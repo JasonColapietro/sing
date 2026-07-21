@@ -73,7 +73,7 @@ export function NoteLaneCanvas({
               y1={laneY}
               x2={w - 4}
               y2={laneY}
-              stroke="#2b2519"
+              stroke="#ddd4c4"
               strokeWidth="1"
             />
             <text
@@ -81,7 +81,7 @@ export function NoteLaneCanvas({
               y={laneY + 3}
               textAnchor="end"
               fontSize="8.5"
-              fill="#6f685a"
+              fill="#8a8272"
               fontFamily="var(--font-mono, monospace)"
             >
               {midiToLabel(midi)}
@@ -108,7 +108,7 @@ export function NoteLaneCanvas({
                 height={blockH}
                 rx={5}
                 fill="none"
-                stroke="#f2ede3"
+                stroke="#20201d"
                 strokeWidth="1.4"
                 opacity="0.75"
               />
@@ -119,7 +119,7 @@ export function NoteLaneCanvas({
                   width={Math.max(0, (x1 - x0 - 4) * ratio)}
                   height={blockH}
                   rx={5}
-                  fill="#7fd99a"
+                  fill="#3f8f6e"
                   opacity="0.85"
                 />
               )}
@@ -138,7 +138,7 @@ export function NoteLaneCanvas({
               y1={y0}
               x2={x1}
               y2={y1}
-              stroke="#f2ede3"
+              stroke="#20201d"
               strokeWidth="7"
               strokeLinecap="round"
               opacity="0.5"
@@ -149,7 +149,7 @@ export function NoteLaneCanvas({
                 y1={y0}
                 x2={xr}
                 y2={yr}
-                stroke="#7fd99a"
+                stroke="#3f8f6e"
                 strokeWidth="7"
                 strokeLinecap="round"
                 opacity="0.85"
@@ -164,7 +164,7 @@ export function NoteLaneCanvas({
         <polyline
           points={tracePath}
           fill="none"
-          stroke="#f5b03e"
+          stroke="#c59642"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -176,7 +176,7 @@ export function NoteLaneCanvas({
           cx={x(cursorSec)}
           cy={y(liveMidiFloat)}
           r="4.5"
-          fill="#f5b03e"
+          fill="#c59642"
         />
       )}
 
@@ -187,7 +187,7 @@ export function NoteLaneCanvas({
           y1={padTop - 2}
           x2={x(cursorSec)}
           y2={h - padTop + 2}
-          stroke="#3a3222"
+          stroke="#c9bda0"
           strokeWidth="1.5"
           strokeDasharray="2,2"
         />

@@ -57,18 +57,18 @@ function CentsNeedle({
         width={tolW * 2}
         height={34}
         rx={6}
-        fill={inTune ? "#7fd99a" : "#1f1a13"}
+        fill={inTune ? "#3f8f6e" : "#efe6d5"}
         opacity={inTune ? 0.18 : 1}
-        stroke={inTune ? "#7fd99a" : "#2b2519"}
+        stroke={inTune ? "#3f8f6e" : "#ddd4c4"}
       />
       {/* scale */}
-      <line x1="20" y1="35" x2="280" y2="35" stroke="#2b2519" strokeWidth="2" />
+      <line x1="20" y1="35" x2="280" y2="35" stroke="#ddd4c4" strokeWidth="2" />
       {[-50, -25, 0, 25, 50].map((c) => {
         const tx = 150 + (c / 60) * 130;
         return (
           <g key={c}>
-            <line x1={tx} y1={c === 0 ? 22 : 28} x2={tx} y2={c === 0 ? 48 : 42} stroke={c === 0 ? "#a69d8c" : "#3a3222"} strokeWidth={c === 0 ? 2 : 1.5} />
-            <text x={tx} y={64} textAnchor="middle" fontSize="9" fill="#6f685a" fontFamily="monospace">
+            <line x1={tx} y1={c === 0 ? 22 : 28} x2={tx} y2={c === 0 ? 48 : 42} stroke={c === 0 ? "#5c564d" : "#c9bda0"} strokeWidth={c === 0 ? 2 : 1.5} />
+            <text x={tx} y={64} textAnchor="middle" fontSize="9" fill="#8a8272" fontFamily="monospace">
               {c > 0 ? `+${c}` : c}
             </text>
           </g>
@@ -82,15 +82,15 @@ function CentsNeedle({
             y1={12}
             x2={x}
             y2={56}
-            stroke={inTune ? "#7fd99a" : "#f5b03e"}
+            stroke={inTune ? "#3f8f6e" : "#c59642"}
             strokeWidth="3"
             strokeLinecap="round"
           />
-          <circle cx={x} cy={12} r={3.5} fill={inTune ? "#7fd99a" : "#f5b03e"} />
+          <circle cx={x} cy={12} r={3.5} fill={inTune ? "#3f8f6e" : "#c59642"} />
         </g>
       )}
       {!voiced && (
-        <text x="150" y="80" textAnchor="middle" fontSize="10" fill="#6f685a" fontFamily="monospace">
+        <text x="150" y="80" textAnchor="middle" fontSize="10" fill="#8a8272" fontFamily="monospace">
           sing to move the needle
         </text>
       )}

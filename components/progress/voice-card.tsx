@@ -42,8 +42,8 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
             width={CW - 1}
             height={(black ? KH * 0.62 : KH) - 1}
             rx={1.5}
-            fill={black ? "#17140f" : "#e9e2d3"}
-            stroke="#2b2519"
+            fill={black ? "#fffaf2" : "#e9e2d3"}
+            stroke="#ddd4c4"
             strokeWidth={1}
           />
         );
@@ -67,7 +67,7 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
           fontSize={10}
           fontWeight={600}
           fontFamily="var(--font-mono)"
-          fill="#f5b03e"
+          fill="#c59642"
         >
           {midiToLabel(m)}
         </text>
@@ -82,7 +82,7 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
             textAnchor="middle"
             fontSize={8}
             fontFamily="var(--font-mono)"
-            fill="#6f685a"
+            fill="#8a8272"
           >
             {midiToLabel(m)}
           </text>

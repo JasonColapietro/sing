@@ -266,10 +266,10 @@ export function MicGate({
     <Card className="text-center">
       <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-line2 bg-panel2">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="9" y="3" width="6" height="11" rx="3" stroke="#a69d8c" strokeWidth="1.6" />
+          <rect x="9" y="3" width="6" height="11" rx="3" stroke="#5c564d" strokeWidth="1.6" />
           <path
             d="M5 11a7 7 0 0 0 14 0M12 18v3"
-            stroke="#a69d8c"
+            stroke="#5c564d"
             strokeWidth="1.6"
             strokeLinecap="round"
           />

@@ -56,10 +56,10 @@ function MiniKeyboard({
                   ? locked
                     ? "bg-ok"
                     : "bg-amber"
-                  : "bg-[#e8e1d0] hover:bg-ink"
+                  : "bg-[#e8e1d0] hover:bg-[#f4eee0]"
               }`}
             >
-              <span className="font-mono text-[10px] text-[#3a3222]">
+              <span className="font-mono text-[10px] text-[#c9bda0]">
                 {midiToName(m) === "C" ? midiToLabel(m) : ""}
               </span>
             </button>
@@ -83,7 +83,7 @@ function MiniKeyboard({
                 ? locked
                   ? "bg-ok"
                   : "bg-amber"
-                : "bg-[#0b0906] hover:bg-panel2"
+                : "bg-[#0b0906] hover:bg-[#241f18]"
             }`}
           />
         );
@@ -225,13 +225,13 @@ export function TargetPractice({
                 : `Hold progress: ${(holdMs / 1000).toFixed(1)} of 3 seconds`
             }
           >
-            <circle cx={38} cy={38} r={R} fill="none" stroke="#2b2519" strokeWidth={6} />
+            <circle cx={38} cy={38} r={R} fill="none" stroke="#ddd4c4" strokeWidth={6} />
             <circle
               cx={38}
               cy={38}
               r={R}
               fill="none"
-              stroke={lockFlash ? "#7fd99a" : "#f5b03e"}
+              stroke={lockFlash ? "#3f8f6e" : "#c59642"}
               strokeWidth={6}
               strokeLinecap="round"
               strokeDasharray={CIRC}
@@ -244,7 +244,7 @@ export function TargetPractice({
               y={42}
               textAnchor="middle"
               fontSize={13}
-              fill={lockFlash ? "#7fd99a" : "#f2ede3"}
+              fill={lockFlash ? "#3f8f6e" : "#20201d"}
               fontFamily='"IBM Plex Mono", ui-monospace, monospace'
             >
               {(holdMs / 1000).toFixed(1)}s

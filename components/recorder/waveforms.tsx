@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 import type { Peaks } from "./wav";
 
-const PANEL = "#17140f";
-const LINE = "#2b2519";
-const AMBER = "#f5b03e";
+const PANEL = "#fffaf2";
+const LINE = "#ddd4c4";
+const AMBER = "#c59642";
 const AMBER_DIM = "rgba(245, 176, 62, 0.32)";
 
 /** Size a canvas to its CSS box at devicePixelRatio. Returns a 2d ctx in CSS px. */

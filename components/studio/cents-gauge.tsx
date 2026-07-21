@@ -36,10 +36,10 @@ export function CentsGauge({ cents }: { cents: number | null }) {
       className="mx-auto mt-2 w-full max-w-[320px]"
     >
       {/* dial face */}
-      <path d={arc(-50, 50, 95)} fill="none" stroke="#1f1a13" strokeWidth={14} strokeLinecap="round" />
-      <path d={arc(-50, 50, 95)} fill="none" stroke="#2b2519" strokeWidth={1} />
+      <path d={arc(-50, 50, 95)} fill="none" stroke="#efe6d5" strokeWidth={14} strokeLinecap="round" />
+      <path d={arc(-50, 50, 95)} fill="none" stroke="#ddd4c4" strokeWidth={1} />
       {/* green zone ±15 cents */}
-      <path d={arc(-15, 15, 95)} fill="none" stroke="#7fd99a" strokeOpacity={0.55} strokeWidth={14} />
+      <path d={arc(-15, 15, 95)} fill="none" stroke="#3f8f6e" strokeOpacity={0.55} strokeWidth={14} />
       {/* ticks */}
       {TICKS.map((t) => {
         const major = t === 0 || Math.abs(t) === 50 || Math.abs(t) === 25;
@@ -52,7 +52,7 @@ export function CentsGauge({ cents }: { cents: number | null }) {
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke={t === 0 ? "#f2ede3" : "#6f685a"}
+            stroke={t === 0 ? "#20201d" : "#8a8272"}
             strokeWidth={t === 0 ? 1.5 : 1}
           />
         );
@@ -67,7 +67,7 @@ export function CentsGauge({ cents }: { cents: number | null }) {
             y={y}
             textAnchor="middle"
             fontSize={10}
-            fill="#a69d8c"
+            fill="#5c564d"
             fontFamily='"IBM Plex Mono", ui-monospace, monospace'
           >
             {t > 0 ? `+${t}` : t}
@@ -79,7 +79,7 @@ export function CentsGauge({ cents }: { cents: number | null }) {
         y={CY + 20}
         textAnchor="middle"
         fontSize={9}
-        fill="#6f685a"
+        fill="#8a8272"
         fontFamily='"IBM Plex Mono", ui-monospace, monospace'
         letterSpacing={2}
       >
@@ -94,11 +94,11 @@ export function CentsGauge({ cents }: { cents: number | null }) {
           opacity: active ? 1 : 0.25,
         }}
       >
-        <line x1={CX} y1={CY + 10} x2={CX} y2={CY - 88} stroke="#f5b03e" strokeWidth={2.5} strokeLinecap="round" />
+        <line x1={CX} y1={CY + 10} x2={CX} y2={CY - 88} stroke="#c59642" strokeWidth={2.5} strokeLinecap="round" />
       </g>
       {/* pivot */}
-      <circle cx={CX} cy={CY} r={7} fill="#1f1a13" stroke="#3a3222" strokeWidth={1.5} />
-      <circle cx={CX} cy={CY} r={2.5} fill="#f5b03e" opacity={active ? 1 : 0.3} />
+      <circle cx={CX} cy={CY} r={7} fill="#efe6d5" stroke="#c9bda0" strokeWidth={1.5} />
+      <circle cx={CX} cy={CY} r={2.5} fill="#c59642" opacity={active ? 1 : 0.3} />
     </svg>
   );
 }

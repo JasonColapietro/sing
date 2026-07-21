@@ -4,9 +4,9 @@ import { useMemo } from "react";
 import type { SessionLog } from "@/lib/progress";
 import { addDays, localDayStr, mondayOf, secondsByDay } from "./format";
 
-const AMBER = "#f5b03e";
-const EMPTY = "#1f1a13";
-const DIM = "#6f685a";
+const AMBER = "#c59642";
+const EMPTY = "#efe6d5";
+const DIM = "#8a8272";
 const MONO = "var(--font-mono)";
 
 /** 4 amber intensity steps (opacity on the amber hue) + empty. */

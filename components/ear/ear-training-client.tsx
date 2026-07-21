@@ -30,8 +30,8 @@ const GAMES: GameMeta[] = [
     mic: false,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 17V7m16 10V7" stroke="#8fb7e8" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M7.5 12h9" stroke="#8fb7e8" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="2.5 3" />
+        <path d="M4 17V7m16 10V7" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M7.5 12h9" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="2.5 3" />
       </svg>
     ),
   },
@@ -42,8 +42,8 @@ const GAMES: GameMeta[] = [
     mic: true,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <rect x="9" y="3" width="6" height="11" rx="3" stroke="#8fb7e8" strokeWidth="1.8" />
-        <path d="M5 11a7 7 0 0 0 14 0M12 18v3" stroke="#8fb7e8" strokeWidth="1.8" strokeLinecap="round" />
+        <rect x="9" y="3" width="6" height="11" rx="3" stroke="#11615d" strokeWidth="1.8" />
+        <path d="M5 11a7 7 0 0 0 14 0M12 18v3" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -54,8 +54,8 @@ const GAMES: GameMeta[] = [
     mic: true,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 15c2-4 4 4 6 0s4 4 6 0 3-2 4-1" stroke="#8fb7e8" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-        <path d="M4 9c2-4 4 4 6 0" stroke="#8fb7e8" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.5" />
+        <path d="M4 15c2-4 4 4 6 0s4 4 6 0 3-2 4-1" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+        <path d="M4 9c2-4 4 4 6 0" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.5" />
       </svg>
     ),
   },
@@ -66,8 +66,8 @@ const GAMES: GameMeta[] = [
     mic: false,
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M8 18V6m0 0L4.5 9.5M8 6l3.5 3.5" stroke="#8fb7e8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M16 6v12m0 0 3.5-3.5M16 18l-3.5-3.5" stroke="#8fb7e8" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M8 18V6m0 0L4.5 9.5M8 6l3.5 3.5" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M16 6v12m0 0 3.5-3.5M16 18l-3.5-3.5" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     ),
   },

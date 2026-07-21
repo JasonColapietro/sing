@@ -1,13 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Manrope, IBM_Plex_Mono } from "next/font/google";
+import { Manrope, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/nav";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  display: "swap",
-});
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
@@ -30,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0e0c09",
+  themeColor: "#f7f0e7",
 };
 
 export default function RootLayout({
@@ -39,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${manrope.variable} ${plexMono.variable}`}
+      className={`${manrope.variable} ${plexMono.variable}`}
     >
       <body className="min-h-dvh antialiased">
         <Nav />

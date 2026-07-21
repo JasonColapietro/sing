@@ -59,7 +59,7 @@ export function NoteLanes({
               y1={y}
               x2={w - 4}
               y2={y}
-              stroke="#2b2519"
+              stroke="#ddd4c4"
               strokeWidth="1"
             />
             <text
@@ -67,7 +67,7 @@ export function NoteLanes({
               y={y + 3}
               textAnchor="end"
               fontSize="8.5"
-              fill="#6f685a"
+              fill="#8a8272"
               fontFamily="monospace"
             >
               {midiToLabel(midi)}
@@ -85,7 +85,7 @@ export function NoteLanes({
           height={laneH - 4}
           rx={5}
           fill="none"
-          stroke="#f2ede3"
+          stroke="#20201d"
           strokeWidth="1.4"
           opacity="0.8"
         />
@@ -103,7 +103,7 @@ export function NoteLanes({
             width={colW - 18}
             height={laneH - 8}
             rx={4}
-            fill={hit ? "#7fd99a" : "#f5b03e"}
+            fill={hit ? "#3f8f6e" : "#c59642"}
           />
         );
       })}

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useProgress, levelForXp } from "@/lib/progress";
@@ -16,17 +17,6 @@ const LINKS = [
   { href: "/progress", label: "Progress" },
 ];
 
-function Logo() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="1" y="1" width="22" height="22" rx="6" fill="#1f1a13" />
-      <rect x="6" y="12" width="2.6" height="7" rx="1.3" fill="#a69d8c" />
-      <rect x="10.7" y="7" width="2.6" height="12" rx="1.3" fill="#f5b03e" />
-      <rect x="15.4" y="10" width="2.6" height="9" rx="1.3" fill="#ff5a48" />
-    </svg>
-  );
-}
-
 export default function Nav() {
   const pathname = usePathname();
   const p = useProgress();
@@ -36,7 +26,13 @@ export default function Nav() {
     <header className="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-4 px-4 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2">
-          <Logo />
+          <Image
+            src="/suede-logo.png"
+            alt=""
+            width={22}
+            height={22}
+            className="rounded-full"
+          />
           <span className="font-display text-lg tracking-tight">
             Suede Sing
           </span>

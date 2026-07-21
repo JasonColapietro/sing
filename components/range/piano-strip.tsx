@@ -108,8 +108,8 @@ export function PianoStrip({
           width={WHITE_W - 1}
           height={WHITE_H - 1}
           rx={2}
-          fill={k.midi === active ? "#f5b03e" : "#e9e2d3"}
-          stroke="#2b2519"
+          fill={k.midi === active ? "#c59642" : "#e9e2d3"}
+          stroke="#ddd4c4"
           strokeWidth={1}
         />
       ))}
@@ -122,8 +122,8 @@ export function PianoStrip({
           width={BLACK_W}
           height={BLACK_H}
           rx={1.5}
-          fill={k.midi === active ? "#f5b03e" : "#17140f"}
-          stroke="#2b2519"
+          fill={k.midi === active ? "#c59642" : "#fffaf2"}
+          stroke="#ddd4c4"
           strokeWidth={1}
         />
       ))}
@@ -149,7 +149,7 @@ export function PianoStrip({
           textAnchor="middle"
           fontSize={9}
           fontFamily="var(--font-mono)"
-          fill="#6f685a"
+          fill="#8a8272"
         >
           {midiToLabel(k.midi)}
         </text>
@@ -164,7 +164,7 @@ export function PianoStrip({
               y1={0}
               x2={x}
               y2={WHITE_H + 4}
-              stroke="#f5b03e"
+              stroke="#c59642"
               strokeWidth={1.5}
             />
             <text
@@ -174,7 +174,7 @@ export function PianoStrip({
               fontSize={10}
               fontWeight={600}
               fontFamily="var(--font-mono)"
-              fill="#f5b03e"
+              fill="#c59642"
             >
               {midiToLabel(m.midi)}
             </text>

@@ -172,7 +172,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
             : "border-[#080705] bg-[#0b0a07] hover:bg-[#171410]"
         }`
       : `${base} ${
-          isActive ? "border-amber bg-amber" : "border-line bg-ink hover:bg-[#e4dccb]"
+          isActive ? "border-amber bg-amber" : "border-line bg-[#faf6ec] hover:bg-[#e4dccb]"
         }`;
     return (
       <button

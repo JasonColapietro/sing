@@ -71,7 +71,7 @@ export default function HeroVisual() {
             y1={y}
             x2="640"
             y2={y}
-            stroke="#2b2519"
+            stroke="#ddd4c4"
             strokeWidth="1"
           />
         ))}
@@ -83,7 +83,7 @@ export default function HeroVisual() {
             y1="24"
             x2={x}
             y2="276"
-            stroke="#2b2519"
+            stroke="#ddd4c4"
             strokeWidth="1"
             strokeDasharray="2 6"
           />
@@ -96,7 +96,7 @@ export default function HeroVisual() {
             y={lane.y + 4}
             fontFamily="var(--font-plex-mono), monospace"
             fontSize="11"
-            fill="#6f685a"
+            fill="#8a8272"
           >
             {lane.label}
           </text>
@@ -121,7 +121,7 @@ export default function HeroVisual() {
           d={TRACE_PATH}
           pathLength={1000}
           fill="none"
-          stroke="#f5b03e"
+          stroke="#c59642"
           strokeWidth="7"
           strokeLinecap="round"
           opacity="0.18"
@@ -131,7 +131,7 @@ export default function HeroVisual() {
           d={TRACE_PATH}
           pathLength={1000}
           fill="none"
-          stroke="#f5b03e"
+          stroke="#c59642"
           strokeWidth="2.25"
           strokeLinecap="round"
           className={styles.trace}
@@ -143,11 +143,11 @@ export default function HeroVisual() {
             y1="24"
             x2="40"
             y2="276"
-            stroke="#f5b03e"
+            stroke="#c59642"
             strokeWidth="1"
             opacity="0.45"
           />
-          <circle cx="40" cy="24" r="2.5" fill="#f5b03e" opacity="0.7" />
+          <circle cx="40" cy="24" r="2.5" fill="#c59642" opacity="0.7" />
         </g>
       </svg>
       <div className="flex items-center justify-between border-t border-line px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em]">

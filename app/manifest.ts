@@ -8,13 +8,13 @@ export default function manifest(): MetadataRoute.Manifest {
       "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free, in the browser.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0e0c09",
-    theme_color: "#0e0c09",
+    background_color: "#f7f0e7",
+    theme_color: "#f7f0e7",
     icons: [
       {
-        src: "/icon.svg",
-        sizes: "any",
-        type: "image/svg+xml",
+        src: "/suede-logo.png",
+        sizes: "132x132",
+        type: "image/png",
       },
     ],
   };

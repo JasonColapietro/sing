@@ -11,12 +11,12 @@ import {
 } from "./format";
 
 // Design-token hex values for SVG (mirrors app/globals.css @theme).
-const AMBER = "#f5b03e";
-const LINE = "#2b2519";
-const LINE2 = "#3a3222";
-const DIM = "#6f685a";
-const MUT = "#a69d8c";
-const PANEL = "#17140f";
+const AMBER = "#c59642";
+const LINE = "#ddd4c4";
+const LINE2 = "#c9bda0";
+const DIM = "#8a8272";
+const MUT = "#5c564d";
+const PANEL = "#fffaf2";
 
 const MONO = "var(--font-mono)";
 

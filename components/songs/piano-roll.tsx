@@ -10,15 +10,15 @@ const BEATS_WINDOW = 6;
 const PLAYHEAD_FRAC = 0.3;
 
 const C = {
-  bg: "#0e0c09",
+  bg: "#f7f0e7",
   lane: "rgba(242, 237, 227, 0.025)",
-  line: "#2b2519",
-  line2: "#3a3222",
-  ink: "#f2ede3",
-  mut: "#a69d8c",
-  dim: "#6f685a",
-  amber: "#f5b03e",
-  ok: "#7fd99a",
+  line: "#ddd4c4",
+  line2: "#c9bda0",
+  ink: "#20201d",
+  mut: "#5c564d",
+  dim: "#8a8272",
+  amber: "#c59642",
+  ok: "#3f8f6e",
 } as const;
 
 const MONO = '"IBM Plex Mono", ui-monospace, monospace';

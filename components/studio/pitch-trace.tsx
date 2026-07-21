@@ -9,14 +9,14 @@ const WINDOW_MS = 8000;
 const SEMIS = 14;
 
 const C = {
-  bg: "#0e0c09",
+  bg: "#f7f0e7",
   lane: "rgba(242, 237, 227, 0.02)",
-  line: "#2b2519",
-  ink: "#f2ede3",
-  mut: "#a69d8c",
-  dim: "#6f685a",
-  amber: "#f5b03e",
-  ok: "#7fd99a",
+  line: "#ddd4c4",
+  ink: "#20201d",
+  mut: "#5c564d",
+  dim: "#8a8272",
+  amber: "#c59642",
+  ok: "#3f8f6e",
   okFill: "rgba(127, 217, 154, 0.12)",
   inkFill: "rgba(242, 237, 227, 0.05)",
 } as const;

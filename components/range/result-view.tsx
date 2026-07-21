@@ -41,7 +41,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   const mono = "'IBM Plex Mono', ui-monospace, monospace";
 
   // Studio-dark background with a soft amber wash from the top
-  ctx.fillStyle = "#0e0c09";
+  ctx.fillStyle = "#f7f0e7";
   ctx.fillRect(0, 0, W, H);
   const glow = ctx.createRadialGradient(W / 2, -120, 60, W / 2, -120, 760);
   glow.addColorStop(0, "rgba(245, 176, 62, 0.12)");
@@ -50,26 +50,26 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   ctx.fillRect(0, 0, W, H);
 
   // Panel frame
-  ctx.strokeStyle = "#2b2519";
+  ctx.strokeStyle = "#ddd4c4";
   ctx.lineWidth = 2;
   ctx.strokeRect(28.5, 28.5, W - 57, H - 57);
 
   ctx.textAlign = "center";
 
   // Kicker
-  ctx.fillStyle = "#f5b03e";
+  ctx.fillStyle = "#c59642";
   ctx.font = `600 22px ${mono}`;
   ctx.fillText("V O C A L   R A N G E", W / 2, 118);
 
   // Big readout
-  ctx.fillStyle = "#f2ede3";
+  ctx.fillStyle = "#20201d";
   ctx.font = `700 124px ${mono}`;
   ctx.fillText(`${midiToLabel(lowMidi)} — ${midiToLabel(highMidi)}`, W / 2, 268);
 
   // Voice type + span
   const voice = classifyVoice(lowMidi, highMidi);
   const semis = highMidi - lowMidi;
-  ctx.fillStyle = "#a69d8c";
+  ctx.fillStyle = "#5c564d";
   ctx.font = `500 30px ${mono}`;
   ctx.fillText(
     `${voice.label} · ${semis} semitones · ${describeSpan(semis)}`,
@@ -96,7 +96,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
     } else {
       centers.set(m, kbX + wi * whiteW + whiteW / 2);
       ctx.fillStyle = "#e9e2d3";
-      ctx.strokeStyle = "#2b2519";
+      ctx.strokeStyle = "#ddd4c4";
       ctx.lineWidth = 1;
       ctx.fillRect(kbX + wi * whiteW + 0.5, kbY, whiteW - 1, kbH);
       ctx.strokeRect(kbX + wi * whiteW + 0.5, kbY, whiteW - 1, kbH);
@@ -108,7 +108,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
     const pc = ((m % 12) + 12) % 12;
     if (blackPcs.has(pc)) {
       const cx = centers.get(m) ?? kbX;
-      ctx.fillStyle = "#17140f";
+      ctx.fillStyle = "#fffaf2";
       ctx.fillRect(cx - whiteW * 0.28, kbY, whiteW * 0.56, kbH * 0.6);
     } else {
       wi++;
@@ -119,16 +119,16 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   const x1 = (centers.get(clampMidi(highMidi)) ?? kbX + kbW) + whiteW / 2;
   ctx.fillStyle = "rgba(245, 176, 62, 0.30)";
   ctx.fillRect(x0, kbY, Math.max(0, x1 - x0), kbH);
-  ctx.strokeStyle = "#f5b03e";
+  ctx.strokeStyle = "#c59642";
   ctx.lineWidth = 2;
   ctx.strokeRect(x0, kbY, Math.max(0, x1 - x0), kbH);
-  ctx.fillStyle = "#f5b03e";
+  ctx.fillStyle = "#c59642";
   ctx.font = `600 22px ${mono}`;
   ctx.fillText(midiToLabel(lowMidi), x0, kbY + kbH + 30);
   ctx.fillText(midiToLabel(highMidi), x1, kbY + kbH + 30);
 
   // Footer
-  ctx.fillStyle = "#6f685a";
+  ctx.fillStyle = "#8a8272";
   ctx.font = `500 22px ${mono}`;
   ctx.fillText("sing.suedeai — free vocal studio", W / 2, H - 52);
 
