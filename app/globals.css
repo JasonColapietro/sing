@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #0e0c09;
+  --color-panel: #17140f;
+  --color-panel2: #1f1a13;
+  --color-line: #2b2519;
+  --color-line2: #3a3222;
+  --color-ink: #f2ede3;
+  --color-mut: #a69d8c;
+  --color-dim: #6f685a;
+  --color-amber: #f5b03e;
+  --color-amber-soft: #ffd489;
+  --color-rec: #ff5a48;
+  --color-ok: #7fd99a;
+  --color-cool: #8fb7e8;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(1100px 480px at 50% -12%, rgba(245, 176, 62, 0.07), transparent 60%),
+    var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--color-amber);
+  color: #0e0c09;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes recblink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+.animate-recblink {
+  animation: recblink 1.2s ease-in-out infinite;
+}
+
+@keyframes fadeup {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-fadeup {
+  animation: fadeup 0.5s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

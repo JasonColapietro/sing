@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sing-web",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4173",
+        "--directory",
+        "/Users/jasoncolapietro/code/suede-voice/web"
+      ],
+      "port": 4173
+    },
+    {
+      "name": "sing-web-compare",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8951",
+        "--directory",
+        "/Users/jasoncolapietro/code/suede-voice/web"
+      ],
+      "port": 8951
+    }
+  ]
+}
