@@ -181,18 +181,29 @@ export function SustainTest() {
   const samplesRef = useRef<number[]>([]);
 
   useEffect(() => {
+    // Deliberately deferred to an effect: reading localStorage during the
+    // lazy initializer would return real attempts on the client but null on
+    // the server, causing a hydration mismatch on this route's SSR-prerendered
+    // HTML shell.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setData(loadBreath());
   }, []);
 
-  // If the mic is turned off mid-attempt, drop back to idle cleanly.
-  useEffect(() => {
+  // If the mic is turned off mid-attempt, drop back to idle cleanly. Adjusted
+  // during render (guarded by prevListening) rather than in an effect, per
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevListening, setPrevListening] = useState(listening);
+  if (listening !== prevListening) {
+    setPrevListening(listening);
     if (!listening && (phase === "armed" || phase === "running")) {
       setPhase("idle");
       setElapsed(0);
     }
-  }, [listening, phase]);
+  }
 
   // Attempt state machine, driven by pitch frames (one per animation frame).
+  // This is a subscription to an external, continuously-updating signal
+  // (mic frames), not a derivable render value — genuinely effect-shaped.
   useEffect(() => {
     if (phase !== "armed" && phase !== "running") return;
     const v = frame.volume;
@@ -204,6 +215,7 @@ export function SustainTest() {
         startRef.current = now;
         lastLoudRef.current = now;
         samplesRef.current = [v];
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- transition triggered by a mic-frame threshold crossing, not derivable during render
         setElapsed(0);
         setPhase("running");
       }

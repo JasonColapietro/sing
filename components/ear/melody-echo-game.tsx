@@ -44,12 +44,14 @@ export function MelodyEchoGame({
   const [leftMs, setLeftMs] = useState(0);
   const [singing, setSinging] = useState(false);
 
-  const startedAt = useRef(performance.now());
+  const [startedAt, setStartedAt] = useState(() => performance.now());
   const framesRef = useRef<VoicedFrame[]>([]);
   const rafRef = useRef(0);
   const timerRef = useRef(0);
   const phaseRef = useRef<Phase>("listen");
-  phaseRef.current = phase;
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
 
   const windowMsFor = (m: number[]) => m.length * 900 + 2500;
 
@@ -69,10 +71,12 @@ export function MelodyEchoGame({
     [playMelody],
   );
 
-  // First round once the mic is on.
+  // First round once the mic is on. This bootstraps playback (a side effect
+  // that must not run during render), so the state it seeds lives here too.
   useEffect(() => {
     if (listening && melody === null && !session.done) {
-      startedAt.current = performance.now();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the round that beginRound() below immediately plays audio for
+      setStartedAt(performance.now());
       const m = generateMelody(difficulty, singableRegister(progress.range));
       setMelody(m);
       beginRound(m);
@@ -159,7 +163,7 @@ export function MelodyEchoGame({
           game="melody-echo"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt.current}
+          startedAt={startedAt}
           onReplay={() => {
             session.reset();
             setMelody(null);

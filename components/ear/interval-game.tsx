@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Card } from "@/components/ui";
 import { playSequence, playTone } from "@/lib/audio/synth";
 import {
@@ -41,7 +41,7 @@ export function IntervalGame({
   const [round, setRound] = useState<Round>(() => makeRound(difficulty));
   const [answered, setAnswered] = useState<number | null>(null);
   const [key, setKey] = useState(0); // remount trigger for replay
-  const startedAt = useRef(performance.now());
+  const [startedAt, setStartedAt] = useState(() => performance.now());
 
   const play = useCallback(() => {
     if (harmonic) {
@@ -99,7 +99,7 @@ export function IntervalGame({
     session.reset();
     setAnswered(null);
     setRound(makeRound(difficulty));
-    startedAt.current = performance.now();
+    setStartedAt(performance.now());
     setKey((k) => k + 1);
   };
 
@@ -109,7 +109,7 @@ export function IntervalGame({
         difficulty={difficulty}
         onExit={onExit}
         session={session}
-        startedAt={startedAt.current}
+        startedAt={startedAt}
         onReplay={replayAll}
       />
     );

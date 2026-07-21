@@ -126,10 +126,13 @@ export function TargetPractice({
     shuffleRef.current = shuffle;
   }, [shuffle]);
 
-  // Reset progress whenever the target changes.
+  // Reset progress whenever the target changes. Kept as an effect (rather
+  // than a render-time guard) because it resets rAF-loop-owned refs
+  // (holdRef/lockedRef) in lockstep with the mirrored state below.
   useEffect(() => {
     holdRef.current = 0;
     lockedRef.current = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- mirrors the ref reset above; must stay in the same tick as holdRef/lockedRef
     setHoldMs(0);
     setLockFlash(false);
   }, [targetMidi]);

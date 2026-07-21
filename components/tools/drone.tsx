@@ -16,7 +16,9 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
 
   const stopRef = useRef<(() => void) | null>(null);
   const gainRef = useRef(gain);
-  gainRef.current = gain;
+  useEffect(() => {
+    gainRef.current = gain;
+  }, [gain]);
 
   const begin = (pc: number, oct: number) => {
     getAudioContext();

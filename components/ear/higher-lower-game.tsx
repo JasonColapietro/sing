@@ -49,7 +49,7 @@ export function HigherLowerGame({
 
   const [round, setRound] = useState<Round>(() => makeRound(difficulty));
   const [answered, setAnswered] = useState<Answer | null>(null);
-  const startedAt = useRef(performance.now());
+  const [startedAt, setStartedAt] = useState(() => performance.now());
   const advanceRef = useRef(0);
 
   const play = useCallback(() => {
@@ -105,12 +105,12 @@ export function HigherLowerGame({
           game="higher-lower"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt.current}
+          startedAt={startedAt}
           onReplay={() => {
             session.reset();
             setAnswered(null);
             setRound(makeRound(difficulty));
-            startedAt.current = performance.now();
+            setStartedAt(performance.now());
           }}
           onExit={onExit}
         />

@@ -61,6 +61,7 @@ export function BoxBreathing() {
   const [side, setSide] = useState(4);
   const [minutes, setMinutes] = useState<(typeof LENGTHS)[number]>(3);
   const [run, setRun] = useState<RunFrame | null>(null);
+  const [runTargetSec, setRunTargetSec] = useState(0);
   const [summary, setSummary] = useState<{
     sec: number;
     rounds: number;
@@ -90,6 +91,7 @@ export function BoxBreathing() {
     const targetSec = Math.ceil((minutes * 60) / cycle) * cycle;
     cfgRef.current = { side, targetSec };
     startRef.current = performance.now();
+    setRunTargetSec(targetSec);
     setSummary(null);
     setMode("running");
 
@@ -244,7 +246,7 @@ export function BoxBreathing() {
   const dot = dotPos(phaseIdx, p);
   const amt = breathAmount(phaseIdx, p);
   const r = 34 + 28 * amt;
-  const target = cfgRef.current.targetSec;
+  const target = runTargetSec;
   const elapsed = run?.elapsed ?? 0;
 
   return (

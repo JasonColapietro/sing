@@ -84,7 +84,14 @@ export default function EarTrainingClient() {
   const [bests, setBests] = useState<Record<string, number>>({});
 
   const refreshBests = useCallback(() => setBests(readBests()), []);
-  useEffect(refreshBests, [refreshBests]);
+  useEffect(() => {
+    // Deliberately deferred to an effect: reading localStorage during the
+    // lazy initializer would return real scores on the client but {} on the
+    // server, causing a hydration mismatch on this route's SSR-prerendered
+    // HTML shell.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    refreshBests();
+  }, [refreshBests]);
 
   const exit = useCallback(() => {
     setActive(null);

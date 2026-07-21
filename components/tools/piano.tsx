@@ -50,9 +50,11 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
   const sustainRef = useRef(sustain);
   const volumeRef = useRef(volume);
   const kbBaseRef = useRef(kbBase);
-  sustainRef.current = sustain;
-  volumeRef.current = volume;
-  kbBaseRef.current = kbBase;
+  useEffect(() => {
+    sustainRef.current = sustain;
+    volumeRef.current = volume;
+    kbBaseRef.current = kbBase;
+  }, [sustain, volume, kbBase]);
 
   // "Played recently" activity ping for session logging.
   const pingTimer = useRef<number | undefined>(undefined);

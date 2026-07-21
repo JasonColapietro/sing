@@ -117,10 +117,12 @@ export function PitchMatchGame({
   const [heldMs, setHeldMs] = useState(0);
   const [leftMs, setLeftMs] = useState(WINDOW_MS);
   const [liveCents, setLiveCents] = useState<number | null>(null);
-  const startedAt = useRef(performance.now());
+  const [startedAt, setStartedAt] = useState(() => performance.now());
   const rafRef = useRef(0);
   const phaseRef = useRef<Phase>("listen");
-  phaseRef.current = phase;
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
 
   const pickTarget = useCallback(() => {
     const { lo, hi } = singableRegister(progress.range);
@@ -141,10 +143,13 @@ export function PitchMatchGame({
     [],
   );
 
-  // Kick off the first round once the mic is on.
+  // Kick off the first round once the mic is on. This bootstraps playback (a
+  // side effect that must not run during render), so the state it seeds
+  // lives here too.
   useEffect(() => {
     if (listening && target === null && !session.done) {
-      startedAt.current = performance.now();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the round that beginRound() below immediately plays audio for
+      setStartedAt(performance.now());
       const t = pickTarget();
       setTarget(t);
       beginRound(t);
@@ -230,7 +235,7 @@ export function PitchMatchGame({
           game="pitch-match"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt.current}
+          startedAt={startedAt}
           onReplay={() => {
             session.reset();
             setTarget(null);

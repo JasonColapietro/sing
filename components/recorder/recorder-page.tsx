@@ -122,9 +122,8 @@ export default function RecorderPageClient() {
   const [positionSec, setPositionSec] = useState(0);
 
   // --- peaks cache ---
-  const peaksRef = useRef(new Map<string, Peaks>());
+  const [peaksMap, setPeaksMap] = useState<Map<string, Peaks>>(() => new Map());
   const decodingRef = useRef(new Set<string>());
-  const [, setPeaksVersion] = useState(0);
 
   // --- review, downloads, compare, toast ---
   const [reviewId, setReviewId] = useState<string | null>(null);
@@ -199,18 +198,18 @@ export default function RecorderPageClient() {
 
   // --- peaks ---
   const ensurePeaks = useCallback((take: TakeRecord) => {
-    if (peaksRef.current.has(take.id) || decodingRef.current.has(take.id)) return;
+    if (peaksMap.has(take.id) || decodingRef.current.has(take.id)) return;
     decodingRef.current.add(take.id);
     void decodeTakeBlob(take.blob)
       .then((buffer) => {
-        peaksRef.current.set(take.id, computePeaks(buffer, 700));
-        setPeaksVersion((v) => v + 1);
+        const peaks = computePeaks(buffer, 700);
+        setPeaksMap((prev) => new Map(prev).set(take.id, peaks));
       })
       .catch(() => {})
       .finally(() => {
         decodingRef.current.delete(take.id);
       });
-  }, []);
+  }, [peaksMap]);
 
   useEffect(() => {
     const wanted = new Set([selectedId, ...abPicks]);
@@ -463,7 +462,12 @@ export default function RecorderPageClient() {
         setLoadedId(null);
         setPositionSec(0);
       }
-      peaksRef.current.delete(take.id);
+      setPeaksMap((prev) => {
+        if (!prev.has(take.id)) return prev;
+        const next = new Map(prev);
+        next.delete(take.id);
+        return next;
+      });
       setAbPicks((prev) => prev.filter((id) => id !== take.id));
       setSelectedId((prev) => (prev === take.id ? null : prev));
       setReviewId((prev) => (prev === take.id ? null : prev));
@@ -805,7 +809,7 @@ export default function RecorderPageClient() {
                 </div>
               </div>
               <PeaksWaveform
-                peaks={peaksRef.current.get(selectedTake.id) ?? null}
+                peaks={peaksMap.get(selectedTake.id) ?? null}
                 progress={progressFor(selectedTake)}
                 height={84}
                 onSeek={(f) => seekTake(selectedTake, f)}
@@ -851,7 +855,7 @@ export default function RecorderPageClient() {
                       </span>
                     </div>
                     <PeaksWaveform
-                      peaks={peaksRef.current.get(take.id) ?? null}
+                      peaks={peaksMap.get(take.id) ?? null}
                       progress={progressFor(take)}
                       height={56}
                       onSeek={(f) => seekTake(take, f)}

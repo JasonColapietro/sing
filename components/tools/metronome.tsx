@@ -40,9 +40,11 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
   const bpmRef = useRef(bpm);
   const beatsRef = useRef(beatsFor(sig));
   const subRef = useRef(sub);
-  bpmRef.current = bpm;
-  beatsRef.current = beatsFor(sig);
-  subRef.current = sub;
+  useEffect(() => {
+    bpmRef.current = bpm;
+    beatsRef.current = beatsFor(sig);
+    subRef.current = sub;
+  }, [bpm, sig, sub]);
 
   const sched = useRef({ nextTime: 0, beat: 0 });
   const queue = useRef<Array<{ time: number; beat: number }>>([]);
@@ -56,6 +58,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
   // Lookahead scheduler + rAF beat indicator.
   useEffect(() => {
     if (!running) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- coupled to this effect's own scheduler teardown below, not a derivable render value
       setBeat(-1);
       return;
     }

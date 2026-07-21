@@ -53,13 +53,15 @@ export function FarinelliDrill() {
     logged: LogResult | null;
   } | null>(null);
 
+  const [beats, setBeats] = useState<Beat[]>([]);
   const rafRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const beatsRef = useRef<Beat[]>([]);
   const t0Ref = useRef(0);
   const nextClickRef = useRef(0);
   const soundRef = useRef(true);
-  soundRef.current = sound;
+  useEffect(() => {
+    soundRef.current = sound;
+  }, [sound]);
 
   const cleanup = () => {
     cancelAnimationFrame(rafRef.current);
@@ -68,12 +70,11 @@ export function FarinelliDrill() {
   };
   useEffect(() => cleanup, []);
 
-  const finish = (elapsed: number, early: boolean) => {
+  const finish = (elapsed: number, allBeats: Beat[], early: boolean) => {
     cleanup();
-    const beats = beatsRef.current;
-    const sec = Math.max(0, Math.round(Math.min(elapsed, beats.length)));
-    const idx = Math.min(beats.length - 1, Math.max(0, Math.floor(elapsed) - 1));
-    const reached = early ? beats[idx] : beats[beats.length - 1];
+    const sec = Math.max(0, Math.round(Math.min(elapsed, allBeats.length)));
+    const idx = Math.min(allBeats.length - 1, Math.max(0, Math.floor(elapsed) - 1));
+    const reached = early ? allBeats[idx] : allBeats[allBeats.length - 1];
     const logged =
       !early || sec >= MIN_LOG_SEC
         ? logSession({ type: "breath", durationSec: sec, detail: "Farinelli drill" })
@@ -88,8 +89,8 @@ export function FarinelliDrill() {
   };
 
   const begin = () => {
-    const beats = buildBeats(cap);
-    beatsRef.current = beats;
+    const newBeats = buildBeats(cap);
+    setBeats(newBeats);
     t0Ref.current = audioNow() + LEAD_SEC; // audio clock is the master clock
     nextClickRef.current = 0;
     setSummary(null);
@@ -99,10 +100,10 @@ export function FarinelliDrill() {
     timerRef.current = setInterval(() => {
       const horizon = audioNow() + 0.35;
       while (
-        nextClickRef.current < beats.length &&
+        nextClickRef.current < newBeats.length &&
         t0Ref.current + nextClickRef.current < horizon
       ) {
-        const b = beats[nextClickRef.current];
+        const b = newBeats[nextClickRef.current];
         if (soundRef.current) {
           clickAt(t0Ref.current + nextClickRef.current, b.count === 1);
         }
@@ -112,8 +113,8 @@ export function FarinelliDrill() {
 
     const loop = () => {
       const elapsed = audioNow() - t0Ref.current;
-      if (elapsed >= beats.length) {
-        finish(beats.length, false);
+      if (elapsed >= newBeats.length) {
+        finish(newBeats.length, newBeats, false);
         return;
       }
       setRun({ beatIdx: elapsed < 0 ? -1 : Math.floor(elapsed), elapsed });
@@ -214,7 +215,6 @@ export function FarinelliDrill() {
   }
 
   // ---- running ----
-  const beats = beatsRef.current;
   const beatIdx = run?.beatIdx ?? -1;
   const beat = beatIdx >= 0 ? beats[beatIdx] : null;
   const progress = beats.length ? (Math.max(0, beatIdx) / beats.length) * 100 : 0;
@@ -235,7 +235,7 @@ export function FarinelliDrill() {
           <Button
             size="sm"
             variant="outline"
-            onClick={() => finish(run?.elapsed ?? 0, true)}
+            onClick={() => finish(run?.elapsed ?? 0, beats, true)}
           >
             Stop
           </Button>

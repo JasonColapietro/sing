@@ -67,16 +67,19 @@ export function ExercisePlayer({
   const centsSumRef = useRef(0);
   const centsCountRef = useRef(0);
   const traceRef = useRef<TracePoint[]>([]);
-  const sessionStartRef = useRef(performance.now());
+  // Lazy state initializer: performance.now() only runs once, on mount.
+  const [sessionStart] = useState(() => performance.now());
   const resultsRef = useRef<RepResult[]>([]);
-  resultsRef.current = results;
+  useEffect(() => {
+    resultsRef.current = results;
+  }, [results]);
 
   function finalize(finalResults: RepResult[]) {
     const avgScore = repAvgScore(finalResults);
     const best = bestRep(finalResults);
     const durationSec = Math.max(
       1,
-      Math.round((performance.now() - sessionStartRef.current) / 1000),
+      Math.round((performance.now() - sessionStart) / 1000),
     );
     const log = logSession({
       type: "warmup",
@@ -95,10 +98,13 @@ export function ExercisePlayer({
   }
 
   // Listen: auto-play the guide melody, animate the cursor, then flip to Sing.
+  // Kept as an effect because it starts audio playback (a side effect that
+  // must not run during render); the state resets below seed that playback.
   useEffect(() => {
     if (phase !== "listen") return;
     const { segs: guideSegs, totalSec: t } = playGuide(ex, currentRoot, tempo);
     const start = performance.now();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the rep that just started playing above
     setElapsedSec(0);
     setHitSec(guideSegs.map(() => 0));
     setTrace([]);
@@ -116,7 +122,6 @@ export function ExercisePlayer({
       cancelAnimationFrame(raf);
       clearTimeout(timer);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, repIndex, ex, currentRoot, tempo]);
 
   // Sing: score the live pitch against the target melody in real time.
