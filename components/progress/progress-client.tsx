@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ACHIEVEMENTS,
   clearProgress,
@@ -411,6 +411,31 @@ export function ProgressClient() {
   const todaySec = todayPracticeSec(state);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
   const isFresh = state.sessions.length === 0 && state.xp === 0;
+
+  // The calendar heatmap and trend charts render "today" and date-range axis
+  // labels unconditionally, computed from new Date(). This page is statically
+  // prerendered, so the server's "now" is frozen at build time and will
+  // always disagree with the client's real "now" on the very first render —
+  // a guaranteed hydration mismatch, not a hypothetical one. Deferring the
+  // real, date-dependent tree to a client-only render (after the first paint
+  // matches the server exactly) is the standard fix for this class of bug.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the canonical client-only-render gate: this is the one legitimate use of this pattern, not a derivable render value
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <PageShell
+        kicker="Practice room 9"
+        title="Progress"
+        subtitle="XP, streaks, achievements, and a coach that reads your last two weeks of practice."
+      >
+        <div className="py-20 text-center text-sm text-mut">Loading your progress…</div>
+      </PageShell>
+    );
+  }
 
   return (
     <PageShell
