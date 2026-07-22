@@ -26,16 +26,20 @@
 
 html {
   color-scheme: light;
-  /* Belt-and-suspenders against accidental page-level horizontal scroll:
-     a nested overflow-x-auto container (e.g. the comparison table) can
-     leak into document.documentElement's scrollable area in some browser
-     layout engines even though the container itself correctly clips and
-     scrolls its own content. */
-  overflow-x: hidden;
+  /* A wide nested overflow-x-auto container (the landing page's comparison
+     table, min-w-720px) inflates the mobile *layout* viewport (window.
+     innerWidth) even though it's correctly clipped and scrollable within
+     its own box and the visual viewport stays correct. That inflated
+     window.innerWidth is what position:fixed elements size against, so on
+     a real phone the whole page — including the mobile nav drawer —
+     renders zoomed out on that one page. overflow-x: hidden alone stops
+     the scroll symptom but not this. `clip` is the stricter, purpose-built
+     containment value and is what actually fixes it. */
+  overflow-x: clip;
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   background:
     radial-gradient(1100px 480px at 50% -12%, rgba(197, 150, 66, 0.08), transparent 60%),
     var(--color-bg);
