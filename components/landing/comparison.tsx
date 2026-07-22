@@ -78,8 +78,8 @@ function MarkCell({ mark }: { mark: Mark }) {
 
 export default function ComparisonTable() {
   return (
-    <div>
-      <div className="no-scrollbar overflow-x-auto rounded-2xl border border-line bg-panel">
+    <div className="w-full min-w-0">
+      <div className="no-scrollbar w-full min-w-0 overflow-x-auto rounded-2xl border border-line bg-panel">
         <table className="w-full min-w-[720px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-line">
