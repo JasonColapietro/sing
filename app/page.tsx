@@ -143,10 +143,10 @@ export default function Home() {
                 href={href}
                 className="group rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-amber/50 sm:p-6"
               >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-amber">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-amber-ink">
                   <Glyph />
                 </span>
-                <span className="mt-4 block font-display text-xl text-ink group-hover:text-amber">
+                <span className="mt-4 block font-display text-xl text-ink group-hover:text-amber-ink">
                   {label}
                 </span>
                 <span className="mt-1 block text-sm text-mut">{desc}</span>
@@ -184,7 +184,7 @@ export default function Home() {
                 key={step.n}
                 className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
               >
-                <span className="tabular font-mono text-sm text-amber">
+                <span className="tabular font-mono text-sm text-amber-ink">
                   {step.n}
                 </span>
                 <h3 className="mt-3 text-xl">{step.title}</h3>

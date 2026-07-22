@@ -79,7 +79,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
             viewBox="0 0 16 16"
             fill="none"
             aria-hidden="true"
-            className="text-amber"
+            className="text-amber-ink"
           >
             <path
               d="M1.5 8c1.5-4 2.5-4 4 0s2.5 4 4 0 2.5-4 4 0"
@@ -124,7 +124,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
                   isPlaying
                     ? "border-amber bg-amber text-[#241a05]"
                     : pc === rootPc
-                      ? "border-amber/50 bg-panel2 text-amber"
+                      ? "border-amber/50 bg-panel2 text-amber-ink"
                       : "border-line bg-panel2 text-mut hover:border-line2 hover:text-ink"
                 }`}
               >
@@ -153,7 +153,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
               onClick={() => pickOctave(o)}
               className={`rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
                 octave === o
-                  ? "border-amber bg-panel2 text-amber"
+                  ? "border-amber bg-panel2 text-amber-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
               }`}
             >

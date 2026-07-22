@@ -155,7 +155,7 @@ export function HigherLowerGame({
                       ? "border-rec/50 bg-panel2 text-rec"
                       : answered !== null
                         ? "border-line text-dim"
-                        : "border-line2 text-ink hover:border-amber hover:text-amber"
+                        : "border-line2 text-ink hover:border-amber hover:text-amber-ink"
                 }`}
               >
                 <span className="font-mono text-xl" aria-hidden="true">

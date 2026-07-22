@@ -261,7 +261,7 @@ export function ExercisePlayer({
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Root
             </div>
-            <div className="tabular mt-1 font-mono text-3xl font-bold text-amber">
+            <div className="tabular mt-1 font-mono text-3xl font-bold text-amber-ink">
               {midiToLabel(currentRoot)}
             </div>
           </div>
@@ -285,7 +285,7 @@ export function ExercisePlayer({
               <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Cents off
               </div>
-              <div className="tabular mt-1 font-mono text-2xl text-amber">
+              <div className="tabular mt-1 font-mono text-2xl text-amber-ink">
                 {currentCents !== null ? (currentCents > 0 ? `+${currentCents}` : currentCents) : "—"}
               </div>
             </div>
@@ -352,7 +352,7 @@ export function ExercisePlayer({
                 onClick={() => setTempo(tv)}
                 aria-pressed={tempo === tv}
                 className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
-                  tempo === tv ? "bg-panel2 text-amber" : "text-mut hover:text-ink"
+                  tempo === tv ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
                 }`}
               >
                 {tv}×

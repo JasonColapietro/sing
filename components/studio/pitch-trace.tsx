@@ -10,15 +10,15 @@ const SEMIS = 14;
 
 const C = {
   bg: "#f7f0e7",
-  lane: "rgba(242, 237, 227, 0.02)",
+  lane: "rgba(32, 32, 29, 0.02)",
   line: "#ddd4c4",
   ink: "#20201d",
   mut: "#5c564d",
   dim: "#8a8272",
   amber: "#c59642",
   ok: "#3f8f6e",
-  okFill: "rgba(127, 217, 154, 0.12)",
-  inkFill: "rgba(242, 237, 227, 0.05)",
+  okFill: "rgba(63, 143, 110, 0.12)",
+  inkFill: "rgba(32, 32, 29, 0.05)",
 } as const;
 
 const MONO = '"IBM Plex Mono", ui-monospace, monospace';

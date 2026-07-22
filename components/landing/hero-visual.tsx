@@ -110,8 +110,8 @@ export default function HeroVisual() {
             width={b.w}
             height="26"
             rx="7"
-            fill="rgba(242,237,227,0.04)"
-            stroke="rgba(242,237,227,0.4)"
+            fill="rgba(32, 32, 29,0.04)"
+            stroke="rgba(32, 32, 29,0.4)"
             strokeWidth="1.25"
             className={b.hit ? `${styles.hit} ${b.hit}` : undefined}
           />

@@ -82,9 +82,9 @@ type ButtonSize = "sm" | "md" | "lg";
 const buttonBase =
   "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40";
 const buttonVariants: Record<ButtonVariant, string> = {
-  rec: "bg-rec text-[#1a0703] hover:bg-[#ff6f60]",
+  rec: "bg-rec text-[#fffaf2] hover:bg-[#b5493d]",
   amber: "bg-amber text-[#241a05] hover:bg-amber-soft",
-  outline: "border border-line2 text-ink hover:border-amber hover:text-amber",
+  outline: "border border-line2 text-ink hover:border-amber hover:text-amber-ink",
   ghost: "text-mut hover:text-ink hover:bg-panel2",
 };
 const buttonSizes: Record<ButtonSize, string> = {
@@ -146,7 +146,7 @@ export function Stat({
 }) {
   const tones = {
     ink: "text-ink",
-    amber: "text-amber",
+    amber: "text-amber-ink",
     rec: "text-rec",
     ok: "text-ok",
     cool: "text-cool",
@@ -173,7 +173,7 @@ export function Pill({
 }) {
   const tones = {
     mut: "border-line text-mut",
-    amber: "border-amber/40 text-amber",
+    amber: "border-amber/40 text-amber-ink",
     rec: "border-rec/40 text-rec",
     ok: "border-ok/40 text-ok",
     cool: "border-cool/40 text-cool",

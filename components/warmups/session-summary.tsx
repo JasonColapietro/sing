@@ -87,7 +87,7 @@ export function SessionSummary({
       <Card>
         <SectionLabel>Keep going</SectionLabel>
         <h3 className="mt-3 text-lg">
-          Next up: <span className="text-amber">{nextEx.title}</span>
+          Next up: <span className="text-amber-ink">{nextEx.title}</span>
         </h3>
         <p className="mt-1.5 max-w-md text-sm text-mut">{nextEx.desc}</p>
         <div className="mt-5 flex flex-wrap gap-3">

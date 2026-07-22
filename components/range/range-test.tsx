@@ -52,7 +52,7 @@ function StepIndicator({ stage }: { stage: Stage }) {
               className={
                 "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.1em] " +
                 (state === "current"
-                  ? "border-amber/50 text-amber"
+                  ? "border-amber/50 text-amber-ink"
                   : state === "done"
                     ? "border-ok/40 text-ok"
                     : "border-line text-dim")
@@ -330,7 +330,7 @@ export function RangeTest() {
                 Hearing
               </div>
               <div
-                className="tabular mt-1 font-mono text-5xl font-bold text-amber"
+                className="tabular mt-1 font-mono text-5xl font-bold text-amber-ink"
                 aria-live="polite"
               >
                 {liveLabel}
@@ -375,7 +375,7 @@ export function RangeTest() {
                 Hearing
               </div>
               <div
-                className="tabular mt-1 font-mono text-5xl font-bold text-amber"
+                className="tabular mt-1 font-mono text-5xl font-bold text-amber-ink"
                 aria-live="polite"
               >
                 {liveLabel}

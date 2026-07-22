@@ -134,8 +134,8 @@ export function PianoStrip({
           y={0}
           width={Math.max(0, bandX1 - bandX0)}
           height={WHITE_H}
-          fill="rgba(245, 176, 62, 0.22)"
-          stroke="rgba(245, 176, 62, 0.55)"
+          fill="rgba(197, 150, 66, 0.22)"
+          stroke="rgba(197, 150, 66, 0.55)"
           strokeWidth={1}
           rx={2}
         />

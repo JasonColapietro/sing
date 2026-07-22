@@ -146,7 +146,7 @@ export function CoachCard({ state }: { state: ProgressState }) {
               <div className="flex flex-wrap items-baseline gap-x-2">
                 <Link
                   href={item.href}
-                  className="font-medium text-ink underline-offset-4 hover:text-amber hover:underline"
+                  className="font-medium text-ink underline-offset-4 hover:text-amber-ink hover:underline"
                 >
                   {item.title}
                 </Link>

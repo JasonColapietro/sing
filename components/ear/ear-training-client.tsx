@@ -153,7 +153,7 @@ export default function EarTrainingClient() {
                       onClick={() => setDiffs((p) => ({ ...p, [g.id]: d.id }))}
                       className={`rounded-full px-3 py-1 text-xs transition-colors ${
                         diff === d.id
-                          ? "bg-panel text-amber"
+                          ? "bg-panel text-amber-ink"
                           : "text-mut hover:text-ink"
                       }`}
                     >

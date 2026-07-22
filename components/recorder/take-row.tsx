@@ -99,7 +99,7 @@ export function TakeRow({
             "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors",
             playing
               ? "border-amber bg-amber text-[#241a05]"
-              : "border-line2 text-ink hover:border-amber hover:text-amber",
+              : "border-line2 text-ink hover:border-amber hover:text-amber-ink",
           )}
           aria-label={playing ? `Pause ${take.name}` : `Play ${take.name}`}
           onClick={(e) => {
@@ -132,7 +132,7 @@ export function TakeRow({
           ) : (
             <button
               type="button"
-              className="tabular block max-w-full truncate rounded font-mono text-sm text-ink hover:text-amber"
+              className="tabular block max-w-full truncate rounded font-mono text-sm text-ink hover:text-amber-ink"
               title="Rename take"
               aria-label={`Rename ${take.name}`}
               onClick={(e) => {
@@ -152,7 +152,7 @@ export function TakeRow({
               <>
                 <span aria-hidden="true">·</span>
                 <span
-                  className="flex items-center gap-0.5 text-amber"
+                  className="flex items-center gap-0.5 text-amber-ink"
                   aria-label={`Self-rating ${take.rating} of 5`}
                 >
                   {[1, 2, 3, 4, 5].map((n) => (
@@ -168,7 +168,7 @@ export function TakeRow({
           type="button"
           className={cn(
             "shrink-0 rounded-full p-1.5 transition-colors",
-            take.starred ? "text-amber" : "text-dim hover:text-amber",
+            take.starred ? "text-amber-ink" : "text-dim hover:text-amber-ink",
           )}
           aria-label={take.starred ? `Unstar ${take.name}` : `Star ${take.name}`}
           aria-pressed={take.starred}
@@ -198,7 +198,7 @@ export function TakeRow({
           <span className="text-rec">Delete take? This can&rsquo;t be undone.</span>
           <button
             type="button"
-            className="rounded-full bg-rec px-2.5 py-1 font-medium text-[#1a0703] hover:bg-[#ff6f60]"
+            className="rounded-full bg-rec px-2.5 py-1 font-medium text-[#fffaf2] hover:bg-[#b5493d]"
             onClick={(e) => {
               e.stopPropagation();
               setArmed(false);

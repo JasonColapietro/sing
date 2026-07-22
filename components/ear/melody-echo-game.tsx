@@ -194,7 +194,7 @@ export function MelodyEchoGame({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-mut">
             {phase === "listen" && (
-              <span className="text-amber animate-recblink">Listen to the melody…</span>
+              <span className="text-amber-ink animate-recblink">Listen to the melody…</span>
             )}
             {phase === "sing" &&
               `Sing it back — ${melody?.length ?? 0} notes, one at a time.`}

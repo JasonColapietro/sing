@@ -275,7 +275,7 @@ export function PitchMatchGame({
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Target note
             </div>
-            <div className="tabular mt-1 font-mono text-3xl text-amber">
+            <div className="tabular mt-1 font-mono text-3xl text-amber-ink">
               {targetLabel}
             </div>
             {octaveAgnostic && (
@@ -295,7 +295,7 @@ export function PitchMatchGame({
 
         <div className="mt-5">
           {phase === "listen" && (
-            <p className="text-sm text-amber animate-recblink">Listen…</p>
+            <p className="text-sm text-amber-ink animate-recblink">Listen…</p>
           )}
           {phase === "sing" && (
             <p className="text-sm text-mut">

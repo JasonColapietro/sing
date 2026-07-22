@@ -232,7 +232,7 @@ export function SummaryView({
                 {a.icon}
               </span>
               <div>
-                <div className="text-sm text-amber">{a.title}</div>
+                <div className="text-sm text-amber-ink">{a.title}</div>
                 <div className="text-xs text-mut">{a.desc}</div>
               </div>
             </div>

@@ -376,7 +376,7 @@ export function SongPlayer({
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Tempo
             </div>
-            <div className="tabular mt-1 font-mono text-3xl font-bold text-amber">
+            <div className="tabular mt-1 font-mono text-3xl font-bold text-amber-ink">
               {effBpm}
               <span className="ml-1 text-sm text-mut">bpm</span>
             </div>
@@ -486,7 +486,7 @@ export function SongPlayer({
                 onClick={() => setTempo(tv)}
                 aria-pressed={tempo === tv}
                 className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
-                  tempo === tv ? "bg-panel2 text-amber" : "text-mut hover:text-ink"
+                  tempo === tv ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
                 }`}
               >
                 {tv}×

@@ -11,6 +11,11 @@
   --color-dim: #8a8272;
   --color-amber: #c59642;
   --color-amber-soft: #e0bb74;
+  /* Darker gold for text on paper/panel — --color-amber fails WCAG AA as
+     foreground text (2.4–2.6:1); this clears 4.5:1+ on both surfaces while
+     staying in the same gold family. Use for text-amber-ink; keep bg-amber /
+     border-amber on the lighter value where it works as a fill or border. */
+  --color-amber-ink: #82631f;
   --color-rec: #9d3f33;
   --color-ok: #3f8f6e;
   --color-cool: #11615d;

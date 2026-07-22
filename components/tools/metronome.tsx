@@ -149,7 +149,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
             viewBox="0 0 16 16"
             fill="none"
             aria-hidden="true"
-            className="text-amber"
+            className="text-amber-ink"
           >
             <path
               d="M6 2h4l2.5 12h-9L6 2Z"
@@ -180,7 +180,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
           <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             Tempo
           </div>
-          <div className="tabular font-mono text-4xl text-amber">
+          <div className="tabular font-mono text-4xl text-amber-ink">
             {bpm}
             <span className="ml-1.5 text-sm text-mut">BPM</span>
           </div>
@@ -200,8 +200,8 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
               } ${
                 running && i === beat
                   ? i === 0
-                    ? "border-rec bg-rec shadow-[0_0_12px_rgba(255,90,72,0.75)]"
-                    : "border-amber bg-amber shadow-[0_0_10px_rgba(245,176,62,0.65)]"
+                    ? "border-rec bg-rec shadow-[0_0_12px_rgba(157, 63, 51,0.75)]"
+                    : "border-amber bg-amber shadow-[0_0_10px_rgba(197, 150, 66,0.65)]"
                   : "border-line2 bg-panel"
               }`}
             />
@@ -264,7 +264,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
               onClick={() => setSig(s.id)}
               className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                 sig === s.id
-                  ? "border-amber bg-panel2 text-amber"
+                  ? "border-amber bg-panel2 text-amber-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
               }`}
             >
@@ -293,7 +293,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
               onClick={() => setSub(o.id)}
               className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                 sub === o.id
-                  ? "border-amber bg-panel2 text-amber"
+                  ? "border-amber bg-panel2 text-amber-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
               }`}
             >

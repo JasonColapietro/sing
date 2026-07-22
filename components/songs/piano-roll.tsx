@@ -11,7 +11,7 @@ const PLAYHEAD_FRAC = 0.3;
 
 const C = {
   bg: "#f7f0e7",
-  lane: "rgba(242, 237, 227, 0.025)",
+  lane: "rgba(32, 32, 29, 0.025)",
   line: "#ddd4c4",
   line2: "#c9bda0",
   ink: "#20201d",

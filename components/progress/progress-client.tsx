@@ -105,7 +105,7 @@ function HeaderRow({
       <Card>
         <SectionLabel>Level</SectionLabel>
         <div className="mt-3 flex items-baseline gap-2">
-          <span className="font-display text-3xl text-amber">{lvl.level}</span>
+          <span className="font-display text-3xl text-amber-ink">{lvl.level}</span>
           <span className="text-mut">{lvl.title}</span>
         </div>
         <ProgressBar value={lvl.progress * 100} className="mt-3" />
@@ -250,7 +250,7 @@ function SessionLogTable({ sessions }: { sessions: SessionLog[] }) {
                 <td className="tabular px-3 py-2.5 text-right font-mono text-xs text-ink">
                   {s.score !== undefined ? Math.round(s.score) : "—"}
                 </td>
-                <td className="tabular px-3 py-2.5 text-right font-mono text-xs text-amber">
+                <td className="tabular px-3 py-2.5 text-right font-mono text-xs text-amber-ink">
                   +{s.xp}
                 </td>
                 <td className="px-5 py-2.5 text-right font-mono text-xs text-dim sm:px-6">

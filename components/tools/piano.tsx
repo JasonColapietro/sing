@@ -226,7 +226,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
             viewBox="0 0 16 16"
             fill="none"
             aria-hidden="true"
-            className="text-amber"
+            className="text-amber-ink"
           >
             <rect
               x="1.5"
@@ -272,7 +272,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
           onClick={() => setSustain((s) => !s)}
           className={`rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
             sustain
-              ? "border-amber bg-panel2 text-amber"
+              ? "border-amber bg-panel2 text-amber-ink"
               : "border-line text-mut hover:border-line2 hover:text-ink"
           }`}
         >
@@ -320,7 +320,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
               onClick={() => setLabelMode(o.id)}
               className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                 labelMode === o.id
-                  ? "border-amber bg-panel2 text-amber"
+                  ? "border-amber bg-panel2 text-amber-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
               }`}
             >
@@ -337,7 +337,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
         </span>{" "}
         A row plays notes — A=C, W=C#, S=D, E=D#, D=E, F=F, T=F#, G=G, Y=G#,
         H=A, U=A#, J=B, K=C above. Z and X shift the octave. Current range:{" "}
-        <span className="tabular font-mono text-amber">
+        <span className="tabular font-mono text-amber-ink">
           {midiToLabel(kbBase)}–{midiToLabel(kbBase + 12)}
         </span>
       </div>

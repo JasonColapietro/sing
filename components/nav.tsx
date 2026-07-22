@@ -39,7 +39,7 @@ export default function Nav() {
         </Link>
         <nav
           aria-label="Main"
-          className="no-scrollbar flex flex-1 items-center gap-1 overflow-x-auto"
+          className="no-scrollbar flex flex-1 items-center gap-1 overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
         >
           {LINKS.map((l) => {
             const active =
@@ -50,7 +50,7 @@ export default function Nav() {
                 href={l.href}
                 className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
                   active
-                    ? "bg-panel2 text-amber"
+                    ? "bg-panel2 text-amber-ink"
                     : "text-mut hover:text-ink"
                 }`}
               >
@@ -63,7 +63,7 @@ export default function Nav() {
           href="/progress"
           className="hidden shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs sm:flex"
         >
-          <span className="text-amber">LV {lvl.level}</span>
+          <span className="text-amber-ink">LV {lvl.level}</span>
           <span className="text-dim">·</span>
           <span className="tabular">{p.xp} XP</span>
           {p.streak.current > 0 && (

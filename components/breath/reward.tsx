@@ -17,7 +17,7 @@ export function RewardNote({ result }: { result: LogResult }) {
             {a.icon}
           </span>
           <div>
-            <div className="text-amber">{a.title}</div>
+            <div className="text-amber-ink">{a.title}</div>
             <div className="text-xs text-mut">{a.desc}</div>
           </div>
         </div>

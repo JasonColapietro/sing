@@ -54,8 +54,8 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
         width={x(hi) - x(lo) + CW}
         height={KH}
         rx={2}
-        fill="rgba(245, 176, 62, 0.24)"
-        stroke="rgba(245, 176, 62, 0.6)"
+        fill="rgba(197, 150, 66, 0.24)"
+        stroke="rgba(197, 150, 66, 0.6)"
         strokeWidth={1}
       />
       {[lo, hi].map((m) => (

@@ -6,7 +6,7 @@ import type { Peaks } from "./wav";
 const PANEL = "#fffaf2";
 const LINE = "#ddd4c4";
 const AMBER = "#c59642";
-const AMBER_DIM = "rgba(245, 176, 62, 0.32)";
+const AMBER_DIM = "rgba(197, 150, 66, 0.32)";
 
 /** Size a canvas to its CSS box at devicePixelRatio. Returns a 2d ctx in CSS px. */
 function prepare(canvas: HTMLCanvasElement): {

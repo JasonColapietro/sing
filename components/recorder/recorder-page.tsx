@@ -610,7 +610,7 @@ export default function RecorderPageClient() {
                   className={cn(
                     "flex items-center gap-2 rounded-full border px-3 py-1 text-xs transition-colors",
                     countIn
-                      ? "border-amber/50 text-amber"
+                      ? "border-amber/50 text-amber-ink"
                       : "border-line text-mut hover:border-line2 hover:text-ink",
                   )}
                   aria-pressed={countIn}
@@ -630,7 +630,7 @@ export default function RecorderPageClient() {
 
             {micState !== "ready" ? (
               <div className="flex flex-col items-center gap-4 py-8 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-line2 text-amber">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-line2 text-amber-ink">
                   <IconMic className="h-6 w-6" />
                 </div>
                 {micState === "blocked" ? (
@@ -697,7 +697,7 @@ export default function RecorderPageClient() {
                       </div>
                     ) : recPhase === "countin" ? (
                       <div className="flex items-baseline gap-3">
-                        <span className="tabular font-mono text-3xl text-amber">{countBeat}</span>
+                        <span className="tabular font-mono text-3xl text-amber-ink">{countBeat}</span>
                         <span className="text-sm text-mut">count-in…</span>
                       </div>
                     ) : recPhase === "saving" ? (
@@ -740,7 +740,7 @@ export default function RecorderPageClient() {
                     aria-label={`${n} star${n === 1 ? "" : "s"}`}
                     className={cn(
                       "rounded p-1 transition-colors",
-                      n <= reviewRating ? "text-amber" : "text-dim hover:text-amber",
+                      n <= reviewRating ? "text-amber-ink" : "text-dim hover:text-amber-ink",
                     )}
                     onClick={() => setReviewRating((r) => (r === n ? 0 : n))}
                   >
@@ -784,7 +784,7 @@ export default function RecorderPageClient() {
                     "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors",
                     loadedId === selectedTake.id && isPlaying
                       ? "border-amber bg-amber text-[#241a05]"
-                      : "border-line2 text-ink hover:border-amber hover:text-amber",
+                      : "border-line2 text-ink hover:border-amber hover:text-amber-ink",
                   )}
                   aria-label={
                     loadedId === selectedTake.id && isPlaying
@@ -972,7 +972,7 @@ export default function RecorderPageClient() {
           role="status"
         >
           <div className="flex items-center justify-between gap-2">
-            <span className="tabular font-mono text-lg text-amber">+{toast.xp} XP</span>
+            <span className="tabular font-mono text-lg text-amber-ink">+{toast.xp} XP</span>
             <button
               type="button"
               className="rounded px-1 text-dim hover:text-ink"

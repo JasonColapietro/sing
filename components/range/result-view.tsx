@@ -44,8 +44,8 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   ctx.fillStyle = "#f7f0e7";
   ctx.fillRect(0, 0, W, H);
   const glow = ctx.createRadialGradient(W / 2, -120, 60, W / 2, -120, 760);
-  glow.addColorStop(0, "rgba(245, 176, 62, 0.12)");
-  glow.addColorStop(1, "rgba(245, 176, 62, 0)");
+  glow.addColorStop(0, "rgba(197, 150, 66, 0.12)");
+  glow.addColorStop(1, "rgba(197, 150, 66, 0)");
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, W, H);
 
@@ -117,7 +117,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   const clampMidi = (m: number) => Math.max(axisLow, Math.min(axisHigh, m));
   const x0 = (centers.get(clampMidi(lowMidi)) ?? kbX) - whiteW / 2;
   const x1 = (centers.get(clampMidi(highMidi)) ?? kbX + kbW) + whiteW / 2;
-  ctx.fillStyle = "rgba(245, 176, 62, 0.30)";
+  ctx.fillStyle = "rgba(197, 150, 66, 0.30)";
   ctx.fillRect(x0, kbY, Math.max(0, x1 - x0), kbH);
   ctx.strokeStyle = "#c59642";
   ctx.lineWidth = 2;
@@ -264,7 +264,7 @@ export function ResultView({
       <Card>
         <SectionLabel>Voice type</SectionLabel>
         <h2 className="mt-3 text-xl">
-          Closest fit: <span className="text-amber">{voice.label}</span>
+          Closest fit: <span className="text-amber-ink">{voice.label}</span>
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-mut">
           Voice types are rough guides borrowed from choral music. Your range
@@ -280,7 +280,7 @@ export function ResultView({
             return (
               <div key={v.id} className="flex items-center gap-3">
                 <span
-                  className={`w-28 shrink-0 text-right font-mono text-xs ${isMatch ? "text-amber" : "text-mut"}`}
+                  className={`w-28 shrink-0 text-right font-mono text-xs ${isMatch ? "text-amber-ink" : "text-mut"}`}
                 >
                   {v.label}
                 </span>
@@ -298,7 +298,7 @@ export function ResultView({
           })}
           {/* User range overlay row */}
           <div className="flex items-center gap-3">
-            <span className="w-28 shrink-0 text-right font-mono text-xs font-semibold text-amber">
+            <span className="w-28 shrink-0 text-right font-mono text-xs font-semibold text-amber-ink">
               You
             </span>
             <div className="relative h-5 flex-1 rounded bg-panel2">
@@ -310,7 +310,7 @@ export function ResultView({
                 }}
               />
             </div>
-            <span className="tabular w-20 shrink-0 font-mono text-[11px] text-amber">
+            <span className="tabular w-20 shrink-0 font-mono text-[11px] text-amber-ink">
               {midiToLabel(lowMidi)}–{midiToLabel(highMidi)}
             </span>
           </div>
@@ -333,7 +333,7 @@ export function ResultView({
         <SectionLabel>Famous company</SectionLabel>
         <h2 className="mt-3 text-xl">
           Your range overlaps most with{" "}
-          <span className="text-amber">{famous.best.name}</span>
+          <span className="text-amber-ink">{famous.best.name}</span>
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-mut">
           Reported ranges — approximate figures fans and journalists commonly
@@ -352,7 +352,7 @@ export function ResultView({
             return (
               <div key={f.name} className="flex items-center gap-3">
                 <span
-                  className={`w-36 shrink-0 truncate text-right font-mono text-xs ${isBest ? "text-amber" : "text-mut"}`}
+                  className={`w-36 shrink-0 truncate text-right font-mono text-xs ${isBest ? "text-amber-ink" : "text-mut"}`}
                 >
                   {f.name}
                 </span>
@@ -368,7 +368,7 @@ export function ResultView({
                 </div>
                 <span className="tabular w-24 shrink-0 font-mono text-[11px] text-dim">
                   {midiToLabel(f.lowMidi)}–{midiToLabel(f.highMidi)}{" "}
-                  <span className={isBest ? "text-amber" : ""}>
+                  <span className={isBest ? "text-amber-ink" : ""}>
                     ({f.overlap}st)
                   </span>
                 </span>

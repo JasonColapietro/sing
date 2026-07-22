@@ -62,7 +62,7 @@ const ROWS: Array<{ label: string; marks: [Mark, Mark, Mark, Mark, Mark, Mark] }
 
 const MARK_STYLE: Record<Mark, { glyph: string; className: string; sr: string }> = {
   yes: { glyph: "✓", className: "text-ok", sr: "yes" },
-  part: { glyph: "～", className: "text-amber", sr: "partial" },
+  part: { glyph: "～", className: "text-amber-ink", sr: "partial" },
   no: { glyph: "✗", className: "text-dim", sr: "no" },
 };
 
@@ -90,7 +90,7 @@ export default function ComparisonTable() {
               </th>
               <th
                 scope="col"
-                className="bg-panel2 px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber"
+                className="bg-panel2 px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink"
               >
                 Suede Sing
               </th>
@@ -129,7 +129,7 @@ export default function ComparisonTable() {
       </div>
       <p className="mt-3 font-mono text-xs text-dim">
         Compiled July 2026 from vendor sites and app-store reviews.{" "}
-        <span className="text-amber">～</span> = partial, limited, video-only,
+        <span className="text-amber-ink">～</span> = partial, limited, video-only,
         or unclear from public info.
       </p>
     </div>
