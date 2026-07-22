@@ -647,7 +647,7 @@ export default function RecorderPageClient() {
                       never leave your browser.
                     </p>
                     <Button
-                      variant="amber"
+                      variant="rec"
                       onClick={() => void enableMic()}
                       disabled={micState === "requesting"}
                     >
