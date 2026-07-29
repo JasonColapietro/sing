@@ -76,6 +76,12 @@ h3 {
   font-variant-numeric: tabular-nums;
 }
 
+/* Long list rows (singers directory): skip offscreen rendering work. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 56px;
+}
+
 @keyframes recblink {
   0%,
   100% {

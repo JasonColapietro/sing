@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/nav";
+import { SITE_URL } from "@/lib/site";
 import ProMoments from "@/components/pro/moments";
 import ProSync from "@/components/pro/sync";
 
@@ -18,6 +19,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Suede Sing — the vocal studio in your browser",
     template: "%s · Suede Sing",

@@ -1,0 +1,338 @@
+[
+  {
+    "name": "Mahalia Jackson",
+    "voiceType": "Contralto",
+    "genres": [
+      "Gospel",
+      "Blues"
+    ],
+    "country": "USA",
+    "activeFrom": 1947,
+    "lowNote": "E3",
+    "highNote": "F5",
+    "beltNote": "D5",
+    "whistle": false,
+    "signatureSong": "Take My Hand, Precious Lord",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Chest-heavy contralto; slides into pitches and stretches syllables instead of landing them squarely."
+  },
+  {
+    "name": "Yolanda Adams",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Gospel",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 1987,
+    "lowNote": "E3",
+    "highNote": "C6",
+    "beltNote": "F5",
+    "whistle": false,
+    "signatureSong": "Open My Heart",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Smoky bottom under a bright top; breathy onsets and clipped, jazz-leaning phrase endings."
+  },
+  {
+    "name": "CeCe Winans",
+    "voiceType": "Soprano",
+    "genres": [
+      "Gospel",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 1987,
+    "lowNote": "F3",
+    "highNote": "C6",
+    "beltNote": "G5",
+    "whistle": false,
+    "signatureSong": "Alabaster Box",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Light lyric soprano, very even across the break; sparse ornament and a narrow, steady vibrato."
+  },
+  {
+    "name": "BeBe Winans",
+    "voiceType": "Tenor",
+    "genres": [
+      "Gospel",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 1987,
+    "lowNote": "A2",
+    "highNote": "E5",
+    "beltNote": "A4",
+    "whistle": false,
+    "signatureSong": "Addictive Love",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Warm mid-weight tenor that slips into a soft-edged falsetto with no audible gear change."
+  },
+  {
+    "name": "Marvin Winans",
+    "voiceType": "Tenor",
+    "genres": [
+      "Gospel"
+    ],
+    "country": "USA",
+    "activeFrom": 1981,
+    "lowNote": "A2",
+    "highNote": "F5",
+    "beltNote": "Bb4",
+    "whistle": false,
+    "signatureSong": "Tomorrow",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Nasal, tightly focused tenor with wide vibrato; held notes thin out into falsetto at the top."
+  },
+  {
+    "name": "Karen Clark Sheard",
+    "voiceType": "Soprano",
+    "genres": [
+      "Gospel"
+    ],
+    "country": "USA",
+    "activeFrom": 1981,
+    "lowNote": "F3",
+    "highNote": "Eb6",
+    "beltNote": "Bb5",
+    "whistle": true,
+    "signatureSong": "The Safest Place",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Wide chest belt plus a usable whistle register; stacks fast melisma over sustained cadences."
+  },
+  {
+    "name": "Kim Burrell",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Gospel",
+      "Jazz"
+    ],
+    "country": "USA",
+    "activeFrom": 1995,
+    "lowNote": "E3",
+    "highNote": "D6",
+    "beltNote": "A5",
+    "whistle": false,
+    "signatureSong": "I See a Victory",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Jazz harmonic sense in a gospel frame; chromatic runs, then sudden drops to a spoken chest tone."
+  },
+  {
+    "name": "Tasha Cobbs Leonard",
+    "voiceType": "Contralto",
+    "genres": [
+      "Gospel"
+    ],
+    "country": "USA",
+    "activeFrom": 2013,
+    "lowNote": "D3",
+    "highNote": "A5",
+    "beltNote": "F5",
+    "whistle": false,
+    "signatureSong": "Break Every Chain",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Dark, thick contralto that stays in chest; builds by adding weight rather than climbing higher."
+  },
+  {
+    "name": "Lauren Daigle",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Gospel",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2015,
+    "lowNote": "E3",
+    "highNote": "A5",
+    "beltNote": "E5",
+    "whistle": false,
+    "signatureSong": "You Say",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Husky, grainy mezzo pitched low in her range; heavy rasp on consonants, slow wide vibrato."
+  },
+  {
+    "name": "Sandi Patty",
+    "voiceType": "Soprano",
+    "genres": [
+      "Gospel",
+      "Classical"
+    ],
+    "country": "USA",
+    "activeFrom": 1982,
+    "lowNote": "F3",
+    "highNote": "C6",
+    "beltNote": "G5",
+    "whistle": false,
+    "signatureSong": "We Shall Behold Him",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Classically schooled soprano with a bright forward top and clean sustained highs at full volume."
+  },
+  {
+    "name": "Amy Grant",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Gospel",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 1982,
+    "lowNote": "F3",
+    "highNote": "E5",
+    "beltNote": "C5",
+    "whistle": false,
+    "signatureSong": "Baby Baby",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Conversational mezzo close to speech range; slight rasp, little ornament, breath-driven phrasing."
+  },
+  {
+    "name": "Michael W. Smith",
+    "voiceType": "Tenor",
+    "genres": [
+      "Gospel",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 1983,
+    "lowNote": "A2",
+    "highNote": "D5",
+    "beltNote": "A4",
+    "whistle": false,
+    "signatureSong": "Friends",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Thin, bright tenor built for high keys; reaches for head voice instead of pushing chest upward."
+  },
+  {
+    "name": "Chris Tomlin",
+    "voiceType": "Tenor",
+    "genres": [
+      "Gospel",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2002,
+    "lowNote": "A2",
+    "highNote": "D5",
+    "beltNote": "B4",
+    "whistle": false,
+    "signatureSong": "How Great Is Our God",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Light, airy tenor with modest chest weight; writes in keys that park him in his upper mix."
+  },
+  {
+    "name": "Fred Hammond",
+    "voiceType": "Bass-baritone",
+    "genres": [
+      "Gospel",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 1985,
+    "lowNote": "E2",
+    "highNote": "Bb4",
+    "beltNote": "G4",
+    "whistle": false,
+    "signatureSong": "No Weapon",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Deep bass-baritone with thick low resonance; half-speaks phrases over funk and quartet grooves."
+  },
+  {
+    "name": "Donnie McClurkin",
+    "voiceType": "Tenor",
+    "genres": [
+      "Gospel"
+    ],
+    "country": "USA",
+    "activeFrom": 1996,
+    "lowNote": "B2",
+    "highNote": "E5",
+    "beltNote": "A4",
+    "whistle": false,
+    "signatureSong": "We Fall Down",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Reedy, high-placed tenor with quick access to falsetto and a narrow, fluttering vibrato."
+  },
+  {
+    "name": "Mitch Grassi",
+    "voiceType": "Countertenor",
+    "genres": [
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2011,
+    "lowNote": "F2",
+    "highNote": "C7",
+    "beltNote": "C5",
+    "whistle": true,
+    "signatureSong": "Hallelujah",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Countertenor who lives above the staff: light chest, agile head voice, whistle notes on top."
+  },
+  {
+    "name": "Scott Hoying",
+    "voiceType": "Baritone",
+    "genres": [
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2011,
+    "lowNote": "F2",
+    "highNote": "Bb5",
+    "beltNote": "C5",
+    "whistle": false,
+    "signatureSong": "Sing",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Baritone bottom with a bright high mix; percussive consonants anchor a cappella arrangements."
+  },
+  {
+    "name": "Avi Kaplan",
+    "voiceType": "Bass",
+    "genres": [
+      "Pop",
+      "Folk"
+    ],
+    "country": "USA",
+    "activeFrom": 2011,
+    "lowNote": "Eb1",
+    "highNote": "Db5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Little Drummer Boy",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Bass who drops into fry and subharmonics for pedal tones well under the written staff."
+  },
+  {
+    "name": "Kirstin Maldonado",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Pop",
+      "Musical Theatre"
+    ],
+    "country": "USA",
+    "activeFrom": 2011,
+    "lowNote": "F3",
+    "highNote": "C6",
+    "beltNote": "G5",
+    "whistle": false,
+    "signatureSong": "Can't Sleep Love",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Theatre-trained mezzo with a firm chest belt, tight vowel shapes and controlled vibrato."
+  }
+]
