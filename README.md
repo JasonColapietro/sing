@@ -20,6 +20,39 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Payments (Suede Pro)
+
+Pro is a Stripe subscription — $4/month or $30/year — provisioned through the
+Vercel Marketplace, so `STRIPE_SECRET_KEY` and friends are set on the project
+automatically. Locally: `vercel link && vercel env pull`.
+
+There are no accounts and no database, so **Stripe is the only source of
+truth** and the flow is built around that:
+
+| Route | Job |
+|---|---|
+| `POST /api/checkout` | Creates a hosted Stripe Checkout Session. No card field is ever rendered by this app. |
+| `POST /api/entitlement` | Resolves entitlement from a `session_id` (right after paying) or a `subscription_id` (re-checks later). |
+| `POST /api/restore` | Unlocks Pro on a new device from the email that paid. |
+| `POST /api/portal` | Opens Stripe's billing portal — this is what makes "cancel in one click" true. |
+
+`lib/pro.ts` caches the last answer in `localStorage`; `components/pro/sync.tsx`
+re-checks with Stripe twice a day so a cancellation or failed payment actually
+revokes access. Prices are resolved by **lookup key** (`suede_pro_monthly`,
+`suede_pro_annual`), never by hardcoded id.
+
+### Going live
+
+The Marketplace resource starts as a Stripe **sandbox** (test mode — real card
+numbers are declined). To take real money:
+
+```bash
+vercel integration resource claim suede-sing-pro
+```
+
+Then recreate the two prices in the live account with the same lookup keys and
+enable the billing portal. No code changes are needed.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -3,6 +3,7 @@ import { Manrope, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/nav";
 import ProMoments from "@/components/pro/moments";
+import ProSync from "@/components/pro/sync";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({
     >
       <body className="min-h-dvh antialiased">
         <Nav />
+        <ProSync />
         <ProMoments />
         <div className="min-h-[70dvh]">{children}</div>
         <footer className="mt-20 border-t border-line">

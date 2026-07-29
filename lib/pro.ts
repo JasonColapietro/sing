@@ -1,28 +1,31 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { INACTIVE, type Entitlement, type ProPlan } from "./pro-shared";
+
+export type { ProPlan, Entitlement };
 
 /**
- * Suede Pro — client-side entitlement state.
+ * Suede Pro — entitlement on the client.
  *
- * Front-end only for now: `activatePro` flips a local flag so the whole
- * funnel (pricing page → upgrade → gold state everywhere) is demoable end
- * to end. Real checkout wiring replaces the body of `activatePro` later;
- * nothing else in the app should need to change.
+ * There are no accounts and no database: Stripe is the source of truth, and
+ * this store is a local cache of what Stripe last said. That means it can go
+ * stale (someone cancels in the portal), so `revalidatePro` re-checks on a
+ * schedule, and `restorePro` recovers access on a new device or a cleared
+ * browser.
  */
 
-export type ProPlan = "monthly" | "annual";
-
-export interface ProState {
-  active: boolean;
-  plan: ProPlan | null;
-  /** ISO timestamp of activation. */
+export interface ProState extends Entitlement {
+  /** ISO timestamp of when Pro first unlocked on this device. */
   since: string | null;
+  /** ISO timestamp of the last successful check against Stripe. */
+  lastVerified: string | null;
 }
 
-const KEY = "suede-sing:pro:v1";
+/** v2: v1 held a local-only flag from before checkout existed. */
+const KEY = "suede-sing:pro:v2";
 
-const DEFAULT: ProState = { active: false, plan: null, since: null };
+const DEFAULT: ProState = { ...INACTIVE, since: null, lastVerified: null };
 
 let cache: ProState | null = null;
 const listeners = new Set<() => void>();
@@ -82,17 +85,105 @@ export function useIsPro(): boolean {
   return useProState().active;
 }
 
-export function activatePro(plan: ProPlan): ProState {
+/* ------------------------------------------------------------------ stripe */
+
+async function post<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(path, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = (await res.json().catch(() => null)) as
+    | (T & { error?: string })
+    | null;
+  if (!res.ok) {
+    throw new Error(data?.error ?? "Something went wrong. Try again.");
+  }
+  if (!data) throw new Error("Stripe sent back an empty response.");
+  return data;
+}
+
+function apply(entitlement: Entitlement): ProState {
+  const prev = load();
   const next: ProState = {
-    active: true,
-    plan,
-    since: new Date().toISOString(),
+    ...entitlement,
+    since: entitlement.active
+      ? (prev.since ?? new Date().toISOString())
+      : null,
+    lastVerified: new Date().toISOString(),
   };
   save(next);
   return next;
 }
 
-export function deactivatePro(): void {
+/** Hands the singer off to Stripe Checkout. Only returns if the redirect fails. */
+export async function startCheckout(plan: ProPlan): Promise<void> {
+  const { url } = await post<{ url: string }>("/api/checkout", { plan });
+  window.location.href = url;
+}
+
+/** Confirms a finished Checkout Session and unlocks Pro on this device. */
+export async function confirmCheckout(sessionId: string): Promise<ProState> {
+  return apply(await post<Entitlement>("/api/entitlement", { sessionId }));
+}
+
+const REVALIDATE_AFTER_MS = 12 * 60 * 60 * 1000;
+
+/**
+ * Re-checks the subscription against Stripe so a cancellation or a failed
+ * payment takes effect here. Network failures leave the current state alone
+ * rather than locking out someone who is paying.
+ */
+export async function revalidatePro({ force = false } = {}): Promise<void> {
+  const state = load();
+  if (!state.subscriptionId) return;
+  if (
+    !force &&
+    state.lastVerified &&
+    Date.now() - Date.parse(state.lastVerified) < REVALIDATE_AFTER_MS
+  ) {
+    return;
+  }
+  try {
+    apply(
+      await post<Entitlement>("/api/entitlement", {
+        subscriptionId: state.subscriptionId,
+      }),
+    );
+  } catch {
+    // offline or Stripe hiccup — try again next load
+  }
+}
+
+/** Recovers Pro on a new device using the email the subscription was paid with. */
+export async function restorePro(email: string): Promise<ProState> {
+  const result = await post<Entitlement & { error?: string }>("/api/restore", {
+    email,
+  });
+  const state = apply(result);
+  if (!result.active) {
+    throw new Error(
+      result.error ?? "No active Pro subscription found for that email.",
+    );
+  }
+  return state;
+}
+
+/** Sends the singer to Stripe's billing portal to cancel or update a card. */
+export async function openBillingPortal(): Promise<void> {
+  const { customerId, subscriptionId } = load();
+  if (!customerId || !subscriptionId) {
+    throw new Error("No subscription found on this device.");
+  }
+  const { url } = await post<{ url: string }>("/api/portal", {
+    customerId,
+    subscriptionId,
+  });
+  window.location.href = url;
+}
+
+/** Forgets Pro on this device only. Does not touch the Stripe subscription. */
+export function clearProLocally(): void {
   save({ ...DEFAULT });
 }
 

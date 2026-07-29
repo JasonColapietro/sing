@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, LinkButton, SectionLabel } from "@/components/ui";
 import ProVisual from "./pro-visual";
 import { ProChip } from "./ui";
@@ -13,10 +13,12 @@ import {
   TakesGlyph,
 } from "./glyphs";
 import {
-  activatePro,
-  deactivatePro,
+  confirmCheckout,
+  openBillingPortal,
   PLAN_ROWS,
   PRO_PERKS,
+  restorePro,
+  startCheckout,
   useProState,
   type ProPlan,
 } from "@/lib/pro";
@@ -118,19 +120,148 @@ function PlanPoint({ children, gold }: { children: string; gold?: boolean }) {
   );
 }
 
+type Task =
+  | { kind: "idle" }
+  | { kind: "working" }
+  | { kind: "error"; message: string };
+
+function messageOf(error: unknown, fallback: string): string {
+  return error instanceof Error && error.message ? error.message : fallback;
+}
+
+function longDate(iso: string | null): string | null {
+  if (!iso) return null;
+  const when = new Date(iso);
+  if (Number.isNaN(when.getTime())) return null;
+  return when.toLocaleDateString(undefined, {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+/** Recovers Pro on a fresh browser, where the local entitlement is gone. */
+function RestorePanel() {
+  const [email, setEmail] = useState("");
+  const [task, setTask] = useState<Task>({ kind: "idle" });
+
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setTask({ kind: "working" });
+    try {
+      await restorePro(email);
+      setTask({ kind: "idle" });
+    } catch (error) {
+      setTask({
+        kind: "error",
+        message: messageOf(error, "Could not restore Pro just now."),
+      });
+    }
+  };
+
+  return (
+    <details className="rounded-2xl border border-line bg-panel px-5 py-4">
+      <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
+        Already subscribed? Unlock Pro on this device
+      </summary>
+      <form onSubmit={submit} className="mt-4 flex flex-wrap items-center gap-3">
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="you@example.com"
+          aria-label="Email you paid with"
+          className="min-w-[12rem] flex-1 rounded-full border border-line2 bg-bg px-4 py-2.5 text-sm text-ink placeholder:text-dim"
+        />
+        <Button
+          type="submit"
+          variant="outline"
+          size="md"
+          disabled={task.kind === "working"}
+        >
+          {task.kind === "working" ? "Checking…" : "Unlock Pro"}
+        </Button>
+      </form>
+      {task.kind === "error" && (
+        <p className="mt-3 text-sm text-rec">{task.message}</p>
+      )}
+      <p className="mt-3 text-xs text-dim">
+        Pro unlocks per browser, since there are no accounts. Enter the email
+        you paid with and it unlocks here too.
+      </p>
+    </details>
+  );
+}
+
 export function ProClient() {
   const pro = useProState();
   const [billing, setBilling] = useState<ProPlan>("annual");
   const [justUpgraded, setJustUpgraded] = useState(false);
+  const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
+  const [portal, setPortal] = useState<Task>({ kind: "idle" });
+  const [abandoned, setAbandoned] = useState(false);
 
   const price = billing === "annual" ? "$2.50" : "$4";
   const priceNote =
     billing === "annual" ? "per month · $30 billed once a year" : "per month · billed monthly";
+  const periodEnd = longDate(pro.currentPeriodEnd);
 
-  const goPro = () => {
-    activatePro(billing);
-    setJustUpgraded(true);
-  };
+  // Stripe returns to /pro?checkout=success&session_id=… — confirm the
+  // session with the API, then strip the query so a refresh stays clean.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id");
+    const outcome = params.get("checkout");
+    if (!sessionId && !outcome) return;
+    window.history.replaceState({}, "", "/pro");
+
+    if (sessionId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- the session id only exists in the URL, so confirmation can only start after hydration
+      setCheckout({ kind: "working" });
+      confirmCheckout(sessionId)
+        .then((state) => {
+          setCheckout({ kind: "idle" });
+          if (state.active) setJustUpgraded(true);
+        })
+        .catch((error: unknown) =>
+          setCheckout({
+            kind: "error",
+            message: messageOf(
+              error,
+              "Payment went through, but we couldn't confirm it here. Use the unlock form below.",
+            ),
+          }),
+        );
+      return;
+    }
+    setAbandoned(true);
+  }, []);
+
+  const goPro = useCallback(async () => {
+    setCheckout({ kind: "working" });
+    setAbandoned(false);
+    try {
+      await startCheckout(billing);
+    } catch (error) {
+      setCheckout({
+        kind: "error",
+        message: messageOf(error, "Could not start checkout."),
+      });
+    }
+  }, [billing]);
+
+  const manageBilling = useCallback(async () => {
+    setPortal({ kind: "working" });
+    try {
+      await openBillingPortal();
+    } catch (error) {
+      setPortal({
+        kind: "error",
+        message: messageOf(error, "Could not open the billing portal."),
+      });
+    }
+  }, []);
 
   return (
     <main>
@@ -161,9 +292,26 @@ export function ProClient() {
                     Start a pro warmup
                   </LinkButton>
                 </div>
+                {pro.status === "past_due" && (
+                  <p className="mt-5 max-w-xl rounded-xl border border-rec/40 bg-rec/10 px-3 py-2 text-sm text-rec">
+                    Your last payment didn&apos;t go through. Pro stays on
+                    while Stripe retries — update your card to keep it.
+                  </p>
+                )}
+                {pro.cancelAtPeriodEnd && periodEnd && (
+                  <p className="mt-5 max-w-xl rounded-xl border border-line2 bg-panel2/60 px-3 py-2 text-sm text-mut">
+                    Pro is set to end on {periodEnd}. You keep everything you
+                    earned when it does.
+                  </p>
+                )}
                 <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
                   {pro.plan === "annual" ? "Annual plan" : "Monthly plan"}
-                  <span className="mx-2 text-line2">·</span>Cancel anytime
+                  {periodEnd && (
+                    <>
+                      <span className="mx-2 text-line2">·</span>
+                      {pro.cancelAtPeriodEnd ? "Ends" : "Renews"} {periodEnd}
+                    </>
+                  )}
                   <span className="mx-2 text-line2">·</span>Voice stays on
                   device
                 </p>
@@ -275,6 +423,23 @@ export function ProClient() {
             </div>
           )}
 
+          {checkout.kind === "working" && !justUpgraded && (
+            <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-amber/40 bg-panel px-4 py-3 text-center text-sm text-mut">
+              Confirming your payment with Stripe…
+            </p>
+          )}
+          {checkout.kind === "error" && (
+            <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-rec/40 bg-rec/10 px-4 py-3 text-center text-sm text-rec">
+              {checkout.message}
+            </p>
+          )}
+          {abandoned && (
+            <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut">
+              Checkout cancelled — nothing was charged. The free studio is
+              exactly where you left it.
+            </p>
+          )}
+
           <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2">
             {/* Free */}
             <div className="flex flex-col rounded-2xl border border-line bg-panel p-6 sm:p-7">
@@ -345,23 +510,36 @@ export function ProClient() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => {
-                        deactivatePro();
-                        setJustUpgraded(false);
-                      }}
+                      onClick={manageBilling}
+                      disabled={portal.kind === "working"}
                     >
-                      Switch back to free
+                      {portal.kind === "working"
+                        ? "Opening Stripe…"
+                        : "Manage or cancel"}
                     </Button>
+                    {portal.kind === "error" && (
+                      <p className="text-center text-xs text-rec">
+                        {portal.message}
+                      </p>
+                    )}
                   </div>
                 ) : (
-                  <Button
-                    variant="amber"
-                    size="md"
-                    className="w-full"
-                    onClick={goPro}
-                  >
-                    Go Pro — {billing === "annual" ? "$30/year" : "$4/month"}
-                  </Button>
+                  <>
+                    <Button
+                      variant="amber"
+                      size="md"
+                      className="w-full"
+                      onClick={goPro}
+                      disabled={checkout.kind === "working"}
+                    >
+                      {checkout.kind === "working"
+                        ? "Opening Stripe…"
+                        : `Go Pro — ${billing === "annual" ? "$30/year" : "$4/month"}`}
+                    </Button>
+                    <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
+                      Secure checkout by Stripe
+                    </p>
+                  </>
                 )}
               </div>
             </div>
@@ -371,6 +549,12 @@ export function ProClient() {
             Cancel in one click · Keep everything you earned · Founding price
             locked for life
           </p>
+
+          {!pro.active && (
+            <div className="mx-auto mt-6 max-w-4xl">
+              <RestorePanel />
+            </div>
+          )}
         </div>
       </section>
 
