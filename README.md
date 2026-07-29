@@ -58,16 +58,41 @@ subscriber's address unlock Pro, and the endpoint doubled as an oracle for
 
 ### Rate limiting
 
-Two layers. `lib/rate-limit.ts` is an in-process burst limiter on all four
-routes (429 with `Retry-After`) — free, but its counters are per function
-instance and per region, so treat it as a floor. The durable layer is Vercel
-WAF `rate_limit` rules on `/api/*`; requests blocked there never reach the
-functions and aren't billed. Stage rules in log mode, review the traffic, then:
+Two layers, and the edge one does the real work.
+
+`lib/rate-limit.ts` caps bursts inside the function (429 with `Retry-After`,
+8–40 per route). It's free but opportunistic: counters live per function
+instance, so a parallel burst that lands on fresh instances can slip past it
+entirely. Treat it as a floor, not a guarantee.
+
+The durable layer is a Vercel WAF rule, live on this project:
+
+```
+Rate limit Stripe API — path starts with /api/ — 40 requests / 60s per IP — deny
+```
+
+Requests denied there never reach the functions and aren't billed. A real
+session makes one or two API calls (entitlement revalidation is throttled to
+twice a day), so 40/min leaves roughly 20× headroom.
 
 ```bash
-vercel firewall diff
-vercel firewall publish --yes
+vercel firewall rules inspect "Rate limit Stripe API"
+vercel firewall diff && vercel firewall publish --yes
 ```
+
+Two things to know before editing it. Changes are **staged** until you publish,
+and `edit` silently reports "No changes detected" if you pass only the field you
+want to change — re-pass the whole rate-limit config or nothing happens:
+
+```bash
+vercel firewall rules edit "Rate limit Stripe API" \
+  --action rate_limit --rate-limit-window 60 --rate-limit-requests 40 \
+  --rate-limit-keys ip --rate-limit-action deny --yes
+```
+
+Passing `--condition` **replaces** the rule's conditions, so omit it unless you
+mean to rewrite the path match. WAF counters are per region, so a distributed
+caller can exceed the limit by roughly the number of regions it hits.
 
 `lib/pro.ts` caches the last answer in `localStorage`; `components/pro/sync.tsx`
 re-checks with Stripe twice a day so a cancellation or failed payment actually
