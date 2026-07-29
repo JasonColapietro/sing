@@ -44,14 +44,31 @@ revokes access. Prices are resolved by **lookup key** (`suede_pro_monthly`,
 ### Going live
 
 The Marketplace resource starts as a Stripe **sandbox** (test mode — real card
-numbers are declined). To take real money:
+numbers are declined). No code changes are needed to go live; it's four steps,
+and the first two can only be done by the account owner.
 
-```bash
-vercel integration resource claim suede-sing-pro
-```
+1. **Claim the sandbox.** `vercel integration resource claim suede-sing-pro`
+   opens a Stripe URL. Sign in (or create the account) there.
+2. **Finish Stripe activation** in the dashboard: business details, bank
+   account for payouts, tax and identity verification. Until this is done
+   `charges_enabled` stays false and live checkout will fail.
+3. **Refresh the keys and set up live mode.** Test and live data are separate
+   spaces in Stripe, so the product, prices, and portal config must be created
+   again with live keys:
 
-Then recreate the two prices in the live account with the same lookup keys and
-enable the billing portal. No code changes are needed.
+   ```bash
+   vercel env pull
+   STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs
+   ```
+
+   The script is idempotent and prints which mode it's touching. For test mode
+   it's just `npm run stripe:setup`.
+4. **Confirm.** `vercel integration list` should show ownership as `linked`
+   rather than `sandbox`, and the setup script should report
+   `charges_enabled=true`.
+
+Verify a real charge with a small live purchase you refund, not with a test
+card — test cards are declined in live mode.
 
 ## Learn More
 
