@@ -155,16 +155,18 @@ export async function revalidatePro({ force = false } = {}): Promise<void> {
   }
 }
 
-/** Recovers Pro on a new device using the email the subscription was paid with. */
-export async function restorePro(email: string): Promise<ProState> {
+/**
+ * Recovers Pro on a new device from the subscriber's Pro key. Restoring by
+ * email was removed: it let anyone who knew a subscriber's address unlock Pro,
+ * and it leaked who was subscribed.
+ */
+export async function restorePro(key: string): Promise<ProState> {
   const result = await post<Entitlement & { error?: string }>("/api/restore", {
-    email,
+    key: key.trim(),
   });
   const state = apply(result);
   if (!result.active) {
-    throw new Error(
-      result.error ?? "No active Pro subscription found for that email.",
-    );
+    throw new Error(result.error ?? "That Pro key didn't unlock anything.");
   }
   return state;
 }

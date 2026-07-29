@@ -7,6 +7,7 @@ import {
   type Entitlement,
   type ProPlan,
 } from "./pro-shared";
+import { mintProKey } from "./pro-key";
 
 let client: Stripe | null = null;
 
@@ -80,17 +81,30 @@ export function entitlementFrom(
   const granted = (ENTITLING_STATUSES as readonly string[]).includes(sub.status);
   if (!granted) return { ...INACTIVE, status: sub.status };
   const periodEnd = sub.items.data[0]?.current_period_end ?? null;
+  const customerId =
+    typeof sub.customer === "string" ? sub.customer : sub.customer.id;
+
+  // A missing signing secret shouldn't cost a paying singer their access —
+  // they just don't get a restore key until it's configured.
+  let proKey: string | null = null;
+  try {
+    proKey = mintProKey(customerId, sub.id);
+  } catch (error) {
+    console.error("[stripe] could not mint pro key", error);
+  }
+
   return {
     active: true,
     plan: planFromSubscription(sub),
     status: sub.status,
     subscriptionId: sub.id,
-    customerId: typeof sub.customer === "string" ? sub.customer : sub.customer.id,
+    customerId,
     email: email ?? null,
     currentPeriodEnd: periodEnd
       ? new Date(periodEnd * 1000).toISOString()
       : null,
     cancelAtPeriodEnd: sub.cancel_at_period_end,
+    proKey,
   };
 }
 

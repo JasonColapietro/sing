@@ -33,8 +33,41 @@ truth** and the flow is built around that:
 |---|---|
 | `POST /api/checkout` | Creates a hosted Stripe Checkout Session. No card field is ever rendered by this app. |
 | `POST /api/entitlement` | Resolves entitlement from a `session_id` (right after paying) or a `subscription_id` (re-checks later). |
-| `POST /api/restore` | Unlocks Pro on a new device from the email that paid. |
+| `POST /api/restore` | Unlocks Pro on a new device from the subscriber's Pro key. |
 | `POST /api/portal` | Opens Stripe's billing portal — this is what makes "cancel in one click" true. |
+
+### Pro keys
+
+Entitlement lives in one browser, so subscribers get a **Pro key** — an HMAC
+over their Stripe customer and subscription ids (`lib/pro-key.ts`, signed with
+`PRO_KEY_SECRET`). It is shown on `/pro` while Pro is active and is what
+`/api/restore` accepts.
+
+A key is proof of *purchase*, not a grant: restore verifies the signature and
+then asks Stripe whether that subscription is still live, so a cancelled or
+leaked key stops unlocking anything. Keys are derived rather than stored, so a
+lost one is regenerated, not looked up:
+
+```bash
+node --env-file=.env.local scripts/pro-key.mjs sub_123…      # or an email
+```
+
+Restoring by email was removed deliberately: it let anyone who knew a
+subscriber's address unlock Pro, and the endpoint doubled as an oracle for
+"is this person a subscriber?".
+
+### Rate limiting
+
+Two layers. `lib/rate-limit.ts` is an in-process burst limiter on all four
+routes (429 with `Retry-After`) — free, but its counters are per function
+instance and per region, so treat it as a floor. The durable layer is Vercel
+WAF `rate_limit` rules on `/api/*`; requests blocked there never reach the
+functions and aren't billed. Stage rules in log mode, review the traffic, then:
+
+```bash
+vercel firewall diff
+vercel firewall publish --yes
+```
 
 `lib/pro.ts` caches the last answer in `localStorage`; `components/pro/sync.tsx`
 re-checks with Stripe twice a day so a cancellation or failed payment actually

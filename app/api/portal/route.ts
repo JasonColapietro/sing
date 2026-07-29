@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
 import { getStripe, isStripeId, siteOrigin } from "@/lib/stripe";
 
 /**
@@ -10,6 +11,9 @@ import { getStripe, isStripeId, siteOrigin } from "@/lib/stripe";
  * enough to open someone's billing history.
  */
 export async function POST(request: Request) {
+  const limited = rateLimit(request, "portal", { limit: 10, windowMs: 60_000 });
+  if (limited) return limited;
+
   let customerId: unknown;
   let subscriptionId: unknown;
   try {

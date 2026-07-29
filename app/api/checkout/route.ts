@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isProPlan } from "@/lib/pro-shared";
+import { rateLimit } from "@/lib/rate-limit";
 import { getStripe, resolvePriceId, siteOrigin } from "@/lib/stripe";
 
 /**
@@ -9,6 +10,9 @@ import { getStripe, resolvePriceId, siteOrigin } from "@/lib/stripe";
  * touches this app.
  */
 export async function POST(request: Request) {
+  const limited = rateLimit(request, "checkout", { limit: 8, windowMs: 60_000 });
+  if (limited) return limited;
+
   let plan: unknown;
   try {
     const body = (await request.json()) as { plan?: unknown };

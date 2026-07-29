@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { INACTIVE } from "@/lib/pro-shared";
+import { rateLimit } from "@/lib/rate-limit";
 import { emailOf, entitlementFrom, getStripe, isStripeId } from "@/lib/stripe";
 import type Stripe from "stripe";
 
@@ -12,6 +13,14 @@ import type Stripe from "stripe";
  * so every check goes straight to Stripe.
  */
 export async function POST(request: Request) {
+  // Higher than the others: every page load may revalidate, and a shared NAT
+  // or office network can legitimately produce a burst from one address.
+  const limited = rateLimit(request, "entitlement", {
+    limit: 40,
+    windowMs: 60_000,
+  });
+  if (limited) return limited;
+
   let sessionId: unknown;
   let subscriptionId: unknown;
   try {
