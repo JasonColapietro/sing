@@ -156,7 +156,7 @@ export const PLAN_ROWS: Array<{
   { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis, cloud backup" },
   { label: "Song library", free: "Starter set", pro: "Full catalog, weekly drops" },
   { label: "Warmup routines", free: "Core set", pro: "Core + pro packs" },
-  { label: "Coach plan", free: "Daily suggestion", pro: "Adaptive, score-aware" },
+  { label: "Coach plan", free: "First step each day", pro: "Full adaptive plan, daily" },
   { label: "Vocal analytics", free: "Session scores", pro: "Per-note, heatmaps, trends" },
   { label: "Range history", free: "Latest test", pro: "Every test, charted over time" },
   { label: "Practice history", free: "Last 20 sessions shown", pro: "Full history + trends" },

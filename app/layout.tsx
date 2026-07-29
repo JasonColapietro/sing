@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/nav";
+import ProMoments from "@/components/pro/moments";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
     >
       <body className="min-h-dvh antialiased">
         <Nav />
+        <ProMoments />
         <div className="min-h-[70dvh]">{children}</div>
         <footer className="mt-20 border-t border-line">
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-8 font-mono text-xs text-dim sm:px-6">

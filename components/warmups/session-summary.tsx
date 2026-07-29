@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { EXERCISES } from "./exercises";
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
-import { ProInlineNudge } from "@/components/pro/gate";
+import { ProCrescendoNudge } from "@/components/pro/gate";
 import { midiToLabel } from "@/lib/audio/notes";
 import type { SessionSummaryData } from "./lib";
 
@@ -86,7 +86,12 @@ export function SessionSummary({
       </Card>
 
       <div>
-        <ProInlineNudge>Pro plans tomorrow&apos;s warmup from this score</ProInlineNudge>
+        <ProCrescendoNudge
+          line="Pro plans tomorrow's warmup from this score"
+          title="Make tomorrow's warmup count"
+          body="Pro plans tomorrow's session from this score — weak notes first."
+          context="Warmups"
+        />
       </div>
 
       <Card>

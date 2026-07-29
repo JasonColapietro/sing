@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Card, Pill, ProgressBar, Stat } from "@/components/ui";
-import { ProInlineNudge } from "@/components/pro/gate";
+import { ProCrescendoNudge, ProWhisper } from "@/components/pro/gate";
 import { logSession, type Achievement } from "@/lib/progress";
 import {
   DIFFICULTIES,
@@ -241,7 +241,12 @@ export function SummaryView({
         </div>
       )}
       <div className="mt-5">
-        <ProInlineNudge>Pro tracks per-interval accuracy over time</ProInlineNudge>
+        <ProCrescendoNudge
+          line="Pro tracks per-interval accuracy over time"
+          title="Your ear is getting sharper"
+          body="Pro charts per-interval accuracy over time and drills what's weakest first."
+          context="Ear training"
+        />
       </div>
       <div className="mt-6 flex gap-2">
         <Button variant="amber" onClick={onReplay}>
@@ -292,6 +297,7 @@ export function MicGate({
           {error}
         </p>
       )}
+      <ProWhisper className="mt-4" />
     </Card>
   );
 }

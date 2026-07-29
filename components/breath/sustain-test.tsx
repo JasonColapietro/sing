@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
 import { Button, Card, Pill, Stat } from "@/components/ui";
-import { ProInlineNudge } from "@/components/pro/gate";
+import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { loadBreath, recordAttempt, type BreathData } from "./store";
 import { RewardNote } from "./reward";
 
@@ -302,6 +302,7 @@ export function SustainTest() {
               {error}
             </p>
           )}
+          <ProWhisper className="mt-4" />
         </div>
       </Card>
     );

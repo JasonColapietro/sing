@@ -2,7 +2,7 @@
 
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { midiToLabel } from "@/lib/audio/notes";
-import { ProInlineNudge } from "@/components/pro/gate";
+import { ProCrescendoNudge } from "@/components/pro/gate";
 import type { SessionSummaryData } from "./lib";
 
 function scoreTone(score: number): "ok" | "amber" | "rec" {
@@ -75,7 +75,12 @@ export function SessionSummary({
 
       {!listenMode && (
         <div>
-          <ProInlineNudge>Pro replays your trickiest notes and adds full verses</ProInlineNudge>
+          <ProCrescendoNudge
+            line="Pro replays your trickiest notes and adds full verses"
+            title="You know this one now"
+            body="Pro adds the full verses and replays your trickiest notes until they stick."
+            context="Song practice"
+          />
         </div>
       )}
 

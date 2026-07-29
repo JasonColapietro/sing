@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
-import { ProInlineNudge } from "@/components/pro/gate";
+import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
@@ -154,6 +154,7 @@ export function StudioClient() {
             Enable microphone
           </Button>
           {error && <p className="mt-4 text-sm text-rec">{error}</p>}
+          <ProWhisper className="mt-4" />
         </Card>
       ) : (
         <>

@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import type { ProgressState } from "@/lib/progress";
+import { useIsPro } from "@/lib/pro";
 import { Card } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
+import { LockGlyph } from "@/components/pro/ui";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
 interface PlanItem {
@@ -118,6 +120,7 @@ function buildPlan(state: ProgressState, now: Date): {
 }
 
 export function CoachCard({ state }: { state: ProgressState }) {
+  const isPro = useIsPro();
   const { banner, items } = buildPlan(state, new Date());
   const total = items.reduce((a, i) => a + i.minutes, 0);
 
@@ -126,7 +129,7 @@ export function CoachCard({ state }: { state: ProgressState }) {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg">Today&apos;s session</h2>
         <span className="tabular font-mono text-xs text-dim">
-          {total} min planned
+          {isPro ? total : items[0].minutes} min planned
         </span>
       </div>
       {banner && (
@@ -135,37 +138,56 @@ export function CoachCard({ state }: { state: ProgressState }) {
         </p>
       )}
       <ol className="mt-4 space-y-3">
-        {items.map((item, i) => (
-          <li key={item.title} className="flex gap-3">
-            <span
-              aria-hidden="true"
-              className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line2 font-mono text-[11px] text-mut"
-            >
-              {i + 1}
-            </span>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-baseline gap-x-2">
-                <Link
-                  href={item.href}
-                  className="font-medium text-ink underline-offset-4 hover:text-amber-ink hover:underline"
-                >
-                  {item.title}
-                </Link>
-                <span className="tabular font-mono text-xs text-dim">
-                  {item.minutes} min
-                </span>
+        {items.map((item, i) =>
+          isPro || i === 0 ? (
+            <li key={item.title} className="flex gap-3">
+              <span
+                aria-hidden="true"
+                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line2 font-mono text-[11px] text-mut"
+              >
+                {i + 1}
+              </span>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-baseline gap-x-2">
+                  <Link
+                    href={item.href}
+                    className="font-medium text-ink underline-offset-4 hover:text-amber-ink hover:underline"
+                  >
+                    {item.title}
+                  </Link>
+                  <span className="tabular font-mono text-xs text-dim">
+                    {item.minutes} min
+                  </span>
+                </div>
+                <p className="mt-0.5 text-xs text-mut">{item.reason}</p>
               </div>
-              <p className="mt-0.5 text-xs text-mut">{item.reason}</p>
-            </div>
-          </li>
-        ))}
+            </li>
+          ) : (
+            <li key={item.title} className="flex gap-3">
+              <span
+                aria-hidden="true"
+                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-amber/40 font-mono text-[11px] text-amber-ink"
+              >
+                {i + 1}
+              </span>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="text-mut">{item.title}</span>
+                  <span className="text-amber-ink">
+                    <LockGlyph size={11} />
+                  </span>
+                </div>
+              </div>
+            </li>
+          )
+        )}
       </ol>
       <p className="mt-4 text-xs text-dim">
         Built from your recent practice — no AI, just the numbers.
       </p>
       <div className="mt-3">
         <ProInlineNudge>
-          Pro coach reads your pitch data and plans tomorrow
+          Pro unlocks the full daily plan
         </ProInlineNudge>
       </div>
     </Card>

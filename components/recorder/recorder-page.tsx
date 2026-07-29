@@ -17,7 +17,7 @@ import { computePeaks, decodeTakeBlob, encodeWavMono, type Peaks } from "./wav";
 import { IconMic, IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from "./icons";
 import { LiveWaveform, PeaksWaveform } from "./waveforms";
 import { TakeRow } from "./take-row";
-import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
+import { FreeOnly, ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { LockedPanel } from "@/components/pro/ui";
 
 const MAX_SEC = 300; // 5 minute take limit
@@ -658,6 +658,7 @@ export default function RecorderPageClient() {
                     </Button>
                   </>
                 )}
+                <ProWhisper className="mt-4" />
               </div>
             ) : (
               <>

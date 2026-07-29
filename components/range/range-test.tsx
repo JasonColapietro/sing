@@ -18,6 +18,7 @@ import {
   ProgressBar,
   SectionLabel,
 } from "@/components/ui";
+import { ProWhisper } from "@/components/pro/gate";
 import { PianoStrip } from "./piano-strip";
 import { ResultView, type SaveSummary } from "./result-view";
 
@@ -312,6 +313,7 @@ export function RangeTest() {
                 {error}
               </p>
             )}
+            <ProWhisper className="mt-4" />
           </Card>
         </div>
       )}

@@ -267,7 +267,8 @@ export function ProClient() {
                 </h2>
                 <p className="mt-3 max-w-xl text-mut">
                   No tiers inside the tier. No feature roulette. Coffee money,
-                  once a month.
+                  once a month — and early singers lock the founding price for
+                  life.
                 </p>
               </div>
               <BillingToggle billing={billing} onChange={setBilling} />
@@ -322,6 +323,9 @@ export function ProClient() {
                 </span>
                 <span className="text-sm text-mut">{priceNote}</span>
               </div>
+              <span className="mt-2 inline-flex w-fit items-center rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-amber-ink">
+                Founding price — locked for life
+              </span>
               <p className="mt-2 text-sm text-mut">
                 Everything in Free, plus the coach.
               </p>
@@ -364,8 +368,8 @@ export function ProClient() {
           </div>
 
           <p className="mx-auto mt-6 max-w-4xl text-center font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Cancel in one click · Keep everything you earned · Price never
-            changes while subscribed
+            Cancel in one click · Keep everything you earned · Founding price
+            locked for life
           </p>
         </div>
       </section>

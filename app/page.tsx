@@ -236,9 +236,9 @@ export default function Home() {
                 </LinkButton>
               </div>
               <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                From $2.50/mo<span className="mx-2 text-line2">·</span>Cancel
-                anytime<span className="mx-2 text-line2">·</span>Free stays
-                free
+                From $2.50/mo — founding price
+                <span className="mx-2 text-line2">·</span>Cancel anytime
+                <span className="mx-2 text-line2">·</span>Free stays free
               </p>
             </div>
             <ProVisual />

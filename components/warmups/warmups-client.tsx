@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
+import { ProWhisper } from "@/components/pro/gate";
 import { IconMic } from "./icons";
 import { EXERCISES, type WarmupExercise } from "./exercises";
 import { Library } from "./library";
@@ -55,6 +56,7 @@ export function WarmupsClient() {
               {pitch.error}
             </p>
           )}
+          <ProWhisper className="mt-4" />
         </Card>
       </PageShell>
     );

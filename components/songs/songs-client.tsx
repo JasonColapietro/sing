@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
+import { ProWhisper } from "@/components/pro/gate";
 import { IconHeadphones, IconMic } from "./icons";
 import { SONGS, type Song } from "./data";
 import { Library } from "./library";
@@ -63,6 +64,7 @@ export function SongsClient() {
               {pitch.error}
             </p>
           )}
+          <ProWhisper className="mt-4" />
         </Card>
       </PageShell>
     );
