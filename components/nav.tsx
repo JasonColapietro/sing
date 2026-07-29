@@ -13,6 +13,7 @@ const LINKS = [
   { href: "/studio", label: "Studio" },
   { href: "/warmups", label: "Warmups" },
   { href: "/range", label: "Range" },
+  { href: "/singers", label: "Singers" },
   { href: "/ear-training", label: "Ear" },
   { href: "/breath", label: "Breath" },
   { href: "/songs", label: "Songs" },

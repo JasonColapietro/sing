@@ -46,6 +46,28 @@ export function midiToLabel(midi: number): string {
   return `${midiToName(midi)}${midiToOctave(midi)}`;
 }
 
+const LABEL_RE = /^([A-Ga-g])([#b♯♭]?)(-?\d)$/;
+const LETTER_PC: Record<string, number> = {
+  C: 0,
+  D: 2,
+  E: 4,
+  F: 5,
+  G: 7,
+  A: 9,
+  B: 11,
+};
+
+/** Parse a scientific pitch label ("F2", "Eb3", "A#4") to midi. Null if malformed. */
+export function labelToMidi(label: string): number | null {
+  const m = LABEL_RE.exec(label.trim());
+  if (!m) return null;
+  const [, letter, accidental, octave] = m;
+  let pc = LETTER_PC[letter.toUpperCase()];
+  if (accidental === "#" || accidental === "♯") pc += 1;
+  if (accidental === "b" || accidental === "♭") pc -= 1;
+  return (parseInt(octave, 10) + 1) * 12 + pc;
+}
+
 export function freqToNote(freq: number): NoteInfo | null {
   if (!Number.isFinite(freq) || freq <= 0) return null;
   const mf = freqToMidiFloat(freq);

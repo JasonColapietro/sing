@@ -1,0 +1,303 @@
+[
+  {
+    "name": "Aretha Franklin",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Soul",
+      "Gospel",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 1961,
+    "lowNote": "G2",
+    "highNote": "E6",
+    "beltNote": "Bb5",
+    "whistle": false,
+    "signatureSong": "Respect",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Gospel-schooled mezzo: hard chest register, melismatic runs, sudden shifts from growl to soft head voice."
+  },
+  {
+    "name": "Chaka Khan",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Funk",
+      "R&B",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 1974,
+    "lowNote": "F2",
+    "highNote": "B5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Ain't Nobody",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Gritty low register into a bright, cutting upper mix; improvises like a horn player over the groove."
+  },
+  {
+    "name": "Patti LaBelle",
+    "voiceType": "Soprano",
+    "genres": [
+      "Soul",
+      "R&B",
+      "Gospel"
+    ],
+    "country": "USA",
+    "activeFrom": 1962,
+    "lowNote": "Bb2",
+    "highNote": "E6",
+    "beltNote": "Bb5",
+    "whistle": false,
+    "signatureSong": "Lady Marmalade",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Church-powered soprano with a piercing belt, abrupt octave leaps, and long sustained upper notes."
+  },
+  {
+    "name": "Gladys Knight",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Soul",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 1961,
+    "lowNote": "E3",
+    "highNote": "D5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Midnight Train to Georgia",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Warm, slightly husky mezzo that stays in chest voice and leans on phrasing over altitude."
+  },
+  {
+    "name": "Anita Baker",
+    "voiceType": "Contralto",
+    "genres": [
+      "Soul",
+      "R&B",
+      "Jazz"
+    ],
+    "country": "USA",
+    "activeFrom": 1983,
+    "lowNote": "C#3",
+    "highNote": "C#6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Sweet Love",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Velvety contralto with jazz phrasing; sits low, scoops into notes, seldom pushes volume."
+  },
+  {
+    "name": "Minnie Riperton",
+    "voiceType": "Soprano",
+    "genres": [
+      "Soul",
+      "R&B",
+      "Funk"
+    ],
+    "country": "USA",
+    "activeFrom": 1974,
+    "lowNote": "D3",
+    "highNote": "F#7",
+    "beltNote": null,
+    "whistle": true,
+    "signatureSong": "Lovin' You",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Light, agile soprano who moves up into clean whistle tones with no audible register break."
+  },
+  {
+    "name": "Etta James",
+    "voiceType": "Contralto",
+    "genres": [
+      "Soul",
+      "Blues",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 1955,
+    "lowNote": "G#2",
+    "highNote": "B5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "At Last",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Blues-weighted contralto: thick chest tone, growled note entries, wide and slow vibrato."
+  },
+  {
+    "name": "Toni Braxton",
+    "voiceType": "Contralto",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 1992,
+    "lowNote": "Bb2",
+    "highNote": "Bb5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Un-Break My Heart",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Unusually low contralto; dark, breathy bottom end and tight vibrato even when pushing."
+  },
+  {
+    "name": "Mary J. Blige",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 1992,
+    "lowNote": "A2",
+    "highNote": "C6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Family Affair",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Raw chest-dominant mezzo with a nasal edge and clipped, conversational phrasing."
+  },
+  {
+    "name": "Lauryn Hill",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 1996,
+    "lowNote": "Bb2",
+    "highNote": "A5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Doo Wop (That Thing)",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Forward, nasal placement and rap-adjacent timing; belts inside a narrow, tightly held band."
+  },
+  {
+    "name": "Erykah Badu",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Soul",
+      "R&B",
+      "Jazz"
+    ],
+    "country": "USA",
+    "activeFrom": 1997,
+    "lowNote": "G2",
+    "highNote": "D5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "On & On",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Thin, nasal jazz-inflected tone with bent pitches and phrasing dragged behind the beat."
+  },
+  {
+    "name": "Jill Scott",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Soul",
+      "R&B",
+      "Jazz"
+    ],
+    "country": "USA",
+    "activeFrom": 2000,
+    "lowNote": "C3",
+    "highNote": "E5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "A Long Walk",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Round, full-bodied mezzo that slides between spoken delivery and open, jazz-toned sustains."
+  },
+  {
+    "name": "Brandy",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 1994,
+    "lowNote": "G2",
+    "highNote": "E6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "The Boy Is Mine",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Husky mid-weight mezzo built for stacked harmony; fast, light runs kept low in the mix."
+  },
+  {
+    "name": "Jennifer Hudson",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Soul",
+      "R&B",
+      "Gospel"
+    ],
+    "country": "USA",
+    "activeFrom": 2004,
+    "lowNote": "A2",
+    "highNote": "C6",
+    "beltNote": "A5",
+    "whistle": false,
+    "signatureSong": "And I Am Telling You I'm Not Going",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Heavy chest weight carried into the fifth octave; belts stay full instead of thinning to falsetto."
+  },
+  {
+    "name": "Jazmine Sullivan",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 2008,
+    "lowNote": "A2",
+    "highNote": "C#6",
+    "beltNote": "G#5",
+    "whistle": false,
+    "signatureSong": "Bust Your Windows",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Flips between growled chest notes and airy, agile upper runs; rasp used as an effect, not a default."
+  },
+  {
+    "name": "Amy Winehouse",
+    "voiceType": "Contralto",
+    "genres": [
+      "Soul",
+      "Jazz",
+      "R&B"
+    ],
+    "country": "UK",
+    "activeFrom": 2003,
+    "lowNote": "C3",
+    "highNote": "Eb5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Rehab",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Contralto with jazz-era diction, heavy vibrato, and a cracked, smoky bottom register."
+  }
+]

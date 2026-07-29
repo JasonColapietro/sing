@@ -1,0 +1,357 @@
+[
+  {
+    "name": "Johnny Cash",
+    "voiceType": "Bass-baritone",
+    "genres": [
+      "Country",
+      "Folk"
+    ],
+    "country": "USA",
+    "activeFrom": 1955,
+    "lowNote": "E2",
+    "highNote": "E4",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Ring of Fire",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Narrow bass-baritone with a flat, spoken attack; adds volume rather than pitch at the top."
+  },
+  {
+    "name": "Dolly Parton",
+    "voiceType": "Soprano",
+    "genres": [
+      "Country",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 1967,
+    "lowNote": "F3",
+    "highNote": "Bb5",
+    "beltNote": "E5",
+    "whistle": false,
+    "signatureSong": "Jolene",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Bright soprano, fast narrow vibrato, thin forward tone that cuts through banjo and fiddle."
+  },
+  {
+    "name": "Willie Nelson",
+    "voiceType": "Tenor",
+    "genres": [
+      "Country",
+      "Folk"
+    ],
+    "country": "USA",
+    "activeFrom": 1962,
+    "lowNote": "G2",
+    "highNote": "F4",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "On the Road Again",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Light nasal tenor that lags behind the beat and slides into notes instead of landing on them."
+  },
+  {
+    "name": "Patsy Cline",
+    "voiceType": "Contralto",
+    "genres": [
+      "Country",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 1957,
+    "lowNote": "E3",
+    "highNote": "D5",
+    "beltNote": "C5",
+    "whistle": false,
+    "signatureSong": "Crazy",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Warm contralto with a controlled sob on held notes and heavy, deliberate slides between them."
+  },
+  {
+    "name": "Reba McEntire",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 1977,
+    "lowNote": "E3",
+    "highNote": "F5",
+    "beltNote": "D5",
+    "whistle": false,
+    "signatureSong": "Fancy",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Oklahoma twang over a strong chest belt; breaks into a deliberate cry at the top of phrases."
+  },
+  {
+    "name": "Garth Brooks",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 1989,
+    "lowNote": "G2",
+    "highNote": "A4",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Friends in Low Places",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Sturdy baritone that takes its grit from breath pressure; stage-shout delivery up high."
+  },
+  {
+    "name": "George Strait",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 1981,
+    "lowNote": "A2",
+    "highNote": "E4",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Amarillo by Morning",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Unhurried baritone, almost no vibrato, phrasing shaped for two-step and Western swing."
+  },
+  {
+    "name": "Carrie Underwood",
+    "voiceType": "Soprano",
+    "genres": [
+      "Country",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2005,
+    "lowNote": "F3",
+    "highNote": "C6",
+    "beltNote": "E5",
+    "whistle": false,
+    "signatureSong": "Before He Cheats",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Supported belt that hands off to a clean head voice; rasp on peaks without losing center."
+  },
+  {
+    "name": "Chris Stapleton",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country",
+      "Blues",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 2015,
+    "lowNote": "F2",
+    "highNote": "B4",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Tennessee Whiskey",
+    "lowSource": null,
+    "highSource": "Tennessee Whiskey",
+    "blurb": "Gravel-heavy baritone with gospel-blues runs; carries high lines in full voice, not falsetto."
+  },
+  {
+    "name": "Alison Krauss",
+    "voiceType": "Soprano",
+    "genres": [
+      "Country",
+      "Folk"
+    ],
+    "country": "USA",
+    "activeFrom": 1987,
+    "lowNote": "G3",
+    "highNote": "D5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "When You Say Nothing at All",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Straight-tone soprano, nearly breathless, exact intonation and very little ornament."
+  },
+  {
+    "name": "Loretta Lynn",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 1960,
+    "lowNote": "G3",
+    "highNote": "D5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Coal Miner's Daughter",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Nasal Appalachian mezzo, hard consonants, a bent and talking approach to the melody line."
+  },
+  {
+    "name": "Tammy Wynette",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 1966,
+    "lowNote": "G3",
+    "highNote": "E5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Stand by Your Man",
+    "lowSource": null,
+    "highSource": "Stand by Your Man",
+    "blurb": "Mezzo who uses her own register break as a teardrop catch at the ends of lines."
+  },
+  {
+    "name": "Randy Travis",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 1986,
+    "lowNote": "F2",
+    "highNote": "E4",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Forever and Ever, Amen",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Round, resonant baritone with long downward slides and a heavy drawl on line endings."
+  },
+  {
+    "name": "Vince Gill",
+    "voiceType": "Tenor",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 1984,
+    "lowNote": "A2",
+    "highNote": "C5",
+    "beltNote": "A4",
+    "whistle": false,
+    "signatureSong": "Go Rest High on That Mountain",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "High sweet tenor thinning into clean falsetto; harmony-trained blend, steady even vibrato."
+  },
+  {
+    "name": "Kacey Musgraves",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Country",
+      "Pop",
+      "Singer-Songwriter"
+    ],
+    "country": "USA",
+    "activeFrom": 2013,
+    "lowNote": "G3",
+    "highNote": "D5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Rainbow",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Soft-edged mezzo close to the mic, breath left in the tone, melody kept conversational."
+  },
+  {
+    "name": "Hank Williams",
+    "voiceType": "Tenor",
+    "genres": [
+      "Country",
+      "Blues"
+    ],
+    "country": "USA",
+    "activeFrom": 1947,
+    "lowNote": "A2",
+    "highNote": "A4",
+    "beltNote": "F4",
+    "whistle": false,
+    "signatureSong": "Your Cheatin' Heart",
+    "lowSource": null,
+    "highSource": "Lovesick Blues",
+    "blurb": "Thin keening tenor that flips into yodel breaks; hard nasal placement, cries on the vowel."
+  },
+  {
+    "name": "Merle Haggard",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 1965,
+    "lowNote": "F2",
+    "highNote": "E4",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Okie from Muskogee",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Relaxed baritone with jazz-tinged timing; bends up into notes and stays behind the beat."
+  },
+  {
+    "name": "Waylon Jennings",
+    "voiceType": "Bass-baritone",
+    "genres": [
+      "Country",
+      "Rock"
+    ],
+    "country": "USA",
+    "activeFrom": 1965,
+    "lowNote": "E2",
+    "highNote": "D4",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Good Hearted Woman",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Dark chesty bass-baritone pushed against a hard backbeat; almost no head-voice extension."
+  },
+  {
+    "name": "Emmylou Harris",
+    "voiceType": "Soprano",
+    "genres": [
+      "Country",
+      "Folk",
+      "Singer-Songwriter"
+    ],
+    "country": "USA",
+    "activeFrom": 1975,
+    "lowNote": "G3",
+    "highNote": "D5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Boulder to Birmingham",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Silvery soprano with a fragile edge on sustained notes; built to sit above a lead vocal."
+  },
+  {
+    "name": "Shania Twain",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Country",
+      "Pop"
+    ],
+    "country": "Canada",
+    "activeFrom": 1995,
+    "lowNote": "E3",
+    "highNote": "E5",
+    "beltNote": "C5",
+    "whistle": false,
+    "signatureSong": "You're Still the One",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Bright mezzo with a clipped percussive attack, slipping into a thin upper register on hooks."
+  }
+]

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   VOICE_TYPES,
@@ -381,6 +382,14 @@ export function ResultView({
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           Amber = your range · st = semitones of overlap
         </p>
+        <div className="mt-4">
+          <Link
+            href="/singers"
+            className="text-sm text-amber-ink underline decoration-amber/50 underline-offset-2 hover:decoration-amber"
+          >
+            Compare against every famous voice →
+          </Link>
+        </div>
       </Card>
 
       {/* Range over time */}
