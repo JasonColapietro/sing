@@ -1,0 +1,51 @@
+/* Draw-on sparkline: dash offset sweeps once on mount. */
+.spark {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: prodraw 1.8s cubic-bezier(0.3, 0, 0.2, 1) 0.2s forwards;
+}
+
+.sparkFill {
+  opacity: 0;
+  animation: profade 0.8s ease 1.6s forwards;
+}
+
+@keyframes prodraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes profade {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Per-note accuracy bars grow from the baseline, staggered. */
+.bar {
+  transform: scaleY(0);
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: progrow 0.7s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+.b1 { animation-delay: 0.35s; }
+.b2 { animation-delay: 0.45s; }
+.b3 { animation-delay: 0.55s; }
+.b4 { animation-delay: 0.65s; }
+.b5 { animation-delay: 0.75s; }
+.b6 { animation-delay: 0.85s; }
+.b7 { animation-delay: 0.95s; }
+
+@keyframes progrow {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Coach-note tag fades in after the data lands. */
+.note {
+  opacity: 0;
+  animation: profade 0.6s ease 1.4s forwards;
+}

@@ -22,6 +22,8 @@ import {
   SectionLabel,
   Stat,
 } from "@/components/ui";
+import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
+import { LockedPanel } from "@/components/pro/ui";
 import { PracticeCalendar } from "./calendar";
 import { MinutesBarChart, PracticeMixChart, ScoreTrendChart } from "./charts";
 import { CoachCard } from "./coach";
@@ -346,6 +348,11 @@ function DataControls() {
             onChange={handleImportFile}
           />
         </div>
+        <div className="mt-3">
+          <ProInlineNudge>
+            Pro syncs progress across devices automatically
+          </ProInlineNudge>
+        </div>
         {importNotice && (
           <p
             className={
@@ -507,6 +514,70 @@ export function ProgressClient() {
               </div>
             </Card>
           </div>
+          <FreeOnly>
+            <LockedPanel label="Pitch accuracy over time" className="mt-4">
+              <div className="p-4 sm:p-5">
+                <svg
+                  viewBox="0 0 640 160"
+                  className="block w-full"
+                  aria-hidden="true"
+                >
+                  {[30, 65, 100, 135].map((gy) => (
+                    <line
+                      key={gy}
+                      x1={40}
+                      y1={gy}
+                      x2={610}
+                      y2={gy}
+                      stroke="#ddd4c4"
+                      strokeWidth={1}
+                    />
+                  ))}
+                  <path
+                    d="M40 126 C90 120 120 128 165 112 C210 96 240 108 285 92 C330 76 360 88 405 70 C450 54 480 66 525 50 C560 40 585 44 610 34 L610 150 L40 150 Z"
+                    fill="#c59642"
+                    fillOpacity={0.12}
+                  />
+                  <path
+                    d="M40 126 C90 120 120 128 165 112 C210 96 240 108 285 92 C330 76 360 88 405 70 C450 54 480 66 525 50 C560 40 585 44 610 34"
+                    fill="none"
+                    stroke="#c59642"
+                    strokeWidth={2}
+                  />
+                  <text
+                    x={40}
+                    y={152}
+                    textAnchor="start"
+                    fontSize={9}
+                    fontFamily="var(--font-mono)"
+                    fill="#8a8272"
+                  >
+                    W1
+                  </text>
+                  <text
+                    x={325}
+                    y={152}
+                    textAnchor="middle"
+                    fontSize={9}
+                    fontFamily="var(--font-mono)"
+                    fill="#8a8272"
+                  >
+                    W4
+                  </text>
+                  <text
+                    x={610}
+                    y={152}
+                    textAnchor="end"
+                    fontSize={9}
+                    fontFamily="var(--font-mono)"
+                    fill="#8a8272"
+                  >
+                    W8
+                  </text>
+                </svg>
+              </div>
+            </LockedPanel>
+          </FreeOnly>
         </section>
 
         <section aria-label="Your voice">

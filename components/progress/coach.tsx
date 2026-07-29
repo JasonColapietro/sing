@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ProgressState } from "@/lib/progress";
 import { Card } from "@/components/ui";
+import { ProInlineNudge } from "@/components/pro/gate";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
 interface PlanItem {
@@ -162,6 +163,11 @@ export function CoachCard({ state }: { state: ProgressState }) {
       <p className="mt-4 text-xs text-dim">
         Built from your recent practice — no AI, just the numbers.
       </p>
+      <div className="mt-3">
+        <ProInlineNudge>
+          Pro coach reads your pitch data and plans tomorrow
+        </ProInlineNudge>
+      </div>
     </Card>
   );
 }

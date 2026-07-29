@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   EXERCISES,
   TIER_LABELS,
@@ -10,8 +11,16 @@ import {
 } from "./exercises";
 import type { ProgressState } from "@/lib/progress";
 import { Card, LinkButton, Pill, SectionLabel } from "@/components/ui";
+import { FreeOnly } from "@/components/pro/gate";
+import { ProChip, ProLockTag } from "@/components/pro/ui";
 
 const RECENT_WINDOW_MS = 3 * 24 * 3600 * 1000;
+
+const PRO_PACKS = [
+  { name: "Belt prep", desc: "Chest-voice power without strain, 8 exercises." },
+  { name: "Head-voice builder", desc: "Light, connected top notes, 7 exercises." },
+  { name: "Morning reset", desc: "A gentle 6-minute wake-up for rough days." },
+];
 
 function isRecentlyDone(ex: WarmupExercise, progress: ProgressState): boolean {
   const now = Date.now();
@@ -94,6 +103,28 @@ export function Library({
           </section>
         );
       })}
+
+      <FreeOnly>
+        <section>
+          <div className="flex items-center gap-2">
+            <SectionLabel>Pro packs</SectionLabel>
+            <ProChip />
+          </div>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {PRO_PACKS.map((pack) => (
+              <Link key={pack.name} href="/pro">
+                <Card className="h-full transition-colors hover:border-amber/40">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-lg">{pack.name}</h3>
+                    <ProLockTag />
+                  </div>
+                  <p className="mt-2 text-sm text-mut">{pack.desc}</p>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </FreeOnly>
     </div>
   );
 }

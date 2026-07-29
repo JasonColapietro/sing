@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { EXERCISES } from "./exercises";
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
+import { ProInlineNudge } from "@/components/pro/gate";
 import { midiToLabel } from "@/lib/audio/notes";
 import type { SessionSummaryData } from "./lib";
 
@@ -83,6 +84,10 @@ export function SessionSummary({
           </ul>
         )}
       </Card>
+
+      <div>
+        <ProInlineNudge>Pro plans tomorrow&apos;s warmup from this score</ProInlineNudge>
+      </div>
 
       <Card>
         <SectionLabel>Keep going</SectionLabel>

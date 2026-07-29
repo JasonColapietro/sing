@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { SONGS, type Song } from "./data";
 import type { ProgressState } from "@/lib/progress";
 import { Card, LinkButton, Pill, SectionLabel } from "@/components/ui";
+import { FreeOnly } from "@/components/pro/gate";
+import { ProLockTag } from "@/components/pro/ui";
 import {
   bestScoreForSong,
   computeDifficulty,
@@ -75,6 +78,31 @@ export function Library({
               </button>
             );
           })}
+          <FreeOnly>
+            {[
+              { title: "Danny Boy", meta: "Ballad" },
+              { title: "Shenandoah", meta: "Folk ballad" },
+              { title: "Scarborough Fair", meta: "Folk" },
+            ].map((teaser) => (
+              <Link
+                key={teaser.title}
+                href="/pro"
+                aria-label={`${teaser.title} — unlock with Pro`}
+              >
+                <Card className="h-full transition-colors hover:border-amber/40">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-lg text-mut">{teaser.title}</h3>
+                    <ProLockTag />
+                  </div>
+                  <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    <span>{teaser.meta}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>Pro songbook</span>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </FreeOnly>
         </div>
       </section>
     </div>

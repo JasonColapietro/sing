@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useProgress, levelForXp } from "@/lib/progress";
+import { useIsPro } from "@/lib/pro";
+import { ProChip } from "@/components/pro/ui";
 
 const LINKS = [
   { href: "/studio", label: "Studio" },
@@ -49,6 +51,7 @@ export default function Nav() {
   const pathname = usePathname();
   const p = useProgress();
   const lvl = levelForXp(p.xp);
+  const isPro = useIsPro();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const currentLabel =
@@ -138,7 +141,7 @@ export default function Nav() {
 
             <nav
               aria-label="Main"
-              className="mt-4 grid grid-cols-2 gap-2.5 px-4 pb-6"
+              className="mt-4 grid grid-cols-2 gap-2.5 px-4 pb-3"
             >
               {LINKS.map((l) => {
                 const active =
@@ -159,6 +162,30 @@ export default function Nav() {
                 );
               })}
             </nav>
+
+            <div className="px-4 pb-8">
+              <Link
+                href="/pro"
+                onClick={() => setMenuOpen(false)}
+                className="relative block overflow-hidden rounded-2xl border border-amber/50 bg-panel px-4 py-4 transition-colors hover:border-amber"
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber to-transparent"
+                />
+                <span className="flex items-center gap-2">
+                  <ProChip />
+                  <span className="font-display text-base font-extrabold">
+                    Suede Pro
+                  </span>
+                </span>
+                <span className="mt-1 block text-sm text-mut">
+                  {isPro
+                    ? "Gold channel active — manage your plan"
+                    : "The coach on top of the studio — from $2.50/mo"}
+                </span>
+              </Link>
+            </div>
           </div>
         </div>,
         document.body,
@@ -217,6 +244,17 @@ export default function Nav() {
             <MenuIcon />
             {currentLabel}
           </button>
+
+          <Link
+            href="/pro"
+            className={`hidden shrink-0 items-center rounded-full px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:flex ${
+              isPro
+                ? "bg-amber text-[#241a05] hover:bg-amber-soft"
+                : "border border-amber/60 text-amber-ink hover:border-amber hover:bg-panel2"
+            }`}
+          >
+            Pro
+          </Link>
 
           <Link
             href="/progress"

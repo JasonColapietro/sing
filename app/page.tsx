@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import HeroVisual from "@/components/landing/hero-visual";
 import ComparisonTable from "@/components/landing/comparison";
+import ProVisual from "@/components/pro/pro-visual";
 import {
   BreathGlyph,
   EarGlyph,
@@ -195,7 +196,57 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5 — Privacy strip */}
+      {/* 5 — Pro teaser */}
+      <section className="border-t border-line">
+        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
+            <div>
+              <SectionLabel className="mb-4 border-amber/50 text-amber-ink">
+                Suede Pro
+              </SectionLabel>
+              <h2 className="max-w-xl text-3xl">
+                Free forever. Gold when you&apos;re ready.
+              </h2>
+              <p className="mt-3 max-w-xl text-mut">
+                The studio never charges you to practice. Pro adds a coach that
+                remembers every session — adaptive daily plans, per-note
+                accuracy, your range charted over months, and the full
+                songbook.
+              </p>
+              <ul className="mt-5 space-y-2.5">
+                {[
+                  "A practice plan that rebuilds itself around your weak notes",
+                  "Range growth and accuracy trends, week over week",
+                  "Pitch analysis on every recorded take",
+                ].map((line) => (
+                  <li
+                    key={line}
+                    className="flex items-start gap-2.5 text-sm text-mut"
+                  >
+                    <span aria-hidden className="mt-0.5 font-mono text-amber-ink">
+                      ✓
+                    </span>
+                    {line}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <LinkButton href="/pro" variant="amber" size="lg">
+                  See Suede Pro
+                </LinkButton>
+              </div>
+              <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
+                From $2.50/mo<span className="mx-2 text-line2">·</span>Cancel
+                anytime<span className="mx-2 text-line2">·</span>Free stays
+                free
+              </p>
+            </div>
+            <ProVisual />
+          </div>
+        </div>
+      </section>
+
+      {/* 6 — Privacy strip */}
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
           <p className="max-w-xl text-sm text-mut">
@@ -210,7 +261,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6 — Final CTA */}
+      {/* 7 — Final CTA */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 text-center sm:px-6">
           <h2 className="text-3xl sm:text-4xl">
@@ -228,6 +279,15 @@ export default function Home() {
               Browse warmups
             </LinkButton>
           </div>
+          <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
+            Ready for the coach?{" "}
+            <Link
+              href="/pro"
+              className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+            >
+              See Suede Pro
+            </Link>
+          </p>
         </div>
       </section>
     </main>

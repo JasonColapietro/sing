@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
+import { ProInlineNudge } from "@/components/pro/gate";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
@@ -126,6 +127,11 @@ export function StudioClient() {
             <Button variant="ghost" size="sm" onClick={() => setToast(null)}>
               Dismiss
             </Button>
+          </div>
+          <div className="mt-2">
+            <ProInlineNudge>
+              Pro keeps a per-note report of this session
+            </ProInlineNudge>
           </div>
         </Card>
       )}

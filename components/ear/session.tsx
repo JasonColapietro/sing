@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Card, Pill, ProgressBar, Stat } from "@/components/ui";
+import { ProInlineNudge } from "@/components/pro/gate";
 import { logSession, type Achievement } from "@/lib/progress";
 import {
   DIFFICULTIES,
@@ -239,6 +240,9 @@ export function SummaryView({
           ))}
         </div>
       )}
+      <div className="mt-5">
+        <ProInlineNudge>Pro tracks per-interval accuracy over time</ProInlineNudge>
+      </div>
       <div className="mt-6 flex gap-2">
         <Button variant="amber" onClick={onReplay}>
           Play again
