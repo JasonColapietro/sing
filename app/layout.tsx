@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 import Nav from "@/components/nav";
 
@@ -42,6 +43,9 @@ export default function RootLayout({
         <footer className="mt-20 border-t border-line">
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-8 font-mono text-xs text-dim sm:px-6">
             <span>SUEDE SING</span>
+            <Link href="/pro" className="hover:text-ink">
+              PRO — $9 ONCE
+            </Link>
             <span>practice loud — your voice never leaves this device</span>
           </div>
         </footer>

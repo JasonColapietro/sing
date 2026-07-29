@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { SONGS, type Song } from "./data";
 import type { ProgressState } from "@/lib/progress";
+import { usePro } from "@/lib/pro";
+import { ProPill } from "@/components/pro/lock";
 import { Card, LinkButton, Pill, SectionLabel } from "@/components/ui";
 import {
   bestScoreForSong,
@@ -24,6 +27,7 @@ export function Library({
   onSelect: (song: Song) => void;
 }) {
   const hasRange = progress.range.lowMidi !== undefined && progress.range.highMidi !== undefined;
+  const isPro = usePro() !== null;
 
   return (
     <div className="space-y-8">
@@ -51,27 +55,49 @@ export function Library({
             const difficulty = computeDifficulty(song);
             const best = bestScoreForSong(progress.sessions, song.title);
             const seconds = phraseSeconds(song);
-            return (
+            const locked = Boolean(song.pro) && !isPro;
+            const body = (
+              <Card className="h-full transition-colors hover:border-amber/40">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="text-lg">{song.title}</h3>
+                  {locked ? (
+                    <ProPill />
+                  ) : (
+                    best !== undefined && <Pill tone="ok">Best {best}%</Pill>
+                  )}
+                </div>
+                <p className="mt-2 text-sm text-mut">{song.origin}</p>
+                <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                  <span>{song.notes.length} notes</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{formatMinSec(seconds)} phrase</span>
+                  <span aria-hidden="true">·</span>
+                  <Pill tone={difficultyTone(difficulty.label)}>{difficulty.label}</Pill>
+                </div>
+                {locked && (
+                  <p className="mt-3 text-xs text-mut">
+                    Part of the Pro songbook — $9 unlocks all six songs.
+                  </p>
+                )}
+              </Card>
+            );
+            return locked ? (
+              <Link
+                key={song.id}
+                href="/pro"
+                aria-label={`${song.title} — unlock with Pro`}
+                className="text-left"
+              >
+                {body}
+              </Link>
+            ) : (
               <button
                 key={song.id}
                 type="button"
                 onClick={() => onSelect(song)}
                 className="text-left"
               >
-                <Card className="h-full transition-colors hover:border-amber/40">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-lg">{song.title}</h3>
-                    {best !== undefined && <Pill tone="ok">Best {best}%</Pill>}
-                  </div>
-                  <p className="mt-2 text-sm text-mut">{song.origin}</p>
-                  <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                    <span>{song.notes.length} notes</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{formatMinSec(seconds)} phrase</span>
-                    <span aria-hidden="true">·</span>
-                    <Pill tone={difficultyTone(difficulty.label)}>{difficulty.label}</Pill>
-                  </div>
-                </Card>
+                {body}
               </button>
             );
           })}

@@ -12,6 +12,8 @@ export interface Song {
   bpm: number;
   /** Tonic pitch of the key the melody is transcribed in. */
   defaultKeyRootMidi: number;
+  /** Part of the Pro songbook — locked until the one-time unlock. */
+  pro?: boolean;
   notes: SongNote[];
 }
 
@@ -48,6 +50,7 @@ export const SONGS: Song[] = [
     title: "Ode to Joy",
     origin: "Beethoven, Symphony No. 9 (1824); hymn text 1907",
     bpm: 120,
+    pro: true,
     defaultKeyRootMidi: 60,
     notes: [
       { midi: 64, startBeat: 0, durBeats: 1, lyric: "Joy" },
@@ -106,6 +109,7 @@ export const SONGS: Song[] = [
     title: "Frère Jacques",
     origin: "Traditional (French round, 18th century)",
     bpm: 120,
+    pro: true,
     defaultKeyRootMidi: 60,
     notes: [
       { midi: 60, startBeat: 0, durBeats: 1, lyric: "Frè" },
@@ -123,6 +127,7 @@ export const SONGS: Song[] = [
     title: "London Bridge Is Falling Down",
     origin: "Traditional (English nursery rhyme)",
     bpm: 104,
+    pro: true,
     defaultKeyRootMidi: 60,
     notes: [
       { midi: 67, startBeat: 0, durBeats: 1, lyric: "Lon" },

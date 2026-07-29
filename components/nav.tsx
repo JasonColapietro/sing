@@ -17,6 +17,7 @@ const LINKS = [
   { href: "/recorder", label: "Recorder" },
   { href: "/tools", label: "Tools" },
   { href: "/progress", label: "Progress" },
+  { href: "/pro", label: "Pro" },
 ];
 
 function MenuIcon() {

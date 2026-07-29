@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
+import { usePro } from "@/lib/pro";
 import { Button, Card, PageShell } from "@/components/ui";
 import { IconHeadphones, IconMic } from "./icons";
 import { SONGS, type Song } from "./data";
@@ -14,8 +16,10 @@ import type { SessionSummaryData } from "./lib";
 type View = "library" | "practice" | "summary";
 
 export function SongsClient() {
+  const router = useRouter();
   const pitch = usePitch();
   const progress = useProgress();
+  const isPro = usePro() !== null;
 
   const [listenMode, setListenMode] = useState(false);
   const [view, setView] = useState<View>("library");
@@ -23,6 +27,10 @@ export function SongsClient() {
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
 
   function startSong(song: Song) {
+    if (song.pro && !isPro) {
+      router.push("/pro");
+      return;
+    }
     setActiveSong(song);
     setSummary(null);
     setView("practice");

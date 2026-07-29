@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
+import { usePro } from "@/lib/pro";
 import { Button, Card, PageShell } from "@/components/ui";
 import { IconMic } from "./icons";
-import { EXERCISES, type WarmupExercise } from "./exercises";
+import { EXERCISES, isProExercise, type WarmupExercise } from "./exercises";
 import { Library } from "./library";
 import { ExercisePlayer } from "./exercise-player";
 import { SessionSummary } from "./session-summary";
@@ -14,14 +16,20 @@ import type { SessionSummaryData } from "./lib";
 type View = "library" | "session" | "summary";
 
 export function WarmupsClient() {
+  const router = useRouter();
   const pitch = usePitch();
   const progress = useProgress();
+  const isPro = usePro() !== null;
 
   const [view, setView] = useState<View>("library");
   const [activeEx, setActiveEx] = useState<WarmupExercise | null>(null);
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
 
   function startExercise(ex: WarmupExercise) {
+    if (isProExercise(ex) && !isPro) {
+      router.push("/pro");
+      return;
+    }
     setActiveEx(ex);
     setSummary(null);
     setView("session");

@@ -120,7 +120,7 @@ export default function Home() {
             <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
               No app<span className="mx-2 text-line2">·</span>No ads
               <span className="mx-2 text-line2">·</span>No signup
-              <span className="mx-2 text-line2">·</span>$0
+              <span className="mx-2 text-line2">·</span>Free core
             </p>
           </div>
           <div className="animate-fadeup">
@@ -161,11 +161,13 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel className="mb-4">Side by side</SectionLabel>
           <h2 className="max-w-2xl text-3xl">
-            The whole toolkit, without the paywall
+            The whole toolkit, without the subscription
           </h2>
           <p className="mt-3 max-w-2xl text-mut">
-            Most trainers do a few of these things, behind a subscription or an
-            app install. Suede Sing does all of them, free, on the web.
+            Most trainers do a few of these things, behind a monthly plan or an
+            app install. Every Suede Sing practice room is free on the web —
+            and Pro is a single $9 unlock for the full songbook, Tier 3
+            warmups, and unlimited takes. Nothing renews.
           </p>
           <div className="mt-8">
             <ComparisonTable />

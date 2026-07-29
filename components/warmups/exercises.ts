@@ -10,6 +10,13 @@ export const TIER_LABELS: Record<WarmupTier, string> = {
   advanced: "Tier 3 · Stretching",
 };
 
+/** Tier 3 is part of the Pro unlock. */
+export const PRO_TIER: WarmupTier = "advanced";
+
+export function isProExercise(ex: WarmupExercise): boolean {
+  return ex.tier === PRO_TIER;
+}
+
 export interface WarmupExercise {
   id: string;
   title: string;

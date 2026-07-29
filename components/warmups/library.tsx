@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import {
   EXERCISES,
+  PRO_TIER,
   TIER_LABELS,
   TIER_ORDER,
   computeRootLadder,
@@ -9,6 +11,8 @@ import {
   type WarmupExercise,
 } from "./exercises";
 import type { ProgressState } from "@/lib/progress";
+import { usePro } from "@/lib/pro";
+import { ProPill } from "@/components/pro/lock";
 import { Card, LinkButton, Pill, SectionLabel } from "@/components/ui";
 
 const RECENT_WINDOW_MS = 3 * 24 * 3600 * 1000;
@@ -31,6 +35,7 @@ export function Library({
   onSelect: (ex: WarmupExercise) => void;
 }) {
   const hasRange = progress.range.lowMidi !== undefined && progress.range.highMidi !== undefined;
+  const isPro = usePro() !== null;
 
   return (
     <div className="space-y-8">
@@ -54,39 +59,63 @@ export function Library({
       {TIER_ORDER.map((tier) => {
         const exercises = EXERCISES.filter((e) => e.tier === tier);
         if (exercises.length === 0) return null;
+        const tierLocked = tier === PRO_TIER && !isPro;
         return (
           <section key={tier}>
-            <SectionLabel>{TIER_LABELS[tier]}</SectionLabel>
+            <div className="flex flex-wrap items-center gap-3">
+              <SectionLabel>{TIER_LABELS[tier]}</SectionLabel>
+              {tierLocked && (
+                <span className="text-xs text-mut">
+                  Part of Pro — $9 unlocks the stretching tier.
+                </span>
+              )}
+            </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {exercises.map((ex) => {
                 const roots = computeRootLadder(ex, progress.range.lowMidi, progress.range.highMidi);
                 const minutes = estimateMinutes(ex, roots.length);
                 const recent = isRecentlyDone(ex, progress);
-                return (
+                const body = (
+                  <Card className="h-full transition-colors hover:border-amber/40">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-lg">{ex.title}</h3>
+                      {tierLocked ? (
+                        <ProPill />
+                      ) : (
+                        recent && <Pill tone="ok">Done recently</Pill>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm text-mut">{ex.desc}</p>
+                    <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                      <span>{roots.length} reps</span>
+                      <span aria-hidden="true">·</span>
+                      <span>~{minutes} min</span>
+                      {ex.glide && (
+                        <>
+                          <span aria-hidden="true">·</span>
+                          <span>Glide</span>
+                        </>
+                      )}
+                    </div>
+                  </Card>
+                );
+                return tierLocked ? (
+                  <Link
+                    key={ex.id}
+                    href="/pro"
+                    aria-label={`${ex.title} — unlock with Pro`}
+                    className="text-left"
+                  >
+                    {body}
+                  </Link>
+                ) : (
                   <button
                     key={ex.id}
                     type="button"
                     onClick={() => onSelect(ex)}
                     className="text-left"
                   >
-                    <Card className="h-full transition-colors hover:border-amber/40">
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-lg">{ex.title}</h3>
-                        {recent && <Pill tone="ok">Done recently</Pill>}
-                      </div>
-                      <p className="mt-2 text-sm text-mut">{ex.desc}</p>
-                      <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                        <span>{roots.length} reps</span>
-                        <span aria-hidden="true">·</span>
-                        <span>~{minutes} min</span>
-                        {ex.glide && (
-                          <>
-                            <span aria-hidden="true">·</span>
-                            <span>Glide</span>
-                          </>
-                        )}
-                      </div>
-                    </Card>
+                    {body}
                   </button>
                 );
               })}

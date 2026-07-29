@@ -5,6 +5,7 @@ import {
   Button,
   Card,
   EmptyState,
+  LinkButton,
   PageShell,
   Pill,
   SectionLabel,
@@ -12,6 +13,7 @@ import {
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { clickAt } from "@/lib/audio/synth";
 import { logSession, type Achievement } from "@/lib/progress";
+import { usePro } from "@/lib/pro";
 import { openTakesStore, type TakeRecord, type TakesStore } from "./db";
 import { computePeaks, decodeTakeBlob, encodeWavMono, type Peaks } from "./wav";
 import { IconMic, IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from "./icons";
@@ -20,6 +22,7 @@ import { TakeRow } from "./take-row";
 
 const MAX_SEC = 300; // 5 minute take limit
 const COUNT_IN_BEAT = 0.5; // seconds per count-in click
+const FREE_TAKE_LIMIT = 5; // saved takes on the free tier; Pro removes the cap
 
 type MicState = "idle" | "requesting" | "ready" | "blocked";
 type RecPhase = "idle" | "countin" | "recording" | "saving";
@@ -91,6 +94,8 @@ function downloadBlob(blob: Blob, filename: string) {
 }
 
 export default function RecorderPageClient() {
+  const isPro = usePro() !== null;
+
   // --- store + takes ---
   const storeRef = useRef<TakesStore | null>(null);
   const [takes, setTakes] = useState<TakeRecord[]>([]);
@@ -361,6 +366,10 @@ export default function RecorderPageClient() {
     }
     if (recPhase !== "idle") return;
 
+    // Free tier keeps FREE_TAKE_LIMIT takes; the notice card above the deck
+    // explains the cap, so starting a new take is simply a no-op at the cap.
+    if (!isPro && takesRef.current.length >= FREE_TAKE_LIMIT) return;
+
     // Pause any playback so it doesn't bleed into the take.
     audioRef.current?.pause();
 
@@ -382,7 +391,7 @@ export default function RecorderPageClient() {
     } else {
       beginCapture();
     }
-  }, [micState, recPhase, countIn, beginCapture]);
+  }, [micState, recPhase, countIn, beginCapture, isPro]);
 
   // --- playback ---
   const ensureAudio = useCallback((): HTMLAudioElement => {
@@ -575,6 +584,7 @@ export default function RecorderPageClient() {
   const abB = takes.find((t) => t.id === abPicks[1]) ?? null;
   const recording = recPhase === "recording";
   const starredCount = takes.filter((t) => t.starred).length;
+  const atFreeCap = !isPro && takes.length >= FREE_TAKE_LIMIT;
 
   const progressFor = (take: TakeRecord) =>
     loadedId === take.id && take.durationSec > 0
@@ -659,6 +669,19 @@ export default function RecorderPageClient() {
               </div>
             ) : (
               <>
+                {atFreeCap && (
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber/40 bg-panel2 px-4 py-3">
+                    <p className="text-sm text-mut">
+                      <span className="text-ink">
+                        All {FREE_TAKE_LIMIT} free take slots are full.
+                      </span>{" "}
+                      Delete a take to free a slot, or go unlimited with Pro.
+                    </p>
+                    <LinkButton href="/pro" variant="amber" size="sm">
+                      Get Pro — $9
+                    </LinkButton>
+                  </div>
+                )}
                 <div className="mb-4 flex flex-wrap items-center gap-5">
                   <Button
                     variant="rec"
@@ -671,7 +694,7 @@ export default function RecorderPageClient() {
                           : "Start recording"
                     }
                     onClick={toggleRecord}
-                    disabled={recPhase === "saving"}
+                    disabled={recPhase === "saving" || atFreeCap}
                   >
                     {recording || recPhase === "countin" ? (
                       <IconStop className="h-7 w-7" />
