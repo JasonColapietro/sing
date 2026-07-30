@@ -9,6 +9,7 @@ import {
   relatedSingers,
   singerBySlug,
   spanOctaves,
+  spanPercentile,
 } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
@@ -16,7 +17,14 @@ import {
   CompareWithMe,
   PlayRangeButton,
 } from "@/components/singers/singer-actions";
-import { Card, PageShell, Pill, SectionLabel, Stat } from "@/components/ui";
+import {
+  Card,
+  LinkButton,
+  PageShell,
+  Pill,
+  SectionLabel,
+  Stat,
+} from "@/components/ui";
 
 interface Params {
   slug: string;
@@ -38,7 +46,7 @@ export async function generateMetadata({
   if (!s) return {};
   const semis = s.highMidi - s.lowMidi;
   const title = `${s.name} Vocal Range: ${rangeLabel(s)} (${spanOctaves(semis)} Octaves)`;
-  const description = `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — ${describeSpan(semis)}, a ${s.voiceType.toLowerCase()}. See it on a keyboard, hear it, and compare your own range free.`;
+  const description = `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — ${describeSpan(semis)}, a ${s.voiceType.toLowerCase()}. See it on a keyboard, hear it, and test your own range for free.`;
   return {
     title,
     description,
@@ -47,14 +55,22 @@ export async function generateMetadata({
   };
 }
 
+/** Voice categories whose upper register is head voice, not falsetto. */
+const HEAD_VOICE_TYPES = new Set(["Contralto", "Mezzo-soprano", "Soprano"]);
+
 function answerSentence(s: (typeof SINGERS)[number]): string {
   const semis = s.highMidi - s.lowMidi;
   const parts = [
-    `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — ${describeSpan(semis)} (${semis} semitones), which classifies them as a ${s.voiceType.toLowerCase()}.`,
+    `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — about ${spanOctaves(semis)} octaves (${semis} semitones). ${s.name} is generally classified as a ${s.voiceType.toLowerCase()}.`,
   ];
   if (s.beltMidi != null) {
+    const upper = HEAD_VOICE_TYPES.has(s.voiceType)
+      ? `head voice${s.whistle ? " or whistle register" : ""}`
+      : s.whistle
+        ? "falsetto, head voice, or whistle register"
+        : "falsetto or head voice";
     parts.push(
-      `In full voice they are cited up to around ${midiToLabel(s.beltMidi)}; everything above that comes from falsetto, head voice${s.whistle ? " or whistle register" : ""}.`,
+      `In full voice they are cited up to around ${midiToLabel(s.beltMidi)}; everything above that comes from ${upper}.`,
     );
   } else if (s.whistle) {
     parts.push(`The very top of that span sits in whistle register.`);
@@ -112,12 +128,9 @@ export default async function SingerPage({
       title={s.name}
       subtitle={`${s.voiceType} · ${s.genres.join(" · ")} · ${s.country} · prominent since ${s.activeFrom}`}
       actions={
-        <Link
-          href="/singers"
-          className="rounded-full border border-line px-4 py-2 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
-        >
+        <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
-        </Link>
+        </LinkButton>
       }
     >
       <script
@@ -142,7 +155,7 @@ export default async function SingerPage({
               <Stat label="Semitones" value={semis} tone="ink" />
               {s.beltMidi != null && (
                 <Stat
-                  label="Belt up to"
+                  label="Full voice to"
                   value={midiToLabel(s.beltMidi)}
                   tone="rec"
                 />
@@ -175,7 +188,10 @@ export default async function SingerPage({
             What is {s.name}&rsquo;s vocal range?
           </h2>
           <p className="mt-3 max-w-3xl text-mut">{answerSentence(s)}</p>
-          <p className="mt-3 max-w-3xl text-sm text-mut">{s.blurb}</p>
+          <p className="mt-3 max-w-3xl text-sm text-mut">
+            {s.blurb} That cited span is wider than {spanPercentile(s)}% of
+            the {SINGERS.length} voices in this library.
+          </p>
           <dl className="mt-5 grid gap-4 sm:grid-cols-3">
             <div>
               <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">

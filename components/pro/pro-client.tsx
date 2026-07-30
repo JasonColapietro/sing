@@ -41,7 +41,7 @@ const PRO_CARD_POINTS = [
 ];
 
 const FREE_CARD_POINTS = [
-  "All nine practice rooms",
+  "All ten practice rooms",
   "Live pitch feedback + range test",
   "Recorder with A/B compare",
   "XP, streaks, achievements",
@@ -51,7 +51,7 @@ const FREE_CARD_POINTS = [
 const FAQ: Array<{ q: string; a: string }> = [
   {
     q: "Does the free studio stay free?",
-    a: "Yes — permanently. All nine rooms, live pitch feedback, the range test, the recorder: none of it moves behind Pro. Pro only adds things that don't exist today.",
+    a: "Yes — permanently. All ten rooms, live pitch feedback, the range test, the recorder: none of it moves behind Pro. Pro only adds things that don't exist today.",
   },
   {
     q: "Do I need Pro to get better?",

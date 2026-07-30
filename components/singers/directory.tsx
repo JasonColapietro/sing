@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
@@ -24,17 +24,18 @@ const AXIS_HIGH = Math.ceil(DATA_HIGH / 12) * 12;
 const AXIS_SPAN = AXIS_HIGH - AXIS_LOW;
 
 function pct(midi: number): number {
-  return ((midi - AXIS_LOW) / AXIS_SPAN) * 100;
+  return Math.min(100, ((midi - AXIS_LOW) / AXIS_SPAN) * 100);
 }
 
 /** Octave gridlines as a repeating background so rows need no extra DOM. */
 const OCTAVE_TILE = (12 / AXIS_SPAN) * 100;
 const GRID_BG = `repeating-linear-gradient(90deg, rgba(201,189,160,0.5) 0, rgba(201,189,160,0.5) 1px, transparent 1px, transparent ${OCTAVE_TILE}%)`;
 
-/** Amber wash where the user's own range sits, layered over the gridlines. */
+/** Amber wash where the user's own range sits, layered over the gridlines.
+ * Inclusive of the top semitone cell, matching the ruler band. */
 function youBandBg(uLow: number, uHigh: number): string {
   const l = pct(uLow);
-  const r = pct(uHigh);
+  const r = pct(uHigh + 1);
   return `linear-gradient(90deg, transparent ${l}%, rgba(197,150,66,0.14) ${l}%, rgba(197,150,66,0.14) ${r}%, transparent ${r}%), ${GRID_BG}`;
 }
 
@@ -96,25 +97,33 @@ function Ruler({ youLow, youHigh }: { youLow?: number; youHigh?: number }) {
 
 function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
   const left = pct(s.lowMidi);
-  const width = Math.max(0.8, pct(s.highMidi) - left);
+  // Inclusive of the top semitone cell, matching the ruler and you-band.
+  const width = Math.max(0.8, pct(s.highMidi + 1) - left);
   const beltPct =
     s.beltMidi != null
-      ? ((s.beltMidi - s.lowMidi) / (s.highMidi - s.lowMidi)) * 100
+      ? ((s.beltMidi - s.lowMidi + 1) / (s.highMidi - s.lowMidi + 1)) * 100
       : 100;
   const semis = s.highMidi - s.lowMidi;
+  const ariaBits = [
+    `${s.name}, ${s.voiceType}`,
+    `cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`,
+    s.beltMidi != null ? `full voice to ${midiToLabel(s.beltMidi)}` : null,
+    s.whistle ? "uses whistle register" : null,
+  ].filter(Boolean);
 
   return (
     <li className="cv-auto">
       <Link
         href={`/singers/${s.slug}`}
-        className={`group block rounded-xl px-2 py-2.5 transition-colors hover:bg-panel ${ROW_GRID}`}
+        aria-label={ariaBits.join(", ")}
+        className={`group block scroll-mt-32 rounded-xl px-2 py-2.5 transition-colors hover:bg-panel ${ROW_GRID}`}
       >
         <span className="flex items-baseline justify-between gap-2 sm:block">
           <span className="min-w-0">
             <span className="block truncate text-sm font-medium text-ink">
               {s.name}
             </span>
-            <span className="block truncate font-mono text-[10px] uppercase tracking-[0.1em] text-dim sm:mt-0.5">
+            <span className="block truncate font-mono text-[10px] uppercase tracking-[0.1em] text-mut sm:mt-0.5">
               {s.voiceType} · {s.activeFrom}
             </span>
           </span>
@@ -124,15 +133,16 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
         </span>
 
         <span
+          aria-hidden="true"
           className="relative mt-1.5 block h-7 sm:mt-0"
           style={{ backgroundImage: trackBg }}
         >
-          {/* Full reach (head / falsetto / whistle) */}
+          {/* Reach above the cited full-voice ceiling (head / falsetto / whistle) */}
           <span
-            className="absolute inset-y-1.5 rounded-full bg-cool/20 transition-colors group-hover:bg-cool/30"
+            className="absolute inset-y-1.5 rounded-full bg-cool/30 transition-colors group-hover:bg-cool/45"
             style={{ left: `${left}%`, width: `${width}%` }}
           >
-            {/* Full-voice portion */}
+            {/* Full-voice portion (whole bar when no ceiling is cited) */}
             <span
               className="absolute inset-y-0 left-0 rounded-full bg-cool/70 transition-colors group-hover:bg-cool"
               style={{ width: `${beltPct}%` }}
@@ -147,9 +157,7 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
           <span className="tabular block">
             {midiToLabel(s.lowMidi)}–{midiToLabel(s.highMidi)}
           </span>
-          <span className="tabular block text-dim">
-            {spanOctaves(semis)} oct
-          </span>
+          <span className="tabular block">{spanOctaves(semis)} oct</span>
         </span>
       </Link>
     </li>
@@ -175,11 +183,65 @@ const selectClass =
 
 /* ---------------------------------------------------------- directory --- */
 
+const SORT_IDS = new Set<string>(SORTS.map((s) => s.id));
+
+/** Lives in the sticky ruler bar — the only way back to search/filters from
+ * deep inside a 357-row list without a long manual scroll. */
+function BackToFiltersButton() {
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        const reduce = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+      }}
+      className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-mut transition-colors hover:border-amber hover:text-amber-ink"
+    >
+      ↑ filters
+    </button>
+  );
+}
+
 export function SingersDirectory() {
   const [q, setQ] = useState("");
   const [voice, setVoice] = useState<VoiceKind | "all">("all");
   const [genre, setGenre] = useState<string>("all");
   const [sort, setSort] = useState<SortId>("name");
+
+  // Filters live in the URL (?q=&voice=&genre=&sort=) so browser Back from a
+  // singer page restores them. Read once after mount (SSR renders defaults,
+  // so no hydration mismatch), write with replaceState (no nav, no rerender).
+  useEffect(() => {
+    // useSearchParams would need a Suspense boundary that blanks the
+    // server-rendered directory (and its 357 crawlable links), so restore
+    // from the URL after hydration instead — the one-shot init the rule
+    // can't distinguish from a cascading-render bug.
+    /* eslint-disable react-hooks/set-state-in-effect */
+    const p = new URLSearchParams(window.location.search);
+    const pv = p.get("voice");
+    const pg = p.get("genre");
+    const ps = p.get("sort");
+    if (p.get("q")) setQ(p.get("q")!);
+    if (pv && (VOICE_KINDS as string[]).includes(pv)) setVoice(pv as VoiceKind);
+    if (pg && ALL_GENRES.includes(pg)) setGenre(pg);
+    if (ps && SORT_IDS.has(ps)) setSort(ps as SortId);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, []);
+
+  useEffect(() => {
+    const p = new URLSearchParams();
+    if (q.trim()) p.set("q", q.trim());
+    if (voice !== "all") p.set("voice", voice);
+    if (genre !== "all") p.set("genre", genre);
+    if (sort !== "name") p.set("sort", sort);
+    const qs = p.toString();
+    const next = qs ? `?${qs}` : window.location.pathname;
+    if (window.location.search !== (qs ? `?${qs}` : "")) {
+      window.history.replaceState(null, "", next);
+    }
+  }, [q, voice, genre, sort]);
 
   const progress = useProgress();
   const youLow = progress.range.lowMidi;
@@ -294,19 +356,26 @@ export function SingersDirectory() {
             </option>
           ))}
         </select>
-        <span className="tabular ml-auto font-mono text-xs text-dim">
+        <span
+          aria-live="polite"
+          className="tabular ml-auto font-mono text-xs text-mut"
+        >
           {rows.length} of {SINGERS.length}
         </span>
       </div>
 
       {/* Legend + your-range status */}
-      <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] text-dim">
+      <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] text-mut">
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-cool/70" /> full voice
+          <span className="h-2 w-6 rounded-full bg-cool/70" /> cited range
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-cool/20" /> falsetto · head
-          · whistle
+          <span className="h-2 w-6 rounded-full bg-cool/30" /> above the cited
+          full-voice ceiling
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full border border-cool bg-bg" />{" "}
+          whistle register
         </span>
         {hasYou ? (
           <span className="flex items-center gap-1.5">
@@ -323,8 +392,16 @@ export function SingersDirectory() {
         )}
       </div>
 
-      {/* Sticky octave ruler */}
-      <div className="sticky top-14 z-40 -mx-2 mt-5 border-b border-line bg-bg/95 px-2 pb-1 pt-2 backdrop-blur">
+      {/* Sticky octave ruler. -mx-2 bleeds the bar to the row-hover edge;
+          px-4 (8px bleed + 8px row padding) keeps its grid aligned with the
+          rows' px-2 content below. */}
+      <div className="sticky top-14 z-40 -mx-2 mt-5 border-b border-line bg-bg/95 px-4 pb-1 pt-1.5 backdrop-blur">
+        <div className="mb-1 flex items-center justify-between sm:hidden">
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
+            low → high
+          </span>
+          <BackToFiltersButton />
+        </div>
         <div className={ROW_GRID}>
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.14em] text-dim sm:block">
             low → high
@@ -333,7 +410,9 @@ export function SingersDirectory() {
             youLow={hasYou ? youLow : undefined}
             youHigh={hasYou ? youHigh : undefined}
           />
-          <span className="hidden sm:block" />
+          <span className="hidden text-right sm:block">
+            <BackToFiltersButton />
+          </span>
         </div>
       </div>
 

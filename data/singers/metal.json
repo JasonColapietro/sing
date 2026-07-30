@@ -2,12 +2,15 @@
   {
     "name": "Bruce Dickinson",
     "voiceType": "Tenor",
-    "genres": ["Metal", "Hard Rock"],
+    "genres": [
+      "Metal",
+      "Hard Rock"
+    ],
     "country": "UK",
     "activeFrom": 1979,
     "lowNote": "E2",
     "highNote": "C6",
-    "beltNote": "A5",
+    "beltNote": "G5",
     "whistle": false,
     "signatureSong": "The Number of the Beast",
     "lowSource": null,
@@ -17,12 +20,14 @@
   {
     "name": "Rob Halford",
     "voiceType": "Tenor",
-    "genres": ["Metal"],
+    "genres": [
+      "Metal"
+    ],
     "country": "UK",
     "activeFrom": 1974,
     "lowNote": "F2",
     "highNote": "C6",
-    "beltNote": "A5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Breaking the Law",
     "lowSource": null,
@@ -32,7 +37,10 @@
   {
     "name": "Ronnie James Dio",
     "voiceType": "Tenor",
-    "genres": ["Metal", "Hard Rock"],
+    "genres": [
+      "Metal",
+      "Hard Rock"
+    ],
     "country": "USA",
     "activeFrom": 1975,
     "lowNote": "F2",
@@ -47,12 +55,14 @@
   {
     "name": "Michael Kiske",
     "voiceType": "Tenor",
-    "genres": ["Metal"],
+    "genres": [
+      "Metal"
+    ],
     "country": "Germany",
     "activeFrom": 1987,
     "lowNote": "F2",
     "highNote": "C6",
-    "beltNote": "A5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "I Want Out",
     "lowSource": null,
@@ -62,12 +72,15 @@
   {
     "name": "Geoff Tate",
     "voiceType": "Tenor",
-    "genres": ["Metal", "Hard Rock"],
+    "genres": [
+      "Metal",
+      "Hard Rock"
+    ],
     "country": "USA",
     "activeFrom": 1983,
     "lowNote": "E2",
     "highNote": "C6",
-    "beltNote": "A5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Silent Lucidity",
     "lowSource": null,
@@ -77,7 +90,9 @@
   {
     "name": "King Diamond",
     "voiceType": "Countertenor",
-    "genres": ["Metal"],
+    "genres": [
+      "Metal"
+    ],
     "country": "Denmark",
     "activeFrom": 1981,
     "lowNote": "F2",
@@ -92,12 +107,15 @@
   {
     "name": "Corey Taylor",
     "voiceType": "Baritone",
-    "genres": ["Metal", "Alternative"],
+    "genres": [
+      "Metal",
+      "Alternative"
+    ],
     "country": "USA",
     "activeFrom": 1999,
     "lowNote": "E2",
     "highNote": "A5",
-    "beltNote": "E5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Duality",
     "lowSource": null,
@@ -107,7 +125,9 @@
   {
     "name": "James Hetfield",
     "voiceType": "Baritone",
-    "genres": ["Metal"],
+    "genres": [
+      "Metal"
+    ],
     "country": "USA",
     "activeFrom": 1983,
     "lowNote": "E2",
@@ -122,7 +142,10 @@
   {
     "name": "Ozzy Osbourne",
     "voiceType": "Tenor",
-    "genres": ["Metal", "Hard Rock"],
+    "genres": [
+      "Metal",
+      "Hard Rock"
+    ],
     "country": "UK",
     "activeFrom": 1970,
     "lowNote": "G2",
@@ -137,12 +160,14 @@
   {
     "name": "Devin Townsend",
     "voiceType": "Tenor",
-    "genres": ["Metal"],
+    "genres": [
+      "Metal"
+    ],
     "country": "Canada",
     "activeFrom": 1993,
     "lowNote": "F2",
     "highNote": "C6",
-    "beltNote": "A5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Kingdom",
     "lowSource": null,
@@ -150,29 +175,17 @@
     "blurb": "Stacked wall-of-voice belt plus harsh screams; swings from near-whisper to full-throated push."
   },
   {
-    "name": "Serj Tankian",
-    "voiceType": "Tenor",
-    "genres": ["Metal", "Alternative"],
-    "country": "USA",
-    "activeFrom": 1998,
-    "lowNote": "F2",
-    "highNote": "Bb5",
-    "beltNote": null,
-    "whistle": false,
-    "signatureSong": "Chop Suey!",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Elastic tenor jumping between sustained operatic tone, staccato yelps and folk-style ornament."
-  },
-  {
     "name": "Maynard James Keenan",
     "voiceType": "Tenor",
-    "genres": ["Metal", "Alternative"],
+    "genres": [
+      "Metal",
+      "Alternative"
+    ],
     "country": "USA",
     "activeFrom": 1993,
     "lowNote": "F2",
     "highNote": "A5",
-    "beltNote": "E5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Sober",
     "lowSource": null,
@@ -182,12 +195,15 @@
   {
     "name": "Mike Patton",
     "voiceType": "Baritone",
-    "genres": ["Metal", "Alternative"],
+    "genres": [
+      "Metal",
+      "Alternative"
+    ],
     "country": "USA",
     "activeFrom": 1989,
     "lowNote": "Eb1",
     "highNote": "Eb7",
-    "beltNote": "C5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Epic",
     "lowSource": null,
@@ -197,12 +213,15 @@
   {
     "name": "Sebastian Bach",
     "voiceType": "Tenor",
-    "genres": ["Hard Rock", "Metal"],
+    "genres": [
+      "Hard Rock",
+      "Metal"
+    ],
     "country": "Canada",
     "activeFrom": 1989,
     "lowNote": "F2",
     "highNote": "C6",
-    "beltNote": "A5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "18 and Life",
     "lowSource": null,
@@ -210,48 +229,21 @@
     "blurb": "Rasp-heavy high tenor that sustains fifth-octave belts, then slips up into scream falsetto."
   },
   {
-    "name": "Lzzy Hale",
-    "voiceType": "Mezzo-soprano",
-    "genres": ["Hard Rock", "Metal"],
-    "country": "USA",
-    "activeFrom": 2009,
-    "lowNote": "G3",
-    "highNote": "C6",
-    "beltNote": "A5",
-    "whistle": false,
-    "signatureSong": "I Miss the Misery",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Thick chest-mix belt with bluesy grit; climbs high without dropping into a lighter head tone."
-  },
-  {
     "name": "Tarja Turunen",
     "voiceType": "Soprano",
-    "genres": ["Metal", "Opera"],
+    "genres": [
+      "Metal",
+      "Opera"
+    ],
     "country": "Finland",
     "activeFrom": 1996,
     "lowNote": "F3",
     "highNote": "E6",
-    "beltNote": "A5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Nemo",
     "lowSource": null,
     "highSource": null,
     "blurb": "Classically placed soprano over distorted guitar: covered vowels, vibrato-rich head voice."
-  },
-  {
-    "name": "Floor Jansen",
-    "voiceType": "Soprano",
-    "genres": ["Metal", "Opera"],
-    "country": "Netherlands",
-    "activeFrom": 2000,
-    "lowNote": "E3",
-    "highNote": "E6",
-    "beltNote": "A5",
-    "whistle": false,
-    "signatureSong": "Ghost Love Score",
-    "lowSource": null,
-    "highSource": "Ghost Love Score",
-    "blurb": "Trades operatic head voice for heavy chest belt mid-phrase with the tone matched across both."
   }
 ]

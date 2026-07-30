@@ -20,6 +20,12 @@ const plexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  // Google Search Console ownership: set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+  // on the Vercel project to the token from GSC's URL-prefix "HTML tag"
+  // method — no code change needed to (re)verify.
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   title: {
     default: "Suede Sing — the vocal studio in your browser",
     template: "%s · Suede Sing",

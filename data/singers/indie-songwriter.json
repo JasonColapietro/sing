@@ -2,7 +2,11 @@
   {
     "name": "Bob Dylan",
     "voiceType": "Tenor",
-    "genres": ["Folk", "Singer-Songwriter", "Rock"],
+    "genres": [
+      "Folk",
+      "Singer-Songwriter",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 1962,
     "lowNote": "E2",
@@ -17,7 +21,11 @@
   {
     "name": "Joni Mitchell",
     "voiceType": "Soprano",
-    "genres": ["Folk", "Singer-Songwriter", "Jazz"],
+    "genres": [
+      "Folk",
+      "Singer-Songwriter",
+      "Jazz"
+    ],
     "country": "Canada",
     "activeFrom": 1968,
     "lowNote": "E3",
@@ -32,12 +40,16 @@
   {
     "name": "Paul Simon",
     "voiceType": "Tenor",
-    "genres": ["Folk", "Singer-Songwriter", "Pop"],
+    "genres": [
+      "Folk",
+      "Singer-Songwriter",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1964,
     "lowNote": "A2",
     "highNote": "D5",
-    "beltNote": "A4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "The Sound of Silence",
     "lowSource": null,
@@ -47,7 +59,10 @@
   {
     "name": "Leonard Cohen",
     "voiceType": "Bass-baritone",
-    "genres": ["Folk", "Singer-Songwriter"],
+    "genres": [
+      "Folk",
+      "Singer-Songwriter"
+    ],
     "country": "Canada",
     "activeFrom": 1967,
     "lowNote": "D2",
@@ -62,7 +77,10 @@
   {
     "name": "Joan Baez",
     "voiceType": "Soprano",
-    "genres": ["Folk", "Singer-Songwriter"],
+    "genres": [
+      "Folk",
+      "Singer-Songwriter"
+    ],
     "country": "USA",
     "activeFrom": 1960,
     "lowNote": "F3",
@@ -77,12 +95,16 @@
   {
     "name": "Neil Young",
     "voiceType": "Tenor",
-    "genres": ["Folk", "Rock", "Singer-Songwriter"],
+    "genres": [
+      "Folk",
+      "Rock",
+      "Singer-Songwriter"
+    ],
     "country": "Canada",
     "activeFrom": 1966,
     "lowNote": "G2",
     "highNote": "C5",
-    "beltNote": "A4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Heart of Gold",
     "lowSource": null,
@@ -92,12 +114,16 @@
   {
     "name": "Van Morrison",
     "voiceType": "Tenor",
-    "genres": ["Soul", "Blues", "Folk"],
+    "genres": [
+      "Soul",
+      "Blues",
+      "Folk"
+    ],
     "country": "Northern Ireland",
     "activeFrom": 1967,
     "lowNote": "G2",
     "highNote": "D5",
-    "beltNote": "B4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Brown Eyed Girl",
     "lowSource": null,
@@ -107,7 +133,11 @@
   {
     "name": "James Taylor",
     "voiceType": "Baritone",
-    "genres": ["Folk", "Singer-Songwriter", "Pop"],
+    "genres": [
+      "Folk",
+      "Singer-Songwriter",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1970,
     "lowNote": "F2",
@@ -122,12 +152,16 @@
   {
     "name": "Sinéad O'Connor",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Alternative", "Pop", "Folk"],
+    "genres": [
+      "Alternative",
+      "Pop",
+      "Folk"
+    ],
     "country": "Ireland",
     "activeFrom": 1987,
     "lowNote": "F3",
     "highNote": "A5",
-    "beltNote": "E5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Nothing Compares 2 U",
     "lowSource": null,
@@ -137,12 +171,16 @@
   {
     "name": "Tracy Chapman",
     "voiceType": "Contralto",
-    "genres": ["Folk", "Singer-Songwriter", "Blues"],
+    "genres": [
+      "Folk",
+      "Singer-Songwriter",
+      "Blues"
+    ],
     "country": "USA",
     "activeFrom": 1988,
     "lowNote": "D3",
     "highNote": "D5",
-    "beltNote": "B4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Fast Car",
     "lowSource": null,
@@ -152,12 +190,16 @@
   {
     "name": "Tori Amos",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Singer-Songwriter", "Alternative", "Pop"],
+    "genres": [
+      "Singer-Songwriter",
+      "Alternative",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1992,
     "lowNote": "E3",
     "highNote": "C6",
-    "beltNote": "F5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Cornflake Girl",
     "lowSource": null,
@@ -167,12 +209,16 @@
   {
     "name": "Sarah McLachlan",
     "voiceType": "Soprano",
-    "genres": ["Folk", "Pop", "Singer-Songwriter"],
+    "genres": [
+      "Folk",
+      "Pop",
+      "Singer-Songwriter"
+    ],
     "country": "Canada",
     "activeFrom": 1993,
     "lowNote": "F3",
     "highNote": "B5",
-    "beltNote": "E5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Angel",
     "lowSource": null,
@@ -182,12 +228,16 @@
   {
     "name": "Rufus Wainwright",
     "voiceType": "Tenor",
-    "genres": ["Singer-Songwriter", "Pop", "Opera"],
+    "genres": [
+      "Singer-Songwriter",
+      "Pop",
+      "Opera"
+    ],
     "country": "Canada",
     "activeFrom": 1998,
     "lowNote": "A2",
     "highNote": "D5",
-    "beltNote": "B4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Cigarettes and Chocolate Milk",
     "lowSource": null,
@@ -196,8 +246,12 @@
   },
   {
     "name": "ANOHNI",
-    "voiceType": "Countertenor",
-    "genres": ["Alternative", "Electronic", "Singer-Songwriter"],
+    "voiceType": "Contralto",
+    "genres": [
+      "Alternative",
+      "Electronic",
+      "Singer-Songwriter"
+    ],
     "country": "UK",
     "activeFrom": 2000,
     "lowNote": "A2",
@@ -212,12 +266,16 @@
   {
     "name": "Regina Spektor",
     "voiceType": "Soprano",
-    "genres": ["Indie", "Pop", "Singer-Songwriter"],
+    "genres": [
+      "Indie",
+      "Pop",
+      "Singer-Songwriter"
+    ],
     "country": "USA",
     "activeFrom": 2004,
     "lowNote": "F3",
     "highNote": "C6",
-    "beltNote": "E5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Fidelity",
     "lowSource": null,
@@ -227,7 +285,11 @@
   {
     "name": "Florence Welch",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Indie", "Alternative", "Rock"],
+    "genres": [
+      "Indie",
+      "Alternative",
+      "Rock"
+    ],
     "country": "UK",
     "activeFrom": 2008,
     "lowNote": "F3",
@@ -242,12 +304,16 @@
   {
     "name": "Justin Vernon",
     "voiceType": "Tenor",
-    "genres": ["Indie", "Folk", "Alternative"],
+    "genres": [
+      "Indie",
+      "Folk",
+      "Alternative"
+    ],
     "country": "USA",
     "activeFrom": 2008,
     "lowNote": "F2",
     "highNote": "F5",
-    "beltNote": "B4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Skinny Love",
     "lowSource": null,
@@ -257,12 +323,16 @@
   {
     "name": "James Blake",
     "voiceType": "Tenor",
-    "genres": ["Electronic", "R&B", "Alternative"],
+    "genres": [
+      "Electronic",
+      "R&B",
+      "Alternative"
+    ],
     "country": "UK",
     "activeFrom": 2011,
     "lowNote": "F2",
     "highNote": "F5",
-    "beltNote": "A4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Retrograde",
     "lowSource": null,
@@ -272,7 +342,11 @@
   {
     "name": "Hozier",
     "voiceType": "Baritone",
-    "genres": ["Soul", "Blues", "Rock"],
+    "genres": [
+      "Soul",
+      "Blues",
+      "Rock"
+    ],
     "country": "Ireland",
     "activeFrom": 2013,
     "lowNote": "E2",
@@ -287,12 +361,16 @@
   {
     "name": "Jacob Collier",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Pop", "Funk"],
+    "genres": [
+      "Jazz",
+      "Pop",
+      "Funk"
+    ],
     "country": "UK",
     "activeFrom": 2016,
     "lowNote": "D2",
     "highNote": "D6",
-    "beltNote": "A4",
+    "beltNote": "G5",
     "whistle": false,
     "signatureSong": "Moon River",
     "lowSource": null,

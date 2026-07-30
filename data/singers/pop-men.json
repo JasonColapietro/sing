@@ -2,12 +2,16 @@
   {
     "name": "Michael Jackson",
     "voiceType": "Tenor",
-    "genres": ["Pop", "R&B", "Funk"],
+    "genres": [
+      "Pop",
+      "R&B",
+      "Funk"
+    ],
     "country": "USA",
     "activeFrom": 1969,
     "lowNote": "Eb2",
     "highNote": "F6",
-    "beltNote": "C5",
+    "beltNote": "Eb5",
     "whistle": false,
     "signatureSong": "Billie Jean",
     "lowSource": null,
@@ -17,12 +21,15 @@
   {
     "name": "George Michael",
     "voiceType": "Baritone",
-    "genres": ["Pop", "Soul"],
+    "genres": [
+      "Pop",
+      "Soul"
+    ],
     "country": "UK",
     "activeFrom": 1982,
     "lowNote": "E2",
     "highNote": "A5",
-    "beltNote": "A4",
+    "beltNote": "C5",
     "whistle": false,
     "signatureSong": "Careless Whisper",
     "lowSource": null,
@@ -30,29 +37,17 @@
     "blurb": "Warm baritone with a smoky bottom; slides into a controlled, airy falsetto on hooks."
   },
   {
-    "name": "Prince",
-    "voiceType": "Tenor",
-    "genres": ["Pop", "Funk", "R&B"],
-    "country": "USA",
-    "activeFrom": 1978,
-    "lowNote": "E2",
-    "highNote": "C6",
-    "beltNote": "Bb4",
-    "whistle": false,
-    "signatureSong": "Purple Rain",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Moves between gritty chest shouts and a piercing falsetto, often inside a single phrase."
-  },
-  {
     "name": "Justin Timberlake",
     "voiceType": "Tenor",
-    "genres": ["Pop", "R&B"],
+    "genres": [
+      "Pop",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1996,
     "lowNote": "A2",
     "highNote": "C6",
-    "beltNote": "A4",
+    "beltNote": "B4",
     "whistle": false,
     "signatureSong": "Cry Me a River",
     "lowSource": null,
@@ -62,12 +57,16 @@
   {
     "name": "Bruno Mars",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Funk", "R&B"],
+    "genres": [
+      "Pop",
+      "Funk",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 2010,
     "lowNote": "G2",
     "highNote": "D6",
-    "beltNote": "C5",
+    "beltNote": "E5",
     "whistle": false,
     "signatureSong": "Just the Way You Are",
     "lowSource": null,
@@ -77,12 +76,16 @@
   {
     "name": "Ed Sheeran",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Singer-Songwriter", "Folk"],
+    "genres": [
+      "Pop",
+      "Singer-Songwriter",
+      "Folk"
+    ],
     "country": "UK",
     "activeFrom": 2011,
     "lowNote": "G2",
     "highNote": "A5",
-    "beltNote": "A4",
+    "beltNote": "B4",
     "whistle": false,
     "signatureSong": "Shape of You",
     "lowSource": null,
@@ -92,12 +95,15 @@
   {
     "name": "Harry Styles",
     "voiceType": "Baritone",
-    "genres": ["Pop", "Rock"],
+    "genres": [
+      "Pop",
+      "Rock"
+    ],
     "country": "UK",
     "activeFrom": 2010,
     "lowNote": "E2",
     "highNote": "F5",
-    "beltNote": "A4",
+    "beltNote": "C5",
     "whistle": false,
     "signatureSong": "Sign of the Times",
     "lowSource": null,
@@ -107,7 +113,10 @@
   {
     "name": "Shawn Mendes",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Singer-Songwriter"],
+    "genres": [
+      "Pop",
+      "Singer-Songwriter"
+    ],
     "country": "Canada",
     "activeFrom": 2014,
     "lowNote": "G2",
@@ -122,7 +131,11 @@
   {
     "name": "The Weeknd",
     "voiceType": "Tenor",
-    "genres": ["R&B", "Pop", "Synth-Pop"],
+    "genres": [
+      "R&B",
+      "Pop",
+      "Synth-Pop"
+    ],
     "country": "Canada",
     "activeFrom": 2011,
     "lowNote": "G2",
@@ -137,7 +150,10 @@
   {
     "name": "Charlie Puth",
     "voiceType": "Tenor",
-    "genres": ["Pop", "R&B"],
+    "genres": [
+      "Pop",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 2015,
     "lowNote": "G2",
@@ -152,7 +168,11 @@
   {
     "name": "Elton John",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Rock", "Singer-Songwriter"],
+    "genres": [
+      "Pop",
+      "Rock",
+      "Singer-Songwriter"
+    ],
     "country": "UK",
     "activeFrom": 1970,
     "lowNote": "F2",
@@ -167,7 +187,11 @@
   {
     "name": "Billy Joel",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Rock", "Singer-Songwriter"],
+    "genres": [
+      "Pop",
+      "Rock",
+      "Singer-Songwriter"
+    ],
     "country": "USA",
     "activeFrom": 1973,
     "lowNote": "F2",
@@ -182,7 +206,10 @@
   {
     "name": "Rick Astley",
     "voiceType": "Baritone",
-    "genres": ["Pop", "Synth-Pop"],
+    "genres": [
+      "Pop",
+      "Synth-Pop"
+    ],
     "country": "UK",
     "activeFrom": 1987,
     "lowNote": "F2",
@@ -197,7 +224,10 @@
   {
     "name": "Adam Levine",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Rock"],
+    "genres": [
+      "Pop",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 2002,
     "lowNote": "A2",
@@ -212,12 +242,16 @@
   {
     "name": "Jason Mraz",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Singer-Songwriter", "Folk"],
+    "genres": [
+      "Pop",
+      "Singer-Songwriter",
+      "Folk"
+    ],
     "country": "USA",
     "activeFrom": 2002,
     "lowNote": "F2",
     "highNote": "Bb5",
-    "beltNote": "A4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "I'm Yours",
     "lowSource": null,
@@ -227,7 +261,10 @@
   {
     "name": "Frankie Valli",
     "voiceType": "Tenor",
-    "genres": ["Pop", "R&B"],
+    "genres": [
+      "Pop",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1962,
     "lowNote": "A2",
@@ -242,7 +279,10 @@
   {
     "name": "Barry Gibb",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Disco"],
+    "genres": [
+      "Pop",
+      "Disco"
+    ],
     "country": "UK",
     "activeFrom": 1967,
     "lowNote": "F2",
@@ -257,7 +297,10 @@
   {
     "name": "Justin Bieber",
     "voiceType": "Tenor",
-    "genres": ["Pop", "R&B"],
+    "genres": [
+      "Pop",
+      "R&B"
+    ],
     "country": "Canada",
     "activeFrom": 2009,
     "lowNote": "A2",
@@ -272,7 +315,11 @@
   {
     "name": "Morten Harket",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Synth-Pop", "New Wave"],
+    "genres": [
+      "Pop",
+      "Synth-Pop",
+      "New Wave"
+    ],
     "country": "Norway",
     "activeFrom": 1985,
     "lowNote": "A2",

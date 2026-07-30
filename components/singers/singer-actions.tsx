@@ -111,10 +111,17 @@ export function CompareWithMe({ s }: { s: Singer }) {
           </div>
         ))}
       </div>
-      <div className="mt-4">
+      {/* Where to go with the comparison — into practice, not a dead end. */}
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <LinkButton href="/warmups" variant="outline" size="sm">
+          Train toward the gap
+        </LinkButton>
+        <LinkButton href="/songs" variant="ghost" size="sm">
+          Practice songs in your range
+        </LinkButton>
         <Link
           href="/range"
-          className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim underline decoration-line underline-offset-2 hover:text-mut"
+          className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut underline decoration-line underline-offset-2 hover:text-ink"
         >
           Retake the range test
         </Link>

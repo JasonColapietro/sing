@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SINGERS } from "@/lib/singers";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import HeroVisual from "@/components/landing/hero-visual";
 import ComparisonTable from "@/components/landing/comparison";
@@ -9,6 +10,7 @@ import {
   ProgressGlyph,
   RangeGlyph,
   RecorderGlyph,
+  SingersGlyph,
   SongGlyph,
   StudioGlyph,
   ToolsGlyph,
@@ -33,6 +35,12 @@ const FEATURES = [
     label: "Range test",
     desc: "Find your lowest and highest notes and get your voice type.",
     Glyph: RangeGlyph,
+  },
+  {
+    href: "/singers",
+    label: "Famous ranges",
+    desc: `${SINGERS.length} famous voices on one keyboard — see whose range matches yours.`,
+    Glyph: SingersGlyph,
   },
   {
     href: "/ear-training",
@@ -133,7 +141,7 @@ export default function Home() {
       {/* 2 — Feature grid */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionLabel className="mb-4">Nine practice rooms</SectionLabel>
+          <SectionLabel className="mb-4">Ten practice rooms</SectionLabel>
           <h2 className="max-w-2xl text-3xl">
             Everything a practice session needs, one tab over
           </h2>

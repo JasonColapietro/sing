@@ -2,7 +2,11 @@
   {
     "name": "Chris Cornell",
     "voiceType": "Tenor",
-    "genres": ["Grunge", "Hard Rock", "Rock"],
+    "genres": [
+      "Grunge",
+      "Hard Rock",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 1988,
     "lowNote": "E2",
@@ -17,7 +21,11 @@
   {
     "name": "Layne Staley",
     "voiceType": "Baritone",
-    "genres": ["Grunge", "Alternative", "Hard Rock"],
+    "genres": [
+      "Grunge",
+      "Alternative",
+      "Hard Rock"
+    ],
     "country": "USA",
     "activeFrom": 1990,
     "lowNote": "E2",
@@ -32,7 +40,11 @@
   {
     "name": "Kurt Cobain",
     "voiceType": "Baritone",
-    "genres": ["Grunge", "Punk", "Alternative"],
+    "genres": [
+      "Grunge",
+      "Punk",
+      "Alternative"
+    ],
     "country": "USA",
     "activeFrom": 1989,
     "lowNote": "F2",
@@ -47,12 +59,16 @@
   {
     "name": "Eddie Vedder",
     "voiceType": "Baritone",
-    "genres": ["Grunge", "Rock", "Alternative"],
+    "genres": [
+      "Grunge",
+      "Rock",
+      "Alternative"
+    ],
     "country": "USA",
     "activeFrom": 1991,
     "lowNote": "D2",
     "highNote": "E5",
-    "beltNote": "A4",
+    "beltNote": "B4",
     "whistle": false,
     "signatureSong": "Alive",
     "lowSource": null,
@@ -62,12 +78,16 @@
   {
     "name": "Scott Weiland",
     "voiceType": "Baritone",
-    "genres": ["Grunge", "Alternative", "Hard Rock"],
+    "genres": [
+      "Grunge",
+      "Alternative",
+      "Hard Rock"
+    ],
     "country": "USA",
     "activeFrom": 1992,
     "lowNote": "E2",
     "highNote": "C#5",
-    "beltNote": "A4",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Interstate Love Song",
     "lowSource": null,
@@ -77,7 +97,11 @@
   {
     "name": "Thom Yorke",
     "voiceType": "Tenor",
-    "genres": ["Alternative", "Rock", "Electronic"],
+    "genres": [
+      "Alternative",
+      "Rock",
+      "Electronic"
+    ],
     "country": "UK",
     "activeFrom": 1992,
     "lowNote": "F2",
@@ -92,7 +116,11 @@
   {
     "name": "Jeff Buckley",
     "voiceType": "Tenor",
-    "genres": ["Alternative", "Rock", "Singer-Songwriter"],
+    "genres": [
+      "Alternative",
+      "Rock",
+      "Singer-Songwriter"
+    ],
     "country": "USA",
     "activeFrom": 1994,
     "lowNote": "E2",
@@ -105,24 +133,13 @@
     "blurb": "Very wide tenor with seamless falsetto shifts, long melisma, and near-whispered dynamic drops."
   },
   {
-    "name": "Maynard James Keenan",
-    "voiceType": "Baritone",
-    "genres": ["Metal", "Alternative", "Rock"],
-    "country": "USA",
-    "activeFrom": 1993,
-    "lowNote": "F2",
-    "highNote": "F#5",
-    "beltNote": "D5",
-    "whistle": false,
-    "signatureSong": "Schism",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Baritone with a controlled, narrow-vibrato line; moves to a piercing head voice without breaking tone."
-  },
-  {
     "name": "Chester Bennington",
     "voiceType": "Tenor",
-    "genres": ["Alternative", "Metal", "Rock"],
+    "genres": [
+      "Alternative",
+      "Metal",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 2000,
     "lowNote": "G2",
@@ -137,7 +154,11 @@
   {
     "name": "Brandon Boyd",
     "voiceType": "Tenor",
-    "genres": ["Alternative", "Rock", "Funk"],
+    "genres": [
+      "Alternative",
+      "Rock",
+      "Funk"
+    ],
     "country": "USA",
     "activeFrom": 1997,
     "lowNote": "F2",
@@ -152,7 +173,11 @@
   {
     "name": "Serj Tankian",
     "voiceType": "Baritone",
-    "genres": ["Metal", "Alternative", "Rock"],
+    "genres": [
+      "Metal",
+      "Alternative",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 1998,
     "lowNote": "F2",
@@ -167,7 +192,11 @@
   {
     "name": "Anthony Kiedis",
     "voiceType": "Baritone",
-    "genres": ["Funk", "Alternative", "Rock"],
+    "genres": [
+      "Funk",
+      "Alternative",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 1984,
     "lowNote": "F2",
@@ -182,7 +211,11 @@
   {
     "name": "Billy Corgan",
     "voiceType": "Tenor",
-    "genres": ["Alternative", "Grunge", "Rock"],
+    "genres": [
+      "Alternative",
+      "Grunge",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 1991,
     "lowNote": "F2",
@@ -195,29 +228,18 @@
     "blurb": "Nasal, reedy tenor with a whining edge; cuts through dense guitars by placement, not volume."
   },
   {
-    "name": "Dolores O'Riordan",
-    "voiceType": "Mezzo-soprano",
-    "genres": ["Alternative", "Rock", "Pop"],
-    "country": "Ireland",
-    "activeFrom": 1993,
-    "lowNote": "F3",
-    "highNote": "B5",
-    "beltNote": "E5",
-    "whistle": false,
-    "signatureSong": "Zombie",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Mezzo with a Limerick lilt, yodel-like register flips, and a keening upper chest tone."
-  },
-  {
     "name": "Shirley Manson",
     "voiceType": "Contralto",
-    "genres": ["Alternative", "Rock", "Electronic"],
+    "genres": [
+      "Alternative",
+      "Rock",
+      "Electronic"
+    ],
     "country": "UK",
     "activeFrom": 1995,
     "lowNote": "F3",
     "highNote": "A5",
-    "beltNote": "E5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Only Happy When It Rains",
     "lowSource": null,
@@ -227,7 +249,11 @@
   {
     "name": "Alanis Morissette",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Alternative", "Rock", "Pop"],
+    "genres": [
+      "Alternative",
+      "Rock",
+      "Pop"
+    ],
     "country": "Canada",
     "activeFrom": 1995,
     "lowNote": "B2",
@@ -240,39 +266,13 @@
     "blurb": "Mezzo with hard consonants, sudden yelps into head voice, and heavy pitch bending on long notes."
   },
   {
-    "name": "Corey Taylor",
-    "voiceType": "Baritone",
-    "genres": ["Metal", "Hard Rock", "Alternative"],
-    "country": "USA",
-    "activeFrom": 1999,
-    "lowNote": "E2",
-    "highNote": "A5",
-    "beltNote": null,
-    "whistle": false,
-    "signatureSong": "Duality",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Baritone that alternates clean melodic lines with a distorted false-cord scream."
-  },
-  {
-    "name": "Amy Lee",
-    "voiceType": "Mezzo-soprano",
-    "genres": ["Alternative", "Rock", "Metal"],
-    "country": "USA",
-    "activeFrom": 2003,
-    "lowNote": "E3",
-    "highNote": "C6",
-    "beltNote": "F5",
-    "whistle": false,
-    "signatureSong": "Bring Me to Life",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Trained mezzo with classical vowel shaping; steady belt and a clear, unhurried vibrato."
-  },
-  {
     "name": "Chino Moreno",
     "voiceType": "Tenor",
-    "genres": ["Alternative", "Metal", "Rock"],
+    "genres": [
+      "Alternative",
+      "Metal",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 1995,
     "lowNote": "F2",
@@ -287,12 +287,16 @@
   {
     "name": "Fiona Apple",
     "voiceType": "Contralto",
-    "genres": ["Alternative", "Singer-Songwriter", "Jazz"],
+    "genres": [
+      "Alternative",
+      "Singer-Songwriter",
+      "Jazz"
+    ],
     "country": "USA",
     "activeFrom": 1996,
     "lowNote": "C3",
     "highNote": "A5",
-    "beltNote": "E5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Criminal",
     "lowSource": null,

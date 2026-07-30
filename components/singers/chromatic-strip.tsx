@@ -37,15 +37,20 @@ export function ChromaticStrip({
   const x = (m: number) => (m - stripLow) * CW;
 
   return (
-    <svg
-      viewBox={`0 0 ${W} ${KH + LABEL_H}`}
-      className={className ?? "h-auto w-full"}
-      role="img"
-      aria-label={
-        label ??
-        `Keyboard strip highlighting the range ${midiToLabel(low)} to ${midiToLabel(high)}.`
-      }
-    >
+    // Wide ranges (5+ octaves) would otherwise scale the strip so small its
+    // labels and belt dash become illegible on phones — floor the rendered
+    // width and let narrow screens scroll the strip instead.
+    <div className={`overflow-x-auto ${className ?? ""}`}>
+      <svg
+        viewBox={`0 0 ${W} ${KH + LABEL_H}`}
+        className="h-auto w-full"
+        style={{ minWidth: n * 8 }}
+        role="img"
+        aria-label={
+          label ??
+          `Keyboard strip highlighting the range ${midiToLabel(low)} to ${midiToLabel(high)}.`
+        }
+      >
       {Array.from({ length: n }, (_, i) => {
         const m = stripLow + i;
         const black = isBlack(m);
@@ -82,6 +87,7 @@ export function ChromaticStrip({
           stroke="#9d3f33"
           strokeWidth={1.5}
           strokeDasharray="3 2"
+          vectorEffect="non-scaling-stroke"
         />
       )}
       {[low, high].map((m) => (
@@ -113,6 +119,7 @@ export function ChromaticStrip({
             {midiToLabel(m)}
           </text>
         ))}
-    </svg>
+      </svg>
+    </div>
   );
 }
