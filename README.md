@@ -120,18 +120,23 @@ Live mode is already provisioned in the LLC account:
 | Annual | `price_1TypNIRdcsaZ58FLFr5kdy7p` — $30.00/yr, lookup key `suede_pro_annual` |
 | Billing portal | the account's existing live default config, cancel-at-period-end enabled |
 
-**The one remaining step** is swapping `STRIPE_SECRET_KEY` on the `sing` project
-from the sandbox key to the LLC's live secret key (Vercel dashboard or
-`vercel env`). Nothing in the code changes: prices resolve by lookup key, which
-is exactly why the same build serves both modes.
+**Production is live.** `STRIPE_SECRET_KEY` on the `sing` project holds the LLC's
+live secret key, and `/api/checkout` mints `cs_live_…` sessions against the
+prices above — verified with `livemode: true`, correct amounts, and
+`subscription` mode. No code differs between modes: prices resolve by lookup
+key, which is exactly why the same build serves both.
+
+`.env.local` still carries the sandbox key, so local development stays in test
+mode. That is deliberate — don't pull the live key onto a laptop.
 
 Two traps to know:
 
-- **The Marketplace integration owns `STRIPE_SECRET_KEY` today.** It injected the
-  sandbox key when `suede-sing-pro` was provisioned, so a re-sync or reinstall of
-  that resource can overwrite a hand-set live key and quietly drop production
-  back into test mode. If checkout starts minting `cs_test_…` sessions, that is
-  what happened.
+- **The Marketplace resource `suede-sing-pro` still exists and originally set
+  `STRIPE_SECRET_KEY`.** A re-sync or reinstall of it can overwrite the live key
+  and quietly drop production back into test mode. If checkout starts minting
+  `cs_test_…` sessions, that is what happened — reset the variable and redeploy.
+  Env changes need a rebuild to take effect (`bash scripts/deploy-prod.sh`);
+  editing the variable alone changes nothing until then.
 - **Test and live are separate data spaces.** Anything created in one is invisible
   to the other, so a live account with no prices under the lookup keys makes
   `/api/checkout` fail. `scripts/stripe-setup.mjs` is idempotent and creates the
