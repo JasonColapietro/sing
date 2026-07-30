@@ -15,7 +15,8 @@
     "signatureSong": "No Woman, No Cry",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light nasal-forward tenor; clipped offbeat phrasing, thin bright top, easy slides into head voice."
+    "blurb": "Light nasal-forward tenor; clipped offbeat phrasing, thin bright top, easy slides into head voice.",
+    "technique": "Tone sits high in the nose and front of the mouth, light for a tenor reaching C5 — placement carries it, not pressure. Onsets are soft, often slightly breathy, and consonants get clipped so syllables land in the gaps left by the drum and bass. Vibrato stays narrow and arrives late. Above the staff he thins into head voice rather than belting. Students copy the vowels and miss the offbeat, which is where this voice actually lives."
   },
   {
     "name": "Peter Tosh",
@@ -32,7 +33,8 @@
     "signatureSong": "Legalize It",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark chesty baritone, flat and declamatory; sits near speech pitch with almost no vibrato."
+    "blurb": "Dark chesty baritone, flat and declamatory; sits near speech pitch with almost no vibrato.",
+    "technique": "Almost none of this leaves speech territory. The voice is dark and thick-cored, delivered flat and declamatory, with hard glottal onsets and very little vibrato to soften a held note. Lines stay inside a narrow working band and lean on rhythm and consonant weight for emphasis instead of pitch movement. Toward G4 the sound gets tighter and louder rather than lighter, and the phrase usually ends before the note has to bloom."
   },
   {
     "name": "Jimmy Cliff",
@@ -50,7 +52,8 @@
     "signatureSong": "Many Rivers to Cross",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright gospel-leaning tenor; open vowels, long sustained upper notes, wide vibrato at phrase ends."
+    "blurb": "Bright gospel-leaning tenor; open vowels, long sustained upper notes, wide vibrato at phrase ends.",
+    "technique": "Open vowels and a lifted soft palate give this tenor its gospel brightness — forward, ringing, never covered. Attacks are clean and unscooped, phrases climb rather than sit, and long upper notes take a wide, slow vibrato that only switches on once the pitch has settled. Many Rivers to Cross shows that habit plainly. Bring the vibrato in too early and the straight-tone arrival that makes the note land disappears."
   },
   {
     "name": "Toots Hibbert",
@@ -68,7 +71,8 @@
     "signatureSong": "Pressure Drop",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rasping soul-shouter tenor; grit on every held note, pushes chest voice up until it frays."
+    "blurb": "Rasping soul-shouter tenor; grit on every held note, pushes chest voice up until it frays.",
+    "technique": "Grit is the point, and it comes from air pressure meeting a firmly closed larynx, not from scraping the throat. Chest weight gets carried high and pushed until the tone frays, which is what gives held notes their rasp. Phrasing is shouted and rhythmic, landing hard on downbeats, with short interjections dropped between lines. Nothing releases into a light head register. The imitation that fails is the one that growls with no breath support underneath."
   },
   {
     "name": "Dennis Brown",
@@ -86,7 +90,8 @@
     "signatureSong": "Money in My Pocket",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Round warm tenor with a smooth chest-to-head handoff mid-phrase and quick falsetto flips."
+    "blurb": "Round warm tenor with a smooth chest-to-head handoff mid-phrase and quick falsetto flips.",
+    "technique": "Two numbers explain this voice: a belt topping out near Bb4 and a range that keeps going to D5. Everything above the belt is head voice or a quick falsetto flip, and the handoff happens mid-phrase with no audible seam. Tone is round and warm, onsets gentle, vibrato even and moderate. Ornaments stay small — a turn, a scoop into a sustained note — and the highest notes arrive light rather than muscled up in chest."
   },
   {
     "name": "Buju Banton",
@@ -103,7 +108,8 @@
     "signatureSong": "Untold Stories",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gravel-heavy bass-baritone; sandpaper texture, chanted rhythm, shouts the top rather than lifting."
+    "blurb": "Gravel-heavy bass-baritone; sandpaper texture, chanted rhythm, shouts the top rather than lifting.",
+    "technique": "Sandpaper texture rides on top of a genuinely low, heavy instrument, and the rasp is constant rather than an effect switched on for emphasis. Delivery is chanted and rhythmic, closer to declamation than to melody, with pitches often approached from below and left without vibrato. Near A4 the sound is shouted, not lifted into a lighter register. The low anchor underneath is what keeps that grain from collapsing into plain strain."
   },
   {
     "name": "Shaggy",
@@ -121,7 +127,8 @@
     "signatureSong": "It Wasn't Me",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Very deep gravel bass-baritone used percussively; half-spoken toasting, few sustained pitches."
+    "blurb": "Very deep gravel bass-baritone used percussively; half-spoken toasting, few sustained pitches.",
+    "technique": "Rhythm and texture do nearly everything here. The voice works as a percussion instrument: half-spoken toasting, very few sustained pitches, and a gravelly bottom that stays close to the microphone instead of projecting. Onsets are dry and consonant-driven, and the top of the stated range barely gets used. The usual mistake is pushing volume to find the depth — the depth comes from a relaxed low placement and a quiet, close delivery."
   },
   {
     "name": "Grace Jones",
@@ -140,7 +147,8 @@
     "signatureSong": "Pull Up to the Bumper",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Flat-toned contralto pitched near speech; hard consonants, dry chest resonance, vibrato withheld."
+    "blurb": "Flat-toned contralto pitched near speech; hard consonants, dry chest resonance, vibrato withheld.",
+    "technique": "This contralto sits near speaking pitch and stays there, flat and dry and deliberately unwarmed. Chest resonance is present but never blooms, vibrato is withheld almost entirely, and consonants are struck hard so lines come out clipped and mechanical. Long notes hold straight through with no swell. Anyone imitating it tends to add expression — a vibrato, a crescendo, a lift toward Bb4 — and the coolness that carries the sound evaporates."
   },
   {
     "name": "Burna Boy",
@@ -158,7 +166,8 @@
     "signatureSong": "Last Last",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm baritone with a smoky edge; drags behind the beat, then drops to soft airy falsetto."
+    "blurb": "Warm baritone with a smoky edge; drags behind the beat, then drops to soft airy falsetto.",
+    "technique": "A baritone with smoke through the middle and a relaxed, unforced onset. Phrases sit behind the beat, syllables stretched lazily across the groove, and lines often finish by dropping into a soft, airy falsetto instead of climbing in chest. Vibrato is barely present. That rhythmic drag is the hard part to copy — sing right on the beat and the whole thing tightens up and loses its slouch."
   },
   {
     "name": "Wizkid",
@@ -176,7 +185,8 @@
     "signatureSong": "Essence",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light breathy tenor kept in a narrow band; low projection, sighing falsetto tails on line ends."
+    "blurb": "Light breathy tenor kept in a narrow band; low projection, sighing falsetto tails on line ends.",
+    "technique": "Keep it small. This tenor works in a narrow band with low projection, a breathy onset, and almost no chest push; the belt tops out around G4 while the range reaches C5, so the notes above that are falsetto sighs which fade rather than land. Phrasing is conversational, landing a fraction late against the groove. The common error is singing it loudly, because volume erases the intimacy that is the entire style."
   },
   {
     "name": "Tems",
@@ -194,7 +204,8 @@
     "signatureSong": "Free Mind",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Husky contralto sitting far lower than most pop voices; hoarse-edged tone, lazy pitch slides."
+    "blurb": "Husky contralto sitting far lower than most pop voices; hoarse-edged tone, lazy pitch slides.",
+    "technique": "Notice how low this sits: a D3 floor and a heavy, hoarse-edged middle in the region where most pop voices are already thinning. Onsets are lazy and frequently slide up into the pitch from underneath. Chest weight carries to about Bb4, above which the tone goes breathy on the way to D5. Vibrato is slow and used sparingly. Brighten the vowels or lift the placement and the huskiness goes with them."
   },
   {
     "name": "Sade Adu",
@@ -212,7 +223,8 @@
     "signatureSong": "Smooth Operator",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Restrained contralto: narrow range, level dynamics, straight tone with vibrato barely used."
+    "blurb": "Restrained contralto: narrow range, level dynamics, straight tone with vibrato barely used.",
+    "technique": "Restraint is the technique. Dynamics stay level, tone stays straight, and vibrato is applied so lightly you catch it only at the very end of a phrase. Onsets are soft and unaspirated, vowels rounded and cool, and lines stay inside a narrow working band without reaching for a climax. Melisma is rare. Nothing gets added that the line does not ask for, which is why extra volume or decoration reads immediately as wrong."
   },
   {
     "name": "Angélique Kidjo",
@@ -230,7 +242,8 @@
     "signatureSong": "Agolo",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Brassy forward mezzo with heavy chest projection; percussive diction, long loud held notes."
+    "blurb": "Brassy forward mezzo with heavy chest projection; percussive diction, long loud held notes.",
+    "technique": "Forward placement and a brassy core carry this mezzo, with real chest projection and a percussive attack on every consonant. Held notes stay loud and steady, driven from the breath rather than squeezed in the throat, and the belt carries to about C5 before the tone lightens on its way to E5. Rhythm is exact, usually locked to the drums. Undersinging it does not work — that volume needs full support to stay in tune."
   },
   {
     "name": "Youssou N'Dour",
@@ -248,7 +261,8 @@
     "signatureSong": "7 Seconds",
     "lowSource": null,
     "highSource": null,
-    "blurb": "High keening tenor shaped by chant ornament; rapid microtonal turns and a piercing bright top."
+    "blurb": "High keening tenor shaped by chant ornament; rapid microtonal turns and a piercing bright top.",
+    "technique": "Ornament drives this voice more than sustain does. The tenor is high, bright and keening, full of rapid microtonal turns between neighboring pitches, and it tends to bend into a note rather than start cleanly on it. Chest carries to around B4; above that the sound stays piercing but narrows toward D5. Phrases finish in long calls. Flatten those turns into plain notes and the line loses everything that identifies it."
   },
   {
     "name": "Salif Keita",
@@ -266,7 +280,8 @@
     "signatureSong": "Madan",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Reedy high tenor with a nasal cutting edge; melismatic lines and sustained calls near the top."
+    "blurb": "Reedy high tenor with a nasal cutting edge; melismatic lines and sustained calls near the top.",
+    "technique": "Nasal, reedy placement gives this high tenor its cutting edge; the tone is thin by design, not by weakness. Lines run melismatic, decorated with fast turns and slides, and the upper register rides on that narrow forward placement instead of on chest weight. Sustained notes near the top act as calls, held straight before any vibrato shows up. Warming and covering the vowels loses the edge that lets the voice cut through a band."
   },
   {
     "name": "Miriam Makeba",
@@ -284,7 +299,8 @@
     "signatureSong": "Pata Pata",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rich forward mezzo; crisp multilingual diction, click consonants, bell-clear controlled top."
+    "blurb": "Rich forward mezzo; crisp multilingual diction, click consonants, bell-clear controlled top.",
+    "technique": "Diction is half of it: crisp consonants, clean vowel changes across languages, and click sounds placed rhythmically inside the melodic line. Tone is rich and forward in the mask, with an even, controlled top that arrives bell-clear rather than pushed. Onsets are precise, vibrato moderate and steady, phrasing dance-driven and exact. Students smear the consonants chasing a smoother legato, and the rhythmic snap that carries the whole thing goes flat."
   },
   {
     "name": "Cesária Évora",
@@ -302,7 +318,8 @@
     "signatureSong": "Sodade",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Smoky low contralto sung softly close to the mic; conversational, unhurried, vibrato minimal."
+    "blurb": "Smoky low contralto sung softly close to the mic; conversational, unhurried, vibrato minimal.",
+    "technique": "Sung inches from the microphone at low volume, this contralto trades projection for detail — you hear the breath, the consonants, the smoke in the lower middle. Onsets are soft, the tempo unhurried, and phrases float a little behind the accompaniment. Vibrato is minimal and vowels stay dark and loose. Push it any louder and the intimacy that makes those low notes work is gone."
   },
   {
     "name": "Fela Kuti",
@@ -321,6 +338,7 @@
     "signatureSong": "Zombie",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rough mid-weight baritone built for call-and-response chant; talks pitch, shouts line endings."
+    "blurb": "Rough mid-weight baritone built for call-and-response chant; talks pitch, shouts line endings.",
+    "technique": "Chant, not melody, organizes this baritone. Pitch is often spoken or half-sung, parked in a rough mid-weight middle, with line endings shouted for emphasis and left open for a group answer. Rhythm rules everything: syllables lock to the groove and repeat, and long sustains are rare. Vibrato is essentially absent. Smoothing the delivery into legato melody works against it, because the whole approach is percussive and conversational."
   }
 ]

@@ -12,7 +12,8 @@
     "signatureSong": "I Will Always Love You",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gospel-trained mix with a bright forward tone; runs stay in chest weight instead of thinning out."
+    "blurb": "Gospel-trained mix with a bright forward tone; runs stay in chest weight instead of thinning out.",
+    "technique": "Listen for a bright, forward placement with real thickness behind it: the tone sits high in the mask but the cords stay fully together, so a G5 belt lands with the same core as a D4. Onsets are clean and unaspirated, vibrato arrives at the tail of a held note rather than the start, and melisma keeps chest weight instead of lightening. In the final chorus of \"I Will Always Love You\" the size comes from breath speed and narrowed vowels, not from pushed volume or a clenched jaw."
   },
   {
     "name": "Mariah Carey",
@@ -27,7 +28,8 @@
     "signatureSong": "Vision of Love",
     "lowSource": "Bye Bye",
     "highSource": "Emotions",
-    "blurb": "Breathy low register, dense upper mix, and a whistle top used as melody rather than decoration."
+    "blurb": "Breathy low register, dense upper mix, and a whistle top used as melody rather than decoration.",
+    "technique": "Three distinct sounds get stacked in one phrase: an airy, half-voiced bottom, a compressed mix that belts to around G5, and a whistle that sits far above it and functions as a written line, not a stunt. Notice how the whistle enters without a scoop or a break — the cords are already set before air moves. Riffs are fast, rhythmically placed off the beat, and articulated with the tongue rather than the throat. The usual mistake is chasing the top of \"Emotions\" before the mix underneath it is stable."
   },
   {
     "name": "Celine Dion",
@@ -42,7 +44,8 @@
     "signatureSong": "My Heart Will Go On",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Narrow vowels and a nasal-forward mix let her hold long belted phrases at steady pressure."
+    "blurb": "Narrow vowels and a nasal-forward mix let her hold long belted phrases at steady pressure.",
+    "technique": "Verses often begin almost spoken and quiet, with soft aspirate onsets, then build in one long ramp toward a sustained belt near G5. The vowels narrow as pitch rises, which keeps the resonance nasal-forward and lets the note hold at even pressure rather than blowing out. Consonants are crisp and slightly over-articulated. A fast, narrow vibrato usually switches on partway through a long note instead of at its start. The architecture is the point: the ending only reads as a climax because the opening was held so far back."
   },
   {
     "name": "Barbra Streisand",
@@ -57,7 +60,8 @@
     "signatureSong": "The Way We Were",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Long legato lines with exact vowel placement; climaxes come from breath control, not volume."
+    "blurb": "Long legato lines with exact vowel placement; climaxes come from breath control, not volume.",
+    "technique": "Everything hangs on legato: notes connect with no gap, no scoop, and no restart of air, so a phrase can run long past where most singers would take a breath. The belt tops out around D5 and the range above it is sung as a lightened head tone, so climaxes come from lengthening and swelling a line rather than adding volume. Tall, exact vowels carry a slow and often delayed vibrato, while consonants land late, right on the beat — and that timing is what keeps a slow ballad from drifting."
   },
   {
     "name": "Cher",
@@ -72,7 +76,8 @@
     "signatureSong": "Believe",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thick low-set chest voice with wide vibrato; hard consonants, phrasing that sits behind the beat."
+    "blurb": "Thick low-set chest voice with wide vibrato; hard consonants, phrasing that sits behind the beat.",
+    "technique": "Weight comes from a chest register set low and thick, with a dark, almost brassy edge that carries down toward F2 without going hollow. Vibrato is wide and slow — closer to a swell than a flutter — and it tends to open up on the last beat of a held word. Consonants hit hard, and phrases sit a hair behind the beat, which reads as weight. Above the D5 belt the tone releases into something lighter. Dropping the larynx to fake that depth just produces a hooty, unfocused sound."
   },
   {
     "name": "Madonna",
@@ -87,7 +92,8 @@
     "signatureSong": "Like a Prayer",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Early records sit at speech-level chest tone; later work adds a rounder, trained middle register."
+    "blurb": "Early records sit at speech-level chest tone; later work adds a rounder, trained middle register.",
+    "technique": "Most of the singing happens in a narrow band at speech level, delivered with a thin, bright chest tone and very little vibrato — the interest lives in rhythm and consonant placement, not in tone color. With the belt around C5 and the ceiling well above it, the upper notes come out as a light, sometimes deliberately girlish head voice rather than a pushed chest note. Later material sits rounder and lower in the throat. The rhythmic snap depends on that lightness; extra weight and vibrato blunt it immediately."
   },
   {
     "name": "Kate Bush",
@@ -102,7 +108,8 @@
     "signatureSong": "Wuthering Heights",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Fluttering vibrato and character placement; jumps from breathy speech to a piercing head voice."
+    "blurb": "Fluttering vibrato and character placement; jumps from breathy speech to a piercing head voice.",
+    "technique": "Character comes first and tone follows it, so the placement shifts line to line: breathy near-speech, a nasal pinched middle, then a thin, piercing head voice reached by leap rather than by climb. Vibrato flutters fast and narrow, sometimes fast enough to read as a trill. Words get stretched, swallowed, or bitten off for effect, and glides between distant notes are audible on purpose. In \"Wuthering Heights\" the high writing stays in head voice throughout. Students squeeze the throat for that thinness instead of letting the cords stay light."
   },
   {
     "name": "Olivia Newton-John",
@@ -117,7 +124,8 @@
     "signatureSong": "Hopelessly Devoted to You",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Clear light tone with soft onsets and almost no rasp; relies on pitch accuracy over power."
+    "blurb": "Clear light tone with soft onsets and almost no rasp; relies on pitch accuracy over power.",
+    "technique": "Clarity does the work here. Onsets are soft and slightly breathy, the tone carries no rasp at all, and the transition into head voice is smoothed over so completely that the seam is hard to hear. A light vibrato usually waits for the end of a sustained note. Pitch lands dead center with only small country-style bends into a few words. Nothing is belted. This is a sound built by taking effort away rather than adding it, and too much air is what turns clear into foggy."
   },
   {
     "name": "Karen Carpenter",
@@ -132,7 +140,8 @@
     "signatureSong": "Close to You",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm low-middle register sung close to the mic, minimal vibrato, very even air pressure."
+    "blurb": "Warm low-middle register sung close to the mic, minimal vibrato, very even air pressure.",
+    "technique": "Nearly all of it lives in the low-middle, a region most singers pass through on the way up, and it is sung close to the microphone at a conversational volume. Air pressure barely changes across a phrase, vibrato is minimal, and there is almost no scoop into notes — pitches arrive already centered. Consonants stay soft so the line never breaks. Two things ruin an imitation: transposing it up into a brighter part of the voice, and adding vibrato, which immediately makes the evenness disappear."
   },
   {
     "name": "Diana Ross",
@@ -147,7 +156,8 @@
     "signatureSong": "Ain't No Mountain High Enough",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin-edged bright tone with breathy onsets; phrasing stays conversational across the groove."
+    "blurb": "Thin-edged bright tone with breathy onsets; phrasing stays conversational across the groove.",
+    "technique": "Thin cord closure gives a bright, narrow edge that cuts through a dense track without much volume behind it. Onsets are breathy, words are delivered conversationally on top of the groove, and the top of the range is reached as a light head tone rather than belted. What vibrato there is stays small, and it often disappears entirely. Ornament is sparse — a bend or a single turn, not a run. Restraint and forward placement are the whole appeal, and added soul weight or heavy melisma pulls against them."
   },
   {
     "name": "Annie Lennox",
@@ -162,7 +172,8 @@
     "signatureSong": "Sweet Dreams (Are Made of This)",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark chesty low notes under a hard-edged mid belt; tall vowels, vibrato held back until late."
+    "blurb": "Dark chesty low notes under a hard-edged mid belt; tall vowels, vibrato held back until late.",
+    "technique": "Two clear gears: a dark, fully chested bottom that stays resonant near G2, and a hard-edged mid belt topping out around Eb5 that gets its bite from tall, slightly covered vowels rather than from shouting. Vibrato is withheld — long notes sit straight and only open up in the final moment. Onsets are firm and precise, with no scooping, and phrases are cut off cleanly. Above the belt the tone thins into head voice. That edge is built in the vowel, never in the throat."
   },
   {
     "name": "Björk",
@@ -177,7 +188,8 @@
     "signatureSong": "It's Oh So Quiet",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Swings from whisper to full-throat shout in a bar; open vowels and glottal attacks drive phrasing."
+    "blurb": "Swings from whisper to full-throat shout in a bar; open vowels and glottal attacks drive phrasing.",
+    "technique": "Dynamics move in jumps, not ramps: a near-whisper can become a wide-open shout inside a bar, which is exactly the device \"It's Oh So Quiet\" is built on. Attacks are frequently glottal, vowels stay open and unrounded, and consonants get rolled or trilled for rhythm. The upper range is bright and edgy rather than rounded, and there is a rasp available on demand at full volume. Vibrato appears irregularly, as an expressive choice. The shout has to be supported low; copying it from the throat gets tiring fast."
   },
   {
     "name": "Cyndi Lauper",
@@ -192,7 +204,8 @@
     "signatureSong": "Time After Time",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright edgy chest notes that flip abruptly into a thin, wide-vibrato upper register."
+    "blurb": "Bright edgy chest notes that flip abruptly into a thin, wide-vibrato upper register.",
+    "technique": "The register change is the signature: bright, nasal-edged chest notes flip suddenly into a thin upper voice with a wide, loose vibrato, and the flip is left audible rather than smoothed over. It reads almost like a yodel on wide leaps. Lower singing is conversational and often gentle, as in \"Time After Time\"; the edge only appears when she pushes forward into the nose and mask. Students hear the flip as a crack and try to eliminate it, which removes the whole effect — practice it deliberately at low volume."
   },
   {
     "name": "Linda Ronstadt",
@@ -207,6 +220,7 @@
     "signatureSong": "Blue Bayou",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Full-bodied chest voice with clean intonation; carries weight high before easing into head voice."
+    "blurb": "Full-bodied chest voice with clean intonation; carries weight high before easing into head voice.",
+    "technique": "Full chest weight is carried surprisingly high before the voice releases into a round head tone, and the handoff is done by easing pressure rather than by flipping — the sustained high line late in \"Blue Bayou\" shows the release clearly. Intonation is exact, onsets are firm and unaspirated, and vibrato is even and moderate in width, arriving after the pitch is established. Phrasing sits right on the beat with country-style bends on individual words. The roundness up there survives only because the height is eased into instead of forced."
   }
 ]

@@ -16,7 +16,8 @@
     "signatureSong": "Black Hole Sun",
     "lowSource": null,
     "highSource": "Beyond the Wheel",
-    "blurb": "Grit-heavy tenor that stays connected into a high sustained scream; wide vibrato on held notes."
+    "blurb": "Grit-heavy tenor that stays connected into a high sustained scream; wide vibrato on held notes.",
+    "technique": "Grit sits on top of a fully connected chest tone rather than replacing it, so the rasp never costs him pitch. Onsets are firm, almost glottal, and vibrato arrives late and wide once a note has been held a while. Above the staff he keeps that F#5 belt in a narrowed vowel with a lot of twang instead of opening the throat. Reach for it as a shout and the squeeze takes the ring away."
   },
   {
     "name": "Layne Staley",
@@ -35,7 +36,8 @@
     "signatureSong": "Man in the Box",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal-edged baritone with a heavy chest push; his stacked harmonies with Cantrell define the sound."
+    "blurb": "Nasal-edged baritone with a heavy chest push; his stacked harmonies with Cantrell define the sound.",
+    "technique": "Nasal buzz carries the tone forward while the weight underneath stays thick and baritone-heavy, which is why the voice reads as pressed even at moderate volume. He holds long notes nearly straight, letting a slow wide vibrato in at the very end, and doubles himself in close harmony that demands identical vowels take after take. Copying the nasality by pinching the throat is the usual mistake — it belongs in the resonance, not the larynx."
   },
   {
     "name": "Kurt Cobain",
@@ -54,7 +56,8 @@
     "signatureSong": "Smells Like Teen Spirit",
     "lowSource": null,
     "highSource": "Aneurysm",
-    "blurb": "Rasped baritone that shifts from muttered verses to a torn, throat-forward shout at the chorus."
+    "blurb": "Rasped baritone that shifts from muttered verses to a torn, throat-forward shout at the chorus.",
+    "technique": "Verses sit barely above speech, dry and without vibrato, the pitch center allowed to sag. The chorus arrives as a throat-forward shout built from a compressed vowel and hard consonants rather than raw volume, and the phrasing drags a fraction behind the beat. Going straight to full-force screaming sounds nothing like it and falls apart by the second chorus; the tone is loud speech held on a pitch."
   },
   {
     "name": "Eddie Vedder",
@@ -73,7 +76,8 @@
     "signatureSong": "Alive",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Deep, rounded baritone with heavy vibrato and swallowed diction; sits low and pushes rather than lifts."
+    "blurb": "Deep, rounded baritone with heavy vibrato and swallowed diction; sits low and pushes rather than lifts.",
+    "technique": "Everything is dark and back-placed, with a low larynx and vowels that close in on themselves, so words blur while the tone stays round. Vibrato is wide and starts almost immediately. The ringing part of the voice lives under that B4 belt; notes above it come out thinner and yelped rather than fuller. Chasing the depth by pressing the tongue down flattens pitch and kills what diction is left."
   },
   {
     "name": "Scott Weiland",
@@ -92,7 +96,8 @@
     "signatureSong": "Interstate Love Song",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Croon-to-snarl baritone, often filtered through a megaphone; leans on slides into the note."
+    "blurb": "Croon-to-snarl baritone, often filtered through a megaphone; leans on slides into the note.",
+    "technique": "Low phrases are crooned close to the mic, then the same line hardens into a snarl as it climbs toward C#5. Pitches get approached from underneath with an audible slide, and vibrato, when it comes at all, is narrow and quick. Overdone, that scoop makes every note arrive late; the slide should finish before the beat rather than on it, so the target pitch is already there when the syllable lands."
   },
   {
     "name": "Thom Yorke",
@@ -111,7 +116,8 @@
     "signatureSong": "Creep",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light tenor that flips early into a thin, airy falsetto; small vibrato, softened consonants."
+    "blurb": "Light tenor that flips early into a thin, airy falsetto; small vibrato, softened consonants.",
+    "technique": "Weight stays light and the flip into falsetto happens early, well below where a tenor could still push, and that early flip is the character of the sound. Breath stays in the tone, consonants soften almost to nothing, and vibrato is small and shallow. Trying to keep chest voice alive all the way to that F5 is the usual error — the top is meant to thin out and go quiet, not open up."
   },
   {
     "name": "Jeff Buckley",
@@ -130,7 +136,8 @@
     "signatureSong": "Hallelujah",
     "lowSource": null,
     "highSource": "Grace",
-    "blurb": "Very wide tenor with seamless falsetto shifts, long melisma, and near-whispered dynamic drops."
+    "blurb": "Very wide tenor with seamless falsetto shifts, long melisma, and near-whispered dynamic drops.",
+    "technique": "Listen for how little seam there is between mix and falsetto: the shift happens inside a vowel rather than between notes, which is what lets long melismatic runs stay even. Dynamics drop to almost nothing and rebuild, audible throughout his reading of Hallelujah, and vibrato arrives late and narrow. Height comes from releasing pressure, not adding it — students push for the top and the ornaments stiffen into steps."
   },
   {
     "name": "Chester Bennington",
@@ -149,7 +156,8 @@
     "signatureSong": "In the End",
     "lowSource": null,
     "highSource": "Given Up",
-    "blurb": "Clean tenor with a rasp layer and screamed extension; abrupt switch between sung and torn tone."
+    "blurb": "Clean tenor with a rasp layer and screamed extension; abrupt switch between sung and torn tone.",
+    "technique": "Two tones operate here and they work as separate systems. Underneath is a bright, cleanly supported tenor with precise onsets and nearly straight tone up to that E5 belt; over it sits a distorted scream that reaches higher without the clean voice going with it. Manufacturing the rasp in the throat itself muddies both — the clean line has to stay intact underneath the distortion."
   },
   {
     "name": "Brandon Boyd",
@@ -168,7 +176,8 @@
     "signatureSong": "Drive",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm tenor with a loose, breathy falsetto and scooped phrasing; light attack on consonants."
+    "blurb": "Warm tenor with a loose, breathy falsetto and scooped phrasing; light attack on consonants.",
+    "technique": "Warmth comes from a relaxed jaw and aspirate onsets: notes are breathed into rather than struck, often scooped up from just below. Above D5 he lets go into a loose, unpressed falsetto with obvious air in it, and rhythm sits slightly behind the beat, close to conversation. The common error is hitting consonants hard, then squeezing the falsetto to match chest volume; it should get lighter, not louder."
   },
   {
     "name": "Serj Tankian",
@@ -187,7 +196,8 @@
     "signatureSong": "Chop Suey!",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Operatic-leaning baritone with fast register jumps, trills, and pinched nasal placement."
+    "blurb": "Operatic-leaning baritone with fast register jumps, trills, and pinched nasal placement.",
+    "technique": "Wide leaps between a heavy chest bottom and a pinched, bright head tone happen fast and land exactly on the beat — the theatrics are metrically strict. Add trills, staccato glottal attacks, exaggerated vowel shapes, and syllables fired at speed. Copy the character and the rhythm is the first thing to go. The full-voice ceiling sits near B4; everything above it is deliberately narrow and forward rather than powered."
   },
   {
     "name": "Anthony Kiedis",
@@ -206,7 +216,8 @@
     "signatureSong": "Under the Bridge",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Narrow baritone built for rhythmic talk-singing; thin falsetto used as color on choruses."
+    "blurb": "Narrow baritone built for rhythmic talk-singing; thin falsetto used as color on choruses.",
+    "technique": "Range is not the point. Most lines live inside a fifth, and the interest is rhythmic — talk-singing locked to sixteenth-note subdivisions with consonants used percussively, verses holding a flat pitch center on purpose. Choruses lift into a thin falsetto used as color rather than weight, with the full sound topping out around A4. Adding melodic ornament is exactly the wrong instinct; tighten the subdivision instead."
   },
   {
     "name": "Billy Corgan",
@@ -225,7 +236,8 @@
     "signatureSong": "1979",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal, reedy tenor with a whining edge; cuts through dense guitars by placement, not volume."
+    "blurb": "Nasal, reedy tenor with a whining edge; cuts through dense guitars by placement, not volume.",
+    "technique": "Placement is high, forward and frankly nasal, with a reedy whine that cuts through loud guitars by frequency rather than volume. Tone stays straight, vibrato barely appears, and breaks in the line are left in rather than smoothed over. Rounding the sound to make it prettier removes the one quality that lets it be heard, and pushing air at the C5 belt turns that edge into strain."
   },
   {
     "name": "Shirley Manson",
@@ -244,7 +256,8 @@
     "signatureSong": "Only Happy When It Rains",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Smoky low contralto, half-spoken in the verses, opening into a flat, cool-toned belt."
+    "blurb": "Smoky low contralto, half-spoken in the verses, opening into a flat, cool-toned belt.",
+    "technique": "Smoke and breath fill the low third of the voice, half-spoken through verses, consonants sneered rather than articulated cleanly. The lift into a chorus adds volume and brightness but keeps the same cool, uninvested affect, and vibrato stays minimal by choice. Warm it up with swell and emotion and the detachment that makes the delivery land goes with it."
   },
   {
     "name": "Alanis Morissette",
@@ -263,7 +276,8 @@
     "signatureSong": "You Oughta Know",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Mezzo with hard consonants, sudden yelps into head voice, and heavy pitch bending on long notes."
+    "blurb": "Mezzo with hard consonants, sudden yelps into head voice, and heavy pitch bending on long notes.",
+    "technique": "Consonants land hard and early, words crowd ahead of the beat, and long notes get bent well off center before resolving. Sudden yelps jump into a bright head voice, sometimes an octave above where the phrase was sitting. Those bends work only because they start and finish on pitch; students slide vaguely and land nowhere, then copy the nasal edge by squeezing rather than placing it forward."
   },
   {
     "name": "Chino Moreno",
@@ -282,7 +296,8 @@
     "signatureSong": "Change (In the House of Flies)",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Tenor split between a soft, breathy falsetto and a raw shout, often layered in one phrase."
+    "blurb": "Tenor split between a soft, breathy falsetto and a raw shout, often layered in one phrase.",
+    "technique": "Contrast is the technique: a soft, airy head tone at low volume in one bar, a raw open shout in the next, sometimes stacked across the same phrase. The quiet side needs steady airflow and no pressing at all. Full voice stops around D5, and what sits higher is distorted rather than sung. Students switch the shout on first and never build the soft half that gives it meaning."
   },
   {
     "name": "Fiona Apple",
@@ -301,6 +316,7 @@
     "signatureSong": "Criminal",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Contralto anchored in a husky low register; conversational timing with sudden gravel on peaks."
+    "blurb": "Contralto anchored in a husky low register; conversational timing with sudden gravel on peaks.",
+    "technique": "Speech shapes the phrasing — timing stretches and compresses against the beat, and diction stays crisp even at the husky bottom of the range. Weight is chest-heavy with a low, settled larynx, and gravel shows up only at the peaks of a line, then clears. Smoothing it into legato is the error; the lines are meant to arrive unevenly, with abrupt dynamic surges instead of a steady swell."
   }
 ]

@@ -15,7 +15,8 @@
     "signatureSong": "Crazy in Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dense mezzo chest voice with rapid-fire runs; stacks a belted mix near Eb5 without thinning out."
+    "blurb": "Dense mezzo chest voice with rapid-fire runs; stacks a belted mix near Eb5 without thinning out.",
+    "technique": "Weight is the first thing you hear: a thick, chest-dominant tone that stays chest-dominant as she climbs toward that G5 belt. Onsets are percussive and consonant-driven, and the vibrato is fast and narrow, arriving only at the end of a held note. Runs work as rhythm rather than decoration, so count them in sixteenths. Students copy the riffs and skip the breath support underneath, and the top turns shouty."
   },
   {
     "name": "Ariana Grande",
@@ -33,7 +34,8 @@
     "signatureSong": "thank u, next",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light lyric soprano; moves from breathy mix into whistle register with almost no audible gear change."
+    "blurb": "Light lyric soprano; moves from breathy mix into whistle register with almost no audible gear change.",
+    "technique": "Placement sits high and forward, with a light, slightly nasal mix that never carries much chest weight. Notice that the belt is marked at E5 while the ceiling runs to E7, which tells you most of the upper range is head voice and whistle, not chest. Onsets are soft and aspirate, and the passaggio is hidden by staying quiet through it. Forcing air pressure into the whistle instead of releasing it shuts the tone off entirely."
   },
   {
     "name": "Adele",
@@ -51,7 +53,8 @@
     "signatureSong": "Rolling in the Deep",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Chesty mezzo with wide vibrato and audible glottal onsets; works a narrow, heavily supported belt band."
+    "blurb": "Chesty mezzo with wide vibrato and audible glottal onsets; works a narrow, heavily supported belt band.",
+    "technique": "Listen to the onset: many phrases begin with a small glottal click, then open into a broad, chesty tone with slow, wide vibrato. The belt band is narrow, right around E5, so impact comes from support and vowel depth rather than from climbing higher. Phrases lean slightly behind the beat and often finish with a downward bend. The common error is muscling volume in the throat to match that weight instead of letting the ribs and breath carry it."
   },
   {
     "name": "Lady Gaga",
@@ -69,7 +72,8 @@
     "signatureSong": "Bad Romance",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Trained mix with fast vibrato; jazz phrasing sits low, then she opens into a squared-off, brassy belt."
+    "blurb": "Trained mix with fast vibrato; jazz phrasing sits low, then she opens into a squared-off, brassy belt.",
+    "technique": "Two modes sit side by side: a low, conversational croon with jazz-inflected timing, and a brassy, squared-off belt near G5 that keeps a fast, even vibrato. Vowels narrow and brighten as she ascends, which is what lets the mix carry that much ring without spreading. Consonants land hard and right on the beat. Chase that brightness by clenching the jaw and the tone comes out pinched rather than ringing."
   },
   {
     "name": "Rihanna",
@@ -87,7 +91,8 @@
     "signatureSong": "Umbrella",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal-forward mezzo with clipped consonants; strongest in a smoky lower-mid rather than up high."
+    "blurb": "Nasal-forward mezzo with clipped consonants; strongest in a smoky lower-mid rather than up high.",
+    "technique": "Most of the character lives from B2 up through the middle of the staff: a smoky, nasal-forward tone with very little vibrato and consonants cut short. Phrasing is percussive, notes clipped and set tight against the drum rather than sustained. Where the line does rise, the tone stays narrow instead of opening out. Singers imitating this usually add vibrato and legato, which erases the flat, spoken quality that makes it land."
   },
   {
     "name": "Katy Perry",
@@ -104,7 +109,8 @@
     "signatureSong": "Firework",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright, forward belt with a hard nasal edge; head voice thins quickly above her chorus range."
+    "blurb": "Bright, forward belt with a hard nasal edge; head voice thins quickly above her chorus range.",
+    "technique": "Brightness comes from a high, narrow resonance with a real nasal edge, and the belt works a tight window around F5 where the tone is thickest. Above that it thins fast into a light head voice rather than continuing to open. Vibrato is minimal, so sustains stay loud and mostly straight. What goes wrong in imitation is chasing the edge with throat squeeze; the buzz has to come from resonance and firm breath instead."
   },
   {
     "name": "Taylor Swift",
@@ -123,7 +129,8 @@
     "signatureSong": "Love Story",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Speech-level mezzo with light breath onsets; later albums lean on a firmer, better supported mix."
+    "blurb": "Speech-level mezzo with light breath onsets; later albums lean on a firmer, better supported mix.",
+    "technique": "Delivery stays at speech level: light aspirate onsets, small vibrato that arrives late if at all, and a lot of syllables packed conversationally across the bar. The belt marker at D5 is the honest number, since power comes from consonant clarity and timing rather than height. On louder choruses the mix firms up and takes less air, but the placement never drops back into heavy chest. Copy only the breathiness and you lose pitch center, which is how this turns mumbly."
   },
   {
     "name": "Billie Eilish",
@@ -142,7 +149,8 @@
     "signatureSong": "bad guy",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Close-mic whisper singing low in the chest register, with controlled fry and layered falsetto stacks."
+    "blurb": "Close-mic whisper singing low in the chest register, with controlled fry and layered falsetto stacks.",
+    "technique": "Everything is built at whisper volume and very close to the microphone: audible breath, light fry on low sustained notes, consonants quiet enough that you hear the mouth working. There is no belt in this voice, and height is reached instead with a thin, airy head tone, often doubled in stacks. Phrase ends slide downward by design. The trap is assuming quiet singing needs no support, which makes the fry squeezed and the pitch sag."
   },
   {
     "name": "Sia",
@@ -160,7 +168,8 @@
     "signatureSong": "Chandelier",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rasp-heavy belt that frays by design; wide vowels and long notes held high in full voice."
+    "blurb": "Rasp-heavy belt that frays by design; wide vowels and long notes held high in full voice.",
+    "technique": "Rasp is the signature and it is loudest at the top, where notes around Ab5 are held in a wide, open vowel until the tone frays. Onsets often scoop up from below, and the vibrato is broad and late, sometimes replaced by a deliberate crack. Chandelier shows that held, splintering belt clearly. Producing the grit with throat friction wears a voice out inside one chorus; it has to ride on strong, steady airflow."
   },
   {
     "name": "Christina Aguilera",
@@ -178,7 +187,8 @@
     "signatureSong": "Beautiful",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Heavy melisma over a thick, forward belt; adds whistle notes well above the staff when she wants them."
+    "blurb": "Heavy melisma over a thick, forward belt; adds whistle notes well above the staff when she wants them.",
+    "technique": "She ornaments almost everything: long melismatic chains, turns and slides on nearly every held syllable, all sitting on a thick, forward belt that keeps chest weight up near G5. Vibrato is fast and wide, usually started immediately rather than saved for the end. Above the belt she flips to whistle, which is a separate mechanism and not an extension of chest. Ornaments added before the support exists go sharp, and the throat grips to hold them."
   },
   {
     "name": "Kelly Clarkson",
@@ -196,7 +206,8 @@
     "signatureSong": "Since U Been Gone",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Open-throated, largely unornamented belt; sustains high chest notes with even vibrato and no scoop."
+    "blurb": "Open-throated, largely unornamented belt; sustains high chest notes with even vibrato and no scoop.",
+    "technique": "Simplicity is the point here. Notes arrive centered with no scoop, hold straight for a beat, then take an even, moderate vibrato. The throat stays open and the vowel tall, which is what keeps a belt around G5 round instead of shrill. Melisma is rare, so the melody carries itself. Most singers reach for this by lifting the chin and pushing volume, and the tone goes bright and brittle rather than full."
   },
   {
     "name": "Pink",
@@ -214,7 +225,8 @@
     "signatureSong": "So What",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gritty mezzo with rock distortion; belts from a low placement instead of lifting into a lighter mix."
+    "blurb": "Gritty mezzo with rock distortion; belts from a low placement instead of lifting into a lighter mix.",
+    "technique": "You can hear grit in the tone at every volume, made with a low, chesty placement rather than a lifted lighter mix, so the belt around F5 feels pushed up from underneath. Attacks are hard and often slightly scooped, and vibrato arrives late, at the tail of a long note. Because the placement is low, this is the hardest belt to copy: with shallow breath support the whole thing collapses into a shout by the second verse."
   },
   {
     "name": "Demi Lovato",
@@ -231,7 +243,8 @@
     "signatureSong": "Heart Attack",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Big-lunged belter with heavy vibrato; drives chest voice high, then unspools R&B runs coming down."
+    "blurb": "Big-lunged belter with heavy vibrato; drives chest voice high, then unspools R&B runs coming down.",
+    "technique": "There is no slow build. The belt lands wide and heavily vibrated, carrying real thickness all the way to A5, which is high for that much weight. Onsets are frequently glottal, and the biggest notes get hit straight on rather than approached from below. Runs mostly happen on the way back down, after the peak. Jamming the larynx upward to reach that top is the usual mistake, when the height should come from breath pressure and a narrowed vowel."
   },
   {
     "name": "Dua Lipa",
@@ -250,7 +263,8 @@
     "signatureSong": "Don't Start Now",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Husky low-mid with cool, flat phrasing; sits in a narrow band and rarely reaches for head voice."
+    "blurb": "Husky low-mid with cool, flat phrasing; sits in a narrow band and rarely reaches for head voice.",
+    "technique": "She uses less range than she has. Melodies live in a husky low-mid, and the G5 ceiling is barely tested, so the interest has to come from elsewhere. Tone is cool and level, close to straight, with only a light vibrato at phrase ends, and dynamics stay flat so the groove supplies the lift. Timing is the real technique: syllables land just behind the kick. Add emotive swells and you break the detachment the style runs on."
   },
   {
     "name": "Olivia Rodrigo",
@@ -269,7 +283,8 @@
     "signatureSong": "drivers license",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Conversational verses that snap into a deliberately strained, edge-heavy belt on the choruses."
+    "blurb": "Conversational verses that snap into a deliberately strained, edge-heavy belt on the choruses.",
+    "technique": "Contrast does the work. Verses sit near speech, with fry on the low notes and almost no vibrato, then choruses snap into a tight, edge-heavy belt around E5 with an audible cry in it. Onsets scoop up from underneath and consonants get chewed for attitude. That strain is shaped, not accidental. Students reproduce the sound by genuinely squeezing, which is a different thing: the cry comes from a narrowed vowel over firm support."
   },
   {
     "name": "Miley Cyrus",
@@ -288,7 +303,8 @@
     "signatureSong": "Wrecking Ball",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Sandpaper rasp anchored in chest voice; belts with a hard buzz and drops into a smoky low range."
+    "blurb": "Sandpaper rasp anchored in chest voice; belts with a hard buzz and drops into a smoky low range.",
+    "technique": "A dry, sandpaper rasp runs through every phrase, riding a chest-anchored tone that stays thick from a low G2 up to a belt near F5. Twang supplies the cutting buzz, and vibrato is wide and slow when it shows up at all. She likes dropping an octave into a smoky low register mid-phrase for contrast. Chasing the rasp directly is the standard mistake, since it should be a byproduct of a bright, well-supported tone."
   },
   {
     "name": "Jessie J",
@@ -306,7 +322,8 @@
     "signatureSong": "Price Tag",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Loud, pitch-precise belter with R&B melisma; keeps tone compressed and bright at the top of chest."
+    "blurb": "Loud, pitch-precise belter with R&B melisma; keeps tone compressed and bright at the top of chest.",
+    "technique": "Precision survives the volume here. Fast melismatic runs land dead center on pitch, and the belt stays compressed and bright right up to A5 rather than spreading wide. Onsets are clean and immediate with little scoop, and vibrato is fast, used mainly as an ending gesture. Dynamics move in steps, not swells. The imitation problem is spread: opening the vowel to get louder costs focus and pitch at the top."
   },
   {
     "name": "Lana Del Rey",
@@ -325,7 +342,8 @@
     "signatureSong": "Summertime Sadness",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Two voices: a heavy low chest croon and a thin, girlish head register she slips into mid-phrase."
+    "blurb": "Two voices: a heavy low chest croon and a thin, girlish head register she slips into mid-phrase.",
+    "technique": "She switches between two registers as if they were two characters: a heavy, breathy croon down around C3, and a thin, deliberately childlike head tone she flips into mid-phrase without smoothing the seam. That audible break is the effect, not a flaw to fix. Lines drawl behind the beat with long slides between notes and hardly any vibrato. The temptation is to blend the two into one polished mix, which removes the exact contrast the style depends on."
   },
   {
     "name": "Kesha",
@@ -343,6 +361,7 @@
     "signatureSong": "TiK ToK",
     "lowSource": null,
     "highSource": "Praying",
-    "blurb": "Talk-sung, processed verses give way to an open belt and thin, exposed notes at the very top."
+    "blurb": "Talk-sung, processed verses give way to an open belt and thin, exposed notes at the very top.",
+    "technique": "Verses run close to rhythmic speech, delivered in a flat, wide-vowel drawl that sits low and leans on attitude more than tone. When she opens up, the belt around F5 is plain and unornamented, and anything above it goes thin and exposed rather than reinforced, which is the whole effect of the top notes in Praying. Vibrato stays minimal. Trying to fatten those high notes with weight defeats them; they need air and release."
   }
 ]

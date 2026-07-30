@@ -15,7 +15,8 @@
     "signatureSong": "The Number of the Beast",
     "lowSource": null,
     "highSource": "The Number of the Beast",
-    "blurb": "Air-raid-siren tenor: forward placement, wide vibrato, holds high belts without thinning out."
+    "blurb": "Air-raid-siren tenor: forward placement, wide vibrato, holds high belts without thinning out.",
+    "technique": "Listen for the brass in the tone: a narrow, forward placement that stays bright rather than dark, with vibrato that often arrives late and then widens. Chest connection holds all the way up to the G5 belt, and the C6 wails sit above that as a thinner, siren-like extension. Students imitating him squeeze the throat for volume. The sound comes from a supported cry and a tall, narrow vowel instead."
   },
   {
     "name": "Rob Halford",
@@ -32,7 +33,8 @@
     "signatureSong": "Breaking the Law",
     "lowSource": null,
     "highSource": "Painkiller",
-    "blurb": "Moves from gritted chest snarl into piercing falsetto shrieks with almost no audible seam."
+    "blurb": "Moves from gritted chest snarl into piercing falsetto shrieks with almost no audible seam.",
+    "technique": "The gap between the D5 belt and the C6 top is the whole map of this voice. Below it, gritted chest tone with hard consonant attacks and a snarl layered onto an already supported note. Above it, he releases into a thin, piercing falsetto and rides it, so the shriek carries without weight. Most singers try to muscle that top note in chest, and the line gives out before the verse is over."
   },
   {
     "name": "Ronnie James Dio",
@@ -50,7 +52,8 @@
     "signatureSong": "Holy Diver",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Chest-dominant power, fast narrow vibrato, vowels stay focused even at full volume."
+    "blurb": "Chest-dominant power, fast narrow vibrato, vowels stay focused even at full volume.",
+    "technique": "Chest voice carries nearly everything here, with vowels kept small and focused so the tone stays clear at full volume. Vibrato is fast and narrow, and it starts almost as soon as a note lands rather than blooming late. Attacks are clean instead of scooped, and phrases end deliberately rather than trailing off. Copying it usually goes wrong in the jaw: singers open too wide, the tone spreads, and the pitch centre slides."
   },
   {
     "name": "Michael Kiske",
@@ -67,7 +70,8 @@
     "signatureSong": "I Want Out",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright, boyish high tenor that stays connected and vibrato-light through fifth-octave lines."
+    "blurb": "Bright, boyish high tenor that stays connected and vibrato-light through fifth-octave lines.",
+    "technique": "The high tenor placement stays bright without going thin, connected through the D5 belt and ringing in a boyish way rather than shouting. Vibrato is sparse, so long notes hold nearly straight and only shimmer as they release, and fifth-octave lines arrive on even legato instead of a scream. Chasing the brightness on its own pushes it into the nose, where the low overtones that keep the tone round drop away."
   },
   {
     "name": "Geoff Tate",
@@ -85,7 +89,8 @@
     "signatureSong": "Silent Lucidity",
     "lowSource": null,
     "highSource": "Queen of the Reich",
-    "blurb": "Trained-sounding tenor: even legato, ringing sustain, more classical vowel shaping than most."
+    "blurb": "Trained-sounding tenor: even legato, ringing sustain, more classical vowel shaping than most.",
+    "technique": "Rounded, classically placed vowels sit closer to art song than to shouting, carried on even legato with a long ringing sustain. Full weight stops at the B4 belt; above it the tone thins deliberately into head voice, which is what keeps the fifth- and sixth-octave notes controlled instead of strained. Vibrato is measured and often delayed. Where imitators add pressure, he adds space."
   },
   {
     "name": "King Diamond",
@@ -102,7 +107,8 @@
     "signatureSong": "Welcome Home",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Two voices in one part: clipped mid-range narration against thin, wailing falsetto shrieks."
+    "blurb": "Two voices in one part: clipped mid-range narration against thin, wailing falsetto shrieks.",
+    "technique": "A dry, clipped mid-range handles the narrative lines, then the same phrase leaps into thin, edgy falsetto for shrieks that climb well above the C5 belt. The flip has to be released rather than pushed, so reaching for it from a pressed throat never quite arrives. That falsetto is deliberately weightless, closer to a whistle edge than to force, and a fast flickering vibrato keeps it moving."
   },
   {
     "name": "Corey Taylor",
@@ -120,7 +126,8 @@
     "signatureSong": "Duality",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Grit-heavy mid baritone that flips to shredded screams and back to clean nasal-forward melody."
+    "blurb": "Grit-heavy mid baritone that flips to shredded screams and back to clean nasal-forward melody.",
+    "technique": "Grit sits on top of a genuine mid-baritone core, and the two modes trade off inside a single line: shredded scream on the aggressive phrase, then a clean, nasal-forward melodic tone with almost no rasp on the hook. Onsets are hard and consonant-led. The clean half is harder to copy than it sounds, since going straight for the distortion drops the support underneath it and the result reads as strain rather than weight."
   },
   {
     "name": "James Hetfield",
@@ -137,7 +144,8 @@
     "signatureSong": "Enter Sandman",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rhythmic consonant-driven baritone, raspy edge, phrasing clipped tight to the riff."
+    "blurb": "Rhythmic consonant-driven baritone, raspy edge, phrasing clipped tight to the riff.",
+    "technique": "Rhythm is the instrument here. Consonants land on the riff like a picking hand, syllables get clipped short, and the tone is a mid-baritone with a dry rasp rather than a smooth sustain. Notes are often approached from underneath with a quick bend and then cut off. Copying it fails when singers stretch the vowels: the moment the phrasing loosens off the guitar figure, the whole effect disappears."
   },
   {
     "name": "Ozzy Osbourne",
@@ -155,7 +163,8 @@
     "signatureSong": "Crazy Train",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin nasal tenor with a pleading edge; narrow span, but the timbre cuts through dense guitars."
+    "blurb": "Thin nasal tenor with a pleading edge; narrow span, but the timbre cuts through dense guitars.",
+    "technique": "Narrow span, unmistakable colour. The placement is thin and nasal with a pleading upward edge, and it cuts through thick guitars precisely because it is not big. Notes get scooped into from below, vibrato is slow and shallow, and sustains stay level in dynamic rather than swelling. With nothing reaching past D5, the character lives entirely in timbre and phrasing. Students overweight it and lose the whine that makes it read."
   },
   {
     "name": "Devin Townsend",
@@ -172,7 +181,8 @@
     "signatureSong": "Kingdom",
     "lowSource": null,
     "highSource": "Kingdom",
-    "blurb": "Stacked wall-of-voice belt plus harsh screams; swings from near-whisper to full-throated push."
+    "blurb": "Stacked wall-of-voice belt plus harsh screams; swings from near-whisper to full-throated push.",
+    "technique": "Near-whispered breathy phrases open out into a wall of stacked belted layers, and harsh screaming stays a separate texture rather than a colour applied to the belt. Layering does much of the work on record, so one voice trying to match that size pushes far too hard. Full weight tops out around C5, the C6 material is carried lighter and thinner above it, and vowels stay wide through the big sustains."
   },
   {
     "name": "Maynard James Keenan",
@@ -190,7 +200,8 @@
     "signatureSong": "Sober",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Breath-controlled tenor: long even sustains, rasp saved for the peak of a phrase."
+    "blurb": "Breath-controlled tenor: long even sustains, rasp saved for the peak of a phrase.",
+    "technique": "Long sustains hold steady from first moment to last, with very little vibrato until the release, which puts breath management out front as the thing you notice. Rasp is rationed, so the line stays clean and covered until edge arrives right at the peak of a phrase. Phrasing floats loosely across the accompaniment instead of locking to the downbeat. Grit applied everywhere flattens that contrast completely."
   },
   {
     "name": "Mike Patton",
@@ -208,7 +219,8 @@
     "signatureSong": "Epic",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Six cited octaves of extended technique: growls, croons, falsetto squeals, throat-noise texture."
+    "blurb": "Six cited octaves of extended technique: growls, croons, falsetto squeals, throat-noise texture.",
+    "technique": "Guttural growls, close-mic crooning, falsetto squeals, throat noise and character voices swap inside the space of a bar, so extended technique is the material rather than a decoration on it. The crooned baritone in the middle is the anchor everything departs from and returns to. Across a cited Eb1 to Eb7, most of that span comes from switching mode instead of stretching chest voice, and the pitch accuracy underneath the noises is the part that gets skipped."
   },
   {
     "name": "Sebastian Bach",
@@ -226,7 +238,8 @@
     "signatureSong": "18 and Life",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rasp-heavy high tenor that sustains fifth-octave belts, then slips up into scream falsetto."
+    "blurb": "Rasp-heavy high tenor that sustains fifth-octave belts, then slips up into scream falsetto.",
+    "technique": "Rasp is baked into the tone rather than added at the ends of phrases, sitting on a high tenor that holds a sustained C5 belt and then slips upward into a scream that is really reinforced falsetto. Vibrato is wide and arrives late, after the note has been held straight for a beat or more. Students go for the scream cold. It only works launched from an already connected, well-supported belt."
   },
   {
     "name": "Tarja Turunen",
@@ -244,6 +257,7 @@
     "signatureSong": "Nemo",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Classically placed soprano over distorted guitar: covered vowels, vibrato-rich head voice."
+    "blurb": "Classically placed soprano over distorted guitar: covered vowels, vibrato-rich head voice.",
+    "technique": "Classical habits stay intact over distorted guitar. Vowels are covered, the larynx sits low and settled, and vibrato runs continuously through a whole note instead of appearing at the end of it. The tone stays covered as it climbs rather than opening out bright, and the top of the range is sung in head voice with no shout in it. Diction stays rounded throughout, and pushing chest voice too high is what costs imitators that covered colour."
   }
 ]

@@ -15,7 +15,8 @@
     "signatureSong": "My Way",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Conversational baritone, long legato lines, breath control that carries a phrase past the bar."
+    "blurb": "Conversational baritone, long legato lines, breath control that carries a phrase past the bar.",
+    "technique": "Listen for how little happens at the onset: air and tone start together, no scoop, and the vowel carries almost the whole note before a narrow vibrato arrives at the very end. Lines are built to run past the obvious breath point, so the phrase, not the bar, sets the shape. The top of the range opens out rather than getting louder — an A4 is sung, never belted. The swagger is the easy part to copy; the consonant timing underneath it is the actual work."
   },
   {
     "name": "Ella Fitzgerald",
@@ -33,7 +34,8 @@
     "signatureSong": "A-Tisket, A-Tasket",
     "lowSource": null,
     "highSource": "How High the Moon",
-    "blurb": "Flute-clear tone, exact intonation, scat lines phrased like a horn solo."
+    "blurb": "Flute-clear tone, exact intonation, scat lines phrased like a horn solo.",
+    "technique": "Onsets are clean and pitch-centred, with almost no slide into the note and a vibrato so narrow it reads as straight tone. Above the staff the voice thins into a light, flute-like head register instead of adding weight, which is how the compass reaches C6 without strain. The scat choruses in How High the Moon move in horn-shaped intervals, and speed without that pitch centre turns the same lines into mush."
   },
   {
     "name": "Nat King Cole",
@@ -51,7 +53,8 @@
     "signatureSong": "Unforgettable",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Soft-grained baritone, unusually clean diction, vibrato held back until a phrase ends."
+    "blurb": "Soft-grained baritone, unusually clean diction, vibrato held back until a phrase ends.",
+    "technique": "Pressure is the enemy of this sound. Air arrives just ahead of tone, giving a soft, felt-covered attack, and consonants are articulated with the tongue tip rather than the jaw, which keeps the line unbroken. Vibrato is withheld through the body of a note and released only as it decays. To get near it, sing quieter than feels safe and resist the urge to darken the vowel."
   },
   {
     "name": "Billie Holiday",
@@ -69,7 +72,8 @@
     "signatureSong": "Strange Fruit",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Narrow compass, heavy inflection: bent pitches, behind-the-beat placement, thin reedy top."
+    "blurb": "Narrow compass, heavy inflection: bent pitches, behind-the-beat placement, thin reedy top.",
+    "technique": "Two things carry this style, and neither is range: placement behind the beat and constant pitch inflection. Notes are approached from underneath, bent up into tune, then left before they settle. The top of a narrow F3 to C5 compass turns reedy and thin rather than opening out, and vibrato shows up late as a small flutter. Students copy the breathiness and the scoops, then sing them squarely on the beat, which loses the whole effect."
   },
   {
     "name": "Sarah Vaughan",
@@ -87,7 +91,8 @@
     "signatureSong": "Misty",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Operatic weight low down, controlled vibrato, a top she floats onto instead of pushing."
+    "blurb": "Operatic weight low down, controlled vibrato, a top she floats onto instead of pushing.",
+    "technique": "Weight is the first thing to notice — the bottom of the range is genuinely dark and covered, closer to a trained contralto than a band singer. Vibrato is wide but metered, switched on and off deliberately. Rather than pushing toward C6 she lightens and floats, then drops back into chest inside a single phrase for contrast. The common mistake is manufacturing that darkness by pressing the larynx down; it comes from space, not force."
   },
   {
     "name": "Louis Armstrong",
@@ -105,7 +110,8 @@
     "signatureSong": "What a Wonderful World",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gravel-and-air rasp, trumpet-shaped phrasing, scat treated as a second horn chorus."
+    "blurb": "Gravel-and-air rasp, trumpet-shaped phrasing, scat treated as a second horn chorus.",
+    "technique": null
   },
   {
     "name": "Nina Simone",
@@ -124,7 +130,8 @@
     "signatureSong": "Feeling Good",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Contralto with an unusually deep floor; speech-into-song delivery, pianist's sense of time."
+    "blurb": "Contralto with an unusually deep floor; speech-into-song delivery, pianist's sense of time.",
+    "technique": "Start from speech. Lines begin at conversational pitch and swell into sung tone, often with no vibrato at all until a long note has been held well past comfort. The floor of the range is unusually low for this voice type, and those low notes are placed heavily, almost spoken. Time is elastic: phrases arrive early or late against the accompaniment on purpose. Copying it means committing to the deliberate pace, not to volume."
   },
   {
     "name": "Tony Bennett",
@@ -142,7 +149,8 @@
     "signatureSong": "I Left My Heart in San Francisco",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright forward baritone that widens as it gets louder rather than thinning at the top."
+    "blurb": "Bright forward baritone that widens as it gets louder rather than thinning at the top.",
+    "technique": "Here is a baritone that grows wider rather than thinner as it climbs. The tone is bright and set forward behind the teeth, the throat stays open, and loud notes gain ring instead of edge. Vibrato is steady, moderate in width, and present through the whole note. Vowels are held long and consonants clipped short. Sung with a raised soft palate this reads as bright; sung with a lowered one it collapses into nasal, which is the usual error."
   },
   {
     "name": "Dean Martin",
@@ -160,7 +168,8 @@
     "signatureSong": "That's Amore",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Low-set relaxed baritone, slid entrances, phrases deliberately lagging the beat."
+    "blurb": "Low-set relaxed baritone, slid entrances, phrases deliberately lagging the beat.",
+    "technique": "Everything sits low and loose. Entrances are scooped from below, phrases lag behind the band and catch up by the end of the line, and the whole thing is delivered at conversational volume close to the microphone. Vibrato is slow and shallow. Rhythm is the hardest part to steal — match the tone but sing on top of the beat, and the ease disappears immediately."
   },
   {
     "name": "Bing Crosby",
@@ -178,7 +187,8 @@
     "signatureSong": "White Christmas",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bass-leaning baritone sung close to the mic, warm and level, with small ornamental turns."
+    "blurb": "Bass-leaning baritone sung close to the mic, warm and level, with small ornamental turns.",
+    "technique": "Sung as though the microphone were doing half the work: low placement, level dynamics, and no audible effort anywhere between F2 and F4. Small ornamental turns decorate the ends of phrases, and vibrato stays narrow and slow. White Christmas keeps the voice inside a comfortable middle where the bass-leaning warmth carries everything. To imitate it, take volume out rather than adding weight."
   },
   {
     "name": "Mel Tormé",
@@ -195,7 +205,8 @@
     "signatureSong": "Comin' Home Baby",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Soft-focus tone with almost no edge, paired with fast and accurate bebop scat lines."
+    "blurb": "Soft-focus tone with almost no edge, paired with fast and accurate bebop scat lines.",
+    "technique": "Almost no edge in the tone — the sound is soft-focused, closer to a flugelhorn than a trumpet, with breath and tone blended so evenly that onsets barely register. Then the scat arrives, fast and harmonically exact, articulated at the front of the mouth so the consonants can keep up with the tempo. Above the staff he thins instead of pushing. Chase the smoothness alone and the rhythmic precision that makes it swing goes missing."
   },
   {
     "name": "Al Jarreau",
@@ -214,7 +225,8 @@
     "signatureSong": "We're in This Love Together",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Mouth-percussion textures under a light tenor that flips to falsetto without a seam."
+    "blurb": "Mouth-percussion textures under a light tenor that flips to falsetto without a seam.",
+    "technique": "Percussion is part of the singing here rather than a separate layer: clicks, pops and breath sounds get placed inside the melodic line, so rhythm and tune come out of one mechanism. The tenor itself is light and forward, and the move into falsetto is deliberately seamless — no break, no drop in volume, which is how the compass reaches A5. Bends and slides are constant. The usual trap is copying the effects until the melody stops being legible."
   },
   {
     "name": "Bobby McFerrin",
@@ -231,7 +243,8 @@
     "signatureSong": "Don't Worry, Be Happy",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Alternates chest bass and high falsetto mid-phrase, chest-slapping his own rhythm track."
+    "blurb": "Alternates chest bass and high falsetto mid-phrase, chest-slapping his own rhythm track.",
+    "technique": "Alternating registers mid-phrase is the whole trick. Low chest notes are attacked with a glottal stop for a plucked, bass-like sound; above the G4 belt ceiling the voice releases into a light, well-supported falsetto that climbs a long way. Rhythm comes from body percussion and from breath sounds placed between the pitches. The demand is not range but instant switching — slur the transition and the illusion of two separate instruments collapses."
   },
   {
     "name": "Diana Krall",
@@ -248,7 +261,8 @@
     "signatureSong": "The Look of Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Low, husky and unforced; lines sit close to speech pitch and rarely climb."
+    "blurb": "Low, husky and unforced; lines sit close to speech pitch and rarely climb.",
+    "technique": "Low and unhurried, with a dry huskiness that comes from slightly loose closure rather than from pushing. Lines sit near speech pitch and rarely climb, so tone colour and timing carry the interest. Onsets are soft, vibrato is minimal, and phrases land late and resolve quietly. Anyone imitating this tends to add volume; the style depends on holding it back."
   },
   {
     "name": "Norah Jones",
@@ -267,7 +281,8 @@
     "signatureSong": "Don't Know Why",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Breathy alto that stays mid-range: soft onsets, little vibrato, country-tinged slides."
+    "blurb": "Breathy alto that stays mid-range: soft onsets, little vibrato, country-tinged slides.",
+    "technique": "Air is part of the sound. Onsets are aspirate, the tone stays warm and unpressed through the middle of the range, and vibrato is close to absent. The ornament habit is a short slide up or down into a note rather than a run, and nothing above C5 is asked for. The trap is confusing breathy with unsupported: the breathiness only works over steady airflow and firm ribs."
   },
   {
     "name": "Gregory Porter",
@@ -286,7 +301,8 @@
     "signatureSong": "Liquid Spirit",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thick baritone with a gospel-shout attack on top and a resonant, grounded bottom octave."
+    "blurb": "Thick baritone with a gospel-shout attack on top and a resonant, grounded bottom octave.",
+    "technique": "Thick, round and low-placed, with a bottom octave that resonates rather than rumbles. The top of the range takes a gospel-shout attack: firm onset, forward vowel, an occasional growl laid over a clear pitch. Melisma is used sparingly and almost always on a strong beat. Liquid Spirit puts the shout and the grounded bottom in the same take. Build the low end first — that shout over a thin bottom just sounds strained."
   },
   {
     "name": "Cécile McLorin Salvant",
@@ -304,7 +320,8 @@
     "signatureSong": "Wives and Lovers",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Conservatory control over a wide compass; crisp diction, abrupt shifts to a thin girlish top."
+    "blurb": "Conservatory control over a wide compass; crisp diction, abrupt shifts to a thin girlish top.",
+    "technique": "Trained control shows up in the choices, not just the notes: straight tone opens a phrase, vibrato is then added as an effect, and the vowel gets reshaped mid-note for colour. Diction is crisp to the point of theatrical. Above the staff the voice thins abruptly into a small, girlish register, and that sudden change of character is deliberate. Smoothing that transition out removes the point of it."
   },
   {
     "name": "Michael Bublé",
@@ -322,7 +339,8 @@
     "signatureSong": "Home",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Crooner baritone with a pop-sized top; well-supported, lightly swung, very even tone."
+    "blurb": "Crooner baritone with a pop-sized top; well-supported, lightly swung, very even tone.",
+    "technique": "Very even from bottom to top: no obvious seam, no thinning at A4, and consistent breath support under every note. Onsets are lightly aspirate, the swing is understated, and vibrato stays regular and unhurried. Ad-libs at the end of a chorus bring a little grit over a clear pitch. Evenness is the difficulty — it demands the same air pressure and the same vowel shape everywhere, which is duller to practise than it is to hear."
   },
   {
     "name": "Johnny Mathis",
@@ -340,6 +358,7 @@
     "signatureSong": "Chances Are",
     "lowSource": null,
     "highSource": null,
-    "blurb": "High, feathery tenor; vibrato stays fast and narrow even at whisper volume."
+    "blurb": "High, feathery tenor; vibrato stays fast and narrow even at whisper volume.",
+    "technique": "High and feathery, weighted toward head resonance even in the middle of the range, with an onset so soft the note seems already in progress. Vibrato is fast and narrow and stays that way at whisper volume, which is the fingerprint of the voice. The upper reach is light mix and falsetto, never chest. Chances Are sits in that floated territory. Sing it loudly and the tone vanishes; it only exists at low pressure."
   }
 ]

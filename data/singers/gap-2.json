@@ -16,7 +16,8 @@
     "signatureSong": "Georgia on My Mind",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gospel-schooled tenor with a rough edge, bending pitch and dragging behind the beat on purpose."
+    "blurb": "Gospel-schooled tenor with a rough edge, bending pitch and dragging behind the beat on purpose.",
+    "technique": "Nasal-forward, grainy tone that keeps a cry in it even at low volume. Notes get approached from underneath, bent through the blues third, then released with a narrow, quick vibrato that only shows up at the end of a phrase. Words sit behind the beat on purpose. Above the A4 belt the sound tightens instead of opening out. Students copy the rasp by squeezing the throat; the grit belongs in the tone, not in the grip."
   },
   {
     "name": "Lionel Richie",
@@ -35,7 +36,8 @@
     "signatureSong": "Hello",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm, unhurried tenor that leans on breathy tone over volume and steps up to a light falsetto."
+    "blurb": "Warm, unhurried tenor that leans on breathy tone over volume and steps up to a light falsetto.",
+    "technique": "Air is part of the tone here, not a fault. Lines start soft, with an aspirate onset, and stay near speech volume even when sustained; a slow, narrow vibrato shows up only at the tail of a long note. Above the A4 belt he moves into a light falsetto rather than driving the chest voice higher, and phrasing sits square on the beat with almost no ornament. The trap is oversinging it, because the warmth comes from steady breath and relaxed vowels at low volume."
   },
   {
     "name": "John Legend",
@@ -54,7 +56,8 @@
     "signatureSong": "All of Me",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Church-trained tenor; clean chest tone, light rasp on push, and an easy step up to falsetto."
+    "blurb": "Church-trained tenor; clean chest tone, light rasp on push, and an easy step up to falsetto.",
+    "technique": "Clean, forward chest tone with a little grain that only shows when he leans in. Onsets are precise rather than scooped, and runs stay short: three or four notes placed at the end of a line instead of draped over it, since any more than that buries the straight-line clarity underneath. Bb4 is the ceiling for full weight, and above it the voice releases into falsetto with no audible seam, carrying an even, moderate vibrato."
   },
   {
     "name": "Teddy Swims",
@@ -73,7 +76,8 @@
     "signatureSong": "Lose Control",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gravel-heavy baritone that climbs into rasped high belts, with gospel runs on the way down."
+    "blurb": "Gravel-heavy baritone that climbs into rasped high belts, with gospel runs on the way down.",
+    "technique": "Weight first. The tone sits low and thick, closer to a speaking growl than a croon, then opens into a rasped upper range that keeps chest character rather than thinning out. Matching his volume gets nowhere near the sound, because the grit is a texture laid over a steady pitch center. Dynamics swing hard inside a single line, the wide vibrato arriving late, and descending melisma is a habit: he lands the phrase, then unspools four or five notes on the way down."
   },
   {
     "name": "Alicia Keys",
@@ -92,7 +96,8 @@
     "signatureSong": "Fallin'",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Smoky mezzo with a slight nasal edge; belts from the chest and clips notes short for rhythm."
+    "blurb": "Smoky mezzo with a slight nasal edge; belts from the chest and clips notes short for rhythm.",
+    "technique": "Compression, not air. Notes begin with a firm glottal edge and a slightly nasal placement, and that is where the huskiness lives; breathing the tone out to sound smoky works against it. She clips syllables short and lets the rests carry the groove, landing a fraction behind the beat. The Eb5 belt keeps chest weight instead of thinning into a mix, with only a shimmer of narrow vibrato on the release."
   },
   {
     "name": "SZA",
@@ -111,7 +116,8 @@
     "signatureSong": "Kill Bill",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Breathy, conversational tone that slips between speech, soft belt, and thin airy top notes."
+    "blurb": "Breathy, conversational tone that slips between speech, soft belt, and thin airy top notes.",
+    "technique": "Nearly everything happens at conversation volume, breath left in the tone, phrase ends trailing off into speech or a whisper. Rhythm floats: syllables land late, then hurry to catch up. The soft belt around C5 is as loud as it gets, and above that the sound thins into an airy head voice instead of getting stronger. Small bends and slides do the job vibrato would normally do. Project it and the style disappears."
   },
   {
     "name": "Sam Smith",
@@ -130,7 +136,8 @@
     "signatureSong": "Stay with Me",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light, vibrato-rich voice that lives in a high tenor mix and floats up in pure falsetto."
+    "blurb": "Light, vibrato-rich voice that lives in a high tenor mix and floats up in pure falsetto.",
+    "technique": "Light-weight tone that mostly lives high in a thin mix, so the G2 floor of this range almost never turns up in an actual song. Onsets are soft and aspirate; sustained notes take a quick, narrow vibrato that starts early and keeps going, and pushing weight into that mix to make it bigger flattens the flutter it depends on. Above the Bb4 belt the voice releases into an unmixed falsetto kept deliberately quiet, with melisma slow enough to hear every note in it."
   },
   {
     "name": "Adam Lambert",
@@ -148,7 +155,8 @@
     "signatureSong": "Whataya Want from Me",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Theatrical tenor with a metallic mixed belt, fast vibrato, and rock rasp layered on top."
+    "blurb": "Theatrical tenor with a metallic mixed belt, fast vibrato, and rock rasp layered on top.",
+    "technique": "Metal in the tone: a bright, ringing mix that holds its edge up to the C5 belt and can take rasp on top without losing pitch. Vibrato is fast and even, switched on deliberately at the end of a sustained note. Dragging chest weight upward for size is the common mistake, since the climb comes from narrowing the vowel instead. Sirens are a favorite move, one connected slide from low chest up through the mix with no audible gear change, dynamics swinging wide inside the phrase."
   },
   {
     "name": "Lewis Capaldi",
@@ -167,7 +175,8 @@
     "signatureSong": "Someone You Loved",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thick baritone with constant rasp; pushes into a strained high mix and lets the tone break."
+    "blurb": "Thick baritone with constant rasp; pushes into a strained high mix and lets the tone break.",
+    "technique": "Rasp is constant here, present even in a quiet verse, with a thick, low-placed tone underneath it. Verses stay close to speech; choruses arrive as one long crescendo into a high mix around Bb4, and the loudest word is often where he lets the tone come apart on purpose. The slow vibrato, when it appears, comes late. Reaching straight for that break produces noise, because the effect depends on how quiet the setup was before it."
   },
   {
     "name": "Benson Boone",
@@ -186,7 +195,8 @@
     "signatureSong": "Beautiful Things",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright tenor that jumps octaves fast, favoring an open-throated high belt and clean falsetto."
+    "blurb": "Bright tenor that jumps octaves fast, favoring an open-throated high belt and clean falsetto.",
+    "technique": "Wide leaps shape the lines: a low, quiet phrase, then a jump of an octave or more into an open, bright belt around D5. Those high notes stay vowel-forward, throat open rather than volume shoved, and the vowel has to be set before the leap; taken cold it comes out as a shout. Past the belt he flips cleanly to falsetto instead of hunting for more chest, with a quick vibrato that switches on late."
   },
   {
     "name": "Lizzo",
@@ -205,7 +215,8 @@
     "signatureSong": "Truth Hurts",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Full chest belt with gospel weight; switches into rap cadence and back without losing tone."
+    "blurb": "Full chest belt with gospel weight; switches into rap cadence and back without losing tone.",
+    "technique": "Full chest weight, forward and bright, with the belt topping out near Eb5 and no thinning on the way up. Diction is percussive. She drops from a sung line into a rapped cadence and back without changing placement, which is the hard part to copy: the same forward tone has to hold through the spoken sections. Ornaments are gospel-shaped, short fast melisma with a growl on the accent, and sustained notes stay mostly straight until the last word of a chorus."
   },
   {
     "name": "Sabrina Carpenter",
@@ -222,7 +233,8 @@
     "signatureSong": "Espresso",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright, compact soprano with breathy onsets and a light belt she rarely pushes to full volume."
+    "blurb": "Bright, compact soprano with breathy onsets and a light belt she rarely pushes to full volume.",
+    "technique": "Small and bright, and kept small on purpose: breathy onsets, a light belt around E5 that rarely opens to full volume, and plenty of near-spoken asides tucked between sung lines. Timing is playful, syllables pulled late or delivered flat and dry for a wink, and what vibrato there is stays decorative. The tone is compact rather than big, so the skills it actually asks for are control at low volume and crisp consonants."
   },
   {
     "name": "Chappell Roan",
@@ -241,7 +253,8 @@
     "signatureSong": "Good Luck, Babe!",
     "lowSource": null,
     "highSource": "Good Luck, Babe!",
-    "blurb": "Theatre-sized soprano belt with hard consonants, then a sudden thin head voice up top."
+    "blurb": "Theatre-sized soprano belt with hard consonants, then a sudden thin head voice up top.",
+    "technique": "Stage projection is the baseline. Consonants get hit hard, vowels stay bright and narrow, and the belt runs up to F5 with a steady ring rather than a shout. The characteristic move is a drop into thin, quiet head voice right after a big line, letting the contrast carry the feeling; belt the whole song and half the effect is gone. Long notes finish with a wide vibrato that only surfaces at the very end."
   },
   {
     "name": "Lorde",
@@ -260,6 +273,7 @@
     "signatureSong": "Royals",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Low-sitting mezzo with a dry, spoken quality; layers her own voice instead of belting high."
+    "blurb": "Low-sitting mezzo with a dry, spoken quality; layers her own voice instead of belting high.",
+    "technique": "Dark and dry, placed low in the voice, with almost no vibrato and breath left audible at the ends of lines. Consonants supply the percussion, and melodies stay inside a narrow band, repeating instead of climbing. Where another singer would belt, she stacks harmonies and octaves on the same low line, so the D5 ceiling rarely gets tested. Phrasing is speech-timed and often just behind the beat. Sing it big and it stops working."
   }
 ]

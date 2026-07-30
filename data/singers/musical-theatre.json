@@ -12,7 +12,8 @@
     "signatureSong": "Let It Go",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal-forward mix and a hard-edged chest belt that stays loud without thinning near the top."
+    "blurb": "Nasal-forward mix and a hard-edged chest belt that stays loud without thinning near the top.",
+    "technique": "Listen for a narrow, bright tone placed high in the nose and pressed against the front teeth; that forward buzz is what keeps the belt loud up to F5 instead of thinning. Quiet lines start breathy and nearly spoken, then the belt arrives with a firm push and no gradual ramp. Vibrato is slow and shows up late, often only as the note releases. Nothing in the sound is round or covered; the whole effect depends on keeping it narrow and in front."
   },
   {
     "name": "Lea Salonga",
@@ -27,7 +28,8 @@
     "signatureSong": "On My Own",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Clear, vibrato-light soprano with precise legato; shifts to a bright chest belt for pop lines."
+    "blurb": "Clear, vibrato-light soprano with precise legato; shifts to a bright chest belt for pop lines.",
+    "technique": "Her sound is unusually tidy. Onsets begin right on the pitch with no scoop, vowels stay narrow and matched from note to note, and vibrato is withheld until the last beat of a long tone. Between the D5 belt and the top of the range she moves into a light head register with almost no seam, so the change reads as a shift of colour rather than a change of gear. Imitations go wrong by adding weight and constant vibrato; the plainness is the technique."
   },
   {
     "name": "Patti LuPone",
@@ -42,7 +44,8 @@
     "signatureSong": "Don't Cry for Me Argentina",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark chest-dominant belt, wide vibrato, and a consonant-heavy attack that lands every syllable."
+    "blurb": "Dark chest-dominant belt, wide vibrato, and a consonant-heavy attack that lands every syllable.",
+    "technique": "Everything begins with the consonant. Hard t's, d's and s's set the rhythm before the vowel arrives, and the tone underneath is dark, thick, low-placed chest carried all the way to the D5 belt. Vibrato is wide and slow, more a shudder than a shimmer. Phrases stretch and compress against the accompaniment instead of sitting square on it. The common error is mistaking that weight for volume and simply shouting; the size comes from a low, settled larynx and a very full breath."
   },
   {
     "name": "Audra McDonald",
@@ -57,7 +60,8 @@
     "signatureSong": "Summertime",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Classically placed lyric soprano with fast vibrato; drops to plain speech-tone for storytelling."
+    "blurb": "Classically placed lyric soprano with fast vibrato; drops to plain speech-tone for storytelling.",
+    "technique": "Classical placement shows in the vowels: tall, rounded, spinning on a fast narrow vibrato that stays consistent from the bottom of the staff to the top. The interesting move is what she sets against it, dropping mid-phrase into a plain, nearly spoken tone with the vibrato switched off, then letting it return. There is no belt in play; the upper range is supported head voice. The contrast is the point, and the spoken passages are what make the sung ones land."
   },
   {
     "name": "Bernadette Peters",
@@ -72,7 +76,8 @@
     "signatureSong": "Children Will Listen",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Small breathy soprano with a fluttering vibrato; thins the top on purpose for a childlike color."
+    "blurb": "Small breathy soprano with a fluttering vibrato; thins the top on purpose for a childlike color.",
+    "technique": "Breath is left in the tone deliberately: you can hear air travelling alongside the pitch, and the vibrato flutters fast and shallow rather than swinging wide. Volume stays small, so the C5 belt reads as an emotional break instead of a display. Above it she thins into a narrow, childlike head tone rather than filling it out. Phrasing sits well behind the beat, with real silence inside a line. The trap is copying the breathiness without support, which lets pitch sag."
   },
   {
     "name": "Kristin Chenoweth",
@@ -87,7 +92,8 @@
     "signatureSong": "Popular",
     "lowSource": null,
     "highSource": "Glitter and Be Gay",
-    "blurb": "Coloratura top with easy staccato leaps, plus a separate brassy belt she switches into abruptly."
+    "blurb": "Coloratura top with easy staccato leaps, plus a separate brassy belt she switches into abruptly.",
+    "technique": "Two voices sit side by side. One is a light coloratura that leaps and detaches cleanly, each staccato note re-articulated from the breath rather than chopped in the throat, and it runs far above the staff. The other is a brassy, nasal-forward belt topping out near F5. She swaps between them mid-phrase with no blending, and the abruptness is part of the comedy. Smoothing the join would remove the effect, and reaching for coloratura pitches from inside the belt is what strains it."
   },
   {
     "name": "Michael Crawford",
@@ -102,7 +108,8 @@
     "signatureSong": "The Music of the Night",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light breath-heavy tenor with narrow vibrato; favors head voice over chest pressure."
+    "blurb": "Light breath-heavy tenor with narrow vibrato; favors head voice over chest pressure.",
+    "technique": "There is very little weight in the instrument by design: a slim, breath-mixed tenor that leans into head resonance instead of pressing chest upward, so the approach to Bb4 gets softer rather than louder. Vibrato is narrow and even, tucked inside the tone instead of decorating it. Onsets are gentle, with air arriving a fraction before the pitch, and consonants are shaped lightly so the legato never breaks. Anyone imitating this adds chest weight for the high phrases, which is exactly the wrong instinct."
   },
   {
     "name": "Hugh Jackman",
@@ -117,7 +124,8 @@
     "signatureSong": "The Greatest Show",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Baritone with a bright forward belt; speech-driven phrasing, short sustains, restrained vibrato."
+    "blurb": "Baritone with a bright forward belt; speech-driven phrasing, short sustains, restrained vibrato.",
+    "technique": "Delivery is built on speech. The rhythm of the line follows the rhythm of the sentence, so notes are released as soon as the word is finished instead of being held for their own sake. Tone is baritone-thick but placed forward and bright, and the top of the range near B4 is taken with a firm forward mix rather than an open ring. Vibrato barely appears. Imitators over-sing the sustains and lose the conversational drive the phrasing depends on."
   },
   {
     "name": "Ben Platt",
@@ -132,7 +140,8 @@
     "signatureSong": "Waving Through a Window",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Tight cry-heavy high mix with audible glottal breaks used as expression rather than fault."
+    "blurb": "Tight cry-heavy high mix with audible glottal breaks used as expression rather than fault.",
+    "technique": "The core sound is a narrow cry, thin and forward, and that is what carries the mix to D5 without full chest weight. Onsets frequently begin with a small glottal catch, and the voice is allowed to crack or break at the end of a phrase; those breaks are placed, not accidents. Consonants get clipped and the rhythm often runs slightly ahead of the beat. The usual mistake is faking the crack by cutting off the breath, which destabilises the whole line."
   },
   {
     "name": "Jonathan Groff",
@@ -147,7 +156,8 @@
     "signatureSong": "You'll Be Back",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Round warm tenor with clean onsets; steady sustain and almost no scooping into pitches."
+    "blurb": "Round warm tenor with clean onsets; steady sustain and almost no scooping into pitches.",
+    "technique": "Notice how little decoration there is. Pitches start exactly where they finish, with no slide up into them and no fall off the back, and the tone stays round and warm rather than edgy. Sustains hold at even volume with small, late vibrato. Because the range tops out around C5 and sits in a comfortable legit placement, the whole effect rests on accuracy of the onset. Scoops and swells added on top read immediately as effort, because there is nothing decorative here to hide behind."
   },
   {
     "name": "Cynthia Erivo",
@@ -162,7 +172,8 @@
     "signatureSong": "I'm Here",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gospel-rooted belt with fast melisma and controlled rasp, releasing into clean head voice."
+    "blurb": "Gospel-rooted belt with fast melisma and controlled rasp, releasing into clean head voice.",
+    "technique": "Gospel-style ornament sits on top of theatre discipline: fast melisma with every note of the run separately articulated, bends into pitches from below, and a rasp added to the front of a word then removed within the same phrase. The belt drives to F5 on real chest weight, and rather than force past it she releases into a clean, unpressed head voice for the notes above. That release is the hard part; most singers either stay in the belt and push or lose the tone entirely in the switch."
   },
   {
     "name": "Jeremy Jordan",
@@ -177,7 +188,8 @@
     "signatureSong": "Santa Fe",
     "lowSource": null,
     "highSource": null,
-    "blurb": "High tenor belt with a metallic ring; adds grit up top and flips to falsetto past the break."
+    "blurb": "High tenor belt with a metallic ring; adds grit up top and flips to falsetto past the break.",
+    "technique": "Ring is the giveaway: a hard metallic edge from close fold contact and a narrow resonance space, which pushes the belt to C5 and keeps it cutting through a band. Above that he adds grit on the attack, then flips openly into falsetto instead of dragging chest higher, so you hear the seam and are meant to. Rhythm is aggressive and consonants land early. The grit rides on breath pressure rather than throat squeeze, which is why the metallic edge survives it."
   },
   {
     "name": "Aaron Tveit",
@@ -192,7 +204,8 @@
     "signatureSong": "Come What May",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rock-leaning tenor with a compressed high mix; pushes volume instead of switching registers."
+    "blurb": "Rock-leaning tenor with a compressed high mix; pushes volume instead of switching registers.",
+    "technique": "Everything here runs on compression. The tone stays narrow and pressed, and volume rather than a register change does the work as the line climbs to the B4 belt and past it. There is no flip to falsetto; the top thins but holds its chest colour. Vibrato is fast, small, and mostly saved for the release. Attacks come straight on, with a light rasp on loud consonants. Loudness without that narrow setup becomes pushed air instead of raised intensity."
   },
   {
     "name": "Ethel Merman",
@@ -207,7 +220,8 @@
     "signatureSong": "There's No Business Like Show Business",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Unamplified chest belt with a trumpet-like edge, no audible register shift, pitch dead center."
+    "blurb": "Unamplified chest belt with a trumpet-like edge, no audible register shift, pitch dead center.",
+    "technique": "This is chest voice used like a brass instrument: bright, forward, and remarkably even in volume across the whole range to D5, with no register shift anywhere to hear. Pitch sits dead centre and the note arrives at full size immediately instead of growing into it. Vibrato stays narrow and steady rather than wide. Vowels are open and consonants crisp enough to carry a room without a microphone. That volume is resonance and breath balance at work, not throat force."
   },
   {
     "name": "Julie Andrews",
@@ -222,7 +236,8 @@
     "signatureSong": "The Sound of Music",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bell-clear soprano with exact intonation and light vibrato; very little chest-voice pressure."
+    "blurb": "Bell-clear soprano with exact intonation and light vibrato; very little chest-voice pressure.",
+    "technique": "Clarity comes from clean vowels and very little air in the tone. Pitch centre is exact, onsets are quiet and precise, and the vibrato is light enough that long notes read as nearly straight. Chest register is used sparingly and released early, so the climb toward the top of the range happens in clear head voice with no gear change audible. Diction stays crisp without hardening the vowel. The bottom of the range is where the illusion usually breaks, given a weight this voice never carries."
   },
   {
     "name": "Sutton Foster",
@@ -237,7 +252,8 @@
     "signatureSong": "Gimme Gimme",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright mixed belt with comic timing built into the phrasing; sustains high notes without hardening."
+    "blurb": "Bright mixed belt with comic timing built into the phrasing; sustains high notes without hardening.",
+    "technique": "Comic timing is built into the singing rather than layered on afterwards: words land early or late against the beat, and a line can drop to speech and back inside a single phrase. The belt is a genuine mix instead of pure chest, bright and forward and light enough that sustaining near F5 neither hardens nor spreads. Onsets are clean, vibrato modest and late. Chesting the belt for extra volume locks the top and removes the flexibility the timing needs."
   },
   {
     "name": "Sierra Boggess",
@@ -252,7 +268,8 @@
     "signatureSong": "The Phantom of the Opera",
     "lowSource": null,
     "highSource": "The Phantom of the Opera",
-    "blurb": "Lyric soprano with a floated top and easy pianissimo; even vibrato through the passage."
+    "blurb": "Lyric soprano with a floated top and easy pianissimo; even vibrato through the passage.",
+    "technique": "Steady, unhurried air does all the work here, and it is what lets the very quiet high notes stay in tune and keep their vibrato. Through the passage between registers the tone does not change weight or colour, so nothing pushes and nothing thins, and the top of the range floats rather than projects. Onsets are soft and exactly on pitch. Singers chasing this hold the breath back to get quiet, which stops the vibrato and lets the note settle flat."
   },
   {
     "name": "Ramin Karimloo",
@@ -267,7 +284,8 @@
     "signatureSong": "Til I Hear You Sing",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Baritone-weighted tenor with rock grit; carries chest colour higher than most legit theatre tenors."
+    "blurb": "Baritone-weighted tenor with rock grit; carries chest colour higher than most legit theatre tenors.",
+    "technique": "The instrument sits low and heavy for a tenor: a thick bottom reaching down to G2, and that same dark chest colour carried up through the Bb4 belt rather than lightened into a legit tenor mix. Grit is applied selectively, on the attack of one important word, then dropped again. Vibrato is broad and slow. Phrases build across a long line instead of arriving at full size. Without deep support underneath, carried chest of that weight collapses into plain pushing."
   },
   {
     "name": "Colm Wilkinson",
@@ -282,7 +300,8 @@
     "signatureSong": "Bring Him Home",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Reedy tenor with pronounced vibrato and a plaintive edge on long sustained high phrases."
+    "blurb": "Reedy tenor with pronounced vibrato and a plaintive edge on long sustained high phrases.",
+    "technique": "Reediness comes from a narrow, slightly nasal resonance rather than a wide open throat, and it gives the upper range a thin pleading edge instead of a heroic ring. Vibrato is prominent and fairly wide, present from the instant the note starts. Long high phrases are sung quietly and held, thinning toward the end of the breath instead of being reinforced. Copying the vibrato without the reedy placement produces a wobble; that narrowness is what keeps it in focus."
   },
   {
     "name": "Lea Michele",
@@ -297,6 +316,7 @@
     "signatureSong": "Don't Rain on My Parade",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Broad nasal belt with heavy vibrato; pop riffing layered over legit theatre technique."
+    "blurb": "Broad nasal belt with heavy vibrato; pop riffing layered over legit theatre technique.",
+    "technique": "Placement is high and nasal, which broadens the belt and keeps it bright all the way to E5. Vibrato is heavy and fast, arriving early in the note and staying for its full length. Underneath sits a legit theatre foundation, full breath and matched vowels and long sustains, with pop riffs and quick turns laid over the top, sometimes inside one phrase. Attacks are firm and scooped slightly from below. Pinching the throat to get the brightness narrows the tone without adding ring."
   }
 ]

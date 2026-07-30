@@ -15,7 +15,8 @@
     "signatureSong": "Nessun dorma",
     "lowSource": null,
     "highSource": "Ah! mes amis, quel jour de fête!",
-    "blurb": "Bright, forward Italian tenor with squillo that cuts; sang nine consecutive high Cs in full voice."
+    "blurb": "Bright, forward Italian tenor with squillo that cuts; sang nine consecutive high Cs in full voice.",
+    "technique": "Everything is placed forward and narrow: the vowel stays small, the ring sits high in the mask, and the tone cuts without needing extra volume. Onsets are clean, with no scoop into the note. Vibrato is quick and even, present from the first instant. Climbing toward C5 he adds cover while keeping that forward point, so the top sounds open rather than squeezed. Students push air and widen the mouth, which kills the ring."
   },
   {
     "name": "Enrico Caruso",
@@ -33,7 +34,8 @@
     "signatureSong": "Vesti la giubba",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark, baritonal tenor timbre on acoustic discs; transposed music down rather than reach past Bb4."
+    "blurb": "Dark, baritonal tenor timbre on acoustic discs; transposed music down rather than reach past Bb4.",
+    "technique": "The color is dark for a tenor, close to a baritone through the middle of the staff, and the weight sits low rather than up in the mask. Attacks land firm and immediate, lines are joined with audible portamento, and the vibrato holds one moderate speed from start to finish. Up top the vowel is covered rather than opened out, and with Bb4 as the ceiling the interest is in how much happens underneath it. Press the larynx down to imitate that darkness and all you get is muffled tone."
   },
   {
     "name": "Plácido Domingo",
@@ -51,7 +53,8 @@
     "signatureSong": "Granada",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm spinto weight and long phrases; later took baritone roles, extending his usable low register."
+    "blurb": "Warm spinto weight and long phrases; later took baritone roles, extending his usable low register.",
+    "technique": "Weight is the first thing you hear: a thick, warm middle that keeps its size all the way down toward A2. Breath and tone arrive together, so nothing sounds struck. Phrases run long, crossing bar lines with no obvious refill. The vibrato turns over more slowly than a light lyric tenor's, and the approach to C5 stays covered and muscular. Imitators carry all that weight into the top and run out of air before the phrase ends."
   },
   {
     "name": "José Carreras",
@@ -70,7 +73,8 @@
     "signatureSong": "Amigos Para Siempre",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Lyric tenor with a plaintive, slightly grainy tone; leaned on phrasing rather than sheer volume."
+    "blurb": "Lyric tenor with a plaintive, slightly grainy tone; leaned on phrasing rather than sheer volume.",
+    "technique": "Grain in the tone and a slightly plaintive vowel color give this voice its ache. The attack is gentle, consonants stay clear, and the expression comes from timing: entries delayed, tempo pulled, dynamics dropped to almost nothing before a line opens out. Vibrato is thin and starts with the note instead of arriving late. The mistake is trying to make any of it bigger. The character lives in restraint, not in size."
   },
   {
     "name": "Jonas Kaufmann",
@@ -88,7 +92,8 @@
     "signatureSong": "Pourquoi me réveiller",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Unusually dark, covered tenor sound with baritone-like lows and a tightly held, muscular top."
+    "blurb": "Unusually dark, covered tenor sound with baritone-like lows and a tightly held, muscular top.",
+    "technique": "Cover comes on early here, so the sound stays dark and gathered through the middle where most tenors brighten. Onsets are soft, vibrato narrow and slightly delayed. By C5 the tone reads compressed and muscular rather than open and ringing, which is the trade that darkness costs. Copy it with a depressed tongue root, though, and you get a throaty, unfocused note instead of a covered one."
   },
   {
     "name": "Andrea Bocelli",
@@ -107,7 +112,8 @@
     "signatureSong": "Con te partirò",
     "lowSource": null,
     "highSource": "Nessun dorma",
-    "blurb": "Light lyric tenor recorded close to the mic; softer, more crooned attack than stage projection."
+    "blurb": "Light lyric tenor recorded close to the mic; softer, more crooned attack than stage projection.",
+    "technique": "Recorded close, this is a light lyric sound with a crooner's attack: breath leaks in ahead of the tone, and the resonance sits forward and a little nasal. Vibrato is quick and shallow. Notes near the B4 ceiling are thinned and mixed rather than fully opened, so they read intimate instead of projected. Reach for operatic size by adding chest weight and the softness that defines the sound disappears."
   },
   {
     "name": "Maria Callas",
@@ -125,7 +131,8 @@
     "signatureSong": "Casta Diva",
     "lowSource": null,
     "highSource": "Sempre libera",
-    "blurb": "Uneven but instantly identifiable across three registers; used chest weight and portamento as drama."
+    "blurb": "Uneven but instantly identifiable across three registers; used chest weight and portamento as drama.",
+    "technique": "Three registers, each with its own color, and the seams between them are audible. Chest is heavy and unmixed down toward F#3, the middle veiled, the top bright and sometimes edged. Portamento carries the drama, while accents land on hard glottal onsets. Vibrato widens as pressure rises, and recitative comes out close to speech rhythm. Students copy the chest register with a clenched jaw and end up shouting rather than speaking on pitch."
   },
   {
     "name": "Joan Sutherland",
@@ -143,7 +150,8 @@
     "signatureSong": "Il dolce suono (Lucia's Mad Scene)",
     "lowSource": null,
     "highSource": "Il dolce suono",
-    "blurb": "Round, high-volume coloratura with easy staccato and trills; diction blurred in the upper extension."
+    "blurb": "Round, high-volume coloratura with easy staccato and trills; diction blurred in the upper extension.",
+    "technique": "Volume with roundness: the pharynx stays wide open, which is why the coloratura sounds cushioned rather than pecked, and why words dissolve above the staff as every vowel drifts toward a neutral schwa. Staccato is fired from the breath, not the throat, and trills stay fast and even. What students miss is that the size comes from space and a light onset, never from pressing."
   },
   {
     "name": "Leontyne Price",
@@ -161,7 +169,8 @@
     "signatureSong": "Pace, pace mio Dio",
     "lowSource": null,
     "highSource": "O patria mia",
-    "blurb": "Creamy Verdi soprano with a wide, steady spin; floated high Cs over full orchestra without pushing."
+    "blurb": "Creamy Verdi soprano with a wide, steady spin; floated high Cs over full orchestra without pushing.",
+    "technique": "The spin is the thing to listen for, a wide and steady vibrato that holds its rate, riding a narrow unwavering stream of air. Onsets arrive already spinning, with no scoop and no shove. High notes are floated and then released with a diminuendo instead of chopped off, and the register transitions are hard to locate. Students attack a high C from below and force it. The note has to be in place before the breath moves."
   },
   {
     "name": "Jessye Norman",
@@ -180,7 +189,8 @@
     "signatureSong": "Dich, teure Halle",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Broad, dark-hued dramatic soprano with contralto-like lows and unusually even breath control."
+    "blurb": "Broad, dark-hued dramatic soprano with contralto-like lows and unusually even breath control.",
+    "technique": "A broad, dark instrument with lows that read nearly contralto, and an unhurried approach to every entrance. Consonants land late, vibrato is slow and wide, and crescendos build across whole phrases instead of single notes. Nothing is rushed. Widen the throat to chase that size and the pitch center sags while the vowel blurs; the breadth comes from the length of the breath, not from opening wider."
   },
   {
     "name": "Renée Fleming",
@@ -199,7 +209,8 @@
     "signatureSong": "Song to the Moon",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Silvery lyric soprano with a soft-edged onset and heavy use of floated, breath-mixed high notes."
+    "blurb": "Silvery lyric soprano with a soft-edged onset and heavy use of floated, breath-mixed high notes.",
+    "technique": "Aspirate onsets, notes approached from slightly under, and a fast shallow vibrato that arrives a moment after the tone begins: every edge is softened. Upper notes are mixed with breath and floated rather than driven, which produces the silvery quality. Students hear the breathiness and imitate only that, losing the firm core beneath it. The airiness is a color laid over a supported tone, not a replacement for one."
   },
   {
     "name": "Montserrat Caballé",
@@ -218,7 +229,8 @@
     "signatureSong": "Barcelona",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Known for pianissimo high notes spun on almost no air, then sudden shifts to full dramatic weight."
+    "blurb": "Known for pianissimo high notes spun on almost no air, then sudden shifts to full dramatic weight.",
+    "technique": "The signature device is a high note spun at a whisper: fold contact thinned right down, the vowel kept close, the air rationed, then a sudden shift into full dramatic weight with the vowel unchanged. Onsets are almost inaudible, vibrato slow and even. Chase that pianissimo by blowing more air and it collapses. It works the other way around, on less air held longer with the support untouched."
   },
   {
     "name": "Anna Netrebko",
@@ -236,7 +248,8 @@
     "signatureSong": "Sempre libera",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Started lyric and darkened toward dramatic roles; thick middle register under a bright, cutting top."
+    "blurb": "Started lyric and darkened toward dramatic roles; thick middle register under a bright, cutting top.",
+    "technique": "A thick, meaty middle sits beneath a top that brightens and cuts, and the contrast between the two is the sound. Onsets are decisive, with a touch of glottal edge for attack, and vibrato is moderate and steady. The extension toward D6 comes from a lighter mechanism, not from middle-register weight. That is precisely what students get wrong, hauling the thickness upward until the passaggio jams."
   },
   {
     "name": "Sarah Brightman",
@@ -255,7 +268,8 @@
     "signatureSong": "Time to Say Goodbye",
     "lowSource": null,
     "highSource": "The Phantom of the Opera",
-    "blurb": "Thin, breathy classical-pop tone; stays in head voice up top rather than carrying chest weight."
+    "blurb": "Thin, breathy classical-pop tone; stays in head voice up top rather than carrying chest weight.",
+    "technique": "Thin, airy and head-voice dominant, with no chest weight carried up past the middle. Onsets are aspirate, and vibrato is light, often late, sometimes withheld altogether for a straight tone. Vowels stay bright and compact, which is what lets the top of the range float, as it does through The Phantom of the Opera. Treat this material as belting and the quality goes at once. It depends on staying light exactly where the instinct says push."
   },
   {
     "name": "Cecilia Bartoli",
@@ -273,7 +287,8 @@
     "signatureSong": "Agitata da due venti",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rapid-fire coloratura driven by audible diaphragm pulses; small, tightly focused mezzo core."
+    "blurb": "Rapid-fire coloratura driven by audible diaphragm pulses; small, tightly focused mezzo core.",
+    "technique": "Every note in a run is re-articulated by a small pulse from the body, and you can hear it: the coloratura sounds beaded rather than smeared. The core tone is compact and tightly focused instead of large, onsets are crisp, vibrato quick. Students go wrong in two directions, either slurring the runs into one smooth stream or producing the pulses with the throat rather than the breath."
   },
   {
     "name": "Dmitri Hvorostovsky",
@@ -292,7 +307,8 @@
     "signatureSong": "Dark Eyes (Ochi Chornye)",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Smooth Verdi baritone with a metallic edge and long, unbroken legato on a single breath."
+    "blurb": "Smooth Verdi baritone with a metallic edge and long, unbroken legato on a single breath.",
+    "technique": "Legato is the whole method: long lines joined without a seam, often stretched further than most singers would attempt, with the vowel shape barely shifting from note to note. There is a metallic edge inside an otherwise smooth tone, and the vibrato stays even at every dynamic. The climb to A4 is fully covered. Squeeze the throat chasing that metal and you lose it, because it comes from steady airflow and a consistent vowel."
   },
   {
     "name": "Bryn Terfel",
@@ -311,7 +327,8 @@
     "signatureSong": "Votre toast (Toreador Song)",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Big, grainy bass-baritone with hard consonants; moves between Wagner, Mozart and stage musicals."
+    "blurb": "Big, grainy bass-baritone with hard consonants; moves between Wagner, Mozart and stage musicals.",
+    "technique": "Consonants do the rhythmic work here, percussive on the attack and bitten rather than smoothed, carried on a big and grainy instrument. The vibrato is broad and unhurried next to a lyric baritone's, and the low end toward F2 keeps its body instead of thinning out. Operatic legato and a more speech-driven delivery sit side by side depending on the material. The error is manufacturing the grain as throat rasp; it is resonance and consonant energy."
   },
   {
     "name": "Josh Groban",
@@ -330,7 +347,8 @@
     "signatureSong": "You Raise Me Up",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Pop-classical baritone recorded warm and close; opens into a full ring across the top fourth."
+    "blurb": "Pop-classical baritone recorded warm and close; opens into a full ring across the top fourth.",
+    "technique": "Close-mic'd and warm, with a low register that sits near speech and almost no vibrato, then a gradual opening as the line climbs until there is full ring by the top fourth toward A4. Vibrato arrives late in sustained notes and widens as it goes. Much of the swell is the vowel opening plus microphone distance rather than added force. Shove at the top notes and the phrase stops growing."
   },
   {
     "name": "Ivan Rebroff",
@@ -349,7 +367,8 @@
     "signatureSong": "Kalinka",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Billed at four octaves: deep Russian bass below, thin falsetto soprano well above the staff."
+    "blurb": "Billed at four octaves: deep Russian bass below, thin falsetto soprano well above the staff.",
+    "technique": "Two separate mechanisms, stacked, with the seam left plainly audible: a heavy pressed bass down toward F1, full voice topping out around F4, and a thin, unsupported falsetto well above the staff. The vibrato differs between them, slow below and fluttery above. Blending the two into one continuous register erases the whole effect. The switch is the point, not a seam to be smoothed away."
   },
   {
     "name": "Yma Sumac",
@@ -368,6 +387,7 @@
     "signatureSong": "Gopher Mambo",
     "lowSource": null,
     "highSource": "Chuncho (The Forest Creatures)",
-    "blurb": "Switched between growled low chest and piercing whistle-register tones inside single phrases."
+    "blurb": "Switched between growled low chest and piercing whistle-register tones inside single phrases.",
+    "technique": "The trick is changing mechanism mid-phrase with no warning: a growled, rattling low chest sound, then a bright piercing tone up in whistle register, and nothing gradual in between. Vowels stay wide and open down low and clamp tight up high. Rhythm is percussive, locked to the accompaniment. Attack the whistle notes with force and they will not come, since that register needs very little air and a fully released jaw."
   }
 ]

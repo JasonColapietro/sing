@@ -16,7 +16,8 @@
     "signatureSong": "Hips Don't Lie",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal-edged chest voice with a fast natural vibrato and Arabic-inflected melisma."
+    "blurb": "Nasal-edged chest voice with a fast natural vibrato and Arabic-inflected melisma.",
+    "technique": "Nasal placement is the whole sound — the tone stays forward and slightly pinched, which lets a fast, narrow vibrato ride on a chesty middle. Ornaments come from Arabic-style melisma: quick microtonal slides and trills threaded between beats. Above the E5 belt she flips into a light, hooty upper register rather than pushing. Students chase the buzz by squeezing the throat, but that buzz belongs in the mask with the larynx loose."
   },
   {
     "name": "Luis Miguel",
@@ -34,7 +35,8 @@
     "signatureSong": "La Incondicional",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm bolero tenor; open vowels, unbroken legato, gradual crescendo into sustained notes."
+    "blurb": "Warm bolero tenor; open vowels, unbroken legato, gradual crescendo into sustained notes.",
+    "technique": "Those long bolero sustains run for bars, so the breath has to sit at steady pressure rather than get shoved out at the start, and that is where most imitations come apart. Vowels stay wide open and the line never breaks: phrases arrive on a soft, aspirate onset and grow by crescendo instead of by attack. Vibrato is even and enters early in the note. Around the B4 belt he blends into a warm mix rather than shouting, which keeps the peak of a phrase round."
   },
   {
     "name": "Juan Gabriel",
@@ -52,7 +54,8 @@
     "signatureSong": "Amor Eterno",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Reedy ranchera tenor that slips into falsetto mid-phrase, with loose conversational timing."
+    "blurb": "Reedy ranchera tenor that slips into falsetto mid-phrase, with loose conversational timing.",
+    "technique": "Phrases lean late, stretch, then scramble to catch up, so a ranchera line ends up sounding spoken as much as sung. The tone underneath is reedy and narrow with a bright edge that carries over horns. Mid-phrase the voice breaks upward into falsetto and drops back again, treating the crack as an expressive move rather than a fault. Smoothing that transition out to sound polished removes the exact thing that makes the delivery his."
   },
   {
     "name": "José José",
@@ -70,7 +73,8 @@
     "signatureSong": "El Triste",
     "lowSource": null,
     "highSource": "El Triste",
-    "blurb": "Clean lyric tenor; accurate on stepwise ballad climbs, near-seamless chest-to-mix handoff."
+    "blurb": "Clean lyric tenor; accurate on stepwise ballad climbs, near-seamless chest-to-mix handoff.",
+    "technique": "Onsets land precisely without turning glottal, vibrato stays narrow and steady, and the climb through the passaggio into mix near B4 arrives with no seam and no shift of color. Ballad lines build stepwise, one degree at a time, which leaves intonation exposed the whole way up. Volume is not what makes the top work; the tone stays slim and resonance does the growing."
   },
   {
     "name": "Vicente Fernández",
@@ -88,7 +92,8 @@
     "signatureSong": "El Rey",
     "lowSource": null,
     "highSource": "El Rey",
-    "blurb": "Open-throated ranchera tenor; full-voice top notes held long past the band."
+    "blurb": "Open-throated ranchera tenor; full-voice top notes held long past the band.",
+    "technique": "Big vowels, a settled larynx, no nasal squeeze. The sound is built from openness before anything else, with a wide slow vibrato riding the long notes. Those top notes get held well past the point where the band expects to move on, volume steady rather than tapering, and the grito lands deliberately at phrase ends as a rising shouted cry. Dragging chest weight upward instead of opening the throat first is what turns the imitation stiff and sharp."
   },
   {
     "name": "Selena",
@@ -107,7 +112,8 @@
     "signatureSong": "Como La Flor",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright mezzo with a thick lower-middle and plain, unornamented cumbia phrasing."
+    "blurb": "Bright mezzo with a thick lower-middle and plain, unornamented cumbia phrasing.",
+    "technique": "The lower middle carries real weight and stays undecorated, which is why cumbia lines land so squarely on the beat. Onsets are clean; vibrato is light and arrives late in a sustain rather than at the start. Up to the F5 belt the tone stays chesty and forward, and above it she thins into a lighter head voice. Piling runs onto these melodies erases the plainness they were built on."
   },
   {
     "name": "Marc Anthony",
@@ -125,7 +131,8 @@
     "signatureSong": "Vivir Mi Vida",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Cutting salsa tenor; nasal placement and tight vibrato on high sustained calls over horns."
+    "blurb": "Cutting salsa tenor; nasal placement and tight vibrato on high sustained calls over horns.",
+    "technique": "Placement is high and nasal by design, because that is what cuts through a full horn section. Sustains sit up near the C#5 belt with a fast, tight vibrato that starts almost immediately. Phrases get clipped short and set against the clave instead of sung legato. Beginners chase the loudness and end up shouting under pitch; the intensity here is forward resonance, not air pressure."
   },
   {
     "name": "Celia Cruz",
@@ -143,7 +150,8 @@
     "signatureSong": "La Vida Es Un Carnaval",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Brassy forward chest tone built to cut through horn sections; percussive improvised soneos."
+    "blurb": "Brassy forward chest tone built to cut through horn sections; percussive improvised soneos.",
+    "technique": "The tone is forward and chest-dominant, with hard consonants and almost no breath in it, sitting closer to a brass section than to a crooner. Improvised soneos come out percussive and speech-rhythmic, trading with the band rather than floating over it, and the belt around E5 stays bright instead of covered. Rhythm is the hard part. Those calls are placed precisely against the montuno, and singing them loosely turns declamation into noise."
   },
   {
     "name": "Gloria Estefan",
@@ -161,7 +169,8 @@
     "signatureSong": "Conga",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rounded mezzo with even vibrato; ballad lines stay inside a comfortable mid-belt."
+    "blurb": "Rounded mezzo with even vibrato; ballad lines stay inside a comfortable mid-belt.",
+    "technique": "Warm vowels and gentle onsets keep the tone round, and a mid-rate vibrato holds the same width whether a phrase is loud or soft. Ballads live in a comfortable middle and step up to the F5 belt without changing color, so nothing sounds strained. Uptempo material trades sustain for crisp rhythmic accents. There is no grit to reach for here, because the appeal is a smooth, unhurried line."
   },
   {
     "name": "Ricky Martin",
@@ -179,7 +188,8 @@
     "signatureSong": "Livin' la Vida Loca",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Grainy pop tenor with a short usable top; leans on rhythm, shouts and falsetto flips."
+    "blurb": "Grainy pop tenor with a short usable top; leans on rhythm, shouts and falsetto flips.",
+    "technique": "Grain in the tone does a lot of work, because the comfortable belt stops around A4 and C5 is the ceiling. Rather than climbing past that he leans on rhythm: short barked phrases, spoken interjections, and quick flips into falsetto for anything above the break. Vibrato stays minimal. The hooks are written low on purpose, so taking them in full chest only produces strain when the energy is meant to come from attack and groove."
   },
   {
     "name": "Thalía",
@@ -197,7 +207,8 @@
     "signatureSong": "Amor a la Mexicana",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light bright soprano; thin low notes, girlish forward mix carrying the upper hooks."
+    "blurb": "Light bright soprano; thin low notes, girlish forward mix carrying the upper hooks.",
+    "technique": "F3 is a genuine floor and it stays quiet down there, thin rather than supported. The working sound above it is a bright girlish mix that carries hooks to about F5 without much chest weight behind them. Onsets are soft, vibrato fast and shallow, and phrase ends often lift slightly. Adding body low down is the usual miscalculation, since the character depends on staying slender with high placement."
   },
   {
     "name": "Rosalía",
@@ -216,7 +227,8 @@
     "signatureSong": "Malamente",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Flamenco-trained melisma: glottal attacks, microtonal bends, light and agile up top."
+    "blurb": "Flamenco-trained melisma: glottal attacks, microtonal bends, light and agile up top.",
+    "technique": "Flamenco training shows in the attacks, which are hard and glottal, and in long melismatic runs that bend between notes instead of stepping cleanly, ornaments sitting a quarter-tone off before they resolve. A slight rasp runs through the middle, while the top near F#5 stays agile and light rather than thickening. Vibrato is often withheld, then added at the very end of a held note. Round those microtonal bends into ordinary scale tones and the idiom vanishes."
   },
   {
     "name": "Karol G",
@@ -235,7 +247,8 @@
     "signatureSong": "Provenza",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Slightly raspy mezzo with breathy onsets, parked in a narrow mid-belt for reggaeton hooks."
+    "blurb": "Slightly raspy mezzo with breathy onsets, parked in a narrow mid-belt for reggaeton hooks.",
+    "technique": "Aspirate onsets let breath into the tone, the edges stay slightly raspy, and the whole delivery lives inside a narrow band around the E5 belt. Phrases lag a fraction behind the beat, which is what makes them feel unhurried. Vibrato barely appears, and notes get cut off rather than sustained. Sung fully supported and squarely on the grid, these hooks come out too tidy for the pocket."
   },
   {
     "name": "Bad Bunny",
@@ -254,7 +267,8 @@
     "signatureSong": "Titi Me Pregunto",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Low conversational baritone working a narrow band; rhythm and processing carry the melody."
+    "blurb": "Low conversational baritone working a narrow band; rhythm and processing carry the melody.",
+    "technique": "The pitch range is deliberately small, most of the delivery sitting between F2 and the E4 belt, close to speech, with melody implied more than sung out. Onsets are soft, vowels dark and slack, and there is no vibrato to speak of. Interest comes from placement instead: syllables land just off the grid, dragging or pushing against the dembow. Over-projecting and over-tuning it strips out the conversational flatness the style runs on."
   },
   {
     "name": "Camilo Sesto",
@@ -273,7 +287,8 @@
     "signatureSong": "Vivir Asi Es Morir de Amor",
     "lowSource": null,
     "highSource": "Getsemani",
-    "blurb": "High cutting tenor with a rock edge; loud upper sustains carried on heavy vibrato."
+    "blurb": "High cutting tenor with a rock edge; loud upper sustains carried on heavy vibrato.",
+    "technique": "This is a tenor that lives at the top of the staff, bright and edged on the consonants, where the C5 belt is a working note rather than a stunt and E5 is within reach. Sustains come out loud, carried on a wide vibrato that starts fast and stays wide. Phrases climb instead of sitting still. Grabbing at the throat is the usual mistake, when the top needs a narrow vowel and steady breath."
   },
   {
     "name": "Mercedes Sosa",
@@ -291,7 +306,8 @@
     "signatureSong": "Gracias a la Vida",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark chest-dominant contralto; little vibrato, plain declamation, weight on the vowel."
+    "blurb": "Dark chest-dominant contralto; little vibrato, plain declamation, weight on the vowel.",
+    "technique": "Weight sits on the vowel. Tone is dark, chest-dominant and nearly straight, vibrato appearing only faintly at the end of long notes, so the effect is declamatory rather than lyrical. Phrases are shaped like speech, pauses used as punctuation, dynamics shifting slowly. Nothing is decorated. Adding vibrato and rubato to sound more expressive flattens the plain, deliberate delivery that gives folk material its weight."
   },
   {
     "name": "Elis Regina",
@@ -310,7 +326,8 @@
     "signatureSong": "Como Nossos Pais",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright forward mezzo with abrupt dynamic swings and hard consonant attacks."
+    "blurb": "Bright forward mezzo with abrupt dynamic swings and hard consonant attacks.",
+    "technique": "Dynamics move in sudden steps rather than gradual curves, so a phrase can travel from near-whisper to a bright forward belt inside a bar. Consonants are attacked hard, putting a percussive edge on the front of each word, and the belt up at G5 keeps chest color instead of softening. Timing pushes slightly ahead of the beat. Students even out the swings into a smooth line, and the theatrical contrast disappears."
   },
   {
     "name": "Milton Nascimento",
@@ -329,7 +346,8 @@
     "signatureSong": "Travessia",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Full chest register under a floating falsetto he treats as a second, instrument-like voice."
+    "blurb": "Full chest register under a floating falsetto he treats as a second, instrument-like voice.",
+    "technique": "There are effectively two instruments at work. The chest register is warm and reaches down toward G2 with a belt around A4; the falsetto floats well above it, often on wordless lines, and functions as a separate voice entirely. The switch between them is audible but unhurried, with no grab at the transition. Falsetto vibrato is slow and narrow, and below the break there is almost none. Belting what he sings in falsetto loses the airy quality the approach depends on."
   },
   {
     "name": "Caetano Veloso",
@@ -348,7 +366,8 @@
     "signatureSong": "Alegria, Alegria",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light breathy tenor pitched close to speech; soft onsets, almost no vibrato."
+    "blurb": "Light breathy tenor pitched close to speech; soft onsets, almost no vibrato.",
+    "technique": "The delivery sits close to speech and barely rises above it, built from soft aspirate onsets, a light breathy tone and almost no vibrato, which leaves the pitch center fully exposed. Phrases stay short and conversational, often sitting behind the guitar rather than on top of it. Around G4 he keeps a gentle mix instead of opening out. Singing this quietly takes more breath control, not less, or the pitch sags."
   },
   {
     "name": "Natalia Lafourcade",
@@ -367,6 +386,7 @@
     "signatureSong": "Hasta la Raiz",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Small airy soprano, head-voice dominant, folk-style straight tone with gentle vibrato."
+    "blurb": "Small airy soprano, head-voice dominant, folk-style straight tone with gentle vibrato.",
+    "technique": "Head voice dominates even through the middle, small and airy, with a folk-style straight tone that only blooms into gentle vibrato at the ends of phrases. Onsets are soft, consonants light, and the F3 floor is nearly spoken. Her belt at E5 stays slim and forward rather than thickening into chest. Loading weight underneath it to make the sound carry defeats the intimacy, which depends on staying quiet and steady on the air."
   }
 ]

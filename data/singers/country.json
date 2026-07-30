@@ -15,7 +15,8 @@
     "signatureSong": "Ring of Fire",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Narrow bass-baritone with a flat, spoken attack; adds volume rather than pitch at the top."
+    "blurb": "Narrow bass-baritone with a flat, spoken attack; adds volume rather than pitch at the top.",
+    "technique": "Speech is the starting point. The tone sits low and forward with almost no vibrato, and phrases land squarely on the beat next to that clipped, chugging rhythm. Onsets are soft rather than punched. Near the E4 ceiling he adds breath and volume instead of brightness. Students go wrong by pressing the larynx down to manufacture depth, which kills the flat, easy speaking quality the whole sound depends on."
   },
   {
     "name": "Dolly Parton",
@@ -33,7 +34,8 @@
     "signatureSong": "Jolene",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright soprano, fast narrow vibrato, thin forward tone that cuts through banjo and fiddle."
+    "blurb": "Bright soprano, fast narrow vibrato, thin forward tone that cuts through banjo and fiddle.",
+    "technique": "Placement is high and forward, close to the nose, which is what lets a light soprano cut through banjo and fiddle without volume. Vibrato is fast and narrow and starts almost as soon as a note does. Notes are often begun with a small breathy onset and decorated with quick grace-note flips. Climbing toward Bb5 the tone thins into head voice rather than thickening. Imitators add weight and lose the sparkle."
   },
   {
     "name": "Willie Nelson",
@@ -51,7 +53,8 @@
     "signatureSong": "On the Road Again",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light nasal tenor that lags behind the beat and slides into notes instead of landing on them."
+    "blurb": "Light nasal tenor that lags behind the beat and slides into notes instead of landing on them.",
+    "technique": "Almost everything here is timing. Notes arrive late, behind where the band puts them, then slide up or down into pitch instead of starting there. Tone stays light and nasal, close to speech, with very little vibrato and no push at the F4 ceiling. Copy the drag but resolve early and you land back on the beat too soon; the phrase should only catch up at the very end of the line."
   },
   {
     "name": "Patsy Cline",
@@ -69,7 +72,8 @@
     "signatureSong": "Crazy",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm contralto with a controlled sob on held notes and heavy, deliberate slides between them."
+    "blurb": "Warm contralto with a controlled sob on held notes and heavy, deliberate slides between them.",
+    "technique": "Weight sits in the chest register for most of the range, with slow, heavy portamento carrying you between notes rather than clean intervals. Vibrato arrives late on a sustained tone, often preceded by a small catch that reads as a sob. Toward D5 the sound thins gently instead of belting. Overdone, that catch turns into a wobble; it works as one placed break inside an otherwise steady line."
   },
   {
     "name": "Reba McEntire",
@@ -86,7 +90,8 @@
     "signatureSong": "Fancy",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Oklahoma twang over a strong chest belt; breaks into a deliberate cry at the top of phrases."
+    "blurb": "Oklahoma twang over a strong chest belt; breaks into a deliberate cry at the top of phrases.",
+    "technique": "Twang does the work up front: a bright, narrow, forward vowel that keeps the belt from sounding heavy. Chest-weighted mix carries confidently to about D5, and above that toward F5 the sound releases into a thinner cry rather than more push. Consonants are crisp, and line endings often break upward into that cry on purpose. Shouted from the throat, the belt spreads and tires fast; the narrow vowel is what makes it carry."
   },
   {
     "name": "Garth Brooks",
@@ -103,7 +108,8 @@
     "signatureSong": "Friends in Low Places",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Sturdy baritone that takes its grit from breath pressure; stage-shout delivery up high."
+    "blurb": "Sturdy baritone that takes its grit from breath pressure; stage-shout delivery up high.",
+    "technique": "Grit here comes from breath pressure against a fairly open throat, not from scraping. Onsets are aspirate, a little air ahead of the tone, and vibrato is wide and shows up at the ends of long notes. Approaching A4 the delivery turns into a stage shout, chest-weighted and open-vowelled. Copy the volume without the air behind it and you get a squeezed, hoarse sound that will not survive a set."
   },
   {
     "name": "George Strait",
@@ -120,7 +126,8 @@
     "signatureSong": "Amarillo by Morning",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Unhurried baritone, almost no vibrato, phrasing shaped for two-step and Western swing."
+    "blurb": "Unhurried baritone, almost no vibrato, phrasing shaped for two-step and Western swing.",
+    "technique": "Restraint is the technique. The tone is even and unbrightened, vibrato nearly absent, onsets clean with no scoop into pitch. Phrasing sits inside the shuffle or swing feel and rarely displaces a note for effect. Melody gets sung close to as written, ornament limited to a small turn at a cadence. Singers imitating this add runs and vibrato to fill the space, which is exactly what the style takes out."
   },
   {
     "name": "Carrie Underwood",
@@ -138,7 +145,8 @@
     "signatureSong": "Before He Cheats",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Supported belt that hands off to a clean head voice; rasp on peaks without losing center."
+    "blurb": "Supported belt that hands off to a clean head voice; rasp on peaks without losing center.",
+    "technique": "Mix carries a lot of chest weight up to about G5 and the transition is smoothed rather than broken, so you rarely hear the gear change. Past the belt the voice releases into a clean head register reaching toward C6 without thickening. Rasp gets added on peak notes as surface texture while the core pitch stays centered. The common error is yelling the belt on a wide vowel instead of narrowing it and keeping air moving."
   },
   {
     "name": "Chris Stapleton",
@@ -157,7 +165,8 @@
     "signatureSong": "Tennessee Whiskey",
     "lowSource": null,
     "highSource": "Tennessee Whiskey",
-    "blurb": "Gravel-heavy baritone with gospel-blues runs; carries high lines in full voice, not falsetto."
+    "blurb": "Gravel-heavy baritone with gospel-blues runs; carries high lines in full voice, not falsetto.",
+    "technique": "Distortion sits on top of a well-supported baritone tone, so the grain never swallows the pitch. Phrasing comes out of gospel and blues: melisma around the flatted third and seventh, notes bent into from underneath, vibrato withheld until a sustain is nearly over. High lines toward B4 stay in full voice rather than flipping. Made with the throat itself, that rasp goes hoarse inside a set; it belongs on the airflow above a steady tone."
   },
   {
     "name": "Alison Krauss",
@@ -175,7 +184,8 @@
     "signatureSong": "When You Say Nothing at All",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Straight-tone soprano, nearly breathless, exact intonation and very little ornament."
+    "blurb": "Straight-tone soprano, nearly breathless, exact intonation and very little ornament.",
+    "technique": "Very little happens on purpose here, which is what makes it hard. Tone stays straight with only a trace of vibrato late in a long note, dynamics stay quiet, and pitch is placed dead center with no scoop in. Onsets are soft, almost breath-first. Ornament is nearly absent, so every vowel is exposed. Sing this with normal vibrato habits and you find out how much of your tuning the vibrato was hiding."
   },
   {
     "name": "Loretta Lynn",
@@ -192,7 +202,8 @@
     "signatureSong": "Coal Miner's Daughter",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal Appalachian mezzo, hard consonants, a bent and talking approach to the melody line."
+    "blurb": "Nasal Appalachian mezzo, hard consonants, a bent and talking approach to the melody line.",
+    "technique": "You hear the nose first: placement is high and forward, vowels flattened toward speech, consonants struck hard enough to become part of the rhythm. Melody gets bent, notes approached from under and pushed up into, sometimes talked more than sung. Chest-weighted tone covers most of the G3-D5 span with no flip into anything lighter. Round the vowels out and the accent goes with them, and the accent is where the feeling actually lives."
   },
   {
     "name": "Tammy Wynette",
@@ -209,7 +220,8 @@
     "signatureSong": "Stand by Your Man",
     "lowSource": null,
     "highSource": "Stand by Your Man",
-    "blurb": "Mezzo who uses her own register break as a teardrop catch at the ends of lines."
+    "blurb": "Mezzo who uses her own register break as a teardrop catch at the ends of lines.",
+    "technique": "The register break is not hidden, it is used. Phrases build in chest, then at the end of a line the voice deliberately cracks up into a lighter register for a beat, the teardrop catch. Otherwise the tone is warm and even, with moderate vibrato and slow, weighted slides. Get this wrong and you crack randomly mid-word; the catch has to be placed, in the same spot in the phrase every time."
   },
   {
     "name": "Randy Travis",
@@ -226,7 +238,8 @@
     "signatureSong": "Forever and Ever, Amen",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Round, resonant baritone with long downward slides and a heavy drawl on line endings."
+    "blurb": "Round, resonant baritone with long downward slides and a heavy drawl on line endings.",
+    "technique": "Resonance is low and round, the sound sitting behind the teeth rather than up in the nose. Long downward slides finish most phrases, and diphthongs get drawled so the second vowel becomes its own small note. Vibrato is narrow and arrives late, when it arrives. Take on the drawl and the pitch tends to sag with it; every slide still has to land on a definite note instead of trailing away."
   },
   {
     "name": "Vince Gill",
@@ -243,7 +256,8 @@
     "signatureSong": "Go Rest High on That Mountain",
     "lowSource": null,
     "highSource": null,
-    "blurb": "High sweet tenor thinning into clean falsetto; harmony-trained blend, steady even vibrato."
+    "blurb": "High sweet tenor thinning into clean falsetto; harmony-trained blend, steady even vibrato.",
+    "technique": "Two registers, joined carefully. Full voice reaches about A4 with a sweet, unheavy tone, and above that the sound thins into clean falsetto toward C5 with no bump at the seam. Vibrato is even in both rate and width, tuning sits exact, and vowels are matched the way a harmony part has to match. The thing to avoid is muscling the top; it wants to get lighter as it climbs, not louder."
   },
   {
     "name": "Kacey Musgraves",
@@ -262,7 +276,8 @@
     "signatureSong": "Rainbow",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Soft-edged mezzo close to the mic, breath left in the tone, melody kept conversational."
+    "blurb": "Soft-edged mezzo close to the mic, breath left in the tone, melody kept conversational.",
+    "technique": "Everything stays close to the microphone and close to speech. Air is left in the tone deliberately, onsets are soft, and vibrato is minimal, a small tail at the end of a note rather than through it. The line sits mid-staff where talking is comfortable, consonants relaxed. Sung at full volume the style disappears, so the real work is staying intelligible and in tune at that low a dynamic."
   },
   {
     "name": "Hank Williams",
@@ -280,7 +295,8 @@
     "signatureSong": "Your Cheatin' Heart",
     "lowSource": null,
     "highSource": "Lovesick Blues",
-    "blurb": "Thin keening tenor that flips into yodel breaks; hard nasal placement, cries on the vowel."
+    "blurb": "Thin keening tenor that flips into yodel breaks; hard nasal placement, cries on the vowel.",
+    "technique": "Nasal placement is extreme and deliberate, and that is what gives the thin, keening carry over a band. Vowels get a cry on them, an audible pinch that reads as ache, and the register break is thrown wide open into a yodel flip, clearest in Lovesick Blues. Timing pushes slightly ahead of the beat. The break tends to get dodged entirely, or the flip gets attempted on a closed vowel, which will not release."
   },
   {
     "name": "Merle Haggard",
@@ -297,7 +313,8 @@
     "signatureSong": "Okie from Muskogee",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Relaxed baritone with jazz-tinged timing; bends up into notes and stays behind the beat."
+    "blurb": "Relaxed baritone with jazz-tinged timing; bends up into notes and stays behind the beat.",
+    "technique": "Phrasing leans back the way a jazz singer's does, notes set a hair behind the beat and bent up into from below. Tone is relaxed and mid-weight, never pressed, with light vibrato that only surfaces as a note is ending. The E4 top is reached by opening the vowel rather than adding volume. Students copy the looseness and lose the tuning; behind the beat still has to be precisely behind it."
   },
   {
     "name": "Waylon Jennings",
@@ -315,7 +332,8 @@
     "signatureSong": "Good Hearted Woman",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark chesty bass-baritone pushed against a hard backbeat; almost no head-voice extension."
+    "blurb": "Dark chesty bass-baritone pushed against a hard backbeat; almost no head-voice extension.",
+    "technique": "Chest register does all the work: dark, thick, and driven straight at a hard backbeat, consonants landing on the accent. There is essentially no lighter extension above the D4 top, so lines stay low and repeat instead of climbing. Onsets are firm, close to glottal, and vibrato is minimal. Copying the darkness by dropping the jaw and swallowing the tone just makes it muddy; this sound is dark but still forward."
   },
   {
     "name": "Emmylou Harris",
@@ -334,7 +352,8 @@
     "signatureSong": "Boulder to Birmingham",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Silvery soprano with a fragile edge on sustained notes; built to sit above a lead vocal."
+    "blurb": "Silvery soprano with a fragile edge on sustained notes; built to sit above a lead vocal.",
+    "technique": "Tone is silvery and slightly thin, with a fine tremor rather than a wide vibrato on sustained notes, and that thinness is what lets it sit above a lead vocal without fighting it. Onsets are gentle, pitch placed a touch high in the note. Ornament is sparse and vowels are matched carefully, the mark of a harmony singer. Reach for more volume and the tone thickens, and the fragile edge is the first thing lost."
   },
   {
     "name": "Shania Twain",
@@ -352,6 +371,7 @@
     "signatureSong": "You're Still the One",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright mezzo with a clipped percussive attack, slipping into a thin upper register on hooks."
+    "blurb": "Bright mezzo with a clipped percussive attack, slipping into a thin upper register on hooks.",
+    "technique": "Attack is percussive and clipped, consonants working as rhythm, phrases cut off early rather than held out. Chest mix belts comfortably to about C5, and above that toward E5 the tone deliberately thins on hook notes for contrast. Vibrato is light and used sparingly. Smooth all of it into a legato line and the rhythmic snap the whole delivery is built on drains away."
   }
 ]

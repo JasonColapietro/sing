@@ -16,7 +16,8 @@
     "signatureSong": "Superstition",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal-forward tenor with gospel melisma; slides from chest into a bright, controlled falsetto."
+    "blurb": "Nasal-forward tenor with gospel melisma; slides from chest into a bright, controlled falsetto.",
+    "technique": "Sound sits high and forward, buzzing in the mask, which is why it cuts through a horn section without much volume. Notes are usually approached from underneath with a quick scoop, and vibrato shows up only at the tail of a long note. Chest carries to roughly the belt around E5; everything above that is a thin, deliberate falsetto reaching toward E6. Copying the nasal buzz and the runs without the rhythmic placement misses where the phrasing actually lives."
   },
   {
     "name": "Marvin Gaye",
@@ -34,7 +35,8 @@
     "signatureSong": "What's Going On",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Three voices in one: growl at the bottom, smooth mid, airy falsetto layered over the top."
+    "blurb": "Three voices in one: growl at the bottom, smooth mid, airy falsetto layered over the top.",
+    "technique": "Three distinct colors get used as separate instruments: a gritty low register near F2, a warm smooth middle, and a breathy falsetto floated on top toward Bb5. Onsets are soft and aspirate, almost sighed into place, and phrases lean slightly behind the beat. Vibrato is narrow and arrives late. The common mistake is powering the falsetto; it works because it stays quiet and airy against the fuller mid voice."
   },
   {
     "name": "Al Green",
@@ -53,7 +55,8 @@
     "signatureSong": "Let's Stay Together",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light tenor that keeps breaking into a soft, moaning falsetto over laid-back phrasing."
+    "blurb": "Light tenor that keeps breaking into a soft, moaning falsetto over laid-back phrasing.",
+    "technique": "Weight stays light on purpose. Instead of pressing at the top of the chest register, the voice flips into a soft moaning falsetto mid-word, then drops back down, so the break becomes an ornament rather than a problem to hide. Phrasing hangs behind the groove, with little sighs and hums filling the gaps. To imitate this, learn to release where you want to push; a student who belts the same lines loses the whole effect."
   },
   {
     "name": "Sam Cooke",
@@ -72,7 +75,8 @@
     "signatureSong": "A Change Is Gonna Come",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Clean gospel-trained tenor; yodel-like turns and easy legato instead of grit."
+    "blurb": "Clean gospel-trained tenor; yodel-like turns and easy legato instead of grit.",
+    "technique": "Clarity does the work here: even airflow, clean onsets, and long connected lines with almost no rasp. The signature move is a yodel-like turn that hops briefly into a lighter register and back inside a single syllable, used as punctuation at the end of a phrase. Vibrato is even and modest. Reaching for grit to sound soulful is backwards here; the feeling comes from pitch accuracy, breath control, and where the turn lands."
   },
   {
     "name": "Otis Redding",
@@ -90,7 +94,8 @@
     "signatureSong": "(Sittin' On) The Dock of the Bay",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Raspy, pushed baritone that stammers and repeats phrases to build pressure."
+    "blurb": "Raspy, pushed baritone that stammers and repeats phrases to build pressure.",
+    "technique": "A thick baritone driven hard, with rasp riding on top of the tone rather than replacing it. Onsets are often glottal, words get stammered and repeated to build pressure, and lines push slightly ahead of the beat so the band sounds like it is chasing the singer. The top of the range is shouted, not floated. The grit is not throat scrape; it comes from breath compression and bright forward vowels, and it should never hurt."
   },
   {
     "name": "Prince",
@@ -109,7 +114,8 @@
     "signatureSong": "Purple Rain",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Switches between smoky chest voice, piercing falsetto, and screams well above the staff."
+    "blurb": "Switches between smoky chest voice, piercing falsetto, and screams well above the staff.",
+    "technique": "Registers get swapped like guitar tones: a smoky, half-spoken low voice, a chesty belt up around E5, a piercing thin falsetto, and screams above that reaching toward B5. Consonants are clipped and placed exactly on the sixteenth-note grid, so the vocal doubles as a rhythm part. Vibrato is minimal until a note is held on purpose. Beginners chase the scream first, before the low conversational register and the rhythmic precision that make it land."
   },
   {
     "name": "James Brown",
@@ -128,7 +134,8 @@
     "signatureSong": "I Got You (I Feel Good)",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Shouted baritone used as percussion; screams and grunts placed on the beat."
+    "blurb": "Shouted baritone used as percussion; screams and grunts placed on the beat.",
+    "technique": "Placement carries more of the load than melody. Most of the singing happens inside a narrow band of the baritone range, shouted with a hard glottal attack, and the grunts, yelps and short rasped bursts are struck like drum hits on specific beats. Sustained notes are rare; energy comes from repetition and rhythmic accent. Copy the screams without the timing and the whole thing collapses, and what should stay short and punchy gets oversung."
   },
   {
     "name": "Curtis Mayfield",
@@ -147,7 +154,8 @@
     "signatureSong": "Move On Up",
     "lowSource": null,
     "highSource": null,
-    "blurb": "High, thin tenor sung mostly in a floated falsetto with very little vibrato."
+    "blurb": "High, thin tenor sung mostly in a floated falsetto with very little vibrato.",
+    "technique": "Almost everything stays in the light register: thin, sweet, gentle breathy onsets, and a tone left nearly straight. Absence of vibrato is a choice, not a limitation; it keeps the vocal sitting calmly on top of busy rhythm sections. Lines stay high in the staff and stay quiet, relying on the microphone for size. Two habits ruin an imitation: adding chest weight to feel more powerful, and adding vibrato to feel more expressive."
   },
   {
     "name": "Smokey Robinson",
@@ -166,7 +174,8 @@
     "signatureSong": "The Tracks of My Tears",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Feathery high tenor; falsetto entries so smooth the register change is hard to hear."
+    "blurb": "Feathery high tenor; falsetto entries so smooth the register change is hard to hear.",
+    "technique": "The whole line rides on very little air pressure, feathery and placed well forward. The crossing into falsetto is blended so smoothly you hear a change in color rather than a break, which takes a steady breath and a resistance to getting louder as the line rises. Phrases arch long and stay legato, with a small vibrato appearing only at the end. Trying to add volume at the transition is the fastest way to make the seam audible."
   },
   {
     "name": "Luther Vandross",
@@ -185,7 +194,8 @@
     "signatureSong": "Never Too Much",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Round, cushioned tenor with precise runs and falsetto used as ornament, not escape."
+    "blurb": "Round, cushioned tenor with precise runs and falsetto used as ornament, not escape.",
+    "technique": "Nothing in the tone carries an edge, even at full volume: round, cushioned, warm, with a low larynx color. Runs are fast but fully articulated, each pitch landing rhythmically rather than smearing, and falsetto gets used as a decorative flick at the top of a phrase instead of an escape hatch. Dynamics swell gradually inside single notes. Smeared runs and over-scooped entries kill it; the style depends on clean starts and exact intervals."
   },
   {
     "name": "Usher",
@@ -203,7 +213,8 @@
     "signatureSong": "Yeah!",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Agile pop-R&B tenor; clipped rhythmic phrasing and a light, breathy upper register."
+    "blurb": "Agile pop-R&B tenor; clipped rhythmic phrasing and a light, breathy upper register.",
+    "technique": "Consonants get cut short so the vocal snaps against the beat, with placement kept bright and forward. Runs are brief and rhythmic rather than long and showy, often used to fill a half-beat gap. The upper register thins out and turns breathy instead of belting, and ad-libs stack around the lead line. Imitators tend to smooth the phrasing into even legato, which drains the groove, and they hold notes that should be clipped off early."
   },
   {
     "name": "Maxwell",
@@ -221,7 +232,8 @@
     "signatureSong": "Ascension (Don't Ever Wonder)",
     "lowSource": null,
     "highSource": "This Woman's Work",
-    "blurb": "Sings long stretches in falsetto with a narrow, flute-like tone and slow vibrato."
+    "blurb": "Sings long stretches in falsetto with a narrow, flute-like tone and slow vibrato.",
+    "technique": "Whole verses live in falsetto, with a narrow flute-like tone that stays quiet and close to the microphone. Vibrato is slow, shallow, and arrives well after the note has settled. Reaching toward C6 works because the sound gets lighter as it climbs rather than louder. Powering the falsetto up there is the wrong instinct; the skill is holding a very small, steady stream of air and trusting the amplification."
   },
   {
     "name": "D'Angelo",
@@ -240,7 +252,8 @@
     "signatureSong": "Untitled (How Does It Feel)",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Slurred phrasing that drags behind the beat, with falsetto harmonies stacked in blocks."
+    "blurb": "Slurred phrasing that drags behind the beat, with falsetto harmonies stacked in blocks.",
+    "technique": "Consonants get softened and slurred so words blur into each other, and lines sit noticeably behind the beat while the band stays put, which creates the drag that defines the feel. Falsetto lines are stacked in dense harmony blocks, each one small and breathy. Pitches often bend into place rather than starting there. Singing this cleanly on the beat, with crisp diction, produces something technically correct and completely wrong stylistically."
   },
   {
     "name": "Teddy Pendergrass",
@@ -258,7 +271,8 @@
     "signatureSong": "Close the Door",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Heavy baritone with a gravel edge; moves from near-whisper to full-throated shouting."
+    "blurb": "Heavy baritone with a gravel edge; moves from near-whisper to full-throated shouting.",
+    "technique": "Sheer weight is the whole instrument. With a top only around Bb4, nothing depends on high notes; the drama comes from dynamics, moving from a near-whisper to a full-throated shout inside one phrase, with gravel appearing as intensity rises. Onsets are firm and vowels stay wide and dark. Going straight to the shouting skips the quiet end, where the contrast is built, and then the loud passages have nowhere left to go."
   },
   {
     "name": "Barry White",
@@ -277,7 +291,8 @@
     "signatureSong": "Can't Get Enough of Your Love, Babe",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Deep bass built for spoken-sung delivery: narrow working range, enormous resonance."
+    "blurb": "Deep bass built for spoken-sung delivery: narrow working range, enormous resonance.",
+    "technique": "Delivery sits between speech and song, mostly inside a narrow band low in the bass range, with long sustained resonance and very little melodic movement. Pace is unhurried, consonants are relaxed, and the tone stays smooth rather than pressed. Since the range tops out around E4, everything rests on resonance instead of reach. Forcing the larynx down to fake the depth produces a muffled, breathy sound; real weight comes from an open, relaxed throat and slow air."
   },
   {
     "name": "Aaron Neville",
@@ -295,7 +310,8 @@
     "signatureSong": "Tell It Like It Is",
     "lowSource": null,
     "highSource": null,
-    "blurb": "High tenor with a wide, warbling vibrato and gospel turns on nearly every held note."
+    "blurb": "High tenor with a wide, warbling vibrato and gospel turns on nearly every held note.",
+    "technique": "Vibrato is the signature: wide, quick, and present almost from the moment a note begins, giving the tone a warble that most singers spend years trying to remove. Onsets are gentle and slightly breathy, and nearly every held note gets decorated with a gospel turn or a small quaver upward. The range sits high and light. Imitating this by wobbling the pitch from the throat sounds unsteady; the oscillation has to stay even and come from the breath."
   },
   {
     "name": "Philip Bailey",
@@ -314,7 +330,8 @@
     "signatureSong": "Easy Lover",
     "lowSource": null,
     "highSource": "Reasons",
-    "blurb": "Baritone speaking range under a penetrating falsetto that carries entire lead vocals."
+    "blurb": "Baritone speaking range under a penetrating falsetto that carries entire lead vocals.",
+    "technique": "Note the gap: a chest belt topping out near B4 under a range extending to D6. Everything high is a pure, penetrating falsetto that carries full lead lines and sustains without wobble, not a chest note. Tone up there is clean and almost boyish, with fast even vibrato on held notes and a genuinely low speaking register underneath. The usual error is trying to belt those pitches in chest, which strains and still sounds nothing like it."
   },
   {
     "name": "Brian McKnight",
@@ -333,7 +350,8 @@
     "signatureSong": "Back at One",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Trained tenor with clean legato and a falsetto he steps into without an audible seam."
+    "blurb": "Trained tenor with clean legato and a falsetto he steps into without an audible seam.",
+    "technique": "The control is in the details: exact pitch on entry with no scoop, smooth legato, and a step into the light upper register that leaves no audible seam. Runs are melodic and unhurried rather than crowded, and vibrato stays even and controlled at the end of long notes. Volume changes come from breath support, not squeeze. Sliding into every note from below undoes the clean, connected line that gives the style its polish."
   },
   {
     "name": "Bill Withers",
@@ -352,7 +370,8 @@
     "signatureSong": "Ain't No Sunshine",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Plain-spoken baritone, narrow range, conversational timing and almost no ornament."
+    "blurb": "Plain-spoken baritone, narrow range, conversational timing and almost no ornament.",
+    "technique": "Everything sits close to speech. A narrow range topping out around A4, almost no vibrato, plain onsets, and timing that follows how a sentence would actually be spoken rather than where the bar line falls. Ornament is nearly absent, so word stress and pauses carry the meaning. This is the hardest style to fake, because a student's instinct is to add runs and swells, and each addition makes the delivery sound less honest."
   },
   {
     "name": "Donny Hathaway",
@@ -371,6 +390,7 @@
     "signatureSong": "A Song for You",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Church-rooted tenor with a hard-edged mid range and a wide, urgent vibrato."
+    "blurb": "Church-rooted tenor with a hard-edged mid range and a wide, urgent vibrato.",
+    "technique": "Most of the singing happens in a hard-edged middle register carried in chest weight up toward C5, with a wide urgent vibrato that widens further as a phrase intensifies. Onsets can be firm or scooped depending on emphasis, and phrases stretch and compress freely against a steady rhythm section. The ornaments are gospel-shaped rather than pop-shaped, landing on the vowel and resolving downward. Substituting loudness for that urgency just presses the tone flat."
   }
 ]

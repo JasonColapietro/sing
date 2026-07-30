@@ -12,7 +12,8 @@
     "signatureSong": "Son of a Preacher Man",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Breathy, smoke-toned mezzo; heavy vibrato and chest-driven phrasing borrowed from soul records."
+    "blurb": "Breathy, smoke-toned mezzo; heavy vibrato and chest-driven phrasing borrowed from soul records.",
+    "technique": "Air moves through nearly every note, so the tone keeps a soft edge and consonants land late and gentle rather than struck. Vibrato is wide and slow, usually arriving on the tail of a long note instead of under it. Phrases sit slightly behind the beat, chest-weighted through the middle of the staff and thinning as they climb toward Eb5. Students copying the breathiness let support collapse with it; the airflow has to stay pressurized underneath or the pitch sags."
   },
   {
     "name": "Judy Garland",
@@ -27,7 +28,8 @@
     "signatureSong": "Over the Rainbow",
     "lowSource": null,
     "highSource": "The Man That Got Away",
-    "blurb": "Contralto with a tremulous forward vibrato, thick chest resonance, and an audible catch on held notes."
+    "blurb": "Contralto with a tremulous forward vibrato, thick chest resonance, and an audible catch on held notes.",
+    "technique": "Listen for the shake: a fast, narrow vibrato placed well forward in the mask, sometimes widening into an audible waver across a sustained note. That waver rides on a pulse in the breath rather than a squeeze in the throat, which is why the tone stays open even while it moves. Chest resonance holds thick well above the middle of the staff, and phrase endings tend to break off with a small catch instead of tapering out. Consonants get attacked firmly, vowels stay wide and speech-like."
   },
   {
     "name": "Auli'i Cravalho",
@@ -42,7 +44,8 @@
     "signatureSong": "How Far I'll Go",
     "lowSource": null,
     "highSource": "How Far I'll Go",
-    "blurb": "Bright youthful mezzo; unforced belt into the fifth octave, steady pitch, very little vibrato."
+    "blurb": "Bright youthful mezzo; unforced belt into the fifth octave, steady pitch, very little vibrato.",
+    "technique": "Bright and forward from the first syllable, with a thin, focused tone and almost no vibrato, so long notes read as very straight and very young. Each note starts dead on pitch, never scooped up into. Across the top of the staff the belt stays in a bright mix rather than gaining chest weight, opening toward E5 with more space instead of more push. The pressure comes off at exactly the point where a louder singer would add it, and resonance does the carrying."
   },
   {
     "name": "Tom Jones",
@@ -57,7 +60,8 @@
     "signatureSong": "It's Not Unusual",
     "lowSource": null,
     "highSource": "Delilah",
-    "blurb": "Grainy baritone with wide vibrato and a full-throated belt; volume rather than finesse up top."
+    "blurb": "Grainy baritone with wide vibrato and a full-throated belt; volume rather than finesse up top.",
+    "technique": "Grain and sheer size define this sound: a heavy baritone driven at high pressure, with rasp coming out of the tone itself rather than from bolted-on distortion. The vibrato swings wide and unhurried. Attacks frequently scoop up from below and then get hammered flat onto the vowel. Nearing Bb4 he leans in harder instead of thinning, so the top deliberately sounds effortful. The bulk of it is built from breath and an open pharynx, not a squeezed throat, which is why imitation tires out within a chorus."
   },
   {
     "name": "Mario Lanza",
@@ -72,7 +76,8 @@
     "signatureSong": "Be My Love",
     "lowSource": null,
     "highSource": "Be My Love",
-    "blurb": "Operatic tenor with dense squillo; carries full chest weight to a sustained high C, no falsetto."
+    "blurb": "Operatic tenor with dense squillo; carries full chest weight to a sustained high C, no falsetto.",
+    "technique": "Everything rests on a ringing, concentrated core, the narrow metallic ping that lets an unamplified tenor sit on top of an orchestra without shouting. Full weight is carried up to C5 with no flip into falsetto: larynx low, palate high, the vowel darkening as it rises while the ring stays pinned in one thin band. Attacks are firm without turning glottal, and the vibrato runs even and moderately fast. The scale of the sound is a resonance effect, not a matter of moving more air."
   },
   {
     "name": "Martina McBride",
@@ -87,7 +92,8 @@
     "signatureSong": "Independence Day",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Country soprano who belts from a braced chest mix; clean vowels, no scoop into the high notes."
+    "blurb": "Country soprano who belts from a braced chest mix; clean vowels, no scoop into the high notes.",
+    "technique": "The vowels stay square, and every note begins straight on pitch with no slide up to it. The belt runs on a braced chest mix with the ribs held wide, staying bright and even from mid-staff up toward F5 instead of thickening as it climbs. Vibrato stays narrow and arrives late, often only in the last beat of a held note. Dropping the jaw for extra power swallows the forward ring that carries the belt."
   },
   {
     "name": "LeAnn Rimes",
@@ -102,7 +108,8 @@
     "signatureSong": "Blue",
     "lowSource": null,
     "highSource": "Blue",
-    "blurb": "Fast, wide vibrato and a clean yodel flip between chest and head voice, trained from childhood."
+    "blurb": "Fast, wide vibrato and a clean yodel flip between chest and head voice, trained from childhood.",
+    "technique": "That fast, wide vibrato is the fingerprint, and it sits under nearly the whole length of a held note rather than showing up at the end. The chest register is thick for a soprano, and the register change becomes an ornament in its own right: a deliberate yodel flip up into head voice and straight back down, clean enough to use as rhythm. Notes are often bent into from underneath, with short, precise turns. The flip works by releasing the chest note, not by forcing through it."
   },
   {
     "name": "Lata Mangeshkar",
@@ -117,7 +124,8 @@
     "signatureSong": "Lag Ja Gale",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin, light soprano; pinpoint intonation above the staff with straight tone and slim vibrato."
+    "blurb": "Thin, light soprano; pinpoint intonation above the staff with straight tone and slim vibrato.",
+    "technique": "Slim, light, and placed high, with very little chest weight anywhere, because a narrow tone is what allows this much speed. The ornaments draw on a classical vocabulary: quick grace notes, tight oscillating turns, and smooth connecting slides that cross between pitches without a seam. Above the staff the vibrato thins out or drops away entirely, leaving a straight tone that sits dead centre in pitch. Weight is traded off on purpose here; adding any would cost the agility outright."
   },
   {
     "name": "Arijit Singh",
@@ -132,6 +140,7 @@
     "signatureSong": "Tum Hi Ho",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light nasal tenor, breath-forward; slips into head voice at the top rather than pushing chest."
+    "blurb": "Light nasal tenor, breath-forward; slips into head voice at the top rather than pushing chest.",
+    "technique": "Breath leads the tone: light, slightly nasal in placement, conversational even as the dynamic rises. The distance between the A4 belt and the C5 ceiling tells you how the instrument is wired, because above that belt he thins into head voice rather than driving chest, so the highest notes arrive quieter and softer-edged. Attacks are gentle, vibrato slight and late, ornaments kept small. Pushed for volume, the fourth-octave phrases lose the intimacy the phrasing is built on."
   }
 ]

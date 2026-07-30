@@ -16,7 +16,8 @@
     "signatureSong": "Can't Help Falling in Love",
     "lowSource": "Peace in the Valley",
     "highSource": null,
-    "blurb": "Baritone with a thick chest register, wide vibrato, and a gospel-trained bottom he drops into freely."
+    "blurb": "Baritone with a thick chest register, wide vibrato, and a gospel-trained bottom he drops into freely.",
+    "technique": "Listen for a dark, thick baritone placed low and forward, carrying a wide, slow vibrato that arrives late in a held note. Onsets are aspirate and scooped — he slides up into pitch rather than landing on it. The bottom near G2 stays relaxed and unpressed rather than ground into a growl. Everything moves unhurried: phrases start under-sung and open out, so the loudest moment usually lands on the last line instead of the first."
   },
   {
     "name": "Axl Rose",
@@ -34,7 +35,8 @@
     "signatureSong": "Sweet Child o' Mine",
     "lowSource": "There Was a Time",
     "highSource": null,
-    "blurb": "Two voices in one: a low growl underneath, a thin cutting rasp on top, screams above that."
+    "blurb": "Two voices in one: a low growl underneath, a thin cutting rasp on top, screams above that.",
+    "technique": "Two mechanisms do the work. Underneath sits a heavy, distorted low voice trailing into fry at the bottom; above the D5 belt the tone thins into a narrow, nasal rasp that cuts rather than fills, and the screams past that are almost pure edge with no weight behind them. Phrasing drags behind the beat, then snaps forward. The common mistake is squeezing the throat to find the rasp — compression makes that noise, not force."
   },
   {
     "name": "Roy Orbison",
@@ -53,7 +55,8 @@
     "signatureSong": "Oh, Pretty Woman",
     "lowSource": null,
     "highSource": "Running Scared",
-    "blurb": "Operatic tenor that swells from a soft low murmur to full-voice high notes with no audible break."
+    "blurb": "Operatic tenor that swells from a soft low murmur to full-voice high notes with no audible break.",
+    "technique": "Rather than belting, he crescendos. A phrase can start nearly murmured down low and grow through the transition with no audible seam, so the top near E5 arrives as ringing head voice instead of a shout — the long build in Running Scared is the clearest example. Vibrato stays narrow and quick, legato unbroken. The tone tilts lighter as it rises instead of thickening, which is why nothing jams up at the passaggio and the climb reads as one line."
   },
   {
     "name": "Rod Stewart",
@@ -72,7 +75,8 @@
     "signatureSong": "Maggie May",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Sandpaper rasp from a breathy onset; sits mid-range and pushes volume rather than height."
+    "blurb": "Sandpaper rasp from a breathy onset; sits mid-range and pushes volume rather than height.",
+    "technique": "The rasp comes off a breathy onset: air first, tone second, which frays the edge of every word. He works a narrow middle band and finds intensity through volume and grit rather than altitude, topping out around A4 before the C5 goes thin. Phrases sit slightly behind the beat and the ends fall away rather than resolving. Grinding the throat to copy the texture gets you hoarse in a verse; it is aspirate, not squeezed."
   },
   {
     "name": "Jon Bon Jovi",
@@ -90,7 +94,8 @@
     "signatureSong": "Livin' on a Prayer",
     "lowSource": null,
     "highSource": "Livin' on a Prayer",
-    "blurb": "Bright nasal tenor that drives choruses in a hard chest mix and roughens at the top end."
+    "blurb": "Bright nasal tenor that drives choruses in a hard chest mix and roughens at the top end.",
+    "technique": "Bright and noticeably nasal, with the sound pinned high in the mask so it carries over distorted guitars. Choruses ride a hard chest-heavy mix that roughens as it climbs, and the D5 at the top of Livin' on a Prayer is taken with the throat open and a slight bark on the vowel. Attacks land firm and consonant-first, and there is real chest weight sitting under the brightness, which keeps the nasal edge from going thin."
   },
   {
     "name": "Bono",
@@ -108,7 +113,8 @@
     "signatureSong": "With or Without You",
     "lowSource": null,
     "highSource": "Lemon",
-    "blurb": "Chesty tenor with a pleading attack that scoops into pitch, plus a light falsetto he flips to."
+    "blurb": "Chesty tenor with a pleading attack that scoops into pitch, plus a light falsetto he flips to.",
+    "technique": "Pleading is a technical choice here. Onsets scoop up from under the note, vowels stay wide and open, and vibrato shows up late in a phrase if at all. Chest carries to about B4; past that he either lets the tone thin and fray on purpose or flips into a light, airy falsetto rather than forcing. Rhythm is elastic and stretches across bar lines. Imitators over-scoop until nothing actually lands in tune."
   },
   {
     "name": "Sting",
@@ -127,7 +133,8 @@
     "signatureSong": "Every Breath You Take",
     "lowSource": null,
     "highSource": "Roxanne",
-    "blurb": "Reedy, narrow tenor with clipped phrasing; takes upper notes in a strained mix, not a full belt."
+    "blurb": "Reedy, narrow tenor with clipped phrasing; takes upper notes in a strained mix, not a full belt.",
+    "technique": "Reedy and narrow, placed forward and slightly nasal, with consonants clipping the ends of phrases short. Rhythm is the real tell: syncopated, pushed off the downbeat, percussive more than legato. Above B4 he moves into a tight, strained mix, so the sustained upper notes in Roxanne read as pressed rather than fully belted. That audible tension belongs to the sound; smoothed out into an even legato, the voice stops being recognizable."
   },
   {
     "name": "Phil Collins",
@@ -145,7 +152,8 @@
     "signatureSong": "In the Air Tonight",
     "lowSource": null,
     "highSource": "Against All Odds",
-    "blurb": "Grainy tenor that stays conversational down low, then shoves into a shouted chest top."
+    "blurb": "Grainy tenor that stays conversational down low, then shoves into a shouted chest top.",
+    "technique": "Down low the delivery stays conversational, nearly spoken, with breathy onsets and hardly any vibrato. Climbing into the top he stops blending and shoves, and the sound turns grainy and shouted with the vowel spread wide. Dynamics swing hard between those two states. Singers copying this start loud and leave themselves nowhere to go — the quiet, deliberately under-supported verses are what make the top of the chorus land."
   },
   {
     "name": "Little Richard",
@@ -164,7 +172,8 @@
     "signatureSong": "Tutti Frutti",
     "lowSource": null,
     "highSource": "Long Tall Sally",
-    "blurb": "Gospel shouter's tenor: hard chest attack, heavy rasp, falsetto whoops flipped in mid-phrase."
+    "blurb": "Gospel shouter's tenor: hard chest attack, heavy rasp, falsetto whoops flipped in mid-phrase.",
+    "technique": "Everything begins with a hard glottal attack — notes are punched, never eased into. The chest sound is bright, heavily rasped, and driven to the top of its working range around C5; above that he flips mid-phrase into falsetto whoops that function as exclamation rather than melody. Time sits slightly ahead of the beat and drags the band with it. The attack and that forward timing carry the style, and the rasp falls out of both."
   },
   {
     "name": "Matt Bellamy",
@@ -182,7 +191,8 @@
     "signatureSong": "Uprising",
     "lowSource": null,
     "highSource": "Micro Cuts",
-    "blurb": "Thin, vibrato-heavy tenor that trades chest weight for a piercing falsetto with an operatic wobble."
+    "blurb": "Thin, vibrato-heavy tenor that trades chest weight for a piercing falsetto with an operatic wobble.",
+    "technique": "Weight gets traded for ring. Tone is thin and forward with a fast, fairly wide vibrato running almost continuously, and above the D5 belt he moves into a falsetto that keeps that operatic wobble intact all the way up toward D6, which is where the upper writing in Micro Cuts sits. Chest stays comparatively light. The usual error is manufacturing the vibrato with the jaw rather than letting airflow produce it."
   },
   {
     "name": "Brendon Urie",
@@ -201,7 +211,8 @@
     "signatureSong": "I Write Sins Not Tragedies",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Theatrical tenor with a forward mix; belts high without thinning, then slips into clean falsetto."
+    "blurb": "Theatrical tenor with a forward mix; belts high without thinning, then slips into clean falsetto.",
+    "technique": "Theatrical placement: forward and bright, with clean vowels and crisply finished consonants. The mix is strong enough to hold a belt up to F5 without much thinning, and the falsetto above it is clear rather than breathy, so the changeover is easy to miss. Runs move fast and stay precisely articulated instead of smearing together, and the belt keeps its vowel shape at the top rather than spreading out into a shout."
   },
   {
     "name": "Billie Joe Armstrong",
@@ -220,7 +231,8 @@
     "signatureSong": "Basket Case",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Snarling nasal tenor with a put-on accent; a narrow band worked hard, almost entirely in chest."
+    "blurb": "Snarling nasal tenor with a put-on accent; a narrow band worked hard, almost entirely in chest.",
+    "technique": "A narrow band worked hard — nearly all of it chest, from F2 up to around C5 — with a nasal snarl and a stylized vowel shift that bends words away from his speaking accent. Tone is straight, with almost no vibrato, and onsets clip tight to the guitar's eighth notes. Copying this means committing to the sneer; sung prettily, the notes survive and the entire character disappears."
   },
   {
     "name": "Tina Turner",
@@ -239,7 +251,8 @@
     "signatureSong": "Proud Mary",
     "lowSource": null,
     "highSource": "River Deep - Mountain High",
-    "blurb": "Gravel-edged contralto that stays in chest voice and gets power from a hard, forward rasp."
+    "blurb": "Gravel-edged contralto that stays in chest voice and gets power from a hard, forward rasp.",
+    "technique": "Power lives in the lower middle here, not up top. The contralto stays in chest with a gravel edge sitting right at the front of the sound, onsets are frequently growled, and phrases push and shove against the beat rather than floating over it. Approaching Eb5 the tone narrows into a hard, rasp-edged cry. That grit rides on breath pressure behind a forward, wide-open vowel, which is how it stays loud without closing the throat down."
   },
   {
     "name": "Avril Lavigne",
@@ -258,6 +271,7 @@
     "signatureSong": "Complicated",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal mezzo with flat, speech-like phrasing and a hard chest belt she rarely lifts to head voice."
+    "blurb": "Nasal mezzo with flat, speech-like phrasing and a hard chest belt she rarely lifts to head voice.",
+    "technique": "Flat and speech-like by design: phrasing tracks how a sentence would be spoken, vowels stay nasal and forward, vibrato is nearly absent. Notes get approached with a slur or scoop from below, then held dead straight. Chest weight dominates the climb and she rarely lifts into head voice, which keeps the sound blunt and young. Placement is forward rather than clamped, so the nasality is where the tone sits, not a squeezed throat."
   }
 ]
