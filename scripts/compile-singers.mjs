@@ -97,6 +97,14 @@ for (const file of files) {
       problems.push(`${where}: implausible ${r.lowNote}–${r.highNote} — skipped`);
       continue;
     }
+    // A null beltNote renders as one solid bar, i.e. "full voice all the way to
+    // the top". That is fine for a 2-octave crooner and absurd for a 4-octave
+    // falsetto specialist, so wide spans must state a ceiling explicitly.
+    if (r.beltNote == null && highMidi - lowMidi > 42) {
+      problems.push(
+        `${where}: ${r.lowNote}–${r.highNote} spans ${((highMidi - lowMidi) / 12).toFixed(1)} octaves with no beltNote — would render as full voice throughout`,
+      );
+    }
     if (!VOICE_KINDS.has(r.voiceType)) {
       problems.push(`${where}: bad voiceType "${r.voiceType}" — skipped`);
       continue;

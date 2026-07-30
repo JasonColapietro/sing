@@ -2,7 +2,10 @@
   {
     "name": "Frank Sinatra",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1940,
     "lowNote": "G2",
@@ -17,7 +20,10 @@
   {
     "name": "Ella Fitzgerald",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1935,
     "lowNote": "D3",
@@ -32,7 +38,10 @@
   {
     "name": "Nat King Cole",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1939,
     "lowNote": "F2",
@@ -47,7 +56,10 @@
   {
     "name": "Billie Holiday",
     "voiceType": "Contralto",
-    "genres": ["Jazz", "Blues"],
+    "genres": [
+      "Jazz",
+      "Blues"
+    ],
     "country": "USA",
     "activeFrom": 1933,
     "lowNote": "F3",
@@ -62,7 +74,10 @@
   {
     "name": "Sarah Vaughan",
     "voiceType": "Contralto",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1943,
     "lowNote": "Eb3",
@@ -77,7 +92,10 @@
   {
     "name": "Louis Armstrong",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Blues"],
+    "genres": [
+      "Jazz",
+      "Blues"
+    ],
     "country": "USA",
     "activeFrom": 1925,
     "lowNote": "F2",
@@ -92,7 +110,11 @@
   {
     "name": "Nina Simone",
     "voiceType": "Contralto",
-    "genres": ["Jazz", "Soul", "Blues"],
+    "genres": [
+      "Jazz",
+      "Soul",
+      "Blues"
+    ],
     "country": "USA",
     "activeFrom": 1958,
     "lowNote": "G2",
@@ -107,7 +129,10 @@
   {
     "name": "Tony Bennett",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1951,
     "lowNote": "A2",
@@ -122,7 +147,10 @@
   {
     "name": "Dean Martin",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1946,
     "lowNote": "F2",
@@ -137,7 +165,10 @@
   {
     "name": "Bing Crosby",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1926,
     "lowNote": "F2",
@@ -152,7 +183,9 @@
   {
     "name": "Mel Tormé",
     "voiceType": "Tenor",
-    "genres": ["Jazz"],
+    "genres": [
+      "Jazz"
+    ],
     "country": "USA",
     "activeFrom": 1943,
     "lowNote": "G2",
@@ -167,7 +200,11 @@
   {
     "name": "Al Jarreau",
     "voiceType": "Tenor",
-    "genres": ["Jazz", "R&B", "Pop"],
+    "genres": [
+      "Jazz",
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1975,
     "lowNote": "G2",
@@ -182,12 +219,14 @@
   {
     "name": "Bobby McFerrin",
     "voiceType": "Baritone",
-    "genres": ["Jazz"],
+    "genres": [
+      "Jazz"
+    ],
     "country": "USA",
     "activeFrom": 1982,
     "lowNote": "E2",
     "highNote": "E6",
-    "beltNote": null,
+    "beltNote": "G4",
     "whistle": false,
     "signatureSong": "Don't Worry, Be Happy",
     "lowSource": null,
@@ -197,7 +236,9 @@
   {
     "name": "Diana Krall",
     "voiceType": "Contralto",
-    "genres": ["Jazz"],
+    "genres": [
+      "Jazz"
+    ],
     "country": "Canada",
     "activeFrom": 1993,
     "lowNote": "E3",
@@ -212,7 +253,11 @@
   {
     "name": "Norah Jones",
     "voiceType": "Contralto",
-    "genres": ["Jazz", "Pop", "Singer-Songwriter"],
+    "genres": [
+      "Jazz",
+      "Pop",
+      "Singer-Songwriter"
+    ],
     "country": "USA",
     "activeFrom": 2002,
     "lowNote": "F3",
@@ -227,7 +272,11 @@
   {
     "name": "Gregory Porter",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Soul", "Gospel"],
+    "genres": [
+      "Jazz",
+      "Soul",
+      "Gospel"
+    ],
     "country": "USA",
     "activeFrom": 2010,
     "lowNote": "F2",
@@ -242,7 +291,10 @@
   {
     "name": "Cécile McLorin Salvant",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Jazz", "Blues"],
+    "genres": [
+      "Jazz",
+      "Blues"
+    ],
     "country": "USA",
     "activeFrom": 2010,
     "lowNote": "F3",
@@ -257,7 +309,10 @@
   {
     "name": "Michael Bublé",
     "voiceType": "Baritone",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "Canada",
     "activeFrom": 2003,
     "lowNote": "G2",
@@ -272,7 +327,10 @@
   {
     "name": "Johnny Mathis",
     "voiceType": "Tenor",
-    "genres": ["Jazz", "Pop"],
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1956,
     "lowNote": "B2",

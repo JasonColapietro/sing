@@ -12,7 +12,7 @@ import {
   type Singer,
   type VoiceKind,
 } from "@/lib/singers";
-import { Button, EmptyState } from "@/components/ui";
+import { Button, EmptyState, LinkButton } from "@/components/ui";
 
 /* ---------------------------------------------------------------- axis --- */
 
@@ -185,9 +185,11 @@ const selectClass =
 
 const SORT_IDS = new Set<string>(SORTS.map((s) => s.id));
 
+const SEARCH_ID = "singers-search";
+
 /** Lives in the sticky ruler bar — the only way back to search/filters from
  * deep inside a 357-row list without a long manual scroll. */
-function BackToFiltersButton() {
+function BackToFiltersButton({ searchId }: { searchId: string }) {
   return (
     <button
       type="button"
@@ -196,6 +198,10 @@ function BackToFiltersButton() {
           "(prefers-reduced-motion: reduce)",
         ).matches;
         window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+        // Scrolling alone leaves keyboard focus deep in the row list, so the
+        // button did nothing for anyone not using a mouse. The search box is
+        // what "↑ filters" is actually for.
+        document.getElementById(searchId)?.focus({ preventScroll: true });
       }}
       className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-mut transition-colors hover:border-amber hover:text-amber-ink"
     >
@@ -277,8 +283,10 @@ export function SingersDirectory() {
 
   return (
     <div>
-      {/* Records strip */}
-      <div className="grid gap-3 sm:grid-cols-3">
+      {/* Records strip. Three stacked cards pushed every singer below the fold
+          on a phone, so below sm they sit in one horizontally-scrollable row
+          (same fade affordance as the nav) instead of ~200px of column. */}
+      <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 [mask-image:linear-gradient(to_right,black_calc(100%-20px),transparent)] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:[mask-image:none]">
         {(
           [
             [
@@ -293,7 +301,7 @@ export function SingersDirectory() {
           <Link
             key={label}
             href={`/singers/${s.slug}`}
-            className="rounded-2xl border border-line bg-panel px-4 py-3 transition-colors hover:border-amber"
+            className="w-[13.5rem] shrink-0 rounded-2xl border border-line bg-panel px-4 py-3 transition-colors hover:border-amber sm:w-auto"
           >
             <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
               {label}
@@ -311,6 +319,7 @@ export function SingersDirectory() {
       {/* Toolbar */}
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <input
+          id={SEARCH_ID}
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -356,41 +365,57 @@ export function SingersDirectory() {
             </option>
           ))}
         </select>
+        {/* aria-atomic so the whole sentence is re-read on every filter
+            change, not just the digits that happened to differ. */}
         <span
           aria-live="polite"
+          aria-atomic="true"
           className="tabular ml-auto font-mono text-xs text-mut"
         >
-          {rows.length} of {SINGERS.length}
+          {rows.length === 0
+            ? `No singers match — ${SINGERS.length} total`
+            : `${rows.length} of ${SINGERS.length}`}
         </span>
       </div>
 
       {/* Legend + your-range status */}
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] text-mut">
+        {/* "cited range" for the solid segment implied the faded part was
+            uncited, which is backwards — both come from the same figures.
+            beltMidi: null means full voice essentially to the top, so a
+            fully-solid bar reading "full voice" is accurate. */}
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-cool/70" /> cited range
+          <span className="h-2 w-6 rounded-full bg-cool/70" /> full voice
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-cool/30" /> above the cited
-          full-voice ceiling
+          <span className="h-2 w-6 rounded-full bg-cool/30" /> falsetto · head ·
+          whistle
         </span>
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full border border-cool bg-bg" />{" "}
           whistle register
         </span>
-        {hasYou ? (
+        {hasYou && (
           <span className="flex items-center gap-1.5">
             <span className="h-3 w-6 rounded-sm bg-amber/30" /> you (
             {midiToLabel(youLow)}–{midiToLabel(youHigh)})
           </span>
-        ) : (
-          <Link
-            href="/range"
-            className="text-amber-ink underline decoration-amber/50 underline-offset-2 hover:decoration-amber"
-          >
-            Take the range test to see your voice on this chart →
-          </Link>
         )}
       </div>
+
+      {/* First visit: the offer that makes this chart personal deserves a real
+          button, not 11px of legend text. */}
+      {!hasYou && (
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-amber/40 bg-panel px-4 py-3">
+          <span className="text-sm text-mut">
+            Your own range can sit on this chart — the test takes two minutes
+            and never leaves your device.
+          </span>
+          <LinkButton href="/range" size="sm" className="ml-auto">
+            Find my range
+          </LinkButton>
+        </div>
+      )}
 
       {/* Sticky octave ruler. -mx-2 bleeds the bar to the row-hover edge;
           px-4 (8px bleed + 8px row padding) keeps its grid aligned with the
@@ -400,7 +425,7 @@ export function SingersDirectory() {
           <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
             low → high
           </span>
-          <BackToFiltersButton />
+          <BackToFiltersButton searchId={SEARCH_ID} />
         </div>
         <div className={ROW_GRID}>
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.14em] text-dim sm:block">
@@ -411,7 +436,7 @@ export function SingersDirectory() {
             youHigh={hasYou ? youHigh : undefined}
           />
           <span className="hidden text-right sm:block">
-            <BackToFiltersButton />
+            <BackToFiltersButton searchId={SEARCH_ID} />
           </span>
         </div>
       </div>

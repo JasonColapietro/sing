@@ -2,7 +2,11 @@
   {
     "name": "Shakira",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Latin", "Pop", "Rock"],
+    "genres": [
+      "Latin",
+      "Pop",
+      "Rock"
+    ],
     "country": "Colombia",
     "activeFrom": 1995,
     "lowNote": "E3",
@@ -17,7 +21,10 @@
   {
     "name": "Luis Miguel",
     "voiceType": "Tenor",
-    "genres": ["Latin", "Pop"],
+    "genres": [
+      "Latin",
+      "Pop"
+    ],
     "country": "Mexico",
     "activeFrom": 1982,
     "lowNote": "A2",
@@ -32,7 +39,10 @@
   {
     "name": "Juan Gabriel",
     "voiceType": "Tenor",
-    "genres": ["Latin", "Pop"],
+    "genres": [
+      "Latin",
+      "Pop"
+    ],
     "country": "Mexico",
     "activeFrom": 1971,
     "lowNote": "A2",
@@ -45,9 +55,12 @@
     "blurb": "Reedy ranchera tenor that slips into falsetto mid-phrase, with loose conversational timing."
   },
   {
-    "name": "Jose Jose",
+    "name": "José José",
     "voiceType": "Tenor",
-    "genres": ["Latin", "Pop"],
+    "genres": [
+      "Latin",
+      "Pop"
+    ],
     "country": "Mexico",
     "activeFrom": 1970,
     "lowNote": "A2",
@@ -60,9 +73,12 @@
     "blurb": "Clean lyric tenor; accurate on stepwise ballad climbs, near-seamless chest-to-mix handoff."
   },
   {
-    "name": "Vicente Fernandez",
+    "name": "Vicente Fernández",
     "voiceType": "Tenor",
-    "genres": ["Latin", "Folk"],
+    "genres": [
+      "Latin",
+      "Folk"
+    ],
     "country": "Mexico",
     "activeFrom": 1966,
     "lowNote": "A2",
@@ -77,7 +93,11 @@
   {
     "name": "Selena",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Latin", "Pop", "R&B"],
+    "genres": [
+      "Latin",
+      "Pop",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1989,
     "lowNote": "E3",
@@ -92,7 +112,10 @@
   {
     "name": "Marc Anthony",
     "voiceType": "Tenor",
-    "genres": ["Latin", "Pop"],
+    "genres": [
+      "Latin",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1993,
     "lowNote": "A2",
@@ -107,7 +130,10 @@
   {
     "name": "Celia Cruz",
     "voiceType": "Contralto",
-    "genres": ["Latin", "Jazz"],
+    "genres": [
+      "Latin",
+      "Jazz"
+    ],
     "country": "Cuba",
     "activeFrom": 1950,
     "lowNote": "E3",
@@ -122,7 +148,10 @@
   {
     "name": "Gloria Estefan",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Latin", "Pop"],
+    "genres": [
+      "Latin",
+      "Pop"
+    ],
     "country": "Cuba",
     "activeFrom": 1985,
     "lowNote": "E3",
@@ -137,7 +166,10 @@
   {
     "name": "Ricky Martin",
     "voiceType": "Tenor",
-    "genres": ["Latin", "Pop"],
+    "genres": [
+      "Latin",
+      "Pop"
+    ],
     "country": "Puerto Rico",
     "activeFrom": 1991,
     "lowNote": "B2",
@@ -150,9 +182,12 @@
     "blurb": "Grainy pop tenor with a short usable top; leans on rhythm, shouts and falsetto flips."
   },
   {
-    "name": "Thalia",
+    "name": "Thalía",
     "voiceType": "Soprano",
-    "genres": ["Latin", "Pop"],
+    "genres": [
+      "Latin",
+      "Pop"
+    ],
     "country": "Mexico",
     "activeFrom": 1990,
     "lowNote": "F3",
@@ -165,9 +200,13 @@
     "blurb": "Light bright soprano; thin low notes, girlish forward mix carrying the upper hooks."
   },
   {
-    "name": "Rosalia",
+    "name": "Rosalía",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Latin", "Pop", "Electronic"],
+    "genres": [
+      "Latin",
+      "Pop",
+      "Electronic"
+    ],
     "country": "Spain",
     "activeFrom": 2017,
     "lowNote": "F3",
@@ -182,7 +221,11 @@
   {
     "name": "Karol G",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Latin", "Pop", "Hip-Hop"],
+    "genres": [
+      "Latin",
+      "Pop",
+      "Hip-Hop"
+    ],
     "country": "Colombia",
     "activeFrom": 2017,
     "lowNote": "E3",
@@ -197,7 +240,11 @@
   {
     "name": "Bad Bunny",
     "voiceType": "Baritone",
-    "genres": ["Latin", "Hip-Hop", "Reggae"],
+    "genres": [
+      "Latin",
+      "Hip-Hop",
+      "Reggae"
+    ],
     "country": "Puerto Rico",
     "activeFrom": 2017,
     "lowNote": "F2",
@@ -212,7 +259,11 @@
   {
     "name": "Camilo Sesto",
     "voiceType": "Tenor",
-    "genres": ["Latin", "Pop", "Musical Theatre"],
+    "genres": [
+      "Latin",
+      "Pop",
+      "Musical Theatre"
+    ],
     "country": "Spain",
     "activeFrom": 1972,
     "lowNote": "A2",
@@ -227,7 +278,10 @@
   {
     "name": "Mercedes Sosa",
     "voiceType": "Contralto",
-    "genres": ["Folk", "Latin"],
+    "genres": [
+      "Folk",
+      "Latin"
+    ],
     "country": "Argentina",
     "activeFrom": 1965,
     "lowNote": "E3",
@@ -242,7 +296,11 @@
   {
     "name": "Elis Regina",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Latin", "Jazz", "Pop"],
+    "genres": [
+      "Latin",
+      "Jazz",
+      "Pop"
+    ],
     "country": "Brazil",
     "activeFrom": 1965,
     "lowNote": "E3",
@@ -257,7 +315,11 @@
   {
     "name": "Milton Nascimento",
     "voiceType": "Tenor",
-    "genres": ["Jazz", "Folk", "Latin"],
+    "genres": [
+      "Jazz",
+      "Folk",
+      "Latin"
+    ],
     "country": "Brazil",
     "activeFrom": 1967,
     "lowNote": "G2",
@@ -272,7 +334,11 @@
   {
     "name": "Caetano Veloso",
     "voiceType": "Tenor",
-    "genres": ["Latin", "Folk", "Singer-Songwriter"],
+    "genres": [
+      "Latin",
+      "Folk",
+      "Singer-Songwriter"
+    ],
     "country": "Brazil",
     "activeFrom": 1967,
     "lowNote": "A2",
@@ -287,7 +353,11 @@
   {
     "name": "Natalia Lafourcade",
     "voiceType": "Soprano",
-    "genres": ["Latin", "Folk", "Singer-Songwriter"],
+    "genres": [
+      "Latin",
+      "Folk",
+      "Singer-Songwriter"
+    ],
     "country": "Mexico",
     "activeFrom": 2002,
     "lowNote": "F3",

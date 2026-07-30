@@ -2,7 +2,10 @@
   {
     "name": "Luciano Pavarotti",
     "voiceType": "Tenor",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "Italy",
     "activeFrom": 1961,
     "lowNote": "C3",
@@ -17,7 +20,10 @@
   {
     "name": "Enrico Caruso",
     "voiceType": "Tenor",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "Italy",
     "activeFrom": 1902,
     "lowNote": "B2",
@@ -32,7 +38,10 @@
   {
     "name": "Plácido Domingo",
     "voiceType": "Tenor",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "Spain",
     "activeFrom": 1961,
     "lowNote": "A2",
@@ -47,7 +56,11 @@
   {
     "name": "José Carreras",
     "voiceType": "Tenor",
-    "genres": ["Opera", "Classical", "Pop"],
+    "genres": [
+      "Opera",
+      "Classical",
+      "Pop"
+    ],
     "country": "Spain",
     "activeFrom": 1971,
     "lowNote": "C3",
@@ -62,7 +75,10 @@
   {
     "name": "Jonas Kaufmann",
     "voiceType": "Tenor",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "Germany",
     "activeFrom": 1994,
     "lowNote": "B2",
@@ -77,7 +93,11 @@
   {
     "name": "Andrea Bocelli",
     "voiceType": "Tenor",
-    "genres": ["Opera", "Classical", "Pop"],
+    "genres": [
+      "Opera",
+      "Classical",
+      "Pop"
+    ],
     "country": "Italy",
     "activeFrom": 1994,
     "lowNote": "C3",
@@ -92,7 +112,10 @@
   {
     "name": "Maria Callas",
     "voiceType": "Soprano",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "Greece",
     "activeFrom": 1947,
     "lowNote": "F#3",
@@ -107,7 +130,10 @@
   {
     "name": "Joan Sutherland",
     "voiceType": "Soprano",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "Australia",
     "activeFrom": 1959,
     "lowNote": "G3",
@@ -122,7 +148,10 @@
   {
     "name": "Leontyne Price",
     "voiceType": "Soprano",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "USA",
     "activeFrom": 1955,
     "lowNote": "G3",
@@ -137,7 +166,11 @@
   {
     "name": "Jessye Norman",
     "voiceType": "Soprano",
-    "genres": ["Opera", "Classical", "Gospel"],
+    "genres": [
+      "Opera",
+      "Classical",
+      "Gospel"
+    ],
     "country": "USA",
     "activeFrom": 1969,
     "lowNote": "E3",
@@ -152,7 +185,11 @@
   {
     "name": "Renée Fleming",
     "voiceType": "Soprano",
-    "genres": ["Opera", "Classical", "Jazz"],
+    "genres": [
+      "Opera",
+      "Classical",
+      "Jazz"
+    ],
     "country": "USA",
     "activeFrom": 1991,
     "lowNote": "G3",
@@ -167,7 +204,11 @@
   {
     "name": "Montserrat Caballé",
     "voiceType": "Soprano",
-    "genres": ["Opera", "Classical", "Pop"],
+    "genres": [
+      "Opera",
+      "Classical",
+      "Pop"
+    ],
     "country": "Spain",
     "activeFrom": 1956,
     "lowNote": "G3",
@@ -182,7 +223,10 @@
   {
     "name": "Anna Netrebko",
     "voiceType": "Soprano",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "Russia",
     "activeFrom": 1994,
     "lowNote": "G3",
@@ -197,7 +241,11 @@
   {
     "name": "Sarah Brightman",
     "voiceType": "Soprano",
-    "genres": ["Classical", "Pop", "Musical Theatre"],
+    "genres": [
+      "Classical",
+      "Pop",
+      "Musical Theatre"
+    ],
     "country": "UK",
     "activeFrom": 1981,
     "lowNote": "G3",
@@ -212,7 +260,10 @@
   {
     "name": "Cecilia Bartoli",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Opera", "Classical"],
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
     "country": "Italy",
     "activeFrom": 1988,
     "lowNote": "F3",
@@ -227,7 +278,11 @@
   {
     "name": "Dmitri Hvorostovsky",
     "voiceType": "Baritone",
-    "genres": ["Opera", "Classical", "Folk"],
+    "genres": [
+      "Opera",
+      "Classical",
+      "Folk"
+    ],
     "country": "Russia",
     "activeFrom": 1989,
     "lowNote": "G2",
@@ -242,7 +297,11 @@
   {
     "name": "Bryn Terfel",
     "voiceType": "Bass-baritone",
-    "genres": ["Opera", "Classical", "Musical Theatre"],
+    "genres": [
+      "Opera",
+      "Classical",
+      "Musical Theatre"
+    ],
     "country": "UK",
     "activeFrom": 1989,
     "lowNote": "F2",
@@ -257,7 +316,11 @@
   {
     "name": "Josh Groban",
     "voiceType": "Baritone",
-    "genres": ["Classical", "Pop", "Musical Theatre"],
+    "genres": [
+      "Classical",
+      "Pop",
+      "Musical Theatre"
+    ],
     "country": "USA",
     "activeFrom": 2001,
     "lowNote": "G2",
@@ -272,12 +335,16 @@
   {
     "name": "Ivan Rebroff",
     "voiceType": "Bass",
-    "genres": ["Classical", "Folk", "Musical Theatre"],
+    "genres": [
+      "Classical",
+      "Folk",
+      "Musical Theatre"
+    ],
     "country": "Germany",
     "activeFrom": 1966,
     "lowNote": "F1",
     "highNote": "F5",
-    "beltNote": null,
+    "beltNote": "F4",
     "whistle": false,
     "signatureSong": "Kalinka",
     "lowSource": null,
@@ -287,12 +354,16 @@
   {
     "name": "Yma Sumac",
     "voiceType": "Soprano",
-    "genres": ["Latin", "Folk", "Classical"],
+    "genres": [
+      "Latin",
+      "Folk",
+      "Classical"
+    ],
     "country": "Peru",
     "activeFrom": 1950,
     "lowNote": "B2",
     "highNote": "C#7",
-    "beltNote": null,
+    "beltNote": "A5",
     "whistle": true,
     "signatureSong": "Gopher Mambo",
     "lowSource": null,

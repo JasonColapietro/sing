@@ -2,7 +2,11 @@
   {
     "name": "Ray Charles",
     "voiceType": "Tenor",
-    "genres": ["Soul", "R&B", "Blues"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Blues"
+    ],
     "country": "USA",
     "activeFrom": 1954,
     "lowNote": "C2",
@@ -17,7 +21,11 @@
   {
     "name": "Lionel Richie",
     "voiceType": "Tenor",
-    "genres": ["Soul", "R&B", "Pop"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1974,
     "lowNote": "F2",
@@ -32,7 +40,11 @@
   {
     "name": "John Legend",
     "voiceType": "Tenor",
-    "genres": ["R&B", "Soul", "Pop"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2004,
     "lowNote": "E2",
@@ -47,7 +59,11 @@
   {
     "name": "Teddy Swims",
     "voiceType": "Baritone",
-    "genres": ["Soul", "R&B", "Pop"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2020,
     "lowNote": "E2",
@@ -62,7 +78,11 @@
   {
     "name": "Alicia Keys",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Soul", "Pop"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2001,
     "lowNote": "A2",
@@ -77,7 +97,11 @@
   {
     "name": "SZA",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Alternative", "Soul"],
+    "genres": [
+      "R&B",
+      "Alternative",
+      "Soul"
+    ],
     "country": "USA",
     "activeFrom": 2017,
     "lowNote": "E3",
@@ -92,7 +116,11 @@
   {
     "name": "Sam Smith",
     "voiceType": "Countertenor",
-    "genres": ["Pop", "Soul", "R&B"],
+    "genres": [
+      "Pop",
+      "Soul",
+      "R&B"
+    ],
     "country": "UK",
     "activeFrom": 2012,
     "lowNote": "G2",
@@ -107,12 +135,15 @@
   {
     "name": "Adam Lambert",
     "voiceType": "Tenor",
-    "genres": ["Rock", "Pop"],
+    "genres": [
+      "Rock",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2009,
     "lowNote": "F2",
     "highNote": "C6",
-    "beltNote": null,
+    "beltNote": "C5",
     "whistle": false,
     "signatureSong": "Whataya Want from Me",
     "lowSource": null,
@@ -122,7 +153,11 @@
   {
     "name": "Lewis Capaldi",
     "voiceType": "Baritone",
-    "genres": ["Pop", "Singer-Songwriter", "Soul"],
+    "genres": [
+      "Pop",
+      "Singer-Songwriter",
+      "Soul"
+    ],
     "country": "UK",
     "activeFrom": 2017,
     "lowNote": "F2",
@@ -137,7 +172,11 @@
   {
     "name": "Benson Boone",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Rock", "Singer-Songwriter"],
+    "genres": [
+      "Pop",
+      "Rock",
+      "Singer-Songwriter"
+    ],
     "country": "USA",
     "activeFrom": 2021,
     "lowNote": "G2",
@@ -152,7 +191,11 @@
   {
     "name": "Lizzo",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Pop", "R&B", "Hip-Hop"],
+    "genres": [
+      "Pop",
+      "R&B",
+      "Hip-Hop"
+    ],
     "country": "USA",
     "activeFrom": 2016,
     "lowNote": "E3",
@@ -167,7 +210,9 @@
   {
     "name": "Sabrina Carpenter",
     "voiceType": "Soprano",
-    "genres": ["Pop"],
+    "genres": [
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2015,
     "lowNote": "E3",
@@ -182,7 +227,11 @@
   {
     "name": "Chappell Roan",
     "voiceType": "Soprano",
-    "genres": ["Pop", "Synth-Pop", "Indie"],
+    "genres": [
+      "Pop",
+      "Synth-Pop",
+      "Indie"
+    ],
     "country": "USA",
     "activeFrom": 2020,
     "lowNote": "E3",
@@ -197,7 +246,11 @@
   {
     "name": "Lorde",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Alternative", "Pop", "Electronic"],
+    "genres": [
+      "Alternative",
+      "Pop",
+      "Electronic"
+    ],
     "country": "New Zealand",
     "activeFrom": 2013,
     "lowNote": "D3",

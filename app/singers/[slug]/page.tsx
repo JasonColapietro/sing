@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { midiToLabel } from "@/lib/audio/notes";
+import { altSpelling, midiToLabel } from "@/lib/audio/notes";
 import {
   SINGERS,
   describeSpan,
   rangeLabel,
   relatedSingers,
+  hasUsefulPercentile,
   singerBySlug,
   spanOctaves,
   spanPercentile,
@@ -58,10 +59,16 @@ export async function generateMetadata({
 /** Voice categories whose upper register is head voice, not falsetto. */
 const HEAD_VOICE_TYPES = new Set(["Contralto", "Mezzo-soprano", "Soprano"]);
 
+/** "A#5 (Bb5)" where the two spellings differ, else just "A#5". */
+function bothSpellings(midi: number): string {
+  const alt = altSpelling(midi);
+  return alt ? `${midiToLabel(midi)} (${alt})` : midiToLabel(midi);
+}
+
 function answerSentence(s: (typeof SINGERS)[number]): string {
   const semis = s.highMidi - s.lowMidi;
   const parts = [
-    `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — about ${spanOctaves(semis)} octaves (${semis} semitones). ${s.name} is generally classified as a ${s.voiceType.toLowerCase()}.`,
+    `${s.name}'s vocal range is commonly cited as ${bothSpellings(s.lowMidi)} to ${bothSpellings(s.highMidi)} — about ${spanOctaves(semis)} octaves, or ${semis} semitones, and is usually classified as ${s.voiceType.toLowerCase()}.`,
   ];
   if (s.beltMidi != null) {
     const upper = HEAD_VOICE_TYPES.has(s.voiceType)
@@ -70,7 +77,7 @@ function answerSentence(s: (typeof SINGERS)[number]): string {
         ? "falsetto, head voice, or whistle register"
         : "falsetto or head voice";
     parts.push(
-      `In full voice they are cited up to around ${midiToLabel(s.beltMidi)}; everything above that comes from ${upper}.`,
+      `Full voice is cited up to around ${bothSpellings(s.beltMidi)}; everything above that comes from ${upper}.`,
     );
   } else if (s.whistle) {
     parts.push(`The very top of that span sits in whistle register.`);
@@ -115,10 +122,14 @@ export default async function SingerPage({
     },
     mainEntity: {
       "@type": "Person",
+      "@id": `${SITE_URL}/singers/${s.slug}#person`,
       name: s.name,
       jobTitle: "Singer",
       nationality: s.country,
       description: `${s.voiceType} known for "${s.signatureSong}". ${s.blurb}`,
+      // Without an external identifier these are 357 unresolvable strings;
+      // the Wikipedia URL is the cheapest anchor to the real entity.
+      sameAs: `https://en.wikipedia.org/wiki/${encodeURIComponent(s.name.replace(/ /g, "_"))}`,
     },
   };
 
@@ -189,8 +200,9 @@ export default async function SingerPage({
           </h2>
           <p className="mt-3 max-w-3xl text-mut">{answerSentence(s)}</p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            {s.blurb} That cited span is wider than {spanPercentile(s)}% of
-            the {SINGERS.length} voices in this library.
+            {s.blurb}
+            {hasUsefulPercentile(s) &&
+              ` That cited span is wider than ${spanPercentile(s)}% of the ${SINGERS.length} voices in this library.`}
           </p>
           <dl className="mt-5 grid gap-4 sm:grid-cols-3">
             <div>

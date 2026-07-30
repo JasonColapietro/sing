@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SingersDirectory } from "@/components/singers/directory";
 import { PageShell } from "@/components/ui";
-import { SINGERS } from "@/lib/singers";
+import { SINGERS, rangeLabel } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
 const DESCRIPTION = `The vocal ranges of ${SINGERS.length} famous singers on one keyboard — whistle notes to the deepest basses. Overlay your own range free.`;
@@ -30,13 +30,28 @@ export default function SingersPage() {
       name: "Suede Sing",
       url: SITE_URL,
     },
+    // The page is a list of 357 people; without an ItemList none of that is
+    // machine-readable. Alphabetical, matching the default render order.
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: SINGERS.length,
+      itemListOrder: "https://schema.org/ItemListOrderAscending",
+      itemListElement: [...SINGERS]
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((s, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: `${SITE_URL}/singers/${s.slug}`,
+          name: `${s.name} — ${rangeLabel(s)}`,
+        })),
+    },
   };
 
   return (
     <PageShell
       kicker="Reference"
       title="Famous vocal ranges"
-      subtitle={`Every voice on one keyboard — the commonly cited ranges of ${SINGERS.length} famous singers, from the deepest recorded lows to whistle-register highs. Tap any singer for the full breakdown.`}
+      subtitle={`The commonly cited ranges of ${SINGERS.length} famous singers, every one on the same keyboard.`}
     >
       <script
         type="application/ld+json"

@@ -46,6 +46,36 @@ export function midiToLabel(midi: number): string {
   return `${midiToName(midi)}${midiToOctave(midi)}`;
 }
 
+const FLAT_NAMES = [
+  "C",
+  "Db",
+  "D",
+  "Eb",
+  "E",
+  "F",
+  "Gb",
+  "G",
+  "Ab",
+  "A",
+  "Bb",
+  "B",
+] as const;
+
+/**
+ * Flat spelling of a note ("Bb3" for what midiToLabel calls "A#3"). Sources
+ * quoting vocal ranges overwhelmingly use flats — "Bb5", not "A#5" — so text
+ * meant to match what a reader searched for needs both spellings.
+ */
+export function midiToFlatLabel(midi: number): string {
+  return `${FLAT_NAMES[((midi % 12) + 12) % 12]}${midiToOctave(midi)}`;
+}
+
+/** The flat spelling only when it differs from the sharp one, else null. */
+export function altSpelling(midi: number): string | null {
+  const flat = midiToFlatLabel(midi);
+  return flat === midiToLabel(midi) ? null : flat;
+}
+
 const LABEL_RE = /^([A-Ga-g])([#b♯♭]?)(-?\d)$/;
 const LETTER_PC: Record<string, number> = {
   C: 0,
