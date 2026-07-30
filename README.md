@@ -22,9 +22,9 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Payments (Suede Pro)
 
-Pro is a Stripe subscription — $4/month or $30/year — provisioned through the
-Vercel Marketplace, so `STRIPE_SECRET_KEY` and friends are set on the project
-automatically. Locally: `vercel link && vercel env pull`.
+Pro is a Stripe subscription — $4/month or $30/year. `STRIPE_SECRET_KEY` decides
+which Stripe account and mode the app talks to; see [Going live](#going-live) for
+where production points. Locally: `vercel link && vercel env pull`.
 
 There are no accounts and no database, so **Stripe is the only source of
 truth** and the flow is built around that:
@@ -101,32 +101,51 @@ revokes access. Prices are resolved by **lookup key** (`suede_pro_monthly`,
 
 ### Going live
 
-The Marketplace resource starts as a Stripe **sandbox** (test mode — real card
-numbers are declined). No code changes are needed to go live; it's four steps,
-and the first two can only be done by the account owner.
+Real money goes to the existing **JC INVESTMENT GROUP LLC** Stripe account
+(`acct_1SHG7dRdcsaZ58FL`), not to a claimed sandbox.
 
-1. **Claim the sandbox.** `vercel integration resource claim suede-sing-pro`
-   opens a Stripe URL. Sign in (or create the account) there.
-2. **Finish Stripe activation** in the dashboard: business details, bank
-   account for payouts, tax and identity verification. Until this is done
-   `charges_enabled` stays false and live checkout will fail.
-3. **Refresh the keys and set up live mode.** Test and live data are separate
-   spaces in Stripe, so the product, prices, and portal config must be created
-   again with live keys:
+The Marketplace resource `suede-sing-pro` was deliberately left **unclaimed**.
+Claiming it would have minted a *second* Stripe account, starting unactivated
+and needing its own business details, bank account, identity verification and
+tax setup — splitting Suede Sing's revenue, payouts and 1099s away from the LLC
+that already does all of that. The sandbox stays as the test-mode environment
+instead.
 
-   ```bash
-   vercel env pull
-   STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs
-   ```
+Live mode is already provisioned in the LLC account:
 
-   The script is idempotent and prints which mode it's touching. For test mode
-   it's just `npm run stripe:setup`.
-4. **Confirm.** `vercel integration list` should show ownership as `linked`
-   rather than `sandbox`, and the setup script should report
-   `charges_enabled=true`.
+| | |
+|---|---|
+| Product | `prod_UymwMKT9x94n1k` — Suede Pro |
+| Monthly | `price_1TypNARdcsaZ58FLZkhbk6mJ` — $4.00/mo, lookup key `suede_pro_monthly` |
+| Annual | `price_1TypNIRdcsaZ58FLFr5kdy7p` — $30.00/yr, lookup key `suede_pro_annual` |
+| Billing portal | the account's existing live default config, cancel-at-period-end enabled |
 
-Verify a real charge with a small live purchase you refund, not with a test
-card — test cards are declined in live mode.
+**The one remaining step** is swapping `STRIPE_SECRET_KEY` on the `sing` project
+from the sandbox key to the LLC's live secret key (Vercel dashboard or
+`vercel env`). Nothing in the code changes: prices resolve by lookup key, which
+is exactly why the same build serves both modes.
+
+Two traps to know:
+
+- **The Marketplace integration owns `STRIPE_SECRET_KEY` today.** It injected the
+  sandbox key when `suede-sing-pro` was provisioned, so a re-sync or reinstall of
+  that resource can overwrite a hand-set live key and quietly drop production
+  back into test mode. If checkout starts minting `cs_test_…` sessions, that is
+  what happened.
+- **Test and live are separate data spaces.** Anything created in one is invisible
+  to the other, so a live account with no prices under the lookup keys makes
+  `/api/checkout` fail. `scripts/stripe-setup.mjs` is idempotent and creates the
+  product, both prices and a portal config against whichever key it is given —
+  use it if the live catalogue ever needs rebuilding:
+
+  ```bash
+  STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs   # live
+  npm run stripe:setup                                        # test mode
+  ```
+
+  It prints which mode it touched and reports `charges_enabled`.
+
+Verify with one small real purchase — test cards are declined against live keys.
 
 ## Learn More
 
