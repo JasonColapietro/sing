@@ -137,8 +137,31 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Production is **https://sing.suedeai.ai**, served by the Vercel project `sing`
+(team `suede-ai-64d39175`). Pushing `main` deploys it; previews are disabled by
+the `ignoreCommand` in `vercel.json`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+To force a rebuild — the only way to pick up a changed `NEXT_PUBLIC_*` variable,
+since those are inlined at build time:
+
+```bash
+bash scripts/deploy-prod.sh
+```
+
+It refuses to run unless the tree is clean and at `origin/main`. That guard
+exists because `vercel --prod` uploads the working directory rather than a git
+ref, so running it from a stale worktree silently rolls production back.
+
+### Domain and canonical URLs
+
+`suedeai.ai` is on GoDaddy nameservers, so each subdomain needs an
+`A <sub> 76.76.21.21` record there (GoDaddy gates the save behind an identity
+check, so it can't be automated). Every absolute URL — canonicals, `sitemap.xml`,
+JSON-LD, OG images — comes from `NEXT_PUBLIC_SITE_URL` via `lib/site.ts`, which
+falls back to the `.vercel.app` host when the variable is unset.
+
+Search Console is verified for the whole domain as the `sc-domain:suedeai.ai`
+property, so new subdomains need no separate verification — just submit their
+sitemap.
