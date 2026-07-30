@@ -310,7 +310,7 @@
     "activeFrom": 2011,
     "lowNote": "Eb1",
     "highNote": "Db5",
-    "beltNote": null,
+    "beltNote": "E4",
     "whistle": false,
     "signatureSong": "Little Drummer Boy",
     "lowSource": null,

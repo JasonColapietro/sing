@@ -90,13 +90,22 @@ export function CompareWithMe({ s }: { s: Singer }) {
       </p>
       <div className="mt-5 space-y-2">
         {bars.map((b) => (
-          <div key={b.who} className="flex items-center gap-3">
-            <span
-              className={`w-28 shrink-0 truncate text-right font-mono text-xs ${b.text}`}
-            >
-              {b.who}
-            </span>
-            <div className="relative h-5 flex-1 rounded bg-panel2">
+          // On a phone the fixed side labels left the track ~100px wide, so
+          // the bars stopped being comparable. Stack the label above the track
+          // below sm and keep the side-by-side layout from sm up.
+          <div
+            key={b.who}
+            className="sm:flex sm:items-center sm:gap-3"
+          >
+            <div className="flex items-baseline justify-between gap-2 sm:block sm:w-28 sm:shrink-0">
+              <span className={`truncate font-mono text-xs sm:block sm:text-right ${b.text}`}>
+                {b.who}
+              </span>
+              <span className="tabular shrink-0 font-mono text-[11px] text-dim sm:hidden">
+                {midiToLabel(b.low)}–{midiToLabel(b.high)}
+              </span>
+            </div>
+            <div className="relative mt-1 h-5 rounded bg-panel2 sm:mt-0 sm:flex-1">
               <div
                 className={`absolute inset-y-0 rounded ${b.cls}`}
                 style={{
@@ -105,7 +114,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
                 }}
               />
             </div>
-            <span className="tabular w-20 shrink-0 font-mono text-[11px] text-dim">
+            <span className="tabular hidden w-20 shrink-0 font-mono text-[11px] text-dim sm:block">
               {midiToLabel(b.low)}–{midiToLabel(b.high)}
             </span>
           </div>

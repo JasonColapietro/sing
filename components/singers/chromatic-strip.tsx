@@ -7,10 +7,14 @@ function isBlack(midi: number): boolean {
 }
 
 /**
- * Equal-width-per-semitone keyboard strip with an amber band over a range.
- * Same visual language as the progress page's mini keyboard, but with
- * configurable bounds so extreme ranges (whistle sopranos, deep basses)
- * render without clamping. Pure SVG — safe in server components.
+ * Equal-width-per-semitone keyboard strip with a teal band over a range.
+ * Same geometry as the progress page's mini keyboard, but with configurable
+ * bounds so extreme ranges (whistle sopranos, deep basses) render without
+ * clamping — and deliberately teal, not amber: across /range and /progress an
+ * amber band on keys means "your measured voice", so a reference singer's
+ * cited range has to read in the other tone. Pure SVG, safe in server
+ * components (the visitor's own range is client-only, and lives in the
+ * CompareWithMe card further down the page).
  */
 export function ChromaticStrip({
   low,
@@ -31,20 +35,25 @@ export function ChromaticStrip({
   const stripHigh = Math.ceil(high / 12) * 12;
   const CW = 9;
   const KH = 38;
-  const LABEL_H = 18;
   const n = stripHigh - stripLow + 1;
   const W = n * CW;
   const x = (m: number) => (m - stripLow) * CW;
 
+  // The whole range always fits — a horizontally scrolled strip hid the one
+  // note people came to see (Mariah Carey's G7 started off-screen). Instead the
+  // strip scales to the container and the type scales with it, so a 6-octave
+  // span renders its labels at the same on-screen size a 2-octave one does.
+  // Reference: a 4-octave strip (W = 441) at fontSize 10.
+  const k = Math.max(1, W / 441);
+  const noteFont = 10 * k;
+  const octaveFont = 8 * k;
+  const LABEL_H = 18 * k;
+
   return (
-    // Wide ranges (5+ octaves) would otherwise scale the strip so small its
-    // labels and belt dash become illegible on phones — floor the rendered
-    // width and let narrow screens scroll the strip instead.
-    <div className={`overflow-x-auto ${className ?? ""}`}>
+    <div className={className}>
       <svg
         viewBox={`0 0 ${W} ${KH + LABEL_H}`}
         className="h-auto w-full"
-        style={{ minWidth: n * 8 }}
         role="img"
         aria-label={
           label ??
@@ -74,8 +83,8 @@ export function ChromaticStrip({
         width={x(high) - x(low) + CW}
         height={KH}
         rx={2}
-        fill="rgba(197, 150, 66, 0.24)"
-        stroke="rgba(197, 150, 66, 0.6)"
+        fill="rgba(17, 97, 93, 0.20)"
+        stroke="rgba(17, 97, 93, 0.60)"
         strokeWidth={1}
       />
       {beltMidi != null && (
@@ -94,25 +103,32 @@ export function ChromaticStrip({
         <text
           key={m}
           x={x(m) + CW / 2}
-          y={KH + 13}
+          y={KH + noteFont + 3}
           textAnchor="middle"
-          fontSize={10}
+          fontSize={noteFont}
           fontWeight={600}
           fontFamily="var(--font-mono)"
-          fill="#c59642"
+          fill="#11615d"
         >
           {midiToLabel(m)}
         </text>
       ))}
+      {/* Octave marks, minus any that would sit under an endpoint label. The
+          clearance scales with the type, since wider strips carry wider glyphs. */}
       {Array.from({ length: n }, (_, i) => stripLow + i)
-        .filter((m) => m % 12 === 0 && Math.abs(m - low) > 1 && Math.abs(m - high) > 1)
+        .filter(
+          (m) =>
+            m % 12 === 0 &&
+            Math.abs(m - low) > 1.5 * k &&
+            Math.abs(m - high) > 1.5 * k,
+        )
         .map((m) => (
           <text
             key={`oct-${m}`}
             x={x(m) + CW / 2}
-            y={KH + 13}
+            y={KH + noteFont + 3}
             textAnchor="middle"
-            fontSize={8}
+            fontSize={octaveFont}
             fontFamily="var(--font-mono)"
             fill="#8a8272"
           >

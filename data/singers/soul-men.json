@@ -2,7 +2,11 @@
   {
     "name": "Stevie Wonder",
     "voiceType": "Tenor",
-    "genres": ["Soul", "R&B", "Funk"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Funk"
+    ],
     "country": "USA",
     "activeFrom": 1963,
     "lowNote": "C2",
@@ -17,7 +21,10 @@
   {
     "name": "Marvin Gaye",
     "voiceType": "Tenor",
-    "genres": ["Soul", "R&B"],
+    "genres": [
+      "Soul",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1962,
     "lowNote": "F2",
@@ -32,7 +39,11 @@
   {
     "name": "Al Green",
     "voiceType": "Tenor",
-    "genres": ["Soul", "R&B", "Gospel"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Gospel"
+    ],
     "country": "USA",
     "activeFrom": 1967,
     "lowNote": "F2",
@@ -47,7 +58,11 @@
   {
     "name": "Sam Cooke",
     "voiceType": "Tenor",
-    "genres": ["Soul", "Gospel", "R&B"],
+    "genres": [
+      "Soul",
+      "Gospel",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1957,
     "lowNote": "A2",
@@ -62,7 +77,10 @@
   {
     "name": "Otis Redding",
     "voiceType": "Baritone",
-    "genres": ["Soul", "R&B"],
+    "genres": [
+      "Soul",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1962,
     "lowNote": "F2",
@@ -77,7 +95,11 @@
   {
     "name": "Prince",
     "voiceType": "Tenor",
-    "genres": ["Funk", "R&B", "Rock"],
+    "genres": [
+      "Funk",
+      "R&B",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 1978,
     "lowNote": "E2",
@@ -92,7 +114,11 @@
   {
     "name": "James Brown",
     "voiceType": "Baritone",
-    "genres": ["Funk", "Soul", "R&B"],
+    "genres": [
+      "Funk",
+      "Soul",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1956,
     "lowNote": "F2",
@@ -107,7 +133,11 @@
   {
     "name": "Curtis Mayfield",
     "voiceType": "Tenor",
-    "genres": ["Soul", "Funk", "R&B"],
+    "genres": [
+      "Soul",
+      "Funk",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1958,
     "lowNote": "G2",
@@ -122,7 +152,11 @@
   {
     "name": "Smokey Robinson",
     "voiceType": "Tenor",
-    "genres": ["Soul", "R&B", "Pop"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1960,
     "lowNote": "A2",
@@ -137,7 +171,11 @@
   {
     "name": "Luther Vandross",
     "voiceType": "Tenor",
-    "genres": ["R&B", "Soul", "Pop"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1981,
     "lowNote": "B2",
@@ -152,7 +190,10 @@
   {
     "name": "Usher",
     "voiceType": "Tenor",
-    "genres": ["R&B", "Pop"],
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1994,
     "lowNote": "Bb2",
@@ -167,7 +208,10 @@
   {
     "name": "Maxwell",
     "voiceType": "Tenor",
-    "genres": ["R&B", "Soul"],
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
     "country": "USA",
     "activeFrom": 1996,
     "lowNote": "A2",
@@ -182,7 +226,11 @@
   {
     "name": "D'Angelo",
     "voiceType": "Tenor",
-    "genres": ["R&B", "Soul", "Funk"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Funk"
+    ],
     "country": "USA",
     "activeFrom": 1995,
     "lowNote": "G2",
@@ -197,7 +245,10 @@
   {
     "name": "Teddy Pendergrass",
     "voiceType": "Baritone",
-    "genres": ["Soul", "R&B"],
+    "genres": [
+      "Soul",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1972,
     "lowNote": "E2",
@@ -212,7 +263,11 @@
   {
     "name": "Barry White",
     "voiceType": "Bass",
-    "genres": ["Soul", "Disco", "R&B"],
+    "genres": [
+      "Soul",
+      "Disco",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1973,
     "lowNote": "D2",
@@ -227,7 +282,10 @@
   {
     "name": "Aaron Neville",
     "voiceType": "Tenor",
-    "genres": ["Soul", "R&B"],
+    "genres": [
+      "Soul",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1966,
     "lowNote": "G2",
@@ -242,12 +300,16 @@
   {
     "name": "Philip Bailey",
     "voiceType": "Countertenor",
-    "genres": ["Funk", "Soul", "R&B"],
+    "genres": [
+      "Funk",
+      "Soul",
+      "R&B"
+    ],
     "country": "USA",
     "activeFrom": 1972,
     "lowNote": "G2",
     "highNote": "D6",
-    "beltNote": null,
+    "beltNote": "B4",
     "whistle": false,
     "signatureSong": "Easy Lover",
     "lowSource": null,
@@ -257,7 +319,11 @@
   {
     "name": "Brian McKnight",
     "voiceType": "Tenor",
-    "genres": ["R&B", "Soul", "Pop"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1992,
     "lowNote": "A2",
@@ -272,7 +338,11 @@
   {
     "name": "Bill Withers",
     "voiceType": "Baritone",
-    "genres": ["Soul", "R&B", "Folk"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Folk"
+    ],
     "country": "USA",
     "activeFrom": 1971,
     "lowNote": "F2",
@@ -287,7 +357,11 @@
   {
     "name": "Donny Hathaway",
     "voiceType": "Tenor",
-    "genres": ["Soul", "R&B", "Gospel"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Gospel"
+    ],
     "country": "USA",
     "activeFrom": 1970,
     "lowNote": "F2",

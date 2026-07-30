@@ -182,7 +182,7 @@
     "activeFrom": 1998,
     "lowNote": "F2",
     "highNote": "C6",
-    "beltNote": null,
+    "beltNote": "B4",
     "whistle": false,
     "signatureSong": "Chop Suey!",
     "lowSource": null,

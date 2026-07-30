@@ -86,6 +86,17 @@ export function spanPercentile(s: Singer): number {
   return Math.round((narrower / SINGERS.length) * 100);
 }
 
+/**
+ * Whether a "wider than N% of the library" line is worth printing. At the
+ * extremes the rounded percentile states something false — the narrowest
+ * singers tie rather than being beaten by nobody, and the widest is not wider
+ * than himself — so those pages get no comparison line rather than a wrong one.
+ */
+export function hasUsefulPercentile(s: Singer): boolean {
+  const p = spanPercentile(s);
+  return p > 0 && p < 100;
+}
+
 /** Semitones of overlap between two ranges (0 if disjoint). */
 export function rangeOverlap(
   aLow: number,
