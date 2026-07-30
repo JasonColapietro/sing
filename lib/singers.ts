@@ -77,6 +77,15 @@ export function relatedSingers(s: Singer, count = 6): Singer[] {
     .map((x) => x.o);
 }
 
+/** Percent (0–100) of the library whose cited span is narrower than this singer's. */
+export function spanPercentile(s: Singer): number {
+  const span = s.highMidi - s.lowMidi;
+  const narrower = SINGERS.filter(
+    (o) => o.highMidi - o.lowMidi < span,
+  ).length;
+  return Math.round((narrower / SINGERS.length) * 100);
+}
+
 /** Semitones of overlap between two ranges (0 if disjoint). */
 export function rangeOverlap(
   aLow: number,

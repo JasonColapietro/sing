@@ -2,7 +2,10 @@
   {
     "name": "Ann Wilson",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Rock", "Hard Rock"],
+    "genres": [
+      "Rock",
+      "Hard Rock"
+    ],
     "country": "USA",
     "activeFrom": 1975,
     "lowNote": "G2",
@@ -17,7 +20,11 @@
   {
     "name": "Janis Joplin",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Rock", "Blues", "Soul"],
+    "genres": [
+      "Rock",
+      "Blues",
+      "Soul"
+    ],
     "country": "USA",
     "activeFrom": 1967,
     "lowNote": "A2",
@@ -32,12 +39,16 @@
   {
     "name": "Pat Benatar",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Rock", "Hard Rock", "Pop"],
+    "genres": [
+      "Rock",
+      "Hard Rock",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1979,
     "lowNote": "F3",
     "highNote": "Bb5",
-    "beltNote": "F5",
+    "beltNote": "G5",
     "whistle": false,
     "signatureSong": "Love Is a Battlefield",
     "lowSource": null,
@@ -47,7 +58,11 @@
   {
     "name": "Stevie Nicks",
     "voiceType": "Contralto",
-    "genres": ["Rock", "Folk", "Pop"],
+    "genres": [
+      "Rock",
+      "Folk",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1975,
     "lowNote": "E3",
@@ -62,7 +77,9 @@
   {
     "name": "Grace Slick",
     "voiceType": "Contralto",
-    "genres": ["Rock"],
+    "genres": [
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 1966,
     "lowNote": "E3",
@@ -77,7 +94,11 @@
   {
     "name": "Joan Jett",
     "voiceType": "Contralto",
-    "genres": ["Rock", "Punk", "Hard Rock"],
+    "genres": [
+      "Rock",
+      "Punk",
+      "Hard Rock"
+    ],
     "country": "USA",
     "activeFrom": 1976,
     "lowNote": "E3",
@@ -92,7 +113,11 @@
   {
     "name": "Debbie Harry",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Rock", "New Wave", "Punk"],
+    "genres": [
+      "Rock",
+      "New Wave",
+      "Punk"
+    ],
     "country": "USA",
     "activeFrom": 1976,
     "lowNote": "F3",
@@ -107,12 +132,16 @@
   {
     "name": "Lzzy Hale",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Hard Rock", "Metal", "Rock"],
+    "genres": [
+      "Hard Rock",
+      "Metal",
+      "Rock"
+    ],
     "country": "USA",
     "activeFrom": 2009,
     "lowNote": "G2",
     "highNote": "C6",
-    "beltNote": "A5",
+    "beltNote": "G5",
     "whistle": false,
     "signatureSong": "I Miss the Misery",
     "lowSource": null,
@@ -122,12 +151,16 @@
   {
     "name": "Hayley Williams",
     "voiceType": "Soprano",
-    "genres": ["Alternative", "Rock", "Punk"],
+    "genres": [
+      "Alternative",
+      "Rock",
+      "Punk"
+    ],
     "country": "USA",
     "activeFrom": 2005,
     "lowNote": "F3",
     "highNote": "D6",
-    "beltNote": "A5",
+    "beltNote": "G5",
     "whistle": false,
     "signatureSong": "Misery Business",
     "lowSource": null,
@@ -137,12 +170,16 @@
   {
     "name": "Amy Lee",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Rock", "Metal", "Alternative"],
+    "genres": [
+      "Rock",
+      "Metal",
+      "Alternative"
+    ],
     "country": "USA",
     "activeFrom": 2003,
     "lowNote": "E3",
     "highNote": "E6",
-    "beltNote": "A5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Bring Me to Life",
     "lowSource": null,
@@ -152,7 +189,11 @@
   {
     "name": "Floor Jansen",
     "voiceType": "Soprano",
-    "genres": ["Metal", "Rock", "Classical"],
+    "genres": [
+      "Metal",
+      "Rock",
+      "Classical"
+    ],
     "country": "Netherlands",
     "activeFrom": 2000,
     "lowNote": "E3",
@@ -165,24 +206,12 @@
     "blurb": "Trades operatic head voice for full metal belt mid-phrase with no audible gear change."
   },
   {
-    "name": "Tarja Turunen",
-    "voiceType": "Soprano",
-    "genres": ["Metal", "Classical"],
-    "country": "Finland",
-    "activeFrom": 1996,
-    "lowNote": "F3",
-    "highNote": "E6",
-    "beltNote": null,
-    "whistle": false,
-    "signatureSong": "Nemo",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Classical placement over metal arrangements; lifted palate, wide vibrato, dark vowel shapes."
-  },
-  {
     "name": "Sharon den Adel",
     "voiceType": "Soprano",
-    "genres": ["Metal", "Rock"],
+    "genres": [
+      "Metal",
+      "Rock"
+    ],
     "country": "Netherlands",
     "activeFrom": 1997,
     "lowNote": "G3",
@@ -197,12 +226,15 @@
   {
     "name": "Dolores O'Riordan",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Alternative", "Rock"],
+    "genres": [
+      "Alternative",
+      "Rock"
+    ],
     "country": "Ireland",
     "activeFrom": 1990,
     "lowNote": "E3",
     "highNote": "C6",
-    "beltNote": "G5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Zombie",
     "lowSource": null,
@@ -210,29 +242,18 @@
     "blurb": "Keening Irish lilt with a deliberate yodel across the register break; nasal-forward, direct."
   },
   {
-    "name": "Alanis Morissette",
-    "voiceType": "Mezzo-soprano",
-    "genres": ["Alternative", "Rock", "Singer-Songwriter"],
-    "country": "Canada",
-    "activeFrom": 1995,
-    "lowNote": "F3",
-    "highNote": "C6",
-    "beltNote": "F5",
-    "whistle": false,
-    "signatureSong": "You Oughta Know",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Compressed nasal-edged middle voice; abrupt register flips used as a rhythmic device."
-  },
-  {
     "name": "Gwen Stefani",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Rock", "Punk", "Pop"],
+    "genres": [
+      "Rock",
+      "Punk",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1995,
     "lowNote": "F3",
     "highNote": "Bb5",
-    "beltNote": "F5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Don't Speak",
     "lowSource": null,

@@ -13,7 +13,25 @@ import { Button, Card, Pill, SectionLabel, Stat } from "@/components/ui";
 import { FreeOnly } from "@/components/pro/gate";
 import { LockedPanel } from "@/components/pro/ui";
 import { PianoStrip } from "./piano-strip";
-import { FAMOUS_VOICES, rangeOverlap } from "./famous-voices";
+import { SINGERS, rangeOverlap } from "@/lib/singers";
+
+/**
+ * Household names for the quick post-test comparison, pulled from the full
+ * singers library so the numbers here always match /singers/[slug] pages.
+ */
+const COMPARISON_SLUGS = [
+  "freddie-mercury",
+  "mariah-carey",
+  "axl-rose",
+  "johnny-cash",
+  "adele",
+  "bruno-mars",
+  "whitney-houston",
+];
+const FAMOUS_VOICES = COMPARISON_SLUGS.flatMap((slug) => {
+  const s = SINGERS.find((x) => x.slug === slug);
+  return s ? [s] : [];
+});
 
 function describeSpan(semitones: number): string {
   const oct = Math.floor(semitones / 12);
@@ -170,9 +188,16 @@ export function ResultView({
     return { rows, best: rows[0] };
   }, [lowMidi, highMidi]);
 
-  // Fixed axis for the famous comparison: F1..G7 covers every listed range.
-  const FAME_LOW = 29;
-  const FAME_HIGH = 103;
+  // Axis for the famous comparison: octave-snapped around every listed range
+  // (and the singer's own, in case it reaches beyond them).
+  const FAME_LOW =
+    Math.floor(
+      Math.min(lowMidi, ...famous.rows.map((f) => f.lowMidi)) / 12,
+    ) * 12;
+  const FAME_HIGH =
+    Math.ceil(
+      Math.max(highMidi, ...famous.rows.map((f) => f.highMidi)) / 12,
+    ) * 12;
 
   const playRange = () => {
     playTone(lowMidi, { dur: 0.6 });
@@ -354,11 +379,12 @@ export function ResultView({
             const isBest = i === 0;
             return (
               <div key={f.name} className="flex items-center gap-3">
-                <span
-                  className={`w-36 shrink-0 truncate text-right font-mono text-xs ${isBest ? "text-amber-ink" : "text-mut"}`}
+                <Link
+                  href={`/singers/${f.slug}`}
+                  className={`w-36 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current ${isBest ? "text-amber-ink" : "text-mut"}`}
                 >
                   {f.name}
-                </span>
+                </Link>
                 <div className="relative h-5 flex-1 rounded bg-panel2">
                   <div
                     className={`absolute inset-y-0 rounded ${isBest ? "bg-cool/50" : "bg-cool/25"}`}

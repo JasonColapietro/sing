@@ -106,3 +106,15 @@ export function ProgressGlyph(props: GlyphProps) {
     </svg>
   );
 }
+
+/** Stacked range bars of different spans — the famous-singers library. */
+export function SingersGlyph(props: GlyphProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M3 5h9M6 10h11M4 15h8" />
+      <circle cx="14" cy="5" r="1.4" />
+      <circle cx="3.5" cy="10" r="1.4" />
+      <circle cx="14.5" cy="15" r="1.4" />
+    </svg>
+  );
+}

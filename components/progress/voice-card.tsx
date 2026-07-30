@@ -132,9 +132,12 @@ export function VoiceCard({ range }: { range: VocalRange }) {
       <div className="mt-4">
         <MiniKeyboard low={range.lowMidi} high={range.highMidi} />
       </div>
-      <div className="mt-4">
+      <div className="mt-4 flex flex-wrap items-center gap-3">
         <LinkButton href="/range" variant="outline" size="sm">
           Retake the test
+        </LinkButton>
+        <LinkButton href="/singers" variant="ghost" size="sm">
+          See yourself among famous voices →
         </LinkButton>
       </div>
     </Card>
