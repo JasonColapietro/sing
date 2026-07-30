@@ -12,7 +12,8 @@
     "signatureSong": "Whole Lotta Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bluesy tenor with a bright, nasal-forward top and heavy vibrato; leans on falsetto wails above the belt."
+    "blurb": "Bluesy tenor with a bright, nasal-forward top and heavy vibrato; leans on falsetto wails above the belt.",
+    "technique": "Everything sits forward and high in the mouth, thin at the edges rather than round, with vibrato that comes on fast and wide almost as soon as a note lands. Blues bends and slurred approaches replace clean onsets. Above the E5 belt he releases into a ringing falsetto wail instead of pushing. Students usually try to muscle those cries in chest and end up squeezing the throat shut."
   },
   {
     "name": "Freddie Mercury",
@@ -27,7 +28,8 @@
     "signatureSong": "Bohemian Rhapsody",
     "lowSource": null,
     "highSource": "Get Down, Make Love",
-    "blurb": "Baritone core sung as a tenor: fast vibrato, hard consonants, and a sudden switch into piercing falsetto."
+    "blurb": "Baritone core sung as a tenor: fast vibrato, hard consonants, and a sudden switch into piercing falsetto.",
+    "technique": "Listen for a speaking weight heavier than the tessitura suggests: a baritone body carried up to an F5 belt. The vibrato is quick and narrow and starts almost at the onset. Consonants land like percussion, and phrases end cleanly rather than trailing off. Above the belt he drops the weight and flips outright into falsetto. Shake the jaw to fake that vibrato and it reads as a wobble; the real thing runs on steady breath, not motion."
   },
   {
     "name": "Roger Daltrey",
@@ -42,7 +44,8 @@
     "signatureSong": "Won't Get Fooled Again",
     "lowSource": null,
     "highSource": "Love, Reign o'er Me",
-    "blurb": "Chest-dominant tenor: thick midrange, gravel on the push, screams sung on the belt rather than falsetto."
+    "blurb": "Chest-dominant tenor: thick midrange, gravel on the push, screams sung on the belt rather than falsetto.",
+    "technique": "Weight stays in the chest as the line climbs, so the tone thickens rather than thinning on the way to C5. Onsets are hard and often shouted, and the grain shows up only when he pushes harder: controlled distortion riding on a supported tone, not a rasp laid over the top. Vibrato is slight. The grit comes last in the learning order; grab it first and the second chorus is gone."
   },
   {
     "name": "Steven Tyler",
@@ -57,7 +60,8 @@
     "signatureSong": "Dream On",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Raspy high tenor built on screams and blues bends; top notes arrive as distorted cries, not clean tone."
+    "blurb": "Raspy high tenor built on screams and blues bends; top notes arrive as distorted cries, not clean tone.",
+    "technique": "Rasp is present at nearly every volume, sitting on top of a bright forward tone rather than replacing it. Phrases slide into pitch from below and often flick upward at the end. Above the E5 belt the sound turns to distorted cry and screamed falsetto instead of clean tone. Blues bends and quick melisma fill the gaps. The grit is layered over real support; produce it in the throat and you get noise."
   },
   {
     "name": "Paul McCartney",
@@ -72,7 +76,8 @@
     "signatureSong": "Hey Jude",
     "lowSource": null,
     "highSource": "Long Tall Sally",
-    "blurb": "Flexible tenor that shifts from soft crooning to a hoarse rock shout inside the same song."
+    "blurb": "Flexible tenor that shifts from soft crooning to a hoarse rock shout inside the same song.",
+    "technique": "Two settings live in one voice: a light, nearly vibrato-free croon with soft aspirate onsets, and a hoarse open-throated shout he switches to without warning. The quiet mode is genuinely smooth, pitch-centered, no scooping. The shout brightens and flattens the tone and rides high toward E5. That mode draws all the attention, but the quiet one is the harder skill and the one carrying most of the material."
   },
   {
     "name": "John Lennon",
@@ -87,7 +92,8 @@
     "signatureSong": "Come Together",
     "lowSource": null,
     "highSource": "Twist and Shout",
-    "blurb": "Nasal, slightly flat-toned tenor; pushes into a torn-edged shout at the top instead of smoothing it out."
+    "blurb": "Nasal, slightly flat-toned tenor; pushes into a torn-edged shout at the top instead of smoothing it out.",
+    "technique": "Placement is narrow and nasal with very little vibrato, mostly straight tone, phrases delivered close to how he would speak them. Notes are often approached from just underneath and left sitting there, which is part of the sound rather than a fault. Near D5 the tone tears into a shout instead of smoothing into a mix. The usual imitation error is adding vibrato and polish and losing the conversational delivery."
   },
   {
     "name": "Mick Jagger",
@@ -102,7 +108,8 @@
     "signatureSong": "(I Can't Get No) Satisfaction",
     "lowSource": null,
     "highSource": "Emotional Rescue",
-    "blurb": "Thin, drawled tenor with heavy blues phrasing; the high stuff comes out in a light, airy falsetto."
+    "blurb": "Thin, drawled tenor with heavy blues phrasing; the high stuff comes out in a light, airy falsetto.",
+    "technique": "Note how low the belt sits at B4 while the range reaches F5: everything above the belt arrives in a light, airy falsetto, often as a whoop rather than a held note. The tone is thin and slightly pinched by design, vowels stretched and drawled, consonants chewed. Rhythm is the real technique here, landing late, dragging syllables across the beat, then snapping back. Sing it cleanly and on time and the character disappears."
   },
   {
     "name": "Jim Morrison",
@@ -117,7 +124,8 @@
     "signatureSong": "Light My Fire",
     "lowSource": null,
     "highSource": "When the Music's Over",
-    "blurb": "Dark, resonant baritone with crooner control below and unpitched howls when he pushes past the staff."
+    "blurb": "Dark, resonant baritone with crooner control below and unpitched howls when he pushes past the staff.",
+    "technique": "Below the staff the voice is dark and round with a low larynx, closer to a crooner's setup than a rock singer's, and slow wide vibrato on held notes. Phrases often begin nearly spoken and grow into tone. Pushing past Bb4 he trades pitch for open howls, so there is no real mix to study. Students darken by pressing the tongue down and lose the words; that depth comes from an open throat, not a swallowed one."
   },
   {
     "name": "David Bowie",
@@ -132,7 +140,8 @@
     "signatureSong": "Space Oddity",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Baritone with a wide color palette: theatrical vibrato low, thin brightness up top, heavy diction."
+    "blurb": "Baritone with a wide color palette: theatrical vibrato low, thin brightness up top, heavy diction.",
+    "technique": "Color changes from song to song, but the mechanics repeat: a plummy, vibrato-heavy low register with theatrical vowel shaping, and a thinner brighter sound above the B4 belt that he lets stay light rather than reinforcing. Diction is deliberate, consonants placed, vowels chosen for character. Vibrato often arrives late in a held note and then widens. Imitators go straight for the accent and skip the vowel discipline that makes the character readable."
   },
   {
     "name": "Ian Gillan",
@@ -147,7 +156,8 @@
     "signatureSong": "Smoke on the Water",
     "lowSource": null,
     "highSource": "Child in Time",
-    "blurb": "High tenor that trades melody for siren-like screams; belts stay bright and forward with little weight."
+    "blurb": "High tenor that trades melody for siren-like screams; belts stay bright and forward with little weight.",
+    "technique": "Brightness is the whole engine: narrow vowels, high placement, very little weight carried upward, which is how the belt reaches G5 and the screams above it stay pitched instead of collapsing. Held notes pick up a fast shimmer of vibrato late. Sirens slide across an octave with no audible seam. Copy this by adding chest weight and you will jam around D5; the trick is subtracting mass, not adding force."
   },
   {
     "name": "Steve Perry",
@@ -162,7 +172,8 @@
     "signatureSong": "Don't Stop Believin'",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Smooth tenor with an R&B bend to the phrasing; the mix stays connected right through the top of the belt."
+    "blurb": "Smooth tenor with an R&B bend to the phrasing; the mix stays connected right through the top of the belt.",
+    "technique": "The seam between registers is the thing to study: the mix stays connected right through the E5 belt with no audible gear change. Onsets are clean and pitch-centered, then vibrato arrives a beat or so into the note, even and moderate in width. Phrasing borrows from R&B, with small bends, delayed entries and a cry inside the vowel. Volume is the wrong lever here; the tone comes from narrowing the vowel and holding the larynx steady."
   },
   {
     "name": "Geddy Lee",
@@ -177,7 +188,8 @@
     "signatureSong": "Tom Sawyer",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Piercing, narrow-toned high tenor; early records sit near the top of his range with a nasal edge."
+    "blurb": "Piercing, narrow-toned high tenor; early records sit near the top of his range with a nasal edge.",
+    "technique": "Compact and edged rather than large, this is a tone built to slice through a loud band instead of filling a room. Much of the material sits so high that the bottom of the range barely gets used. Vibrato is fast and shallow where it appears; mostly the sound runs straight. Rhythmic placement is exact, syllables locked tight to the rhythm section. Reaching for that height with more pressure is the usual error; it comes from forward placement instead."
   },
   {
     "name": "Bruce Springsteen",
@@ -192,7 +204,8 @@
     "signatureSong": "Born to Run",
     "lowSource": null,
     "highSource": "Born to Run",
-    "blurb": "Grainy baritone that works the low-middle and gets height by shouting through a raspy chest mix."
+    "blurb": "Grainy baritone that works the low-middle and gets height by shouting through a raspy chest mix.",
+    "technique": "Most of the singing happens in the low-middle, close to speech, with grain in the tone even at conversational volume. Height comes from shouting through a raspy chest mix rather than lightening, so C5 sounds like effort and is meant to. Onsets are breathy or half-spoken and vibrato is nearly absent. Phrases stretch long and push toward the top of a line. Take the rasp without the breath behind it and you get hoarseness, not intensity."
   },
   {
     "name": "Brian Johnson",
@@ -207,6 +220,7 @@
     "signatureSong": "Back in Black",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Sits almost entirely in a strained, distorted upper register; little clean tone, high notes are shrieks."
+    "blurb": "Sits almost entirely in a strained, distorted upper register; little clean tone, high notes are shrieks.",
+    "technique": "Almost everything sits in a narrow band near the top of the range with a constant distorted edge, and the clean tone barely appears, so there is no soft setting for contrast. Rhythm is blunt and right on the beat, consonants clipped, phrases short. Vibrato is essentially absent. Distortion this dense has to come from loose tissue vibrating above a supported note; substitute raw pressure for that and you get one take out of it."
   }
 ]

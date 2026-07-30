@@ -15,7 +15,8 @@
     "signatureSong": "Take My Hand, Precious Lord",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Chest-heavy contralto; slides into pitches and stretches syllables instead of landing them squarely."
+    "blurb": "Chest-heavy contralto; slides into pitches and stretches syllables instead of landing them squarely.",
+    "technique": "Almost nothing lands squarely on the beat. Notes get approached from below, stretched, then leaned on until the vibrato arrives, slow and wide, at the end of the tone rather than the start. Weight stays in chest up to the D5 belt, with dynamic swells inside a single syllable. Students sing this loud and straight; the shape lives in the scoops, the time-stretching, and the sudden drops to almost nothing."
   },
   {
     "name": "Yolanda Adams",
@@ -33,7 +34,8 @@
     "signatureSong": "Open My Heart",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Smoky bottom under a bright top; breathy onsets and clipped, jazz-leaning phrase endings."
+    "blurb": "Smoky bottom under a bright top; breathy onsets and clipped, jazz-leaning phrase endings.",
+    "technique": "Air comes before tone on almost every onset, consonants get clipped, and phrase endings cut off early the way a horn player would take them. Below the F5 belt the sound is smoky and thick; above it the tone lightens into head voice instead of pushing. Sitting a fraction behind the beat is part of it. Belt the soft passages and it collapses; the quiet, airy delivery is carrying the whole thing."
   },
   {
     "name": "CeCe Winans",
@@ -51,7 +53,8 @@
     "signatureSong": "Alabaster Box",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light lyric soprano, very even across the break; sparse ornament and a narrow, steady vibrato."
+    "blurb": "Light lyric soprano, very even across the break; sparse ornament and a narrow, steady vibrato.",
+    "technique": "Listen for how little changes between F3 and the G5 belt: the same vowel shape, the same narrow vibrato, no seam where the register should shift. Ornament is sparse and placed, usually one small turn at the end of a line rather than a cascade. Anyone working on this should strip the runs out first, hold the tone identical through the transition, and let the top float instead of driving it."
   },
   {
     "name": "BeBe Winans",
@@ -69,7 +72,8 @@
     "signatureSong": "Addictive Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm mid-weight tenor that slips into a soft-edged falsetto with no audible gear change."
+    "blurb": "Warm mid-weight tenor that slips into a soft-edged falsetto with no audible gear change.",
+    "technique": "Onsets are soft and aspirate rather than hard and glottal, and the body of the tone sits mid-weight and warm. The distance between the A4 belt and the E5 top tells you what happens up there: instead of pushing chest, the tone thins and slides into a rounded falsetto, and the handoff is hard to hear. Vibrato is gentle and late. Work that connection quietly at first, because forcing it makes the seam obvious immediately."
   },
   {
     "name": "Marvin Winans",
@@ -86,7 +90,8 @@
     "signatureSong": "Tomorrow",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal, tightly focused tenor with wide vibrato; held notes thin out into falsetto at the top."
+    "blurb": "Nasal, tightly focused tenor with wide vibrato; held notes thin out into falsetto at the top.",
+    "technique": "Placement is high and narrow, forward in the mask, which is what cuts through a full choir. Vibrato is wide and fast, often shaking harder at the end of a long note. Notice the gap between the Bb4 belt and the F5: those top notes thin deliberately into falsetto instead of thickening. Push chest up into that gap and the placement collapses along with the vibrato, which is where most imitations come apart."
   },
   {
     "name": "Karen Clark Sheard",
@@ -103,7 +108,8 @@
     "signatureSong": "The Safest Place",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Wide chest belt plus a usable whistle register; stacks fast melisma over sustained cadences."
+    "blurb": "Wide chest belt plus a usable whistle register; stacks fast melisma over sustained cadences.",
+    "technique": "Two very different instruments answer each other here. Underneath, a wide chest-mix belt up to Bb5 with grit on the attack; above it, a clean whistle register used as punctuation rather than decoration. Melisma comes in fast stacks over a held cadence, often landing on the ninth or the flat seventh. Students chase the whistle first. Build the belt and the run vocabulary, because the top notes only read over that foundation."
   },
   {
     "name": "Kim Burrell",
@@ -121,7 +127,8 @@
     "signatureSong": "I See a Victory",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Jazz harmonic sense in a gospel frame; chromatic runs, then sudden drops to a spoken chest tone."
+    "blurb": "Jazz harmonic sense in a gospel frame; chromatic runs, then sudden drops to a spoken chest tone.",
+    "technique": "Harmony drives the line. Runs move chromatically through altered notes rather than sliding up a pentatonic shape, and phrases get displaced across the bar so the resolution arrives late. A climb toward A5 in full voice can drop without warning into a near-spoken chest tone at conversational volume. Copying the runs note-for-note misses it: the ear has to hear the passing chords first, or the chromatics just sound like mistakes."
   },
   {
     "name": "Tasha Cobbs Leonard",
@@ -138,7 +145,8 @@
     "signatureSong": "Break Every Chain",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark, thick contralto that stays in chest; builds by adding weight rather than climbing higher."
+    "blurb": "Dark, thick contralto that stays in chest; builds by adding weight rather than climbing higher.",
+    "technique": "Weight, not height, is how the build happens. The voice sits dark and thick through the F5 belt, vowels kept round and back, and intensity grows by adding body and repeating a phrase rather than climbing toward the A5. Onsets are firm without being harsh, and vibrato arrives late on the sustains. The trap is shouting; add depth and breath pressure gradually and keep the larynx settled as the volume rises."
   },
   {
     "name": "Lauren Daigle",
@@ -156,7 +164,8 @@
     "signatureSong": "You Say",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Husky, grainy mezzo pitched low in her range; heavy rasp on consonants, slow wide vibrato."
+    "blurb": "Husky, grainy mezzo pitched low in her range; heavy rasp on consonants, slow wide vibrato.",
+    "technique": "A husky, slightly pressed tone with grain riding the consonants, and melodies written low enough that whole verses sit just above the E3 floor before anything lifts. Vibrato is slow and wide and shows up at the end of a held note rather than the beginning. Phrasing drags behind the beat, words chewed rather than pronounced. That grain is a byproduct of the low, relaxed placement, not something to squeeze out on purpose."
   },
   {
     "name": "Sandi Patty",
@@ -174,7 +183,8 @@
     "signatureSong": "We Shall Behold Him",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Classically schooled soprano with a bright forward top and clean sustained highs at full volume."
+    "blurb": "Classically schooled soprano with a bright forward top and clean sustained highs at full volume.",
+    "technique": "Everything points to classical placement: steady breath support underneath, a bright forward ring, and sustained notes near C6 taken at full volume without thinning. Vibrato is present from the moment the tone starts, even and narrow. Legato lines get shaped as one long arc instead of word by word. The support has to come first, since high sustains expose breath that was snatched rather than set up."
   },
   {
     "name": "Amy Grant",
@@ -192,7 +202,8 @@
     "signatureSong": "Baby Baby",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Conversational mezzo close to speech range; slight rasp, little ornament, breath-driven phrasing."
+    "blurb": "Conversational mezzo close to speech range; slight rasp, little ornament, breath-driven phrasing.",
+    "technique": "Speech is the reference point. Most lines sit between F3 and the C5 belt, close to talking pitch, with a light dryness in the tone and a trace of rasp underneath. Ornament is nearly absent, and phrases are shaped by where the breath falls rather than by riffs. The E5 top comes lightly. Over-singing flattens the whole effect, because the intimacy depends on staying at conversational volume."
   },
   {
     "name": "Michael W. Smith",
@@ -210,7 +221,8 @@
     "signatureSong": "Friends",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin, bright tenor built for high keys; reaches for head voice instead of pushing chest upward."
+    "blurb": "Thin, bright tenor built for high keys; reaches for head voice instead of pushing chest upward.",
+    "technique": "The tone stays forward and the chest weight stays deliberately light, which is what keeps it bright and slender rather than big. Melodies sit high for a tenor, and rather than dragging chest past the A4 belt the sound shifts into head voice and holds that slimmer shape up to D5. Onsets are clean, vibrato modest. All of it depends on releasing weight as the line rises, which feels smaller from the inside than it sounds from out front."
   },
   {
     "name": "Chris Tomlin",
@@ -228,7 +240,8 @@
     "signatureSong": "How Great Is Our God",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light, airy tenor with modest chest weight; writes in keys that park him in his upper mix."
+    "blurb": "Light, airy tenor with modest chest weight; writes in keys that park him in his upper mix.",
+    "technique": "Airy and unforced, with modest chest weight and a slightly breathy edge on the low notes. Keys are chosen to park the voice in upper mix around B4, which is why the melodies feel high but rarely strained. Rhythm stays square, sung close to the beat so a room can follow it on first hearing. Adding power is the mistake; the thinness is exactly what makes these lines singable by a crowd."
   },
   {
     "name": "Fred Hammond",
@@ -246,7 +259,8 @@
     "signatureSong": "No Weapon",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Deep bass-baritone with thick low resonance; half-speaks phrases over funk and quartet grooves."
+    "blurb": "Deep bass-baritone with thick low resonance; half-speaks phrases over funk and quartet grooves.",
+    "technique": "Bottom-heavy and unhurried. The E2 region gives a thick chest resonance that stays un-pushed, with lines half-spoken over the groove and the voice only opening toward the G4 belt for a payoff. Attack is relaxed and often just behind the beat, with quartet-style bends on the ends of words. Imitators reach for volume, but the character comes from resonance and rhythmic patience instead of force."
   },
   {
     "name": "Donnie McClurkin",
@@ -263,7 +277,8 @@
     "signatureSong": "We Fall Down",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Reedy, high-placed tenor with quick access to falsetto and a narrow, fluttering vibrato."
+    "blurb": "Reedy, high-placed tenor with quick access to falsetto and a narrow, fluttering vibrato.",
+    "technique": "Reedy and high-placed, with a narrow fluttering vibrato sitting right on top of the tone. Falsetto is a step away at any moment, so lines slip in and out of it mid-phrase without ceremony. Long notes get thinner as they go rather than louder. Full voice tops out around the A4 belt, and the E5 belongs to a lighter mechanism. Copying this with a heavy chest sound loses the reediness completely."
   },
   {
     "name": "Mitch Grassi",
@@ -280,7 +295,8 @@
     "signatureSong": "Hallelujah",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Countertenor who lives above the staff: light chest, agile head voice, whistle notes on top."
+    "blurb": "Countertenor who lives above the staff: light chest, agile head voice, whistle notes on top.",
+    "technique": "Living above the staff changes the whole setup. Chest stays light, the head voice is agile enough to run sixteenths cleanly, and whistle notes get used as accents near the very top rather than as sustained material. R&B ornament arrives small and bright: quick riffs, bent thirds, tight melisma. None of that altitude comes from pressure underneath. It comes from taking weight off, which is the opposite of what pushing high feels like."
   },
   {
     "name": "Scott Hoying",
@@ -297,7 +313,8 @@
     "signatureSong": "Sing",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Baritone bottom with a bright high mix; percussive consonants anchor a cappella arrangements."
+    "blurb": "Baritone bottom with a bright high mix; percussive consonants anchor a cappella arrangements.",
+    "technique": "A baritone bottom that anchors a stack, then a bright forward mix up to the C5 belt whenever the lead line comes around. Consonants get cut percussively so rhythm reads in an unaccompanied texture, and vowels are matched tightly to whoever sits next in the harmony. Vibrato stays controlled, mostly held back until the end of a phrase. Sing it with a wide vibrato and the chord blurs."
   },
   {
     "name": "Avi Kaplan",
@@ -315,7 +332,8 @@
     "signatureSong": "Little Drummer Boy",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bass who drops into fry and subharmonics for pedal tones well under the written staff."
+    "blurb": "Bass who drops into fry and subharmonics for pedal tones well under the written staff.",
+    "technique": "Below the staff is where the character is. Pedal tones near the bottom come from vocal fry and subharmonic reinforcement rather than ordinary phonation, which is why they read like an octave doubler under the chord. Higher up the tone turns soft and folk-leaning, with light breath and simple ornament toward the E4 belt. Pressing down to reach those low notes is the classic error; they need a loose setup and very little air."
   },
   {
     "name": "Kirstin Maldonado",
@@ -333,6 +351,7 @@
     "signatureSong": "Can't Sleep Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Theatre-trained mezzo with a firm chest belt, tight vowel shapes and controlled vibrato."
+    "blurb": "Theatre-trained mezzo with a firm chest belt, tight vowel shapes and controlled vibrato.",
+    "technique": "The vowels are the giveaway: narrow, forward, and identical take to take, sitting under a chest-mix belt that keeps its brightness through G5. Onsets are precise rather than scooped, vibrato gets switched on deliberately at the ends of sustains, and diction stays crisp at speed. Above the belt the sound thins into a light head voice. Loosen the vowel shape and the belt immediately loses focus."
   }
 ]

@@ -124,6 +124,19 @@ for (const file of files) {
       problems.push(`${where}: blurb missing or too long — skipped`);
       continue;
     }
+    // Optional editorial paragraph. Absent is fine — the page just omits the
+    // section — so a half-written batch degrades instead of dropping singers.
+    let technique = r.technique == null ? null : String(r.technique).trim();
+    if (technique !== null) {
+      const words = technique.split(/\s+/).length;
+      if (words < 25 || words > 130) {
+        problems.push(`${where}: technique is ${words} words (want 25-130) — dropped`);
+        technique = null;
+      } else if (/\b(reportedly|allegedly|rumou?red|it is said|some say)\b/i.test(technique)) {
+        problems.push(`${where}: technique hedges an unverifiable claim — dropped`);
+        technique = null;
+      }
+    }
     const slug = slugify(r.name);
     if (seen.has(slug)) continue; // first occurrence wins
     seen.set(slug, {
@@ -141,6 +154,7 @@ for (const file of files) {
       lowSource: r.lowSource ? String(r.lowSource).trim() : null,
       highSource: r.highSource ? String(r.highSource).trim() : null,
       blurb,
+      technique,
     });
   }
 }
@@ -183,6 +197,8 @@ export interface Singer {
   lowSource: string | null;
   highSource: string | null;
   blurb: string;
+  /** Editorial paragraph on how the voice actually works. Null when unwritten. */
+  technique: string | null;
 }
 
 export const SINGERS: Singer[] = `;

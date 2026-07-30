@@ -16,7 +16,8 @@
     "signatureSong": "Respect",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gospel-schooled mezzo: hard chest register, melismatic runs, sudden shifts from growl to soft head voice."
+    "blurb": "Gospel-schooled mezzo: hard chest register, melismatic runs, sudden shifts from growl to soft head voice.",
+    "technique": "Listen for the way weight shifts: chest tone driven hard up to a belt around G5, then a sudden drop into a soft, breathy head voice with almost no seam. Runs are gospel-shaped, pentatonic, aimed at a target note rather than sprinkled for decoration. Vibrato arrives late and narrow at the end of a sustain. Students copy the runs and miss the point, which is that the phrasing sits behind the beat and the consonants stay crisp."
   },
   {
     "name": "Chaka Khan",
@@ -35,7 +36,8 @@
     "signatureSong": "Ain't Nobody",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gritty low register into a bright, cutting upper mix; improvises like a horn player over the groove."
+    "blurb": "Gritty low register into a bright, cutting upper mix; improvises like a horn player over the groove.",
+    "technique": "Grit sits on the onset rather than running through the whole note: a short scratch at the front, then clean tone behind it. Up high the sound thins into a bright, forward mix that cuts through a dense band instead of adding weight to it. Phrases start off the downbeat and land in the drummer's gaps, often trading a written line for a rhythmic scat figure. Pushing volume for that brightness is the usual error; it comes from placement and a fast, narrow vibrato."
   },
   {
     "name": "Patti LaBelle",
@@ -54,7 +56,8 @@
     "signatureSong": "Lady Marmalade",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Church-powered soprano with a piercing belt, abrupt octave leaps, and long sustained upper notes."
+    "blurb": "Church-powered soprano with a piercing belt, abrupt octave leaps, and long sustained upper notes.",
+    "technique": "Ring carries further than volume here. The belt up toward Bb5 keeps a narrow, bright core even as the vowel spreads wide open, and shouting toward it only sends the pitch sharp and locks the throat. Octave leaps land clean, with the breath set before the jump rather than scooped into from below. Sustains run long, and the vibrato widens the longer the note is held."
   },
   {
     "name": "Gladys Knight",
@@ -72,7 +75,8 @@
     "signatureSong": "Midnight Train to Georgia",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm, slightly husky mezzo that stays in chest voice and leans on phrasing over altitude."
+    "blurb": "Warm, slightly husky mezzo that stays in chest voice and leans on phrasing over altitude.",
+    "technique": "Nothing here is about altitude. The whole story happens between E3 and D5, in chest voice, at close to speaking weight. Notes are entered gently and often a shade behind where the band puts them, then pulled back into time by the end of the line. Huskiness lives in the tone rather than in force. Singers hear soul and start adding runs, when the effect actually comes from restraint and from finishing every consonant."
   },
   {
     "name": "Anita Baker",
@@ -91,7 +95,8 @@
     "signatureSong": "Sweet Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Velvety contralto with jazz phrasing; sits low, scoops into notes, seldom pushes volume."
+    "blurb": "Velvety contralto with jazz phrasing; sits low, scoops into notes, seldom pushes volume.",
+    "technique": "Low and quiet, fully supported, with the microphone doing the amplifying instead of the singer. The tone stays dark and rounded at close to conversational volume. Notes get approached from underneath on a slow scoop, and the vibrato that follows is wide and unhurried. Higher up the sound lightens into an airy head tone rather than belting. Power is not the difficulty at all; holding that dark colour quietly is, without sliding into breathiness or settling under the pitch."
   },
   {
     "name": "Minnie Riperton",
@@ -110,7 +115,8 @@
     "signatureSong": "Lovin' You",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light, agile soprano who moves up into clean whistle tones with no audible register break."
+    "blurb": "Light, agile soprano who moves up into clean whistle tones with no audible register break.",
+    "technique": "Register changes never announce themselves, because the weight never increases on the way up: chest thins into head voice, head voice narrows into whistle, and the vowel keeps its shape through both. Whistle notes are placed rather than screeched, quiet and pitch-centred with barely any vibrato on them. Build this from the top down out of a soft head voice. Forcing chest weight upward is what keeps the whistle from engaging at all."
   },
   {
     "name": "Etta James",
@@ -129,7 +135,8 @@
     "signatureSong": "At Last",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Blues-weighted contralto: thick chest tone, growled note entries, wide and slow vibrato."
+    "blurb": "Blues-weighted contralto: thick chest tone, growled note entries, wide and slow vibrato.",
+    "technique": "The growl lands on the attack and then resolves into thick, steady chest tone a beat later. Growl the whole way through and the effect disappears, because it only reads against clean tone underneath it. Vibrato is slow and wide and arrives late, once the note has been held straight for a while, and the melody moves by blues bends far more than by runs. Notes swell into their full size instead of starting there."
   },
   {
     "name": "Toni Braxton",
@@ -148,7 +155,8 @@
     "signatureSong": "Un-Break My Heart",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Unusually low contralto; dark, breathy bottom end and tight vibrato even when pushing."
+    "blurb": "Unusually low contralto; dark, breathy bottom end and tight vibrato even when pushing.",
+    "technique": "Most of the interest lives in the bottom third of the range, down toward Bb2, where the tone goes dark and slightly breathy without losing its centre. Onsets are aspirate, air first and pitch a moment later, and the vibrato that follows stays tight and fast even under pressure. Lines build by adding intensity rather than pitch. Higher-voiced singers attempting this jam the larynx down to fake depth and end up muffled; the colour comes from a relaxed, low speaking placement."
   },
   {
     "name": "Mary J. Blige",
@@ -167,7 +175,8 @@
     "signatureSong": "Family Affair",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Raw chest-dominant mezzo with a nasal edge and clipped, conversational phrasing."
+    "blurb": "Raw chest-dominant mezzo with a nasal edge and clipped, conversational phrasing.",
+    "technique": "Everything is placed forward and slightly nasal, which is what gives the sound its edge over a hip-hop drum track. Phrases get clipped short and delivered in chest voice, nearer to talking than to singing, with ad-libs crowding in behind the main line. Small breaks and catches are left in rather than smoothed away. Clean the tone up and the character goes with it; the work is keeping that raw edge while the pitch centre stays exact."
   },
   {
     "name": "Lauryn Hill",
@@ -186,7 +195,8 @@
     "signatureSong": "Doo Wop (That Thing)",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Forward, nasal placement and rap-adjacent timing; belts inside a narrow, tightly held band."
+    "blurb": "Forward, nasal placement and rap-adjacent timing; belts inside a narrow, tightly held band.",
+    "technique": "Timing is the instrument. Sung lines get the same rhythmic precision as spoken ones, syllables landing on subdivisions instead of on beats, and the placement stays high, narrow and a little nasal. The band pushed hardest is a narrow one, and approaching A5 the tone thins rather than opening out. Widen the vowels into legato and the character evaporates, so the vowels stay short and the consonants drive the groove."
   },
   {
     "name": "Erykah Badu",
@@ -205,7 +215,8 @@
     "signatureSong": "On & On",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin, nasal jazz-inflected tone with bent pitches and phrasing dragged behind the beat."
+    "blurb": "Thin, nasal jazz-inflected tone with bent pitches and phrasing dragged behind the beat.",
+    "technique": "Pitch here is elastic on purpose. Notes bend up into place, slide off the end, and sometimes settle deliberately between the two nearest pitches, while the tone stays thin and nasal, sung close to the microphone with very little vibrato on it. Phrases drag behind the beat and catch up only at the cadence. None of that is the hard part. The control is, because bending without steady air underneath it just reads as flat."
   },
   {
     "name": "Jill Scott",
@@ -224,7 +235,8 @@
     "signatureSong": "A Long Walk",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Round, full-bodied mezzo that slides between spoken delivery and open, jazz-toned sustains."
+    "blurb": "Round, full-bodied mezzo that slides between spoken delivery and open, jazz-toned sustains.",
+    "technique": "Two modes alternate inside a single verse: near-spoken delivery half in time with the band, then an open, round sustain with real jazz tone on it. Vowels stay wide and the placement is warm instead of nasal. Ornaments tend to be short scat figures rather than long melismatic runs. Crossing between the modes is what trips people up, since the sung notes need full breath support the instant they arrive, so the spoken sections have to be supported too."
   },
   {
     "name": "Brandy",
@@ -242,7 +254,8 @@
     "signatureSong": "The Boy Is Mine",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Husky mid-weight mezzo built for stacked harmony; fast, light runs kept low in the mix."
+    "blurb": "Husky mid-weight mezzo built for stacked harmony; fast, light runs kept low in the mix.",
+    "technique": "Breathy mid-weight tone, and yet the runs come out fully articulated, every note separated instead of smeared into a slide. They are metered rather than free, which is why rushing them is where most attempts fall apart. The belt around E5 stays in mix and never opens into a shout, and riffs sit tucked underneath the lead line, dropped into the gaps between phrases so they read as arrangement rather than display."
   },
   {
     "name": "Jennifer Hudson",
@@ -261,7 +274,8 @@
     "signatureSong": "And I Am Telling You I'm Not Going",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Heavy chest weight carried into the fifth octave; belts stay full instead of thinning to falsetto."
+    "blurb": "Heavy chest weight carried into the fifth octave; belts stay full instead of thinning to falsetto.",
+    "technique": "Chest weight is carried unusually high, so a belt near A5 keeps the thickness it had an octave lower instead of thinning into mix. Vowels open wide at the top, and the note is held straight before a slow vibrato is allowed in at the end. Attacks land firm and on pitch with little scooping. Attempting this without the breath pressure behind it is how singers strain, since the size comes from support and space rather than from squeezing."
   },
   {
     "name": "Jazmine Sullivan",
@@ -279,7 +293,8 @@
     "signatureSong": "Bust Your Windows",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Flips between growled chest notes and airy, agile upper runs; rasp used as an effect, not a default."
+    "blurb": "Flips between growled chest notes and airy, agile upper runs; rasp used as an effect, not a default.",
+    "technique": "A growled, gritty chest note gets answered a beat later by an airy, fast run well above it, sometimes inside a single phrase. Rasp switches on for one word and off again, which tells you it is being produced deliberately rather than simply lived in. Belts around G#5 stay connected before releasing into breath. Leave the rasp on continuously and it stops registering altogether, since the contrast against clean tone is the entire effect."
   },
   {
     "name": "Amy Winehouse",
@@ -298,6 +313,7 @@
     "signatureSong": "Rehab",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Contralto with jazz-era diction, heavy vibrato, and a cracked, smoky bottom register."
+    "blurb": "Contralto with jazz-era diction, heavy vibrato, and a cracked, smoky bottom register.",
+    "technique": "Consonants come clipped and the vowels sit narrower than modern pop asks for. That, plus a low and slightly smoky placement near C3, is most of the character, and copying the accent without the breath support underneath it gets nowhere near the sound. Notes are slid into and slid out of. A wide, slow vibrato lands on nearly every sustain, and the timing lags the beat by a fraction all the way through."
   }
 ]

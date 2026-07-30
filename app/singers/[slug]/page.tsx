@@ -203,6 +203,27 @@ export default async function SingerPage({
           </div>
         </Card>
 
+        {/* How the voice works — the part a singer came for, and the only
+            section here that is written rather than derived. */}
+        {s.technique && (
+          <Card>
+            <h2 className="text-xl">
+              How {s.name} uses that range
+            </h2>
+            <p className="mt-3 max-w-3xl text-mut">{s.technique}</p>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <LinkButton href="/warmups" variant="outline" size="sm">
+                Warm up for this
+              </LinkButton>
+              <span className="text-xs text-dim">
+                A description of the sound, not a technique to copy wholesale —
+                the top of anyone&rsquo;s cited range is the least imitable part
+                of it.
+              </span>
+            </div>
+          </Card>
+        )}
+
         {/* The answer, in prose a search snippet can lift */}
         <Card>
           <h2 className="text-xl">

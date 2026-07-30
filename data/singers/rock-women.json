@@ -15,7 +15,8 @@
     "signatureSong": "Barracuda",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Operatic power belt with a hard edge; holds high chest notes without letting them thin out."
+    "blurb": "Operatic power belt with a hard edge; holds high chest notes without letting them thin out.",
+    "technique": "Chest weight rides up past the top of the staff, with a hard, precise onset and a bright ring that cuts over loud guitars. The vibrato is even and moderately fast, starting almost the instant the note does. Above the A5 belt the tone thins into a clean upper register instead of a shout. Copy the volume without building the breath support underneath it and the sound turns throaty by the second chorus."
   },
   {
     "name": "Janis Joplin",
@@ -34,7 +35,8 @@
     "signatureSong": "Piece of My Heart",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rasp-forward blues phrasing, heavy distortion and grit, pushed high in raw chest voice."
+    "blurb": "Rasp-forward blues phrasing, heavy distortion and grit, pushed high in raw chest voice.",
+    "technique": "Grit is the instrument. Rasp sits on top of the vowel, notes get scooped into from underneath, and phrase ends fray out into a cry. Blues bends and repeated shouted syllables do the ornamenting rather than clean melisma. Full weight stops around F5; higher notes arrive as raw, unpolished pushes. The usual mistake is grinding the throat to fake the rasp instead of keeping the vowel open and letting airflow rough up the tone."
   },
   {
     "name": "Pat Benatar",
@@ -53,7 +55,8 @@
     "signatureSong": "Love Is a Battlefield",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Trained placement applied to hard rock; clean cutting mid belt with a fast, narrow vibrato."
+    "blurb": "Trained placement applied to hard rock; clean cutting mid belt with a fast, narrow vibrato.",
+    "technique": "Every onset lands exactly on pitch with no scoop, and the vibrato is narrow and quick, closer to a classical rate than a rock shout. Placement stays forward, which is how a belt around G5 cuts through a wall of guitars without extra volume. Above that the tone lightens rather than thickens. The pitch precision is the whole effect; rasp layered over it just blurs the line."
   },
   {
     "name": "Stevie Nicks",
@@ -72,7 +75,8 @@
     "signatureSong": "Dreams",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Husky breath-driven alto in a narrow working band; wide vibrato, almost entirely chest voice."
+    "blurb": "Husky breath-driven alto in a narrow working band; wide vibrato, almost entirely chest voice.",
+    "technique": "Breath is part of the tone, not a flaw in it: air rides through every note and creates the huskiness. Onsets are soft, consonants get swallowed, and phrases lean slightly behind the beat. Vibrato is wide and slow, and it usually arrives late in a sustain. Everything sits in chest voice inside a narrow band, so colour has to come from texture. The instinct is to tighten the throat to manufacture that texture, when the sound depends on staying loose."
   },
   {
     "name": "Grace Slick",
@@ -89,7 +93,8 @@
     "signatureSong": "White Rabbit",
     "lowSource": null,
     "highSource": "Somebody to Love",
-    "blurb": "Flat declamatory chest tone with little vibrato; builds by adding volume, not by climbing."
+    "blurb": "Flat declamatory chest tone with little vibrato; builds by adding volume, not by climbing.",
+    "technique": "Notes get stated, not sung around. The tone stays flat and straight, vibrato is minimal, and intensity builds by adding volume and hardening the vowel while the pitch stays put. Onsets are firm and unornamented, and lines land squarely on the beat with an almost spoken conviction. A student's instinct is to add vibrato and slides, which immediately softens the menace this approach depends on."
   },
   {
     "name": "Joan Jett",
@@ -108,7 +113,8 @@
     "signatureSong": "I Love Rock 'n' Roll",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Speech-level snarl in a narrow chest band; drive comes from consonants and timing, not pitch."
+    "blurb": "Speech-level snarl in a narrow chest band; drive comes from consonants and timing, not pitch.",
+    "technique": "Drive comes from the consonants. She sings at speech level in a narrow chest band, snarling the front of each word and clipping the ends, so rhythm rather than pitch carries the energy. Vibrato is nearly absent and the vowel stays bright and tight. Trying to make it pretty, or adding runs, kills the effect — it depends on staying blunt and dead on the groove."
   },
   {
     "name": "Debbie Harry",
@@ -127,7 +133,8 @@
     "signatureSong": "Heart of Glass",
     "lowSource": null,
     "highSource": "Heart of Glass",
-    "blurb": "Cool deadpan delivery that flips to a thin bright top; light onsets, very little vibrato."
+    "blurb": "Cool deadpan delivery that flips to a thin bright top; light onsets, very little vibrato.",
+    "technique": "The detachment is the performance: light onsets, almost no vibrato, short clipped vowels, and a delivery that sits exactly on the beat without pushing. When the line rises the tone thins into a bright, narrow upper register instead of belting, which keeps the deadpan intact. Over-emote, or add weight up top, and the flat unbothered quality that is the actual style disappears."
   },
   {
     "name": "Lzzy Hale",
@@ -146,7 +153,8 @@
     "signatureSong": "I Miss the Misery",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thick chest-weighted belt with controlled rasp, plus screamed falsetto above the staff."
+    "blurb": "Thick chest-weighted belt with controlled rasp, plus screamed falsetto above the staff.",
+    "technique": "Two layers work at once: a thick, chest-weighted belt around G5 and a controlled rasp laid over it, added and removed at will. Down near G2 the tone goes speech-like and grounded. Past the belt the sound moves into a screamed upper register rather than more chest, and that gap up to C6 is where the style shows. Build the clean belt first; reaching for the rasp on day one usually means squeezing the throat to get it."
   },
   {
     "name": "Hayley Williams",
@@ -165,7 +173,8 @@
     "signatureSong": "Misery Business",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright forward mix that stays punchy at speed; climbs into a belt instead of a shout."
+    "blurb": "Bright forward mix that stays punchy at speed; climbs into a belt instead of a shout.",
+    "technique": "Speed is the hard part. The tone is bright and placed well forward, consonants are clipped, and phrases push slightly ahead of the beat while staying in tune at tempos where most singers flatten. She climbs into a belt around G5 and lightens above it rather than shouting. Vibrato is sparse and sustains mostly straight. Most people shout from the chest instead and are out of air by the second verse."
   },
   {
     "name": "Amy Lee",
@@ -184,7 +193,8 @@
     "signatureSong": "Bring Me to Life",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark rounded lower register joined to a classical-leaning head voice by a smooth mix."
+    "blurb": "Dark rounded lower register joined to a classical-leaning head voice by a smooth mix.",
+    "technique": "The registers are joined with no audible seam. A dark, rounded lower voice meets a classical-leaning head voice through a smooth mix, so climbing the range reads as one colour getting brighter rather than a gear change. Onsets are soft on quiet lines, and the vibrato is slow, even, and does not appear until well into a sustain. Pressing the larynx down to chase that darkness only makes the tone heavy instead of round."
   },
   {
     "name": "Floor Jansen",
@@ -203,7 +213,8 @@
     "signatureSong": "Élan",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Trades operatic head voice for full metal belt mid-phrase with no audible gear change."
+    "blurb": "Trades operatic head voice for full metal belt mid-phrase with no audible gear change.",
+    "technique": "Watch for the gear changes, because you will not hear them. Operatic head voice and a full belt up around A5 trade places inside a single phrase, and the extension above stays free rather than pressed. Vibrato is under conscious control and can be switched off for straight-toned lines. That belt without the support and breath management holding up the classical side collapses into a shout."
   },
   {
     "name": "Sharon den Adel",
@@ -221,7 +232,8 @@
     "signatureSong": "Ice Queen",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light airy soprano with straight-toned sustains; keeps weight out of the upper register."
+    "blurb": "Light airy soprano with straight-toned sustains; keeps weight out of the upper register.",
+    "technique": "Weight stays out of the top. Onsets are breathy, sustains are largely straight-toned with a narrow vibrato easing in near the end, and the upper register floats instead of pushing. Size comes from resonance and the space around the voice, not from chest weight carried upward. Mixing in more chest to make it bigger thickens the tone and loses the light, hovering quality the style is built on."
   },
   {
     "name": "Dolores O'Riordan",
@@ -239,7 +251,8 @@
     "signatureSong": "Zombie",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Keening Irish lilt with a deliberate yodel across the register break; nasal-forward, direct."
+    "blurb": "Keening Irish lilt with a deliberate yodel across the register break; nasal-forward, direct.",
+    "technique": "That flip across the register break is deliberate. Chest snaps up into a light, keening upper voice like a yodel, and it lands at the same point in the phrase every time. The tone is nasal-forward and direct, ornaments come as quick grace notes and turns, and sustains start straight before the vibrato widens in. Smooth that break away in the name of polish and the whole character goes with it."
   },
   {
     "name": "Gwen Stefani",
@@ -258,6 +271,7 @@
     "signatureSong": "Don't Speak",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright cartoon-clear tone with wide vibrato, parked in a punchy mid belt and rarely soft."
+    "blurb": "Bright cartoon-clear tone with wide vibrato, parked in a punchy mid belt and rarely soft.",
+    "technique": "Everything is aimed forward and bright. She scoops up into notes, holds a punchy mid-range with a wide and fairly slow vibrato, and rarely drops to anything soft; consonants get clipped short in the punk-derived phrasing. The top of the range comes in lighter rather than heavier. Pushing volume to match the attitude misses the point, because the cut is coming from placement."
   }
 ]

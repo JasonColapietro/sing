@@ -16,7 +16,8 @@
     "signatureSong": "Billie Jean",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light, percussive tenor; hiccups and breath grunts used as rhythm, plus a thin high falsetto."
+    "blurb": "Light, percussive tenor; hiccups and breath grunts used as rhythm, plus a thin high falsetto.",
+    "technique": "Listen for how much of the rhythm comes out of the mouth rather than the pitch: clipped consonants, inhaled grunts and hiccup syllables all land as percussion. Tone stays bright and forward, faintly nasal, with a narrow fast vibrato that arrives late on held notes. Above the Eb5 belt he thins into a light, reedy falsetto. Students copy the tics and forget the tics only work over dead-accurate time."
   },
   {
     "name": "George Michael",
@@ -34,7 +35,8 @@
     "signatureSong": "Careless Whisper",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm baritone with a smoky bottom; slides into a controlled, airy falsetto on hooks."
+    "blurb": "Warm baritone with a smoky bottom; slides into a controlled, airy falsetto on hooks.",
+    "technique": "Down at the bottom the tone is thick and smoky, with breath mixed into the onset so lines begin soft-edged instead of struck. Chest carries comfortably to about that C5 belt; everything higher is a deliberate lift into airy falsetto, which is where the A5 lives. Vibrato is slow and enters late, often only on the last beat of a phrase. Imitators drag chest weight above C5 and lose the smoke."
   },
   {
     "name": "Justin Timberlake",
@@ -52,7 +54,8 @@
     "signatureSong": "Cry Me a River",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light tenor living in falsetto and mix; rhythm-first phrasing with very little vibrato."
+    "blurb": "Light tenor living in falsetto and mix; rhythm-first phrasing with very little vibrato.",
+    "technique": "Syllables get chopped into sixteenths and placed just behind the beat, with consonants doing the groove work while the pitch content stays deliberately plain. Tone is thin and breathy, vibrato nearly absent, phrases holding a straight tone until they end. The B4 belt is modest for a range topping C6 because most of that height is head voice and falsetto rather than pushed chest. Cry Me a River shows the falsetto sitting inside the mix."
   },
   {
     "name": "Bruno Mars",
@@ -71,7 +74,8 @@
     "signatureSong": "Just the Way You Are",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright, forward tenor; snaps into a hard mix on choruses with clean falsetto stacked above."
+    "blurb": "Bright, forward tenor; snaps into a hard mix on choruses with clean falsetto stacked above.",
+    "technique": "Everything is placed forward and narrow, a bright almost twangy ring that lets the E5 belt keep its chest flavour without shouting. Attacks land firm and often glottal, the vibrato underneath quick and slightly wide, phrase ends decorated with short retro-soul turns instead of long runs. Above the belt, falsetto comes in clean and stacked. The usual mistake is adding volume rather than twang, which closes the throat by the second chorus."
   },
   {
     "name": "Ed Sheeran",
@@ -90,7 +94,8 @@
     "signatureSong": "Shape of You",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Speech-level tenor, breathy tone; leans on rhythmic delivery and light head voice up top."
+    "blurb": "Speech-level tenor, breathy tone; leans on rhythmic delivery and light head voice up top.",
+    "technique": "Think of speech pitched onto notes. Every entry is eased in rather than struck, soft and aspirate, vowels stay conversational, and volume barely changes across a verse. Rhythm carries the interest, with syllables crammed tight and rapped against the guitar. Above the B4 belt he lightens into head voice rather than driving. There is barely any vibrato, and often none at all. Push the tone out and the intimacy that makes the phrasing legible goes with it."
   },
   {
     "name": "Harry Styles",
@@ -108,7 +113,8 @@
     "signatureSong": "Sign of the Times",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Raspy baritone with a grainy upper mix; keeps the edge in the belt instead of smoothing it."
+    "blurb": "Raspy baritone with a grainy upper mix; keeps the edge in the belt instead of smoothing it.",
+    "technique": "A dry, grainy rasp sits on top of a baritone core and stays there through the C5 belt instead of being polished off, so the grit reads as the point rather than a by-product. Notes come in breathy before they engage, phrasing is unhurried and a touch behind the beat, and the vibrato stays loose and irregular. The F5 top arrives thin and strained by design. Faking that rasp with throat squeeze instead of airflow never survives a full set."
   },
   {
     "name": "Shawn Mendes",
@@ -126,7 +132,8 @@
     "signatureSong": "Stitches",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal tenor with a tight, compressed mix; rasp creeps in on sustained upper notes."
+    "blurb": "Nasal tenor with a tight, compressed mix; rasp creeps in on sustained upper notes.",
+    "technique": "Placement is high and nasal, with a compressed, narrow mix that keeps the B4 belt sounding tight rather than open. Notes start clean, the vibrato shallow and late, and rasp shows up only after a note has been held a while. Toward E5 the sound thins rather than opening out, and that nasal placement is the only thing keeping it audible at such a small size."
   },
   {
     "name": "The Weeknd",
@@ -145,7 +152,8 @@
     "signatureSong": "Blinding Lights",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light tenor with a floating falsetto and heavy melisma; keeps chest weight off the top."
+    "blurb": "Light tenor with a floating falsetto and heavy melisma; keeps chest weight off the top.",
+    "technique": "Chest engages to around Bb4 and stops there; everything above it floats in a soft, airy falsetto that reaches B5 without sounding pushed. The attack is always breathy, ornaments quick and constant, small three- and four-note turns closing almost every phrase. Vibrato runs fast and narrow, decoration rather than a way of sustaining. Belting those high lines is the common error, and it flattens the texture the whole style depends on."
   },
   {
     "name": "Charlie Puth",
@@ -163,7 +171,8 @@
     "signatureSong": "Attention",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Clean, pitch-exact tenor; frequent falsetto flips and tightly stacked self-harmony."
+    "blurb": "Clean, pitch-exact tenor; frequent falsetto flips and tightly stacked self-harmony.",
+    "technique": "Notes are hit dead centre with almost no scoop, and the tone stays clean with very little rasp, so intonation itself ends up being the signature. The A4 belt is modest, so the reach to C6 happens through an audible, deliberate flip into falsetto used as a hook in itself. Vibrato is light and even. Lines are often stacked in close self-harmony, so the melody alone can feel surprisingly thin."
   },
   {
     "name": "Elton John",
@@ -182,7 +191,8 @@
     "signatureSong": "Rocket Man",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Full-throated tenor early on; after 1987 throat surgery the top went and the tone thickened."
+    "blurb": "Full-throated tenor early on; after 1987 throat surgery the top went and the tone thickened.",
+    "technique": "Vowels get darkened and reshaped constantly, a broad rounded diction that turns ordinary syllables into something rhythmically odd but singable. Tone is full-throated and chesty up to the Bb4 belt, carried by a wide vibrato that starts early. Phrasing sits tight against the piano, pushing and pulling inside the bar. Higher than the belt the sound thins toward head voice near F5. Imitate the vowels alone and you miss that the vibrato is doing half the work."
   },
   {
     "name": "Billy Joel",
@@ -201,7 +211,8 @@
     "signatureSong": "Piano Man",
     "lowSource": null,
     "highSource": "An Innocent Man",
-    "blurb": "Nasal tenor with hard consonants; belts to the ceiling of chest, then flips to thin falsetto."
+    "blurb": "Nasal tenor with hard consonants; belts to the ceiling of chest, then flips to thin falsetto.",
+    "technique": "Hard consonants and a nasal, forward placement give the lines their bite, and onsets are struck rather than eased into. Chest runs right to its ceiling around Bb4 and stays there, bright and tense, before flipping into a thin falsetto for anything above. Vibrato is quick and slightly uneven. Phrasing follows conversational stress, so accents rarely land where the meter would suggest."
   },
   {
     "name": "Rick Astley",
@@ -219,7 +230,8 @@
     "signatureSong": "Never Gonna Give You Up",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark, resonant baritone with steady vibrato; the tone reads far older than the records."
+    "blurb": "Dark, resonant baritone with steady vibrato; the tone reads far older than the records.",
+    "technique": "What catches people out is the weight: a dark, low-larynx baritone with full chest tone, and a wide, even vibrato running through nearly every sustained note. Lines begin firm and legato with almost no breath in them, and the D5 top stays connected instead of flipping. Nothing is rasped or scooped, so that vibrato carries most of the interpretive work by itself."
   },
   {
     "name": "Adam Levine",
@@ -237,7 +249,8 @@
     "signatureSong": "She Will Be Loved",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin tenor built on falsetto and a nasal mix; adds compressed rasp rather than volume."
+    "blurb": "Thin tenor built on falsetto and a nasal mix; adds compressed rasp rather than volume.",
+    "technique": "Most of the sound lives above the A4 belt, in a thin nasal mix and a wiry falsetto that stretches to C6. Loudness is not the tool; compression and a thin edge of rasp are. Phrases begin breathy, the vibrato quick and narrow, and phrase ends often lift into falsetto mid-word. Pushing chest to chase the high notes is the wrong instinct here, since the placement needs to get narrower rather than bigger."
   },
   {
     "name": "Jason Mraz",
@@ -256,7 +269,8 @@
     "signatureSong": "I'm Yours",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Loose, jazz-leaning tenor; scat phrasing and quick trades between mix and light falsetto."
+    "blurb": "Loose, jazz-leaning tenor; scat phrasing and quick trades between mix and light falsetto.",
+    "technique": "Syllables tumble out in loose, jazz-inflected bursts, scatted between sung lines and rarely landing squarely on the beat, and that phrasing carries far more of the personality than the timbre does. The tone itself is light and slightly nasal, entries soft, and the climb upward is handled by trading into a small falsetto instead of belting, which is why the top of the range sits well above any comfortable chest note. What vibrato there is comes fast and sparingly."
   },
   {
     "name": "Frankie Valli",
@@ -274,7 +288,8 @@
     "signatureSong": "Can't Take My Eyes Off You",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Plain mid-range traded for a hard, ringing falsetto that carries the whole lead line."
+    "blurb": "Plain mid-range traded for a hard, ringing falsetto that carries the whole lead line.",
+    "technique": "Something unusual happens at the register break. The plain, unremarkable chest voice tops out around F4, and the lead line simply moves into a hard, ringing falsetto that carries the rest of the way up. That falsetto is edgy and pressed rather than airy, with a fast tight vibrato, and it cuts straight through the arrangement. Students try to belt those notes in chest and either strain or lose the timbre entirely."
   },
   {
     "name": "Barry Gibb",
@@ -292,7 +307,8 @@
     "signatureSong": "Stayin' Alive",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Natural voice sits low and reedy; the disco records ride an insistent, vibrato-heavy falsetto."
+    "blurb": "Natural voice sits low and reedy; the disco records ride an insistent, vibrato-heavy falsetto.",
+    "technique": "Two voices are really in play. The natural one sits low and reedy with a conversational delivery; the other is a bright falsetto held high above the G4 belt and driven with an insistent, wide vibrato on nearly every note. Onsets in that falsetto are firm, not breathy, and the rhythm lands right on top of the beat. Stayin' Alive is the clearest example of the falsetto carrying an entire lead line."
   },
   {
     "name": "Justin Bieber",
@@ -310,7 +326,8 @@
     "signatureSong": "Sorry",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Breathy tenor with a light mix; moved from a boyish head voice to a closer, quieter delivery."
+    "blurb": "Breathy tenor with a light mix; moved from a boyish head voice to a closer, quieter delivery.",
+    "technique": "The microphone does the amplifying here, which lets the voice stay breathy and half-spoken, engaging into a light mix around the A4 belt. Runs are small and rhythmic, tucked between words rather than displayed. Lines toward Bb5 go into head voice with the weight taken off. Project the whole thing loudly and the conversational feel the phrasing is built on goes with it."
   },
   {
     "name": "Morten Harket",
@@ -329,6 +346,7 @@
     "signatureSong": "Take On Me",
     "lowSource": null,
     "highSource": "Take On Me",
-    "blurb": "Bright tenor that climbs into a ringing head voice; clean onsets, no rasp anywhere."
+    "blurb": "Bright tenor that climbs into a ringing head voice; clean onsets, no rasp anywhere.",
+    "technique": "Everything about the sound is clean: precise entries with no scoop and no rasp anywhere, vowels kept tall and bright, vibrato even when it appears at all. Large interval leaps happen without an audible gear change, chest lifting into a ringing head voice that holds its brightness up to E5. Take On Me shows that head-voice top plainly. Grabbing at the leaps instead of placing them lands you under pitch."
   }
 ]

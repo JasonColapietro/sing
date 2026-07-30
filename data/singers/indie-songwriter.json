@@ -16,7 +16,8 @@
     "signatureSong": "Like a Rolling Stone",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal, talk-sung phrasing; pitch bends and rhythmic pushback carry more than sustained tone."
+    "blurb": "Nasal, talk-sung phrasing; pitch bends and rhythmic pushback carry more than sustained tone.",
+    "technique": "Hear how much of the sound is placement rather than tone: the resonance rides high and forward in the nose, vowels stay narrow, and there is almost no vibrato to lean on. Consonants do the work, and notes are approached from below or slid off at the end of a line. Words crowd ahead of the beat, then hang back. Students copy the nasal color and miss the real skill, which is the rhythmic pushback of the phrasing on something like Like a Rolling Stone."
   },
   {
     "name": "Joni Mitchell",
@@ -35,7 +36,8 @@
     "signatureSong": "Both Sides Now",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Early records float in light head voice with wide leaps; her later voice settled lower and huskier."
+    "blurb": "Early records float in light head voice with wide leaps; her later voice settled lower and huskier.",
+    "technique": "Everything sits in a light, unpressed head voice, with the top of the range reached by releasing weight rather than adding it. Leaps of an octave or more land dead center with no scoop, and the tone stays mostly straight, vibrato appearing only as a phrase settles. Later work lives lower, huskier, and closer to speech. Volume never climbs with the pitch: up toward C6 the sound thins instead of thickening, and that thinness is what keeps the intervals accurate."
   },
   {
     "name": "Paul Simon",
@@ -54,7 +56,8 @@
     "signatureSong": "The Sound of Silence",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light, even tenor that stays conversational and slips into thin falsetto rather than pushing chest."
+    "blurb": "Light, even tenor that stays conversational and slips into thin falsetto rather than pushing chest.",
+    "technique": "Conversational is the operative word. Onsets are soft and breath-led, the volume barely changes across a verse, and diction stays crisp enough that every consonant reads. Around the upper limit he thins out and releases into a light falsetto instead of driving chest weight up. Vibrato is narrow and arrives late, if at all. Singers imitating this tend to add power at exactly the point where he takes it away, which flattens the intimacy."
   },
   {
     "name": "Leonard Cohen",
@@ -72,7 +75,8 @@
     "signatureSong": "Hallelujah",
     "lowSource": "You Want It Darker",
     "highSource": null,
-    "blurb": "Speech-level bass-baritone, gravelly and unhurried, dropping to near-spoken low notes late in life."
+    "blurb": "Speech-level bass-baritone, gravelly and unhurried, dropping to near-spoken low notes late in life.",
+    "technique": "Think speech first, pitch second. The tone is dry, gravelly, and nearly free of vibrato, sustained by steady air rather than resonance, and phrases land behind the accompaniment with unhurried timing. Down near the bottom of the range the sound is more spoken than sung, with the microphone carrying what volume cannot. Nothing is pressed downward to find that depth; the low notes arrive by relaxing into speech, and they stay quiet once they get there."
   },
   {
     "name": "Joan Baez",
@@ -90,7 +94,8 @@
     "signatureSong": "Diamonds & Rust",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright soprano with a fast, narrow vibrato and clean vowels; little rasp and almost no chest push."
+    "blurb": "Bright soprano with a fast, narrow vibrato and clean vowels; little rasp and almost no chest push.",
+    "technique": "The vibrato is the signature: fast, narrow, and present almost from the instant a note begins, rather than blooming at the end. Vowels stay bright and unmodified, onsets are clean with no aspirate breath, and the line moves in smooth legato with small ornamental turns at cadences. Rasp is absent, and chest weight never climbs into the upper range. Speed is what keeps that vibrato sounding folk rather than operatic; widen it and slow it down and the character changes entirely."
   },
   {
     "name": "Neil Young",
@@ -109,7 +114,8 @@
     "signatureSong": "Heart of Gold",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin, nasal high tenor with heavy vibrato; sits near the top of his range for most of a song."
+    "blurb": "Thin, nasal high tenor with heavy vibrato; sits near the top of his range for most of a song.",
+    "technique": "Most of a song lives in a narrow band near the top of the range, which is why the sound reads as thin and nasal. The larynx stays light, the tone never thickens, and a fast, breath-driven vibrato wobbles through sustained notes. Attacks are gentle and slightly under pitch before settling. The fragility is structural rather than incidental: add chest weight or volume anywhere in that band and the reedy quality the whole style rests on disappears."
   },
   {
     "name": "Van Morrison",
@@ -128,7 +134,8 @@
     "signatureSong": "Brown Eyed Girl",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Raspy tenor that repeats and stretches syllables, sliding between blues shouts and scat phrasing."
+    "blurb": "Raspy tenor that repeats and stretches syllables, sliding between blues shouts and scat phrasing.",
+    "technique": "Rhythm and repetition matter more than sustained tone here. Syllables get stretched, doubled, and worried at until they turn into rhythmic figures, and lines slide between a blues shout and wordless scat phrasing. The rasp comes from breath pressure against a fairly open throat, not from squeezing, and it thickens as volume rises. Phrases enter late and catch up. Because the grit rides on air instead of a tight throat, the flexibility survives the volume."
   },
   {
     "name": "James Taylor",
@@ -147,7 +154,8 @@
     "signatureSong": "Fire and Rain",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm, breath-controlled baritone with soft attacks and vibrato held back until a phrase ends."
+    "blurb": "Warm, breath-controlled baritone with soft attacks and vibrato held back until a phrase ends.",
+    "technique": "Notice how little the voice moves and how much the breath does. Onsets are soft, almost released rather than started, the tone stays warm with the resonance low and round, and vibrato is withheld until the last beat of a phrase, then added narrowly. Consonants close gently. Lines sit just behind the guitar. The dynamic stays small and steady from the first line to the last, with the microphone supplying volume the voice never reaches for."
   },
   {
     "name": "Sinéad O'Connor",
@@ -166,7 +174,8 @@
     "signatureSong": "Nothing Compares 2 U",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Whisper-to-cry dynamics inside a few bars; a clear tone that breaks into hard rasp at full volume."
+    "blurb": "Whisper-to-cry dynamics inside a few bars; a clear tone that breaks into hard rasp at full volume.",
+    "technique": "The range of dynamics inside a couple of bars is the technique. A phrase can start as a breathy near-whisper with the tone barely engaged, swell into a clear, straight mezzo, then fracture into hard rasp at the top of the crescendo. Cracks and breaks are placed, not accidental. Vibrato is scarce, arriving only at the end of a held note. Beginners start at full volume and leave themselves nowhere to go, which removes the entire shape."
   },
   {
     "name": "Tracy Chapman",
@@ -185,7 +194,8 @@
     "signatureSong": "Fast Car",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark contralto with a tight, buzzy edge; pushes intensity through consonants instead of vibrato."
+    "blurb": "Dark contralto with a tight, buzzy edge; pushes intensity through consonants instead of vibrato.",
+    "technique": "Weight sits low and dark, with a tight, buzzy edge that keeps the sound cutting rather than muddy. Intensity is delivered through consonants and through how firmly a vowel is attacked, not through volume or vibrato, which stays minimal. Phrasing locks tightly to the guitar and rarely rushes. Singers reaching for the color often drop the larynx to manufacture darkness; that thickens the tone and kills the buzz that makes the voice legible at low volume."
   },
   {
     "name": "Tori Amos",
@@ -204,7 +214,8 @@
     "signatureSong": "Cornflake Girl",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright mezzo that scoops into notes and flips to airy head voice, with frequent glottal breaks."
+    "blurb": "Bright mezzo that scoops into notes and flips to airy head voice, with frequent glottal breaks.",
+    "technique": "Notes are frequently approached from below with an audible scoop, and glottal catches punctuate lines like percussion. The mezzo core is bright and slightly edgy, then releases into an airy head voice up high instead of belting through. Timing floats freely against the piano, stretching and compressing phrases. The scoops are selective rather than constant, and the glottal catches are placed on purpose, which is easy to mishear as a loss of control."
   },
   {
     "name": "Sarah McLachlan",
@@ -223,7 +234,8 @@
     "signatureSong": "Angel",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Clear soprano with an airy top and long, steady sustains; shapes lines rather than adding runs."
+    "blurb": "Clear soprano with an airy top and long, steady sustains; shapes lines rather than adding runs.",
+    "technique": "Long, even sustains define this, held on steady air with the tone clear and slightly airy in the upper range. The register transition is smoothed rather than featured, so a line can climb without any audible gear change. Vibrato arrives late and stays narrow, and ornaments are almost absent; shape comes from crescendo and vowel color instead. These melodies are built to be carried straight through, and runs laid on top of them only add clutter."
   },
   {
     "name": "Rufus Wainwright",
@@ -242,7 +254,8 @@
     "signatureSong": "Cigarettes and Chocolate Milk",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Operatic-leaning tenor with wide vibrato and long legato lines; a nasal ring through the upper mix."
+    "blurb": "Operatic-leaning tenor with wide vibrato and long legato lines; a nasal ring through the upper mix.",
+    "technique": "Vibrato is wide and slow, closer to a recital voice than a pop one, and it runs through most sustained notes rather than arriving at the end. Vowels stay tall and connected, so phrases move in long legato with audible portamento between pitches, and a nasal ring brightens the upper mix. Sitting toward the top of the range, the tone narrows rather than thickens. That ring is a product of resonance and vowel shape, not volume, so it stays audible in quiet passages too."
   },
   {
     "name": "ANOHNI",
@@ -261,7 +274,8 @@
     "signatureSong": "Hope There's Someone",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Countertenor with slow, wide vibrato and hollow, flute-like sustain, mostly sung above the staff."
+    "blurb": "Countertenor with slow, wide vibrato and hollow, flute-like sustain, mostly sung above the staff.",
+    "technique": null
   },
   {
     "name": "Regina Spektor",
@@ -280,7 +294,8 @@
     "signatureSong": "Fidelity",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Elastic delivery that switches between clipped staccato, trills, and thin squeaks at the very top."
+    "blurb": "Elastic delivery that switches between clipped staccato, trills, and thin squeaks at the very top.",
+    "technique": "Delivery is elastic and percussive: clipped staccato syllables, sudden trills, rolled and over-pronounced consonants, and thin squeaks right at the top of the range. Glottal stops and small hiccup accents fall on unexpected beats, treating the voice as a rhythm instrument alongside the piano. The tone itself is bright and unforced. The frequent misread is treating these noises as decoration; they are rhythmic events, and imitating them without locking the timing makes the whole thing sound arbitrary."
   },
   {
     "name": "Florence Welch",
@@ -299,7 +314,8 @@
     "signatureSong": "Dog Days Are Over",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Open-throated mezzo belt with a wide vibrato, usually stacked into choral upper harmonies."
+    "blurb": "Open-throated mezzo belt with a wide vibrato, usually stacked into choral upper harmonies.",
+    "technique": "Belted notes are produced with an open throat and a wide, slow vibrato, and the stated belt around E5 marks where chest-based power stops. Above it the tone lightens into head voice, which is why the highest pitches read as choral rather than driven. Vowels stay open and vertical, powered by generous breath. Much of the thickness on record is stacked harmony rather than one line, and the belt itself rides on open resonance more than on sheer volume."
   },
   {
     "name": "Justin Vernon",
@@ -318,7 +334,8 @@
     "signatureSong": "Skinny Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bon Iver's layered falsetto in tight harmony stacks; the chest voice stays quiet and slightly strained."
+    "blurb": "Bon Iver's layered falsetto in tight harmony stacks; the chest voice stays quiet and slightly strained.",
+    "technique": "Falsetto leads almost everything, sung at modest volume close to the microphone and then stacked into tight harmony so the blend, not the individual note, carries weight. Onsets are breathy, vibrato is barely there, and the chest register stays quiet with an audible edge of strain that is part of the character. The low end of the range is rarely used at full voice. Nothing here trades on power, and the strain in the upper lines works as texture rather than effort."
   },
   {
     "name": "James Blake",
@@ -337,7 +354,8 @@
     "signatureSong": "Retrograde",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Falsetto-first and close-miked, breathy at low volume, then thickened with pitch-shifted layers."
+    "blurb": "Falsetto-first and close-miked, breathy at low volume, then thickened with pitch-shifted layers.",
+    "technique": "Volume stays low and the microphone stays close, so a breathy falsetto with very little vibrato becomes the default sound. Sustains are straight, almost unmoving, and consonants soften into the vowel rather than cutting it. The register shift is handled by never really committing to chest weight at all. Thickness on record comes from doubled and pitch-shifted layers rather than a bigger voice, so the unprocessed line stays quiet even as the arrangement grows around it."
   },
   {
     "name": "Hozier",
@@ -356,7 +374,8 @@
     "signatureSong": "Take Me to Church",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gritty baritone that stacks a gospel-inflected rasp under a clean, sustained falsetto."
+    "blurb": "Gritty baritone that stacks a gospel-inflected rasp under a clean, sustained falsetto.",
+    "technique": "Two voices are in play. Down low the baritone runs gritty, with gospel-flavored rasp and blues bends applied to short melodic figures, sometimes growling into the bottom of a phrase. From the stated belt around B4 upward the sound thins toward a lighter, cleaner register instead of driving chest weight any higher. The contrast between those two colors, rather than the size of either one, is what carries a chorus."
   },
   {
     "name": "Jacob Collier",
@@ -375,6 +394,7 @@
     "signatureSong": "Moon River",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Wide range used compositionally: low chest notes, stacked falsetto, and deliberate microtonal slides."
+    "blurb": "Wide range used compositionally: low chest notes, stacked falsetto, and deliberate microtonal slides.",
+    "technique": "Range is used as an arrangement tool rather than a display. Low chest notes are sung quietly and precisely, the upper register is stacked in falsetto for harmony, and slides between pitches are deliberate and often land between the usual twelve, so intonation has to be exact. Phrasing borrows jazz timing, hanging behind and then catching up. Trying to reproduce the extremes first is backwards; the tuning and the smoothness of each transition are what make it work."
   }
 ]

@@ -12,7 +12,8 @@
     "signatureSong": "Euphoria",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Bright tenor, breathy on low lines, then a thin but unstrained mix that slides into falsetto."
+    "blurb": "Bright tenor, breathy on low lines, then a thin but unstrained mix that slides into falsetto.",
+    "technique": "Listen for how little weight he carries. Low lines come out on air, with soft aspirate onsets and almost no vibrato, then the tone narrows and brightens as it climbs. The mix around C5 stays slim rather than loud, and above it he releases into falsetto instead of driving. Students add chest weight and volume, which kills the ping and turns the falsetto handoff into an audible break."
   },
   {
     "name": "V",
@@ -27,7 +28,8 @@
     "signatureSong": "Singularity",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Dark, husky baritone that sits speech-close and thins to airy falsetto instead of pushing chest."
+    "blurb": "Dark, husky baritone that sits speech-close and thins to airy falsetto instead of pushing chest.",
+    "technique": null
   },
   {
     "name": "Jimin",
@@ -42,7 +44,8 @@
     "signatureSong": "Serendipity",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light, narrow tenor tone; favors soft head voice and fast vibrato over chest projection."
+    "blurb": "Light, narrow tenor tone; favors soft head voice and fast vibrato over chest projection.",
+    "technique": "The distance between the Bb4 belt and the F5 ceiling never gets belted; he thins through it instead. Tone is narrow and slightly forward, onsets gentle, and the vibrato is fast and shallow, arriving late on held notes. Head voice does the work up top, kept light but connected. Reaching for volume in the upper mix flattens the tone into a shout and the vibrato disappears."
   },
   {
     "name": "Taeyang",
@@ -57,7 +60,8 @@
     "signatureSong": "Eyes, Nose, Lips",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Raspy R&B tenor built on melisma, tight vibrato and a falsetto he flips into mid-phrase."
+    "blurb": "Raspy R&B tenor built on melisma, tight vibrato and a falsetto he flips into mid-phrase.",
+    "technique": "The rasp rides on top of a supported tone; it is surface texture, not a scrape at the cords. Phrases carry short melismatic turns and bends that land a hair behind the beat, and the vibrato is fast and narrow. At the top of the B4 belt he flips into falsetto mid-word, then drops back into chest without resetting the phrase, a move that recurs through Eyes, Nose, Lips. Manufacture the rasp in the throat and pitch center is the first thing to go."
   },
   {
     "name": "Ailee",
@@ -72,7 +76,8 @@
     "signatureSong": "I Will Show You",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thick gospel-schooled mezzo with a wide chest belt and audible grit at the top of the register."
+    "blurb": "Thick gospel-schooled mezzo with a wide chest belt and audible grit at the top of the register.",
+    "technique": "Weight is the whole game. The chest register is thick and gospel-shaped, onsets are firm and closer to glottal than breathy, and the belt keeps chest quality all the way to F5 with a wide vibrato that opens as the note holds. Grit shows up at peaks as an edge riding on a supported tone. Chasing the volume without breath pressure underneath turns that edge into throat scraping."
   },
   {
     "name": "Sohyang",
@@ -87,7 +92,8 @@
     "signatureSong": "Arirang Alone",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Trained soprano who stacks a supported high belt under a whistle register used as melody, not effect."
+    "blurb": "Trained soprano who stacks a supported high belt under a whistle register used as melody, not effect.",
+    "technique": "A belt sitting as high as C6 only holds because the breath under it is doing the work: larynx steady, vowel open, vibrato even and classical in width, no thinning into a scream. Above that, the whistle register works as a usable part of the instrument rather than a stunt, entered cleanly, held in tune, phrased like melody. The order matters. Whistle is the part people try to copy first, and the part that depends most on everything underneath it."
   },
   {
     "name": "Park Hyo Shin",
@@ -102,7 +108,8 @@
     "signatureSong": "Wild Flower",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Grainy tenor with stage-trained support; opens from near-whisper into a wide, ringing high belt."
+    "blurb": "Grainy tenor with stage-trained support; opens from near-whisper into a wide, ringing high belt.",
+    "technique": "He builds a phrase with dynamics rather than with extra notes. Lines begin near a whisper, grainy and slightly compressed, then open gradually into a wide belt that rings around B4, with a slow vibrato arriving only after the note settles. Consonants stay soft so the crescendo carries the feeling. Wild Flower runs that whole climb from near-silence up to full voice. Start at the loud end and there is nowhere left to go."
   },
   {
     "name": "IU",
@@ -117,7 +124,8 @@
     "signatureSong": "Good Day",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Small bell-clear soprano tone, exact pitch placement, and a light mix she keeps deliberately unforced."
+    "blurb": "Small bell-clear soprano tone, exact pitch placement, and a light mix she keeps deliberately unforced.",
+    "technique": "Almost nothing decorative gets added. Onsets land without scoop, the tone is small, bright and bell-like with very little air in it, and vibrato appears as a flicker at the end of a sustain, if at all. Above the E5 belt she thins into head voice rather than pushing. The climbing high run that closes Good Day stays connected the whole way up. Breathiness and a wider vibrato would cost the precision that defines the sound."
   },
   {
     "name": "Taeyeon",
@@ -132,7 +140,8 @@
     "signatureSong": "I",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal-bright soprano with compact vibrato; her belt stays thin yet cuts through dense mixes."
+    "blurb": "Nasal-bright soprano with compact vibrato; her belt stays thin yet cuts through dense mixes.",
+    "technique": "What cuts through an arrangement here is placement, not size. The tone rides forward with a nasal brightness, vibrato compact and quick, attacks clean and unaccented. Her belt around F5 stays narrow, more ring than weight, which is why it sits over a dense mix without shouting; above it she thins to head voice. Meet a loud track with added chest weight and the vowel thickens, burying the brightness that made the line audible."
   },
   {
     "name": "Rosé",
@@ -147,7 +156,8 @@
     "signatureSong": "On the Ground",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Reedy, slightly nasal soprano with wavering vibrato; prefers an airy top to full-chest volume."
+    "blurb": "Reedy, slightly nasal soprano with wavering vibrato; prefers an airy top to full-chest volume.",
+    "technique": "Two things define it: a reedy, slightly nasal core, and a vibrato that wavers wide and a little unevenly, arriving early on sustains. Instead of pushing chest she lets the top go airy and translucent, so the E5 belt reads as intensity rather than volume. Consonants are soft, vowels narrow. That wobble is not a shake made in the throat; it comes from loose, unpressed airflow, and shaking for it produces a different sound entirely."
   },
   {
     "name": "Baekhyun",
@@ -162,7 +172,8 @@
     "signatureSong": "UN Village",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Warm tenor with soft-edged attack and quick runs; the mix thickens rather than thins as it climbs."
+    "blurb": "Warm tenor with soft-edged attack and quick runs; the mix thickens rather than thins as it climbs.",
+    "technique": "Unusually, the tone gets rounder as it rises. Onsets are soft-edged, close to sighed, and runs stay quick and light with no grit. The mix around C5 keeps its warmth instead of narrowing to a point, and vibrato is moderate and steady. Ornaments are small and rhythmically tight. Treating those runs as fast scales is the common error; they are placed against the beat, and rushing them flattens the phrase."
   },
   {
     "name": "Chen",
@@ -177,7 +188,8 @@
     "signatureSong": "Beautiful Goodbye",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Forward, chest-heavy tenor; belted lines land with a slight cry instead of a shout."
+    "blurb": "Forward, chest-heavy tenor; belted lines land with a slight cry instead of a shout.",
+    "technique": "Forward and chest-dominant from the bottom up. There is no scoop into notes; he arrives on pitch with a firm onset and a narrow pharyngeal cry that makes the C5 belt sound urgent rather than loud. Vibrato is steady, medium in width, and held through the ends of phrases. Above the belt he thins instead of pushing. Answering that urgency with volume raises the larynx and the cry becomes strain."
   },
   {
     "name": "Jonghyun",
@@ -192,7 +204,8 @@
     "signatureSong": "Lonely",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Sharp ringing tenor with steady breath support; often ends phrases in controlled falsetto."
+    "blurb": "Sharp ringing tenor with steady breath support; often ends phrases in controlled falsetto.",
+    "technique": "Ring is the defining quality: a bright, focused tone with even breath support, so long lines hold steady in volume and pitch. Onsets are clean, vibrato regular and fairly quick, and R&B turns are placed rather than sprayed. Phrases often finish in a controlled falsetto entered without a seam. The transition is what students miss, grabbing at falsetto instead of easing the weight off note by note."
   },
   {
     "name": "Hikaru Utada",
@@ -207,7 +220,8 @@
     "signatureSong": "First Love",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Low-set husky mezzo, conversational phrasing, R&B melisma kept small and slightly behind the beat."
+    "blurb": "Low-set husky mezzo, conversational phrasing, R&B melisma kept small and slightly behind the beat.",
+    "technique": "This voice sits low and slightly husky, nearer to speaking than singing, breath audible in the tone and onsets beginning softly. Phrasing lags a fraction behind the beat, and melisma stays small, two or three notes, understated. The D5 belt keeps that conversational weight instead of opening out. Copying the laid-back timing usually just becomes late; the pulse has to stay exact underneath the relaxation."
   },
   {
     "name": "Ayumi Hamasaki",
@@ -222,7 +236,8 @@
     "signatureSong": "M",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Thin nasal mezzo with fast vibrato; drive comes from consonant attack more than chest volume."
+    "blurb": "Thin nasal mezzo with fast vibrato; drive comes from consonant attack more than chest volume.",
+    "technique": "The push in a chorus comes from consonants, not from chest volume. The tone is thin and forward with clear nasal resonance, vibrato fast and tight, and every syllable takes a hard attack that shoves the line on to the next one. The D5 belt stays narrow and bright rather than opening out. Add weight to compete with the arrangement and both the speed of the vibrato and the rhythmic bite go with it."
   },
   {
     "name": "LiSA",
@@ -237,7 +252,8 @@
     "signatureSong": "Gurenge",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Rock mezzo who takes anime choruses in a bright, strident chest mix and rarely drops to falsetto."
+    "blurb": "Rock mezzo who takes anime choruses in a bright, strident chest mix and rarely drops to falsetto.",
+    "technique": "Nearly all of this happens in a bright chest-dominant mix, driven hard and kept connected across the whole F3 to F5 span rather than flipped to falsetto. Onsets are consonant-heavy and percussive, vowels wide and slightly strident, vibrato fast and applied late in a note. Rapid syllabic choruses like Gurenge require the breath be reset in tiny gaps. Most students take the volume without the support and run out of air by the second line."
   },
   {
     "name": "Kenshi Yonezu",
@@ -252,7 +268,8 @@
     "signatureSong": "Lemon",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Nasal baritone with a flat deadpan low register that tightens into a strained, plaintive high belt."
+    "blurb": "Nasal baritone with a flat deadpan low register that tightens into a strained, plaintive high belt.",
+    "technique": null
   },
   {
     "name": "Misia",
@@ -267,7 +284,8 @@
     "signatureSong": "Everything",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Full-bodied soprano who moves from breathy low verses to whistle notes held long and on pitch."
+    "blurb": "Full-bodied soprano who moves from breathy low verses to whistle notes held long and on pitch.",
+    "technique": "She works the range in layers rather than climbing it in one line. Verses can sit low and breathy with soft onsets; the chest belt then opens around F5 with full body and a wide, even vibrato; above that, whistle notes are entered cleanly and sustained on pitch instead of flicked at. Transitions get smoothed over, not jumped. The whistle is no party trick here, supported from the ribs the same way the belt below it is."
   },
   {
     "name": "Ado",
@@ -282,6 +300,7 @@
     "signatureSong": "New Genesis",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Gritty mezzo alternating growled low verses with a hard forward belt and abrupt clean high notes."
+    "blurb": "Gritty mezzo alternating growled low verses with a hard forward belt and abrupt clean high notes.",
+    "technique": "Texture change is the structure. Low verses come out growled, with a rough distorted edge over the tone, then the belt lands hard around F5, forward and wide and unornamented, and above it the distortion drops away for an abrupt clean high note. Vibrato is minimal; straight tone is the default. Imitating the growl with real throat friction is unsustainable and takes the clean belt down with it."
   }
 ]
