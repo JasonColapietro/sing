@@ -137,6 +137,252 @@ export const EXERCISES: WarmupExercise[] = [
   },
 ];
 
+export interface WarmupPack {
+  id: string;
+  name: string;
+  desc: string;
+  exercises: WarmupExercise[];
+}
+
+export const PRO_PACKS: WarmupPack[] = [
+  {
+    id: "belt-prep",
+    name: "Belt prep",
+    desc: "Chest-voice power without strain, 8 exercises.",
+    exercises: [
+      {
+        id: "belt-hey-thirds",
+        title: "Hey on falling thirds",
+        desc: 'Call and answer — a bright "hey" dropping a major third, twice.',
+        tier: "intermediate",
+        tip: "Think playground call, not scream. Power comes from the body, never the throat.",
+        noteDur: 0.6,
+        buildSteps: (r) => [rel(r, [4, 0, 4, 0])],
+      },
+      {
+        id: "belt-forte-ah",
+        title: "Forte ah hold",
+        desc: 'One strong "ah" at forte — full voice, held steady on a single note.',
+        tier: "intermediate",
+        tip: "Big sound, low effort. If your neck tightens, back off ten percent.",
+        noteDur: 3,
+        buildSteps: (r) => [[r]],
+      },
+      {
+        id: "belt-yah-triad",
+        title: "Yah triad",
+        desc: 'Punch through 1-3-5-3-1 on "yah" — bright vowel, chest-voice color.',
+        tier: "intermediate",
+        tip: 'Let the "y" spring each note forward. No gripping at the top of the triad.',
+        noteDur: 0.55,
+        buildSteps: (r) => [rel(r, [0, 4, 7, 4, 0])],
+      },
+      {
+        id: "belt-octave-drop",
+        title: "Octave-drop hey",
+        desc: 'Start "hey" on the octave and drop straight home, twice.',
+        tier: "intermediate",
+        tip: "Start light up top and land solid — the drop does the work, not you.",
+        noteDur: 0.6,
+        buildSteps: (r) => [rel(r, [12, 0, 12, 0])],
+      },
+      {
+        id: "belt-nay-speech",
+        title: "Speech-level nays",
+        desc: '"Nay nay nay nay nay" on one repeated note, right at speaking volume.',
+        tier: "intermediate",
+        tip: "Bratty is correct. Keep it forward and buzzy, like a playground taunt.",
+        noteDur: 0.45,
+        buildSteps: (r) => [rel(r, [0, 0, 0, 0, 0])],
+      },
+      {
+        id: "belt-bah-bursts",
+        title: "Bah bursts",
+        desc: 'Four short "bah" bursts climbing 1-2-3-4 — crisp starts, no sliding.',
+        tier: "intermediate",
+        tip: "Each burst starts from air, not from squeeze. Reset between notes.",
+        noteDur: 0.4,
+        buildSteps: (r) => [rel(r, [0, 2, 4, 5])],
+      },
+      {
+        id: "belt-fifth-hold",
+        title: "Fifth hold",
+        desc: "Sustain the root, then the fifth — two long, even holds at full voice.",
+        tier: "intermediate",
+        tip: "Match the fifth to the root's effort — same body, higher pitch.",
+        noteDur: 2,
+        buildSteps: (r) => [rel(r, [0, 7])],
+      },
+      {
+        id: "belt-hah-descent",
+        title: "Hah descent",
+        desc: 'Descend 5-4-3-2-1 on an open "hah", keeping chest color all the way down.',
+        tier: "intermediate",
+        tip: "Stay full as you descend — don't let the bottom notes go breathy.",
+        noteDur: 0.5,
+        buildSteps: (r) => [rel(r, [7, 5, 4, 2, 0])],
+      },
+    ],
+  },
+  {
+    id: "head-voice-builder",
+    name: "Head-voice builder",
+    desc: "Light, connected top notes, 7 exercises.",
+    exercises: [
+      {
+        id: "head-oo-siren",
+        title: "Oo siren to the octave",
+        desc: 'Glide a full octave up and back down on a small, hooty "oo".',
+        tier: "intermediate",
+        glide: true,
+        noteDur: 1,
+        tip: "Small mouth, tall sound. Let the top feel like it floats off the breath.",
+        buildSteps: (r) => [
+          [r, r + 12],
+          [r + 12, r],
+        ],
+      },
+      {
+        id: "head-wee-descent",
+        title: "Wee from the fifth",
+        desc: 'Fall 5-3-1 on a light "wee" — thin, sweet, and connected.',
+        tier: "intermediate",
+        tip: 'Keep the "w" soft and let each note land like a feather.',
+        noteDur: 0.7,
+        buildSteps: (r) => [rel(r, [7, 4, 0])],
+      },
+      {
+        id: "head-hum-five",
+        title: "Hummed five down",
+        desc: "Hum down 5-4-3-2-1 with the buzz parked behind your nose.",
+        tier: "intermediate",
+        tip: "If the hum rattles your throat, lighten until it only buzzes your face.",
+        noteDur: 0.55,
+        buildSteps: (r) => [rel(r, [7, 5, 4, 2, 0])],
+      },
+      {
+        id: "head-octave-leaps",
+        title: "Octave leaps on oo",
+        desc: 'Leap a clean octave on "oo" and return, twice — no weight up top.',
+        tier: "intermediate",
+        tip: "Aim just above the top note and drop onto it — never climb into it.",
+        noteDur: 0.6,
+        buildSteps: (r) => [rel(r, [0, 12, 0, 12, 0])],
+      },
+      {
+        id: "head-loo-arpeggio",
+        title: "Loo octave arpeggio",
+        desc: 'Roll through 1-5-8-5-1 on "loo", light as a music box.',
+        tier: "intermediate",
+        tip: 'Let the "l" reset each note. The octave should feel easier than the fifth.',
+        noteDur: 0.6,
+        buildSteps: (r) => [rel(r, [0, 7, 12, 7, 0])],
+      },
+      {
+        id: "head-fifth-siren",
+        title: "Gentle fifth siren",
+        desc: "A soft siren to the fifth and back — the smallest sound that still slides.",
+        tier: "intermediate",
+        glide: true,
+        noteDur: 0.8,
+        tip: "Half the volume you think you need. Smooth beats loud here.",
+        buildSteps: (r) => [
+          [r, r + 7],
+          [r + 7, r],
+        ],
+      },
+      {
+        id: "head-float-hold",
+        title: "Top-note float",
+        desc: "Hold one light note at the fifth and let it hover — pure head voice.",
+        tier: "intermediate",
+        tip: "Imagine the note resting on the breath, like a ball on a fountain.",
+        noteDur: 3,
+        buildSteps: (r) => [[r + 7]],
+      },
+    ],
+  },
+  // Morning reset ≈ 6 min: per-exercise secs = reps × (totalSec × 2.2 + 2), reps 6–8.
+  // totalSec at 1x — trill 2.88, hum 2.56, climb 3.32, siren 2.48, sigh 2.0,
+  // sustain 2.5 — keeps every exercise in 38–75 s (each card rounds to ~1 min),
+  // so the six cards sum to 6 min and real time runs 4.7–6.2 min.
+  {
+    id: "morning-reset",
+    name: "Morning reset",
+    desc: "A gentle 6-minute wake-up for rough days.",
+    exercises: [
+      {
+        id: "morning-lip-trill",
+        title: "Lip-trill wake-up",
+        desc: 'A sleepy "brr" lip trill gliding up a third and back down.',
+        tier: "beginner",
+        glide: true,
+        noteDur: 0.7,
+        tip: "If the trill sputters, more air and looser lips — never more push.",
+        buildSteps: (r) => [
+          [r, r + 4],
+          [r + 4, r],
+        ],
+      },
+      {
+        id: "morning-hum",
+        title: "First hum",
+        desc: "Three tiny hummed steps — root, up one tone, back home.",
+        tier: "beginner",
+        tip: "Barely more than breathing. Let the buzz find your face on its own.",
+        noteDur: 0.8,
+        buildSteps: (r) => [rel(r, [0, 2, 0])],
+      },
+      {
+        id: "morning-three-note",
+        title: "Small three-note climb",
+        desc: 'Walk up 1-2-3 and back down on a soft "noo" — no hurry.',
+        tier: "beginner",
+        tip: "Morning voice is allowed. Keep it small and let the notes wake slowly.",
+        noteDur: 0.6,
+        buildSteps: (r) => [rel(r, [0, 2, 4, 2, 0])],
+      },
+      {
+        id: "morning-siren",
+        title: "Easy fourth siren",
+        desc: "A lazy little siren up a fourth and back — half awake is fine.",
+        tier: "beginner",
+        glide: true,
+        noteDur: 0.6,
+        tip: "Think yawn, not siren drill. Loose jaw, easy slide.",
+        buildSteps: (r) => [
+          [r, r + 5],
+          [r + 5, r],
+        ],
+      },
+      {
+        id: "morning-sigh",
+        title: "Sighing slide",
+        desc: "Slide from the third down to the root like a long, relieved sigh.",
+        tier: "beginner",
+        glide: true,
+        noteDur: 1,
+        tip: "Start the sigh before the note — let the pitch ride out on the air.",
+        buildSteps: (r) => [[r + 4, r]],
+      },
+      {
+        id: "morning-sustain",
+        title: "Soft sustain",
+        desc: "One soft, steady note to finish — quiet, centered, unhurried.",
+        tier: "beginner",
+        tip: "Steady beats loud. If it wobbles, sing it smaller.",
+        noteDur: 2.5,
+        buildSteps: (r) => [[r]],
+      },
+    ],
+  },
+];
+
+export const ALL_EXERCISES: WarmupExercise[] = [
+  ...EXERCISES,
+  ...PRO_PACKS.flatMap((p) => p.exercises),
+];
+
 /** One scored/rendered chunk of the melody. Plain notes have start === end. */
 export interface Segment {
   startMidi: number;

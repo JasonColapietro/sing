@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { EXERCISES } from "./exercises";
+import { ALL_EXERCISES, EXERCISES } from "./exercises";
+import { useIsPro } from "@/lib/pro";
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { midiToLabel } from "@/lib/audio/notes";
@@ -24,11 +25,14 @@ export function SessionSummary({
 }) {
   const { ex, results, avgScore, best, xpGained, newAchievements } = data;
 
+  const isPro = useIsPro();
   const nextEx = useMemo(() => {
-    const idx = EXERCISES.findIndex((e) => e.id === ex.id);
-    if (idx < 0) return EXERCISES[0];
-    return EXERCISES[(idx + 1) % EXERCISES.length];
-  }, [ex.id]);
+    // Rotate through what this user can actually play.
+    const pool = isPro ? ALL_EXERCISES : EXERCISES;
+    const idx = pool.findIndex((e) => e.id === ex.id);
+    if (idx < 0) return pool[0];
+    return pool[(idx + 1) % pool.length];
+  }, [ex.id, isPro]);
 
   return (
     <div className="space-y-6">

@@ -6,7 +6,8 @@ import { useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { IconHeadphones, IconMic } from "./icons";
-import { SONGS, type Song } from "./data";
+import { ALL_SONGS, SONGS, type Song } from "./data";
+import { getProState } from "@/lib/pro";
 import { Library } from "./library";
 import { SongPlayer } from "./song-player";
 import { SessionSummary } from "./session-summary";
@@ -30,8 +31,12 @@ export function SongsClient() {
   }
 
   function startSongById(id: string) {
-    const song = SONGS.find((s) => s.id === id);
-    if (song) startSong(song);
+    const song = ALL_SONGS.find((s) => s.id === id);
+    if (!song) return;
+    // Defense in depth: Pro songs never start for free users, even if a
+    // card leaks through.
+    if (!SONGS.some((s) => s.id === id) && !getProState().active) return;
+    startSong(song);
   }
 
   const gated = !pitch.listening && !listenMode;

@@ -2,15 +2,18 @@
 
 import { useEffect } from "react";
 import { revalidatePro } from "@/lib/pro";
+import { startAutoSync } from "@/lib/sync";
 
 /**
- * Re-checks the Stripe subscription once per load (throttled to twice a day
- * inside `revalidatePro`). Entitlement is cached in this browser, so without
- * this a cancellation or an expired card would never reach the UI.
+ * Once per page load: re-checks the Stripe subscription (throttled to twice
+ * a day inside `revalidatePro`) and kicks off cloud sync for Pro members —
+ * a pull-merge-push when the last sync is stale, plus a debounced upload
+ * whenever practice writes new progress.
  */
 export default function ProSync() {
   useEffect(() => {
     void revalidatePro();
+    startAutoSync();
   }, []);
   return null;
 }

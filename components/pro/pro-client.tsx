@@ -36,8 +36,8 @@ const PRO_CARD_POINTS = [
   "Adaptive coach plan, rebuilt daily",
   "Per-note accuracy + range history",
   "Pitch analysis on every take",
-  "Full songbook, weekly drops",
-  "Pro warmup packs + cloud sync",
+  "Full songbook + pro warmup packs",
+  "Cloud sync across devices",
 ];
 
 const FREE_CARD_POINTS = [
@@ -59,7 +59,7 @@ const FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Is my voice uploaded?",
-    a: "No. Pitch analysis runs on your device on both tiers. Pro's cloud sync backs up your progress numbers and takes only if you turn it on — and you can keep it off.",
+    a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers — scores, streaks, range — never audio.",
   },
   {
     q: "Can I cancel anytime?",

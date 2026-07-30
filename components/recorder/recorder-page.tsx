@@ -9,16 +9,19 @@ import {
   Pill,
   SectionLabel,
 } from "@/components/ui";
+import { analyzeTake, type TakeAnalysis } from "@/lib/audio/analyze-take";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { clickAt } from "@/lib/audio/synth";
+import { useIsPro } from "@/lib/pro";
 import { logSession, type Achievement } from "@/lib/progress";
 import { openTakesStore, type TakeRecord, type TakesStore } from "./db";
 import { computePeaks, decodeTakeBlob, encodeWavMono, type Peaks } from "./wav";
 import { IconMic, IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from "./icons";
 import { LiveWaveform, PeaksWaveform } from "./waveforms";
 import { TakeRow } from "./take-row";
+import { AbPitchOverlay, TakePitchPanel } from "./pitch-analysis";
 import { FreeOnly, ProInlineNudge, ProWhisper } from "@/components/pro/gate";
-import { LockedPanel } from "@/components/pro/ui";
+import { LockedPanel, ProChip } from "@/components/pro/ui";
 
 const MAX_SEC = 300; // 5 minute take limit
 const COUNT_IN_BEAT = 0.5; // seconds per count-in click
@@ -93,6 +96,8 @@ function downloadBlob(blob: Blob, filename: string) {
 }
 
 export default function RecorderPageClient() {
+  const isPro = useIsPro();
+
   // --- store + takes ---
   const storeRef = useRef<TakesStore | null>(null);
   const [takes, setTakes] = useState<TakeRecord[]>([]);
@@ -126,6 +131,10 @@ export default function RecorderPageClient() {
   // --- peaks cache ---
   const [peaksMap, setPeaksMap] = useState<Map<string, Peaks>>(() => new Map());
   const decodingRef = useRef(new Set<string>());
+
+  // --- pitch analysis cache ---
+  const [analysisMap, setAnalysisMap] = useState<Map<string, TakeAnalysis>>(() => new Map());
+  const analyzingRef = useRef(new Set<string>());
 
   // --- review, downloads, compare, toast ---
   const [reviewId, setReviewId] = useState<string | null>(null);
@@ -213,12 +222,31 @@ export default function RecorderPageClient() {
       });
   }, [peaksMap]);
 
+  const ensureAnalysis = useCallback(
+    (take: TakeRecord) => {
+      if (analysisMap.has(take.id) || analyzingRef.current.has(take.id)) return;
+      analyzingRef.current.add(take.id);
+      void analyzeTake(take.blob)
+        .then((analysis) => {
+          setAnalysisMap((prev) => new Map(prev).set(take.id, analysis));
+        })
+        .catch(() => {})
+        .finally(() => {
+          analyzingRef.current.delete(take.id);
+        });
+    },
+    [analysisMap],
+  );
+
   useEffect(() => {
     const wanted = new Set([selectedId, ...abPicks]);
     for (const t of takes) {
-      if (wanted.has(t.id)) ensurePeaks(t);
+      if (wanted.has(t.id)) {
+        ensurePeaks(t);
+        if (isPro) ensureAnalysis(t);
+      }
     }
-  }, [selectedId, abPicks, takes, ensurePeaks]);
+  }, [selectedId, abPicks, takes, ensurePeaks, ensureAnalysis, isPro]);
 
   // --- mic ---
   const enableMic = useCallback(async () => {
@@ -465,6 +493,12 @@ export default function RecorderPageClient() {
         setPositionSec(0);
       }
       setPeaksMap((prev) => {
+        if (!prev.has(take.id)) return prev;
+        const next = new Map(prev);
+        next.delete(take.id);
+        return next;
+      });
+      setAnalysisMap((prev) => {
         if (!prev.has(take.id)) return prev;
         const next = new Map(prev);
         next.delete(take.id);
@@ -905,6 +939,47 @@ export default function RecorderPageClient() {
             )}
           </Card>
 
+          {isPro && (
+            <Card>
+              <div className="flex items-center gap-2">
+                <SectionLabel>Pitch analysis</SectionLabel>
+                <ProChip />
+              </div>
+              {selectedTake ? (
+                analysisMap.has(selectedTake.id) ? (
+                  <div className="mt-4">
+                    <TakePitchPanel
+                      analysis={analysisMap.get(selectedTake.id)!}
+                      name={selectedTake.name}
+                    />
+                  </div>
+                ) : (
+                  <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    Analyzing {selectedTake.name}…
+                  </p>
+                )
+              ) : (
+                <p className="mt-4 text-sm text-mut">
+                  Select a take to see its pitch trace — every note you held,
+                  drawn over time.
+                </p>
+              )}
+              {abA &&
+                abB &&
+                analysisMap.has(abA.id) &&
+                analysisMap.has(abB.id) && (
+                  <div className="mt-6">
+                    <AbPitchOverlay
+                      a={analysisMap.get(abA.id)!}
+                      b={analysisMap.get(abB.id)!}
+                      nameA={abA.name}
+                      nameB={abB.name}
+                    />
+                  </div>
+                )}
+            </Card>
+          )}
+
           <FreeOnly>
             <LockedPanel label="Take pitch analysis">
               <div className="p-4">
@@ -1014,7 +1089,7 @@ export default function RecorderPageClient() {
                 <span>Takes are stored locally in your browser.</span>
               )}
               <div className="mt-2">
-                <ProInlineNudge>Pro backs takes up to the cloud</ProInlineNudge>
+                <ProInlineNudge>Pro analyzes the pitch of every take</ProInlineNudge>
               </div>
             </div>
           </Card>

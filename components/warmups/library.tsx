@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {
   EXERCISES,
+  PRO_PACKS,
   TIER_LABELS,
   TIER_ORDER,
   computeRootLadder,
@@ -10,13 +11,15 @@ import {
   type WarmupExercise,
 } from "./exercises";
 import type { ProgressState } from "@/lib/progress";
+import { useIsPro } from "@/lib/pro";
 import { Card, LinkButton, Pill, SectionLabel } from "@/components/ui";
 import { FreeOnly } from "@/components/pro/gate";
 import { ProChip, ProLockTag } from "@/components/pro/ui";
 
 const RECENT_WINDOW_MS = 3 * 24 * 3600 * 1000;
 
-const PRO_PACKS = [
+/** What free users see of the packs; copy mirrors the real content above. */
+const PACK_TEASERS = [
   { name: "Belt prep", desc: "Chest-voice power without strain, 8 exercises." },
   { name: "Head-voice builder", desc: "Light, connected top notes, 7 exercises." },
   { name: "Morning reset", desc: "A gentle 6-minute wake-up for rough days." },
@@ -39,6 +42,41 @@ export function Library({
   progress: ProgressState;
   onSelect: (ex: WarmupExercise) => void;
 }) {
+  const isPro = useIsPro();
+
+  const exerciseCard = (ex: WarmupExercise) => {
+    const roots = computeRootLadder(ex, progress.range.lowMidi, progress.range.highMidi);
+    const minutes = estimateMinutes(ex, roots.length);
+    const recent = isRecentlyDone(ex, progress);
+    return (
+      <button
+        key={ex.id}
+        type="button"
+        onClick={() => onSelect(ex)}
+        className="text-left"
+      >
+        <Card className="h-full transition-colors hover:border-amber/40">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="text-lg">{ex.title}</h3>
+            {recent && <Pill tone="ok">Done recently</Pill>}
+          </div>
+          <p className="mt-2 text-sm text-mut">{ex.desc}</p>
+          <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            <span>{roots.length} reps</span>
+            <span aria-hidden="true">·</span>
+            <span>~{minutes} min</span>
+            {ex.glide && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>Glide</span>
+              </>
+            )}
+          </div>
+        </Card>
+      </button>
+    );
+  };
+
   const hasRange = progress.range.lowMidi !== undefined && progress.range.highMidi !== undefined;
 
   return (
@@ -67,42 +105,25 @@ export function Library({
           <section key={tier}>
             <SectionLabel>{TIER_LABELS[tier]}</SectionLabel>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {exercises.map((ex) => {
-                const roots = computeRootLadder(ex, progress.range.lowMidi, progress.range.highMidi);
-                const minutes = estimateMinutes(ex, roots.length);
-                const recent = isRecentlyDone(ex, progress);
-                return (
-                  <button
-                    key={ex.id}
-                    type="button"
-                    onClick={() => onSelect(ex)}
-                    className="text-left"
-                  >
-                    <Card className="h-full transition-colors hover:border-amber/40">
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-lg">{ex.title}</h3>
-                        {recent && <Pill tone="ok">Done recently</Pill>}
-                      </div>
-                      <p className="mt-2 text-sm text-mut">{ex.desc}</p>
-                      <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                        <span>{roots.length} reps</span>
-                        <span aria-hidden="true">·</span>
-                        <span>~{minutes} min</span>
-                        {ex.glide && (
-                          <>
-                            <span aria-hidden="true">·</span>
-                            <span>Glide</span>
-                          </>
-                        )}
-                      </div>
-                    </Card>
-                  </button>
-                );
-              })}
+              {exercises.map(exerciseCard)}
             </div>
           </section>
         );
       })}
+
+      {isPro &&
+        PRO_PACKS.map((pack) => (
+          <section key={pack.id}>
+            <div className="flex items-center gap-2">
+              <SectionLabel>{pack.name}</SectionLabel>
+              <ProChip />
+            </div>
+            <p className="mt-2 text-sm text-mut">{pack.desc}</p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {pack.exercises.map(exerciseCard)}
+            </div>
+          </section>
+        ))}
 
       <FreeOnly>
         <section>
@@ -111,7 +132,7 @@ export function Library({
             <ProChip />
           </div>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {PRO_PACKS.map((pack) => (
+            {PACK_TEASERS.map((pack) => (
               <Link key={pack.name} href="/pro">
                 <Card className="h-full transition-colors hover:border-amber/40">
                   <div className="flex items-start justify-between gap-2">

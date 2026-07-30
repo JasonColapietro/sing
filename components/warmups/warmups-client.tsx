@@ -6,7 +6,8 @@ import { useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { IconMic } from "./icons";
-import { EXERCISES, type WarmupExercise } from "./exercises";
+import { ALL_EXERCISES, EXERCISES, type WarmupExercise } from "./exercises";
+import { getProState } from "@/lib/pro";
 import { Library } from "./library";
 import { ExercisePlayer } from "./exercise-player";
 import { SessionSummary } from "./session-summary";
@@ -29,8 +30,11 @@ export function WarmupsClient() {
   }
 
   function startExerciseById(id: string) {
-    const ex = EXERCISES.find((e) => e.id === id);
-    if (ex) startExercise(ex);
+    const ex = ALL_EXERCISES.find((e) => e.id === id);
+    if (!ex) return;
+    // Defense in depth: pack exercises never start for free users.
+    if (!EXERCISES.some((e) => e.id === id) && !getProState().active) return;
+    startExercise(ex);
   }
 
   if (!pitch.listening) {

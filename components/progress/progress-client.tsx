@@ -26,6 +26,7 @@ import { ProInlineNudge } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { useIsPro } from "@/lib/pro";
 import { aggregateNotes } from "@/lib/analytics";
+import { lastSyncedAt, syncNow } from "@/lib/sync";
 import { NoteAccuracyChart, RangeHistoryChart } from "./pro-charts";
 import { PracticeCalendar } from "./calendar";
 import { MinutesBarChart, PracticeMixChart, ScoreTrendChart } from "./charts";
@@ -274,7 +275,80 @@ function SessionLogTable({ sessions }: { sessions: SessionLog[] }) {
 /* Data controls                                                       */
 /* ------------------------------------------------------------------ */
 
+function SyncControls() {
+  const [notice, setNotice] = useState<
+    { kind: "ok" | "err"; text: string } | null
+  >(null);
+  const [working, setWorking] = useState(false);
+  const [lastSync, setLastSync] = useState<string | null>(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reads localStorage, so it can only run after hydration
+    setLastSync(lastSyncedAt());
+  }, []);
+
+  const runSync = async () => {
+    setWorking(true);
+    setNotice(null);
+    try {
+      const { mergedRemote } = await syncNow();
+      setLastSync(lastSyncedAt());
+      setNotice({
+        kind: "ok",
+        text: mergedRemote
+          ? "Synced — progress from your other devices is merged in."
+          : "Synced — this device's progress is backed up.",
+      });
+    } catch (error) {
+      setNotice({
+        kind: "err",
+        text:
+          error instanceof Error && error.message
+            ? error.message
+            : "Sync failed. Try again in a moment.",
+      });
+    } finally {
+      setWorking(false);
+    }
+  };
+
+  const lastLabel = lastSync
+    ? new Date(lastSync).toLocaleString(undefined, {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    : null;
+
+  return (
+    <div className="mt-3">
+      <div className="flex flex-wrap items-center gap-2.5">
+        <Button variant="outline" size="sm" onClick={runSync} disabled={working}>
+          {working ? "Syncing…" : "Sync now"}
+        </Button>
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+          {lastLabel ? `Last synced ${lastLabel}` : "Syncs automatically as you practice"}
+        </span>
+      </div>
+      {notice && (
+        <p
+          className={
+            notice.kind === "ok"
+              ? "mt-3 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok"
+              : "mt-3 rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-xs text-rec"
+          }
+          role="status"
+        >
+          {notice.text}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function DataControls() {
+  const isPro = useIsPro();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importNotice, setImportNotice] = useState<
     { kind: "ok" | "err"; text: string } | null
@@ -331,8 +405,9 @@ function DataControls() {
       <Card>
         <h2 className="text-lg">Backup &amp; transfer</h2>
         <p className="mt-1.5 text-sm text-mut">
-          Progress lives only in this browser. Export a copy to back it up or move
-          it to another device, then import it there.
+          {isPro
+            ? "Progress syncs to the cloud automatically and follows your Pro key to any device. Export still works if you want a file of your own."
+            : "Progress lives only in this browser. Export a copy to back it up or move it to another device, then import it there."}
         </p>
         <div className="mt-4 flex flex-wrap gap-2.5">
           <Button variant="outline" size="sm" onClick={handleExport}>
@@ -351,11 +426,15 @@ function DataControls() {
             onChange={handleImportFile}
           />
         </div>
-        <div className="mt-3">
-          <ProInlineNudge>
-            Pro syncs progress across devices automatically
-          </ProInlineNudge>
-        </div>
+        {isPro ? (
+          <SyncControls />
+        ) : (
+          <div className="mt-3">
+            <ProInlineNudge>
+              Pro syncs progress across devices automatically
+            </ProInlineNudge>
+          </div>
+        )}
         {importNotice && (
           <p
             className={

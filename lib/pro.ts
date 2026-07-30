@@ -217,8 +217,8 @@ export const PRO_PERKS: ProPerk[] = [
   },
   {
     id: "takes",
-    title: "Take analysis + backup",
-    desc: "A pitch overlay on every recorded take, and cloud backup so a cleared browser never eats a keeper.",
+    title: "Take pitch analysis",
+    desc: "A pitch trace of every recorded take, and an A/B overlay that shows which keeper actually sat in tune.",
   },
   {
     id: "songs",
@@ -243,10 +243,10 @@ export const PLAN_ROWS: Array<{
   free: string;
   pro: string;
 }> = [
-  { label: "Practice rooms (all nine)", free: "Included", pro: "Included" },
+  { label: "Practice rooms (all ten)", free: "Included", pro: "Included" },
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
-  { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis, cloud backup" },
+  { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis on every take" },
   { label: "Song library", free: "Starter set", pro: "Full catalog, weekly drops" },
   { label: "Warmup routines", free: "Core set", pro: "Core + pro packs" },
   { label: "Coach plan", free: "First step each day", pro: "Full adaptive plan, daily" },

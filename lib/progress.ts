@@ -474,3 +474,131 @@ export function importProgress(json: string): boolean {
     return false;
   }
 }
+
+/* ------------------------------------------------------------------ merge */
+
+function asArray<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
+}
+
+/** Consecutive practice days ending at the newest session day. */
+function streakFromSessions(sessions: SessionLog[]): number {
+  const days = new Set(sessions.map((s) => s.day));
+  if (days.size === 0) return 0;
+  const latest = [...days].sort().pop()!;
+  let current = 0;
+  const cursor = new Date(`${latest}T00:00:00`);
+  while (days.has(localDay(cursor))) {
+    current += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return current;
+}
+
+/**
+ * Two-way merge of a remote ProgressState into the local one, for cloud
+ * sync. Every rule is a union, max, or latest-wins, which makes the merge
+ * commutative and idempotent — the properties an eventually-consistent
+ * two-device sync actually needs. Nothing a device recorded is ever lost,
+ * beyond what the store's own caps (500 sessions, 60 range tests) already
+ * discard.
+ */
+export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
+  const local = load();
+  if (typeof remoteRaw !== "object" || remoteRaw === null) return local;
+  const remote = remoteRaw as Partial<ProgressState>;
+
+  // Sessions: union by id. Same id means the same session (ids are minted
+  // once at log time); on collision prefer whichever copy carries notes.
+  const byId = new Map<string, SessionLog>();
+  for (const s of asArray<SessionLog>(remote.sessions)) {
+    if (s && typeof s.id === "string" && typeof s.day === "string") {
+      byId.set(s.id, s);
+    }
+  }
+  for (const s of local.sessions) {
+    const other = byId.get(s.id);
+    byId.set(s.id, other?.notes && !s.notes ? other : s);
+  }
+  const sessions = [...byId.values()]
+    .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+    .slice(0, 500);
+
+  const achievements = [
+    ...new Set([
+      ...local.achievements,
+      ...asArray<string>(remote.achievements).filter(
+        (a) => typeof a === "string",
+      ),
+    ]),
+  ];
+
+  // Range history: testedAt is minted per test, so it works as an id.
+  const historyByTest = new Map(
+    [...asArray<VocalRange & { testedAt: string }>(remote.rangeHistory), ...local.rangeHistory]
+      .filter(
+        (e) =>
+          e &&
+          typeof e.testedAt === "string" &&
+          typeof e.lowMidi === "number" &&
+          typeof e.highMidi === "number",
+      )
+      .map((e) => [e.testedAt, e] as const),
+  );
+  const rangeHistory = [...historyByTest.values()]
+    .sort((a, b) => Date.parse(a.testedAt) - Date.parse(b.testedAt))
+    .slice(-60) as ProgressState["rangeHistory"];
+
+  // Latest measurement wins wholesale, keeping voiceType consistent with it.
+  const localTested = Date.parse(local.range.testedAt ?? "");
+  const remoteTested = Date.parse(
+    (remote.range as VocalRange | undefined)?.testedAt ?? "",
+  );
+  const range =
+    Number.isNaN(remoteTested) || remoteTested <= (localTested || 0)
+      ? local.range
+      : { ...(remote.range as VocalRange) };
+
+  // XP: recomputing from the merged work credits both devices exactly; the
+  // max() floor guarantees no device ever watches its number go down.
+  const recomputedXp =
+    sessions.reduce((a, s) => a + (typeof s.xp === "number" ? s.xp : 0), 0) +
+    30 * achievements.length;
+  const xp = Math.max(
+    local.xp,
+    typeof remote.xp === "number" ? remote.xp : 0,
+    recomputedXp,
+  );
+
+  const remoteStreak = remote.streak;
+  const lastDay =
+    [local.streak.lastDay, remoteStreak?.lastDay]
+      .filter((d): d is string => typeof d === "string")
+      .sort()
+      .pop() ?? null;
+  const current = Math.max(
+    streakFromSessions(sessions),
+    lastDay === local.streak.lastDay ? local.streak.current : 0,
+    lastDay === remoteStreak?.lastDay &&
+      typeof remoteStreak?.current === "number"
+      ? remoteStreak.current
+      : 0,
+  );
+  const best = Math.max(
+    local.streak.best,
+    typeof remoteStreak?.best === "number" ? remoteStreak.best : 0,
+    current,
+  );
+
+  const next: ProgressState = {
+    ...DEFAULT,
+    xp,
+    sessions,
+    streak: { current, best, lastDay },
+    range,
+    rangeHistory,
+    achievements,
+  };
+  save(next);
+  return next;
+}

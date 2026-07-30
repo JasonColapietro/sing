@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { SONGS, type Song } from "./data";
+import { PRO_SONGS, SONGS, type Song } from "./data";
 import type { ProgressState } from "@/lib/progress";
+import { useIsPro } from "@/lib/pro";
 import { Card, LinkButton, Pill, SectionLabel } from "@/components/ui";
 import { FreeOnly } from "@/components/pro/gate";
-import { ProLockTag } from "@/components/pro/ui";
+import { ProChip, ProLockTag } from "@/components/pro/ui";
 import {
   bestScoreForSong,
   computeDifficulty,
@@ -27,6 +28,36 @@ export function Library({
   onSelect: (song: Song) => void;
 }) {
   const hasRange = progress.range.lowMidi !== undefined && progress.range.highMidi !== undefined;
+  const isPro = useIsPro();
+
+  const songCard = (song: Song) => {
+    const difficulty = computeDifficulty(song);
+    const best = bestScoreForSong(progress.sessions, song.title);
+    const seconds = phraseSeconds(song);
+    return (
+      <button
+        key={song.id}
+        type="button"
+        onClick={() => onSelect(song)}
+        className="text-left"
+      >
+        <Card className="h-full transition-colors hover:border-amber/40">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="text-lg">{song.title}</h3>
+            {best !== undefined && <Pill tone="ok">Best {best}%</Pill>}
+          </div>
+          <p className="mt-2 text-sm text-mut">{song.origin}</p>
+          <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            <span>{song.notes.length} notes</span>
+            <span aria-hidden="true">·</span>
+            <span>{formatMinSec(seconds)} phrase</span>
+            <span aria-hidden="true">·</span>
+            <Pill tone={difficultyTone(difficulty.label)}>{difficulty.label}</Pill>
+          </div>
+        </Card>
+      </button>
+    );
+  };
 
   return (
     <div className="space-y-8">
@@ -48,36 +79,13 @@ export function Library({
       )}
 
       <section>
-        <SectionLabel>Songs</SectionLabel>
+        <span className="flex items-center gap-2">
+          <SectionLabel>Songs</SectionLabel>
+          {isPro && <ProChip />}
+        </span>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SONGS.map((song) => {
-            const difficulty = computeDifficulty(song);
-            const best = bestScoreForSong(progress.sessions, song.title);
-            const seconds = phraseSeconds(song);
-            return (
-              <button
-                key={song.id}
-                type="button"
-                onClick={() => onSelect(song)}
-                className="text-left"
-              >
-                <Card className="h-full transition-colors hover:border-amber/40">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-lg">{song.title}</h3>
-                    {best !== undefined && <Pill tone="ok">Best {best}%</Pill>}
-                  </div>
-                  <p className="mt-2 text-sm text-mut">{song.origin}</p>
-                  <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                    <span>{song.notes.length} notes</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{formatMinSec(seconds)} phrase</span>
-                    <span aria-hidden="true">·</span>
-                    <Pill tone={difficultyTone(difficulty.label)}>{difficulty.label}</Pill>
-                  </div>
-                </Card>
-              </button>
-            );
-          })}
+          {SONGS.map(songCard)}
+          {isPro && PRO_SONGS.map(songCard)}
           <FreeOnly>
             {[
               { title: "Danny Boy", meta: "Ballad" },

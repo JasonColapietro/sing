@@ -141,3 +141,72 @@ export const SONGS: Song[] = [
     ],
   },
 ];
+
+/**
+ * The Pro songbook — same one-phrase house style, gated to Pro members.
+ * Titles must stay exactly as the teaser cards spelled them: the title is
+ * the key best-scores are stored under.
+ */
+export const PRO_SONGS: Song[] = [
+  {
+    // Contour: rising step opening, phrase peak on "call" — Medium (span 14 st).
+    id: "danny-boy",
+    title: "Danny Boy",
+    origin: "Traditional (Londonderry Air, publ. 1855); lyrics Frederic Weatherly, 1913",
+    bpm: 63,
+    defaultKeyRootMidi: 60,
+    notes: [
+      { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh" },
+      { midi: 60, startBeat: 1, durBeats: 1, lyric: "Dan" },
+      { midi: 62, startBeat: 2, durBeats: 1, lyric: "ny" },
+      { midi: 64, startBeat: 3, durBeats: 2, lyric: "boy," },
+      { midi: 64, startBeat: 5, durBeats: 1, lyric: "the" },
+      { midi: 65, startBeat: 6, durBeats: 1, lyric: "pipes," },
+      { midi: 64, startBeat: 7, durBeats: 1, lyric: "the" },
+      { midi: 65, startBeat: 8, durBeats: 1, lyric: "pipes" },
+      { midi: 67, startBeat: 9, durBeats: 1, lyric: "are" },
+      { midi: 69, startBeat: 10, durBeats: 2, lyric: "call" },
+      { midi: 67, startBeat: 12, durBeats: 2, lyric: "ing" },
+    ],
+  },
+  {
+    // Long held tones over a gentle arch — Easy tempo, Medium reach to A4.
+    id: "shenandoah",
+    title: "Shenandoah",
+    origin: "Traditional (American river shanty, early 1800s)",
+    bpm: 66,
+    defaultKeyRootMidi: 60,
+    notes: [
+      { midi: 60, startBeat: 0, durBeats: 1, lyric: "Oh" },
+      { midi: 64, startBeat: 1, durBeats: 1, lyric: "Shen" },
+      { midi: 65, startBeat: 2, durBeats: 1, lyric: "an" },
+      { midi: 67, startBeat: 3, durBeats: 2, lyric: "doah," },
+      { midi: 67, startBeat: 5, durBeats: 1, lyric: "I" },
+      { midi: 69, startBeat: 6, durBeats: 2, lyric: "long" },
+      { midi: 67, startBeat: 8, durBeats: 1, lyric: "to" },
+      { midi: 64, startBeat: 9, durBeats: 1, lyric: "hear" },
+      { midi: 67, startBeat: 10, durBeats: 2, lyric: "you" },
+    ],
+  },
+  {
+    // Dorian: the raised sixth on "to" is the tune's signature color.
+    id: "scarborough-fair",
+    title: "Scarborough Fair",
+    origin: "Traditional (English ballad, 17th century)",
+    bpm: 96,
+    defaultKeyRootMidi: 62,
+    notes: [
+      { midi: 62, startBeat: 0, durBeats: 1, lyric: "Are" },
+      { midi: 62, startBeat: 1, durBeats: 1, lyric: "you" },
+      { midi: 69, startBeat: 2, durBeats: 2, lyric: "go" },
+      { midi: 69, startBeat: 4, durBeats: 1, lyric: "ing" },
+      { midi: 71, startBeat: 5, durBeats: 1, lyric: "to" },
+      { midi: 69, startBeat: 6, durBeats: 2, lyric: "Scar" },
+      { midi: 67, startBeat: 8, durBeats: 1, lyric: "bo" },
+      { midi: 64, startBeat: 9, durBeats: 1, lyric: "rough" },
+      { midi: 62, startBeat: 10, durBeats: 3, lyric: "Fair?" },
+    ],
+  },
+];
+
+export const ALL_SONGS: Song[] = [...SONGS, ...PRO_SONGS];
