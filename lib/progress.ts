@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { classifyVoice } from "./audio/notes";
+import type { NoteTallies, RangeEntry } from "./analytics";
 
 export type ActivityType =
   | "warmup"
@@ -26,6 +27,13 @@ export interface SessionLog {
   /** Short human-readable note, e.g. exercise name or song title. */
   detail?: string;
   xp: number;
+  /**
+   * Per-note accuracy for exercises that score against target pitches,
+   * folded to one tally per MIDI note. Absent for activities with no target
+   * (free singing, the metronome) and for sessions logged before Pro
+   * analytics existed.
+   */
+  notes?: NoteTallies;
 }
 
 export interface VocalRange {
@@ -40,7 +48,10 @@ export interface ProgressState {
   xp: number;
   sessions: SessionLog[];
   streak: { current: number; best: number; lastDay: string | null };
+  /** The most recent range test. */
   range: VocalRange;
+  /** Every range test, oldest first — `range` is just the last of these. */
+  rangeHistory: RangeEntry[];
   /** Unlocked achievement ids. */
   achievements: string[];
 }
@@ -60,6 +71,7 @@ const DEFAULT: ProgressState = {
   sessions: [],
   streak: { current: 0, best: 0, lastDay: null },
   range: {},
+  rangeHistory: [],
   achievements: [],
 };
 
@@ -74,14 +86,46 @@ function localDay(d = new Date()): string {
   return `${y}-${m}-${day}`;
 }
 
+/**
+ * Backfills fields added after the store first shipped.
+ *
+ * Never mutate the incoming arrays: `{ ...DEFAULT }` copies references, so a
+ * push would corrupt DEFAULT for every later load in the page session.
+ */
+function migrate(state: ProgressState): ProgressState {
+  // Range history used to be a single latest-only measurement. Seed it from
+  // that so a singer who already tested doesn't start with an empty chart.
+  const { lowMidi, highMidi } = state.range;
+  if (
+    state.rangeHistory.length === 0 &&
+    lowMidi !== undefined &&
+    highMidi !== undefined
+  ) {
+    return {
+      ...state,
+      rangeHistory: [
+        {
+          lowMidi,
+          highMidi,
+          voiceTypeLabel: state.range.voiceTypeLabel,
+          testedAt: state.range.testedAt ?? new Date().toISOString(),
+        },
+      ],
+    };
+  }
+  return state;
+}
+
 function load(): ProgressState {
   if (cache) return cache;
   if (typeof window === "undefined") return DEFAULT;
   try {
     const raw = window.localStorage.getItem(KEY);
-    cache = raw
-      ? { ...DEFAULT, ...(JSON.parse(raw) as Partial<ProgressState>) }
-      : { ...DEFAULT };
+    cache = migrate(
+      raw
+        ? { ...DEFAULT, ...(JSON.parse(raw) as Partial<ProgressState>) }
+        : { ...DEFAULT },
+    );
   } catch {
     cache = { ...DEFAULT };
   }
@@ -325,6 +369,8 @@ export function logSession(input: {
   durationSec: number;
   score?: number;
   detail?: string;
+  /** Per-note accuracy, when the exercise scored against target pitches. */
+  notes?: NoteTallies;
 }): LogResult {
   const prev = load();
   const now = new Date();
@@ -346,6 +392,11 @@ export function logSession(input: {
     score: input.score,
     detail: input.detail,
     xp,
+    // Omit the key entirely when there's nothing to say, so old sessions and
+    // target-less activities stay as small as they were.
+    ...(input.notes && Object.keys(input.notes).length > 0
+      ? { notes: input.notes }
+      : {}),
   };
 
   const yesterday = localDay(new Date(now.getTime() - 24 * 3600 * 1000));
@@ -370,10 +421,15 @@ export function logSession(input: {
   };
 }
 
-/** Store the measured vocal range (from the range test). */
+/**
+ * Store a measured vocal range. Appends to the history as well as replacing
+ * `range`, so retaking the test builds a record of the voice widening instead
+ * of erasing the previous measurement.
+ */
 export function setVocalRange(lowMidi: number, highMidi: number): LogResult {
   const prev = load();
   const voice = classifyVoice(lowMidi, highMidi);
+  const testedAt = new Date().toISOString();
   const next: ProgressState = {
     ...prev,
     range: {
@@ -381,8 +437,12 @@ export function setVocalRange(lowMidi: number, highMidi: number): LogResult {
       highMidi,
       voiceType: voice.id,
       voiceTypeLabel: voice.label,
-      testedAt: new Date().toISOString(),
+      testedAt,
     },
+    rangeHistory: [
+      ...prev.rangeHistory,
+      { lowMidi, highMidi, voiceTypeLabel: voice.label, testedAt },
+    ].slice(-60),
   };
   const newAchievements = unlockAchievements(next);
   save(next);

@@ -5,6 +5,7 @@ import { buildSegments, computeRootLadder, type WarmupExercise } from "./exercis
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { centsOff, freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { logSession, type VocalRange } from "@/lib/progress";
+import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
 import { IconArrowLeft, IconMinus, IconPlay, IconPlus, IconSkip, IconStop } from "./icons";
 import { NoteLaneCanvas, type TracePoint } from "./note-lane-canvas";
@@ -66,6 +67,10 @@ export function ExercisePlayer({
   const hitAccumRef = useRef<number[]>([]);
   const centsSumRef = useRef(0);
   const centsCountRef = useRef(0);
+  // Per-segment cents error for the Pro analytics, alongside the rep-wide
+  // averages above.
+  const segCentsSumRef = useRef<number[]>([]);
+  const segCentsFramesRef = useRef<number[]>([]);
   const traceRef = useRef<TracePoint[]>([]);
   // Lazy state initializer: performance.now() only runs once, on mount.
   const [sessionStart] = useState(() => performance.now());
@@ -86,6 +91,11 @@ export function ExercisePlayer({
       durationSec,
       score: avgScore,
       detail: ex.title,
+      // The ladder sings the same shape at rising roots, so one exercise
+      // covers many notes — fold every rep into a single per-note tally.
+      notes: tallyFromScores(
+        finalResults.flatMap((rep) => (rep.skipped ? [] : (rep.notes ?? []))),
+      ),
     });
     onFinish({
       ex,
@@ -130,6 +140,8 @@ export function ExercisePlayer({
     hitAccumRef.current = segs.map(() => 0);
     centsSumRef.current = 0;
     centsCountRef.current = 0;
+    segCentsSumRef.current = segs.map(() => 0);
+    segCentsFramesRef.current = segs.map(() => 0);
     traceRef.current = [];
     setHitSec(hitAccumRef.current);
     setTrace([]);
@@ -156,9 +168,16 @@ export function ExercisePlayer({
           const cents = centsOff(frame.freq, target);
           centsSumRef.current += Math.abs(cents);
           centsCountRef.current += 1;
-          if (Math.abs(cents) <= TOLERANCE_CENTS) {
-            const idx = segmentIndexAt(segs, elapsed);
-            if (idx >= 0) {
+          // Attribute every voiced frame to its segment, in tune or not —
+          // an out-of-tune frame is exactly the signal weak-note detection
+          // needs, so the index has to be resolved before the check.
+          const idx = segmentIndexAt(segs, elapsed);
+          if (idx >= 0) {
+            segCentsSumRef.current[idx] =
+              (segCentsSumRef.current[idx] ?? 0) + Math.abs(cents);
+            segCentsFramesRef.current[idx] =
+              (segCentsFramesRef.current[idx] ?? 0) + 1;
+            if (Math.abs(cents) <= TOLERANCE_CENTS) {
               hitAccumRef.current[idx] = (hitAccumRef.current[idx] ?? 0) + dt;
             }
           }
@@ -179,7 +198,31 @@ export function ExercisePlayer({
           centsCountRef.current > 0
             ? Math.round(centsSumRef.current / centsCountRef.current)
             : 0;
-        const result: RepResult = { root: currentRoot, score, avgCentsErr, skipped: false };
+        const result: RepResult = {
+          root: currentRoot,
+          score,
+          avgCentsErr,
+          skipped: false,
+          notes: segs.flatMap((seg, i) => {
+            const hitSec = hitAccumRef.current[i] ?? 0;
+            const centsSum = segCentsSumRef.current[i] ?? 0;
+            const centsFrames = segCentsFramesRef.current[i] ?? 0;
+            // A glide sweeps between two pitches, so credit each endpoint
+            // with half the segment rather than pinning it to one note.
+            const endpoints =
+              seg.startMidi === seg.endMidi
+                ? [seg.startMidi]
+                : [seg.startMidi, seg.endMidi];
+            const share = 1 / endpoints.length;
+            return endpoints.map((midi) => ({
+              midi,
+              hitSec: hitSec * share,
+              possibleSec: seg.dur * share,
+              centsSum: centsSum * share,
+              centsFrames: Math.round(centsFrames * share),
+            }));
+          }),
+        };
         setResults((prev) => [...prev, result]);
         setPhase("rep-result");
       }

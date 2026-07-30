@@ -11,14 +11,14 @@ import {
 } from "./format";
 
 // Design-token hex values for SVG (mirrors app/globals.css @theme).
-const AMBER = "#c59642";
-const LINE = "#ddd4c4";
-const LINE2 = "#c9bda0";
-const DIM = "#8a8272";
-const MUT = "#5c564d";
-const PANEL = "#fffaf2";
+export const AMBER = "#c59642";
+export const LINE = "#ddd4c4";
+export const LINE2 = "#c9bda0";
+export const DIM = "#8a8272";
+export const MUT = "#5c564d";
+export const PANEL = "#fffaf2";
 
-const MONO = "var(--font-mono)";
+export const MONO = "var(--font-mono)";
 
 /** Bar path: 4px rounded data-end (top), square at the baseline. */
 function roundedTopBar(x: number, y: number, w: number, h: number, r = 4): string {

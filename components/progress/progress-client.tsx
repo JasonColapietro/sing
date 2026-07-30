@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ACHIEVEMENTS,
   clearProgress,
@@ -22,8 +22,11 @@ import {
   SectionLabel,
   Stat,
 } from "@/components/ui";
-import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
-import { LockedPanel } from "@/components/pro/ui";
+import { ProInlineNudge } from "@/components/pro/gate";
+import { LockedPanel, ProChip } from "@/components/pro/ui";
+import { useIsPro } from "@/lib/pro";
+import { aggregateNotes } from "@/lib/analytics";
+import { NoteAccuracyChart, RangeHistoryChart } from "./pro-charts";
 import { PracticeCalendar } from "./calendar";
 import { MinutesBarChart, PracticeMixChart, ScoreTrendChart } from "./charts";
 import { CoachCard } from "./coach";
@@ -415,9 +418,14 @@ function DataControls() {
 
 export function ProgressClient() {
   const state = useProgress();
+  const isPro = useIsPro();
   const todaySec = todayPracticeSec(state);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
   const isFresh = state.sessions.length === 0 && state.xp === 0;
+  const noteTallies = useMemo(
+    () => aggregateNotes(state.sessions),
+    [state.sessions],
+  );
 
   // The calendar heatmap and trend charts render "today" and date-range axis
   // labels unconditionally, computed from new Date(). This page is statically
@@ -514,70 +522,36 @@ export function ProgressClient() {
               </div>
             </Card>
           </div>
-          <FreeOnly>
-            <LockedPanel label="Pitch accuracy over time" className="mt-4">
+          {isPro ? (
+            <div className="grid gap-4 lg:grid-cols-2">
+              <Card>
+                <div className="flex items-center justify-between gap-2">
+                  <SectionLabel>Accuracy by note</SectionLabel>
+                  <ProChip />
+                </div>
+                <div className="mt-4">
+                  <NoteAccuracyChart tallies={noteTallies} />
+                </div>
+              </Card>
+              <Card>
+                <div className="flex items-center justify-between gap-2">
+                  <SectionLabel>Range over time</SectionLabel>
+                  <ProChip />
+                </div>
+                <div className="mt-4">
+                  <RangeHistoryChart history={state.rangeHistory} />
+                </div>
+              </Card>
+            </div>
+          ) : (
+            <LockedPanel label="Accuracy by note" className="mt-4">
+              {/* Real chart as the preview: faded and inert under the panel,
+                  but it is the singer's own data doing the selling. */}
               <div className="p-4 sm:p-5">
-                <svg
-                  viewBox="0 0 640 160"
-                  className="block w-full"
-                  aria-hidden="true"
-                >
-                  {[30, 65, 100, 135].map((gy) => (
-                    <line
-                      key={gy}
-                      x1={40}
-                      y1={gy}
-                      x2={610}
-                      y2={gy}
-                      stroke="#ddd4c4"
-                      strokeWidth={1}
-                    />
-                  ))}
-                  <path
-                    d="M40 126 C90 120 120 128 165 112 C210 96 240 108 285 92 C330 76 360 88 405 70 C450 54 480 66 525 50 C560 40 585 44 610 34 L610 150 L40 150 Z"
-                    fill="#c59642"
-                    fillOpacity={0.12}
-                  />
-                  <path
-                    d="M40 126 C90 120 120 128 165 112 C210 96 240 108 285 92 C330 76 360 88 405 70 C450 54 480 66 525 50 C560 40 585 44 610 34"
-                    fill="none"
-                    stroke="#c59642"
-                    strokeWidth={2}
-                  />
-                  <text
-                    x={40}
-                    y={152}
-                    textAnchor="start"
-                    fontSize={9}
-                    fontFamily="var(--font-mono)"
-                    fill="#8a8272"
-                  >
-                    W1
-                  </text>
-                  <text
-                    x={325}
-                    y={152}
-                    textAnchor="middle"
-                    fontSize={9}
-                    fontFamily="var(--font-mono)"
-                    fill="#8a8272"
-                  >
-                    W4
-                  </text>
-                  <text
-                    x={610}
-                    y={152}
-                    textAnchor="end"
-                    fontSize={9}
-                    fontFamily="var(--font-mono)"
-                    fill="#8a8272"
-                  >
-                    W8
-                  </text>
-                </svg>
+                <NoteAccuracyChart tallies={noteTallies} />
               </div>
             </LockedPanel>
-          </FreeOnly>
+          )}
         </section>
 
         <section aria-label="Your voice">
