@@ -6,12 +6,19 @@ import {
   SINGERS,
   describeSpan,
   rangeLabel,
-  relatedSingers,
+  genreSlug,
   hasUsefulPercentile,
+  relatedSingers,
   singerBySlug,
   spanOctaves,
   spanPercentile,
+  voiceTypeSlug,
 } from "@/lib/singers";
+import {
+  observationsFor,
+  sharesHigh,
+  sharesLow,
+} from "@/lib/singers-analysis";
 import { SITE_URL } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import {
@@ -96,6 +103,9 @@ export default async function SingerPage({
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
+  const observations = observationsFor(s).slice(0, 5);
+  const lowMates = sharesLow(s).slice(0, 8);
+  const highMates = sharesHigh(s).slice(0, 8);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -228,6 +238,23 @@ export default async function SingerPage({
               </div>
             )}
           </dl>
+          {observations.length > 0 && (
+            <>
+              <h3 className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                Reading the numbers
+              </h3>
+              <ul className="mt-3 max-w-3xl space-y-2">
+                {observations.map((o) => (
+                  <li key={o.id} className="flex gap-3 text-sm text-mut">
+                    <span aria-hidden="true" className="text-amber-ink">
+                      ·
+                    </span>
+                    <span>{o.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
           <p className="mt-5 text-xs text-dim">
             Commonly cited figures, not lab measurements — extreme notes are
             one-off recorded moments, not the singer&rsquo;s everyday range.
@@ -236,6 +263,90 @@ export default async function SingerPage({
 
         {/* You vs them */}
         <CompareWithMe s={s} />
+
+        {/* Who else touches the same extremes — the pages a reader who cares
+            about one specific note actually wants next. */}
+        {(lowMates.length > 0 || highMates.length > 0) && (
+          <Card>
+            <SectionLabel>Same notes, other voices</SectionLabel>
+            <div className="mt-4 grid gap-6 sm:grid-cols-2">
+              {lowMates.length > 0 && (
+                <div>
+                  <h2 className="text-base">
+                    Also bottoming out on {midiToLabel(s.lowMidi)}
+                  </h2>
+                  <p className="mt-1 text-sm text-mut">
+                    {sharesLow(s).length} other{" "}
+                    {sharesLow(s).length === 1 ? "voice" : "voices"} here{" "}
+                    {sharesLow(s).length === 1 ? "is" : "are"} cited to the same
+                    floor.
+                  </p>
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {lowMates.map((m) => (
+                      <li key={m.slug}>
+                        <Link
+                          href={`/singers/${m.slug}`}
+                          className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-amber"
+                        >
+                          {m.name}
+                          <span className="tabular font-mono text-[10px] text-dim">
+                            {rangeLabel(m)}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {highMates.length > 0 && (
+                <div>
+                  <h2 className="text-base">
+                    Also topping out on {midiToLabel(s.highMidi)}
+                  </h2>
+                  <p className="mt-1 text-sm text-mut">
+                    {sharesHigh(s).length} other{" "}
+                    {sharesHigh(s).length === 1 ? "voice" : "voices"} here{" "}
+                    {sharesHigh(s).length === 1 ? "reaches" : "reach"} the same
+                    ceiling.
+                  </p>
+                  <ul className="mt-3 flex flex-wrap gap-2">
+                    {highMates.map((m) => (
+                      <li key={m.slug}>
+                        <Link
+                          href={`/singers/${m.slug}`}
+                          className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-amber"
+                        >
+                          {m.name}
+                          <span className="tabular font-mono text-[10px] text-dim">
+                            {rangeLabel(m)}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <LinkButton
+                href={`/singers/voice-type/${voiceTypeSlug(s.voiceType)}`}
+                variant="outline"
+                size="sm"
+              >
+                All {s.voiceType.toLowerCase()}s
+              </LinkButton>
+              {s.genres[0] && (
+                <LinkButton
+                  href={`/singers/genre/${genreSlug(s.genres[0])}`}
+                  variant="ghost"
+                  size="sm"
+                >
+                  {s.genres[0]} voices
+                </LinkButton>
+              )}
+            </div>
+          </Card>
+        )}
 
         {/* Similar voices */}
         <Card>

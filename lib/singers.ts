@@ -97,6 +97,58 @@ export function hasUsefulPercentile(s: Singer): boolean {
   return p > 0 && p < 100;
 }
 
+/* ------------------------------------------------------------------ hubs --- */
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function voiceTypeSlug(v: VoiceKind): string {
+  return slugify(v);
+}
+
+export function genreSlug(g: string): string {
+  return slugify(g);
+}
+
+export function voiceTypeFromSlug(slug: string): VoiceKind | undefined {
+  return VOICE_KINDS.find((v) => voiceTypeSlug(v) === slug);
+}
+
+/** Genres with enough singers to make a page worth having on its own. */
+export const HUB_GENRE_MINIMUM = 8;
+
+export const HUB_GENRES: string[] = (() => {
+  const counts = new Map<string, number>();
+  for (const s of SINGERS) {
+    for (const g of s.genres) counts.set(g, (counts.get(g) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .filter(([, n]) => n >= HUB_GENRE_MINIMUM)
+    .map(([g]) => g)
+    .sort();
+})();
+
+export function genreFromSlug(slug: string): string | undefined {
+  return HUB_GENRES.find((g) => genreSlug(g) === slug);
+}
+
+export function singersByVoiceType(v: VoiceKind): Singer[] {
+  return SINGERS.filter((s) => s.voiceType === v).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
+}
+
+export function singersByGenre(g: string): Singer[] {
+  return SINGERS.filter((s) => s.genres.includes(g)).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
+}
+
 /** Semitones of overlap between two ranges (0 if disjoint). */
 export function rangeOverlap(
   aLow: number,

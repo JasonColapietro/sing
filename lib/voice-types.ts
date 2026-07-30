@@ -1,0 +1,74 @@
+import type { VoiceKind } from "@/lib/singers";
+
+/**
+ * What each category actually means, in the app's own voice. Written once per
+ * category (eight paragraphs, not 357), because a reader who lands on "famous
+ * tenors" deserves to know what a tenor is before scrolling a chart.
+ */
+export interface VoiceTypeNote {
+  /** One-line definition for the page subtitle and meta description. */
+  summary: string;
+  /** Two or three sentences on how the category behaves in practice. */
+  body: string;
+  /** What a singer in this category tends to find hard. */
+  challenge: string;
+}
+
+export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
+  Bass: {
+    summary:
+      "the lowest male category, built on weight and depth rather than reach",
+    body: "A bass carries more vocal-fold mass than any other category, which is what gives the bottom of the range its size — notes that another singer can technically hit but not fill. The trade is at the top: where a baritone still has room, a bass is already working hard, so the repertoire tends to sit low and move slowly.",
+    challenge:
+      "Basses are the rarest category in recorded popular music, and the figures collected here reflect that — a handful of voices against a hundred-plus tenors.",
+  },
+  "Bass-baritone": {
+    summary:
+      "a bass's bottom with a baritone's working middle, common in storytelling styles",
+    body: "Bass-baritone describes a voice that reaches genuine bass depth but spends most of its time in baritone territory, which is why the label shows up so often around country and folk. The bottom notes are real but used as colour, not as the home key.",
+    challenge:
+      "The category blurs at both edges, so the same singer is often filed as bass on one source and baritone on another.",
+  },
+  Baritone: {
+    summary:
+      "the most common male speaking-range voice, sitting between bass and tenor",
+    body: "Most men speak in baritone territory, which makes it the default category and the one most conversational singing sits in. The characteristic sound comes from the middle of the range rather than either extreme, and the shift into head voice arrives lower than a tenor's.",
+    challenge:
+      "Rock and pop are written largely for tenors, so baritones spend a lot of time either transposing or pushing the top of the range harder than it wants to go.",
+  },
+  Tenor: {
+    summary:
+      "the highest standard male category, and the default voice of recorded popular music",
+    body: "Tenor is by far the largest group in this library, partly because the category is genuinely common and partly because the last seventy years of popular songwriting has been pitched for it. The interest in a tenor is usually not the top note but the transition — how a singer negotiates the passage out of chest voice around E4 to G4.",
+    challenge:
+      "Because so much repertoire sits right at that transition, tenors carry the most audible strain when they are singing tired or in the wrong key.",
+  },
+  Countertenor: {
+    summary:
+      "a male voice working in the alto or mezzo range, usually through developed falsetto",
+    body: "Countertenor describes function rather than anatomy: a male singer whose usable performing range sits where a female alto or mezzo would sing, generally reached through a highly developed falsetto or head register. In popular music the label attaches to falsetto specialists whose upper register is the whole point of the voice.",
+    challenge:
+      "The full-voice and falsetto figures for these singers are frequently conflated in circulation, which is why the cited spans look enormous.",
+  },
+  Contralto: {
+    summary:
+      "the lowest female category, prized for weight and darkness in the low middle",
+    body: "A contralto's value is in the bottom third of the range, where the tone stays full instead of thinning out. Many singers filed here in popular music are really low mezzos with a distinctive dark colour, since true contralto is rare.",
+    challenge:
+      "The category is chronically over-assigned to any woman with a low speaking voice, so treat contralto labels in circulation with more caution than the notes themselves.",
+  },
+  "Mezzo-soprano": {
+    summary:
+      "the middle female category, and the home of most modern pop belting",
+    body: "Mezzo-soprano is where the majority of women in popular music sit, and where the belt-driven pop of the last three decades lives. The interesting figure for a mezzo is rarely the highest note reached but the highest note held in full voice, which is why this library tracks the two separately.",
+    challenge:
+      "Belting near the top of the range is the most commonly injured technique in popular singing, and the cited ceilings here are peaks rather than sustainable nightly territory.",
+  },
+  Soprano: {
+    summary:
+      "the highest female category, with the most headroom above the staff",
+    body: "Sopranos carry the lightest fold mass and the most usable range above middle C, which is what makes coloratura and whistle register possible at all. In this library the soprano group holds most of the extreme top figures, and nearly all of the whistle-register entries.",
+    challenge:
+      "A soprano's cited top note is usually the least representative number about them — it is a one-off recorded moment, not where the voice actually works.",
+  },
+};
