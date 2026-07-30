@@ -6,6 +6,7 @@ import { freqToMidiFloat } from "@/lib/audio/notes";
 import { playTone, clickAt } from "@/lib/audio/synth";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { logSession, type VocalRange } from "@/lib/progress";
+import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, LinkButton, Pill, ProgressBar, SectionLabel } from "@/components/ui";
 import type { Song } from "./data";
 import {
@@ -83,6 +84,10 @@ export function SongPlayer({
   const hitRatioRef = useRef<number[]>([]);
   const hitSecRef = useRef<number[]>([]);
   const possibleSecRef = useRef<number[]>([]);
+  // Per-note cents error, for the Pro analytics. Summed over voiced frames so
+  // a note can report how sharp or flat it tends to be, not just hit or miss.
+  const centsSumRef = useRef<number[]>([]);
+  const centsFramesRef = useRef<number[]>([]);
   const loopSnapshotRef = useRef(0);
   const loopIndexTrackRef = useRef(0);
   const perLoopScoresRef = useRef<number[]>([]);
@@ -157,6 +162,18 @@ export function SongPlayer({
       durationSec,
       score: overallScore,
       detail: song.title,
+      // Only meaningful with a mic — listen mode scores nothing.
+      notes: listeningRef.current
+        ? tallyFromScores(
+            notes.map((n, i) => ({
+              midi: n.midi,
+              hitSec: hitSecRef.current[i] ?? 0,
+              possibleSec: possibleSecRef.current[i] ?? 0,
+              centsSum: centsSumRef.current[i] ?? 0,
+              centsFrames: centsFramesRef.current[i] ?? 0,
+            })),
+          )
+        : undefined,
     });
 
     const hardest = listeningRef.current ? hardestNotes(notes, hitRatioRef.current) : [];
@@ -222,6 +239,8 @@ export function SongPlayer({
         const idx = noteIndexAtBeat(currentNotesRef.current, beatInLoop);
         if (idx >= 0) {
           const cents = foldedCents(midiFloat, currentNotesRef.current[idx].midi, octaveAgnosticRef.current);
+          centsSumRef.current[idx] = (centsSumRef.current[idx] ?? 0) + Math.abs(cents);
+          centsFramesRef.current[idx] = (centsFramesRef.current[idx] ?? 0) + 1;
           if (Math.abs(cents) <= TOLERANCE_CENTS) {
             hitSecRef.current[idx] = (hitSecRef.current[idx] ?? 0) + dt;
           }
@@ -257,6 +276,8 @@ export function SongPlayer({
     possibleSecRef.current = notes.map((n) => n.durBeats * spb * LOOPS);
     hitSecRef.current = notes.map(() => 0);
     hitRatioRef.current = notes.map(() => 0);
+    centsSumRef.current = notes.map(() => 0);
+    centsFramesRef.current = notes.map(() => 0);
     scheduledMaskRef.current = new Array(notes.length * LOOPS).fill(false);
     loopSnapshotRef.current = 0;
     loopIndexTrackRef.current = 0;

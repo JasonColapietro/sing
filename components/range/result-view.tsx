@@ -8,10 +8,11 @@ import {
   midiToLabel,
 } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
-import type { Achievement } from "@/lib/progress";
+import { useProgress, type Achievement } from "@/lib/progress";
+import { useIsPro } from "@/lib/pro";
 import { Button, Card, Pill, SectionLabel, Stat } from "@/components/ui";
-import { FreeOnly } from "@/components/pro/gate";
-import { LockedPanel } from "@/components/pro/ui";
+import { LockedPanel, ProChip } from "@/components/pro/ui";
+import { RangeHistoryChart } from "@/components/progress/pro-charts";
 import { PianoStrip } from "./piano-strip";
 import { SINGERS, rangeOverlap } from "@/lib/singers";
 
@@ -418,35 +419,36 @@ export function ResultView({
         </div>
       </Card>
 
-      {/* Range over time */}
-      <FreeOnly>
-        <LockedPanel label="Range over time">
-          <div className="p-4">
-            <svg
-              viewBox="0 0 640 150"
-              className="block w-full"
-              aria-hidden="true"
-            >
-              <line x1="24" y1="30" x2="616" y2="30" stroke="#ddd4c4" strokeWidth="1" />
-              <line x1="24" y1="60" x2="616" y2="60" stroke="#ddd4c4" strokeWidth="1" />
-              <line x1="24" y1="90" x2="616" y2="90" stroke="#ddd4c4" strokeWidth="1" />
-              <line x1="24" y1="120" x2="616" y2="120" stroke="#ddd4c4" strokeWidth="1" />
-              <rect x="56" y="58" width="28" height="44" rx="6" fill="#c59642" opacity="0.25" />
-              <rect x="156" y="52" width="28" height="54" rx="6" fill="#c59642" opacity="0.35" />
-              <rect x="256" y="46" width="28" height="62" rx="6" fill="#c59642" opacity="0.45" />
-              <rect x="356" y="40" width="28" height="72" rx="6" fill="#c59642" opacity="0.6" />
-              <rect x="456" y="34" width="28" height="82" rx="6" fill="#c59642" opacity="0.8" />
-              <rect x="556" y="26" width="28" height="94" rx="6" fill="#c59642" />
-              <text x="70" y="142" textAnchor="middle" className="font-mono" fontSize="10" fill="#8a8272">FEB</text>
-              <text x="170" y="142" textAnchor="middle" className="font-mono" fontSize="10" fill="#8a8272">MAR</text>
-              <text x="270" y="142" textAnchor="middle" className="font-mono" fontSize="10" fill="#8a8272">APR</text>
-              <text x="370" y="142" textAnchor="middle" className="font-mono" fontSize="10" fill="#8a8272">MAY</text>
-              <text x="470" y="142" textAnchor="middle" className="font-mono" fontSize="10" fill="#8a8272">JUN</text>
-              <text x="570" y="142" textAnchor="middle" className="font-mono" fontSize="10" fill="#8a8272">JUL</text>
-            </svg>
-          </div>
-        </LockedPanel>
-      </FreeOnly>
+      {/* Range over time — real history for Pro, the same chart faded as the
+          preview for free. */}
+      <RangeOverTime />
     </div>
+  );
+}
+
+function RangeOverTime() {
+  const isPro = useIsPro();
+  const history = useProgress().rangeHistory;
+
+  if (isPro) {
+    return (
+      <Card>
+        <div className="flex items-center justify-between gap-2">
+          <SectionLabel>Range over time</SectionLabel>
+          <ProChip />
+        </div>
+        <div className="mt-4">
+          <RangeHistoryChart history={history} />
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <LockedPanel label="Range over time">
+      <div className="p-4 sm:p-5">
+        <RangeHistoryChart history={history} />
+      </div>
+    </LockedPanel>
   );
 }

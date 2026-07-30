@@ -33,8 +33,66 @@ truth** and the flow is built around that:
 |---|---|
 | `POST /api/checkout` | Creates a hosted Stripe Checkout Session. No card field is ever rendered by this app. |
 | `POST /api/entitlement` | Resolves entitlement from a `session_id` (right after paying) or a `subscription_id` (re-checks later). |
-| `POST /api/restore` | Unlocks Pro on a new device from the email that paid. |
+| `POST /api/restore` | Unlocks Pro on a new device from the subscriber's Pro key. |
 | `POST /api/portal` | Opens Stripe's billing portal — this is what makes "cancel in one click" true. |
+
+### Pro keys
+
+Entitlement lives in one browser, so subscribers get a **Pro key** — an HMAC
+over their Stripe customer and subscription ids (`lib/pro-key.ts`, signed with
+`PRO_KEY_SECRET`). It is shown on `/pro` while Pro is active and is what
+`/api/restore` accepts.
+
+A key is proof of *purchase*, not a grant: restore verifies the signature and
+then asks Stripe whether that subscription is still live, so a cancelled or
+leaked key stops unlocking anything. Keys are derived rather than stored, so a
+lost one is regenerated, not looked up:
+
+```bash
+node --env-file=.env.local scripts/pro-key.mjs sub_123…      # or an email
+```
+
+Restoring by email was removed deliberately: it let anyone who knew a
+subscriber's address unlock Pro, and the endpoint doubled as an oracle for
+"is this person a subscriber?".
+
+### Rate limiting
+
+Two layers, and the edge one does the real work.
+
+`lib/rate-limit.ts` caps bursts inside the function (429 with `Retry-After`,
+8–40 per route). It's free but opportunistic: counters live per function
+instance, so a parallel burst that lands on fresh instances can slip past it
+entirely. Treat it as a floor, not a guarantee.
+
+The durable layer is a Vercel WAF rule, live on this project:
+
+```
+Rate limit Stripe API — path starts with /api/ — 40 requests / 60s per IP — deny
+```
+
+Requests denied there never reach the functions and aren't billed. A real
+session makes one or two API calls (entitlement revalidation is throttled to
+twice a day), so 40/min leaves roughly 20× headroom.
+
+```bash
+vercel firewall rules inspect "Rate limit Stripe API"
+vercel firewall diff && vercel firewall publish --yes
+```
+
+Two things to know before editing it. Changes are **staged** until you publish,
+and `edit` silently reports "No changes detected" if you pass only the field you
+want to change — re-pass the whole rate-limit config or nothing happens:
+
+```bash
+vercel firewall rules edit "Rate limit Stripe API" \
+  --action rate_limit --rate-limit-window 60 --rate-limit-requests 40 \
+  --rate-limit-keys ip --rate-limit-action deny --yes
+```
+
+Passing `--condition` **replaces** the rule's conditions, so omit it unless you
+mean to rewrite the path match. WAF counters are per region, so a distributed
+caller can exceed the limit by roughly the number of regions it hits.
 
 `lib/pro.ts` caches the last answer in `localStorage`; `components/pro/sync.tsx`
 re-checks with Stripe twice a day so a cancellation or failed payment actually
@@ -44,14 +102,31 @@ revokes access. Prices are resolved by **lookup key** (`suede_pro_monthly`,
 ### Going live
 
 The Marketplace resource starts as a Stripe **sandbox** (test mode — real card
-numbers are declined). To take real money:
+numbers are declined). No code changes are needed to go live; it's four steps,
+and the first two can only be done by the account owner.
 
-```bash
-vercel integration resource claim suede-sing-pro
-```
+1. **Claim the sandbox.** `vercel integration resource claim suede-sing-pro`
+   opens a Stripe URL. Sign in (or create the account) there.
+2. **Finish Stripe activation** in the dashboard: business details, bank
+   account for payouts, tax and identity verification. Until this is done
+   `charges_enabled` stays false and live checkout will fail.
+3. **Refresh the keys and set up live mode.** Test and live data are separate
+   spaces in Stripe, so the product, prices, and portal config must be created
+   again with live keys:
 
-Then recreate the two prices in the live account with the same lookup keys and
-enable the billing portal. No code changes are needed.
+   ```bash
+   vercel env pull
+   STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs
+   ```
+
+   The script is idempotent and prints which mode it's touching. For test mode
+   it's just `npm run stripe:setup`.
+4. **Confirm.** `vercel integration list` should show ownership as `linked`
+   rather than `sandbox`, and the setup script should report
+   `charges_enabled=true`.
+
+Verify a real charge with a small live purchase you refund, not with a test
+card — test cards are declined in live mode.
 
 ## Learn More
 

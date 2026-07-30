@@ -6,6 +6,8 @@ import { useIsPro } from "@/lib/pro";
 import { Card } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
 import { LockGlyph } from "@/components/pro/ui";
+import { midiToLabel } from "@/lib/audio/notes";
+import { aggregateNotes, overallAccuracy, weakNotes } from "@/lib/analytics";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
 interface PlanItem {
@@ -32,25 +34,57 @@ function buildPlan(state: ProgressState, now: Date): {
       ? `Keep your ${state.streak.current}-day streak alive — one short session today keeps the tape rolling.`
       : null;
 
-  // Weakest recent area: lowest average score among ear/song/warmup, last 14 days.
+  /* ---- signals, all from the singer's own numbers ---- */
+
+  const recent = state.sessions.filter((s) => s.day >= cutoff);
+  const tallies = aggregateNotes(state.sessions, { sinceDay: cutoff });
+  const weak = weakNotes(tallies, { limit: 2 });
+  const accuracy = overallAccuracy(tallies);
+
+  // Weakest scored area over the last 14 days, with a 2-session minimum so a
+  // single bad round doesn't get to define an "average".
   const buckets = new Map<"ear" | "song" | "warmup", { sum: number; n: number }>();
-  for (const s of state.sessions) {
-    if (s.day < cutoff || s.score === undefined) continue;
+  for (const s of recent) {
+    if (s.score === undefined) continue;
     if (s.type !== "ear" && s.type !== "song" && s.type !== "warmup") continue;
     const b = buckets.get(s.type) ?? { sum: 0, n: 0 };
     b.sum += s.score;
     b.n += 1;
     buckets.set(s.type, b);
   }
-  let weakest: { type: "ear" | "song" | "warmup"; avg: number } | null = null;
+  let weakestArea: { type: "ear" | "song" | "warmup"; avg: number } | null = null;
   for (const [type, b] of buckets) {
+    if (b.n < 2) continue;
     const avg = b.sum / b.n;
-    if (!weakest || avg < weakest.avg) weakest = { type, avg };
+    if (!weakestArea || avg < weakestArea.avg) weakestArea = { type, avg };
   }
+
+  // A recovery day: yesterday was unusually heavy relative to the recent norm.
+  const daySec = new Map<string, number>();
+  for (const s of recent) {
+    daySec.set(s.day, (daySec.get(s.day) ?? 0) + s.durationSec);
+  }
+  const yesterdaySec = daySec.get(yesterdayKey) ?? 0;
+  const activeDays = [...daySec.entries()].filter(([day]) => day !== todayKey);
+  const meanDaySec =
+    activeDays.length > 0
+      ? activeDays.reduce((a, [, sec]) => a + sec, 0) / activeDays.length
+      : 0;
+  const heavyYesterday =
+    yesterdaySec >= 25 * 60 && yesterdaySec > meanDaySec * 1.6;
+
+  // Range staleness: growth charts need fresh measurements.
+  const testedAt = state.range.testedAt ? Date.parse(state.range.testedAt) : NaN;
+  const rangeAgeDays = Number.isNaN(testedAt)
+    ? null
+    : Math.floor((now.getTime() - testedAt) / 86_400_000);
+  const hasRange = state.range.lowMidi !== undefined;
+
+  /* ---- assemble, most important first ---- */
 
   const items: PlanItem[] = [];
 
-  if (state.range.lowMidi === undefined) {
+  if (!hasRange) {
     items.push({
       title: "Vocal range test",
       href: "/range",
@@ -58,32 +92,63 @@ function buildPlan(state: ProgressState, now: Date): {
       reason:
         "You haven't measured your range yet — it anchors every other exercise to your voice.",
     });
+  } else if (rangeAgeDays !== null && rangeAgeDays >= 21) {
+    items.push({
+      title: "Retake the range test",
+      href: "/range",
+      minutes: 3,
+      reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test keeps the growth chart honest.`,
+    });
   }
 
   items.push({
     title: "Breathing",
     href: "/breath",
-    minutes: 2,
-    reason: "Every session starts here — low, steady breaths set up the rest.",
+    minutes: heavyYesterday ? 4 : 2,
+    reason: heavyYesterday
+      ? `Yesterday was a heavy one (${Math.round(yesterdaySec / 60)} min) — start slow and give the voice time to settle.`
+      : "Every session starts here — low, steady breaths set up the rest.",
   });
 
-  items.push({
-    title: "Warmups",
-    href: "/warmups",
-    minutes: 5,
-    reason: "Gentle sirens and hums wake the voice up before harder work.",
-  });
+  // The core of the plan: measured weak notes drive the warmup choice.
+  if (weak.length > 0) {
+    const worst = weak[0];
+    const names = weak.map((n) => midiToLabel(n.midi)).join(" and ");
+    const upper = hasRange && state.range.highMidi !== undefined
+      ? worst.midi >= state.range.highMidi - 5
+      : worst.midi >= 67;
+    items.push({
+      title: upper ? "Head-voice builder warmup" : "Slow sirens through your weak spot",
+      href: "/warmups",
+      minutes: 6,
+      reason: `${names} ${weak.length > 1 ? "are" : "is"} your weakest ${
+        weak.length > 1 ? "notes" : "note"
+      } right now — ${midiToLabel(worst.midi)} lands in tune just ${worst.accuracy}% of the time${
+        worst.cents !== null ? `, off by ~${Math.round(worst.cents)} cents` : ""
+      }. Ladder through it slowly.`,
+    });
+  } else {
+    items.push({
+      title: "Warmups",
+      href: "/warmups",
+      minutes: 5,
+      reason:
+        accuracy === null
+          ? "Sing one scored warmup with the mic on and tomorrow's plan starts reading your actual notes."
+          : "No stand-out weak note in the last two weeks — a general ladder keeps the whole range honest.",
+    });
+  }
 
-  if (weakest) {
-    const avg = Math.round(weakest.avg);
-    if (weakest.type === "ear") {
+  if (weakestArea) {
+    const avg = Math.round(weakestArea.avg);
+    if (weakestArea.type === "ear") {
       items.push({
         title: "Ear training",
         href: TYPE_META.ear.href,
         minutes: 5,
-        reason: `Your interval scores averaged ${avg} over the last two weeks — the lowest of your scored areas.`,
+        reason: `Your ear scores averaged ${avg} over the last two weeks — the lowest of your scored areas.`,
       });
-    } else if (weakest.type === "song") {
+    } else if (weakestArea.type === "song") {
       items.push({
         title: "Song practice",
         href: TYPE_META.song.href,
@@ -103,16 +168,19 @@ function buildPlan(state: ProgressState, now: Date): {
       title: "Ear training",
       href: TYPE_META.ear.href,
       minutes: 5,
-      reason: "No recent scores to read yet — a scored round sets your baseline.",
+      reason: "Not enough recent scores to compare areas — a scored round sets your baseline.",
     });
   }
 
-  if (state.range.lowMidi !== undefined) {
+  if (hasRange) {
     items.push({
       title: "Sing a song",
       href: "/songs",
       minutes: 3,
-      reason: "Finish by putting the work into real music.",
+      reason:
+        accuracy !== null
+          ? `Finish on real music — you're in tune ${accuracy}% of the scored time lately, and songs are where that shows.`
+          : "Finish by putting the work into real music.",
     });
   }
 
@@ -183,7 +251,8 @@ export function CoachCard({ state }: { state: ProgressState }) {
         )}
       </ol>
       <p className="mt-4 text-xs text-dim">
-        Built from your recent practice — no AI, just the numbers.
+        Built from your scored notes, range tests, and recent practice — no AI,
+        just the numbers.
       </p>
       <div className="mt-3">
         <ProInlineNudge>

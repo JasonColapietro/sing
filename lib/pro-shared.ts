@@ -29,6 +29,8 @@ export interface Entitlement {
   /** ISO timestamp of the end of the paid period, when known. */
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
+  /** Signed key that restores Pro on another device. Null when inactive. */
+  proKey: string | null;
 }
 
 export const INACTIVE: Entitlement = {
@@ -40,4 +42,5 @@ export const INACTIVE: Entitlement = {
   email: null,
   currentPeriodEnd: null,
   cancelAtPeriodEnd: false,
+  proKey: null,
 };

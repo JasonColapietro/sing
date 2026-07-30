@@ -140,16 +140,54 @@ function longDate(iso: string | null): string | null {
   });
 }
 
+/** The key a subscriber uses to unlock Pro in another browser. */
+function ProKeyRow({ proKey }: { proKey: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(proKey);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard blocked — the key is selectable on screen either way
+    }
+  };
+
+  return (
+    <div className="mt-4 rounded-xl border border-line bg-panel2/50 px-3 py-2.5 text-left">
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
+          Your Pro key
+        </span>
+        <button
+          type="button"
+          onClick={copy}
+          className="font-mono text-[10px] uppercase tracking-[0.14em] text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+        >
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </div>
+      <code className="mt-1.5 block truncate font-mono text-xs text-mut">
+        {proKey}
+      </code>
+      <p className="mt-1.5 text-xs text-dim">
+        Unlocks Pro in another browser. Worth keeping somewhere safe.
+      </p>
+    </div>
+  );
+}
+
 /** Recovers Pro on a fresh browser, where the local entitlement is gone. */
 function RestorePanel() {
-  const [email, setEmail] = useState("");
+  const [key, setKey] = useState("");
   const [task, setTask] = useState<Task>({ kind: "idle" });
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     setTask({ kind: "working" });
     try {
-      await restorePro(email);
+      await restorePro(key);
       setTask({ kind: "idle" });
     } catch (error) {
       setTask({
@@ -166,13 +204,15 @@ function RestorePanel() {
       </summary>
       <form onSubmit={submit} className="mt-4 flex flex-wrap items-center gap-3">
         <input
-          type="email"
+          type="text"
           required
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="you@example.com"
-          aria-label="Email you paid with"
-          className="min-w-[12rem] flex-1 rounded-full border border-line2 bg-bg px-4 py-2.5 text-sm text-ink placeholder:text-dim"
+          value={key}
+          onChange={(event) => setKey(event.target.value)}
+          placeholder="suede-pro_…"
+          aria-label="Your Pro key"
+          autoComplete="off"
+          spellCheck={false}
+          className="min-w-[12rem] flex-1 rounded-full border border-line2 bg-bg px-4 py-2.5 font-mono text-sm text-ink placeholder:text-dim"
         />
         <Button
           type="submit"
@@ -187,8 +227,9 @@ function RestorePanel() {
         <p className="mt-3 text-sm text-rec">{task.message}</p>
       )}
       <p className="mt-3 text-xs text-dim">
-        Pro unlocks per browser, since there are no accounts. Enter the email
-        you paid with and it unlocks here too.
+        Pro unlocks per browser, since there are no accounts. Paste the Pro key
+        from the browser where you subscribed. Lost it? Email
+        hey@suedeai.ai and we&apos;ll send a new one.
       </p>
     </details>
   );
@@ -405,6 +446,7 @@ export function ProClient() {
                   See your dashboard
                 </LinkButton>
               </div>
+              {pro.proKey && <ProKeyRow proKey={pro.proKey} />}
             </div>
           ) : (
             <div className="flex flex-wrap items-end justify-between gap-6">
@@ -521,6 +563,9 @@ export function ProClient() {
                       <p className="text-center text-xs text-rec">
                         {portal.message}
                       </p>
+                    )}
+                    {pro.proKey && !justUpgraded && (
+                      <ProKeyRow proKey={pro.proKey} />
                     )}
                   </div>
                 ) : (

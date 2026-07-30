@@ -4,6 +4,7 @@ import type { Segment, WarmupExercise } from "./exercises";
 import { buildSegments } from "./exercises";
 import { playSequence, playTone } from "@/lib/audio/synth";
 import type { Achievement } from "@/lib/progress";
+import type { NoteScore } from "@/lib/analytics";
 
 /** Sing window = melody length + 20%, per the classic warmup ladder. */
 export function singWindowSec(totalSec: number): number {
@@ -73,6 +74,11 @@ export interface RepResult {
   score: number;
   avgCentsErr: number;
   skipped: boolean;
+  /**
+   * Per-note scoring for the Pro analytics. A glide segment contributes to
+   * both of its endpoints, since the singer had to land each one.
+   */
+  notes?: NoteScore[];
 }
 
 export function repAvgScore(results: RepResult[]): number {
