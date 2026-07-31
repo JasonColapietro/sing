@@ -235,6 +235,11 @@ export const PRO_PERKS: ProPerk[] = [
     desc: "Genre and voice-type routines: belt prep, head-voice builders, morning resets.",
   },
   {
+    id: "book",
+    title: "The Measured Voice",
+    desc: "A 23-chapter book on how the voice works, reading your own numbers, and a twelve-week program — in the app and as a PDF to keep.",
+  },
+  {
     id: "history",
     title: "Cloud sync",
     desc: "Progress that follows you across devices, backed up automatically — no export files.",
@@ -258,4 +263,5 @@ export const PLAN_ROWS: Array<{
   { label: "Range history", free: "Latest test", pro: "Every test, charted over time" },
   { label: "Practice history", free: "Last 20 sessions shown", pro: "Full history + trends" },
   { label: "Backup & sync", free: "Manual export file", pro: "Automatic cloud sync" },
+  { label: "The Measured Voice (book)", free: "Contents only", pro: "All 23 chapters + PDF" },
 ];
