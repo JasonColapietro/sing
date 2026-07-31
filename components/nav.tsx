@@ -20,6 +20,7 @@ const LINKS = [
   { href: "/recorder", label: "Recorder" },
   { href: "/tools", label: "Tools" },
   { href: "/progress", label: "Progress" },
+  { href: "/book", label: "Book" },
 ];
 
 function MenuIcon() {

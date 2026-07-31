@@ -8,6 +8,7 @@ import {
   AnalyticsGlyph,
   CoachGlyph,
   PacksGlyph,
+  BookGlyph,
   SongbookGlyph,
   SyncGlyph,
   TakesGlyph,
@@ -29,6 +30,7 @@ const PERK_GLYPHS: Record<string, React.ComponentType> = {
   takes: TakesGlyph,
   songs: SongbookGlyph,
   warmups: PacksGlyph,
+  book: BookGlyph,
   history: SyncGlyph,
 };
 

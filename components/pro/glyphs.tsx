@@ -82,3 +82,15 @@ export function SyncGlyph(props: GlyphProps) {
     </svg>
   );
 }
+
+/** Open book with a marked line — The Measured Voice. */
+export function BookGlyph(props: GlyphProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M10 5.5C8.5 4.4 6.8 4 4.5 4H3v11h1.5c2.3 0 4 .4 5.5 1.5" />
+      <path d="M10 5.5C11.5 4.4 13.2 4 15.5 4H17v11h-1.5c-2.3 0-4 .4-5.5 1.5" />
+      <path d="M10 5.5v11" />
+      <path d="M12.3 8.6h2.6" opacity="0.6" />
+    </svg>
+  );
+}
