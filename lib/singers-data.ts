@@ -488,8 +488,8 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Hope There's Someone",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Countertenor with slow, wide vibrato and hollow, flute-like sustain, mostly sung above the staff.",
-    "technique": null
+    "blurb": "Contralto with slow, wide vibrato and a hollow, flute-like sustain that carries most of the expression.",
+    "technique": "The vibrato is the instrument: slow, wide, and present almost from the onset rather than arriving at the tail of a note. Tone stays hollow and flute-like, with a lot of air in the sound and very little chest weight even down at the bottom of the range. Phrases are sustained rather than rhythmic, and pitch is allowed to bend into a note instead of landing square on it. Copying the wobble by shaking the jaw is the usual mistake — it comes from a released, low-pressure breath, not from muscle."
   },
   {
     "slug": "anthony-kiedis",
@@ -3971,7 +3971,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Nasal baritone with a flat deadpan low register that tightens into a strained, plaintive high belt.",
-    "technique": null
+    "technique": "Two registers, deliberately unblended. The low register is flat and nearly deadpan, nasal and close-mic'd, with almost no vibrato. The upper register tightens into a strained, plaintive quality that keeps a hard edge instead of opening out — full voice is cited to about A4, and the tension is the intended effect rather than a fault. Consonants are clipped to serve rhythm, and phrases sit tight to the grid. Students copy the strain by squeezing the throat; the sound depends on breath support underneath it, or it goes hoarse within a song."
   },
   {
     "slug": "kesha",
@@ -4499,7 +4499,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Gravel-and-air rasp, trumpet-shaped phrasing, scat treated as a second horn chorus.",
-    "technique": null
+    "technique": "Two instruments share one technique. The rasp is constant — a dense, gravelly tone with audible air behind it — and phrases are shaped like trumpet lines: short, punched, built around a rhythmic idea rather than a lyric line. Scat syllables are chosen for attack, hard consonants where a horn would tongue a note. Vibrato is fast and shallow, applied at the end of held notes. Singers imitating the gravel push it from the throat, which tires fast and misses the point: the phrasing is what carries it, not the texture."
   },
   {
     "slug": "luciano-pavarotti",
@@ -7097,7 +7097,7 @@ export const SINGERS: Singer[] = [
     "lowSource": null,
     "highSource": null,
     "blurb": "Dark, husky baritone that sits speech-close and thins to airy falsetto instead of pushing chest.",
-    "technique": null
+    "technique": "The voice sits close to speech: dark, husky, slightly behind the beat, with a lot of breath mixed into the tone even at low volume. Full voice is cited to around A4, and rather than push chest higher he thins deliberately into an airy falsetto above that, keeping the volume low so the change reads as intimacy rather than strain. Onsets are soft, almost sighed. The common error is adding weight to imitate the darkness — the colour comes from a relaxed, low larynx and a quiet breath, not from pressing."
   },
   {
     "slug": "van-morrison",

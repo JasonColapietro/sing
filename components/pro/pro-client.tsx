@@ -243,9 +243,12 @@ export function ProClient() {
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
   const [abandoned, setAbandoned] = useState(false);
 
-  const price = billing === "annual" ? "$2.50" : "$4";
+  // Lead with the amount actually charged. Dividing the annual plan down to a
+  // per-month figure undersells it and invites a price comparison this product
+  // does not need to win.
+  const price = billing === "annual" ? "$30" : "$4";
   const priceNote =
-    billing === "annual" ? "per month · $30 billed once a year" : "per month · billed monthly";
+    billing === "annual" ? "per year · billed once" : "per month · billed monthly";
   const periodEnd = longDate(pro.currentPeriodEnd);
 
   // Stripe returns to /pro?checkout=success&session_id=… — confirm the
@@ -372,7 +375,7 @@ export function ProClient() {
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <LinkButton href="#plans" variant="amber" size="lg">
-                    Go Pro — from $2.50/mo
+                    Go Pro
                   </LinkButton>
                   <LinkButton href="/studio" variant="ghost" size="lg">
                     Keep practicing free
@@ -609,7 +612,7 @@ export function ProClient() {
           <SectionLabel className="mb-4">Side by side</SectionLabel>
           <h2 className="max-w-2xl text-3xl">Exactly where free ends</h2>
           <p className="mt-3 max-w-2xl text-mut">
-            No asterisks. If a row says free, it&apos;s free forever.
+            No asterisks. If a row says free, it costs nothing.
           </p>
           <div className="mt-8 w-full min-w-0 [contain:layout]">
             <div className="no-scrollbar w-full min-w-0 overflow-x-auto rounded-2xl border border-line bg-panel [contain:layout]">
@@ -702,7 +705,7 @@ export function ProClient() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 text-center sm:px-6">
           <h2 className="text-3xl sm:text-4xl">
-            Sing free forever. Or bring in the coach.
+            Sing for nothing. Or bring in the coach.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-mut">
             Either way, your voice never leaves this device — and your practice
@@ -710,7 +713,7 @@ export function ProClient() {
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <LinkButton href="#plans" variant="amber" size="lg">
-              {pro.active ? "Manage your plan" : "Go Pro — from $2.50/mo"}
+              {pro.active ? "Manage your plan" : "Go Pro"}
             </LinkButton>
             <LinkButton href="/studio" variant="ghost" size="lg">
               Back to the studio
