@@ -56,11 +56,10 @@ export default function BookPage() {
             <Stat label="Parts" value={BOOK_PARTS.length} tone="cool" />
           </div>
           <p className="mt-5 max-w-2xl text-mut">
-            Everything the app can&rsquo;t say while you&rsquo;re mid-exercise:
-            how the voice actually works, how to read the numbers your own
-            sessions produce, a twelve-week program built from the rooms
-            you already have, and how to pick songs that fit the voice you
-            have today.
+            Twenty-three chapters on how the voice works, how to read the
+            numbers your own sessions produce, a twelve-week program built from
+            the rooms you already have, and how to pick songs that fit the voice
+            you have today. Written for the reading you do between sessions.
           </p>
           <div className="mt-5">
             <BookCta />

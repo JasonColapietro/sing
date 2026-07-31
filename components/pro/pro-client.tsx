@@ -40,6 +40,7 @@ const PRO_CARD_POINTS = [
   "Pitch analysis on every take",
   "Full songbook + pro warmup packs",
   "Cloud sync across devices",
+  "The Measured Voice: 23 chapters + PDF",
 ];
 
 const FREE_CARD_POINTS = [
@@ -69,7 +70,7 @@ const FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Why does a free app sell anything?",
-    a: "Suede Sing is built by one musician. Pro is what keeps the free studio free — instead of ads, trackers, or selling your data. One tier, one honest price.",
+    a: "Suede Sing is built by one musician. Pro is what keeps the free studio free — instead of ads, trackers, or selling your data. One tier, and the price is on this page.",
   },
 ];
 
@@ -421,12 +422,12 @@ export function ProClient() {
               <div>
                 <SectionLabel className="mb-4">Plans</SectionLabel>
                 <h2 className="max-w-2xl text-3xl">
-                  One price, every gold feature
+                  One tier. Coach, analytics, songbook, book.
                 </h2>
                 <p className="mt-3 max-w-xl text-mut">
-                  No tiers inside the tier. No feature roulette. Coffee money,
-                  once a month — and early singers lock the founding price for
-                  life.
+                  $9.99 a month, billed monthly, cancel in one click. Every Pro
+                  feature sits in the one tier, and the price you join at is the
+                  price you keep.
                 </p>
               </div>
             </div>
@@ -457,10 +458,10 @@ export function ProClient() {
               </span>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="tabular font-mono text-4xl text-ink">$0</span>
-                <span className="text-sm text-mut">no card, no clock</span>
+                <span className="text-sm text-mut">the whole studio</span>
               </div>
               <p className="mt-2 text-sm text-mut">
-                The whole studio. What you&apos;re using right now.
+                Every practice room, open right now.
               </p>
               <ul className="mt-5 space-y-2.5">
                 {FREE_CARD_POINTS.map((point) => (
@@ -669,7 +670,7 @@ export function ProClient() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 text-center sm:px-6">
           <h2 className="text-3xl sm:text-4xl">
-            Sing for nothing. Or bring in the coach.
+            The studio costs nothing. Pro adds the coach.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-mut">
             Either way, your voice never leaves this device — and your practice

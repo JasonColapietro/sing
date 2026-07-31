@@ -29,10 +29,10 @@ export function BookCta() {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <LinkButton href="/pro" size="md">
-        Get it with Suede Pro
+        See what Pro includes
       </LinkButton>
       <span className="text-xs text-dim">
-        {BOOK_CONTENTS.length} chapters, plus a PDF to keep
+        {BOOK_CONTENTS.length} chapters and a 140-page PDF, $9.99/month
       </span>
     </div>
   );
