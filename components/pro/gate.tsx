@@ -29,7 +29,7 @@ export function ProWhisper({ className = "" }: { className?: string }) {
     <p
       className={`font-mono text-[11px] uppercase tracking-[0.14em] text-dim ${className}`}
     >
-      Free forever ·{" "}
+      Free ·{" "}
       <Link
         href="/pro"
         className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"

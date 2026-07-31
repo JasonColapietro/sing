@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { SINGERS } from "@/lib/singers";
 import { LinkButton, SectionLabel } from "@/components/ui";
-import HeroVisual from "@/components/landing/hero-visual";
+import { HeroSplit } from "@/components/landing/hero-split";
+import { IosBand } from "@/components/landing/ios-band";
 import ComparisonTable from "@/components/landing/comparison";
 import ProVisual from "@/components/pro/pro-visual";
 import {
@@ -101,42 +102,8 @@ const STEPS = [
 export default function Home() {
   return (
     <main>
-      {/* 1 — Hero */}
-      <section className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
-          <div className="animate-fadeup">
-            <SectionLabel className="mb-4">
-              Free vocal studio — in the browser
-            </SectionLabel>
-            <h1 className="text-4xl leading-tight sm:text-5xl">
-              See your voice.
-              <br />
-              Sing in tune.
-            </h1>
-            <p className="mt-4 max-w-xl text-lg text-mut">
-              Suede Sing turns your mic into a real-time vocal trainer: live
-              pitch feedback, a range test, warmups, ear training, breath work,
-              and song practice — all in one place, all in your browser.
-            </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <LinkButton href="/studio" variant="rec" size="lg">
-                Start singing — free
-              </LinkButton>
-              <LinkButton href="/range" variant="outline" size="lg">
-                Find your range
-              </LinkButton>
-            </div>
-            <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-              No app<span className="mx-2 text-line2">·</span>No ads
-              <span className="mx-2 text-line2">·</span>No signup
-              <span className="mx-2 text-line2">·</span>$0
-            </p>
-          </div>
-          <div className="animate-fadeup">
-            <HeroVisual />
-          </div>
-        </div>
-      </section>
+      {/* 1 — Hero, carried over from the iOS app's landing page */}
+      <HeroSplit />
 
       {/* 2 — Feature grid */}
       <section className="border-t border-line">
@@ -145,6 +112,11 @@ export default function Home() {
           <h2 className="max-w-2xl text-3xl">
             Everything a practice session needs, one tab over
           </h2>
+          <p className="mt-3 max-w-2xl text-mut">
+            No install, no signup, no ads. Open a room and sing — the browser
+            studio does live pitch feedback, range testing, warmups, ear
+            training, breath work and song practice.
+          </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map(({ href, label, desc, Glyph }) => (
               <Link
@@ -165,7 +137,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3 — Comparison */}
+      {/* 3 — The iOS app, folded in from print.suedeai.ai */}
+      <IosBand />
+
+      {/* 4 — Comparison */}
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel className="mb-4">Side by side</SectionLabel>
@@ -213,10 +188,10 @@ export default function Home() {
                 Suede Pro
               </SectionLabel>
               <h2 className="max-w-xl text-3xl">
-                Free forever. Gold when you&apos;re ready.
+                The coach on top of the studio
               </h2>
               <p className="mt-3 max-w-xl text-mut">
-                The studio never charges you to practice. Pro adds a coach that
+                Practice in the studio without paying. Pro adds a coach that
                 remembers every session — adaptive daily plans, per-note
                 accuracy, your range charted over months, and the full
                 songbook.
@@ -244,9 +219,9 @@ export default function Home() {
                 </LinkButton>
               </div>
               <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                From $2.50/mo — founding price
-                <span className="mx-2 text-line2">·</span>Cancel anytime
-                <span className="mx-2 text-line2">·</span>Free stays free
+                Cancel in one click
+                <span className="mx-2 text-line2">·</span>No account needed
+                <span className="mx-2 text-line2">·</span>The studio stays free
               </p>
             </div>
             <ProVisual />

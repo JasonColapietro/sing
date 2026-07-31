@@ -183,7 +183,7 @@ export default function Nav() {
                 <span className="mt-1 block text-sm text-mut">
                   {isPro
                     ? "Gold channel active — manage your plan"
-                    : "The coach on top of the studio — from $2.50/mo"}
+                    : "The coach on top of the studio"}
                 </span>
               </Link>
             </div>

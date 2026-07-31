@@ -116,7 +116,7 @@ export default function ProMoments() {
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Button variant="amber" size="md" onClick={goPro} autoFocus>
-            See Suede Pro — from $2.50/mo
+            See Suede Pro
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>
             Keep it free

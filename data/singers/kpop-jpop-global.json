@@ -2,7 +2,11 @@
   {
     "name": "Jungkook",
     "voiceType": "Tenor",
-    "genres": ["K-Pop", "Pop", "R&B"],
+    "genres": [
+      "K-Pop",
+      "Pop",
+      "R&B"
+    ],
     "country": "South Korea",
     "activeFrom": 2013,
     "lowNote": "F2",
@@ -18,7 +22,11 @@
   {
     "name": "V",
     "voiceType": "Baritone",
-    "genres": ["K-Pop", "Pop", "R&B"],
+    "genres": [
+      "K-Pop",
+      "Pop",
+      "R&B"
+    ],
     "country": "South Korea",
     "activeFrom": 2013,
     "lowNote": "D2",
@@ -29,12 +37,15 @@
     "lowSource": null,
     "highSource": null,
     "blurb": "Dark, husky baritone that sits speech-close and thins to airy falsetto instead of pushing chest.",
-    "technique": null
+    "technique": "The voice sits close to speech: dark, husky, slightly behind the beat, with a lot of breath mixed into the tone even at low volume. Full voice is cited to around A4, and rather than push chest higher he thins deliberately into an airy falsetto above that, keeping the volume low so the change reads as intimacy rather than strain. Onsets are soft, almost sighed. The common error is adding weight to imitate the darkness — the colour comes from a relaxed, low larynx and a quiet breath, not from pressing."
   },
   {
     "name": "Jimin",
     "voiceType": "Tenor",
-    "genres": ["K-Pop", "Pop"],
+    "genres": [
+      "K-Pop",
+      "Pop"
+    ],
     "country": "South Korea",
     "activeFrom": 2013,
     "lowNote": "A2",
@@ -50,7 +61,10 @@
   {
     "name": "Taeyang",
     "voiceType": "Tenor",
-    "genres": ["K-Pop", "R&B"],
+    "genres": [
+      "K-Pop",
+      "R&B"
+    ],
     "country": "South Korea",
     "activeFrom": 2006,
     "lowNote": "A2",
@@ -66,7 +80,11 @@
   {
     "name": "Ailee",
     "voiceType": "Mezzo-soprano",
-    "genres": ["K-Pop", "R&B", "Pop"],
+    "genres": [
+      "K-Pop",
+      "R&B",
+      "Pop"
+    ],
     "country": "South Korea",
     "activeFrom": 2012,
     "lowNote": "F3",
@@ -82,7 +100,10 @@
   {
     "name": "Sohyang",
     "voiceType": "Soprano",
-    "genres": ["Pop", "Gospel"],
+    "genres": [
+      "Pop",
+      "Gospel"
+    ],
     "country": "South Korea",
     "activeFrom": 2011,
     "lowNote": "E3",
@@ -98,7 +119,10 @@
   {
     "name": "Park Hyo Shin",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Musical Theatre"],
+    "genres": [
+      "Pop",
+      "Musical Theatre"
+    ],
     "country": "South Korea",
     "activeFrom": 1999,
     "lowNote": "F2",
@@ -114,7 +138,11 @@
   {
     "name": "IU",
     "voiceType": "Soprano",
-    "genres": ["K-Pop", "Pop", "Singer-Songwriter"],
+    "genres": [
+      "K-Pop",
+      "Pop",
+      "Singer-Songwriter"
+    ],
     "country": "South Korea",
     "activeFrom": 2008,
     "lowNote": "D3",
@@ -130,7 +158,10 @@
   {
     "name": "Taeyeon",
     "voiceType": "Soprano",
-    "genres": ["K-Pop", "Pop"],
+    "genres": [
+      "K-Pop",
+      "Pop"
+    ],
     "country": "South Korea",
     "activeFrom": 2007,
     "lowNote": "E3",
@@ -146,7 +177,10 @@
   {
     "name": "Rosé",
     "voiceType": "Soprano",
-    "genres": ["K-Pop", "Pop"],
+    "genres": [
+      "K-Pop",
+      "Pop"
+    ],
     "country": "New Zealand",
     "activeFrom": 2016,
     "lowNote": "F3",
@@ -162,7 +196,11 @@
   {
     "name": "Baekhyun",
     "voiceType": "Tenor",
-    "genres": ["K-Pop", "Pop", "R&B"],
+    "genres": [
+      "K-Pop",
+      "Pop",
+      "R&B"
+    ],
     "country": "South Korea",
     "activeFrom": 2012,
     "lowNote": "F2",
@@ -178,7 +216,10 @@
   {
     "name": "Chen",
     "voiceType": "Tenor",
-    "genres": ["K-Pop", "Pop"],
+    "genres": [
+      "K-Pop",
+      "Pop"
+    ],
     "country": "South Korea",
     "activeFrom": 2012,
     "lowNote": "G2",
@@ -194,7 +235,11 @@
   {
     "name": "Jonghyun",
     "voiceType": "Tenor",
-    "genres": ["K-Pop", "R&B", "Pop"],
+    "genres": [
+      "K-Pop",
+      "R&B",
+      "Pop"
+    ],
     "country": "South Korea",
     "activeFrom": 2008,
     "lowNote": "F2",
@@ -210,7 +255,11 @@
   {
     "name": "Hikaru Utada",
     "voiceType": "Mezzo-soprano",
-    "genres": ["J-Pop", "R&B", "Pop"],
+    "genres": [
+      "J-Pop",
+      "R&B",
+      "Pop"
+    ],
     "country": "Japan",
     "activeFrom": 1998,
     "lowNote": "E3",
@@ -226,7 +275,10 @@
   {
     "name": "Ayumi Hamasaki",
     "voiceType": "Mezzo-soprano",
-    "genres": ["J-Pop", "Pop"],
+    "genres": [
+      "J-Pop",
+      "Pop"
+    ],
     "country": "Japan",
     "activeFrom": 1998,
     "lowNote": "F3",
@@ -242,7 +294,10 @@
   {
     "name": "LiSA",
     "voiceType": "Mezzo-soprano",
-    "genres": ["J-Pop", "Rock"],
+    "genres": [
+      "J-Pop",
+      "Rock"
+    ],
     "country": "Japan",
     "activeFrom": 2010,
     "lowNote": "F3",
@@ -258,7 +313,10 @@
   {
     "name": "Kenshi Yonezu",
     "voiceType": "Baritone",
-    "genres": ["J-Pop", "Pop"],
+    "genres": [
+      "J-Pop",
+      "Pop"
+    ],
     "country": "Japan",
     "activeFrom": 2012,
     "lowNote": "F2",
@@ -269,12 +327,16 @@
     "lowSource": null,
     "highSource": null,
     "blurb": "Nasal baritone with a flat deadpan low register that tightens into a strained, plaintive high belt.",
-    "technique": null
+    "technique": "Two registers, deliberately unblended. The low register is flat and nearly deadpan, nasal and close-mic'd, with almost no vibrato. The upper register tightens into a strained, plaintive quality that keeps a hard edge instead of opening out — full voice is cited to about A4, and the tension is the intended effect rather than a fault. Consonants are clipped to serve rhythm, and phrases sit tight to the grid. Students copy the strain by squeezing the throat; the sound depends on breath support underneath it, or it goes hoarse within a song."
   },
   {
     "name": "Misia",
     "voiceType": "Soprano",
-    "genres": ["J-Pop", "R&B", "Soul"],
+    "genres": [
+      "J-Pop",
+      "R&B",
+      "Soul"
+    ],
     "country": "Japan",
     "activeFrom": 1998,
     "lowNote": "F3",
@@ -290,7 +352,11 @@
   {
     "name": "Ado",
     "voiceType": "Mezzo-soprano",
-    "genres": ["J-Pop", "Rock", "Pop"],
+    "genres": [
+      "J-Pop",
+      "Rock",
+      "Pop"
+    ],
     "country": "Japan",
     "activeFrom": 2020,
     "lowNote": "E3",
