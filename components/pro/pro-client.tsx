@@ -71,41 +71,6 @@ const FAQ: Array<{ q: string; a: string }> = [
   },
 ];
 
-function BillingToggle({
-  billing,
-  onChange,
-}: {
-  billing: ProPlan;
-  onChange: (b: ProPlan) => void;
-}) {
-  const seg = (value: ProPlan, label: string, extra?: string) => (
-    <button
-      type="button"
-      aria-pressed={billing === value}
-      onClick={() => onChange(value)}
-      className={`rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.14em] transition-colors ${
-        billing === value
-          ? "bg-amber text-[#241a05]"
-          : "text-mut hover:text-ink"
-      }`}
-    >
-      {label}
-      {extra && (
-        <span className={billing === value ? "opacity-70" : "text-ok"}>
-          {" "}
-          {extra}
-        </span>
-      )}
-    </button>
-  );
-  return (
-    <div className="inline-flex items-center gap-1 rounded-full border border-line bg-panel p-1">
-      {seg("monthly", "Monthly")}
-      {seg("annual", "Annual", "−38%")}
-    </div>
-  );
-}
-
 function PlanPoint({ children, gold }: { children: string; gold?: boolean }) {
   return (
     <li className="flex items-start gap-2.5 text-sm text-mut">
@@ -237,18 +202,16 @@ function RestorePanel() {
 
 export function ProClient() {
   const pro = useProState();
-  const [billing, setBilling] = useState<ProPlan>("annual");
+  // Monthly is the only plan on sale; the type still allows "annual" so an
+  // older subscription would still be recognised if one ever existed.
+  const [billing] = useState<ProPlan>("monthly");
   const [justUpgraded, setJustUpgraded] = useState(false);
   const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
   const [abandoned, setAbandoned] = useState(false);
 
-  // Lead with the amount actually charged. Dividing the annual plan down to a
-  // per-month figure undersells it and invites a price comparison this product
-  // does not need to win.
-  const price = billing === "annual" ? "$30" : "$4";
-  const priceNote =
-    billing === "annual" ? "per year · billed once" : "per month · billed monthly";
+  const price = "$9.99";
+  const priceNote = "per month · billed monthly";
   const periodEnd = longDate(pro.currentPeriodEnd);
 
   // Stripe returns to /pro?checkout=success&session_id=… — confirm the
@@ -368,7 +331,7 @@ export function ProClient() {
                   Add the coach.
                 </h1>
                 <p className="mt-4 max-w-xl text-lg text-mut">
-                  Everything you practice with today stays free, forever. Pro
+                  Everything you practice with today stays free. Pro
                   layers a coach on top — adaptive daily plans, per-note
                   analytics, pitch analysis on your takes, and the full
                   songbook.
@@ -464,7 +427,6 @@ export function ProClient() {
                   life.
                 </p>
               </div>
-              <BillingToggle billing={billing} onChange={setBilling} />
             </div>
           )}
 
@@ -493,7 +455,7 @@ export function ProClient() {
               </span>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="tabular font-mono text-4xl text-ink">$0</span>
-                <span className="text-sm text-mut">forever</span>
+                <span className="text-sm text-mut">no card, no clock</span>
               </div>
               <p className="mt-2 text-sm text-mut">
                 The whole studio. What you&apos;re using right now.
@@ -582,7 +544,7 @@ export function ProClient() {
                     >
                       {checkout.kind === "working"
                         ? "Opening Stripe…"
-                        : `Go Pro — ${billing === "annual" ? "$30/year" : "$4/month"}`}
+                        : "Go Pro — $9.99/month"}
                     </Button>
                     <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
                       Secure checkout by Stripe

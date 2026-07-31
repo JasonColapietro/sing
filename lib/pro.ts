@@ -191,9 +191,13 @@ export function clearProLocally(): void {
 
 /* ---------------------------------------------------------------- pricing */
 
+/**
+ * One tier, monthly only. Must match the live Stripe price carrying the
+ * `suede_pro_monthly` lookup key — the app resolves the id at request time, so
+ * this constant is display copy and nothing else.
+ */
 export const PRICING = {
-  monthly: { perMonth: 4, note: "billed monthly" },
-  annual: { perMonth: 2.5, perYear: 30, note: "billed once a year", save: "save 38%" },
+  monthly: { perMonth: 9.99, note: "billed monthly" },
 } as const;
 
 /* ------------------------------------------------------------------ perks */
