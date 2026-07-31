@@ -1,0 +1,63 @@
+name: CI
+
+# vercel.json sets an ignoreCommand that kills every non-production build, so
+# no preview deploy ever runs for a PR. That makes this workflow the only
+# pre-merge proof that the app compiles. "Vercel deployed" is a production
+# signal, never a PR signal.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+# The pull_request event tests GitHub's synthetic merge commit, so re-running
+# after a squash merge would re-test the same tree at full cost. Only the
+# newest push to a PR branch matters.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Deliberately one unconditional job with no path filters. This repo is a
+  # single Next.js app, so there is no expensive native half to gate behind a
+  # classifier, and an unconditional job always reports a conclusion — which
+  # means branch protection can require `ci` directly. A path-filtered job that
+  # skips never reports, and would leave docs-only PRs pending forever.
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Matches the Vercel production runtime (24.x). There is no .nvmrc or
+          # engines field to read; if prod moves, move this with it.
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # First because it fails in seconds rather than the ~1 minute a build
+      # takes. Not redundant with Build: `next build` only type-checks what the
+      # app graph reaches, so scripts/ is invisible to it.
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      # Every env var this app reads (STRIPE_SECRET_KEY, PRO_KEY_SECRET, the
+      # Upstash pair) is resolved lazily inside a function, specifically so a
+      # missing key surfaces as a request-time error instead of breaking the
+      # build. That is what lets CI build with no secrets configured — if a
+      # future change reads an env var at module scope, this step is where it
+      # will start failing.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+
+      # No test step: this repo has no test script and no test files. Add one
+      # here when it does — omitted rather than stubbed, so the gate never
+      # reports green for a suite that does not exist.
