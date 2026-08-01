@@ -18,6 +18,7 @@ import {
   openBillingPortal,
   PLAN_ROWS,
   PRO_PERKS,
+  redeemCode,
   restorePro,
   startCheckout,
   useProState,
@@ -143,6 +144,64 @@ function ProKeyRow({ proKey }: { proKey: string }) {
         Unlocks Pro in another browser. Worth keeping somewhere safe.
       </p>
     </div>
+  );
+}
+
+/** Turns a comp code into a 30-day pass. No card, no checkout. */
+function RedeemPanel() {
+  const [code, setCode] = useState("");
+  const [task, setTask] = useState<Task>({ kind: "idle" });
+
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setTask({ kind: "working" });
+    try {
+      await redeemCode(code);
+      setTask({ kind: "idle" });
+    } catch (error) {
+      setTask({
+        kind: "error",
+        message: messageOf(error, "Could not redeem that code just now."),
+      });
+    }
+  };
+
+  return (
+    <details className="rounded-2xl border border-line bg-panel px-5 py-4">
+      <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
+        Have a code? Start a 30-day pass
+      </summary>
+      <form onSubmit={submit} className="mt-4 flex flex-wrap items-center gap-3">
+        <input
+          type="text"
+          required
+          value={code}
+          onChange={(event) => setCode(event.target.value)}
+          placeholder="Your code"
+          aria-label="Your comp code"
+          autoComplete="off"
+          autoCapitalize="characters"
+          spellCheck={false}
+          maxLength={64}
+          className="min-w-[12rem] flex-1 rounded-full border border-line2 bg-bg px-4 py-2.5 font-mono text-sm uppercase tracking-[0.08em] text-ink placeholder:normal-case placeholder:tracking-normal placeholder:text-dim"
+        />
+        <Button
+          type="submit"
+          variant="amber"
+          size="md"
+          disabled={task.kind === "working"}
+        >
+          {task.kind === "working" ? "Checking…" : "Start my 30 days"}
+        </Button>
+      </form>
+      {task.kind === "error" && (
+        <p className="mt-3 text-sm text-rec">{task.message}</p>
+      )}
+      <p className="mt-3 text-xs text-dim">
+        Every Pro feature for 30 days. No card, no charge, and it ends by itself
+        — there&apos;s nothing to cancel.
+      </p>
+    </details>
   );
 }
 
@@ -515,8 +574,15 @@ export function ProClient() {
                 {pro.active ? (
                   <div className="flex flex-col gap-2">
                     <div className="flex w-full items-center justify-center gap-2 rounded-full bg-amber px-5 py-2.5 font-mono text-sm font-semibold text-[#241a05]">
-                      ✓ Active — {pro.plan === "annual" ? "annual" : "monthly"}
+                      {pro.status === "trialing"
+                        ? "✓ Active — free pass"
+                        : `✓ Active — ${pro.plan === "annual" ? "annual" : "monthly"}`}
                     </div>
+                    {pro.status === "trialing" && periodEnd && (
+                      <p className="text-center text-xs text-dim">
+                        Runs through {periodEnd}, then ends on its own.
+                      </p>
+                    )}
                     <Button
                       variant="ghost"
                       size="sm"
@@ -564,7 +630,8 @@ export function ProClient() {
           </p>
 
           {!pro.active && (
-            <div className="mx-auto mt-6 max-w-4xl">
+            <div className="mx-auto mt-6 grid max-w-4xl gap-3">
+              <RedeemPanel />
               <RestorePanel />
             </div>
           )}

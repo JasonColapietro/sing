@@ -171,6 +171,22 @@ export async function restorePro(key: string): Promise<ProState> {
   return state;
 }
 
+/**
+ * Redeems a comp code for a 30-day pass. The pass is an ordinary Stripe
+ * subscription in its trial, so everything downstream — the Pro key, revalidation,
+ * expiry — behaves exactly as it does for a paying subscriber.
+ */
+export async function redeemCode(code: string): Promise<ProState> {
+  const result = await post<Entitlement & { error?: string }>("/api/redeem", {
+    code: code.trim(),
+  });
+  const state = apply(result);
+  if (!result.active) {
+    throw new Error(result.error ?? "That code didn't unlock anything.");
+  }
+  return state;
+}
+
 /** Sends the singer to Stripe's billing portal to cancel or update a card. */
 export async function openBillingPortal(): Promise<void> {
   const { customerId, subscriptionId } = load();
