@@ -2,12 +2,12 @@
 title: "Learning from other singers' ranges"
 part: "Range and repertoire"
 order: 22
-summary: "How to read the 357-singer library for tessitura and craft instead of ceilings, and what those cited figures can and cannot tell you."
+summary: "How to read the singer library for tessitura and craft instead of ceilings, and what those cited figures can and cannot tell you."
 ---
 
 There is a way of reading another singer's range that quietly makes you a worse singer. You look up someone you admire, see a figure like E2–C7, compare it to your own, and file the difference away as the distance between you and them. Then you spend six months practising the wrong thing.
 
-The famous ranges page holds 357 singers on one keyboard. Almost none of its usefulness lives in that first comparison.
+The famous ranges page puts the great voices on one keyboard. Almost none of its usefulness lives in that first comparison.
 
 ## What a cited range is, and how it got that way
 
@@ -43,7 +43,7 @@ Now set that band against your own comfortable middle, which you find the same w
 
 **Visit the record-holders page once.** It exists, it is fun, and it is the least instructive corner of the library. The page says so itself: the widest figures are the ones with the thinnest evidence behind them. Look, enjoy it, and set nothing on it as a target.
 
-**Look sideways, not up.** The most useful singer in the library is rarely the one you already love. More often it is someone a genre over whose comfortable band matches yours almost note for note, whose songs never came up because they were not on your radar. That is what a searchable list of 357 voices is for — finding material that fits an instrument like yours, not confirming that a famous person could sing higher than you.
+**Look sideways, not up.** The most useful singer in the library is rarely the one you already love. More often it is someone a genre over whose comfortable band matches yours almost note for note, whose songs never came up because they were not on your radar. That is what a searchable library of famous voices is for — finding material that fits an instrument like yours, not confirming that a famous person could sing higher than you.
 
 ## What imitation is good for
 

@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 
 const TITLE = "Who Has the Widest Vocal Range? The Extremes, Ranked";
-const DESCRIPTION = `The widest cited vocal ranges, deepest low notes and highest high notes among ${SINGERS.length} famous singers — ranked, with the caveats that belong on figures like these.`;
+const DESCRIPTION = `The widest cited vocal ranges, deepest low notes and highest high notes among famous singers — ranked, with the caveats that belong on figures like these.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -87,7 +87,7 @@ export default function RecordsPage() {
     <PageShell
       kicker="Extremes"
       title="The record holders"
-      subtitle={`The widest spans, deepest floors and highest ceilings among ${SINGERS.length} famous voices — and why these particular numbers deserve the most scepticism.`}
+      subtitle="The widest spans, deepest floors and highest ceilings among famous voices — and why these particular numbers deserve the most scepticism."
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
@@ -165,8 +165,7 @@ export default function RecordsPage() {
           <p className="mt-3 max-w-3xl text-sm text-mut">
             The more meaningful ranking for most singers: the top of the belted,
             chest-dominant register rather than the top of the whole range.
-            Restricted to the {SINGERS.filter((s) => s.beltMidi != null).length}{" "}
-            voices here with a cited full-voice ceiling.
+            Restricted to the voices here with a cited full-voice ceiling.
           </p>
           <Table
             rows={belters}
@@ -177,9 +176,9 @@ export default function RecordsPage() {
         <Card>
           <SectionLabel>Whistle register</SectionLabel>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            The {whistlers.length} singers here documented using whistle
-            register — a separate mechanism above the head voice, and the reason
-            the top of this library reaches as far as it does.
+            The singers here are documented using whistle register — a separate
+            mechanism above the head voice, and the reason the top of this
+            library reaches as far as it does.
           </p>
           <ul className="mt-4 flex flex-wrap gap-2">
             {whistlers

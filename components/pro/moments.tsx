@@ -11,9 +11,10 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
 
 /**
  * One-time full-screen gold moment: shown on the first page load after a
- * singer has logged three sessions — the point where the habit signal is
- * real. Never repeats, never fires for Pro members, and only triggers on
- * mount so it can't interrupt an exercise in progress.
+ * singer has logged their first session — the earliest point where the
+ * pitch is grounded in their own numbers. Never repeats, never fires for
+ * Pro members, and only triggers on mount so it can't interrupt an
+ * exercise in progress.
  */
 export default function ProMoments() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function ProMoments() {
     try {
       if (getProState().active) return;
       if (window.localStorage.getItem(SEEN_KEY)) return;
-      if (getState().sessions.length < 3) return;
+      if (getState().sessions.length < 1) return;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- mount-only client gate reading localStorage after hydration; not derivable during render without a hydration mismatch
       setShow(true);
     } catch {
@@ -88,14 +89,14 @@ export default function ProMoments() {
         <div className="flex items-center gap-2">
           <ProChip />
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            After session three
+            After your first session
           </span>
         </div>
         <h2 className="mt-4 text-2xl sm:text-3xl">Meet your coach</h2>
         <p className="mt-3 text-sm text-mut sm:text-base">
-          Three sessions in — you&apos;re past kicking the tires. This is
-          where a coach takes over: a daily plan built from your numbers,
-          weak notes drilled on purpose, and your range charted as it grows.
+          You have your first numbers. A coach is what turns them into a
+          practice: a daily plan built from your results, weak notes drilled
+          on purpose, and your range charted as it grows.
         </p>
         <ul className="mt-4 space-y-2">
           {[
@@ -123,7 +124,6 @@ export default function ProMoments() {
           </Button>
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Founding price, locked for life<span className="mx-2 text-line2">·</span>
           Free stays free
         </p>
       </div>

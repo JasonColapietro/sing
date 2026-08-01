@@ -37,8 +37,8 @@ export async function generateMetadata({
   if (!g) return {};
   const list = singersByGenre(g);
   const stats = statsFor(list);
-  const title = `${g} Singers' Vocal Ranges: ${list.length} Voices Compared`;
-  const description = `The cited vocal ranges of ${list.length} famous ${g} singers on one keyboard, from ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}. Compare spans and overlay your own range free.`;
+  const title = `${g} Singers' Vocal Ranges Compared`;
+  const description = `The cited vocal ranges of famous ${g} singers on one keyboard, from ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}. Compare spans and overlay your own range free.`;
   return {
     title,
     description,
@@ -109,7 +109,7 @@ export default async function GenrePage({
     <PageShell
       kicker="Genre"
       title={`${g} vocal ranges`}
-      subtitle={`${list.length} ${g} voices on one keyboard, ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`}
+      subtitle={`${g} voices on one keyboard, ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
@@ -124,7 +124,6 @@ export default async function GenrePage({
       <div className="space-y-6">
         <Card>
           <div className="flex flex-wrap gap-8">
-            <Stat label="Singers" value={list.length} tone="amber" />
             <Stat
               label="Median span"
               value={`${spanOctaves(stats.medianSpanSemitones)} oct`}
@@ -148,7 +147,7 @@ export default async function GenrePage({
           <h2 className="text-xl">How ranges sit in {g}</h2>
           <ul className="mt-4 max-w-3xl space-y-2 text-sm text-mut">
             <li>
-              The median cited span across these {list.length} voices is{" "}
+              The median cited span across these voices is{" "}
               {stats.medianSpanSemitones} semitones —{" "}
               {vsLibrary === 0
                 ? "level with the library as a whole"
@@ -182,9 +181,9 @@ export default async function GenrePage({
               at {midiToLabel(stats.highest.highMidi)}.
             </li>
             <li>
-              Voice categories break down as{" "}
+              Voice categories here, most common first:{" "}
               {mixSorted
-                .map(([type, n]) => `${n} ${type.toLowerCase()}${n === 1 ? "" : "s"}`)
+                .map(([type, n]) => `${type.toLowerCase()}${n === 1 ? "" : "s"}`)
                 .join(", ")}
               .
             </li>
@@ -192,7 +191,7 @@ export default async function GenrePage({
         </Card>
 
         <Card>
-          <SectionLabel>All {list.length} on one axis</SectionLabel>
+          <SectionLabel>Every voice on one axis</SectionLabel>
           <div className="mt-4">
             <HubChart list={list} axisLow={axisLow} axisHigh={axisHigh} />
           </div>
