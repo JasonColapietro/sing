@@ -32,7 +32,7 @@ export function BookCta() {
         See what Pro includes
       </LinkButton>
       <span className="text-xs text-dim">
-        {BOOK_CONTENTS.length} chapters and a 140-page PDF, $9.99/month
+        {BOOK_CONTENTS.length} chapters and a PDF to keep, $9.99/month
       </span>
     </div>
   );

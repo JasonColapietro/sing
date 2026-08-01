@@ -233,7 +233,7 @@ export default async function SingerPage({
           <p className="mt-3 max-w-3xl text-sm text-mut">
             {s.blurb}
             {hasUsefulPercentile(s) &&
-              ` That cited span is wider than ${spanPercentile(s)}% of the ${SINGERS.length} voices in this library.`}
+              ` That cited span is wider than ${spanPercentile(s)}% of the voices in this library.`}
           </p>
           <dl className="mt-5 grid gap-4 sm:grid-cols-3">
             <div>

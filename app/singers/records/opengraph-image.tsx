@@ -18,7 +18,7 @@ export default function Image() {
       <HubOgCard
         kicker="Extremes"
         title="The record holders"
-        stat={`Widest of ${SINGERS.length} voices — up to ${spanOctaves(rows[0].highMidi - rows[0].lowMidi)} octaves`}
+        stat={`The widest voices in the library — up to ${spanOctaves(rows[0].highMidi - rows[0].lowMidi)} octaves`}
         rows={rows}
         axisLow={axisLow}
         axisHigh={axisHigh}

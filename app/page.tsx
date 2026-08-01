@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SINGERS } from "@/lib/singers";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { HeroSplit } from "@/components/landing/hero-split";
 import { IosBand } from "@/components/landing/ios-band";
@@ -40,7 +39,7 @@ const FEATURES = [
   {
     href: "/singers",
     label: "Famous ranges",
-    desc: `${SINGERS.length} famous voices on one keyboard — see whose range matches yours.`,
+    desc: "Famous voices on one keyboard — see whose range matches yours.",
     Glyph: SingersGlyph,
   },
   {

@@ -35,10 +35,9 @@ export async function generateMetadata({
   const { type } = await params;
   const voice = voiceTypeFromSlug(type);
   if (!voice) return {};
-  const list = singersByVoiceType(voice);
   const note = VOICE_TYPE_NOTES[voice];
-  const title = `Famous ${voice}s: ${list.length} Vocal Ranges Compared`;
-  const description = `The cited vocal ranges of ${list.length} famous ${voice.toLowerCase()}s on one keyboard — ${note.summary}. Compare spans, full-voice ceilings and your own range.`;
+  const title = `Famous ${voice} Vocal Ranges Compared`;
+  const description = `The cited vocal ranges of famous ${voice.toLowerCase()}s on one keyboard — ${note.summary}. Compare spans, full-voice ceilings and your own range.`;
   return {
     title,
     description,
@@ -107,7 +106,7 @@ export default async function VoiceTypePage({
     <PageShell
       kicker="Voice type"
       title={`Famous ${lower}s`}
-      subtitle={`${list.length} cited ranges on one keyboard — ${note.summary}.`}
+      subtitle={`Cited ranges on one keyboard — ${note.summary}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
@@ -122,7 +121,6 @@ export default async function VoiceTypePage({
       <div className="space-y-6">
         <Card>
           <div className="flex flex-wrap gap-8">
-            <Stat label="Singers here" value={list.length} tone="amber" />
             <Stat
               label="Median span"
               value={`${spanOctaves(stats.medianSpanSemitones)} oct`}
@@ -137,7 +135,7 @@ export default async function VoiceTypePage({
               label="Share of library"
               value={`${share}%`}
               tone="ink"
-              sub={`of ${SINGERS.length} voices`}
+              sub="of the library"
             />
           </div>
         </Card>
@@ -148,7 +146,7 @@ export default async function VoiceTypePage({
           <p className="mt-3 max-w-3xl text-sm text-mut">{note.challenge}</p>
 
           <h3 className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            What the {list.length} {lower}s here show
+            What the {lower}s here show
           </h3>
           <ul className="mt-3 max-w-3xl space-y-2 text-sm text-mut">
             <li>
@@ -223,7 +221,7 @@ export default async function VoiceTypePage({
         </Card>
 
         <Card>
-          <SectionLabel>All {list.length} on one axis</SectionLabel>
+          <SectionLabel>Every {lower} on one axis</SectionLabel>
           <div className="mt-4">
             <HubChart list={list} axisLow={axisLow} axisHigh={axisHigh} />
           </div>
@@ -239,9 +237,6 @@ export default async function VoiceTypePage({
                   className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-amber"
                 >
                   {v}
-                  <span className="tabular font-mono text-[10px] text-dim">
-                    {singersByVoiceType(v).length}
-                  </span>
                 </Link>
               </li>
             ))}

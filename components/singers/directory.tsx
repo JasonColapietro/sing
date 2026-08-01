@@ -323,7 +323,7 @@ export function SingersDirectory() {
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder={`Search ${SINGERS.length} singers…`}
+          placeholder="Search singers…"
           aria-label="Search singers"
           className="w-full rounded-full border border-line bg-panel px-4 py-2 text-sm text-ink placeholder:text-dim focus:border-amber focus:outline-none sm:w-64"
         />
@@ -373,8 +373,10 @@ export function SingersDirectory() {
           className="tabular ml-auto font-mono text-xs text-mut"
         >
           {rows.length === 0
-            ? `No singers match — ${SINGERS.length} total`
-            : `${rows.length} of ${SINGERS.length}`}
+            ? "No singers match"
+            : rows.length === SINGERS.length
+              ? "Full library"
+              : `${rows.length} shown`}
         </span>
       </div>
 

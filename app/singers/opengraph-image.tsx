@@ -57,7 +57,7 @@ export default function Image() {
           {`Famous vocal ranges`}
         </div>
         <div style={{ marginTop: 8, fontSize: 28, color: "#5c564d" }}>
-          {`${SINGERS.length} singers on one keyboard · ${midiToLabel(records.lowest.lowMidi)} to ${midiToLabel(records.highest.highMidi)}`}
+          {`Famous singers on one keyboard · ${midiToLabel(records.lowest.lowMidi)} to ${midiToLabel(records.highest.highMidi)}`}
         </div>
 
         <div

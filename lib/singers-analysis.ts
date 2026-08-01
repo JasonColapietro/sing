@@ -114,7 +114,7 @@ export function observationsFor(s: Singer): Observation[] {
     out.push({
       id: "lowest-in-library",
       weight: 100,
-      text: `No singer here is cited lower: ${midiToLabel(s.lowMidi)} is the floor of all ${SINGERS.length} voices in this library.`,
+      text: `No singer here is cited lower: ${midiToLabel(s.lowMidi)} is the floor of every voice in this library.`,
     });
   } else if (lowerLows <= 10) {
     out.push({
@@ -127,7 +127,7 @@ export function observationsFor(s: Singer): Observation[] {
     out.push({
       id: "highest-in-library",
       weight: 100,
-      text: `Nothing here is cited higher: ${midiToLabel(s.highMidi)} is the ceiling of all ${SINGERS.length} voices in this library.`,
+      text: `Nothing here is cited higher: ${midiToLabel(s.highMidi)} is the ceiling of every voice in this library.`,
     });
   } else if (higherHighs <= 10) {
     out.push({
@@ -349,7 +349,7 @@ export function observationsFor(s: Singer): Observation[] {
   out.push({
     id: "low-rank-library",
     weight: 12,
-    text: `Ranked by bottom note, it is the ${ordinal(lowerLows + 1)} lowest of the ${SINGERS.length} voices here; by top note, the ${ordinal(higherHighs + 1)} highest.`,
+    text: `Ranked by bottom note, it is the ${ordinal(lowerLows + 1)} lowest voice in this library; by top note, the ${ordinal(higherHighs + 1)} highest.`,
   });
 
   const lowMates = sharesLow(s);

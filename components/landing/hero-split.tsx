@@ -78,7 +78,7 @@ export function HeroSplit() {
             href="/singers"
             className="text-amber-ink underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
           >
-            357 famous ranges
+            Famous singers&apos; ranges
           </Link>
         </p>
       </div>

@@ -31,7 +31,7 @@ export default async function Image({
       <HubOgCard
         kicker="Genre"
         title={`${g} vocal ranges`}
-        stat={`${list.length} voices · median ${spanOctaves(stats.medianSpanSemitones)} octaves`}
+        stat={`Median span ${spanOctaves(stats.medianSpanSemitones)} octaves`}
         rows={rows}
         axisLow={axisLow}
         axisHigh={axisHigh}
