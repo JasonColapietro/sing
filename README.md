@@ -22,7 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Payments (Suede Pro)
 
-Pro is a Stripe subscription — $4/month or $30/year. `STRIPE_SECRET_KEY` decides
+Pro is a Stripe subscription — $9.99/month. `STRIPE_SECRET_KEY` decides
 which Stripe account and mode the app talks to; see [Going live](#going-live) for
 where production points. Locally: `vercel link && vercel env pull`.
 
@@ -96,8 +96,8 @@ caller can exceed the limit by roughly the number of regions it hits.
 
 `lib/pro.ts` caches the last answer in `localStorage`; `components/pro/sync.tsx`
 re-checks with Stripe twice a day so a cancellation or failed payment actually
-revokes access. Prices are resolved by **lookup key** (`suede_pro_monthly`,
-`suede_pro_annual`), never by hardcoded id.
+revokes access. Prices are resolved by **lookup key** (`suede_pro_monthly`),
+never by hardcoded id.
 
 ### Going live
 
@@ -116,9 +116,12 @@ Live mode is already provisioned in the LLC account:
 | | |
 |---|---|
 | Product | `prod_UymwMKT9x94n1k` — Suede Pro |
-| Monthly | `price_1TypNARdcsaZ58FLZkhbk6mJ` — $4.00/mo, lookup key `suede_pro_monthly` |
-| Annual | `price_1TypNIRdcsaZ58FLFr5kdy7p` — $30.00/yr, lookup key `suede_pro_annual` |
+| Monthly | `price_1Tz61WRdcsaZ58FLCfDoSZVp` — $9.99/mo, lookup key `suede_pro_monthly` |
 | Billing portal | the account's existing live default config, cancel-at-period-end enabled |
+
+Monthly is the only plan (PR #11). The original $4 monthly price is archived;
+the old $30/yr `suede_pro_annual` price is left active but unreferenced, so
+restoring an annual plan is a UI change, not a Stripe migration.
 
 **Production is live.** `STRIPE_SECRET_KEY` on the `sing` project holds the LLC's
 live secret key, and `/api/checkout` mints `cs_live_…` sessions against the
