@@ -27,7 +27,10 @@ import { join } from "node:path";
 import { chromium } from "playwright";
 
 const SRC = "content/book";
-const OUT = "public/the-measured-voice.pdf";
+// Not public/ — the PDF is a paid benefit, served only through /api/book/pdf
+// after a Stripe check. Writing it back into public/ would republish the whole
+// book at a world-readable URL.
+const OUT = "content/pdfs/the-measured-voice.pdf";
 
 const TITLE = "The Measured Voice";
 const SUBTITLE = "Building a voice you can measure";
@@ -96,10 +99,41 @@ function mdToHtml(md) {
 }
 
 function inline(t) {
-  return esc(t)
-    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>")
-    .replace(/`([^`]+)`/g, "<code>$1</code>");
+  return crossLink(
+    esc(t)
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>")
+      .replace(/`([^`]+)`/g, "<code>$1</code>"),
+  );
+}
+
+const WORD_NUMBERS = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8,
+  nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
+  fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
+  twenty: 20, "twenty-one": 21, "twenty-two": 22, "twenty-three": 23,
+};
+
+/**
+ * Turns prose references — "chapter four takes this apart properly" — into
+ * links to that chapter. The book cross-references itself constantly, and in a
+ * PDF those are dead ends unless something makes them jump.
+ *
+ * Deliberately conservative: it only fires on a chapter word or digit that
+ * resolves to a chapter this book actually has, so "chapter and verse" or a
+ * reference to a chapter number beyond the end is left as plain text. The
+ * matched text is preserved exactly, including its original capitalisation.
+ */
+function crossLink(html) {
+  return html.replace(
+    /\b(chapters?)\s+((?:twenty-)?[a-z]+|\d{1,2})\b/gi,
+    (whole, word, ref) => {
+      const key = ref.toLowerCase();
+      const n = /^\d+$/.test(key) ? Number(key) : WORD_NUMBERS[key];
+      if (!n || !chapterOrders.has(n)) return whole;
+      return `<a class="xref" href="#${chapterId(n)}">${word} ${ref}</a>`;
+    },
+  );
 }
 
 const chapters = readdirSync(SRC)
@@ -119,23 +153,77 @@ for (const chapter of chapters) {
 const partId = (i) => `part-${i + 1}`;
 const chapterId = (order) => `ch-${order}`;
 
-let lastPart = "";
-let partIndex = -1;
-const body = chapters
-  .map(({ meta, body }) => {
-    let partOpener = "";
-    if (meta.part !== lastPart) {
-      lastPart = meta.part;
-      partIndex += 1;
-      partOpener = `<section class="part" id="${partId(partIndex)}"><p class="part-label">Part</p><h1>${esc(meta.part)}</h1></section>`;
-    }
-    return `${partOpener}<section class="chapter" id="${chapterId(meta.order)}">
-      <p class="ch-num">Chapter ${esc(String(meta.order))}<a class="back" href="#contents">Contents</a></p>
-      <h1>${esc(meta.title)}</h1>
-      ${mdToHtml(body)}
-    </section>`;
-  })
-  .join("\n");
+/** Chapter numbers that exist, so cross-links can refuse to invent one. */
+const chapterOrders = new Set(chapters.map((c) => Number(c.meta.order)));
+
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+/**
+ * A part opener that earns its page: the roman numeral, the part name, and the
+ * chapters underneath it as links. The old version was a title floating in
+ * three-quarters of an empty page.
+ */
+function partOpenerHtml(part, i, pages) {
+  const rows = part.chapters
+    .map(({ meta }) => {
+      const n = pages?.get(chapterId(meta.order));
+      return `<li><a href="#${chapterId(meta.order)}">
+        <span class="p-n">${esc(String(meta.order))}</span>
+        <span class="p-t">${esc(meta.title)}</span>
+        <span class="p-dots"></span>
+        <span class="pg">${n ?? "00"}</span>
+      </a></li>`;
+    })
+    .join("\n");
+  return `<section class="part" id="${partId(i)}">
+    <div class="part-head">
+      <span class="part-num">${ROMAN[i] ?? i + 1}</span>
+      <div>
+        <p class="part-label">Part</p>
+        <h1>${esc(part.name)}</h1>
+      </div>
+    </div>
+    <ol class="part-list">${rows}</ol>
+    <a class="part-back" href="#contents">Contents</a>
+  </section>`;
+}
+
+/** The chapter body, with the openers and the end-of-chapter jump. */
+function bodyHtml(pages) {
+  let lastPart = "";
+  let partIndex = -1;
+  return chapters
+    .map(({ meta, body }, i) => {
+      let opener = "";
+      if (meta.part !== lastPart) {
+        lastPart = meta.part;
+        partIndex += 1;
+        opener = partOpenerHtml(parts[partIndex], partIndex, pages);
+      }
+      const next = chapters[i + 1];
+      const tail = next
+        ? `<p class="ch-next"><a href="#${chapterId(next.meta.order)}">
+             <span class="nx-label">Next</span>
+             <span class="nx-title">${esc(next.meta.title)}</span>
+             <span class="nx-arrow">→</span>
+           </a></p>`
+        : `<p class="ch-next"><a href="#colophon">
+             <span class="nx-label">End of the last chapter</span>
+             <span class="nx-title">Colophon</span>
+             <span class="nx-arrow">→</span>
+           </a></p>`;
+      return `${opener}<section class="chapter" id="${chapterId(meta.order)}">
+        <p class="ch-num"><span>Chapter ${esc(String(meta.order))}</span><a class="back" href="#contents">Contents</a></p>
+        <div class="ch-head">
+          <span class="ch-big">${esc(String(meta.order))}</span>
+          <h1>${esc(meta.title)}</h1>
+        </div>
+        ${mdToHtml(body)}
+        ${tail}
+      </section>`;
+    })
+    .join("\n");
+}
 
 /**
  * The contents page. `pages` maps an anchor id to its printed page number;
@@ -172,35 +260,93 @@ function contentsHtml(pages) {
     <p class="c-label">Contents</p>
     <h1>The Measured Voice</h1>
     <p class="c-hint">Every line below is a link — tap a chapter to jump straight to it.
-    Every chapter has a link back here.</p>
+    Every chapter links back here, to the next chapter, and to any chapter its
+    text mentions.</p>
     <ol class="c-list">${rows}</ol>
   </nav>`;
 }
+
+/**
+ * The cover. The bars are the same pitch-trace motif the site uses on its share
+ * cards — a voice settling onto a target note — so the book looks like it came
+ * from the same place as the app.
+ */
+const TRACE = [30, 44, 38, 54, 48, 60, 56, 66, 62, 72, 69, 76, 74, 79, 78, 80, 80, 80];
+
+const coverHtml = () => `<section class="cover">
+  <p class="kicker">Included with Suede Pro</p>
+  <h1>${esc(TITLE)}</h1>
+  <p class="sub">${esc(SUBTITLE)}</p>
+  <div class="trace">
+    ${TRACE.map(
+      (h, i) =>
+        `<span class="bar${i >= TRACE.length - 4 ? " lit" : ""}" style="height:${h}%"></span>`,
+    ).join("")}
+  </div>
+  <p class="mark">Suede Sing<span class="dot">·</span>sing.suedeai.ai</p>
+</section>`;
 
 const styles = `
   @page { size: A5; margin: 18mm 16mm; }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
          color: #20201d; font-size: 10.5pt; line-height: 1.62; }
-  .cover { height: 88vh; display: flex; flex-direction: column; justify-content: center;
-           page-break-after: always; border-top: 2pt solid #9d3f33; padding-top: 8mm; }
+  .cover { height: 92vh; display: flex; flex-direction: column;
+           page-break-after: always; border-top: 2.5pt solid #9d3f33; padding-top: 9mm; }
   .cover .kicker { font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
-                   letter-spacing: .22em; text-transform: uppercase; color: #9d3f33; margin: 0 0 10mm; }
-  .cover h1 { font-size: 30pt; line-height: 1.02; margin: 0; letter-spacing: -.02em; }
-  .cover p.sub { color: #5c564d; font-size: 12pt; margin: 6mm 0 0; }
-  .cover .mark { margin-top: auto; font-family: ui-monospace, Menlo, monospace;
+                   letter-spacing: .22em; text-transform: uppercase; color: #9d3f33; margin: 0 0 22mm; }
+  .cover h1 { font-size: 34pt; line-height: 1.0; margin: 0; letter-spacing: -.025em; }
+  .cover p.sub { color: #5c564d; font-size: 12.5pt; margin: 7mm 0 0; }
+  /* The pitch-trace motif from the site's share cards: a voice wandering, then
+     settling onto the target for the last four readings. */
+  .trace { margin-top: auto; display: flex; align-items: flex-end; gap: 1.6mm; height: 34mm; }
+  .trace .bar { flex: 1 1 auto; border-radius: 1mm; background: #b6c9c4; }
+  .trace .bar.lit { background: #9d3f33; }
+  .cover .mark { margin-top: 8mm; font-family: ui-monospace, Menlo, monospace;
                  font-size: 8pt; letter-spacing: .18em; text-transform: uppercase; color: #8a8272; }
-  .part { page-break-before: always; page-break-after: always; height: 70vh;
-          display: flex; flex-direction: column; justify-content: center; }
+  .cover .mark .dot { margin: 0 2mm; color: #c9bda0; }
+
+  /* Part opener: numeral, name, and the chapters under it as links. */
+  .part { page-break-before: always; page-break-after: always;
+          border-top: 1pt solid #ddd4c4; padding-top: 7mm;
+          display: flex; flex-direction: column; height: 88vh; }
+  .part-head { display: flex; align-items: flex-start; gap: 6mm; margin-bottom: 10mm; }
+  .part-num { font-family: ui-monospace, Menlo, monospace; font-size: 30pt; line-height: .9;
+              color: #e4d9c6; letter-spacing: -.02em; }
   .part-label { font-family: ui-monospace, Menlo, monospace; font-size: 8pt; letter-spacing: .22em;
-                text-transform: uppercase; color: #9d3f33; margin: 0 0 4mm; }
-  .part h1 { font-size: 22pt; margin: 0; letter-spacing: -.02em; }
-  .part { border-top: 1pt solid #ddd4c4; padding-top: 6mm; }
+                text-transform: uppercase; color: #9d3f33; margin: 0 0 3mm; }
+  .part h1 { font-size: 22pt; margin: 0; letter-spacing: -.02em; line-height: 1.1; }
+  .part-list { list-style: none; margin: 0; padding: 0; }
+  .part-list a { color: inherit; text-decoration: none; display: flex; align-items: baseline; gap: 2mm; }
+  .part-list li { font-size: 10pt; padding: 1.4mm 0; border-bottom: .4pt solid #efe6d5; }
+  .p-n { flex: 0 0 7mm; font-family: ui-monospace, Menlo, monospace; font-size: 8.5pt; color: #8a8272; }
+  .p-t { flex: 0 1 auto; }
+  .p-dots { flex: 1 1 auto; align-self: center; height: 0;
+            border-bottom: .5pt dotted #c9bda0; margin: 0 1.5mm; }
+  .part-back { margin-top: auto; font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
+               letter-spacing: .18em; text-transform: uppercase; color: #9d3f33; text-decoration: none; }
   .chapter { page-break-before: always; }
   .ch-num { font-family: ui-monospace, Menlo, monospace; font-size: 8pt; letter-spacing: .18em;
-            text-transform: uppercase; color: #8a8272; margin: 0 0 3mm;
+            text-transform: uppercase; color: #8a8272; margin: 0 0 4mm; padding-bottom: 2.5mm;
+            border-bottom: .5pt solid #efe6d5;
             display: flex; justify-content: space-between; align-items: baseline; }
   .ch-num .back { color: #9d3f33; text-decoration: none; letter-spacing: .18em; }
+  /* Display numeral beside the title, set in the pale sand so it reads as
+     ornament rather than as a word competing with the heading. */
+  .ch-head { display: flex; align-items: flex-start; gap: 4mm; margin-bottom: 7mm; }
+  .ch-big { font-family: ui-monospace, Menlo, monospace; font-size: 26pt; line-height: .82;
+            color: #e4d9c6; letter-spacing: -.03em; flex: 0 0 auto; }
+  /* Cross-references to other chapters, e.g. "chapter four takes this apart". */
+  .xref { color: #9d3f33; text-decoration: none;
+          border-bottom: .4pt solid rgba(157,63,51,.32); }
+  /* End-of-chapter jump to the next one. */
+  .ch-next { margin: 9mm 0 0; padding-top: 3mm; border-top: .5pt solid #efe6d5;
+             page-break-inside: avoid; }
+  .ch-next a { color: inherit; text-decoration: none; display: flex; align-items: baseline; gap: 2.5mm; }
+  .nx-label { font-family: ui-monospace, Menlo, monospace; font-size: 7.5pt; letter-spacing: .18em;
+              text-transform: uppercase; color: #8a8272; flex: 0 0 auto; }
+  .nx-title { flex: 1 1 auto; color: #9d3f33; font-size: 10pt; }
+  .nx-arrow { color: #9d3f33; flex: 0 0 auto; }
 
   /* Contents */
   .contents { page-break-after: always; border-top: 1pt solid #ddd4c4; padding-top: 6mm; }
@@ -224,33 +370,58 @@ const styles = `
      filling in the real numbers in pass two cannot reflow the page. */
   .pg { flex: 0 0 9mm; text-align: right; font-family: ui-monospace, Menlo, monospace;
         font-size: 8.5pt; font-variant-numeric: tabular-nums; color: #5c564d; }
-  .chapter h1 { font-size: 17pt; margin: 0 0 6mm; letter-spacing: -.015em; line-height: 1.15; }
-  h2 { font-size: 12pt; margin: 8mm 0 2mm; letter-spacing: -.01em; }
-  h3, h4 { font-size: 11pt; margin: 6mm 0 2mm; }
-  p { margin: 0 0 3.5mm; color: #3a3833; }
+  .chapter h1 { font-size: 17pt; margin: 0; letter-spacing: -.015em; line-height: 1.15;
+                align-self: center; }
+  /* Headings stay with the text they introduce, and no line strands alone at
+     the top or bottom of a page. */
+  h2 { font-size: 12pt; margin: 8mm 0 2mm; letter-spacing: -.01em;
+       page-break-after: avoid; break-after: avoid; }
+  h3, h4 { font-size: 11pt; margin: 6mm 0 2mm; page-break-after: avoid; break-after: avoid; }
+  p { margin: 0 0 3.5mm; color: #3a3833; orphans: 2; widows: 2; }
+  /* The chapter's opening paragraph, set slightly larger as a lead-in. */
+  .ch-head + p { font-size: 11.5pt; line-height: 1.55; color: #2c2a26; }
   ul { margin: 0 0 3.5mm; padding-left: 5mm; }
-  li { margin: 0 0 1.6mm; color: #3a3833; }
+  li { margin: 0 0 1.6mm; color: #3a3833; orphans: 2; widows: 2; }
   strong { color: #20201d; }
   code { font-family: ui-monospace, Menlo, monospace; font-size: 9.5pt; }
   .note { page-break-before: always; color: #5c564d; font-size: 9.5pt; }
+
+  /* Colophon */
+  .colophon { page-break-before: always; border-top: 1pt solid #ddd4c4; padding-top: 7mm;
+              display: flex; flex-direction: column; height: 86vh; }
+  .colophon h2 { font-size: 15pt; margin: 0 0 4mm; }
+  .colophon p { font-size: 9.5pt; color: #5c564d; max-width: 92%; }
+  .colo-meta { margin-top: auto; font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
+               letter-spacing: .14em; text-transform: uppercase; color: #8a8272;
+               border-top: .5pt solid #efe6d5; padding-top: 3mm; }
+  .colo-meta a { color: #9d3f33; text-decoration: none; }
 `;
 
 const documentHtml = (pages) => `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>${esc(TITLE)}</title><style>${styles}</style></head><body>
-  <section class="cover">
-    <p class="kicker">Included with Suede Pro</p>
-    <h1>${esc(TITLE)}</h1>
-    <p class="sub">${esc(SUBTITLE)}</p>
-    <p class="mark">Suede Sing</p>
-  </section>
+  ${coverHtml()}
   ${contentsHtml(pages)}
-  ${body}
+  ${bodyHtml(pages)}
   <section class="note">
     <h2>A note on what this book is not</h2>
     <p>This is a book about practice, not medicine. Nothing in it diagnoses or treats
     anything. If singing hurts, if you are hoarse and it will not clear, or if you ever
     see blood, that is a question for a doctor or a speech-language pathologist. There is
     no waiting period, and you do not need to be sure it is serious before you go.</p>
+  </section>
+  <section class="colophon" id="colophon">
+    <h2>Colophon</h2>
+    <p>${esc(TITLE)} — ${esc(SUBTITLE)}. Written for Suede Sing, the browser vocal
+    studio, and included with a Suede Pro subscription. ${chapters.length} chapters
+    in ${parts.length} parts.</p>
+    <p>Set in Helvetica Neue with monospace labels, and typeset from the same
+    source text the app reads, so the book and the in-app chapters can never
+    disagree. Every contents row, part list, cross-reference and chapter footer
+    in this file is a live link.</p>
+    <p class="colo-meta">
+      Suede Sing · <a href="https://sing.suedeai.ai">sing.suedeai.ai</a> ·
+      <a href="#contents">Contents</a>
+    </p>
   </section>
 </body></html>`;
 
@@ -261,7 +432,10 @@ const PDF_OPTIONS = {
   // tagged is what makes outline (the reader's bookmark sidebar) possible.
   tagged: true,
   outline: true,
-  headerTemplate: "<span></span>",
+  // Chromium prints one header for every page — it has no notion of a running
+  // chapter title — so the header carries the book, and the footer the page.
+  headerTemplate:
+    '<div style="width:100%;padding:0 16mm;font-size:6.5pt;letter-spacing:.18em;text-transform:uppercase;color:#c9bda0;font-family:Menlo,monospace;text-align:right;">The Measured Voice</div>',
   footerTemplate:
     '<div style="width:100%;font-size:7pt;color:#8a8272;font-family:Helvetica,Arial,sans-serif;text-align:center;"><span class="pageNumber"></span></div>',
   margin: { top: "18mm", bottom: "16mm", left: "16mm", right: "16mm" },
@@ -291,11 +465,13 @@ function locateOpeners(pdfPath) {
     return i === -1 ? null : i + 1; // printed numbers are 1-based
   };
 
+  // A part title long enough to wrap arrives from pdftotext with a newline in
+  // the middle of it, so the comparison has to ignore how the line broke.
+  const flat = (s) => s.toUpperCase().replace(/\s+/g, " ");
+
   parts.forEach((part, i) => {
-    const name = part.name.toUpperCase();
-    const at = firstPage(
-      (t) => t.includes("PART") && t.toUpperCase().includes(name),
-    );
+    const name = flat(part.name);
+    const at = firstPage((t) => t.includes("PART") && flat(t).includes(name));
     if (at) found.set(partId(i), at);
   });
 
@@ -307,9 +483,14 @@ function locateOpeners(pdfPath) {
 
   const missing = [...parts.map((_, i) => partId(i)), ...chapters.map((c) => chapterId(c.meta.order))]
     .filter((id) => !found.has(id));
+  // An opener that can't be located prints "00" in the contents — a broken
+  // page number in a paid book, arriving silently. A layout change caused
+  // exactly that once (a part title started wrapping), so this fails the build
+  // rather than warning into a log nobody reads.
   if (missing.length > 0) {
-    console.warn(
-      `warning: no page found for ${missing.length} opener(s): ${missing.join(", ")}`,
+    throw new Error(
+      `No printed page found for ${missing.length} opener(s): ${missing.join(", ")}. ` +
+        `The contents would show "00" for these.`,
     );
   }
   return found;

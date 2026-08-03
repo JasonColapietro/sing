@@ -1,5 +1,5 @@
 /**
- * Render The Voice Atlas to public/the-voice-atlas.pdf.
+ * Render The Voice Atlas to content/pdfs/the-voice-atlas.pdf.
  *
  * Usage: node scripts/build-atlas-pdf.mjs
  *
@@ -17,7 +17,9 @@ import { join } from "node:path";
 import { chromium } from "playwright";
 import { ATLAS_SUBTITLE, ATLAS_TITLE, buildAtlas } from "./compile-atlas.mjs";
 
-const OUT = "public/the-voice-atlas.pdf";
+// Not public/ — a paid benefit, served only through /api/book/pdf after a
+// Stripe check. Writing it into public/ would republish the whole book.
+const OUT = "content/pdfs/the-voice-atlas.pdf";
 
 const { chapters, problems } = buildAtlas();
 if (problems.length) {
@@ -118,27 +120,73 @@ for (const chapter of chapters) {
 const partId = (i) => `part-${i + 1}`;
 const chapterId = (order) => `ch-${order}`;
 
-let lastPart = "";
-let partIndex = -1;
-const body = chapters
-  .map((c) => {
-    let partOpener = "";
-    if (c.part !== lastPart) {
-      lastPart = c.part;
-      partIndex += 1;
-      partOpener = `<section class="part" id="${partId(partIndex)}"><p class="part-label">Part</p><h1>${esc(c.part)}</h1></section>`;
-    }
-    const entries = c.entries.length
-      ? `<div class="entries">${c.entries.map(entryHtml).join("\n")}</div>`
-      : "";
-    return `${partOpener}<section class="chapter" id="${chapterId(c.order)}">
-      <p class="ch-num">Chapter ${esc(String(c.order))}<a class="back" href="#contents">Contents</a></p>
-      <h1>${esc(c.title)}</h1>
-      ${mdToHtml(c.body)}
-      ${entries}
-    </section>`;
-  })
-  .join("\n");
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+/** A part opener that lists the chapters under it, as links. */
+function partOpenerHtml(part, i, pages) {
+  const rows = part.chapters
+    .map((c) => {
+      const n = pages?.get(chapterId(c.order));
+      return `<li><a href="#${chapterId(c.order)}">
+        <span class="p-n">${esc(String(c.order))}</span>
+        <span class="p-t">${esc(c.title)}</span>
+        <span class="p-dots"></span>
+        <span class="pg">${n ?? "00"}</span>
+      </a></li>`;
+    })
+    .join("\n");
+  return `<section class="part" id="${partId(i)}">
+    <div class="part-head">
+      <span class="part-num">${ROMAN[i] ?? i + 1}</span>
+      <div>
+        <p class="part-label">Part</p>
+        <h1>${esc(part.name)}</h1>
+      </div>
+    </div>
+    <ol class="part-list">${rows}</ol>
+    <a class="part-back" href="#contents">Contents</a>
+  </section>`;
+}
+
+function bodyHtml(pages) {
+  let lastPart = "";
+  let partIndex = -1;
+  return chapters
+    .map((c, i) => {
+      let opener = "";
+      if (c.part !== lastPart) {
+        lastPart = c.part;
+        partIndex += 1;
+        opener = partOpenerHtml(parts[partIndex], partIndex, pages);
+      }
+      const entries = c.entries.length
+        ? `<div class="entries">${c.entries.map(entryHtml).join("\n")}</div>`
+        : "";
+      const next = chapters[i + 1];
+      const tail = next
+        ? `<p class="ch-next"><a href="#${chapterId(next.order)}">
+             <span class="nx-label">Next</span>
+             <span class="nx-title">${esc(next.title)}</span>
+             <span class="nx-arrow">\u2192</span>
+           </a></p>`
+        : `<p class="ch-next"><a href="#colophon">
+             <span class="nx-label">End of the last chapter</span>
+             <span class="nx-title">Colophon</span>
+             <span class="nx-arrow">\u2192</span>
+           </a></p>`;
+      return `${opener}<section class="chapter" id="${chapterId(c.order)}">
+        <p class="ch-num"><span>Chapter ${esc(String(c.order))}</span><a class="back" href="#contents">Contents</a></p>
+        <div class="ch-head">
+          <span class="ch-big">${esc(String(c.order))}</span>
+          <h1>${esc(c.title)}</h1>
+        </div>
+        ${mdToHtml(c.body)}
+        ${entries}
+        ${tail}
+      </section>`;
+    })
+    .join("\n");
+}
 
 /**
  * The contents page. `pages` maps an anchor id to its printed page number;
@@ -179,7 +227,8 @@ function contentsHtml(pages) {
     <p class="c-label">Contents</p>
     <h1>${esc(ATLAS_TITLE)}</h1>
     <p class="c-hint">Every line below is a link — tap a chapter to jump straight to it, and
-    the names under each chapter are the voices it covers. Every chapter has a link back here.</p>
+    the names under each chapter are the voices it covers. Every chapter links back here
+    and on to the next one.</p>
     <ol class="c-list">${rows}</ol>
   </nav>`;
 }
@@ -189,25 +238,67 @@ const styles = `
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
          color: #20201d; font-size: 10.5pt; line-height: 1.62; }
-  .cover { height: 88vh; display: flex; flex-direction: column; justify-content: center;
-           page-break-after: always; border-top: 2pt solid #9d3f33; padding-top: 8mm; }
+  .cover { height: 92vh; display: flex; flex-direction: column;
+           page-break-after: always; border-top: 2.5pt solid #9d3f33; padding-top: 9mm; }
   .cover .kicker { font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
-                   letter-spacing: .22em; text-transform: uppercase; color: #9d3f33; margin: 0 0 10mm; }
-  .cover h1 { font-size: 30pt; line-height: 1.02; margin: 0; letter-spacing: -.02em; }
-  .cover p.sub { color: #5c564d; font-size: 12pt; margin: 6mm 0 0; }
-  .cover .mark { margin-top: auto; font-family: ui-monospace, Menlo, monospace;
+                   letter-spacing: .22em; text-transform: uppercase; color: #9d3f33; margin: 0 0 22mm; }
+  .cover h1 { font-size: 34pt; line-height: 1.0; margin: 0; letter-spacing: -.025em; }
+  .cover p.sub { color: #5c564d; font-size: 12.5pt; margin: 7mm 0 0; }
+  /* A keyboard-span motif: the range bars this book is a catalogue of. */
+  .trace { margin-top: auto; display: flex; flex-direction: column; gap: 2mm; }
+  .trace .row { height: 4.6mm; background: #efe6d5; border-radius: 2.3mm; position: relative; }
+  .trace .row span { position: absolute; top: 0; height: 100%; border-radius: 2.3mm;
+                     background: #b6c9c4; }
+  .trace .row.lit span { background: #9d3f33; }
+  .cover .mark { margin-top: 8mm; font-family: ui-monospace, Menlo, monospace;
                  font-size: 8pt; letter-spacing: .18em; text-transform: uppercase; color: #8a8272; }
-  .part { page-break-before: always; page-break-after: always; height: 70vh;
-          display: flex; flex-direction: column; justify-content: center;
-          border-top: 1pt solid #ddd4c4; padding-top: 6mm; }
+  .cover .mark .dot { margin: 0 2mm; color: #c9bda0; }
+
+  .part { page-break-before: always; page-break-after: always;
+          border-top: 1pt solid #ddd4c4; padding-top: 7mm;
+          display: flex; flex-direction: column; height: 88vh; }
+  .part-head { display: flex; align-items: flex-start; gap: 6mm; margin-bottom: 10mm; }
+  .part-num { font-family: ui-monospace, Menlo, monospace; font-size: 30pt; line-height: .9;
+              color: #e4d9c6; letter-spacing: -.02em; }
   .part-label { font-family: ui-monospace, Menlo, monospace; font-size: 8pt; letter-spacing: .22em;
-                text-transform: uppercase; color: #9d3f33; margin: 0 0 4mm; }
-  .part h1 { font-size: 22pt; margin: 0; letter-spacing: -.02em; }
+                text-transform: uppercase; color: #9d3f33; margin: 0 0 3mm; }
+  .part h1 { font-size: 22pt; margin: 0; letter-spacing: -.02em; line-height: 1.1; }
+  .part-list { list-style: none; margin: 0; padding: 0; }
+  .part-list a { color: inherit; text-decoration: none; display: flex; align-items: baseline; gap: 2mm; }
+  .part-list li { font-size: 10pt; padding: 1.4mm 0; border-bottom: .4pt solid #efe6d5; }
+  .p-n { flex: 0 0 7mm; font-family: ui-monospace, Menlo, monospace; font-size: 8.5pt; color: #8a8272; }
+  .p-t { flex: 0 1 auto; }
+  .p-dots { flex: 1 1 auto; align-self: center; height: 0;
+            border-bottom: .5pt dotted #c9bda0; margin: 0 1.5mm; }
+  .part-back { margin-top: auto; font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
+               letter-spacing: .18em; text-transform: uppercase; color: #9d3f33; text-decoration: none; }
+
   .chapter { page-break-before: always; }
   .ch-num { font-family: ui-monospace, Menlo, monospace; font-size: 8pt; letter-spacing: .18em;
-            text-transform: uppercase; color: #8a8272; margin: 0 0 3mm;
+            text-transform: uppercase; color: #8a8272; margin: 0 0 4mm; padding-bottom: 2.5mm;
+            border-bottom: .5pt solid #efe6d5;
             display: flex; justify-content: space-between; align-items: baseline; }
   .ch-num .back { color: #9d3f33; text-decoration: none; letter-spacing: .18em; }
+  .ch-head { display: flex; align-items: flex-start; gap: 4mm; margin-bottom: 7mm; }
+  .ch-big { font-family: ui-monospace, Menlo, monospace; font-size: 26pt; line-height: .82;
+            color: #e4d9c6; letter-spacing: -.03em; flex: 0 0 auto; }
+  .ch-next { margin: 9mm 0 0; padding-top: 3mm; border-top: .5pt solid #efe6d5;
+             page-break-inside: avoid; }
+  .ch-next a { color: inherit; text-decoration: none; display: flex; align-items: baseline; gap: 2.5mm; }
+  .nx-label { font-family: ui-monospace, Menlo, monospace; font-size: 7.5pt; letter-spacing: .18em;
+              text-transform: uppercase; color: #8a8272; flex: 0 0 auto; }
+  .nx-title { flex: 1 1 auto; color: #9d3f33; font-size: 10pt; }
+  .nx-arrow { color: #9d3f33; flex: 0 0 auto; }
+
+  /* Colophon */
+  .colophon { page-break-before: always; border-top: 1pt solid #ddd4c4; padding-top: 7mm;
+              display: flex; flex-direction: column; height: 86vh; }
+  .colophon h2 { font-size: 15pt; margin: 0 0 4mm; }
+  .colophon p { font-size: 9.5pt; color: #5c564d; max-width: 92%; }
+  .colo-meta { margin-top: auto; font-family: ui-monospace, Menlo, monospace; font-size: 8pt;
+               letter-spacing: .14em; text-transform: uppercase; color: #8a8272;
+               border-top: .5pt solid #efe6d5; padding-top: 3mm; }
+  .colo-meta a { color: #9d3f33; text-decoration: none; }
 
   /* Contents */
   .contents { page-break-after: always; border-top: 1pt solid #ddd4c4; padding-top: 6mm; }
@@ -230,7 +321,7 @@ const styles = `
         font-size: 8.5pt; font-variant-numeric: tabular-nums; color: #5c564d; }
   .c-roster { margin: .8mm 0 1.8mm 7mm; font-size: 7.5pt; line-height: 1.5; color: #8a8272; }
 
-  .chapter h1 { font-size: 17pt; margin: 0 0 6mm; letter-spacing: -.015em; line-height: 1.15; }
+  .chapter h1 { align-self: center; font-size: 17pt; margin: 0; letter-spacing: -.015em; line-height: 1.15; }
   h2 { font-size: 12pt; margin: 8mm 0 2mm; letter-spacing: -.01em; }
   h3, h4 { font-size: 11pt; margin: 6mm 0 2mm; }
   p { margin: 0 0 3.5mm; color: #3a3833; }
@@ -258,16 +349,25 @@ const styles = `
   .note { page-break-before: always; color: #5c564d; font-size: 9.5pt; }
 `;
 
+/** A few real spans from the library, drawn as range bars on the cover. */
+const COVER_RANGES = [[18, 62], [28, 74], [8, 96], [34, 70], [22, 58]];
+
 const documentHtml = (pages) => `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>${esc(ATLAS_TITLE)}</title><style>${styles}</style></head><body>
   <section class="cover">
     <p class="kicker">Included with Suede Pro</p>
     <h1>${esc(ATLAS_TITLE)}</h1>
     <p class="sub">${esc(ATLAS_SUBTITLE)}</p>
-    <p class="mark">Suede Sing</p>
+    <div class="trace">
+      ${COVER_RANGES.map(
+        (r, i) =>
+          `<div class="row${i === 2 ? " lit" : ""}"><span style="left:${r[0]}%;width:${r[1] - r[0]}%"></span></div>`,
+      ).join("")}
+    </div>
+    <p class="mark">Suede Sing<span class="dot">\u00b7</span>sing.suedeai.ai</p>
   </section>
   ${contentsHtml(pages)}
-  ${body}
+  ${bodyHtml(pages)}
   <section class="note">
     <h2>A note on the figures</h2>
     <p>Every range in this book is a commonly cited figure — compiled from recordings and
@@ -279,6 +379,20 @@ const documentHtml = (pages) => `<!doctype html><html lang="en"><head><meta char
     doctor or a speech-language pathologist — there is no waiting period, and you do not
     need to be sure it is serious before you go.</p>
   </section>
+  <section class="colophon" id="colophon">
+    <h2>Colophon</h2>
+    <p>${esc(ATLAS_TITLE)} — ${esc(ATLAS_SUBTITLE)}. Written for Suede Sing, the browser
+    vocal studio, and included with a Suede Pro subscription. ${chapters.length} chapters
+    in ${parts.length} parts.</p>
+    <p>Typeset from the same source the app reads, so the book and the in-app chapters
+    can never disagree. Every contents row, part list and chapter footer in this file is
+    a live link, and the contents double as the index — every singer covered is named
+    there.</p>
+    <p class="colo-meta">
+      Suede Sing \u00b7 <a href="https://sing.suedeai.ai">sing.suedeai.ai</a> \u00b7
+      <a href="#contents">Contents</a>
+    </p>
+  </section>
 </body></html>`;
 
 const PDF_OPTIONS = {
@@ -287,7 +401,8 @@ const PDF_OPTIONS = {
   displayHeaderFooter: true,
   tagged: true,
   outline: true,
-  headerTemplate: "<span></span>",
+  headerTemplate:
+    '<div style="width:100%;padding:0 16mm;font-size:6.5pt;letter-spacing:.18em;text-transform:uppercase;color:#c9bda0;font-family:Menlo,monospace;text-align:right;">The Voice Atlas</div>',
   footerTemplate:
     '<div style="width:100%;font-size:7pt;color:#8a8272;font-family:Helvetica,Arial,sans-serif;text-align:center;"><span class="pageNumber"></span></div>',
   margin: { top: "18mm", bottom: "16mm", left: "16mm", right: "16mm" },
@@ -315,11 +430,13 @@ function locateOpeners(pdfPath) {
     return i === -1 ? null : i + 1;
   };
 
+  // A part title long enough to wrap arrives from pdftotext with a newline in
+  // the middle of it, so the comparison has to ignore how the line broke.
+  const flat = (str) => str.toUpperCase().replace(/\s+/g, " ");
+
   parts.forEach((part, i) => {
-    const name = part.name.toUpperCase();
-    const at = firstPage(
-      (t) => t.includes("PART") && t.toUpperCase().includes(name),
-    );
+    const name = flat(part.name);
+    const at = firstPage((t) => t.includes("PART") && flat(t).includes(name));
     if (at) found.set(partId(i), at);
   });
 
@@ -333,9 +450,11 @@ function locateOpeners(pdfPath) {
     ...parts.map((_, i) => partId(i)),
     ...chapters.map((c) => chapterId(c.order)),
   ].filter((id) => !found.has(id));
+  // "00" in the contents of a paid book, arriving silently, is not a warning.
   if (missing.length > 0) {
-    console.warn(
-      `warning: no page found for ${missing.length} opener(s): ${missing.join(", ")}`,
+    throw new Error(
+      `No printed page found for ${missing.length} opener(s): ${missing.join(", ")}. ` +
+        `The contents would show "00" for these.`,
     );
   }
   return found;
