@@ -1,6 +1,7 @@
 import "server-only";
 
 import Stripe from "stripe";
+import { SITE_URL } from "./site";
 import {
   ENTITLING_STATUSES,
   INACTIVE,
@@ -126,15 +127,25 @@ export function isStripeId(value: unknown, prefix: string): value is string {
 }
 
 /**
- * Redirect origin built from the proxy-set Host header rather than the
- * client-supplied Origin, so a forged header can't point Stripe's
- * post-checkout redirect at another site.
+ * The origin Stripe should return a customer to.
+ *
+ * Deployed, this is always the configured canonical origin rather than
+ * whatever Host the request carried. Two reasons: entitlement lives in
+ * localStorage and localStorage is per origin, so a checkout begun on a
+ * vercel.app host would unlock Pro on that host and leave the singer looking
+ * unsubscribed on the real domain; and a redirect target should not be
+ * derived from a request header when the canonical value is already in
+ * config. Vercel currently rejects a forged Host at the edge, but that is the
+ * platform protecting this, not the code.
+ *
+ * Local development still follows the request, so localhost keeps working.
  */
 export function siteOrigin(request: Request): string {
   const host = request.headers.get("host");
-  if (host) {
-    const local = host.startsWith("localhost") || host.startsWith("127.0.0.1");
-    return `${local ? "http" : "https"}://${host}`;
-  }
+  const local =
+    !!host && (host.startsWith("localhost") || host.startsWith("127.0.0.1"));
+  if (local) return `http://${host}`;
+  if (SITE_URL) return SITE_URL;
+  if (host) return `https://${host}`;
   return new URL(request.url).origin;
 }
