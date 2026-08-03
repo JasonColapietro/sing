@@ -28,7 +28,7 @@ export const ATLAS_SUBTITLE =
 
 const LETTER_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 
-function labelToMidi(label) {
+export function labelToMidi(label) {
   const m = /^([A-Ga-g])([#b♯♭]?)(-?\d)$/.exec(String(label).trim());
   if (!m) return null;
   let pc = LETTER_PC[m[1].toUpperCase()];
