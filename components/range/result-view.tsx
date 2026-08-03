@@ -14,7 +14,7 @@ import { Button, Card, Pill, SectionLabel, Stat } from "@/components/ui";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { RangeHistoryChart } from "@/components/progress/pro-charts";
 import { PianoStrip } from "./piano-strip";
-import { SINGERS, rangeOverlap } from "@/lib/singers";
+import { SINGERS, rangeOverlap, voiceTypeSlug } from "@/lib/singers";
 
 /**
  * Household names for the quick post-test comparison, pulled from the full
@@ -301,6 +301,16 @@ export function ResultView({
           great singers sit between categories — treat this as a starting
           point, not a box.
         </p>
+        {/* The classification used to end here. Every label the classifier can
+            produce has a page of singers behind it, so it should be the next
+            click rather than the last word. */}
+        <Link
+          href={`/singers/voice-type/${voiceTypeSlug(voice.label)}`}
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-amber-ink underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
+        >
+          See the {voice.label.toLowerCase()}s in the library
+          <span aria-hidden>→</span>
+        </Link>
         <div className="mt-6 space-y-2">
           {VOICE_TYPES.map((v) => {
             const left = axisPct(v.lowMidi, 36, 84);
