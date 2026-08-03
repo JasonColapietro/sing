@@ -53,6 +53,23 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ url: session.url });
   } catch (error) {
+    // A subscription Stripe has never heard of isn't a transient fault, and
+    // telling that person to "try again in a moment" sends them retrying a
+    // button that can never work. It happens for real: a subscription deleted
+    // in Stripe, or ids left in localStorage from a test checkout.
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      (error as { type?: string }).type === "StripeInvalidRequestError"
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "We couldn't find that subscription in Stripe. Unlock Pro again with your Pro key, or email hey@suedeai.ai.",
+        },
+        { status: 404 },
+      );
+    }
     console.error("[api/portal]", error);
     return NextResponse.json(
       { error: "Could not open the billing portal. Try again in a moment." },

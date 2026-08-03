@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { INACTIVE } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
+import { getRedis } from "@/lib/redis";
 import { entitlementFrom, getStripe, resolvePriceId } from "@/lib/stripe";
 
 /**
@@ -19,9 +20,76 @@ import { entitlementFrom, getStripe, resolvePriceId } from "@/lib/stripe";
  *
  * Codes live in PRO_COMP_CODES rather than in Stripe or a database, so handing
  * one out and revoking it are both an env var edit.
+ *
+ * A code is reusable without limit unless PRO_COMP_MAX_REDEMPTIONS is set. That
+ * is fine for a code shared with a mailing list and dangerous for one that ends
+ * up on Reddit: every redemption mints a real Stripe customer and subscription,
+ * so an unbounded code is both unbounded free Pro and unbounded object
+ * creation. Setting the cap turns on a durable per-code counter.
  */
 
 const COMP_DAYS = 30;
+
+/** Total redemptions allowed per code, or null for the unlimited default. */
+function redemptionCap(): number | null {
+  const raw = process.env.PRO_COMP_MAX_REDEMPTIONS;
+  if (!raw) return null;
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < 1) {
+    console.warn(
+      `[api/redeem] PRO_COMP_MAX_REDEMPTIONS is "${raw}", which isn't a positive integer — treating codes as uncapped.`,
+    );
+    return null;
+  }
+  return n;
+}
+
+const usageKey = (code: string) => `comp:used:${code}`;
+
+/**
+ * Claims one redemption against a code's quota.
+ *
+ * INCR is atomic, so two simultaneous redemptions of the last slot can't both
+ * win — which a read-then-write check, or counting subscriptions through
+ * Stripe's search index, would both allow. Search is additionally the wrong
+ * tool here: it lags writes by around a minute, which is exactly the window a
+ * script would exploit.
+ *
+ * Returns null when the claim succeeded, or a reason when it did not. With no
+ * cap configured this never runs, so the store stays entirely optional.
+ */
+async function claimRedemption(
+  code: string,
+  cap: number,
+): Promise<"exhausted" | "unavailable" | null> {
+  const redis = getRedis();
+  if (!redis) {
+    // The operator asked for a cap. Granting unlimited passes because the
+    // counter is unreachable would quietly do the opposite of that.
+    console.error(
+      "[api/redeem] PRO_COMP_MAX_REDEMPTIONS is set but no Redis store is configured; refusing rather than granting uncapped passes.",
+    );
+    return "unavailable";
+  }
+  const used = await redis.incr(usageKey(code));
+  if (used > cap) {
+    // Give the slot back so a later cap raise starts from the true count.
+    await redis.decr(usageKey(code));
+    return "exhausted";
+  }
+  return null;
+}
+
+/** Hands a reserved slot back after a failed grant. */
+async function releaseRedemption(code: string) {
+  try {
+    await getRedis()?.decr(usageKey(code));
+  } catch (error) {
+    // A leaked slot costs one redemption; failing the request over it would
+    // cost the singer their pass on top of the Stripe error they already hit.
+    console.error("[api/redeem] could not release redemption slot", error);
+  }
+}
 
 /** Normalised so "friends30", "FRIENDS30 " and "Friends30" are one code. */
 function normalise(value: string): string {
@@ -80,6 +148,26 @@ export async function POST(request: Request) {
 
   const redeemed = normalise(code);
 
+  const cap = redemptionCap();
+  if (cap !== null) {
+    const refusal = await claimRedemption(redeemed, cap);
+    if (refusal === "exhausted") {
+      return NextResponse.json(
+        {
+          ...INACTIVE,
+          error: "That code has been fully claimed. Ask for a fresh one.",
+        },
+        { status: 409 },
+      );
+    }
+    if (refusal === "unavailable") {
+      return NextResponse.json(
+        { ...INACTIVE, error: "Could not check that code just now. Try again in a moment." },
+        { status: 503 },
+      );
+    }
+  }
+
   try {
     const stripe = getStripe();
     const price = await resolvePriceId("monthly");
@@ -105,6 +193,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(entitlementFrom(sub, customer.email));
   } catch (error) {
+    if (cap !== null) await releaseRedemption(redeemed);
     console.error("[api/redeem]", error);
     return NextResponse.json(
       { error: "Could not start your pass. Try again in a moment." },

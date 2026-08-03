@@ -35,6 +35,30 @@ truth** and the flow is built around that:
 | `POST /api/entitlement` | Resolves entitlement from a `session_id` (right after paying) or a `subscription_id` (re-checks later). |
 | `POST /api/restore` | Unlocks Pro on a new device from the subscriber's Pro key. |
 | `POST /api/portal` | Opens Stripe's billing portal — this is what makes "cancel in one click" true. |
+| `POST /api/redeem` | Turns a comp code into a 30-day pass, as a real trialing subscription with no card. |
+
+### Comp codes
+
+`PRO_COMP_CODES` is a comma-separated list; handing a code out and revoking it
+are both an env var edit. Matching is case- and whitespace-insensitive.
+
+**A code is reusable without limit by default.** That suits a code sent to a
+mailing list and is dangerous for one that ends up somewhere public, because
+every redemption mints a real Stripe customer and subscription — so an
+uncapped leaked code is both unbounded free Pro and unbounded object creation.
+
+Set a total per code to bound it:
+
+```bash
+PRO_COMP_MAX_REDEMPTIONS=50
+```
+
+The counter is atomic and lives in the same Upstash store as cloud sync, keyed
+`comp:used:<CODE>`. It only runs when the cap is set, so the store stays
+optional otherwise. Raising the cap later resumes from the true count; to reset
+a code, delete its key. If a cap is configured and the store can't be reached,
+redemption fails closed with a 503 rather than silently granting uncapped
+passes — the opposite of what setting the cap asked for.
 
 ### Pro keys
 
