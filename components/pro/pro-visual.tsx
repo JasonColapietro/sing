@@ -59,7 +59,7 @@ export default function ProVisual() {
             Coach report — week 8
           </span>
         </span>
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ok">
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ok-ink">
           Range +4 st
         </span>
       </div>

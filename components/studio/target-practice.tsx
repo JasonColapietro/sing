@@ -260,7 +260,7 @@ export function TargetPractice({
               <>
                 <div className="flex items-center gap-2">
                   <span
-                    className={`tabular font-mono text-3xl ${lockFlash ? "text-ok" : "text-ink"}`}
+                    className={`tabular font-mono text-3xl ${lockFlash ? "text-ok-ink" : "text-ink"}`}
                   >
                     {midiToLabel(targetMidi)}
                   </span>

@@ -47,10 +47,22 @@ export default function RootLayout({
       className={`${manrope.variable} ${plexMono.variable}`}
     >
       <body className="min-h-dvh antialiased">
+        {/* Sixteen tabbable elements sit ahead of the content on every page —
+            the twelve-room nav plus the Pro and progress links — so a keyboard
+            or screen-reader user crossed all of them again on every
+            navigation. Visible only once focused. */}
+        <a
+          href="#content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:border focus:border-amber focus:bg-panel focus:px-4 focus:py-2.5 focus:text-sm focus:text-ink"
+        >
+          Skip to content
+        </a>
         <Nav />
         <ProSync />
         <ProMoments />
-        <div className="min-h-[70dvh]">{children}</div>
+        <div id="content" className="min-h-[70dvh]">
+          {children}
+        </div>
         <footer className="mt-20 border-t border-line">
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-8 font-mono text-xs text-dim sm:px-6">
             <span>SUEDE SING</span>

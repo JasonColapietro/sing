@@ -150,7 +150,7 @@ export function HigherLowerGame({
                 aria-label={`${LABELS[a]}, shortcut ${keyHint} arrow`}
                 className={`flex min-w-28 flex-col items-center gap-1 rounded-2xl border px-6 py-4 transition-colors disabled:cursor-default ${
                   isRight
-                    ? "border-ok/60 bg-panel2 text-ok"
+                    ? "border-ok/60 bg-panel2 text-ok-ink"
                     : isWrongPick
                       ? "border-rec/50 bg-panel2 text-rec"
                       : answered !== null
@@ -174,7 +174,7 @@ export function HigherLowerGame({
           {answered === null ? (
             <span className="text-dim">Answer with the arrow keys for speed.</span>
           ) : answered === correctAnswer ? (
-            <span className="text-ok">Correct — it was {LABELS[correctAnswer].toLowerCase()}.</span>
+            <span className="text-ok-ink">Correct — it was {LABELS[correctAnswer].toLowerCase()}.</span>
           ) : (
             <span className="text-mut">
               It was {LABELS[correctAnswer].toLowerCase()}.

@@ -143,7 +143,7 @@ export function IntervalGame({
                 aria-label={`${INTERVAL_NAMES[semi]}, shortcut ${SHORTCUT_KEYS[i]}`}
                 className={`flex items-center justify-between gap-2 rounded-2xl border px-3.5 py-2.5 text-left text-sm transition-colors disabled:cursor-default ${
                   isAnswer
-                    ? "border-ok/60 bg-panel2 text-ok"
+                    ? "border-ok/60 bg-panel2 text-ok-ink"
                     : isWrongPick
                       ? "border-rec/50 bg-panel2 text-rec"
                       : answered !== null

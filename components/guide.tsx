@@ -163,7 +163,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
                     <span
                       aria-hidden
                       className={`mt-0.5 font-mono ${
-                        i === 0 ? "text-ok" : "text-amber-ink"
+                        i === 0 ? "text-ok-ink" : "text-amber-ink"
                       }`}
                     >
                       ✓

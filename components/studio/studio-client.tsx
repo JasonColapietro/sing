@@ -172,7 +172,7 @@ export function StudioClient() {
               <div className="mt-4 text-center">
                 <div
                   className={`tabular font-mono text-7xl tracking-tight ${
-                    note ? (inTune ? "text-ok" : "text-ink") : "text-dim"
+                    note ? (inTune ? "text-ok-ink" : "text-ink") : "text-dim"
                   }`}
                 >
                   {note ? note.label : "--"}

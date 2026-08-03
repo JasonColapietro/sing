@@ -8,7 +8,11 @@
   --color-line2: #c9bda0;
   --color-ink: #20201d;
   --color-mut: #5c564d;
-  --color-dim: #8a8272;
+  /* Darkened from #8a8272, which read 3.07–3.66:1 on bg/panel/panel2 and so
+     failed WCAG AA for body text — and this token is text-only, carrying the
+     mono kickers, table markers and meta lines. Now 4.74–5.65:1, still lighter
+     than --color-mut so the type hierarchy is unchanged. */
+  --color-dim: #6b6455;
   --color-amber: #c59642;
   --color-amber-soft: #e0bb74;
   /* Darker gold for text on paper/panel — --color-amber fails WCAG AA as
@@ -18,6 +22,11 @@
   --color-amber-ink: #82631f;
   --color-rec: #9d3f33;
   --color-ok: #3f8f6e;
+  /* Same split as amber above: --color-ok reads 3.16–3.77:1 as text, so it
+     stays the fill and border value (progress bars, success chips, the canvas
+     and SVG constants that mirror it) while text-ok-ink carries anything a
+     reader has to read. 4.85–5.78:1. */
+  --color-ok-ink: #2a6f53;
   --color-cool: #11615d;
   --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
