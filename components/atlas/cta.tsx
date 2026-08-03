@@ -3,6 +3,7 @@
 import { useProState } from "@/lib/pro";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { LinkButton } from "@/components/ui";
+import { PdfDownload } from "@/components/book/pdf-download";
 
 /** Start reading if subscribed, otherwise sample the free chapter. */
 export function AtlasCta() {
@@ -15,13 +16,7 @@ export function AtlasCta() {
         <LinkButton href={`/atlas/${first.slug}`} size="md">
           Start reading
         </LinkButton>
-        <a
-          href="/the-voice-atlas.pdf"
-          download
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-line2 px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-amber hover:text-amber-ink"
-        >
-          Download the PDF
-        </a>
+        <PdfDownload book="atlas" filename="the-voice-atlas.pdf" />
       </div>
     );
   }

@@ -252,8 +252,8 @@ export const PRO_PERKS: ProPerk[] = [
   },
   {
     id: "book",
-    title: "The Measured Voice",
-    desc: "A 23-chapter book on how the voice works, reading your own numbers, and a twelve-week program — in the app and as a PDF to keep.",
+    title: "Two books, with PDFs",
+    desc: "The Measured Voice — 23 chapters on how the voice works and a twelve-week program — plus The Voice Atlas, the famous-voices companion. Both in the app and as PDFs to keep.",
   },
   {
     id: "history",
@@ -280,4 +280,5 @@ export const PLAN_ROWS: Array<{
   { label: "Practice history", free: "Last 20 sessions shown", pro: "Full history + trends" },
   { label: "Backup & sync", free: "Manual export file", pro: "Automatic cloud sync" },
   { label: "The Measured Voice (book)", free: "Contents only", pro: "All 23 chapters + PDF" },
+  { label: "The Voice Atlas (book)", free: "Contents + first chapter", pro: "All 27 chapters + PDF" },
 ];

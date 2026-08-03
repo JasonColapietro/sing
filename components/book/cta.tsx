@@ -3,6 +3,7 @@
 import { useProState } from "@/lib/pro";
 import { BOOK_CONTENTS } from "@/lib/book-data";
 import { LinkButton } from "@/components/ui";
+import { PdfDownload } from "@/components/book/pdf-download";
 
 /** Start reading if subscribed, otherwise point at Pro. */
 export function BookCta() {
@@ -15,13 +16,7 @@ export function BookCta() {
         <LinkButton href={`/book/${first.slug}`} size="md">
           Start reading
         </LinkButton>
-        <a
-          href="/the-measured-voice.pdf"
-          download
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-line2 px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-amber hover:text-amber-ink"
-        >
-          Download the PDF
-        </a>
+        <PdfDownload book="measured-voice" filename="the-measured-voice.pdf" />
       </div>
     );
   }
