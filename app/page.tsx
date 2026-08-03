@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_URL } from "@/lib/site";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { HeroSplit } from "@/components/landing/hero-split";
 import { IosBand } from "@/components/landing/ios-band";
@@ -98,9 +100,80 @@ const STEPS = [
   },
 ];
 
+// Homepage-only head additions (audit 2026-08-02: canonical, OG and schema were
+// absent sitewide at the root). Kept here rather than in layout.tsx so routes that
+// set their own canonical (e.g. /singers/[slug]) are not overridden.
+export const metadata: Metadata = {
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: "Suede Sing — the vocal studio in your browser",
+    description:
+      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free, in the browser, no install.",
+    url: SITE_URL,
+    siteName: "Suede Sing",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Suede Sing — the vocal studio in your browser",
+    description:
+      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free, in the browser, no install.",
+  },
+};
+
+const HOME_JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: `${SITE_URL}/`,
+      name: "Suede Sing",
+      publisher: { "@id": "https://suedeai.ai/#organization" },
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://suedeai.ai/#organization",
+      name: "Suede Labs AI",
+      url: "https://suedeai.ai",
+      logo: "https://suedeai.ai/suede-ai-logo-transparent.png",
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${SITE_URL}/#app`,
+      name: "Suede Sing",
+      applicationCategory: "MusicApplication",
+      operatingSystem: "Web Browser",
+      browserRequirements: "Requires a microphone for pitch and range features",
+      url: `${SITE_URL}/`,
+      publisher: { "@id": "https://suedeai.ai/#organization" },
+      featureList: [
+        "Real-time pitch training",
+        "Vocal range test",
+        "Guided warmups",
+        "Ear training",
+        "Breath work",
+        "Recorder and song practice",
+        "Famous singer vocal ranges (457 indexed)",
+      ],
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+      },
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_JSON_LD) }}
+      />
       {/* 1 — Hero, carried over from the iOS app's landing page */}
       <HeroSplit />
 
