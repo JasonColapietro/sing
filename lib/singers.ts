@@ -158,3 +158,54 @@ export function rangeOverlap(
 ): number {
   return Math.max(0, Math.min(aHigh, bHigh) - Math.max(aLow, bLow));
 }
+
+/**
+ * Wikipedia titles that name-mangling gets wrong.
+ *
+ * `sameAs` is an identity assertion: it says "this Person IS the thing at that
+ * URL". Deriving the URL from the display name silently breaks for anyone whose
+ * name is not the primary topic — every one of these resolved to a *disambiguation
+ * page*, which is not a person, so the claim was false rather than merely
+ * unhelpful. A 404 would have been safer; a 200 on the wrong kind of page is the
+ * failure mode that hides.
+ *
+ * Checked against the Wikipedia API on 2026-08-02: all 420 titles queried,
+ * 18 landed on disambiguation pages and 7 more resolved only via a redirect.
+ * Every replacement title below was verified to be a real, non-disambiguation
+ * article. Re-run that check when adding singers with single-word or shared names.
+ */
+const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
+  // Landed on a disambiguation page.
+  ado: "Ado (singer)",
+  chen: "Chen (singer)",
+  halsey: "Halsey (singer)",
+  iu: "IU (singer)",
+  "james-blake": "James Blake (musician)",
+  "jelly-roll": "Jelly Roll (singer)",
+  "jeremy-jordan": "Jeremy Jordan (actor)",
+  "jill-scott": "Jill Scott (singer)",
+  laufey: "Laufey (singer)",
+  maxwell: "Maxwell (musician)",
+  miguel: "Miguel (singer)",
+  rema: "Rema (musician)",
+  "robert-smith": "Robert Smith (musician)",
+  shaggy: "Shaggy (musician)",
+  sting: "Sting (musician)",
+  "tom-jones": "Tom Jones (singer)",
+  usher: "Usher (musician)",
+  zayn: "Zayn Malik",
+  // Resolved only through a redirect; point at the article directly.
+  anohni: "Anohni",
+  "aulii-cravalho": "Auliʻi Cravalho",
+  "dimash-kudaibergen": "Dimash Qudaibergen",
+  jungkook: "Jung Kook",
+  lisa: "Lisa (Japanese musician, born 1987)",
+  "park-hyo-shin": "Park Hyo-shin",
+  "sade-adu": "Sade (singer)",
+};
+
+/** Canonical Wikipedia URL for a singer, honouring the overrides above. */
+export function wikipediaUrl(s: Pick<Singer, "slug" | "name">): string {
+  const title = WIKIPEDIA_TITLE_OVERRIDES[s.slug] ?? s.name;
+  return `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`;
+}
