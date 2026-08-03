@@ -303,9 +303,12 @@ export function RangeTest() {
             <p className="mt-3 text-sm text-dim">
               Takes about two minutes. Works best in a quiet room.
             </p>
+            <p className="mt-2 max-w-xl text-sm text-rec">
+              Use a comfortable volume. Stop if a note causes pain or strain.
+            </p>
             <div className="mt-5">
               <Button variant="rec" size="lg" onClick={begin}>
-                Enable microphone
+                Start free range test
               </Button>
             </div>
             {error && (
@@ -368,8 +371,8 @@ export function RangeTest() {
           </h2>
           <p className="mt-2 max-w-xl text-sm text-mut">
             {stage === "low"
-              ? "Move down gradually, a step at a time. Hold each note clearly for a moment so it counts — croaky vocal fry at the bottom is fine."
-              : "Move up gradually and hold each note clearly for a moment. Falsetto and head voice count — flip over and keep going."}
+              ? "Move down gradually, a step at a time. Hold each note clearly for a moment so it counts. Stop when the sound turns to croak, rattle, or air."
+              : "Move up gradually and hold each note clearly for a moment. Falsetto and head voice count. Stop before a note causes pain or strain."}
           </p>
           <div className="mt-6 flex flex-wrap items-end gap-8">
             <div>
