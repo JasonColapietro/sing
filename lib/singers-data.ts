@@ -245,6 +245,25 @@ export const SINGERS: Singer[] = [
     "technique": "Consonants land hard and early, words crowd ahead of the beat, and long notes get bent well off center before resolving. Sudden yelps jump into a bright head voice, sometimes an octave above where the phrase was sitting. Those bends work only because they start and finish on pitch; students slide vaguely and land nowhere, then copy the nasal edge by squeezing rather than placing it forward."
   },
   {
+    "slug": "alex-warren",
+    "name": "Alex Warren",
+    "voiceType": "Baritone",
+    "genres": [
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2024,
+    "lowMidi": 45,
+    "highMidi": 66,
+    "beltMidi": 64,
+    "whistle": false,
+    "signatureSong": "Ordinary",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Stadium-folk balladry: a husky baritone that builds from hushed verse to a huge, hymn-like chorus with choir-sized reverb.",
+    "technique": "Dynamics do the storytelling. Verses sit husky and close, almost spoken over fingerpicking, then the chorus opens into a full-throated, anthemic belt with the vowels widened and a slight rasp on top, a shape borrowed from worship music as much as from pop. Vibrato stays narrow even at volume. Map the crescendo across the whole song and rehearse the quiet sections quieter than feels natural, so the lift has somewhere to go. Peaking in verse one flattens the entire arc."
+  },
+  {
     "slug": "alicia-keys",
     "name": "Alicia Keys",
     "voiceType": "Mezzo-soprano",
@@ -346,6 +365,48 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Contralto with jazz-era diction, heavy vibrato, and a cracked, smoky bottom register.",
     "technique": "Consonants come clipped and the vowels sit narrower than modern pop asks for. That, plus a low and slightly smoky placement near C3, is most of the character, and copying the accent without the breath support underneath it gets nowhere near the sound. Notes are slid into and slid out of. A wide, slow vibrato lands on nearly every sustain, and the timing lags the beat by a fraction all the way through."
+  },
+  {
+    "slug": "anderson-paak",
+    "name": "Anderson .Paak",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Funk",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 2016,
+    "lowMidi": 48,
+    "highMidi": 77,
+    "beltMidi": 67,
+    "whistle": false,
+    "signatureSong": "Come Down",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Drummer-brain soul: a raspy, grinning tenor that phrases like a snare pattern and smears bar lines for fun.",
+    "technique": "Groove placement is the genius. Phrases start late, rush the middle and snap the last syllable onto the pocket, a drummer's instinct applied to melody, in a sandy, sun-cracked tenor with a permanent smile in the vowels. The rasp is light and constant, never pushed. Falsetto arrives as quick yelps, not held lines. Practice singing over a metronome while deliberately dragging then catching up inside each bar. Straightening his timing to the grid removes the exact thing that makes it his."
+  },
+  {
+    "slug": "andra-day",
+    "name": "Andra Day",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Soul",
+      "R&B",
+      "Jazz"
+    ],
+    "country": "USA",
+    "activeFrom": 2015,
+    "lowMidi": 52,
+    "highMidi": 78,
+    "beltMidi": 73,
+    "whistle": false,
+    "signatureSong": "Rise Up",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A time-traveling soul voice: Billie Holiday's bent notes and smoke, wired to a modern gospel belt.",
+    "technique": "Jazz inflection meets church power. Verses lean on Holiday-style delays and note-bends, the pitch approached from underneath and worried around its center, in a smoky tone with a distinctive nasal glint. The chorus then squares up into a straight, supported gospel belt. The two vocabularies alternate; they never blur. Learn a verse with every bend mapped, then deliver the chorus with none. Singers who bend the belt or straighten the verses lose the tension that makes the arc land."
   },
   {
     "slug": "andrea-bocelli",
@@ -670,9 +731,29 @@ export const SINGERS: Singer[] = [
     "whistle": false,
     "signatureSong": "Sweet Child o' Mine",
     "lowSource": "There Was a Time",
-    "highSource": null,
+    "highSource": "Ain't It Fun",
     "blurb": "Two voices in one: a low growl underneath, a thin cutting rasp on top, screams above that.",
     "technique": "Two mechanisms do the work. Underneath sits a heavy, distorted low voice trailing into fry at the bottom; above the D5 belt the tone thins into a narrow, nasal rasp that cuts rather than fills, and the screams past that are almost pure edge with no weight behind them. Phrasing drags behind the beat, then snaps forward. The common mistake is squeezing the throat to find the rasp — compression makes that noise, not force."
+  },
+  {
+    "slug": "ayra-starr",
+    "name": "Ayra Starr",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Afrobeats",
+      "R&B"
+    ],
+    "country": "Nigeria",
+    "activeFrom": 2021,
+    "lowMidi": 52,
+    "highMidi": 76,
+    "beltMidi": 71,
+    "whistle": false,
+    "signatureSong": "Rush",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Sabi girl smoke: a low-set, velvet mezzo with lazy-lidded phrasing and sudden bright leaps that snap the ear awake.",
+    "technique": "Cool understatement rules the verses: a smoky, low-sitting mezzo delivering syllables slightly late and legato, Nigerian Pidgin inflections keeping the rhythm supple. Then a chorus line leaps an octave into a bright, girlish head tone, and the contrast between velvet and shine is the hook. Runs are compact, pentatonic and unhurried. Work the low register's clarity first, no fry, no push, then rehearse the leap so the top arrives light instead of grabbed. Both colors have to sound unforced."
   },
   {
     "slug": "ayumi-hamasaki",
@@ -1247,6 +1328,25 @@ export const SINGERS: Singer[] = [
     "technique": "The control is in the details: exact pitch on entry with no scoop, smooth legato, and a step into the light upper register that leaves no audible seam. Runs are melodic and unhurried rather than crowded, and vibrato stays even and controlled at the end of long notes. Volume changes come from breath support, not squeeze. Sliding into every note from below undoes the clean, connected line that gives the style its polish."
   },
   {
+    "slug": "britney-spears",
+    "name": "Britney Spears",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 1998,
+    "lowMidi": 47,
+    "highMidi": 78,
+    "beltMidi": 73,
+    "whistle": false,
+    "signatureSong": "...Baby One More Time",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The template for modern pop diction: creaky fry onsets, a nasal baby-doll mix, and a fuller natural voice saved for ballads.",
+    "technique": "Fry is the engine here: phrases start in a creak, slide up into a bright nasal mix, and land back in the creak at the end of the line. That onset is a stylistic choice layered over a real soprano, and the ballads show the rounder voice underneath. To borrow the sound, add the fry only at onsets and releases while keeping air moving; imitators who hold the creak through whole phrases end up pressed and pitchy."
+  },
+  {
     "slug": "bruce-dickinson",
     "name": "Bruce Dickinson",
     "voiceType": "Tenor",
@@ -1388,6 +1488,26 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Light breathy tenor pitched close to speech; soft onsets, almost no vibrato.",
     "technique": "The delivery sits close to speech and barely rises above it, built from soft aspirate onsets, a light breathy tone and almost no vibrato, which leaves the pitch center fully exposed. Phrases stay short and conversational, often sitting behind the guitar rather than on top of it. Around G4 he keeps a gentle mix instead of opening out. Singing this quietly takes more breath control, not less, or the pitch sags."
+  },
+  {
+    "slug": "camila-cabello",
+    "name": "Camila Cabello",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop",
+      "Latin"
+    ],
+    "country": "Cuba/USA",
+    "activeFrom": 2013,
+    "lowMidi": 50,
+    "highMidi": 79,
+    "beltMidi": 74,
+    "whistle": false,
+    "signatureSong": "Havana",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A light soprano with a built-in sob: cracks, yodels and Spanish-inflected turns used as ornaments, not accidents.",
+    "technique": "The break is the instrument. Where most singers smooth the flip between chest and head, she leans into it, placing little yodels and sobs exactly on the beat, with a bright, forward, slightly childlike tone around them. Melisma bends toward Cuban phrasing: short turns that sit behind the beat. Practice cracking on purpose, softly, at the same pitch every time. Imitators who crack wherever it happens to land sound broken; hers land like grace notes because they are planned."
   },
   {
     "slug": "camilo-sesto",
@@ -1592,6 +1712,26 @@ export const SINGERS: Singer[] = [
     "technique": "Stage projection is the baseline. Consonants get hit hard, vowels stay bright and narrow, and the belt runs up to F5 with a steady ring rather than a shout. The characteristic move is a drop into thin, quiet head voice right after a big line, letting the contrast carry the feeling; belt the whole song and half the effect is gone. Long notes finish with a wide vibrato that only surfaces at the very end."
   },
   {
+    "slug": "charli-xcx",
+    "name": "Charli XCX",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Pop",
+      "Electronic"
+    ],
+    "country": "UK",
+    "activeFrom": 2013,
+    "lowMidi": 53,
+    "highMidi": 77,
+    "beltMidi": 72,
+    "whistle": false,
+    "signatureSong": "Boom Clap",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A blunt, sing-shouted mezzo that treats processing as part of the voice: chants, talk-singing and hooks built from attitude.",
+    "technique": "Delivery beats ornament every time. The core sound is a flat-affect chant, almost shouted but pitched, with hard consonant attacks and no vibrato; the polish comes from stacking and processing, which she writes for rather than fights. When she does sing out, the belt is plain and square-toned. To work on this style, drill clean pitch at high speech intensity and rhythmic precision on consonants. Students who add runs and warmth are singing a different genre."
+  },
+  {
     "slug": "charlie-puth",
     "name": "Charlie Puth",
     "voiceType": "Tenor",
@@ -1694,6 +1834,26 @@ export const SINGERS: Singer[] = [
     "technique": "Contrast is the technique: a soft, airy head tone at low volume in one bar, a raw open shout in the next, sometimes stacked across the same phrase. The quiet side needs steady airflow and no pressing at all. Full voice stops around D5, and what sits higher is distorted rather than sung. Students switch the shout on first and never build the soft half that gives it meaning."
   },
   {
+    "slug": "chris-brown",
+    "name": "Chris Brown",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2005,
+    "lowMidi": 48,
+    "highMidi": 80,
+    "beltMidi": 67,
+    "whistle": false,
+    "signatureSong": "With You",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A dancer's light tenor: bright, elastic and rhythmically exact, built to stay effortless mid-choreography.",
+    "technique": "Efficiency governs everything: the tone is light and bright, produced with minimal engine so it stays steady through full-out choreography, and the athleticism goes into rhythm instead of volume. Runs are fast, clipped and placed exactly on subdivisions, more percussive than gospel-fluid, and the falsetto is thin, sweet and instantly available. Practice singing eighth-note runs while walking in tempo, then while dancing, keeping the tone unshaken. Weight is the enemy; a heavy version of this voice cannot move."
+  },
+  {
     "slug": "chris-cornell",
     "name": "Chris Cornell",
     "voiceType": "Tenor",
@@ -1756,6 +1916,25 @@ export const SINGERS: Singer[] = [
     "technique": "Airy and unforced, with modest chest weight and a slightly breathy edge on the low notes. Keys are chosen to park the voice in upper mix around B4, which is why the melodies feel high but rarely strained. Rhythm stays square, sung close to the beat so a room can follow it on first hearing. Adding power is the mistake; the thinness is exactly what makes these lines singable by a crowd."
   },
   {
+    "slug": "christian-nodal",
+    "name": "Christian Nodal",
+    "voiceType": "Baritone",
+    "genres": [
+      "Latin"
+    ],
+    "country": "Mexico",
+    "activeFrom": 2017,
+    "lowMidi": 45,
+    "highMidi": 67,
+    "beltMidi": 65,
+    "whistle": false,
+    "signatureSong": "Adiós Amor",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Mariachi weight in a young frame: a dark, wide-vibrato baritone built on ranchera's long-breath phrasing.",
+    "technique": "Ranchera discipline underpins everything: long phrases sustained on one enormous breath, a wide, slow vibrato that opens fully on held notes, and a dark, chesty tone that stays rich even at the top of the staff. The famous quiebre, a small controlled crack into falsetto and back, decorates phrase peaks. Practice sustaining eight-second tones with the vibrato arriving after two counts, then add the quiebre as a quick flip. Thin, pop-placed tone cannot carry this repertoire's weight."
+  },
+  {
     "slug": "christina-aguilera",
     "name": "Christina Aguilera",
     "voiceType": "Mezzo-soprano",
@@ -1793,6 +1972,25 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Reedy tenor with pronounced vibrato and a plaintive edge on long sustained high phrases.",
     "technique": "Reediness comes from a narrow, slightly nasal resonance rather than a wide open throat, and it gives the upper range a thin pleading edge instead of a heroic ring. Vibrato is prominent and fairly wide, present from the instant the note starts. Long high phrases are sung quietly and held, thinning toward the end of the breath instead of being reinforced. Copying the vibrato without the reedy placement produces a wobble; that narrowness is what keeps it in focus."
+  },
+  {
+    "slug": "conan-gray",
+    "name": "Conan Gray",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2018,
+    "lowMidi": 48,
+    "highMidi": 79,
+    "beltMidi": 69,
+    "whistle": false,
+    "signatureSong": "Heather",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Bedroom-pop drama: a delicate tenor that cracks upward into head voice at emotional peaks, diary-quiet one bar and keening the next.",
+    "technique": "Vulnerability is played as register. Verses sit in a thin, close chest voice; the emotional turn arrives as a deliberate lift into head voice, often with a small audible crack on the way up that functions as punctuation. Vibrato is minimal and late. To learn the move, practice sliding from chest to head on one vowel and placing the flip on a chosen word, not wherever the break happens to catch. Random cracks read as strain; his are cues."
   },
   {
     "slug": "corey-taylor",
@@ -1896,6 +2094,67 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Slurred phrasing that drags behind the beat, with falsetto harmonies stacked in blocks.",
     "technique": "Consonants get softened and slurred so words blur into each other, and lines sit noticeably behind the beat while the band stays put, which creates the drag that defines the feel. Falsetto lines are stacked in dense harmony blocks, each one small and breathy. Pitches often bend into place rather than starting there. Singing this cleanly on the beat, with crisp diction, produces something technically correct and completely wrong stylistically."
+  },
+  {
+    "slug": "damiano-david",
+    "name": "Damiano David",
+    "voiceType": "Baritone",
+    "genres": [
+      "Rock"
+    ],
+    "country": "Italy",
+    "activeFrom": 2021,
+    "lowMidi": 45,
+    "highMidi": 71,
+    "beltMidi": 69,
+    "whistle": false,
+    "signatureSong": "Beggin'",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Måneskin's frontman: a dark, swaggering baritone with Italian vowel color, pushed into a snarling rock belt at the top.",
+    "technique": "Swagger sits on a low foundation. The speaking-range tone is dark and slightly oily, with pure Italian vowels that keep resonance tall where an American singer would spread, and the top is a pushed, snarly belt that stays just this side of a yell. Consonant attacks are theatrical, almost spat. Work the vowel color first: sing the line on pure ah and oh, no diphthongs, then add the snarl as a final layer. Starting with the snarl shreds the voice and misses the elegance underneath."
+  },
+  {
+    "slug": "daniel-caesar",
+    "name": "Daniel Caesar",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Gospel"
+    ],
+    "country": "Canada",
+    "activeFrom": 2017,
+    "lowMidi": 49,
+    "highMidi": 78,
+    "beltMidi": 68,
+    "whistle": false,
+    "signatureSong": "Get You",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Church chords, bedroom volume: a feathery gospel tenor that stacks itself into choir harmony and floats the top lines.",
+    "technique": "Head voice does the heavy lifting. The lead tone is feather-light, mixed toward head even in the middle of the range, with gospel harmony instincts underneath: he hears himself as one voice of a stack, which keeps the lead unforced and tuning immaculate. Runs are unhurried, four and five notes, resolved like amen cadences. Record yourself singing a simple line, then stack two harmonies above it and re-sing the lead to sit inside them. Solo-singer loudness is the habit to unlearn here."
+  },
+  {
+    "slug": "dave-gahan",
+    "name": "Dave Gahan",
+    "voiceType": "Baritone",
+    "genres": [
+      "Synth-Pop",
+      "New Wave",
+      "Electronic"
+    ],
+    "country": "UK",
+    "activeFrom": 1981,
+    "lowMidi": 41,
+    "highMidi": 67,
+    "beltMidi": 64,
+    "whistle": false,
+    "signatureSong": "Enjoy the Silence",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Depeche Mode's dark crooner: a resonant machine-age baritone, nearly vibrato-free, that smolders instead of emotes.",
+    "technique": "Stillness carries the menace. The tone is deep, hooded and deliberately level, with vibrato all but removed and dynamics compressed to a narrow band, so that a semitone of melodic movement lands like an event. Vowels are darkened toward oh; consonants are clipped and precise against the machines. Sing a phrase while consciously suppressing vibrato and keeping the larynx comfortably low, without pressing. Most students discover their voice wobbles the moment they stop pushing; his control of that stillness is the skill."
   },
   {
     "slug": "david-bowie",
@@ -2058,6 +2317,26 @@ export const SINGERS: Singer[] = [
     "technique": "Thin cord closure gives a bright, narrow edge that cuts through a dense track without much volume behind it. Onsets are breathy, words are delivered conversationally on top of the groove, and the top of the range is reached as a light head tone rather than belted. What vibrato there is stays small, and it often disappears entirely. Ornament is sparse — a bend or a single turn, not a run. Restraint and forward placement are the whole appeal, and added soul weight or heavy melisma pulls against them."
   },
   {
+    "slug": "dimash-kudaibergen",
+    "name": "Dimash Kudaibergen",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop",
+      "Classical"
+    ],
+    "country": "Kazakhstan",
+    "activeFrom": 2017,
+    "lowMidi": 36,
+    "highMidi": 108,
+    "beltMidi": 77,
+    "whistle": true,
+    "signatureSong": "S.O.S. d'un terrien en détresse",
+    "lowSource": null,
+    "highSource": "Unforgettable Day (live at Gakku)",
+    "blurb": "The six-octave phenomenon: bass lows to whistle highs in one performance, with conservatory technique at every altitude.",
+    "technique": "Register-switching at this scale is the real spectacle: subharmonic-reinforced lows, a classically placed tenor middle, a belt that stays supported past F5, then seamless handoffs into reinforced falsetto and whistle, each register entered with its own dedicated technique rather than stretched from the last one. Ornaments carry Kazakh traditional inflection. Study the handoffs, not the extremes: practice passing one vowel across chest, mix and falsetto with no volume bump at the seams. The six octaves are his; the smooth seams are learnable."
+  },
+  {
     "slug": "dmitri-hvorostovsky",
     "name": "Dmitri Hvorostovsky",
     "voiceType": "Baritone",
@@ -2077,6 +2356,27 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Smooth Verdi baritone with a metallic edge and long, unbroken legato on a single breath.",
     "technique": "Legato is the whole method: long lines joined without a seam, often stretched further than most singers would attempt, with the vowel shape barely shifting from note to note. There is a metallic edge inside an otherwise smooth tone, and the vibrato stays even at every dynamic. The climb to A4 is fully covered. Squeeze the throat chasing that metal and you lose it, because it comes from steady airflow and a consistent vowel."
+  },
+  {
+    "slug": "doja-cat",
+    "name": "Doja Cat",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop",
+      "R&B",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 2019,
+    "lowMidi": 48,
+    "highMidi": 83,
+    "beltMidi": 76,
+    "whistle": false,
+    "signatureSong": "Say So",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A shape-shifter: cartoon brightness, silky R&B head voice and hard rap cadence, swapped mid-verse like costume changes.",
+    "technique": "Character work is the real skill. The sung tone is light, bright and slightly nasal, easy to bend into cartoonish colors or smooth out into a creamy head voice, and the rap delivery uses the same forward placement so the switch costs nothing. Nothing in it relies on brute power. Practice by picking two contrasting characters for one verse each and switching cleanly at the bar line, keeping breath low while only the resonance changes. Committing halfway to each color is what sounds amateur."
   },
   {
     "slug": "dolly-parton",
@@ -2283,6 +2583,26 @@ export const SINGERS: Singer[] = [
     "technique": "Onsets are clean and pitch-centred, with almost no slide into the note and a vibrato so narrow it reads as straight tone. Above the staff the voice thins into a light, flute-like head register instead of adding weight, which is how the compass reaches C6 without strain. The scat choruses in How High the Moon move in horn-shaped intervals, and speed without that pitch centre turns the same lines into mush."
   },
   {
+    "slug": "ellie-goulding",
+    "name": "Ellie Goulding",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop",
+      "Electronic"
+    ],
+    "country": "UK",
+    "activeFrom": 2010,
+    "lowMidi": 50,
+    "highMidi": 81,
+    "beltMidi": 73,
+    "whistle": false,
+    "signatureSong": "Lights",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A fluttery, folk-rooted soprano: fast tremulous vibrato, feathered head voice, and a bright childlike edge over dance production.",
+    "technique": "The flutter is the fingerprint: a fast, narrow vibrato that shimmers even on short notes, over a light head-dominant tone with a slightly reedy, folk-singer edge. She rarely belts; intensity comes from doubling and from pushing the head voice brighter, not heavier. To approach it, sing phrases in head voice at low volume and let vibrato run free rather than ironing it flat. Forcing chest weight up to imitate her power reads as a different, blunter voice."
+  },
+  {
     "slug": "elton-john",
     "name": "Elton John",
     "voiceType": "Tenor",
@@ -2366,6 +2686,26 @@ export const SINGERS: Singer[] = [
     "technique": "The color is dark for a tenor, close to a baritone through the middle of the staff, and the weight sits low rather than up in the mask. Attacks land firm and immediate, lines are joined with audible portamento, and the vibrato holds one moderate speed from start to finish. Up top the vowel is covered rather than opened out, and with Bb4 as the ceiling the interest is in how much happens underneath it. Press the larynx down to imitate that darkness and all you get is muffled tone."
   },
   {
+    "slug": "enrique-iglesias",
+    "name": "Enrique Iglesias",
+    "voiceType": "Tenor",
+    "genres": [
+      "Latin",
+      "Pop"
+    ],
+    "country": "Spain",
+    "activeFrom": 1996,
+    "lowMidi": 49,
+    "highMidi": 68,
+    "beltMidi": 66,
+    "whistle": false,
+    "signatureSong": "Hero",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The whispering heartthrob: a breathy, intimate light tenor that made proximity, not power, the selling point.",
+    "technique": "Proximity is the product: a light tenor delivered half-whispered into a close microphone, air deliberately mixed into the tone, consonants softened to a murmur, so every listener hears a private serenade. Pitch rises into a gentle, strained upper register that stays sympathetic rather than impressive. Dynamics barely move; intensity comes from getting quieter, not louder. Practice singing at whisper volume while keeping the pitch line exact, and resist clearing the breathiness. Cleaning up this voice would erase its entire appeal."
+  },
+  {
     "slug": "erykah-badu",
     "name": "Erykah Badu",
     "voiceType": "Mezzo-soprano",
@@ -2425,6 +2765,25 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Blues-weighted contralto: thick chest tone, growled note entries, wide and slow vibrato.",
     "technique": "The growl lands on the attack and then resolves into thick, steady chest tone a beat later. Growl the whole way through and the effect disappears, because it only reads against clean tone underneath it. Vibrato is slow and wide and arrives late, once the note has been held straight for a while, and the melody moves by blues bends far more than by runs. Notes swell into their full size instead of starting there."
+  },
+  {
+    "slug": "faouzia",
+    "name": "Faouzia",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop"
+    ],
+    "country": "Morocco/Canada",
+    "activeFrom": 2019,
+    "lowMidi": 49,
+    "highMidi": 91,
+    "beltMidi": 77,
+    "whistle": true,
+    "signatureSong": "Tears of Gold",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A technician's playground: huge belts with Arabic-inflected ornament, stratospheric whistle, and total dynamic control.",
+    "technique": "Ornament ties this voice to a lineage: the melisma bends through quarter-tone-flavored turns drawn from Arabic singing, over a Western pop belt that stays connected to F5. The belt is narrow-vowelled and laser-placed rather than wide and brassy, which is how it climbs so high without spreading, and the whistle sits on top as a separate, practiced register. Work the ornaments slowly on one vowel before chasing any of the altitude; the turns are the learnable part, the ceiling mostly is not."
   },
   {
     "slug": "fela-kuti",
@@ -2511,6 +2870,26 @@ export const SINGERS: Singer[] = [
     "technique": "Belted notes are produced with an open throat and a wide, slow vibrato, and the stated belt around E5 marks where chest-based power stops. Above it the tone lightens into head voice, which is why the highest pitches read as choral rather than driven. Vowels stay open and vertical, powered by generous breath. Much of the thickness on record is stacked harmony rather than one line, and the belt itself rides on open resonance more than on sheer volume."
   },
   {
+    "slug": "frank-ocean",
+    "name": "Frank Ocean",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 2011,
+    "lowMidi": 37,
+    "highMidi": 79,
+    "beltMidi": 66,
+    "whistle": false,
+    "signatureSong": "Thinkin Bout You",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The mumbled confession as art form: a hazy tenor drifting between talk, melody and a fragile, exposed falsetto.",
+    "technique": "Falsetto carries the feelings the words won't say. The chest voice is kept conversational, slightly slurred and unforced, and at emotional peaks he abandons it entirely for a thin, deliberately fragile falsetto that sits high and unprotected, cracks left in. Pitch is loose by design in verses, exact in the falsetto hooks. Practice the handoff: speak-sing a line, then float the next phrase in soft falsetto without resetting your breath. Strengthening the falsetto until it sounds confident misses the point of its fragility."
+  },
+  {
     "slug": "frank-sinatra",
     "name": "Frank Sinatra",
     "voiceType": "Baritone",
@@ -2590,6 +2969,27 @@ export const SINGERS: Singer[] = [
     "highSource": "Get Down, Make Love",
     "blurb": "Baritone core sung as a tenor: fast vibrato, hard consonants, and a sudden switch into piercing falsetto.",
     "technique": "Listen for a speaking weight heavier than the tessitura suggests: a baritone body carried up to an F5 belt. The vibrato is quick and narrow and starts almost at the onset. Consonants land like percussion, and phrases end cleanly rather than trailing off. Above the belt he drops the weight and flips outright into falsetto. Shake the jaw to fake that vibrato and it reads as a wobble; the real thing runs on steady breath, not motion."
+  },
+  {
+    "slug": "fujii-kaze",
+    "name": "Fujii Kaze",
+    "voiceType": "Baritone",
+    "genres": [
+      "J-Pop",
+      "R&B",
+      "Pop"
+    ],
+    "country": "Japan",
+    "activeFrom": 2020,
+    "lowMidi": 43,
+    "highMidi": 74,
+    "beltMidi": 64,
+    "whistle": false,
+    "signatureSong": "Shinunoga E-Wa",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Okayama soul: a loose, jazz-chorded baritone that slips from woody lows to weightless falsetto with pianist's harmony ears.",
+    "technique": "Harmony-first singing defines the style: melodies outline extended chords from his own piano voicings, delivered in a relaxed, woody baritone that flips into a weightless, feminine falsetto without ceremony. Japanese diction keeps consonants light, letting phrases swing. The lows are true and unforced; the falsetto is soft-edged, never breathy. Practice arpeggiating ninth chords vocally, chest for the bottom notes, falsetto for the top, one even breath across. The registers must feel like one keyboard, not two instruments."
   },
   {
     "slug": "garth-brooks",
@@ -2690,6 +3090,46 @@ export const SINGERS: Singer[] = [
     "technique": "Restraint is the technique. The tone is even and unbrightened, vibrato nearly absent, onsets clean with no scoop into pitch. Phrasing sits inside the shuffle or swing feel and rarely displaces a note for effect. Melody gets sung close to as written, ornament limited to a small turn at a cadence. Singers imitating this add runs and vibrato to fill the space, which is exactly what the style takes out."
   },
   {
+    "slug": "gigi-perez",
+    "name": "Gigi Perez",
+    "voiceType": "Contralto",
+    "genres": [
+      "Indie",
+      "Singer-Songwriter"
+    ],
+    "country": "USA",
+    "activeFrom": 2024,
+    "lowMidi": 52,
+    "highMidi": 73,
+    "beltMidi": 69,
+    "whistle": false,
+    "signatureSong": "Sailor Song",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A striking true contralto: deep, hollow-toned and hymn-like, sitting an octave below where pop sopranos live.",
+    "technique": "Depth is the identity. The voice rests where many women speak, around the octave below middle C's neighborhood, with a hollow, woody color and a straight tone that breaks into slow vibrato only on held notes. Phrases repeat like liturgy, gathering weight through accumulation rather than climb. If your voice sits here, resist the industry pull toward brighter, higher keys; train the low register's resonance with descending slides on oh. Chasing soprano keys wastes what makes a voice like this rare."
+  },
+  {
+    "slug": "giveon",
+    "name": "Giveon",
+    "voiceType": "Baritone",
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 2020,
+    "lowMidi": 42,
+    "highMidi": 66,
+    "beltMidi": 64,
+    "whistle": false,
+    "signatureSong": "Heartbreak Anniversary",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A velvet anomaly: true baritone R&B in a falsetto era, with a wide, wowing vibrato that bends notes like a bowed saw.",
+    "technique": "Vibrato is the fingerprint: unusually wide and slow, arriving early in the note and wobbling the pitch so far that it flirts with the neighboring semitone before settling, over a plush, dark baritone that sits an octave below most modern R&B leads. Phrases end with a characteristic downward curl. To study it, sustain mid-range notes and let vibrato widen gradually past comfortable, keeping the center anchored. Most low voices imitate his darkness and miss that the wobble, not the depth, is the signature."
+  },
+  {
     "slug": "gladys-knight",
     "name": "Gladys Knight",
     "voiceType": "Mezzo-soprano",
@@ -2770,6 +3210,26 @@ export const SINGERS: Singer[] = [
     "technique": "Notes get stated, not sung around. The tone stays flat and straight, vibrato is minimal, and intensity builds by adding volume and hardening the vowel while the pitch stays put. Onsets are firm and unornamented, and lines land squarely on the beat with an almost spoken conviction. A student's instinct is to add vibrato and slides, which immediately softens the menace this approach depends on."
   },
   {
+    "slug": "gracie-abrams",
+    "name": "Gracie Abrams",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop",
+      "Singer-Songwriter"
+    ],
+    "country": "USA",
+    "activeFrom": 2020,
+    "lowMidi": 53,
+    "highMidi": 76,
+    "beltMidi": 69,
+    "whistle": false,
+    "signatureSong": "That's So True",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Whisper-pop with a diarist's cadence: airy, close, fast-worded verses that bloom into brief, clear head-voice hooks.",
+    "technique": "Everything happens within arm's reach of speech. Verses run wordy and fast, half-whispered, with the breathiness dialed so high that the consonants carry the pitch. The chorus lift is small but real: air comes off the tone, head voice clears, and that sudden clarity is the payoff. To study it, practice singing at true whisper volume while keeping every note centered, which is far harder than belting. The style fails loud; it also fails when the whisper goes off-pitch."
+  },
+  {
     "slug": "gregory-porter",
     "name": "Gregory Porter",
     "voiceType": "Baritone",
@@ -2810,6 +3270,46 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Bright cartoon-clear tone with wide vibrato, parked in a punchy mid belt and rarely soft.",
     "technique": "Everything is aimed forward and bright. She scoops up into notes, holds a punchy mid-range with a wide and fairly slow vibrato, and rarely drops to anything soft; consonants get clipped short in the punk-derived phrasing. The top of the range comes in lighter rather than heavier. Pushing volume to match the attitude misses the point, because the cut is coming from placement."
+  },
+  {
+    "slug": "her",
+    "name": "H.E.R.",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 2016,
+    "lowMidi": 48,
+    "highMidi": 78,
+    "beltMidi": 73,
+    "whistle": false,
+    "signatureSong": "Best Part",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Silk-textured neo-soul: a smoky mezzo with guitarist's phrasing, runs placed like fills between the vocal lines.",
+    "technique": "A guitarist's ear shapes the singing: phrases breathe like lead lines, with runs dropped in the gaps the way a player fills between chords, never on top of the lyric. The tone is smoky and slightly veiled, vibrato slow, dynamics kept low so the texture stays velvet. Runs favor pentatonic shapes, which is why they sound played. Practice singing a verse, then answering yourself in the rests with a three-note run. Cramming ornaments inside the lyric line is what she never does."
+  },
+  {
+    "slug": "halsey",
+    "name": "Halsey",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Pop",
+      "Alternative"
+    ],
+    "country": "USA",
+    "activeFrom": 2015,
+    "lowMidi": 48,
+    "highMidi": 79,
+    "beltMidi": 76,
+    "whistle": false,
+    "signatureSong": "Without Me",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A grainy, conversational mezzo that flips between diary-entry murmur and a hard, bratty belt with audible edge.",
+    "technique": "Texture does the storytelling: verses sit in a low, frayed murmur with fry at the edges, then the chorus jumps to a belt with deliberate rasp on the front of the note. The jump itself is the hook, so practice the gear change, not just the loud gear. Keep the rasp as a brief onset flare over solid cord closure. Students who manufacture the grit by squeezing the throat get the color for one chorus and hoarseness by the third."
   },
   {
     "slug": "hank-williams",
@@ -2933,6 +3433,26 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Baritone with a bright forward belt; speech-driven phrasing, short sustains, restrained vibrato.",
     "technique": "Delivery is built on speech. The rhythm of the line follows the rhythm of the sentence, so notes are released as soon as the word is finished instead of being held for their own sake. Tone is baritone-thick but placed forward and bright, and the top of the range near B4 is taken with a firm forward mix rather than an open ring. Vibrato barely appears. Imitators over-sing the sustains and lose the conversational drive the phrasing depends on."
+  },
+  {
+    "slug": "ian-curtis",
+    "name": "Ian Curtis",
+    "voiceType": "Baritone",
+    "genres": [
+      "Punk",
+      "New Wave"
+    ],
+    "country": "UK",
+    "activeFrom": 1979,
+    "lowMidi": 43,
+    "highMidi": 64,
+    "beltMidi": 62,
+    "whistle": false,
+    "signatureSong": "Love Will Tear Us Apart",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Joy Division's flat-affect baritone: a gray, unornamented monotone whose power is its refusal to perform feeling.",
+    "technique": "Affectlessness is the aesthetic. The voice sits in a narrow, low band, nearly vibrato-free, vowels unglamorous and consonants plain, delivered as if reading rather than performing, and the emotional charge comes from that refusal colliding with desperate lyrics. Intonation drifts flat-ward at phrase ends, part of the grain. Practice singing a melody at conversational volume while stripping every learned expressive habit: no swells, no scoops, no vibrato. It is harder than it sounds, and the restraint is the entire art."
   },
   {
     "slug": "ian-gillan",
@@ -3204,6 +3724,27 @@ export const SINGERS: Singer[] = [
     "technique": "Listen for how little seam there is between mix and falsetto: the shift happens inside a vowel rather than between notes, which is what lets long melismatic runs stay even. Dynamics drop to almost nothing and rebuild, audible throughout his reading of Hallelujah, and vibrato arrives late and narrow. Height comes from releasing pressure, not adding it — students push for the top and the ornaments stiffen into steps."
   },
   {
+    "slug": "jelly-roll",
+    "name": "Jelly Roll",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country",
+      "Rock",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 2021,
+    "lowMidi": 43,
+    "highMidi": 67,
+    "beltMidi": 65,
+    "whistle": false,
+    "signatureSong": "Save Me",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Testimony over genre: a scarred, gospel-weighted baritone carrying rap cadence into country's altar-call tradition.",
+    "technique": "Confession shapes the sound: a heavy, gravel-floored baritone that pushes toward a preacher's crack at phrase peaks, with rap-trained diction keeping dense lyrics rhythmically locked underneath. The break in the voice on top notes is deployed like a witness's faltering, then recovered with a surge of volume. Vibrato is minimal; conviction substitutes for ornament. Practice speaking the verses in strict time before singing them, then let the chorus open into full-body volume. The credibility lives in that contrast between control and collapse."
+  },
+  {
     "slug": "jennifer-hudson",
     "name": "Jennifer Hudson",
     "voiceType": "Mezzo-soprano",
@@ -3426,6 +3967,27 @@ export const SINGERS: Singer[] = [
     "highSource": "Il dolce suono",
     "blurb": "Round, high-volume coloratura with easy staccato and trills; diction blurred in the upper extension.",
     "technique": "Volume with roundness: the pharynx stays wide open, which is why the coloratura sounds cushioned rather than pecked, and why words dissolve above the staff as every vowel drifts toward a neutral schwa. Staccato is fired from the breath, not the throat, and trills stay fast and even. What students miss is that the size comes from space and a light onset, never from pressing."
+  },
+  {
+    "slug": "joe-cocker",
+    "name": "Joe Cocker",
+    "voiceType": "Baritone",
+    "genres": [
+      "Rock",
+      "Soul",
+      "Blues"
+    ],
+    "country": "UK",
+    "activeFrom": 1968,
+    "lowMidi": 43,
+    "highMidi": 70,
+    "beltMidi": 69,
+    "whistle": false,
+    "signatureSong": "With a Little Help from My Friends",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The definitive gravel: a torn, convulsive blues shout that turned polite pop songs into testifying.",
+    "technique": "Rasp at this depth is a full-body event. The tone is shredded across its whole span, not just at peaks, produced with enormous breath drive and a wide-open throat, and the phrasing convulses: words arrive in spasms, early or late, exactly where a gospel shouter would place them. Sustained notes bloom into wide, slow vibrato. Study the phrasing separately from the rasp, speaking the lines in his timing. The distortion itself took him years and cost him plenty; borrow the timing, not the tissue damage."
   },
   {
     "slug": "john-legend",
@@ -3672,6 +4234,26 @@ export const SINGERS: Singer[] = [
     "technique": "Close-mic'd and warm, with a low register that sits near speech and almost no vibrato, then a gradual opening as the line climbs until there is full ring by the top fourth toward A4. Vibrato arrives late in sustained notes and widens as it goes. Much of the swell is the vowel opening plus microphone distance rather than added force. Shove at the top notes and the phrase stops growing."
   },
   {
+    "slug": "juan-diego-florez",
+    "name": "Juan Diego Flórez",
+    "voiceType": "Tenor",
+    "genres": [
+      "Opera",
+      "Classical"
+    ],
+    "country": "Peru",
+    "activeFrom": 1996,
+    "lowMidi": 48,
+    "highMidi": 76,
+    "beltMidi": null,
+    "whistle": false,
+    "signatureSong": "Ah! mes amis (La Fille du régiment)",
+    "lowSource": null,
+    "highSource": "Ah! mes amis — the nine high Cs",
+    "blurb": "Bel canto's high-C machine: a light, agile leggero tenor that fires nine full-voice C5s in one aria, every night, no falsetto.",
+    "technique": "Leggero lightness makes the altitude possible: the instrument is deliberately lean, brilliant and forward, never carrying more weight up the scale than the top can support, which is how nine full-voice high Cs in a single aria stay repeatable across a career. Coloratura runs are articulated from the diaphragm, each note struck, not smeared. The lesson for any voice is proportion: match the weight you carry upward to what your lightest top note can hold. Heavier is not better; sustainable is better."
+  },
+  {
     "slug": "juan-gabriel",
     "name": "Juan Gabriel",
     "voiceType": "Tenor",
@@ -3835,6 +4417,27 @@ export const SINGERS: Singer[] = [
     "technique": "Everything stays close to the microphone and close to speech. Air is left in the tone deliberately, onsets are soft, and vibrato is minimal, a small tail at the end of a note rather than through it. The line sits mid-staff where talking is comfortable, consonants relaxed. Sung at full volume the style disappears, so the real work is staying intelligible and in tune at that low a dynamic."
   },
   {
+    "slug": "kali-uchis",
+    "name": "Kali Uchis",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Latin",
+      "Pop"
+    ],
+    "country": "Colombia/USA",
+    "activeFrom": 2018,
+    "lowMidi": 48,
+    "highMidi": 77,
+    "beltMidi": 71,
+    "whistle": false,
+    "signatureSong": "Telepatía",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Dream-soul bilingüe: a honeyed, retro-glossed mezzo drifting between English and Spanish, doo-wop and reggaetón.",
+    "technique": "Languor is the aesthetic: notes arrive slightly behind the beat on a honeyed, half-breath tone, with sixties girl-group vibrato at phrase ends and an easy float into a cooing head voice for the high lines. Switching languages changes the vowel color, brighter in Spanish, hazier in English, and she uses that contrast as an arrangement tool. Practice one chorus in each language, matching pitch while letting the vowels shift naturally. Rushing the beat is the quickest way to lose this style entirely."
+  },
+  {
     "slug": "karen-carpenter",
     "name": "Karen Carpenter",
     "voiceType": "Contralto",
@@ -3932,6 +4535,26 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Bright, forward belt with a hard nasal edge; head voice thins quickly above her chorus range.",
     "technique": "Brightness comes from a high, narrow resonance with a real nasal edge, and the belt works a tight window around F5 where the tone is thickest. Above that it thins fast into a light head voice rather than continuing to open. Vibrato is minimal, so sustains stay loud and mostly straight. What goes wrong in imitation is chasing the edge with throat squeeze; the buzz has to come from resonance and firm breath instead."
+  },
+  {
+    "slug": "kehlani",
+    "name": "Kehlani",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2015,
+    "lowMidi": 50,
+    "highMidi": 76,
+    "beltMidi": 71,
+    "whistle": false,
+    "signatureSong": "Nights Like This",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Conversational R&B: a warm, slightly smoky mezzo that glides between melody and near-rap without a visible seam.",
+    "technique": "Flow is the discipline here. Lines slide from pitched melody into rhythmic speech and back inside a single bar, and the trick is that the speech is still supported and placed exactly where the melody was, so the seam never shows. Runs are short, tucked at phrase ends, more punctuation than display. Take one verse and mark which syllables are sung versus spoken, then keep the larynx and breath identical across the switch. Letting the spoken parts collapse into the throat breaks the illusion."
   },
   {
     "slug": "kelly-clarkson",
@@ -4155,6 +4778,26 @@ export const SINGERS: Singer[] = [
     "technique": "Slim, light, and placed high, with very little chest weight anywhere, because a narrow tone is what allows this much speed. The ornaments draw on a classical vocabulary: quick grace notes, tight oscillating turns, and smooth connecting slides that cross between pitches without a seam. Above the staff the vibrato thins out or drops away entirely, leaving a straight tone that sits dead centre in pitch. Weight is traded off on purpose here; adding any would cost the agility outright."
   },
   {
+    "slug": "laufey",
+    "name": "Laufey",
+    "voiceType": "Contralto",
+    "genres": [
+      "Jazz",
+      "Pop"
+    ],
+    "country": "Iceland",
+    "activeFrom": 2023,
+    "lowMidi": 53,
+    "highMidi": 74,
+    "beltMidi": null,
+    "whistle": false,
+    "signatureSong": "From the Start",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Bedroom jazz for a streaming generation: a cello-dark low voice, close-miked to a murmur, over standards-shaped songs.",
+    "technique": "Cello training shows in the singing: long bowed phrases, a dark, woody low register she keeps deliberately quiet, and vibrato applied late and evenly like a string player's, over melodies that resolve the way standards do. The microphone does the projection; the voice never pushes past mezzo-piano. Practice singing full phrases at whisper-adjacent volume while keeping the tone round rather than breathy, and let the lowest notes speak without pressing. Volume would break the spell this style depends on."
+  },
+  {
     "slug": "lauren-daigle",
     "name": "Lauren Daigle",
     "voiceType": "Mezzo-soprano",
@@ -4212,7 +4855,7 @@ export const SINGERS: Singer[] = [
     "whistle": false,
     "signatureSong": "Man in the Box",
     "lowSource": null,
-    "highSource": null,
+    "highSource": "Love, Hate, Love",
     "blurb": "Nasal-edged baritone with a heavy chest push; his stacked harmonies with Cantrell define the sound.",
     "technique": "Nasal buzz carries the tone forward while the weight underneath stays thick and baritone-heavy, which is why the voice reads as pressed even at moderate volume. He holds long notes nearly straight, letting a slow wide vibrato in at the very end, and doubles himself in close harmony that demands identical vowels take after take. Copying the nasality by pinching the throat is the usual mistake — it belongs in the resonance, not the larynx."
   },
@@ -4275,6 +4918,26 @@ export const SINGERS: Singer[] = [
     "highSource": "Blue",
     "blurb": "Fast, wide vibrato and a clean yodel flip between chest and head voice, trained from childhood.",
     "technique": "That fast, wide vibrato is the fingerprint, and it sits under nearly the whole length of a held note rather than showing up at the end. The chest register is thick for a soprano, and the register change becomes an ornament in its own right: a deliberate yodel flip up into head voice and straight back down, clean enough to use as rhythm. Notes are often bent into from underneath, with short, precise turns. The flip works by releasing the chest note, not by forcing through it."
+  },
+  {
+    "slug": "leon-bridges",
+    "name": "Leon Bridges",
+    "voiceType": "Tenor",
+    "genres": [
+      "Soul",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 2015,
+    "lowMidi": 47,
+    "highMidi": 67,
+    "beltMidi": 65,
+    "whistle": false,
+    "signatureSong": "River",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Sixties soul in present tense: a gentle, grain-warmed tenor with Sam Cooke's poise and none of his-era's shouting.",
+    "technique": "Poise over power, always. The tone is soft-grained and slightly covered, phrases delivered with a calm, upright placement that echoes Sam Cooke, and ornament limited to small end-of-phrase turns and the occasional yodel-flip. Dynamics move gently; the voice invites rather than insists. Sing his melodies at genuinely low volume with full breath support, resisting every urge to lean in on peaks. The restraint is a positive act, and its difficulty is invisible until you try to hold it for a whole song."
   },
   {
     "slug": "leonard-cohen",
@@ -4463,6 +5126,26 @@ export const SINGERS: Singer[] = [
     "technique": "Dark and dry, placed low in the voice, with almost no vibrato and breath left audible at the ends of lines. Consonants supply the percussion, and melodies stay inside a narrow band, repeating instead of climbing. Where another singer would belt, she stacks harmonies and octaves on the same low line, so the D5 ceiling rarely gets tested. Phrasing is speech-timed and often just behind the beat. Sing it big and it stops working."
   },
   {
+    "slug": "loren-allred",
+    "name": "Loren Allred",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Pop",
+      "Musical Theatre"
+    ],
+    "country": "USA",
+    "activeFrom": 2017,
+    "lowMidi": 52,
+    "highMidi": 78,
+    "beltMidi": 76,
+    "whistle": false,
+    "signatureSong": "Never Enough",
+    "lowSource": null,
+    "highSource": "Never Enough (The Greatest Showman)",
+    "blurb": "The voice of 'Never Enough': a cinematic mezzo that builds one long crescendo from velvet verse to full-throated peak.",
+    "technique": "Architecture makes this performance famous: one dynamic staircase, managed so gradually that the final belt feels inevitable rather than loud. The verse tone is warm and covered, vibrato slow and wide; as the song climbs, the vowels open one notch per section, never all at once. Map any big ballad the same way, marking where each five-percent increase happens, and save the widest vowel for the last chorus. Starting at eighty percent is why most covers of this song plateau."
+  },
+  {
     "slug": "loretta-lynn",
     "name": "Loretta Lynn",
     "voiceType": "Mezzo-soprano",
@@ -4540,6 +5223,25 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Warm bolero tenor; open vowels, unbroken legato, gradual crescendo into sustained notes.",
     "technique": "Those long bolero sustains run for bars, so the breath has to sit at steady pressure rather than get shoved out at the start, and that is where most imitations come apart. Vowels stay wide open and the line never breaks: phrases arrive on a soft, aspirate onset and grow by crescendo instead of by attack. Vibrato is even and enters early in the note. Around the B4 belt he blends into a warm mix rather than shouting, which keeps the peak of a phrase round."
+  },
+  {
+    "slug": "luke-combs",
+    "name": "Luke Combs",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 2017,
+    "lowMidi": 45,
+    "highMidi": 69,
+    "beltMidi": 67,
+    "whistle": false,
+    "signatureSong": "Beautiful Crazy",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Blue-collar power: a big, grainy baritone that belts like a rock singer but phrases like a barstool storyteller.",
+    "technique": "Power without polish is the brand. The belt is genuinely large, driven from a deep breath anchor with a coarse grain riding the top, but it arrives in service of plainspoken phrasing: no runs, no falsetto, notes struck square and held honest. The rasp thickens as he climbs toward G4 and stays supported underneath. Build the volume on open mid-range vowels before taking it up; the grain must sit on a full column of air, or a night of this style becomes a week of silence."
   },
   {
     "slug": "luther-vandross",
@@ -5022,6 +5724,27 @@ export const SINGERS: Singer[] = [
     "technique": "Note how low the belt sits at B4 while the range reaches F5: everything above the belt arrives in a light, airy falsetto, often as a whoop rather than a held note. The tone is thin and slightly pinched by design, vowels stretched and drawled, consonants chewed. Rhythm is the real technique here, landing late, dragging syllables across the beat, then snapping back. Sing it cleanly and on time and the character disappears."
   },
   {
+    "slug": "miguel",
+    "name": "Miguel",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Funk",
+      "Rock"
+    ],
+    "country": "USA",
+    "activeFrom": 2010,
+    "lowMidi": 48,
+    "highMidi": 82,
+    "beltMidi": 68,
+    "whistle": false,
+    "signatureSong": "Adorn",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Psychedelic soul athletics: a gleaming tenor with a rock edge, sliding between silk falsetto and full-throated wail.",
+    "technique": "Blend is the weapon: chest, mix and falsetto are welded so smoothly that a single phrase can start as a croon and end as a Prince-style wail with no audible gear change. The falsetto gleams with a metallic edge rather than breathiness, and he sustains it at volumes most tenors reserve for chest. Work long slides from chest into falsetto on oo, keeping the intensity constant across the seam. The wail is earned through that evenness, not through pushing harder at the top."
+  },
+  {
     "slug": "mike-patton",
     "name": "Mike Patton",
     "voiceType": "Baritone",
@@ -5100,7 +5823,7 @@ export const SINGERS: Singer[] = [
     "whistle": true,
     "signatureSong": "Lovin' You",
     "lowSource": null,
-    "highSource": null,
+    "highSource": "You Take My Breath Away",
     "blurb": "Light, agile soprano who moves up into clean whistle tones with no audible register break.",
     "technique": "Register changes never announce themselves, because the weight never increases on the way up: chest thins into head voice, head voice narrows into whistle, and the vowel keeps its shape through both. Whistle notes are placed rather than screeched, quiet and pitch-centred with barely any vibrato on them. Build this from the top down out of a soft head voice. Forcing chest weight upward is what keeps the whistle from engaging at all."
   },
@@ -5186,6 +5909,45 @@ export const SINGERS: Singer[] = [
     "technique": "The signature device is a high note spun at a whisper: fold contact thinned right down, the vowel kept close, the air rationed, then a sudden shift into full dramatic weight with the vowel unchanged. Onsets are almost inaudible, vibrato slow and even. Chase that pianissimo by blowing more air and it collapses. It works the other way around, on less air held longer with the support untouched."
   },
   {
+    "slug": "morgan-wallen",
+    "name": "Morgan Wallen",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country"
+    ],
+    "country": "USA",
+    "activeFrom": 2018,
+    "lowMidi": 45,
+    "highMidi": 67,
+    "beltMidi": 65,
+    "whistle": false,
+    "signatureSong": "Last Night",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The defining country voice of its moment: a curled, nasal East Tennessee baritone with a built-in break in the vowels.",
+    "technique": "The curl is everything: vowels bend through a nasal, back-of-the-throat shape, the East Tennessee accent left fully intact, and the tone carries a light perpetual rasp that thickens on pushed notes. Phrase ends drop into a little spoken fall-off, half sigh, half shrug. The melody rides speech rhythm rather than strict meter. To study the sound, exaggerate the accent on the vowels first and add pitch second. Singers who neutralize the accent have removed the actual instrument."
+  },
+  {
+    "slug": "morrissey",
+    "name": "Morrissey",
+    "voiceType": "Baritone",
+    "genres": [
+      "Alternative",
+      "Indie"
+    ],
+    "country": "UK",
+    "activeFrom": 1984,
+    "lowMidi": 42,
+    "highMidi": 71,
+    "beltMidi": 67,
+    "whistle": false,
+    "signatureSong": "There Is a Light That Never Goes Out",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The great miserabilist croon: a plummy baritone that swoops, sighs and breaks into sudden falsetto yelps mid-word.",
+    "technique": "Croon first, then sabotage it. The core is an old-fashioned, rounded baritone with generous portamento between notes, closer to a 1950s balladeer than to punk, and the modern edge comes from interruptions: falsetto yelps, moans and octave flips dropped mid-phrase like italics. Vibrato is wide and unhurried. Practice sliding between chord tones with a completely relaxed jaw, then add one deliberate falsetto break per verse. The slides need real legato; without it the yelps have nothing to disrupt."
+  },
+  {
     "slug": "morten-harket",
     "name": "Morten Harket",
     "voiceType": "Tenor",
@@ -5205,6 +5967,46 @@ export const SINGERS: Singer[] = [
     "highSource": "Take On Me",
     "blurb": "Bright tenor that climbs into a ringing head voice; clean onsets, no rasp anywhere.",
     "technique": "Everything about the sound is clean: precise entries with no scoop and no rasp anywhere, vowels kept tall and bright, vibrato even when it appears at all. Large interval leaps happen without an audible gear change, chest lifting into a ringing head voice that holds its brightness up to E5. Take On Me shows that head-voice top plainly. Grabbing at the leaps instead of placing them lands you under pitch."
+  },
+  {
+    "slug": "musiq-soulchild",
+    "name": "Musiq Soulchild",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 2000,
+    "lowMidi": 48,
+    "highMidi": 78,
+    "beltMidi": 68,
+    "whistle": false,
+    "signatureSong": "Love",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Neo-soul's smoothest talker: a warm, even tenor that bends syllables like taffy and hides virtuosity inside conversation.",
+    "technique": "Syllable elasticity is the trademark: words stretch, compress and slur across beats until lyric and run become the same gesture, in a warm, even tenor that never shows seams between registers. The famous stutter-phrasing chops one word into rhythmic fragments, then resolves the line smooth. Ornaments live inside the diction, not on top of it. Take one lyric line and practice five different rhythmic placements of the same pitches. His genius is that the fifth version still sounds like plain talking."
+  },
+  {
+    "slug": "myles-smith",
+    "name": "Myles Smith",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop",
+      "Folk"
+    ],
+    "country": "UK",
+    "activeFrom": 2023,
+    "lowMidi": 47,
+    "highMidi": 67,
+    "beltMidi": 66,
+    "whistle": false,
+    "signatureSong": "Stargazing",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Festival folk-pop: a warm, sandpapered tenor built for singalongs, all short punchy phrases and open-hearted rasp.",
+    "technique": "Warmth with grit is the recipe. The tone carries a light, even rasp across its whole range, more texture than distortion, over short, rhythmically punchy phrases designed for a crowd to shout back. Melodies stay inside an octave; the energy comes from drive and repetition, not altitude. Keep the rasp consistent rather than saving it for peaks, and place phrases slightly ahead of the beat for urgency. Over-singing the simple lines with runs and swells works against what makes them land."
   },
   {
     "slug": "nat-king-cole",
@@ -5290,6 +6092,27 @@ export const SINGERS: Singer[] = [
     "technique": "Start from speech. Lines begin at conversational pitch and swell into sung tone, often with no vibrato at all until a long note has been held well past comfort. The floor of the range is unusually low for this voice type, and those low notes are placed heavily, almost spoken. Time is elastic: phrases arrive early or late against the accompaniment on purpose. Copying it means committing to the deliberate pace, not to volume."
   },
   {
+    "slug": "noah-kahan",
+    "name": "Noah Kahan",
+    "voiceType": "Tenor",
+    "genres": [
+      "Folk",
+      "Pop",
+      "Singer-Songwriter"
+    ],
+    "country": "USA",
+    "activeFrom": 2022,
+    "lowMidi": 47,
+    "highMidi": 68,
+    "beltMidi": 66,
+    "whistle": false,
+    "signatureSong": "Stick Season",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "New England folk urgency: a bright, keening tenor that gallops through wordy verses and breaks upward like a shout across a field.",
+    "technique": "Urgency drives the phrasing: verses tumble out in dense, galloping strings of syllables, almost patter, then the hook leaps upward into a keening, open-throated call with a folk singer's forward bite and a hint of yodel at the flip. The tone is bright, reedy and unglamorous on purpose. Practice the verse diction at full speed with a metronome until no syllable clips, then let the chorus leap carry a touch of break. Muddying the words loses the breathless, confiding effect the style depends on."
+  },
+  {
     "slug": "norah-jones",
     "name": "Norah Jones",
     "voiceType": "Contralto",
@@ -5350,6 +6173,27 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Conversational verses that snap into a deliberately strained, edge-heavy belt on the choruses.",
     "technique": "Contrast does the work. Verses sit near speech, with fry on the low notes and almost no vibrato, then choruses snap into a tight, edge-heavy belt around E5 with an audible cry in it. Onsets scoop up from underneath and consonants get chewed for attitude. That strain is shaped, not accidental. Students reproduce the sound by genuinely squeezing, which is a different thing: the cry comes from a narrowed vowel over firm support."
+  },
+  {
+    "slug": "omar-apollo",
+    "name": "Omar Apollo",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Latin",
+      "Indie"
+    ],
+    "country": "USA",
+    "activeFrom": 2019,
+    "lowMidi": 48,
+    "highMidi": 78,
+    "beltMidi": 67,
+    "whistle": false,
+    "signatureSong": "Evergreen",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Corridos heartbreak filtered through indie R&B: a plush falsetto-forward tenor with rancheras in its family tree.",
+    "technique": "Falsetto carries the confession: the upper voice is plush and rounded, floated over sparse guitar at the emotional peaks, while the chest voice underneath keeps a Mexican-American vowel warmth inherited from the rancheras his parents played. Runs are brief and descending, sighs turned into pitch. When he commits to full voice the belt is square and surprisingly sturdy. Alternate one phrase full, one phrase falsetto, keeping the breath line unbroken across the swap. That unbroken line is what sells the ache."
   },
   {
     "slug": "otis-redding",
@@ -5431,6 +6275,27 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Trained placement applied to hard rock; clean cutting mid belt with a fast, narrow vibrato.",
     "technique": "Every onset lands exactly on pitch with no scoop, and the vibrato is narrow and quick, closer to a classical rate than a rock shout. Placement stays forward, which is how a belt around G5 cuts through a wall of guitars without extra volume. Above that the tone lightens rather than thickens. The pitch precision is the whole effect; rasp layered over it just blurs the line."
+  },
+  {
+    "slug": "patrick-stump",
+    "name": "Patrick Stump",
+    "voiceType": "Tenor",
+    "genres": [
+      "Rock",
+      "Punk",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2005,
+    "lowMidi": 48,
+    "highMidi": 83,
+    "beltMidi": 72,
+    "whistle": false,
+    "signatureSong": "Sugar, We're Goin Down",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Pop-punk's secret soul singer: a slurred, syllable-dense delivery hiding a genuinely agile, Elvis Costello-meets-Motown tenor.",
+    "technique": "Diction is the disguise. Words blur together in a slurred rush, but the pitch underneath is exact, and the voice is a real soul tenor: high mixed belts to C5, quick turns at phrase ends, and a falsetto he can snap into at full speed. The slur removes the theatre-kid crispness that would fight the genre. Learn the melody clean first, then deliberately smear the consonants while keeping every pitch center. Smearing pitch and diction together is just mumbling."
   },
   {
     "slug": "patsy-cline",
@@ -5532,6 +6397,45 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Light, even tenor that stays conversational and slips into thin falsetto rather than pushing chest.",
     "technique": "Conversational is the operative word. Onsets are soft and breath-led, the volume barely changes across a verse, and diction stays crisp enough that every consonant reads. Around the upper limit he thins out and releases into a light falsetto instead of driving chest weight up. Vibrato is narrow and arrives late, if at all. Singers imitating this tend to add power at exactly the point where he takes it away, which flattens the intimacy."
+  },
+  {
+    "slug": "peso-pluma",
+    "name": "Peso Pluma",
+    "voiceType": "Tenor",
+    "genres": [
+      "Latin"
+    ],
+    "country": "Mexico",
+    "activeFrom": 2022,
+    "lowMidi": 47,
+    "highMidi": 66,
+    "beltMidi": 64,
+    "whistle": false,
+    "signatureSong": "Ella Baila Sola",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Corridos tumbados' rasped-reed voice: nasal, pinched and buzzing, phrased against tuba and charchetas like a lead instrument.",
+    "technique": "The pinch is deliberate: a nasal, reed-like buzz produced by narrowing the tone until it cuts through brass-heavy corridos arrangements, with phrasing that rides ahead of the beat in short, urgent spurts. Vibrato is quick and shallow, almost a flutter. The style speaks more than croons, and ornament comes as slides between chest tones. To explore it, sing through the nose deliberately on a mid-range line, then reduce until the buzz remains without the honk. The color is an acquired taste and an acquired skill."
+  },
+  {
+    "slug": "peter-gabriel",
+    "name": "Peter Gabriel",
+    "voiceType": "Baritone",
+    "genres": [
+      "Rock",
+      "New Wave"
+    ],
+    "country": "UK",
+    "activeFrom": 1971,
+    "lowMidi": 42,
+    "highMidi": 69,
+    "beltMidi": 67,
+    "whistle": false,
+    "signatureSong": "Sledgehammer",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A grainy, soul-schooled baritone: Otis Redding pressure pushed through an English art-rock imagination.",
+    "technique": "Grain plus push defines the mature sound: a throaty, sandpapered baritone driven hard into its upper fourth, where the strain is audible and intentional, borrowed straight from Stax soul shouting. Underneath, phrasing is conversational and behind the beat. The rasp rides on strong breath pressure with the throat staying open; it is effortful but distributed effort. Build the push gradually across a phrase, arriving at full grain only on the peak word. Starting at maximum is how throats get hurt copying this."
   },
   {
     "slug": "peter-tosh",
@@ -5650,7 +6554,7 @@ export const SINGERS: Singer[] = [
     "whistle": false,
     "signatureSong": "Purple Rain",
     "lowSource": null,
-    "highSource": null,
+    "highSource": "The Beautiful Ones",
     "blurb": "Switches between smoky chest voice, piercing falsetto, and screams well above the staff.",
     "technique": "Registers get swapped like guitar tones: a smoky, half-spoken low voice, a chesty belt up around E5, a piercing thin falsetto, and screams above that reaching toward B5. Consonants are clipped and placed exactly on the sixteenth-note grid, so the vocal doubles as a rhythm part. Vibrato is minimal until a note is held on purpose. Beginners chase the scream first, before the low conversational register and the rhythmic precision that make it land."
   },
@@ -5755,6 +6659,25 @@ export const SINGERS: Singer[] = [
     "technique": "Delivery is elastic and percussive: clipped staccato syllables, sudden trills, rolled and over-pronounced consonants, and thin squeaks right at the top of the range. Glottal stops and small hiccup accents fall on unexpected beats, treating the voice as a rhythm instrument alongside the piano. The tone itself is bright and unforced. The frequent misread is treating these noises as decoration; they are rhythmic events, and imitating them without locking the timing makes the whole thing sound arbitrary."
   },
   {
+    "slug": "rema",
+    "name": "Rema",
+    "voiceType": "Tenor",
+    "genres": [
+      "Afrobeats"
+    ],
+    "country": "Nigeria",
+    "activeFrom": 2019,
+    "lowMidi": 49,
+    "highMidi": 76,
+    "beltMidi": 66,
+    "whistle": false,
+    "signatureSong": "Calm Down",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Afrorave's bright edge: a nasal, high-placed tenor that loops melodic cells like percussion and yodels at the seams.",
+    "technique": "Placement sits high and nasal by design, a bright, cutting tone that stays audible over dense percussion without volume, and melodies work as short repeated cells that mutate one note at a time, closer to drum programming than verse-chorus singing. Little yodel-flips mark the cell boundaries. Vibrato is rare; the interest is rhythmic. Loop one four-note phrase and practice shifting a single pitch each repetition while the groove stays locked. Through-composed phrasing misses how this music actually breathes."
+  },
+  {
     "slug": "renee-fleming",
     "name": "Renée Fleming",
     "voiceType": "Soprano",
@@ -5774,6 +6697,26 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Silvery lyric soprano with a soft-edged onset and heavy use of floated, breath-mixed high notes.",
     "technique": "Aspirate onsets, notes approached from slightly under, and a fast shallow vibrato that arrives a moment after the tone begins: every edge is softened. Upper notes are mixed with breath and floated rather than driven, which produces the silvery quality. Students hear the breathiness and imitate only that, losing the firm core beneath it. The airiness is a color laid over a supported tone, not a replacement for one."
+  },
+  {
+    "slug": "renee-rapp",
+    "name": "Reneé Rapp",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Pop",
+      "Musical Theatre"
+    ],
+    "country": "USA",
+    "activeFrom": 2021,
+    "lowMidi": 52,
+    "highMidi": 80,
+    "beltMidi": 76,
+    "whistle": false,
+    "signatureSong": "Snow Angel",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Broadway muscle in pop clothing: a thick, ringing belt with theatre-grade support, dressed down into conversational R&B phrasing.",
+    "technique": "Support gives the game away: this is an eight-shows-a-week belt, anchored low in the body, with a ring that cuts through a mix without EQ. What makes it read as pop instead of theatre is the phrasing on top, lazy, behind the beat, with R&B slides into notes a stage director would want struck cleanly. Practice belting E5 at half volume with full support, then loosen the timing. The order matters; loosening first just sounds under-rehearsed."
   },
   {
     "slug": "rick-astley",
@@ -5874,6 +6817,26 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Bluesy tenor with a bright, nasal-forward top and heavy vibrato; leans on falsetto wails above the belt.",
     "technique": "Everything sits forward and high in the mouth, thin at the edges rather than round, with vibrato that comes on fast and wide almost as soon as a note lands. Blues bends and slurred approaches replace clean onsets. Above the E5 belt he releases into a ringing falsetto wail instead of pushing. Students usually try to muscle those cries in chest and end up squeezing the throat shut."
+  },
+  {
+    "slug": "robert-smith",
+    "name": "Robert Smith",
+    "voiceType": "Tenor",
+    "genres": [
+      "Alternative",
+      "New Wave"
+    ],
+    "country": "UK",
+    "activeFrom": 1982,
+    "lowMidi": 49,
+    "highMidi": 72,
+    "beltMidi": 68,
+    "whistle": false,
+    "signatureSong": "Just Like Heaven",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The Cure's eternal adolescent: a quavering, tearful tenor that sounds perpetually on the verge of either sobbing or smiling.",
+    "technique": "The wobble is the signature: an unstable, sped-up vibrato that reads as barely held-back crying, over a thin, forward tenor with almost no chest weight. Pitch bends sharp-ward at moments of excitement, a controlled mannerism rather than error. Phrases tumble out slightly ahead of the beat, breathless. To borrow it, sing with a deliberately loose jaw and let the vibrato run faster and narrower than feels polished, keeping the core of each note centered. Stabilizing the wobble kills the character."
   },
   {
     "slug": "rod-stewart",
@@ -6121,6 +7084,25 @@ export const SINGERS: Singer[] = [
     "technique": "Light-weight tone that mostly lives high in a thin mix, so the G2 floor of this range almost never turns up in an actual song. Onsets are soft and aspirate; sustained notes take a quick, narrow vibrato that starts early and keeps going, and pushing weight into that mix to make it bigger flattens the flutter it depends on. Above the Bb4 belt the voice releases into an unmixed falsetto kept deliberately quiet, with melisma slow enough to hear every note in it."
   },
   {
+    "slug": "samara-joy",
+    "name": "Samara Joy",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Jazz"
+    ],
+    "country": "USA",
+    "activeFrom": 2022,
+    "lowMidi": 47,
+    "highMidi": 74,
+    "beltMidi": null,
+    "whistle": false,
+    "signatureSong": "Guess Who I Saw Today",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A young voice with an old soul: plush, dark-chocolate low register and horn-player phrasing straight from the Vaughan lineage.",
+    "technique": "Depth of tone is the calling card: a plush, rounded low register that recalls Sarah Vaughan, kept warm by tall vowels and a low, relaxed larynx, with vibrato deployed like a horn player's, straight tone first, then a measured bloom. Scat lines think harmonically, outlining substitutions rather than riffing pentatonics. Practice sustaining low-register notes with the vowel space of a yawn, no breathiness, then delay vibrato until beat three. The patience of that bloom is the lesson."
+  },
+  {
     "slug": "sandi-patty",
     "name": "Sandi Patty",
     "voiceType": "Soprano",
@@ -6282,6 +7264,25 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Bright mezzo with a thick lower-middle and plain, unornamented cumbia phrasing.",
     "technique": "The lower middle carries real weight and stays undecorated, which is why cumbia lines land so squarely on the beat. Onsets are clean; vibrato is light and arrives late in a sustain rather than at the start. Up to the F5 belt the tone stays chesty and forward, and above it she thins into a lighter head voice. Piling runs onto these melodies erases the plainness they were built on."
+  },
+  {
+    "slug": "selena-gomez",
+    "name": "Selena Gomez",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2009,
+    "lowMidi": 48,
+    "highMidi": 77,
+    "beltMidi": 70,
+    "whistle": false,
+    "signatureSong": "Lose You to Love Me",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A quiet, close-mic instrument: low-set, breathy, almost spoken, with the drama carried by restraint instead of volume.",
+    "technique": "Intimacy is the whole design. The voice sits low for a pop lead, stays soft, and leans on the microphone: breath on the tone, consonants barely touched, dynamics that move by millimeters. There is almost no vibrato until a phrase ends. This is one of the most learnable major-label styles because it never leaves the speaking range, and the trap is the opposite of most: adding more air than she does, until pitch smears. Keep the whisper on the cords, not around them."
   },
   {
     "slug": "serj-tankian",
@@ -6529,6 +7530,48 @@ export const SINGERS: Singer[] = [
     "technique": "A belt sitting as high as C6 only holds because the breath under it is doing the work: larynx steady, vowel open, vibrato even and classical in width, no thinning into a scream. Above that, the whistle register works as a usable part of the instrument rather than a stunt, entered cleanly, held in tune, phrased like melody. The order matters. Whistle is the part people try to copy first, and the part that depends most on everything underneath it."
   },
   {
+    "slug": "sombr",
+    "name": "Sombr",
+    "voiceType": "Baritone",
+    "genres": [
+      "Alternative",
+      "Indie",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2025,
+    "lowMidi": 45,
+    "highMidi": 66,
+    "beltMidi": 64,
+    "whistle": false,
+    "signatureSong": "Back to Friends",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Brooding bedroom rock: a low, reverb-drowned croon that murmurs through verses and aches upward at the hook.",
+    "technique": "Mood is managed through register contrast. Verses live in a dark, low murmur with fry at the onsets, mixed so wet that the words blur at the edges, and the hook lifts into a strained, yearning upper-chest push that stays deliberately unpolished. Vibrato is nearly absent. Practice the low murmur with clear pitch centers despite the softness, then let the lifted notes carry a little honest strain instead of smoothing them. Polishing the top note into prettiness breaks the ache."
+  },
+  {
+    "slug": "steve-lacy",
+    "name": "Steve Lacy",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Indie",
+      "Funk"
+    ],
+    "country": "USA",
+    "activeFrom": 2017,
+    "lowMidi": 49,
+    "highMidi": 76,
+    "beltMidi": 68,
+    "whistle": false,
+    "signatureSong": "Bad Habit",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Guitar-first slacker soul: a nonchalant tenor that flips into falsetto mid-word and treats sloppiness as a produced choice.",
+    "technique": "Nonchalance takes precision. The delivery slouches: lazy onsets, words half-swallowed, falsetto flips dropped casually mid-syllable, but the flips land on exact pitches and the doubled vocals line up tight, which is the tell that the mess is manufactured. The falsetto is bright and guitar-like, often harmonizing with his own lead. Practice flipping registers on a single word without pausing the phrase, at conversational volume. If the flip needs a running start, it reads as effort, and effort is the one thing this style cannot show."
+  },
+  {
     "slug": "steve-perry",
     "name": "Steve Perry",
     "voiceType": "Tenor",
@@ -6633,6 +7676,46 @@ export const SINGERS: Singer[] = [
     "technique": "Reedy and narrow, placed forward and slightly nasal, with consonants clipping the ends of phrases short. Rhythm is the real tell: syncopated, pushed off the downbeat, percussive more than legato. Above B4 he moves into a tight, strained mix, so the sustained upper notes in Roxanne read as pressed rather than fully belted. That audible tension belongs to the sound; smoothed out into an even legato, the voice stops being recognizable."
   },
   {
+    "slug": "stromae",
+    "name": "Stromae",
+    "voiceType": "Baritone",
+    "genres": [
+      "Electronic",
+      "Pop",
+      "Hip-Hop"
+    ],
+    "country": "Belgium",
+    "activeFrom": 2010,
+    "lowMidi": 43,
+    "highMidi": 67,
+    "beltMidi": 65,
+    "whistle": false,
+    "signatureSong": "Alors on danse",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Chanson for the dancefloor: a theatrical Belgian baritone that swings between deadpan speech-song and Jacques Brel ache.",
+    "technique": "Theatre runs the voice: verses deliver rapid francophone speech-song with deadpan precision, every syllable machine-placed against the beat, then choruses open into a throbbing, Brel-inherited vibrato and a pushed, pleading upper register. The whiplash between the two modes is the drama. French nasal vowels are essential architecture, not accent. Practice the spoken sections with a metronome at full lyric speed, then the sung hook with generous, wide vibrato. Blending the two modes into one middle temperature loses the whole act."
+  },
+  {
+    "slug": "summer-walker",
+    "name": "Summer Walker",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 2019,
+    "lowMidi": 50,
+    "highMidi": 76,
+    "beltMidi": 69,
+    "whistle": false,
+    "signatureSong": "Girls Need Love",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Whisper-soul: a feathered, half-asleep mezzo whose runs dissolve into breath before they finish.",
+    "technique": "Air is the instrument's finish. Every note carries deliberate breathiness, and runs decay: they start pitched and evaporate into pure breath by the last note, a diminuendo inside a single ornament. The tessitura stays low and close to speech, and dynamics rarely rise above a murmur. Work on running air over the cords while keeping the pitch core audible underneath, then practice runs that fade to nothing on purpose. Singers who keep full tone through her runs sound like they are correcting her."
+  },
+  {
     "slug": "sutton-foster",
     "name": "Sutton Foster",
     "voiceType": "Mezzo-soprano",
@@ -6671,6 +7754,26 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Breathy, conversational tone that slips between speech, soft belt, and thin airy top notes.",
     "technique": "Nearly everything happens at conversation volume, breath left in the tone, phrase ends trailing off into speech or a whisper. Rhythm floats: syllables land late, then hurry to catch up. The soft belt around C5 is as loud as it gets, and above that the sound thins into an airy head voice instead of getting stronger. Small bends and slides do the job vibrato would normally do. Project it and the style disappears."
+  },
+  {
+    "slug": "t-pain",
+    "name": "T-Pain",
+    "voiceType": "Tenor",
+    "genres": [
+      "R&B",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 2005,
+    "lowMidi": 47,
+    "highMidi": 77,
+    "beltMidi": 70,
+    "whistle": false,
+    "signatureSong": "Buy U a Drank (Shawty Snappin')",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The Auto-Tune icon who never needed it: underneath the robot gloss, a rich, gospel-raised soul tenor with real weight.",
+    "technique": "Precision made the effect work: Auto-Tune only snaps cleanly when the input pitch is already close, and his is, which is why the processed lines sound liquid where imitators sound glitchy. Unprocessed, the voice is a warm, wide soul tenor with easy runs and a fat, supported mid-range, schooled in church. Practice his melodies dry, hitting centers dead-on with plain tone, before adding any effect. The plugin is an aesthetic layered onto accuracy; it does not create it."
   },
   {
     "slug": "taeyang",
@@ -6769,6 +7872,25 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Dark, thick contralto that stays in chest; builds by adding weight rather than climbing higher.",
     "technique": "Weight, not height, is how the build happens. The voice sits dark and thick through the F5 belt, vowels kept round and back, and intensity grows by adding body and repeating a phrase rather than climbing toward the A5. Onsets are firm without being harsh, and vibrato arrives late on the sustains. The trap is shouting; add depth and breath pressure gradually and keep the larynx settled as the volume rises."
+  },
+  {
+    "slug": "tate-mcrae",
+    "name": "Tate McRae",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop"
+    ],
+    "country": "Canada",
+    "activeFrom": 2020,
+    "lowMidi": 52,
+    "highMidi": 77,
+    "beltMidi": 71,
+    "whistle": false,
+    "signatureSong": "Greedy",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Dancer's pop: a light, airy soprano that phrases in short exhaled bursts, built to sit inside a beat rather than on top of it.",
+    "technique": "Rhythm leads the singing. Lines are chopped into short, breathy cells that land with the choreography, vowels tipped forward and consonants softened almost to nothing. The tone is deliberately small; the mix above the staff is thin by design so the track keeps its punch. Copy the phrasing first: speak the lyric in time until the bursts feel like dance counts, then pitch it. Adding operatic legato to these songs misses the point of the style entirely."
   },
   {
     "slug": "taylor-swift",
@@ -6915,6 +8037,25 @@ export const SINGERS: Singer[] = [
     "technique": "Weight stays light and the flip into falsetto happens early, well below where a tenor could still push, and that early flip is the character of the sound. Breath stays in the tone, consonants soften almost to nothing, and vibrato is small and shallow. Trying to keep chest voice alive all the way to that F5 is the usual error — the top is meant to thin out and go quiet, not open up."
   },
   {
+    "slug": "till-lindemann",
+    "name": "Till Lindemann",
+    "voiceType": "Bass-baritone",
+    "genres": [
+      "Metal"
+    ],
+    "country": "Germany",
+    "activeFrom": 1995,
+    "lowMidi": 40,
+    "highMidi": 65,
+    "beltMidi": 62,
+    "whistle": false,
+    "signatureSong": "Du Hast",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Rammstein's granite bass-baritone: rolled Rs, machine-press diction and a low register that functions as percussion.",
+    "technique": "Consonants are the star. The famous rolled R and hyper-plosive German diction turn every line into rhythm-section material, delivered on a deep, dark, deliberately monotone bass-baritone that moves in small steps and almost never ornaments. When intensity rises he adds a controlled growl at the onset, not a scream. Drill the alveolar roll until it starts instantly on any vowel, and keep the pitch line flat and heavy. Melodrama in the melody would puncture the menace; the flatness is the theatre."
+  },
+  {
     "slug": "tina-turner",
     "name": "Tina Turner",
     "voiceType": "Contralto",
@@ -7038,6 +8179,27 @@ export const SINGERS: Singer[] = [
     "technique": "Notes are frequently approached from below with an audible scoop, and glottal catches punctuate lines like percussion. The mezzo core is bright and slightly edgy, then releases into an airy head voice up high instead of belting through. Timing floats freely against the piano, stretching and compressing phrases. The scoops are selective rather than constant, and the glottal catches are placed on purpose, which is easy to mishear as a loss of control."
   },
   {
+    "slug": "tori-kelly",
+    "name": "Tori Kelly",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop",
+      "R&B",
+      "Gospel"
+    ],
+    "country": "USA",
+    "activeFrom": 2013,
+    "lowMidi": 47,
+    "highMidi": 88,
+    "beltMidi": 76,
+    "whistle": true,
+    "signatureSong": "Should've Been Us",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A YouTube-era virtuoso: gospel-schooled runs, a ringing mixed belt, and an easy flip into whistle when the arrangement asks.",
+    "technique": "Agility is the headline. Runs are long, even and articulated from the breath, each note of a sixteen-note descent given equal weight, which is the gospel discipline underneath the pop surface. The mix rings bright without spreading, and the flip into whistle is treated casually, as one more color. Slow her runs to quarter notes and learn them exactly before returning to tempo; approximating the shape is what separates karaoke melisma from the real thing. The whistle is decoration, not the lesson."
+  },
+  {
     "slug": "tracy-chapman",
     "name": "Tracy Chapman",
     "voiceType": "Contralto",
@@ -7057,6 +8219,47 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "Dark contralto with a tight, buzzy edge; pushes intensity through consonants instead of vibrato.",
     "technique": "Weight sits low and dark, with a tight, buzzy edge that keeps the sound cutting rather than muddy. Intensity is delivered through consonants and through how firmly a vowel is attacked, not through volume or vibrato, which stays minimal. Phrasing locks tightly to the guitar and rarely rushes. Singers reaching for the color often drop the larynx to manufacture darkness; that thickens the tone and kills the buzz that makes the voice legible at low volume."
+  },
+  {
+    "slug": "troye-sivan",
+    "name": "Troye Sivan",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop",
+      "Electronic"
+    ],
+    "country": "Australia",
+    "activeFrom": 2014,
+    "lowMidi": 48,
+    "highMidi": 77,
+    "beltMidi": 67,
+    "whistle": false,
+    "signatureSong": "Youth",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Soft-focus synth-pop: a breathy, boyish tenor that hovers between chest and falsetto and never raises its voice.",
+    "technique": "Restraint is structural. The voice floats in the blend zone between light chest and falsetto, with enough air on the tone to blur which register is which, and dynamics that stay inside a narrow, intimate band. Consonants are softened; phrase ends dissolve rather than stop. Practice sustaining that half-falsetto blend on a five-note scale without letting it crack into either clear register. The style collapses if you push volume, because the ambiguity, not the power, is the sound."
+  },
+  {
+    "slug": "tyla",
+    "name": "Tyla",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Afrobeats",
+      "R&B",
+      "Pop"
+    ],
+    "country": "South Africa",
+    "activeFrom": 2023,
+    "lowMidi": 50,
+    "highMidi": 74,
+    "beltMidi": 69,
+    "whistle": false,
+    "signatureSong": "Water",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Popiano's breathy shimmer: a light South African mezzo gliding on log-drum grooves, all sighs, slides and softness.",
+    "technique": "Glide is the operative word: phrases slide between notes on a breathy, sun-warmed tone, landing softly on the amapiano log-drum groove rather than striking it, with South African vowel color keeping the sound rounded. Runs are short downward sighs. Nothing is belted; intensity registers as closeness, the voice leaning into the mic. Practice connecting a five-note descent as one continuous slide with even breath, then place it fractionally behind a drum loop. Percussive, syllable-forward singing breaks the water-smooth surface the name promises."
   },
   {
     "slug": "usher",
@@ -7241,6 +8444,26 @@ export const SINGERS: Singer[] = [
     "technique": "Keep it small. This tenor works in a narrow band with low projection, a breathy onset, and almost no chest push; the belt tops out around G4 while the range reaches C5, so the notes above that are falsetto sighs which fade rather than land. Phrasing is conversational, landing a fraction late against the groove. The common error is singing it loudly, because volume erases the intimacy that is the entire style."
   },
   {
+    "slug": "yebba",
+    "name": "Yebba",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Soul",
+      "R&B"
+    ],
+    "country": "USA",
+    "activeFrom": 2017,
+    "lowMidi": 50,
+    "highMidi": 79,
+    "beltMidi": 76,
+    "whistle": false,
+    "signatureSong": "My Mind",
+    "lowSource": null,
+    "highSource": "My Mind (live at Sofar Sounds)",
+    "blurb": "A church-raised force of nature: crying mix, spiraling runs and dynamics that leap from whisper to wail inside a bar.",
+    "technique": "The cry is the core: a bright, weeping edge in the mix that keeps maximum intensity emotionally legible instead of merely loud, learned leading worship in an Arkansas church. Runs spiral through unexpected chromatic turns and land somewhere other than where they started. Dynamics are extreme and sudden. Isolate the cry on one sustained note, a slight sob placed above the sound, before attempting volume; the wail without the weep is just shouting, and her quiet singing carries the same charge as her loudest."
+  },
+  {
     "slug": "yma-sumac",
     "name": "Yma Sumac",
     "voiceType": "Soprano",
@@ -7300,5 +8523,45 @@ export const SINGERS: Singer[] = [
     "highSource": null,
     "blurb": "High keening tenor shaped by chant ornament; rapid microtonal turns and a piercing bright top.",
     "technique": "Ornament drives this voice more than sustain does. The tenor is high, bright and keening, full of rapid microtonal turns between neighboring pitches, and it tends to bend into a note rather than start cleanly on it. Chest carries to around B4; above that the sound stays piercing but narrows toward D5. Phrases finish in long calls. Flatten those turns into plain notes and the line loses everything that identifies it."
+  },
+  {
+    "slug": "zach-bryan",
+    "name": "Zach Bryan",
+    "voiceType": "Baritone",
+    "genres": [
+      "Country",
+      "Folk"
+    ],
+    "country": "USA",
+    "activeFrom": 2022,
+    "lowMidi": 43,
+    "highMidi": 66,
+    "beltMidi": 64,
+    "whistle": false,
+    "signatureSong": "Something in the Orange",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Anti-polish as principle: a cracked, shouting-from-the-porch baritone that treats roughness as proof of honesty.",
+    "technique": "Rawness is the contract with the listener. The voice strains visibly at the top of phrases, cracks left in the take, with a reedy, wind-burned tone and volume that surges on emotional peaks rather than building smoothly. Meter stretches to fit the words, a songwriter's phrasing, not a session singer's. If you borrow this style, keep the support honest underneath the apparent strain: the crack should be a controlled release, not an actual failure. Manufactured roughness over weak breath is the fastest route to real damage."
+  },
+  {
+    "slug": "zayn",
+    "name": "Zayn",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop",
+      "R&B"
+    ],
+    "country": "UK",
+    "activeFrom": 2012,
+    "lowMidi": 50,
+    "highMidi": 83,
+    "beltMidi": 68,
+    "whistle": false,
+    "signatureSong": "Pillowtalk",
+    "lowSource": null,
+    "highSource": "You & I (One Direction)",
+    "blurb": "One Direction's high-wire act turned R&B stylist: a light, agile tenor that lives in falsetto and ornamented upper mix.",
+    "technique": "Falsetto is home base, not a garnish. Most of the memorable notes float above the belt line in a clear, connected falsetto that he ornaments with fast, qawwali-flavored South Asian turns. The full voice underneath is soft-grained and used sparingly. Train the falsetto as its own instrument, with scales and runs at low volume, rather than as an escape hatch from failed belts. The runs betray imitators; his are precise at speed."
   }
 ];

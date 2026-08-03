@@ -1,0 +1,325 @@
+[
+  {
+    "name": "Zayn",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop",
+      "R&B"
+    ],
+    "country": "UK",
+    "activeFrom": 2012,
+    "lowNote": "D3",
+    "highNote": "B5",
+    "beltNote": "G#4",
+    "whistle": false,
+    "signatureSong": "Pillowtalk",
+    "lowSource": null,
+    "highSource": "You & I (One Direction)",
+    "blurb": "One Direction's high-wire act turned R&B stylist: a light, agile tenor that lives in falsetto and ornamented upper mix.",
+    "technique": "Falsetto is home base, not a garnish. Most of the memorable notes float above the belt line in a clear, connected falsetto that he ornaments with fast, qawwali-flavored South Asian turns. The full voice underneath is soft-grained and used sparingly. Train the falsetto as its own instrument, with scales and runs at low volume, rather than as an escape hatch from failed belts. The runs betray imitators; his are precise at speed."
+  },
+  {
+    "name": "Troye Sivan",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop",
+      "Electronic"
+    ],
+    "country": "Australia",
+    "activeFrom": 2014,
+    "lowNote": "C3",
+    "highNote": "F5",
+    "beltNote": "G4",
+    "whistle": false,
+    "signatureSong": "Youth",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Soft-focus synth-pop: a breathy, boyish tenor that hovers between chest and falsetto and never raises its voice.",
+    "technique": "Restraint is structural. The voice floats in the blend zone between light chest and falsetto, with enough air on the tone to blur which register is which, and dynamics that stay inside a narrow, intimate band. Consonants are softened; phrase ends dissolve rather than stop. Practice sustaining that half-falsetto blend on a five-note scale without letting it crack into either clear register. The style collapses if you push volume, because the ambiguity, not the power, is the sound."
+  },
+  {
+    "name": "Conan Gray",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2018,
+    "lowNote": "C3",
+    "highNote": "G5",
+    "beltNote": "A4",
+    "whistle": false,
+    "signatureSong": "Heather",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Bedroom-pop drama: a delicate tenor that cracks upward into head voice at emotional peaks, diary-quiet one bar and keening the next.",
+    "technique": "Vulnerability is played as register. Verses sit in a thin, close chest voice; the emotional turn arrives as a deliberate lift into head voice, often with a small audible crack on the way up that functions as punctuation. Vibrato is minimal and late. To learn the move, practice sliding from chest to head on one vowel and placing the flip on a chosen word, not wherever the break happens to catch. Random cracks read as strain; his are cues."
+  },
+  {
+    "name": "Patrick Stump",
+    "voiceType": "Tenor",
+    "genres": [
+      "Rock",
+      "Punk",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2005,
+    "lowNote": "C3",
+    "highNote": "B5",
+    "beltNote": "C5",
+    "whistle": false,
+    "signatureSong": "Sugar, We're Goin Down",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Pop-punk's secret soul singer: a slurred, syllable-dense delivery hiding a genuinely agile, Elvis Costello-meets-Motown tenor.",
+    "technique": "Diction is the disguise. Words blur together in a slurred rush, but the pitch underneath is exact, and the voice is a real soul tenor: high mixed belts to C5, quick turns at phrase ends, and a falsetto he can snap into at full speed. The slur removes the theatre-kid crispness that would fight the genre. Learn the melody clean first, then deliberately smear the consonants while keeping every pitch center. Smearing pitch and diction together is just mumbling."
+  },
+  {
+    "name": "Damiano David",
+    "voiceType": "Baritone",
+    "genres": [
+      "Rock"
+    ],
+    "country": "Italy",
+    "activeFrom": 2021,
+    "lowNote": "A2",
+    "highNote": "B4",
+    "beltNote": "A4",
+    "whistle": false,
+    "signatureSong": "Beggin'",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Måneskin's frontman: a dark, swaggering baritone with Italian vowel color, pushed into a snarling rock belt at the top.",
+    "technique": "Swagger sits on a low foundation. The speaking-range tone is dark and slightly oily, with pure Italian vowels that keep resonance tall where an American singer would spread, and the top is a pushed, snarly belt that stays just this side of a yell. Consonant attacks are theatrical, almost spat. Work the vowel color first: sing the line on pure ah and oh, no diphthongs, then add the snarl as a final layer. Starting with the snarl shreds the voice and misses the elegance underneath."
+  },
+  {
+    "name": "Morrissey",
+    "voiceType": "Baritone",
+    "genres": [
+      "Alternative",
+      "Indie"
+    ],
+    "country": "UK",
+    "activeFrom": 1984,
+    "lowNote": "F#2",
+    "highNote": "B4",
+    "beltNote": "G4",
+    "whistle": false,
+    "signatureSong": "There Is a Light That Never Goes Out",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The great miserabilist croon: a plummy baritone that swoops, sighs and breaks into sudden falsetto yelps mid-word.",
+    "technique": "Croon first, then sabotage it. The core is an old-fashioned, rounded baritone with generous portamento between notes, closer to a 1950s balladeer than to punk, and the modern edge comes from interruptions: falsetto yelps, moans and octave flips dropped mid-phrase like italics. Vibrato is wide and unhurried. Practice sliding between chord tones with a completely relaxed jaw, then add one deliberate falsetto break per verse. The slides need real legato; without it the yelps have nothing to disrupt."
+  },
+  {
+    "name": "Dave Gahan",
+    "voiceType": "Baritone",
+    "genres": [
+      "Synth-Pop",
+      "New Wave",
+      "Electronic"
+    ],
+    "country": "UK",
+    "activeFrom": 1981,
+    "lowNote": "F2",
+    "highNote": "G4",
+    "beltNote": "E4",
+    "whistle": false,
+    "signatureSong": "Enjoy the Silence",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Depeche Mode's dark crooner: a resonant machine-age baritone, nearly vibrato-free, that smolders instead of emotes.",
+    "technique": "Stillness carries the menace. The tone is deep, hooded and deliberately level, with vibrato all but removed and dynamics compressed to a narrow band, so that a semitone of melodic movement lands like an event. Vowels are darkened toward oh; consonants are clipped and precise against the machines. Sing a phrase while consciously suppressing vibrato and keeping the larynx comfortably low, without pressing. Most students discover their voice wobbles the moment they stop pushing; his control of that stillness is the skill."
+  },
+  {
+    "name": "Robert Smith",
+    "voiceType": "Tenor",
+    "genres": [
+      "Alternative",
+      "New Wave"
+    ],
+    "country": "UK",
+    "activeFrom": 1982,
+    "lowNote": "C#3",
+    "highNote": "C5",
+    "beltNote": "G#4",
+    "whistle": false,
+    "signatureSong": "Just Like Heaven",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The Cure's eternal adolescent: a quavering, tearful tenor that sounds perpetually on the verge of either sobbing or smiling.",
+    "technique": "The wobble is the signature: an unstable, sped-up vibrato that reads as barely held-back crying, over a thin, forward tenor with almost no chest weight. Pitch bends sharp-ward at moments of excitement, a controlled mannerism rather than error. Phrases tumble out slightly ahead of the beat, breathless. To borrow it, sing with a deliberately loose jaw and let the vibrato run faster and narrower than feels polished, keeping the core of each note centered. Stabilizing the wobble kills the character."
+  },
+  {
+    "name": "Ian Curtis",
+    "voiceType": "Baritone",
+    "genres": [
+      "Punk",
+      "New Wave"
+    ],
+    "country": "UK",
+    "activeFrom": 1979,
+    "lowNote": "G2",
+    "highNote": "E4",
+    "beltNote": "D4",
+    "whistle": false,
+    "signatureSong": "Love Will Tear Us Apart",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Joy Division's flat-affect baritone: a gray, unornamented monotone whose power is its refusal to perform feeling.",
+    "technique": "Affectlessness is the aesthetic. The voice sits in a narrow, low band, nearly vibrato-free, vowels unglamorous and consonants plain, delivered as if reading rather than performing, and the emotional charge comes from that refusal colliding with desperate lyrics. Intonation drifts flat-ward at phrase ends, part of the grain. Practice singing a melody at conversational volume while stripping every learned expressive habit: no swells, no scoops, no vibrato. It is harder than it sounds, and the restraint is the entire art."
+  },
+  {
+    "name": "Peter Gabriel",
+    "voiceType": "Baritone",
+    "genres": [
+      "Rock",
+      "New Wave"
+    ],
+    "country": "UK",
+    "activeFrom": 1971,
+    "lowNote": "F#2",
+    "highNote": "A4",
+    "beltNote": "G4",
+    "whistle": false,
+    "signatureSong": "Sledgehammer",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A grainy, soul-schooled baritone: Otis Redding pressure pushed through an English art-rock imagination.",
+    "technique": "Grain plus push defines the mature sound: a throaty, sandpapered baritone driven hard into its upper fourth, where the strain is audible and intentional, borrowed straight from Stax soul shouting. Underneath, phrasing is conversational and behind the beat. The rasp rides on strong breath pressure with the throat staying open; it is effortful but distributed effort. Build the push gradually across a phrase, arriving at full grain only on the peak word. Starting at maximum is how throats get hurt copying this."
+  },
+  {
+    "name": "Joe Cocker",
+    "voiceType": "Baritone",
+    "genres": [
+      "Rock",
+      "Soul",
+      "Blues"
+    ],
+    "country": "UK",
+    "activeFrom": 1968,
+    "lowNote": "G2",
+    "highNote": "Bb4",
+    "beltNote": "A4",
+    "whistle": false,
+    "signatureSong": "With a Little Help from My Friends",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "The definitive gravel: a torn, convulsive blues shout that turned polite pop songs into testifying.",
+    "technique": "Rasp at this depth is a full-body event. The tone is shredded across its whole span, not just at peaks, produced with enormous breath drive and a wide-open throat, and the phrasing convulses: words arrive in spasms, early or late, exactly where a gospel shouter would place them. Sustained notes bloom into wide, slow vibrato. Study the phrasing separately from the rasp, speaking the lines in his timing. The distortion itself took him years and cost him plenty; borrow the timing, not the tissue damage."
+  },
+  {
+    "name": "Till Lindemann",
+    "voiceType": "Bass-baritone",
+    "genres": [
+      "Metal"
+    ],
+    "country": "Germany",
+    "activeFrom": 1995,
+    "lowNote": "E2",
+    "highNote": "F4",
+    "beltNote": "D4",
+    "whistle": false,
+    "signatureSong": "Du Hast",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Rammstein's granite bass-baritone: rolled Rs, machine-press diction and a low register that functions as percussion.",
+    "technique": "Consonants are the star. The famous rolled R and hyper-plosive German diction turn every line into rhythm-section material, delivered on a deep, dark, deliberately monotone bass-baritone that moves in small steps and almost never ornaments. When intensity rises he adds a controlled growl at the onset, not a scream. Drill the alveolar roll until it starts instantly on any vowel, and keep the pitch line flat and heavy. Melodrama in the melody would puncture the menace; the flatness is the theatre."
+  },
+  {
+    "name": "Alex Warren",
+    "voiceType": "Baritone",
+    "genres": [
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2024,
+    "lowNote": "A2",
+    "highNote": "F#4",
+    "beltNote": "E4",
+    "whistle": false,
+    "signatureSong": "Ordinary",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Stadium-folk balladry: a husky baritone that builds from hushed verse to a huge, hymn-like chorus with choir-sized reverb.",
+    "technique": "Dynamics do the storytelling. Verses sit husky and close, almost spoken over fingerpicking, then the chorus opens into a full-throated, anthemic belt with the vowels widened and a slight rasp on top, a shape borrowed from worship music as much as from pop. Vibrato stays narrow even at volume. Map the crescendo across the whole song and rehearse the quiet sections quieter than feels natural, so the lift has somewhere to go. Peaking in verse one flattens the entire arc."
+  },
+  {
+    "name": "Myles Smith",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop",
+      "Folk"
+    ],
+    "country": "UK",
+    "activeFrom": 2023,
+    "lowNote": "B2",
+    "highNote": "G4",
+    "beltNote": "F#4",
+    "whistle": false,
+    "signatureSong": "Stargazing",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Festival folk-pop: a warm, sandpapered tenor built for singalongs, all short punchy phrases and open-hearted rasp.",
+    "technique": "Warmth with grit is the recipe. The tone carries a light, even rasp across its whole range, more texture than distortion, over short, rhythmically punchy phrases designed for a crowd to shout back. Melodies stay inside an octave; the energy comes from drive and repetition, not altitude. Keep the rasp consistent rather than saving it for peaks, and place phrases slightly ahead of the beat for urgency. Over-singing the simple lines with runs and swells works against what makes them land."
+  },
+  {
+    "name": "Sombr",
+    "voiceType": "Baritone",
+    "genres": [
+      "Alternative",
+      "Indie",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2025,
+    "lowNote": "A2",
+    "highNote": "F#4",
+    "beltNote": "E4",
+    "whistle": false,
+    "signatureSong": "Back to Friends",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Brooding bedroom rock: a low, reverb-drowned croon that murmurs through verses and aches upward at the hook.",
+    "technique": "Mood is managed through register contrast. Verses live in a dark, low murmur with fry at the onsets, mixed so wet that the words blur at the edges, and the hook lifts into a strained, yearning upper-chest push that stays deliberately unpolished. Vibrato is nearly absent. Practice the low murmur with clear pitch centers despite the softness, then let the lifted notes carry a little honest strain instead of smoothing them. Polishing the top note into prettiness breaks the ache."
+  },
+  {
+    "name": "Gigi Perez",
+    "voiceType": "Contralto",
+    "genres": [
+      "Indie",
+      "Singer-Songwriter"
+    ],
+    "country": "USA",
+    "activeFrom": 2024,
+    "lowNote": "E3",
+    "highNote": "C#5",
+    "beltNote": "A4",
+    "whistle": false,
+    "signatureSong": "Sailor Song",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "A striking true contralto: deep, hollow-toned and hymn-like, sitting an octave below where pop sopranos live.",
+    "technique": "Depth is the identity. The voice rests where many women speak, around the octave below middle C's neighborhood, with a hollow, woody color and a straight tone that breaks into slow vibrato only on held notes. Phrases repeat like liturgy, gathering weight through accumulation rather than climb. If your voice sits here, resist the industry pull toward brighter, higher keys; train the low register's resonance with descending slides on oh. Chasing soprano keys wastes what makes a voice like this rare."
+  },
+  {
+    "name": "Dimash Kudaibergen",
+    "voiceType": "Tenor",
+    "genres": [
+      "Pop",
+      "Classical"
+    ],
+    "country": "Kazakhstan",
+    "activeFrom": 2017,
+    "lowNote": "C2",
+    "highNote": "C8",
+    "beltNote": "F5",
+    "whistle": true,
+    "signatureSong": "S.O.S. d'un terrien en détresse",
+    "lowSource": null,
+    "highSource": "Unforgettable Day (live at Gakku)",
+    "blurb": "The six-octave phenomenon: bass lows to whistle highs in one performance, with conservatory technique at every altitude.",
+    "technique": "Register-switching at this scale is the real spectacle: subharmonic-reinforced lows, a classically placed tenor middle, a belt that stays supported past F5, then seamless handoffs into reinforced falsetto and whistle, each register entered with its own dedicated technique rather than stretched from the last one. Ornaments carry Kazakh traditional inflection. Study the handoffs, not the extremes: practice passing one vowel across chest, mix and falsetto with no volume bump at the seams. The six octaves are his; the smooth seams are learnable."
+  }
+]

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import {
   HUB_GENRES,
   SINGERS,
@@ -23,10 +24,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/progress",
     "/pro",
     "/book",
+    "/atlas",
+    // The atlas's free sample chapters are real, indexable content; the gated
+    // chapters are robots-noindexed and stay out of the sitemap.
+    ...ATLAS_CONTENTS.filter((c) => c.free).map((c) => `/atlas/${c.slug}`),
   ].map((path) => ({
     url: `${SITE_URL}${path}`,
     changeFrequency: "weekly" as const,
-    priority: path === "" ? 1 : path === "/singers" ? 0.9 : 0.7,
+    priority:
+      path === "" ? 1 : path === "/singers" || path === "/atlas" ? 0.9 : 0.7,
   }));
 
   // Hubs sit above the leaves in priority: they are the pages that gather the

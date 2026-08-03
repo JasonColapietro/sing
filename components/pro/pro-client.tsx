@@ -41,7 +41,7 @@ const PRO_CARD_POINTS = [
   "Pitch analysis on every take",
   "Full songbook + pro warmup packs",
   "Cloud sync across devices",
-  "The Measured Voice: 23 chapters + PDF",
+  "Two books + PDFs: The Measured Voice and The Voice Atlas",
 ];
 
 const FREE_CARD_POINTS = [
@@ -481,7 +481,7 @@ export function ProClient() {
               <div>
                 <SectionLabel className="mb-4">Plans</SectionLabel>
                 <h2 className="max-w-2xl text-3xl">
-                  One tier. Coach, analytics, songbook, book.
+                  One tier. Coach, analytics, songbook, two books.
                 </h2>
                 <p className="mt-3 max-w-xl text-mut">
                   $9.99 a month, billed monthly, cancel in one click. Every Pro
