@@ -27,8 +27,11 @@ const ROWS: Array<{ label: string; marks: [Mark, Mark, Mark, Mark, Mark, Mark] }
     marks: ["yes", "yes", "yes", "part", "yes", "part"],
   },
   {
+    // Singing Carrots corrected part → yes on the August 2026 recheck: they
+    // ship "Sustain & Breath training" as a named practice feature, so the
+    // "unclear from public info" hedge no longer applies to them.
     label: "Breath training",
-    marks: ["yes", "part", "yes", "part", "part", "part"],
+    marks: ["yes", "part", "yes", "part", "yes", "part"],
   },
   {
     label: "Take recorder",
@@ -128,7 +131,8 @@ export default function ComparisonTable() {
         </table>
       </div>
       <p className="mt-3 font-mono text-xs text-dim">
-        Compiled July 2026 from vendor sites and app-store reviews.{" "}
+        Competitor rows rechecked August 2026 against vendor sites and app
+        listings.{" "}
         <span className="text-amber-ink">～</span> = partial, limited, video-only,
         or unclear from public info.
       </p>
