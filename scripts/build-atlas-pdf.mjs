@@ -15,7 +15,7 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
-import { ATLAS_SUBTITLE, ATLAS_TITLE, buildAtlas } from "./compile-atlas.mjs";
+import { ATLAS_SUBTITLE, ATLAS_TITLE, buildAtlas, labelToMidi } from "./compile-atlas.mjs";
 
 // Not public/ — a paid benefit, served only through /api/book/pdf after a
 // Stripe check. Writing it into public/ would republish the whole book.
@@ -83,6 +83,78 @@ function mdToHtml(md) {
   return out.join("\n");
 }
 
+/**
+ * The range bar: every entry's span drawn on one fixed axis, so two singers
+ * three pages apart are still comparable by eye. This is a book about vocal
+ * ranges that, until now, only ever stated them as text.
+ *
+ * The axis is C1-C8 — wide enough for every voice in the library, including
+ * the whistle tops, and the octave ticks give the eye something to measure
+ * against. A belt note, where one is recorded, marks where full voice stops
+ * and the lighter registers above it begin.
+ */
+const AXIS_LOW = 24; // C1
+const AXIS_HIGH = 108; // C8
+const axisPct = (midi) => ((midi - AXIS_LOW) / (AXIS_HIGH - AXIS_LOW)) * 100;
+
+function rangeBarHtml(e) {
+  // Derived from the printed note labels, not from midi fields: the compiled
+  // atlas entry carries `low`/`high` as labels only. Reading a field that
+  // isn't there yields NaN, which CSS silently drops — an invisible bar with
+  // no error anywhere.
+  const lowMidi = labelToMidi(e.low);
+  const highMidi = labelToMidi(e.high);
+  if (lowMidi == null || highMidi == null) {
+    throw new Error(
+      `Unreadable range for ${e.name}: ${e.low}–${e.high}. A bar drawn from an ` +
+        `unparseable note is invisible rather than wrong, so this stops the build.`,
+    );
+  }
+
+  const left = axisPct(lowMidi);
+  const width = axisPct(highMidi + 1) - left;
+  const beltMidi = e.belt ? labelToMidi(e.belt) : null;
+  // Only meaningful when the belt sits inside the drawn span.
+  const belt =
+    beltMidi != null && beltMidi > lowMidi && beltMidi < highMidi
+      ? `<span class="rb-belt" style="left:${axisPct(beltMidi)}%"></span>`
+      : "";
+  const ticks = [36, 48, 60, 72, 84, 96]
+    .map((m) => `<span class="rb-tick" style="left:${axisPct(m)}%"></span>`)
+    .join("");
+  return `<div class="rb" role="img" aria-label="Range ${esc(e.low)} to ${esc(e.high)}">
+    ${ticks}
+    <span class="rb-span" style="left:${left}%;width:${width}%"></span>
+    ${belt}
+  </div>`;
+}
+
+/**
+ * The axis key, printed once above each chapter's entries. It does two jobs:
+ * says what the bars mean, and labels the octave ticks so a reader can read an
+ * approximate pitch straight off a bar instead of only comparing shapes.
+ */
+function axisKeyHtml() {
+  const labels = [
+    [36, "C2"],
+    [48, "C3"],
+    [60, "C4"],
+    [72, "C5"],
+    [84, "C6"],
+    [96, "C7"],
+  ]
+    .map(
+      ([m, label]) =>
+        `<span class="ak-l" style="left:${axisPct(m)}%">${label}</span>`,
+    )
+    .join("");
+  return `<div class="axis-key">
+    <p class="ak-cap">Range bars below share one axis, C1 to C8.
+      <span class="ak-belt-key"></span> marks the top of full voice.</p>
+    <div class="ak-scale">${labels}</div>
+  </div>`;
+}
+
 function entryHtml(e) {
   const pills = [
     e.voiceType,
@@ -103,6 +175,7 @@ function entryHtml(e) {
       : "";
   return `<section class="entry">
     <p class="e-head"><strong>${esc(e.name)}</strong><span class="e-range">${esc(e.low)}–${esc(e.high)} · ${esc(e.span)}</span></p>
+    ${rangeBarHtml(e)}
     <p class="e-meta">${pills}${esc(e.country)} · prominent since ${e.activeFrom} · known for “${esc(e.signatureSong)}”</p>
     ${sources}
     <p class="e-blurb">${esc(e.blurb)}</p>
@@ -160,7 +233,7 @@ function bodyHtml(pages) {
         opener = partOpenerHtml(parts[partIndex], partIndex, pages);
       }
       const entries = c.entries.length
-        ? `<div class="entries">${c.entries.map(entryHtml).join("\n")}</div>`
+        ? `<div class="entries">${axisKeyHtml()}${c.entries.map(entryHtml).join("\n")}</div>`
         : "";
       const next = chapters[i + 1];
       const tail = next
@@ -338,6 +411,24 @@ const styles = `
             gap: 3mm; margin: 0 0 1mm; font-size: 11pt; }
   .e-range { font-family: ui-monospace, Menlo, monospace; font-size: 8.5pt; color: #5c564d;
              white-space: nowrap; }
+  /* Range bar: one C1-C8 axis for the whole book, so spans are comparable by
+     eye across chapters. Octave ticks sit under the track; the belt mark shows
+     where full voice gives way to the lighter registers above it. */
+  .rb { position: relative; height: 3.2mm; margin: 0 0 2mm;
+        background: #f2ebde; border-radius: 1.6mm; }
+  .rb-tick { position: absolute; top: 0; width: .3pt; height: 100%;
+             background: #e0d5c0; }
+  .rb-span { position: absolute; top: 0; height: 100%; border-radius: 1.6mm;
+             background: #7ea39c; }
+  .rb-belt { position: absolute; top: -.5mm; width: .9pt; height: calc(100% + 1mm);
+             background: #9d3f33; border-radius: .45pt; }
+  .axis-key { margin: 0 0 4mm; page-break-inside: avoid; page-break-after: avoid; }
+  .ak-cap { font-size: 8pt; color: #8a8272; margin: 0 0 1.5mm; }
+  .ak-belt-key { display: inline-block; width: .9pt; height: 2.6mm; background: #9d3f33;
+                 vertical-align: -.3mm; margin: 0 .6mm; }
+  .ak-scale { position: relative; height: 3.4mm; border-top: .4pt solid #e0d5c0; }
+  .ak-l { position: absolute; top: .6mm; font-family: ui-monospace, Menlo, monospace;
+          font-size: 6.5pt; color: #b0a695; }
   .e-meta { font-size: 8.5pt; color: #8a8272; margin: 0 0 1.5mm; }
   .pill { display: inline-block; border: .5pt solid #c9bda0; border-radius: 3mm;
           padding: 0 2mm; margin-right: 1.5mm; font-family: ui-monospace, Menlo, monospace;
