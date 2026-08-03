@@ -1,3 +1,5 @@
+import type { VoiceKind } from "@/lib/singers-data";
+
 export const A4 = 440;
 
 export const NOTE_NAMES = [
@@ -119,7 +121,14 @@ export function centsOff(freq: number, targetMidi: number): number {
 
 export interface VoiceType {
   id: string;
-  label: string;
+  /**
+   * Typed as VoiceKind so every label the classifier can return is guaranteed
+   * to be a category the singer library actually has — the range test links
+   * straight to /singers/voice-type/<label>, and a label with no page behind
+   * it is a dead end. This is a type-only import, so nothing is pulled in at
+   * runtime.
+   */
+  label: VoiceKind;
   lowMidi: number;
   highMidi: number;
 }
@@ -128,7 +137,11 @@ export const VOICE_TYPES: VoiceType[] = [
   { id: "bass", label: "Bass", lowMidi: 40, highMidi: 64 }, // E2–E4
   { id: "baritone", label: "Baritone", lowMidi: 45, highMidi: 69 }, // A2–A4
   { id: "tenor", label: "Tenor", lowMidi: 48, highMidi: 72 }, // C3–C5
-  { id: "alto", label: "Alto", lowMidi: 53, highMidi: 77 }, // F3–F5
+  // "Contralto", not "Alto": this is the label the singer library and the
+  // /singers/voice-type pages use, and a range test that answers with a
+  // category the rest of the site has never heard of is a dead end. It is
+  // also the most common result for an untrained female voice.
+  { id: "contralto", label: "Contralto", lowMidi: 53, highMidi: 77 }, // F3–F5
   { id: "mezzo", label: "Mezzo-soprano", lowMidi: 57, highMidi: 81 }, // A3–A5
   { id: "soprano", label: "Soprano", lowMidi: 60, highMidi: 84 }, // C4–C6
 ];

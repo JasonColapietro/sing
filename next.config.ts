@@ -10,6 +10,19 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/book/pdf": ["./content/pdfs/**"],
   },
+  async redirects() {
+    return [
+      {
+        // The library files this category as Contralto, but "alto" is the
+        // commoner word and what the range test used to answer. Both the
+        // stored label on a returning singer's device and anyone searching
+        // "alto singers" should land somewhere real.
+        source: "/singers/voice-type/alto",
+        destination: "/singers/voice-type/contralto",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
