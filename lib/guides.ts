@@ -11,14 +11,32 @@ import type { GuideContent } from "@/components/guide";
 
 export const RANGE_GUIDE: GuideContent = {
   path: "/range",
+  pageName: "Free Vocal Range Test and Voice Type Finder",
   heading: "What a vocal range test actually measures",
   answer:
-    "Your vocal range is the distance between the lowest and highest notes you can sing with a usable tone. A range test finds both ends by having you slide down and then up while a pitch detector watches, and reports the span as note names — F2–D6, say — plus the voice type that span most resembles.",
+    "Your vocal range is the span between the lowest and highest notes you can sing with a clear, usable tone. This online range test listens as you slide down and then up, then reports both notes, the size of the span, and the voice type that overlaps it most closely.",
   body: [
-    "Two singers with the same range can sound nothing alike, because range says nothing about where a voice is comfortable. The notes you can reach at the extremes are usually not notes you would perform on. What a range test gives you is a boundary and a baseline: proof of what is currently there, and a number that moves when your practice is working.",
-    "The figure also moves with the hour and the day. Most voices sit lower and narrower first thing in the morning, and open up after warming. Testing cold and testing warm produce genuinely different results, so the useful habit is to test under roughly the same conditions each time and compare like with like.",
-    "Voice type — soprano, tenor, baritone and the rest — is a classification built for choral and operatic casting, and it depends on tessitura and timbre as much as on the extremes. A range test can suggest the type your span is consistent with. It cannot tell you the weight or colour of your voice, which is the other half of what a teacher listens for.",
+    "Two singers with the same range can sound nothing alike because range does not show where each voice feels comfortable. The notes at the extremes are often not notes a singer would perform repeatedly. A range test gives you a boundary and a baseline, not a grade.",
+    "The result can move with fatigue, illness, the time of day, the room, microphone position, and whether you warmed up. Test under similar conditions when you want to compare one result with another.",
+    "Voice type, including soprano, tenor, baritone, and the other common labels, depends on comfortable range, tone, and register behavior as well as the two extremes. This test can show which conventional range band overlaps your result. It cannot diagnose or permanently classify your voice.",
   ],
+  safety: {
+    heading: "Test the notes you can sing without forcing",
+    body:
+      "Use a comfortable volume and stop if a note causes pain, strain, or persistent hoarseness. Suede Sing is a practice and measurement tool, not a medical assessment. A sudden or lasting loss of range belongs with a qualified voice professional or clinician.",
+    sources: [
+      {
+        href: "https://www.nidcd.nih.gov/health/taking-care-your-voice",
+        label: "NIDCD: Taking Care of Your Voice",
+        note: "voice-health warning signs and guidance for healthy voice use",
+      },
+      {
+        href: "https://www.asha.org/practice-portal/clinical-topics/voice-disorders/",
+        label: "ASHA: Voice Disorders",
+        note: "clinical context for vocal range, effort, fatigue, and evaluation",
+      },
+    ],
+  },
   howTo: {
     name: "How to test your vocal range",
     intro:
@@ -26,7 +44,7 @@ export const RANGE_GUIDE: GuideContent = {
     steps: [
       {
         title: "Warm up first, or note that you didn't",
-        body: "A cold voice tests narrow. Five minutes of gentle sirens or hums gets you a number that reflects your actual range rather than your morning one. If you test cold, keep testing cold — consistency matters more than the warmup.",
+        body: "A short, gentle warmup makes the test easier to repeat under similar conditions. If you test without warming up, record that context and compare it only with another test taken the same way.",
       },
       {
         title: "Allow the microphone",
@@ -38,11 +56,11 @@ export const RANGE_GUIDE: GuideContent = {
       },
       {
         title: "Slide down to your floor",
-        body: "Descend by step or on a slow slide until the tone loses pitch and turns to rattle or air. The last note that still holds a clear pitch is your low. Do not push into vocal fry to add a note — fry has no defined pitch and is not part of a sung range.",
+        body: "Descend by step or on a slow slide until the tone turns to croak, rattle, or air. The last note you can hold with a clear sung pitch is your low. Do not count fry just to extend the number.",
       },
       {
         title: "Slide up to your ceiling",
-        body: "Come back to the middle, then climb the same way. Let the voice flip into head voice or falsetto rather than dragging chest weight upward; the top of your range includes the lighter registers. Stop where tone gives out, not where it hurts.",
+        body: "Come back to the middle, then climb the same way. Let the voice move into head voice or falsetto instead of forcing a heavier sound upward. Stop before the note causes pain or strain.",
       },
       {
         title: "Read the result and save it",
@@ -52,12 +70,12 @@ export const RANGE_GUIDE: GuideContent = {
   },
   beginner: {
     heading: "Your first number is a starting line, not a verdict",
-    body: "Beginners routinely test narrower than they will read a month later, because part of range is technique rather than anatomy. Reaching a note requires knowing how to let the voice change gear, and that is learned.",
+    body: "Your first result reflects what you can coordinate today under the conditions of this test. Technique, microphone setup, and how honestly you stop at the edges all affect the number.",
     points: [
-      "Do not compare your first test to a famous singer's published range — those are performance-career figures, often measured across decades of recordings",
+      "Do not compare your first test to a famous singer's published range; those figures often collect extreme notes across years of recordings",
       "If the top of your range feels like a wall, you are probably holding chest voice too high; let the tone go light and airy and keep climbing",
-      "Test again after a week of warmups rather than the same afternoon — daily variation is larger than a week of progress",
-      "A two-octave range is a completely workable instrument; almost all popular songs live inside it",
+      "Retest after several practice sessions instead of chasing a larger number in the same sitting",
+      "Judge useful range by the notes you can sing clearly and repeatably, not by one extreme sound",
     ],
   },
   advanced: {
@@ -72,12 +90,16 @@ export const RANGE_GUIDE: GuideContent = {
   },
   faq: [
     {
+      q: "How do I find my vocal range online?",
+      a: "Start the free test, allow microphone access, hold one comfortable note, then slide down and up while the pitch detector listens. Suede Sing marks the lowest and highest clear notes it hears, shows the span on a keyboard, and gives the conventional voice-type band that overlaps it most closely.",
+    },
+    {
       q: "How many octaves should I have?",
-      a: "Most untrained adult voices measure somewhere between one and a half and two and a half octaves, and most trained singers land between two and three. Almost all popular music is written inside a two-octave span, so a range in that region is not a limitation on repertoire.",
+      a: "There is no required octave count for a useful singing voice. A smaller span that stays clear, comfortable, and repeatable is more useful than a wider result built from strained or one-off notes. Song choice and transposition matter more than matching someone else's number.",
     },
     {
       q: "Does vocal fry count as part of my range?",
-      a: "No. Vocal fry is a rattling register without a stable pitch, so a pitch detector cannot assign it a note and a score cannot use it. Your low note is the lowest pitch you can hold with clear, sustained tone.",
+      a: "Do not count a croak or fry sound if your goal is a usable singing range. Record the lowest note you can hold with a clear, repeatable sung pitch instead.",
     },
     {
       q: "Should falsetto count in my range?",
@@ -89,7 +111,7 @@ export const RANGE_GUIDE: GuideContent = {
     },
     {
       q: "Why is my range different every time I test?",
-      a: "Hydration, sleep, time of day, allergies and how recently you warmed up all move the extremes, and the top note is the most volatile. That is why one test is a snapshot and a series taken the same way is a measurement.",
+      a: "Fatigue, illness, the time of day, warming up, room noise, and microphone position can all change what the test hears. One result is a snapshot. For a useful comparison, retest under similar conditions and stop at the same standard of clear, comfortable tone.",
     },
   ],
   related: [

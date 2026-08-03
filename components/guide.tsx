@@ -36,6 +36,8 @@ export interface GuideLink {
 export interface GuideContent {
   /** Route this guide belongs to, e.g. "/range". */
   path: string;
+  /** Page entity name when the explanatory heading is not the page's H1. */
+  pageName?: string;
   /** H2 above the explanatory half. */
   heading: string;
   /** The direct answer, in two or three sentences. */
@@ -52,6 +54,11 @@ export interface GuideContent {
   advanced: { heading: string; body: string; points: string[] };
   faq: GuideFaq[];
   related: GuideLink[];
+  safety?: {
+    heading: string;
+    body: string;
+    sources: GuideLink[];
+  };
 }
 
 export function guideJsonLd(guide: GuideContent) {
@@ -65,11 +72,24 @@ export function guideJsonLd(guide: GuideContent) {
       "@type": "WebPage",
       "@id": `${url}#webpage`,
       url,
-      name: guide.heading,
+      name: guide.pageName ?? guide.heading,
       description: guide.answer,
       isPartOf: { "@id": `${SITE_URL}/#website` },
       publisher: { "@id": "https://suedeai.ai/#organization" },
       about: { "@id": `${SITE_URL}/#app` },
+      mainEntity: [
+        ...(guide.howTo ? [{ "@id": `${url}#howto` }] : []),
+        { "@id": `${url}#faq` },
+      ],
+      ...(guide.safety
+        ? {
+            citation: guide.safety.sources.map((source) => ({
+              "@type": "CreativeWork",
+              name: source.label,
+              url: source.href,
+            })),
+          }
+        : {}),
       inLanguage: "en",
     },
     {
@@ -131,6 +151,29 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
         {guide.body.map((para) => (
           <Prose key={para.slice(0, 40)}>{para}</Prose>
         ))}
+
+        {guide.safety && (
+          <aside className="mt-8 max-w-3xl rounded-2xl border border-rec/30 bg-panel p-5 sm:p-6">
+            <SectionLabel className="mb-3 border-rec/40 text-rec">
+              Vocal health
+            </SectionLabel>
+            <h3 className="text-xl">{guide.safety.heading}</h3>
+            <p className="mt-2 text-sm text-mut">{guide.safety.body}</p>
+            <ul className="mt-4 space-y-2">
+              {guide.safety.sources.map((source) => (
+                <li key={source.href} className="text-sm text-mut">
+                  <a
+                    href={source.href}
+                    className="font-medium text-amber-ink underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
+                  >
+                    {source.label}
+                  </a>
+                  <span>. {source.note}.</span>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )}
 
         {guide.howTo && (
           <div className="mt-12">
