@@ -1,5 +1,7 @@
 import { StudioClient } from "@/components/studio/studio-client";
 import { SITE_URL } from "@/lib/site";
+import { ToolGuide } from "@/components/guide";
+import { STUDIO_GUIDE } from "@/lib/guides";
 
 export const metadata = {
   title: "Pitch Training for Singers — Real-Time Pitch Feedback",
@@ -9,5 +11,10 @@ export const metadata = {
 };
 
 export default function StudioPage() {
-  return <StudioClient />;
+  return (
+    <>
+      <StudioClient />
+      <ToolGuide guide={STUDIO_GUIDE} />
+    </>
+  );
 }

@@ -1,5 +1,7 @@
 import EarTrainingClient from "@/components/ear/ear-training-client";
 import { SITE_URL } from "@/lib/site";
+import { ToolGuide } from "@/components/guide";
+import { EAR_GUIDE } from "@/lib/guides";
 
 export const metadata = {
   title: "Ear Training for Singers — Pitch and Interval Games",
@@ -9,5 +11,10 @@ export const metadata = {
 };
 
 export default function EarTrainingPage() {
-  return <EarTrainingClient />;
+  return (
+    <>
+      <EarTrainingClient />
+      <ToolGuide guide={EAR_GUIDE} />
+    </>
+  );
 }

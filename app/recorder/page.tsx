@@ -1,5 +1,7 @@
 import RecorderPageClient from "@/components/recorder/recorder-page";
 import { SITE_URL } from "@/lib/site";
+import { ToolGuide } from "@/components/guide";
+import { RECORDER_GUIDE } from "@/lib/guides";
 
 export const metadata = {
   title: "Voice Recorder for Singing Practice",
@@ -9,5 +11,10 @@ export const metadata = {
 };
 
 export default function RecorderPage() {
-  return <RecorderPageClient />;
+  return (
+    <>
+      <RecorderPageClient />
+      <ToolGuide guide={RECORDER_GUIDE} />
+    </>
+  );
 }

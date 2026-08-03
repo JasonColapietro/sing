@@ -1,5 +1,7 @@
 import { SongsClient } from "@/components/songs/songs-client";
 import { SITE_URL } from "@/lib/site";
+import { ToolGuide } from "@/components/guide";
+import { SONGS_GUIDE } from "@/lib/guides";
 
 export const metadata = {
   title: "Karaoke Practice — Sing Known Melodies with Pitch Feedback",
@@ -9,5 +11,10 @@ export const metadata = {
 };
 
 export default function SongsPage() {
-  return <SongsClient />;
+  return (
+    <>
+      <SongsClient />
+      <ToolGuide guide={SONGS_GUIDE} />
+    </>
+  );
 }

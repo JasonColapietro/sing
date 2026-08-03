@@ -1,5 +1,7 @@
 import ToolsClient from "@/components/tools/tools-page";
 import { SITE_URL } from "@/lib/site";
+import { ToolGuide } from "@/components/guide";
+import { TOOLS_GUIDE } from "@/lib/guides";
 
 export const metadata = {
   title: "Singing Practice Tools — Metronome, Keyboard, Vocal Drone",
@@ -9,5 +11,10 @@ export const metadata = {
 };
 
 export default function ToolsPage() {
-  return <ToolsClient />;
+  return (
+    <>
+      <ToolsClient />
+      <ToolGuide guide={TOOLS_GUIDE} />
+    </>
+  );
 }
