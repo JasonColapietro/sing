@@ -99,6 +99,19 @@ export default function BookPage() {
           </Card>
         ))}
 
+        <Card>
+          <SectionLabel>The other book</SectionLabel>
+          <p className="mt-3 max-w-2xl text-sm text-mut">
+            Pro includes two books. <em>The Voice Atlas</em> is the reference —
+            the range, tone and technique of every voice in the singer library,
+            with the songs where the extreme notes happened.{" "}
+            <Link href="/atlas" className="text-amber-ink hover:underline">
+              Its full contents are free
+            </Link>
+            .
+          </p>
+        </Card>
+
         <p className="max-w-2xl text-xs text-dim">
           This book is about practice, not medicine. Nothing here diagnoses or
           treats anything. If singing hurts, if you are hoarse and it will not

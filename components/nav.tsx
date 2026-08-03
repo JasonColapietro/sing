@@ -21,6 +21,7 @@ const LINKS = [
   { href: "/tools", label: "Tools" },
   { href: "/progress", label: "Progress" },
   { href: "/book", label: "Book" },
+  { href: "/atlas", label: "Atlas" },
 ];
 
 function MenuIcon() {
