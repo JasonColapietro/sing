@@ -1,5 +1,7 @@
 import { BreathStudio } from "@/components/breath/breath-studio";
 import { SITE_URL } from "@/lib/site";
+import { ToolGuide } from "@/components/guide";
+import { BREATH_GUIDE } from "@/lib/guides";
 
 export const metadata = {
   title: "Breathing Exercises for Singers — Breath Support Training",
@@ -9,5 +11,10 @@ export const metadata = {
 };
 
 export default function BreathPage() {
-  return <BreathStudio />;
+  return (
+    <>
+      <BreathStudio />
+      <ToolGuide guide={BREATH_GUIDE} />
+    </>
+  );
 }

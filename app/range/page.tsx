@@ -1,5 +1,7 @@
 import { RangeTest } from "@/components/range/range-test";
 import { SITE_URL } from "@/lib/site";
+import { ToolGuide } from "@/components/guide";
+import { RANGE_GUIDE } from "@/lib/guides";
 
 export const metadata = {
   title: "Vocal Range Test — Find Your Vocal Range",
@@ -9,5 +11,10 @@ export const metadata = {
 };
 
 export default function RangePage() {
-  return <RangeTest />;
+  return (
+    <>
+      <RangeTest />
+      <ToolGuide guide={RANGE_GUIDE} />
+    </>
+  );
 }

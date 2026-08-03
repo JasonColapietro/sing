@@ -1,5 +1,7 @@
 import { WarmupsClient } from "@/components/warmups/warmups-client";
 import { SITE_URL } from "@/lib/site";
+import { ToolGuide } from "@/components/guide";
+import { WARMUPS_GUIDE } from "@/lib/guides";
 
 export const metadata = {
   title: "Vocal Warmups — Guided Singing Warm-Up Exercises",
@@ -9,5 +11,10 @@ export const metadata = {
 };
 
 export default function WarmupsPage() {
-  return <WarmupsClient />;
+  return (
+    <>
+      <WarmupsClient />
+      <ToolGuide guide={WARMUPS_GUIDE} />
+    </>
+  );
 }
