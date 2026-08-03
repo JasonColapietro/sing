@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useProgress, levelForXp } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
 import { ProChip } from "@/components/pro/ui";
+import { useModalFocus } from "@/lib/use-modal-focus";
 
 const LINKS = [
   { href: "/studio", label: "Studio" },
@@ -56,6 +57,8 @@ export default function Nav() {
   const lvl = levelForXp(p.xp);
   const isPro = useIsPro();
   const [menuOpen, setMenuOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  useModalFocus(menuOpen, drawerRef);
 
   const currentLabel =
     LINKS.find((l) => pathname === l.href || pathname.startsWith(l.href + "/"))
@@ -98,10 +101,12 @@ export default function Nav() {
             onClick={() => setMenuOpen(false)}
           />
           <div
+            ref={drawerRef}
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             aria-label="Navigation menu"
-            className="animate-fadeup absolute inset-0 flex flex-col overflow-y-auto bg-bg"
+            className="animate-fadeup absolute inset-0 flex flex-col overflow-y-auto bg-bg outline-none"
           >
             <div className="flex h-14 shrink-0 items-center justify-between border-b border-line px-4">
               <Link
