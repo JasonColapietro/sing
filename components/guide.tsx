@@ -57,9 +57,25 @@ export interface GuideContent {
 export function guideJsonLd(guide: GuideContent) {
   const url = `${SITE_URL}${guide.path}`;
   const graph: Record<string, unknown>[] = [
+    // Without this the eight rooms emitted FAQPage and HowTo nodes floating
+    // free of the site: nothing named the publisher, and nothing tied them to
+    // the collection the singer pages already join. A consumer that landed on
+    // one page could not resolve who stood behind the answer.
+    {
+      "@type": "WebPage",
+      "@id": `${url}#webpage`,
+      url,
+      name: guide.heading,
+      description: guide.answer,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      publisher: { "@id": "https://suedeai.ai/#organization" },
+      about: { "@id": `${SITE_URL}/#app` },
+      inLanguage: "en",
+    },
     {
       "@type": "FAQPage",
       "@id": `${url}#faq`,
+      isPartOf: { "@id": `${url}#webpage` },
       mainEntity: guide.faq.map((item) => ({
         "@type": "Question",
         name: item.q,
@@ -72,6 +88,8 @@ export function guideJsonLd(guide: GuideContent) {
     graph.push({
       "@type": "HowTo",
       "@id": `${url}#howto`,
+      isPartOf: { "@id": `${url}#webpage` },
+      inLanguage: "en",
       name: guide.howTo.name,
       description: guide.howTo.intro,
       // The tool is free and runs in the browser, so there is nothing to buy
