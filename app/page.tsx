@@ -155,7 +155,7 @@ const HOME_JSON_LD = {
         "Ear training",
         "Breath work",
         "Recorder and song practice",
-        "Famous singer vocal ranges (457 indexed)",
+        "Famous singer vocal range library",
       ],
       offers: {
         "@type": "Offer",
