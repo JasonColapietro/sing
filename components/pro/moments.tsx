@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProChip } from "./ui";
 import { getProState } from "@/lib/pro";
 import { getState } from "@/lib/progress";
+import { useModalFocus } from "@/lib/use-modal-focus";
 
 const SEEN_KEY = "suede-sing:coach-intro:v1";
 
@@ -19,6 +20,8 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
 export default function ProMoments() {
   const router = useRouter();
   const [show, setShow] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalFocus(show, dialogRef);
 
   useEffect(() => {
     try {
@@ -77,6 +80,8 @@ export default function ProMoments() {
         onClick={dismiss}
       />
       <div
+        ref={dialogRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label="Meet your coach"
@@ -116,7 +121,7 @@ export default function ProMoments() {
           ))}
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Button variant="amber" size="md" onClick={goPro} autoFocus>
+          <Button variant="amber" size="md" onClick={goPro}>
             See Suede Pro
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>
