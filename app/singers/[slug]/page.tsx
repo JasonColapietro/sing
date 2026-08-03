@@ -13,6 +13,7 @@ import {
   spanOctaves,
   spanPercentile,
   voiceTypeSlug,
+  wikipediaUrl,
 } from "@/lib/singers";
 import {
   observationsFor,
@@ -107,40 +108,108 @@ export default async function SingerPage({
   const lowMates = sharesLow(s).slice(0, 8);
   const highMates = sharesHigh(s).slice(0, 8);
 
+  const pageUrl = `${SITE_URL}/singers/${s.slug}`;
+  const answer = answerSentence(s);
+  // Rendered below AND used verbatim in the FAQPage markup. Google requires the
+  // marked-up question to match what the reader sees; sharing one string is the
+  // only way that stays true. Note the typographic apostrophe — the heading used
+  // &rsquo;, so a straight quote here would have been a silent mismatch.
+  const question = `What is ${s.name}’s vocal range?`;
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: `${s.name} Vocal Range: ${rangeLabel(s)}`,
-    url: `${SITE_URL}/singers/${s.slug}`,
-    description: answerSentence(s),
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Famous vocal ranges",
-          item: `${SITE_URL}/singers`,
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${pageUrl}#webpage`,
+        name: `${s.name} Vocal Range: ${rangeLabel(s)}`,
+        url: pageUrl,
+        description: answer,
+        // Joins each singer to the hub and to the estate graph, so a consumer
+        // landing here can resolve the collection and the publisher.
+        isPartOf: { "@id": `${SITE_URL}/singers#collection` },
+        publisher: { "@id": "https://suedeai.ai/#organization" },
+        breadcrumb: {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Famous vocal ranges",
+              item: `${SITE_URL}/singers`,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: s.name,
+              item: pageUrl,
+            },
+          ],
         },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: s.name,
-          item: `${SITE_URL}/singers/${s.slug}`,
-        },
-      ],
-    },
-    mainEntity: {
-      "@type": "Person",
-      "@id": `${SITE_URL}/singers/${s.slug}#person`,
-      name: s.name,
-      jobTitle: "Singer",
-      nationality: s.country,
-      description: `${s.voiceType} known for "${s.signatureSong}". ${s.blurb}`,
-      // Without an external identifier these are 357 unresolvable strings;
-      // the Wikipedia URL is the cheapest anchor to the real entity.
-      sameAs: `https://en.wikipedia.org/wiki/${encodeURIComponent(s.name.replace(/ /g, "_"))}`,
-    },
+        mainEntity: { "@id": `${pageUrl}#person` },
+      },
+      {
+        "@type": "Person",
+        "@id": `${pageUrl}#person`,
+        name: s.name,
+        jobTitle: "Singer",
+        nationality: s.country,
+        description: `${s.voiceType} known for "${s.signatureSong}". ${s.blurb}`,
+        // Without an external identifier these are hundreds of unresolvable
+        // strings; the Wikipedia URL is the cheapest anchor to the real entity.
+        // Derived via wikipediaUrl() rather than raw name-mangling — 18 singers
+        // have names that mangle onto a disambiguation page, which asserts the
+        // wrong entity instead of failing loudly.
+        sameAs: wikipediaUrl(s),
+        // The range as data, not prose. An engine answering "how many octaves
+        // does X have" should not have to parse a sentence to get 3.3.
+        additionalProperty: [
+          {
+            "@type": "PropertyValue",
+            name: "Vocal range (lowest note)",
+            value: midiToLabel(s.lowMidi),
+          },
+          {
+            "@type": "PropertyValue",
+            name: "Vocal range (highest note)",
+            value: midiToLabel(s.highMidi),
+          },
+          {
+            "@type": "PropertyValue",
+            name: "Vocal range (semitones)",
+            value: semis,
+            unitText: "semitones",
+          },
+          {
+            "@type": "PropertyValue",
+            name: "Vocal range (octaves)",
+            value: Number(spanOctaves(semis)),
+            unitText: "octaves",
+          },
+          {
+            "@type": "PropertyValue",
+            name: "Voice type",
+            value: s.voiceType,
+          },
+        ],
+      },
+      {
+        // The page already asks and answers this question in these exact words.
+        // Marking the pair up is what lets an answer engine quote it as an
+        // answer rather than infer one. Not a bid for FAQ rich results — Google
+        // limits those to government and health sites.
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#faq`,
+        isPartOf: { "@id": `${pageUrl}#webpage` },
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: question,
+            acceptedAnswer: { "@type": "Answer", text: answer },
+          },
+        ],
+      },
+    ],
   };
 
   return (
@@ -226,10 +295,8 @@ export default async function SingerPage({
 
         {/* The answer, in prose a search snippet can lift */}
         <Card>
-          <h2 className="text-xl">
-            What is {s.name}&rsquo;s vocal range?
-          </h2>
-          <p className="mt-3 max-w-3xl text-mut">{answerSentence(s)}</p>
+          <h2 className="text-xl">{question}</h2>
+          <p className="mt-3 max-w-3xl text-mut">{answer}</p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             {s.blurb}
             {hasUsefulPercentile(s) &&
