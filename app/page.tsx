@@ -4,6 +4,7 @@ import { SITE_URL } from "@/lib/site";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { HeroSplit } from "@/components/landing/hero-split";
 import { IosBand } from "@/components/landing/ios-band";
+import { StartingPaths } from "@/components/landing/paths";
 import ComparisonTable from "@/components/landing/comparison";
 import ProVisual from "@/components/pro/pro-visual";
 import {
@@ -177,7 +178,12 @@ export default function Home() {
       {/* 1 — Hero, carried over from the iOS app's landing page */}
       <HeroSplit />
 
-      {/* 2 — Feature grid */}
+      {/* 2 — Starting paths, above the grid: ten equal choices is the wrong
+              shape for a first visit, and a beginner and a working singer
+              need opposite entry points. */}
+      <StartingPaths />
+
+      {/* 3 — Feature grid */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel className="mb-4">Ten practice rooms</SectionLabel>
@@ -185,7 +191,7 @@ export default function Home() {
             Everything a practice session needs, one tab over
           </h2>
           <p className="mt-3 max-w-2xl text-mut">
-            No install, no signup, no ads. Open a room and sing — the browser
+            No install, no signup, no ads. Open any room and sing — the browser
             studio does live pitch feedback, range testing, warmups, ear
             training, breath work and song practice.
           </p>
@@ -209,10 +215,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3 — The iOS app, folded in from print.suedeai.ai */}
+      {/* 4 — The iOS app, folded in from print.suedeai.ai */}
       <IosBand />
 
-      {/* 4 — Comparison */}
+      {/* 5 — Comparison */}
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel className="mb-4">Side by side</SectionLabel>
@@ -229,7 +235,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4 — How practice works */}
+      {/* 6 — How practice works */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel className="mb-4">How practice works</SectionLabel>
@@ -251,7 +257,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5 — Pro teaser */}
+      {/* 7 — Pro teaser */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
@@ -301,7 +307,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6 — Privacy strip */}
+      {/* 8 — Privacy strip */}
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
           <p className="max-w-xl text-sm text-mut">
@@ -316,7 +322,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7 — Final CTA */}
+      {/* 9 — Final CTA */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 text-center sm:px-6">
           <h2 className="text-3xl sm:text-4xl">
