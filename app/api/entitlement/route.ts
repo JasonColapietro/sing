@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { INACTIVE } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
-import { emailOf, entitlementFrom, getStripe, isStripeId } from "@/lib/stripe";
+import {
+  emailOf,
+  entitlementFrom,
+  getStripe,
+  isOurSubscription,
+  isStripeId,
+} from "@/lib/stripe";
 import type Stripe from "stripe";
 
 /**
@@ -11,6 +17,12 @@ import type Stripe from "stripe";
  * this device, and with a `subscriptionId` periodically afterwards so a
  * cancellation or failed payment is reflected here. There is no database,
  * so every check goes straight to Stripe.
+ *
+ * Both paths confirm the subscription is actually one of ours before granting
+ * anything. The id arrives from localStorage, which anyone can edit, and this
+ * Stripe account bills other Suede products too — without the check, one of
+ * their subscription ids would unlock Pro here. `/api/restore` and `/api/sync`
+ * already enforce it, so this only makes the routes agree.
  */
 export async function POST(request: Request) {
   // Higher than the others: every page load may revalidate, and a shared NAT
@@ -45,6 +57,9 @@ export async function POST(request: Request) {
       if (!sub || typeof sub === "string") {
         return NextResponse.json(INACTIVE);
       }
+      if (!isOurSubscription(sub as Stripe.Subscription)) {
+        return NextResponse.json(INACTIVE);
+      }
       const email =
         session.customer_details?.email ?? emailOf(session.customer);
       return NextResponse.json(entitlementFrom(sub as Stripe.Subscription, email));
@@ -54,6 +69,9 @@ export async function POST(request: Request) {
       const sub = await stripe.subscriptions.retrieve(subscriptionId, {
         expand: ["customer"],
       });
+      if (!isOurSubscription(sub)) {
+        return NextResponse.json(INACTIVE);
+      }
       return NextResponse.json(entitlementFrom(sub, emailOf(sub.customer)));
     }
 

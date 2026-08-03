@@ -1,8 +1,14 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
+import { INACTIVE } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
-import { entitlementFrom, getStripe, isStripeId } from "@/lib/stripe";
+import {
+  entitlementFrom,
+  getStripe,
+  isOurSubscription,
+  isStripeId,
+} from "@/lib/stripe";
 
 /**
  * Serves a book PDF to a verified subscriber.
@@ -58,7 +64,11 @@ export async function POST(request: Request) {
     const sub = await stripe.subscriptions.retrieve(subscriptionId, {
       expand: ["customer"],
     });
-    const entitlement = entitlementFrom(sub, null);
+    // Same guard as /api/restore: an id from another product on this Stripe
+    // account must not unlock a book sold with Suede Sing Pro.
+    const entitlement = isOurSubscription(sub)
+      ? entitlementFrom(sub, null)
+      : INACTIVE;
     if (!entitlement.active) {
       return NextResponse.json(
         { error: "That subscription is no longer active." },
