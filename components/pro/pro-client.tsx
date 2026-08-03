@@ -24,6 +24,7 @@ import {
   useProState,
   type ProPlan,
 } from "@/lib/pro";
+import { PRO_FAQ } from "@/lib/pro-shared";
 
 const PERK_GLYPHS: Record<string, React.ComponentType> = {
   coach: CoachGlyph,
@@ -52,28 +53,6 @@ const FREE_CARD_POINTS = [
   "No ads, no signup, no trial clock",
 ];
 
-const FAQ: Array<{ q: string; a: string }> = [
-  {
-    q: "Does the free studio stay free?",
-    a: "Yes — permanently. All ten rooms, live pitch feedback, the range test, the recorder: none of it moves behind Pro. Pro only adds things that don't exist today.",
-  },
-  {
-    q: "Do I need Pro to get better?",
-    a: "No. Free covers real, daily practice. Pro is for singers who want a coach's ear on top: it finds your weak notes, plans tomorrow's session, and shows the long arc of your range.",
-  },
-  {
-    q: "Is my voice uploaded?",
-    a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers — scores, streaks, range — never audio.",
-  },
-  {
-    q: "Can I cancel anytime?",
-    a: "Anytime, in one click, no email required. You drop back to free and keep every recording, score, and streak you earned.",
-  },
-  {
-    q: "Why does a free app sell anything?",
-    a: "Suede Sing is built by one musician. Pro is what keeps the free studio free — instead of ads, trackers, or selling your data. One tier, and the price is on this page.",
-  },
-];
 
 function PlanPoint({ children, gold }: { children: string; gold?: boolean }) {
   return (
@@ -720,7 +699,7 @@ export function ProClient() {
           <SectionLabel className="mb-4">Fair questions</SectionLabel>
           <h2 className="max-w-2xl text-3xl">Before you decide</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
-            {FAQ.map((item) => (
+            {PRO_FAQ.map((item) => (
               <div
                 key={item.q}
                 className="rounded-2xl border border-line bg-panel p-5 sm:p-6"

@@ -49,6 +49,10 @@ export default function AtlasPage() {
     inLanguage: "en",
     isAccessibleForFree: false,
     author: { "@type": "Organization", name: "Suede Sing" },
+    // Joins the estate graph the singer pages already use, so a consumer that
+    // lands on the book can resolve the publisher and the site around it.
+    publisher: { "@id": "https://suedeai.ai/#organization" },
+    isPartOf: { "@id": `${SITE_URL}/#website` },
     hasPart: ATLAS_CONTENTS.filter((c) => c.free).map((c) => ({
       "@type": "Chapter",
       name: c.title,
