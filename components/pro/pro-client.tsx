@@ -80,7 +80,7 @@ function PlanPoint({ children, gold }: { children: string; gold?: boolean }) {
     <li className="flex items-start gap-2.5 text-sm text-mut">
       <span
         aria-hidden
-        className={`mt-0.5 font-mono ${gold ? "text-amber-ink" : "text-ok"}`}
+        className={`mt-0.5 font-mono ${gold ? "text-amber-ink" : "text-ok-ink"}`}
       >
         ✓
       </span>

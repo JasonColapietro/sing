@@ -87,7 +87,7 @@ export function SessionSummary({
       <Card className="border-ok/30">
         <div className="flex flex-wrap items-center gap-3">
           <Pill tone="ok">Saved to your progress</Pill>
-          <span className="tabular font-mono text-sm text-ok">+{xpGained} XP</span>
+          <span className="tabular font-mono text-sm text-ok-ink">+{xpGained} XP</span>
         </div>
         {newAchievements.length > 0 && (
           <ul className="mt-4 space-y-2">

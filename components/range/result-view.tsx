@@ -271,7 +271,7 @@ export function ResultView({
         <Card className="border-ok/30">
           <div className="flex flex-wrap items-center gap-3">
             <Pill tone="ok">Saved to your progress</Pill>
-            <span className="tabular font-mono text-sm text-ok">
+            <span className="tabular font-mono text-sm text-ok-ink">
               +{save.xpGained} XP
             </span>
           </div>

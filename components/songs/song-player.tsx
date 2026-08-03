@@ -422,7 +422,7 @@ export function SongPlayer({
               <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Running score
               </div>
-              <div className="tabular mt-1 font-mono text-2xl text-ok">{runningScore}%</div>
+              <div className="tabular mt-1 font-mono text-2xl text-ok-ink">{runningScore}%</div>
             </div>
           ) : (
             <p className="max-w-sm text-sm text-mut">

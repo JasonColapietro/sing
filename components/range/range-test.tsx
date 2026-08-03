@@ -55,7 +55,7 @@ function StepIndicator({ stage }: { stage: Stage }) {
                 (state === "current"
                   ? "border-amber/50 text-amber-ink"
                   : state === "done"
-                    ? "border-ok/40 text-ok"
+                    ? "border-ok/40 text-ok-ink"
                     : "border-line text-dim")
               }
               aria-current={state === "current" ? "step" : undefined}

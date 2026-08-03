@@ -148,7 +148,7 @@ export function Stat({
     ink: "text-ink",
     amber: "text-amber-ink",
     rec: "text-rec",
-    ok: "text-ok",
+    ok: "text-ok-ink",
     cool: "text-cool",
   } as const;
   return (
@@ -175,7 +175,7 @@ export function Pill({
     mut: "border-line text-mut",
     amber: "border-amber/40 text-amber-ink",
     rec: "border-rec/40 text-rec",
-    ok: "border-ok/40 text-ok",
+    ok: "border-ok/40 text-ok-ink",
     cool: "border-cool/40 text-cool",
   } as const;
   return (

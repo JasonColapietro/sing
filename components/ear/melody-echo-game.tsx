@@ -226,7 +226,7 @@ export function MelodyEchoGame({
           <div className="mt-4 space-y-2">
             <div className="flex items-center justify-between">
               <span
-                className={`font-mono text-xs ${singing ? "text-ok" : "text-dim"}`}
+                className={`font-mono text-xs ${singing ? "text-ok-ink" : "text-dim"}`}
               >
                 {singing ? "voice detected" : "waiting for your voice"}
               </span>
@@ -255,7 +255,7 @@ export function MelodyEchoGame({
                   <span
                     key={i}
                     className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-xs ${
-                      hit ? "border-ok/40 text-ok" : "border-line2 text-mut"
+                      hit ? "border-ok/40 text-ok-ink" : "border-line2 text-mut"
                     }`}
                   >
                     {hit ? <CheckIcon /> : <CrossIcon />}

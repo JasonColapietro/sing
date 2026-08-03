@@ -335,7 +335,7 @@ function SyncControls() {
         <p
           className={
             notice.kind === "ok"
-              ? "mt-3 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok"
+              ? "mt-3 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok-ink"
               : "mt-3 rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-xs text-rec"
           }
           role="status"
@@ -439,7 +439,7 @@ function DataControls() {
           <p
             className={
               importNotice.kind === "ok"
-                ? "mt-3 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok"
+                ? "mt-3 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok-ink"
                 : "mt-3 rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-xs text-rec"
             }
             role="status"
@@ -458,7 +458,7 @@ function DataControls() {
         </p>
         {erased ? (
           <p
-            className="mt-4 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok"
+            className="mt-4 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok-ink"
             role="status"
           >
             Progress erased. Your dashboard has been reset.

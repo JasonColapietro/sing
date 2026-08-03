@@ -61,7 +61,7 @@ const ROWS: Array<{ label: string; marks: [Mark, Mark, Mark, Mark, Mark, Mark] }
 ];
 
 const MARK_STYLE: Record<Mark, { glyph: string; className: string; sr: string }> = {
-  yes: { glyph: "✓", className: "text-ok", sr: "yes" },
+  yes: { glyph: "✓", className: "text-ok-ink", sr: "yes" },
   part: { glyph: "～", className: "text-amber-ink", sr: "partial" },
   no: { glyph: "✗", className: "text-dim", sr: "no" },
 };

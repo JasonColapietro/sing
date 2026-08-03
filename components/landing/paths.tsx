@@ -119,7 +119,7 @@ export function StartingPaths() {
                       <span
                         aria-hidden
                         className={`tabular mt-0.5 font-mono text-sm ${
-                          path.gold ? "text-amber-ink" : "text-ok"
+                          path.gold ? "text-amber-ink" : "text-ok-ink"
                         }`}
                       >
                         {String(i + 1).padStart(2, "0")}
