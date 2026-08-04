@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { SONGS } from "@/components/songs/data";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import {
   HUB_GENRES,
@@ -55,5 +56,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...pages, ...hubs, ...singers];
+  // Free song pages are leaves under /songs, so they get the same 0.6 the
+  // singer leaves get. PRO_SONGS pages are robots-noindexed for the same reason
+  // the gated atlas chapters are, and so stay out of the sitemap — listing a
+  // noindexed URL only asks a crawler to fetch a page we told it to drop.
+  const songs = SONGS.map((s) => ({
+    url: `${SITE_URL}/songs/${s.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...pages, ...hubs, ...singers, ...songs];
 }

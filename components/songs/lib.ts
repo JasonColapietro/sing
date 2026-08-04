@@ -1,7 +1,6 @@
-import type { Song, SongNote } from "./data";
+import type { LyricLine, Song, SongNote, SongSection } from "./types";
 import type { Achievement, SessionLog, VocalRange } from "@/lib/progress";
 
-export const LOOPS = 4;
 export const COUNT_IN_BEATS = 4;
 export const TOLERANCE_CENTS = 50;
 export const MIN_VOLUME = 0.006;
@@ -27,20 +26,48 @@ export interface Difficulty {
   label: "Easy" | "Medium" | "Hard";
   rangeSemis: number;
   leaps: number;
+  /** Range span in semitones plus a leap-density term. Exposed for debugging. */
+  score: number;
 }
 
-/** Difficulty from pitch range span plus count of leaps of a major third or more. */
+/** A jump of a major third or more, which is where intonation starts to cost. */
+const LEAP_SEMIS = 4;
+/** How much an all-leaps melody adds on top of its range span. */
+const LEAP_WEIGHT = 12;
+export const DIFFICULTY_EASY_MAX = 9;
+export const DIFFICULTY_MEDIUM_MAX = 13;
+
+/**
+ * Difficulty from range span plus how *densely* the melody leaps.
+ *
+ * Density rather than a raw leap count, because a count scales with length:
+ * counting leaps rated every full arrangement harder than the phrase cut from
+ * the same melody, which is backwards — the notes are no harder to sing, there
+ * are just more of them. Amazing Grace and its full verse now score alike.
+ *
+ * The thresholds were recalibrated against the whole songbook. The previous
+ * scale (`span + leaps * 3`, Easy ≤ 5, Medium ≤ 9) was set when the book held
+ * six short phrases; across the current catalog it labelled 20 of 27 songs
+ * "Hard", including Frère Jacques, whose melody spans four semitones. A filter
+ * that answers "Hard" for almost everything cannot help anyone choose a song.
+ */
 export function computeDifficulty(song: Song): Difficulty {
   const midis = song.notes.map((n) => n.midi);
   const [lo, hi] = songNoteRange(song);
   const rangeSemis = hi - lo;
   let leaps = 0;
   for (let i = 1; i < midis.length; i++) {
-    if (Math.abs(midis[i] - midis[i - 1]) >= 4) leaps++;
+    if (Math.abs(midis[i] - midis[i - 1]) >= LEAP_SEMIS) leaps++;
   }
-  const score = rangeSemis + leaps * 3;
-  const label = score <= 5 ? "Easy" : score <= 9 ? "Medium" : "Hard";
-  return { label, rangeSemis, leaps };
+  const intervals = Math.max(1, midis.length - 1);
+  const score = rangeSemis + Math.round((leaps / intervals) * LEAP_WEIGHT);
+  const label =
+    score <= DIFFICULTY_EASY_MAX
+      ? "Easy"
+      : score <= DIFFICULTY_MEDIUM_MAX
+        ? "Medium"
+        : "Hard";
+  return { label, rangeSemis, leaps, score };
 }
 
 /** Seconds per beat at a given bpm and tempo multiplier. */
@@ -123,9 +150,41 @@ export function hardestNotes(notes: SongNote[], ratios: number[], max = 3): Hard
     .slice(0, max);
 }
 
+/**
+ * m:ss. The minute used to be hardcoded to "0:", which was invisible while
+ * every song was a single sub-minute phrase and wrong the moment a full
+ * multi-section arrangement ran long — 96 seconds printed as "0:96".
+ */
 export function formatMinSec(totalSec: number): string {
   const s = Math.max(0, Math.round(totalSec));
-  return `0:${String(s).padStart(2, "0")}`;
+  const min = Math.floor(s / 60);
+  return `${min}:${String(s % 60).padStart(2, "0")}`;
+}
+
+/** How cleanly a single note was held, once its window has passed. */
+export type Judgment = "perfect" | "great" | "good" | "miss";
+
+export const JUDGMENTS: Judgment[] = ["perfect", "great", "good", "miss"];
+
+/** Hit-ratio floor for each judgment, checked best-first. */
+export const JUDGMENT_THRESHOLDS: Array<[Judgment, number]> = [
+  ["perfect", 0.9],
+  ["great", 0.7],
+  ["good", 0.4],
+  ["miss", 0],
+];
+
+export function judgeRatio(ratio: number): Judgment {
+  for (const [judgment, floor] of JUDGMENT_THRESHOLDS) {
+    if (ratio >= floor) return judgment;
+  }
+  return "miss";
+}
+
+export type JudgmentTally = Record<Judgment, number>;
+
+export function emptyTally(): JudgmentTally {
+  return { perfect: 0, great: 0, good: 0, miss: 0 };
 }
 
 export interface SessionSummaryData {
@@ -137,4 +196,130 @@ export interface SessionSummaryData {
   xpGained: number;
   newAchievements: Achievement[];
   listenMode: boolean;
+  /** Longest unbroken run of non-miss notes. */
+  maxCombo: number;
+  /** How many notes landed in each judgment band, summed over every loop. */
+  judgments: JudgmentTally;
+  /** Per-section scores, for songs that have sections. */
+  sectionScores: Array<{ label: string; score: number }>;
+  /** The settings the session was actually sung at, for the result card. */
+  transpose: number;
+  tempo: number;
+  loops: number;
+}
+
+// ---------------------------------------------------------------------------
+// Structure: lyric lines and sections
+// ---------------------------------------------------------------------------
+
+/**
+ * Group the flat note array into printed lyric lines.
+ *
+ * Syllables join into a word until one of them ends the word (`wordEnd`
+ * absent or true), so "Twin" + "kle" prints as "Twinkle" while "star" stands
+ * alone. Notes with no `line` fall on line 0, which is what makes a
+ * single-phrase song need no annotation.
+ */
+export function lyricLines(notes: SongNote[]): LyricLine[] {
+  const byLine = new Map<number, number[]>();
+  notes.forEach((n, i) => {
+    const key = n.line ?? 0;
+    const bucket = byLine.get(key);
+    if (bucket) bucket.push(i);
+    else byLine.set(key, [i]);
+  });
+
+  return [...byLine.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([, noteIndices], index) => {
+      const words: string[] = [];
+      let current = "";
+      for (const i of noteIndices) {
+        const n = notes[i];
+        current += n.lyric;
+        if (n.wordEnd !== false) {
+          words.push(current);
+          current = "";
+        }
+      }
+      if (current) words.push(current);
+
+      const starts = noteIndices.map((i) => notes[i].startBeat);
+      const ends = noteIndices.map((i) => notes[i].startBeat + notes[i].durBeats);
+      return {
+        index,
+        noteIndices,
+        startBeat: Math.min(...starts),
+        endBeat: Math.max(...ends),
+        text: words.join(" "),
+      };
+    });
+}
+
+/** The lyric line active at a beat position, or the next one up if between lines. */
+export function lyricLineAtBeat(lines: LyricLine[], beat: number): number {
+  for (let i = 0; i < lines.length; i++) {
+    if (beat < lines[i].endBeat) return i;
+  }
+  return Math.max(0, lines.length - 1);
+}
+
+/** The section containing a beat position, or null when the song has no sections. */
+export function sectionAtBeat(song: Song, beat: number): SongSection | null {
+  if (!song.sections) return null;
+  return (
+    song.sections.find((s) => beat >= s.startBeat && beat < s.endBeat) ?? null
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Browsing helpers
+// ---------------------------------------------------------------------------
+
+/** How many times through this song runs by default. */
+export function loopsFor(song: Song): number {
+  return Math.max(1, song.defaultLoops);
+}
+
+/** Seconds for a full default session: every loop, at 1x tempo. */
+export function sessionSeconds(song: Song): number {
+  return phraseSeconds(song) * loopsFor(song);
+}
+
+export type RangeVerdict = "fits" | "high" | "low" | "wide" | "unknown";
+
+export interface RangeFit {
+  verdict: RangeVerdict;
+  /** Semitones the song sits above (+) or below (-) a comfortable placement. */
+  offsetSemis: number;
+  /** Transposition that would make it fit, or null with no saved range. */
+  suggestedTranspose: number | null;
+}
+
+/**
+ * Whether a song sits inside the singer's saved range as written.
+ *
+ * "wide" means the melody spans more than the voice does, so no
+ * transposition fixes it — the useful signal is that it will be a stretch at
+ * one end whatever key it is in.
+ */
+export function rangeFit(song: Song, range: VocalRange, transpose = 0): RangeFit {
+  if (range.lowMidi === undefined || range.highMidi === undefined) {
+    return { verdict: "unknown", offsetSemis: 0, suggestedTranspose: null };
+  }
+  const [rawLo, rawHi] = songNoteRange(song);
+  const lo = rawLo + transpose;
+  const hi = rawHi + transpose;
+  const suggested = fitTransposeToRange(song, range);
+
+  if (hi - lo > range.highMidi - range.lowMidi) {
+    return { verdict: "wide", offsetSemis: 0, suggestedTranspose: suggested };
+  }
+  if (hi > range.highMidi) {
+    return { verdict: "high", offsetSemis: hi - range.highMidi, suggestedTranspose: suggested };
+  }
+  if (lo < range.lowMidi) {
+    return { verdict: "low", offsetSemis: lo - range.lowMidi, suggestedTranspose: suggested };
+  }
+  return { verdict: "fits", offsetSemis: 0, suggestedTranspose: suggested };
 }
