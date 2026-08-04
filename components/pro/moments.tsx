@@ -26,15 +26,33 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
  * snapshot on the server and the hook forms would flip false->true after
  * hydration on every route.
  *
- * Scroll-lock refusal: if the body overflow slot is already taken, the modal
- * declines to open. The check on the mount pass is a documented no-op —
- * ProMoments renders before {children} in app/layout.tsx, so the slot reads
- * "" at mount essentially always — and is kept only for symmetry with the
- * emit pass. The state it actually defends is a non-empty slot at *emit*
- * time, left stale by the cooperative save/restore of that one slot across
- * components/nav.tsx and components/songs/stage.tsx. The refusal is
- * deferrable, not terminal: no flag is set and no key is written, so the next
- * result signal re-runs the gate and can still open.
+ * Three refusals guard the open. All are deferrable, not terminal: none sets
+ * a flag and none writes the seen key, so the next result signal re-runs the
+ * gate and can still open.
+ *
+ * 1. Checkout return. Stripe sends buyers back to a URL carrying `checkout`
+ *    and `session_id` query markers (see app/api/checkout/route.ts:36-37).
+ *    On that hard load the entitlement is not live yet — the confirm call
+ *    runs in a later effect — so a customer who just paid would be read as
+ *    free and sold to. Worse, the resulting Pro unlock auto-closes the modal
+ *    and burns their one lifetime impression. Refusing on the markers
+ *    themselves keeps the guard tied to the incident rather than to a URL
+ *    that may move.
+ *
+ * 2. The Pro page itself. A full-screen modal whose only CTA pushes to
+ *    /pro#plans has nothing to offer someone already reading that page. The
+ *    test is exact-segment on purpose: a bare prefix match would also swallow
+ *    /progress, which is precisely the page a returning free user with logged
+ *    sessions is most likely to hard-load — the cohort the mount pass exists
+ *    to reach.
+ *
+ * 3. Scroll lock. If the body overflow slot is already taken, the modal
+ *    declines to open. The check on the mount pass is a documented no-op —
+ *    ProMoments renders before {children} in app/layout.tsx, so the slot
+ *    reads "" at mount essentially always — and is kept only for symmetry
+ *    with the emit pass. The state it actually defends is a non-empty slot at
+ *    *emit* time, left stale by the cooperative save/restore of that one slot
+ *    across components/nav.tsx and components/songs/stage.tsx.
  */
 export default function ProMoments() {
   const router = useRouter();
@@ -52,6 +70,21 @@ export default function ProMoments() {
         const progress = getProgressState();
         if (progress.sessions.length === 0 && progress.rangeHistory.length === 0)
           return;
+        // Fresh back from Stripe Checkout. app/api/checkout/route.ts:36-37
+        // builds the return URLs that carry these markers, for the paid and
+        // the cancelled path alike. Entitlement is still false here — the
+        // confirm call lives in a later effect on the page itself — so the
+        // getProState check above cannot catch this buyer.
+        //
+        // Reading the query synchronously is safe because ProMoments renders
+        // before {children} in app/layout.tsx, so this mount effect runs
+        // before the Pro page's own effect replaceState's the markers away.
+        const q = new URLSearchParams(window.location.search);
+        if (q.get("checkout") || q.get("session_id")) return;
+        // Already on the page this modal sells. Exact segment, never a bare
+        // prefix: /progress would match a prefix test and lose its modal.
+        const p = window.location.pathname;
+        if (p === "/pro" || p.startsWith("/pro/")) return;
         // Another surface owns the scroll lock. Decline this pass and leave
         // every flag untouched so a later result can still open.
         if (document.body.style.overflow === "hidden") return;
