@@ -106,7 +106,7 @@ export function SongsClient() {
     return (
       <PageShell
         kicker="Songs"
-        title="Karaoke practice"
+        title="Song practice"
         subtitle="Listen to a short phrase from a well-known melody, then sing it back on a scrolling piano roll."
       >
         <Card>
@@ -148,7 +148,7 @@ export function SongsClient() {
           ? activeSong.title
           : view === "summary" && summary
             ? "Practice summary"
-            : "Karaoke practice"
+            : "Song practice"
       }
       subtitle={view === "library" ? "Pick a song to start your practice loop." : undefined}
       actions={
