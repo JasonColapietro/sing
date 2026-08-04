@@ -3,12 +3,92 @@
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { ProCrescendoNudge } from "@/components/pro/gate";
-import type { SessionSummaryData } from "./lib";
+import { useProgress, type SessionLog } from "@/lib/progress";
+import { computeGrade, starGlyphs, starRatingLabel, type Tone } from "./grade";
+import { ResultCard } from "./result-card";
+import { JUDGMENTS, type Judgment, type SessionSummaryData } from "./lib";
+import type { Song } from "./types";
 
 function scoreTone(score: number): "ok" | "amber" | "rec" {
   if (score >= 80) return "ok";
   if (score >= 50) return "amber";
   return "rec";
+}
+
+const TONE_TEXT: Record<Tone, string> = {
+  ok: "text-ok-ink",
+  amber: "text-amber-ink",
+  rec: "text-rec",
+};
+
+/** Bar tone per judgment band — reuses the same amber/ok/rec/cool palette ProgressBar already speaks. */
+const JUDGMENT_TONE: Record<Judgment, "ok" | "cool" | "amber" | "rec"> = {
+  perfect: "ok",
+  great: "cool",
+  good: "amber",
+  miss: "rec",
+};
+
+type ScoredSongLog = SessionLog & { score: number };
+
+/** Every logged "song" session for this title that carries a score, newest first. */
+function songScoreLogs(sessions: SessionLog[], title: string): ScoredSongLog[] {
+  return sessions.filter(
+    (s): s is ScoredSongLog => s.type === "song" && s.detail === title && s.score !== undefined,
+  );
+}
+
+/**
+ * Personal-best comparison for the run that just finished.
+ *
+ * By the time this screen renders, `logSession` has already written the
+ * just-finished run into the store (song-player.tsx calls it before
+ * `onFinish`), and sessions are stored newest-first. That means the current
+ * run is always `matches[0]` — comparing against the *unfiltered* best would
+ * make every session announce itself as a new personal best purely by
+ * matching itself. Dropping that first entry before taking the max is what
+ * makes "new personal best" mean "beat a previous attempt," not "exists."
+ */
+function personalBestInfo(sessions: SessionLog[], song: Song, currentScore: number) {
+  const matches = songScoreLogs(sessions, song.title);
+  const previous = matches.slice(1);
+  const previousBest =
+    previous.length > 0 ? Math.max(...previous.map((s) => s.score)) : undefined;
+  const isNewBest = previousBest !== undefined && currentScore > previousBest;
+  // Oldest -> newest, for a left-to-right sparkline that reads as a timeline.
+  const history = previous.map((s) => s.score).reverse();
+  return { previousBest, isNewBest, history };
+}
+
+/** Small hand-rolled trend line — no chart library, mirrors the SVG approach in components/progress/charts.tsx. */
+function Sparkline({ scores }: { scores: number[] }) {
+  if (scores.length < 2) return null; // one point has no trend to draw
+  const W = 160;
+  const H = 36;
+  const pad = 4;
+  const stepX = (W - pad * 2) / (scores.length - 1);
+  const y = (v: number) => pad + (H - pad * 2) * (1 - v / 100);
+  const points = scores.map((s, i) => [pad + stepX * i, y(s)] as const);
+  const path = points.map(([x, yy], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${yy.toFixed(1)}`).join(" ");
+  const [lastX, lastY] = points[points.length - 1];
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="h-9 w-40 text-amber-ink"
+      role="img"
+      aria-label={`Score history: ${scores.join(", ")}`}
+    >
+      <path
+        d={path}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+      <circle cx={lastX} cy={lastY} r={2.5} fill="currentColor" />
+    </svg>
+  );
 }
 
 export function SessionSummary({
@@ -21,6 +101,17 @@ export function SessionSummary({
   onLibrary: () => void;
 }) {
   const { song, score, perLoopScores, hardest, xpGained, newAchievements, listenMode } = data;
+  const progress = useProgress();
+
+  // No mic, nothing judged, nothing to grade — computeGrade already encodes
+  // this (it returns null whenever score is undefined), so listen mode falls
+  // out of every grade/star/breakdown block below for free.
+  const grade = computeGrade(score, data.maxCombo, data.judgments);
+  const scored = !listenMode && score !== undefined;
+  const totalJudged = JUDGMENTS.reduce((n, j) => n + data.judgments[j], 0);
+  const { previousBest, isNewBest, history } = scored
+    ? personalBestInfo(progress.sessions, song, score)
+    : { previousBest: undefined, isNewBest: false, history: [] as number[] };
 
   return (
     <div className="space-y-6">
@@ -28,19 +119,42 @@ export function SessionSummary({
         <SectionLabel>Practice complete</SectionLabel>
         <h2 className="mt-3 text-2xl">{song.title}</h2>
 
-        {listenMode || score === undefined ? (
+        {!scored ? (
           <p className="mt-4 max-w-md text-sm text-mut">
             You practiced in listen mode, so there&rsquo;s no pitch score this
             time. Enable your microphone next time to get scored.
           </p>
         ) : (
-          <div className="mt-6 flex flex-wrap gap-10">
-            <Stat label="Score" value={`${score}/100`} tone={scoreTone(score)} />
-            <Stat label="Loops sung" value={perLoopScores.length} tone="cool" />
-          </div>
+          <>
+            <div className="mt-6 flex flex-wrap gap-10">
+              <Stat label="Score" value={`${score}/100`} tone={scoreTone(score)} />
+              <Stat label="Loops sung" value={perLoopScores.length} tone="cool" />
+              {grade && (
+                <div>
+                  <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    Grade
+                  </div>
+                  <div className={`mt-1 font-display text-3xl ${TONE_TEXT[grade.tone]}`}>
+                    {grade.grade}
+                  </div>
+                </div>
+              )}
+            </div>
+            {grade && (
+              <div className="mt-3 flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="tabular font-mono text-base tracking-wider text-amber-ink"
+                >
+                  {starGlyphs(grade.stars)}
+                </span>
+                <span className="sr-only">{starRatingLabel(grade.stars)}</span>
+              </div>
+            )}
+          </>
         )}
 
-        {!listenMode && perLoopScores.length > 0 && (
+        {scored && perLoopScores.length > 0 && (
           <div className="mt-6 space-y-2">
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Per-loop score
@@ -57,7 +171,51 @@ export function SessionSummary({
           </div>
         )}
 
-        {!listenMode && hardest.length > 0 && (
+        {scored && data.sectionScores.length > 0 && (
+          <div className="mt-6 space-y-2">
+            <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              Section scores
+            </div>
+            {data.sectionScores.map((s, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <span className="w-24 shrink-0 truncate font-mono text-xs text-dim">
+                  {s.label}
+                </span>
+                <ProgressBar value={s.score} tone={scoreTone(s.score)} className="flex-1" />
+                <span className="tabular w-12 shrink-0 text-right font-mono text-xs">
+                  {s.score}%
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {scored && totalJudged > 0 && (
+          <div className="mt-6 space-y-2">
+            <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              Judgment breakdown
+            </div>
+            {JUDGMENTS.map((j) => {
+              const count = data.judgments[j];
+              const pct = (count / totalJudged) * 100;
+              return (
+                <div key={j} className="flex items-center gap-3">
+                  <span className="w-16 shrink-0 font-mono text-xs capitalize text-dim">{j}</span>
+                  <ProgressBar value={pct} tone={JUDGMENT_TONE[j]} className="flex-1" />
+                  <span className="tabular w-10 shrink-0 text-right font-mono text-xs">{count}</span>
+                </div>
+              );
+            })}
+            <div className="pt-1">
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                Max combo{" "}
+              </span>
+              <span className="tabular font-mono text-xs text-cool">{data.maxCombo}</span>
+            </div>
+          </div>
+        )}
+
+        {scored && hardest.length > 0 && (
           <div className="mt-6">
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Trickiest notes
@@ -72,6 +230,35 @@ export function SessionSummary({
           </div>
         )}
       </Card>
+
+      {scored && (
+        <Card>
+          <SectionLabel>Personal best</SectionLabel>
+          {previousBest === undefined ? (
+            <p className="mt-3 text-sm text-mut">
+              First time singing this one — nothing to compare against yet.
+            </p>
+          ) : isNewBest ? (
+            <p className="mt-3 text-sm text-ok-ink">
+              New personal best — up from {previousBest}.
+            </p>
+          ) : (
+            <p className="mt-3 text-sm text-mut">
+              Personal best is {previousBest}. This run: {score}.
+            </p>
+          )}
+          {history.length > 0 && (
+            <div className="mt-4">
+              <Sparkline scores={[...history, score as number]} />
+              <p className="mt-1.5 text-xs text-dim">
+                Last {history.length + 1} scored attempt{history.length + 1 === 1 ? "" : "s"}
+              </p>
+            </div>
+          )}
+        </Card>
+      )}
+
+      {scored && <ResultCard data={data} />}
 
       {!listenMode && (
         <div>
