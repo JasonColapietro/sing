@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Card, Pill, ProgressBar, Stat } from "@/components/ui";
 import { ProCrescendoNudge, ProWhisper } from "@/components/pro/gate";
 import { logSession, type Achievement } from "@/lib/progress";
+import { emitProResult } from "@/lib/pro-signal";
 import {
   DIFFICULTIES,
   GAME_NAMES,
@@ -191,6 +192,7 @@ export function SummaryView({
     setXpGained(res.xpGained);
     setNewAchievements(res.newAchievements);
     setNewBest(saveBest(game, difficulty, session.score));
+    emitProResult();
   }, [game, difficulty, session.score, startedAt]);
 
   return (

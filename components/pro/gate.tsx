@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { useIsPro } from "@/lib/pro";
+import { PRICING, useIsPro } from "@/lib/pro";
 import { useProgress } from "@/lib/progress";
 import { ProChip, UpgradeCard } from "./ui";
 
@@ -68,7 +68,7 @@ export function ProCrescendoNudge({
     <UpgradeCard
       title={title}
       body={body}
-      cta="Go Pro — $9.99/month"
+      cta={`Go Pro — $${PRICING.monthly.perMonth.toFixed(2)}/month`}
       context={context}
     />
   );

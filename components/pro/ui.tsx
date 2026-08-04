@@ -51,12 +51,15 @@ export function LockGlyph({ size = 13 }: { size?: number }) {
 export function UpgradeCard({
   title,
   body,
-  cta = "Go Pro — $9.99/month",
+  cta = "See Suede Pro",
   context,
   className = "",
 }: {
   title: string;
   body: string;
+  /** Default carries no price — this file renders on server surfaces and
+      must not pull in the client-only pricing constant. Pass a priced label
+      where the caller already imports it. */
   cta?: string;
   /** Mono tape-label context, e.g. "Coach" or "Take 4 of 3". */
   context: string;

@@ -4,39 +4,72 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProChip } from "./ui";
-import { useIsPro } from "@/lib/pro";
-import { useProgress } from "@/lib/progress";
+import { PRICING, getProState, subscribePro } from "@/lib/pro";
+import { getState as getProgressState } from "@/lib/progress";
+import { subscribeProResult } from "@/lib/pro-signal";
 import { useModalFocus } from "@/lib/use-modal-focus";
 
 const SEEN_KEY = "suede-sing:coach-intro:v1";
 
 /**
- * One-time full-screen sales moment after the first completed result. It
- * reacts to the progress store, so the prompt arrives on the result screen
- * instead of waiting for a reload. Never fires for Pro members and never
- * repeats after dismissal; recurring selling happens in session summaries.
+ * One-time full-screen sales moment after the first completed result. Never
+ * fires for Pro members and never repeats after dismissal; recurring selling
+ * happens in session summaries.
+ *
+ * It cannot interrupt an exercise in progress, because it listens for an
+ * explicit "a result is on screen" signal (`lib/pro-signal`) rather than
+ * subscribing to the progress store. The store fires on every write — XP
+ * banked mid-drill, a cross-tab `storage` sync — so a store subscription
+ * could drop a full-screen modal over someone who was still singing, or over
+ * a second tab that never saw a result at all. Entitlement and progress are
+ * read synchronously instead, since both stores hand back their DEFAULT
+ * snapshot on the server and the hook forms would flip false->true after
+ * hydration on every route.
+ *
+ * Scroll-lock refusal: if the body overflow slot is already taken, the modal
+ * declines to open. The check on the mount pass is a documented no-op —
+ * ProMoments renders before {children} in app/layout.tsx, so the slot reads
+ * "" at mount essentially always — and is kept only for symmetry with the
+ * emit pass. The state it actually defends is a non-empty slot at *emit*
+ * time, left stale by the cooperative save/restore of that one slot across
+ * components/nav.tsx and components/songs/stage.tsx. The refusal is
+ * deferrable, not terminal: no flag is set and no key is written, so the next
+ * result signal re-runs the gate and can still open.
  */
 export default function ProMoments() {
   const router = useRouter();
-  const isPro = useIsPro();
-  const progress = useProgress();
-  const hasCompletedResult =
-    progress.sessions.length > 0 || progress.rangeHistory.length > 0;
   const [show, setShow] = useState(false);
   const dismissedRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-  useModalFocus(show && !isPro, dialogRef);
+  useModalFocus(show, dialogRef);
 
   useEffect(() => {
-    try {
-      if (isPro || show || dismissedRef.current || !hasCompletedResult) return;
-      if (window.localStorage.getItem(SEEN_KEY)) return;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is client-only; opening after hydration avoids a server/client mismatch
-      setShow(true);
-    } catch {
-      // storage unavailable — never show rather than show repeatedly
-    }
-  }, [hasCompletedResult, isPro, show]);
+    const gate = () => {
+      try {
+        if (dismissedRef.current) return;
+        if (getProState().active) return;
+        if (window.localStorage.getItem(SEEN_KEY)) return;
+        const progress = getProgressState();
+        if (progress.sessions.length === 0 && progress.rangeHistory.length === 0)
+          return;
+        // Another surface owns the scroll lock. Decline this pass and leave
+        // every flag untouched so a later result can still open.
+        if (document.body.style.overflow === "hidden") return;
+        // Opening from an effect (rather than from render) is deliberate:
+        // localStorage is client-only, so deciding after hydration is what
+        // avoids a server/client mismatch. No `react-hooks/set-state-in-effect`
+        // disable is needed now that this sits inside `gate` — adding one back
+        // would only report as an unused directive.
+        setShow(true);
+      } catch {
+        // storage unavailable — never show rather than show repeatedly
+      }
+    };
+    // Runs once for a result that landed before this mount, then on every
+    // later one. The early returns above skip OPENING, never subscribing.
+    gate();
+    return subscribeProResult(gate);
+  }, []);
 
   const markSeen = () => {
     dismissedRef.current = true;
@@ -52,8 +85,19 @@ export default function ProMoments() {
     setShow(false);
   };
 
+  // Pro can unlock in another tab while this is open (or in this one, on the
+  // way back from Checkout). Close it rather than sell to a paying member.
   useEffect(() => {
-    if (!show || isPro) return;
+    if (!show) return;
+    return subscribePro(() => {
+      if (!getProState().active) return;
+      markSeen();
+      setShow(false);
+    });
+  }, [show]);
+
+  useEffect(() => {
+    if (!show) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") dismiss();
     };
@@ -65,7 +109,7 @@ export default function ProMoments() {
       document.body.style.overflow = prevOverflow;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPro, show]);
+  }, [show]);
 
   const goPro = () => {
     markSeen();
@@ -73,7 +117,7 @@ export default function ProMoments() {
     router.push("/pro#plans");
   };
 
-  if (isPro || !show) return null;
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
@@ -126,7 +170,7 @@ export default function ProMoments() {
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Button variant="amber" size="md" onClick={goPro}>
-            Go Pro — $9.99/month
+            {`Go Pro — $${PRICING.monthly.perMonth.toFixed(2)}/month`}
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>
             Not now
