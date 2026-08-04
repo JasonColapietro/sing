@@ -128,6 +128,32 @@ export function formatMinSec(totalSec: number): string {
   return `0:${String(s).padStart(2, "0")}`;
 }
 
+/** How cleanly a single note was held, once its window has passed. */
+export type Judgment = "perfect" | "great" | "good" | "miss";
+
+export const JUDGMENTS: Judgment[] = ["perfect", "great", "good", "miss"];
+
+/** Hit-ratio floor for each judgment, checked best-first. */
+export const JUDGMENT_THRESHOLDS: Array<[Judgment, number]> = [
+  ["perfect", 0.9],
+  ["great", 0.7],
+  ["good", 0.4],
+  ["miss", 0],
+];
+
+export function judgeRatio(ratio: number): Judgment {
+  for (const [judgment, floor] of JUDGMENT_THRESHOLDS) {
+    if (ratio >= floor) return judgment;
+  }
+  return "miss";
+}
+
+export type JudgmentTally = Record<Judgment, number>;
+
+export function emptyTally(): JudgmentTally {
+  return { perfect: 0, great: 0, good: 0, miss: 0 };
+}
+
 export interface SessionSummaryData {
   song: Song;
   /** Overall score 0..100, or undefined when practiced in listen mode (no mic). */
@@ -137,6 +163,16 @@ export interface SessionSummaryData {
   xpGained: number;
   newAchievements: Achievement[];
   listenMode: boolean;
+  /** Longest unbroken run of non-miss notes. */
+  maxCombo: number;
+  /** How many notes landed in each judgment band, summed over every loop. */
+  judgments: JudgmentTally;
+  /** Per-section scores, for songs that have sections. */
+  sectionScores: Array<{ label: string; score: number }>;
+  /** The settings the session was actually sung at, for the result card. */
+  transpose: number;
+  tempo: number;
+  loops: number;
 }
 
 // ---------------------------------------------------------------------------
