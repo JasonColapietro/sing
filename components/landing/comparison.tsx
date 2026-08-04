@@ -50,7 +50,7 @@ const ROWS: Array<{ label: string; marks: [Mark, Mark, Mark, Mark, Mark, Mark] }
     marks: ["yes", "yes", "part", "yes", "yes", "part"],
   },
   {
-    label: "Works on the web, no install",
+    label: "Works on the web, no install required",
     marks: ["yes", "no", "no", "no", "yes", "yes"],
   },
   {

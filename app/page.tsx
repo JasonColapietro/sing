@@ -109,7 +109,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Suede Sing — the vocal studio in your browser",
     description:
-      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free, in the browser, no install.",
+      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free in the browser, with no install required.",
     url: SITE_URL,
     siteName: "Suede Sing",
     type: "website",
@@ -119,7 +119,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Suede Sing — the vocal studio in your browser",
     description:
-      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free, in the browser, no install.",
+      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free in the browser, with no install required.",
   },
 };
 
@@ -191,9 +191,9 @@ export default function Home() {
             Everything a practice session needs, one tab over
           </h2>
           <p className="mt-3 max-w-2xl text-mut">
-            No install, no signup, no ads. Open any room and sing — the browser
-            studio does live pitch feedback, range testing, warmups, ear
-            training, breath work and song practice.
+            No install required, no signup, no ads. Open any room and sing —
+            the browser studio does live pitch feedback, range testing,
+            warmups, ear training, breath work and song practice.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map(({ href, label, desc, Glyph }) => (
@@ -227,7 +227,7 @@ export default function Home() {
           </h2>
           <p className="mt-3 max-w-2xl text-mut">
             Most trainers do a few of these things, behind a subscription or an
-            app install. Suede Sing does all of them, free, on the web.
+            install requirement. Suede Sing does all of them, free, on the web.
           </p>
           <div className="mt-8">
             <ComparisonTable />
