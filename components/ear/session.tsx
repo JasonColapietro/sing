@@ -242,9 +242,9 @@ export function SummaryView({
       )}
       <div className="mt-5">
         <ProCrescendoNudge
-          line="Pro tracks per-interval accuracy over time"
-          title="Your ear is getting sharper"
-          body="Pro charts per-interval accuracy over time and drills what's weakest first."
+          line="Pro unlocks your full daily plan and every practice pack"
+          title="Build the rest of your practice"
+          body="Pro unlocks your full daily Coach plan, range history, take analysis, and every Pro song and warmup."
           context="Ear training"
         />
       </div>

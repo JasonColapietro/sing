@@ -4,38 +4,42 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProChip } from "./ui";
-import { getProState } from "@/lib/pro";
-import { getState } from "@/lib/progress";
+import { useIsPro } from "@/lib/pro";
+import { useProgress } from "@/lib/progress";
 import { useModalFocus } from "@/lib/use-modal-focus";
 
 const SEEN_KEY = "suede-sing:coach-intro:v1";
 
 /**
- * One-time full-screen gold moment: shown on the first page load after a
- * singer has logged their first session — the earliest point where the
- * pitch is grounded in their own numbers. Never repeats, never fires for
- * Pro members, and only triggers on mount so it can't interrupt an
- * exercise in progress.
+ * One-time full-screen sales moment after the first completed result. It
+ * reacts to the progress store, so the prompt arrives on the result screen
+ * instead of waiting for a reload. Never fires for Pro members and never
+ * repeats after dismissal; recurring selling happens in session summaries.
  */
 export default function ProMoments() {
   const router = useRouter();
+  const isPro = useIsPro();
+  const progress = useProgress();
+  const hasCompletedResult =
+    progress.sessions.length > 0 || progress.rangeHistory.length > 0;
   const [show, setShow] = useState(false);
+  const dismissedRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-  useModalFocus(show, dialogRef);
+  useModalFocus(show && !isPro, dialogRef);
 
   useEffect(() => {
     try {
-      if (getProState().active) return;
+      if (isPro || show || dismissedRef.current || !hasCompletedResult) return;
       if (window.localStorage.getItem(SEEN_KEY)) return;
-      if (getState().sessions.length < 1) return;
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- mount-only client gate reading localStorage after hydration; not derivable during render without a hydration mismatch
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is client-only; opening after hydration avoids a server/client mismatch
       setShow(true);
     } catch {
       // storage unavailable — never show rather than show repeatedly
     }
-  }, []);
+  }, [hasCompletedResult, isPro, show]);
 
   const markSeen = () => {
+    dismissedRef.current = true;
     try {
       window.localStorage.setItem(SEEN_KEY, new Date().toISOString());
     } catch {
@@ -49,7 +53,7 @@ export default function ProMoments() {
   };
 
   useEffect(() => {
-    if (!show) return;
+    if (!show || isPro) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") dismiss();
     };
@@ -61,15 +65,15 @@ export default function ProMoments() {
       document.body.style.overflow = prevOverflow;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [show]);
+  }, [isPro, show]);
 
   const goPro = () => {
     markSeen();
     setShow(false);
-    router.push("/pro");
+    router.push("/pro#plans");
   };
 
-  if (!show) return null;
+  if (isPro || !show) return null;
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
@@ -84,8 +88,8 @@ export default function ProMoments() {
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label="Meet your coach"
-        className="animate-fadeup relative w-full max-w-lg overflow-hidden rounded-2xl border border-amber bg-panel p-6 sm:p-8"
+        aria-label="Go Pro"
+        className="animate-fadeup relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-amber bg-panel p-6 sm:p-8"
       >
         <div
           aria-hidden
@@ -94,14 +98,14 @@ export default function ProMoments() {
         <div className="flex items-center gap-2">
           <ProChip />
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            After your first session
+            Your result is in
           </span>
         </div>
-        <h2 className="mt-4 text-2xl sm:text-3xl">Meet your coach</h2>
+        <h2 className="mt-4 text-2xl sm:text-3xl">Turn this result into a plan</h2>
         <p className="mt-3 text-sm text-mut sm:text-base">
-          You have your first numbers. A coach is what turns them into a
-          practice: a daily plan built from your results, weak notes drilled
-          on purpose, and your range charted as it grows.
+          Suede Pro turns your numbers into tomorrow&apos;s practice: a daily
+          plan, weak notes drilled on purpose, and your range charted as it
+          grows.
         </p>
         <ul className="mt-4 space-y-2">
           {[
@@ -122,14 +126,16 @@ export default function ProMoments() {
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Button variant="amber" size="md" onClick={goPro}>
-            See Suede Pro
+            Go Pro — $9.99/month
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>
-            Keep it free
+            Not now
           </Button>
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Free stays free
+          Cancel anytime in Stripe
+          <span className="mx-2 text-line2">·</span>
+          Review the plan next
         </p>
       </div>
     </div>

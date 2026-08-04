@@ -31,7 +31,7 @@ export function ProWhisper({ className = "" }: { className?: string }) {
     >
       Free ·{" "}
       <Link
-        href="/pro"
+        href="/pro#plans"
         className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
       >
         Pro
@@ -42,9 +42,10 @@ export function ProWhisper({ className = "" }: { className?: string }) {
 }
 
 /**
- * Escalating nudge for end-of-session summaries: a one-liner while the
- * habit is forming (five or fewer logged sessions), the full gold
- * UpgradeCard once the user is clearly invested. Self-hides for Pro.
+ * Recurring conversion offer for end-of-session summaries. The first result
+ * gets the one-time modal; after that, even-numbered sessions get the full
+ * priced card and odd-numbered sessions keep the compact nudge. Self-hides for
+ * Pro members.
  */
 export function ProCrescendoNudge({
   line,
@@ -60,8 +61,17 @@ export function ProCrescendoNudge({
   const isPro = useIsPro();
   const sessionCount = useProgress().sessions.length;
   if (isPro) return null;
-  if (sessionCount <= 5) return <ProInlineNudge>{line}</ProInlineNudge>;
-  return <UpgradeCard title={title} body={body} context={context} />;
+  if (sessionCount === 0 || sessionCount % 2 === 1) {
+    return <ProInlineNudge>{line}</ProInlineNudge>;
+  }
+  return (
+    <UpgradeCard
+      title={title}
+      body={body}
+      cta="Go Pro — $9.99/month"
+      context={context}
+    />
+  );
 }
 
 /**
@@ -77,10 +87,10 @@ export function ProInlineNudge({ children }: { children: string }) {
       <ProChip />
       <span>{children}</span>
       <Link
-        href="/pro"
+        href="/pro#plans"
         className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
       >
-        See Pro
+        Go Pro
       </Link>
     </p>
   );

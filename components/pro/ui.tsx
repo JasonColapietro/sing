@@ -51,7 +51,7 @@ export function LockGlyph({ size = 13 }: { size?: number }) {
 export function UpgradeCard({
   title,
   body,
-  cta = "See Suede Pro",
+  cta = "Go Pro — $9.99/month",
   context,
   className = "",
 }: {
@@ -81,11 +81,11 @@ export function UpgradeCard({
       </div>
       <p className="mt-1.5 max-w-xl text-sm text-mut">{body}</p>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <LinkButton href="/pro" variant="amber" size="sm">
+        <LinkButton href="/pro#plans" variant="amber" size="sm">
           {cta}
         </LinkButton>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Free stays free
+          Cancel anytime · Review the plan next
         </span>
       </div>
     </div>
@@ -130,7 +130,7 @@ export function LockedPanel({
           <LockGlyph />
           Pro preview
         </span>
-        <LinkButton href="/pro" variant="amber" size="sm">
+        <LinkButton href="/pro#plans" variant="amber" size="sm">
           {cta}
         </LinkButton>
       </div>
