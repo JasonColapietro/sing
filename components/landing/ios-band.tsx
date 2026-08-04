@@ -44,15 +44,15 @@ export function IosBand() {
   return (
     <section id="app" className="border-t border-line bg-panel/40">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <SectionLabel className="mb-4">On iPhone</SectionLabel>
+        <SectionLabel className="mb-4">Optional iPhone companion</SectionLabel>
         <h2 className="max-w-2xl text-3xl">
-          The app measures what the browser can only show you
+          Keep the browser studio. Add deeper analysis on iPhone.
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
           The web studio gives you live pitch, range and guided practice, free
-          and with no install. The iOS app adds the analysis layer: every
-          sustained note becomes a row of objective measurements, and the
-          result is your TonePrint.
+          with no install required. If you want more detail, the optional
+          iPhone companion adds an analysis layer: every sustained note becomes
+          a row of objective measurements, and the result is your TonePrint.
         </p>
 
         {/* The source captures are 268x582; rendering them any larger just
@@ -91,7 +91,7 @@ export function IosBand() {
         <div className="mt-9 flex flex-wrap items-center gap-4">
           <a
             href={APP_STORE_URL}
-            aria-label="Download Suede Sing on the App Store"
+            aria-label="View the optional iPhone companion on the App Store"
             className="inline-block rounded-[10px] transition-opacity hover:opacity-85"
           >
             <Image

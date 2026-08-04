@@ -51,9 +51,15 @@ export function HeroSplit() {
           practice plan built from it.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
+          <LinkButton href="/studio" variant="amber" size="lg">
+            Open the web studio
+          </LinkButton>
+          <LinkButton href="/range" variant="outline" size="lg">
+            Try the free range test
+          </LinkButton>
           <a
             href={APP_STORE_URL}
-            aria-label="Download Suede Sing on the App Store"
+            aria-label="View the optional iPhone companion on the App Store"
             className="inline-block rounded-[10px] transition-opacity hover:opacity-85 focus-visible:opacity-85"
           >
             <Image
@@ -63,13 +69,11 @@ export function HeroSplit() {
               alt="Download on the App Store"
             />
           </a>
-          <LinkButton href="/studio" variant="outline" size="lg">
-            Open the web studio
-          </LinkButton>
-          <LinkButton href="/range" variant="ghost" size="lg">
-            Try the free range test
-          </LinkButton>
         </div>
+        <p className="mt-3 max-w-xl text-sm text-mut">
+          Start here in your browser — no install required. The iPhone
+          companion is optional when you want deeper on-device voice analysis.
+        </p>
         <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-dim">
           On-device analysis
           <span className="mx-2 text-line2">·</span>No signup for the web studio
