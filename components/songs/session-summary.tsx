@@ -95,10 +95,15 @@ export function SessionSummary({
   data,
   onAgain,
   onLibrary,
+  nextInSetlist,
+  onNext,
 }: {
   data: SessionSummaryData;
   onAgain: () => void;
   onLibrary: () => void;
+  /** Title of the next queued song, when a setlist is mid-run. */
+  nextInSetlist?: string;
+  onNext?: () => void;
 }) {
   const { song, score, perLoopScores, hardest, xpGained, newAchievements, listenMode } = data;
   const progress = useProgress();
@@ -290,9 +295,26 @@ export function SessionSummary({
       </Card>
 
       <div className="flex flex-wrap gap-3">
-        <Button variant="amber" onClick={onAgain}>
-          Sing again
-        </Button>
+        {/*
+          Mid-setlist, moving on is the primary action and gets the amber
+          button. The score still gets read first either way: chaining
+          straight into the next song would throw away the grade the singer
+          just earned.
+        */}
+        {nextInSetlist && onNext ? (
+          <>
+            <Button variant="amber" onClick={onNext}>
+              Next: {nextInSetlist}
+            </Button>
+            <Button variant="outline" onClick={onAgain}>
+              Sing again
+            </Button>
+          </>
+        ) : (
+          <Button variant="amber" onClick={onAgain}>
+            Sing again
+          </Button>
+        )}
         <Button variant="outline" onClick={onLibrary}>
           Back to library
         </Button>

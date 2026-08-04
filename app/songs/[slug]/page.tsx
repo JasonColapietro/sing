@@ -242,13 +242,18 @@ export default async function SongPage({
           <Card>
             <h2 className="text-xl">Sing {song.title} with pitch feedback</h2>
             <p className="mt-3 max-w-2xl text-mut">{answer}</p>
+            {/*
+              Deep-links into the practice room so a reader who arrived from
+              search lands on this melody rather than on the library, having
+              already told us which song they wanted.
+            */}
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <LinkButton href="/songs" size="lg">
+              <LinkButton href={`/songs?song=${song.slug}`} size="lg">
                 Sing this song
               </LinkButton>
               <span className="text-xs text-dim">
-                Free, in the browser. Pick {song.title} from the library, and it
-                transposes into a key that suits your voice.
+                Free, in the browser. Opens {song.title} straight in the
+                practice room, transposed into a key that suits your voice.
               </span>
             </div>
           </Card>

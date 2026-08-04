@@ -7,37 +7,84 @@ import { playTone, clickAt } from "@/lib/audio/synth";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { logSession, type VocalRange } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
-import { Button, Card, LinkButton, Pill, ProgressBar, SectionLabel } from "@/components/ui";
+import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
 import type { Song } from "./data";
 import {
   IconArrowLeft,
-  IconMinus,
+  IconCollapse,
+  IconExpand,
   IconPause,
   IconPlay,
-  IconPlus,
   IconRestart,
 } from "./icons";
 import { PianoRoll } from "./piano-roll";
+import { LyricBand } from "./lyric-band";
+import { JudgmentReadout, type JudgmentEvent } from "./judgment";
+import { Mixer } from "./mixer";
+import { Stage, requestStageFullscreen } from "./stage";
 import {
   COUNT_IN_BEATS,
-  LOOPS,
   MIN_VOLUME,
-  TEMPOS,
   TOLERANCE_CENTS,
   clampTranspose,
+  emptyTally,
   fitTransposeToRange,
   foldedCents,
   hardestNotes,
+  judgeRatio,
+  loopsFor,
+  lyricLines,
   noteIndexAtBeat,
   secPerBeat,
+  sectionAtBeat,
   songTotalBeats,
   transposedNotes,
+  type JudgmentTally,
   type SessionSummaryData,
   type Tempo,
 } from "./lib";
 
 type Phase = "idle" | "running" | "paused" | "finished";
-type GuideVolume = "full" | "quiet" | "off";
+
+/** Guide gain with the mixer at 100% — the level the old "full" setting used. */
+const GUIDE_MAX_GAIN = 0.2;
+
+/**
+ * Reps when drilling a single section. A section is picked precisely because it
+ * needs repetition, so this does not follow the song's `defaultLoops` (a full
+ * arrangement's 1 would defeat the point).
+ */
+const SECTION_DRILL_LOOPS = 4;
+
+/** Transport, shared by the in-page player and stage mode. */
+function Transport({
+  phase,
+  size,
+  onToggle,
+  onRestart,
+}: {
+  phase: Phase;
+  size: "sm" | "md";
+  onToggle: () => void;
+  onRestart: () => void;
+}) {
+  return (
+    <>
+      <Button
+        variant={phase === "running" ? "outline" : "amber"}
+        size={size}
+        onClick={onToggle}
+        aria-label={phase === "running" ? "Pause" : "Play"}
+      >
+        {phase === "running" ? <IconPause /> : <IconPlay />}
+        {phase === "running" ? "Pause" : phase === "paused" ? "Resume" : "Play"}
+      </Button>
+      <Button variant="ghost" size={size} onClick={onRestart}>
+        <IconRestart /> Restart
+      </Button>
+    </>
+  );
+}
 
 export function SongPlayer({
   song,
@@ -54,27 +101,43 @@ export function SongPlayer({
 }) {
   const [transpose, setTranspose] = useState(0);
   const [tempo, setTempo] = useState<Tempo>(1);
-  const [guideVolume, setGuideVolume] = useState<GuideVolume>("full");
+  const [guidePct, setGuidePct] = useState(100);
+  const [clickDuringPlay, setClickDuringPlay] = useState(false);
   const [octaveAgnostic, setOctaveAgnostic] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
   const [countInBeat, setCountInBeat] = useState(-1);
   const [loopIndex, setLoopIndex] = useState(0);
   const [runningScore, setRunningScore] = useState(0);
+  const [progressPct, setProgressPct] = useState(0);
   const [perLoopScores, setPerLoopScores] = useState<number[]>([]);
+  /** -1 = the whole song; otherwise an index into `song.sections`. */
+  const [sectionIndex, setSectionIndex] = useState(-1);
+  const [sectionLabel, setSectionLabel] = useState<string | null>(null);
+  const [stageMode, setStageMode] = useState(false);
 
   const currentNotes = useMemo(() => transposedNotes(song, transpose), [song, transpose]);
   const totalBeats = useMemo(() => songTotalBeats(song), [song]);
+  const lines = useMemo(() => lyricLines(currentNotes), [currentNotes]);
+  const sections = useMemo(() => song.sections ?? [], [song]);
 
   const controlsEnabled = phase === "idle";
   const listening = pitch.listening;
 
+  // The span of the song this session sings: the whole phrase, or one section
+  // when the singer is drilling. Fixed at count-in — the section picker is
+  // disabled while running, because the score denominator is built from this.
+  const drilled = sectionIndex >= 0 ? sections[sectionIndex] : undefined;
+  const spanStart = drilled ? drilled.startBeat : 0;
+  const spanEnd = drilled ? drilled.endBeat : totalBeats;
+  const plannedLoops = drilled ? SECTION_DRILL_LOOPS : loopsFor(song);
+
   // Refs mirroring state/props for use inside the audio-clock-driven loops.
   const currentNotesRef = useRef(currentNotes);
   currentNotesRef.current = currentNotes;
-  const totalBeatsRef = useRef(totalBeats);
-  totalBeatsRef.current = totalBeats;
-  const guideVolumeRef = useRef(guideVolume);
-  guideVolumeRef.current = guideVolume;
+  const guidePctRef = useRef(guidePct);
+  guidePctRef.current = guidePct;
+  const clickDuringPlayRef = useRef(clickDuringPlay);
+  clickDuringPlayRef.current = clickDuringPlay;
   const octaveAgnosticRef = useRef(octaveAgnostic);
   octaveAgnosticRef.current = octaveAgnostic;
   const listeningRef = useRef(listening);
@@ -92,14 +155,40 @@ export function SongPlayer({
   const loopIndexTrackRef = useRef(0);
   const perLoopScoresRef = useRef<number[]>([]);
 
+  // Fixed at count-in: what is being sung, how many times, and how much of each
+  // note counts. Everything downstream of the score reads these, never state.
+  const loopsRef = useRef(plannedLoops);
+  const spanStartRef = useRef(0);
+  const spanBeatsRef = useRef(1);
+  /** Beats of each note actually sung per loop; 0 for notes outside the span. */
+  const playBeatsRef = useRef<number[]>([]);
+  /** Scorable seconds in one loop — the per-loop score's denominator. */
+  const perLoopDenomSecRef = useRef(0);
+
+  // Judging: in-span notes ordered by when their window closes, plus a cursor so
+  // each note is judged exactly once per loop rather than every frame.
+  const judgeOrderRef = useRef<Array<{ index: number; endBeat: number }>>([]);
+  const judgeCursorRef = useRef(0);
+  const loopStartHitRef = useRef<number[]>([]);
+  const tallyRef = useRef<JudgmentTally>(emptyTally());
+  const comboRef = useRef(0);
+  const maxComboRef = useRef(0);
+  const judgeSeqRef = useRef(0);
+  const judgeEventRef = useRef<JudgmentEvent | null>(null);
+
   const spbRef = useRef(secPerBeat(song.bpm, 1));
   const t0Ref = useRef(0);
   const pausedGlobalBeatsRef = useRef(0);
   const scheduledMaskRef = useRef<boolean[]>([]);
+  const clickCursorRef = useRef(0);
   const sessionStartRef = useRef(0);
+  const sessionTransposeRef = useRef(0);
+  const sessionTempoRef = useRef<Tempo>(1);
   const lastTickRef = useRef(0);
   const scoreAccumRef = useRef(0);
   const finishedRef = useRef(false);
+  // undefined (not null) so the first frame always syncs the label to state.
+  const sectionLabelRef = useRef<string | null | undefined>(undefined);
 
   const rafRef = useRef(0);
   const schedTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -115,26 +204,77 @@ export function SongPlayer({
     const spb = spbRef.current;
     const notes = currentNotesRef.current;
     const total = notes.length;
+    const loops = loopsRef.current;
+    const playBeats = playBeatsRef.current;
+    const spanBeats = spanBeatsRef.current;
     const horizon = audioNow() + 0.35;
     const mask = scheduledMaskRef.current;
-    for (let slot = 0; slot < total * LOOPS; slot++) {
-      if (mask[slot]) continue;
+    const gain = (guidePctRef.current / 100) * GUIDE_MAX_GAIN;
+
+    for (let slot = 0; slot < total * loops; slot++) {
+      if (mask[slot]) continue; // includes out-of-span notes, pre-marked done
       const loopIdx = Math.floor(slot / total);
       const noteIdx = slot % total;
       const note = notes[noteIdx];
-      const beatAbs = loopIdx * totalBeatsRef.current + note.startBeat;
+      const beatAbs = loopIdx * spanBeats + (note.startBeat - spanStartRef.current);
       const time = t0Ref.current + beatAbs * spb;
       if (time > horizon) break; // events are in ascending time order
       mask[slot] = true;
-      const gv = guideVolumeRef.current;
-      if (gv !== "off") {
+      if (gain > 0) {
         playTone(note.midi, {
-          dur: note.durBeats * spb * 0.92,
-          gain: gv === "full" ? 0.2 : 0.07,
+          dur: playBeats[noteIdx] * spb * 0.92,
+          gain,
           at: time - audioNow(),
         });
       }
     }
+
+    // Metronome through the song, on the same lookahead clock as the guide so
+    // it cannot drift against it. The cursor is clamped forward to the current
+    // position, which is what stops a burst of stale clicks after a resume.
+    if (clickDuringPlayRef.current) {
+      const sessionBeats = loops * spanBeats;
+      let beat = Math.max(
+        clickCursorRef.current,
+        Math.ceil((audioNow() - t0Ref.current) / spb),
+      );
+      while (beat < sessionBeats) {
+        const time = t0Ref.current + beat * spb;
+        if (time > horizon) break;
+        const songBeat = spanStartRef.current + (beat % spanBeats);
+        clickAt(time, Math.round(songBeat) % song.beatsPerBar === 0);
+        beat++;
+      }
+      clickCursorRef.current = beat;
+    }
+  }
+
+  /** Judge one note against how much of it was held in tune *this* loop. */
+  function judgeNote(index: number) {
+    const scorableSec = (playBeatsRef.current[index] ?? 0) * spbRef.current;
+    const gained = (hitSecRef.current[index] ?? 0) - (loopStartHitRef.current[index] ?? 0);
+    const ratio = scorableSec > 0 ? Math.min(1, Math.max(0, gained / scorableSec)) : 0;
+    const judgment = judgeRatio(ratio);
+
+    tallyRef.current[judgment] += 1;
+    if (judgment === "miss") comboRef.current = 0;
+    else {
+      comboRef.current += 1;
+      maxComboRef.current = Math.max(maxComboRef.current, comboRef.current);
+    }
+    judgeSeqRef.current += 1;
+    judgeEventRef.current = {
+      judgment,
+      combo: comboRef.current,
+      seq: judgeSeqRef.current,
+    };
+  }
+
+  /** Judge whatever is left of the current loop — at a wrap, or at the end. */
+  function flushJudgments() {
+    const order = judgeOrderRef.current;
+    for (let i = judgeCursorRef.current; i < order.length; i++) judgeNote(order[i].index);
+    judgeCursorRef.current = order.length;
   }
 
   function finalize() {
@@ -142,9 +282,10 @@ export function SongPlayer({
     finishedRef.current = true;
     stopLoops();
 
-    const spb = spbRef.current;
     const notes = currentNotesRef.current;
-    const denom = notes.reduce((a, n) => a + n.durBeats, 0) * spb;
+    if (listeningRef.current) flushJudgments(); // the last loop's tail
+
+    const denom = perLoopDenomSecRef.current;
     const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
     const delta = hitTotalNow - loopSnapshotRef.current;
     const lastLoopScore = denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
@@ -176,7 +317,36 @@ export function SongPlayer({
         : undefined,
     });
 
-    const hardest = listeningRef.current ? hardestNotes(notes, hitRatioRef.current) : [];
+    // A note that was never sung (outside a drilled section) has a hit ratio of
+    // zero, which would make it look like the hardest note in the song. Report
+    // it as perfect so `hardestNotes` filters it out, rather than filtering the
+    // array here and shifting every index.
+    const ratiosForHardest = hitRatioRef.current.map((ratio, i) =>
+      (possibleSecRef.current[i] ?? 0) > 0 ? ratio : 1,
+    );
+    const hardest = listeningRef.current ? hardestNotes(notes, ratiosForHardest) : [];
+
+    const sectionScores = listeningRef.current
+      ? sections
+          .map((section) => {
+            let hit = 0;
+            let possible = 0;
+            notes.forEach((n, i) => {
+              if (n.startBeat < section.startBeat || n.startBeat >= section.endBeat) return;
+              possible += possibleSecRef.current[i] ?? 0;
+              hit += hitSecRef.current[i] ?? 0;
+            });
+            return {
+              label: section.label,
+              score: possible > 0 ? Math.round(Math.min(100, (hit / possible) * 100)) : 0,
+              possible,
+            };
+          })
+          // A section outside the drilled span was never sung, so it has no
+          // score to report — not a zero.
+          .filter((s) => s.possible > 0)
+          .map(({ label, score }) => ({ label, score }))
+      : [];
 
     setPhase("finished");
     positionBeatsRef.current = null;
@@ -188,6 +358,12 @@ export function SongPlayer({
       xpGained: log.xpGained,
       newAchievements: log.newAchievements,
       listenMode: !listeningRef.current,
+      maxCombo: listeningRef.current ? maxComboRef.current : 0,
+      judgments: listeningRef.current ? tallyRef.current : emptyTally(),
+      sectionScores,
+      transpose: sessionTransposeRef.current,
+      tempo: sessionTempoRef.current,
+      loops: loopsRef.current,
     });
   }
 
@@ -197,8 +373,10 @@ export function SongPlayer({
     const dt = Math.min(0.12, lastTickRef.current ? (now - lastTickRef.current) / 1000 : 0);
     lastTickRef.current = now;
 
+    const loops = loopsRef.current;
+    const spanBeats = spanBeatsRef.current;
     const elapsedGlobal = (audioNow() - t0Ref.current) / spb;
-    const totalSessionBeats = LOOPS * totalBeatsRef.current;
+    const totalSessionBeats = loops * spanBeats;
 
     if (elapsedGlobal < 0) {
       positionBeatsRef.current = null;
@@ -214,21 +392,34 @@ export function SongPlayer({
       return;
     }
 
-    const loopIdx = Math.min(LOOPS - 1, Math.floor(elapsedGlobal / totalBeatsRef.current));
-    const beatInLoop = elapsedGlobal - loopIdx * totalBeatsRef.current;
-    positionBeatsRef.current = beatInLoop;
+    const loopIdx = Math.min(loops - 1, Math.floor(elapsedGlobal / spanBeats));
+    // Position is reported in *song* beats, not span beats, so the piano roll
+    // and the lyric band can keep indexing the song directly while a section
+    // loops.
+    const beatInSong = spanStartRef.current + (elapsedGlobal - loopIdx * spanBeats);
+    positionBeatsRef.current = beatInSong;
 
     if (loopIdx !== loopIndexTrackRef.current) {
-      const notes = currentNotesRef.current;
-      const denom = notes.reduce((a, n) => a + n.durBeats, 0) * spb;
+      // Judge the tail of the loop that just ended before the per-note baseline
+      // moves, otherwise those notes would be scored against the new loop.
+      if (listeningRef.current) flushJudgments();
+      const denom = perLoopDenomSecRef.current;
       const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
       const delta = hitTotalNow - loopSnapshotRef.current;
       const loopScore = denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
       perLoopScoresRef.current = [...perLoopScoresRef.current, loopScore];
       setPerLoopScores(perLoopScoresRef.current);
       loopSnapshotRef.current = hitTotalNow;
+      loopStartHitRef.current = [...hitSecRef.current];
+      judgeCursorRef.current = 0;
       loopIndexTrackRef.current = loopIdx;
       setLoopIndex(loopIdx);
+    }
+
+    const label = sectionAtBeat(song, beatInSong)?.label ?? null;
+    if (label !== sectionLabelRef.current) {
+      sectionLabelRef.current = label;
+      setSectionLabel(label);
     }
 
     if (listeningRef.current) {
@@ -236,8 +427,11 @@ export function SongPlayer({
       const voiced = f.freq !== null && f.volume >= MIN_VOLUME;
       if (voiced && f.freq !== null) {
         const midiFloat = freqToMidiFloat(f.freq);
-        const idx = noteIndexAtBeat(currentNotesRef.current, beatInLoop);
-        if (idx >= 0) {
+        const idx = noteIndexAtBeat(currentNotesRef.current, beatInSong);
+        // The playBeats guard matters: a note that starts before a drilled
+        // section can still cover this beat, and crediting it would add to the
+        // score's numerator without adding to its denominator.
+        if (idx >= 0 && (playBeatsRef.current[idx] ?? 0) > 0) {
           const cents = foldedCents(midiFloat, currentNotesRef.current[idx].midi, octaveAgnosticRef.current);
           centsSumRef.current[idx] = (centsSumRef.current[idx] ?? 0) + Math.abs(cents);
           centsFramesRef.current[idx] = (centsFramesRef.current[idx] ?? 0) + 1;
@@ -252,9 +446,25 @@ export function SongPlayer({
         ratios[i] = poss > 0 ? Math.min(1, (hitSecRef.current[i] ?? 0) / poss) : 0;
       }
 
-      scoreAccumRef.current += dt;
-      if (scoreAccumRef.current > 0.15) {
-        scoreAccumRef.current = 0;
+      // Every in-span note whose window has closed since the last frame.
+      const order = judgeOrderRef.current;
+      let cursor = judgeCursorRef.current;
+      while (cursor < order.length && beatInSong >= order[cursor].endBeat) {
+        judgeNote(order[cursor].index);
+        cursor++;
+      }
+      judgeCursorRef.current = cursor;
+
+    }
+
+    // One throttled state write for both readouts. Progress has to be measured
+    // in elapsed beats, not completed loops: a `form: "full"` arrangement runs
+    // once through, so a loop-counting bar would sit at zero the whole song.
+    scoreAccumRef.current += dt;
+    if (scoreAccumRef.current > 0.15) {
+      scoreAccumRef.current = 0;
+      setProgressPct(Math.min(100, (elapsedGlobal / totalSessionBeats) * 100));
+      if (listeningRef.current) {
         const totalPossible = possibleSecRef.current.reduce((a, b) => a + b, 0);
         const totalHit = hitSecRef.current.reduce((a, b) => a + b, 0);
         setRunningScore(totalPossible > 0 ? Math.round(Math.min(100, (totalHit / totalPossible) * 100)) : 0);
@@ -264,7 +474,7 @@ export function SongPlayer({
     rafRef.current = requestAnimationFrame(rafTick);
   }
 
-  /** Full reset + count-in + play, from the top of the phrase. */
+  /** Full reset + count-in + play, from the top of the span. */
   function beginSession() {
     getAudioContext();
     stopLoops();
@@ -273,18 +483,57 @@ export function SongPlayer({
     const spb = secPerBeat(song.bpm, tempo);
     spbRef.current = spb;
     const notes = currentNotesRef.current;
-    possibleSecRef.current = notes.map((n) => n.durBeats * spb * LOOPS);
+    const loops = plannedLoops;
+    loopsRef.current = loops;
+    spanStartRef.current = spanStart;
+    spanBeatsRef.current = Math.max(0.001, spanEnd - spanStart);
+
+    // Beats of each note that actually get sung, clamped to the span's end. A
+    // note outside the span contributes nothing — that is the single fact the
+    // scheduler, the denominator, and the judging all derive from.
+    const playBeats = notes.map((n) =>
+      n.startBeat >= spanStart && n.startBeat < spanEnd
+        ? Math.max(0, Math.min(n.startBeat + n.durBeats, spanEnd) - n.startBeat)
+        : 0,
+    );
+    playBeatsRef.current = playBeats;
+    possibleSecRef.current = playBeats.map((beats) => beats * spb * loops);
+    perLoopDenomSecRef.current = playBeats.reduce((a, b) => a + b, 0) * spb;
+
     hitSecRef.current = notes.map(() => 0);
     hitRatioRef.current = notes.map(() => 0);
     centsSumRef.current = notes.map(() => 0);
     centsFramesRef.current = notes.map(() => 0);
-    scheduledMaskRef.current = new Array(notes.length * LOOPS).fill(false);
+    loopStartHitRef.current = notes.map(() => 0);
+
+    const mask = new Array(notes.length * loops).fill(false);
+    for (let slot = 0; slot < mask.length; slot++) {
+      if (playBeats[slot % notes.length] === 0) mask[slot] = true;
+    }
+    scheduledMaskRef.current = mask;
+    clickCursorRef.current = 0;
+
+    judgeOrderRef.current = notes
+      .map((n, i) => ({ index: i, endBeat: Math.min(n.startBeat + n.durBeats, spanEnd) }))
+      .filter((entry) => playBeats[entry.index] > 0)
+      .sort((a, b) => a.endBeat - b.endBeat);
+    judgeCursorRef.current = 0;
+    tallyRef.current = emptyTally();
+    comboRef.current = 0;
+    maxComboRef.current = 0;
+    judgeSeqRef.current = 0;
+    judgeEventRef.current = null;
+
     loopSnapshotRef.current = 0;
     loopIndexTrackRef.current = 0;
     perLoopScoresRef.current = [];
+    sectionLabelRef.current = undefined;
+    sessionTransposeRef.current = transpose;
+    sessionTempoRef.current = tempo;
     setPerLoopScores([]);
     setLoopIndex(0);
     setRunningScore(0);
+    setProgressPct(0);
     lastTickRef.current = 0;
     sessionStartRef.current = performance.now();
 
@@ -311,6 +560,9 @@ export function SongPlayer({
   function resume() {
     const spb = spbRef.current;
     t0Ref.current = audioNow() - pausedGlobalBeatsRef.current * spb;
+    // The click cursor counts beats from t0, which just moved; rewinding it lets
+    // schedTick clamp it forward to wherever the song now is.
+    clickCursorRef.current = 0;
     setPhase("running");
     schedTimerRef.current = setInterval(schedTick, 90);
     schedTick();
@@ -333,29 +585,146 @@ export function SongPlayer({
     onExit();
   }
 
-  // Space bar toggles play/pause (not while typing or another button is focused).
-  // Routed through a ref so the listener always calls the latest closure.
-  const togglePlayPauseRef = useRef(togglePlayPause);
-  togglePlayPauseRef.current = togglePlayPause;
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.code !== "Space") return;
-      const tag = (e.target as HTMLElement | null)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "BUTTON") return;
-      e.preventDefault();
-      togglePlayPauseRef.current();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
   function applyFitToRange() {
     const semis = fitTransposeToRange(song, range);
     if (semis !== null) setTranspose(semis);
   }
 
+  /** Fullscreen has to be asked for inside the gesture — see `stage.tsx`. */
+  function enterStage() {
+    requestStageFullscreen();
+    setStageMode(true);
+  }
+
+  // Keyboard shortcuts. Routed through a ref so the listener always calls the
+  // latest closures without re-binding on every render.
+  const shortcutsRef = useRef({
+    togglePlayPause,
+    restart,
+    enterStage,
+    controlsEnabled,
+    stageMode,
+  });
+  shortcutsRef.current = { togglePlayPause, restart, enterStage, controlsEnabled, stageMode };
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      // Never fight the browser's own chords (⌘R, ⌥↑, and friends).
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable) {
+        return;
+      }
+      const s = shortcutsRef.current;
+
+      switch (e.code) {
+        case "Space":
+          // A focused button owns Space itself — that is how it is activated.
+          if (tag === "BUTTON") return;
+          e.preventDefault();
+          s.togglePlayPause();
+          return;
+        case "KeyR":
+          e.preventDefault();
+          s.restart();
+          return;
+        case "KeyF":
+          e.preventDefault();
+          if (s.stageMode) setStageMode(false);
+          else s.enterStage();
+          return;
+        case "Escape":
+          if (!s.stageMode) return;
+          e.preventDefault();
+          setStageMode(false);
+          return;
+        case "ArrowUp":
+        case "ArrowDown":
+          if (!s.controlsEnabled) return;
+          e.preventDefault();
+          setTranspose((t) => clampTranspose(t + (e.code === "ArrowUp" ? 1 : -1)));
+          return;
+        default:
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const hasRange = range.lowMidi !== undefined && range.highMidi !== undefined;
   const effBpm = Math.round(song.bpm * tempo);
+  const loopPill = (
+    <Pill tone="amber">
+      Loop {phase === "idle" ? 0 : Math.min(plannedLoops, loopIndex + 1)} of {plannedLoops}
+    </Pill>
+  );
+  const sectionPill = drilled ? (
+    <Pill tone="cool">Drilling {drilled.label}</Pill>
+  ) : sectionLabel ? (
+    <Pill tone="cool">{sectionLabel}</Pill>
+  ) : null;
+
+  const lyricBand = (
+    <LyricBand
+      lines={lines}
+      notes={currentNotes}
+      positionBeatsRef={positionBeatsRef}
+      size={stageMode ? "lg" : "md"}
+    />
+  );
+  const judgmentReadout = listening ? (
+    <JudgmentReadout
+      eventRef={judgeEventRef}
+      comboRef={comboRef}
+      size={stageMode ? "lg" : "md"}
+    />
+  ) : null;
+
+  if (stageMode) {
+    return (
+      <Stage open onExit={() => setStageMode(false)} label={song.title}>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <SectionLabel>{song.title}</SectionLabel>
+            {sectionPill}
+            {loopPill}
+            {countInBeat >= 0 && <Pill tone="amber">{COUNT_IN_BEATS - countInBeat}</Pill>}
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setStageMode(false)}>
+            <IconCollapse /> Leave stage
+          </Button>
+        </div>
+
+        <ProgressBar value={phase === "idle" ? 0 : progressPct} tone="amber" />
+
+        <div className="flex flex-1 flex-col justify-center gap-6 py-4">
+          {lyricBand}
+          {judgmentReadout}
+        </div>
+
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          {listening ? (
+            <div>
+              <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                Score
+              </div>
+              <div className="tabular mt-1 font-mono text-5xl font-bold text-ok-ink">
+                {runningScore}%
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-mut">Listen mode — no scoring.</p>
+          )}
+          <div className="flex flex-wrap items-center gap-3">
+            <Transport phase={phase} size="md" onToggle={togglePlayPause} onRestart={restart} />
+          </div>
+        </div>
+        <p className="text-xs text-dim">
+          Esc or Leave stage to go back. Space plays and pauses.
+        </p>
+      </Stage>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -369,14 +738,13 @@ export function SongPlayer({
           <IconArrowLeft />
           Exit
         </button>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {!listening && <Pill tone="cool">Listen mode</Pill>}
-          <Pill tone="amber">
-            Loop {phase === "idle" ? 0 : Math.min(LOOPS, loopIndex + 1)} of {LOOPS}
-          </Pill>
+          {sectionPill}
+          {loopPill}
         </div>
       </div>
-      <ProgressBar value={(loopIndex / LOOPS) * 100} tone="amber" />
+      <ProgressBar value={phase === "idle" ? 0 : progressPct} tone="amber" />
 
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -386,7 +754,7 @@ export function SongPlayer({
               {phase === "idle"
                 ? "Ready"
                 : countInBeat >= 0
-                  ? "Count-in…"
+                  ? `Count-in… ${COUNT_IN_BEATS - countInBeat}`
                   : listening
                     ? "Sing along"
                     : "Listening back"}
@@ -404,10 +772,17 @@ export function SongPlayer({
           </div>
         </div>
 
-        <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-panel2 p-2">
+        <div className="mt-6 rounded-xl border border-line bg-panel2 px-4 py-4">
+          {lyricBand}
+        </div>
+        {judgmentReadout && <div className="mt-3">{judgmentReadout}</div>}
+
+        <div className="mt-4 overflow-x-auto rounded-xl border border-line bg-panel2 p-2">
           <PianoRoll
             notes={currentNotes}
             totalBeats={totalBeats}
+            spanStartBeat={spanStart}
+            spanEndBeat={spanEnd}
             positionBeatsRef={positionBeatsRef}
             hitRatioRef={hitRatioRef}
             latest={pitch.latest}
@@ -451,95 +826,36 @@ export function SongPlayer({
 
       <Card>
         <div className="flex flex-wrap items-center gap-3">
-          <Button
-            variant={phase === "running" ? "outline" : "amber"}
-            size="sm"
-            onClick={togglePlayPause}
-            aria-label={phase === "running" ? "Pause" : "Play"}
-          >
-            {phase === "running" ? <IconPause /> : <IconPlay />}
-            {phase === "running" ? "Pause" : phase === "paused" ? "Resume" : "Play"}
+          <Transport phase={phase} size="sm" onToggle={togglePlayPause} onRestart={restart} />
+          <Button variant="outline" size="sm" onClick={enterStage}>
+            <IconExpand /> Stage mode
           </Button>
-          <Button variant="ghost" size="sm" onClick={restart}>
-            <IconRestart /> Restart
-          </Button>
-
-          <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
-            <button
-              type="button"
-              aria-label="Transpose down a semitone"
-              disabled={!controlsEnabled}
-              onClick={() => setTranspose((t) => clampTranspose(t - 1))}
-              className="rounded-full p-1.5 text-mut hover:text-ink disabled:opacity-40"
-            >
-              <IconMinus />
-            </button>
-            <span className="tabular px-1 font-mono text-xs text-mut">
-              {transpose > 0 ? `+${transpose}` : transpose}
-            </span>
-            <button
-              type="button"
-              aria-label="Transpose up a semitone"
-              disabled={!controlsEnabled}
-              onClick={() => setTranspose((t) => clampTranspose(t + 1))}
-              className="rounded-full p-1.5 text-mut hover:text-ink disabled:opacity-40"
-            >
-              <IconPlus />
-            </button>
-          </div>
-
-          {hasRange ? (
-            <Button variant="outline" size="sm" disabled={!controlsEnabled} onClick={applyFitToRange}>
-              Fit to my range
-            </Button>
-          ) : (
-            <LinkButton href="/range" variant="ghost" size="sm">
-              Take the range test to fit
-            </LinkButton>
-          )}
-
-          <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
-            {TEMPOS.map((tv) => (
-              <button
-                key={tv}
-                type="button"
-                disabled={!controlsEnabled}
-                onClick={() => setTempo(tv)}
-                aria-pressed={tempo === tv}
-                className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
-                  tempo === tv ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
-                }`}
-              >
-                {tv}×
-              </button>
-            ))}
-          </div>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() =>
-              setGuideVolume((g) => (g === "full" ? "quiet" : g === "quiet" ? "off" : "full"))
-            }
-            aria-label="Cycle guide volume"
-          >
-            Guide: {guideVolume}
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-pressed={octaveAgnostic}
-            onClick={() => setOctaveAgnostic((v) => !v)}
-          >
-            {octaveAgnostic ? "Any octave" : "Exact octave"}
-          </Button>
-
           <span className="flex-1" />
-
           <Button variant="rec" size="sm" onClick={endPractice}>
             End practice
           </Button>
+        </div>
+
+        <div className="mt-5 border-t border-line pt-5">
+          <Mixer
+            controlsEnabled={controlsEnabled}
+            guidePct={guidePct}
+            onGuidePct={setGuidePct}
+            clickDuringPlay={clickDuringPlay}
+            onClickDuringPlay={setClickDuringPlay}
+            transpose={transpose}
+            onTranspose={(semis) => setTranspose(clampTranspose(semis))}
+            tempo={tempo}
+            onTempo={setTempo}
+            octaveAgnostic={octaveAgnostic}
+            onOctaveAgnostic={setOctaveAgnostic}
+            hasRange={hasRange}
+            onFitToRange={applyFitToRange}
+            sections={sections}
+            sectionIndex={sectionIndex}
+            onSectionIndex={setSectionIndex}
+            drillLoops={SECTION_DRILL_LOOPS}
+          />
         </div>
       </Card>
     </div>

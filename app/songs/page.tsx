@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { PRO_SONGS, SONGS } from "@/components/songs/data";
 import { SongLinkList } from "@/components/songs/song-page";
 import { SongsClient } from "@/components/songs/songs-client";
@@ -22,7 +23,16 @@ export const metadata: Metadata = {
 export default function SongsPage() {
   return (
     <>
-      <SongsClient />
+      {/*
+        SongsClient reads ?song=<slug> so a song page can hand off to the
+        practice room. useSearchParams client-side-renders the tree up to the
+        nearest Suspense boundary, so the boundary sits here rather than around
+        the page: everything below stays prerendered, which is the half a
+        crawler reads.
+      */}
+      <Suspense fallback={null}>
+        <SongsClient />
+      </Suspense>
 
       {/*
         The library above is a client component: its list exists only after

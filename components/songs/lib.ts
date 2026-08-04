@@ -1,7 +1,6 @@
 import type { LyricLine, Song, SongNote, SongSection } from "./types";
 import type { Achievement, SessionLog, VocalRange } from "@/lib/progress";
 
-export const LOOPS = 4;
 export const COUNT_IN_BEATS = 4;
 export const TOLERANCE_CENTS = 50;
 export const MIN_VOLUME = 0.006;

@@ -56,6 +56,8 @@ function roundRect(
 export function PianoRoll({
   notes,
   totalBeats,
+  spanStartBeat,
+  spanEndBeat,
   positionBeatsRef,
   hitRatioRef,
   latest,
@@ -64,6 +66,15 @@ export function PianoRoll({
 }: {
   notes: SongNote[];
   totalBeats: number;
+  /**
+   * The span of the song actually being sung, when a section is being drilled.
+   * Notes outside it are neither played nor scored, so they are not drawn, and
+   * the wrap-around preview shows the section repeating rather than the rest of
+   * the arrangement. Passed as two numbers rather than an object so the render
+   * loop's effect does not restart on every parent re-render.
+   */
+  spanStartBeat?: number;
+  spanEndBeat?: number;
   /** Beats elapsed within the current phrase loop, or null while idle/count-in. */
   positionBeatsRef: React.RefObject<number | null>;
   /** 0..1 hit fraction per note, same order as `notes`. */
@@ -83,7 +94,16 @@ export function PianoRoll({
     if (!ctx) return;
     let raf = 0;
 
-    const midis = notes.map((n) => n.midi);
+    const spanStart = spanStartBeat ?? 0;
+    const spanEnd = spanEndBeat ?? totalBeats;
+    const inSpan = (note: SongNote) =>
+      note.startBeat >= spanStart && note.startBeat < spanEnd;
+    const drawn = notes.filter(inSpan);
+    // The next thing on screen after the last note is the span repeating, so the
+    // preview offset is the span's length, not the whole song's.
+    const wrapBeats = Math.max(0.001, spanEnd - spanStart);
+
+    const midis = (drawn.length > 0 ? drawn : notes).map((n) => n.midi);
     const lo = Math.min(...midis) - 2;
     const hi = Math.max(...midis) + 2;
     const lanes = Math.max(1, Math.round(hi - lo) + 1);
@@ -150,7 +170,8 @@ export function PianoRoll({
       const hitRatios = hitRatioRef.current;
       ctx.textAlign = "center";
       notes.forEach((n, i) => {
-        for (const off of [0, totalBeats]) {
+        if (!inSpan(n)) return;
+        for (const off of [0, wrapBeats]) {
           const b0 = n.startBeat + off;
           const b1 = b0 + n.durBeats;
           const x0 = xFor(b0);
@@ -241,7 +262,16 @@ export function PianoRoll({
 
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [notes, totalBeats, positionBeatsRef, hitRatioRef, latest, showLive]);
+  }, [
+    notes,
+    totalBeats,
+    spanStartBeat,
+    spanEndBeat,
+    positionBeatsRef,
+    hitRatioRef,
+    latest,
+    showLive,
+  ]);
 
   return (
     <canvas
