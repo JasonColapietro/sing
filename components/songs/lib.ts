@@ -1,4 +1,4 @@
-import type { Song, SongNote } from "./data";
+import type { LyricLine, Song, SongNote, SongSection } from "./types";
 import type { Achievement, SessionLog, VocalRange } from "@/lib/progress";
 
 export const LOOPS = 4;
@@ -137,4 +137,120 @@ export interface SessionSummaryData {
   xpGained: number;
   newAchievements: Achievement[];
   listenMode: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Structure: lyric lines and sections
+// ---------------------------------------------------------------------------
+
+/**
+ * Group the flat note array into printed lyric lines.
+ *
+ * Syllables join into a word until one of them ends the word (`wordEnd`
+ * absent or true), so "Twin" + "kle" prints as "Twinkle" while "star" stands
+ * alone. Notes with no `line` fall on line 0, which is what makes a
+ * single-phrase song need no annotation.
+ */
+export function lyricLines(notes: SongNote[]): LyricLine[] {
+  const byLine = new Map<number, number[]>();
+  notes.forEach((n, i) => {
+    const key = n.line ?? 0;
+    const bucket = byLine.get(key);
+    if (bucket) bucket.push(i);
+    else byLine.set(key, [i]);
+  });
+
+  return [...byLine.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([, noteIndices], index) => {
+      const words: string[] = [];
+      let current = "";
+      for (const i of noteIndices) {
+        const n = notes[i];
+        current += n.lyric;
+        if (n.wordEnd !== false) {
+          words.push(current);
+          current = "";
+        }
+      }
+      if (current) words.push(current);
+
+      const starts = noteIndices.map((i) => notes[i].startBeat);
+      const ends = noteIndices.map((i) => notes[i].startBeat + notes[i].durBeats);
+      return {
+        index,
+        noteIndices,
+        startBeat: Math.min(...starts),
+        endBeat: Math.max(...ends),
+        text: words.join(" "),
+      };
+    });
+}
+
+/** The lyric line active at a beat position, or the next one up if between lines. */
+export function lyricLineAtBeat(lines: LyricLine[], beat: number): number {
+  for (let i = 0; i < lines.length; i++) {
+    if (beat < lines[i].endBeat) return i;
+  }
+  return Math.max(0, lines.length - 1);
+}
+
+/** The section containing a beat position, or null when the song has no sections. */
+export function sectionAtBeat(song: Song, beat: number): SongSection | null {
+  if (!song.sections) return null;
+  return (
+    song.sections.find((s) => beat >= s.startBeat && beat < s.endBeat) ?? null
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Browsing helpers
+// ---------------------------------------------------------------------------
+
+/** How many times through this song runs by default. */
+export function loopsFor(song: Song): number {
+  return Math.max(1, song.defaultLoops);
+}
+
+/** Seconds for a full default session: every loop, at 1x tempo. */
+export function sessionSeconds(song: Song): number {
+  return phraseSeconds(song) * loopsFor(song);
+}
+
+export type RangeVerdict = "fits" | "high" | "low" | "wide" | "unknown";
+
+export interface RangeFit {
+  verdict: RangeVerdict;
+  /** Semitones the song sits above (+) or below (-) a comfortable placement. */
+  offsetSemis: number;
+  /** Transposition that would make it fit, or null with no saved range. */
+  suggestedTranspose: number | null;
+}
+
+/**
+ * Whether a song sits inside the singer's saved range as written.
+ *
+ * "wide" means the melody spans more than the voice does, so no
+ * transposition fixes it — the useful signal is that it will be a stretch at
+ * one end whatever key it is in.
+ */
+export function rangeFit(song: Song, range: VocalRange, transpose = 0): RangeFit {
+  if (range.lowMidi === undefined || range.highMidi === undefined) {
+    return { verdict: "unknown", offsetSemis: 0, suggestedTranspose: null };
+  }
+  const [rawLo, rawHi] = songNoteRange(song);
+  const lo = rawLo + transpose;
+  const hi = rawHi + transpose;
+  const suggested = fitTransposeToRange(song, range);
+
+  if (hi - lo > range.highMidi - range.lowMidi) {
+    return { verdict: "wide", offsetSemis: 0, suggestedTranspose: suggested };
+  }
+  if (hi > range.highMidi) {
+    return { verdict: "high", offsetSemis: hi - range.highMidi, suggestedTranspose: suggested };
+  }
+  if (lo < range.lowMidi) {
+    return { verdict: "low", offsetSemis: lo - range.lowMidi, suggestedTranspose: suggested };
+  }
+  return { verdict: "fits", offsetSemis: 0, suggestedTranspose: suggested };
 }
