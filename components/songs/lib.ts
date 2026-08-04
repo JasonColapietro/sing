@@ -27,20 +27,48 @@ export interface Difficulty {
   label: "Easy" | "Medium" | "Hard";
   rangeSemis: number;
   leaps: number;
+  /** Range span in semitones plus a leap-density term. Exposed for debugging. */
+  score: number;
 }
 
-/** Difficulty from pitch range span plus count of leaps of a major third or more. */
+/** A jump of a major third or more, which is where intonation starts to cost. */
+const LEAP_SEMIS = 4;
+/** How much an all-leaps melody adds on top of its range span. */
+const LEAP_WEIGHT = 12;
+export const DIFFICULTY_EASY_MAX = 9;
+export const DIFFICULTY_MEDIUM_MAX = 13;
+
+/**
+ * Difficulty from range span plus how *densely* the melody leaps.
+ *
+ * Density rather than a raw leap count, because a count scales with length:
+ * counting leaps rated every full arrangement harder than the phrase cut from
+ * the same melody, which is backwards — the notes are no harder to sing, there
+ * are just more of them. Amazing Grace and its full verse now score alike.
+ *
+ * The thresholds were recalibrated against the whole songbook. The previous
+ * scale (`span + leaps * 3`, Easy ≤ 5, Medium ≤ 9) was set when the book held
+ * six short phrases; across the current catalog it labelled 20 of 27 songs
+ * "Hard", including Frère Jacques, whose melody spans four semitones. A filter
+ * that answers "Hard" for almost everything cannot help anyone choose a song.
+ */
 export function computeDifficulty(song: Song): Difficulty {
   const midis = song.notes.map((n) => n.midi);
   const [lo, hi] = songNoteRange(song);
   const rangeSemis = hi - lo;
   let leaps = 0;
   for (let i = 1; i < midis.length; i++) {
-    if (Math.abs(midis[i] - midis[i - 1]) >= 4) leaps++;
+    if (Math.abs(midis[i] - midis[i - 1]) >= LEAP_SEMIS) leaps++;
   }
-  const score = rangeSemis + leaps * 3;
-  const label = score <= 5 ? "Easy" : score <= 9 ? "Medium" : "Hard";
-  return { label, rangeSemis, leaps };
+  const intervals = Math.max(1, midis.length - 1);
+  const score = rangeSemis + Math.round((leaps / intervals) * LEAP_WEIGHT);
+  const label =
+    score <= DIFFICULTY_EASY_MAX
+      ? "Easy"
+      : score <= DIFFICULTY_MEDIUM_MAX
+        ? "Medium"
+        : "Hard";
+  return { label, rangeSemis, leaps, score };
 }
 
 /** Seconds per beat at a given bpm and tempo multiplier. */
@@ -123,9 +151,15 @@ export function hardestNotes(notes: SongNote[], ratios: number[], max = 3): Hard
     .slice(0, max);
 }
 
+/**
+ * m:ss. The minute used to be hardcoded to "0:", which was invisible while
+ * every song was a single sub-minute phrase and wrong the moment a full
+ * multi-section arrangement ran long — 96 seconds printed as "0:96".
+ */
 export function formatMinSec(totalSec: number): string {
   const s = Math.max(0, Math.round(totalSec));
-  return `0:${String(s).padStart(2, "0")}`;
+  const min = Math.floor(s / 60);
+  return `${min}:${String(s % 60).padStart(2, "0")}`;
 }
 
 /** How cleanly a single note was held, once its window has passed. */
