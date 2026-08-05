@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isProPlan } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
 import { getStripe, resolvePriceId, siteOrigin } from "@/lib/stripe";
 
@@ -20,13 +21,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
-  // Monthly is the only plan on sale. `ProPlan` still includes "annual" so
-  // existing/legacy subscriptions map correctly, but this route must not sell
-  // it — the UI never offers annual, and accepting it here would let a direct
-  // POST buy a year at the setup script's $30 price against $9.99/month.
-  if (plan !== "monthly") {
+  if (!isProPlan(plan)) {
     return NextResponse.json(
-      { error: "Monthly is the only plan available." },
+      { error: "Choose a monthly or annual plan." },
       { status: 400 },
     );
   }
