@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Card, Pill, ProgressBar, Stat } from "@/components/ui";
 import { ProCrescendoNudge, ProWhisper } from "@/components/pro/gate";
 import { logSession, type Achievement } from "@/lib/progress";
+import { emitProResult } from "@/lib/pro-signal";
 import {
   DIFFICULTIES,
   GAME_NAMES,
@@ -191,6 +192,7 @@ export function SummaryView({
     setXpGained(res.xpGained);
     setNewAchievements(res.newAchievements);
     setNewBest(saveBest(game, difficulty, session.score));
+    emitProResult();
   }, [game, difficulty, session.score, startedAt]);
 
   return (
@@ -242,9 +244,9 @@ export function SummaryView({
       )}
       <div className="mt-5">
         <ProCrescendoNudge
-          line="Pro tracks per-interval accuracy over time"
-          title="Your ear is getting sharper"
-          body="Pro charts per-interval accuracy over time and drills what's weakest first."
+          line="Pro unlocks your full daily plan and every practice pack"
+          title="Build the rest of your practice"
+          body="Pro unlocks your full daily Coach plan, range history, take analysis, and every Pro song and warmup."
           context="Ear training"
         />
       </div>

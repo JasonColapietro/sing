@@ -10,6 +10,7 @@ import {
   useProgress,
   type Achievement,
 } from "@/lib/progress";
+import { emitProResult } from "@/lib/pro-signal";
 import {
   Button,
   Card,
@@ -224,6 +225,7 @@ export function RangeTest() {
       save: { xpGained: r1.xpGained + r2.xpGained, newAchievements: achievements },
     });
     setStage("result");
+    emitProResult();
   };
 
   const retake = () => {

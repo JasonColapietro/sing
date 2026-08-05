@@ -57,6 +57,9 @@ export function UpgradeCard({
 }: {
   title: string;
   body: string;
+  /** Default carries no price — this file renders on server surfaces and
+      must not pull in the client-only pricing constant. Pass a priced label
+      where the caller already imports it. */
   cta?: string;
   /** Mono tape-label context, e.g. "Coach" or "Take 4 of 3". */
   context: string;
@@ -81,11 +84,11 @@ export function UpgradeCard({
       </div>
       <p className="mt-1.5 max-w-xl text-sm text-mut">{body}</p>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <LinkButton href="/pro" variant="amber" size="sm">
+        <LinkButton href="/pro#plans" variant="amber" size="sm">
           {cta}
         </LinkButton>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Free stays free
+          Cancel anytime · Review the plan next
         </span>
       </div>
     </div>
@@ -130,7 +133,7 @@ export function LockedPanel({
           <LockGlyph />
           Pro preview
         </span>
-        <LinkButton href="/pro" variant="amber" size="sm">
+        <LinkButton href="/pro#plans" variant="amber" size="sm">
           {cta}
         </LinkButton>
       </div>
