@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/ui";
-import { APP_STORE_URL } from "@/lib/app-store";
+import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
 
 /**
  * Split hero carried over from the iOS app's own landing page: full-bleed
@@ -59,7 +59,7 @@ export function HeroSplit() {
           </LinkButton>
           <a
             href={APP_STORE_URL}
-            aria-label="View the optional iPhone companion on the App Store"
+            aria-label={`View ${APP_NAME} on the App Store`}
             className="inline-block rounded-[10px] transition-opacity hover:opacity-85 focus-visible:opacity-85"
           >
             <Image
@@ -71,8 +71,9 @@ export function HeroSplit() {
           </a>
         </div>
         <p className="mt-3 max-w-xl text-sm text-mut">
-          Start here in your browser — no install required. The iPhone
-          companion is optional when you want deeper on-device voice analysis.
+          Start here in your browser — no install required. {APP_NAME}, the
+          phone companion, is optional — for when you want deeper on-device
+          voice analysis.
         </p>
         <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-dim">
           On-device analysis

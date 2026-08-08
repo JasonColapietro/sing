@@ -1,21 +1,21 @@
 import Image from "next/image";
 import { SectionLabel } from "@/components/ui";
-import { APP_STORE_URL } from "@/lib/app-store";
+import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
 
 const SHOTS = [
   {
     src: "/shot-01-start-the-session.png",
-    alt: "Suede Sing iOS app: starting a practice session",
+    alt: "Suede Voice iPhone app: starting a practice session",
     caption: "Start a session",
   },
   {
     src: "/shot-02-hear-it-sing-it-back.png",
-    alt: "Suede Sing iOS app: hearing a reference note and singing it back",
+    alt: "Suede Voice iPhone app: hearing a reference note and singing it back",
     caption: "Hear it, sing it back",
   },
   {
     src: "/shot-05-track-the-work.png",
-    alt: "Suede Sing iOS app: progress tracking across sessions",
+    alt: "Suede Voice iPhone app: progress tracking across sessions",
     caption: "Track the work",
   },
 ];
@@ -44,15 +44,16 @@ export function IosBand() {
   return (
     <section id="app" className="border-t border-line bg-panel/40">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <SectionLabel className="mb-4">Optional iPhone companion</SectionLabel>
+        <SectionLabel className="mb-4">{APP_NAME} — optional iPhone companion</SectionLabel>
         <h2 className="max-w-2xl text-3xl">
           Keep the browser studio. Add deeper analysis on iPhone.
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
           The web studio gives you live pitch, range and guided practice, free
-          with no install required. If you want more detail, the optional
-          iPhone companion adds an analysis layer: every sustained note becomes
-          a row of objective measurements, and the result is your TonePrint.
+          with no install required. If you want more detail, {APP_NAME} — the
+          optional iPhone and Android companion — adds an analysis layer: every
+          sustained note becomes a row of objective measurements, and the
+          result is your TonePrint.
         </p>
 
         {/* The source captures are 268x582; rendering them any larger just
@@ -91,7 +92,7 @@ export function IosBand() {
         <div className="mt-9 flex flex-wrap items-center gap-4">
           <a
             href={APP_STORE_URL}
-            aria-label="View the optional iPhone companion on the App Store"
+            aria-label={`View ${APP_NAME} on the App Store`}
             className="inline-block rounded-[10px] transition-opacity hover:opacity-85"
           >
             <Image
