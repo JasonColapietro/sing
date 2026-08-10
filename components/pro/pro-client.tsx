@@ -683,8 +683,16 @@ export function ProClient() {
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
           <p className="max-w-xl text-sm text-mut">
             <span className="text-ink">Pro is what keeps free free.</span> One
-            musician builds this. Pro pays for it — instead of ads, trackers,
-            or selling your data.
+            musician builds this —{" "}
+            <a
+              href="https://jasoncolapietro.com"
+              rel="author"
+              className="text-amber-ink hover:underline"
+            >
+              Jason Colapietro
+            </a>{" "}
+            (Johnny Suede). Pro pays for it — instead of ads,
+            trackers, or selling your data.
           </p>
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             No ads<span className="mx-2 text-line2">·</span>No data selling

@@ -7,6 +7,7 @@ import {
   ATLAS_TITLE,
   ATLAS_WORDS,
 } from "@/lib/atlas-data";
+import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { SITE_URL } from "@/lib/site";
 import { AtlasCta } from "@/components/atlas/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
@@ -48,7 +49,10 @@ export default function AtlasPage() {
     numberOfPages: ATLAS_CONTENTS.length,
     inLanguage: "en",
     isAccessibleForFree: false,
-    author: { "@type": "Organization", name: "Suede Sing" },
+    // Was an Organization named "Suede Sing" — the product name, not the
+    // publisher entity and not a person. A paid book needs a named human
+    // author, and the byline below is its on-page counterpart.
+    author: AUTHOR_NODE,
     // Joins the estate graph the singer pages already use, so a consumer that
     // lands on the book can resolve the publisher and the site around it.
     publisher: { "@id": "https://suedeai.ai/#organization" },
@@ -83,6 +87,17 @@ export default function AtlasPage() {
             />
             <Stat label="Parts" value={ATLAS_PARTS.length} tone="cool" />
           </div>
+          <p className="mt-5 text-sm text-mut">
+            Written by{" "}
+            <a
+              href="https://jasoncolapietro.com"
+              rel="author"
+              className="text-amber-ink hover:underline"
+            >
+              {AUTHOR_NAME}
+            </a>{" "}
+            ({AUTHOR_ALIAS}). Published by Suede Labs AI.
+          </p>
           <p className="mt-5 max-w-3xl text-mut">
             One book for the question every singer eventually types into a
             search bar: <em>what is their vocal range — and how do they do
