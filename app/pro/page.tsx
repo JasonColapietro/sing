@@ -1,4 +1,5 @@
 import { ProClient } from "@/components/pro/pro-client";
+import { AUTHOR_ID, AUTHOR_NODE } from "@/lib/author";
 import { PRO_FAQ } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 
@@ -32,7 +33,11 @@ const PRO_JSON_LD = {
       publisher: { "@id": "https://suedeai.ai/#organization" },
       inLanguage: "en",
       mainEntity: { "@id": `${SITE_URL}/pro#product` },
+      // The page's own byline names the person who builds this; the node makes
+      // that machine-readable instead of leaving the app unattributed.
+      author: { "@id": AUTHOR_ID },
     },
+    AUTHOR_NODE,
     {
       "@type": "Product",
       "@id": `${SITE_URL}/pro#product`,
