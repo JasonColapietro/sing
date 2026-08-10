@@ -40,7 +40,7 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
  *    that may move.
  *
  * 2. The Pro page itself. A full-screen modal whose only CTA pushes to
- *    /pro#plans has nothing to offer someone already reading that page. The
+ *    /pro#pro-plan has nothing to offer someone already reading that page. The
  *    test is exact-segment on purpose: a bare prefix match would also swallow
  *    /progress, which is precisely the page a returning free user with logged
  *    sessions is most likely to hard-load — the cohort the mount pass exists
@@ -147,7 +147,7 @@ export default function ProMoments() {
   const goPro = () => {
     markSeen();
     setShow(false);
-    router.push("/pro#plans");
+    router.push("/pro#pro-plan");
   };
 
   if (!show) return null;
@@ -202,8 +202,8 @@ export default function ProMoments() {
           ))}
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Button variant="amber" size="md" onClick={goPro}>
-            {`Go Pro — $${PRICING.monthly.perMonth.toFixed(2)}/month`}
+          <Button variant="amber" size="lg" onClick={goPro}>
+            {`See Pro for $${PRICING.monthly.perMonth.toFixed(2)}/month`}
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>
             Not now

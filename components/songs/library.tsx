@@ -502,8 +502,8 @@ export function Library({
                 {PRO_SONGS.slice(0, 3).map((song) => (
                   <Link
                     key={song.id}
-                    href="/pro"
-                    aria-label={`${song.title} — unlock with Suede Pro`}
+                    href="/pro#pro-plan"
+                    aria-label={`${song.title}: unlock with Suede Pro`}
                     className="block h-full"
                   >
                     <Card className="h-full transition-colors hover:border-amber/40">
@@ -534,10 +534,10 @@ export function Library({
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               {PRO_SONGS.length} songs in the Pro songbook ·{" "}
               <Link
-                href="/pro"
+                href="/pro#pro-plan"
                 className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
               >
-                See Pro
+                See Pro for $9.99/month
               </Link>
             </p>
           </FreeOnly>

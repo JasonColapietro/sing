@@ -243,7 +243,7 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "songs",
     title: "Full song library",
-    desc: "The complete practice catalog, with new songs added every week.",
+    desc: "The complete practice catalog across styles, ranges, and skill levels.",
   },
   {
     id: "warmups",
@@ -253,12 +253,12 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "book",
     title: "Two books, with PDFs",
-    desc: "The Measured Voice — 23 chapters on how the voice works and a twelve-week program — plus The Voice Atlas, the famous-voices companion. Both in the app and as PDFs to keep.",
+    desc: "The Measured Voice has 23 chapters on how the voice works and a twelve-week program. The Voice Atlas is its famous-voices companion. Both are in the app and available as PDFs.",
   },
   {
     id: "history",
     title: "Cloud sync",
-    desc: "Progress that follows you across devices, backed up automatically — no export files.",
+    desc: "Progress that follows you across devices and backs up automatically, with no export step.",
   },
 ];
 
@@ -272,7 +272,7 @@ export const PLAN_ROWS: Array<{
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
   { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis on every take" },
-  { label: "Song library", free: "Starter set", pro: "Full catalog, weekly drops" },
+  { label: "Song library", free: "Starter set", pro: "Full catalog" },
   { label: "Warmup routines", free: "Core set", pro: "Core + pro packs" },
   { label: "Coach plan", free: "First step each day", pro: "Full adaptive plan, daily" },
   { label: "Vocal analytics", free: "Session scores", pro: "Per-note, heatmaps, trends" },

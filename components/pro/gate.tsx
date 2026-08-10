@@ -31,7 +31,7 @@ export function ProWhisper({ className = "" }: { className?: string }) {
     >
       Free ·{" "}
       <Link
-        href="/pro#plans"
+        href="/pro#pro-plan"
         className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
       >
         Pro
@@ -68,7 +68,7 @@ export function ProCrescendoNudge({
     <UpgradeCard
       title={title}
       body={body}
-      cta={`Go Pro — $${PRICING.monthly.perMonth.toFixed(2)}/month`}
+      cta={`See Pro for $${PRICING.monthly.perMonth.toFixed(2)}/month`}
       context={context}
     />
   );
@@ -87,10 +87,10 @@ export function ProInlineNudge({ children }: { children: string }) {
       <ProChip />
       <span>{children}</span>
       <Link
-        href="/pro#plans"
+        href="/pro#pro-plan"
         className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
       >
-        Go Pro
+        See Pro plan
       </Link>
     </p>
   );

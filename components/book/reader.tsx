@@ -98,8 +98,8 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
             itself stays free either way.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <LinkButton href="/pro" size="sm">
-              See Suede Pro
+            <LinkButton href="/pro#pro-plan" size="sm">
+              See Pro for $9.99/month
             </LinkButton>
             <LinkButton href="/pro#restore" variant="outline" size="sm">
               Already subscribed?

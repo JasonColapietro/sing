@@ -133,7 +133,7 @@ export function Library({
           </div>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {PACK_TEASERS.map((pack) => (
-              <Link key={pack.name} href="/pro">
+              <Link key={pack.name} href="/pro#pro-plan">
                 <Card className="h-full transition-colors hover:border-amber/40">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="text-lg">{pack.name}</h3>

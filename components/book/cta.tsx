@@ -23,8 +23,8 @@ export function BookCta() {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <LinkButton href="/pro" size="md">
-        See what Pro includes
+      <LinkButton href="/pro#pro-plan" size="md">
+        See Pro for $9.99/month
       </LinkButton>
       <span className="text-xs text-dim">
         {BOOK_CONTENTS.length} chapters and a PDF to keep, $9.99/month

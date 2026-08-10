@@ -230,8 +230,8 @@ export default async function SongPage({
               {SONGS.length} melodies you can sing right now.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <LinkButton href="/pro" size="md">
-                See what Pro includes
+              <LinkButton href="/pro#pro-plan" size="md">
+                See Pro for $9.99/month
               </LinkButton>
               <LinkButton href="/songs" variant="outline" size="md">
                 Sing the free songbook

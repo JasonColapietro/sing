@@ -56,18 +56,18 @@ export default function ProVisual() {
         <span className="flex items-center gap-2">
           <ProChip />
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
-            Coach report — week 8
+            Example coach report
           </span>
         </span>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ok-ink">
-          Range +4 st
+          Range trend
         </span>
       </div>
 
       <svg
         viewBox="0 0 640 300"
         role="img"
-        aria-label="Pro coach report: a chart of vocal range widening over eight weeks, and per-note accuracy bars with E4 flagged as the note to work on"
+        aria-label="Example Pro coach report showing a vocal range trend and per-note accuracy bars with E4 flagged as the note to work on"
         className="block w-full"
       >
         {/* ---- left: range growth band ---- */}
@@ -207,8 +207,8 @@ export default function ProVisual() {
       </svg>
 
       <div className="flex items-center justify-between border-t border-line px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em]">
-        <span className="text-dim">Tomorrow: head-voice builder, 12 min</span>
-        <span className="text-amber-ink">Accuracy 87%</span>
+        <span className="text-dim">Tomorrow: head-voice builder</span>
+        <span className="text-amber-ink">Focus note E4</span>
       </div>
     </div>
   );

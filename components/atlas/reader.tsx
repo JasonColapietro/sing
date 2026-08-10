@@ -107,8 +107,8 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
             PDF of the whole book.
           </p>
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            <LinkButton href="/pro" size="md">
-              See what Pro includes
+            <LinkButton href="/pro#pro-plan" size="md">
+              See Pro for $9.99/month
             </LinkButton>
             <LinkButton href="/atlas" variant="outline" size="md">
               Back to contents

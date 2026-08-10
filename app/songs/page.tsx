@@ -67,8 +67,8 @@ export default function SongsPage() {
                 <SongLinkList songs={PRO_SONGS} />
               </div>
               <div className="mt-6">
-                <LinkButton href="/pro" variant="outline" size="sm">
-                  What Pro includes
+                <LinkButton href="/pro#pro-plan" variant="outline" size="sm">
+                  See Pro for $9.99/month
                 </LinkButton>
               </div>
             </>

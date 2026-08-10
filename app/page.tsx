@@ -292,12 +292,12 @@ export default function Home() {
                 ))}
               </ul>
               <div className="mt-7 flex flex-wrap items-center gap-3">
-                <LinkButton href="/pro" variant="amber" size="lg">
-                  See Suede Pro
+                <LinkButton href="/pro#pro-plan" variant="amber" size="lg">
+                  See Suede Pro for $9.99/month
                 </LinkButton>
               </div>
               <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                Cancel in one click
+                Cancel anytime in Stripe
                 <span className="mx-2 text-line2">·</span>No account needed
                 <span className="mx-2 text-line2">·</span>The studio stays free
               </p>
@@ -343,10 +343,10 @@ export default function Home() {
           <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
             Ready for the coach?{" "}
             <Link
-              href="/pro"
+              href="/pro#pro-plan"
               className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
             >
-              See Suede Pro
+              See Suede Pro for $9.99/month
             </Link>
           </p>
         </div>

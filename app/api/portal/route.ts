@@ -3,9 +3,8 @@ import { rateLimit } from "@/lib/rate-limit";
 import { getStripe, isStripeId, siteOrigin } from "@/lib/stripe";
 
 /**
- * Opens the Stripe billing portal, which is where cancelling, swapping
- * plans, and updating a card actually happen — that is what makes the
- * "cancel in one click" promise on /pro true.
+ * Opens the Stripe billing portal, where customers can cancel, swap plans,
+ * or update a card. This backs the "cancel anytime in Stripe" copy on /pro.
  *
  * Both ids are required and must agree: holding a customer id alone is not
  * enough to open someone's billing history.

@@ -177,8 +177,8 @@ function RedeemPanel() {
         <p className="mt-3 text-sm text-rec">{task.message}</p>
       )}
       <p className="mt-3 text-xs text-dim">
-        Every Pro feature for 30 days. No card, no charge, and it ends by itself
-        — there&apos;s nothing to cancel.
+        Every Pro feature for 30 days. No card, no charge, and nothing to
+        cancel when it ends.
       </p>
     </details>
   );
@@ -318,7 +318,7 @@ export function ProClient() {
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
           <div className="animate-fadeup">
             <SectionLabel className="mb-4 border-amber/50 text-amber-ink">
-              Suede Pro — the gold channel
+              Suede Pro: the gold channel
             </SectionLabel>
             {pro.active ? (
               <>
@@ -343,7 +343,7 @@ export function ProClient() {
                 {pro.status === "past_due" && (
                   <p className="mt-5 max-w-xl rounded-xl border border-rec/40 bg-rec/10 px-3 py-2 text-sm text-rec">
                     Your last payment didn&apos;t go through. Pro stays on
-                    while Stripe retries — update your card to keep it.
+                    while Stripe retries. Update your card to keep it.
                   </p>
                 )}
                 {pro.cancelAtPeriodEnd && periodEnd && (
@@ -372,14 +372,13 @@ export function ProClient() {
                   Add the coach.
                 </h1>
                 <p className="mt-4 max-w-xl text-lg text-mut">
-                  Everything you practice with today stays free. Pro
-                  layers a coach on top — adaptive daily plans, per-note
-                  analytics, pitch analysis on your takes, and the full
-                  songbook.
+                  Everything you practice with today stays free. Pro adds
+                  adaptive daily plans, per-note analytics, pitch analysis on
+                  your takes, and the full songbook.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
-                  <LinkButton href="#plans" variant="amber" size="lg">
-                    Go Pro
+                  <LinkButton href="#pro-plan" variant="amber" size="lg">
+                    See Pro for $9.99/month
                   </LinkButton>
                   <LinkButton href="/studio" variant="ghost" size="lg">
                     Keep practicing free
@@ -463,9 +462,8 @@ export function ProClient() {
                   One tier. Coach, analytics, songbook, two books.
                 </h2>
                 <p className="mt-3 max-w-xl text-mut">
-                  $9.99 a month, billed monthly, cancel in one click. Every Pro
-                  feature sits in the one tier, and the price you join at is the
-                  price you keep.
+                  $9.99 a month, billed monthly, cancel anytime in Stripe.
+                  Every listed Pro feature is included in the monthly plan.
                 </p>
               </div>
             </div>
@@ -483,43 +481,17 @@ export function ProClient() {
           )}
           {abandoned && (
             <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut">
-              Checkout cancelled — nothing was charged. The free studio is
+              Checkout cancelled. Nothing was charged. The free studio is
               exactly where you left it.
             </p>
           )}
 
           <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2">
-            {/* Free */}
-            <div className="flex flex-col rounded-2xl border border-line bg-panel p-6 sm:p-7">
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
-                Free
-              </span>
-              <div className="mt-3 flex items-baseline gap-2">
-                <span className="tabular font-mono text-4xl text-ink">$0</span>
-                <span className="text-sm text-mut">the whole studio</span>
-              </div>
-              <p className="mt-2 text-sm text-mut">
-                Every practice room, open right now.
-              </p>
-              <ul className="mt-5 space-y-2.5">
-                {FREE_CARD_POINTS.map((point) => (
-                  <PlanPoint key={point}>{point}</PlanPoint>
-                ))}
-              </ul>
-              <div className="mt-auto pt-6">
-                <LinkButton
-                  href="/studio"
-                  variant="outline"
-                  size="md"
-                  className="w-full"
-                >
-                  Keep practicing free
-                </LinkButton>
-              </div>
-            </div>
-
             {/* Pro */}
-            <div className="relative flex flex-col overflow-hidden rounded-2xl border border-amber bg-panel p-6 sm:p-7">
+            <div
+              id="pro-plan"
+              className="relative flex scroll-mt-20 flex-col overflow-hidden rounded-2xl border border-amber bg-panel p-6 sm:p-7"
+            >
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-soft via-amber to-amber-soft"
@@ -537,7 +509,7 @@ export function ProClient() {
                 <span className="text-sm text-mut">{priceNote}</span>
               </div>
               <span className="mt-2 inline-flex w-fit items-center rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-amber-ink">
-                Founding price — locked for life
+                One monthly plan
               </span>
               <p className="mt-2 text-sm text-mut">
                 Everything in Free, plus the coach.
@@ -554,8 +526,8 @@ export function ProClient() {
                   <div className="flex flex-col gap-2">
                     <div className="flex w-full items-center justify-center gap-2 rounded-full bg-amber px-5 py-2.5 font-mono text-sm font-semibold text-[#241a05]">
                       {pro.status === "trialing"
-                        ? "✓ Active — free pass"
-                        : `✓ Active — ${pro.plan === "annual" ? "annual" : "monthly"}`}
+                        ? "✓ Active · free pass"
+                        : `✓ Active · ${pro.plan === "annual" ? "annual" : "monthly"}`}
                     </div>
                     {pro.status === "trialing" && periodEnd && (
                       <p className="text-center text-xs text-dim">
@@ -585,14 +557,14 @@ export function ProClient() {
                   <>
                     <Button
                       variant="amber"
-                      size="md"
+                      size="lg"
                       className="w-full"
                       onClick={goPro}
                       disabled={checkout.kind === "working"}
                     >
                       {checkout.kind === "working"
                         ? "Opening Stripe…"
-                        : "Go Pro — $9.99/month"}
+                        : "Start Pro for $9.99/month"}
                     </Button>
                     <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
                       Secure checkout by Stripe
@@ -601,11 +573,40 @@ export function ProClient() {
                 )}
               </div>
             </div>
+
+            {/* Free */}
+            <div className="flex flex-col rounded-2xl border border-line bg-panel p-6 sm:p-7">
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
+                Free
+              </span>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="tabular font-mono text-4xl text-ink">$0</span>
+                <span className="text-sm text-mut">the whole studio</span>
+              </div>
+              <p className="mt-2 text-sm text-mut">
+                Every practice room, open right now.
+              </p>
+              <ul className="mt-5 space-y-2.5">
+                {FREE_CARD_POINTS.map((point) => (
+                  <PlanPoint key={point}>{point}</PlanPoint>
+                ))}
+              </ul>
+              <div className="mt-auto pt-6">
+                <LinkButton
+                  href="/studio"
+                  variant="outline"
+                  size="lg"
+                  className="w-full"
+                >
+                  Keep practicing free
+                </LinkButton>
+              </div>
+            </div>
           </div>
 
           <p className="mx-auto mt-6 max-w-4xl text-center font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Cancel in one click · Keep everything you earned · Founding price
-            locked for life
+            Cancel anytime in Stripe · Keep everything you earned · Secure
+            checkout by Stripe
           </p>
 
           {!pro.active && (
@@ -683,7 +684,7 @@ export function ProClient() {
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
           <p className="max-w-xl text-sm text-mut">
             <span className="text-ink">Pro is what keeps free free.</span> One
-            musician builds this —{" "}
+            musician builds this:{" "}
             <a
               href="https://jasoncolapietro.com"
               rel="author"
@@ -691,7 +692,7 @@ export function ProClient() {
             >
               Jason Colapietro
             </a>{" "}
-            (Johnny Suede). Pro pays for it — instead of ads,
+            (Johnny Suede). Pro pays for it instead of ads,
             trackers, or selling your data.
           </p>
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -727,12 +728,12 @@ export function ProClient() {
             The studio costs nothing. Pro adds the coach.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-mut">
-            Either way, your voice never leaves this device — and your practice
-            never hits a paywall it didn&apos;t have yesterday.
+            Either way, your voice never leaves this device. Your practice
+            never hits a paywall it did not have yesterday.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <LinkButton href="#plans" variant="amber" size="lg">
-              {pro.active ? "Manage your plan" : "Go Pro"}
+            <LinkButton href="#pro-plan" variant="amber" size="lg">
+              {pro.active ? "Manage your plan" : "See Pro for $9.99/month"}
             </LinkButton>
             <LinkButton href="/studio" variant="ghost" size="lg">
               Back to the studio

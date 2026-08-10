@@ -84,7 +84,7 @@ export function UpgradeCard({
       </div>
       <p className="mt-1.5 max-w-xl text-sm text-mut">{body}</p>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <LinkButton href="/pro#plans" variant="amber" size="sm">
+        <LinkButton href="/pro#pro-plan" variant="amber" size="sm">
           {cta}
         </LinkButton>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -133,7 +133,7 @@ export function LockedPanel({
           <LockGlyph />
           Pro preview
         </span>
-        <LinkButton href="/pro#plans" variant="amber" size="sm">
+        <LinkButton href="/pro#pro-plan" variant="amber" size="sm">
           {cta}
         </LinkButton>
       </div>

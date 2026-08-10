@@ -85,8 +85,8 @@ export default async function AtlasChapterPage({
               whole book.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <LinkButton href="/pro" size="md">
-                See what Pro includes
+              <LinkButton href="/pro#pro-plan" size="md">
+                See Pro for $9.99/month
               </LinkButton>
               <LinkButton href="/atlas" variant="outline" size="md">
                 Back to contents

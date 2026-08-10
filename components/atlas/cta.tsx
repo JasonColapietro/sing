@@ -28,8 +28,8 @@ export function AtlasCta() {
           Read the free chapter
         </LinkButton>
       )}
-      <LinkButton href="/pro" variant="outline" size="md">
-        See what Pro includes
+      <LinkButton href="/pro#pro-plan" variant="outline" size="md">
+        See Pro for $9.99/month
       </LinkButton>
       <span className="text-xs text-dim">
         Contents free · full book and PDF with Pro, $9.99/month

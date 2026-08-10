@@ -53,7 +53,7 @@ export const INACTIVE: Entitlement = {
 export const PRO_FAQ: Array<{ q: string; a: string }> = [
   {
     q: "Does the free studio stay free?",
-    a: "Yes — permanently. All ten rooms, live pitch feedback, the range test, the recorder: none of it moves behind Pro. Pro only adds things that don't exist today.",
+    a: "Yes. All ten current rooms, live pitch feedback, the range test, and the recorder remain in the free tier. Pro adds coaching, deeper analytics, the full catalog, books, and sync.",
   },
   {
     q: "Do I need Pro to get better?",
@@ -61,14 +61,14 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Is my voice uploaded?",
-    a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers — scores, streaks, range — never audio.",
+    a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro cloud sync backs up progress numbers such as scores, streaks, and range. It never backs up audio.",
   },
   {
     q: "Can I cancel anytime?",
-    a: "Anytime, in one click, no email required. You drop back to free and keep every recording, score, and streak you earned.",
+    a: "Anytime through the Stripe billing portal, with no email required. You drop back to free and keep every recording, score, and streak you earned.",
   },
   {
     q: "Why does a free app sell anything?",
-    a: "Suede Sing is built by one musician. Pro is what keeps the free studio free — instead of ads, trackers, or selling your data. One tier, and the price is on this page.",
+    a: "Suede Sing is built by one musician. Pro keeps the free studio funded without ads, trackers, or selling your data. There is one paid tier, and the price is on this page.",
   },
 ];
