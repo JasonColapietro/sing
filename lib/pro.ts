@@ -122,9 +122,77 @@ export async function startCheckout(plan: ProPlan): Promise<void> {
   window.location.href = url;
 }
 
-/** Confirms a finished Checkout Session and unlocks Pro on this device. */
-export async function confirmCheckout(sessionId: string): Promise<ProState> {
-  return apply(await post<Entitlement>("/api/entitlement", { sessionId }));
+/* ------------------------------------------------------ pending checkout */
+
+/** Where the unconfirmed checkout session waits. */
+const PENDING_KEY = "suede-sing:pro:pending-checkout";
+
+/**
+ * The checkout session id, parked until entitlement is confirmed.
+ *
+ * The id exists in exactly one place — the URL Stripe returns to — and /pro
+ * strips that query immediately so a refresh doesn't re-run confirmation.
+ * Parking it first is what makes the confirmation retryable: without this, a
+ * single failed call (a Stripe hiccup, a 429 from a shared office IP) left
+ * someone who had already been charged with no Pro, no Pro key, no way to try
+ * again, and nothing to quote at support.
+ *
+ * It is cleared as soon as Stripe gives a definitive answer, so it only ever
+ * survives an inconclusive one.
+ */
+export function rememberPendingCheckout(sessionId: string): void {
+  try {
+    window.localStorage.setItem(PENDING_KEY, sessionId);
+  } catch {
+    // storage unavailable — confirmation still runs, it just can't be retried
+  }
+}
+
+export function pendingCheckout(): string | null {
+  try {
+    return window.localStorage.getItem(PENDING_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function clearPendingCheckout(): void {
+  try {
+    window.localStorage.removeItem(PENDING_KEY);
+  } catch {
+    // nothing parked, or storage unavailable
+  }
+}
+
+/**
+ * Confirms a finished Checkout Session and unlocks Pro on this device.
+ *
+ * Retries a transient failure rather than surfacing it, because the singer
+ * has already paid by the time this runs: the difference between one attempt
+ * and three is the difference between a support email and a working account.
+ * A definitive answer from Stripe — including "not active" — returns on the
+ * first pass and is never retried.
+ */
+export async function confirmCheckout(
+  sessionId: string,
+  attempts = 3,
+): Promise<ProState> {
+  let last: unknown;
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    if (attempt > 0) {
+      await new Promise((r) => setTimeout(r, 700 * attempt));
+    }
+    try {
+      const state = apply(await post<Entitlement>("/api/entitlement", { sessionId }));
+      clearPendingCheckout();
+      return state;
+    } catch (error) {
+      last = error;
+    }
+  }
+  throw last instanceof Error
+    ? last
+    : new Error("Could not confirm the payment.");
 }
 
 const REVALIDATE_AFTER_MS = 12 * 60 * 60 * 1000;

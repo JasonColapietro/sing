@@ -46,9 +46,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
-  const stripe = getStripe();
-
   try {
+    // Inside the try: a missing or unreadable STRIPE_SECRET_KEY throws here,
+    // and the README's Marketplace-resync trap is a real way for that to
+    // happen in production. Outside, it surfaced as an unhandled 500 instead
+    // of the 502 the client knows how to retry.
+    const stripe = getStripe();
+
     if (isStripeId(sessionId, "cs_")) {
       const session = await stripe.checkout.sessions.retrieve(sessionId, {
         expand: ["subscription", "customer"],
