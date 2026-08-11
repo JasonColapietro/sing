@@ -14,11 +14,14 @@ import {
   TakesGlyph,
 } from "./glyphs";
 import {
+  clearPendingCheckout,
   confirmCheckout,
   openBillingPortal,
+  pendingCheckout,
   PLAN_ROWS,
   PRO_PERKS,
   redeemCode,
+  rememberPendingCheckout,
   restorePro,
   startCheckout,
   useProState,
@@ -71,7 +74,8 @@ function PlanPoint({ children, gold }: { children: string; gold?: boolean }) {
 type Task =
   | { kind: "idle" }
   | { kind: "working" }
-  | { kind: "error"; message: string };
+  /** `ref` is the checkout session id, shown only when someone has paid and confirmation still failed. */
+  | { kind: "error"; message: string; ref?: string };
 
 function messageOf(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
@@ -257,28 +261,49 @@ export function ProClient() {
 
   // Stripe returns to /pro?checkout=success&session_id=… — confirm the
   // session with the API, then strip the query so a refresh stays clean.
+  //
+  // The id is parked in storage before the query is stripped, and a parked one
+  // resumes on the next load. Confirmation is the step between "charged" and
+  // "has Pro", and it used to get exactly one attempt against an id that no
+  // longer existed anywhere once it failed.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session_id");
+    const fromUrl = params.get("session_id");
     const outcome = params.get("checkout");
+    const sessionId = fromUrl ?? pendingCheckout();
+    if (fromUrl || outcome) window.history.replaceState({}, "", "/pro");
     if (!sessionId && !outcome) return;
-    window.history.replaceState({}, "", "/pro");
 
     if (sessionId) {
+      rememberPendingCheckout(sessionId);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- the session id only exists in the URL, so confirmation can only start after hydration
       setCheckout({ kind: "working" });
       confirmCheckout(sessionId)
         .then((state) => {
-          setCheckout({ kind: "idle" });
-          if (state.active) setJustUpgraded(true);
-        })
-        .catch((error: unknown) =>
+          if (state.active) {
+            setCheckout({ kind: "idle" });
+            setJustUpgraded(true);
+            return;
+          }
+          // Stripe answered, and the answer wasn't "subscribed" — retrying
+          // won't change that, so stop and hand over something support can act on.
+          clearPendingCheckout();
           setCheckout({
             kind: "error",
-            message: messageOf(
-              error,
-              "Payment went through, but we couldn't confirm it here. Use the unlock form below.",
-            ),
+            message:
+              "Your payment went through, but Stripe doesn't show an active subscription yet. Give it a minute and reload — if it sticks, email hey@suedeai.ai with this reference and we'll sort it out.",
+            ref: sessionId,
+          });
+        })
+        .catch(() =>
+          // Deliberately not the API's message. Whatever Stripe's outage
+          // sounded like, the thing this person needs to read is that the
+          // charge is safe, the retry is automatic, and support has a handle.
+          setCheckout({
+            kind: "error",
+            message:
+              "Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again — nothing is lost. If it keeps failing, email hey@suedeai.ai with this reference.",
+            ref: sessionId,
           }),
         );
       return;
@@ -477,9 +502,14 @@ export function ProClient() {
             </p>
           )}
           {checkout.kind === "error" && (
-            <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-rec/40 bg-rec/10 px-4 py-3 text-center text-sm text-rec">
-              {checkout.message}
-            </p>
+            <div className="mx-auto mt-8 max-w-2xl rounded-xl border border-rec/40 bg-rec/10 px-4 py-3 text-center text-sm text-rec">
+              <p>{checkout.message}</p>
+              {checkout.ref && (
+                <p className="mt-2 font-mono text-[11px] break-all text-rec/80">
+                  {checkout.ref}
+                </p>
+              )}
+            </div>
           )}
           {abandoned && (
             <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut">
