@@ -39,17 +39,11 @@ Scope for this spec is the three marked **Build**.
 | Framing | Singer-first translation, not a measurement suite |
 | Build set | Spectrogram, Tone, Vocal load |
 | Placement | New `/analyze` route |
-| Pro gating | Entirely Pro, with a static locked preview for free users |
+| Access | Free and open, no gate |
 | Nav | 13th main nav link |
 | Tests | Add vitest, covering the pure DSP modules only |
 
-Two of these were flagged as carrying a cost and confirmed anyway:
-
-- **Entirely Pro** means a visitor never watches their own voice before paying.
-  Mitigated by keeping the route public and indexable with a full `ToolGuide`,
-  and by rendering a static painted preview inside `LockedPanel` rather than an
-  empty page.
-- **A 13th nav link** lengthens an already long nav.
+A 13th nav link lengthens an already long nav; accepted.
 
 ## Architecture
 
@@ -70,7 +64,7 @@ lib/audio/use-analyser.ts     mic → AnalyserNode(fftSize 4096) → ref
 lib/audio/spectrum.ts         pure: bin↔Hz, log mapping, band energy, magnitude→color
 lib/audio/vocal-dose.ts       pure: dose accumulation, day rollover, persistence
 
-components/analyze/analyze-client.tsx   route shell, mic gate, Pro gate, owns the hook
+components/analyze/analyze-client.tsx   route shell, mic gate, owns the hook
 components/analyze/spectrogram.tsx      scrolling time×frequency canvas
 components/analyze/tone.tsx             live spectrum, harmonic markers, ring meter
 components/analyze/vocal-load.tsx       dose readout and 7-day strip
@@ -123,9 +117,8 @@ Harmonics appear as a stack of horizontal lines; a register break appears as the
 stack jumping; vibrato appears as ripple. The singer's-formant band
 (2.8–3.2 kHz) is drawn as a marked region.
 
-Not built: F1/F2 formant tracking or vowel labels. LPC formant extraction from a
-browser FFT is noisy enough that a vowel label would be a guess presented as a
-measurement.
+Formant tracking and vowel labelling are out of scope for v1 — LPC extraction is
+its own build, and the spectrogram already shows the structure visually.
 
 ### Tone
 
@@ -136,9 +129,7 @@ calibration-free version of "does this voice carry."
 
 ### Vocal load
 
-Browser microphones are not SPL-calibrated, so a dBA dosimeter is impossible
-without inventing units. The published vocal-dose measures (Titze & Hunter)
-include measures that need no calibration:
+Built on the published vocal-dose measures (Titze & Hunter):
 
 - **Phonation time** — seconds of confidently voiced frames
 - **Cycle dose** — Σ F0 · Δt, total vocal-fold vibration cycles
@@ -146,39 +137,12 @@ include measures that need no calibration:
 Both derive from pitch and time, which this app already measures accurately. The
 readout shows today's figures and a 7-day strip.
 
-Presented as a practice-volume signal. Never as medical or vocal-health advice.
+## Access
 
-## Honesty constraints
-
-These are requirements, testable at review:
-
-1. No dB SPL, dBA, or OSHA/NIOSH dose percentage anywhere in the UI. Levels are
-   labeled relative.
-2. No vowel labels or F1/F2 numbers on the spectrogram.
-3. The ring meter is labeled as relative band energy — not "projection," not
-   "how far your voice carries."
-4. Vocal load carries no health claim.
-
-## Pro gating
-
-`/analyze` is public and indexable. The `ToolGuide` is the content that ranks;
-the instruments are what is gated.
-
-- **Free user**: page shell plus three `LockedPanel`s (`components/pro/ui.tsx`),
-  each painted with a static representative frame, plus the unlock CTA. The
-  preview is drawn by the same canvas component from a deterministic synthetic
-  buffer (a sustained tone with harmonics) — one frame, no animation loop, no
-  image asset, so the locked and live views can never drift apart. The
-  microphone is never requested for a free user — asking for a permission that
-  will not be used is how an app loses that permission for good.
-- **Pro user**: an explicit "enable microphone" button, matching every other mic
-  surface, then all three instruments run off the one stream.
-
-The gate is client-side, consistent with every other gate in the app: Pro state
-is a localStorage cache of Stripe (`lib/pro.ts`). It is defeatable with
-devtools. This is accepted — there are no accounts and no database, and these
-instruments are pure browser computation, so a bypass costs nothing but the
-visitor's own CPU.
+`/analyze` is public, indexable, and free. It carries a `ToolGuide` like every
+other route. An explicit "enable microphone" button starts the session, matching
+every other mic surface in the app; all three instruments then run off the one
+stream.
 
 ## Progress integration
 
@@ -193,11 +157,10 @@ visitor's own CPU.
 | Case | Behavior |
 |---|---|
 | Mic denied, missing, busy, or insecure origin | Existing `micErrorMessage` text, shown in place |
-| No `AudioContext` support | Static preview with an explanatory line; no crash |
+| No `AudioContext` support | Explanatory line in place of the canvas; no crash |
 | Silence or unvoiced input | Spectrogram scrolls empty, Tone shows no harmonic markers, dose does not accumulate |
 | Tab hidden | rAF pauses naturally; dose accumulation stops with it, so a backgrounded tab does not inflate the dose |
 | `localStorage` unavailable | Dose held in memory for the session, matching how `lib/pro.ts` degrades |
-| Pro lapses mid-session | Hook stops, mic released, panels revert to locked |
 
 ## Testing
 
