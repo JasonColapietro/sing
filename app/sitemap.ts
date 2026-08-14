@@ -22,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/songs",
     "/recorder",
     "/tools",
+    "/analyze",
     "/progress",
     "/pro",
     "/book",

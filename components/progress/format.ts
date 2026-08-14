@@ -13,6 +13,7 @@ export const TYPE_META: Record<
   song: { label: "Song", href: "/songs", tone: "amber" },
   recording: { label: "Recording", href: "/recorder", tone: "rec" },
   tools: { label: "Tools", href: "/tools", tone: "mut" },
+  analyze: { label: "Analyze", href: "/analyze", tone: "cool" },
 };
 
 /** "45s", "12m", "1h 04m". */
