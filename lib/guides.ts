@@ -846,3 +846,126 @@ export const STUDIO_GUIDE: GuideContent = {
     },
   ],
 };
+
+export const ANALYZE_GUIDE: GuideContent = {
+  path: "/analyze",
+  pageName: "Voice Spectrogram, Tone Analyzer and Vocal Load Tracker",
+  heading: "What a spectrogram shows a singer",
+  answer:
+    "A spectrogram plots every frequency in your voice against time, so one sung note appears as a stack of horizontal lines: the fundamental at the bottom and its harmonics above. It shows the parts of singing you cannot hear from the inside — where a register changes, how fast a vibrato moves, and how much energy sits in the band that makes a voice carry.",
+  body: [
+    "Pitch tells you which note. Everything else about how a voice sounds — bright or dark, thin or full, ringing or swallowed — comes from the relative strength of the harmonics above that note, and that is what a spectrogram makes visible. Two singers on the same pitch produce completely different pictures.",
+    "The band around 3 kHz is worth knowing about. Trained classical voices tend to show a cluster of energy there, usually called the singer's formant, and it is the accepted explanation for how one voice is heard over an orchestra that is measurably louder. It is not a target to chase directly; it tends to appear as a by-product of an efficient, well-resonated tone.",
+    "Vocal load is a different question from how long you practiced. The vocal-dosimetry literature counts vibration cycles rather than minutes, because pitch decides how much work the folds do in a given second: a soprano rehearsing high for an hour has put her folds through several times the cycles of an hour spent low in the range. Counting cycles is what makes two practice days comparable.",
+  ],
+  howTo: {
+    name: "How to read your voice on a spectrogram",
+    intro:
+      "The analysis runs in your browser on your own device. Nothing is uploaded, and nothing is recorded unless you use the take recorder separately.",
+    steps: [
+      {
+        title: "Allow the microphone and sing a steady note",
+        body: "Pick a comfortable note in the middle of your range and hold it on an open vowel. You should see a stack of horizontal lines: the lowest is the note you are singing, and the ones above it are its harmonics.",
+      },
+      {
+        title: "Count how far the stack goes",
+        body: "A bright, well-supported tone shows many harmonics reaching high up the display. A breathy or pressed tone shows fewer, and more of the fuzzy grey between them, which is air rather than tone.",
+      },
+      {
+        title: "Slide slowly from low to high",
+        body: "Watch the whole stack rise together. Where the picture suddenly reorganises — harmonics dropping out or the texture changing — is a register transition, and it usually happens in the same place every time.",
+      },
+      {
+        title: "Hold a note with vibrato",
+        body: "Vibrato appears as a regular ripple in every line at once. Because all the harmonics move together, a wide ripple low in the stack means a wide one high up too.",
+      },
+      {
+        title: "Watch the ring band on the tone view",
+        body: "The gold column marks 2.8 to 3.2 kHz. Sing the same phrase with different amounts of space and brightness and watch the percentage move. Compare it against your own takes rather than against any fixed number, because it depends on your microphone and how close you are to it.",
+      },
+      {
+        title: "Let vocal load run through a normal session",
+        body: "Leave the page listening while you practice. It counts only the time your voice is actually sounding, so silences and talking between exercises do not inflate it.",
+      },
+    ],
+  },
+  beginner: {
+    heading: "Look at the shape, not the numbers",
+    body: "Early on the useful thing is noticing that the picture changes when you change something. You do not need to interpret a spectrogram to benefit from seeing that a supported note and a breathy one look nothing alike.",
+    points: [
+      "Sing one note two ways — breathy, then firm — and watch how much of the stack fills in",
+      "Find where your register changes by sliding slowly, and remember roughly which note it happens on",
+      "Ignore the ring percentage at first; the spectrogram picture is more useful to a new singer",
+      "Use vocal load to see whether you actually practiced twenty minutes or four",
+    ],
+  },
+  advanced: {
+    heading: "Use it to compare, not to score",
+    body: "Every reading here is relative to your microphone, your distance from it, and your room. That makes it excellent for comparing two of your own takes recorded the same way, and close to meaningless as an absolute measurement against another singer.",
+    points: [
+      "A/B two vowel shapes on the same pitch and watch the ring band rather than trusting the sensation",
+      "Track cycle dose across a heavy rehearsal week — the number climbs faster than practice minutes do",
+      "Watch the harmonic stack through a passaggio to see whether the transition is smoothing out over months",
+      "Keep microphone position consistent between sessions or the comparison is not one",
+    ],
+  },
+  faq: [
+    {
+      q: "What is a spectrogram in singing?",
+      a: "It is a display of every frequency present in your voice, plotted against time. One sung note shows as a stack of lines — the fundamental plus its harmonics — and the pattern of those lines is what makes a voice sound bright, dark, full or thin.",
+    },
+    {
+      q: "What is the singer's formant?",
+      a: "A concentration of energy around 3 kHz found in many trained classical voices. It is the standard explanation for how a single unamplified singer is heard over a full orchestra, since the ear is very sensitive in that region and orchestral sound has comparatively little there.",
+    },
+    {
+      q: "What is vocal dose and why count cycles instead of minutes?",
+      a: "Vocal dose measures how much work the vocal folds have done. Cycle dose counts vibration cycles — pitch multiplied by the time you were actually voicing — because a minute sung high puts the folds through far more cycles than a minute sung low. Minutes alone treat those as equal.",
+    },
+    {
+      q: "Does this measure how loud I am in decibels?",
+      a: "No. A browser cannot know the sensitivity of your microphone or how far your mouth is from it, so the levels here are relative to your own setup. They are useful for comparing your takes with each other, not for measuring sound pressure.",
+    },
+    {
+      q: "Can it tell me which vowel I am singing?",
+      a: "Not currently. Vowel identity comes from the first two resonances of the vocal tract, and at high pitch the harmonics are spaced too far apart to locate them reliably. The spectrogram shows the resonance structure; it does not label it.",
+    },
+    {
+      q: "Is my audio uploaded anywhere?",
+      a: "No. The microphone is read in the browser and the analysis runs on your device. No audio is sent to a server.",
+    },
+  ],
+  related: [
+    {
+      href: "/studio",
+      label: "Pitch studio",
+      note: "Work on the note itself before working on its colour.",
+    },
+    {
+      href: "/recorder",
+      label: "Take recorder",
+      note: "Record the take, then come back and look at it.",
+    },
+    {
+      href: "/range",
+      label: "Range test",
+      note: "Find the register transitions the spectrogram shows.",
+    },
+  ],
+  safety: {
+    heading: "Vocal load is a practice signal, not a health check",
+    body: "Cycle dose can show that today was heavier than yesterday. It cannot tell you what is safe for your voice, because that depends on the individual and on factors no microphone can see. Persistent hoarseness, pain, or a loss of range belongs with a qualified voice teacher or a clinician rather than a number on a screen.",
+    sources: [
+      {
+        href: "https://www.nidcd.nih.gov/health/taking-care-your-voice",
+        label: "NIDCD: Taking Care of Your Voice",
+        note: "voice-health warning signs and guidance for healthy voice use",
+      },
+      {
+        href: "https://www.asha.org/practice-portal/clinical-topics/voice-disorders/",
+        label: "ASHA: Voice Disorders",
+        note: "clinical context for vocal fatigue, effort, and evaluation",
+      },
+    ],
+  },
+};

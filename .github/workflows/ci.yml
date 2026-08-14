@@ -47,6 +47,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Covers the pure DSP modules behind /analyze (spectrum maths, vocal-dose
+      # accumulation). Canvas and the mic hook are not unit-tested: against
+      # mocks those tests would only assert the mocks.
+      - name: Test
+        run: npm test
+
       # Every env var this app reads (STRIPE_SECRET_KEY, PRO_KEY_SECRET, the
       # Upstash pair) is resolved lazily inside a function, specifically so a
       # missing key surfaces as a request-time error instead of breaking the

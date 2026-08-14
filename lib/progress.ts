@@ -12,7 +12,8 @@ export type ActivityType =
   | "breath"
   | "song"
   | "recording"
-  | "tools";
+  | "tools"
+  | "analyze";
 
 export interface SessionLog {
   id: string;

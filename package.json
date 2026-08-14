@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "stripe:setup": "node --env-file=.env.local scripts/stripe-setup.mjs"
+    "stripe:setup": "node --env-file=.env.local scripts/stripe-setup.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@upstash/redis": "^1.38.0",
@@ -25,6 +27,7 @@
     "eslint-config-next": "16.2.11",
     "playwright": "^1.62.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }
