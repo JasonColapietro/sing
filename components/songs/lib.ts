@@ -323,3 +323,21 @@ export function rangeFit(song: Song, range: VocalRange, transpose = 0): RangeFit
   }
   return { verdict: "fits", offsetSemis: 0, suggestedTranspose: suggested };
 }
+
+/**
+ * How many of the given songs sit inside the range as written.
+ *
+ * Takes the list rather than reading the catalog, because the only honest
+ * number to quote is one counted over the songs that singer can actually
+ * open: the free set counted for a subscriber understates the book they paid
+ * for, and the full set counted for a free reader advertises access they hit
+ * a paywall on the moment they click through. Callers pass the same
+ * entitlement-aware list the songbook itself browses.
+ */
+export function countSongsFitting(songs: readonly Song[], range: VocalRange): number {
+  let n = 0;
+  for (const song of songs) {
+    if (rangeFit(song, range).verdict === "fits") n++;
+  }
+  return n;
+}

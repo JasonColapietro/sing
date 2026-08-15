@@ -82,53 +82,74 @@ function MarkCell({ mark }: { mark: Mark }) {
 export default function ComparisonTable() {
   return (
     <div className="w-full min-w-0 [contain:layout]">
-      <div className="no-scrollbar w-full min-w-0 overflow-x-auto rounded-2xl border border-line bg-panel [contain:layout]">
-        <table className="w-full min-w-[720px] border-collapse text-left text-sm">
-          <thead>
-            <tr className="border-b border-line">
-              <th scope="col" className="px-4 py-3.5 font-normal text-dim">
-                <span className="font-mono text-[11px] uppercase tracking-[0.14em]">
-                  Feature
-                </span>
-              </th>
-              <th
-                scope="col"
-                className="bg-panel2 px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink"
-              >
-                Suede Sing
-              </th>
-              {COMPETITORS.map((name) => (
+      {/* The table needs 720px; the section gives it (viewport - 48px), so 768px
+          is the exact width where it stops overflowing — zero slack, and media
+          queries measure the viewport *including* a classic scrollbar while the
+          content box is sized without it, so md: would drop both affordances
+          ~15px early on desktops with non-overlay scrollbars. 800px keeps the
+          slack. Below it the scrollbar is suppressed by no-scrollbar and iOS
+          overlay bars only appear mid-scroll, so the fade and the cue are the
+          only signal that five competitor columns exist off to the right —
+          keep them on the same threshold. */}
+      <p className="mb-3 font-mono text-xs text-dim min-[800px]:hidden">
+        Swipe for {COMPETITORS.length} competitors <span aria-hidden>→</span>
+      </p>
+      <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-line bg-panel [contain:layout]">
+        {/* The scroller is the keyboard-focusable element here (no links or
+            buttons inside the table), and it exactly fills the overflow-hidden
+            wrapper above, which would clip the default 2px-outside focus ring
+            entirely. Draw it inset so it survives the clip and clears the
+            rounded corners. */}
+        <div className="no-scrollbar w-full min-w-0 overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)] focus-visible:[outline-offset:-2px] min-[800px]:[mask-image:none]">
+          <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-line">
+                <th scope="col" className="px-4 py-3.5 font-normal text-dim">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em]">
+                    Feature
+                  </span>
+                </th>
                 <th
                   scope="col"
-                  key={name}
-                  className="px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] font-normal text-mut"
+                  className="bg-panel2 px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink"
                 >
-                  {name}
+                  Suede Sing
                 </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {ROWS.map((row, i) => (
-              <tr
-                key={row.label}
-                className={i < ROWS.length - 1 ? "border-b border-line" : undefined}
-              >
-                <th scope="row" className="px-4 py-3 font-normal text-ink">
-                  {row.label}
-                </th>
-                {row.marks.map((mark, j) => (
-                  <td
-                    key={j}
-                    className={j === 0 ? "bg-panel2 px-4 py-3" : "px-4 py-3"}
+                {COMPETITORS.map((name) => (
+                  <th
+                    scope="col"
+                    key={name}
+                    className="px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] font-normal text-mut"
                   >
-                    <MarkCell mark={mark} />
-                  </td>
+                    {name}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {ROWS.map((row, i) => (
+                <tr
+                  key={row.label}
+                  className={
+                    i < ROWS.length - 1 ? "border-b border-line" : undefined
+                  }
+                >
+                  <th scope="row" className="px-4 py-3 font-normal text-ink">
+                    {row.label}
+                  </th>
+                  {row.marks.map((mark, j) => (
+                    <td
+                      key={j}
+                      className={j === 0 ? "bg-panel2 px-4 py-3" : "px-4 py-3"}
+                    >
+                      <MarkCell mark={mark} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <p className="mt-3 font-mono text-xs text-dim">
         Competitor rows rechecked August 2026 against vendor sites and app
