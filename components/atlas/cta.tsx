@@ -1,6 +1,7 @@
 "use client";
 
 import { useProState } from "@/lib/pro";
+import { formatPrice, PRICING } from "@/lib/pro-shared";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { LinkButton } from "@/components/ui";
 import { PdfDownload } from "@/components/book/pdf-download";
@@ -25,14 +26,15 @@ export function AtlasCta() {
     <div className="flex flex-wrap items-center gap-3">
       {first && (
         <LinkButton href={`/atlas/${first.slug}`} size="md">
-          Read the free chapter
+          Read a free chapter
         </LinkButton>
       )}
       <LinkButton href="/pro" variant="outline" size="md">
         See what Pro includes
       </LinkButton>
       <span className="text-xs text-dim">
-        Contents free · full book and PDF with Pro, $9.99/month
+        First 3 chapters free · full book and PDF with Pro,{" "}
+        {formatPrice(PRICING.monthly.amount)}/month
       </span>
     </div>
   );

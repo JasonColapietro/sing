@@ -5,6 +5,7 @@ import { SITE_URL } from "./site";
 import {
   ENTITLING_STATUSES,
   INACTIVE,
+  PRICING,
   type Entitlement,
   type ProPlan,
 } from "./pro-shared";
@@ -38,18 +39,85 @@ export const PRICE_LOOKUP_KEYS: Record<ProPlan, string> = {
   annual: "suede_pro_annual",
 };
 
+/**
+ * Optional escape hatch: pin a plan to an exact price id instead of looking it
+ * up. Useful when an account carries more than one price with the same lookup
+ * key history, or to point a preview deployment at a throwaway price.
+ *
+ * A pinned price still needs its lookup key set in Stripe — isOurSubscription()
+ * matches on lookup keys, and restore ignores anything without one. Pinning is
+ * also the one way past the amount check below: an operator who names an exact
+ * price id owns whether it matches what the page quotes.
+ */
+const PRICE_ID_ENV_VARS: Record<ProPlan, string> = {
+  monthly: "STRIPE_PRICE_MONTHLY",
+  annual: "STRIPE_PRICE_ANNUAL",
+};
+
+/**
+ * A plan with nothing behind it yet — the annual plan before its price has
+ * been created. Kept distinct from a Stripe outage so checkout can answer
+ * "not on sale" rather than "try again in a moment", which would send someone
+ * back to a button that will never work.
+ */
+export class PriceNotConfiguredError extends Error {
+  readonly plan: ProPlan;
+
+  constructor(plan: ProPlan) {
+    super(
+      `No active Stripe price with lookup key "${PRICE_LOOKUP_KEYS[plan]}". Run \`npm run stripe:setup -- ${plan}\` to create one.`,
+    );
+    this.name = "PriceNotConfiguredError";
+    this.plan = plan;
+  }
+}
+
+/**
+ * A price exists under the plan's lookup key, but it charges something other
+ * than what every surface quotes. Kept distinct from a missing price because
+ * the fix is different — someone has to reconcile Stripe with PRICING — and
+ * because this is a state a live account really reaches: an old annual price
+ * can still hold `suede_pro_annual` long after the page moved on from it.
+ * Checkout refuses rather than charging an amount nobody was shown.
+ */
+export class PriceMismatchError extends Error {
+  readonly plan: ProPlan;
+
+  constructor(plan: ProPlan, price: Stripe.Price) {
+    const shown = `$${PRICING[plan].amount}/${PRICING[plan].interval}`;
+    const held = `$${(price.unit_amount ?? 0) / 100}/${price.recurring?.interval ?? "one-off"}`;
+    super(
+      `Stripe price ${price.id} (lookup key "${PRICE_LOOKUP_KEYS[plan]}") charges ${held}, but /pro quotes ${shown}. Fix the price in Stripe or PRICING in lib/pro-shared.ts.`,
+    );
+    this.name = "PriceMismatchError";
+    this.plan = plan;
+  }
+}
+
 export async function resolvePriceId(plan: ProPlan): Promise<string> {
-  const lookupKey = PRICE_LOOKUP_KEYS[plan];
+  const pinned = process.env[PRICE_ID_ENV_VARS[plan]];
+  if (pinned) {
+    if (!isStripeId(pinned, "price_")) {
+      throw new Error(
+        `${PRICE_ID_ENV_VARS[plan]} is set but doesn't look like a Stripe price id.`,
+      );
+    }
+    return pinned;
+  }
+
   const { data } = await getStripe().prices.list({
-    lookup_keys: [lookupKey],
+    lookup_keys: [PRICE_LOOKUP_KEYS[plan]],
     active: true,
     limit: 1,
   });
   const price = data[0];
-  if (!price) {
-    throw new Error(
-      `No active Stripe price with lookup key "${lookupKey}". Create one for the ${plan} plan.`,
-    );
+  if (!price) throw new PriceNotConfiguredError(plan);
+  // Stripe holds cents, PRICING dollars.
+  if (
+    price.unit_amount !== Math.round(PRICING[plan].amount * 100) ||
+    price.recurring?.interval !== PRICING[plan].interval
+  ) {
+    throw new PriceMismatchError(plan, price);
   }
   return price.id;
 }
