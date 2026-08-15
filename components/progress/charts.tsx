@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import type { ActivityType, SessionLog } from "@/lib/progress";
+import { AMBER, DIM, LINE, LINE2, MONO, MUT, PANEL } from "@/lib/chart-colors";
 import {
   TYPE_META,
   addDays,
@@ -10,15 +11,10 @@ import {
   parseDay,
 } from "./format";
 
-// Design-token hex values for SVG (mirrors app/globals.css @theme).
-export const AMBER = "#c59642";
-export const LINE = "#ddd4c4";
-export const LINE2 = "#c9bda0";
-export const DIM = "#8a8272";
-export const MUT = "#5c564d";
-export const PANEL = "#fffaf2";
-
-export const MONO = "var(--font-mono)";
+// The palette now lives in lib/chart-colors.ts, which every chart, gauge and
+// keyboard reads. Re-exported because pro-charts.tsx and the recorder's pitch
+// analysis import these names from here.
+export { AMBER, DIM, LINE, LINE2, MONO, MUT, PANEL };
 
 /** Bar path: 4px rounded data-end (top), square at the baseline. */
 function roundedTopBar(x: number, y: number, w: number, h: number, r = 4): string {

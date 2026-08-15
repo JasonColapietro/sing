@@ -23,6 +23,7 @@ import {
   Stat,
 } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
+import { streakChipState } from "@/components/nav";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { useIsPro } from "@/lib/pro";
 import { aggregateNotes } from "@/lib/analytics";
@@ -38,14 +39,14 @@ import { TYPE_META, fmtDur, localDayStr, relDay } from "./format";
 /* Small inline icons — coral flame for streaks.                      */
 /* ------------------------------------------------------------------ */
 
-function FlameIcon() {
+function FlameIcon({ filled = false }: { filled?: boolean }) {
   return (
     <svg
       viewBox="0 0 24 24"
       className="h-5 w-5"
-      fill="none"
+      fill={filled ? "currentColor" : "none"}
       stroke="currentColor"
-      strokeWidth={1.6}
+      strokeWidth={filled ? 0 : 1.6}
       aria-hidden="true"
     >
       <path
@@ -90,10 +91,18 @@ function UploadIcon() {
 /* Header stat row                                                     */
 /* ------------------------------------------------------------------ */
 
+/**
+ * The day's practice target the "Today" bar fills against. Ten minutes is the
+ * length the guides give for an ordinary warmup, so it is a day that counts
+ * rather than a day that impresses.
+ */
+const DAILY_GOAL_SEC = 10 * 60;
+
 function HeaderRow({
   xp,
   streakCurrent,
   streakBest,
+  streakLastDay,
   todaySec,
   sessionCount,
   totalSec,
@@ -101,11 +110,19 @@ function HeaderRow({
   xp: number;
   streakCurrent: number;
   streakBest: number;
+  streakLastDay: string | null;
   todaySec: number;
   sessionCount: number;
   totalSec: number;
 }) {
   const lvl = levelForXp(xp);
+  const streak = streakChipState({ current: streakCurrent, lastDay: streakLastDay });
+  // `streak.current` is only recomputed when a session is logged, so a run that
+  // died days ago still reads as a live count. Say so rather than colouring a
+  // dead number coral.
+  const lapsed = streak === "none" && streakCurrent > 0;
+  const goalMet = todaySec >= DAILY_GOAL_SEC;
+  const goalPct = Math.min(100, (todaySec / DAILY_GOAL_SEC) * 100);
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -124,20 +141,45 @@ function HeaderRow({
 
       <Card>
         <SectionLabel>Streak</SectionLabel>
-        <div className="mt-3 flex items-center gap-2 text-rec">
-          <FlameIcon />
+        <div
+          className={`mt-3 flex items-center gap-2 ${lapsed ? "text-dim" : "text-rec"}`}
+        >
+          <FlameIcon filled={streak === "banked"} />
           <span className="tabular font-mono text-2xl">{streakCurrent}</span>
           <span className="text-sm text-mut">
             {streakCurrent === 1 ? "day" : "days"}
           </span>
         </div>
+        {streak !== "none" ? (
+          <p
+            className={`mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] ${
+              streak === "banked" ? "text-ok-ink" : "text-amber-ink"
+            }`}
+          >
+            {streak === "banked" ? "Banked today" : "Keep it alive"}
+          </p>
+        ) : lapsed ? (
+          <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            Ended — practice starts a new one
+          </p>
+        ) : null}
         <p className="tabular mt-1.5 font-mono text-[11px] text-dim">
           Best streak: {streakBest} {streakBest === 1 ? "day" : "days"}
         </p>
       </Card>
 
       <Card>
-        <Stat label="Today" value={fmtDur(todaySec)} sub="practiced so far" />
+        <Stat
+          label="Today"
+          value={fmtDur(todaySec)}
+          sub={
+            goalMet
+              ? `past today's ${DAILY_GOAL_SEC / 60} minutes`
+              : `of a ${DAILY_GOAL_SEC / 60}-minute day`
+          }
+          tone={goalMet ? "ok" : "ink"}
+        />
+        <ProgressBar value={goalPct} tone={goalMet ? "ok" : "rec"} className="mt-3" />
       </Card>
 
       <Card>
@@ -543,6 +585,7 @@ export function ProgressClient() {
             xp={state.xp}
             streakCurrent={state.streak.current}
             streakBest={state.streak.best}
+            streakLastDay={state.streak.lastDay}
             todaySec={todaySec}
             sessionCount={state.sessions.length}
             totalSec={totalSec}

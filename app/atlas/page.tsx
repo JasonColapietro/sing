@@ -67,7 +67,7 @@ export default function AtlasPage() {
 
   return (
     <PageShell
-      kicker="Included with Pro · contents free"
+      kicker="Included with Pro · first 3 chapters free"
       title={ATLAS_TITLE}
       subtitle={ATLAS_SUBTITLE}
     >
@@ -111,7 +111,7 @@ export default function AtlasPage() {
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             The contents below list every chapter and every singer covered —
-            free, along with the first chapter and each singer&rsquo;s{" "}
+            free, along with the first three chapters and each singer&rsquo;s{" "}
             <Link href="/singers" className="text-amber-ink hover:underline">
               range page
             </Link>

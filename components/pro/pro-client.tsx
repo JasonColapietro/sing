@@ -27,7 +27,21 @@ import {
   useProState,
   type ProPlan,
 } from "@/lib/pro";
-import { PRO_FAQ } from "@/lib/pro-shared";
+import {
+  annualEnabled,
+  annualSavingsPct,
+  formatPrice,
+  PRICING,
+  PRO_FAQ,
+} from "@/lib/pro-shared";
+
+/**
+ * Read once, at module scope: NEXT_PUBLIC_PRO_ANNUAL is inlined at build time,
+ * so server and client agree and there's nothing for hydration to disagree
+ * about. Off until the Stripe annual price exists — see lib/pro-shared.
+ */
+const ANNUAL_ON = annualEnabled();
+const ANNUAL_SAVINGS = annualSavingsPct();
 
 const PERK_GLYPHS: Record<string, React.ComponentType> = {
   coach: CoachGlyph,
@@ -247,16 +261,29 @@ function RestorePanel() {
 
 export function ProClient() {
   const pro = useProState();
-  // Monthly is the only plan on sale; the type still allows "annual" so an
-  // older subscription would still be recognised if one ever existed.
-  const [billing] = useState<ProPlan>("monthly");
+  // Monthly stays the default even when yearly is on sale: it's the price
+  // every other surface quotes, and nobody should land on a bigger number
+  // than the one that brought them here.
+  const [billing, setBilling] = useState<ProPlan>("monthly");
   const [justUpgraded, setJustUpgraded] = useState(false);
   const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
   const [abandoned, setAbandoned] = useState(false);
 
-  const price = "$9.99";
-  const priceNote = "per month · billed monthly";
+  // PRICING is today's list price, not a record of what any one subscriber
+  // pays — entitlement carries no amount, and an older price can still sit
+  // behind a plan. So the price copy tracks the plan on sale, and a subscriber
+  // is shown the plan they hold instead of a number that might not be theirs.
+  const annual = billing === "annual";
+  const showToggle = ANNUAL_ON && !pro.active;
+  const price = formatPrice(PRICING[billing].amount);
+  const priceUnit = annual ? "per year" : "per month";
+  const priceNote = annual
+    ? `${formatPrice(PRICING.annual.perMonth)} a month, billed yearly — ${ANNUAL_SAVINGS}% off.`
+    : "Billed monthly, cancel in one click.";
+  const plansBlurb = ANNUAL_ON
+    ? `${formatPrice(PRICING.monthly.amount)} a month, or ${formatPrice(PRICING.annual.amount)} a year and save ${ANNUAL_SAVINGS}%. Every Pro feature sits in the one tier, and the price you join at is the price you keep.`
+    : `${formatPrice(PRICING.monthly.amount)} a month, billed monthly, cancel in one click. Every Pro feature sits in the one tier, and the price you join at is the price you keep.`;
   const periodEnd = longDate(pro.currentPeriodEnd);
 
   // Stripe returns to /pro?checkout=success&session_id=… — confirm the
@@ -487,11 +514,7 @@ export function ProClient() {
                 <h2 className="max-w-2xl text-3xl">
                   One tier. Coach, analytics, songbook, two books.
                 </h2>
-                <p className="mt-3 max-w-xl text-mut">
-                  $9.99 a month, billed monthly, cancel in one click. Every Pro
-                  feature sits in the one tier, and the price you join at is the
-                  price you keep.
-                </p>
+                <p className="mt-3 max-w-xl text-mut">{plansBlurb}</p>
               </div>
             </div>
           )}
@@ -518,14 +541,47 @@ export function ProClient() {
             </p>
           )}
 
-          <div className="mx-auto mt-10 grid max-w-4xl gap-4 sm:grid-cols-2">
+          {showToggle && (
+            <div
+              role="group"
+              aria-label="Billing period"
+              className="mx-auto mt-10 flex w-fit items-center gap-1 rounded-full border border-line bg-panel p-1"
+            >
+              {(["monthly", "annual"] as const).map((plan) => {
+                const on = billing === plan;
+                return (
+                  <button
+                    key={plan}
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() => setBilling(plan)}
+                    className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors ${
+                      on
+                        ? "bg-amber text-[#241a05]"
+                        : "text-mut hover:text-ink"
+                    }`}
+                  >
+                    {plan === "monthly"
+                      ? "Monthly"
+                      : `Yearly · save ${ANNUAL_SAVINGS}%`}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <div
+            className={`mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 ${
+              showToggle ? "mt-6" : "mt-10"
+            }`}
+          >
             {/* Free */}
             <div className="flex flex-col rounded-2xl border border-line bg-panel p-6 sm:p-7">
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
                 Free
               </span>
               <div className="mt-3 flex items-baseline gap-2">
-                <span className="tabular font-mono text-4xl text-ink">$0</span>
+                <span className="tabular font-mono text-3xl text-mut">$0</span>
                 <span className="text-sm text-mut">the whole studio</span>
               </div>
               <p className="mt-2 text-sm text-mut">
@@ -548,25 +604,47 @@ export function ProClient() {
               </div>
             </div>
 
-            {/* Pro */}
-            <div className="relative flex flex-col overflow-hidden rounded-2xl border border-amber bg-panel p-6 sm:p-7">
+            {/* Pro — deliberately the louder card: this is the recommendation,
+                not a second option of equal weight. Roomier sides only, so both
+                cards' CTAs still land on the same baseline. */}
+            <div className="relative flex flex-col overflow-hidden rounded-2xl border border-amber bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-amber)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-amber/30 sm:px-8 sm:py-7">
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-soft via-amber to-amber-soft"
               />
+              <span className="mb-3 inline-flex w-fit items-center rounded bg-amber px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#241a05]">
+                What most singers pick
+              </span>
               <span className="flex items-center gap-2">
                 <ProChip />
                 <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
                   The gold channel
                 </span>
               </span>
-              <div className="mt-3 flex items-baseline gap-2">
-                <span className="tabular font-mono text-4xl text-ink">
-                  {price}
-                </span>
-                <span className="text-sm text-mut">{priceNote}</span>
-              </div>
-              <span className="mt-2 inline-flex w-fit items-center rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-amber-ink">
+              {pro.active ? (
+                <>
+                  <div className="mt-3 flex items-baseline gap-2">
+                    <span className="font-mono text-4xl text-amber-ink sm:text-5xl">
+                      {pro.plan === "annual" ? "Yearly" : "Monthly"}
+                    </span>
+                    <span className="text-sm text-mut">your plan</span>
+                  </div>
+                  <p className="mt-1.5 text-sm text-mut">
+                    Manage or cancel it below.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="mt-3 flex items-baseline gap-2">
+                    <span className="tabular font-mono text-5xl text-amber-ink sm:text-6xl">
+                      {price}
+                    </span>
+                    <span className="text-sm text-mut">{priceUnit}</span>
+                  </div>
+                  <p className="mt-1.5 text-sm text-mut">{priceNote}</p>
+                </>
+              )}
+              <span className="mt-3 inline-flex w-fit items-center rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
                 Founding price — locked for life
               </span>
               <p className="mt-2 text-sm text-mut">
@@ -622,7 +700,7 @@ export function ProClient() {
                     >
                       {checkout.kind === "working"
                         ? "Opening Stripe…"
-                        : "Go Pro — $9.99/month"}
+                        : `Go Pro — ${price}/${annual ? "year" : "month"}`}
                     </Button>
                     <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
                       Secure checkout by Stripe

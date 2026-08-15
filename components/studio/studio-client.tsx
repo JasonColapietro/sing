@@ -3,14 +3,66 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
+import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
 import { PitchTrace } from "./pitch-trace";
-import { TargetPractice } from "./target-practice";
+import { TargetPractice, emptyTargetStats, type TargetStats } from "./target-practice";
 
 const MIN_LOG_SEC = 45;
+
+/**
+ * Target time that has to be sung before the session carries a score. A note
+ * or two of target practice inside a long tuner session is too small a sample
+ * to grade — and a perfect blip would otherwise score 100.
+ */
+const MIN_SCORE_MS = 5000;
+
+const BEST_KEY = "suede-sing:studio-best:v1";
+
+/**
+ * Best target-practice session on this device. Stored as an object so a
+ * later figure (longest combo, say) can join it without a key migration.
+ */
+interface StudioBest {
+  locks: number;
+}
+
+function readStudioBest(): StudioBest {
+  if (typeof window === "undefined") return { locks: 0 };
+  try {
+    const raw = window.localStorage.getItem(BEST_KEY);
+    const parsed = raw ? (JSON.parse(raw) as unknown) : null;
+    const locks =
+      typeof parsed === "object" && parsed !== null
+        ? (parsed as Partial<StudioBest>).locks
+        : undefined;
+    return { locks: typeof locks === "number" && locks > 0 ? locks : 0 };
+  } catch {
+    return { locks: 0 };
+  }
+}
+
+/** Record a finished session's lock count. Returns true on a new best. */
+function saveStudioBest(locks: number): boolean {
+  if (locks <= readStudioBest().locks) return false;
+  try {
+    window.localStorage.setItem(BEST_KEY, JSON.stringify({ locks }));
+  } catch {
+    // storage unavailable — the best simply isn't remembered
+  }
+  return true;
+}
+
+/** What a finished session has to report, whether or not it was long enough to log. */
+interface StudioResult {
+  /** Null when the session ran under MIN_LOG_SEC — nothing was written. */
+  log: LogResult | null;
+  locks: number;
+  newBest: boolean;
+}
 
 function fmtTime(sec: number): string {
   const m = Math.floor(sec / 60);
@@ -41,16 +93,27 @@ function MicIcon() {
 export function StudioClient() {
   const { frame, latest, listening, error, start, stop } = usePitch();
   const [elapsed, setElapsed] = useState(0);
-  const [toast, setToast] = useState<LogResult | null>(null);
+  const [toast, setToast] = useState<StudioResult | null>(null);
   const [targetMidi, setTargetMidi] = useState<number | null>(null);
   const startedAtRef = useRef<number | null>(null);
+  // Seconds already sung this session that were too short to log on their own.
+  // A phone that hides the page every time the screen locks flushes below the
+  // floor over and over; without this, each of those stretches would be thrown
+  // away and a long interrupted practice would log nothing at all.
+  const carriedSecRef = useRef(0);
+  // Owned here rather than inside TargetPractice: stopping the mic unmounts
+  // that component, and the session it scored is logged after it is gone.
+  const statsRef = useRef<TargetStats>(emptyTargetStats());
 
   // Session timer while listening.
   useEffect(() => {
     if (!listening) return;
     const id = window.setInterval(() => {
       if (startedAtRef.current !== null) {
-        setElapsed(Math.floor((Date.now() - startedAtRef.current) / 1000));
+        setElapsed(
+          carriedSecRef.current +
+            Math.floor((Date.now() - startedAtRef.current) / 1000),
+        );
       }
     }, 1000);
     return () => window.clearInterval(id);
@@ -60,33 +123,78 @@ export function StudioClient() {
     const ok = await start();
     if (ok) {
       startedAtRef.current = Date.now();
+      carriedSecRef.current = 0;
+      statsRef.current = emptyTargetStats();
       setElapsed(0);
       setToast(null);
     }
   };
 
-  /** Log the session if it ran long enough. Safe to call more than once. */
-  const finishSession = useCallback((): LogResult | null => {
+  /**
+   * Close out the session: bank the personal best and log the practice if it
+   * ran long enough. Idempotent — `startedAtRef` is nulled first, so every
+   * later call falls straight out. That is what makes it safe to fire from
+   * the stop button, from unmount, and from the page going away.
+   */
+  const finishSession = useCallback((): StudioResult | null => {
     const startedAt = startedAtRef.current;
     startedAtRef.current = null;
     if (startedAt === null) return null;
-    const durationSec = Math.floor((Date.now() - startedAt) / 1000);
-    if (durationSec <= MIN_LOG_SEC) return null;
-    return logSession({
-      type: "pitch",
-      durationSec,
-      detail: "Studio session",
-    });
+
+    const { hits, scoredMs, inTuneMs } = statsRef.current;
+    // Banked before the duration floor: a short session that locked notes
+    // still earned the best it set.
+    const newBest = hits > 0 && saveStudioBest(hits);
+
+    const durationSec =
+      carriedSecRef.current + Math.floor((Date.now() - startedAt) / 1000);
+    if (durationSec < MIN_LOG_SEC) {
+      // Nothing was logged, so nothing is thrown away either: the seconds and
+      // the locks stay banked for the next flush, and the singer interrupted
+      // twice still logs the practice they actually did.
+      carriedSecRef.current = durationSec;
+      return { log: null, locks: hits, newBest };
+    }
+
+    carriedSecRef.current = 0;
+    statsRef.current = emptyTargetStats();
+    return {
+      log: logSession({
+        type: "pitch",
+        durationSec,
+        detail:
+          hits > 0
+            ? `Studio — ${hits} lock${hits === 1 ? "" : "s"}`
+            : "Studio session",
+        // The score is the share of sung target time that landed in tune —
+        // the same measure the warmup ladders report, so the two are
+        // comparable in the weekly trend. A pure-tuner session never set a
+        // target, so it goes in unscored: a 0 there would read as a failed
+        // session, not an unscored one, and would drag the trend down with it.
+        ...(scoredMs >= MIN_SCORE_MS
+          ? { score: Math.round((100 * inTuneMs) / scoredMs) }
+          : {}),
+      }),
+      locks: hits,
+      newBest,
+    };
   }, []);
 
   const handleStop = () => {
     stop();
     const result = finishSession();
-    if (result) setToast(result);
+    if (result && (result.log || result.locks > 0)) setToast(result);
   };
 
-  // Log on unmount too (e.g. navigating away mid-session).
-  useEffect(() => () => void finishSession(), [finishSession]);
+  // Unmount alone loses the session: a closed tab, a closed laptop, and a
+  // swiped-away PWA never fire it. Backgrounding also fires here and usually
+  // isn't the end of anything, so the clock picks up again when the mic is
+  // still on — either from zero because the first stretch banked a log, or
+  // from carriedSecRef because it was too short to.
+  const flushOnExit = useCallback(() => {
+    if (finishSession() && listening) startedAtRef.current = Date.now();
+  }, [finishSession, listening]);
+  useFlushOnExit(flushOnExit);
 
   const note = frame.note;
   const inTune = note !== null && Math.abs(note.cents) <= 15;
@@ -98,15 +206,20 @@ export function StudioClient() {
       subtitle="Sing into the mic and watch every note land — name, cents, and an eight-second trace."
       actions={
         listening ? (
-          <>
-            <Pill tone="rec">
-              <span className="h-1.5 w-1.5 animate-recblink rounded-full bg-rec" />
-              <span className="tabular font-mono">{fmtTime(elapsed)}</span>
-            </Pill>
-            <Button variant="outline" onClick={handleStop}>
-              Stop
-            </Button>
-          </>
+          <div className="flex flex-col items-end gap-1.5">
+            <div className="flex items-center gap-2">
+              <Pill tone="rec">
+                <span className="h-1.5 w-1.5 animate-recblink rounded-full bg-rec" />
+                <span className="tabular font-mono">{fmtTime(elapsed)}</span>
+              </Pill>
+              <Button variant="outline" onClick={handleStop}>
+                Stop
+              </Button>
+            </div>
+            <p className="text-[11px] text-dim">
+              Sessions under {MIN_LOG_SEC} seconds aren&rsquo;t logged.
+            </p>
+          </div>
         ) : undefined
       }
     >
@@ -114,11 +227,26 @@ export function StudioClient() {
         <Card className="mb-6 border-amber/40 bg-panel2">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="tabular font-mono text-xl text-amber-ink">
-                +{toast.xpGained} XP
-              </span>
-              <span className="text-sm text-mut">Session saved.</span>
-              {toast.newAchievements.map((a) => (
+              {toast.log ? (
+                <>
+                  <span className="tabular font-mono text-xl text-amber-ink">
+                    +{toast.log.xpGained} XP
+                  </span>
+                  <span className="text-sm text-mut">Session saved.</span>
+                </>
+              ) : (
+                <span className="text-sm text-mut">
+                  That one ran under {MIN_LOG_SEC} seconds, so it wasn&rsquo;t
+                  logged.
+                </span>
+              )}
+              {toast.locks > 0 && (
+                <Pill tone={toast.newBest ? "ok" : "amber"}>
+                  <span className="tabular font-mono">{toast.locks}</span>
+                  {toast.newBest ? " locked · new personal best" : " locked"}
+                </Pill>
+              )}
+              {toast.log?.newAchievements.map((a) => (
                 <Pill key={a.id} tone="ok">
                   {a.icon} {a.title}
                 </Pill>
@@ -213,6 +341,7 @@ export function StudioClient() {
             listening={listening}
             targetMidi={targetMidi}
             onTargetChange={setTargetMidi}
+            stats={statsRef}
           />
         </>
       )}

@@ -14,19 +14,26 @@ import {
   ringRatio,
 } from "@/lib/audio/spectrum";
 import { freqToNote } from "@/lib/audio/notes";
+import {
+  AMBER,
+  DIM,
+  INK,
+  LINE,
+  LINE2,
+  PANEL,
+  monoFontStack,
+} from "@/lib/chart-colors";
 
 const C = {
-  bg: "#fffaf2",
-  line: "#ddd4c4",
-  line2: "#c9bda0",
-  ink: "#20201d",
-  dim: "#6b6455",
-  amber: "#c59642",
+  bg: PANEL,
+  line: LINE,
+  line2: LINE2,
+  ink: INK,
+  dim: DIM,
+  amber: AMBER,
   amberFill: "rgba(197, 150, 66, 0.14)",
   ringFill: "rgba(197, 150, 66, 0.10)",
 } as const;
-
-const MONO = '"IBM Plex Mono", ui-monospace, monospace';
 const PAD_B = 18;
 
 /**
@@ -87,7 +94,7 @@ export function Tone({
       ctx.fillRect(xRingLo, 0, xRingHi - xRingLo, plotH);
 
       // Octave gridlines and their labels.
-      ctx.font = `10px ${MONO}`;
+      ctx.font = `10px ${monoFontStack()}`;
       ctx.fillStyle = C.dim;
       ctx.textAlign = "center";
       ctx.textBaseline = "top";

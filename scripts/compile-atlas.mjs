@@ -8,7 +8,8 @@
  * entries generated from the same batches that build the singer pages. Chapter
  * metadata (and each chapter's roster of singers) is free and feeds the
  * contents page; intro bodies and entry prose are served only through the
- * subscription gate, except the first chapter, which is the free sample.
+ * subscription gate, except the chapters in FREE_CHAPTER_ORDERS, which render
+ * in full on their own pages as the book's free sample.
  *
  * Run scripts/compile-singers.mjs first — it owns validation of the batches.
  * This script trusts them and only re-derives what it needs.
@@ -328,6 +329,18 @@ function voiceTypesMarkdown() {
   return rows.join("\n");
 }
 
+/**
+ * Which chapters render in full, for free, on their own page.
+ *
+ * Chapter 1 teaches the entry format, but the two after it define the
+ * vocabulary every free surface already prints — scientific pitch notation and
+ * the voice-type labels. Gating the definitions of words the product uses on
+ * its free pages costs more than it earns, so the literacy chapters sample the
+ * book. Widening this set is a pricing decision, not a content edit, which is
+ * why it lives here rather than in the frontmatter.
+ */
+const FREE_CHAPTER_ORDERS = new Set([1, 2, 3]);
+
 const chapters = [];
 for (const file of readdirSync(CONTENT).filter((f) => f.endsWith(".md")).sort()) {
   const raw = readFileSync(join(CONTENT, file), "utf8");
@@ -375,7 +388,7 @@ for (const file of readdirSync(CONTENT).filter((f) => f.endsWith(".md")).sort())
     title: meta.title,
     part: meta.part,
     summary: meta.summary ?? "",
-    free: order === 1,
+    free: FREE_CHAPTER_ORDERS.has(order),
     words: wordCount(fullBody) + entryWords,
     body: fullBody,
     entries: entries.map((s) => {
@@ -432,9 +445,10 @@ const out = `/**
  *
  * "The Voice Atlas", the second book included with Suede Sing Pro. Chapter
  * bodies and entry prose are served only through /api/book (which verifies the
- * subscription with Stripe); the contents metadata — including each chapter's
- * roster of singers — is free, and every roster name already has a free page
- * at /singers/[slug].
+ * subscription with Stripe), except the chapters flagged \`free\`, which render
+ * server-side on their own pages; the contents metadata — including each
+ * chapter's roster of singers — is free, and every roster name already has a
+ * free page at /singers/[slug].
  */
 
 export interface AtlasEntry {

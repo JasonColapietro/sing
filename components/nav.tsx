@@ -5,8 +5,8 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useProgress, levelForXp } from "@/lib/progress";
-import { useIsPro } from "@/lib/pro";
+import { useProgress, levelForXp, localDay } from "@/lib/progress";
+import { useIsPro, useProReady } from "@/lib/pro";
 import { ProChip } from "@/components/pro/ui";
 import { useModalFocus } from "@/lib/use-modal-focus";
 
@@ -28,7 +28,14 @@ const LINKS = [
 
 function MenuIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+      className="shrink-0"
+    >
       <path
         d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"
         stroke="currentColor"
@@ -52,11 +59,62 @@ function CloseIcon() {
   );
 }
 
+/** Solid once today is banked, outline while the streak is still at risk. */
+function FlameIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className="shrink-0"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth={filled ? 0 : 1.8}
+    >
+      <path
+        d="M12 2.5c1 3-3 4.5-3 8a3 3 0 0 0 6 0c0-1.2-.6-2-.6-2 1.8.6 3.1 2.6 3.1 4.6a5.5 5.5 0 0 1-11 0c0-4.5 3.5-6 4.2-9.8.1-.5.8-1.2 1.3-.8Z"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** What the streak chip is allowed to say. */
+export type StreakChipState = "banked" | "at-risk" | "none";
+
+/**
+ * The single definition of the streak chip's three states, shared by the header
+ * chip here and the Streak card on /progress so the two cannot disagree.
+ *
+ * `streak.current` is only recomputed when a session is logged, so it keeps its
+ * old value for days after the streak has actually died. "At risk" therefore
+ * requires the last practice to have been *yesterday* — the same guard the
+ * coach card uses — otherwise a long-dead streak would be advertised as
+ * something today's practice could still save.
+ */
+export function streakChipState(
+  streak: { current: number; lastDay: string | null },
+  now: Date = new Date(),
+): StreakChipState {
+  if (streak.current <= 0 || !streak.lastDay) return "none";
+  if (streak.lastDay === localDay(now)) return "banked";
+  const yesterday = localDay(new Date(now.getTime() - 24 * 3600 * 1000));
+  return streak.lastDay === yesterday ? "at-risk" : "none";
+}
+
 export default function Nav() {
   const pathname = usePathname();
   const p = useProgress();
   const lvl = levelForXp(p.xp);
   const isPro = useIsPro();
+  const proReady = useProReady();
+  // Prerendered HTML has no entitlement to read, so "not Pro" is a guess until
+  // the client store reports in. Gate anything that would state something false;
+  // the header pill is styling only and says "Pro" either way, so it uses this
+  // directly rather than holding a third neutral state that every visitor sees.
+  const proActive = proReady && isPro;
+  const streak = streakChipState(p.streak);
   const [menuOpen, setMenuOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   useModalFocus(menuOpen, drawerRef);
@@ -136,21 +194,56 @@ export default function Nav() {
               </button>
             </div>
 
+            {/* Directly under the header: on a phone this is the only entry to
+                the paid tier — /pro is deliberately not one of the thirteen
+                room links — and at the bottom of the list it sat below the
+                fold on every screen size. */}
+            <div className="px-4 pt-4">
+              <Link
+                href="/pro"
+                onClick={() => setMenuOpen(false)}
+                className="relative block overflow-hidden rounded-2xl border border-amber/50 bg-panel px-4 py-4 transition-colors hover:border-amber"
+              >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber to-transparent"
+                />
+                <span className="flex items-center gap-2">
+                  <ProChip />
+                  <span className="font-display text-base font-extrabold">
+                    Suede Pro
+                  </span>
+                </span>
+                <span className="mt-1 block text-sm text-mut">
+                  {proActive
+                    ? "Gold channel active — manage your plan"
+                    : "The coach on top of the studio"}
+                </span>
+              </Link>
+            </div>
+
             <div className="flex items-center gap-2 px-4 pt-4 font-mono text-xs text-dim">
               <span className="text-amber-ink">LV {lvl.level}</span>
               <span>·</span>
               <span className="tabular">{p.xp} XP</span>
-              {p.streak.current > 0 && (
+              {streak !== "none" && (
                 <>
                   <span>·</span>
-                  <span className="text-rec">{p.streak.current} day streak</span>
+                  <span className="flex items-center gap-1 text-rec">
+                    <FlameIcon filled={streak === "banked"} />
+                    <span className="tabular">{p.streak.current}</span>
+                    <span>day streak</span>
+                    {streak === "at-risk" && (
+                      <span className="text-dim">· not yet today</span>
+                    )}
+                  </span>
                 </>
               )}
             </div>
 
             <nav
               aria-label="Main"
-              className="mt-4 grid grid-cols-2 gap-2.5 px-4 pb-3"
+              className="mt-4 grid grid-cols-2 gap-2.5 px-4 pb-8"
             >
               {LINKS.map((l) => {
                 const active =
@@ -171,30 +264,6 @@ export default function Nav() {
                 );
               })}
             </nav>
-
-            <div className="px-4 pb-8">
-              <Link
-                href="/pro"
-                onClick={() => setMenuOpen(false)}
-                className="relative block overflow-hidden rounded-2xl border border-amber/50 bg-panel px-4 py-4 transition-colors hover:border-amber"
-              >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber to-transparent"
-                />
-                <span className="flex items-center gap-2">
-                  <ProChip />
-                  <span className="font-display text-base font-extrabold">
-                    Suede Pro
-                  </span>
-                </span>
-                <span className="mt-1 block text-sm text-mut">
-                  {isPro
-                    ? "Gold channel active — manage your plan"
-                    : "The coach on top of the studio"}
-                </span>
-              </Link>
-            </div>
           </div>
         </div>,
         document.body,
@@ -248,16 +317,18 @@ export default function Nav() {
             onClick={() => setMenuOpen(true)}
             aria-haspopup="dialog"
             aria-expanded={menuOpen}
-            className="flex flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:hidden"
+            className="flex min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:hidden"
           >
             <MenuIcon />
-            {currentLabel}
+            <span className="truncate">{currentLabel}</span>
           </button>
 
+          {/* Shown at every width: on a phone the header was the one place Pro
+              had no entry at all, and the drawer is two taps away. */}
           <Link
             href="/pro"
-            className={`hidden shrink-0 items-center rounded-full px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:flex ${
-              isPro
+            className={`flex shrink-0 items-center rounded-full px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:px-3 ${
+              proActive
                 ? "bg-amber text-[#241a05] hover:bg-amber-soft"
                 : "border border-amber/60 text-amber-ink hover:border-amber hover:bg-panel2"
             }`}
@@ -272,10 +343,27 @@ export default function Nav() {
             <span className="text-amber-ink">LV {lvl.level}</span>
             <span className="text-dim">·</span>
             <span className="tabular">{p.xp} XP</span>
-            {p.streak.current > 0 && (
+            {streak !== "none" && (
               <>
                 <span className="text-dim">·</span>
-                <span className="text-rec">{p.streak.current}d</span>
+                <span className="flex items-center gap-1 text-rec">
+                  <FlameIcon filled={streak === "banked"} />
+                  <span aria-hidden="true" className="tabular">
+                    {p.streak.current}d
+                  </span>
+                  {streak === "at-risk" && (
+                    <span aria-hidden="true" className="text-dim">
+                      · today?
+                    </span>
+                  )}
+                  {/* "5d · today?" is the compact form the header has room for;
+                      the sentence is what a screen reader gets instead. */}
+                  <span className="sr-only">
+                    {streak === "banked"
+                      ? `${p.streak.current} day streak, practiced today`
+                      : `${p.streak.current} day streak, at risk — nothing practiced today`}
+                  </span>
+                </span>
               </>
             )}
           </Link>

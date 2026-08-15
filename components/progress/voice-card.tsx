@@ -3,6 +3,14 @@
 import type { VocalRange } from "@/lib/progress";
 import { midiToLabel } from "@/lib/audio/notes";
 import { Card, EmptyState, LinkButton, Pill } from "@/components/ui";
+import {
+  AMBER,
+  DIM,
+  LINE,
+  MONO,
+  STRIP_BLACK,
+  STRIP_WHITE,
+} from "@/lib/chart-colors";
 
 const STRIP_LOW = 36; // C2
 const STRIP_HIGH = 84; // C6
@@ -42,8 +50,8 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
             width={CW - 1}
             height={(black ? KH * 0.62 : KH) - 1}
             rx={1.5}
-            fill={black ? "#fffaf2" : "#e9e2d3"}
-            stroke="#ddd4c4"
+            fill={black ? STRIP_BLACK : STRIP_WHITE}
+            stroke={LINE}
             strokeWidth={1}
           />
         );
@@ -66,8 +74,8 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
           textAnchor="middle"
           fontSize={10}
           fontWeight={600}
-          fontFamily="var(--font-mono)"
-          fill="#c59642"
+          fontFamily={MONO}
+          fill={AMBER}
         >
           {midiToLabel(m)}
         </text>
@@ -81,8 +89,8 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
             y={KH + 13}
             textAnchor="middle"
             fontSize={8}
-            fontFamily="var(--font-mono)"
-            fill="#8a8272"
+            fontFamily={MONO}
+            fill={DIM}
           >
             {midiToLabel(m)}
           </text>

@@ -2,12 +2,11 @@
 
 import { useMemo } from "react";
 import type { SessionLog } from "@/lib/progress";
+import { AMBER, DIM, MONO, PANEL2 } from "@/lib/chart-colors";
 import { addDays, localDayStr, mondayOf, secondsByDay } from "./format";
 
-const AMBER = "#c59642";
-const EMPTY = "#efe6d5";
-const DIM = "#8a8272";
-const MONO = "var(--font-mono)";
+/** Unpractised day. */
+const EMPTY = PANEL2;
 
 /** 4 amber intensity steps (opacity on the amber hue) + empty. */
 const STEPS = [0.25, 0.45, 0.7, 1] as const;

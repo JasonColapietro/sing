@@ -4,7 +4,7 @@
  * either owning the rules.
  */
 
-import { JUDGMENTS, type JudgmentTally } from "./lib";
+import { JUDGMENTS, emptyTally, type JudgmentTally } from "./lib";
 
 export type Grade = "S" | "A" | "B" | "C" | "D";
 export type Tone = "ok" | "amber" | "rec";
@@ -105,6 +105,19 @@ export function computeGrade(
 
   const stars = Math.max(0, Math.min(STAR_MAX, Math.round((score / 100) * STAR_MAX)));
   return { grade, stars, tone: toneForGrade(grade) };
+}
+
+/**
+ * Grade for a session that produces one score and no per-note judgments —
+ * a warmup ladder, where nothing builds a JudgmentTally.
+ *
+ * The tiebreak above only runs when a tally has entries, so the empty one
+ * passed here is the honest input rather than a placeholder: the letter and
+ * stars come from the score alone. A warmup therefore can't earn the combo
+ * bump a song can, which is correct — there is no combo to earn it with.
+ */
+export function gradeForScore(score: number | undefined): GradeResult | null {
+  return computeGrade(score, 0, emptyTally());
 }
 
 /** Screen-reader text for a star rating — never rely on glyphs alone. */

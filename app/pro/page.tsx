@@ -1,6 +1,11 @@
 import { ProClient } from "@/components/pro/pro-client";
 import { AUTHOR_ID, AUTHOR_NODE } from "@/lib/author";
-import { PRO_FAQ } from "@/lib/pro-shared";
+import {
+  annualEnabled,
+  PRICING,
+  PRO_FAQ,
+  type ProPlan,
+} from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata = {
@@ -10,6 +15,41 @@ export const metadata = {
   alternates: { canonical: `${SITE_URL}/pro` },
 };
 
+/** UN/CEFACT period codes for a recurring price's reference quantity. */
+const UNIT_CODES: Record<"month" | "year", string> = { month: "MON", year: "ANN" };
+
+function offerFor(plan: ProPlan) {
+  const { amount, interval } = PRICING[plan];
+  // Schema wants a plain decimal string, so "79" is written "79.00" here even
+  // though the page shows it without the cents.
+  const price = amount.toFixed(2);
+  return {
+    "@type": "Offer",
+    url: `${SITE_URL}/pro`,
+    name: plan === "annual" ? "Suede Pro — yearly" : "Suede Pro — monthly",
+    price,
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+    // "9.99 USD per one month" — the recurring shape, rather than a one-off
+    // price that happens to read 9.99.
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      price,
+      priceCurrency: "USD",
+      referenceQuantity: {
+        "@type": "QuantitativeValue",
+        value: 1,
+        unitCode: UNIT_CODES[interval],
+      },
+    },
+  };
+}
+
+/** Only markets what can actually be bought today. */
+const OFFERS = annualEnabled()
+  ? [offerFor("monthly"), offerFor("annual")]
+  : [offerFor("monthly")];
+
 /**
  * The page that states the price carried no structured data at all, so the
  * question an answer engine is most likely to be asked about this app — what
@@ -17,9 +57,9 @@ export const metadata = {
  * homepage's SoftwareApplication offer is the free studio, priced 0, which
  * says nothing about the paid tier.
  *
- * The price here is the price the page renders. The FAQ is built from PRO_FAQ,
- * the same array the page displays, so the marked-up answers cannot drift from
- * the visible ones.
+ * The prices here are the prices the page renders — both read PRICING. The
+ * FAQ is built from PRO_FAQ, the same array the page displays, so the marked-up
+ * answers cannot drift from the visible ones.
  */
 const PRO_JSON_LD = {
   "@context": "https://schema.org",
@@ -47,25 +87,7 @@ const PRO_JSON_LD = {
       brand: { "@id": "https://suedeai.ai/#organization" },
       category: "Vocal training subscription",
       isRelatedTo: { "@id": `${SITE_URL}/#app` },
-      offers: {
-        "@type": "Offer",
-        url: `${SITE_URL}/pro`,
-        price: "9.99",
-        priceCurrency: "USD",
-        availability: "https://schema.org/InStock",
-        // "9.99 USD per one month" — the recurring shape, rather than a
-        // one-off price that happens to read 9.99.
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          price: "9.99",
-          priceCurrency: "USD",
-          referenceQuantity: {
-            "@type": "QuantitativeValue",
-            value: 1,
-            unitCode: "MON",
-          },
-        },
-      },
+      offers: OFFERS,
     },
     {
       "@type": "FAQPage",

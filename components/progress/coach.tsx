@@ -8,6 +8,7 @@ import { ProInlineNudge } from "@/components/pro/gate";
 import { LockGlyph } from "@/components/pro/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { aggregateNotes, overallAccuracy, weakNotes } from "@/lib/analytics";
+import { EXERCISES } from "@/components/warmups/exercises";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
 interface PlanItem {
@@ -15,7 +16,21 @@ interface PlanItem {
   href: string;
   minutes: number;
   reason: string;
+  /**
+   * Warmup exercise to open on arrival, as `/warmups?exercise=<id>`. Free-tier
+   * ids only: the warmups page drops pack ids for a singer without Pro, and
+   * this is the item a free singer actually sees.
+   */
+  id?: string;
 }
+
+/**
+ * Measured span, in semitones, before the octave siren is worth recommending.
+ * computeRootLadder clamps every root to `lowMidi + 4` until `highMidi - 5 - 12`
+ * clears it, so a narrower singer gets the same rep six times over, glided to
+ * `lowMidi + 16` — above their own measured ceiling.
+ */
+const OCTAVE_SIREN_MIN_SEMIS = 21;
 
 function buildPlan(state: ProgressState, now: Date): {
   banner: string | null;
@@ -84,7 +99,13 @@ function buildPlan(state: ProgressState, now: Date): {
 
   const items: PlanItem[] = [];
 
+  // Whether a range prompt already claimed the lead. A missing or stale
+  // measurement is the more foundational gap — every other exercise ladders
+  // off it — so nothing below is allowed to promote past it.
+  let rangeFirst = false;
+
   if (!hasRange) {
+    rangeFirst = true;
     items.push({
       title: "Vocal range test",
       href: "/range",
@@ -93,6 +114,7 @@ function buildPlan(state: ProgressState, now: Date): {
         "You haven't measured your range yet — it anchors every other exercise to your voice.",
     });
   } else if (rangeAgeDays !== null && rangeAgeDays >= 21) {
+    rangeFirst = true;
     items.push({
       title: "Retake the range test",
       href: "/range",
@@ -114,19 +136,38 @@ function buildPlan(state: ProgressState, now: Date): {
   if (weak.length > 0) {
     const worst = weak[0];
     const names = weak.map((n) => midiToLabel(n.midi)).join(" and ");
-    const upper = hasRange && state.range.highMidi !== undefined
-      ? worst.midi >= state.range.highMidi - 5
-      : worst.midi >= 67;
-    items.push({
-      title: upper ? "Head-voice builder warmup" : "Slow sirens through your weak spot",
+    // A weak note at the top of the range wants the full-octave glide that
+    // carries the voice through the break; anything lower wants the smaller,
+    // slower siren that sits on the weak spot. The octave is only offered to a
+    // singer whose measured span can hold it — below that the ladder collapses
+    // and every rep glides past their own ceiling.
+    const wantsOctave =
+      state.range.lowMidi !== undefined && state.range.highMidi !== undefined
+        ? worst.midi >= state.range.highMidi - 5 &&
+          state.range.highMidi - state.range.lowMidi >= OCTAVE_SIREN_MIN_SEMIS
+        : worst.midi >= 67;
+    // Titled from the catalog so the link and the label can never name
+    // different exercises.
+    const target = EXERCISES.find(
+      (e) => e.id === (wantsOctave ? "octave-siren" : "ng-siren-fifth"),
+    );
+    const item: PlanItem = {
+      title: target?.title ?? "Slow sirens through your weak spot",
       href: "/warmups",
+      id: target?.id,
       minutes: 6,
       reason: `${names} ${weak.length > 1 ? "are" : "is"} your weakest ${
         weak.length > 1 ? "notes" : "note"
       } right now — ${midiToLabel(worst.midi)} lands in tune just ${worst.accuracy}% of the time${
         worst.cents !== null ? `, off by ~${Math.round(worst.cents)} cents` : ""
       }. Ladder through it slowly.`,
-    });
+    };
+    // A free singer only ever sees item 0 (CoachCard locks the rest), so the
+    // one item built from their own scored notes has to be it — otherwise the
+    // whole plan reads as the same generic breathing line for everyone. A
+    // range prompt still outranks it.
+    if (rangeFirst) items.push(item);
+    else items.unshift(item);
   } else {
     items.push({
       title: "Warmups",
@@ -218,7 +259,7 @@ export function CoachCard({ state }: { state: ProgressState }) {
               <div className="min-w-0">
                 <div className="flex flex-wrap items-baseline gap-x-2">
                   <Link
-                    href={item.href}
+                    href={item.id ? `${item.href}?exercise=${item.id}` : item.href}
                     className="font-medium text-ink underline-offset-4 hover:text-amber-ink hover:underline"
                   >
                     {item.title}

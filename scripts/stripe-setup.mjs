@@ -9,6 +9,12 @@
  *   node --env-file=.env.local scripts/stripe-setup.mjs
  *   STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs
  *
+ * Name plans to work on only those — this is how the yearly price gets created
+ * on its own, once, without touching a live monthly price:
+ *
+ *   npm run stripe:setup -- annual
+ *   STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs annual
+ *
  * Safe to re-run — it reuses whatever already exists and never deletes
  * anything. Prices are keyed by lookup key, which is what the app resolves at
  * runtime, so nothing in the code changes between modes.
@@ -16,20 +22,43 @@
 
 import Stripe from "stripe";
 
+/**
+ * Amounts are in cents and must match PRICING in lib/pro-shared.ts, which is
+ * what every page displays. A mismatch is fatal: this script never edits a
+ * price it didn't create, so it reports the plan as not ready and exits
+ * non-zero rather than leaving an operator to deploy a page quoting one price
+ * over a Stripe price that charges another. Checkout refuses that pairing too.
+ */
 const PLANS = [
   {
+    key: "monthly",
     lookupKey: "suede_pro_monthly",
     nickname: "Suede Pro monthly",
-    unitAmount: 400,
+    unitAmount: 999,
     interval: "month",
   },
   {
+    key: "annual",
     lookupKey: "suede_pro_annual",
     nickname: "Suede Pro annual",
-    unitAmount: 3000,
+    unitAmount: 7900,
     interval: "year",
   },
 ];
+
+const requested = process.argv.slice(2).filter((arg) => !arg.startsWith("-"));
+const unknown = requested.filter((arg) => !PLANS.some((p) => p.key === arg));
+if (unknown.length) {
+  console.error(
+    `Unknown plan: ${unknown.join(", ")}\n` +
+      `  Usage: node scripts/stripe-setup.mjs [${PLANS.map((p) => p.key).join("|")}]\n` +
+      "  With no plan named, every plan is created or reused.",
+  );
+  process.exit(1);
+}
+const selected = requested.length
+  ? PLANS.filter((plan) => requested.includes(plan.key))
+  : PLANS;
 
 const PRODUCT_NAME = "Suede Pro";
 const PRODUCT_DESCRIPTION =
@@ -86,8 +115,11 @@ async function resolveProduct() {
 }
 
 async function ensurePrice(productId, plan) {
+  // active: true is the same question resolvePriceId() asks at checkout — an
+  // archived price with this lookup key is not a price the app can sell.
   const { data } = await stripe.prices.list({
     lookup_keys: [plan.lookupKey],
+    active: true,
     limit: 1,
   });
   const existing = data[0];
@@ -95,13 +127,12 @@ async function ensurePrice(productId, plan) {
     const amount = (existing.unit_amount ?? 0) / 100;
     const matches =
       existing.unit_amount === plan.unitAmount &&
-      existing.recurring?.interval === plan.interval &&
-      existing.active;
+      existing.recurring?.interval === plan.interval;
     console.log(
       `price:    ${plan.lookupKey} -> ${existing.id} (reused, $${amount}/${existing.recurring?.interval})` +
-        (matches ? "" : "  ⚠️  differs from the price on /pro — check it"),
+        (matches ? "" : "  ⚠️  differs from the price on /pro"),
     );
-    return;
+    return matches ? "reused" : "mismatch";
   }
 
   const price = await stripe.prices.create({
@@ -111,10 +142,14 @@ async function ensurePrice(productId, plan) {
     recurring: { interval: plan.interval },
     lookup_key: plan.lookupKey,
     nickname: plan.nickname,
+    // The key may still be held by an archived price — Stripe rejects the
+    // create otherwise, and only an archived one can hold it here.
+    transfer_lookup_key: true,
   });
   console.log(
     `price:    ${plan.lookupKey} -> ${price.id} (created, $${plan.unitAmount / 100}/${plan.interval})`,
   );
+  return "created";
 }
 
 /** Without a default portal configuration, "cancel in one click" 500s. */
@@ -139,8 +174,12 @@ async function ensurePortal() {
 }
 
 const productId = await resolveProduct();
-for (const plan of PLANS) {
-  await ensurePrice(productId, plan);
+const ready = new Set();
+const mismatched = [];
+for (const plan of selected) {
+  const outcome = await ensurePrice(productId, plan);
+  if (outcome === "mismatch") mismatched.push(plan);
+  else ready.add(plan.key);
 }
 await ensurePortal();
 
@@ -155,6 +194,27 @@ if (account) {
         "   (business details, bank account, identity) in the dashboard.",
     );
   }
+}
+
+if (ready.has("annual")) {
+  console.log(
+    "\nThe yearly price is in place. The pricing page still shows monthly only\n" +
+      "   until NEXT_PUBLIC_PRO_ANNUAL=1 is set in the environment and the app is\n" +
+      "   redeployed — that flag is what renders the monthly/yearly toggle.",
+  );
+}
+
+if (mismatched.length) {
+  console.error(
+    `\n❌ Not ready: ${mismatched.map((plan) => plan.key).join(", ")}.\n` +
+      "   A price already holds that lookup key at a different amount or interval,\n" +
+      "   and this script won't repoint or archive a price it didn't create.\n" +
+      "   In the Stripe dashboard, either archive that price and re-run this, or\n" +
+      "   change PRICING in lib/pro-shared.ts to what Stripe holds.\n" +
+      "   Until they agree, checkout refuses the plan rather than charging an\n" +
+      "   amount the page never showed.",
+  );
+  process.exit(1);
 }
 
 console.log(

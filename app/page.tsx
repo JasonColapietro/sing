@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { annualEnabled, formatPrice, PRICING } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { HeroSplit } from "@/components/landing/hero-split";
@@ -19,6 +20,11 @@ import {
   ToolsGlyph,
   WarmupGlyph,
 } from "@/components/landing/glyphs";
+
+/** Both prices when yearly is on sale, monthly alone until it is. */
+const PRO_PRICE_LINE = annualEnabled()
+  ? `${formatPrice(PRICING.monthly.amount)}/mo or ${formatPrice(PRICING.annual.amount)}/yr`
+  : `${formatPrice(PRICING.monthly.amount)}/mo`;
 
 const FEATURES = [
   {
@@ -296,9 +302,12 @@ export default function Home() {
                   See Suede Pro
                 </LinkButton>
               </div>
+              {/* The price used to appear nowhere on this page — a visitor had
+                  to click into /pro to learn what Pro costs. "No account
+                  needed" moves out; the privacy strip below still says it. */}
               <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                Cancel in one click
-                <span className="mx-2 text-line2">·</span>No account needed
+                {PRO_PRICE_LINE}
+                <span className="mx-2 text-line2">·</span>Cancel in one click
                 <span className="mx-2 text-line2">·</span>The studio stays free
               </p>
             </div>

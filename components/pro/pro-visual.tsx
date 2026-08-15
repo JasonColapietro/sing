@@ -1,4 +1,14 @@
 import styles from "./pro-visual.module.css";
+import {
+  AMBER,
+  AMBER_INK,
+  DIM,
+  LINE,
+  LINE2,
+  MONO,
+  PANEL,
+  REC,
+} from "@/lib/chart-colors";
 import { ProChip } from "./ui";
 
 /** Weekly range span, chart units above the floor. [low, high] per week —
@@ -74,10 +84,10 @@ export default function ProVisual() {
         <text
           x="36"
           y="52"
-          fontFamily="var(--font-plex-mono), monospace"
+          fontFamily={MONO}
           fontSize="11"
           letterSpacing="1.5"
-          fill="#8a8272"
+          fill={DIM}
         >
           RANGE / 8 WEEKS
         </text>
@@ -88,7 +98,7 @@ export default function ProVisual() {
             y1={y}
             x2="286"
             y2={y}
-            stroke="#ddd4c4"
+            stroke={LINE}
             strokeWidth="1"
           />
         ))}
@@ -100,7 +110,7 @@ export default function ProVisual() {
         <polyline
           points={HIGH_LINE}
           fill="none"
-          stroke="#c59642"
+          stroke={AMBER}
           strokeWidth="2.25"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -110,7 +120,7 @@ export default function ProVisual() {
         <polyline
           points={LOW_LINE}
           fill="none"
-          stroke="#c59642"
+          stroke={AMBER}
           strokeWidth="2.25"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -123,9 +133,9 @@ export default function ProVisual() {
             x="286"
             y="72"
             textAnchor="end"
-            fontFamily="var(--font-plex-mono), monospace"
+            fontFamily={MONO}
             fontSize="11"
-            fill="#82631f"
+            fill={AMBER_INK}
           >
             G4
           </text>
@@ -133,29 +143,29 @@ export default function ProVisual() {
             x="286"
             y="192"
             textAnchor="end"
-            fontFamily="var(--font-plex-mono), monospace"
+            fontFamily={MONO}
             fontSize="11"
-            fill="#82631f"
+            fill={AMBER_INK}
           >
             E2
           </text>
         </g>
 
         {/* ---- divider ---- */}
-        <line x1="322" y1="36" x2="322" y2="264" stroke="#ddd4c4" strokeWidth="1" />
+        <line x1="322" y1="36" x2="322" y2="264" stroke={LINE} strokeWidth="1" />
 
         {/* ---- right: per-note accuracy ---- */}
         <text
           x="356"
           y="52"
-          fontFamily="var(--font-plex-mono), monospace"
+          fontFamily={MONO}
           fontSize="11"
           letterSpacing="1.5"
-          fill="#8a8272"
+          fill={DIM}
         >
           ACCURACY BY NOTE
         </text>
-        <line x1="356" y1="230" x2="604" y2="230" stroke="#c9bda0" strokeWidth="1" />
+        <line x1="356" y1="230" x2="604" y2="230" stroke={LINE2} strokeWidth="1" />
         {NOTE_BARS.map((b, i) => {
           const x = 356 + i * 36;
           return (
@@ -166,16 +176,16 @@ export default function ProVisual() {
                 width="22"
                 height={b.h}
                 rx="5"
-                fill={b.weak ? "rgba(157, 63, 51, 0.55)" : "#c59642"}
+                fill={b.weak ? "rgba(157, 63, 51, 0.55)" : AMBER}
                 className={`${styles.bar} ${b.cls}`}
               />
               <text
                 x={x + 11}
                 y="250"
                 textAnchor="middle"
-                fontFamily="var(--font-plex-mono), monospace"
+                fontFamily={MONO}
                 fontSize="10"
-                fill={b.weak ? "#9d3f33" : "#8a8272"}
+                fill={b.weak ? REC : DIM}
               >
                 {b.label}
               </text>
@@ -189,17 +199,17 @@ export default function ProVisual() {
             width="94"
             height="24"
             rx="12"
-            fill="#fffaf2"
-            stroke="#9d3f33"
+            fill={PANEL}
+            stroke={REC}
             strokeWidth="1"
           />
           <text
             x="457"
             y="136"
             textAnchor="middle"
-            fontFamily="var(--font-plex-mono), monospace"
+            fontFamily={MONO}
             fontSize="10.5"
-            fill="#9d3f33"
+            fill={REC}
           >
             WORK E4 ↘
           </text>

@@ -5,23 +5,32 @@ import type { PitchFrame } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import type { SongNote } from "./data";
 import { noteIndexAtBeat } from "./lib";
+import {
+  AMBER,
+  BG,
+  DIM,
+  INK,
+  LINE,
+  LINE2,
+  MUT,
+  OK,
+  monoFontStack,
+} from "@/lib/chart-colors";
 
 const BEATS_WINDOW = 6;
 const PLAYHEAD_FRAC = 0.3;
 
 const C = {
-  bg: "#f7f0e7",
+  bg: BG,
   lane: "rgba(32, 32, 29, 0.025)",
-  line: "#ddd4c4",
-  line2: "#c9bda0",
-  ink: "#20201d",
-  mut: "#5c564d",
-  dim: "#8a8272",
-  amber: "#c59642",
-  ok: "#3f8f6e",
+  line: LINE,
+  line2: LINE2,
+  ink: INK,
+  mut: MUT,
+  dim: DIM,
+  amber: AMBER,
+  ok: OK,
 } as const;
-
-const MONO = '"IBM Plex Mono", ui-monospace, monospace';
 
 interface TraceSample {
   pos: number;
@@ -139,7 +148,7 @@ export function PianoRoll({
       ctx.fillRect(0, 0, w, h);
 
       // Semitone lanes + mono labels.
-      ctx.font = `10px ${MONO}`;
+      ctx.font = `10px ${monoFontStack()}`;
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
       for (let i = 0; i < lanes; i++) {
@@ -198,7 +207,7 @@ export function PianoRoll({
 
           if (bw > 14) {
             ctx.fillStyle = C.mut;
-            ctx.font = `9.5px ${MONO}`;
+            ctx.font = `9.5px ${monoFontStack()}`;
             ctx.fillText(n.lyric, x0 + bw / 2 + 1.5, y0 + bh / 2, Math.max(4, bw - 4));
           }
         }

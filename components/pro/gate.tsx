@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { PRICING, useIsPro } from "@/lib/pro";
+import { PRICING, useIsPro, useProReady } from "@/lib/pro";
 import { useProgress } from "@/lib/progress";
 import { ProChip, UpgradeCard } from "./ui";
 
@@ -10,10 +10,16 @@ import { ProChip, UpgradeCard } from "./ui";
  * Renders children only for free users. Wrap every conversion surface
  * (UpgradeCard, LockedPanel, teaser cards) in this so Pro members never
  * see their own upsell.
+ *
+ * Nothing renders until entitlement is known. Every one of these primitives is
+ * prerendered as "not Pro" — there is no server-side entitlement to prerender
+ * with — so without the readiness gate the static HTML sells Pro to the person
+ * who already bought it, then yanks it away on hydration.
  */
 export function FreeOnly({ children }: { children: ReactNode }) {
   const isPro = useIsPro();
-  if (isPro) return null;
+  const ready = useProReady();
+  if (!ready || isPro) return null;
   return <>{children}</>;
 }
 
@@ -24,7 +30,8 @@ export function FreeOnly({ children }: { children: ReactNode }) {
  */
 export function ProWhisper({ className = "" }: { className?: string }) {
   const isPro = useIsPro();
-  if (isPro) return null;
+  const ready = useProReady();
+  if (!ready || isPro) return null;
   return (
     <p
       className={`font-mono text-[11px] uppercase tracking-[0.14em] text-dim ${className}`}
@@ -59,8 +66,9 @@ export function ProCrescendoNudge({
   context: string;
 }) {
   const isPro = useIsPro();
+  const ready = useProReady();
   const sessionCount = useProgress().sessions.length;
-  if (isPro) return null;
+  if (!ready || isPro) return null;
   if (sessionCount === 0 || sessionCount % 2 === 1) {
     return <ProInlineNudge>{line}</ProInlineNudge>;
   }
@@ -81,7 +89,8 @@ export function ProCrescendoNudge({
  */
 export function ProInlineNudge({ children }: { children: string }) {
   const isPro = useIsPro();
-  if (isPro) return null;
+  const ready = useProReady();
+  if (!ready || isPro) return null;
   return (
     <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
       <ProChip />

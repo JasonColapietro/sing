@@ -85,6 +85,28 @@ export function useIsPro(): boolean {
   return useProState().active;
 }
 
+const READY = () => true;
+const NOT_READY = () => false;
+
+/**
+ * Whether the entitlement cache has been read on this device yet.
+ *
+ * Every gated page is prerendered, and there is no server-side entitlement to
+ * prerender with — no accounts, no database, and the cache lives in
+ * localStorage — so the static HTML always says "not Pro". Rendering the upsell
+ * straight from `useIsPro()` therefore ships a sales pitch to the subscriber
+ * who already paid, and flashes it away on hydration. Surfaces that would
+ * assert something false in that window hold a neutral state until this flips
+ * true on the client.
+ *
+ * Only useful for telling "not Pro" apart from "don't know yet": `useIsPro()`
+ * is false in both cases, so anything that merely *adds* on Pro can keep
+ * reading it directly.
+ */
+export function useProReady(): boolean {
+  return useSyncExternalStore(subscribePro, READY, NOT_READY);
+}
+
 /* ------------------------------------------------------------------ stripe */
 
 async function post<T>(path: string, body: unknown): Promise<T> {
@@ -276,13 +298,11 @@ export function clearProLocally(): void {
 /* ---------------------------------------------------------------- pricing */
 
 /**
- * One tier, monthly only. Must match the live Stripe price carrying the
- * `suede_pro_monthly` lookup key — the app resolves the id at request time, so
- * this constant is display copy and nothing else.
+ * Re-exported, not redefined: the price lives in `pro-shared` so the server
+ * routes and the client read one number. A second copy here is how the page
+ * and the checkout drift apart.
  */
-export const PRICING = {
-  monthly: { perMonth: 9.99, note: "billed monthly" },
-} as const;
+export { PRICING } from "./pro-shared";
 
 /* ------------------------------------------------------------------ perks */
 
@@ -311,7 +331,10 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "songs",
     title: "Full song library",
-    desc: "The complete practice catalog, with new songs added every week.",
+    // No cadence promise here: the catalog is a checked-in array, so "new songs
+    // every week" is a claim only a weekly deploy could keep, and a subscriber
+    // can falsify it in ten seconds. Say what the unlock is instead.
+    desc: "The complete practice catalog — the standards, plus Amazing Grace as a two-verse arrangement rather than the opening phrase.",
   },
   {
     id: "warmups",
@@ -340,13 +363,13 @@ export const PLAN_ROWS: Array<{
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
   { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis on every take" },
-  { label: "Song library", free: "Starter set", pro: "Full catalog, weekly drops" },
+  { label: "Song library", free: "Starter set", pro: "Every song in the book" },
   { label: "Warmup routines", free: "Core set", pro: "Core + pro packs" },
   { label: "Coach plan", free: "First step each day", pro: "Full adaptive plan, daily" },
   { label: "Vocal analytics", free: "Session scores", pro: "Per-note, heatmaps, trends" },
   { label: "Range history", free: "Latest test", pro: "Every test, charted over time" },
   { label: "Practice history", free: "Last 20 sessions shown", pro: "Full history + trends" },
   { label: "Backup & sync", free: "Manual export file", pro: "Automatic cloud sync" },
-  { label: "The Measured Voice (book)", free: "Contents only", pro: "All 23 chapters + PDF" },
-  { label: "The Voice Atlas (book)", free: "Contents + first chapter", pro: "All 27 chapters + PDF" },
+  { label: "The Measured Voice (book)", free: "Contents + first chapter", pro: "All 23 chapters + PDF" },
+  { label: "The Voice Atlas (book)", free: "Contents + first 3 chapters", pro: "All 27 chapters + PDF" },
 ];

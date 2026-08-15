@@ -45,6 +45,71 @@ export const INACTIVE: Entitlement = {
   proKey: null,
 };
 
+/* ---------------------------------------------------------------- pricing */
+
+export interface PlanPrice {
+  /** What Stripe charges once per interval, in dollars. */
+  amount: number;
+  /** The Stripe recurring interval this plan bills on. */
+  interval: "month" | "year";
+  /** Amortised monthly cost, so the two plans compare on one number. */
+  perMonth: number;
+  /** The billing line that sits beside the price. */
+  note: string;
+}
+
+/**
+ * The one place the Pro price is written down — the pricing page, the JSON-LD
+ * offer, the homepage teaser and every upgrade CTA read from here.
+ *
+ * Display copy only: checkout resolves the real Stripe price id from a lookup
+ * key at request time, so nothing here charges anyone. It does have to match
+ * what Stripe holds, and both ends enforce that rather than trust it —
+ * `scripts/stripe-setup.mjs` exits non-zero on a price that differs, and
+ * resolvePriceId() refuses to open a session against one.
+ */
+export const PRICING: Record<ProPlan, PlanPrice> = {
+  monthly: {
+    amount: 9.99,
+    interval: "month",
+    perMonth: 9.99,
+    note: "billed monthly",
+  },
+  annual: {
+    amount: 79,
+    interval: "year",
+    perMonth: 79 / 12,
+    note: "billed yearly",
+  },
+};
+
+/** "$9.99", "$79" — a trailing ".00" on a whole-dollar price reads as a typo. */
+export function formatPrice(amount: number): string {
+  return `$${amount.toFixed(2).replace(/\.00$/, "")}`;
+}
+
+/** How much a year on the annual plan undercuts twelve monthly charges. */
+export function annualSavingsPct(pricing: Record<ProPlan, PlanPrice> = PRICING): number {
+  const twelve = pricing.monthly.amount * 12;
+  return Math.round(((twelve - pricing.annual.amount) / twelve) * 100);
+}
+
+/**
+ * Whether the annual plan is on sale.
+ *
+ * Annual is only offered once an active Stripe price carrying the
+ * `suede_pro_annual` lookup key charges the amount above — `npm run
+ * stripe:setup -- annual` creates it and fails loudly if some other price
+ * already holds that key, and setting NEXT_PUBLIC_PRO_ANNUAL=1 turns the UI
+ * on. Until then every surface shows monthly alone rather than a button that
+ * resolves to no price, or to the wrong one.
+ */
+export function annualEnabled(
+  flag: string | undefined = process.env.NEXT_PUBLIC_PRO_ANNUAL,
+): boolean {
+  return flag === "1" || flag === "true";
+}
+
 /**
  * The questions on /pro, rendered there and marked up as FAQPage from these
  * same strings — Google requires the marked-up answer to match what a reader

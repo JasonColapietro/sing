@@ -28,6 +28,18 @@
      reader has to read. 4.85–5.78:1. */
   --color-ok-ink: #2a6f53;
   --color-cool: #11615d;
+  /* Playable piano keys (/tools, studio target practice). Held here rather
+     than inline so the two keyboards cannot drift apart again — they had two
+     white fills, two blacks, and a white key that darkened on hover in one
+     room and lightened in the other. Hover now always steps toward the middle:
+     white keys down, black keys up. Note letters ride on text-mut over white
+     and text-line2 over black (text-mut reads 2.7:1 on a black key).
+     lib/chart-colors.ts mirrors these for the SVG and canvas keyboards, which
+     cannot read a custom property. */
+  --color-key-white: #faf6ec;
+  --color-key-white-hover: #e4dccb;
+  --color-key-black: #0b0a07;
+  --color-key-black-hover: #171410;
   --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;

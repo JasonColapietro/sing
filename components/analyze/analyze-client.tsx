@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { logSession } from "@/lib/progress";
+import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { useAnalyser, type AnalyserFrame } from "@/lib/audio/use-analyser";
 import {
   RING_HI_HZ,
@@ -115,15 +116,9 @@ export default function AnalyzeClient() {
     }
   }, []);
 
-  // A closed laptop or a swiped-away tab never fires unmount, so pagehide is
-  // the only event that reliably lands before the page goes away.
-  useEffect(() => {
-    window.addEventListener("pagehide", flush);
-    return () => {
-      window.removeEventListener("pagehide", flush);
-      flush();
-    };
-  }, [flush]);
+  // A closed laptop or a swiped-away tab never fires unmount, so unmount
+  // alone would lose the tail of every session.
+  useFlushOnExit(flush);
 
   const onStop = useCallback(() => {
     stop();

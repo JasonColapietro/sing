@@ -130,6 +130,11 @@ export const RANGE_GUIDE: GuideContent = {
       label: "Pitch studio",
       note: "Practice holding the notes at the edges of your range.",
     },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "Fry, falsetto, tessitura — the words on this result, defined.",
+    },
   ],
 };
 
@@ -231,6 +236,11 @@ export const WARMUPS_GUIDE: GuideContent = {
       href: "/range",
       label: "Range test",
       note: "Test warm for a number that reflects your real range.",
+    },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "Siren, lip trill, passaggio — what these exercises are named after.",
     },
   ],
 };
@@ -334,6 +344,11 @@ export const BREATH_GUIDE: GuideContent = {
       label: "Song practice",
       note: "Apply support to real phrases with real breath points.",
     },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "Support, steadiness and the rest of the breath vocabulary.",
+    },
   ],
 };
 
@@ -435,6 +450,11 @@ export const EAR_GUIDE: GuideContent = {
       href: "/tools",
       label: "Tools",
       note: "A drone gives you a reference pitch to sing against.",
+    },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "Interval, semitone, cent — the units these drills count in.",
     },
   ],
 };
@@ -538,6 +558,11 @@ export const SONGS_GUIDE: GuideContent = {
       label: "Breath control",
       note: "Fix the phrases that run out of air.",
     },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "Transposition, tessitura, belt — the words behind song fit.",
+    },
   ],
 };
 
@@ -639,6 +664,11 @@ export const RECORDER_GUIDE: GuideContent = {
       href: "/studio",
       label: "Pitch studio",
       note: "See pitch live before you commit a take.",
+    },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "Vibrato, resonance, register — names for what you hear back.",
     },
   ],
 };
@@ -742,6 +772,11 @@ export const TOOLS_GUIDE: GuideContent = {
       label: "Song practice",
       note: "Take the tuned interval into real phrases.",
     },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "A440, cents, drone — what these tools are actually doing.",
+    },
   ],
 };
 
@@ -753,7 +788,9 @@ export const STUDIO_GUIDE: GuideContent = {
   body: [
     "Pitch detection works by finding the repeating period in the sound your voice makes and converting it to a frequency, then to a note name and a deviation in cents. A hundred cents is one semitone, so a reading of minus twenty cents means you are a fifth of a semitone flat — audible to most listeners, and invisible without a display.",
     "The value of the display is that it separates two problems singers usually confuse. If you can see the target and still cannot land on it, the issue is production — support, register, or effort. If you land on it fine once you can see it, the issue was hearing the target, which is ear training rather than technique.",
-    "Everything runs on your device. The audio is analyzed in the browser and never sent anywhere, on any tier.",
+    // Not "everything runs on your device" — lib/sync.ts uploads Pro progress
+    // state to /api/sync. The audio claim is still exact; the scope of it isn't.
+    "Pitch analysis runs in the browser on your device and the audio is never sent anywhere, on any tier. Pro's cloud sync backs up your progress numbers — scores, streaks, range — and never audio.",
   ],
   howTo: {
     name: "How to practice with real-time pitch feedback",
@@ -843,6 +880,11 @@ export const STUDIO_GUIDE: GuideContent = {
       href: "/range",
       label: "Range test",
       note: "Find the edges the studio helps you strengthen.",
+    },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "Cents, sharp and flat, fundamental — the readout, defined.",
     },
   ],
 };
@@ -950,6 +992,11 @@ export const ANALYZE_GUIDE: GuideContent = {
       href: "/range",
       label: "Range test",
       note: "Find the register transitions the spectrogram shows.",
+    },
+    {
+      href: "/glossary",
+      label: "Glossary",
+      note: "Harmonic, formant, vocal dose — the spectrogram's vocabulary.",
     },
   ],
   safety: {

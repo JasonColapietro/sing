@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { logSession } from "@/lib/progress";
+import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { PageShell, Pill } from "@/components/ui";
 import { Metronome } from "./metronome";
 import { Piano } from "./piano";
@@ -13,7 +14,7 @@ const MIN_FLUSH_SEC = 15;
 
 /**
  * Tracks cumulative "any tool active" time. Logs a session for every full
- * 5 minutes of use, and flushes the remainder once when leaving the page.
+ * 5 minutes of use, and flushes the remainder whenever the page goes away.
  */
 function useToolTime() {
   const [xpNote, setXpNote] = useState<string | null>(null);
@@ -66,26 +67,23 @@ function useToolTime() {
     return () => window.clearInterval(id);
   }, [showNote]);
 
-  // Flush the remainder once when leaving the page.
-  useEffect(() => {
-    const flush = () => {
-      if (activeSince.current !== null) {
-        accumSec.current += (performance.now() - activeSince.current) / 1000;
-        activeSince.current =
-          activeTools.current.size > 0 ? performance.now() : null;
-      }
-      const sec = Math.round(accumSec.current);
-      if (sec >= MIN_FLUSH_SEC) {
-        accumSec.current = 0;
-        logSession({ type: "tools", durationSec: sec, detail: "Practice tools" });
-      }
-    };
-    window.addEventListener("pagehide", flush);
-    return () => {
-      window.removeEventListener("pagehide", flush);
-      flush();
-    };
+  /** Bank the time since the last chunk and log it. Idempotent. */
+  const flush = useCallback(() => {
+    if (activeSince.current !== null) {
+      accumSec.current += (performance.now() - activeSince.current) / 1000;
+      activeSince.current =
+        activeTools.current.size > 0 ? performance.now() : null;
+    }
+    const sec = Math.round(accumSec.current);
+    if (sec >= MIN_FLUSH_SEC) {
+      accumSec.current = 0;
+      logSession({ type: "tools", durationSec: sec, detail: "Practice tools" });
+    }
   }, []);
+
+  // Unmount alone would lose the remainder: a closed tab or a backgrounded
+  // PWA never fires it.
+  useFlushOnExit(flush);
 
   return { xpNote, report };
 }

@@ -211,6 +211,61 @@ export function scoredSeconds(tallies: NoteTallies): number {
   return Object.values(tallies).reduce((total, tally) => total + tally.sec, 0);
 }
 
+/* ----------------------------------------------------------------- ladder */
+
+/** One rep of a warmup ladder: the root it was sung at, and what it scored. */
+export interface LadderRep {
+  root: number;
+  score: number;
+  skipped?: boolean;
+}
+
+export interface LadderBreak {
+  /** Root of the rep the ladder came apart on. */
+  root: number;
+  /** Best score reached before that rep. */
+  heldAt: number;
+  /** What that rep scored. */
+  score: number;
+  /** heldAt - score, never below the minimum drop. */
+  drop: number;
+}
+
+/** Under this, a dip is rep-to-rep noise rather than the ladder breaking. */
+export const MIN_LADDER_DROP = 12;
+
+/**
+ * Where a rising warmup ladder stopped holding: the *first* rep that fell a
+ * real distance below the best score reached before it.
+ *
+ * First, not worst, because the ladder climbs — once the voice gives out
+ * every root above it scores badly too, so the note worth naming is where it
+ * gave out, not the lowest number that follows.
+ *
+ * Returns null when nothing fell far enough to name. A ladder that held is a
+ * real result, and inventing a weak point out of a three-point wobble would
+ * tell the singer to go practice a note that is fine.
+ */
+export function ladderBreak(
+  reps: readonly LadderRep[],
+  { minDrop = MIN_LADDER_DROP }: { minDrop?: number } = {},
+): LadderBreak | null {
+  let bestSoFar: number | null = null;
+  for (const rep of reps) {
+    // A skipped rep scores 0 by convention; counting it would report every
+    // skip as the voice falling apart.
+    if (rep.skipped) continue;
+    if (bestSoFar !== null) {
+      const drop = bestSoFar - rep.score;
+      if (drop >= minDrop) {
+        return { root: rep.root, heldAt: bestSoFar, score: rep.score, drop };
+      }
+    }
+    bestSoFar = bestSoFar === null ? rep.score : Math.max(bestSoFar, rep.score);
+  }
+  return null;
+}
+
 /* ------------------------------------------------------------------ range */
 
 export interface RangeEntry {

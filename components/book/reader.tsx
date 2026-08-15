@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useProState } from "@/lib/pro";
+import { useProReady, useProState } from "@/lib/pro";
 import { BOOK_CONTENTS, type BookContentsEntry } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
 import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
@@ -21,6 +21,7 @@ type State =
  */
 export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
   const pro = useProState();
+  const proReady = useProReady();
   const [state, setState] = useState<State>({ kind: "idle" });
 
   const subscriptionId = pro.subscriptionId;
@@ -67,25 +68,50 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
 
   // Both "no subscription" and "still waiting" are render-time facts derived
   // from what we already know, so the effect never sets state synchronously.
-  const view: State = !subscriptionId
-    ? { kind: "locked", message: "This chapter is part of Suede Pro." }
-    : state.kind === "idle"
-      ? { kind: "loading" }
-      : state;
+  //
+  // Readiness comes first: gated chapter pages are statically prerendered
+  // (dynamicParams = false) and the entitlement cache is local to the browser,
+  // so the server always looks unsubscribed. Without this the locked card ships
+  // in the HTML a paying subscriber downloads.
+  const view: State = !proReady
+    ? { kind: "loading" }
+    : !subscriptionId
+      ? { kind: "locked", message: "This chapter is part of Suede Pro." }
+      : state.kind === "idle"
+        ? { kind: "loading" }
+        : state;
 
-  const index = BOOK_CONTENTS.findIndex((c) => c.slug === chapter.slug);
-  const prev = index > 0 ? BOOK_CONTENTS[index - 1] : null;
-  const next =
-    index >= 0 && index < BOOK_CONTENTS.length - 1
-      ? BOOK_CONTENTS[index + 1]
-      : null;
+  const sample = BOOK_CONTENTS.find((c) => c.free);
+
+  // Shared by the loading and locked states: none of these links claim anything
+  // about the reader's entitlement, so they are safe to bake into the prerendered
+  // HTML. Without them the static page is a dead end for anyone whose JS never
+  // runs — the loading line never resolves and there is no way through to Pro.
+  const ctas = (
+    <div className="mt-5 flex flex-wrap gap-3">
+      <LinkButton href="/pro" size="sm">
+        See Suede Pro
+      </LinkButton>
+      {sample && (
+        <LinkButton href={`/book/${sample.slug}`} variant="outline" size="sm">
+          Read the free chapter
+        </LinkButton>
+      )}
+      <LinkButton href="/pro#restore" variant="ghost" size="sm">
+        Already subscribed?
+      </LinkButton>
+    </div>
+  );
 
   return (
     <div>
       {view.kind === "loading" && (
-        <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-          Checking your subscription…
-        </p>
+        <div className="mt-6">
+          <p className="font-mono text-xs uppercase tracking-[0.14em] text-dim">
+            Checking your subscription…
+          </p>
+          {ctas}
+        </div>
       )}
 
       {view.kind === "locked" && (
@@ -95,16 +121,9 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
           <p className="mt-2 max-w-xl text-sm text-mut">
             The Measured Voice comes with a Suede Pro subscription — all{" "}
             {BOOK_CONTENTS.length} chapters, and a PDF to keep. The studio
-            itself stays free either way.
+            itself stays free either way, and so does the first chapter.
           </p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <LinkButton href="/pro" size="sm">
-              See Suede Pro
-            </LinkButton>
-            <LinkButton href="/pro#restore" variant="outline" size="sm">
-              Already subscribed?
-            </LinkButton>
-          </div>
+          {ctas}
         </Card>
       )}
 
@@ -131,44 +150,62 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
           <article className="mt-6 max-w-2xl">
             <Markdown source={view.body} />
           </article>
-          <nav
-            aria-label="Chapters"
-            className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6"
-          >
-            {prev ? (
-              <Link
-                href={`/book/${prev.slug}`}
-                className="max-w-[45%] text-sm text-mut hover:text-ink"
-              >
-                <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
-                  Previous
-                </span>
-                {prev.title}
-              </Link>
-            ) : (
-              <span />
-            )}
-            {next ? (
-              <Link
-                href={`/book/${next.slug}`}
-                className="max-w-[45%] text-right text-sm text-amber-ink hover:text-ink"
-              >
-                <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
-                  Next
-                </span>
-                {next.title}
-              </Link>
-            ) : (
-              <Link
-                href="/book"
-                className="text-right text-sm text-amber-ink hover:text-ink"
-              >
-                Back to contents
-              </Link>
-            )}
-          </nav>
+          <ChapterNav slug={chapter.slug} />
         </>
       )}
     </div>
+  );
+}
+
+/**
+ * Previous/next links across the whole book. The free chapter page renders this
+ * too — a subscriber lands there from "Start reading", so it has to carry on
+ * into the gated chapters rather than dead-ending at the sample.
+ */
+export function ChapterNav({ slug }: { slug: string }) {
+  const index = BOOK_CONTENTS.findIndex((c) => c.slug === slug);
+  const prev = index > 0 ? BOOK_CONTENTS[index - 1] : null;
+  const next =
+    index >= 0 && index < BOOK_CONTENTS.length - 1
+      ? BOOK_CONTENTS[index + 1]
+      : null;
+
+  return (
+    <nav
+      aria-label="Chapters"
+      className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6"
+    >
+      {prev ? (
+        <Link
+          href={`/book/${prev.slug}`}
+          className="max-w-[45%] text-sm text-mut hover:text-ink"
+        >
+          <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
+            Previous
+          </span>
+          {prev.title}
+        </Link>
+      ) : (
+        <span />
+      )}
+      {next ? (
+        <Link
+          href={`/book/${next.slug}`}
+          className="max-w-[45%] text-right text-sm text-amber-ink hover:text-ink"
+        >
+          <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
+            Next
+          </span>
+          {next.title}
+        </Link>
+      ) : (
+        <Link
+          href="/book"
+          className="text-right text-sm text-amber-ink hover:text-ink"
+        >
+          Back to contents
+        </Link>
+      )}
+    </nav>
   );
 }

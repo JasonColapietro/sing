@@ -529,10 +529,15 @@ export function Library({
           </div>
         )}
 
+        {/* Never quote the size of the Pro songbook here: it is smaller than the
+            free grid directly above it, so a count argues against buying. Name
+            the unlock instead — PRO_SONGS carries Amazing Grace as a `form:
+            "full"` two-verse arrangement, where the free book has the phrase. */}
         {PRO_SONGS.length > 3 && (
           <FreeOnly>
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              {PRO_SONGS.length} songs in the Pro songbook ·{" "}
+              More in the Pro songbook — Amazing Grace in full, not just the
+              opening phrase ·{" "}
               <Link
                 href="/pro"
                 className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SONGS } from "@/components/songs/data";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
+import { BOOK_CONTENTS } from "@/lib/book-data";
 import {
   HUB_GENRES,
   SINGERS,
@@ -27,9 +28,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/pro",
     "/book",
     "/atlas",
-    // The atlas's free sample chapters are real, indexable content; the gated
+    "/glossary",
+    // Both books' free sample chapters are real, indexable content; the gated
     // chapters are robots-noindexed and stay out of the sitemap.
     ...ATLAS_CONTENTS.filter((c) => c.free).map((c) => `/atlas/${c.slug}`),
+    ...BOOK_CONTENTS.filter((c) => c.free).map((c) => `/book/${c.slug}`),
   ].map((path) => ({
     url: `${SITE_URL}${path}`,
     changeFrequency: "weekly" as const,

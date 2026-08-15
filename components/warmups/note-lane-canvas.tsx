@@ -1,6 +1,7 @@
 "use client";
 
 import { midiToLabel } from "@/lib/audio/notes";
+import { AMBER, DIM, INK, LINE, LINE2, MONO, OK } from "@/lib/chart-colors";
 import type { Segment } from "./exercises";
 
 export interface TracePoint {
@@ -73,7 +74,7 @@ export function NoteLaneCanvas({
               y1={laneY}
               x2={w - 4}
               y2={laneY}
-              stroke="#ddd4c4"
+              stroke={LINE}
               strokeWidth="1"
             />
             <text
@@ -81,8 +82,8 @@ export function NoteLaneCanvas({
               y={laneY + 3}
               textAnchor="end"
               fontSize="8.5"
-              fill="#8a8272"
-              fontFamily="var(--font-mono, monospace)"
+              fill={DIM}
+              fontFamily={MONO}
             >
               {midiToLabel(midi)}
             </text>
@@ -108,7 +109,7 @@ export function NoteLaneCanvas({
                 height={blockH}
                 rx={5}
                 fill="none"
-                stroke="#20201d"
+                stroke={INK}
                 strokeWidth="1.4"
                 opacity="0.75"
               />
@@ -119,7 +120,7 @@ export function NoteLaneCanvas({
                   width={Math.max(0, (x1 - x0 - 4) * ratio)}
                   height={blockH}
                   rx={5}
-                  fill="#3f8f6e"
+                  fill={OK}
                   opacity="0.85"
                 />
               )}
@@ -138,7 +139,7 @@ export function NoteLaneCanvas({
               y1={y0}
               x2={x1}
               y2={y1}
-              stroke="#20201d"
+              stroke={INK}
               strokeWidth="7"
               strokeLinecap="round"
               opacity="0.5"
@@ -149,7 +150,7 @@ export function NoteLaneCanvas({
                 y1={y0}
                 x2={xr}
                 y2={yr}
-                stroke="#3f8f6e"
+                stroke={OK}
                 strokeWidth="7"
                 strokeLinecap="round"
                 opacity="0.85"
@@ -164,7 +165,7 @@ export function NoteLaneCanvas({
         <polyline
           points={tracePath}
           fill="none"
-          stroke="#c59642"
+          stroke={AMBER}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -176,7 +177,7 @@ export function NoteLaneCanvas({
           cx={x(cursorSec)}
           cy={y(liveMidiFloat)}
           r="4.5"
-          fill="#c59642"
+          fill={AMBER}
         />
       )}
 
@@ -187,7 +188,7 @@ export function NoteLaneCanvas({
           y1={padTop - 2}
           x2={x(cursorSec)}
           y2={h - padTop + 2}
-          stroke="#c9bda0"
+          stroke={LINE2}
           strokeWidth="1.5"
           strokeDasharray="2,2"
         />

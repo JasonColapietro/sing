@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { isProPlan } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
-import { getStripe, resolvePriceId, siteOrigin } from "@/lib/stripe";
+import {
+  getStripe,
+  PriceMismatchError,
+  PriceNotConfiguredError,
+  resolvePriceId,
+  siteOrigin,
+} from "@/lib/stripe";
 
 /**
  * Starts a Stripe Checkout Session for a Pro subscription and hands the
@@ -29,10 +35,16 @@ export async function POST(request: Request) {
   }
 
   try {
+    // Resolved per request rather than pinned in the bundle, so the annual
+    // plan starts selling the moment its Stripe price exists — and answers
+    // honestly until then. Resolution also refuses a price that charges
+    // something other than the page quoted, so no session can open at an
+    // amount the singer never saw.
+    const priceId = await resolvePriceId(plan);
     const origin = siteOrigin(request);
     const session = await getStripe().checkout.sessions.create({
       mode: "subscription",
-      line_items: [{ price: await resolvePriceId(plan), quantity: 1 }],
+      line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/pro?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pro?checkout=cancelled`,
       allow_promotion_codes: true,
@@ -45,6 +57,27 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ url: session.url });
   } catch (error) {
+    if (
+      error instanceof PriceNotConfiguredError ||
+      error instanceof PriceMismatchError
+    ) {
+      // Same answer to the buyer either way — the plan can't be sold at the
+      // price they were shown. The log carries which of the two it is.
+      console.error(
+        "[api/checkout] no sellable price for plan",
+        error.plan,
+        error.message,
+      );
+      return NextResponse.json(
+        {
+          error:
+            error.plan === "annual"
+              ? "The yearly plan isn't on sale yet. Monthly is ready now."
+              : "That plan isn't on sale right now.",
+        },
+        { status: 409 },
+      );
+    }
     console.error("[api/checkout]", error);
     return NextResponse.json(
       { error: "Could not reach Stripe. Try again in a moment." },

@@ -22,7 +22,11 @@ import {
 } from "./lib";
 
 const TEMPOS = [0.75, 1, 1.25] as const;
-const TOLERANCE_CENTS = 50;
+/**
+ * In-tune window a rep is scored against. Exported so the summary can state
+ * the rule the score came from rather than restating the number.
+ */
+export const TOLERANCE_CENTS = 50;
 const REP_RESULT_PAUSE_MS = 1100;
 const MIN_VOLUME = 0.006;
 

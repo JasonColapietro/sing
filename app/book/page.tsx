@@ -7,6 +7,7 @@ import {
   BOOK_TITLE,
   BOOK_WORDS,
 } from "@/lib/book-data";
+import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { SITE_URL } from "@/lib/site";
 import { BookCta } from "@/components/book/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
@@ -30,16 +31,25 @@ export default function BookPage() {
     numberOfPages: BOOK_CONTENTS.length,
     inLanguage: "en",
     isAccessibleForFree: false,
-    author: { "@type": "Organization", name: "Suede Sing" },
+    // Was an Organization named "Suede Sing" — the product name, not the
+    // publisher entity and not a person. A paid book needs a named human
+    // author, and the byline below is its on-page counterpart.
+    author: AUTHOR_NODE,
     // Joins the estate graph the singer pages already use, so a consumer that
     // lands on the book can resolve the publisher and the site around it.
     publisher: { "@id": "https://suedeai.ai/#organization" },
     isPartOf: { "@id": `${SITE_URL}/#website` },
+    hasPart: BOOK_CONTENTS.filter((c) => c.free).map((c) => ({
+      "@type": "Chapter",
+      name: c.title,
+      url: `${SITE_URL}/book/${c.slug}`,
+      isAccessibleForFree: true,
+    })),
   };
 
   return (
     <PageShell
-      kicker="Included with Pro"
+      kicker="Included with Pro · first chapter free"
       title={BOOK_TITLE}
       subtitle={BOOK_SUBTITLE}
     >
@@ -59,11 +69,28 @@ export default function BookPage() {
             />
             <Stat label="Parts" value={BOOK_PARTS.length} tone="cool" />
           </div>
+          <p className="mt-5 text-sm text-mut">
+            Written by{" "}
+            <a
+              href="https://jasoncolapietro.com"
+              rel="author"
+              className="text-amber-ink hover:underline"
+            >
+              {AUTHOR_NAME}
+            </a>{" "}
+            ({AUTHOR_ALIAS}). Published by Suede Labs AI.
+          </p>
           <p className="mt-5 max-w-2xl text-mut">
             Twenty-three chapters on how the voice works, how to read the
             numbers your own sessions produce, a twelve-week program built from
             the rooms you already have, and how to pick songs that fit the voice
             you have today. Written for the reading you do between sessions.
+          </p>
+          <p className="mt-3 max-w-2xl text-sm text-mut">
+            The contents below are free, and so is the first chapter — read it
+            before you decide whether the writing is worth a subscription. Pro
+            unlocks the other {BOOK_CONTENTS.filter((c) => !c.free).length} and
+            the PDF.
           </p>
           <div className="mt-5">
             <BookCta />
@@ -87,8 +114,13 @@ export default function BookPage() {
                       {String(c.order).padStart(2, "0")}
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-sm font-medium text-ink">
+                      <span className="flex flex-wrap items-baseline gap-x-3 text-sm font-medium text-ink">
                         {c.title}
+                        {c.free && (
+                          <span className="rounded-full border border-amber/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-amber-ink">
+                            free
+                          </span>
+                        )}
                       </span>
                       {c.summary && (
                         <span className="mt-0.5 block text-sm text-mut">

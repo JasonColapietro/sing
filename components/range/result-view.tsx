@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   VOICE_TYPES,
   classifyVoice,
@@ -9,12 +9,27 @@ import {
 } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
 import { useProgress, type Achievement } from "@/lib/progress";
-import { useIsPro } from "@/lib/pro";
-import { Button, Card, Pill, SectionLabel, Stat } from "@/components/ui";
+import type { RangeEntry } from "@/lib/analytics";
+import { useIsPro, useProReady } from "@/lib/pro";
+import { Button, Card, LinkButton, Pill, SectionLabel, Stat } from "@/components/ui";
+import { ProCrescendoNudge } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { RangeHistoryChart } from "@/components/progress/pro-charts";
+import {
+  AMBER,
+  BG,
+  DIM,
+  INK,
+  LINE,
+  MUT,
+  STRIP_BLACK,
+  STRIP_WHITE,
+  monoFontStack,
+} from "@/lib/chart-colors";
 import { PianoStrip } from "./piano-strip";
 import { SINGERS, rangeOverlap, voiceTypeSlug } from "@/lib/singers";
+import type { Song } from "@/components/songs/types";
+import { countSongsFitting } from "@/components/songs/lib";
 
 /**
  * Household names for the quick post-test comparison, pulled from the full
@@ -42,6 +57,74 @@ function describeSpan(semitones: number): string {
   return rem > 0 ? `${base} + ${rem}` : base;
 }
 
+/**
+ * Semitones trimmed off each end to get from "the notes I reached" to "the
+ * notes I can sing a phrase on". Both extremes came out of pushing, so
+ * practising at them trains the reach rather than the voice.
+ */
+const EDGE_TRIM_SEMIS = 3;
+
+/** The middle of the span, with the pushed edges trimmed. Never inverts. */
+function workingRange(lowMidi: number, highMidi: number): [number, number] {
+  const trim = Math.min(EDGE_TRIM_SEMIS, Math.floor((highMidi - lowMidi) / 4));
+  return [lowMidi + trim, highMidi - trim];
+}
+
+/** Under an octave and a half, the useful work is still building the span. */
+const LADDER_MAX_SEMIS = 15;
+
+/**
+ * Which warmup a fresh result should send the singer to. Both targets are
+ * free-tier exercises from components/warmups/exercises.ts — a Pro pack id
+ * would be silently dropped by the player's entitlement check.
+ */
+function warmupForSpan(semis: number): { id: string; title: string; why: string } {
+  return semis < LADDER_MAX_SEMIS
+    ? {
+        id: "five-note-scale",
+        title: "Five-note scale",
+        why: "A steady ladder through the middle of your range builds the span before you try to stretch it.",
+      }
+    : {
+        id: "octave-siren",
+        title: "Octave siren",
+        why: "You already cover the span. Sirens keep it one connected voice instead of a low one and a high one.",
+      };
+}
+
+/** Seven tests a fortnight apart spans exactly the three months the caption claims. */
+const SAMPLE_TESTS = 7;
+const SAMPLE_INTERVAL_DAYS = 15;
+
+/**
+ * A worked example of the range chart, not the singer's data: a test every
+ * couple of weeks, ending on the range just measured, widening the way a
+ * practising voice does. Shown only when there is nothing real to plot,
+ * because an empty chart is the one thing that cannot sell the chart.
+ */
+function sampleHistory(lowMidi: number, highMidi: number): RangeEntry[] {
+  const span = highMidi - lowMidi;
+  // Clamped so the earliest sample still spans at least two semitones —
+  // rangeSeries drops any entry whose high is not above its low.
+  const growth = Math.max(
+    0,
+    Math.min(4, Math.floor(span / 6), Math.floor((span - 2) / 2)),
+  );
+  const end = Date.now();
+  const steps = SAMPLE_TESTS - 1;
+  return Array.from({ length: SAMPLE_TESTS }, (_, i) => {
+    const back = steps - i;
+    const inset = Math.round((back / steps) * growth);
+    return {
+      lowMidi: lowMidi + inset,
+      highMidi: highMidi - inset,
+      testedAt: new Date(
+        end - back * SAMPLE_INTERVAL_DAYS * 24 * 60 * 60 * 1000,
+      ).toISOString(),
+    };
+  });
+}
+
 /** 0..100 position of a midi value on a fixed axis. */
 function axisPct(midi: number, low: number, high: number): number {
   return Math.min(100, Math.max(0, ((midi - low) / (high - low)) * 100));
@@ -60,10 +143,10 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
-  const mono = "'IBM Plex Mono', ui-monospace, monospace";
+  const mono = monoFontStack();
 
-  // Studio-dark background with a soft amber wash from the top
-  ctx.fillStyle = "#f7f0e7";
+  // Paper ground with the same soft amber wash the site body carries
+  ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);
   const glow = ctx.createRadialGradient(W / 2, -120, 60, W / 2, -120, 760);
   glow.addColorStop(0, "rgba(197, 150, 66, 0.12)");
@@ -72,26 +155,26 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   ctx.fillRect(0, 0, W, H);
 
   // Panel frame
-  ctx.strokeStyle = "#ddd4c4";
+  ctx.strokeStyle = LINE;
   ctx.lineWidth = 2;
   ctx.strokeRect(28.5, 28.5, W - 57, H - 57);
 
   ctx.textAlign = "center";
 
   // Kicker
-  ctx.fillStyle = "#c59642";
+  ctx.fillStyle = AMBER;
   ctx.font = `600 22px ${mono}`;
   ctx.fillText("V O C A L   R A N G E", W / 2, 118);
 
   // Big readout
-  ctx.fillStyle = "#20201d";
+  ctx.fillStyle = INK;
   ctx.font = `700 124px ${mono}`;
   ctx.fillText(`${midiToLabel(lowMidi)} — ${midiToLabel(highMidi)}`, W / 2, 268);
 
   // Voice type + span
   const voice = classifyVoice(lowMidi, highMidi);
   const semis = highMidi - lowMidi;
-  ctx.fillStyle = "#5c564d";
+  ctx.fillStyle = MUT;
   ctx.font = `500 30px ${mono}`;
   ctx.fillText(
     `${voice.label} · ${semis} semitones · ${describeSpan(semis)}`,
@@ -117,8 +200,8 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
       centers.set(m, kbX + wi * whiteW);
     } else {
       centers.set(m, kbX + wi * whiteW + whiteW / 2);
-      ctx.fillStyle = "#e9e2d3";
-      ctx.strokeStyle = "#ddd4c4";
+      ctx.fillStyle = STRIP_WHITE;
+      ctx.strokeStyle = LINE;
       ctx.lineWidth = 1;
       ctx.fillRect(kbX + wi * whiteW + 0.5, kbY, whiteW - 1, kbH);
       ctx.strokeRect(kbX + wi * whiteW + 0.5, kbY, whiteW - 1, kbH);
@@ -130,7 +213,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
     const pc = ((m % 12) + 12) % 12;
     if (blackPcs.has(pc)) {
       const cx = centers.get(m) ?? kbX;
-      ctx.fillStyle = "#fffaf2";
+      ctx.fillStyle = STRIP_BLACK;
       ctx.fillRect(cx - whiteW * 0.28, kbY, whiteW * 0.56, kbH * 0.6);
     } else {
       wi++;
@@ -141,16 +224,16 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   const x1 = (centers.get(clampMidi(highMidi)) ?? kbX + kbW) + whiteW / 2;
   ctx.fillStyle = "rgba(197, 150, 66, 0.30)";
   ctx.fillRect(x0, kbY, Math.max(0, x1 - x0), kbH);
-  ctx.strokeStyle = "#c59642";
+  ctx.strokeStyle = AMBER;
   ctx.lineWidth = 2;
   ctx.strokeRect(x0, kbY, Math.max(0, x1 - x0), kbH);
-  ctx.fillStyle = "#c59642";
+  ctx.fillStyle = AMBER;
   ctx.font = `600 22px ${mono}`;
   ctx.fillText(midiToLabel(lowMidi), x0, kbY + kbH + 30);
   ctx.fillText(midiToLabel(highMidi), x1, kbY + kbH + 30);
 
   // Footer
-  ctx.fillStyle = "#8a8272";
+  ctx.fillStyle = DIM;
   ctx.font = `500 22px ${mono}`;
   ctx.fillText("sing.suedeai — free vocal studio", W / 2, H - 52);
 
@@ -179,6 +262,41 @@ export function ResultView({
   const voice = useMemo(
     () => classifyVoice(lowMidi, highMidi),
     [lowMidi, highMidi],
+  );
+
+  const [workLow, workHigh] = workingRange(lowMidi, highMidi);
+  const warmup = warmupForSpan(semis);
+
+  const isPro = useIsPro();
+  const proReady = useProReady();
+  // The catalog is ~30 KB of per-note data and all this panel wants from it is
+  // a count, so it loads after the result renders rather than riding in the
+  // /range bundle — this route's cold traffic never reaches the songbook.
+  // Held until the entitlement cache has been read, because the book counted
+  // has to be the one the singer can actually open: quoting the free set to a
+  // subscriber understates what they paid for, and quoting the full set to a
+  // free reader promises access they hit a paywall on one click later.
+  const [book, setBook] = useState<readonly Song[] | null>(null);
+  useEffect(() => {
+    if (!proReady) return;
+    let live = true;
+    void import("@/components/songs/data").then((m) => {
+      if (live) setBook(isPro ? [...m.SONGS, ...m.PRO_SONGS] : m.SONGS);
+    });
+    return () => {
+      live = false;
+    };
+  }, [isPro, proReady]);
+
+  const counted = useMemo(
+    () =>
+      book === null
+        ? null
+        : {
+            fitting: countSongsFitting(book, { lowMidi, highMidi }),
+            total: book.length,
+          },
+    [book, lowMidi, highMidi],
   );
 
   const famous = useMemo(() => {
@@ -288,6 +406,75 @@ export function ResultView({
           )}
         </Card>
       )}
+
+      {/* The result used to end at the number. Two edges and a voice-type
+          label are a diagnosis with no prescription, so this is the one card
+          that says what to go and do with them. */}
+      <Card>
+        <SectionLabel>What to do with this</SectionLabel>
+        <h2 className="mt-3 text-xl">
+          Practise in the middle:{" "}
+          <span className="text-amber-ink">
+            {midiToLabel(workLow)}–{midiToLabel(workHigh)}
+          </span>
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm text-mut">
+          {midiToLabel(lowMidi)} and {midiToLabel(highMidi)} are edges — you
+          found them by pushing, and a note you can only just reach is not a
+          note you can hold a phrase on. The middle of the span is where
+          warmups and songs should sit, and it is the part that widens with
+          practice.
+        </p>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-xl border border-line bg-panel2/60 p-4">
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              Warm up
+            </span>
+            <h3 className="mt-2 text-base font-semibold">{warmup.title}</h3>
+            <p className="mt-1.5 text-sm text-mut">{warmup.why}</p>
+            <div className="mt-4">
+              {/* ?exercise= is the warmup room's deep-link contract; an
+                  unrecognised param just lands on the library, so this stays
+                  safe either way. */}
+              <LinkButton
+                href={`/warmups?exercise=${warmup.id}`}
+                variant="outline"
+                size="sm"
+              >
+                Start this warmup
+              </LinkButton>
+            </div>
+          </div>
+          <div className="rounded-xl border border-line bg-panel2/60 p-4">
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              Sing something
+            </span>
+            <h3 className="mt-2 text-base font-semibold">
+              {counted === null
+                ? "Find one that fits"
+                : counted.fitting > 0
+                  ? `${counted.fitting} song${counted.fitting === 1 ? "" : "s"} already fit`
+                  : "Nothing fits as written — yet"}
+            </h3>
+            <p className="mt-1.5 text-sm text-mut">
+              {counted === null
+                ? "Every song shifts up to an octave either way, so the book comes to the range you just measured."
+                : counted.fitting > 0
+                  ? `${counted.fitting} of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key. The rest transpose.`
+                  : `None of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key, so start from one that transposes — every song shifts up to an octave either way.`}
+            </p>
+            <div className="mt-4">
+              {/* Plain /songs, no filter param: the library seeds its browse
+                  state from a constant and reads nothing off the URL, so a
+                  ?fit=1 here would name a landing it cannot deliver. The count
+                  above is stated here rather than promised there. */}
+              <LinkButton href="/songs" variant="outline" size="sm">
+                Open the songbook
+              </LinkButton>
+            </div>
+          </div>
+        </div>
+      </Card>
 
       {/* Voice type chart */}
       <Card>
@@ -429,14 +616,30 @@ export function ResultView({
         </div>
       </Card>
 
+      {/* Every other completion screen carries the offer; this one, the
+          highest-intent moment in the product, carried only a locked chart.
+          Self-hides for Pro, so it collapses out of the stack entirely. */}
+      <ProCrescendoNudge
+        line="Pro charts every retake, so gained semitones show as a line"
+        title="Watch this number move"
+        body="Pro keeps every range test on one chart — the semitones you gain show up as growth instead of a number you have to remember."
+        context="Range test"
+      />
+
       {/* Range over time — real history for Pro, the same chart faded as the
           preview for free. */}
-      <RangeOverTime />
+      <RangeOverTime lowMidi={lowMidi} highMidi={highMidi} />
     </div>
   );
 }
 
-function RangeOverTime() {
+function RangeOverTime({
+  lowMidi,
+  highMidi,
+}: {
+  lowMidi: number;
+  highMidi: number;
+}) {
   const isPro = useIsPro();
   const history = useProgress().rangeHistory;
 
@@ -454,10 +657,27 @@ function RangeOverTime() {
     );
   }
 
+  // A first-time tester has nothing to plot, so the free panel used to sell
+  // the chart with an empty chart. Plot a worked example instead — and say so
+  // in the panel label, which is the only part of a LockedPanel that is not
+  // aria-hidden, so the sample can never read as their own history.
+  const hasHistory = history.length >= 2;
+
   return (
-    <LockedPanel label="Range over time">
+    <LockedPanel
+      label={hasHistory ? "Range over time" : "Range over time · sample"}
+    >
       <div className="p-4 sm:p-5">
-        <RangeHistoryChart history={history} />
+        {/* Above the chart, not below it: the panel pins its lock row over the
+            bottom of whatever it wraps, and a caption there would be buried. */}
+        {!hasHistory && (
+          <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            Sample — this is what three months of tests looks like
+          </p>
+        )}
+        <RangeHistoryChart
+          history={hasHistory ? history : sampleHistory(lowMidi, highMidi)}
+        />
       </div>
     </LockedPanel>
   );
