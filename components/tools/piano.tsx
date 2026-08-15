@@ -169,10 +169,12 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
       ? `${base} z-10 ${
           isActive
             ? "border-amber bg-amber"
-            : "border-[#080705] bg-[#0b0a07] hover:bg-[#171410]"
+            : "border-key-black bg-key-black hover:bg-key-black-hover"
         }`
       : `${base} ${
-          isActive ? "border-amber bg-amber" : "border-line bg-[#faf6ec] hover:bg-[#e4dccb]"
+          isActive
+            ? "border-amber bg-amber"
+            : "border-line bg-key-white hover:bg-key-white-hover"
         }`;
     return (
       <button
@@ -201,13 +203,13 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
           }
         }}
       >
+        {/* The label has to change with the key under it: mut reads 2.7:1 on
+            an unpressed black key and on a pressed amber one. */}
         {showLabel(k.midi) && (
           <span
             className={`pointer-events-none font-mono ${
-              k.black
-                ? `text-[9px] ${isActive ? "text-[#241a05]" : "text-mut"}`
-                : "text-[10px] text-[#57503f]"
-            }`}
+              isActive ? "text-ink" : k.black ? "text-line2" : "text-mut"
+            } ${k.black ? "text-[9px]" : "text-[10px]"}`}
           >
             {label}
           </span>
@@ -252,7 +254,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
       </div>
 
       {/* Keys */}
-      <div className="no-scrollbar overflow-x-auto rounded-xl border border-line bg-[#0b0a07] p-3">
+      <div className="no-scrollbar overflow-x-auto rounded-xl border border-line bg-panel2 p-3">
         <div
           className="relative"
           style={{ width: totalWidth, height: WHITE_H }}

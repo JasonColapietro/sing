@@ -12,15 +12,14 @@ import {
   logPos,
   posToHz,
 } from "@/lib/audio/spectrum";
+import { AMBER, DIM, LINE, PANEL, monoFontStack } from "@/lib/chart-colors";
 
 const C = {
-  bg: "#fffaf2",
-  line: "#ddd4c4",
-  dim: "#6b6455",
-  amber: "#c59642",
+  bg: PANEL,
+  line: LINE,
+  dim: DIM,
+  amber: AMBER,
 } as const;
-
-const MONO = '"IBM Plex Mono", ui-monospace, monospace';
 
 /**
  * 256 pre-mixed heat colours.
@@ -110,7 +109,7 @@ export function Spectrogram({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.fillStyle = C.bg;
       ctx.fillRect(0, 0, GUTTER, cssH);
-      ctx.font = `10px ${MONO}`;
+      ctx.font = `10px ${monoFontStack()}`;
       ctx.fillStyle = C.dim;
       ctx.textAlign = "right";
       ctx.textBaseline = "middle";

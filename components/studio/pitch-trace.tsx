@@ -3,25 +3,33 @@
 import { useEffect, useRef } from "react";
 import type { PitchFrame } from "@/lib/audio/use-pitch";
 import { centsOff, freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
+import {
+  AMBER,
+  BG,
+  DIM,
+  INK,
+  LINE,
+  MUT,
+  OK,
+  monoFontStack,
+} from "@/lib/chart-colors";
 
 const WINDOW_MS = 8000;
 /** Semitone lanes visible at once. */
 const SEMIS = 14;
 
 const C = {
-  bg: "#f7f0e7",
+  bg: BG,
   lane: "rgba(32, 32, 29, 0.02)",
-  line: "#ddd4c4",
-  ink: "#20201d",
-  mut: "#5c564d",
-  dim: "#8a8272",
-  amber: "#c59642",
-  ok: "#3f8f6e",
+  line: LINE,
+  ink: INK,
+  mut: MUT,
+  dim: DIM,
+  amber: AMBER,
+  ok: OK,
   okFill: "rgba(63, 143, 110, 0.12)",
   inkFill: "rgba(32, 32, 29, 0.05)",
 } as const;
-
-const MONO = '"IBM Plex Mono", ui-monospace, monospace';
 
 interface Sample {
   t: number;
@@ -100,7 +108,7 @@ export function PitchTrace({
       // Semitone lanes + mono labels at left.
       const loMidi = Math.floor(center - SEMIS / 2) - 1;
       const hiMidi = Math.ceil(center + SEMIS / 2) + 1;
-      ctx.font = `10px ${MONO}`;
+      ctx.font = `10px ${monoFontStack()}`;
       ctx.textAlign = "left";
       ctx.textBaseline = "middle";
       for (let midi = loMidi; midi <= hiMidi; midi++) {

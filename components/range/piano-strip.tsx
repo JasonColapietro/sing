@@ -1,6 +1,14 @@
 "use client";
 
 import { midiToLabel } from "@/lib/audio/notes";
+import {
+  AMBER,
+  DIM,
+  LINE,
+  MONO,
+  STRIP_BLACK,
+  STRIP_WHITE,
+} from "@/lib/chart-colors";
 
 /** Keyboard strip bounds: C2..C6. */
 export const STRIP_LOW = 36;
@@ -108,8 +116,8 @@ export function PianoStrip({
           width={WHITE_W - 1}
           height={WHITE_H - 1}
           rx={2}
-          fill={k.midi === active ? "#c59642" : "#e9e2d3"}
-          stroke="#ddd4c4"
+          fill={k.midi === active ? AMBER : STRIP_WHITE}
+          stroke={LINE}
           strokeWidth={1}
         />
       ))}
@@ -122,8 +130,8 @@ export function PianoStrip({
           width={BLACK_W}
           height={BLACK_H}
           rx={1.5}
-          fill={k.midi === active ? "#c59642" : "#fffaf2"}
-          stroke="#ddd4c4"
+          fill={k.midi === active ? AMBER : STRIP_BLACK}
+          stroke={LINE}
           strokeWidth={1}
         />
       ))}
@@ -148,8 +156,8 @@ export function PianoStrip({
           y={WHITE_H + 14}
           textAnchor="middle"
           fontSize={9}
-          fontFamily="var(--font-mono)"
-          fill="#8a8272"
+          fontFamily={MONO}
+          fill={DIM}
         >
           {midiToLabel(k.midi)}
         </text>
@@ -164,7 +172,7 @@ export function PianoStrip({
               y1={0}
               x2={x}
               y2={WHITE_H + 4}
-              stroke="#c59642"
+              stroke={AMBER}
               strokeWidth={1.5}
             />
             <text
@@ -173,8 +181,8 @@ export function PianoStrip({
               textAnchor="middle"
               fontSize={10}
               fontWeight={600}
-              fontFamily="var(--font-mono)"
-              fill="#c59642"
+              fontFamily={MONO}
+              fill={AMBER}
             >
               {midiToLabel(m.midi)}
             </text>

@@ -1,4 +1,13 @@
 import { midiToLabel } from "@/lib/audio/notes";
+import {
+  COOL,
+  DIM,
+  LINE,
+  MONO,
+  REC,
+  STRIP_BLACK,
+  STRIP_WHITE,
+} from "@/lib/chart-colors";
 
 const BLACK_PCS = new Set([1, 3, 6, 8, 10]);
 
@@ -71,8 +80,8 @@ export function ChromaticStrip({
             width={CW - 1}
             height={(black ? KH * 0.62 : KH) - 1}
             rx={1.5}
-            fill={black ? "#fffaf2" : "#e9e2d3"}
-            stroke="#ddd4c4"
+            fill={black ? STRIP_BLACK : STRIP_WHITE}
+            stroke={LINE}
             strokeWidth={1}
           />
         );
@@ -93,7 +102,7 @@ export function ChromaticStrip({
           y1={0}
           x2={x(beltMidi) + CW / 2}
           y2={KH}
-          stroke="#9d3f33"
+          stroke={REC}
           strokeWidth={1.5}
           strokeDasharray="3 2"
           vectorEffect="non-scaling-stroke"
@@ -107,8 +116,8 @@ export function ChromaticStrip({
           textAnchor="middle"
           fontSize={noteFont}
           fontWeight={600}
-          fontFamily="var(--font-mono)"
-          fill="#11615d"
+          fontFamily={MONO}
+          fill={COOL}
         >
           {midiToLabel(m)}
         </text>
@@ -129,8 +138,8 @@ export function ChromaticStrip({
             y={KH + noteFont + 3}
             textAnchor="middle"
             fontSize={octaveFont}
-            fontFamily="var(--font-mono)"
-            fill="#8a8272"
+            fontFamily={MONO}
+            fill={DIM}
           >
             {midiToLabel(m)}
           </text>
