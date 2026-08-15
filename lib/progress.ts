@@ -80,7 +80,12 @@ let cache: ProgressState | null = null;
 const listeners = new Set<() => void>();
 let storageBound = false;
 
-function localDay(d = new Date()): string {
+/**
+ * The local calendar day as YYYY-MM-DD. Local, not UTC: a session at 23:30
+ * has to count for the day the singer thinks they practiced, and the streak
+ * is built entirely out of comparisons against this.
+ */
+export function localDay(d = new Date()): string {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");

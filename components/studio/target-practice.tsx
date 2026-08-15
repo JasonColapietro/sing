@@ -5,12 +5,35 @@ import type { PitchFrame } from "@/lib/audio/use-pitch";
 import { centsOff, midiToLabel, midiToName } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
 import { Button, Card, Pill, SectionLabel } from "@/components/ui";
+import { AMBER, INK, LINE, MONO, OK } from "@/lib/chart-colors";
 
 const HOLD_MS = 3000;
 const TOLERANCE = 50;
 const KEYS = 25; // two octaves inclusive of the top C
 const BASE_MIN = 36; // C2
 const BASE_MAX = 60; // C4 (keyboard tops out at C6)
+/** Locks in a row that earn the rising two-note flourish. */
+const COMBO_FLOURISH = 5;
+
+/**
+ * What target practice contributed to the Studio session, kept in a ref the
+ * page owns so the score survives this component unmounting (the singer
+ * stopping the mic tears the whole listening view down).
+ */
+export interface TargetStats {
+  /** Targets locked. */
+  hits: number;
+  /** Milliseconds of detected voice while a target was up and unlocked. */
+  scoredMs: number;
+  /** Of that, the milliseconds spent within TOLERANCE of the target. */
+  inTuneMs: number;
+  /** Longest unbroken run of locks. */
+  bestCombo: number;
+}
+
+export function emptyTargetStats(): TargetStats {
+  return { hits: 0, scoredMs: 0, inTuneMs: 0, bestCombo: 0 };
+}
 
 function pickNearby(current: number, base: number): number {
   const lo = Math.max(base, current - 5);
@@ -51,15 +74,19 @@ function MiniKeyboard({
               onClick={() => onPick(m)}
               aria-label={`Set target ${midiToLabel(m)}`}
               aria-pressed={selected}
-              className={`flex flex-1 items-end justify-center rounded-b-md border border-line2 pb-1 transition-colors ${
+              className={`flex flex-1 items-end justify-center rounded-b-md border border-line pb-1 transition-colors ${
                 selected
                   ? locked
                     ? "bg-ok"
                     : "bg-amber"
-                  : "bg-[#e8e1d0] hover:bg-[#f4eee0]"
+                  : "bg-key-white hover:bg-key-white-hover"
               }`}
             >
-              <span className="font-mono text-[10px] text-[#c9bda0]">
+              {/* Only the C keys are lettered. mut reads on the ivory key but
+                  washes out on the amber or green one it becomes when picked. */}
+              <span
+                className={`font-mono text-[10px] ${selected ? "text-ink" : "text-mut"}`}
+              >
                 {midiToName(m) === "C" ? midiToLabel(m) : ""}
               </span>
             </button>
@@ -78,12 +105,12 @@ function MiniKeyboard({
             aria-label={`Set target ${midiToLabel(m)}`}
             aria-pressed={selected}
             style={{ left: `${left}%`, width: `${blackW}%` }}
-            className={`absolute top-0 z-10 h-[58%] rounded-b-md border border-line2 transition-colors ${
+            className={`absolute top-0 z-10 h-[58%] rounded-b-md border border-key-black transition-colors ${
               selected
                 ? locked
                   ? "bg-ok"
                   : "bg-amber"
-                : "bg-[#0b0906] hover:bg-[#241f18]"
+                : "bg-key-black hover:bg-key-black-hover"
             }`}
           />
         );
@@ -102,6 +129,7 @@ export function TargetPractice({
   listening,
   targetMidi,
   onTargetChange,
+  stats,
   className,
 }: {
   frame: PitchFrame;
@@ -109,16 +137,20 @@ export function TargetPractice({
   listening: boolean;
   targetMidi: number | null;
   onTargetChange: (midi: number | null) => void;
+  /** Session totals, written straight to the page's ref — see TargetStats. */
+  stats: React.RefObject<TargetStats>;
   className?: string;
 }) {
   const [baseMidi, setBaseMidi] = useState(48); // C3
   const [shuffle, setShuffle] = useState(false);
   const [hits, setHits] = useState(0);
+  const [combo, setCombo] = useState(0);
   const [holdMs, setHoldMs] = useState(0);
   const [lockFlash, setLockFlash] = useState(false);
 
   const holdRef = useRef(0);
   const lockedRef = useRef(false);
+  const comboRef = useRef(0);
   const shuffleRef = useRef(false);
   const advanceTimer = useRef<number | null>(null);
 
@@ -130,10 +162,17 @@ export function TargetPractice({
   // than a render-time guard) because it resets rAF-loop-owned refs
   // (holdRef/lockedRef) in lockstep with the mirrored state below.
   useEffect(() => {
+    // A target the singer got partway into and then swapped or cleared breaks
+    // the run: a combo counts targets actually locked. It has to be read here,
+    // before the reset below wipes the evidence.
+    const abandoned = holdRef.current > 0 && !lockedRef.current;
+    if (abandoned) comboRef.current = 0;
     holdRef.current = 0;
     lockedRef.current = false;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- mirrors the ref reset above; must stay in the same tick as holdRef/lockedRef
     setHoldMs(0);
+     
+    if (abandoned) setCombo(0);
     setLockFlash(false);
   }, [targetMidi]);
 
@@ -149,16 +188,29 @@ export function TargetPractice({
       last = now;
       if (lockedRef.current) return;
       const f = latest.current;
-      if (f.freq === null || Math.abs(centsOff(f.freq, targetMidi)) > TOLERANCE) {
-        return;
-      }
+      if (f.freq === null) return;
+      // The session score is the share of *sung* time at a target that landed
+      // in tune, so silence is not scored: resting between attempts, or
+      // leaving a target up while thinking, is not singing out of tune.
+      stats.current.scoredMs += dt;
+      if (Math.abs(centsOff(f.freq, targetMidi)) > TOLERANCE) return;
+      stats.current.inTuneMs += dt;
       holdRef.current = Math.min(HOLD_MS, holdRef.current + dt);
       setHoldMs(holdRef.current);
       if (holdRef.current >= HOLD_MS) {
         lockedRef.current = true;
         setLockFlash(true);
         setHits((h) => h + 1);
+        const run = comboRef.current + 1;
+        comboRef.current = run;
+        setCombo(run);
+        stats.current.hits += 1;
+        stats.current.bestCombo = Math.max(stats.current.bestCombo, run);
         playTone(targetMidi + 12, { dur: 0.3, gain: 0.16 });
+        // Every fifth lock in a row answers with a second, higher note.
+        if (run % COMBO_FLOURISH === 0) {
+          playTone(targetMidi + 19, { dur: 0.45, at: 0.18, gain: 0.14 });
+        }
         advanceTimer.current = window.setTimeout(() => {
           setLockFlash(false);
           if (shuffleRef.current) {
@@ -178,7 +230,7 @@ export function TargetPractice({
       cancelAnimationFrame(raf);
       if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
     };
-  }, [listening, targetMidi, baseMidi, latest, onTargetChange]);
+  }, [listening, targetMidi, baseMidi, latest, onTargetChange, stats]);
 
   const offset =
     targetMidi !== null && frame.freq !== null
@@ -198,6 +250,11 @@ export function TargetPractice({
           <Pill tone="ok">
             <span className="tabular font-mono">{hits}</span> locked
           </Pill>
+          {combo >= 2 && (
+            <Pill tone="amber">
+              <span className="tabular font-mono">{combo}</span> in a row
+            </Pill>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -225,13 +282,13 @@ export function TargetPractice({
                 : `Hold progress: ${(holdMs / 1000).toFixed(1)} of 3 seconds`
             }
           >
-            <circle cx={38} cy={38} r={R} fill="none" stroke="#ddd4c4" strokeWidth={6} />
+            <circle cx={38} cy={38} r={R} fill="none" stroke={LINE} strokeWidth={6} />
             <circle
               cx={38}
               cy={38}
               r={R}
               fill="none"
-              stroke={lockFlash ? "#3f8f6e" : "#c59642"}
+              stroke={lockFlash ? OK : AMBER}
               strokeWidth={6}
               strokeLinecap="round"
               strokeDasharray={CIRC}
@@ -244,8 +301,8 @@ export function TargetPractice({
               y={42}
               textAnchor="middle"
               fontSize={13}
-              fill={lockFlash ? "#3f8f6e" : "#20201d"}
-              fontFamily='"IBM Plex Mono", ui-monospace, monospace'
+              fill={lockFlash ? OK : INK}
+              fontFamily={MONO}
             >
               {(holdMs / 1000).toFixed(1)}s
             </text>
