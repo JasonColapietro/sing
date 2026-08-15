@@ -5,7 +5,7 @@
  *
  * Chapters are markdown with frontmatter. The body is kept as markdown and
  * rendered at request time; only the metadata is needed to build the contents
- * page, so the free tier never has to download a word of the body.
+ * page, so the free tier never has to download a word of a gated body.
  */
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -25,6 +25,17 @@ function parseFrontmatter(raw, file) {
   }
   return { meta, body: m[2].trim() };
 }
+
+/**
+ * Which chapters render in full, for free, on their own page.
+ *
+ * Same rule the atlas uses: a prospect who has never read a sentence of the
+ * prose is being asked to buy writing quality sight unseen. Chapter one is the
+ * three-part model the whole book runs on, so it samples the book without
+ * giving away the program. Widening this set is a pricing decision, not a
+ * content edit, which is why it lives here rather than in the frontmatter.
+ */
+const FREE_CHAPTER_ORDERS = new Set([1]);
 
 const chapters = [];
 const problems = [];
@@ -54,6 +65,7 @@ for (const file of readdirSync(SRC).filter((f) => f.endsWith(".md")).sort()) {
     title: meta.title,
     part: meta.part,
     summary: meta.summary ?? "",
+    free: FREE_CHAPTER_ORDERS.has(order),
     words,
     body,
   });
@@ -72,7 +84,9 @@ const header = `/**
  *
  * "The Measured Voice", the book included with Suede Sing Pro. Chapter bodies
  * live here but are only ever sent to a verified subscriber: the reader fetches
- * them through /api/book, which checks the subscription with Stripe first.
+ * them through /api/book, which checks the subscription with Stripe first. The
+ * exception is a chapter flagged \`free\`, which renders server-side on its own
+ * page and never touches that route.
  */
 
 export interface BookChapter {
@@ -81,8 +95,10 @@ export interface BookChapter {
   title: string;
   part: string;
   summary: string;
+  /** Renders in full on /book/[slug] instead of going through the gate. */
+  free: boolean;
   words: number;
-  /** Markdown. Served only to verified subscribers. */
+  /** Markdown. Served only to verified subscribers unless \`free\`. */
   body: string;
 }
 

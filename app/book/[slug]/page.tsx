@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
+import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
+import { Markdown } from "@/lib/markdown";
 import { SITE_URL } from "@/lib/site";
-import { ChapterReader } from "@/components/book/reader";
-import { PageShell } from "@/components/ui";
+import { ChapterNav, ChapterReader } from "@/components/book/reader";
+import { FreeOnly } from "@/components/pro/gate";
+import { Card, LinkButton, PageShell } from "@/components/ui";
 
 interface Params {
   slug: string;
@@ -28,9 +30,9 @@ export async function generateMetadata({
     title: `${c.title} · ${BOOK_TITLE}`,
     description: c.summary,
     alternates: { canonical: `${SITE_URL}/book/${c.slug}` },
-    // The body is subscriber-only, so there is nothing here for an index to
-    // rank — list the chapter but keep it out of results.
-    robots: { index: false, follow: true },
+    // A gated body has nothing here for an index to rank — list the chapter but
+    // keep it out of results. The free chapter is real content and ranks.
+    robots: c.free ? undefined : { index: false, follow: true },
   };
 }
 
@@ -42,6 +44,12 @@ export default async function ChapterPage({
   const { slug } = await params;
   const chapter = BOOK_CONTENTS.find((c) => c.slug === slug);
   if (!chapter) notFound();
+
+  // The free chapter renders on the server: indexable, no subscription round
+  // trip. Everything else goes through the gated reader.
+  const full = chapter.free ? BOOK.find((c) => c.slug === slug) : undefined;
+  const next = BOOK_CONTENTS[BOOK_CONTENTS.indexOf(chapter) + 1];
+  const gated = BOOK_CONTENTS.filter((c) => !c.free).length;
 
   return (
     <PageShell
@@ -57,7 +65,51 @@ export default async function ChapterPage({
         </Link>
       }
     >
-      <ChapterReader chapter={chapter} />
+      {full ? (
+        <div className="space-y-6">
+          <Card>
+            <article className="max-w-2xl">
+              <Markdown source={full.body} />
+            </article>
+          </Card>
+          {/* A subscriber arrives here from "Start reading" — sell Pro only to
+              someone who does not already have it. */}
+          <FreeOnly>
+            <Card>
+              <p className="max-w-2xl text-sm text-mut">
+                That was the free chapter. The other {gated} — the rest of how
+                the voice works, how to read the numbers your own sessions
+                produce, the twelve-week program, and choosing songs that fit
+                the voice you have today — come with Suede Pro, along with a PDF
+                of the whole book.
+              </p>
+              {next && (
+                <p className="mt-2 max-w-2xl text-sm text-mut">
+                  Next up:{" "}
+                  <Link
+                    href={`/book/${next.slug}`}
+                    className="text-amber-ink hover:underline"
+                  >
+                    {next.title}
+                  </Link>
+                  . {next.summary}
+                </p>
+              )}
+              <div className="mt-4 flex flex-wrap gap-3">
+                <LinkButton href="/pro" size="md">
+                  See what Pro includes
+                </LinkButton>
+                <LinkButton href="/book" variant="outline" size="md">
+                  Back to contents
+                </LinkButton>
+              </div>
+            </Card>
+          </FreeOnly>
+          <ChapterNav slug={chapter.slug} />
+        </div>
+      ) : (
+        <ChapterReader chapter={chapter} />
+      )}
     </PageShell>
   );
 }

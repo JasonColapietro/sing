@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useProState } from "@/lib/pro";
+import { useProReady, useProState } from "@/lib/pro";
 import {
   ATLAS_CONTENTS,
   type AtlasContentsEntry,
@@ -27,6 +27,7 @@ type State =
  */
 export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry }) {
   const pro = useProState();
+  const proReady = useProReady();
   const [state, setState] = useState<State>({ kind: "idle" });
 
   const subscriptionId = pro.subscriptionId;
@@ -75,24 +76,49 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
     void load();
   }, [load]);
 
-  const view: State = !subscriptionId
-    ? { kind: "locked", message: "This chapter is part of Suede Pro." }
-    : state.kind === "idle"
-      ? { kind: "loading" }
-      : state;
+  // Gated chapter pages are statically prerendered (dynamicParams = false), and
+  // the entitlement cache is local to the browser — so on the server there is
+  // no subscription to find and the locked card would be baked into the HTML a
+  // subscriber downloads. Hold the neutral loading card until the store reports.
+  const view: State = !proReady
+    ? { kind: "loading" }
+    : !subscriptionId
+      ? { kind: "locked", message: "This chapter is part of Suede Pro." }
+      : state.kind === "idle"
+        ? { kind: "loading" }
+        : state;
 
-  const index = ATLAS_CONTENTS.findIndex((c) => c.slug === chapter.slug);
-  const prev = index > 0 ? ATLAS_CONTENTS[index - 1] : null;
-  const next =
-    index >= 0 && index < ATLAS_CONTENTS.length - 1
-      ? ATLAS_CONTENTS[index + 1]
-      : null;
+  const free = ATLAS_CONTENTS.filter((c) => c.free);
+  // Every gated chapter sits after every free one, so the last free chapter is
+  // the one immediately before whatever the reader landed on.
+  const sample = free[free.length - 1] ?? null;
+
+  // Shared by the loading and locked states: none of these links claim anything
+  // about the reader's entitlement, so they are safe to bake into the prerendered
+  // HTML. Without them the static page is a dead end for anyone whose JS never
+  // runs — the loading line never resolves and there is no way through to Pro.
+  const ctas = (
+    <div className="mt-5 flex flex-wrap items-center gap-3">
+      <LinkButton href="/pro" size="md">
+        See what Pro includes
+      </LinkButton>
+      {sample && (
+        <LinkButton href={`/atlas/${sample.slug}`} variant="outline" size="md">
+          Read a free chapter
+        </LinkButton>
+      )}
+      <LinkButton href="/atlas" variant="ghost" size="md">
+        Back to contents
+      </LinkButton>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
       {view.kind === "loading" && (
         <Card>
           <p className="text-sm text-mut">Loading the chapter…</p>
+          {ctas}
         </Card>
       )}
 
@@ -103,17 +129,12 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
           <p className="mt-2 max-w-2xl text-sm text-mut">
             The full contents — every chapter and every singer covered — is
             free on the contents page, and each singer&rsquo;s range page stays
-            free too. Pro unlocks the chapter text, the entry notes, and the
-            PDF of the whole book.
+            free too. So are the first {free.length} chapters, which teach the
+            notation and the labels every entry after them uses. Pro unlocks the
+            remaining chapter text, the entry notes, and the PDF of the whole
+            book.
           </p>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <LinkButton href="/pro" size="md">
-              See what Pro includes
-            </LinkButton>
-            <LinkButton href="/atlas" variant="outline" size="md">
-              Back to contents
-            </LinkButton>
-          </div>
+          {ctas}
         </Card>
       )}
 
@@ -146,28 +167,46 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
         </>
       )}
 
-      <nav className="flex items-center justify-between gap-4">
-        {prev ? (
-          <Link
-            href={`/atlas/${prev.slug}`}
-            className="min-w-0 rounded-xl border border-line px-4 py-3 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
-          >
-            ← {prev.title}
-          </Link>
-        ) : (
-          <span />
-        )}
-        {next ? (
-          <Link
-            href={`/atlas/${next.slug}`}
-            className="min-w-0 rounded-xl border border-line px-4 py-3 text-right text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
-          >
-            {next.title} →
-          </Link>
-        ) : (
-          <span />
-        )}
-      </nav>
+      <AtlasChapterNav slug={chapter.slug} />
     </div>
+  );
+}
+
+/**
+ * Previous/next links across the whole atlas. The free chapter pages render
+ * this too — a subscriber reading in order reaches the last free chapter, and
+ * without it there is no link onward into the gated ones.
+ */
+export function AtlasChapterNav({ slug }: { slug: string }) {
+  const index = ATLAS_CONTENTS.findIndex((c) => c.slug === slug);
+  const prev = index > 0 ? ATLAS_CONTENTS[index - 1] : null;
+  const next =
+    index >= 0 && index < ATLAS_CONTENTS.length - 1
+      ? ATLAS_CONTENTS[index + 1]
+      : null;
+
+  return (
+    <nav className="flex items-center justify-between gap-4">
+      {prev ? (
+        <Link
+          href={`/atlas/${prev.slug}`}
+          className="min-w-0 rounded-xl border border-line px-4 py-3 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
+        >
+          ← {prev.title}
+        </Link>
+      ) : (
+        <span />
+      )}
+      {next ? (
+        <Link
+          href={`/atlas/${next.slug}`}
+          className="min-w-0 rounded-xl border border-line px-4 py-3 text-right text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
+        >
+          {next.title} →
+        </Link>
+      ) : (
+        <span />
+      )}
+    </nav>
   );
 }

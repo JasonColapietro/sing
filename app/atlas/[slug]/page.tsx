@@ -4,8 +4,9 @@ import { notFound } from "next/navigation";
 import { ATLAS, ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
 import { Markdown } from "@/lib/markdown";
 import { SITE_URL } from "@/lib/site";
-import { AtlasChapterReader } from "@/components/atlas/reader";
+import { AtlasChapterNav, AtlasChapterReader } from "@/components/atlas/reader";
 import { AtlasEntryCard } from "@/components/atlas/entry";
+import { FreeOnly } from "@/components/pro/gate";
 import { Card, LinkButton, PageShell } from "@/components/ui";
 
 interface Params {
@@ -48,6 +49,8 @@ export default async function AtlasChapterPage({
   // The free sample renders on the server: indexable, no subscription round
   // trip. Everything else goes through the gated reader.
   const full = chapter.free ? ATLAS.find((c) => c.slug === slug) : undefined;
+  const free = ATLAS_CONTENTS.filter((c) => c.free);
+  const nextFree = free[free.indexOf(chapter) + 1];
 
   return (
     <PageShell
@@ -77,22 +80,39 @@ export default async function AtlasChapterPage({
               ))}
             </div>
           )}
-          <Card>
-            <p className="max-w-2xl text-sm text-mut">
-              That was the free chapter. The rest of the atlas — the method
-              chapters, every genre chapter with its entry notes, and the
-              appendices — is included with Suede Pro, along with a PDF of the
-              whole book.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <LinkButton href="/pro" size="md">
-                See what Pro includes
-              </LinkButton>
-              <LinkButton href="/atlas" variant="outline" size="md">
-                Back to contents
-              </LinkButton>
-            </div>
-          </Card>
+          {/* A subscriber reads the free chapters in order like any other —
+              sell Pro only to someone who does not already have it. */}
+          <FreeOnly>
+            <Card>
+              <p className="max-w-2xl text-sm text-mut">
+                That was one of the {free.length} free chapters. The rest of the
+                atlas — the remaining method chapters, every genre chapter with
+                its entry notes, and the appendices — is included with Suede
+                Pro, along with a PDF of the whole book.
+              </p>
+              {nextFree && (
+                <p className="mt-2 max-w-2xl text-sm text-mut">
+                  Also free:{" "}
+                  <Link
+                    href={`/atlas/${nextFree.slug}`}
+                    className="text-amber-ink hover:underline"
+                  >
+                    {nextFree.title}
+                  </Link>
+                  . {nextFree.summary}
+                </p>
+              )}
+              <div className="mt-4 flex flex-wrap gap-3">
+                <LinkButton href="/pro" size="md">
+                  See what Pro includes
+                </LinkButton>
+                <LinkButton href="/atlas" variant="outline" size="md">
+                  Back to contents
+                </LinkButton>
+              </div>
+            </Card>
+          </FreeOnly>
+          <AtlasChapterNav slug={chapter.slug} />
         </div>
       ) : (
         <AtlasChapterReader chapter={chapter} />
