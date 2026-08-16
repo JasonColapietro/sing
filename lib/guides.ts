@@ -48,11 +48,11 @@ export const RANGE_GUIDE: GuideContent = {
       },
       {
         title: "Allow the microphone",
-        body: "Grant mic access when the browser asks. Pitch detection runs on your device; audio is never sent to a server. Use a quiet room, because background noise makes the detector hesitate at the edges.",
+        body: "Grant mic access when the browser asks. Pitch detection runs on your device; audio is never sent to a server. Use a quiet room, because background noise is what makes the detector hesitate. If nothing registers while you sing, your input level is the first thing to raise — automatic gain is switched off here so the signal being measured is the one you produced.",
       },
       {
         title: "Hold a comfortable note",
-        body: "Start in the middle of your voice, on a vowel you can sustain — 'ah' or 'oo'. This gives the detector a stable reading to anchor on before you move to the extremes.",
+        body: "Start in the middle of your voice, on a vowel you can sustain — 'ah' or 'oo'. Sing it out rather than under your breath: a note at talking volume often sits below what the microphone can measure. This gives the detector a stable reading to anchor on before you move to the extremes.",
       },
       {
         title: "Slide down to your floor",

@@ -359,7 +359,9 @@ export function RangeTest() {
           <Card>
             <h2 className="text-xl">How it works</h2>
             <ol className="mt-3 max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut">
-              <li>Sing a comfortable note and hold it for two seconds.</li>
+              <li>
+                Sing a comfortable note out loud and hold it for two seconds.
+              </li>
               <li>
                 Slide down gradually. Each note you hold clearly counts toward
                 your lowest.
@@ -396,7 +398,8 @@ export function RangeTest() {
           <SectionLabel>Step 1 of 4</SectionLabel>
           <h2 className="mt-3 text-xl">Sing a comfortable note</h2>
           <p className="mt-2 max-w-xl text-sm text-mut">
-            Any easy pitch — an “ahh” at normal speaking volume works well. Hold
+            Any easy pitch — an “ahh”, sung out as if to someone across the
+            room. A note at talking volume is often too quiet to measure. Hold
             it steady for two seconds to lock in your starting register.
           </p>
           <div className="mt-6 flex items-end gap-6">
