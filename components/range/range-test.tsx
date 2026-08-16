@@ -34,6 +34,14 @@ const MIN_PLAUSIBLE = 24;
 const MAX_PLAUSIBLE = 96;
 /** Ignore near-silent frames. */
 const MIN_VOLUME = 0.008;
+/** Below this there is nothing on the mic at all, not merely a quiet singer. */
+const SILENCE_FLOOR = 0.0015;
+/**
+ * How long to let a singer work before explaining why nothing is happening.
+ * Long enough not to nag someone who is about to succeed, short enough that
+ * nobody sits in front of a bar that never moves wondering what is wrong.
+ */
+const HINT_AFTER_MS = 2500;
 
 const STEPS: Array<{ id: Stage; label: string }> = [
   { id: "warm", label: "Warm start" },
@@ -73,6 +81,17 @@ function StepIndicator({ stage }: { stage: Stage }) {
   );
 }
 
+function InputHint({ hint }: { hint: string | null }) {
+  return (
+    <p
+      className="mt-4 max-w-xl border-l-2 border-amber/50 pl-3 text-sm text-mut"
+      aria-live="polite"
+    >
+      {hint}
+    </p>
+  );
+}
+
 function ListeningPill() {
   return (
     <Pill tone="rec">
@@ -101,7 +120,14 @@ export function RangeTest() {
     save?: SaveSummary;
   } | null>(null);
 
+  /** Why the note isn't counting, when it isn't. Null while things are fine. */
+  const [inputHint, setInputHint] = useState<string | null>(null);
+
   const lastTRef = useRef(0);
+  /** Rolling evidence about the mic, so the hint describes what we measured. */
+  const inputRef = useRef({ quietMs: 0, unpitchedMs: 0, loudestSeen: 0 });
+  /** Mirrors inputHint so the analysis effect never reads the state it sets. */
+  const hintRef = useRef<string | null>(null);
   const holdRef = useRef<{ target: number | null; ms: number; gapMs: number }>({
     target: null,
     ms: 0,
@@ -122,6 +148,9 @@ export function RangeTest() {
     setHighFound(null);
     setHoldMs(0);
     setResult(null);
+    setInputHint(null);
+    hintRef.current = null;
+    inputRef.current = { quietMs: 0, unpitchedMs: 0, loudestSeen: 0 };
     holdRef.current = { target: null, ms: 0, gapMs: 0 };
     resetHunt();
   };
@@ -132,6 +161,13 @@ export function RangeTest() {
     resetAll();
     startedAtRef.current = performance.now();
     setStage("warm");
+  };
+
+  /** Publishes a hint only when it actually changes, so steady state is quiet. */
+  const showHint = (next: string | null) => {
+    if (hintRef.current === next) return;
+    hintRef.current = next;
+    setInputHint(next);
   };
 
   // Per-frame analysis for the active wizard stages.
@@ -148,6 +184,38 @@ export function RangeTest() {
     const midi = voiced && frame.note ? frame.note.midi : null;
     const plausible =
       midi !== null && midi >= MIN_PLAUSIBLE && midi <= MAX_PLAUSIBLE;
+
+    // A singer who is too quiet, or too far from the mic, currently gets an
+    // empty readout and a bar that never fills — with nothing to act on. The
+    // test asks for "normal speaking volume", and with automatic gain
+    // deliberately disabled that is often below the floor the detector needs,
+    // so this is the common case rather than the odd one.
+    const input = inputRef.current;
+    input.loudestSeen = Math.max(input.loudestSeen, frame.volume);
+    if (voiced) {
+      input.quietMs = 0;
+      input.unpitchedMs = 0;
+      showHint(null);
+    } else if (frame.volume >= MIN_VOLUME) {
+      // Loud enough, but no pitch came back — a breathy or unsteady note.
+      input.quietMs = 0;
+      input.unpitchedMs += dt;
+      if (input.unpitchedMs >= HINT_AFTER_MS) {
+        showHint(
+          "We can hear you, but we can't lock onto a pitch. Try a steady \u201cah\u201d on one comfortable note.",
+        );
+      }
+    } else {
+      input.unpitchedMs = 0;
+      input.quietMs += dt;
+      if (input.quietMs >= HINT_AFTER_MS) {
+        showHint(
+          input.loudestSeen >= SILENCE_FLOOR
+            ? "You're coming through too quietly to measure. Move closer to the mic, sing a little louder, or raise your input level in your system sound settings."
+            : "We're not picking up any sound. Check the right microphone is selected in your system sound settings, and that nothing else is using it.",
+        );
+      }
+    }
 
     if (stage === "warm") {
       const h = holdRef.current;
@@ -354,6 +422,7 @@ export function RangeTest() {
               </p>
             </div>
           </div>
+          {inputHint && <InputHint hint={inputHint} />}
           <div className="mt-6">
             <PianoStrip
               activeMidi={liveMidi}
@@ -430,6 +499,7 @@ export function RangeTest() {
               ariaLabel="Keyboard highlighting the note you are singing and the range reached so far"
             />
           </div>
+          {inputHint && <InputHint hint={inputHint} />}
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {stage === "low" ? (
               <>
