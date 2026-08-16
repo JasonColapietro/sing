@@ -9,6 +9,10 @@ export interface PitchResult {
  * interpolation). Tuned for the human voice: rejects frames quieter than a
  * small RMS floor and frequencies outside 45–1600 Hz.
  */
+/** The singable range this detector will report, in Hz. */
+const MIN_FREQ = 45;
+const MAX_FREQ = 1600;
+
 export function detectPitch(
   buf: Float32Array,
   sampleRate: number,
@@ -48,11 +52,25 @@ export function detectPitch(
     c[i] = sum;
   }
 
+  // Only lags that correspond to a singable pitch are candidates. Searching
+  // every lag and rejecting the answer afterwards throws the whole frame away
+  // whenever noise wins the peak at some implausible lag — which is what a
+  // normal room, or the browser's own capture and resampling path, reliably
+  // produces. The note is audible and on pitch; the detector was just looking
+  // outside the range it was going to accept anyway.
+  const minLag = Math.max(1, Math.floor(sampleRate / MAX_FREQ));
+  const maxLag = Math.min(size - 1, Math.ceil(sampleRate / MIN_FREQ));
+  if (maxLag <= minLag) return null;
+
+  // Skip the correlation's initial descent from lag 0 so the trivial peak at
+  // zero lag can't win, but never search below the shortest singable period.
   let d = 0;
   while (d < size - 1 && c[d] > c[d + 1]) d++;
+  const from = Math.max(d, minLag);
+
   let maxval = -1;
   let maxpos = -1;
-  for (let i = d; i < size; i++) {
+  for (let i = from; i <= maxLag; i++) {
     if (c[i] > maxval) {
       maxval = c[i];
       maxpos = i;
@@ -70,7 +88,8 @@ export function detectPitch(
   if (a) T0 = T0 - b / (2 * a);
 
   const freq = sampleRate / T0;
-  if (freq < 45 || freq > 1600) return null;
+  // Parabolic interpolation can nudge the period just past the search bounds.
+  if (freq < MIN_FREQ || freq > MAX_FREQ) return null;
 
   return { freq, clarity: Math.max(0, Math.min(1, maxval / c[0])) };
 }
