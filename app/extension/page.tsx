@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { SITE_URL } from "@/lib/site";
 
@@ -224,7 +225,7 @@ export default function ExtensionPage() {
           <a href="https://apps.apple.com/app/id6767763231">
             Suede Sing: Vocal Coach
           </a>{" "}
-          iPhone app, and as a <a href="/">browser studio</a> that needs no
+          iPhone app, and as a <Link href="/">browser studio</Link> that needs no
           install at all.
         </p>
       </section>
