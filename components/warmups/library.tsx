@@ -11,6 +11,7 @@ import {
   type WarmupExercise,
 } from "./exercises";
 import type { ProgressState } from "@/lib/progress";
+import { midiToLabel } from "@/lib/audio/notes";
 import { useIsPro } from "@/lib/pro";
 import { Card, LinkButton, Pill, SectionLabel } from "@/components/ui";
 import { FreeOnly } from "@/components/pro/gate";
@@ -62,9 +63,13 @@ export function Library({
           </div>
           <p className="mt-2 text-sm text-mut">{ex.desc}</p>
           <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            <span>{roots.length} reps</span>
+            <span>
+              {roots.length > 1
+                ? `${midiToLabel(roots[0])}–${midiToLabel(roots[roots.length - 1])} ladder`
+                : `${midiToLabel(roots[0])} ladder`}
+            </span>
             <span aria-hidden="true">·</span>
-            <span>~{minutes} min</span>
+            <span>~{minutes} min per climb</span>
             {ex.glide && (
               <>
                 <span aria-hidden="true">·</span>

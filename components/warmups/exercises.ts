@@ -423,10 +423,12 @@ export function buildSegments(
 }
 
 /**
- * Roots for each rep, climbing by semitones. With a saved range, start a
- * major third above the low note and stop a fourth below the high note
- * (accounting for the exercise's highest interval). Without one, default
- * to the classic C3→G3 ladder.
+ * Every semitone root from the ladder's bottom to its top. With a saved
+ * range, start a major third above the low note and stop a fourth below the
+ * high note (accounting for the exercise's highest interval). Without one,
+ * default to the classic C3→G3 ladder. The player walks this band up and
+ * down endlessly — see ladderWalk — so the ladder is the singer's whole
+ * comfortable span, not a fixed rep count.
  */
 export function computeRootLadder(
   ex: WarmupExercise,
@@ -438,13 +440,37 @@ export function computeRootLadder(
   if (lowMidi !== undefined && highMidi !== undefined) {
     const start = Math.max(30, lowMidi + 4);
     const top = Math.max(start, highMidi - 5 - maxOff);
-    const count = Math.max(6, Math.min(8, top - start + 1));
-    return Array.from({ length: count }, (_, i) => Math.min(start + i, top));
+    return Array.from({ length: top - start + 1 }, (_, i) => start + i);
   }
   return Array.from({ length: 8 }, (_, i) => 48 + i); // C3..G3
 }
 
-/** Rough session length: each rep plays the guide then a 120% sing window. */
+/** One rep of the endless up-and-down ladder walk. */
+export interface LadderStep {
+  /** Root midi to sing on this rep. */
+  root: number;
+  /** Position in the ladder, 0 = bottom note. */
+  index: number;
+  /** Where the walk heads after this rep: up toward the top, or back down. */
+  ascending: boolean;
+}
+
+/**
+ * Map a rep counter onto the ladder walked as a triangle wave —
+ * 0, 1, …, n-1, n-2, …, 1, 0, 1, … — so an exercise keeps ascending and
+ * descending for as long as the singer keeps going. The top and bottom
+ * notes are sung once per turn, never twice in a row.
+ */
+export function ladderWalk(ladder: number[], rep: number): LadderStep {
+  const n = ladder.length;
+  if (n <= 1) return { root: ladder[0] ?? 48, index: 0, ascending: true };
+  const period = 2 * n - 2;
+  const pos = rep % period;
+  const index = pos < n ? pos : period - pos;
+  return { root: ladder[index], index, ascending: pos < n - 1 };
+}
+
+/** Rough length of one climb of the ladder: each rep plays the guide then a 120% sing window. */
 export function estimateMinutes(ex: WarmupExercise, reps: number): number {
   const { totalSec } = buildSegments(ex, 60, 1);
   const secs = reps * (totalSec * 2.2 + 2);

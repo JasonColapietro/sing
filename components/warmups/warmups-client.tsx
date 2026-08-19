@@ -87,7 +87,7 @@ export function WarmupsClient() {
       <PageShell
         kicker="Warmups"
         title="Guided vocal warmups"
-        subtitle="Listen to a short melody, then sing it back. Roots climb by semitones as you go, like a real warmup ladder."
+        subtitle="Listen to a short melody, then sing it back. Roots climb by semitones to the top of your range, then walk back down — for as long as you keep going."
       >
         <Card>
           <h2 className="text-xl">
