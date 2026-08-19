@@ -36,6 +36,10 @@ const PRACTICE: FooterLink[] = [
   { href: "/warmups", label: "Guided warmups" },
   { href: "/range", label: "Free vocal range test" },
   { href: "/ear-training", label: "Ear training" },
+  // No longer header tabs of their own — the footer and /tools carry the
+  // crawl path into these rooms now.
+  { href: "/recorder", label: "Voice recorder" },
+  { href: "/analyze", label: "Voice analyzer" },
   { href: "/progress", label: "Your progress" },
   { href: "/extension", label: "Chrome extension vocal coach" },
 ];

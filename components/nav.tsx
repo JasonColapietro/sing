@@ -10,7 +10,15 @@ import { useIsPro, useProReady } from "@/lib/pro";
 import { ProChip } from "@/components/pro/ui";
 import { useModalFocus } from "@/lib/use-modal-focus";
 
-const LINKS = [
+/**
+ * Ten tabs, not thirteen: Recorder and Analyze fold into Tools, and the two
+ * books share one Books tab. The absorbed rooms keep their pages (each ranks
+ * for its own queries and is linked from its host tab and the footer) — `also`
+ * keeps the host tab lit while you're inside one, so the header never claims
+ * you are nowhere. Order follows the practice loop: warm up and sing, measure
+ * and compare, then read and review.
+ */
+const LINKS: { href: string; label: string; also?: string[] }[] = [
   { href: "/studio", label: "Studio" },
   { href: "/warmups", label: "Warmups" },
   { href: "/range", label: "Range" },
@@ -18,13 +26,20 @@ const LINKS = [
   { href: "/ear-training", label: "Ear" },
   { href: "/breath", label: "Breath" },
   { href: "/songs", label: "Songs" },
-  { href: "/recorder", label: "Recorder" },
-  { href: "/tools", label: "Tools" },
-  { href: "/analyze", label: "Analyze" },
+  { href: "/tools", label: "Tools", also: ["/recorder", "/analyze"] },
+  { href: "/book", label: "Books", also: ["/atlas"] },
   { href: "/progress", label: "Progress" },
-  { href: "/book", label: "Book" },
-  { href: "/atlas", label: "Atlas" },
 ];
+
+/** True when the pathname sits inside the tab's own route or an absorbed one. */
+function isActiveLink(
+  l: (typeof LINKS)[number],
+  pathname: string,
+): boolean {
+  return [l.href, ...(l.also ?? [])].some(
+    (h) => pathname === h || pathname.startsWith(h + "/"),
+  );
+}
 
 function MenuIcon() {
   return (
@@ -120,8 +135,7 @@ export default function Nav() {
   useModalFocus(menuOpen, drawerRef);
 
   const currentLabel =
-    LINKS.find((l) => pathname === l.href || pathname.startsWith(l.href + "/"))
-      ?.label ?? "Menu";
+    LINKS.find((l) => isActiveLink(l, pathname))?.label ?? "Menu";
 
   // Close the mobile menu on navigation. Adjusted during render (guarded by
   // prevPathname) rather than in an effect, per
@@ -246,8 +260,7 @@ export default function Nav() {
               className="mt-4 grid grid-cols-2 gap-2.5 px-4 pb-8"
             >
               {LINKS.map((l) => {
-                const active =
-                  pathname === l.href || pathname.startsWith(l.href + "/");
+                const active = isActiveLink(l, pathname);
                 return (
                   <Link
                     key={l.href}
@@ -293,8 +306,7 @@ export default function Nav() {
             className="no-scrollbar hidden flex-1 items-center gap-1 overflow-x-auto sm:flex [mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
           >
             {LINKS.map((l) => {
-              const active =
-                pathname === l.href || pathname.startsWith(l.href + "/");
+              const active = isActiveLink(l, pathname);
               return (
                 <Link
                   key={l.href}

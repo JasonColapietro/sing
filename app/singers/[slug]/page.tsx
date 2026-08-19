@@ -54,8 +54,11 @@ export async function generateMetadata({
   const s = singerBySlug(slug);
   if (!s) return {};
   const semis = s.highMidi - s.lowMidi;
-  const title = `${s.name} Vocal Range: ${rangeLabel(s)} (${spanOctaves(semis)} Octaves)`;
-  const description = `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — ${describeSpan(semis)}, a ${s.voiceType.toLowerCase()}. See it on a keyboard, hear it, and test your own range for free.`;
+  // "Vocal Range & Highest Note" — the two query families this page answers.
+  // Long names truncate the octave tail in a SERP, which is the right part to
+  // lose; the note letters are the answer people searched for.
+  const title = `${s.name} Vocal Range & Highest Note: ${rangeLabel(s)} (${spanOctaves(semis)} Octaves)`;
+  const description = `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — ${describeSpan(semis)}, a ${s.voiceType.toLowerCase()}. Highest note ${midiToLabel(s.highMidi)}, lowest ${midiToLabel(s.lowMidi)}. Hear it, see it on a keyboard, and test your own range free.`;
   return {
     title,
     description,
@@ -93,6 +96,43 @@ function answerSentence(s: (typeof SINGERS)[number]): string {
   return parts.join(" ");
 }
 
+/**
+ * The other question families searchers type — "what is X's highest note",
+ * "what is X's lowest note", "how many octaves can X sing" — answered from the
+ * same fields the page renders. One array feeds both the visible section and
+ * the FAQPage markup, so the marked-up answer can never drift from the read one.
+ * Typographic apostrophes throughout, for the same reason `question` uses one.
+ */
+function singerFaq(s: (typeof SINGERS)[number]): Array<{ q: string; a: string }> {
+  const semis = s.highMidi - s.lowMidi;
+  const high = [
+    `${s.name}’s highest note is commonly cited as ${bothSpellings(s.highMidi)}${s.highSource ? `, heard in ${s.highSource}` : ""}.`,
+  ];
+  if (s.whistle) {
+    high.push("That note sits in whistle register.");
+  } else if (s.beltMidi != null && s.beltMidi < s.highMidi) {
+    high.push(
+      `Full voice is cited up to around ${midiToLabel(s.beltMidi)}; the very top comes from ${HEAD_VOICE_TYPES.has(s.voiceType) ? "head voice" : "falsetto or head voice"}.`,
+    );
+  }
+  const octaves = [
+    `${s.name}’s commonly cited range spans about ${spanOctaves(semis)} octaves (${semis} semitones), from ${midiToLabel(s.lowMidi)} up to ${midiToLabel(s.highMidi)}.`,
+  ];
+  if (hasUsefulPercentile(s)) {
+    octaves.push(
+      `That span is wider than ${spanPercentile(s)}% of the ${SINGERS.length} voices in this library.`,
+    );
+  }
+  return [
+    { q: `What is ${s.name}’s highest note?`, a: high.join(" ") },
+    {
+      q: `What is ${s.name}’s lowest note?`,
+      a: `${s.name}’s lowest note is commonly cited as ${bothSpellings(s.lowMidi)}${s.lowSource ? `, heard in ${s.lowSource}` : ""}.`,
+    },
+    { q: `How many octaves can ${s.name} sing?`, a: octaves.join(" ") },
+  ];
+}
+
 export default async function SingerPage({
   params,
 }: {
@@ -110,6 +150,7 @@ export default async function SingerPage({
 
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
   const answer = answerSentence(s);
+  const faq = singerFaq(s);
   // Rendered below AND used verbatim in the FAQPage markup. Google requires the
   // marked-up question to match what the reader sees; sharing one string is the
   // only way that stays true. Note the typographic apostrophe — the heading used
@@ -207,6 +248,11 @@ export default async function SingerPage({
             name: question,
             acceptedAnswer: { "@type": "Answer", text: answer },
           },
+          ...faq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
         ],
       },
     ],
@@ -297,34 +343,14 @@ export default async function SingerPage({
         <Card>
           <h2 className="text-xl">{question}</h2>
           <p className="mt-3 max-w-3xl text-mut">{answer}</p>
-          <p className="mt-3 max-w-3xl text-sm text-mut">
-            {s.blurb}
-            {hasUsefulPercentile(s) &&
-              ` That cited span is wider than ${spanPercentile(s)}% of the voices in this library.`}
-          </p>
-          <dl className="mt-5 grid gap-4 sm:grid-cols-3">
+          <p className="mt-3 max-w-3xl text-sm text-mut">{s.blurb}</p>
+          <dl className="mt-5">
             <div>
               <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Signature song
               </dt>
               <dd className="mt-1 text-sm">{s.signatureSong}</dd>
             </div>
-            {s.lowSource && (
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                  Low {midiToLabel(s.lowMidi)} heard in
-                </dt>
-                <dd className="mt-1 text-sm">{s.lowSource}</dd>
-              </div>
-            )}
-            {s.highSource && (
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                  High {midiToLabel(s.highMidi)} heard in
-                </dt>
-                <dd className="mt-1 text-sm">{s.highSource}</dd>
-              </div>
-            )}
           </dl>
           {observations.length > 0 && (
             <>
@@ -347,6 +373,20 @@ export default async function SingerPage({
             Commonly cited figures, not lab measurements — extreme notes are
             one-off recorded moments, not the singer&rsquo;s everyday range.
           </p>
+        </Card>
+
+        {/* The highest-note / lowest-note / octaves question families, in the
+            words people search. Same array as the FAQPage markup above. */}
+        <Card>
+          <h2 className="text-xl">More about {s.name}&rsquo;s voice</h2>
+          <div className="mt-4 max-w-3xl space-y-5">
+            {faq.map((f) => (
+              <div key={f.q}>
+                <h3 className="text-sm font-semibold">{f.q}</h3>
+                <p className="mt-1 text-sm text-mut">{f.a}</p>
+              </div>
+            ))}
+          </div>
         </Card>
 
         {/* You vs them */}
