@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
 import { SITE_URL } from "@/lib/site";
 
 const STORE_URL =
@@ -222,9 +223,7 @@ export default function ExtensionPage() {
           <a href="https://suedeai.ai">Suede Labs AI</a>, an independent studio
           making measurement-first tools for musicians. The vocal work also
           ships as the free{" "}
-          <a href="https://apps.apple.com/app/id6767763231">
-            Suede Sing: Vocal Coach
-          </a>{" "}
+          <a href={APP_STORE_URL}>{APP_NAME}</a>{" "}
           iPhone app, and as a <Link href="/">browser studio</Link> that needs no
           install at all.
         </p>
