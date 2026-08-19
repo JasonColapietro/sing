@@ -6,6 +6,7 @@ import { playTone } from "@/lib/audio/synth";
 import { useProgress } from "@/lib/progress";
 import { rangeOverlap, spanOctaves, type Singer } from "@/lib/singers";
 import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
+import { ProInlineNudge } from "@/components/pro/gate";
 
 /** Low → glide → high, same gesture as the range-test result card. */
 export function PlayRangeButton({ s }: { s: Singer }) {
@@ -129,11 +130,23 @@ export function CompareWithMe({ s }: { s: Singer }) {
           Practice songs in your range
         </LinkButton>
         <Link
+          href="/progress"
+          className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut underline decoration-line underline-offset-2 hover:text-ink"
+        >
+          Your range history
+        </Link>
+        <Link
           href="/range"
           className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut underline decoration-line underline-offset-2 hover:text-ink"
         >
           Retake the range test
         </Link>
+      </div>
+      {/* The ~420 singer pages are where search traffic lands; this is the one
+          Pro line on them, and only after the visitor has a measured range to
+          compare — value first, pitch second. Self-hides for Pro. */}
+      <div className="mt-4">
+        <ProInlineNudge>The coach builds a daily plan around this gap</ProInlineNudge>
       </div>
     </Card>
   );
