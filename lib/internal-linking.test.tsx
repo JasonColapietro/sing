@@ -16,10 +16,21 @@
  * for the reintroduce-the-defect / watch-it-fail runs.
  */
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// Nav is a client component and calls usePathname, which has no request to read
+// outside Next's server runtime. Only that one export is replaced; `notFound`
+// (used by the singer page rendered below) stays real.
+vi.mock("next/navigation", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("next/navigation")>()),
+  usePathname: () => "/",
+}));
+
 import SingerPage from "@/app/singers/[slug]/page";
+import Nav, { NAV_GROUPS, PROGRESS_LINK } from "@/components/nav";
 import SiteFooter from "@/components/site-footer";
 import { SingersDirectory } from "@/components/singers/directory";
+import { APP_STORE_URL } from "@/lib/app-store";
 import {
   HUB_GENRES,
   SINGERS,
@@ -95,7 +106,27 @@ describe("footer wires every hub into every page", () => {
       "/singers",
       "/singers/records",
       "/atlas",
+      // Both books, symmetrically: /book was the one long-form surface with no
+      // sitewide inbound link in server-rendered HTML.
+      "/book",
       "/glossary",
+      "/songs",
+    ]) {
+      expect(html, `footer missing ${href}`).toContain(`href="${href}"`);
+    }
+  });
+
+  it("links every practice room the sitemap asks Google to index", () => {
+    for (const href of [
+      "/studio",
+      "/warmups",
+      "/range",
+      "/breath",
+      "/ear-training",
+      "/recorder",
+      "/analyze",
+      "/tools",
+      "/progress",
     ]) {
       expect(html, `footer missing ${href}`).toContain(`href="${href}"`);
     }
@@ -116,5 +147,64 @@ describe("footer wires every hub into every page", () => {
         `href="/singers/genre/${genreSlug(g)}"`,
       );
     }
+  });
+});
+
+describe("the header ships every destination as a real anchor", () => {
+  // Menus are closed in this pass — no state, no effects, no portal — so this
+  // is exactly the HTML a crawler is served.
+  const html = renderToStaticMarkup(<Nav />);
+  const hrefs = new Set(
+    [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1]),
+  );
+  const destinations = [
+    ...NAV_GROUPS.flatMap((g) => g.items.map((i) => i.href)),
+    PROGRESS_LINK.href,
+  ];
+
+  it("covers the whole room list, plus Progress and both apps", () => {
+    // Guards the shape of the IA, not just its rendering: a group silently
+    // losing an item would otherwise pass the loop below.
+    expect(destinations.sort()).toEqual(
+      [
+        "/analyze",
+        "/atlas",
+        "/book",
+        "/breath",
+        "/ear-training",
+        "/extension",
+        "/glossary",
+        "/progress",
+        "/range",
+        "/recorder",
+        "/singers",
+        "/songs",
+        "/studio",
+        "/tools",
+        "/warmups",
+        APP_STORE_URL,
+      ].sort(),
+    );
+  });
+
+  it("server-renders each one with its menu closed (not JS-only)", () => {
+    // The regression this exists to catch: someone rebuilds the group menus so
+    // their contents mount on click, or move into a portal. Every href inside
+    // Practice / Perform / Library / Apps then disappears from the crawlable
+    // HTML of every page on the site while the UI still looks correct.
+    const missing = destinations.filter((href) => !hrefs.has(href));
+    expect(missing).toEqual([]);
+  });
+
+  it("keeps each group a disclosure button, not a hover-only menu", () => {
+    for (const g of NAV_GROUPS) {
+      expect(html, `group ${g.id} missing its disclosure wiring`).toContain(
+        `aria-controls="nav-group-${g.id}"`,
+      );
+      expect(html, `group ${g.id} menu not in the markup`).toContain(
+        `id="nav-group-${g.id}"`,
+      );
+    }
+    expect(html).toContain('aria-expanded="false"');
   });
 });

@@ -8,23 +8,92 @@ import { usePathname } from "next/navigation";
 import { useProgress, levelForXp, localDay } from "@/lib/progress";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { ProChip } from "@/components/pro/ui";
+import { SectionLabel } from "@/components/ui";
+import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
 import { useModalFocus } from "@/lib/use-modal-focus";
 
-const LINKS = [
-  { href: "/studio", label: "Studio" },
-  { href: "/warmups", label: "Warmups" },
-  { href: "/range", label: "Range" },
-  { href: "/singers", label: "Singers" },
-  { href: "/ear-training", label: "Ear" },
-  { href: "/breath", label: "Breath" },
-  { href: "/songs", label: "Songs" },
-  { href: "/recorder", label: "Recorder" },
-  { href: "/tools", label: "Tools" },
-  { href: "/analyze", label: "Analyze" },
-  { href: "/progress", label: "Progress" },
-  { href: "/book", label: "Book" },
-  { href: "/atlas", label: "Atlas" },
+export type NavItem = { href: string; label: string; external?: boolean };
+export type NavGroup = { id: string; label: string; items: NavItem[] };
+
+/**
+ * The header used to render all thirteen rooms as one flat `overflow-x-auto`
+ * row inside a `max-w-6xl` header. The row needed ~925px and got 777px at
+ * 1280, so Progress, Book and Atlas fell off the right edge at *every* desktop
+ * width — with `.no-scrollbar` on and only a fade mask, there was no scrollbar,
+ * no chevron, and no cue that anything was hidden. Three indexed rooms were
+ * unreachable from the header on any screen.
+ *
+ * The rooms are grouped instead of shrunk: five top-level items fit inside the
+ * container with room to spare, and the grouping is the same one the mobile
+ * drawer uses, so the two surfaces cannot describe the product differently.
+ *
+ * Every `<a href>` below ships in the server-rendered HTML at all times. The
+ * closed menus are hidden with `visibility`/`opacity`, never unmounted and
+ * never portaled, because a crawler reads the raw HTML and a menu that mounted
+ * on click would take those destinations back out of the crawl path.
+ * lib/internal-linking.test.tsx asserts that against rendered markup.
+ */
+export const NAV_GROUPS: NavGroup[] = [
+  {
+    id: "practice",
+    label: "Practice",
+    items: [
+      { href: "/studio", label: "Studio" },
+      { href: "/warmups", label: "Warmups" },
+      { href: "/range", label: "Range" },
+      { href: "/breath", label: "Breath" },
+      { href: "/ear-training", label: "Ear training" },
+    ],
+  },
+  {
+    id: "perform",
+    label: "Perform",
+    items: [
+      { href: "/songs", label: "Songs" },
+      { href: "/recorder", label: "Recorder" },
+      { href: "/analyze", label: "Analyze" },
+      { href: "/tools", label: "Tools" },
+    ],
+  },
+  {
+    id: "library",
+    label: "Library",
+    items: [
+      { href: "/singers", label: "Singers" },
+      { href: "/atlas", label: "Atlas" },
+      { href: "/book", label: "Book" },
+      { href: "/glossary", label: "Glossary" },
+    ],
+  },
+  {
+    id: "apps",
+    label: "Apps",
+    items: [
+      { href: "/extension", label: "Chrome extension" },
+      { href: APP_STORE_URL, label: `${APP_NAME} for iPhone`, external: true },
+    ],
+  },
 ];
+
+/** Promoted out of the groups: where a returning singer goes first. */
+export const PROGRESS_LINK: NavItem = { href: "/progress", label: "Progress" };
+
+/**
+ * Every route the header can name, longest path first so `/singers/records`
+ * wins over `/singers`. Footer-only and chrome-only destinations are included
+ * so the mobile trigger never degrades to a generic "Menu" on a real page — it
+ * used to do exactly that on /glossary, which was in no nav array at all.
+ */
+const ROUTE_LABELS: NavItem[] = [
+  ...NAV_GROUPS.flatMap((g) => g.items).filter((i) => !i.external),
+  PROGRESS_LINK,
+  { href: "/singers/records", label: "Range records" },
+  { href: "/pro", label: "Suede Pro" },
+].sort((a, b) => b.href.length - a.href.length);
+
+function isActive(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(href + "/");
+}
 
 function MenuIcon() {
   return (
@@ -54,6 +123,29 @@ function CloseIcon() {
         stroke="currentColor"
         strokeWidth="1.5"
         strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden="true"
+      className={`shrink-0 transition-transform duration-150 ease-out ${
+        open ? "rotate-180" : ""
+      }`}
+    >
+      <path
+        d="M2.5 4.5 6 8l3.5-3.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -103,6 +195,147 @@ export function streakChipState(
   return streak.lastDay === yesterday ? "at-risk" : "none";
 }
 
+const TOP_ITEM =
+  "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors";
+// Background shape and weight, not colour alone, so the current section
+// survives greyscale.
+const TOP_ITEM_ACTIVE = "bg-panel2 font-semibold text-amber-ink";
+const TOP_ITEM_IDLE = "text-mut hover:text-ink";
+
+/** One desktop group: a disclosure button over an always-rendered link list. */
+function GroupMenu({
+  group,
+  pathname,
+  open,
+  onToggle,
+  onClose,
+  triggerRef,
+}: {
+  group: NavGroup;
+  pathname: string;
+  open: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+  triggerRef: (el: HTMLButtonElement | null) => void;
+}) {
+  const groupActive = group.items.some(
+    (i) => !i.external && isActive(pathname, i.href),
+  );
+  return (
+    <div className="relative">
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={`nav-group-${group.id}`}
+        className={`${TOP_ITEM} ${groupActive ? TOP_ITEM_ACTIVE : TOP_ITEM_IDLE}`}
+      >
+        {group.label}
+        <ChevronIcon open={open} />
+      </button>
+
+      <ul
+        id={`nav-group-${group.id}`}
+        // `visibility` — not unmounting, not display:none — keeps the anchors
+        // in the server-rendered HTML while taking a closed menu out of the tab
+        // order and the accessibility tree. globals.css zeroes the duration
+        // under prefers-reduced-motion.
+        //
+        // `visibility` is in the closing transition only. Transitioning it on
+        // the way *open* costs the menu its first 150ms of focusability:
+        // Enter-then-Tab straight away tabbed past the whole menu, because the
+        // computed visibility was still `hidden`. Closing keeps it, since a
+        // discrete `visible → hidden` interpolation holds `visible` for the
+        // duration and is what lets the fade-out finish before it disappears.
+        className={`absolute left-0 top-full z-10 mt-2 min-w-[13rem] rounded-2xl border border-line bg-panel p-1.5 shadow-lg duration-150 ease-out ${
+          open
+            ? "visible translate-y-0 opacity-100 transition-[opacity,transform]"
+            : "invisible -translate-y-1 opacity-0 transition-[opacity,transform,visibility]"
+        }`}
+      >
+        {group.items.map((item) => {
+          const active = !item.external && isActive(pathname, item.href);
+          const className = `flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm transition-colors ${
+            active
+              ? "bg-panel2 font-semibold text-amber-ink"
+              : "text-mut hover:bg-panel2 hover:text-ink"
+          }`;
+          return (
+            <li key={item.href}>
+              {item.external ? (
+                <a href={item.href} className={className} onClick={onClose}>
+                  {item.label}
+                  <span aria-hidden="true" className="text-dim">
+                    ↗
+                  </span>
+                </a>
+              ) : (
+                <Link
+                  href={item.href}
+                  className={className}
+                  aria-current={active ? "page" : undefined}
+                  onClick={onClose}
+                >
+                  {item.label}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/** One drawer group: mono kicker over the same items the desktop menu holds. */
+function DrawerGroup({
+  group,
+  pathname,
+  onNavigate,
+}: {
+  group: NavGroup;
+  pathname: string;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="mt-6">
+      <SectionLabel>{group.label}</SectionLabel>
+      <ul className="mt-3 grid grid-cols-2 gap-2.5">
+        {group.items.map((item) => {
+          const active = !item.external && isActive(pathname, item.href);
+          const className = `block h-full rounded-2xl border px-4 py-4 text-base transition-colors ${
+            active
+              ? "border-amber bg-panel2 font-semibold text-amber-ink"
+              : "border-line bg-panel text-ink hover:border-line2"
+          }`;
+          return (
+            <li key={item.href}>
+              {item.external ? (
+                <a href={item.href} className={className} onClick={onNavigate}>
+                  {item.label}{" "}
+                  <span aria-hidden="true" className="text-dim">
+                    ↗
+                  </span>
+                </a>
+              ) : (
+                <Link
+                  href={item.href}
+                  className={className}
+                  aria-current={active ? "page" : undefined}
+                  onClick={onNavigate}
+                >
+                  {item.label}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 export default function Nav() {
   const pathname = usePathname();
   const p = useProgress();
@@ -116,20 +349,26 @@ export default function Nav() {
   const proActive = proReady && isPro;
   const streak = streakChipState(p.streak);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const desktopNavRef = useRef<HTMLElement>(null);
+  const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   useModalFocus(menuOpen, drawerRef);
 
+  const progressActive = isActive(pathname, PROGRESS_LINK.href);
   const currentLabel =
-    LINKS.find((l) => pathname === l.href || pathname.startsWith(l.href + "/"))
-      ?.label ?? "Menu";
+    pathname === "/"
+      ? "Home"
+      : (ROUTE_LABELS.find((l) => isActive(pathname, l.href))?.label ?? "Menu");
 
-  // Close the mobile menu on navigation. Adjusted during render (guarded by
-  // prevPathname) rather than in an effect, per
+  // Close the mobile menu and any open group menu on navigation. Adjusted
+  // during render (guarded by prevPathname) rather than in an effect, per
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
   const [prevPathname, setPrevPathname] = useState(pathname);
   if (pathname !== prevPathname) {
     setPrevPathname(pathname);
     if (menuOpen) setMenuOpen(false);
+    if (openGroup) setOpenGroup(null);
   }
 
   useEffect(() => {
@@ -146,13 +385,36 @@ export default function Nav() {
     };
   }, [menuOpen]);
 
+  // Escape and click-outside close the open group. Escape hands focus back to
+  // the trigger it came from, so a keyboard user does not get dropped at the
+  // top of the document.
+  useEffect(() => {
+    if (!openGroup) return;
+    const onPointerDown = (e: PointerEvent) => {
+      if (!desktopNavRef.current?.contains(e.target as Node)) {
+        setOpenGroup(null);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      triggerRefs.current[openGroup]?.focus();
+      setOpenGroup(null);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [openGroup]);
+
   // Portaled to document.body: a fixed-position drawer nested inside the
   // sticky, backdrop-blurred header would be sized against the header's own
   // containing block (56px tall), not the viewport, since backdrop-filter
   // creates a new containing block for fixed descendants.
   const drawer = menuOpen
     ? createPortal(
-        <div className="fixed inset-0 z-[60] sm:hidden">
+        <div className="fixed inset-0 z-[60] md:hidden">
           <button
             type="button"
             aria-label="Close menu"
@@ -195,9 +457,9 @@ export default function Nav() {
             </div>
 
             {/* Directly under the header: on a phone this is the only entry to
-                the paid tier — /pro is deliberately not one of the thirteen
-                room links — and at the bottom of the list it sat below the
-                fold on every screen size. */}
+                the paid tier — /pro is deliberately not one of the room links
+                — and at the bottom of the list it sat below the fold on every
+                screen size. */}
             <div className="px-4 pt-4">
               <Link
                 href="/pro"
@@ -241,28 +503,30 @@ export default function Nav() {
               )}
             </div>
 
-            <nav
-              aria-label="Main"
-              className="mt-4 grid grid-cols-2 gap-2.5 px-4 pb-8"
-            >
-              {LINKS.map((l) => {
-                const active =
-                  pathname === l.href || pathname.startsWith(l.href + "/");
-                return (
-                  <Link
-                    key={l.href}
-                    href={l.href}
-                    onClick={() => setMenuOpen(false)}
-                    className={`rounded-2xl border px-4 py-4 text-base transition-colors ${
-                      active
-                        ? "border-amber bg-panel2 text-amber-ink"
-                        : "border-line bg-panel text-ink hover:border-line2"
-                    }`}
-                  >
-                    {l.label}
-                  </Link>
-                );
-              })}
+            {/* The same four groups the desktop header uses, as mono kickers.
+                The flat thirteen-tile grid this replaces gave a phone no way to
+                tell a practice room from a reference page. */}
+            <nav aria-label="Main" className="mt-6 px-4 pb-10">
+              <Link
+                href={PROGRESS_LINK.href}
+                onClick={() => setMenuOpen(false)}
+                aria-current={progressActive ? "page" : undefined}
+                className={`block rounded-2xl border px-4 py-4 text-base transition-colors ${
+                  progressActive
+                    ? "border-amber bg-panel2 font-semibold text-amber-ink"
+                    : "border-line bg-panel text-ink hover:border-line2"
+                }`}
+              >
+                {PROGRESS_LINK.label}
+              </Link>
+              {NAV_GROUPS.map((g) => (
+                <DrawerGroup
+                  key={g.id}
+                  group={g}
+                  pathname={pathname}
+                  onNavigate={() => setMenuOpen(false)}
+                />
+              ))}
             </nav>
           </div>
         </div>,
@@ -287,28 +551,44 @@ export default function Nav() {
             </span>
           </Link>
 
-          {/* Desktop / tablet: scrollable link row, unchanged from before */}
+          {/* Desktop / tablet: four grouped disclosures plus Progress. Nothing
+              overflows any more, so there is no scroll container and no fade
+              mask pretending to be one. */}
           <nav
+            ref={desktopNavRef}
             aria-label="Main"
-            className="no-scrollbar hidden flex-1 items-center gap-1 overflow-x-auto sm:flex [mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
+            className="hidden flex-1 items-center gap-1 md:flex"
+            // Tabbing past the last link of an open menu closes it.
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                setOpenGroup(null);
+              }
+            }}
           >
-            {LINKS.map((l) => {
-              const active =
-                pathname === l.href || pathname.startsWith(l.href + "/");
-              return (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
-                    active
-                      ? "bg-panel2 text-amber-ink"
-                      : "text-mut hover:text-ink"
-                  }`}
-                >
-                  {l.label}
-                </Link>
-              );
-            })}
+            {NAV_GROUPS.map((g) => (
+              <GroupMenu
+                key={g.id}
+                group={g}
+                pathname={pathname}
+                open={openGroup === g.id}
+                onToggle={() =>
+                  setOpenGroup((cur) => (cur === g.id ? null : g.id))
+                }
+                onClose={() => setOpenGroup(null)}
+                triggerRef={(el) => {
+                  triggerRefs.current[g.id] = el;
+                }}
+              />
+            ))}
+            <Link
+              href={PROGRESS_LINK.href}
+              aria-current={progressActive ? "page" : undefined}
+              className={`${TOP_ITEM} ${
+                progressActive ? TOP_ITEM_ACTIVE : TOP_ITEM_IDLE
+              }`}
+            >
+              {PROGRESS_LINK.label}
+            </Link>
           </nav>
 
           {/* Mobile: single trigger that names the current page and opens a full-screen menu */}
@@ -317,7 +597,7 @@ export default function Nav() {
             onClick={() => setMenuOpen(true)}
             aria-haspopup="dialog"
             aria-expanded={menuOpen}
-            className="flex min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:hidden"
+            className="flex min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink md:hidden"
           >
             <MenuIcon />
             <span className="truncate">{currentLabel}</span>
@@ -338,7 +618,7 @@ export default function Nav() {
 
           <Link
             href="/progress"
-            className="hidden shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs sm:flex"
+            className="hidden shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs lg:flex"
           >
             <span className="text-amber-ink">LV {lvl.level}</span>
             <span className="text-dim">·</span>
