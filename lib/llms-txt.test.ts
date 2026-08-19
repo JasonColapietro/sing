@@ -14,6 +14,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
+import { APP_NAME } from "./app-store";
 import { SINGERS } from "./singers-data";
 
 const STORE_URL =
@@ -86,5 +87,43 @@ describe("public/llms.txt singers layer", () => {
     expect(llms).toMatch(/not laboratory measurements|approximate/i);
     const sourced = SINGERS.filter((s) => s.lowSource || s.highSource).length;
     expect(llms).toContain(`${sourced} profiles carry an explicit citation`);
+  });
+});
+
+describe("public/llms.txt iPhone app name", () => {
+  /**
+   * lib/app-store.ts has been the single source for the app's name since it was
+   * written ("say 'Suede Voice' whenever the copy means the app"). llms.txt and
+   * app/extension/page.tsx both bypassed it and hardcoded "Suede Sing: Vocal
+   * Coach" — a name that does not exist on the App Store. `itunes lookup
+   * id6767763231` returns "Suede Voice: Vocal Range Test" (v1.5, 2026-08-15),
+   * and llms.txt went further and declared the live name a retired one.
+   *
+   * That is worse in llms.txt than anywhere else: it is the file answer engines
+   * read to learn what to call things, so the wrong name propagates as fact.
+   */
+  it("uses the name lib/app-store.ts publishes", () => {
+    expect(llms).toContain(APP_NAME);
+  });
+
+  it("never revives the name that is not on the App Store", () => {
+    expect(llms).not.toContain("Suede Sing: Vocal Coach,");
+    expect(llms).not.toMatch(/iPhone app: Suede Sing/);
+  });
+
+  it("does not describe the live app name as retired", () => {
+    // The old line said "Suede Voice ... were earlier working names".
+    expect(llms).not.toMatch(
+      /"Suede Voice"[^\n]*earlier working name/i,
+    );
+  });
+
+  it("keeps the extension page on the same source", () => {
+    const page = readFileSync(
+      new URL("../app/extension/page.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(page).toContain('from "@/lib/app-store"');
+    expect(page).not.toMatch(/>\s*Suede Sing: Vocal Coach\s*</);
   });
 });
