@@ -37,6 +37,7 @@ const PRACTICE: FooterLink[] = [
   { href: "/range", label: "Free vocal range test" },
   { href: "/ear-training", label: "Ear training" },
   { href: "/progress", label: "Your progress" },
+  { href: "/extension", label: "Chrome extension vocal coach" },
 ];
 
 const linkClass =

@@ -101,6 +101,10 @@ describe("footer wires every hub into every page", () => {
     }
   });
 
+  it("links the extension page — its only internal inbound link", () => {
+    expect(html, "footer missing /extension").toContain('href="/extension"');
+  });
+
   it("links every voice-type hub", () => {
     for (const v of VOICE_KINDS) {
       expect(html, `footer missing voice-type ${v}`).toContain(
