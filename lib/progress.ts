@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import { classifyVoice } from "./audio/notes";
 import type { NoteTallies } from "./analytics";
 import {
+  clampXp,
   DEFAULT_PROGRESS,
   MAX_RANGE_HISTORY,
   MAX_SESSIONS,
@@ -172,6 +173,9 @@ function xpThreshold(level: number): number {
   return 40 * level * (level + 1);
 }
 
+/** The last rung. XP past xpThreshold(MAX_LEVEL) buys nothing. */
+const MAX_LEVEL = 60;
+
 export function levelForXp(xp: number): {
   level: number;
   title: string;
@@ -180,18 +184,25 @@ export function levelForXp(xp: number): {
   /** 0..1 progress through the current level. */
   progress: number;
 } {
+  // The store behind this has survived hand edits, imported backups and a
+  // merge that sums another device's numbers, so the argument is untrusted
+  // even though it is typed. clampXp is the store's own bound, applied here so
+  // the card can never be handed a total the ladder has no rung for.
+  const total = clampXp(xp);
   let level = 1;
-  while (level < 60 && xp >= xpThreshold(level)) level++;
+  while (level < MAX_LEVEL && total >= xpThreshold(level)) level++;
   const floor = level === 1 ? 0 : xpThreshold(level - 1);
-  const ceil = xpThreshold(level);
-  const intoLevel = xp - floor;
-  const span = ceil - floor;
+  const span = xpThreshold(level) - floor;
+  // Below the cap this is just `total - floor`. At the cap there is no next
+  // level to count down to, so XP beyond it fills the bar instead of driving
+  // the remainder negative.
+  const intoLevel = Math.min(total - floor, span);
   return {
     level,
     title: LEVEL_TITLES[Math.min(level - 1, LEVEL_TITLES.length - 1)],
     intoLevel,
-    toNext: ceil - xp,
-    progress: Math.min(1, intoLevel / span),
+    toNext: span - intoLevel,
+    progress: intoLevel / span,
   };
 }
 
@@ -538,7 +549,10 @@ export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
   // max() floor guarantees no device ever watches its number go down.
   const recomputedXp =
     sessions.reduce((a, s) => a + s.xp, 0) + 30 * achievements.length;
-  const xp = Math.max(local.xp, remote.xp, recomputedXp);
+  // Clamped because this total is saved straight to the store: the sum of 500
+  // sessions' xp fields skips sanitizeProgress on the way in, and a backup can
+  // put any finite number in every one of them.
+  const xp = clampXp(Math.max(local.xp, remote.xp, recomputedXp));
 
   const remoteStreak = remote.streak;
   const lastDay =

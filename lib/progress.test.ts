@@ -256,6 +256,71 @@ describe("sanitizeProgress", () => {
   });
 });
 
+describe("an XP total the ladder has no rung for", () => {
+  /**
+   * XP is clamped at the floor but used to have no ceiling, so seeding a large
+   * enough number made the level card render "-999,999,999,853,600 to next":
+   * the countdown subtracts the total from the last rung's threshold, and past
+   * that rung the difference goes negative. localStorage is one way in; the
+   * JSON import path is the one that does not need devtools.
+   */
+  const ABSURD = [
+    ["a hand-edited localStorage record", 1e15],
+    ["the largest integer JSON can round-trip", Number.MAX_SAFE_INTEGER],
+  ] as const;
+
+  it.each(ABSURD)("holds %s at the ceiling", async (_label, xp) => {
+    const { sanitizeProgress, MAX_XP } = await import("./progress-shape");
+    expect(sanitizeProgress({ xp }).xp).toBe(MAX_XP);
+  });
+
+  it.each(ABSURD)("caps the level card rather than counting down from %s", async (_label, xp) => {
+    const { levelForXp } = await import("./progress");
+    const lvl = levelForXp(xp);
+    expect(lvl.level).toBe(60);
+    expect(lvl.toNext).toBe(0);
+    expect(lvl.progress).toBe(1);
+    // The card prints `intoLevel / (intoLevel + toNext)`, so intoLevel has to
+    // stay inside the level's own span or the denominator stops meaning one.
+    expect(lvl.intoLevel).toBe(xpThresholdFor(60) - xpThresholdFor(59));
+  });
+
+  it("floors a negative total instead of running the bar backwards", async () => {
+    const { sanitizeProgress } = await import("./progress-shape");
+    const { levelForXp } = await import("./progress");
+    expect(sanitizeProgress({ xp: -5_000 }).xp).toBe(0);
+    const lvl = levelForXp(-5_000);
+    expect(lvl).toMatchObject({ level: 1, intoLevel: 0, progress: 0 });
+    expect(lvl.toNext).toBe(xpThresholdFor(1));
+  });
+
+  it("treats a numeric string as no XP, not as NaN", async () => {
+    const { sanitizeProgress } = await import("./progress-shape");
+    const { levelForXp } = await import("./progress");
+    // A backup edited in a text editor quotes its numbers easily enough.
+    expect(sanitizeProgress({ xp: "500" }).xp).toBe(0);
+    const lvl = levelForXp("500" as unknown as number);
+    expect(Number.isNaN(lvl.progress)).toBe(false);
+    expect(lvl).toMatchObject({ level: 1, intoLevel: 0, progress: 0 });
+  });
+
+  it("leaves a total a singer could actually earn exactly where it was", async () => {
+    const { sanitizeProgress } = await import("./progress-shape");
+    const { levelForXp } = await import("./progress");
+    expect(sanitizeProgress({ xp: 4_310 }).xp).toBe(4_310);
+    const lvl = levelForXp(4_310);
+    // Level 10 spans 3,600..4,400, so the countdown is the plain subtraction
+    // it always was.
+    expect(lvl).toMatchObject({ level: 10, intoLevel: 710, toNext: 90 });
+  });
+});
+
+/** The ladder's own curve, restated so the cases above assert against a
+ *  number rather than against lib/progress.ts's private copy of it. */
+function xpThresholdFor(level: number): number {
+  return 40 * level * (level + 1);
+}
+
 describe("identities are strict, labels are not", () => {
   it("keeps a session whose detail is empty but drops one with an empty id", async () => {
     const { sanitizeProgress, checkProgress } = await import("./progress-shape");
