@@ -54,12 +54,23 @@ export const SING_APPEARANCE: ClerkAppearance = {
   },
 };
 
-// Clerk's card carries its own heading, "Sign in to <application name>", which
-// is a second h1 under this page's own. It stays: that header slot is also
-// where the later steps announce themselves ("Verify your email address") and
-// where the back link lives, so hiding it would strand someone mid-flow. The
-// name it prints is the Clerk dashboard's application name, so that has to read
-// "Suede Sing" there — it is not set from here.
+// Clerk's card carries its own heading and emits it as an <h1>: "Sign in to
+// <application name>" on the first step, then "Verify your email" and the rest
+// as the flow advances. That header slot is the only place those later steps
+// announce themselves, and it is where the back link lives, so hiding it would
+// strand someone mid-flow under an unlabelled card. `appearance` can only reach
+// it with CSS, and CSS cannot turn an <h1> into anything else.
+//
+// So Clerk's heading is this page's h1, and the sentence below it is a lede
+// rather than a second one. It kept its <h1> until now, which meant two of them
+// in one document — invisible in production only because accountsReady() sends
+// this route to AccountsUnavailable instead, so the defect would have arrived
+// with the pk_live_ keys rather than being caught by them. The lede repeats the
+// h1 styling from app/globals.css by hand (font-display / 800 / -0.01em) so
+// nothing about the page moves.
+//
+// The name Clerk prints is the Clerk dashboard's application name, so that has
+// to read "Suede Sing" there — it is not set from here.
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -77,7 +88,9 @@ export default function SignInPage() {
   return (
     <main className="mx-auto flex w-full max-w-md flex-col items-center px-4 py-12 sm:py-16">
       <SectionLabel className="mb-3">Free account</SectionLabel>
-      <h1 className="text-center text-3xl">Pick your practice record back up</h1>
+      <p className="text-center font-display text-3xl font-extrabold tracking-[-0.01em]">
+        Pick your practice record back up
+      </p>
       <p className="mt-3 text-center text-mut">
         Your XP, streak, logged sessions and vocal range are stored in this
         browser. Signing in restores the copy you saved, on this device or any

@@ -70,8 +70,7 @@ const session = (id: string, n: number) => ({
   id, type: "warmup" as const, date: iso(n), day: iso(n).slice(0, 10),
   durationSec: 300, score: 80, xp: 40,
 });
-function seed(ids: [string, number][], xp: number, streak: number) {
-  storage.clear();
+function writeLocal(ids: [string, number][], xp: number, streak: number) {
   // importProgress is the exported path that writes storage AND refreshes the
   // module cache, which a bare setItem would not do.
   const ok = progress.importProgress(JSON.stringify({
@@ -81,6 +80,16 @@ function seed(ids: [string, number][], xp: number, streak: number) {
     rangeHistory: [], achievements: ["first-session"],
   }));
   if (!ok) throw new Error("seed rejected by importProgress");
+}
+
+/**
+ * A fresh browser holding `ids` and nothing else. The clear() matters as much
+ * as the write: it drops "suede-sing:backup:last", which is what decides
+ * whether maybeBackup() is inside its throttle window.
+ */
+function seed(ids: [string, number][], xp: number, streak: number) {
+  storage.clear();
+  writeLocal(ids, xp, streak);
 }
 
 const CONFIGURED = Boolean(
@@ -122,6 +131,42 @@ describe.skipIf(!CONFIGURED)("free backup round trip against real Redis", () => 
     // And the push half means the next restore cannot lose d/e.
     const remote = await backup.fetchBackup();
     expect(remote.state!.sessions.map((s) => s.id).sort()).toEqual(["a", "b", "c", "d", "e"]);
+  });
+
+  /**
+   * The regression that shipped: every test above drives reconcileBackup(),
+   * but AccountBackupSync only calls that once per browser per account. Every
+   * later visit lands on maybeBackup(), which used to be a bare PUT of this
+   * device's state — so the device that reconciled longest ago quietly erased
+   * everything the others had backed up since.
+   */
+  it("a background refresh cannot erase another device's backup", async () => {
+    // What the account holds, from some other device.
+    seed([["p", 1], ["q", 2]], 800, 3);
+    await backup.backupNow();
+
+    // This device: different practice, and it reconciled with the account long
+    // enough ago that AccountBackupSync sends it straight past the merge.
+    seed([["z", 0]], 100, 1);
+    await backup.maybeBackup();
+
+    const remote = await backup.fetchBackup();
+    expect(remote.state!.sessions.map((s) => s.id).sort()).toEqual(["p", "q", "z"]);
+  });
+
+  it("still leaves the stored copy alone inside the throttle window", async () => {
+    seed([["t", 0]], 100, 1);
+    await backup.backupNow();
+    const before = await backup.fetchBackup();
+
+    // New local work, but no clear(), so the throttle key from the push above
+    // survives and this refresh is inside the window.
+    writeLocal([["t", 0], ["u", 1]], 200, 2);
+    await backup.maybeBackup();
+
+    const after = await backup.fetchBackup();
+    expect(after.savedAt).toBe(before.savedAt);
+    expect(after.state!.sessions.map((s) => s.id)).not.toContain("u");
   });
 
   it("is idempotent - reconciling twice changes nothing", async () => {

@@ -138,12 +138,33 @@ export async function reconcileBackup(): Promise<{ restored: boolean }> {
  * Refresh the snapshot if it is older than BACKUP_MIN_INTERVAL_MS. Swallows
  * everything, including being signed out: a backup must never interrupt or
  * break a practice session.
+ *
+ * Reconciles rather than pushes, and the difference is the whole safety
+ * property. A bare backupNow() is a blind PUT of this device's state over
+ * whatever the account holds, and AccountBackupSync only ever reconciles once
+ * per browser per account (the "suede-sing:backup:account" key), so a device
+ * never learns about work another device backed up afterwards. Every later
+ * refresh from that device then overwrote it:
+ *
+ *   phone signs in, backs up three sessions  -> account holds 3
+ *   laptop had already reconciled last month -> skips the merge
+ *   laptop's 6-hourly refresh fires          -> account holds the laptop's 1
+ *
+ * The phone's practice is still on the phone, but it is gone from the backup,
+ * so a cleared phone restores to the laptop's record and the sessions are gone
+ * for good. That is the exact loss reconcileBackup() was written to prevent; it
+ * was simply never on this path. Merging first makes the push a union, so the
+ * stored copy can only ever grow.
+ *
+ * Still one round trip per BACKUP_MIN_INTERVAL_MS, so this stays a snapshot and
+ * does not drift into the continuous two-way sync Pro pays for — it just makes
+ * the snapshot honest about every device that has fed it.
  */
 export async function maybeBackup(): Promise<void> {
   const last = lastBackupAt();
   if (last && Date.now() - Date.parse(last) < BACKUP_MIN_INTERVAL_MS) return;
   try {
-    await backupNow();
+    await reconcileBackup();
   } catch {
     // next page load tries again
   }
