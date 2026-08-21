@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui";
+import { accountsReady } from "@/lib/accounts";
 import {
   BackupError,
   backupNow,
@@ -46,6 +47,10 @@ export function AccountBackupSync() {
   const handled = useRef<string | null>(null);
 
   useEffect(() => {
+    // A development Clerk instance never resolves a session on a custom domain,
+    // so the throttled background push would only ever 401. Checked in here
+    // rather than as an early return so the hook order cannot change.
+    if (!accountsReady()) return;
     if (!isLoaded || !isSignedIn || !userId) return;
     if (handled.current === userId) return;
     handled.current = userId;
@@ -101,6 +106,10 @@ export function AccountBackupControls() {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reads localStorage, so it can only run after hydration
     setLast(lastBackupAt());
   }, []);
+
+  // After the hooks, never before: an early return above them would change the
+  // hook order between deployments that have real keys and ones that do not.
+  if (!accountsReady()) return null;
 
   const run = async (kind: "backup" | "restore") => {
     setWorking(kind);

@@ -3,6 +3,7 @@
 import { useId, useSyncExternalStore } from "react";
 import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import { Button, Card, SectionLabel } from "@/components/ui";
+import { accountsReady } from "@/lib/accounts";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { useProgress, type ProgressState } from "@/lib/progress";
 
@@ -179,6 +180,10 @@ export function AccountSavePrompt({
     serverDismissed,
   );
 
+  // Never offer an account this deployment cannot actually create. On a
+  // development Clerk instance the sign-in completes and then every call comes
+  // back 401, which is a worse experience than no offer at all.
+  if (!accountsReady()) return null;
   if (!isLoaded || isSignedIn) return null;
   if (!proReady || isPro) return null;
   if (dismissed) return null;
