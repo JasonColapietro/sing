@@ -1,4 +1,5 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import { accountsReady } from "@/lib/accounts";
 import {
   NextResponse,
   type NextProxy,
@@ -49,8 +50,17 @@ function canonicalRedirect(request: NextRequest) {
  * available to the app. Every room stays open to a signed-out visitor, which
  * is what an organic-search funnel depends on. A route matcher here would gate
  * the site, so there isn't one.
+ *
+ * It only runs when the keys are real. On a development instance Clerk answers
+ * the first HTML request with a 307 to its own accounts.dev handshake
+ * (x-clerk-auth-reason: dev-browser-missing) to plant a dev-browser token. That
+ * happens with no handler and no matcher, because it is Clerk establishing
+ * itself rather than protecting anything - so "nothing is gated" was true and
+ * still let every crawler get bounced off the domain. It fires on Accept:
+ * text/html and not on Accept: *\/*, which is why curl checks missed it and why
+ * robots.txt and sitemap.xml were redirected too.
  */
-const withClerk = clerkMiddleware();
+const withClerk = accountsReady() ? clerkMiddleware() : null;
 
 export const proxy: NextProxy = (request, event) => {
   // Canonical first. The redirect must not depend on Clerk resolving a session
@@ -60,6 +70,11 @@ export const proxy: NextProxy = (request, event) => {
   // the canonical host they land on.
   const redirect = canonicalRedirect(request);
   if (redirect) return redirect;
+
+  // Without real keys there is no session to read, so the only thing Clerk
+  // would contribute here is the handshake redirect. Pass the request straight
+  // through instead.
+  if (!withClerk) return NextResponse.next();
 
   return withClerk(request, event);
 };
