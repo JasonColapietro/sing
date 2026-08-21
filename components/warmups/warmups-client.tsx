@@ -158,8 +158,8 @@ export function WarmupsClient() {
           </h2>
           <ol className="mt-3 max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut">
             <li>
-              Pick an exercise from the catalogue below. Titles, rep counts and
-              lengths are all there before you decide.
+              Pick an exercise from the catalogue below. Titles, ladder spans
+              and lengths are all there before you decide.
             </li>
             <li>A short melody plays, then it is your turn to sing it back.</li>
             <li>
@@ -167,8 +167,9 @@ export function WarmupsClient() {
               gets a score at the end of it.
             </li>
             <li>
-              The root climbs a semitone and the ladder repeats, six to eight
-              times.
+              The root climbs a semitone each rep to the top of your range,
+              then walks back down — and keeps going until you end the
+              exercise.
             </li>
           </ol>
           <p id="warmups-mic-note" className="mt-3 max-w-xl text-sm text-dim">

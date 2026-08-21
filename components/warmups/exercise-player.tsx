@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { buildSegments, computeRootLadder, type WarmupExercise } from "./exercises";
+import { buildSegments, computeRootLadder, ladderWalk, type WarmupExercise } from "./exercises";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { centsOff, freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { logSession, type VocalRange } from "@/lib/progress";
@@ -60,7 +60,8 @@ export function ExercisePlayer({
   const [trace, setTrace] = useState<TracePoint[]>([]);
   const [liveMidiFloat, setLiveMidiFloat] = useState<number | null>(null);
 
-  const currentRoot = Math.max(24, Math.min(96, roots[repIndex] + transpose));
+  const { root: ladderRoot, index: ladderIndex, ascending } = ladderWalk(roots, repIndex);
+  const currentRoot = Math.max(24, Math.min(96, ladderRoot + transpose));
   const { segs, totalSec } = useMemo(
     () => buildSegments(ex, currentRoot, tempo),
     [ex, currentRoot, tempo],
@@ -78,10 +79,6 @@ export function ExercisePlayer({
   const traceRef = useRef<TracePoint[]>([]);
   // Lazy state initializer: performance.now() only runs once, on mount.
   const [sessionStart] = useState(() => performance.now());
-  const resultsRef = useRef<RepResult[]>([]);
-  useEffect(() => {
-    resultsRef.current = results;
-  }, [results]);
 
   function finalize(finalResults: RepResult[]) {
     const avgScore = repAvgScore(finalResults);
@@ -236,31 +233,22 @@ export function ExercisePlayer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, repIndex]);
 
-  // Rep result: brief pause, then advance the ladder or finish the session.
+  // Rep result: brief pause, then keep walking the ladder — up to the top,
+  // back down, and around again. Only the singer ends the session.
   useEffect(() => {
     if (phase !== "rep-result") return;
     const timer = setTimeout(() => {
-      if (repIndex + 1 >= roots.length) {
-        finalize(resultsRef.current);
-      } else {
-        setRepIndex((i) => i + 1);
-        setPhase("listen");
-      }
+      setRepIndex((i) => i + 1);
+      setPhase("listen");
     }, REP_RESULT_PAUSE_MS);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
 
   function skipRep() {
     const result: RepResult = { root: currentRoot, score: 0, avgCentsErr: 0, skipped: true };
-    const next = [...results, result];
-    setResults(next);
-    if (repIndex + 1 >= roots.length) {
-      finalize(next);
-    } else {
-      setRepIndex((i) => i + 1);
-      setPhase("listen");
-    }
+    setResults((prev) => [...prev, result]);
+    setRepIndex((i) => i + 1);
+    setPhase("listen");
   }
 
   function endExercise() {
@@ -289,11 +277,16 @@ export function ExercisePlayer({
           <IconArrowLeft />
           Exit
         </button>
-        <Pill tone="amber">
-          Rep {repIndex + 1} of {roots.length}
-        </Pill>
+        <div className="flex items-center gap-2">
+          <Pill tone="mut">Rep {repIndex + 1}</Pill>
+          <Pill tone={ascending ? "amber" : "cool"}>
+            {ascending ? "Climbing" : "Descending"}{" "}
+            <span aria-hidden="true">{ascending ? "↑" : "↓"}</span>
+          </Pill>
+        </div>
       </div>
-      <ProgressBar value={((repIndex + (phase === "rep-result" ? 1 : 0)) / roots.length) * 100} tone="amber" />
+      {/* Height in the ladder, not session completion — it rises to the top note and falls back. */}
+      <ProgressBar value={((ladderIndex + 1) / roots.length) * 100} tone="amber" />
 
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-4">
