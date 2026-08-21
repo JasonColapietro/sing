@@ -255,7 +255,7 @@ describe("sanitizeProgress", () => {
 
 describe("identities are strict, labels are not", () => {
   it("keeps a session whose detail is empty but drops one with an empty id", async () => {
-    const { sanitizeProgress, isValidProgress } = await import("./progress-shape");
+    const { sanitizeProgress, checkProgress } = await import("./progress-shape");
     const base = {
       type: "recording" as const,
       date: "2026-08-20T09:00:00.000Z",
@@ -275,9 +275,9 @@ describe("identities are strict, labels are not", () => {
 
     // And the accept path agrees: an empty label is not a reason to refuse a
     // whole backup, an empty id is.
-    expect(isValidProgress(state)).toBeNull();
+    expect(checkProgress(state)).toBeNull();
     expect(
-      isValidProgress({ ...state, sessions: [{ ...base, id: "", detail: "" }] }),
-    ).toBe("A session in the payload is malformed.");
+      checkProgress({ ...state, sessions: [{ ...base, id: "", detail: "" }] }),
+    ).toEqual({ reason: "A session in the payload is malformed.", overCap: false });
   });
 });

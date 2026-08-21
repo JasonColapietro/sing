@@ -336,47 +336,75 @@ export function sanitizeProgress(value: unknown): ProgressState {
 
 /* ------------------------------------------------------------- acceptance */
 
+export interface ProgressRejection {
+  /** Human-readable and safe to hand back to the client. */
+  reason: string;
+  /**
+   * True when the payload is shaped correctly but holds more than the store
+   * can. Callers that speak HTTP turn this into 413 rather than 400 — the
+   * client's mistake is quantity, not grammar.
+   */
+  overCap: boolean;
+}
+
+function malformed(reason: string): ProgressRejection {
+  return { reason, overCap: false };
+}
+
+function tooMuch(reason: string): ProgressRejection {
+  return { reason, overCap: true };
+}
+
 /**
- * Whether a payload is already a well-formed ProgressState, with a reason when
- * it isn't. For callers that must refuse rather than repair — an API boundary
- * storing a client's backup, where quietly reshaping the singer's record would
- * hand back a merge they never agreed to.
+ * Why a payload is not an acceptable ProgressState, or null if it is.
  *
- * Over-cap payloads are refused rather than trimmed, for the same reason.
+ * For callers that must refuse rather than repair — an API boundary storing a
+ * client's backup, where quietly reshaping the singer's record would hand back
+ * a merge they never agreed to. Over-cap payloads are refused rather than
+ * trimmed, for the same reason.
+ *
+ * Deliberately knows nothing about HTTP: it reports what is wrong and how, and
+ * leaves status codes to whoever is speaking a protocol.
  */
-export function isValidProgress(value: unknown): string | null {
-  if (!isPlainObject(value)) return "Progress payload must be an object.";
-  if (!isFiniteNumber(value.xp)) return "Progress payload is missing xp.";
-  if (!Array.isArray(value.sessions)) {
-    return "Progress payload is missing sessions.";
+export function checkProgress(value: unknown): ProgressRejection | null {
+  if (!isPlainObject(value)) {
+    return malformed("Progress payload must be an object.");
   }
-  if (value.sessions.length > MAX_SESSIONS) return "Too many sessions to back up.";
+  if (!isFiniteNumber(value.xp)) {
+    return malformed("Progress payload is missing xp.");
+  }
+  if (!Array.isArray(value.sessions)) {
+    return malformed("Progress payload is missing sessions.");
+  }
+  if (value.sessions.length > MAX_SESSIONS) {
+    return tooMuch("Too many sessions to back up.");
+  }
   if (!value.sessions.every(isValidSession)) {
-    return "A session in the payload is malformed.";
+    return malformed("A session in the payload is malformed.");
   }
   if (!isValidStreak(value.streak)) {
-    return "Progress payload has a malformed streak.";
+    return malformed("Progress payload has a malformed streak.");
   }
   if (!isValidRange(value.range)) {
-    return "Progress payload has a malformed range.";
+    return malformed("Progress payload has a malformed range.");
   }
   if (!Array.isArray(value.rangeHistory)) {
-    return "Progress payload is missing rangeHistory.";
+    return malformed("Progress payload is missing rangeHistory.");
   }
   if (value.rangeHistory.length > MAX_RANGE_HISTORY) {
-    return "Too many range tests to back up.";
+    return tooMuch("Too many range tests to back up.");
   }
   if (!value.rangeHistory.every(isValidRangeEntry)) {
-    return "A range test in the payload is malformed.";
+    return malformed("A range test in the payload is malformed.");
   }
   if (!Array.isArray(value.achievements)) {
-    return "Progress payload is missing achievements.";
+    return malformed("Progress payload is missing achievements.");
   }
   if (value.achievements.length > MAX_ACHIEVEMENTS) {
-    return "Too many achievements to back up.";
+    return tooMuch("Too many achievements to back up.");
   }
   if (!value.achievements.every(isValidAchievementId)) {
-    return "An achievement id in the payload is malformed.";
+    return malformed("An achievement id in the payload is malformed.");
   }
   return null;
 }
