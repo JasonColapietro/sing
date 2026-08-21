@@ -18,6 +18,7 @@ import { ProChip } from "@/components/pro/ui";
 import { Button } from "@/components/ui";
 import { hasSomethingToSave } from "@/components/account/save-prompt";
 import { useModalFocus } from "@/lib/use-modal-focus";
+import { accountsReady } from "@/lib/accounts";
 
 /**
  * Ten tabs, not thirteen: Recorder and Analyze fold into Tools, and the two
@@ -396,7 +397,7 @@ export default function Nav() {
                 because that line is the thing it is offering to protect. It is
                 also the phone's only account entry: the header has room for the
                 Pro pill and the user button and nothing more. */}
-            {authLoaded && (
+            {accountsReady() && authLoaded && (
               <div className="px-4 pt-4">
                 {isSignedIn ? (
                   <UserButton
@@ -578,7 +579,8 @@ export default function Nav() {
               only route to signing out. Signed out it hides below sm: a phone
               header already carries the menu, the current page name and the Pro
               pill, and a free offer can wait two taps for the drawer. */}
-          {authLoaded &&
+          {accountsReady() &&
+            authLoaded &&
             (isSignedIn ? (
               <span className="flex shrink-0 items-center">
                 <UserButton

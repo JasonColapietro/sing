@@ -5,6 +5,8 @@ import { LinkButton, SectionLabel } from "@/components/ui";
 // bracketed segment is the real directory name; this is a plain module import,
 // not a route reference.
 import { SING_APPEARANCE } from "@/app/sign-in/[[...sign-in]]/page";
+import { AccountsUnavailable } from "@/components/account/unavailable";
+import { accountsReady } from "@/lib/accounts";
 
 export const metadata: Metadata = {
   title: "Create your free account",
@@ -16,6 +18,8 @@ export const metadata: Metadata = {
 };
 
 export default function SignUpPage() {
+  if (!accountsReady()) return <AccountsUnavailable verb={"Signing up"} />;
+
   return (
     <main className="mx-auto flex w-full max-w-md flex-col items-center px-4 py-12 sm:py-16">
       <SectionLabel className="mb-3">Free account</SectionLabel>

@@ -2,6 +2,8 @@ import type { ComponentProps } from "react";
 import type { Metadata } from "next";
 import { SignIn } from "@clerk/nextjs";
 import { LinkButton, SectionLabel } from "@/components/ui";
+import { AccountsUnavailable } from "@/components/account/unavailable";
+import { accountsReady } from "@/lib/accounts";
 
 type ClerkAppearance = NonNullable<ComponentProps<typeof SignIn>["appearance"]>;
 
@@ -70,6 +72,8 @@ export const metadata: Metadata = {
 };
 
 export default function SignInPage() {
+  if (!accountsReady()) return <AccountsUnavailable verb={"Signing in"} />;
+
   return (
     <main className="mx-auto flex w-full max-w-md flex-col items-center px-4 py-12 sm:py-16">
       <SectionLabel className="mb-3">Free account</SectionLabel>
