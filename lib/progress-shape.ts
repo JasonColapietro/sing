@@ -8,18 +8,22 @@
  * handler validating an uploaded backup, a test, a migration. Nothing here
  * touches storage, React, or the network.
  *
- * The two entry points answer deliberately different questions, because their
- * callers face deliberately different situations:
+ * The three entry points answer deliberately different questions, because
+ * their callers face deliberately different situations:
  *
- *   isValidProgress()  — "should I accept this?" A server taking a payload can
+ *   checkProgress()    — "should I accept this?" A server taking a payload can
  *                        say no and let the client try again. Reject wholesale;
  *                        never silently reshape data before storing it.
  *   sanitizeProgress() — "what can I still use?" A browser reading its own
  *                        localStorage has nobody to appeal to. The bytes are
  *                        the only copy the singer has, so keep everything that
  *                        is still meaningful and drop only what isn't.
+ *   looksLikeProgress()— "is this even ours?" A file chosen from a file picker
+ *                        may be any file on the machine. Repairing one that
+ *                        isn't ours produces an empty record, which is how an
+ *                        import turns into an erase.
  *
- * They share every predicate below, so the two answers can never drift into
+ * They share every predicate below, so the answers can never drift into
  * disagreeing about what a session or a range test looks like.
  */
 
@@ -263,7 +267,13 @@ function repairSession(value: unknown): SessionLog | null {
     durationSec: isFiniteNumber(value.durationSec)
       ? Math.max(0, Math.round(value.durationSec))
       : 0,
-    xp: isFiniteNumber(value.xp) ? Math.max(0, Math.round(value.xp)) : 0,
+    // Bounded per session, not just per record. The total is recomputed by
+    // summing these (mergeRemoteProgress in lib/progress.ts), so leaving a
+    // single session unbounded lets 500 of them overflow the sum to Infinity —
+    // which clampXp then floors to 0, walking a record's XP down to nothing in
+    // the one place the merge promises it can never go down. No real session
+    // awards more than about a hundred.
+    xp: clampXp(value.xp),
   };
   if (isFiniteNumber(value.score)) session.score = value.score;
   if (isBoundedString(value.detail)) session.detail = value.detail;
@@ -379,6 +389,34 @@ function tooMuch(reason: string): ProgressRejection {
 }
 
 /**
+ * Whether a payload is recognisably one of our practice records at all.
+ *
+ * A narrower question than checkProgress asks, for a caller that has to be
+ * lenient in a way an API boundary must not be. An imported file is a stored
+ * record that took a detour through a filesystem, so it can legitimately
+ * predate fields the current schema has — the genuine first-release export
+ * carries no `rangeHistory` key whatsoever, which is exactly what migrate() in
+ * lib/progress.ts exists to backfill. Refusing everything checkProgress
+ * refuses would throw those real backups away.
+ *
+ * But sanitizeProgress on its own is not the answer either: it accepts ANY
+ * object and repairs it into an empty record, so picking the wrong file in the
+ * picker replaced a singer's practice with zeros and reported success.
+ *
+ * So this tests identity, not completeness. `xp` and `sessions` are the two
+ * fields the record has carried since the scaffold commit, so a file with both
+ * is ours and a file with neither is somebody else's. Everything past that is
+ * repairable, and gets repaired.
+ */
+export function looksLikeProgress(value: unknown): boolean {
+  return (
+    isPlainObject(value) &&
+    isFiniteNumber(value.xp) &&
+    Array.isArray(value.sessions)
+  );
+}
+
+/**
  * Why a payload is not an acceptable ProgressState, or null if it is.
  *
  * For callers that must refuse rather than repair — an API boundary storing a
@@ -395,6 +433,13 @@ export function checkProgress(value: unknown): ProgressRejection | null {
   }
   if (!isFiniteNumber(value.xp)) {
     return malformed("Progress payload is missing xp.");
+  }
+  // The fourth cap, enforced like the other three. Without this the route
+  // stored an xp this module will never hand back intact — sanitizeProgress
+  // clamps it on every read, so the client self-heals and nothing is visible,
+  // but Redis ends up holding a number the docstring above says we refuse.
+  if (value.xp > MAX_XP) {
+    return tooMuch("That XP total is too large to back up.");
   }
   if (!Array.isArray(value.sessions)) {
     return malformed("Progress payload is missing sessions.");
