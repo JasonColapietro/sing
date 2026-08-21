@@ -20,6 +20,10 @@ import { IconMic, IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from 
 import { LiveWaveform, PeaksWaveform } from "./waveforms";
 import { TakeRow } from "./take-row";
 import { AbPitchOverlay, TakePitchPanel } from "./pitch-analysis";
+import { AccountSavePrompt } from "@/components/account/save-prompt";
+// Lives under components/progress because what it backs up is the progress
+// record, not the takes — the takes never leave this device either way.
+import { AccountBackupSync } from "@/components/progress/account-backup-sync";
 import { FreeOnly, ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 
@@ -633,6 +637,10 @@ export default function RecorderPageClient() {
         ) : undefined
       }
     >
+      {/* Silent, and only for whoever is signed in. Mounted here as well as on
+          /progress so a singer who lives in the recorder still gets backed up. */}
+      <AccountBackupSync />
+
       <div className="grid gap-6 lg:grid-cols-5">
         {/* ------- left column: deck + playback + compare ------- */}
         <div className="space-y-6 lg:col-span-3">
@@ -856,6 +864,18 @@ export default function RecorderPageClient() {
               )}
             </Card>
           )}
+
+          {/* Only once a take exists, and only once the self-review card has
+              been answered or skipped: that card is the one thing competing
+              for this moment, and it asks for something the singer gets more
+              out of. Sitting here, after the deck, the review and the
+              playback, it is downstream of everything that matters about a
+              take and still two cards clear of the locked pitch panel below.
+
+              The label stays "Your practice record" on purpose. This room is
+              full of audio, and "Take saved" here would read as an offer to
+              back up the recordings, which an account does not do. */}
+          <AccountSavePrompt when={takes.length > 0 && !reviewTake} />
 
           {/* A/B compare */}
           <Card>

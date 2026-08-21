@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import Nav from "@/components/nav";
 import SiteFooter from "@/components/site-footer";
@@ -48,23 +49,28 @@ export default function RootLayout({
       className={`${manrope.variable} ${plexMono.variable}`}
     >
       <body className="min-h-dvh antialiased">
-        {/* Sixteen tabbable elements sit ahead of the content on every page —
-            the twelve-room nav plus the Pro and progress links — so a keyboard
-            or screen-reader user crossed all of them again on every
-            navigation. Visible only once focused. */}
-        <a
-          href="#content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:border focus:border-amber focus:bg-panel focus:px-4 focus:py-2.5 focus:text-sm focus:text-ink"
-        >
-          Skip to content
-        </a>
-        <Nav />
-        <ProSync />
-        <ProMoments />
-        <div id="content" className="min-h-[70dvh]">
-          {children}
-        </div>
-        <SiteFooter />
+        {/* Inside <body>, per Clerk Core 3 — wrapping <html> is the old shape
+            and breaks. It only reads the session; nothing under it is gated,
+            and a signed-out visitor sees the whole site as before. */}
+        <ClerkProvider>
+          {/* Sixteen tabbable elements sit ahead of the content on every page —
+              the twelve-room nav plus the Pro and progress links — so a keyboard
+              or screen-reader user crossed all of them again on every
+              navigation. Visible only once focused. */}
+          <a
+            href="#content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:border focus:border-amber focus:bg-panel focus:px-4 focus:py-2.5 focus:text-sm focus:text-ink"
+          >
+            Skip to content
+          </a>
+          <Nav />
+          <ProSync />
+          <ProMoments />
+          <div id="content" className="min-h-[70dvh]">
+            {children}
+          </div>
+          <SiteFooter />
+        </ClerkProvider>
       </body>
     </html>
   );

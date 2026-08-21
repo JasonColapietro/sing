@@ -1,13 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+  type ReactElement,
+} from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs";
 import { useProgress, levelForXp, localDay } from "@/lib/progress";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { ProChip } from "@/components/pro/ui";
+import { Button } from "@/components/ui";
+import { hasSomethingToSave } from "@/components/account/save-prompt";
 import { useModalFocus } from "@/lib/use-modal-focus";
 
 /**
@@ -74,6 +83,28 @@ function CloseIcon() {
   );
 }
 
+/** Neutral head-and-shoulders glyph, drawn to match MenuIcon's line weight. */
+function AccountIcon() {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+      className="shrink-0"
+    >
+      <circle cx="8" cy="5.5" r="2.6" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M2.9 13.9c0-2.6 2.3-4.2 5.1-4.2s5.1 1.6 5.1 4.2"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 /** Solid once today is banked, outline while the streak is still at risk. */
 function FlameIcon({ filled }: { filled: boolean }) {
   return (
@@ -92,6 +123,81 @@ function FlameIcon({ filled }: { filled: boolean }) {
         strokeLinejoin="round"
       />
     </svg>
+  );
+}
+
+type ClerkAppearance = NonNullable<
+  ComponentProps<typeof UserButton>["appearance"]
+>;
+
+/**
+ * The header's own copy of the site theme, spent on the sign-in modal and the
+ * user button. Tailwind's semantic classes cannot reach Clerk's subtree, so
+ * these name the tokens directly: app/globals.css puts them on `:root, :host`,
+ * which Clerk's card and portals both inherit.
+ *
+ * The full version, with a note on why colorPrimary is the darker gold, lives
+ * in app/sign-in/[[...sign-in]]/page.tsx. Keep the two in step. A route module
+ * and a "use client" module cannot share one constant without a third file.
+ */
+const CLERK_APPEARANCE: ClerkAppearance = {
+  variables: {
+    colorPrimary: "var(--color-amber-ink)",
+    colorPrimaryForeground: "var(--color-panel)",
+    colorBackground: "var(--color-panel)",
+    colorForeground: "var(--color-ink)",
+    colorMuted: "var(--color-panel2)",
+    colorMutedForeground: "var(--color-mut)",
+    colorNeutral: "var(--color-ink)",
+    colorInput: "var(--color-panel)",
+    colorInputForeground: "var(--color-ink)",
+    colorBorder: "var(--color-line)",
+    colorRing: "var(--color-rec)",
+    colorDanger: "var(--color-rec)",
+    colorSuccess: "var(--color-ok-ink)",
+    colorWarning: "var(--color-amber-ink)",
+    fontFamily: "var(--font-display)",
+    fontFamilyMono: "var(--font-mono)",
+    borderRadius: "0.75rem",
+  },
+  options: {
+    logoPlacement: "none",
+    socialButtonsVariant: "blockButton",
+  },
+};
+
+/**
+ * The signed-out half of the account affordance.
+ *
+ * Two things it deliberately does not do. It passes no redirect URL, so the
+ * modal closes onto whatever room the singer was already in — being thrown to
+ * /progress mid-warmup would make a free offer feel like a detour. And it never
+ * navigates to /sign-in: those pages exist for Clerk's own flows and for anyone
+ * who lands on them, but a header control that leaves the page reads as a wall,
+ * and nothing here is walled.
+ *
+ * Which modal opens follows what the browser holds. Someone with practice
+ * behind them needs an account created; an empty browser is nearly always
+ * someone returning to one they already have, which is exactly the person whose
+ * backup is worth recovering. Both modals link to the other, so neither branch
+ * is a dead end.
+ */
+function AccountOffer({
+  earned,
+  children,
+}: {
+  earned: boolean;
+  /** A single element; Clerk clones it and hangs the modal off its onClick. */
+  children: ReactElement;
+}) {
+  return earned ? (
+    <SignUpButton mode="modal" appearance={CLERK_APPEARANCE}>
+      {children}
+    </SignUpButton>
+  ) : (
+    <SignInButton mode="modal" appearance={CLERK_APPEARANCE}>
+      {children}
+    </SignInButton>
   );
 }
 
@@ -129,6 +235,19 @@ export default function Nav() {
   // the header pill is styling only and says "Pro" either way, so it uses this
   // directly rather than holding a third neutral state that every visitor sees.
   const proActive = proReady && isPro;
+  // Same discipline as proActive above, applied harder: signed-in and
+  // signed-out are different controls, not two paint jobs on one, so nothing
+  // account-shaped renders until Clerk has actually resolved the session. A
+  // returning member would otherwise be shown a sign-in offer for the account
+  // they are already in.
+  const { isLoaded: authLoaded, isSignedIn } = useAuth();
+  // hasSomethingToSave is the shared definition of an earned prompt (a logged
+  // session, a recorded take, a streak, a measured range). It lives with the
+  // in-page save prompt so the header cannot ask on a colder page than that one
+  // does. Before it is true the affordance is still there, just neutral: a
+  // visitor whose browser was wiped has nothing to lose and is exactly the
+  // person who needs the way back in.
+  const worthSaving = hasSomethingToSave(p);
   const streak = streakChipState(p.streak);
   const [menuOpen, setMenuOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -255,6 +374,49 @@ export default function Nav() {
               )}
             </div>
 
+            {/* Sits with the LV/XP/streak line rather than with the Pro card,
+                because that line is the thing it is offering to protect. It is
+                also the phone's only account entry: the header has room for the
+                Pro pill and the user button and nothing more. */}
+            {authLoaded && (
+              <div className="px-4 pt-4">
+                {isSignedIn ? (
+                  <UserButton
+                    appearance={CLERK_APPEARANCE}
+                    userProfileMode="modal"
+                    showName
+                  />
+                ) : worthSaving ? (
+                  <>
+                    <p className="text-sm text-mut">
+                      This browser holds the only copy of your practice record. A
+                      free account keeps a backup.
+                    </p>
+                    <AccountOffer earned>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-2.5"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        Back up my progress
+                      </Button>
+                    </AccountOffer>
+                  </>
+                ) : (
+                  <AccountOffer earned={false}>
+                    <button
+                      type="button"
+                      onClick={() => setMenuOpen(false)}
+                      className="text-sm text-mut underline decoration-line2 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+                    >
+                      Sign in
+                    </button>
+                  </AccountOffer>
+                )}
+              </div>
+            )}
+
             <nav
               aria-label="Main"
               className="mt-4 grid grid-cols-2 gap-2.5 px-4 pb-8"
@@ -379,6 +541,51 @@ export default function Nav() {
               </>
             )}
           </Link>
+
+          {/* Last in the row, where an account control is looked for, and a
+              glyph rather than a label because the row has no words left to
+              give. At the max-w-6xl plateau the ten tabs need 706px and have
+              777px, so anything past 71px (this slot plus its gap) starts
+              masking the Progress tab — and a "Save progress" label alone is
+              wider than that. The offer gets its sentence where there is room
+              to say it: the drawer below, and the in-page save prompt.
+              28px square either way, so signing in shifts nothing.
+
+              Signed in it shows at every width, because the user button is the
+              only route to signing out. Signed out it hides below sm: a phone
+              header already carries the menu, the current page name and the Pro
+              pill, and a free offer can wait two taps for the drawer. */}
+          {authLoaded &&
+            (isSignedIn ? (
+              <span className="flex shrink-0 items-center">
+                <UserButton
+                  appearance={CLERK_APPEARANCE}
+                  userProfileMode="modal"
+                />
+              </span>
+            ) : (
+              <AccountOffer earned={worthSaving}>
+                <button
+                  type="button"
+                  // The glyph is neutral; the name carries the offer. It only
+                  // mentions the practice record once there is one, so a first
+                  // visit is never told what it stands to lose.
+                  aria-label={
+                    worthSaving
+                      ? "Sign in to back up your practice record"
+                      : "Sign in"
+                  }
+                  title={
+                    worthSaving
+                      ? "Sign in to back up your practice record"
+                      : "Sign in"
+                  }
+                  className="hidden size-7 shrink-0 items-center justify-center rounded-full border border-line text-mut transition-colors hover:border-line2 hover:text-ink sm:inline-flex"
+                >
+                  <AccountIcon />
+                </button>
+              </AccountOffer>
+            ))}
         </div>
       </header>
       {drawer}
