@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ComponentProps, ReactElement } from "react";
 import { SectionLabel } from "@/components/ui";
 import {
+  AnalyzeGlyph,
   BreathGlyph,
   EarGlyph,
   ProgressGlyph,
@@ -26,29 +27,6 @@ import {
 
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
-}
-
-// No analyze glyph exists in components/landing/glyphs.tsx yet and this lane
-// does not own that file. Duplicated verbatim in app/tools/page.tsx; promote
-// both to the shared set when someone owns glyphs.tsx.
-function AnalyzeGlyph(props: ComponentProps<"svg">) {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      width={20}
-      height={20}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden={true}
-      {...props}
-    >
-      <path d="M3 6h4M9 6h2.5M13.5 6h3.5M3 10h2.5M7.5 10H10M12.5 10h4.5M3 14h5M10 14h2M14 14h3" />
-      <path d="M3 17.5h14" />
-    </svg>
-  );
 }
 
 export interface Room {

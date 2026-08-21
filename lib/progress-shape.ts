@@ -102,6 +102,17 @@ export const DEFAULT_PROGRESS: ProgressState = {
 export const MAX_SESSIONS = 500;
 export const MAX_RANGE_HISTORY = 60;
 export const MAX_ACHIEVEMENTS = 200;
+/**
+ * A ceiling on lifetime XP.
+ *
+ * The ladder tops out at 146,400 and one session awards at most about a
+ * hundred, so this is decades of daily practice: far past anything a singer
+ * can earn, and far short of what a hand-edited record or an imported backup
+ * can carry. It has to exist because the level card counts down from a fixed
+ * ceiling, and an XP total with no upper bound runs that countdown backwards
+ * through the trillions.
+ */
+export const MAX_XP = 10_000_000;
 /** One tally per MIDI note, and MIDI only has 128 of them. */
 export const MAX_NOTE_KEYS = 128;
 export const MAX_STRING = 400;
@@ -274,6 +285,18 @@ function repairRange(value: unknown): VocalRange {
   return range;
 }
 
+/**
+ * Lifetime XP, held inside what the ladder and the level card can render.
+ *
+ * Exported because levelForXp bounds its own argument the same way, and the
+ * store and the card disagreeing about how much XP a record may claim is
+ * exactly how a negative countdown got on screen.
+ */
+export function clampXp(value: unknown): number {
+  if (!isFiniteNumber(value)) return 0;
+  return Math.min(MAX_XP, Math.max(0, Math.round(value)));
+}
+
 function repairStreak(value: unknown): ProgressState["streak"] {
   if (!isPlainObject(value)) return { ...DEFAULT_PROGRESS.streak };
   const current = isFiniteNumber(value.current)
@@ -325,7 +348,7 @@ export function sanitizeProgress(value: unknown): ProgressState {
     : [];
 
   return {
-    xp: isFiniteNumber(value.xp) ? Math.max(0, Math.round(value.xp)) : 0,
+    xp: clampXp(value.xp),
     sessions,
     streak: repairStreak(value.streak),
     range: repairRange(value.range),
