@@ -11,7 +11,8 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs";
+import {SignInButton, SignUpButton, UserButton} from "@clerk/nextjs";
+import { useAccountAuth } from "@/lib/use-account-auth";
 import { useProgress, levelForXp, localDay } from "@/lib/progress";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { ProChip } from "@/components/pro/ui";
@@ -241,7 +242,7 @@ export default function Nav() {
   // account-shaped renders until Clerk has actually resolved the session. A
   // returning member would otherwise be shown a sign-in offer for the account
   // they are already in.
-  const { isLoaded: authLoaded, isSignedIn } = useAuth();
+  const { isLoaded: authLoaded, isSignedIn } = useAccountAuth();
   // hasSomethingToSave is the shared definition of an earned prompt (a logged
   // session, a recorded take, a streak, a measured range). It lives with the
   // in-page save prompt so the header cannot ask on a colder page than that one

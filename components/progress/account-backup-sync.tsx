@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAccountAuth } from "@/lib/use-account-auth";
 import { Button } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
 import {
@@ -41,7 +41,7 @@ const RECONCILED_KEY = "suede-sing:backup:account";
  * singer who visits both in one sitting still does at most one round trip.
  */
 export function AccountBackupSync() {
-  const { isLoaded, isSignedIn, userId } = useAuth();
+  const { isLoaded, isSignedIn, userId } = useAccountAuth();
   // Guards against a second run inside one page life; the localStorage key
   // below is what guards across page loads.
   const handled = useRef<string | null>(null);

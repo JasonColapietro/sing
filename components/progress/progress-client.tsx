@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAccountAuth } from "@/lib/use-account-auth";
 import {
   ACHIEVEMENTS,
   clearProgress,
@@ -397,7 +397,7 @@ function SyncControls() {
 
 function DataControls() {
   const isPro = useIsPro();
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAccountAuth();
   // Pro's own sync supersedes the account snapshot, so a Pro member is shown
   // the sync controls and never both. Nothing waits on Clerk: while it is
   // still loading this reads false and the card looks exactly as it did

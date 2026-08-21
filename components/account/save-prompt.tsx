@@ -1,7 +1,8 @@
 "use client";
 
 import { useId, useSyncExternalStore } from "react";
-import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
+import {SignInButton, SignUpButton} from "@clerk/nextjs";
+import { useAccountAuth } from "@/lib/use-account-auth";
 import { Button, Card, SectionLabel } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
 import { useIsPro, useProReady } from "@/lib/pro";
@@ -169,7 +170,7 @@ export function AccountSavePrompt({
   context?: string;
   className?: string;
 }) {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAccountAuth();
   const isPro = useIsPro();
   const proReady = useProReady();
   const progress = useProgress();
