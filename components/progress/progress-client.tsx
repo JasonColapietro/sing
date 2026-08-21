@@ -94,6 +94,77 @@ function UploadIcon() {
 }
 
 /* ------------------------------------------------------------------ */
+/* Loading shell                                                       */
+/* ------------------------------------------------------------------ */
+
+/** One inert placeholder block. */
+function Bar({ className }: { className: string }) {
+  return <div className={`rounded bg-panel2 ${className}`} />;
+}
+
+/**
+ * What stands in for the dashboard until the client render below replaces it.
+ *
+ * The dashboard is client-only — see the `mounted` gate — so the server cannot
+ * know how tall it will be, and it is tall: 3,600–3,900px at 1280×900, with an
+ * empty record rendering *taller* than a full one because the empty states and
+ * the locked Pro panels are big. The old shell was a single centred "Loading
+ * your progress…" line, 402px of main. Swapping 402px for 3,887px on hydration
+ * threw the room rail (which PR #61 deliberately placed inside the first
+ * viewport) and the footer clean out of the viewport, and that one shift was
+ * this page's entire CLS: 0.40, against a 0.25 "poor" threshold.
+ *
+ * The reservation is a viewport rather than the dashboard's measured height, on
+ * purpose. Layout shift only scores what a visitor can actually see, so putting
+ * everything below this block under the fold at first paint is sufficient — and
+ * unlike a pixel figure copied off one screen size, `min-h-[100dvh]` stays
+ * correct at every screen size and cannot rot as the dashboard grows. It costs
+ * nothing in blank space either: the block is replaced a few hundred
+ * milliseconds later by a dashboard several times taller, for first-run
+ * visitors most of all.
+ *
+ * Shaped like the real thing — the four-card stat row, then the calendar —
+ * rather than an empty reservation, so the first paint reads as the page
+ * arriving instead of as a hole. Hidden from assistive tech, which gets the
+ * status line instead.
+ */
+export function DashboardSkeleton() {
+  return (
+    <div className="min-h-[100dvh]">
+      <p className="sr-only" role="status">
+        Loading your progress…
+      </p>
+      <div className="space-y-10" aria-hidden="true">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {["Level", "Streak", "Today", "Sessions"].map((label) => (
+            <Card key={label}>
+              <SectionLabel>{label}</SectionLabel>
+              <Bar className="mt-3 h-8 w-24" />
+              <Bar className="mt-3 h-2 w-full" />
+              <Bar className="mt-2 h-3 w-32" />
+            </Card>
+          ))}
+        </div>
+
+        <section>
+          <h2 className="mb-3 text-lg">Practice calendar</h2>
+          <Card>
+            <Bar className="h-32 w-full" />
+          </Card>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-lg">Trends</h2>
+          <Card>
+            <Bar className="h-40 w-full" />
+          </Card>
+        </section>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Header stat row                                                     */
 /* ------------------------------------------------------------------ */
 
@@ -585,7 +656,7 @@ export function ProgressClient() {
         title="Progress"
         subtitle="XP, streaks, achievements, and a coach that reads your last two weeks of practice."
       >
-        <div className="py-20 text-center text-sm text-mut">Loading your progress…</div>
+        <DashboardSkeleton />
       </PageShell>
     );
   }
