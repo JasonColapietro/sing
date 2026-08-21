@@ -20,6 +20,16 @@ import type { SessionSummaryData } from "./lib";
 /** Under this a rep didn't hold — the amber floor the whole page reads from. */
 const HELD_FLOOR = 50;
 
+/**
+ * How many rep rows the per-rep list draws. The walk is endless — it climbs
+ * to the top of the range, comes back down and goes again until the singer
+ * ends it — so a twenty-minute session arrives here with a hundred reps and
+ * an unbounded list would bury the rest of the summary. The rows shown are
+ * the most recent ones, the reps still fresh in the singer's ear; everything
+ * else on the page still counts the whole session.
+ */
+const MAX_LISTED_REPS = 12;
+
 function scoreTone(score: number): "ok" | "amber" | "rec" {
   if (score >= 80) return "ok";
   if (score >= HELD_FLOOR) return "amber";
@@ -74,6 +84,14 @@ export function SessionSummary({
   // grade, and a D would read as a judgment of singing that never happened.
   const grade = diagnosis ? gradeForScore(avgScore) : null;
 
+  // Only the rendered list is bounded. `hidden` doubles as the offset of the
+  // first row, so the rep numbers stay the real ones — row 84 of 95, not a
+  // second list starting at 1.
+  const { hidden, rows } = useMemo(() => {
+    const hidden = Math.max(0, results.length - MAX_LISTED_REPS);
+    return { hidden, rows: results.slice(hidden) };
+  }, [results]);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -112,13 +130,21 @@ export function SessionSummary({
         )}
 
         <div className="mt-6 space-y-2">
-          <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Per-rep score
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              Per-rep score
+            </div>
+            {hidden > 0 && (
+              <div className="tabular font-mono text-[11px] text-dim">
+                Last {rows.length} of {results.length} reps · {hidden} earlier
+                not shown
+              </div>
+            )}
           </div>
-          {results.map((r, i) => (
-            <div key={i} className="flex items-center gap-3">
+          {rows.map((r, i) => (
+            <div key={hidden + i} className="flex items-center gap-3">
               <span className="tabular w-8 shrink-0 font-mono text-xs text-dim">
-                {i + 1}
+                {hidden + i + 1}
               </span>
               <span className="tabular w-12 shrink-0 font-mono text-xs text-mut">
                 {midiToLabel(r.root)}

@@ -25,7 +25,7 @@ const RECENT_WINDOW_MS = 3 * 24 * 3600 * 1000;
 const PACK_TEASERS = [
   { name: "Belt prep", desc: "Chest-voice power without strain, 8 exercises." },
   { name: "Head-voice builder", desc: "Light, connected top notes, 7 exercises." },
-  { name: "Morning reset", desc: "A gentle 6-minute wake-up for rough days." },
+  { name: "Morning reset", desc: "A gentle wake-up for rough days, 6 exercises." },
 ];
 
 /** One line of orientation per tier. TIER_LABELS alone ("Tier 2 · Building")

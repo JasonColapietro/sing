@@ -26,9 +26,16 @@ interface PlanItem {
 
 /**
  * Measured span, in semitones, before the octave siren is worth recommending.
- * computeRootLadder clamps every root to `lowMidi + 4` until `highMidi - 5 - 12`
- * clears it, so a narrower singer gets the same rep six times over, glided to
- * `lowMidi + 16` — above their own measured ceiling.
+ * computeRootLadder runs that exercise's ladder from `lowMidi + 4` up to
+ * `highMidi - 5 - 12` — the octave it glides, plus five semitones of headroom
+ * under the measured ceiling — so 21 (4 + 12 + 5) is exactly the span at which
+ * that top finally reaches the start. At 21 the band is a single root whose
+ * glide lands on `highMidi - 5`, headroom intact; wider spans widen the band a
+ * semitone at a time. Below 21 the `Math.max(start, …)` floor fabricates that
+ * lone root anyway, and its glide to `lowMidi + 16` eats into the headroom the
+ * ladder reserves — clearing the measured ceiling outright under 16 semitones.
+ * (The MIDI-30 start floor only bites below lowMidi 26, so this holds for any
+ * real voice.)
  */
 const OCTAVE_SIREN_MIN_SEMIS = 21;
 
@@ -139,8 +146,9 @@ function buildPlan(state: ProgressState, now: Date): {
     // A weak note at the top of the range wants the full-octave glide that
     // carries the voice through the break; anything lower wants the smaller,
     // slower siren that sits on the weak spot. The octave is only offered to a
-    // singer whose measured span can hold it — below that the ladder collapses
-    // and every rep glides past their own ceiling.
+    // singer whose measured span can hold it — below OCTAVE_SIREN_MIN_SEMIS the
+    // ladder collapses to one root whose glide pushes into the headroom kept
+    // under their ceiling, so those singers get the fifth instead.
     const wantsOctave =
       state.range.lowMidi !== undefined && state.range.highMidi !== undefined
         ? worst.midi >= state.range.highMidi - 5 &&

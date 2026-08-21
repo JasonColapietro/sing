@@ -213,7 +213,11 @@ export function scoredSeconds(tallies: NoteTallies): number {
 
 /* ----------------------------------------------------------------- ladder */
 
-/** One rep of a warmup ladder: the root it was sung at, and what it scored. */
+/**
+ * One rep of a warmup ladder: the root it was sung at, and what it scored.
+ * Reps are in the order they were sung; the walk climbs and descends, so the
+ * roots are not sorted.
+ */
 export interface LadderRep {
   root: number;
   score: number;
@@ -223,7 +227,7 @@ export interface LadderRep {
 export interface LadderBreak {
   /** Root of the rep the ladder came apart on. */
   root: number;
-  /** Best score reached before that rep. */
+  /** Best score reached earlier in the same climb. */
   heldAt: number;
   /** What that rep scored. */
   score: number;
@@ -235,12 +239,27 @@ export interface LadderBreak {
 export const MIN_LADDER_DROP = 12;
 
 /**
- * Where a rising warmup ladder stopped holding: the *first* rep that fell a
- * real distance below the best score reached before it.
+ * Where a climb of the warmup ladder stopped holding: the *first* rep that
+ * fell a real distance below the best score reached earlier in the same
+ * climb.
  *
- * First, not worst, because the ladder climbs — once the voice gives out
- * every root above it scores badly too, so the note worth naming is where it
- * gave out, not the lowest number that follows.
+ * First, not worst, because a climb rises — once the voice gives out every
+ * root above it scores badly too, so the note worth naming is where it gave
+ * out, not the lowest number that follows.
+ *
+ * A warmup walks the ladder endlessly — every semitone up to the top of the
+ * range, then back down, over and over — so `reps` is a triangle wave that
+ * revisits the same roots many times. Only a *rising* run of roots can break.
+ * A rep sung at or below the previous rep's root is the walk turning around,
+ * so it starts a fresh climb and clears the best held so far; the roots are
+ * the only direction we have, and none is asked of the caller. Without that
+ * reset an ordinary wobble on the way down would be measured against a peak
+ * set dozens of reps earlier and named as a break on a root the singer
+ * already sang cleanly on the way up.
+ *
+ * The break returned is the earliest one in the session, on whichever climb
+ * it happened: a voice that holds for ten minutes and then gives out is
+ * telling us something the first climb alone cannot.
  *
  * Returns null when nothing fell far enough to name. A ladder that held is a
  * real result, and inventing a weak point out of a three-point wobble would
@@ -251,10 +270,16 @@ export function ladderBreak(
   { minDrop = MIN_LADDER_DROP }: { minDrop?: number } = {},
 ): LadderBreak | null {
   let bestSoFar: number | null = null;
+  let prevRoot: number | null = null;
   for (const rep of reps) {
     // A skipped rep scores 0 by convention; counting it would report every
-    // skip as the voice falling apart.
+    // skip as the voice falling apart. It does not end the climb either — the
+    // reps either side of the gap are still rising.
     if (rep.skipped) continue;
+    // At or below the previous root, the walk has turned: this rep is the
+    // foot of a new climb, with nothing above it yet to have fallen from.
+    if (prevRoot !== null && rep.root <= prevRoot) bestSoFar = null;
+    prevRoot = rep.root;
     if (bestSoFar !== null) {
       const drop = bestSoFar - rep.score;
       if (drop >= minDrop) {

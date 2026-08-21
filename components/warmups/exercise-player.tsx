@@ -29,8 +29,76 @@ const TEMPOS = [0.75, 1, 1.25] as const;
 export const TOLERANCE_CENTS = 50;
 const REP_RESULT_PAUSE_MS = 1100;
 const MIN_VOLUME = 0.006;
+/**
+ * Consecutive reps without a single voiced frame before the walk ends itself.
+ * The ladder never stops on its own, so silence is the only signal that the
+ * singer has left: two reps is roughly 25 s of quiet — generous enough for
+ * catching a breath, tight enough that an abandoned tab stops almost at once.
+ */
+const MAX_UNSUNG_REPS = 2;
 
 type Phase = "listen" | "sing" | "rep-result";
+
+/** Phases where a rep is still in play, so skipping it means something. */
+const SKIPPABLE_PHASES: Phase[] = ["listen", "sing"];
+
+/**
+ * What an unsung rep — one where the mic never landed a voiced frame on a
+ * target — means for the endless walk. `unsungStreak` counts consecutive
+ * unsung reps, this one included; `recordedReps` is how many reps have
+ * actually been scored.
+ *
+ * - "continue": the singer may just be between breaths, so keep walking.
+ * - "finish": end the session and log only the reps that were sung.
+ * - "exit": nothing was ever sung — leave without logging a session at all.
+ *
+ * Unsung reps are never recorded, so they cannot drag the logged average
+ * down: eight reps at 85% followed by an abandoned tab still log 85%.
+ */
+export function unsungRepAction(
+  unsungStreak: number,
+  recordedReps: number,
+): "continue" | "finish" | "exit" {
+  if (unsungStreak < MAX_UNSUNG_REPS) return "continue";
+  return recordedReps > 0 ? "finish" : "exit";
+}
+
+/**
+ * Seconds of practice to log: mount → the end of the last scored rep, never
+ * mount → now. The walk is endless, so wall-clock time would bill every idle
+ * minute of a forgotten tab as singing — enough to read as a heavy day.
+ */
+export function practicedDurationSec(
+  sessionStart: number,
+  lastScoredAt: number | null,
+): number {
+  return Math.max(
+    1,
+    Math.round(((lastScoredAt ?? sessionStart) - sessionStart) / 1000),
+  );
+}
+
+/**
+ * Height in the ladder as 0..100: the bottom rung reads 0, the top reads 100.
+ * A one-rung ladder has no height to travel, so it stays at 0 rather than
+ * reporting a permanent 100 on an exercise that never completes.
+ */
+export function ladderHeightPct(ladderIndex: number, rungs: number): number {
+  if (rungs <= 1) return 0;
+  return (ladderIndex / (rungs - 1)) * 100;
+}
+
+/**
+ * Whether the rep at `repIndex` was reached by climbing. `LadderStep.ascending`
+ * answers a different question — where the walk heads *after* this rep — so
+ * using it as a label would call the top rung "Descending" while it is still
+ * being sung. Compare against the previous rep instead; rep 0 starts the climb,
+ * and a one-rung ladder that never travels keeps that same starting label.
+ */
+export function repAscending(roots: number[], repIndex: number): boolean {
+  if (repIndex <= 0) return true;
+  return ladderWalk(roots, repIndex).index >= ladderWalk(roots, repIndex - 1).index;
+}
 
 export function ExercisePlayer({
   ex,
@@ -59,8 +127,13 @@ export function ExercisePlayer({
   const [hitSec, setHitSec] = useState<number[]>([]);
   const [trace, setTrace] = useState<TracePoint[]>([]);
   const [liveMidiFloat, setLiveMidiFloat] = useState<number | null>(null);
+  // The rep that just ended picked up no sound at all — say so, instead of
+  // leaving the previous rep's score on screen as if it belonged to this one.
+  const [repSilent, setRepSilent] = useState(false);
 
-  const { root: ladderRoot, index: ladderIndex, ascending } = ladderWalk(roots, repIndex);
+  const { root: ladderRoot, index: ladderIndex } = ladderWalk(roots, repIndex);
+  // The direction that produced this rep, not the one the walk turns to next.
+  const climbing = repAscending(roots, repIndex);
   const currentRoot = Math.max(24, Math.min(96, ladderRoot + transpose));
   const { segs, totalSec } = useMemo(
     () => buildSegments(ex, currentRoot, tempo),
@@ -77,16 +150,17 @@ export function ExercisePlayer({
   const segCentsSumRef = useRef<number[]>([]);
   const segCentsFramesRef = useRef<number[]>([]);
   const traceRef = useRef<TracePoint[]>([]);
+  // Consecutive reps the singer didn't sing, and when the last rep that *was*
+  // sung ended. Together they keep an abandoned tab out of permanent progress.
+  const unsungRepsRef = useRef(0);
+  const lastScoredAtRef = useRef<number | null>(null);
   // Lazy state initializer: performance.now() only runs once, on mount.
   const [sessionStart] = useState(() => performance.now());
 
   function finalize(finalResults: RepResult[]) {
     const avgScore = repAvgScore(finalResults);
     const best = bestRep(finalResults);
-    const durationSec = Math.max(
-      1,
-      Math.round((performance.now() - sessionStart) / 1000),
-    );
+    const durationSec = practicedDurationSec(sessionStart, lastScoredAtRef.current);
     const log = logSession({
       type: "warmup",
       durationSec,
@@ -190,43 +264,65 @@ export function ExercisePlayer({
 
       if (elapsed < singWindow) {
         raf = requestAnimationFrame(tick);
-      } else {
-        const denom = totalTargetDur(segs);
-        const hitTotal = hitAccumRef.current.reduce((a, b) => a + b, 0);
-        const score =
-          denom > 0 ? Math.round(Math.min(100, (hitTotal / denom) * 100)) : 0;
-        const avgCentsErr =
-          centsCountRef.current > 0
-            ? Math.round(centsSumRef.current / centsCountRef.current)
-            : 0;
-        const result: RepResult = {
-          root: currentRoot,
-          score,
-          avgCentsErr,
-          skipped: false,
-          notes: segs.flatMap((seg, i) => {
-            const hitSec = hitAccumRef.current[i] ?? 0;
-            const centsSum = segCentsSumRef.current[i] ?? 0;
-            const centsFrames = segCentsFramesRef.current[i] ?? 0;
-            // A glide sweeps between two pitches, so credit each endpoint
-            // with half the segment rather than pinning it to one note.
-            const endpoints =
-              seg.startMidi === seg.endMidi
-                ? [seg.startMidi]
-                : [seg.startMidi, seg.endMidi];
-            const share = 1 / endpoints.length;
-            return endpoints.map((midi) => ({
-              midi,
-              hitSec: hitSec * share,
-              possibleSec: seg.dur * share,
-              centsSum: centsSum * share,
-              centsFrames: Math.round(centsFrames * share),
-            }));
-          }),
-        };
-        setResults((prev) => [...prev, result]);
-        setPhase("rep-result");
+        return;
       }
+
+      // Not one voiced frame all window: nobody sang this rep. Recording it
+      // would fold a 0 into the logged average, and the walk never stops on
+      // its own — so record nothing and end the session once the silence
+      // stops looking like a breath.
+      if (centsCountRef.current === 0) {
+        unsungRepsRef.current += 1;
+        const action = unsungRepAction(unsungRepsRef.current, results.length);
+        if (action === "continue") {
+          setRepSilent(true);
+          setPhase("rep-result");
+        } else if (action === "finish") {
+          finalize(results);
+        } else {
+          onExit();
+        }
+        return;
+      }
+
+      unsungRepsRef.current = 0;
+      lastScoredAtRef.current = now;
+      const denom = totalTargetDur(segs);
+      const hitTotal = hitAccumRef.current.reduce((a, b) => a + b, 0);
+      const score =
+        denom > 0 ? Math.round(Math.min(100, (hitTotal / denom) * 100)) : 0;
+      const avgCentsErr =
+        centsCountRef.current > 0
+          ? Math.round(centsSumRef.current / centsCountRef.current)
+          : 0;
+      const result: RepResult = {
+        root: currentRoot,
+        score,
+        avgCentsErr,
+        skipped: false,
+        notes: segs.flatMap((seg, i) => {
+          const hitSec = hitAccumRef.current[i] ?? 0;
+          const centsSum = segCentsSumRef.current[i] ?? 0;
+          const centsFrames = segCentsFramesRef.current[i] ?? 0;
+          // A glide sweeps between two pitches, so credit each endpoint
+          // with half the segment rather than pinning it to one note.
+          const endpoints =
+            seg.startMidi === seg.endMidi
+              ? [seg.startMidi]
+              : [seg.startMidi, seg.endMidi];
+          const share = 1 / endpoints.length;
+          return endpoints.map((midi) => ({
+            midi,
+            hitSec: hitSec * share,
+            possibleSec: seg.dur * share,
+            centsSum: centsSum * share,
+            centsFrames: Math.round(centsFrames * share),
+          }));
+        }),
+      };
+      setRepSilent(false);
+      setResults((prev) => [...prev, result]);
+      setPhase("rep-result");
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
@@ -234,7 +330,8 @@ export function ExercisePlayer({
   }, [phase, repIndex]);
 
   // Rep result: brief pause, then keep walking the ladder — up to the top,
-  // back down, and around again. Only the singer ends the session.
+  // back down, and around again. The walk ends only when the singer says so,
+  // or when the sing phase above has heard nothing for MAX_UNSUNG_REPS reps.
   useEffect(() => {
     if (phase !== "rep-result") return;
     const timer = setTimeout(() => {
@@ -245,6 +342,13 @@ export function ExercisePlayer({
   }, [phase]);
 
   function skipRep() {
+    // Only meaningful while the rep is still in play. During the rep-result
+    // pause repIndex hasn't advanced yet, so a tap here would append a second
+    // result for the rung just scored — counted twice in the average and
+    // listed twice in the summary.
+    if (!SKIPPABLE_PHASES.includes(phase)) return;
+    // Tapping skip is a sign of life, so the silence streak starts over.
+    unsungRepsRef.current = 0;
     const result: RepResult = { root: currentRoot, score: 0, avgCentsErr: 0, skipped: true };
     setResults((prev) => [...prev, result]);
     setRepIndex((i) => i + 1);
@@ -260,6 +364,7 @@ export function ExercisePlayer({
   }
 
   const controlsEnabled = phase === "listen";
+  const canSkip = SKIPPABLE_PHASES.includes(phase);
   const currentCents =
     phase === "sing" && liveMidiFloat !== null
       ? Math.round((liveMidiFloat - (targetMidiAt(segs, Math.min(elapsedSec, totalSec)) ?? liveMidiFloat)) * 100)
@@ -279,14 +384,14 @@ export function ExercisePlayer({
         </button>
         <div className="flex items-center gap-2">
           <Pill tone="mut">Rep {repIndex + 1}</Pill>
-          <Pill tone={ascending ? "amber" : "cool"}>
-            {ascending ? "Climbing" : "Descending"}{" "}
-            <span aria-hidden="true">{ascending ? "↑" : "↓"}</span>
+          <Pill tone={climbing ? "amber" : "cool"}>
+            {climbing ? "Climbing" : "Descending"}{" "}
+            <span aria-hidden="true">{climbing ? "↑" : "↓"}</span>
           </Pill>
         </div>
       </div>
       {/* Height in the ladder, not session completion — it rises to the top note and falls back. */}
-      <ProgressBar value={((ladderIndex + 1) / roots.length) * 100} tone="amber" />
+      <ProgressBar value={ladderHeightPct(ladderIndex, roots.length)} tone="amber" />
 
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -330,7 +435,10 @@ export function ExercisePlayer({
               </div>
             </div>
           )}
-          {phase === "rep-result" && lastResult && (
+          {phase === "rep-result" && repSilent && (
+            <Pill tone="mut">No sound picked up</Pill>
+          )}
+          {phase === "rep-result" && !repSilent && lastResult && (
             <div className="flex flex-1 flex-wrap items-center gap-4">
               <Pill tone={lastResult.skipped ? "mut" : lastResult.score >= 80 ? "ok" : "amber"}>
                 {lastResult.skipped ? "Skipped" : `Rep score ${lastResult.score}%`}
@@ -402,7 +510,7 @@ export function ExercisePlayer({
 
           <span className="flex-1" />
 
-          <Button variant="ghost" size="sm" onClick={skipRep}>
+          <Button variant="ghost" size="sm" disabled={!canSkip} onClick={skipRep}>
             <IconSkip /> Skip rep
           </Button>
           <Button variant="rec" size="sm" onClick={endExercise}>
