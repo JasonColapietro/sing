@@ -78,7 +78,7 @@ describe("PUT /api/account/progress", () => {
   });
 
   it("refuses a malformed session with 400 and stores nothing", async () => {
-    // The exact shape that crashed /progress: pre-release field names.
+    // The shape that crashed /progress — field names this app never wrote.
     const { status, error } = await statusAndError({
       ...healthy(),
       sessions: [{ id: "s0", kind: "warmup", day: "2026-08-21", sec: 300 }],
