@@ -1,4 +1,11 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
+import { accountsReady } from "@/lib/accounts";
+import {
+  NextResponse,
+  type NextProxy,
+  type NextRequest,
+  type ProxyConfig,
+} from "next/server";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -18,23 +25,64 @@ import { SITE_URL } from "@/lib/site";
  * Deliberately narrow: it only fires for *.vercel.app. A broad "anything that
  * is not SITE_URL" rule would take the whole site down if NEXT_PUBLIC_SITE_URL
  * were ever unset, since lib/site.ts falls back to a vercel.app default.
+ *
+ * Returns null when the request is already on a host we are happy to serve, so
+ * the caller can carry on rather than short-circuit.
  */
-export function proxy(request: NextRequest) {
+function canonicalRedirect(request: NextRequest) {
   const host = request.headers.get("host") ?? "";
-  if (!host.endsWith(".vercel.app")) return NextResponse.next();
+  if (!host.endsWith(".vercel.app")) return null;
 
   const canonical = new URL(SITE_URL);
   // If SITE_URL is itself a vercel.app host, redirecting would loop.
   if (canonical.host === host || canonical.host.endsWith(".vercel.app")) {
-    return NextResponse.next();
+    return null;
   }
 
   const target = new URL(request.nextUrl.pathname + request.nextUrl.search, canonical);
   return NextResponse.redirect(target, 308);
 }
 
-export const config = {
-  // Static assets and the build output do not need the check, and a redirect
-  // on them would only cost a round trip.
+/**
+ * No handler argument, and that is the point: with no callback there is no
+ * auth.protect() call anywhere, so clerkMiddleware cannot turn a route into a
+ * protected one. It runs purely to read the session and make auth state
+ * available to the app. Every room stays open to a signed-out visitor, which
+ * is what an organic-search funnel depends on. A route matcher here would gate
+ * the site, so there isn't one.
+ *
+ * It only runs when the keys are real. On a development instance Clerk answers
+ * the first HTML request with a 307 to its own accounts.dev handshake
+ * (x-clerk-auth-reason: dev-browser-missing) to plant a dev-browser token. That
+ * happens with no handler and no matcher, because it is Clerk establishing
+ * itself rather than protecting anything - so "nothing is gated" was true and
+ * still let every crawler get bounced off the domain. It fires on Accept:
+ * text/html and not on Accept: *\/*, which is why curl checks missed it and why
+ * robots.txt and sitemap.xml were redirected too.
+ */
+const withClerk = accountsReady() ? clerkMiddleware() : null;
+
+export const proxy: NextProxy = (request, event) => {
+  // Canonical first. The redirect must not depend on Clerk resolving a session
+  // or on the Clerk keys being present, because landing on the wrong origin is
+  // what costs someone a subscription they paid for. A visitor on a vercel.app
+  // host leaves before any auth work happens, and Clerk then runs normally on
+  // the canonical host they land on.
+  const redirect = canonicalRedirect(request);
+  if (redirect) return redirect;
+
+  // Without real keys there is no session to read, so the only thing Clerk
+  // would contribute here is the handshake redirect. Pass the request straight
+  // through instead.
+  if (!withClerk) return NextResponse.next();
+
+  return withClerk(request, event);
+};
+
+export const config: ProxyConfig = {
+  // Unchanged from before Clerk. It still covers every path the canonical
+  // redirect covered, which is also every path where auth state is worth
+  // having — pages and /api alike. Static assets and the build output do not
+  // need the check, and a redirect on them would only cost a round trip.
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

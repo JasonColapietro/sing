@@ -2,6 +2,7 @@ import { StudioClient } from "@/components/studio/studio-client";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { STUDIO_GUIDE } from "@/lib/guides";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = {
   title: "Pitch Training for Singers — Real-Time Pitch Feedback",
@@ -14,6 +15,7 @@ export default function StudioPage() {
   return (
     <>
       <StudioClient />
+      <RoomRailBand current="/studio" />
       <ToolGuide guide={STUDIO_GUIDE} />
     </>
   );

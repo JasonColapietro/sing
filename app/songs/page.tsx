@@ -3,10 +3,12 @@ import { Suspense } from "react";
 import { PRO_SONGS, SONGS } from "@/components/songs/data";
 import { SongLinkList } from "@/components/songs/song-page";
 import { SongsClient } from "@/components/songs/songs-client";
+import { SongsMicGate } from "@/components/songs/mic-gate";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { SONGS_GUIDE } from "@/lib/guides";
 import { LinkButton, SectionLabel } from "@/components/ui";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 // Derived from the arrays rather than written down, so the counts cannot go
 // stale as the songbook grows.
@@ -29,8 +31,17 @@ export default function SongsPage() {
         nearest Suspense boundary, so the boundary sits here rather than around
         the page: everything below stays prerendered, which is the half a
         crawler reads.
+
+        The fallback is the mic gate itself, not null. Every visitor meets that
+        gate first — usePitch never auto-starts — so it is a real prerender of
+        the page's own first screen, not a placeholder standing in for one, and
+        it carries the <h1> this hub previously had nowhere in its static HTML.
+        It also holds the space: a null fallback let hydration insert 494px of
+        gate above the prerendered songbook and push all of it down, which was
+        this page's CLS 0.36. SongsClient renders the same component, so the
+        real gate lands in the box the fallback already drew.
       */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<SongsMicGate />}>
         <SongsClient />
       </Suspense>
 
@@ -76,6 +87,7 @@ export default function SongsPage() {
         </div>
       </section>
 
+      <RoomRailBand current="/songs" />
       <ToolGuide guide={SONGS_GUIDE} />
     </>
   );

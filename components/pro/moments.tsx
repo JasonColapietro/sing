@@ -26,7 +26,7 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
  * snapshot on the server and the hook forms would flip false->true after
  * hydration on every route.
  *
- * Three refusals guard the open. All are deferrable, not terminal: none sets
+ * Four refusals guard the open. All are deferrable, not terminal: none sets
  * a flag and none writes the seen key, so the next result signal re-runs the
  * gate and can still open.
  *
@@ -46,7 +46,12 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
  *    sessions is most likely to hard-load — the cohort the mount pass exists
  *    to reach.
  *
- * 3. Scroll lock. If the body overflow slot is already taken, the modal
+ * 3. The sign-in and sign-up routes. A full-screen upsell over an auth form
+ *    hides the form, and its overlay eats the first click meant for the card
+ *    beneath it. Prefix-matched, unlike /pro: both are catch-all segments and
+ *    Clerk pushes further steps onto the path as the flow advances.
+ *
+ * 4. Scroll lock. If the body overflow slot is already taken, the modal
  *    declines to open. The check on the mount pass is a documented no-op —
  *    ProMoments renders before {children} in app/layout.tsx, so the slot
  *    reads "" at mount essentially always — and is kept only for symmetry
@@ -85,6 +90,16 @@ export default function ProMoments() {
         // prefix: /progress would match a prefix test and lose its modal.
         const p = window.location.pathname;
         if (p === "/pro" || p.startsWith("/pro/")) return;
+        // Mid sign-up or sign-in. A full-screen upsell dropped over an auth
+        // form covers the exact thing the visitor navigated here to do, and
+        // because the overlay is a button the first click aimed at the card
+        // underneath dismisses this instead of landing. Someone reaching these
+        // routes has a practice record and is trying to protect it, which is a
+        // worse moment to interrupt than most and not one Pro needs to win.
+        // Unlike /pro these are catch-all segments, so Clerk can push a further
+        // step onto the path ("/sign-in/factor-one") and the match has to
+        // travel with it.
+        if (/^\/sign-(in|up)(\/|$)/.test(p)) return;
         // Another surface owns the scroll lock. Decline this pass and leave
         // every flag untouched so a later result can still open.
         if (document.body.style.overflow === "hidden") return;

@@ -5,6 +5,7 @@ import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
+import { MicAlert } from "@/components/mic-alert";
 import { IconMic } from "./icons";
 import { ALL_EXERCISES, EXERCISES, type WarmupExercise } from "./exercises";
 import { getProState } from "@/lib/pro";
@@ -62,6 +63,38 @@ export function WarmupsClient() {
     startExercise(ex);
   }
 
+  // The exercise a cold visitor picked while the mic was still off, held until
+  // permission lands. Without it their choice is thrown away by the prompt.
+  const [pendingEx, setPendingEx] = useState<WarmupExercise | null>(null);
+
+  // Where the next mic failure has to appear: the id of the exercise whose card
+  // was pressed, or null for the gate card's own button. The library sits under
+  // the gate card, so a card near the bottom of the catalogue was asking for the
+  // mic and printing the refusal most of a page above the fold. One MicAlert is
+  // rendered, in whichever of those two places the singer was actually looking.
+  const [errorAt, setErrorAt] = useState<string | null>(null);
+
+  async function selectExercise(ex: WarmupExercise) {
+    if (pitch.listening) {
+      startExercise(ex);
+      return;
+    }
+    // A cold visitor picked a specific exercise, so the mic prompt is the
+    // interruption, not the destination: hold their choice and open it the
+    // moment permission lands.
+    setPendingEx(ex);
+    setErrorAt(ex.id);
+    const ok = await pitch.start();
+    if (!ok) setPendingEx(null);
+  }
+
+  // The gate card's button, which is its own place on screen. Set before the
+  // await, but nothing renders during it: start() clears the error first.
+  function startFromGate() {
+    setErrorAt(null);
+    void pitch.start();
+  }
+
   const deepLinkEx = deepLinkId
     ? (ALL_EXERCISES.find((e) => e.id === deepLinkId) ?? null)
     : null;
@@ -82,37 +115,15 @@ export function WarmupsClient() {
 
   const pendingDeepLink = !deepLinkDone && deepLinkEx && canStart(deepLinkEx);
 
-  if (!pitch.listening) {
-    return (
-      <PageShell
-        kicker="Warmups"
-        title="Guided vocal warmups"
-        subtitle="Listen to a short melody, then sing it back. Roots climb by semitones to the top of your range, then walk back down — for as long as you keep going."
-      >
-        <Card>
-          <h2 className="text-xl">
-            {pendingDeepLink
-              ? `Enable your microphone to start “${deepLinkEx.title}”`
-              : "Enable your microphone to begin"}
-          </h2>
-          <p className="mt-2 max-w-md text-sm text-mut">
-            Suede Sing needs the mic to score your pitch against the target
-            melody. Audio never leaves your browser.
-          </p>
-          <div className="mt-5">
-            <Button variant="rec" size="lg" onClick={pitch.start}>
-              <IconMic /> Enable microphone
-            </Button>
-          </div>
-          {pitch.error && (
-            <p className="mt-4 max-w-md text-sm text-rec" role="alert">
-              {pitch.error}
-            </p>
-          )}
-          <ProWhisper className="mt-4" />
-        </Card>
-      </PageShell>
-    );
+  // Resolved after the deep link, not before it: both land in the same render
+  // when permission arrives, and whoever writes activeEx last wins. A visitor
+  // who tapped a specific card asked for that card, so their pick has to
+  // outrank the ?exercise= link they happened to arrive on. Adjusted during
+  // render rather than in an effect that would paint the library for a frame.
+  if (pendingEx && pitch.listening) {
+    const ex = pendingEx;
+    setPendingEx(null);
+    if (canStart(ex)) startExercise(ex);
   }
 
   return (
@@ -127,11 +138,71 @@ export function WarmupsClient() {
       }
       subtitle={
         view === "library"
-          ? "Pick an exercise to start your ladder."
+          ? pitch.listening
+            ? "Pick an exercise to start your ladder."
+            : "Browse every exercise first. The mic comes on when you pick one."
           : undefined
       }
     >
-      {view === "library" && <Library progress={progress} onSelect={startExercise} />}
+      {/*
+        The mic card used to be returned INSTEAD of this page, so a first-time
+        visitor could not read a single exercise title before granting
+        permission. /range already solved this: explain the loop, then ask.
+      */}
+      {view === "library" && !pitch.listening && (
+        <Card className="mb-8">
+          <h2 className="text-xl">
+            {pendingDeepLink
+              ? `Turn on your mic to start “${deepLinkEx.title}”`
+              : "How a warmup ladder works"}
+          </h2>
+          <ol className="mt-3 max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut">
+            <li>
+              Pick an exercise from the catalogue below. Titles, ladder spans
+              and lengths are all there before you decide.
+            </li>
+            <li>A short melody plays, then it is your turn to sing it back.</li>
+            <li>
+              Your pitch is scored against the target as you sing, and each rep
+              gets a score at the end of it.
+            </li>
+            <li>
+              The root climbs a semitone each rep to the top of your range,
+              then walks back down — and keeps going until you end the
+              exercise.
+            </li>
+          </ol>
+          <p id="warmups-mic-note" className="mt-3 max-w-xl text-sm text-dim">
+            Scoring needs your microphone. Audio is read and analyzed in this
+            browser and never leaves your device.
+          </p>
+          <p className="mt-2 max-w-xl text-sm text-rec">
+            Sing at a comfortable volume. Stop if a note causes pain or strain.
+          </p>
+          <div className="mt-5">
+            <Button variant="rec" size="lg" onClick={startFromGate}>
+              <IconMic /> Enable microphone
+            </Button>
+          </div>
+          {pitch.error && errorAt === null && (
+            <MicAlert
+              message={pitch.error}
+              className="mt-4 max-w-md text-sm text-rec"
+            />
+          )}
+          <ProWhisper className="mt-4" />
+        </Card>
+      )}
+
+      {view === "library" && (
+        <Library
+          progress={progress}
+          onSelect={selectExercise}
+          micReady={pitch.listening}
+          error={errorAt === null ? null : pitch.error}
+          errorExerciseId={errorAt}
+        />
+      )}
 
       {view === "session" && activeEx && (
         <ExercisePlayer

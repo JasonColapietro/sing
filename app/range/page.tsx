@@ -3,6 +3,7 @@ import { RangeTest } from "@/components/range/range-test";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { RANGE_GUIDE } from "@/lib/guides";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 const TITLE = "Free Vocal Range Test & Voice Type | Suede Sing";
 const DESCRIPTION =
@@ -31,6 +32,7 @@ export default function RangePage() {
   return (
     <>
       <RangeTest />
+      <RoomRailBand current="/range" />
       <ToolGuide guide={RANGE_GUIDE} />
     </>
   );

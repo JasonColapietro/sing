@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useAccountAuth } from "@/lib/use-account-auth";
 import {
   ACHIEVEMENTS,
   clearProgress,
@@ -22,6 +23,11 @@ import {
   SectionLabel,
   Stat,
 } from "@/components/ui";
+import { AccountSavePrompt } from "@/components/account/save-prompt";
+import {
+  AccountBackupControls,
+  AccountBackupSync,
+} from "./account-backup-sync";
 import { ProInlineNudge } from "@/components/pro/gate";
 import { streakChipState } from "@/components/nav";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
@@ -84,6 +90,77 @@ function UploadIcon() {
     >
       <path d="M12 15V3m0 0 4 4m-4-4-4 4M4 19h16" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Loading shell                                                       */
+/* ------------------------------------------------------------------ */
+
+/** One inert placeholder block. */
+function Bar({ className }: { className: string }) {
+  return <div className={`rounded bg-panel2 ${className}`} />;
+}
+
+/**
+ * What stands in for the dashboard until the client render below replaces it.
+ *
+ * The dashboard is client-only — see the `mounted` gate — so the server cannot
+ * know how tall it will be, and it is tall: 3,600–3,900px at 1280×900, with an
+ * empty record rendering *taller* than a full one because the empty states and
+ * the locked Pro panels are big. The old shell was a single centred "Loading
+ * your progress…" line, 402px of main. Swapping 402px for 3,887px on hydration
+ * threw the room rail (which PR #61 deliberately placed inside the first
+ * viewport) and the footer clean out of the viewport, and that one shift was
+ * this page's entire CLS: 0.40, against a 0.25 "poor" threshold.
+ *
+ * The reservation is a viewport rather than the dashboard's measured height, on
+ * purpose. Layout shift only scores what a visitor can actually see, so putting
+ * everything below this block under the fold at first paint is sufficient — and
+ * unlike a pixel figure copied off one screen size, `min-h-[100dvh]` stays
+ * correct at every screen size and cannot rot as the dashboard grows. It costs
+ * nothing in blank space either: the block is replaced a few hundred
+ * milliseconds later by a dashboard several times taller, for first-run
+ * visitors most of all.
+ *
+ * Shaped like the real thing — the four-card stat row, then the calendar —
+ * rather than an empty reservation, so the first paint reads as the page
+ * arriving instead of as a hole. Hidden from assistive tech, which gets the
+ * status line instead.
+ */
+export function DashboardSkeleton() {
+  return (
+    <div className="min-h-[100dvh]">
+      <p className="sr-only" role="status">
+        Loading your progress…
+      </p>
+      <div className="space-y-10" aria-hidden="true">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {["Level", "Streak", "Today", "Sessions"].map((label) => (
+            <Card key={label}>
+              <SectionLabel>{label}</SectionLabel>
+              <Bar className="mt-3 h-8 w-24" />
+              <Bar className="mt-3 h-2 w-full" />
+              <Bar className="mt-2 h-3 w-32" />
+            </Card>
+          ))}
+        </div>
+
+        <section>
+          <h2 className="mb-3 text-lg">Practice calendar</h2>
+          <Card>
+            <Bar className="h-32 w-full" />
+          </Card>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-lg">Trends</h2>
+          <Card>
+            <Bar className="h-40 w-full" />
+          </Card>
+        </section>
+      </div>
+    </div>
   );
 }
 
@@ -391,6 +468,12 @@ function SyncControls() {
 
 function DataControls() {
   const isPro = useIsPro();
+  const { isLoaded, isSignedIn } = useAccountAuth();
+  // Pro's own sync supersedes the account snapshot, so a Pro member is shown
+  // the sync controls and never both. Nothing waits on Clerk: while it is
+  // still loading this reads false and the card looks exactly as it did
+  // before accounts existed.
+  const accountBackup = isLoaded && isSignedIn && !isPro;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importNotice, setImportNotice] = useState<
     { kind: "ok" | "err"; text: string } | null
@@ -449,7 +532,9 @@ function DataControls() {
         <p className="mt-1.5 text-sm text-mut">
           {isPro
             ? "Progress syncs to the cloud automatically and follows your Pro key to any device. Export still works if you want a file of your own."
-            : "Progress lives only in this browser. Export a copy to back it up or move it to another device, then import it there."}
+            : accountBackup
+              ? "Your account keeps a copy of this record, so clearing this browser doesn't put you back at zero. Export still works if you want a file of your own."
+              : "Progress lives only in this browser. Export a copy to back it up or move it to another device, then import it there."}
         </p>
         <div className="mt-4 flex flex-wrap gap-2.5">
           <Button variant="outline" size="sm" onClick={handleExport}>
@@ -471,7 +556,10 @@ function DataControls() {
         {isPro ? (
           <SyncControls />
         ) : (
-          <div className="mt-3">
+          <div className="mt-3 space-y-3">
+            {accountBackup && <AccountBackupControls />}
+            {/* Still worth saying to a signed-in free user: a snapshot they
+                take is not the live mirror Pro pays for. */}
             <ProInlineNudge>
               Pro syncs progress across devices automatically
             </ProInlineNudge>
@@ -568,7 +656,7 @@ export function ProgressClient() {
         title="Progress"
         subtitle="XP, streaks, achievements, and a coach that reads your last two weeks of practice."
       >
-        <div className="py-20 text-center text-sm text-mut">Loading your progress…</div>
+        <DashboardSkeleton />
       </PageShell>
     );
   }
@@ -580,6 +668,10 @@ export function ProgressClient() {
       subtitle="XP, streaks, achievements, and a coach that reads your last two weeks of practice."
     >
       <div className="space-y-10">
+        {/* Keeps the signed-in singer's record backed up. Renders nothing and
+            never blocks; a signed-out visitor cannot tell it is here. */}
+        <AccountBackupSync />
+
         <section aria-label="Overview">
           <HeaderRow
             xp={state.xp}
@@ -611,6 +703,13 @@ export function ProgressClient() {
               />
             </div>
           )}
+          {/* Directly under the numbers it is talking about. The stat row above
+              is the whole practice record in four cards, so this is where its
+              loss is legible — and the nearest Pro surface is the locked chart
+              two sections down, far enough that neither is competing with the
+              other. `when` is false on a fresh dashboard, which also means this
+              and the empty state above can never both be on screen. */}
+          <AccountSavePrompt when={!isFresh} className="mt-4" />
         </section>
 
         <section aria-label="Practice calendar">

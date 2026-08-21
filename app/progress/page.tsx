@@ -1,5 +1,6 @@
 import { ProgressClient } from "@/components/progress/progress-client";
 import { SITE_URL } from "@/lib/site";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = {
   title: "Singing Progress Tracker — Range, Accuracy and Streaks",
@@ -9,5 +10,10 @@ export const metadata = {
 };
 
 export default function ProgressPage() {
-  return <ProgressClient />;
+  return (
+    <>
+      <ProgressClient />
+      <RoomRailBand current="/progress" />
+    </>
+  );
 }

@@ -2,6 +2,7 @@ import EarTrainingClient from "@/components/ear/ear-training-client";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { EAR_GUIDE } from "@/lib/guides";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = {
   title: "Ear Training for Singers — Pitch and Interval Games",
@@ -14,6 +15,7 @@ export default function EarTrainingPage() {
   return (
     <>
       <EarTrainingClient />
+      <RoomRailBand current="/ear-training" />
       <ToolGuide guide={EAR_GUIDE} />
     </>
   );

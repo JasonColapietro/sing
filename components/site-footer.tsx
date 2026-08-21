@@ -37,8 +37,10 @@ const PRACTICE: FooterLink[] = [
   { href: "/range", label: "Free vocal range test" },
   { href: "/ear-training", label: "Ear training" },
   // No longer header tabs of their own — the footer and /tools carry the
-  // crawl path into these rooms now.
-  { href: "/recorder", label: "Voice recorder" },
+  // crawl path into these rooms now. "Take recorder" is what the homepage room
+  // card and lib/guides.ts call it; a footer naming the same room differently
+  // splits the anchor text pointing at one URL, and reads as two rooms.
+  { href: "/recorder", label: "Take recorder" },
   { href: "/analyze", label: "Voice analyzer" },
   { href: "/progress", label: "Your progress" },
   { href: "/extension", label: "Chrome extension vocal coach" },

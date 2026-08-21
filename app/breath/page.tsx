@@ -2,6 +2,7 @@ import { BreathStudio } from "@/components/breath/breath-studio";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { BREATH_GUIDE } from "@/lib/guides";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = {
   title: "Breathing Exercises for Singers — Breath Support Training",
@@ -14,6 +15,7 @@ export default function BreathPage() {
   return (
     <>
       <BreathStudio />
+      <RoomRailBand current="/breath" />
       <ToolGuide guide={BREATH_GUIDE} />
     </>
   );

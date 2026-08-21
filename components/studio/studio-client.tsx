@@ -5,6 +5,7 @@ import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
+import { MicAlert } from "@/components/mic-alert";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
@@ -69,6 +70,35 @@ function fmtTime(sec: number): string {
   const s = sec % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
 }
+
+/** Tape label above the parts list, and the accessible name of that list. */
+const PARTS_LABEL = "Inside the studio";
+
+/**
+ * The four surfaces this room actually has. The mic card names all four in a
+ * single sentence, which is enough to sell the tuner and not enough to explain
+ * the rest: the in-tune window, what the trace is good for, and the fact that
+ * target practice keeps a record at all were only discoverable after the
+ * browser prompt. One line each, before the prompt instead of after it.
+ */
+const STUDIO_PARTS = [
+  {
+    name: "Tuner",
+    desc: "The note you are singing in large type, its frequency in hertz, and how many cents sharp or flat you are. A level meter under it confirms the mic is hearing you.",
+  },
+  {
+    name: "Cents gauge",
+    desc: "A needle that leaves center the moment you drift. Inside fifteen cents reads as in tune.",
+  },
+  {
+    name: "Pitch trace",
+    desc: "A scrolling line of your last eight seconds, so a wobble becomes something you can see instead of something you half heard.",
+  },
+  {
+    name: "Target practice",
+    desc: "Pick a note and hold it in tune until it locks. Locks in a row build a run, and your best session is kept on this device.",
+  },
+] as const;
 
 function MicIcon() {
   return (
@@ -265,25 +295,73 @@ export function StudioClient() {
       )}
 
       {!listening ? (
-        <Card className="mx-auto max-w-2xl py-10 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-line2 bg-panel2 text-amber-ink">
-            <MicIcon />
+        <>
+          <Card className="mx-auto max-w-2xl py-10 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-line2 bg-panel2 text-amber-ink">
+              <MicIcon />
+            </div>
+            <h2 className="mt-5 text-2xl">The voice oscilloscope</h2>
+            <p className="mx-auto mt-2 max-w-md text-mut">
+              Sing or hum any note and watch it land on the dial in real time —
+              note name, cents sharp or flat, and a scrolling trace of your last
+              eight seconds. Pick a target note to practice locking your pitch.
+            </p>
+            <p className="mt-2 text-xs text-dim">
+              Audio is analyzed on this device and never uploaded.
+            </p>
+            <Button
+              variant="rec"
+              size="lg"
+              className="mt-6"
+              onClick={handleStart}
+            >
+              Enable microphone
+            </Button>
+            {/* This card is the only control on the page, so the message has
+                always been where the singer was looking. It was a plain <p>
+                though, which meant a refused mic was silent to anyone using a
+                screen reader. */}
+            {error && (
+              <MicAlert message={error} className="mt-4 text-sm text-rec" />
+            )}
+            <ProWhisper className="mt-4" />
+          </Card>
+
+          {/*
+           * The card above is the only button on this page and it stays that
+           * way. This block sits under it so the room is legible before the
+           * browser prompt, not so it competes with the prompt.
+           */}
+          <div className="mx-auto mt-8 max-w-2xl">
+            <SectionLabel>{PARTS_LABEL}</SectionLabel>
+            {/*
+             * SectionLabel is a decorative span, not a heading, so without an
+             * explicit name this list announces as "list, 4 items" with no clue
+             * what it lists. Naming the list beats promoting the tape to a
+             * heading, which would put a second h2 on the page.
+             */}
+            <ul
+              aria-label={PARTS_LABEL}
+              className="mt-4 grid gap-3 sm:grid-cols-2"
+            >
+              {STUDIO_PARTS.map(({ name, desc }) => (
+                <li
+                  key={name}
+                  className="rounded-xl border border-line bg-panel2 p-4"
+                >
+                  <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
+                    {name}
+                  </h3>
+                  <p className="mt-2 text-sm text-mut">{desc}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-xs text-dim">
+              Practice logs to your XP once a session reaches {MIN_LOG_SEC}{" "}
+              seconds.
+            </p>
           </div>
-          <h2 className="mt-5 text-2xl">The voice oscilloscope</h2>
-          <p className="mx-auto mt-2 max-w-md text-mut">
-            Sing or hum any note and watch it land on the dial in real time —
-            note name, cents sharp or flat, and a scrolling trace of your last
-            eight seconds. Pick a target note to practice locking your pitch.
-          </p>
-          <p className="mt-2 text-xs text-dim">
-            Audio is analyzed on this device and never uploaded.
-          </p>
-          <Button variant="rec" size="lg" className="mt-6" onClick={handleStart}>
-            Enable microphone
-          </Button>
-          {error && <p className="mt-4 text-sm text-rec">{error}</p>}
-          <ProWhisper className="mt-4" />
-        </Card>
+        </>
       ) : (
         <>
           <div className="grid gap-4 lg:grid-cols-[380px_minmax(0,1fr)]">

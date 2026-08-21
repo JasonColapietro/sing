@@ -2,60 +2,28 @@
 
 import { useSyncExternalStore } from "react";
 import { classifyVoice } from "./audio/notes";
-import type { NoteTallies, RangeEntry } from "./analytics";
+import type { NoteTallies } from "./analytics";
+import {
+  clampXp,
+  DEFAULT_PROGRESS,
+  MAX_RANGE_HISTORY,
+  MAX_SESSIONS,
+  looksLikeProgress,
+  sanitizeProgress,
+} from "./progress-shape";
+import type {
+  ActivityType,
+  ProgressState,
+  SessionLog,
+  VocalRange,
+} from "./progress-shape";
 
-export type ActivityType =
-  | "warmup"
-  | "pitch"
-  | "range"
-  | "ear"
-  | "breath"
-  | "song"
-  | "recording"
-  | "tools"
-  | "analyze";
-
-export interface SessionLog {
-  id: string;
-  type: ActivityType;
-  /** ISO timestamp. */
-  date: string;
-  /** Local calendar day, YYYY-MM-DD. */
-  day: string;
-  durationSec: number;
-  /** 0..100 where the activity produces a score. */
-  score?: number;
-  /** Short human-readable note, e.g. exercise name or song title. */
-  detail?: string;
-  xp: number;
-  /**
-   * Per-note accuracy for exercises that score against target pitches,
-   * folded to one tally per MIDI note. Absent for activities with no target
-   * (free singing, the metronome) and for sessions logged before Pro
-   * analytics existed.
-   */
-  notes?: NoteTallies;
-}
-
-export interface VocalRange {
-  lowMidi?: number;
-  highMidi?: number;
-  voiceType?: string;
-  voiceTypeLabel?: string;
-  testedAt?: string;
-}
-
-export interface ProgressState {
-  xp: number;
-  sessions: SessionLog[];
-  streak: { current: number; best: number; lastDay: string | null };
-  /** The most recent range test. */
-  range: VocalRange;
-  /** Every range test, oldest first — `range` is just the last of these. */
-  rangeHistory: RangeEntry[];
-  /** Unlocked achievement ids. */
-  achievements: string[];
-}
+// The shape and its validators live in ./progress-shape so a server route can
+// import them without dragging this `"use client"` module along. Re-exported
+// here because `@/lib/progress` is where the rest of the app has always asked
+// for them.
+export type { ActivityType, ProgressState, SessionLog, VocalRange };
+export { ACTIVITY_TYPES } from "./progress-shape";
 
 export interface Achievement {
   id: string;
@@ -67,14 +35,7 @@ export interface Achievement {
 
 const KEY = "suede-sing:progress:v1";
 
-const DEFAULT: ProgressState = {
-  xp: 0,
-  sessions: [],
-  streak: { current: 0, best: 0, lastDay: null },
-  range: {},
-  rangeHistory: [],
-  achievements: [],
-};
+const DEFAULT = DEFAULT_PROGRESS;
 
 let cache: ProgressState | null = null;
 const listeners = new Set<() => void>();
@@ -95,8 +56,10 @@ export function localDay(d = new Date()): string {
 /**
  * Backfills fields added after the store first shipped.
  *
- * Never mutate the incoming arrays: `{ ...DEFAULT }` copies references, so a
- * push would corrupt DEFAULT for every later load in the page session.
+ * Runs after sanitizeProgress, so it can trust the shape and only has to worry
+ * about what is missing. Returns a new state rather than mutating the one it
+ * was handed — nothing here should be able to surprise a caller that kept a
+ * reference to the input.
  */
 function migrate(state: ProgressState): ProgressState {
   // Range history used to be a single latest-only measurement. Seed it from
@@ -122,18 +85,32 @@ function migrate(state: ProgressState): ProgressState {
   return state;
 }
 
+/**
+ * Reads the stored record, repairing whatever it finds.
+ *
+ * localStorage is not a trusted input. It survives releases that rename fields,
+ * a half-written write, another tab on an older build, and anyone who opens
+ * devtools — and a syntactically valid record with the wrong shape underneath
+ * used to sail straight through into consumers that assumed otherwise. One
+ * session with an unrecognised `type` was enough to put /progress in its error
+ * boundary, which loses the singer a page that was working a moment ago in
+ * order to protect a row that was already junk.
+ *
+ * So every read goes through sanitizeProgress: keep what is still meaningful,
+ * drop what isn't, and never hand a consumer a field that lies about its type.
+ *
+ * The repaired state is deliberately not written back. The bytes on disk are
+ * the only copy the singer has, and a future migration may understand them
+ * better than this one does; the next real save heals the record anyway.
+ */
 function load(): ProgressState {
   if (cache) return cache;
   if (typeof window === "undefined") return DEFAULT;
   try {
     const raw = window.localStorage.getItem(KEY);
-    cache = migrate(
-      raw
-        ? { ...DEFAULT, ...(JSON.parse(raw) as Partial<ProgressState>) }
-        : { ...DEFAULT },
-    );
+    cache = migrate(sanitizeProgress(raw ? JSON.parse(raw) : null));
   } catch {
-    cache = { ...DEFAULT };
+    cache = sanitizeProgress(null);
   }
   return cache;
 }
@@ -197,6 +174,9 @@ function xpThreshold(level: number): number {
   return 40 * level * (level + 1);
 }
 
+/** The last rung. XP past xpThreshold(MAX_LEVEL) buys nothing. */
+const MAX_LEVEL = 60;
+
 export function levelForXp(xp: number): {
   level: number;
   title: string;
@@ -205,18 +185,25 @@ export function levelForXp(xp: number): {
   /** 0..1 progress through the current level. */
   progress: number;
 } {
+  // The store behind this has survived hand edits, imported backups and a
+  // merge that sums another device's numbers, so the argument is untrusted
+  // even though it is typed. clampXp is the store's own bound, applied here so
+  // the card can never be handed a total the ladder has no rung for.
+  const total = clampXp(xp);
   let level = 1;
-  while (level < 60 && xp >= xpThreshold(level)) level++;
+  while (level < MAX_LEVEL && total >= xpThreshold(level)) level++;
   const floor = level === 1 ? 0 : xpThreshold(level - 1);
-  const ceil = xpThreshold(level);
-  const intoLevel = xp - floor;
-  const span = ceil - floor;
+  const span = xpThreshold(level) - floor;
+  // Below the cap this is just `total - floor`. At the cap there is no next
+  // level to count down to, so XP beyond it fills the bar instead of driving
+  // the remainder negative.
+  const intoLevel = Math.min(total - floor, span);
   return {
     level,
     title: LEVEL_TITLES[Math.min(level - 1, LEVEL_TITLES.length - 1)],
     intoLevel,
-    toNext: ceil - xp,
-    progress: Math.min(1, intoLevel / span),
+    toNext: span - intoLevel,
+    progress: intoLevel / span,
   };
 }
 
@@ -415,7 +402,7 @@ export function logSession(input: {
   const next: ProgressState = {
     ...prev,
     xp: prev.xp + xp,
-    sessions: [session, ...prev.sessions].slice(0, 500),
+    sessions: [session, ...prev.sessions].slice(0, MAX_SESSIONS),
     streak: { current, best, lastDay: day },
   };
   const newAchievements = unlockAchievements(next);
@@ -448,7 +435,7 @@ export function setVocalRange(lowMidi: number, highMidi: number): LogResult {
     rangeHistory: [
       ...prev.rangeHistory,
       { lowMidi, highMidi, voiceTypeLabel: voice.label, testedAt },
-    ].slice(-60),
+    ].slice(-MAX_RANGE_HISTORY),
   };
   const newAchievements = unlockAchievements(next);
   save(next);
@@ -461,7 +448,10 @@ export function todayPracticeSec(s: ProgressState = load()): number {
 
 /** Wipe all progress. Ask the user to confirm before calling. */
 export function clearProgress(): void {
-  save({ ...DEFAULT, sessions: [], achievements: [] });
+  // A fresh state rather than a spread of DEFAULT: the spread would share
+  // DEFAULT's nested streak/range objects with the live store, and DEFAULT is
+  // now a const other modules hold too.
+  save(sanitizeProgress(null));
 }
 
 /** Export progress as a JSON string (for backup / transfer). */
@@ -469,12 +459,33 @@ export function exportProgress(): string {
   return JSON.stringify(load(), null, 2);
 }
 
-/** Import progress from a JSON string. Returns false if it doesn't parse. */
+/**
+ * Import progress from a JSON string. Returns false if the file isn't one of
+ * ours, which is the caller's cue to say so and change nothing.
+ *
+ * Repaired on the way in for the same reason a stored record is: a backup file
+ * is a stored record that took a detour through a filesystem, and it can be
+ * just as stale or just as hand-edited. What repair must not do is run on a
+ * file that was never a practice record. sanitizeProgress accepts any object
+ * and returns an empty state for one it cannot read, so importing a
+ * package.json — or anything else in the file picker — used to overwrite a
+ * singer's whole record with zeros and report "Progress imported". An import
+ * that silently erases is worse than one that refuses, and the erase control
+ * on this same page makes you type the word "erase" for that outcome.
+ *
+ * looksLikeProgress is the identity check, and it stops at identity on
+ * purpose: a real first-release export carries no `rangeHistory` key at all,
+ * so anything stricter would reject the very backups this feature exists to
+ * restore.
+ *
+ * migrate() runs here as well as in load(), so an old export shows its
+ * backfilled range chart immediately rather than only after the next reload.
+ */
 export function importProgress(json: string): boolean {
   try {
-    const parsed = JSON.parse(json) as Partial<ProgressState>;
-    if (typeof parsed !== "object" || parsed === null) return false;
-    save({ ...DEFAULT, ...parsed });
+    const parsed: unknown = JSON.parse(json);
+    if (!looksLikeProgress(parsed)) return false;
+    save(migrate(sanitizeProgress(parsed)));
     return true;
   } catch {
     return false;
@@ -482,10 +493,6 @@ export function importProgress(json: string): boolean {
 }
 
 /* ------------------------------------------------------------------ merge */
-
-function asArray<T>(value: unknown): T[] {
-  return Array.isArray(value) ? (value as T[]) : [];
-}
 
 /** Consecutive practice days ending at the newest session day. */
 function streakFromSessions(sessions: SessionLog[]): number {
@@ -512,15 +519,17 @@ function streakFromSessions(sessions: SessionLog[]): number {
 export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
   const local = load();
   if (typeof remoteRaw !== "object" || remoteRaw === null) return local;
-  const remote = remoteRaw as Partial<ProgressState>;
+  // The other device is no more trustworthy than our own localStorage — it may
+  // be a tab on an older build, and whatever it sends lands in the state this
+  // page renders. Repair it on arrival, same as a local read. sanitizeProgress
+  // is idempotent, so two healthy devices merge exactly as they did before.
+  const remote = sanitizeProgress(remoteRaw);
 
   // Sessions: union by id. Same id means the same session (ids are minted
   // once at log time); on collision prefer whichever copy carries notes.
   const byId = new Map<string, SessionLog>();
-  for (const s of asArray<SessionLog>(remote.sessions)) {
-    if (s && typeof s.id === "string" && typeof s.day === "string") {
-      byId.set(s.id, s);
-    }
+  for (const s of remote.sessions) {
+    byId.set(s.id, s);
   }
   for (const s of local.sessions) {
     const other = byId.get(s.id);
@@ -528,76 +537,53 @@ export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
   }
   const sessions = [...byId.values()]
     .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
-    .slice(0, 500);
+    .slice(0, MAX_SESSIONS);
 
   const achievements = [
-    ...new Set([
-      ...local.achievements,
-      ...asArray<string>(remote.achievements).filter(
-        (a) => typeof a === "string",
-      ),
-    ]),
+    ...new Set([...local.achievements, ...remote.achievements]),
   ];
 
   // Range history: testedAt is minted per test, so it works as an id.
   const historyByTest = new Map(
-    [...asArray<VocalRange & { testedAt: string }>(remote.rangeHistory), ...local.rangeHistory]
-      .filter(
-        (e) =>
-          e &&
-          typeof e.testedAt === "string" &&
-          typeof e.lowMidi === "number" &&
-          typeof e.highMidi === "number",
-      )
-      .map((e) => [e.testedAt, e] as const),
+    [...remote.rangeHistory, ...local.rangeHistory].map(
+      (e) => [e.testedAt, e] as const,
+    ),
   );
   const rangeHistory = [...historyByTest.values()]
     .sort((a, b) => Date.parse(a.testedAt) - Date.parse(b.testedAt))
-    .slice(-60) as ProgressState["rangeHistory"];
+    .slice(-MAX_RANGE_HISTORY);
 
   // Latest measurement wins wholesale, keeping voiceType consistent with it.
   const localTested = Date.parse(local.range.testedAt ?? "");
-  const remoteTested = Date.parse(
-    (remote.range as VocalRange | undefined)?.testedAt ?? "",
-  );
+  const remoteTested = Date.parse(remote.range.testedAt ?? "");
   const range =
     Number.isNaN(remoteTested) || remoteTested <= (localTested || 0)
       ? local.range
-      : { ...(remote.range as VocalRange) };
+      : { ...remote.range };
 
   // XP: recomputing from the merged work credits both devices exactly; the
   // max() floor guarantees no device ever watches its number go down.
   const recomputedXp =
-    sessions.reduce((a, s) => a + (typeof s.xp === "number" ? s.xp : 0), 0) +
-    30 * achievements.length;
-  const xp = Math.max(
-    local.xp,
-    typeof remote.xp === "number" ? remote.xp : 0,
-    recomputedXp,
-  );
+    sessions.reduce((a, s) => a + s.xp, 0) + 30 * achievements.length;
+  // Clamped because this total is saved straight to the store: the sum of 500
+  // sessions' xp fields skips sanitizeProgress on the way in, and a backup can
+  // put any finite number in every one of them.
+  const xp = clampXp(Math.max(local.xp, remote.xp, recomputedXp));
 
   const remoteStreak = remote.streak;
   const lastDay =
-    [local.streak.lastDay, remoteStreak?.lastDay]
+    [local.streak.lastDay, remoteStreak.lastDay]
       .filter((d): d is string => typeof d === "string")
       .sort()
       .pop() ?? null;
   const current = Math.max(
     streakFromSessions(sessions),
     lastDay === local.streak.lastDay ? local.streak.current : 0,
-    lastDay === remoteStreak?.lastDay &&
-      typeof remoteStreak?.current === "number"
-      ? remoteStreak.current
-      : 0,
+    lastDay === remoteStreak.lastDay ? remoteStreak.current : 0,
   );
-  const best = Math.max(
-    local.streak.best,
-    typeof remoteStreak?.best === "number" ? remoteStreak.best : 0,
-    current,
-  );
+  const best = Math.max(local.streak.best, remoteStreak.best, current);
 
   const next: ProgressState = {
-    ...DEFAULT,
     xp,
     sessions,
     streak: { current, best, lastDay },
