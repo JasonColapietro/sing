@@ -337,11 +337,23 @@ export default function Nav() {
                   Suede Sing
                 </span>
               </Link>
+              {/* 44x44, because p-2 around an 18px glyph gave a 34px tap
+                  target — under Apple's minimum on the one control a phone
+                  reaches for most. The glyph stays 18px and the negative
+                  margin spends the extra width into the row's own px-4
+                  gutter, so the X sits where it always did and the row gets
+                  no wider.
+
+                  The square overlay is the hit region. `rounded-full` shapes
+                  the global focus ring, but border-radius clips pointer
+                  hit-testing too, which would leave the four corners of the
+                  new box dead — a fifth of it. iOS does the same thing:
+                  round button, square target. */}
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
                 aria-label="Close menu"
-                className="rounded-full p-2 text-mut hover:text-ink"
+                className="relative -mr-1 flex size-11 shrink-0 items-center justify-center rounded-full text-mut after:absolute after:inset-0 hover:text-ink"
               >
                 <CloseIcon />
               </button>
