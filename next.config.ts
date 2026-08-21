@@ -22,6 +22,17 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
 
+      {
+        // Same failure, other taxonomy. slugify() folds "&" to "and", so "R&B"
+        // is served at /singers/genre/randb — a slug nobody guesses. /llms.txt
+        // advertised /singers/genre/r-b to answer engines for months (fixed in
+        // the same PR as this line), so that URL is already in crawler and
+        // model memory and needs somewhere real to land.
+        source: "/singers/genre/r-b",
+        destination: "/singers/genre/randb",
+        permanent: true,
+      },
+
       // --- Legacy paths Google still holds for this host (2026-08-08) ---
       // The 2026-08-02 consolidation moved the brand's marketing home from
       // print.suedeai.ai to this host. Google kept asking this host for the
