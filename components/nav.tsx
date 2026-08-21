@@ -249,6 +249,24 @@ export default function Nav() {
   // person who needs the way back in.
   const worthSaving = hasSomethingToSave(p);
   const streak = streakChipState(p.streak);
+  // The fade on the right edge of the tab row is a scroll hint, so it should
+  // only exist when there is something to scroll. Adding the account button
+  // narrowed the row by 44px, which pushed "Progress" under a fade it could
+  // never be scrolled out from behind: at 1280px the row does not overflow, so
+  // the last tab sat permanently half-erased with no way to reveal it.
+  const tabsRef = useRef<HTMLElement>(null);
+  const [tabsOverflow, setTabsOverflow] = useState(false);
+  useEffect(() => {
+    const el = tabsRef.current;
+    if (!el) return;
+    const measure = () =>
+      setTabsOverflow(el.scrollWidth > el.clientWidth + 1);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   useModalFocus(menuOpen, drawerRef);
@@ -465,7 +483,12 @@ export default function Nav() {
           {/* Desktop / tablet: scrollable link row, unchanged from before */}
           <nav
             aria-label="Main"
-            className="no-scrollbar hidden flex-1 items-center gap-1 overflow-x-auto sm:flex [mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
+            ref={tabsRef}
+            className={`no-scrollbar hidden flex-1 items-center gap-1 overflow-x-auto sm:flex ${
+              tabsOverflow
+                ? "[mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
+                : ""
+            }`}
           >
             {LINKS.map((l) => {
               const active = isActiveLink(l, pathname);

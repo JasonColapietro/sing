@@ -40,6 +40,19 @@ export const viewport: Viewport = {
   themeColor: "#f7f0e7",
 };
 
+/**
+ * Clerk names the sign-in card after the *application*, and Vercel's
+ * marketplace install auto-generated that name, so the card greeted singers
+ * with "Sign in to clerk-canary-button". Renaming it in the Clerk dashboard
+ * would also work, but it is a setting in someone else's console that nothing
+ * in this repo can hold in place. Pinning the strings here means the product
+ * name cannot drift out from under the UI again.
+ */
+const CLERK_COPY = {
+  signIn: { start: { title: "Sign in to Suede Sing" } },
+  signUp: { start: { title: "Create your Suede Sing account" } },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -52,7 +65,7 @@ export default function RootLayout({
         {/* Inside <body>, per Clerk Core 3 — wrapping <html> is the old shape
             and breaks. It only reads the session; nothing under it is gated,
             and a signed-out visitor sees the whole site as before. */}
-        <ClerkProvider>
+        <ClerkProvider localization={CLERK_COPY}>
           {/* Sixteen tabbable elements sit ahead of the content on every page —
               the twelve-room nav plus the Pro and progress links — so a keyboard
               or screen-reader user crossed all of them again on every
