@@ -7,6 +7,7 @@ import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { SONGS_GUIDE } from "@/lib/guides";
 import { LinkButton, SectionLabel } from "@/components/ui";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 // Derived from the arrays rather than written down, so the counts cannot go
 // stale as the songbook grows.
@@ -76,6 +77,7 @@ export default function SongsPage() {
         </div>
       </section>
 
+      <RoomRailBand current="/songs" />
       <ToolGuide guide={SONGS_GUIDE} />
     </>
   );

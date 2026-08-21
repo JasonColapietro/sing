@@ -2,6 +2,7 @@ import RecorderPageClient from "@/components/recorder/recorder-page";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { RECORDER_GUIDE } from "@/lib/guides";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = {
   title: "Voice Recorder for Singing Practice",
@@ -14,6 +15,7 @@ export default function RecorderPage() {
   return (
     <>
       <RecorderPageClient />
+      <RoomRailBand current="/recorder" />
       <ToolGuide guide={RECORDER_GUIDE} />
     </>
   );

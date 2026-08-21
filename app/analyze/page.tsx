@@ -2,6 +2,7 @@ import AnalyzeClient from "@/components/analyze/analyze-client";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { ANALYZE_GUIDE } from "@/lib/guides";
+import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = {
   title: "Voice Spectrogram and Tone Analyzer — See Your Own Harmonics",
@@ -14,6 +15,7 @@ export default function AnalyzePage() {
   return (
     <>
       <AnalyzeClient />
+      <RoomRailBand current="/analyze" />
       <ToolGuide guide={ANALYZE_GUIDE} />
     </>
   );

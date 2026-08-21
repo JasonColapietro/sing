@@ -9,6 +9,7 @@ import {
   computeRootLadder,
   estimateMinutes,
   type WarmupExercise,
+  type WarmupTier,
 } from "./exercises";
 import type { ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
@@ -25,6 +26,19 @@ const PACK_TEASERS = [
   { name: "Morning reset", desc: "A gentle 6-minute wake-up for rough days." },
 ];
 
+/** One line of orientation per tier. TIER_LABELS alone ("Tier 2 · Building")
+ *  tells a first-time visitor nothing about who the tier is for. Each line
+ *  describes the exercises actually filed under that tier below, so it stays
+ *  checkable against the catalogue instead of reading like a brochure. */
+const TIER_BLURBS: Record<WarmupTier, string> = {
+  beginner:
+    "Short ladders on hums and easy vowels. Start here if you have never warmed up on purpose.",
+  intermediate:
+    "Wider intervals, a minor ladder, and your first siren. The everyday middle of a practice session.",
+  advanced:
+    "A full-octave siren and clean sixth leaps, for a voice that is already moving freely.",
+};
+
 function isRecentlyDone(ex: WarmupExercise, progress: ProgressState): boolean {
   const now = Date.now();
   return progress.sessions.some(
@@ -38,9 +52,14 @@ function isRecentlyDone(ex: WarmupExercise, progress: ProgressState): boolean {
 export function Library({
   progress,
   onSelect,
+  micReady,
 }: {
   progress: ProgressState;
   onSelect: (ex: WarmupExercise) => void;
+  /** False until mic permission lands. The cards look identical either way;
+   *  only the announced description changes, so a screen reader user hears
+   *  that the button asks for a microphone before they press it. */
+  micReady: boolean;
 }) {
   const isPro = useIsPro();
 
@@ -53,6 +72,7 @@ export function Library({
         key={ex.id}
         type="button"
         onClick={() => onSelect(ex)}
+        aria-describedby={micReady ? undefined : "warmups-mic-note"}
         className="text-left"
       >
         <Card className="h-full transition-colors hover:border-amber/40">
@@ -103,7 +123,14 @@ export function Library({
         if (exercises.length === 0) return null;
         return (
           <section key={tier}>
-            <SectionLabel>{TIER_LABELS[tier]}</SectionLabel>
+            <div className="flex flex-wrap items-center gap-2">
+              <SectionLabel>{TIER_LABELS[tier]}</SectionLabel>
+              {/* Counted, never a literal, so the number cannot drift from the catalogue. */}
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                {exercises.length} exercises
+              </span>
+            </div>
+            <p className="mt-2 max-w-xl text-sm text-mut">{TIER_BLURBS[tier]}</p>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {exercises.map(exerciseCard)}
             </div>
