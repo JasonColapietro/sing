@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import {
   ACHIEVEMENTS,
   clearProgress,
@@ -22,6 +23,11 @@ import {
   SectionLabel,
   Stat,
 } from "@/components/ui";
+import { AccountSavePrompt } from "@/components/account/save-prompt";
+import {
+  AccountBackupControls,
+  AccountBackupSync,
+} from "./account-backup-sync";
 import { ProInlineNudge } from "@/components/pro/gate";
 import { streakChipState } from "@/components/nav";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
@@ -391,6 +397,12 @@ function SyncControls() {
 
 function DataControls() {
   const isPro = useIsPro();
+  const { isLoaded, isSignedIn } = useAuth();
+  // Pro's own sync supersedes the account snapshot, so a Pro member is shown
+  // the sync controls and never both. Nothing waits on Clerk: while it is
+  // still loading this reads false and the card looks exactly as it did
+  // before accounts existed.
+  const accountBackup = isLoaded && isSignedIn && !isPro;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importNotice, setImportNotice] = useState<
     { kind: "ok" | "err"; text: string } | null
@@ -449,7 +461,9 @@ function DataControls() {
         <p className="mt-1.5 text-sm text-mut">
           {isPro
             ? "Progress syncs to the cloud automatically and follows your Pro key to any device. Export still works if you want a file of your own."
-            : "Progress lives only in this browser. Export a copy to back it up or move it to another device, then import it there."}
+            : accountBackup
+              ? "Your account keeps a copy of this record, so clearing this browser doesn't put you back at zero. Export still works if you want a file of your own."
+              : "Progress lives only in this browser. Export a copy to back it up or move it to another device, then import it there."}
         </p>
         <div className="mt-4 flex flex-wrap gap-2.5">
           <Button variant="outline" size="sm" onClick={handleExport}>
@@ -471,7 +485,10 @@ function DataControls() {
         {isPro ? (
           <SyncControls />
         ) : (
-          <div className="mt-3">
+          <div className="mt-3 space-y-3">
+            {accountBackup && <AccountBackupControls />}
+            {/* Still worth saying to a signed-in free user: a snapshot they
+                take is not the live mirror Pro pays for. */}
             <ProInlineNudge>
               Pro syncs progress across devices automatically
             </ProInlineNudge>
@@ -580,6 +597,10 @@ export function ProgressClient() {
       subtitle="XP, streaks, achievements, and a coach that reads your last two weeks of practice."
     >
       <div className="space-y-10">
+        {/* Keeps the signed-in singer's record backed up. Renders nothing and
+            never blocks; a signed-out visitor cannot tell it is here. */}
+        <AccountBackupSync />
+
         <section aria-label="Overview">
           <HeaderRow
             xp={state.xp}
@@ -611,6 +632,13 @@ export function ProgressClient() {
               />
             </div>
           )}
+          {/* Directly under the numbers it is talking about. The stat row above
+              is the whole practice record in four cards, so this is where its
+              loss is legible — and the nearest Pro surface is the locked chart
+              two sections down, far enough that neither is competing with the
+              other. `when` is false on a fresh dashboard, which also means this
+              and the empty state above can never both be on screen. */}
+          <AccountSavePrompt when={!isFresh} className="mt-4" />
         </section>
 
         <section aria-label="Practice calendar">
