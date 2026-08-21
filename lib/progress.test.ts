@@ -428,3 +428,176 @@ describe("a record written by the first release still loads", () => {
     expect(getState().rangeHistory[0].testedAt).toBe("2026-06-01T09:00:00.000Z");
   });
 });
+
+describe("importProgress refuses a file that is not a practice record", () => {
+  /**
+   * The defect this pins: importProgress ran sanitizeProgress, the *repair*
+   * function, on whatever the file picker handed it. Repair accepts any object
+   * and returns an empty record for one it cannot read, so choosing the wrong
+   * file replaced a singer's entire practice with zeros — and the page then
+   * said "Progress imported. Your dashboard is now up to date."
+   *
+   * The erase control two cards down makes you type the word "erase" to reach
+   * the same end state. This one got there from a mis-click in a file dialog.
+   */
+  const REAL = JSON.stringify({
+    xp: 150,
+    sessions: [
+      {
+        id: "1730000000000-123456",
+        type: "warmup",
+        date: "2026-05-01T09:00:00.000Z",
+        day: "2026-05-01",
+        durationSec: 300,
+        xp: 55,
+      },
+    ],
+    streak: { current: 1, best: 4, lastDay: "2026-05-01" },
+    range: {},
+    rangeHistory: [],
+    achievements: ["first-note"],
+  });
+
+  /** Any other file on the machine. Valid JSON, an object, not ours. */
+  const NOT_OURS = JSON.stringify({
+    name: "sing",
+    version: "0.1.0",
+    private: true,
+    scripts: { dev: "next dev" },
+  });
+
+  it("returns false and leaves the existing record untouched", async () => {
+    const { importProgress, getState } = await withStoredRecord(REAL);
+    expect(getState().xp).toBe(150);
+
+    expect(importProgress(NOT_OURS)).toBe(false);
+
+    // The whole point: nothing moved.
+    expect(getState().xp).toBe(150);
+    expect(getState().sessions).toHaveLength(1);
+    expect(getState().achievements).toEqual(["first-note"]);
+  });
+
+  it("refuses the shapes a file picker can realistically produce", async () => {
+    const { importProgress, getState } = await withStoredRecord(REAL);
+    for (const junk of [
+      "null",
+      "[]",
+      '"a string"',
+      "42",
+      "{}",
+      "not json at all",
+      JSON.stringify({ xp: "150", sessions: [] }), // xp present but not a number
+      JSON.stringify({ xp: 150 }), // no sessions
+      JSON.stringify({ sessions: [] }), // no xp
+    ]) {
+      expect(importProgress(junk), `should refuse ${junk}`).toBe(false);
+    }
+    expect(getState().xp).toBe(150);
+  });
+
+  it("still accepts a genuine first-release export, which has no rangeHistory", async () => {
+    // The reason import cannot simply borrow checkProgress: this file is a
+    // real backup and checkProgress rejects it for the missing key.
+    const V1_EXPORT = JSON.stringify({
+      xp: 150,
+      sessions: [],
+      streak: { current: 1, best: 4, lastDay: "2026-05-01" },
+      range: {
+        lowMidi: 45,
+        highMidi: 69,
+        voiceTypeLabel: "Baritone",
+        testedAt: "2026-05-01T09:10:00.000Z",
+      },
+      achievements: ["first-note"],
+    });
+
+    const { importProgress, getState } = await withStoredRecord("{}");
+    expect(importProgress(V1_EXPORT)).toBe(true);
+    expect(getState().xp).toBe(150);
+    // migrate() runs on the imported record too, so the chart is seeded now
+    // rather than only after the next page load.
+    expect(getState().rangeHistory).toEqual([
+      {
+        lowMidi: 45,
+        highMidi: 69,
+        voiceTypeLabel: "Baritone",
+        testedAt: "2026-05-01T09:10:00.000Z",
+      },
+    ]);
+  });
+
+  it("still repairs a record that is ours but damaged, rather than refusing it", async () => {
+    // Identity, not completeness: this one is recognisably ours, so the junk
+    // session is dropped and the rest survives.
+    const OURS_BUT_BENT = JSON.stringify({
+      xp: 90,
+      sessions: [{ id: "s0", kind: "warmup", sec: 300 }],
+      streak: { current: 2, best: 2, lastDay: "2026-05-01" },
+      range: { low: "C3" },
+      achievements: ["first-note"],
+    });
+
+    const { importProgress, getState } = await withStoredRecord("{}");
+    expect(importProgress(OURS_BUT_BENT)).toBe(true);
+    expect(getState().xp).toBe(90);
+    expect(getState().sessions).toEqual([]);
+    expect(getState().achievements).toEqual(["first-note"]);
+  });
+});
+
+describe("a record whose sessions could overflow the XP sum", () => {
+  /**
+   * mergeRemoteProgress recomputes the total by summing every session's xp and
+   * takes max() against what each device already had, on the promise that "no
+   * device ever watches its number go down". Per-session xp used to be
+   * unbounded, so 500 sessions of 1e306 summed to Infinity — and clampXp sends
+   * a non-finite value to 0, which is the number going down as far as it can.
+   *
+   * Bounding each session at MAX_XP keeps the worst-case sum finite
+   * (500 x 10,000,000 = 5e9), so the record clamps to the ceiling instead.
+   */
+  const HUGE = JSON.stringify({
+    xp: 500,
+    sessions: Array.from({ length: 500 }, (_, i) => ({
+      id: `s${i}`,
+      type: "warmup",
+      date: "2026-05-01T09:00:00.000Z",
+      day: "2026-05-01",
+      durationSec: 300,
+      xp: 1e306,
+    })),
+    streak: { current: 1, best: 1, lastDay: "2026-05-01" },
+    range: {},
+    rangeHistory: [],
+    achievements: [],
+  });
+
+  it("keeps every session's xp finite, so the sum cannot overflow", async () => {
+    const { getState } = await withStoredRecord(HUGE);
+    const total = getState().sessions.reduce((a, s) => a + s.xp, 0);
+    expect(Number.isFinite(total)).toBe(true);
+    expect(getState().sessions.every((s) => s.xp <= 10_000_000)).toBe(true);
+  });
+
+  it("merges to the ceiling rather than to zero", async () => {
+    // The sum only happens in mergeRemoteProgress, so that is where the
+    // overflow lived. A device with a modest record pulls the huge one in.
+    const { mergeRemoteProgress, getState } = await withStoredRecord(
+      JSON.stringify({
+        xp: 500,
+        sessions: [],
+        streak: { current: 1, best: 1, lastDay: "2026-05-01" },
+        range: {},
+        rangeHistory: [],
+        achievements: [],
+      }),
+    );
+    mergeRemoteProgress(JSON.parse(HUGE));
+    const merged = getState().xp;
+    expect(Number.isFinite(merged)).toBe(true);
+    expect(merged).toBe(10_000_000);
+    // The merge's own promise: never below what this device already had.
+    expect(merged).toBeGreaterThanOrEqual(500);
+  });
+});

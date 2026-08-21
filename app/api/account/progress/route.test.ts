@@ -131,6 +131,20 @@ describe("PUT /api/account/progress", () => {
     expect(rangeCap.error).toBe("Too many range tests to back up.");
   });
 
+  it("refuses an xp total over the cap, like the other three caps", async () => {
+    // The store declares four caps and used to enforce three. An xp of 1e15
+    // passed every check and was written to Redis, where it sat as a number
+    // sanitizeProgress clamps away on every read — invisible, self-healing,
+    // and still not what this route says it does with over-cap payloads.
+    const { status, error } = await statusAndError({ ...healthy(), xp: 1e15 });
+    expect(status).toBe(413);
+    expect(error).toBe("That XP total is too large to back up.");
+
+    // The cap itself is still acceptable — this is a ceiling, not a fence.
+    const atCap = await statusAndError({ ...healthy(), xp: 10_000_000 });
+    expect(atCap.status).toBe(200);
+  });
+
   it("still refuses a payload too large in bytes, which shape alone cannot catch", async () => {
     // 500 legal sessions, each with a maxed-out note tally: passes every shape
     // check and still serializes far past what Redis should ever see.

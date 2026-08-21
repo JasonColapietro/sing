@@ -8,6 +8,7 @@ import {
   DEFAULT_PROGRESS,
   MAX_RANGE_HISTORY,
   MAX_SESSIONS,
+  looksLikeProgress,
   sanitizeProgress,
 } from "./progress-shape";
 import type {
@@ -459,17 +460,32 @@ export function exportProgress(): string {
 }
 
 /**
- * Import progress from a JSON string. Returns false if it doesn't parse.
+ * Import progress from a JSON string. Returns false if the file isn't one of
+ * ours, which is the caller's cue to say so and change nothing.
  *
  * Repaired on the way in for the same reason a stored record is: a backup file
  * is a stored record that took a detour through a filesystem, and it can be
- * just as stale or just as hand-edited.
+ * just as stale or just as hand-edited. What repair must not do is run on a
+ * file that was never a practice record. sanitizeProgress accepts any object
+ * and returns an empty state for one it cannot read, so importing a
+ * package.json — or anything else in the file picker — used to overwrite a
+ * singer's whole record with zeros and report "Progress imported". An import
+ * that silently erases is worse than one that refuses, and the erase control
+ * on this same page makes you type the word "erase" for that outcome.
+ *
+ * looksLikeProgress is the identity check, and it stops at identity on
+ * purpose: a real first-release export carries no `rangeHistory` key at all,
+ * so anything stricter would reject the very backups this feature exists to
+ * restore.
+ *
+ * migrate() runs here as well as in load(), so an old export shows its
+ * backfilled range chart immediately rather than only after the next reload.
  */
 export function importProgress(json: string): boolean {
   try {
     const parsed: unknown = JSON.parse(json);
-    if (typeof parsed !== "object" || parsed === null) return false;
-    save(sanitizeProgress(parsed));
+    if (!looksLikeProgress(parsed)) return false;
+    save(migrate(sanitizeProgress(parsed)));
     return true;
   } catch {
     return false;
