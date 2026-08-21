@@ -51,8 +51,11 @@ describe("load() against a corrupt record", () => {
   /**
    * The shape that took /progress down in production: valid JSON, right field
    * names at the top level, wrong shape underneath. `sessions[0]` carries the
-   * pre-release `kind`/`sec` names instead of `type`/`durationSec`, and `range`
-   * carries note names instead of MIDI numbers.
+   * `kind`/`sec` instead of `type`/`durationSec`, and note names in `range`
+   * instead of MIDI numbers. No release ever wrote these names — the point is
+   * that a record does not have to come from a real past schema to exist. A
+   * half-written write, a foreign import, or thirty seconds in devtools gets
+   * you here, and none of those are reasons to lose the page.
    */
   const CORRUPT = JSON.stringify({
     xp: 1240,
@@ -132,7 +135,7 @@ describe("load() against a corrupt record", () => {
         achievements: [],
       }),
     );
-    // A second device on an older build sends the pre-release session shape.
+    // A second device sends a session shape this app never wrote.
     const merged = mergeRemoteProgress({
       xp: 90,
       sessions: [{ id: "r0", kind: "song", day: "2026-08-19", sec: 120 }],
@@ -279,5 +282,84 @@ describe("identities are strict, labels are not", () => {
     expect(
       checkProgress({ ...state, sessions: [{ ...base, id: "", detail: "" }] }),
     ).toEqual({ reason: "A session in the payload is malformed.", overCap: false });
+  });
+});
+
+describe("a record written by the first release still loads", () => {
+  /**
+   * The genuine v1 shape, from the scaffold commit: no `rangeHistory` key at
+   * all (it arrived with Pro analytics) and no `notes` on a session. This is
+   * the only schema evolution this store has ever had, and it is additive.
+   *
+   * It matters because sanitizeProgress runs before migrate and fills a missing
+   * `rangeHistory` with `[]` — erasing the difference between "key absent" and
+   * "key present but empty". migrate keys off emptiness rather than presence,
+   * so the seed still happens; this pins that, because a singer who took the
+   * range test before Pro shipped would otherwise open the chart to nothing.
+   */
+  const V1 = JSON.stringify({
+    xp: 150,
+    sessions: [
+      {
+        id: "1730000000000-123456",
+        type: "warmup",
+        date: "2026-05-01T09:00:00.000Z",
+        day: "2026-05-01",
+        durationSec: 300,
+        score: 88,
+        detail: "Lip trills",
+        xp: 55,
+      },
+    ],
+    streak: { current: 1, best: 4, lastDay: "2026-05-01" },
+    range: {
+      lowMidi: 45,
+      highMidi: 69,
+      voiceType: "baritone",
+      voiceTypeLabel: "Baritone",
+      testedAt: "2026-05-01T09:10:00.000Z",
+    },
+    achievements: ["first-note", "warmed-up"],
+  });
+
+  it("keeps every session, score and label the old release wrote", async () => {
+    const { getState } = await withStoredRecord(V1);
+    const state = getState();
+    expect(state.xp).toBe(150);
+    expect(state.sessions).toHaveLength(1);
+    expect(state.sessions[0]).toMatchObject({
+      type: "warmup",
+      detail: "Lip trills",
+      score: 88,
+      durationSec: 300,
+      xp: 55,
+    });
+    expect(state.achievements).toEqual(["first-note", "warmed-up"]);
+    expect(state.streak).toEqual({ current: 1, best: 4, lastDay: "2026-05-01" });
+  });
+
+  it("seeds the range chart from the one measurement v1 kept", async () => {
+    const { getState } = await withStoredRecord(V1);
+    expect(getState().rangeHistory).toEqual([
+      {
+        lowMidi: 45,
+        highMidi: 69,
+        voiceTypeLabel: "Baritone",
+        testedAt: "2026-05-01T09:10:00.000Z",
+      },
+    ]);
+  });
+
+  it("does not re-seed once a real history exists", async () => {
+    const { getState } = await withStoredRecord(
+      JSON.stringify({
+        ...JSON.parse(V1),
+        rangeHistory: [
+          { lowMidi: 47, highMidi: 70, testedAt: "2026-06-01T09:00:00.000Z" },
+        ],
+      }),
+    );
+    expect(getState().rangeHistory).toHaveLength(1);
+    expect(getState().rangeHistory[0].testedAt).toBe("2026-06-01T09:00:00.000Z");
   });
 });
