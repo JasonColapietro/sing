@@ -5,6 +5,7 @@ import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
+import { MicAlert } from "@/components/mic-alert";
 import { IconMic } from "./icons";
 import { ALL_EXERCISES, EXERCISES, type WarmupExercise } from "./exercises";
 import { getProState } from "@/lib/pro";
@@ -66,6 +67,13 @@ export function WarmupsClient() {
   // permission lands. Without it their choice is thrown away by the prompt.
   const [pendingEx, setPendingEx] = useState<WarmupExercise | null>(null);
 
+  // Where the next mic failure has to appear: the id of the exercise whose card
+  // was pressed, or null for the gate card's own button. The library sits under
+  // the gate card, so a card near the bottom of the catalogue was asking for the
+  // mic and printing the refusal most of a page above the fold. One MicAlert is
+  // rendered, in whichever of those two places the singer was actually looking.
+  const [errorAt, setErrorAt] = useState<string | null>(null);
+
   async function selectExercise(ex: WarmupExercise) {
     if (pitch.listening) {
       startExercise(ex);
@@ -75,8 +83,16 @@ export function WarmupsClient() {
     // interruption, not the destination: hold their choice and open it the
     // moment permission lands.
     setPendingEx(ex);
+    setErrorAt(ex.id);
     const ok = await pitch.start();
     if (!ok) setPendingEx(null);
+  }
+
+  // The gate card's button, which is its own place on screen. Set before the
+  // await, but nothing renders during it: start() clears the error first.
+  function startFromGate() {
+    setErrorAt(null);
+    void pitch.start();
   }
 
   const deepLinkEx = deepLinkId
@@ -163,14 +179,15 @@ export function WarmupsClient() {
             Sing at a comfortable volume. Stop if a note causes pain or strain.
           </p>
           <div className="mt-5">
-            <Button variant="rec" size="lg" onClick={pitch.start}>
+            <Button variant="rec" size="lg" onClick={startFromGate}>
               <IconMic /> Enable microphone
             </Button>
           </div>
-          {pitch.error && (
-            <p className="mt-4 max-w-md text-sm text-rec" role="alert">
-              {pitch.error}
-            </p>
+          {pitch.error && errorAt === null && (
+            <MicAlert
+              message={pitch.error}
+              className="mt-4 max-w-md text-sm text-rec"
+            />
           )}
           <ProWhisper className="mt-4" />
         </Card>
@@ -181,6 +198,8 @@ export function WarmupsClient() {
           progress={progress}
           onSelect={selectExercise}
           micReady={pitch.listening}
+          error={errorAt === null ? null : pitch.error}
+          errorExerciseId={errorAt}
         />
       )}
 

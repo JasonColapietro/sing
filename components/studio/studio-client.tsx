@@ -5,6 +5,7 @@ import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
+import { MicAlert } from "@/components/mic-alert";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
@@ -316,7 +317,13 @@ export function StudioClient() {
             >
               Enable microphone
             </Button>
-            {error && <p className="mt-4 text-sm text-rec">{error}</p>}
+            {/* This card is the only control on the page, so the message has
+                always been where the singer was looking. It was a plain <p>
+                though, which meant a refused mic was silent to anyone using a
+                screen reader. */}
+            {error && (
+              <MicAlert message={error} className="mt-4 text-sm text-rec" />
+            )}
             <ProWhisper className="mt-4" />
           </Card>
 

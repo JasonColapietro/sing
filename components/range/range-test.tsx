@@ -20,6 +20,7 @@ import {
   SectionLabel,
 } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
+import { MicAlert } from "@/components/mic-alert";
 import { PianoStrip } from "./piano-strip";
 import { ResultView, type SaveSummary } from "./result-view";
 
@@ -384,9 +385,10 @@ export function RangeTest() {
               </Button>
             </div>
             {error && (
-              <p className="mt-4 max-w-md text-sm text-rec" role="alert">
-                {error}
-              </p>
+              <MicAlert
+                message={error}
+                className="mt-4 max-w-md text-sm text-rec"
+              />
             )}
             <ProWhisper className="mt-4" />
           </Card>
