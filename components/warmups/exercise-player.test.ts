@@ -6,15 +6,23 @@ import {
   unsungRepAction,
 } from "./exercise-player";
 import { EXERCISES, computeRootLadder, ladderWalk } from "./exercises";
-import { repAvgScore, type RepResult } from "./lib";
+import { bestRep, repAvgScore, sungReps, type RepResult } from "./lib";
 
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
 
-const sungRep = (score: number): RepResult => ({
-  root: 52,
+const sungRep = (score: number, root = 52): RepResult => ({
+  root,
   score,
   avgCentsErr: 18,
   skipped: false,
+});
+
+/** A skipped rung carries score 0 by convention — it was never sung. */
+const skippedRep = (root = 52): RepResult => ({
+  root,
+  score: 0,
+  avgCentsErr: 0,
+  skipped: true,
 });
 
 describe("unsungRepAction", () => {
@@ -164,5 +172,73 @@ describe("repAscending", () => {
       const current = ladderWalk(ladder, rep).index;
       expect(repAscending(ladder, rep)).toBe(current > prev);
     }
+  });
+});
+
+describe("skipped reps are abstentions, not zeros", () => {
+  it("keeps a skip out of the average instead of scoring it 0", () => {
+    const results = [sungRep(90), skippedRep(), sungRep(80)];
+    expect(repAvgScore(results)).toBe(85);
+  });
+
+  it("pins the old behavior it replaces, so the regression cannot return", () => {
+    // Averaging every result, skips included, is what turned two good reps
+    // into a 57% session: (90 + 0 + 80) / 3.
+    const results = [sungRep(90), skippedRep(), sungRep(80)];
+    const naive = Math.round(
+      results.reduce((a, r) => a + r.score, 0) / results.length,
+    );
+    expect(naive).toBe(57);
+    expect(repAvgScore(results)).not.toBe(naive);
+  });
+
+  it("does not let a heavily skipped ladder drag a steady voice down", () => {
+    // The endless ladder spans the whole range, so stepping over rungs that
+    // sit too high or too low is ordinary use.
+    const results = [
+      sungRep(88),
+      ...Array.from({ length: 9 }, () => skippedRep()),
+      sungRep(92),
+    ];
+    expect(repAvgScore(results)).toBe(90);
+  });
+
+  it("reports 0 only when nothing was sung at all", () => {
+    expect(repAvgScore([skippedRep(), skippedRep()])).toBe(0);
+    expect(repAvgScore([])).toBe(0);
+  });
+
+  it("never calls a skipped rung the best rep", () => {
+    // Every sung rep scored under the skip's conventional 0.
+    const results = [skippedRep(60), sungRep(0, 52), sungRep(0, 53)];
+    const best = bestRep(results);
+    expect(best?.skipped).toBe(false);
+    expect(best?.root).toBe(52);
+  });
+
+  it("has no best rep when every rung was skipped", () => {
+    expect(bestRep([skippedRep(), skippedRep()])).toBeNull();
+  });
+
+  it("keeps skips in the results so the summary can still list them", () => {
+    const results = [sungRep(90), skippedRep(), sungRep(80)];
+    expect(results).toHaveLength(3);
+    expect(sungReps(results)).toHaveLength(2);
+  });
+});
+
+describe("a session of nothing but skips is not a session", () => {
+  it("leaves without logging, the way an all-silent session does", () => {
+    // endExercise routes on the sung count, so an all-skipped ladder exits
+    // rather than writing a 0% warmup for singing that never happened.
+    const allSkipped = [skippedRep(), skippedRep(), skippedRep()];
+    expect(sungReps(allSkipped)).toHaveLength(0);
+    expect(unsungRepAction(2, sungReps(allSkipped).length)).toBe("exit");
+  });
+
+  it("still finishes a session that mixed skips with real singing", () => {
+    const mixed = [skippedRep(), sungRep(84), skippedRep()];
+    expect(unsungRepAction(2, sungReps(mixed).length)).toBe("finish");
+    expect(repAvgScore(mixed)).toBe(84);
   });
 });
