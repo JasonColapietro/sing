@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EXERCISES, computeRootLadder, ladderWalk } from "./exercises";
+import { EXERCISES, PRO_PACKS, computeRootLadder, ladderWalk } from "./exercises";
 
 // five-note-scale's highest interval is the fifth (7 semitones).
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
@@ -63,5 +63,36 @@ describe("ladderWalk", () => {
     for (let rep = 0; rep < 5; rep++) {
       expect(ladderWalk([52], rep)).toEqual({ root: 52, index: 0, ascending: true });
     }
+  });
+});
+
+describe("pack descriptions stay true to the packs", () => {
+  // The library used to restate this copy in a second hand-kept array, and the
+  // two drifted. The teaser now renders straight from PRO_PACKS, so the only
+  // claims left to check are the ones baked into the description text itself.
+
+  it("counts the exercises it actually ships", () => {
+    for (const pack of PRO_PACKS) {
+      const claimed = pack.desc.match(/(\d+)\s+exercises/);
+      expect(claimed, `${pack.name} states an exercise count`).not.toBeNull();
+      expect(Number(claimed![1]), `${pack.name} count matches its array`).toBe(
+        pack.exercises.length,
+      );
+    }
+  });
+
+  it("promises no fixed duration, since ladder length is the singer's range", () => {
+    // "A gentle 6-minute wake-up" survived here after computeRootLadder stopped
+    // capping reps, and ran ~22 min for a three-octave singer.
+    for (const pack of PRO_PACKS) {
+      expect(pack.desc, `${pack.name} claims no minute figure`).not.toMatch(
+        /\d+\s*-?\s*(min|minute)/i,
+      );
+    }
+  });
+
+  it("gives every pack a unique id, which the teaser now keys on", () => {
+    const ids = PRO_PACKS.map((p) => p.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 });
