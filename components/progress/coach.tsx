@@ -239,14 +239,19 @@ function buildPlan(state: ProgressState, now: Date): {
 export function CoachCard({ state }: { state: ProgressState }) {
   const isPro = useIsPro();
   const { banner, items } = buildPlan(state, new Date());
-  const total = items.reduce((a, i) => a + i.minutes, 0);
+  // One step is not a plan, it is a screenshot of one. A singer who can see two
+  // steps has watched the coach make a decision — this after that, and why —
+  // which is the thing Pro actually sells; a singer who sees one has been shown
+  // a locked door. buildPlan always produces at least three items, so this
+  // never empties the card.
+  const shown = isPro ? items.length : Math.min(2, items.length);
 
   return (
     <Card>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg">Today&apos;s session</h2>
         <span className="tabular font-mono text-xs text-dim">
-          {isPro ? total : items[0].minutes} min planned
+          {items.slice(0, shown).reduce((a, i) => a + i.minutes, 0)} min planned
         </span>
       </div>
       {banner && (
@@ -256,7 +261,7 @@ export function CoachCard({ state }: { state: ProgressState }) {
       )}
       <ol className="mt-4 space-y-3">
         {items.map((item, i) =>
-          isPro || i === 0 ? (
+          i < shown ? (
             <li key={item.title} className="flex gap-3">
               <span
                 aria-hidden="true"

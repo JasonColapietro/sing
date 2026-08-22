@@ -30,12 +30,23 @@ function parseFrontmatter(raw, file) {
  * Which chapters render in full, for free, on their own page.
  *
  * Same rule the atlas uses: a prospect who has never read a sentence of the
- * prose is being asked to buy writing quality sight unseen. Chapter one is the
- * three-part model the whole book runs on, so it samples the book without
- * giving away the program. Widening this set is a pricing decision, not a
- * content edit, which is why it lives here rather than in the frontmatter.
+ * prose is being asked to buy writing quality sight unseen. Widening this set
+ * is a pricing decision, not a content edit, which is why it lives here rather
+ * than in the frontmatter.
+ *
+ * Chapter 1 is the three-part model the whole book runs on, so it samples the
+ * book without giving away the program.
+ *
+ * Chapters 8 and 12 were added because they are load-bearing for the *free*
+ * product, not just adverts for the paid one. Every free measurement the app
+ * makes — the range test, the voice-type label, every score — is only worth
+ * something if the singer knows how to take it honestly (8) and can recognise
+ * when the room, the mic or a rough morning is what they are actually reading
+ * (12). Charging admission for "your numbers might be lying to you" meant the
+ * free tier handed out verdicts and sold the instructions for doubting them.
+ * They are also the two best arguments for the rest of the book.
  */
-const FREE_CHAPTER_ORDERS = new Set([1]);
+const FREE_CHAPTER_ORDERS = new Set([1, 8, 12]);
 
 const chapters = [];
 const problems = [];

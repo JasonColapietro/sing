@@ -85,6 +85,8 @@ export function useAnalyser(opts?: {
   // See `usePitch` — the permission prompt can outlive the component.
   const mountedRef = useRef(true);
   const listeningRef = useRef(false);
+  /** The in-flight open, shared by concurrent callers — see `usePitch`. */
+  const pendingRef = useRef<Promise<boolean> | null>(null);
   const onFrameRef = useRef(opts?.onFrame);
   const onFrame = opts?.onFrame;
   useEffect(() => {
@@ -104,6 +106,15 @@ export function useAnalyser(opts?: {
 
   const start = useCallback(async (): Promise<boolean> => {
     if (streamRef.current) return true;
+    if (pendingRef.current) return pendingRef.current;
+    const run = openStream();
+    pendingRef.current = run;
+    try {
+      return await run;
+    } finally {
+      pendingRef.current = null;
+    }
+    async function openStream(): Promise<boolean> {
     setError(null);
 
     const opened = await openMic();
@@ -170,6 +181,7 @@ export function useAnalyser(opts?: {
     };
     rafRef.current = requestAnimationFrame(loop);
     return true;
+    }
   }, [clarityThreshold]);
 
   useEffect(() => {

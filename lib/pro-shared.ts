@@ -76,9 +76,9 @@ export const PRICING: Record<ProPlan, PlanPrice> = {
     note: "billed monthly",
   },
   annual: {
-    amount: 79,
+    amount: 29,
     interval: "year",
-    perMonth: 79 / 12,
+    perMonth: 29 / 12,
     note: "billed yearly",
   },
 };
@@ -122,11 +122,15 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Do I need Pro to get better?",
-    a: "No. Free covers real, daily practice. Pro is for singers who want a coach's ear on top: it finds your weak notes, plans tomorrow's session, and shows the long arc of your range.",
+    a: "Not to practice — the studio, the range test and the warmups are free and stay free. Pro is for the singer who wants the record: every test charted, every take analysed, and the two books that explain what the numbers mean.",
   },
   {
     q: "Is my voice uploaded?",
     a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers — scores, streaks, range — never audio.",
+  },
+  {
+    q: "What do I get the moment I subscribe?",
+    a: "Both books in full — 50 chapters and 82,734 words across The Measured Voice and The Voice Atlas — plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your full range history, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.",
   },
   {
     q: "Can I cancel anytime?",

@@ -13,8 +13,8 @@ import {
   Pill,
   SectionLabel,
 } from "@/components/ui";
-import { FreeOnly } from "@/components/pro/gate";
-import { ProChip, ProLockTag } from "@/components/pro/ui";
+import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
+import { ProChip } from "@/components/pro/ui";
 import {
   bestScoreForSong,
   computeDifficulty,
@@ -46,7 +46,6 @@ import {
   browseOptions,
   BrowseControls,
   DEFAULT_BROWSE,
-  formLabel,
   type BrowseState,
 } from "./browse-controls";
 
@@ -492,61 +491,19 @@ export function Library({
               />
             ))}
 
-            {/* Teasers are a conversion surface, not a search result: they sit
-                out while filters are on so "no songs match" stays honest. Their
-                content is derived from PRO_SONGS — title, genre, difficulty and
-                nothing else, never lyrics — so the book can grow without this
-                list going stale. */}
-            {active === 0 && (
-              <FreeOnly>
-                {PRO_SONGS.slice(0, 3).map((song) => (
-                  <Link
-                    key={song.id}
-                    href="/pro"
-                    aria-label={`${song.title} — unlock with Suede Pro`}
-                    className="block h-full"
-                  >
-                    <Card className="h-full transition-colors hover:border-amber/40">
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-lg text-mut">{song.title}</h3>
-                        <ProLockTag />
-                      </div>
-                      <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                        <Pill tone={difficultyTone(computeDifficulty(song).label)}>
-                          {computeDifficulty(song).label}
-                        </Pill>
-                        <Pill>{song.genre}</Pill>
-                        <Pill>{formLabel(song.form)}</Pill>
-                      </div>
-                      <div className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                        Pro songbook
-                      </div>
-                    </Card>
-                  </Link>
-                ))}
-              </FreeOnly>
-            )}
           </div>
         )}
 
-        {/* Never quote the size of the Pro songbook here: it is smaller than the
-            free grid directly above it, so a count argues against buying. Name
-            the unlock instead — PRO_SONGS carries Amazing Grace as a `form:
-            "full"` two-verse arrangement, where the free book has the phrase. */}
-        {PRO_SONGS.length > 3 && (
-          <FreeOnly>
-            <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              More in the Pro songbook — Amazing Grace in full, not just the
-              opening phrase ·{" "}
-              <Link
-                href="/pro"
-                className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
-              >
-                See Pro
-              </Link>
-            </p>
-          </FreeOnly>
-        )}
+        {/* The songbook is no longer the paywall — all 26 melodies are free,
+            because six public-domain folk tunes held back from someone who
+            already had twenty was a gate that argued against buying. What Pro
+            adds on this surface is the record of singing them. */}
+        <FreeOnly>
+          <ProInlineNudge>
+            Pro charts every take of every song, so you can hear month one
+            against month six
+          </ProInlineNudge>
+        </FreeOnly>
       </section>
     </div>
   );

@@ -11,7 +11,7 @@ export type {
 } from "./types";
 
 /**
- * The free songbook. Every melody here is public domain — the `publicDomain`
+ * The songbook. Every melody here is public domain — the `publicDomain`
  * field on each entry says why, because that is the constraint the whole
  * catalog is built around.
  *
@@ -652,20 +652,6 @@ export const SONGS: Song[] = [
       { midi: 64, startBeat: 13, durBeats: 3, lyric: "dan," },
     ],
   },
-];
-
-/**
- * The Pro songbook — same house style, gated to Pro members.
- *
- * Membership in this array IS the paywall: `songs-client` refuses to start
- * anything that is not in `SONGS` unless Pro is active. Moving an entry
- * between the two arrays changes who can sing it, so treat the split as
- * access control, not as categorisation.
- *
- * Titles must stay exactly as the teaser cards spell them: the title is the
- * key best-scores are stored under.
- */
-export const PRO_SONGS: Song[] = [
   {
     // Contour: rising step opening, phrase peak on "call" — Medium (span 14 st).
     id: "danny-boy",
@@ -887,6 +873,23 @@ export const PRO_SONGS: Song[] = [
     ],
   },
 ];
+
+/**
+ * Kept as an empty array rather than deleted.
+ *
+ * These six titles — Danny Boy, Shenandoah, Scarborough Fair, the two-verse
+ * Amazing Grace, My Bonnie and Swing Low — used to be the paywall, and the
+ * paywall argued against buying: six public-domain folk tunes held back from a
+ * singer who already had twenty free ones. `library.tsx` even carried a comment
+ * forbidding the catalogue from printing a Pro count, because the count was the
+ * argument against it. A number you cannot say out loud is not an asset.
+ *
+ * The export stays so that the type and the split stay expressible if a genuine
+ * Pro song — something licensed, or something recorded — ever arrives. What Pro
+ * sells on this surface now is the record: scoring history per song, and the
+ * transposition report.
+ */
+export const PRO_SONGS: Song[] = [];
 
 export const ALL_SONGS: Song[] = [...SONGS, ...PRO_SONGS];
 

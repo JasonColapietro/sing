@@ -135,6 +135,74 @@ export const EXERCISES: WarmupExercise[] = [
     noteDur: 0.65,
     buildSteps: (r) => [rel(r, [0, 9, 0, 9, 0])],
   },
+  // The Morning reset pack, moved out from behind the paywall. It was the
+  // gentle-wake-up set for rough days — which is to say, the pack that builds
+  // the daily habit. Charging for the habit and giving away the hard work had
+  // it backwards: the routine someone reaches for on a bad morning is exactly
+  // the one that should be there before they have paid anything.
+    {
+      id: "morning-lip-trill",
+      title: "Lip-trill wake-up",
+      desc: 'A sleepy "brr" lip trill gliding up a third and back down.',
+      tier: "beginner",
+      glide: true,
+      noteDur: 0.7,
+      tip: "If the trill sputters, more air and looser lips — never more push.",
+      buildSteps: (r) => [
+        [r, r + 4],
+        [r + 4, r],
+      ],
+    },
+    {
+      id: "morning-hum",
+      title: "First hum",
+      desc: "Three tiny hummed steps — root, up one tone, back home.",
+      tier: "beginner",
+      tip: "Barely more than breathing. Let the buzz find your face on its own.",
+      noteDur: 0.8,
+      buildSteps: (r) => [rel(r, [0, 2, 0])],
+    },
+    {
+      id: "morning-three-note",
+      title: "Small three-note climb",
+      desc: 'Walk up 1-2-3 and back down on a soft "noo" — no hurry.',
+      tier: "beginner",
+      tip: "Morning voice is allowed. Keep it small and let the notes wake slowly.",
+      noteDur: 0.6,
+      buildSteps: (r) => [rel(r, [0, 2, 4, 2, 0])],
+    },
+    {
+      id: "morning-siren",
+      title: "Easy fourth siren",
+      desc: "A lazy little siren up a fourth and back — half awake is fine.",
+      tier: "beginner",
+      glide: true,
+      noteDur: 0.6,
+      tip: "Think yawn, not siren drill. Loose jaw, easy slide.",
+      buildSteps: (r) => [
+        [r, r + 5],
+        [r + 5, r],
+      ],
+    },
+    {
+      id: "morning-sigh",
+      title: "Sighing slide",
+      desc: "Slide from the third down to the root like a long, relieved sigh.",
+      tier: "beginner",
+      glide: true,
+      noteDur: 1,
+      tip: "Start the sigh before the note — let the pitch ride out on the air.",
+      buildSteps: (r) => [[r + 4, r]],
+    },
+    {
+      id: "morning-sustain",
+      title: "Soft sustain",
+      desc: "One soft, steady note to finish — quiet, centered, unhurried.",
+      tier: "beginner",
+      tip: "Steady beats loud. If it wobbles, sing it smaller.",
+      noteDur: 2.5,
+      buildSteps: (r) => [[r]],
+    },
 ];
 
 export interface WarmupPack {
@@ -299,82 +367,6 @@ export const PRO_PACKS: WarmupPack[] = [
         tip: "Imagine the note resting on the breath, like a ball on a fountain.",
         noteDur: 3,
         buildSteps: (r) => [[r + 7]],
-      },
-    ],
-  },
-  // Morning reset: six short, low-effort exercises, deliberately no minute
-  // claim. estimateMinutes bills reps × (totalSec × 2.2 + 2) and reps is the
-  // ladder length, which computeRootLadder now derives from the singer's own
-  // range — so the pack runs ~10 min over a two-octave range and ~22 min over
-  // three, and the per-card "~N min per climb" in library.tsx is the only
-  // honest number. Keep `desc` counting exercises, not minutes.
-  {
-    id: "morning-reset",
-    name: "Morning reset",
-    desc: "A gentle wake-up for rough days, 6 exercises.",
-    exercises: [
-      {
-        id: "morning-lip-trill",
-        title: "Lip-trill wake-up",
-        desc: 'A sleepy "brr" lip trill gliding up a third and back down.',
-        tier: "beginner",
-        glide: true,
-        noteDur: 0.7,
-        tip: "If the trill sputters, more air and looser lips — never more push.",
-        buildSteps: (r) => [
-          [r, r + 4],
-          [r + 4, r],
-        ],
-      },
-      {
-        id: "morning-hum",
-        title: "First hum",
-        desc: "Three tiny hummed steps — root, up one tone, back home.",
-        tier: "beginner",
-        tip: "Barely more than breathing. Let the buzz find your face on its own.",
-        noteDur: 0.8,
-        buildSteps: (r) => [rel(r, [0, 2, 0])],
-      },
-      {
-        id: "morning-three-note",
-        title: "Small three-note climb",
-        desc: 'Walk up 1-2-3 and back down on a soft "noo" — no hurry.',
-        tier: "beginner",
-        tip: "Morning voice is allowed. Keep it small and let the notes wake slowly.",
-        noteDur: 0.6,
-        buildSteps: (r) => [rel(r, [0, 2, 4, 2, 0])],
-      },
-      {
-        id: "morning-siren",
-        title: "Easy fourth siren",
-        desc: "A lazy little siren up a fourth and back — half awake is fine.",
-        tier: "beginner",
-        glide: true,
-        noteDur: 0.6,
-        tip: "Think yawn, not siren drill. Loose jaw, easy slide.",
-        buildSteps: (r) => [
-          [r, r + 5],
-          [r + 5, r],
-        ],
-      },
-      {
-        id: "morning-sigh",
-        title: "Sighing slide",
-        desc: "Slide from the third down to the root like a long, relieved sigh.",
-        tier: "beginner",
-        glide: true,
-        noteDur: 1,
-        tip: "Start the sigh before the note — let the pitch ride out on the air.",
-        buildSteps: (r) => [[r + 4, r]],
-      },
-      {
-        id: "morning-sustain",
-        title: "Soft sustain",
-        desc: "One soft, steady note to finish — quiet, centered, unhurried.",
-        tier: "beginner",
-        tip: "Steady beats loud. If it wobbles, sing it smaller.",
-        noteDur: 2.5,
-        buildSteps: (r) => [[r]],
       },
     ],
   },

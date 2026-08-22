@@ -28,7 +28,7 @@ import {
   AccountBackupControls,
   AccountBackupSync,
 } from "./account-backup-sync";
-import { ProInlineNudge } from "@/components/pro/gate";
+import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
 import { streakChipState } from "@/components/nav";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { useIsPro } from "@/lib/pro";
@@ -40,6 +40,16 @@ import { MinutesBarChart, PracticeMixChart, ScoreTrendChart } from "./charts";
 import { CoachCard } from "./coach";
 import { VoiceCard } from "./voice-card";
 import { TYPE_META, fmtDur, localDayStr, relDay } from "./format";
+
+/**
+ * How many sessions the free tier lists.
+ *
+ * Nothing is deleted at this boundary — the store keeps up to MAX_SESSIONS
+ * either way, and a singer who subscribes later sees the whole record appear.
+ * It is a display limit, and the nudge below the table says so rather than
+ * implying the older sessions are gone.
+ */
+const FREE_SESSION_LOG = 20;
 
 /* ------------------------------------------------------------------ */
 /* Small inline icons — coral flame for streaks.                      */
@@ -322,9 +332,23 @@ function AchievementsGallery({ unlocked }: { unlocked: string[] }) {
 /* Session log                                                         */
 /* ------------------------------------------------------------------ */
 
-function SessionLogTable({ sessions }: { sessions: SessionLog[] }) {
+/**
+ * The session log.
+ *
+ * `limit` is what makes the pricing table's "Practice history" row true. It ran
+ * `slice(0, 20)` for everyone, Pro included, while /pro sold "Full history +
+ * trends" — so the one row a subscriber was most likely to check on their first
+ * paid session was the one that had never been implemented.
+ */
+function SessionLogTable({
+  sessions,
+  limit,
+}: {
+  sessions: SessionLog[];
+  limit: number | null;
+}) {
   const todayKey = localDayStr(new Date());
-  const recent = sessions.slice(0, 20);
+  const recent = limit === null ? sessions : sessions.slice(0, limit);
 
   if (recent.length === 0) {
     return (
@@ -792,12 +816,24 @@ export function ProgressClient() {
             <div className="mb-1 flex items-baseline justify-between gap-2">
               <h2 className="text-lg">Recent sessions</h2>
               <span className="tabular font-mono text-xs text-dim">
-                last {Math.min(20, state.sessions.length)}
+                {isPro
+                  ? `all ${state.sessions.length}`
+                  : `last ${Math.min(FREE_SESSION_LOG, state.sessions.length)}`}
               </span>
             </div>
             <div className="mt-3">
-              <SessionLogTable sessions={state.sessions} />
+              <SessionLogTable
+                sessions={state.sessions}
+                limit={isPro ? null : FREE_SESSION_LOG}
+              />
             </div>
+            <FreeOnly>
+              {state.sessions.length > FREE_SESSION_LOG && (
+                <ProInlineNudge>
+                  {`${state.sessions.length - FREE_SESSION_LOG} older sessions are stored — Pro shows all of them`}
+                </ProInlineNudge>
+              )}
+            </FreeOnly>
           </Card>
         </section>
 

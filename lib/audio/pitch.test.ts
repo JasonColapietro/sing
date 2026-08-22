@@ -86,4 +86,77 @@ describe("detectPitch", () => {
     expect(low!.freq).toBeCloseTo(82, 0);
     expect(high!.freq).toBeCloseTo(880, -1);
   });
+  /**
+   * The gate every practice room actually applies is `clarity >= 0.75`
+   * (lib/audio/use-pitch.ts), not "did detectPitch return something". Asserting
+   * only the frequency is how a detector that could not hear a bass passed its
+   * own tests for months: E2 came back at the right pitch with a clarity of
+   * 0.714, and every caller threw it away as unvoiced.
+   *
+   * 2048 samples at 48 kHz is the exact frame every room uses, and the case
+   * that used to fail.
+   */
+  describe("clears the caller's clarity gate across the whole vocal range", () => {
+    const CLARITY_GATE = 0.75;
+    const notes: Array<[string, number]> = [
+      ["C2", 65.41],
+      ["E2 (bass floor)", 82.41],
+      ["F#2", 92.5],
+      ["G2", 98.0],
+      ["A2 (baritone floor)", 110.0],
+      ["C3", 130.81],
+      ["A3", 220.0],
+      ["C5", 523.25],
+      ["A5", 880.0],
+    ];
+
+    for (const [name, freq] of notes) {
+      it(`${name} at 48 kHz`, () => {
+        const r = detectPitch(
+          voiceFrame({ freq, sampleRate: 48000, size: 2048 }),
+          48000,
+        );
+        expect(r).not.toBeNull();
+        expect(r!.freq).toBeCloseTo(freq, freq > 400 ? -1 : 0);
+        expect(r!.clarity).toBeGreaterThanOrEqual(CLARITY_GATE);
+      });
+    }
+  });
+
+  /**
+   * Normalizing the correlation removed the taper that used to suppress
+   * sub-octave lags for free, so the octave below now scores about as well as
+   * the true period. Without first-peak selection a bass singing E2 reads as
+   * E1 and the range test overstates him instead of understating him.
+   */
+  it("does not drop an octave when the sub-octave lag scores as well", () => {
+    for (const freq of [82.41, 110, 146.83, 220]) {
+      const r = detectPitch(
+        voiceFrame({ freq, sampleRate: 48000, size: 2048 }),
+        48000,
+      );
+      expect(r).not.toBeNull();
+      // Half the true frequency would be the classic failure.
+      expect(r!.freq).toBeGreaterThan(freq * 0.8);
+      expect(r!.freq).toBeLessThan(freq * 1.25);
+    }
+  });
+
+  /**
+   * Two singers with the same voice used to get different range tests
+   * depending on their sound card, because the old clarity floor moved with
+   * the sample rate (4*sampleRate/size).
+   */
+  it("reads the same low note at 44.1 kHz and 48 kHz", () => {
+    const a = detectPitch(voiceFrame({ freq: 87.31, sampleRate: 44100 }), 44100);
+    const b = detectPitch(
+      voiceFrame({ freq: 87.31, sampleRate: 48000, size: 2048 }),
+      48000,
+    );
+    expect(a).not.toBeNull();
+    expect(b).not.toBeNull();
+    expect(a!.clarity).toBeGreaterThanOrEqual(0.75);
+    expect(b!.clarity).toBeGreaterThanOrEqual(0.75);
+    expect(Math.abs(a!.freq - b!.freq)).toBeLessThan(2);
+  });
 });
