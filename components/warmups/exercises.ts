@@ -302,14 +302,16 @@ export const PRO_PACKS: WarmupPack[] = [
       },
     ],
   },
-  // Morning reset ≈ 6 min: per-exercise secs = reps × (totalSec × 2.2 + 2), reps 6–8.
-  // totalSec at 1x — trill 2.88, hum 2.56, climb 3.32, siren 2.48, sigh 2.0,
-  // sustain 2.5 — keeps every exercise in 38–75 s (each card rounds to ~1 min),
-  // so the six cards sum to 6 min and real time runs 4.7–6.2 min.
+  // Morning reset: six short, low-effort exercises, deliberately no minute
+  // claim. estimateMinutes bills reps × (totalSec × 2.2 + 2) and reps is the
+  // ladder length, which computeRootLadder now derives from the singer's own
+  // range — so the pack runs ~10 min over a two-octave range and ~22 min over
+  // three, and the per-card "~N min per climb" in library.tsx is the only
+  // honest number. Keep `desc` counting exercises, not minutes.
   {
     id: "morning-reset",
     name: "Morning reset",
-    desc: "A gentle 6-minute wake-up for rough days.",
+    desc: "A gentle wake-up for rough days, 6 exercises.",
     exercises: [
       {
         id: "morning-lip-trill",
