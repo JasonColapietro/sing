@@ -21,13 +21,6 @@ import { MicAlert } from "@/components/mic-alert";
 
 const RECENT_WINDOW_MS = 3 * 24 * 3600 * 1000;
 
-/** What free users see of the packs; copy mirrors the real content above. */
-const PACK_TEASERS = [
-  { name: "Belt prep", desc: "Chest-voice power without strain, 8 exercises." },
-  { name: "Head-voice builder", desc: "Light, connected top notes, 7 exercises." },
-  { name: "Morning reset", desc: "A gentle wake-up for rough days, 6 exercises." },
-];
-
 /** One line of orientation per tier. TIER_LABELS alone ("Tier 2 · Building")
  *  tells a first-time visitor nothing about who the tier is for. Each line
  *  describes the exercises actually filed under that tier below, so it stays
@@ -185,8 +178,13 @@ export function Library({
             <ProChip />
           </div>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {PACK_TEASERS.map((pack) => (
-              <Link key={pack.name} href="/pro">
+            {/* Rendered straight from PRO_PACKS, never a restated copy: a
+                hand-kept teaser list is what let this card go on promising a
+                "6-minute" Morning reset after the pack itself stopped. Only
+                the names and descriptions cross the paywall — the exercises
+                stay behind FreeOnly. */}
+            {PRO_PACKS.map((pack) => (
+              <Link key={pack.id} href="/pro">
                 <Card className="h-full transition-colors hover:border-amber/40">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="text-lg">{pack.name}</h3>
