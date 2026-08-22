@@ -13,6 +13,7 @@ import {
   bestRep,
   playGuide,
   repAvgScore,
+  sungReps,
   segmentIndexAt,
   singWindowSec,
   targetMidiAt,
@@ -45,8 +46,9 @@ const SKIPPABLE_PHASES: Phase[] = ["listen", "sing"];
 /**
  * What an unsung rep — one where the mic never landed a voiced frame on a
  * target — means for the endless walk. `unsungStreak` counts consecutive
- * unsung reps, this one included; `recordedReps` is how many reps have
- * actually been scored.
+ * unsung reps, this one included; `sungRepCount` is how many reps were
+ * actually sung and scored — skips do not count, since a skipped rung is an
+ * abstention rather than a performance.
  *
  * - "continue": the singer may just be between breaths, so keep walking.
  * - "finish": end the session and log only the reps that were sung.
@@ -57,10 +59,10 @@ const SKIPPABLE_PHASES: Phase[] = ["listen", "sing"];
  */
 export function unsungRepAction(
   unsungStreak: number,
-  recordedReps: number,
+  sungRepCount: number,
 ): "continue" | "finish" | "exit" {
   if (unsungStreak < MAX_UNSUNG_REPS) return "continue";
-  return recordedReps > 0 ? "finish" : "exit";
+  return sungRepCount > 0 ? "finish" : "exit";
 }
 
 /**
@@ -273,7 +275,7 @@ export function ExercisePlayer({
       // stops looking like a breath.
       if (centsCountRef.current === 0) {
         unsungRepsRef.current += 1;
-        const action = unsungRepAction(unsungRepsRef.current, results.length);
+        const action = unsungRepAction(unsungRepsRef.current, sungReps(results).length);
         if (action === "continue") {
           setRepSilent(true);
           setPhase("rep-result");
@@ -356,7 +358,10 @@ export function ExercisePlayer({
   }
 
   function endExercise() {
-    if (results.length === 0) {
+    // Skips are abstentions, so a session of nothing but skips has nothing to
+    // report: logging it would write a 0% warmup for singing that never
+    // happened, the same way an abandoned tab used to.
+    if (sungReps(results).length === 0) {
       onExit();
     } else {
       finalize(results);

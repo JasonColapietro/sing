@@ -15,7 +15,7 @@ import {
 } from "@/components/songs/grade";
 import { ShareableResult } from "@/components/songs/result-card";
 import { TOLERANCE_CENTS } from "./exercise-player";
-import type { SessionSummaryData } from "./lib";
+import { sungReps, type SessionSummaryData } from "./lib";
 
 /** Under this a rep didn't hold — the amber floor the whole page reads from. */
 const HELD_FLOOR = 50;
@@ -67,7 +67,7 @@ export function SessionSummary({
   // so nothing new has to be threaded through the player to say which note
   // came apart.
   const diagnosis = useMemo(() => {
-    const sung = results.filter((r) => !r.skipped);
+    const sung = sungReps(results);
     if (sung.length === 0) return null;
     const tallies = tallyFromScores(sung.flatMap((r) => r.notes ?? []));
     return {
@@ -87,6 +87,12 @@ export function SessionSummary({
   // Only the rendered list is bounded. `hidden` doubles as the offset of the
   // first row, so the rep numbers stay the real ones — row 84 of 95, not a
   // second list starting at 1.
+  // The average and the grade cover the sung reps only, so the tile counts
+  // them the same way — "Reps 5" beside an average of three would read as if
+  // the two skipped rungs had been scored.
+  const sungCount = sungReps(results).length;
+  const skippedCount = results.length - sungCount;
+
   const { hidden, rows } = useMemo(() => {
     const hidden = Math.max(0, results.length - MAX_LISTED_REPS);
     return { hidden, rows: results.slice(hidden) };
@@ -115,7 +121,12 @@ export function SessionSummary({
             sub={best ? midiToLabel(best.root) : undefined}
             tone="cool"
           />
-          <Stat label="Reps" value={results.length} tone="ink" />
+          <Stat
+            label="Reps sung"
+            value={sungCount}
+            sub={skippedCount > 0 ? `${skippedCount} skipped` : undefined}
+            tone="ink"
+          />
         </div>
         {grade && (
           <div className="mt-3 flex items-center gap-2">

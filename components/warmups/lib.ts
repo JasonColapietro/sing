@@ -81,14 +81,30 @@ export interface RepResult {
   notes?: NoteScore[];
 }
 
-export function repAvgScore(results: RepResult[]): number {
-  if (results.length === 0) return 0;
-  return Math.round(results.reduce((a, r) => a + r.score, 0) / results.length);
+/**
+ * The reps the singer actually sang. A skip is an abstention, not a
+ * performance: the ladder now spans the whole range and keeps walking, so
+ * stepping over a rung that sits too high or too low is ordinary use, and
+ * every number derived from "how well did this go" has to ignore it. The
+ * skipped reps stay in `results` — the summary still lists them, and they
+ * are still part of what happened.
+ */
+export function sungReps(results: RepResult[]): RepResult[] {
+  return results.filter((r) => !r.skipped);
 }
 
+/** Mean score across the sung reps. 0 when nothing was sung. */
+export function repAvgScore(results: RepResult[]): number {
+  const sung = sungReps(results);
+  if (sung.length === 0) return 0;
+  return Math.round(sung.reduce((a, r) => a + r.score, 0) / sung.length);
+}
+
+/** Highest-scoring sung rep, or null when nothing was sung. */
 export function bestRep(results: RepResult[]): RepResult | null {
-  if (results.length === 0) return null;
-  return results.reduce((b, r) => (r.score > b.score ? r : b), results[0]);
+  const sung = sungReps(results);
+  if (sung.length === 0) return null;
+  return sung.reduce((b, r) => (r.score > b.score ? r : b), sung[0]);
 }
 
 export interface SessionSummaryData {
