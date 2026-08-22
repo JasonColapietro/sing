@@ -6,6 +6,7 @@ import { logSession, type LogResult } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
+import { AudioSetup } from "@/components/audio/audio-setup";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
@@ -324,6 +325,11 @@ export function StudioClient() {
             {error && (
               <MicAlert message={error} className="mt-4 text-sm text-rec" />
             )}
+            {/* Before the mic runs the browser hides device labels, so this
+                reads as "System default" until permission lands. It still
+                belongs here: someone with an interface plugged in goes looking
+                for this control before they sing, not after one bad score. */}
+            <AudioSetup className="mt-6 text-left" />
             <ProWhisper className="mt-4" />
           </Card>
 

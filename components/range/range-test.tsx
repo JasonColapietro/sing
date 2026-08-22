@@ -21,6 +21,7 @@ import {
 } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
+import { AudioSetup } from "@/components/audio/audio-setup";
 import { PianoStrip } from "./piano-strip";
 import { ResultView, type SaveSummary } from "./result-view";
 
@@ -390,6 +391,11 @@ export function RangeTest() {
                 className="mt-4 max-w-md text-sm text-rec"
               />
             )}
+            {/* The room where the input device matters most. A laptop lid mic
+                rolls off exactly the low end a bass is trying to prove, so the
+                test hands back a range short at the bottom and the singer has
+                no reason to doubt it. */}
+            <AudioSetup className="mt-6 max-w-md" />
             <ProWhisper className="mt-4" />
           </Card>
         </div>

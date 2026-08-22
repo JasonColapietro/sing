@@ -6,6 +6,7 @@ import { useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
+import { AudioSetup } from "@/components/audio/audio-setup";
 import { IconMic } from "./icons";
 import { ALL_EXERCISES, EXERCISES, type WarmupExercise } from "./exercises";
 import { getProState } from "@/lib/pro";
@@ -190,6 +191,7 @@ export function WarmupsClient() {
               className="mt-4 max-w-md text-sm text-rec"
             />
           )}
+          <AudioSetup className="mt-6 max-w-xl" />
           <ProWhisper className="mt-4" />
         </Card>
       )}

@@ -5,6 +5,7 @@ import { detectPitch } from "./pitch";
 import { freqToNote, type NoteInfo } from "./notes";
 import { getAudioContext } from "./context";
 import { openMic } from "./mic";
+import { useAudioPrefs } from "./devices";
 
 export interface PitchFrame {
   /** Median-smoothed frequency in Hz, or null when no confident voiced pitch. */
@@ -54,6 +55,15 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const rafRef = useRef<number>(0);
   const histRef = useRef<number[]>([]);
+  // Whether this hook is still on screen. `start` awaits a permission prompt
+  // that a singer can leave open for as long as they like, so the component can
+  // be gone by the time the stream arrives.
+  const mountedRef = useRef(true);
+  const listeningRef = useRef(false);
+
+  // The input device and monitoring mode, so a change made in the picker can
+  // reopen a stream that is already running.
+  const { inputId, monitoring } = useAudioPrefs();
 
   const stop = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
@@ -64,6 +74,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     histRef.current = [];
     latest.current = EMPTY_FRAME;
     setFrame(EMPTY_FRAME);
+    listeningRef.current = false;
     setListening(false);
   }, []);
 
@@ -72,6 +83,14 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     setError(null);
 
     const opened = await openMic();
+    // Left the room while the permission prompt was up. Without this the tracks
+    // stay live on a component that no longer exists — the unmount cleanup ran
+    // while `streamRef` was still null, so it had nothing to stop — and the
+    // browser's recording indicator stays on with no UI left to turn it off.
+    if (!mountedRef.current) {
+      opened.stream?.getTracks().forEach((t) => t.stop());
+      return false;
+    }
     if (opened.stream === null) {
       setError(opened.error);
       return false;
@@ -85,6 +104,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     source.connect(analyser);
     streamRef.current = stream;
     sourceRef.current = source;
+    listeningRef.current = true;
     setListening(true);
 
     const buf = new Float32Array(analyser.fftSize);
@@ -121,7 +141,26 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     return true;
   }, [clarityThreshold]);
 
-  useEffect(() => stop, [stop]);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      stop();
+    };
+  }, [stop]);
+
+  /**
+   * Reopens the stream when the singer picks a different microphone, or moves
+   * between headphones and speakers, without making them leave the exercise.
+   *
+   * Skipped entirely while idle: `start` reads the current preference anyway,
+   * so a change made before the mic is running needs nothing here.
+   */
+  useEffect(() => {
+    if (!listeningRef.current) return;
+    stop();
+    void start();
+  }, [inputId, monitoring, start, stop]);
 
   return { frame, latest, listening, error, start, stop };
 }
