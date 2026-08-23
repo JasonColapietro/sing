@@ -1,12 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   PRICING,
-  annualEnabled,
-  annualSavingsPct,
   formatPrice,
+  isCheckoutPlan,
   isProPlan,
-  type PlanPrice,
-  type ProPlan,
+  proHeadline,
+  proHeadlineLong,
 } from "./pro-shared";
 
 describe("formatPrice", () => {
@@ -22,56 +21,34 @@ describe("formatPrice", () => {
 });
 
 describe("PRICING", () => {
-  it("prices the year below twelve months, or the yearly plan is a downgrade", () => {
-    expect(PRICING.annual.amount).toBeLessThan(PRICING.monthly.amount * 12);
-    expect(PRICING.annual.perMonth).toBeLessThan(PRICING.monthly.perMonth);
-  });
-
-  it("amortises each plan onto the same monthly number", () => {
-    expect(PRICING.monthly.perMonth).toBe(PRICING.monthly.amount);
-    expect(PRICING.annual.perMonth).toBeCloseTo(PRICING.annual.amount / 12, 10);
-  });
-
-  it("bills each plan on the interval its Stripe price recurs on", () => {
+  it("keeps the Early Access offers on their intended billing shapes", () => {
+    expect(PRICING.monthly.amount).toBe(4.99);
     expect(PRICING.monthly.interval).toBe("month");
-    expect(PRICING.annual.interval).toBe("year");
-  });
-});
-
-describe("annualSavingsPct", () => {
-  it("compares a year of the annual plan against twelve monthly charges", () => {
-    const pricing: Record<ProPlan, PlanPrice> = {
-      monthly: { amount: 10, interval: "month", perMonth: 10, note: "" },
-      annual: { amount: 90, interval: "year", perMonth: 7.5, note: "" },
-    };
-    expect(annualSavingsPct(pricing)).toBe(25);
-  });
-
-  it("reports a whole percentage for the shipped prices", () => {
-    const pct = annualSavingsPct();
-    expect(Number.isInteger(pct)).toBe(true);
-    expect(pct).toBeGreaterThan(0);
-  });
-});
-
-describe("annualEnabled", () => {
-  it("is off unless the flag is explicitly set", () => {
-    expect(annualEnabled(undefined)).toBe(false);
-    expect(annualEnabled("")).toBe(false);
-    expect(annualEnabled("0")).toBe(false);
-    expect(annualEnabled("false")).toBe(false);
-  });
-
-  it("accepts the two spellings a deploy env is likely to carry", () => {
-    expect(annualEnabled("1")).toBe(true);
-    expect(annualEnabled("true")).toBe(true);
+    expect(PRICING.lifetime.amount).toBe(79);
+    expect(PRICING.lifetime.interval).toBe("one_time");
   });
 });
 
 describe("isProPlan", () => {
-  it("accepts every plan PRICING quotes, so checkout can sell all of them", () => {
-    for (const plan of Object.keys(PRICING)) {
-      expect(isProPlan(plan)).toBe(true);
-    }
+  it("keeps annual as a restorable entitlement while adding lifetime", () => {
+    expect(isProPlan("monthly")).toBe(true);
+    expect(isProPlan("annual")).toBe(true);
+    expect(isProPlan("lifetime")).toBe(true);
+    expect(isProPlan("weekly")).toBe(false);
+  });
+});
+
+describe("isCheckoutPlan", () => {
+  it("sells monthly and lifetime but never annual", () => {
+    expect(isCheckoutPlan("monthly")).toBe(true);
+    expect(isCheckoutPlan("lifetime")).toBe(true);
+    expect(isCheckoutPlan("annual")).toBe(false);
+  });
+});
+
+describe("Early Access headline", () => {
+  it("shows both sellable prices without implying a lifetime subscription", () => {
+    expect(proHeadline()).toBe("$4.99 a month or $79 for life");
+    expect(proHeadlineLong()).toBe("Early Access: $4.99 a month or $79 once");
   });
 });

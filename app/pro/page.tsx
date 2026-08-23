@@ -1,54 +1,68 @@
 import { ProClient } from "@/components/pro/pro-client";
 import { AUTHOR_ID, AUTHOR_NODE } from "@/lib/author";
 import {
-  annualEnabled,
+  formatPrice,
   PRICING,
   PRO_FAQ,
-  type ProPlan,
+  type CheckoutPlan,
 } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata = {
-  title: "Suede Pro — The Vocal Coach on Top of the Free Studio",
+  title: "Suede Pro: The Vocal Coach on Top of the Free Studio",
   description:
-    "Suede Pro adds an adaptive coach, per-note analytics, take analysis, pro warmup packs, the full songbook, and two books with PDFs — while the browser studio stays free.",
+    "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access, adding an adaptive coach, per-note analytics, take analysis, pro warmup packs, the full songbook, and two books with PDFs.",
   alternates: { canonical: `${SITE_URL}/pro` },
 };
 
-/** UN/CEFACT period codes for a recurring price's reference quantity. */
-const UNIT_CODES: Record<"month" | "year", string> = { month: "MON", year: "ANN" };
-
-function offerFor(plan: ProPlan) {
-  const { amount, interval } = PRICING[plan];
+function offerFor(plan: CheckoutPlan) {
+  const { amount } = PRICING[plan];
   // Schema wants a plain decimal string, so "79" is written "79.00" here even
   // though the page shows it without the cents.
   const price = amount.toFixed(2);
-  return {
+  const offer = {
     "@type": "Offer",
     url: `${SITE_URL}/pro`,
-    name: plan === "annual" ? "Suede Pro — yearly" : "Suede Pro — monthly",
+    name:
+      plan === "lifetime"
+        ? "Suede Pro lifetime access"
+        : "Suede Pro monthly",
+    description:
+      plan === "lifetime"
+        ? "One payment for lifetime access. No renewal."
+        : `Renews monthly at ${formatPrice(amount)}. Keep that price while the subscription remains active. Cancel anytime.`,
     price,
     priceCurrency: "USD",
     availability: "https://schema.org/InStock",
-    // "9.99 USD per one month" — the recurring shape, rather than a one-off
-    // price that happens to read 9.99.
     priceSpecification: {
-      "@type": "UnitPriceSpecification",
+      "@type":
+        plan === "monthly" ? "UnitPriceSpecification" : "PriceSpecification",
       price,
       priceCurrency: "USD",
-      referenceQuantity: {
-        "@type": "QuantitativeValue",
-        value: 1,
-        unitCode: UNIT_CODES[interval],
-      },
     },
   };
+
+  if (plan === "monthly") {
+    // "4.99 USD per one month" — recurring, not a one-off price that
+    // happens to read 4.99. Lifetime deliberately has no reference quantity.
+    return {
+      ...offer,
+      priceSpecification: {
+        ...offer.priceSpecification,
+        referenceQuantity: {
+          "@type": "QuantitativeValue",
+          value: 1,
+          unitCode: "MON",
+        },
+      },
+    };
+  }
+
+  return offer;
 }
 
 /** Only markets what can actually be bought today. */
-const OFFERS = annualEnabled()
-  ? [offerFor("monthly"), offerFor("annual")]
-  : [offerFor("monthly")];
+const OFFERS = [offerFor("monthly"), offerFor("lifetime")];
 
 /**
  * The page that states the price carried no structured data at all, so the

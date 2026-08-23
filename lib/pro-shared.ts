@@ -4,10 +4,18 @@
  * import it.
  */
 
-export type ProPlan = "monthly" | "annual";
+/** Every plan an existing entitlement can carry. */
+export type ProPlan = "monthly" | "annual" | "lifetime";
+
+/** Plans that may begin a new Checkout Session. Annual is legacy-only. */
+export type CheckoutPlan = "monthly" | "lifetime";
 
 export function isProPlan(value: unknown): value is ProPlan {
-  return value === "monthly" || value === "annual";
+  return value === "monthly" || value === "annual" || value === "lifetime";
+}
+
+export function isCheckoutPlan(value: unknown): value is CheckoutPlan {
+  return value === "monthly" || value === "lifetime";
 }
 
 /**
@@ -24,6 +32,7 @@ export interface Entitlement {
   /** Raw Stripe subscription status, so the UI can flag payment trouble. */
   status: string | null;
   subscriptionId: string | null;
+  paymentIntentId: string | null;
   customerId: string | null;
   email: string | null;
   /** ISO timestamp of the end of the paid period, when known. */
@@ -38,6 +47,7 @@ export const INACTIVE: Entitlement = {
   plan: null,
   status: null,
   subscriptionId: null,
+  paymentIntentId: null,
   customerId: null,
   email: null,
   currentPeriodEnd: null,
@@ -50,10 +60,8 @@ export const INACTIVE: Entitlement = {
 export interface PlanPrice {
   /** What Stripe charges once per interval, in dollars. */
   amount: number;
-  /** The Stripe recurring interval this plan bills on. */
-  interval: "month" | "year";
-  /** Amortised monthly cost, so the two plans compare on one number. */
-  perMonth: number;
+  /** Whether Stripe bills monthly or exactly once. */
+  interval: "month" | "one_time";
   /** The billing line that sits beside the price. */
   note: string;
 }
@@ -68,82 +76,42 @@ export interface PlanPrice {
  * `scripts/stripe-setup.mjs` exits non-zero on a price that differs, and
  * resolvePriceId() refuses to open a session against one.
  */
-export const PRICING: Record<ProPlan, PlanPrice> = {
+export const PRICING: Record<CheckoutPlan, PlanPrice> = {
   monthly: {
-    amount: 9.99,
+    amount: 4.99,
     interval: "month",
-    perMonth: 9.99,
     note: "billed monthly",
   },
-  annual: {
-    amount: 29,
-    interval: "year",
-    perMonth: 29 / 12,
-    note: "billed yearly",
+  lifetime: {
+    amount: 79,
+    interval: "one_time",
+    note: "one payment",
   },
 };
 
-/** "$9.99", "$79" — a trailing ".00" on a whole-dollar price reads as a typo. */
+/** "$4.99", "$79": a trailing ".00" on a whole-dollar price reads as a typo. */
 export function formatPrice(amount: number): string {
   return `$${amount.toFixed(2).replace(/\.00$/, "")}`;
 }
 
-/** How much a year on the annual plan undercuts twelve monthly charges. */
-export function annualSavingsPct(pricing: Record<ProPlan, PlanPrice> = PRICING): number {
-  const twelve = pricing.monthly.amount * 12;
-  return Math.round(((twelve - pricing.annual.amount) / twelve) * 100);
-}
-
-/**
- * Whether the annual plan is on sale.
- *
- * Annual is only offered once an active Stripe price carrying the
- * `suede_pro_annual` lookup key charges the amount above — `npm run
- * stripe:setup -- annual` creates it and fails loudly if some other price
- * already holds that key, and setting NEXT_PUBLIC_PRO_ANNUAL=1 turns the UI
- * on. Until then every surface shows monthly alone rather than a button that
- * resolves to no price, or to the wrong one.
- */
-export function annualEnabled(
-  flag: string | undefined = process.env.NEXT_PUBLIC_PRO_ANNUAL,
-): boolean {
-  return flag === "1" || flag === "true";
-}
-
 /**
  * The one price line every teaser surface prints.
- *
- * Six surfaces used to interpolate `PRICING.monthly` by hand — the two book
- * CTAs, the gate, the upgrade modal, the homepage and the plans blurb — so
- * turning the yearly plan on changed the pricing page and left every entry
- * point still quoting a monthly number. At $29 that is the difference between
- * the offer landing and not landing, because the yearly price is the whole
- * argument.
- *
- * Falls back to monthly on its own when yearly is not on sale, so no surface
- * has to know about the flag.
  */
 export function proHeadline(
-  pricing: Record<ProPlan, PlanPrice> = PRICING,
-  annualOn: boolean = annualEnabled(),
+  pricing: Record<CheckoutPlan, PlanPrice> = PRICING,
 ): string {
-  return annualOn
-    ? `${formatPrice(pricing.annual.amount)} a year`
-    : `${formatPrice(pricing.monthly.amount)} a month`;
+  return `${formatPrice(pricing.monthly.amount)} a month or ${formatPrice(
+    pricing.lifetime.amount,
+  )} for life`;
 }
 
-/** "$29 a year — $2.42 a month, against $119.88 billed monthly." */
+/** The expanded line used when Early Access needs to be explicit. */
 export function proHeadlineLong(
-  pricing: Record<ProPlan, PlanPrice> = PRICING,
-  annualOn: boolean = annualEnabled(),
+  pricing: Record<CheckoutPlan, PlanPrice> = PRICING,
 ): string {
-  if (!annualOn) {
-    return `${formatPrice(pricing.monthly.amount)} a month, cancel in one click`;
-  }
-  const twelve = pricing.monthly.amount * 12;
-  return `${formatPrice(pricing.annual.amount)} a year — ${formatPrice(
-    pricing.annual.perMonth,
-  )} a month, against ${formatPrice(twelve)} billed monthly`;
+  return `Early Access: ${formatPrice(pricing.monthly.amount)} a month or ${formatPrice(
+    pricing.lifetime.amount,
+  )} once`;
 }
 
 /**
@@ -165,12 +133,12 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
     a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers — scores, streaks, range — never audio.",
   },
   {
-    q: "What do I get the moment I subscribe?",
+    q: "What do I get the moment I upgrade?",
     a: "Both books in full — 50 chapters and 82,734 words across The Measured Voice and The Voice Atlas — plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your full range history, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.",
   },
   {
-    q: "Can I cancel anytime?",
-    a: "Anytime, in one click, no email required. You drop back to free and keep every recording, score, and streak you earned.",
+    q: "How does billing work?",
+    a: "Monthly renews at $4.99 and can be cancelled from the billing portal. Lifetime is a single $79 payment with no renewal. Either way, your recordings, scores, and streaks remain yours.",
   },
   {
     q: "Why does a free app sell anything?",

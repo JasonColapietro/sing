@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { proHeadlineLong } from "@/lib/pro-shared";
+import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { SITE_URL } from "@/lib/site";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
@@ -22,8 +22,9 @@ import {
   WarmupGlyph,
 } from "@/components/landing/glyphs";
 
-/** The yearly price when it is on sale, monthly alone until it is. */
+/** The complete Early Access offer, shared with every other sales surface. */
 const PRO_PRICE_LINE = proHeadlineLong();
+const PRO_MONTHLY_PRICE = formatPrice(PRICING.monthly.amount);
 
 const FEATURES = [
   {
@@ -264,7 +265,7 @@ export default function Home() {
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
             <div>
               <SectionLabel className="mb-4 border-amber/50 text-amber-ink">
-                Suede Pro
+                Suede Pro · Early Access
               </SectionLabel>
               <h2 className="max-w-xl text-2xl sm:text-3xl">
                 The coach on top of the studio
@@ -304,8 +305,11 @@ export default function Home() {
                   needed" moves out; the privacy strip below still says it. */}
               <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
                 {PRO_PRICE_LINE}
-                <span className="mx-2 text-line2">·</span>Cancel in one click
-                <span className="mx-2 text-line2">·</span>The studio stays free
+                <span className="mx-2 text-line2">·</span>The{" "}
+                {PRO_MONTHLY_PRICE} monthly price stays while your subscription
+                remains active
+                <span className="mx-2 text-line2">·</span>Monthly cancels anytime
+                <span className="mx-2 text-line2">·</span>Lifetime never renews
               </p>
             </div>
             <ProVisual />

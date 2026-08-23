@@ -15,9 +15,9 @@ type State =
   | { kind: "error"; message: string };
 
 /**
- * Fetches one chapter for a verified subscriber. Bodies are not in the client
- * bundle — /api/book re-checks the subscription with Stripe and returns the
- * markdown, so a non-subscriber has nothing to read in the page source.
+ * Fetches one chapter for a verified Pro customer. Bodies are not in the
+ * client bundle — /api/book re-checks the Stripe billing record and returns
+ * the markdown, so a visitor without Pro has nothing to read in page source.
  */
 export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
   const pro = useProState();
@@ -25,14 +25,19 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
   const [state, setState] = useState<State>({ kind: "idle" });
 
   const subscriptionId = pro.subscriptionId;
+  const paymentIntentId = pro.paymentIntentId;
 
   const load = useCallback(async () => {
-    if (!subscriptionId) return;
+    if (!subscriptionId && !paymentIntentId) return;
     try {
       const res = await fetch("/api/book", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ subscriptionId, slug: chapter.slug }),
+        body: JSON.stringify({
+          subscriptionId,
+          paymentIntentId,
+          slug: chapter.slug,
+        }),
       });
       const data = (await res.json()) as { body?: string; error?: string };
       if (res.status === 403) {
@@ -56,7 +61,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
         message: "Could not reach the server. Check your connection.",
       });
     }
-  }, [subscriptionId, chapter.slug]);
+  }, [subscriptionId, paymentIntentId, chapter.slug]);
 
   useEffect(() => {
     // Every setState inside load() happens after `await fetch(...)`, so none of
@@ -66,16 +71,16 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
     void load();
   }, [load]);
 
-  // Both "no subscription" and "still waiting" are render-time facts derived
+  // Both "no entitlement" and "still waiting" are render-time facts derived
   // from what we already know, so the effect never sets state synchronously.
   //
   // Readiness comes first: gated chapter pages are statically prerendered
   // (dynamicParams = false) and the entitlement cache is local to the browser,
   // so the server always looks unsubscribed. Without this the locked card ships
-  // in the HTML a paying subscriber downloads.
+  // in the HTML a paying Pro customer downloads.
   const view: State = !proReady
     ? { kind: "loading" }
-    : !subscriptionId
+    : !subscriptionId && !paymentIntentId
       ? { kind: "locked", message: "This chapter is part of Suede Pro." }
       : state.kind === "idle"
         ? { kind: "loading" }
@@ -98,7 +103,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
         </LinkButton>
       )}
       <LinkButton href="/pro#restore" variant="ghost" size="sm">
-        Already subscribed?
+        Already have Pro?
       </LinkButton>
     </div>
   );
@@ -108,7 +113,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
       {view.kind === "loading" && (
         <div className="mt-6">
           <p className="font-mono text-xs uppercase tracking-[0.14em] text-dim">
-            Checking your subscription…
+            Checking your Pro access…
           </p>
           {ctas}
         </div>
@@ -119,7 +124,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
           <SectionLabel>Included with Pro</SectionLabel>
           <h2 className="mt-3 text-xl">{view.message}</h2>
           <p className="mt-2 max-w-xl text-sm text-mut">
-            The Measured Voice comes with a Suede Pro subscription — all{" "}
+            The Measured Voice comes with Suede Pro: all{" "}
             {BOOK_CONTENTS.length} chapters, and a PDF to keep. The studio
             itself stays free either way, and so does the first chapter.
           </p>
