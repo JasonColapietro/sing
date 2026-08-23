@@ -111,6 +111,42 @@ export function annualEnabled(
 }
 
 /**
+ * The one price line every teaser surface prints.
+ *
+ * Six surfaces used to interpolate `PRICING.monthly` by hand — the two book
+ * CTAs, the gate, the upgrade modal, the homepage and the plans blurb — so
+ * turning the yearly plan on changed the pricing page and left every entry
+ * point still quoting a monthly number. At $29 that is the difference between
+ * the offer landing and not landing, because the yearly price is the whole
+ * argument.
+ *
+ * Falls back to monthly on its own when yearly is not on sale, so no surface
+ * has to know about the flag.
+ */
+export function proHeadline(
+  pricing: Record<ProPlan, PlanPrice> = PRICING,
+  annualOn: boolean = annualEnabled(),
+): string {
+  return annualOn
+    ? `${formatPrice(pricing.annual.amount)} a year`
+    : `${formatPrice(pricing.monthly.amount)} a month`;
+}
+
+/** "$29 a year — $2.42 a month, against $119.88 billed monthly." */
+export function proHeadlineLong(
+  pricing: Record<ProPlan, PlanPrice> = PRICING,
+  annualOn: boolean = annualEnabled(),
+): string {
+  if (!annualOn) {
+    return `${formatPrice(pricing.monthly.amount)} a month, cancel in one click`;
+  }
+  const twelve = pricing.monthly.amount * 12;
+  return `${formatPrice(pricing.annual.amount)} a year — ${formatPrice(
+    pricing.annual.perMonth,
+  )} a month, against ${formatPrice(twelve)} billed monthly`;
+}
+
+/**
  * The questions on /pro, rendered there and marked up as FAQPage from these
  * same strings — Google requires the marked-up answer to match what a reader
  * sees, and sharing one array is the only way that stays true.

@@ -34,6 +34,13 @@ import {
   PRICING,
   PRO_FAQ,
 } from "@/lib/pro-shared";
+import {
+  PRO_EXERCISES,
+  PRO_PACK_COUNT,
+  TOTAL_CHAPTERS,
+  TOTAL_WORDS,
+} from "@/lib/pro-inventory";
+import { UnlockStack } from "./unlock-stack";
 
 /**
  * Read once, at module scope: NEXT_PUBLIC_PRO_ANNUAL is inlined at build time,
@@ -53,13 +60,23 @@ const PERK_GLYPHS: Record<string, React.ComponentType> = {
   history: SyncGlyph,
 };
 
+/**
+ * Numbers first, feature names second.
+ *
+ * This list used to open with "Adaptive coach plan, rebuilt daily" — a phrase
+ * a stranger can neither verify nor weigh before paying, and the kind of claim
+ * every app on the internet makes. The counts underneath it are the part that
+ * survives scrutiny, and they are checked against the shipped data on every
+ * build by lib/pro-inventory.test.ts.
+ */
 const PRO_CARD_POINTS = [
+  `${TOTAL_WORDS.toLocaleString("en-US")} words across ${TOTAL_CHAPTERS} chapters — both books, in full`,
+  "Both PDFs, downloadable and yours to keep",
+  `${PRO_EXERCISES} pro warmup exercises in ${PRO_PACK_COUNT} packs`,
+  "Pitch analysis on every recorded take",
+  "Per-note accuracy and your range charted over months",
   "Adaptive coach plan, rebuilt daily",
-  "Per-note accuracy + range history",
-  "Pitch analysis on every take",
-  "Full songbook + pro warmup packs",
-  "Cloud sync across devices",
-  "Two books + PDFs: The Measured Voice and The Voice Atlas",
+  "Continuous cloud sync across devices",
 ];
 
 const FREE_CARD_POINTS = [
@@ -261,10 +278,14 @@ function RestorePanel() {
 
 export function ProClient() {
   const pro = useProState();
-  // Monthly stays the default even when yearly is on sale: it's the price
-  // every other surface quotes, and nobody should land on a bigger number
-  // than the one that brought them here.
-  const [billing, setBilling] = useState<ProPlan>("monthly");
+  // Yearly is the default when it is on sale, and that inverts the reasoning
+  // this line used to carry. When the year cost $79 the toggle's default was
+  // protecting the visitor from landing on a bigger number than the one that
+  // brought them here. At $29 the year *is* the smaller number in every sense
+  // that matters — less than three months of monthly — so defaulting to
+  // monthly would be hiding the better offer behind a toggle. The teaser copy
+  // on every other surface leads with the yearly price for the same reason.
+  const [billing, setBilling] = useState<ProPlan>(ANNUAL_ON ? "annual" : "monthly");
   const [justUpgraded, setJustUpgraded] = useState(false);
   const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
@@ -724,6 +745,12 @@ export function ProClient() {
           )}
         </div>
       </section>
+
+      {/* 3b — What the money buys, itemised. Directly under the buy card on
+              purpose: an annual buyer is committing twelve months up front and
+              the question in their head at that exact scroll position is "what
+              do I actually get today". */}
+      <UnlockStack />
 
       {/* 4 — Free vs Pro table */}
       <section className="border-t border-line">

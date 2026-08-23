@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { annualEnabled, formatPrice, PRICING } from "@/lib/pro-shared";
+import { proHeadlineLong } from "@/lib/pro-shared";
+import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { SITE_URL } from "@/lib/site";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { HeroSplit } from "@/components/landing/hero-split";
@@ -21,10 +22,8 @@ import {
   WarmupGlyph,
 } from "@/components/landing/glyphs";
 
-/** Both prices when yearly is on sale, monthly alone until it is. */
-const PRO_PRICE_LINE = annualEnabled()
-  ? `${formatPrice(PRICING.monthly.amount)}/mo or ${formatPrice(PRICING.annual.amount)}/yr`
-  : `${formatPrice(PRICING.monthly.amount)}/mo`;
+/** The yearly price when it is on sale, monthly alone until it is. */
+const PRO_PRICE_LINE = proHeadlineLong();
 
 const FEATURES = [
   {
@@ -275,13 +274,15 @@ export default function Home() {
                 The coach on top of the studio
               </h2>
               <p className="mt-3 max-w-xl text-mut">
-                Practice in the studio without paying. Pro adds a coach that
-                remembers every session — adaptive daily plans, per-note
-                accuracy, your range charted over months, and the full
-                songbook.
+                The studio, all 26 songs, the range test and 420 measured
+                voices cost nothing and always will. Pro adds the library and
+                the long memory: both books in full, pitch analysis on every
+                take, and your range charted over months rather than one test
+                at a time.
               </p>
               <ul className="mt-5 space-y-2.5">
                 {[
+                  `Both books open at once — ${TOTAL_CHAPTERS} chapters, ${TOTAL_WORDS.toLocaleString("en-US")} words, two PDFs to keep`,
                   "A practice plan that rebuilds itself around your weak notes",
                   "Range growth and accuracy trends, week over week",
                   "Pitch analysis on every recorded take",

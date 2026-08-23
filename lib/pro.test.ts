@@ -50,8 +50,6 @@ describe("Pro sales copy", () => {
   it("describes each book's free tier by its actual free-chapter count", () => {
     // The `free` flags on the checked-in chapter arrays are the source of
     // truth; this copy is the only place the counts are restated by hand.
-    const freeChapters = (entries: Array<{ free: boolean }>) =>
-      entries.filter((c) => c.free).length;
     // "first N" is only honest when the free chapters really are the opening
     // run. The Measured Voice now samples chapters 1, 8 and 12 — the two that
     // teach a reader to take an honest measurement and to spot a bad one — so
