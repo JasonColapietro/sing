@@ -44,26 +44,34 @@ export function totalTargetDur(segs: Segment[]): number {
  * Play the guide melody for one rep: discrete-note exercises use
  * playSequence (spacing matches buildSegments exactly), glide exercises
  * schedule per-segment pitch glides with playTone.
+ *
+ * `at` delays the whole pattern (seconds from now), `gain` scales it — the
+ * under-voice pass plays quieter than a teach pass — and `out` routes every
+ * tone through a cancellable group, which is what lets a transpose or an exit
+ * take a scheduled guide back.
  */
 export function playGuide(
   ex: WarmupExercise,
   rootMidi: number,
   tempo: number,
+  opts: { at?: number; gain?: number; out?: AudioNode } = {},
 ): { segs: Segment[]; totalSec: number } {
+  const { at = 0, gain = 0.22, out } = opts;
   const { segs, totalSec, noteDur, gap } = buildSegments(ex, rootMidi, tempo);
   if (ex.glide) {
     for (const seg of segs) {
       playTone(seg.startMidi, {
         dur: seg.dur,
-        at: seg.t0,
-        gain: 0.22,
+        at: at + seg.t0,
+        gain,
+        out,
         glideToMidi: seg.endMidi !== seg.startMidi ? seg.endMidi : undefined,
       });
     }
   } else {
     playSequence(
       segs.map((s) => s.startMidi),
-      { noteDur, gap, gain: 0.22 },
+      { noteDur, gap, gain, at, out },
     );
   }
   return { segs, totalSec };

@@ -2,10 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { buildSegments, computeRootLadder, ladderWalk, type WarmupExercise } from "./exercises";
-import type { UsePitchResult } from "@/lib/audio/use-pitch";
-import { centsOff, freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
+import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
+import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
-import { logSession, type VocalRange } from "@/lib/progress";
+import { audioNow, getAudioContext } from "@/lib/audio/context";
+import { clickAt, createToneGroup, type ToneGroup } from "@/lib/audio/synth";
+import { liveLags } from "@/lib/audio/latency";
+import { logSession, type VocalRange, type WarmupMode } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
 import { IconArrowLeft, IconMinus, IconPlay, IconPlus, IconSkip, IconStop } from "./icons";
@@ -15,35 +18,29 @@ import {
   playGuide,
   repAvgScore,
   sungReps,
-  segmentIndexAt,
-  singWindowSec,
   targetMidiAt,
-  totalTargetDur,
   type RepResult,
   type SessionSummaryData,
 } from "./lib";
-
-import { TOLERANCE_CENTS } from "./scoring";
-
-// Re-exported so existing imports keep resolving until the Task 7 rewrite
-// moves them all onto ./scoring, where the constant now lives.
-export { TOLERANCE_CENTS };
+import { clickTimes, planRep, type RepPlan } from "./timeline";
+import { createRepScorer, type RepScorer } from "./scoring";
 
 const TEMPOS = [0.75, 1, 1.25] as const;
-const REP_RESULT_PAUSE_MS = 1100;
 const MIN_VOLUME = 0.006;
+/** Guide gain with the level at 100 — the gain the teach pass has always used. */
+const GUIDE_MAX_GAIN = 0.22;
+/** Seconds between scheduling a rep and its first event, so nothing lands in the past. */
+const SCHEDULE_LEAD_SEC = 0.2;
 /**
  * Consecutive reps without a single voiced frame before the walk ends itself.
  * The ladder never stops on its own, so silence is the only signal that the
- * singer has left: two reps is roughly 25 s of quiet — generous enough for
- * catching a breath, tight enough that an abandoned tab stops almost at once.
+ * singer has left: two reps of quiet is generous enough for catching a breath,
+ * tight enough that an abandoned tab stops almost at once.
  */
 const MAX_UNSUNG_REPS = 2;
 
-type Phase = "listen" | "sing" | "rep-result";
-
-/** Phases where a rep is still in play, so skipping it means something. */
-const SKIPPABLE_PHASES: Phase[] = ["listen", "sing"];
+/** Where in one rep's timeline the loop currently is. */
+type Stage = "teach" | "lead" | "sing";
 
 /**
  * What an unsung rep — one where the mic never landed a voiced frame on a
@@ -145,42 +142,56 @@ export function ExercisePlayer({
     [ex, range.lowMidi, range.highMidi],
   );
 
+  // Local until Task 8 wires the persisted preference and its control.
+  const mode: WarmupMode = "sing-along";
+  const guidePct = 70;
+
   const [repIndex, setRepIndex] = useState(0);
   const [tempo, setTempo] = useState<(typeof TEMPOS)[number]>(1);
   const [transpose, setTranspose] = useState(0);
-  const [phase, setPhase] = useState<Phase>("listen");
+  const [stage, setStage] = useState<Stage>("lead");
   const [results, setResults] = useState<RepResult[]>([]);
-  const [elapsedSec, setElapsedSec] = useState(0);
+  // The last rep that closed: "silent" shows the no-sound pill, "scored" the
+  // score pill. Rendered in place while the next rep is already running, so
+  // the ladder never stops to grade anyone.
+  const [lastOutcome, setLastOutcome] = useState<"scored" | "silent" | null>(null);
+  const [cursorSec, setCursorSec] = useState<number | null>(null);
   const [hitSec, setHitSec] = useState<number[]>([]);
   const [trace, setTrace] = useState<TracePoint[]>([]);
   const [liveMidiFloat, setLiveMidiFloat] = useState<number | null>(null);
-  // The rep that just ended picked up no sound at all — say so, instead of
-  // leaving the previous rep's score on screen as if it belonged to this one.
-  const [repSilent, setRepSilent] = useState(false);
 
-  const { root: ladderRoot, index: ladderIndex } = ladderWalk(roots, repIndex);
+  const { index: ladderIndex } = ladderWalk(roots, repIndex);
   // The direction that produced this rep, not the one the walk turns to next.
   const climbing = repAscending(roots, repIndex);
-  const currentRoot = Math.max(24, Math.min(96, ladderRoot + transpose));
+  const currentRoot = Math.max(24, Math.min(96, ladderWalk(roots, repIndex).root + transpose));
   const { segs, totalSec } = useMemo(
     () => buildSegments(ex, currentRoot, tempo),
     [ex, currentRoot, tempo],
   );
-  const singWindow = singWindowSec(totalSec);
   const lastResult = results[results.length - 1] ?? null;
 
-  const hitAccumRef = useRef<number[]>([]);
-  const centsSumRef = useRef(0);
-  const centsCountRef = useRef(0);
-  // Per-segment cents error for the Pro analytics, alongside the rep-wide
-  // averages above.
-  const segCentsSumRef = useRef<number[]>([]);
-  const segCentsFramesRef = useRef<number[]>([]);
+  // The loop's working set. The rAF tick must see the rep that is actually
+  // scheduled on the audio clock, not whatever render last committed, so
+  // everything it reads lives in refs that scheduleRep writes synchronously.
+  const planRef = useRef<RepPlan | null>(null);
+  const scorerRef = useRef<RepScorer | null>(null);
+  const groupRef = useRef<ToneGroup | null>(null);
+  const patternSecRef = useRef(0);
+  const rootRef = useRef(48);
+  const repIndexRef = useRef(0);
+  const tempoRef = useRef<(typeof TEMPOS)[number]>(1);
+  const transposeRef = useRef(0);
+  const resultsRef = useRef<RepResult[]>([]);
   const traceRef = useRef<TracePoint[]>([]);
-  // Consecutive reps the singer didn't sing, and when the last rep that *was*
-  // sung ended. Together they keep an abandoned tab out of permanent progress.
+  const stageRef = useRef<Stage>("lead");
+  const lagsRef = useRef({ pitchLag: 0, outputLag: 0, scoreLag: 0 });
   const unsungRepsRef = useRef(0);
   const lastScoredAtRef = useRef<number | null>(null);
+  const lastTickRef = useRef(0);
+  const rafRef = useRef(0);
+  // Set once the session has handed off (finish, exit, or unmount): the loop
+  // stops scheduling and every handler becomes a no-op.
+  const finishedRef = useRef(false);
   // Lazy state initializer: performance.now() only runs once, on mount.
   const [sessionStart] = useState(() => performance.now());
 
@@ -209,198 +220,252 @@ export function ExercisePlayer({
     });
   }
 
-  // Listen: auto-play the guide melody, animate the cursor, then flip to Sing.
-  // Kept as an effect because it starts audio playback (a side effect that
-  // must not run during render); the state resets below seed that playback.
-  useEffect(() => {
-    if (phase !== "listen") return;
-    const { segs: guideSegs, totalSec: t } = playGuide(ex, currentRoot, tempo);
-    const start = performance.now();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the rep that just started playing above
-    setElapsedSec(0);
-    setHitSec(guideSegs.map(() => 0));
-    setTrace([]);
-    setLiveMidiFloat(null);
+  /**
+   * Put rep `repIdx` on the audio clock starting at `t0`: cancel whatever the
+   * previous rep still had scheduled, lay the plan out, and schedule its
+   * sounds into a fresh cancellable group — the teach pass when the plan has
+   * one, the count-in clicks, and the under-voice guide for sing-along.
+   */
+  function scheduleRep(repIdx: number, t0: number, opts?: { teach?: boolean }) {
+    groupRef.current?.cancel();
+    const ladderRoot = ladderWalk(roots, repIdx).root;
+    const root = Math.max(24, Math.min(96, ladderRoot + transposeRef.current));
+    const { segs, totalSec, noteDur } = buildSegments(ex, root, tempoRef.current);
+    const plan = planRep({
+      mode,
+      // A forced teach replays the guide-alone pass without moving the walk:
+      // rep 0 is the one index every mode teaches at.
+      repIndex: opts?.teach ? 0 : repIdx,
+      t0,
+      patternSec: totalSec,
+      noteDur,
+    });
 
-    let raf = 0;
-    const tick = () => {
-      const el = (performance.now() - start) / 1000;
-      setElapsedSec(Math.min(t, el));
-      if (el < t) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    const timer = setTimeout(() => setPhase("sing"), Math.max(50, t * 1000));
-    return () => {
-      cancelAnimationFrame(raf);
-      clearTimeout(timer);
-    };
-  }, [phase, repIndex, ex, currentRoot, tempo]);
+    const group = createToneGroup();
+    const now = audioNow();
+    if (plan.guideAt !== null) {
+      playGuide(ex, root, tempoRef.current, {
+        at: plan.t0 + plan.guideAt - now,
+        out: group.node,
+      });
+    }
+    clickTimes(plan, noteDur).forEach((time, i) => clickAt(time, i === 0, group.node));
+    if (plan.guideUnderVoice && guidePct > 0) {
+      playGuide(ex, root, tempoRef.current, {
+        at: plan.t0 + plan.singAt - now,
+        gain: (guidePct / 100) * GUIDE_MAX_GAIN,
+        out: group.node,
+      });
+    }
 
-  // Sing: score the live pitch against the target melody in real time.
-  useEffect(() => {
-    if (phase !== "sing") return;
-    hitAccumRef.current = segs.map(() => 0);
-    centsSumRef.current = 0;
-    centsCountRef.current = 0;
-    segCentsSumRef.current = segs.map(() => 0);
-    segCentsFramesRef.current = segs.map(() => 0);
+    planRef.current = plan;
+    groupRef.current = group;
+    scorerRef.current = createRepScorer(segs);
+    patternSecRef.current = totalSec;
+    rootRef.current = root;
+    repIndexRef.current = repIdx;
     traceRef.current = [];
-    setHitSec(hitAccumRef.current);
+    setRepIndex(repIdx);
     setTrace([]);
-    setLiveMidiFloat(null);
+    setHitSec(segs.map(() => 0));
+    setCursorSec(null);
+  }
 
-    const start = performance.now();
-    let last = start;
-    let raf = 0;
-    const tick = () => {
-      const now = performance.now();
-      // Shared cap, not a local one: a hidden tab stops rAF while the wall
-      // clock keeps running, so the first frame back would otherwise carry the
-      // whole absence. See lib/audio/frame-clock.
-      const dt = frameDelta(now, last) / 1000;
-      last = now;
-      const elapsed = (now - start) / 1000;
-      setElapsedSec(elapsed);
+  /** Close the rep whose window just ended, then keep walking. */
+  function closeRep() {
+    const plan = planRef.current;
+    const scorer = scorerRef.current;
+    if (!plan || !scorer) return;
 
-      const frame = pitch.latest.current;
-      const voiced = isScorableFrame(frame, now);
-      const midiFloat = voiced && frame.freq !== null ? freqToMidiFloat(frame.freq) : null;
-      setLiveMidiFloat(midiFloat);
-
-      if (elapsed <= totalSec) {
-        const target = targetMidiAt(segs, elapsed);
-        if (target !== null && voiced && frame.freq !== null) {
-          const cents = centsOff(frame.freq, target);
-          centsSumRef.current += Math.abs(cents);
-          centsCountRef.current += 1;
-          // Attribute every voiced frame to its segment, in tune or not —
-          // an out-of-tune frame is exactly the signal weak-note detection
-          // needs, so the index has to be resolved before the check.
-          const idx = segmentIndexAt(segs, elapsed);
-          if (idx >= 0) {
-            segCentsSumRef.current[idx] =
-              (segCentsSumRef.current[idx] ?? 0) + Math.abs(cents);
-            segCentsFramesRef.current[idx] =
-              (segCentsFramesRef.current[idx] ?? 0) + 1;
-            if (Math.abs(cents) <= TOLERANCE_CENTS) {
-              hitAccumRef.current[idx] = (hitAccumRef.current[idx] ?? 0) + dt;
-            }
-          }
-        }
-        traceRef.current = [...traceRef.current, { t: elapsed, midi: midiFloat }].slice(-260);
-        setHitSec([...hitAccumRef.current]);
-        setTrace(traceRef.current);
-      }
-
-      if (elapsed < singWindow) {
-        raf = requestAnimationFrame(tick);
-        return;
-      }
-
+    const res = scorer.result(rootRef.current);
+    if (res === null) {
       // Not one voiced frame all window: nobody sang this rep. Recording it
       // would fold a 0 into the logged average, and the walk never stops on
       // its own — so record nothing and end the session once the silence
       // stops looking like a breath.
-      if (centsCountRef.current === 0) {
-        unsungRepsRef.current += 1;
-        const action = unsungRepAction(unsungRepsRef.current, sungReps(results).length);
-        if (action === "continue") {
-          setRepSilent(true);
-          setPhase("rep-result");
-        } else if (action === "finish") {
-          finalize(results);
-        } else {
-          onExit();
-        }
+      unsungRepsRef.current += 1;
+      const action = unsungRepAction(unsungRepsRef.current, sungReps(resultsRef.current).length);
+      if (action === "finish") {
+        finishedRef.current = true;
+        groupRef.current?.cancel();
+        finalize(resultsRef.current);
         return;
       }
-
+      if (action === "exit") {
+        finishedRef.current = true;
+        groupRef.current?.cancel();
+        onExit();
+        return;
+      }
+      setLastOutcome("silent");
+    } else {
       unsungRepsRef.current = 0;
-      lastScoredAtRef.current = now;
-      const denom = totalTargetDur(segs);
-      const hitTotal = hitAccumRef.current.reduce((a, b) => a + b, 0);
-      const score =
-        denom > 0 ? Math.round(Math.min(100, (hitTotal / denom) * 100)) : 0;
-      const avgCentsErr =
-        centsCountRef.current > 0
-          ? Math.round(centsSumRef.current / centsCountRef.current)
-          : 0;
-      const result: RepResult = {
-        root: currentRoot,
-        score,
-        avgCentsErr,
-        skipped: false,
-        notes: segs.flatMap((seg, i) => {
-          const hitSec = hitAccumRef.current[i] ?? 0;
-          const centsSum = segCentsSumRef.current[i] ?? 0;
-          const centsFrames = segCentsFramesRef.current[i] ?? 0;
-          // A glide sweeps between two pitches, so credit each endpoint
-          // with half the segment rather than pinning it to one note.
-          const endpoints =
-            seg.startMidi === seg.endMidi
-              ? [seg.startMidi]
-              : [seg.startMidi, seg.endMidi];
-          const share = 1 / endpoints.length;
-          return endpoints.map((midi) => ({
-            midi,
-            hitSec: hitSec * share,
-            possibleSec: seg.dur * share,
-            centsSum: centsSum * share,
-            centsFrames: Math.round(centsFrames * share),
-          }));
-        }),
-      };
-      setRepSilent(false);
-      setResults((prev) => [...prev, result]);
-      setPhase("rep-result");
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, repIndex]);
+      lastScoredAtRef.current = performance.now();
+      resultsRef.current = [...resultsRef.current, res];
+      setResults(resultsRef.current);
+      setLastOutcome("scored");
+    }
+    scheduleRep(repIndexRef.current + 1, plan.t0 + plan.repDur);
+  }
 
-  // Rep result: brief pause, then keep walking the ladder — up to the top,
-  // back down, and around again. The walk ends only when the singer says so,
-  // or when the sing phase above has heard nothing for MAX_UNSUNG_REPS reps.
+  // The one loop. Reps chain edge to edge on the audio clock; the tick derives
+  // the stage from where the clock sits in the current plan, draws the lane
+  // where the singer *hears* the guide, and feeds the scorer the pattern
+  // position the frame in hand actually describes.
   useEffect(() => {
-    if (phase !== "rep-result") return;
-    const timer = setTimeout(() => {
-      setRepIndex((i) => i + 1);
-      setPhase("listen");
-    }, REP_RESULT_PAUSE_MS);
-    return () => clearTimeout(timer);
-  }, [phase]);
+    finishedRef.current = false;
+    lagsRef.current = liveLags(getAudioContext().sampleRate, PITCH_FFT_SIZE);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the rep whose audio the effect just scheduled, same as the old listen effect
+    scheduleRep(0, audioNow() + SCHEDULE_LEAD_SEC);
+    lastTickRef.current = performance.now();
+
+    const tick = () => {
+      if (finishedRef.current) return;
+      const plan = planRef.current;
+      const scorer = scorerRef.current;
+      if (!plan || !scorer) return;
+
+      const nowPerf = performance.now();
+      // Shared cap, not a local one: a hidden tab stops rAF while the wall
+      // clock keeps running, so the first frame back would otherwise carry the
+      // whole absence. See lib/audio/frame-clock.
+      const dt = frameDelta(nowPerf, lastTickRef.current) / 1000;
+      lastTickRef.current = nowPerf;
+      const elapsed = audioNow() - plan.t0;
+      const { outputLag, scoreLag } = lagsRef.current;
+      const patternSec = patternSecRef.current;
+
+      const stageNow: Stage =
+        elapsed >= plan.singAt
+          ? "sing"
+          : plan.guideAt !== null && elapsed < plan.leadAt
+            ? "teach"
+            : "lead";
+      if (stageNow !== stageRef.current) {
+        stageRef.current = stageNow;
+        setStage(stageNow);
+      }
+
+      const frame = pitch.latest.current;
+      const scorable = isScorableFrame(frame, nowPerf);
+      const midiFloat = scorable && frame.freq !== null ? freqToMidiFloat(frame.freq) : null;
+
+      if (stageNow === "sing") {
+        // Drawn where the guide is heard; scored where the voice actually was.
+        // The two corrections differ by the pitch-report lag, and neither is
+        // the raw clock — see lib/audio/latency.
+        const drawSec = Math.min(patternSec, Math.max(0, elapsed - plan.singAt - outputLag));
+        setCursorSec(drawSec);
+        setLiveMidiFloat(midiFloat);
+        scorer.feed(
+          elapsed - plan.singAt - scoreLag,
+          scorable && frame.freq !== null ? frame.freq : null,
+          dt,
+        );
+        traceRef.current = [...traceRef.current, { t: drawSec, midi: midiFloat }].slice(-260);
+        setTrace(traceRef.current);
+        setHitSec(scorer.hitSec());
+      } else if (stageNow === "teach") {
+        setCursorSec(Math.min(patternSec, Math.max(0, elapsed - outputLag)));
+        setLiveMidiFloat(null);
+      } else {
+        setCursorSec(null);
+        setLiveMidiFloat(null);
+      }
+
+      if (elapsed >= plan.repDur) {
+        closeRep();
+        if (finishedRef.current) return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+
+    // A hidden tab must go quiet and stall cleanly: rAF stops on its own, but
+    // the tone group would keep playing whatever was already scheduled — one
+    // full guide melody, out loud, to an empty room. Cancel it, and rebuild
+    // the current rep from the clock when the singer comes back.
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        groupRef.current?.cancel();
+        cancelAnimationFrame(rafRef.current);
+      } else if (!finishedRef.current) {
+        lastTickRef.current = performance.now();
+        scheduleRep(repIndexRef.current, audioNow() + SCHEDULE_LEAD_SEC);
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      finishedRef.current = true;
+      document.removeEventListener("visibilitychange", onVisibility);
+      cancelAnimationFrame(rafRef.current);
+      groupRef.current?.cancel();
+    };
+    // Everything the loop reads lives in refs precisely so this runs once per
+    // exercise: reps chain inside the loop, and control changes reschedule
+    // through scheduleRep rather than by re-running the effect.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ex]);
+
+  /** Cancel the current rep's sounds and rebuild it from the clock. */
+  function restartCurrentRep(opts?: { teach?: boolean }) {
+    if (finishedRef.current) return;
+    scheduleRep(repIndexRef.current, audioNow() + SCHEDULE_LEAD_SEC, opts);
+  }
 
   function skipRep() {
-    // Only meaningful while the rep is still in play. During the rep-result
-    // pause repIndex hasn't advanced yet, so a tap here would append a second
-    // result for the rung just scored — counted twice in the average and
-    // listed twice in the summary.
-    if (!SKIPPABLE_PHASES.includes(phase)) return;
-    // Tapping skip is a sign of life, so the silence streak starts over.
+    if (finishedRef.current) return;
+    // A skipped rung is an abstention: recorded so the summary can list it,
+    // never scored. Tapping skip is a sign of life, so the silence streak
+    // starts over.
+    groupRef.current?.cancel();
     unsungRepsRef.current = 0;
-    const result: RepResult = { root: currentRoot, score: 0, avgCentsErr: 0, skipped: true };
-    setResults((prev) => [...prev, result]);
-    setRepIndex((i) => i + 1);
-    setPhase("listen");
+    const result: RepResult = { root: rootRef.current, score: 0, avgCentsErr: 0, skipped: true };
+    resultsRef.current = [...resultsRef.current, result];
+    setResults(resultsRef.current);
+    setLastOutcome("scored");
+    scheduleRep(repIndexRef.current + 1, audioNow() + SCHEDULE_LEAD_SEC);
   }
 
   function endExercise() {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    groupRef.current?.cancel();
+    cancelAnimationFrame(rafRef.current);
     // Skips are abstentions, so a session of nothing but skips has nothing to
     // report: logging it would write a 0% warmup for singing that never
     // happened, the same way an abandoned tab used to.
-    if (sungReps(results).length === 0) {
+    if (sungReps(resultsRef.current).length === 0) {
       onExit();
     } else {
-      finalize(results);
+      finalize(resultsRef.current);
     }
   }
 
-  const controlsEnabled = phase === "listen";
-  const canSkip = SKIPPABLE_PHASES.includes(phase);
+  function changeTempo(tv: (typeof TEMPOS)[number]) {
+    tempoRef.current = tv;
+    setTempo(tv);
+    restartCurrentRep();
+  }
+
+  function nudgeTranspose(delta: number) {
+    const next = Math.max(-6, Math.min(6, transposeRef.current + delta));
+    if (next === transposeRef.current) return;
+    transposeRef.current = next;
+    setTranspose(next);
+    restartCurrentRep();
+  }
+
+  const singing = stage === "sing";
   const currentCents =
-    phase === "sing" && liveMidiFloat !== null
-      ? Math.round((liveMidiFloat - (targetMidiAt(segs, Math.min(elapsedSec, totalSec)) ?? liveMidiFloat)) * 100)
+    singing && liveMidiFloat !== null
+      ? Math.round(
+          (liveMidiFloat -
+            (targetMidiAt(segs, Math.min(cursorSec ?? 0, totalSec)) ?? liveMidiFloat)) *
+            100,
+        )
       : null;
 
   return (
@@ -427,21 +492,17 @@ export function ExercisePlayer({
       <ProgressBar value={ladderHeightPct(ladderIndex, roots.length)} tone="amber" />
 
       {/*
-       * The container carries the phase, not just a word inside it.
+       * The container carries the stage, not just a word inside it.
        *
        * "Listen" and "Your turn" is the one state a singer has to read
-       * correctly mid-exercise — sing over the reference and the rep is
-       * wasted — and it was a 20px word, the second element in the card, next
-       * to a 30px root note that was larger than it. The card border, the
-       * background and the lane frame were byte-identical across both phases
-       * and the playhead animated in both, so there was nothing peripheral
-       * vision could catch. Now the whole card changes state, the word leads,
-       * and the live phase gets the same blinking dot the studio already uses
-       * to mean "this is recording you".
+       * correctly mid-exercise — sing over a teach pass and the rep is
+       * wasted — so the whole card changes state, the word leads, and the
+       * live stage gets the same blinking dot the studio already uses to
+       * mean "this is recording you".
        */}
       <Card
         className={
-          phase === "sing"
+          singing
             ? "border-rec bg-rec/[0.04] transition-colors"
             : "transition-colors"
         }
@@ -452,13 +513,13 @@ export function ExercisePlayer({
               className="flex items-center gap-2.5 text-3xl"
               aria-live="polite"
             >
-              {phase === "sing" && (
+              {singing && (
                 <span
                   aria-hidden="true"
                   className="animate-recblink inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-rec"
                 />
               )}
-              {phase === "sing" ? "Your turn" : "Listen"}
+              {singing ? "Your turn" : "Listen"}
             </h2>
             <SectionLabel className="mt-3">{ex.title}</SectionLabel>
             <p className="mt-2 max-w-md text-sm text-mut">{ex.tip}</p>
@@ -482,22 +543,22 @@ export function ExercisePlayer({
         </p>
         <div
           className={`no-scrollbar well mt-2 overflow-x-auto rounded-xl p-3 transition-opacity [mask-image:linear-gradient(to_right,black_calc(100%-24px),transparent)] sm:mt-6 sm:[mask-image:none] ${
-            phase === "listen" ? "opacity-70" : "opacity-100"
+            singing ? "opacity-100" : "opacity-70"
           }`}
         >
           <NoteLaneCanvas
             segs={segs}
             totalSec={totalSec}
             hitSec={hitSec}
-            cursorSec={phase === "rep-result" ? null : elapsedSec}
+            cursorSec={cursorSec}
             liveMidiFloat={liveMidiFloat}
             trace={trace}
-            showLive={phase === "sing"}
+            showLive={singing}
           />
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-6">
-          {phase === "sing" && (
+          {singing && (
             <div>
               <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Cents off
@@ -507,10 +568,8 @@ export function ExercisePlayer({
               </div>
             </div>
           )}
-          {phase === "rep-result" && repSilent && (
-            <Pill tone="mut">No sound picked up</Pill>
-          )}
-          {phase === "rep-result" && !repSilent && lastResult && (
+          {lastOutcome === "silent" && <Pill tone="mut">No sound picked up</Pill>}
+          {lastOutcome === "scored" && lastResult && (
             <div className="flex flex-1 flex-wrap items-center gap-4">
               <Pill tone={lastResult.skipped ? "mut" : lastResult.score >= 80 ? "ok" : "amber"}>
                 {lastResult.skipped ? "Skipped" : `Rep score ${lastResult.score}%`}
@@ -535,8 +594,7 @@ export function ExercisePlayer({
           <Button
             variant="outline"
             size="sm"
-            disabled={phase === "sing"}
-            onClick={() => playGuide(ex, currentRoot, tempo)}
+            onClick={() => restartCurrentRep({ teach: true })}
           >
             <IconPlay /> Play reference again
           </Button>
@@ -545,9 +603,8 @@ export function ExercisePlayer({
             <button
               type="button"
               aria-label="Transpose down a semitone"
-              disabled={!controlsEnabled}
-              onClick={() => setTranspose((t) => Math.max(-6, t - 1))}
-              className="rounded-full p-1.5 text-mut hover:text-ink disabled:opacity-40"
+              onClick={() => nudgeTranspose(-1)}
+              className="rounded-full p-1.5 text-mut hover:text-ink"
             >
               <IconMinus />
             </button>
@@ -555,9 +612,8 @@ export function ExercisePlayer({
             <button
               type="button"
               aria-label="Transpose up a semitone"
-              disabled={!controlsEnabled}
-              onClick={() => setTranspose((t) => Math.min(6, t + 1))}
-              className="rounded-full p-1.5 text-mut hover:text-ink disabled:opacity-40"
+              onClick={() => nudgeTranspose(1)}
+              className="rounded-full p-1.5 text-mut hover:text-ink"
             >
               <IconPlus />
             </button>
@@ -568,10 +624,9 @@ export function ExercisePlayer({
               <button
                 key={tv}
                 type="button"
-                disabled={!controlsEnabled}
-                onClick={() => setTempo(tv)}
+                onClick={() => changeTempo(tv)}
                 aria-pressed={tempo === tv}
-                className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
+                className={`rounded-full px-2.5 py-1 font-mono text-xs ${
                   tempo === tv ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
                 }`}
               >
@@ -582,7 +637,7 @@ export function ExercisePlayer({
 
           <span className="flex-1" />
 
-          <Button variant="ghost" size="sm" disabled={!canSkip} onClick={skipRep}>
+          <Button variant="ghost" size="sm" onClick={skipRep}>
             <IconSkip /> Skip rep
           </Button>
           <Button variant="rec" size="sm" onClick={endExercise}>

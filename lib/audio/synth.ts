@@ -160,8 +160,10 @@ export function startDrone(midi: number, gain = 0.09): () => void {
 /**
  * Schedule a metronome click at an absolute AudioContext time (see audioNow()).
  * Use a lookahead loop that schedules a few clicks ahead for stable timing.
+ * `out` routes the click through a ToneGroup so a cancelled rep silences its
+ * count-in along with its guide.
  */
-export function clickAt(at: number, accent = false): void {
+export function clickAt(at: number, accent = false, out?: AudioNode): void {
   const ctx = getAudioContext();
   const osc = ctx.createOscillator();
   const g = ctx.createGain();
@@ -170,7 +172,7 @@ export function clickAt(at: number, accent = false): void {
   g.gain.setValueAtTime(0.0001, at);
   g.gain.exponentialRampToValueAtTime(accent ? 0.5 : 0.32, at + 0.002);
   g.gain.exponentialRampToValueAtTime(0.0001, at + 0.05);
-  osc.connect(g).connect(ctx.destination);
+  osc.connect(g).connect(out ?? ctx.destination);
   osc.start(at);
   osc.stop(at + 0.08);
 }
