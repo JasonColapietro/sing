@@ -14,7 +14,7 @@ import {
   type Tone,
 } from "@/components/songs/grade";
 import { ShareableResult } from "@/components/songs/result-card";
-import { TOLERANCE_CENTS } from "./exercise-player";
+import { TOLERANCE_CENTS } from "./scoring";
 import { sungReps, type SessionSummaryData } from "./lib";
 
 /** Under this a rep didn't hold — the amber floor the whole page reads from. */
