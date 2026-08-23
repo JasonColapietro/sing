@@ -13,6 +13,7 @@ import {
 } from "./exercises";
 import type { ProgressState } from "@/lib/progress";
 import { midiToLabel } from "@/lib/audio/notes";
+import { MODE_LABELS } from "./prefs";
 import { useIsPro } from "@/lib/pro";
 import { Card, LinkButton, Pill, SectionLabel } from "@/components/ui";
 import { FreeOnly } from "@/components/pro/gate";
@@ -34,9 +35,14 @@ const TIER_BLURBS: Record<WarmupTier, string> = {
     "A full-octave siren and clean sixth leaps, for a voice that is already moving freely.",
 };
 
-function isRecentlyDone(ex: WarmupExercise, progress: ProgressState): boolean {
+/**
+ * The most recent session of this exercise inside the recency window, or
+ * undefined. Sessions are stored newest-first, so `find` is the latest one;
+ * a rung is recent whichever mode sang it, but the card says which.
+ */
+function latestRecentSession(ex: WarmupExercise, progress: ProgressState) {
   const now = Date.now();
-  return progress.sessions.some(
+  return progress.sessions.find(
     (s) =>
       s.type === "warmup" &&
       s.detail === ex.title &&
@@ -70,7 +76,7 @@ export function Library({
   const exerciseCard = (ex: WarmupExercise) => {
     const roots = computeRootLadder(ex, progress.range.lowMidi, progress.range.highMidi);
     const minutes = estimateMinutes(ex, roots.length);
-    const recent = isRecentlyDone(ex, progress);
+    const recent = latestRecentSession(ex, progress);
     const failed = error !== null && errorExerciseId === ex.id;
     return (
       // The message goes under the button, not inside it: a card is a control,
@@ -91,7 +97,11 @@ export function Library({
           >
             <div className="flex items-start justify-between gap-2">
               <h3 className="text-lg">{ex.title}</h3>
-              {recent && <Pill tone="ok">Done recently</Pill>}
+              {recent && (
+                <Pill tone="ok">
+                  Done recently{recent.mode ? ` · ${MODE_LABELS[recent.mode]}` : ""}
+                </Pill>
+              )}
             </div>
             <p className="mt-2 text-sm text-mut">{ex.desc}</p>
             <div className="mt-4 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">

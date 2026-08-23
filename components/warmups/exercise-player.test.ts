@@ -294,3 +294,42 @@ describe("a hidden tab cannot score the rep it was away for", () => {
     expect(frameDelta(now, now + 500)).toBe(0);
   });
 });
+
+describe("the loop's contracts with its extracted modules", () => {
+  it("chains sing-along reps with no overlap between scored windows", async () => {
+    // The rewrite schedules rep N+1 at rep N's t0 + repDur; if any scored
+    // window could reach into the next rep's, one voice frame would be
+    // fed to two scorers. Absolute times, five reps deep.
+    const { planRep } = await import("./timeline");
+    let t0 = 0.2;
+    let prevSingEnd = -Infinity;
+    for (let i = 0; i < 5; i++) {
+      const plan = planRep({
+        mode: "sing-along",
+        repIndex: i,
+        t0,
+        patternSec: 5.14,
+        noteDur: 0.5,
+      });
+      const singStart = plan.t0 + plan.singAt;
+      expect(singStart).toBeGreaterThan(prevSingEnd);
+      prevSingEnd = singStart + plan.singDur;
+      t0 = plan.t0 + plan.repDur;
+    }
+  });
+
+  it("routes a silent scorer through unsungRepAction exactly like a zero frame count", async () => {
+    // The old loop asked "centsCount === 0"; the new one asks "result() ===
+    // null". This pins that the two questions have the same answer, so the
+    // walk still ends itself on silence and still exits without logging when
+    // nothing was ever sung.
+    const { createRepScorer } = await import("./scoring");
+    const { buildSegments } = await import("./exercises");
+    const { segs, totalSec } = buildSegments(fiveNote, 52, 1);
+    const scorer = createRepScorer(segs);
+    for (let t = 0; t < totalSec; t += 0.05) scorer.feed(t, null, 0.05);
+    expect(scorer.result(52)).toBeNull();
+    expect(unsungRepAction(1, 3)).toBe("continue");
+    expect(unsungRepAction(2, 0)).toBe("exit");
+  });
+});
