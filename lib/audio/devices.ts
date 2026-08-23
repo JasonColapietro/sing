@@ -216,6 +216,23 @@ export async function listDevices(): Promise<{
 
 const NOT_READY = () => DEFAULT_PREFS;
 
+const NOOP_SUBSCRIBE = () => () => {};
+const ON_CLIENT = () => true;
+const ON_SERVER = () => false;
+
+/**
+ * True once rendering has moved to the browser.
+ *
+ * The same shape as `useProReady` in lib/pro.ts, and for the same reason: the
+ * capability checks below read `navigator`, which is absent during prerender,
+ * so calling them straight from render makes the server and the first client
+ * render disagree. A store with a server snapshot is how this codebase already
+ * separates "no" from "don't know yet" without a setState in an effect.
+ */
+export function useClientReady(): boolean {
+  return useSyncExternalStore(NOOP_SUBSCRIBE, ON_CLIENT, ON_SERVER);
+}
+
 export function useAudioPrefs(): Prefs {
   return useSyncExternalStore(subscribeAudioPrefs, getAudioPrefs, NOT_READY);
 }

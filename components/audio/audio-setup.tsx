@@ -9,6 +9,7 @@ import {
   setOutputDevice,
   useAudioDevices,
   useAudioPrefs,
+  useClientReady,
   type Monitoring,
 } from "@/lib/audio/devices";
 
@@ -45,13 +46,29 @@ export function AudioSetup({
   const inputSelectId = useId();
   const outputSelectId = useId();
 
-  // Firefox and Safari have never shipped setSinkId, so the output row would
-  // be a control that silently does nothing. The monitoring question still
-  // matters there — it is about the room, not about routing — so only the
-  // device list is withheld.
-  const outputChoosable = canChooseOutput() && outputs.length > 0;
+  /**
+   * Capability checks belong in an effect, not in render.
+   *
+   * Both of these read `navigator`, which does not exist while the page is
+   * being prerendered, so reading them during render made the server emit
+   * nothing and the first client render emit the whole panel — a hydration
+   * mismatch, and a chunk of layout appearing under the mic button a moment
+   * after the singer had already started reading it. `useAudioPrefs` is safe to
+   * read directly because `useSyncExternalStore` has a server snapshot; these
+   * are plain function calls and do not.
+   *
+   * The panel itself always renders, so the box is the right size from the
+   * first paint. Only the two device lists wait for the capability answer, and
+   * the monitoring question never does — it is about the room the singer is
+   * standing in, not about what the browser can enumerate.
+   */
+  const ready = useClientReady();
+  const canList = ready && canListDevices();
+  const canSink = ready && canChooseOutput();
 
-  if (!canListDevices()) return null;
+  // Firefox and Safari have never shipped setSinkId, so the output row would
+  // otherwise be a control that silently does nothing.
+  const outputChoosable = canSink && outputs.length > 0;
 
   return (
     <details
@@ -74,7 +91,7 @@ export function AudioSetup({
 
       <div className="space-y-4 border-t border-line px-4 py-4">
         {/* --- input ------------------------------------------------------ */}
-        <div>
+        <div hidden={!canList}>
           <label
             htmlFor={inputSelectId}
             className="block font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
