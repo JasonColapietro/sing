@@ -1,5 +1,6 @@
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
+import { AudioSetup } from "@/components/audio/audio-setup";
 import { IconHeadphones, IconMic } from "./icons";
 
 /**
@@ -65,6 +66,7 @@ export function SongsMicGate({
             {error}
           </p>
         )}
+        <AudioSetup className="mt-6 max-w-md" />
         <ProWhisper className="mt-4" />
       </Card>
     </PageShell>

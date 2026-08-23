@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Card, Pill, ProgressBar, Stat } from "@/components/ui";
 import { ProCrescendoNudge, ProWhisper } from "@/components/pro/gate";
+import { AudioSetup } from "@/components/audio/audio-setup";
 import { logSession, type Achievement } from "@/lib/progress";
 import { emitProResult } from "@/lib/pro-signal";
 import {
@@ -299,6 +300,7 @@ export function MicGate({
           {error}
         </p>
       )}
+      <AudioSetup className="mx-auto mt-6 max-w-sm text-left" />
       <ProWhisper className="mt-4" />
     </Card>
   );

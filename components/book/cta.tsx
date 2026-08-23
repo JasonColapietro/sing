@@ -1,7 +1,7 @@
 "use client";
 
 import { useProState } from "@/lib/pro";
-import { formatPrice, PRICING } from "@/lib/pro-shared";
+import { proHeadline } from "@/lib/pro-shared";
 import { BOOK_CONTENTS } from "@/lib/book-data";
 import { LinkButton } from "@/components/ui";
 import { PdfDownload } from "@/components/book/pdf-download";
@@ -34,8 +34,8 @@ export function BookCta() {
         See what Pro includes
       </LinkButton>
       <span className="text-xs text-dim">
-        First chapter free · all {BOOK_CONTENTS.length} and a PDF to keep with
-        Pro, {formatPrice(PRICING.monthly.amount)}/month
+        {BOOK_CONTENTS.filter((c) => c.free).length} chapters free · all{" "}
+        {BOOK_CONTENTS.length} and a PDF to keep with Pro, {proHeadline()}
       </span>
     </div>
   );

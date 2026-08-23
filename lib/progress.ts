@@ -392,7 +392,25 @@ export function logSession(input: {
       : {}),
   };
 
-  const yesterday = localDay(new Date(now.getTime() - 24 * 3600 * 1000));
+  /**
+   * The calendar day before `now`, by the calendar rather than by 86,400,000ms.
+   *
+   * Subtracting a fixed day is wrong twice a year. On the morning the clocks
+   * spring forward the previous day was 23 hours long, so between midnight and
+   * 1 a.m. local this landed two days back: practise on 2026-03-08, practise
+   * again at 00:30 on 2026-03-09, and `lastDay` matched neither `day` nor
+   * `yesterday`, so a streak of any length silently reset to 1. Verified under
+   * TZ=America/New_York.
+   *
+   * `setDate` walks the calendar and is what every other date helper in this
+   * codebase already uses — `streakFromSessions` below, and `addDays` in
+   * components/progress/format.ts. This was the one place still doing
+   * arithmetic on the clock, which meant the merge path computed the streak
+   * correctly while the write path threw it away.
+   */
+  const yesterdayDate = new Date(now);
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  const yesterday = localDay(yesterdayDate);
   let { current, best } = prev.streak;
   if (prev.streak.lastDay !== day) {
     current = prev.streak.lastDay === yesterday ? current + 1 : 1;

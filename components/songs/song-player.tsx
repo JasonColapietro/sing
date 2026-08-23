@@ -105,6 +105,9 @@ export function SongPlayer({
   const [clickDuringPlay, setClickDuringPlay] = useState(false);
   const [octaveAgnostic, setOctaveAgnostic] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
+  const phaseRef = useRef<Phase>("idle");
+  phaseRef.current = phase;
+  const pauseRef = useRef<() => void>(() => {});
   const [countInBeat, setCountInBeat] = useState(-1);
   const [loopIndex, setLoopIndex] = useState(0);
   const [runningScore, setRunningScore] = useState(0);
@@ -182,6 +185,20 @@ export function SongPlayer({
   const scheduledMaskRef = useRef<boolean[]>([]);
   const clickCursorRef = useRef(0);
   const sessionStartRef = useRef(0);
+  /**
+   * Seconds this session was actually being played and watched.
+   *
+   * `sessionStartRef` is wall clock, and wall clock counts two things that are
+   * not practice: time the tab spent hidden (rAF is suspended, so no note is
+   * scored and nothing is drawn) and time spent paused (`pause()` never
+   * adjusted the start, so an eight-minute pause inside a thirty-second phrase
+   * still billed eight and a half minutes). `logSession` derives XP from the
+   * duration and clamps it to 80, so both paths handed out the ceiling for a
+   * phrase nobody sang, and both counted toward the thirty-minutes-in-a-day
+   * achievement. This accumulates capped frame deltas instead — see
+   * lib/audio/frame-clock — so it can only ever advance while the loop is awake.
+   */
+  const awakeSecRef = useRef(0);
   const sessionTransposeRef = useRef(0);
   const sessionTempoRef = useRef<Tempo>(1);
   const lastTickRef = useRef(0);
@@ -296,7 +313,8 @@ export function SongPlayer({
       listeningRef.current && totalPossible > 0
         ? Math.round(Math.min(100, (hitTotalNow / totalPossible) * 100))
         : undefined;
-    const durationSec = Math.max(1, Math.round((performance.now() - sessionStartRef.current) / 1000));
+    // Awake time, not wall clock. See awakeSecRef.
+    const durationSec = Math.max(1, Math.round(awakeSecRef.current));
 
     const log = logSession({
       type: "song",
@@ -367,11 +385,39 @@ export function SongPlayer({
     });
   }
 
+  /**
+   * Leaving the tab pauses the song instead of destroying the session.
+   *
+   * rAF stops in a hidden tab but the AudioContext clock does not, and rafTick
+   * is the only thing that accumulates score or can end a session. So the first
+   * frame after coming back read the audio clock, found it past the end, and
+   * finalized immediately: every note whose window had passed while hidden had
+   * accumulated zero hit time and was judged a miss in one burst, producing a
+   * near-zero score. The wall-clock duration meanwhile included the entire
+   * absence, which hit the 80 XP ceiling. logSession runs before onFinish, so
+   * that result was already permanent — in the practice log, in the personal
+   * best, in the achievement counters — before the summary rendered, with no
+   * confirmation and no way to discard it. Alt-tabbing mid-song is routine.
+   *
+   * Pausing is the whole fix: resume() rebases t0 on the audio clock, so the
+   * song picks up where it left off and nothing is judged in absentia.
+   */
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden" && phaseRef.current === "running") {
+        pauseRef.current();
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+
   function rafTick() {
     const spb = spbRef.current;
     const now = performance.now();
     const dt = Math.min(0.12, lastTickRef.current ? (now - lastTickRef.current) / 1000 : 0);
     lastTickRef.current = now;
+    awakeSecRef.current += dt;
 
     const loops = loopsRef.current;
     const spanBeats = spanBeatsRef.current;
@@ -406,9 +452,17 @@ export function SongPlayer({
       const denom = perLoopDenomSecRef.current;
       const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
       const delta = hitTotalNow - loopSnapshotRef.current;
-      const loopScore = denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
-      perLoopScoresRef.current = [...perLoopScoresRef.current, loopScore];
-      setPerLoopScores(perLoopScoresRef.current);
+      // Only when there is a microphone. `flushJudgments` was already gated on
+      // listening but this push was not, so listen mode accrued no hit time and
+      // dutifully recorded 0% for every loop — rendering "Per loop 0% 0% 0%"
+      // directly beside the line explaining that scoring is off. The summary
+      // hid them correctly; only the in-session readout leaked them.
+      if (listeningRef.current) {
+        const loopScore =
+          denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
+        perLoopScoresRef.current = [...perLoopScoresRef.current, loopScore];
+        setPerLoopScores(perLoopScoresRef.current);
+      }
       loopSnapshotRef.current = hitTotalNow;
       loopStartHitRef.current = [...hitSecRef.current];
       judgeCursorRef.current = 0;
@@ -465,9 +519,23 @@ export function SongPlayer({
       scoreAccumRef.current = 0;
       setProgressPct(Math.min(100, (elapsedGlobal / totalSessionBeats) * 100));
       if (listeningRef.current) {
-        const totalPossible = possibleSecRef.current.reduce((a, b) => a + b, 0);
+        // Against the possible seconds *so far*, not the whole session.
+        //
+        // Dividing by the full multi-loop denominator meant the running score
+        // could never exceed elapsed progress — the bar directly above it
+        // already reports that — so a singer who had just sung loop 1 of 4
+        // perfectly watched "Running score 25%" sitting beside a per-loop pill
+        // reading 100%, both in the same row. In stage mode that 25% is the
+        // only number on screen, at text-5xl, and it looks like failure.
+        const elapsedFrac = Math.min(1, elapsedGlobal / totalSessionBeats);
+        const possibleSoFar =
+          possibleSecRef.current.reduce((a, b) => a + b, 0) * elapsedFrac;
         const totalHit = hitSecRef.current.reduce((a, b) => a + b, 0);
-        setRunningScore(totalPossible > 0 ? Math.round(Math.min(100, (totalHit / totalPossible) * 100)) : 0);
+        setRunningScore(
+          possibleSoFar > 0
+            ? Math.round(Math.min(100, (totalHit / possibleSoFar) * 100))
+            : 0,
+        );
       }
     }
 
@@ -536,6 +604,7 @@ export function SongPlayer({
     setProgressPct(0);
     lastTickRef.current = 0;
     sessionStartRef.current = performance.now();
+    awakeSecRef.current = 0;
 
     const LEAD = 0.15;
     const countInStart = audioNow() + LEAD;
@@ -548,6 +617,8 @@ export function SongPlayer({
     schedTick();
     rafRef.current = requestAnimationFrame(rafTick);
   }
+
+  pauseRef.current = pause;
 
   function pause() {
     stopLoops();

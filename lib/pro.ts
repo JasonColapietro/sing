@@ -125,10 +125,34 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return data;
 }
 
-function apply(entitlement: Entitlement): ProState {
+/**
+ * Folds a fresh entitlement into what this device already knows.
+ *
+ * `keepCredentials` exists because revalidation deliberately answers without
+ * them. `/api/entitlement` will not mint a Pro key, a customer id or an email
+ * from a bare subscription id — that id is a bearer string in localStorage, not
+ * proof of ownership, and handing back the full entitlement turned it into a
+ * master key for someone else's billing portal and practice record.
+ *
+ * So a status check returns nulls in those three fields, and blanking the
+ * device's real credentials every twelve hours would take the portal and the
+ * Pro key away from the subscriber who legitimately earned them at checkout.
+ * They are kept while the subscription is active and cleared the moment it is
+ * not, which is the only case where forgetting them is correct.
+ */
+function apply(
+  entitlement: Entitlement,
+  { keepCredentials = false } = {},
+): ProState {
   const prev = load();
+  const carry = keepCredentials && entitlement.active;
   const next: ProState = {
     ...entitlement,
+    customerId: carry
+      ? (entitlement.customerId ?? prev.customerId)
+      : entitlement.customerId,
+    proKey: carry ? (entitlement.proKey ?? prev.proKey) : entitlement.proKey,
+    email: carry ? (entitlement.email ?? prev.email) : entitlement.email,
     since: entitlement.active
       ? (prev.since ?? new Date().toISOString())
       : null,
@@ -239,6 +263,9 @@ export async function revalidatePro({ force = false } = {}): Promise<void> {
       await post<Entitlement>("/api/entitlement", {
         subscriptionId: state.subscriptionId,
       }),
+      // Status-only reply — keep the Pro key and customer id this device got
+      // at checkout. See `apply`.
+      { keepCredentials: true },
     );
   } catch {
     // offline or Stripe hiccup — try again next load
@@ -321,7 +348,12 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "analytics",
     title: "Deep vocal analytics",
-    desc: "Per-note accuracy, range growth over time, and pitch heatmaps of every session.",
+    // No heatmap claim here. "Pitch heatmaps of every session" shipped in this
+    // list for months and existed in no file — the only heatmap in the repo is
+    // the practice-days calendar, which is free and ungated. A subscriber can
+    // falsify a line like that in sixty seconds, and the one they catch is what
+    // makes them doubt the perks that were true.
+    desc: "Per-note accuracy, and your range charted over months rather than one test at a time.",
   },
   {
     id: "takes",
@@ -330,11 +362,13 @@ export const PRO_PERKS: ProPerk[] = [
   },
   {
     id: "songs",
-    title: "Full song library",
-    // No cadence promise here: the catalog is a checked-in array, so "new songs
-    // every week" is a claim only a weekly deploy could keep, and a subscriber
-    // can falsify it in ten seconds. Say what the unlock is instead.
-    desc: "The complete practice catalog — the standards, plus Amazing Grace as a two-verse arrangement rather than the opening phrase.",
+    title: "Every song, scored and kept",
+    // The songbook itself moved to free — six public-domain folk tunes were a
+    // gate that argued against buying. What Pro sells on this surface is the
+    // record of singing them, which is the thing that compounds. No cadence
+    // promise: the catalog is a checked-in array, so "new songs every week" is
+    // a claim only a weekly deploy could keep.
+    desc: "All 26 songs are free. Pro keeps the scoring history for each one, so you can hear month one against month six.",
   },
   {
     id: "warmups",
@@ -344,7 +378,7 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "book",
     title: "Two books, with PDFs",
-    desc: "The Measured Voice — 23 chapters on how the voice works and a twelve-week program — plus The Voice Atlas, the famous-voices companion. Both in the app and as PDFs to keep.",
+    desc: "50 chapters and 82,734 words: The Measured Voice (how the voice works, plus a twelve-week program) and The Voice Atlas (420 measured voices). Both open in full the moment you subscribe, and both as PDFs to keep.",
   },
   {
     id: "history",
@@ -363,13 +397,18 @@ export const PLAN_ROWS: Array<{
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
   { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis on every take" },
-  { label: "Song library", free: "Starter set", pro: "Every song in the book" },
-  { label: "Warmup routines", free: "Core set", pro: "Core + pro packs" },
-  { label: "Coach plan", free: "First step each day", pro: "Full adaptive plan, daily" },
-  { label: "Vocal analytics", free: "Session scores", pro: "Per-note, heatmaps, trends" },
+  { label: "Song library (all 26)", free: "Included", pro: "+ scoring history per song" },
+  { label: "Warmup routines", free: "17 exercises", pro: "17 + 15 in 2 pro packs" },
+  { label: "Coach plan", free: "First two steps each day", pro: "Full adaptive plan, daily" },
+  { label: "Vocal analytics", free: "Session scores", pro: "Per-note accuracy and trends" },
   { label: "Range history", free: "Latest test", pro: "Every test, charted over time" },
-  { label: "Practice history", free: "Last 20 sessions shown", pro: "Full history + trends" },
-  { label: "Backup & sync", free: "Manual export file", pro: "Automatic cloud sync" },
-  { label: "The Measured Voice (book)", free: "Contents + first chapter", pro: "All 23 chapters + PDF" },
+  { label: "Practice history", free: "Last 20 sessions", pro: "Every session you have ever sung" },
+  { label: "Backup & sync", free: "Account backup, every 6 hours", pro: "Continuous two-way sync across devices" },
+  { label: "The Measured Voice (book)", free: "Contents + 3 chapters", pro: "All 23 chapters + PDF" },
   { label: "The Voice Atlas (book)", free: "Contents + first 3 chapters", pro: "All 27 chapters + PDF" },
+  // 420 singer pages have always been free and the comparison table never said
+  // so — the single largest free asset in the product, invisible on the page
+  // whose whole job is to argue that free is generous.
+  { label: "Famous voices (all 420)", free: "Every singer page", pro: "+ the Atlas chapters behind them" },
+  { label: "Glossary (31 terms)", free: "Included", pro: "Included" },
 ];

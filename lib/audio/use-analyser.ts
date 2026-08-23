@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getAudioContext } from "./context";
 import { openMic } from "./mic";
+import { useAudioPrefs } from "./devices";
 import { detectPitch } from "./pitch";
 import { doseDay } from "./vocal-dose";
 
@@ -73,10 +74,19 @@ export function useAnalyser(opts?: {
   const [error, setError] = useState<string | null>(null);
   const [sampleRate, setSampleRate] = useState(48000);
 
+  // The input device and monitoring mode, so a change made in the picker can
+  // reopen a stream that is already running.
+  const { inputId, monitoring } = useAudioPrefs();
+
   const latest = useRef<AnalyserFrame>(emptyFrame());
   const streamRef = useRef<MediaStream | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const rafRef = useRef<number>(0);
+  // See `usePitch` — the permission prompt can outlive the component.
+  const mountedRef = useRef(true);
+  const listeningRef = useRef(false);
+  /** The in-flight open, shared by concurrent callers — see `usePitch`. */
+  const pendingRef = useRef<Promise<boolean> | null>(null);
   const onFrameRef = useRef(opts?.onFrame);
   const onFrame = opts?.onFrame;
   useEffect(() => {
@@ -90,14 +100,29 @@ export function useAnalyser(opts?: {
     sourceRef.current?.disconnect();
     sourceRef.current = null;
     latest.current = emptyFrame();
+    listeningRef.current = false;
     setListening(false);
   }, []);
 
   const start = useCallback(async (): Promise<boolean> => {
     if (streamRef.current) return true;
+    if (pendingRef.current) return pendingRef.current;
+    const run = openStream();
+    pendingRef.current = run;
+    try {
+      return await run;
+    } finally {
+      pendingRef.current = null;
+    }
+    async function openStream(): Promise<boolean> {
     setError(null);
 
     const opened = await openMic();
+    // Left the room while the permission prompt was up — see `usePitch`.
+    if (!mountedRef.current) {
+      opened.stream?.getTracks().forEach((t) => t.stop());
+      return false;
+    }
     if (opened.stream === null) {
       setError(opened.error);
       return false;
@@ -117,6 +142,7 @@ export function useAnalyser(opts?: {
     streamRef.current = stream;
     sourceRef.current = source;
     setSampleRate(ctx.sampleRate);
+    listeningRef.current = true;
     setListening(true);
 
     const freqDb = new Float32Array(analyser.frequencyBinCount);
@@ -155,9 +181,23 @@ export function useAnalyser(opts?: {
     };
     rafRef.current = requestAnimationFrame(loop);
     return true;
+    }
   }, [clarityThreshold]);
 
-  useEffect(() => stop, [stop]);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      stop();
+    };
+  }, [stop]);
+
+  /** Reopens a running stream when the singer changes device — see `usePitch`. */
+  useEffect(() => {
+    if (!listeningRef.current) return;
+    stop();
+    void start();
+  }, [inputId, monitoring, start, stop]);
 
   return { latest, listening, error, sampleRate, start, stop };
 }

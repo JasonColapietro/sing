@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, ProgressBar } from "@/components/ui";
 import { usePitch } from "@/lib/audio/use-pitch";
+import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
+import { useAudioPrefs } from "@/lib/audio/devices";
 import { playSequence } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
@@ -39,6 +41,15 @@ export function MelodyEchoGame({
 
   const [melody, setMelody] = useState<number[] | null>(null);
   const [phase, setPhase] = useState<Phase>("listen");
+  const { monitoring } = useAudioPrefs();
+  /**
+   * Whether "Hear again" may sound right now — see pitch-match for the full
+   * reasoning. It is worse here: `segmentNotes` takes the first N segments with
+   * no alignment, so the replayed notes are prepended to the singer's own and
+   * shift every position, mis-scoring the rest of the melody.
+   */
+  const replayAllowed =
+    phase !== "listen" && (phase !== "sing" || monitoring === "headphones");
   const [detected, setDetected] = useState<(number | null)[]>([]);
   const [correct, setCorrect] = useState(false);
   const [leftMs, setLeftMs] = useState(0);
@@ -102,17 +113,25 @@ export function MelodyEchoGame({
     if (phase !== "sing" || melody === null) return;
     framesRef.current = [];
     const windowMs = windowMsFor(melody);
-    const t0 = performance.now();
+    let lastT = performance.now();
+    // The answer window runs on accumulated capped deltas, not wall clock: a
+    // hidden tab used to freeze the countdown on screen and then expire it
+    // outright on the first frame back, failing the round on whatever frames
+    // happened to exist before the singer switched away.
+    let elapsed = 0;
 
     const tick = () => {
       const now = performance.now();
+      elapsed += frameDelta(now, lastT);
+      lastT = now;
       const f = latest.current;
-      if (f.freq !== null) {
-        framesRef.current.push({ t: now, midi: freqToMidiFloat(f.freq) });
+      const fresh = f.freq !== null && isFrameFresh(f.t, now);
+      if (fresh) {
+        framesRef.current.push({ t: now, midi: freqToMidiFloat(f.freq!) });
       }
-      setSinging(f.freq !== null);
-      setLeftMs(Math.max(0, windowMs - (now - t0)));
-      if (now - t0 >= windowMs) {
+      setSinging(fresh);
+      setLeftMs(Math.max(0, windowMs - elapsed));
+      if (elapsed >= windowMs) {
         finishSinging();
         return;
       }
@@ -137,11 +156,11 @@ export function MelodyEchoGame({
         if (phase === "sing") finishSinging();
         else if (phase === "result") next();
       }
-      if ((e.key === "r" || e.key === "R") && phase !== "listen") playMelody(melody);
+      if ((e.key === "r" || e.key === "R") && replayAllowed) playMelody(melody);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [session.done, melody, phase, finishSinging, next, playMelody]);
+  }, [session.done, melody, phase, finishSinging, next, playMelody, replayAllowed]);
 
   useEffect(
     () => () => {
@@ -204,7 +223,12 @@ export function MelodyEchoGame({
           <Button
             variant="outline"
             size="sm"
-            disabled={phase === "listen"}
+            disabled={!replayAllowed}
+            title={
+              phase === "sing" && !replayAllowed
+                ? "Replaying through speakers would play the answer into your mic. Switch to headphones in Audio setup to use this while singing."
+                : undefined
+            }
             onClick={() => melody && playMelody(melody)}
           >
             Hear again

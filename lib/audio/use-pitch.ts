@@ -5,6 +5,7 @@ import { detectPitch } from "./pitch";
 import { freqToNote, type NoteInfo } from "./notes";
 import { getAudioContext } from "./context";
 import { openMic } from "./mic";
+import { useAudioPrefs } from "./devices";
 
 export interface PitchFrame {
   /** Median-smoothed frequency in Hz, or null when no confident voiced pitch. */
@@ -54,6 +55,29 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const rafRef = useRef<number>(0);
   const histRef = useRef<number[]>([]);
+  // Whether this hook is still on screen. `start` awaits a permission prompt
+  // that a singer can leave open for as long as they like, so the component can
+  // be gone by the time the stream arrives.
+  const mountedRef = useRef(true);
+  const listeningRef = useRef(false);
+  /**
+   * The in-flight open, shared by every caller that arrives during it.
+   *
+   * The `streamRef` guard below only rejects a second call once the *first has
+   * finished*, and the first spends its whole life awaiting a permission
+   * prompt. Two presses inside that window therefore opened two MediaStreams
+   * and started two animation loops that both wrote `rafRef`, so `stop()`
+   * cancelled one loop and stopped one stream while the other ran forever with
+   * the recording indicator lit and no UI left to turn it off. /warmups made
+   * this easy to hit: it renders the gate card and the exercise catalogue at
+   * once, and both "Enable microphone" and any exercise card call start().
+   */
+  const pendingRef = useRef<Promise<boolean> | null>(null);
+
+
+  // The input device and monitoring mode, so a change made in the picker can
+  // reopen a stream that is already running.
+  const { inputId, monitoring } = useAudioPrefs();
 
   const stop = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
@@ -64,14 +88,32 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     histRef.current = [];
     latest.current = EMPTY_FRAME;
     setFrame(EMPTY_FRAME);
+    listeningRef.current = false;
     setListening(false);
   }, []);
 
   const start = useCallback(async (): Promise<boolean> => {
     if (streamRef.current) return true;
+    if (pendingRef.current) return pendingRef.current;
+    const run = openStream();
+    pendingRef.current = run;
+    try {
+      return await run;
+    } finally {
+      pendingRef.current = null;
+    }
+    async function openStream(): Promise<boolean> {
     setError(null);
 
     const opened = await openMic();
+    // Left the room while the permission prompt was up. Without this the tracks
+    // stay live on a component that no longer exists — the unmount cleanup ran
+    // while `streamRef` was still null, so it had nothing to stop — and the
+    // browser's recording indicator stays on with no UI left to turn it off.
+    if (!mountedRef.current) {
+      opened.stream?.getTracks().forEach((t) => t.stop());
+      return false;
+    }
     if (opened.stream === null) {
       setError(opened.error);
       return false;
@@ -81,10 +123,18 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     const ctx = getAudioContext();
     const source = ctx.createMediaStreamSource(stream);
     const analyser = ctx.createAnalyser();
-    analyser.fftSize = 2048;
+    // 4096 samples is 85 ms at 48 kHz — about five and a half periods of a low
+    // C2, where 2048 gave under three. Normalizing the correlation is what made
+    // low notes *detectable* at all (see pitch.ts); the longer frame is what
+    // makes them survive a room with noise in it. Measured against a synthetic
+    // vowel at -3.5 dB SNR, usable frames at E2 went from 2 in 20 to 7 in 20.
+    // The cost is latency, and it is affordable: the median-of-4 smoothing
+    // below already spans more time than the extra 43 ms this adds.
+    analyser.fftSize = 4096;
     source.connect(analyser);
     streamRef.current = stream;
     sourceRef.current = source;
+    listeningRef.current = true;
     setListening(true);
 
     const buf = new Float32Array(analyser.fftSize);
@@ -119,9 +169,29 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     };
     rafRef.current = requestAnimationFrame(loop);
     return true;
+    }
   }, [clarityThreshold]);
 
-  useEffect(() => stop, [stop]);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      stop();
+    };
+  }, [stop]);
+
+  /**
+   * Reopens the stream when the singer picks a different microphone, or moves
+   * between headphones and speakers, without making them leave the exercise.
+   *
+   * Skipped entirely while idle: `start` reads the current preference anyway,
+   * so a change made before the mic is running needs nothing here.
+   */
+  useEffect(() => {
+    if (!listeningRef.current) return;
+    stop();
+    void start();
+  }, [inputId, monitoring, start, stop]);
 
   return { frame, latest, listening, error, start, stop };
 }

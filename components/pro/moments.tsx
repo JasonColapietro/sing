@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProChip } from "./ui";
-import { PRICING, getProState, subscribePro } from "@/lib/pro";
+import { getProState, subscribePro } from "@/lib/pro";
+import { proHeadline } from "@/lib/pro-shared";
 import { getState as getProgressState } from "@/lib/progress";
 import { subscribeProResult } from "@/lib/pro-signal";
 import { useModalFocus } from "@/lib/use-modal-focus";
@@ -218,7 +219,7 @@ export default function ProMoments() {
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Button variant="amber" size="md" onClick={goPro}>
-            {`Go Pro — $${PRICING.monthly.perMonth.toFixed(2)}/month`}
+            {`Go Pro — ${proHeadline()}`}
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>
             Not now

@@ -16,6 +16,8 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
 
   const stopRef = useRef<(() => void) | null>(null);
   const gainRef = useRef(gain);
+  /** The gain the sounding drone was last started at — see the effect below. */
+  const lastGainRef = useRef(gain);
   useEffect(() => {
     gainRef.current = gain;
   }, [gain]);
@@ -48,16 +50,41 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
     [onActive],
   );
 
-  // Volume changes restart the drone at the same pitch (debounced).
+  /**
+   * Volume changes restart the drone at the same pitch (debounced).
+   *
+   * `playingMidi` belongs in the deps, and leaving it out is what made the
+   * drone unstoppable. The effect only re-ran on a `gain` change, so nothing
+   * cancelled a pending restart when the singer pressed Stop: `stop()` faded
+   * the drone and set `playingMidi` to null, then the timer fired holding the
+   * *previous* render's non-null `playingMidi` and started it again. A drone
+   * was sounding, the "playing" pill was gone, and "Stop drone" is
+   * `disabled={playingMidi === null}` — so the only control that could have
+   * fixed it was greyed out, and the singer had to leave the page. Picking a
+   * different root inside the same 200 ms was the other half: the timer
+   * restarted the *old* pitch while the pill and the pressed key showed the
+   * new one, which is a wrong reference note in a tool whose entire job is
+   * being the right reference note.
+   *
+   * With `playingMidi` in the deps the cleanup runs on stop and on every note
+   * change, so a pending restart is always cancelled. `lastGainRef` is what
+   * keeps that from turning into a double restart: `begin()` has already
+   * started the new pitch, and this effect only has work to do when the volume
+   * is what actually moved.
+   */
   useEffect(() => {
-    if (playingMidi === null) return;
+    if (playingMidi === null) {
+      lastGainRef.current = gain;
+      return;
+    }
+    if (lastGainRef.current === gain) return;
     const id = window.setTimeout(() => {
+      lastGainRef.current = gain;
       stopRef.current?.();
       stopRef.current = startDrone(playingMidi, gain);
     }, 200);
     return () => window.clearTimeout(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gain]);
+  }, [gain, playingMidi]);
 
   const pickNote = (pc: number) => {
     setRootPc(pc);

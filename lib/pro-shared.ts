@@ -76,9 +76,9 @@ export const PRICING: Record<ProPlan, PlanPrice> = {
     note: "billed monthly",
   },
   annual: {
-    amount: 79,
+    amount: 29,
     interval: "year",
-    perMonth: 79 / 12,
+    perMonth: 29 / 12,
     note: "billed yearly",
   },
 };
@@ -111,6 +111,42 @@ export function annualEnabled(
 }
 
 /**
+ * The one price line every teaser surface prints.
+ *
+ * Six surfaces used to interpolate `PRICING.monthly` by hand — the two book
+ * CTAs, the gate, the upgrade modal, the homepage and the plans blurb — so
+ * turning the yearly plan on changed the pricing page and left every entry
+ * point still quoting a monthly number. At $29 that is the difference between
+ * the offer landing and not landing, because the yearly price is the whole
+ * argument.
+ *
+ * Falls back to monthly on its own when yearly is not on sale, so no surface
+ * has to know about the flag.
+ */
+export function proHeadline(
+  pricing: Record<ProPlan, PlanPrice> = PRICING,
+  annualOn: boolean = annualEnabled(),
+): string {
+  return annualOn
+    ? `${formatPrice(pricing.annual.amount)} a year`
+    : `${formatPrice(pricing.monthly.amount)} a month`;
+}
+
+/** "$29 a year — $2.42 a month, against $119.88 billed monthly." */
+export function proHeadlineLong(
+  pricing: Record<ProPlan, PlanPrice> = PRICING,
+  annualOn: boolean = annualEnabled(),
+): string {
+  if (!annualOn) {
+    return `${formatPrice(pricing.monthly.amount)} a month, cancel in one click`;
+  }
+  const twelve = pricing.monthly.amount * 12;
+  return `${formatPrice(pricing.annual.amount)} a year — ${formatPrice(
+    pricing.annual.perMonth,
+  )} a month, against ${formatPrice(twelve)} billed monthly`;
+}
+
+/**
  * The questions on /pro, rendered there and marked up as FAQPage from these
  * same strings — Google requires the marked-up answer to match what a reader
  * sees, and sharing one array is the only way that stays true.
@@ -122,11 +158,15 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Do I need Pro to get better?",
-    a: "No. Free covers real, daily practice. Pro is for singers who want a coach's ear on top: it finds your weak notes, plans tomorrow's session, and shows the long arc of your range.",
+    a: "Not to practice — the studio, the range test and the warmups are free and stay free. Pro is for the singer who wants the record: every test charted, every take analysed, and the two books that explain what the numbers mean.",
   },
   {
     q: "Is my voice uploaded?",
     a: "No. Pitch analysis runs on your device on both tiers, and recordings never leave it. Pro's cloud sync backs up your progress numbers — scores, streaks, range — never audio.",
+  },
+  {
+    q: "What do I get the moment I subscribe?",
+    a: "Both books in full — 50 chapters and 82,734 words across The Measured Voice and The Voice Atlas — plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your full range history, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.",
   },
   {
     q: "Can I cancel anytime?",

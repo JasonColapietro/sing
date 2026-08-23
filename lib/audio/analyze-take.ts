@@ -1,6 +1,6 @@
 /**
  * Offline per-take pitch analysis. Decodes a stored take, walks it in
- * 2048-sample windows, and reduces the voiced frames to a chartable trace
+ * 4096-sample windows, and reduces the voiced frames to a chartable trace
  * plus nearest-note intonation stats. Client-only: decoding rides the
  * shared AudioContext.
  */
@@ -9,8 +9,12 @@ import { decodeTakeBlob } from "@/components/recorder/wav";
 import { freqToMidiFloat } from "@/lib/audio/notes";
 import { detectPitch } from "@/lib/audio/pitch";
 
-const WINDOW = 2048;
-const HOP = 1024;
+// Matches the live detector — see lib/audio/use-pitch.ts for why 4096. A take
+// analysed in a shorter window than it was scored in would disagree with the
+// score the singer already saw, and disagree worst on exactly the low notes
+// this is meant to prove they hit.
+const WINDOW = 4096;
+const HOP = 2048;
 const CLARITY_MIN = 0.75;
 /** Analysis cap — long takes are truncated so the trace stays cheap. */
 const MAX_ANALYZE_SEC = 180;

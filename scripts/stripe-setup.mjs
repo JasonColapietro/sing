@@ -41,7 +41,7 @@ const PLANS = [
     key: "annual",
     lookupKey: "suede_pro_annual",
     nickname: "Suede Pro annual",
-    unitAmount: 7900,
+    unitAmount: 2900,
     interval: "year",
   },
 ];

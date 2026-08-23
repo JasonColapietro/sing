@@ -30,16 +30,40 @@ import { entitlementFrom, getStripe, resolvePriceId } from "@/lib/stripe";
 
 const COMP_DAYS = 30;
 
-/** Total redemptions allowed per code, or null for the unlimited default. */
+/**
+ * How many times one comp code may be redeemed, ever.
+ *
+ * This defaulted to unlimited, and the safe behaviour was opt-in through an
+ * environment variable that appeared in the README and in neither .env file.
+ * That made a leaked code an unbounded faucet: every redemption creates a real
+ * Stripe customer and a real subscription on the live account and hands back a
+ * working Pro key, and nothing tied a redemption to an identity, so renewing
+ * was just redeeming again. The rate limiter bounds requests per IP per
+ * instance, not the total — one IP sustains hundreds a day and a hundred IPs
+ * sustain tens of thousands, each one a persistent Stripe object.
+ *
+ * A default of 25 is a guess, and deliberately a low one: a comp code is
+ * something handed to a specific person or a small group, so the cost of the
+ * cap being too low is a message asking for a fresh code, while the cost of it
+ * being absent is a live billing account being used as a free-Pro dispenser by
+ * anyone who reposts the string. Raise it explicitly for a wider giveaway.
+ *
+ * Set PRO_COMP_MAX_REDEMPTIONS=0 to restore the old uncapped behaviour, which
+ * is now the thing you have to ask for rather than the thing you get.
+ */
+const DEFAULT_COMP_CAP = 25;
+
 function redemptionCap(): number | null {
   const raw = process.env.PRO_COMP_MAX_REDEMPTIONS;
-  if (!raw) return null;
+  if (!raw) return DEFAULT_COMP_CAP;
   const n = Number(raw);
+  // An explicit zero is the documented way to ask for no cap at all.
+  if (n === 0) return null;
   if (!Number.isInteger(n) || n < 1) {
     console.warn(
-      `[api/redeem] PRO_COMP_MAX_REDEMPTIONS is "${raw}", which isn't a positive integer — treating codes as uncapped.`,
+      `[api/redeem] PRO_COMP_MAX_REDEMPTIONS is "${raw}", which isn't a non-negative integer — falling back to the default cap of ${DEFAULT_COMP_CAP}.`,
     );
-    return null;
+    return DEFAULT_COMP_CAP;
   }
   return n;
 }
@@ -150,7 +174,17 @@ export async function POST(request: Request) {
 
   const cap = redemptionCap();
   if (cap !== null) {
-    const refusal = await claimRedemption(redeemed, cap);
+    // `claimRedemption` handles a *missing* store, but a *failing* one — an
+    // Upstash timeout rejecting the INCR — used to propagate out of the handler
+    // unhandled, because this call sits outside the try below. That is a bare
+    // 500 with no JSON body, where the route's own contract promises a 503.
+    let refusal: Awaited<ReturnType<typeof claimRedemption>>;
+    try {
+      refusal = await claimRedemption(redeemed, cap);
+    } catch (error) {
+      console.error("[api/redeem] redemption ledger unavailable", error);
+      refusal = "unavailable";
+    }
     if (refusal === "exhausted") {
       return NextResponse.json(
         {
