@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  isScorableFrame,
   ladderHeightPct,
   practicedDurationSec,
   repAscending,
   unsungRepAction,
 } from "./exercise-player";
+import { MAX_FRAME_MS, STALE_FRAME_MS, frameDelta } from "@/lib/audio/frame-clock";
 import { EXERCISES, computeRootLadder, ladderWalk } from "./exercises";
 import { bestRep, repAvgScore, sungReps, type RepResult } from "./lib";
 
@@ -240,5 +242,55 @@ describe("a session of nothing but skips is not a session", () => {
     const mixed = [skippedRep(), sungRep(84), skippedRep()];
     expect(unsungRepAction(2, sungReps(mixed).length)).toBe("finish");
     expect(repAvgScore(mixed)).toBe(84);
+  });
+});
+
+describe("a hidden tab cannot score the rep it was away for", () => {
+  // rAF stops while a tab is hidden; performance.now() does not. usePitch
+  // publishes through a ref it only clears on stop, so the frame from before
+  // the tab hid sits there looking current. See lib/audio/frame-clock.
+  const now = 10_000;
+  const singing = { freq: 220, volume: 0.05, t: now - 16 };
+
+  it("scores a fresh, voiced, loud-enough frame", () => {
+    expect(isScorableFrame(singing, now)).toBe(true);
+  });
+
+  it("refuses the frame left behind by a hidden tab", () => {
+    const stale = { ...singing, t: now - 5_000 };
+    expect(isScorableFrame(stale, now)).toBe(false);
+  });
+
+  it("draws the line at the shared staleness threshold", () => {
+    expect(isScorableFrame({ ...singing, t: now - (STALE_FRAME_MS - 1) }, now)).toBe(true);
+    expect(isScorableFrame({ ...singing, t: now - STALE_FRAME_MS }, now)).toBe(false);
+  });
+
+  it("refuses a frame with no timestamp at all", () => {
+    // EMPTY_FRAME carries t: 0 — the state before the first analysis lands.
+    expect(isScorableFrame({ ...singing, t: 0 }, now)).toBe(false);
+  });
+
+  it("still refuses silence and unvoiced frames", () => {
+    expect(isScorableFrame({ ...singing, freq: null }, now)).toBe(false);
+    expect(isScorableFrame({ ...singing, volume: 0.0001 }, now)).toBe(false);
+  });
+
+  it("keeps an unsung rep unsung, which is what the guard depends on", () => {
+    // The singer tabs away mid-rep. Every frame the loop sees on return is the
+    // stale one, so no frame is scorable, the rep records nothing, and the
+    // walk ends itself rather than logging reps nobody sang.
+    const stale = { ...singing, t: now - 30_000 };
+    const scoredFrames = [stale, stale, stale].filter((f) => isScorableFrame(f, now));
+    expect(scoredFrames).toHaveLength(0);
+    expect(unsungRepAction(2, 0)).toBe("exit");
+  });
+
+  it("caps the returning frame's delta instead of banking the whole absence", () => {
+    // Ten seconds away must not become ten seconds of credited hold time.
+    expect(frameDelta(now, now - 10_000)).toBe(MAX_FRAME_MS);
+    expect(frameDelta(now, now - 16)).toBe(16);
+    // A clock that goes backwards contributes nothing rather than negative time.
+    expect(frameDelta(now, now + 500)).toBe(0);
   });
 });
