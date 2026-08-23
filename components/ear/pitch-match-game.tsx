@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, ProgressBar } from "@/components/ui";
 import { usePitch } from "@/lib/audio/use-pitch";
+import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
+import { useAudioPrefs } from "@/lib/audio/devices";
 import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
@@ -113,6 +115,20 @@ export function PitchMatchGame({
 
   const [target, setTarget] = useState<number | null>(null);
   const [phase, setPhase] = useState<Phase>("listen");
+  const { monitoring } = useAudioPrefs();
+  /**
+   * Whether "Hear again" may sound right now.
+   *
+   * Replaying the reference is genuinely useful, and on headphones it is
+   * harmless. Through speakers it plays the answer into an open mic that has
+   * echo cancellation deliberately off, and a synthesised tone is a cleaner,
+   * steadier pitch than any voice — so the detector locks onto it, cents reads
+   * about zero, and two presses of R clear HOLD_MS while the singer says
+   * nothing. It also quietly corrupts honest use: someone who replays to
+   * re-listen is credited for the app's own tone.
+   */
+  const replayAllowed =
+    phase !== "listen" && (phase !== "sing" || monitoring === "headphones");
   const [correct, setCorrect] = useState(false);
   const [heldMs, setHeldMs] = useState(0);
   const [leftMs, setLeftMs] = useState(WINDOW_MS);
@@ -159,25 +175,34 @@ export function PitchMatchGame({
   // The sing-phase loop: accumulate in-tune time inside the window.
   useEffect(() => {
     if (phase !== "sing" || target === null) return;
-    const windowStart = performance.now();
-    let lastT = windowStart;
+    let lastT = performance.now();
+    // Both the hold and the answer window run on accumulated capped deltas
+    // rather than wall clock, so time the tab spent hidden is time neither of
+    // them counts. See lib/audio/frame-clock.
+    let elapsed = 0;
     let held = 0;
     let settled = false;
 
     const tick = () => {
       const now = performance.now();
-      const dt = now - lastT;
+      const dt = frameDelta(now, lastT);
       lastT = now;
+      elapsed += dt;
 
       const f = latest.current;
       let cents: number | null = null;
-      if (f.freq !== null) {
+      // A suspended loop leaves the last frame before the tab was hidden
+      // sitting in the ref looking current. Without this check the first frame
+      // back re-credits a note that stopped sounding minutes ago — and pairs it
+      // with the whole absence as a single delta, which cleared HOLD_MS
+      // outright and scored the round correct for someone who sang nothing.
+      if (f.freq !== null && isFrameFresh(f.t, now)) {
         cents = centsToTarget(freqToMidiFloat(f.freq), target, octaveAgnostic);
         if (Math.abs(cents) <= tolerance) held += dt;
       }
       setLiveCents(cents);
       setHeldMs(held);
-      setLeftMs(Math.max(0, WINDOW_MS - (now - windowStart)));
+      setLeftMs(Math.max(0, WINDOW_MS - elapsed));
 
       if (held >= HOLD_MS) {
         settled = true;
@@ -186,7 +211,7 @@ export function PitchMatchGame({
         session.record(true);
         return;
       }
-      if (now - windowStart >= WINDOW_MS) {
+      if (elapsed >= WINDOW_MS) {
         settled = true;
         setCorrect(false);
         setPhase("result");
@@ -214,12 +239,12 @@ export function PitchMatchGame({
     const onKey = (e: KeyboardEvent) => {
       if (session.done || target === null) return;
       if (e.key === "Enter" && phase === "result") next();
-      if ((e.key === "r" || e.key === "R") && phase !== "listen")
+      if ((e.key === "r" || e.key === "R") && replayAllowed)
         playTone(target, { dur: 1.1, gain: 0.25 });
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [session.done, target, phase, next]);
+  }, [session.done, target, phase, next, replayAllowed]);
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
@@ -285,7 +310,12 @@ export function PitchMatchGame({
           <Button
             variant="outline"
             size="sm"
-            disabled={phase === "listen"}
+            disabled={!replayAllowed}
+            title={
+              phase === "sing" && !replayAllowed
+                ? "Replaying through speakers would play the answer into your mic. Switch to headphones in Audio setup to use this while singing."
+                : undefined
+            }
             onClick={() => target !== null && playTone(target, { dur: 1.1, gain: 0.25 })}
           >
             Hear again

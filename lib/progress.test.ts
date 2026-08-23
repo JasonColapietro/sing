@@ -47,6 +47,65 @@ afterEach(() => {
   vi.resetModules();
 });
 
+/**
+ * The streak asks "was the last practice day yesterday?" and used to answer it
+ * by subtracting 86,400,000 milliseconds. That is not yesterday twice a year.
+ *
+ * These run against whatever timezone the suite is in, so they assert the
+ * property rather than a literal date: the day before a given local day is the
+ * one `setDate` produces, and on a DST boundary the millisecond version
+ * disagrees with it. If this ever fails in CI because the runner sits in UTC,
+ * the assertion to keep is the first one — a calendar step is always exactly
+ * one calendar day.
+ */
+describe("the day before, across a clock change", () => {
+  const dayBefore = (d: Date) => {
+    const y = new Date(d);
+    y.setDate(y.getDate() - 1);
+    return localDay(y);
+  };
+  const naiveDayBefore = (d: Date) =>
+    localDay(new Date(d.getTime() - 24 * 3600 * 1000));
+
+  it("steps exactly one calendar day, whatever the clocks did", () => {
+    // Spring forward and fall back in US/EU zones, sampled just after midnight
+    // local where the short and long days bite.
+    for (const iso of [
+      "2026-03-09T04:30:00Z",
+      "2026-03-09T05:30:00Z",
+      "2026-11-02T04:30:00Z",
+      "2026-10-26T00:30:00Z",
+      "2026-06-15T12:00:00Z",
+    ]) {
+      const now = new Date(iso);
+      const today = localDay(now);
+      const expected = new Date(`${today}T12:00:00`);
+      expected.setDate(expected.getDate() - 1);
+      expect(dayBefore(now)).toBe(localDay(expected));
+    }
+  });
+
+  it("differs from millisecond arithmetic on at least one clock change", () => {
+    // The regression itself. In a zone with no DST this is vacuous, so it is
+    // written as "at least one" rather than asserted per-date.
+    const boundaries = [
+      "2026-03-09T04:30:00Z",
+      "2026-11-02T04:30:00Z",
+      "2026-10-26T00:30:00Z",
+      "2026-03-29T00:30:00Z",
+    ].map((iso) => new Date(iso));
+    const disagreements = boundaries.filter(
+      (d) => dayBefore(d) !== naiveDayBefore(d),
+    );
+    const anyDst = boundaries.some(
+      (d) =>
+        d.getTimezoneOffset() !==
+        new Date(d.getTime() - 24 * 3600 * 1000).getTimezoneOffset(),
+    );
+    if (anyDst) expect(disagreements.length).toBeGreaterThan(0);
+  });
+});
+
 describe("load() against a corrupt record", () => {
   /**
    * The shape that took /progress down in production: valid JSON, right field

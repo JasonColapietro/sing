@@ -63,8 +63,35 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
       return;
     }
     const tick = () => {
-      const horizon = audioNow() + LOOKAHEAD_SEC;
+      const now = audioNow();
+      const horizon = now + LOOKAHEAD_SEC;
       const s = sched.current;
+
+      /**
+       * Catch the cursor up when it has fallen into the past.
+       *
+       * setInterval is throttled to about once a second in a hidden tab while
+       * the AudioContext clock keeps running, so the cursor ends up a full
+       * second behind the horizon and the loop below schedules a backlog of
+       * clicks whose time has already gone. Those do not merely arrive late:
+       * `clickAt` builds its whole envelope relative to `at` — silence, a two
+       * millisecond ramp up, a ramp back down by `at + 0.05` — so for a past
+       * `at` the gain is already back at zero before the oscillator starts, and
+       * the click plays at silence. At 96 bpm roughly one beat in six landed
+       * inside the future window, so the metronome degraded to an irregular
+       * stutter and effectively went quiet. Any main-thread stall longer than
+       * the 100 ms lookahead does the same thing.
+       *
+       * song-player.tsx already solved exactly this for its own click track,
+       * clamping the cursor forward on resume; this is the same clamp.
+       */
+      if (s.nextTime < now) {
+        const interval = 60 / bpmRef.current;
+        const missed = Math.ceil((now - s.nextTime) / interval);
+        s.nextTime += missed * interval;
+        s.beat += missed;
+      }
+
       while (s.nextTime < horizon) {
         const interval = 60 / bpmRef.current;
         const beatInBar = s.beat % beatsRef.current;
