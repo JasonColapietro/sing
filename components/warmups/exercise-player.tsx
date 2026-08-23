@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { buildSegments, computeRootLadder, ladderWalk, type WarmupExercise } from "./exercises";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { centsOff, freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
+import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { logSession, type VocalRange } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
@@ -88,6 +89,29 @@ export function practicedDurationSec(
 export function ladderHeightPct(ladderIndex: number, rungs: number): number {
   if (rungs <= 1) return 0;
   return (ladderIndex / (rungs - 1)) * 100;
+}
+
+/**
+ * Whether a published pitch frame may be scored against the target.
+ *
+ * Three things have to hold: the detector found a pitch, the input was loud
+ * enough to be a voice rather than room noise, and the reading is recent.
+ * The last one matters most here. `usePitch` publishes through a ref it only
+ * clears on stop, so a loop suspended by a hidden tab leaves the frame from
+ * before the tab hid sitting there looking current — and scoring it would not
+ * just credit a note that stopped sounding, it would mark a rep the singer was
+ * never present for as sung, which is exactly what `unsungRepAction` relies on
+ * being able to detect.
+ */
+export function isScorableFrame(
+  frame: { freq: number | null; volume: number; t: number },
+  now: number,
+): boolean {
+  return (
+    frame.freq !== null &&
+    frame.volume >= MIN_VOLUME &&
+    isFrameFresh(frame.t, now)
+  );
 }
 
 /**
@@ -229,13 +253,16 @@ export function ExercisePlayer({
     let raf = 0;
     const tick = () => {
       const now = performance.now();
-      const dt = Math.min(0.12, (now - last) / 1000);
+      // Shared cap, not a local one: a hidden tab stops rAF while the wall
+      // clock keeps running, so the first frame back would otherwise carry the
+      // whole absence. See lib/audio/frame-clock.
+      const dt = frameDelta(now, last) / 1000;
       last = now;
       const elapsed = (now - start) / 1000;
       setElapsedSec(elapsed);
 
       const frame = pitch.latest.current;
-      const voiced = frame.freq !== null && frame.volume >= MIN_VOLUME;
+      const voiced = isScorableFrame(frame, now);
       const midiFloat = voiced && frame.freq !== null ? freqToMidiFloat(frame.freq) : null;
       setLiveMidiFloat(midiFloat);
 

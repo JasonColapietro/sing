@@ -732,7 +732,15 @@ The new shape:
     the singer *hears* the guide rather than where it was scheduled;
   - when `elapsed >= plan.singAt`, feeds the scorer with
     `plan` position `elapsed - plan.singAt - scoreLag`, the current frame's `freq`
-    when `frame.volume >= MIN_VOLUME`, and the frame `dt` clamped at 0.12 as today;
+    when `isScorableFrame(frame, performance.now())`, and the frame `dt` from
+    `frameDelta()` — both `lib/audio/frame-clock`, as the player uses today. Do not
+    reinstate the old local `Math.min(0.12, ...)` cap this line used to describe: it
+    predated `frame-clock` and had drifted to nearly twice the shared `MAX_FRAME_MS`.
+    Keep the freshness half of `isScorableFrame` even alongside the `visibilitychange`
+    listener below — that listener covers a hidden tab, but `usePitch` clears `latest`
+    only on stop, so an ordinary stall (a GC pause is the case `frame-clock` documents)
+    also leaves a stale frame looking current, and one stale voiced frame is enough to
+    mark an unsung rep as sung and defeat `unsungRepAction`;
   - when `elapsed >= plan.repDur`, closes the rep: `scorer.result(currentRoot)` null
     means unsung and routes through the existing `unsungRepAction`; non-null appends
     to `results`, clears the unsung streak and sets `lastScoredAtRef`. Then it calls
