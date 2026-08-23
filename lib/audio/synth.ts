@@ -11,6 +11,8 @@ export interface ToneOptions {
   at?: number;
   /** If set, glide from the tone's pitch to this midi over the duration. */
   glideToMidi?: number;
+  /** Where the tone connects. Defaults to the shared context destination. */
+  out?: AudioNode;
 }
 
 /**
@@ -27,7 +29,7 @@ export function playTone(midi: number, opts: ToneOptions = {}): number {
   out.gain.setValueAtTime(0.0001, t0);
   out.gain.exponentialRampToValueAtTime(Math.max(0.001, gain), t0 + 0.02);
   out.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-  out.connect(ctx.destination);
+  out.connect(opts.out ?? ctx.destination);
 
   const osc = ctx.createOscillator();
   osc.type = type;
@@ -60,6 +62,8 @@ export interface SequenceOptions {
   gain?: number;
   /** Seconds from now to start the first note. */
   at?: number;
+  /** Where every note connects. Defaults to the shared context destination. */
+  out?: AudioNode;
 }
 
 /** Play midis one after another. Returns total seconds until the last note ends. */
@@ -67,13 +71,59 @@ export function playSequence(
   midis: number[],
   opts: SequenceOptions = {},
 ): number {
-  const { noteDur = 0.55, gap = 0.06, type, gain, at = 0 } = opts;
+  const { noteDur = 0.55, gap = 0.06, type, gain, at = 0, out } = opts;
   let t = at;
   for (const m of midis) {
-    playTone(m, { dur: noteDur, type, gain, at: t });
+    playTone(m, { dur: noteDur, type, gain, at: t, out });
     t += noteDur + gap;
   }
   return t;
+}
+
+/**
+ * A set of scheduled tones that can be silenced together.
+ *
+ * Nothing in this module could previously un-schedule a sound. Every tone is
+ * committed to the audio clock at the moment it is scheduled, so a guide melody
+ * kept sounding through a transpose, a tempo change, a skipped rung and an exit
+ * back to the library. That is survivable while the guide only ever plays into
+ * silence; it is a scoring bug the moment a guide sounds under the voice, because
+ * a stale group at the previous root is then bleeding into a scored take.
+ */
+export interface ToneGroup {
+  /** Pass as `out` to playTone/playSequence to route a tone into this group. */
+  readonly node: GainNode;
+  /** True once cancel() has run. */
+  readonly cancelled: boolean;
+  /** Silence the group over 40 ms, including tones scheduled to start later. */
+  cancel(): void;
+}
+
+export function createToneGroup(): ToneGroup {
+  const ctx = getAudioContext();
+  const node = ctx.createGain();
+  node.gain.setValueAtTime(1, ctx.currentTime);
+  node.connect(ctx.destination);
+  let cancelled = false;
+  return {
+    node,
+    get cancelled() {
+      return cancelled;
+    },
+    cancel() {
+      if (cancelled) return;
+      cancelled = true;
+      const t = ctx.currentTime;
+      node.gain.cancelScheduledValues(t);
+      node.gain.setValueAtTime(node.gain.value, t);
+      node.gain.linearRampToValueAtTime(0, t + 0.04);
+      // The gain stays at zero rather than disconnecting immediately: tones
+      // already scheduled ramp their own envelopes through this node and each
+      // stops itself at t0 + dur + 0.05. Five seconds clears the longest tone
+      // this app schedules (an octave siren at 0.75x is 3.2 s).
+      setTimeout(() => node.disconnect(), 5000);
+    },
+  };
 }
 
 /** Sustained practice drone. Returns a stop function (with a soft release). */
