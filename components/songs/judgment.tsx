@@ -35,8 +35,8 @@ const TONES: Record<Judgment, string> = {
 const HOLD_MS = 700;
 
 const FLASH_BASE = {
-  md: "font-display text-lg font-bold tracking-tight",
-  lg: "font-display text-2xl font-bold tracking-tight sm:text-3xl",
+  md: "text-lg font-bold tracking-tight",
+  lg: "text-2xl font-bold tracking-tight sm:text-3xl",
 } as const;
 
 const COMBO_BASE = {

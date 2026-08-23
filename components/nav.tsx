@@ -158,7 +158,7 @@ const CLERK_APPEARANCE: ClerkAppearance = {
     colorDanger: "var(--color-rec)",
     colorSuccess: "var(--color-ok-ink)",
     colorWarning: "var(--color-amber-ink)",
-    fontFamily: "var(--font-display)",
+    fontFamily: "var(--font-body)",
     fontFamilyMono: "var(--font-mono)",
     borderRadius: "0.75rem",
   },
@@ -333,7 +333,7 @@ export default function Nav() {
                   height={22}
                   className="rounded-full"
                 />
-                <span className="font-display text-lg tracking-tight">
+                <span className="font-display text-xl tracking-tight">
                   Suede Sing
                 </span>
               </Link>
@@ -375,7 +375,7 @@ export default function Nav() {
                 />
                 <span className="flex items-center gap-2">
                   <ProChip />
-                  <span className="font-display text-base font-extrabold">
+                  <span className="text-base font-extrabold">
                     Suede Pro
                   </span>
                 </span>
@@ -489,7 +489,7 @@ export default function Nav() {
               height={22}
               className="rounded-full"
             />
-            <span className="font-display text-lg tracking-tight">
+            <span className="font-display text-xl tracking-tight">
               Suede Sing
             </span>
           </Link>

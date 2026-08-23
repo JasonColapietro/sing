@@ -45,7 +45,7 @@ export function IosBand() {
     <section id="app" className="border-t border-line bg-panel/40">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
         <SectionLabel className="mb-4">{APP_NAME} — optional iPhone companion</SectionLabel>
-        <h2 className="max-w-2xl text-3xl">
+        <h2 className="max-w-2xl text-2xl sm:text-3xl">
           Keep the browser studio. Add deeper analysis on iPhone.
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
@@ -81,7 +81,7 @@ export function IosBand() {
         <dl className="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2">
           {MEASURES.map((m) => (
             <div key={m.term}>
-              <dt className="font-display text-base font-extrabold text-ink">
+              <dt className="text-base font-extrabold text-ink">
                 {m.term}
               </dt>
               <dd className="mt-1 text-sm text-mut">{m.def}</dd>

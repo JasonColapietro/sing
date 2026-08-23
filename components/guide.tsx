@@ -190,7 +190,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
                   <span className="tabular font-mono text-sm text-amber-ink">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h4 className="mt-2 font-display text-lg font-extrabold text-ink">
+                  <h4 className="mt-2 text-lg font-extrabold text-ink">
                     {step.title}
                   </h4>
                   <p className="mt-1.5 text-sm text-mut">{step.body}</p>
@@ -261,7 +261,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
                 href={link.href}
                 className="group rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-amber/50"
               >
-                <span className="block font-display text-lg font-extrabold text-ink group-hover:text-amber-ink">
+                <span className="block text-lg font-extrabold text-ink group-hover:text-amber-ink">
                   {link.label}
                 </span>
                 <span className="mt-1 block text-sm text-mut">{link.note}</span>

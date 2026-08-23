@@ -4,7 +4,7 @@ import type { VocalRange } from "@/lib/progress";
 import { midiToLabel } from "@/lib/audio/notes";
 import { Card, EmptyState, LinkButton, Pill } from "@/components/ui";
 import {
-  AMBER,
+  AMBER_INK,
   DIM,
   LINE,
   MONO,
@@ -66,16 +66,20 @@ function MiniKeyboard({ low, high }: { low: number; high: number }) {
         stroke="rgba(197, 150, 66, 0.6)"
         strokeWidth={1}
       />
-      {[lo, hi].map((m) => (
+      {/* `new Set` because lo and hi are the same note for a zero-semitone
+          range, and for any range that clamps to the same end of the strip —
+          two <text> elements with the same key, drawn at identical coordinates,
+          so the label rendered doubled over itself. */}
+      {[...new Set([lo, hi])].map((m) => (
         <text
           key={m}
           x={x(m) + CW / 2}
           y={KH + 13}
           textAnchor="middle"
-          fontSize={10}
+          fontSize={12}
           fontWeight={600}
           fontFamily={MONO}
-          fill={AMBER}
+          fill={AMBER_INK}
         >
           {midiToLabel(m)}
         </text>

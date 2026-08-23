@@ -476,7 +476,7 @@ export function ProClient() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel className="mb-4">What gold adds</SectionLabel>
-          <h2 className="max-w-2xl text-3xl">
+          <h2 className="max-w-2xl text-2xl sm:text-3xl">
             A coach&apos;s ear on every session
           </h2>
           <p className="mt-3 max-w-2xl text-mut">
@@ -494,7 +494,7 @@ export function ProClient() {
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-amber/40 bg-panel2 text-amber-ink">
                     <Glyph />
                   </span>
-                  <span className="mt-4 block font-display text-xl font-extrabold text-ink">
+                  <span className="mt-4 block text-xl font-extrabold text-ink">
                     {perk.title}
                   </span>
                   <span className="mt-1 block text-sm text-mut">
@@ -513,7 +513,7 @@ export function ProClient() {
           {justUpgraded ? (
             <div className="animate-fadeup mx-auto mb-10 max-w-2xl rounded-2xl border border-amber bg-panel p-6 text-center sm:p-8">
               <ProChip className="mx-auto" />
-              <h2 className="mt-3 text-3xl">Welcome to the gold channel</h2>
+              <h2 className="mt-3 text-2xl sm:text-3xl">Welcome to the gold channel</h2>
               <p className="mx-auto mt-2 max-w-md text-mut">
                 Your coach starts listening on your next session. Sing one
                 warmup and watch the report build itself.
@@ -532,7 +532,7 @@ export function ProClient() {
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
                 <SectionLabel className="mb-4">Plans</SectionLabel>
-                <h2 className="max-w-2xl text-3xl">
+                <h2 className="max-w-2xl text-2xl sm:text-3xl">
                   One tier. Coach, analytics, songbook, two books.
                 </h2>
                 <p className="mt-3 max-w-xl text-mut">{plansBlurb}</p>
@@ -756,17 +756,54 @@ export function ProClient() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel className="mb-4">Side by side</SectionLabel>
-          <h2 className="max-w-2xl text-3xl">Exactly where free ends</h2>
+          <h2 className="max-w-2xl text-2xl sm:text-3xl">Exactly where free ends</h2>
           <p className="mt-3 max-w-2xl text-mut">
             No asterisks. If a row says free, it costs nothing.
           </p>
-          <div className="mt-8 w-full min-w-0 [contain:layout]">
-            <div className="no-scrollbar w-full min-w-0 overflow-x-auto rounded-2xl border border-line bg-panel [contain:layout]">
-              <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+          {/*
+            * Below sm this renders as stacked rows, not a scrolling table.
+            *
+            * The table is `min-w-[560px]` inside a `no-scrollbar` scroller, so
+            * on a 375px phone about 217px sat off-screen — the whole Pro
+            * column and part of Free — with the scrollbar suppressed, no fade,
+            * and no swipe cue. The heading directly above it says "Exactly
+            * where free ends" and "No asterisks", while the reader could not
+            * see the column that answers it. A three-column comparison is also
+            * the worst possible thing to ask someone to scroll horizontally:
+            * the label scrolls away with the values.
+            */}
+          <dl className="mt-8 space-y-3 sm:hidden">
+            {PLAN_ROWS.map((row) => (
+              <div
+                key={row.label}
+                className="overflow-hidden rounded-xl border border-line bg-panel"
+              >
+                <dt className="border-b border-line px-4 py-2.5 text-sm text-ink">
+                  {row.label}
+                </dt>
+                <dd className="flex items-baseline gap-3 px-4 py-2.5 text-sm">
+                  <span className="w-10 shrink-0 font-mono text-label uppercase tracking-[0.1em] text-dim">
+                    Free
+                  </span>
+                  <span className="text-mut">{row.free}</span>
+                </dd>
+                <dd className="flex items-baseline gap-3 bg-panel2/60 px-4 py-2.5 text-sm">
+                  <span className="w-10 shrink-0 font-mono text-label uppercase tracking-[0.1em] text-amber-ink">
+                    Pro
+                  </span>
+                  <span className="text-amber-ink">{row.pro}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="mt-8 hidden w-full min-w-0 [contain:layout] sm:block">
+            <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-line bg-panel [contain:layout]">
+              <table className="w-full border-collapse text-left text-sm">
                 <thead>
                   <tr className="border-b border-line">
                     <th scope="col" className="px-4 py-3.5 font-normal">
-                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                      <span className="font-mono text-label uppercase tracking-[0.1em] text-dim">
                         Feature
                       </span>
                     </th>
@@ -840,7 +877,7 @@ export function ProClient() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionLabel className="mb-4">Fair questions</SectionLabel>
-          <h2 className="max-w-2xl text-3xl">Before you decide</h2>
+          <h2 className="max-w-2xl text-2xl sm:text-3xl">Before you decide</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {PRO_FAQ.map((item) => (
               <div

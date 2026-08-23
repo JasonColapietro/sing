@@ -40,9 +40,22 @@
   --color-key-white-hover: #e4dccb;
   --color-key-black: #0b0a07;
   --color-key-black-hover: #171410;
-  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  /* The editorial voice: h1 and h2, and nothing else. See app/layout.tsx for
+     why this is a serif and why it is restricted. The fallbacks are the two
+     book faces most likely to already be installed, so a failed webfont
+     degrades to something with the same colour rather than to Times. */
+  --font-display: var(--font-instrument-serif), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+
+  /* --- type scale ---------------------------------------------------------
+     Sixteen sizes were in use and five of them (9, 10, 11, 12, 12.5px) lived
+     inside a 3.5px band, which is not a scale — it is five ways to spell
+     "small mono label". 343 of 829 size utilities were 12px or smaller and 625
+     were 14px or smaller, so the product was built almost entirely out of
+     caption type. These two replace that band. */
+  --text-label: 0.75rem;      /* 12px — tape labels, uppercase mono */
+  --text-meta: 0.8125rem;     /* 13px — secondary lines, timestamps, hints */
 }
 
 html {
@@ -68,12 +81,62 @@ body {
   font-family: var(--font-body);
 }
 
+/*
+ * h1 and h2 are the editorial tier and take the serif. h3 is a card title —
+ * it lives inside instruments and dense lists, so it stays on the UI face.
+ */
 h1,
-h2,
-h3 {
+h2 {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-weight: 700;
   letter-spacing: -0.01em;
+}
+
+/*
+ * Elevation, which the product had none of: one `shadow-lg` existed in the
+ * whole repo, so a modal, a card and a page section all sat on the same plane,
+ * and the dominant hover was a border tint from #ddd4c4 to about #e2c8a2 — a
+ * few percent of luminance, invisible to most people and to anyone at a glance.
+ *
+ * `.lift` is for anything clickable. The shadow is warm rather than neutral
+ * (the ground is paper, and a grey shadow on cream reads as dirt), and the
+ * translate is small enough to feel like a press rather than a jump.
+ */
+.lift {
+  box-shadow: 0 1px 2px rgba(72, 58, 32, 0.06);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .lift:hover {
+    box-shadow: 0 8px 20px -6px rgba(72, 58, 32, 0.16);
+    transform: translateY(-2px);
+  }
+}
+
+.lift:active {
+  box-shadow: 0 1px 2px rgba(72, 58, 32, 0.06);
+  transform: translateY(0);
+}
+
+/*
+ * The recessed tier: read-only chrome that should sit *under* the page rather
+ * than on it — note-lane frames, meter wells, inline code. No border, because
+ * the inset edge is what reads as depth.
+ */
+.well {
+  background: var(--color-panel2);
+  box-shadow: inset 0 1px 2px rgba(72, 58, 32, 0.07);
 }
 
 ::selection {

@@ -104,7 +104,7 @@ export default function GlossaryPage() {
                   className="scroll-mt-20 py-4 first:pt-0 last:pb-0"
                 >
                   <dt className="flex flex-wrap items-baseline gap-x-3">
-                    <span className="font-display text-lg font-extrabold text-ink">
+                    <span className="text-lg font-extrabold text-ink">
                       {entry.term}
                     </span>
                     {entry.aka && (

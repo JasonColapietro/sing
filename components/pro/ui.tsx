@@ -79,7 +79,7 @@ export function UpgradeCard({
           {context}
         </span>
       </div>
-      <div className="mt-3 font-display text-xl font-extrabold text-ink">
+      <div className="mt-3 text-xl font-extrabold text-ink">
         {title}
       </div>
       <p className="mt-1.5 max-w-xl text-sm text-mut">{body}</p>

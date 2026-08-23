@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import type { PitchFrame } from "@/lib/audio/use-pitch";
 import { centsOff, freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import {
-  AMBER,
+  COOL,
   BG,
   DIM,
   INK,
@@ -25,7 +25,7 @@ const C = {
   ink: INK,
   mut: MUT,
   dim: DIM,
-  amber: AMBER,
+  cool: COOL,
   ok: OK,
   okFill: "rgba(63, 143, 110, 0.12)",
   inkFill: "rgba(32, 32, 29, 0.05)",
@@ -37,7 +37,7 @@ interface Sample {
 }
 
 /**
- * Scrolling note-lane canvas: last ~8 s of pitch as an amber trace over
+ * Scrolling note-lane canvas: last ~8 s of pitch as a teal trace over
  * horizontal semitone lanes, auto-centered on the sung register.
  */
 export function PitchTrace({
@@ -153,8 +153,16 @@ export function PitchTrace({
         ctx.strokeRect(gutter + 1, yT + 1, w - gutter - 2, laneH - 2);
       }
 
-      // Amber pitch trace (segments break on silence or big time gaps).
-      ctx.strokeStyle = C.amber;
+      // The singer's own voice, in the instrument teal.
+      //
+      // This was amber, which is also the primary CTA fill, the Pro marker, the
+      // out-of-tune pill, the level meter's caution zone and the default
+      // progress bar. On this screen a singer saw their voice drawn in exactly
+      // the colour the page uses to mean "this costs money", while the note
+      // they were trying to hit sat behind it in green. `--color-cool` was
+      // defined and almost unused; it reads as instrument panel, which is what
+      // a live trace is.
+      ctx.strokeStyle = C.cool;
       ctx.lineWidth = 2;
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
@@ -180,7 +188,7 @@ export function PitchTrace({
 
       // Live dot at the leading edge.
       if (m !== null) {
-        ctx.fillStyle = inTune ? C.ok : C.amber;
+        ctx.fillStyle = inTune ? C.ok : C.cool;
         ctx.beginPath();
         ctx.arc(xFor(now), yFor(m), 4, 0, Math.PI * 2);
         ctx.fill();

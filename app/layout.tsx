@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, IBM_Plex_Mono } from "next/font/google";
+import { Manrope, IBM_Plex_Mono, Instrument_Serif } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { accountsReady } from "@/lib/accounts";
 import "./globals.css";
@@ -12,6 +12,32 @@ import ProSync from "@/components/pro/sync";
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-manrope",
+  display: "swap",
+});
+/**
+ * The display face, and the only second voice on the site.
+ *
+ * Before this, --font-display and --font-body were both Manrope, so every
+ * `font-display` class in the app — 44 of them — changed nothing, and the
+ * wordmark, the headings, the card titles, the book prose, the nav and the
+ * buttons were all one face at 400–800. The only contrast of form was IBM Plex
+ * Mono, spent entirely on 11px uppercase labels. There was nothing for the eye
+ * to grip, which is most of why the site read as a template.
+ *
+ * A high-contrast serif is the right second voice for this particular product
+ * rather than a generic choice: the ground is warm paper, the numbers are
+ * already mono, and two books ship with Pro. It carries h1 and h2 only —
+ * everything inside an instrument stays Manrope, because a practice room is a
+ * console, not an essay.
+ *
+ * Instrument Serif ships one weight (400), which is why globals.css drops
+ * headings from 800 to 400 rather than leaving a bold that would synthesise.
+ */
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument-serif",
   display: "swap",
 });
 const plexMono = IBM_Plex_Mono({
@@ -91,7 +117,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${plexMono.variable}`}
+      className={`${manrope.variable} ${plexMono.variable} ${instrumentSerif.variable}`}
     >
       <body className="min-h-dvh antialiased">
         {/* Inside <body>, per Clerk Core 3 — wrapping <html> is the old shape

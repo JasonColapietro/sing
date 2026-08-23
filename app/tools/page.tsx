@@ -56,7 +56,7 @@ export default function ToolsPage() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
           <SectionLabel>Also in this tab</SectionLabel>
-          <h2 className="mt-4 max-w-2xl text-3xl">Two more rooms, both listening</h2>
+          <h2 className="mt-4 max-w-2xl text-2xl sm:text-3xl">Two more rooms, both listening</h2>
           <p className="mt-3 max-w-2xl text-mut">
             The metronome, keyboard and drone above only need speakers. These
             two read your microphone and draw what they hear. Nothing uploads.
@@ -71,7 +71,7 @@ export default function ToolsPage() {
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-amber-ink">
                     <Glyph />
                   </span>
-                  <span className="mt-4 block font-display text-xl text-ink group-hover:text-amber-ink">
+                  <span className="mt-4 block text-xl text-ink group-hover:text-amber-ink">
                     {label}
                   </span>
                   <span className="mt-1 block text-sm text-mut">{desc}</span>

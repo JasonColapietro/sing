@@ -131,7 +131,7 @@ export function ShareableResult({
           {subtitle && <p className="mt-1.5 text-sm text-mut">{subtitle}</p>}
         </div>
         <div className="text-right">
-          <div className={`font-display text-5xl ${TONE_TEXT[grade.tone]}`}>{grade.grade}</div>
+          <div className={`text-5xl ${TONE_TEXT[grade.tone]}`}>{grade.grade}</div>
           <div className="tabular mt-1 font-mono text-lg tracking-wider text-amber-ink" aria-hidden="true">
             {starGlyphs(grade.stars)}
           </div>

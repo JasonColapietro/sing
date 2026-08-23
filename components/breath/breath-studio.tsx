@@ -79,7 +79,7 @@ export function BreathStudio() {
             <path d="M12 10c0 4-2 6-5 7a4 4 0 0 1-4-4c0-3 4-3 9-3s9 0 9 3a4 4 0 0 1-4 4c-3-1-5-3-5-7Z" />
           </svg>
           <div>
-            <h4 className="font-display text-lg">Why breath work</h4>
+            <h4 className="text-lg">Why breath work</h4>
             <p className="mt-1 max-w-2xl text-sm text-mut">
               Steady airflow is what keeps a note even and a phrase alive to
               its last word. Training slow, measured exhales teaches your body

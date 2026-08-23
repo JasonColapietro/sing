@@ -130,7 +130,7 @@ export function BoxBreathing() {
       <Card>
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <h3 className="font-display text-xl">Box breathing</h3>
+            <h3 className="text-xl">Box breathing</h3>
             <p className="mt-2 max-w-sm text-sm text-mut">
               Breathe around the square: inhale, hold, exhale, hold — equal
               counts on every side. A calm way to settle nerves before you
@@ -211,7 +211,7 @@ export function BoxBreathing() {
     return (
       <Card>
         <div className="flex flex-col items-center gap-4 py-8 text-center">
-          <h3 className="font-display text-xl">Session complete</h3>
+          <h3 className="text-xl">Session complete</h3>
           <div className="flex gap-8">
             <Stat
               label="Time"
@@ -252,7 +252,7 @@ export function BoxBreathing() {
   return (
     <Card>
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-display text-xl">Box breathing</h3>
+        <h3 className="text-xl">Box breathing</h3>
         <div className="flex items-center gap-2">
           <Pill tone="cool">round {run?.round ?? 1}</Pill>
           <Button size="sm" variant="outline" onClick={endEarly}>
@@ -295,7 +295,7 @@ export function BoxBreathing() {
           aria-live="polite"
           aria-atomic="true"
         >
-          <div className="font-display text-2xl text-ink">
+          <div className="text-2xl text-ink">
             {PHASES[phaseIdx]}&hellip;
           </div>
           <div className="tabular font-mono text-5xl text-cool">

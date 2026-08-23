@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
+import { AUTHOR_NAME } from "@/lib/author";
 
 /**
  * Split hero carried over from the iOS app's own landing page: full-bleed
@@ -28,20 +29,53 @@ export function HeroSplit() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-bg/15 to-ink/30" />
       </div>
+
+      {/*
+       * The portrait is the largest image on the site and nothing named the
+       * person in it, so it read as stock photography — which on a page selling
+       * vocal-health guidance and two books is worse than no photo at all. It
+       * is the founder, and a solo-built product is a reason to trust this one,
+       * not something to hide. Not aria-hidden, unlike the image itself: this
+       * is the credit, and it is the only place on the landing page a name
+       * appears.
+       */}
+      <p className="pointer-events-none absolute bottom-5 right-4 z-10 hidden sm:block sm:right-6">
+        <Link
+          href="/pro#author"
+          className="pointer-events-auto rounded-full border border-line/60 bg-panel/80 px-3 py-1.5 font-mono text-label uppercase tracking-[0.14em] text-mut backdrop-blur-sm transition-colors hover:border-amber/50 hover:text-amber-ink"
+        >
+          Built by {AUTHOR_NAME}
+        </Link>
+      </p>
       <div
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(247,240,231,0.98)_0%,rgba(247,240,231,0.94)_58%,rgba(247,240,231,0.54)_78%,rgba(247,240,231,0.20)_100%)] max-sm:bg-[linear-gradient(180deg,rgba(247,240,231,0.72)_0%,rgba(247,240,231,0.94)_46%,rgba(247,240,231,0.99)_70%)]"
       />
 
       <div className="animate-fadeup mx-auto w-full max-w-6xl px-4 pb-16 pt-28 sm:px-6 sm:pb-20 sm:pt-32">
-        <p className="font-display text-[0.78rem] font-black uppercase tracking-[0.12em] text-rec">
-          A vocal training app that measures your singing voice
+        {/* The name is the kicker and the claim is the headline, which is the
+            inverse of how this shipped. The h1 was `clamp(3rem, 9vw, 6.5rem)`
+            — up to 104px — and it said "Suede Sing", two words that mean
+            nothing to someone arriving from a search for how to find their
+            vocal range. The sentence that actually explains the product sat
+            above it at 12.5px. So the type scale had a 104px tier spent on a
+            brand nobody knows and a 12.5px tier carrying the pitch, and the
+            first legible thing on the page was the third element down.
+
+            The name still gets a face: the nav wordmark is set in the display
+            serif, and this line is the same red tape label it always was. */}
+        <p className="font-mono text-label uppercase tracking-[0.16em] text-rec">
+          Suede Sing
+          <span className="mx-2 text-line2" aria-hidden>
+            ·
+          </span>
+          <span className="text-dim">Free in your browser</span>
         </p>
         <h1
           id="hero-title"
-          className="mt-3 text-[clamp(3rem,9vw,6.5rem)] font-extrabold leading-[0.95] tracking-[-0.03em]"
+          className="mt-4 max-w-[19ch] text-[clamp(2.5rem,5.6vw,4.25rem)] leading-[1.04] tracking-[-0.025em]"
         >
-          Suede Sing
+          Sing one note. See exactly what came out.
         </h1>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-mut sm:text-xl">
           Your voice has a signature. Suede Sing reads it — range, register

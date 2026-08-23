@@ -16,7 +16,7 @@ export function SectionLabel({
   return (
     <span
       className={cn(
-        "inline-block rounded border border-line bg-panel px-2 py-0.5 font-mono text-[11px] uppercase tracking-[0.14em] text-mut",
+        "inline-block rounded border border-line bg-panel px-2 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-mut",
         className,
       )}
     >
@@ -44,8 +44,8 @@ export function PageShell({
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
           {kicker && <SectionLabel className="mb-3">{kicker}</SectionLabel>}
-          <h1 className="text-3xl sm:text-4xl">{title}</h1>
-          {subtitle && <p className="mt-2 text-mut">{subtitle}</p>}
+          <h1 className="text-4xl sm:text-5xl">{title}</h1>
+          {subtitle && <p className="mt-3 max-w-prose text-mut">{subtitle}</p>}
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
@@ -54,19 +54,74 @@ export function PageShell({
   );
 }
 
+/**
+ * A section heading, one tier below the page title.
+ *
+ * There were ten literal `className="max-w-2xl text-3xl"` headings across the
+ * landing and Pro pages, all 30px, each preceded by an identical 11px mono
+ * label and followed by an identical muted paragraph. Meanwhile PageShell's h1
+ * was `text-3xl sm:text-4xl`, so an interior page's own title was six pixels
+ * larger than a section heading on the homepage — and on mobile, exactly the
+ * same size. Nothing in the type ranked anything.
+ *
+ * The ladder is now: hero clamp(2.5rem…4.25rem) → page h1 text-4xl/5xl →
+ * this at text-2xl/3xl → card title text-lg. Each rung is a clear step, and
+ * this component is what stops the middle one drifting back.
+ */
+export function SectionHeading({
+  label,
+  children,
+  lede,
+  className,
+  id,
+}: {
+  /** The tape label above the heading. */
+  label?: string;
+  children: ReactNode;
+  /** The one-line explanation that almost always follows. */
+  lede?: ReactNode;
+  className?: string;
+  id?: string;
+}) {
+  return (
+    <div className={cn("max-w-2xl", className)}>
+      {label && <SectionLabel className="mb-4">{label}</SectionLabel>}
+      <h2 id={id} className="text-2xl sm:text-3xl">
+        {children}
+      </h2>
+      {lede && <p className="mt-3 text-mut">{lede}</p>}
+    </div>
+  );
+}
+
 export function Card({
   children,
   className,
   pad = true,
+  tone = "flat",
 }: {
   children: ReactNode;
   className?: string;
   pad?: boolean;
+  /**
+   * `flat` is the default page card. `raised` is for anything clickable and
+   * carries a real hover — the product previously had one `shadow-lg` in the
+   * whole repo, so a modal, a card and a page section all sat on the same
+   * plane, and the dominant hover was a border tint of a few percent luminance
+   * that most people cannot see. `well` is read-only chrome that should sit
+   * under the page rather than on it.
+   */
+  tone?: "flat" | "raised" | "well";
 }) {
   return (
     <div
       className={cn(
-        "rounded-2xl border border-line bg-panel",
+        "rounded-2xl",
+        tone === "well"
+          ? "well"
+          : tone === "raised"
+            ? "lift border border-line bg-panel hover:border-amber/50"
+            : "border border-line bg-panel",
         pad && "p-5 sm:p-6",
         className,
       )}
@@ -192,14 +247,20 @@ export function Pill({
 
 export function ProgressBar({
   value,
-  tone = "amber",
+  tone = "neutral",
   className,
 }: {
   value: number; // 0..100
-  tone?: "amber" | "rec" | "ok" | "cool";
+  /**
+   * `neutral` is the default because a progress bar is almost never a paid
+   * surface, and amber has to mean one thing. Pass "amber" deliberately on Pro
+   * surfaces; the rest of the app reads better with a bar that recedes.
+   */
+  tone?: "neutral" | "amber" | "rec" | "ok" | "cool";
   className?: string;
 }) {
   const tones = {
+    neutral: "bg-ink/25",
     amber: "bg-amber",
     rec: "bg-rec",
     ok: "bg-ok",
@@ -232,7 +293,7 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line2 px-6 py-14 text-center">
-      <div className="font-display text-xl">{title}</div>
+      <div className="text-xl">{title}</div>
       {hint && <p className="mt-2 max-w-sm text-sm text-mut">{hint}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>

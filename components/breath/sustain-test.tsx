@@ -282,7 +282,7 @@ export function SustainTest() {
             <path d="M12 18v3" />
           </svg>
           <div>
-            <h3 className="font-display text-xl">Sustain test</h3>
+            <h3 className="text-xl">Sustain test</h3>
             <p className="mx-auto mt-2 max-w-sm text-sm text-mut">
               Sing or hiss one steady note for as long as you can. The timer
               runs while the mic hears you and stops when you run out of air.
@@ -312,7 +312,7 @@ export function SustainTest() {
     <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
       <Card>
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-display text-xl">Sustain test</h3>
+          <h3 className="text-xl">Sustain test</h3>
           <div className="flex items-center gap-2">
             {phase === "running" ? (
               <Pill tone="rec">
@@ -442,7 +442,7 @@ export function SustainTest() {
       </Card>
 
       <Card>
-        <h4 className="font-display text-lg">Your attempts</h4>
+        <h4 className="text-lg">Your attempts</h4>
         {data && data.attempts.length > 0 ? (
           <>
             <div className="mt-3 flex gap-6">
