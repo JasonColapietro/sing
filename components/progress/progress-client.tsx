@@ -215,7 +215,7 @@ function HeaderRow({
       <Card>
         <SectionLabel>Level</SectionLabel>
         <div className="mt-3 flex items-baseline gap-2">
-          <span className="font-display text-3xl text-amber-ink">{lvl.level}</span>
+          <span className="text-3xl text-amber-ink">{lvl.level}</span>
           <span className="text-mut">{lvl.title}</span>
         </div>
         <ProgressBar value={lvl.progress * 100} className="mt-3" />

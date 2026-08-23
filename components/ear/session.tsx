@@ -145,7 +145,7 @@ export function RoundFeedback({
         correct ? "border-ok/40 bg-panel2" : "border-line2 bg-panel2"
       }`}
     >
-      <div className={`font-display text-lg ${correct ? "text-ok-ink" : "text-ink"}`}>
+      <div className={`text-lg ${correct ? "text-ok-ink" : "text-ink"}`}>
         {correct ? "Correct" : "Not quite"}
       </div>
       <p className="mt-1 text-sm text-mut">{message}</p>

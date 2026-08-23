@@ -55,7 +55,7 @@ export default function SongsPage() {
       <section className="mt-16 border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
           <SectionLabel className="mb-4">Every song</SectionLabel>
-          <h2 className="max-w-3xl text-3xl">The songbook, one page each</h2>
+          <h2 className="max-w-3xl text-2xl sm:text-3xl">The songbook, one page each</h2>
           <p className="mt-4 max-w-3xl text-mut">
             Every melody here is public domain, and every page says why — plus
             its lyrics as transcribed, the key it sits in, its tempo, and the

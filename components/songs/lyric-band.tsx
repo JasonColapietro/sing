@@ -140,7 +140,7 @@ export function LyricBand({
     <div className={className}>
       <div
         aria-hidden="true"
-        className={`font-display flex flex-wrap gap-x-[0.28em] gap-y-1 font-bold tracking-tight text-mut ${sizes.current}`}
+        className={`flex flex-wrap gap-x-[0.28em] gap-y-1 font-bold tracking-tight text-mut ${sizes.current}`}
       >
         {words.map((word, w) => (
           <span key={w} className="whitespace-nowrap">

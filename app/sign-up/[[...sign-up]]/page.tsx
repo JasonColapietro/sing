@@ -26,7 +26,7 @@ export default function SignUpPage() {
       {/* A lede, not an <h1>: Clerk's card supplies the page's only heading, and
           it re-labels itself at every step of the flow. The full reasoning is on
           the sign-in route, which is also where SING_APPEARANCE lives. */}
-      <p className="text-center font-display text-3xl font-extrabold tracking-[-0.01em]">
+      <p className="text-center text-3xl font-extrabold tracking-[-0.01em]">
         Keep a copy of your progress
       </p>
       <p className="mt-3 text-center text-mut">

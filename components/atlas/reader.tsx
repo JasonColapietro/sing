@@ -152,7 +152,7 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
       {view.kind === "ready" && (
         <>
           <Card>
-            <div className="max-w-3xl">
+            <div className="max-w-[64ch]">
               <Markdown source={view.body} />
             </div>
           </Card>

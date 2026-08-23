@@ -25,7 +25,7 @@ function renderInline(text: string, keyPrefix: string): Inline[] {
     const key = `${keyPrefix}-i${i++}`;
     if (tok.startsWith("**")) {
       out.push(
-        <strong key={key} className="font-semibold text-ink">
+        <strong key={key} className="font-semibold">
           {tok.slice(2, -2)}
         </strong>,
       );
@@ -65,7 +65,7 @@ export function Markdown({ source }: { source: string }) {
     para = [];
     if (text) {
       blocks.push(
-        <p key={`p${k++}`} className="mt-4 leading-relaxed text-mut">
+        <p key={`p${k++}`} className="mt-5 text-[1.0625rem] leading-[1.7] text-ink/85">
           {renderInline(text, `p${k}`)}
         </p>,
       );
@@ -78,7 +78,7 @@ export function Markdown({ source }: { source: string }) {
     blocks.push(
       <ul key={`u${k++}`} className="mt-4 space-y-2">
         {items.map((it, idx) => (
-          <li key={idx} className="flex gap-3 leading-relaxed text-mut">
+          <li key={idx} className="flex gap-3 text-[1.0625rem] leading-[1.7] text-ink/85">
             <span aria-hidden="true" className="text-amber-ink">
               ·
             </span>
@@ -95,7 +95,7 @@ export function Markdown({ source }: { source: string }) {
     blocks.push(
       <blockquote
         key={`q${k++}`}
-        className="mt-5 border-l-2 border-amber/50 pl-4 text-mut italic"
+        className="mt-6 border-l-2 border-line2 pl-5 text-[1.0625rem] leading-[1.7] text-mut italic"
       >
         {renderInline(text, `q${k}`)}
       </blockquote>,

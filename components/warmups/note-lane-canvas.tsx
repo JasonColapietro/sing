@@ -1,7 +1,7 @@
 "use client";
 
 import { midiToLabel } from "@/lib/audio/notes";
-import { AMBER, DIM, INK, LINE, LINE2, MONO, OK } from "@/lib/chart-colors";
+import { COOL, DIM, INK, LINE, LINE2, MONO, OK } from "@/lib/chart-colors";
 import type { Segment } from "./exercises";
 
 export interface TracePoint {
@@ -13,8 +13,9 @@ export interface TracePoint {
  * Note-lane view for one rep: horizontal semitone lanes with mono labels on
  * the left. Target notes render as ivory-outlined blocks (a slanted stroke
  * for glide steps); each block fills green left-to-right as the singer holds
- * it within tolerance. During "sing", the live pitch renders as an amber dot
- * with a trailing trace.
+ * it within tolerance. During "sing", the live pitch renders as a teal dot
+ * with a trailing trace — the same colour the studio draws a voice in, and
+ * deliberately not amber, which means "Pro" everywhere else.
  */
 export function NoteLaneCanvas({
   segs,
@@ -40,8 +41,11 @@ export function NoteLaneCanvas({
   const hi = Math.max(...midis, liveMidiFloat ?? -Infinity) + 2;
   const lanes = Math.max(1, Math.round(hi - lo) + 1);
 
-  const laneH = 20;
-  const labelW = 40;
+  // 20 was fine at native size and the SVG was never at native size — see the
+  // width note below. 24 gives the note labels room to be legible at arm's
+  // length, which is where a singer's eyes actually are.
+  const laneH = 24;
+  const labelW = 42;
   const padTop = 6;
   const plotW = Math.max(320, totalSec * 170);
   const w = labelW + plotW + 12;
@@ -59,9 +63,25 @@ export function NoteLaneCanvas({
   return (
     <svg
       viewBox={`0 0 ${w} ${h}`}
-      className="w-full"
+      /**
+       * Fills a wide container, but never shrinks below its own natural width.
+       *
+       * This was `className="w-full"` inside an `overflow-x-auto` wrapper,
+       * which meant the wrapper could never scroll — the SVG simply shrank to
+       * whatever was available. A four-second exercise is 732 units wide, and
+       * the box inside PageShell's px-4, the Card's p-5 and the wrapper's p-3
+       * on a 375px phone is about 279px: a 0.38 scale. Lanes became 7.6px tall
+       * and the note labels rendered at roughly 3.2px. The singer was being
+       * asked to hit a melody they could not read, on the one screen where
+       * reading it is the entire task.
+       *
+       * With a min-width the parent scrolls instead, and every unit below is a
+       * real pixel again.
+       */
+      style={{ width: "100%", minWidth: `${w}px` }}
+      className="block h-auto"
       role="img"
-      aria-label="Note lanes: ivory outlines are the target melody, the amber trail is your voice"
+      aria-label="Note lanes: ivory outlines are the target melody, the teal trail is your voice"
     >
       {/* lanes */}
       {Array.from({ length: lanes }, (_, i) => {
@@ -81,7 +101,7 @@ export function NoteLaneCanvas({
               x={labelW - 6}
               y={laneY + 3}
               textAnchor="end"
-              fontSize="8.5"
+              fontSize="10.5"
               fill={DIM}
               fontFamily={MONO}
             >
@@ -110,8 +130,8 @@ export function NoteLaneCanvas({
                 rx={5}
                 fill="none"
                 stroke={INK}
-                strokeWidth="1.4"
-                opacity="0.75"
+                strokeWidth="2"
+                opacity="0.9"
               />
               {ratio > 0 && (
                 <rect
@@ -165,7 +185,7 @@ export function NoteLaneCanvas({
         <polyline
           points={tracePath}
           fill="none"
-          stroke={AMBER}
+          stroke={COOL}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -177,7 +197,7 @@ export function NoteLaneCanvas({
           cx={x(cursorSec)}
           cy={y(liveMidiFloat)}
           r="4.5"
-          fill={AMBER}
+          fill={COOL}
         />
       )}
 

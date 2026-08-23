@@ -147,7 +147,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
 
       {view.kind === "ready" && (
         <>
-          <article className="mt-6 max-w-2xl">
+          <article className="mt-6 max-w-[64ch]">
             <Markdown source={view.body} />
           </article>
           <ChapterNav slug={chapter.slug} />

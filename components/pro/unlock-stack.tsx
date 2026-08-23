@@ -45,7 +45,7 @@ export function UnlockStack() {
         <SectionLabel className="mb-4 border-amber/50 text-amber-ink">
           Included, instantly
         </SectionLabel>
-        <h2 id="unlocks-heading" className="max-w-2xl text-3xl">
+        <h2 id="unlocks-heading" className="max-w-2xl text-2xl sm:text-3xl">
           Everything below opens the second you subscribe
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
@@ -66,7 +66,7 @@ export function UnlockStack() {
               key={tile.label}
               className="rounded-2xl border border-line bg-panel p-5"
             >
-              <p className="tabular font-display text-4xl text-amber-ink">
+              <p className="tabular text-4xl text-amber-ink">
                 {tile.figure}
               </p>
               <p className="mt-1 text-sm text-ink">{tile.label}</p>
@@ -142,7 +142,7 @@ function BookContents({
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <h3 className="font-display text-xl text-ink">{title}</h3>
+        <h3 className="text-xl text-ink">{title}</h3>
         <span className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           {entries.length} chapters
           <span className="mx-1.5 text-line2">·</span>

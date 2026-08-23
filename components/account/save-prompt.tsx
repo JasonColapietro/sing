@@ -198,7 +198,7 @@ export function AccountSavePrompt({
         <SectionLabel>{context}</SectionLabel>
         <h2
           id={headingId}
-          className="mt-3 font-display text-xl font-extrabold text-ink"
+          className="mt-3 text-xl font-extrabold text-ink"
         >
           Keep a copy of your progress
         </h2>

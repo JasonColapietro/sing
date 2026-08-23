@@ -3,7 +3,7 @@ import Link from "next/link";
 import { proHeadlineLong } from "@/lib/pro-shared";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { SITE_URL } from "@/lib/site";
-import { LinkButton, SectionLabel } from "@/components/ui";
+import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { HeroSplit } from "@/components/landing/hero-split";
 import { IosBand } from "@/components/landing/ios-band";
 import { StartingPaths } from "@/components/landing/paths";
@@ -191,26 +191,23 @@ export default function Home() {
       {/* 3 — Feature grid */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionLabel className="mb-4">Ten practice rooms</SectionLabel>
-          <h2 className="max-w-2xl text-3xl">
+          <SectionHeading
+            label="Ten practice rooms"
+            lede="No install required, no signup, no ads. Open any room and sing — the browser studio does live pitch feedback, range testing, warmups, ear training, breath work and song practice."
+          >
             Everything a practice session needs, one tab over
-          </h2>
-          <p className="mt-3 max-w-2xl text-mut">
-            No install required, no signup, no ads. Open any room and sing —
-            the browser studio does live pitch feedback, range testing,
-            warmups, ear training, breath work and song practice.
-          </p>
+          </SectionHeading>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map(({ href, label, desc, Glyph }) => (
               <Link
                 key={href}
                 href={href}
-                className="group rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-amber/50 sm:p-6"
+                className="lift group rounded-2xl border border-line bg-panel p-5 hover:border-amber/50 sm:p-6"
               >
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-amber-ink">
                   <Glyph />
                 </span>
-                <span className="mt-4 block font-display text-xl text-ink group-hover:text-amber-ink">
+                <span className="mt-4 block text-xl text-ink group-hover:text-amber-ink">
                   {label}
                 </span>
                 <span className="mt-1 block text-sm text-mut">{desc}</span>
@@ -226,14 +223,12 @@ export default function Home() {
       {/* 5 — Comparison */}
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionLabel className="mb-4">Side by side</SectionLabel>
-          <h2 className="max-w-2xl text-3xl">
+          <SectionHeading
+            label="Side by side"
+            lede="Most trainers do a few of these things, behind a subscription or an install requirement. Suede Sing does all of them, free, on the web."
+          >
             The whole toolkit, without the paywall
-          </h2>
-          <p className="mt-3 max-w-2xl text-mut">
-            Most trainers do a few of these things, behind a subscription or an
-            install requirement. Suede Sing does all of them, free, on the web.
-          </p>
+          </SectionHeading>
           <div className="mt-8">
             <ComparisonTable />
           </div>
@@ -243,8 +238,9 @@ export default function Home() {
       {/* 6 — How practice works */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionLabel className="mb-4">How practice works</SectionLabel>
-          <h2 className="max-w-2xl text-3xl">Three steps, no setup</h2>
+          <SectionHeading label="How practice works">
+            Three steps, no setup
+          </SectionHeading>
           <ol className="mt-8 grid gap-4 md:grid-cols-3">
             {STEPS.map((step) => (
               <li
@@ -270,7 +266,7 @@ export default function Home() {
               <SectionLabel className="mb-4 border-amber/50 text-amber-ink">
                 Suede Pro
               </SectionLabel>
-              <h2 className="max-w-xl text-3xl">
+              <h2 className="max-w-xl text-2xl sm:text-3xl">
                 The coach on top of the studio
               </h2>
               <p className="mt-3 max-w-xl text-mut">

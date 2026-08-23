@@ -139,7 +139,7 @@ export function SessionSummary({
                   <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                     Grade
                   </div>
-                  <div className={`mt-1 font-display text-3xl ${TONE_TEXT[grade.tone]}`}>
+                  <div className={`mt-1 text-3xl ${TONE_TEXT[grade.tone]}`}>
                     {grade.grade}
                   </div>
                 </div>

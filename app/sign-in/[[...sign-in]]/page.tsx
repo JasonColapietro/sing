@@ -42,7 +42,7 @@ export const SING_APPEARANCE: ClerkAppearance = {
     colorDanger: "var(--color-rec)",
     colorSuccess: "var(--color-ok-ink)",
     colorWarning: "var(--color-amber-ink)",
-    fontFamily: "var(--font-display)",
+    fontFamily: "var(--font-body)",
     fontFamilyMono: "var(--font-mono)",
     borderRadius: "0.75rem",
   },
@@ -88,7 +88,7 @@ export default function SignInPage() {
   return (
     <main className="mx-auto flex w-full max-w-md flex-col items-center px-4 py-12 sm:py-16">
       <SectionLabel className="mb-3">Free account</SectionLabel>
-      <p className="text-center font-display text-3xl font-extrabold tracking-[-0.01em]">
+      <p className="text-center text-3xl font-extrabold tracking-[-0.01em]">
         Pick your practice record back up
       </p>
       <p className="mt-3 text-center text-mut">

@@ -398,14 +398,42 @@ export function ExercisePlayer({
       {/* Height in the ladder, not session completion — it rises to the top note and falls back. */}
       <ProgressBar value={ladderHeightPct(ladderIndex, roots.length)} tone="amber" />
 
-      <Card>
+      {/*
+       * The container carries the phase, not just a word inside it.
+       *
+       * "Listen" and "Your turn" is the one state a singer has to read
+       * correctly mid-exercise — sing over the reference and the rep is
+       * wasted — and it was a 20px word, the second element in the card, next
+       * to a 30px root note that was larger than it. The card border, the
+       * background and the lane frame were byte-identical across both phases
+       * and the playhead animated in both, so there was nothing peripheral
+       * vision could catch. Now the whole card changes state, the word leads,
+       * and the live phase gets the same blinking dot the studio already uses
+       * to mean "this is recording you".
+       */}
+      <Card
+        className={
+          phase === "sing"
+            ? "border-rec bg-rec/[0.04] transition-colors"
+            : "transition-colors"
+        }
+      >
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <SectionLabel>{ex.title}</SectionLabel>
-            <h2 className="mt-3 text-xl">
+            <h2
+              className="flex items-center gap-2.5 text-3xl"
+              aria-live="polite"
+            >
+              {phase === "sing" && (
+                <span
+                  aria-hidden="true"
+                  className="animate-recblink inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-rec"
+                />
+              )}
               {phase === "sing" ? "Your turn" : "Listen"}
             </h2>
-            <p className="mt-1.5 max-w-md text-sm text-mut">{ex.tip}</p>
+            <SectionLabel className="mt-3">{ex.title}</SectionLabel>
+            <p className="mt-2 max-w-md text-sm text-mut">{ex.tip}</p>
           </div>
           <div className="text-right">
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -417,7 +445,18 @@ export function ExercisePlayer({
           </div>
         </div>
 
-        <div className="mt-6 overflow-x-auto rounded-xl border border-line bg-panel2 p-3">
+        {/* The lane now has a real minimum width, so this wrapper genuinely
+            scrolls on a narrow screen instead of squashing it. Same fade and
+            cue as the landing comparison table, so the affordance is one
+            pattern rather than two. */}
+        <p className="mt-6 mb-2 font-mono text-meta text-dim sm:hidden">
+          Swipe the lanes <span aria-hidden>→</span>
+        </p>
+        <div
+          className={`no-scrollbar well mt-2 overflow-x-auto rounded-xl p-3 transition-opacity [mask-image:linear-gradient(to_right,black_calc(100%-24px),transparent)] sm:mt-6 sm:[mask-image:none] ${
+            phase === "listen" ? "opacity-70" : "opacity-100"
+          }`}
+        >
           <NoteLaneCanvas
             segs={segs}
             totalSec={totalSec}

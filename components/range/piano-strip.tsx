@@ -3,6 +3,7 @@
 import { midiToLabel } from "@/lib/audio/notes";
 import {
   AMBER,
+  AMBER_INK,
   DIM,
   LINE,
   MONO,
@@ -179,10 +180,10 @@ export function PianoStrip({
               x={x}
               y={WHITE_H + 16}
               textAnchor="middle"
-              fontSize={10}
+              fontSize={12}
               fontWeight={600}
               fontFamily={MONO}
-              fill={AMBER}
+              fill={AMBER_INK}
             >
               {midiToLabel(m.midi)}
             </text>

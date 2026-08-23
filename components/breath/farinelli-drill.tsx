@@ -131,7 +131,7 @@ export function FarinelliDrill() {
     const mins = Math.round(beats.length / 60 * 10) / 10;
     return (
       <Card>
-        <h3 className="font-display text-xl">Farinelli drill</h3>
+        <h3 className="text-xl">Farinelli drill</h3>
         <p className="mt-2 max-w-lg text-sm text-mut">
           A classic singer&rsquo;s exercise: inhale for four counts, hold for
           four, exhale for four. Each round adds one count, so the breath gets
@@ -184,7 +184,7 @@ export function FarinelliDrill() {
     return (
       <Card>
         <div className="flex flex-col items-center gap-4 py-8 text-center">
-          <h3 className="font-display text-xl">Drill complete</h3>
+          <h3 className="text-xl">Drill complete</h3>
           <div className="flex gap-8">
             <Stat
               label="Time"
@@ -222,7 +222,7 @@ export function FarinelliDrill() {
   return (
     <Card>
       <div className="flex items-center justify-between gap-2">
-        <h3 className="font-display text-xl">Farinelli drill</h3>
+        <h3 className="text-xl">Farinelli drill</h3>
         <div className="flex items-center gap-2">
           <Button
             size="sm"
@@ -251,7 +251,7 @@ export function FarinelliDrill() {
               aria-live="polite"
               aria-atomic="true"
             >
-              <div className="font-display text-2xl text-ink">
+              <div className="text-2xl text-ink">
                 {PHASE_LABELS[beat.phase]}&hellip;
               </div>
               <div className="tabular font-mono text-6xl text-cool sm:text-7xl">
@@ -270,7 +270,7 @@ export function FarinelliDrill() {
             role="status"
             aria-live="polite"
           >
-            <div className="font-display text-2xl text-ink">Ready&hellip;</div>
+            <div className="text-2xl text-ink">Ready&hellip;</div>
             <p className="text-sm text-mut">Exhale fully — inhale starts on the first count.</p>
           </div>
         )}

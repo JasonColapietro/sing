@@ -378,7 +378,7 @@ export function StudioClient() {
                   (inTune ? (
                     <Pill tone="ok">In tune</Pill>
                   ) : (
-                    <Pill tone="amber">{note.cents > 0 ? "Sharp" : "Flat"}</Pill>
+                    <Pill tone="rec">{note.cents > 0 ? "Sharp" : "Flat"}</Pill>
                   ))}
               </div>
               <div className="mt-4 text-center">

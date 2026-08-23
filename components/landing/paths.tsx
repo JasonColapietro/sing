@@ -85,7 +85,7 @@ export function StartingPaths() {
     <section className="border-t border-line">
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
         <SectionLabel className="mb-4">Where to start</SectionLabel>
-        <h2 className="max-w-2xl text-3xl">
+        <h2 className="max-w-2xl text-2xl sm:text-3xl">
           Two ways in, depending on where you&apos;re starting
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
@@ -114,7 +114,7 @@ export function StartingPaths() {
                   <li key={step.href}>
                     <Link
                       href={step.href}
-                      className="group flex gap-3 rounded-xl border border-line bg-bg/60 p-3.5 transition-colors hover:border-amber/50"
+                      className="lift group flex gap-3 rounded-xl border border-line bg-bg/60 p-3.5 hover:border-amber/50"
                     >
                       <span
                         aria-hidden
@@ -125,7 +125,7 @@ export function StartingPaths() {
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span>
-                        <span className="block font-display font-extrabold text-ink group-hover:text-amber-ink">
+                        <span className="block font-extrabold text-ink group-hover:text-amber-ink">
                           {step.label}
                         </span>
                         <span className="mt-0.5 block text-sm text-mut">
