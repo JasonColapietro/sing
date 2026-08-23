@@ -660,3 +660,60 @@ describe("a record whose sessions could overflow the XP sum", () => {
     expect(merged).toBeGreaterThanOrEqual(500);
   });
 });
+
+describe("a warmup's mode survives the round trips a session takes", () => {
+  const base = {
+    id: "a",
+    type: "warmup" as const,
+    date: "2026-08-23T09:00:00.000Z",
+    day: "2026-08-23",
+    durationSec: 300,
+    xp: 50,
+    score: 91,
+  };
+  const record = (session: Record<string, unknown>) => ({
+    xp: 50,
+    sessions: [session],
+    streak: { current: 1, best: 1, lastDay: "2026-08-23" },
+    range: {},
+    rangeHistory: [],
+    achievements: [],
+  });
+
+  it("keeps mode through sanitizeProgress — the repair path copies it", async () => {
+    // This is the assertion that fails if repairSession forgets the copy line:
+    // the field passes validation, is written, and silently vanishes on the
+    // next read, the sync merge, and every import.
+    const { sanitizeProgress } = await import("./progress-shape");
+    const state = sanitizeProgress(record({ ...base, mode: "sing-along" }));
+    expect(state.sessions[0].mode).toBe("sing-along");
+  });
+
+  it("strips an unrecognised mode without dropping the session it rode in on", async () => {
+    const { sanitizeProgress } = await import("./progress-shape");
+    const state = sanitizeProgress(record({ ...base, mode: "nonsense" }));
+    expect(state.sessions).toHaveLength(1);
+    expect(state.sessions[0].mode).toBeUndefined();
+    expect(state.sessions[0].score).toBe(91);
+  });
+
+  it("leaves a mode-less session mode-less — old records never grow the key", async () => {
+    const { sanitizeProgress } = await import("./progress-shape");
+    const state = sanitizeProgress(record({ ...base }));
+    expect(state.sessions[0].mode).toBeUndefined();
+    expect("mode" in state.sessions[0]).toBe(false);
+  });
+
+  it("accepts a backup whose session names the other mode", async () => {
+    const { checkProgress } = await import("./progress-shape");
+    expect(checkProgress(record({ ...base, mode: "call-response" }))).toBeNull();
+  });
+
+  it("refuses a backup whose mode is not a mode", async () => {
+    const { checkProgress } = await import("./progress-shape");
+    expect(checkProgress(record({ ...base, mode: 7 }))).toEqual({
+      reason: "A session in the payload is malformed.",
+      overCap: false,
+    });
+  });
+});

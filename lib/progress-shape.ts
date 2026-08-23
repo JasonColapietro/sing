@@ -51,6 +51,21 @@ export type ActivityType = (typeof ACTIVITY_TYPES)[number];
 
 const ACTIVITY_TYPE_SET: ReadonlySet<string> = new Set(ACTIVITY_TYPES);
 
+/**
+ * How a warmup was sung. Sing-along scores a voice against a guide that is
+ * sounding; call-and-response scores a voice reproducing a guide that has
+ * stopped. Matching a sounding tone is the easier task, so the two never share
+ * an average — see components/warmups/session-summary.tsx.
+ */
+export const WARMUP_MODES = ["sing-along", "call-response"] as const;
+export type WarmupMode = (typeof WARMUP_MODES)[number];
+
+const WARMUP_MODE_SET: ReadonlySet<string> = new Set(WARMUP_MODES);
+
+export function isWarmupMode(value: unknown): value is WarmupMode {
+  return typeof value === "string" && WARMUP_MODE_SET.has(value);
+}
+
 export interface SessionLog {
   id: string;
   type: ActivityType;
@@ -71,6 +86,11 @@ export interface SessionLog {
    * analytics existed.
    */
   notes?: NoteTallies;
+  /**
+   * How a warmup was sung. Absent on every session logged before modes existed
+   * and on every activity that has none.
+   */
+  mode?: WarmupMode;
 }
 
 export interface VocalRange {
@@ -192,7 +212,8 @@ export function isValidSession(value: unknown): value is SessionLog {
     isFiniteNumber(value.xp) &&
     optional(value.score, isFiniteNumber) &&
     optional(value.detail, (v) => isBoundedString(v)) &&
-    optional(value.notes, isValidNotes)
+    optional(value.notes, isValidNotes) &&
+    optional(value.mode, isWarmupMode)
   );
 }
 
@@ -278,6 +299,7 @@ function repairSession(value: unknown): SessionLog | null {
   if (isFiniteNumber(value.score)) session.score = value.score;
   if (isBoundedString(value.detail)) session.detail = value.detail;
   if (isValidNotes(value.notes)) session.notes = value.notes;
+  if (isWarmupMode(value.mode)) session.mode = value.mode;
   return session;
 }
 
