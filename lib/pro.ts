@@ -125,10 +125,34 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return data;
 }
 
-function apply(entitlement: Entitlement): ProState {
+/**
+ * Folds a fresh entitlement into what this device already knows.
+ *
+ * `keepCredentials` exists because revalidation deliberately answers without
+ * them. `/api/entitlement` will not mint a Pro key, a customer id or an email
+ * from a bare subscription id — that id is a bearer string in localStorage, not
+ * proof of ownership, and handing back the full entitlement turned it into a
+ * master key for someone else's billing portal and practice record.
+ *
+ * So a status check returns nulls in those three fields, and blanking the
+ * device's real credentials every twelve hours would take the portal and the
+ * Pro key away from the subscriber who legitimately earned them at checkout.
+ * They are kept while the subscription is active and cleared the moment it is
+ * not, which is the only case where forgetting them is correct.
+ */
+function apply(
+  entitlement: Entitlement,
+  { keepCredentials = false } = {},
+): ProState {
   const prev = load();
+  const carry = keepCredentials && entitlement.active;
   const next: ProState = {
     ...entitlement,
+    customerId: carry
+      ? (entitlement.customerId ?? prev.customerId)
+      : entitlement.customerId,
+    proKey: carry ? (entitlement.proKey ?? prev.proKey) : entitlement.proKey,
+    email: carry ? (entitlement.email ?? prev.email) : entitlement.email,
     since: entitlement.active
       ? (prev.since ?? new Date().toISOString())
       : null,
@@ -239,6 +263,9 @@ export async function revalidatePro({ force = false } = {}): Promise<void> {
       await post<Entitlement>("/api/entitlement", {
         subscriptionId: state.subscriptionId,
       }),
+      // Status-only reply — keep the Pro key and customer id this device got
+      // at checkout. See `apply`.
+      { keepCredentials: true },
     );
   } catch {
     // offline or Stripe hiccup — try again next load

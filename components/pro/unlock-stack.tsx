@@ -55,23 +55,25 @@ export function UnlockStack() {
         </p>
 
         {/* --- the numbers ------------------------------------------------ */}
-        <dl className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* A plain list rather than a <dl>: the description-list version needed
+            an sr-only <dt> carrying the same words as the visible label, so a
+            screen reader read every tile's label twice ("words, two books —
+            82,734 words, two books"). Nothing here is a term/definition pair
+            anyway; it is four figures. */}
+        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {UNLOCK_TILES.map((tile) => (
-            <div
+            <li
               key={tile.label}
               className="rounded-2xl border border-line bg-panel p-5"
             >
-              <dt className="sr-only">{tile.label}</dt>
-              <dd>
-                <span className="tabular block font-display text-4xl text-amber-ink">
-                  {tile.figure}
-                </span>
-                <span className="mt-1 block text-sm text-ink">{tile.label}</span>
-                <span className="mt-1.5 block text-xs text-mut">{tile.sub}</span>
-              </dd>
-            </div>
+              <p className="tabular font-display text-4xl text-amber-ink">
+                {tile.figure}
+              </p>
+              <p className="mt-1 text-sm text-ink">{tile.label}</p>
+              <p className="mt-1.5 text-xs text-mut">{tile.sub}</p>
+            </li>
           ))}
-        </dl>
+        </ul>
 
         {/* --- the table of contents -------------------------------------- */}
         <div className="mt-12 grid gap-8 lg:grid-cols-2">

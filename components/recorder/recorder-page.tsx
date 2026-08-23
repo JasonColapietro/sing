@@ -11,6 +11,8 @@ import {
 } from "@/components/ui";
 import { analyzeTake, type TakeAnalysis } from "@/lib/audio/analyze-take";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
+import { openMic } from "@/lib/audio/mic";
+import { AudioSetup } from "@/components/audio/audio-setup";
 import { clickAt } from "@/lib/audio/synth";
 import { useIsPro } from "@/lib/pro";
 import { logSession, type Achievement } from "@/lib/progress";
@@ -253,32 +255,38 @@ export default function RecorderPageClient() {
   }, [selectedId, abPicks, takes, ensurePeaks, ensureAnalysis, isPro]);
 
   // --- mic ---
+  /**
+   * Routed through the shared `openMic` rather than calling getUserMedia here.
+   *
+   * This room kept its own copy of the permission-error table, and it had
+   * drifted exactly the way lib/audio/mic.ts warns about: no NotReadableError
+   * and no AbortError, so the most common repeat-visit failure — a mic held by
+   * a call in another tab, which Safari reports as AbortError — fell through to
+   * "Check your input settings and try again", advice for a problem the singer
+   * did not have. It also missed the Firefox aliases and the insecure-origin
+   * check.
+   *
+   * The bigger reason is the device picker: this room bypassed it entirely, so
+   * a singer who had chosen their interface everywhere else was still recorded
+   * through the laptop lid mic here, with nothing on screen saying so.
+   */
   const enableMic = useCallback(async () => {
     setMicState("requesting");
     setMicError(null);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
-      });
-      streamRef.current = stream;
-      const ctx = getAudioContext();
-      const source = ctx.createMediaStreamSource(stream);
-      const an = ctx.createAnalyser();
-      an.fftSize = 2048;
-      source.connect(an);
-      setAnalyser(an);
-      setMicState("ready");
-    } catch (err) {
+    const opened = await openMic();
+    if (opened.stream === null) {
       setMicState("blocked");
-      const name = err instanceof DOMException ? err.name : "";
-      setMicError(
-        name === "NotAllowedError" || name === "SecurityError"
-          ? "Microphone access was blocked. Allow the mic for this site in your browser settings, then try again."
-          : name === "NotFoundError"
-            ? "No microphone found. Plug one in or check your input settings, then try again."
-            : "Couldn't open the microphone. Check your input settings and try again.",
-      );
+      setMicError(opened.error);
+      return;
     }
+    streamRef.current = opened.stream;
+    const ctx = getAudioContext();
+    const source = ctx.createMediaStreamSource(opened.stream);
+    const an = ctx.createAnalyser();
+    an.fftSize = 2048;
+    source.connect(an);
+    setAnalyser(an);
+    setMicState("ready");
   }, []);
 
   // --- persistence helpers ---
@@ -700,6 +708,7 @@ export default function RecorderPageClient() {
                     </Button>
                   </>
                 )}
+                <AudioSetup className="mt-6 w-full max-w-sm text-left" />
                 <ProWhisper className="mt-4" />
               </div>
             ) : (

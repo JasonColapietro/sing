@@ -76,7 +76,31 @@ export async function POST(request: Request) {
       if (!isOurSubscription(sub)) {
         return NextResponse.json(INACTIVE);
       }
-      return NextResponse.json(entitlementFrom(sub, emailOf(sub.customer)));
+      // Status only. A subscription id is not proof of ownership: it is a
+      // bearer string sitting in plaintext localStorage, and this branch exists
+      // solely so a device that already holds one can ask whether it is still
+      // active.
+      //
+      // Answering it with the full entitlement made that id a master key. The
+      // reply carried the customer id, and /api/portal's whole defence is that
+      // "holding a customer id alone is not enough" — it demands both ids, and
+      // this handed over the missing half, opening the victim's real billing
+      // portal: invoice history, card last four, and a working cancel button.
+      // It also returned the subscriber's email, the precise disclosure
+      // /api/restore was rewritten to remove, and minted their permanent Pro
+      // key, which unlocks their practice record through /api/sync and both
+      // PDFs through /api/book.
+      //
+      // Nothing legitimate needs those fields here. The client keeps the
+      // credentials it already earned at checkout — see `apply` in lib/pro.ts,
+      // which preserves them across a revalidation rather than blanking them.
+      const status = entitlementFrom(sub, null);
+      return NextResponse.json({
+        ...status,
+        customerId: null,
+        proKey: null,
+        email: null,
+      });
     }
 
     return NextResponse.json(

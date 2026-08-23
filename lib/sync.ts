@@ -77,10 +77,42 @@ export async function syncNow(): Promise<{ mergedRemote: boolean }> {
   return { mergedRemote: hadRemote };
 }
 
-/** Upload only — used by the debounced change feed after local practice. */
+/**
+ * The debounced write after local practice. Reconciles before it writes.
+ *
+ * This used to push without pulling, and `/api/sync` stores with an
+ * unconditional `redis.set`, so the cloud copy became whichever device wrote
+ * last rather than the union of all of them. The full round trip runs once per
+ * page load and only when the last sync is over thirty minutes old, so a
+ * long-lived tab pulled once and then overwrote every other device for the
+ * rest of the day: practise on the phone at ten, practise on the laptop at
+ * eleven, and the phone's ten o'clock session is gone from the cloud. It
+ * survived only on the phone, until that phone cleared its storage.
+ *
+ * `lib/account-backup.ts` already worked this out and fixed it the same way —
+ * for the *free* backup path. The paid one never got the fix, which is the
+ * wrong way round.
+ *
+ * The merge in lib/progress.ts is a genuine commutative union, so pulling
+ * first costs one GET and makes the write safe.
+ */
 async function pushOnly(): Promise<void> {
   const key = proKeyOrNull();
   if (!key) return;
+
+  // A failed pull must not become a blind push — that is the exact overwrite
+  // this function exists to avoid. Let it throw; the caller swallows it and the
+  // next practice write tries again.
+  const remote = await post<{ state: unknown }>({ key });
+  if (remote.state !== null && remote.state !== undefined) {
+    applyingRemote = true;
+    try {
+      mergeRemoteProgress(remote.state);
+    } finally {
+      applyingRemote = false;
+    }
+  }
+
   await post<{ ok: boolean }>({
     key,
     state: getState(),
