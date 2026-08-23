@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { buildSegments, computeRootLadder, ladderWalk, type WarmupExercise } from "./exercises";
 import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
@@ -11,7 +11,15 @@ import { liveLags } from "@/lib/audio/latency";
 import { logSession, type VocalRange, type WarmupMode } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
-import { IconArrowLeft, IconMinus, IconPlay, IconPlus, IconSkip, IconStop } from "./icons";
+import {
+  IconArrowLeft,
+  IconMetronome,
+  IconMinus,
+  IconPlay,
+  IconPlus,
+  IconSkip,
+  IconStop,
+} from "./icons";
 import { NoteLaneCanvas, type TracePoint } from "./note-lane-canvas";
 import {
   bestRep,
@@ -24,8 +32,17 @@ import {
 } from "./lib";
 import { clickTimes, planRep, type RepPlan } from "./timeline";
 import { createRepScorer, type RepScorer } from "./scoring";
+import { setClick, setGuidePct, setWarmupMode, useWarmupPrefs } from "./prefs";
 
-const TEMPOS = [0.75, 1, 1.25] as const;
+// 0.5x matches the songs room: the room most likely to need slow is the one
+// that previously would not go slow.
+const TEMPOS = [0.5, 0.75, 1, 1.25] as const;
+const MAX_TRANSPOSE = 12;
+
+const MODE_LABELS: Record<WarmupMode, string> = {
+  "sing-along": "Sing along",
+  "call-response": "Call and response",
+};
 const MIN_VOLUME = 0.006;
 /** Guide gain with the level at 100 — the gain the teach pass has always used. */
 const GUIDE_MAX_GAIN = 0.22;
@@ -142,9 +159,8 @@ export function ExercisePlayer({
     [ex, range.lowMidi, range.highMidi],
   );
 
-  // Local until Task 8 wires the persisted preference and its control.
-  const mode: WarmupMode = "sing-along";
-  const guidePct = 70;
+  const { mode, guidePct, click } = useWarmupPrefs();
+  const guideSliderId = useId();
 
   const [repIndex, setRepIndex] = useState(0);
   const [tempo, setTempo] = useState<(typeof TEMPOS)[number]>(1);
@@ -176,6 +192,13 @@ export function ExercisePlayer({
   const planRef = useRef<RepPlan | null>(null);
   const scorerRef = useRef<RepScorer | null>(null);
   const groupRef = useRef<ToneGroup | null>(null);
+  // The gain node the governed guide pass plays through, so the slider is
+  // live mid-rep: the pass is scheduled at full gain and this node carries
+  // the level, the way the songs mixer's guidePct works.
+  const guideGainRef = useRef<GainNode | null>(null);
+  const modeRef = useRef<WarmupMode>(mode);
+  const guidePctRef = useRef(guidePct);
+  const clickRef = useRef(click);
   const patternSecRef = useRef(0);
   const rootRef = useRef(48);
   const repIndexRef = useRef(0);
@@ -192,6 +215,15 @@ export function ExercisePlayer({
   // Set once the session has handed off (finish, exit, or unmount): the loop
   // stops scheduling and every handler becomes a no-op.
   const finishedRef = useRef(false);
+
+  // The handlers below write these refs synchronously before touching the
+  // store, so the loop never waits a render for a control change; this effect
+  // only catches a preference changed somewhere else (another tab).
+  useEffect(() => {
+    modeRef.current = mode;
+    guidePctRef.current = guidePct;
+    clickRef.current = click;
+  }, [mode, guidePct, click]);
   // Lazy state initializer: performance.now() only runs once, on mount.
   const [sessionStart] = useState(() => performance.now());
 
@@ -204,6 +236,8 @@ export function ExercisePlayer({
       durationSec,
       score: avgScore,
       detail: ex.title,
+      // Fixed at the first scored rep, so one session is one mode is one score.
+      mode: modeRef.current,
       // The ladder sings the same shape at rising roots, so one exercise
       // covers many notes — fold every rep into a single per-note tally.
       notes: tallyFromScores(
@@ -232,7 +266,7 @@ export function ExercisePlayer({
     const root = Math.max(24, Math.min(96, ladderRoot + transposeRef.current));
     const { segs, totalSec, noteDur } = buildSegments(ex, root, tempoRef.current);
     const plan = planRep({
-      mode,
+      mode: modeRef.current,
       // A forced teach replays the guide-alone pass without moving the walk:
       // rep 0 is the one index every mode teaches at.
       repIndex: opts?.teach ? 0 : repIdx,
@@ -243,18 +277,34 @@ export function ExercisePlayer({
 
     const group = createToneGroup();
     const now = audioNow();
+    // The level the slider governs plays through its own gain node, scheduled
+    // at full gain, so dragging the slider mid-rep is heard mid-rep. In
+    // sing-along that is the under-voice pass and the teach pass stays at
+    // full (a reference should be audible); in call-and-response it is the
+    // reference itself, which is the only guide that mode has.
+    const guideNode = getAudioContext().createGain();
+    guideNode.gain.value = guidePctRef.current / 100;
+    guideNode.connect(group.node);
+    guideGainRef.current = guideNode;
+
     if (plan.guideAt !== null) {
-      playGuide(ex, root, tempoRef.current, {
-        at: plan.t0 + plan.guideAt - now,
-        out: group.node,
-      });
+      const governed = modeRef.current === "call-response";
+      if (!governed || guidePctRef.current > 0) {
+        playGuide(ex, root, tempoRef.current, {
+          at: plan.t0 + plan.guideAt - now,
+          gain: GUIDE_MAX_GAIN,
+          out: governed ? guideNode : group.node,
+        });
+      }
     }
-    clickTimes(plan, noteDur).forEach((time, i) => clickAt(time, i === 0, group.node));
-    if (plan.guideUnderVoice && guidePct > 0) {
+    if (clickRef.current) {
+      clickTimes(plan, noteDur).forEach((time, i) => clickAt(time, i === 0, group.node));
+    }
+    if (plan.guideUnderVoice && guidePctRef.current > 0) {
       playGuide(ex, root, tempoRef.current, {
         at: plan.t0 + plan.singAt - now,
-        gain: (guidePct / 100) * GUIDE_MAX_GAIN,
-        out: group.node,
+        gain: GUIDE_MAX_GAIN,
+        out: guideNode,
       });
     }
 
@@ -451,11 +501,38 @@ export function ExercisePlayer({
   }
 
   function nudgeTranspose(delta: number) {
-    const next = Math.max(-6, Math.min(6, transposeRef.current + delta));
+    // ±12 matches the songs room's clamp.
+    const next = Math.max(-MAX_TRANSPOSE, Math.min(MAX_TRANSPOSE, transposeRef.current + delta));
     if (next === transposeRef.current) return;
     transposeRef.current = next;
     setTranspose(next);
     restartCurrentRep();
+  }
+
+  // The mode is what separates the two scoring rulers, so it locks the moment
+  // a rep has been scored: one session is one mode is one score.
+  const modeLocked = sungReps(results).length > 0;
+
+  function changeMode(next: WarmupMode) {
+    if (finishedRef.current || modeLocked || next === modeRef.current) return;
+    modeRef.current = next;
+    setWarmupMode(next);
+    restartCurrentRep();
+  }
+
+  function changeGuidePct(pct: number) {
+    guidePctRef.current = pct;
+    setGuidePct(pct);
+    // Level is monitoring, not scoring, so it moves mid-rep: the governed pass
+    // is scheduled at full gain through this node precisely so the slider can
+    // reach a rep that is already sounding.
+    guideGainRef.current?.gain.setTargetAtTime(pct / 100, audioNow(), 0.03);
+  }
+
+  function toggleClick() {
+    const next = !clickRef.current;
+    clickRef.current = next;
+    setClick(next);
   }
 
   const singing = stage === "sing";
@@ -590,7 +667,70 @@ export function ExercisePlayer({
       </Card>
 
       <Card>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div
+            className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1"
+            title={
+              modeLocked
+                ? "The mode is fixed once a rep has been scored, so one session is one score. End the exercise to switch."
+                : undefined
+            }
+          >
+            {(Object.keys(MODE_LABELS) as WarmupMode[]).map((m) => (
+              <button
+                key={m}
+                type="button"
+                disabled={modeLocked}
+                onClick={() => changeMode(m)}
+                aria-pressed={mode === m}
+                className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
+                  mode === m ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
+                }`}
+              >
+                {MODE_LABELS[m]}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex min-w-[220px] flex-1 items-center gap-3">
+            <label
+              htmlFor={guideSliderId}
+              className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
+            >
+              {mode === "call-response" ? "Reference level" : "Guide level"}
+            </label>
+            {/* Left at its native height: squashing a range input clips the
+                thumb and shrinks the touch target on a phone. */}
+            <input
+              id={guideSliderId}
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={guidePct}
+              aria-valuetext={guidePct === 0 ? "Off" : `${guidePct} percent`}
+              onChange={(e) => changeGuidePct(Number(e.target.value))}
+              className="min-w-0 flex-1 cursor-pointer accent-amber"
+            />
+            <span className="tabular w-9 shrink-0 text-right font-mono text-xs text-mut">
+              {guidePct === 0 ? "Off" : `${guidePct}%`}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={toggleClick}
+            aria-pressed={click}
+            title="Count-in clicks before every scored window"
+            className={`inline-flex items-center gap-1.5 rounded-full border border-line2 px-2.5 py-1 font-mono text-xs ${
+              click ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
+            }`}
+          >
+            <IconMetronome /> Click
+          </button>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3">
           <Button
             variant="outline"
             size="sm"

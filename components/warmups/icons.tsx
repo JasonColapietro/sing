@@ -82,3 +82,10 @@ export const IconArrowRight = (p: IconProps) => (
     <polyline points="12 5 19 12 12 19" />
   </Svg>
 );
+
+export const IconMetronome = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M9 3h6l4 18H5z" />
+    <line x1="12" y1="19" x2="17" y2="7" />
+  </Svg>
+);
