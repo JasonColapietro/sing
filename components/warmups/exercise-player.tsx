@@ -32,17 +32,12 @@ import {
 } from "./lib";
 import { clickTimes, planRep, type RepPlan } from "./timeline";
 import { createRepScorer, type RepScorer } from "./scoring";
-import { setClick, setGuidePct, setWarmupMode, useWarmupPrefs } from "./prefs";
+import { MODE_LABELS, setClick, setGuidePct, setWarmupMode, useWarmupPrefs } from "./prefs";
 
 // 0.5x matches the songs room: the room most likely to need slow is the one
 // that previously would not go slow.
 const TEMPOS = [0.5, 0.75, 1, 1.25] as const;
 const MAX_TRANSPOSE = 12;
-
-const MODE_LABELS: Record<WarmupMode, string> = {
-  "sing-along": "Sing along",
-  "call-response": "Call and response",
-};
 const MIN_VOLUME = 0.006;
 /** Guide gain with the level at 100 — the gain the teach pass has always used. */
 const GUIDE_MAX_GAIN = 0.22;
@@ -251,6 +246,7 @@ export function ExercisePlayer({
       best,
       xpGained: log.xpGained,
       newAchievements: log.newAchievements,
+      mode: modeRef.current,
     });
   }
 

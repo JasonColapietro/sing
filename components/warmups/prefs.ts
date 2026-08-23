@@ -28,6 +28,12 @@ export const DEFAULT_WARMUP_PREFS: WarmupPrefs = {
   click: true,
 };
 
+/** The singer-facing names, shared by the player, the summary and the library. */
+export const MODE_LABELS: Record<WarmupMode, string> = {
+  "sing-along": "Sing along",
+  "call-response": "Call and response",
+};
+
 let prefs: WarmupPrefs | null = null;
 const listeners = new Set<() => void>();
 

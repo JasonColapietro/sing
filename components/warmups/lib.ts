@@ -3,7 +3,7 @@
 import type { Segment, WarmupExercise } from "./exercises";
 import { buildSegments } from "./exercises";
 import { playSequence, playTone } from "@/lib/audio/synth";
-import type { Achievement } from "@/lib/progress";
+import type { Achievement, WarmupMode } from "@/lib/progress";
 import type { NoteScore } from "@/lib/analytics";
 
 /** Sing window = melody length + 20%, per the classic warmup ladder. */
@@ -122,4 +122,6 @@ export interface SessionSummaryData {
   best: RepResult | null;
   xpGained: number;
   newAchievements: Achievement[];
+  /** How the session was sung — the two modes are scored as different things. */
+  mode: WarmupMode;
 }

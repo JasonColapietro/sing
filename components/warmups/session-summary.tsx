@@ -15,6 +15,7 @@ import {
 } from "@/components/songs/grade";
 import { ShareableResult } from "@/components/songs/result-card";
 import { TOLERANCE_CENTS } from "./scoring";
+import { MODE_LABELS } from "./prefs";
 import { sungReps, type SessionSummaryData } from "./lib";
 
 /** Under this a rep didn't hold — the amber floor the whole page reads from. */
@@ -51,7 +52,7 @@ export function SessionSummary({
   onNext: (id: string) => void;
   onLibrary: () => void;
 }) {
-  const { ex, results, avgScore, best, xpGained, newAchievements } = data;
+  const { ex, results, avgScore, best, xpGained, newAchievements, mode } = data;
 
   const isPro = useIsPro();
   const nextEx = useMemo(() => {
@@ -102,7 +103,12 @@ export function SessionSummary({
     <div className="space-y-6">
       <Card>
         <SectionLabel>Session complete</SectionLabel>
-        <h2 className="mt-3 text-2xl">{ex.title}</h2>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <h2 className="text-2xl">{ex.title}</h2>
+          {/* The two modes are different skills scored as different things, so
+              every summary says which one this number came from. */}
+          <Pill tone="mut">{MODE_LABELS[mode]}</Pill>
+        </div>
         <div className="mt-6 flex flex-wrap gap-10">
           <Stat label="Average score" value={`${avgScore}%`} tone={scoreTone(avgScore)} />
           {grade && (
@@ -175,7 +181,10 @@ export function SessionSummary({
           <p className="mt-3 max-w-xl text-sm text-mut">
             Your score is the share of each phrase you held within{" "}
             {TOLERANCE_CENTS} cents of the target — how close to the note you
-            stayed, not how good it sounded.
+            stayed, not how good it sounded.{" "}
+            {mode === "sing-along"
+              ? "The guide was sounding while you sang, so this score measures how well you held to a note you could hear."
+              : "The guide had stopped before you sang, so this score measures how well you held to a note you were carrying yourself."}
           </p>
           <p className="mt-2 max-w-xl text-sm text-ink">
             {diagnosis.broke ? (

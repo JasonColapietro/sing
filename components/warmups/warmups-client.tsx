@@ -162,7 +162,10 @@ export function WarmupsClient() {
               Pick an exercise from the catalogue below. Titles, ladder spans
               and lengths are all there before you decide.
             </li>
-            <li>A short melody plays, then it is your turn to sing it back.</li>
+            <li>
+              The pattern plays once so you have it, then a two-beat count-in,
+              then you sing it with the guide underneath you.
+            </li>
             <li>
               Your pitch is scored against the target as you sing, and each rep
               gets a score at the end of it.
@@ -171,6 +174,11 @@ export function WarmupsClient() {
               The root climbs a semitone each rep to the top of your range,
               then walks back down — and keeps going until you end the
               exercise.
+            </li>
+            <li>
+              Prefer to sing it back from memory? Switch to Call and response
+              in the exercise controls. It is scored separately, because it is
+              a harder thing to do.
             </li>
           </ol>
           <p id="warmups-mic-note" className="mt-3 max-w-xl text-sm text-dim">
