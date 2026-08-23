@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { UsePitchResult } from "@/lib/audio/use-pitch";
+import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat } from "@/lib/audio/notes";
 import { playTone, clickAt } from "@/lib/audio/synth";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
+import { liveLags } from "@/lib/audio/latency";
 import { logSession, type VocalRange } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
@@ -201,6 +202,14 @@ export function SongPlayer({
   const awakeSecRef = useRef(0);
   const sessionTransposeRef = useRef(0);
   const sessionTempoRef = useRef<Tempo>(1);
+  /**
+   * Seconds a pitch frame lags the moment it describes, seeded at count-in.
+   * The frame in hand reports the voice ~68 ms ago (analyser centroid plus
+   * median smoothing), and the guide it was following was heard outputLatency
+   * after it was scheduled. Scoring at `now` misattributed every note onset
+   * to the note before it — see lib/audio/latency.ts.
+   */
+  const scoreLagRef = useRef(0);
   const lastTickRef = useRef(0);
   const scoreAccumRef = useRef(0);
   const finishedRef = useRef(false);
@@ -481,7 +490,11 @@ export function SongPlayer({
       const voiced = f.freq !== null && f.volume >= MIN_VOLUME;
       if (voiced && f.freq !== null) {
         const midiFloat = freqToMidiFloat(f.freq);
-        const idx = noteIndexAtBeat(currentNotesRef.current, beatInSong);
+        // The frame in hand describes the voice `scoreLag` ago, and the guide it
+        // was following was heard `outputLag` after it was scheduled. Judge it
+        // against where the song was then, not where the song is now.
+        const scoredBeat = beatInSong - scoreLagRef.current / spb;
+        const idx = noteIndexAtBeat(currentNotesRef.current, scoredBeat);
         // The playBeats guard matters: a note that starts before a drilled
         // section can still cover this beat, and crediting it would add to the
         // score's numerator without adding to its denominator.
@@ -598,6 +611,7 @@ export function SongPlayer({
     sectionLabelRef.current = undefined;
     sessionTransposeRef.current = transpose;
     sessionTempoRef.current = tempo;
+    scoreLagRef.current = liveLags(getAudioContext().sampleRate, PITCH_FFT_SIZE).scoreLag;
     setPerLoopScores([]);
     setLoopIndex(0);
     setRunningScore(0);

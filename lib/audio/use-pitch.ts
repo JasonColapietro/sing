@@ -27,6 +27,13 @@ export const EMPTY_FRAME: PitchFrame = {
   t: 0,
 };
 
+/**
+ * Analyser frame the pitch loop opens. Exported because lib/audio/latency.ts
+ * converts it into the seconds a reading lags reality, and a frame size changed
+ * in one place and not the other silently mis-aligns every scored room.
+ */
+export const PITCH_FFT_SIZE = 4096;
+
 export interface UsePitchResult {
   /** React state, updated every animation frame while listening. */
   frame: PitchFrame;
@@ -130,7 +137,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     // vowel at -3.5 dB SNR, usable frames at E2 went from 2 in 20 to 7 in 20.
     // The cost is latency, and it is affordable: the median-of-4 smoothing
     // below already spans more time than the extra 43 ms this adds.
-    analyser.fftSize = 4096;
+    analyser.fftSize = PITCH_FFT_SIZE;
     source.connect(analyser);
     streamRef.current = stream;
     sourceRef.current = source;

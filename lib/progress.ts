@@ -16,14 +16,15 @@ import type {
   ProgressState,
   SessionLog,
   VocalRange,
+  WarmupMode,
 } from "./progress-shape";
 
 // The shape and its validators live in ./progress-shape so a server route can
 // import them without dragging this `"use client"` module along. Re-exported
 // here because `@/lib/progress` is where the rest of the app has always asked
 // for them.
-export type { ActivityType, ProgressState, SessionLog, VocalRange };
-export { ACTIVITY_TYPES } from "./progress-shape";
+export type { ActivityType, ProgressState, SessionLog, VocalRange, WarmupMode };
+export { ACTIVITY_TYPES, isWarmupMode, WARMUP_MODES } from "./progress-shape";
 
 export interface Achievement {
   id: string;
@@ -364,6 +365,8 @@ export function logSession(input: {
   detail?: string;
   /** Per-note accuracy, when the exercise scored against target pitches. */
   notes?: NoteTallies;
+  /** How a warmup was sung, for the activities that have modes. */
+  mode?: WarmupMode;
 }): LogResult {
   const prev = load();
   const now = new Date();
@@ -390,6 +393,7 @@ export function logSession(input: {
     ...(input.notes && Object.keys(input.notes).length > 0
       ? { notes: input.notes }
       : {}),
+    ...(input.mode ? { mode: input.mode } : {}),
   };
 
   /**
