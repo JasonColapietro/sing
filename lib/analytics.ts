@@ -14,9 +14,6 @@
  * hundred bytes a session instead of tens of kilobytes.
  */
 
-/** In-tune threshold, matching the ±25 cents the studio shows singers. */
-export const IN_TUNE_CENTS = 25;
-
 /** Below this much scored time, a note's accuracy is noise. */
 export const MIN_SCORED_SEC = 1.5;
 
@@ -24,7 +21,12 @@ export const MIN_SCORED_SEC = 1.5;
 export interface NoteTally {
   /** Seconds this note was scorable. */
   sec: number;
-  /** Of those, seconds sung within tolerance. */
+  /**
+   * Of those, seconds sung within ±50 cents of the target. Both writers
+   * (components/warmups/exercise-player.tsx and components/songs/song-player.tsx)
+   * use that window; it is deliberately wider than the ±25 the studio draws,
+   * because a held note that drifts to 40 cents is still a held note.
+   */
   hitSec: number;
   /** Mean absolute cents error over voiced frames, or null if not measured. */
   cents: number | null;
