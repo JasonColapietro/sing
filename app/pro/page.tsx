@@ -79,14 +79,24 @@ const PRO_JSON_LD = {
     },
     AUTHOR_NODE,
     {
-      "@type": "Product",
+      // SoftwareApplication, not Product. A subscription is not a shippable
+      // good: typing it Product is what enrols the page in Google's Merchant
+      // listings report, which then demands shippingDetails and
+      // hasMerchantReturnPolicy — fields that do not honestly exist for a
+      // monthly plan, so the warnings would sit open forever. Matches the
+      // free tier's node on the homepage and the rest of the Suede estate.
+      "@type": "SoftwareApplication",
       "@id": `${SITE_URL}/pro#product`,
       name: "Suede Sing Pro",
       description:
         "An adaptive daily practice plan, per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, the full songbook, cloud sync, and two books with PDFs.",
-      brand: { "@id": "https://suedeai.ai/#organization" },
-      category: "Vocal training subscription",
-      isRelatedTo: { "@id": `${SITE_URL}/#app` },
+      applicationCategory: "MusicApplication",
+      operatingSystem: "Web Browser",
+      publisher: { "@id": "https://suedeai.ai/#organization" },
+      // isPartOf, not isRelatedTo: isRelatedTo only takes Product and Service
+      // on both ends, and neither this node nor /#app is either one.
+      isPartOf: { "@id": `${SITE_URL}/#app` },
+      url: `${SITE_URL}/pro`,
       offers: OFFERS,
     },
     {
