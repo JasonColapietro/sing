@@ -25,14 +25,12 @@ import {
   restorePro,
   startCheckout,
   useProState,
-  type ProPlan,
 } from "@/lib/pro";
 import {
-  annualEnabled,
-  annualSavingsPct,
   formatPrice,
   PRICING,
   PRO_FAQ,
+  type CheckoutPlan,
 } from "@/lib/pro-shared";
 import {
   PRO_EXERCISES,
@@ -41,14 +39,6 @@ import {
   TOTAL_WORDS,
 } from "@/lib/pro-inventory";
 import { UnlockStack } from "./unlock-stack";
-
-/**
- * Read once, at module scope: NEXT_PUBLIC_PRO_ANNUAL is inlined at build time,
- * so server and client agree and there's nothing for hydration to disagree
- * about. Off until the Stripe annual price exists — see lib/pro-shared.
- */
-const ANNUAL_ON = annualEnabled();
-const ANNUAL_SAVINGS = annualSavingsPct();
 
 const PERK_GLYPHS: Record<string, React.ComponentType> = {
   coach: CoachGlyph,
@@ -123,7 +113,7 @@ function longDate(iso: string | null): string | null {
   });
 }
 
-/** The key a subscriber uses to unlock Pro in another browser. */
+/** The key a Pro owner uses to unlock access in another browser. */
 function ProKeyRow({ proKey }: { proKey: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -241,7 +231,7 @@ function RestorePanel() {
   return (
     <details className="rounded-2xl border border-line bg-panel px-5 py-4">
       <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
-        Already subscribed? Unlock Pro on this device
+        Already have Pro? Unlock it on this device
       </summary>
       <form onSubmit={submit} className="mt-4 flex flex-wrap items-center gap-3">
         <input
@@ -269,7 +259,7 @@ function RestorePanel() {
       )}
       <p className="mt-3 text-xs text-dim">
         Pro unlocks per browser, since there are no accounts. Paste the Pro key
-        from the browser where you subscribed. Lost it? Email
+        from the browser where you bought or subscribed. Lost it? Email
         hey@suedeai.ai and we&apos;ll send a new one.
       </p>
     </details>
@@ -278,33 +268,21 @@ function RestorePanel() {
 
 export function ProClient() {
   const pro = useProState();
-  // Yearly is the default when it is on sale, and that inverts the reasoning
-  // this line used to carry. When the year cost $79 the toggle's default was
-  // protecting the visitor from landing on a bigger number than the one that
-  // brought them here. At $29 the year *is* the smaller number in every sense
-  // that matters — less than three months of monthly — so defaulting to
-  // monthly would be hiding the better offer behind a toggle. The teaser copy
-  // on every other surface leads with the yearly price for the same reason.
-  const [billing, setBilling] = useState<ProPlan>(ANNUAL_ON ? "annual" : "monthly");
+  const [billing, setBilling] = useState<CheckoutPlan>("monthly");
   const [justUpgraded, setJustUpgraded] = useState(false);
   const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
   const [abandoned, setAbandoned] = useState(false);
 
-  // PRICING is today's list price, not a record of what any one subscriber
-  // pays — entitlement carries no amount, and an older price can still sit
-  // behind a plan. So the price copy tracks the plan on sale, and a subscriber
-  // is shown the plan they hold instead of a number that might not be theirs.
-  const annual = billing === "annual";
-  const showToggle = ANNUAL_ON && !pro.active;
+  const lifetimePurchase = billing === "lifetime";
+  const subscriptionPlan = pro.plan === "monthly" || pro.plan === "annual";
+  const showPurchaseOptions = !pro.active;
   const price = formatPrice(PRICING[billing].amount);
-  const priceUnit = annual ? "per year" : "per month";
-  const priceNote = annual
-    ? `${formatPrice(PRICING.annual.perMonth)} a month, billed yearly — ${ANNUAL_SAVINGS}% off.`
-    : "Billed monthly, cancel in one click.";
-  const plansBlurb = ANNUAL_ON
-    ? `${formatPrice(PRICING.monthly.amount)} a month, or ${formatPrice(PRICING.annual.amount)} a year and save ${ANNUAL_SAVINGS}%. Every Pro feature sits in the one tier, and the price you join at is the price you keep.`
-    : `${formatPrice(PRICING.monthly.amount)} a month, billed monthly, cancel in one click. Every Pro feature sits in the one tier, and the price you join at is the price you keep.`;
+  const priceUnit = lifetimePurchase ? "one time" : "per month";
+  const priceNote = lifetimePurchase
+    ? "One payment. Lifetime Pro. No renewal."
+    : `Keep the ${formatPrice(PRICING.monthly.amount)} monthly price while your subscription remains active. Cancel anytime.`;
+  const plansBlurb = `Early Access is ${formatPrice(PRICING.monthly.amount)} a month. Keep that monthly price while your subscription remains active. Or pay ${formatPrice(PRICING.lifetime.amount)} once for lifetime access. Both unlock the same Pro tier; lifetime never renews.`;
   const periodEnd = longDate(pro.currentPeriodEnd);
 
   // Stripe returns to /pro?checkout=success&session_id=… — confirm the
@@ -333,13 +311,13 @@ export function ProClient() {
             setJustUpgraded(true);
             return;
           }
-          // Stripe answered, and the answer wasn't "subscribed" — retrying
+          // Stripe answered, and the answer wasn't "active" — retrying
           // won't change that, so stop and hand over something support can act on.
           clearPendingCheckout();
           setCheckout({
             kind: "error",
             message:
-              "Your payment went through, but Stripe doesn't show an active subscription yet. Give it a minute and reload — if it sticks, email hey@suedeai.ai with this reference and we'll sort it out.",
+              "Your payment went through, but Stripe doesn't show active Pro access yet. Give it a minute and reload. If it sticks, email hey@suedeai.ai with this reference and we'll sort it out.",
             ref: sessionId,
           });
         })
@@ -350,7 +328,7 @@ export function ProClient() {
           setCheckout({
             kind: "error",
             message:
-              "Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again — nothing is lost. If it keeps failing, email hey@suedeai.ai with this reference.",
+              "Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again. Nothing is lost. If it keeps failing, email hey@suedeai.ai with this reference.",
             ref: sessionId,
           }),
         );
@@ -413,21 +391,25 @@ export function ProClient() {
                     Start a pro warmup
                   </LinkButton>
                 </div>
-                {pro.status === "past_due" && (
+                {subscriptionPlan && pro.status === "past_due" && (
                   <p className="mt-5 max-w-xl rounded-xl border border-rec/40 bg-rec/10 px-3 py-2 text-sm text-rec">
                     Your last payment didn&apos;t go through. Pro stays on
                     while Stripe retries — update your card to keep it.
                   </p>
                 )}
-                {pro.cancelAtPeriodEnd && periodEnd && (
+                {subscriptionPlan && pro.cancelAtPeriodEnd && periodEnd && (
                   <p className="mt-5 max-w-xl rounded-xl border border-line2 bg-panel2/60 px-3 py-2 text-sm text-mut">
                     Pro is set to end on {periodEnd}. You keep everything you
                     earned when it does.
                   </p>
                 )}
                 <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                  {pro.plan === "annual" ? "Annual plan" : "Monthly plan"}
-                  {periodEnd && (
+                  {pro.plan === "lifetime"
+                    ? "Lifetime access"
+                    : pro.plan === "annual"
+                      ? "Annual plan"
+                      : "Monthly plan"}
+                  {subscriptionPlan && periodEnd && (
                     <>
                       <span className="mx-2 text-line2">·</span>
                       {pro.cancelAtPeriodEnd ? "Ends" : "Renews"} {periodEnd}
@@ -459,9 +441,10 @@ export function ProClient() {
                   </LinkButton>
                 </div>
                 <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                  Cancel anytime<span className="mx-2 text-line2">·</span>Free
-                  stays free<span className="mx-2 text-line2">·</span>Voice
-                  stays on device
+                  Keep the monthly price while the subscription remains active
+                  <span className="mx-2 text-line2">·</span>Lifetime never
+                  renews<span className="mx-2 text-line2">·</span>Voice stays
+                  on device
                 </p>
               </>
             )}
@@ -562,13 +545,13 @@ export function ProClient() {
             </p>
           )}
 
-          {showToggle && (
+          {showPurchaseOptions && (
             <div
               role="group"
-              aria-label="Billing period"
+              aria-label="Purchase option"
               className="mx-auto mt-10 flex w-fit items-center gap-1 rounded-full border border-line bg-panel p-1"
             >
-              {(["monthly", "annual"] as const).map((plan) => {
+              {(["monthly", "lifetime"] as const).map((plan) => {
                 const on = billing === plan;
                 return (
                   <button
@@ -583,8 +566,8 @@ export function ProClient() {
                     }`}
                   >
                     {plan === "monthly"
-                      ? "Monthly"
-                      : `Yearly · save ${ANNUAL_SAVINGS}%`}
+                      ? `Monthly · ${formatPrice(PRICING.monthly.amount)}`
+                      : `Lifetime · ${formatPrice(PRICING.lifetime.amount)} once`}
                   </button>
                 );
               })}
@@ -593,7 +576,7 @@ export function ProClient() {
 
           <div
             className={`mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 ${
-              showToggle ? "mt-6" : "mt-10"
+              showPurchaseOptions ? "mt-6" : "mt-10"
             }`}
           >
             {/* Free */}
@@ -634,7 +617,7 @@ export function ProClient() {
                 className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-soft via-amber to-amber-soft"
               />
               <span className="mb-3 inline-flex w-fit items-center rounded bg-amber px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#241a05]">
-                What most singers pick
+                {pro.active ? "Your Pro access" : "Early Access"}
               </span>
               <span className="flex items-center gap-2">
                 <ProChip />
@@ -646,12 +629,18 @@ export function ProClient() {
                 <>
                   <div className="mt-3 flex items-baseline gap-2">
                     <span className="font-mono text-4xl text-amber-ink sm:text-5xl">
-                      {pro.plan === "annual" ? "Yearly" : "Monthly"}
+                      {pro.plan === "lifetime"
+                        ? "Lifetime"
+                        : pro.plan === "annual"
+                          ? "Annual"
+                          : "Monthly"}
                     </span>
                     <span className="text-sm text-mut">your plan</span>
                   </div>
                   <p className="mt-1.5 text-sm text-mut">
-                    Manage or cancel it below.
+                    {pro.plan === "lifetime"
+                      ? "No subscription. No renewal. Yours for life."
+                      : "Manage or cancel it below."}
                   </p>
                 </>
               ) : (
@@ -666,7 +655,7 @@ export function ProClient() {
                 </>
               )}
               <span className="mt-3 inline-flex w-fit items-center rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
-                Founding price — locked for life
+                {pro.active ? "Pro unlocked" : "Early Access price"}
               </span>
               <p className="mt-2 text-sm text-mut">
                 Everything in Free, plus the coach.
@@ -683,28 +672,38 @@ export function ProClient() {
                   <div className="flex flex-col gap-2">
                     <div className="flex w-full items-center justify-center gap-2 rounded-full bg-amber px-5 py-2.5 font-mono text-sm font-semibold text-[#241a05]">
                       {pro.status === "trialing"
-                        ? "✓ Active — free pass"
-                        : `✓ Active — ${pro.plan === "annual" ? "annual" : "monthly"}`}
+                        ? "✓ Active: free pass"
+                        : `✓ Active: ${
+                            pro.plan === "lifetime"
+                              ? "lifetime"
+                              : pro.plan === "annual"
+                                ? "annual"
+                                : "monthly"
+                          }`}
                     </div>
                     {pro.status === "trialing" && periodEnd && (
                       <p className="text-center text-xs text-dim">
                         Runs through {periodEnd}, then ends on its own.
                       </p>
                     )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={manageBilling}
-                      disabled={portal.kind === "working"}
-                    >
-                      {portal.kind === "working"
-                        ? "Opening Stripe…"
-                        : "Manage or cancel"}
-                    </Button>
-                    {portal.kind === "error" && (
-                      <p className="text-center text-xs text-rec">
-                        {portal.message}
-                      </p>
+                    {subscriptionPlan && (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={manageBilling}
+                          disabled={portal.kind === "working"}
+                        >
+                          {portal.kind === "working"
+                            ? "Opening Stripe…"
+                            : "Manage or cancel"}
+                        </Button>
+                        {portal.kind === "error" && (
+                          <p className="text-center text-xs text-rec">
+                            {portal.message}
+                          </p>
+                        )}
+                      </>
                     )}
                     {pro.proKey && !justUpgraded && (
                       <ProKeyRow proKey={pro.proKey} />
@@ -721,7 +720,9 @@ export function ProClient() {
                     >
                       {checkout.kind === "working"
                         ? "Opening Stripe…"
-                        : `Go Pro — ${price}/${annual ? "year" : "month"}`}
+                        : lifetimePurchase
+                          ? `Get lifetime Pro: ${price} once`
+                          : `Go Pro: ${price}/month`}
                     </Button>
                     <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
                       Secure checkout by Stripe
@@ -733,8 +734,8 @@ export function ProClient() {
           </div>
 
           <p className="mx-auto mt-6 max-w-4xl text-center font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Cancel in one click · Keep everything you earned · Founding price
-            locked for life
+            Monthly price stays while subscription is active · Lifetime never
+            renews · Keep everything you earned
           </p>
 
           {!pro.active && (
@@ -746,10 +747,9 @@ export function ProClient() {
         </div>
       </section>
 
-      {/* 3b — What the money buys, itemised. Directly under the buy card on
-              purpose: an annual buyer is committing twelve months up front and
-              the question in their head at that exact scroll position is "what
-              do I actually get today". */}
+      {/* 3b — What the money buys, itemised. Directly under the buy card so a
+              monthly subscriber and a lifetime buyer can both answer "what do
+              I actually get today?" before leaving for Checkout. */}
       <UnlockStack />
 
       {/* 4 — Free vs Pro table */}
@@ -904,7 +904,11 @@ export function ProClient() {
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <LinkButton href="#plans" variant="amber" size="lg">
-              {pro.active ? "Manage your plan" : "Go Pro"}
+              {pro.active
+                ? subscriptionPlan
+                  ? "Manage your plan"
+                  : "Your Pro access"
+                : "Go Pro"}
             </LinkButton>
             <LinkButton href="/studio" variant="ghost" size="lg">
               Back to the studio

@@ -88,7 +88,8 @@ export function UpgradeCard({
           {cta}
         </LinkButton>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Cancel anytime · Review the plan next
+          Monthly price stays while subscription is active · Lifetime never
+          renews
         </span>
       </div>
     </div>

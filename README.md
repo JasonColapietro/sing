@@ -22,9 +22,10 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Payments (Suede Pro)
 
-Pro is a Stripe subscription — $9.99/month. `STRIPE_SECRET_KEY` decides
-which Stripe account and mode the app talks to; see [Going live](#going-live) for
-where production points. Locally: `vercel link && vercel env pull`.
+Pro is sold at Early Access pricing: a $4.99 monthly subscription or a $79
+lifetime purchase. `STRIPE_SECRET_KEY` decides which Stripe account and mode
+the app talks to; see [Going live](#going-live) for where production points.
+Locally: `vercel link && vercel env pull`.
 
 There are no accounts and no database, so **Stripe is the only source of
 truth** and the flow is built around that:
@@ -32,9 +33,9 @@ truth** and the flow is built around that:
 | Route | Job |
 |---|---|
 | `POST /api/checkout` | Creates a hosted Stripe Checkout Session. No card field is ever rendered by this app. |
-| `POST /api/entitlement` | Resolves entitlement from a `session_id` (right after paying) or a `subscription_id` (re-checks later). |
-| `POST /api/restore` | Unlocks Pro on a new device from the subscriber's Pro key. |
-| `POST /api/portal` | Opens Stripe's billing portal — this is what makes "cancel in one click" true. |
+| `POST /api/entitlement` | Resolves entitlement from a `session_id` (right after paying), `subscription_id`, or lifetime `payment_intent_id`. |
+| `POST /api/restore` | Unlocks Pro on a new device from the purchaser's Pro key. |
+| `POST /api/portal` | Opens Stripe's billing portal for monthly and legacy annual subscribers. Lifetime purchases do not use the portal. |
 | `POST /api/redeem` | Turns a comp code into a 30-day pass, as a real trialing subscription with no card. |
 
 ### Comp codes
@@ -62,18 +63,22 @@ passes — the opposite of what setting the cap asked for.
 
 ### Pro keys
 
-Entitlement lives in one browser, so subscribers get a **Pro key** — an HMAC
-over their Stripe customer and subscription ids (`lib/pro-key.ts`, signed with
-`PRO_KEY_SECRET`). It is shown on `/pro` while Pro is active and is what
-`/api/restore` accepts.
+Entitlement lives in one browser, so purchasers get a **Pro key**, an HMAC over
+their Stripe customer and billing reference (`lib/pro-key.ts`, signed with
+`PRO_KEY_SECRET`). The billing reference is a subscription id for monthly or
+legacy annual access and a PaymentIntent id for lifetime access. The key is
+shown on `/pro` while Pro is active and is what `/api/restore` accepts.
 
 A key is proof of *purchase*, not a grant: restore verifies the signature and
-then asks Stripe whether that subscription is still live, so a cancelled or
-leaked key stops unlocking anything. Keys are derived rather than stored, so a
-lost one is regenerated, not looked up:
+then asks Stripe whether the subscription is still live or the lifetime charge
+remains unreversed. A cancelled subscription or refunded lifetime purchase
+stops unlocking anything. Keys are derived rather than stored, so a lost one is
+regenerated, not looked up:
 
 ```bash
-node --env-file=.env.local scripts/pro-key.mjs sub_123…      # or an email
+node --env-file=.env.local scripts/pro-key.mjs sub_123…      # subscription
+node --env-file=.env.local scripts/pro-key.mjs pi_123…       # lifetime
+node --env-file=.env.local scripts/pro-key.mjs singer@example.com
 ```
 
 Restoring by email was removed deliberately: it let anyone who knew a
@@ -119,9 +124,11 @@ mean to rewrite the path match. WAF counters are per region, so a distributed
 caller can exceed the limit by roughly the number of regions it hits.
 
 `lib/pro.ts` caches the last answer in `localStorage`; `components/pro/sync.tsx`
-re-checks with Stripe twice a day so a cancellation or failed payment actually
-revokes access. Prices are resolved by **lookup key** (`suede_pro_monthly`),
-never by hardcoded id.
+re-checks with Stripe twice a day so a cancellation, failed payment, refund, or
+dispute revokes access. New prices resolve by lookup key
+(`suede_pro_monthly_early_access` and
+`suede_pro_lifetime_early_access`), never by hardcoded id. Legacy monthly and
+annual lookup keys remain recognized for existing subscriptions.
 
 ### Going live
 
@@ -140,18 +147,19 @@ Live mode is already provisioned in the LLC account:
 | | |
 |---|---|
 | Product | `prod_UymwMKT9x94n1k` — Suede Pro |
-| Monthly | `price_1Tz61WRdcsaZ58FLCfDoSZVp` — $9.99/mo, lookup key `suede_pro_monthly` |
-| Billing portal | the account's existing live default config, cancel-at-period-end enabled |
+| Monthly Early Access | $4.99/mo, lookup key `suede_pro_monthly_early_access` |
+| Lifetime Early Access | $79 once, lookup key `suede_pro_lifetime_early_access` |
+| Billing portal | the account's existing live default config, cancel-at-period-end enabled for subscriptions |
 
-Monthly is the only plan (PR #11). The original $4 monthly price is archived;
-the old $30/yr `suede_pro_annual` price is left active but unreferenced, so
-restoring an annual plan is a UI change, not a Stripe migration.
+New checkout sells monthly and lifetime only. The former $9.99 monthly price
+and old $30/yr `suede_pro_annual` price are left untouched and recognized for
+existing subscribers. `/api/checkout` hard-rejects annual before any Stripe
+lookup or Checkout Session call.
 
 **Production is live.** `STRIPE_SECRET_KEY` on the `sing` project holds the LLC's
-live secret key, and `/api/checkout` mints `cs_live_…` sessions against the
-prices above — verified with `livemode: true`, correct amounts, and
-`subscription` mode. No code differs between modes: prices resolve by lookup
-key, which is exactly why the same build serves both.
+live secret key, and `/api/checkout` uses the prices above. Monthly Checkout is
+in subscription mode; lifetime Checkout is in one-time payment mode. No code
+differs between modes because both prices resolve by lookup key.
 
 `.env.local` still carries the sandbox key, so local development stays in test
 mode. That is deliberate — don't pull the live key onto a laptop.
@@ -167,17 +175,21 @@ Two traps to know:
 - **Test and live are separate data spaces.** Anything created in one is invisible
   to the other, so a live account with no prices under the lookup keys makes
   `/api/checkout` fail. `scripts/stripe-setup.mjs` is idempotent and creates the
-  product, both prices and a portal config against whichever key it is given —
-  use it if the live catalogue ever needs rebuilding:
+  product, both sellable prices and a portal config against whichever key it is given.
+  It does not repoint or archive legacy monthly or annual prices. Use it if the
+  live catalog ever needs rebuilding:
 
   ```bash
-  STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs   # live
-  npm run stripe:setup                                        # test mode
+  vercel env run -e production -- node scripts/stripe-setup.mjs  # live
+  npm run stripe:setup                                           # test mode
   ```
 
   It prints which mode it touched and reports `charges_enabled`.
 
-Verify with one small real purchase — test cards are declined against live keys.
+Verify the catalog by inspecting the two lookup-key prices. Verify the deployed
+annual prohibition with a single POST containing `{ "plan": "annual" }`; the
+route must return 409 before Stripe is called. Do not create a live Checkout
+Session merely as a deployment smoke test.
 
 ## Learn More
 

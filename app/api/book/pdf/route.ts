@@ -5,19 +5,20 @@ import { INACTIVE } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   entitlementFrom,
+  entitlementFromLifetime,
   getStripe,
   isOurSubscription,
   isStripeId,
 } from "@/lib/stripe";
 
 /**
- * Serves a book PDF to a verified subscriber.
+ * Serves a book PDF to a verified Pro customer.
  *
  * The PDFs used to live in public/, which made them world-readable at a
  * stable URL — the whole book, free, to anyone who ever saw the link. They
  * now live in content/pdfs/ (bundled into this function via
  * outputFileTracingIncludes) and are only streamed after the same Stripe
- * subscription check /api/book performs for chapter bodies.
+ * subscription or lifetime-payment check /api/book performs for chapters.
  */
 
 const PDFS: Record<string, { file: string; filename: string }> = {
@@ -36,13 +37,16 @@ export async function POST(request: Request) {
   if (limited) return limited;
 
   let subscriptionId: unknown;
+  let paymentIntentId: unknown;
   let book: unknown;
   try {
     const body = (await request.json()) as {
       subscriptionId?: unknown;
+      paymentIntentId?: unknown;
       book?: unknown;
     };
     subscriptionId = body?.subscriptionId;
+    paymentIntentId = body?.paymentIntentId;
     book = body?.book;
   } catch {
     return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
@@ -52,7 +56,17 @@ export async function POST(request: Request) {
   if (!pdf) {
     return NextResponse.json({ error: "Unknown book." }, { status: 400 });
   }
-  if (!isStripeId(subscriptionId, "sub_")) {
+  let billing:
+    | { kind: "subscription"; id: string }
+    | { kind: "lifetime"; id: string };
+  if (paymentIntentId == null && isStripeId(subscriptionId, "sub_")) {
+    billing = { kind: "subscription", id: subscriptionId };
+  } else if (
+    subscriptionId == null &&
+    isStripeId(paymentIntentId, "pi_")
+  ) {
+    billing = { kind: "lifetime", id: paymentIntentId };
+  } else {
     return NextResponse.json(
       { error: "Suede Pro is required to download this." },
       { status: 403 },
@@ -61,17 +75,28 @@ export async function POST(request: Request) {
 
   try {
     const stripe = getStripe();
-    const sub = await stripe.subscriptions.retrieve(subscriptionId, {
-      expand: ["customer"],
-    });
-    // Same guard as /api/restore: an id from another product on this Stripe
-    // account must not unlock a book sold with Suede Sing Pro.
-    const entitlement = isOurSubscription(sub)
-      ? entitlementFrom(sub, null)
-      : INACTIVE;
+    let entitlement = INACTIVE;
+    if (billing.kind === "subscription") {
+      const sub = await stripe.subscriptions.retrieve(billing.id, {
+        expand: ["customer"],
+      });
+      // Same guard as /api/restore: an id from another product on this Stripe
+      // account must not unlock a Suede Sing book.
+      if (isOurSubscription(sub)) entitlement = entitlementFrom(sub, null);
+    } else {
+      const payment = await stripe.paymentIntents.retrieve(billing.id, {
+        expand: ["customer", "latest_charge"],
+      });
+      entitlement = entitlementFromLifetime(payment, null);
+    }
     if (!entitlement.active) {
       return NextResponse.json(
-        { error: "That subscription is no longer active." },
+        {
+          error:
+            billing.kind === "subscription"
+              ? "That subscription is no longer active."
+              : "That lifetime purchase is no longer active.",
+        },
         { status: 403 },
       );
     }
@@ -99,7 +124,7 @@ export async function POST(request: Request) {
     }
     console.error("[api/book/pdf]", error);
     return NextResponse.json(
-      { error: "Could not verify your subscription. Try again in a moment." },
+      { error: "Could not verify your Pro access. Try again in a moment." },
       { status: 502 },
     );
   }
