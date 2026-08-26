@@ -20,6 +20,7 @@
  * array, mirroring components/discover/room-rail.test.tsx: the data being
  * right is not the failure mode, a reader seeing the wrong subject is.
  */
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { IosBand } from "./ios-band";
@@ -58,5 +59,37 @@ describe("the iOS band", () => {
       expect(prose).toContain(term);
     }
     expect(prose).not.toMatch(/(browser|extension|web studio)[^.]*\b(H1|spectral tilt|cepstral|passaggio|classifies register)/i);
+  });
+});
+
+describe("the Android claim", () => {
+  /**
+   * The band read "the optional iPhone and Android companion" until 2026-08-26.
+   * There was no Play Store listing behind it — details?id=ai.suedeai.suedevoice
+   * returned 404 while com.spotify.music returned 200 from the same client, so
+   * the absence was real rather than Google refusing the request. Android is
+   * built, signed and R8-verified in the suede-voice repo, but step 3 of its
+   * own release checklist ("Create the app in Play Console") had not been run.
+   *
+   * This guard is written to retire itself: it only forbids the claim while
+   * lib/app-store.ts has no Play Store URL in it. Ship the listing, add the
+   * constant, and the band is free to name Android again.
+   */
+  const appStoreSource = readFileSync(
+    new URL("../../lib/app-store.ts", import.meta.url),
+    "utf8",
+  );
+  const hasPlayListing = /play\.google\.com/.test(appStoreSource);
+
+  it("names Android only once a Play Store listing exists to back it", () => {
+    if (hasPlayListing) {
+      expect(prose).toMatch(/Android/i);
+      return;
+    }
+    expect(prose).not.toMatch(/Android/i);
+  });
+
+  it("still points somewhere real for the companion it does name", () => {
+    expect(renderToStaticMarkup(<IosBand />)).toMatch(/apps\.apple\.com/);
   });
 });

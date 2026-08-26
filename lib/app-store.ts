@@ -1,8 +1,9 @@
 /**
  * The iPhone companion on the App Store.
  *
- * The app ships as **Suede Voice** (App Store "Suede Voice: Vocal Range Test",
- * Play "Suede Voice: Vocal Range Test"); this site is Suede Sing. They are the
+ * The app ships as **Suede Voice** (App Store "Suede Voice: Vocal Range Test";
+ * there is no Play Store listing yet, so no copy on this site may present
+ * Android as a shipping surface); this site is Suede Sing. They are the
  * same brand, different surfaces — say "Suede Voice" whenever the copy means
  * the app, so the app's own brand term is searchable somewhere on the web.
  *
