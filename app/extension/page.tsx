@@ -115,7 +115,7 @@ const jsonLd = {
       url: `${SITE_URL}/extension`,
       installUrl: STORE_URL,
       downloadUrl: STORE_URL,
-      softwareVersion: "1.0.0",
+      softwareVersion: "1.1.0",
       isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       permissions: "Microphone",
