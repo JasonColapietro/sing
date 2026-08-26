@@ -51,7 +51,7 @@ export function IosBand() {
         <p className="mt-3 max-w-2xl text-mut">
           The web studio gives you live pitch, range and guided practice, free
           with no install required. If you want more detail, {APP_NAME} — the
-          optional iPhone and Android companion — adds an analysis layer: every
+          optional iPhone companion — adds an analysis layer: every
           sustained note becomes a row of objective measurements, and the
           result is your TonePrint.
         </p>
