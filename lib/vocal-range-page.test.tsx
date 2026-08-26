@@ -44,8 +44,11 @@ const html = renderToStaticMarkup(<Page />);
 
 /** The single ld+json block the page emits. */
 const graph = (() => {
+  // [\s\S] rather than the /s flag: tsconfig targets ES2017, where dotAll
+  // is not available (CI's `tsc --noEmit` rejects it — `next build` does not
+  // typecheck test files, so only CI catches this).
   const m = html.match(
-    /<script type="application\/ld\+json">(.*?)<\/script>/s,
+    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
   );
   if (!m) throw new Error("page emitted no JSON-LD");
   // renderToStaticMarkup escapes the JSON payload for HTML context.
@@ -76,7 +79,7 @@ const text = html
 
 describe("the answer is actually on the page", () => {
   it("poses the question in the h1", () => {
-    const h1 = html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1] ?? "";
+    const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? "";
     expect(h1.toLowerCase()).toContain("vocal range");
     expect(h1).toMatch(/\?/);
   });
