@@ -83,13 +83,30 @@ export const PRICING: Record<CheckoutPlan, PlanPrice> = {
     note: "billed monthly",
   },
   lifetime: {
-    amount: 79,
+    amount: 59,
     interval: "one_time",
     note: "one payment",
   },
 };
 
-/** "$4.99", "$79": a trailing ".00" on a whole-dollar price reads as a typo. */
+/**
+ * Every one-time amount, in cents, that unlocks lifetime Pro — the price on
+ * sale today plus every price this offer was ever sold at.
+ *
+ * A lifetime purchase is permanent, so entitlement can never be checked
+ * against the *current* price: repricing the offer would silently revoke Pro
+ * from everyone who bought it at the old one, with no refund and no signal.
+ * Lowering the price is exactly when that would fire, and exactly when it is
+ * least defensible. Add to this list when the price moves; never replace it.
+ *
+ *   7900 — $79 launch price, sold 2026-08-24 to 2026-08-25.
+ */
+export const HONORED_LIFETIME_CENTS: readonly number[] = [
+  Math.round(PRICING.lifetime.amount * 100),
+  7900,
+];
+
+/** "$4.99", "$59": a trailing ".00" on a whole-dollar price reads as a typo. */
 export function formatPrice(amount: number): string {
   return `$${amount.toFixed(2).replace(/\.00$/, "")}`;
 }
@@ -138,7 +155,7 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "How does billing work?",
-    a: "Monthly renews at $4.99 and can be cancelled from the billing portal. Lifetime is a single $79 payment with no renewal. Either way, your recordings, scores, and streaks remain yours.",
+    a: `Monthly renews at ${formatPrice(PRICING.monthly.amount)} and can be cancelled from the billing portal. Lifetime is a single ${formatPrice(PRICING.lifetime.amount)} payment with no renewal. Either way, your recordings, scores, and streaks remain yours.`,
   },
   {
     q: "Why does a free app sell anything?",

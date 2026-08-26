@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { SITE_URL } from "./site";
 import {
   ENTITLING_STATUSES,
+  HONORED_LIFETIME_CENTS,
   INACTIVE,
   PRICING,
   type CheckoutPlan,
@@ -209,7 +210,12 @@ export function entitlementFrom(
   };
 }
 
-/** True only for an unreversed $79 Early Access lifetime purchase. */
+/**
+ * True only for an unreversed Early Access lifetime purchase of ours.
+ *
+ * The amount is checked against HONORED_LIFETIME_CENTS rather than today's
+ * price, so a repricing never revokes Pro from someone who already paid.
+ */
 export function isOurLifetimePayment(payment: Stripe.PaymentIntent): boolean {
   const customerId =
     typeof payment.customer === "string"
@@ -221,7 +227,7 @@ export function isOurLifetimePayment(payment: Stripe.PaymentIntent): boolean {
     payment.status === "succeeded" &&
     !!customerId?.startsWith("cus_") &&
     payment.currency === "usd" &&
-    payment.amount_received === Math.round(PRICING.lifetime.amount * 100) &&
+    HONORED_LIFETIME_CENTS.includes(payment.amount_received) &&
     payment.metadata.app === "suede-sing" &&
     payment.metadata.offer === "early-access" &&
     payment.metadata.plan === "lifetime" &&

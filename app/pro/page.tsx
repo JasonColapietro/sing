@@ -11,13 +11,13 @@ import { SITE_URL } from "@/lib/site";
 export const metadata = {
   title: "Suede Pro: The Vocal Coach on Top of the Free Studio",
   description:
-    "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access, adding an adaptive coach, per-note analytics, take analysis, pro warmup packs, the full songbook, and two books with PDFs.",
+    "Suede Pro Early Access is $4.99 monthly or $59 once for lifetime access, adding an adaptive coach, per-note analytics, take analysis, pro warmup packs, the full songbook, and two books with PDFs.",
   alternates: { canonical: `${SITE_URL}/pro` },
 };
 
 function offerFor(plan: CheckoutPlan) {
   const { amount } = PRICING[plan];
-  // Schema wants a plain decimal string, so "79" is written "79.00" here even
+  // Schema wants a plain decimal string, so "59" is written "59.00" here even
   // though the page shows it without the cents.
   const price = amount.toFixed(2);
   const offer = {

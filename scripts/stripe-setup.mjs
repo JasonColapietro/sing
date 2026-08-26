@@ -41,7 +41,7 @@ const PLANS = [
     key: "lifetime",
     lookupKey: "suede_pro_lifetime_early_access",
     nickname: "Suede Pro lifetime - Early Access",
-    unitAmount: 7900,
+    unitAmount: 5900,
     interval: null,
   },
 ];
@@ -138,7 +138,9 @@ async function ensurePrice(productId, plan) {
     const billing = existing.recurring?.interval ?? "one-time";
     console.log(
       `price:    ${plan.lookupKey} -> ${existing.id} (reused, $${amount}/${billing})` +
-        (matches ? "" : "  ⚠️  differs from the price on /pro"),
+        (matches
+          ? ""
+          : `  ⚠️  /pro quotes $${plan.unitAmount / 100}/${plan.interval ?? "one-time"}`),
     );
     return matches ? "reused" : "mismatch";
   }
@@ -225,7 +227,9 @@ if (account) {
 
 if (mismatched.length) {
   console.error(
-    `\n❌ Not ready: ${mismatched.map((plan) => plan.key).join(", ")}.\n` +
+    `\n❌ Not ready: ${mismatched
+      .map((plan) => `${plan.key} (want $${plan.unitAmount / 100})`)
+      .join(", ")}.\n` +
       "   A price already holds that lookup key at a different amount or interval,\n" +
       "   and this script won't repoint or archive a price it didn't create.\n" +
       "   In the Stripe dashboard, either archive that price and re-run this, or\n" +

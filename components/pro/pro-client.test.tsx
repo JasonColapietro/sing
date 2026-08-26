@@ -44,7 +44,7 @@ describe("Pro purchase choices", () => {
 
     expect(html).toContain("Early Access");
     expect(html).toContain("$4.99");
-    expect(html).toContain("$79");
+    expect(html).toContain("$59");
     expect(html).toContain("Lifetime");
     expect(html).toContain(
       "Keep the $4.99 monthly price while your subscription remains active.",

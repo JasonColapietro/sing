@@ -22,7 +22,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Payments (Suede Pro)
 
-Pro is sold at Early Access pricing: a $4.99 monthly subscription or a $79
+Pro is sold at Early Access pricing: a $4.99 monthly subscription or a $59
 lifetime purchase. `STRIPE_SECRET_KEY` decides which Stripe account and mode
 the app talks to; see [Going live](#going-live) for where production points.
 Locally: `vercel link && vercel env pull`.
@@ -148,7 +148,7 @@ Live mode is already provisioned in the LLC account:
 |---|---|
 | Product | `prod_UymwMKT9x94n1k` — Suede Pro |
 | Monthly Early Access | $4.99/mo, lookup key `suede_pro_monthly_early_access` |
-| Lifetime Early Access | $79 once, lookup key `suede_pro_lifetime_early_access` |
+| Lifetime Early Access | $59 once, lookup key `suede_pro_lifetime_early_access` |
 | Billing portal | the account's existing live default config, cancel-at-period-end enabled for subscriptions |
 
 New checkout sells monthly and lifetime only. The former $9.99 monthly price
@@ -190,6 +190,43 @@ Verify the catalog by inspecting the two lookup-key prices. Verify the deployed
 annual prohibition with a single POST containing `{ "plan": "annual" }`; the
 route must return 409 before Stripe is called. Do not create a live Checkout
 Session merely as a deployment smoke test.
+
+### Repricing a plan
+
+Changing `PRICING` in `lib/pro-shared.ts` changes what the pages *say*, not what
+Stripe *charges*, and the two are checked against each other on every checkout.
+Until Stripe holds the new amount under the same lookup key, `/api/checkout`
+throws `PriceMismatchError` and the plan cannot be bought at all — a deploy of
+the number alone takes the plan off sale rather than discounting it.
+
+`scripts/stripe-setup.mjs` will not repoint or archive a price it did not create,
+so the swap needs one manual step per mode:
+
+1. Archive the old price in the Stripe dashboard (Product → Suede Pro → the
+   price holding the lookup key → Archive). Archiving is not deletion: existing
+   subscriptions on it keep billing, and one-time payments already taken are
+   untouched.
+2. Re-run setup for that plan. It recreates the price at the new amount and
+   takes the lookup key back via `transfer_lookup_key`:
+
+   ```bash
+   npm run stripe:setup -- lifetime                                     # test
+   vercel env run -e production -- node scripts/stripe-setup.mjs lifetime  # live
+   ```
+
+3. Deploy. Steps 1–2 have to land in **both** modes, and live before the deploy,
+   or production sells nothing.
+
+Do both modes even if only production matters — a test catalog quoting the old
+price makes every local checkout throw the same mismatch.
+
+**Lifetime is permanent, so old buyers stay entitled.** Entitlement checks the
+paid amount against `HONORED_LIFETIME_CENTS`, a list of every amount this offer
+has ever sold at, never against the current price. Add the retired amount to
+that list — and to the copy of it in `scripts/pro-key.mjs` — before dropping the
+price; `lib/pricing-sync.test.ts` fails the build if the two drift apart.
+Replacing the list instead of appending to it revokes Pro from everyone who
+bought at the old price, silently and without refund.
 
 ## Learn More
 

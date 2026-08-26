@@ -18,7 +18,7 @@ describe("/pro Early Access offers", () => {
     const html = renderToStaticMarkup(<ProPage />);
 
     expect(html).toContain("$4.99");
-    expect(html).toContain("$79");
+    expect(html).toContain("$59");
     expect(html).toContain("Early Access");
     expect(html).not.toMatch(/\b(?:annual|yearly)\b/i);
   });
@@ -56,7 +56,7 @@ describe("/pro Early Access offers", () => {
       },
     });
     expect(offers[1]).toMatchObject({
-      price: "79.00",
+      price: "59.00",
       description: "One payment for lifetime access. No renewal.",
       priceSpecification: { "@type": "PriceSpecification" },
     });
@@ -70,7 +70,7 @@ describe("homepage Pro teaser", () => {
   it("states both Early Access prices and the different billing shapes", () => {
     const html = renderToStaticMarkup(<Home />);
 
-    expect(html).toContain("Early Access: $4.99 a month or $79 once");
+    expect(html).toContain("Early Access: $4.99 a month or $59 once");
     expect(html).toContain(
       "The $4.99 monthly price stays while your subscription remains active",
     );

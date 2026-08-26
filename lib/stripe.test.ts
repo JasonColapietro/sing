@@ -45,13 +45,13 @@ function subscription({
   } as unknown as Stripe.Subscription;
 }
 
-function lifetimePayment(): Stripe.PaymentIntent {
+function lifetimePayment(cents = 5_900): Stripe.PaymentIntent {
   return {
     id: "pi_lifetime",
     status: "succeeded",
     customer: "cus_lifetime",
     currency: "usd",
-    amount_received: 7_900,
+    amount_received: cents,
     metadata: {
       app: "suede-sing",
       offer: "early-access",
@@ -126,12 +126,28 @@ describe("lifetime entitlement", () => {
     );
   });
 
+  /**
+   * The drop from $79 to $59 must not revoke what was already bought outright.
+   * Checking the amount against the current price instead of the honored list
+   * is what would do it, and there is no re-bill to catch it afterwards.
+   */
+  it("still honors a purchase made at the retired $79 launch price", () => {
+    expect(isOurLifetimePayment(lifetimePayment(7_900))).toBe(true);
+    expect(entitlementFromLifetime(lifetimePayment(7_900)).plan).toBe(
+      "lifetime",
+    );
+  });
+
+  it("ignores a payment carrying our metadata at an amount never on sale", () => {
+    expect(isOurLifetimePayment(lifetimePayment(100))).toBe(false);
+  });
+
   it("does not grant lifetime access after a full refund", () => {
     const payment = lifetimePayment();
     payment.latest_charge = {
       ...(payment.latest_charge as Stripe.Charge),
       refunded: true,
-      amount_refunded: 7_900,
+      amount_refunded: 5_900,
     };
 
     expect(isOurLifetimePayment(payment)).toBe(false);

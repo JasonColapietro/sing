@@ -32,6 +32,14 @@ if (!stripeKey || !keySecret) {
 
 const stripe = new Stripe(stripeKey);
 
+/**
+ * Every one-time amount, in cents, that unlocks lifetime Pro. Must stay in
+ * step with HONORED_LIFETIME_CENTS in lib/pro-shared.ts — this file is plain
+ * node with no build step, so it cannot import it, and lib/pricing-sync.test.ts
+ * is what keeps the two honest.
+ */
+const HONORED_LIFETIME_CENTS = [5900, 7900];
+
 /** Must stay in step with lib/pro-key.ts. */
 function mint(customerId, billingId) {
   const payload = Buffer.from(`${customerId}:${billingId}`, "utf8").toString(
@@ -115,7 +123,7 @@ for (const purchase of purchases) {
   const entitles =
     value.status === "succeeded" &&
     value.currency === "usd" &&
-    value.amount_received === 7900 &&
+    HONORED_LIFETIME_CENTS.includes(value.amount_received) &&
     value.metadata.app === "suede-sing" &&
     value.metadata.offer === "early-access" &&
     value.metadata.plan === "lifetime" &&
