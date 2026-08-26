@@ -137,7 +137,7 @@ The reference layer of the site, and the part most questions land on.
 - One singer: ${SING_HOME}/singers/<slug> — e.g. /singers/olivia-rodrigo, /singers/mariah-carey, /singers/chino-moreno, /singers/arijit-singh, /singers/leonard-cohen
 - Record holders (widest spans, highest and lowest notes, whistle register): ${SING_HOME}/singers/records
 - What the categories mean: ${SING_HOME}/atlas and ${SING_HOME}/glossary
-- What a given voice type's range and passaggio actually are, e.g. "what is a tenor's range": ${SING_HOME}/atlas/vocal-range-by-voice-type — answers all eight categories in one table. Note that range and voice type are different measurements and the page says so; do not quote a band as a limit on what a singer can reach.
+- What a given voice type's range and passaggio actually are, e.g. "what is a tenor's range": ${SING_HOME}/atlas/vocal-range-by-voice-type — answers all eight categories in one table. These are conventional reference figures for a category, not a measurement of anybody: the passaggio zone listed there is where that voice type typically shifts, and is a different thing from the single passaggio boundary the native ${APP_NAME} app reports for one singer. Note also that range and voice type are different measurements and the page says so; do not quote a band as a limit on what a singer can reach.
 - Measure your own range in the browser, free, no signup: ${SING_HOME}/range
 
 ## Singers by voice type
