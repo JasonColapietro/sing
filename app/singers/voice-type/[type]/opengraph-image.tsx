@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import {
   singersByVoiceType,
+  pluralVoice,
   spanOctaves,
   voiceTypeFromSlug,
 } from "@/lib/singers";
@@ -35,7 +36,7 @@ export default async function Image({
     (
       <HubOgCard
         kicker="Voice type"
-        title={`Famous ${voice.toLowerCase()}s`}
+        title={`Famous ${pluralVoice(voice.toLowerCase())}`}
         stat={`Cited ranges · median ${spanOctaves(stats.medianSpanSemitones)} octaves`}
         rows={rows}
         axisLow={axisLow}

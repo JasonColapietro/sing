@@ -137,6 +137,20 @@ export function genreFromSlug(slug: string): string | undefined {
   return HUB_GENRES.find((g) => genreSlug(g) === slug);
 }
 
+/**
+ * The plural of a voice category.
+ *
+ * Every label pluralises by adding "s" except one: "bass" needs "es", and
+ * `${"bass"}s` renders the category as "basss". That typo was live in eight
+ * places — the /singers/voice-type/bass H1, its meta description, its JSON-LD
+ * name and breadcrumb, its OG image, and the "All basss" links on the singer
+ * and genre pages — which is what one-off string concatenation buys you across
+ * a route family. Pluralise through here, never with a template suffix.
+ */
+export function pluralVoice(v: VoiceKind | string): string {
+  return /s$/i.test(v) ? `${v}es` : `${v}s`;
+}
+
 export function singersByVoiceType(v: VoiceKind): Singer[] {
   return SINGERS.filter((s) => s.voiceType === v).sort((a, b) =>
     a.name.localeCompare(b.name),

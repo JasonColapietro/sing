@@ -1,5 +1,10 @@
 import { midiToLabel } from "@/lib/audio/notes";
-import { SINGERS, type Singer, type VoiceKind } from "@/lib/singers";
+import {
+  SINGERS,
+  pluralVoice,
+  type Singer,
+  type VoiceKind,
+} from "@/lib/singers";
 
 /**
  * Facts derived from the dataset itself — no new claims about anybody.
@@ -72,6 +77,33 @@ export function peers(s: Singer): Singer[] {
   );
 }
 
+/**
+ * The singers who best *illustrate* a category, for a "typical range" table.
+ *
+ * Deliberately not "the most famous" — the library holds no popularity signal,
+ * so any such ordering would be someone's opinion smuggled in as data, and it
+ * would go stale the moment taste moved. This ranks by how close a voice sits
+ * to the conventional band for its own type at both ends, which is what a
+ * "typical range" column is actually asking: show me a textbook one of these.
+ *
+ * A useful side effect is that the outliers stay out. The widest and highest
+ * voices are the memorable ones, so ranking on fame would illustrate the
+ * typical-range row with exactly the singers who defy it.
+ *
+ * Ties break on name, so the choice is stable between builds.
+ */
+export function representativeSingers(v: VoiceKind, count = 3): Singer[] {
+  const band = REFERENCE_BANDS[v];
+  return SINGERS.filter((s) => s.voiceType === v)
+    .map((s) => ({
+      s,
+      d: Math.abs(s.lowMidi - band.low) + Math.abs(s.highMidi - band.high),
+    }))
+    .sort((a, b) => a.d - b.d || a.s.name.localeCompare(b.s.name))
+    .slice(0, count)
+    .map((x) => x.s);
+}
+
 const GENRE_COUNTS = (() => {
   const m = new Map<string, number>();
   for (const s of SINGERS) for (const g of s.genres) m.set(g, (m.get(g) ?? 0) + 1);
@@ -95,7 +127,7 @@ export function observationsFor(s: Singer): Observation[] {
   const band = REFERENCE_BANDS[s.voiceType];
   const group = peers(s);
   const type = s.voiceType.toLowerCase();
-  const typeName = group.length === 1 ? type : `${type}s`;
+  const typeName = group.length === 1 ? type : pluralVoice(type);
 
   // Position within the singer's own category, which is what actually
   // distinguishes one tenor from the other 126.

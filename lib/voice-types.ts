@@ -72,3 +72,49 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
       "A soprano's cited top note is usually the least representative number about them — it is a one-off recorded moment, not where the voice actually works.",
   },
 };
+
+/* ----------------------------------------------------------- passaggio --- */
+
+/**
+ * The transition zone for each category, in MIDI.
+ *
+ * This is the one set of figures on the site that the singer library cannot
+ * supply. `REFERENCE_BANDS` in lib/singers-analysis.ts is the conventional
+ * *range* per category and stays the source for that; a passaggio is a
+ * different measurement — where the voice changes gear, not how far it
+ * reaches — and no amount of low/high data implies it.
+ *
+ * Provenance, because these are assertions about real physiology rather than
+ * anything derived: the male zones and the two upper female zones are the
+ * figures this product already published on the old print.suedeai.ai range
+ * demo, which are in turn the conventional CCM values (a tenor's E4–G4 is the
+ * standard "money zone"). Contralto and bass-baritone are interpolated onto
+ * the same scale from their neighbours, which is why they overlap the
+ * categories either side of them — that overlap is real and worth showing
+ * rather than tidying away.
+ *
+ * `caveat` marks a category where the single-zone model is genuinely a poor
+ * fit, so the page can say so instead of printing a number at a confidence the
+ * underlying idea does not support.
+ */
+export interface VoiceTypePassaggio {
+  low: number;
+  high: number;
+  caveat?: string;
+}
+
+export const VOICE_TYPE_PASSAGGIO: Record<VoiceKind, VoiceTypePassaggio> = {
+  Bass: { low: 55, high: 57 }, // G3–A3
+  "Bass-baritone": { low: 57, high: 60 }, // A3–C4
+  Baritone: { low: 59, high: 62 }, // B3–D4
+  Tenor: { low: 64, high: 67 }, // E4–G4
+  Countertenor: {
+    low: 55,
+    high: 60, // G3–C4
+    caveat:
+      "A countertenor's working transition is the crossing out of full voice into the falsetto-family register the voice then sings above — a different event from the shifts listed for the other categories, and the one figure here that varies most from singer to singer.",
+  },
+  Contralto: { low: 67, high: 71 }, // G4–B4
+  "Mezzo-soprano": { low: 69, high: 72 }, // A4–C5
+  Soprano: { low: 72, high: 76 }, // C5–E5
+};

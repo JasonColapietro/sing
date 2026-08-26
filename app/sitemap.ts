@@ -29,6 +29,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/pro",
     "/book",
     "/atlas",
+    // Not a chapter: a standalone reference page under /atlas, so it is
+    // listed here rather than derived from ATLAS_CONTENTS below.
+    "/atlas/vocal-range-by-voice-type",
     "/glossary",
     // Both books' free sample chapters are real, indexable content; the gated
     // chapters are robots-noindexed and stay out of the sitemap.

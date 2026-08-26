@@ -12,6 +12,7 @@ import {
   singerBySlug,
   spanOctaves,
   spanPercentile,
+  pluralVoice,
   voiceTypeSlug,
   wikipediaUrl,
 } from "@/lib/singers";
@@ -461,7 +462,7 @@ export default async function SingerPage({
                 variant="outline"
                 size="sm"
               >
-                All {s.voiceType.toLowerCase()}s
+                All {pluralVoice(s.voiceType.toLowerCase())}
               </LinkButton>
               {s.genres[0] && (
                 <LinkButton
