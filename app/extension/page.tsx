@@ -115,7 +115,10 @@ const jsonLd = {
       url: `${SITE_URL}/extension`,
       installUrl: STORE_URL,
       downloadUrl: STORE_URL,
-      softwareVersion: "1.0.0",
+      // No softwareVersion: it is owned by extension/manifest.json in the
+      // suede-voice repo, where nothing here can check it, and any value stated
+      // here can outrun what the store linked above actually serves. schema.org
+      // does not require it.
       isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       permissions: "Microphone",
