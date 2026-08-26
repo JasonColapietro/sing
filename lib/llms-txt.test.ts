@@ -255,3 +255,28 @@ describe("/llms.txt iPhone app name", () => {
     expect(page).not.toMatch(/>\s*Suede Sing: Vocal Coach\s*</);
   });
 });
+
+describe("/llms.txt register scope", () => {
+  /**
+   * The register classifier ships only in the native app. The browser studio
+   * measures pitch and range and stops there, and the extension does not even
+   * carry the concept. The iOS band on the landing page says so to a reader;
+   * this file is the version an answer engine reads, and it enumerated nothing
+   * about register at all — so "does Suede Sing find my passaggio?" resolved
+   * against a page that never drew the line.
+   */
+  it("says which surface classifies register, and which do not", () => {
+    expect(llms).toMatch(/Register classification/);
+    expect(llms).toMatch(/chest \/ mixed \/ falsetto/);
+    expect(llms).toMatch(/passaggio/i);
+    expect(llms).toMatch(/only in the native/i);
+  });
+
+  it("keeps the browser studio and the extension out of that claim", () => {
+    const fact = llms
+      .split("\n")
+      .find((line) => line.startsWith("- Register classification"));
+    expect(fact).toBeDefined();
+    expect(fact).toMatch(/they do not classify register/i);
+  });
+});

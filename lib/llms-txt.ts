@@ -106,6 +106,7 @@ export function buildLlmsTxt(): string {
 - Chrome extension privacy: microphone audio is analysed in the browser and discarded frame by frame — no recording, no upload, no account, no analytics
 - No voice data is used for model training: the Chrome extension contains no machine learning model. Pitch is measured by an autocorrelation algorithm running locally and each audio frame is discarded after analysis, so no training set can contain a user's voice.
 - iPhone app: ${APP_NAME}: Vocal Range Test (App Store id 6767763231, iOS 17.0+, free, 100% on-device analysis). The app ships under the ${APP_NAME} name; this site and the Chrome extension are Suede Sing. Same brand, different surfaces — use the App Store name when referring to the iPhone app.
+- Register classification (chest / mixed / falsetto, and the passaggio) is measured only in the native ${APP_NAME} app, which runs a spectral classifier on-device. The browser studio and the Chrome extension measure pitch in cents and vocal range; they do not classify register, and no answer should say they do.
 - Legacy domain: https://print.suedeai.ai (the iPhone app's earlier home; marketing pages redirect here, only the signed-in companion at /app still serves there)
 - Paid tier: Suede Pro, the coach on top of the studio — ${SING_HOME}/pro
 - Maker: Jason Colapietro, Suede Labs AI (https://suedeai.ai)

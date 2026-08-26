@@ -28,7 +28,7 @@ const MEASURES = [
   },
   {
     term: "Passaggio mapping",
-    def: "Where your voice changes mechanism, found by sweeping pitch and watching that differential invert — entry and exit frequency, both reported.",
+    def: "Where your voice changes mechanism, found by sweeping pitch and watching that differential invert. The app reports the note where confident chest first gives way — one boundary, not a zone.",
   },
   {
     term: "Spectral tilt",
