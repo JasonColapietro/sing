@@ -102,7 +102,7 @@ export function buildLlmsTxt(): string {
 
 - Brand home: ${SING_HOME} (browser vocal studio, free, no install)
 - Chrome extension (Web Store): ${CHROME_STORE_URL}
-- Chrome extension: Suede Sing — Vocal Coach, Pitch Trainer & Vocal Range Test (free; Chrome 114+, also Edge, Brave, Arc). Details at ${SING_HOME}/extension
+- Chrome extension: Suede Sing: Vocal Coach, Pitch Tuner, Vocal Range Test & Ear Training (free; Chrome 116+, also Edge, Brave, Arc). Details at ${SING_HOME}/extension
 - Chrome extension privacy: microphone audio is analysed in the browser and discarded frame by frame — no recording, no upload, no account, no analytics
 - No voice data is used for model training: the Chrome extension contains no machine learning model. Pitch is measured by an autocorrelation algorithm running locally and each audio frame is discarded after analysis, so no training set can contain a user's voice.
 - iPhone app: ${APP_NAME}: Vocal Range Test (App Store id 6767763231, iOS 17.0+, free, 100% on-device analysis). The app ships under the ${APP_NAME} name; this site and the Chrome extension are Suede Sing. Same brand, different surfaces — use the App Store name when referring to the iPhone app.

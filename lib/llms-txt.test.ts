@@ -29,6 +29,10 @@ import { SITE_URL } from "./site";
 
 const STORE_URL =
   "https://chromewebstore.google.com/detail/dbimnmcokgmibdenmonoafhmdbjhpicd";
+/** minimum_chrome_version in the extension's manifest (suede-voice repo). */
+const MIN_CHROME = 116;
+const EXTENSION_NAME =
+  "Suede Sing: Vocal Coach, Pitch Tuner, Vocal Range Test & Ear Training";
 
 const llms = buildLlmsTxt();
 
@@ -57,6 +61,39 @@ describe("/llms.txt", () => {
       "utf8",
     );
     expect(page).toContain(STORE_URL);
+  });
+
+  it("calls the extension what the Web Store calls it", () => {
+    // Same reasoning as the store URL above: the name is hard-coded in both
+    // files, so they are asserted against one literal or they drift. They did.
+    // The Web Store name field said "Pitch Trainer" while the description, the
+    // summary and this page's own title tag all said tuner — and the store
+    // ranks a name-field match above body text, so the listing sat at #3 for
+    // "pitch tuner" behind two extensions whose names matched exactly.
+    const page = readFileSync(
+      new URL("../app/extension/page.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(llms).toContain(EXTENSION_NAME);
+    expect(page).toContain(EXTENSION_NAME);
+    expect(llms).not.toContain("Pitch Trainer");
+    expect(page).not.toContain("Pitch Trainer");
+  });
+
+  it("states one supported Chrome version across both surfaces", () => {
+    // The extension ships minimum_chrome_version 116 (sidePanel.open() landed
+    // there; on 114-115 the welcome page's one-click open is a silent no-op).
+    // That manifest lives in the suede-voice repo, so nothing here can read it
+    // — but a bump that updates one of these two files and not the other is
+    // exactly how both sat at 114 for a release after the extension moved.
+    const page = readFileSync(
+      new URL("../app/extension/page.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(llms).toContain(`Chrome ${MIN_CHROME}+`);
+    expect(page).toContain(`Chrome ${MIN_CHROME} or later`);
+    expect(llms).not.toMatch(/Chrome (?!116)\d{3}\+/);
+    expect(page).not.toMatch(/Chrome (?!116)\d{3} or later/);
   });
 
   it("is no longer shadowed by a stale static copy", () => {
@@ -235,7 +272,15 @@ describe("/llms.txt iPhone app name", () => {
   });
 
   it("never revives the name that is not on the App Store", () => {
-    expect(llms).not.toContain("Suede Sing: Vocal Coach,");
+    // Scoped to the iPhone app deliberately. The original defect read
+    //   ...a free iPhone app, "Suede Sing: Vocal Coach," which measures...
+    // and a bare `not.toContain("Suede Sing: Vocal Coach,")` caught it. That
+    // check cannot stay bare: the Chrome extension's real Web Store name is
+    // "Suede Sing: Vocal Coach, Pitch Tuner, ..." and shares the prefix, so
+    // the bare form fails on a correct file. Both assertions below still fire
+    // on the original text; see the PR body for the reintroduce-and-watch-it-
+    // fail run.
+    expect(llms).not.toMatch(/iPhone app[^\n]*Suede Sing: Vocal Coach/);
     expect(llms).not.toMatch(/iPhone app: Suede Sing/);
   });
 

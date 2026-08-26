@@ -83,6 +83,10 @@ const FAQ = [
     a: "No. Suede Sing contains no machine learning model. Pitch is measured with an autocorrelation algorithm running locally in the browser, and each audio frame is discarded as soon as it is analysed. No audio is recorded, stored, or transmitted, so there is no training set a singer's voice could end up in. Suede Labs AI builds measurement tools rather than data-collection tools.",
   },
   {
+    q: "Does the extension record or upload my voice?",
+    a: "No. Suede Sing analyses each audio frame in your browser and discards it immediately. Nothing is recorded, nothing is uploaded, there is no account or server, and the extension contains no analytics or tracking scripts. Practice history is stored locally in Chrome and can be cleared at any time.",
+  },
+  {
     q: "What does pitch accuracy in cents mean?",
     a: "A cent is one hundredth of a semitone. Within roughly 10 cents of a note a listener hears you as in tune; beyond about 25 cents most people can hear the error. Suede Sing shows the exact number so singers can measure improvement instead of guessing.",
   },
@@ -102,11 +106,11 @@ const jsonLd = {
     {
       "@type": "SoftwareApplication",
       "@id": `${SITE_URL}/extension#software`,
-      name: "Suede Sing: Vocal Coach, Pitch Trainer & Vocal Range Test",
+      name: "Suede Sing: Vocal Coach, Pitch Tuner, Vocal Range Test & Ear Training",
       alternateName: ["Suede Sing for Chrome", "Suede Voice"],
       applicationCategory: "EducationalApplication",
       applicationSubCategory: "Browser Extension",
-      operatingSystem: "Chrome 114 or later, Microsoft Edge, Brave, Arc",
+      operatingSystem: "Chrome 116 or later, Microsoft Edge, Brave, Arc",
       url: `${SITE_URL}/extension`,
       installUrl: STORE_URL,
       downloadUrl: STORE_URL,
