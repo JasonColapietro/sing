@@ -5,6 +5,7 @@ import { midiToLabel } from "@/lib/audio/notes";
 import {
   SINGERS,
   VOICE_KINDS,
+  pluralVoice,
   rangeLabel,
   singersByVoiceType,
   spanOctaves,
@@ -37,7 +38,7 @@ export async function generateMetadata({
   if (!voice) return {};
   const note = VOICE_TYPE_NOTES[voice];
   const title = `Famous ${voice} Vocal Ranges Compared`;
-  const description = `The cited vocal ranges of famous ${voice.toLowerCase()}s on one keyboard — ${note.summary}. Compare spans, full-voice ceilings and your own range.`;
+  const description = `The cited vocal ranges of famous ${pluralVoice(voice.toLowerCase())} on one keyboard — ${note.summary}. Compare spans, full-voice ceilings and your own range.`;
   return {
     title,
     description,
@@ -69,7 +70,7 @@ export default async function VoiceTypePage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `Famous ${voice}s and their vocal ranges`,
+    name: `Famous ${pluralVoice(voice)} and their vocal ranges`,
     url: `${SITE_URL}/singers/voice-type/${type}`,
     description: note.summary,
     isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
@@ -85,7 +86,7 @@ export default async function VoiceTypePage({
         {
           "@type": "ListItem",
           position: 2,
-          name: `${voice}s`,
+          name: pluralVoice(voice),
           item: `${SITE_URL}/singers/voice-type/${type}`,
         },
       ],
@@ -105,7 +106,7 @@ export default async function VoiceTypePage({
   return (
     <PageShell
       kicker="Voice type"
-      title={`Famous ${lower}s`}
+      title={`Famous ${pluralVoice(lower)}`}
       subtitle={`Cited ranges on one keyboard — ${note.summary}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
@@ -146,7 +147,7 @@ export default async function VoiceTypePage({
           <p className="mt-3 max-w-3xl text-sm text-mut">{note.challenge}</p>
 
           <h3 className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            What the {lower}s here show
+            What the {pluralVoice(lower)} here show
           </h3>
           <ul className="mt-3 max-w-3xl space-y-2 text-sm text-mut">
             <li>

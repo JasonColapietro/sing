@@ -9,6 +9,7 @@ import {
   genreSlug,
   rangeLabel,
   singersByGenre,
+  pluralVoice,
   spanOctaves,
   voiceTypeSlug,
 } from "@/lib/singers";
@@ -206,7 +207,7 @@ export default async function GenrePage({
                   href={`/singers/voice-type/${voiceTypeSlug(type as never)}`}
                   className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-amber"
                 >
-                  All {type.toLowerCase()}s
+                  All {pluralVoice(type.toLowerCase())}
                 </Link>
               </li>
             ))}

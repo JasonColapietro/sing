@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
+import { ORG_ID, ORG_SAME_AS } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
 const STORE_URL =
@@ -127,11 +128,12 @@ const jsonLd = {
     },
     {
       "@type": "Organization",
-      "@id": "https://suedeai.ai/#organization",
+      "@id": ORG_ID,
       name: "Suede Labs AI",
       alternateName: ["Suede AI", "Suede Labs"],
       url: "https://suedeai.ai",
       founder: { "@id": "https://suedeai.ai/#jason-colapietro" },
+      sameAs: [...ORG_SAME_AS],
     },
     {
       "@type": "Person",
