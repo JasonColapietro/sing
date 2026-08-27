@@ -76,6 +76,8 @@ const FILE_GROUPS = {
   "rock-legends.json": "rock-men",
   "rock-modern.json": "rock-men",
   "metal-2.json": "metal",
+  "pop-women-2.json": "pop-women-modern",
+  "rnb-men-2.json": "rnb-modern",
 };
 
 /** The gap batches are grab-bags, so every singer in them is placed by hand. */
@@ -201,6 +203,21 @@ const ASSIGN = {
   fantasia: "soul-women",
   "macy-gray": "soul-women",
   indiaarie: "soul-women",
+  // pop-women-2.json exceptions
+  "bonnie-tyler": "pop-women-classic",
+  jewel: "folk",
+  "joss-stone": "soul-women",
+  "emeli-sande": "soul-women",
+  "phoebe-bridgers": "folk",
+  mitski: "grunge-alt",
+  "rachel-zegler": "musical-theatre",
+  "nicole-scherzinger": "musical-theatre",
+  // rnb-men-2.json exceptions — the classic soul voices
+  "jackie-wilson": "soul-men",
+  "david-ruffin": "soul-men",
+  "wilson-pickett": "soul-men",
+  "bobby-hatfield": "soul-men",
+  "ceelo-green": "soul-men",
   // metal-2.json exceptions — the dark non-metal voices
   "nick-cave": "grunge-alt",
   "tom-waits": "folk",

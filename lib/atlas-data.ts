@@ -370,9 +370,43 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Pop",
     "summary": "The current and recent generation of pop leads — whisper-pop, fry onsets, whistle flexes and conversational belts — and how the microphone rewrote what counts as power.",
     "free": false,
-    "words": 3503,
+    "words": 5711,
     "body": "The defining fact of modern pop singing is that the microphone finally won. Once every listener is six inches from the singer's mouth, intimacy scales better than volume, and this chapter documents the consequences: fry onsets as rhythm, whisper-verses as default, breathiness as an instrument rather than a flaw, and belts that arrive as *events* inside otherwise conversational performances. The whisper-pop generation — the entries here built on air and closeness — is not a decline from the founders' power; it is a different instrument optimized for a different playback device.\n\nThat said, the power never left. This chapter also holds the era's technicians — the whistle-register carriers, the gospel-schooled run machines, the theatre-trained belters moonlighting in pop — and their entries read like the founders' chapter with faster ornaments. The range extremes in this room are among the widest in the book, precisely because modern production loves a documented flex: the one whistle note, the one fry low, captured and cited forever.\n\nRead these entries with the full-voice ceiling in view. Modern pop's most common imitation injury is copying a conversational singer's *loud moments* without noticing that ninety percent of the performance happens at speech volume — or copying a whistle flex that even its owner visits once per album. The habitat is quiet; the peaks are punctuation. Borrow the verse technique first — onset control, breath-on-tone, diction that carries pitch — and treat every big note in this chapter as the founders treated theirs: rationed, placed, and paid for.",
     "entries": [
+      {
+        "slug": "bonnie-tyler",
+        "name": "Bonnie Tyler",
+        "voiceType": "Mezzo-soprano",
+        "country": "UK",
+        "activeFrom": 1977,
+        "low": "D3",
+        "high": "G5",
+        "belt": "F5",
+        "whistle": false,
+        "signatureSong": "Total Eclipse of the Heart",
+        "lowSource": null,
+        "highSource": "Si demain (Turn Around)",
+        "blurb": "Gravel-and-flame rock mezzo — a torn, husky rasp that turns every chorus into a storm warning.",
+        "technique": "Rasp with architecture: Tyler's distortion is constant, a torn edge riding on full chest resonance, yet the pitch line underneath is disciplined. She belts F5 with a wide-open throat and huge breath spend, letting sustains fray deliberately at the tip. Verses sit low around D3, husky and confiding, before the register slams upward toward G5 peaks. Copying the gravel by grinding the throat is the classic error — hers sits high in the mask, powered by torso-deep support.",
+        "span": "2 octaves + 5"
+      },
+      {
+        "slug": "jewel",
+        "name": "Jewel",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 1995,
+        "low": "E3",
+        "high": "E6",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "You Were Meant for Me",
+        "lowSource": null,
+        "highSource": "Who Will Save Your Soul",
+        "blurb": "Clear folk soprano that glides between plainspoken chest tone, yodel flips, and a floating, quasi-operatic head voice.",
+        "technique": "Register flips are the signature here: Jewel treats the break as an instrument, yodeling across it on purpose with split-second accuracy. Her chest voice stays conversational and word-led, then the head voice blooms suddenly at the top, pure and vibrato-warmed toward E6. Breath control is exceptional — long folk phrases taper without wobble. Singers copying her tend to smooth out the flip; the style needs a deliberate, audible register change, plus low-larynx ease down at E3.",
+        "span": "3 octaves"
+      },
       {
         "slug": "beyonce",
         "name": "Beyoncé",
@@ -459,6 +493,57 @@ export const ATLAS: AtlasChapter[] = [
         "span": "3 octaves + 1"
       },
       {
+        "slug": "joss-stone",
+        "name": "Joss Stone",
+        "voiceType": "Mezzo-soprano",
+        "country": "UK",
+        "activeFrom": 2003,
+        "low": "C3",
+        "high": "G5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "You Had Me",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Smoky, grainy soul mezzo — cool and husky down low, gutsy and warm in the belt.",
+        "technique": "Grit is the organizing principle: Stone adds rasp by compressing at the cords, then releases into clean warmth mid-phrase for contrast. Her low range near C3 keeps a cool, smoky cover, while belts toward G5 open into a wide, gospel-shaped vowel with fast vibrato arriving late. Runs are loose and behind the beat, more sung speech than drill. Copying her rasp with throat squeeze causes fatigue; the distortion rides on steady airflow and a released jaw.",
+        "span": "2 octaves + 7"
+      },
+      {
+        "slug": "jojo",
+        "name": "JoJo",
+        "voiceType": "Mezzo-soprano",
+        "country": "USA",
+        "activeFrom": 2004,
+        "low": "A2",
+        "high": "Bb6",
+        "belt": "G5",
+        "whistle": true,
+        "signatureSong": "Leave (Get Out)",
+        "lowSource": "Mad Love.",
+        "highSource": null,
+        "blurb": "Dark, weighty mezzo with gritty low notes, muscular R&B runs, and a belt that punches to G5 without thinning.",
+        "technique": "Chest-dominant and thick through the middle, this voice carries real weight up to G5 by widening the pharynx rather than pushing volume. JoJo's runs are metronomic — each note articulated from the diaphragm, not slurred — and her low A2 speaks with honest cord contact instead of fry. She flips cleanly into head voice for color, reserving whistle squeaks as ornament. Imitators usually muscle the larynx up; she keeps it neutral and lets resonance do the lifting.",
+        "span": "4 octaves + 1"
+      },
+      {
+        "slug": "nicole-scherzinger",
+        "name": "Nicole Scherzinger",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2005,
+        "low": "D3",
+        "high": "G#6",
+        "belt": null,
+        "whistle": true,
+        "signatureSong": "Buttons",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Athletic pop-theatre soprano — muscular belts, precise melisma, and a head voice that opens into whistle territory.",
+        "technique": "Control at every altitude: Scherzinger drills melisma with dance-track precision, each run landing on grid, supported from a strong appoggio. Her chest voice is muscular and dark-tinted near D3, her belts squarely projected, and the top blooms through head voice into occasional whistle tones toward G#6. Vibrato is polished and even. Theatre discipline shows in her consonants and long sustains. Imitators chase the high notes first; the foundation is the rock-solid middle she never lets wobble.",
+        "span": "3 octaves + 6"
+      },
+      {
         "slug": "rihanna",
         "name": "Rihanna",
         "voiceType": "Mezzo-soprano",
@@ -474,6 +559,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Nasal-forward mezzo with clipped consonants; strongest in a smoky lower-mid rather than up high.",
         "technique": "Most of the character lives from B2 up through the middle of the staff: a smoky, nasal-forward tone with very little vibrato and consonants cut short. Phrasing is percussive, notes clipped and set tight against the drum rather than sustained. Where the line does rise, the tone stays narrow instead of opening out. Singers imitating this usually add vibrato and legato, which erases the flat, spoken quality that makes it land.",
         "span": "3 octaves"
+      },
+      {
+        "slug": "leona-lewis",
+        "name": "Leona Lewis",
+        "voiceType": "Soprano",
+        "country": "UK",
+        "activeFrom": 2006,
+        "low": "C3",
+        "high": "F#6",
+        "belt": "A5",
+        "whistle": true,
+        "signatureSong": "Bleeding Love",
+        "lowSource": "Hurt",
+        "highSource": "Loving You",
+        "blurb": "Feather-light lyric soprano with cushioned head voice, gentle onsets, and belts that stay round and unforced up to A5.",
+        "technique": "A light lyric instrument built on gentle onsets and a high, forward placement. Lewis blends chest and head early, so ascents toward A5 keep a rounded, covered shape instead of splatting wide. Her head voice floats with slow, even vibrato, and she saves F#6 flourishes for cadenzas rather than choruses. Students copying her often over-breathe the tone; the airiness sits on firm cord closure, not collapsed support. Keep consonants soft, vowels tall, and let phrases taper.",
+        "span": "3 octaves + 6"
       },
       {
         "slug": "miley-cyrus",
@@ -508,6 +610,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Speech-level mezzo with light breath onsets; later albums lean on a firmer, better supported mix.",
         "technique": "Delivery stays at speech level: light aspirate onsets, small vibrato that arrives late if at all, and a lot of syllables packed conversationally across the bar. The belt marker at D5 is the honest number, since power comes from consonant clarity and timing rather than height. On louder choruses the mix firms up and takes less air, but the placement never drops back into heavy chest. Copy only the breathiness and you lose pitch center, which is how this turns mumbly.",
         "span": "3 octaves + 1"
+      },
+      {
+        "slug": "sara-bareilles",
+        "name": "Sara Bareilles",
+        "voiceType": "Mezzo-soprano",
+        "country": "USA",
+        "activeFrom": 2007,
+        "low": "B2",
+        "high": "E6",
+        "belt": "G5",
+        "whistle": false,
+        "signatureSong": "Love Song",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Warm piano-pop mezzo with a chesty, ringing mid-belt and bright, easy head-voice extensions.",
+        "technique": "Speech-level singing anchors everything: Bareilles keeps the larynx relaxed and the tone conversational, so her belt up to G5 rings without strain. She mixes early, brightening vowels as lines climb instead of dragging pure chest, and her head voice pops out light and flute-like for ornaments near E6. Phrasing leans behind the beat with jazz-informed rubato. The common mistake when copying her is over-singing; the power comes from forward placement and crisp diction, not sheer air pressure.",
+        "span": "3 octaves + 5"
       },
       {
         "slug": "adele",
@@ -629,6 +748,40 @@ export const ATLAS: AtlasChapter[] = [
         "span": "2 octaves + 7"
       },
       {
+        "slug": "marina",
+        "name": "MARINA",
+        "voiceType": "Mezzo-soprano",
+        "country": "UK",
+        "activeFrom": 2010,
+        "low": "Bb2",
+        "high": "C#6",
+        "belt": "B5",
+        "whistle": false,
+        "signatureSong": "Primadonna",
+        "lowSource": "Solitaire",
+        "highSource": "Mowgli's Road",
+        "blurb": "Theatrical mezzo with plummy low chest, campy register leaps, and a bright, brassy top.",
+        "technique": "Drama drives the registration: MARINA drops into a plummy, almost spoken chest voice near Bb2, then vaults into bright head-voice squeals up to C#6 for punchlines. Her belts around B5 are brassy and deliberately overdriven, vibrato wide and theatrical. Vowels are posh and exaggerated, consonants bitten. She connects registers cleanly when she wants smoothness, which is what imitators miss — the leaps are choices, not breaks, and each register keeps its own steady support underneath.",
+        "span": "3 octaves + 3"
+      },
+      {
+        "slug": "emeli-sande",
+        "name": "Emeli Sandé",
+        "voiceType": "Mezzo-soprano",
+        "country": "UK",
+        "activeFrom": 2011,
+        "low": "D3",
+        "high": "F5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Next to Me",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Bright-edged mezzo with a trumpet-like belt, tight fast vibrato, and hymn-like directness.",
+        "technique": "Economy defines this voice: Sandé chooses one placement — forward, bright, slightly brassy — and commits, so every note from D3 to F5 sounds like the same instrument. Her vibrato is narrow and quick, switched on at phrase ends. Belts keep weight and character right up to F5 without widening, and melisma is deployed sparingly, in short gospel-rooted cells. Students copying her overdecorate; the style is declamatory, hymn-plain, with consonants planted and every vowel fully voiced.",
+        "span": "2 octaves + 3"
+      },
+      {
         "slug": "jessie-j",
         "name": "Jessie J",
         "voiceType": "Mezzo-soprano",
@@ -678,6 +831,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Rasp-heavy belt that frays by design; wide vowels and long notes held high in full voice.",
         "technique": "Rasp is the signature and it is loudest at the top, where notes around Ab5 are held in a wide, open vowel until the tone frays. Onsets often scoop up from below, and the vibrato is broad and late, sometimes replaced by a deliberate crack. Chandelier shows that held, splintering belt clearly. Producing the grit with throat friction wears a voice out inside one chorus; it has to ride on strong, steady airflow.",
         "span": "3 octaves"
+      },
+      {
+        "slug": "grimes",
+        "name": "Grimes",
+        "voiceType": "Soprano",
+        "country": "Canada",
+        "activeFrom": 2012,
+        "low": "D3",
+        "high": "G6",
+        "belt": "Bb5",
+        "whistle": true,
+        "signatureSong": "Oblivion",
+        "lowSource": "We Appreciate Power",
+        "highSource": "Circumambient",
+        "blurb": "Wispy, girlish electronic soprano — cooing head-voice choirs, soft spoken lows, and sudden piercing peaks.",
+        "technique": "Head voice does most of the work: Grimes sings in a small, breathy, girlish placement, stacking self-harmonies instead of projecting one big line. Belts near Bb5 are bright yelps, punched and released, and her occasional whistle-territory peaks toward G6 arrive as pure, needle-thin tones. Down at D3 the voice turns to soft speech. The trap in copying her is treating breathiness as weakness — the pitch centering under all that air is exact, and the mic does the projection.",
+        "span": "3 octaves + 5"
       },
       {
         "slug": "ariana-grande",
@@ -765,6 +935,91 @@ export const ATLAS: AtlasChapter[] = [
         "span": "3 octaves + 5"
       },
       {
+        "slug": "zara-larsson",
+        "name": "Zara Larsson",
+        "voiceType": "Soprano",
+        "country": "Sweden",
+        "activeFrom": 2013,
+        "low": "D3",
+        "high": "C#6",
+        "belt": "B5",
+        "whistle": false,
+        "signatureSong": "Lush Life",
+        "lowSource": "Funeral",
+        "highSource": "Skippin a Beat",
+        "blurb": "Gleaming Scandi-pop soprano with a laser-bright mix, athletic runs, and belts that climb to B5 while staying narrow.",
+        "technique": "Mix is everything in this instrument: Larsson narrows to a bright, twangy channel around the passaggio and rides it all the way to B5 belts that sound chesty but weigh almost nothing. Vowels get thin and forward — ee and eh shapes — as she climbs, with vibrato held off until the note lands. Runs are pattern-perfect, practiced shapes from R&B. The trap for imitators is pulling full chest upward; she trades mass for twang early and never looks back.",
+        "span": "2 octaves + 11"
+      },
+      {
+        "slug": "meghan-trainor",
+        "name": "Meghan Trainor",
+        "voiceType": "Mezzo-soprano",
+        "country": "USA",
+        "activeFrom": 2014,
+        "low": "Eb3",
+        "high": "B5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "All About That Bass",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Retro-pop mezzo — chipper doo-wop chest voice, swung phrasing, and bright, sassy spoken-sung asides.",
+        "technique": "Swing rules the phrasing: Trainor sings on the back of the beat with a chipper, forward chest voice built for doo-wop bounce. Her tone is bright and slightly nasal, vowels wide and grinning, with scooped onsets as a signature. Most lines live in a compact lower-middle zone above Eb3, saving head voice near B5 for background stacks. Runs are short, bluesy turns. Copying her means committing to the retro diction — crisp, cheeky, and rhythm-locked.",
+        "span": "2 octaves + 8"
+      },
+      {
+        "slug": "melanie-martinez",
+        "name": "Melanie Martinez",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2014,
+        "low": "F3",
+        "high": "D5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Dollhouse",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Baby-doll alt-pop soprano — breathy, curled vowels, half-whispered chest tone, and quick falsetto flips.",
+        "technique": "Character voice comes first: Martinez curls vowels into a babyish pout, singing with a breathy, half-whispered chest tone that rarely rises above conversational volume. Her range in use is compact — F3 to D5 — so interest comes from cracks, flips into falsetto, and vocal-fry onsets used as punctuation. Vibrato is minimal, pitch glides constant. Singers copying the whisper usually lose pitch center; hers stays exact under the air, and the stylized diction never swallows the consonants.",
+        "span": "1 octaves + 9"
+      },
+      {
+        "slug": "aurora",
+        "name": "Aurora",
+        "voiceType": "Soprano",
+        "country": "Norway",
+        "activeFrom": 2015,
+        "low": "Eb3",
+        "high": "E6",
+        "belt": "F5",
+        "whistle": false,
+        "signatureSong": "Runaway",
+        "lowSource": "The Essence",
+        "highSource": "Your Blood",
+        "blurb": "Glacial Nordic soprano — childlike, bell-clear head tones, sudden fierce chest bursts, and wide dynamic swings.",
+        "technique": "Contrast powers this voice: Aurora alternates a tiny, vibratoless, childlike head tone with abrupt full-chest exclamations around F5, often within one bar. Her placement is high and masky, consonants percussive, vowels kept pure. Head-voice sustains near E6 stay straight until the last moment, when a slow vibrato blooms. Low phrases at Eb3 are whispered more than sung. Copying her requires dynamic discipline — the loud moments only land because the quiet ones are genuinely quiet.",
+        "span": "3 octaves + 1"
+      },
+      {
+        "slug": "bebe-rexha",
+        "name": "Bebe Rexha",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2015,
+        "low": "D3",
+        "high": "B5",
+        "belt": "F#5",
+        "whistle": false,
+        "signatureSong": "I'm Good (Blue)",
+        "lowSource": "I'm Good (Blue)",
+        "highSource": "I Don't Wanna Grow Up",
+        "blurb": "Brassy dance-pop soprano with a hard-edged belt, husky low color, and punchy, syllabic phrasing.",
+        "technique": "Attack-first singing: Rexha hits consonants and downbeats hard, driving a brassy, slightly husky chest voice into belts at F#5 that favor edge over roundness. Her vibrato is quick and tight, mostly at phrase ends. Down near D3 she lets the tone go smoky and speech-like. Head voice appears briefly at B5 for climaxes rather than as a home base. The pitfall when copying her is jaw tension — that edge comes from twang and compression, not clenching.",
+        "span": "2 octaves + 9"
+      },
+      {
         "slug": "halsey",
         "name": "Halsey",
         "voiceType": "Mezzo-soprano",
@@ -833,6 +1088,40 @@ export const ATLAS: AtlasChapter[] = [
         "span": "2 octaves + 6"
       },
       {
+        "slug": "mitski",
+        "name": "Mitski",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2016,
+        "low": "E3",
+        "high": "F#5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Nobody",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Restrained indie soprano — clean, steady, almost vibratoless lines that break into raw chest cries.",
+        "technique": "Stillness is the discipline: Mitski holds long, even tones with minimal vibrato, placing the voice in a clear, unornamented middle that reads as calm until it doesn't. Climaxes push into open chest toward F#5, slightly raw by design, while verses sit low near E3 in a darkened, rounded timbre. Onsets are soft, releases unadorned. The common error in imitation is adding expression; her power is subtraction — perfectly level lines that make the eventual crack devastating.",
+        "span": "2 octaves + 2"
+      },
+      {
+        "slug": "raye",
+        "name": "RAYE",
+        "voiceType": "Mezzo-soprano",
+        "country": "UK",
+        "activeFrom": 2016,
+        "low": "C#3",
+        "high": "D6",
+        "belt": "F5",
+        "whistle": false,
+        "signatureSong": "Escapism.",
+        "lowSource": "Escapism.",
+        "highSource": "You Don't Know Me",
+        "blurb": "Jazz-schooled British mezzo — smoky conversational lows, quicksilver runs, and big torch-song belts.",
+        "technique": "Storytelling steers the technique: RAYE slips between spoken asides near C#3, jazz-inflected bends, and full theatrical belts at F5, changing register mid-sentence like a scene change. Her runs are light, fast and thrown away, more swing-era than melisma-drill; head voice floats up toward D6 for cinematic endings. Vibrato is wide and expressive, arriving late on sustains. Imitators tend to over-commit to one mode — the style lives in quick, confident switching between them.",
+        "span": "3 octaves + 1"
+      },
+      {
         "slug": "dua-lipa",
         "name": "Dua Lipa",
         "voiceType": "Mezzo-soprano",
@@ -848,6 +1137,91 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Husky low-mid with cool, flat phrasing; sits in a narrow band and rarely reaches for head voice.",
         "technique": "She uses less range than she has. Melodies live in a husky low-mid, and the G5 ceiling is barely tested, so the interest has to come from elsewhere. Tone is cool and level, close to straight, with only a light vibrato at phrase ends, and dynamics stay flat so the groove supplies the lift. Timing is the real technique: syllables land just behind the kick. Add emotive swells and you break the detachment the style runs on.",
         "span": "2 octaves + 8"
+      },
+      {
+        "slug": "kim-petras",
+        "name": "Kim Petras",
+        "voiceType": "Soprano",
+        "country": "Germany",
+        "activeFrom": 2017,
+        "low": "D3",
+        "high": "Bb6",
+        "belt": "G#5",
+        "whistle": true,
+        "signatureSong": "Heart to Break",
+        "lowSource": "Trampoline",
+        "highSource": null,
+        "blurb": "Sugar-bright pop soprano with springy mixed belts and genuine whistle-register fireworks above the staff.",
+        "technique": "Bounce characterizes the phrasing: Petras attacks notes from above with a bright, poppy mix, keeping belts around G#5 springy rather than planted. Her tone is light and glossy, vibrato shallow and fast. The party trick is a genuine whistle register — tiny, flute-like tones far above the staff toward Bb6 — entered from a stopped, high-compression setup, not slid into from head voice. Imitators strain reaching for it; the whistle needs minimal air and total jaw release.",
+        "span": "3 octaves + 8"
+      },
+      {
+        "slug": "phoebe-bridgers",
+        "name": "Phoebe Bridgers",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2017,
+        "low": "C#3",
+        "high": "E5",
+        "belt": "D5",
+        "whistle": false,
+        "signatureSong": "Motion Sickness",
+        "lowSource": null,
+        "highSource": "When the Party's Over",
+        "blurb": "Hushed, close-mic indie soprano — feathery straight tone, murmured lows, and rare, aching belts.",
+        "technique": "Whisper-adjacent singing, done with control: Bridgers keeps subglottal pressure low, letting air haze the tone while pitch stays dead center. Her straight-tone sustains barely waver, doubling into ghostly unisons. Lines sit speech-low near C#3, and when she finally opens into a D5 belt the contrast does the emotional work. Consonants are soft, phrase ends often fall off pitch deliberately. Imitators push volume for feeling; her dynamic ceiling is low, and the mic supplies the size.",
+        "span": "2 octaves + 3"
+      },
+      {
+        "slug": "ava-max",
+        "name": "Ava Max",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2018,
+        "low": "E3",
+        "high": "C#6",
+        "belt": "F#5",
+        "whistle": false,
+        "signatureSong": "Sweet but Psycho",
+        "lowSource": "Freaking Me Out",
+        "highSource": "Kings & Queens",
+        "blurb": "Punchy dance-pop soprano — nasal-bright chest belts, clipped phrasing, and glassy head notes topping the hooks.",
+        "technique": "Twang forward, always: Ava Max sets a nasal, cutting placement that survives dense dance production, belting to F#5 with a hard, clipped attack and almost no vibrato. Sustains are straight-toned, released quickly to keep rhythmic drive. Above the belt she snaps into a glassy head voice for hook-topping notes near C#6 rather than mixing gradually. Copying the brightness by pinching the nose misses it — the sound comes from raised soft-palate twang with relaxed lips and jaw.",
+        "span": "2 octaves + 9"
+      },
+      {
+        "slug": "madison-beer",
+        "name": "Madison Beer",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2018,
+        "low": "C3",
+        "high": "C6",
+        "belt": "Bb5",
+        "whistle": false,
+        "signatureSong": "Selfish",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Glossy, darkened pop soprano — sultry low chest, liquid R&B runs, and cool, airy head voice.",
+        "technique": "Polish defines the sound: Beer sings with a darkened, rounded soprano placement, sliding through R&B runs legato-first, every note connected rather than punched. Her low register near C3 is intimate and slightly smoky; belts climb toward Bb5 with a covered, controlled shape, never shouty. Head voice up around C6 is cool and airy, used for texture. Copying her means resisting over-articulation — the runs blur on purpose, tuned precisely but delivered like an afterthought.",
+        "span": "3 octaves"
+      },
+      {
+        "slug": "caroline-polachek",
+        "name": "Caroline Polachek",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2019,
+        "low": "G#2",
+        "high": "F6",
+        "belt": "G5",
+        "whistle": false,
+        "signatureSong": "So Hot You're Hurting My Feelings",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Elastic art-pop soprano that swoops, yodels, and glides through registers like a synthesizer with lungs.",
+        "technique": "Portamento is the calling card: Polachek glides between chest and head with bel-canto smoothness, then deliberately exposes the flip as an ornament — a controlled yodel landing anywhere up to G5 in full voice or F6 above it. Her vowels morph mid-note, treating the mouth like a filter sweep. Low phrases sink toward G#2 in a slack, speechy fry-chest blend. Students chasing the swoops usually smear pitch; hers are mapped, hitting exact targets at each end of the slide.",
+        "span": "3 octaves + 9"
       },
       {
         "slug": "doja-cat",
@@ -952,6 +1326,23 @@ export const ATLAS: AtlasChapter[] = [
         "span": "2 octaves + 11"
       },
       {
+        "slug": "rachel-zegler",
+        "name": "Rachel Zegler",
+        "voiceType": "Soprano",
+        "country": "USA",
+        "activeFrom": 2021,
+        "low": "Db3",
+        "high": "E6",
+        "belt": "C5",
+        "whistle": false,
+        "signatureSong": "Tonight",
+        "lowSource": null,
+        "highSource": "Grown-Up Christmas List",
+        "blurb": "Classic musical-theatre soprano — warm chest lows, a poised legit mix, and clear, ringing head voice.",
+        "technique": "Legit placement, modern mix: Zegler supports a classic theatre soprano line with tall vowels, clean legato and a head voice that rings toward E6 without shrillness. Her mix-belt tops out around C5, kept round and well-anchored rather than pushed, and the low register near Db3 stays warm and unforced. Vibrato is even and arrives quickly, opera-adjacent in spin. Students copying her often belt where she mixes — the sound reads bigger than it is because placement, not pressure, carries it.",
+        "span": "3 octaves + 3"
+      },
+      {
         "slug": "renee-rapp",
         "name": "Reneé Rapp",
         "voiceType": "Mezzo-soprano",
@@ -967,6 +1358,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Broadway muscle in pop clothing: a thick, ringing belt with theatre-grade support, dressed down into conversational R&B phrasing.",
         "technique": "Support gives the game away: this is an eight-shows-a-week belt, anchored low in the body, with a ring that cuts through a mix without EQ. What makes it read as pop instead of theatre is the phrasing on top, lazy, behind the beat, with R&B slides into notes a stage director would want struck cleanly. Practice belting E5 at half volume with full support, then loosen the timing. The order matters; loosening first just sounds under-rehearsed.",
         "span": "2 octaves + 4"
+      },
+      {
+        "slug": "lola-young",
+        "name": "Lola Young",
+        "voiceType": "Mezzo-soprano",
+        "country": "UK",
+        "activeFrom": 2024,
+        "low": "E3",
+        "high": "Bb5",
+        "belt": "B4",
+        "whistle": false,
+        "signatureSong": "Messy",
+        "lowSource": "Messy",
+        "highSource": "Together in Electric Dreams",
+        "blurb": "Raw, husky London mezzo — wide-open vowels, cracked edges, and yell-adjacent belts that spit feeling.",
+        "technique": "An open-throat shout, refined: Young sings on wide, undarkened vowels with a husky, grainy chest voice that cracks on purpose at emotional peaks. Belts around B4 are reached by yelling up from speech rather than mixing, which gives them urgency and bite; softer moments drop to a mumbled, fry-edged murmur near E3. Vibrato is scarce. Copying the rasp without her breath anchor wears a voice out fast — the grit rides on low, steady support and a loose jaw.",
+        "span": "2 octaves + 6"
       }
     ]
   },
@@ -4750,9 +5158,77 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The streaming era's R&B — falsetto confessions, whisper-runs, baritone outliers and produced nonchalance — and how the genre traded the shout for the microphone's trust.",
     "free": false,
-    "words": 3749,
+    "words": 5476,
     "body": "Modern R&B is soul rebuilt for headphones. The church lineage is intact — listen to the harmony stacks and the run grammar — but the delivery contract changed: where the classic tradition projected to the back pew, this generation confides at six inches, and the entries here document the consequences. Falsetto became the lead register rather than the special effect. Runs learned to decay into breath. Nonchalance became a produced aesthetic, sloppiness engineered with studio precision. And a counter-movement of baritones planted flags in the cellar, proving the genre had been renting only the top half of the male voice for a generation.\n\nThe technique paragraphs in this chapter return constantly to one theme: the apparent casualness is exact. The flips land on chosen syllables; the mumble holds its pitch centers; the stacked harmonies that make one voice sound like a choir require the lead to tune like a section player. Modern R&B is the atlas's clearest demonstration that *relaxed* and *imprecise* are different properties, and that the first is manufactured from the second's opposite.\n\nFor the practicing singer this is the most immediately usable chapter in the soul wing. The volumes are conversational, the tessituras moderate, the tools — onset control, register blending, breath-as-texture — all safe to drill at home. What it demands instead is patience with detail: the loop method from the borrower's chapter, run at short phrase length, is the only way the exactness underneath this style becomes audible enough to copy.",
     "entries": [
+      {
+        "slug": "jackie-wilson",
+        "name": "Jackie Wilson",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 1957,
+        "low": "A2",
+        "high": "C#6",
+        "belt": "Bb5",
+        "whistle": false,
+        "signatureSong": "Higher and Higher",
+        "lowSource": "What Kind of Fool Am I?",
+        "highSource": "Baby Workout",
+        "blurb": "Ringing, vibrato-rich soul tenor with operatic swoops and full-voice altitude.",
+        "technique": "Operatic power in a rhythm-and-blues frame: a ringing tenor with fast, wide vibrato, immaculate legato, and full-voice attacks to Bb5 that never thin out. He swoops into notes from below, ornaments with rapid turns, and shifts from croon to shout inside a single bar. The larynx stays remarkably free at the extremes. Students copying him try to muscle the top notes; his altitude comes from released, forward resonance and a vibrato that keeps the tone spinning instead of locking.",
+        "span": "3 octaves + 4"
+      },
+      {
+        "slug": "bobby-hatfield",
+        "name": "Bobby Hatfield",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 1963,
+        "low": "B2",
+        "high": "Eb6",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Unchained Melody",
+        "lowSource": "Is It So Wrong",
+        "highSource": "If I Asked You",
+        "blurb": "High, glassy tenor built for long climbing arcs that crest in floated head voice.",
+        "technique": "Silver-toned high tenor specializing in the long climb: phrases built as single arcs that start low and crest in ringing head voice. His vibrato is slow and even, his onsets clean, and his top notes float rather than punch, extending into a pure head register at the extreme. Melisma is sparse and always structural. Students copying him grab at the climax note; the climb must be paced by breath, each step legato, so the peak arrives with air to spare.",
+        "span": "3 octaves + 4"
+      },
+      {
+        "slug": "david-ruffin",
+        "name": "David Ruffin",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 1964,
+        "low": "A2",
+        "high": "E6",
+        "belt": "Bb5",
+        "whistle": false,
+        "signatureSong": "My Girl",
+        "lowSource": "I Get Excited",
+        "highSource": "Rainy Night in Georgia",
+        "blurb": "Gravel-and-plead soul tenor whose controlled fray climbs into screamed full-voice peaks.",
+        "technique": "Raw-grained tenor whose signature is controlled fray: a pleading rasp that intensifies as lines climb, stretched over a firm rhythmic core. He belts to Bb5 in full voice and rides screamed peaks above that, using hoarseness as expression rather than accident. Phrasing tugs against the pulse, with sobs and spoken asides breaking the line. Students copying him start with the rasp and lose the pitch; his grit sits on top of accurate, supported tone, and the cracks are placed, not accidental.",
+        "span": "3 octaves + 7"
+      },
+      {
+        "slug": "wilson-pickett",
+        "name": "Wilson Pickett",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 1965,
+        "low": "Bb2",
+        "high": "E6",
+        "belt": "D6",
+        "whistle": false,
+        "signatureSong": "In the Midnight Hour",
+        "lowSource": "I'm in Love",
+        "highSource": "Mustang Sally",
+        "blurb": "Brass-lunged soul shouter: punched phrases, wide vowels, genuinely pitched screams.",
+        "technique": "Full-throttle Southern soul shouting: a brassy tenor driven by huge breath pressure, short punched phrases, and screams that stay genuinely pitched at the top of the range. Vowels are wide, consonants explosive, vibrato almost absent, so intensity substitutes for ornament. He rides one dynamic, loud, with strategic drops for contrast. Students copying him tear at the top; his screams are supported yells with the pharynx open, launched off the diaphragm in short bursts, never sustained past what the air can carry.",
+        "span": "3 octaves + 6"
+      },
       {
         "slug": "janet-jackson",
         "name": "Janet Jackson",
@@ -4786,6 +5262,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Cool, airy head-mix glide over stuttering beats — intimacy and precision instead of power.",
         "technique": "Aaliyah floats a small, cool head-mix over intricate rhythmic phrasing, singing softly enough that the microphone does the projection. Her onsets are aspirate and gentle, runs are compact and precise rather than showy, and harmony stacks carry much of the color. The belt tops out around G#5 but she rarely leans on it, preferring restraint. Students copying her often whisper instead of phonating; the trick is a clear, connected tone at low volume, with breath moving constantly underneath.",
         "span": "2 octaves + 8"
+      },
+      {
+        "slug": "ceelo-green",
+        "name": "CeeLo Green",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 1995,
+        "low": "Bb1",
+        "high": "C6",
+        "belt": "C5",
+        "whistle": false,
+        "signatureSong": "Crazy",
+        "lowSource": "Go-Go Gadget Gospel",
+        "highSource": "Workin' Man's Blues",
+        "blurb": "Rasp-edged gospel-soul tenor: huge open belts, keening falsetto leaps, and joyful swing.",
+        "technique": "Gritty, joyful soul tenor with sanded edges: rasp sits on top of a supported, rounded chest tone rather than replacing it. He belts hard to C5 with wide-open vowels, jumps into a keening falsetto above that, and lands runs with gospel timing, triplets pulling against the backbeat. Vibrato is fast and generous. Students copying him imitate the rasp with throat squeeze; his distortion rides on airflow over a stable larynx, so the grit never costs him pitch or stamina.",
+        "span": "4 octaves + 2"
       },
       {
         "slug": "faith-evans",
@@ -4890,6 +5383,23 @@ export const ATLAS: AtlasChapter[] = [
         "span": "3 octaves + 3"
       },
       {
+        "slug": "pharrell-williams",
+        "name": "Pharrell Williams",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 2001,
+        "low": "Eb2",
+        "high": "Bb5",
+        "belt": "A5",
+        "whistle": false,
+        "signatureSong": "Happy",
+        "lowSource": "Double Life",
+        "highSource": "Breakout",
+        "blurb": "Airy, boyish falsetto-led tenor with percussive phrasing and short full-voice shouts.",
+        "technique": "Feather-light tenor placement with a breathy, boyish timbre that reads younger than his speaking voice. Most hooks live in loose falsetto with air deliberately left in the tone; full voice appears in short stabs and the occasional shouted A5 climax. Phrasing rides behind the beat like a drummer's. Students copying him overfill the falsetto and lose the percussive consonants; the sound is thin by design, supported from low breath, with vowels kept close to speech.",
+        "span": "3 octaves + 7"
+      },
+      {
         "slug": "ashanti",
         "name": "Ashanti",
         "voiceType": "Mezzo-soprano",
@@ -4905,6 +5415,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Soft, rounded midrange stacked into pillowy self-harmonies; melody kept simple and conversational.",
         "technique": "Ashanti layers soft, midweight lines into cushioned harmony beds, treating her lead vocal as one thread inside the arrangement. The tone is round and slightly nasal-forward, onsets are gentle, and she repeats short melodic cells rather than long runs. Sustains carry a slow, narrow vibrato. Students copying her underestimate the stacking discipline: each double must match vowel shape and decay exactly, and the lead must stay conversational, never pushed, or the blend collapses.",
         "span": "2 octaves + 7"
+      },
+      {
+        "slug": "akon",
+        "name": "Akon",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 2004,
+        "low": "C3",
+        "high": "Bb4",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Lonely",
+        "lowSource": "Lonely",
+        "highSource": "Beautiful",
+        "blurb": "Reedy, lilting tenor with mournful slides and West African-inflected trills over club beats.",
+        "technique": "High, lilting tenor with a reedy, slightly nasal core and constant gentle portamento between notes. He sits in a narrow band from the C3 floor to a Bb4 ceiling and gets variety from ornament rather than range: quick mordent-like trills, West African-inflected melisma, and long sustained vowels with almost no vibrato. Students copying him push volume into the nasality and go flat on the slides; the style needs light breath pressure and a precise landing pitch under every ornament.",
+        "span": "1 octaves + 10"
       },
       {
         "slug": "ciara",
@@ -4992,6 +5519,57 @@ export const ATLAS: AtlasChapter[] = [
         "span": "2 octaves + 6"
       },
       {
+        "slug": "trey-songz",
+        "name": "Trey Songz",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 2005,
+        "low": "F2",
+        "high": "G5",
+        "belt": "F5",
+        "whistle": false,
+        "signatureSong": "Bottoms Up",
+        "lowSource": "Inside Pt. 2",
+        "highSource": "Neighbors Know My Name",
+        "blurb": "Plush bedroom-R&B tenor stacked with falsetto ad-libs and metronomic melisma.",
+        "technique": "Sweet-toned R&B tenor with a light, high-set placement and constant ornamental motion. He starts phrases with soft glottal onsets, ends them with falling melisma, and layers falsetto ad-libs over his own lead line. Full voice stays plush up to F5, with a quick flip above it rather than a hard belt edge. Students copying him over-sing the runs; his passagework is metronomic, each note articulated by the tongue rather than the throat, and the breathiness is an overlay on tone, not a substitute for it.",
+        "span": "3 octaves + 2"
+      },
+      {
+        "slug": "ne-yo",
+        "name": "Ne-Yo",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 2006,
+        "low": "Eb2",
+        "high": "A5",
+        "belt": "F5",
+        "whistle": false,
+        "signatureSong": "So Sick",
+        "lowSource": "Story Time",
+        "highSource": "Makin' a Movie",
+        "blurb": "Polished lyric tenor with conversational verses, narrow forward vowels, and clean F5 belt climaxes.",
+        "technique": "Clean, centered lyric tenor built on a light chest mix that never over-weights the larynx. He keeps vowels narrow and forward, releases phrase endings with a soft straight-tone before a late, shallow vibrato, and reserves full belt for F5 climaxes. Runs are written like melodies: short, diatonic, landed on chord tones. Students copying him usually over-darken the tone and muscle the top; the sound depends on keeping the verse almost conversational so the chorus lift feels doubled.",
+        "span": "3 octaves + 6"
+      },
+      {
+        "slug": "kid-cudi",
+        "name": "Kid Cudi",
+        "voiceType": "Baritone",
+        "country": "USA",
+        "activeFrom": 2008,
+        "low": "A1",
+        "high": "F5",
+        "belt": "D5",
+        "whistle": false,
+        "signatureSong": "Day 'n' Nite",
+        "lowSource": "SUPERBOY",
+        "highSource": "Worth",
+        "blurb": "Droning sub-bass hums beneath yowling open-throat wails; the contrast is the style.",
+        "technique": "Low hums are the foundation: a woolly baritone that drones sustained chest tones down toward A1, then vaults into an open, yowling belt around D5 for hooks. The middle voice is talky and loose, with pitch treated as gesture. His signature is the hum-to-wail contrast inside one song. Students copying him press the low notes; subterranean pitches need slack folds and big resonating space, not force, and the high wails require an open throat with nothing held back in the jaw.",
+        "span": "3 octaves + 8"
+      },
+      {
         "slug": "solange",
         "name": "Solange",
         "voiceType": "Soprano",
@@ -5007,6 +5585,40 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Floated, straight-tone head voice tuned like synth pads; minimalist R&B sung at whisper weight.",
         "technique": "Solange lifts into head voice earlier than most R&B singers, treating everything above the mid-staff as a place for floated, straight-tone color. Her belts are rare and light; instead she stacks precise falsetto-adjacent harmonies with minimal vibrato, tuning them like synth pads. Low notes are soft-spoken but centered. Students copying her push chest upward and sound strained where she sounds weightless; the move is an early, unashamed register shift with breath kept slow and even.",
         "span": "3 octaves + 4"
+      },
+      {
+        "slug": "drake",
+        "name": "Drake",
+        "voiceType": "Baritone",
+        "country": "Canada",
+        "activeFrom": 2009,
+        "low": "D2",
+        "high": "C5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Hold On, We're Going Home",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Soft, covered baritone melodies that sit on speech contours and tight repeated intervals.",
+        "technique": "Conversational baritone singing that hugs a narrow third-octave band, with a soft, covered tone and melodies built from speech contours. Onsets are gentle, vibrato nearly absent, and hooks repeat small intervals until they hypnotize. Head voice appears sparingly and quietly. Students copying him under-rate the pitch discipline; the half-sung style still requires exact intonation on tight intervals, a relaxed jaw, and rhythmic placement a hair behind the beat, because slack pitch turns the style into mumbling.",
+        "span": "2 octaves + 10"
+      },
+      {
+        "slug": "jason-derulo",
+        "name": "Jason Derulo",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 2009,
+        "low": "A2",
+        "high": "Bb5",
+        "belt": "F5",
+        "whistle": false,
+        "signatureSong": "Whatcha Say",
+        "lowSource": "Don't Wanna Go Home",
+        "highSource": "Breathing",
+        "blurb": "Nasal-bright pop tenor that flips between punchy full voice and high floating falsetto tags.",
+        "technique": "A bright pop tenor who leads with a pinched, nasal-forward placement that cuts through dense production. He flips cleanly between full voice and a heady falsetto, tags phrases with quick melisma, and glides through pitch like a warm-up exercise. Belt tops around F5 stay narrow and twangy rather than wide. Students copying him choke the top by opening the vowel too far; the cut comes from twang and a high tongue position, not volume, and the falsetto needs steady airflow, not squeeze.",
+        "span": "3 octaves + 1"
       },
       {
         "slug": "janelle-monae",
@@ -5026,6 +5638,23 @@ export const ATLAS: AtlasChapter[] = [
         "span": "3 octaves + 2"
       },
       {
+        "slug": "mac-miller",
+        "name": "Mac Miller",
+        "voiceType": "Baritone",
+        "country": "USA",
+        "activeFrom": 2010,
+        "low": "C#2",
+        "high": "E4",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Self Care",
+        "lowSource": "Good News",
+        "highSource": "Good News",
+        "blurb": "Low, smoke-soft murmur that sings just above speech with jazz-wise note choices.",
+        "technique": "Smoke-softened baritone murmur with a frayed edge, sitting low and singing barely above speech. Melodies move stepwise in a narrow band, phrases exhale downward, and the C#2 floor appears as sung rumble rather than effect. Jazz-leaning chord awareness shows in the note choices more than the delivery. Students copying him let the softness go breathy and flat; the mumble still needs core tone, closed-enough folds, and intervals placed exactly, or the laid-back feel reads as out of tune.",
+        "span": "2 octaves + 3"
+      },
+      {
         "slug": "miguel",
         "name": "Miguel",
         "voiceType": "Tenor",
@@ -5043,6 +5672,23 @@ export const ATLAS: AtlasChapter[] = [
         "span": "2 octaves + 10"
       },
       {
+        "slug": "childish-gambino",
+        "name": "Childish Gambino",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 2011,
+        "low": "Bb1",
+        "high": "C6",
+        "belt": "Bb5",
+        "whistle": false,
+        "signatureSong": "Redbone",
+        "lowSource": "Algorhythm",
+        "highSource": "Me and Your Mama",
+        "blurb": "Shape-shifting funk tenor sliding from talky lows to screamed belts and quivering falsetto.",
+        "technique": "Elastic and theatrical, moving from a talky low register near Bb1 up through screamed full-voice climaxes and a keening falsetto. He treats registration as costume: airy croon, funk yelp, preacher rasp, sometimes all inside one verse. Falsetto carries whole songs with a fast flicker vibrato; belts around Bb5 are distorted on purpose. Students copying him chase the scream first; the control lives in his soft singing, pitch-true falsetto with a released jaw, and the distortion must sit over support or it shreds.",
+        "span": "4 octaves + 2"
+      },
+      {
         "slug": "frank-ocean",
         "name": "Frank Ocean",
         "voiceType": "Tenor",
@@ -5058,6 +5704,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "The mumbled confession as art form: a hazy tenor drifting between talk, melody and a fragile, exposed falsetto.",
         "technique": "Falsetto carries the feelings the words won't say. The chest voice is kept conversational, slightly slurred and unforced, and at emotional peaks he abandons it entirely for a thin, deliberately fragile falsetto that sits high and unprotected, cracks left in. Pitch is loose by design in verses, exact in the falsetto hooks. Practice the handoff: speak-sing a line, then float the next phrase in soft falsetto without resetting your breath. Strengthening the falsetto until it sounds confident misses the point of its fragility.",
         "span": "3 octaves + 6"
+      },
+      {
+        "slug": "tyler-the-creator",
+        "name": "Tyler, the Creator",
+        "voiceType": "Baritone",
+        "country": "USA",
+        "activeFrom": 2011,
+        "low": "B1",
+        "high": "B5",
+        "belt": "A5",
+        "whistle": false,
+        "signatureSong": "EARFQUAKE",
+        "lowSource": "WHARF TALK",
+        "highSource": "Tamale",
+        "blurb": "Rumbling monotone baritone lows against cracked, earnest falsetto hooks.",
+        "technique": "Cavernous speaking-range baritone rap sits beside a surprisingly tender sung falsetto, two instruments in one artist. Low lines rumble toward B1 with deliberate monotone weight; sung hooks flip into a cracked, earnest falsetto and a strong mix that can push to A5 in shrieked peaks. Pitch is sometimes bent flat for character. Students copying him polish the falsetto too much; the charm is a controlled amateurishness, supported underneath, with the cracks landing on expressive words.",
+        "span": "4 octaves"
       },
       {
         "slug": "coco-jones",
@@ -5145,6 +5808,23 @@ export const ATLAS: AtlasChapter[] = [
         "span": "3 octaves + 5"
       },
       {
+        "slug": "bryson-tiller",
+        "name": "Bryson Tiller",
+        "voiceType": "Tenor",
+        "country": "USA",
+        "activeFrom": 2015,
+        "low": "A2",
+        "high": "C6",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Don't",
+        "lowSource": null,
+        "highSource": null,
+        "blurb": "Half-sung, half-rapped murmur with sighing phrase-ends and rare falsetto lifts.",
+        "technique": "Murmured, close-mic R&B phrasing that lives right at the speech-singing border. The tone is soft-edged and midweight, with minimal vibrato and phrase shapes that fall away like sighs; falsetto floats in for single words rather than full lines. Rhythm is the engine, and he places syllables like a rapper, slightly behind the beat. Students copying him confuse quiet with unsupported; the intimacy requires steady compressed airflow at low volume, and every slurred pitch still lands centered.",
+        "span": "3 octaves + 3"
+      },
+      {
         "slug": "kehlani",
         "name": "Kehlani",
         "voiceType": "Mezzo-soprano",
@@ -5160,6 +5840,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Conversational R&B: a warm, slightly smoky mezzo that glides between melody and near-rap without a visible seam.",
         "technique": "Flow is the discipline here. Lines slide from pitched melody into rhythmic speech and back inside a single bar, and the trick is that the speech is still supported and placed exactly where the melody was, so the seam never shows. Runs are short, tucked at phrase ends, more punctuation than display. Take one verse and mark which syllables are sung versus spoken, then keep the larynx and breath identical across the switch. Letting the spoken parts collapse into the throat breaks the illusion.",
         "span": "2 octaves + 2"
+      },
+      {
+        "slug": "post-malone",
+        "name": "Post Malone",
+        "voiceType": "Baritone",
+        "country": "USA",
+        "activeFrom": 2015,
+        "low": "E2",
+        "high": "E5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Circles",
+        "lowSource": "Leave",
+        "highSource": "Broken Whiskey Glass",
+        "blurb": "Fry-onset croon with twangy edge, constant upward slides, and a quick wobbling vibrato.",
+        "technique": "Wounded-croon delivery: a midweight voice with a bright, twangy edge, heavy vocal fry on onsets, and a fast tremolo-like vibrato that wobbles at phrase ends. He slides into most notes from beneath and lets a country-style cry color the sustained vowels. Belts stay narrow and pinched rather than open. Students copying him overdo the fry until pitch collapses; the style needs the fry to release into clean tone immediately, and the persistent slide must land dead center or the whole line sounds seasick.",
+        "span": "3 octaves"
       },
       {
         "slug": "anderson-paak",
@@ -5247,6 +5944,23 @@ export const ATLAS: AtlasChapter[] = [
         "span": "2 octaves + 8"
       },
       {
+        "slug": "xxxtentacion",
+        "name": "XXXTentacion",
+        "voiceType": "Baritone",
+        "country": "USA",
+        "activeFrom": 2017,
+        "low": "C3",
+        "high": "F5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "SAD!",
+        "lowSource": "SAD!",
+        "highSource": "Hope",
+        "blurb": "Close-mic, breaking mid-voice that swings between whisper and pitched full-voice cry.",
+        "technique": "Bare, unprocessed-sounding delivery: a light, boyish mid-voice that cracks on purpose, recorded close enough to hear breath and room. Sung lines sit in a small comfortable range with simple stepwise tunes; intensity comes from dynamic swings between whisper and a full-voice cry near F5. Vibrato is minimal and unsteady by design. Students copying him treat the rawness as an absence of technique; the quiet verses need genuine breath control, and the cries must be pitched, not just loud.",
+        "span": "2 octaves + 5"
+      },
+      {
         "slug": "chloe-bailey",
         "name": "Chlöe Bailey",
         "voiceType": "Mezzo-soprano",
@@ -5296,6 +6010,23 @@ export const ATLAS: AtlasChapter[] = [
         "blurb": "Feather-quick runs and bell-clear head voice, sweet-toned and classically poised.",
         "technique": "Halle spins fast, feather-light runs with almost classical purity, each note articulated from the breath instead of the throat. Her head voice is clear and bell-toned, entered smoothly from a bright mix, and her belt stays sweet rather than brassy up to G5. Vibrato is quick, shimmering, consistent. Students copying her muscle the runs with jaw movement; hers ride on a still jaw, moving air, and vowels kept narrow so the pitch spins freely.",
         "span": "3 octaves"
+      },
+      {
+        "slug": "juice-wrld",
+        "name": "Juice WRLD",
+        "voiceType": "Baritone",
+        "country": "USA",
+        "activeFrom": 2018,
+        "low": "G2",
+        "high": "C5",
+        "belt": null,
+        "whistle": false,
+        "signatureSong": "Lucid Dreams",
+        "lowSource": "All Girls Are the Same",
+        "highSource": "Black & White",
+        "blurb": "Plainspoken melodic drawl, improvised in long takes with expressive line-end bends.",
+        "technique": "Freestyle-born melody-making: mid-voiced, slightly husky, with hooks improvised in long unbroken takes and pitch bent expressively at line ends. His tone is plain and unornamented, no runs and minimal vibrato, so emotion carries through timing and lyric stress. He sits mostly in one comfortable octave with brief pushed peaks near C5. Students copying him mistake plainness for ease; holding steady pitch on repeated notes without vibrato is exposed work, and every bend has to return to center.",
+        "span": "2 octaves + 5"
       },
       {
         "slug": "ravyn-lenae",
@@ -9749,8 +10480,8 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Appendices",
     "summary": "The atlas's extremes in one place — lowest floors, highest ceilings, widest spans and the whistle club, each with the recording where the note happened when one is famously known.",
     "free": false,
-    "words": 958,
-    "body": "This appendix gathers the edges of the whole atlas: the lowest cited floors, the highest cited ceilings, the widest spans, and the short roster of voices with a documented whistle register. The tables that follow are generated from the same data as every entry, so they update as the library does, and where an extreme is famously tied to one recording, it is listed with the note.\n\nRead the tables with the first chapter's caveats fully loaded, because records concentrate everything approximate about cited figures. An extreme is one recorded moment — often decades old, often live, sometimes a glissando's peak rather than a sustained pitch — and the singers on these lists could not necessarily reproduce their entry on demand, which they would tell you themselves. The spans table stacks a second caveat on top: a wide figure usually spans multiple vocal mechanisms, so it measures versatility of *production*, not the size of one continuous voice.\n\nFor calibration, the world beyond this library: Guinness verifies extremes far outside anything here, including subterranean lows produced by singers like Tim Storms whose deepest frequencies sit below human hearing and are verified by instrument rather than ear. Those feats are real and irrelevant to music, which is a useful reminder of what these tables are — documentation of remarkable moments, not a leaderboard anyone should train toward. The atlas's own advice lives in the method chapters: the interesting part of every voice on these lists is the middle, and the middle never makes the record book.\n\n## The deepest floors\n- **Avi Kaplan** — **Eb1**, from a cited Eb1–Db5\n- **Mike Patton** — **Eb1**, from a cited Eb1–Eb7\n- **David Lee Roth** — **E1** in *Last Call*, from a cited E1–D6\n- **Axl Rose** — **F1** in *There Was a Time*, from a cited F1–Bb6\n- **Peter Steele** — **F1** in *Cinnamon Girl*, from a cited F1–G5\n- **Ivan Rebroff** — **F1**, from a cited F1–F5\n- **Ville Valo** — **F#1**, from a cited F#1–B5\n- **Josh Turner** — **Ab1**, from a cited Ab1–C#5\n- **Jonathan Davis** — **A1** in *Dead Bodies Everywhere*, from a cited A1–F#5\n- **Tom Waits** — **A1** in *Crossroads*, from a cited A1–G5\n- **Chad Kroeger** — **A1** in *Coin for the Ferryman*, from a cited A1–E5\n- **Myles Kennedy** — **Bb1** in *Come to Life*, from a cited Bb1–D6\n\n## The highest ceilings\n- **Dimash Kudaibergen** — **C8** in *Unforgettable Day (live at Gakku)* (whistle register), from a cited C2–C8\n- **Mariah Carey** — **G7** in *Emotions* (whistle register), from a cited F2–G7\n- **Minnie Riperton** — **F#7** in *You Take My Breath Away* (whistle register), from a cited D3–F#7\n- **Ariana Grande** — **E7** (whistle register), from a cited D3–E7\n- **Mike Patton** — **Eb7**, from a cited Eb1–Eb7\n- **Normani** — **Eb7** (whistle register), from a cited C#3–Eb7\n- **Yma Sumac** — **C#7** in *Chuncho (The Forest Creatures)* (whistle register), from a cited B2–C#7\n- **Mitch Grassi** — **C7** (whistle register), from a cited F2–C7\n- **Sohyang** — **C7** (whistle register), from a cited E3–C7\n- **Christina Aguilera** — **C7** (whistle register), from a cited C3–C7\n- **Axl Rose** — **Bb6** in *Ain't It Fun*, from a cited F1–Bb6\n- **Jack White** — **A6** in *Corporation* (whistle register), from a cited E2–A6\n\n## The widest spans\n- **Dimash Kudaibergen** — C2–C8, 6 octaves\n- **Mike Patton** — Eb1–Eb7, 6 octaves\n- **Axl Rose** — F1–Bb6, 5 octaves + 5\n- **Mariah Carey** — F2–G7, 5 octaves + 2\n- **David Lee Roth** — E1–D6, 4 octaves + 10\n- **Mitch Grassi** — F2–C7, 4 octaves + 7\n- **Ville Valo** — F#1–B5, 4 octaves + 5\n- **Jack White** — E2–A6, 4 octaves + 5\n- **Myles Kennedy** — Bb1–D6, 4 octaves + 4\n- **Stevie Wonder** — C2–E6, 4 octaves + 4\n- **Minnie Riperton** — D3–F#7, 4 octaves + 4\n- **Peter Steele** — F1–G5, 4 octaves + 2\n\n## The highest full-voice ceilings\nBelted or full-voice tops, as distinct from falsetto, head voice or whistle — for many readers the most meaningful list on this page.\n- **Sohyang** — full voice cited to **C6** (range E3–C7)\n- **Sturgill Simpson** — full voice cited to **B5** (range Eb2–C#6)\n- **Karen Clark Sheard** — full voice cited to **Bb5** (range F3–Eb6)\n- **Patti LaBelle** — full voice cited to **Bb5** (range Bb2–E6)\n- **Lara Fabian** — full voice cited to **A5** (range Eb3–D6)\n- **Kim Burrell** — full voice cited to **A5** (range E3–D6)\n- **Yma Sumac** — full voice cited to **A5** (range B2–C#7)\n- **Demi Lovato** — full voice cited to **A5** (range C#3–D6)\n- **Jessie J** — full voice cited to **A5** (range C#3–C6)\n- **Sammy Hagar** — full voice cited to **A5** (range D2–B5)\n- **Glenn Hughes** — full voice cited to **A5** (range D2–D6)\n- **Ann Wilson** — full voice cited to **A5** (range G2–E6)\n\n## The whistle club\nVoices in the library with a documented whistle register. The flag is rare on purpose.\n- **Dimash Kudaibergen** — cited to **C8** in *Unforgettable Day (live at Gakku)*\n- **Mariah Carey** — cited to **G7** in *Emotions*\n- **Minnie Riperton** — cited to **F#7** in *You Take My Breath Away*\n- **Ariana Grande** — cited to **E7**\n- **Normani** — cited to **Eb7**\n- **Yma Sumac** — cited to **C#7** in *Chuncho (The Forest Creatures)*\n- **Mitch Grassi** — cited to **C7**\n- **Sohyang** — cited to **C7**\n- **Christina Aguilera** — cited to **C7**\n- **Jack White** — cited to **A6** in *Corporation*\n- **Faouzia** — cited to **G6**\n- **G.E.M.** — cited to **F6**\n- **Misia** — cited to **F6**\n- **Tori Kelly** — cited to **E6**\n- **Karen Clark Sheard** — cited to **Eb6**",
+    "words": 989,
+    "body": "This appendix gathers the edges of the whole atlas: the lowest cited floors, the highest cited ceilings, the widest spans, and the short roster of voices with a documented whistle register. The tables that follow are generated from the same data as every entry, so they update as the library does, and where an extreme is famously tied to one recording, it is listed with the note.\n\nRead the tables with the first chapter's caveats fully loaded, because records concentrate everything approximate about cited figures. An extreme is one recorded moment — often decades old, often live, sometimes a glissando's peak rather than a sustained pitch — and the singers on these lists could not necessarily reproduce their entry on demand, which they would tell you themselves. The spans table stacks a second caveat on top: a wide figure usually spans multiple vocal mechanisms, so it measures versatility of *production*, not the size of one continuous voice.\n\nFor calibration, the world beyond this library: Guinness verifies extremes far outside anything here, including subterranean lows produced by singers like Tim Storms whose deepest frequencies sit below human hearing and are verified by instrument rather than ear. Those feats are real and irrelevant to music, which is a useful reminder of what these tables are — documentation of remarkable moments, not a leaderboard anyone should train toward. The atlas's own advice lives in the method chapters: the interesting part of every voice on these lists is the middle, and the middle never makes the record book.\n\n## The deepest floors\n- **Avi Kaplan** — **Eb1**, from a cited Eb1–Db5\n- **Mike Patton** — **Eb1**, from a cited Eb1–Eb7\n- **David Lee Roth** — **E1** in *Last Call*, from a cited E1–D6\n- **Axl Rose** — **F1** in *There Was a Time*, from a cited F1–Bb6\n- **Peter Steele** — **F1** in *Cinnamon Girl*, from a cited F1–G5\n- **Ivan Rebroff** — **F1**, from a cited F1–F5\n- **Ville Valo** — **F#1**, from a cited F#1–B5\n- **Josh Turner** — **Ab1**, from a cited Ab1–C#5\n- **Jonathan Davis** — **A1** in *Dead Bodies Everywhere*, from a cited A1–F#5\n- **Tom Waits** — **A1** in *Crossroads*, from a cited A1–G5\n- **Kid Cudi** — **A1** in *SUPERBOY*, from a cited A1–F5\n- **Chad Kroeger** — **A1** in *Coin for the Ferryman*, from a cited A1–E5\n\n## The highest ceilings\n- **Dimash Kudaibergen** — **C8** in *Unforgettable Day (live at Gakku)* (whistle register), from a cited C2–C8\n- **Mariah Carey** — **G7** in *Emotions* (whistle register), from a cited F2–G7\n- **Minnie Riperton** — **F#7** in *You Take My Breath Away* (whistle register), from a cited D3–F#7\n- **Ariana Grande** — **E7** (whistle register), from a cited D3–E7\n- **Mike Patton** — **Eb7**, from a cited Eb1–Eb7\n- **Normani** — **Eb7** (whistle register), from a cited C#3–Eb7\n- **Yma Sumac** — **C#7** in *Chuncho (The Forest Creatures)* (whistle register), from a cited B2–C#7\n- **Mitch Grassi** — **C7** (whistle register), from a cited F2–C7\n- **Sohyang** — **C7** (whistle register), from a cited E3–C7\n- **Christina Aguilera** — **C7** (whistle register), from a cited C3–C7\n- **Axl Rose** — **Bb6** in *Ain't It Fun*, from a cited F1–Bb6\n- **JoJo** — **Bb6** (whistle register), from a cited A2–Bb6\n\n## The widest spans\n- **Dimash Kudaibergen** — C2–C8, 6 octaves\n- **Mike Patton** — Eb1–Eb7, 6 octaves\n- **Axl Rose** — F1–Bb6, 5 octaves + 5\n- **Mariah Carey** — F2–G7, 5 octaves + 2\n- **David Lee Roth** — E1–D6, 4 octaves + 10\n- **Mitch Grassi** — F2–C7, 4 octaves + 7\n- **Ville Valo** — F#1–B5, 4 octaves + 5\n- **Jack White** — E2–A6, 4 octaves + 5\n- **Myles Kennedy** — Bb1–D6, 4 octaves + 4\n- **Stevie Wonder** — C2–E6, 4 octaves + 4\n- **Minnie Riperton** — D3–F#7, 4 octaves + 4\n- **Peter Steele** — F1–G5, 4 octaves + 2\n\n## The highest full-voice ceilings\nBelted or full-voice tops, as distinct from falsetto, head voice or whistle — for many readers the most meaningful list on this page.\n- **Wilson Pickett** — full voice cited to **D6** (range Bb2–E6)\n- **Sohyang** — full voice cited to **C6** (range E3–C7)\n- **Sturgill Simpson** — full voice cited to **B5** (range Eb2–C#6)\n- **Zara Larsson** — full voice cited to **B5** (range D3–C#6)\n- **MARINA** — full voice cited to **B5** (range Bb2–C#6)\n- **Karen Clark Sheard** — full voice cited to **Bb5** (range F3–Eb6)\n- **Grimes** — full voice cited to **Bb5** (range D3–G6)\n- **Madison Beer** — full voice cited to **Bb5** (range C3–C6)\n- **Childish Gambino** — full voice cited to **Bb5** (range Bb1–C6)\n- **Jackie Wilson** — full voice cited to **Bb5** (range A2–C#6)\n- **David Ruffin** — full voice cited to **Bb5** (range A2–E6)\n- **Patti LaBelle** — full voice cited to **Bb5** (range Bb2–E6)\n\n## The whistle club\nVoices in the library with a documented whistle register. The flag is rare on purpose.\n- **Dimash Kudaibergen** — cited to **C8** in *Unforgettable Day (live at Gakku)*\n- **Mariah Carey** — cited to **G7** in *Emotions*\n- **Minnie Riperton** — cited to **F#7** in *You Take My Breath Away*\n- **Ariana Grande** — cited to **E7**\n- **Normani** — cited to **Eb7**\n- **Yma Sumac** — cited to **C#7** in *Chuncho (The Forest Creatures)*\n- **Mitch Grassi** — cited to **C7**\n- **Sohyang** — cited to **C7**\n- **Christina Aguilera** — cited to **C7**\n- **JoJo** — cited to **Bb6**\n- **Kim Petras** — cited to **Bb6**\n- **Jack White** — cited to **A6** in *Corporation*\n- **Nicole Scherzinger** — cited to **G#6**\n- **Faouzia** — cited to **G6**\n- **Grimes** — cited to **G6** in *Circumambient*\n- **Leona Lewis** — cited to **F#6** in *Loving You*\n- **G.E.M.** — cited to **F6**\n- **Misia** — cited to **F6**\n- **Tori Kelly** — cited to **E6**\n- **Karen Clark Sheard** — cited to **Eb6**",
     "entries": []
   },
   {
@@ -9760,8 +10491,8 @@ export const ATLAS: AtlasChapter[] = [
     "part": "Appendices",
     "summary": "The whole library shelved by classification, basses to sopranos, with each voice's cited range — the shopping index for borrowing along your own shelf.",
     "free": false,
-    "words": 2967,
-    "body": "The method chapters recommend borrowing first from voices built like yours; this appendix is the shelving system that makes it practical. Every entry in the atlas appears below exactly once, grouped by voice type and ordered low to high — basses first, sopranos last — with the cited range beside each name so you can scan a whole shelf at a glance.\n\nA few reminders before you shop. The labels are habitat descriptions, not certifications — the voice-types chapter explains how loosely popular music wears them — and the ranges beside the names are cited spans, with everything that phrase implies about extremes and evidence. Within your own type, expect enormous variety: the point of a shelf is not that its voices sound alike but that their *architecture* is similar enough for techniques to transfer at face value. One shelf away, techniques still transfer with adjustment — usually a transposition — and the chapter on borrowing covers the exchange rate.\n\nIf you have taken the range test, find the shelf whose typical spans bracket your own numbers and start reading there; each name links to the singer's full entry and page. If you have not, the test takes a few minutes and turns this appendix from a list into a mirror. Either way, the shelf you belong to holds more careers, in more genres, than most singers expect to find there — which is the last thing this book has to say, and the most useful.\n\n## Basss\n- **Avi Kaplan** — `Eb1–Db5`\n- **Barry White** — `D2–E4`\n- **Ivan Rebroff** — `F1–F5`\n\n## Bass-baritones\n- **Bryn Terfel** — `F2–A4`\n- **Buju Banton** — `E2–A4`\n- **Fred Hammond** — `E2–Bb4`\n- **Johnny Cash** — `E2–E4`\n- **Josh Turner** — `Ab1–C#5`\n- **Leonard Cohen** — `D2–E4`\n- **Peter Steele** — `F1–G5`\n- **Shaggy** — `E2–F4`\n- **Till Lindemann** — `E2–F4`\n- **Tom Waits** — `A1–G5`\n- **Trace Adkins** — `D2–G4`\n- **Waylon Jennings** — `E2–D4`\n\n## Baritones\n- **Alan Jackson** — `E2–B4`\n- **Alejandro Fernández** — `F#2–C5`\n- **Alex Warren** — `A2–F#4`\n- **Andy Biersack** — `D2–F5`\n- **Anthony Kiedis** — `F2–E5`\n- **Bad Bunny** — `F2–G4`\n- **Bill Withers** — `F2–A4`\n- **Bing Crosby** — `F2–F4`\n- **Blake Shelton** — `D2–C#5`\n- **Bobby McFerrin** — `E2–E6`\n- **Bruce Springsteen** — `F2–C5`\n- **Burna Boy** — `F2–C5`\n- **Carín León** — `F#2–A#4`\n- **Chad Kroeger** — `A1–E5`\n- **Chris Stapleton** — `F2–B4`\n- **Christian Nodal** — `A2–G4`\n- **Cody Johnson** — `F#2–G#4`\n- **Corey Taylor** — `E2–A5`\n- **Damiano David** — `A2–B4`\n- **Dan Reynolds** — `G2–G#5`\n- **Dave Gahan** — `F2–G4`\n- **David Bowie** — `E2–A5`\n- **David Coverdale** — `F2–A5`\n- **David Draiman** — `Bb1–G#5`\n- **David Lee Roth** — `E1–D6`\n- **Dean Martin** — `F2–G4`\n- **Dmitri Hvorostovsky** — `G2–A4`\n- **Eddie Vedder** — `D2–E5`\n- **Elvis Presley** — `G2–Db5`\n- **Fela Kuti** — `F2–A4`\n- **Frank Sinatra** — `G2–A4`\n- **Freddie Mercury** — `F2–F6`\n- **Fujii Kaze** — `G2–D5`\n- **Garth Brooks** — `G2–A4`\n- **George Jones** — `B1–B4`\n- **George Michael** — `E2–A5`\n- **George Strait** — `A2–E4`\n- **Giveon** — `F#2–F#4`\n- **Glenn Danzig** — `C#2–Eb5`\n- **Glenn Hughes** — `D2–D6`\n- **Gregory Porter** — `F2–G4`\n- **Harry Styles** — `E2–F5`\n- **Hozier** — `E2–E5`\n- **Hugh Jackman** — `A2–B4`\n- **Ian Curtis** — `G2–E4`\n- **Jacky Cheung** — `E3–C5`\n- **Jacob Collier** — `D2–D6`\n- **James Brown** — `F2–C5`\n- **James Hetfield** — `E2–C5`\n- **James Taylor** — `F2–A4`\n- **Jay Chou** — `A2–B4`\n- **Jelly Roll** — `G2–G4`\n- **Jim Morrison** — `E2–Bb4`\n- **Joe Cocker** — `G2–Bb4`\n- **Joe Elliott** — `D2–G#5`\n- **Jonathan Davis** — `A1–F#5`\n- **Josh Groban** — `G2–A4`\n- **Julian Casablancas** — `C2–F#5`\n- **Julio Iglesias** — `B2–G4`\n- **Kane Brown** — `E2–F4`\n- **Kenny Rogers** — `D2–D5`\n- **Kenshi Yonezu** — `F2–D5`\n- **Kurt Cobain** — `F2–E5`\n- **Layne Staley** — `E2–G5`\n- **Lewis Capaldi** — `F2–E5`\n- **Louis Armstrong** — `F2–G4`\n- **Luke Combs** — `A2–A4`\n- **M. Shadows** — `D2–A5`\n- **Maluma** — `D3–F4`\n- **Merle Haggard** — `F2–E4`\n- **Michael Bublé** — `G2–A4`\n- **Michael Hutchence** — `B1–F#5`\n- **Michael McDonald** — `G#2–A5`\n- **Mike Patton** — `Eb1–Eb7`\n- **Morgan Wallen** — `A2–G4`\n- **Morrissey** — `F#2–B4`\n- **Nat King Cole** — `F2–G4`\n- **Neil Diamond** — `D2–G#4`\n- **Nick Cave** — `D2–G5`\n- **Noah Sebastian** — `A2–D5`\n- **Orville Peck** — `E2–F#5`\n- **Otis Redding** — `F2–C5`\n- **Paul Rodgers** — `E2–G#5`\n- **Peter Gabriel** — `F#2–A4`\n- **Peter Tosh** — `F2–G4`\n- **Randy Travis** — `F2–E4`\n- **Rauw Alejandro** — `G2–C5`\n- **Rick Astley** — `F2–D5`\n- **Scott Hoying** — `F2–Bb5`\n- **Scott Stapp** — `D2–D5`\n- **Scott Weiland** — `E2–C#5`\n- **Serj Tankian** — `F2–C6`\n- **Sombr** — `A2–F#4`\n- **Stromae** — `G2–G4`\n- **Sturgill Simpson** — `Eb2–C#6`\n- **Teddy Pendergrass** — `E2–Bb4`\n- **Teddy Swims** — `E2–A5`\n- **Tim McGraw** — `F2–B4`\n- **Tobias Forge** — `D2–G#5`\n- **Tom Jones** — `G2–Bb4`\n- **Tom Petty** — `C2–Bb5`\n- **Tony Bennett** — `A2–A4`\n- **V** — `D2–D5`\n- **Ville Valo** — `F#1–B5`\n- **Zach Bryan** — `G2–F#4`\n\n## Tenors\n- **Aaron Neville** — `G2–Bb5`\n- **Aaron Tveit** — `A2–D5`\n- **Adam Lambert** — `F2–C6`\n- **Adam Levine** — `A2–C6`\n- **Al Green** — `F2–Bb5`\n- **Al Jarreau** — `G2–A5`\n- **Alex Turner** — `E2–G5`\n- **Anderson .Paak** — `C3–F5`\n- **Andrea Bocelli** — `C3–B4`\n- **Arijit Singh** — `C3–C5`\n- **Axl Rose** — `F1–Bb6`\n- **Baekhyun** — `F2–E5`\n- **Barry Gibb** — `F2–D6`\n- **Barry Manilow** — `D2–G5`\n- **BeBe Winans** — `A2–E5`\n- **Ben Platt** — `A2–F5`\n- **Benson Boone** — `G2–A5`\n- **Billie Joe Armstrong** — `F2–C5`\n- **Billy Corgan** — `F2–E5`\n- **Billy Joel** — `F2–C6`\n- **Bob Dylan** — `E2–A4`\n- **Bob Marley** — `F2–C5`\n- **Bono** — `Eb2–Db5`\n- **Boy George** — `D2–A5`\n- **Brad Delp** — `G#2–D6`\n- **Brandon Boyd** — `F2–A5`\n- **Brandon Flowers** — `F#2–G#5`\n- **Brendon Urie** — `E2–C6`\n- **Brian Johnson** — `A2–E5`\n- **Brian McKnight** — `A2–Bb5`\n- **Brian Wilson** — `C2–Bb5`\n- **Bruce Dickinson** — `E2–C6`\n- **Bruno Mars** — `G2–D6`\n- **Bryan Adams** — `Eb2–E6`\n- **Caetano Veloso** — `A2–C5`\n- **Caleb Followill** — `A2–E5`\n- **Camilo Sesto** — `A2–E5`\n- **Charles Aznavour** — `D3–B4`\n- **Charlie Puth** — `G2–C6`\n- **Chen** — `G2–F5`\n- **Chester Bennington** — `G2–A5`\n- **Chino Moreno** — `F2–A5`\n- **Chris Brown** — `C3–G#5`\n- **Chris Cornell** — `E2–A5`\n- **Chris Martin** — `D2–C6`\n- **Chris Tomlin** — `A2–D5`\n- **Christopher Cross** — `D3–A#4`\n- **Colm Wilkinson** — `G2–C5`\n- **Conan Gray** — `C3–G5`\n- **Cristian Castro** — `G2–C6`\n- **Curtis Mayfield** — `G2–Bb5`\n- **D'Angelo** — `G2–Bb5`\n- **Daniel Caesar** — `C#3–F#5`\n- **Daryl Hall** — `E2–C6`\n- **Dennis Brown** — `G2–D5`\n- **Dennis DeYoung** — `E2–A5`\n- **Devin Townsend** — `F2–C6`\n- **Dimash Kudaibergen** — `C2–C8`\n- **Don Henley** — `F#2–D#5`\n- **Donnie McClurkin** — `B2–E5`\n- **Donny Hathaway** — `F2–C5`\n- **Ed Sheeran** — `G2–A5`\n- **Elton John** — `F2–F5`\n- **Enrico Caruso** — `B2–Bb4`\n- **Enrique Iglesias** — `C#3–G#4`\n- **Frank Ocean** — `C#2–G5`\n- **Frankie Valli** — `A2–C6`\n- **Geddy Lee** — `F2–Bb5`\n- **Geoff Tate** — `E2–C6`\n- **Gerard Way** — `F#2–F#5`\n- **Glen Campbell** — `F2–A4`\n- **Hank Williams** — `A2–A4`\n- **Hua Chenyu** — `G2–Bb5`\n- **Ian Gillan** — `G2–Bb5`\n- **Jack White** — `E2–A6`\n- **James Blake** — `F2–F5`\n- **Jason Mraz** — `F2–Bb5`\n- **Jeff Buckley** — `E2–D6`\n- **Jeremy Jordan** — `A2–E5`\n- **Jimin** — `A2–F5`\n- **Jimmy Cliff** — `F2–C5`\n- **JJ Lin** — `G2–G5`\n- **John Denver** — `G2–B5`\n- **John Legend** — `E2–Bb5`\n- **John Lennon** — `G2–D5`\n- **Johnny Mathis** — `B2–G5`\n- **Jon Anderson** — `C#3–F#5`\n- **Jon Bon Jovi** — `E2–D5`\n- **Jonas Kaufmann** — `B2–C5`\n- **Jonathan Groff** — `A2–C5`\n- **Jonghyun** — `F2–E5`\n- **José Carreras** — `C3–C5`\n- **José José** — `A2–D5`\n- **Josh Kiszka** — `C3–C#6`\n- **Juan Diego Flórez** — `C3–E5`\n- **Juan Gabriel** — `A2–C5`\n- **Jungkook** — `F2–A5`\n- **Justin Bieber** — `A2–Bb5`\n- **Justin Timberlake** — `A2–C6`\n- **Justin Vernon** — `F2–F5`\n- **Keith Urban** — `F2–A5`\n- **Kellin Quinn** — `B2–A5`\n- **Kenny Chesney** — `D#2–F#4`\n- **Kenny Loggins** — `D2–C#6`\n- **Kevin Cronin** — `G2–A4`\n- **Klaus Meine** — `G2–C6`\n- **Lenny Kravitz** — `A2–Bb5`\n- **Leon Bridges** — `B2–G4`\n- **Lionel Richie** — `F2–G5`\n- **Little Richard** — `F2–Bb5`\n- **Lou Gramm** — `B1–A5`\n- **Luciano Pavarotti** — `C3–C5`\n- **Luis Fonsi** — `E3–A4`\n- **Luis Miguel** — `A2–D5`\n- **Luther Vandross** — `B2–A5`\n- **Marc Anthony** — `A2–E5`\n- **Mario Lanza** — `C3–C5`\n- **Marvin Gaye** — `F2–Bb5`\n- **Marvin Winans** — `A2–F5`\n- **Matt Bellamy** — `E2–D6`\n- **Matty Healy** — `F2–A5`\n- **Maxwell** — `A2–C6`\n- **Maynard James Keenan** — `F2–A5`\n- **Meat Loaf** — `F2–Eb6`\n- **Mel Tormé** — `G2–C5`\n- **Michael Crawford** — `A2–Bb4`\n- **Michael Jackson** — `Eb2–F6`\n- **Michael Kiske** — `F2–C6`\n- **Michael W. Smith** — `A2–D5`\n- **Mick Jagger** — `F2–F5`\n- **Miguel** — `C3–Bb5`\n- **Mika** — `F#2–G#5`\n- **Milton Nascimento** — `G2–Bb5`\n- **Morten Harket** — `A2–E5`\n- **Musiq Soulchild** — `C3–F#5`\n- **Myles Kennedy** — `Bb1–D6`\n- **Myles Smith** — `B2–G4`\n- **Nate Ruess** — `G2–A5`\n- **Neil Young** — `G2–C5`\n- **Noah Kahan** — `B2–G#4`\n- **Oli Sykes** — `Eb2–G#5`\n- **Omar Apollo** — `C3–F#5`\n- **Ozuna** — `F#2–C5`\n- **Ozzy Osbourne** — `G2–D5`\n- **Park Hyo Shin** — `F2–E5`\n- **Patrick Stump** — `C3–B5`\n- **Paul McCartney** — `F2–E5`\n- **Paul Simon** — `A2–D5`\n- **Peso Pluma** — `B2–F#4`\n- **Phil Collins** — `F2–Db5`\n- **Plácido Domingo** — `A2–C5`\n- **Prince** — `E2–B5`\n- **Ramin Karimloo** — `G2–C5`\n- **Ray Charles** — `C2–Bb5`\n- **Rema** — `C#3–E5`\n- **Ricky Martin** — `B2–C5`\n- **Rivers Cuomo** — `Eb2–G5`\n- **Rob Halford** — `F2–C6`\n- **Robbie Williams** — `F2–B5`\n- **Robert Plant** — `F2–A5`\n- **Robert Smith** — `C#3–C5`\n- **Rod Stewart** — `E2–C5`\n- **Roger Daltrey** — `F2–C5`\n- **Ronnie James Dio** — `F2–Bb5`\n- **Ronnie Radke** — `D2–G5`\n- **Roy Orbison** — `E2–E5`\n- **Rufus Wainwright** — `A2–D5`\n- **Salif Keita** — `B2–D5`\n- **Sam Cooke** — `A2–E5`\n- **Sam Fender** — `F#2–F5`\n- **Sam Ryder** — `C4–E6`\n- **Sammy Hagar** — `D2–B5`\n- **Seal** — `Eb2–G5`\n- **Sebastian Bach** — `F2–C6`\n- **Shawn Mendes** — `G2–E5`\n- **Smokey Robinson** — `A2–Bb5`\n- **Steve Lacy** — `C#3–E5`\n- **Steve Perry** — `G2–A5`\n- **Steven Tyler** — `F2–C6`\n- **Stevie Wonder** — `C2–E6`\n- **Sting** — `Eb2–E5`\n- **T-Pain** — `B2–F5`\n- **Taeyang** — `A2–F5`\n- **The Weeknd** — `G2–B5`\n- **Thom Yorke** — `F2–F5`\n- **Toots Hibbert** — `G2–C5`\n- **Troye Sivan** — `C3–F5`\n- **Tyler Childers** — `E2–C6`\n- **Tyler Joseph** — `A2–F6`\n- **Usher** — `Bb2–A5`\n- **Van Morrison** — `G2–D5`\n- **Vicente Fernández** — `A2–C5`\n- **Vince Gill** — `A2–C5`\n- **Vitas** — `D2–Eb6`\n- **Willie Nelson** — `G2–F4`\n- **Wizkid** — `G2–C5`\n- **Youssou N'Dour** — `A2–D5`\n- **Zayn** — `D3–B5`\n\n## Countertenors\n- **King Diamond** — `F2–D6`\n- **Mitch Grassi** — `F2–C7`\n- **Philip Bailey** — `G2–D6`\n- **Sam Smith** — `G2–C6`\n\n## Contraltos\n- **Amy Winehouse** — `C3–Eb5`\n- **Anita Baker** — `C#3–C#6`\n- **Annie Lennox** — `G2–A5`\n- **ANOHNI** — `A2–F5`\n- **Billie Holiday** — `F3–C5`\n- **Celia Cruz** — `E3–G5`\n- **Cesária Évora** — `D3–Bb4`\n- **Cher** — `F2–A5`\n- **Diana Krall** — `E3–C5`\n- **Etta James** — `G#2–B5`\n- **Fiona Apple** — `C3–A5`\n- **Gigi Perez** — `E3–C#5`\n- **Grace Jones** — `D3–Bb4`\n- **Grace Slick** — `E3–D5`\n- **India.Arie** — `A2–C6`\n- **Joan Jett** — `E3–C5`\n- **Judy Garland** — `F3–Eb5`\n- **Karen Carpenter** — `D3–Eb5`\n- **Laufey** — `F3–D5`\n- **Mahalia Jackson** — `E3–F5`\n- **Mercedes Sosa** — `E3–E5`\n- **Monica** — `B2–B5`\n- **Nina Simone** — `G2–F5`\n- **Norah Jones** — `F3–C5`\n- **Patsy Cline** — `E3–D5`\n- **Sade Adu** — `E3–D5`\n- **Sarah Vaughan** — `Eb3–C6`\n- **Shirley Manson** — `F3–A5`\n- **Stevie Nicks** — `E3–D5`\n- **Tasha Cobbs Leonard** — `D3–A5`\n- **Tems** — `D3–D5`\n- **Tina Turner** — `G2–Eb5`\n- **Toni Braxton** — `Bb2–Bb5`\n- **Tracy Chapman** — `D3–D5`\n- **Wynonna Judd** — `E3–E5`\n\n## Mezzo-sopranos\n- **Adele** — `C3–Bb5`\n- **Ado** — `E3–Bb5`\n- **Ailee** — `F3–C6`\n- **Alanis Morissette** — `B2–C6`\n- **Alicia Keys** — `A2–Bb5`\n- **Amy Grant** — `F3–E5`\n- **Amy Lee** — `E3–E6`\n- **Andra Day** — `E3–F#5`\n- **Ángela Aguilar** — `Eb3–G5`\n- **Angélique Kidjo** — `E3–E5`\n- **Ann Wilson** — `G2–E6`\n- **Aretha Franklin** — `G2–E6`\n- **Ashanti** — `F3–C6`\n- **Auli'i Cravalho** — `F3–E5`\n- **Avril Lavigne** — `F3–E5`\n- **Ayra Starr** — `E3–E5`\n- **Ayumi Hamasaki** — `F3–Bb5`\n- **Barbra Streisand** — `Bb2–C6`\n- **Beyoncé** — `B2–Eb6`\n- **Billie Eilish** — `A2–B5`\n- **Brandy** — `G2–E6`\n- **Cécile McLorin Salvant** — `F3–Bb5`\n- **Cecilia Bartoli** — `F3–D6`\n- **Chaka Khan** — `F2–B5`\n- **Charli XCX** — `F3–F5`\n- **Chlöe Bailey** — `B2–D6`\n- **Christina Aguilera** — `C3–C7`\n- **Ciara** — `Bb2–A5`\n- **Coco Jones** — `B2–C#6`\n- **Cynthia Erivo** — `E3–C6`\n- **Debbie Harry** — `F3–E5`\n- **Demi Lovato** — `C#3–D6`\n- **Dolores O'Riordan** — `E3–C6`\n- **Dua Lipa** — `B2–G5`\n- **Dusty Springfield** — `C3–Eb5`\n- **Édith Piaf** — `B2–D5`\n- **Elis Regina** — `E3–Bb5`\n- **Ella Fitzgerald** — `D3–C6`\n- **Ella Mai** — `C3–G#5`\n- **Erykah Badu** — `G2–D5`\n- **Ethel Merman** — `F3–D5`\n- **Faith Evans** — `C#3–C#6`\n- **Faith Hill** — `C3–Bb5`\n- **Fantasia** — `C3–Bb5`\n- **Faye Wong** — `E3–D5`\n- **Florence Welch** — `F3–B5`\n- **Gladys Knight** — `E3–D5`\n- **Gloria Estefan** — `E3–Bb5`\n- **Gwen Stefani** — `F3–Bb5`\n- **H.E.R.** — `C3–F#5`\n- **Halsey** — `C3–G5`\n- **Hikaru Utada** — `E3–Bb5`\n- **Idina Menzel** — `G2–D6`\n- **Janis Joplin** — `A2–Bb5`\n- **Jazmine Sullivan** — `A2–C#6`\n- **Jenni Rivera** — `C3–E5`\n- **Jennifer Hudson** — `A2–C6`\n- **Jessie J** — `C#3–C6`\n- **Jill Scott** — `C3–E5`\n- **Kacey Musgraves** — `G3–D5`\n- **Kali Uchis** — `C3–F5`\n- **Karol G** — `E3–A5`\n- **Katy Perry** — `A2–C6`\n- **Kehlani** — `D3–E5`\n- **Kelly Clarkson** — `D3–Eb6`\n- **Kelly Rowland** — `C3–Eb6`\n- **Kesha** — `D3–E6`\n- **Keyshia Cole** — `C3–Bb5`\n- **Kim Burrell** — `E3–D6`\n- **Kirstin Maldonado** — `F3–C6`\n- **Lady Gaga** — `G2–C6`\n- **Lainey Wilson** — `A3–C#5`\n- **Lana Del Rey** — `C3–D6`\n- **Laura Pausini** — `B2–F5`\n- **Lauren Daigle** — `E3–A5`\n- **Lauryn Hill** — `Bb2–A5`\n- **Lea Michele** — `F3–Bb5`\n- **LiSA** — `F3–F5`\n- **Lizzo** — `E3–Bb5`\n- **Lorde** — `D3–A5`\n- **Loreen** — `B2–B5`\n- **Loren Allred** — `E3–F#5`\n- **Loretta Lynn** — `G3–D5`\n- **Lzzy Hale** — `G2–C6`\n- **Macy Gray** — `A2–D6`\n- **Madonna** — `F3–Bb5`\n- **Mary J. Blige** — `A2–C6`\n- **Miley Cyrus** — `G2–E6`\n- **Miranda Lambert** — `E3–D5`\n- **Miriam Makeba** — `E3–D5`\n- **Normani** — `C#3–Eb7`\n- **Olivia Newton-John** — `F3–Bb5`\n- **Olivia Rodrigo** — `B2–Bb5`\n- **Pat Benatar** — `F3–Bb5`\n- **Patti LuPone** — `E3–G5`\n- **Pink** — `G2–Bb5`\n- **Reba McEntire** — `E3–F5`\n- **Reneé Rapp** — `E3–G#5`\n- **Rihanna** — `B2–B5`\n- **Rosalía** — `F3–Bb5`\n- **Samara Joy** — `B2–D5`\n- **Selena** — `E3–Bb5`\n- **Selena Gomez** — `C3–F5`\n- **Shakira** — `E3–D6`\n- **Shania Twain** — `E3–E5`\n- **Sia** — `C3–C6`\n- **Simone Simons** — `G3–C#6`\n- **Sinéad O'Connor** — `F3–A5`\n- **Summer Walker** — `D3–E5`\n- **Sutton Foster** — `F3–A5`\n- **SZA** — `E3–C6`\n- **Tamia** — `Eb3–D6`\n- **Tammy Wynette** — `G3–E5`\n- **Tatiana Shmayluk** — `A2–G5`\n- **Taylor Swift** — `A2–Bb5`\n- **Tori Amos** — `E3–C6`\n- **Trisha Yearwood** — `D3–A5`\n- **Tyla** — `D3–D5`\n- **Victoria Monét** — `B2–A5`\n- **Whitney Houston** — `A2–C6`\n- **Yebba** — `D3–G5`\n- **Yolanda Adams** — `E3–C6`\n\n## Sopranos\n- **Aaliyah** — `C#3–A5`\n- **Alison Krauss** — `G3–D5`\n- **Anna Netrebko** — `G3–D6`\n- **Ari Lennox** — `Bb2–E6`\n- **Ariana Grande** — `D3–E7`\n- **Audra McDonald** — `F3–C6`\n- **Bernadette Peters** — `G3–A5`\n- **Björk** — `E3–C6`\n- **Britney Spears** — `B2–F#5`\n- **Camila Cabello** — `D3–G5`\n- **Carrie Underwood** — `F3–C6`\n- **CeCe Winans** — `F3–C6`\n- **Celine Dion** — `Bb2–C6`\n- **Chappell Roan** — `E3–Bb5`\n- **Cyndi Lauper** — `F3–C6`\n- **Diana Ross** — `Eb3–C6`\n- **Doja Cat** — `C3–B5`\n- **Dolly Parton** — `F3–Bb5`\n- **Elize Ryd** — `E3–F#6`\n- **Ellie Goulding** — `D3–A5`\n- **Emmylou Harris** — `G3–D5`\n- **Faouzia** — `C#3–G6`\n- **FKA twigs** — `E3–F6`\n- **Floor Jansen** — `E3–E6`\n- **G.E.M.** — `D3–F6`\n- **Gracie Abrams** — `F3–E5`\n- **Halle Bailey** — `C3–C6`\n- **Hayley Williams** — `F3–D6`\n- **IU** — `D3–C6`\n- **Janelle Monáe** — `C#3–Eb6`\n- **Janet Jackson** — `C3–D6`\n- **Jessye Norman** — `E3–C6`\n- **Jhené Aiko** — `B2–E6`\n- **Joan Baez** — `F3–B5`\n- **Joan Sutherland** — `G3–F6`\n- **Joni Mitchell** — `E3–C6`\n- **Julie Andrews** — `G3–C6`\n- **Karen Clark Sheard** — `F3–Eb6`\n- **Kate Bush** — `C3–C6`\n- **Kristin Chenoweth** — `G3–F6`\n- **Lara Fabian** — `Eb3–D6`\n- **Lata Mangeshkar** — `G3–Bb5`\n- **Lea Salonga** — `F3–D6`\n- **LeAnn Rimes** — `F3–F5`\n- **Leontyne Price** — `G3–C6`\n- **Linda Ronstadt** — `E3–Bb5`\n- **Maria Callas** — `F#3–Eb6`\n- **Mariah Carey** — `F2–G7`\n- **Martina McBride** — `F3–F5`\n- **Minnie Riperton** — `D3–F#7`\n- **Misia** — `F3–F6`\n- **Montserrat Caballé** — `G3–C6`\n- **Natalia Lafourcade** — `F3–Bb5`\n- **Patti LaBelle** — `Bb2–E6`\n- **Ravyn Lenae** — `C#3–C#6`\n- **Regina Spektor** — `F3–C6`\n- **Renée Fleming** — `G3–C6`\n- **Rosé** — `F3–C6`\n- **Sabrina Carpenter** — `E3–C6`\n- **Sandi Patty** — `F3–C6`\n- **Sarah Brightman** — `G3–E6`\n- **Sarah McLachlan** — `F3–B5`\n- **Sharon den Adel** — `G3–D6`\n- **Sierra Boggess** — `G3–E6`\n- **Sohyang** — `E3–C7`\n- **Solange** — `C3–E6`\n- **Taeyeon** — `E3–C6`\n- **Tarja Turunen** — `F3–E6`\n- **Tate McRae** — `E3–F5`\n- **Teresa Teng** — `Eb3–B5`\n- **Thalía** — `F3–Bb5`\n- **Tinashe** — `B2–E6`\n- **Tori Kelly** — `B2–E6`\n- **Yma Sumac** — `B2–C#7`\n",
+    "words": 3172,
+    "body": "The method chapters recommend borrowing first from voices built like yours; this appendix is the shelving system that makes it practical. Every entry in the atlas appears below exactly once, grouped by voice type and ordered low to high — basses first, sopranos last — with the cited range beside each name so you can scan a whole shelf at a glance.\n\nA few reminders before you shop. The labels are habitat descriptions, not certifications — the voice-types chapter explains how loosely popular music wears them — and the ranges beside the names are cited spans, with everything that phrase implies about extremes and evidence. Within your own type, expect enormous variety: the point of a shelf is not that its voices sound alike but that their *architecture* is similar enough for techniques to transfer at face value. One shelf away, techniques still transfer with adjustment — usually a transposition — and the chapter on borrowing covers the exchange rate.\n\nIf you have taken the range test, find the shelf whose typical spans bracket your own numbers and start reading there; each name links to the singer's full entry and page. If you have not, the test takes a few minutes and turns this appendix from a list into a mirror. Either way, the shelf you belong to holds more careers, in more genres, than most singers expect to find there — which is the last thing this book has to say, and the most useful.\n\n## Basss\n- **Avi Kaplan** — `Eb1–Db5`\n- **Barry White** — `D2–E4`\n- **Ivan Rebroff** — `F1–F5`\n\n## Bass-baritones\n- **Bryn Terfel** — `F2–A4`\n- **Buju Banton** — `E2–A4`\n- **Fred Hammond** — `E2–Bb4`\n- **Johnny Cash** — `E2–E4`\n- **Josh Turner** — `Ab1–C#5`\n- **Leonard Cohen** — `D2–E4`\n- **Peter Steele** — `F1–G5`\n- **Shaggy** — `E2–F4`\n- **Till Lindemann** — `E2–F4`\n- **Tom Waits** — `A1–G5`\n- **Trace Adkins** — `D2–G4`\n- **Waylon Jennings** — `E2–D4`\n\n## Baritones\n- **Alan Jackson** — `E2–B4`\n- **Alejandro Fernández** — `F#2–C5`\n- **Alex Warren** — `A2–F#4`\n- **Andy Biersack** — `D2–F5`\n- **Anthony Kiedis** — `F2–E5`\n- **Bad Bunny** — `F2–G4`\n- **Bill Withers** — `F2–A4`\n- **Bing Crosby** — `F2–F4`\n- **Blake Shelton** — `D2–C#5`\n- **Bobby McFerrin** — `E2–E6`\n- **Bruce Springsteen** — `F2–C5`\n- **Burna Boy** — `F2–C5`\n- **Carín León** — `F#2–A#4`\n- **Chad Kroeger** — `A1–E5`\n- **Chris Stapleton** — `F2–B4`\n- **Christian Nodal** — `A2–G4`\n- **Cody Johnson** — `F#2–G#4`\n- **Corey Taylor** — `E2–A5`\n- **Damiano David** — `A2–B4`\n- **Dan Reynolds** — `G2–G#5`\n- **Dave Gahan** — `F2–G4`\n- **David Bowie** — `E2–A5`\n- **David Coverdale** — `F2–A5`\n- **David Draiman** — `Bb1–G#5`\n- **David Lee Roth** — `E1–D6`\n- **Dean Martin** — `F2–G4`\n- **Dmitri Hvorostovsky** — `G2–A4`\n- **Drake** — `D2–C5`\n- **Eddie Vedder** — `D2–E5`\n- **Elvis Presley** — `G2–Db5`\n- **Fela Kuti** — `F2–A4`\n- **Frank Sinatra** — `G2–A4`\n- **Freddie Mercury** — `F2–F6`\n- **Fujii Kaze** — `G2–D5`\n- **Garth Brooks** — `G2–A4`\n- **George Jones** — `B1–B4`\n- **George Michael** — `E2–A5`\n- **George Strait** — `A2–E4`\n- **Giveon** — `F#2–F#4`\n- **Glenn Danzig** — `C#2–Eb5`\n- **Glenn Hughes** — `D2–D6`\n- **Gregory Porter** — `F2–G4`\n- **Harry Styles** — `E2–F5`\n- **Hozier** — `E2–E5`\n- **Hugh Jackman** — `A2–B4`\n- **Ian Curtis** — `G2–E4`\n- **Jacky Cheung** — `E3–C5`\n- **Jacob Collier** — `D2–D6`\n- **James Brown** — `F2–C5`\n- **James Hetfield** — `E2–C5`\n- **James Taylor** — `F2–A4`\n- **Jay Chou** — `A2–B4`\n- **Jelly Roll** — `G2–G4`\n- **Jim Morrison** — `E2–Bb4`\n- **Joe Cocker** — `G2–Bb4`\n- **Joe Elliott** — `D2–G#5`\n- **Jonathan Davis** — `A1–F#5`\n- **Josh Groban** — `G2–A4`\n- **Juice WRLD** — `G2–C5`\n- **Julian Casablancas** — `C2–F#5`\n- **Julio Iglesias** — `B2–G4`\n- **Kane Brown** — `E2–F4`\n- **Kenny Rogers** — `D2–D5`\n- **Kenshi Yonezu** — `F2–D5`\n- **Kid Cudi** — `A1–F5`\n- **Kurt Cobain** — `F2–E5`\n- **Layne Staley** — `E2–G5`\n- **Lewis Capaldi** — `F2–E5`\n- **Louis Armstrong** — `F2–G4`\n- **Luke Combs** — `A2–A4`\n- **M. Shadows** — `D2–A5`\n- **Mac Miller** — `C#2–E4`\n- **Maluma** — `D3–F4`\n- **Merle Haggard** — `F2–E4`\n- **Michael Bublé** — `G2–A4`\n- **Michael Hutchence** — `B1–F#5`\n- **Michael McDonald** — `G#2–A5`\n- **Mike Patton** — `Eb1–Eb7`\n- **Morgan Wallen** — `A2–G4`\n- **Morrissey** — `F#2–B4`\n- **Nat King Cole** — `F2–G4`\n- **Neil Diamond** — `D2–G#4`\n- **Nick Cave** — `D2–G5`\n- **Noah Sebastian** — `A2–D5`\n- **Orville Peck** — `E2–F#5`\n- **Otis Redding** — `F2–C5`\n- **Paul Rodgers** — `E2–G#5`\n- **Peter Gabriel** — `F#2–A4`\n- **Peter Tosh** — `F2–G4`\n- **Post Malone** — `E2–E5`\n- **Randy Travis** — `F2–E4`\n- **Rauw Alejandro** — `G2–C5`\n- **Rick Astley** — `F2–D5`\n- **Scott Hoying** — `F2–Bb5`\n- **Scott Stapp** — `D2–D5`\n- **Scott Weiland** — `E2–C#5`\n- **Serj Tankian** — `F2–C6`\n- **Sombr** — `A2–F#4`\n- **Stromae** — `G2–G4`\n- **Sturgill Simpson** — `Eb2–C#6`\n- **Teddy Pendergrass** — `E2–Bb4`\n- **Teddy Swims** — `E2–A5`\n- **Tim McGraw** — `F2–B4`\n- **Tobias Forge** — `D2–G#5`\n- **Tom Jones** — `G2–Bb4`\n- **Tom Petty** — `C2–Bb5`\n- **Tony Bennett** — `A2–A4`\n- **Tyler, the Creator** — `B1–B5`\n- **V** — `D2–D5`\n- **Ville Valo** — `F#1–B5`\n- **XXXTentacion** — `C3–F5`\n- **Zach Bryan** — `G2–F#4`\n\n## Tenors\n- **Aaron Neville** — `G2–Bb5`\n- **Aaron Tveit** — `A2–D5`\n- **Adam Lambert** — `F2–C6`\n- **Adam Levine** — `A2–C6`\n- **Akon** — `C3–Bb4`\n- **Al Green** — `F2–Bb5`\n- **Al Jarreau** — `G2–A5`\n- **Alex Turner** — `E2–G5`\n- **Anderson .Paak** — `C3–F5`\n- **Andrea Bocelli** — `C3–B4`\n- **Arijit Singh** — `C3–C5`\n- **Axl Rose** — `F1–Bb6`\n- **Baekhyun** — `F2–E5`\n- **Barry Gibb** — `F2–D6`\n- **Barry Manilow** — `D2–G5`\n- **BeBe Winans** — `A2–E5`\n- **Ben Platt** — `A2–F5`\n- **Benson Boone** — `G2–A5`\n- **Billie Joe Armstrong** — `F2–C5`\n- **Billy Corgan** — `F2–E5`\n- **Billy Joel** — `F2–C6`\n- **Bob Dylan** — `E2–A4`\n- **Bob Marley** — `F2–C5`\n- **Bobby Hatfield** — `B2–Eb6`\n- **Bono** — `Eb2–Db5`\n- **Boy George** — `D2–A5`\n- **Brad Delp** — `G#2–D6`\n- **Brandon Boyd** — `F2–A5`\n- **Brandon Flowers** — `F#2–G#5`\n- **Brendon Urie** — `E2–C6`\n- **Brian Johnson** — `A2–E5`\n- **Brian McKnight** — `A2–Bb5`\n- **Brian Wilson** — `C2–Bb5`\n- **Bruce Dickinson** — `E2–C6`\n- **Bruno Mars** — `G2–D6`\n- **Bryan Adams** — `Eb2–E6`\n- **Bryson Tiller** — `A2–C6`\n- **Caetano Veloso** — `A2–C5`\n- **Caleb Followill** — `A2–E5`\n- **Camilo Sesto** — `A2–E5`\n- **CeeLo Green** — `Bb1–C6`\n- **Charles Aznavour** — `D3–B4`\n- **Charlie Puth** — `G2–C6`\n- **Chen** — `G2–F5`\n- **Chester Bennington** — `G2–A5`\n- **Childish Gambino** — `Bb1–C6`\n- **Chino Moreno** — `F2–A5`\n- **Chris Brown** — `C3–G#5`\n- **Chris Cornell** — `E2–A5`\n- **Chris Martin** — `D2–C6`\n- **Chris Tomlin** — `A2–D5`\n- **Christopher Cross** — `D3–A#4`\n- **Colm Wilkinson** — `G2–C5`\n- **Conan Gray** — `C3–G5`\n- **Cristian Castro** — `G2–C6`\n- **Curtis Mayfield** — `G2–Bb5`\n- **D'Angelo** — `G2–Bb5`\n- **Daniel Caesar** — `C#3–F#5`\n- **Daryl Hall** — `E2–C6`\n- **David Ruffin** — `A2–E6`\n- **Dennis Brown** — `G2–D5`\n- **Dennis DeYoung** — `E2–A5`\n- **Devin Townsend** — `F2–C6`\n- **Dimash Kudaibergen** — `C2–C8`\n- **Don Henley** — `F#2–D#5`\n- **Donnie McClurkin** — `B2–E5`\n- **Donny Hathaway** — `F2–C5`\n- **Ed Sheeran** — `G2–A5`\n- **Elton John** — `F2–F5`\n- **Enrico Caruso** — `B2–Bb4`\n- **Enrique Iglesias** — `C#3–G#4`\n- **Frank Ocean** — `C#2–G5`\n- **Frankie Valli** — `A2–C6`\n- **Geddy Lee** — `F2–Bb5`\n- **Geoff Tate** — `E2–C6`\n- **Gerard Way** — `F#2–F#5`\n- **Glen Campbell** — `F2–A4`\n- **Hank Williams** — `A2–A4`\n- **Hua Chenyu** — `G2–Bb5`\n- **Ian Gillan** — `G2–Bb5`\n- **Jack White** — `E2–A6`\n- **Jackie Wilson** — `A2–C#6`\n- **James Blake** — `F2–F5`\n- **Jason Derulo** — `A2–Bb5`\n- **Jason Mraz** — `F2–Bb5`\n- **Jeff Buckley** — `E2–D6`\n- **Jeremy Jordan** — `A2–E5`\n- **Jimin** — `A2–F5`\n- **Jimmy Cliff** — `F2–C5`\n- **JJ Lin** — `G2–G5`\n- **John Denver** — `G2–B5`\n- **John Legend** — `E2–Bb5`\n- **John Lennon** — `G2–D5`\n- **Johnny Mathis** — `B2–G5`\n- **Jon Anderson** — `C#3–F#5`\n- **Jon Bon Jovi** — `E2–D5`\n- **Jonas Kaufmann** — `B2–C5`\n- **Jonathan Groff** — `A2–C5`\n- **Jonghyun** — `F2–E5`\n- **José Carreras** — `C3–C5`\n- **José José** — `A2–D5`\n- **Josh Kiszka** — `C3–C#6`\n- **Juan Diego Flórez** — `C3–E5`\n- **Juan Gabriel** — `A2–C5`\n- **Jungkook** — `F2–A5`\n- **Justin Bieber** — `A2–Bb5`\n- **Justin Timberlake** — `A2–C6`\n- **Justin Vernon** — `F2–F5`\n- **Keith Urban** — `F2–A5`\n- **Kellin Quinn** — `B2–A5`\n- **Kenny Chesney** — `D#2–F#4`\n- **Kenny Loggins** — `D2–C#6`\n- **Kevin Cronin** — `G2–A4`\n- **Klaus Meine** — `G2–C6`\n- **Lenny Kravitz** — `A2–Bb5`\n- **Leon Bridges** — `B2–G4`\n- **Lionel Richie** — `F2–G5`\n- **Little Richard** — `F2–Bb5`\n- **Lou Gramm** — `B1–A5`\n- **Luciano Pavarotti** — `C3–C5`\n- **Luis Fonsi** — `E3–A4`\n- **Luis Miguel** — `A2–D5`\n- **Luther Vandross** — `B2–A5`\n- **Marc Anthony** — `A2–E5`\n- **Mario Lanza** — `C3–C5`\n- **Marvin Gaye** — `F2–Bb5`\n- **Marvin Winans** — `A2–F5`\n- **Matt Bellamy** — `E2–D6`\n- **Matty Healy** — `F2–A5`\n- **Maxwell** — `A2–C6`\n- **Maynard James Keenan** — `F2–A5`\n- **Meat Loaf** — `F2–Eb6`\n- **Mel Tormé** — `G2–C5`\n- **Michael Crawford** — `A2–Bb4`\n- **Michael Jackson** — `Eb2–F6`\n- **Michael Kiske** — `F2–C6`\n- **Michael W. Smith** — `A2–D5`\n- **Mick Jagger** — `F2–F5`\n- **Miguel** — `C3–Bb5`\n- **Mika** — `F#2–G#5`\n- **Milton Nascimento** — `G2–Bb5`\n- **Morten Harket** — `A2–E5`\n- **Musiq Soulchild** — `C3–F#5`\n- **Myles Kennedy** — `Bb1–D6`\n- **Myles Smith** — `B2–G4`\n- **Nate Ruess** — `G2–A5`\n- **Ne-Yo** — `Eb2–A5`\n- **Neil Young** — `G2–C5`\n- **Noah Kahan** — `B2–G#4`\n- **Oli Sykes** — `Eb2–G#5`\n- **Omar Apollo** — `C3–F#5`\n- **Ozuna** — `F#2–C5`\n- **Ozzy Osbourne** — `G2–D5`\n- **Park Hyo Shin** — `F2–E5`\n- **Patrick Stump** — `C3–B5`\n- **Paul McCartney** — `F2–E5`\n- **Paul Simon** — `A2–D5`\n- **Peso Pluma** — `B2–F#4`\n- **Pharrell Williams** — `Eb2–Bb5`\n- **Phil Collins** — `F2–Db5`\n- **Plácido Domingo** — `A2–C5`\n- **Prince** — `E2–B5`\n- **Ramin Karimloo** — `G2–C5`\n- **Ray Charles** — `C2–Bb5`\n- **Rema** — `C#3–E5`\n- **Ricky Martin** — `B2–C5`\n- **Rivers Cuomo** — `Eb2–G5`\n- **Rob Halford** — `F2–C6`\n- **Robbie Williams** — `F2–B5`\n- **Robert Plant** — `F2–A5`\n- **Robert Smith** — `C#3–C5`\n- **Rod Stewart** — `E2–C5`\n- **Roger Daltrey** — `F2–C5`\n- **Ronnie James Dio** — `F2–Bb5`\n- **Ronnie Radke** — `D2–G5`\n- **Roy Orbison** — `E2–E5`\n- **Rufus Wainwright** — `A2–D5`\n- **Salif Keita** — `B2–D5`\n- **Sam Cooke** — `A2–E5`\n- **Sam Fender** — `F#2–F5`\n- **Sam Ryder** — `C4–E6`\n- **Sammy Hagar** — `D2–B5`\n- **Seal** — `Eb2–G5`\n- **Sebastian Bach** — `F2–C6`\n- **Shawn Mendes** — `G2–E5`\n- **Smokey Robinson** — `A2–Bb5`\n- **Steve Lacy** — `C#3–E5`\n- **Steve Perry** — `G2–A5`\n- **Steven Tyler** — `F2–C6`\n- **Stevie Wonder** — `C2–E6`\n- **Sting** — `Eb2–E5`\n- **T-Pain** — `B2–F5`\n- **Taeyang** — `A2–F5`\n- **The Weeknd** — `G2–B5`\n- **Thom Yorke** — `F2–F5`\n- **Toots Hibbert** — `G2–C5`\n- **Trey Songz** — `F2–G5`\n- **Troye Sivan** — `C3–F5`\n- **Tyler Childers** — `E2–C6`\n- **Tyler Joseph** — `A2–F6`\n- **Usher** — `Bb2–A5`\n- **Van Morrison** — `G2–D5`\n- **Vicente Fernández** — `A2–C5`\n- **Vince Gill** — `A2–C5`\n- **Vitas** — `D2–Eb6`\n- **Willie Nelson** — `G2–F4`\n- **Wilson Pickett** — `Bb2–E6`\n- **Wizkid** — `G2–C5`\n- **Youssou N'Dour** — `A2–D5`\n- **Zayn** — `D3–B5`\n\n## Countertenors\n- **King Diamond** — `F2–D6`\n- **Mitch Grassi** — `F2–C7`\n- **Philip Bailey** — `G2–D6`\n- **Sam Smith** — `G2–C6`\n\n## Contraltos\n- **Amy Winehouse** — `C3–Eb5`\n- **Anita Baker** — `C#3–C#6`\n- **Annie Lennox** — `G2–A5`\n- **ANOHNI** — `A2–F5`\n- **Billie Holiday** — `F3–C5`\n- **Celia Cruz** — `E3–G5`\n- **Cesária Évora** — `D3–Bb4`\n- **Cher** — `F2–A5`\n- **Diana Krall** — `E3–C5`\n- **Etta James** — `G#2–B5`\n- **Fiona Apple** — `C3–A5`\n- **Gigi Perez** — `E3–C#5`\n- **Grace Jones** — `D3–Bb4`\n- **Grace Slick** — `E3–D5`\n- **India.Arie** — `A2–C6`\n- **Joan Jett** — `E3–C5`\n- **Judy Garland** — `F3–Eb5`\n- **Karen Carpenter** — `D3–Eb5`\n- **Laufey** — `F3–D5`\n- **Mahalia Jackson** — `E3–F5`\n- **Mercedes Sosa** — `E3–E5`\n- **Monica** — `B2–B5`\n- **Nina Simone** — `G2–F5`\n- **Norah Jones** — `F3–C5`\n- **Patsy Cline** — `E3–D5`\n- **Sade Adu** — `E3–D5`\n- **Sarah Vaughan** — `Eb3–C6`\n- **Shirley Manson** — `F3–A5`\n- **Stevie Nicks** — `E3–D5`\n- **Tasha Cobbs Leonard** — `D3–A5`\n- **Tems** — `D3–D5`\n- **Tina Turner** — `G2–Eb5`\n- **Toni Braxton** — `Bb2–Bb5`\n- **Tracy Chapman** — `D3–D5`\n- **Wynonna Judd** — `E3–E5`\n\n## Mezzo-sopranos\n- **Adele** — `C3–Bb5`\n- **Ado** — `E3–Bb5`\n- **Ailee** — `F3–C6`\n- **Alanis Morissette** — `B2–C6`\n- **Alicia Keys** — `A2–Bb5`\n- **Amy Grant** — `F3–E5`\n- **Amy Lee** — `E3–E6`\n- **Andra Day** — `E3–F#5`\n- **Ángela Aguilar** — `Eb3–G5`\n- **Angélique Kidjo** — `E3–E5`\n- **Ann Wilson** — `G2–E6`\n- **Aretha Franklin** — `G2–E6`\n- **Ashanti** — `F3–C6`\n- **Auli'i Cravalho** — `F3–E5`\n- **Avril Lavigne** — `F3–E5`\n- **Ayra Starr** — `E3–E5`\n- **Ayumi Hamasaki** — `F3–Bb5`\n- **Barbra Streisand** — `Bb2–C6`\n- **Beyoncé** — `B2–Eb6`\n- **Billie Eilish** — `A2–B5`\n- **Bonnie Tyler** — `D3–G5`\n- **Brandy** — `G2–E6`\n- **Cécile McLorin Salvant** — `F3–Bb5`\n- **Cecilia Bartoli** — `F3–D6`\n- **Chaka Khan** — `F2–B5`\n- **Charli XCX** — `F3–F5`\n- **Chlöe Bailey** — `B2–D6`\n- **Christina Aguilera** — `C3–C7`\n- **Ciara** — `Bb2–A5`\n- **Coco Jones** — `B2–C#6`\n- **Cynthia Erivo** — `E3–C6`\n- **Debbie Harry** — `F3–E5`\n- **Demi Lovato** — `C#3–D6`\n- **Dolores O'Riordan** — `E3–C6`\n- **Dua Lipa** — `B2–G5`\n- **Dusty Springfield** — `C3–Eb5`\n- **Édith Piaf** — `B2–D5`\n- **Elis Regina** — `E3–Bb5`\n- **Ella Fitzgerald** — `D3–C6`\n- **Ella Mai** — `C3–G#5`\n- **Emeli Sandé** — `D3–F5`\n- **Erykah Badu** — `G2–D5`\n- **Ethel Merman** — `F3–D5`\n- **Faith Evans** — `C#3–C#6`\n- **Faith Hill** — `C3–Bb5`\n- **Fantasia** — `C3–Bb5`\n- **Faye Wong** — `E3–D5`\n- **Florence Welch** — `F3–B5`\n- **Gladys Knight** — `E3–D5`\n- **Gloria Estefan** — `E3–Bb5`\n- **Gwen Stefani** — `F3–Bb5`\n- **H.E.R.** — `C3–F#5`\n- **Halsey** — `C3–G5`\n- **Hikaru Utada** — `E3–Bb5`\n- **Idina Menzel** — `G2–D6`\n- **Janis Joplin** — `A2–Bb5`\n- **Jazmine Sullivan** — `A2–C#6`\n- **Jenni Rivera** — `C3–E5`\n- **Jennifer Hudson** — `A2–C6`\n- **Jessie J** — `C#3–C6`\n- **Jill Scott** — `C3–E5`\n- **JoJo** — `A2–Bb6`\n- **Joss Stone** — `C3–G5`\n- **Kacey Musgraves** — `G3–D5`\n- **Kali Uchis** — `C3–F5`\n- **Karol G** — `E3–A5`\n- **Katy Perry** — `A2–C6`\n- **Kehlani** — `D3–E5`\n- **Kelly Clarkson** — `D3–Eb6`\n- **Kelly Rowland** — `C3–Eb6`\n- **Kesha** — `D3–E6`\n- **Keyshia Cole** — `C3–Bb5`\n- **Kim Burrell** — `E3–D6`\n- **Kirstin Maldonado** — `F3–C6`\n- **Lady Gaga** — `G2–C6`\n- **Lainey Wilson** — `A3–C#5`\n- **Lana Del Rey** — `C3–D6`\n- **Laura Pausini** — `B2–F5`\n- **Lauren Daigle** — `E3–A5`\n- **Lauryn Hill** — `Bb2–A5`\n- **Lea Michele** — `F3–Bb5`\n- **LiSA** — `F3–F5`\n- **Lizzo** — `E3–Bb5`\n- **Lola Young** — `E3–Bb5`\n- **Lorde** — `D3–A5`\n- **Loreen** — `B2–B5`\n- **Loren Allred** — `E3–F#5`\n- **Loretta Lynn** — `G3–D5`\n- **Lzzy Hale** — `G2–C6`\n- **Macy Gray** — `A2–D6`\n- **Madonna** — `F3–Bb5`\n- **MARINA** — `Bb2–C#6`\n- **Mary J. Blige** — `A2–C6`\n- **Meghan Trainor** — `Eb3–B5`\n- **Miley Cyrus** — `G2–E6`\n- **Miranda Lambert** — `E3–D5`\n- **Miriam Makeba** — `E3–D5`\n- **Normani** — `C#3–Eb7`\n- **Olivia Newton-John** — `F3–Bb5`\n- **Olivia Rodrigo** — `B2–Bb5`\n- **Pat Benatar** — `F3–Bb5`\n- **Patti LuPone** — `E3–G5`\n- **Pink** — `G2–Bb5`\n- **RAYE** — `C#3–D6`\n- **Reba McEntire** — `E3–F5`\n- **Reneé Rapp** — `E3–G#5`\n- **Rihanna** — `B2–B5`\n- **Rosalía** — `F3–Bb5`\n- **Samara Joy** — `B2–D5`\n- **Sara Bareilles** — `B2–E6`\n- **Selena** — `E3–Bb5`\n- **Selena Gomez** — `C3–F5`\n- **Shakira** — `E3–D6`\n- **Shania Twain** — `E3–E5`\n- **Sia** — `C3–C6`\n- **Simone Simons** — `G3–C#6`\n- **Sinéad O'Connor** — `F3–A5`\n- **Summer Walker** — `D3–E5`\n- **Sutton Foster** — `F3–A5`\n- **SZA** — `E3–C6`\n- **Tamia** — `Eb3–D6`\n- **Tammy Wynette** — `G3–E5`\n- **Tatiana Shmayluk** — `A2–G5`\n- **Taylor Swift** — `A2–Bb5`\n- **Tori Amos** — `E3–C6`\n- **Trisha Yearwood** — `D3–A5`\n- **Tyla** — `D3–D5`\n- **Victoria Monét** — `B2–A5`\n- **Whitney Houston** — `A2–C6`\n- **Yebba** — `D3–G5`\n- **Yolanda Adams** — `E3–C6`\n\n## Sopranos\n- **Aaliyah** — `C#3–A5`\n- **Alison Krauss** — `G3–D5`\n- **Anna Netrebko** — `G3–D6`\n- **Ari Lennox** — `Bb2–E6`\n- **Ariana Grande** — `D3–E7`\n- **Audra McDonald** — `F3–C6`\n- **Aurora** — `Eb3–E6`\n- **Ava Max** — `E3–C#6`\n- **Bebe Rexha** — `D3–B5`\n- **Bernadette Peters** — `G3–A5`\n- **Björk** — `E3–C6`\n- **Britney Spears** — `B2–F#5`\n- **Camila Cabello** — `D3–G5`\n- **Caroline Polachek** — `G#2–F6`\n- **Carrie Underwood** — `F3–C6`\n- **CeCe Winans** — `F3–C6`\n- **Celine Dion** — `Bb2–C6`\n- **Chappell Roan** — `E3–Bb5`\n- **Cyndi Lauper** — `F3–C6`\n- **Diana Ross** — `Eb3–C6`\n- **Doja Cat** — `C3–B5`\n- **Dolly Parton** — `F3–Bb5`\n- **Elize Ryd** — `E3–F#6`\n- **Ellie Goulding** — `D3–A5`\n- **Emmylou Harris** — `G3–D5`\n- **Faouzia** — `C#3–G6`\n- **FKA twigs** — `E3–F6`\n- **Floor Jansen** — `E3–E6`\n- **G.E.M.** — `D3–F6`\n- **Gracie Abrams** — `F3–E5`\n- **Grimes** — `D3–G6`\n- **Halle Bailey** — `C3–C6`\n- **Hayley Williams** — `F3–D6`\n- **IU** — `D3–C6`\n- **Janelle Monáe** — `C#3–Eb6`\n- **Janet Jackson** — `C3–D6`\n- **Jessye Norman** — `E3–C6`\n- **Jewel** — `E3–E6`\n- **Jhené Aiko** — `B2–E6`\n- **Joan Baez** — `F3–B5`\n- **Joan Sutherland** — `G3–F6`\n- **Joni Mitchell** — `E3–C6`\n- **Julie Andrews** — `G3–C6`\n- **Karen Clark Sheard** — `F3–Eb6`\n- **Kate Bush** — `C3–C6`\n- **Kim Petras** — `D3–Bb6`\n- **Kristin Chenoweth** — `G3–F6`\n- **Lara Fabian** — `Eb3–D6`\n- **Lata Mangeshkar** — `G3–Bb5`\n- **Lea Salonga** — `F3–D6`\n- **LeAnn Rimes** — `F3–F5`\n- **Leona Lewis** — `C3–F#6`\n- **Leontyne Price** — `G3–C6`\n- **Linda Ronstadt** — `E3–Bb5`\n- **Madison Beer** — `C3–C6`\n- **Maria Callas** — `F#3–Eb6`\n- **Mariah Carey** — `F2–G7`\n- **Martina McBride** — `F3–F5`\n- **Melanie Martinez** — `F3–D5`\n- **Minnie Riperton** — `D3–F#7`\n- **Misia** — `F3–F6`\n- **Mitski** — `E3–F#5`\n- **Montserrat Caballé** — `G3–C6`\n- **Natalia Lafourcade** — `F3–Bb5`\n- **Nicole Scherzinger** — `D3–G#6`\n- **Patti LaBelle** — `Bb2–E6`\n- **Phoebe Bridgers** — `C#3–E5`\n- **Rachel Zegler** — `Db3–E6`\n- **Ravyn Lenae** — `C#3–C#6`\n- **Regina Spektor** — `F3–C6`\n- **Renée Fleming** — `G3–C6`\n- **Rosé** — `F3–C6`\n- **Sabrina Carpenter** — `E3–C6`\n- **Sandi Patty** — `F3–C6`\n- **Sarah Brightman** — `G3–E6`\n- **Sarah McLachlan** — `F3–B5`\n- **Sharon den Adel** — `G3–D6`\n- **Sierra Boggess** — `G3–E6`\n- **Sohyang** — `E3–C7`\n- **Solange** — `C3–E6`\n- **Taeyeon** — `E3–C6`\n- **Tarja Turunen** — `F3–E6`\n- **Tate McRae** — `E3–F5`\n- **Teresa Teng** — `Eb3–B5`\n- **Thalía** — `F3–Bb5`\n- **Tinashe** — `B2–E6`\n- **Tori Kelly** — `B2–E6`\n- **Yma Sumac** — `B2–C#7`\n- **Zara Larsson** — `D3–C#6`\n",
     "entries": []
   }
 ];
@@ -9959,8 +10690,22 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Pop",
     "summary": "The current and recent generation of pop leads — whisper-pop, fry onsets, whistle flexes and conversational belts — and how the microphone rewrote what counts as power.",
     "free": false,
-    "words": 3503,
+    "words": 5711,
     "singers": [
+      {
+        "slug": "bonnie-tyler",
+        "name": "Bonnie Tyler",
+        "voiceType": "Mezzo-soprano",
+        "low": "D3",
+        "high": "G5"
+      },
+      {
+        "slug": "jewel",
+        "name": "Jewel",
+        "voiceType": "Soprano",
+        "low": "E3",
+        "high": "E6"
+      },
       {
         "slug": "beyonce",
         "name": "Beyoncé",
@@ -9997,11 +10742,39 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "Eb6"
       },
       {
+        "slug": "joss-stone",
+        "name": "Joss Stone",
+        "voiceType": "Mezzo-soprano",
+        "low": "C3",
+        "high": "G5"
+      },
+      {
+        "slug": "jojo",
+        "name": "JoJo",
+        "voiceType": "Mezzo-soprano",
+        "low": "A2",
+        "high": "Bb6"
+      },
+      {
+        "slug": "nicole-scherzinger",
+        "name": "Nicole Scherzinger",
+        "voiceType": "Soprano",
+        "low": "D3",
+        "high": "G#6"
+      },
+      {
         "slug": "rihanna",
         "name": "Rihanna",
         "voiceType": "Mezzo-soprano",
         "low": "B2",
         "high": "B5"
+      },
+      {
+        "slug": "leona-lewis",
+        "name": "Leona Lewis",
+        "voiceType": "Soprano",
+        "low": "C3",
+        "high": "F#6"
       },
       {
         "slug": "miley-cyrus",
@@ -10016,6 +10789,13 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "voiceType": "Mezzo-soprano",
         "low": "A2",
         "high": "Bb5"
+      },
+      {
+        "slug": "sara-bareilles",
+        "name": "Sara Bareilles",
+        "voiceType": "Mezzo-soprano",
+        "low": "B2",
+        "high": "E6"
       },
       {
         "slug": "adele",
@@ -10067,6 +10847,20 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "A5"
       },
       {
+        "slug": "marina",
+        "name": "MARINA",
+        "voiceType": "Mezzo-soprano",
+        "low": "Bb2",
+        "high": "C#6"
+      },
+      {
+        "slug": "emeli-sande",
+        "name": "Emeli Sandé",
+        "voiceType": "Mezzo-soprano",
+        "low": "D3",
+        "high": "F5"
+      },
+      {
         "slug": "jessie-j",
         "name": "Jessie J",
         "voiceType": "Mezzo-soprano",
@@ -10086,6 +10880,13 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "voiceType": "Mezzo-soprano",
         "low": "C3",
         "high": "C6"
+      },
+      {
+        "slug": "grimes",
+        "name": "Grimes",
+        "voiceType": "Soprano",
+        "low": "D3",
+        "high": "G6"
       },
       {
         "slug": "ariana-grande",
@@ -10123,6 +10924,41 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "E6"
       },
       {
+        "slug": "zara-larsson",
+        "name": "Zara Larsson",
+        "voiceType": "Soprano",
+        "low": "D3",
+        "high": "C#6"
+      },
+      {
+        "slug": "meghan-trainor",
+        "name": "Meghan Trainor",
+        "voiceType": "Mezzo-soprano",
+        "low": "Eb3",
+        "high": "B5"
+      },
+      {
+        "slug": "melanie-martinez",
+        "name": "Melanie Martinez",
+        "voiceType": "Soprano",
+        "low": "F3",
+        "high": "D5"
+      },
+      {
+        "slug": "aurora",
+        "name": "Aurora",
+        "voiceType": "Soprano",
+        "low": "Eb3",
+        "high": "E6"
+      },
+      {
+        "slug": "bebe-rexha",
+        "name": "Bebe Rexha",
+        "voiceType": "Soprano",
+        "low": "D3",
+        "high": "B5"
+      },
+      {
         "slug": "halsey",
         "name": "Halsey",
         "voiceType": "Mezzo-soprano",
@@ -10151,11 +10987,60 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "Bb5"
       },
       {
+        "slug": "mitski",
+        "name": "Mitski",
+        "voiceType": "Soprano",
+        "low": "E3",
+        "high": "F#5"
+      },
+      {
+        "slug": "raye",
+        "name": "RAYE",
+        "voiceType": "Mezzo-soprano",
+        "low": "C#3",
+        "high": "D6"
+      },
+      {
         "slug": "dua-lipa",
         "name": "Dua Lipa",
         "voiceType": "Mezzo-soprano",
         "low": "B2",
         "high": "G5"
+      },
+      {
+        "slug": "kim-petras",
+        "name": "Kim Petras",
+        "voiceType": "Soprano",
+        "low": "D3",
+        "high": "Bb6"
+      },
+      {
+        "slug": "phoebe-bridgers",
+        "name": "Phoebe Bridgers",
+        "voiceType": "Soprano",
+        "low": "C#3",
+        "high": "E5"
+      },
+      {
+        "slug": "ava-max",
+        "name": "Ava Max",
+        "voiceType": "Soprano",
+        "low": "E3",
+        "high": "C#6"
+      },
+      {
+        "slug": "madison-beer",
+        "name": "Madison Beer",
+        "voiceType": "Soprano",
+        "low": "C3",
+        "high": "C6"
+      },
+      {
+        "slug": "caroline-polachek",
+        "name": "Caroline Polachek",
+        "voiceType": "Soprano",
+        "low": "G#2",
+        "high": "F6"
       },
       {
         "slug": "doja-cat",
@@ -10200,11 +11085,25 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "Bb5"
       },
       {
+        "slug": "rachel-zegler",
+        "name": "Rachel Zegler",
+        "voiceType": "Soprano",
+        "low": "Db3",
+        "high": "E6"
+      },
+      {
         "slug": "renee-rapp",
         "name": "Reneé Rapp",
         "voiceType": "Mezzo-soprano",
         "low": "E3",
         "high": "G#5"
+      },
+      {
+        "slug": "lola-young",
+        "name": "Lola Young",
+        "voiceType": "Mezzo-soprano",
+        "low": "E3",
+        "high": "Bb5"
       }
     ]
   },
@@ -11811,8 +12710,36 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Soul, R&B and gospel",
     "summary": "The streaming era's R&B — falsetto confessions, whisper-runs, baritone outliers and produced nonchalance — and how the genre traded the shout for the microphone's trust.",
     "free": false,
-    "words": 3749,
+    "words": 5476,
     "singers": [
+      {
+        "slug": "jackie-wilson",
+        "name": "Jackie Wilson",
+        "voiceType": "Tenor",
+        "low": "A2",
+        "high": "C#6"
+      },
+      {
+        "slug": "bobby-hatfield",
+        "name": "Bobby Hatfield",
+        "voiceType": "Tenor",
+        "low": "B2",
+        "high": "Eb6"
+      },
+      {
+        "slug": "david-ruffin",
+        "name": "David Ruffin",
+        "voiceType": "Tenor",
+        "low": "A2",
+        "high": "E6"
+      },
+      {
+        "slug": "wilson-pickett",
+        "name": "Wilson Pickett",
+        "voiceType": "Tenor",
+        "low": "Bb2",
+        "high": "E6"
+      },
       {
         "slug": "janet-jackson",
         "name": "Janet Jackson",
@@ -11826,6 +12753,13 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "voiceType": "Soprano",
         "low": "C#3",
         "high": "A5"
+      },
+      {
+        "slug": "ceelo-green",
+        "name": "CeeLo Green",
+        "voiceType": "Tenor",
+        "low": "Bb1",
+        "high": "C6"
       },
       {
         "slug": "faith-evans",
@@ -11870,11 +12804,25 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "C6"
       },
       {
+        "slug": "pharrell-williams",
+        "name": "Pharrell Williams",
+        "voiceType": "Tenor",
+        "low": "Eb2",
+        "high": "Bb5"
+      },
+      {
         "slug": "ashanti",
         "name": "Ashanti",
         "voiceType": "Mezzo-soprano",
         "low": "F3",
         "high": "C6"
+      },
+      {
+        "slug": "akon",
+        "name": "Akon",
+        "voiceType": "Tenor",
+        "low": "C3",
+        "high": "Bb4"
       },
       {
         "slug": "ciara",
@@ -11912,11 +12860,46 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "F5"
       },
       {
+        "slug": "trey-songz",
+        "name": "Trey Songz",
+        "voiceType": "Tenor",
+        "low": "F2",
+        "high": "G5"
+      },
+      {
+        "slug": "ne-yo",
+        "name": "Ne-Yo",
+        "voiceType": "Tenor",
+        "low": "Eb2",
+        "high": "A5"
+      },
+      {
+        "slug": "kid-cudi",
+        "name": "Kid Cudi",
+        "voiceType": "Baritone",
+        "low": "A1",
+        "high": "F5"
+      },
+      {
         "slug": "solange",
         "name": "Solange",
         "voiceType": "Soprano",
         "low": "C3",
         "high": "E6"
+      },
+      {
+        "slug": "drake",
+        "name": "Drake",
+        "voiceType": "Baritone",
+        "low": "D2",
+        "high": "C5"
+      },
+      {
+        "slug": "jason-derulo",
+        "name": "Jason Derulo",
+        "voiceType": "Tenor",
+        "low": "A2",
+        "high": "Bb5"
       },
       {
         "slug": "janelle-monae",
@@ -11926,6 +12909,13 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "Eb6"
       },
       {
+        "slug": "mac-miller",
+        "name": "Mac Miller",
+        "voiceType": "Baritone",
+        "low": "C#2",
+        "high": "E4"
+      },
+      {
         "slug": "miguel",
         "name": "Miguel",
         "voiceType": "Tenor",
@@ -11933,11 +12923,25 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "Bb5"
       },
       {
+        "slug": "childish-gambino",
+        "name": "Childish Gambino",
+        "voiceType": "Tenor",
+        "low": "Bb1",
+        "high": "C6"
+      },
+      {
         "slug": "frank-ocean",
         "name": "Frank Ocean",
         "voiceType": "Tenor",
         "low": "C#2",
         "high": "G5"
+      },
+      {
+        "slug": "tyler-the-creator",
+        "name": "Tyler, the Creator",
+        "voiceType": "Baritone",
+        "low": "B1",
+        "high": "B5"
       },
       {
         "slug": "coco-jones",
@@ -11975,10 +12979,24 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "E6"
       },
       {
+        "slug": "bryson-tiller",
+        "name": "Bryson Tiller",
+        "voiceType": "Tenor",
+        "low": "A2",
+        "high": "C6"
+      },
+      {
         "slug": "kehlani",
         "name": "Kehlani",
         "voiceType": "Mezzo-soprano",
         "low": "D3",
+        "high": "E5"
+      },
+      {
+        "slug": "post-malone",
+        "name": "Post Malone",
+        "voiceType": "Baritone",
+        "low": "E2",
         "high": "E5"
       },
       {
@@ -12017,6 +13035,13 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "high": "C6"
       },
       {
+        "slug": "xxxtentacion",
+        "name": "XXXTentacion",
+        "voiceType": "Baritone",
+        "low": "C3",
+        "high": "F5"
+      },
+      {
         "slug": "chloe-bailey",
         "name": "Chlöe Bailey",
         "voiceType": "Mezzo-soprano",
@@ -12036,6 +13061,13 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "voiceType": "Soprano",
         "low": "C3",
         "high": "C6"
+      },
+      {
+        "slug": "juice-wrld",
+        "name": "Juice WRLD",
+        "voiceType": "Baritone",
+        "low": "G2",
+        "high": "C5"
       },
       {
         "slug": "ravyn-lenae",
@@ -13930,7 +14962,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Appendices",
     "summary": "The atlas's extremes in one place — lowest floors, highest ceilings, widest spans and the whistle club, each with the recording where the note happened when one is famously known.",
     "free": false,
-    "words": 958,
+    "words": 989,
     "singers": []
   },
   {
@@ -13940,7 +14972,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "Appendices",
     "summary": "The whole library shelved by classification, basses to sopranos, with each voice's cited range — the shopping index for borrowing along your own shelf.",
     "free": false,
-    "words": 2967,
+    "words": 3172,
     "singers": []
   }
 ];
@@ -13957,4 +14989,4 @@ export const ATLAS_PARTS: Array<{ part: string; chapters: AtlasContentsEntry[] }
     [],
   );
 
-export const ATLAS_WORDS = 64134;
+export const ATLAS_WORDS = 68305;
