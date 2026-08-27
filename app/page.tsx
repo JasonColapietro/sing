@@ -5,6 +5,7 @@ import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { ORG_ID, ORG_SAME_AS } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
+import { FamousVoices } from "@/components/landing/famous-voices";
 import { HeroSplit } from "@/components/landing/hero-split";
 import { IosBand } from "@/components/landing/ios-band";
 import { StartingPaths } from "@/components/landing/paths";
@@ -220,10 +221,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4 — The iOS app, folded in from print.suedeai.ai */}
+      {/* 4 — Head-query singer pages, linked straight from the strongest page
+              on the subdomain. See famous-voices.tsx for why the hubs alone
+              were not enough. */}
+      <FamousVoices />
+
+      {/* 5 — The iOS app, folded in from print.suedeai.ai */}
       <IosBand />
 
-      {/* 5 — Comparison */}
+      {/* 6 — Comparison */}
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
@@ -238,7 +244,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 6 — How practice works */}
+      {/* 7 — How practice works */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading label="How practice works">
@@ -261,7 +267,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7 — Pro teaser */}
+      {/* 8 — Pro teaser */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
@@ -319,7 +325,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 8 — Privacy strip */}
+      {/* 9 — Privacy strip */}
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
           <p className="max-w-xl text-sm text-mut">
@@ -334,7 +340,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9 — Final CTA */}
+      {/* 10 — Final CTA */}
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-20 text-center sm:px-6">
           <h2 className="text-3xl sm:text-4xl">
