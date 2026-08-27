@@ -26,6 +26,12 @@ export const ORG_SAME_AS = [
   "https://github.com/Suede-AI",
   "https://www.youtube.com/@aisuede",
   "https://www.instagram.com/suedeai/",
+  // The Suede Sing product account. Verified live 2026-08-27 — the handle is
+  // suedesingapp, not suedesing: Facebook's /suedesing vanity already belongs
+  // to an unrelated page, so both platforms took the -app form to stay
+  // matched. No Facebook Page entry yet; /suedesingapp still serves "content
+  // isn't available", and a sameAs that does not resolve is worse than none.
+  "https://www.instagram.com/suedesingapp/",
   "https://www.facebook.com/people/Suede-Labs-AI/61584534847516",
   "https://t.me/SUEDEAI",
   "https://linktr.ee/suedelabsai",
