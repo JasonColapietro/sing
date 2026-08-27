@@ -68,6 +68,12 @@ const FILE_GROUPS = {
   "rock-women.json": "rock-women",
   "soul-men.json": "soul-men",
   "soul-women.json": "soul-women",
+  // The 2026-08 expansion batches. Mostly chapter-homogeneous; the handful
+  // of entries that belong elsewhere are re-homed in ASSIGN below.
+  "country-2.json": "country",
+  "global-2.json": "global-pop",
+  "rnb-women-2.json": "rnb-modern",
+  "rock-legends.json": "rock-men",
 };
 
 /** The gap batches are grab-bags, so every singer in them is placed by hand. */
@@ -180,6 +186,30 @@ const ASSIGN = {
   "fujii-kaze": "global-pop",
   "juan-diego-florez": "opera",
   stromae: "global-pop",
+  // rock-legends.json exceptions
+  "neil-diamond": "pop-men",
+  "barry-manilow": "pop-men",
+  "brian-wilson": "pop-men",
+  "christopher-cross": "pop-men",
+  "daryl-hall": "soul-men",
+  "michael-mcdonald": "soul-men",
+  // rnb-women-2.json exceptions
+  "janet-jackson": "pop-women-classic",
+  monica: "soul-women",
+  fantasia: "soul-women",
+  "macy-gray": "soul-women",
+  indiaarie: "soul-women",
+  // global-2.json exceptions — the Latin lane
+  "julio-iglesias": "latin",
+  "cristian-castro": "latin",
+  "luis-fonsi": "latin",
+  maluma: "latin",
+  "rauw-alejandro": "latin",
+  ozuna: "latin",
+  "angela-aguilar": "latin",
+  "carin-leon": "latin",
+  "alejandro-fernandez": "latin",
+  "jenni-rivera": "latin",
 };
 
 /** Build every chapter from the markdown + batches. Shared with the PDF script. */

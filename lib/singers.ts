@@ -119,6 +119,12 @@ export function singersByGenre(g: string): Singer[] {
  * 18 landed on disambiguation pages and 7 more resolved only via a redirect.
  * Every replacement title below was verified to be a real, non-disambiguation
  * article. Re-run that check when adding singers with single-word or shared names.
+ *
+ * Re-checked 2026-08-27 for the expansion batches. New trap found: a bare
+ * title can be a "name list" page that does NOT carry the disambiguation
+ * pageprop ("Mika" is one), so the check must also read the page's short
+ * description — anything like "Topics referred to by the same term" or
+ * "Name list" is not a person, whatever the pageprops say.
  */
 const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
   // Landed on a disambiguation page.
@@ -140,6 +146,17 @@ const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
   "tom-jones": "Tom Jones (singer)",
   usher: "Usher (musician)",
   zayn: "Zayn Malik",
+  // 2026-08-27 expansion batches.
+  "glenn-hughes": "Glenn Hughes (musician)",
+  "michael-mcdonald": "Michael McDonald (musician)",
+  monica: "Monica (singer)",
+  ashanti: "Ashanti (singer)",
+  fantasia: "Fantasia (singer)",
+  indiaarie: "India Arie",
+  solange: "Solange Knowles",
+  "fka-twigs": "FKA Twigs",
+  mika: "Mika (singer)",
+  "chloe-bailey": "Chloe Bailey",
   // Resolved only through a redirect; point at the article directly.
   anohni: "Anohni",
   "aulii-cravalho": "Auliʻi Cravalho",
