@@ -70,6 +70,19 @@
     font-size: 20px; letter-spacing: 0.14em; color: var(--line2);
   }
 
+  /* Byline. These are Jason's words — the book chapters verbatim, the product
+     data from his own app — so his name travels with the slide. Bottom-left,
+     balancing the kicker top-left, and paired with the counter on the right.
+     Carousels get screenshotted a slide at a time, which is the whole reason
+     it goes on every slide rather than only the last one. */
+  .byline {
+    position: absolute; left: 88px; bottom: 88px;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 500; font-size: 20px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--label);
+  }
+
   /*
     This carousel is a book excerpt, so the book's voice — the serif — carries
     the quoted lines, and Manrope is demoted to the connective tissue around
@@ -143,6 +156,7 @@
     </div>
   </div>
   <div class="count">01 / 06</div>
+  <div class="byline">Jason Colapietro</div>
 </section>
 
 <!-- 2 -->
@@ -155,6 +169,7 @@
     </div>
   </div>
   <div class="count">02 / 06</div>
+  <div class="byline">Jason Colapietro</div>
 </section>
 
 <!-- 3 -->
@@ -167,6 +182,7 @@
     </div>
   </div>
   <div class="count">03 / 06</div>
+  <div class="byline">Jason Colapietro</div>
 </section>
 
 <!-- 4 — the diagnostic payoff, the reason to save the post -->
@@ -183,6 +199,7 @@
     </div>
   </div>
   <div class="count">04 / 06</div>
+  <div class="byline">Jason Colapietro</div>
 </section>
 
 <!-- 5 — the sharpest line in the chapter -->
@@ -195,6 +212,7 @@
     </div>
   </div>
   <div class="count">05 / 06</div>
+  <div class="byline">Jason Colapietro</div>
 </section>
 
 <!-- 6 -->
@@ -209,6 +227,7 @@
     </div>
   </div>
   <div class="count">06 / 06</div>
+  <div class="byline">Jason Colapietro</div>
 </section>
 
 </body>
