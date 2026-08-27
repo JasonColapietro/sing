@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { AUTHOR_NODE } from "@/lib/author";
@@ -13,7 +14,12 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/glossary` },
-  openGraph: { title: TITLE, description: DESCRIPTION, type: "article" },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    type: "article",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function GlossaryPage() {

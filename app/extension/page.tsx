@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
     siteName: "Suede Sing",
     type: "website",
     locale: "en_US",
+    images: [DEFAULT_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",

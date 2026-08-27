@@ -1,14 +1,18 @@
 import { ImageResponse } from "next/og";
+import { OG_IMAGE_ALT, OG_IMAGE_SIZE } from "@/lib/og";
 
-export const size = { width: 1200, height: 630 };
+export const size = OG_IMAGE_SIZE;
 export const contentType = "image/png";
-export const alt =
-  "Suede Sing — the vocal studio in your browser: live pitch, range test, warmups, ear training";
+export const alt = OG_IMAGE_ALT;
 
 /**
  * Sitewide fallback share card. Routes with their own opengraph-image
  * (the /singers section) override this; everything else — home, the
  * practice rooms, /pro, the books — previously shared with no image at all.
+ *
+ * "Everything else" only holds for routes that inherit `openGraph` untouched.
+ * A route that declares its own must also name this card explicitly; see
+ * DEFAULT_OG_IMAGE in lib/og.ts for why, and the test there for the guard.
  */
 export default function Image() {
   // A stylized pitch trace settling onto a target note, drawn as bars.

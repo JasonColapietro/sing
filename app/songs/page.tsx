@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import { Suspense } from "react";
 import { PRO_SONGS, SONGS } from "@/components/songs/data";
 import { SongLinkList } from "@/components/songs/song-page";
@@ -19,7 +20,12 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/songs` },
-  openGraph: { title: TITLE, description: DESCRIPTION, type: "website" },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    type: "website",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function SongsPage() {

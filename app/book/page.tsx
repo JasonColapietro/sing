@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import {
   BOOK_CONTENTS,
@@ -18,7 +19,12 @@ export const metadata: Metadata = {
   title: BOOK_TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/book` },
-  openGraph: { title: BOOK_TITLE, description: DESCRIPTION, type: "book" },
+  openGraph: {
+    title: BOOK_TITLE,
+    description: DESCRIPTION,
+    type: "book",
+    images: [DEFAULT_OG_IMAGE],
+  },
 };
 
 export default function BookPage() {

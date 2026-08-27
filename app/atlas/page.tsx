@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import {
   ATLAS_CONTENTS,
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
     title: `${ATLAS_TITLE} — Famous Singers' Vocal Ranges, Tone and Technique`,
     description: DESCRIPTION,
     type: "book",
+    images: [DEFAULT_OG_IMAGE],
   },
 };
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import {
@@ -51,6 +52,7 @@ export const metadata: Metadata = {
     siteName: "Suede Sing",
     type: "article",
     locale: "en_US",
+    images: [DEFAULT_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",

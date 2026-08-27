@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import { RangeTest } from "@/components/range/range-test";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
     siteName: "Suede Sing",
     type: "website",
     locale: "en_US",
+    images: [DEFAULT_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
