@@ -79,6 +79,7 @@ const FILE_GROUPS = {
   "pop-women-2.json": "pop-women-modern",
   "rnb-men-2.json": "rnb-modern",
   "kpop-indie.json": "global-pop",
+  "specialists.json": "jazz",
 };
 
 /** The gap batches are grab-bags, so every singer in them is placed by hand. */
@@ -204,6 +205,19 @@ const ASSIGN = {
   fantasia: "soul-women",
   "macy-gray": "soul-women",
   indiaarie: "soul-women",
+  // specialists.json exceptions — jazz is the default, the rest re-home
+  "tim-storms": "gospel",
+  "geoff-castellucci": "gospel",
+  "tamela-mann": "gospel",
+  "marvin-sapp": "gospel",
+  "david-phelps": "gospel",
+  "smokie-norful": "gospel",
+  "diana-damrau": "opera",
+  "sumi-jo": "opera",
+  "birgit-nilsson": "opera",
+  "samuel-ramey": "opera",
+  "philippe-jaroussky": "opera",
+  "jackie-evancho": "opera",
   // kpop-indie.json exceptions — the non-K-pop half of the file
   "dermot-kennedy": "folk",
   passenger: "folk",
