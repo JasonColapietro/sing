@@ -14,6 +14,26 @@ around it is done.
 | [geo-wiring.md](geo-wiring.md) | Entity-consistency rules + staged `sameAs` / llms.txt patches (apply after the accounts exist) |
 | [assets/](assets/) | `avatar-512.png` (both platforms), `fb-cover-1640x720.png` (+ HTML source and re-render script) |
 | [assets/carousel-range/](assets/carousel-range/README.md) | **Post 2, finished** — six 1080×1350 slides, caption, and per-slide alt text. Upload and go. |
+| [assets/carousel-book/](assets/carousel-book/README.md) | **Post 6, finished** — six slides from chapter one of The Measured Voice, quotation-checked. |
+
+## What's ready vs. what needs your voice
+
+Of the nine Instagram launch posts, **four need no production work**:
+
+| Post | State |
+|---|---|
+| 2 — What's my vocal range? | Slides rendered, caption written |
+| 3 — The three App Store screenshots | Assets already in `public/`, caption in instagram.md |
+| 6 — From The Measured Voice | Slides rendered, caption written, quotes verified |
+| 8 — Founder introduction | `public/founder-portrait.jpg` + caption in instagram.md |
+
+The other five — 1, 4, 5, 7, 9 — are screen recordings of you singing into
+the studio, the range test, the famous-ranges keyboard, a warmup, and an ear
+training round. Nobody can make those but you; post 1 is fully scripted
+second-by-second in [instagram.md](instagram.md) §5.
+
+Facebook's first five posts reuse the same material: (a) and (b) want the same
+recordings, (c) and (d) are screenshots, (e) is the portrait.
 
 ## Decisions already made
 

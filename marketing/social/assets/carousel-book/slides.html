@@ -1,0 +1,214 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!--
+  Instagram carousel: "Your voice is not an instrument you own."
+  Six 1080x1350 (4:5) slides — Instagram launch grid post 6.
+
+  Source: chapter one of The Measured Voice
+  (content/book/01-what-your-voice-is.md), one of the book's three free
+  chapters, served in full and unpaywalled at /book/what-your-voice-is
+  (verified 2026-08-28).
+
+  The typography draws the line that matters:
+    - Serif, under an open quotation mark = VERBATIM from the chapter. Slides
+      1, 2, 3 and 5 are quoted word for word, and a draft of slide 2 that
+      trimmed "There is" and dropped a trailing clause was restored, because
+      a condensed sentence set as a quotation is a misquotation.
+    - Sans-serif = editorial summary written for the slide, never presented
+      as the author's words. Slide 4's three lines compress a longer passage
+      and are deliberately not styled as quotation.
+  Keep that distinction if you edit this file.
+
+  Note the free chapters are 1, 8 and 12 — NOT the first three. Chapter 3
+  (the passaggio) is paid, so do not build a "read it free" post around it.
+
+  Render:  node marketing/social/assets/carousel-book/render.mjs
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=block"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --paper: #f7f0e7;
+    --panel: #fffaf2;
+    --line: #ddd4c4;
+    --line2: #c9bda0;
+    --ink: #20201d;
+    --mut: #5c564d;
+    --label: #82631f;
+    --teal: #11615d;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #888; font-family: Manrope, sans-serif; }
+
+  .slide {
+    position: relative;
+    width: 1080px; height: 1350px;
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+    padding: 96px 88px;
+    display: flex; flex-direction: column;
+  }
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600; font-size: 19px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--label);
+  }
+  .count {
+    position: absolute; right: 88px; bottom: 88px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px; letter-spacing: 0.14em; color: var(--line2);
+  }
+
+  /*
+    This carousel is a book excerpt, so the book's voice — the serif — carries
+    the quoted lines, and Manrope is demoted to the connective tissue around
+    them. That is the inverse of the range carousel, where the serif only sets
+    headings. The difference is the point: a reader who sees both should feel
+    they are hearing two different registers of the same brand.
+  */
+  .quote {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    font-size: 76px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .quote em { font-style: italic; }
+  .quote.small { font-size: 62px; }
+  .say { font-size: 31px; line-height: 1.5; color: var(--mut); }
+  .say strong { color: var(--ink); font-weight: 600; }
+
+  /* An open quotation mark, set large and low-contrast — the one ornament. */
+  .mark {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 190px;
+    line-height: 0.6;
+    color: var(--line2);
+    height: 96px;
+  }
+
+  /* Slide 4: the three systems, as a real list of three */
+  .three { display: flex; flex-direction: column; gap: 20px; margin-top: 46px; }
+  .sys {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 30px 34px;
+    display: grid; grid-template-columns: 210px 1fr; gap: 26px; align-items: baseline;
+  }
+  .sys .n {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600; font-size: 21px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--label);
+  }
+  .sys .d { font-size: 30px; line-height: 1.38; }
+
+  .attrib {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--label);
+  }
+  .url {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 64px; color: var(--teal); margin-top: 18px;
+  }
+  .booktitle {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 92px; line-height: 1.06; margin-top: 14px;
+  }
+  .booktitle em { font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- 1 — the opening line of the chapter, used as the opening line of the post -->
+<section class="slide" id="s1">
+  <div class="kicker">The Measured Voice &middot; Chapter one</div>
+  <div class="body">
+    <div>
+      <div class="mark">&ldquo;</div>
+      <div class="quote">Your voice is not an instrument you own. It is one you <em>assemble</em>, freshly, every time you make a sound.</div>
+    </div>
+  </div>
+  <div class="count">01 / 06</div>
+</section>
+
+<!-- 2 -->
+<section class="slide" id="s2">
+  <div class="kicker">What that means</div>
+  <div class="body">
+    <div>
+      <div class="quote" style="font-size:50px">Nothing about it is stored. There is no reed, no string, no fixed tube of brass &mdash; just <em>moving air</em>, a pair of small folds of tissue that get in its way, and a shaped space above them that colours whatever comes out.</div>
+      <p class="say" style="margin-top:46px">&ldquo;That is the whole machine.&rdquo;</p>
+    </div>
+  </div>
+  <div class="count">02 / 06</div>
+</section>
+
+<!-- 3 -->
+<section class="slide" id="s3">
+  <div class="kicker">The three-part model</div>
+  <div class="body">
+    <div>
+      <div class="quote">Power,<br />vibrator,<br /><em>filter.</em></div>
+      <p class="say" style="margin-top:52px">The breath drives it. The folds buzz. The throat and mouth shape the buzz into a voice you recognise.</p>
+    </div>
+  </div>
+  <div class="count">03 / 06</div>
+</section>
+
+<!-- 4 — the diagnostic payoff, the reason to save the post -->
+<section class="slide" id="s4">
+  <div class="kicker">Three questions, not one</div>
+  <div class="body">
+    <div>
+      <p class="say" style="font-size:33px">Hear something you don&rsquo;t like in a recording, and the model gives you somewhere to look.</p>
+      <div class="three">
+        <div class="sys"><div class="n">Breath?</div><div class="d">Wobbling volume, notes that sag, running out of air.</div></div>
+        <div class="sys"><div class="n">Folds?</div><div class="d">Breathiness, a crack at a predictable spot, a thin top.</div></div>
+        <div class="sys"><div class="n">Tract?</div><div class="d">Dullness, a woolly vowel, a note two sizes smaller.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="count">04 / 06</div>
+</section>
+
+<!-- 5 — the sharpest line in the chapter -->
+<section class="slide" id="s5">
+  <div class="kicker">Why it matters</div>
+  <div class="body">
+    <div>
+      <div class="mark">&ldquo;</div>
+      <div class="quote small">Most singers treat every problem as a breath problem and answer it with more effort. <em>Effort is the least specific tool you have.</em></div>
+    </div>
+  </div>
+  <div class="count">05 / 06</div>
+</section>
+
+<!-- 6 -->
+<section class="slide" id="s6">
+  <div class="kicker">Read the whole chapter</div>
+  <div class="body">
+    <div>
+      <div class="attrib">From</div>
+      <div class="booktitle">The Measured <em>Voice</em></div>
+      <p class="say" style="margin-top:26px">23 chapters on building a voice you can measure. Chapter one is free to read &mdash; no account, no paywall.</p>
+      <div class="url">sing.suedeai.ai/book</div>
+    </div>
+  </div>
+  <div class="count">06 / 06</div>
+</section>
+
+</body>
+</html>
