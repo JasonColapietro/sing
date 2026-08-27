@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
+import { SONGS } from "@/components/songs/data";
+import { SINGERS } from "@/lib/singers";
 import { ORG_ID, ORG_SAME_AS } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
@@ -273,8 +275,8 @@ export default function Home() {
                 The coach on top of the studio
               </h2>
               <p className="mt-3 max-w-xl text-mut">
-                The studio, all 26 songs, the range test and 420 measured
-                voices cost nothing and always will. Pro adds the library and
+                The studio, all {SONGS.length} songs, the range test and{" "}
+                {SINGERS.length} measured voices cost nothing and always will. Pro adds the library and
                 the long memory: both books in full, pitch analysis on every
                 take, and your range charted over months rather than one test
                 at a time.
