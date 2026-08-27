@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!-- Facebook Page cover for Suede Sing. Rendered at 1640x720 (2x of the
+     ~820x360 display box). Desktop shows ~820x312, mobile ~640x360; every
+     word below sits inside the shared safe center, and the pitch trace is
+     the only element allowed to run edge to edge. Colors and fonts are the
+     site's own tokens (app/globals.css, app/layout.tsx). Regenerate with
+     marketing/social/assets/render-cover.mjs (kept beside this file). -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@500;700&display=block"
+  rel="stylesheet"
+/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1640px; height: 720px; }
+  body {
+    background: #f7f0e7;
+    color: #20201d;
+    font-family: Manrope, sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+  /* Note lanes: the studio's ground, faint, full-bleed. */
+  .lanes { position: absolute; inset: 0; }
+  .lane { position: absolute; left: 0; right: 0; height: 1px; background: #ddd4c4; }
+  /* The target lane the trace locks into — a soft amber band. */
+  .target {
+    position: absolute; left: 0; right: 0;
+    top: 486px; height: 44px;
+    background: rgba(197, 150, 66, 0.10);
+    border-top: 1px solid #c9bda0;
+    border-bottom: 1px solid #c9bda0;
+  }
+  svg.trace { position: absolute; inset: 0; }
+  .stack {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding-bottom: 120px;
+    text-align: center;
+  }
+  .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: 0.32em;
+    color: #82631f;
+    margin-bottom: 26px;
+  }
+  h1 {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    font-size: 150px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  h1 em { font-style: italic; }
+  .tagline {
+    margin-top: 30px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #5c564d;
+  }
+</style>
+</head>
+<body>
+  <div class="lanes">
+    <div class="lane" style="top: 156px"></div>
+    <div class="lane" style="top: 266px"></div>
+    <div class="lane" style="top: 376px"></div>
+    <div class="target"></div>
+    <div class="lane" style="top: 640px"></div>
+  </div>
+
+  <!-- The pitch trace: wanders, dips flat below the target lane, then locks
+       into it and holds — the product's one-glance story. -->
+  <svg class="trace" width="1640" height="720" viewBox="0 0 1640 720" fill="none">
+    <path
+      d="M -20 260 C 90 240, 150 320, 240 310 C 320 302, 340 380, 400 440 C 450 490, 470 560, 520 552 C 560 546, 570 514, 610 508 L 1640 508"
+      stroke="#11615d" stroke-width="6" stroke-linecap="round"
+    />
+    <circle cx="1596" cy="508" r="11" fill="#11615d" />
+  </svg>
+
+  <div class="stack">
+    <div class="kicker">FREE&nbsp;&nbsp;·&nbsp;&nbsp;IN THE BROWSER&nbsp;&nbsp;·&nbsp;&nbsp;NO INSTALL</div>
+    <h1>Suede <em>Sing</em></h1>
+    <div class="tagline">The vocal studio in your browser.</div>
+  </div>
+</body>
+</html>
