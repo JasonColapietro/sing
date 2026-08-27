@@ -8,6 +8,12 @@ up means entering credentials and accepting Meta's terms as the account owner,
 which is not something an agent does on someone's behalf. That is the whole
 reason this file splits the work the way it does.
 
+Routing it to Codex does not change that, and it also does not work
+mechanically: `codex exec` runs in a workspace sandbox with no browser session
+and no way to receive the SMS or email verification Meta requires, so a
+signup attempt stalls at the first verification step whatever it is told.
+Codex is useful *after* the accounts exist — see Part 2b.
+
 ---
 
 ## Part 1 — Jason, about fifteen minutes
@@ -65,6 +71,28 @@ Work in ~/sing (this repo, not ~/code/sing). Do these in order:
 Do not post anything, schedule anything, or edit the accounts. The carousels
 are uploaded by hand — 26 slides in marketing/social/assets/carousel-*/, each
 folder with its caption and per-slide alt text in its README.
+```
+
+### Part 2b — same work, routed to Codex
+
+The repo-side half of Part 2 runs fine on the Codex CLI, and costs nothing
+against the Anthropic weekly limit. It cannot do the suede-home mirror (that
+is a second repo) or the Sharing Debugger pass (needs a browser session), so
+those stay with Claude or with you.
+
+```bash
+codex exec --sandbox workspace-write -C ~/sing "The Suede Sing social accounts
+now exist: Instagram @<handle>, Facebook <full URL>.
+
+Apply patches 1 and 2 of marketing/social/geo-wiring.md — ORG_SAME_AS in
+lib/organization.ts and the official-profiles line in lib/llms-txt.ts — using
+those exact URLs. Before adding either URL, curl it and confirm it resolves;
+a sameAs pointing at a 404 is worse than no sameAs, and that rule is written
+at the top of lib/organization.ts.
+
+Then run: npx vitest run, and npm run build. Commit to a branch cut from
+origin/main and open a PR. Do not push to main, do not touch the accounts,
+and do not edit geo-wiring.md itself."
 ```
 
 ---
