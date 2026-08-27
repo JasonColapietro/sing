@@ -42,7 +42,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Voice Atlas",
     chapters: 27,
-    words: 51075,
+    words: 72484,
     free: 3,
     pdfMb: 3.6,
     href: "/atlas",
@@ -63,7 +63,7 @@ export const PRO_PACK_COUNT = 2;
 export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
 
 /** Singers with a measured range and a page of their own. Free to read. */
-export const SINGER_COUNT = 420;
+export const SINGER_COUNT = 637;
 
 /** Terms defined in the free glossary. */
 export const GLOSSARY_COUNT = 31;
