@@ -78,6 +78,7 @@ const FILE_GROUPS = {
   "metal-2.json": "metal",
   "pop-women-2.json": "pop-women-modern",
   "rnb-men-2.json": "rnb-modern",
+  "kpop-indie.json": "global-pop",
 };
 
 /** The gap batches are grab-bags, so every singer in them is placed by hand. */
@@ -203,6 +204,24 @@ const ASSIGN = {
   fantasia: "soul-women",
   "macy-gray": "soul-women",
   indiaarie: "soul-women",
+  // kpop-indie.json exceptions — the non-K-pop half of the file
+  "dermot-kennedy": "folk",
+  passenger: "folk",
+  "vance-joy": "folk",
+  "lizzy-mcalpine": "folk",
+  clairo: "folk",
+  "sufjan-stevens": "folk",
+  "calum-scott": "pop-men",
+  "james-arthur": "pop-men",
+  "james-bay": "pop-men",
+  "david-kushner": "pop-men",
+  "stephen-sanchez": "pop-men",
+  "george-ezra": "pop-men",
+  "niall-horan": "pop-men",
+  "louis-tomlinson": "pop-men",
+  "liam-payne": "pop-men",
+  jvke: "pop-men",
+  "ragnbone-man": "soul-men",
   // pop-women-2.json exceptions
   "bonnie-tyler": "pop-women-classic",
   jewel: "folk",
