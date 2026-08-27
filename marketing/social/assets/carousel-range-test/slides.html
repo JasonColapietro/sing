@@ -1,0 +1,344 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!--
+  Instagram carousel: "How to read your range test."
+  Seven 1080x1350 (4:5) slides.
+
+  SOURCE: content/book/08-reading-the-range-test.md
+
+  Chapter eight of The Measured Voice is free and served in full at
+  /book/reading-the-range-test.
+
+  Typographic contract:
+    - Instrument Serif in class="quote", under an open quotation mark, is
+      VERBATIM from the chapter.
+    - Manrope is editorial explanation written for the slide.
+
+  Render: node marketing/social/assets/carousel-range-test/render.mjs
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=block"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --paper: #f7f0e7;
+    --panel: #fffaf2;
+    --line: #ddd4c4;
+    --line2: #c9bda0;
+    --ink: #20201d;
+    --mut: #5c564d;
+    --label: #82631f;
+    --teal: #11615d;
+    --rec: #9d3f33;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #888; font-family: Manrope, sans-serif; }
+
+  .slide {
+    position: relative;
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    padding: 96px 88px;
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+  .count {
+    position: absolute;
+    right: 88px;
+    bottom: 88px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    color: var(--line2);
+  }
+  .mark {
+    height: 96px;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 190px;
+    line-height: 0.6;
+    color: var(--line2);
+  }
+  .quote {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 72px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .quote em { font-style: italic; }
+  .say { font-size: 31px; line-height: 1.48; color: var(--mut); }
+  .say strong { color: var(--ink); font-weight: 700; }
+  .mono {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+
+  .readout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-top: 46px;
+  }
+  .reading {
+    padding: 30px 32px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--panel);
+  }
+  .reading .value {
+    margin-top: 10px;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 62px;
+    line-height: 1.05;
+  }
+  .reading .detail { margin-top: 8px; font-size: 24px; line-height: 1.4; color: var(--mut); }
+
+  .protocol { margin-top: 36px; display: flex; flex-direction: column; }
+  .protocol-row {
+    display: grid;
+    grid-template-columns: 72px 218px 1fr;
+    gap: 22px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+  }
+  .protocol-row:last-child { border-bottom: 1px solid var(--line); }
+  .protocol-row .n {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px;
+    color: var(--line2);
+  }
+  .protocol-row .h { font-size: 25px; font-weight: 700; }
+  .protocol-row .d { font-size: 24px; line-height: 1.38; color: var(--mut); }
+
+  .note-tests { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 44px; }
+  .note-test {
+    min-height: 330px;
+    padding: 28px 28px 30px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--panel);
+  }
+  .note-test .verdict { margin-top: 14px; font-size: 24px; line-height: 1.38; color: var(--mut); }
+  .note-test .verdict strong { display: block; margin-bottom: 5px; font-size: 28px; color: var(--ink); }
+
+  .causes { display: flex; flex-direction: column; margin-top: 34px; }
+  .cause {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 24px;
+    align-items: baseline;
+    padding: 19px 0;
+    border-top: 1px solid var(--line);
+  }
+  .cause:last-child { border-bottom: 1px solid var(--line); }
+  .cause .h { font-size: 24px; font-weight: 700; }
+  .cause .d { font-size: 23px; line-height: 1.36; color: var(--mut); }
+  .discard {
+    margin-top: 30px;
+    padding: 22px 26px;
+    border: 1px solid var(--line2);
+    border-radius: 16px;
+    font-size: 25px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  .label-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 50px; }
+  .label-col { padding-top: 24px; border-top: 1px solid var(--line2); }
+  .label-col .h { font-size: 25px; font-weight: 700; }
+  .label-col .d { margin-top: 12px; font-size: 25px; line-height: 1.46; color: var(--mut); }
+
+  .attrib {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+  .booktitle {
+    margin-top: 12px;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 66px;
+    line-height: 1.06;
+  }
+  .booktitle em { font-style: italic; }
+  .url {
+    margin-top: 18px;
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 60px;
+    color: var(--teal);
+  }
+</style>
+</head>
+<body>
+
+<!-- 1: the chapter's sharpest line -->
+<section class="slide" id="s1">
+  <div class="kicker">The Measured Voice &middot; Chapter eight</div>
+  <div class="body">
+    <div>
+      <div class="mark">&ldquo;</div>
+      <div class="quote">Treat the two numbers like a bathroom scale. Real, useful across months, <em>close to meaningless on any single reading.</em></div>
+    </div>
+  </div>
+  <div class="count">01 / 07</div>
+</section>
+
+<!-- 2: the frame -->
+<section class="slide" id="s2">
+  <div class="kicker">What the test measures</div>
+  <div class="body">
+    <div>
+      <div class="mark">&ldquo;</div>
+      <div class="quote" style="font-size:52px">The test measures the lowest and highest notes you would let another person hear &mdash; today, in this room, with the voice you warmed up or did not.</div>
+      <div class="readout">
+        <div class="reading">
+          <div class="mono">Floor</div>
+          <div class="value">Lowest</div>
+          <div class="detail">An audible note you can reproduce.</div>
+        </div>
+        <div class="reading">
+          <div class="mono">Ceiling</div>
+          <div class="value">Highest</div>
+          <div class="detail">An audible note you can reproduce.</div>
+        </div>
+      </div>
+      <p class="say" style="margin-top:30px">The result records today&rsquo;s edges. Potential and future change sit outside the measurement.</p>
+    </div>
+  </div>
+  <div class="count">02 / 07</div>
+</section>
+
+<!-- 3: the repeatable protocol -->
+<section class="slide" id="s3">
+  <div class="kicker">Make the next test comparable</div>
+  <div class="body">
+    <div>
+      <div class="mark" style="height:72px;font-size:150px">&ldquo;</div>
+      <div class="quote" style="font-size:48px">Honest means the same conditions every time, and the same definition of a note every time.</div>
+      <div class="protocol">
+        <div class="protocol-row"><div class="n">01</div><div class="h">Warm up</div><div class="d">Use the same short set. Avoid testing cold or after hard singing.</div></div>
+        <div class="protocol-row"><div class="n">02</div><div class="h">Match setup</div><div class="d">Keep the room, time of day, and phone distance steady.</div></div>
+        <div class="protocol-row"><div class="n">03</div><div class="h">Count a note</div><div class="d">Require clear pitch, no strain, and enough stability for two beats.</div></div>
+        <div class="protocol-row"><div class="n">04</div><div class="h">Stop honestly</div><div class="d">End the test when effort replaces height.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="count">03 / 07</div>
+</section>
+
+<!-- 4: the save-worthy note check, drawn as a trace -->
+<section class="slide" id="s4">
+  <div class="kicker">The note rule</div>
+  <div class="body">
+    <div>
+      <div class="mark" style="height:72px;font-size:150px">&ldquo;</div>
+      <div class="quote" style="font-size:50px">A note counts if it has an identifiable pitch, arrives without strain, and could be held for a beat or two.</div>
+      <div class="note-tests">
+        <div class="note-test">
+          <div class="mono" style="color:var(--teal)">Counts</div>
+          <svg width="100%" height="160" viewBox="0 0 390 160" fill="none" preserveAspectRatio="none" aria-label="A trace settling on one pitch">
+            <line x1="0" y1="82" x2="390" y2="82" stroke="#ddd4c4" stroke-width="2" />
+            <path d="M8 120 C32 116 46 98 64 89 C82 81 102 82 122 82 L366 82" stroke="#11615d" stroke-width="8" stroke-linecap="round" />
+            <circle cx="366" cy="82" r="10" fill="#11615d" />
+            <path d="M138 126 L138 140 L342 140 L342 126" stroke="#c9bda0" stroke-width="2" />
+          </svg>
+          <div class="verdict"><strong>Settles and holds</strong>The pitch stays clear for two beats.</div>
+        </div>
+        <div class="note-test">
+          <div class="mono" style="color:var(--rec)">Does not count</div>
+          <svg width="100%" height="160" viewBox="0 0 390 160" fill="none" preserveAspectRatio="none" aria-label="A trace breaking into unstable fragments">
+            <line x1="0" y1="82" x2="390" y2="82" stroke="#ddd4c4" stroke-width="2" />
+            <path d="M10 116 L38 108 M54 91 L75 72 M94 104 L118 89 M142 57 L164 96 M188 76 L207 113 M230 84 L250 64 M276 111 L300 91 M324 72 L346 102 M362 88 L380 75" stroke="#9d3f33" stroke-width="8" stroke-linecap="round" />
+          </svg>
+          <div class="verdict"><strong>Creaks or breaks</strong>A sound at the edge never becomes a usable note.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="count">04 / 07</div>
+</section>
+
+<!-- 5: the boring explanations before belief -->
+<section class="slide" id="s5">
+  <div class="kicker">When the result looks wrong</div>
+  <div class="body">
+    <div>
+      <div class="mark" style="height:66px;font-size:145px">&ldquo;</div>
+      <div class="quote" style="font-size:47px">A disappointing result usually has a boring explanation. Work through these before you believe it.</div>
+      <div class="causes">
+        <div class="cause"><div class="h">Cold voice</div><div class="d">Retest after the warmup you normally use.</div></div>
+        <div class="cause"><div class="h">Different hour</div><div class="d">Morning and evening can produce different edges.</div></div>
+        <div class="cause"><div class="h">Pushing</div><div class="d">Extra effort can narrow the top instead of extending it.</div></div>
+        <div class="cause"><div class="h">Room or phone</div><div class="d">Noise, distance, and placement can hide quiet notes.</div></div>
+        <div class="cause"><div class="h">Rushed edge</div><div class="d">Give the final notes time to settle.</div></div>
+      </div>
+      <div class="discard"><strong>Two plausible causes?</strong> Discard the reading and test another day.</div>
+    </div>
+  </div>
+  <div class="count">05 / 07</div>
+</section>
+
+<!-- 6: the counterintuitive turn -->
+<section class="slide" id="s6">
+  <div class="kicker">Read the label loosely</div>
+  <div class="body">
+    <div>
+      <div class="mark">&ldquo;</div>
+      <div class="quote" style="font-size:68px">What it is not is an identity, a ceiling, or a <em>verdict.</em></div>
+      <div class="label-grid">
+        <div class="label-col">
+          <div class="h">The label sees</div>
+          <div class="d">Your lowest note and your highest note on one test.</div>
+        </div>
+        <div class="label-col">
+          <div class="h">The label misses</div>
+          <div class="d">Tessitura, timbre, transition points, and sustained load.</div>
+        </div>
+      </div>
+      <p class="say" style="margin-top:38px">Use it as a closest fit for finding a starting key, not as permission for what to sing.</p>
+    </div>
+  </div>
+  <div class="count">06 / 07</div>
+</section>
+
+<!-- 7: the closer and the free chapter -->
+<section class="slide" id="s7">
+  <div class="kicker">Read chapter eight</div>
+  <div class="body">
+    <div>
+      <div class="mark" style="height:74px;font-size:155px">&ldquo;</div>
+      <div class="quote" style="font-size:52px">A rough protocol you actually repeat is worth more than a perfect one you manage once.</div>
+      <div class="attrib" style="margin-top:48px">From</div>
+      <div class="booktitle">The Measured <em>Voice</em></div>
+      <p class="say" style="margin-top:18px">Chapter eight is free to read. No account, no paywall.</p>
+      <div class="url">sing.suedeai.ai/book</div>
+    </div>
+  </div>
+  <div class="count">07 / 07</div>
+</section>
+
+</body>
+</html>
