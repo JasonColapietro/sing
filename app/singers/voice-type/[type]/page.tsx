@@ -67,40 +67,73 @@ export default async function VoiceTypePage({
   const axisLow = Math.floor(stats.lowest.lowMidi / 12) * 12;
   const axisHigh = Math.ceil(stats.highest.highMidi / 12) * 12;
 
+  // "How high can a tenor sing" / "how low can a bass sing" are asked in
+  // those words, and the honest answer has two parts: the conventional band,
+  // and what recorded voices in this category are actually cited doing. Both
+  // figures already render elsewhere on the page, so the Q&A introduces no
+  // new claims — and one array feeds the visible section and the FAQPage
+  // markup, so the two can never drift.
+  const faq = [
+    {
+      q: `How high can a ${lower} sing?`,
+      a: `The conventional ${lower} band tops out around ${midiToLabel(band.high)}, but recorded ${pluralVoice(lower)} are cited well past it: the highest note among the ${list.length} ${pluralVoice(lower)} indexed here is ${midiToLabel(stats.highest.highMidi)}, cited for ${stats.highest.name}.`,
+    },
+    {
+      q: `How low can a ${lower} sing?`,
+      a: `Conventionally the ${lower} band bottoms out around ${midiToLabel(band.low)}. The lowest cited note among the ${pluralVoice(lower)} here is ${midiToLabel(stats.lowest.lowMidi)}, cited for ${stats.lowest.name}.`,
+    },
+  ];
+
+  const pageUrl = `${SITE_URL}/singers/voice-type/${type}`;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: `Famous ${pluralVoice(voice)} and their vocal ranges`,
-    url: `${SITE_URL}/singers/voice-type/${type}`,
-    description: note.summary,
-    isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Famous vocal ranges",
-          item: `${SITE_URL}/singers`,
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${pageUrl}#collection`,
+        name: `Famous ${pluralVoice(voice)} and their vocal ranges`,
+        url: pageUrl,
+        description: note.summary,
+        isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
+        breadcrumb: {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Famous vocal ranges",
+              item: `${SITE_URL}/singers`,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: pluralVoice(voice),
+              item: pageUrl,
+            },
+          ],
         },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: pluralVoice(voice),
-          item: `${SITE_URL}/singers/voice-type/${type}`,
+        mainEntity: {
+          "@type": "ItemList",
+          numberOfItems: list.length,
+          itemListElement: list.map((s, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: `${SITE_URL}/singers/${s.slug}`,
+            name: `${s.name} — ${rangeLabel(s)}`,
+          })),
         },
-      ],
-    },
-    mainEntity: {
-      "@type": "ItemList",
-      numberOfItems: list.length,
-      itemListElement: list.map((s, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        url: `${SITE_URL}/singers/${s.slug}`,
-        name: `${s.name} — ${rangeLabel(s)}`,
-      })),
-    },
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#faq`,
+        isPartOf: { "@id": `${pageUrl}#collection` },
+        mainEntity: faq.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
   };
 
   return (
@@ -225,6 +258,27 @@ export default async function VoiceTypePage({
           <SectionLabel>Every {lower} on one axis</SectionLabel>
           <div className="mt-4">
             <HubChart list={list} axisLow={axisLow} axisHigh={axisHigh} />
+          </div>
+        </Card>
+
+        {/* The question families, in the words people search — same array as
+            the FAQPage markup above. */}
+        <Card>
+          <h2 className="text-xl">
+            How high — and how low — {pluralVoice(lower)} sing
+          </h2>
+          <div className="mt-4 max-w-3xl space-y-5">
+            {faq.map((f) => (
+              <div key={f.q}>
+                <h3 className="text-sm font-semibold">{f.q}</h3>
+                <p className="mt-1 text-sm text-mut">{f.a}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-5">
+            <LinkButton href="/range" variant="outline" size="sm">
+              Find out how high you can sing
+            </LinkButton>
           </div>
         </Card>
 
