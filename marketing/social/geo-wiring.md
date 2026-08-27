@@ -1,5 +1,19 @@
 # GEO wiring for the Suede Sing social profiles
 
+> **Status 2026-08-27 — Instagram is wired and live. Facebook is not.**
+> The account is `@suedesingapp` (not `suedesing`: `facebook.com/suedesing`
+> already resolves to an unrelated page, so both platforms take the `-app`
+> form to stay matched). Patch 1 landed in `sing@dbb5a81`, patch 2 in
+> `10ddb15`, patch 3 in `Suede-AI-App#1038` — all three verified live.
+> Facebook is deliberately absent: `facebook.com/suedesingapp` serves
+> "content isn't available", and a sameAs that does not resolve is a worse
+> claim than none. Add it when a Page URL resolves.
+>
+> Two things learned applying it: `${APP_NAME}` is **"Suede Voice"**, the
+> iOS app's name and the site's retired brand — never interpolate it when
+> you mean the site. And the Wikidata divergence noted in patch 3 below was
+> an artefact of a stale local checkout; `origin/main` already had it.
+
 The generative-engine side of this launch. The point: when the Instagram
 account and Facebook Page exist, search and answer engines must resolve them
 to the same entity as sing.suedeai.ai — one name, one mark, one set of claims,
