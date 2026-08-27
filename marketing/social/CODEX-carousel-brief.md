@@ -82,6 +82,14 @@ pipeline are visual — collisions, dead space at the bottom, a card whose text
 wraps to two lines while its neighbour takes one — and none of them show up
 in the HTML.
 
+**6. Every slide carries the byline.** `JASON COLAPIETRO`, bottom-left,
+opposite the slide counter — the words are his, and carousels get
+screenshotted a slide at a time, so a byline on the closing slide alone does
+not survive. Copy the `.byline` rule and the per-slide `<div class="byline">`
+from any existing carousel. If a slide already has an in-flow `.foot` line on
+that baseline, lift it with `margin-bottom` rather than letting the two
+collide.
+
 ## Brand
 
 Tokens are the site's own (`app/globals.css`); do not invent colours.
@@ -132,6 +140,7 @@ never imply one. Do not invent statistics, testimonials, or user counts.
 ## Done means
 
 - [ ] `slide-1.png` … `slide-N.png` at exactly 1080×1350
+- [ ] every slide carries the `JASON COLAPIETRO` byline, bottom-left
 - [ ] `node marketing/social/assets/verify-quotes.mjs` exits 0
 - [ ] you have viewed every rendered slide and none has colliding or
       strikethrough text
