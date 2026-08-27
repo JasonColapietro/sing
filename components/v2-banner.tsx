@@ -8,12 +8,18 @@ import V2TraceGlyph from "@/components/v2-glyph";
 const SEEN_KEY = "suede-sing:v2-banner:v1";
 
 /**
- * The v2 announcement: a 40px strip above the sticky header that scrolls away
+ * The v2 announcement: a filled band above the sticky header that scrolls away
  * with the page. It shares the header's max-w-6xl grid so the V2 chip sits on
  * the same left edge as the wordmark below it — part of the console, not a
  * toast. No amber anywhere in it: the strip hangs directly over the amber Pro
  * pill, and a gold banner there would announce a pricing event, not a version.
  * Its accent is --color-cool, the pitch trace's colour (see v2-glyph.tsx).
+ *
+ * It started as a 40px hairline strip whose message was hidden below sm, which
+ * meant phone visitors saw a bare "V2" chip and a link. It is now a solid cool
+ * band carrying the message at every width. The dismiss key is deliberately
+ * unchanged: making the banner louder is not a reason to re-show it to someone
+ * who already closed it. Bump SEEN_KEY only to deliberately re-broadcast.
  *
  * Dismissal has to survive server rendering without a flash or a layout
  * shift, on a site that prerenders every page. The banner is always in the
@@ -60,34 +66,36 @@ export default function V2Banner() {
       <aside
         id="v2-banner"
         aria-label="What's new in Suede Sing"
-        className="relative border-b border-line"
+        className="relative bg-cool text-white"
       >
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cool to-transparent"
-        />
-        <div className="mx-auto flex h-10 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
-          <V2TraceGlyph className="shrink-0 text-cool" />
-          <span className="inline-block shrink-0 rounded border border-cool/40 bg-panel px-1.5 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-cool">
+        {/* The strip reads as a filled band rather than a hairline: white on
+            --color-cool is 7.26:1, so the announcement carries at a glance
+            without borrowing amber, which on this site means a pricing event
+            (see the file header). The dismiss control is positioned rather
+            than in flow so the row can wrap to two lines on a narrow phone
+            instead of truncating the message away. */}
+        <div className="mx-auto flex min-h-12 w-full max-w-6xl flex-wrap items-center gap-x-3 gap-y-1 py-2 pl-4 pr-12 sm:pl-6 sm:pr-14">
+          <V2TraceGlyph className="shrink-0 text-white" />
+          <span className="inline-block shrink-0 rounded border border-white/40 px-1.5 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-white">
             V2
           </span>
-          <span className="hidden truncate text-meta text-mut sm:inline">
+          <span className="text-meta text-white/85">
             The studio has been rebuilt.
           </span>
           <Link
             href="/changelog"
-            className="truncate text-meta text-ink underline decoration-line2 underline-offset-4 transition-colors hover:decoration-ink"
+            className="shrink-0 rounded-full bg-white/15 px-3 py-1 text-meta font-medium text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/25"
           >
             See what we&apos;ve changed
           </Link>
-          {/* The drawer-close pattern from nav.tsx: 44px square hit region
-              around a small glyph, spent into the gutter so the 40px strip
-              never grows. */}
+          {/* The drawer-close pattern from nav.tsx: a 44px square hit region
+              around a small glyph, here pinned to the right edge so it stays
+              reachable whether the row is one line or two. */}
           <button
             type="button"
             onClick={dismiss}
             aria-label="Dismiss the v2 announcement"
-            className="relative -mr-2 ml-auto flex size-11 shrink-0 items-center justify-center rounded-full text-dim transition-colors after:absolute after:inset-0 hover:text-ink"
+            className="absolute right-1 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white"
           >
             <svg
               width="14"
