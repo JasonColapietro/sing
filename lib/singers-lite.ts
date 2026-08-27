@@ -356,6 +356,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "andy-biersack",
+    "name": "Andy Biersack",
+    "voiceType": "Baritone",
+    "genres": [
+      "Rock",
+      "Metal"
+    ],
+    "activeFrom": 2010,
+    "lowMidi": 38,
+    "highMidi": 77,
+    "beltMidi": null,
+    "whistle": false
+  },
+  {
     "slug": "angela-aguilar",
     "name": "Ángela Aguilar",
     "voiceType": "Mezzo-soprano",
@@ -1930,6 +1944,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "david-draiman",
+    "name": "David Draiman",
+    "voiceType": "Baritone",
+    "genres": [
+      "Metal",
+      "Hard Rock"
+    ],
+    "activeFrom": 2000,
+    "lowMidi": 34,
+    "highMidi": 80,
+    "beltMidi": 79,
+    "whistle": false
+  },
+  {
     "slug": "david-lee-roth",
     "name": "David Lee Roth",
     "voiceType": "Baritone",
@@ -2255,6 +2283,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "lowMidi": 52,
     "highMidi": 82,
     "beltMidi": 79,
+    "whistle": false
+  },
+  {
+    "slug": "elize-ryd",
+    "name": "Elize Ryd",
+    "voiceType": "Soprano",
+    "genres": [
+      "Metal",
+      "Pop"
+    ],
+    "activeFrom": 2011,
+    "lowMidi": 52,
+    "highMidi": 90,
+    "beltMidi": null,
     "whistle": false
   },
   {
@@ -2810,6 +2852,21 @@ export const SINGERS_LITE: SingerLite[] = [
     "lowMidi": 41,
     "highMidi": 69,
     "beltMidi": null,
+    "whistle": false
+  },
+  {
+    "slug": "glenn-danzig",
+    "name": "Glenn Danzig",
+    "voiceType": "Baritone",
+    "genres": [
+      "Punk",
+      "Metal",
+      "Rock"
+    ],
+    "activeFrom": 1977,
+    "lowMidi": 37,
+    "highMidi": 75,
+    "beltMidi": 73,
     "whistle": false
   },
   {
@@ -3707,6 +3764,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "jonathan-davis",
+    "name": "Jonathan Davis",
+    "voiceType": "Baritone",
+    "genres": [
+      "Metal",
+      "Alternative"
+    ],
+    "activeFrom": 1994,
+    "lowMidi": 33,
+    "highMidi": 78,
+    "beltMidi": 72,
+    "whistle": false
+  },
+  {
     "slug": "jonathan-groff",
     "name": "Jonathan Groff",
     "voiceType": "Tenor",
@@ -3790,6 +3861,21 @@ export const SINGERS_LITE: SingerLite[] = [
     "activeFrom": 2001,
     "lowMidi": 43,
     "highMidi": 69,
+    "beltMidi": null,
+    "whistle": false
+  },
+  {
+    "slug": "josh-kiszka",
+    "name": "Josh Kiszka",
+    "voiceType": "Tenor",
+    "genres": [
+      "Rock",
+      "Hard Rock",
+      "Blues"
+    ],
+    "activeFrom": 2017,
+    "lowMidi": 48,
+    "highMidi": 85,
     "beltMidi": null,
     "whistle": false
   },
@@ -4088,6 +4174,20 @@ export const SINGERS_LITE: SingerLite[] = [
     ],
     "activeFrom": 2000,
     "lowMidi": 41,
+    "highMidi": 81,
+    "beltMidi": null,
+    "whistle": false
+  },
+  {
+    "slug": "kellin-quinn",
+    "name": "Kellin Quinn",
+    "voiceType": "Tenor",
+    "genres": [
+      "Rock",
+      "Alternative"
+    ],
+    "activeFrom": 2010,
+    "lowMidi": 47,
     "highMidi": 81,
     "beltMidi": null,
     "whistle": false
@@ -4803,6 +4903,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "m-shadows",
+    "name": "M. Shadows",
+    "voiceType": "Baritone",
+    "genres": [
+      "Metal",
+      "Hard Rock"
+    ],
+    "activeFrom": 2003,
+    "lowMidi": 38,
+    "highMidi": 81,
+    "beltMidi": 72,
+    "whistle": false
+  },
+  {
     "slug": "macy-gray",
     "name": "Macy Gray",
     "voiceType": "Mezzo-soprano",
@@ -5424,6 +5538,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "myles-kennedy",
+    "name": "Myles Kennedy",
+    "voiceType": "Tenor",
+    "genres": [
+      "Hard Rock",
+      "Metal"
+    ],
+    "activeFrom": 2004,
+    "lowMidi": 34,
+    "highMidi": 86,
+    "beltMidi": 78,
+    "whistle": false
+  },
+  {
     "slug": "myles-smith",
     "name": "Myles Smith",
     "voiceType": "Tenor",
@@ -5512,6 +5640,21 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "nick-cave",
+    "name": "Nick Cave",
+    "voiceType": "Baritone",
+    "genres": [
+      "Alternative",
+      "Rock",
+      "Singer-Songwriter"
+    ],
+    "activeFrom": 1980,
+    "lowMidi": 38,
+    "highMidi": 79,
+    "beltMidi": null,
+    "whistle": false
+  },
+  {
     "slug": "nina-simone",
     "name": "Nina Simone",
     "voiceType": "Contralto",
@@ -5542,6 +5685,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "noah-sebastian",
+    "name": "Noah Sebastian",
+    "voiceType": "Baritone",
+    "genres": [
+      "Metal",
+      "Rock"
+    ],
+    "activeFrom": 2016,
+    "lowMidi": 45,
+    "highMidi": 74,
+    "beltMidi": null,
+    "whistle": false
+  },
+  {
     "slug": "norah-jones",
     "name": "Norah Jones",
     "voiceType": "Contralto",
@@ -5569,6 +5726,21 @@ export const SINGERS_LITE: SingerLite[] = [
     "highMidi": 99,
     "beltMidi": 79,
     "whistle": true
+  },
+  {
+    "slug": "oli-sykes",
+    "name": "Oli Sykes",
+    "voiceType": "Tenor",
+    "genres": [
+      "Metal",
+      "Rock",
+      "Electronic"
+    ],
+    "activeFrom": 2006,
+    "lowMidi": 39,
+    "highMidi": 80,
+    "beltMidi": 70,
+    "whistle": false
   },
   {
     "slug": "olivia-newton-john",
@@ -5825,6 +5997,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "lowMidi": 42,
     "highMidi": 69,
     "beltMidi": 67,
+    "whistle": false
+  },
+  {
+    "slug": "peter-steele",
+    "name": "Peter Steele",
+    "voiceType": "Bass-baritone",
+    "genres": [
+      "Metal",
+      "Rock"
+    ],
+    "activeFrom": 1991,
+    "lowMidi": 29,
+    "highMidi": 79,
+    "beltMidi": 68,
     "whistle": false
   },
   {
@@ -6207,6 +6393,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "activeFrom": 1975,
     "lowMidi": 41,
     "highMidi": 82,
+    "beltMidi": null,
+    "whistle": false
+  },
+  {
+    "slug": "ronnie-radke",
+    "name": "Ronnie Radke",
+    "voiceType": "Tenor",
+    "genres": [
+      "Rock",
+      "Metal"
+    ],
+    "activeFrom": 2006,
+    "lowMidi": 38,
+    "highMidi": 79,
     "beltMidi": null,
     "whistle": false
   },
@@ -6683,6 +6883,19 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "simone-simons",
+    "name": "Simone Simons",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Metal"
+    ],
+    "activeFrom": 2003,
+    "lowMidi": 55,
+    "highMidi": 85,
+    "beltMidi": null,
+    "whistle": false
+  },
+  {
     "slug": "sinead-oconnor",
     "name": "Sinéad O'Connor",
     "voiceType": "Mezzo-soprano",
@@ -7025,6 +7238,19 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "tatiana-shmayluk",
+    "name": "Tatiana Shmayluk",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Metal"
+    ],
+    "activeFrom": 2016,
+    "lowMidi": 45,
+    "highMidi": 79,
+    "beltMidi": null,
+    "whistle": false
+  },
+  {
     "slug": "taylor-swift",
     "name": "Taylor Swift",
     "voiceType": "Mezzo-soprano",
@@ -7197,6 +7423,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
+    "slug": "tobias-forge",
+    "name": "Tobias Forge",
+    "voiceType": "Baritone",
+    "genres": [
+      "Hard Rock",
+      "Metal"
+    ],
+    "activeFrom": 2010,
+    "lowMidi": 38,
+    "highMidi": 80,
+    "beltMidi": 74,
+    "whistle": false
+  },
+  {
     "slug": "tom-jones",
     "name": "Tom Jones",
     "voiceType": "Baritone",
@@ -7222,6 +7462,21 @@ export const SINGERS_LITE: SingerLite[] = [
     "lowMidi": 36,
     "highMidi": 82,
     "beltMidi": 71,
+    "whistle": false
+  },
+  {
+    "slug": "tom-waits",
+    "name": "Tom Waits",
+    "voiceType": "Bass-baritone",
+    "genres": [
+      "Singer-Songwriter",
+      "Blues",
+      "Jazz"
+    ],
+    "activeFrom": 1973,
+    "lowMidi": 33,
+    "highMidi": 79,
+    "beltMidi": 67,
     "whistle": false
   },
   {
@@ -7467,6 +7722,20 @@ export const SINGERS_LITE: SingerLite[] = [
     "lowMidi": 47,
     "highMidi": 81,
     "beltMidi": 73,
+    "whistle": false
+  },
+  {
+    "slug": "ville-valo",
+    "name": "Ville Valo",
+    "voiceType": "Baritone",
+    "genres": [
+      "Rock",
+      "Metal"
+    ],
+    "activeFrom": 1997,
+    "lowMidi": 30,
+    "highMidi": 83,
+    "beltMidi": 67,
     "whistle": false
   },
   {

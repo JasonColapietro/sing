@@ -75,6 +75,7 @@ const FILE_GROUPS = {
   "rnb-women-2.json": "rnb-modern",
   "rock-legends.json": "rock-men",
   "rock-modern.json": "rock-men",
+  "metal-2.json": "metal",
 };
 
 /** The gap batches are grab-bags, so every singer in them is placed by hand. */
@@ -200,6 +201,10 @@ const ASSIGN = {
   fantasia: "soul-women",
   "macy-gray": "soul-women",
   indiaarie: "soul-women",
+  // metal-2.json exceptions — the dark non-metal voices
+  "nick-cave": "grunge-alt",
+  "tom-waits": "folk",
+  "kellin-quinn": "grunge-alt",
   // rock-modern.json exceptions
   "gerard-way": "grunge-alt",
   "tyler-joseph": "grunge-alt",
