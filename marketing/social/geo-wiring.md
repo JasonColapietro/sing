@@ -88,6 +88,36 @@ Suede-AI-App monorepo) so both surfaces assert the same profile set.
 - **Wikidata** (Q141169484 is the org): product-profile claims there are a
   manual, human edit if ever wanted; not part of this pass.
 
+## Done already: link previews (2026-08-28)
+
+Before any post goes out, the link has to preview correctly — a Facebook post
+whose card is a bare text link is a wasted post. A sweep with Facebook's own
+crawler UA found **eight pages serving with no `og:image` at all**: `/range`,
+`/songs`, `/extension`, `/changelog`, `/book`, `/glossary`, `/atlas` and
+`/atlas/vocal-range-by-voice-type`. Two of those are the surfaces this launch
+points at hardest — `/range` is the Instagram bio-link destination, and
+`/extension` is the Chrome Web Store funnel.
+
+Cause: Next replaces the `openGraph` object wholesale at the deepest segment
+that declares one, so every page that set `openGraph` to carry its own title
+silently dropped the sitewide card. Fixed in `f1adce0` — `lib/og.ts` owns the
+card, the eight pages name it, and `lib/og.test.ts` fails the suite if a ninth
+page repeats it. All 21 audited pages now serve the card from
+`sing.suedeai.ai`.
+
+Re-audit any time (the file tree will not show this — only the served HTML
+does):
+
+```bash
+FB="facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
+curl -s -A "$FB" -H "Accept: text/html" https://sing.suedeai.ai/range | grep -c 'property="og:image"'
+```
+
+After the accounts exist, run each launch URL through Facebook's Sharing
+Debugger once to force a fresh scrape — Facebook caches the old imageless
+version, so a link shared before the fix keeps previewing wrong until it is
+re-scraped.
+
 ## Verification checklist (run after patches deploy)
 
 ```bash

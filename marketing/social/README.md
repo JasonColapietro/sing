@@ -33,6 +33,16 @@ around it is done.
   link carries `?utm_source=instagram&utm_medium=social&utm_campaign=profile`;
   FB post links carry `utm_source=facebook` with `utm_medium=organic|group`.
 
+## Known before you start
+
+- **Facebook's `suedesing` vanity already fuzzy-matches an unrelated Budapest
+  design firm** ("SueDesign"). It may still be grantable at Page creation —
+  if it is refused, `suedesingapp` is the ranked fallback in
+  [facebook.md §1](facebook.md).
+- **Link previews were broken sitewide and are now fixed** (2026-08-28,
+  commit `f1adce0`): eight pages, `/range` among them, shared with no image.
+  Details and the re-audit command are in [geo-wiring.md](geo-wiring.md).
+
 ## Jason's part — creating the accounts (~15 minutes)
 
 1. **Instagram** (in the app): create a new account with the accounts email
