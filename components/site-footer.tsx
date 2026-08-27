@@ -129,7 +129,15 @@ export default function SiteFooter() {
         </nav>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 font-mono text-xs text-dim">
-          <span>SUEDE SING</span>
+          <span className="flex flex-wrap items-center gap-x-2">
+            <span>SUEDE SING</span>
+            <span aria-hidden>·</span>
+            {/* The durable inbound link to /changelog: the v2 banner will
+                retire one day, and the crawl path must not retire with it. */}
+            <Link href="/changelog" className={linkClass}>
+              v2 — what we&apos;ve changed
+            </Link>
+          </span>
           <span>practice loud — your voice never leaves this device</span>
         </div>
       </div>

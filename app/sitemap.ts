@@ -33,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // listed here rather than derived from ATLAS_CONTENTS below.
     "/atlas/vocal-range-by-voice-type",
     "/glossary",
+    "/changelog",
     // Both books' free sample chapters are real, indexable content; the gated
     // chapters are robots-noindexed and stay out of the sitemap.
     ...ATLAS_CONTENTS.filter((c) => c.free).map((c) => `/atlas/${c.slug}`),

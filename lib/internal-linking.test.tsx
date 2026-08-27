@@ -105,6 +105,10 @@ describe("footer wires every hub into every page", () => {
     expect(html, "footer missing /extension").toContain('href="/extension"');
   });
 
+  it("links the changelog — the durable path once the v2 banner retires", () => {
+    expect(html, "footer missing /changelog").toContain('href="/changelog"');
+  });
+
   it("links every voice-type hub", () => {
     for (const v of VOICE_KINDS) {
       expect(html, `footer missing voice-type ${v}`).toContain(
