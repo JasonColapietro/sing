@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!--
+  Instagram carousel: "When the numbers lie to you." Seven 1080x1350 slides.
+
+  SOURCE: content/book/12-when-numbers-lie.md
+
+  Chapter 12 of The Measured Voice — one of the three free chapters (1, 8, 12),
+  served unpaywalled at /book/when-numbers-lie.
+
+  Same rule as the other book carousel, enforced by
+  marketing/social/assets/verify-quotes.mjs:
+    - Serif, under an open quote mark = VERBATIM from the chapter.
+    - Sans-serif = editorial summary written for the slide, never presented
+      as the author's words.
+
+  Seven slides rather than six because this chapter is the most actionable in
+  the book: the silence check on slide 5 is a thing a reader can do in ten
+  seconds, and burying it inside another slide would waste it.
+
+  Render:  node marketing/social/assets/carousel-numbers/render.mjs
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=block"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --paper: #f7f0e7;
+    --panel: #fffaf2;
+    --line: #ddd4c4;
+    --line2: #c9bda0;
+    --ink: #20201d;
+    --mut: #5c564d;
+    --label: #82631f;
+    --teal: #11615d;
+    --rec: #9d3f33;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #888; font-family: Manrope, sans-serif; }
+
+  .slide {
+    position: relative;
+    width: 1080px; height: 1350px;
+    background: var(--paper); color: var(--ink);
+    overflow: hidden; padding: 96px 88px;
+    display: flex; flex-direction: column;
+  }
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600; font-size: 19px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--label);
+  }
+  .count {
+    position: absolute; right: 88px; bottom: 88px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px; letter-spacing: 0.14em; color: var(--line2);
+  }
+  .quote {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400; font-size: 76px; line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .quote em { font-style: italic; }
+  .say { font-size: 31px; line-height: 1.5; color: var(--mut); }
+  .say strong { color: var(--ink); font-weight: 600; }
+  .mark {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 190px; line-height: 0.6; color: var(--line2); height: 96px;
+  }
+
+  /* Lists of causes and tells — editorial summary, so never serif. */
+  .items { display: flex; flex-direction: column; gap: 18px; margin-top: 44px; }
+  .item {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 20px; padding: 28px 32px;
+  }
+  .item .h {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600; font-size: 20px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--label);
+  }
+  .item .d { font-size: 29px; line-height: 1.4; margin-top: 8px; }
+
+  .tells { display: flex; flex-direction: column; gap: 22px; margin-top: 42px; }
+  .tell { display: grid; grid-template-columns: 26px 1fr; gap: 22px; align-items: start; }
+  .tell .dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--rec); margin-top: 14px;
+  }
+  .tell .t { font-size: 31px; line-height: 1.42; }
+
+  /* Slide 5: the silence check, drawn. Two panels — what a clean setup shows,
+     and what a noisy room shows — because the whole test is "does the trace
+     stay empty when you do". */
+  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 46px; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 20px; padding: 26px 26px 20px;
+  }
+  .panel .lab {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600; font-size: 18px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .panel .verdict { font-size: 26px; line-height: 1.35; margin-top: 16px; color: var(--mut); }
+
+  .attrib {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--label);
+  }
+  .booktitle {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 88px; line-height: 1.06; margin-top: 14px;
+  }
+  .booktitle em { font-style: italic; }
+  .url {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 60px; color: var(--teal); margin-top: 18px;
+  }
+</style>
+</head>
+<body>
+
+<!-- 1 — the line the whole chapter turns on -->
+<section class="slide" id="s1">
+  <div class="kicker">The Measured Voice &middot; Chapter twelve</div>
+  <div class="body">
+    <div>
+      <div class="mark">&ldquo;</div>
+      <div class="quote">Bad data does not feel like bad data. It feels like a <em>verdict.</em></div>
+    </div>
+  </div>
+  <div class="count">01 / 07</div>
+</section>
+
+<!-- 2 -->
+<section class="slide" id="s2">
+  <div class="kicker">Why that happens</div>
+  <div class="body">
+    <div>
+      <div class="quote" style="font-size:60px">Every number the app shows you measures two things at once: your singing, and <em>the conditions you sang in.</em></div>
+      <p class="say" style="margin-top:44px">Usually the second is quiet enough to ignore. Sometimes it is louder than the first &mdash; and you end up reading the room instead of your voice.</p>
+    </div>
+  </div>
+  <div class="count">02 / 07</div>
+</section>
+
+<!-- 3 — editorial summary of the chapter's causes. Deliberately not serif. -->
+<section class="slide" id="s3">
+  <div class="kicker">Four things that corrupt a session</div>
+  <div class="body">
+    <div>
+      <div class="items">
+        <div class="item"><div class="h">Room noise</div><div class="d">A fan, a fridge, traffic. Low steady noise sits in the same neighbourhood as your low notes.</div></div>
+        <div class="item"><div class="h">Mic distance</div><div class="d">Too close and loud notes clip. Too far and your quietest notes never register at all.</div></div>
+        <div class="item"><div class="h">Headphone bleed</div><div class="d">The mic hears the backing track too, and your score drifts toward the reference tone.</div></div>
+        <div class="item"><div class="h">The day itself</div><div class="d">Sleep, talking, dryness, the hour. None of it is a fault. All of it moves the numbers.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="count">03 / 07</div>
+</section>
+
+<!-- 4 — the false range test, the most costly failure -->
+<section class="slide" id="s4">
+  <div class="kicker">The classic false reading</div>
+  <div class="body">
+    <div>
+      <div class="mark">&ldquo;</div>
+      <div class="quote" style="font-size:66px">You sang the note, the app did not hear it, and the result says <em>you cannot reach it.</em></div>
+    </div>
+  </div>
+  <div class="count">04 / 07</div>
+</section>
+
+<!-- 5 — the ten-second test, drawn -->
+<section class="slide" id="s5">
+  <div class="kicker">The ten-second check</div>
+  <div class="body">
+    <div>
+      <div class="quote" style="font-size:58px">Open the pitch studio, stay silent, and watch.</div>
+      <div class="panels">
+        <div class="panel">
+          <div class="lab" style="color:var(--teal)">Clean</div>
+          <svg width="100%" height="120" viewBox="0 0 380 120" fill="none" preserveAspectRatio="none">
+            <line x1="0" y1="40" x2="380" y2="40" stroke="#ddd4c4" stroke-width="1" />
+            <line x1="0" y1="80" x2="380" y2="80" stroke="#ddd4c4" stroke-width="1" />
+          </svg>
+          <div class="verdict">Nothing. Silence reads as silence.</div>
+        </div>
+        <div class="panel">
+          <div class="lab" style="color:var(--rec)">Noisy room</div>
+          <svg width="100%" height="120" viewBox="0 0 380 120" fill="none" preserveAspectRatio="none">
+            <line x1="0" y1="40" x2="380" y2="40" stroke="#ddd4c4" stroke-width="1" />
+            <line x1="0" y1="80" x2="380" y2="80" stroke="#ddd4c4" stroke-width="1" />
+            <path d="M8 92 L26 84 M40 96 L58 88 M74 90 L92 99 M108 86 L126 94 M140 97 L158 89 M172 91 L190 84 M204 95 L222 90 M236 88 L254 97 M268 93 L286 86 M300 90 L318 96 M332 95 L350 88"
+                  stroke="#9d3f33" stroke-width="7" stroke-linecap="round" />
+          </svg>
+          <div class="verdict">Phantom notes, with nobody singing.</div>
+        </div>
+      </div>
+      <p class="say" style="margin-top:38px"><strong>If the trace finds notes in your silence, it will find them while you sing too</strong>, and mix them into the reading.</p>
+    </div>
+  </div>
+  <div class="count">05 / 07</div>
+</section>
+
+<!-- 6 — the tells, editorial summary -->
+<section class="slide" id="s6">
+  <div class="kicker">Tells that a session went wrong</div>
+  <div class="body">
+    <div>
+      <div class="tells">
+        <div class="tell"><div class="dot"></div><div class="t">Accuracy uniformly bad across your whole range &mdash; voices don&rsquo;t degrade evenly, setups do.</div></div>
+        <div class="tell"><div class="dot"></div><div class="t">Low notes erratic, middle clean.</div></div>
+        <div class="tell"><div class="dot"></div><div class="t">Notes you sang last week that don&rsquo;t appear at all.</div></div>
+        <div class="tell"><div class="dot"></div><div class="t">Everything sharp or flat by the same amount on every note.</div></div>
+      </div>
+      <p class="say" style="margin-top:44px">One question before a number changes your plan: <strong>was this session measurable?</strong></p>
+    </div>
+  </div>
+  <div class="count">06 / 07</div>
+</section>
+
+<!-- 7 — the closer, then the book -->
+<section class="slide" id="s7">
+  <div class="kicker">Read chapter twelve</div>
+  <div class="body">
+    <div>
+      <div class="quote" style="font-size:56px">One discarded test costs you nothing. One believed bad test sends you <em>chasing a problem that was never in your voice.</em></div>
+      <div class="attrib" style="margin-top:56px">From</div>
+      <div class="booktitle" style="font-size:66px">The Measured <em>Voice</em></div>
+      <p class="say" style="margin-top:18px">Chapter twelve is free to read &mdash; no account, no paywall.</p>
+      <div class="url">sing.suedeai.ai/book</div>
+    </div>
+  </div>
+  <div class="count">07 / 07</div>
+</section>
+
+</body>
+</html>

@@ -15,6 +15,8 @@ around it is done.
 | [assets/](assets/) | `avatar-512.png` (both platforms), `fb-cover-1640x720.png` (+ HTML source and re-render script) |
 | [assets/carousel-range/](assets/carousel-range/README.md) | **Post 2, finished** — six 1080×1350 slides, caption, and per-slide alt text. Upload and go. |
 | [assets/carousel-book/](assets/carousel-book/README.md) | **Post 6, finished** — six slides from chapter one of The Measured Voice, quotation-checked. |
+| [assets/carousel-numbers/](assets/carousel-numbers/README.md) | **Bonus post, finished** — seven slides from chapter twelve, "When the numbers lie to you". |
+| [CODEX-carousel-brief.md](CODEX-carousel-brief.md) | Hand the next carousel (chapter 8) to the Codex CLI — self-contained spec, all five traps written down. |
 
 ## What's ready vs. what needs your voice
 
