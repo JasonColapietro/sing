@@ -221,8 +221,10 @@ export default async function SingerPage({
         // strings; the Wikipedia URL is the cheapest anchor to the real entity.
         // Derived via wikipediaUrl() rather than raw name-mangling — 18 singers
         // have names that mangle onto a disambiguation page, which asserts the
-        // wrong entity instead of failing loudly.
-        sameAs: wikipediaUrl(s),
+        // wrong entity instead of failing loudly. Null means no personal
+        // article exists (band-only artists) — then the node carries no sameAs
+        // rather than a wrong one.
+        ...(wikipediaUrl(s) ? { sameAs: wikipediaUrl(s) } : {}),
         // The range as data, not prose. An engine answering "how many octaves
         // does X have" should not have to parse a sentence to get 3.3.
         additionalProperty: [

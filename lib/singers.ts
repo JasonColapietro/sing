@@ -126,7 +126,7 @@ export function singersByGenre(g: string): Singer[] {
  * description — anything like "Topics referred to by the same term" or
  * "Name list" is not a person, whatever the pageprops say.
  */
-const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
+const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string | null> = {
   // Landed on a disambiguation page.
   ado: "Ado (singer)",
   chen: "Chen (singer)",
@@ -147,6 +147,20 @@ const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
   usher: "Usher (musician)",
   zayn: "Zayn Malik",
   // 2026-08-27 expansion batches.
+  seal: "Seal (musician)",
+  jojo: "JoJo (singer)",
+  jewel: "Jewel (singer)",
+  aurora: "Aurora (singer)",
+  marina: "Marina Diamandis",
+  raye: "Raye",
+  drake: "Drake (musician)",
+  "childish-gambino": "Donald Glover",
+  "juice-wrld": "Juice Wrld",
+  // No personal article exists — only the band's. A Person sameAs pointing at
+  // a band asserts the wrong kind of entity, so these emit no sameAs at all.
+  "caleb-followill": null,
+  "tatiana-shmayluk": null,
+  "josh-kiszka": null,
   "glenn-hughes": "Glenn Hughes (musician)",
   "michael-mcdonald": "Michael McDonald (musician)",
   monica: "Monica (singer)",
@@ -167,8 +181,16 @@ const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
   "sade-adu": "Sade (singer)",
 };
 
-/** Canonical Wikipedia URL for a singer, honouring the overrides above. */
-export function wikipediaUrl(s: Pick<Singer, "slug" | "name">): string {
-  const title = WIKIPEDIA_TITLE_OVERRIDES[s.slug] ?? s.name;
+/**
+ * Canonical Wikipedia URL for a singer, honouring the overrides above.
+ * Null when the singer has no personal article (a band article is not an
+ * acceptable stand-in for a Person) — callers omit sameAs in that case.
+ */
+export function wikipediaUrl(s: Pick<Singer, "slug" | "name">): string | null {
+  const title =
+    s.slug in WIKIPEDIA_TITLE_OVERRIDES
+      ? WIKIPEDIA_TITLE_OVERRIDES[s.slug]
+      : s.name;
+  if (title === null) return null;
   return `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`;
 }
