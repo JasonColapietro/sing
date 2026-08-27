@@ -74,6 +74,7 @@ const FILE_GROUPS = {
   "global-2.json": "global-pop",
   "rnb-women-2.json": "rnb-modern",
   "rock-legends.json": "rock-men",
+  "rock-modern.json": "rock-men",
 };
 
 /** The gap batches are grab-bags, so every singer in them is placed by hand. */
@@ -199,6 +200,18 @@ const ASSIGN = {
   fantasia: "soul-women",
   "macy-gray": "soul-women",
   indiaarie: "soul-women",
+  // rock-modern.json exceptions
+  "gerard-way": "grunge-alt",
+  "tyler-joseph": "grunge-alt",
+  "alex-turner": "grunge-alt",
+  "julian-casablancas": "grunge-alt",
+  "rivers-cuomo": "grunge-alt",
+  "michael-hutchence": "grunge-alt",
+  "boy-george": "grunge-alt",
+  "matty-healy": "pop-men",
+  "nate-ruess": "pop-men",
+  "robbie-williams": "pop-men",
+  seal: "soul-men",
   // global-2.json exceptions — the Latin lane
   "julio-iglesias": "latin",
   "cristian-castro": "latin",
