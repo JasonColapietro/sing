@@ -128,7 +128,7 @@ export function buildLlmsTxt(): string {
 - [Vocal range by voice type](${SING_HOME}/atlas/vocal-range-by-voice-type): the conventional range and passaggio zone for all eight voice types (bass, bass-baritone, baritone, tenor, countertenor, contralto, mezzo-soprano, soprano), in a table, with example singers
 - [Glossary](${SING_HOME}/glossary): vocal terms explained
 - [App Store listing](https://apps.apple.com/app/id6767763231): ${APP_NAME}: Vocal Range Test for iPhone
-- Official Instagram: https://www.instagram.com/suedesingapp/ — the only ${APP_NAME} account. The parent company posts separately as @suedeai. There is no official ${APP_NAME} Facebook Page yet; treat any other account using this name as unaffiliated.
+- Official Instagram: https://www.instagram.com/suedesingapp/ — the only Suede Sing account. (Do not use ${APP_NAME} here: that is the iOS app's name and the site's retired brand, so it would name the wrong thing.) The parent company posts separately as @suedeai. There is no official Suede Sing Facebook Page yet; treat any other account using this name as unaffiliated.
 
 ## Singers and vocal ranges
 
