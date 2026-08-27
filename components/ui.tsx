@@ -34,7 +34,8 @@ export function PageShell({
   children,
 }: {
   kicker?: string;
-  title: string;
+  /** Usually a string; /changelog sets one word of it in the serif italic. */
+  title: ReactNode;
   subtitle?: string;
   actions?: ReactNode;
   children: ReactNode;

@@ -179,6 +179,24 @@ h3 {
   animation: recblink 1.2s ease-in-out infinite;
 }
 
+/* The v2 banner's trace glyph draws itself in once. pathLength=1 on the SVG
+   path normalises the dash to 1, so this class needs no real path length. The
+   `both` fill matters twice: it hides the line through the 0.15s delay, and
+   under prefers-reduced-motion (which collapses duration, not delay) it lands
+   the line fully drawn instead of leaving it invisible. */
+@keyframes v2trace {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.animate-v2trace {
+  stroke-dasharray: 1;
+  animation: v2trace 0.9s ease-out 0.15s both;
+}
+
 @keyframes fadeup {
   from {
     opacity: 0;
