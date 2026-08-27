@@ -5,10 +5,11 @@ of The Measured Voice, using the pipeline already in this repo. Three
 carousels exist and work; this describes how to make the next one without
 rediscovering the traps.
 
-**Run it from the repo root** (`~/code/sing`, or wherever this checkout is):
+**Run it from the repo root.** This repo lives at `~/sing` — *not* under
+`~/code/` like the rest of the estate, which CLAUDE.md calls out explicitly.
 
 ```bash
-codex exec --sandbox workspace-write -C ~/code/sing "$(cat marketing/social/CODEX-carousel-brief.md)
+codex exec --sandbox workspace-write -C ~/sing "$(cat marketing/social/CODEX-carousel-brief.md)
 
 TASK: build the carousel for chapter 8, 'Reading your range test'."
 ```
