@@ -70,7 +70,7 @@ interface Row {
   slug: string;
   /** "E2–E4" for the conventional band. */
   band: string;
-  /** "G3–A3" for the transition zone. */
+  /** "G3–C4" for the transition zone. */
   passaggio: string;
   caveat?: string;
   examples: ReturnType<typeof representativeSingers>;
@@ -159,7 +159,11 @@ const FAQ: Faq[] = [
   },
   {
     q: "What is a passaggio?",
-    a: "The passaggio is the pitch zone where a singing voice changes gear between registers — the place where chest voice stops working the way it did and the voice has to shift into a lighter production. It is felt as a break, a wobble, or a sudden need to push. Each voice type has its own zone: roughly G3–A3 for a bass, B3–D4 for a baritone, E4–G4 for a tenor, A4–C5 for a mezzo-soprano, and C5–E5 for a soprano. Most of the difficulty in a song lives at or just under the singer's passaggio, which is why two singers with identical ranges can find completely different songs hard.",
+    // The only FAQ answer that names pitches outside a row, so it is the
+    // one that can drift from the table. Built from the same constant the
+    // table renders: the hand-typed version of this sentence outlived a
+    // correction to the figures once already.
+    a: `The passaggio is the pitch zone where a singing voice changes gear between registers — it runs from where the voice has to start shedding weight up to where chest voice stops working the way it did and a lighter production has to take over. It is a few notes wide rather than a single note, and it is felt as a break, a wobble, or a sudden need to push. Each voice type has its own zone: roughly ${row("Bass").passaggio} for a bass, ${row("Baritone").passaggio} for a baritone, ${row("Tenor").passaggio} for a tenor, ${row("Mezzo-soprano").passaggio} for a mezzo-soprano, and ${row("Soprano").passaggio} for a soprano. Most of the difficulty in a song lives at or just under the singer's passaggio, which is why two singers with identical ranges can find completely different songs hard.`,
   },
 ];
 

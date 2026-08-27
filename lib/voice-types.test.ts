@@ -13,7 +13,9 @@
  * concatenation was copied rather than shared.
  *
  * Proven non-vacuous: restoring `${type}s` fails the plural test naming Bass;
- * widening any REFERENCE_BAND by a semitone fails the two-octave test.
+ * widening any REFERENCE_BAND by a semitone fails the two-octave test;
+ * restoring the primo-only male passaggi (55-57, 57-60, 59-62, 64-67)
+ * fails both of the registration-event tests below.
  */
 import { describe, expect, it } from "vitest";
 
@@ -83,6 +85,43 @@ describe("passaggio zones", () => {
       const lows = ladder.map((v) => VOICE_TYPE_PASSAGGIO[v].low);
       expect(lows, ladder.join(" < ")).toEqual([...lows].sort((a, b) => a - b));
     }
+  });
+
+  // The male ladder spans [primo passaggio, secondo passaggio]. The two tests
+  // below pin that as a shape rather than as four hardcoded pairs, because the
+  // defect they exist for was a category error, not a typo: the published lows
+  // were Miller's primo column while the page's prose describes the secondo,
+  // so three of the four rows named an event a perfect fourth below the one
+  // being defined. Countertenor is excluded throughout — its zone is the M1/M2
+  // crossing, a different event, and it carries a caveat saying so.
+  const MALE_LADDER = ["Bass", "Bass-baritone", "Baritone", "Tenor"] as const;
+
+  it("spans a perfect fourth for every male category", () => {
+    // Miller puts a perfect fourth between primo and secondo, so a male band
+    // narrower than five semitones is reporting only one of the two events.
+    const wrong = MALE_LADDER.filter(
+      (v) => VOICE_TYPE_PASSAGGIO[v].high - VOICE_TYPE_PASSAGGIO[v].low !== 5,
+    );
+    expect(wrong, `not a perfect fourth: ${wrong.join(", ")}`).toEqual([]);
+  });
+
+  it("steps between male categories by less than it spans within one", () => {
+    // The tell that caught the original error, kept as an invariant. Adjacent
+    // male categories sit a tone or so apart; primo to secondo is a fourth. A
+    // gap of a fourth *between* two neighbours therefore means the ladder has
+    // changed which event it is measuring partway down — which is exactly what
+    // the +5 from the baritone floor to the tenor floor was.
+    const lows = MALE_LADDER.map((v) => VOICE_TYPE_PASSAGGIO[v].low);
+    const steps = lows.slice(1).map((n, i) => n - lows[i]);
+    const jumped = steps
+      .map((n, i) => ({ n, pair: `${MALE_LADDER[i]}->${MALE_LADDER[i + 1]}` }))
+      .filter((x) => x.n >= 5);
+    expect(
+      jumped.map((x) => x.pair),
+      `gap of a fourth or more between neighbours: ${jumped
+        .map((x) => `${x.pair} +${x.n}`)
+        .join(", ")}`,
+    ).toEqual([]);
   });
 
   it("explains itself wherever the single-zone model is a poor fit", () => {
