@@ -94,6 +94,10 @@ export const RANGE_GUIDE: GuideContent = {
       a: "Start the free test, allow microphone access, hold one comfortable note, then slide down and up while the pitch detector listens. Suede Sing marks the lowest and highest clear notes it hears, shows the span on a keyboard, and gives the conventional voice-type band that overlaps it most closely.",
     },
     {
+      q: "How high can I sing?",
+      a: "As high as you can hold a clear, comfortable tone — that ceiling is exactly what this test finds. Most voices reach further than they think once they let go of chest weight and allow head voice or falsetto to carry the top. Test it, then compare your ceiling against the famous voices in the singer library.",
+    },
+    {
       q: "How many octaves should I have?",
       a: "There is no required octave count for a useful singing voice. A smaller span that stays clear, comfortable, and repeatable is more useful than a wider result built from strained or one-off notes. Song choice and transposition matter more than matching someone else's number.",
     },

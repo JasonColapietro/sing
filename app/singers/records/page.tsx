@@ -62,25 +62,63 @@ export default function RecordsPage() {
     .slice(0, 15);
   const whistlers = SINGERS.filter((s) => s.whistle);
 
+  // The absolute phrasings people actually type — "ever", "in the world",
+  // "biggest" — answered from the same computed rankings the tables render,
+  // with the hedge these numbers deserve stated inside the answer rather than
+  // near it. One array feeds the visible section and the FAQPage markup.
+  const w = widest[0];
+  const hi = highest[0];
+  const lo = lowest[0];
+  const faq = [
+    {
+      q: "Who has the biggest vocal range in the world?",
+      a: `No figure like this is lab-verified, so "in the world" claims are really "in circulation" claims. Among the ${SINGERS.length} famous voices indexed here, the widest commonly cited range is ${w.name}'s ${rangeLabel(w)} — about ${spanOctaves(span(w))} octaves. Spans that wide run from growled subharmonics to whistle register, not one continuous singing voice.`,
+    },
+    {
+      q: "What is the highest note ever sung?",
+      a: `Claims vary and the extremes are one-off recorded moments rather than repeatable notes. The highest note cited in this collection is ${midiToLabel(hi.highMidi)}, for ${hi.name} — whistle register, a different mechanism from the voice doing the work an octave down.`,
+    },
+    {
+      q: "What is the lowest note ever sung?",
+      a: `The lowest note cited in this collection is ${midiToLabel(lo.lowMidi)}, for ${lo.name}. Notes this low carry almost no acoustic power, so cited floors depend on a microphone doing much of the work — the deeper the claim, the more that caveat applies.`,
+    },
+  ];
+
+  const pageUrl = `${SITE_URL}/singers/records`;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: TITLE,
-    url: `${SITE_URL}/singers/records`,
-    description: DESCRIPTION,
-    isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
-    mainEntity: {
-      "@type": "ItemList",
-      name: "Widest cited vocal ranges",
-      numberOfItems: widest.length,
-      itemListOrder: "https://schema.org/ItemListOrderDescending",
-      itemListElement: widest.map((s, i) => ({
-        "@type": "ListItem",
-        position: i + 1,
-        url: `${SITE_URL}/singers/${s.slug}`,
-        name: `${s.name} — ${spanOctaves(span(s))} octaves`,
-      })),
-    },
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${pageUrl}#collection`,
+        name: TITLE,
+        url: pageUrl,
+        description: DESCRIPTION,
+        isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
+        mainEntity: {
+          "@type": "ItemList",
+          name: "Widest cited vocal ranges",
+          numberOfItems: widest.length,
+          itemListOrder: "https://schema.org/ItemListOrderDescending",
+          itemListElement: widest.map((s, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            url: `${SITE_URL}/singers/${s.slug}`,
+            name: `${s.name} — ${spanOctaves(span(s))} octaves`,
+          })),
+        },
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#faq`,
+        isPartOf: { "@id": `${pageUrl}#collection` },
+        mainEntity: faq.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
   };
 
   return (
@@ -197,6 +235,20 @@ export default function RecordsPage() {
                 </li>
               ))}
           </ul>
+        </Card>
+
+        {/* The absolute questions, in the words people search — same array as
+            the FAQPage markup above. */}
+        <Card>
+          <h2 className="text-xl">The questions these tables get asked</h2>
+          <div className="mt-4 max-w-3xl space-y-5">
+            {faq.map((f) => (
+              <div key={f.q}>
+                <h3 className="text-sm font-semibold">{f.q}</h3>
+                <p className="mt-1 text-sm text-mut">{f.a}</p>
+              </div>
+            ))}
+          </div>
         </Card>
 
         <Card>

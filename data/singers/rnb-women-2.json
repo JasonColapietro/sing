@@ -1,0 +1,474 @@
+[
+  {
+    "name": "Janet Jackson",
+    "voiceType": "Soprano",
+    "genres": [
+      "Pop",
+      "R&B",
+      "Funk"
+    ],
+    "country": "USA",
+    "activeFrom": 1986,
+    "lowNote": "C3",
+    "highNote": "D6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Rhythm Nation",
+    "lowSource": "No Sleeep",
+    "highSource": "He Doesn't Know I'm Alive",
+    "blurb": "Feather-light pop-funk mix: breathy, rhythm-locked phrasing and whispery stacked harmonies over machine grooves.",
+    "technique": "Janet works close to the microphone, favoring a light, breathy mix over open-throated belting. She stacks whispery harmonies in thirds and lets consonants land on the groove, so rhythm does the projecting that volume does not. Head voice stays airy and slightly straight-toned, with vibrato saved for phrase endings. Students copying her usually over-breathe the tone and lose pitch center; she keeps the breath shallow but the placement forward, and she never pushes the mix past its natural weight."
+  },
+  {
+    "name": "Aaliyah",
+    "voiceType": "Soprano",
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 1994,
+    "lowNote": "C#3",
+    "highNote": "A5",
+    "beltNote": "G#5",
+    "whistle": false,
+    "signatureSong": "Try Again",
+    "lowSource": "Death of a Playa",
+    "highSource": "Never Comin' Back",
+    "blurb": "Cool, airy head-mix glide over stuttering beats — intimacy and precision instead of power.",
+    "technique": "Aaliyah floats a small, cool head-mix over intricate rhythmic phrasing, singing softly enough that the microphone does the projection. Her onsets are aspirate and gentle, runs are compact and precise rather than showy, and harmony stacks carry much of the color. The belt tops out around G#5 but she rarely leans on it, preferring restraint. Students copying her often whisper instead of phonating; the trick is a clear, connected tone at low volume, with breath moving constantly underneath."
+  },
+  {
+    "name": "Monica",
+    "voiceType": "Contralto",
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 1995,
+    "lowNote": "B2",
+    "highNote": "B5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "The Boy Is Mine",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Dark, weighty chest voice with a husky edge, driving church-bred runs straight through the beat.",
+    "technique": "Monica anchors phrases in a dense chest voice that keeps its rasp and weight down where speech lives. Her onset is firm, almost spoken, and she drives melisma from the diaphragm so each note of a run lands separately. The mix carries chest color surprisingly high before flipping late into head voice. Students copying her tend to imitate the grit by squeezing the throat; the darkness comes from low placement and relaxed pharyngeal space, not pressure."
+  },
+  {
+    "name": "Ashanti",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Hip-Hop",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2002,
+    "lowNote": "F3",
+    "highNote": "C6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Foolish",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Soft, rounded midrange stacked into pillowy self-harmonies; melody kept simple and conversational.",
+    "technique": "Ashanti layers soft, midweight lines into cushioned harmony beds, treating her lead vocal as one thread inside the arrangement. The tone is round and slightly nasal-forward, onsets are gentle, and she repeats short melodic cells rather than long runs. Sustains carry a slow, narrow vibrato. Students copying her underestimate the stacking discipline: each double must match vowel shape and decay exactly, and the lead must stay conversational, never pushed, or the blend collapses."
+  },
+  {
+    "name": "Tamia",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
+    "country": "Canada",
+    "activeFrom": 1995,
+    "lowNote": "Eb3",
+    "highNote": "D6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Officially Missing You",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Pristine, bright mix that blooms into clear head voice, with exacting intonation on long, high sustains.",
+    "technique": "Tamia balances a bright, forward mix with genuine head-voice bloom, moving between them without a visible seam. Her intonation is unusually exact on sustained high lines, vibrato arrives late and even, and runs are shaped in clean descending curls. She supports long crescendos from the ribs, letting a note grow without spreading. Students copying her usually attack the top notes; she approaches them on closed vowels, narrows first, then opens once the pitch is seated."
+  },
+  {
+    "name": "Kelly Rowland",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Pop",
+      "Electronic"
+    ],
+    "country": "USA",
+    "activeFrom": 1998,
+    "lowNote": "C3",
+    "highNote": "Eb6",
+    "beltNote": "F5",
+    "whistle": false,
+    "signatureSong": "Motivation",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Warm, weighty mezzo middle with a rounded belt and wide vibrato that turns dance tracks humid.",
+    "technique": "Kelly sings from a weighty, warm middle register and builds phrases around it rather than around the extremes. Her belt is thick and rounded up to F5, finished with a wide, deliberate vibrato that she can delay for tension. Low phrases keep full tone instead of fry. Students copying her often thin out the middle to reach higher; she does the opposite, keeping the larynx settled and accepting a lower ceiling in exchange for evenness and warmth."
+  },
+  {
+    "name": "Ciara",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Pop",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 2004,
+    "lowNote": "Bb2",
+    "highNote": "A5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Goodies",
+    "lowSource": "Girl Gang",
+    "highSource": "Up & Down",
+    "blurb": "Light, reedy tone clipped tight to the beat — a dancer's voice, quick and cool.",
+    "technique": "Ciara treats the voice as part of the choreography: light, reedy, and rhythmically clipped, with consonants placed exactly on the beat. She sings mostly in a nimble low mix, harmonizing her lower notes and saving the thin, bright top for accents. Runs are fast, small-interval, and always land on the grid. Students copying her add too much weight; the style needs a lifted soft palate, minimal air pressure, and breath planned around dance movement."
+  },
+  {
+    "name": "Fantasia",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Gospel"
+    ],
+    "country": "USA",
+    "activeFrom": 2004,
+    "lowNote": "C3",
+    "highNote": "Bb5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "When I See U",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Husky, grainy soul shout with gospel bends, percussive onsets and a growl always within reach.",
+    "technique": "Fantasia drives breath hard through a husky, gospel-schooled instrument, turning the rasp into an expressive dial she opens and closes at will. Onsets are often glottal and percussive, phrases bend behind the beat, and she shouts-then-croons within a single line. Runs come from church tradition: pentatonic, weighted, finished with a growl. Students copying her force the rasp from the folds; hers rides on strong support and a dropped jaw, and she releases it before strain sets in."
+  },
+  {
+    "name": "Keyshia Cole",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 2005,
+    "lowNote": "C3",
+    "highNote": "Bb5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Love",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Metallic, raw-edged chest voice that lags the beat like pressured speech and snaps into tight-vibrato belts.",
+    "technique": "Keyshia pushes chest voice with a metallic, grainy edge, favoring raw directness over polish. Her phrasing lags the beat like speech under pressure, and she snaps into sustained belts with hard glottal onsets. Vibrato is quick and tight, applied at peak volume. The husk in the tone is real but controlled. Students copying her copy the shout and miss the anchor: her sound needs firm abdominal support and a stable jaw, or the edge turns into spread, sharp-leaning pitch."
+  },
+  {
+    "name": "Faith Evans",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Hip-Hop"
+    ],
+    "country": "USA",
+    "activeFrom": 1995,
+    "lowNote": "C#3",
+    "highNote": "C#6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Love Like This",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Honeyed, jazz-tinged croon; long legato runs that melt behind the beat over hip-hop drums.",
+    "technique": "Faith rides a honeyed mid-register with jazz-inflected timing, sliding into notes from just beneath and blooming them with slow vibrato. Her runs are long, legato, and behind the beat, more Marvin-style croon than percussive gospel. Head voice is warm and covered rather than piercing. She layers her own backgrounds into thick pads. Students copying her rush the ornaments; the style depends on unhurried breath cycles, soft palate lift, and finishing each phrase before starting the next."
+  },
+  {
+    "name": "Macy Gray",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "Soul",
+      "R&B",
+      "Funk"
+    ],
+    "country": "USA",
+    "activeFrom": 1999,
+    "lowNote": "A2",
+    "highNote": "D6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "I Try",
+    "lowSource": "Lately",
+    "highSource": "Come Together",
+    "blurb": "Frayed, smoky talk-singing that cracks and dissolves on purpose, hiding wide range inside character.",
+    "technique": "Macy speaks more than she sings, dragging a frayed, smoky rasp across the pitch and letting words crack on purpose. Her onset is breathy-then-gripped, sustains wobble deliberately, and phrase endings dissolve into air. Underneath the character voice sits a real range, from low chest tones up to bright head-voice peaks. Students copying her fake the crackle with throat tension; hers comes from loose folds and heavy airflow, and forcing it without support wrecks intonation fast."
+  },
+  {
+    "name": "India.Arie",
+    "voiceType": "Contralto",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Singer-Songwriter"
+    ],
+    "country": "USA",
+    "activeFrom": 2001,
+    "lowNote": "A2",
+    "highNote": "C6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Video",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Woody, low-lying contralto calm — acoustic soul sung at speaking weight with sparse ornament.",
+    "technique": "India.Arie keeps the larynx low and the tone woody, singing acoustic-guitar phrases in a true contralto tessitura. Her onset is simultaneous and unforced, dynamics stay inside a narrow, intimate band, and ornaments are sparse, placed only where the lyric asks. Chest resonance dominates even on upper passages, which she rounds rather than brightens. Students copying her mistake quiet for unsupported; the stillness requires steady appoggio, tall vowels, and the patience to leave space unfilled."
+  },
+  {
+    "name": "Janelle Monáe",
+    "voiceType": "Soprano",
+    "genres": [
+      "R&B",
+      "Funk",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2010,
+    "lowNote": "C#3",
+    "highNote": "Eb6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Tightrope",
+    "lowSource": "BabopbyeYa",
+    "highSource": null,
+    "blurb": "Shape-shifting funk instrument: croon, patter and raspy upper-mix wails traded inside a single song.",
+    "technique": "Janelle switches between crooned jazz phrasing, rapid patter, and wild, raspy upper-mix exclamations, often inside one verse. Articulation is theatrical: crisp consonants, exaggerated vowel shifts, James-Brown-style rhythmic stabs. Her mix takes on a deliberate scream-adjacent edge at climaxes while staying on pitch. Vibrato is narrow and fast. Students copying her chase the mania and lose the diction; the control comes from classical-grade breath pacing beneath the showmanship, with every effect planned to the bar."
+  },
+  {
+    "name": "Solange",
+    "voiceType": "Soprano",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2008,
+    "lowNote": "D3",
+    "highNote": "E6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Cranes in the Sky",
+    "lowSource": null,
+    "highSource": "Cosmic Journey",
+    "blurb": "Floated, straight-tone head voice tuned like synth pads; minimalist R&B sung at whisper weight.",
+    "technique": "Solange lifts into head voice earlier than most R&B singers, treating everything above the mid-staff as a place for floated, straight-tone color. Her belts are rare and light; instead she stacks precise falsetto-adjacent harmonies with minimal vibrato, tuning them like synth pads. Low notes are soft-spoken but centered. Students copying her push chest upward and sound strained where she sounds weightless; the move is an early, unashamed register shift with breath kept slow and even."
+  },
+  {
+    "name": "FKA twigs",
+    "voiceType": "Soprano",
+    "genres": [
+      "Electronic",
+      "R&B",
+      "Alternative"
+    ],
+    "country": "UK",
+    "activeFrom": 2014,
+    "lowNote": "E3",
+    "highNote": "F6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Two Weeks",
+    "lowSource": "Figure 8",
+    "highSource": "Preface",
+    "blurb": "Fragile, cry-tinged soprano thread trembling over sparse electronics, gliding from murmur to flute-high head tones.",
+    "technique": "Twigs starts tones as a fragile, cry-tinged thread and lets them tremble at the edge of breaking, a schooled control disguised as vulnerability. She glides between chest murmur and high, flute-like head voice with portamento, ornamenting like early-music soprano lines over electronic pulse. Dynamics operate at whisper scale. Students copying her confuse the tremble with instability; it is a supported cry reflex, larynx tilted, airflow tiny and constant, and the pitch underneath never actually wavers."
+  },
+  {
+    "name": "Tinashe",
+    "voiceType": "Soprano",
+    "genres": [
+      "R&B",
+      "Pop",
+      "Electronic"
+    ],
+    "country": "USA",
+    "activeFrom": 2014,
+    "lowNote": "B2",
+    "highNote": "E6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "2 On",
+    "lowSource": "C'est La Vie",
+    "highSource": null,
+    "blurb": "Seamless, cool-toned mix that stays weightless from bass-adjacent lows to airy falsetto peaks.",
+    "technique": "Tinashe blends chest and head into one seamless, cool-toned mix that stays light no matter how high the line climbs. Her lower register is unusually solid for a soprano, and she moves through the break without any audible gear change. Runs are airy, fast, and slightly under-sung by design. Students copying her over-project; the style lives at half breath pressure, with pop-and-lock rhythmic precision in the phrasing and falsetto floated rather than aimed."
+  },
+  {
+    "name": "Normani",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2013,
+    "lowNote": "C#3",
+    "highNote": "Eb7",
+    "beltNote": "G5",
+    "whistle": true,
+    "signatureSong": "Motivation",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Bright, dance-built mix with clean belts and an occasional glassy whistle flash at the very top.",
+    "technique": "Normani mixes light chest tones with a bright, dance-ready top, belting cleanly to G5 before handing lines to head voice and, at the extreme, a piercing whistle up to Eb7. Her phrasing is percussive and breath-managed for choreography, with short, punchy sustains. Runs stay compact. Students copying her treat the whistle as the goal; it is an occasional ornament, produced with tiny fold contact after full release of the belt weight, never pushed from chest."
+  },
+  {
+    "name": "Victoria Monét",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Funk",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2020,
+    "lowNote": "B2",
+    "highNote": "A5",
+    "beltNote": "C#5",
+    "whistle": false,
+    "signatureSong": "On My Mama",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Exhale-relaxed head-dominant mix; bright, small tone with horn-smooth runs sunk deep in the pocket.",
+    "technique": "Victoria leans on a head-dominant mix so relaxed it reads as exhale, keeping full-voice weight below C#5 and floating everything above it. Her tone is bright but small, with tasteful fry starting low phrases and vibrato used sparingly, mostly on final sustains. Runs are smooth, connected, horn-like. Students copying her aim for volume and lose the pocket; the sound requires singing at conversation level, releasing jaw tension, and letting compression come from the microphone."
+  },
+  {
+    "name": "Coco Jones",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2012,
+    "lowNote": "B2",
+    "highNote": "C#6",
+    "beltNote": "G5",
+    "whistle": false,
+    "signatureSong": "ICU",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Rich, wide-open chest voice with broad vibrato and belts that keep full color to the top.",
+    "technique": "Coco opens her chest voice wide and rich, with a deep-set lower register and a belt that keeps full color through G5. Her vibrato is broad and anchored, runs are deliberate and fully voiced rather than skated, and she shifts into head voice only after the belt has made its point. Diction stays theater-clean. Students copying her go for size immediately; the richness comes from low breath anchoring and tall, rounded vowels, not from sheer push."
+  },
+  {
+    "name": "Ari Lennox",
+    "voiceType": "Soprano",
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 2019,
+    "lowNote": "Bb2",
+    "highNote": "E6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Shea Butter Baby",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Plush, behind-the-beat neo-soul warmth; loose, blue-note runs poured out in a thick lower mix.",
+    "technique": "Ari rounds every phrase with a plush, soul-steeped warmth, singing mostly in chest and a thick lower mix that she bends with lazy, behind-the-beat phrasing. Runs spill out loose and conversational, full of blue notes, and her vibrato is wide and unhurried. Head voice is robust rather than wispy. Students copying her tidy the phrasing up and lose the feel; the slur is intentional, built on legato airflow, soft consonants, and total rhythmic confidence."
+  },
+  {
+    "name": "Halle Bailey",
+    "voiceType": "Soprano",
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
+    "country": "USA",
+    "activeFrom": 2018,
+    "lowNote": "C3",
+    "highNote": "C6",
+    "beltNote": "G5",
+    "whistle": false,
+    "signatureSong": "Part of Your World",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Feather-quick runs and bell-clear head voice, sweet-toned and classically poised.",
+    "technique": "Halle spins fast, feather-light runs with almost classical purity, each note articulated from the breath instead of the throat. Her head voice is clear and bell-toned, entered smoothly from a bright mix, and her belt stays sweet rather than brassy up to G5. Vibrato is quick, shimmering, consistent. Students copying her muscle the runs with jaw movement; hers ride on a still jaw, moving air, and vowels kept narrow so the pitch spins freely."
+  },
+  {
+    "name": "Jhené Aiko",
+    "voiceType": "Soprano",
+    "genres": [
+      "R&B",
+      "Hip-Hop",
+      "Soul"
+    ],
+    "country": "USA",
+    "activeFrom": 2013,
+    "lowNote": "B2",
+    "highNote": "E6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "The Worst",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Pitch-perfect whisper-singing: fry onsets, narrow slides, breath woven into the texture.",
+    "technique": "Jhené whispers at pitch, keeping phonation so light that the line hovers between speech and song. She leans on vocal fry as an entrance, slides between notes in narrow glissandi, and lets sibilants and breath become part of the texture. Her upper register is a filmy head voice, never pushed. Students copying her lose the pitch core inside the airiness; the whisper still needs precise fold closure at the center, tuned quiet rather than merely breathy."
+  },
+  {
+    "name": "Ella Mai",
+    "voiceType": "Mezzo-soprano",
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
+    "country": "UK",
+    "activeFrom": 2018,
+    "lowNote": "C3",
+    "highNote": "G#5",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Boo'd Up",
+    "lowSource": null,
+    "highSource": null,
+    "blurb": "Low, conversational melody with rounded London vowels and short, exact runs on the line endings.",
+    "technique": "Ella Mai sits in a low, conversational pocket, singing melody like dialogue with a soft London vowel color. Her runs are short, precise, and rhythmically placed, decorating line endings instead of dominating them. Tone stays rounded and slightly covered, with fry-touched onsets and restrained dynamics. Students copying her over-ornament; the style is built on economy, locking simple phrases to the drums and letting repetition, not range, create the hook."
+  },
+  {
+    "name": "Ravyn Lenae",
+    "voiceType": "Soprano",
+    "genres": [
+      "R&B",
+      "Soul",
+      "Alternative"
+    ],
+    "country": "USA",
+    "activeFrom": 2018,
+    "lowNote": "C#3",
+    "highNote": "C#6",
+    "beltNote": null,
+    "whistle": false,
+    "signatureSong": "Love Me Not",
+    "lowSource": "Deep in the World",
+    "highSource": "4 Leaf Clover",
+    "blurb": "High, glassy head voice with hummingbird vibrato, stacked into wide, straight-tuned harmony clouds.",
+    "technique": "Ravyn floats head voice as her home base, a high, glassy timbre with fast, fluttering vibrato that reads almost like a synth LFO. She layers herself in wide stacks, tunes upper harmonies dead straight, and drops to chest only for grounding contrast. Onsets are feathered, dynamics tiny. Students copying her treat the top as falsetto escape; hers is connected head voice with real cord closure, kept small on purpose and placed far forward."
+  }
+]

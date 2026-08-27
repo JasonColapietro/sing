@@ -1,62 +1,38 @@
-import { midiToLabel } from "@/lib/audio/notes";
 import { SINGERS } from "@/lib/singers-data";
+import {
+  computeRecords as computeRecordsOf,
+  genreSlug,
+  type Records,
+} from "@/lib/singers-core";
 
 export type { Singer, VoiceKind } from "@/lib/singers-data";
 export { SINGERS } from "@/lib/singers-data";
 
-import type { Singer, VoiceKind } from "@/lib/singers-data";
+// Pure helpers live in singers-core so client components can use them without
+// dragging the full SINGERS array (blurbs, technique prose, sources) into
+// their bundle. Server code keeps importing everything from here.
+export {
+  VOICE_KINDS,
+  describeSpan,
+  genreSlug,
+  pluralVoice,
+  rangeLabel,
+  rangeOverlap,
+  spanOctaves,
+  voiceTypeFromSlug,
+  voiceTypeSlug,
+} from "@/lib/singers-core";
 
-/** Voice categories in low-to-high tessitura order, for filters and grouping. */
-export const VOICE_KINDS: VoiceKind[] = [
-  "Bass",
-  "Bass-baritone",
-  "Baritone",
-  "Tenor",
-  "Countertenor",
-  "Contralto",
-  "Mezzo-soprano",
-  "Soprano",
-];
+import type { Singer } from "@/lib/singers-data";
 
 export function singerBySlug(slug: string): Singer | undefined {
   return SINGERS.find((s) => s.slug === slug);
 }
 
-/** "3 octaves + 2" style description of a semitone span. */
-export function describeSpan(semitones: number): string {
-  const oct = Math.floor(semitones / 12);
-  const rem = semitones % 12;
-  if (oct === 0) return `${rem} semitone${rem === 1 ? "" : "s"}`;
-  const base = `${oct} octave${oct === 1 ? "" : "s"}`;
-  return rem > 0 ? `${base} + ${rem}` : base;
-}
-
-/** Decimal octave count, e.g. "3.7". */
-export function spanOctaves(semitones: number): string {
-  return (semitones / 12).toFixed(1);
-}
-
-/** "F2–D6" readout. */
-export function rangeLabel(s: Pick<Singer, "lowMidi" | "highMidi">): string {
-  return `${midiToLabel(s.lowMidi)}–${midiToLabel(s.highMidi)}`;
-}
-
-export interface SingerRecords {
-  widest: Singer;
-  lowest: Singer;
-  highest: Singer;
-}
+export type SingerRecords = Records<Singer>;
 
 export function computeRecords(list: Singer[] = SINGERS): SingerRecords {
-  let widest = list[0];
-  let lowest = list[0];
-  let highest = list[0];
-  for (const s of list) {
-    if (s.highMidi - s.lowMidi > widest.highMidi - widest.lowMidi) widest = s;
-    if (s.lowMidi < lowest.lowMidi) lowest = s;
-    if (s.highMidi > highest.highMidi) highest = s;
-  }
-  return { widest, lowest, highest };
+  return computeRecordsOf(list);
 }
 
 /**
@@ -99,26 +75,6 @@ export function hasUsefulPercentile(s: Singer): boolean {
 
 /* ------------------------------------------------------------------ hubs --- */
 
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
-export function voiceTypeSlug(v: VoiceKind): string {
-  return slugify(v);
-}
-
-export function genreSlug(g: string): string {
-  return slugify(g);
-}
-
-export function voiceTypeFromSlug(slug: string): VoiceKind | undefined {
-  return VOICE_KINDS.find((v) => voiceTypeSlug(v) === slug);
-}
-
 /** Genres with enough singers to make a page worth having on its own. */
 export const HUB_GENRE_MINIMUM = 8;
 
@@ -137,21 +93,7 @@ export function genreFromSlug(slug: string): string | undefined {
   return HUB_GENRES.find((g) => genreSlug(g) === slug);
 }
 
-/**
- * The plural of a voice category.
- *
- * Every label pluralises by adding "s" except one: "bass" needs "es", and
- * `${"bass"}s` renders the category as "basss". That typo was live in eight
- * places — the /singers/voice-type/bass H1, its meta description, its JSON-LD
- * name and breadcrumb, its OG image, and the "All basss" links on the singer
- * and genre pages — which is what one-off string concatenation buys you across
- * a route family. Pluralise through here, never with a template suffix.
- */
-export function pluralVoice(v: VoiceKind | string): string {
-  return /s$/i.test(v) ? `${v}es` : `${v}s`;
-}
-
-export function singersByVoiceType(v: VoiceKind): Singer[] {
+export function singersByVoiceType(v: Singer["voiceType"]): Singer[] {
   return SINGERS.filter((s) => s.voiceType === v).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
@@ -161,16 +103,6 @@ export function singersByGenre(g: string): Singer[] {
   return SINGERS.filter((s) => s.genres.includes(g)).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
-}
-
-/** Semitones of overlap between two ranges (0 if disjoint). */
-export function rangeOverlap(
-  aLow: number,
-  aHigh: number,
-  bLow: number,
-  bHigh: number,
-): number {
-  return Math.max(0, Math.min(aHigh, bHigh) - Math.max(aLow, bLow));
 }
 
 /**
@@ -187,8 +119,14 @@ export function rangeOverlap(
  * 18 landed on disambiguation pages and 7 more resolved only via a redirect.
  * Every replacement title below was verified to be a real, non-disambiguation
  * article. Re-run that check when adding singers with single-word or shared names.
+ *
+ * Re-checked 2026-08-27 for the expansion batches. New trap found: a bare
+ * title can be a "name list" page that does NOT carry the disambiguation
+ * pageprop ("Mika" is one), so the check must also read the page's short
+ * description — anything like "Topics referred to by the same term" or
+ * "Name list" is not a person, whatever the pageprops say.
  */
-const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
+const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string | null> = {
   // Landed on a disambiguation page.
   ado: "Ado (singer)",
   chen: "Chen (singer)",
@@ -208,6 +146,39 @@ const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
   "tom-jones": "Tom Jones (singer)",
   usher: "Usher (musician)",
   zayn: "Zayn Malik",
+  // 2026-08-27 expansion batches.
+  jin: "Jin (singer)",
+  do: "Doh Kyung-soo",
+  wendy: "Wendy (singer)",
+  solar: "Solar (singer)",
+  "james-bay": "James Bay (singer)",
+  passenger: "Passenger (singer)",
+  "david-kushner": "David Kushner (singer-songwriter)",
+  jvke: "Jvke",
+  seal: "Seal (musician)",
+  jojo: "JoJo (singer)",
+  jewel: "Jewel (singer)",
+  aurora: "Aurora (singer)",
+  marina: "Marina Diamandis",
+  raye: "Raye",
+  drake: "Drake (musician)",
+  "childish-gambino": "Donald Glover",
+  "juice-wrld": "Juice Wrld",
+  // No personal article exists — only the band's. A Person sameAs pointing at
+  // a band asserts the wrong kind of entity, so these emit no sameAs at all.
+  "caleb-followill": null,
+  "tatiana-shmayluk": null,
+  "josh-kiszka": null,
+  "glenn-hughes": "Glenn Hughes (musician)",
+  "michael-mcdonald": "Michael McDonald (musician)",
+  monica: "Monica (singer)",
+  ashanti: "Ashanti (singer)",
+  fantasia: "Fantasia (singer)",
+  indiaarie: "India Arie",
+  solange: "Solange Knowles",
+  "fka-twigs": "FKA Twigs",
+  mika: "Mika (singer)",
+  "chloe-bailey": "Chloe Bailey",
   // Resolved only through a redirect; point at the article directly.
   anohni: "Anohni",
   "aulii-cravalho": "Auliʻi Cravalho",
@@ -218,8 +189,16 @@ const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string> = {
   "sade-adu": "Sade (singer)",
 };
 
-/** Canonical Wikipedia URL for a singer, honouring the overrides above. */
-export function wikipediaUrl(s: Pick<Singer, "slug" | "name">): string {
-  const title = WIKIPEDIA_TITLE_OVERRIDES[s.slug] ?? s.name;
+/**
+ * Canonical Wikipedia URL for a singer, honouring the overrides above.
+ * Null when the singer has no personal article (a band article is not an
+ * acceptable stand-in for a Person) — callers omit sameAs in that case.
+ */
+export function wikipediaUrl(s: Pick<Singer, "slug" | "name">): string | null {
+  const title =
+    s.slug in WIKIPEDIA_TITLE_OVERRIDES
+      ? WIKIPEDIA_TITLE_OVERRIDES[s.slug]
+      : s.name;
+  if (title === null) return null;
   return `https://en.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`;
 }

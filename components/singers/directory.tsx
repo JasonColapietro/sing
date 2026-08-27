@@ -5,13 +5,15 @@ import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import {
-  SINGERS,
+  SINGERS_LITE as SINGERS,
+  type SingerLite as Singer,
+} from "@/lib/singers-lite";
+import {
   VOICE_KINDS,
   computeRecords,
   spanOctaves,
-  type Singer,
   type VoiceKind,
-} from "@/lib/singers";
+} from "@/lib/singers-core";
 import { Button, EmptyState, LinkButton } from "@/components/ui";
 
 /* ---------------------------------------------------------------- axis --- */
@@ -273,7 +275,7 @@ export function SingersDirectory() {
     return [...list].sort(by[sort]);
   }, [q, voice, genre, sort]);
 
-  const records = useMemo(() => computeRecords(), []);
+  const records = useMemo(() => computeRecords(SINGERS), []);
 
   const clearFilters = () => {
     setQ("");

@@ -4,7 +4,8 @@ import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
 import { useProgress } from "@/lib/progress";
-import { rangeOverlap, spanOctaves, type Singer } from "@/lib/singers";
+import { rangeOverlap, spanOctaves } from "@/lib/singers-core";
+import type { Singer } from "@/lib/singers-data";
 import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
 
