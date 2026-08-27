@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<!--
+  Instagram carousel: "What's my vocal range?" — six 1080x1350 (4:5) slides.
+
+  Every figure on slide 3 is the site's own REFERENCE_BANDS
+  (lib/singers-analysis.ts), verified 2026-08-28 against what
+  /atlas/vocal-range-by-voice-type actually serves. Do not hand-edit the
+  numbers here: change the constant, re-verify against the live page, then
+  re-render. A carousel that disagrees with the page it links to is worse
+  than no carousel.
+
+  Render:  node marketing/social/assets/carousel-range/render.mjs
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=block"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --paper: #f7f0e7;
+    --panel: #fffaf2;
+    --line: #ddd4c4;
+    --line2: #c9bda0;
+    --ink: #20201d;
+    --mut: #5c564d;
+    --label: #82631f;
+    --teal: #11615d;
+    --amber-band: rgba(197, 150, 66, 0.13);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #888; font-family: Manrope, sans-serif; }
+
+  .slide {
+    position: relative;
+    width: 1080px;
+    height: 1350px;
+    background: var(--paper);
+    color: var(--ink);
+    overflow: hidden;
+    padding: 96px 88px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /*
+    No full-bleed "note lane" hairlines behind the type.
+    The first render drew them at fixed y-positions and they struck straight
+    through the headline on four of six slides — a line through "two notes."
+    and "measurements." reads as a strikethrough, not as texture. They also
+    encoded nothing. The lane motif now appears only where it carries meaning:
+    the target band under the trace on slide 1, and the tracks the bars sit in
+    on slide 3.
+  */
+
+  /* Body sits centred in what's left under the kicker, so a short slide and a
+     long one are both balanced instead of top-stacked over dead space. */
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+  h1 {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    font-size: 118px;
+    line-height: 0.98;
+    letter-spacing: -0.015em;
+  }
+  h1 em { font-style: italic; }
+  h2 {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    font-size: 82px;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+  }
+  h2 em { font-style: italic; }
+  p { font-size: 34px; line-height: 1.5; color: var(--mut); }
+  p strong { color: var(--ink); font-weight: 600; }
+  .grow { flex: 1; }
+
+  /* Slide counter — a carousel is a real sequence, so the number means something. */
+  .count {
+    position: absolute;
+    right: 88px;
+    bottom: 88px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    color: var(--line2);
+  }
+  .foot {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+
+  /* ---- slide 1 ---- */
+  .trace-wrap { position: absolute; left: 0; right: 0; bottom: 250px; height: 340px; }
+
+  /* ---- slide 2: the two notes ---- */
+  .twonotes { display: flex; gap: 28px; margin-top: 56px; }
+  .note-card {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 40px 36px;
+  }
+  .note-card .lab {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 19px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--label);
+  }
+  .note-card .val {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 92px;
+    line-height: 1.1;
+    margin-top: 10px;
+  }
+  .note-card .sub { font-size: 27px; color: var(--mut); margin-top: 6px; }
+
+  /* ---- slide 3: the chart ---- */
+  .chart { margin-top: 44px; display: flex; flex-direction: column; gap: 21px; }
+  .row { display: grid; grid-template-columns: 290px 1fr; align-items: center; gap: 22px; }
+  .row .name { font-size: 30px; font-weight: 600; }
+  .track { position: relative; height: 48px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+  .bar {
+    position: absolute; top: -1px; bottom: -1px;
+    background: var(--teal);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bar span {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    color: #f7f0e7;
+    white-space: nowrap;
+  }
+  .axis { display: grid; grid-template-columns: 290px 1fr; gap: 22px; margin-top: 14px; }
+  .axis .ticks { position: relative; height: 30px; }
+  .axis .ticks b {
+    position: absolute;
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 400;
+    font-size: 21px;
+    color: var(--mut);
+    transform: translateX(-50%);
+  }
+
+  /* ---- slide 5: steps ---- */
+  .steps { margin-top: 50px; display: flex; flex-direction: column; gap: 30px; }
+  .step { display: grid; grid-template-columns: 74px 1fr; gap: 26px; align-items: start; }
+  .step .n {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    font-size: 25px;
+    color: var(--label);
+    border: 1px solid var(--line2);
+    border-radius: 999px;
+    width: 74px; height: 74px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step .txt { font-size: 33px; line-height: 1.42; padding-top: 12px; }
+  .step .txt b { font-weight: 700; }
+
+  /* ---- slide 6: CTA ---- */
+  .url {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: 76px;
+    color: var(--teal);
+    margin-top: 22px;
+  }
+  .pills { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 44px; }
+  .pill {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 24px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--label);
+    border: 1px solid var(--line2);
+    border-radius: 999px;
+    padding: 14px 26px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================= 1 ============================= -->
+<section class="slide" id="s1">
+  <div class="kicker">Suede Sing</div>
+  <div class="body">
+    <div>
+    <h1>What&rsquo;s my<br /><em>vocal range?</em></h1>
+    <p style="margin-top:40px;font-size:38px">Answer it in one take.</p>
+    </div>
+  </div>
+  <div class="trace-wrap">
+    <svg width="1080" height="340" viewBox="0 0 1080 340" fill="none">
+      <rect x="0" y="196" width="1080" height="56" fill="var(--amber-band)" />
+      <line x1="0" y1="196" x2="1080" y2="196" stroke="var(--line2)" stroke-width="1.5" />
+      <line x1="0" y1="252" x2="1080" y2="252" stroke="var(--line2)" stroke-width="1.5" />
+      <path d="M -10 96 C 110 74, 170 150, 260 142 C 350 134, 372 236, 452 288 C 510 326, 556 322, 604 240 C 640 178, 690 226, 760 226 L 1010 226"
+            stroke="var(--teal)" stroke-width="9" stroke-linecap="round" />
+      <circle cx="1010" cy="226" r="16" fill="var(--teal)" />
+    </svg>
+  </div>
+  <div class="count">01 / 06</div>
+</section>
+
+<!-- ============================= 2 ============================= -->
+<section class="slide" id="s2">
+  <div class="kicker">The definition</div>
+  <div class="body">
+    <div>
+    <h2>Your range is<br /><em>two notes.</em></h2>
+    <div class="twonotes">
+      <div class="note-card">
+        <div class="lab">Floor</div>
+        <div class="val">Lowest</div>
+        <div class="sub">the deepest note you hold</div>
+      </div>
+      <div class="note-card">
+        <div class="lab">Ceiling</div>
+        <div class="val">Highest</div>
+        <div class="sub">the top note you can reach</div>
+      </div>
+    </div>
+    <p style="margin-top:52px">Everything else &mdash; your voice type, the songs that sit right, the keys that fight you &mdash; is <strong>derived from those two</strong>.</p>
+    </div>
+  </div>
+  <div class="count">02 / 06</div>
+</section>
+
+<!-- ============================= 3 ============================= -->
+<section class="slide" id="s3" style="padding:80px 72px">
+  <div class="kicker">The eight voice types</div>
+  <div class="body">
+    <div>
+      <h2 style="font-size:62px;margin-top:22px">Where each one <em>sits</em></h2>
+      <div class="chart" id="chart"></div>
+      <div class="axis"><div></div><div class="ticks" id="ticks"></div></div>
+      <p style="font-size:25px;line-height:1.42;margin-top:40px">The conventional two-octave band for each type. Real voices run wider at both ends.</p>
+    </div>
+  </div>
+  <div class="count" style="bottom:72px;right:72px">03 / 06</div>
+</section>
+
+<!-- ============================= 4 ============================= -->
+<section class="slide" id="s4">
+  <div class="kicker">The part most posts skip</div>
+  <div class="body">
+    <div>
+    <h2>Range and voice type<br />are <em>different</em><br />measurements.</h2>
+    <p style="margin-top:52px"><strong>Range</strong> is the distance between your two extreme notes &mdash; often one-off moments.</p>
+    <p style="margin-top:30px"><strong>Voice type</strong> is where your voice sits comfortably for a long time, plus its weight and colour.</p>
+    <p style="margin-top:30px">A soprano with a practiced low extension can show a lower floor than a contralto who never sings down there. Neither label is wrong.</p>
+    </div>
+  </div>
+  <div class="count">04 / 06</div>
+</section>
+
+<!-- ============================= 5 ============================= -->
+<section class="slide" id="s5">
+  <div class="kicker">How the test works</div>
+  <div class="body">
+    <div>
+    <h2 style="margin-top:32px">About <em>a minute.</em></h2>
+  <div class="steps">
+    <div class="step"><div class="n">01</div><div class="txt">Slide down to the <b>floor</b> of your voice.</div></div>
+    <div class="step"><div class="n">02</div><div class="txt">Slide up to the <b>ceiling</b>.</div></div>
+    <div class="step"><div class="n">03</div><div class="txt">Read your <b>two notes</b>, your span, and the voice type that range fits.</div></div>
+  </div>
+    <p style="margin-top:56px;font-size:30px">Mic audio is analyzed on-device and never leaves the device.</p>
+    </div>
+  </div>
+  <div class="count">05 / 06</div>
+</section>
+
+<!-- ============================= 6 ============================= -->
+<section class="slide" id="s6">
+  <div class="kicker">Free, in your browser</div>
+  <div class="body">
+    <div>
+    <h2>Find your range<br /><em>right now.</em></h2>
+    <div class="url">sing.suedeai.ai</div>
+    <div class="pills">
+      <span class="pill">No install</span>
+      <span class="pill">No account</span>
+      <span class="pill">Free</span>
+    </div>
+    </div>
+  </div>
+  <div class="foot">Suede Sing &mdash; the vocal studio in your browser</div>
+  <div class="count">06 / 06</div>
+</section>
+
+<script>
+  // Verified 2026-08-28 against REFERENCE_BANDS (lib/singers-analysis.ts) and
+  // the live /atlas/vocal-range-by-voice-type table. MIDI numbers drive the
+  // bar geometry so the drawing cannot disagree with the labels.
+  var BANDS = [
+    { name: "Bass",           low: 40, high: 64, label: "E2–E4"   },
+    { name: "Bass-baritone",  low: 42, high: 66, label: "F#2–F#4" },
+    { name: "Baritone",       low: 45, high: 69, label: "A2–A4"   },
+    { name: "Tenor",          low: 48, high: 72, label: "C3–C5"   },
+    { name: "Contralto",      low: 53, high: 77, label: "F3–F5"   },
+    { name: "Countertenor",   low: 55, high: 79, label: "G3–G5"   },
+    { name: "Mezzo-soprano",  low: 57, high: 81, label: "A3–A5"   },
+    { name: "Soprano",        low: 60, high: 84, label: "C4–C6"   }
+  ];
+
+  var MIN = 40, MAX = 84; // E2 to C6 — the full span the eight types cover
+  function pct(m) { return ((m - MIN) / (MAX - MIN)) * 100; }
+
+  var chart = document.getElementById("chart");
+  BANDS.forEach(function (b) {
+    var row = document.createElement("div");
+    row.className = "row";
+    var left = pct(b.low), width = pct(b.high) - pct(b.low);
+    row.innerHTML =
+      '<div class="name">' + b.name + '</div>' +
+      '<div class="track"><div class="bar" style="left:' + left + '%;width:' + width + '%">' +
+      '<span>' + b.label + '</span></div></div>';
+    chart.appendChild(row);
+  });
+
+  // Octave ticks across the same axis the bars use.
+  var ticks = document.getElementById("ticks");
+  [[40, "E2"], [48, "C3"], [60, "C4"], [72, "C5"], [84, "C6"]].forEach(function (t) {
+    var b = document.createElement("b");
+    b.textContent = t[1];
+    b.style.left = pct(t[0]) + "%";
+    ticks.appendChild(b);
+  });
+</script>
+</body>
+</html>

@@ -77,9 +77,29 @@ accounts there is what lets an answer engine say "the official Instagram is
 ## Patch 3 — suedeai.ai mirror (suede-home, separate repo)
 
 `lib/organization.ts` says the sameAs list is maintained "here *and* on
-suedeai.ai." When patch 1 lands, make the matching addition to the parent
-site's organization schema in the `suede-home` project (inside the
-Suede-AI-App monorepo) so both surfaces assert the same profile set.
+suedeai.ai." Verified 2026-08-28 — the parent's list is:
+
+```
+~/code/Suede-AI-App/suede-home/src/lib/seo-entity.ts
+export const SUEDE_ORG_SAME_AS = [ … ]   (line 61)
+```
+
+Add the same two profile URLs there. Three things to know before touching it:
+
+1. **It has a guard test** — `tests/seo-entity-source.test.mjs` in suede-home.
+   Run it after editing.
+2. **That file states the stricter rule this repo also follows**: sameAs must
+   list URLs that "resolve where they say they do." Four entries were deleted
+   on 2026-08-09 for being redirects rather than identities, and five more on
+   2026-08-19 for being Suede's own sub-brands rather than alternate profiles
+   of the organization. A Suede Sing *profile* is a genuine alternate profile
+   and belongs; the sing.suedeai.ai *site* would not.
+3. **The two lists already diverge** and this patch does not close that.
+   sing's `ORG_SAME_AS` carries twelve entries, the parent's ten — the parent
+   omits `https://www.wikidata.org/wiki/Q141169484`, which is the strongest
+   single identity edge in sing's list. Worth reconciling in its own pass;
+   flagged here rather than fixed silently, because the parent's list is
+   governed by that repo's audit history, not this one's.
 
 ## Optional, later
 

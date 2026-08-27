@@ -13,6 +13,7 @@ around it is done.
 | [facebook.md](facebook.md) | Page identity, setup fields, IG↔FB linking, first 5 posts, Groups strategy, 30-day calendar, measurement |
 | [geo-wiring.md](geo-wiring.md) | Entity-consistency rules + staged `sameAs` / llms.txt patches (apply after the accounts exist) |
 | [assets/](assets/) | `avatar-512.png` (both platforms), `fb-cover-1640x720.png` (+ HTML source and re-render script) |
+| [assets/carousel-range/](assets/carousel-range/README.md) | **Post 2, finished** — six 1080×1350 slides, caption, and per-slide alt text. Upload and go. |
 
 ## Decisions already made
 
