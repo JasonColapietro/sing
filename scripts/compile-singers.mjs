@@ -208,6 +208,57 @@ writeFileSync(
   header + JSON.stringify(singers, null, 2) + ";\n",
 );
 
+// The client-side projection: everything the /singers directory and the
+// /range result view render, and none of the prose. Blurbs, technique
+// paragraphs and source notes are the bulk of singers-data.ts by bytes, and
+// no client component displays them — shipping them to the browser would tax
+// the two pages this library exists to rank.
+const liteHeader = `/**
+ * GENERATED FILE — edit scripts/compile-singers.mjs + its source batches, not
+ * this file directly.
+ *
+ * Prose-free projection of SINGERS for client components. Import this (plus
+ * helpers from lib/singers-core) in "use client" files; importing from
+ * lib/singers there ships every blurb and technique paragraph to the browser.
+ */
+
+import type { VoiceKind } from "@/lib/singers-data";
+
+export interface SingerLite {
+  slug: string;
+  name: string;
+  voiceType: VoiceKind;
+  genres: string[];
+  /** Year they became prominent. */
+  activeFrom: number;
+  lowMidi: number;
+  highMidi: number;
+  /** Highest full/belted note when meaningfully below highMidi. */
+  beltMidi: number | null;
+  whistle: boolean;
+}
+
+export const SINGERS_LITE: SingerLite[] = `;
+
+const lite = singers.map(
+  ({ slug, name, voiceType, genres, activeFrom, lowMidi, highMidi, beltMidi, whistle }) => ({
+    slug,
+    name,
+    voiceType,
+    genres,
+    activeFrom,
+    lowMidi,
+    highMidi,
+    beltMidi,
+    whistle,
+  }),
+);
+
+writeFileSync(
+  new URL("../lib/singers-lite.ts", import.meta.url),
+  liteHeader + JSON.stringify(lite, null, 2) + ";\n",
+);
+
 console.log(`wrote ${singers.length} singers from ${files.length} batches`);
 if (problems.length) {
   console.log(`\n${problems.length} rows needed attention:`);

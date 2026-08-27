@@ -27,7 +27,8 @@ import {
   monoFontStack,
 } from "@/lib/chart-colors";
 import { PianoStrip } from "./piano-strip";
-import { SINGERS, rangeOverlap, voiceTypeSlug } from "@/lib/singers";
+import { SINGERS_LITE as SINGERS } from "@/lib/singers-lite";
+import { rangeOverlap, voiceTypeSlug } from "@/lib/singers-core";
 import type { Song } from "@/components/songs/types";
 import { countSongsFitting } from "@/components/songs/lib";
 
