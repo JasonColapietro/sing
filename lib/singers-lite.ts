@@ -1759,20 +1759,6 @@ export const SINGERS_LITE: SingerLite[] = [
     "whistle": false
   },
   {
-    "slug": "chloe-bailey",
-    "name": "Chlöe Bailey",
-    "voiceType": "Mezzo-soprano",
-    "genres": [
-      "R&B",
-      "Pop"
-    ],
-    "activeFrom": 2018,
-    "lowMidi": 47,
-    "highMidi": 86,
-    "beltMidi": 79,
-    "whistle": false
-  },
-  {
     "slug": "chris-brown",
     "name": "Chris Brown",
     "voiceType": "Tenor",
@@ -7968,7 +7954,7 @@ export const SINGERS_LITE: SingerLite[] = [
       "Pop"
     ],
     "activeFrom": 2008,
-    "lowMidi": 48,
+    "lowMidi": 50,
     "highMidi": 88,
     "beltMidi": null,
     "whistle": false

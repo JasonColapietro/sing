@@ -2500,26 +2500,6 @@ export const SINGERS: Singer[] = [
     "technique": "Contrast is the technique: a soft, airy head tone at low volume in one bar, a raw open shout in the next, sometimes stacked across the same phrase. The quiet side needs steady airflow and no pressing at all. Full voice stops around D5, and what sits higher is distorted rather than sung. Students switch the shout on first and never build the soft half that gives it meaning."
   },
   {
-    "slug": "chloe-bailey",
-    "name": "Chlöe Bailey",
-    "voiceType": "Mezzo-soprano",
-    "genres": [
-      "R&B",
-      "Pop"
-    ],
-    "country": "USA",
-    "activeFrom": 2018,
-    "lowMidi": 47,
-    "highMidi": 86,
-    "beltMidi": 79,
-    "whistle": false,
-    "signatureSong": "Have Mercy",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Growl-bottomed, gospel-charged power with distortion ridden as ornament and sudden soft head-voice turns.",
-    "technique": "Chlöe grinds the bottom of her range with growl and fry, then rockets into gritty, gospel-charged belts that carry distortion as ornament up to G5. Her phrasing is muscular and improvisatory, stacking ad-libs over her own harmonies, and head voice arrives with surprising softness after all that grit. Students copying her produce the distortion at the folds and blow out quickly; hers is supported false-fold rasp layered over a clean core tone."
-  },
-  {
     "slug": "chris-brown",
     "name": "Chris Brown",
     "voiceType": "Tenor",
@@ -11314,12 +11294,12 @@ export const SINGERS: Singer[] = [
     ],
     "country": "USA",
     "activeFrom": 2008,
-    "lowMidi": 48,
+    "lowMidi": 50,
     "highMidi": 88,
     "beltMidi": null,
     "whistle": false,
     "signatureSong": "Cranes in the Sky",
-    "lowSource": "Twice",
+    "lowSource": null,
     "highSource": "Cosmic Journey",
     "blurb": "Floated, straight-tone head voice tuned like synth pads; minimalist R&B sung at whisper weight.",
     "technique": "Solange lifts into head voice earlier than most R&B singers, treating everything above the mid-staff as a place for floated, straight-tone color. Her belts are rare and light; instead she stacks precise falsetto-adjacent harmonies with minimal vibrato, tuning them like synth pads. Low notes are soft-spoken but centered. Students copying her push chest upward and sound strained where she sounds weightless; the move is an early, unashamed register shift with breath kept slow and even."

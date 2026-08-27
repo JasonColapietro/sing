@@ -2,7 +2,11 @@
   {
     "name": "Janet Jackson",
     "voiceType": "Soprano",
-    "genres": ["Pop", "R&B", "Funk"],
+    "genres": [
+      "Pop",
+      "R&B",
+      "Funk"
+    ],
     "country": "USA",
     "activeFrom": 1986,
     "lowNote": "C3",
@@ -18,7 +22,10 @@
   {
     "name": "Aaliyah",
     "voiceType": "Soprano",
-    "genres": ["R&B", "Pop"],
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 1994,
     "lowNote": "C#3",
@@ -34,7 +41,10 @@
   {
     "name": "Monica",
     "voiceType": "Contralto",
-    "genres": ["R&B", "Soul"],
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
     "country": "USA",
     "activeFrom": 1995,
     "lowNote": "B2",
@@ -50,7 +60,11 @@
   {
     "name": "Ashanti",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Hip-Hop", "Pop"],
+    "genres": [
+      "R&B",
+      "Hip-Hop",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2002,
     "lowNote": "F3",
@@ -66,7 +80,10 @@
   {
     "name": "Tamia",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Soul"],
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
     "country": "Canada",
     "activeFrom": 1995,
     "lowNote": "Eb3",
@@ -82,7 +99,11 @@
   {
     "name": "Kelly Rowland",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Pop", "Electronic"],
+    "genres": [
+      "R&B",
+      "Pop",
+      "Electronic"
+    ],
     "country": "USA",
     "activeFrom": 1998,
     "lowNote": "C3",
@@ -98,7 +119,11 @@
   {
     "name": "Ciara",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Pop", "Hip-Hop"],
+    "genres": [
+      "R&B",
+      "Pop",
+      "Hip-Hop"
+    ],
     "country": "USA",
     "activeFrom": 2004,
     "lowNote": "Bb2",
@@ -114,7 +139,11 @@
   {
     "name": "Fantasia",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Soul", "Gospel"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Gospel"
+    ],
     "country": "USA",
     "activeFrom": 2004,
     "lowNote": "C3",
@@ -130,7 +159,11 @@
   {
     "name": "Keyshia Cole",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Soul", "Hip-Hop"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Hip-Hop"
+    ],
     "country": "USA",
     "activeFrom": 2005,
     "lowNote": "C3",
@@ -146,7 +179,11 @@
   {
     "name": "Faith Evans",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Soul", "Hip-Hop"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Hip-Hop"
+    ],
     "country": "USA",
     "activeFrom": 1995,
     "lowNote": "C#3",
@@ -162,7 +199,11 @@
   {
     "name": "Macy Gray",
     "voiceType": "Mezzo-soprano",
-    "genres": ["Soul", "R&B", "Funk"],
+    "genres": [
+      "Soul",
+      "R&B",
+      "Funk"
+    ],
     "country": "USA",
     "activeFrom": 1999,
     "lowNote": "A2",
@@ -178,7 +219,11 @@
   {
     "name": "India.Arie",
     "voiceType": "Contralto",
-    "genres": ["R&B", "Soul", "Singer-Songwriter"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Singer-Songwriter"
+    ],
     "country": "USA",
     "activeFrom": 2001,
     "lowNote": "A2",
@@ -194,7 +239,11 @@
   {
     "name": "Janelle Monáe",
     "voiceType": "Soprano",
-    "genres": ["R&B", "Funk", "Pop"],
+    "genres": [
+      "R&B",
+      "Funk",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2010,
     "lowNote": "C#3",
@@ -210,15 +259,19 @@
   {
     "name": "Solange",
     "voiceType": "Soprano",
-    "genres": ["R&B", "Soul", "Pop"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2008,
-    "lowNote": "C3",
+    "lowNote": "D3",
     "highNote": "E6",
     "beltNote": null,
     "whistle": false,
     "signatureSong": "Cranes in the Sky",
-    "lowSource": "Twice",
+    "lowSource": null,
     "highSource": "Cosmic Journey",
     "blurb": "Floated, straight-tone head voice tuned like synth pads; minimalist R&B sung at whisper weight.",
     "technique": "Solange lifts into head voice earlier than most R&B singers, treating everything above the mid-staff as a place for floated, straight-tone color. Her belts are rare and light; instead she stacks precise falsetto-adjacent harmonies with minimal vibrato, tuning them like synth pads. Low notes are soft-spoken but centered. Students copying her push chest upward and sound strained where she sounds weightless; the move is an early, unashamed register shift with breath kept slow and even."
@@ -226,7 +279,11 @@
   {
     "name": "FKA twigs",
     "voiceType": "Soprano",
-    "genres": ["Electronic", "R&B", "Alternative"],
+    "genres": [
+      "Electronic",
+      "R&B",
+      "Alternative"
+    ],
     "country": "UK",
     "activeFrom": 2014,
     "lowNote": "E3",
@@ -242,7 +299,11 @@
   {
     "name": "Tinashe",
     "voiceType": "Soprano",
-    "genres": ["R&B", "Pop", "Electronic"],
+    "genres": [
+      "R&B",
+      "Pop",
+      "Electronic"
+    ],
     "country": "USA",
     "activeFrom": 2014,
     "lowNote": "B2",
@@ -258,7 +319,10 @@
   {
     "name": "Normani",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Pop"],
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2013,
     "lowNote": "C#3",
@@ -274,7 +338,11 @@
   {
     "name": "Victoria Monét",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Funk", "Pop"],
+    "genres": [
+      "R&B",
+      "Funk",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2020,
     "lowNote": "B2",
@@ -290,7 +358,10 @@
   {
     "name": "Coco Jones",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Pop"],
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2012,
     "lowNote": "B2",
@@ -306,7 +377,10 @@
   {
     "name": "Ari Lennox",
     "voiceType": "Soprano",
-    "genres": ["R&B", "Soul"],
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
     "country": "USA",
     "activeFrom": 2019,
     "lowNote": "Bb2",
@@ -322,7 +396,10 @@
   {
     "name": "Halle Bailey",
     "voiceType": "Soprano",
-    "genres": ["R&B", "Pop"],
+    "genres": [
+      "R&B",
+      "Pop"
+    ],
     "country": "USA",
     "activeFrom": 2018,
     "lowNote": "C3",
@@ -336,25 +413,13 @@
     "technique": "Halle spins fast, feather-light runs with almost classical purity, each note articulated from the breath instead of the throat. Her head voice is clear and bell-toned, entered smoothly from a bright mix, and her belt stays sweet rather than brassy up to G5. Vibrato is quick, shimmering, consistent. Students copying her muscle the runs with jaw movement; hers ride on a still jaw, moving air, and vowels kept narrow so the pitch spins freely."
   },
   {
-    "name": "Chlöe Bailey",
-    "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Pop"],
-    "country": "USA",
-    "activeFrom": 2018,
-    "lowNote": "B2",
-    "highNote": "D6",
-    "beltNote": "G5",
-    "whistle": false,
-    "signatureSong": "Have Mercy",
-    "lowSource": null,
-    "highSource": null,
-    "blurb": "Growl-bottomed, gospel-charged power with distortion ridden as ornament and sudden soft head-voice turns.",
-    "technique": "Chlöe grinds the bottom of her range with growl and fry, then rockets into gritty, gospel-charged belts that carry distortion as ornament up to G5. Her phrasing is muscular and improvisatory, stacking ad-libs over her own harmonies, and head voice arrives with surprising softness after all that grit. Students copying her produce the distortion at the folds and blow out quickly; hers is supported false-fold rasp layered over a clean core tone."
-  },
-  {
     "name": "Jhené Aiko",
     "voiceType": "Soprano",
-    "genres": ["R&B", "Hip-Hop", "Soul"],
+    "genres": [
+      "R&B",
+      "Hip-Hop",
+      "Soul"
+    ],
     "country": "USA",
     "activeFrom": 2013,
     "lowNote": "B2",
@@ -370,7 +435,10 @@
   {
     "name": "Ella Mai",
     "voiceType": "Mezzo-soprano",
-    "genres": ["R&B", "Soul"],
+    "genres": [
+      "R&B",
+      "Soul"
+    ],
     "country": "UK",
     "activeFrom": 2018,
     "lowNote": "C3",
@@ -386,7 +454,11 @@
   {
     "name": "Ravyn Lenae",
     "voiceType": "Soprano",
-    "genres": ["R&B", "Soul", "Alternative"],
+    "genres": [
+      "R&B",
+      "Soul",
+      "Alternative"
+    ],
     "country": "USA",
     "activeFrom": 2018,
     "lowNote": "C#3",
