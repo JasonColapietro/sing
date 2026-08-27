@@ -39,7 +39,7 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
   Tenor: {
     summary:
       "the highest standard male category, and the default voice of recorded popular music",
-    body: "Tenor is by far the largest group in this library, partly because the category is genuinely common and partly because the last seventy years of popular songwriting has been pitched for it. The interest in a tenor is usually not the top note but the transition — how a singer negotiates the passage out of chest voice around E4 to G4.",
+    body: "Tenor is by far the largest group in this library, partly because the category is genuinely common and partly because the last seventy years of popular songwriting has been pitched for it. The interest in a tenor is usually not the top note but the transition — how a singer negotiates the passage out of chest voice around D4 to G4.",
     challenge:
       "Because so much repertoire sits right at that transition, tenors carry the most audible strain when they are singing tired or in the wrong key.",
   },
@@ -85,13 +85,38 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
  * reaches — and no amount of low/high data implies it.
  *
  * Provenance, because these are assertions about real physiology rather than
- * anything derived: the male zones and the two upper female zones are the
- * figures this product already published on the old print.suedeai.ai range
- * demo, which are in turn the conventional CCM values (a tenor's E4–G4 is the
- * standard "money zone"). Contralto and bass-baritone are interpolated onto
- * the same scale from their neighbours, which is why they overlap the
- * categories either side of them — that overlap is real and worth showing
- * rather than tidying away.
+ * anything derived — and the two halves of this table do not share a source.
+ *
+ * The four male zones span [primo passaggio, secondo passaggio] from Richard
+ * Miller's registration tables: basso profondo, bass-baritone, lyric baritone
+ * and tenore lirico respectively (Securing Baritone, Bass-Baritone, and Bass
+ * Voices, Oxford 2008, p. 9; Training Tenor Voices, Schirmer 1993, pp. 9–13).
+ * Miller puts a perfect fourth between the two events, so every male band here
+ * is exactly five semitones — the invariant voice-types.test.ts pins.
+ *
+ * Publishing the primo alone was this table's original error, and it is worth
+ * naming so it cannot come back quietly. The page defines a passaggio as the
+ * ceiling of chest production, which is the *secondo*; the low male figures
+ * were the primo, a different event a perfect fourth below it. The prose and
+ * the numbers were describing two different events. The tell was the
+ * five-semitone jump from the baritone floor to the tenor floor — exactly the
+ * interval Miller puts between primo and secondo, showing up between two
+ * categories instead of within one.
+ *
+ * The three female zones are deliberately not Miller and must not be
+ * "corrected" onto him. His classical female secondo is E5–F#5, where a
+ * trained soprano crosses into head voice; these pages address the
+ * contemporary commercial break, which lands nearer A4–B4. That is a
+ * different event in a different repertoire, not a rounding of the same one,
+ * so those rows keep the conventional CCM figures this product published on
+ * the old print.suedeai.ai range demo. Contralto is interpolated onto that
+ * scale from its neighbours, which is why it overlaps the category above it
+ * — that overlap is real and worth showing rather than tidying away.
+ *
+ * Do not sync any of this with the suede-voice iOS app. That app carries a
+ * single secondo baseline per voice as a diagnostic threshold, not a published
+ * band — a different shape for a different job — and "it matches the other
+ * surface" is how the wrong figures survived here in the first place.
  *
  * `caveat` marks a category where the single-zone model is genuinely a poor
  * fit, so the page can say so instead of printing a number at a confidence the
@@ -104,10 +129,10 @@ export interface VoiceTypePassaggio {
 }
 
 export const VOICE_TYPE_PASSAGGIO: Record<VoiceKind, VoiceTypePassaggio> = {
-  Bass: { low: 55, high: 57 }, // G3–A3
-  "Bass-baritone": { low: 57, high: 60 }, // A3–C4
-  Baritone: { low: 59, high: 62 }, // B3–D4
-  Tenor: { low: 64, high: 67 }, // E4–G4
+  Bass: { low: 55, high: 60 }, // G3–C4
+  "Bass-baritone": { low: 57, high: 62 }, // A3–D4
+  Baritone: { low: 59, high: 64 }, // B3–E4
+  Tenor: { low: 62, high: 67 }, // D4–G4
   Countertenor: {
     low: 55,
     high: 60, // G3–C4
