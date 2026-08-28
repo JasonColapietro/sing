@@ -108,7 +108,7 @@ export default function SingersPage() {
       {
         "@type": "Organization",
         "@id": "https://suedeai.ai/#organization",
-        name: "Suede Labs AI",
+        name: "Suede Labs",
         url: "https://suedeai.ai",
         logo: "https://suedeai.ai/suede-ai-logo-transparent.png",
       },
