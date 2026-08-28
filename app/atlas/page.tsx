@@ -98,7 +98,7 @@ export default function AtlasPage() {
             >
               {AUTHOR_NAME}
             </a>{" "}
-            ({AUTHOR_ALIAS}). Published by Suede Labs AI.
+            ({AUTHOR_ALIAS}). Published by Suede Labs.
           </p>
           <p className="mt-5 max-w-3xl text-mut">
             One book for the question every singer eventually types into a

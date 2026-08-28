@@ -146,7 +146,7 @@ const HOME_JSON_LD = {
     {
       "@type": "Organization",
       "@id": ORG_ID,
-      name: "Suede Labs AI",
+      name: "Suede Labs",
       url: "https://suedeai.ai",
       logo: "https://suedeai.ai/suede-ai-logo-transparent.png",
       sameAs: [...ORG_SAME_AS],
