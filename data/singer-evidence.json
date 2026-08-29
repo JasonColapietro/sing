@@ -1,0 +1,262 @@
+{
+  "olivia-rodrigo": {
+    "status": "disputed",
+    "reviewedBy": "Jason Colapietro",
+    "reviewedAt": "2026-08-29",
+    "voiceTypeCopy": "Olivia Rodrigo's voice type is disputed in the reviewed sources; this review does not establish a definitive classical classification.",
+    "sources": [
+      {
+        "title": "Olivia Rodrigo - GUTS",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/collections/olivia-rodrigo/collection-olivia-rodrigo-guts/CL0010978",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "Published arrangements provide written compasses for songs in the GUTS collection.",
+        "scope": "Written compasses for GUTS song arrangements only; they do not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "GUTS collection"
+      },
+      {
+        "title": "Olivia Rodrigo artist study",
+        "publisher": "HumMatch",
+        "url": "https://hummatch.me/artist/olivia-rodrigo",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The researched cohort supports range observations for the recordings represented in that study.",
+        "scope": "A researched recording cohort, not a complete career inventory or a definitive classical voice type.",
+        "confidence": "moderate",
+        "kind": "artist-study"
+      }
+    ]
+  },
+  "reba-mcentire": {
+    "status": "reviewed",
+    "reviewedBy": "Jason Colapietro",
+    "reviewedAt": "2026-08-29",
+    "voiceTypeCopy": "Reba McEntire's reviewed sources describe a peak-career span of about three octaves but do not establish a definitive classical voice type.",
+    "sources": [
+      {
+        "title": "Reba McEntire Teaches Country Music: Singing",
+        "publisher": "MasterClass",
+        "url": "https://www.masterclass.com/classes/reba-mcentire-teaches-country-music/chapters/singing-3213510a-2f6e-446e-bbf2-d86675aea8cb",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "McEntire's first-person lesson describes a peak-career span of about three octaves.",
+        "scope": "A first-person approximate span statement; it gives no endpoints and does not establish a definitive classical voice type.",
+        "confidence": "moderate",
+        "kind": "first-person-statement"
+      },
+      {
+        "title": "Reba McEntire - Fancy",
+        "publisher": "Singing Carrots",
+        "url": "https://singingcarrots.com/song?song=reba-mcentire-fancy",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The page documents a range for Reba McEntire's recording of Fancy.",
+        "scope": "One identified song performance only; it does not establish a full-career range or classical voice type.",
+        "confidence": "limited",
+        "kind": "song-analysis",
+        "song": "Fancy"
+      },
+      {
+        "title": "Fancy",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/reba-mcentire/fancy/MN0108062_U3",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Fancy arrangement.",
+        "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Fancy"
+      }
+    ]
+  },
+  "alex-warren": {
+    "status": "disputed",
+    "reviewedBy": "Jason Colapietro",
+    "reviewedAt": "2026-08-29",
+    "voiceTypeCopy": "Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints.",
+    "sources": [
+      {
+        "title": "Ordinary",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/alex-warren/ordinary/MN0299873",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Ordinary arrangement.",
+        "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Ordinary"
+      },
+      {
+        "title": "Before You Leave Me",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/alex-warren/before-you-leave-me/MN0302282",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Before You Leave Me arrangement.",
+        "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Before You Leave Me"
+      },
+      {
+        "title": "Carry You Home",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/alex-warren/carry-you-home/MN0294485",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Carry You Home arrangement.",
+        "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Carry You Home"
+      },
+      {
+        "title": "Eternity",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/alex-warren/eternity/MN0302267",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Eternity arrangement.",
+        "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Eternity"
+      },
+      {
+        "title": "Burning Down",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/alex-warren/burning-down/MN0302281",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Burning Down arrangement.",
+        "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Burning Down"
+      }
+    ]
+  },
+  "sam-smith": {
+    "status": "disputed",
+    "reviewedBy": "Jason Colapietro",
+    "reviewedAt": "2026-08-29",
+    "voiceTypeCopy": "Sam Smith's long-time coach describes baritone-to-tenor territory; the reviewed sources do not establish a definitive countertenor classification.",
+    "sources": [
+      {
+        "title": "Sam Smith's Vocal Coach on Their Voice",
+        "publisher": "VH1",
+        "url": "https://www.vh1.com/news/np30pw/sam-smith-vocal-coach-joanna-eden-team-celeb",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "Long-time teacher Joanna Eden describes Smith's voice as developing from baritone toward tenor territory.",
+        "scope": "A coach's descriptive account; it does not establish a definitive classical countertenor classification or full-career endpoints.",
+        "confidence": "moderate",
+        "kind": "coach-interview"
+      },
+      {
+        "title": "Lay Me Down",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/sam-smith/lay-me-down/MN0129167",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Lay Me Down arrangement.",
+        "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Lay Me Down",
+        "octaveConvention": "Scientific pitch notation as published by the score; this is a written arrangement compass, not a performance or physiological measurement."
+      },
+      {
+        "title": "Sam Smith artist study",
+        "publisher": "HumMatch",
+        "url": "https://hummatch.me/artist/sam-smith",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The researched cohort supports range observations for the recordings represented in that study.",
+        "scope": "A researched recording cohort, not a complete career inventory or a definitive classical voice type.",
+        "confidence": "moderate",
+        "kind": "artist-study"
+      }
+    ]
+  },
+  "arijit-singh": {
+    "status": "disputed",
+    "reviewedBy": "Jason Colapietro",
+    "reviewedAt": "2026-08-29",
+    "voiceTypeCopy": "A public artist biography describes Arijit Singh as a rich baritone; the reviewed sources dispute a definitive tenor label.",
+    "sources": [
+      {
+        "title": "Arijit Singh",
+        "publisher": "Ticketmaster",
+        "url": "https://www.ticketmaster.com/arijit-singh-tickets/artist/2006598",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The public artist biography describes Arijit Singh as a rich baritone.",
+        "scope": "A biographical descriptive label, not an independently established classical voice classification or full-career range.",
+        "confidence": "limited",
+        "kind": "artist-biography"
+      },
+      {
+        "title": "Tum Hi Ho",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/arijit-singh/tum-hi-ho/MN0126344_U1",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Tum Hi Ho arrangement.",
+        "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Tum Hi Ho"
+      },
+      {
+        "title": "Arijit Singh artist range",
+        "publisher": "Singing Carrots",
+        "url": "https://singingcarrots.com/artist-range?artist=Arijit+Singh",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The page reports an artist-range aggregation for Arijit Singh.",
+        "scope": "An aggregation page with its own stated methodology; it is not an independently verified physiological or full-career limit.",
+        "confidence": "limited",
+        "kind": "artist-study"
+      }
+    ]
+  },
+  "adele": {
+    "status": "reviewed",
+    "reviewedBy": "Jason Colapietro",
+    "reviewedAt": "2026-08-29",
+    "voiceTypeCopy": "Reviewed expert analysis describes Adele as a mezzo-soprano, with chest mix to E5.",
+    "sources": [
+      {
+        "title": "Adele's voice: power, fragile self and authentic artistry",
+        "publisher": "ABC News / The Conversation",
+        "url": "https://www.abc.net.au/news/2021-11-28/adele-30-album-voice-power-true-artistry-fragile-self-authentic/100654136",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "Narelle Yeo's expert analysis describes Adele as a mezzo-soprano and discusses chest mix to E5.",
+        "scope": "Expert analysis of vocal qualities and selected repertoire; it does not establish reviewed full-career C3-A#5 endpoints.",
+        "confidence": "high",
+        "kind": "expert-analysis"
+      },
+      {
+        "title": "Narelle Yeo",
+        "publisher": "University of Sydney",
+        "url": "https://profiles.sydney.edu.au/narelle.yeo",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The university profile identifies the expert whose analysis is cited for Adele's vocal description.",
+        "scope": "Author and expertise context only; it supplies no independent evidence of Adele's range or voice type.",
+        "confidence": "high",
+        "kind": "expert-profile"
+      },
+      {
+        "title": "Has Adele got a good voice?",
+        "publisher": "Classic FM",
+        "url": "https://www.classicfm.com/discover-music/music-theory/has-adele-got-a-good-voice/",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The analysis discusses Adele's vocal qualities and repertoire examples.",
+        "scope": "Commentary on selected examples, not a reviewed measurement of full-career endpoints or a clinical classification.",
+        "confidence": "limited",
+        "kind": "expert-analysis"
+      },
+      {
+        "title": "Rolling in the Deep",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/adele/rolling-in-the-deep/MN0089577",
+        "accessedAt": "2026-08-29",
+        "supportedClaim": "The published score shows a written compass for the Rolling in the Deep arrangement.",
+        "scope": "Written compass for this song arrangement only; does not establish a full-career range or physiological limit.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Rolling in the Deep"
+      }
+    ]
+  }
+}
