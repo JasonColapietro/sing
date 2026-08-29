@@ -151,6 +151,13 @@ function gatherTapTargets({ selector, isTouch }) {
 
     const hit = window.__hit(el);
     if (!hit) continue;
+    // Scrolled out of its own scroll container: reachable after a swipe, so its
+    // corners resolving to that container says nothing about the control.
+    if (hit.clippedByScroll) continue;
+    // A link wrapping across lines has a union rect covering the gap between
+    // its first and last line, so its "corners" sit in whitespace it never
+    // occupied. 756x39 for a two-line link is two 19px lines, not a 39px target.
+    if (el.getClientRects().length > 1) continue;
 
     nodes.push({ el, hit, r });
   }
@@ -290,7 +297,12 @@ export async function run(ctx) {
     // region is nonetheless too small -- genuinely shape-clipped or occluded.
     const bigEnoughOnPaper = target.width >= 24 && target.height >= 24;
     if (target.dead.length > 0 && bigEnoughOnPaper && target.minimumTargetFits === false && once("dead-corners", target.selector)) {
-      const severity = nominal < 44 ? "major" : "minor";
+      // WCAG 2.5.8 sizes a non-rectangular target by its smallest enclosing
+      // rectangle, so a 33x26 pill passes the criterion on its bounding box no
+      // matter how its corners are shaped. Losing area to a radius is a real
+      // usability observation and worth surfacing, but it is not a violation --
+      // the size check above is the one that enforces the criterion.
+      const severity = "minor";
       const lost = deadCornerLostArea(target.width, target.height, target.dead.length);
       const verb = target.dead.length === 1 ? "does" : "do";
       findings.push({

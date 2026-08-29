@@ -134,7 +134,30 @@ export const HIT_PROBE = `
         if (!at || !(at === el || el.contains(at))) { minimumTargetFits = false; break; }
       }
     }
-    return { width: r.width, height: r.height, dead, minimumTargetFits };
+    /**
+     * A control scrolled out of its own scroll container is not a defect.
+     *
+     * The nav pill strip and the /tools keyboard are both deliberately
+     * scrollable: their contents are wider than the box and you swipe to reach
+     * them. Those off-strip controls still have rects inside the viewport, so a
+     * viewport-only bounds check lets them through, and every probe point then
+     * resolves to the clipping container instead of the control. That reported
+     * 33 perfectly good piano keys and most of the nav as untappable.
+     *
+     * The control becomes reachable the moment its container is scrolled, so
+     * this is reported separately rather than treated as a hit-test failure.
+     */
+    let clippedByScroll = false;
+    for (let p = el.parentElement; p && !clippedByScroll; p = p.parentElement) {
+      const pcs = getComputedStyle(p);
+      const clips = /auto|scroll|hidden|clip/.test(pcs.overflowX + " " + pcs.overflowY);
+      if (!clips) continue;
+      const pr = p.getBoundingClientRect();
+      if (r.right > pr.right + 1 || r.left < pr.left - 1 ||
+          r.bottom > pr.bottom + 1 || r.top < pr.top - 1) clippedByScroll = true;
+    }
+
+    return { width: r.width, height: r.height, dead, minimumTargetFits, clippedByScroll };
   };
 })();
 `;
