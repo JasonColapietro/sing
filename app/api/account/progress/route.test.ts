@@ -80,6 +80,17 @@ beforeEach(() => {
 });
 
 describe("GET /api/account/progress", () => {
+  it("returns unauthorized for a configured but signed-out request", async () => {
+    account.auth.mockResolvedValue({ userId: null });
+
+    const response = await GET(
+      new Request("https://sing.suedeai.ai/api/account/progress"),
+    );
+
+    expect(response.status).toBe(401);
+    expect(account.auth).toHaveBeenCalledOnce();
+  });
+
   it("returns unauthorized before Clerk when accounts are not configured", async () => {
     account.accountsReady.mockReturnValue(false);
     account.auth.mockRejectedValue(new Error("Clerk middleware is unavailable"));
