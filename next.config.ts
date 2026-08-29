@@ -13,6 +13,21 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        // Redirect raw Vercel hosts before Proxy runs. Clerk authenticates
+        // before invoking its callback and can emit its own handshake redirect,
+        // so canonicalization inside clerkMiddleware is too late to guarantee
+        // that paid entitlement stays on sing.suedeai.ai's localStorage origin.
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: ".+\\.vercel\\.app",
+          },
+        ],
+        destination: "https://sing.suedeai.ai/:path*",
+        permanent: true,
+      },
+      {
         // The library files this category as Contralto, but "alto" is the
         // commoner word and what the range test used to answer. Both the
         // stored label on a returning singer's device and anyone searching
