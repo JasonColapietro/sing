@@ -316,8 +316,18 @@ export async function run(ctx) {
 
     // ---- 4. form controls ---------------------------------------------
     (function checkFormControls() {
+      // isReachable matters as much as the type=hidden test. The standard
+      // "styled upload button" pattern puts a display:none <input type=file>
+      // next to a visible <Button>Import JSON</Button> that clicks it, and a
+      // display:none input is never in the accessibility tree at all -- so
+      // reporting that a screen reader announces it unlabelled describes
+      // something no screen reader reaches. The name that matters is the
+      // visible button's, and that one is checked separately.
       const controls = [...document.querySelectorAll("input, select, textarea")].filter(
-        (el) => (el.getAttribute("type") || "").toLowerCase() !== "hidden" && !isAriaHiddenAncestor(el),
+        (el) =>
+          (el.getAttribute("type") || "").toLowerCase() !== "hidden" &&
+          !isAriaHiddenAncestor(el) &&
+          isReachable(el),
       );
 
       for (const el of controls) {
