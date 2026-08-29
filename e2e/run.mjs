@@ -64,6 +64,38 @@ async function clearAppState(context) {
   });
 }
 
+
+/**
+ * Hand each audit the same starting conditions.
+ *
+ * Audits share one page per route, so whatever the previous one left behind
+ * becomes the next one's baseline. That is not hypothetical: a module that
+ * focuses a control to measure its focus ring moves the sequential focus
+ * navigation starting point, and the keyboard audit then begins its Tab walk
+ * from the middle of the page and reports every control above that point as
+ * unreachable. Run alone it found nothing; run third it accused a correct site
+ * of 39 keyboard traps.
+ *
+ * Blurring resets the navigation starting point to the document, so Tab starts
+ * at the top again, and scrolling home undoes any scrolling a module did.
+ */
+async function resetPageState(page) {
+  await page.evaluate(() => {
+    const el = document.activeElement;
+    if (el && el !== document.body && typeof el.blur === "function") el.blur();
+    // blur() alone does not move Chrome's sequential focus navigation starting
+    // point, so the next Tab resumes from wherever the last module left off
+    // rather than from the top. Focusing the body does move it; the body needs
+    // a tabindex to accept focus at all, and the attribute comes straight back
+    // off so the page is left as it was found.
+    const hadTabindex = document.body.hasAttribute("tabindex");
+    if (!hadTabindex) document.body.setAttribute("tabindex", "-1");
+    document.body.focus({ preventScroll: true });
+    if (!hadTabindex) document.body.removeAttribute("tabindex");
+    window.scrollTo(0, 0);
+  }).catch(() => {});
+}
+
 async function main() {
   const audits = await loadAudits();
   if (audits.length === 0) {
@@ -126,6 +158,7 @@ async function main() {
         const ctx = { page, route, viewport, baseUrl: BASE, response, consoleErrors, failedRequests };
         for (const audit of audits) {
           if (audit.appliesTo && !audit.appliesTo(ctx)) continue;
+          await resetPageState(page);
           try {
             const got = (await audit.run(ctx)) ?? [];
             for (const f of got) {
@@ -182,7 +215,8 @@ function report(findings, errors, viewportCount) {
 
   console.log(`\n${"=".repeat(72)}\n  ${rows.length} distinct findings\n${"=".repeat(72)}`);
   for (const r of rows) {
-    const where = r.viewports.length === viewportCount ? "all viewports" : r.viewports.join(", ");
+    const seen = [...new Set(r.viewports)];
+    const where = seen.length === viewportCount ? "all viewports" : seen.join(", ");
     console.log(`\n[${r.severity.toUpperCase()}] ${r.audit} — ${r.route} (${where})`);
     console.log(`  ${r.summary}`);
     if (r.selector) console.log(`  at: ${r.selector}`);
