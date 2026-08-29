@@ -110,6 +110,27 @@ function gatherTapTargets({ selector, isTouch }) {
     return full.replace(own, "").trim().length > 0;
   };
 
+  /**
+   * The other half of 2.5.8's inline exception, and the half that matters here.
+   *
+   * The success criterion exempts a target whose "size is otherwise constrained
+   * by the line-height of non-target text" -- that is, a link sized by
+   * typography rather than by padding. Requiring prose around it was too strict
+   * and flagged 118 ordinary text links, every one of them 19-20px tall because
+   * that is what a line of this type is. A link in a list of links is exempt for
+   * the same reason a link mid-sentence is: making it 24px tall would mean
+   * changing the leading of the text it sits in.
+   *
+   * Padded controls that merely happen to be links are not exempt -- their
+   * height comes from padding, so the box is taller than the line box.
+   */
+  const isLineHeightConstrained = (el, cs, rect) => {
+    if (cs.display !== "inline") return false;
+    const lh = parseFloat(cs.lineHeight);
+    const line = Number.isFinite(lh) ? lh : parseFloat(cs.fontSize) * 1.2;
+    return Number.isFinite(line) && rect.height <= line + 2;
+  };
+
   const nodes = [];
   for (const el of document.querySelectorAll(selector)) {
     if (el.closest('[aria-hidden="true"]')) continue;
@@ -120,6 +141,7 @@ function gatherTapTargets({ selector, isTouch }) {
     if (isLinkish && isInlineProseLink(el)) continue;
 
     const r = el.getBoundingClientRect();
+    if (isLinkish && isLineHeightConstrained(el, cs, r)) continue;
     if (r.width === 0 || r.height === 0) continue;
     const fullyOnScreen = r.top >= -EPS && r.left >= -EPS && r.bottom <= vh + EPS && r.right <= vw + EPS;
     if (!fullyOnScreen) continue; // see module header — elementFromPoint(outside viewport) is null
@@ -259,7 +281,12 @@ export async function run(ctx) {
     // ~27 non-defects per route: a 66x32 pill and a 44px circle both report 4/4
     // dead and both are comfortably tappable. Only speak up when the WCAG 2.5.8
     // minimum does not actually fit inside the hittable region.
-    if (target.dead.length > 0 && target.minimumTargetFits === false && once("dead-corners", target.selector)) {
+    // A control already reported as under 24x24 fails the inscribed probe for
+    // that reason alone, so reporting its corners too says the same thing
+    // twice. This fires only for controls big enough to pass on size whose hit
+    // region is nonetheless too small -- genuinely shape-clipped or occluded.
+    const bigEnoughOnPaper = target.width >= 24 && target.height >= 24;
+    if (target.dead.length > 0 && bigEnoughOnPaper && target.minimumTargetFits === false && once("dead-corners", target.selector)) {
       const severity = nominal < 44 ? "major" : "minor";
       const lost = deadCornerLostArea(target.width, target.height, target.dead.length);
       const verb = target.dead.length === 1 ? "does" : "do";

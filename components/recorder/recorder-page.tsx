@@ -29,6 +29,7 @@ import { AccountSavePrompt } from "@/components/account/save-prompt";
 import { AccountBackupSync } from "@/components/progress/account-backup-sync";
 import { FreeOnly, ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
+import { DIM } from "@/lib/chart-colors";
 
 const MAX_SEC = 300; // 5 minute take limit
 const COUNT_IN_BEAT = 0.5; // seconds per count-in click
@@ -1046,7 +1047,7 @@ export default function RecorderPageClient() {
                     className="font-mono"
                     fontSize="9"
                     letterSpacing="0.1em"
-                    fill="#8a8272"
+                    fill={DIM}
                   >
                     TAKE 3
                   </text>
@@ -1056,7 +1057,7 @@ export default function RecorderPageClient() {
                     className="font-mono"
                     fontSize="9"
                     letterSpacing="0.1em"
-                    fill="#8a8272"
+                    fill={DIM}
                   >
                     TAKE 7
                   </text>

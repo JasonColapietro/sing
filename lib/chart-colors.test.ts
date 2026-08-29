@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   AMBER,
@@ -89,6 +89,32 @@ describe("the palette mirrors app/globals.css", () => {
     // in the SVG and canvas constants for months because nothing checked.
     const source = readFileSync(new URL("./chart-colors.ts", import.meta.url), "utf8");
     expect(source.replace(/\/\*[\s\S]*?\*\//g, "")).not.toContain("#8a8272");
+  });
+
+  it("does not paint in the retired gray anywhere a singer can read it", () => {
+    // Guarding this file alone was not enough. The constants were clean while
+    // five SVG <text> call sites went on writing the literal, and a browser
+    // audit measured one of them -- /recorder's "TAKE n" labels -- at 3.66:1
+    // against panel, where AA asks 4.5:1. Components paint the same glyphs the
+    // constants do, so they are held to the same rule.
+    const roots = ["../components", "../app"];
+    const offenders: string[] = [];
+    const walk = (dir: URL) => {
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const child = new URL(`${entry.name}${entry.isDirectory() ? "/" : ""}`, dir);
+        if (entry.isDirectory()) walk(child);
+        else if (/\.tsx?$/.test(entry.name)) {
+          // Open Graph cards render through Satori to a static image and carry
+          // their own palette; this rule is about glyphs painted in the app.
+          if (/og-card|opengraph-image/.test(entry.name)) continue;
+          if (readFileSync(child, "utf8").includes("#8a8272")) {
+            offenders.push(child.pathname.replace(/.*\/sing\//, ""));
+          }
+        }
+      }
+    };
+    for (const root of roots) walk(new URL(`${root}/`, import.meta.url));
+    expect(offenders).toEqual([]);
   });
 });
 

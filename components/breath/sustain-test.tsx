@@ -7,6 +7,7 @@ import { Button, Card, Pill, Stat } from "@/components/ui";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { loadBreath, recordAttempt, type BreathData } from "./store";
 import { RewardNote } from "./reward";
+import { MicAlert } from "@/components/mic-alert";
 
 type Phase = "idle" | "armed" | "running" | "done";
 
@@ -298,9 +299,7 @@ export function SustainTest() {
             Enable microphone
           </Button>
           {error && (
-            <p role="alert" className="max-w-sm text-sm text-rec">
-              {error}
-            </p>
+            <MicAlert message={error} className="max-w-sm text-sm text-rec" />
           )}
           <ProWhisper className="mt-4" />
         </div>

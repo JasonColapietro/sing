@@ -21,6 +21,7 @@ import {
   SummaryView,
   useEarSession,
 } from "./session";
+import { DIM } from "@/lib/chart-colors";
 
 const HOLD_MS = 1500;
 const WINDOW_MS = 8000;
@@ -70,7 +71,7 @@ function CentsNeedle({
         return (
           <g key={c}>
             <line x1={tx} y1={c === 0 ? 22 : 28} x2={tx} y2={c === 0 ? 48 : 42} stroke={c === 0 ? "#5c564d" : "#c9bda0"} strokeWidth={c === 0 ? 2 : 1.5} />
-            <text x={tx} y={64} textAnchor="middle" fontSize="9" fill="#8a8272" fontFamily="monospace">
+            <text x={tx} y={64} textAnchor="middle" fontSize="9" fill={DIM} fontFamily="monospace">
               {c > 0 ? `+${c}` : c}
             </text>
           </g>
@@ -92,7 +93,7 @@ function CentsNeedle({
         </g>
       )}
       {!voiced && (
-        <text x="150" y="80" textAnchor="middle" fontSize="10" fill="#8a8272" fontFamily="monospace">
+        <text x="150" y="80" textAnchor="middle" fontSize="10" fill={DIM} fontFamily="monospace">
           sing to move the needle
         </text>
       )}
