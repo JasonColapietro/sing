@@ -78,13 +78,24 @@ export function hasUsefulPercentile(s: Singer): boolean {
 /** Genres with enough singers to make a page worth having on its own. */
 export const HUB_GENRE_MINIMUM = 8;
 
+/**
+ * Deliberate hubs below the general floor.
+ *
+ * Grunge is the primary genre on five singer profiles, so leaving it out of
+ * the generated hub set turns those crawlable links into 404s. Keep exceptions
+ * named here instead of lowering the floor for every thin genre bucket.
+ */
+const INTENTIONAL_HUB_GENRES = new Set(["Grunge"]);
+
 export const HUB_GENRES: string[] = (() => {
   const counts = new Map<string, number>();
   for (const s of SINGERS) {
     for (const g of s.genres) counts.set(g, (counts.get(g) ?? 0) + 1);
   }
   return [...counts.entries()]
-    .filter(([, n]) => n >= HUB_GENRE_MINIMUM)
+    .filter(([g, n]) =>
+      n >= HUB_GENRE_MINIMUM || INTENTIONAL_HUB_GENRES.has(g),
+    )
     .map(([g]) => g)
     .sort();
 })();

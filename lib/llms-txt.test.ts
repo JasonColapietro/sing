@@ -24,7 +24,12 @@ import { generateStaticParams as voiceTypeParams } from "@/app/singers/voice-typ
 import { APP_NAME } from "./app-store";
 import { GENRE_HUBS, SING_HOME, VOICE_TYPE_HUBS, buildLlmsTxt } from "./llms-txt";
 import { SINGERS } from "./singers-data";
-import { singerBySlug } from "./singers";
+import {
+  HUB_GENRE_MINIMUM,
+  HUB_GENRES,
+  singerBySlug,
+  singersByGenre,
+} from "./singers";
 import { SITE_URL } from "./site";
 
 const STORE_URL =
@@ -150,6 +155,23 @@ describe("/llms.txt only advertises routes that exist", () => {
   it("never revives the R&B slug that 404s", () => {
     expect(genreSlugs).toContain("randb");
     expect(genreSlugs).not.toContain("r-b");
+  });
+
+  it("publishes the Grunge hub that singer profiles link to", () => {
+    expect(realGenres).toContain("grunge");
+    expect(genreSlugs).toContain("grunge");
+    expect(llms).toContain(
+      `${SING_HOME}/singers/genre/grunge`,
+    );
+  });
+
+  it("keeps Grunge as the only intentional exception below the hub floor", () => {
+    const belowFloor = HUB_GENRES.filter(
+      (genre) => singersByGenre(genre).length < HUB_GENRE_MINIMUM,
+    );
+
+    expect(belowFloor).toEqual(["Grunge"]);
+    expect(singersByGenre("Grunge")).toHaveLength(6);
   });
 
   it("advertises voice-type hubs at all", () => {

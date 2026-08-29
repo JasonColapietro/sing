@@ -35,6 +35,16 @@ function saysNoindex(robots: Metadata["robots"]): boolean {
 }
 
 describe("sitemap indexability", () => {
+  it("publishes the generated Grunge singer hub", () => {
+    expect(sitemap()).toContainEqual(
+      expect.objectContaining({
+        url: `${SITE_URL}/singers/genre/grunge`,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      }),
+    );
+  });
+
   it("never publishes an Atlas or book chapter whose route metadata says noindex", async () => {
     const published = new Set(sitemap().map(({ url }) => url));
     const chapters = await Promise.all([
