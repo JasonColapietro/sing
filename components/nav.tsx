@@ -4,7 +4,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type ComponentProps,
   type ReactElement,
 } from "react";
 import { createPortal } from "react-dom";
@@ -20,6 +19,7 @@ import { Button } from "@/components/ui";
 import { hasSomethingToSave } from "@/components/account/save-prompt";
 import { useModalFocus } from "@/lib/use-modal-focus";
 import { accountsReady } from "@/lib/accounts";
+import { SING_APPEARANCE } from "@/lib/clerk-appearance";
 
 /**
  * Ten tabs, not thirteen: Recorder and Analyze fold into Tools, and the two
@@ -128,46 +128,6 @@ function FlameIcon({ filled }: { filled: boolean }) {
   );
 }
 
-type ClerkAppearance = NonNullable<
-  ComponentProps<typeof UserButton>["appearance"]
->;
-
-/**
- * The header's own copy of the site theme, spent on the sign-in modal and the
- * user button. Tailwind's semantic classes cannot reach Clerk's subtree, so
- * these name the tokens directly: app/globals.css puts them on `:root, :host`,
- * which Clerk's card and portals both inherit.
- *
- * The full version, with a note on why colorPrimary is the darker gold, lives
- * in app/sign-in/[[...sign-in]]/page.tsx. Keep the two in step. A route module
- * and a "use client" module cannot share one constant without a third file.
- */
-const CLERK_APPEARANCE: ClerkAppearance = {
-  variables: {
-    colorPrimary: "var(--color-amber-ink)",
-    colorPrimaryForeground: "var(--color-panel)",
-    colorBackground: "var(--color-panel)",
-    colorForeground: "var(--color-ink)",
-    colorMuted: "var(--color-panel2)",
-    colorMutedForeground: "var(--color-mut)",
-    colorNeutral: "var(--color-ink)",
-    colorInput: "var(--color-panel)",
-    colorInputForeground: "var(--color-ink)",
-    colorBorder: "var(--color-line)",
-    colorRing: "var(--color-rec)",
-    colorDanger: "var(--color-rec)",
-    colorSuccess: "var(--color-ok-ink)",
-    colorWarning: "var(--color-amber-ink)",
-    fontFamily: "var(--font-body)",
-    fontFamilyMono: "var(--font-mono)",
-    borderRadius: "0.75rem",
-  },
-  options: {
-    logoPlacement: "none",
-    socialButtonsVariant: "blockButton",
-  },
-};
-
 /**
  * The signed-out half of the account affordance.
  *
@@ -193,11 +153,11 @@ function AccountOffer({
   children: ReactElement;
 }) {
   return earned ? (
-    <SignUpButton mode="modal" appearance={CLERK_APPEARANCE}>
+    <SignUpButton mode="modal" appearance={SING_APPEARANCE}>
       {children}
     </SignUpButton>
   ) : (
-    <SignInButton mode="modal" appearance={CLERK_APPEARANCE}>
+    <SignInButton mode="modal" appearance={SING_APPEARANCE}>
       {children}
     </SignInButton>
   );
@@ -414,7 +374,7 @@ export default function Nav() {
               <div className="px-4 pt-4">
                 {isSignedIn ? (
                   <UserButton
-                    appearance={CLERK_APPEARANCE}
+                    appearance={SING_APPEARANCE}
                     userProfileMode="modal"
                     showName
                   />
@@ -597,7 +557,7 @@ export default function Nav() {
             (isSignedIn ? (
               <span className="flex shrink-0 items-center">
                 <UserButton
-                  appearance={CLERK_APPEARANCE}
+                  appearance={SING_APPEARANCE}
                   userProfileMode="modal"
                 />
               </span>

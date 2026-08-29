@@ -40,6 +40,47 @@ interface Params {
   slug: string;
 }
 
+/** Exact-page GSC query intent observed for Jul 30–Aug 26, 2026. */
+const SEARCH_INTENT_BY_SLUG = new Map<
+  string,
+  "voice-type" | "vocal-range"
+>([
+  ["olivia-rodrigo", "voice-type"],
+  ["reba-mcentire", "voice-type"],
+  ["alex-warren", "voice-type"],
+  ["sam-smith", "voice-type"],
+  ["arijit-singh", "vocal-range"],
+]);
+
+function queryAlignedTitle(
+  s: (typeof SINGERS)[number],
+  intent: "voice-type" | "vocal-range",
+): string {
+  const voice = `Voice Type: ${s.voiceType}`;
+  return intent === "voice-type"
+    ? `${s.name} ${voice} | Vocal Range ${rangeLabel(s)}`
+    : `${s.name} Vocal Range: ${rangeLabel(s)} | ${voice}`;
+}
+
+function queryAlignedHeading(
+  s: (typeof SINGERS)[number],
+  intent: "voice-type" | "vocal-range",
+): string {
+  return intent === "voice-type"
+    ? `${s.name} Voice Type and Vocal Range`
+    : `${s.name} Vocal Range and Voice Type`;
+}
+
+function queryAlignedDescription(
+  s: (typeof SINGERS)[number],
+  intent: "voice-type" | "vocal-range",
+): string {
+  const semis = s.highMidi - s.lowMidi;
+  const voiceAnswer = `${s.name} is commonly classified as a ${s.voiceType.toLowerCase()}. Its cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(semis)} octaves).`;
+  const rangeAnswer = `${s.name}'s cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(semis)} octaves). The voice is commonly classified as ${s.voiceType.toLowerCase()}.`;
+  return `${intent === "voice-type" ? voiceAnswer : rangeAnswer} See the notes and compare your range free.`;
+}
+
 export const dynamicParams = false;
 
 export function generateStaticParams(): Params[] {
@@ -55,16 +96,27 @@ export async function generateMetadata({
   const s = singerBySlug(slug);
   if (!s) return {};
   const semis = s.highMidi - s.lowMidi;
+  const intent = SEARCH_INTENT_BY_SLUG.get(s.slug);
   // "Vocal Range & Highest Note" — the two query families this page answers.
   // Long names truncate the octave tail in a SERP, which is the right part to
   // lose; the note letters are the answer people searched for.
-  const title = `${s.name} Vocal Range & Highest Note: ${rangeLabel(s)} (${spanOctaves(semis)} Octaves)`;
-  const description = `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — ${describeSpan(semis)}, a ${s.voiceType.toLowerCase()}. Highest note ${midiToLabel(s.highMidi)}, lowest ${midiToLabel(s.lowMidi)}. Hear it, see it on a keyboard, and test your own range free.`;
+  const title = intent
+    ? queryAlignedTitle(s, intent)
+    : `${s.name} Vocal Range & Highest Note: ${rangeLabel(s)} (${spanOctaves(semis)} Octaves)`;
+  const description = intent
+    ? queryAlignedDescription(s, intent)
+    : `${s.name}'s vocal range is commonly cited as ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} — ${describeSpan(semis)}, a ${s.voiceType.toLowerCase()}. Highest note ${midiToLabel(s.highMidi)}, lowest ${midiToLabel(s.lowMidi)}. Hear it, see it on a keyboard, and test your own range free.`;
+  const canonical = `${SITE_URL}/singers/${s.slug}`;
   return {
-    title,
+    title: intent ? { absolute: title } : title,
     description,
-    alternates: { canonical: `${SITE_URL}/singers/${s.slug}` },
-    openGraph: { title, description, type: "profile" },
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      type: "profile",
+      ...(intent ? { url: canonical } : {}),
+    },
   };
 }
 
@@ -172,6 +224,7 @@ export default async function SingerPage({
   const pageUrl = `${SITE_URL}/singers/${s.slug}`;
   const answer = answerSentence(s);
   const faq = singerFaq(s);
+  const intent = SEARCH_INTENT_BY_SLUG.get(s.slug);
   // Rendered below AND used verbatim in the FAQPage markup. Google requires the
   // marked-up question to match what the reader sees; sharing one string is the
   // only way that stays true. Note the typographic apostrophe — the heading used
@@ -284,8 +337,12 @@ export default async function SingerPage({
   return (
     <PageShell
       kicker="Vocal range"
-      title={s.name}
-      subtitle={`${s.voiceType} · ${s.genres.join(" · ")} · ${s.country} · prominent since ${s.activeFrom}`}
+      title={intent ? queryAlignedHeading(s, intent) : s.name}
+      subtitle={
+        intent
+          ? queryAlignedDescription(s, intent)
+          : `${s.voiceType} · ${s.genres.join(" · ")} · ${s.country} · prominent since ${s.activeFrom}`
+      }
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
