@@ -135,6 +135,7 @@ function gatherTapTargets({ selector, isTouch }) {
     width: hit.width,
     height: hit.height,
     dead: hit.dead,
+    minimumTargetFits: hit.minimumTargetFits,
   }));
 
   // --- spacing (touch viewports only, gated by the caller via `isTouch`) ---
@@ -254,7 +255,12 @@ export async function run(ctx) {
       }
     }
 
-    if (target.dead.length > 0 && once("dead-corners", target.selector)) {
+    // Dead corners alone are not a defect. Every rounded-full control has them
+    // by construction, so reporting each one buried the real findings under
+    // ~27 non-defects per route: a 66x32 pill and a 44px circle both report 4/4
+    // dead and both are comfortably tappable. Only speak up when the WCAG 2.5.8
+    // minimum does not actually fit inside the hittable region.
+    if (target.dead.length > 0 && target.minimumTargetFits === false && once("dead-corners", target.selector)) {
       const severity = nominal < 44 ? "major" : "minor";
       const lost = deadCornerLostArea(target.width, target.height, target.dead.length);
       const verb = target.dead.length === 1 ? "does" : "do";
@@ -263,8 +269,9 @@ export async function run(ctx) {
         summary: `${target.dead.length}/4 corners of the nominal box do not hit-test back to the control`,
         detail:
           `${target.selector} is nominally ${w}x${h}px but ${target.dead.join(", ")} ${verb} not ` +
-          `resolve to it — an estimated ${lost}px² there is untappable, assuming the usual cause ` +
-          `(border-radius clipping the hit region the same way it clips paint). Fix: an unrounded ` +
+          `resolve to it, and a 24x24 box at its centre does not hit-test cleanly either — so the ` +
+          `WCAG 2.5.8 minimum does not fit inside the real target. An estimated ${lost}px² is ` +
+          `untappable (border-radius clips the hit region the same way it clips paint). Fix: an unrounded ` +
           `after:absolute after:inset-0 overlay squares the hit region while border-radius keeps ` +
           `shaping only the :focus-visible ring.`,
         selector: target.selector,

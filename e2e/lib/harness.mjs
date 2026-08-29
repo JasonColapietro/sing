@@ -100,7 +100,35 @@ export const HIT_PROBE = `
       const at = document.elementFromPoint(x, y);
       if (!at || !(at === el || el.contains(at))) dead.push(name);
     }
-    return { width: r.width, height: r.height, dead };
+
+    /**
+     * Dead corners on their own do not make a target too small.
+     *
+     * Every rounded-full control has them by construction -- the corners of the
+     * bounding box are outside the shape, so they resolve to the parent. A 66x32
+     * pill and a 44px circle both report 4/4 dead and both are comfortably
+     * tappable. What actually matters is whether the WCAG 2.5.8 minimum fits
+     * INSIDE the hittable region, so probe a 24x24 box at the centre: if every
+     * point of that box hits the control, the target passes regardless of how
+     * the corners are shaped.
+     */
+    const cx = (r.left + r.right) / 2;
+    const cy = (r.top + r.bottom) / 2;
+    const half = 12; // 24x24 CSS px, the 2.5.8 minimum
+    const probes = [
+      [cx, cy],
+      [cx - half, cy - half], [cx + half, cy - half],
+      [cx - half, cy + half], [cx + half, cy + half],
+      [cx, cy - half], [cx, cy + half], [cx - half, cy], [cx + half, cy],
+    ];
+    let minimumTargetFits = r.width >= 24 && r.height >= 24;
+    if (minimumTargetFits) {
+      for (const [x, y] of probes) {
+        const at = document.elementFromPoint(x, y);
+        if (!at || !(at === el || el.contains(at))) { minimumTargetFits = false; break; }
+      }
+    }
+    return { width: r.width, height: r.height, dead, minimumTargetFits };
   };
 })();
 `;
