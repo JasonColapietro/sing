@@ -75,6 +75,14 @@ async function main() {
   let routes = [...ROUTES, ...templateRoutes];
   if (ROUTE_FILTER) routes = routes.filter((r) => ROUTE_FILTER.includes(r.name));
 
+  const viewports = VIEWPORT_FILTER
+    ? VIEWPORTS.filter((v) => VIEWPORT_FILTER.includes(v.name))
+    : VIEWPORTS;
+  if (viewports.length === 0) {
+    console.error(`no viewport matched --viewport=${VIEWPORT_FILTER?.join(",")}; known: ${VIEWPORTS.map((v) => v.name).join(", ")}`);
+    process.exit(2);
+  }
+
   console.log(
     `sing UI/UX audit — ${audits.length} audits x ${routes.length} routes x ${viewports.length} viewports against ${BASE}\n`
   );
@@ -90,14 +98,6 @@ async function main() {
 
   const findings = [];
   const errors = [];
-
-  const viewports = VIEWPORT_FILTER
-    ? VIEWPORTS.filter((v) => VIEWPORT_FILTER.includes(v.name))
-    : VIEWPORTS;
-  if (viewports.length === 0) {
-    console.error(`no viewport matched --viewport=${VIEWPORT_FILTER?.join(",")}; known: ${VIEWPORTS.map((v) => v.name).join(", ")}`);
-    process.exit(2);
-  }
 
   for (const viewport of viewports) {
     const context = await browser.newContext({
