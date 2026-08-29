@@ -23,7 +23,9 @@
  * fails (3).
  */
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("server-only", () => ({}));
 
 import Page, { metadata } from "@/app/atlas/vocal-range-by-voice-type/page";
 import sitemap from "@/app/sitemap";

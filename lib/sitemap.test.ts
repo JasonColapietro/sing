@@ -8,7 +8,9 @@
  * cannot be published in the sitemap.
  */
 import type { Metadata } from "next";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("server-only", () => ({}));
 
 import sitemap from "@/app/sitemap";
 import { generateMetadata as atlasMetadata } from "@/app/atlas/[slug]/page";

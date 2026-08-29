@@ -7,6 +7,7 @@ import {
   type Entitlement,
   type ProPlan,
 } from "./pro-shared";
+import { SINGER_COUNT } from "./pro-inventory";
 
 export type { CheckoutPlan, ProPlan, Entitlement };
 
@@ -419,9 +420,9 @@ export const PLAN_ROWS: Array<{
   { label: "Backup & sync", free: "Account backup, every 6 hours", pro: "Continuous two-way sync across devices" },
   { label: "The Measured Voice (book)", free: "Contents + 3 chapters", pro: "All 23 chapters + PDF" },
   { label: "The Voice Atlas (book)", free: "Contents + first 3 chapters", pro: "All 27 chapters + PDF" },
-  // 420 singer pages have always been free and the comparison table never said
+  // Singer pages have always been free and the comparison table never said
   // so — the single largest free asset in the product, invisible on the page
   // whose whole job is to argue that free is generous.
-  { label: "Famous voices (all 420)", free: "Every singer page", pro: "+ the Atlas chapters behind them" },
+  { label: `Famous voices (all ${SINGER_COUNT})`, free: "Every singer page", pro: "+ the Atlas chapters behind them" },
   { label: "Glossary (31 terms)", free: "Included", pro: "Included" },
 ];

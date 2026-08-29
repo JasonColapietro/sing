@@ -8,6 +8,7 @@
  */
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { assertNoReservedSingerSlugs } from "./singer-slugs.mjs";
 
 const SRC = process.argv[2];
 if (!SRC) {
@@ -160,6 +161,7 @@ for (const file of files) {
 }
 
 const singers = [...seen.values()].sort((a, b) => a.name.localeCompare(b.name));
+assertNoReservedSingerSlugs(singers);
 
 const header = `/**
  * GENERATED FILE — edit scripts/compile-singers.mjs + its source batches, not

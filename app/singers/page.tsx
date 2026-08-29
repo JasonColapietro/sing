@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SingersDirectory } from "@/components/singers/directory";
+import { SingerCrawlIndex } from "@/components/singers/crawl-index";
 import { LinkButton, PageShell } from "@/components/ui";
 import {
   HUB_GENRES,
@@ -12,11 +13,10 @@ import {
   spanOctaves,
   voiceTypeSlug,
 } from "@/lib/singers";
+import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { SITE_URL } from "@/lib/site";
 
 const DESCRIPTION = `The vocal ranges of famous singers on one keyboard — whistle notes to the deepest basses. Overlay your own range free.`;
-
-const METHOD_NOTE = `These are the approximate figures fans and music journalists commonly cite — the widest notes a singer has recorded, not the comfortable range they sing in every night, and not lab measurements. Treat them as a fun reference, not a target.`;
 
 /**
  * The questions people actually type before they land here, answered from the
@@ -45,7 +45,7 @@ function buildFaq() {
     },
     {
       q: "What does a singer's “cited range” actually mean?",
-      a: METHOD_NOTE,
+      a: SINGER_RANGE_DISCLAIMER,
     },
     {
       q: "How do I find my own vocal range?",
@@ -81,22 +81,6 @@ export default function SingersPage() {
         description: DESCRIPTION,
         isPartOf: { "@id": `${SITE_URL}/#website` },
         publisher: { "@id": "https://suedeai.ai/#organization" },
-        // The page is a list of hundreds of people; without an ItemList none of
-        // that is machine-readable. Alphabetical, matching the default render
-        // order. Count comes from SINGERS so it cannot go stale.
-        mainEntity: {
-          "@type": "ItemList",
-          itemListOrder: "https://schema.org/ItemListOrderAscending",
-          numberOfItems: SINGERS.length,
-          itemListElement: [...SINGERS]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((s, i) => ({
-              "@type": "ListItem",
-              position: i + 1,
-              url: `${SITE_URL}/singers/${s.slug}`,
-              name: `${s.name} — ${rangeLabel(s)}`,
-            })),
-        },
       },
       {
         "@type": "WebSite",
@@ -104,13 +88,6 @@ export default function SingersPage() {
         url: `${SITE_URL}/`,
         name: "Suede Sing",
         publisher: { "@id": "https://suedeai.ai/#organization" },
-      },
-      {
-        "@type": "Organization",
-        "@id": "https://suedeai.ai/#organization",
-        name: "Suede Labs",
-        url: "https://suedeai.ai",
-        logo: "https://suedeai.ai/suede-ai-logo-transparent.png",
       },
       {
         "@type": "FAQPage",
@@ -136,6 +113,7 @@ export default function SingersPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SingersDirectory />
+      <SingerCrawlIndex />
 
       {/* Hubs: the filters above are client state and invisible to a crawler,
           so the same cuts exist as real pages — and they carry content the
@@ -183,19 +161,25 @@ export default function SingersPage() {
           the thing an answer engine checks before quoting you. */}
       <section className="mt-12" id="faq">
         <h2 className="text-xl">Common questions about vocal range</h2>
-        <dl className="mt-4 max-w-2xl space-y-5">
+        <div className="mt-4 max-w-2xl space-y-5">
           {faq.map((f) => (
             <div key={f.q}>
-              <dt className="text-sm font-medium">{f.q}</dt>
-              <dd className="mt-1 text-sm text-mut">{f.a}</dd>
+              <h3 className="text-sm font-medium">{f.q}</h3>
+              <p className="mt-1 text-sm text-mut">{f.a}</p>
             </div>
           ))}
-        </dl>
+        </div>
       </section>
 
       <section className="mt-12" id="method">
         <h2 className="text-xl">How these ranges are sourced</h2>
-        <p className="mt-3 max-w-2xl text-sm text-mut">{METHOD_NOTE}</p>
+        <p className="mt-3 max-w-2xl text-sm text-mut">{SINGER_RANGE_DISCLAIMER}</p>
+        <Link
+          href="/singers/methodology"
+          className="mt-3 inline-block text-sm text-amber-ink underline underline-offset-4"
+        >
+          Read the source and review methodology
+        </Link>
       </section>
     </PageShell>
   );

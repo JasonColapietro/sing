@@ -1,5 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("server-only", () => ({}));
 import SingerPage, {
   generateMetadata,
 } from "@/app/singers/[slug]/page";
@@ -11,39 +13,44 @@ const ARTIST_INTENT_CASES = [
   {
     slug: "olivia-rodrigo",
     name: "Olivia Rodrigo",
-    opening: "Olivia Rodrigo is commonly classified as a mezzo-soprano. The cited vocal range is B2 to A#5",
-    title: "Olivia Rodrigo Voice Type: Mezzo-soprano | Vocal Range B2–A#5",
+    opening: "Olivia Rodrigo's voice type is disputed in the reviewed sources; this review does not establish a definitive classical classification. The displayed range of B2 to A#5 is a reported reference span, not an independently verified physiological limit.",
+    title: "Olivia Rodrigo Voice Type: Classifications Vary | Reported Vocal Range B2–A#5",
     heading: "Olivia Rodrigo Voice Type and Vocal Range",
   },
   {
     slug: "reba-mcentire",
     name: "Reba McEntire",
-    opening: "Reba McEntire is commonly classified as a mezzo-soprano. The cited vocal range is E3 to F5",
-    title: "Reba McEntire Voice Type: Mezzo-soprano | Vocal Range E3–F5",
+    opening: "Reba McEntire's reviewed sources describe a peak-career span of about three octaves but do not establish a definitive classical voice type. The displayed range of E3 to F5 is a reported reference span, not an independently verified physiological limit.",
+    title: "Reba McEntire Voice Type: Classifications Vary | Reported Vocal Range E3–F5",
     heading: "Reba McEntire Voice Type and Vocal Range",
   },
   {
     slug: "alex-warren",
     name: "Alex Warren",
-    opening: "Alex Warren is commonly classified as a baritone. The cited vocal range is A2 to F#4",
-    title: "Alex Warren Voice Type: Baritone | Vocal Range A2–F#4",
+    opening: "Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints. The displayed range of A2 to F#4 is a reported reference span, not an independently verified physiological limit.",
+    title: "Alex Warren Voice Type: Evidence Does Not Establish a Definitive Type | Reported Vocal Range A2–F#4",
     heading: "Alex Warren Voice Type and Vocal Range",
   },
   {
     slug: "sam-smith",
     name: "Sam Smith",
-    opening: "Sam Smith is commonly classified as a countertenor. The cited vocal range is G2 to C6",
-    title: "Sam Smith Voice Type: Countertenor | Vocal Range G2–C6",
+    opening: "Sam Smith's long-time coach describes baritone-to-tenor territory; the reviewed sources do not establish a definitive countertenor classification. The displayed range of G2 to C6 is a reported reference span, not an independently verified physiological limit.",
+    title: "Sam Smith Voice Type: Baritone-to-Tenor Territory | Reported Vocal Range G2–C6",
     heading: "Sam Smith Voice Type and Vocal Range",
   },
   {
     slug: "arijit-singh",
     name: "Arijit Singh",
-    opening: "Arijit Singh's cited vocal range is C3 to C5 (2.0 octaves). Arijit Singh is commonly classified as a tenor.",
-    title: "Arijit Singh Vocal Range: C3–C5 | Voice Type: Tenor",
+    opening: "A public artist biography describes Arijit Singh as a rich baritone; the reviewed sources dispute a definitive tenor label. The displayed range of C3 to C5 is a reported reference span, not an independently verified physiological limit.",
+    title: "Arijit Singh Vocal Range: Reported C3–C5 | Voice Type: Described as Rich Baritone",
     heading: "Arijit Singh Vocal Range and Voice Type",
   },
 ] as const;
+
+const REVIEWED_TITLE_CORRECTIONS: Readonly<Record<string, { title: string; opening: string }>> =
+  Object.fromEntries(
+    ARTIST_INTENT_CASES.map(({ slug, title, opening }) => [slug, { title, opening }]),
+  );
 
 const VOICE_TYPE_QUERY_SLUGS: ReadonlySet<string> = new Set([
   "olivia-rodrigo",
@@ -92,16 +99,19 @@ describe("every singer page answers its vocal range and voice type intent", () =
       const metadata = await generateMetadata({
         params: Promise.resolve({ slug: singer.slug }),
       });
-      const title = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
+      const defaultTitle = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
         ? `${singer.name} Voice Type: ${singer.voiceType} | Vocal Range ${rangeLabel(singer)}`
         : `${singer.name} Vocal Range: ${rangeLabel(singer)} | Voice Type: ${singer.voiceType}`;
-      const opening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
+      const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
         ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`
         : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). ${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}.`;
+      const correction = REVIEWED_TITLE_CORRECTIONS[singer.slug];
+      const title = correction?.title ?? defaultTitle;
+      const opening = correction?.opening ?? defaultOpening;
 
       expect(metadata.title).toEqual({ absolute: title });
       expect(metadata.description).toBe(
-        `${opening} See the notes and compare your range free.`,
+        correction ? opening : `${opening} See the notes and compare your range free.`,
       );
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
@@ -123,9 +133,10 @@ describe("every singer page answers its vocal range and voice type intent", () =
         const heading = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} Voice Type and Vocal Range`
           : `${singer.name} Vocal Range and Voice Type`;
-        const opening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
+        const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`
           : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). ${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}.`;
+        const opening = REVIEWED_TITLE_CORRECTIONS[singer.slug]?.opening ?? defaultOpening;
 
         expect(html).toContain(
           `<h1 class="text-4xl sm:text-5xl">${heading}</h1>`,
