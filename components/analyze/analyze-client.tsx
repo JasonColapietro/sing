@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { MicAlert } from "@/components/mic-alert";
 import { logSession } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { useAnalyser, type AnalyserFrame } from "@/lib/audio/use-analyser";
@@ -153,7 +154,7 @@ export default function AnalyzeClient() {
     >
       {error && (
         <Card className="mb-6 border-rec/40">
-          <p className="text-sm text-rec">{error}</p>
+          <MicAlert message={error} className="text-sm text-rec" />
         </Card>
       )}
 

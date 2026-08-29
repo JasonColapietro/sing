@@ -2,6 +2,7 @@
 
 import { midiToLabel } from "@/lib/audio/notes";
 import { midiMatches } from "./lib";
+import { DIM } from "@/lib/chart-colors";
 
 /**
  * Mini note-lane view: horizontal semitone lanes, one column per melody
@@ -67,7 +68,7 @@ export function NoteLanes({
               y={y + 3}
               textAnchor="end"
               fontSize="8.5"
-              fill="#8a8272"
+              fill={DIM}
               fontFamily="monospace"
             >
               {midiToLabel(midi)}

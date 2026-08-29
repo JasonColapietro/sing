@@ -127,6 +127,14 @@ describe("every singer page answers its vocal range and voice type intent", () =
     }
   });
 
+  /**
+   * Each batch server-renders 64 singer pages, and the first one also pays for
+   * the module graph and React's server renderer warming up — enough to blow
+   * vitest's 5s default while later batches finish comfortably inside it. That
+   * made batch 0 alone fail on a suite that is otherwise green, which reads as
+   * a regression in the page and is not one. The budget is generous on purpose:
+   * it is here to stop a cold start flaking the gate, not to police render speed.
+   */
   it.each(SINGER_RENDER_BATCHES)(
     "covers singer render batch %# in the H1 and opening answer",
     async (singers) => {
@@ -150,5 +158,6 @@ describe("every singer page answers its vocal range and voice type intent", () =
         expect(html).toContain(opening);
       }
     },
+    30_000,
   );
 });
