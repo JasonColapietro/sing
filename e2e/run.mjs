@@ -80,6 +80,13 @@ async function clearAppState(context) {
  * at the top again, and scrolling home undoes any scrolling a module did.
  */
 async function resetPageState(page) {
+  // Modules are allowed to reload the page (the preference audit has to, to
+  // re-render under prefers-reduced-motion and a dark colour scheme). A reload
+  // wipes the injected probes, so reinstalling here is what keeps a module that
+  // reloads from silently disarming every module ordered after it. The
+  // self-test caught this as 40 "probes missing" blockers on a full run.
+  await installProbes(page).catch(() => {});
+  await page.evaluate(DESCRIBE).catch(() => {});
   await page.evaluate(() => {
     const el = document.activeElement;
     if (el && el !== document.body && typeof el.blur === "function") el.blur();

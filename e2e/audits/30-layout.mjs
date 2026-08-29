@@ -150,6 +150,13 @@ export async function run(ctx) {
         // of this element's content is clipped".
         if (cs.display === "inline") continue;
         if (cs.overflowX !== "hidden") continue;
+        // Truncation is a design decision, not a clipping bug. `truncate`
+        // (overflow:hidden + text-overflow:ellipsis) deliberately cuts a long
+        // singer name to fit its column and shows an ellipsis saying so.
+        if (cs.textOverflow === "ellipsis") continue;
+        // Screen-reader-only text lives in a 1px box with overflow hidden by
+        // definition; every sr-only node on the page reads as 100% clipped.
+        if (cs.position === "absolute" && el.clientWidth <= 1 && el.clientHeight <= 1) continue;
         if (el.scrollWidth <= el.clientWidth + 1) continue;
         candidates.push(el);
       }
@@ -188,6 +195,12 @@ export async function run(ctx) {
         if (candidates.length >= TEXT_PAIR_BUDGET) break;
         if (isSvgNode(el) || !isRendered(el)) continue;
         if (!hasOwnText(el)) continue;
+        // A box laid out across more than one line has no single meaningful
+        // rect: getBoundingClientRect returns the union of its line boxes,
+        // which spans the whole column and swallows whatever sits beside it on
+        // the first line. Comparing those unions reported ordinary stacked
+        // paragraphs as overlapping each other.
+        if (el.getClientRects().length > 1) continue;
         candidates.push(el);
       }
 

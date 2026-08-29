@@ -209,6 +209,8 @@ export async function run(ctx) {
   }
 
   const findings = [];
+  // Advisory rollup accumulators — see where they are drained at the end.
+  const snug = [];
 
   // Scoped to this one run() call — one route, one viewport — deliberately.
   // run.mjs's own report() already collapses identical [audit, route,
@@ -245,14 +247,11 @@ export async function run(ctx) {
         });
       }
     } else if (isTouch && nominal < 44) {
-      if (once("size", target.selector)) {
-        findings.push({
-          severity: "minor",
-          summary: "Target clears the WCAG floor but is under 44x44px Apple/Material touch guidance",
-          detail: `${target.selector} measures ${w}x${h}px — fine with a mouse, tight for a thumb.`,
-          selector: target.selector,
-        });
-      }
+      // Advisory, not a violation: these already clear WCAG 2.5.8. Collected
+      // and reported as one line per page rather than one per control -- at
+      // one finding each this produced 774 lines across a full run and buried
+      // everything that was actually broken.
+      if (once("size", target.selector)) snug.push(`${target.selector} (${w}x${h})`);
     }
 
     // Dead corners alone are not a defect. Every rounded-full control has them
@@ -279,14 +278,27 @@ export async function run(ctx) {
     }
   }
 
+  const tight = [];
   for (const pair of spacing) {
     const key = [pair.a, pair.b].sort().join(" ~ ");
     if (!once("spacing", key)) continue;
+    tight.push(`${pair.a} / ${pair.b} (${pair.gap.toFixed(1)}px)`);
+  }
+
+  // Both advisory rollups carry their worst few examples so the finding is
+  // still actionable without listing every control on the page.
+  if (snug.length) {
     findings.push({
       severity: "minor",
-      summary: `Adjacent targets are ${pair.gap.toFixed(1)}px apart, under the 8px comfortable-spacing margin`,
-      detail: `${pair.a} and ${pair.b}.`,
-      selector: pair.a,
+      summary: `${snug.length} touch target(s) clear the WCAG floor but sit under 44x44px`,
+      detail: `Fine with a mouse, tight for a thumb. For example: ${snug.slice(0, 3).join("; ")}.`,
+    });
+  }
+  if (tight.length) {
+    findings.push({
+      severity: "minor",
+      summary: `${tight.length} pair(s) of adjacent touch targets sit under the 8px comfortable-spacing margin`,
+      detail: `For example: ${tight.slice(0, 3).join("; ")}.`,
     });
   }
 

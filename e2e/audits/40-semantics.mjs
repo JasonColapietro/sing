@@ -359,10 +359,23 @@ export async function run(ctx) {
       }
     })();
 
+    /**
+     * An accessible name can only be computed from markup the browser is
+     * actually rendering. This app ships a desktop and a mobile nav at once and
+     * CSS-toggles them, so at any given width one of them is display:none --
+     * and every label inside it is invisible to the name computation for the
+     * same reason it is invisible to a screen reader. Checking those produced
+     * an exactly inverted result: the mobile menu button was flagged only at
+     * tablet and desktop, and the desktop XP link only at the two phone widths,
+     * each one reported precisely where it is not rendered.
+     *
+     * Nothing is lost by skipping them. The suite runs five viewports, so every
+     * control is name-checked at the widths where it is on screen.
+     */
     // ---- 5. buttons and links ----------------------------------------
     (function checkButtonsAndLinks() {
       const buttons = [...document.querySelectorAll("button, [role~=button]")].filter(
-        (el) => !isAriaHiddenAncestor(el),
+        (el) => !isAriaHiddenAncestor(el) && isReachable(el),
       );
       for (const btn of buttons) {
         if (!accName(btn)) {
@@ -388,7 +401,7 @@ export async function run(ctx) {
         }
 
         const name = accName(a);
-        if (!name) {
+        if (!name && isReachable(a)) {
           add("major", "Link has no accessible name", "No text content, aria-label, or aria-labelledby — announced as a bare 'link' with no destination context.", a);
           continue;
         }
