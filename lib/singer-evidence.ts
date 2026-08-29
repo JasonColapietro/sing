@@ -105,6 +105,18 @@ function optionalText(value: unknown, path: string): string | undefined {
   return requiredText(value, path);
 }
 
+function claimsLicensedScoreProof(text: string): boolean {
+  const proofVerb = "prove|establish|demonstrate|confirm|verify|show";
+  const withoutExplicitLimitations = text.replace(
+    new RegExp(`\\b(?:does|do|did)?\\s*not\\s+(?:${proofVerb})(?:s|d|es)?\\b`, "gi"),
+    "",
+  );
+  return new RegExp(
+    `\\b(?:${proofVerb})(?:s|d|es)?\\b[^.]*\\b(?:full[- ]career|career[- ]wide|physiological|tessitura|voice type|classical type|type)\\b`,
+    "i",
+  ).test(withoutExplicitLimitations);
+}
+
 function validateSource(value: unknown, path: string): SingerEvidenceSource {
   if (!isRecord(value)) throw new Error(`${path} must be an object`);
 
@@ -137,8 +149,10 @@ function validateSource(value: unknown, path: string): SingerEvidenceSource {
     if (!/(song|arrangement|written)/i.test(source.scope)) {
       throw new Error(`${path} licensed score scope must be limited to the song arrangement`);
     }
-    if (/(full[- ]career|career[- ]wide|physiological)/i.test(source.supportedClaim)) {
-      throw new Error(`${path} licensed score cannot prove a full-career range`);
+    if (claimsLicensedScoreProof(source.supportedClaim) || claimsLicensedScoreProof(source.scope)) {
+      throw new Error(
+        `${path} licensed score cannot prove a full-career range, physiology, tessitura, or voice type`,
+      );
     }
   }
   return source;

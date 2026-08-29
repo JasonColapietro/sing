@@ -195,5 +195,20 @@ describe("singer evidence", () => {
         },
       }),
     ).toThrow('cannot prove a full-career range');
+    for (const scope of [
+      "Written arrangement; proves the artist's full-career range.",
+      "Written arrangement; proves the artist's physiological range.",
+      "Written arrangement; proves the artist's tessitura.",
+      "Written arrangement; proves the artist's voice type.",
+    ]) {
+      expect(() =>
+        validateSingerEvidence({
+          adele: {
+            ...reviewedRecord.adele,
+            sources: [{ ...reviewedRecord.adele.sources[0], scope }],
+          },
+        }),
+      ).toThrow('cannot prove a full-career range, physiology, tessitura, or voice type');
+    }
   });
 });
