@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { isSingerReviewed, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
 import { rangeLabel, singerBySlug } from "@/lib/singers";
 
 /**
@@ -41,6 +42,14 @@ const FEATURED = [
   "arijit-singh",
 ] as const;
 
+const EVIDENCE_FEATURED = new Set<string>([
+  "olivia-rodrigo",
+  "reba-mcentire",
+  "alex-warren",
+  "sam-smith",
+  "arijit-singh",
+]);
+
 /**
  * Resolved at module load so a slug that stops existing — a rename in a
  * data/singers batch, a singer dropped from the library — breaks the build
@@ -54,7 +63,16 @@ const VOICES = FEATURED.map((slug) => {
       `famous-voices: no singer for slug "${slug}". Update FEATURED when a data/singers batch renames or drops an entry.`,
     );
   }
-  return singer;
+  const needsEvidenceCopy = EVIDENCE_FEATURED.has(singer.slug);
+  if (needsEvidenceCopy && !isSingerReviewed(singer.slug)) {
+    throw new Error(
+      `famous-voices: missing reviewed evidence for promoted singer "${singer.slug}".`,
+    );
+  }
+  return {
+    singer,
+    evidenceCopy: needsEvidenceCopy ? voiceTypeEvidenceCopy(singer) : undefined,
+  };
 });
 
 export function FamousVoices() {
@@ -85,22 +103,24 @@ export function FamousVoices() {
         </div>
 
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {VOICES.map((s) => (
-            <li key={s.slug}>
+          {VOICES.map(({ singer, evidenceCopy }) => (
+            <li key={singer.slug}>
               <Link
-                href={`/singers/${s.slug}`}
+                href={`/singers/${singer.slug}`}
                 className="lift group flex items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 hover:border-amber/50"
               >
                 <span className="min-w-0">
                   <span className="block truncate text-ink group-hover:text-amber-ink">
-                    {s.name}
+                    {singer.name}
                   </span>
                   <span className="mt-0.5 block text-xs text-dim">
-                    {s.voiceType}
+                    {evidenceCopy ?? singer.voiceType}
                   </span>
                 </span>
                 <span className="tabular shrink-0 font-mono text-xs text-mut">
-                  {rangeLabel(s)}
+                  {evidenceCopy
+                    ? `Reported reference span: ${rangeLabel(singer)}`
+                    : rangeLabel(singer)}
                 </span>
               </Link>
             </li>
