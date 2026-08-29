@@ -59,6 +59,8 @@ describe("singer-page evidence and provenance", () => {
     expect(html).toContain("Confidence:");
     expect(html).toContain("Methodology");
     expect(html).toContain("Suggest a correction");
+    expect(html).toContain('href="/singers/methodology"');
+    expect(html).toContain('href="/contact"');
     expect(html).toContain("Reported reference span");
   });
 

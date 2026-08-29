@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SingersDirectory } from "@/components/singers/directory";
+import { SingerCrawlIndex } from "@/components/singers/crawl-index";
 import { LinkButton, PageShell } from "@/components/ui";
 import {
   HUB_GENRES,
@@ -80,22 +81,6 @@ export default function SingersPage() {
         description: DESCRIPTION,
         isPartOf: { "@id": `${SITE_URL}/#website` },
         publisher: { "@id": "https://suedeai.ai/#organization" },
-        // The page is a list of hundreds of people; without an ItemList none of
-        // that is machine-readable. Alphabetical, matching the default render
-        // order. Count comes from SINGERS so it cannot go stale.
-        mainEntity: {
-          "@type": "ItemList",
-          itemListOrder: "https://schema.org/ItemListOrderAscending",
-          numberOfItems: SINGERS.length,
-          itemListElement: [...SINGERS]
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((s, i) => ({
-              "@type": "ListItem",
-              position: i + 1,
-              url: `${SITE_URL}/singers/${s.slug}`,
-              name: `${s.name} — ${rangeLabel(s)}`,
-            })),
-        },
       },
       {
         "@type": "WebSite",
@@ -103,13 +88,6 @@ export default function SingersPage() {
         url: `${SITE_URL}/`,
         name: "Suede Sing",
         publisher: { "@id": "https://suedeai.ai/#organization" },
-      },
-      {
-        "@type": "Organization",
-        "@id": "https://suedeai.ai/#organization",
-        name: "Suede Labs",
-        url: "https://suedeai.ai",
-        logo: "https://suedeai.ai/suede-ai-logo-transparent.png",
       },
       {
         "@type": "FAQPage",
@@ -135,6 +113,7 @@ export default function SingersPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SingersDirectory />
+      <SingerCrawlIndex />
 
       {/* Hubs: the filters above are client state and invisible to a crawler,
           so the same cuts exist as real pages — and they carry content the

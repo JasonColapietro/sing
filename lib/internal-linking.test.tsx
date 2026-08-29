@@ -20,8 +20,8 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 import SingerPage from "@/app/singers/[slug]/page";
+import SingersPage from "@/app/singers/page";
 import SiteFooter from "@/components/site-footer";
-import { SingersDirectory } from "@/components/singers/directory";
 import {
   HUB_GENRES,
   SINGERS,
@@ -44,10 +44,11 @@ function sampleSingers() {
 }
 
 describe("/singers hub is a crawlable index", () => {
-  const html = renderToStaticMarkup(<SingersDirectory />);
+  const html = renderToStaticMarkup(<SingersPage />);
+  const catalogSlugs = new Set(SINGERS.map((singer) => singer.slug));
 
   it("server-renders a real <a> link to every singer (not JS-only)", () => {
-    const linked = new Set(singerLinkSlugs(html));
+    const linked = new Set(singerLinkSlugs(html).filter((slug) => catalogSlugs.has(slug)));
     const missing = SINGERS.filter((s) => !linked.has(s.slug)).map((s) => s.slug);
     // Every singer must have a raw-HTML anchor. If the directory ever regresses
     // to rendering rows only after mount, `linked` collapses toward empty and

@@ -34,6 +34,11 @@ const FEATURED = [
   "axl-rose",
   "chris-cornell",
   "dimash-kudaibergen",
+  "olivia-rodrigo",
+  "reba-mcentire",
+  "alex-warren",
+  "sam-smith",
+  "arijit-singh",
 ] as const;
 
 /**

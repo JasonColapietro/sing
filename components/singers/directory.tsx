@@ -14,6 +14,11 @@ import {
   spanOctaves,
   type VoiceKind,
 } from "@/lib/singers-core";
+import {
+  INITIAL_RICH_SINGER_ROWS,
+  nextRichSingerRowCount,
+  visibleRichSingerRows,
+} from "@/lib/singer-directory-pagination";
 import { Button, EmptyState, LinkButton } from "@/components/ui";
 
 /* ---------------------------------------------------------------- axis --- */
@@ -217,6 +222,10 @@ export function SingersDirectory() {
   const [voice, setVoice] = useState<VoiceKind | "all">("all");
   const [genre, setGenre] = useState<string>("all");
   const [sort, setSort] = useState<SortId>("name");
+  const [visibleRowCount, setVisibleRowCount] = useState(
+    INITIAL_RICH_SINGER_ROWS,
+  );
+  const [isInteractive, setIsInteractive] = useState(false);
 
   // Filters live in the URL (?q=&voice=&genre=&sort=) so browser Back from a
   // singer page restores them. Read once after mount (SSR renders defaults,
@@ -235,6 +244,8 @@ export function SingersDirectory() {
     if (pv && (VOICE_KINDS as string[]).includes(pv)) setVoice(pv as VoiceKind);
     if (pg && ALL_GENRES.includes(pg)) setGenre(pg);
     if (ps && SORT_IDS.has(ps)) setSort(ps as SortId);
+    setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
+    setIsInteractive(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
@@ -276,12 +287,20 @@ export function SingersDirectory() {
   }, [q, voice, genre, sort]);
 
   const records = useMemo(() => computeRecords(SINGERS), []);
+  const visibleRows = visibleRichSingerRows(rows, visibleRowCount);
+  const canLoadMore = visibleRows.length < rows.length;
 
   const clearFilters = () => {
     setQ("");
     setVoice("all");
     setGenre("all");
+    setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
   };
+
+  // The complete server-only crawl index on /singers carries every raw HTML
+  // artist anchor. Deferring this richer client chart avoids duplicating those
+  // anchors in the initial document and keeps the first interactive batch small.
+  if (!isInteractive) return null;
 
   return (
     <div>
@@ -324,14 +343,20 @@ export function SingersDirectory() {
           id={SEARCH_ID}
           type="search"
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => {
+            setQ(e.target.value);
+            setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
+          }}
           placeholder="Search singers…"
           aria-label="Search singers"
           className="w-full rounded-full border border-line bg-panel px-4 py-2 text-sm text-ink placeholder:text-dim focus:border-amber focus:outline-none sm:w-64"
         />
         <select
           value={voice}
-          onChange={(e) => setVoice(e.target.value as VoiceKind | "all")}
+          onChange={(e) => {
+            setVoice(e.target.value as VoiceKind | "all");
+            setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
+          }}
           aria-label="Filter by voice type"
           className={selectClass}
         >
@@ -344,7 +369,10 @@ export function SingersDirectory() {
         </select>
         <select
           value={genre}
-          onChange={(e) => setGenre(e.target.value)}
+          onChange={(e) => {
+            setGenre(e.target.value);
+            setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
+          }}
           aria-label="Filter by genre"
           className={selectClass}
         >
@@ -357,7 +385,10 @@ export function SingersDirectory() {
         </select>
         <select
           value={sort}
-          onChange={(e) => setSort(e.target.value as SortId)}
+          onChange={(e) => {
+            setSort(e.target.value as SortId);
+            setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
+          }}
           aria-label="Sort"
           className={selectClass}
         >
@@ -376,9 +407,7 @@ export function SingersDirectory() {
         >
           {rows.length === 0
             ? "No singers match"
-            : rows.length === SINGERS.length
-              ? "Full library"
-              : `${rows.length} shown`}
+            : `${rows.length} matches · ${visibleRows.length} loaded`}
         </span>
       </div>
 
@@ -459,11 +488,31 @@ export function SingersDirectory() {
           />
         </div>
       ) : (
-        <ul className="mt-2 divide-y divide-line/50">
-          {rows.map((s) => (
-            <SingerRow key={s.slug} s={s} trackBg={trackBg} />
-          ))}
-        </ul>
+        <>
+          <ul
+            id="singer-directory-results"
+            className="mt-2 divide-y divide-line/50"
+          >
+            {visibleRows.map((s) => (
+              <SingerRow key={s.slug} s={s} trackBg={trackBg} />
+            ))}
+          </ul>
+          {canLoadMore && (
+            <div className="mt-5 flex justify-center">
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setVisibleRowCount(
+                    nextRichSingerRowCount(visibleRowCount, rows.length),
+                  )
+                }
+                aria-controls="singer-directory-results"
+              >
+                Load more singers ({rows.length - visibleRows.length} remaining)
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
