@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { SignUp } from "@clerk/nextjs";
 import { LinkButton, SectionLabel } from "@/components/ui";
-// Sign-in is where the theme lives, so the two cards cannot drift apart. The
-// bracketed segment is the real directory name; this is a plain module import,
-// not a route reference.
-import { SING_APPEARANCE } from "@/app/sign-in/[[...sign-in]]/page";
+import { SING_APPEARANCE } from "@/lib/clerk-appearance";
 import { AccountsUnavailable } from "@/components/account/unavailable";
 import { accountsReady } from "@/lib/accounts";
 
@@ -25,7 +22,7 @@ export default function SignUpPage() {
       <SectionLabel className="mb-3">Free account</SectionLabel>
       {/* A lede, not an <h1>: Clerk's card supplies the page's only heading, and
           it re-labels itself at every step of the flow. The full reasoning is on
-          the sign-in route, which is also where SING_APPEARANCE lives. */}
+          the shared Clerk appearance module. */}
       <p className="text-center text-3xl font-extrabold tracking-[-0.01em]">
         Keep a copy of your progress
       </p>
