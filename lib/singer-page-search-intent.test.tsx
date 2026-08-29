@@ -58,9 +58,15 @@ const VOICE_TYPE_QUERY_SLUGS: ReadonlySet<string> = new Set([
   "alex-warren",
   "sam-smith",
 ]);
+const SINGER_RENDER_BATCH_SIZE = 32;
 const SINGER_RENDER_BATCHES = Array.from(
-  { length: Math.ceil(SINGERS.length / 64) },
-  (_, index) => [SINGERS.slice(index * 64, (index + 1) * 64)] as const,
+  { length: Math.ceil(SINGERS.length / SINGER_RENDER_BATCH_SIZE) },
+  (_, index) => [
+    SINGERS.slice(
+      index * SINGER_RENDER_BATCH_SIZE,
+      (index + 1) * SINGER_RENDER_BATCH_SIZE,
+    ),
+  ] as const,
 );
 
 describe("every singer page answers its vocal range and voice type intent", () => {
