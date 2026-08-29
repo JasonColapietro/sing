@@ -87,6 +87,17 @@ Every one of these produced a wrong result before it was written down.
 
 ## Not covered here
 
+**Anything behind a closed `<details>`, a dialog, or a mobile menu.** The suite
+audits each page as it arrives and never expands an accordion or opens a modal,
+so controls inside them are unaudited rather than proven fine. This matters more
+than it sounds: Chrome keeps a closed `<details>`'s contents in the layout tree
+so find-in-page can reach them, so those controls report full-size rects while
+being unpaintable and unclickable. Auditing them anyway produced a 350x39
+device picker that "nothing could click" and made collapsed sections read as
+overlapping body copy. `window.__rendered()` excludes them; opening them first
+is the way to actually cover them.
+
+
 **Layout shift (CLS).** It needs a production build to mean anything, and
 `npm run build` clobbers `.next` under a running `next dev`. Measure it in a
 separate pass against `npm run build && npm start`, which reproduces production

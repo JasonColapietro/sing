@@ -114,7 +114,13 @@ export const HIT_PROBE = `
      */
     const cx = (r.left + r.right) / 2;
     const cy = (r.top + r.bottom) / 2;
-    const half = 12; // 24x24 CSS px, the 2.5.8 minimum
+    // 24x24 CSS px is the 2.5.8 minimum, but probing at exactly +/-12 puts the
+    // sample points on the boundary of a control that is exactly 24px tall, and
+    // hit-testing there rounds to the parent. That reported the ear-training
+    // difficulty pills (50x24) as having no room for a target they exactly fit.
+    // Pulling the probes half a pixel inward tests the same box without asking
+    // the browser to resolve its edge.
+    const half = 11.5;
     const probes = [
       [cx, cy],
       [cx - half, cy - half], [cx + half, cy - half],
@@ -133,10 +139,44 @@ export const HIT_PROBE = `
 })();
 `;
 
+/**
+ * "Is this element actually presented to the person looking at the page?"
+ *
+ * Not the same question as `display:none` or `visibility:hidden`. Chrome keeps
+ * the contents of a closed <details> in the layout tree so find-in-page can
+ * reach them, which means every control inside a collapsed accordion still
+ * reports a full-size bounding rect while being unpainted and unhittable. That
+ * made the audio-device picker on /recorder look like a 350x39 control nothing
+ * could click, and stacked the boxes of collapsed sections on top of each other
+ * so ordinary copy read as overlapping text.
+ *
+ * checkVisibility covers the content-visibility cases; the explicit
+ * details:not([open]) test covers the collapsed accordion directly rather than
+ * relying on which Chrome version models it which way.
+ */
+export const RENDERED_PROBE = `
+(() => {
+  window.__rendered = function (el) {
+    if (!el || !el.isConnected) return false;
+    if (el.closest("details:not([open])")) return false;
+    if (typeof el.checkVisibility === "function") {
+      return el.checkVisibility({
+        checkVisibilityCSS: true,
+        contentVisibilityAuto: true,
+        opacityProperty: false,
+      });
+    }
+    const cs = getComputedStyle(el);
+    return cs.display !== "none" && cs.visibility !== "hidden";
+  };
+})();
+`;
+
 /** Install every probe on the page. Call after each navigation. */
 export async function installProbes(page) {
   await page.evaluate(COLOR_PROBE);
   await page.evaluate(HIT_PROBE);
+  await page.evaluate(RENDERED_PROBE);
 }
 
 /** A stable, human-readable selector for reporting a finding. */

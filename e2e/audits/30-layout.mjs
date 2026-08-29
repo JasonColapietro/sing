@@ -35,6 +35,11 @@ export async function run(ctx) {
      * layout defect in its own right.
      */
     function isRendered(el) {
+      // A closed <details> keeps its contents in the layout tree so find-in-page
+      // can reach them: full-size rects, nothing painted, nothing clickable. Two
+      // collapsed sections therefore report their boxes stacked on the same
+      // pixels, which read as overlapping body copy on /pro and /studio.
+      if (typeof window.__rendered === "function" && !window.__rendered(el)) return false;
       const r = el.getBoundingClientRect();
       if (r.top === 0 && r.left === 0 && r.right === 0 && r.bottom === 0) return false;
       if (r.width === 0 || r.height === 0) return false;

@@ -136,6 +136,9 @@ function gatherTapTargets({ selector, isTouch }) {
     if (el.closest('[aria-hidden="true"]')) continue;
     const cs = getComputedStyle(el);
     if (cs.display === "none" || cs.visibility === "hidden") continue;
+    // A control inside a collapsed <details> keeps its rect but cannot be
+    // painted or clicked, so auditing it measures a control nobody is shown.
+    if (typeof window.__rendered === "function" && !window.__rendered(el)) continue;
 
     const isLinkish = el.tagName === "A" || el.getAttribute("role") === "link";
     if (isLinkish && isInlineProseLink(el)) continue;
