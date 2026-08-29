@@ -47,6 +47,9 @@ describe("Pro purchase choices", () => {
     expect(html).toContain("$79");
     expect(html).toContain("Lifetime");
     expect(html).toContain(
+      "Founding offer: $79 lifetime is limited to the first 10 members.",
+    );
+    expect(html).toContain(
       "Keep the $4.99 monthly price while your subscription remains active.",
     );
     expect(html).not.toMatch(/\b(?:annual|yearly)\b/i);

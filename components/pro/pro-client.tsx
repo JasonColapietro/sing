@@ -574,6 +574,12 @@ export function ProClient() {
             </div>
           )}
 
+          {showPurchaseOptions && (
+            <p className="mx-auto mt-3 w-fit max-w-full rounded-xl border border-amber/40 bg-amber/10 px-3 py-2 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
+              Founding offer: $79 lifetime is limited to the first 10 members.
+            </p>
+          )}
+
           <div
             className={`mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 ${
               showPurchaseOptions ? "mt-6" : "mt-10"
