@@ -13,6 +13,7 @@ import { analyzeTake, type TakeAnalysis } from "@/lib/audio/analyze-take";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { openMic } from "@/lib/audio/mic";
 import { AudioSetup } from "@/components/audio/audio-setup";
+import { MicAlert } from "@/components/mic-alert";
 import { clickAt } from "@/lib/audio/synth";
 import { useIsPro } from "@/lib/pro";
 import { logSession, type Achievement } from "@/lib/progress";
@@ -687,7 +688,12 @@ export default function RecorderPageClient() {
                 </div>
                 {micState === "blocked" ? (
                   <>
-                    <p className="max-w-sm text-sm text-mut">{micError}</p>
+                    {micError && (
+                      <MicAlert
+                        message={micError}
+                        className="max-w-sm text-sm text-mut"
+                      />
+                    )}
                     <Button variant="outline" onClick={() => void enableMic()}>
                       Try again
                     </Button>
