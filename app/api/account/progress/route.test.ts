@@ -13,11 +13,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const TEST_USER = "user_routeValidation";
+const account = vi.hoisted(() => ({
+  accountsReady: vi.fn(),
+  auth: vi.fn(),
+}));
 
 vi.mock("server-only", () => ({}));
 vi.mock("@clerk/nextjs/server", () => ({
-  auth: async () => ({ userId: TEST_USER }),
+  auth: account.auth,
 }));
+vi.mock("@/lib/accounts", () => ({ accountsReady: account.accountsReady }));
 
 const saved = new Map<string, unknown>();
 vi.mock("@/lib/redis", () => ({
@@ -29,7 +34,7 @@ vi.mock("@/lib/redis", () => ({
 // Rate limiting is a separate concern with its own tests; let every call past.
 vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => null }));
 
-const { PUT } = await import("./route");
+const { GET, PUT } = await import("./route");
 
 function healthy() {
   return {
@@ -68,7 +73,28 @@ async function statusAndError(state: unknown) {
   return { status: res.status, error: body.error };
 }
 
-beforeEach(() => saved.clear());
+beforeEach(() => {
+  saved.clear();
+  account.accountsReady.mockReset().mockReturnValue(true);
+  account.auth.mockReset().mockResolvedValue({ userId: TEST_USER });
+});
+
+describe("GET /api/account/progress", () => {
+  it("returns unauthorized before Clerk when accounts are not configured", async () => {
+    account.accountsReady.mockReturnValue(false);
+    account.auth.mockRejectedValue(new Error("Clerk middleware is unavailable"));
+
+    const response = await GET(
+      new Request("https://sing.suedeai.ai/api/account/progress"),
+    );
+
+    expect(response.status).toBe(401);
+    await expect(response.json()).resolves.toEqual({
+      error: "Sign in to use your practice backup.",
+    });
+    expect(account.auth).not.toHaveBeenCalled();
+  });
+});
 
 describe("PUT /api/account/progress", () => {
   it("stores a well-formed record", async () => {

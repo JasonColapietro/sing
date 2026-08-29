@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { accountsReady } from "@/lib/accounts";
 import { rateLimit } from "@/lib/rate-limit";
 import { getRedis } from "@/lib/redis";
 import type { ProgressState } from "@/lib/progress";
@@ -57,6 +58,12 @@ function unauthorized() {
   );
 }
 
+async function authorizedStoreKey(): Promise<string | null> {
+  if (!accountsReady()) return null;
+  const { userId } = await auth();
+  return userId ? storeKeyFor(userId) : null;
+}
+
 function notConfigured() {
   return NextResponse.json(
     { error: "Backups aren't set up on the server yet." },
@@ -71,10 +78,7 @@ export async function GET(request: Request) {
   });
   if (limited) return limited;
 
-  const { userId } = await auth();
-  if (!userId) return unauthorized();
-
-  const storeKey = storeKeyFor(userId);
+  const storeKey = await authorizedStoreKey();
   if (!storeKey) return unauthorized();
 
   const redis = getRedis();
@@ -103,10 +107,7 @@ export async function PUT(request: Request) {
   });
   if (limited) return limited;
 
-  const { userId } = await auth();
-  if (!userId) return unauthorized();
-
-  const storeKey = storeKeyFor(userId);
+  const storeKey = await authorizedStoreKey();
   if (!storeKey) return unauthorized();
 
   let state: unknown;

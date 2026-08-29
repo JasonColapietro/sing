@@ -28,6 +28,16 @@ function isMissingStripeResource(error: unknown): boolean {
   );
 }
 
+function invalidBillingReference() {
+  return NextResponse.json(
+    {
+      error:
+        "Provide a checkout session id, subscription id, or payment intent id.",
+    },
+    { status: 400 },
+  );
+}
+
 /**
  * Resolves entitlement from Stripe — the only source of truth.
  *
@@ -67,6 +77,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
+  const validSessionId = isStripeId(sessionId, "cs_") ? sessionId : null;
+  const validSubscriptionId = isStripeId(subscriptionId, "sub_")
+    ? subscriptionId
+    : null;
+  const validPaymentIntentId = isStripeId(paymentIntentId, "pi_")
+    ? paymentIntentId
+    : null;
+  if (!validSessionId && !validSubscriptionId && !validPaymentIntentId) {
+    return invalidBillingReference();
+  }
+
   try {
     // Inside the try: a missing or unreadable STRIPE_SECRET_KEY throws here,
     // and the README's Marketplace-resync trap is a real way for that to
@@ -74,8 +95,8 @@ export async function POST(request: Request) {
     // of the 502 the client knows how to retry.
     const stripe = getStripe();
 
-    if (isStripeId(sessionId, "cs_")) {
-      const session = await stripe.checkout.sessions.retrieve(sessionId, {
+    if (validSessionId) {
+      const session = await stripe.checkout.sessions.retrieve(validSessionId, {
         expand: [
           "subscription",
           "customer",
@@ -115,8 +136,8 @@ export async function POST(request: Request) {
       return NextResponse.json(entitlementFromLifetime(payment, email));
     }
 
-    if (isStripeId(subscriptionId, "sub_")) {
-      const sub = await stripe.subscriptions.retrieve(subscriptionId, {
+    if (validSubscriptionId) {
+      const sub = await stripe.subscriptions.retrieve(validSubscriptionId, {
         expand: ["customer"],
       });
       if (!isOurSubscription(sub)) {
@@ -149,8 +170,8 @@ export async function POST(request: Request) {
       });
     }
 
-    if (isStripeId(paymentIntentId, "pi_")) {
-      const payment = await stripe.paymentIntents.retrieve(paymentIntentId, {
+    if (validPaymentIntentId) {
+      const payment = await stripe.paymentIntents.retrieve(validPaymentIntentId, {
         expand: ["customer", "latest_charge"],
       });
       if (!isOurLifetimePayment(payment)) {
@@ -165,13 +186,7 @@ export async function POST(request: Request) {
       });
     }
 
-    return NextResponse.json(
-      {
-        error:
-          "Provide a checkout session id, subscription id, or payment intent id.",
-      },
-      { status: 400 },
-    );
+    return invalidBillingReference();
   } catch (error) {
     // A deleted or unknown id is a legitimate "not a member" answer.
     if (isMissingStripeResource(error)) {

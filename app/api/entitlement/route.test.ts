@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const stripe = vi.hoisted(() => ({
+  getStripe: vi.fn(),
   retrieveSession: vi.fn(),
   retrieveSubscription: vi.fn(),
   retrievePaymentIntent: vi.fn(),
@@ -14,11 +15,7 @@ const stripe = vi.hoisted(() => ({
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => null }));
 vi.mock("@/lib/stripe", () => ({
-  getStripe: () => ({
-    checkout: { sessions: { retrieve: stripe.retrieveSession } },
-    subscriptions: { retrieve: stripe.retrieveSubscription },
-    paymentIntents: { retrieve: stripe.retrievePaymentIntent },
-  }),
+  getStripe: stripe.getStripe,
   isStripeId: (value: unknown, prefix: string) =>
     typeof value === "string" && value.startsWith(prefix),
   isOurSubscription: stripe.isOurSubscription,
@@ -68,6 +65,11 @@ function entitlement(body: unknown) {
 
 beforeEach(() => {
   for (const mock of Object.values(stripe)) mock.mockReset();
+  stripe.getStripe.mockReturnValue({
+    checkout: { sessions: { retrieve: stripe.retrieveSession } },
+    subscriptions: { retrieve: stripe.retrieveSubscription },
+    paymentIntents: { retrieve: stripe.retrievePaymentIntent },
+  });
   stripe.isOurSubscription.mockReturnValue(true);
   stripe.isOurLifetimePayment.mockReturnValue(true);
   stripe.emailOf.mockReturnValue("singer@example.com");
@@ -79,6 +81,21 @@ afterEach(() => {
 });
 
 describe("POST /api/entitlement", () => {
+  it("rejects missing billing ids before Stripe configuration is required", async () => {
+    stripe.getStripe.mockImplementation(() => {
+      throw new Error("STRIPE_SECRET_KEY is not set");
+    });
+
+    const response = await entitlement({});
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error:
+        "Provide a checkout session id, subscription id, or payment intent id.",
+    });
+    expect(stripe.getStripe).not.toHaveBeenCalled();
+  });
+
   it("confirms an owned lifetime payment from its Checkout Session", async () => {
     const payment = {
       id: "pi_lifetime",
