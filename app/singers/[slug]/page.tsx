@@ -20,6 +20,12 @@ import {
   sharesHigh,
   sharesLow,
 } from "@/lib/singers-analysis";
+import {
+  getSingerEvidence,
+  groupEvidenceSources,
+  isSingerReviewed,
+  voiceTypeEvidenceCopy,
+} from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import {
@@ -41,6 +47,8 @@ interface Params {
 
 type SearchIntent = "voice-type" | "vocal-range";
 
+type SingerRecord = (typeof SINGERS)[number];
+
 /** Exact-page GSC voice-type intent observed for Jul 30–Aug 26, 2026. */
 const VOICE_TYPE_QUERY_SLUGS: ReadonlySet<string> = new Set([
   "olivia-rodrigo",
@@ -54,29 +62,41 @@ function searchIntentFor(slug: string): SearchIntent {
   return VOICE_TYPE_QUERY_SLUGS.has(slug) ? "voice-type" : "vocal-range";
 }
 
-function queryAlignedTitle(
-  s: (typeof SINGERS)[number],
-  intent: SearchIntent,
-): string {
+function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
+  return [
+    "olivia-rodrigo",
+    "reba-mcentire",
+    "alex-warren",
+    "sam-smith",
+    "arijit-singh",
+  ].includes(s.slug);
+}
+
+function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
+  const reviewedTitles: Record<string, string> = {
+    "olivia-rodrigo": "Olivia Rodrigo Voice Type: Classifications Vary | Reported Vocal Range B2–A#5",
+    "reba-mcentire": "Reba McEntire Voice Type: Classifications Vary | Reported Vocal Range E3–F5",
+    "alex-warren": "Alex Warren Voice Type: Evidence Does Not Establish a Definitive Type | Reported Vocal Range A2–F#4",
+    "sam-smith": "Sam Smith Voice Type: Baritone-to-Tenor Territory | Reported Vocal Range G2–C6",
+    "arijit-singh": "Arijit Singh Vocal Range: Reported C3–C5 | Voice Type: Described as Rich Baritone",
+  };
+  if (hasReviewedVoiceTypeCorrection(s)) return reviewedTitles[s.slug];
   const voice = `Voice Type: ${s.voiceType}`;
   return intent === "voice-type"
     ? `${s.name} ${voice} | Vocal Range ${rangeLabel(s)}`
     : `${s.name} Vocal Range: ${rangeLabel(s)} | ${voice}`;
 }
 
-function queryAlignedHeading(
-  s: (typeof SINGERS)[number],
-  intent: SearchIntent,
-): string {
+function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
   return intent === "voice-type"
     ? `${s.name} Voice Type and Vocal Range`
     : `${s.name} Vocal Range and Voice Type`;
 }
 
-function queryAlignedDescription(
-  s: (typeof SINGERS)[number],
-  intent: SearchIntent,
-): string {
+function queryAlignedDescription(s: SingerRecord, intent: SearchIntent): string {
+  if (hasReviewedVoiceTypeCorrection(s)) {
+    return `${voiceTypeEvidenceCopy(s)} The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
+  }
   const semis = s.highMidi - s.lowMidi;
   const voiceAnswer = `${s.name} is commonly classified as a ${s.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(semis)} octaves).`;
   const rangeAnswer = `${s.name}'s cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(semis)} octaves). ${s.name} is commonly classified as a ${s.voiceType.toLowerCase()}.`;
@@ -123,8 +143,11 @@ function bothSpellings(midi: number): string {
   return alt ? `${midiToLabel(midi)} (${alt})` : midiToLabel(midi);
 }
 
-function answerSentence(s: (typeof SINGERS)[number]): string {
+function answerSentence(s: SingerRecord): string {
   const semis = s.highMidi - s.lowMidi;
+  if (hasReviewedVoiceTypeCorrection(s)) {
+    return `The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones), not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
+  }
   const parts = [
     `${s.name}'s vocal range is commonly cited as ${bothSpellings(s.lowMidi)} to ${bothSpellings(s.highMidi)} — about ${spanOctaves(semis)} octaves, or ${semis} semitones, and is usually classified as ${s.voiceType.toLowerCase()}.`,
   ];
@@ -150,7 +173,7 @@ function answerSentence(s: (typeof SINGERS)[number]): string {
  * the FAQPage markup, so the marked-up answer can never drift from the read one.
  * Typographic apostrophes throughout, for the same reason `question` uses one.
  */
-function singerFaq(s: (typeof SINGERS)[number]): Array<{ q: string; a: string }> {
+function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
   const semis = s.highMidi - s.lowMidi;
   // "How high can X sing" is its own query family, asked in those words, and
   // it wants the register story — how far full voice goes and what carries the
@@ -219,6 +242,25 @@ export default async function SingerPage({
   const answer = answerSentence(s);
   const faq = singerFaq(s);
   const intent = searchIntentFor(s.slug);
+  const evidence = getSingerEvidence(s.slug);
+  const reviewed = isSingerReviewed(s.slug);
+  const breadcrumbs = [
+    { name: "Famous vocal ranges", href: "/singers", url: `${SITE_URL}/singers` },
+    { name: s.name, href: `/singers/${s.slug}`, url: pageUrl },
+  ];
+  const reviewedPageFields = reviewed
+    ? {
+        dateModified: evidence.reviewedAt,
+        reviewedBy: { "@type": "Person", name: evidence.reviewedBy },
+        citation: evidence.sources.map((source) => ({
+          "@type": "CreativeWork",
+          name: source.title,
+          publisher: source.publisher,
+          url: source.url,
+          description: source.scope,
+        })),
+      }
+    : {};
   // Rendered below AND used verbatim in the FAQPage markup. Google requires the
   // marked-up question to match what the reader sees; sharing one string is the
   // only way that stays true. Note the typographic apostrophe — the heading used
@@ -234,26 +276,19 @@ export default async function SingerPage({
         name: `${s.name} Vocal Range: ${rangeLabel(s)}`,
         url: pageUrl,
         description: answer,
+        ...reviewedPageFields,
         // Joins each singer to the hub and to the estate graph, so a consumer
         // landing here can resolve the collection and the publisher.
         isPartOf: { "@id": `${SITE_URL}/singers#collection` },
         publisher: { "@id": "https://suedeai.ai/#organization" },
         breadcrumb: {
           "@type": "BreadcrumbList",
-          itemListElement: [
-            {
-              "@type": "ListItem",
-              position: 1,
-              name: "Famous vocal ranges",
-              item: `${SITE_URL}/singers`,
-            },
-            {
-              "@type": "ListItem",
-              position: 2,
-              name: s.name,
-              item: pageUrl,
-            },
-          ],
+          itemListElement: breadcrumbs.map((breadcrumb, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: breadcrumb.name,
+            item: breadcrumb.url,
+          })),
         },
         mainEntity: { "@id": `${pageUrl}#person` },
       },
@@ -263,7 +298,9 @@ export default async function SingerPage({
         name: s.name,
         jobTitle: "Singer",
         nationality: s.country,
-        description: `${s.voiceType} known for "${s.signatureSong}". ${s.blurb}`,
+        description: hasReviewedVoiceTypeCorrection(s)
+          ? voiceTypeEvidenceCopy(s)
+          : `${s.voiceType} known for "${s.signatureSong}". ${s.blurb}`,
         // Without an external identifier these are hundreds of unresolvable
         // strings; the Wikipedia URL is the cheapest anchor to the real entity.
         // Derived via wikipediaUrl() rather than raw name-mangling — 18 singers
@@ -272,37 +309,6 @@ export default async function SingerPage({
         // article exists (band-only artists) — then the node carries no sameAs
         // rather than a wrong one.
         ...(wikipediaUrl(s) ? { sameAs: wikipediaUrl(s) } : {}),
-        // The range as data, not prose. An engine answering "how many octaves
-        // does X have" should not have to parse a sentence to get 3.3.
-        additionalProperty: [
-          {
-            "@type": "PropertyValue",
-            name: "Vocal range (lowest note)",
-            value: midiToLabel(s.lowMidi),
-          },
-          {
-            "@type": "PropertyValue",
-            name: "Vocal range (highest note)",
-            value: midiToLabel(s.highMidi),
-          },
-          {
-            "@type": "PropertyValue",
-            name: "Vocal range (semitones)",
-            value: semis,
-            unitText: "semitones",
-          },
-          {
-            "@type": "PropertyValue",
-            name: "Vocal range (octaves)",
-            value: Number(spanOctaves(semis)),
-            unitText: "octaves",
-          },
-          {
-            "@type": "PropertyValue",
-            name: "Voice type",
-            value: s.voiceType,
-          },
-        ],
       },
       {
         // The page already asks and answers this question in these exact words.
@@ -345,11 +351,28 @@ export default async function SingerPage({
       />
 
       <div className="space-y-6">
+        <nav aria-label="Breadcrumb" className="font-mono text-xs text-mut">
+          <ol className="flex flex-wrap items-center gap-2">
+            {breadcrumbs.map((breadcrumb, index) => (
+              <li key={breadcrumb.href} className="flex items-center gap-2">
+                {index > 0 && <span aria-hidden="true">/</span>}
+                {index === breadcrumbs.length - 1 ? (
+                  <span aria-current="page">{breadcrumb.name}</span>
+                ) : (
+                  <Link href={breadcrumb.href} className="hover:text-amber-ink">
+                    {breadcrumb.name}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+
         {/* Big readout */}
         <Card>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <SectionLabel>Cited range</SectionLabel>
+              <SectionLabel>Reported reference span</SectionLabel>
               <div className="tabular mt-3 font-mono text-5xl font-bold sm:text-6xl">
                 {midiToLabel(s.lowMidi)}
                 <span className="text-dim"> — </span>
@@ -366,7 +389,11 @@ export default async function SingerPage({
                   tone="rec"
                 />
               )}
-              <Stat label="Voice type" value={s.voiceType} tone="cool" />
+              <Stat
+                label={hasReviewedVoiceTypeCorrection(s) ? "Catalog label" : "Voice type"}
+                value={s.voiceType}
+                tone="cool"
+              />
             </div>
           </div>
           <div className="mt-6">
@@ -385,6 +412,65 @@ export default async function SingerPage({
                 red dash = top of full voice
               </span>
             )}
+          </div>
+        </Card>
+
+        <Card>
+          <SectionLabel>Evidence and review</SectionLabel>
+          <h2 className="mt-3 text-xl">Evidence and review</h2>
+          {reviewed ? (
+            <>
+              <p className="mt-3 max-w-3xl text-sm text-mut">
+                Reviewed {evidence.reviewedAt} · Dataset editor: {evidence.reviewedBy}
+              </p>
+              <p className="mt-3 max-w-3xl text-sm text-mut">
+                Reported reference span: the displayed catalog range is not an independently
+                verified physiological limit. {voiceTypeEvidenceCopy(s)}
+              </p>
+              <div className="mt-5 space-y-5">
+                {groupEvidenceSources(evidence.sources).map((group) => (
+                  <section key={group.label}>
+                    <h3 className="text-sm font-semibold">{group.label}</h3>
+                    {group.performance && (
+                      <p className="mt-1 text-xs text-dim">Performance: {group.performance}</p>
+                    )}
+                    <ul className="mt-3 space-y-3">
+                      {group.sources.map((source) => (
+                        <li key={source.url} className="border-l border-line pl-3 text-sm text-mut">
+                          <a
+                            href={source.url}
+                            rel="noreferrer"
+                            target="_blank"
+                            className="font-medium text-ink underline decoration-amber/60 underline-offset-4 hover:text-amber-ink"
+                          >
+                            {source.title} <span className="text-dim">({source.publisher})</span>
+                          </a>
+                          <p className="mt-1">Supports: {source.supportedClaim}</p>
+                          <p className="mt-1">Scope: {source.scope}</p>
+                          <p className="mt-1 text-xs">Confidence: {source.confidence}</p>
+                          {source.octaveConvention && (
+                            <p className="mt-1 text-xs">Octave convention: {source.octaveConvention}</p>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ))}
+              </div>
+            </>
+          ) : (
+            <p className="mt-3 max-w-3xl text-sm text-mut">
+              Individual evidence review is pending. The displayed range is a reported
+              reference span, not an independently verified physiological limit.
+            </p>
+          )}
+          <div className="mt-5 flex flex-wrap gap-3">
+            <LinkButton href="/singers/methodology" variant="outline" size="sm">
+              Methodology
+            </LinkButton>
+            <LinkButton href="/contact" variant="ghost" size="sm">
+              Suggest a correction
+            </LinkButton>
           </div>
         </Card>
 
@@ -444,6 +530,13 @@ export default async function SingerPage({
             one-off recorded moments, not the singer&rsquo;s everyday range.
           </p>
         </Card>
+
+        {intent === "voice-type" && (
+          <Card>
+            <h2 className="text-xl">What voice type is {s.name}?</h2>
+            <p className="mt-3 max-w-3xl text-mut">{voiceTypeEvidenceCopy(s)}</p>
+          </Card>
+        )}
 
         {/* The highest-note / lowest-note / octaves question families, in the
             words people search. Same array as the FAQPage markup above. */}

@@ -16,7 +16,9 @@
  * for the reintroduce-the-defect / watch-it-fail runs.
  */
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("server-only", () => ({}));
 import SingerPage from "@/app/singers/[slug]/page";
 import SiteFooter from "@/components/site-footer";
 import { SingersDirectory } from "@/components/singers/directory";
