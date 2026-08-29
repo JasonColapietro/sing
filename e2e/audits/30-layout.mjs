@@ -159,6 +159,17 @@ export async function run(ctx) {
         // (overflow:hidden + text-overflow:ellipsis) deliberately cuts a long
         // singer name to fit its column and shows an ellipsis saying so.
         if (cs.textOverflow === "ellipsis") continue;
+        // An overflow-hidden wrapper around a scroller is not hiding anything:
+        // the content is reached by swiping the child. The home page's
+        // comparison table is exactly this -- a masked wrapper (hidden, 655 >
+        // 286) around an overflow-x:auto strip the reader can drag.
+        {
+          const scrollableChild = [...el.querySelectorAll("*")].some((d) => {
+            const dcs = getComputedStyle(d);
+            return /auto|scroll/.test(dcs.overflowX) && d.scrollWidth > d.clientWidth + 1;
+          });
+          if (scrollableChild) continue;
+        }
         // Screen-reader-only text lives in a 1px box with overflow hidden by
         // definition; every sr-only node on the page reads as 100% clipped.
         if (cs.position === "absolute" && el.clientWidth <= 1 && el.clientHeight <= 1) continue;
@@ -206,6 +217,14 @@ export async function run(ctx) {
         // the first line. Comparing those unions reported ordinary stacked
         // paragraphs as overlapping each other.
         if (el.getClientRects().length > 1) continue;
+        // A deliberately-overlaid preview layer is not a text collision.
+        // LockedPanel renders the Pro-gated content aria-hidden,
+        // pointer-events-none and faded, then positions the "Unlock with Pro"
+        // bar on top of it -- that stacking IS the design, and the layer
+        // underneath cannot take a click or be read aloud.
+        const pcs = getComputedStyle(el);
+        if (pcs.pointerEvents === "none") continue;
+        if (el.closest('[aria-hidden="true"], [aria-hidden=""]')) continue;
         candidates.push(el);
       }
 
