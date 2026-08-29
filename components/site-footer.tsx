@@ -26,6 +26,8 @@ type FooterLink = { href: string; label: string };
 const REFERENCE: FooterLink[] = [
   { href: "/singers", label: "Famous singers' vocal ranges" },
   { href: "/singers/records", label: "Widest, lowest & highest ranges" },
+  { href: "/singers/methodology", label: "Singer range methodology" },
+  { href: "/contact", label: "Suggest a correction" },
   { href: "/atlas", label: "The Voice Atlas" },
   {
     href: "/atlas/vocal-range-by-voice-type",

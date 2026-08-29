@@ -26,6 +26,7 @@ import {
   isSingerReviewed,
   voiceTypeEvidenceCopy,
 } from "@/lib/singer-evidence";
+import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { SITE_URL } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import {
@@ -485,6 +486,7 @@ export default async function SingerPage({
               reference span, not an independently verified physiological limit.
             </p>
           )}
+          <p className="mt-3 max-w-3xl text-sm text-mut">{SINGER_RANGE_DISCLAIMER}</p>
           <div className="mt-5 flex flex-wrap gap-3">
             <LinkButton href="/singers/methodology" variant="outline" size="sm">
               Methodology
