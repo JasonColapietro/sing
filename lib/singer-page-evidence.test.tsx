@@ -135,6 +135,25 @@ describe("singer-page evidence and provenance", () => {
     expect(person).not.toHaveProperty("additionalProperty");
   });
 
+  it.each(REVIEWED_SLUGS)("keeps %s primary and FAQ answers scoped to reported reference spans", async (slug) => {
+    const html = await rendered(slug);
+    const visibleHtml = html.replace(/<script[\s\S]*?<\/script>/g, "");
+    const graph = graphFrom(html);
+    const faq = graph["@graph"].find((node) => node["@type"] === "FAQPage") as {
+      mainEntity: Array<{ acceptedAnswer: { text: string } }>;
+    };
+    const answers = faq.mainEntity.map((question) => question.acceptedAnswer.text);
+
+    expect(answers).toHaveLength(5);
+    for (const answer of answers) {
+      expect(answer).toContain("reported reference span");
+      expect(answer.toLowerCase()).not.toMatch(
+        /\b(full voice|falsetto|head voice|whistle register)\b/,
+      );
+      expect(visibleHtml).toContain(answer);
+    }
+  });
+
   it.each(VOICE_TYPE_QUESTION_SLUGS)("answers the explicit voice-type question for %s", async (slug, name) => {
     const html = await rendered(slug);
     expect(html).toContain(`What voice type is ${name}?`);

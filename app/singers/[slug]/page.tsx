@@ -145,7 +145,7 @@ function bothSpellings(midi: number): string {
 
 function answerSentence(s: SingerRecord): string {
   const semis = s.highMidi - s.lowMidi;
-  if (hasReviewedVoiceTypeCorrection(s)) {
+  if (isSingerReviewed(s.slug)) {
     return `The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones), not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
   }
   const parts = [
@@ -175,6 +175,27 @@ function answerSentence(s: SingerRecord): string {
  */
 function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
   const semis = s.highMidi - s.lowMidi;
+  if (isSingerReviewed(s.slug)) {
+    const referenceSpan = `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span, not an independently verified physiological limit.`;
+    return [
+      {
+        q: `How high can ${s.name} sing?`,
+        a: `${referenceSpan} Its upper endpoint should not be read as a verified individual maximum.`,
+      },
+      {
+        q: `What is ${s.name}’s highest note?`,
+        a: `${referenceSpan} The reviewed sources do not independently establish the upper endpoint as an individual highest note.`,
+      },
+      {
+        q: `What is ${s.name}’s lowest note?`,
+        a: `${referenceSpan} The reviewed sources do not independently establish the lower endpoint as an individual physiological limit.`,
+      },
+      {
+        q: `How many octaves can ${s.name} sing?`,
+        a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in the catalog, not a reviewed measurement of the singer's full working range.`,
+      },
+    ];
+  }
   // "How high can X sing" is its own query family, asked in those words, and
   // it wants the register story — how far full voice goes and what carries the
   // voice above it — not just the peak note (the next question owns that).
@@ -382,7 +403,7 @@ export default async function SingerPage({
             <div className="flex flex-wrap gap-8">
               <Stat label="Octaves" value={spanOctaves(semis)} tone="amber" />
               <Stat label="Semitones" value={semis} tone="ink" />
-              {s.beltMidi != null && (
+              {!reviewed && s.beltMidi != null && (
                 <Stat
                   label="Full voice to"
                   value={midiToLabel(s.beltMidi)}
@@ -400,14 +421,14 @@ export default async function SingerPage({
             <ChromaticStrip
               low={s.lowMidi}
               high={s.highMidi}
-              beltMidi={s.beltMidi}
-              label={`Keyboard showing ${s.name}'s cited range from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}.`}
+              beltMidi={reviewed ? undefined : s.beltMidi}
+              label={`Keyboard showing ${s.name}'s ${reviewed ? "reported reference span" : "cited range"} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}.`}
             />
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <PlayRangeButton s={s} />
-            {s.whistle && <Pill tone="amber">Whistle register</Pill>}
-            {s.beltMidi != null && (
+            {!reviewed && s.whistle && <Pill tone="amber">Whistle register</Pill>}
+            {!reviewed && s.beltMidi != null && (
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 red dash = top of full voice
               </span>
