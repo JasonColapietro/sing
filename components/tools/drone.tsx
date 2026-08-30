@@ -204,7 +204,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
             step={0.01}
             value={gain}
             onChange={(e) => setGain(Number(e.target.value))}
-            className="accent-amber h-1.5 w-32 cursor-pointer"
+            className="accent-amber h-6 w-32 cursor-pointer"
           />
         </div>
       </div>
