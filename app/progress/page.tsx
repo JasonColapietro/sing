@@ -1,13 +1,14 @@
 import { ProgressClient } from "@/components/progress/progress-client";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { RoomRailBand } from "@/components/discover/room-rail";
 
-export const metadata = {
+export const metadata = withCanonicalOpenGraph({
   title: "Singing Progress Tracker — Range, Accuracy and Streaks",
   description:
     "Every practice session logged: XP, streaks, achievements, range history and per-exercise scores, stored on your device. Watch your singing improve week over week.",
   alternates: { canonical: `${SITE_URL}/progress` },
-};
+});
 
 export default function ProgressPage() {
   return (

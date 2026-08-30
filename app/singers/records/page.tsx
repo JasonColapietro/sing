@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import { midiToLabel } from "@/lib/audio/notes";
 import { SINGERS, rangeLabel, spanOctaves, type Singer } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
@@ -8,12 +9,12 @@ import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 const TITLE = "Who Has the Widest Vocal Range? The Extremes, Ranked";
 const DESCRIPTION = `The widest cited vocal ranges, deepest low notes and highest high notes among famous singers — ranked, with the caveats that belong on figures like these.`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonicalOpenGraph({
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers/records` },
   openGraph: { title: TITLE, description: DESCRIPTION, type: "website" },
-};
+});
 
 const span = (s: Singer) => s.highMidi - s.lowMidi;
 

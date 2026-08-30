@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_OG_IMAGE } from "@/lib/og";
+import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
 import {
   ATLAS_CONTENTS,
@@ -16,7 +16,7 @@ import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 const DESCRIPTION =
   "What is a famous singer's vocal range, really? The Voice Atlas answers it voice by voice: cited ranges with the songs where the extreme notes happened, tonal quality decoded in plain language, and how to borrow each technique safely. The full contents — every chapter and every singer covered — is free.";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonicalOpenGraph({
   title: `${ATLAS_TITLE} — Famous Singers' Vocal Ranges, Tone and Technique`,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/atlas` },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "book",
     images: [DEFAULT_OG_IMAGE],
   },
-};
+});
 
 const PART_WORDS = [
   "one",

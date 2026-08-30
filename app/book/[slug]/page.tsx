@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
 import { FreeOnly } from "@/components/pro/gate";
@@ -26,14 +27,14 @@ export async function generateMetadata({
   const { slug } = await params;
   const c = BOOK_CONTENTS.find((x) => x.slug === slug);
   if (!c) return {};
-  return {
+  return withCanonicalOpenGraph({
     title: `${c.title} · ${BOOK_TITLE}`,
     description: c.summary,
     alternates: { canonical: `${SITE_URL}/book/${c.slug}` },
     // A gated body has nothing here for an index to rank — list the chapter but
     // keep it out of results. The free chapter is real content and ranks.
     robots: c.free ? undefined : { index: false, follow: true },
-  };
+  });
 }
 
 export default async function ChapterPage({

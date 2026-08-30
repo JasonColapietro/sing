@@ -14,6 +14,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { statsFor } from "@/lib/singers-analysis";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
 import { Card, LinkButton, PageShell, SectionLabel, Stat } from "@/components/ui";
@@ -40,12 +41,12 @@ export async function generateMetadata({
   const stats = statsFor(list);
   const title = `${g} Singers' Vocal Ranges Compared`;
   const description = `The cited vocal ranges of famous ${g} singers on one keyboard, from ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}. Compare spans and overlay your own range free.`;
-  return {
+  return withCanonicalOpenGraph({
     title,
     description,
     alternates: { canonical: `${SITE_URL}/singers/genre/${genre}` },
     openGraph: { title, description, type: "website" },
-  };
+  });
 }
 
 export default async function GenrePage({

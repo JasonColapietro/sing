@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_OG_IMAGE } from "@/lib/og";
+import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
 import {
   BOOK_CONTENTS,
@@ -15,7 +15,7 @@ import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 
 const DESCRIPTION = `${BOOK_TITLE} — a ${BOOK_CONTENTS.length}-chapter guide to how the voice works, reading your own measurements, a twelve-week program and choosing repertoire. Included with Suede Sing Pro.`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonicalOpenGraph({
   title: BOOK_TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/book` },
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: "book",
     images: [DEFAULT_OG_IMAGE],
   },
-};
+});
 
 export default function BookPage() {
   const jsonLd = {
