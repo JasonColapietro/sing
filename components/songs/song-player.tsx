@@ -72,7 +72,7 @@ function Transport({
   return (
     <>
       <Button
-        variant={phase === "running" ? "outline" : "amber"}
+        variant={phase === "running" ? "outline" : "violet"}
         size={size}
         onClick={onToggle}
         aria-label={phase === "running" ? "Pause" : "Play"}
@@ -739,7 +739,7 @@ export function SongPlayer({
   const hasRange = range.lowMidi !== undefined && range.highMidi !== undefined;
   const effBpm = Math.round(song.bpm * tempo);
   const loopPill = (
-    <Pill tone="amber">
+    <Pill tone="violet">
       Loop {phase === "idle" ? 0 : Math.min(plannedLoops, loopIndex + 1)} of {plannedLoops}
     </Pill>
   );
@@ -773,14 +773,14 @@ export function SongPlayer({
             <SectionLabel>{song.title}</SectionLabel>
             {sectionPill}
             {loopPill}
-            {countInBeat >= 0 && <Pill tone="amber">{COUNT_IN_BEATS - countInBeat}</Pill>}
+            {countInBeat >= 0 && <Pill tone="violet">{COUNT_IN_BEATS - countInBeat}</Pill>}
           </div>
           <Button variant="outline" size="sm" onClick={() => setStageMode(false)}>
             <IconCollapse /> Leave stage
           </Button>
         </div>
 
-        <ProgressBar value={phase === "idle" ? 0 : progressPct} tone="amber" />
+        <ProgressBar value={phase === "idle" ? 0 : progressPct} tone="violet" />
 
         <div className="flex flex-1 flex-col justify-center gap-6 py-4">
           {lyricBand}
@@ -829,7 +829,7 @@ export function SongPlayer({
           {loopPill}
         </div>
       </div>
-      <ProgressBar value={phase === "idle" ? 0 : progressPct} tone="amber" />
+      <ProgressBar value={phase === "idle" ? 0 : progressPct} tone="violet" />
 
       <Card>
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -850,7 +850,7 @@ export function SongPlayer({
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Tempo
             </div>
-            <div className="tabular mt-1 font-mono text-3xl font-bold text-amber-ink">
+            <div className="tabular mt-1 font-mono text-3xl font-bold text-violet-ink">
               {effBpm}
               <span className="ml-1 text-sm text-mut">bpm</span>
             </div>
@@ -895,7 +895,7 @@ export function SongPlayer({
                 Per loop
               </span>
               {perLoopScores.map((s, i) => (
-                <Pill key={i} tone={s >= 80 ? "ok" : s >= 50 ? "amber" : "mut"}>
+                <Pill key={i} tone={s >= 80 ? "ok" : s >= 50 ? "violet" : "mut"}>
                   {s}%
                 </Pill>
               ))}

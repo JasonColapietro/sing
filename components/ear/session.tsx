@@ -112,7 +112,7 @@ export function GameShell({
 export function StreakPill({ streak }: { streak: number }) {
   if (streak < 2) return null;
   return (
-    <Pill tone="amber">
+    <Pill tone="violet">
       <span
         className={streak >= 4 ? "animate-recblink" : undefined}
         aria-hidden="true"
@@ -200,7 +200,7 @@ export function SummaryView({
     <Card>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-lg">Session complete</h3>
-        {newBest && <Pill tone="amber">New personal best</Pill>}
+        {newBest && <Pill tone="violet">New personal best</Pill>}
       </div>
       <div className="mt-5 grid grid-cols-3 gap-4">
         <Stat
@@ -213,7 +213,7 @@ export function SummaryView({
           }
           tone={session.score >= 70 ? "ok" : "ink"}
         />
-        <Stat label="Best streak" value={session.bestStreak} tone="amber" />
+        <Stat label="Best streak" value={session.bestStreak} tone="violet" />
         <Stat label="XP earned" value={`+${xpGained}`} tone="cool" />
       </div>
       <div className="mt-5 flex gap-1.5" aria-label="Round results">
@@ -230,13 +230,13 @@ export function SummaryView({
           {newAchievements.map((a) => (
             <div
               key={a.id}
-              className="flex items-center gap-3 rounded-2xl border border-amber/40 bg-panel2 px-4 py-3"
+              className="flex items-center gap-3 rounded-2xl border border-violet/40 bg-panel2 px-4 py-3"
             >
               <span className="text-xl" aria-hidden="true">
                 {a.icon}
               </span>
               <div>
-                <div className="text-sm text-amber-ink">{a.title}</div>
+                <div className="text-sm text-violet-ink">{a.title}</div>
                 <div className="text-xs text-mut">{a.desc}</div>
               </div>
             </div>
@@ -252,7 +252,7 @@ export function SummaryView({
         />
       </div>
       <div className="mt-6 flex gap-2">
-        <Button variant="amber" onClick={onReplay}>
+        <Button variant="violet" onClick={onReplay}>
           Play again
         </Button>
         <Button variant="outline" onClick={onExit}>

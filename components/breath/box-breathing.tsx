@@ -168,7 +168,7 @@ export function BoxBreathing() {
                   <Button
                     key={m}
                     size="sm"
-                    variant={minutes === m ? "amber" : "outline"}
+                    variant={minutes === m ? "violet" : "outline"}
                     aria-pressed={minutes === m}
                     onClick={() => setMinutes(m)}
                   >
@@ -177,7 +177,7 @@ export function BoxBreathing() {
                 ))}
               </div>
             </div>
-            <Button variant="amber" size="lg" className="mt-6" onClick={begin}>
+            <Button variant="violet" size="lg" className="mt-6" onClick={begin}>
               Begin
             </Button>
           </div>
@@ -228,7 +228,7 @@ export function BoxBreathing() {
             </p>
           )}
           <div className="flex gap-2">
-            <Button variant="amber" onClick={begin}>
+            <Button variant="violet" onClick={begin}>
               Go again
             </Button>
             <Button variant="outline" onClick={() => setMode("setup")}>

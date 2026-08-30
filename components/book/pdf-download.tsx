@@ -53,7 +53,7 @@ export function PdfDownload({
         type="button"
         onClick={download}
         disabled={state === "working"}
-        className="inline-flex items-center justify-center gap-2 rounded-full border border-line2 px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-amber hover:text-amber-ink disabled:opacity-60"
+        className="inline-flex items-center justify-center gap-2 rounded-full border border-line2 px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-violet hover:text-violet-ink disabled:opacity-60"
       >
         {state === "working" ? "Preparing…" : "Download the PDF"}
       </button>

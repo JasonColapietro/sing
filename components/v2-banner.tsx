@@ -11,7 +11,7 @@ const SEEN_KEY = "suede-sing:v2-banner:v1";
  * The v2 announcement: a filled band above the sticky header that scrolls away
  * with the page. It shares the header's max-w-6xl grid so the V2 chip sits on
  * the same left edge as the wordmark below it — part of the console, not a
- * toast. No amber anywhere in it: the strip hangs directly over the amber Pro
+ * toast. No violet anywhere in it: the strip hangs directly over the violet Pro
  * pill, and a gold banner there would announce a pricing event, not a version.
  * Its accent is --color-cool, the pitch trace's colour (see v2-glyph.tsx).
  *
@@ -66,11 +66,11 @@ export default function V2Banner() {
       <aside
         id="v2-banner"
         aria-label="What's new in Suede Sing"
-        className="relative bg-cool text-white"
+        className="relative bg-violet-ink text-white"
       >
         {/* The strip reads as a filled band rather than a hairline: white on
-            --color-cool is 7.26:1, so the announcement carries at a glance
-            without borrowing amber, which on this site means a pricing event
+            --color-violet-ink is 7.10:1, so the announcement carries at a glance
+            without borrowing violet, which on this site means a pricing event
             (see the file header). The dismiss control is positioned rather
             than in flow so the row can wrap to two lines on a narrow phone
             instead of truncating the message away. */}

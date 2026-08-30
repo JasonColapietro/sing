@@ -41,7 +41,7 @@ function Table({
                 {s.voiceType} · {rangeLabel(s)}
               </span>
             </span>
-            <span className="tabular shrink-0 font-mono text-sm text-amber-ink">
+            <span className="tabular shrink-0 font-mono text-sm text-violet-ink">
               {value(s)}
             </span>
           </Link>
@@ -138,7 +138,7 @@ export default function RecordsPage() {
       />
 
       <div className="space-y-6">
-        <Card className="border-amber/40">
+        <Card className="border-violet/40">
           <h2 className="text-xl">Read these with the most caution</h2>
           <p className="mt-3 max-w-3xl text-mut">
             Record figures are the least reliable entries in any range
@@ -225,10 +225,10 @@ export default function RecordsPage() {
                 <li key={s.slug}>
                   <Link
                     href={`/singers/${s.slug}`}
-                    className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-amber"
+                    className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-violet"
                   >
                     {s.name}
-                    <span className="tabular font-mono text-[10px] text-amber-ink">
+                    <span className="tabular font-mono text-[10px] text-violet-ink">
                       {midiToLabel(s.highMidi)}
                     </span>
                   </Link>

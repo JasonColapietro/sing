@@ -153,7 +153,7 @@ export default function EarTrainingClient() {
                       onClick={() => setDiffs((p) => ({ ...p, [g.id]: d.id }))}
                       className={`rounded-full px-3 py-1 text-xs transition-colors ${
                         diff === d.id
-                          ? "bg-panel text-amber-ink"
+                          ? "bg-panel text-violet-ink"
                           : "text-mut hover:text-ink"
                       }`}
                     >
@@ -168,7 +168,7 @@ export default function EarTrainingClient() {
 
               <div className="mt-4">
                 <Button
-                  variant="amber"
+                  variant="violet"
                   size="sm"
                   onClick={() => setActive({ game: g.id, difficulty: diff })}
                 >

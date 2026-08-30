@@ -74,7 +74,7 @@ export function AudioSetup({
     <details
       className={`group rounded-2xl border border-line bg-panel2/60 ${className}`}
     >
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm text-mut outline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-amber">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm text-mut outline-offset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-violet">
         <span className="flex items-center gap-2">
           <MicGlyph />
           Audio setup
@@ -102,7 +102,7 @@ export function AudioSetup({
             id={inputSelectId}
             value={inputId}
             onChange={(e) => setInputDevice(e.target.value)}
-            className="mt-1.5 w-full rounded-xl border border-line bg-panel px-3 py-2 text-sm text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-amber"
+            className="mt-1.5 w-full rounded-xl border border-line bg-panel px-3 py-2 text-sm text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-violet"
           >
             <option value="">System default</option>
             {inputs.map((d) => (
@@ -155,7 +155,7 @@ export function AudioSetup({
               id={outputSelectId}
               value={outputId}
               onChange={(e) => setOutputDevice(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-line bg-panel px-3 py-2 text-sm text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-amber"
+              className="mt-1.5 w-full rounded-xl border border-line bg-panel px-3 py-2 text-sm text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-violet"
             >
               <option value="">System default</option>
               {outputs.map((d) => (
@@ -197,8 +197,8 @@ function MonitorChoice({
     <label
       className={`cursor-pointer rounded-xl border p-3 transition-colors ${
         selected
-          ? "border-amber/60 bg-amber/10"
-          : "border-line bg-panel hover:border-amber/40"
+          ? "border-violet/60 bg-violet/10"
+          : "border-line bg-panel hover:border-violet/40"
       }`}
     >
       <span className="flex items-center gap-2">
@@ -208,7 +208,7 @@ function MonitorChoice({
           value={value}
           checked={selected}
           onChange={() => setMonitoring(value)}
-          className="accent-[var(--color-amber)]"
+          className="accent-[var(--color-violet)]"
         />
         <span className="text-sm text-ink">{title}</span>
       </span>
@@ -247,7 +247,7 @@ function LevelMeter({ level }: { level: number }) {
       >
         <div
           className={`h-full rounded-full transition-[width] duration-75 ${
-            pct > 92 ? "bg-rec" : "bg-amber"
+            pct > 92 ? "bg-rec" : "bg-violet"
           }`}
           style={{ width: `${pct}%` }}
         />

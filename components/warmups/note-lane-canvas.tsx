@@ -15,7 +15,7 @@ export interface TracePoint {
  * for glide steps); each block fills green left-to-right as the singer holds
  * it within tolerance. During "sing", the live pitch renders as a teal dot
  * with a trailing trace — the same colour the studio draws a voice in, and
- * deliberately not amber, which means "Pro" everywhere else.
+ * deliberately not violet, which means "Pro" everywhere else.
  */
 export function NoteLaneCanvas({
   segs,

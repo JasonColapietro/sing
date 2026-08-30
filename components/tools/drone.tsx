@@ -106,7 +106,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
             viewBox="0 0 16 16"
             fill="none"
             aria-hidden="true"
-            className="text-amber-ink"
+            className="text-violet-ink"
           >
             <path
               d="M1.5 8c1.5-4 2.5-4 4 0s2.5 4 4 0 2.5-4 4 0"
@@ -118,8 +118,8 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
           <SectionLabel>Drone</SectionLabel>
         </div>
         {playingMidi !== null && (
-          <Pill tone="amber">
-            <span className="animate-recblink h-1.5 w-1.5 rounded-full bg-amber" />
+          <Pill tone="violet">
+            <span className="animate-recblink h-1.5 w-1.5 rounded-full bg-violet" />
             <span className="tabular font-mono">{midiToLabel(playingMidi)}</span>
           </Pill>
         )}
@@ -149,9 +149,9 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
                 onClick={() => pickNote(pc)}
                 className={`rounded-lg border py-2 font-mono text-sm transition-colors ${
                   isPlaying
-                    ? "border-amber bg-amber text-[#241a05]"
+                    ? "border-violet bg-violet text-[#241a05]"
                     : pc === rootPc
-                      ? "border-amber/50 bg-panel2 text-amber-ink"
+                      ? "border-violet/50 bg-panel2 text-violet-ink"
                       : "border-line bg-panel2 text-mut hover:border-line2 hover:text-ink"
                 }`}
               >
@@ -180,7 +180,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
               onClick={() => pickOctave(o)}
               className={`rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
                 octave === o
-                  ? "border-amber bg-panel2 text-amber-ink"
+                  ? "border-violet bg-panel2 text-violet-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
               }`}
             >
@@ -204,14 +204,14 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
             step={0.01}
             value={gain}
             onChange={(e) => setGain(Number(e.target.value))}
-            className="accent-amber h-6 w-32 cursor-pointer"
+            className="accent-violet h-6 w-32 cursor-pointer"
           />
         </div>
       </div>
 
       <div className="mt-5 flex items-center gap-3">
         <Button
-          variant="amber"
+          variant="violet"
           onClick={() => begin(rootPc, octave)}
         >
           {playingMidi !== null ? "Restart drone" : "Start drone"}

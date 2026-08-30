@@ -36,7 +36,7 @@ function LevelMeter({
             i >= METER_SEGS * 0.85
               ? "bg-rec"
               : i >= METER_SEGS * 0.6
-                ? "bg-amber"
+                ? "bg-violet"
                 : "bg-ok";
           return (
             <div
@@ -49,7 +49,7 @@ function LevelMeter({
       {/* threshold marker */}
       <div
         aria-hidden="true"
-        className="absolute -bottom-1.5 -top-1.5 w-px bg-amber/70"
+        className="absolute -bottom-1.5 -top-1.5 w-px bg-violet/70"
         style={{ left: `${thPct}%` }}
       />
       <span className="sr-only">
@@ -117,7 +117,7 @@ function AttemptsChart({ data }: { data: BreathData }) {
             x2={W}
             y1={y(data.bestSec)}
             y2={y(data.bestSec)}
-            stroke="var(--color-amber)"
+            stroke="var(--color-violet)"
             strokeWidth={1}
             strokeDasharray="4 3"
           />
@@ -125,7 +125,7 @@ function AttemptsChart({ data }: { data: BreathData }) {
             x={W - 2}
             y={y(data.bestSec) - 3}
             textAnchor="end"
-            fill="var(--color-amber)"
+            fill="var(--color-violet)"
             fontSize={8}
             fontFamily="var(--font-mono, monospace)"
           >
@@ -319,7 +319,7 @@ export function SustainTest() {
                 sustaining
               </Pill>
             ) : phase === "armed" ? (
-              <Pill tone="amber">waiting for sound</Pill>
+              <Pill tone="violet">waiting for sound</Pill>
             ) : (
               <Pill tone="ok">mic ready</Pill>
             )}
@@ -349,7 +349,7 @@ export function SustainTest() {
                 &ldquo;sss&rdquo; or &ldquo;ahh&rdquo;. Stopping for a moment
                 ends the attempt.
               </p>
-              <Button variant="amber" size="lg" onClick={() => setPhase("armed")}>
+              <Button variant="violet" size="lg" onClick={() => setPhase("armed")}>
                 Start attempt
               </Button>
             </>
@@ -386,7 +386,7 @@ export function SustainTest() {
                   label="Held for"
                   value={`${result.sec.toFixed(1)}s`}
                   sub={benchmark(result.sec)}
-                  tone="amber"
+                  tone="violet"
                 />
                 <Stat
                   label="Steadiness"
@@ -403,7 +403,7 @@ export function SustainTest() {
                 </p>
               )}
               <Button
-                variant="amber"
+                variant="violet"
                 onClick={() => {
                   setElapsed(0);
                   setResult(null);
@@ -433,7 +433,7 @@ export function SustainTest() {
               step={0.005}
               value={threshold}
               onChange={(e) => setThreshold(Number(e.target.value))}
-              className="w-full accent-[var(--color-amber)]"
+              className="w-full accent-[var(--color-violet)]"
             />
             <span className="text-xs text-mut">noisy room</span>
           </div>
@@ -448,7 +448,7 @@ export function SustainTest() {
               <Stat
                 label="Best ever"
                 value={`${data.bestSec.toFixed(1)}s`}
-                tone="amber"
+                tone="violet"
               />
               <Stat
                 label="Last attempt"

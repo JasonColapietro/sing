@@ -273,7 +273,7 @@ export function CoachCard({ state }: { state: ProgressState }) {
                 <div className="flex flex-wrap items-baseline gap-x-2">
                   <Link
                     href={item.id ? `${item.href}?exercise=${item.id}` : item.href}
-                    className="font-medium text-ink underline-offset-4 hover:text-amber-ink hover:underline"
+                    className="font-medium text-ink underline-offset-4 hover:text-violet-ink hover:underline"
                   >
                     {item.title}
                   </Link>
@@ -288,14 +288,14 @@ export function CoachCard({ state }: { state: ProgressState }) {
             <li key={item.title} className="flex gap-3">
               <span
                 aria-hidden="true"
-                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-amber/40 font-mono text-[11px] text-amber-ink"
+                className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-violet/40 font-mono text-[11px] text-violet-ink"
               >
                 {i + 1}
               </span>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-baseline gap-x-2">
                   <span className="text-mut">{item.title}</span>
-                  <span className="text-amber-ink">
+                  <span className="text-violet-ink">
                     <LockGlyph size={11} />
                   </span>
                 </div>

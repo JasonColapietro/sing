@@ -33,7 +33,7 @@ export function BreathStudio() {
             key={t.id}
             role="tab"
             aria-selected={tab === t.id}
-            variant={tab === t.id ? "amber" : "outline"}
+            variant={tab === t.id ? "violet" : "outline"}
             size="sm"
             onClick={() => setTab(t.id)}
           >

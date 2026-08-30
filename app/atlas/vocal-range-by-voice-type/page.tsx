@@ -273,7 +273,7 @@ export default function VocalRangeByVoiceTypePage() {
             records down there, and the{" "}
             <Link
               href="/singers"
-              className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2"
             >
               library of {SINGERS.length} cited singers
             </Link>{" "}
@@ -331,7 +331,7 @@ export default function VocalRangeByVoiceTypePage() {
                     <th scope="row" className="py-3 pr-4 font-medium text-ink">
                       <Link
                         href={`/singers/voice-type/${row.slug}`}
-                        className="hover:text-amber-ink hover:underline"
+                        className="hover:text-violet-ink hover:underline"
                       >
                         {row.voice}
                       </Link>
@@ -353,7 +353,7 @@ export default function VocalRangeByVoiceTypePage() {
                           {i > 0 && ", "}
                           <Link
                             href={`/singers/${s.slug}`}
-                            className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                            className="text-violet-ink underline decoration-violet/40 underline-offset-2"
                           >
                             {s.name}
                           </Link>{" "}
@@ -421,7 +421,7 @@ export default function VocalRangeByVoiceTypePage() {
             <li>
               <Link
                 href="/atlas/voice-types-in-the-wild"
-                className="text-amber-ink hover:underline"
+                className="text-violet-ink hover:underline"
               >
                 Voice types in the wild
               </Link>{" "}
@@ -430,14 +430,14 @@ export default function VocalRangeByVoiceTypePage() {
               a teacher. Free.
             </li>
             <li>
-              <Link href="/range" className="text-amber-ink hover:underline">
+              <Link href="/range" className="text-violet-ink hover:underline">
                 The free range test
               </Link>{" "}
               — sixty seconds in the browser gives you your own two numbers to
               read this table with.
             </li>
             <li>
-              <Link href="/singers" className="text-amber-ink hover:underline">
+              <Link href="/singers" className="text-violet-ink hover:underline">
                 All {SINGERS.length} singers
               </Link>{" "}
               — or jump to{" "}
@@ -446,7 +446,7 @@ export default function VocalRangeByVoiceTypePage() {
                   {i > 0 && (i === ROWS.length - 1 ? " and " : ", ")}
                   <Link
                     href={`/singers/voice-type/${row.slug}`}
-                    className="text-amber-ink hover:underline"
+                    className="text-violet-ink hover:underline"
                   >
                     {pluralVoice(row.lower)}
                   </Link>
@@ -455,7 +455,7 @@ export default function VocalRangeByVoiceTypePage() {
               .
             </li>
             <li>
-              <Link href="/glossary" className="text-amber-ink hover:underline">
+              <Link href="/glossary" className="text-violet-ink hover:underline">
                 The glossary
               </Link>{" "}
               — passaggio, tessitura, fach, belt and the rest, defined.

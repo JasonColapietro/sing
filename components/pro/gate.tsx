@@ -40,7 +40,7 @@ export function ProWhisper({ className = "" }: { className?: string }) {
       Free ·{" "}
       <Link
         href="/pro#plans"
-        className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+        className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
       >
         Pro
       </Link>{" "}
@@ -98,7 +98,7 @@ export function ProInlineNudge({ children }: { children: string }) {
       <span>{children}</span>
       <Link
         href="/pro#plans"
-        className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+        className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
       >
         Go Pro
       </Link>

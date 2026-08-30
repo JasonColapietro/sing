@@ -19,8 +19,8 @@ function isBlack(midi: number): boolean {
  * Equal-width-per-semitone keyboard strip with a teal band over a range.
  * Same geometry as the progress page's mini keyboard, but with configurable
  * bounds so extreme ranges (whistle sopranos, deep basses) render without
- * clamping — and deliberately teal, not amber: across /range and /progress an
- * amber band on keys means "your measured voice", so a reference singer's
+ * clamping — and deliberately teal, not violet: across /range and /progress an
+ * violet band on keys means "your measured voice", so a reference singer's
  * cited range has to read in the other tone. Pure SVG, safe in server
  * components (the visitor's own range is client-only, and lives in the
  * CompareWithMe card further down the page).

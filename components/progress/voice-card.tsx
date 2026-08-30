@@ -20,7 +20,7 @@ function isBlack(midi: number): boolean {
   return BLACK_PCS.has(((midi % 12) + 12) % 12);
 }
 
-/** Compact keyboard strip, C2..C6, with an amber band over the sung range. */
+/** Compact keyboard strip, C2..C6, with an violet band over the sung range. */
 function MiniKeyboard({ low, high }: { low: number; high: number }) {
   const CW = 9;
   const KH = 38;
@@ -130,7 +130,7 @@ export function VoiceCard({ range }: { range: VocalRange }) {
     <Card>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg">Your voice</h2>
-        {range.voiceTypeLabel && <Pill tone="amber">{range.voiceTypeLabel}</Pill>}
+        {range.voiceTypeLabel && <Pill tone="violet">{range.voiceTypeLabel}</Pill>}
       </div>
       <div className="tabular mt-3 font-mono text-2xl text-ink">
         {midiToLabel(range.lowMidi)}

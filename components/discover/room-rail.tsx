@@ -94,12 +94,12 @@ export function RoomRail({
           <li key={href}>
             <Link
               href={href}
-              className="lift group flex h-full flex-col rounded-xl border border-line bg-panel p-3 hover:border-amber/50 sm:p-4"
+              className="lift group flex h-full flex-col rounded-xl border border-line bg-panel p-3 hover:border-violet/50 sm:p-4"
             >
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-panel2 text-amber-ink">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-panel2 text-violet-ink">
                 <Glyph width={16} height={16} />
               </span>
-              <span className="mt-3 block text-sm text-ink group-hover:text-amber-ink">
+              <span className="mt-3 block text-sm text-ink group-hover:text-violet-ink">
                 {label}
               </span>
               <span className="mt-1 block text-xs text-mut">{blurb}</span>

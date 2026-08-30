@@ -43,7 +43,7 @@ function Toggle({
       onClick={onToggle}
       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors ${
         pressed
-          ? "border-amber bg-panel2 text-amber-ink"
+          ? "border-violet bg-panel2 text-violet-ink"
           : "border-line2 text-mut hover:text-ink"
       }`}
     >
@@ -73,7 +73,7 @@ function Chip({
       disabled={disabled}
       onClick={onClick}
       className={`rounded-full px-2.5 py-1 font-mono text-xs transition-colors disabled:opacity-40 ${
-        active ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
+        active ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
       }`}
     >
       {children}
@@ -163,7 +163,7 @@ export function Mixer({
               value={guidePct}
               aria-valuetext={guidePct === 0 ? "Off" : `${guidePct} percent`}
               onChange={(e) => onGuidePct(Number(e.target.value))}
-              className="min-w-0 flex-1 cursor-pointer accent-amber"
+              className="min-w-0 flex-1 cursor-pointer accent-violet"
             />
             <span className="tabular w-9 shrink-0 text-right font-mono text-xs text-mut">
               {guidePct === 0 ? "Off" : `${guidePct}%`}

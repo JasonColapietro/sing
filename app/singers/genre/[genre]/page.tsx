@@ -161,21 +161,21 @@ export default async function GenrePage({
               Widest here is{" "}
               <Link
                 href={`/singers/${stats.widest.slug}`}
-                className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
               >
                 {stats.widest.name}
               </Link>{" "}
               ({rangeLabel(stats.widest)}); the deepest floor belongs to{" "}
               <Link
                 href={`/singers/${stats.lowest.slug}`}
-                className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
               >
                 {stats.lowest.name}
               </Link>{" "}
               at {midiToLabel(stats.lowest.lowMidi)} and the highest ceiling to{" "}
               <Link
                 href={`/singers/${stats.highest.slug}`}
-                className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
               >
                 {stats.highest.name}
               </Link>{" "}
@@ -205,7 +205,7 @@ export default async function GenrePage({
               <li key={type}>
                 <Link
                   href={`/singers/voice-type/${voiceTypeSlug(type as never)}`}
-                  className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-amber"
+                  className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-violet"
                 >
                   All {pluralVoice(type.toLowerCase())}
                 </Link>
@@ -217,7 +217,7 @@ export default async function GenrePage({
                 <li key={x}>
                   <Link
                     href={`/singers/genre/${genreSlug(x)}`}
-                    className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-amber hover:text-ink"
+                    className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-violet hover:text-ink"
                   >
                     {x}
                   </Link>

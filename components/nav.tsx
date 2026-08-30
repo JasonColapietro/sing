@@ -327,11 +327,11 @@ export default function Nav() {
               <Link
                 href="/pro"
                 onClick={() => setMenuOpen(false)}
-                className="relative block overflow-hidden rounded-2xl border border-amber/50 bg-panel px-4 py-4 transition-colors hover:border-amber"
+                className="relative block overflow-hidden rounded-2xl border border-violet/50 bg-panel px-4 py-4 transition-colors hover:border-violet"
               >
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber to-transparent"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet to-transparent"
                 />
                 <span className="flex items-center gap-2">
                   <ProChip />
@@ -348,7 +348,7 @@ export default function Nav() {
             </div>
 
             <div className="flex items-center gap-2 px-4 pt-4 font-mono text-xs text-dim">
-              <span className="text-amber-ink">LV {lvl.level}</span>
+              <span className="text-violet-ink">LV {lvl.level}</span>
               <span>·</span>
               <span className="tabular">{p.xp} XP</span>
               {streak !== "none" && (
@@ -422,7 +422,7 @@ export default function Nav() {
                     onClick={() => setMenuOpen(false)}
                     className={`rounded-2xl border px-4 py-4 text-base transition-colors ${
                       active
-                        ? "border-amber bg-panel2 text-amber-ink"
+                        ? "border-violet bg-panel2 text-violet-ink"
                         : "border-line bg-panel text-ink hover:border-line2"
                     }`}
                   >
@@ -475,7 +475,7 @@ export default function Nav() {
                   href={l.href}
                   className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
                     active
-                      ? "bg-panel2 text-amber-ink"
+                      ? "bg-panel2 text-violet-ink"
                       : "text-mut hover:text-ink"
                   }`}
                 >
@@ -503,8 +503,8 @@ export default function Nav() {
             href="/pro"
             className={`flex min-h-11 shrink-0 items-center rounded-full px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:min-h-0 sm:px-3 ${
               proActive
-                ? "bg-amber text-[#241a05] hover:bg-amber-soft"
-                : "border border-amber/60 text-amber-ink hover:border-amber hover:bg-panel2"
+                ? "bg-violet text-[#241a05] hover:bg-violet"
+                : "border border-violet/60 text-violet-ink hover:border-violet hover:bg-panel2"
             }`}
           >
             Pro
@@ -514,7 +514,7 @@ export default function Nav() {
             href="/progress"
             className="hidden shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs sm:flex"
           >
-            <span className="text-amber-ink">LV {lvl.level}</span>
+            <span className="text-violet-ink">LV {lvl.level}</span>
             <span className="text-dim">·</span>
             <span className="tabular">{p.xp} XP</span>
             {streak !== "none" && (

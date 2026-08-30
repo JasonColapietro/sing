@@ -67,7 +67,7 @@ export default function BookPage() {
       <div className="space-y-6">
         <Card>
           <div className="flex flex-wrap gap-8">
-            <Stat label="Chapters" value={BOOK_CONTENTS.length} tone="amber" />
+            <Stat label="Chapters" value={BOOK_CONTENTS.length} tone="violet" />
             <Stat
               label="Words"
               value={BOOK_WORDS.toLocaleString("en-US")}
@@ -80,7 +80,7 @@ export default function BookPage() {
             <a
               href="https://jasoncolapietro.com"
               rel="author"
-              className="text-amber-ink hover:underline"
+              className="text-violet-ink hover:underline"
             >
               {AUTHOR_NAME}
             </a>{" "}
@@ -123,7 +123,7 @@ export default function BookPage() {
                       <span className="flex flex-wrap items-baseline gap-x-3 text-sm font-medium text-ink">
                         {c.title}
                         {c.free && (
-                          <span className="rounded-full border border-amber/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-amber-ink">
+                          <span className="rounded-full border border-violet/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-violet-ink">
                             free
                           </span>
                         )}
@@ -147,7 +147,7 @@ export default function BookPage() {
             Pro includes two books. <em>The Voice Atlas</em> is the reference —
             the range, tone and technique of every voice in the singer library,
             with the songs where the extreme notes happened.{" "}
-            <Link href="/atlas" className="text-amber-ink hover:underline">
+            <Link href="/atlas" className="text-violet-ink hover:underline">
               Its full contents are free
             </Link>
             .

@@ -64,7 +64,7 @@ function StepIndicator({ stage }: { stage: Stage }) {
               className={
                 "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.1em] " +
                 (state === "current"
-                  ? "border-amber/50 text-amber-ink"
+                  ? "border-violet/50 text-violet-ink"
                   : state === "done"
                     ? "border-ok/40 text-ok-ink"
                     : "border-line text-dim")
@@ -86,7 +86,7 @@ function StepIndicator({ stage }: { stage: Stage }) {
 function InputHint({ hint }: { hint: string | null }) {
   return (
     <p
-      className="mt-4 max-w-xl border-l-2 border-amber/50 pl-3 text-sm text-mut"
+      className="mt-4 max-w-xl border-l-2 border-violet/50 pl-3 text-sm text-mut"
       aria-live="polite"
     >
       {hint}
@@ -342,7 +342,7 @@ export function RangeTest() {
                         ` · tested ${new Date(savedRange.testedAt).toLocaleDateString()}`}
                     </p>
                   </div>
-                  <Button variant="amber" onClick={begin}>
+                  <Button variant="violet" onClick={begin}>
                     Retake test
                   </Button>
                 </div>
@@ -416,7 +416,7 @@ export function RangeTest() {
                 Hearing
               </div>
               <div
-                className="tabular mt-1 font-mono text-5xl font-bold text-amber-ink"
+                className="tabular mt-1 font-mono text-5xl font-bold text-violet-ink"
                 aria-live="polite"
               >
                 {liveLabel}
@@ -425,7 +425,7 @@ export function RangeTest() {
             <div className="flex-1 pb-2">
               <ProgressBar
                 value={(holdMs / WARM_HOLD_MS) * 100}
-                tone="amber"
+                tone="violet"
               />
               <p className="mt-1.5 font-mono text-[11px] text-dim">
                 Hold steady — {Math.max(0, ((WARM_HOLD_MS - holdMs) / 1000)).toFixed(1)}s
@@ -462,7 +462,7 @@ export function RangeTest() {
                 Hearing
               </div>
               <div
-                className="tabular mt-1 font-mono text-5xl font-bold text-amber-ink"
+                className="tabular mt-1 font-mono text-5xl font-bold text-violet-ink"
                 aria-live="polite"
               >
                 {liveLabel}
@@ -485,7 +485,7 @@ export function RangeTest() {
             <div className="min-w-40 flex-1 pb-2">
               <ProgressBar
                 value={dwell ? Math.min(100, (dwell.ms / DWELL_MS) * 100) : 0}
-                tone={dwell && dwell.ms >= DWELL_MS ? "ok" : "amber"}
+                tone={dwell && dwell.ms >= DWELL_MS ? "ok" : "violet"}
               />
               <p className="mt-1.5 font-mono text-[11px] text-dim">
                 {dwell
@@ -514,7 +514,7 @@ export function RangeTest() {
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {stage === "low" ? (
               <>
-                <Button variant="amber" onClick={advanceToHigh}>
+                <Button variant="violet" onClick={advanceToHigh}>
                   I can&apos;t go lower
                 </Button>
                 {lowFound !== null && (
@@ -529,7 +529,7 @@ export function RangeTest() {
               </>
             ) : (
               <>
-                <Button variant="amber" onClick={finish}>
+                <Button variant="violet" onClick={finish}>
                   I can&apos;t go higher
                 </Button>
                 {highFound !== null && (

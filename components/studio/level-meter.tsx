@@ -26,7 +26,7 @@ export function LevelMeter({ volume }: { volume: number }) {
         {Array.from({ length: SEGS }, (_, i) => {
           const on = i < lit;
           const color =
-            i >= SEGS - 3 ? "bg-rec" : i >= SEGS - 8 ? "bg-amber" : "bg-ok";
+            i >= SEGS - 3 ? "bg-rec" : i >= SEGS - 8 ? "bg-violet" : "bg-ok";
           return (
             <span
               key={i}

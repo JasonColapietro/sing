@@ -1,7 +1,7 @@
 /**
  * The v2 campaign mark: a pitch trace that dips once, rises, and settles on a
  * note. Drawn in --color-cool because that is the colour of the live trace —
- * the singer's own voice made visible — and the one accent amber's one-meaning
+ * the singer's own voice made visible — and the one accent violet's one-meaning
  * rule leaves unclaimed. Shared by the announcement banner and /changelog so
  * the two read as one campaign; when the banner retires, cool goes back to
  * being the instrument's colour.

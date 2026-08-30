@@ -63,9 +63,9 @@ function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
 }
 
-function difficultyTone(label: "Easy" | "Medium" | "Hard"): "ok" | "amber" | "rec" {
+function difficultyTone(label: "Easy" | "Medium" | "Hard"): "ok" | "violet" | "rec" {
   if (label === "Easy") return "ok";
-  if (label === "Medium") return "amber";
+  if (label === "Medium") return "violet";
   return "rec";
 }
 
@@ -76,14 +76,14 @@ function semitones(n: number): string {
 /** Plain-language range verdict, or null when there's no saved range to judge against. */
 function rangeBadge(
   fit: RangeFit,
-): { tone: "ok" | "amber" | "rec"; text: string } | null {
+): { tone: "ok" | "violet" | "rec"; text: string } | null {
   switch (fit.verdict) {
     case "fits":
       return { tone: "ok", text: "Fits your range" };
     case "high":
-      return { tone: "amber", text: `${semitones(fit.offsetSemis)} high` };
+      return { tone: "violet", text: `${semitones(fit.offsetSemis)} high` };
     case "low":
-      return { tone: "amber", text: `${semitones(Math.abs(fit.offsetSemis))} low` };
+      return { tone: "violet", text: `${semitones(Math.abs(fit.offsetSemis))} low` };
     case "wide":
       return { tone: "rec", text: "Wider than your range" };
     default:
@@ -227,7 +227,7 @@ function SongCard({
         </Button>
         <Link
           href={`/songs/${song.slug}`}
-          className="ml-auto font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+          className="ml-auto font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
         >
           About
         </Link>
@@ -338,7 +338,7 @@ export function Library({
   return (
     <div className="space-y-8">
       {!hasRange && (
-        <Card className="border-amber/30">
+        <Card className="border-violet/30">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <SectionLabel>No range saved</SectionLabel>
@@ -366,7 +366,7 @@ export function Library({
                 key={song.id}
                 type="button"
                 onClick={() => start(song)}
-                className="w-44 shrink-0 rounded-xl border border-line bg-panel px-4 py-3 text-left transition-colors hover:border-amber/40"
+                className="w-44 shrink-0 rounded-xl border border-line bg-panel px-4 py-3 text-left transition-colors hover:border-violet/40"
               >
                 <div className="truncate text-sm">{song.title}</div>
                 <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -379,7 +379,7 @@ export function Library({
       )}
 
       {queuedSongs.length > 0 && (
-        <Card className="border-amber/30">
+        <Card className="border-violet/30">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <span className="flex items-center gap-2">
               <SectionLabel>Setlist</SectionLabel>
@@ -406,7 +406,7 @@ export function Library({
                   {i + 1}
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm">{song.title}</span>
-                {song.id === nowSingingId && <Pill tone="amber">Now</Pill>}
+                {song.id === nowSingingId && <Pill tone="violet">Now</Pill>}
                 <MiniButton
                   label={`Move ${song.title} up`}
                   disabled={i === 0}

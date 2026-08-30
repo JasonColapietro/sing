@@ -95,7 +95,7 @@ export default async function AtlasChapterPage({
                   Also free:{" "}
                   <Link
                     href={`/atlas/${nextFree.slug}`}
-                    className="text-amber-ink hover:underline"
+                    className="text-violet-ink hover:underline"
                   >
                     {nextFree.title}
                   </Link>

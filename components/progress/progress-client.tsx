@@ -215,7 +215,7 @@ function HeaderRow({
       <Card>
         <SectionLabel>Level</SectionLabel>
         <div className="mt-3 flex items-baseline gap-2">
-          <span className="text-3xl text-amber-ink">{lvl.level}</span>
+          <span className="text-3xl text-violet-ink">{lvl.level}</span>
           <span className="text-mut">{lvl.title}</span>
         </div>
         <ProgressBar value={lvl.progress * 100} className="mt-3" />
@@ -240,7 +240,7 @@ function HeaderRow({
         {streak !== "none" ? (
           <p
             className={`mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] ${
-              streak === "banked" ? "text-ok-ink" : "text-amber-ink"
+              streak === "banked" ? "text-ok-ink" : "text-violet-ink"
             }`}
           >
             {streak === "banked" ? "Banked today" : "Keep it alive"}
@@ -301,7 +301,7 @@ function AchievementsGallery({ unlocked }: { unlocked: string[] }) {
               key={a.id}
               className={
                 isUnlocked
-                  ? "rounded-xl border border-amber/40 bg-panel2 p-3"
+                  ? "rounded-xl border border-violet/40 bg-panel2 p-3"
                   : "rounded-xl border border-line p-3 opacity-45"
               }
             >
@@ -399,7 +399,7 @@ function SessionLogTable({
                 <td className="tabular px-3 py-2.5 text-right font-mono text-xs text-ink">
                   {s.score !== undefined ? Math.round(s.score) : "—"}
                 </td>
-                <td className="tabular px-3 py-2.5 text-right font-mono text-xs text-amber-ink">
+                <td className="tabular px-3 py-2.5 text-right font-mono text-xs text-violet-ink">
                   +{s.xp}
                 </td>
                 <td className="px-5 py-2.5 text-right font-mono text-xs text-dim sm:px-6">

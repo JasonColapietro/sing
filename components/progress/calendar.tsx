@@ -8,11 +8,11 @@ import { addDays, localDayStr, mondayOf, secondsByDay } from "./format";
 /** Unpractised day. */
 const EMPTY = PANEL2;
 
-/** 4 amber intensity steps (opacity on the amber hue) + empty. */
+/** 4 violet intensity steps (opacity on the violet hue) + empty. */
 const STEPS = [0.25, 0.45, 0.7, 1] as const;
 
 function stepFor(min: number): number {
-  // 0 = empty, 1..4 = amber steps
+  // 0 = empty, 1..4 = violet steps
   if (min <= 0) return 0;
   if (min < 5) return 1;
   if (min < 15) return 2;
@@ -95,7 +95,7 @@ export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full max-w-xl"
         role="img"
-        aria-label={`Practice calendar for the last 12 weeks: ${activeDays} active days, ${totalMin} minutes total. Darker amber squares mean more minutes that day.`}
+        aria-label={`Practice calendar for the last 12 weeks: ${activeDays} active days, ${totalMin} minutes total. Darker violet squares mean more minutes that day.`}
       >
         {monthLabels.map((m) => (
           <text

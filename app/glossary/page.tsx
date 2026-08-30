@@ -74,11 +74,11 @@ export default function GlossaryPage() {
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             Definitions only. No exercise is prescribed here — the{" "}
-            <Link href="/warmups" className="text-amber-ink hover:underline">
+            <Link href="/warmups" className="text-violet-ink hover:underline">
               warmups
             </Link>{" "}
             and the{" "}
-            <Link href="/range" className="text-amber-ink hover:underline">
+            <Link href="/range" className="text-violet-ink hover:underline">
               range test
             </Link>{" "}
             do that part, and none of this is medical advice.
@@ -88,7 +88,7 @@ export default function GlossaryPage() {
               <a
                 key={section.heading}
                 href={`#${termId(section.heading)}`}
-                className="rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-amber/50 hover:text-amber-ink"
+                className="rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-violet/50 hover:text-violet-ink"
               >
                 {section.heading}
               </a>
@@ -126,7 +126,7 @@ export default function GlossaryPage() {
                     {entry.where}{" "}
                     <Link
                       href={entry.href}
-                      className="text-amber-ink hover:underline"
+                      className="text-violet-ink hover:underline"
                     >
                       Open {roomLabel(entry.href)} →
                     </Link>
@@ -149,7 +149,7 @@ export default function GlossaryPage() {
               <li key={c.slug} className="max-w-3xl text-sm text-mut">
                 <Link
                   href={`/atlas/${c.slug}`}
-                  className="text-amber-ink hover:underline"
+                  className="text-violet-ink hover:underline"
                 >
                   {c.title}
                 </Link>
@@ -158,7 +158,7 @@ export default function GlossaryPage() {
             ))}
           </ul>
           <p className="mt-4 max-w-3xl text-sm text-mut">
-            <Link href="/book" className="text-amber-ink hover:underline">
+            <Link href="/book" className="text-violet-ink hover:underline">
               The Measured Voice
             </Link>{" "}
             takes the same ground from the other side — how the voice works,

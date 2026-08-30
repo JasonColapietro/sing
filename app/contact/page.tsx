@@ -33,7 +33,7 @@ export default function ContactPage() {
           Email{" "}
           <a
             href="mailto:support@suedeai.ai"
-            className="text-amber-ink underline underline-offset-4"
+            className="text-violet-ink underline underline-offset-4"
           >
             support@suedeai.ai
           </a>{" "}

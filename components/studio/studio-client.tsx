@@ -255,12 +255,12 @@ export function StudioClient() {
       }
     >
       {toast && (
-        <Card className="mb-6 border-amber/40 bg-panel2">
+        <Card className="mb-6 border-violet/40 bg-panel2">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-3">
               {toast.log ? (
                 <>
-                  <span className="tabular font-mono text-xl text-amber-ink">
+                  <span className="tabular font-mono text-xl text-violet-ink">
                     +{toast.log.xpGained} XP
                   </span>
                   <span className="text-sm text-mut">Session saved.</span>
@@ -272,7 +272,7 @@ export function StudioClient() {
                 </span>
               )}
               {toast.locks > 0 && (
-                <Pill tone={toast.newBest ? "ok" : "amber"}>
+                <Pill tone={toast.newBest ? "ok" : "violet"}>
                   <span className="tabular font-mono">{toast.locks}</span>
                   {toast.newBest ? " locked · new personal best" : " locked"}
                 </Pill>
@@ -298,7 +298,7 @@ export function StudioClient() {
       {!listening ? (
         <>
           <Card className="mx-auto max-w-2xl py-10 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-line2 bg-panel2 text-amber-ink">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-line2 bg-panel2 text-violet-ink">
               <MicIcon />
             </div>
             <h2 className="mt-5 text-2xl">The voice oscilloscope</h2>
@@ -355,7 +355,7 @@ export function StudioClient() {
                   key={name}
                   className="rounded-xl border border-line bg-panel2 p-4"
                 >
-                  <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
+                  <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
                     {name}
                   </h3>
                   <p className="mt-2 text-sm text-mut">{desc}</p>

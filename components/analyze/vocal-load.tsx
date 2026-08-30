@@ -64,7 +64,7 @@ export function VocalLoad({
         <Stat
           label="Cycle dose"
           value={<span ref={cyclesRef}>{fmtCycles(t.cycles)}</span>}
-          tone="amber"
+          tone="violet"
           sub="vocal-fold vibrations, pitch × time"
         />
       </div>
@@ -77,7 +77,7 @@ export function VocalLoad({
           {days.map((d) => (
             <div key={d.day} className="flex flex-1 flex-col items-center gap-1.5">
               <div
-                className="w-full rounded-sm bg-amber/70"
+                className="w-full rounded-sm bg-violet/70"
                 style={{ height: `${Math.max(2, (d.cycles / peak) * 56)}px` }}
               />
               <span className="font-mono text-[10px] text-dim">

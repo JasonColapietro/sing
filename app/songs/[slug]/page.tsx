@@ -216,8 +216,8 @@ export default async function SongPage({
       <div className="space-y-6">
         {/* The one thing a visitor came to do, or the reason they can't yet. */}
         {pro ? (
-          <Card className="border-amber/40">
-            <SectionLabel className="border-amber/40 text-amber-ink">
+          <Card className="border-violet/40">
+            <SectionLabel className="border-violet/40 text-violet-ink">
               Included with Pro
             </SectionLabel>
             <h2 className="mt-3 text-xl">
@@ -279,7 +279,7 @@ export default async function SongPage({
                   <li key={other.slug}>
                     <Link
                       href={`/songs/${other.slug}`}
-                      className="flex flex-wrap items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-amber"
+                      className="flex flex-wrap items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
                     >
                       <span className="text-sm font-medium">{other.title}</span>
                       <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim">

@@ -176,7 +176,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
             viewBox="0 0 16 16"
             fill="none"
             aria-hidden="true"
-            className="text-amber-ink"
+            className="text-violet-ink"
           >
             <path
               d="M6 2h4l2.5 12h-9L6 2Z"
@@ -207,7 +207,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
           <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             Tempo
           </div>
-          <div className="tabular font-mono text-4xl text-amber-ink">
+          <div className="tabular font-mono text-4xl text-violet-ink">
             {bpm}
             <span className="ml-1.5 text-sm text-mut">BPM</span>
           </div>
@@ -228,7 +228,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
                 running && i === beat
                   ? i === 0
                     ? "border-rec bg-rec shadow-[0_0_12px_rgba(157, 63, 51,0.75)]"
-                    : "border-amber bg-amber shadow-[0_0_10px_rgba(197, 150, 66,0.65)]"
+                    : "border-violet bg-violet shadow-[0_0_10px_rgba(197, 150, 66,0.65)]"
                   : "border-line2 bg-panel"
               }`}
             />
@@ -249,7 +249,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
           step={1}
           value={bpm}
           onChange={(e) => applyBpm(Number(e.target.value))}
-          className="accent-amber h-6 min-w-40 flex-1 cursor-pointer"
+          className="accent-violet h-6 min-w-40 flex-1 cursor-pointer"
         />
         <label htmlFor="met-bpm-num" className="sr-only">
           Tempo, exact value
@@ -291,7 +291,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
               onClick={() => setSig(s.id)}
               className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                 sig === s.id
-                  ? "border-amber bg-panel2 text-amber-ink"
+                  ? "border-violet bg-panel2 text-violet-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
               }`}
             >
@@ -320,7 +320,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
               onClick={() => setSub(o.id)}
               className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                 sub === o.id
-                  ? "border-amber bg-panel2 text-amber-ink"
+                  ? "border-violet bg-panel2 text-violet-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
               }`}
             >
@@ -336,7 +336,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
             Stop metronome
           </Button>
         ) : (
-          <Button variant="amber" onClick={start}>
+          <Button variant="violet" onClick={start}>
             Start metronome
           </Button>
         )}

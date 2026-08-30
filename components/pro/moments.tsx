@@ -182,11 +182,11 @@ export default function ProMoments() {
         role="dialog"
         aria-modal="true"
         aria-label="Go Pro"
-        className="animate-fadeup relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-amber bg-panel p-6 sm:p-8"
+        className="animate-fadeup relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-violet bg-panel p-6 sm:p-8"
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-soft via-amber to-amber-soft"
+          className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet via-violet to-violet"
         />
         <div className="flex items-center gap-2">
           <ProChip />
@@ -210,7 +210,7 @@ export default function ProMoments() {
               key={line}
               className="flex items-start gap-2.5 text-sm text-mut"
             >
-              <span aria-hidden className="mt-0.5 font-mono text-amber-ink">
+              <span aria-hidden className="mt-0.5 font-mono text-violet-ink">
                 ✓
               </span>
               {line}
@@ -218,7 +218,7 @@ export default function ProMoments() {
           ))}
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Button variant="amber" size="md" onClick={goPro}>
+          <Button variant="violet" size="md" onClick={goPro}>
             {`Go Pro: ${proHeadline()}`}
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>

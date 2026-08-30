@@ -3,14 +3,14 @@ import type { ActivityType, SessionLog } from "@/lib/progress";
 /** Route + display metadata for each activity type. */
 export const TYPE_META: Record<
   ActivityType,
-  { label: string; href: string; tone: "mut" | "amber" | "rec" | "ok" | "cool" }
+  { label: string; href: string; tone: "mut" | "violet" | "rec" | "ok" | "cool" }
 > = {
-  warmup: { label: "Warmup", href: "/warmups", tone: "amber" },
-  pitch: { label: "Pitch", href: "/studio", tone: "amber" },
+  warmup: { label: "Warmup", href: "/warmups", tone: "violet" },
+  pitch: { label: "Pitch", href: "/studio", tone: "violet" },
   range: { label: "Range", href: "/range", tone: "cool" },
   ear: { label: "Ear", href: "/ear-training", tone: "cool" },
   breath: { label: "Breath", href: "/breath", tone: "ok" },
-  song: { label: "Song", href: "/songs", tone: "amber" },
+  song: { label: "Song", href: "/songs", tone: "violet" },
   recording: { label: "Recording", href: "/recorder", tone: "rec" },
   tools: { label: "Tools", href: "/tools", tone: "mut" },
   analyze: { label: "Analyze", href: "/analyze", tone: "cool" },

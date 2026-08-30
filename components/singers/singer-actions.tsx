@@ -34,7 +34,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
 
   if (youLow === undefined || youHigh === undefined) {
     return (
-      <Card className="border-amber/40">
+      <Card className="border-violet/40">
         <SectionLabel>You vs {s.name}</SectionLabel>
         <p className="mt-3 max-w-xl text-sm text-mut">
           Take the free 2-minute range test — your mic finds your lowest and
@@ -71,8 +71,8 @@ export function CompareWithMe({ s }: { s: Singer }) {
       who: "You",
       low: youLow,
       high: youHigh,
-      cls: "bg-amber",
-      text: "text-amber-ink font-semibold",
+      cls: "bg-violet",
+      text: "text-violet-ink font-semibold",
     },
   ];
 
@@ -81,7 +81,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
       <SectionLabel>You vs {s.name}</SectionLabel>
       <h2 className="mt-3 text-xl">
         Your range covers{" "}
-        <span className="text-amber-ink">{coverage}%</span> of {s.name}
+        <span className="text-violet-ink">{coverage}%</span> of {s.name}
         &rsquo;s
       </h2>
       <p className="mt-2 text-sm text-mut">

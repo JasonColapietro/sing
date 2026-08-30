@@ -14,7 +14,7 @@ import type { SessionSummaryData } from "./lib";
 
 const TONE_TEXT: Record<Tone, string> = {
   ok: "text-ok-ink",
-  amber: "text-amber-ink",
+  violet: "text-violet-ink",
   rec: "text-rec",
 };
 
@@ -22,13 +22,13 @@ const TONE_TEXT: Record<Tone, string> = {
 export interface ResultStat {
   label: string;
   value: string;
-  tone?: "ink" | "cool" | "amber";
+  tone?: "ink" | "cool" | "violet";
 }
 
 const STAT_TONE: Record<NonNullable<ResultStat["tone"]>, string> = {
   ink: "text-ink",
   cool: "text-cool",
-  amber: "text-amber-ink",
+  violet: "text-violet-ink",
 };
 
 /** "C" or "G# (+3)" — the key isn't meaningful without noting a shift from the default. */
@@ -123,7 +123,7 @@ export function ShareableResult({
   }
 
   return (
-    <Card className="border-amber/30">
+    <Card className="border-violet/30">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <SectionLabel>Suede Sing</SectionLabel>
@@ -132,7 +132,7 @@ export function ShareableResult({
         </div>
         <div className="text-right">
           <div className={`text-5xl ${TONE_TEXT[grade.tone]}`}>{grade.grade}</div>
-          <div className="tabular mt-1 font-mono text-lg tracking-wider text-amber-ink" aria-hidden="true">
+          <div className="tabular mt-1 font-mono text-lg tracking-wider text-violet-ink" aria-hidden="true">
             {starGlyphs(grade.stars)}
           </div>
           <span className="sr-only">{starRatingLabel(grade.stars)}</span>

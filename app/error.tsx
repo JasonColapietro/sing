@@ -29,7 +29,7 @@ export default function Error({
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-24 text-center sm:px-6">
-      <p className="font-mono text-xs uppercase tracking-[0.14em] text-amber-ink">
+      <p className="font-mono text-xs uppercase tracking-[0.14em] text-violet-ink">
         Something broke
       </p>
       <h1 className="mt-4 text-3xl sm:text-4xl">This room stopped working</h1>

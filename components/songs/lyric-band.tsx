@@ -45,7 +45,7 @@ const SIZES = {
 
 /**
  * Karaoke lyric band: the current line large, the next line previewed under
- * it, and the active syllable wiping amber left-to-right in time with the
+ * it, and the active syllable wiping violet left-to-right in time with the
  * music.
  *
  * The wipe is a per-syllable overlay whose width is written straight to the DOM
@@ -153,7 +153,7 @@ export function LyricBand({
                     ref={(el) => {
                       fillsRef.current[slot] = el;
                     }}
-                    className="absolute inset-y-0 left-0 w-0 overflow-hidden whitespace-nowrap text-amber-ink"
+                    className="absolute inset-y-0 left-0 w-0 overflow-hidden whitespace-nowrap text-violet-ink"
                   >
                     {syllable.text}
                   </span>

@@ -213,7 +213,7 @@ export function MelodyEchoGame({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-mut">
             {phase === "listen" && (
-              <span className="text-amber-ink animate-recblink">Listen to the melody…</span>
+              <span className="text-violet-ink animate-recblink">Listen to the melody…</span>
             )}
             {phase === "sing" &&
               `Sing it back — ${melody?.length ?? 0} notes, one at a time.`}
@@ -260,7 +260,7 @@ export function MelodyEchoGame({
             </div>
             <ProgressBar
               value={100 - (leftMs / windowMsFor(melody)) * 100}
-              tone="amber"
+              tone="violet"
             />
             <Button variant="outline" size="sm" onClick={finishSinging}>
               I&apos;m done
@@ -297,10 +297,10 @@ export function MelodyEchoGame({
               message={
                 correct
                   ? "You echoed the whole melody."
-                  : "Compare the amber blocks with the outlines above, then try the next one."
+                  : "Compare the violet blocks with the outlines above, then try the next one."
               }
             />
-            <Button variant="amber" onClick={next}>
+            <Button variant="violet" onClick={next}>
               Next round
               <span className="font-mono text-xs opacity-70" aria-hidden="true">Enter</span>
             </Button>

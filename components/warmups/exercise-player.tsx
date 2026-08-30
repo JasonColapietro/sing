@@ -555,14 +555,14 @@ export function ExercisePlayer({
         </button>
         <div className="flex items-center gap-2">
           <Pill tone="mut">Rep {repIndex + 1}</Pill>
-          <Pill tone={climbing ? "amber" : "cool"}>
+          <Pill tone={climbing ? "violet" : "cool"}>
             {climbing ? "Climbing" : "Descending"}{" "}
             <span aria-hidden="true">{climbing ? "↑" : "↓"}</span>
           </Pill>
         </div>
       </div>
       {/* Height in the ladder, not session completion — it rises to the top note and falls back. */}
-      <ProgressBar value={ladderHeightPct(ladderIndex, roots.length)} tone="amber" />
+      <ProgressBar value={ladderHeightPct(ladderIndex, roots.length)} tone="violet" />
 
       {/*
        * The container carries the stage, not just a word inside it.
@@ -601,7 +601,7 @@ export function ExercisePlayer({
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Root
             </div>
-            <div className="tabular mt-1 font-mono text-3xl font-bold text-amber-ink">
+            <div className="tabular mt-1 font-mono text-3xl font-bold text-violet-ink">
               {midiToLabel(currentRoot)}
             </div>
           </div>
@@ -636,7 +636,7 @@ export function ExercisePlayer({
               <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Cents off
               </div>
-              <div className="tabular mt-1 font-mono text-2xl text-amber-ink">
+              <div className="tabular mt-1 font-mono text-2xl text-violet-ink">
                 {currentCents !== null ? (currentCents > 0 ? `+${currentCents}` : currentCents) : "—"}
               </div>
             </div>
@@ -644,7 +644,7 @@ export function ExercisePlayer({
           {lastOutcome === "silent" && <Pill tone="mut">No sound picked up</Pill>}
           {lastOutcome === "scored" && lastResult && (
             <div className="flex flex-1 flex-wrap items-center gap-4">
-              <Pill tone={lastResult.skipped ? "mut" : lastResult.score >= 80 ? "ok" : "amber"}>
+              <Pill tone={lastResult.skipped ? "mut" : lastResult.score >= 80 ? "ok" : "violet"}>
                 {lastResult.skipped ? "Skipped" : `Rep score ${lastResult.score}%`}
               </Pill>
               {!lastResult.skipped && (
@@ -680,7 +680,7 @@ export function ExercisePlayer({
                 onClick={() => changeMode(m)}
                 aria-pressed={mode === m}
                 className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
-                  mode === m ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
+                  mode === m ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
                 }`}
               >
                 {MODE_LABELS[m]}
@@ -706,7 +706,7 @@ export function ExercisePlayer({
               value={guidePct}
               aria-valuetext={guidePct === 0 ? "Off" : `${guidePct} percent`}
               onChange={(e) => changeGuidePct(Number(e.target.value))}
-              className="min-w-0 flex-1 cursor-pointer accent-amber"
+              className="min-w-0 flex-1 cursor-pointer accent-violet"
             />
             <span className="tabular w-9 shrink-0 text-right font-mono text-xs text-mut">
               {guidePct === 0 ? "Off" : `${guidePct}%`}
@@ -719,7 +719,7 @@ export function ExercisePlayer({
             aria-pressed={click}
             title="Count-in clicks before every scored window"
             className={`inline-flex items-center gap-1.5 rounded-full border border-line2 px-2.5 py-1 font-mono text-xs ${
-              click ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
+              click ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
             }`}
           >
             <IconMetronome /> Click
@@ -763,7 +763,7 @@ export function ExercisePlayer({
                 onClick={() => changeTempo(tv)}
                 aria-pressed={tempo === tv}
                 className={`rounded-full px-2.5 py-1 font-mono text-xs ${
-                  tempo === tv ? "bg-panel2 text-amber-ink" : "text-mut hover:text-ink"
+                  tempo === tv ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
                 }`}
               >
                 {tv}×

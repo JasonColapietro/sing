@@ -16,7 +16,7 @@ export function SectionLabel({
   return (
     <span
       className={cn(
-        "inline-block rounded border border-line bg-panel px-2 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-mut",
+        "inline-block rounded border border-violet/35 bg-panel px-2 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-violet-ink",
         className,
       )}
     >
@@ -121,7 +121,7 @@ export function Card({
         tone === "well"
           ? "well"
           : tone === "raised"
-            ? "lift border border-line bg-panel hover:border-amber/50"
+            ? "lift border border-line bg-panel hover:border-violet/50"
             : "border border-line bg-panel",
         pad && "p-5 sm:p-6",
         className,
@@ -132,15 +132,15 @@ export function Card({
   );
 }
 
-type ButtonVariant = "rec" | "amber" | "outline" | "ghost";
+type ButtonVariant = "rec" | "violet" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
 const buttonBase =
   "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40";
 const buttonVariants: Record<ButtonVariant, string> = {
   rec: "bg-rec text-[#fffaf2] hover:bg-[#b5493d]",
-  amber: "bg-amber text-[#241a05] hover:bg-amber-soft",
-  outline: "border border-line2 text-ink hover:border-amber hover:text-amber-ink",
+  violet: "bg-violet-ink text-white hover:bg-violet",
+  outline: "border border-line2 text-ink hover:border-violet hover:text-violet-ink",
   ghost: "text-mut hover:text-ink hover:bg-panel2",
 };
 const buttonSizes: Record<ButtonSize, string> = {
@@ -150,7 +150,7 @@ const buttonSizes: Record<ButtonSize, string> = {
 };
 
 export function Button({
-  variant = "amber",
+  variant = "violet",
   size = "md",
   className,
   ...props
@@ -168,7 +168,7 @@ export function Button({
 
 export function LinkButton({
   href,
-  variant = "amber",
+  variant = "violet",
   size = "md",
   className,
   children,
@@ -198,11 +198,11 @@ export function Stat({
   label: string;
   value: ReactNode;
   sub?: string;
-  tone?: "ink" | "amber" | "rec" | "ok" | "cool";
+  tone?: "ink" | "violet" | "rec" | "ok" | "cool";
 }) {
   const tones = {
     ink: "text-ink",
-    amber: "text-amber-ink",
+    violet: "text-violet-ink",
     rec: "text-rec",
     ok: "text-ok-ink",
     cool: "text-cool",
@@ -225,11 +225,11 @@ export function Pill({
   tone = "mut",
 }: {
   children: ReactNode;
-  tone?: "mut" | "amber" | "rec" | "ok" | "cool";
+  tone?: "mut" | "violet" | "rec" | "ok" | "cool";
 }) {
   const tones = {
     mut: "border-line text-mut",
-    amber: "border-amber/40 text-amber-ink",
+    violet: "border-violet/40 text-violet-ink",
     rec: "border-rec/40 text-rec",
     ok: "border-ok/40 text-ok-ink",
     cool: "border-cool/40 text-cool",
@@ -254,15 +254,15 @@ export function ProgressBar({
   value: number; // 0..100
   /**
    * `neutral` is the default because a progress bar is almost never a paid
-   * surface, and amber has to mean one thing. Pass "amber" deliberately on Pro
+   * surface, and violet has to mean one thing. Pass "violet" deliberately on Pro
    * surfaces; the rest of the app reads better with a bar that recedes.
    */
-  tone?: "neutral" | "amber" | "rec" | "ok" | "cool";
+  tone?: "neutral" | "violet" | "rec" | "ok" | "cool";
   className?: string;
 }) {
   const tones = {
     neutral: "bg-ink/25",
-    amber: "bg-amber",
+    violet: "bg-violet",
     rec: "bg-rec",
     ok: "bg-ok",
     cool: "bg-cool",

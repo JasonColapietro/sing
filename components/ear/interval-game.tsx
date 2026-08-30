@@ -148,7 +148,7 @@ export function IntervalGame({
                       ? "border-rec/50 bg-panel2 text-rec"
                       : answered !== null
                         ? "border-line text-dim"
-                        : "border-line2 text-ink hover:border-amber hover:text-amber-ink"
+                        : "border-line2 text-ink hover:border-violet hover:text-violet-ink"
                 }`}
               >
                 <span>{INTERVAL_NAMES[semi]}</span>
@@ -170,7 +170,7 @@ export function IntervalGame({
                   : `It was a ${INTERVAL_NAMES[round.semi].toLowerCase()}.`
               }
             />
-            <Button variant="amber" onClick={next}>
+            <Button variant="violet" onClick={next}>
               Next round
               <span className="font-mono text-xs opacity-70" aria-hidden="true">
                 Enter

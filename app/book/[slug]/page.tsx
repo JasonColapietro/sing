@@ -88,7 +88,7 @@ export default async function ChapterPage({
                   Next up:{" "}
                   <Link
                     href={`/book/${next.slug}`}
-                    className="text-amber-ink hover:underline"
+                    className="text-violet-ink hover:underline"
                   >
                     {next.title}
                   </Link>

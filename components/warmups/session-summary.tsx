@@ -18,7 +18,7 @@ import { TOLERANCE_CENTS } from "./scoring";
 import { MODE_LABELS } from "./prefs";
 import { sungReps, type SessionSummaryData } from "./lib";
 
-/** Under this a rep didn't hold — the amber floor the whole page reads from. */
+/** Under this a rep didn't hold — the violet floor the whole page reads from. */
 const HELD_FLOOR = 50;
 
 /**
@@ -31,15 +31,15 @@ const HELD_FLOOR = 50;
  */
 const MAX_LISTED_REPS = 12;
 
-function scoreTone(score: number): "ok" | "amber" | "rec" {
+function scoreTone(score: number): "ok" | "violet" | "rec" {
   if (score >= 80) return "ok";
-  if (score >= HELD_FLOOR) return "amber";
+  if (score >= HELD_FLOOR) return "violet";
   return "rec";
 }
 
 const TONE_TEXT: Record<Tone, string> = {
   ok: "text-ok-ink",
-  amber: "text-amber-ink",
+  violet: "text-violet-ink",
   rec: "text-rec",
 };
 
@@ -138,7 +138,7 @@ export function SessionSummary({
           <div className="mt-3 flex items-center gap-2">
             <span
               aria-hidden="true"
-              className="tabular font-mono text-base tracking-wider text-amber-ink"
+              className="tabular font-mono text-base tracking-wider text-violet-ink"
             >
               {starGlyphs(grade.stars)}
             </span>
@@ -274,11 +274,11 @@ export function SessionSummary({
       <Card>
         <SectionLabel>Keep going</SectionLabel>
         <h3 className="mt-3 text-lg">
-          Next up: <span className="text-amber-ink">{nextEx.title}</span>
+          Next up: <span className="text-violet-ink">{nextEx.title}</span>
         </h3>
         <p className="mt-1.5 max-w-md text-sm text-mut">{nextEx.desc}</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Button variant="amber" onClick={() => onNext(nextEx.id)}>
+          <Button variant="violet" onClick={() => onNext(nextEx.id)}>
             Next exercise
           </Button>
           <Button variant="outline" onClick={onLibrary}>

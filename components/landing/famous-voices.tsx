@@ -96,7 +96,7 @@ export function FamousVoices() {
           </div>
           <Link
             href="/singers"
-            className="font-mono text-xs uppercase tracking-[0.14em] text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+            className="font-mono text-xs uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
           >
             Browse every voice
           </Link>
@@ -107,10 +107,10 @@ export function FamousVoices() {
             <li key={singer.slug}>
               <Link
                 href={`/singers/${singer.slug}`}
-                className="lift group flex items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 hover:border-amber/50"
+                className="lift group flex items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 hover:border-violet/50"
               >
                 <span className="min-w-0">
-                  <span className="block truncate text-ink group-hover:text-amber-ink">
+                  <span className="block truncate text-ink group-hover:text-violet-ink">
                     {singer.name}
                   </span>
                   <span className="mt-0.5 block text-xs text-dim">

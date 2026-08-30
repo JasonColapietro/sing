@@ -15,7 +15,7 @@ export function AtlasEntryCard({ entry }: { entry: AtlasEntry }) {
         <h3 className="text-lg font-semibold">
           <Link
             href={`/singers/${entry.slug}`}
-            className="transition-colors hover:text-amber-ink"
+            className="transition-colors hover:text-violet-ink"
           >
             {entry.name}
           </Link>
@@ -31,7 +31,7 @@ export function AtlasEntryCard({ entry }: { entry: AtlasEntry }) {
       <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-dim">
         <Pill tone="cool">{entry.voiceType}</Pill>
         {entry.belt && <Pill tone="rec">full voice to {entry.belt}</Pill>}
-        {entry.whistle && <Pill tone="amber">whistle register</Pill>}
+        {entry.whistle && <Pill tone="violet">whistle register</Pill>}
         <span>
           {entry.country} · prominent since {entry.activeFrom} · known for
           &ldquo;{entry.signatureSong}&rdquo;

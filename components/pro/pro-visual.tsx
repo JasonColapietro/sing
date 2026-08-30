@@ -61,7 +61,7 @@ const BAND = `${HIGH_LINE} ${LOW_LINE.split(" ").reverse().join(" ")}`;
  */
 export default function ProVisual() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-amber/40 bg-panel">
+    <div className="overflow-hidden rounded-2xl border border-violet/40 bg-panel">
       <div className="flex items-center justify-between border-b border-line bg-panel2 px-4 py-2.5">
         <span className="flex items-center gap-2">
           <ProChip />
@@ -218,7 +218,7 @@ export default function ProVisual() {
 
       <div className="flex items-center justify-between border-t border-line px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em]">
         <span className="text-dim">Tomorrow: head-voice builder, 12 min</span>
-        <span className="text-amber-ink">Accuracy 87%</span>
+        <span className="text-violet-ink">Accuracy 87%</span>
       </div>
     </div>
   );

@@ -78,12 +78,12 @@ function MiniKeyboard({
                 selected
                   ? locked
                     ? "bg-ok"
-                    : "bg-amber"
+                    : "bg-violet"
                   : "bg-key-white hover:bg-key-white-hover"
               }`}
             >
               {/* Only the C keys are lettered. mut reads on the ivory key but
-                  washes out on the amber or green one it becomes when picked. */}
+                  washes out on the violet or green one it becomes when picked. */}
               <span
                 className={`font-mono text-[10px] ${selected ? "text-ink" : "text-mut"}`}
               >
@@ -109,7 +109,7 @@ function MiniKeyboard({
               selected
                 ? locked
                   ? "bg-ok"
-                  : "bg-amber"
+                  : "bg-violet"
                 : "bg-key-black hover:bg-key-black-hover"
             }`}
           />
@@ -251,14 +251,14 @@ export function TargetPractice({
             <span className="tabular font-mono">{hits}</span> locked
           </Pill>
           {combo >= 2 && (
-            <Pill tone="amber">
+            <Pill tone="violet">
               <span className="tabular font-mono">{combo}</span> in a row
             </Pill>
           )}
         </div>
         <div className="flex items-center gap-2">
           <Button
-            variant={shuffle ? "amber" : "outline"}
+            variant={shuffle ? "violet" : "outline"}
             size="sm"
             aria-pressed={shuffle}
             onClick={() => setShuffle((s) => !s)}
@@ -324,7 +324,7 @@ export function TargetPractice({
                   {lockFlash ? (
                     <Pill tone="ok">Locked</Pill>
                   ) : offset !== null ? (
-                    <Pill tone={within ? "ok" : "amber"}>
+                    <Pill tone={within ? "ok" : "violet"}>
                       <span className="tabular font-mono">
                         {offset > 0 ? "+" : ""}
                         {offset}

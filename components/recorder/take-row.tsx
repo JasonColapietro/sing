@@ -87,7 +87,7 @@ export function TakeRow({
     <li
       className={cn(
         "rounded-xl border p-3 transition-colors",
-        selected ? "border-amber/50 bg-panel2" : "border-line bg-panel hover:border-line2",
+        selected ? "border-violet/50 bg-panel2" : "border-line bg-panel hover:border-line2",
       )}
       onClick={onSelect}
       aria-current={selected || undefined}
@@ -98,8 +98,8 @@ export function TakeRow({
           className={cn(
             "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors",
             playing
-              ? "border-amber bg-amber text-[#241a05]"
-              : "border-line2 text-ink hover:border-amber hover:text-amber-ink",
+              ? "border-violet bg-violet text-[#241a05]"
+              : "border-line2 text-ink hover:border-violet hover:text-violet-ink",
           )}
           aria-label={playing ? `Pause ${take.name}` : `Play ${take.name}`}
           onClick={(e) => {
@@ -132,7 +132,7 @@ export function TakeRow({
           ) : (
             <button
               type="button"
-              className="tabular block max-w-full truncate rounded font-mono text-sm text-ink hover:text-amber-ink"
+              className="tabular block max-w-full truncate rounded font-mono text-sm text-ink hover:text-violet-ink"
               title="Rename take"
               aria-label={`Rename ${take.name}`}
               onClick={(e) => {
@@ -152,7 +152,7 @@ export function TakeRow({
               <>
                 <span aria-hidden="true">·</span>
                 <span
-                  className="flex items-center gap-0.5 text-amber-ink"
+                  className="flex items-center gap-0.5 text-violet-ink"
                   aria-label={`Self-rating ${take.rating} of 5`}
                 >
                   {[1, 2, 3, 4, 5].map((n) => (
@@ -168,7 +168,7 @@ export function TakeRow({
           type="button"
           className={cn(
             "shrink-0 rounded-full p-1.5 transition-colors",
-            take.starred ? "text-amber-ink" : "text-dim hover:text-amber-ink",
+            take.starred ? "text-violet-ink" : "text-dim hover:text-violet-ink",
           )}
           aria-label={take.starred ? `Unstar ${take.name}` : `Star ${take.name}`}
           aria-pressed={take.starred}
@@ -189,7 +189,7 @@ export function TakeRow({
 
       {progress > 0 && (
         <div className="mt-2 pl-12">
-          <ProgressBar value={progress * 100} tone="amber" />
+          <ProgressBar value={progress * 100} tone="violet" />
         </div>
       )}
 
@@ -209,7 +209,7 @@ export function TakeRow({
           </button>
           <button
             type="button"
-            className="rounded-full border border-line2 px-2.5 py-1 text-ink hover:border-amber"
+            className="rounded-full border border-line2 px-2.5 py-1 text-ink hover:border-violet"
             onClick={(e) => {
               e.stopPropagation();
               setArmed(false);

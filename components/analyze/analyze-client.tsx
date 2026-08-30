@@ -193,7 +193,7 @@ export default function AnalyzeClient() {
             <div className="mb-4 flex items-center justify-between">
               <SectionLabel>Tone</SectionLabel>
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                Ring band <span ref={ringRef} className="text-amber-ink">0.0%</span>
+                Ring band <span ref={ringRef} className="text-violet-ink">0.0%</span>
               </span>
             </div>
             <Tone

@@ -66,12 +66,12 @@ export default function ToolsPage() {
               <li key={href}>
                 <Link
                   href={href}
-                  className="group flex h-full flex-col rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-amber/50 sm:p-6"
+                  className="group flex h-full flex-col rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-violet/50 sm:p-6"
                 >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-amber-ink">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-violet-ink">
                     <Glyph />
                   </span>
-                  <span className="mt-4 block text-xl text-ink group-hover:text-amber-ink">
+                  <span className="mt-4 block text-xl text-ink group-hover:text-violet-ink">
                     {label}
                   </span>
                   <span className="mt-1 block text-sm text-mut">{desc}</span>
