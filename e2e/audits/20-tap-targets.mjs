@@ -166,6 +166,8 @@ function gatherTapTargets({ selector, isTouch }) {
     selector: window.__describe(el),
     width: hit.width,
     height: hit.height,
+    liveWidth: hit.liveWidth,
+    liveHeight: hit.liveHeight,
     dead: hit.dead,
     minimumTargetFits: hit.minimumTargetFits,
   }));
@@ -265,16 +267,27 @@ export async function run(ctx) {
   };
 
   for (const target of targets) {
-    const nominal = Math.min(target.width, target.height);
-    const w = Math.round(target.width);
-    const h = Math.round(target.height);
+    // Measure what the browser accepts a press on, not the CSS box. A native
+    // range input styled to a 6px track draws a thumb larger than its own box,
+    // and that thumb hit-tests back to the input -- the box says 6px, the
+    // control answers across 16. Falls back to the box wherever the live
+    // measurement was not taken or came back smaller.
+    const liveW = Math.max(target.width, target.liveWidth ?? 0);
+    const liveH = Math.max(target.height, target.liveHeight ?? 0);
+    const nominal = Math.min(liveW, liveH);
+    const w = Math.round(liveW);
+    const h = Math.round(liveH);
+    const boxDiffers = Math.round(target.width) !== w || Math.round(target.height) !== h;
 
     if (nominal < 24) {
       if (once("size", target.selector)) {
         findings.push({
           severity: "major",
           summary: "Target is under the WCAG 2.2 AA 24x24px minimum (2.5.8)",
-          detail: `${target.selector} measures ${w}x${h}px — under 24px on at least one axis.`,
+          detail: `${target.selector} measures ${w}x${h}px — under 24px on at least one axis.` +
+            (boxDiffers
+              ? ` Measured from where it actually responds to a press; its CSS box is ${Math.round(target.width)}x${Math.round(target.height)}px, and the control draws outside it.`
+              : ""),
           selector: target.selector,
         });
       }

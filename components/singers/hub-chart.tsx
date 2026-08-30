@@ -27,7 +27,11 @@ export function HubChart({
 
   return (
     <div>
-      <div className="sm:grid sm:grid-cols-[11rem_minmax(0,1fr)_5.5rem] sm:items-center sm:gap-x-4">
+      {/* Columns capped as a share of the row as well as in rem, for the same
+          reason as the directory's ROW_GRID: at 200% text zoom the rem values
+          double and squeeze this ruler to about 48px, stacking every octave
+          label on the same pixels. The caps never bind at normal sizes. */}
+      <div className="sm:grid sm:grid-cols-[min(11rem,40%)_minmax(0,1fr)_min(5.5rem,20%)] sm:items-center sm:gap-x-4">
         <span className="hidden font-mono text-[10px] uppercase tracking-[0.14em] text-dim sm:block">
           low → high
         </span>

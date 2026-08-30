@@ -249,7 +249,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
           step={1}
           value={bpm}
           onChange={(e) => applyBpm(Number(e.target.value))}
-          className="accent-amber h-1.5 min-w-40 flex-1 cursor-pointer"
+          className="accent-amber h-6 min-w-40 flex-1 cursor-pointer"
         />
         <label htmlFor="met-bpm-num" className="sr-only">
           Tempo, exact value

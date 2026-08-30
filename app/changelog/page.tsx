@@ -32,8 +32,13 @@ export const metadata: Metadata = {
   },
 };
 
+// py-0.5 is not decoration: these are standalone calls to action in a row of
+// their own, not links inside a sentence, so WCAG 2.5.8's inline exception does
+// not cover them and a 20px line box is under the 24px minimum. The padding
+// raises the press target to 24px; the underline sits on the text and does not
+// move with it.
 const linkClass =
-  "text-sm text-ink underline decoration-line2 underline-offset-4 transition-colors hover:decoration-ink";
+  "inline-block py-0.5 text-sm text-ink underline decoration-line2 underline-offset-4 transition-colors hover:decoration-ink";
 
 /** The five v2 stories, told in the order a singer meets them. */
 const STORIES: Array<{

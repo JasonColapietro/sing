@@ -157,7 +157,46 @@ export const HIT_PROBE = `
           r.bottom > pr.bottom + 1 || r.top < pr.top - 1) clippedByScroll = true;
     }
 
-    return { width: r.width, height: r.height, dead, minimumTargetFits, clippedByScroll };
+    /**
+     * What the browser will actually accept a press on.
+     *
+     * A native <input type=range> styled to a 6px track still draws a thumb
+     * bigger than its own box, and that thumb hit-tests back to the input --
+     * /tools' metronome slider reports a 6px box and responds across 16px.
+     * Reporting the box would describe a control four times harder to hit than
+     * it is. Only measured for elements that would otherwise be reported
+     * undersized, so the scan costs nothing on the common path.
+     */
+    let liveWidth = r.width, liveHeight = r.height;
+    if (r.width < 24 || r.height < 24) {
+      const owns = (x, y) => { const e = document.elementFromPoint(x, y); return e === el || el.contains(e); };
+      const grow = (probe) => {
+        let lo = 0, hi = 0;
+        while (lo > -30 && probe(lo - 1)) lo--;
+        while (hi < 30 && probe(hi + 1)) hi++;
+        return hi - lo + 1;
+      };
+      // Sample across the control rather than only through its centre. A
+      // slider's thumb sits wherever its current value puts it, so a single
+      // centre probe measures the 6px track and misses the 16px thumb beside
+      // it. The tallest response anywhere along the control is the target a
+      // person actually presses.
+      const fracs = [0.1, 0.25, 0.5, 0.75, 0.9];
+      if (r.height < 24) {
+        for (const f of fracs) {
+          const x = r.left + r.width * f;
+          liveHeight = Math.max(liveHeight, grow((d) => owns(x, (r.top + r.bottom) / 2 + d)));
+        }
+      }
+      if (r.width < 24) {
+        for (const f of fracs) {
+          const y = r.top + r.height * f;
+          liveWidth = Math.max(liveWidth, grow((d) => owns((r.left + r.right) / 2 + d, y)));
+        }
+      }
+    }
+
+    return { width: r.width, height: r.height, liveWidth, liveHeight, dead, minimumTargetFits, clippedByScroll };
   };
 })();
 `;
