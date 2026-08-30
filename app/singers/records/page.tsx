@@ -160,7 +160,9 @@ export default function RecordsPage() {
         </Card>
 
         <Card>
-          <SectionLabel>Widest cited span</SectionLabel>
+          <h2>
+            <SectionLabel>Widest cited span</SectionLabel>
+          </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             Measured from the lowest cited note to the highest, regardless of
             register. This is the number people mean by &ldquo;who has the
@@ -174,7 +176,9 @@ export default function RecordsPage() {
         </Card>
 
         <Card>
-          <SectionLabel>Deepest cited floor</SectionLabel>
+          <h2>
+            <SectionLabel>Deepest cited floor</SectionLabel>
+          </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             Very low notes are easier to claim than to use: below roughly F2 the
             voice loses volume fast, so many cited floors are audible only in
@@ -187,7 +191,9 @@ export default function RecordsPage() {
         </Card>
 
         <Card>
-          <SectionLabel>Highest cited ceiling</SectionLabel>
+          <h2>
+            <SectionLabel>Highest cited ceiling</SectionLabel>
+          </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             Nearly everything at the top of this list is whistle register or
             developed falsetto rather than full voice — a different mechanism
@@ -200,7 +206,9 @@ export default function RecordsPage() {
         </Card>
 
         <Card>
-          <SectionLabel>Highest full voice</SectionLabel>
+          <h2>
+            <SectionLabel>Highest full voice</SectionLabel>
+          </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             The more meaningful ranking for most singers: the top of the belted,
             chest-dominant register rather than the top of the whole range.
@@ -213,7 +221,9 @@ export default function RecordsPage() {
         </Card>
 
         <Card>
-          <SectionLabel>Whistle register</SectionLabel>
+          <h2>
+            <SectionLabel>Whistle register</SectionLabel>
+          </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             The singers here are documented using whistle register — a separate
             mechanism above the head voice, and the reason the top of this
@@ -253,7 +263,9 @@ export default function RecordsPage() {
         </Card>
 
         <Card>
-          <SectionLabel>Where you fit</SectionLabel>
+          <h2>
+            <SectionLabel>Where you fit</SectionLabel>
+          </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             None of these numbers is a target. The useful comparison is your own
             measured range against singers whose repertoire you actually want to

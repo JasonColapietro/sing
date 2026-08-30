@@ -2,6 +2,8 @@ import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { rangeLabel, spanOctaves, type Singer } from "@/lib/singers";
 
+const MAX_SINGERS_PER_SECTION = 24;
+
 /**
  * Static range chart for a hub page — same shared-axis reading as the main
  * directory, minus the filters and the localStorage overlay, so a hub stays a
@@ -24,6 +26,14 @@ export function HubChart({
   for (let m = Math.ceil(axisLow / 12) * 12; m <= axisHigh; m += 12) {
     octaveCs.push(m);
   }
+  const groups = Array.from(
+    { length: Math.ceil(list.length / MAX_SINGERS_PER_SECTION) },
+    (_, index) =>
+      list.slice(
+        index * MAX_SINGERS_PER_SECTION,
+        (index + 1) * MAX_SINGERS_PER_SECTION,
+      ),
+  );
 
   return (
     <div>
@@ -49,58 +59,74 @@ export function HubChart({
         <span className="hidden sm:block" />
       </div>
 
-      <ul className="mt-1 divide-y divide-line/50">
-        {list.map((s) => {
-          const left = pct(s.lowMidi);
-          const width = Math.max(0.8, pct(s.highMidi + 1) - left);
-          const beltPct =
-            s.beltMidi != null
-              ? ((s.beltMidi - s.lowMidi + 1) / (s.highMidi - s.lowMidi + 1)) * 100
-              : 100;
-          return (
-            <li key={s.slug} className="cv-auto">
-              <Link
-                href={`/singers/${s.slug}`}
-                aria-label={`${s.name}, ${s.voiceType}, cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`}
-                className="group block rounded-xl px-2 py-2.5 transition-colors hover:bg-panel sm:grid sm:grid-cols-[11rem_minmax(0,1fr)_5.5rem] sm:items-center sm:gap-x-4"
-              >
-                <span className="flex items-baseline justify-between gap-2 sm:block">
-                  <span className="block truncate text-sm font-medium text-ink">
-                    {s.name}
-                  </span>
-                  <span className="tabular shrink-0 font-mono text-[11px] text-mut sm:hidden">
-                    {rangeLabel(s)}
-                  </span>
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="relative mt-1.5 block h-6 sm:mt-0"
-                  style={{ backgroundImage: grid }}
-                >
-                  <span
-                    className="absolute inset-y-1 rounded-full bg-cool/30 transition-colors group-hover:bg-cool/45"
-                    style={{ left: `${left}%`, width: `${width}%` }}
+      {groups.map((group, groupIndex) => (
+        <section
+          key={group[0].slug}
+          aria-labelledby={`singer-chart-group-${groupIndex}`}
+          className="mt-4 first:mt-1"
+        >
+          <h3
+            id={`singer-chart-group-${groupIndex}`}
+            className="font-mono text-[10px] uppercase tracking-[0.14em] text-dim"
+          >
+            Singers {group[0].name} through {group[group.length - 1].name}
+          </h3>
+          <ul className="mt-1 divide-y divide-line/50">
+            {group.map((s) => {
+              const left = pct(s.lowMidi);
+              const width = Math.max(0.8, pct(s.highMidi + 1) - left);
+              const beltPct =
+                s.beltMidi != null
+                  ? ((s.beltMidi - s.lowMidi + 1) /
+                      (s.highMidi - s.lowMidi + 1)) *
+                    100
+                  : 100;
+              return (
+                <li key={s.slug} className="cv-auto">
+                  <Link
+                    href={`/singers/${s.slug}`}
+                    aria-label={`${s.name}, ${s.voiceType}, cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`}
+                    className="group block rounded-xl px-2 py-2.5 transition-colors hover:bg-panel sm:grid sm:grid-cols-[11rem_minmax(0,1fr)_5.5rem] sm:items-center sm:gap-x-4"
                   >
+                    <span className="flex items-baseline justify-between gap-2 sm:block">
+                      <span className="block truncate text-sm font-medium text-ink">
+                        {s.name}
+                      </span>
+                      <span className="tabular shrink-0 font-mono text-[11px] text-mut sm:hidden">
+                        {rangeLabel(s)}
+                      </span>
+                    </span>
                     <span
-                      className="absolute inset-y-0 left-0 rounded-full bg-cool/70 transition-colors group-hover:bg-cool"
-                      style={{ width: `${beltPct}%` }}
-                    />
-                    {s.whistle && (
-                      <span className="absolute right-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full border border-cool bg-bg" />
-                    )}
-                  </span>
-                </span>
-                <span className="hidden text-right font-mono text-[11px] leading-tight text-mut sm:block">
-                  <span className="tabular block">{rangeLabel(s)}</span>
-                  <span className="tabular block">
-                    {spanOctaves(s.highMidi - s.lowMidi)} oct
-                  </span>
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+                      aria-hidden="true"
+                      className="relative mt-1.5 block h-6 sm:mt-0"
+                      style={{ backgroundImage: grid }}
+                    >
+                      <span
+                        className="absolute inset-y-1 rounded-full bg-cool/30 transition-colors group-hover:bg-cool/45"
+                        style={{ left: `${left}%`, width: `${width}%` }}
+                      >
+                        <span
+                          className="absolute inset-y-0 left-0 rounded-full bg-cool/70 transition-colors group-hover:bg-cool"
+                          style={{ width: `${beltPct}%` }}
+                        />
+                        {s.whistle && (
+                          <span className="absolute right-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full border border-cool bg-bg" />
+                        )}
+                      </span>
+                    </span>
+                    <span className="hidden text-right font-mono text-[11px] leading-tight text-mut sm:block">
+                      <span className="tabular block">{rangeLabel(s)}</span>
+                      <span className="tabular block">
+                        {spanOctaves(s.highMidi - s.lowMidi)} oct
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
     </div>
   );
 }

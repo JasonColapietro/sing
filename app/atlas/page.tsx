@@ -41,6 +41,79 @@ const PART_WORDS = [
   "ten",
 ];
 
+const MAX_SINGERS_PER_CHAPTER_SECTION = 24;
+type AtlasSinger = (typeof ATLAS_CONTENTS)[number]["singers"][number];
+
+function SingerLinks({ singers }: { singers: AtlasSinger[] }) {
+  return (
+    <ul className="grid grid-cols-1 gap-x-6 pl-2 sm:grid-cols-2 lg:grid-cols-3">
+      {singers.map((s) => (
+        <li key={s.slug}>
+          <Link
+            href={`/singers/${s.slug}`}
+            className="flex items-baseline justify-between gap-3 rounded-lg px-2 py-1 text-sm transition-colors hover:bg-panel"
+          >
+            <span className="min-w-0 truncate text-mut">{s.name}</span>
+            <span className="tabular shrink-0 font-mono text-[11px] text-dim">
+              {s.low}–{s.high}
+            </span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ChapterSingerIndex({
+  chapterSlug,
+  singers,
+}: {
+  chapterSlug: string;
+  singers: AtlasSinger[];
+}) {
+  if (singers.length <= MAX_SINGERS_PER_CHAPTER_SECTION) {
+    return (
+      <div className="mt-2">
+        <SingerLinks singers={singers} />
+      </div>
+    );
+  }
+
+  const groups = Array.from(
+    { length: Math.ceil(singers.length / MAX_SINGERS_PER_CHAPTER_SECTION) },
+    (_, index) =>
+      singers.slice(
+        index * MAX_SINGERS_PER_CHAPTER_SECTION,
+        (index + 1) * MAX_SINGERS_PER_CHAPTER_SECTION,
+      ),
+  );
+
+  return (
+    <div className="mt-2">
+      {groups.map((group, index) => {
+        const headingId = `${chapterSlug}-singers-${index + 1}`;
+        return (
+          <section
+            key={headingId}
+            aria-labelledby={headingId}
+            className="mt-4 first:mt-0"
+          >
+            <h4
+              id={headingId}
+              className="pl-2 font-mono text-[10px] uppercase tracking-[0.14em] text-dim"
+            >
+              Singers {group[0].name} through {group[group.length - 1].name}
+            </h4>
+            <div className="mt-1">
+              <SingerLinks singers={group} />
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function AtlasPage() {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -144,14 +217,14 @@ export default function AtlasPage() {
                       {String(c.order).padStart(2, "0")}
                     </span>
                     <span className="min-w-0">
-                      <span className="flex flex-wrap items-baseline gap-x-3 text-sm font-medium text-ink">
+                      <h3 className="flex flex-wrap items-baseline gap-x-3 text-sm font-medium text-ink">
                         {c.title}
                         {c.free && (
                           <span className="rounded-full border border-violet/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-violet-ink">
                             free
                           </span>
                         )}
-                      </span>
+                      </h3>
                       {c.summary && (
                         <span className="mt-0.5 block text-sm text-mut">
                           {c.summary}
@@ -160,23 +233,10 @@ export default function AtlasPage() {
                     </span>
                   </Link>
                   {c.singers.length > 0 && (
-                    <ul className="mt-2 grid grid-cols-1 gap-x-6 pl-2 sm:grid-cols-2 lg:grid-cols-3">
-                      {c.singers.map((s) => (
-                        <li key={s.slug}>
-                          <Link
-                            href={`/singers/${s.slug}`}
-                            className="flex items-baseline justify-between gap-3 rounded-lg px-2 py-1 text-sm transition-colors hover:bg-panel"
-                          >
-                            <span className="min-w-0 truncate text-mut">
-                              {s.name}
-                            </span>
-                            <span className="tabular shrink-0 font-mono text-[11px] text-dim">
-                              {s.low}–{s.high}
-                            </span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <ChapterSingerIndex
+                      chapterSlug={c.slug}
+                      singers={c.singers}
+                    />
                   )}
                 </li>
               ))}

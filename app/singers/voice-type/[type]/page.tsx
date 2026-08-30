@@ -256,7 +256,9 @@ export default async function VoiceTypePage({
         </Card>
 
         <Card>
-          <SectionLabel>Every {lower} on one axis</SectionLabel>
+          <h2>
+            <SectionLabel>Every {lower} on one axis</SectionLabel>
+          </h2>
           <div className="mt-4">
             <HubChart list={list} axisLow={axisLow} axisHigh={axisHigh} />
           </div>
