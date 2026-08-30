@@ -52,13 +52,13 @@ describe("canonical Open Graph URLs", () => {
   });
 
   it.each([
-    ["genre hub", genreMetadata, { genre: "grunge" }],
-    ["voice-type hub", voiceTypeMetadata, { type: "soprano" }],
-    ["song detail", songMetadata, { slug: "amazing-grace" }],
-    ["Atlas chapter", atlasChapterMetadata, { slug: "how-to-read-an-entry" }],
-    ["book chapter", bookChapterMetadata, { slug: "reading-the-range-test" }],
-  ] as const)("keeps the %s template's og:url equal to its canonical", async (_name, generate, params) => {
-    const metadata = await generate({ params: Promise.resolve(params) });
+    ["genre hub", () => genreMetadata({ params: Promise.resolve({ genre: "grunge" }) })],
+    ["voice-type hub", () => voiceTypeMetadata({ params: Promise.resolve({ type: "soprano" }) })],
+    ["song detail", () => songMetadata({ params: Promise.resolve({ slug: "amazing-grace" }) })],
+    ["Atlas chapter", () => atlasChapterMetadata({ params: Promise.resolve({ slug: "how-to-read-an-entry" }) })],
+    ["book chapter", () => bookChapterMetadata({ params: Promise.resolve({ slug: "reading-the-range-test" }) })],
+  ] as const)("keeps the %s template's og:url equal to its canonical", async (_name, generate) => {
+    const metadata = await generate();
     expectCanonicalOpenGraphUrl(metadata);
   });
 });
