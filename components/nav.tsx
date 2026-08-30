@@ -441,7 +441,10 @@ export default function Nav() {
     <>
       <header className="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-3 px-4 sm:gap-4 sm:px-6">
-          <Link href="/" className="flex shrink-0 items-center gap-2">
+          <Link
+            href="/"
+            className="flex min-h-11 shrink-0 items-center gap-2 sm:min-h-0"
+          >
             <Image
               src="/suede-logo.png"
               alt=""
@@ -488,7 +491,7 @@ export default function Nav() {
             onClick={() => setMenuOpen(true)}
             aria-haspopup="dialog"
             aria-expanded={menuOpen}
-            className="flex min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:hidden"
+            className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:hidden"
           >
             <MenuIcon />
             <span className="truncate">{currentLabel}</span>
@@ -498,7 +501,7 @@ export default function Nav() {
               had no entry at all, and the drawer is two taps away. */}
           <Link
             href="/pro"
-            className={`flex shrink-0 items-center rounded-full px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:px-3 ${
+            className={`flex min-h-11 shrink-0 items-center rounded-full px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:min-h-0 sm:px-3 ${
               proActive
                 ? "bg-amber text-[#241a05] hover:bg-amber-soft"
                 : "border border-amber/60 text-amber-ink hover:border-amber hover:bg-panel2"
