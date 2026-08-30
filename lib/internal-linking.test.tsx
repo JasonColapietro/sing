@@ -88,6 +88,36 @@ describe("every singer page is a spoke, never a dead end", () => {
       );
     }
   });
+
+  it("links all five primary-Grunge profiles to the generated Grunge hub", async () => {
+    const primaryGrungeSlugs = SINGERS.filter(
+      (s) => s.genres[0] === "Grunge",
+    ).map((s) => s.slug);
+
+    expect(primaryGrungeSlugs).toEqual([
+      "chris-cornell",
+      "eddie-vedder",
+      "kurt-cobain",
+      "layne-staley",
+      "scott-weiland",
+    ]);
+
+    for (const slug of primaryGrungeSlugs) {
+      const el = await SingerPage({ params: Promise.resolve({ slug }) });
+      expect(renderToStaticMarkup(el)).toContain(
+        'href="/singers/genre/grunge"',
+      );
+    }
+  });
+
+  it("never points a primary-genre profile link at an ungenerated hub", () => {
+    const generatedGenres = new Set(HUB_GENRES);
+    const deadPrimaryGenres = SINGERS.filter(
+      (s) => s.genres[0] && !generatedGenres.has(s.genres[0]),
+    ).map((s) => `${s.slug}:${s.genres[0]}`);
+
+    expect(deadPrimaryGenres).toEqual([]);
+  });
 });
 
 describe("footer wires every hub into every page", () => {
