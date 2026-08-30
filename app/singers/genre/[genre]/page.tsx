@@ -193,7 +193,9 @@ export default async function GenrePage({
         </Card>
 
         <Card>
-          <SectionLabel>Every voice on one axis</SectionLabel>
+          <h2>
+            <SectionLabel>Every voice on one axis</SectionLabel>
+          </h2>
           <div className="mt-4">
             <HubChart list={list} axisLow={axisLow} axisHigh={axisHigh} />
           </div>

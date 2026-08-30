@@ -859,19 +859,21 @@ export function ProClient() {
       {/* 5 — Why paid strip */}
       <section className="border-t border-line bg-panel/40">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
-          <p className="max-w-xl text-sm text-mut">
-            <span className="text-ink">Pro is what keeps free free.</span> One
-            musician builds this —{" "}
-            <a
-              href="https://jasoncolapietro.com"
-              rel="author"
-              className="text-violet-ink hover:underline"
-            >
-              Jason Colapietro
-            </a>{" "}
-            (Johnny Suede). Pro pays for it — instead of ads,
-            trackers, or selling your data.
-          </p>
+          <div className="max-w-xl">
+            <h2 className="text-sm text-ink">Pro is what keeps free free.</h2>
+            <p className="mt-1 text-sm text-mut">
+              One musician builds this —{" "}
+              <a
+                href="https://jasoncolapietro.com"
+                rel="author"
+                className="text-violet-ink hover:underline"
+              >
+                Jason Colapietro
+              </a>{" "}
+              (Johnny Suede). Pro pays for it — instead of ads, trackers, or
+              selling your data.
+            </p>
+          </div>
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             No ads<span className="mx-2 text-line2">·</span>No data selling
             <span className="mx-2 text-line2">·</span>No trial countdown
