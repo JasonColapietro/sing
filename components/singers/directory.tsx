@@ -210,7 +210,9 @@ function BackToFiltersButton({ searchId }: { searchId: string }) {
         // what "↑ filters" is actually for.
         document.getElementById(searchId)?.focus({ preventScroll: true });
       }}
-      className="rounded-full border border-line px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.1em] text-mut transition-colors hover:border-amber hover:text-amber-ink"
+      // py-1 rather than py-0.5: at 10px type this button measured 21px tall,
+      // under the 24px minimum for a control that is not inline text.
+      className="rounded-full border border-line px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-mut transition-colors hover:border-amber hover:text-amber-ink"
     >
       ↑ filters
     </button>
