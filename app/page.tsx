@@ -208,12 +208,12 @@ export default function Home() {
               <Link
                 key={href}
                 href={href}
-                className="lift group rounded-2xl border border-line bg-panel p-5 hover:border-amber/50 sm:p-6"
+                className="lift group rounded-2xl border border-line bg-panel p-5 hover:border-violet/50 sm:p-6"
               >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-amber-ink">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-violet-ink">
                   <Glyph />
                 </span>
-                <span className="mt-4 block text-xl text-ink group-hover:text-amber-ink">
+                <span className="mt-4 block text-xl text-ink group-hover:text-violet-ink">
                   {label}
                 </span>
                 <span className="mt-1 block text-sm text-mut">{desc}</span>
@@ -258,7 +258,7 @@ export default function Home() {
                 key={step.n}
                 className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
               >
-                <span className="tabular font-mono text-sm text-amber-ink">
+                <span className="tabular font-mono text-sm text-violet-ink">
                   {step.n}
                 </span>
                 <h3 className="mt-3 text-xl">{step.title}</h3>
@@ -274,7 +274,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
             <div>
-              <SectionLabel className="mb-4 border-amber/50 text-amber-ink">
+              <SectionLabel className="mb-4 border-violet/50 text-violet-ink">
                 Suede Pro · Early Access
               </SectionLabel>
               <h2 className="max-w-xl text-2xl sm:text-3xl">
@@ -298,7 +298,7 @@ export default function Home() {
                     key={line}
                     className="flex items-start gap-2.5 text-sm text-mut"
                   >
-                    <span aria-hidden className="mt-0.5 font-mono text-amber-ink">
+                    <span aria-hidden className="mt-0.5 font-mono text-violet-ink">
                       ✓
                     </span>
                     {line}
@@ -306,7 +306,7 @@ export default function Home() {
                 ))}
               </ul>
               <div className="mt-7 flex flex-wrap items-center gap-3">
-                <LinkButton href="/pro" variant="amber" size="lg">
+                <LinkButton href="/pro" variant="violet" size="lg">
                   See Suede Pro
                 </LinkButton>
               </div>
@@ -364,7 +364,7 @@ export default function Home() {
             Ready for the coach?{" "}
             <Link
               href="/pro"
-              className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+              className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
             >
               See Suede Pro
             </Link>

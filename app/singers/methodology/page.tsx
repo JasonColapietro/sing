@@ -91,7 +91,7 @@ export default function SingerMethodologyPage() {
           <p className="mt-3 max-w-3xl text-mut">
             See a claim that needs correction? Please send the page, recording details, timestamp,
             supporting source, and your proposed wording through the{" "}
-            <Link href="/contact" className="text-amber-ink underline underline-offset-4">
+            <Link href="/contact" className="text-violet-ink underline underline-offset-4">
               correction workflow
             </Link>
             .

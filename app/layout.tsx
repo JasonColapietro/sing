@@ -101,7 +101,7 @@ export default function RootLayout({
           navigation. Visible only once focused. */}
       <a
         href="#content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:border focus:border-amber focus:bg-panel focus:px-4 focus:py-2.5 focus:text-sm focus:text-ink"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:border focus:border-violet focus:bg-panel focus:px-4 focus:py-2.5 focus:text-sm focus:text-ink"
       >
         Skip to content
       </a>

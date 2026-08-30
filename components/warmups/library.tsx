@@ -91,7 +91,7 @@ export function Library({
           className="flex-1 text-left"
         >
           <Card
-            className={`h-full transition-colors hover:border-amber/40 ${
+            className={`h-full transition-colors hover:border-violet/40 ${
               failed ? "border-rec/50" : ""
             }`}
           >
@@ -131,7 +131,7 @@ export function Library({
   return (
     <div className="space-y-8">
       {!hasRange && (
-        <Card className="border-amber/30">
+        <Card className="border-violet/30">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <SectionLabel>No range saved</SectionLabel>
@@ -195,7 +195,7 @@ export function Library({
                 stay behind FreeOnly. */}
             {PRO_PACKS.map((pack) => (
               <Link key={pack.id} href="/pro">
-                <Card className="h-full transition-colors hover:border-amber/40">
+                <Card className="h-full transition-colors hover:border-violet/40">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="text-lg">{pack.name}</h3>
                     <ProLockTag />

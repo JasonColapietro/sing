@@ -69,7 +69,7 @@ export const EXERCISES: WarmupExercise[] = [
     title: "Sustained hold",
     desc: "One note, held steady. Keep the pitch dead center for the whole block.",
     tier: "beginner",
-    tip: "Steady air, relaxed jaw. Keep the amber dot inside the block.",
+    tip: "Steady air, relaxed jaw. Keep the violet dot inside the block.",
     noteDur: 3.5,
     buildSteps: (r) => [[r]],
   },

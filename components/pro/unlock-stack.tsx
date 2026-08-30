@@ -42,7 +42,7 @@ export function UnlockStack() {
       aria-labelledby="unlocks-heading"
     >
       <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-        <SectionLabel className="mb-4 border-amber/50 text-amber-ink">
+        <SectionLabel className="mb-4 border-violet/50 text-violet-ink">
           Included, instantly
         </SectionLabel>
         <h2 id="unlocks-heading" className="max-w-2xl text-2xl sm:text-3xl">
@@ -66,7 +66,7 @@ export function UnlockStack() {
               key={tile.label}
               className="rounded-2xl border border-line bg-panel p-5"
             >
-              <p className="tabular text-4xl text-amber-ink">
+              <p className="tabular text-4xl text-violet-ink">
                 {tile.figure}
               </p>
               <p className="mt-1 text-sm text-ink">{tile.label}</p>
@@ -94,7 +94,7 @@ export function UnlockStack() {
           The unlocked ones are readable right now — start with{" "}
           <Link
             href="/book/when-numbers-lie"
-            className="text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+            className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
           >
             When the numbers lie to you
           </Link>
@@ -165,15 +165,15 @@ function BookContents({
             {entry.free ? (
               <Link
                 href={`${href}/${entry.slug}`}
-                className="flex items-baseline gap-3 py-2 outline-offset-2 hover:text-amber-ink focus-visible:outline-2 focus-visible:outline-amber"
+                className="flex items-baseline gap-3 py-2 outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
               >
-                <span className="tabular w-6 shrink-0 font-mono text-[11px] text-amber-ink">
+                <span className="tabular w-6 shrink-0 font-mono text-[11px] text-violet-ink">
                   {entry.order}
                 </span>
                 <span className="min-w-0 flex-1 text-sm text-ink">
                   {entry.title}
                 </span>
-                <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-amber-ink">
+                <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink">
                   Free
                 </span>
               </Link>

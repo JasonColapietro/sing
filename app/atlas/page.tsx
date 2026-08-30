@@ -81,7 +81,7 @@ export default function AtlasPage() {
       <div className="space-y-6">
         <Card>
           <div className="flex flex-wrap gap-8">
-            <Stat label="Chapters" value={ATLAS_CONTENTS.length} tone="amber" />
+            <Stat label="Chapters" value={ATLAS_CONTENTS.length} tone="violet" />
             <Stat
               label="Words"
               value={ATLAS_WORDS.toLocaleString("en-US")}
@@ -94,7 +94,7 @@ export default function AtlasPage() {
             <a
               href="https://jasoncolapietro.com"
               rel="author"
-              className="text-amber-ink hover:underline"
+              className="text-violet-ink hover:underline"
             >
               {AUTHOR_NAME}
             </a>{" "}
@@ -114,12 +114,12 @@ export default function AtlasPage() {
           <p className="mt-3 max-w-3xl text-sm text-mut">
             The contents below list every chapter and every singer covered —
             free, along with the first three chapters and each singer&rsquo;s{" "}
-            <Link href="/singers" className="text-amber-ink hover:underline">
+            <Link href="/singers" className="text-violet-ink hover:underline">
               range page
             </Link>
             . Pro unlocks the chapter text, the entry notes and the PDF, and
             the{" "}
-            <Link href="/range" className="text-amber-ink hover:underline">
+            <Link href="/range" className="text-violet-ink hover:underline">
               range test
             </Link>{" "}
             gives you your own numbers to read it with.
@@ -147,7 +147,7 @@ export default function AtlasPage() {
                       <span className="flex flex-wrap items-baseline gap-x-3 text-sm font-medium text-ink">
                         {c.title}
                         {c.free && (
-                          <span className="rounded-full border border-amber/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-amber-ink">
+                          <span className="rounded-full border border-violet/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-violet-ink">
                             free
                           </span>
                         )}
@@ -190,7 +190,7 @@ export default function AtlasPage() {
             Pro includes two books. <em>The Measured Voice</em> is the training
             manual — how the voice works, how to read your own measurements,
             and a twelve-week program.{" "}
-            <Link href="/book" className="text-amber-ink hover:underline">
+            <Link href="/book" className="text-violet-ink hover:underline">
               Its contents are free too
             </Link>
             .

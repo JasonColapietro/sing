@@ -28,7 +28,7 @@ const C = {
   ink: INK,
   mut: MUT,
   dim: DIM,
-  amber: AMBER,
+  violet: AMBER,
   ok: OK,
 } as const;
 
@@ -59,7 +59,7 @@ function roundRect(
  * Scrolling piano roll: horizontal semitone lanes with mono labels on the
  * left, target notes as ivory-outlined blocks with the lyric syllable
  * inside, playhead fixed near 30% width, timeline scrolls right-to-left in
- * beat time. Live amber pitch trace overlays; note blocks fill ok-green as
+ * beat time. Live violet pitch trace overlays; note blocks fill ok-green as
  * the singer holds them in tune.
  */
 export function PianoRoll({
@@ -213,7 +213,7 @@ export function PianoRoll({
         }
       });
 
-      // Live amber pitch trace + leading dot.
+      // Live violet pitch trace + leading dot.
       if (showLive && pos !== null) {
         const f = latest.current;
         const midiFloat = f.freq !== null ? freqToMidiFloat(f.freq) : null;
@@ -221,7 +221,7 @@ export function PianoRoll({
         samples.push({ pos, midi: midiFloat });
         while (samples.length > 400) samples.shift();
 
-        ctx.strokeStyle = C.amber;
+        ctx.strokeStyle = C.violet;
         ctx.lineWidth = 2;
         ctx.lineJoin = "round";
         ctx.lineCap = "round";
@@ -251,7 +251,7 @@ export function PianoRoll({
           const idx = noteIndexAtBeat(notes, pos);
           const target = idx >= 0 ? notes[idx].midi : null;
           const inTune = target !== null && Math.abs((midiFloat - target) * 100) <= 50;
-          ctx.fillStyle = inTune ? C.ok : C.amber;
+          ctx.fillStyle = inTune ? C.ok : C.violet;
           ctx.beginPath();
           ctx.arc(playheadX, yFor(midiFloat) + laneH / 2, 4.5, 0, Math.PI * 2);
           ctx.fill();

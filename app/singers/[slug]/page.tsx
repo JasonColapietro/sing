@@ -381,7 +381,7 @@ export default async function SingerPage({
                 {index === breadcrumbs.length - 1 ? (
                   <span aria-current="page">{breadcrumb.name}</span>
                 ) : (
-                  <Link href={breadcrumb.href} className="hover:text-amber-ink">
+                  <Link href={breadcrumb.href} className="hover:text-violet-ink">
                     {breadcrumb.name}
                   </Link>
                 )}
@@ -402,7 +402,7 @@ export default async function SingerPage({
               </div>
             </div>
             <div className="flex flex-wrap gap-8">
-              <Stat label="Octaves" value={spanOctaves(semis)} tone="amber" />
+              <Stat label="Octaves" value={spanOctaves(semis)} tone="violet" />
               <Stat label="Semitones" value={semis} tone="ink" />
               {!reviewed && s.beltMidi != null && (
                 <Stat
@@ -428,7 +428,7 @@ export default async function SingerPage({
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <PlayRangeButton s={s} />
-            {!reviewed && s.whistle && <Pill tone="amber">Whistle register</Pill>}
+            {!reviewed && s.whistle && <Pill tone="violet">Whistle register</Pill>}
             {!reviewed && s.beltMidi != null && (
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 red dash = top of full voice
@@ -463,7 +463,7 @@ export default async function SingerPage({
                             href={source.url}
                             rel="noreferrer"
                             target="_blank"
-                            className="font-medium text-ink underline decoration-amber/60 underline-offset-4 hover:text-amber-ink"
+                            className="font-medium text-ink underline decoration-violet/60 underline-offset-4 hover:text-violet-ink"
                           >
                             {source.title} <span className="text-dim">({source.publisher})</span>
                           </a>
@@ -539,7 +539,7 @@ export default async function SingerPage({
               <ul className="mt-3 max-w-3xl space-y-2">
                 {observations.map((o) => (
                   <li key={o.id} className="flex gap-3 text-sm text-mut">
-                    <span aria-hidden="true" className="text-amber-ink">
+                    <span aria-hidden="true" className="text-violet-ink">
                       ·
                     </span>
                     <span>{o.text}</span>
@@ -600,7 +600,7 @@ export default async function SingerPage({
                       <li key={m.slug}>
                         <Link
                           href={`/singers/${m.slug}`}
-                          className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-amber"
+                          className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
                         >
                           {m.name}
                           <span className="tabular font-mono text-[10px] text-dim">
@@ -628,7 +628,7 @@ export default async function SingerPage({
                       <li key={m.slug}>
                         <Link
                           href={`/singers/${m.slug}`}
-                          className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-amber"
+                          className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
                         >
                           {m.name}
                           <span className="tabular font-mono text-[10px] text-dim">
@@ -670,7 +670,7 @@ export default async function SingerPage({
               <li key={r.slug}>
                 <Link
                   href={`/singers/${r.slug}`}
-                  className="flex items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-amber"
+                  className="flex items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
                 >
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-medium">

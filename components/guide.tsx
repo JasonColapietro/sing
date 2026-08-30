@@ -164,7 +164,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
                 <li key={source.href} className="text-sm text-mut">
                   <a
                     href={source.href}
-                    className="font-medium text-amber-ink underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
+                    className="font-medium text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
                   >
                     {source.label}
                   </a>
@@ -187,7 +187,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
                   id={`step-${i + 1}`}
                   className="scroll-mt-20 rounded-2xl border border-line bg-panel p-5"
                 >
-                  <span className="tabular font-mono text-sm text-amber-ink">
+                  <span className="tabular font-mono text-sm text-violet-ink">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <h4 className="mt-2 text-lg font-extrabold text-ink">
@@ -207,7 +207,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
               className={`rounded-2xl border p-6 ${
                 i === 0
                   ? "border-line bg-panel"
-                  : "border-amber/40 bg-panel2/50"
+                  : "border-violet/40 bg-panel2/50"
               }`}
             >
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -224,7 +224,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
                     <span
                       aria-hidden
                       className={`mt-0.5 font-mono ${
-                        i === 0 ? "text-ok-ink" : "text-amber-ink"
+                        i === 0 ? "text-ok-ink" : "text-violet-ink"
                       }`}
                     >
                       ✓
@@ -259,9 +259,9 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="group rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-amber/50"
+                className="group rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-violet/50"
               >
-                <span className="block text-lg font-extrabold text-ink group-hover:text-amber-ink">
+                <span className="block text-lg font-extrabold text-ink group-hover:text-violet-ink">
                   {link.label}
                 </span>
                 <span className="mt-1 block text-sm text-mut">{link.note}</span>

@@ -155,7 +155,7 @@ export function PitchTrace({
 
       // The singer's own voice, in the instrument teal.
       //
-      // This was amber, which is also the primary CTA fill, the Pro marker, the
+      // This was violet, which is also the primary CTA fill, the Pro marker, the
       // out-of-tune pill, the level meter's caution zone and the default
       // progress bar. On this screen a singer saw their voice drawn in exactly
       // the colour the page uses to mean "this costs money", while the note

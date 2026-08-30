@@ -10,7 +10,7 @@ import { LinkButton } from "@/components/ui";
 export function ProChip({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded bg-amber px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#241a05] ${className}`}
+      className={`inline-flex items-center rounded bg-violet px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#241a05] ${className}`}
     >
       Pro
     </span>
@@ -45,7 +45,7 @@ export function LockGlyph({ size = 13 }: { size?: number }) {
 }
 
 /**
- * Inline upgrade panel dropped at a moment of value. Quiet gold: thin amber
+ * Inline upgrade panel dropped at a moment of value. Quiet gold: thin violet
  * border, tape header, one line of copy, one CTA. Never blocks free content.
  */
 export function UpgradeCard({
@@ -67,11 +67,11 @@ export function UpgradeCard({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-amber/50 bg-panel p-5 sm:p-6 ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-violet/50 bg-panel p-5 sm:p-6 ${className}`}
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet to-transparent"
       />
       <div className="flex items-center gap-2">
         <ProChip />
@@ -84,7 +84,7 @@ export function UpgradeCard({
       </div>
       <p className="mt-1.5 max-w-xl text-sm text-mut">{body}</p>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <LinkButton href="/pro#plans" variant="amber" size="sm">
+        <LinkButton href="/pro#plans" variant="violet" size="sm">
           {cta}
         </LinkButton>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -114,7 +114,7 @@ export function LockedPanel({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-amber/40 bg-panel ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-violet/40 bg-panel ${className}`}
     >
       <div className="flex items-center justify-between border-b border-line bg-panel2/60 px-4 py-2.5">
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
@@ -130,11 +130,11 @@ export function LockedPanel({
         className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-panel to-transparent"
       />
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 px-4 pb-4 sm:px-5">
-        <span className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
+        <span className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
           <LockGlyph />
           Pro preview
         </span>
-        <LinkButton href="/pro#plans" variant="amber" size="sm">
+        <LinkButton href="/pro#plans" variant="violet" size="sm">
           {cta}
         </LinkButton>
       </div>
@@ -145,7 +145,7 @@ export function LockedPanel({
 /** Tiny inline lock tag for list items / song cards that are Pro-only. */
 export function ProLockTag() {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-amber/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-amber-ink">
+    <span className="inline-flex items-center gap-1 rounded-full border border-violet/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink">
       <LockGlyph size={11} />
       Pro
     </span>

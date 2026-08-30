@@ -30,8 +30,8 @@ const C = {
   line2: LINE2,
   ink: INK,
   dim: DIM,
-  amber: AMBER,
-  amberFill: "rgba(197, 150, 66, 0.14)",
+  violet: AMBER,
+  violetFill: "rgba(197, 150, 66, 0.14)",
   ringFill: "rgba(197, 150, 66, 0.10)",
 } as const;
 const PAD_B = 18;
@@ -121,9 +121,9 @@ export function Tone({
         }
         ctx.lineTo(w, plotH);
         ctx.closePath();
-        ctx.fillStyle = C.amberFill;
+        ctx.fillStyle = C.violetFill;
         ctx.fill();
-        ctx.strokeStyle = C.amber;
+        ctx.strokeStyle = C.violet;
         ctx.lineWidth = 1.5;
         ctx.stroke();
 

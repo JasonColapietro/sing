@@ -165,14 +165,14 @@ export function FarinelliDrill() {
         <div className="mt-4 flex items-center gap-3">
           <Button
             size="sm"
-            variant={sound ? "amber" : "outline"}
+            variant={sound ? "violet" : "outline"}
             aria-pressed={sound}
             onClick={() => setSound((s) => !s)}
           >
             {sound ? "Count clicks on" : "Count clicks off"}
           </Button>
         </div>
-        <Button variant="amber" size="lg" className="mt-6" onClick={begin}>
+        <Button variant="violet" size="lg" className="mt-6" onClick={begin}>
           Begin
         </Button>
       </Card>
@@ -192,7 +192,7 @@ export function FarinelliDrill() {
               tone="cool"
             />
             <Stat label="Rounds" value={summary.rounds} />
-            <Stat label="Top count" value={summary.topN} tone="amber" />
+            <Stat label="Top count" value={summary.topN} tone="violet" />
           </div>
           {summary.logged ? (
             <RewardNote result={summary.logged} />
@@ -202,7 +202,7 @@ export function FarinelliDrill() {
             </p>
           )}
           <div className="flex gap-2">
-            <Button variant="amber" onClick={begin}>
+            <Button variant="violet" onClick={begin}>
               Go again
             </Button>
             <Button variant="outline" onClick={() => setMode("setup")}>

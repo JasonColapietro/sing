@@ -7,21 +7,21 @@
 import { JUDGMENTS, emptyTally, type JudgmentTally } from "./lib";
 
 export type Grade = "S" | "A" | "B" | "C" | "D";
-export type Tone = "ok" | "amber" | "rec";
+export type Tone = "ok" | "violet" | "rec";
 
 /**
  * Score floor each letter needs before any tiebreak runs. Deliberately
  * aligned with the score-color split session-summary.tsx already uses
- * (scoreTone: >=80 "ok", >=50 "amber", else "rec") so a grade badge never
+ * (scoreTone: >=80 "ok", >=50 "violet", else "rec") so a grade badge never
  * contradicts the color of the raw score sitting next to it: S and A read
- * "ok", B and C read "amber", D reads "rec" (see toneForGrade below).
+ * "ok", B and C read "violet", D reads "rec" (see toneForGrade below).
  */
 export const GRADE_SCORE_FLOOR: Record<Grade, number> = {
   S: 95, // near-flawless: room for a "great" or two, not more
   A: 80, // matches scoreTone's "ok" floor — clearly nailed it
   B: 65, // solidly in tune, a handful of rough notes
-  C: 50, // matches scoreTone's "amber" floor — recognizable, needs work
-  D: 0, // below the amber floor: more misses than hits
+  C: 50, // matches scoreTone's "violet" floor — recognizable, needs work
+  D: 0, // below the violet floor: more misses than hits
 };
 
 /** Ascending order — index math for "the next grade up" relies on this. */
@@ -65,11 +65,11 @@ function nextGradeUp(g: Grade): Grade {
   return GRADE_ORDER[Math.min(GRADE_ORDER.length - 1, i + 1)];
 }
 
-/** Matches the amber/ok/rec convention scoreTone() uses for raw scores. */
+/** Matches the violet/ok/rec convention scoreTone() uses for raw scores. */
 export function toneForGrade(grade: Grade): Tone {
   if (grade === "S" || grade === "A") return "ok";
   if (grade === "D") return "rec";
-  return "amber";
+  return "violet";
 }
 
 /**

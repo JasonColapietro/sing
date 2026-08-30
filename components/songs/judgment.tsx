@@ -27,7 +27,7 @@ const LABELS: Record<Judgment, string> = {
 const TONES: Record<Judgment, string> = {
   perfect: "text-ok-ink",
   great: "text-ok-ink",
-  good: "text-amber-ink",
+  good: "text-violet-ink",
   miss: "text-rec",
 };
 

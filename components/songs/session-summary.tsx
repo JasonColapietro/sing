@@ -9,23 +9,23 @@ import { ResultCard } from "./result-card";
 import { JUDGMENTS, type Judgment, type SessionSummaryData } from "./lib";
 import type { Song } from "./types";
 
-function scoreTone(score: number): "ok" | "amber" | "rec" {
+function scoreTone(score: number): "ok" | "violet" | "rec" {
   if (score >= 80) return "ok";
-  if (score >= 50) return "amber";
+  if (score >= 50) return "violet";
   return "rec";
 }
 
 const TONE_TEXT: Record<Tone, string> = {
   ok: "text-ok-ink",
-  amber: "text-amber-ink",
+  violet: "text-violet-ink",
   rec: "text-rec",
 };
 
-/** Bar tone per judgment band — reuses the same amber/ok/rec/cool palette ProgressBar already speaks. */
-const JUDGMENT_TONE: Record<Judgment, "ok" | "cool" | "amber" | "rec"> = {
+/** Bar tone per judgment band — reuses the same violet/ok/rec/cool palette ProgressBar already speaks. */
+const JUDGMENT_TONE: Record<Judgment, "ok" | "cool" | "violet" | "rec"> = {
   perfect: "ok",
   great: "cool",
-  good: "amber",
+  good: "violet",
   miss: "rec",
 };
 
@@ -74,7 +74,7 @@ function Sparkline({ scores }: { scores: number[] }) {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      className="h-9 w-40 text-amber-ink"
+      className="h-9 w-40 text-violet-ink"
       role="img"
       aria-label={`Score history: ${scores.join(", ")}`}
     >
@@ -149,7 +149,7 @@ export function SessionSummary({
               <div className="mt-3 flex items-center gap-2">
                 <span
                   aria-hidden="true"
-                  className="tabular font-mono text-base tracking-wider text-amber-ink"
+                  className="tabular font-mono text-base tracking-wider text-violet-ink"
                 >
                   {starGlyphs(grade.stars)}
                 </span>
@@ -227,7 +227,7 @@ export function SessionSummary({
             </div>
             <div className="mt-2 flex flex-wrap gap-2">
               {hardest.map((n) => (
-                <Pill key={n.index} tone="amber">
+                <Pill key={n.index} tone="violet">
                   {midiToLabel(n.midi)} · &ldquo;{n.lyric}&rdquo;
                 </Pill>
               ))}
@@ -296,14 +296,14 @@ export function SessionSummary({
 
       <div className="flex flex-wrap gap-3">
         {/*
-          Mid-setlist, moving on is the primary action and gets the amber
+          Mid-setlist, moving on is the primary action and gets the violet
           button. The score still gets read first either way: chaining
           straight into the next song would throw away the grade the singer
           just earned.
         */}
         {nextInSetlist && onNext ? (
           <>
-            <Button variant="amber" onClick={onNext}>
+            <Button variant="violet" onClick={onNext}>
               Next: {nextInSetlist}
             </Button>
             <Button variant="outline" onClick={onAgain}>
@@ -311,7 +311,7 @@ export function SessionSummary({
             </Button>
           </>
         ) : (
-          <Button variant="amber" onClick={onAgain}>
+          <Button variant="violet" onClick={onAgain}>
             Sing again
           </Button>
         )}

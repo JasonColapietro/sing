@@ -6,7 +6,7 @@ import { DIM } from "@/lib/chart-colors";
 
 /**
  * Mini note-lane view: horizontal semitone lanes, one column per melody
- * position. Ivory outlines mark the target notes, amber blocks the sung
+ * position. Ivory outlines mark the target notes, violet blocks the sung
  * notes, green when a sung note hits its target.
  */
 export function NoteLanes({

@@ -63,7 +63,7 @@ export function midiToStripPct(midi: number): number {
 }
 
 export interface PianoStripProps {
-  /** Currently sung note — lights up amber. */
+  /** Currently sung note — lights up violet. */
   activeMidi?: number | null;
   /** Start of a highlighted range band (inclusive). */
   rangeLow?: number;
@@ -78,7 +78,7 @@ export interface PianoStripProps {
 
 /**
  * Reusable piano keyboard strip, C2 to C6. Highlights the current sung note
- * in amber and can overlay a range band plus labelled endpoint markers.
+ * in violet and can overlay a range band plus labelled endpoint markers.
  */
 export function PianoStrip({
   activeMidi,

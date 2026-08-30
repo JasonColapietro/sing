@@ -639,7 +639,7 @@ export default function RecorderPageClient() {
       actions={
         takes.length > 0 ? (
           <>
-            <Pill tone="amber">
+            <Pill tone="violet">
               {takes.length} {takes.length === 1 ? "take" : "takes"}
             </Pill>
             {starredCount > 0 && <Pill tone="ok">{starredCount} starred</Pill>}
@@ -664,7 +664,7 @@ export default function RecorderPageClient() {
                   className={cn(
                     "flex items-center gap-2 rounded-full border px-3 py-1 text-xs transition-colors",
                     countIn
-                      ? "border-amber/50 text-amber-ink"
+                      ? "border-violet/50 text-violet-ink"
                       : "border-line text-mut hover:border-line2 hover:text-ink",
                   )}
                   aria-pressed={countIn}
@@ -673,7 +673,7 @@ export default function RecorderPageClient() {
                   <span
                     className={cn(
                       "h-2 w-2 rounded-full",
-                      countIn ? "bg-amber" : "border border-line2",
+                      countIn ? "bg-violet" : "border border-line2",
                     )}
                     aria-hidden="true"
                   />
@@ -684,7 +684,7 @@ export default function RecorderPageClient() {
 
             {micState !== "ready" ? (
               <div className="flex flex-col items-center gap-4 py-8 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-line2 text-amber-ink">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-line2 text-violet-ink">
                   <IconMic className="h-6 w-6" />
                 </div>
                 {micState === "blocked" ? (
@@ -758,7 +758,7 @@ export default function RecorderPageClient() {
                       </div>
                     ) : recPhase === "countin" ? (
                       <div className="flex items-baseline gap-3">
-                        <span className="tabular font-mono text-3xl text-amber-ink">{countBeat}</span>
+                        <span className="tabular font-mono text-3xl text-violet-ink">{countBeat}</span>
                         <span className="text-sm text-mut">count-in…</span>
                       </div>
                     ) : recPhase === "saving" ? (
@@ -781,7 +781,7 @@ export default function RecorderPageClient() {
 
           {/* Self-review prompt */}
           {reviewTake && (
-            <Card className="animate-fadeup border-amber/40">
+            <Card className="animate-fadeup border-violet/40">
               <div className="mb-3 flex items-center justify-between gap-3">
                 <SectionLabel>Quick self-review</SectionLabel>
                 <span className="tabular font-mono text-xs text-mut">{reviewTake.name}</span>
@@ -801,7 +801,7 @@ export default function RecorderPageClient() {
                     aria-label={`${n} star${n === 1 ? "" : "s"}`}
                     className={cn(
                       "rounded p-1 transition-colors",
-                      n <= reviewRating ? "text-amber-ink" : "text-dim hover:text-amber-ink",
+                      n <= reviewRating ? "text-violet-ink" : "text-dim hover:text-violet-ink",
                     )}
                     onClick={() => setReviewRating((r) => (r === n ? 0 : n))}
                   >
@@ -818,7 +818,7 @@ export default function RecorderPageClient() {
                 className="mb-4 w-full rounded-xl border border-line bg-panel2 px-3 py-2 text-sm text-ink placeholder:text-dim"
               />
               <div className="flex gap-2">
-                <Button variant="amber" size="sm" onClick={saveReview}>
+                <Button variant="violet" size="sm" onClick={saveReview}>
                   Save review
                 </Button>
                 <Button variant="ghost" size="sm" onClick={() => setReviewId(null)}>
@@ -844,8 +844,8 @@ export default function RecorderPageClient() {
                   className={cn(
                     "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors",
                     loadedId === selectedTake.id && isPlaying
-                      ? "border-amber bg-amber text-[#241a05]"
-                      : "border-line2 text-ink hover:border-amber hover:text-amber-ink",
+                      ? "border-violet bg-violet text-[#241a05]"
+                      : "border-line2 text-ink hover:border-violet hover:text-violet-ink",
                   )}
                   aria-label={
                     loadedId === selectedTake.id && isPlaying
@@ -937,7 +937,7 @@ export default function RecorderPageClient() {
                 ))}
                 <div className="flex gap-2">
                   <Button
-                    variant={loadedId === abA.id && isPlaying ? "amber" : "outline"}
+                    variant={loadedId === abA.id && isPlaying ? "violet" : "outline"}
                     size="sm"
                     onClick={() => playAb(abA.id)}
                     aria-label={`Play take A: ${abA.name}`}
@@ -945,7 +945,7 @@ export default function RecorderPageClient() {
                     <IconPlay className="h-3.5 w-3.5" /> Play A
                   </Button>
                   <Button
-                    variant={loadedId === abB.id && isPlaying ? "amber" : "outline"}
+                    variant={loadedId === abB.id && isPlaying ? "violet" : "outline"}
                     size="sm"
                     onClick={() => playAb(abB.id)}
                     aria-label={`Play take B: ${abB.name}`}
@@ -1135,11 +1135,11 @@ export default function RecorderPageClient() {
       {/* XP toast */}
       {toast && (
         <div
-          className="animate-fadeup fixed right-4 bottom-4 z-50 w-72 rounded-2xl border border-amber/50 bg-panel2 p-4 shadow-lg"
+          className="animate-fadeup fixed right-4 bottom-4 z-50 w-72 rounded-2xl border border-violet/50 bg-panel2 p-4 shadow-lg"
           role="status"
         >
           <div className="flex items-center justify-between gap-2">
-            <span className="tabular font-mono text-lg text-amber-ink">+{toast.xp} XP</span>
+            <span className="tabular font-mono text-lg text-violet-ink">+{toast.xp} XP</span>
             <button
               type="button"
               className="rounded px-1 text-dim hover:text-ink"

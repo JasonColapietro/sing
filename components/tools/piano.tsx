@@ -168,12 +168,12 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
     const cls = k.black
       ? `${base} z-10 ${
           isActive
-            ? "border-amber bg-amber"
+            ? "border-violet bg-violet"
             : "border-key-black bg-key-black hover:bg-key-black-hover"
         }`
       : `${base} ${
           isActive
-            ? "border-amber bg-amber"
+            ? "border-violet bg-violet"
             : "border-line bg-key-white hover:bg-key-white-hover"
         }`;
     return (
@@ -204,7 +204,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
         }}
       >
         {/* The label has to change with the key under it: mut reads 2.7:1 on
-            an unpressed black key and on a pressed amber one. */}
+            an unpressed black key and on a pressed violet one. */}
         {showLabel(k.midi) && (
           <span
             className={`pointer-events-none font-mono ${
@@ -228,7 +228,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
             viewBox="0 0 16 16"
             fill="none"
             aria-hidden="true"
-            className="text-amber-ink"
+            className="text-violet-ink"
           >
             <rect
               x="1.5"
@@ -274,7 +274,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
           onClick={() => setSustain((s) => !s)}
           className={`rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
             sustain
-              ? "border-amber bg-panel2 text-amber-ink"
+              ? "border-violet bg-panel2 text-violet-ink"
               : "border-line text-mut hover:border-line2 hover:text-ink"
           }`}
         >
@@ -296,7 +296,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
             step={0.01}
             value={volume}
             onChange={(e) => setVolume(Number(e.target.value))}
-            className="accent-amber h-6 w-32 cursor-pointer"
+            className="accent-violet h-6 w-32 cursor-pointer"
           />
         </div>
 
@@ -322,7 +322,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
               onClick={() => setLabelMode(o.id)}
               className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                 labelMode === o.id
-                  ? "border-amber bg-panel2 text-amber-ink"
+                  ? "border-violet bg-panel2 text-violet-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
               }`}
             >
@@ -339,7 +339,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
         </span>{" "}
         A row plays notes — A=C, W=C#, S=D, E=D#, D=E, F=F, T=F#, G=G, Y=G#,
         H=A, U=A#, J=B, K=C above. Z and X shift the octave. Current range:{" "}
-        <span className="tabular font-mono text-amber-ink">
+        <span className="tabular font-mono text-violet-ink">
           {midiToLabel(kbBase)}–{midiToLabel(kbBase + 12)}
         </span>
       </div>

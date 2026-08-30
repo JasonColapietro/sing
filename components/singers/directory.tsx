@@ -194,7 +194,7 @@ type SortId = (typeof SORTS)[number]["id"];
 const ALL_GENRES = [...new Set(SINGERS.flatMap((s) => s.genres))].sort();
 
 const selectClass =
-  "rounded-full border border-line bg-panel px-3 py-1.5 text-sm text-ink focus:border-amber focus:outline-none";
+  "rounded-full border border-line bg-panel px-3 py-1.5 text-sm text-ink focus:border-violet focus:outline-none";
 
 /* ---------------------------------------------------------- directory --- */
 
@@ -220,7 +220,7 @@ function BackToFiltersButton({ searchId }: { searchId: string }) {
       }}
       // py-1 rather than py-0.5: at 10px type this button measured 21px tall,
       // under the 24px minimum for a control that is not inline text.
-      className="rounded-full border border-line px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-mut transition-colors hover:border-amber hover:text-amber-ink"
+      className="rounded-full border border-line px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-mut transition-colors hover:border-violet hover:text-violet-ink"
     >
       ↑ filters
     </button>
@@ -332,14 +332,14 @@ export function SingersDirectory() {
           <Link
             key={label}
             href={`/singers/${s.slug}`}
-            className="w-[13.5rem] shrink-0 rounded-2xl border border-line bg-panel px-4 py-3 transition-colors hover:border-amber sm:w-auto"
+            className="w-[13.5rem] shrink-0 rounded-2xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet sm:w-auto"
           >
             <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
               {label}
             </span>
             <span className="mt-1 flex items-baseline justify-between gap-2">
               <span className="truncate text-sm font-medium">{s.name}</span>
-              <span className="tabular shrink-0 font-mono text-sm text-amber-ink">
+              <span className="tabular shrink-0 font-mono text-sm text-violet-ink">
                 {value}
               </span>
             </span>
@@ -359,7 +359,7 @@ export function SingersDirectory() {
           }}
           placeholder="Search singers…"
           aria-label="Search singers"
-          className="w-full rounded-full border border-line bg-panel px-4 py-2 text-sm text-ink placeholder:text-dim focus:border-amber focus:outline-none sm:w-64"
+          className="w-full rounded-full border border-line bg-panel px-4 py-2 text-sm text-ink placeholder:text-dim focus:border-violet focus:outline-none sm:w-64"
         />
         <select
           value={voice}
@@ -440,7 +440,7 @@ export function SingersDirectory() {
         </span>
         {hasYou && (
           <span className="flex items-center gap-1.5">
-            <span className="h-3 w-6 rounded-sm bg-amber/30" /> you (
+            <span className="h-3 w-6 rounded-sm bg-violet/30" /> you (
             {midiToLabel(youLow)}–{midiToLabel(youHigh)})
           </span>
         )}
@@ -449,7 +449,7 @@ export function SingersDirectory() {
       {/* First visit: the offer that makes this chart personal deserves a real
           button, not 11px of legend text. */}
       {!hasYou && (
-        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-amber/40 bg-panel px-4 py-3">
+        <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-violet/40 bg-panel px-4 py-3">
           <span className="text-sm text-mut">
             Your own range can sit on this chart — the test takes two minutes
             and never leaves your device.

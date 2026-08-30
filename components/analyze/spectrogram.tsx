@@ -18,7 +18,7 @@ const C = {
   bg: PANEL,
   line: LINE,
   dim: DIM,
-  amber: AMBER,
+  violet: AMBER,
 } as const;
 
 /**
@@ -123,7 +123,7 @@ export function Spectrogram({
         ctx.lineTo(GUTTER, Math.round(y) + 0.5);
         ctx.stroke();
       }
-      ctx.strokeStyle = C.amber;
+      ctx.strokeStyle = C.violet;
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
       for (const hz of [RING_LO_HZ, RING_HI_HZ]) {

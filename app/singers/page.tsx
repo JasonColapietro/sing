@@ -125,7 +125,7 @@ export default function SingersPage() {
             <li key={v}>
               <Link
                 href={`/singers/voice-type/${voiceTypeSlug(v)}`}
-                className="flex items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-amber"
+                className="flex items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
               >
                 <span className="text-sm font-medium">{v}</span>
               </Link>
@@ -139,7 +139,7 @@ export default function SingersPage() {
             <li key={g}>
               <Link
                 href={`/singers/genre/${genreSlug(g)}`}
-                className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1.5 text-sm transition-colors hover:border-amber"
+                className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1.5 text-sm transition-colors hover:border-violet"
               >
                 {g}
               </Link>
@@ -176,7 +176,7 @@ export default function SingersPage() {
         <p className="mt-3 max-w-2xl text-sm text-mut">{SINGER_RANGE_DISCLAIMER}</p>
         <Link
           href="/singers/methodology"
-          className="mt-3 inline-block text-sm text-amber-ink underline underline-offset-4"
+          className="mt-3 inline-block text-sm text-violet-ink underline underline-offset-4"
         >
           Read the source and review methodology
         </Link>

@@ -98,7 +98,7 @@ export function LiveWaveform({
 
 /**
  * Static min/max peak waveform for a decoded take, with playback progress
- * (played portion bright amber) and optional click-to-seek.
+ * (played portion bright violet) and optional click-to-seek.
  */
 export function PeaksWaveform({
   peaks,

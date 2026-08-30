@@ -99,7 +99,7 @@ export function StartingPaths() {
               key={path.kicker}
               className={`flex flex-col rounded-2xl border p-6 sm:p-7 ${
                 path.gold
-                  ? "border-amber/40 bg-panel2/50"
+                  ? "border-violet/40 bg-panel2/50"
                   : "border-line bg-panel"
               }`}
             >
@@ -114,18 +114,18 @@ export function StartingPaths() {
                   <li key={step.href}>
                     <Link
                       href={step.href}
-                      className="lift group flex gap-3 rounded-xl border border-line bg-bg/60 p-3.5 hover:border-amber/50"
+                      className="lift group flex gap-3 rounded-xl border border-line bg-bg/60 p-3.5 hover:border-violet/50"
                     >
                       <span
                         aria-hidden
                         className={`tabular mt-0.5 font-mono text-sm ${
-                          path.gold ? "text-amber-ink" : "text-ok-ink"
+                          path.gold ? "text-violet-ink" : "text-ok-ink"
                         }`}
                       >
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span>
-                        <span className="block font-extrabold text-ink group-hover:text-amber-ink">
+                        <span className="block font-extrabold text-ink group-hover:text-violet-ink">
                           {step.label}
                         </span>
                         <span className="mt-0.5 block text-sm text-mut">

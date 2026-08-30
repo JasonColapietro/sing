@@ -28,6 +28,13 @@
      reader has to read. 4.85–5.78:1. */
   --color-ok-ink: #2a6f53;
   --color-cool: #11615d;
+  /* Violet, shared with Suede Agent Studio: this fill value is byte-identical
+     to that app's `--violet`, so the two surfaces read as one estate. Split the
+     same way gold and green are, and for the same reason — #8b5cf6 measures
+     3.42-4.07:1 on the three paper grounds, so it is a fill and border only.
+     Anything a reader has to read takes --color-violet-ink (5.73-6.84:1). */
+  --color-violet: #8b5cf6;
+  --color-violet-ink: #6d28d9;
   /* Playable piano keys (/tools, studio target practice). Held here rather
      than inline so the two keyboards cannot drift apart again — they had two
      white fills, two blacks, and a white key that darkened on hover in one

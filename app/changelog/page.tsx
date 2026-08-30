@@ -81,7 +81,7 @@ const STORIES: Array<{
   {
     label: "Design",
     title: "A calmer room",
-    body: "v2 rebuilt the site's voice: an editorial serif for the headings, a real type scale beneath it, and one meaning for amber — gold now only ever marks Pro. Ten focused tabs replace thirteen, and cards lift when they are clickable. A practice room is a console, and it finally reads like one.",
+    body: "v2 rebuilt the site's voice: an editorial serif for the headings, a real type scale beneath it, and one meaning for violet — gold now only ever marks Pro. Ten focused tabs replace thirteen, and cards lift when they are clickable. A practice room is a console, and it finally reads like one.",
     links: [{ href: "/studio", text: "Step into the studio" }],
   },
 ];
@@ -106,7 +106,7 @@ const LOG: Array<{
       { day: "22", note: "Pick which microphone the studio listens to." },
       {
         day: "22",
-        note: "A second typeface, a real type scale, and one meaning for amber.",
+        note: "A second typeface, a real type scale, and one meaning for violet.",
       },
       {
         day: "21",
@@ -222,11 +222,11 @@ export default function ChangelogPage() {
         ))}
       </div>
 
-      {/* The page's one amber moment, because this surface genuinely is Pro. */}
-      <section className="relative mt-14 overflow-hidden rounded-2xl border border-amber/50 bg-panel p-5 sm:p-6">
+      {/* The page's one violet moment, because this surface genuinely is Pro. */}
+      <section className="relative mt-14 overflow-hidden rounded-2xl border border-violet/50 bg-panel p-5 sm:p-6">
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet to-transparent"
         />
         <ProChip />
         <h2 className="mt-3 text-2xl sm:text-3xl">{proHeadlineLong()}</h2>
@@ -235,7 +235,7 @@ export default function ChangelogPage() {
           take, your range history, and cloud sync. v2 grew the free studio;
           Pro is what keeps it free.
         </p>
-        <LinkButton href="/pro" variant="amber" size="md" className="mt-5">
+        <LinkButton href="/pro" variant="violet" size="md" className="mt-5">
           See what Pro adds
         </LinkButton>
       </section>

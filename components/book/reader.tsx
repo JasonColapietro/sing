@@ -120,7 +120,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
       )}
 
       {view.kind === "locked" && (
-        <Card className="mt-6 border-amber/40">
+        <Card className="mt-6 border-violet/40">
           <SectionLabel>Included with Pro</SectionLabel>
           <h2 className="mt-3 text-xl">{view.message}</h2>
           <p className="mt-2 max-w-xl text-sm text-mut">
@@ -196,7 +196,7 @@ export function ChapterNav({ slug }: { slug: string }) {
       {next ? (
         <Link
           href={`/book/${next.slug}`}
-          className="max-w-[45%] text-right text-sm text-amber-ink hover:text-ink"
+          className="max-w-[45%] text-right text-sm text-violet-ink hover:text-ink"
         >
           <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
             Next
@@ -206,7 +206,7 @@ export function ChapterNav({ slug }: { slug: string }) {
       ) : (
         <Link
           href="/book"
-          className="text-right text-sm text-amber-ink hover:text-ink"
+          className="text-right text-sm text-violet-ink hover:text-ink"
         >
           Back to contents
         </Link>

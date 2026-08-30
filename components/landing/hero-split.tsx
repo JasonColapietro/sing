@@ -42,7 +42,7 @@ export function HeroSplit() {
       <p className="pointer-events-none absolute bottom-5 right-4 z-10 hidden sm:block sm:right-6">
         <Link
           href="/pro#author"
-          className="pointer-events-auto rounded-full border border-line/60 bg-panel/80 px-3 py-1.5 font-mono text-label uppercase tracking-[0.14em] text-mut backdrop-blur-sm transition-colors hover:border-amber/50 hover:text-amber-ink"
+          className="pointer-events-auto rounded-full border border-line/60 bg-panel/80 px-3 py-1.5 font-mono text-label uppercase tracking-[0.14em] text-mut backdrop-blur-sm transition-colors hover:border-violet/50 hover:text-violet-ink"
         >
           Built by {AUTHOR_NAME}
         </Link>
@@ -63,8 +63,8 @@ export function HeroSplit() {
             first legible thing on the page was the third element down.
 
             The name still gets a face: the nav wordmark is set in the display
-            serif, and this line is the same red tape label it always was. */}
-        <p className="font-mono text-label uppercase tracking-[0.16em] text-rec">
+            serif, and this line now carries the violet the rest of the estate uses. */}
+        <p className="font-mono text-label uppercase tracking-[0.16em] text-violet-ink">
           Suede Sing
           <span className="mx-2 text-line2" aria-hidden>
             ·
@@ -85,7 +85,7 @@ export function HeroSplit() {
           practice plan built from it.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <LinkButton href="/studio" variant="amber" size="lg">
+          <LinkButton href="/studio" variant="violet" size="lg">
             Open the web studio
           </LinkButton>
           <LinkButton href="/range" variant="outline" size="lg">
@@ -115,7 +115,7 @@ export function HeroSplit() {
           <span className="mx-2 text-line2">·</span>
           <Link
             href="/singers"
-            className="text-amber-ink underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
+            className="text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
           >
             Famous singers&apos; ranges
           </Link>

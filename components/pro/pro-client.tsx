@@ -83,7 +83,7 @@ function PlanPoint({ children, gold }: { children: string; gold?: boolean }) {
     <li className="flex items-start gap-2.5 text-sm text-mut">
       <span
         aria-hidden
-        className={`mt-0.5 font-mono ${gold ? "text-amber-ink" : "text-ok-ink"}`}
+        className={`mt-0.5 font-mono ${gold ? "text-violet-ink" : "text-ok-ink"}`}
       >
         ✓
       </span>
@@ -136,7 +136,7 @@ function ProKeyRow({ proKey }: { proKey: string }) {
         <button
           type="button"
           onClick={copy}
-          className="font-mono text-[10px] uppercase tracking-[0.14em] text-amber-ink underline decoration-amber/50 underline-offset-4 hover:decoration-amber"
+          className="font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
         >
           {copied ? "Copied" : "Copy"}
         </button>
@@ -191,7 +191,7 @@ function RedeemPanel() {
         />
         <Button
           type="submit"
-          variant="amber"
+          variant="violet"
           size="md"
           disabled={task.kind === "working"}
         >
@@ -368,7 +368,7 @@ export function ProClient() {
       <section className="mx-auto w-full max-w-6xl px-4 pb-16 pt-12 sm:px-6 sm:pt-16">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
           <div className="animate-fadeup">
-            <SectionLabel className="mb-4 border-amber/50 text-amber-ink">
+            <SectionLabel className="mb-4 border-violet/50 text-violet-ink">
               Suede Pro — the gold channel
             </SectionLabel>
             {pro.active ? (
@@ -384,7 +384,7 @@ export function ProClient() {
                   the free studio free.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
-                  <LinkButton href="/progress" variant="amber" size="lg">
+                  <LinkButton href="/progress" variant="violet" size="lg">
                     Open your coach report
                   </LinkButton>
                   <LinkButton href="/warmups" variant="outline" size="lg">
@@ -433,7 +433,7 @@ export function ProClient() {
                   songbook.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
-                  <LinkButton href="#plans" variant="amber" size="lg">
+                  <LinkButton href="#plans" variant="violet" size="lg">
                     Go Pro
                   </LinkButton>
                   <LinkButton href="/studio" variant="ghost" size="lg">
@@ -474,7 +474,7 @@ export function ProClient() {
                   key={perk.id}
                   className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
                 >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-amber/40 bg-panel2 text-amber-ink">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-violet/40 bg-panel2 text-violet-ink">
                     <Glyph />
                   </span>
                   <span className="mt-4 block text-xl font-extrabold text-ink">
@@ -494,7 +494,7 @@ export function ProClient() {
       <section id="plans" className="scroll-mt-20 border-t border-line bg-panel/40">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           {justUpgraded ? (
-            <div className="animate-fadeup mx-auto mb-10 max-w-2xl rounded-2xl border border-amber bg-panel p-6 text-center sm:p-8">
+            <div className="animate-fadeup mx-auto mb-10 max-w-2xl rounded-2xl border border-violet bg-panel p-6 text-center sm:p-8">
               <ProChip className="mx-auto" />
               <h2 className="mt-3 text-2xl sm:text-3xl">Welcome to the gold channel</h2>
               <p className="mx-auto mt-2 max-w-md text-mut">
@@ -502,7 +502,7 @@ export function ProClient() {
                 warmup and watch the report build itself.
               </p>
               <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-                <LinkButton href="/warmups" variant="amber" size="md">
+                <LinkButton href="/warmups" variant="violet" size="md">
                   Sing your first pro warmup
                 </LinkButton>
                 <LinkButton href="/progress" variant="outline" size="md">
@@ -524,7 +524,7 @@ export function ProClient() {
           )}
 
           {checkout.kind === "working" && !justUpgraded && (
-            <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-amber/40 bg-panel px-4 py-3 text-center text-sm text-mut">
+            <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-violet/40 bg-panel px-4 py-3 text-center text-sm text-mut">
               Confirming your payment with Stripe…
             </p>
           )}
@@ -561,7 +561,7 @@ export function ProClient() {
                     onClick={() => setBilling(plan)}
                     className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors ${
                       on
-                        ? "bg-amber text-[#241a05]"
+                        ? "bg-violet text-[#241a05]"
                         : "text-mut hover:text-ink"
                     }`}
                   >
@@ -575,7 +575,7 @@ export function ProClient() {
           )}
 
           {showPurchaseOptions && (
-            <p className="mx-auto mt-3 w-fit max-w-full rounded-xl border border-amber/40 bg-amber/10 px-3 py-2 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
+            <p className="mx-auto mt-3 w-fit max-w-full rounded-xl border border-violet/40 bg-violet/10 px-3 py-2 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
               Founding offer: $79 lifetime is limited to the first 10 members.
             </p>
           )}
@@ -617,24 +617,24 @@ export function ProClient() {
             {/* Pro — deliberately the louder card: this is the recommendation,
                 not a second option of equal weight. Roomier sides only, so both
                 cards' CTAs still land on the same baseline. */}
-            <div className="relative flex flex-col overflow-hidden rounded-2xl border border-amber bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-amber)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-amber/30 sm:px-8 sm:py-7">
+            <div className="relative flex flex-col overflow-hidden rounded-2xl border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:px-8 sm:py-7">
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-amber-soft via-amber to-amber-soft"
+                className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet via-violet to-violet"
               />
-              <span className="mb-3 inline-flex w-fit items-center rounded bg-amber px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#241a05]">
+              <span className="mb-3 inline-flex w-fit items-center rounded bg-violet px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#241a05]">
                 {pro.active ? "Your Pro access" : "Early Access"}
               </span>
               <span className="flex items-center gap-2">
                 <ProChip />
-                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
                   The gold channel
                 </span>
               </span>
               {pro.active ? (
                 <>
                   <div className="mt-3 flex items-baseline gap-2">
-                    <span className="font-mono text-4xl text-amber-ink sm:text-5xl">
+                    <span className="font-mono text-4xl text-violet-ink sm:text-5xl">
                       {pro.plan === "lifetime"
                         ? "Lifetime"
                         : pro.plan === "annual"
@@ -652,7 +652,7 @@ export function ProClient() {
               ) : (
                 <>
                   <div className="mt-3 flex items-baseline gap-2">
-                    <span className="tabular font-mono text-5xl text-amber-ink sm:text-6xl">
+                    <span className="tabular font-mono text-5xl text-violet-ink sm:text-6xl">
                       {price}
                     </span>
                     <span className="text-sm text-mut">{priceUnit}</span>
@@ -660,7 +660,7 @@ export function ProClient() {
                   <p className="mt-1.5 text-sm text-mut">{priceNote}</p>
                 </>
               )}
-              <span className="mt-3 inline-flex w-fit items-center rounded border border-amber/50 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink">
+              <span className="mt-3 inline-flex w-fit items-center rounded border border-violet/50 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
                 {pro.active ? "Pro unlocked" : "Early Access price"}
               </span>
               <p className="mt-2 text-sm text-mut">
@@ -676,7 +676,7 @@ export function ProClient() {
               <div className="mt-auto pt-6">
                 {pro.active ? (
                   <div className="flex flex-col gap-2">
-                    <div className="flex w-full items-center justify-center gap-2 rounded-full bg-amber px-5 py-2.5 font-mono text-sm font-semibold text-[#241a05]">
+                    <div className="flex w-full items-center justify-center gap-2 rounded-full bg-violet px-5 py-2.5 font-mono text-sm font-semibold text-[#241a05]">
                       {pro.status === "trialing"
                         ? "✓ Active: free pass"
                         : `✓ Active: ${
@@ -718,7 +718,7 @@ export function ProClient() {
                 ) : (
                   <>
                     <Button
-                      variant="amber"
+                      variant="violet"
                       size="md"
                       className="w-full"
                       onClick={goPro}
@@ -794,10 +794,10 @@ export function ProClient() {
                   <span className="text-mut">{row.free}</span>
                 </dd>
                 <dd className="flex items-baseline gap-3 bg-panel2/60 px-4 py-2.5 text-sm">
-                  <span className="w-10 shrink-0 font-mono text-label uppercase tracking-[0.1em] text-amber-ink">
+                  <span className="w-10 shrink-0 font-mono text-label uppercase tracking-[0.1em] text-violet-ink">
                     Pro
                   </span>
-                  <span className="text-amber-ink">{row.pro}</span>
+                  <span className="text-violet-ink">{row.pro}</span>
                 </dd>
               </div>
             ))}
@@ -821,7 +821,7 @@ export function ProClient() {
                     </th>
                     <th
                       scope="col"
-                      className="bg-panel2 px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-amber-ink"
+                      className="bg-panel2 px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink"
                     >
                       Pro
                     </th>
@@ -844,7 +844,7 @@ export function ProClient() {
                         {row.label}
                       </th>
                       <td className="px-4 py-3 text-mut">{row.free}</td>
-                      <td className="bg-panel2/60 px-4 py-3 text-amber-ink">
+                      <td className="bg-panel2/60 px-4 py-3 text-violet-ink">
                         {row.pro}
                       </td>
                     </tr>
@@ -865,7 +865,7 @@ export function ProClient() {
             <a
               href="https://jasoncolapietro.com"
               rel="author"
-              className="text-amber-ink hover:underline"
+              className="text-violet-ink hover:underline"
             >
               Jason Colapietro
             </a>{" "}
@@ -909,7 +909,7 @@ export function ProClient() {
             never hits a paywall it didn&apos;t have yesterday.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <LinkButton href="#plans" variant="amber" size="lg">
+            <LinkButton href="#plans" variant="violet" size="lg">
               {pro.active
                 ? subscriptionPlan
                   ? "Manage your plan"

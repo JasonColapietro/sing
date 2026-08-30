@@ -33,7 +33,7 @@ export function SingerCrawlIndex({ singers = SINGERS }: { singers?: readonly Sin
                 <li key={singer.slug} className="break-inside-avoid">
                   <Link
                     href={`/singers/${singer.slug}`}
-                    className="text-mut underline decoration-line underline-offset-4 hover:text-amber-ink hover:decoration-amber"
+                    className="text-mut underline decoration-line underline-offset-4 hover:text-violet-ink hover:decoration-violet"
                   >
                     {singer.name}
                   </Link>

@@ -146,7 +146,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
 
   const mono = monoFontStack();
 
-  // Paper ground with the same soft amber wash the site body carries
+  // Paper ground with the same soft violet wash the site body carries
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);
   const glow = ctx.createRadialGradient(W / 2, -120, 60, W / 2, -120, 760);
@@ -352,7 +352,7 @@ export function ResultView({
             </div>
           </div>
           <div className="flex gap-8">
-            <Stat label="Semitones" value={semis} tone="amber" />
+            <Stat label="Semitones" value={semis} tone="violet" />
             <Stat label="Span" value={describeSpan(semis)} tone="ink" />
             <Stat label="Voice type" value={voice.label} tone="cool" />
           </div>
@@ -415,7 +415,7 @@ export function ResultView({
         <SectionLabel>What to do with this</SectionLabel>
         <h2 className="mt-3 text-xl">
           Practise in the middle:{" "}
-          <span className="text-amber-ink">
+          <span className="text-violet-ink">
             {midiToLabel(workLow)}–{midiToLabel(workHigh)}
           </span>
         </h2>
@@ -481,7 +481,7 @@ export function ResultView({
       <Card>
         <SectionLabel>Voice type</SectionLabel>
         <h2 className="mt-3 text-xl">
-          Closest fit: <span className="text-amber-ink">{voice.label}</span>
+          Closest fit: <span className="text-violet-ink">{voice.label}</span>
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-mut">
           Voice types are rough guides borrowed from choral music. Your range
@@ -494,7 +494,7 @@ export function ResultView({
             click rather than the last word. */}
         <Link
           href={`/singers/voice-type/${voiceTypeSlug(voice.label)}`}
-          className="mt-3 inline-flex items-center gap-1.5 text-sm text-amber-ink underline decoration-amber/40 underline-offset-4 hover:decoration-amber"
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
         >
           See the {voice.label.toLowerCase()}s in the library
           <span aria-hidden>→</span>
@@ -507,7 +507,7 @@ export function ResultView({
             return (
               <div key={v.id} className="flex items-center gap-3">
                 <span
-                  className={`w-28 shrink-0 text-right font-mono text-xs ${isMatch ? "text-amber-ink" : "text-mut"}`}
+                  className={`w-28 shrink-0 text-right font-mono text-xs ${isMatch ? "text-violet-ink" : "text-mut"}`}
                 >
                   {v.label}
                 </span>
@@ -525,19 +525,19 @@ export function ResultView({
           })}
           {/* User range overlay row */}
           <div className="flex items-center gap-3">
-            <span className="w-28 shrink-0 text-right font-mono text-xs font-semibold text-amber-ink">
+            <span className="w-28 shrink-0 text-right font-mono text-xs font-semibold text-violet-ink">
               You
             </span>
             <div className="relative h-5 flex-1 rounded bg-panel2">
               <div
-                className="absolute inset-y-0 rounded bg-amber"
+                className="absolute inset-y-0 rounded bg-violet"
                 style={{
                   left: `${axisPct(lowMidi, 36, 84)}%`,
                   width: `${Math.max(1, axisPct(highMidi, 36, 84) - axisPct(lowMidi, 36, 84))}%`,
                 }}
               />
             </div>
-            <span className="tabular w-20 shrink-0 font-mono text-[11px] text-amber-ink">
+            <span className="tabular w-20 shrink-0 font-mono text-[11px] text-violet-ink">
               {midiToLabel(lowMidi)}–{midiToLabel(highMidi)}
             </span>
           </div>
@@ -560,7 +560,7 @@ export function ResultView({
         <SectionLabel>Famous company</SectionLabel>
         <h2 className="mt-3 text-xl">
           Your range overlaps most with{" "}
-          <span className="text-amber-ink">{famous.best.name}</span>
+          <span className="text-violet-ink">{famous.best.name}</span>
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-mut">
           Reported ranges — approximate figures fans and journalists commonly
@@ -580,7 +580,7 @@ export function ResultView({
               <div key={f.name} className="flex items-center gap-3">
                 <Link
                   href={`/singers/${f.slug}`}
-                  className={`w-36 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current ${isBest ? "text-amber-ink" : "text-mut"}`}
+                  className={`w-36 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current ${isBest ? "text-violet-ink" : "text-mut"}`}
                 >
                   {f.name}
                 </Link>
@@ -590,13 +590,13 @@ export function ResultView({
                     style={{ left: `${left}%`, width: `${width}%` }}
                   />
                   <div
-                    className="absolute inset-y-1 rounded bg-amber/70"
+                    className="absolute inset-y-1 rounded bg-violet/70"
                     style={{ left: `${uLeft}%`, width: `${uWidth}%` }}
                   />
                 </div>
                 <span className="tabular w-24 shrink-0 font-mono text-[11px] text-dim">
                   {midiToLabel(f.lowMidi)}–{midiToLabel(f.highMidi)}{" "}
-                  <span className={isBest ? "text-amber-ink" : ""}>
+                  <span className={isBest ? "text-violet-ink" : ""}>
                     ({f.overlap}st)
                   </span>
                 </span>
@@ -610,7 +610,7 @@ export function ResultView({
         <div className="mt-4">
           <Link
             href="/singers"
-            className="text-sm text-amber-ink underline decoration-amber/50 underline-offset-2 hover:decoration-amber"
+            className="text-sm text-violet-ink underline decoration-violet/50 underline-offset-2 hover:decoration-violet"
           >
             Compare against every famous voice →
           </Link>

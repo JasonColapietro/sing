@@ -187,7 +187,7 @@ export default async function VoiceTypePage({
               Widest cited span:{" "}
               <Link
                 href={`/singers/${stats.widest.slug}`}
-                className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
               >
                 {stats.widest.name}
               </Link>{" "}
@@ -196,7 +196,7 @@ export default async function VoiceTypePage({
               octaves); narrowest is{" "}
               <Link
                 href={`/singers/${stats.narrowest.slug}`}
-                className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
               >
                 {stats.narrowest.name}
               </Link>{" "}
@@ -208,7 +208,7 @@ export default async function VoiceTypePage({
                   Both extremes belong to the same singer:{" "}
                   <Link
                     href={`/singers/${stats.lowest.slug}`}
-                    className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                    className="text-violet-ink underline decoration-violet/40 underline-offset-2"
                   >
                     {stats.lowest.name}
                   </Link>{" "}
@@ -223,14 +223,14 @@ export default async function VoiceTypePage({
                   The group bottoms out at {midiToLabel(stats.lowest.lowMidi)} (
                   <Link
                     href={`/singers/${stats.lowest.slug}`}
-                    className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                    className="text-violet-ink underline decoration-violet/40 underline-offset-2"
                   >
                     {stats.lowest.name}
                   </Link>
                   ) and tops out at {midiToLabel(stats.highest.highMidi)} (
                   <Link
                     href={`/singers/${stats.highest.slug}`}
-                    className="text-amber-ink underline decoration-amber/40 underline-offset-2"
+                    className="text-violet-ink underline decoration-violet/40 underline-offset-2"
                   >
                     {stats.highest.name}
                   </Link>
@@ -289,7 +289,7 @@ export default async function VoiceTypePage({
               <li key={v}>
                 <Link
                   href={`/singers/voice-type/${voiceTypeSlug(v)}`}
-                  className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-amber"
+                  className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-violet"
                 >
                   {v}
                 </Link>

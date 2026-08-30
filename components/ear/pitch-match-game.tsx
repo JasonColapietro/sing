@@ -301,7 +301,7 @@ export function PitchMatchGame({
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Target note
             </div>
-            <div className="tabular mt-1 font-mono text-3xl text-amber-ink">
+            <div className="tabular mt-1 font-mono text-3xl text-violet-ink">
               {targetLabel}
             </div>
             {octaveAgnostic && (
@@ -326,7 +326,7 @@ export function PitchMatchGame({
 
         <div className="mt-5">
           {phase === "listen" && (
-            <p className="text-sm text-amber-ink animate-recblink">Listen…</p>
+            <p className="text-sm text-violet-ink animate-recblink">Listen…</p>
           )}
           {phase === "sing" && (
             <p className="text-sm text-mut">
@@ -363,7 +363,7 @@ export function PitchMatchGame({
                   : `The note was ${targetLabel}. Try matching it before the timer runs out.`
               }
             />
-            <Button variant="amber" onClick={next}>
+            <Button variant="violet" onClick={next}>
               Next round
               <span className="font-mono text-xs opacity-70" aria-hidden="true">Enter</span>
             </Button>

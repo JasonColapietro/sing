@@ -97,7 +97,7 @@ export function SongStats({ song }: { song: Song }) {
           </p>
         </div>
         <div className="flex flex-wrap gap-x-8 gap-y-5">
-          <Stat label="Tonic" value={f.tonic} tone="amber" />
+          <Stat label="Tonic" value={f.tonic} tone="violet" />
           <Stat label="Tempo" value={song.bpm} sub="bpm" tone="ink" />
           <Stat
             label="Meter"
@@ -204,12 +204,12 @@ export function PublicDomainNote({ song }: { song: Song }) {
   );
 }
 
-const SECTION_TONE: Record<string, "amber" | "cool" | "ok" | "rec" | "mut"> = {
+const SECTION_TONE: Record<string, "violet" | "cool" | "ok" | "rec" | "mut"> = {
   intro: "mut",
   verse: "cool",
   prechorus: "mut",
-  chorus: "amber",
-  refrain: "amber",
+  chorus: "violet",
+  refrain: "violet",
   bridge: "rec",
   outro: "mut",
 };
@@ -273,7 +273,7 @@ export function SongLinkList({ songs }: { songs: Song[] }) {
           <li key={s.slug}>
             <Link
               href={`/songs/${s.slug}`}
-              className="flex h-full items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-amber"
+              className="flex h-full items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
             >
               <span className="min-w-0">
                 <span className="block truncate text-sm font-medium">
