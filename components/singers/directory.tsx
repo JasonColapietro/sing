@@ -47,8 +47,16 @@ function youBandBg(uLow: number, uHigh: number): string {
 }
 
 /** Row grid shared by the ruler and every singer row, so columns align. */
+// The two fixed columns are capped as a share of the row as well as in rem.
+// At 200% text zoom the rem values double -- 12rem becomes 384px and 6.5rem
+// becomes 208px, which with the gaps claims 656px of a ~700px row and leaves
+// the ruler about 44px. Nine octave labels positioned by percentage across
+// 44px land on top of each other, and the axis renders as one illegible smudge
+// (WCAG 1.4.4: content lost at 200%). The caps never bind at normal sizes --
+// at every viewport this app targets, 12rem is well under 40% and 6.5rem well
+// under 20%, so min() picks the rem value and the layout is byte-identical.
 const ROW_GRID =
-  "sm:grid sm:grid-cols-[12rem_minmax(0,1fr)_6.5rem] sm:items-center sm:gap-x-4";
+  "sm:grid sm:grid-cols-[min(12rem,40%)_minmax(0,1fr)_min(6.5rem,20%)] sm:items-center sm:gap-x-4";
 
 const BLACK_PCS = new Set([1, 3, 6, 8, 10]);
 
