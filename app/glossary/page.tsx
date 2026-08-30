@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_OG_IMAGE } from "@/lib/og";
+import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { AUTHOR_NODE } from "@/lib/author";
@@ -10,7 +10,7 @@ import { Card, PageShell, SectionLabel } from "@/components/ui";
 const TITLE = "Singing Terms Glossary — Passaggio, Cents, Tessitura";
 const DESCRIPTION = `What ${GLOSSARY_TERMS.length} singing terms actually mean, in one sentence each: passaggio, tessitura, cents, chest and head voice, falsetto, whistle register, vocal fry, the singer's formant and the rest of the vocabulary Suede Sing uses. Free, with the room in the app where each word shows up.`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonicalOpenGraph({
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/glossary` },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "article",
     images: [DEFAULT_OG_IMAGE],
   },
-};
+});
 
 export default function GlossaryPage() {
   const setId = `${SITE_URL}/glossary#glossary`;

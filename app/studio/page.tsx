@@ -1,15 +1,16 @@
 import { StudioClient } from "@/components/studio/studio-client";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { STUDIO_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
 
-export const metadata = {
+export const metadata = withCanonicalOpenGraph({
   title: "Pitch Training for Singers — Real-Time Pitch Feedback",
   description:
     "Sing into your mic and watch your pitch trace against target notes, live. Free browser pitch training — scales, slides and hold-the-note drills with instant scoring, no signup.",
   alternates: { canonical: `${SITE_URL}/studio` },
-};
+});
 
 export default function StudioPage() {
   return (

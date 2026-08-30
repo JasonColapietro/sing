@@ -1,17 +1,18 @@
 import Link from "next/link";
 import ToolsClient from "@/components/tools/tools-page";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { TOOLS_GUIDE } from "@/lib/guides";
 import { SectionLabel } from "@/components/ui";
 import { AnalyzeGlyph, RecorderGlyph } from "@/components/landing/glyphs";
 
-export const metadata = {
+export const metadata = withCanonicalOpenGraph({
   title: "Singing Practice Tools — Metronome, Keyboard, Drone, Recorder",
   description:
     "The console modules every practice session leans on: a metronome, an on-screen keyboard, and a sustained drone for pitch matching — plus the take recorder and the spectrogram analyzer. Free in the browser.",
   alternates: { canonical: `${SITE_URL}/tools` },
-};
+});
 
 /**
  * The rooms this tab absorbed when the header went from thirteen tabs to ten.

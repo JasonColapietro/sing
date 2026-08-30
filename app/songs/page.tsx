@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_OG_IMAGE } from "@/lib/og";
+import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { Suspense } from "react";
 import { PRO_SONGS, SONGS } from "@/components/songs/data";
 import { SongLinkList } from "@/components/songs/song-page";
@@ -16,7 +16,7 @@ import { RoomRailBand } from "@/components/discover/room-rail";
 const TITLE = `Sing ${SONGS.length} Free Public-Domain Songs with Live Pitch Feedback`;
 const DESCRIPTION = `Sing ${SONGS.length} public-domain melodies with live pitch feedback in your browser. Each transposes to your range, and each has a page with its lyrics, key, tempo and note range.`;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withCanonicalOpenGraph({
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/songs` },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [DEFAULT_OG_IMAGE],
   },
-};
+});
 
 export default function SongsPage() {
   return (

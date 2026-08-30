@@ -13,6 +13,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { REFERENCE_BANDS, statsFor } from "@/lib/singers-analysis";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import { VOICE_TYPE_NOTES } from "@/lib/voice-types";
 import { SITE_URL } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
@@ -39,12 +40,12 @@ export async function generateMetadata({
   const note = VOICE_TYPE_NOTES[voice];
   const title = `Famous ${voice} Vocal Ranges Compared`;
   const description = `The cited vocal ranges of famous ${pluralVoice(voice.toLowerCase())} on one keyboard — ${note.summary}. Compare spans, full-voice ceilings and your own range.`;
-  return {
+  return withCanonicalOpenGraph({
     title,
     description,
     alternates: { canonical: `${SITE_URL}/singers/voice-type/${type}` },
     openGraph: { title, description, type: "website" },
-  };
+  });
 }
 
 export default async function VoiceTypePage({

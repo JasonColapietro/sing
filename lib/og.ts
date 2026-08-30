@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -34,3 +35,46 @@ export const DEFAULT_OG_IMAGE = {
   alt: OG_IMAGE_ALT,
   type: "image/png",
 };
+
+/**
+ * Keep a route's Open Graph identity on the same absolute URL as its canonical.
+ *
+ * Next does not derive `og:url` from `alternates.canonical`, and a child route
+ * cannot safely inherit the root URL because that would identify every page as
+ * the homepage. Route modules therefore pass their existing metadata through
+ * this helper once. Data-driven routes cover every generated page from that
+ * one template rather than repeating a URL field per output.
+ *
+ * Routes with their own `openGraph` object retain it, including file-convention
+ * images beside the route. Routes that previously relied on the root card need
+ * the explicit fallback image because adding an `openGraph` object replaces the
+ * parent segment's object instead of merging it field by field.
+ */
+export function withCanonicalOpenGraph(metadata: Metadata): Metadata {
+  const canonical = metadata.alternates?.canonical;
+  const url =
+    typeof canonical === "object" && canonical && "url" in canonical
+      ? canonical.url
+      : canonical;
+
+  if (!url) {
+    throw new Error("withCanonicalOpenGraph requires alternates.canonical");
+  }
+
+  const existing = metadata.openGraph;
+  const title = typeof metadata.title === "string" ? metadata.title : undefined;
+  const description =
+    typeof metadata.description === "string" ? metadata.description : undefined;
+
+  return {
+    ...metadata,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      ...(existing ? {} : { images: [DEFAULT_OG_IMAGE] }),
+      ...existing,
+      url,
+    } as Metadata["openGraph"],
+  };
+}

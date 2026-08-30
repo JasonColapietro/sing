@@ -23,6 +23,7 @@ import {
 import { formatMinSec } from "@/components/songs/lib";
 import type { Song } from "@/components/songs/types";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 
 interface Params {
@@ -58,7 +59,7 @@ export async function generateMetadata({
   const description = pro
     ? `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel}. Lyrics, structure and why it is public domain. Part of the Suede Pro songbook.`
     : `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel} (${f.difficulty}). Full lyrics, why it is public domain, and free browser practice with live pitch feedback.`;
-  return {
+  return withCanonicalOpenGraph({
     title,
     description,
     alternates: { canonical: `${SITE_URL}/songs/${song.slug}` },
@@ -67,7 +68,7 @@ export async function generateMetadata({
     // page worth sharing, but it is not the page we want ranking for "sing
     // <title> free" when the practice room behind it is paid.
     robots: pro ? { index: false, follow: true } : undefined,
-  };
+  });
 }
 
 export default async function SongPage({

@@ -1,5 +1,6 @@
 import { ProClient } from "@/components/pro/pro-client";
 import { AUTHOR_ID, AUTHOR_NODE } from "@/lib/author";
+import { withCanonicalOpenGraph } from "@/lib/og";
 import {
   formatPrice,
   PRICING,
@@ -8,12 +9,12 @@ import {
 } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 
-export const metadata = {
+export const metadata = withCanonicalOpenGraph({
   title: "Suede Pro: The Vocal Coach on Top of the Free Studio",
   description:
     "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access, adding an adaptive coach, per-note analytics, take analysis, pro warmup packs, the full songbook, and two books with PDFs.",
   alternates: { canonical: `${SITE_URL}/pro` },
-};
+});
 
 function offerFor(plan: CheckoutPlan) {
   const { amount } = PRICING[plan];
