@@ -153,7 +153,17 @@ async function checkTextZoom(page, findings) {
       const isVisible = (el, rect) => {
         if (rect.width === 0 || rect.height === 0) return false;
         const cs = getComputedStyle(el);
-        return cs.visibility !== "hidden" && cs.display !== "none";
+        if (cs.visibility === "hidden" || cs.display === "none") return false;
+        // Chrome keeps a closed <details>'s contents in the layout tree so
+        // find-in-page can reach them: real rects, nothing painted. Every
+        // collapsed section is laid out over the same pixels, so comparing
+        // them pairwise reports ordinary copy as overlapping ordinary copy.
+        // Written inline rather than via window.__rendered because this
+        // module reloads the page to apply each preference, and a reload
+        // wipes the probes -- a probe call here would silently fall back to
+        // "visible" and quietly restore the false positive.
+        if (el.closest("details:not([open])")) return false;
+        return true;
       };
       const describe = (el) => (typeof window.__describe === "function" ? window.__describe(el) : el.tagName.toLowerCase());
 
@@ -193,6 +203,14 @@ async function checkTextZoom(page, findings) {
         if (!isScreenReaderOnly && cs.overflowY === "hidden" && el.scrollHeight > el.clientHeight + 1) {
           clipped.push({ selector: describe(el), scrollHeight: el.scrollHeight, clientHeight: el.clientHeight });
         }
+
+        // sr-only nodes are all clipped to the same 1px box and stacked on
+        // each other by design, so every pair of them "overlaps" by 100%.
+        // They are never displayed at any zoom, which is the whole point of
+        // the pattern -- two of them on /tools were the last finding in this
+        // class. The clipped check above already treats them correctly and
+        // runs before this, so skipping them here costs no coverage.
+        if (isScreenReaderOnly) continue;
 
         const parent = el.parentElement;
         if (!parent) continue;

@@ -82,6 +82,13 @@ function setupKeyboardProbe(selector) {
       if (rect.width === 0 && rect.height === 0) return false;
       const raw = el.getAttribute("tabindex");
       if (raw !== null && parseInt(raw, 10) < 0) return false;
+      // A control inside a closed <details> passes every check above -- Chrome
+      // keeps it in the layout tree for find-in-page, so it has a real rect and
+      // neither display:none nor visibility:hidden -- while being correctly
+      // skipped by Tab. Expecting focus to land on it reported the /studio and
+      // /warmups device pickers as unreachable when the browser was right and
+      // the audit was wrong.
+      if (el.closest("details:not([open])")) return false;
       return true;
     },
 
