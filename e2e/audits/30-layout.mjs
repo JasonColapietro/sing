@@ -228,7 +228,44 @@ export async function run(ctx) {
         candidates.push(el);
       }
 
-      const rects = candidates.map((el) => el.getBoundingClientRect());
+      /**
+       * The rect a person can actually see, not the rect the element claims.
+       *
+       * An element inside a scroll container keeps its full width in its
+       * bounding rect even when the container clips most of it away. The nav
+       * pill strip is exactly that: at 768px the "Tools" pill is scrolled out
+       * of the strip entirely, but its rect still reaches across the header and
+       * into the "LV 1 · 0 XP" badge beside it -- so a rect comparison reported
+       * the two as overlapping on all thirty routes, at one viewport, where a
+       * screenshot shows the pill is not painted there at all.
+       *
+       * Intersecting with every clipping ancestor gives the visible box, which
+       * is the one that can actually collide with something. This keeps
+       * coverage rather than skipping clipped elements: a partly-scrolled
+       * element still reports overlaps within the part you can see.
+       */
+      const visibleRect = (el) => {
+        let r = el.getBoundingClientRect();
+        let box = { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+        for (let p = el.parentElement; p && p !== document.documentElement; p = p.parentElement) {
+          const pcs2 = getComputedStyle(p);
+          if (!/auto|scroll|hidden|clip/.test(pcs2.overflowX + " " + pcs2.overflowY)) continue;
+          const pr = p.getBoundingClientRect();
+          box.left = Math.max(box.left, pr.left);
+          box.top = Math.max(box.top, pr.top);
+          box.right = Math.min(box.right, pr.right);
+          box.bottom = Math.min(box.bottom, pr.bottom);
+        }
+        return {
+          left: box.left, top: box.top,
+          right: Math.max(box.left, box.right),
+          bottom: Math.max(box.top, box.bottom),
+          width: Math.max(0, box.right - box.left),
+          height: Math.max(0, box.bottom - box.top),
+        };
+      };
+
+      const rects = candidates.map(visibleRect);
       const hits = [];
       for (let i = 0; i < candidates.length; i++) {
         for (let j = i + 1; j < candidates.length; j++) {
