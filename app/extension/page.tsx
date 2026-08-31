@@ -95,11 +95,11 @@ const FAQ = [
   },
   {
     q: "Is Suede Sing free?",
-    a: "Yes. The Suede Sing Chrome extension is free with no trial, no paywall, and no account. The companion Suede Sing iPhone app is also free on the App Store.",
+    a: "Yes. The Suede Sing Chrome extension is free with no trial, no paywall, and no account. The companion Suede Voice iPhone app is also free on the App Store.",
   },
   {
     q: "What is the difference between Suede Sing and Suede Voice?",
-    a: "Suede Sing and Suede Voice are the same product. Suede Voice was the earlier working name; Suede Sing is the current brand as of the July 2026 rebrand. Both names refer to the vocal training tools from Suede Labs, founded by Jason Colapietro.",
+    a: "Suede Sing is the web app and the Chrome extension. The iPhone app is a separate product, Suede Voice: Vocal Range Test. Both are vocal training tools from Suede Labs, founded by Jason Colapietro.",
   },
 ];
 

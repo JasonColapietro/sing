@@ -7,9 +7,13 @@
  * same brand, different surfaces — say "Suede Voice" whenever the copy means
  * the app, so the app's own brand term is searchable somewhere on the web.
  *
- * The `suede-studio-voice` slug in the URL is the App Store's own historical
- * slug. Apple owns it, it still resolves, and it is not ours to rewrite.
+ * The URL uses Apple's own canonical slug for this listing, taken from the
+ * iTunes lookup API's `trackViewUrl` for id 6767763231 (re-checked 2026-08-31).
+ * It previously used `suede-studio-voice`, a retired working name — a third
+ * name for the same app, and the one thing on this page that still implied the
+ * app had ever been called anything else. Apple has since moved the slug to
+ * match the live listing name, so the canonical form is the one to link.
  */
 export const APP_NAME = "Suede Voice";
 export const APP_STORE_URL =
-  "https://apps.apple.com/us/app/suede-studio-voice/id6767763231";
+  "https://apps.apple.com/us/app/suede-voice-vocal-range-test/id6767763231";
