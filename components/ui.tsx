@@ -238,3 +238,99 @@ export function EmptyState({
     </div>
   );
 }
+
+/**
+ * The mic glyph every permission gate wears. Stroked with `currentColor` so the
+ * badge that holds it decides the colour.
+ */
+function MicGlyph() {
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="9" y="2.5" width="6" height="11" rx="3" />
+      <path d="M5.5 11a6.5 6.5 0 0 0 13 0" />
+      <path d="M12 17.5V21M8.5 21h7" />
+    </svg>
+  );
+}
+
+/**
+ * The promise made on every mic gate. One sentence, one place, so no room can
+ * drift into a weaker or vaguer version of it.
+ */
+export const MIC_PRIVACY = "Audio is analyzed on this device and never uploaded.";
+
+/**
+ * The one microphone-permission gate. Every listening room asks in the same
+ * shape — badge, what the room does, where the audio goes, one button — and
+ * differs only in the words it is handed, never in its layout. Rooms that ask
+ * from inside a panel that is already a Card pass `bare` so no card nests.
+ */
+export function MicGate({
+  title,
+  description,
+  privacy = MIC_PRIVACY,
+  enableLabel = "Enable microphone",
+  onEnable,
+  disabled = false,
+  error = null,
+  secondary,
+  footer,
+  bare = false,
+  className,
+}: {
+  title: ReactNode;
+  description: ReactNode;
+  /** Override only where the true sentence differs — the recorder also stores takes. */
+  privacy?: string;
+  enableLabel?: string;
+  onEnable: () => void;
+  disabled?: boolean;
+  /** What went wrong, in the words of lib/audio/mic.ts: cause plus the fix. */
+  error?: string | null;
+  /** An alternative way in, e.g. song practice without a mic. */
+  secondary?: ReactNode;
+  /** The quiet Pro line. Passed in so components/ui.tsx stays dependency-free. */
+  footer?: ReactNode;
+  bare?: boolean;
+  className?: string;
+}) {
+  const body = (
+    <>
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-line2 bg-panel2 text-amber-ink">
+        <MicGlyph />
+      </div>
+      <h2 className="mt-5 text-2xl">{title}</h2>
+      <p className="mx-auto mt-2 max-w-md text-mut">{description}</p>
+      <p className="mt-2 text-xs text-dim">{privacy}</p>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <Button variant="rec" size="lg" onClick={onEnable} disabled={disabled}>
+          {error ? "Try again" : enableLabel}
+        </Button>
+        {secondary}
+      </div>
+      {error && (
+        <p role="alert" className="mx-auto mt-4 max-w-md text-sm text-rec">
+          {error}
+        </p>
+      )}
+      {footer && <div className="mt-4">{footer}</div>}
+    </>
+  );
+
+  if (bare) {
+    return <div className={cn("py-8 text-center", className)}>{body}</div>;
+  }
+  return (
+    <Card className={cn("mx-auto max-w-2xl py-10 text-center", className)}>{body}</Card>
+  );
+}

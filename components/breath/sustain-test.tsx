@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
-import { Button, Card, Pill, Stat } from "@/components/ui";
+import { Button, Card, MicGate, Pill, Stat } from "@/components/ui";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { loadBreath, recordAttempt, type BreathData } from "./store";
 import { RewardNote } from "./reward";
@@ -266,45 +266,15 @@ export function SustainTest() {
   // ---- Mic gate ----
   if (!listening) {
     return (
-      <Card>
-        <div className="flex flex-col items-center gap-4 py-10 text-center">
-          <svg
-            width="36"
-            height="36"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--color-mut)"
-            strokeWidth="1.5"
-            aria-hidden="true"
-          >
-            <rect x="9" y="3" width="6" height="11" rx="3" />
-            <path d="M5 11a7 7 0 0 0 14 0" />
-            <path d="M12 18v3" />
-          </svg>
-          <div>
-            <h3 className="font-display text-xl">Sustain test</h3>
-            <p className="mx-auto mt-2 max-w-sm text-sm text-mut">
-              Sing or hiss one steady note for as long as you can. The timer
-              runs while the mic hears you and stops when you run out of air.
-            </p>
-          </div>
-          <Button
-            variant="rec"
-            onClick={() => {
-              void start();
-            }}
-          >
-            <span className="h-2 w-2 rounded-full bg-current animate-recblink" />
-            Enable microphone
-          </Button>
-          {error && (
-            <p role="alert" className="max-w-sm text-sm text-rec">
-              {error}
-            </p>
-          )}
-          <ProWhisper className="mt-4" />
-        </div>
-      </Card>
+      <MicGate
+        title="Sustain test"
+        description="Sing or hiss one steady note for as long as you can. The timer runs while the mic hears you and stops when you run out of air."
+        onEnable={() => {
+          void start();
+        }}
+        error={error}
+        footer={<ProWhisper />}
+      />
     );
   }
 

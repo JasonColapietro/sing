@@ -5,7 +5,7 @@ import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
-import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { Button, Card, MicGate, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { CentsGauge } from "./cents-gauge";
 import { LevelMeter } from "./level-meter";
 import { PitchTrace } from "./pitch-trace";
@@ -68,26 +68,6 @@ function fmtTime(sec: number): string {
   const m = Math.floor(sec / 60);
   const s = sec % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
-}
-
-function MicIcon() {
-  return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="9" y="2.5" width="6" height="11" rx="3" />
-      <path d="M5.5 11a6.5 6.5 0 0 0 13 0" />
-      <path d="M12 17.5V21M8.5 21h7" />
-    </svg>
-  );
 }
 
 export function StudioClient() {
@@ -265,25 +245,13 @@ export function StudioClient() {
       )}
 
       {!listening ? (
-        <Card className="mx-auto max-w-2xl py-10 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-line2 bg-panel2 text-amber-ink">
-            <MicIcon />
-          </div>
-          <h2 className="mt-5 text-2xl">The voice oscilloscope</h2>
-          <p className="mx-auto mt-2 max-w-md text-mut">
-            Sing or hum any note and watch it land on the dial in real time —
-            note name, cents sharp or flat, and a scrolling trace of your last
-            eight seconds. Pick a target note to practice locking your pitch.
-          </p>
-          <p className="mt-2 text-xs text-dim">
-            Audio is analyzed on this device and never uploaded.
-          </p>
-          <Button variant="rec" size="lg" className="mt-6" onClick={handleStart}>
-            Enable microphone
-          </Button>
-          {error && <p className="mt-4 text-sm text-rec">{error}</p>}
-          <ProWhisper className="mt-4" />
-        </Card>
+        <MicGate
+          title="The voice oscilloscope"
+          description="Sing or hum any note and watch it land on the dial in real time — note name, cents sharp or flat, and a scrolling trace of your last eight seconds. Pick a target note to practice locking your pitch."
+          onEnable={handleStart}
+          error={error}
+          footer={<ProWhisper />}
+        />
       ) : (
         <>
           <div className="grid gap-4 lg:grid-cols-[380px_minmax(0,1fr)]">

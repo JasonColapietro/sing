@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
-import { Button, Card, PageShell } from "@/components/ui";
+import { MicGate, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
-import { IconMic } from "./icons";
 import { ALL_EXERCISES, EXERCISES, type WarmupExercise } from "./exercises";
 import { getProState } from "@/lib/pro";
 import { Library } from "./library";
@@ -89,28 +88,15 @@ export function WarmupsClient() {
         title="Guided vocal warmups"
         subtitle="Listen to a short melody, then sing it back. Roots climb by semitones as you go, like a real warmup ladder."
       >
-        <Card>
-          <h2 className="text-xl">
-            {pendingDeepLink
-              ? `Enable your microphone to start “${deepLinkEx.title}”`
-              : "Enable your microphone to begin"}
-          </h2>
-          <p className="mt-2 max-w-md text-sm text-mut">
-            Suede Sing needs the mic to score your pitch against the target
-            melody. Audio never leaves your browser.
-          </p>
-          <div className="mt-5">
-            <Button variant="rec" size="lg" onClick={pitch.start}>
-              <IconMic /> Enable microphone
-            </Button>
-          </div>
-          {pitch.error && (
-            <p className="mt-4 max-w-md text-sm text-rec" role="alert">
-              {pitch.error}
-            </p>
-          )}
-          <ProWhisper className="mt-4" />
-        </Card>
+        <MicGate
+          title={
+            pendingDeepLink ? `Warm up with “${deepLinkEx.title}”` : "Sing the melody back"
+          }
+          description="Suede Sing needs the mic to score your pitch against the target melody, note by note, as the roots climb."
+          onEnable={pitch.start}
+          error={pitch.error}
+          footer={<ProWhisper />}
+        />
       </PageShell>
     );
   }
