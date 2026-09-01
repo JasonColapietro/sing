@@ -142,6 +142,28 @@ export default function SiteFooter() {
           </span>
           <span>practice loud — your voice never leaves this device</span>
         </div>
+
+        {/* Estate attribution. The open-source record is the same claim the
+            sibling Suede properties carry, worded identically and pointed at
+            the one canonical receipt, so the number is verified in one place
+            rather than drifting per surface. */}
+        <p className="mt-4 text-xs leading-relaxed text-dim">
+          A <a href="https://suedeai.ai" className={linkClass}>Suede Labs AI</a>{" "}
+          product, built by{" "}
+          <a href="https://suedeai.ai/founder" className={linkClass}>
+            Jason Colapietro
+          </a>
+          , an{" "}
+          <a
+            href="https://seo.suedeai.ai/evidence#open-source"
+            className={linkClass}
+          >
+            open-source contributor with 37 pull requests merged across 34
+            external repositories through GitHub, plus one public Linux kernel
+            USB/IP contribution labeled Public upstream v6, as of September 2026
+          </a>
+          .
+        </p>
       </div>
     </footer>
   );
