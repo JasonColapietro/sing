@@ -35,6 +35,7 @@ const REFERENCE: FooterLink[] = [
   },
   { href: "/glossary", label: "Vocal glossary" },
   { href: "/songs", label: "Song library" },
+  { href: "/can-you-sing", label: "Vocal ranges of popular songs" },
 ];
 
 const PRACTICE: FooterLink[] = [

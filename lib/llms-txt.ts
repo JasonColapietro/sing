@@ -123,6 +123,7 @@ export function buildLlmsTxt(): string {
 - [Suede Sing on the Chrome Web Store](${CHROME_STORE_URL}): install the extension
 - [Analyze](${SING_HOME}/analyze): spectrogram, tone, and vocal load
 - [Songs](${SING_HOME}/songs): song practice with real notation
+- [Can you sing it?](${SING_HOME}/can-you-sing): the key, vocal range and difficulty of popular songs, checked against your own range test
 - [Singers](${SING_HOME}/singers): vocal profiles of notable singers, by voice type and genre
 - [The Voice Atlas](${SING_HOME}/atlas): reference atlas of the singing voice
 - [Vocal range by voice type](${SING_HOME}/atlas/vocal-range-by-voice-type): the conventional range and passaggio zone for all eight voice types (bass, bass-baritone, baritone, tenor, countertenor, contralto, mezzo-soprano, soprano), in a table, with example singers

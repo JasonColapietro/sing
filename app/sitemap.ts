@@ -9,6 +9,7 @@ import {
   genreSlug,
   voiceTypeSlug,
 } from "@/lib/singers";
+import { POP_SONGS } from "@/lib/pop-songs";
 import { getSingerLastModified } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 
@@ -32,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/pro",
     "/book",
     "/atlas",
+    "/can-you-sing",
     // Not a chapter: a standalone reference page under /atlas, so it is
     // listed here rather than derived from ATLAS_CONTENTS below.
     "/atlas/vocal-range-by-voice-type",
@@ -82,5 +84,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...pages, ...hubs, ...singers, ...songs];
+  // Popular-song range pages: facts only, always indexable, same leaf
+  // priority as the singer pages they cross-link.
+  const popSongs = POP_SONGS.map((s) => ({
+    url: `${SITE_URL}/can-you-sing/${s.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [...pages, ...hubs, ...singers, ...songs, ...popSongs];
 }

@@ -27,6 +27,7 @@ import {
   voiceTypeEvidenceCopy,
 } from "@/lib/singer-evidence";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
+import { popRangeLabel, popSongsByArtistSlug } from "@/lib/pop-songs";
 import { SITE_URL } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import {
@@ -659,6 +660,25 @@ export default async function SingerPage({
                 </LinkButton>
               )}
             </div>
+          </Card>
+        )}
+
+        {/* Songs in the range catalog by this artist */}
+        {popSongsByArtistSlug(s.slug).length > 0 && (
+          <Card>
+            <SectionLabel>Can you sing their songs?</SectionLabel>
+            <ul className="mt-4 space-y-2">
+              {popSongsByArtistSlug(s.slug).map((song) => (
+                <li key={song.slug} className="text-sm">
+                  <Link
+                    className="text-violet-ink underline-offset-4 hover:underline"
+                    href={`/can-you-sing/${song.slug}`}
+                  >
+                    {song.title} vocal range: {popRangeLabel(song)} in {song.key}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </Card>
         )}
 
