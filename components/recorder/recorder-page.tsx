@@ -1,14 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Card,
-  EmptyState,
-  PageShell,
-  Pill,
-  SectionLabel,
-} from "@/components/ui";
+import { Button, Card, EmptyState, MicGate, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { analyzeTake, type TakeAnalysis } from "@/lib/audio/analyze-take";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { clickAt } from "@/lib/audio/synth";
@@ -16,7 +9,7 @@ import { useIsPro } from "@/lib/pro";
 import { logSession, type Achievement } from "@/lib/progress";
 import { openTakesStore, type TakeRecord, type TakesStore } from "./db";
 import { computePeaks, decodeTakeBlob, encodeWavMono, type Peaks } from "./wav";
-import { IconMic, IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from "./icons";
+import { IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from "./icons";
 import { LiveWaveform, PeaksWaveform } from "./waveforms";
 import { TakeRow } from "./take-row";
 import { AbPitchOverlay, TakePitchPanel } from "./pitch-analysis";
@@ -665,35 +658,21 @@ export default function RecorderPageClient() {
             </div>
 
             {micState !== "ready" ? (
-              <div className="flex flex-col items-center gap-4 py-8 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-line2 text-amber-ink">
-                  <IconMic className="h-6 w-6" />
-                </div>
-                {micState === "blocked" ? (
-                  <>
-                    <p className="max-w-sm text-sm text-mut">{micError}</p>
-                    <Button variant="outline" onClick={() => void enableMic()}>
-                      Try again
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <p className="max-w-sm text-sm text-mut">
-                      Record practice takes and listen back. Takes stay on this device — they
-                      never leave your browser.
-                    </p>
-                    <Button
-                      variant="rec"
-                      onClick={() => void enableMic()}
-                      disabled={micState === "requesting"}
-                    >
-                      <IconMic />
-                      {micState === "requesting" ? "Waiting for permission…" : "Enable microphone"}
-                    </Button>
-                  </>
-                )}
-                <ProWhisper className="mt-4" />
-              </div>
+              <MicGate
+                bare
+                title="Record practice takes"
+                description="Record practice takes and listen back."
+                // The recorder also *stores* takes, so the shared one-line promise
+                // is not the true sentence here.
+                privacy="Takes stay on this device — they never leave your browser."
+                enableLabel={
+                  micState === "requesting" ? "Waiting for permission…" : "Enable microphone"
+                }
+                onEnable={() => void enableMic()}
+                disabled={micState === "requesting"}
+                error={micState === "blocked" ? micError : null}
+                footer={<ProWhisper />}
+              />
             ) : (
               <>
                 <div className="mb-4 flex flex-wrap items-center gap-5">

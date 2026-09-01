@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
-import { Button, Card, PageShell } from "@/components/ui";
+import { Button, MicGate, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { IconHeadphones, IconMic } from "./icons";
 import { ALL_SONGS, SONGS, type Song } from "./data";
@@ -109,33 +109,22 @@ export function SongsClient() {
         title="Song practice"
         subtitle="Listen to a short phrase from a well-known melody, then sing it back on a scrolling piano roll."
       >
-        <Card>
-          <h2 className="text-xl">
-            {pendingDeepLink
+        <MicGate
+          title={
+            pendingDeepLink
               ? `Enable your microphone to sing “${deepLinkSong.title}”`
-              : "Enable your microphone to get scored"}
-          </h2>
-          <p className="mt-2 max-w-md text-sm text-mut">
-            Suede Sing needs the mic to score your pitch against the melody in
-            real time. Audio never leaves your browser. You can also practice
-            without a mic in listen mode — the guide melody still plays, just
-            without scoring.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            <Button variant="rec" size="lg" onClick={pitch.start}>
-              <IconMic /> Enable microphone
-            </Button>
+              : "Enable your microphone to get scored"
+          }
+          description="Suede Sing scores your pitch against the melody in real time."
+          onEnable={pitch.start}
+          error={pitch.error}
+          secondary={
             <Button variant="outline" size="lg" onClick={() => setListenMode(true)}>
               <IconHeadphones /> Continue without a mic
             </Button>
-          </div>
-          {pitch.error && (
-            <p className="mt-4 max-w-md text-sm text-rec" role="alert">
-              {pitch.error}
-            </p>
-          )}
-          <ProWhisper className="mt-4" />
-        </Card>
+          }
+          footer={<ProWhisper />}
+        />
       </PageShell>
     );
   }

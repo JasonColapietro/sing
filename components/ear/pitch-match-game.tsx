@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Card, ProgressBar } from "@/components/ui";
+import { Button, Card, MicGate, ProgressBar } from "@/components/ui";
+import { ProWhisper } from "@/components/pro/gate";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
@@ -14,7 +15,6 @@ import {
 } from "./lib";
 import {
   GameShell,
-  MicGate,
   RoundFeedback,
   SummaryView,
   useEarSession,
@@ -252,9 +252,11 @@ export function PitchMatchGame({
     return (
       <div className="mx-auto max-w-2xl">
         <MicGate
+          title="This game listens to you sing"
+          description="You'll hear a reference note, then sing it back and hold it steady."
           error={error}
           onEnable={() => void start()}
-          trains="You'll hear a reference note, then sing it back and hold it steady."
+          footer={<ProWhisper />}
         />
       </div>
     );
