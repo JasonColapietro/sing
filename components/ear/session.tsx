@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Card, Pill, ProgressBar, Stat } from "@/components/ui";
-import { ProCrescendoNudge, ProWhisper } from "@/components/pro/gate";
-import { AudioSetup } from "@/components/audio/audio-setup";
+import { ProCrescendoNudge } from "@/components/pro/gate";
 import { logSession, type Achievement } from "@/lib/progress";
 import { emitProResult } from "@/lib/pro-signal";
 import {
@@ -259,49 +258,6 @@ export function SummaryView({
           All games
         </Button>
       </div>
-    </Card>
-  );
-}
-
-/* ---------------- mic gate ---------------- */
-
-export function MicGate({
-  error,
-  onEnable,
-  trains,
-}: {
-  error: string | null;
-  onEnable: () => void;
-  trains: string;
-}) {
-  return (
-    <Card className="text-center">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-line2 bg-panel2">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect x="9" y="3" width="6" height="11" rx="3" stroke="#5c564d" strokeWidth="1.6" />
-          <path
-            d="M5 11a7 7 0 0 0 14 0M12 18v3"
-            stroke="#5c564d"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
-      <h3 className="mt-4 text-lg">This game listens to you sing</h3>
-      <p className="mx-auto mt-2 max-w-sm text-sm text-mut">{trains} Audio
-        stays on your device — nothing is uploaded.</p>
-      <div className="mt-5">
-        <Button variant="rec" onClick={onEnable}>
-          Enable microphone
-        </Button>
-      </div>
-      {error && (
-        <p role="alert" className="mx-auto mt-4 max-w-sm text-sm text-rec">
-          {error}
-        </p>
-      )}
-      <AudioSetup className="mx-auto mt-6 max-w-sm text-left" />
-      <ProWhisper className="mt-4" />
     </Card>
   );
 }
