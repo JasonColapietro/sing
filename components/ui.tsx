@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { MicAlert } from "@/components/mic-alert";
+
 function cn(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
 }
@@ -299,4 +301,104 @@ export function EmptyState({
       {action && <div className="mt-5">{action}</div>}
     </div>
   );
+}
+
+/**
+ * The mic glyph a permission gate wears. Stroked with `currentColor` so the
+ * badge that holds it decides the colour.
+ */
+function MicGlyph() {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <rect x="9" y="3" width="6" height="11" rx="3" />
+      <path d="M5 11a7 7 0 0 0 14 0" />
+      <path d="M12 18v3" />
+    </svg>
+  );
+}
+
+/**
+ * The promise a room makes when it asks for the mic, in one place.
+ *
+ * The estate had two versions of this sentence in prose that means the same
+ * thing. One sentence cannot be quietly weakened in one room while the others
+ * keep the stronger claim.
+ */
+export const MIC_PRIVACY = "Audio is analyzed on this device and never uploaded.";
+
+/**
+ * The shape a practice room asks for the microphone in: badge, what the room
+ * does, where the audio goes, one button, and the failure underneath it.
+ *
+ * Failures render through MicAlert rather than a local `<p role="alert">`, so
+ * every room inherits the scroll-into-view behaviour that component exists to
+ * provide — an ear game's refusal used to announce itself and then sit wherever
+ * it happened to be.
+ *
+ * Not every gate belongs here. `SongsMicGate` doubles as the /songs Suspense
+ * fallback and is sized against it, /warmups carries an exercise list and a
+ * safety line inside its gate, and the recorder's gate is a permission state
+ * machine. Those are rooms whose gate is doing more than gating.
+ */
+export function MicGate({
+  title,
+  description,
+  privacy = MIC_PRIVACY,
+  enableLabel = "Enable microphone",
+  onEnable,
+  disabled = false,
+  error = null,
+  secondary,
+  footer,
+  bare = false,
+  className,
+}: {
+  title: ReactNode;
+  description: ReactNode;
+  /** Override only where the true sentence differs — the recorder stores takes. */
+  privacy?: string;
+  enableLabel?: string;
+  onEnable: () => void;
+  disabled?: boolean;
+  /** The failure, in the words of the room's mic hook. */
+  error?: string | null;
+  /** An alternative way in, e.g. song practice without a mic. */
+  secondary?: ReactNode;
+  /** The quiet Pro line, passed in so this file stays dependency-free. */
+  footer?: ReactNode;
+  /** Set when the room already sits inside a Card, so none nests. */
+  bare?: boolean;
+  className?: string;
+}) {
+  const body = (
+    <>
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-line2 bg-panel2 text-violet-ink">
+        <MicGlyph />
+      </div>
+      <h2 className="mt-5 text-2xl">{title}</h2>
+      <p className="mx-auto mt-2 max-w-md text-mut">{description}</p>
+      <p className="mt-2 text-xs text-dim">{privacy}</p>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <Button variant="rec" size="lg" onClick={onEnable} disabled={disabled}>
+          {error ? "Try again" : enableLabel}
+        </Button>
+        {secondary}
+      </div>
+      {error && (
+        <MicAlert message={error} className="mx-auto mt-4 max-w-md text-sm text-rec" />
+      )}
+      {footer && <div className="mt-4">{footer}</div>}
+    </>
+  );
+  if (bare) return <div className={cn("py-8 text-center", className)}>{body}</div>;
+  return <Card className={cn("mx-auto max-w-2xl py-10 text-center", className)}>{body}</Card>;
 }

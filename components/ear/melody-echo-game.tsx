@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Card, ProgressBar } from "@/components/ui";
+import { Button, Card, MicGate, ProgressBar } from "@/components/ui";
+import { ProWhisper } from "@/components/pro/gate";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { useAudioPrefs } from "@/lib/audio/devices";
@@ -19,7 +20,6 @@ import {
 import { NoteLanes } from "./note-lanes";
 import {
   GameShell,
-  MicGate,
   RoundFeedback,
   SummaryView,
   useEarSession,
@@ -199,9 +199,11 @@ export function MelodyEchoGame({
     return (
       <div className="mx-auto max-w-2xl">
         <MicGate
-          error={error}
+          title="This game listens to you sing"
+          description="You'll hear a short melody, then sing it back note for note."
           onEnable={() => void start()}
-          trains="You'll hear a short melody, then sing it back note for note."
+          error={error}
+          footer={<ProWhisper />}
         />
       </div>
     );
