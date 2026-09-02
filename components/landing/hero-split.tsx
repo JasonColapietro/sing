@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/ui";
-import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
+import { APP_NAME, APP_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { AUTHOR_NAME } from "@/lib/author";
 
 /**
@@ -105,7 +105,7 @@ export function HeroSplit() {
           </a>
         </div>
         <p className="mt-3 max-w-xl text-sm text-mut">
-          Start here in your browser — no install required. {APP_NAME}, the
+          Start here in your browser — no install required. <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">{APP_NAME}</Link>, the
           phone companion, is optional — for when you want deeper on-device
           voice analysis.
         </p>

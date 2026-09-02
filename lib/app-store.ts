@@ -1,9 +1,9 @@
 /**
- * The iPhone companion on the App Store.
+ * Official Suede Voice mobile listings.
  *
  * The app ships as **Suede Voice** (App Store "Suede Voice: Vocal Range Test";
- * there is no Play Store listing yet, so no copy on this site may present
- * Android as a shipping surface); this site is Suede Sing. They are the
+ * Android package ai.suedeai.suedevoice is also publicly live on Google Play,
+ * verified 2026-09-02); this site is Suede Sing. They are the
  * same brand, different surfaces — say "Suede Voice" whenever the copy means
  * the app, so the app's own brand term is searchable somewhere on the web.
  *
@@ -17,3 +17,6 @@
 export const APP_NAME = "Suede Voice";
 export const APP_STORE_URL =
   "https://apps.apple.com/us/app/suede-voice-vocal-range-test/id6767763231";
+export const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=ai.suedeai.suedevoice";
+export const VOICE_PAGE_PATH = "/voice";

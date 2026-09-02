@@ -42,6 +42,7 @@ const PRACTICE: FooterLink[] = [
   { href: "/studio", label: "Vocal studio" },
   { href: "/warmups", label: "Guided warmups" },
   { href: "/range", label: "Free vocal range test" },
+  { href: "/voice", label: "Suede Voice for iPhone & Android" },
   { href: "/ear-training", label: "Ear training" },
   // No longer header tabs of their own — the footer and /tools carry the
   // crawl path into these rooms now. "Take recorder" is what the homepage room

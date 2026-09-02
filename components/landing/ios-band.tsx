@@ -1,6 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
-import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
+import { APP_NAME, APP_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 
 const SHOTS = [
   {
@@ -90,6 +91,9 @@ export function IosBand() {
         </dl>
 
         <div className="mt-9 flex flex-wrap items-center gap-4">
+          <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">
+            Explore Suede Voice for iPhone and Android
+          </Link>
           <a
             href={APP_STORE_URL}
             aria-label={`View ${APP_NAME} on the App Store`}
