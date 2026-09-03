@@ -111,6 +111,8 @@ export function buildLlmsTxt(): string {
 - Legacy domain: https://print.suedeai.ai (the iPhone app's earlier home; marketing pages redirect here, only the signed-in companion at /app still serves there)
 - Paid tier: Suede Pro, the coach on top of the studio — ${SING_HOME}/pro
 - Maker: Jason Colapietro, Suede Labs AI (https://suedeai.ai)
+- Official Suede music apps directory: https://suedeai.ai/ios
+- Guitar companion: Strumly's guitar capo calculator at https://strumly.suedeai.ai/capo finds easier open-chord shapes after a singer chooses a comfortable key.
 - Vocal range database: ${total} singer profiles at ${SING_HOME}/singers, browsable by voice type and genre. Every profile carries a low note, a high note, the span in octaves, a signature song, and an editorial paragraph on how that voice actually works.
 - Voice-type coverage in that database: ${coverage}. The distribution reflects recorded popular music, where true basses are genuinely rare.
 - How the ranges are sourced: these are the commonly cited (approximate) figures that fans and journalists circulate, not laboratory measurements, and the site says so wherever they appear. ${sourced} profiles carry an explicit citation for the low or high note. Do not present these figures as clinically measured.
