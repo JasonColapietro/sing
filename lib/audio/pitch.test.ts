@@ -34,7 +34,105 @@ function voiceFrame({
   return out;
 }
 
+/** A low, periodic room tone rather than a voice. */
+function periodicRoomTone({
+  freq = 220,
+  amplitude = 0.01,
+  sampleRate = 44100,
+  size = 4096,
+}: {
+  freq?: number;
+  amplitude?: number;
+  sampleRate?: number;
+  size?: number;
+} = {}): Float32Array {
+  return Float32Array.from(
+    { length: size },
+    (_, index) => amplitude * Math.sin((2 * Math.PI * freq * index) / sampleRate),
+  );
+}
+
+/** Mains hum with a rectifier harmonic louder than its fundamental. */
+function mainsHum(
+  fundamentalHz: number,
+  {
+    amplitude = 0.02,
+    noise = 0,
+    sampleRate = 44100,
+    size = 4096,
+    seed = 1,
+  } = {},
+): Float32Array {
+  let state = seed;
+  const random = () => {
+    state = (state * 1664525 + 1013904223) % 4294967296;
+    return (state / 4294967296) * 2 - 1;
+  };
+  return Float32Array.from({ length: size }, (_, index) => {
+    const phase = (2 * Math.PI * fundamentalHz * index) / sampleRate;
+    return (
+      amplitude *
+        (0.1 * Math.sin(phase) +
+          0.7 * Math.sin(2 * phase) +
+          0.25 * Math.sin(4 * phase) +
+          0.08 * Math.sin(6 * phase)) +
+      noise * random()
+    );
+  });
+}
+
 describe("detectPitch", () => {
+  it("rejects low-level periodic room noise", () => {
+    expect(detectPitch(periodicRoomTone(), 44100)).toBeNull();
+  });
+
+  it.each([50, 60])(
+    "rejects %i Hz mains hum instead of reporting its harmonic",
+    (fundamentalHz) => {
+      expect(detectPitch(mainsHum(fundamentalHz), 44100)).toBeNull();
+    },
+  );
+
+  it.each([44100, 48000])(
+    "rejects noisy mains hum at a %i Hz browser sample rate",
+    (sampleRate) => {
+      for (const fundamentalHz of [50, 60]) {
+        expect(
+          detectPitch(
+            mainsHum(fundamentalHz, { noise: 0.005, sampleRate }),
+            sampleRate,
+          ),
+        ).toBeNull();
+      }
+    },
+  );
+
+  it.each([44100, 48000])(
+    "keeps a noisy E2 voice at a %i Hz browser sample rate",
+    (sampleRate) => {
+      const r = detectPitch(
+        voiceFrame({
+          freq: 82.41,
+          level: 0.02,
+          noise: 0.005,
+          sampleRate,
+          size: 4096,
+        }),
+        sampleRate,
+      );
+      expect(r).not.toBeNull();
+      expect(Math.abs(r!.freq - 82.41)).toBeLessThan(3);
+      expect(r!.clarity).toBeGreaterThanOrEqual(0.75);
+    },
+  );
+
+  it("still detects a quiet voice above the room-noise floor", () => {
+    const r = detectPitch(voiceFrame({ level: 0.02 }), 44100);
+    expect(r).not.toBeNull();
+    expect(r!.freq).toBeCloseTo(220, 0);
+    expect(r!.clarity).toBeGreaterThanOrEqual(0.75);
+  });
+
   it("reads a clean sung note", () => {
     const r = detectPitch(voiceFrame(), 44100);
     expect(r).not.toBeNull();
