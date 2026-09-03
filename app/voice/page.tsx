@@ -129,6 +129,9 @@ export default function VoicePage() {
         <div className="mt-6 flex flex-wrap gap-3">
           <LinkButton href="/studio" variant="outline">Open Suede Sing</LinkButton>
           <LinkButton href="/singers" variant="ghost">Explore famous vocal ranges</LinkButton>
+          <LinkButton href="https://suedeai.ai/ios" variant="ghost">
+            Browse all official Suede music apps
+          </LinkButton>
         </div>
       </section>
 

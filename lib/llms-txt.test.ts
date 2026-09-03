@@ -347,3 +347,27 @@ describe("/llms.txt register scope", () => {
     expect(fact).toMatch(/they do not classify register/i);
   });
 });
+
+describe("cross-product search paths", () => {
+  it("routes app-intent queries to the official Suede app directory", () => {
+    const voicePage = readFileSync(
+      new URL("../app/voice/page.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(voicePage).toContain("https://suedeai.ai/ios");
+    expect(voicePage.replace(/\s+/g, " ")).toContain(
+      "Browse all official Suede music apps",
+    );
+    expect(llms).toContain("https://suedeai.ai/ios");
+  });
+
+  it("connects a measured vocal key to the guitar capo calculator", () => {
+    const rangePage = readFileSync(
+      new URL("../app/range/page.tsx", import.meta.url),
+      "utf8",
+    );
+    expect(rangePage).toContain("https://strumly.suedeai.ai/capo");
+    expect(rangePage.replace(/\s+/g, " ")).toMatch(/guitar capo calculator/i);
+    expect(llms).toContain("https://strumly.suedeai.ai/capo");
+  });
+});

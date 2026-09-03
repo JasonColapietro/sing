@@ -35,6 +35,18 @@ export default function RangePage() {
     <>
       <RangeTest />
       <RoomRailBand current="/range" />
+      <section className="mx-auto max-w-4xl px-4 py-8" aria-label="Singing with guitar">
+        <p className="rounded-2xl border border-line bg-panel p-5 leading-relaxed text-mut">
+          Singing with a guitarist? Once you know the most comfortable key for your voice, use{" "}
+          <a
+            href="https://strumly.suedeai.ai/capo"
+            className="text-violet-ink underline underline-offset-4"
+          >
+            Strumly&apos;s guitar capo calculator
+          </a>{" "}
+          to keep the song in that key with easier chord shapes.
+        </p>
+      </section>
       <ToolGuide guide={RANGE_GUIDE} />
     </>
   );
