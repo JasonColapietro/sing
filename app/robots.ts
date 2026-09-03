@@ -10,7 +10,7 @@ import { SITE_URL } from "@/lib/site";
  * this file has to decide about each of these crawlers deliberately rather
  * than sweep them up in a wildcard edit. Second, this list is the answer to
  * "is Suede Sing opted out?" for anyone auditing the domain — the brand's
- * whole reference layer (357 singer profiles, the Atlas, the glossary) exists
+ * whole reference layer (636 singer profiles, the Atlas, the glossary) exists
  * to be quoted by answer engines, and silence reads as ambiguity.
  *
  * CAREFUL — the per-bot groups must repeat `disallow`. Under RFC 9309 a

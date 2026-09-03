@@ -7,7 +7,7 @@ import { ORG_ID, ORG_SAME_AS } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
 const STORE_URL =
-  "https://chromewebstore.google.com/detail/dbimnmcokgmibdenmonoafhmdbjhpicd";
+  "https://chromewebstore.google.com/detail/suede-sing-vocal-coach-pi/dbimnmcokgmibdenmonoafhmdbjhpicd";
 
 const TITLE = "Suede Sing for Chrome: Free Vocal Coach, Pitch Tuner & Range Test";
 const DESCRIPTION =

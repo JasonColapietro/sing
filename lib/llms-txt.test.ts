@@ -33,7 +33,7 @@ import {
 import { SITE_URL } from "./site";
 
 const STORE_URL =
-  "https://chromewebstore.google.com/detail/dbimnmcokgmibdenmonoafhmdbjhpicd";
+  "https://chromewebstore.google.com/detail/suede-sing-vocal-coach-pi/dbimnmcokgmibdenmonoafhmdbjhpicd";
 /** minimum_chrome_version in the extension's manifest (suede-voice repo). */
 const MIN_CHROME = 116;
 const EXTENSION_NAME =

@@ -5,7 +5,7 @@
  * it hand-listed the genre hub slugs. One of them was wrong. It advertised
  * /singers/genre/r-b, but slugify() turns "R&B" into "randb" (via "&" -> "and"),
  * so the router serves /singers/genre/randb and the advertised URL answered 404
- * — on the second-largest bucket in a 420-profile directory. This file exists
+ * — on the second-largest bucket in what is now a 636-profile directory. This file exists
  * precisely so answer engines can navigate the site, which makes a dead URL in
  * it worse than no list at all.
  *
@@ -47,7 +47,7 @@ import {
 export const SING_HOME = "https://sing.suedeai.ai";
 
 export const CHROME_STORE_URL =
-  "https://chromewebstore.google.com/detail/dbimnmcokgmibdenmonoafhmdbjhpicd";
+  "https://chromewebstore.google.com/detail/suede-sing-vocal-coach-pi/dbimnmcokgmibdenmonoafhmdbjhpicd";
 
 /** One hub page, named the way the library files it and slugged the way the router serves it. */
 export interface HubLink {
