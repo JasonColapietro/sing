@@ -138,7 +138,15 @@ export default async function CanYouSingSongPage({
             <p className="mt-3 max-w-prose text-sm text-mut">{song.blurb}</p>
             <p className="mt-4 text-xs text-dim">
               Figures are the commonly cited range and published key for the
-              studio version ({song.sourceNote}), not lab measurements. No
+              studio version ({song.sourceUrl ? (
+                <a
+                  className="underline underline-offset-2 hover:text-violet-ink"
+                  href={song.sourceUrl}
+                  rel="noreferrer"
+                >
+                  {song.sourceNote}
+                </a>
+              ) : song.sourceNote}), not lab measurements. No
               lyrics or melody are reproduced here — this page is about what
               the song demands of a voice.
             </p>

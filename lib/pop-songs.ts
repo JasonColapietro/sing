@@ -27,6 +27,8 @@ export interface PopSong {
   highMidi: number;
   /** Where the cited figures come from (site names, arrangement notes). */
   sourceNote: string;
+  /** Public arrangement detail backing the figures, when retained. */
+  sourceUrl?: string;
   /** What the voice is actually asked to do. No lyric quotes. */
   blurb: string;
 }
@@ -415,6 +417,40 @@ export const POP_SONGS: PopSong[] = [
     sourceNote: "Musicnotes original-key arrangement, written E4–A5, sounding E3–A4",
     blurb:
       "Strummed folk-pop with a fast, wordy verse and a chorus that sits on A4 at the top of an untrained male range without ever leaving it much room to rest. The song is a stamina-and-diction test: eleven semitones of range, a relentless syllable count, and a top note that recurs just often enough to find out whether it is really there.",
+  },
+  {
+    slug: "drop-dead",
+    title: "drop dead",
+    artist: "Olivia Rodrigo",
+    artistSlugs: ["olivia-rodrigo"],
+    year: 2026,
+    genre: "Pop",
+    key: "Ab major",
+    lowMidi: noteMidi("Ab3"),
+    highMidi: noteMidi("F5"),
+    sourceNote:
+      "Musicnotes original-key Singer Pro arrangement MN0309204, Ab3–F5 in Ab major",
+    sourceUrl:
+      "https://www.musicnotes.com/sheetmusic/olivia-rodrigo/drop-dead/MN0309204",
+    blurb:
+      "Almost two octaves separate the grounded Ab3 low from the F5 peak, so this is less about one isolated high note than keeping every register available at a brisk pop pace. Start the phrases lighter than the recording suggests, map the two range edges separately, and only join the full song after both ends stay free of strain.",
+  },
+  {
+    slug: "unchained-melody",
+    title: "Unchained Melody",
+    artist: "The Righteous Brothers",
+    artistSlugs: ["bobby-hatfield"],
+    year: 1965,
+    genre: "Pop",
+    key: "Bb major",
+    lowMidi: noteMidi("C4"),
+    highMidi: noteMidi("A5"),
+    sourceNote:
+      "Musicnotes original-key Singer Pro arrangement MN0133818, C4–A5 in Bb major",
+    sourceUrl:
+      "https://www.musicnotes.com/sheetmusic/the-righteous-brothers/unchained-melody/MN0133818",
+    blurb:
+      "The climb from C4 to A5 makes the ending the obvious headline, but the first job is controlled breath and an even legato line through the quieter opening. Practice the upper section softly and separately; the page's range fit is a boundary check, not permission to push for the recording's full volume or color.",
   },
   {
     slug: "greedy",
