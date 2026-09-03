@@ -29,6 +29,31 @@ import { SINGERS } from "@/lib/singers-data";
 import { SITE_URL } from "@/lib/site";
 
 describe("catalog data sanity", () => {
+  it("covers the current Search Console song-range gaps with published-key evidence", () => {
+    expect(POP_SONGS).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          slug: "drop-dead",
+          title: "drop dead",
+          artist: "Olivia Rodrigo",
+          key: "Ab major",
+          lowMidi: noteMidi("Ab3"),
+          highMidi: noteMidi("F5"),
+          sourceUrl: "https://www.musicnotes.com/sheetmusic/olivia-rodrigo/drop-dead/MN0309204",
+        }),
+        expect.objectContaining({
+          slug: "unchained-melody",
+          title: "Unchained Melody",
+          artist: "The Righteous Brothers",
+          key: "Bb major",
+          lowMidi: noteMidi("C4"),
+          highMidi: noteMidi("A5"),
+          sourceUrl: "https://www.musicnotes.com/sheetmusic/the-righteous-brothers/unchained-melody/MN0133818",
+        }),
+      ]),
+    );
+  });
+
   it("has unique slugs", () => {
     const slugs = POP_SONGS.map((s) => s.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
@@ -134,6 +159,17 @@ describe("crawl path", () => {
       ).toBe(true);
     }
   });
+
+  it.each(["drop-dead", "unchained-melody"])(
+    "%s renders its supporting arrangement as a real source link",
+    async (slug) => {
+      const song = POP_SONGS.find((candidate) => candidate.slug === slug)!;
+      const html = renderToStaticMarkup(
+        await CanYouSingSongPage({ params: Promise.resolve({ slug }) }),
+      );
+      expect(html).toContain(`href="${song.sourceUrl}"`);
+    },
+  );
 
   it("difficulty stays deterministic over the catalog", () => {
     for (const s of POP_SONGS) {

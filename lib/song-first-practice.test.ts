@@ -8,6 +8,30 @@ import { songFirstPractice } from "./song-first-practice";
 const song = POP_SONGS.find((s) => s.slug === "espresso")!;
 
 describe("saved-range recommendation boundaries", () => {
+  it.each(["drop-dead", "unchained-melody"])(
+    "gives the new %s result a safe first-practice destination for every fit outcome",
+    (slug) => {
+      const popular = POP_SONGS.find((candidate) => candidate.slug === slug)!;
+      expect(popular).toBeDefined();
+
+      const cases = [
+        ["fits", { lowMidi: popular.lowMidi - 2, highMidi: popular.highMidi + 2 }],
+        ["high", { lowMidi: popular.lowMidi - 3, highMidi: popular.highMidi - 1 }],
+        ["low", { lowMidi: popular.lowMidi + 1, highMidi: popular.highMidi + 3 }],
+        ["wide", { lowMidi: popular.lowMidi, highMidi: popular.highMidi - 1 }],
+      ] as const;
+
+      for (const [verdict, range] of cases) {
+        const fit = popFit(popular, range);
+        expect(fit.verdict).toBe(verdict);
+        const next = songFirstPractice(fit, range);
+        expect(next?.free.href).toMatch(/^\/(songs|warmups|studio)/);
+        expect(next?.free.label.length).toBeGreaterThan(0);
+        expect(next?.free.reason.length).toBeGreaterThan(40);
+      }
+    },
+  );
+
   it("requires a complete, finite, ordered MIDI range", () => {
     for (const range of [{}, { lowMidi: 48 }, { highMidi: 72 },
       { lowMidi: NaN, highMidi: 72 }, { lowMidi: 48, highMidi: Infinity },
