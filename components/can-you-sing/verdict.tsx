@@ -7,6 +7,8 @@ import {
   type PopSong,
 } from "@/lib/pop-songs";
 import { useProgress } from "@/lib/progress";
+import { songFirstPractice } from "@/lib/song-first-practice";
+import { FreeOnly } from "@/components/pro/gate";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 
 /**
@@ -18,6 +20,7 @@ import { Card, LinkButton, SectionLabel } from "@/components/ui";
 export function CanYouSingVerdict({ song }: { song: PopSong }) {
   const progress = useProgress();
   const fit = popFit(song, progress.range);
+  const practice = songFirstPractice(fit, progress.range);
 
   if (fit.verdict === "unknown") {
     return (
@@ -46,7 +49,7 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
         ? `The top of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} above your tested ceiling of ${midiToLabel(high)}. Dropping the key by ${fit.offsetSemis} would bring it inside.`
         : fit.verdict === "low"
           ? `The low end of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} below your tested floor of ${midiToLabel(low)}. Raising the key by ${fit.offsetSemis} would bring it inside.`
-          : `${song.title} spans more semitones than your tested range covers, so no key change fits it yet — extending your range is the move.`;
+          : `${song.title} spans more semitones than your tested range covers, so no key change puts every note inside that saved range. Start with a smaller pattern rather than pushing for the extremes.`;
 
   return (
     <Card>
@@ -55,18 +58,42 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
       <p className="mt-2 text-xs text-mut">
         Your saved range: {yours}. Song as written: {popRangeLabel(song)}.
       </p>
-      <div className="mt-4 flex gap-3">
-        <LinkButton href="/range" variant="outline" size="sm">
-          Retest your range
-        </LinkButton>
-        <LinkButton href="/warmups" variant="outline" size="sm">
-          Extend it with warmups
-        </LinkButton>
-      </div>
       <p className="mt-4 text-xs text-dim">
         Compared against the commonly cited studio-version range, not a
-        judgment of your voice on this material.
+        judgment of your voice on this material. Note bounds alone do not
+        establish comfort, tone, or readiness to perform it.
       </p>
+      {practice && (
+        <section aria-label="Your first practice" className="mt-6 border-t border-line pt-5">
+          <h2 className="text-lg text-ink">Your first practice</h2>
+          <p className="mt-2 text-sm text-mut">{practice.free.reason}</p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <LinkButton href={practice.free.href} size="sm">
+              {practice.free.label}
+            </LinkButton>
+          </div>
+          <p className="mt-3 text-xs text-dim">
+            These tools use exercises and public-domain melodies, not this
+            popular song’s audio or melody. Stop if singing feels strained.
+          </p>
+          <FreeOnly>
+            <div className="mt-5 border-t border-line pt-4">
+              <SectionLabel>Optional with Pro</SectionLabel>
+              <p className="mt-2 text-xs text-mut">{practice.pro}</p>
+              <div className="mt-3">
+                <LinkButton href="/pro#plans" variant="outline" size="sm">
+                  See Pro plans
+                </LinkButton>
+              </div>
+            </div>
+          </FreeOnly>
+        </section>
+      )}
+      <div className="mt-5">
+        <LinkButton href="/range" variant="ghost" size="sm">
+          Retest your range
+        </LinkButton>
+      </div>
     </Card>
   );
 }

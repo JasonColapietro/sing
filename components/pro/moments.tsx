@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
 import { ProChip } from "./ui";
 import { getProState, subscribePro } from "@/lib/pro";
@@ -27,7 +27,7 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
  * snapshot on the server and the hook forms would flip false->true after
  * hydration on every route.
  *
- * Four refusals guard the open. All are deferrable, not terminal: none sets
+ * Five refusals guard the open. All are deferrable, not terminal: none sets
  * a flag and none writes the seen key, so the next result signal re-runs the
  * gate and can still open.
  *
@@ -59,10 +59,20 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
  *    with the emit pass. The state it actually defends is a non-empty slot at
  *    *emit* time, left stale by the cooperative save/restore of that one slot
  *    across components/nav.tsx and components/songs/stage.tsx.
+ *
+ * 5. Song-range pages own their contextual Pro path after a saved range. A
+ *    comparison is not a completed singing result; leave its free step usable.
  */
 export default function ProMoments() {
   const router = useRouter();
+  const pathname = usePathname();
   const [show, setShow] = useState(false);
+  // Browser Back can bring an already-open result modal from /range here.
+  // Clear that pending impression without marking it seen, so it can still
+  // be offered after a later completed practice on an eligible route.
+  if (show && (pathname === "/can-you-sing" || pathname.startsWith("/can-you-sing/"))) {
+    setShow(false);
+  }
   const dismissedRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   useModalFocus(show, dialogRef);
@@ -91,6 +101,7 @@ export default function ProMoments() {
         // prefix: /progress would match a prefix test and lose its modal.
         const p = window.location.pathname;
         if (p === "/pro" || p.startsWith("/pro/")) return;
+        if (p === "/can-you-sing" || p.startsWith("/can-you-sing/")) return;
         // Mid sign-up or sign-in. A full-screen upsell dropped over an auth
         // form covers the exact thing the visitor navigated here to do, and
         // because the overlay is a button the first click aimed at the card
