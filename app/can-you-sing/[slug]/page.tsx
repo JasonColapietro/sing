@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CanYouSingVerdict } from "@/components/can-you-sing/verdict";
-import { Card, LinkButton, PageShell, SectionLabel, Stat } from "@/components/ui";
+import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import {
@@ -190,22 +190,6 @@ export default async function CanYouSingSongPage({
               </ul>
             </Card>
           )}
-
-          <Card tone="well">
-            <SectionLabel>Practice it for real</SectionLabel>
-            <p className="mt-3 text-sm text-mut">
-              The song library has public-domain songs you can sing along to
-              with live pitch feedback, and guided warmups that extend range.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <LinkButton href="/songs" variant="outline" size="sm">
-                Song library
-              </LinkButton>
-              <LinkButton href="/warmups" variant="outline" size="sm">
-                Warmups
-              </LinkButton>
-            </div>
-          </Card>
         </div>
       </div>
     </PageShell>

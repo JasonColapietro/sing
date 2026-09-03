@@ -66,7 +66,15 @@ export function popFit(
   song: PopSong,
   range: { lowMidi?: number; highMidi?: number },
 ): PopFit {
-  if (range.lowMidi === undefined || range.highMidi === undefined) {
+  if (
+    range.lowMidi === undefined ||
+    range.highMidi === undefined ||
+    !Number.isInteger(range.lowMidi) ||
+    !Number.isInteger(range.highMidi) ||
+    range.lowMidi < 0 ||
+    range.highMidi > 127 ||
+    range.lowMidi > range.highMidi
+  ) {
     return { verdict: "unknown", offsetSemis: 0 };
   }
   if (song.highMidi - song.lowMidi > range.highMidi - range.lowMidi) {
