@@ -5,7 +5,12 @@ pitch-tracked (harmonic product spectrum over 4096-sample frames at 22.05 kHz,
 stable notes ≥120 ms, phrases split at 0.7 s gaps) and the piano guide read
 off the stable-note stream. Speech and the intro music are noisy and were
 ignored; sirens are glides and do not register. Numbers below are the
-recording's, rounded. No audio was kept; only these facts.
+recording's, rounded. The audio is not kept in the repo (it is Singeo's);
+`singeo-pitch-track.py` beside this file is the tracker, and reproducing the
+table takes `yt-dlp -x --audio-format wav --postprocessor-args "ffmpeg:-ac 1 -ar 22050"`
+on the two video ids, numpy + scipy, and `python singeo-pitch-track.py file.wav`.
+The long phrases (over 15 s) in its output are the piano guide; read the rep
+roots off them.
 
 Sources: "Easy Singing Warm Up (7 minutes)" `youtube.com/watch?v=fJCfHHLf2Pg`
 (10:05 with talk) and "COMPLETE 10-Minute Vocal Warm UP" `youtube.com/watch?v=rYsuVwyGe-4`
