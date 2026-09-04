@@ -13,6 +13,7 @@ import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
 import {
   IconArrowLeft,
+  IconChevron,
   IconMetronome,
   IconMinus,
   IconPlay,
@@ -30,7 +31,7 @@ import {
   type RepResult,
   type SessionSummaryData,
 } from "./lib";
-import { clickTimes, planRep, type RepPlan } from "./timeline";
+import { COUNT_IN_CLICKS, clickTimes, leadSec, planRep, type RepPlan } from "./timeline";
 import { createRepScorer, type RepScorer } from "./scoring";
 import { MODE_LABELS, setClick, setGuidePct, setWarmupMode, useWarmupPrefs } from "./prefs";
 
@@ -136,16 +137,31 @@ export function repAscending(roots: number[], repIndex: number): boolean {
   return ladderWalk(roots, repIndex).index >= ladderWalk(roots, repIndex - 1).index;
 }
 
+/**
+ * What a routine tells the player about the step it is running. With bounds
+ * the step completes itself after `reps` reps, sung or skipped, and the header
+ * counts reps instead of ladder height; the runner owns the session, so the
+ * Exit button goes away and End becomes "Finish step". Without bounds the
+ * exercise is the endless walk a deep link still opens.
+ */
+export interface ExerciseBounds {
+  reps: number;
+  stepIndex: number;
+  stepCount: number;
+}
+
 export function ExercisePlayer({
   ex,
   pitch,
   range,
+  bounds,
   onFinish,
   onExit,
 }: {
   ex: WarmupExercise;
   pitch: UsePitchResult;
   range: VocalRange;
+  bounds?: ExerciseBounds;
   onFinish: (summary: SessionSummaryData) => void;
   onExit: () => void;
 }) {
@@ -170,6 +186,12 @@ export function ExercisePlayer({
   const [hitSec, setHitSec] = useState<number[]>([]);
   const [trace, setTrace] = useState<TracePoint[]>([]);
   const [liveMidiFloat, setLiveMidiFloat] = useState<number | null>(null);
+  // Which count-in beat is sounding, 1-based; 0 outside the lead stage. The
+  // wait before a scored window used to be silent and invisible, which is what
+  // made it feel arbitrary — now it is drawn as beats filling.
+  const [leadBeat, setLeadBeat] = useState(0);
+  const [adjustOpen, setAdjustOpen] = useState(false);
+  const adjustId = useId();
 
   const { index: ladderIndex } = ladderWalk(roots, repIndex);
   // The direction that produced this rep, not the one the walk turns to next.
@@ -195,6 +217,8 @@ export function ExercisePlayer({
   const guidePctRef = useRef(guidePct);
   const clickRef = useRef(click);
   const patternSecRef = useRef(0);
+  const noteDurRef = useRef(0.55);
+  const leadBeatRef = useRef(0);
   const rootRef = useRef(48);
   const repIndexRef = useRef(0);
   const tempoRef = useRef<(typeof TEMPOS)[number]>(1);
@@ -308,6 +332,7 @@ export function ExercisePlayer({
     groupRef.current = group;
     scorerRef.current = createRepScorer(segs);
     patternSecRef.current = totalSec;
+    noteDurRef.current = noteDur;
     rootRef.current = root;
     repIndexRef.current = repIdx;
     traceRef.current = [];
@@ -315,6 +340,11 @@ export function ExercisePlayer({
     setTrace([]);
     setHitSec(segs.map(() => 0));
     setCursorSec(null);
+  }
+
+  /** In a routine, whether this step has used every rep it was given. */
+  function stepComplete(): boolean {
+    return bounds !== undefined && resultsRef.current.length >= bounds.reps;
   }
 
   /** Close the rep whose window just ended, then keep walking. */
@@ -350,6 +380,14 @@ export function ExercisePlayer({
       resultsRef.current = [...resultsRef.current, res];
       setResults(resultsRef.current);
       setLastOutcome("scored");
+    }
+    // A bounded step ends itself: the routine, not the singer, decides when
+    // this exercise is done. At least one rep was sung to get here.
+    if (stepComplete()) {
+      finishedRef.current = true;
+      groupRef.current?.cancel();
+      finalize(resultsRef.current);
+      return;
     }
     scheduleRep(repIndexRef.current + 1, plan.t0 + plan.repDur);
   }
@@ -390,6 +428,10 @@ export function ExercisePlayer({
       if (stageNow !== stageRef.current) {
         stageRef.current = stageNow;
         setStage(stageNow);
+        if (stageNow !== "lead" && leadBeatRef.current !== 0) {
+          leadBeatRef.current = 0;
+          setLeadBeat(0);
+        }
       }
 
       const frame = pitch.latest.current;
@@ -417,6 +459,17 @@ export function ExercisePlayer({
       } else {
         setCursorSec(null);
         setLiveMidiFloat(null);
+        // The beat that is sounding now, from the same arithmetic clickTimes
+        // schedules with, so the dots and the clicks cannot drift apart.
+        const beatLen = leadSec(noteDurRef.current) / COUNT_IN_CLICKS;
+        const beat = Math.min(
+          COUNT_IN_CLICKS,
+          Math.max(0, Math.floor((elapsed - plan.leadAt) / beatLen) + 1),
+        );
+        if (beat !== leadBeatRef.current) {
+          leadBeatRef.current = beat;
+          setLeadBeat(beat);
+        }
       }
 
       if (elapsed >= plan.repDur) {
@@ -472,6 +525,14 @@ export function ExercisePlayer({
     resultsRef.current = [...resultsRef.current, result];
     setResults(resultsRef.current);
     setLastOutcome("scored");
+    if (stepComplete()) {
+      finishedRef.current = true;
+      cancelAnimationFrame(rafRef.current);
+      // Skips are abstentions: a step of nothing but skips is not a session.
+      if (sungReps(resultsRef.current).length === 0) onExit();
+      else finalize(resultsRef.current);
+      return;
+    }
     scheduleRep(repIndexRef.current + 1, audioNow() + SCHEDULE_LEAD_SEC);
   }
 
@@ -544,25 +605,43 @@ export function ExercisePlayer({
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <button
-          type="button"
-          onClick={endExercise}
-          aria-label="Exit exercise"
-          className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-sm text-mut hover:text-ink"
-        >
-          <IconArrowLeft />
-          Exit
-        </button>
+        {bounds ? (
+          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            Step {bounds.stepIndex + 1} of {bounds.stepCount}
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={endExercise}
+            aria-label="Exit exercise"
+            className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-sm text-mut hover:text-ink"
+          >
+            <IconArrowLeft />
+            Exit
+          </button>
+        )}
         <div className="flex items-center gap-2">
-          <Pill tone="mut">Rep {repIndex + 1}</Pill>
+          <Pill tone="mut">
+            {bounds
+              ? `Rep ${Math.min(results.length + 1, bounds.reps)} of ${bounds.reps}`
+              : `Rep ${repIndex + 1}`}
+          </Pill>
           <Pill tone={climbing ? "violet" : "cool"}>
             {climbing ? "Climbing" : "Descending"}{" "}
             <span aria-hidden="true">{climbing ? "↑" : "↓"}</span>
           </Pill>
         </div>
       </div>
-      {/* Height in the ladder, not session completion — it rises to the top note and falls back. */}
-      <ProgressBar value={ladderHeightPct(ladderIndex, roots.length)} tone="violet" />
+      {/* In a routine this is the step's completion. Unbounded, it is height in
+          the ladder — it rises to the top note and falls back. */}
+      <ProgressBar
+        value={
+          bounds
+            ? (results.length / bounds.reps) * 100
+            : ladderHeightPct(ladderIndex, roots.length)
+        }
+        tone="violet"
+      />
 
       {/*
        * The container carries the stage, not just a word inside it.
@@ -592,8 +671,24 @@ export function ExercisePlayer({
                   className="animate-recblink inline-block h-2.5 w-2.5 shrink-0 rounded-full bg-rec"
                 />
               )}
-              {singing ? "Your turn" : "Listen"}
+              {singing ? "Your turn" : stage === "teach" ? "Listen" : "Breathe"}
             </h2>
+            {stage === "lead" && (
+              <div className="mt-2 flex items-center gap-2">
+                {Array.from({ length: COUNT_IN_CLICKS }, (_, i) => (
+                  <span
+                    key={i}
+                    aria-hidden="true"
+                    className={`inline-block h-2.5 w-2.5 rounded-full transition-colors duration-150 ${
+                      i < leadBeat ? "bg-violet" : "bg-line2"
+                    }`}
+                  />
+                ))}
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                  Count-in
+                </span>
+              </div>
+            )}
             <SectionLabel className="mt-3">{ex.title}</SectionLabel>
             <p className="mt-2 max-w-md text-sm text-mut">{ex.tip}</p>
           </div>
@@ -662,71 +757,15 @@ export function ExercisePlayer({
         </div>
       </Card>
 
+      {/*
+       * The three things a singer reaches for mid-exercise stay on the card.
+       * Everything that shapes the exercise — mode, guide level, click,
+       * transpose, tempo — lives under Adjust, closed by default: nine controls
+       * on one row read as a mixing desk, and a warmup is not the moment to be
+       * offered one.
+       */}
       <Card>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-          <div
-            className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1"
-            title={
-              modeLocked
-                ? "The mode is fixed once a rep has been scored, so one session is one score. End the exercise to switch."
-                : undefined
-            }
-          >
-            {(Object.keys(MODE_LABELS) as WarmupMode[]).map((m) => (
-              <button
-                key={m}
-                type="button"
-                disabled={modeLocked}
-                onClick={() => changeMode(m)}
-                aria-pressed={mode === m}
-                className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
-                  mode === m ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
-                }`}
-              >
-                {MODE_LABELS[m]}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex min-w-[220px] flex-1 items-center gap-3">
-            <label
-              htmlFor={guideSliderId}
-              className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
-            >
-              {mode === "call-response" ? "Reference level" : "Guide level"}
-            </label>
-            {/* Left at its native height: squashing a range input clips the
-                thumb and shrinks the touch target on a phone. */}
-            <input
-              id={guideSliderId}
-              type="range"
-              min={0}
-              max={100}
-              step={5}
-              value={guidePct}
-              aria-valuetext={guidePct === 0 ? "Off" : `${guidePct} percent`}
-              onChange={(e) => changeGuidePct(Number(e.target.value))}
-              className="min-w-0 flex-1 cursor-pointer accent-violet"
-            />
-            <span className="tabular w-9 shrink-0 text-right font-mono text-xs text-mut">
-              {guidePct === 0 ? "Off" : `${guidePct}%`}
-            </span>
-          </div>
-
-          <button
-            type="button"
-            onClick={toggleClick}
-            aria-pressed={click}
-            title="Count-in clicks before every scored window"
-            className={`inline-flex items-center gap-1.5 rounded-full border border-line2 px-2.5 py-1 font-mono text-xs ${
-              click ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
-            }`}
-          >
-            <IconMetronome /> Click
-          </button>
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Button
             variant="outline"
             size="sm"
@@ -734,52 +773,134 @@ export function ExercisePlayer({
           >
             <IconPlay /> Play reference again
           </Button>
-
-          <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
-            <button
-              type="button"
-              aria-label="Transpose down a semitone"
-              onClick={() => nudgeTranspose(-1)}
-              className="rounded-full p-1.5 text-mut hover:text-ink"
-            >
-              <IconMinus />
-            </button>
-            <span className="tabular px-1 font-mono text-xs text-mut">Transpose</span>
-            <button
-              type="button"
-              aria-label="Transpose up a semitone"
-              onClick={() => nudgeTranspose(1)}
-              className="rounded-full p-1.5 text-mut hover:text-ink"
-            >
-              <IconPlus />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
-            {TEMPOS.map((tv) => (
-              <button
-                key={tv}
-                type="button"
-                onClick={() => changeTempo(tv)}
-                aria-pressed={tempo === tv}
-                className={`rounded-full px-2.5 py-1 font-mono text-xs ${
-                  tempo === tv ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
-                }`}
-              >
-                {tv}×
-              </button>
-            ))}
-          </div>
-
-          <span className="flex-1" />
-
           <Button variant="ghost" size="sm" onClick={skipRep}>
             <IconSkip /> Skip rep
           </Button>
+          <button
+            type="button"
+            onClick={() => setAdjustOpen((o) => !o)}
+            aria-expanded={adjustOpen}
+            aria-controls={adjustId}
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-xs ${
+              adjustOpen ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
+            }`}
+          >
+            Adjust
+            <IconChevron className={`transition-transform ${adjustOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          <span className="flex-1" />
+
           <Button variant="rec" size="sm" onClick={endExercise}>
-            <IconStop /> End exercise
+            <IconStop /> {bounds ? "Finish step" : "End exercise"}
           </Button>
         </div>
+
+        {adjustOpen && (
+          <div
+            id={adjustId}
+            className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-4"
+          >
+            <div
+              className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1"
+              title={
+                modeLocked
+                  ? "The mode is fixed once a rep has been scored, so one session is one score. End the exercise to switch."
+                  : undefined
+              }
+            >
+              {(Object.keys(MODE_LABELS) as WarmupMode[]).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  disabled={modeLocked}
+                  onClick={() => changeMode(m)}
+                  aria-pressed={mode === m}
+                  className={`rounded-full px-2.5 py-1 font-mono text-xs disabled:opacity-40 ${
+                    mode === m ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
+                  }`}
+                >
+                  {MODE_LABELS[m]}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex min-w-[220px] flex-1 items-center gap-3">
+              <label
+                htmlFor={guideSliderId}
+                className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
+              >
+                {mode === "call-response" ? "Reference level" : "Guide level"}
+              </label>
+              {/* Left at its native height: squashing a range input clips the
+                  thumb and shrinks the touch target on a phone. */}
+              <input
+                id={guideSliderId}
+                type="range"
+                min={0}
+                max={100}
+                step={5}
+                value={guidePct}
+                aria-valuetext={guidePct === 0 ? "Off" : `${guidePct} percent`}
+                onChange={(e) => changeGuidePct(Number(e.target.value))}
+                className="min-w-0 flex-1 cursor-pointer accent-violet"
+              />
+              <span className="tabular w-9 shrink-0 text-right font-mono text-xs text-mut">
+                {guidePct === 0 ? "Off" : `${guidePct}%`}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={toggleClick}
+              aria-pressed={click}
+              title="Count-in clicks before every scored window"
+              className={`inline-flex items-center gap-1.5 rounded-full border border-line2 px-2.5 py-1 font-mono text-xs ${
+                click ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
+              }`}
+            >
+              <IconMetronome /> Click
+            </button>
+
+            <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
+              <button
+                type="button"
+                aria-label="Transpose down a semitone"
+                onClick={() => nudgeTranspose(-1)}
+                className="rounded-full p-1.5 text-mut hover:text-ink"
+              >
+                <IconMinus />
+              </button>
+              <span className="tabular px-1 font-mono text-xs text-mut">
+                Transpose{transpose !== 0 ? ` ${transpose > 0 ? "+" : ""}${transpose}` : ""}
+              </span>
+              <button
+                type="button"
+                aria-label="Transpose up a semitone"
+                onClick={() => nudgeTranspose(1)}
+                className="rounded-full p-1.5 text-mut hover:text-ink"
+              >
+                <IconPlus />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
+              {TEMPOS.map((tv) => (
+                <button
+                  key={tv}
+                  type="button"
+                  onClick={() => changeTempo(tv)}
+                  aria-pressed={tempo === tv}
+                  className={`rounded-full px-2.5 py-1 font-mono text-xs ${
+                    tempo === tv ? "bg-panel2 text-violet-ink" : "text-mut hover:text-ink"
+                  }`}
+                >
+                  {tv}×
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );

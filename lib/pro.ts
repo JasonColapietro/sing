@@ -7,7 +7,12 @@ import {
   type Entitlement,
   type ProPlan,
 } from "./pro-shared";
-import { SINGER_COUNT } from "./pro-inventory";
+import {
+  FREE_EXERCISES,
+  PRO_EXERCISES,
+  PRO_PACK_COUNT,
+  SINGER_COUNT,
+} from "./pro-inventory";
 
 export type { CheckoutPlan, ProPlan, Entitlement };
 
@@ -412,7 +417,11 @@ export const PLAN_ROWS: Array<{
   { label: "Range test + voice type", free: "Included", pro: "Included" },
   { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis on every take" },
   { label: "Song library (all 26)", free: "Included", pro: "+ scoring history per song" },
-  { label: "Warmup routines", free: "17 exercises", pro: "17 + 15 in 2 pro packs" },
+  {
+    label: "Warmup routines",
+    free: `${FREE_EXERCISES} exercises`,
+    pro: `${FREE_EXERCISES} + ${PRO_EXERCISES} in ${PRO_PACK_COUNT} pro packs`,
+  },
   { label: "Coach plan", free: "First two steps each day", pro: "Full adaptive plan, daily" },
   { label: "Vocal analytics", free: "Session scores", pro: "Per-note accuracy and trends" },
   { label: "Range history", free: "Latest test", pro: "Every test, charted over time" },

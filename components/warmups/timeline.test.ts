@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   COUNT_IN_CLICKS,
   GRACE_SEC,
+  MAX_LEAD_SEC,
   MIN_LEAD_SEC,
   clickTimes,
   leadSec,
@@ -64,6 +65,13 @@ describe("leadSec", () => {
   it("breathes at the exercise's own pulse, floored for fast patterns", () => {
     expect(leadSec(0.5)).toBe(1.0);
     expect(leadSec(0.3)).toBe(MIN_LEAD_SEC);
+  });
+
+  it("caps the wait for slow patterns — a sustained hold is not a seven-second pause", () => {
+    expect(leadSec(3.5)).toBe(MAX_LEAD_SEC);
+    expect(leadSec(1.2)).toBe(MAX_LEAD_SEC);
+    // Exactly two beats still wins inside the band.
+    expect(leadSec(0.9)).toBeCloseTo(1.8, 6);
   });
 });
 

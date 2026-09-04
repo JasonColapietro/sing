@@ -40,7 +40,7 @@ const FEATURES = [
   {
     href: "/warmups",
     label: "Warmups",
-    desc: "Guided vocal warmups scored in real time as you sing along.",
+    desc: "Warmup routines from five to fifteen minutes, every exercise scored as you sing.",
     Glyph: WarmupGlyph,
   },
   {
