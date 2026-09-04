@@ -2,21 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
-import { localDay, useProgress } from "@/lib/progress";
-import { Button, Card, PageShell, SectionLabel } from "@/components/ui";
+import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
+import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
 import { AudioSetup } from "@/components/audio/audio-setup";
-import { IconChevron, IconMic } from "./icons";
-import { ALL_EXERCISES, EXERCISES, PRO_PACKS, type WarmupExercise } from "./exercises";
+import { ContinueCard, useDailyGoal } from "@/components/practice/learn-home";
+import { IconMic } from "./icons";
+import { ALL_EXERCISES, EXERCISES, type WarmupExercise } from "./exercises";
 import { getProState } from "@/lib/pro";
-import { Library } from "./library";
 import { ExercisePlayer } from "./exercise-player";
 import { SessionSummary } from "./session-summary";
 import { RoutineRunner, type RoutineSummaryData } from "./routine-runner";
 import { RoutineSummary } from "./routine-summary";
-import { RoutineGrid, TodayCard } from "./routine-home";
-import { recommendRoutine, routineById, type Routine } from "./routines";
+import { PathSection, RoutineGrid, RoutineMeta, routineStats } from "./routine-home";
+import { recommendRoutine, routineById, stepExercise, type Routine } from "./routines";
 import type { SessionSummaryData } from "./lib";
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
@@ -24,8 +24,9 @@ type View = "home" | "session" | "summary" | "routine" | "routine-summary";
 /**
  * Whether this exercise may be started at all. Membership in EXERCISES is the
  * paywall; everything inside a pack needs an active Pro entitlement. Every
- * entry point that isn't a library card — a deep link, a "next exercise" —
- * routes through here, so none of them can become the one that leaks a pack.
+ * entry point that isn't a path row — a deep link, a "next exercise", the
+ * results screen's Practice button — routes through here, so none of them can
+ * become the one that leaks a pack.
  */
 function canStart(ex: WarmupExercise): boolean {
   if (EXERCISES.some((e) => e.id === ex.id)) return true;
@@ -47,6 +48,7 @@ type ErrorAt =
 export function WarmupsClient() {
   const pitch = usePitch();
   const progress = useProgress();
+  const { goalSec } = useDailyGoal();
 
   const [view, setView] = useState<View>("home");
   const [activeEx, setActiveEx] = useState<WarmupExercise | null>(null);
@@ -189,22 +191,13 @@ export function WarmupsClient() {
       ? `Turn on your mic to start “${pendingDeepLinkEx.title}”`
       : "How a warmup works here";
 
-  const packCount = PRO_PACKS.reduce((a, p) => a + p.exercises.length, 0);
-
   return (
     <PageShell
       kicker="Warmups"
-      title={
-        view === "routine" && activeRoutine
-          ? activeRoutine.name
-          : view === "routine-summary"
-            ? "Warmup complete"
-            : view === "session" && activeEx
-              ? activeEx.title
-              : view === "summary" && summary
-                ? "Session summary"
-                : "Guided vocal warmups"
-      }
+      // Every other view runs inside the full-screen session surface, which
+      // covers this heading entirely — only the summary of a single exercise
+      // still renders as a page under it.
+      title={view === "summary" ? "Session summary" : "Guided vocal warmups"}
       subtitle={
         view === "home"
           ? pitch.listening
@@ -215,13 +208,24 @@ export function WarmupsClient() {
     >
       {view === "home" && (
         <div className="space-y-8">
-          <TodayCard
-            routine={recommended}
-            progress={progress}
+          <ContinueCard
+            kicker="Today's warmup"
+            title={recommended.name}
+            tagline={recommended.tagline}
+            meta={<RoutineMeta routine={recommended} />}
+            stepTitles={recommended.steps.map((s) => stepExercise(s).title)}
+            stars={routineStats(progress, recommended).stars}
+            goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+            streakDays={progress.streak.current}
             micReady={pitch.listening}
+            startLabel={pitch.listening ? "Start warmup" : "Enable mic and start"}
             error={errorAt.kind === "today" ? pitch.error : null}
             onStart={() => void selectRoutine(recommended, "today")}
-          />
+          >
+            <p className="text-xs text-dim sm:text-right">
+              Each exercise starts itself. Just sing when it says your turn.
+            </p>
+          </ContinueCard>
 
           {/*
             The mic card used to be returned INSTEAD of this page, so a first-time
@@ -243,11 +247,15 @@ export function WarmupsClient() {
                   own — you never have to pick what comes next.
                 </li>
                 <li>
-                  At the end you get one summary: score, grade, XP, and the
+                  At the end you get one summary: score, stars, XP, and the
                   streak you just kept alive.
                 </li>
               </ol>
-              <p id="warmups-mic-note" className="mt-3 max-w-xl text-sm text-dim">
+              {/* The id the path rows point their aria-describedby at, so a
+                  screen reader user hears that a row asks for the microphone
+                  before they press it. It only exists while the gate does,
+                  which is exactly while the rows set that attribute. */}
+              <p id="practice-mic-note" className="mt-3 max-w-xl text-sm text-dim">
                 Scoring needs your microphone. Audio is read and analyzed in this
                 browser and never leaves your device.
               </p>
@@ -271,38 +279,19 @@ export function WarmupsClient() {
           )}
 
           <RoutineGrid
+            progress={progress}
             onStart={(r) => void selectRoutine(r, "grid")}
             error={errorAt.kind === "routine" ? pitch.error : null}
             errorRoutineId={errorAt.kind === "routine" ? errorAt.id : null}
           />
 
-          {/* The catalogue, still here for anyone who wants one exercise on
-              its own — as the endless ladder it always was — but no longer the
-              first thing in the room. */}
-          <details
-            className="group rounded-2xl border border-line bg-panel"
-            open={pendingDeepLinkEx !== null || undefined}
-          >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 sm:p-6 [&::-webkit-details-marker]:hidden">
-              <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <SectionLabel>All exercises</SectionLabel>
-                <span className="text-sm text-mut">
-                  Run any single exercise on its own as an endless ladder —{" "}
-                  {EXERCISES.length} free, {packCount} in the Pro packs.
-                </span>
-              </span>
-              <IconChevron className="shrink-0 text-dim transition-transform group-open:rotate-180" />
-            </summary>
-            <div className="border-t border-line p-5 sm:p-6">
-              <Library
-                progress={progress}
-                onSelect={selectExercise}
-                micReady={pitch.listening}
-                error={errorAt.kind === "exercise" ? pitch.error : null}
-                errorExerciseId={errorAt.kind === "exercise" ? errorAt.id : null}
-              />
-            </div>
-          </details>
+          <PathSection
+            progress={progress}
+            onSelect={selectExercise}
+            micReady={pitch.listening}
+            error={errorAt.kind === "exercise" ? pitch.error : null}
+            errorExerciseId={errorAt.kind === "exercise" ? errorAt.id : null}
+          />
         </div>
       )}
 
@@ -324,6 +313,7 @@ export function WarmupsClient() {
           data={routineSummary}
           onRepeat={() => startRoutine(routineSummary.routine)}
           onHome={() => setView("home")}
+          onPractice={startExerciseById}
         />
       )}
 
@@ -332,6 +322,7 @@ export function WarmupsClient() {
           ex={activeEx}
           pitch={pitch}
           range={progress.range}
+          variant="session"
           onFinish={(data) => {
             setSummary(data);
             setView("summary");

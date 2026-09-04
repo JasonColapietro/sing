@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import type { VocalRange } from "@/lib/progress";
-import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
+import { SESSION_FOCUS, SessionShell } from "@/components/practice/session-shell";
 import { ExercisePlayer } from "./exercise-player";
-import { IconPlay, IconSkip, IconStop } from "./icons";
+import { IconPlay, IconSkip } from "./icons";
 import type { SessionSummaryData } from "./lib";
 import {
   STEP_INTRO_SEC,
@@ -45,6 +45,16 @@ export interface RoutineSummaryData {
   completed: boolean;
 }
 
+/**
+ * A routine, start to finish, on the session surface.
+ *
+ * The whole run is full-screen and dark: the between-steps card is a slide
+ * inside the same shell the player uses, so a routine reads as one continuous
+ * session instead of a page that swaps a card in and out under a site header.
+ * That also retired the scroll-into-view this used to need — there is no page
+ * to scroll, and the "Listen / Your turn" line can no longer end up above the
+ * fold while a singer is already singing over the teach pass.
+ */
 export function RoutineRunner({
   routine,
   pitch,
@@ -67,17 +77,6 @@ export function RoutineRunner({
   const stepIndex = phase.kind === "done" ? stepCount - 1 : phase.step;
   const step = routine.steps[stepIndex];
   const ex = stepExercise(step);
-
-  // Each phase change brings the routine's header back to the top of the
-  // viewport. The player is a tall card and the intro is a short one, so
-  // without this a step could start with its "Listen / Your turn" line
-  // scrolled off the screen — which, in a room where singing over the teach
-  // pass wastes the rep, is the one thing that must stay visible.
-  const rootRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (phase.kind === "done") return;
-    rootRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
-  }, [phase]);
 
   function closeStep(i: number, data: SessionSummaryData | null) {
     const next = [...results];
@@ -104,85 +103,57 @@ export function RoutineRunner({
   const prev = stepIndex > 0 ? (results[stepIndex - 1] ?? null) : null;
   const prevEx = stepIndex > 0 ? stepExercise(routine.steps[stepIndex - 1]) : null;
 
+  if (phase.kind === "play") {
+    return (
+      <ExercisePlayer
+        key={phase.step}
+        ex={ex}
+        pitch={pitch}
+        range={range}
+        variant="session"
+        bounds={{ reps: step.reps, stepIndex: phase.step, stepCount }}
+        onFinish={(data) => closeStep(phase.step, data)}
+        onExit={() => closeStep(phase.step, null)}
+      />
+    );
+  }
+
+  // The summary owns the screen once the last step closes; rendering a fourth
+  // shell under it would only fight the results screen's portal for the body.
+  if (phase.kind === "done") return null;
+
   return (
-    <div ref={rootRef} className="scroll-mt-20 space-y-6">
-      {/* The routine's own header: which step, how much is left, one way out.
-          The player under it no longer carries an Exit — the session belongs
-          to the routine, and a step ending is not the singer leaving. */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <SectionLabel>{routine.name}</SectionLabel>
-          <span className="tabular font-mono text-meta text-dim">
-            ~{minutesLeft} min left
-          </span>
-        </div>
-        <Button variant="ghost" size="sm" onClick={quit} aria-label="Quit routine">
-          <IconStop /> Quit routine
-        </Button>
-      </div>
-      <ol
-        className="flex gap-1.5"
-        aria-label={`Step ${stepIndex + 1} of ${stepCount}`}
-      >
-        {routine.steps.map((s, i) => (
-          <li
-            key={`${s.exerciseId}-${i}`}
-            aria-current={i === stepIndex ? "step" : undefined}
-            className={`h-1.5 flex-1 rounded-full transition-colors ${
-              i < stepIndex
-                ? "bg-violet"
-                : i === stepIndex
-                  ? "bg-violet/45"
-                  : "bg-panel2"
-            }`}
-          />
-        ))}
-      </ol>
-
-      {phase.kind === "intro" && (
-        <StepIntro
-          key={phase.step}
-          stepIndex={phase.step}
-          stepCount={stepCount}
-          title={ex.title}
-          desc={ex.desc}
-          tip={ex.tip}
-          reps={step.reps}
-          seconds={stepSeconds(step)}
-          glide={ex.glide === true}
-          prev={
-            prevEx
-              ? { title: prevEx.title, score: prev ? prev.avgScore : null }
-              : null
-          }
-          onStart={() => setPhase({ kind: "play", step: phase.step })}
-          onSkip={() => closeStep(phase.step, null)}
-        />
-      )}
-
-      {phase.kind === "play" && (
-        <ExercisePlayer
-          key={phase.step}
-          ex={ex}
-          pitch={pitch}
-          range={range}
-          bounds={{ reps: step.reps, stepIndex: phase.step, stepCount }}
-          onFinish={(data) => closeStep(phase.step, data)}
-          onExit={() => closeStep(phase.step, null)}
-        />
-      )}
-    </div>
+    <StepIntro
+      key={phase.step}
+      routineName={routine.name}
+      stepIndex={phase.step}
+      stepCount={stepCount}
+      minutesLeft={minutesLeft}
+      title={ex.title}
+      desc={ex.desc}
+      tip={ex.tip}
+      reps={step.reps}
+      seconds={stepSeconds(step)}
+      glide={ex.glide === true}
+      prev={prevEx ? { title: prevEx.title, score: prev ? prev.avgScore : null } : null}
+      onStart={() => setPhase({ kind: "play", step: phase.step })}
+      onSkip={() => closeStep(phase.step, null)}
+      onQuit={quit}
+    />
   );
 }
 
 /**
- * The card between steps: what is next, why, and how long. It starts the step
+ * The slide between steps: what is next, why, and how long. It starts the step
  * on its own after STEP_INTRO_SEC so the routine keeps its own pace; the two
- * buttons are for a singer who wants to move sooner.
+ * buttons are for a singer who wants to move sooner or skip a rung that does
+ * not suit their voice today.
  */
 function StepIntro({
+  routineName,
   stepIndex,
   stepCount,
+  minutesLeft,
   title,
   desc,
   tip,
@@ -192,9 +163,12 @@ function StepIntro({
   prev,
   onStart,
   onSkip,
+  onQuit,
 }: {
+  routineName: string;
   stepIndex: number;
   stepCount: number;
+  minutesLeft: number;
   title: string;
   desc: string;
   tip: string;
@@ -204,6 +178,7 @@ function StepIntro({
   prev: { title: string; score: number | null } | null;
   onStart: () => void;
   onSkip: () => void;
+  onQuit: () => void;
 }) {
   // Fraction of the hold elapsed, drawn as the bar filling. Ten updates a
   // second is smooth enough for a 4-second bar and cheap enough to ignore.
@@ -220,57 +195,90 @@ function StepIntro({
       }
     }, 100);
     return () => window.clearInterval(id);
-    // Runs once per intro: the card is keyed by step, so a new step is a new
-    // mount and a fresh timer. onStart is stable for the card's lifetime.
+    // Runs once per intro: the slide is keyed by step, so a new step is a new
+    // mount and a fresh timer. onStart is stable for the slide's lifetime.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const secondsLeft = Math.max(1, Math.ceil(STEP_INTRO_SEC - (pct / 100) * STEP_INTRO_SEC));
 
   return (
-    <Card className="py-10 text-center sm:py-12">
-      {prev && (
-        <div className="mb-5 flex justify-center">
-          {prev.score === null ? (
-            <Pill tone="mut">{prev.title} · skipped</Pill>
-          ) : (
-            <Pill tone={prev.score >= 80 ? "ok" : "violet"}>
-              {prev.title} · {prev.score}%
-            </Pill>
-          )}
+    <SessionShell
+      title={routineName}
+      subtitle={`Step ${stepIndex + 1} of ${stepCount}`}
+      progress={(stepIndex / stepCount) * 100}
+      onClose={onQuit}
+      closeLabel="Quit routine"
+      topRight={
+        <span className="tabular font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--s-dim)]">
+          ~{minutesLeft} min left
+        </span>
+      }
+      bottom={
+        <div className="mx-auto w-full max-w-md">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onStart}
+              className={`flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-[var(--s-ok)] px-5 py-2.5 text-sm font-medium text-[oklch(0.15_0.02_155)] transition-[filter] hover:brightness-110 ${SESSION_FOCUS}`}
+            >
+              <IconPlay /> Start now
+            </button>
+            <button
+              type="button"
+              onClick={onSkip}
+              className={`flex min-h-11 items-center justify-center gap-2 rounded-full border border-[var(--s-line2)] px-5 py-2.5 text-sm text-[var(--s-mut)] transition-colors hover:bg-[var(--s-over)] hover:text-[var(--s-ink)] ${SESSION_FOCUS}`}
+            >
+              <IconSkip /> Skip
+            </button>
+          </div>
+          <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-[var(--s-over)]">
+            <div
+              className="h-full rounded-full bg-[var(--s-accent)]"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <p className="tabular mt-2 text-center font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--s-dim)]">
+            Starting in {secondsLeft}
+          </p>
         </div>
-      )}
-      <SectionLabel>
-        {stepIndex === 0 ? "First up" : "Up next"} · Step {stepIndex + 1} of {stepCount}
-      </SectionLabel>
-      <h2 className="mt-4 text-3xl sm:text-4xl" aria-live="polite">
-        {title}
-      </h2>
-      <p className="mx-auto mt-3 max-w-md text-mut">{desc}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm text-dim">{tip}</p>
-      <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-        {reps} reps
-        <span className="mx-2 text-line2">·</span>~{Math.round(seconds)}s
-        {glide && (
-          <>
-            <span className="mx-2 text-line2">·</span>Glide
-          </>
+      }
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-5 py-6 text-center">
+        {prev && (
+          <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--s-line2)] px-3 py-1 text-xs text-[var(--s-mut)]">
+            <span className="truncate">{prev.title}</span>
+            <span aria-hidden="true" className="text-[var(--s-dim)]">
+              ·
+            </span>
+            <span
+              className="tabular font-mono"
+              style={{
+                color: prev.score === null ? "var(--s-dim)" : "var(--s-ok)",
+              }}
+            >
+              {prev.score === null ? "skipped" : `${prev.score}%`}
+            </span>
+          </p>
         )}
-      </p>
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button variant="rec" size="lg" onClick={onStart}>
-          <IconPlay /> Start now
-        </Button>
-        <Button variant="ghost" onClick={onSkip}>
-          <IconSkip /> Skip this one
-        </Button>
-      </div>
-      <div className="mx-auto mt-6 max-w-xs">
-        <ProgressBar value={pct} tone="violet" />
-        <p className="tabular mt-2 font-mono text-meta text-dim">
-          Starting in {secondsLeft}
+        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
+          {stepIndex === 0 ? "First up" : "Up next"}
+        </p>
+        <h2 className="mt-3 text-4xl text-[var(--s-ink)] sm:text-5xl" aria-live="polite">
+          {title}
+        </h2>
+        <p className="mx-auto mt-4 max-w-md text-[var(--s-mut)]">{desc}</p>
+        <p className="mx-auto mt-2 max-w-md text-sm text-[var(--s-dim)]">{tip}</p>
+        <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
+          {reps} reps
+          <span className="mx-2 text-[var(--s-line2)]">·</span>~{Math.round(seconds)}s
+          {glide && (
+            <>
+              <span className="mx-2 text-[var(--s-line2)]">·</span>Glide
+            </>
+          )}
         </p>
       </div>
-    </Card>
+    </SessionShell>
   );
 }

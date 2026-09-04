@@ -291,14 +291,19 @@ async function checkDestructiveActions(ctx, findings) {
  * wrapping all four of them.
  */
 async function openEarTrainingGame(page) {
-  const card = page
-    .locator("div")
+  // The ear room is a learning path now (components/practice/learn-home.tsx):
+  // each game is a row button whose text is its title plus a one-line
+  // description. The workout cards above the path are also buttons and also
+  // name "Pitch match" in their step strip, so they are excluded by the
+  // "N games · ~M min" meta line only a workout card carries.
+  const row = page
+    .getByRole("button")
     .filter({ hasText: "Pitch match" })
-    .filter({ has: page.getByRole("button", { name: "Play", exact: true }) })
-    .last();
-  if ((await card.count().catch(() => 0)) === 0) return false;
+    .filter({ hasNotText: /games\s*·/ })
+    .first();
+  if ((await row.count().catch(() => 0)) === 0) return false;
   try {
-    await card.getByRole("button", { name: "Play", exact: true }).click({ timeout: 5000 });
+    await row.click({ timeout: 5000 });
     return true;
   } catch {
     return false;
@@ -354,7 +359,7 @@ async function checkMicRefusal(ctx, findings) {
       findings.push({
         severity: "minor",
         summary: "Mic-refusal probe could not open a mic-based ear-training game",
-        detail: ["Looked for a card containing \"Pitch match\" with a \"Play\" button and could not find or click one.", ...notes].join(" "),
+        detail: ["Looked for the \"Pitch match\" row in the ear-training path and could not find or click it.", ...notes].join(" "),
       });
       return;
     }

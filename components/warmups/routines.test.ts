@@ -75,12 +75,20 @@ describe("routine length", () => {
     expect(routineSeconds(r)).toBeCloseTo(steps + STEP_INTRO_SEC * r.steps.length, 6);
   });
 
-  it("lands each free routine on the length its name promises", () => {
+  it("keeps the three lengths in order and near the recordings they mirror", () => {
     const minutes = Object.fromEntries(ROUTINES.map((r) => [r.id, routineMinutes(r)]));
-    // The names are the promise on the card, so the rounded minutes must match.
-    expect(minutes.quick).toBe(5);
-    expect(minutes.daily).toBe(10);
-    expect(minutes.full).toBe(15);
+    // Quick is Singeo's 7-minute warmup with the talking removed (its piano
+    // runs about six minutes); Daily is the 10-minute one the same way. The
+    // rep counts are the recordings', so the minutes follow from them rather
+    // than the other way round — see docs/research/singeo-warmup-parameters.md.
+    expect(minutes.quick).toBeGreaterThanOrEqual(5);
+    expect(minutes.quick).toBeLessThanOrEqual(7);
+    expect(minutes.daily).toBeGreaterThanOrEqual(8);
+    expect(minutes.daily).toBeLessThanOrEqual(11);
+    expect(minutes.full).toBeGreaterThanOrEqual(13);
+    expect(minutes.full).toBeLessThanOrEqual(16);
+    expect(minutes.quick).toBeLessThan(minutes.daily);
+    expect(minutes.daily).toBeLessThan(minutes.full);
     expect(minutes.morning).toBeGreaterThanOrEqual(4);
     expect(minutes.morning).toBeLessThanOrEqual(7);
   });

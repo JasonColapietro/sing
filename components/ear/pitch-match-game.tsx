@@ -1,8 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Card, MicGate, ProgressBar } from "@/components/ui";
-import { ProWhisper } from "@/components/pro/gate";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { useAudioPrefs } from "@/lib/audio/devices";
@@ -18,17 +16,29 @@ import {
 import {
   GameShell,
   RoundFeedback,
+  ShellBar,
+  ShellButton,
+  ShellMicGate,
+  StepDone,
   SummaryView,
   useEarSession,
+  type OnEarComplete,
 } from "./session";
-import { DIM } from "@/lib/chart-colors";
 
 const HOLD_MS = 1500;
 const WINDOW_MS = 8000;
 
 type Phase = "listen" | "sing" | "result";
 
-/** Live tuner needle, -60..+60 cents. */
+/**
+ * Live tuner needle, -60..+60 cents.
+ *
+ * Drawn on the session shell's dark tokens rather than the site's paper ones:
+ * this only ever renders inside the full-screen surface, where the ivory band
+ * and brown ticks it used to use were a bright rectangle on a dark ground.
+ * The colours come through `style` — SVG presentation attributes do not accept
+ * `var()`, only real CSS declarations do.
+ */
 function CentsNeedle({
   cents,
   tolerance,
@@ -60,18 +70,33 @@ function CentsNeedle({
         width={tolW * 2}
         height={34}
         rx={6}
-        fill={inTune ? "#3f8f6e" : "#efe6d5"}
-        opacity={inTune ? 0.18 : 1}
-        stroke={inTune ? "#3f8f6e" : "#ddd4c4"}
+        style={{
+          fill: inTune ? "var(--s-ok-soft)" : "var(--s-over)",
+          stroke: inTune ? "var(--s-ok)" : "var(--s-line2)",
+        }}
       />
       {/* scale */}
-      <line x1="20" y1="35" x2="280" y2="35" stroke="#ddd4c4" strokeWidth="2" />
+      <line x1="20" y1="35" x2="280" y2="35" strokeWidth="2" style={{ stroke: "var(--s-line2)" }} />
       {[-50, -25, 0, 25, 50].map((c) => {
         const tx = 150 + (c / 60) * 130;
         return (
           <g key={c}>
-            <line x1={tx} y1={c === 0 ? 22 : 28} x2={tx} y2={c === 0 ? 48 : 42} stroke={c === 0 ? "#5c564d" : "#c9bda0"} strokeWidth={c === 0 ? 2 : 1.5} />
-            <text x={tx} y={64} textAnchor="middle" fontSize="9" fill={DIM} fontFamily="monospace">
+            <line
+              x1={tx}
+              y1={c === 0 ? 22 : 28}
+              x2={tx}
+              y2={c === 0 ? 48 : 42}
+              strokeWidth={c === 0 ? 2 : 1.5}
+              style={{ stroke: c === 0 ? "var(--s-mut)" : "var(--s-line2)" }}
+            />
+            <text
+              x={tx}
+              y={64}
+              textAnchor="middle"
+              fontSize="9"
+              fontFamily="monospace"
+              style={{ fill: "var(--s-dim)" }}
+            >
               {c > 0 ? `+${c}` : c}
             </text>
           </g>
@@ -79,21 +104,20 @@ function CentsNeedle({
       })}
       {/* needle */}
       {voiced && cents !== null && (
-        <g>
-          <line
-            x1={x}
-            y1={12}
-            x2={x}
-            y2={56}
-            stroke={inTune ? "#3f8f6e" : "#c59642"}
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-          <circle cx={x} cy={12} r={3.5} fill={inTune ? "#3f8f6e" : "#c59642"} />
+        <g style={{ fill: inTune ? "var(--s-ok)" : "var(--s-amber)", stroke: inTune ? "var(--s-ok)" : "var(--s-amber)" }}>
+          <line x1={x} y1={12} x2={x} y2={56} strokeWidth="3" strokeLinecap="round" />
+          <circle cx={x} cy={12} r={3.5} stroke="none" />
         </g>
       )}
       {!voiced && (
-        <text x="150" y="80" textAnchor="middle" fontSize="10" fill={DIM} fontFamily="monospace">
+        <text
+          x="150"
+          y="80"
+          textAnchor="middle"
+          fontSize="10"
+          fontFamily="monospace"
+          style={{ fill: "var(--s-dim)" }}
+        >
           sing to move the needle
         </text>
       )}
@@ -104,9 +128,13 @@ function CentsNeedle({
 export function PitchMatchGame({
   difficulty,
   onExit,
+  onComplete,
 }: {
   difficulty: Difficulty;
   onExit: () => void;
+  /** Set when this game is one step of a workout: the result goes up instead
+      of being drawn here, and no summary card renders. */
+  onComplete?: OnEarComplete;
 }) {
   const session = useEarSession();
   const { latest, listening, error, start, stop } = usePitch();
@@ -255,6 +283,18 @@ export function PitchMatchGame({
   }, [session.done, listening, stop]);
 
   if (session.done) {
+    if (onComplete) {
+      return (
+        <StepDone
+          game="pitch-match"
+          difficulty={difficulty}
+          session={session}
+          startedAt={startedAt}
+          onExit={onExit}
+          onComplete={onComplete}
+        />
+      );
+    }
     return (
       <div className="mx-auto max-w-2xl">
         <SummaryView
@@ -274,17 +314,18 @@ export function PitchMatchGame({
     );
   }
 
+  // The gate lives inside the shell, so the surface a singer sees when the
+  // game opens is the one they play on.
   if (!listening) {
     return (
-      <div className="mx-auto max-w-2xl">
-        <MicGate
+      <GameShell game="pitch-match" difficulty={difficulty} session={session} onExit={onExit}>
+        <ShellMicGate
           title="This game listens to you sing"
           description="You'll hear a reference note, then sing it back and hold it steady."
           onEnable={() => void start()}
           error={error}
-          footer={<ProWhisper />}
         />
-      </div>
+      </GameShell>
     );
   }
 
@@ -297,81 +338,82 @@ export function PitchMatchGame({
 
   return (
     <GameShell game="pitch-match" difficulty={difficulty} session={session} onExit={onExit}>
-      <Card>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              Target note
-            </div>
-            <div className="tabular mt-1 font-mono text-3xl text-violet-ink">
-              {targetLabel}
-            </div>
-            {octaveAgnostic && (
-              <div className="mt-0.5 text-xs text-mut">any octave counts</div>
-            )}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
+            Target note
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!replayAllowed}
-            title={
-              phase === "sing" && !replayAllowed
-                ? "Replaying through speakers would play the answer into your mic. Switch to headphones in Audio setup to use this while singing."
-                : undefined
-            }
-            onClick={() => target !== null && playTone(target, { dur: 1.1, gain: 0.25 })}
+          <div
+            className="tabular mt-1 font-mono text-4xl"
+            style={{ color: "var(--s-voice)" }}
           >
-            Hear again
-            <span className="font-mono text-xs text-dim" aria-hidden="true">R</span>
-          </Button>
-        </div>
-
-        <div className="mt-5">
-          {phase === "listen" && (
-            <p className="text-sm text-violet-ink animate-recblink">Listen…</p>
-          )}
-          {phase === "sing" && (
-            <p className="text-sm text-mut">
-              Sing the note and hold it inside the band.
-            </p>
+            {targetLabel}
+          </div>
+          {octaveAgnostic && (
+            <div className="mt-0.5 text-xs text-[var(--s-mut)]">any octave counts</div>
           )}
         </div>
+        <ShellButton
+          disabled={!replayAllowed}
+          title={
+            phase === "sing" && !replayAllowed
+              ? "Replaying through speakers would play the answer into your mic. Switch to headphones in Audio setup to use this while singing."
+              : undefined
+          }
+          onClick={() => target !== null && playTone(target, { dur: 1.1, gain: 0.25 })}
+        >
+          Hear again
+          <span className="font-mono text-xs text-[var(--s-dim)]" aria-hidden="true">R</span>
+        </ShellButton>
+      </div>
 
-        <div className="mt-3 rounded-2xl border border-line bg-bg p-4">
-          <CentsNeedle
-            cents={liveCents}
-            tolerance={tolerance}
-            voiced={phase === "sing" && liveCents !== null}
-          />
-        </div>
-
+      <div className="mt-5">
+        {phase === "listen" && (
+          <p className="animate-recblink text-sm" style={{ color: "var(--s-voice)" }}>
+            Listen…
+          </p>
+        )}
         {phase === "sing" && (
-          <div className="mt-4 space-y-2">
-            <div className="flex items-center justify-between font-mono text-xs text-mut">
-              <span>Held {(heldMs / 1000).toFixed(1)}s / {(HOLD_MS / 1000).toFixed(1)}s</span>
-              <span className="tabular">{Math.ceil(leftMs / 1000)}s left</span>
-            </div>
-            <ProgressBar value={(heldMs / HOLD_MS) * 100} tone="ok" />
-          </div>
+          <p className="text-sm text-[var(--s-mut)]">
+            Sing the note and hold it inside the band.
+          </p>
         )}
+      </div>
 
-        {phase === "result" && (
-          <div className="mt-5 space-y-4">
-            <RoundFeedback
-              correct={correct}
-              message={
-                correct
-                  ? `You locked onto ${targetLabel}.`
-                  : `The note was ${targetLabel}. Try matching it before the timer runs out.`
-              }
-            />
-            <Button variant="violet" onClick={next}>
-              Next round
-              <span className="font-mono text-xs opacity-70" aria-hidden="true">Enter</span>
-            </Button>
+      <div className="mt-3 rounded-2xl border border-[var(--s-line)] bg-[var(--s-elev)] p-4">
+        <CentsNeedle
+          cents={liveCents}
+          tolerance={tolerance}
+          voiced={phase === "sing" && liveCents !== null}
+        />
+      </div>
+
+      {phase === "sing" && (
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center justify-between font-mono text-xs text-[var(--s-mut)]">
+            <span>Held {(heldMs / 1000).toFixed(1)}s / {(HOLD_MS / 1000).toFixed(1)}s</span>
+            <span className="tabular">{Math.ceil(leftMs / 1000)}s left</span>
           </div>
-        )}
-      </Card>
+          <ShellBar value={(heldMs / HOLD_MS) * 100} label="Time held in tune" />
+        </div>
+      )}
+
+      {phase === "result" && (
+        <div className="mt-5 space-y-4">
+          <RoundFeedback
+            correct={correct}
+            message={
+              correct
+                ? `You locked onto ${targetLabel}.`
+                : `The note was ${targetLabel}. Try matching it before the timer runs out.`
+            }
+          />
+          <ShellButton tone="primary" onClick={next}>
+            Next round
+            <span className="font-mono text-xs opacity-70" aria-hidden="true">Enter</span>
+          </ShellButton>
+        </div>
+      )}
     </GameShell>
   );
 }

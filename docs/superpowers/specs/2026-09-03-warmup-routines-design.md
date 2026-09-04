@@ -58,8 +58,10 @@ pack; Range builder and Agility and runs (~6 each) stand in for Singeo's range
 and riff workouts. The two Pro packs become Pro routines, built from
 `PRO_PACKS` rather than restated. Durations are computed from the same
 `planRep` arithmetic the player schedules with, so the minutes on the card are
-the minutes the singer gets, and a test pins Quick, Daily and Full to 5, 10
-and 15.
+the minutes the singer gets. Rep counts, note lengths, pattern shapes and
+ladder directions were then measured from the piano guide in Singeo's two
+public warm-up videos (`docs/research/singeo-warmup-parameters.md`), so Quick
+is the 7-minute warm-up exercise for exercise and Daily the 10-minute one.
 
 **Bounded player.** `ExercisePlayer` takes an optional `bounds` prop
 (`{ reps, stepIndex, stepCount }`). With bounds, the step completes itself

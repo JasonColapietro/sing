@@ -21,6 +21,12 @@ export interface WarmupExercise {
   noteDur?: number;
   /** Steps are two-note pitch glides (sirens) instead of discrete notes. */
   glide?: boolean;
+  /**
+   * Which end of the root ladder the walk starts from. Most exercises climb
+   * from the bottom; Singeo's raspberries, hoo and puffy-cheeks descend by
+   * half-steps from the top of the band, and the player honours that.
+   */
+  ladder?: "up" | "down";
   /** Each step is a small melody in midi numbers, built from a root note. */
   buildSteps(rootMidi: number): number[][];
 }
@@ -135,76 +141,82 @@ export const EXERCISES: WarmupExercise[] = [
     noteDur: 0.65,
     buildSteps: (r) => [rel(r, [0, 9, 0, 9, 0])],
   },
-  // The exercise types that a documented Singeo warmup runs on and this
-  // catalogue did not have. Singeo's own write-ups of its 10-minute and
-  // 7-minute routines (singeo.com/chorus) name the mechanics — bubble on a
-  // scale, raspberries down a scale, hung-ee-mm, the four-note hoo, staccato
-  // gug, the straw, N and V scales, descending hoo arpeggios, reverse
-  // arpeggios and the speed challenge — and every one of them is a pitch
-  // pattern this player can score. The consonant or vowel is in the title and
-  // the tip, since the detector only hears the pitch.
+  // The exercise types a documented Singeo warmup runs on and this catalogue
+  // did not have. The shapes, note lengths and ladder directions below are not
+  // taken from the blog copy but measured from the piano guide in Singeo's two
+  // public warm-up videos (the "Easy 7-minute" and the "Complete 10-minute",
+  // pitch-tracked 2026-09-03 — see docs/research/singeo-warmup-parameters.md):
+  // the bubble is a 1-3-5-8-5-3-1 arpeggio at ~0.42s a note, N and gug are a
+  // 13-note run up the arpeggio to the 12th and down the scale, hung-ee-mm is
+  // three five-note passes in one breath, and hoo is a slow 8-5-3-1 that walks
+  // DOWN by half-steps. The consonant or vowel is in the title and the tip,
+  // since the detector only hears the pitch.
   {
     id: "lip-trill-scale",
-    title: "Lip-trill scale",
-    desc: 'The bubble on a full ladder — "brr" up the first five notes and back down.',
+    title: "Lip-trill arpeggio",
+    desc: 'The bubble — "brr" through 1-3-5-8-5-3-1, climbing by half-steps and back down.',
     tier: "beginner",
     tip: "Loose lips, steady air. If the bubble stalls, less push and more breath.",
-    noteDur: 0.45,
-    buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0])],
+    noteDur: 0.42,
+    buildSteps: (r) => [rel(r, [0, 4, 7, 12, 7, 4, 0])],
   },
   {
     id: "straw-scale",
     title: "Straw scale",
-    desc: 'Puff the cheeks and blow through pursed lips (or a real straw) up five notes and down.',
+    desc: "Puff the cheeks and blow through pursed lips (or a real straw) up five notes and down.",
     tier: "beginner",
     tip: "Cheeks stay full. The narrow opening does the work — do not press the tone.",
-    noteDur: 0.5,
+    noteDur: 0.46,
     buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0])],
   },
   {
     id: "n-hum-scale",
-    title: "N-hum scale",
-    desc: 'Hum on "n" — tongue on the roof of the mouth — up five notes and back.',
-    tier: "beginner",
-    tip: "All of it through the nose. Feel the buzz behind the top teeth.",
-    noteDur: 0.5,
-    buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0])],
+    title: "N run",
+    desc: 'Hum on "n" up the arpeggio to the twelfth, then down the scale — thirteen notes on one breath.',
+    tier: "intermediate",
+    tip: "All of it through the nose, tongue on the roof of the mouth. Feel the buzz behind the top teeth.",
+    noteDur: 0.3,
+    buildSteps: (r) => [rel(r, [0, 4, 7, 12, 16, 19, 17, 14, 11, 7, 5, 2, 0])],
   },
   {
     id: "hoo-four-note",
-    title: "Four-note hoo",
-    desc: 'A slow "hoo" down four notes from the fourth to the root. Let vibrato happen if it wants to.',
+    title: "Hoo descent",
+    desc: 'A slow "hoo" down 8-5-3-1, each rep a half-step lower. Let vibrato happen if it wants to.',
     tier: "beginner",
-    tip: "Long and easy. Do not make vibrato — leave room for it.",
+    tip: "Long and easy. Start the top note light; do not make vibrato — leave room for it.",
     noteDur: 1,
-    buildSteps: (r) => [rel(r, [5, 4, 2, 0])],
+    ladder: "down",
+    buildSteps: (r) => [rel(r, [12, 7, 4, 0])],
   },
   {
     id: "tongue-trill-descent",
     title: "Tongue-trill descent",
-    desc: 'Raspberries or a rolled "r" falling 5-4-3-2-1.',
+    desc: 'Raspberries or a rolled "r" falling 5-4-3-2-1, each rep a half-step lower.',
     tier: "intermediate",
     tip: "If the tongue will not roll, a loose raspberry counts. Stretch the tongue out between reps.",
-    noteDur: 0.5,
+    noteDur: 0.6,
+    ladder: "down",
     buildSteps: (r) => [rel(r, [7, 5, 4, 2, 0])],
   },
   {
     id: "hung-ee-mm",
-    title: "Hung-ee-mm scale",
-    desc: 'One continuous "hung-ee-mm" up the octave scale and back down.',
+    title: "Hung-ee-mm",
+    desc: 'Three five-note passes on one breath — "hung" up and down, "ee" up and down, "mm" up and down.',
     tier: "intermediate",
     tip: "Blend the three sounds into one line. Nothing restarts between them.",
-    noteDur: 0.4,
-    buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 9, 11, 12, 11, 9, 7, 5, 4, 2, 0])],
+    noteDur: 0.3,
+    buildSteps: (r) => [
+      rel(r, [0, 2, 4, 5, 7, 5, 4, 2, 0, 2, 4, 5, 7, 5, 4, 2, 0, 2, 4, 5, 7, 5, 4, 2, 0]),
+    ],
   },
   {
     id: "gug-staccato",
     title: "Staccato gug",
-    desc: 'Thirteen short "gug"s up the scale to the seventh and back down, with space between each.',
+    desc: 'Thirteen short "gug"s — up the arpeggio to the twelfth, down the scale — with space between each.',
     tier: "intermediate",
     tip: "Each note starts from the breath, not the throat. Leave the gap.",
-    noteDur: 0.3,
-    buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 9, 11, 9, 7, 5, 4, 2, 0])],
+    noteDur: 0.25,
+    buildSteps: (r) => [rel(r, [0, 4, 7, 12, 16, 19, 17, 14, 11, 7, 5, 2, 0])],
   },
   {
     id: "v-double-arpeggio",
@@ -212,17 +224,8 @@ export const EXERCISES: WarmupExercise[] = [
     desc: 'A "vvv" (or "zzz") through 1-3-5-8-5-3-1 twice on one breath.',
     tier: "intermediate",
     tip: "Teeth on the lip, air moving the whole time. The second arpeggio is the same as the first.",
-    noteDur: 0.45,
+    noteDur: 0.3,
     buildSteps: (r) => [rel(r, [0, 4, 7, 12, 7, 4, 0, 4, 7, 12, 7, 4, 0])],
-  },
-  {
-    id: "hoo-descending-arpeggio",
-    title: "Hoo descending arpeggio",
-    desc: 'Fall 8-5-3-1 on "hoo", narrow and easy.',
-    tier: "intermediate",
-    tip: 'A small "oo" frees the folds. Start the top note light.',
-    noteDur: 0.9,
-    buildSteps: (r) => [rel(r, [12, 7, 4, 0])],
   },
   {
     id: "reverse-arpeggio",
@@ -549,6 +552,14 @@ export function buildSegments(
  * down endlessly — see ladderWalk — so the ladder is the singer's whole
  * comfortable span, not a fixed rep count.
  */
+/**
+ * The fewest rungs a fitted ladder should have before the courtesies above
+ * give way. The 13-note runs reach a 12th above the root, so with the usual
+ * major-third floor and fourth of headroom a two-octave singer got a ladder of
+ * one rung — every rep on the same note, while the room promised a climb.
+ */
+export const MIN_RUNGS = 5;
+
 export function computeRootLadder(
   ex: WarmupExercise,
   lowMidi?: number,
@@ -557,9 +568,21 @@ export function computeRootLadder(
   const offsets = ex.buildSteps(0).flat();
   const maxOff = Math.max(...offsets);
   if (lowMidi !== undefined && highMidi !== undefined) {
+    const range = (start: number, top: number) =>
+      Array.from({ length: top - start + 1 }, (_, i) => start + i);
     const start = Math.max(30, lowMidi + 4);
     const top = Math.max(start, highMidi - 5 - maxOff);
-    return Array.from({ length: top - start + 1 }, (_, i) => start + i);
+    if (top - start + 1 >= MIN_RUNGS || maxOff < 12) return range(start, top);
+    // A pattern an octave or wider in an ordinary range: spend the headroom
+    // first (the pattern's top note may reach the measured top, which is what
+    // the recordings this catalogue mirrors do), then let the floor drop
+    // toward the measured low — never below it — until the ladder has rungs
+    // to walk. Narrower patterns keep the courtesies untouched: the coach's
+    // first-practice picker (lib/song-first-practice.ts) relies on them.
+    const top2 = Math.max(30, highMidi - maxOff);
+    const start2 = Math.max(30, lowMidi, Math.min(lowMidi + 4, top2 - (MIN_RUNGS - 1)));
+    if (top2 >= start2 && top2 - start2 + 1 > top - start + 1) return range(start2, top2);
+    return range(start, top);
   }
   return Array.from({ length: 8 }, (_, i) => 48 + i); // C3..G3
 }

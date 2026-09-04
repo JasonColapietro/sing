@@ -1,7 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Card, PageShell, Pill, SectionLabel } from "@/components/ui";
+import {
+  ContinueCard,
+  GoalRing,
+  PathList,
+  StarTrio,
+  StreakChip,
+  useDailyGoal,
+} from "@/components/practice/learn-home";
+import { starsForScore } from "@/components/practice/results-screen";
+import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
 import {
   DIFFICULTIES,
   GAME_NAMES,
@@ -9,79 +19,44 @@ import {
   type Difficulty,
   type GameId,
 } from "./lib";
-import { IntervalGame } from "./interval-game";
-import { PitchMatchGame } from "./pitch-match-game";
-import { MelodyEchoGame } from "./melody-echo-game";
-import { HigherLowerGame } from "./higher-lower-game";
+import {
+  EAR_ROUTINES,
+  GAME_DESC,
+  GAME_MIC,
+  GAME_TRAINS,
+  earRoutineMinutes,
+  recommendEarRoutine,
+  type EarRoutine,
+} from "./routines";
+import { EarGameSession, EarRunner } from "./ear-runner";
 
-interface GameMeta {
-  id: GameId;
-  trains: string;
-  desc: string;
-  mic: boolean;
-  icon: React.ReactNode;
-}
+/** What the room is running right now, if anything. */
+type Active =
+  | { kind: "routine"; routine: EarRoutine }
+  | { kind: "game"; game: GameId; difficulty: Difficulty };
 
-const GAMES: GameMeta[] = [
-  {
-    id: "interval",
-    trains: "Interval recognition",
-    desc: "Two notes play — name the distance between them.",
-    mic: false,
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 17V7m16 10V7" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M7.5 12h9" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="2.5 3" />
-      </svg>
-    ),
-  },
-  {
-    id: "pitch-match",
-    trains: "Pitch accuracy",
-    desc: "Hear a note, sing it back, and hold it steady in tune.",
-    mic: true,
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <rect x="9" y="3" width="6" height="11" rx="3" stroke="#11615d" strokeWidth="1.8" />
-        <path d="M5 11a7 7 0 0 0 14 0M12 18v3" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
-    id: "melody-echo",
-    trains: "Melodic memory",
-    desc: "Hear a short melody and echo it back note for note.",
-    mic: true,
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 15c2-4 4 4 6 0s4 4 6 0 3-2 4-1" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-        <path d="M4 9c2-4 4 4 6 0" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.5" />
-      </svg>
-    ),
-  },
-  {
-    id: "higher-lower",
-    trains: "Pitch direction",
-    desc: "Was the second note higher or lower? Fast rounds, tiny gaps.",
-    mic: false,
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M8 18V6m0 0L4.5 9.5M8 6l3.5 3.5" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M16 6v12m0 0 3.5-3.5M16 18l-3.5-3.5" stroke="#11615d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-  },
+const GAME_ORDER: GameId[] = [
+  "higher-lower",
+  "interval",
+  "pitch-match",
+  "melody-echo",
 ];
 
+/** Stars for a whole workout: the average of its steps' best scores. */
+function routineStars(
+  routine: EarRoutine,
+  bests: Record<string, number>,
+): 0 | 1 | 2 | 3 {
+  const scores = routine.steps.map((s) => bests[`${s.game}:${s.difficulty}`] ?? 0);
+  const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+  return starsForScore(Math.round(avg));
+}
+
 export default function EarTrainingClient() {
-  const [active, setActive] = useState<{ game: GameId; difficulty: Difficulty } | null>(null);
-  const [diffs, setDiffs] = useState<Record<GameId, Difficulty>>({
-    interval: "easy",
-    "pitch-match": "easy",
-    "melody-echo": "easy",
-    "higher-lower": "easy",
-  });
+  const [active, setActive] = useState<Active | null>(null);
   const [bests, setBests] = useState<Record<string, number>>({});
+  const progress = useProgress();
+  const { goalSec } = useDailyGoal();
 
   const refreshBests = useCallback(() => setBests(readBests()), []);
   useEffect(() => {
@@ -98,15 +73,57 @@ export default function EarTrainingClient() {
     refreshBests();
   }, [refreshBests]);
 
+  // "Practised ear today" is what decides between the top-up and the full
+  // workout, so it asks about ear sessions specifically, not practice at large.
+  const earToday = useMemo(() => {
+    const today = localDay();
+    return progress.sessions.some((s) => s.type === "ear" && s.day === today);
+  }, [progress.sessions]);
+
+  const recommended = useMemo(
+    () => recommendEarRoutine({ practicedToday: earToday }),
+    [earToday],
+  );
+
+  /** The path: one level per difficulty, the four games as its rows. */
+  const levels = useMemo(() => {
+    return DIFFICULTIES.map((d) => ({
+      title: d.label,
+      unit: "games",
+      blurb:
+        d.id === "easy"
+          ? "Wide gaps, four intervals, any octave counts."
+          : d.id === "medium"
+            ? "Smaller gaps, seven intervals, the octave matters."
+            : "Every interval, harmonic pairs, and a tighter tuning window.",
+      items: GAME_ORDER.map((game) => {
+        const best = bests[`${game}:${d.id}`];
+        const stars = starsForScore(typeof best === "number" ? best : null);
+        return {
+          id: `${game}:${d.id}`,
+          title: GAME_NAMES[game],
+          desc: GAME_DESC[game],
+          meta:
+            typeof best === "number"
+              ? `10 rounds · best ${best}/100`
+              : "10 rounds · not played yet",
+          stars,
+          mic: GAME_MIC[game],
+          onSelect: () => setActive({ kind: "game", game, difficulty: d.id }),
+        };
+      }),
+    }));
+  }, [bests]);
+
   if (active) {
-    const props = { difficulty: active.difficulty, onExit: exit };
-    return (
-      <PageShell kicker="Ear training" title={GAME_NAMES[active.game]}>
-        {active.game === "interval" && <IntervalGame {...props} />}
-        {active.game === "pitch-match" && <PitchMatchGame {...props} />}
-        {active.game === "melody-echo" && <MelodyEchoGame {...props} />}
-        {active.game === "higher-lower" && <HigherLowerGame {...props} />}
-      </PageShell>
+    return active.kind === "routine" ? (
+      <EarRunner routine={active.routine} onExit={exit} />
+    ) : (
+      <EarGameSession
+        game={active.game}
+        difficulty={active.difficulty}
+        onExit={exit}
+      />
     );
   }
 
@@ -114,77 +131,81 @@ export default function EarTrainingClient() {
     <PageShell
       kicker="Ear training"
       title="Train your ear"
-      subtitle="Four short games, ten rounds each. Pick a difficulty and press play."
+      subtitle="Short workouts and four games, ten rounds each. Start where the app points you."
     >
-      <div className="grid gap-4 sm:grid-cols-2">
-        {GAMES.map((g) => {
-          const diff = diffs[g.id];
-          const best = bests[`${g.id}:${diff}`];
-          return (
-            <Card key={g.id} className="flex flex-col">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2">
-                    {g.icon}
-                  </span>
-                  <div>
-                    <h2 className="text-lg">{GAME_NAMES[g.id]}</h2>
-                    <SectionLabel className="mt-1 border-cool/30 text-cool">
-                      {g.trains}
-                    </SectionLabel>
-                  </div>
-                </div>
-                {g.mic && <Pill tone="rec">mic</Pill>}
-              </div>
+      <ContinueCard
+        kicker={earToday ? "Top up today" : "Today's ear workout"}
+        title={recommended.name}
+        tagline={recommended.tagline}
+        meta={`${recommended.steps.length} games · ~${earRoutineMinutes(recommended)} min`}
+        stepTitles={recommended.steps.map((s) => GAME_NAMES[s.game])}
+        onStart={() => setActive({ kind: "routine", routine: recommended })}
+        startLabel="Start workout"
+        micReady
+        error={null}
+        streakDays={progress.streak.current}
+      />
 
-              <p className="mt-3 text-sm text-mut">{g.desc}</p>
-
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <div
-                  role="radiogroup"
-                  aria-label={`${GAME_NAMES[g.id]} difficulty`}
-                  className="flex rounded-full border border-line bg-panel2 p-0.5"
-                >
-                  {DIFFICULTIES.map((d) => (
-                    <button
-                      key={d.id}
-                      role="radio"
-                      aria-checked={diff === d.id}
-                      onClick={() => setDiffs((p) => ({ ...p, [g.id]: d.id }))}
-                      className={`rounded-full px-3 py-1 text-xs transition-colors ${
-                        diff === d.id
-                          ? "bg-panel text-violet-ink"
-                          : "text-mut hover:text-ink"
-                      }`}
-                    >
-                      {d.label}
-                    </button>
-                  ))}
-                </div>
-                <span className="tabular font-mono text-xs text-dim">
-                  {typeof best === "number" ? `Best ${best}/100` : "Not played yet"}
-                </span>
-              </div>
-
-              <div className="mt-4">
-                <Button
-                  variant="violet"
-                  size="sm"
-                  onClick={() => setActive({ game: g.id, difficulty: diff })}
-                >
-                  Play
-                  <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-                    <path d="M2.5 1.5 8 5 2.5 8.5z" fill="currentColor" />
-                  </svg>
-                </Button>
-              </div>
-            </Card>
-          );
-        })}
+      <div className="mt-6 flex flex-wrap items-center gap-4">
+        <GoalRing doneSec={todayPracticeSec(progress)} goalSec={goalSec} />
+        <StreakChip days={progress.streak.current} />
       </div>
 
-      <p className="mt-6 text-center text-xs text-dim">
-        Every finished session earns XP and counts toward your streak.
+      <section className="mt-10">
+        <div className="flex flex-wrap items-center gap-2">
+          <SectionLabel>Workouts</SectionLabel>
+          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            Pick a length, press start
+          </span>
+        </div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {EAR_ROUTINES.map((r) => (
+            <button
+              key={r.id}
+              type="button"
+              onClick={() => setActive({ kind: "routine", routine: r })}
+              className="text-left"
+            >
+              <Card tone="raised" className="h-full">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="text-lg">{r.name}</h3>
+                  <StarTrio stars={routineStars(r, bests)} />
+                </div>
+                <p className="mt-2 text-sm text-mut">{r.tagline}</p>
+                <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                  {r.steps.length} games
+                  <span className="mx-2 text-line2">·</span>~{earRoutineMinutes(r)} min
+                </p>
+                <ol className="mt-4 flex flex-wrap gap-1.5" aria-label="Games in this workout">
+                  {r.steps.map((s, i) => (
+                    <li key={`${s.game}-${s.difficulty}-${i}`}>
+                      <Pill tone="mut">{GAME_NAMES[s.game]}</Pill>
+                    </li>
+                  ))}
+                </ol>
+              </Card>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-10">
+        <div className="flex flex-wrap items-center gap-2">
+          <SectionLabel>Path</SectionLabel>
+          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            Three stars on every game, easiest first
+          </span>
+        </div>
+        <div className="mt-4">
+          <PathList levels={levels} micNoteId={null} />
+        </div>
+      </section>
+
+      <p className="mt-8 text-center text-xs text-dim">
+        Every finished game earns XP and counts toward your streak.
+        {" "}
+        {GAME_TRAINS["pitch-match"]} and {GAME_TRAINS["melody-echo"].toLowerCase()} need a
+        microphone; the other two never listen.
       </p>
     </PageShell>
   );

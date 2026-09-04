@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EXERCISES, PRO_PACKS, computeRootLadder, ladderWalk } from "./exercises";
+import { ALL_EXERCISES, EXERCISES, MIN_RUNGS, PRO_PACKS, computeRootLadder, ladderWalk } from "./exercises";
 
 // five-note-scale's highest interval is the fifth (7 semitones).
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
@@ -22,6 +22,34 @@ describe("computeRootLadder", () => {
   it("collapses a too-narrow range to a single root instead of a plateau", () => {
     // start = 52, top = max(52, 55 - 5 - 7) = 52 — one root, no repeats.
     expect(computeRootLadder(fiveNote, 48, 55)).toEqual([52]);
+  });
+
+  it("gives every exercise a ladder to walk in an ordinary range", () => {
+    // A 24-semitone range earns the "two octaves" achievement, so it is the
+    // upper end of ordinary. The 13-note runs reach a 12th above the root and
+    // used to collapse to one rung here — every rep on one note.
+    for (const ex of ALL_EXERCISES) {
+      const roots = computeRootLadder(ex, 48, 72);
+      expect(roots.length, ex.id).toBeGreaterThanOrEqual(4);
+      const maxOff = Math.max(...ex.buildSteps(0).flat());
+      // Never above the measured top, never below the measured bottom.
+      expect(roots[roots.length - 1] + maxOff, ex.id).toBeLessThanOrEqual(72);
+      expect(roots[0], ex.id).toBeGreaterThanOrEqual(48);
+    }
+    // At 21 semitones the widest patterns still get a short walk, in range.
+    for (const ex of ALL_EXERCISES) {
+      const roots = computeRootLadder(ex, 48, 69);
+      expect(roots.length, ex.id).toBeGreaterThanOrEqual(3);
+      expect(roots[0], ex.id).toBeGreaterThanOrEqual(48);
+    }
+    expect(MIN_RUNGS).toBeGreaterThanOrEqual(4);
+  });
+
+  it("leaves the classic fit alone when it already has rungs", () => {
+    // Nothing about the five-note scale changed: same band as before.
+    expect(computeRootLadder(fiveNote, 48, 72)).toEqual(
+      Array.from({ length: 9 }, (_, i) => 52 + i),
+    );
   });
 
   it("never starts below MIDI 30", () => {

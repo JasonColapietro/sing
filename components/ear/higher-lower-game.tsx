@@ -1,10 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Card } from "@/components/ui";
 import { playSequence } from "@/lib/audio/synth";
 import { pick, randInt, type Difficulty } from "./lib";
-import { GameShell, SummaryView, useEarSession } from "./session";
+import {
+  AnswerButton,
+  GameShell,
+  ShellButton,
+  StepDone,
+  SummaryView,
+  useEarSession,
+  type OnEarComplete,
+} from "./session";
 
 type Answer = "higher" | "lower" | "same";
 
@@ -37,9 +44,13 @@ const LABELS: Record<Answer, string> = {
 export function HigherLowerGame({
   difficulty,
   onExit,
+  onComplete,
 }: {
   difficulty: Difficulty;
   onExit: () => void;
+  /** Set when this game is one step of a workout: the result goes up instead
+      of being drawn here, and no summary card renders. */
+  onComplete?: OnEarComplete;
 }) {
   const session = useEarSession();
   const hasSame = difficulty === "hard";
@@ -99,6 +110,18 @@ export function HigherLowerGame({
   useEffect(() => () => window.clearTimeout(advanceRef.current), []);
 
   if (session.done) {
+    if (onComplete) {
+      return (
+        <StepDone
+          game="higher-lower"
+          difficulty={difficulty}
+          session={session}
+          startedAt={startedAt}
+          onExit={onExit}
+          onComplete={onComplete}
+        />
+      );
+    }
     return (
       <div className="mx-auto max-w-2xl">
         <SummaryView
@@ -122,66 +145,66 @@ export function HigherLowerGame({
 
   return (
     <GameShell game="higher-lower" difficulty={difficulty} session={session} onExit={onExit}>
-      <Card>
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-sm text-mut">
-            Two notes. Was the second one higher{hasSame ? ", lower, or the same" : " or lower"}?
-          </p>
-          <Button variant="outline" size="sm" onClick={play}>
-            Hear again
-            <span className="font-mono text-xs text-dim" aria-hidden="true">R</span>
-          </Button>
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-[var(--s-mut)]">
+          Two notes. Was the second one higher{hasSame ? ", lower, or the same" : " or lower"}?
+        </p>
+        <ShellButton onClick={play}>
+          Hear again
+          <span className="font-mono text-xs text-[var(--s-dim)]" aria-hidden="true">R</span>
+        </ShellButton>
+      </div>
 
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          {answers.map((a) => {
-            const isRight = answered !== null && a === correctAnswer;
-            const isWrongPick =
-              answered !== null && a === answered && a !== correctAnswer;
-            const arrow =
-              a === "higher" ? "↑" : a === "lower" ? "↓" : "→";
-            const keyHint =
-              a === "higher" ? "Up" : a === "lower" ? "Down" : "Right";
-            return (
-              <button
-                key={a}
-                onClick={() => answer(a)}
-                disabled={answered !== null}
-                aria-label={`${LABELS[a]}, shortcut ${keyHint} arrow`}
-                className={`flex min-w-28 flex-col items-center gap-1 rounded-2xl border px-6 py-4 transition-colors disabled:cursor-default ${
-                  isRight
-                    ? "border-ok/60 bg-panel2 text-ok-ink"
-                    : isWrongPick
-                      ? "border-rec/50 bg-panel2 text-rec"
-                      : answered !== null
-                        ? "border-line text-dim"
-                        : "border-line2 text-ink hover:border-violet hover:text-violet-ink"
-                }`}
-              >
-                <span className="font-mono text-xl" aria-hidden="true">
-                  {arrow}
-                </span>
-                <span className="text-sm">{LABELS[a]}</span>
-                <kbd className="rounded border border-line bg-panel px-1.5 font-mono text-[10px] text-dim">
-                  {keyHint}
-                </kbd>
-              </button>
-            );
-          })}
-        </div>
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
+        {answers.map((a) => {
+          const isRight = answered !== null && a === correctAnswer;
+          const isWrongPick =
+            answered !== null && a === answered && a !== correctAnswer;
+          const arrow = a === "higher" ? "↑" : a === "lower" ? "↓" : "→";
+          const keyHint =
+            a === "higher" ? "Up" : a === "lower" ? "Down" : "Right";
+          return (
+            <AnswerButton
+              key={a}
+              state={
+                isRight
+                  ? "correct"
+                  : isWrongPick
+                    ? "wrong"
+                    : answered !== null
+                      ? "muted"
+                      : "idle"
+              }
+              onClick={() => answer(a)}
+              disabled={answered !== null}
+              ariaLabel={`${LABELS[a]}, shortcut ${keyHint} arrow`}
+              className="min-w-32 flex-col items-center justify-center gap-1 py-6 text-center"
+            >
+              <span className="font-mono text-2xl" aria-hidden="true">
+                {arrow}
+              </span>
+              <span className="text-sm">{LABELS[a]}</span>
+              <kbd className="rounded border border-[var(--s-line)] px-1.5 font-mono text-[10px] opacity-70">
+                {keyHint}
+              </kbd>
+            </AnswerButton>
+          );
+        })}
+      </div>
 
-        <div className="mt-5 text-center text-sm" role="status" aria-live="polite">
-          {answered === null ? (
-            <span className="text-dim">Answer with the arrow keys for speed.</span>
-          ) : answered === correctAnswer ? (
-            <span className="text-ok-ink">Correct — it was {LABELS[correctAnswer].toLowerCase()}.</span>
-          ) : (
-            <span className="text-mut">
-              It was {LABELS[correctAnswer].toLowerCase()}.
-            </span>
-          )}
-        </div>
-      </Card>
+      <div className="mt-6 text-center text-sm" role="status" aria-live="polite">
+        {answered === null ? (
+          <span className="text-[var(--s-dim)]">Answer with the arrow keys for speed.</span>
+        ) : answered === correctAnswer ? (
+          <span style={{ color: "var(--s-ok)" }}>
+            Correct — it was {LABELS[correctAnswer].toLowerCase()}.
+          </span>
+        ) : (
+          <span className="text-[var(--s-mut)]">
+            It was {LABELS[correctAnswer].toLowerCase()}.
+          </span>
+        )}
+      </div>
     </GameShell>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Button, Card } from "@/components/ui";
 import { playSequence, playTone } from "@/lib/audio/synth";
 import {
   INTERVAL_NAMES,
@@ -12,10 +11,14 @@ import {
   type Difficulty,
 } from "./lib";
 import {
+  AnswerButton,
   GameShell,
   RoundFeedback,
+  ShellButton,
+  StepDone,
   SummaryView,
   useEarSession,
+  type OnEarComplete,
 } from "./session";
 
 interface Round {
@@ -30,9 +33,13 @@ function makeRound(difficulty: Difficulty): Round {
 export function IntervalGame({
   difficulty,
   onExit,
+  onComplete,
 }: {
   difficulty: Difficulty;
   onExit: () => void;
+  /** Set when this game is one step of a workout: the result goes up instead
+      of being drawn here, and no summary card renders. */
+  onComplete?: OnEarComplete;
 }) {
   const session = useEarSession();
   const options = INTERVAL_SETS[difficulty];
@@ -104,108 +111,95 @@ export function IntervalGame({
   };
 
   if (session.done) {
+    if (onComplete) {
+      return (
+        <StepDone
+          game="interval"
+          difficulty={difficulty}
+          session={session}
+          startedAt={startedAt}
+          onExit={onExit}
+          onComplete={onComplete}
+        />
+      );
+    }
     return (
-      <SummaryOrReplay
-        difficulty={difficulty}
-        onExit={onExit}
-        session={session}
-        startedAt={startedAt}
-        onReplay={replayAll}
-      />
+      <div className="mx-auto max-w-2xl">
+        <SummaryView
+          game="interval"
+          difficulty={difficulty}
+          session={session}
+          startedAt={startedAt}
+          onReplay={replayAll}
+          onExit={onExit}
+        />
+      </div>
     );
   }
 
   return (
     <GameShell game="interval" difficulty={difficulty} session={session} onExit={onExit}>
-      <Card>
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-sm text-mut">
-            {harmonic
-              ? "Two notes play together. Which interval is it?"
-              : "Two notes play one after the other. Which interval is it?"}
-          </p>
-          <Button variant="outline" size="sm" onClick={play}>
-            Hear again
-            <span className="font-mono text-xs text-dim" aria-hidden="true">R</span>
-          </Button>
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-[var(--s-mut)]">
+          {harmonic
+            ? "Two notes play together. Which interval is it?"
+            : "Two notes play one after the other. Which interval is it?"}
+        </p>
+        <ShellButton onClick={play}>
+          Hear again
+          <span className="font-mono text-xs text-[var(--s-dim)]" aria-hidden="true">R</span>
+        </ShellButton>
+      </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {options.map((semi, i) => {
-            const isAnswer = answered !== null && semi === round.semi;
-            const isWrongPick =
-              answered !== null && semi === answered && semi !== round.semi;
-            return (
-              <button
-                key={semi}
-                onClick={() => answer(semi)}
-                disabled={answered !== null}
-                aria-label={`${INTERVAL_NAMES[semi]}, shortcut ${SHORTCUT_KEYS[i]}`}
-                className={`flex items-center justify-between gap-2 rounded-2xl border px-3.5 py-2.5 text-left text-sm transition-colors disabled:cursor-default ${
-                  isAnswer
-                    ? "border-ok/60 bg-panel2 text-ok-ink"
-                    : isWrongPick
-                      ? "border-rec/50 bg-panel2 text-rec"
-                      : answered !== null
-                        ? "border-line text-dim"
-                        : "border-line2 text-ink hover:border-violet hover:text-violet-ink"
-                }`}
-              >
-                <span>{INTERVAL_NAMES[semi]}</span>
-                <kbd className="rounded border border-line bg-panel px-1.5 font-mono text-[11px] text-dim">
-                  {SHORTCUT_KEYS[i]}
-                </kbd>
-              </button>
-            );
-          })}
-        </div>
-
-        {answered !== null && (
-          <div className="mt-5 space-y-4">
-            <RoundFeedback
-              correct={answered === round.semi}
-              message={
-                answered === round.semi
-                  ? `That was a ${INTERVAL_NAMES[round.semi].toLowerCase()}.`
-                  : `It was a ${INTERVAL_NAMES[round.semi].toLowerCase()}.`
+      <div className="mt-6 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+        {options.map((semi, i) => {
+          const isAnswer = answered !== null && semi === round.semi;
+          const isWrongPick =
+            answered !== null && semi === answered && semi !== round.semi;
+          return (
+            <AnswerButton
+              key={semi}
+              state={
+                isAnswer
+                  ? "correct"
+                  : isWrongPick
+                    ? "wrong"
+                    : answered !== null
+                      ? "muted"
+                      : "idle"
               }
-            />
-            <Button variant="violet" onClick={next}>
-              Next round
-              <span className="font-mono text-xs opacity-70" aria-hidden="true">
-                Enter
-              </span>
-            </Button>
-          </div>
-        )}
-      </Card>
-    </GameShell>
-  );
-}
+              onClick={() => answer(semi)}
+              disabled={answered !== null}
+              ariaLabel={`${INTERVAL_NAMES[semi]}, shortcut ${SHORTCUT_KEYS[i]}`}
+              className="items-center justify-between gap-2 py-3 text-left text-sm"
+            >
+              <span>{INTERVAL_NAMES[semi]}</span>
+              <kbd className="rounded border border-[var(--s-line)] px-1.5 font-mono text-[11px] opacity-70">
+                {SHORTCUT_KEYS[i]}
+              </kbd>
+            </AnswerButton>
+          );
+        })}
+      </div>
 
-function SummaryOrReplay({
-  difficulty,
-  session,
-  startedAt,
-  onReplay,
-  onExit,
-}: {
-  difficulty: Difficulty;
-  session: ReturnType<typeof useEarSession>;
-  startedAt: number;
-  onReplay: () => void;
-  onExit: () => void;
-}) {
-  return (
-    <div className="mx-auto max-w-2xl">
-      <SummaryView
-        game="interval"
-        difficulty={difficulty}
-        session={session}
-        startedAt={startedAt}
-        onReplay={onReplay}
-        onExit={onExit}
-      />
-    </div>
+      {answered !== null && (
+        <div className="mt-6 space-y-4">
+          <RoundFeedback
+            correct={answered === round.semi}
+            message={
+              answered === round.semi
+                ? `That was a ${INTERVAL_NAMES[round.semi].toLowerCase()}.`
+                : `It was a ${INTERVAL_NAMES[round.semi].toLowerCase()}.`
+            }
+          />
+          <ShellButton tone="primary" onClick={next}>
+            Next round
+            <span className="font-mono text-xs opacity-70" aria-hidden="true">
+              Enter
+            </span>
+          </ShellButton>
+        </div>
+      )}
+    </GameShell>
   );
 }

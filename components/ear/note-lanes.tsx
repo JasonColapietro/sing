@@ -2,12 +2,16 @@
 
 import { midiToLabel } from "@/lib/audio/notes";
 import { midiMatches } from "./lib";
-import { DIM } from "@/lib/chart-colors";
 
 /**
  * Mini note-lane view: horizontal semitone lanes, one column per melody
- * position. Ivory outlines mark the target notes, violet blocks the sung
- * notes, green when a sung note hits its target.
+ * position. Pale outlines mark the target notes, filled blocks the sung ones —
+ * green when a sung note hits its target, amber when it lands somewhere else.
+ *
+ * This only ever renders inside the dark session surface, so every colour is
+ * one of that shell's `--s-*` tokens. They are set through `style` rather than
+ * as `fill`/`stroke` attributes because SVG presentation attributes are not
+ * CSS declarations and do not resolve `var()`.
  */
 export function NoteLanes({
   target,
@@ -60,16 +64,16 @@ export function NoteLanes({
               y1={y}
               x2={w - 4}
               y2={y}
-              stroke="#ddd4c4"
               strokeWidth="1"
+              style={{ stroke: "var(--s-line)" }}
             />
             <text
               x={labelW - 6}
               y={y + 3}
               textAnchor="end"
               fontSize="8.5"
-              fill={DIM}
               fontFamily="monospace"
+              style={{ fill: "var(--s-dim)" }}
             >
               {midiToLabel(midi)}
             </text>
@@ -86,9 +90,9 @@ export function NoteLanes({
           height={laneH - 4}
           rx={5}
           fill="none"
-          stroke="#20201d"
           strokeWidth="1.4"
-          opacity="0.8"
+          style={{ stroke: "var(--s-ink)" }}
+          opacity="0.7"
         />
       ))}
       {/* sung notes */}
@@ -104,7 +108,7 @@ export function NoteLanes({
             width={colW - 18}
             height={laneH - 8}
             rx={4}
-            fill={hit ? "#3f8f6e" : "#c59642"}
+            style={{ fill: hit ? "var(--s-ok)" : "var(--s-amber)" }}
           />
         );
       })}

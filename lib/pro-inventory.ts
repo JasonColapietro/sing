@@ -57,7 +57,7 @@ export const FREE_CHAPTERS = BOOKS.reduce((n, b) => n + b.free, 0);
 export const SONG_COUNT = 26;
 
 /** Warmup exercises, split by tier. */
-export const FREE_EXERCISES = 30;
+export const FREE_EXERCISES = 29;
 export const PRO_EXERCISES = 15;
 export const PRO_PACK_COUNT = 2;
 export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
