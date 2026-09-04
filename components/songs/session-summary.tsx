@@ -1,5 +1,7 @@
 "use client";
 
+import { LinkButton } from "@/components/ui";
+
 import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { ProCrescendoNudge } from "@/components/pro/gate";
@@ -318,6 +320,9 @@ export function SessionSummary({
         <Button variant="outline" onClick={onLibrary}>
           Back to library
         </Button>
+        <LinkButton href="/analyze" variant="ghost">
+          See your tone
+        </LinkButton>
       </div>
     </div>
   );

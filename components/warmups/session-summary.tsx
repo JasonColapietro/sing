@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { ALL_EXERCISES, EXERCISES } from "./exercises";
 import { useIsPro } from "@/lib/pro";
-import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
+import { Button, Card, LinkButton, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { midiToLabel } from "@/lib/audio/notes";
 import { ladderBreak, tallyFromScores, weakNotes } from "@/lib/analytics";
@@ -284,6 +284,9 @@ export function SessionSummary({
           <Button variant="outline" onClick={onLibrary}>
             Back to library
           </Button>
+          <LinkButton href="/analyze" variant="ghost">
+            See your tone
+          </LinkButton>
         </div>
       </Card>
     </div>
