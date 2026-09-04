@@ -1,5 +1,8 @@
 "use client";
 
+import { CapSlide } from "@/components/practice/free-cap";
+import { useFreeCap } from "@/lib/free-cap";
+
 import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import {
@@ -245,15 +248,19 @@ export function starsForCompletion(done: number, total: number): Stars {
 }
 
 export function BreathRunner({
+  capped = false,
   routine,
   pitch,
   onExit,
 }: {
+  /** The free allowance is spent: the next intro becomes the cap slide. */
+  capped?: boolean;
   routine: BreathRoutine;
   pitch: UsePitchResult;
   /** Back to the room. */
   onExit: () => void;
 }) {
+  const cap = useFreeCap();
   const stepCount = routine.steps.length;
   const [runId, setRunId] = useState(0);
   const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: 0 });
@@ -329,6 +336,8 @@ export function BreathRunner({
   const stepProgress = (phase.step / stepCount) * 100;
 
   if (phase.kind === "intro") {
+    // Between steps only: a drill under way finishes and logs first.
+    if (capped) return <CapSlide cap={cap} onExit={leave} />;
     return (
       <StepIntro
         key={`${runId}-${phase.step}`}

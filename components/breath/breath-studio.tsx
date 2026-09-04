@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useFreeCap } from "@/lib/free-cap";
+import { CapWall } from "@/components/practice/free-cap";
+
+import { useCallback, useEffect, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
 import { Card, PageShell, SectionHeading } from "@/components/ui";
@@ -89,6 +92,15 @@ export function BreathStudio() {
   const [bests, setBests] = useState<BreathBests>(EMPTY_BREATH_BESTS);
 
   const progress = useProgress();
+  const cap = useFreeCap();
+  /** Every way into a drill or set, so a capped singer meets the wall, not a mic prompt. */
+  const start = useCallback(
+    (next: View) => {
+      if (cap.capped) return;
+      setView(next);
+    },
+    [cap.capped],
+  );
   const { goalSec } = useDailyGoal();
 
   /**
@@ -122,7 +134,7 @@ export function BreathStudio() {
   };
 
   if (view.kind === "routine") {
-    return <BreathRunner routine={view.routine} pitch={pitch} onExit={goHome} />;
+    return <BreathRunner routine={view.routine} pitch={pitch} onExit={goHome} capped={cap.capped} />;
   }
   if (view.kind === "drill") {
     return <BreathDrillSession drill={view.drill} pitch={pitch} onExit={goHome} />;
@@ -135,6 +147,7 @@ export function BreathStudio() {
       title="Breath"
       subtitle="Build the air supply behind every long note — start the set that fits the moment, or pick one drill and work it."
     >
+      {cap.capped && <CapWall cap={cap} />}
       <ContinueCard
         kicker={practicedToday ? "Back for more" : "Start here"}
         title={recommended.name}
@@ -149,7 +162,7 @@ export function BreathStudio() {
           </p>
         }
         stepTitles={recommended.steps.map(breathStepTitle)}
-        onStart={() => setView({ kind: "routine", routine: recommended })}
+        onStart={() => start({ kind: "routine", routine: recommended })}
         /* Our own label rather than the card's mic-aware default: every breath
            set opens on a silent drill, so "Enable mic and start" would be
            asking for something this set does not need until its last step. */
@@ -185,7 +198,7 @@ export function BreathStudio() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => setView({ kind: "routine", routine: r })}
+                  onClick={() => start({ kind: "routine", routine: r })}
                   className="mt-4 min-h-11 rounded-full bg-violet-ink px-5 text-sm font-medium text-white transition-colors hover:bg-violet"
                 >
                   Start {r.name.toLowerCase()}
@@ -224,7 +237,7 @@ export function BreathStudio() {
                       : { desc: breathDrillDesc(drill) }),
                     stars,
                     mic: drill === "sustain",
-                    onSelect: () => setView({ kind: "drill", drill }),
+                    onSelect: () => start({ kind: "drill", drill }),
                   };
                 }),
               },

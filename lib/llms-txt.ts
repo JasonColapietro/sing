@@ -100,7 +100,7 @@ export function buildLlmsTxt(): string {
 
 ## Key facts
 
-- Brand home: ${SING_HOME} (browser vocal studio, free, no install)
+- Brand home: ${SING_HOME} (browser vocal studio, no install; the pitch studio and range test are free without limits, guided practice is three free minutes a day, unlimited with Suede Pro)
 - Chrome extension (Web Store): ${CHROME_STORE_URL}
 - Chrome extension: Suede Sing: Vocal Coach, Pitch Tuner, Vocal Range Test & Ear Training (free; Chrome 116+, also Edge, Brave, Arc). Details at ${SING_HOME}/extension
 - Chrome extension privacy: microphone audio is analysed in the browser and discarded frame by frame — no recording, no upload, no account, no analytics

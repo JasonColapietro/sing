@@ -1,5 +1,8 @@
 "use client";
 
+import { useFreeCap } from "@/lib/free-cap";
+import { CapWall } from "@/components/practice/free-cap";
+
 import { useEffect, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
@@ -48,6 +51,9 @@ type ErrorAt =
 export function WarmupsClient() {
   const pitch = usePitch();
   const progress = useProgress();
+  // Three free minutes of guided practice a day; every way into a session
+  // checks it, so a capped singer sees the wall rather than a mic prompt.
+  const cap = useFreeCap();
   const { goalSec } = useDailyGoal();
 
   const [view, setView] = useState<View>("home");
@@ -82,6 +88,7 @@ export function WarmupsClient() {
   const recommended = recommendRoutine({ practicedToday, hour: hour ?? 12 });
 
   function startExercise(ex: WarmupExercise) {
+    if (cap.capped) return;
     setActiveEx(ex);
     setSummary(null);
     setView("session");
@@ -95,7 +102,7 @@ export function WarmupsClient() {
   }
 
   function startRoutine(r: Routine) {
-    if (!canStartRoutine(r)) return;
+    if (!canStartRoutine(r) || cap.capped) return;
     setActiveRoutine(r);
     setRoutineSummary(null);
     setView("routine");
@@ -114,6 +121,7 @@ export function WarmupsClient() {
   const [errorAt, setErrorAt] = useState<ErrorAt>({ kind: "gate" });
 
   async function selectExercise(ex: WarmupExercise) {
+    if (cap.capped) return;
     if (pitch.listening) {
       startExercise(ex);
       return;
@@ -125,7 +133,7 @@ export function WarmupsClient() {
   }
 
   async function selectRoutine(r: Routine, from: "today" | "grid") {
-    if (!canStartRoutine(r)) return;
+    if (!canStartRoutine(r) || cap.capped) return;
     if (pitch.listening) {
       startRoutine(r);
       return;
@@ -208,6 +216,7 @@ export function WarmupsClient() {
     >
       {view === "home" && (
         <div className="space-y-8">
+          {cap.capped && <CapWall cap={cap} />}
           <ContinueCard
             kicker="Today's warmup"
             title={recommended.name}
@@ -297,6 +306,7 @@ export function WarmupsClient() {
 
       {view === "routine" && activeRoutine && (
         <RoutineRunner
+          capped={cap.capped}
           routine={activeRoutine}
           pitch={pitch}
           range={progress.range}

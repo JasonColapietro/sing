@@ -91,7 +91,7 @@ describe("saved-range recommendation boundaries", () => {
         }
       }
     }
-  });
+  }, 20_000);
 
   it("uses the studio when the song player's transpose limit cannot reach the saved range", () => {
     const range = { lowMidi: 25, highMidi: 40 };

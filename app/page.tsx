@@ -236,9 +236,9 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
             label="Side by side"
-            lede="Most trainers do a few of these things, behind a subscription or an install requirement. Suede Sing does all of them, free, on the web."
+            lede="Most trainers do a few of these things, behind an install requirement. Suede Sing does all of them on the web: the studio and the range test free without limits, three free minutes of guided practice a day, and unlimited practice on Pro."
           >
-            The whole toolkit, without the paywall
+            The whole toolkit, in one tab
           </SectionHeading>
           <div className="mt-8">
             <ComparisonTable />
@@ -281,11 +281,13 @@ export default function Home() {
                 The coach on top of the studio
               </h2>
               <p className="mt-3 max-w-xl text-mut">
-                The studio, all {SONGS.length} songs, the range test and{" "}
-                {SINGERS.length} measured voices cost nothing and always will. Pro adds the library and
-                the long memory: both books in full, pitch analysis on every
-                take, and your range charted over months rather than one test
-                at a time.
+                The studio, the range test and {SINGERS.length} measured voices
+                cost nothing. Free accounts get three minutes of guided
+                practice a day across warmups, ear training, breath and all{" "}
+                {SONGS.length} songs. Pro removes the clock and adds the library
+                and the long memory: both books in full, pitch analysis on
+                every take, and your range charted over months rather than one
+                test at a time.
               </p>
               <ul className="mt-5 space-y-2.5">
                 {[

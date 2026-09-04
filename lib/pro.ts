@@ -413,6 +413,11 @@ export const PLAN_ROWS: Array<{
   pro: string;
 }> = [
   { label: "Practice rooms (all ten)", free: "Included", pro: "Included" },
+  {
+    label: "Guided practice (warmups, ear, breath, songs)",
+    free: "3 minutes a day",
+    pro: "Unlimited",
+  },
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
   { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis on every take" },

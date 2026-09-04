@@ -70,8 +70,8 @@ const PRO_CARD_POINTS = [
 ];
 
 const FREE_CARD_POINTS = [
-  "All ten practice rooms",
-  "Live pitch feedback + range test",
+  "All ten practice rooms, 3 minutes of guided practice a day",
+  "Live pitch feedback + range test, unlimited",
   "Recorder with A/B compare",
   "XP, streaks, achievements",
   "No ads, no signup, no trial clock",
@@ -427,10 +427,11 @@ export function ProClient() {
                   Add the coach.
                 </h1>
                 <p className="mt-4 max-w-xl text-lg text-mut">
-                  Everything you practice with today stays free. Pro
-                  layers a coach on top — adaptive daily plans, per-note
-                  analytics, pitch analysis on your takes, and the full
-                  songbook.
+                  The studio and the range test stay free, and free accounts
+                  get three minutes of guided practice a day. Pro removes the
+                  clock and layers a coach on top — adaptive daily plans,
+                  per-note analytics, pitch analysis on your takes, and the
+                  full songbook.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <LinkButton href="#plans" variant="violet" size="lg">

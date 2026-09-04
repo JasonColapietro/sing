@@ -1,5 +1,8 @@
 "use client";
 
+import { useFreeCap } from "@/lib/free-cap";
+import { CapWall } from "@/components/practice/free-cap";
+
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
@@ -32,6 +35,7 @@ function canStart(song: Song): boolean {
 export function SongsClient() {
   const pitch = usePitch();
   const progress = useProgress();
+  const cap = useFreeCap();
   const searchParams = useSearchParams();
   const setlist = useSetlist();
 
@@ -44,6 +48,8 @@ export function SongsClient() {
   const [playToken, setPlayToken] = useState(0);
 
   function startSong(song: Song) {
+    // Song practice is guided practice: the free day's three minutes apply.
+    if (cap.capped) return;
     setActiveSong(song);
     setSummary(null);
     setView("practice");
@@ -136,6 +142,11 @@ export function SongsClient() {
         ) : undefined
       }
     >
+      {view === "library" && cap.capped && (
+        <div className="mb-6">
+          <CapWall cap={cap} />
+        </div>
+      )}
       {view === "library" && <Library progress={progress} onSelect={startSong} />}
 
       {view === "practice" && activeSong && (

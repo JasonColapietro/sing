@@ -1,5 +1,8 @@
 "use client";
 
+import { CapSlide } from "@/components/practice/free-cap";
+import { useFreeCap } from "@/lib/free-cap";
+
 import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import type { VocalRange } from "@/lib/progress";
@@ -61,16 +64,20 @@ export function RoutineRunner({
   range,
   onDone,
   onQuit,
+  capped = false,
 }: {
   routine: Routine;
   pitch: UsePitchResult;
   range: VocalRange;
+  /** The free allowance is spent: the next intro becomes the cap slide. */
+  capped?: boolean;
   /** Every finished routine, and any quit that had at least one sung step. */
   onDone: (data: RoutineSummaryData) => void;
   /** A quit with nothing sung: there is nothing to summarise. */
   onQuit: () => void;
 }) {
   const stepCount = routine.steps.length;
+  const cap = useFreeCap();
   const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: 0 });
   const [results, setResults] = useState<(SessionSummaryData | null)[]>([]);
 
@@ -121,6 +128,10 @@ export function RoutineRunner({
   // The summary owns the screen once the last step closes; rendering a fourth
   // shell under it would only fight the results screen's portal for the body.
   if (phase.kind === "done") return null;
+
+  // Checked between steps, never mid-step: the exercise under way finishes and
+  // logs, and the routine ends on what was sung.
+  if (capped) return <CapSlide cap={cap} onExit={quit} />;
 
   return (
     <StepIntro
