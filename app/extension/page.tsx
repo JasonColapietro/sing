@@ -126,7 +126,7 @@ const jsonLd = {
       permissions: "Microphone",
       privacyPolicyUrl: `${SITE_URL}/privacy`,
       featureList: FEATURES.map((f) => f.name),
-      author: { "@id": "https://suedeai.ai/#jason-colapietro" },
+      author: { "@id": "https://suedeai.ai/founder#person" },
       publisher: { "@id": "https://suedeai.ai/#organization" },
       description:
         "Suede Sing for Chrome is a free browser extension that shows a singer their pitch in real time. It provides a vocal tuner, a vocal range test, guided warmups, and ear training in Chrome's side panel, plus a pitch meter overlay for singing along on YouTube. All audio analysis happens locally and no audio is recorded or transmitted.",
@@ -137,17 +137,16 @@ const jsonLd = {
       name: "Suede Labs",
       alternateName: ["Suede AI", "Suede Labs"],
       url: "https://suedeai.ai",
-      founder: { "@id": "https://suedeai.ai/#jason-colapietro" },
+      founder: { "@id": "https://suedeai.ai/founder#person" },
       sameAs: [...ORG_SAME_AS],
     },
     {
+      // Reference only. The canonical Person node is defined on suedeai.ai;
+      // satellite pages must not restate its properties, because a thin
+      // property set emitted from a frequently-crawled host can outrank the
+      // full one. jobTitle and a one-entry sameAs were doing exactly that.
       "@type": "Person",
-      "@id": "https://suedeai.ai/#jason-colapietro",
-      name: "Jason Colapietro",
-      url: "https://suedeai.ai/founder",
-      jobTitle: "Founder",
-      worksFor: { "@id": "https://suedeai.ai/#organization" },
-      sameAs: ["https://github.com/JasonColapietro"],
+      "@id": "https://suedeai.ai/founder#person",
     },
     {
       "@type": "FAQPage",
