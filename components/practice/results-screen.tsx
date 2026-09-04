@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import type { ReactNode } from "react";
 import { SESSION_FOCUS, SessionShell } from "./session-shell";
 import { gradeForScore } from "@/components/songs/grade";
@@ -228,6 +230,26 @@ export function ResultsScreen({
               </ul>
             </div>
           )}
+
+          {/* The score says how close the voice was; the analyze room shows
+              what it looked like — the spectrogram and the harmonics behind the
+              tone. One door to it from every results screen, so a singer who
+              just heard something odd can go and look at it. */}
+          <Link
+            href="/analyze"
+            className={`mt-6 flex items-center justify-between gap-4 rounded-2xl border border-[var(--s-line2)] bg-[var(--s-elev)] px-4 py-3 text-left transition-colors hover:bg-[var(--s-over)] ${SESSION_FOCUS}`}
+          >
+            <span>
+              <span className="block text-sm font-semibold text-[var(--s-ink)]">See your tone</span>
+              <span className="mt-0.5 block text-xs text-[var(--s-mut)]">
+                Spectrogram, harmonics and today&apos;s vocal load — what your voice
+                looked like, not just how close it was.
+              </span>
+            </span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0 text-[var(--s-dim)]">
+              <path d="m9 6 6 6-6 6" />
+            </svg>
+          </Link>
 
           {children && <div className="mt-6">{children}</div>}
 
