@@ -3,6 +3,13 @@
  *
  * Usage: node scripts/build-icons.mjs
  *
+ * Palette is "Ink & gold, lit" (chosen 2026-09-04): a warm near-black ground
+ * that darkens toward the bottom, and the S in the site's CTA gold, lit from
+ * the top. The same values drive suede-voice's scripts/build-icons.py, so the
+ * App Store, Google Play, print.suedeai.ai, the extension and this site all
+ * show one mark. Before this the site icon was a white S on an electric blue
+ * (#015cff) that appeared nowhere else in the product.
+ *
  * The site shipped with one 132px logo doing every job: nav image, and the
  * only entry in the web manifest. That is too small for an installed PWA
  * (Android wants 192 and 512), it has transparent corners where iOS renders
@@ -20,6 +27,8 @@
  *   public/icon-192.png       192  manifest, purpose "any"
  *   public/icon-512.png       512  manifest, purpose "any"
  *   public/icon-maskable.png  512  manifest, purpose "maskable"
+ *   public/suede-logo.png     132  the nav image, a disc on transparency
+ *   marketing/social/assets/avatar-512.png  512  the social profile avatar
  *
  * Source of truth is assets/suede-mark-400.png — the approved white mark on
  * transparency, copied from suede-brand-assets. Its ink occupies a measured
@@ -32,7 +41,9 @@ import { chromium } from "playwright";
 const MARK = "assets/suede-mark-400.png";
 /** Measured ink box of the source mark: 243px of drawing inside 400px. */
 const MARK_INK_RATIO = 243 / 400;
-const BRAND_BLUE = "#015cff";
+/** Ground and mark, each lit from the top: vertical gradients across the tile. */
+const GROUND = "linear-gradient(180deg, #2b2a26 0%, #15140f 100%)";
+const GOLD = "linear-gradient(180deg, #e0bb74 0%, #b8863a 100%)";
 
 /**
  * Fraction of the icon's width the mark's ink should occupy.
@@ -55,14 +66,17 @@ const markData = `data:image/png;base64,${readFileSync(MARK).toString("base64")}
 function iconHtml({ size, shape, inkFraction }) {
   const markWidth = (size * inkFraction) / MARK_INK_RATIO;
   const radius = shape === "disc" ? "50%" : "0";
+  // The mark's PNG is white on transparency; its alpha is used as a mask over a
+  // gold gradient that spans the whole tile, so the lit edge is the tile's top.
   return `<!doctype html><html><head><meta charset="utf-8"><style>
     html, body { margin: 0; padding: 0; background: transparent; }
     .icon { width: ${size}px; height: ${size}px; border-radius: ${radius};
-            background: ${BRAND_BLUE};
-            display: flex; align-items: center; justify-content: center; }
-    .icon img { width: ${markWidth}px; height: ${markWidth}px; display: block; }
+            background: ${GROUND}; position: relative; overflow: hidden; }
+    .mark { position: absolute; inset: 0; background: ${GOLD};
+            -webkit-mask: url("${markData}") center / ${markWidth}px ${markWidth}px no-repeat;
+            mask: url("${markData}") center / ${markWidth}px ${markWidth}px no-repeat; }
   </style></head><body>
-    <div class="icon"><img src="${markData}"></div>
+    <div class="icon"><div class="mark"></div></div>
   </body></html>`;
 }
 
@@ -76,6 +90,13 @@ const TARGETS = [
     size: 512,
     shape: "bleed",
     ink: INK_FRACTION.maskable,
+  },
+  { path: "public/suede-logo.png", size: 132, shape: "disc", ink: INK_FRACTION.any },
+  {
+    path: "marketing/social/assets/avatar-512.png",
+    size: 512,
+    shape: "disc",
+    ink: INK_FRACTION.any,
   },
 ];
 
@@ -114,7 +135,9 @@ function packIco(images) {
   return Buffer.concat([header, ...entries, ...images.map((i) => i.data)]);
 }
 
-const browser = await chromium.launch();
+// channel: "chrome" drives the installed Google Chrome — the Playwright-cached
+// chromium_headless_shell hangs at launch on this machine (180s timeout).
+const browser = await chromium.launch({ channel: "chrome" });
 const page = await browser.newPage();
 
 /** Renders one icon and returns the PNG bytes. */
