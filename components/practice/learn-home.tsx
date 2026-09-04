@@ -84,13 +84,31 @@ export function useDailyGoal(): {
  * `detail` carries — there is no exercise id in the log, and adding one would
  * be a store migration this lane has no business writing.
  */
+/**
+ * Titles an exercise used to log under. Sessions carry the title, not an id,
+ * so a rename would otherwise zero a returning singer's stars and "Best %"
+ * for that row. Add a line here whenever a title changes; the test pins it.
+ */
+export const RETIRED_TITLES: Record<string, readonly string[]> = {
+  "Lip-trill arpeggio": ["Lip-trill scale"],
+  "N run": ["N-hum scale"],
+  "Hoo descent": ["Four-note hoo", "Hoo descending arpeggio"],
+  "Hung-ee-mm": ["Hung-ee-mm scale"],
+};
+
+/** Every title a session for this exercise may have been filed under. */
+export function titlesFor(exerciseTitle: string): readonly string[] {
+  return [exerciseTitle, ...(RETIRED_TITLES[exerciseTitle] ?? [])];
+}
+
 export function bestScoreForExercise(
   progress: ProgressState,
   exerciseTitle: string,
 ): number | null {
+  const titles = titlesFor(exerciseTitle);
   let best: number | null = null;
   for (const s of progress.sessions) {
-    if (s.type !== "warmup" || s.detail !== exerciseTitle) continue;
+    if (s.type !== "warmup" || s.detail === undefined || !titles.includes(s.detail)) continue;
     if (typeof s.score !== "number") continue;
     if (best === null || s.score > best) best = s.score;
   }
@@ -343,7 +361,18 @@ export interface PathLevel {
  * right. Rows rather than a card grid, because a path is an order — a grid
  * says "any of these", and the whole point is that there is a next one.
  */
-export function PathList({ levels }: { levels: PathLevel[] }) {
+export function PathList({
+  levels,
+  micNoteId = "practice-mic-note",
+}: {
+  levels: PathLevel[];
+  /**
+   * The id of the room's mic note, which mic rows describe themselves by.
+   * Pass null in a room that renders no such note: an IDREF to nothing is an
+   * accessibility defect, not a harmless default.
+   */
+  micNoteId?: string | null;
+}) {
   const nextId = nextUpId(levels);
   return (
     <div className="space-y-8">
@@ -361,7 +390,7 @@ export function PathList({ levels }: { levels: PathLevel[] }) {
           <ul className="mt-3 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel">
             {level.items.map((item) => (
               <li key={item.id}>
-                <PathRow item={item} isNext={item.id === nextId} />
+                <PathRow item={item} isNext={item.id === nextId} micNoteId={micNoteId} />
                 {item.error && (
                   <MicAlert message={item.error} className="px-4 pb-3 text-sm text-rec" />
                 )}
@@ -387,7 +416,15 @@ export function nextUpId(levels: PathLevel[]): string | null {
   return null;
 }
 
-function PathRow({ item, isNext }: { item: PathItem; isNext: boolean }) {
+function PathRow({
+  item,
+  isNext,
+  micNoteId,
+}: {
+  item: PathItem;
+  isNext: boolean;
+  micNoteId: string | null;
+}) {
   const secondary = item.meta ?? item.desc;
   const body = (
     <>
@@ -442,7 +479,7 @@ function PathRow({ item, isNext }: { item: PathItem; isNext: boolean }) {
     <button
       type="button"
       onClick={item.onSelect}
-      aria-describedby={item.mic ? "practice-mic-note" : undefined}
+      aria-describedby={item.mic && micNoteId ? micNoteId : undefined}
       className={rowClass}
     >
       {body}

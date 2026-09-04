@@ -185,7 +185,9 @@ export function BoxBreathing({
         durationSec: sec,
         score: null,
         logged,
-        label: `${cfgRef.current.minutes} min · ${cfgRef.current.side}s sides`,
+        // What was done, not what was configured: an early End must not read
+        // as the full session on the results screen.
+        label: `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} · ${cfgRef.current.side}s sides`,
       });
       return;
     }
@@ -232,13 +234,15 @@ export function BoxBreathing({
     finish(run.elapsed, Math.floor(run.elapsed / cycleSec), true);
   };
 
-  // A routine step starts itself. Guarded by a ref rather than by `mode` so a
-  // development double-mount cannot leave two animation loops running.
-  const startedRef = useRef(false);
+  // A routine step starts itself. Start and teardown live in ONE effect: a
+  // ref guard here left the drill dead under React's development double-mount
+  // (the simulated unmount cancelled the loop, the guard refused to restart
+  // it), and an effect that owns its own cleanup restarts cleanly instead.
   useEffect(() => {
-    if (!autoStart || startedRef.current) return;
-    startedRef.current = true;
+    if (!autoStart) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- begin() seeds the run frame the loop it starts will overwrite next tick
     begin();
+    return () => cancelAnimationFrame(rafRef.current);
     // Runs once on mount: `begin` closes over the preset-seeded initial state,
     // which is exactly the state a routine step is meant to run.
     // eslint-disable-next-line react-hooks/exhaustive-deps

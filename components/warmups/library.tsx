@@ -1,5 +1,7 @@
 "use client";
 
+import { titlesFor } from "@/components/practice/learn-home";
+
 import type { ProgressState, SessionLog } from "@/lib/progress";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 import type { WarmupExercise, WarmupTier } from "./exercises";
@@ -21,14 +23,14 @@ import type { WarmupExercise, WarmupTier } from "./exercises";
  *  checkable against the catalogue instead of reading like a brochure. */
 export const TIER_BLURBS: Record<WarmupTier, string> = {
   beginner:
-    "Short ladders on hums and easy vowels. Start here if you have never warmed up on purpose.",
+    "Hums, the bubble, the straw and a slow hoo. Start here if you have never warmed up on purpose.",
   intermediate:
     "Wider intervals, a minor ladder, and your first siren. The everyday middle of a practice session.",
   advanced:
     "A full-octave siren and clean sixth leaps, for a voice that is already moving freely.",
 };
 
-export const RECENT_WINDOW_MS = 3 * 24 * 3600 * 1000;
+const RECENT_WINDOW_MS = 3 * 24 * 3600 * 1000;
 
 /**
  * The most recent session of this exercise inside the recency window, or
@@ -40,10 +42,12 @@ export function latestRecentSession(
   progress: ProgressState,
   now = Date.now(),
 ): SessionLog | undefined {
+  const titles = titlesFor(ex.title);
   return progress.sessions.find(
     (s) =>
       s.type === "warmup" &&
-      s.detail === ex.title &&
+      s.detail !== undefined &&
+      titles.includes(s.detail) &&
       now - new Date(s.date).getTime() <= RECENT_WINDOW_MS,
   );
 }

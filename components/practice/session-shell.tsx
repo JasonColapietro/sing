@@ -107,6 +107,14 @@ export function SessionShell({
       const first = items[0];
       const last = items[items.length - 1];
       const active = document.activeElement;
+      // Focus falls to <body> whenever the control that had it disables or
+      // unmounts itself — an answered ear round does exactly that — and from
+      // <body> a native Tab lands on the page underneath the shell.
+      if (!(active instanceof Node) || !root.contains(active)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+        return;
+      }
       if (e.shiftKey && (active === first || active === root)) {
         e.preventDefault();
         last.focus();

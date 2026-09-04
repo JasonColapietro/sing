@@ -141,7 +141,7 @@ export function starsForBox(minutes: number): Stars {
   return 0;
 }
 
-/** Farinelli is scored by how high the count climbed: the drill starts at 8 and caps at 12. */
+/** Farinelli is scored by how high the count climbed: every run starts at 4; the cap slider runs 8–12. */
 export function starsForFarinelli(cap: number): Stars {
   if (cap >= 12) return 3;
   if (cap >= 10) return 2;

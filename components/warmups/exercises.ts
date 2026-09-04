@@ -552,6 +552,14 @@ export function buildSegments(
  * down endlessly — see ladderWalk — so the ladder is the singer's whole
  * comfortable span, not a fixed rep count.
  */
+/**
+ * The fewest rungs a fitted ladder should have before the courtesies above
+ * give way. The 13-note runs reach a 12th above the root, so with the usual
+ * major-third floor and fourth of headroom a two-octave singer got a ladder of
+ * one rung — every rep on the same note, while the room promised a climb.
+ */
+export const MIN_RUNGS = 5;
+
 export function computeRootLadder(
   ex: WarmupExercise,
   lowMidi?: number,
@@ -560,9 +568,21 @@ export function computeRootLadder(
   const offsets = ex.buildSteps(0).flat();
   const maxOff = Math.max(...offsets);
   if (lowMidi !== undefined && highMidi !== undefined) {
+    const range = (start: number, top: number) =>
+      Array.from({ length: top - start + 1 }, (_, i) => start + i);
     const start = Math.max(30, lowMidi + 4);
     const top = Math.max(start, highMidi - 5 - maxOff);
-    return Array.from({ length: top - start + 1 }, (_, i) => start + i);
+    if (top - start + 1 >= MIN_RUNGS || maxOff < 12) return range(start, top);
+    // A pattern an octave or wider in an ordinary range: spend the headroom
+    // first (the pattern's top note may reach the measured top, which is what
+    // the recordings this catalogue mirrors do), then let the floor drop
+    // toward the measured low — never below it — until the ladder has rungs
+    // to walk. Narrower patterns keep the courtesies untouched: the coach's
+    // first-practice picker (lib/song-first-practice.ts) relies on them.
+    const top2 = Math.max(30, highMidi - maxOff);
+    const start2 = Math.max(30, lowMidi, Math.min(lowMidi + 4, top2 - (MIN_RUNGS - 1)));
+    if (top2 >= start2 && top2 - start2 + 1 > top - start + 1) return range(start2, top2);
+    return range(start, top);
   }
   return Array.from({ length: 8 }, (_, i) => 48 + i); // C3..G3
 }

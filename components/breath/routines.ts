@@ -40,6 +40,8 @@ export interface BreathDrillResult {
   logged: LogResult | null;
   /** The one line the results screen puts next to the step, e.g. "18.4 s". */
   label: string;
+  /** The sustain test's longest single hold; the guided drills have none. */
+  best?: number;
 }
 
 /**

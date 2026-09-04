@@ -123,6 +123,10 @@ export function HighwayCanvas({
      * rep.
      */
     const bounds = { segs: null as Segment[] | null, lo: 0, hi: 0 };
+    // A rep restarts with cursorSec back at null; the same pattern object is
+    // reused across reps on a short ladder, so identity alone would let one
+    // stray octave-error frame widen the grid for the rest of the session.
+    let cursorWasNull = true;
     const laneBounds = (patterns: Segment[], live: number | null) => {
       if (bounds.segs !== patterns) {
         const midis = patterns.flatMap((g) => [g.startMidi, g.endMidi]);
@@ -157,6 +161,11 @@ export function HighwayCanvas({
       if (s.segs.length === 0) return;
 
       const live = s.showLive ? s.liveMidiFloat : null;
+      if (s.cursorSec === null) cursorWasNull = true;
+      else if (cursorWasNull) {
+        cursorWasNull = false;
+        bounds.segs = null;
+      }
       const { lo, hi } = laneBounds(s.segs, live);
       const lanes = Math.max(5, hi - lo + 1);
       const laneH = h / lanes;

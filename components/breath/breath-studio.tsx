@@ -205,11 +205,13 @@ export function BreathStudio() {
         </SectionHeading>
         <div className="mt-5">
           <PathList
+            micNoteId={null}
             levels={[
               {
                 title: "Breath",
                 blurb:
                   "One measured test and two guided drills. Stars come from how far you have taken each one.",
+                unit: "drills",
                 items: DRILL_ORDER.map((drill) => {
                   const stars = starsForDrill(drill, bests);
                   return {

@@ -136,7 +136,8 @@ export function FarinelliDrill({
         durationSec: sec,
         score: null,
         logged,
-        label: `Top count ${topN}`,
+        // The count actually reached in the seconds actually run.
+        label: `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")} · top count ${topN}`,
       });
       return;
     }
@@ -185,13 +186,15 @@ export function FarinelliDrill({
     rafRef.current = requestAnimationFrame(loop);
   };
 
-  // A routine step starts itself. Guarded by a ref rather than by `mode` so a
-  // development double-mount cannot leave two schedulers running.
-  const startedRef = useRef(false);
+  // A routine step starts itself. Start and teardown live in ONE effect: a
+  // ref guard here left the drill dead under React's development double-mount
+  // (the simulated unmount ran cleanup, the guard refused to restart), and an
+  // effect that owns its own cleanup restarts cleanly instead.
   useEffect(() => {
-    if (!autoStart || startedRef.current) return;
-    startedRef.current = true;
+    if (!autoStart) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- begin() seeds the run frame the loop it starts will overwrite next tick
     begin();
+    return cleanup;
     // Runs once on mount: `begin` closes over the preset-seeded initial cap,
     // which is exactly the drill a routine step is meant to run.
     // eslint-disable-next-line react-hooks/exhaustive-deps

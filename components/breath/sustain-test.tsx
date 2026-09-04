@@ -288,6 +288,7 @@ export function SustainTest({
       score,
       logged: foldAttempts(all),
       label: `${best.toFixed(1)} s`,
+      best,
     });
   };
 

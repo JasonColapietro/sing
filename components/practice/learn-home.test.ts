@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_PROGRESS } from "@/lib/progress-shape";
+import { ALL_EXERCISES } from "@/components/warmups/exercises";
 import type { ProgressState, SessionLog } from "@/lib/progress-shape";
 import { starsForScore } from "./results-screen";
 import {
@@ -8,6 +9,7 @@ import {
   nextUpId,
   starsForExercise,
   type PathLevel,
+  RETIRED_TITLES,
 } from "./learn-home";
 
 function warmup(detail: string, score: number | undefined, day = "2026-09-01"): SessionLog {
@@ -135,5 +137,36 @@ describe("nextUpId", () => {
 
   it("returns null when everything is starred", () => {
     expect(nextUpId([level("One", [{ id: "a", title: "A", stars: 1 }])])).toBeNull();
+  });
+});
+
+describe("retired titles", () => {
+  it("still finds a session logged under an exercise's old title", () => {
+    const progress = {
+      ...DEFAULT_PROGRESS,
+      sessions: [
+        {
+          id: "1",
+          type: "warmup" as const,
+          date: "2026-09-03T10:00:00.000Z",
+          day: "2026-09-03",
+          durationSec: 60,
+          score: 82,
+          detail: "Lip-trill scale",
+          xp: 10,
+        },
+      ],
+    };
+    expect(bestScoreForExercise(progress, "Lip-trill arpeggio")).toBe(82);
+    expect(starsForExercise(progress, "Lip-trill arpeggio")).toBe(2);
+    expect(bestScoreForExercise(progress, "Straw scale")).toBeNull();
+  });
+
+  it("maps every retired title to a title that exists in the catalogue", () => {
+    const live = new Set(ALL_EXERCISES.map((e) => e.title));
+    for (const [current, olds] of Object.entries(RETIRED_TITLES)) {
+      expect(live.has(current), current).toBe(true);
+      for (const old of olds) expect(live.has(old), old).toBe(false);
+    }
   });
 });

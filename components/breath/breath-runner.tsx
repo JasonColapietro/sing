@@ -210,7 +210,8 @@ function starsForDrillResult(drill: BreathDrillId, r: BreathDrillResult): Stars 
     case "farinelli":
       return starsForFarinelli(farinelliCapReached(r.durationSec));
     default:
-      return starsForSustain(r.durationSec);
+      // The longest single hold, never the sum of attempts.
+      return starsForSustain(r.best ?? r.durationSec);
   }
 }
 
@@ -281,7 +282,9 @@ export function BreathRunner({
   }
 
   if (phase.kind === "done") {
-    const doneSteps = results.filter((r) => r).length;
+    // A step counts as done when it ran long enough to be logged — its own
+    // MIN_LOG_SEC — not merely because End was pressed.
+    const doneSteps = results.filter((r) => r !== null && r.logged !== null).length;
     const scored = results.filter(
       (r): r is BreathDrillResult => !!r && r.score !== null,
     );

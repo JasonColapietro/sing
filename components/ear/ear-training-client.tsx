@@ -89,6 +89,7 @@ export default function EarTrainingClient() {
   const levels = useMemo(() => {
     return DIFFICULTIES.map((d) => ({
       title: d.label,
+      unit: "games",
       blurb:
         d.id === "easy"
           ? "Wide gaps, four intervals, any octave counts."
@@ -196,7 +197,7 @@ export default function EarTrainingClient() {
           </span>
         </div>
         <div className="mt-4">
-          <PathList levels={levels} />
+          <PathList levels={levels} micNoteId={null} />
         </div>
       </section>
 

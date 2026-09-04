@@ -147,23 +147,6 @@ export function ScoreChip({ score, streak }: { score: number; streak: number }) 
   );
 }
 
-/** Kept for anything still reading the old paper header. */
-export function StreakPill({ streak }: { streak: number }) {
-  if (streak < 2) return null;
-  return (
-    <Pill tone="violet">
-      <span
-        className={streak >= 4 ? "animate-recblink" : undefined}
-        aria-hidden="true"
-      >
-        <svg width="10" height="10" viewBox="0 0 10 10">
-          <circle cx="5" cy="5" r="4" fill="currentColor" />
-        </svg>
-      </span>
-      <span className="tabular font-mono">{streak} in a row</span>
-    </Pill>
-  );
-}
 
 /* ---------------- dark controls ---------------- */
 
