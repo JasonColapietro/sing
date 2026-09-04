@@ -13,8 +13,16 @@ export const COUNT_IN_CLICKS = 2;
  * slow breath and 0.75x tempo stretches it with everything else.
  */
 export const MIN_LEAD_SEC = 0.8;
+/**
+ * And capped. Two beats of a 3.5-second sustained hold is a seven-second wait
+ * with nothing on screen, and a singer moving from a fast scale to a slow hold
+ * felt the wait times "all over the place" — the lead-in swung from 0.8s to 7s
+ * between neighbouring exercises. Two seconds is a full, unhurried breath; no
+ * exercise needs more than that between the count-in and the first note.
+ */
+export const MAX_LEAD_SEC = 2;
 export function leadSec(noteDur: number): number {
-  return Math.max(MIN_LEAD_SEC, noteDur * 2);
+  return Math.min(MAX_LEAD_SEC, Math.max(MIN_LEAD_SEC, noteDur * 2));
 }
 
 /**

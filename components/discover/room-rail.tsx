@@ -60,7 +60,7 @@ interface RoomRailProps {
  */
 export const ROOMS: readonly Room[] = [
   { href: "/studio", label: "Pitch studio", blurb: "Live note, cents, and an eight-second trace.", Glyph: StudioGlyph, mic: true },
-  { href: "/warmups", label: "Warmups", blurb: "Guided ladders, scored while you sing them.", Glyph: WarmupGlyph, mic: true },
+  { href: "/warmups", label: "Warmups", blurb: "Warmup routines by length, scored while you sing.", Glyph: WarmupGlyph, mic: true },
   { href: "/recorder", label: "Take recorder", blurb: "Cut a take, compare two, keep the good ones.", Glyph: RecorderGlyph, mic: true },
   { href: "/analyze", label: "Spectrogram and tone", blurb: "Your harmonics live, plus today's vocal load.", Glyph: AnalyzeGlyph, mic: true },
   { href: "/range", label: "Range test", blurb: "Your lowest and highest note, and your voice type.", Glyph: RangeGlyph, mic: true },
