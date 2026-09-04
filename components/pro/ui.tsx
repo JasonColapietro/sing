@@ -6,11 +6,13 @@ import { LinkButton } from "@/components/ui";
  * moment per page. Everything here links into the /pro funnel.
  */
 
-/** Small gold-filled tape chip. The mark of the Pro tier everywhere. */
+/** Small violet tape chip, the mark of the Pro tier everywhere. Filled with the
+ * darker violet-ink so white text clears 4.5:1 at 10 px; the base violet only
+ * reaches 4.05:1 with either black or white on it. */
 export function ProChip({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded bg-violet px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#241a05] ${className}`}
+      className={`inline-flex items-center rounded bg-violet-ink px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-white ${className}`}
     >
       Pro
     </span>

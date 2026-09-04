@@ -562,7 +562,7 @@ export function ProClient() {
                     onClick={() => setBilling(plan)}
                     className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors ${
                       on
-                        ? "bg-violet text-[#241a05]"
+                        ? "bg-violet-ink text-white"
                         : "text-mut hover:text-ink"
                     }`}
                   >
@@ -623,7 +623,7 @@ export function ProClient() {
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet via-violet to-violet"
               />
-              <span className="mb-3 inline-flex w-fit items-center rounded bg-violet px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-[#241a05]">
+              <span className="mb-3 inline-flex w-fit items-center rounded bg-violet-ink px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-white">
                 {pro.active ? "Your Pro access" : "Early Access"}
               </span>
               <span className="flex items-center gap-2">
