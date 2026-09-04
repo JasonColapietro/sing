@@ -1,52 +1,44 @@
 "use client";
 
 import { useMemo } from "react";
-import { Button, Card, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
-import { useProgress, type Achievement } from "@/lib/progress";
-import { gradeForScore, starGlyphs, starRatingLabel, type Tone } from "@/components/songs/grade";
-import { ShareableResult } from "@/components/songs/result-card";
+import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
+import { useDailyGoal } from "@/components/practice/learn-home";
+import { todayPracticeSec, useProgress, type Achievement } from "@/lib/progress";
 import type { RoutineSummaryData } from "./routine-runner";
 import { routineMinutes, stepExercise } from "./routines";
-import { IconPlay } from "./icons";
-
-const TONE_TEXT: Record<Tone, string> = {
-  ok: "text-ok-ink",
-  violet: "text-violet-ink",
-  rec: "text-rec",
-};
-
-function scoreTone(score: number): "ok" | "violet" | "rec" {
-  if (score >= 80) return "ok";
-  if (score >= 50) return "violet";
-  return "rec";
-}
 
 /**
  * The end of a routine. Every step already logged its own warmup session on
  * the way through, so nothing is written here: this reads the step summaries
- * back as one page — the overall grade, the XP the steps earned between them,
- * one row per exercise, and the streak the session just extended.
+ * back onto the shared results screen — stars, the average, the XP the steps
+ * earned between them, one row per exercise, and the streak the session just
+ * extended.
  */
 export function RoutineSummary({
   data,
   onRepeat,
   onHome,
+  onPractice,
 }: {
   data: RoutineSummaryData;
   onRepeat: () => void;
   onHome: () => void;
+  /** Run the weakest step again on its own, where the room can start one. */
+  onPractice?: (exerciseId: string) => void;
 }) {
   const { routine, steps, completed } = data;
   const progress = useProgress();
+  const { goalSec } = useDailyGoal();
 
-  const { sung, avgScore, xp, achievements } = useMemo(() => {
+  const { sungCount, score, xp, achievements, weakestId } = useMemo(() => {
     const sung = steps.filter((s): s is NonNullable<typeof s> => s !== null);
-    const avgScore =
+    const score =
       sung.length > 0
         ? Math.round(sung.reduce((a, s) => a + s.avgScore, 0) / sung.length)
-        : 0;
+        : null;
     const xp = sung.reduce((a, s) => a + s.xpGained, 0);
+
     const seen = new Set<string>();
     const achievements: Achievement[] = [];
     for (const s of sung) {
@@ -56,124 +48,67 @@ export function RoutineSummary({
         achievements.push(a);
       }
     }
-    return { sung, avgScore, xp, achievements };
+
+    // "Practice" means the one that went worst, not the one that was skipped:
+    // a skipped step has no evidence against it.
+    let weakest: (typeof sung)[number] | null = null;
+    for (const s of sung) {
+      if (!weakest || s.avgScore < weakest.avgScore) weakest = s;
+    }
+
+    return { sungCount: sung.length, score, xp, achievements, weakestId: weakest?.ex.id ?? null };
   }, [steps]);
 
-  const grade = sung.length > 0 ? gradeForScore(avgScore) : null;
-  const streak = progress.streak.current;
+  const subtitle = `${routine.steps.length} exercises · ~${routineMinutes(routine)} min${
+    completed ? "" : " · ended early"
+  }`;
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <SectionLabel>{completed ? "Routine complete" : "Routine ended early"}</SectionLabel>
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <h2 className="text-2xl">{routine.name}</h2>
-          <Pill tone="mut">
-            {sung.length} of {routine.steps.length} exercises sung
-          </Pill>
-        </div>
-        <div className="mt-6 flex flex-wrap gap-10">
-          <Stat
-            label="Average score"
-            value={sung.length > 0 ? `${avgScore}%` : "—"}
-            tone={sung.length > 0 ? scoreTone(avgScore) : "ink"}
-          />
-          {grade && (
-            <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                Grade
-              </div>
-              <div className={`mt-1 text-3xl ${TONE_TEXT[grade.tone]}`}>{grade.grade}</div>
-            </div>
-          )}
-          <Stat label="XP earned" value={`+${xp}`} tone="ok" />
-          <Stat
-            label="Streak"
-            value={`${streak} day${streak === 1 ? "" : "s"}`}
-            sub={streak >= 2 ? "Keep it going tomorrow" : "Come back tomorrow to start one"}
-            tone="cool"
-          />
-        </div>
-        {grade && (
-          <div className="mt-3 flex items-center gap-2">
-            <span
-              aria-hidden="true"
-              className="tabular font-mono text-base tracking-wider text-violet-ink"
-            >
-              {starGlyphs(grade.stars)}
-            </span>
-            <span className="sr-only">{starRatingLabel(grade.stars)}</span>
-          </div>
-        )}
-
-        <div className="mt-6 space-y-2">
-          <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            By exercise
-          </div>
-          {routine.steps.map((s, i) => {
-            const ex = stepExercise(s);
-            const r = steps[i] ?? null;
-            return (
-              <div key={`${s.exerciseId}-${i}`} className="flex items-center gap-3">
-                <span className="tabular w-5 shrink-0 font-mono text-xs text-dim">{i + 1}</span>
-                <span className="w-40 shrink-0 truncate text-sm sm:w-56">{ex.title}</span>
-                <ProgressBar
-                  value={r ? r.avgScore : 0}
-                  tone={r ? scoreTone(r.avgScore) : "neutral"}
-                  className="flex-1"
-                />
-                <span className="tabular w-14 shrink-0 text-right font-mono text-xs">
-                  {r ? `${r.avgScore}%` : i < steps.length ? "skip" : "—"}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-
-      {grade && (
-        <ShareableResult
-          title={routine.name}
-          subtitle={`Warmup routine · ${routine.steps.length} exercises · ~${routineMinutes(routine)} min`}
-          score={avgScore}
-          grade={grade}
-          stats={[
-            { label: "Exercises", value: `${sung.length}/${routine.steps.length}` },
-            { label: "XP", value: `+${xp}`, tone: "cool" },
-          ]}
+    <ResultsScreen
+      title={routine.name}
+      subtitle={subtitle}
+      score={score}
+      stars={starsForScore(score)}
+      xp={xp}
+      streakDays={progress.streak.current}
+      goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+      rows={routine.steps.map((s, i) => {
+        const r = steps[i] ?? null;
+        return {
+          label: stepExercise(s).title,
+          score: r ? r.avgScore : null,
+          note: "skipped",
+        };
+      })}
+      achievements={achievements}
+      onContinue={onHome}
+      onAgain={onRepeat}
+      onPractice={
+        onPractice && weakestId ? () => onPractice(weakestId) : undefined
+      }
+      share={
+        score === null
+          ? undefined
+          : {
+              title: routine.name,
+              subtitle: `Warmup routine · ${sungCount}/${routine.steps.length} exercises · ~${routineMinutes(routine)} min`,
+            }
+      }
+    >
+      {/* The nudge is built from the site's paper tokens, and the results
+          screen is dark — its quiet one-line variant would land at about
+          2.3:1 straight on the session background. It gets its own paper
+          ground rather than a dark-mode fork of the Pro components. */}
+      {/* `empty:hidden` because the nudge self-hides for Pro members — without it
+          they would get a blank cream block where the pitch used to be. */}
+      <div className="rounded-2xl bg-panel p-4 empty:hidden sm:p-5">
+        <ProCrescendoNudge
+          line="Pro plans tomorrow's routine from these scores"
+          title="Make tomorrow's warmup count"
+          body="Pro plans tomorrow's session from these scores — weak notes first."
+          context="Warmups"
         />
-      )}
-
-      {achievements.length > 0 && (
-        <Card className="border-ok/30">
-          <Pill tone="ok">New achievements</Pill>
-          <ul className="mt-4 space-y-2">
-            {achievements.map((a) => (
-              <li key={a.id} className="flex items-center gap-3 text-sm">
-                <span aria-hidden="true">{a.icon}</span>
-                <span className="font-medium">{a.title}</span>
-                <span className="text-mut">{a.desc}</span>
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )}
-
-      <ProCrescendoNudge
-        line="Pro plans tomorrow's routine from these scores"
-        title="Make tomorrow's warmup count"
-        body="Pro plans tomorrow's session from these scores — weak notes first."
-        context="Warmups"
-      />
-
-      <div className="flex flex-wrap gap-3">
-        <Button variant="violet" onClick={onRepeat}>
-          <IconPlay /> Run it again
-        </Button>
-        <Button variant="outline" onClick={onHome}>
-          Back to warmups
-        </Button>
       </div>
-    </div>
+    </ResultsScreen>
   );
 }

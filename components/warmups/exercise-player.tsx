@@ -22,6 +22,13 @@ import {
   IconStop,
 } from "./icons";
 import { NoteLaneCanvas, type TracePoint } from "./note-lane-canvas";
+import { HighwayCanvas } from "./highway-canvas";
+import { CountIn } from "@/components/practice/count-in";
+import {
+  SESSION_FOCUS,
+  SessionButton,
+  SessionShell,
+} from "@/components/practice/session-shell";
 import {
   bestRep,
   playGuide,
@@ -155,6 +162,7 @@ export function ExercisePlayer({
   pitch,
   range,
   bounds,
+  variant = "page",
   onFinish,
   onExit,
 }: {
@@ -162,13 +170,24 @@ export function ExercisePlayer({
   pitch: UsePitchResult;
   range: VocalRange;
   bounds?: ExerciseBounds;
+  /**
+   * `page` is the original card layout, still what a deep link into a single
+   * exercise renders. `session` is the full-screen practice surface: same
+   * engine, same handlers, a different room. Only the render differs — every
+   * scheduling, scoring and ref path below is shared, because a second copy of
+   * the audio loop is how the two views would drift apart.
+   */
+  variant?: "page" | "session";
   onFinish: (summary: SessionSummaryData) => void;
   onExit: () => void;
 }) {
-  const roots = useMemo(
-    () => computeRootLadder(ex, range.lowMidi, range.highMidi),
-    [ex, range.lowMidi, range.highMidi],
-  );
+  // A "down" exercise walks the same band from the top: Singeo's raspberries
+  // and hoo start high and drop a half-step a rep, and the walk's triangle
+  // wave handles a reversed ladder without knowing it was reversed.
+  const roots = useMemo(() => {
+    const band = computeRootLadder(ex, range.lowMidi, range.highMidi);
+    return ex.ladder === "down" ? [...band].reverse() : band;
+  }, [ex, range.lowMidi, range.highMidi]);
 
   const { mode, guidePct, click } = useWarmupPrefs();
   const guideSliderId = useId();
@@ -195,7 +214,9 @@ export function ExercisePlayer({
 
   const { index: ladderIndex } = ladderWalk(roots, repIndex);
   // The direction that produced this rep, not the one the walk turns to next.
-  const climbing = repAscending(roots, repIndex);
+  // "Climbing" is about pitch, not ladder index: on a reversed ladder an
+  // ascending index is a falling root.
+  const climbing = ex.ladder === "down" ? !repAscending(roots, repIndex) : repAscending(roots, repIndex);
   const currentRoot = Math.max(24, Math.min(96, ladderWalk(roots, repIndex).root + transpose));
   const { segs, totalSec } = useMemo(
     () => buildSegments(ex, currentRoot, tempo),
@@ -602,7 +623,20 @@ export function ExercisePlayer({
         )
       : null;
 
-  return (
+  // Everything both views read, derived once. The session view is a different
+  // room, not a different exercise: it must never compute a rep count, a
+  // progress figure or a stage word its own way.
+  const progressPct = bounds
+    ? (results.length / bounds.reps) * 100
+    : ladderHeightPct(ladderIndex, roots.length);
+  const repLabel = bounds
+    ? `Rep ${Math.min(results.length + 1, bounds.reps)} of ${bounds.reps}`
+    : `Rep ${repIndex + 1}`;
+  const centsText =
+    currentCents === null ? "—" : `${currentCents > 0 ? "+" : ""}${currentCents}`;
+  const stageWord = singing ? "Sing" : stage === "teach" ? "Listen" : "Breathe";
+
+  const pageView = (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         {bounds ? (
@@ -903,5 +937,263 @@ export function ExercisePlayer({
         )}
       </Card>
     </div>
+  );
+
+  // --- the session view -----------------------------------------------------
+  // Same handlers, same state, dark tokens. The three shapes below are the
+  // whole vocabulary of the Adjust panel, held here so a control cannot end up
+  // styled one way in the mode row and another in the tempo row.
+  const segGroup =
+    "flex items-center gap-1 rounded-2xl border border-[var(--s-line)] bg-[var(--s-bg)] p-1";
+  const segItem = (on: boolean) =>
+    `min-h-[44px] rounded-xl px-3 font-mono text-xs transition-colors disabled:opacity-40 ${SESSION_FOCUS} ${
+      on
+        ? "bg-[var(--s-over)] text-[var(--s-ink)]"
+        : "text-[var(--s-mut)] hover:text-[var(--s-ink)]"
+    }`;
+  const panelLabel =
+    "font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--s-dim)]";
+
+  const sessionBottom = (
+    <div className="space-y-3">
+      {adjustOpen && (
+        <div
+          id={adjustId}
+          className="flex flex-wrap items-center gap-x-5 gap-y-3 rounded-2xl border border-[var(--s-line)] bg-[var(--s-bg)] p-3"
+        >
+          <div
+            className={segGroup}
+            title={
+              modeLocked
+                ? "The mode is fixed once a rep has been scored, so one session is one score. End the exercise to switch."
+                : undefined
+            }
+          >
+            {(Object.keys(MODE_LABELS) as WarmupMode[]).map((m) => (
+              <button
+                key={m}
+                type="button"
+                disabled={modeLocked}
+                onClick={() => changeMode(m)}
+                aria-pressed={mode === m}
+                className={segItem(mode === m)}
+              >
+                {MODE_LABELS[m]}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex min-w-[220px] flex-1 items-center gap-3">
+            <label htmlFor={guideSliderId} className={`shrink-0 ${panelLabel}`}>
+              {mode === "call-response" ? "Reference" : "Guide"}
+            </label>
+            <input
+              id={guideSliderId}
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={guidePct}
+              aria-valuetext={guidePct === 0 ? "Off" : `${guidePct} percent`}
+              onChange={(e) => changeGuidePct(Number(e.target.value))}
+              className={`min-w-0 flex-1 cursor-pointer accent-[var(--s-ok)] ${SESSION_FOCUS}`}
+            />
+            <span className="tabular w-9 shrink-0 text-right font-mono text-xs text-[var(--s-mut)]">
+              {guidePct === 0 ? "Off" : `${guidePct}%`}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={toggleClick}
+            aria-pressed={click}
+            title="Count-in clicks before every scored window"
+            className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-2xl border border-[var(--s-line2)] px-3 font-mono text-xs transition-colors ${SESSION_FOCUS} ${
+              click
+                ? "bg-[var(--s-over)] text-[var(--s-ink)]"
+                : "text-[var(--s-mut)] hover:text-[var(--s-ink)]"
+            }`}
+          >
+            <IconMetronome /> Click
+          </button>
+
+          <div className={segGroup}>
+            <button
+              type="button"
+              aria-label="Transpose down a semitone"
+              onClick={() => nudgeTranspose(-1)}
+              className={`flex h-11 w-11 items-center justify-center rounded-xl text-[var(--s-mut)] transition-colors hover:text-[var(--s-ink)] ${SESSION_FOCUS}`}
+            >
+              <IconMinus />
+            </button>
+            <span className="tabular px-1 font-mono text-xs text-[var(--s-mut)]">
+              Transpose{transpose !== 0 ? ` ${transpose > 0 ? "+" : ""}${transpose}` : ""}
+            </span>
+            <button
+              type="button"
+              aria-label="Transpose up a semitone"
+              onClick={() => nudgeTranspose(1)}
+              className={`flex h-11 w-11 items-center justify-center rounded-xl text-[var(--s-mut)] transition-colors hover:text-[var(--s-ink)] ${SESSION_FOCUS}`}
+            >
+              <IconPlus />
+            </button>
+          </div>
+
+          <div className={segGroup}>
+            {TEMPOS.map((tv) => (
+              <button
+                key={tv}
+                type="button"
+                onClick={() => changeTempo(tv)}
+                aria-pressed={tempo === tv}
+                className={segItem(tempo === tv)}
+              >
+                {tv}×
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="flex items-center gap-2">
+        <SessionButton
+          label="Reference"
+          onClick={() => restartCurrentRep({ teach: true })}
+        >
+          {/* 14px is the icon size for a page button; this strip is read and
+              hit at arm's length, so every glyph in it steps up to 20. */}
+          <IconPlay className="h-5 w-5" />
+        </SessionButton>
+        <SessionButton label="Skip rep" onClick={skipRep}>
+          <IconSkip className="h-5 w-5" />
+        </SessionButton>
+        <SessionButton
+          label="Adjust"
+          onClick={() => setAdjustOpen((o) => !o)}
+          pressed={adjustOpen}
+          expanded={adjustOpen}
+          controls={adjustId}
+        >
+          <IconChevron
+            className={`h-5 w-5 transition-transform ${adjustOpen ? "rotate-180" : ""}`}
+          />
+        </SessionButton>
+        <span className="flex-1" />
+        <SessionButton
+          label={bounds ? "Finish step" : "End"}
+          onClick={endExercise}
+          tone="danger"
+        >
+          <IconStop className="h-5 w-5" />
+        </SessionButton>
+      </div>
+    </div>
+  );
+
+  const sessionView = (
+    <SessionShell
+      title={ex.title}
+      subtitle={bounds ? `Step ${bounds.stepIndex + 1} of ${bounds.stepCount}` : "Endless ladder"}
+      progress={progressPct}
+      onClose={endExercise}
+      closeLabel={bounds ? "Finish step" : "Exit exercise"}
+      topRight={
+        <div className="text-right leading-tight">
+          <div className="font-mono text-[11px] text-[var(--s-dim)]">
+            Root · <span className="text-[var(--s-ink)]">{midiToLabel(currentRoot)}</span>
+          </div>
+          <div className="tabular font-mono text-[11px] text-[var(--s-dim)]">{repLabel}</div>
+        </div>
+      }
+      bottom={sessionBottom}
+    >
+      {/*
+       * The stage banner. "Listen" and "Sing" is the one state a singer has to
+       * read correctly mid-exercise — sing over a teach pass and the rep is
+       * wasted — so it is the largest thing on the screen after the highway,
+       * in the editorial face, with the studio's blinking dot to mean "this is
+       * recording you".
+       */}
+      <div className="flex shrink-0 items-start justify-between gap-4 px-4 pb-3 sm:px-5">
+        <div className="min-w-0">
+          <div className="flex items-center gap-3">
+            {singing && (
+              <span
+                aria-hidden="true"
+                className="animate-recblink inline-block h-3 w-3 shrink-0 rounded-full bg-[var(--s-rec)]"
+              />
+            )}
+            <p
+              aria-live="polite"
+              className="font-display text-[clamp(1.75rem,4vw,2.5rem)] leading-none"
+            >
+              {stageWord}
+            </p>
+            {stage === "lead" && <CountIn beats={COUNT_IN_CLICKS} beat={leadBeat} />}
+          </div>
+          <p className="mt-2 max-w-md text-sm text-[var(--s-mut)]">{ex.tip}</p>
+          {pitch.error && (
+            <p className="mt-2 font-mono text-xs text-[var(--s-rec)]" role="alert">
+              {pitch.error}
+            </p>
+          )}
+        </div>
+        <div className="shrink-0 text-right">
+          {singing ? (
+            <>
+              <div className={panelLabel}>Cents off</div>
+              <div className="tabular mt-1 font-mono text-[clamp(1.5rem,3.5vw,2rem)] leading-none text-[var(--s-ink)]">
+                {centsText} <span className="text-[var(--s-dim)]">¢</span>
+              </div>
+            </>
+          ) : lastOutcome === "silent" ? (
+            <SessionPill tone="dim">No sound picked up</SessionPill>
+          ) : lastOutcome === "scored" && lastResult ? (
+            <SessionPill tone={lastResult.skipped ? "dim" : lastResult.score >= 80 ? "ok" : "amber"}>
+              {lastResult.skipped ? "Skipped" : `Rep ${lastResult.score}%`}
+            </SessionPill>
+          ) : null}
+        </div>
+      </div>
+
+      <HighwayCanvas
+        segs={segs}
+        totalSec={totalSec}
+        hitSec={hitSec}
+        // The count-in parks the pattern at its start, so the first bar sits
+        // just right of the line and the singer can see what is coming while
+        // they breathe. Null would draw the same frame, but saying 0 is what
+        // this view actually means.
+        cursorSec={stage === "lead" ? 0 : cursorSec}
+        liveMidiFloat={liveMidiFloat}
+        trace={trace}
+        showLive={singing}
+        className="block w-full min-h-[220px] flex-1"
+      />
+    </SessionShell>
+  );
+
+  return variant === "session" ? sessionView : pageView;
+}
+
+/** The session surface's read-only chip — Pill's shape in the dark tokens. */
+function SessionPill({
+  children,
+  tone,
+}: {
+  children: React.ReactNode;
+  tone: "dim" | "ok" | "amber";
+}) {
+  const tones = {
+    dim: "border-[var(--s-line2)] text-[var(--s-mut)]",
+    ok: "border-[var(--s-ok)]/45 text-[var(--s-ok)]",
+    amber: "border-[var(--s-amber)]/45 text-[var(--s-amber)]",
+  } as const;
+  return (
+    <span
+      className={`inline-flex items-center rounded-full border px-3 py-1 font-mono text-xs whitespace-nowrap ${tones[tone]}`}
+    >
+      {children}
+    </span>
   );
 }

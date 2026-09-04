@@ -1,8 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Card, MicGate, ProgressBar } from "@/components/ui";
-import { ProWhisper } from "@/components/pro/gate";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { useAudioPrefs } from "@/lib/audio/devices";
@@ -21,8 +19,13 @@ import { NoteLanes } from "./note-lanes";
 import {
   GameShell,
   RoundFeedback,
+  ShellBar,
+  ShellButton,
+  ShellMicGate,
+  StepDone,
   SummaryView,
   useEarSession,
+  type OnEarComplete,
 } from "./session";
 
 type Phase = "listen" | "sing" | "result";
@@ -30,9 +33,13 @@ type Phase = "listen" | "sing" | "result";
 export function MelodyEchoGame({
   difficulty,
   onExit,
+  onComplete,
 }: {
   difficulty: Difficulty;
   onExit: () => void;
+  /** Set when this game is one step of a workout: the result goes up instead
+      of being drawn here, and no summary card renders. */
+  onComplete?: OnEarComplete;
 }) {
   const session = useEarSession();
   const { latest, listening, error, start, stop } = usePitch();
@@ -176,6 +183,18 @@ export function MelodyEchoGame({
   }, [session.done, listening, stop]);
 
   if (session.done) {
+    if (onComplete) {
+      return (
+        <StepDone
+          game="melody-echo"
+          difficulty={difficulty}
+          session={session}
+          startedAt={startedAt}
+          onExit={onExit}
+          onComplete={onComplete}
+        />
+      );
+    }
     return (
       <div className="mx-auto max-w-2xl">
         <SummaryView
@@ -195,120 +214,123 @@ export function MelodyEchoGame({
     );
   }
 
+  // The gate lives inside the shell, so the surface a singer sees when the
+  // game opens is the one they play on.
   if (!listening) {
     return (
-      <div className="mx-auto max-w-2xl">
-        <MicGate
+      <GameShell game="melody-echo" difficulty={difficulty} session={session} onExit={onExit}>
+        <ShellMicGate
           title="This game listens to you sing"
           description="You'll hear a short melody, then sing it back note for note."
           onEnable={() => void start()}
           error={error}
-          footer={<ProWhisper />}
         />
-      </div>
+      </GameShell>
     );
   }
 
   return (
     <GameShell game="melody-echo" difficulty={difficulty} session={session} onExit={onExit}>
-      <Card>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-mut">
-            {phase === "listen" && (
-              <span className="text-violet-ink animate-recblink">Listen to the melody…</span>
-            )}
-            {phase === "sing" &&
-              `Sing it back — ${melody?.length ?? 0} notes, one at a time.`}
-            {phase === "result" &&
-              (octaveAgnostic ? "Any octave counted." : "Exact notes counted.")}
-          </p>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!replayAllowed}
-            title={
-              phase === "sing" && !replayAllowed
-                ? "Replaying through speakers would play the answer into your mic. Switch to headphones in Audio setup to use this while singing."
-                : undefined
-            }
-            onClick={() => melody && playMelody(melody)}
-          >
-            Hear again
-            <span className="font-mono text-xs text-dim" aria-hidden="true">R</span>
-          </Button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-[var(--s-mut)]">
+          {phase === "listen" && (
+            <span className="animate-recblink" style={{ color: "var(--s-voice)" }}>
+              Listen to the melody…
+            </span>
+          )}
+          {phase === "sing" &&
+            `Sing it back — ${melody?.length ?? 0} notes, one at a time.`}
+          {phase === "result" &&
+            (octaveAgnostic ? "Any octave counted." : "Exact notes counted.")}
+        </p>
+        <ShellButton
+          disabled={!replayAllowed}
+          title={
+            phase === "sing" && !replayAllowed
+              ? "Replaying through speakers would play the answer into your mic. Switch to headphones in Audio setup to use this while singing."
+              : undefined
+          }
+          onClick={() => melody && playMelody(melody)}
+        >
+          Hear again
+          <span className="font-mono text-xs text-[var(--s-dim)]" aria-hidden="true">R</span>
+        </ShellButton>
+      </div>
+
+      {melody && (
+        <div className="mt-4 rounded-2xl border border-[var(--s-line)] bg-[var(--s-elev)] p-4">
+          <NoteLanes
+            target={melody}
+            detected={phase === "result" ? detected : undefined}
+            octaveAgnostic={octaveAgnostic}
+          />
         </div>
+      )}
 
-        {melody && (
-          <div className="mt-4 rounded-2xl border border-line bg-bg p-4">
-            <NoteLanes
-              target={melody}
-              detected={phase === "result" ? detected : undefined}
-              octaveAgnostic={octaveAgnostic}
-            />
+      {phase === "sing" && melody && (
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center justify-between">
+            <span
+              className="font-mono text-xs"
+              style={{ color: singing ? "var(--s-ok)" : "var(--s-dim)" }}
+            >
+              {singing ? "voice detected" : "waiting for your voice"}
+            </span>
+            <span className="tabular font-mono text-xs text-[var(--s-mut)]">
+              {Math.ceil(leftMs / 1000)}s left
+            </span>
           </div>
-        )}
+          <ShellBar
+            value={100 - (leftMs / windowMsFor(melody)) * 100}
+            tone="voice"
+            label="Answer window"
+          />
+          <ShellButton onClick={finishSinging}>
+            I&apos;m done
+            <span className="font-mono text-xs text-[var(--s-dim)]" aria-hidden="true">Enter</span>
+          </ShellButton>
+        </div>
+      )}
 
-        {phase === "sing" && melody && (
-          <div className="mt-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <span
-                className={`font-mono text-xs ${singing ? "text-ok-ink" : "text-dim"}`}
-              >
-                {singing ? "voice detected" : "waiting for your voice"}
-              </span>
-              <span className="tabular font-mono text-xs text-mut">
-                {Math.ceil(leftMs / 1000)}s left
-              </span>
-            </div>
-            <ProgressBar
-              value={100 - (leftMs / windowMsFor(melody)) * 100}
-              tone="violet"
-            />
-            <Button variant="outline" size="sm" onClick={finishSinging}>
-              I&apos;m done
-              <span className="font-mono text-xs text-dim" aria-hidden="true">Enter</span>
-            </Button>
+      {phase === "result" && melody && (
+        <div className="mt-5 space-y-4">
+          <div className="flex flex-wrap gap-2" aria-label="Per-note results">
+            {melody.map((t, i) => {
+              const d = detected[i];
+              const hit = d !== null && midiMatches(d, t, octaveAgnostic);
+              return (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-xs"
+                  style={{
+                    borderColor: hit ? "var(--s-ok)" : "var(--s-line2)",
+                    color: hit ? "var(--s-ok)" : "var(--s-mut)",
+                  }}
+                >
+                  {hit ? <CheckIcon /> : <CrossIcon />}
+                  {midiToLabel(t)}
+                  {!hit && d !== null && (
+                    <span className="text-[var(--s-dim)]">you sang {midiToLabel(d)}</span>
+                  )}
+                  {!hit && d === null && <span className="text-[var(--s-dim)]">missed</span>}
+                </span>
+              );
+            })}
           </div>
-        )}
-
-        {phase === "result" && melody && (
-          <div className="mt-5 space-y-4">
-            <div className="flex flex-wrap gap-2" aria-label="Per-note results">
-              {melody.map((t, i) => {
-                const d = detected[i];
-                const hit = d !== null && midiMatches(d, t, octaveAgnostic);
-                return (
-                  <span
-                    key={i}
-                    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-xs ${
-                      hit ? "border-ok/40 text-ok-ink" : "border-line2 text-mut"
-                    }`}
-                  >
-                    {hit ? <CheckIcon /> : <CrossIcon />}
-                    {midiToLabel(t)}
-                    {!hit && d !== null && (
-                      <span className="text-dim">you sang {midiToLabel(d)}</span>
-                    )}
-                    {!hit && d === null && <span className="text-dim">missed</span>}
-                  </span>
-                );
-              })}
-            </div>
-            <RoundFeedback
-              correct={correct}
-              message={
-                correct
-                  ? "You echoed the whole melody."
-                  : "Compare the violet blocks with the outlines above, then try the next one."
-              }
-            />
-            <Button variant="violet" onClick={next}>
-              Next round
-              <span className="font-mono text-xs opacity-70" aria-hidden="true">Enter</span>
-            </Button>
-          </div>
-        )}
-      </Card>
+          <RoundFeedback
+            correct={correct}
+            message={
+              correct
+                ? "You echoed the whole melody."
+                : "Compare the filled blocks with the outlines above, then try the next one."
+            }
+          />
+          <ShellButton tone="primary" onClick={next}>
+            Next round
+            <span className="font-mono text-xs opacity-70" aria-hidden="true">Enter</span>
+          </ShellButton>
+        </div>
+      )}
     </GameShell>
   );
 }
