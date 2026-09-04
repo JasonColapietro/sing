@@ -1,5 +1,8 @@
 "use client";
 
+import { useIsPro } from "@/lib/pro";
+import { FREE_DAILY_SEC } from "@/lib/free-cap";
+
 import Link from "next/link";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import type { ProgressState } from "@/lib/progress";
@@ -57,6 +60,7 @@ export function useDailyGoal(): {
   setGoalMin: (min: number) => void;
 } {
   const [goalMin, setStored] = useState(DEFAULT_GOAL_MIN);
+  const isPro = useIsPro();
 
   useEffect(() => {
     /* eslint-disable-next-line react-hooks/set-state-in-effect */
@@ -73,7 +77,10 @@ export function useDailyGoal(): {
     }
   }, []);
 
-  return { goalSec: goalMin * 60, goalMin, setGoalMin };
+  // A free account's day cannot run past its allowance, so its ring fills at
+  // the cap rather than at a goal it can never reach.
+  const goalSec = isPro ? goalMin * 60 : Math.min(goalMin * 60, FREE_DAILY_SEC);
+  return { goalSec, goalMin, setGoalMin };
 }
 
 /* ------------------------------------------------------------------- stars */

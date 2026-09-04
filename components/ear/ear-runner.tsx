@@ -1,5 +1,8 @@
 "use client";
 
+import { CapSlide } from "@/components/practice/free-cap";
+import { useFreeCap } from "@/lib/free-cap";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
 import { useDailyGoal } from "@/components/practice/learn-home";
@@ -239,13 +242,17 @@ function EarResults({
 /* ---------------- the runner ---------------- */
 
 export function EarRunner({
+  capped = false,
   routine,
   onExit,
 }: {
+  /** The free allowance is spent: the next intro becomes the cap slide. */
+  capped?: boolean;
   routine: EarRoutine;
   /** Back to the room. */
   onExit: () => void;
 }) {
+  const cap = useFreeCap();
   const stepCount = routine.steps.length;
   const [phase, setPhase] = useState<EarPhase>({ kind: "intro", step: 0 });
   const [results, setResults] = useState<(EarStepResult | null)[]>([]);
@@ -295,6 +302,8 @@ export function EarRunner({
   const step = routine.steps[phase.step];
 
   if (phase.kind === "intro") {
+    // Between steps only: a game under way finishes and logs first.
+    if (capped) return <CapSlide cap={cap} onExit={quit} />;
     const prevStep = phase.step > 0 ? routine.steps[phase.step - 1] : null;
     return (
       <StepIntro

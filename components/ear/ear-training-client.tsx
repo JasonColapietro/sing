@@ -1,5 +1,8 @@
 "use client";
 
+import { useFreeCap } from "@/lib/free-cap";
+import { CapWall } from "@/components/practice/free-cap";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import {
@@ -56,6 +59,15 @@ export default function EarTrainingClient() {
   const [active, setActive] = useState<Active | null>(null);
   const [bests, setBests] = useState<Record<string, number>>({});
   const progress = useProgress();
+  const cap = useFreeCap();
+  /** Every way into a game or workout, so a capped singer meets the wall, not a mic prompt. */
+  const start = useCallback(
+    (next: Active) => {
+      if (cap.capped) return;
+      setActive(next);
+    },
+    [cap.capped],
+  );
   const { goalSec } = useDailyGoal();
 
   const refreshBests = useCallback(() => setBests(readBests()), []);
@@ -109,15 +121,15 @@ export default function EarTrainingClient() {
               : "10 rounds · not played yet",
           stars,
           mic: GAME_MIC[game],
-          onSelect: () => setActive({ kind: "game", game, difficulty: d.id }),
+          onSelect: () => start({ kind: "game", game, difficulty: d.id }),
         };
       }),
     }));
-  }, [bests]);
+  }, [bests, start]);
 
   if (active) {
     return active.kind === "routine" ? (
-      <EarRunner routine={active.routine} onExit={exit} />
+      <EarRunner routine={active.routine} onExit={exit} capped={cap.capped} />
     ) : (
       <EarGameSession
         game={active.game}
@@ -133,13 +145,14 @@ export default function EarTrainingClient() {
       title="Train your ear"
       subtitle="Short workouts and four games, ten rounds each. Start where the app points you."
     >
+      {cap.capped && <CapWall cap={cap} />}
       <ContinueCard
         kicker={earToday ? "Top up today" : "Today's ear workout"}
         title={recommended.name}
         tagline={recommended.tagline}
         meta={`${recommended.steps.length} games · ~${earRoutineMinutes(recommended)} min`}
         stepTitles={recommended.steps.map((s) => GAME_NAMES[s.game])}
-        onStart={() => setActive({ kind: "routine", routine: recommended })}
+        onStart={() => start({ kind: "routine", routine: recommended })}
         startLabel="Start workout"
         micReady
         error={null}
@@ -163,7 +176,7 @@ export default function EarTrainingClient() {
             <button
               key={r.id}
               type="button"
-              onClick={() => setActive({ kind: "routine", routine: r })}
+              onClick={() => start({ kind: "routine", routine: r })}
               className="text-left"
             >
               <Card tone="raised" className="h-full">

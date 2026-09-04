@@ -49,7 +49,7 @@ export const ROUTINES: Routine[] = [
   {
     id: "quick",
     name: "Quick warmup",
-    tagline: "Singeo's easy warmup, measured from the recording: bubble, straw, N and V.",
+    tagline: "The easy warmup: the bubble, the straw, an N-hum and a V. Gentle all the way through.",
     pro: false,
     steps: [
       step("lip-trill-scale", 15),

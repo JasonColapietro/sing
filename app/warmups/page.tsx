@@ -8,7 +8,7 @@ import { RoomRailBand } from "@/components/discover/room-rail";
 export const metadata = withCanonicalOpenGraph({
   title: "Vocal Warmups — Guided Singing Warm-Up Exercises",
   description:
-    "Guided vocal warmups with real-time pitch feedback: listen to a short melody, sing it back, and climb by semitone. Free in the browser — no install.",
+    "Guided vocal warmup routines with real-time pitch feedback: each exercise plays, counts you in, scores you and climbs by semitone. Three free minutes a day in the browser — no install.",
   alternates: { canonical: `${SITE_URL}/warmups` },
 });
 
