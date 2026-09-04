@@ -195,7 +195,7 @@ const jsonLd = {
       inLanguage: "en",
       isPartOf: { "@id": `${SITE_URL}/#website` },
       publisher: { "@id": ORG_ID },
-      author: { "@id": "https://suedeai.ai/#jason-colapietro" },
+      author: { "@id": "https://suedeai.ai/founder#person" },
       about: ROWS.map((r) => ({
         "@type": "Thing",
         name: r.voice,
