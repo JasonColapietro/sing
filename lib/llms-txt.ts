@@ -119,7 +119,7 @@ export function buildLlmsTxt(): string {
 
 ## Pages
 
-- [Suede Sing — the vocal studio in your browser](${SING_HOME}/): the brand's canonical home
+- [Suede Sing: the vocal studio in your browser](${SING_HOME}/): the brand's canonical home
 - [Suede Voice for iPhone and Android](${SING_HOME}/voice): the official mobile app page, with both store listings and the relationship to Suede Sing
 - [Studio](${SING_HOME}/studio): real-time pitch training
 - [Free vocal range test](${SING_HOME}/range): browser-based range test, no signup or download

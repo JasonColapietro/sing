@@ -6,7 +6,7 @@ import { WARMUPS_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = withCanonicalOpenGraph({
-  title: "Vocal Warmups — Guided Singing Warm-Up Exercises",
+  title: "Vocal Warmups: Guided Singing Warm-Up Exercises",
   description:
     "Guided vocal warmup routines with real-time pitch feedback: each exercise plays, counts you in, scores you and climbs by semitone. Three free minutes a day in the browser — no install.",
   alternates: { canonical: `${SITE_URL}/warmups` },

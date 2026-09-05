@@ -6,7 +6,7 @@ import { ANALYZE_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = withCanonicalOpenGraph({
-  title: "Voice Spectrogram and Tone Analyzer — See Your Own Harmonics",
+  title: "Voice Spectrogram and Tone Analyzer: See Your Own Harmonics",
   description:
     "Watch your voice as a live spectrogram, see where the harmonics and the 3 kHz ring sit, and track vocal load by vibration cycles rather than minutes. Runs in the browser; no audio leaves your device.",
   alternates: { canonical: `${SITE_URL}/analyze` },

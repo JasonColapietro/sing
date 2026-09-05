@@ -6,7 +6,7 @@ import { EAR_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = withCanonicalOpenGraph({
-  title: "Ear Training for Singers — Pitch and Interval Games",
+  title: "Ear Training for Singers: Pitch and Interval Games",
   description:
     "Four short ear training games for singers: match pitch, name intervals, and sing melodies back. Ten rounds each; three free minutes a day in the browser.",
   alternates: { canonical: `${SITE_URL}/ear-training` },

@@ -8,7 +8,7 @@ import { SectionLabel } from "@/components/ui";
 import { AnalyzeGlyph, RecorderGlyph } from "@/components/landing/glyphs";
 
 export const metadata = withCanonicalOpenGraph({
-  title: "Singing Practice Tools — Metronome, Keyboard, Drone, Recorder",
+  title: "Singing Practice Tools: Metronome, Keyboard, Drone, Recorder",
   description:
     "The console modules every practice session leans on: a metronome, an on-screen keyboard, and a sustained drone for pitch matching — plus the take recorder and the spectrogram analyzer. Free in the browser.",
   alternates: { canonical: `${SITE_URL}/tools` },

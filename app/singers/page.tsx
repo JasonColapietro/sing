@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers` },
   openGraph: {
-    title: `Famous Singers' Vocal Ranges — every voice on one keyboard`,
+    title: `Famous Singers' Vocal Ranges: each voice on one keyboard`,
     description: DESCRIPTION,
     type: "website",
     url: `${SITE_URL}/singers`,

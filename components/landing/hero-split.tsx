@@ -78,8 +78,8 @@ export function HeroSplit() {
           Sing one note. See exactly what came out.
         </h1>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-mut sm:text-xl">
-          Your voice has a signature. Suede Sing reads it — range, register
-          transitions, breath support, resonance, vibrato — every session,
+          Your voice has a signature. Suede Sing reads it: range, register
+          transitions, breath support, resonance, vibrato, each session,
           on-device. The result is your{" "}
           <strong className="font-semibold text-ink">TonePrint</strong>, and a
           practice plan built from it.
@@ -105,8 +105,8 @@ export function HeroSplit() {
           </a>
         </div>
         <p className="mt-3 max-w-xl text-sm text-mut">
-          Start here in your browser — no install required. <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">{APP_NAME}</Link>, the
-          phone companion, is optional — for when you want deeper on-device
+          Start here in your browser, no install required. <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">{APP_NAME}</Link>, the
+          phone companion, is optional, for when you want deeper on-device
           voice analysis.
         </p>
         <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-dim">
