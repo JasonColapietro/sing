@@ -57,11 +57,11 @@ export const metadata: Metadata = {
     ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
     : undefined,
   title: {
-    default: "Suede Sing — the vocal studio in your browser",
+    default: "Suede Sing: the vocal studio in your browser",
     template: "%s · Suede Sing",
   },
   description:
-    "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free, in the browser, no install.",
+    "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free, in the browser, no install.",
 };
 
 export const viewport: Viewport = {

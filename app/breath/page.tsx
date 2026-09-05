@@ -6,7 +6,7 @@ import { BREATH_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
 
 export const metadata = withCanonicalOpenGraph({
-  title: "Breathing Exercises for Singers — Breath Support Training",
+  title: "Breathing Exercises for Singers: Breath Support Training",
   description:
     "Build the air supply behind every long note: a mic-based sustain test plus guided breathing exercises for singers. Free in the browser.",
   alternates: { canonical: `${SITE_URL}/breath` },

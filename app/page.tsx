@@ -117,9 +117,9 @@ const STEPS = [
 export const metadata: Metadata = {
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: "Suede Sing — the vocal studio in your browser",
+    title: "Suede Sing: the vocal studio in your browser",
     description:
-      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free in the browser, with no install required.",
+      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free in the browser, with no install required.",
     url: SITE_URL,
     siteName: "Suede Sing",
     type: "website",
@@ -127,9 +127,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Suede Sing — the vocal studio in your browser",
+    title: "Suede Sing: the vocal studio in your browser",
     description:
-      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice — free in the browser, with no install required.",
+      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free in the browser, with no install required.",
   },
 };
 
@@ -275,7 +275,7 @@ export default function Home() {
               </h2>
               <p className="mt-3 max-w-xl text-mut">
                 The studio, the range test and {SINGERS.length} measured voices
-                cost nothing. Free accounts get three minutes of guided
+                are free. Free accounts get three minutes of guided
                 practice a day across warmups, ear training, breath and all{" "}
                 {SONGS.length} songs. Pro removes the clock and adds the library
                 and the long memory: both books in full, pitch analysis on
