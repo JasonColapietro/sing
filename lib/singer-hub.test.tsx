@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import SingersPage from "@/app/singers/page";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SINGERS } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
@@ -25,7 +26,14 @@ describe("/singers hub schema and crawl discovery", () => {
   const html = renderToStaticMarkup(<SingersPage />);
   const graph = graphFrom(html);
 
-  it("keeps a lean collection graph without a catalog-sized ItemList or duplicate Organization", () => {
+  // The hub used to carry no Organization at all, on the reasoning that a
+  // second copy of the estate entity would duplicate the canonical one. What
+  // that produced was a `publisher` pointing at an @id the document never
+  // defined, so the hub named no publisher to anything reading it on its own.
+  // The node below is the shared minimal one, held to that exact shape here so
+  // it cannot grow back into a full duplicate, and the payload ceiling still
+  // guards the size worry underneath the original rule.
+  it("keeps a lean collection graph with a resolvable publisher and no catalog-sized ItemList", () => {
     const types = graph["@graph"].map((node) => node["@type"]);
     const script = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1] ?? "";
 
@@ -33,7 +41,9 @@ describe("/singers hub schema and crawl discovery", () => {
     expect(types).toContain("WebSite");
     expect(types).toContain("FAQPage");
     expect(JSON.stringify(graph)).not.toContain('"@type":"ItemList"');
-    expect(types).not.toContain("Organization");
+    expect(graph["@graph"].filter((node) => node["@type"] === "Organization")).toEqual([
+      ORG_PUBLISHER_NODE,
+    ]);
     expect(graph["@graph"].find((node) => node["@type"] === "CollectionPage")).toMatchObject({
       isPartOf: { "@id": `${SITE_URL}/#website` },
       publisher: { "@id": "https://suedeai.ai/#organization" },

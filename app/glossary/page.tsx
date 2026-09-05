@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { AUTHOR_NODE } from "@/lib/author";
 import { GLOSSARY, GLOSSARY_TERMS, roomLabel, termId } from "@/lib/glossary";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
 
@@ -33,7 +34,7 @@ export default function GlossaryPage() {
     url: `${SITE_URL}/glossary`,
     inLanguage: "en",
     author: AUTHOR_NODE,
-    publisher: { "@id": "https://suedeai.ai/#organization" },
+    publisher: ORG_PUBLISHER_NODE,
     isPartOf: { "@id": `${SITE_URL}/#website` },
     hasDefinedTerm: GLOSSARY_TERMS.map((entry) => ({
       "@type": "DefinedTerm",

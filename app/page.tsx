@@ -4,7 +4,7 @@ import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { SONGS } from "@/components/songs/data";
 import { SINGERS } from "@/lib/singers";
-import { ORG_ID, ORG_SAME_AS } from "@/lib/organization";
+import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { FamousVoices } from "@/components/landing/famous-voices";
@@ -143,14 +143,7 @@ const HOME_JSON_LD = {
       name: "Suede Sing",
       publisher: { "@id": "https://suedeai.ai/#organization" },
     },
-    {
-      "@type": "Organization",
-      "@id": ORG_ID,
-      name: "Suede Labs",
-      url: "https://suedeai.ai",
-      logo: "https://suedeai.ai/suede-ai-logo-transparent.png",
-      sameAs: [...ORG_SAME_AS],
-    },
+    ORG_NODE,
     {
       "@type": "SoftwareApplication",
       "@id": `${SITE_URL}/#app`,

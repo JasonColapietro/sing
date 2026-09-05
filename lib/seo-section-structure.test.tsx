@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import AtlasPage from "@/app/atlas/page";
+import VocalRangeByVoiceTypePage from "@/app/atlas/vocal-range-by-voice-type/page";
+import ExtensionPage from "@/app/extension/page";
 import GlossaryPage from "@/app/glossary/page";
 import ProPage from "@/app/pro/page";
 import GenrePage from "@/app/singers/genre/[genre]/page";
@@ -51,6 +53,7 @@ async function renderedAffectedRoutes() {
 
   return [
     ["/atlas", renderToStaticMarkup(<AtlasPage />)],
+    ["/extension", renderToStaticMarkup(<ExtensionPage />)],
     ["/glossary", renderToStaticMarkup(<GlossaryPage />)],
     ["/pro", renderToStaticMarkup(<ProPage />)],
     ["/singers/records", renderToStaticMarkup(<RecordsPage />)],
@@ -102,4 +105,83 @@ describe("former-83 structural retrieval cohort", () => {
 
     expect(classicRock).toMatch(/<h4[^>]*>Singers [^<]+ through [^<]+<\/h4>/);
   });
+});
+
+/**
+ * The FAQ blocks these two pages render used to be description lists. A <dt>
+ * is styled like a heading and counts as none, so a page could declare eleven
+ * Question nodes in its FAQPage markup and carry zero visible headings for
+ * them, leaving every answer inside one undifferentiated passage — 1,176
+ * words on the atlas page, against the 375-word ceiling the cohort above
+ * holds to.
+ *
+ * The atlas page is in this cohort rather than the word-count one: its "The
+ * short answer" section runs 409 words around the voice-type table, which
+ * predates this and is a separate editorial question.
+ *
+ * Proven non-vacuous: reverting either block to <dl>/<dt>/<dd> fails both
+ * assertions below, checked by doing it.
+ */
+describe("declared questions have visible headings to match", () => {
+  const pages: Array<[string, string]> = [
+    [
+      "/atlas/vocal-range-by-voice-type",
+      renderToStaticMarkup(<VocalRangeByVoiceTypePage />),
+    ],
+    ["/extension", renderToStaticMarkup(<ExtensionPage />)],
+  ];
+
+  /** Character entities decoded, case and whitespace flattened. */
+  function normalize(value: string) {
+    return value
+      .replace(/&#x27;|&#39;|&apos;/gi, "'")
+      .replace(/&quot;/gi, '"')
+      .replace(/&nbsp;/gi, " ")
+      .replace(/&amp;/gi, "&")
+      .replace(/&rsquo;/gi, "'")
+      .replace(/&mdash;/gi, "\u2014")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  function faqQuestions(html: string) {
+    const raw = html.match(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
+    )?.[1];
+    if (!raw) throw new Error("page emitted no JSON-LD");
+    const decoded = raw
+      .replace(/&quot;/g, '"')
+      .replace(/&#x27;/g, "'")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">");
+    const parsed = JSON.parse(decoded) as {
+      "@graph": Array<Record<string, unknown>>;
+    };
+    const faq = parsed["@graph"].find((n) => n["@type"] === "FAQPage") as
+      | { mainEntity: Array<{ name: string }> }
+      | undefined;
+    if (!faq) throw new Error("page emitted no FAQPage");
+    return faq.mainEntity.map((q) => q.name);
+  }
+
+  for (const [url, html] of pages) {
+    it(`renders one heading per FAQPage question on ${url}`, () => {
+      const questions = faqQuestions(html);
+      expect(questions.length).toBeGreaterThan(0);
+
+      const headings = [
+        ...html.matchAll(/<(h[1-6])\b[^>]*>([\s\S]*?)<\/\1>/gi),
+      ].map((m) => normalize(m[2]));
+
+      const unheaded = questions.filter((q) => !headings.includes(normalize(q)));
+      expect(unheaded, `questions with no heading on ${url}`).toEqual([]);
+    });
+
+    it(`does not hide those questions in a description list on ${url}`, () => {
+      expect(html).not.toContain("<dt");
+    });
+  }
 });

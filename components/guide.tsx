@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -64,6 +65,7 @@ export interface GuideContent {
 export function guideJsonLd(guide: GuideContent) {
   const url = `${SITE_URL}${guide.path}`;
   const graph: Record<string, unknown>[] = [
+    ORG_PUBLISHER_NODE,
     // Without this the eight rooms emitted FAQPage and HowTo nodes floating
     // free of the site: nothing named the publisher, and nothing tied them to
     // the collection the singer pages already join. A consumer that landed on

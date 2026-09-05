@@ -9,6 +9,7 @@ import {
   ATLAS_WORDS,
 } from "@/lib/atlas-data";
 import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { AtlasCta } from "@/components/atlas/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
@@ -130,7 +131,7 @@ export default function AtlasPage() {
     author: AUTHOR_NODE,
     // Joins the estate graph the singer pages already use, so a consumer that
     // lands on the book can resolve the publisher and the site around it.
-    publisher: { "@id": "https://suedeai.ai/#organization" },
+    publisher: ORG_PUBLISHER_NODE,
     isPartOf: { "@id": `${SITE_URL}/#website` },
     hasPart: ATLAS_CONTENTS.filter((c) => c.free).map((c) => ({
       "@type": "Chapter",

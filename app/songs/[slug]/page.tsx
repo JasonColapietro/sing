@@ -24,6 +24,7 @@ import { formatMinSec } from "@/components/songs/lib";
 import type { Song } from "@/components/songs/types";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { withCanonicalOpenGraph } from "@/lib/og";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
 interface Params {
@@ -99,6 +100,10 @@ export default async function SongPage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+      // The publisher, spelled out rather than pointed at. Every template on
+      // this site referenced this @id without defining it, so a crawler
+      // reading one page on its own resolved the pointer to nothing.
+      ORG_PUBLISHER_NODE,
       {
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,

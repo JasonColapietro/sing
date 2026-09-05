@@ -158,4 +158,13 @@ describe("footer wires every hub into every page", () => {
       );
     }
   });
+
+  // Both pages resolved for months with no link to either from the header,
+  // the footer, or /contact. A microphone app whose policy can only be found
+  // by guessing the URL has a policy in name only.
+  it("links the policy pages from every server-rendered page", () => {
+    for (const href of ["/privacy", "/terms"]) {
+      expect(html, `footer missing ${href}`).toContain(`href="${href}"`);
+    }
+  });
 });
