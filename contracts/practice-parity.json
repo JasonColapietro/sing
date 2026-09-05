@@ -173,18 +173,6 @@
     "stars": "Three stars at 90 percent, two at 75, one at 50, none below. Native scores are 0..1 fractions and the web's are 0..100 percentages; the thresholds are the same numbers on each scale."
   },
   "knownDivergences": {
-    "transposeMax": {
-      "web": 12,
-      "ios": 24,
-      "android": null,
-      "reason": "iOS Song.transpositionLimit is 24, the web clamp is 12. Found when this contract was written, not yet adjudicated. Whichever bound is right, both apps should carry it; until someone decides, the difference is recorded rather than hidden."
-    },
-    "countInBeats": {
-      "web": 4,
-      "ios": 3,
-      "android": null,
-      "reason": "iOS PracticeViewModel.defaultCountInBeats is 3 and neither production call site overrides it; the web counts in 4. Shipped behaviour on both sides. Changing the count-in changes the feel of every drill, so it is recorded here rather than altered as a side effect of writing this contract."
-    },
     "songTempo": {
       "web": {
         "min": 0.25,
