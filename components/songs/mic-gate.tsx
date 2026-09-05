@@ -1,7 +1,10 @@
+"use client";
+
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { IconHeadphones, IconMic } from "./icons";
+import type { SessionMode } from "./types";
 
 /**
  * The first screen of /songs, for everyone.
@@ -27,17 +30,41 @@ import { IconHeadphones, IconMic } from "./icons";
  * Next.js docs' own fallback example makes, and it beats the blank the hub
  * shipped before.
  */
+/**
+ * Our two session modes, in our own words. Rehearsal loops for as long as the
+ * singer wants; performance is the scored take that ends on its own.
+ */
+const MODES: { id: SessionMode; label: string; blurb: string }[] = [
+  {
+    id: "rehearsal",
+    label: "Rehearsal",
+    blurb:
+      "Loop the phrase as long as you like. Each pass is scored; stop whenever you are ready.",
+  },
+  {
+    id: "performance",
+    label: "Performance",
+    blurb:
+      "A scored take: points build with your streak and the run ends after the planned loops.",
+  },
+];
+
 export function SongsMicGate({
   heading = "Enable your microphone to get scored",
   error,
   onEnable,
   onListen,
+  mode = "rehearsal",
+  onModeChange,
 }: {
   /** Overridden when a deep link names the song being opened. */
   heading?: string;
   error?: string | null;
   onEnable?: () => void;
   onListen?: () => void;
+  /** Chosen here so it applies to both entries below — mic and listen mode. */
+  mode?: SessionMode;
+  onModeChange?: (mode: SessionMode) => void;
 }) {
   return (
     <PageShell
@@ -53,6 +80,31 @@ export function SongsMicGate({
           without a mic in listen mode — the guide melody still plays, just
           without scoring.
         </p>
+        <fieldset className="mt-5">
+          <legend className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            Session mode
+          </legend>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {MODES.map((m) => (
+              <button
+                key={m.id}
+                type="button"
+                aria-pressed={mode === m.id}
+                onClick={() => onModeChange?.(m.id)}
+                className={`min-h-11 rounded-full border px-4 py-2 text-sm transition-colors ${
+                  mode === m.id
+                    ? "border-violet-ink bg-violet/10 text-violet-ink"
+                    : "border-line2 text-mut hover:text-ink"
+                }`}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 max-w-md text-sm text-mut">
+            {MODES.find((m) => m.id === mode)?.blurb}
+          </p>
+        </fieldset>
         <div className="mt-5 flex flex-wrap gap-3">
           <Button variant="rec" size="lg" onClick={onEnable}>
             <IconMic /> Enable microphone

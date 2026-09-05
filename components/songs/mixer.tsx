@@ -3,7 +3,7 @@
 import { useId, type ReactNode } from "react";
 import { Button, LinkButton } from "@/components/ui";
 import type { SongSection } from "./data";
-import { TEMPOS, type Tempo } from "./lib";
+import { TEMPO_MAX, TEMPO_MIN, TEMPO_STEP, formatTempoPct } from "./lib";
 import {
   IconMetronome,
   IconMinus,
@@ -111,6 +111,8 @@ export function Mixer({
   onTranspose,
   tempo,
   onTempo,
+  tempoAuto,
+  onTempoAuto,
   octaveAgnostic,
   onOctaveAgnostic,
   hasRange,
@@ -128,8 +130,12 @@ export function Mixer({
   onClickDuringPlay: (on: boolean) => void;
   transpose: number;
   onTranspose: (semitones: number) => void;
-  tempo: Tempo;
-  onTempo: (tempo: Tempo) => void;
+  /** Playback rate, already snapped onto the TEMPO_STEP grid. */
+  tempo: number;
+  onTempo: (rate: number) => void;
+  /** While on, the session moves the rate itself at every loop boundary. */
+  tempoAuto: boolean;
+  onTempoAuto: (auto: boolean) => void;
   octaveAgnostic: boolean;
   onOctaveAgnostic: (on: boolean) => void;
   hasRange: boolean;
@@ -142,6 +148,7 @@ export function Mixer({
   drillLoops: number;
 }) {
   const guideId = useId();
+  const tempoId = useId();
 
   return (
     <div className="space-y-5">
@@ -228,21 +235,37 @@ export function Mixer({
           )}
         </Field>
 
-        <Field label="Tempo">
-          <div className="flex items-center gap-1 rounded-full border border-line2 px-1 py-1">
-            {TEMPOS.map((value) => (
-              <Chip
-                key={value}
-                active={tempo === value}
-                disabled={!controlsEnabled}
-                onClick={() => onTempo(value)}
-                label={`${value} times speed`}
-              >
-                {value}×
-              </Chip>
-            ))}
+        <div className="min-w-0">
+          <label htmlFor={tempoId} className={LABEL}>
+            Tempo
+          </label>
+          <div className="mt-2 flex items-center gap-3">
+            <Toggle
+              pressed={tempoAuto}
+              onToggle={() => onTempoAuto(!tempoAuto)}
+              title="Let the session move the tempo between loops, from how the last one scored"
+            >
+              Auto
+            </Toggle>
+            {/* Native height, for the same reason as the guide slider above. */}
+            <input
+              id={tempoId}
+              type="range"
+              min={TEMPO_MIN}
+              max={TEMPO_MAX}
+              step={TEMPO_STEP}
+              value={tempo}
+              disabled={tempoAuto || !controlsEnabled}
+              aria-valuetext={formatTempoPct(tempo)}
+              onChange={(e) => onTempo(Number(e.target.value))}
+              className="min-w-0 flex-1 cursor-pointer accent-violet disabled:cursor-not-allowed disabled:opacity-40"
+            />
+            {/* Reads the live rate even while Auto is driving it. */}
+            <span className="tabular w-9 shrink-0 text-right font-mono text-xs text-mut">
+              {formatTempoPct(tempo)}
+            </span>
           </div>
-        </Field>
+        </div>
       </div>
 
       {sections.length > 0 && (

@@ -18,6 +18,7 @@ import { SessionSummary } from "./session-summary";
 import { recordSongPlayed } from "./favorites";
 import { advanceSetlist, endSetlist, useSetlist } from "./setlist";
 import type { SessionSummaryData } from "./lib";
+import type { SessionMode } from "./types";
 
 type View = "library" | "practice" | "summary";
 
@@ -40,6 +41,9 @@ export function SongsClient() {
   const setlist = useSetlist();
 
   const [listenMode, setListenMode] = useState(false);
+  // Rehearsal loops until the singer stops; performance is the scored take.
+  // Chosen on the start step and switchable while paused, so it lives here.
+  const [mode, setMode] = useState<SessionMode>("rehearsal");
   const [view, setView] = useState<View>("library");
   const [activeSong, setActiveSong] = useState<Song | null>(null);
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
@@ -119,6 +123,8 @@ export function SongsClient() {
         error={pitch.error}
         onEnable={pitch.start}
         onListen={() => setListenMode(true)}
+        mode={mode}
+        onModeChange={setMode}
       />
     );
   }
@@ -154,6 +160,8 @@ export function SongsClient() {
           song={activeSong}
           pitch={pitch}
           range={progress.range}
+          mode={mode}
+          onModeChange={setMode}
           onFinish={(data) => {
             setSummary(data);
             setView("summary");

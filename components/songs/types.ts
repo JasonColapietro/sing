@@ -8,6 +8,13 @@
  * adding structure never changes what index a note has.
  */
 
+/**
+ * Which of the two songs-room session modes a run was sung in: "rehearsal"
+ * loops until the singer stops, "performance" runs the planned loops once and
+ * scores them.
+ */
+export type SessionMode = "rehearsal" | "performance";
+
 export interface SongNote {
   midi: number;
   startBeat: number;

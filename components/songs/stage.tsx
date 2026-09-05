@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useModalFocus } from "@/lib/use-modal-focus";
+import { PointsReadout } from "./judgment";
 
 /**
  * True only while *this* module owns the browser's fullscreen. Leaving the
@@ -65,12 +66,18 @@ export function Stage({
   open,
   onExit,
   label,
+  points,
+  multiplier,
   children,
 }: {
   open: boolean;
   onExit: () => void;
   /** Accessible name for the stage, e.g. the song title. */
   label: string;
+  /** Running score, or null when this session is not scoring points. */
+  points?: number | null;
+  /** Multiplier those points are landing at, shown beside the total. */
+  multiplier?: number | null;
   children: ReactNode;
 }) {
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -129,6 +136,12 @@ export function Stage({
         aria-label={`${label} — stage mode`}
         className="mx-auto flex min-h-full w-full max-w-4xl flex-col gap-5 px-4 py-6 outline-none sm:px-8 sm:py-10"
       >
+        {/* The player passes points and multiplier together, or neither. */}
+        {typeof points === "number" && (
+          <header className="flex items-center justify-end">
+            <PointsReadout points={points} multiplier={multiplier ?? 1} />
+          </header>
+        )}
         {children}
       </div>
     </div>,

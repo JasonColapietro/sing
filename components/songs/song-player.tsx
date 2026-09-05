@@ -25,8 +25,10 @@ import { Mixer } from "./mixer";
 import { Stage, requestStageFullscreen } from "./stage";
 import {
   COUNT_IN_BEATS,
+  INITIAL_MULTIPLIER,
   MIN_VOLUME,
   TOLERANCE_CENTS,
+  autoTempoStep,
   clampTranspose,
   emptyTally,
   fitTransposeToRange,
@@ -35,15 +37,19 @@ import {
   judgeRatio,
   loopsFor,
   lyricLines,
+  multiplierStep,
   noteIndexAtBeat,
+  pointsFor,
   secPerBeat,
   sectionAtBeat,
+  snapTempo,
   songTotalBeats,
   transposedNotes,
   type JudgmentTally,
   type SessionSummaryData,
   type Tempo,
 } from "./lib";
+import type { SessionMode } from "./types";
 
 type Phase = "idle" | "running" | "paused" | "finished";
 
@@ -56,6 +62,13 @@ const GUIDE_MAX_GAIN = 0.2;
  * arrangement's 1 would defeat the point).
  */
 const SECTION_DRILL_LOOPS = 4;
+
+/**
+ * How many per-loop pills the in-session readout draws. A rehearsal loops for
+ * as long as the singer keeps singing, so the whole list is kept for the
+ * summary and only the most recent passes are shown here.
+ */
+const MAX_LOOP_PILLS = 6;
 
 /** Transport, shared by the in-page player and stage mode. */
 function Transport({
@@ -91,17 +104,22 @@ export function SongPlayer({
   song,
   pitch,
   range,
+  mode,
+  onModeChange,
   onFinish,
   onExit,
 }: {
   song: Song;
   pitch: UsePitchResult;
   range: VocalRange;
+  mode: SessionMode;
+  onModeChange: (mode: SessionMode) => void;
   onFinish: (summary: SessionSummaryData) => void;
   onExit: () => void;
 }) {
   const [transpose, setTranspose] = useState(0);
   const [tempo, setTempo] = useState<Tempo>(1);
+  const [tempoAuto, setTempoAuto] = useState(false);
   const [guidePct, setGuidePct] = useState(100);
   const [clickDuringPlay, setClickDuringPlay] = useState(false);
   const [octaveAgnostic, setOctaveAgnostic] = useState(false);
@@ -111,7 +129,11 @@ export function SongPlayer({
   const pauseRef = useRef<() => void>(() => {});
   const [countInBeat, setCountInBeat] = useState(-1);
   const [loopIndex, setLoopIndex] = useState(0);
+  /** Whole planned sessions a rehearsal has already looped through. */
+  const [cycle, setCycle] = useState(0);
   const [runningScore, setRunningScore] = useState(0);
+  const [points, setPoints] = useState(0);
+  const [multiplier, setMultiplier] = useState(INITIAL_MULTIPLIER.multiplier);
   const [progressPct, setProgressPct] = useState(0);
   const [perLoopScores, setPerLoopScores] = useState<number[]>([]);
   /** -1 = the whole song; otherwise an index into `song.sections`. */
@@ -146,6 +168,10 @@ export function SongPlayer({
   octaveAgnosticRef.current = octaveAgnostic;
   const listeningRef = useRef(listening);
   listeningRef.current = listening;
+  const modeRef = useRef(mode);
+  modeRef.current = mode;
+  const tempoAutoRef = useRef(tempoAuto);
+  tempoAutoRef.current = tempoAuto;
 
   const positionBeatsRef = useRef<number | null>(null);
   const hitRatioRef = useRef<number[]>([]);
@@ -157,6 +183,8 @@ export function SongPlayer({
   const centsFramesRef = useRef<number[]>([]);
   const loopSnapshotRef = useRef(0);
   const loopIndexTrackRef = useRef(0);
+  /** Whole planned sessions rehearsal has already looped through. */
+  const cyclesRef = useRef(0);
   const perLoopScoresRef = useRef<number[]>([]);
 
   // Fixed at count-in: what is being sung, how many times, and how much of each
@@ -179,9 +207,16 @@ export function SongPlayer({
   const maxComboRef = useRef(0);
   const judgeSeqRef = useRef(0);
   const judgeEventRef = useRef<JudgmentEvent | null>(null);
+  // Performance scoring. Rehearsal judges without paying, so these hold their
+  // opening values unless the singer switches mode mid-session.
+  const multiplierRef = useRef(INITIAL_MULTIPLIER);
+  const topMultiplierRef = useRef(INITIAL_MULTIPLIER.multiplier);
+  const pointsRef = useRef(0);
 
   const spbRef = useRef(secPerBeat(song.bpm, 1));
   const t0Ref = useRef(0);
+  /** Position on the session clock, in beats, as of the last frame. */
+  const elapsedBeatsRef = useRef(0);
   const pausedGlobalBeatsRef = useRef(0);
   const scheduledMaskRef = useRef<boolean[]>([]);
   const clickCursorRef = useRef(0);
@@ -294,6 +329,20 @@ export function SongPlayer({
       combo: comboRef.current,
       seq: judgeSeqRef.current,
     };
+
+    // Only a performance pays. The note is paid at the multiplier it was sung
+    // under and the rung moves afterwards, so a streak's reward lands on the
+    // notes that follow it rather than on the note that completed it. The
+    // thresholds behind multiplierStep and pointsFor are our product decisions;
+    // lib.ts documents them.
+    if (modeRef.current === "performance") {
+      pointsRef.current += pointsFor(judgment, multiplierRef.current.multiplier);
+      multiplierRef.current = multiplierStep(multiplierRef.current, judgment);
+      topMultiplierRef.current = Math.max(
+        topMultiplierRef.current,
+        multiplierRef.current.multiplier,
+      );
+    }
   }
 
   /** Judge whatever is left of the current loop — at a wrap, or at the end. */
@@ -301,6 +350,107 @@ export function SongPlayer({
     const order = judgeOrderRef.current;
     for (let i = judgeCursorRef.current; i < order.length; i++) judgeNote(order[i].index);
     judgeCursorRef.current = order.length;
+  }
+
+  /**
+   * How much of everything `possibleSec` covers has actually been sung.
+   * Rehearsal keeps adding passes and ends wherever the singer stops, so this
+   * is measured against the passes planned so far rather than assumed to be 1.
+   */
+  function sessionDoneFrac(elapsedBeats: number) {
+    const planned = loopsRef.current * (cyclesRef.current + 1);
+    if (planned <= 0) return 0;
+    const run =
+      cyclesRef.current * loopsRef.current +
+      Math.min(loopsRef.current, elapsedBeats / spanBeatsRef.current);
+    return Math.min(1, run / planned);
+  }
+
+  /**
+   * Possible seconds per note across every pass this session has planned, at
+   * the current beat length. Both move while a song is running — Auto steps the
+   * tempo at a loop line, rehearsal keeps adding passes — so this is derived
+   * rather than fixed at count-in, which is what keeps the score's numerator
+   * and denominator in the same units.
+   */
+  function refreshPossibleSec() {
+    const passes = loopsRef.current * (cyclesRef.current + 1);
+    possibleSecRef.current = playBeatsRef.current.map(
+      (beats) => beats * spbRef.current * passes,
+    );
+  }
+
+  /**
+   * A fresh scheduling mask for one pass over the planned session. Notes
+   * outside a drilled span are pre-marked done so schedTick skips them free.
+   */
+  function freshScheduleMask() {
+    const notes = currentNotesRef.current;
+    const playBeats = playBeatsRef.current;
+    const mask: boolean[] = new Array(notes.length * loopsRef.current).fill(false);
+    for (let slot = 0; slot < mask.length; slot++) {
+      if (playBeats[slot % notes.length] === 0) mask[slot] = true;
+    }
+    return mask;
+  }
+
+  /**
+   * Change the beat length mid-song without moving the song or the score.
+   *
+   * `elapsedBeats` is the position on the session clock: t0 is re-based on the
+   * new beat length so the current beat stays exactly where it is and only the
+   * beats after it get longer or shorter. Every second already banked is
+   * restated in the new beat length too, so a change of speed on its own can
+   * never move a ratio. Notes already inside schedTick's lookahead keep the
+   * times they were scheduled at.
+   */
+  function applyTempoRate(rate: number, elapsedBeats: number) {
+    const next = snapTempo(rate);
+    const oldSpb = spbRef.current;
+    const newSpb = secPerBeat(song.bpm, next);
+    if (newSpb === oldSpb) return;
+    const scale = newSpb / oldSpb;
+    spbRef.current = newSpb;
+    t0Ref.current = audioNow() - elapsedBeats * newSpb;
+    hitSecRef.current = hitSecRef.current.map((sec) => sec * scale);
+    loopStartHitRef.current = loopStartHitRef.current.map((sec) => sec * scale);
+    loopSnapshotRef.current *= scale;
+    perLoopDenomSecRef.current *= scale;
+    refreshPossibleSec();
+    sessionTempoRef.current = next;
+    setTempo(next);
+  }
+
+  /**
+   * A loop line: judge the tail of the pass that just ended, record its score,
+   * move the per-note baselines onto it, and — on Auto — step the tempo for the
+   * pass ahead off the score the pass just earned.
+   */
+  function closeLoop(elapsedBeats: number) {
+    // Judge the tail before the per-note baseline moves, otherwise those notes
+    // would be scored against the pass that is only just starting.
+    if (listeningRef.current) flushJudgments();
+    const denom = perLoopDenomSecRef.current;
+    const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
+    const delta = hitTotalNow - loopSnapshotRef.current;
+    const loopScore = denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
+    // Only when there is a microphone. `flushJudgments` was already gated on
+    // listening but this push was not, so listen mode accrued no hit time and
+    // dutifully recorded 0% for every loop — rendering "Per loop 0% 0% 0%"
+    // directly beside the line explaining that scoring is off. The summary hid
+    // them correctly; only the in-session readout leaked them.
+    if (listeningRef.current) {
+      perLoopScoresRef.current = [...perLoopScoresRef.current, loopScore];
+      setPerLoopScores(perLoopScoresRef.current);
+    }
+    loopSnapshotRef.current = hitTotalNow;
+    loopStartHitRef.current = [...hitSecRef.current];
+    judgeCursorRef.current = 0;
+    // Listen mode banks no hit time, so its loop score is a structural 0 and
+    // Auto would ratchet the song down to the floor for nobody. Hold the rate.
+    if (tempoAutoRef.current && listeningRef.current) {
+      applyTempoRate(autoTempoStep(sessionTempoRef.current, loopScore), elapsedBeats);
+    }
   }
 
   function finalize() {
@@ -317,7 +467,12 @@ export function SongPlayer({
     const lastLoopScore = denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
     const finalPerLoop = [...perLoopScoresRef.current, lastLoopScore];
 
-    const totalPossible = possibleSecRef.current.reduce((a, b) => a + b, 0);
+    // possibleSec covers every pass this session planned. A rehearsal ends when
+    // the singer stops, which is rarely on a loop line, so the unsung remainder
+    // would otherwise be scored as a miss — divide by what was actually sung.
+    const totalPossible =
+      possibleSecRef.current.reduce((a, b) => a + b, 0) *
+      sessionDoneFrac(elapsedBeatsRef.current);
     const overallScore =
       listeningRef.current && totalPossible > 0
         ? Math.round(Math.min(100, (hitTotalNow / totalPossible) * 100))
@@ -389,8 +544,14 @@ export function SongPlayer({
       judgments: listeningRef.current ? tallyRef.current : emptyTally(),
       sectionScores,
       transpose: sessionTransposeRef.current,
+      // The rate the song ended on — Auto may have moved it several times.
       tempo: sessionTempoRef.current,
-      loops: loopsRef.current,
+      // Rehearsal runs as many passes as the singer wants, so report the passes
+      // actually sung rather than the ones planned.
+      loops: Math.max(loopsRef.current, finalPerLoop.length),
+      mode: modeRef.current,
+      points: pointsRef.current,
+      topMultiplier: topMultiplierRef.current,
     });
   }
 
@@ -441,9 +602,28 @@ export function SongPlayer({
       return;
     }
     setCountInBeat(-1);
+    elapsedBeatsRef.current = Math.min(elapsedGlobal, totalSessionBeats);
 
     if (elapsedGlobal >= totalSessionBeats) {
-      finalize();
+      if (modeRef.current === "performance") {
+        finalize();
+        return;
+      }
+      // Rehearsal has no last loop: close the pass that just ended and re-base
+      // the clock a whole session back so the span comes round again. Only the
+      // singer ends a rehearsal — see endSession.
+      closeLoop(elapsedGlobal);
+      cyclesRef.current += 1;
+      setCycle(cyclesRef.current);
+      refreshPossibleSec();
+      t0Ref.current += totalSessionBeats * spbRef.current;
+      scheduledMaskRef.current = freshScheduleMask();
+      // The click cursor counts beats from t0, which just moved; rewinding it
+      // lets schedTick clamp it forward to wherever the song now is.
+      clickCursorRef.current = 0;
+      loopIndexTrackRef.current = 0;
+      setLoopIndex(0);
+      rafRef.current = requestAnimationFrame(rafTick);
       return;
     }
 
@@ -455,26 +635,7 @@ export function SongPlayer({
     positionBeatsRef.current = beatInSong;
 
     if (loopIdx !== loopIndexTrackRef.current) {
-      // Judge the tail of the loop that just ended before the per-note baseline
-      // moves, otherwise those notes would be scored against the new loop.
-      if (listeningRef.current) flushJudgments();
-      const denom = perLoopDenomSecRef.current;
-      const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
-      const delta = hitTotalNow - loopSnapshotRef.current;
-      // Only when there is a microphone. `flushJudgments` was already gated on
-      // listening but this push was not, so listen mode accrued no hit time and
-      // dutifully recorded 0% for every loop — rendering "Per loop 0% 0% 0%"
-      // directly beside the line explaining that scoring is off. The summary
-      // hid them correctly; only the in-session readout leaked them.
-      if (listeningRef.current) {
-        const loopScore =
-          denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
-        perLoopScoresRef.current = [...perLoopScoresRef.current, loopScore];
-        setPerLoopScores(perLoopScoresRef.current);
-      }
-      loopSnapshotRef.current = hitTotalNow;
-      loopStartHitRef.current = [...hitSecRef.current];
-      judgeCursorRef.current = 0;
+      closeLoop(elapsedGlobal);
       loopIndexTrackRef.current = loopIdx;
       setLoopIndex(loopIdx);
     }
@@ -531,6 +692,10 @@ export function SongPlayer({
     if (scoreAccumRef.current > 0.15) {
       scoreAccumRef.current = 0;
       setProgressPct(Math.min(100, (elapsedGlobal / totalSessionBeats) * 100));
+      if (modeRef.current === "performance") {
+        setPoints(pointsRef.current);
+        setMultiplier(multiplierRef.current.multiplier);
+      }
       if (listeningRef.current) {
         // Against the possible seconds *so far*, not the whole session.
         //
@@ -540,9 +705,11 @@ export function SongPlayer({
         // perfectly watched "Running score 25%" sitting beside a per-loop pill
         // reading 100%, both in the same row. In stage mode that 25% is the
         // only number on screen, at text-5xl, and it looks like failure.
-        const elapsedFrac = Math.min(1, elapsedGlobal / totalSessionBeats);
+        // possibleSec covers every pass planned so far, which in a rehearsal
+        // grows with each one; sessionDoneFrac scales it to what was sung.
         const possibleSoFar =
-          possibleSecRef.current.reduce((a, b) => a + b, 0) * elapsedFrac;
+          possibleSecRef.current.reduce((a, b) => a + b, 0) *
+          sessionDoneFrac(elapsedGlobal);
         const totalHit = hitSecRef.current.reduce((a, b) => a + b, 0);
         setRunningScore(
           possibleSoFar > 0
@@ -566,6 +733,7 @@ export function SongPlayer({
     const notes = currentNotesRef.current;
     const loops = plannedLoops;
     loopsRef.current = loops;
+    cyclesRef.current = 0;
     spanStartRef.current = spanStart;
     spanBeatsRef.current = Math.max(0.001, spanEnd - spanStart);
 
@@ -578,7 +746,7 @@ export function SongPlayer({
         : 0,
     );
     playBeatsRef.current = playBeats;
-    possibleSecRef.current = playBeats.map((beats) => beats * spb * loops);
+    refreshPossibleSec();
     perLoopDenomSecRef.current = playBeats.reduce((a, b) => a + b, 0) * spb;
 
     hitSecRef.current = notes.map(() => 0);
@@ -587,11 +755,7 @@ export function SongPlayer({
     centsFramesRef.current = notes.map(() => 0);
     loopStartHitRef.current = notes.map(() => 0);
 
-    const mask = new Array(notes.length * loops).fill(false);
-    for (let slot = 0; slot < mask.length; slot++) {
-      if (playBeats[slot % notes.length] === 0) mask[slot] = true;
-    }
-    scheduledMaskRef.current = mask;
+    scheduledMaskRef.current = freshScheduleMask();
     clickCursorRef.current = 0;
 
     judgeOrderRef.current = notes
@@ -604,16 +768,23 @@ export function SongPlayer({
     maxComboRef.current = 0;
     judgeSeqRef.current = 0;
     judgeEventRef.current = null;
+    multiplierRef.current = INITIAL_MULTIPLIER;
+    topMultiplierRef.current = INITIAL_MULTIPLIER.multiplier;
+    pointsRef.current = 0;
 
     loopSnapshotRef.current = 0;
     loopIndexTrackRef.current = 0;
     perLoopScoresRef.current = [];
+    elapsedBeatsRef.current = 0;
     sectionLabelRef.current = undefined;
     sessionTransposeRef.current = transpose;
     sessionTempoRef.current = tempo;
     scoreLagRef.current = liveLags(getAudioContext().sampleRate, PITCH_FFT_SIZE).scoreLag;
     setPerLoopScores([]);
     setLoopIndex(0);
+    setCycle(0);
+    setPoints(0);
+    setMultiplier(INITIAL_MULTIPLIER.multiplier);
     setRunningScore(0);
     setProgressPct(0);
     lastTickRef.current = 0;
@@ -668,6 +839,19 @@ export function SongPlayer({
   function endPractice() {
     stopLoops();
     onExit();
+  }
+
+  /**
+   * The singer stopping is how a rehearsal ends — it has no last loop — so the
+   * End practice button hands back the same summary a performance produces
+   * rather than throwing the pass away. Anything else just leaves.
+   */
+  function endSession() {
+    if (modeRef.current === "rehearsal" && (phase === "running" || phase === "paused")) {
+      finalize();
+      return;
+    }
+    endPractice();
   }
 
   function applyFitToRange() {
@@ -738,11 +922,20 @@ export function SongPlayer({
 
   const hasRange = range.lowMidi !== undefined && range.highMidi !== undefined;
   const effBpm = Math.round(song.bpm * tempo);
+  // A rehearsal has no planned end, so it counts the passes it has made instead
+  // of counting down to one.
+  const loopNumber = phase === "idle" ? 0 : Math.min(plannedLoops, loopIndex + 1);
+  const passNumber = phase === "idle" ? 0 : cycle * plannedLoops + loopIndex + 1;
   const loopPill = (
     <Pill tone="violet">
-      Loop {phase === "idle" ? 0 : Math.min(plannedLoops, loopIndex + 1)} of {plannedLoops}
+      {mode === "rehearsal"
+        ? `Loop ${passNumber}`
+        : `Loop ${loopNumber} of ${plannedLoops}`}
     </Pill>
   );
+  // Rehearsal loops for as long as the singer keeps going; the summary gets the
+  // whole list, the in-session row only the most recent passes.
+  const shownLoopScores = perLoopScores.slice(-MAX_LOOP_PILLS);
   const sectionPill = drilled ? (
     <Pill tone="cool">Drilling {drilled.label}</Pill>
   ) : sectionLabel ? (
@@ -764,10 +957,42 @@ export function SongPlayer({
       size={stageMode ? "lg" : "md"}
     />
   ) : null;
+  /**
+   * Both modes, offered while the song is paused — the one moment where the
+   * switch cannot land in the middle of a note being judged.
+   */
+  const modeSwitch =
+    phase === "paused" ? (
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+          Mode
+        </span>
+        <Button
+          variant={mode === "rehearsal" ? "violet" : "outline"}
+          size="sm"
+          onClick={() => onModeChange("rehearsal")}
+        >
+          Rehearsal
+        </Button>
+        <Button
+          variant={mode === "performance" ? "violet" : "outline"}
+          size="sm"
+          onClick={() => onModeChange("performance")}
+        >
+          Performance
+        </Button>
+      </div>
+    ) : null;
 
   if (stageMode) {
     return (
-      <Stage open onExit={() => setStageMode(false)} label={song.title}>
+      <Stage
+        open
+        onExit={() => setStageMode(false)}
+        label={song.title}
+        points={mode === "performance" ? points : null}
+        multiplier={mode === "performance" ? multiplier : null}
+      >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <SectionLabel>{song.title}</SectionLabel>
@@ -801,6 +1026,7 @@ export function SongPlayer({
             <p className="text-sm text-mut">Listen mode — no scoring.</p>
           )}
           <div className="flex flex-wrap items-center gap-3">
+            {modeSwitch}
             <Transport phase={phase} size="md" onToggle={togglePlayPause} onRestart={restart} />
           </div>
         </div>
@@ -889,12 +1115,12 @@ export function SongPlayer({
               Practicing without a mic. Enable it to see your live score.
             </p>
           )}
-          {perLoopScores.length > 0 && (
+          {shownLoopScores.length > 0 && (
             <div className="flex items-center gap-2">
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Per loop
               </span>
-              {perLoopScores.map((s, i) => (
+              {shownLoopScores.map((s, i) => (
                 <Pill key={i} tone={s >= 80 ? "ok" : s >= 50 ? "violet" : "mut"}>
                   {s}%
                 </Pill>
@@ -916,10 +1142,11 @@ export function SongPlayer({
             <IconExpand /> Stage mode
           </Button>
           <span className="flex-1" />
-          <Button variant="rec" size="sm" onClick={endPractice}>
+          <Button variant="rec" size="sm" onClick={endSession}>
             End practice
           </Button>
         </div>
+        {modeSwitch && <div className="mt-4">{modeSwitch}</div>}
 
         <div className="mt-5 border-t border-line pt-5">
           <Mixer
@@ -931,7 +1158,9 @@ export function SongPlayer({
             transpose={transpose}
             onTranspose={(semis) => setTranspose(clampTranspose(semis))}
             tempo={tempo}
-            onTempo={setTempo}
+            onTempo={(rate) => setTempo(snapTempo(rate))}
+            tempoAuto={tempoAuto}
+            onTempoAuto={setTempoAuto}
             octaveAgnostic={octaveAgnostic}
             onOctaveAgnostic={setOctaveAgnostic}
             hasRange={hasRange}

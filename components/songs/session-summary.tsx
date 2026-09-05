@@ -8,8 +8,8 @@ import { ProCrescendoNudge } from "@/components/pro/gate";
 import { useProgress, type SessionLog } from "@/lib/progress";
 import { computeGrade, starGlyphs, starRatingLabel, type Tone } from "./grade";
 import { ResultCard } from "./result-card";
-import { JUDGMENTS, type Judgment, type SessionSummaryData } from "./lib";
-import type { Song } from "./types";
+import { JUDGMENTS, formatTempoPct, type Judgment, type SessionSummaryData } from "./lib";
+import type { SessionMode, Song } from "./types";
 
 function scoreTone(score: number): "ok" | "violet" | "rec" {
   if (score >= 80) return "ok";
@@ -21,6 +21,12 @@ const TONE_TEXT: Record<Tone, string> = {
   ok: "text-ok-ink",
   violet: "text-violet-ink",
   rec: "text-rec",
+};
+
+/** Our own names for the two session modes — the summary never borrows another product's labels. */
+const MODE_LABEL: Record<SessionMode, string> = {
+  rehearsal: "Rehearsal",
+  performance: "Performance",
 };
 
 /** Bar tone per judgment band — reuses the same violet/ok/rec/cool palette ProgressBar already speaks. */
@@ -107,7 +113,18 @@ export function SessionSummary({
   nextInSetlist?: string;
   onNext?: () => void;
 }) {
-  const { song, score, perLoopScores, hardest, xpGained, newAchievements, listenMode } = data;
+  const {
+    song,
+    score,
+    perLoopScores,
+    hardest,
+    xpGained,
+    newAchievements,
+    listenMode,
+    mode,
+    points,
+    topMultiplier,
+  } = data;
   const progress = useProgress();
 
   // No mic, nothing judged, nothing to grade — computeGrade already encodes
@@ -123,8 +140,10 @@ export function SessionSummary({
   return (
     <div className="space-y-6">
       <Card>
-        <SectionLabel>Practice complete</SectionLabel>
+        <SectionLabel>{MODE_LABEL[mode]} complete</SectionLabel>
         <h2 className="mt-3 text-2xl">{song.title}</h2>
+        {/* The rate the song ended on — on Auto the tempo can move mid-session. */}
+        <p className="mt-1.5 text-sm text-mut">Finished at {formatTempoPct(data.tempo)} tempo</p>
 
         {!scored ? (
           <p className="mt-4 max-w-md text-sm text-mut">
@@ -136,6 +155,12 @@ export function SessionSummary({
             <div className="mt-6 flex flex-wrap gap-10">
               <Stat label="Score" value={`${score}/100`} tone={scoreTone(score)} />
               <Stat label="Loops sung" value={perLoopScores.length} tone="cool" />
+              {mode === "performance" && (
+                <>
+                  <Stat label="Points" value={`${points}`} tone="violet" />
+                  <Stat label="Top multiplier" value={`${topMultiplier}×`} tone="cool" />
+                </>
+              )}
               {grade && (
                 <div>
                   <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
