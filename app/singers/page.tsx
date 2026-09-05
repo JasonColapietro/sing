@@ -14,6 +14,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
 const DESCRIPTION = `The vocal ranges of famous singers on one keyboard — whistle notes to the deepest basses. Overlay your own range free.`;
@@ -71,6 +72,10 @@ export default function SingersPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+      // The publisher, spelled out rather than pointed at. Every template on
+      // this site referenced this @id without defining it, so a crawler
+      // reading one page on its own resolved the pointer to nothing.
+      ORG_PUBLISHER_NODE,
       {
         "@type": "CollectionPage",
         // Stable @id so the hub can be referenced by the artist pages and by

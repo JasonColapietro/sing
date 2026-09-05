@@ -141,6 +141,17 @@ export default function SiteFooter() {
             <Link href="/changelog" className={linkClass}>
               v2 — what we&apos;ve changed
             </Link>
+            <span aria-hidden>·</span>
+            {/* Both pages were already live and neither was linked from
+                anywhere on the site. An app that asks for a microphone should
+                put its policy one click from every page. */}
+            <Link href="/privacy" className={linkClass}>
+              Privacy
+            </Link>
+            <span aria-hidden>·</span>
+            <Link href="/terms" className={linkClass}>
+              Terms
+            </Link>
           </span>
           <span>practice loud — your voice never leaves this device</span>
         </div>

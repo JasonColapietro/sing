@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
-import { ORG_ID } from "@/lib/organization";
+import { ORG_ID, ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
 const TITLE = "Suede Voice: Vocal Range Test for iPhone & Android";
@@ -59,7 +59,7 @@ const JSON_LD = {
       author: { "@type": "Person", name: "Jason Colapietro", url: "https://suedeai.ai/founder" },
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD", url: store },
     })),
-    { "@type": "Organization", "@id": ORG_ID, name: "Suede Labs AI", url: "https://suedeai.ai" },
+    ORG_NODE,
   ],
 };
 

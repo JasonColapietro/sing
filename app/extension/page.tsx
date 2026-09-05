@@ -3,7 +3,7 @@ import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
-import { ORG_ID, ORG_SAME_AS } from "@/lib/organization";
+import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
 const STORE_URL =
@@ -131,15 +131,7 @@ const jsonLd = {
       description:
         "Suede Sing for Chrome is a free browser extension that shows a singer their pitch in real time. It provides a vocal tuner, a vocal range test, guided warmups, and ear training in Chrome's side panel, plus a pitch meter overlay for singing along on YouTube. All audio analysis happens locally and no audio is recorded or transmitted.",
     },
-    {
-      "@type": "Organization",
-      "@id": ORG_ID,
-      name: "Suede Labs",
-      alternateName: ["Suede AI", "Suede Labs"],
-      url: "https://suedeai.ai",
-      founder: { "@id": "https://suedeai.ai/founder#person" },
-      sameAs: [...ORG_SAME_AS],
-    },
+    ORG_NODE,
     {
       // Reference only. The canonical Person node is defined on suedeai.ai;
       // satellite pages must not restate its properties, because a thin
@@ -215,14 +207,18 @@ export default function ExtensionPage() {
 
       <section className="mt-12">
         <SectionLabel>Questions</SectionLabel>
-        <dl className="mt-4 space-y-6">
+        {/* Headings, not a description list: the FAQPage markup above declares
+            eight questions, and a <dt> is not a heading, so the visible
+            structure carried none of them and the answers read as one long
+            passage instead of eight retrievable ones. */}
+        <div className="mt-4 space-y-6">
           {FAQ.map((item) => (
             <div key={item.q}>
-              <dt className="font-semibold text-ink">{item.q}</dt>
-              <dd className="mt-1 text-sm text-mut">{item.a}</dd>
+              <h3 className="font-semibold text-ink">{item.q}</h3>
+              <p className="mt-1 text-sm text-mut">{item.a}</p>
             </div>
           ))}
-        </dl>
+        </div>
       </section>
 
       <section className="mt-12">

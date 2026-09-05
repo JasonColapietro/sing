@@ -14,13 +14,22 @@
  *  2. The FAQ in the JSON-LD must be the FAQ on the page. Google requires the
  *     structured data to match visible content, and the two drift the instant
  *     they stop sharing a source.
- *  3. The graph must reference the Organization by @id, never redeclare it.
- *     A second, thinner description of the same @id forks the entity this
- *     whole task exists to consolidate.
+ *  3. The graph must name the publisher without forking it. This rule used to
+ *     be "reference the Organization by @id, never redeclare it", which left
+ *     `publisher` pointing at a node no crawler could resolve: the @id lives
+ *     on suedeai.ai and nothing fetches it while reading this page, so the
+ *     page shipped a pointer where a publisher should be. What the rule was
+ *     protecting against was a second, *thinner* description competing with
+ *     the canonical one, so it now says what it means — the only Organization
+ *     this page may carry is the shared ORG_PUBLISHER_NODE, and a Person node
+ *     is still forbidden outright.
  *
  * Proven non-vacuous: swapping the <table> for divs fails (1); adding an
- * entry to the JSON-LD FAQ alone fails (2); inlining an Organization node
- * fails (3).
+ * entry to the JSON-LD FAQ alone fails (2); dropping the Organization back to
+ * a bare @id, or inlining a Person, fails (3). The name itself is compared
+ * against the shared constant here, which cannot catch a rename of that
+ * constant — lib/publisher-entity.test.tsx pins the literal string and checks
+ * every route that declares the node, and it is what fails on a rename.
  */
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
@@ -36,7 +45,7 @@ import {
   voiceTypeSlug,
 } from "./singers";
 import { REFERENCE_BANDS } from "./singers-analysis";
-import { ORG_ID } from "./organization";
+import { ORG_ID, ORG_NAME, ORG_PUBLISHER_NODE } from "./organization";
 import { SITE_URL } from "./site";
 
 const PATH = "/atlas/vocal-range-by-voice-type";
@@ -179,15 +188,19 @@ describe("structured data", () => {
     expect(uncovered, `no FAQ entry for: ${uncovered.join(", ")}`).toEqual([]);
   });
 
-  it("references the Organization by @id and never redeclares it", () => {
-    const declared = graph["@graph"].filter(
-      (n) => n["@type"] === "Organization" || n["@type"] === "Person",
-    );
+  it("resolves the publisher on the page, and joins the estate entity rather than forking it", () => {
     expect(
-      declared,
-      "this page must join the estate entity, not fork it",
+      graph["@graph"].filter((n) => n["@type"] === "Person"),
+      "the canonical Person node lives on suedeai.ai; a thin copy here competes with it",
     ).toEqual([]);
-    expect(JSON.stringify(graph)).toContain(ORG_ID);
+
+    const orgs = graph["@graph"].filter((n) => n["@type"] === "Organization");
+    expect(
+      orgs,
+      "publisher must be a node a crawler can read here, not a bare pointer",
+    ).toEqual([ORG_PUBLISHER_NODE]);
+    expect((orgs[0] as { "@id": string })["@id"]).toBe(ORG_ID);
+    expect((orgs[0] as { name: string }).name).toBe(ORG_NAME);
   });
 
   it("declares the page and points it at its own FAQ", () => {

@@ -13,7 +13,7 @@ import {
 } from "@/lib/singers";
 import { REFERENCE_BANDS, representativeSingers } from "@/lib/singers-analysis";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
-import { ORG_ID } from "@/lib/organization";
+import { ORG_ID, ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 
@@ -186,6 +186,10 @@ const PAGE_URL = `${SITE_URL}/atlas/vocal-range-by-voice-type`;
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
+    // The publisher, spelled out rather than pointed at. Every template on
+    // this site referenced this @id without defining it, so a crawler
+    // reading one page on its own resolved the pointer to nothing.
+    ORG_PUBLISHER_NODE,
     {
       "@type": "WebPage",
       "@id": `${PAGE_URL}#webpage`,
@@ -405,14 +409,19 @@ export default function VocalRangeByVoiceTypePage() {
         <Card>
           <SectionLabel>Questions</SectionLabel>
           <h2 className="mt-3 text-xl">Every voice type, one at a time</h2>
-          <dl className="mt-5 max-w-3xl space-y-6">
+          {/* Each question is a real heading rather than a <dt>, so the eleven
+              Question nodes in the FAQPage markup above have eleven visible
+              counterparts. As one description list the whole block read as a
+              single ~1,176-word passage, which is more than three times the
+              375-word ceiling the rest of the site holds to. */}
+          <div className="mt-5 max-w-3xl space-y-6">
             {FAQ.map((f) => (
               <div key={f.q}>
-                <dt className="font-medium text-ink">{f.q}</dt>
-                <dd className="mt-1.5 text-sm text-mut">{f.a}</dd>
+                <h3 className="font-medium text-ink">{f.q}</h3>
+                <p className="mt-1.5 text-sm text-mut">{f.a}</p>
               </div>
             ))}
-          </dl>
+          </div>
         </Card>
 
         <Card>
