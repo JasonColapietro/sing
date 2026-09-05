@@ -65,7 +65,9 @@ export function RoutineRunner({
   onDone,
   onQuit,
   capped = false,
+  initialTempo = 1,
 }: {
+  initialTempo?: 0.75 | 1 | 1.25;
   routine: Routine;
   pitch: UsePitchResult;
   range: VocalRange;
@@ -77,6 +79,7 @@ export function RoutineRunner({
   onQuit: () => void;
 }) {
   const stepCount = routine.steps.length;
+  const [startingTempo] = useState(initialTempo);
   const cap = useFreeCap();
   const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: 0 });
   const [results, setResults] = useState<(SessionSummaryData | null)[]>([]);
@@ -118,6 +121,7 @@ export function RoutineRunner({
         pitch={pitch}
         range={range}
         variant="session"
+        initialTempo={startingTempo}
         bounds={{ reps: step.reps, stepIndex: phase.step, stepCount }}
         onFinish={(data) => closeStep(phase.step, data)}
         onExit={() => closeStep(phase.step, null)}

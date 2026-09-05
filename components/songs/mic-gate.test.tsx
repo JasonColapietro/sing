@@ -65,4 +65,11 @@ describe("songs mic gate", () => {
     expect(html).toContain("Ode to Joy");
     expect(html).toContain("Continue without a mic");
   });
+
+  it("offers all three guide passes on the start step", () => {
+    const html = renderToStaticMarkup(<SongsMicGate />);
+    expect(html).toContain("Guide track");
+    expect(html).toContain("Sing along");
+    expect(html).toContain("On your own");
+  });
 });

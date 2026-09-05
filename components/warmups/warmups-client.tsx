@@ -10,16 +10,16 @@ import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
 import { AudioSetup } from "@/components/audio/audio-setup";
-import { ContinueCard, useDailyGoal } from "@/components/practice/learn-home";
+import { ContinueCard, useDailyGoal, nextUpId, starsForExercise } from "@/components/practice/learn-home";
 import { IconMic } from "./icons";
-import { ALL_EXERCISES, EXERCISES, type WarmupExercise } from "./exercises";
-import { getProState } from "@/lib/pro";
+import { ALL_EXERCISES, EXERCISES, PRO_PACKS, TIER_ORDER, type WarmupExercise } from "./exercises";
+import { getProState, useIsPro } from "@/lib/pro";
 import { ExercisePlayer } from "./exercise-player";
 import { SessionSummary } from "./session-summary";
 import { RoutineRunner, type RoutineSummaryData } from "./routine-runner";
 import { RoutineSummary } from "./routine-summary";
 import { PathSection, RoutineGrid, RoutineMeta, routineStats } from "./routine-home";
-import { recommendRoutine, routineById, stepExercise, type Routine } from "./routines";
+import { recentWarmupResults, routineReason, routineStartingTempo, recommendRoutine, routineById, stepExercise, type Routine } from "./routines";
 import type { SessionSummaryData } from "./lib";
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
@@ -51,6 +51,7 @@ type ErrorAt =
 export function WarmupsClient() {
   const pitch = usePitch();
   const progress = useProgress();
+  const isPro = useIsPro();
   // Three free minutes of guided practice a day; every way into a session
   // checks it, so a capped singer sees the wall rather than a mic prompt.
   const cap = useFreeCap();
@@ -85,7 +86,15 @@ export function WarmupsClient() {
   }, []);
 
   const practicedToday = progress.sessions.some((s) => s.day === localDay());
-  const recommended = recommendRoutine({ practicedToday, hour: hour ?? 12 });
+  const routineContext = { practicedToday, hour: hour ?? 12, recent: recentWarmupResults(progress.sessions) };
+  const recommended = recommendRoutine(routineContext);
+  const pathExercises = isPro ? ALL_EXERCISES : EXERCISES;
+  const pathItem = (e: WarmupExercise) => ({ id: e.id, title: e.title, stars: starsForExercise(progress, e.title) });
+  const nextId = nextUpId([
+    ...TIER_ORDER.map((tier) => ({ title: tier, items: EXERCISES.filter((e) => e.tier === tier).map(pathItem) })),
+    ...(isPro ? PRO_PACKS.map((pack) => ({ title: pack.name, items: pack.exercises.map(pathItem) })) : []),
+  ]);
+  const nextExercise = pathExercises.find((e) => e.id === nextId);
 
   function startExercise(ex: WarmupExercise) {
     if (cap.capped) return;
@@ -217,6 +226,18 @@ export function WarmupsClient() {
       {view === "home" && (
         <div className="space-y-8">
           {cap.capped && <CapWall cap={cap} />}
+          {nextExercise && (
+            <ContinueCard
+              kicker="Continue your path"
+              streakDays={progress.streak.current}
+              title={nextExercise.title}
+              tagline="The next exercise in your lowest unfinished tier. You can still choose any exercise below."
+              onStart={() => void selectExercise(nextExercise)}
+              startLabel={pitch.listening ? "Start exercise" : "Enable mic and start"}
+              micReady={pitch.listening}
+              error={errorAt.kind === "exercise" && errorAt.id === nextExercise.id ? pitch.error : null}
+            />
+          )}
           <ContinueCard
             kicker="Today's warmup"
             title={recommended.name}
@@ -232,7 +253,7 @@ export function WarmupsClient() {
             onStart={() => void selectRoutine(recommended, "today")}
           >
             <p className="text-xs text-dim sm:text-right">
-              Each exercise starts itself. Just sing when it says your turn.
+              {routineReason(routineContext)}
             </p>
           </ContinueCard>
 
@@ -306,6 +327,7 @@ export function WarmupsClient() {
 
       {view === "routine" && activeRoutine && (
         <RoutineRunner
+          initialTempo={routineStartingTempo(routineContext)}
           capped={cap.capped}
           routine={activeRoutine}
           pitch={pitch}

@@ -15,6 +15,20 @@
  */
 export type SessionMode = "rehearsal" | "performance";
 
+/**
+ * How much of the guide the singer sings against on a pass: "listen" plays the
+ * guide alone and scores nothing, "guided" keeps it under the voice and scores,
+ * "solo" silences it and scores.
+ */
+export type GuidePass = "listen" | "guided" | "solo";
+
+/**
+ * How hard the songbook rates a song, for the browsing ladder. Five bands
+ * rather than computeDifficulty's three labels: the ladder opens a band at a
+ * time, and three steps is too coarse to feel like progress.
+ */
+export type SongBand = "first" | "easy" | "steady" | "hard" | "peak";
+
 export interface SongNote {
   midi: number;
   startBeat: number;

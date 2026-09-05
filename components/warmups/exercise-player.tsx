@@ -163,6 +163,7 @@ export function ExercisePlayer({
   range,
   bounds,
   variant = "page",
+  initialTempo = 1,
   onFinish,
   onExit,
 }: {
@@ -170,6 +171,7 @@ export function ExercisePlayer({
   pitch: UsePitchResult;
   range: VocalRange;
   bounds?: ExerciseBounds;
+  initialTempo?: (typeof TEMPOS)[number];
   /**
    * `page` is the original card layout, still what a deep link into a single
    * exercise renders. `session` is the full-screen practice surface: same
@@ -193,7 +195,7 @@ export function ExercisePlayer({
   const guideSliderId = useId();
 
   const [repIndex, setRepIndex] = useState(0);
-  const [tempo, setTempo] = useState<(typeof TEMPOS)[number]>(1);
+  const [tempo, setTempo] = useState<(typeof TEMPOS)[number]>(initialTempo);
   const [transpose, setTranspose] = useState(0);
   const [stage, setStage] = useState<Stage>("lead");
   const [results, setResults] = useState<RepResult[]>([]);
@@ -242,7 +244,7 @@ export function ExercisePlayer({
   const leadBeatRef = useRef(0);
   const rootRef = useRef(48);
   const repIndexRef = useRef(0);
-  const tempoRef = useRef<(typeof TEMPOS)[number]>(1);
+  const tempoRef = useRef<(typeof TEMPOS)[number]>(initialTempo);
   const transposeRef = useRef(0);
   const resultsRef = useRef<RepResult[]>([]);
   const traceRef = useRef<TracePoint[]>([]);

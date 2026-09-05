@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat } from "@/lib/audio/notes";
 import { playTone, clickAt } from "@/lib/audio/synth";
@@ -27,6 +27,8 @@ import {
   COUNT_IN_BEATS,
   INITIAL_MULTIPLIER,
   MIN_VOLUME,
+  PASS_GUIDE_PCT,
+  PASS_LABEL,
   TOLERANCE_CENTS,
   autoTempoStep,
   clampTranspose,
@@ -34,6 +36,7 @@ import {
   fitTransposeToRange,
   foldedCents,
   hardestNotes,
+  isMastered,
   judgeRatio,
   loopsFor,
   lyricLines,
@@ -49,12 +52,22 @@ import {
   type SessionSummaryData,
   type Tempo,
 } from "./lib";
-import type { SessionMode } from "./types";
+import type { GuidePass, SessionMode } from "./types";
 
 type Phase = "idle" | "running" | "paused" | "finished";
 
 /** Guide gain with the mixer at 100% — the level the old "full" setting used. */
 const GUIDE_MAX_GAIN = 0.2;
+
+/**
+ * The guide level a pass runs at. Solo silences the guide; the other two keep
+ * the mixer where the singer set it, falling back to the pass's own level only
+ * when the mixer is at zero (a solo pass just ended, or a hand-set 0).
+ */
+function guideLevelFor(next: GuidePass, current: number): number {
+  if (next === "solo") return 0;
+  return current > 0 ? current : PASS_GUIDE_PCT[next];
+}
 
 /**
  * Reps when drilling a single section. A section is picked precisely because it
@@ -106,6 +119,8 @@ export function SongPlayer({
   range,
   mode,
   onModeChange,
+  pass,
+  onPassChange,
   onFinish,
   onExit,
 }: {
@@ -114,18 +129,19 @@ export function SongPlayer({
   range: VocalRange;
   mode: SessionMode;
   onModeChange: (mode: SessionMode) => void;
+  pass: GuidePass;
+  onPassChange: (pass: GuidePass) => void;
   onFinish: (summary: SessionSummaryData) => void;
   onExit: () => void;
 }) {
   const [transpose, setTranspose] = useState(0);
   const [tempo, setTempo] = useState<Tempo>(1);
   const [tempoAuto, setTempoAuto] = useState(false);
-  const [guidePct, setGuidePct] = useState(100);
+  const [guidePct, setGuidePct] = useState(PASS_GUIDE_PCT[pass]);
   const [clickDuringPlay, setClickDuringPlay] = useState(false);
   const [octaveAgnostic, setOctaveAgnostic] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
   const phaseRef = useRef<Phase>("idle");
-  phaseRef.current = phase;
   const pauseRef = useRef<() => void>(() => {});
   const [countInBeat, setCountInBeat] = useState(-1);
   const [loopIndex, setLoopIndex] = useState(0);
@@ -148,6 +164,12 @@ export function SongPlayer({
 
   const controlsEnabled = phase === "idle";
   const listening = pitch.listening;
+  /**
+   * Whether this run is scored. A listen pass plays the guide and scores
+   * nothing, the way practicing without a microphone does today, so the two
+   * fold into one flag that every scoring gate below reads.
+   */
+  const scoring = listening && pass !== "listen";
 
   // The span of the song this session sings: the whole phrase, or one section
   // when the singer is drilling. Fixed at count-in — the section picker is
@@ -159,19 +181,27 @@ export function SongPlayer({
 
   // Refs mirroring state/props for use inside the audio-clock-driven loops.
   const currentNotesRef = useRef(currentNotes);
-  currentNotesRef.current = currentNotes;
   const guidePctRef = useRef(guidePct);
-  guidePctRef.current = guidePct;
   const clickDuringPlayRef = useRef(clickDuringPlay);
-  clickDuringPlayRef.current = clickDuringPlay;
   const octaveAgnosticRef = useRef(octaveAgnostic);
-  octaveAgnosticRef.current = octaveAgnostic;
-  const listeningRef = useRef(listening);
-  listeningRef.current = listening;
+  const scoringRef = useRef(scoring);
   const modeRef = useRef(mode);
-  modeRef.current = mode;
+  const passRef = useRef(pass);
+  const masteryEligibleRef = useRef(false);
   const tempoAutoRef = useRef(tempoAuto);
-  tempoAutoRef.current = tempoAuto;
+
+  // Publish committed state to the audio callbacks before the next frame.
+  useLayoutEffect(() => {
+    phaseRef.current = phase;
+    currentNotesRef.current = currentNotes;
+    guidePctRef.current = guidePct;
+    clickDuringPlayRef.current = clickDuringPlay;
+    octaveAgnosticRef.current = octaveAgnostic;
+    scoringRef.current = scoring;
+    modeRef.current = mode;
+    passRef.current = pass;
+    tempoAutoRef.current = tempoAuto;
+  });
 
   const positionBeatsRef = useRef<number | null>(null);
   const hitRatioRef = useRef<number[]>([]);
@@ -429,17 +459,17 @@ export function SongPlayer({
   function closeLoop(elapsedBeats: number) {
     // Judge the tail before the per-note baseline moves, otherwise those notes
     // would be scored against the pass that is only just starting.
-    if (listeningRef.current) flushJudgments();
+    if (scoringRef.current) flushJudgments();
     const denom = perLoopDenomSecRef.current;
     const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
     const delta = hitTotalNow - loopSnapshotRef.current;
     const loopScore = denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
-    // Only when there is a microphone. `flushJudgments` was already gated on
+    // Only on a scored run. `flushJudgments` was already gated on
     // listening but this push was not, so listen mode accrued no hit time and
     // dutifully recorded 0% for every loop — rendering "Per loop 0% 0% 0%"
     // directly beside the line explaining that scoring is off. The summary hid
     // them correctly; only the in-session readout leaked them.
-    if (listeningRef.current) {
+    if (scoringRef.current) {
       perLoopScoresRef.current = [...perLoopScoresRef.current, loopScore];
       setPerLoopScores(perLoopScoresRef.current);
     }
@@ -448,7 +478,7 @@ export function SongPlayer({
     judgeCursorRef.current = 0;
     // Listen mode banks no hit time, so its loop score is a structural 0 and
     // Auto would ratchet the song down to the floor for nobody. Hold the rate.
-    if (tempoAutoRef.current && listeningRef.current) {
+    if (tempoAutoRef.current && scoringRef.current) {
       applyTempoRate(autoTempoStep(sessionTempoRef.current, loopScore), elapsedBeats);
     }
   }
@@ -459,7 +489,7 @@ export function SongPlayer({
     stopLoops();
 
     const notes = currentNotesRef.current;
-    if (listeningRef.current) flushJudgments(); // the last loop's tail
+    if (scoringRef.current) flushJudgments(); // the last loop's tail
 
     const denom = perLoopDenomSecRef.current;
     const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
@@ -474,7 +504,7 @@ export function SongPlayer({
       possibleSecRef.current.reduce((a, b) => a + b, 0) *
       sessionDoneFrac(elapsedBeatsRef.current);
     const overallScore =
-      listeningRef.current && totalPossible > 0
+      scoringRef.current && totalPossible > 0
         ? Math.round(Math.min(100, (hitTotalNow / totalPossible) * 100))
         : undefined;
     // Awake time, not wall clock. See awakeSecRef.
@@ -485,8 +515,8 @@ export function SongPlayer({
       durationSec,
       score: overallScore,
       detail: song.title,
-      // Only meaningful with a mic — listen mode scores nothing.
-      notes: listeningRef.current
+      // Only meaningful on a scored run — a listen pass scores nothing.
+      notes: scoringRef.current
         ? tallyFromScores(
             notes.map((n, i) => ({
               midi: n.midi,
@@ -506,9 +536,9 @@ export function SongPlayer({
     const ratiosForHardest = hitRatioRef.current.map((ratio, i) =>
       (possibleSecRef.current[i] ?? 0) > 0 ? ratio : 1,
     );
-    const hardest = listeningRef.current ? hardestNotes(notes, ratiosForHardest) : [];
+    const hardest = scoringRef.current ? hardestNotes(notes, ratiosForHardest) : [];
 
-    const sectionScores = listeningRef.current
+    const sectionScores = scoringRef.current
       ? sections
           .map((section) => {
             let hit = 0;
@@ -539,9 +569,9 @@ export function SongPlayer({
       hardest,
       xpGained: log.xpGained,
       newAchievements: log.newAchievements,
-      listenMode: !listeningRef.current,
-      maxCombo: listeningRef.current ? maxComboRef.current : 0,
-      judgments: listeningRef.current ? tallyRef.current : emptyTally(),
+      listenMode: !scoringRef.current,
+      maxCombo: scoringRef.current ? maxComboRef.current : 0,
+      judgments: scoringRef.current ? tallyRef.current : emptyTally(),
       sectionScores,
       transpose: sessionTransposeRef.current,
       // The rate the song ended on — Auto may have moved it several times.
@@ -550,6 +580,8 @@ export function SongPlayer({
       // actually sung rather than the ones planned.
       loops: Math.max(loopsRef.current, finalPerLoop.length),
       mode: modeRef.current,
+      pass: passRef.current,
+      mastered: isMastered(passRef.current, modeRef.current, overallScore, masteryEligibleRef.current),
       points: pointsRef.current,
       topMultiplier: topMultiplierRef.current,
     });
@@ -646,7 +678,7 @@ export function SongPlayer({
       setSectionLabel(label);
     }
 
-    if (listeningRef.current) {
+    if (scoringRef.current) {
       const f = pitch.latest.current;
       const voiced = f.freq !== null && f.volume >= MIN_VOLUME;
       if (voiced && f.freq !== null) {
@@ -696,7 +728,7 @@ export function SongPlayer({
         setPoints(pointsRef.current);
         setMultiplier(multiplierRef.current.multiplier);
       }
-      if (listeningRef.current) {
+      if (scoringRef.current) {
         // Against the possible seconds *so far*, not the whole session.
         //
         // Dividing by the full multi-loop denominator meant the running score
@@ -732,6 +764,7 @@ export function SongPlayer({
     spbRef.current = spb;
     const notes = currentNotesRef.current;
     const loops = plannedLoops;
+    masteryEligibleRef.current = pass === "solo" && mode === "performance" && !drilled;
     loopsRef.current = loops;
     cyclesRef.current = 0;
     spanStartRef.current = spanStart;
@@ -779,6 +812,16 @@ export function SongPlayer({
     sectionLabelRef.current = undefined;
     sessionTransposeRef.current = transpose;
     sessionTempoRef.current = tempo;
+    // The pass owns the guide level at count-in: solo silences it; listen and
+    // guided keep the mixer where the singer left it, restoring the pass's own
+    // level only if the mixer sits at zero. Spelled out here rather than through
+    // guideLevelFor: with both handlers calling the helper, the react-hooks
+    // compiler rules start flagging this component's ref mirrors. Written
+    // through the ref as well as state, because schedTick runs below before
+    // React re-renders.
+    const passGuidePct = pass === "solo" ? 0 : guidePct > 0 ? guidePct : PASS_GUIDE_PCT[pass];
+    guidePctRef.current = passGuidePct;
+    setGuidePct(passGuidePct);
     scoreLagRef.current = liveLags(getAudioContext().sampleRate, PITCH_FFT_SIZE).scoreLag;
     setPerLoopScores([]);
     setLoopIndex(0);
@@ -803,7 +846,7 @@ export function SongPlayer({
     rafRef.current = requestAnimationFrame(rafTick);
   }
 
-  pauseRef.current = pause;
+  useLayoutEffect(() => { pauseRef.current = pause; });
 
   function pause() {
     stopLoops();
@@ -859,6 +902,21 @@ export function SongPlayer({
     if (semis !== null) setTranspose(semis);
   }
 
+  /**
+   * Switching passes moves the guide level with it, so a summary that names
+   * the pass can never describe a run sung against a different guide. Offered
+   * while paused only — the one moment the level can move without landing
+   * inside a note the scheduler has already queued.
+   */
+  function choosePass(next: GuidePass) {
+    if (next !== pass) masteryEligibleRef.current = false;
+    onPassChange(next);
+    const pct = guideLevelFor(next, guidePct);
+    guidePctRef.current = pct;
+    setGuidePct(pct);
+  }
+
+
   /** Fullscreen has to be asked for inside the gesture — see `stage.tsx`. */
   function enterStage() {
     requestStageFullscreen();
@@ -867,14 +925,16 @@ export function SongPlayer({
 
   // Keyboard shortcuts. Routed through a ref so the listener always calls the
   // latest closures without re-binding on every render.
-  const shortcutsRef = useRef({
-    togglePlayPause,
-    restart,
-    enterStage,
-    controlsEnabled,
-    stageMode,
+  const shortcutsRef = useRef<{
+    togglePlayPause: () => void;
+    restart: () => void;
+    enterStage: () => void;
+    controlsEnabled: boolean;
+    stageMode: boolean;
+  } | null>(null);
+  useLayoutEffect(() => {
+    shortcutsRef.current = { togglePlayPause, restart, enterStage, controlsEnabled, stageMode };
   });
-  shortcutsRef.current = { togglePlayPause, restart, enterStage, controlsEnabled, stageMode };
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       // Never fight the browser's own chords (⌘R, ⌥↑, and friends).
@@ -885,6 +945,7 @@ export function SongPlayer({
         return;
       }
       const s = shortcutsRef.current;
+      if (!s) return;
 
       switch (e.code) {
         case "Space":
@@ -950,7 +1011,7 @@ export function SongPlayer({
       size={stageMode ? "lg" : "md"}
     />
   );
-  const judgmentReadout = listening ? (
+  const judgmentReadout = scoring ? (
     <JudgmentReadout
       eventRef={judgeEventRef}
       comboRef={comboRef}
@@ -970,7 +1031,7 @@ export function SongPlayer({
         <Button
           variant={mode === "rehearsal" ? "violet" : "outline"}
           size="sm"
-          onClick={() => onModeChange("rehearsal")}
+          onClick={() => { masteryEligibleRef.current = false; onModeChange("rehearsal"); }}
         >
           Rehearsal
         </Button>
@@ -984,14 +1045,34 @@ export function SongPlayer({
       </div>
     ) : null;
 
+  /** The three passes, offered beside the mode switch on the same pause. */
+  const passSwitch =
+    phase === "paused" ? (
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+          Pass
+        </span>
+        {(["listen", "guided", "solo"] as const).map((p) => (
+          <Button
+            key={p}
+            variant={pass === p ? "violet" : "outline"}
+            size="sm"
+            onClick={() => choosePass(p)}
+          >
+            {PASS_LABEL[p]}
+          </Button>
+        ))}
+      </div>
+    ) : null;
+
   if (stageMode) {
     return (
       <Stage
         open
         onExit={() => setStageMode(false)}
         label={song.title}
-        points={mode === "performance" ? points : null}
-        multiplier={mode === "performance" ? multiplier : null}
+        points={scoring && mode === "performance" ? points : null}
+        multiplier={scoring && mode === "performance" ? multiplier : null}
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
@@ -1013,7 +1094,7 @@ export function SongPlayer({
         </div>
 
         <div className="flex flex-wrap items-end justify-between gap-6">
-          {listening ? (
+          {scoring ? (
             <div>
               <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Score
@@ -1023,10 +1104,13 @@ export function SongPlayer({
               </div>
             </div>
           ) : (
-            <p className="text-sm text-mut">Listen mode — no scoring.</p>
+            <p className="text-sm text-mut">
+              {listening ? "Listen pass — no scoring." : "Listen mode — no scoring."}
+            </p>
           )}
           <div className="flex flex-wrap items-center gap-3">
             {modeSwitch}
+            {passSwitch}
             <Transport phase={phase} size="md" onToggle={togglePlayPause} onRestart={restart} />
           </div>
         </div>
@@ -1051,6 +1135,7 @@ export function SongPlayer({
         </button>
         <div className="flex flex-wrap items-center gap-2">
           {!listening && <Pill tone="cool">Listen mode</Pill>}
+          <Pill tone="cool">{PASS_LABEL[pass]}</Pill>
           {sectionPill}
           {loopPill}
         </div>
@@ -1066,7 +1151,7 @@ export function SongPlayer({
                 ? "Ready"
                 : countInBeat >= 0
                   ? `Count-in… ${COUNT_IN_BEATS - countInBeat}`
-                  : listening
+                  : scoring
                     ? "Sing along"
                     : "Listening back"}
             </h2>
@@ -1103,7 +1188,7 @@ export function SongPlayer({
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-6">
-          {listening ? (
+          {scoring ? (
             <div>
               <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Running score
@@ -1112,7 +1197,9 @@ export function SongPlayer({
             </div>
           ) : (
             <p className="max-w-sm text-sm text-mut">
-              Practicing without a mic. Enable it to see your live score.
+              {listening
+                ? "Listen pass — the guide sings it. Switch passes to be scored."
+                : "Practicing without a mic. Enable it to see your live score."}
             </p>
           )}
           {shownLoopScores.length > 0 && (
@@ -1146,13 +1233,25 @@ export function SongPlayer({
             End practice
           </Button>
         </div>
-        {modeSwitch && <div className="mt-4">{modeSwitch}</div>}
+        {(modeSwitch || passSwitch) && (
+          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+            {modeSwitch}
+            {passSwitch}
+          </div>
+        )}
 
         <div className="mt-5 border-t border-line pt-5">
           <Mixer
             controlsEnabled={controlsEnabled}
             guidePct={guidePct}
-            onGuidePct={setGuidePct}
+            onGuidePct={(pct) => {
+              if (pass === "solo" && pct > 0) {
+                masteryEligibleRef.current = false;
+                onPassChange("guided");
+              }
+              guidePctRef.current = pct;
+              setGuidePct(pct);
+            }}
             clickDuringPlay={clickDuringPlay}
             onClickDuringPlay={setClickDuringPlay}
             transpose={transpose}

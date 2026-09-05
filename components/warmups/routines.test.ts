@@ -6,6 +6,8 @@ import {
   ROUTINES,
   STEP_INTRO_SEC,
   recommendRoutine,
+  recentWarmupResults,
+  routineStartingTempo,
   routineById,
   routineMinutes,
   routineSeconds,
@@ -108,5 +110,31 @@ describe("recommendRoutine", () => {
   it("defaults to the daily warmup the rest of the day", () => {
     expect(recommendRoutine({ practicedToday: false, hour: 10 }).id).toBe("daily");
     expect(recommendRoutine({ practicedToday: false, hour: 22 }).id).toBe("daily");
+  });
+});
+
+describe("adaptive warmups", () => {
+  const strong = { count: 3, averageScore: 95, averageStars: 3 };
+  const weak = { count: 3, averageScore: 35, averageStars: 0 };
+  it("offers a longer and faster set after three strong sessions, and a gentle one after weak sessions", () => {
+    const context = { hour: 12, practicedToday: false };
+    expect(recommendRoutine({ ...context, recent: strong }).id).toBe("full");
+    expect(routineStartingTempo({ ...context, recent: strong })).toBe(1.25);
+    expect(recommendRoutine({ ...context, recent: weak }).id).toBe("quick");
+    expect(routineStartingTempo({ ...context, recent: weak })).toBe(0.75);
+    expect(recommendRoutine({ ...context, recent: { ...strong, count: 2 } }).id).toBe("daily");
+  });
+  it("keeps the morning reset and same-day top-up even after strong scores", () => {
+    expect(recommendRoutine({ hour: 8, practicedToday: false, recent: strong }).id).toBe("morning");
+    expect(routineStartingTempo({ hour: 8, practicedToday: false, recent: strong })).toBe(1);
+    expect(recommendRoutine({ hour: 12, practicedToday: true, recent: strong }).id).toBe("quick");
+  });
+  it("uses only the newest three scored warmups, including unsorted imported records", () => {
+    const session = (day: string, score?: number) => ({ id: day, day, date: day, type: "warmup" as const, durationSec: 30, xp: 0, score });
+    expect(recentWarmupResults([session("2026-09-01", 0), session("2026-09-04", 90),
+      session("2026-09-03", 90), session("2026-09-02", 90), session("2026-09-05"),
+      { ...session("2026-09-06", 0), type: "song" as const },
+    ])).toEqual({ count: 3, averageScore: 90, averageStars: 3 });
+    expect(recentWarmupResults([])).toBeNull();
   });
 });
