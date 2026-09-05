@@ -616,3 +616,23 @@ export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
   save(next);
   return next;
 }
+
+/** Monday-based calendar weeks, using the same local day keys as the streak. */
+export function weeklyReport(sessions: readonly SessionLog[], now = new Date()) {
+  const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  monday.setDate(monday.getDate() - (monday.getDay() + 6) % 7);
+  const previous = new Date(monday);
+  previous.setDate(previous.getDate() - 7);
+  const start = localDay(monday), lastStart = localDay(previous), today = localDay(now);
+  const thisWeek = { stars: 0, sessions: 0, durationSec: 0 };
+  const lastWeek = { stars: 0, sessions: 0, durationSec: 0 };
+  for (const session of sessions) {
+    if (session.day < lastStart || session.day > today) continue;
+    const period = session.day >= start ? thisWeek : lastWeek;
+    period.sessions++;
+    period.durationSec += session.durationSec;
+    const score = session.score;
+    period.stars += score === undefined ? 0 : score >= 90 ? 3 : score >= 75 ? 2 : score >= 50 ? 1 : 0;
+  }
+  return { thisWeek, lastWeek, start, lastStart };
+}

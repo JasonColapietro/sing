@@ -5,6 +5,7 @@ import type { ProgressState, SessionLog } from "@/lib/progress-shape";
 import { starsForScore } from "./results-screen";
 import {
   averageStars,
+  levelCompletion,
   bestScoreForExercise,
   nextUpId,
   starsForExercise,
@@ -168,5 +169,14 @@ describe("retired titles", () => {
       expect(live.has(current), current).toBe(true);
       for (const old of olds) expect(live.has(old), old).toBe(false);
     }
+  });
+});
+
+describe("levelCompletion", () => {
+  it("requires every exercise, not just a high average", () => {
+    const items = [{ id: "a", title: "A", stars: 3 as const }, { id: "b", title: "B", stars: 0 as const }];
+    expect(levelCompletion({ title: "One", items })).toEqual({ sung: 1, total: 2, complete: false });
+    expect(levelCompletion({ title: "One", items: items.map((i) => ({ ...i, stars: 1 })) }).complete).toBe(true);
+    expect(levelCompletion({ title: "Empty", items: [] }).complete).toBe(false);
   });
 });

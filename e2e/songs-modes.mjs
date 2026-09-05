@@ -143,6 +143,60 @@ try {
     console.log(`PASS rehearsal: auto tempo 125%→120%, wrapped past planned loops (${planned ?? "?"}), summary without points`);
     await context.close();
   }
+
+  // 3. Passes and bands: the guide-track chips on the start step, a solo pass in the player and on the
+  //    summary, and the library's ladder — bands, a real lock, and the check mark a mastered song earns.
+  {
+    const { context, page, errors } = await open();
+    const solo = page.getByRole("button", { name: "On your own", exact: true });
+    assert.equal(await page.getByRole("button", { name: "Sing along", exact: true }).getAttribute("aria-pressed"), "true", "guided is the default pass");
+    for (let i = 0; i < 20 && (await solo.getAttribute("aria-pressed")) !== "true"; i++) { await dismissOverlays(page); await solo.click(); await page.waitForTimeout(250); }
+    assert.equal(await solo.getAttribute("aria-pressed"), "true");
+    assert.match(await page.locator("fieldset", { hasText: "Guide track" }).innerText(), /masters a song/i);
+    await chooseMode(page, "Performance");
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
+    await page.getByText("On your own", { exact: true }).first().waitFor(); // the pass pill
+    assert.equal(await page.getByLabel(/Guide/).first().getAttribute("aria-valuetext"), "Off", "a solo pass silences the guide");
+    await tempoSlider(page).fill("1.25");
+    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    await page.getByRole("button", { name: "Pause", exact: true }).first().click();
+    await page.getByRole("button", { name: "Sing along", exact: true }).waitFor(); // the pass switch while paused
+    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    const summary = page.locator("main");
+    await summary.getByText("Performance complete").waitFor({ timeout: 240_000 });
+    assert.match(await summary.innerText(), /on your own pass/i, "summary names the pass sung");
+    assert.doesNotMatch(await summary.innerText(), /\bmastered\b/i, "a silent solo cannot master the song");
+    assert.deepEqual(errors, []);
+    console.log("PASS passes: chips, solo guide off, paused switch, summary names the pass");
+
+    // The ladder. Read the first band's songs, master two of them by seeding the store, and the next band opens.
+    await page.goto(`${base}/songs`);
+    await page.waitForLoadState("networkidle");
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    const firstBand = page.getByRole("region", { name: "First songs band" });
+    await firstBand.waitFor();
+    assert.match(await page.getByRole("region", { name: "Easy going band" }).innerText(), /Locked/, "the second band starts locked");
+    const lockedSing = page.getByRole("button", { name: "Locked", exact: true }).first();
+    assert.equal(await lockedSing.isDisabled(), true, "a locked song does not start");
+    const firstIds = await firstBand.locator('a[href^="/songs/"]').evaluateAll((links) =>
+      links.map((a) => a.getAttribute("href").replace("/songs/", "")).slice(0, 2));
+    assert.equal(firstIds.length, 2, `two first-band songs to master; got ${JSON.stringify(firstIds)}`);
+    await page.evaluate((ids) => localStorage.setItem("suede-sing:mastered:v1", JSON.stringify(ids)), firstIds);
+    await page.reload({ waitUntil: "networkidle" });
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await page.getByRole("region", { name: "First songs band" }).waitFor();
+    assert.equal(await page.getByRole("img", { name: "Mastered" }).count(), 2, "both mastered songs carry the check mark");
+
+    assert.doesNotMatch(await page.getByRole("region", { name: "Easy going band" }).innerText(), /Locked/, "the second band opened once two first-band songs were mastered");
+    assert.match(await page.getByRole("region", { name: "Steady band" }).innerText(), /Locked/, "the third band is still locked");
+    assert.deepEqual(errors, []);
+    console.log(`PASS bands: five-band ladder, real lock, mastering ${firstIds.join(" + ")} opened the next band`);
+    await context.close();
+  }
 } finally {
   await browser.close();
 }

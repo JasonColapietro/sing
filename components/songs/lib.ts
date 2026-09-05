@@ -1,4 +1,12 @@
-import type { LyricLine, SessionMode, Song, SongNote, SongSection } from "./types";
+import type {
+  GuidePass,
+  LyricLine,
+  SessionMode,
+  Song,
+  SongBand,
+  SongNote,
+  SongSection,
+} from "./types";
 import type { Achievement, SessionLog, VocalRange } from "@/lib/progress";
 
 export const COUNT_IN_BEATS = 4;
@@ -111,6 +119,72 @@ export function computeDifficulty(song: Song): Difficulty {
         ? "Medium"
         : "Hard";
   return { label, rangeSemis, leaps, score };
+}
+
+// ---------------------------------------------------------------------------
+// Bands: the songbook's five-rung browsing ladder
+//
+// Cut from computeDifficulty's score rather than its three labels: the ladder
+// opens a rung at a time, and Easy/Medium/Hard cannot say where inside the
+// book a singer has got to. The names are ours.
+// ---------------------------------------------------------------------------
+
+export const BAND_ORDER: readonly SongBand[] = ["first", "easy", "steady", "hard", "peak"];
+
+export const BAND_LABEL: Record<SongBand, string> = {
+  first: "First songs",
+  easy: "Easy going",
+  steady: "Steady",
+  hard: "A stretch",
+  peak: "Peak",
+};
+
+/**
+ * Score ceiling for each band, checked in order; anything above the last one
+ * is "peak". The middle two ceilings are the difficulty labels' own
+ * thresholds, so a song can never read "Easy" on its card while sitting above
+ * the easy band.
+ */
+const BAND_MAX_SCORE: Array<[SongBand, number]> = [
+  ["first", 6],
+  ["easy", DIFFICULTY_EASY_MAX],
+  ["steady", DIFFICULTY_MEDIUM_MAX],
+  ["hard", 17],
+];
+
+export function bandForSong(song: Song): SongBand {
+  const { score } = computeDifficulty(song);
+  for (const [band, max] of BAND_MAX_SCORE) {
+    if (score <= max) return band;
+  }
+  return "peak";
+}
+
+/** How many mastered songs of a band open the band above it. */
+export const BAND_UNLOCK_MASTERED = 2;
+
+/**
+ * Whether a band is open to sing. The first band always is; every later one
+ * opens once BAND_UNLOCK_MASTERED songs of the band directly below it are
+ * mastered. Counted over the songs passed in — the same entitlement-aware list
+ * the songbook browses — so the ladder never counts a song behind the paywall.
+ */
+export function bandOpen(
+  band: SongBand,
+  masteredIds: ReadonlySet<string>,
+  songs: readonly Song[],
+): boolean {
+  const index = BAND_ORDER.indexOf(band);
+  if (index <= 0) return true;
+  const below = BAND_ORDER[index - 1];
+  let mastered = 0;
+  for (const song of songs) {
+    if (masteredIds.has(song.id) && bandForSong(song) === below) {
+      mastered++;
+      if (mastered >= BAND_UNLOCK_MASTERED) return true;
+    }
+  }
+  return false;
 }
 
 /** Seconds per beat at a given bpm and tempo multiplier. */
@@ -288,10 +362,63 @@ export function pointsFor(judgment: Judgment, multiplier: number): number {
   return Math.round(JUDGMENT_POINTS[judgment] * multiplier);
 }
 
+// ---------------------------------------------------------------------------
+// Passes: how much of the guide the singer sings against
+// ---------------------------------------------------------------------------
+
+/**
+ * Guide level each pass opens at, as a mixer percentage. "listen" and "guided"
+ * both play the guide in full; what separates them is that a listen pass is
+ * not scored, which the session runtime decides rather than the mixer.
+ */
+export const PASS_GUIDE_PCT: Record<GuidePass, number> = {
+  listen: 100,
+  guided: 100,
+  solo: 0,
+};
+
+/** Our own names for the three passes — one vocabulary for the gate, the player and the summary. */
+export const PASS_LABEL: Record<GuidePass, string> = {
+  listen: "Listen",
+  guided: "Sing along",
+  solo: "On your own",
+};
+
+/**
+ * The score a solo pass has to reach to master a song. Our own number: 80 is
+ * already the bar the per-loop pills treat as a clean pass.
+ */
+export const MASTERY_SCORE = 80;
+
+/**
+ * Whether a finished run masters the song: a solo pass, sung in performance
+ * mode, scoring at or above MASTERY_SCORE. An unscored run — a listen pass, or
+ * no microphone — masters nothing, because it has no score to judge.
+ */
+export function isMastered(
+  pass: GuidePass,
+  mode: SessionMode,
+  score: number | undefined,
+  fullSoloPerformance = true,
+): boolean {
+  return (
+    fullSoloPerformance &&
+    pass === "solo" &&
+    mode === "performance" &&
+    score !== undefined &&
+    Number.isFinite(score) && score <= 100 &&
+    score >= MASTERY_SCORE
+  );
+}
+
 export interface SessionSummaryData {
   song: Song;
   /** Which mode the run was sung in. */
   mode: SessionMode;
+  /** Which guide pass the run was sung on. */
+  pass: GuidePass;
+  /** Whether this run mastered the song — see isMastered. */
+  mastered: boolean;
   /** Overall score 0..100, or undefined when practiced in listen mode (no mic). */
   score: number | undefined;
   perLoopScores: number[];
@@ -380,6 +507,39 @@ export function sectionAtBeat(song: Song, beat: number): SongSection | null {
   return (
     song.sections.find((s) => beat >= s.startBeat && beat < s.endBeat) ?? null
   );
+}
+
+/** A note this long before a new line is where a singer actually takes the breath. */
+export const BREATH_HELD_BEATS = 2;
+
+/**
+ * Indices of the notes to draw a breath mark before: every note the melody
+ * reaches after a rest of at least one beat, and the first note of a new lyric
+ * line when the note before it was held for BREATH_HELD_BEATS or more.
+ *
+ * The second rule is what makes this sing: the songbook's phrases tile with no
+ * written rests (every note starts where the last one ended), so a rest-only
+ * rule marks nothing in the whole catalogue. Breath lives at the phrase
+ * turnover instead — the held note that closes one line and the line that
+ * follows — which is also where Simply Sing's cue lands.
+ *
+ * The first note is never marked — there is nothing to breathe after — and the
+ * rest is measured from the furthest beat the melody has already sung to, so a
+ * short note nested under a long one cannot open a gap behind itself.
+ */
+export function breathMarks(notes: SongNote[]): number[] {
+  const marks: number[] = [];
+  if (notes.length === 0) return marks;
+  let sungTo = notes[0].startBeat + notes[0].durBeats;
+  for (let i = 1; i < notes.length; i++) {
+    const n = notes[i];
+    const prev = notes[i - 1];
+    const rested = n.startBeat - sungTo >= 1;
+    const newLine = (n.line ?? 0) !== (prev.line ?? 0) && prev.durBeats >= BREATH_HELD_BEATS;
+    if (rested || newLine) marks.push(i);
+    sungTo = Math.max(sungTo, n.startBeat + n.durBeats);
+  }
+  return marks;
 }
 
 // ---------------------------------------------------------------------------

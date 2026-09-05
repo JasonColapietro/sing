@@ -10,6 +10,7 @@ import {
   levelForXp,
   todayPracticeSec,
   useProgress,
+  weeklyReport,
   type SessionLog,
 } from "@/lib/progress";
 import {
@@ -653,6 +654,7 @@ export function ProgressClient() {
   const state = useProgress();
   const isPro = useIsPro();
   const todaySec = todayPracticeSec(state);
+  const weekly = weeklyReport(state.sessions);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
   const isFresh = state.sessions.length === 0 && state.xp === 0;
   const noteTallies = useMemo(
@@ -695,6 +697,23 @@ export function ProgressClient() {
         {/* Keeps the signed-in singer's record backed up. Renders nothing and
             never blocks; a signed-out visitor cannot tell it is here. */}
         <AccountBackupSync />
+        <Card>
+          <SectionLabel>This week so far</SectionLabel>
+          <p className="mt-2 text-sm text-mut">Since Monday, compared with the full previous week. Up to three stars per scored session.</p>
+          <dl className="mt-4 grid gap-4 sm:grid-cols-3">
+            {([
+              ["Stars earned", String(weekly.thisWeek.stars), String(weekly.lastWeek.stars)],
+              ["Sessions", String(weekly.thisWeek.sessions), String(weekly.lastWeek.sessions)],
+              ["Practice time", fmtDur(weekly.thisWeek.durationSec), fmtDur(weekly.lastWeek.durationSec)],
+            ] as const).map(([label, current, previous]) => (
+              <div key={label}>
+                <dt className="text-sm text-mut">{label}</dt>
+                <dd className="mt-1 font-mono text-xl">{current}</dd>
+                <dd className="mt-1 text-xs text-dim">{previous} last week</dd>
+              </div>
+            ))}
+          </dl>
+        </Card>
 
         <section aria-label="Overview">
           <HeaderRow

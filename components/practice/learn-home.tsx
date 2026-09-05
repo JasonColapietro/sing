@@ -363,6 +363,13 @@ export interface PathLevel {
   items: PathItem[];
 }
 
+/** A tier is complete only when every row has earned at least one star. */
+export function levelCompletion(level: PathLevel) {
+  const sung = level.items.filter((item) => item.stars >= 1).length;
+  const total = level.items.length;
+  return { sung, total, complete: total > 0 && sung === total };
+}
+
 /**
  * The learning path: levels top to bottom, one row per exercise, stars on the
  * right. Rows rather than a card grid, because a path is an order — a grid
@@ -390,9 +397,10 @@ export function PathList({
             {/* Counted, never a literal, so the number cannot drift from the
                 rows underneath it. */}
             <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              {level.items.length} {level.unit ?? "exercises"}
+              {levelCompletion(level).sung} of {level.items.length} {level.unit ?? "exercises"} sung
             </span>
           </div>
+          {levelCompletion(level).complete && <Pill tone="ok">Complete</Pill>}
           {level.blurb && <p className="mt-2 max-w-xl text-sm text-mut">{level.blurb}</p>}
           <ul className="mt-3 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel">
             {level.items.map((item) => (

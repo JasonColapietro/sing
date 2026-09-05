@@ -16,6 +16,11 @@ import {
 import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
 import { ProChip } from "@/components/pro/ui";
 import {
+  BAND_LABEL,
+  BAND_ORDER,
+  BAND_UNLOCK_MASTERED,
+  bandForSong,
+  bandOpen,
   bestScoreForSong,
   computeDifficulty,
   formatMinSec,
@@ -30,6 +35,7 @@ import {
   relativeTime,
   toggleFavorite,
   useFavorites,
+  useMastered,
   useRecentlyPlayed,
 } from "./favorites";
 import {
@@ -155,12 +161,66 @@ function MiniButton({
   );
 }
 
+/** Check mark for a song the singer has mastered — a solo pass in performance mode. */
+function MasteredMark() {
+  return (
+    <span
+      role="img"
+      aria-label="Mastered"
+      title="Mastered"
+      className="inline-flex shrink-0 text-violet-ink"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M2.6 7.3 5.5 10.2 11.4 3.9" />
+      </svg>
+    </span>
+  );
+}
+
+/** Lock mark for a song whose band hasn't opened yet. */
+function LockMark() {
+  return (
+    <span
+      role="img"
+      aria-label="Locked"
+      title="Locked"
+      className="inline-flex shrink-0 text-dim"
+    >
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        aria-hidden="true"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinejoin="round"
+      >
+        <rect x="2.75" y="6.1" width="8.5" height="5.4" rx="1.2" />
+        <path d="M4.9 6.1V4.7a2.1 2.1 0 0 1 4.2 0v1.4" />
+      </svg>
+    </span>
+  );
+}
+
 function SongCard({
   song,
   best,
   fit,
   favorite,
   queued,
+  mastered,
+  locked,
   pro,
   onStart,
   onFavorite,
@@ -171,6 +231,10 @@ function SongCard({
   fit: RangeFit;
   favorite: boolean;
   queued: boolean;
+  /** A solo pass sung in performance mode at or above the mastery score. */
+  mastered: boolean;
+  /** This song's band hasn't opened yet — it still lists, marked with a lock. */
+  locked: boolean;
   /** True when this song comes from the Pro book (only ever rendered to Pro members). */
   pro: boolean;
   onStart: () => void;
@@ -185,7 +249,11 @@ function SongCard({
     <Card className="flex h-full flex-col">
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-lg">{song.title}</h3>
-        <HeartButton active={favorite} title={song.title} onClick={onFavorite} />
+        <div className="flex shrink-0 items-center gap-1.5">
+          {mastered && <MasteredMark />}
+          {locked && <LockMark />}
+          <HeartButton active={favorite} title={song.title} onClick={onFavorite} />
+        </div>
       </div>
       <p className="mt-2 text-sm text-mut">{song.origin}</p>
 
@@ -214,14 +282,23 @@ function SongCard({
       </div>
 
       <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
-        <Button size="sm" onClick={onStart}>
-          Sing
+        {/* A locked band's songs stay in view but do not start: the ladder is
+            the mechanic, and a lock that still plays would make the unlock
+            line above the band a lie. */}
+        <Button
+          size="sm"
+          onClick={onStart}
+          disabled={locked}
+          title={locked ? "Master more songs in the band below to open this one" : undefined}
+        >
+          {locked ? "Locked" : "Sing"}
         </Button>
         <Button
           variant="outline"
           size="sm"
           aria-pressed={queued}
           onClick={onQueue}
+          disabled={locked && !queued}
         >
           {queued ? "Queued" : "Add to setlist"}
         </Button>
@@ -255,6 +332,7 @@ export function Library({
     progress.range.lowMidi !== undefined && progress.range.highMidi !== undefined;
   const isPro = useIsPro();
   const favorites = useFavorites();
+  const mastered = useMastered();
   const recents = useRecentlyPlayed();
   const setlist = useSetlist();
   const [browse, setBrowse] = useState<BrowseState>(DEFAULT_BROWSE);
@@ -285,7 +363,30 @@ export function Library({
     [accessible, favorites],
   );
 
+  // Bands are the spine of the grid: every song sits in exactly one, and a band
+  // that hasn't opened still shows its songs — locked, under the one line that
+  // says what opens it — so the singer can see where the book goes next.
+  const bandSections = useMemo(
+    () =>
+      BAND_ORDER.map((band, i) => {
+        const below = i > 0 ? BAND_ORDER[i - 1] : undefined;
+        const done = below
+          ? accessible.filter((s) => bandForSong(s) === below && mastered.has(s.id)).length
+          : 0;
+        return {
+          band,
+          songs: visible.filter((s) => bandForSong(s) === band),
+          open: bandOpen(band, mastered, accessible),
+          unlock: below
+            ? `${done} of ${BAND_UNLOCK_MASTERED} ${BAND_LABEL[below]} songs mastered — master ${Math.max(BAND_UNLOCK_MASTERED - done, 0)} more to open this band.`
+            : "",
+        };
+      }).filter((section) => section.songs.length > 0),
+    [accessible, visible, mastered],
+  );
+
   function start(song: Song) {
+    if (!bandOpen(bandForSong(song), mastered, accessible)) return;
     // Recorded here as well as (optionally) in the caller: the recently-sung
     // row must not look dead just because the wiring hasn't landed. The store
     // keys on song id, so recording twice for one start is a no-op.
@@ -296,7 +397,9 @@ export function Library({
   function surprise() {
     // Respect the filters the singer just set — the dice should pick from what
     // they're looking at — and fall back to the whole accessible book.
-    const pool = visible.length > 0 ? visible : accessible;
+    const openSongs = accessible.filter((s) => bandOpen(bandForSong(s), mastered, accessible));
+    const filtered = visible.filter((s) => bandOpen(bandForSong(s), mastered, accessible));
+    const pool = filtered.length > 0 ? filtered : openSongs;
     const song = pool[Math.floor(Math.random() * pool.length)];
     if (song) start(song);
   }
@@ -308,8 +411,8 @@ export function Library({
     () =>
       setlist.ids
         .map((id) => accessible.find((s) => s.id === id))
-        .filter((s): s is Song => s !== undefined),
-    [setlist.ids, accessible],
+        .filter((s): s is Song => s !== undefined && bandOpen(bandForSong(s), mastered, accessible)),
+    [setlist.ids, accessible, mastered],
   );
   const nowSingingId = setlist.cursor >= 0 ? setlist.ids[setlist.cursor] : null;
 
@@ -471,26 +574,41 @@ export function Library({
             />
           </div>
         ) : (
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {visible.map((song) => (
-              <SongCard
-                key={song.id}
-                song={song}
-                best={bestScoreForSong(progress.sessions, song.title)}
-                fit={rangeFit(song, progress.range)}
-                favorite={favorites.includes(song.id)}
-                queued={setlist.ids.includes(song.id)}
-                pro={isPro && !SONGS.some((s) => s.id === song.id)}
-                onStart={() => start(song)}
-                onFavorite={() => toggleFavorite(song.id)}
-                onQueue={() =>
-                  setlist.ids.includes(song.id)
-                    ? removeFromSetlist(song.id)
-                    : addToSetlist(song.id)
-                }
-              />
+          <div className="mt-4 space-y-8">
+            {bandSections.map(({ band, songs: bandSongs, open, unlock }) => (
+              <section key={band} aria-label={`${BAND_LABEL[band]} band`}>
+                <div className="flex flex-wrap items-center gap-2">
+                  <SectionLabel>{BAND_LABEL[band]}</SectionLabel>
+                  <span className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    {bandSongs.length} song{bandSongs.length === 1 ? "" : "s"}
+                  </span>
+                  {!open && <Pill>Locked</Pill>}
+                </div>
+                {!open && <p className="mt-1.5 text-sm text-mut">{unlock}</p>}
+                <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {bandSongs.map((song) => (
+                    <SongCard
+                      key={song.id}
+                      song={song}
+                      best={bestScoreForSong(progress.sessions, song.title)}
+                      fit={rangeFit(song, progress.range)}
+                      favorite={favorites.includes(song.id)}
+                      queued={setlist.ids.includes(song.id)}
+                      mastered={mastered.has(song.id)}
+                      locked={!open}
+                      pro={isPro && !SONGS.some((s) => s.id === song.id)}
+                      onStart={() => start(song)}
+                      onFavorite={() => toggleFavorite(song.id)}
+                      onQueue={() =>
+                        setlist.ids.includes(song.id)
+                          ? removeFromSetlist(song.id)
+                          : addToSetlist(song.id)
+                      }
+                    />
+                  ))}
+                </div>
+              </section>
             ))}
-
           </div>
         )}
 

@@ -8,7 +8,7 @@ import { ProCrescendoNudge } from "@/components/pro/gate";
 import { useProgress, type SessionLog } from "@/lib/progress";
 import { computeGrade, starGlyphs, starRatingLabel, type Tone } from "./grade";
 import { ResultCard } from "./result-card";
-import { JUDGMENTS, formatTempoPct, type Judgment, type SessionSummaryData } from "./lib";
+import { JUDGMENTS, PASS_LABEL, formatTempoPct, type Judgment, type SessionSummaryData } from "./lib";
 import type { SessionMode, Song } from "./types";
 
 function scoreTone(score: number): "ok" | "violet" | "rec" {
@@ -122,6 +122,8 @@ export function SessionSummary({
     newAchievements,
     listenMode,
     mode,
+    pass,
+    mastered,
     points,
     topMultiplier,
   } = data;
@@ -144,11 +146,22 @@ export function SessionSummary({
         <h2 className="mt-3 text-2xl">{song.title}</h2>
         {/* The rate the song ended on — on Auto the tempo can move mid-session. */}
         <p className="mt-1.5 text-sm text-mut">Finished at {formatTempoPct(data.tempo)} tempo</p>
+        {/* Which pass produced this run: a score only means what it means in
+            the context of the pass that was sung. */}
+        <p className="mt-1 text-sm text-mut">{PASS_LABEL[pass]} pass</p>
+        {mastered && (
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <Pill tone="ok">Mastered</Pill>
+            <span className="text-sm text-ok-ink">
+              You&rsquo;ve mastered {song.title}.
+            </span>
+          </div>
+        )}
 
         {!scored ? (
           <p className="mt-4 max-w-md text-sm text-mut">
-            You practiced in listen mode, so there&rsquo;s no pitch score this
-            time. Enable your microphone next time to get scored.
+            This was a listen pass, so there&rsquo;s no pitch score this time.
+            Choose Sing along or On your own with your microphone enabled to get scored.
           </p>
         ) : (
           <>

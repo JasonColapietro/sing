@@ -14,6 +14,7 @@ import { useSyncExternalStore } from "react";
 
 const FAV_KEY = "suede-sing:song-favorites:v1";
 const RECENT_KEY = "suede-sing:song-recents:v1";
+const MASTERED_KEY = "suede-sing:mastered:v1";
 
 /** A karaoke night's worth of history; past that, older entries stop earning rent. */
 const MAX_RECENTS = 24;
@@ -189,4 +190,59 @@ export function relativeTime(iso: string): string {
   const days = Math.floor(hours / 24);
   if (days < 7) return `${days}d ago`;
   return "a while ago";
+}
+
+/* --------------------------------------------------------------- mastered */
+
+/**
+ * Songs mastered by a clean solo pass — see `isMastered` in ./lib.
+ *
+ * Callers want a Set (the library asks "is this one mastered?" once per card)
+ * but JSON cannot carry one, so the store keeps the ids as an array and the
+ * Set is minted from it and cached against that array's identity. Returning a
+ * fresh Set on every read would re-render forever, as `get` warns above.
+ */
+const NO_MASTERED: readonly string[] = Object.freeze([]);
+const EMPTY_MASTERED: ReadonlySet<string> = new Set<string>();
+
+const mastered = createLocalStore<readonly string[]>(MASTERED_KEY, NO_MASTERED, (raw) =>
+  Array.isArray(raw)
+    ? Object.freeze(raw.filter((v): v is string => typeof v === "string"))
+    : NO_MASTERED,
+);
+
+let masteredSetCache: { ids: readonly string[]; set: ReadonlySet<string> } | null = null;
+
+function masteredSnapshot(): ReadonlySet<string> {
+  const ids = mastered.get();
+  if (masteredSetCache === null || masteredSetCache.ids !== ids) {
+    masteredSetCache = { ids, set: new Set(ids) };
+  }
+  return masteredSetCache.set;
+}
+
+function masteredServerSnapshot(): ReadonlySet<string> {
+  return EMPTY_MASTERED;
+}
+
+export function getMastered(): ReadonlySet<string> {
+  return masteredSnapshot();
+}
+
+export function useMastered(): ReadonlySet<string> {
+  return useSyncExternalStore(
+    mastered.subscribe,
+    masteredSnapshot,
+    masteredServerSnapshot,
+  );
+}
+
+/**
+ * Record a song as mastered. Idempotent: mastering it twice is not news, and
+ * skipping the write keeps a repeat solo pass from waking every subscriber.
+ */
+export function recordMastered(id: string): void {
+  const current = mastered.get();
+  if (current.includes(id)) return;
+  mastered.set(Object.freeze([...current, id]));
 }

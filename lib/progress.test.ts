@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TYPE_META } from "@/components/progress/format";
-import { localDay } from "./progress";
+import { weeklyReport, localDay } from "./progress";
 
 describe("localDay", () => {
   it("formats the local calendar day, zero-padded", () => {
@@ -715,5 +715,19 @@ describe("a warmup's mode survives the round trips a session takes", () => {
       reason: "A session in the payload is malformed.",
       overCap: false,
     });
+  });
+});
+
+describe("weeklyReport", () => {
+  it("uses Monday boundaries, keeps unscored time, and excludes future and older sessions", () => {
+    const session = (day: string, score?: number) => ({ id: day, day, date: day + "T12:00:00Z", type: "warmup" as const, durationSec: 45, xp: 0, score });
+    const report = weeklyReport([
+      session("2026-08-23", 100), session("2026-08-30", 90), session("2026-08-31", 75),
+      session("2026-09-05"), session("2026-09-06", 100),
+    ], new Date(2026, 8, 5, 12));
+    expect(report.thisWeek).toEqual({ stars: 2, sessions: 2, durationSec: 90 });
+    expect(report.lastWeek).toEqual({ stars: 3, sessions: 1, durationSec: 45 });
+    expect(report.start).toBe("2026-08-31");
+    expect(weeklyReport([], new Date(2026, 8, 7)).lastStart).toBe("2026-08-31");
   });
 });

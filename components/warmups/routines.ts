@@ -17,6 +17,7 @@ import {
   buildSegments,
   type WarmupExercise,
 } from "./exercises";
+import type { SessionLog } from "@/lib/progress";
 import { planRep } from "./timeline";
 
 export interface RoutineStep {
@@ -203,16 +204,48 @@ export function routineMinutes(r: Routine): number {
   return Math.max(1, Math.round(routineSeconds(r) / 60));
 }
 
-/**
- * Which routine to put at the top of the room right now.
- *
- * Someone who has already practised today gets the quick one — a second
- * session is a top-up, not another full warmup. Before ten in the morning a
- * cold voice gets the morning reset. Everyone else gets the daily. Nothing
- * here reads scores: the coach on /progress owns "what you are weak at", and
- * this only answers "what fits this moment".
- */
-export function recommendRoutine(opts: { practicedToday: boolean; hour: number }): Routine {
-  const pick = opts.practicedToday ? "quick" : opts.hour < 10 ? "morning" : "daily";
+export interface RecentWarmups { averageScore: number; averageStars: number; count: number }
+
+/** Ignore unscored listens; sort by date so imported history is handled too. */
+export function recentWarmupResults(sessions: readonly SessionLog[]): RecentWarmups | null {
+  const recent = sessions.filter((s) => s.type === "warmup" && Number.isFinite(s.score))
+    .sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
+  if (recent.length === 0) return null;
+  const scores = recent.map((s) => s.score!);
+  return {
+    averageScore: scores.reduce((a, b) => a + b, 0) / scores.length,
+    averageStars: scores.reduce((a, n) => a + (n >= 90 ? 3 : n >= 75 ? 2 : n >= 50 ? 1 : 0), 0) / scores.length,
+    count: scores.length,
+  };
+}
+
+type RoutineContext = { practicedToday: boolean; hour: number; recent?: RecentWarmups | null };
+function readiness(recent: RecentWarmups | null | undefined) {
+  if (!recent || recent.count < 3) return "new";
+  if (recent.averageScore >= 85 && recent.averageStars >= 2) return "strong";
+  if (recent.averageScore < 50 || recent.averageStars < 1) return "gentle";
+  return "steady";
+}
+
+/** Keep morning and same-day top-ups gentle; otherwise use three scored sessions. */
+export function recommendRoutine(opts: RoutineContext): Routine {
+  const result = readiness(opts.recent);
+  const pick = opts.practicedToday ? "quick" : opts.hour < 10 ? "morning"
+    : result === "strong" ? "full" : result === "gentle" ? "quick" : "daily";
   return ROUTINES.find((r) => r.id === pick) ?? ROUTINES[0];
+}
+
+export function routineReason(opts: RoutineContext): string {
+  if (opts.practicedToday) return "A short top-up after today's practice.";
+  if (opts.hour < 10) return "A gentle start for your morning voice.";
+  const result = readiness(opts.recent);
+  if (result === "strong") return "Your last three scored warmups went well. Try a longer set.";
+  if (result === "gentle") return "A shorter, slower set to find your footing after your last three warmups.";
+  return "A balanced set to build consistency at your own pace.";
+}
+
+export function routineStartingTempo(opts: RoutineContext): 0.75 | 1 | 1.25 {
+  const result = readiness(opts.recent);
+  if (result === "gentle") return 0.75;
+  return !opts.practicedToday && opts.hour >= 10 && result === "strong" ? 1.25 : 1;
 }
