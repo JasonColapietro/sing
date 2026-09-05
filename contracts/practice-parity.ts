@@ -88,6 +88,20 @@ const KNOWN_DIVERGENCES = {
     reason:
       "iOS Song.transpositionLimit is 24, the web clamp is 12. Found when this contract was written, not yet adjudicated. Whichever bound is right, both apps should carry it; until someone decides, the difference is recorded rather than hidden.",
   },
+  countInBeats: {
+    web: COUNT_IN_BEATS,
+    ios: 3,
+    android: null,
+    reason:
+      "iOS PracticeViewModel.defaultCountInBeats is 3 and neither production call site overrides it; the web counts in 4. Shipped behaviour on both sides. Changing the count-in changes the feel of every drill, so it is recorded here rather than altered as a side effect of writing this contract.",
+  },
+  songTempo: {
+    web: { min: TEMPO_MIN, max: TEMPO_MAX, step: TEMPO_STEP },
+    ios: [0.75, 1.0],
+    android: null,
+    reason:
+      "Not a value drift but a gap: iOS SongPracticeViewModel.tempoRates offers two fixed playback rates because native song practice is still playback without a microphone. The web's continuous tempo grid and its auto-tempo rules arrive natively with microphone-backed scoring. Listed so the gap is a recorded state rather than an oversight.",
+  },
 } as const;
 
 /** The contract, built from the values the app itself runs on. */
