@@ -1,0 +1,162 @@
+/**
+ * The practice-parity contract: the web's reference numbers, in one machine
+ * readable file that the native apps can assert against.
+ *
+ * Suede's vocal domain is implemented four times — this repo's TypeScript, the
+ * companion web app in Suede-AI/suede-voice, the SwiftUI app, and the Android
+ * app. Every parity slice so far has copied the numbers by hand out of a
+ * handoff document. That is how they drift, and the drift is silent: nothing
+ * fails, the two apps simply start scoring the same performance differently.
+ *
+ * The one already in the tree when this file was written: the web clamps a
+ * song transpose to ±12 semitones and the iOS app clamps it to ±24. Neither
+ * side had a test that could notice.
+ *
+ * So this module does not restate the numbers. It imports them from the modules
+ * the app itself runs on and re-exports them as plain JSON-shaped data. The
+ * committed `practice-parity.json` is that data serialized, and
+ * `practice-parity.test.ts` fails when the file and this builder disagree. A
+ * constant cannot change in the app without the contract changing with it.
+ *
+ * The native repo keeps a byte-identical copy and asserts its own constants
+ * against it, so a divergence fails a test on whichever side moved.
+ */
+import {
+  AUTO_TEMPO_DOWN_SCORE,
+  AUTO_TEMPO_UP_SCORE,
+  BAND_ORDER,
+  BAND_UNLOCK_MASTERED,
+  BREATH_HELD_BEATS,
+  COUNT_IN_BEATS,
+  DIFFICULTY_EASY_MAX,
+  DIFFICULTY_MEDIUM_MAX,
+  INITIAL_MULTIPLIER,
+  JUDGMENTS,
+  JUDGMENT_POINTS,
+  JUDGMENT_THRESHOLDS,
+  MASTERY_SCORE,
+  MAX_TRANSPOSE,
+  MIN_TRANSPOSE,
+  MIN_VOLUME,
+  MULTIPLIER_RUNGS,
+  MULTIPLIER_STREAK,
+  PASS_GUIDE_PCT,
+  TEMPO_MAX,
+  TEMPO_MIN,
+  TEMPO_STEP,
+  TOLERANCE_CENTS,
+} from "@/components/songs/lib";
+import { LEVEL_TITLES, MAX_LEVEL, xpThreshold } from "@/lib/progress";
+
+/**
+ * Bumped only when the *shape* changes — a key added, removed or renamed.
+ * A changed value is not a version bump; it is the thing the contract exists
+ * to surface, and the native side should see it as a failing assertion rather
+ * than as a version it can skip.
+ */
+export const CONTRACT_VERSION = 1;
+
+/**
+ * Rules the native apps must satisfy that are not a single exported number.
+ * Stated in prose because the assertion lives in each app's own test; stated
+ * here so no one has to go re-read the web source to find out what it was.
+ */
+const RULES = {
+  masteredBy:
+    "A song is mastered by one whole-song solo pass in performance mode scoring at or above masteryScore. A listen pass, a guided pass and a rehearsal run never master a song.",
+  autoTempo:
+    "After a scored loop: at or above autoTempoUpScore step one tempoStep up, at or below autoTempoDownScore step one down, otherwise hold. The result is clamped to [tempoMin, tempoMax] and snapped to a tempoStep grid.",
+  levelXp:
+    "Cumulative XP for the end of level n is 40 * n * (n + 1). Level 1 starts at 0. XP past the last rung buys nothing.",
+  stars:
+    "Three stars at 90 percent, two at 75, one at 50, none below. Native scores are 0..1 fractions and the web's are 0..100 percentages; the thresholds are the same numbers on each scale.",
+} as const;
+
+/**
+ * Divergences that are known, deliberate, and not to be silently 'fixed'.
+ *
+ * A key listed here is one the native side is allowed to answer differently.
+ * Anything not listed here is a drift, and the native contract test should
+ * fail on it. Entries carry the reason so the next reader does not have to
+ * reconstruct the argument, and removing one is a deliberate act.
+ */
+const KNOWN_DIVERGENCES = {
+  transposeMax: {
+    web: MAX_TRANSPOSE,
+    ios: 24,
+    android: null,
+    reason:
+      "iOS Song.transpositionLimit is 24, the web clamp is 12. Found when this contract was written, not yet adjudicated. Whichever bound is right, both apps should carry it; until someone decides, the difference is recorded rather than hidden.",
+  },
+  countInBeats: {
+    web: COUNT_IN_BEATS,
+    ios: 3,
+    android: null,
+    reason:
+      "iOS PracticeViewModel.defaultCountInBeats is 3 and neither production call site overrides it; the web counts in 4. Shipped behaviour on both sides. Changing the count-in changes the feel of every drill, so it is recorded here rather than altered as a side effect of writing this contract.",
+  },
+  songTempo: {
+    web: { min: TEMPO_MIN, max: TEMPO_MAX, step: TEMPO_STEP },
+    ios: [0.75, 1.0],
+    android: null,
+    reason:
+      "Not a value drift but a gap: iOS SongPracticeViewModel.tempoRates offers two fixed playback rates because native song practice is still playback without a microphone. The web's continuous tempo grid and its auto-tempo rules arrive natively with microphone-backed scoring. Listed so the gap is a recorded state rather than an oversight.",
+  },
+} as const;
+
+/** The contract, built from the values the app itself runs on. */
+export function buildContract() {
+  return {
+    contract: "suede-practice-parity",
+    version: CONTRACT_VERSION,
+    reference: {
+      repo: "JasonColapietro/sing",
+      modules: ["components/songs/lib.ts", "lib/progress.ts"],
+      note: "Generated by contracts/practice-parity.ts. Do not hand-edit; run the regenerate command in contracts/README.md.",
+    },
+    scoring: {
+      toleranceCents: TOLERANCE_CENTS,
+      minVolume: MIN_VOLUME,
+      countInBeats: COUNT_IN_BEATS,
+      breathHeldBeats: BREATH_HELD_BEATS,
+      judgments: [...JUDGMENTS],
+      judgmentThresholds: JUDGMENT_THRESHOLDS.map(([j, floor]) => ({ judgment: j, floor })),
+      judgmentPoints: { ...JUDGMENT_POINTS },
+    },
+    tempo: {
+      min: TEMPO_MIN,
+      max: TEMPO_MAX,
+      step: TEMPO_STEP,
+      autoUpScore: AUTO_TEMPO_UP_SCORE,
+      autoDownScore: AUTO_TEMPO_DOWN_SCORE,
+    },
+    transpose: { min: MIN_TRANSPOSE, max: MAX_TRANSPOSE },
+    difficulty: { easyMax: DIFFICULTY_EASY_MAX, mediumMax: DIFFICULTY_MEDIUM_MAX },
+    bands: {
+      order: [...BAND_ORDER],
+      unlockMastered: BAND_UNLOCK_MASTERED,
+    },
+    multiplier: {
+      rungs: [...MULTIPLIER_RUNGS],
+      streak: MULTIPLIER_STREAK,
+      initial: INITIAL_MULTIPLIER.multiplier,
+    },
+    guide: { passGuidePct: { ...PASS_GUIDE_PCT } },
+    mastery: { score: MASTERY_SCORE },
+    progress: {
+      starThresholdsPercent: [90, 75, 50],
+      maxLevel: MAX_LEVEL,
+      levelTitles: [...LEVEL_TITLES],
+      // Serialized rather than described, so a native ladder can be checked
+      // rung by rung instead of by re-implementing the formula from prose.
+      xpThresholds: Array.from({ length: 12 }, (_, i) => ({
+        level: i + 1,
+        cumulativeXp: xpThreshold(i + 1),
+      })),
+    },
+    rules: RULES,
+    knownDivergences: KNOWN_DIVERGENCES,
+  };
+}
+
+export type PracticeParityContract = ReturnType<typeof buildContract>;

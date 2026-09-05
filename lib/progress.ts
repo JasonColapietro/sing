@@ -170,13 +170,19 @@ export const LEVEL_TITLES = [
   "Suede Legend",
 ];
 
-/** Cumulative XP required to *reach* level n+1 (levels are 1-based). */
-function xpThreshold(level: number): number {
+/**
+ * Cumulative XP required to *reach* level n+1 (levels are 1-based).
+ *
+ * Exported for contracts/practice-parity.ts, which serializes the ladder so the
+ * native apps can assert their own rungs against these numbers rather than
+ * re-deriving the formula from a handoff note.
+ */
+export function xpThreshold(level: number): number {
   return 40 * level * (level + 1);
 }
 
 /** The last rung. XP past xpThreshold(MAX_LEVEL) buys nothing. */
-const MAX_LEVEL = 60;
+export const MAX_LEVEL = 60;
 
 export function levelForXp(xp: number): {
   level: number;
