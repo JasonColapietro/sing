@@ -10,7 +10,7 @@ import {
   type GradeResult,
   type Tone,
 } from "./grade";
-import type { SessionSummaryData } from "./lib";
+import { formatTempoPct, type SessionSummaryData } from "./lib";
 
 const TONE_TEXT: Record<Tone, string> = {
   ok: "text-ok-ink",
@@ -185,18 +185,25 @@ export function ShareableResult({
  * — the card must not promise a score that doesn't exist.
  */
 export function ResultCard({ data }: { data: SessionSummaryData }) {
-  const { song, score, maxCombo, judgments, transpose, tempo } = data;
+  const { song, score, maxCombo, judgments, transpose, tempo, mode, points } = data;
   if (score === undefined) return null;
   const grade = computeGrade(score, maxCombo, judgments);
   if (!grade) return null;
 
+  // Points are a performance-mode figure only — a rehearsal never earns them,
+  // so the shared card must not carry a zero that reads like a bad run.
+  const stats: ResultStat[] = [{ label: "Max combo", value: String(maxCombo), tone: "cool" }];
+  if (mode === "performance") {
+    stats.push({ label: "Points", value: String(points), tone: "violet" });
+  }
+
   return (
     <ShareableResult
       title={song.title}
-      subtitle={`Key of ${keyLabel(song.defaultKeyRootMidi, transpose)} · ${tempo}× tempo`}
+      subtitle={`Key of ${keyLabel(song.defaultKeyRootMidi, transpose)} · ${formatTempoPct(tempo)} tempo`}
       score={score}
       grade={grade}
-      stats={[{ label: "Max combo", value: String(maxCombo), tone: "cool" }]}
+      stats={stats}
     />
   );
 }

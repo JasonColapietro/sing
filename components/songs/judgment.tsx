@@ -135,3 +135,30 @@ export function JudgmentReadout({
     </div>
   );
 }
+
+/**
+ * Running points and the multiplier they are being scored at, for the stage
+ * header.
+ *
+ * Plain React rather than the rAF path above: the total moves once per judged
+ * note and lives in the stage header, not inside the player's audio-scheduling
+ * render path.
+ */
+export function PointsReadout({
+  points,
+  multiplier,
+}: {
+  points: number;
+  multiplier: number;
+}) {
+  return (
+    <div className="flex items-baseline gap-3">
+      <span className="tabular font-mono text-xl font-bold tracking-tight text-ink sm:text-2xl">
+        {points.toLocaleString()}
+      </span>
+      <span className="tabular font-mono text-sm text-violet-ink">
+        {multiplier}×
+      </span>
+    </div>
+  );
+}

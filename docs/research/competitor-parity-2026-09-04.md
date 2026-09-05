@@ -33,13 +33,13 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 
 | Mechanic | Source | Web | iOS |
 |---|---|---|---|
-| Practice mode restarts at the end so you keep practicing | Yousician | ◐ loops (defaultLoops / 4 for a section) | ◐ |
-| Auto tempo: app raises or lowers speed from how you sing, 25–125 % in 5 % steps; manual slider too | Yousician | ✗ four fixed tempos (50/75/100/125) | ✗ |
+| Practice mode restarts at the end so you keep practicing | Yousician | ✓ rehearsal mode (PR #129) | ◐ |
+| Auto tempo: app raises or lowers speed from how you sing, 25–125 % in 5 % steps; manual slider too | Yousician | ✓ Auto + slider (PR #129) | ✗ |
 | Transpose; auto-transpose to calibrated range | Yousician, Simply Sing | ✓ fitTransposeToRange | ✓ |
 | Guide-vocal and own-voice volume | Yousician | ✓ Mixer guidePct | ◐ |
 | Loop any section with sliders on the progress bar | Yousician | ◐ section picker, fixed 4 loops | ✗ |
 | Record and review inside the song | Yousician, Simply Sing "Recording Studio" | ✗ (separate /recorder) | ✗ |
-| Play mode: stars + points, multiplier starts 3× and climbs to 5× with correct notes and timing | Yousician | ◐ grade/stars/XP/maxCombo, no multiplier, no mode split | ✗ |
+| Play mode: stars + points, multiplier starts 3× and climbs to 5× with correct notes and timing | Yousician | ✓ performance mode, 3×→5× (PR #129) | ✗ |
 | Staged session: lyrics read → demo in your key → sing with vocals → solo | Simply Sing | ✗ listen mode is unscored only | ✗ |
 | Pass threshold → song "mastered"; levels Basic→Easy→Medium→Hard→Extreme unlocked by XP | Simply Sing | ◐ Easy/Medium/Hard labels, best %; no pass/mastered, no unlock ladder | ✗ |
 | Breath cues in the lyric line ("when to hold a note and when to breathe") | Simply Sing | ✗ | ✗ |

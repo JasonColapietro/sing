@@ -1,12 +1,55 @@
-import type { LyricLine, Song, SongNote, SongSection } from "./types";
+import type { LyricLine, SessionMode, Song, SongNote, SongSection } from "./types";
 import type { Achievement, SessionLog, VocalRange } from "@/lib/progress";
 
 export const COUNT_IN_BEATS = 4;
 export const TOLERANCE_CENTS = 50;
 export const MIN_VOLUME = 0.006;
 
-export const TEMPOS = [0.5, 0.75, 1, 1.25] as const;
-export type Tempo = (typeof TEMPOS)[number];
+/**
+ * Playback rate multiplier. Continuous rather than a four-value tuple: the
+ * tempo control is a slider now, and auto-tempo nudges the rate one step at a
+ * time, which a literal union cannot express. Always pass rates through
+ * `snapTempo` so every stored or displayed rate sits on the grid.
+ */
+export type Tempo = number;
+
+export const TEMPO_MIN = 0.25;
+export const TEMPO_MAX = 1.25;
+export const TEMPO_STEP = 0.05;
+
+/** Clamp into [TEMPO_MIN, TEMPO_MAX] and round onto the TEMPO_STEP grid. */
+export function snapTempo(rate: number): number {
+  const clamped = Math.min(TEMPO_MAX, Math.max(TEMPO_MIN, rate));
+  // Re-round after the multiply: 0.05 grids land on values like
+  // 0.35000000000000003 in binary floating point, which then prints wrong.
+  return Math.round((Math.round(clamped / TEMPO_STEP) * TEMPO_STEP) * 100) / 100;
+}
+
+/** A rate as a percentage of the written tempo, e.g. "85%". */
+export function formatTempoPct(rate: number): string {
+  return `${Math.round(rate * 100)}%`;
+}
+
+/**
+ * Loop scores that move the tempo when the singer leaves it on Auto.
+ *
+ * Our product decision, not anyone's published number: 85 is a loop sung
+ * cleanly enough that the next one should be harder, and at or below 60 the
+ * singer is fighting the take rather than learning it.
+ */
+export const AUTO_TEMPO_UP_SCORE = 85;
+export const AUTO_TEMPO_DOWN_SCORE = 60;
+
+/**
+ * The next rate after a loop: one step up at or above the up score, one step
+ * down at or below the down score, hold in between. Snapped, so it also
+ * refuses to walk past the bounds.
+ */
+export function autoTempoStep(current: number, lastLoopScore: number): number {
+  if (lastLoopScore >= AUTO_TEMPO_UP_SCORE) return snapTempo(current + TEMPO_STEP);
+  if (lastLoopScore <= AUTO_TEMPO_DOWN_SCORE) return snapTempo(current - TEMPO_STEP);
+  return snapTempo(current);
+}
 
 export const MAX_TRANSPOSE = 12;
 export const MIN_TRANSPOSE = -12;
@@ -187,8 +230,68 @@ export function emptyTally(): JudgmentTally {
   return { perfect: 0, great: 0, good: 0, miss: 0 };
 }
 
+// ---------------------------------------------------------------------------
+// Performance-mode scoring
+//
+// The rungs, the streak length and the point values below are our product
+// decisions — they are tuned so a clean phrase feels like it is climbing
+// without letting one lucky bar carry a whole song. Points are always derived
+// from the judgments of a run and are never stored: nothing here touches
+// lib/progress or the SessionLog shape.
+// ---------------------------------------------------------------------------
+
+export const MULTIPLIER_RUNGS = [3, 3.5, 4, 4.5, 5] as const;
+
+/** How many consecutive strong notes it takes to climb one rung. */
+export const MULTIPLIER_STREAK = 4;
+
+export interface MultiplierState {
+  multiplier: number;
+  streak: number;
+}
+
+export const INITIAL_MULTIPLIER: MultiplierState = { multiplier: 3, streak: 0 };
+
+function rungIndex(multiplier: number): number {
+  const i = (MULTIPLIER_RUNGS as readonly number[]).indexOf(multiplier);
+  return i === -1 ? 0 : i;
+}
+
+/**
+ * Advance the multiplier for one judged note: perfect and great extend the
+ * streak and climb a rung every MULTIPLIER_STREAK in a row, good holds the
+ * rung but resets the streak, a miss drops a rung and resets.
+ */
+export function multiplierStep(state: MultiplierState, judgment: Judgment): MultiplierState {
+  const index = rungIndex(state.multiplier);
+  if (judgment === "perfect" || judgment === "great") {
+    const streak = state.streak + 1;
+    const climb = streak % MULTIPLIER_STREAK === 0;
+    const next = climb ? Math.min(MULTIPLIER_RUNGS.length - 1, index + 1) : index;
+    return { multiplier: MULTIPLIER_RUNGS[next], streak };
+  }
+  if (judgment === "good") {
+    return { multiplier: MULTIPLIER_RUNGS[index], streak: 0 };
+  }
+  return { multiplier: MULTIPLIER_RUNGS[Math.max(0, index - 1)], streak: 0 };
+}
+
+/** Base points per note before the multiplier. Our own values. */
+export const JUDGMENT_POINTS: Record<Judgment, number> = {
+  perfect: 100,
+  great: 70,
+  good: 40,
+  miss: 0,
+};
+
+export function pointsFor(judgment: Judgment, multiplier: number): number {
+  return Math.round(JUDGMENT_POINTS[judgment] * multiplier);
+}
+
 export interface SessionSummaryData {
   song: Song;
+  /** Which mode the run was sung in. */
+  mode: SessionMode;
   /** Overall score 0..100, or undefined when practiced in listen mode (no mic). */
   score: number | undefined;
   perLoopScores: number[];
@@ -204,8 +307,15 @@ export interface SessionSummaryData {
   sectionScores: Array<{ label: string; score: number }>;
   /** The settings the session was actually sung at, for the result card. */
   transpose: number;
+  /**
+   * The rate the song *ended* on. With Auto tempo the rate moves between
+   * loops, so this is the last one sung, not the one the session started at.
+   */
   tempo: number;
   loops: number;
+  /** Derived performance-mode totals; 0 for a rehearsal. */
+  points: number;
+  topMultiplier: number;
 }
 
 // ---------------------------------------------------------------------------
