@@ -171,7 +171,7 @@ export default function SiteFooter() {
             href="https://seo.suedeai.ai/evidence#open-source"
             className={linkClass}
           >
-            open-source contributor with 37 pull requests merged across 34
+            open-source contributor with 41 pull requests merged across 38
             external repositories through GitHub, plus one public Linux kernel
             USB/IP contribution labeled Public upstream v6, as of September 2026
           </a>
