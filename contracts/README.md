@@ -53,10 +53,15 @@ differently, with the reason. A key listed there is allowed to differ; anything
 not listed is drift and should fail the native assertion. Removing an entry is
 a decision, not cleanup.
 
-The entry present at version 1 is `transposeMax`: the web clamps a song
-transpose to ±12 semitones and iOS clamps it to ±24. That was found by writing
-this contract. It has not been adjudicated, so it is recorded rather than
-quietly changed on one side.
+Writing this contract found three. Two were adjudicated on 2026-09-05 and
+closed by moving iOS to the web's value: the transpose clamp (iOS was ±24
+against the web's ±12) and the count-in (iOS was 3 beats against the web's 4).
+Both are now asserted as equalities rather than recorded as differences.
+
+The one that remains is `songTempo`, and it is a gap rather than a wrong number:
+native song practice is still playback without a microphone, so it offers two
+fixed rates where the web has a continuous tempo grid and auto-tempo. It closes
+when microphone-backed song scoring lands.
 
 ### Versioning
 
