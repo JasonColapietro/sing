@@ -9,7 +9,7 @@ import { SITE_URL } from "@/lib/site";
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 
 export const OG_IMAGE_ALT =
-  "Suede Sing, the vocal studio in your browser: live pitch, range test, warmups, ear training";
+  "Suede Sing: the free browser vocal studio for live pitch, range test, warmups and ear training";
 
 /**
  * The sitewide card, shaped for a route's own `openGraph.images`.

@@ -117,7 +117,7 @@ const STEPS = [
 export const metadata: Metadata = {
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: "Suede Sing: the vocal studio in your browser",
+    title: "Suede Sing: Free Browser Vocal Studio, Pitch Training and Range Test",
     description:
       "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free in the browser, with no install required.",
     url: SITE_URL,
@@ -127,7 +127,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Suede Sing: the vocal studio in your browser",
+    title: "Suede Sing: Free Browser Vocal Studio, Pitch Training and Range Test",
     description:
       "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free in the browser, with no install required.",
   },

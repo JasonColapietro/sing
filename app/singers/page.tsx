@@ -56,11 +56,11 @@ function buildFaq() {
 }
 
 export const metadata: Metadata = {
-  title: "Famous Singers' Vocal Ranges",
+  title: "Famous Singers' Vocal Ranges and Vocal Range Chart",
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers` },
   openGraph: {
-    title: `Famous Singers' Vocal Ranges: each voice on one keyboard`,
+    title: `Famous Singers' Vocal Ranges and Vocal Range Chart: each voice on one keyboard`,
     description: DESCRIPTION,
     type: "website",
     url: `${SITE_URL}/singers`,
