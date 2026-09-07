@@ -64,7 +64,7 @@ try {
         if (test.href.startsWith("/warmups")) {
           await page.getByRole("heading", { name: `Turn on your mic to start “${test.title}”`, exact: true }).waitFor();
           await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
-          await page.getByRole("heading", { level: 1, name: test.title, exact: true }).waitFor();
+          await page.getByRole("dialog", { name: test.title, exact: true }).waitFor();
         } else if (test.href.startsWith("/songs")) {
           await page.getByRole("heading", { name: `Enable your microphone to sing “${test.title}”`, exact: true }).waitFor();
           await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
