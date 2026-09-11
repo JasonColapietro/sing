@@ -6,7 +6,7 @@ Implement every actionable finding from the 2026-08-29 three-agent SEO audit so 
 
 ## Global Constraints
 
-- Canonical repository: `/Users/jasoncolapietro/sing`; implementation worktree: `/private/tmp/sing-vocal-range-evidence-20260829`; base branch: `main` at `173cb5b1080ef42ab4cdba7a41dcabcf3d085bee`.
+- Canonical repository: `~/sing`; implementation worktree: `/private/tmp/sing-vocal-range-evidence-20260829`; base branch: `main` at `173cb5b1080ef42ab4cdba7a41dcabcf3d085bee`.
 - Preserve the canonical checkout's user-owned untracked `.suede-graph-flo-xr/` directory. Do not edit or remove it.
 - Never install, connect, authenticate, or use OpenSEO.
 - Use test-driven development: add a focused failing test, run it and record the expected failure, then implement the minimum production change and record the passing run.
