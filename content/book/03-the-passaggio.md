@@ -25,14 +25,16 @@ Now put the two things together. Right where the acoustic support goes away, the
 
 The passaggio sits where it does because it is tied to the dimensions of your instrument. Longer, thicker folds and a longer vocal tract put the whole business lower. Shorter and lighter put it higher. That is why voice type and passaggio location travel together, and why the transition tells you more about the kind of voice you have than the highest note you can hit does.
 
-Teaching traditions generally describe two turning points rather than one: a lower one where the voice has to start shedding weight, and an upper one, often a fourth or fifth above, where the head mechanism takes over properly. The conventional approximate locations:
+Teaching traditions describe two turning points rather than one: a lower one where the voice has to start shedding weight, and an upper one where the head mechanism takes over properly. For the lower voices the classical literature puts them a perfect fourth apart — Richard Miller's *primo* and *secondo passaggio*. The figures usually quoted for the higher voices come from contemporary commercial singing instead, describe a narrower zone of three to four semitones, and are not the same event under another name. The zones this book and the app both work from:
 
-- **Bass:** around A3, then around D4
-- **Baritone:** around B3, then around E4
-- **Tenor:** around C4 or D4, then around F♯4 or G4
-- **Contralto:** around E4, then around A4
-- **Mezzo-soprano:** around F4, then around B♭4
-- **Soprano:** around F♯4 or G4, then around C♯5 or D5
+- **Bass:** G3 up to C4
+- **Bass-baritone:** A3 up to D4
+- **Baritone:** B3 up to E4
+- **Tenor:** D4 up to G4
+- **Countertenor:** G3 up to C4, with a caveat — the working transition is the crossing out of full voice into the falsetto-family register, which is a different decision from the one the other rows describe
+- **Contralto:** G4 up to B4
+- **Mezzo-soprano:** A4 up to C5
+- **Soprano:** C5 up to E5
 
 Treat those as a neighbourhood, not an address. Individual voices sit a semitone or three off the list in either direction, and the vowel you are singing shifts the acoustic half of it, because different vowels put their resonant peaks in different places. An "ee" and an "ah" on the same pitch do not meet the wall at the same moment.
 

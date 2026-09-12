@@ -117,6 +117,24 @@ native song practice is still playback without a microphone, so it offers two
 fixed rates where the web has a continuous tempo grid and auto-tempo. It closes
 when microphone-backed song scoring lands.
 
+### practice-parity v2
+
+`version` moved to 2 on 2026-09-12. Three key additions, no changed values:
+
+- `progress.xpEarn` — the rate a singer earns XP. The ladder's rungs were always
+  here; the rate was not, so two surfaces could satisfy every assertion in the
+  file and still level singers at different speeds.
+- `progress.xpThresholds` — now all `maxLevel` rungs rather than the first
+  twelve, each with the title shown at that level. `LEVEL_TITLES` has 15 entries
+  for 60 levels, so the last repeats; serialized so a consumer does not index
+  past the end and render undefined.
+- `mastery.minTempo` — mastery ignored tempo, so a song sung at 0.25x unlocked
+  the next band on the same terms as a clean pass at written tempo.
+  Transposition is deliberately still not gated.
+
+`Suede-AI/suede-voice` vendors this file byte-identically and needs a re-sync
+(the `curl` above) before its own assertions will see any of it.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

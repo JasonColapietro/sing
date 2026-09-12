@@ -1,6 +1,6 @@
 {
   "contract": "suede-practice-parity",
-  "version": 1,
+  "version": 2,
   "reference": {
     "repo": "JasonColapietro/sing",
     "modules": [
@@ -89,7 +89,8 @@
     }
   },
   "mastery": {
-    "score": 80
+    "score": 80,
+    "minTempo": 1
   },
   "progress": {
     "starThresholdsPercent": [
@@ -115,59 +116,331 @@
       "Maestro",
       "Suede Legend"
     ],
+    "xpEarn": {
+      "perMinute": 10,
+      "minPerSession": 4,
+      "maxPerSession": 80,
+      "scoreBonuses": [
+        {
+          "minScore": 95,
+          "xp": 25
+        },
+        {
+          "minScore": 85,
+          "xp": 15
+        },
+        {
+          "minScore": 70,
+          "xp": 8
+        }
+      ],
+      "perAchievement": 30
+    },
     "xpThresholds": [
       {
         "level": 1,
-        "cumulativeXp": 80
+        "cumulativeXp": 80,
+        "title": "Shower Singer"
       },
       {
         "level": 2,
-        "cumulativeXp": 240
+        "cumulativeXp": 240,
+        "title": "Humming Novice"
       },
       {
         "level": 3,
-        "cumulativeXp": 480
+        "cumulativeXp": 480,
+        "title": "Melody Seeker"
       },
       {
         "level": 4,
-        "cumulativeXp": 800
+        "cumulativeXp": 800,
+        "title": "Pitch Apprentice"
       },
       {
         "level": 5,
-        "cumulativeXp": 1200
+        "cumulativeXp": 1200,
+        "title": "Tone Crafter"
       },
       {
         "level": 6,
-        "cumulativeXp": 1680
+        "cumulativeXp": 1680,
+        "title": "Scale Runner"
       },
       {
         "level": 7,
-        "cumulativeXp": 2240
+        "cumulativeXp": 2240,
+        "title": "Range Explorer"
       },
       {
         "level": 8,
-        "cumulativeXp": 2880
+        "cumulativeXp": 2880,
+        "title": "Steady Voice"
       },
       {
         "level": 9,
-        "cumulativeXp": 3600
+        "cumulativeXp": 3600,
+        "title": "Stage Ready"
       },
       {
         "level": 10,
-        "cumulativeXp": 4400
+        "cumulativeXp": 4400,
+        "title": "Velvet Voice"
       },
       {
         "level": 11,
-        "cumulativeXp": 5280
+        "cumulativeXp": 5280,
+        "title": "Studio Regular"
       },
       {
         "level": 12,
-        "cumulativeXp": 6240
+        "cumulativeXp": 6240,
+        "title": "Vocal Athlete"
+      },
+      {
+        "level": 13,
+        "cumulativeXp": 7280,
+        "title": "Resident Soloist"
+      },
+      {
+        "level": 14,
+        "cumulativeXp": 8400,
+        "title": "Maestro"
+      },
+      {
+        "level": 15,
+        "cumulativeXp": 9600,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 16,
+        "cumulativeXp": 10880,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 17,
+        "cumulativeXp": 12240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 18,
+        "cumulativeXp": 13680,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 19,
+        "cumulativeXp": 15200,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 20,
+        "cumulativeXp": 16800,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 21,
+        "cumulativeXp": 18480,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 22,
+        "cumulativeXp": 20240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 23,
+        "cumulativeXp": 22080,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 24,
+        "cumulativeXp": 24000,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 25,
+        "cumulativeXp": 26000,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 26,
+        "cumulativeXp": 28080,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 27,
+        "cumulativeXp": 30240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 28,
+        "cumulativeXp": 32480,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 29,
+        "cumulativeXp": 34800,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 30,
+        "cumulativeXp": 37200,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 31,
+        "cumulativeXp": 39680,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 32,
+        "cumulativeXp": 42240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 33,
+        "cumulativeXp": 44880,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 34,
+        "cumulativeXp": 47600,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 35,
+        "cumulativeXp": 50400,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 36,
+        "cumulativeXp": 53280,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 37,
+        "cumulativeXp": 56240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 38,
+        "cumulativeXp": 59280,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 39,
+        "cumulativeXp": 62400,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 40,
+        "cumulativeXp": 65600,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 41,
+        "cumulativeXp": 68880,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 42,
+        "cumulativeXp": 72240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 43,
+        "cumulativeXp": 75680,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 44,
+        "cumulativeXp": 79200,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 45,
+        "cumulativeXp": 82800,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 46,
+        "cumulativeXp": 86480,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 47,
+        "cumulativeXp": 90240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 48,
+        "cumulativeXp": 94080,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 49,
+        "cumulativeXp": 98000,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 50,
+        "cumulativeXp": 102000,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 51,
+        "cumulativeXp": 106080,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 52,
+        "cumulativeXp": 110240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 53,
+        "cumulativeXp": 114480,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 54,
+        "cumulativeXp": 118800,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 55,
+        "cumulativeXp": 123200,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 56,
+        "cumulativeXp": 127680,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 57,
+        "cumulativeXp": 132240,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 58,
+        "cumulativeXp": 136880,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 59,
+        "cumulativeXp": 141600,
+        "title": "Suede Legend"
+      },
+      {
+        "level": 60,
+        "cumulativeXp": 146400,
+        "title": "Suede Legend"
       }
     ]
   },
   "rules": {
-    "masteredBy": "A song is mastered by one whole-song solo pass in performance mode scoring at or above masteryScore. A listen pass, a guided pass and a rehearsal run never master a song.",
+    "masteredBy": "A song is mastered by one whole-song solo pass in performance mode, sung at or above mastery.minTempo, scoring at or above masteryScore. A listen pass, a guided pass and a rehearsal run never master a song. Transposition never blocks mastery: fitting a song to your own range is the point of the transpose control.",
     "autoTempo": "After a scored loop: at or above autoTempoUpScore step one tempoStep up, at or below autoTempoDownScore step one down, otherwise hold. The result is clamped to [tempoMin, tempoMax] and snapped to a tempoStep grid.",
     "levelXp": "Cumulative XP for the end of level n is 40 * n * (n + 1). Level 1 starts at 0. XP past the last rung buys nothing.",
     "stars": "Three stars at 90 percent, two at 75, one at 50, none below. Native scores are 0..1 fractions and the web's are 0..100 percentages; the thresholds are the same numbers on each scale."

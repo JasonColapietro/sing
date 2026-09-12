@@ -34,6 +34,7 @@ import {
   JUDGMENTS,
   JUDGMENT_POINTS,
   JUDGMENT_THRESHOLDS,
+  MASTERY_MIN_TEMPO,
   MASTERY_SCORE,
   MAX_TRANSPOSE,
   MIN_TRANSPOSE,
@@ -46,7 +47,16 @@ import {
   TEMPO_STEP,
   TOLERANCE_CENTS,
 } from "@/components/songs/lib";
-import { LEVEL_TITLES, MAX_LEVEL, xpThreshold } from "@/lib/progress";
+import {
+  LEVEL_TITLES,
+  MAX_LEVEL,
+  XP_MAX_PER_SESSION,
+  XP_MIN_PER_SESSION,
+  XP_PER_ACHIEVEMENT,
+  XP_PER_MINUTE,
+  XP_SCORE_BONUSES,
+  xpThreshold,
+} from "@/lib/progress";
 import { STAR_THRESHOLDS } from "@/lib/stars";
 
 /**
@@ -55,7 +65,14 @@ import { STAR_THRESHOLDS } from "@/lib/stars";
  * to surface, and the native side should see it as a failing assertion rather
  * than as a version it can skip.
  */
-export const CONTRACT_VERSION = 1;
+export const CONTRACT_VERSION = 2;
+/*
+ * 2: added progress.xpEarn (the earn rate, previously unserialized), extended
+ *    progress.xpThresholds from the first 12 rungs to all MAX_LEVEL rungs and
+ *    gave each a title, and added mastery.minTempo. All three are key additions,
+ *    which this contract counts as a shape change; none of the existing values
+ *    moved.
+ */
 
 /**
  * Rules the native apps must satisfy that are not a single exported number.
@@ -64,7 +81,7 @@ export const CONTRACT_VERSION = 1;
  */
 const RULES = {
   masteredBy:
-    "A song is mastered by one whole-song solo pass in performance mode scoring at or above masteryScore. A listen pass, a guided pass and a rehearsal run never master a song.",
+    "A song is mastered by one whole-song solo pass in performance mode, sung at or above mastery.minTempo, scoring at or above masteryScore. A listen pass, a guided pass and a rehearsal run never master a song. Transposition never blocks mastery: fitting a song to your own range is the point of the transpose control.",
   autoTempo:
     "After a scored loop: at or above autoTempoUpScore step one tempoStep up, at or below autoTempoDownScore step one down, otherwise hold. The result is clamped to [tempoMin, tempoMax] and snapped to a tempoStep grid.",
   levelXp:
@@ -129,16 +146,36 @@ export function buildContract() {
       initial: INITIAL_MULTIPLIER.multiplier,
     },
     guide: { passGuidePct: { ...PASS_GUIDE_PCT } },
-    mastery: { score: MASTERY_SCORE },
+    mastery: { score: MASTERY_SCORE, minTempo: MASTERY_MIN_TEMPO },
     progress: {
       starThresholdsPercent: [...STAR_THRESHOLDS],
       maxLevel: MAX_LEVEL,
       levelTitles: [...LEVEL_TITLES],
-      // Serialized rather than described, so a native ladder can be checked
-      // rung by rung instead of by re-implementing the formula from prose.
-      xpThresholds: Array.from({ length: 12 }, (_, i) => ({
+      /**
+       * How fast a singer climbs the ladder. The rungs were already here; the
+       * rate was not, so two surfaces could pass every assertion in this file
+       * and still level singers at different speeds.
+       */
+      xpEarn: {
+        perMinute: XP_PER_MINUTE,
+        minPerSession: XP_MIN_PER_SESSION,
+        maxPerSession: XP_MAX_PER_SESSION,
+        scoreBonuses: XP_SCORE_BONUSES.map((rung) => ({ ...rung })),
+        perAchievement: XP_PER_ACHIEVEMENT,
+      },
+      // Every rung, not the first twelve. Serialized rather than described so a
+      // native ladder is checked rung by rung instead of by re-implementing the
+      // formula from prose — and stopping at 12 of 60 left rungs 13 to 60
+      // assertable only by trusting that formula.
+      xpThresholds: Array.from({ length: MAX_LEVEL }, (_, i) => ({
         level: i + 1,
         cumulativeXp: xpThreshold(i + 1),
+        /**
+         * The title shown at this level. LEVEL_TITLES has 15 entries for 60
+         * levels, so the last title repeats from level 15 on; spelled out here
+         * so a consumer does not index past the end and render undefined.
+         */
+        title: LEVEL_TITLES[Math.min(i, LEVEL_TITLES.length - 1)],
       })),
     },
     rules: RULES,

@@ -581,7 +581,7 @@ export function SongPlayer({
       loops: Math.max(loopsRef.current, finalPerLoop.length),
       mode: modeRef.current,
       pass: passRef.current,
-      mastered: isMastered(passRef.current, modeRef.current, overallScore, masteryEligibleRef.current),
+      mastered: isMastered(passRef.current, modeRef.current, overallScore, masteryEligibleRef.current, sessionTempoRef.current),
       points: pointsRef.current,
       topMultiplier: topMultiplierRef.current,
     });

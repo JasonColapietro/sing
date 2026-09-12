@@ -22,6 +22,8 @@ import { describe, expect, it } from "vitest";
 import { REFERENCE_BANDS, representativeSingers } from "./singers-analysis";
 import { SINGERS, VOICE_KINDS, pluralVoice, singersByVoiceType } from "./singers";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "./voice-types";
+import { VOICE_TYPES } from "./audio/notes";
+import { BOOK } from "./book-data";
 
 describe("voice category coverage", () => {
   it("has a note and a passaggio for every category, with no strays", () => {
@@ -177,5 +179,81 @@ describe("representativeSingers", () => {
     expect(representativeSingers("Soprano", 3).map((s) => s.slug)).toEqual(
       representativeSingers("Soprano", 3).map((s) => s.slug),
     );
+  });
+});
+
+/**
+ * The book's chapter-three passaggio list is hand-typed prose, and it had drifted
+ * badly: it printed Bass-baritone's A3-D4 under "Bass", and put Contralto,
+ * Mezzo-soprano and Soprano two to five semitones below the zones the app and
+ * the atlas publish. Nothing compared the two, so a reader following the book
+ * was working from different numbers than the product.
+ *
+ * Prose cannot be generated from the constants without a templating step the
+ * book pipeline does not have, so instead it is asserted against them.
+ */
+describe("the book's passaggio chapter agrees with VOICE_TYPE_PASSAGGIO", () => {
+  const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const label = (midi: number) => `${NOTE_NAMES[midi % 12]}${Math.floor(midi / 12) - 1}`;
+  const chapter = BOOK.find((c) => c.slug === "the-passaggio");
+
+  it("ships the chapter", () => {
+    expect(chapter, "book chapter 'the-passaggio' is missing").toBeTruthy();
+  });
+
+  it("prints every category's zone exactly as the constants define it", () => {
+    const body = chapter?.body ?? "";
+    for (const kind of VOICE_KINDS) {
+      const zone = VOICE_TYPE_PASSAGGIO[kind];
+      const expected = `**${kind}:** ${label(zone.low)} up to ${label(zone.high)}`;
+      expect(body, `chapter 3 does not state ${kind} as ${label(zone.low)}-${label(zone.high)}`).toContain(
+        expected,
+      );
+    }
+  });
+
+  /**
+   * The chapter used to say the two turning points sit "often a fourth or fifth"
+   * apart, which is true of the male rows and wrong for the female ones — the
+   * suite above pins those at three and four semitones.
+   */
+  it("does not claim a fifth between the turning points", () => {
+    expect(chapter?.body ?? "").not.toContain("fourth or fifth");
+  });
+});
+
+/**
+ * The classifier returns six categories; the editorial taxonomy publishes eight.
+ * That gap is deliberate — bass-baritone and countertenor are judgments about
+ * timbre and production, not bands a low and a high note can place you in — but
+ * it is only safe while every category the classifier CAN return routes
+ * somewhere. A classified label with no passaggio row or no reference band would
+ * render a blank or crash the page it was routed to.
+ */
+describe("every classifiable voice type routes", () => {
+  it("is a subset of the published taxonomy", () => {
+    for (const type of VOICE_TYPES) {
+      const match = VOICE_KINDS.find((kind) => kind.toLowerCase() === type.label.toLowerCase());
+      expect(match, `classifier can return ${type.label}, which is not a published voice kind`).toBeTruthy();
+    }
+  });
+
+  it("has a passaggio zone and a reference band for every label it can return", () => {
+    for (const type of VOICE_TYPES) {
+      const kind = VOICE_KINDS.find((k) => k.toLowerCase() === type.label.toLowerCase())!;
+      expect(VOICE_TYPE_PASSAGGIO[kind], `no passaggio zone for ${kind}`).toBeTruthy();
+      expect(REFERENCE_BANDS[kind], `no reference band for ${kind}`).toBeTruthy();
+    }
+  });
+
+  /**
+   * Named so the two editorial-only categories are a recorded state rather than
+   * a surprise. If the classifier ever gains one, this fails and the gap is
+   * re-decided deliberately.
+   */
+  it("records which published categories a range scan can never assign", () => {
+    const classifiable = VOICE_TYPES.map((t) => t.label.toLowerCase());
+    const unreachable = VOICE_KINDS.filter((k) => !classifiable.includes(k.toLowerCase()));
+    expect(unreachable).toEqual(["Bass-baritone", "Countertenor"]);
   });
 });
