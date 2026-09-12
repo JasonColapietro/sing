@@ -18,6 +18,7 @@ import type {
   VocalRange,
   WarmupMode,
 } from "./progress-shape";
+import { starsForScore } from "./stars";
 
 // The shape and its validators live in ./progress-shape so a server route can
 // import them without dragging this `"use client"` module along. Re-exported
@@ -638,7 +639,7 @@ export function weeklyReport(sessions: readonly SessionLog[], now = new Date()) 
     period.sessions++;
     period.durationSec += session.durationSec;
     const score = session.score;
-    period.stars += score === undefined ? 0 : score >= 90 ? 3 : score >= 75 ? 2 : score >= 50 ? 1 : 0;
+    period.stars += starsForScore(score);
   }
   return { thisWeek, lastWeek, start, lastStart };
 }

@@ -212,6 +212,18 @@ export function breathDrillDesc(drill: BreathDrillId): string {
 }
 
 /** True when the drill needs the microphone. */
+/** The drill ids, so an untrusted string from a URL can be narrowed safely. */
+export const BREATH_DRILL_IDS: BreathDrillId[] = ["sustain", "box", "farinelli"];
+
+/**
+ * Guards a `?drill=` value from a deep link. A curriculum on another origin
+ * builds these URLs, so an unknown or stale id has to fall through to the
+ * room's front page rather than render a drill that does not exist.
+ */
+export function isBreathDrillId(value: string | null | undefined): value is BreathDrillId {
+  return !!value && (BREATH_DRILL_IDS as string[]).includes(value);
+}
+
 export function breathStepNeedsMic(step: BreathStep): boolean {
   return step.drill === "sustain";
 }

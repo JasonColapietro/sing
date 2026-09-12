@@ -47,6 +47,7 @@ import {
   TOLERANCE_CENTS,
 } from "@/components/songs/lib";
 import { LEVEL_TITLES, MAX_LEVEL, xpThreshold } from "@/lib/progress";
+import { STAR_THRESHOLDS } from "@/lib/stars";
 
 /**
  * Bumped only when the *shape* changes — a key added, removed or renamed.
@@ -130,7 +131,7 @@ export function buildContract() {
     guide: { passGuidePct: { ...PASS_GUIDE_PCT } },
     mastery: { score: MASTERY_SCORE },
     progress: {
-      starThresholdsPercent: [90, 75, 50],
+      starThresholdsPercent: [...STAR_THRESHOLDS],
       maxLevel: MAX_LEVEL,
       levelTitles: [...LEVEL_TITLES],
       // Serialized rather than described, so a native ladder can be checked
