@@ -141,3 +141,48 @@ when microphone-backed song scoring lands.
 renamed. A changed value is never a version bump. A value is the thing the
 contract exists to surface, and the native side should meet it as a failing
 assertion rather than as a version it is allowed to skip.
+
+## glossary
+
+`glossary.json` holds the shared vocabulary of Suede's two instruments: every
+term in `lib/glossary.ts` with its definition, the surface where the word is
+already in use, the path that surface lives at, the domain it belongs to
+(`music`, `voice` or `guitar`) and the site that publishes it.
+
+It exists because one word can mean two things. `register` is a vocal mechanism
+and a region of the guitar neck; `support` is breath management and how the
+instrument is held; `tone` carries a general musical sense and a guitarist's
+sense of one instrument and one touch. A single definition covering both sides of
+any of those would have to be vague enough to help neither player, so a colliding
+word gets one entry per domain instead.
+
+Which means term identity is no longer the term. `termId` is still the anchor
+within one page, but `glossaryKey` — `domain:termId` — is what a map or a lookup
+has to be keyed on. Two entries sharing a `termId` never render on the same site,
+and `lib/glossary.test.ts` asserts that rather than trusting it.
+
+**One site publishes each term.** Two sites emitting `DefinedTerm` markup for one
+word compete with each other as the definitional source for it, so
+`publisherFor` sends the voice and music vocabulary here — `/glossary` renders it
+and is the only place in either repo that emits `DefinedTermSet` — and the guitar
+senses to the guitar hub, which renders them with no structured data at all. The
+contract carries the whole set regardless, guitar included, because the consumer
+needs every entry either way: it renders its own and links a reader to ours
+instead of leaving a word bare.
+
+`lib/glossary-publishing.test.tsx` renders `/glossary` and reads the markup back,
+because the edit that would leak the guitar terms is someone mapping over
+`GLOSSARY` again instead of `SING_GLOSSARY`, and no assertion about the data
+catches that.
+
+**It is generated, not written**, on the same terms as the other two.
+`glossary.ts` reshapes the live glossary and `glossary.test.ts` fails when the
+committed JSON disagrees with it. Regenerate after any change to the glossary:
+
+```bash
+CONTRACT_WRITE=1 npx vitest run contracts/glossary.test.ts
+```
+
+The term counts are pinned — in total, per domain and per publisher — so adding a
+word to the shared vocabulary is a line in a review rather than a number nobody
+looked at.

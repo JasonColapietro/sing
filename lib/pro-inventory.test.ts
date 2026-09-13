@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ATLAS, ATLAS_WORDS } from "./atlas-data";
 import { BOOK, BOOK_WORDS } from "./book-data";
-import { GLOSSARY_TERMS } from "./glossary";
+import { SING_GLOSSARY_TERMS } from "./glossary";
 import { SINGERS } from "./singers-data";
 import { SONGS, PRO_SONGS } from "@/components/songs/data";
 import { ALL_EXERCISES, EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
@@ -65,6 +65,6 @@ describe("pro inventory matches what actually ships", () => {
 
   it("counts the singers and the glossary", () => {
     expect(SINGER_COUNT).toBe(SINGERS.length);
-    expect(GLOSSARY_COUNT).toBe(GLOSSARY_TERMS.length);
+    expect(GLOSSARY_COUNT).toBe(SING_GLOSSARY_TERMS.length);
   });
 });
