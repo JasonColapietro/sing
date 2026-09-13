@@ -128,6 +128,33 @@ describe("migrating v1", () => {
     }
   });
 
+  it("returns an identical snapshot across reads, which useSyncExternalStore requires", async () => {
+    // The bug this guards: legacyRecords() re-parsed on every call and
+    // allRecords() rebuilt the merged array, so the Set cache below it never hit
+    // and getMastered() minted a new Set per read. React compares snapshots by
+    // identity, so the song library re-rendered until it hit the maximum update
+    // depth — for exactly the migrating singers the merge exists to protect.
+    installStorage({
+      [V1]: JSON.stringify(["deep-river"]),
+      [V2]: JSON.stringify([{ id: "shenandoah", at: "2026-01-01T00:00:00.000Z", conditions: clean }]),
+    });
+    const { getMastered, getMasteredRecords, recordMastered } = await load();
+
+    const first = getMastered();
+    expect(getMastered()).toBe(first);
+    expect(getMastered()).toBe(first);
+    expect(getMasteredRecords()).toBe(getMasteredRecords());
+    expect([...first].sort()).toEqual(["deep-river", "shenandoah"]);
+
+    // A write must still be seen: the cache is keyed on the stored array's
+    // identity, so it invalidates itself rather than needing to be cleared.
+    recordMastered("wayfaring-stranger", clean);
+    const second = getMastered();
+    expect(second).not.toBe(first);
+    expect([...second].sort()).toEqual(["deep-river", "shenandoah", "wayfaring-stranger"]);
+    expect(getMastered()).toBe(second);
+  });
+
   it("does not rewrite v1, so an older tab still works", async () => {
     const store = installStorage({ [V1]: JSON.stringify(["deep-river"]) });
     const { recordMastered, getMastered } = await load();

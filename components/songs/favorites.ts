@@ -271,21 +271,34 @@ function reviveRecord(v: unknown): MasteryRecord | null {
   return { id: r.id, at: r.at, conditions: isConditions(r.conditions) ? r.conditions : null };
 }
 
-/** v1 ids, read once so a returning singer keeps what they earned. */
+/**
+ * v1 ids, read once so a returning singer keeps what they earned.
+ *
+ * Cached, and the cache is load-bearing rather than an optimisation: this feeds
+ * `allRecords`, which feeds the `useSyncExternalStore` snapshot, and React
+ * compares snapshots by identity. Re-parsing here minted a new array on every
+ * read, which defeated the Set cache below and re-rendered forever — for exactly
+ * the migrating singers this merge exists to protect. Nothing in this app writes
+ * the v1 key any more, so one read is the whole story; the SSR path is not cached
+ * because it is answering a different question.
+ */
+let legacyCache: readonly MasteryRecord[] | null = null;
+
 function legacyRecords(): readonly MasteryRecord[] {
   if (typeof window === "undefined") return NO_MASTERED;
+  if (legacyCache !== null) return legacyCache;
   try {
     const raw = window.localStorage.getItem(LEGACY_MASTERED_KEY);
-    if (raw === null) return NO_MASTERED;
+    if (raw === null) return (legacyCache = NO_MASTERED);
     const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return NO_MASTERED;
-    return Object.freeze(
+    if (!Array.isArray(parsed)) return (legacyCache = NO_MASTERED);
+    return (legacyCache = Object.freeze(
       parsed
         .filter((v): v is string => typeof v === "string")
         .map((id) => ({ id, at: "", conditions: null })),
-    );
+    ));
   } catch {
-    return NO_MASTERED;
+    return (legacyCache = NO_MASTERED);
   }
 }
 
@@ -303,13 +316,26 @@ const mastered = createLocalStore<readonly MasteryRecord[]>(MASTERED_KEY, NO_MAS
  * their v1 data intact. A song present in both keeps its v2 record, which is the
  * one that carries conditions.
  */
+let mergedCache: {
+  current: readonly MasteryRecord[];
+  legacy: readonly MasteryRecord[];
+  merged: readonly MasteryRecord[];
+} | null = null;
+
 function allRecords(): readonly MasteryRecord[] {
   const current = mastered.get();
   const legacy = legacyRecords();
   if (legacy.length === 0) return current;
+  // Keyed on both inputs, so a write to v2 invalidates it by changing `current`'s
+  // identity and nothing has to remember to clear it.
+  if (mergedCache !== null && mergedCache.current === current && mergedCache.legacy === legacy) {
+    return mergedCache.merged;
+  }
   const known = new Set(current.map((r) => r.id));
   const extra = legacy.filter((r) => !known.has(r.id));
-  return extra.length === 0 ? current : Object.freeze([...current, ...extra]);
+  const merged = extra.length === 0 ? current : Object.freeze([...current, ...extra]);
+  mergedCache = { current, legacy, merged };
+  return merged;
 }
 
 /**
