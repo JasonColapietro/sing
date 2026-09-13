@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import { RangeTest } from "@/components/range/range-test";
 import { SITE_URL } from "@/lib/site";
@@ -35,6 +36,17 @@ export default function RangePage() {
     <>
       <RangeTest />
       <RoomRailBand current="/range" />
+      <section className="mx-auto max-w-4xl px-4 py-8" aria-label="Where this test lives">
+        <p className="rounded-2xl border border-line bg-panel p-5 leading-relaxed text-mut">
+          This is the test itself, free in the browser and with nothing to
+          install. The same measurement ships inside the mobile app, and{" "}
+          <Link href="/voice" className="text-violet-ink underline underline-offset-4">
+            the Suede Voice app page
+          </Link>{" "}
+          is where you download that. Come here to take the test. Go there to put
+          it on a phone.
+        </p>
+      </section>
       <section className="mx-auto max-w-4xl px-4 py-8" aria-label="Singing with guitar">
         <p className="rounded-2xl border border-line bg-panel p-5 leading-relaxed text-mut">
           Singing with a guitarist? Once you know the most comfortable key for your voice, use{" "}
