@@ -65,8 +65,12 @@ export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
 /** Singers with a measured range and a page of their own. Free to read. */
 export const SINGER_COUNT = 636;
 
-/** Terms defined in the free glossary. */
-export const GLOSSARY_COUNT = 31;
+/**
+ * Terms defined in the free glossary on this site. The shared set is larger:
+ * the guitar senses live in it too, and the guitar hub publishes those, so
+ * counting them here would promise a singer pages this site does not have.
+ */
+export const GLOSSARY_COUNT = 42;
 
 /** Practice rooms, all free. */
 export const ROOM_COUNT = 10;

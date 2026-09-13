@@ -5,9 +5,13 @@ import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/
 import { ORG_ID, ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
-const TITLE = "Suede Voice: Vocal Range Test for iPhone & Android";
+// Deliberately not "Suede Voice: Vocal Range Test", which is the store name:
+// that exact string is also the title of /range, the free browser test, and the
+// two pages were bidding against each other for one query while answering two
+// different intents. This page is the install; /range is the test.
+const TITLE = "Download Suede Voice: the Vocal Practice App for iPhone & Android";
 const DESCRIPTION =
-  "Meet Suede Voice, the vocal range and singing practice app from Suede Labs AI. Get the official iPhone or Android app, or try Suede Sing in your browser.";
+  "Download Suede Voice, the vocal range and singing practice app from Suede Labs AI, for iPhone or Android. To run the test in a browser with no install, open Suede Sing instead.";
 const PAGE_URL = `${SITE_URL}${VOICE_PAGE_PATH}`;
 
 export const metadata: Metadata = {
@@ -85,7 +89,9 @@ export default function VoicePage() {
             your next session count.
           </p>
           <p className="mt-5 max-w-xl text-mut">
-            Prefer to start without an install? <Link href="/range" className="text-violet-ink underline underline-offset-4">Try the free vocal range test</Link> in Suede Sing, our browser studio.
+            This page is the app download rather than the test itself. If you
+            want the test, it is free in the browser and needs no install:{" "}
+            <Link href="/range" className="text-violet-ink underline underline-offset-4">take the vocal range test</Link> in Suede Sing, our browser studio.
           </p>
         </div>
         <div className="rounded-2xl border border-line bg-panel p-6 sm:p-8">

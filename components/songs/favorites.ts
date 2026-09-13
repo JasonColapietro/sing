@@ -2,6 +2,8 @@
 
 import { useSyncExternalStore } from "react";
 
+import { MASTERY_MIN_TEMPO, MASTERY_SCORE } from "./lib";
+
 /**
  * Browse memory: which songs the singer starred, and which they sang last.
  *
@@ -14,7 +16,17 @@ import { useSyncExternalStore } from "react";
 
 const FAV_KEY = "suede-sing:song-favorites:v1";
 const RECENT_KEY = "suede-sing:song-recents:v1";
-const MASTERED_KEY = "suede-sing:mastered:v1";
+/**
+ * Mastery moved to a v2 key rather than upgrading v1 in place.
+ *
+ * v1 is a bare `string[]`; v2 is an array of records. Writing records into the
+ * v1 key would make a rollback to an older deploy read them with
+ * `filter(typeof v === "string")` and see zero masteries — every band unlock
+ * gone. Leaving v1 where it is costs a few hundred bytes and makes the migration
+ * survivable in both directions.
+ */
+const MASTERED_KEY = "suede-sing:mastered:v2";
+const LEGACY_MASTERED_KEY = "suede-sing:mastered:v1";
 
 /** A karaoke night's worth of history; past that, older entries stop earning rent. */
 const MAX_RECENTS = 24;
@@ -195,28 +207,198 @@ export function relativeTime(iso: string): string {
 /* --------------------------------------------------------------- mastered */
 
 /**
- * Songs mastered by a clean solo pass — see `isMastered` in ./lib.
+ * What a song was mastered *under* — the half that used to be thrown away.
  *
- * Callers want a Set (the library asks "is this one mastered?" once per card)
- * but JSON cannot carry one, so the store keeps the ids as an array and the
- * Set is minted from it and cached against that array's identity. Returning a
- * fresh Set on every read would re-render forever, as `get` warns above.
+ * The store was a bare array of song ids. That made two things impossible. The
+ * gate could not be re-evaluated: when mastery gained a tempo floor, every
+ * record already on disk had been earned under no floor at all, possibly at
+ * quarter speed, and was indistinguishable from a clean pass at written tempo —
+ * so fixing the rule did not fix the records it was wrong about. And a mastery
+ * could not be audited: a singer looking at a mastered badge, or anyone looking
+ * at a band unlock, had no way to ask what run earned it.
+ *
+ * So the conditions are stored and the gate is applied on read. Raising
+ * `MASTERY_SCORE` or `MASTERY_MIN_TEMPO` now retroactively stops counting the
+ * records that no longer clear it, with no migration.
  */
-const NO_MASTERED: readonly string[] = Object.freeze([]);
+export interface MasteryConditions {
+  /** The tempo multiplier the run ended on. Gated: see MASTERY_MIN_TEMPO. */
+  tempo: number;
+  /**
+   * Semitones transposed. Recorded and deliberately never gated — fitting a
+   * song to your own range is the point of the transpose control. Recording it
+   * is what lets an audit see the run without changing what qualifies.
+   */
+  transpose: number;
+  /** Overall score, 0..100. Gated: see MASTERY_SCORE. */
+  score: number;
+  /** `melodyFingerprint` of the song as it was when this was earned. */
+  melody: string;
+}
+
+export interface MasteryRecord {
+  id: string;
+  /** ISO timestamp. */
+  at: string;
+  /**
+   * `null` for a record migrated from v1, which carried no conditions. Those
+   * cannot be verified and must not claim to be: see `masteryHolds`.
+   */
+  conditions: MasteryConditions | null;
+}
+
+const NO_MASTERED: readonly MasteryRecord[] = Object.freeze([]);
 const EMPTY_MASTERED: ReadonlySet<string> = new Set<string>();
 
-const mastered = createLocalStore<readonly string[]>(MASTERED_KEY, NO_MASTERED, (raw) =>
-  Array.isArray(raw)
-    ? Object.freeze(raw.filter((v): v is string => typeof v === "string"))
-    : NO_MASTERED,
-);
+function isConditions(v: unknown): v is MasteryConditions {
+  if (typeof v !== "object" || v === null) return false;
+  const c = v as Partial<MasteryConditions>;
+  return (
+    typeof c.tempo === "number" && Number.isFinite(c.tempo) &&
+    typeof c.transpose === "number" && Number.isFinite(c.transpose) &&
+    typeof c.score === "number" && Number.isFinite(c.score) &&
+    typeof c.melody === "string" && c.melody.length > 0
+  );
+}
 
-let masteredSetCache: { ids: readonly string[]; set: ReadonlySet<string> } | null = null;
+function reviveRecord(v: unknown): MasteryRecord | null {
+  if (typeof v !== "object" || v === null) return null;
+  const r = v as Partial<MasteryRecord>;
+  if (typeof r.id !== "string" || !r.id || typeof r.at !== "string") return null;
+  // An unrecognisable conditions blob degrades to "unverifiable" rather than
+  // being dropped: a hand-edited or truncated value should cost the audit, not
+  // the singer's unlock.
+  return { id: r.id, at: r.at, conditions: isConditions(r.conditions) ? r.conditions : null };
+}
 
+/**
+ * v1 ids, read once so a returning singer keeps what they earned.
+ *
+ * Cached, and the cache is load-bearing rather than an optimisation: this feeds
+ * `allRecords`, which feeds the `useSyncExternalStore` snapshot, and React
+ * compares snapshots by identity. Re-parsing here minted a new array on every
+ * read, which defeated the Set cache below and re-rendered forever — for exactly
+ * the migrating singers this merge exists to protect. Nothing in this app writes
+ * the v1 key any more, so one read is the whole story; the SSR path is not cached
+ * because it is answering a different question.
+ */
+let legacyCache: readonly MasteryRecord[] | null = null;
+
+function legacyRecords(): readonly MasteryRecord[] {
+  if (typeof window === "undefined") return NO_MASTERED;
+  if (legacyCache !== null) return legacyCache;
+  try {
+    const raw = window.localStorage.getItem(LEGACY_MASTERED_KEY);
+    if (raw === null) return (legacyCache = NO_MASTERED);
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return (legacyCache = NO_MASTERED);
+    return (legacyCache = Object.freeze(
+      parsed
+        .filter((v): v is string => typeof v === "string")
+        .map((id) => ({ id, at: "", conditions: null })),
+    ));
+  } catch {
+    return (legacyCache = NO_MASTERED);
+  }
+}
+
+const mastered = createLocalStore<readonly MasteryRecord[]>(MASTERED_KEY, NO_MASTERED, (raw) => {
+  if (!Array.isArray(raw)) return NO_MASTERED;
+  const records = raw.map(reviveRecord).filter((r): r is MasteryRecord => r !== null);
+  return Object.freeze(records);
+});
+
+/**
+ * Every record, v2 plus anything still only in v1.
+ *
+ * The merge happens on read rather than by rewriting v1 into v2, so the
+ * migration is idempotent and a singer who opens an older tab later still finds
+ * their v1 data intact. A song present in both keeps its v2 record, which is the
+ * one that carries conditions.
+ */
+let mergedCache: {
+  current: readonly MasteryRecord[];
+  legacy: readonly MasteryRecord[];
+  merged: readonly MasteryRecord[];
+} | null = null;
+
+function allRecords(): readonly MasteryRecord[] {
+  const current = mastered.get();
+  const legacy = legacyRecords();
+  if (legacy.length === 0) return current;
+  // Keyed on both inputs, so a write to v2 invalidates it by changing `current`'s
+  // identity and nothing has to remember to clear it.
+  if (mergedCache !== null && mergedCache.current === current && mergedCache.legacy === legacy) {
+    return mergedCache.merged;
+  }
+  const known = new Set(current.map((r) => r.id));
+  const extra = legacy.filter((r) => !known.has(r.id));
+  const merged = extra.length === 0 ? current : Object.freeze([...current, ...extra]);
+  mergedCache = { current, legacy, merged };
+  return merged;
+}
+
+/**
+ * Whether a record still satisfies today's mastery rule.
+ *
+ * A record with conditions is re-judged against the current constants, which is
+ * the entire point of storing them. A record without them — migrated from v1 —
+ * is honoured: it was earned under whatever rule was in force at the time, and
+ * silently revoking someone's unlock because this app once failed to write down
+ * the tempo is a cost to put on the app, not on the singer. `isVerified` is how
+ * a caller tells the two apart without guessing.
+ */
+export function masteryHolds(record: MasteryRecord): boolean {
+  if (record.conditions === null) return true;
+  return (
+    record.conditions.tempo >= MASTERY_MIN_TEMPO &&
+    record.conditions.score >= MASTERY_SCORE
+  );
+}
+
+/** Whether this mastery can be checked at all. False only for v1 records. */
+export function isVerified(record: MasteryRecord): boolean {
+  return record.conditions !== null;
+}
+
+/**
+ * Records whose stored melody no longer matches the song as it is now.
+ *
+ * Returned rather than revoked. A transcription fix means the mastery was earned
+ * on different content, which an auditor should see; whether it should also cost
+ * the singer their unlock is a product decision, and this function is what makes
+ * that decision possible to take later instead of impossible to take at all.
+ */
+export function staleMasteries(
+  songs: readonly { id: string; notes: unknown[] }[],
+  fingerprint: (song: never) => string,
+): MasteryRecord[] {
+  const byId = new Map(songs.map((song) => [song.id, song]));
+  return allRecords().filter((record) => {
+    const song = byId.get(record.id);
+    if (!song || record.conditions === null) return false;
+    return fingerprint(song as never) !== record.conditions.melody;
+  });
+}
+
+export function getMasteredRecords(): readonly MasteryRecord[] {
+  return allRecords();
+}
+
+let masteredSetCache: { records: readonly MasteryRecord[]; set: ReadonlySet<string> } | null = null;
+
+/**
+ * The ids that count as mastered today.
+ *
+ * Callers want a Set (the library asks "is this one mastered?" once per card)
+ * but JSON cannot carry one, so the store keeps records and the Set is minted
+ * from them and cached against the array's identity. Returning a fresh Set on
+ * every read would re-render forever, as `get` warns above.
+ */
 function masteredSnapshot(): ReadonlySet<string> {
-  const ids = mastered.get();
-  if (masteredSetCache === null || masteredSetCache.ids !== ids) {
-    masteredSetCache = { ids, set: new Set(ids) };
+  const records = allRecords();
+  if (masteredSetCache === null || masteredSetCache.records !== records) {
+    masteredSetCache = { records, set: new Set(records.filter(masteryHolds).map((r) => r.id)) };
   }
   return masteredSetCache.set;
 }
@@ -238,11 +420,20 @@ export function useMastered(): ReadonlySet<string> {
 }
 
 /**
- * Record a song as mastered. Idempotent: mastering it twice is not news, and
- * skipping the write keeps a repeat solo pass from waking every subscriber.
+ * Record a song as mastered, with the conditions it was earned under.
+ *
+ * Re-mastering an already-recorded song replaces the record when the new run
+ * clears today's rule, so a singer who masters a song again at written tempo
+ * upgrades an unverified or now-failing record instead of being stuck with it.
+ * Otherwise the write is skipped, which keeps a repeat pass from waking every
+ * subscriber.
  */
-export function recordMastered(id: string): void {
+export function recordMastered(id: string, conditions: MasteryConditions): void {
   const current = mastered.get();
-  if (current.includes(id)) return;
-  mastered.set(Object.freeze([...current, id]));
+  const existing = current.find((r) => r.id === id);
+  const record: MasteryRecord = { id, at: new Date().toISOString(), conditions };
+  if (existing && isVerified(existing) && masteryHolds(existing)) return;
+  mastered.set(
+    Object.freeze(existing ? current.map((r) => (r.id === id ? record : r)) : [...current, record]),
+  );
 }

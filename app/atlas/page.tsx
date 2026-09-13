@@ -175,6 +175,16 @@ export default function AtlasPage() {
             ({AUTHOR_ALIAS}). Published by Suede Labs.
           </p>
           <p className="mt-5 max-w-3xl text-mut">
+            This is the written study rather than the chart. The numbers on one
+            keyboard, searchable and with your own range overlaid, are the{" "}
+            <Link href="/singers" className="text-violet-ink hover:underline">
+              famous vocal ranges chart
+            </Link>
+            ; this book is where the same voices are explained voice by voice.
+            Read the chart for the figure. Read this for how the voice was built
+            and what borrowing from it costs.
+          </p>
+          <p className="mt-5 max-w-3xl text-mut">
             One book for the question every singer eventually types into a
             search bar: <em>what is their vocal range — and how do they do
             that?</em> Six method chapters teach you to read a range claim,

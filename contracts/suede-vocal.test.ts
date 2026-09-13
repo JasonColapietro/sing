@@ -26,6 +26,10 @@ import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
 import { isFreeExercise } from "@/components/warmups/routines";
 import { SUSTAIN_BENCHMARKS_SEC, SUSTAIN_STAR_SEC } from "@/components/breath/routines";
 import { starsForSustain } from "@/components/breath/store";
+import { BOOK_CONTENTS, BOOK_WORDS } from "@/lib/book-data";
+import { ATLAS_CONTENTS, ATLAS_WORDS } from "@/lib/atlas-data";
+import { POP_SONGS, popDifficulty } from "@/lib/pop-songs";
+import { SINGERS } from "@/lib/singers-data";
 
 const FILE = fileURLToPath(new URL("./suede-vocal.json", import.meta.url));
 const SUSTAIN_SRC = fileURLToPath(
@@ -68,6 +72,7 @@ describe("suede-vocal contract", () => {
         "contract",
         "deepLinks",
         "earTraining",
+        "editorial",
         "knownDivergences",
         "measurement",
         "pitch",
@@ -263,6 +268,124 @@ describe("suede-vocal contract", () => {
           expect(row.measurable, `${claim} recommends unmeasurable ${key}`).toBe("yes");
         }
       }
+    });
+  });
+
+  /**
+   * The editorial section exists so GuitarHub can cite this library through an
+   * identifier instead of a hand-written URL. Three things have to hold for
+   * that to be worth anything: the identifiers have to be the real ones, the
+   * gate has to be the real gate, and the prose has to stay here.
+   */
+  describe("the editorial library", () => {
+    it("publishes every chapter of both books, with its resolved path", () => {
+      const { book, atlas } = buildContract().editorial;
+
+      expect(book.chapters.length).toBe(BOOK_CONTENTS.length);
+      expect(atlas.chapters.length).toBe(ATLAS_CONTENTS.length);
+      expect(book.totalWords).toBe(BOOK_WORDS);
+      expect(atlas.totalWords).toBe(ATLAS_WORDS);
+
+      for (const shelf of [book, atlas]) {
+        for (const chapter of shelf.chapters) {
+          expect(chapter.path, `chapter ${chapter.slug} has no resolved path`).toBe(
+            `${shelf.pathPrefix}/${chapter.slug}`,
+          );
+          expect(chapter.title, `chapter ${chapter.slug} has no title`).toBeTruthy();
+          expect(chapter.summary, `chapter ${chapter.slug} has no summary`).toBeTruthy();
+          expect(chapter.words, `chapter ${chapter.slug} has no word count`).toBeGreaterThan(0);
+        }
+      }
+    });
+
+    /**
+     * The gate is the field a citing surface has to read, because most of this
+     * library is behind Pro and a free lesson citing a gated chapter without
+     * saying so sends a singer at a paywall it did not mention. So it has to be
+     * the compiled content's own flag rather than anything re-derived.
+     */
+    it("reports each chapter's gate as the content itself reports it", () => {
+      const { book, atlas } = buildContract().editorial;
+      const bySlug = new Map(
+        [...BOOK_CONTENTS, ...ATLAS_CONTENTS].map((c) => [c.slug, c.free] as const),
+      );
+      for (const chapter of [...book.chapters, ...atlas.chapters]) {
+        expect(chapter.free, `${chapter.slug} gate disagrees with the compiled content`).toBe(
+          bySlug.get(chapter.slug),
+        );
+      }
+      // And the gate must not be vacuous in either direction: if everything
+      // were free, or nothing were, a consumer's disclosure logic would never
+      // be exercised.
+      const all = [...book.chapters, ...atlas.chapters];
+      expect(all.some((c) => c.free)).toBe(true);
+      expect(all.some((c) => !c.free)).toBe(true);
+    });
+
+    /**
+     * The whole point of citing rather than copying. If a body ever reached the
+     * contract, GuitarHub would vendor 104,000 words of this app's writing and
+     * the two sites would start competing to be the place it lives.
+     */
+    it("carries no chapter body", () => {
+      const { book, atlas } = buildContract().editorial;
+      for (const chapter of [...book.chapters, ...atlas.chapters]) {
+        expect(Object.keys(chapter)).not.toContain("body");
+        expect(Object.keys(chapter)).not.toContain("entries");
+      }
+      // A summary is an abstract; a body is not. Nothing here should be long.
+      const longest = Math.max(
+        ...[...book.chapters, ...atlas.chapters].map((c) => c.summary.length),
+      );
+      expect(longest).toBeLessThan(600);
+    });
+
+    it("publishes the popular-song catalogue with key, range and derived difficulty", () => {
+      const { repertoire } = buildContract().editorial;
+      expect(repertoire.songs.length).toBe(POP_SONGS.length);
+      expect(repertoire.scored).toBe(false);
+
+      const source = new Map(POP_SONGS.map((s) => [s.slug, s] as const));
+      for (const song of repertoire.songs) {
+        const original = source.get(song.slug);
+        expect(original, `${song.slug} is not in POP_SONGS`).toBeTruthy();
+        expect(song.key, `${song.slug} has no key`).toBeTruthy();
+        expect(song.lowMidi).toBe(original!.lowMidi);
+        expect(song.highMidi).toBe(original!.highMidi);
+        expect(song.spanSemitones).toBe(original!.highMidi - original!.lowMidi);
+        expect(song.difficulty, `${song.slug} difficulty was authored, not derived`).toBe(
+          popDifficulty(original!),
+        );
+        expect(song.path).toBe(`${repertoire.pathPrefix}/${song.slug}`);
+      }
+    });
+
+    /**
+     * 636 records is not a list a consuming curriculum should vendor. What it
+     * needs to know is that every record carries a written technique paragraph
+     * rather than only a range, because that is the thing worth citing.
+     */
+    it("counts the singer library rather than enumerating it", () => {
+      const { singers } = buildContract().editorial;
+      expect(singers.count).toBe(SINGERS.length);
+      expect(singers.withTechnique).toBe(SINGERS.filter((s) => s.technique !== null).length);
+      expect(singers.withTechnique).toBe(singers.count);
+      expect(Object.keys(singers)).not.toContain("records");
+    });
+
+    /**
+     * The band grid is a page, not a chapter. The voice-types chapter refuses
+     * to print it on purpose, so a consumer that wants the grid has to be sent
+     * to the page that answers the question.
+     */
+    it("points the band grid at the page that prints it", () => {
+      const { referenceTables, atlas } = buildContract().editorial;
+      const table = referenceTables.vocalRangeByVoiceType;
+      expect(table.path).toBe("/atlas/vocal-range-by-voice-type");
+      expect(table.free).toBe(true);
+      // It must not be mistaken for a chapter, or a consumer resolving it
+      // through the chapter list would find nothing.
+      expect(atlas.chapters.some((c) => c.path === table.path)).toBe(false);
     });
   });
 

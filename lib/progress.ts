@@ -35,7 +35,18 @@ export interface Achievement {
   check: (s: ProgressState) => boolean;
 }
 
-const KEY = "suede-sing:progress:v1";
+/**
+ * Where the record lives in localStorage.
+ *
+ * Exported for contracts/suede-progress.ts, which publishes it. A consumer
+ * holding an exported record needs to know which key produced it, and the
+ * version suffix is the only thing distinguishing this schema from a future
+ * one — a consumer that hard-codes the string cannot notice when that suffix
+ * moves. Nothing outside this module should read or write the key itself.
+ */
+export const PROGRESS_STORAGE_KEY = "suede-sing:progress:v1";
+
+const KEY = PROGRESS_STORAGE_KEY;
 
 const DEFAULT = DEFAULT_PROGRESS;
 

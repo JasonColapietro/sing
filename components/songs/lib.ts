@@ -429,6 +429,35 @@ export function isMastered(
   );
 }
 
+/**
+ * A stable fingerprint of a song's written melody.
+ *
+ * Mastery records store this so a past mastery can be audited against the song
+ * as it is today. A transcription fix — a corrected pitch, a re-barred phrase —
+ * means the run that earned the mastery was a run at different content, and
+ * without a fingerprint there is no way to know that happened.
+ *
+ * Only the musically identifying fields go in: pitch, onset, duration, and the
+ * note count. Lyrics, line numbers and word breaks are presentation, so fixing a
+ * syllable break must not invalidate anyone's mastery. Transposition is excluded
+ * on purpose — it shifts every note equally, so it is a property of the run and
+ * is recorded alongside the fingerprint rather than inside it.
+ *
+ * FNV-1a over a canonical string: short, dependency-free and deterministic. It
+ * is a change detector, not a security primitive.
+ */
+export function melodyFingerprint(song: Song): string {
+  const canonical = `${song.notes.length}|${song.notes
+    .map((n) => `${Math.round(n.midi)}:${n.startBeat.toFixed(4)}:${n.durBeats.toFixed(4)}`)
+    .join(",")}`;
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < canonical.length; i++) {
+    hash ^= canonical.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return hash.toString(16).padStart(8, "0");
+}
+
 export interface SessionSummaryData {
   song: Song;
   /** Which mode the run was sung in. */

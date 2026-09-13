@@ -117,6 +117,19 @@ export default function SingersPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {/* This page is the chart and the Voice Atlas is the book about the same
+          voices. Both opened on "famous singers' vocal ranges", so each carried
+          half of one query; the line below says which page answers what. */}
+      <p className="max-w-3xl text-mut">
+        This page is the chart: every cited range on one keyboard, filterable,
+        with your own range overlaid on top of them. It reports the figures
+        rather than explaining them. The{" "}
+        <Link href="/atlas" className="text-violet-ink hover:underline">
+          Voice Atlas
+        </Link>{" "}
+        is the book that explains them, voice by voice. Come here for the number.
+        Go there for how the voice does it.
+      </p>
       <SingersDirectory />
       <SingerCrawlIndex />
 

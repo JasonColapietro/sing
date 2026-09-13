@@ -3,13 +3,18 @@ import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { AUTHOR_NODE } from "@/lib/author";
-import { GLOSSARY, GLOSSARY_TERMS, roomLabel, termId } from "@/lib/glossary";
+import {
+  roomLabel,
+  SING_GLOSSARY,
+  SING_GLOSSARY_TERMS,
+  termId,
+} from "@/lib/glossary";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
 
 const TITLE = "Singing Terms Glossary — Passaggio, Cents, Tessitura";
-const DESCRIPTION = `What ${GLOSSARY_TERMS.length} singing terms actually mean, in one sentence each: passaggio, tessitura, cents, chest and head voice, falsetto, whistle register, vocal fry, the singer's formant and the rest of the vocabulary Suede Sing uses. Free, with the room in the app where each word shows up.`;
+const DESCRIPTION = `What ${SING_GLOSSARY_TERMS.length} singing terms actually mean, in one sentence each: passaggio, tessitura, cents, chest and head voice, falsetto, whistle register, vocal fry, the singer's formant and the rest of the vocabulary Suede Sing uses. Free, with the room in the app where each word shows up.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   title: TITLE,
@@ -36,7 +41,7 @@ export default function GlossaryPage() {
     author: AUTHOR_NODE,
     publisher: ORG_PUBLISHER_NODE,
     isPartOf: { "@id": `${SITE_URL}/#website` },
-    hasDefinedTerm: GLOSSARY_TERMS.map((entry) => ({
+    hasDefinedTerm: SING_GLOSSARY_TERMS.map((entry) => ({
       "@type": "DefinedTerm",
       "@id": `${SITE_URL}/glossary#${termId(entry.term)}`,
       name: entry.term,
@@ -68,7 +73,7 @@ export default function GlossaryPage() {
             Vocal teaching runs on borrowed words. Half of them arrived from
             three different traditions that never agreed with each other, and
             the rest describe a sensation rather than a mechanism. This page
-            takes the {GLOSSARY_TERMS.length} that turn up in this app — on the
+            takes the {SING_GLOSSARY_TERMS.length} that turn up in this app — on the
             range result, in the studio readout, across the singer pages — and
             gives each one a single sentence, plus the place it shows up so the
             definition has somewhere to land.
@@ -85,7 +90,7 @@ export default function GlossaryPage() {
             do that part, and none of this is medical advice.
           </p>
           <nav aria-label="Sections" className="mt-5 flex flex-wrap gap-2">
-            {GLOSSARY.map((section) => (
+            {SING_GLOSSARY.map((section) => (
               <a
                 key={section.heading}
                 href={`#${termId(section.heading)}`}
@@ -97,7 +102,7 @@ export default function GlossaryPage() {
           </nav>
         </Card>
 
-        {GLOSSARY.map((section) => (
+        {SING_GLOSSARY.map((section) => (
           <Card key={section.heading}>
             <h2 id={termId(section.heading)} className="scroll-mt-20 text-xl">
               {section.heading}

@@ -29,10 +29,22 @@
  * its lesson claims against it. A claim with no backing measurement becomes a
  * failing test instead of a promise to a singer that the product cannot keep.
  *
+ * Version 2 adds the `editorial` section, for the other half of the same
+ * problem. This app holds the writing — the book, the atlas, the singer library
+ * and the popular-song range catalogue — and GuitarHub holds a voice curriculum
+ * that names no repertoire and cites no reading. Publishing the chapter and song
+ * identifiers lets that curriculum cite this library through a contract instead
+ * of through hand-written URLs, and lets a renamed chapter fail a test there
+ * rather than rot into a dead link.
+ *
  * It is generated, not written: every number is imported from the modules the
  * app runs on, exactly like `practice-parity.ts`. See contracts/README.md.
  */
 import { VOICE_TYPE_PASSAGGIO, type VoiceTypePassaggio } from "@/lib/voice-types";
+import { ATLAS_CONTENTS, ATLAS_SUBTITLE, ATLAS_TITLE, ATLAS_WORDS } from "@/lib/atlas-data";
+import { BOOK_CONTENTS, BOOK_SUBTITLE, BOOK_TITLE, BOOK_WORDS } from "@/lib/book-data";
+import { POP_SONGS, popDifficulty, popRangeLabel } from "@/lib/pop-songs";
+import { SINGERS } from "@/lib/singers-data";
 import { REFERENCE_BANDS } from "@/lib/singers-analysis";
 import { VOICE_KINDS } from "@/lib/singers-core";
 import { A4, VOICE_TYPES } from "@/lib/audio/notes";
@@ -73,7 +85,7 @@ import {
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 1;
+export const CONTRACT_VERSION = 2;
 
 /**
  * Every measurement this app can take from a microphone, and every one a
@@ -151,10 +163,34 @@ const MEASUREMENTS = {
     note: "Share of energy in a fixed 2800-3200 Hz band. Self-relative only: compare a singer against their own takes, never against a target or another singer. NOT a strain measure.",
   },
   unbrokenPhraseLength: {
-    measurable: "adaptable",
+    measurable: "yes",
     unit: "seconds",
+    module: "lib/audio/voiced-run.ts",
+    note: "Longest stretch with a confident fundamental on every frame, bridging unvoiced gaps up to 60 ms so a dropped frame does not end a run. Reduced from the voiced/unvoiced trace and reported by analyzeTake. It says continuous phonation and nothing else: a register crack stays voiced, so this is not the absence of a crack, and a whisper ends a run, so it is not proof the singer did not stop.",
+  },
+  registerBreakDetection: {
+    measurable: "no",
+    unit: null,
     module: null,
-    note: "The voiced/unvoiced trace already carries this; no function reduces it to a longest-run number.",
+    note: "Nothing detects an audible break or crack at a register transition. This is the measurement a siren module needs and it is NOT unbrokenPhraseLength: a crack stays voiced, so a longest-voiced-run figure reports one continuous run straight through one. Recorded because that substitution had been made, and it made a module look one reducer away from provable when nothing addresses it.",
+  },
+  keyAdherence: {
+    measurable: "no",
+    unit: null,
+    module: null,
+    note: "Nothing scores whether free singing stayed in a key. Scored songs compare against authored notes, which is a different problem: there is no authored target in an improvisation, so there is nothing to deviate from.",
+  },
+  ornamentClassification: {
+    measurable: "no",
+    unit: null,
+    module: null,
+    note: "Nothing names a turn, a slide, a scoop or a trill from the pitch contour. The contour is drawn and a singer can see the gesture; no function labels it.",
+  },
+  improvisationQuality: {
+    measurable: "no",
+    unit: null,
+    module: null,
+    note: "Nothing in Suede judges whether a passage was improvised, or improvised well over a given harmony. A longest-voiced-run figure is sometimes mistaken for this because an improvisation module can be scored on not stopping; it establishes that a sound continued, not that anything was invented. Recorded so a module whose promise is improvisation names the gap it actually has.",
   },
   onsetTimingError: {
     measurable: "adaptable",
@@ -178,7 +214,7 @@ const MEASUREMENTS = {
     measurable: "no",
     unit: null,
     module: null,
-    note: "No chest/head/falsetto classification on the web. The iOS app reports a single H1-H2 derived boundary, which is a different and narrower claim.",
+    note: "No chest/head/falsetto classification on any Suede surface. This row used to say the iOS app reports a single H1-H2 derived boundary; that was false and is corrected here — the iOS app has no spectral analysis at all, its pitch estimator is time-domain YIN, and its only vocal surface plots f0 and latches range extremes. `lib/audio/register-mechanism.ts` now computes H1-H2 as a pure function against one boundary that is chosen rather than validated, and nothing calls it from a live take. Even once something does, the boundary it settles is the heavier laryngeal mechanism against the lighter; the pedagogical chest and head both sit inside the heavier one, so it will not answer a chest-versus-head question.",
   },
   vowelOrFormant: {
     measurable: "no",
@@ -296,6 +332,86 @@ const KNOWN_DIVERGENCES = {
   },
 } as const;
 
+/**
+ * The written library, published as identifiers instead of as prose.
+ *
+ * GuitarHub teaches a voice curriculum and writes none of this. Its seven
+ * levels name no repertoire at all, and the reading a singer would need for
+ * registers, the passaggio, breath or belt safety is already written here at
+ * length. The obvious thing to do is cite it, and the obvious way to get that
+ * wrong is for GuitarHub to hand-write `https://sing.suedeai.ai/book/registers`
+ * into a lesson page, at which point renaming a chapter quietly breaks a link
+ * on a page nobody is looking at.
+ *
+ * So the chapters and the song catalogue are serialized the same way the rooms
+ * already are: slug, title, part, gate and resolved path, generated from the
+ * compiled content rather than retyped. A consumer resolves a citation through
+ * this section, and a withdrawn or renamed chapter becomes a failing assertion
+ * on its side rather than a dead link on ours.
+ *
+ * Two things are deliberately absent. Chapter and entry **bodies** are not
+ * here: one site is the source for a piece of writing and the other cites it,
+ * and a contract that carried the prose would make two sites compete to be the
+ * place the writing lives. And no word count or roster is restated per chapter
+ * beyond what the compiled content already computes.
+ *
+ * `free` is the field a consumer must actually read. Most of this library is
+ * behind Suede Pro, verified against Stripe at `/api/book`, so a free lesson
+ * citing a gated chapter has to say so rather than sending a singer to a
+ * paywall it did not mention.
+ */
+interface ChapterLike {
+  slug: string;
+  order: number;
+  title: string;
+  part: string;
+  summary: string;
+  free: boolean;
+  words: number;
+}
+
+function serializeChapter(chapter: ChapterLike, pathPrefix: string) {
+  return {
+    slug: chapter.slug,
+    order: chapter.order,
+    title: chapter.title,
+    part: chapter.part,
+    /**
+     * The chapter's own one-line abstract. Carried so a citing surface can say
+     * what it is sending a reader to without writing a second description of
+     * someone else's chapter and letting the two drift.
+     */
+    summary: chapter.summary,
+    /** False means the body is behind Suede Pro and verified against Stripe. */
+    free: chapter.free,
+    words: chapter.words,
+    /** Resolved here so no consumer concatenates a route. */
+    path: `${pathPrefix}/${chapter.slug}`,
+  };
+}
+
+function serializePopSong(song: (typeof POP_SONGS)[number], pathPrefix: string) {
+  return {
+    slug: song.slug,
+    title: song.title,
+    artist: song.artist,
+    artistSlugs: [...song.artistSlugs],
+    year: song.year,
+    genre: song.genre,
+    key: song.key,
+    lowMidi: song.lowMidi,
+    highMidi: song.highMidi,
+    /** Spelled out because the two repos print accidentals differently. */
+    rangeLabel: popRangeLabel(song),
+    spanSemitones: song.highMidi - song.lowMidi,
+    /** Derived by `popDifficulty`, not authored, so the cut cannot drift. */
+    difficulty: popDifficulty(song),
+    /** Where the cited key and range come from. Not a measurement. */
+    sourceNote: song.sourceNote,
+    path: `${pathPrefix}/${song.slug}`,
+  };
+}
+
 /** Offsets from the root, which is how a warmup pattern is actually defined. */
 function exerciseOffsets(ex: WarmupExercise): number[][] {
   return ex.buildSteps(0);
@@ -337,6 +453,10 @@ export function buildContract() {
         "components/warmups/routines.ts",
         "components/breath/routines.ts",
         "components/ear/routines.ts",
+        "lib/book-data.ts",
+        "lib/atlas-data.ts",
+        "lib/pop-songs.ts",
+        "lib/singers-data.ts",
       ],
       note: "Generated by contracts/suede-vocal.ts. Do not hand-edit; run the regenerate command in contracts/README.md.",
     },
@@ -493,6 +613,68 @@ export function buildContract() {
         steps: r.steps.map((s) => ({ ...s })),
         seconds: earRoutineSeconds(r),
       })),
+    },
+
+    /**
+     * The written library. See the note above `serializeChapter`: identifiers
+     * and gates, never bodies.
+     */
+    editorial: {
+      book: {
+        title: BOOK_TITLE,
+        subtitle: BOOK_SUBTITLE,
+        pathPrefix: "/book",
+        totalWords: BOOK_WORDS,
+        chapters: BOOK_CONTENTS.map((c) => serializeChapter(c, "/book")),
+      },
+      atlas: {
+        title: ATLAS_TITLE,
+        subtitle: ATLAS_SUBTITLE,
+        pathPrefix: "/atlas",
+        totalWords: ATLAS_WORDS,
+        chapters: ATLAS_CONTENTS.map((c) => serializeChapter(c, "/atlas")),
+      },
+      /**
+       * Pages that answer a question with a table rather than an argument. The
+       * voice-types chapter deliberately refuses to print the band grid — its
+       * argument is that range and type are different measurements — so a
+       * consumer wanting the grid must cite this page and not that chapter.
+       */
+      referenceTables: {
+        vocalRangeByVoiceType: {
+          path: "/atlas/vocal-range-by-voice-type",
+          free: true,
+          title: "Vocal range by voice type",
+          covers: ["referenceBands", "passaggioZones"],
+          note: "Built from REFERENCE_BANDS and VOICE_TYPE_PASSAGGIO, the same values this contract publishes under taxonomy.",
+        },
+      },
+      /**
+       * The popular-song range catalogue: key, cited lead-vocal range and a
+       * derived difficulty. These are editorial pages about repertoire, not
+       * scored practice tracks — nothing here is singable in the songbook, and
+       * a consumer must not deep-link it as `songs?song=`.
+       */
+      repertoire: {
+        pathPrefix: "/can-you-sing",
+        hubPath: "/can-you-sing",
+        scored: false,
+        figuresAreCited: true,
+        songs: POP_SONGS.map((song) => serializePopSong(song, "/can-you-sing")),
+      },
+      /**
+       * The singer library. Counted rather than enumerated: 636 records is not
+       * a list a consuming curriculum should vendor, and the one fact a citing
+       * surface needs is that every record carries a written technique
+       * paragraph rather than only a range.
+       */
+      singers: {
+        pathPrefix: "/singers",
+        hubPath: "/singers",
+        count: SINGERS.length,
+        withTechnique: SINGERS.filter((s) => s.technique !== null).length,
+        figuresAreCited: true,
+      },
     },
 
     /**
