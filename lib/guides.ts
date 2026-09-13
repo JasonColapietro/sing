@@ -257,7 +257,7 @@ export const BREATH_GUIDE: GuideContent = {
   body: [
     "The mechanics are unglamorous. You breathe low, so the diaphragm descends and the ribs stay open rather than the shoulders lifting. Then you resist the natural collapse of the ribcage while you sing, so air leaves at the rate the note needs instead of all at once. That resistance is the 'support' in breath support.",
     "It is trainable in a way that most vocal qualities are not, because you can measure it directly: how long can you sustain an even tone on one breath, and does the pitch stay put while you do. Both numbers move with practice, and both are visible without a teacher in the room.",
-    "This room runs two kinds of exercise. Timed breathing patterns build the habit of a low, unhurried inhale and a controlled exhale. The mic-based sustain test then checks the result — you hold a note while the app watches how long the tone lasts and how steady the pitch stays.",
+    "This room runs two kinds of exercise. Timed breathing patterns build the habit of a low, unhurried inhale and a controlled exhale. The mic-based sustain test then checks the result — you hold a note while the app times how long the tone lasts and how even you keep its loudness.",
   ],
   howTo: {
     name: "How to practice breath support for singing",
@@ -278,7 +278,7 @@ export const BREATH_GUIDE: GuideContent = {
       },
       {
         title: "Run the sustain test",
-        body: "Sing one comfortable note and hold it while the app times the tone and watches the pitch. You get a duration and a steadiness reading, which is a far more honest measure than counting in your head.",
+        body: "Sing or hiss one comfortable note and hold it while the app times the tone and tracks how even its loudness stays. You get a duration and a steadiness reading, which is a far more honest measure than counting in your head.",
       },
       {
         title: "Add pitch to the demand",
@@ -306,7 +306,7 @@ export const BREATH_GUIDE: GuideContent = {
     points: [
       "Practice sustains at the top of your working range, where support fails first and matters most",
       "Work on the fast, low catch-breath — most real songs never give you four counts to inhale",
-      "Watch pitch steadiness rather than duration; a long note that drifts flat is a support problem, not a pitch problem",
+      "Watch the steadiness reading rather than duration; a long note that fades away is a support problem, not a lung-capacity problem",
       "Map your sustain length against dynamics — the same note loud spends air several times faster",
     ],
   },
@@ -341,7 +341,7 @@ export const BREATH_GUIDE: GuideContent = {
     {
       href: "/studio",
       label: "Pitch studio",
-      note: "Watch pitch steadiness on a sustained note.",
+      note: "Watch loudness steadiness on a sustained note.",
     },
     {
       href: "/songs",

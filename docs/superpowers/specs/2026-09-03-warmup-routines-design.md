@@ -93,6 +93,14 @@ routine cards, then the full exercise library under a disclosure. Deep links
 
 Video lessons, a leveled "Method" curriculum, and community coaching. The
 question of offloading voice lessons to a guitar property was raised and
-answered no: GuitarHub is sunset (serves Suede Social), Strumly's lesson
-engine is guitar-shaped, and Suede Voice on iOS is this app's companion and
-inherits whatever the web practice loop becomes.
+answered no: Strumly's lesson engine is guitar-shaped, and Suede Voice on iOS
+is this app's companion and inherits whatever the web practice loop becomes.
+
+Correction, 2026-09-12: this paragraph originally read "GuitarHub is sunset
+(serves Suede Social)" as part of that reasoning. That was wrong. GuitarHub is
+live at guitarhub.org and ships a seven-level voice curriculum covering the same
+material this app implements. The decision above stands on its other grounds —
+the practice loop belongs here — but it was partly argued from a dead premise,
+and the two apps then spent months with no link between them in either direction
+while one taught what the other measured. `contracts/suede-vocal.json` now
+publishes this app's vocal capabilities for GuitarHub to assert against.

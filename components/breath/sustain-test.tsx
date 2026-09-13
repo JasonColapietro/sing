@@ -13,7 +13,7 @@ import {
   type BreathData,
 } from "./store";
 import { RewardNote } from "./reward";
-import type { BreathDrillResult } from "./routines";
+import { SUSTAIN_BENCHMARKS_SEC, type BreathDrillResult } from "./routines";
 
 type Phase = "idle" | "armed" | "running" | "done";
 
@@ -397,7 +397,15 @@ export function SustainTest({
   }, [frame, phase, threshold]);
 
   const benchmark = (sec: number) =>
-    sec >= 45 ? "excellent" : sec >= 30 ? "strong" : sec >= 20 ? "good" : sec >= 10 ? "fair" : "keep at it";
+    sec >= SUSTAIN_BENCHMARKS_SEC.excellent
+      ? "excellent"
+      : sec >= SUSTAIN_BENCHMARKS_SEC.strong
+        ? "strong"
+        : sec >= SUSTAIN_BENCHMARKS_SEC.good
+          ? "good"
+          : sec >= SUSTAIN_BENCHMARKS_SEC.fair
+            ? "fair"
+            : "keep at it";
 
   /* ---------------------------------------------------------------- *
    * Session — the full-screen dark surface.
@@ -754,7 +762,8 @@ export function SustainTest({
             Benchmarks
           </div>
           <p className="tabular mt-1.5 font-mono text-xs text-mut">
-            10s fair · 20s good · 30s strong · 45s+ excellent
+            {SUSTAIN_BENCHMARKS_SEC.fair}s fair · {SUSTAIN_BENCHMARKS_SEC.good}s good ·{" "}
+            {SUSTAIN_BENCHMARKS_SEC.strong}s strong · {SUSTAIN_BENCHMARKS_SEC.excellent}s+ excellent
           </p>
         </div>
       </Card>

@@ -44,6 +44,10 @@ const PRACTICE: FooterLink[] = [
   { href: "/range", label: "Free vocal range test" },
   { href: "/voice", label: "Suede Voice for iPhone & Android" },
   { href: "/ear-training", label: "Ear training" },
+  // Both rooms are live and were in no footer column, so neither had a
+  // site-wide internal link.
+  { href: "/breath", label: "Breath training" },
+  { href: "/tools", label: "Metronome, keyboard and drone" },
   // No longer header tabs of their own — the footer and /tools carry the
   // crawl path into these rooms now. "Take recorder" is what the homepage room
   // card and lib/guides.ts call it; a footer naming the same room differently
@@ -52,6 +56,24 @@ const PRACTICE: FooterLink[] = [
   { href: "/analyze", label: "Voice analyzer" },
   { href: "/progress", label: "Your progress" },
   { href: "/extension", label: "Chrome extension vocal coach" },
+];
+
+/**
+ * Sibling Suede properties. This footer carried no product column at all — only
+ * the attribution paragraph — so the companion that teaches this material in a
+ * structured order had no inbound link from any of this site's pages.
+ *
+ * GuitarHub's voice track now deep-links into these rooms, module by module,
+ * asserted against contracts/suede-vocal.json. This is the return path.
+ *
+ * Linked at /learn/voice rather than at an individual lesson on purpose: the
+ * lesson pages are noindex while the track has no authored lesson bodies, and
+ * pointing crawlers at 102 noindex URLs helps nobody.
+ */
+const MORE_FROM_SUEDE: FooterLink[] = [
+  { href: "https://guitarhub.org/learn/voice", label: "Voice curriculum on GuitarHub" },
+  { href: "https://strumly.suedeai.ai/capo", label: "Capo calculator on Strumly" },
+  { href: "https://suedeai.ai", label: "Suede Labs AI" },
 ];
 
 const linkClass =
@@ -72,9 +94,17 @@ function Column({
       <ul className="mt-3 space-y-2 text-sm">
         {links.map((l) => (
           <li key={l.href}>
-            <Link href={l.href} className={linkClass}>
-              {l.label}
-            </Link>
+            {/* next/link is for in-app routes; a sibling property is a plain
+                anchor so it is not prefetched as a local route. */}
+            {l.href.startsWith("http") ? (
+              <a href={l.href} className={linkClass}>
+                {l.label}
+              </a>
+            ) : (
+              <Link href={l.href} className={linkClass}>
+                {l.label}
+              </Link>
+            )}
           </li>
         ))}
       </ul>
@@ -88,10 +118,11 @@ export default function SiteFooter() {
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
         <nav
           aria-label="Explore Suede Sing"
-          className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-5"
+          className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6"
         >
           <Column heading="Reference" links={REFERENCE} />
           <Column heading="Practice" links={PRACTICE} />
+          <Column heading="More from Suede" links={MORE_FROM_SUEDE} />
 
           {/* Every voice-type hub, one click from any page. */}
           <div>

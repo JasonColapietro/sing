@@ -35,8 +35,8 @@ export interface PitchResult {
  * is the shortest period that explains the signal.
  */
 /** The live rooms and native apps all start at C2. */
-const MIN_FREQ = 65;
-const MAX_FREQ = 1600;
+export const MIN_FREQ = 65;
+export const MAX_FREQ = 1600;
 
 /**
  * Search this far below C2 when checking a candidate's integer multiples.

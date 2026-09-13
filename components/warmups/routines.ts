@@ -19,6 +19,7 @@ import {
 } from "./exercises";
 import type { SessionLog } from "@/lib/progress";
 import { planRep } from "./timeline";
+import { starsForScore } from "@/lib/stars";
 
 export interface RoutineStep {
   exerciseId: string;
@@ -214,7 +215,7 @@ export function recentWarmupResults(sessions: readonly SessionLog[]): RecentWarm
   const scores = recent.map((s) => s.score!);
   return {
     averageScore: scores.reduce((a, b) => a + b, 0) / scores.length,
-    averageStars: scores.reduce((a, n) => a + (n >= 90 ? 3 : n >= 75 ? 2 : n >= 50 ? 1 : 0), 0) / scores.length,
+    averageStars: scores.reduce((a, n) => a + starsForScore(n), 0) / scores.length,
     count: scores.length,
   };
 }

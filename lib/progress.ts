@@ -18,6 +18,7 @@ import type {
   VocalRange,
   WarmupMode,
 } from "./progress-shape";
+import { starsForScore } from "./stars";
 
 // The shape and its validators live in ./progress-shape so a server route can
 // import them without dragging this `"use client"` module along. Re-exported
@@ -169,6 +170,38 @@ export const LEVEL_TITLES = [
   "Maestro",
   "Suede Legend",
 ];
+
+/**
+ * The earn rate, as named constants rather than literals inside logSession.
+ *
+ * The XP *ladder* (xpThreshold, LEVEL_TITLES) was already serialized into
+ * contracts/practice-parity.json, but the rate at which a singer climbs it was
+ * not, so two surfaces could satisfy every assertion in that contract and still
+ * level singers at completely different speeds. These exist so the contract can
+ * carry the rate too.
+ */
+export const XP_PER_MINUTE = 10;
+/** A session always earns something, and one long session cannot earn a level. */
+export const XP_MIN_PER_SESSION = 4;
+export const XP_MAX_PER_SESSION = 80;
+/** Score bonuses, highest first: the first threshold the score clears applies. */
+export const XP_SCORE_BONUSES = [
+  { minScore: 95, xp: 25 },
+  { minScore: 85, xp: 15 },
+  { minScore: 70, xp: 8 },
+] as const;
+export const XP_PER_ACHIEVEMENT = 30;
+
+/** XP for one session, before achievement bonuses. */
+export function xpForSession(durationSec: number, score?: number): number {
+  const base = Math.max(
+    XP_MIN_PER_SESSION,
+    Math.min(XP_MAX_PER_SESSION, Math.round((durationSec / 60) * XP_PER_MINUTE)),
+  );
+  if (score === undefined) return base;
+  const bonus = XP_SCORE_BONUSES.find((rung) => score >= rung.minScore);
+  return base + (bonus?.xp ?? 0);
+}
 
 /**
  * Cumulative XP required to *reach* level n+1 (levels are 1-based).
@@ -350,7 +383,7 @@ function unlockAchievements(next: ProgressState): Achievement[] {
   for (const a of ACHIEVEMENTS) {
     if (!next.achievements.includes(a.id) && a.check(next)) {
       next.achievements = [...next.achievements, a.id];
-      next.xp += 30;
+      next.xp += XP_PER_ACHIEVEMENT;
       fresh.push(a);
     }
   }
@@ -378,12 +411,7 @@ export function logSession(input: {
   const now = new Date();
   const day = localDay(now);
 
-  let xp = Math.max(4, Math.min(80, Math.round((input.durationSec / 60) * 10)));
-  if (input.score !== undefined) {
-    if (input.score >= 95) xp += 25;
-    else if (input.score >= 85) xp += 15;
-    else if (input.score >= 70) xp += 8;
-  }
+  const xp = xpForSession(input.durationSec, input.score);
 
   const session: SessionLog = {
     id: `${now.getTime()}-${Math.floor(Math.random() * 1e6)}`,
@@ -436,7 +464,7 @@ export function logSession(input: {
   const newAchievements = unlockAchievements(next);
   save(next);
   return {
-    xpGained: xp + newAchievements.length * 30,
+    xpGained: xp + newAchievements.length * XP_PER_ACHIEVEMENT,
     newAchievements,
     state: next,
   };
@@ -467,7 +495,7 @@ export function setVocalRange(lowMidi: number, highMidi: number): LogResult {
   };
   const newAchievements = unlockAchievements(next);
   save(next);
-  return { xpGained: newAchievements.length * 30, newAchievements, state: next };
+  return { xpGained: newAchievements.length * XP_PER_ACHIEVEMENT, newAchievements, state: next };
 }
 
 export function todayPracticeSec(s: ProgressState = load()): number {
@@ -592,7 +620,7 @@ export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
   // XP: recomputing from the merged work credits both devices exactly; the
   // max() floor guarantees no device ever watches its number go down.
   const recomputedXp =
-    sessions.reduce((a, s) => a + s.xp, 0) + 30 * achievements.length;
+    sessions.reduce((a, s) => a + s.xp, 0) + XP_PER_ACHIEVEMENT * achievements.length;
   // Clamped because this total is saved straight to the store: the sum of 500
   // sessions' xp fields skips sanitizeProgress on the way in, and a backup can
   // put any finite number in every one of them.
@@ -638,7 +666,7 @@ export function weeklyReport(sessions: readonly SessionLog[], now = new Date()) 
     period.sessions++;
     period.durationSec += session.durationSec;
     const score = session.score;
-    period.stars += score === undefined ? 0 : score >= 90 ? 3 : score >= 75 ? 2 : score >= 50 ? 1 : 0;
+    period.stars += starsForScore(score);
   }
   return { thisWeek, lastWeek, start, lastStart };
 }

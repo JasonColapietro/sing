@@ -19,8 +19,10 @@ import {
   BREATH_ROUTINES,
   breathDrillDesc,
   breathDrillTitle,
+  breathRoutineById,
   breathRoutineMinutes,
   breathStepTitle,
+  isBreathDrillId,
   recommendBreathRoutine,
   type BreathDrillId,
   type BreathRoutine,
@@ -122,6 +124,34 @@ export function BreathStudio() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setBests(loadBreathBests());
   }, [view]);
+
+  // GuitarHub's voice curriculum links a breath lesson straight at the drill it
+  // teaches, as /breath?drill=sustain, and its checkpoints at a whole set as
+  // /breath?routine=daily. Without this the links landed on the room's front
+  // page and the lesson looked broken rather than the link.
+  //
+  // Read from the URL after mount rather than with useSearchParams, for the
+  // reason the warmups room documents: that hook needs a Suspense boundary in
+  // app/breath/page.tsx, and the boundary would blank this route's prerendered
+  // heading and copy. Runs once, and never overrides a singer who has already
+  // navigated — `handled` keeps a back-press out of the drill they just left.
+  const [handledDeepLink, setHandledDeepLink] = useState(false);
+  useEffect(() => {
+    if (handledDeepLink) return;
+    const q = new URLSearchParams(window.location.search);
+    const drill = q.get("drill");
+    const routineId = q.get("routine");
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setHandledDeepLink(true);
+    if (cap.capped) return;
+    if (drill && isBreathDrillId(drill)) {
+      setView({ kind: "drill", drill });
+      return;
+    }
+    const routine = breathRoutineById(routineId);
+    if (routine) setView({ kind: "routine", routine });
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [handledDeepLink, cap.capped]);
 
   const practicedToday = progress.sessions.some(
     (s) => s.type === "breath" && s.day === localDay(),

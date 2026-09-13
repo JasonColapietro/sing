@@ -22,22 +22,15 @@ import { ShareableResult } from "@/components/songs/result-card";
  * through; this only reads the numbers back.
  */
 
-export type Stars = 0 | 1 | 2 | 3;
-
 /**
- * Score to stars. Three bands, chosen to match what the rooms already call
- * good: 90 is the "nailed it" line the grade table calls S/A territory, 75 is
- * a clean take with rough edges, 50 is the floor a recognizable attempt clears.
- * An unscored session (listen mode, nothing sung) earns none — it is not a
- * zero-star performance, it is no performance.
+ * Re-exported so the rooms can keep importing stars from the results screen
+ * they render. The ladder itself lives in `@/lib/stars`, which has no React in
+ * it, so `contracts/practice-parity.ts` can import the same numbers instead of
+ * re-typing them.
  */
-export function starsForScore(score: number | null): Stars {
-  if (score === null) return 0;
-  if (score >= 90) return 3;
-  if (score >= 75) return 2;
-  if (score >= 50) return 1;
-  return 0;
-}
+import type { Stars } from "@/lib/stars";
+
+export { starsForScore, STAR_THRESHOLDS, type Stars } from "@/lib/stars";
 
 export interface ResultRow {
   label: string;

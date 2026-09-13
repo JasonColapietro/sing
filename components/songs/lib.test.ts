@@ -18,6 +18,7 @@ import {
   breathMarks,
   countSongsFitting,
   isMastered,
+  MASTERY_MIN_TEMPO,
   multiplierStep,
   pointsFor,
   rangeFit,
@@ -212,6 +213,25 @@ describe("isMastered", () => {
 
   it("refuses a solo pass that fell short", () => {
     expect(isMastered("solo", "performance", MASTERY_SCORE - 1)).toBe(false);
+  });
+
+  /**
+   * Mastery used to ignore tempo, so a pass at a quarter speed unlocked the next
+   * band on the same terms as a clean one at written tempo.
+   */
+  it("refuses a pass sung below written tempo", () => {
+    expect(isMastered("solo", "performance", 100, true, TEMPO_MIN)).toBe(false);
+    expect(isMastered("solo", "performance", 100, true, 0.95)).toBe(false);
+    expect(isMastered("solo", "performance", 100, true, MASTERY_MIN_TEMPO)).toBe(true);
+  });
+
+  it("allows a pass sung faster than written", () => {
+    expect(isMastered("solo", "performance", 100, true, TEMPO_MAX)).toBe(true);
+  });
+
+  it("treats a missing or broken tempo as written tempo rather than unlocking on NaN", () => {
+    expect(isMastered("solo", "performance", 100)).toBe(true);
+    expect(isMastered("solo", "performance", 100, true, NaN)).toBe(false);
   });
 
   it("refuses any pass that left the guide singing", () => {

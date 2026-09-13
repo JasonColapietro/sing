@@ -391,20 +391,38 @@ export const PASS_LABEL: Record<GuidePass, string> = {
 export const MASTERY_SCORE = 80;
 
 /**
+ * The slowest tempo a run may be sung at and still master the song.
+ *
+ * Mastery used to ignore tempo entirely, so a song sung at 0.25x — four times
+ * slower than written, every note four times easier to hold in tune — counted
+ * exactly the same as a clean pass at full speed, and unlocked the next band on
+ * the same terms. Singing faster than written is not a problem, so this is a
+ * floor rather than an equality.
+ *
+ * Transposition is deliberately NOT gated: fitting a song to your own range is
+ * the point of the transpose control, not a way around the scorer.
+ */
+export const MASTERY_MIN_TEMPO = 1;
+
+/**
  * Whether a finished run masters the song: a solo pass, sung in performance
- * mode, scoring at or above MASTERY_SCORE. An unscored run — a listen pass, or
- * no microphone — masters nothing, because it has no score to judge.
+ * mode, at or above written tempo, scoring at or above MASTERY_SCORE. An
+ * unscored run — a listen pass, or no microphone — masters nothing, because it
+ * has no score to judge.
  */
 export function isMastered(
   pass: GuidePass,
   mode: SessionMode,
   score: number | undefined,
   fullSoloPerformance = true,
+  tempo: number = MASTERY_MIN_TEMPO,
 ): boolean {
   return (
     fullSoloPerformance &&
     pass === "solo" &&
     mode === "performance" &&
+    Number.isFinite(tempo) &&
+    tempo >= MASTERY_MIN_TEMPO &&
     score !== undefined &&
     Number.isFinite(score) && score <= 100 &&
     score >= MASTERY_SCORE
