@@ -24,6 +24,8 @@ import { VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { VOICE_KINDS } from "@/lib/singers-core";
 import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
 import { isFreeExercise } from "@/components/warmups/routines";
+import { SUSTAIN_BENCHMARKS_SEC, SUSTAIN_STAR_SEC } from "@/components/breath/routines";
+import { starsForSustain } from "@/components/breath/store";
 
 const FILE = fileURLToPath(new URL("./suede-vocal.json", import.meta.url));
 const SUSTAIN_SRC = fileURLToPath(
@@ -168,6 +170,30 @@ describe("suede-vocal contract", () => {
     }
     expect(zones.Countertenor.semantics).toBe("m1-m2-crossing");
     expect(zones.Countertenor.caveat).toBeTruthy();
+  });
+
+  /**
+   * The sustain ladder must be imported, not restated.
+   *
+   * It was restated: `benchmarksSec` and `starsSec` were copied literals, so
+   * changing the runtime ladder would regenerate this contract byte-for-byte
+   * while publishing the old numbers to GuitarHub. That is the exact drift the
+   * contract exists to catch, and it is the same defect the star thresholds had
+   * before `lib/stars.ts`. Asserting against both the constants and the
+   * behaviour, so neither half can move alone.
+   */
+  it("publishes the sustain ladder the breath room actually runs", () => {
+    const sustain = buildContract().breath.sustain;
+    expect(sustain.benchmarksSec).toEqual({ ...SUSTAIN_BENCHMARKS_SEC });
+    expect(sustain.starsSec).toEqual({ ...SUSTAIN_STAR_SEC });
+
+    // And the star cuts have to agree with the function that awards them.
+    expect(starsForSustain(sustain.starsSec.three)).toBe(3);
+    expect(starsForSustain(sustain.starsSec.three - 0.1)).toBe(2);
+    expect(starsForSustain(sustain.starsSec.two)).toBe(2);
+    expect(starsForSustain(sustain.starsSec.two - 0.1)).toBe(1);
+    expect(starsForSustain(sustain.starsSec.one)).toBe(1);
+    expect(starsForSustain(sustain.starsSec.one - 0.1)).toBe(0);
   });
 
   it("states that a passaggio cannot be derived from a range scan", () => {

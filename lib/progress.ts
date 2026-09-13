@@ -383,7 +383,7 @@ function unlockAchievements(next: ProgressState): Achievement[] {
   for (const a of ACHIEVEMENTS) {
     if (!next.achievements.includes(a.id) && a.check(next)) {
       next.achievements = [...next.achievements, a.id];
-      next.xp += 30;
+      next.xp += XP_PER_ACHIEVEMENT;
       fresh.push(a);
     }
   }

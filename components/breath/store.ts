@@ -1,5 +1,7 @@
 "use client";
 
+import { SUSTAIN_STAR_SEC } from "./routines";
+
 export interface SustainAttempt {
   /** Sustained duration in seconds. */
   sec: number;
@@ -127,9 +129,9 @@ export type Stars = 0 | 1 | 2 | 3;
  * professional can fill is a locked door with no key.
  */
 export function starsForSustain(sec: number): Stars {
-  if (sec >= 30) return 3;
-  if (sec >= 20) return 2;
-  if (sec >= 10) return 1;
+  if (sec >= SUSTAIN_STAR_SEC.three) return 3;
+  if (sec >= SUSTAIN_STAR_SEC.two) return 2;
+  if (sec >= SUSTAIN_STAR_SEC.one) return 1;
   return 0;
 }
 

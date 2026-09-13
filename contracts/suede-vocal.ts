@@ -45,6 +45,8 @@ import {
   FARINELLI_LEAD_SEC,
   FARINELLI_START_N,
   SUSTAIN_ATTEMPT_SEC,
+  SUSTAIN_BENCHMARKS_SEC,
+  SUSTAIN_STAR_SEC,
   boxSeconds,
   breathRoutineSeconds,
   farinelliSeconds,
@@ -418,12 +420,13 @@ export function buildContract() {
       stepIntroSec: BREATH_STEP_INTRO_SEC,
       sustain: {
         /**
-         * The published benchmark ladder. Note 12 seconds is NOT a rung: it
-         * sits inside the lowest band. A curriculum promising a twelve-second
-         * milestone has no threshold here to pass or fail against.
+         * The published benchmark ladder, imported rather than restated. Note
+         * 12 seconds is NOT a rung: it sits inside the lowest band, so a
+         * curriculum promising a twelve-second milestone has no threshold here
+         * to pass or fail against.
          */
-        benchmarksSec: { fair: 10, good: 20, strong: 30, excellent: 45 },
-        starsSec: { one: 10, two: 20, three: 30 },
+        benchmarksSec: { ...SUSTAIN_BENCHMARKS_SEC },
+        starsSec: { ...SUSTAIN_STAR_SEC },
         attemptEstimateSec: SUSTAIN_ATTEMPT_SEC,
         steadinessMetric: "loudness_cv",
         measuresPitchDrift: false,

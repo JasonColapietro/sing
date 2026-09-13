@@ -66,6 +66,24 @@ export const FARINELLI_START_N = 4;
  * between arming and the first sound, which is close enough for a "~7 min" on a
  * card and honest about being an estimate.
  */
+/**
+ * The sustain ladder, in one place.
+ *
+ * These were inline literals in `sustain-test.tsx` (the benchmark words and the
+ * printed "10s fair · 20s ..." line) and again in `store.ts` (the star cuts),
+ * and `contracts/suede-vocal.ts` restated them a third time. A contract that
+ * copies its values instead of importing them regenerates byte-for-byte while
+ * publishing stale numbers to its consumers, which is the drift it exists to
+ * detect — the same defect the star thresholds had before `lib/stars.ts`.
+ *
+ * They live here rather than beside the drill because this module is pure, so
+ * the contract builder can import it without pulling a client component in.
+ */
+export const SUSTAIN_BENCHMARKS_SEC = { fair: 10, good: 20, strong: 30, excellent: 45 } as const;
+
+/** Star cuts for a sustain attempt. 45s is deliberately not the three-star bar. */
+export const SUSTAIN_STAR_SEC = { one: 10, two: 20, three: 30 } as const;
+
 export const SUSTAIN_ATTEMPT_SEC = 25;
 
 export const BREATH_ROUTINES: BreathRoutine[] = [

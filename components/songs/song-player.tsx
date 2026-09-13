@@ -268,6 +268,15 @@ export function SongPlayer({
   const sessionTransposeRef = useRef(0);
   const sessionTempoRef = useRef<Tempo>(1);
   /**
+   * The slowest tempo any scored part of this run was sung at.
+   *
+   * Mastery cannot read the final tempo alone. On Auto a run can open at 0.85x,
+   * score well, and be stepped up to 1.00x by the last loop — so three quarters
+   * of the performance sat below the bar while the ending tempo says it did
+   * not. The minimum is what the gate has to see.
+   */
+  const minScoredTempoRef = useRef<Tempo>(1);
+  /**
    * Seconds a pitch frame lags the moment it describes, seeded at count-in.
    * The frame in hand reports the voice ~68 ms ago (analyser centroid plus
    * median smoothing), and the guide it was following was heard outputLatency
@@ -448,6 +457,10 @@ export function SongPlayer({
     perLoopDenomSecRef.current *= scale;
     refreshPossibleSec();
     sessionTempoRef.current = next;
+    // Only a scored pass can earn mastery, so only a scored pass constrains it.
+    if (scoringRef.current) {
+      minScoredTempoRef.current = Math.min(minScoredTempoRef.current, next) as Tempo;
+    }
     setTempo(next);
   }
 
@@ -581,7 +594,7 @@ export function SongPlayer({
       loops: Math.max(loopsRef.current, finalPerLoop.length),
       mode: modeRef.current,
       pass: passRef.current,
-      mastered: isMastered(passRef.current, modeRef.current, overallScore, masteryEligibleRef.current, sessionTempoRef.current),
+      mastered: isMastered(passRef.current, modeRef.current, overallScore, masteryEligibleRef.current, minScoredTempoRef.current),
       points: pointsRef.current,
       topMultiplier: topMultiplierRef.current,
     });
@@ -812,6 +825,7 @@ export function SongPlayer({
     sectionLabelRef.current = undefined;
     sessionTransposeRef.current = transpose;
     sessionTempoRef.current = tempo;
+    minScoredTempoRef.current = tempo;
     // The pass owns the guide level at count-in: solo silences it; listen and
     // guided keep the mixer where the singer left it, restoring the pass's own
     // level only if the mixer sits at zero. Spelled out here rather than through
