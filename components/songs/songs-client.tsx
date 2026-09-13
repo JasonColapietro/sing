@@ -17,7 +17,7 @@ import { SongPlayer } from "./song-player";
 import { SessionSummary } from "./session-summary";
 import { getMastered, recordMastered, recordSongPlayed } from "./favorites";
 import { advanceSetlist, endSetlist, useSetlist } from "./setlist";
-import { bandForSong, bandOpen, type SessionSummaryData } from "./lib";
+import { bandForSong, bandOpen, melodyFingerprint, type SessionSummaryData } from "./lib";
 import type { GuidePass, SessionMode } from "./types";
 
 type View = "library" | "practice" | "summary";
@@ -176,7 +176,15 @@ export function SongsClient() {
           pass={pass}
           onPassChange={setPass}
           onFinish={(data) => {
-            if (data.mastered) recordMastered(data.song.id);
+            // The whole summary, not just the id: what the run was sung at is
+            // what makes the mastery re-judgeable and auditable later.
+            if (data.mastered)
+              recordMastered(data.song.id, {
+                tempo: data.tempo,
+                transpose: data.transpose,
+                score: data.score ?? 0,
+                melody: melodyFingerprint(data.song),
+              });
             setSummary(data);
             setView("summary");
           }}
