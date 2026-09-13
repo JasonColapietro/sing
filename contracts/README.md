@@ -135,6 +135,27 @@ when microphone-backed song scoring lands.
 `Suede-AI/suede-voice` vendors this file byte-identically and needs a re-sync
 (the `curl` above) before its own assertions will see any of it.
 
+### suede-vocal v2
+
+`version` moved to 2 on 2026-09-13, adding one section and changing no value:
+`editorial`. It publishes the written library as identifiers — every chapter of
+both books with its slug, part, word count, Pro gate and resolved path, the
+popular-song range catalogue with key, cited range and derived difficulty, the
+band-grid reference page, and a count of the singer library.
+
+It exists because GuitarHub teaches a voice curriculum, names no repertoire at
+all, and cites none of the reading that is already written here. The alternative
+to publishing these identifiers is GuitarHub hand-writing chapter URLs into
+lesson pages, where renaming a chapter breaks a link nobody is looking at. With
+the section, a renamed or withdrawn chapter fails a test on the consuming side
+instead.
+
+Bodies are deliberately not in it. One site is the source for a piece of writing
+and the other cites it; a contract carrying the prose would make two sites
+compete to be the place the writing lives. `free` is the field a consumer has to
+read, because most of the library is behind Pro and a free lesson citing a gated
+chapter has to say so.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

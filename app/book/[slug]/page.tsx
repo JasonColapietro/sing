@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
+import { exitTestFor } from "@/lib/programme-exit-tests";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
@@ -51,6 +52,13 @@ export default async function ChapterPage({
   const full = chapter.free ? BOOK.find((c) => c.slug === slug) : undefined;
   const next = BOOK_CONTENTS[BOOK_CONTENTS.indexOf(chapter) + 1];
   const gated = BOOK_CONTENTS.filter((c) => !c.free).length;
+  /**
+   * Shown whether or not the body is gated, and on purpose. The chapter is the
+   * paid thing; the condition that tells a singer the fortnight is finished is
+   * not, and a programme phase whose exit test sat behind the paywall would
+   * leave the calendar as the only free way to judge progress.
+   */
+  const exit = exitTestFor(chapter.slug);
 
   return (
     <PageShell
@@ -66,6 +74,28 @@ export default async function ChapterPage({
         </Link>
       }
     >
+      {exit && (
+        <Card>
+          <div className="max-w-2xl space-y-3">
+            <p className="text-sm font-medium text-ink">
+              Move on when: {exit.test}
+            </p>
+            <p className="text-sm text-mut">
+              The evidence comes from{" "}
+              <Link href={exit.roomPath} className="text-violet-ink hover:underline">
+                {exit.roomLabel}
+              </Link>
+              , which is where this app measures it.
+            </p>
+            <p className="text-sm text-mut">
+              When it does not pass, the blocker is usually this one. {exit.blocker}
+            </p>
+            <p className="text-sm text-mut">
+              What passing does not prove: {exit.doesNotProve}
+            </p>
+          </div>
+        </Card>
+      )}
       {full ? (
         <div className="space-y-6">
           <Card>
