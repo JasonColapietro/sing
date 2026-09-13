@@ -63,7 +63,6 @@ feeds the Organization JSON-LD on every page that emits it (homepage, /pro,
 +  "https://www.facebook.com/suedesing",
    "https://t.me/SUEDEAI",
    "https://linktr.ee/suedelabsai",
-   "https://www.crunchbase.com/organization/suede-labs-ai",
    "https://www.linkedin.com/company/suede-labs",
    "https://www.wikidata.org/wiki/Q141169484",
  ] as const;
