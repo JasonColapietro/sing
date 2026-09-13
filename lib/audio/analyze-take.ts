@@ -6,8 +6,10 @@
  */
 
 import { decodeTakeBlob } from "@/components/recorder/wav";
+import { type F0Frame } from "@/lib/audio/f0-trace";
 import { freqToMidiFloat } from "@/lib/audio/notes";
 import { detectPitch } from "@/lib/audio/pitch";
+import { longestVoicedRunSec } from "@/lib/audio/voiced-run";
 
 // Matches the live detector — see lib/audio/use-pitch.ts for why 4096. A take
 // analysed in a shorter window than it was scored in would disagree with the
@@ -29,6 +31,19 @@ export interface TakeAnalysis {
   durationSec: number;
   /** True when the take ran past the analysis cap. */
   truncated: boolean;
+  /**
+   * Seconds of the longest stretch the detector found a pitch on every frame
+   * of. See lib/audio/voiced-run.ts for what this does and does not mean — in
+   * particular it is not the absence of a register crack.
+   *
+   * Vibrato is deliberately absent from this summary. The hop below is 2048
+   * samples, which is about 23 frames a second at 48 kHz, and
+   * lib/audio/vibrato.ts will not report a rate from a trace too coarse to
+   * carry the top of the vibrato band. Vibrato is measured from the live 60 fps
+   * trace instead; measuring it here would mean either halving the hop for
+   * every take or reporting a number the frame rate cannot support.
+   */
+  longestVoicedRunSec: number | null;
 }
 
 export async function analyzeTake(blob: Blob): Promise<TakeAnalysis> {
@@ -52,6 +67,7 @@ export async function analyzeTake(blob: Blob): Promise<TakeAnalysis> {
   }
 
   const points: TakeAnalysis["points"] = [];
+  const trace: F0Frame[] = [];
   const voiced: number[] = [];
   let inTune = 0;
   let burst = 0;
@@ -61,10 +77,12 @@ export async function analyzeTake(blob: Blob): Promise<TakeAnalysis> {
     if (result && result.clarity >= CLARITY_MIN) {
       const midi = freqToMidiFloat(result.freq);
       points.push({ t, midi });
+      trace.push({ t, f0: result.freq });
       voiced.push(midi);
       if (Math.abs(midi - Math.round(midi)) <= 0.25) inTune += 1;
     } else {
       points.push({ t, midi: null });
+      trace.push({ t, f0: null });
     }
     burst += 1;
     if (burst >= CHUNK_WINDOWS) {
@@ -88,5 +106,6 @@ export async function analyzeTake(blob: Blob): Promise<TakeAnalysis> {
       voiced.length > 0 ? Math.round((inTune / voiced.length) * 100) : null,
     durationSec: buffer.duration,
     truncated,
+    longestVoicedRunSec: longestVoicedRunSec(trace),
   };
 }
