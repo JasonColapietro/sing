@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/warmups",
     "/range",
     "/voice",
+    "/learn",
     "/singers",
     "/singers/methodology",
     "/contact",

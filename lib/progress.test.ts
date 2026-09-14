@@ -67,42 +67,58 @@ describe("the day before, across a clock change", () => {
   const naiveDayBefore = (d: Date) =>
     localDay(new Date(d.getTime() - 24 * 3600 * 1000));
 
+  const boundaries = [
+    {
+      label: "US spring forward",
+      now: new Date(2026, 2, 9, 0, 30),
+      today: "2026-03-09",
+      yesterday: "2026-03-08",
+    },
+    {
+      label: "US fall back",
+      now: new Date(2026, 10, 2, 0, 30),
+      today: "2026-11-02",
+      yesterday: "2026-11-01",
+    },
+    {
+      label: "EU spring forward",
+      now: new Date(2026, 2, 30, 0, 30),
+      today: "2026-03-30",
+      yesterday: "2026-03-29",
+    },
+    {
+      label: "EU fall back",
+      now: new Date(2026, 9, 26, 0, 30),
+      today: "2026-10-26",
+      yesterday: "2026-10-25",
+    },
+  ] as const;
+
   it("steps exactly one calendar day, whatever the clocks did", () => {
-    // Spring forward and fall back in US/EU zones, sampled just after midnight
-    // local where the short and long days bite.
-    for (const iso of [
-      "2026-03-09T04:30:00Z",
-      "2026-03-09T05:30:00Z",
-      "2026-11-02T04:30:00Z",
-      "2026-10-26T00:30:00Z",
-      "2026-06-15T12:00:00Z",
-    ]) {
-      const now = new Date(iso);
-      const today = localDay(now);
-      const expected = new Date(`${today}T12:00:00`);
-      expected.setDate(expected.getDate() - 1);
-      expect(dayBefore(now)).toBe(localDay(expected));
+    // Construct local times rather than UTC instants: each runner now tests the
+    // same near-midnight calendar boundary regardless of its offset from UTC.
+    for (const { label, now, today, yesterday } of boundaries) {
+      expect(localDay(now), `${label}: today`).toBe(today);
+      expect(dayBefore(now), `${label}: yesterday`).toBe(yesterday);
     }
   });
 
   it("differs from millisecond arithmetic on at least one clock change", () => {
-    // The regression itself. In a zone with no DST this is vacuous, so it is
-    // written as "at least one" rather than asserted per-date.
-    const boundaries = [
-      "2026-03-09T04:30:00Z",
-      "2026-11-02T04:30:00Z",
-      "2026-10-26T00:30:00Z",
-      "2026-03-29T00:30:00Z",
-    ].map((iso) => new Date(iso));
-    const disagreements = boundaries.filter(
-      (d) => dayBefore(d) !== naiveDayBefore(d),
+    // The regression itself. UTC has no DST, so its run deliberately exercises
+    // the explicit calendar assertions above without requiring a disagreement.
+    const changingBoundaries = boundaries.filter(
+      ({ now }) => {
+        const previous = new Date(now);
+        previous.setDate(previous.getDate() - 1);
+        return now.getTimezoneOffset() !== previous.getTimezoneOffset();
+      },
     );
-    const anyDst = boundaries.some(
-      (d) =>
-        d.getTimezoneOffset() !==
-        new Date(d.getTime() - 24 * 3600 * 1000).getTimezoneOffset(),
+    const disagreements = changingBoundaries.filter(
+      ({ now }) => dayBefore(now) !== naiveDayBefore(now),
     );
-    if (anyDst) expect(disagreements.length).toBeGreaterThan(0);
+    if (changingBoundaries.length > 0) {
+      expect(disagreements.length).toBeGreaterThan(0);
+    }
   });
 });
 

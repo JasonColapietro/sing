@@ -63,15 +63,16 @@ const PRACTICE: FooterLink[] = [
  * the attribution paragraph — so the companion that teaches this material in a
  * structured order had no inbound link from any of this site's pages.
  *
- * GuitarHub's voice track now deep-links into these rooms, module by module,
- * asserted against contracts/suede-vocal.json. This is the return path.
- *
- * Linked at /learn/voice rather than at an individual lesson on purpose: the
- * lesson pages are noindex while the track has no authored lesson bodies, and
- * pointing crawlers at 102 noindex URLs helps nobody.
+ * Sing now owns the curriculum catalog and discovery page. GuitarHub remains
+ * the temporary lesson renderer and entitlement gate, so both the durable
+ * local entry point and the current host remain reachable during the handoff.
  */
 const MORE_FROM_SUEDE: FooterLink[] = [
-  { href: "https://guitarhub.org/learn/voice", label: "Voice curriculum on GuitarHub" },
+  { href: "/learn", label: "Voice curriculum" },
+  {
+    href: "https://guitarhub.org/learn/voice",
+    label: "Voice lessons on GuitarHub",
+  },
   { href: "https://strumly.suedeai.ai/capo", label: "Capo calculator on Strumly" },
   { href: "https://suedeai.ai", label: "Suede Labs AI" },
 ];
