@@ -28,7 +28,7 @@
      reader has to read. 4.85–5.78:1. */
   --color-ok-ink: #2a6f53;
   --color-cool: #11615d;
-  /* Violet, shared with Suede Agent Studio: this fill value is byte-identical
+  /* Violet, shared with Suede AI Agent Studio: this fill value is byte-identical
      to that app's `--violet`, so the two surfaces read as one estate. Split the
      same way gold and green are, and for the same reason — #8b5cf6 measures
      3.42-4.07:1 on the three paper grounds, so it is a fill and border only.
