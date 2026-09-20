@@ -91,9 +91,10 @@ function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
 }
 
 function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
-  return intent === "voice-type"
-    ? `${s.name} Voice Type and Vocal Range`
-    : `${s.name} Vocal Range and Voice Type`;
+  if (intent === "voice-type") return `${s.name} Voice Type and Vocal Range`;
+  return isSingerReviewed(s.slug)
+    ? `${s.name} Vocal Range: Reported ${rangeLabel(s)}`
+    : `${s.name} Vocal Range: ${rangeLabel(s)}`;
 }
 
 function queryAlignedDescription(s: SingerRecord, intent: SearchIntent): string {

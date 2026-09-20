@@ -7,6 +7,7 @@ import SingerPage, {
 } from "@/app/singers/[slug]/page";
 import { SINGERS, rangeLabel, spanOctaves } from "@/lib/singers";
 import { midiToLabel } from "@/lib/audio/notes";
+import { isSingerReviewed } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 
 const ARTIST_INTENT_CASES = [
@@ -43,7 +44,7 @@ const ARTIST_INTENT_CASES = [
     name: "Arijit Singh",
     opening: "A public artist biography describes Arijit Singh as a rich baritone; the reviewed sources dispute a definitive tenor label. The displayed range of C3 to C5 is a reported reference span, not an independently verified physiological limit.",
     title: "Arijit Singh Vocal Range: Reported C3–C5 | Voice Type: Described as Rich Baritone",
-    heading: "Arijit Singh Vocal Range and Voice Type",
+    heading: "Arijit Singh Vocal Range: Reported C3–C5",
   },
 ] as const;
 
@@ -146,7 +147,9 @@ describe("every singer page answers its vocal range and voice type intent", () =
         const html = renderToStaticMarkup(page).replaceAll("&#x27;", "'");
         const heading = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} Voice Type and Vocal Range`
-          : `${singer.name} Vocal Range and Voice Type`;
+          : isSingerReviewed(singer.slug)
+            ? `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`
+            : `${singer.name} Vocal Range: ${rangeLabel(singer)}`;
         const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`
           : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). ${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}.`;

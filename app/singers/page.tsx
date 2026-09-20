@@ -14,10 +14,17 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
+import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
 const DESCRIPTION = `The vocal ranges of famous singers on one keyboard — whistle notes to the deepest basses. Overlay your own range free.`;
+
+const VOCAL_RANGE_PRIORITY_SINGERS = VOCAL_RANGE_PRIORITY_SLUGS.map((slug) => {
+  const singer = SINGERS.find((candidate) => candidate.slug === slug);
+  if (!singer) throw new Error(`Unknown vocal-range search priority: ${slug}`);
+  return singer;
+});
 
 /**
  * The questions people actually type before they land here, answered from the
@@ -130,6 +137,38 @@ export default function SingersPage() {
         is the book that explains them, voice by voice. Come here for the number.
         Go there for how the voice does it.
       </p>
+
+      <section
+        data-singer-search-priority="true"
+        aria-labelledby="popular-vocal-range-lookups"
+        className="mt-10"
+      >
+        <h2 id="popular-vocal-range-lookups" className="text-xl">
+          Popular vocal range lookups
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm text-mut">
+          The singer pages currently drawing the most Google search interest,
+          with the reported span visible before you open one.
+        </p>
+        <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {VOCAL_RANGE_PRIORITY_SINGERS.map((singer) => (
+            <li key={singer.slug}>
+              <Link
+                href={`/singers/${singer.slug}`}
+                className="flex h-full items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
+              >
+                <span className="text-sm font-medium">
+                  {singer.name} vocal range
+                </span>
+                <span className="tabular shrink-0 font-mono text-[11px] text-mut">
+                  {rangeLabel(singer)}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       <SingersDirectory />
       <SingerCrawlIndex />
 
