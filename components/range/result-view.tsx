@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   VOICE_TYPES,
   classifyVoice,
@@ -49,6 +49,24 @@ const FAMOUS_VOICES = COMPARISON_SLUGS.flatMap((slug) => {
   const s = SINGERS.find((x) => x.slug === slug);
   return s ? [s] : [];
 });
+
+export function comparisonSingerFromSlug(slug: string | null) {
+  if (!slug) return null;
+  return SINGERS.find((singer) => singer.slug === slug) ?? null;
+}
+
+function subscribeToLocation(onChange: () => void) {
+  window.addEventListener("popstate", onChange);
+  return () => window.removeEventListener("popstate", onChange);
+}
+
+function comparisonSlugFromLocation() {
+  return new URLSearchParams(window.location.search).get("compare");
+}
+
+function noServerComparison() {
+  return null;
+}
 
 function describeSpan(semitones: number): string {
   const oct = Math.floor(semitones / 12);
@@ -259,6 +277,12 @@ export function ResultView({
   onRetake: () => void;
 }) {
   const [downloadError, setDownloadError] = useState(false);
+  const comparisonSlug = useSyncExternalStore(
+    subscribeToLocation,
+    comparisonSlugFromLocation,
+    noServerComparison,
+  );
+  const comparisonSinger = comparisonSingerFromSlug(comparisonSlug);
   const semis = highMidi - lowMidi;
   const voice = useMemo(
     () => classifyVoice(lowMidi, highMidi),
@@ -384,6 +408,24 @@ export function ResultView({
           </p>
         )}
       </Card>
+
+      {comparisonSinger && (
+        <Card className="border-violet/40">
+          <SectionLabel>Finish the comparison</SectionLabel>
+          <h2 className="mt-3 text-xl">
+            Now compare your range with {comparisonSinger.name}
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-mut">
+            Your result is saved in this browser. Return to the singer profile
+            to see the overlap, shared notes, and the gap at each end.
+          </p>
+          <div className="mt-4">
+            <LinkButton href={`/singers/${comparisonSinger.slug}`} size="md">
+              Compare with {comparisonSinger.name} →
+            </LinkButton>
+          </div>
+        </Card>
+      )}
 
       {/* Save summary */}
       {save && (

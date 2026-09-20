@@ -81,13 +81,16 @@ function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
     "reba-mcentire": "Reba McEntire Voice Type: Classifications Vary | Reported Vocal Range E3–F5",
     "alex-warren": "Alex Warren Voice Type: Evidence Does Not Establish a Definitive Type | Reported Vocal Range A2–F#4",
     "sam-smith": "Sam Smith Voice Type: Baritone-to-Tenor Territory | Reported Vocal Range G2–C6",
-    "arijit-singh": "Arijit Singh Vocal Range: Reported C3–C5 | Voice Type: Described as Rich Baritone",
+    "arijit-singh": "Arijit Singh Vocal Range: Reported C3–C5 — Compare Yours",
   };
   if (hasReviewedVoiceTypeCorrection(s)) return reviewedTitles[s.slug];
   const voice = `Voice Type: ${s.voiceType}`;
-  return intent === "voice-type"
-    ? `${s.name} ${voice} | Vocal Range ${rangeLabel(s)}`
-    : `${s.name} Vocal Range: ${rangeLabel(s)} | ${voice}`;
+  if (intent === "voice-type") {
+    return `${s.name} ${voice} | Vocal Range ${rangeLabel(s)}`;
+  }
+  const answer = `${s.name} Vocal Range: ${rangeLabel(s)}`;
+  const challenge = `${answer} — Can You Sing It?`;
+  return challenge.length <= 60 ? challenge : `${answer} | Test Yours`;
 }
 
 function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
@@ -102,9 +105,10 @@ function queryAlignedDescription(s: SingerRecord, intent: SearchIntent): string 
     return `${voiceTypeEvidenceCopy(s)} The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
   }
   const semis = s.highMidi - s.lowMidi;
-  const voiceAnswer = `${s.name} is commonly classified as a ${s.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(semis)} octaves).`;
-  const rangeAnswer = `${s.name}'s cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(semis)} octaves). ${s.name} is commonly classified as a ${s.voiceType.toLowerCase()}.`;
-  return `${intent === "voice-type" ? voiceAnswer : rangeAnswer} See the notes and compare your range free.`;
+  if (intent === "voice-type") {
+    return `${s.name} is commonly classified as a ${s.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}. See every note, and take the free two-minute test to compare yours.`;
+  }
+  return `${s.name}'s cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(semis)} octaves). See every note, learn the voice type, and take the free two-minute test to compare yours.`;
 }
 
 export const dynamicParams = false;
@@ -369,9 +373,14 @@ export default async function SingerPage({
       title={queryAlignedHeading(s, intent)}
       subtitle={queryAlignedDescription(s, intent)}
       actions={
-        <LinkButton href="/singers" variant="outline" size="md">
-          ← All singers
-        </LinkButton>
+        <>
+          <LinkButton href={`/range?compare=${s.slug}`} size="md">
+            Test my range →
+          </LinkButton>
+          <LinkButton href="/singers" variant="outline" size="md">
+            ← All singers
+          </LinkButton>
+        </>
       }
     >
       <script
@@ -443,6 +452,10 @@ export default async function SingerPage({
             )}
           </div>
         </Card>
+
+        {/* The profile's unique value is the personal comparison, so it sits
+            directly under the answer rather than below the editorial detail. */}
+        <CompareWithMe s={s} />
 
         <Card>
           <SectionLabel>Evidence and review</SectionLabel>
@@ -581,9 +594,6 @@ export default async function SingerPage({
             ))}
           </div>
         </Card>
-
-        {/* You vs them */}
-        <CompareWithMe s={s} />
 
         {/* Who else touches the same extremes — the pages a reader who cares
             about one specific note actually wants next. */}

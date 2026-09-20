@@ -36,14 +36,15 @@ export function CompareWithMe({ s }: { s: Singer }) {
     return (
       <Card className="border-violet/40">
         <SectionLabel>You vs {s.name}</SectionLabel>
+        <h2 className="mt-3 text-xl">Can you sing it?</h2>
         <p className="mt-3 max-w-xl text-sm text-mut">
           Take the free 2-minute range test — your mic finds your lowest and
           highest notes, then this page shows exactly how your voice lines up
           with {s.name}&rsquo;s.
         </p>
         <div className="mt-4">
-          <LinkButton href="/range" size="sm">
-            Find my range
+          <LinkButton href={`/range?compare=${s.slug}`} size="md">
+            Take the free range test →
           </LinkButton>
         </div>
       </Card>
