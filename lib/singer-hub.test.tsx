@@ -5,7 +5,8 @@ vi.mock("server-only", () => ({}));
 
 import SingersPage from "@/app/singers/page";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SINGERS } from "@/lib/singers";
+import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
+import { SINGERS, rangeLabel } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
 function graphFrom(html: string) {
@@ -19,6 +20,12 @@ function graphFrom(html: string) {
 function crawlIndexHtml(html: string) {
   const match = html.match(/<section[^>]*data-singer-crawl-index="true"[^>]*>([\s\S]*?)<\/section>/);
   if (!match) throw new Error("singer hub emitted no compact crawl index");
+  return match[1];
+}
+
+function searchPriorityHtml(html: string) {
+  const match = html.match(/<section[^>]*data-singer-search-priority="true"[^>]*>([\s\S]*?)<\/section>/);
+  if (!match) throw new Error("singer hub emitted no search-priority section");
   return match[1];
 }
 
@@ -74,6 +81,24 @@ describe("/singers hub schema and crawl discovery", () => {
     const allHubSlugs = [...html.matchAll(/href="\/singers\/([a-z0-9-]+)"/g)]
       .map((match) => match[1])
       .filter((slug) => knownSlugs.has(slug));
-    expect(allHubSlugs).toHaveLength(SINGERS.length);
+    expect(allHubSlugs).toHaveLength(SINGERS.length + VOCAL_RANGE_PRIORITY_SLUGS.length);
+  });
+
+  it("gives current high-demand vocal-range pages prominent exact-answer links", () => {
+    const priority = searchPriorityHtml(html);
+    const links = [...priority.matchAll(/href="\/singers\/([a-z0-9-]+)"[^>]*>([\s\S]*?)<\/a>/g)];
+
+    expect(VOCAL_RANGE_PRIORITY_SLUGS.length).toBeGreaterThanOrEqual(12);
+    expect(links.map((match) => match[1])).toEqual([...VOCAL_RANGE_PRIORITY_SLUGS]);
+    expect(new Set(VOCAL_RANGE_PRIORITY_SLUGS).size).toBe(VOCAL_RANGE_PRIORITY_SLUGS.length);
+
+    for (const [index, slug] of VOCAL_RANGE_PRIORITY_SLUGS.entries()) {
+      const singer = SINGERS.find((candidate) => candidate.slug === slug);
+      expect(singer, `${slug} must remain in the singer catalog`).toBeDefined();
+      expect(links[index][2].replace(/<[^>]+>/g, "")).toContain(
+        `${singer!.name} vocal range`,
+      );
+      expect(links[index][2]).toContain(rangeLabel(singer!));
+    }
   });
 });
