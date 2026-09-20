@@ -43,7 +43,7 @@ const ARTIST_INTENT_CASES = [
     slug: "arijit-singh",
     name: "Arijit Singh",
     opening: "A public artist biography describes Arijit Singh as a rich baritone; the reviewed sources dispute a definitive tenor label. The displayed range of C3 to C5 is a reported reference span, not an independently verified physiological limit.",
-    title: "Arijit Singh Vocal Range: Reported C3–C5 | Voice Type: Described as Rich Baritone",
+    title: "Arijit Singh Vocal Range: Reported C3–C5 — Compare Yours",
     heading: "Arijit Singh Vocal Range: Reported C3–C5",
   },
 ] as const;
@@ -106,19 +106,34 @@ describe("every singer page answers its vocal range and voice type intent", () =
       const metadata = await generateMetadata({
         params: Promise.resolve({ slug: singer.slug }),
       });
+      const answerTitle = `${singer.name} Vocal Range: ${rangeLabel(singer)}`;
+      const challengeTitle = `${answerTitle} — Can You Sing It?`;
       const defaultTitle = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
         ? `${singer.name} Voice Type: ${singer.voiceType} | Vocal Range ${rangeLabel(singer)}`
-        : `${singer.name} Vocal Range: ${rangeLabel(singer)} | Voice Type: ${singer.voiceType}`;
+        : challengeTitle.length <= 60
+          ? challengeTitle
+          : `${answerTitle} | Test Yours`;
       const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
-        ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`
-        : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). ${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}.`;
+        ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
+        : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
+      const defaultDescription = `${defaultOpening} See every note${
+        VOICE_TYPE_QUERY_SLUGS.has(singer.slug) ? "" : ", learn the voice type"
+      }, and take the free two-minute test to compare yours.`;
       const correction = REVIEWED_TITLE_CORRECTIONS[singer.slug];
       const title = correction?.title ?? defaultTitle;
       const opening = correction?.opening ?? defaultOpening;
 
+      if (!correction) {
+        expect(title.length, `${singer.slug} title length`).toBeLessThanOrEqual(60);
+        expect(
+          defaultDescription.length,
+          `${singer.slug} description length`,
+        ).toBeLessThanOrEqual(175);
+      }
+
       expect(metadata.title).toEqual({ absolute: title });
       expect(metadata.description).toBe(
-        correction ? opening : `${opening} See the notes and compare your range free.`,
+        correction ? opening : defaultDescription,
       );
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
@@ -151,14 +166,16 @@ describe("every singer page answers its vocal range and voice type intent", () =
             ? `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`
             : `${singer.name} Vocal Range: ${rangeLabel(singer)}`;
         const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
-          ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`
-          : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). ${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}.`;
+          ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
+          : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
         const opening = REVIEWED_TITLE_CORRECTIONS[singer.slug]?.opening ?? defaultOpening;
 
         expect(html).toContain(
           `<h1 class="text-4xl sm:text-5xl">${heading}</h1>`,
         );
         expect(html).toContain(opening);
+        expect(html).toContain(`href="/range?compare=${singer.slug}"`);
+        expect(html).toContain("Test my range");
       }
     },
     30_000,

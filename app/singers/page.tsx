@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SingersDirectory } from "@/components/singers/directory";
 import { SingerCrawlIndex } from "@/components/singers/crawl-index";
-import { LinkButton, PageShell } from "@/components/ui";
+import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import {
   HUB_GENRES,
   SINGERS,
@@ -119,6 +119,11 @@ export default function SingersPage() {
       kicker="Reference"
       title="Famous vocal ranges"
       subtitle="The commonly cited ranges of famous singers, every one on the same keyboard."
+      actions={
+        <LinkButton href="/range" size="md">
+          Test my vocal range →
+        </LinkButton>
+      }
     >
       <script
         type="application/ld+json"
@@ -137,6 +142,23 @@ export default function SingersPage() {
         is the book that explains them, voice by voice. Come here for the number.
         Go there for how the voice does it.
       </p>
+
+      <Card className="mt-8 border-violet/40">
+        <div className="flex flex-wrap items-center justify-between gap-5">
+          <div className="max-w-2xl">
+            <SectionLabel>Compare your voice</SectionLabel>
+            <h2 className="mt-3 text-2xl">Can you sing it?</h2>
+            <p className="mt-2 text-sm text-mut">
+              Find your lowest and highest notes in about two minutes, then open
+              any singer to see exactly how your range overlaps theirs. Free in
+              your browser, with no signup.
+            </p>
+          </div>
+          <LinkButton href="/range" size="lg">
+            Test my vocal range →
+          </LinkButton>
+        </div>
+      </Card>
 
       <section
         data-singer-search-priority="true"
