@@ -1,0 +1,14 @@
+[
+  {
+    "id": "nidcd-voice-care",
+    "title": "Taking Care of Your Voice",
+    "url": "https://www.nidcd.nih.gov/health/taking-care-your-voice",
+    "supports": "General voice-care practices, symptom awareness, and seeking professional help for persistent voice problems."
+  },
+  {
+    "id": "asha-voice-disorders",
+    "title": "Voice Disorders",
+    "url": "https://www.asha.org/practice-portal/clinical-topics/voice-disorders/",
+    "supports": "The boundary between educational listening practice and clinical evaluation or treatment."
+  }
+]

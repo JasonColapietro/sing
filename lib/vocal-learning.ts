@@ -6,12 +6,19 @@ export interface VocalLearningPath {
 }
 
 /**
- * Six broad questions, each handed to the existing page that can answer it.
+ * A structured course, then six broad questions, each handed to the existing
+ * page that can answer it.
  *
  * /learn is a map, not a replacement for these pages. Keeping this list in one
  * place lets the visible cards and ItemList schema describe the same routes.
  */
 export const VOCAL_LEARNING_PATHS: readonly VocalLearningPath[] = [
+  {
+    title: "Follow a step-by-step course",
+    need: "Work through seven stages of short voice lessons, each with a self-check and a room to practise in, from room setup to style.",
+    href: "/learn/voice",
+    action: "Start the voice lessons",
+  },
   {
     title: "Find your vocal range",
     need: "Measure your lowest and highest comfortable notes, then use the result as a starting point for songs and warmups.",

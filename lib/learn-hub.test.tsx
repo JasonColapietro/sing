@@ -81,7 +81,7 @@ describe("/learn vocal training hub", () => {
     const paths = graph.find((node) => node["@type"] === "ItemList") as {
       itemListElement: Array<{ url: string }>;
     };
-    expect(paths.itemListElement).toHaveLength(6);
+    expect(paths.itemListElement).toHaveLength(7);
     for (const path of paths.itemListElement) {
       expect(path.url).toMatch(new RegExp(`^${SITE_URL.replaceAll(".", "\\.")}/`));
       expect(html).toContain(`href="${new URL(path.url).pathname}"`);
