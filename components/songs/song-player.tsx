@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat } from "@/lib/audio/notes";
 import { playTone, clickAt } from "@/lib/audio/synth";
@@ -51,6 +51,9 @@ import {
   type JudgmentTally,
   type SessionSummaryData,
   type Tempo,
+  describeLoopRange,
+  isWholeSongRange,
+  type LoopRange,
 } from "./lib";
 import type { GuidePass, SessionMode } from "./types";
 
@@ -152,8 +155,16 @@ export function SongPlayer({
   const [multiplier, setMultiplier] = useState(INITIAL_MULTIPLIER.multiplier);
   const [progressPct, setProgressPct] = useState(0);
   const [perLoopScores, setPerLoopScores] = useState<number[]>([]);
-  /** -1 = the whole song; otherwise an index into `song.sections`. */
-  const [sectionIndex, setSectionIndex] = useState(-1);
+  /**
+   * The loop the singer picked, tagged with the song it was picked on. The
+   * player is not re-mounted between songs, so a range left over from the last
+   * song must not carry into this one; reading it through the id resets it
+   * without an effect.
+   */
+  const [pickedLoop, setPickedLoop] = useState<{ songId: string; range: LoopRange | null }>({
+    songId: song.id,
+    range: null,
+  });
   const [sectionLabel, setSectionLabel] = useState<string | null>(null);
   const [stageMode, setStageMode] = useState(false);
 
@@ -171,13 +182,20 @@ export function SongPlayer({
    */
   const scoring = listening && pass !== "listen";
 
-  // The span of the song this session sings: the whole phrase, or one section
-  // when the singer is drilling. Fixed at count-in — the section picker is
-  // disabled while running, because the score denominator is built from this.
-  const drilled = sectionIndex >= 0 ? sections[sectionIndex] : undefined;
+  // The span of the song this session sings: the whole phrase, or a loop the
+  // singer set with the handles or a section preset. Fixed at count-in — the
+  // loop controls are disabled while running, because the score denominator is
+  // built from this.
+  const loopRange = pickedLoop.songId === song.id ? pickedLoop.range : null;
+  const drilled = isWholeSongRange(loopRange, song) ? null : loopRange;
+  const drilledLabel = drilled ? describeLoopRange(song, drilled) : null;
   const spanStart = drilled ? drilled.startBeat : 0;
   const spanEnd = drilled ? drilled.endBeat : totalBeats;
   const plannedLoops = drilled ? SECTION_DRILL_LOOPS : loopsFor(song);
+  const setLoopRange = useCallback(
+    (range: LoopRange | null) => setPickedLoop({ songId: song.id, range }),
+    [song.id],
+  );
 
   // Refs mirroring state/props for use inside the audio-clock-driven loops.
   const currentNotesRef = useRef(currentNotes);
@@ -1012,7 +1030,7 @@ export function SongPlayer({
   // whole list, the in-session row only the most recent passes.
   const shownLoopScores = perLoopScores.slice(-MAX_LOOP_PILLS);
   const sectionPill = drilled ? (
-    <Pill tone="cool">Drilling {drilled.label}</Pill>
+    <Pill tone="cool">Drilling {drilledLabel}</Pill>
   ) : sectionLabel ? (
     <Pill tone="cool">{sectionLabel}</Pill>
   ) : null;
@@ -1279,8 +1297,9 @@ export function SongPlayer({
             hasRange={hasRange}
             onFitToRange={applyFitToRange}
             sections={sections}
-            sectionIndex={sectionIndex}
-            onSectionIndex={setSectionIndex}
+            song={song}
+            loopRange={drilled}
+            onLoopRange={setLoopRange}
             drillLoops={SECTION_DRILL_LOOPS}
           />
         </div>
