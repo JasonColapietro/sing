@@ -172,6 +172,19 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
       };
       latest.current = next;
       setFrame(next);
+      // Test hook for e2e/pitch-precision.mjs, which plays a known note in as
+      // the fake microphone and scores what the room actually heard. Inert
+      // unless the harness created the array before the page loaded.
+      const probe = (window as { __singPitchProbe?: unknown[] }).__singPitchProbe;
+      if (Array.isArray(probe)) {
+        probe.push({
+          t: next.t,
+          raw: r?.freq ?? null,
+          clarity: next.clarity,
+          freq,
+          sampleRate: ctx.sampleRate,
+        });
+      }
       rafRef.current = requestAnimationFrame(loop);
     };
     rafRef.current = requestAnimationFrame(loop);

@@ -102,3 +102,34 @@ is the way to actually cover them.
 `npm run build` clobbers `.next` under a running `next dev`. Measure it in a
 separate pass against `npm run build && npm start`, which reproduces production
 to four decimals.
+
+## Pitch precision
+
+A separate runner, not an audit: it scores how many cents the practice rooms
+are off, through the real browser audio path.
+
+```bash
+npm run build && npm start                      # in another shell
+npm run e2e:pitch                               # uses Chrome, like the audit
+npm run e2e:pitch -- --executable=/opt/pw-browsers/chromium   # a specific build
+```
+
+Each case writes a synthetic voice (`lib/audio/voice-fixture.ts`) to a WAV,
+launches a browser with it as the fake microphone, opens `/studio`, presses
+"Enable microphone", and reads what `usePitch` heard through the
+`window.__singPitchProbe` hook. It exits non-zero when a case misses its
+ceiling. `lib/audio/pitch-precision.test.ts` scores the detector alone on the
+same fixtures, so a regression in one and not the other says which layer broke.
+
+Measured on introduction (Chromium, 44.1 kHz context, 48 kHz source):
+
+| Case | Bias | p95 \|error\| |
+|---|---|---|
+| E2 – C6, clean | ≤ 0.13 c | ≤ 0.14 c |
+| A3 ±25 c detune | 0.00 c | 0.00 c |
+| A3, 20 dB SNR | 0.2 c | 0.9 c |
+| A3, 5.5 Hz ±40 c vibrato | **5.5 c sharp** | 25 c |
+
+The vibrato bias is a real defect, not the harness: `usePitch`'s median of 4
+takes the upper middle value. The raw detector's bias on the same signal is
+0.4 c.
