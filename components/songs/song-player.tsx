@@ -231,6 +231,12 @@ export function SongPlayer({
   const centsFramesRef = useRef<number[]>([]);
   const loopSnapshotRef = useRef(0);
   const loopIndexTrackRef = useRef(0);
+  /**
+   * Which loop the *scored* position is in, as cycle * loops + loop. Scoring
+   * runs `scoreLag` behind the audio clock, so loop lines are closed on this,
+   * not on `loopIndexTrackRef`, which drives the on-screen loop number.
+   */
+  const scoredLoopKeyRef = useRef(0);
   /** Whole planned sessions rehearsal has already looped through. */
   const cyclesRef = useRef(0);
   const perLoopScoresRef = useRef<number[]>([]);
@@ -667,15 +673,23 @@ export function SongPlayer({
     setCountInBeat(-1);
     elapsedBeatsRef.current = Math.min(elapsedGlobal, totalSessionBeats);
 
-    if (elapsedGlobal >= totalSessionBeats) {
-      if (modeRef.current === "performance") {
-        finalize();
-        return;
-      }
-      // Rehearsal has no last loop: close the pass that just ended and re-base
-      // the clock a whole session back so the span comes round again. Only the
+    // Pitch reports describe the voice `scoreLag` ago, so everything that
+    // scores — crediting, judging, closing a loop, ending a performance — runs
+    // on this lagged position rather than on the audio clock. Scoring on the
+    // audio clock closed each loop before its last note's final reports came
+    // in; on a short loop that tail is a large share of the notes (a perfect
+    // half-beat loop at 120 bpm scored ~73%).
+    const lagBeats = scoreLagRef.current / spb;
+
+    if (modeRef.current === "performance" && elapsedGlobal - lagBeats >= totalSessionBeats) {
+      finalize();
+      return;
+    }
+    if (modeRef.current !== "performance" && elapsedGlobal >= totalSessionBeats) {
+      // Rehearsal has no last loop: re-base the clock a whole session back so
+      // the span comes round again. The pass that just ended is closed a
+      // moment later, when the lagged position crosses the line. Only the
       // singer ends a rehearsal — see endSession.
-      closeLoop(elapsedGlobal);
       cyclesRef.current += 1;
       setCycle(cyclesRef.current);
       refreshPossibleSec();
@@ -693,14 +707,37 @@ export function SongPlayer({
     const loopIdx = Math.min(loops - 1, Math.floor(elapsedGlobal / spanBeats));
     // Position is reported in *song* beats, not span beats, so the piano roll
     // and the lyric band can keep indexing the song directly while a section
-    // loops.
-    const beatInSong = spanStartRef.current + (elapsedGlobal - loopIdx * spanBeats);
+    // loops. Clamped: a performance keeps ticking for `lagBeats` past its end
+    // while the last reports come in.
+    const beatInSong = Math.min(
+      spanStartRef.current + spanBeats,
+      spanStartRef.current + (elapsedGlobal - loopIdx * spanBeats),
+    );
     positionBeatsRef.current = beatInSong;
 
     if (loopIdx !== loopIndexTrackRef.current) {
-      closeLoop(elapsedGlobal);
       loopIndexTrackRef.current = loopIdx;
       setLoopIndex(loopIdx);
+    }
+
+    // The lagged position. Just after a rehearsal wrap it still belongs to the
+    // end of the previous cycle.
+    let scoredElapsed = elapsedGlobal - lagBeats;
+    let scoredCycle = cyclesRef.current;
+    if (scoredElapsed < 0 && scoredCycle > 0) {
+      scoredElapsed += totalSessionBeats;
+      scoredCycle -= 1;
+    }
+    const scoredLoop =
+      scoredElapsed >= 0 ? Math.min(loops - 1, Math.floor(scoredElapsed / spanBeats)) : -1;
+    const scoredBeat =
+      scoredLoop >= 0 ? spanStartRef.current + (scoredElapsed - scoredLoop * spanBeats) : -Infinity;
+    if (scoredLoop >= 0) {
+      const key = scoredCycle * loops + scoredLoop;
+      if (key !== scoredLoopKeyRef.current) {
+        closeLoop(elapsedGlobal);
+        scoredLoopKeyRef.current = key;
+      }
     }
 
     const label = sectionAtBeat(song, beatInSong)?.label ?? null;
@@ -716,8 +753,7 @@ export function SongPlayer({
         const midiFloat = freqToMidiFloat(f.freq);
         // The frame in hand describes the voice `scoreLag` ago, and the guide it
         // was following was heard `outputLag` after it was scheduled. Judge it
-        // against where the song was then, not where the song is now.
-        const scoredBeat = beatInSong - scoreLagRef.current / spb;
+        // against where the song was then — `scoredBeat` — not where it is now.
         const idx = noteIndexAtBeat(currentNotesRef.current, scoredBeat);
         // The playBeats guard matters: a note that starts before a drilled
         // section can still cover this beat, and crediting it would add to the
@@ -740,7 +776,7 @@ export function SongPlayer({
       // Every in-span note whose window has closed since the last frame.
       const order = judgeOrderRef.current;
       let cursor = judgeCursorRef.current;
-      while (cursor < order.length && beatInSong >= order[cursor].endBeat) {
+      while (cursor < order.length && scoredBeat >= order[cursor].endBeat) {
         judgeNote(order[cursor].index);
         cursor++;
       }
@@ -838,6 +874,7 @@ export function SongPlayer({
 
     loopSnapshotRef.current = 0;
     loopIndexTrackRef.current = 0;
+    scoredLoopKeyRef.current = 0;
     perLoopScoresRef.current = [];
     elapsedBeatsRef.current = 0;
     sectionLabelRef.current = undefined;

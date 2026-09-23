@@ -123,6 +123,13 @@ try {
     await loopPill.waitFor();
     // Wait for the first loop line: Auto reads the silent loop as poor and steps down one notch.
     await page.waitForFunction(() => /^Loop [2-9]/.test([...document.querySelectorAll("span")].map((s) => s.textContent).find((t) => /^Loop \d+$/.test(t ?? "")) ?? ""), null, { timeout: 120_000 });
+    // Auto steps when the *scored* position crosses the loop line, which trails
+    // the on-screen loop number by the pitch-report lag (~0.1 s), so wait for it.
+    await page.waitForFunction(
+      () => document.querySelector('input[aria-valuetext$="%"][type="range"][disabled]')?.getAttribute("aria-valuetext") === "120%",
+      null,
+      { timeout: 5_000 },
+    ).catch(() => {});
     assert.equal(await tempoText(page), "120%", "Auto stepped the rate down after a silent loop");
     // Planned loops for this song; a rehearsal must run past them.
     const planned = await page.evaluate(() => {
