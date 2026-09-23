@@ -32,6 +32,8 @@ const LANE_PAD = 2;
 const BURST_MS = 450;
 /** How much of the voice's recent path trails behind the marker. */
 const TRAIL_MS = 1600;
+/** Upper bound on trail samples; a few seconds of frames at 120 Hz. */
+const MAX_TRAIL_POINTS = 600;
 
 /** Everything the loop reads, written by the game every frame. */
 export interface CatcherView {
@@ -234,9 +236,16 @@ export function NoteCatcherCanvas({
         }
       });
 
-      // Trail: where the voice has been, running back from the line.
-      trail.push({ t: now, midi: markerMidi });
+      // Trail: where the voice has been, running back from the line. Sampled
+      // on game time, which stands still while paused — this loop keeps
+      // drawing then, and pushing a sample per frame at a frozen time would
+      // grow the trail without bound, since nothing ever ages out. The cap is
+      // a backstop against any other way time might stall.
+      if (trail.length === 0 || now > trail[trail.length - 1].t) {
+        trail.push({ t: now, midi: markerMidi });
+      }
       while (trail.length > 0 && trail[0].t < now - TRAIL_MS) trail.shift();
+      if (trail.length > MAX_TRAIL_POINTS) trail.splice(0, trail.length - MAX_TRAIL_POINTS);
       ctx.strokeStyle = p.voice;
       ctx.globalAlpha = 0.55;
       ctx.lineWidth = 2;

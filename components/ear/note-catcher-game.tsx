@@ -198,9 +198,40 @@ export function NoteCatcherGame({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, targets, level, latest]);
 
+  // The logged session length is `now - startedAt`, so each pause moves
+  // startedAt forward by its own length: time spent paused (or with the tab
+  // parked on the pause screen) is not practice, and must not earn XP or use
+  // up a free singer's daily minutes.
+  const pausedAtRef = useRef<number | null>(null);
   const togglePause = useCallback(() => {
-    setPhase((p) => (p === "play" ? "paused" : p === "paused" ? "play" : p));
-  }, []);
+    if (phase === "play") {
+      pausedAtRef.current = performance.now();
+      setPhase("paused");
+    } else if (phase === "paused") {
+      const at = pausedAtRef.current;
+      pausedAtRef.current = null;
+      if (at !== null) {
+        const pausedMs = performance.now() - at;
+        setStartedAt((s) => s + pausedMs);
+      }
+      setPhase("play");
+    }
+  }, [phase]);
+
+  // A hidden tab pauses the game, as the songs room does: nothing can be
+  // caught while nobody is looking, and the pause keeps that time out of the
+  // logged session.
+  const togglePauseRef = useRef(togglePause);
+  useEffect(() => {
+    togglePauseRef.current = togglePause;
+  }, [togglePause]);
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden" && phase === "play") togglePauseRef.current();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [phase]);
 
   // Keyboard: Space pauses and resumes.
   useEffect(() => {
