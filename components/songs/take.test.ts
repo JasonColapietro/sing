@@ -97,6 +97,26 @@ describe("song takes", () => {
     expect((onTake.mock.calls[0][0] as SongTake).durationSec).toBe(MAX_TAKE_SEC);
   });
 
+  it("does not let a long pause use up the cap", () => {
+    const onTake = vi.fn();
+    const rec = startTakeRecorder(stream, song, onTake)!;
+    now = 60_000;
+    vi.advanceTimersByTime(60_000);
+    rec.pause();
+    // Away far longer than the whole cap.
+    now = 60_000 + 2 * MAX_TAKE_SEC * 1000;
+    vi.advanceTimersByTime(2 * MAX_TAKE_SEC * 1000);
+    expect(onTake).not.toHaveBeenCalled();
+    rec.resume();
+    // The remaining budget is what the cap now allows.
+    now += (MAX_TAKE_SEC - 60) * 1000 - 1;
+    vi.advanceTimersByTime((MAX_TAKE_SEC - 60) * 1000 - 1);
+    expect(onTake).not.toHaveBeenCalled();
+    now += 1;
+    vi.advanceTimersByTime(1);
+    expect((onTake.mock.calls[0][0] as SongTake).durationSec).toBe(MAX_TAKE_SEC);
+  });
+
   it("lets the song play without a take where recording isn't possible", () => {
     FakeRecorder.supported = false;
     expect(startTakeRecorder(stream, song, vi.fn())).toBeNull();

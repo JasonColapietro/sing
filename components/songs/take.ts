@@ -115,27 +115,36 @@ export function startTakeRecorder(
     else rec.onstop?.(new Event("stop"));
   };
   // A rehearsal loops until the singer stops; the cap keeps a forgotten one
-  // from filling memory. The take ends there and the song carries on.
-  const cap = setTimeout(stop, MAX_TAKE_SEC * 1000);
+  // from filling memory. The take ends there and the song carries on. It counts
+  // recorded time only: the timer is dropped on pause and re-armed with what is
+  // left on resume, or a long pause (the song pauses itself when the tab is
+  // hidden) would end the take while the song itself was still unfinished.
+  let cap: ReturnType<typeof setTimeout> | undefined;
+  const armCap = () => {
+    clearTimeout(cap);
+    cap = setTimeout(stop, Math.max(0, MAX_TAKE_SEC * 1000 - recordedMs));
+  };
 
   try {
     rec.start(1000);
   } catch {
-    clearTimeout(cap);
     return null;
   }
+  armCap();
 
   return {
     pause() {
       if (rec.state === "recording") {
         rec.pause();
         bank();
+        clearTimeout(cap);
       }
     },
     resume() {
       if (rec.state === "paused") {
         rec.resume();
         runningSince = performance.now();
+        armCap();
       }
     },
     finish: stop,
