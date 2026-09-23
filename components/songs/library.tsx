@@ -54,6 +54,9 @@ import {
   DEFAULT_BROWSE,
   type BrowseState,
 } from "./browse-controls";
+import { pickForTaste, tasteGenreOptions } from "@/lib/song-taste";
+import { saveTaste, skipTaste, useTaste } from "./taste";
+import { PickedForYou, TasteQuiz } from "./taste-quiz";
 
 /**
  * The songbook browser.
@@ -336,6 +339,10 @@ export function Library({
   const recents = useRecentlyPlayed();
   const setlist = useSetlist();
   const [browse, setBrowse] = useState<BrowseState>(DEFAULT_BROWSE);
+  const taste = useTaste();
+  // Re-opening the quiz is local UI state: saved answers stay in force (and
+  // the picks stay correct) until the singer actually submits new ones.
+  const [editingTaste, setEditingTaste] = useState(false);
 
   // The single definition of "songs this singer can start". Everything below —
   // filtering, the dice, the setlist, the recents row — reads from this, so no
@@ -346,6 +353,16 @@ export function Library({
   );
 
   const options = useMemo(() => browseOptions(accessible), [accessible]);
+  const tasteGenres = useMemo(() => tasteGenreOptions(accessible), [accessible]);
+  // Ranked over the same entitlement-aware list and mastery set as the grid,
+  // so a pick can never be a song the grid would show locked.
+  const picks = useMemo(
+    () =>
+      taste?.kind === "answered"
+        ? pickForTaste(taste, { songs: accessible, pro: isPro, masteredIds: mastered, range: progress.range })
+        : [],
+    [taste, accessible, isPro, mastered, progress.range],
+  );
   const visible = useMemo(
     () =>
       applyBrowse(accessible, browse, {
@@ -440,6 +457,42 @@ export function Library({
 
   return (
     <div className="space-y-8">
+      {taste === null || editingTaste ? (
+        <TasteQuiz
+          genres={tasteGenres}
+          initial={taste?.kind === "answered" ? taste : undefined}
+          skipLabel={taste === null ? "Skip for now" : "Cancel"}
+          onSave={(answers) => {
+            saveTaste(answers);
+            setEditingTaste(false);
+          }}
+          onSkip={() => {
+            // Cancelling an edit keeps what was saved; only a first-visit skip
+            // is recorded, so the quiz stops asking.
+            if (taste === null) skipTaste();
+            setEditingTaste(false);
+          }}
+        />
+      ) : taste.kind === "answered" ? (
+        // Hidden while filtering, like the recents row: the singer is
+        // searching for something specific and did not ask for suggestions.
+        active === 0 && picks.length > 0 && (
+          <PickedForYou
+            answers={taste}
+            picks={picks}
+            onStart={(pick) => start(pick.song)}
+            onChange={() => setEditingTaste(true)}
+          />
+        )
+      ) : (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-mut">
+          <span>Want a few songs picked for you?</span>
+          <Button variant="outline" size="sm" onClick={() => setEditingTaste(true)}>
+            Answer three questions
+          </Button>
+        </div>
+      )}
+
       {!hasRange && (
         <Card className="border-violet/30">
           <div className="flex flex-wrap items-center justify-between gap-4">
