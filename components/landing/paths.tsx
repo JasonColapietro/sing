@@ -90,7 +90,12 @@ export function StartingPaths() {
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
           Everything below is free and open right now. These are just the two
-          orders that waste the least time.
+          orders that waste the least time. If you want the whole sequence,
+          the free {" "}
+          <Link href="/learn" className="text-violet-ink hover:underline">
+            learn-to-sing and vocal training guide
+          </Link>{" "}
+          turns these rooms into a twenty-minute session and a seven-day plan.
         </p>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2">

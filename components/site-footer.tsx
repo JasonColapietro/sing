@@ -24,6 +24,7 @@ import {
 type FooterLink = { href: string; label: string };
 
 const REFERENCE: FooterLink[] = [
+  { href: "/learn", label: "Learn to sing" },
   { href: "/singers", label: "Famous singers' vocal ranges" },
   { href: "/singers/records", label: "Widest, lowest & highest ranges" },
   { href: "/singers/methodology", label: "Singer range methodology" },
