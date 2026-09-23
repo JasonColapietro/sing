@@ -3,7 +3,7 @@
 import { useFreeCap } from "@/lib/free-cap";
 import { CapWall } from "@/components/practice/free-cap";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
@@ -14,6 +14,7 @@ import { ALL_SONGS, SONGS, type Song } from "./data";
 import { getProState } from "@/lib/pro";
 import { Library } from "./library";
 import { SongPlayer } from "./song-player";
+import { releaseTake, type TakeState } from "./take";
 import { SessionSummary } from "./session-summary";
 import { getMastered, recordMastered, recordSongPlayed } from "./favorites";
 import { advanceSetlist, endSetlist, useSetlist } from "./setlist";
@@ -51,6 +52,16 @@ export function SongsClient() {
   const [view, setView] = useState<View>("library");
   const [activeSong, setActiveSong] = useState<Song | null>(null);
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
+  // The singer's recorded take for the current run; undefined when the run
+  // isn't recorded. Its object URL is released whenever it is replaced.
+  const [take, setTake] = useState<TakeState | undefined>(undefined);
+  const takeRef = useRef<TakeState | undefined>(undefined);
+  const replaceTake = useCallback((next: TakeState | undefined) => {
+    if (takeRef.current !== next) releaseTake(takeRef.current);
+    takeRef.current = next;
+    setTake(next);
+  }, []);
+  useEffect(() => () => releaseTake(takeRef.current), []);
   // Bumped on every start so a repeat of the same song still counts as a play;
   // the effect below keys off it as well as the song identity.
   const [playToken, setPlayToken] = useState(0);
@@ -60,6 +71,7 @@ export function SongsClient() {
     if (cap.capped || !canStart(song)) return;
     setActiveSong(song);
     setSummary(null);
+    replaceTake(undefined);
     setView("practice");
     setPlayToken((t) => t + 1);
   }
@@ -188,6 +200,7 @@ export function SongsClient() {
             setSummary(data);
             setView("summary");
           }}
+          onTake={replaceTake}
           onExit={() => {
             // Walking out mid-night stops the setlist without clearing it, so
             // the running order survives for the next "Start setlist".
@@ -200,6 +213,7 @@ export function SongsClient() {
       {view === "summary" && summary && (
         <SessionSummary
           data={summary}
+          take={take}
           onAgain={() => startSongById(summary.song.id)}
           onLibrary={() => {
             endSetlist();

@@ -23,6 +23,7 @@ import { LyricBand } from "./lyric-band";
 import { JudgmentReadout, type JudgmentEvent } from "./judgment";
 import { Mixer } from "./mixer";
 import { Stage, requestStageFullscreen } from "./stage";
+import { startTakeRecorder, type TakeRecorder, type TakeState } from "./take";
 import {
   COUNT_IN_BEATS,
   INITIAL_MULTIPLIER,
@@ -126,6 +127,7 @@ export function SongPlayer({
   onPassChange,
   onFinish,
   onExit,
+  onTake,
 }: {
   song: Song;
   pitch: UsePitchResult;
@@ -136,6 +138,12 @@ export function SongPlayer({
   onPassChange: (pass: GuidePass) => void;
   onFinish: (summary: SessionSummaryData) => void;
   onExit: () => void;
+  /**
+   * The recorded take, for the summary: "recording" when a run starts
+   * recording, then the take (or "none") a moment after onFinish once the
+   * recorder stops, and undefined when a run starts without recording.
+   */
+  onTake?: (take: TakeState | undefined) => void;
 }) {
   const [transpose, setTranspose] = useState(0);
   const [tempo, setTempo] = useState<Tempo>(1);
@@ -167,6 +175,9 @@ export function SongPlayer({
   });
   const [sectionLabel, setSectionLabel] = useState<string | null>(null);
   const [stageMode, setStageMode] = useState(false);
+  /** Record the singer's own take this run, for review in the summary. */
+  const [recordTake, setRecordTake] = useState(false);
+  const takeRecorderRef = useRef<TakeRecorder | null>(null);
 
   const currentNotes = useMemo(() => transposedNotes(song, transpose), [song, transpose]);
   const totalBeats = useMemo(() => songTotalBeats(song), [song]);
@@ -524,6 +535,8 @@ export function SongPlayer({
     if (finishedRef.current) return;
     finishedRef.current = true;
     stopLoops();
+    takeRecorderRef.current?.finish();
+    takeRecorderRef.current = null;
 
     const notes = currentNotesRef.current;
     if (scoringRef.current) flushJudgments(); // the last loop's tail
@@ -650,6 +663,9 @@ export function SongPlayer({
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
+
+  // Leaving the room mid-take releases the microphone recording with it.
+  useEffect(() => () => takeRecorderRef.current?.discard(), []);
 
   function rafTick() {
     const spb = spbRef.current;
@@ -909,6 +925,17 @@ export function SongPlayer({
     for (let i = 0; i < COUNT_IN_BEATS; i++) clickAt(countInStart + i * spb, i === 0);
     pausedGlobalBeatsRef.current = 0;
 
+    // A restart throws the unfinished take away; a new one starts with the
+    // count-in so the singer's first breath is on it.
+    takeRecorderRef.current?.discard();
+    takeRecorderRef.current = null;
+    const stream = recordTake && listening ? pitch.getStream() : null;
+    const recorder = stream
+      ? startTakeRecorder(stream, song, (take) => onTake?.(take ?? "none"))
+      : null;
+    takeRecorderRef.current = recorder;
+    onTake?.(recorder ? "recording" : undefined);
+
     setPhase("running");
     schedTimerRef.current = setInterval(schedTick, 90);
     schedTick();
@@ -922,6 +949,7 @@ export function SongPlayer({
     const spb = spbRef.current;
     const elapsedGlobal = Math.max(0, (audioNow() - t0Ref.current) / spb);
     pausedGlobalBeatsRef.current = elapsedGlobal;
+    takeRecorderRef.current?.pause();
     setPhase("paused");
   }
 
@@ -931,6 +959,7 @@ export function SongPlayer({
     // The click cursor counts beats from t0, which just moved; rewinding it lets
     // schedTick clamp it forward to wherever the song now is.
     clickCursorRef.current = 0;
+    takeRecorderRef.current?.resume();
     setPhase("running");
     schedTimerRef.current = setInterval(schedTick, 90);
     schedTick();
@@ -950,6 +979,8 @@ export function SongPlayer({
 
   function endPractice() {
     stopLoops();
+    takeRecorderRef.current?.discard();
+    takeRecorderRef.current = null;
     onExit();
   }
 
@@ -1297,6 +1328,26 @@ export function SongPlayer({
           <Button variant="outline" size="sm" onClick={enterStage}>
             <IconExpand /> Stage mode
           </Button>
+          {listening && (
+            <button
+              type="button"
+              aria-pressed={recordTake}
+              disabled={!controlsEnabled}
+              onClick={() => setRecordTake((on) => !on)}
+              title="Record your voice this run, then play it back from the summary"
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors disabled:opacity-40 ${
+                recordTake ? "border-rec text-rec" : "border-line2 text-mut hover:text-ink"
+              }`}
+            >
+              <span
+                aria-hidden
+                className={`size-2 rounded-full ${recordTake ? "bg-rec" : "bg-line2"} ${
+                  recordTake && phase === "running" ? "animate-pulse" : ""
+                }`}
+              />
+              Record my take
+            </button>
+          )}
           <span className="flex-1" />
           <Button variant="rec" size="sm" onClick={endSession}>
             End practice

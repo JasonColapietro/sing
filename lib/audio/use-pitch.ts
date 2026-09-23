@@ -46,6 +46,13 @@ export interface UsePitchResult {
   /** Resolves true if the mic started. Call from a click handler. */
   start: () => Promise<boolean>;
   stop: () => void;
+  /**
+   * The live microphone stream, or null while idle. For recording the same
+   * take the room is scoring, without opening the device a second time (which
+   * Safari can refuse as busy). It is replaced when the singer switches input,
+   * so hold it only for as long as one recording.
+   */
+  getStream: () => MediaStream | null;
 }
 
 /**
@@ -213,5 +220,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     void start();
   }, [inputId, monitoring, start, stop]);
 
-  return { frame, latest, listening, error, start, stop };
+  const getStream = useCallback(() => streamRef.current, []);
+
+  return { frame, latest, listening, error, start, stop, getStream };
 }

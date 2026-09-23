@@ -30,6 +30,7 @@ import { AccountBackupSync } from "@/components/progress/account-backup-sync";
 import { FreeOnly, ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
+import { pickMimeType } from "./mime";
 
 const MAX_SEC = 300; // 5 minute take limit
 const COUNT_IN_BEAT = 0.5; // seconds per count-in click
@@ -67,17 +68,6 @@ function nextTakeName(takes: TakeRecord[]): string {
   }
   const date = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
   return `Take ${maxN + 1} — ${date}`;
-}
-
-function pickMimeType(): string | undefined {
-  if (typeof MediaRecorder === "undefined") return undefined;
-  const candidates = [
-    "audio/webm;codecs=opus",
-    "audio/webm",
-    "audio/ogg;codecs=opus",
-    "audio/mp4",
-  ];
-  return candidates.find((m) => MediaRecorder.isTypeSupported(m));
 }
 
 function extForMime(mime: string): string {
