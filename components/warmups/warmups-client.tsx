@@ -3,7 +3,7 @@
 import { useFreeCap } from "@/lib/free-cap";
 import { CapWall } from "@/components/practice/free-cap";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
@@ -21,6 +21,8 @@ import { RoutineSummary } from "./routine-summary";
 import { PathSection, RoutineGrid, RoutineMeta, routineStats } from "./routine-home";
 import { recentWarmupResults, routineReason, routineStartingTempo, recommendRoutine, routineById, stepExercise, type Routine } from "./routines";
 import type { SessionSummaryData } from "./lib";
+import { DailyThreeCard } from "./daily-three-card";
+import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type DailyTempo } from "@/lib/daily-three";
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
 
@@ -46,7 +48,8 @@ type ErrorAt =
   | { kind: "gate" }
   | { kind: "today" }
   | { kind: "routine"; id: string }
-  | { kind: "exercise"; id: string };
+  | { kind: "exercise"; id: string }
+  | { kind: "daily"; id: string };
 
 export function WarmupsClient() {
   const pitch = usePitch();
@@ -62,6 +65,9 @@ export function WarmupsClient() {
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
   const [activeRoutine, setActiveRoutine] = useState<Routine | null>(null);
   const [routineSummary, setRoutineSummary] = useState<RoutineSummaryData | null>(null);
+  // The tempo the running exercise starts at: 1x, or the step today's plan
+  // chose for it.
+  const [activeTempo, setActiveTempo] = useState<DailyTempo>(1);
 
   // The coach links here as /warmups?exercise=<id> and the routine cards
   // elsewhere as /warmups?routine=<id>, so a singer arrives on the thing that
@@ -77,11 +83,14 @@ export function WarmupsClient() {
   // is where the singer sits, so it renders the daily routine and the
   // client corrects it once — the same shape as the deep-link read above.
   const [hour, setHour] = useState<number | null>(null);
+  // The local day seeds today's three, read after mount for the same reason.
+  const [today, setToday] = useState<string | null>(null);
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     /* eslint-disable react-hooks/set-state-in-effect */
     setDeepLink({ exercise: q.get("exercise"), routine: q.get("routine") });
     setHour(new Date().getHours());
+    setToday(localDay());
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
@@ -95,10 +104,18 @@ export function WarmupsClient() {
     ...(isPro ? PRO_PACKS.map((pack) => ({ title: pack.name, items: pack.exercises.map(pathItem) })) : []),
   ]);
   const nextExercise = pathExercises.find((e) => e.id === nextId);
+  // Planned from the free catalogue whatever the viewer's plan, and from
+  // sessions before today, so it holds still all day.
+  const dailyPlan = useMemo(
+    () => (today ? planDailyThree({ sessions: progress.sessions, day: today }) : null),
+    [progress.sessions, today],
+  );
+  const dailyDone = dailyPlan ? dailyThreeDone(dailyPlan, progress.sessions) : [];
 
-  function startExercise(ex: WarmupExercise) {
+  function startExercise(ex: WarmupExercise, tempo: DailyTempo = 1) {
     if (cap.capped) return;
     setActiveEx(ex);
+    setActiveTempo(tempo);
     setSummary(null);
     setView("session");
   }
@@ -120,7 +137,9 @@ export function WarmupsClient() {
   // What a cold visitor picked while the mic was still off, held until
   // permission lands. Without it their choice is thrown away by the prompt.
   const [pending, setPending] = useState<
-    { kind: "exercise"; ex: WarmupExercise } | { kind: "routine"; routine: Routine } | null
+    | { kind: "exercise"; ex: WarmupExercise; tempo?: DailyTempo }
+    | { kind: "routine"; routine: Routine }
+    | null
   >(null);
 
   // Where the next mic failure has to appear. The room is long — a card near
@@ -137,6 +156,19 @@ export function WarmupsClient() {
     }
     setPending({ kind: "exercise", ex });
     setErrorAt({ kind: "exercise", id: ex.id });
+    const ok = await pitch.start();
+    if (!ok) setPending(null);
+  }
+
+  /** A row in today's three: the exercise at the tempo the plan set for it. */
+  async function selectDailyPick(p: DailyPick) {
+    if (cap.capped || !canStart(p.exercise)) return;
+    if (pitch.listening) {
+      startExercise(p.exercise, p.tempo);
+      return;
+    }
+    setPending({ kind: "exercise", ex: p.exercise, tempo: p.tempo });
+    setErrorAt({ kind: "daily", id: p.exercise.id });
     const ok = await pitch.start();
     if (!ok) setPending(null);
   }
@@ -179,6 +211,8 @@ export function WarmupsClient() {
       setView("routine");
     } else if (deepLinkEx && canStart(deepLinkEx)) {
       setActiveEx(deepLinkEx);
+      // A link to one of today's three starts at the tempo the plan set.
+      setActiveTempo(dailyTempoFor(dailyPlan, deepLinkEx.id) ?? 1);
       setSummary(null);
       setView("session");
     }
@@ -198,7 +232,7 @@ export function WarmupsClient() {
   if (pending && pitch.listening) {
     const p = pending;
     setPending(null);
-    if (p.kind === "exercise" && canStart(p.ex)) startExercise(p.ex);
+    if (p.kind === "exercise" && canStart(p.ex)) startExercise(p.ex, p.tempo);
     if (p.kind === "routine" && canStartRoutine(p.routine)) startRoutine(p.routine);
   }
 
@@ -236,6 +270,15 @@ export function WarmupsClient() {
               startLabel={pitch.listening ? "Start exercise" : "Enable mic and start"}
               micReady={pitch.listening}
               error={errorAt.kind === "exercise" && errorAt.id === nextExercise.id ? pitch.error : null}
+            />
+          )}
+          {dailyPlan && (
+            <DailyThreeCard
+              plan={dailyPlan}
+              done={dailyDone}
+              onStart={(p) => void selectDailyPick(p)}
+              error={errorAt.kind === "daily" ? pitch.error : null}
+              errorExerciseId={errorAt.kind === "daily" ? errorAt.id : null}
             />
           )}
           <ContinueCard
@@ -352,6 +395,7 @@ export function WarmupsClient() {
       {view === "session" && activeEx && (
         <ExercisePlayer
           ex={activeEx}
+          initialTempo={activeTempo}
           pitch={pitch}
           range={progress.range}
           variant="session"
