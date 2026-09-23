@@ -85,6 +85,16 @@ function difficultyLabel(difficulty: Difficulty): string {
 }
 
 /**
+ * A run of a game that is not comparable with its plain levels — Note catcher
+ * chasing one song. `key` keeps its best apart; `label` names it on the top bar
+ * and in the logged session's detail. Every other game passes nothing.
+ */
+export interface EarVariant {
+  key: string;
+  label: string;
+}
+
+/**
  * A game's live screen: the full-screen dark session surface, with the round
  * UI in the body. The top bar carries the way out and the progress through
  * the ten rounds; the score and the current streak sit in its right slot, the
@@ -95,18 +105,26 @@ export function GameShell({
   difficulty,
   session,
   onExit,
+  variant,
   children,
 }: {
   game: GameId;
   difficulty: Difficulty;
   session: EarSession;
   onExit: () => void;
+  variant?: EarVariant;
   children: ReactNode;
 }) {
   return (
     <SessionShell
-      title={GAME_NAMES[game]}
-      subtitle={`${difficultyLabel(difficulty)} · Round ${session.round}/${ROUNDS}`}
+      // A variant names itself in the title, which truncates; the subtitle
+      // never shrinks, so a song title there pushed the game name off a phone.
+      title={variant?.label ?? GAME_NAMES[game]}
+      subtitle={
+        variant
+          ? `Round ${session.round}/${ROUNDS}`
+          : `${difficultyLabel(difficulty)} · Round ${session.round}/${ROUNDS}`
+      }
       progress={(session.results.length / ROUNDS) * 100}
       onClose={onExit}
       closeLabel="Quit game"
@@ -370,6 +388,7 @@ export function useLogEarSession(
   session: EarSession,
   /** performance.now() when play began, for session duration. */
   startedAt: number,
+  variant?: EarVariant,
 ): EarLogResult {
   const written = useRef(false);
   const [result, setResult] = useState<EarLogResult>({
@@ -390,16 +409,16 @@ export function useLogEarSession(
       type: "ear",
       durationSec,
       score: session.score,
-      detail: GAME_NAMES[game],
+      detail: variant ? `${GAME_NAMES[game]} · ${variant.label}` : GAME_NAMES[game],
     });
     setResult({
       xpGained: res.xpGained,
       newAchievements: res.newAchievements,
-      newBest: saveBest(game, difficulty, session.score),
+      newBest: saveBest(game, difficulty, session.score, variant?.key),
       logged: true,
     });
     emitProResult();
-  }, [game, difficulty, session.done, session.score, startedAt]);
+  }, [game, difficulty, session.done, session.score, startedAt, variant]);
 
   return result;
 }
@@ -417,6 +436,7 @@ export function StepDone({
   startedAt,
   onExit,
   onComplete,
+  variant,
 }: {
   game: GameId;
   difficulty: Difficulty;
@@ -424,8 +444,9 @@ export function StepDone({
   startedAt: number;
   onExit: () => void;
   onComplete: OnEarComplete;
+  variant?: EarVariant;
 }) {
-  const log = useLogEarSession(game, difficulty, session, startedAt);
+  const log = useLogEarSession(game, difficulty, session, startedAt, variant);
   const handed = useRef(false);
 
   useEffect(() => {
@@ -442,7 +463,13 @@ export function StepDone({
   }, [log, session, onComplete]);
 
   return (
-    <GameShell game={game} difficulty={difficulty} session={session} onExit={onExit}>
+    <GameShell
+      game={game}
+      difficulty={difficulty}
+      session={session}
+      onExit={onExit}
+      variant={variant}
+    >
       <p className="py-24 text-center text-sm text-[var(--s-mut)]" role="status">
         Scoring your round…
       </p>
@@ -467,6 +494,7 @@ export function SummaryView({
   startedAt,
   onReplay,
   onExit,
+  variant,
 }: {
   game: GameId;
   difficulty: Difficulty;
@@ -475,12 +503,14 @@ export function SummaryView({
   startedAt: number;
   onReplay: () => void;
   onExit: () => void;
+  variant?: EarVariant;
 }) {
   const { xpGained, newAchievements, newBest } = useLogEarSession(
     game,
     difficulty,
     session,
     startedAt,
+    variant,
   );
 
   return (

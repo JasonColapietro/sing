@@ -41,6 +41,7 @@ export const GAME_TRAINS: Record<GameId, string> = {
   "pitch-match": "Pitch accuracy",
   "melody-echo": "Melodic memory",
   "higher-lower": "Pitch direction",
+  "note-catcher": "Finding a note fast",
 };
 
 export const GAME_DESC: Record<GameId, string> = {
@@ -48,14 +49,16 @@ export const GAME_DESC: Record<GameId, string> = {
   "pitch-match": "Hear a note, sing it back, and hold it steady in tune.",
   "melody-echo": "Hear a short melody and echo it back note for note.",
   "higher-lower": "Was the second note higher or lower? Fast rounds, tiny gaps.",
+  "note-catcher": "Your voice steers a marker — catch each note as it slides in.",
 };
 
-/** The two games that listen to you. */
+/** The three games that listen to you. */
 export const GAME_MIC: Record<GameId, boolean> = {
   interval: false,
   "pitch-match": true,
   "melody-echo": true,
   "higher-lower": false,
+  "note-catcher": true,
 };
 
 /**
@@ -65,13 +68,15 @@ export const GAME_MIC: Record<GameId, boolean> = {
  * paced by the singer. These are the observed lengths of a ten-round run —
  * the two tapping games run about a minute, pitch match spends 1.5s holding
  * plus its reference tone per round, and melody echo plays and then waits out
- * a window several seconds long.
+ * a window several seconds long. Note catcher runs on its own clock: ten
+ * targets on medium's 2.7s spacing plus the lead-in, about half a minute.
  */
 export const EAR_GAME_SECONDS: Record<GameId, number> = {
   "higher-lower": 60,
   interval: 60,
   "pitch-match": 120,
   "melody-echo": 150,
+  "note-catcher": 40,
 };
 
 /**
@@ -129,11 +134,13 @@ export const EAR_ROUTINES: EarRoutine[] = [
   {
     id: "pitch",
     name: "Pitch lab",
-    tagline: "Sing every round: pitch match up through hard, then echo a melody.",
+    tagline:
+      "Sing every round: pitch match up through hard, catch moving notes, then echo a melody.",
     steps: [
       step("pitch-match", "easy"),
       step("pitch-match", "medium"),
       step("pitch-match", "hard"),
+      step("note-catcher", "medium"),
       step("melody-echo", "medium"),
     ],
   },
