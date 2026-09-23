@@ -19,14 +19,15 @@ import {
  * fixtures are deterministic, so a ceiling that starts failing means the
  * detector changed, and the numbers in the failure say by how much.
  *
- * Measured on introduction (cents, |error|):
- *   clean ................ max 0.2
- *   ±37 c detune ......... max 0.2
- *   weak fundamental ..... max 0.1, no octave errors
- *   10 c jitter .......... p95 3.8
- *   vibrato 5.5 Hz ±50 c . p95 4.0, max 5.1 (vs. the frame's mean pitch)
- *   20 dB SNR ............ p95 1.2, max 2.4
- *   10 dB SNR ............ p50 1.6, p95 16.2, max 30.6, 2 of 294 frames missed
+ * Measured with the 4 kHz pre-filter (cents, |error|; before it, in brackets):
+ *   clean ................ max 0.4 (0.2), 2048-sample frames max 0.7 (0.2)
+ *   weak fundamental ..... max 0.3 (0.1), no octave errors
+ *   10 c jitter .......... p95 3.7 (3.8)
+ *   vibrato 5.5 Hz ±50 c . p95 3.8, max 4.9 (4.0, 5.1) vs. the frame's mean pitch
+ *   20 dB SNR ............ p95 0.3, max 0.5 (1.2, 2.4)
+ *   10 dB SNR ............ p95 1.3, max 3.6, none missed
+ *                          (p95 16.2, max 30.6, 2 of 294 missed)
+ *   5 dB SNR ............. p95 4.2, max 6.9, none missed (83 of 294 missed)
  */
 
 /** C2 to C6: the range the live rooms accept, a semitone at a time. */
@@ -79,7 +80,7 @@ describe("detectPitch precision", () => {
     const s = sweep((midi, sampleRate, seed) => ({ freq: midiToHz(midi), sampleRate, seed }));
     expect(s.missed).toBe(0);
     expect(s.octaveErrors).toBe(0);
-    expect(s.errors.at(-1)).toBeLessThan(0.5);
+    expect(s.errors.at(-1)).toBeLessThan(1);
   });
 
   it("is as precise with the 2048-sample frames of the older rooms", () => {
@@ -91,7 +92,7 @@ describe("detectPitch precision", () => {
     }));
     expect(s.missed).toBe(0);
     expect(s.octaveErrors).toBe(0);
-    expect(s.errors.at(-1)).toBeLessThan(0.5);
+    expect(s.errors.at(-1)).toBeLessThan(1);
   });
 
   it("measures a flat or sharp note by how far off it is, not just its nearest note", () => {
@@ -106,7 +107,7 @@ describe("detectPitch precision", () => {
           continue;
         }
         expect(r).not.toBeNull();
-        expect(Math.abs(centsBetween(r!.freq, target) - detuneCents)).toBeLessThan(0.5);
+        expect(Math.abs(centsBetween(r!.freq, target) - detuneCents)).toBeLessThan(1);
       }
     }
   });
@@ -120,7 +121,7 @@ describe("detectPitch precision", () => {
     }));
     expect(s.missed).toBe(0);
     expect(s.octaveErrors).toBe(0);
-    expect(s.errors.at(-1)).toBeLessThan(0.5);
+    expect(s.errors.at(-1)).toBeLessThan(1);
   });
 
   it("stays within a few cents through natural jitter", () => {
@@ -158,24 +159,35 @@ describe("detectPitch precision", () => {
     }));
     expect(s.missed).toBe(0);
     expect(s.octaveErrors).toBe(0);
-    expect(quantile(s.errors, 0.95)).toBeLessThan(2.5);
-    expect(s.errors.at(-1)).toBeLessThan(4);
+    expect(quantile(s.errors, 0.95)).toBeLessThan(1);
+    expect(s.errors.at(-1)).toBeLessThan(1.5);
   });
 
-  it("degrades without octave errors in a loud room (10 dB SNR)", () => {
+  it("stays within a few cents in a loud room (10 dB SNR)", () => {
     const s = sweep((midi, sampleRate, seed) => ({
       freq: midiToHz(midi),
       sampleRate,
       seed,
       snrDb: 10,
     }));
-    // A regression ceiling on a known weak spot: the tail here is what a
-    // precision improvement should shrink, so tighten these when it does.
+    expect(s.missed).toBe(0);
     expect(s.octaveErrors).toBe(0);
-    expect(s.missed / s.total).toBeLessThanOrEqual(0.02);
-    expect(quantile(s.errors, 0.5)).toBeLessThan(3);
-    expect(quantile(s.errors, 0.95)).toBeLessThan(25);
-    expect(s.errors.at(-1)).toBeLessThan(40);
+    expect(quantile(s.errors, 0.95)).toBeLessThan(2.5);
+    expect(s.errors.at(-1)).toBeLessThan(6);
+  });
+
+  it("still reads, without octave errors, when noise is nearly as loud (5 dB SNR)", () => {
+    const s = sweep((midi, sampleRate, seed) => ({
+      freq: midiToHz(midi),
+      sampleRate,
+      seed,
+      snrDb: 5,
+    }));
+    // Before the 4 kHz pre-filter, 83 of these 294 frames were discarded.
+    expect(s.missed).toBe(0);
+    expect(s.octaveErrors).toBe(0);
+    expect(quantile(s.errors, 0.95)).toBeLessThan(7);
+    expect(s.errors.at(-1)).toBeLessThan(10);
   });
 
   it("reads a quiet voice precisely once it clears the silence floor", () => {
@@ -186,6 +198,6 @@ describe("detectPitch precision", () => {
       level: 0.05,
     }));
     expect(s.missed).toBe(0);
-    expect(s.errors.at(-1)).toBeLessThan(0.5);
+    expect(s.errors.at(-1)).toBeLessThan(1);
   });
 });

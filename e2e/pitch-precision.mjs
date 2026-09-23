@@ -84,18 +84,29 @@ const CASES = [
   {
     name: "A3 vibrato",
     // Scored against the note's centre, which a symmetric vibrato averages to.
-    // Known issue, held as a regression ceiling: usePitch smooths with a
-    // median of the last 4 readings but takes `sorted[2]`, the upper of the
-    // two middle values, so a swinging pitch reads ~5.5 c sharp. The raw
-    // detector's bias on the same signal is 0.4 c. Tighten to 1 c once the
-    // smoothing takes the true median.
+    // This case caught usePitch's smoothing taking the upper of the two middle
+    // readings instead of the median, which read ~5.5 c sharp in every room.
+    // Measures 0.7–0.8 c now; 1.5 c leaves run-to-run room and still fails
+    // that 5.5 c bug by a wide margin.
     spec: { freq: midiToHz(57), vibratoHz: 5.5, vibratoCents: 40 },
-    limits: { bias: 7, p95: 45, voiced: 0.9 },
+    limits: { bias: 1.5, p95: 45, voiced: 0.9 },
   },
   {
     name: "A3 20dB SNR",
     spec: { freq: midiToHz(57), snrDb: 20 },
-    limits: { bias: 2, p95: 6, voiced: 0.9 },
+    limits: { bias: 1, p95: 2, voiced: 0.9 },
+  },
+  // A loud room, at the low end where the unfiltered detector used to drop
+  // frames outright, and mid-range.
+  {
+    name: "E2 10dB SNR",
+    spec: { freq: midiToHz(40), snrDb: 10 },
+    limits: { bias: 1, p95: 4, voiced: 0.9 },
+  },
+  {
+    name: "A3 10dB SNR",
+    spec: { freq: midiToHz(57), snrDb: 10 },
+    limits: { bias: 1, p95: 4, voiced: 0.9 },
   },
 ];
 

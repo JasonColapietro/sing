@@ -121,15 +121,17 @@ launches a browser with it as the fake microphone, opens `/studio`, presses
 ceiling. `lib/audio/pitch-precision.test.ts` scores the detector alone on the
 same fixtures, so a regression in one and not the other says which layer broke.
 
-Measured on introduction (Chromium, 44.1 kHz context, 48 kHz source):
+Measured (Chromium, 44.1 kHz context, 48 kHz source), before and after S1:
+the true median in `usePitch` and the detector's 4 kHz pre-filter.
 
-| Case | Bias | p95 \|error\| |
+| Case | Bias before → after | p95 \|error\| before → after |
 |---|---|---|
-| E2 – C6, clean | ≤ 0.13 c | ≤ 0.14 c |
-| A3 ±25 c detune | 0.00 c | 0.00 c |
-| A3, 20 dB SNR | 0.2 c | 0.9 c |
-| A3, 5.5 Hz ±40 c vibrato | **5.5 c sharp** | 25 c |
+| E2 – C6, clean | ≤ 0.13 c → ≤ 0.07 c | ≤ 0.14 c → ≤ 0.12 c |
+| A3 ±25 c detune | 0.00 c → 0.00 c | 0.00 c → ≤ 0.09 c |
+| A3, 20 dB SNR | 0.2 c → 0.0 c | 0.9 c → 0.1 c |
+| A3, 5.5 Hz ±40 c vibrato | **5.5 c sharp** → 0.7 c | 25 c → 23 c |
+| E2 / A3, 10 dB SNR | new | 1.7 c / 0.6–1.5 c |
 
-The vibrato bias is a real defect, not the harness: `usePitch`'s median of 4
-takes the upper middle value. The raw detector's bias on the same signal is
-0.4 c.
+The vibrato bias came from `usePitch`'s median of 4 taking the upper middle
+value (`lib/audio/median.ts` now averages the two). The spread on vibrato
+cases is the vibrato itself, not error.

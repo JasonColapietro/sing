@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { detectPitch } from "./pitch";
+import { median } from "./median";
 import { freqToNote, type NoteInfo } from "./notes";
 import { getAudioContext } from "./context";
 import { openMic } from "./mic";
@@ -157,8 +158,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
         const hist = histRef.current;
         hist.push(r.freq);
         if (hist.length > 4) hist.shift();
-        const sorted = [...hist].sort((a, b) => a - b);
-        freq = sorted[Math.floor(sorted.length / 2)];
+        freq = median(hist);
       } else {
         histRef.current = [];
       }

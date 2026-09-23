@@ -61,15 +61,65 @@ const SUBRANGE_MIN_CLARITY = 0.8;
  */
 const PEAK_TOLERANCE = 0.9;
 
+/**
+ * Corner of the low-pass applied before analysis.
+ *
+ * Voice pitch lives in the fundamental and the first few harmonics; above a
+ * few kHz a microphone mostly delivers room hiss, and in the NSDF that hiss
+ * lands as random error on the peak the parabola is fitted to. Measured on
+ * the synthetic vowels in pitch-precision.test.ts, filtering at 4 kHz took a
+ * 10 dB SNR frame's p95 error from 16 c to 1.4 c and the misses at 5 dB SNR
+ * from 83 of 294 frames to none. The price is ~0.2 c on a clean frame. 4 kHz
+ * still passes the top fundamental (1600 Hz) and its second harmonic; 3 kHz
+ * was slightly better in noise and slightly worse clean, and nothing between
+ * them is worth tuning to a synthetic signal.
+ */
+const LOWPASS_HZ = 4000;
+
+/**
+ * Second-order Butterworth low-pass (RBJ biquad), into a new buffer.
+ *
+ * The caller's frame is left untouched: every room reads the same analyser
+ * buffer for its level meter as well.
+ */
+function lowpass(x: Float32Array, sampleRate: number, cornerHz: number): Float32Array {
+  const w = (2 * Math.PI * cornerHz) / sampleRate;
+  const alpha = Math.sin(w) / (2 * Math.SQRT1_2);
+  const cos = Math.cos(w);
+  const a0 = 1 + alpha;
+  const b0 = (1 - cos) / 2 / a0;
+  const b1 = (1 - cos) / a0;
+  const a1 = (-2 * cos) / a0;
+  const a2 = (1 - alpha) / a0;
+  const y = new Float32Array(x.length);
+  let x1 = 0;
+  let x2 = 0;
+  let y1 = 0;
+  let y2 = 0;
+  for (let i = 0; i < x.length; i++) {
+    const v = b0 * x[i] + b1 * x1 + b0 * x2 - a1 * y1 - a2 * y2;
+    x2 = x1;
+    x1 = x[i];
+    y2 = y1;
+    y1 = v;
+    y[i] = v;
+  }
+  return y;
+}
+
 export function detectPitch(
-  buf: Float32Array,
+  input: Float32Array,
   sampleRate: number,
 ): PitchResult | null {
-  const SIZE = buf.length;
+  const SIZE = input.length;
+  // The silence floor is judged on the raw frame, so filtering never changes
+  // which frames count as quiet.
   let rms = 0;
-  for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
+  for (let i = 0; i < SIZE; i++) rms += input[i] * input[i];
   rms = Math.sqrt(rms / SIZE);
   if (rms < 0.01) return null;
+  const buf =
+    sampleRate > 2 * LOWPASS_HZ ? lowpass(input, sampleRate, LOWPASS_HZ) : input;
 
   // Trim leading/trailing low-energy samples so the correlation focuses on
   // the voiced middle of the frame.

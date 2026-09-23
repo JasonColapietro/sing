@@ -43,6 +43,7 @@
  * itself.
  */
 
+import { median } from "@/lib/audio/median";
 import { hzToBin } from "@/lib/audio/spectrum";
 
 /**
@@ -326,8 +327,7 @@ export function measureEnvelopeHold(
   }
   const driftDb = Math.sqrt(sum / (shapes.length * probes));
 
-  const sorted = f0s.slice().sort((a, b) => a - b);
-  const medianF0Hz = sorted[Math.floor(sorted.length / 2)];
+  const medianF0Hz = median(f0s);
 
   return { driftDb, confident: true, abstained: null, framesUsed: shapes.length, medianF0Hz };
 }
