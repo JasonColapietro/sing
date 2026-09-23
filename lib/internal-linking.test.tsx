@@ -146,23 +146,21 @@ describe("footer wires every hub into every page", () => {
 
   /**
    * This suite only ever asserted root-relative hrefs, which is how the footer
-   * came to carry absolute sibling-product links that nothing checked — and how
-   * it came to carry none at all to the companion that teaches this material.
+   * came to carry absolute sibling-product links that nothing checked.
    *
-   * GuitarHub's voice curriculum deep-links into this app's rooms module by
-   * module. This is the return path, and it is asserted so it cannot quietly
-   * disappear again.
+   * The voice course was GuitarHub's and this footer linked out to it. sing now
+   * hosts the lessons and GuitarHub redirects to them, so the footer links the
+   * local course and must not send a reader back through the redirect.
    */
-  it("links the sibling Suede properties", () => {
-    expect(html, "footer missing the GuitarHub voice curriculum").toContain(
-      'href="https://guitarhub.org/learn/voice"',
-    );
+  it("links the voice course on sing, not its old home", () => {
+    expect(html, "footer missing the voice course").toContain('href="/learn/voice"');
+    expect(html).not.toContain("guitarhub.org/learn/voice");
     expect(html, "footer missing Suede Labs").toContain('href="https://suedeai.ai"');
   });
 
   it("links sibling properties as plain anchors, not prefetched routes", () => {
     // next/link would treat an absolute URL as a local route to prefetch.
-    expect(html).not.toContain('href="https://guitarhub.org/learn/voice" data-prefetch');
+    expect(html).not.toContain('href="https://suedeai.ai" data-prefetch');
   });
 
   it("links the extension page — its only internal inbound link", () => {

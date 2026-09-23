@@ -4,7 +4,6 @@ import { VOICE_TYPES } from "@/lib/audio/notes";
 import {
   parseVoiceCurriculum,
   voiceCurriculum,
-  voiceLessonHref,
 } from "@/lib/voice-curriculum";
 
 const levels = voiceCurriculum.curriculum.levels;
@@ -19,7 +18,9 @@ describe("the Sing-owned voice curriculum contract", () => {
       ownership: {
         catalogRepository: "JasonColapietro/sing",
         discoveryUrl: "https://sing.suedeai.ai/learn",
-        lessonBaseUrl: "https://guitarhub.org/learn/voice",
+        lessonHostRepository: "JasonColapietro/sing",
+        lessonBaseUrl: "https://sing.suedeai.ai/learn/voice",
+        hostingDecisionDate: "2026-09-23",
         decisionDate: "2026-09-14",
         decidedBy: "Jason Colapietro (delegated decision)",
       },
@@ -35,8 +36,10 @@ describe("the Sing-owned voice curriculum contract", () => {
         importedSessionCompletion: "historyOnly",
       },
       migration: {
-        phase: "discovery",
-        redirectsEnabled: false,
+        phase: "hosted",
+        redirectsEnabled: true,
+        previousLessonBaseUrl: "https://guitarhub.org/learn/voice",
+        urlMap: "contracts/suede-voice-lesson-urls.json",
         requiredEvidence: [
           "lessonBodies",
           "identity",
@@ -63,13 +66,19 @@ describe("the Sing-owned voice curriculum contract", () => {
     );
   });
 
-  it("builds current-host URLs only for lessons in the owned catalog", () => {
-    expect(voiceLessonHref("v-l1-m1-01")).toBe(
-      "https://guitarhub.org/learn/voice/v-l1-m1-01",
+  it("says which migration evidence is settled and which is still open", () => {
+    const { resolution } = voiceCurriculum.migration;
+    expect(Object.keys(resolution).sort()).toEqual(
+      [...voiceCurriculum.migration.requiredEvidence].sort(),
     );
-    expect(() => voiceLessonHref("made-up-lesson")).toThrow(
-      /unknown voice lesson id/i,
-    );
+    // Not claimed done: nobody has reviewed the advanced lessons or run the
+    // physical-microphone checks.
+    expect(resolution.vocalReview).toMatch(/^Open\./);
+    expect(resolution.deviceAudio).toMatch(/^Open\./);
+  });
+
+  it("makes every stage free, as decided on 2026-09-23", () => {
+    expect(levels.every((level) => level.access === "free")).toBe(true);
   });
 
   it("rejects a level whose modules array is empty", () => {

@@ -16,18 +16,39 @@ surfaces can assert against them instead of re-typing them.
 seven stages, 34 modules and 102 lessons. Its `curriculum` member started as an
 exact copy of GuitarHub's voice catalog (`lib/learning/data/voice.json` in
 `JasonColapietro/suede-guitar-hub`, as of that repo's #47). Sing has since
-edited it on purpose. Twelve "Checkpoint:" lessons became "Self-Check:",
-because no voice self-check produces a measured pass, and three summaries that
-promised an unmeasured outcome were reworded. Don't "re-sync" those edits away.
+edited it on purpose. Twelve "Checkpoint:" lessons that nothing measures
+became "Self-Check:", three summaries that promised an unmeasured outcome were
+reworded, and every stage is free. Don't "re-sync" those edits away: parity
+with GuitarHub is by stage, module and lesson ID, not by text.
 
-Parity with GuitarHub is now by identity. Every stage, module and lesson ID
-matches `voice.json`, but the text doesn't have to. GuitarHub vendors this file
-byte for byte, so update it here first.
+Since 2026-09-23 sing also hosts the lessons. The bodies are markdown in
+`content/lessons`, compiled into `lib/lesson-data.ts` and served at
+`/learn/voice`. `ownership` and `migration` record that move. Each of the
+seven pieces of evidence GuitarHub required before redirecting has a line in
+`migration.resolution` saying what happened to it. Two are still open: a
+qualified vocal review, and the physical-microphone checks.
 
-The contract also records the six automatic classifier labels, the
-`historyOnly` imported-session policy, and the evidence required before any
-lesson URL moves. `lib/voice-curriculum.ts` validates the JSON at the data
+The file is authored here, not generated. GuitarHub vendors it byte for byte,
+so update it here first. `lib/voice-curriculum.ts` validates it at the data
 boundary.
+
+## suede-voice-lesson-urls
+
+`suede-voice-lesson-urls.json` maps every stage, module and lesson ID to its
+path on sing. GuitarHub vendors it and redirects `/learn/voice/<lesson-id>`
+from it. `scripts/compile-lessons.mjs` generates it, alongside
+`lib/lesson-data.ts`, from the directory names under `content/lessons`, so
+moving a lesson changes a line here. `node scripts/compile-lessons.mjs --check`
+fails if the file is stale; `lib/voice-lessons.test.tsx` runs that check.
+
+## suede-progress
+
+`suede-progress.json` publishes the shape of a singer's practice record. It is
+generated from `suede-progress.ts`; regenerate it with the command in that
+file. Sing now authors the voice-lesson IDs and hosts the lessons, but the
+record still has no lesson field. A lesson page counts its module's room
+sessions as practice (`lib/lesson-practice.ts`) and never records a lesson as
+complete.
 
 ## practice-parity
 
