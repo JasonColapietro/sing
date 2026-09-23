@@ -78,9 +78,10 @@ describe("game metadata", () => {
     }
   });
 
-  it("marks the two singing games as the ones needing a microphone", () => {
+  it("marks the three singing games as the ones needing a microphone", () => {
     expect(GAME_MIC["pitch-match"]).toBe(true);
     expect(GAME_MIC["melody-echo"]).toBe(true);
+    expect(GAME_MIC["note-catcher"]).toBe(true);
     expect(GAME_MIC.interval).toBe(false);
     expect(GAME_MIC["higher-lower"]).toBe(false);
   });

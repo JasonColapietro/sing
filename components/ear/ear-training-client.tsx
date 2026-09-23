@@ -18,15 +18,17 @@ import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
 import {
   DIFFICULTIES,
   GAME_NAMES,
+  ROUNDS,
+  bestKey,
   readBests,
   type Difficulty,
   type GameId,
 } from "./lib";
+import { CHASE_DIFFICULTY, chaseSongs } from "./note-catcher";
 import {
   EAR_ROUTINES,
   GAME_DESC,
   GAME_MIC,
-  GAME_TRAINS,
   earRoutineMinutes,
   recommendEarRoutine,
   type EarRoutine,
@@ -36,14 +38,24 @@ import { EarGameSession, EarRunner } from "./ear-runner";
 /** What the room is running right now, if anything. */
 type Active =
   | { kind: "routine"; routine: EarRoutine }
-  | { kind: "game"; game: GameId; difficulty: Difficulty };
+  | {
+      kind: "game";
+      game: GameId;
+      difficulty: Difficulty;
+      /** Note catcher chasing this song rather than random notes. */
+      song?: { id: string; title: string };
+    };
 
 const GAME_ORDER: GameId[] = [
   "higher-lower",
   "interval",
   "pitch-match",
+  "note-catcher",
   "melody-echo",
 ];
+
+/** Computed once: the songbook is static, and so is which songs it offers. */
+const CHASE_SONGS = chaseSongs();
 
 /** Stars for a whole workout: the average of its steps' best scores. */
 function routineStars(
@@ -97,9 +109,13 @@ export default function EarTrainingClient() {
     [earToday],
   );
 
-  /** The path: one level per difficulty, the four games as its rows. */
+  /**
+   * The path: one level per difficulty with the five games as its rows, then
+   * a last level of songs to chase in Note catcher — the songbook's first
+   * phrases, so the ear room points at the songs a singer meets next.
+   */
   const levels = useMemo(() => {
-    return DIFFICULTIES.map((d) => ({
+    const games = DIFFICULTIES.map((d) => ({
       title: d.label,
       unit: "games",
       blurb:
@@ -125,6 +141,34 @@ export default function EarTrainingClient() {
         };
       }),
     }));
+    const chase = {
+      title: "Chase the notes",
+      unit: "songs",
+      blurb:
+        "Note catcher with a real melody: each song's opening, moved into your range. Any octave counts.",
+      items: CHASE_SONGS.map((song) => {
+        const best = bests[bestKey("note-catcher", CHASE_DIFFICULTY, `song:${song.id}`)];
+        return {
+          id: `chase:${song.id}`,
+          title: song.title,
+          desc: `Catch the first ${ROUNDS} notes of ${song.title} as they slide in.`,
+          meta:
+            typeof best === "number"
+              ? `${ROUNDS} notes · best ${best}/100`
+              : `${ROUNDS} notes · not played yet`,
+          stars: starsForScore(typeof best === "number" ? best : null),
+          mic: true,
+          onSelect: () =>
+            start({
+              kind: "game",
+              game: "note-catcher",
+              difficulty: CHASE_DIFFICULTY,
+              song: { id: song.id, title: song.title },
+            }),
+        };
+      }),
+    };
+    return [...games, chase];
   }, [bests, start]);
 
   if (active) {
@@ -134,6 +178,7 @@ export default function EarTrainingClient() {
       <EarGameSession
         game={active.game}
         difficulty={active.difficulty}
+        song={active.song}
         onExit={exit}
       />
     );
@@ -143,7 +188,7 @@ export default function EarTrainingClient() {
     <PageShell
       kicker="Ear training"
       title="Train your ear"
-      subtitle="Short workouts and four games, ten rounds each. Start where the app points you."
+      subtitle="Short workouts and five games, ten rounds each. Start where the app points you."
     >
       {cap.capped && <CapWall cap={cap} />}
       <ContinueCard
@@ -217,8 +262,9 @@ export default function EarTrainingClient() {
       <p className="mt-8 text-center text-xs text-dim">
         Every finished game earns XP and counts toward your streak.
         {" "}
-        {GAME_TRAINS["pitch-match"]} and {GAME_TRAINS["melody-echo"].toLowerCase()} need a
-        microphone; the other two never listen.
+        {GAME_NAMES["pitch-match"]}, {GAME_NAMES["note-catcher"].toLowerCase()} and{" "}
+        {GAME_NAMES["melody-echo"].toLowerCase()} need a microphone; the other two never
+        listen.
       </p>
     </PageShell>
   );

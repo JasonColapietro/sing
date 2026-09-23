@@ -3,7 +3,12 @@
 import { median } from "@/lib/audio/median";
 
 export type Difficulty = "easy" | "medium" | "hard";
-export type GameId = "interval" | "pitch-match" | "melody-echo" | "higher-lower";
+export type GameId =
+  | "interval"
+  | "pitch-match"
+  | "melody-echo"
+  | "higher-lower"
+  | "note-catcher";
 
 export const ROUNDS = 10;
 export const POINTS_PER_ROUND = 10;
@@ -19,6 +24,7 @@ export const GAME_NAMES: Record<GameId, string> = {
   "pitch-match": "Pitch match",
   "melody-echo": "Melody echo",
   "higher-lower": "Higher or lower",
+  "note-catcher": "Note catcher",
 };
 
 /* ---------------- high scores ---------------- */
@@ -38,15 +44,30 @@ export function readBests(): Record<string, number> {
   }
 }
 
-export function bestFor(game: GameId, diff: Difficulty): number | null {
-  const v = readBests()[`${game}:${diff}`];
+/**
+ * The key a best is stored under. `variant` separates runs of one game that
+ * are not comparable — Note catcher chasing a song keeps a best per song, apart
+ * from its random-target levels — and is absent for everything else, so every
+ * key written before it existed still reads back.
+ */
+export function bestKey(game: GameId, diff: Difficulty, variant?: string): string {
+  return variant ? `${game}:${diff}:${variant}` : `${game}:${diff}`;
+}
+
+export function bestFor(game: GameId, diff: Difficulty, variant?: string): number | null {
+  const v = readBests()[bestKey(game, diff, variant)];
   return typeof v === "number" ? v : null;
 }
 
 /** Persist a finished score. Returns true when it's a new personal best. */
-export function saveBest(game: GameId, diff: Difficulty, score: number): boolean {
+export function saveBest(
+  game: GameId,
+  diff: Difficulty,
+  score: number,
+  variant?: string,
+): boolean {
   const bests = readBests();
-  const key = `${game}:${diff}`;
+  const key = bestKey(game, diff, variant);
   const prev = bests[key];
   if (typeof prev === "number" && prev >= score) return false;
   bests[key] = score;

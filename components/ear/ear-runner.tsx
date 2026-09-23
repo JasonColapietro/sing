@@ -22,6 +22,7 @@ import { IntervalGame } from "./interval-game";
 import { PitchMatchGame } from "./pitch-match-game";
 import { MelodyEchoGame } from "./melody-echo-game";
 import { HigherLowerGame } from "./higher-lower-game";
+import { NoteCatcherGame } from "./note-catcher-game";
 
 /**
  * Where the runner is: reading the slide for step `step`, playing it, or done.
@@ -53,15 +54,20 @@ function difficultyLabel(d: Difficulty): string {
 
 function GameStep({
   step,
+  songId,
   onExit,
   onComplete,
 }: {
   step: EarRoutineStep;
+  /** Note catcher only: chase this song instead of random notes. */
+  songId?: string;
   onExit: () => void;
   onComplete: (r: EarStepResult) => void;
 }) {
   const props = { difficulty: step.difficulty, onExit, onComplete };
   switch (step.game) {
+    case "note-catcher":
+      return <NoteCatcherGame {...props} songId={songId} />;
     case "interval":
       return <IntervalGame {...props} />;
     case "pitch-match":
@@ -347,10 +353,13 @@ export function EarRunner({
 export function EarGameSession({
   game,
   difficulty,
+  song,
   onExit,
 }: {
   game: GameId;
   difficulty: Difficulty;
+  /** Note catcher chasing a song: its id, and the title the results show. */
+  song?: { id: string; title: string };
   onExit: () => void;
 }) {
   const [result, setResult] = useState<EarStepResult | null>(null);
@@ -360,8 +369,8 @@ export function EarGameSession({
   if (result) {
     return (
       <EarResults
-        title={GAME_NAMES[game]}
-        subtitle={`${difficultyLabel(difficulty)} · 10 rounds`}
+        title={song ? `Chase: ${song.title}` : GAME_NAMES[game]}
+        subtitle={`${song ? GAME_NAMES[game] : difficultyLabel(difficulty)} · 10 rounds`}
         steps={[{ label: earStepLabel(step), result }]}
         onContinue={onExit}
         onAgain={() => {
@@ -372,5 +381,13 @@ export function EarGameSession({
     );
   }
 
-  return <GameStep key={run} step={step} onExit={onExit} onComplete={setResult} />;
+  return (
+    <GameStep
+      key={run}
+      step={step}
+      songId={song?.id}
+      onExit={onExit}
+      onComplete={setResult}
+    />
+  );
 }
