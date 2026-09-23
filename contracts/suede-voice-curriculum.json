@@ -316,7 +316,7 @@
               },
               {
                 "id": "v-l3-m1-07",
-                "title": "Checkpoint: Switch on Cue",
+                "title": "Self-Check: Switch on Cue",
                 "type": "checkpoint",
                 "minutes": 5,
                 "summary": "Called at random, both directions."
@@ -348,10 +348,10 @@
               },
               {
                 "id": "v-l3-m2-07",
-                "title": "Checkpoint: Up and Down, No Crack",
+                "title": "Self-Check: Up and Down, Listening for a Crack",
                 "type": "checkpoint",
                 "minutes": 5,
-                "summary": "Three vowels, both directions."
+                "summary": "Three vowels, both directions. Judged by ear: nothing detects a register break."
               }
             ]
           },
@@ -380,7 +380,7 @@
               },
               {
                 "id": "v-l3-m3-07",
-                "title": "Checkpoint: Tone Consistent Across Vowels",
+                "title": "Self-Check: Tone Across Five Vowels",
                 "type": "checkpoint",
                 "minutes": 5,
                 "summary": "Judged by your own ear against your own recording. No vowel or formant tracking exists to score this for you."
@@ -444,7 +444,7 @@
               },
               {
                 "id": "v-l3-m5-07",
-                "title": "Checkpoint: Beat Your Own Baseline",
+                "title": "Self-Check: Compare With Your Baseline",
                 "type": "checkpoint",
                 "minutes": 5,
                 "summary": "Same phrase as Stage 2, judged against how it sounded then."
@@ -583,7 +583,7 @@
               },
               {
                 "id": "v-l4-m4-07",
-                "title": "Checkpoint: Three Articulations on Cue",
+                "title": "Self-Check: Three Articulations on Cue",
                 "type": "checkpoint",
                 "minutes": 5,
                 "summary": "Called at random mid-phrase."
@@ -615,7 +615,7 @@
               },
               {
                 "id": "v-l4-m5-07",
-                "title": "Checkpoint: Four Levels, One Note",
+                "title": "Self-Check: Four Levels, One Note",
                 "type": "checkpoint",
                 "minutes": 5,
                 "summary": "Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number."
@@ -658,7 +658,7 @@
               },
               {
                 "id": "v-l5-m1-07",
-                "title": "Checkpoint: Cross It On Cue",
+                "title": "Self-Check: Cross It On Cue",
                 "type": "checkpoint",
                 "minutes": 5,
                 "summary": "Located by ear, then crossed in both directions."
@@ -690,10 +690,10 @@
               },
               {
                 "id": "v-l5-m2-07",
-                "title": "Checkpoint: Three Vowels, No Break",
+                "title": "Self-Check: Three Vowels Through the Break",
                 "type": "checkpoint",
                 "minutes": 5,
-                "summary": "Both directions across the zone."
+                "summary": "Both directions across the zone. Judged by ear: nothing detects a register break."
               }
             ]
           },
@@ -893,7 +893,7 @@
               },
               {
                 "id": "v-l6-m3-08",
-                "title": "Checkpoint: Straight to Vibrato on Cue",
+                "title": "Self-Check: Straight to Vibrato on Cue",
                 "type": "checkpoint",
                 "minutes": 6,
                 "summary": "Heard and held, not scored. Nothing measures vibrato rate yet, so this one is your ear and your recording."
@@ -925,10 +925,10 @@
               },
               {
                 "id": "v-l6-m4-08",
-                "title": "Checkpoint: Four Ornaments, One Phrase",
+                "title": "Self-Check: Four Ornaments, One Phrase",
                 "type": "checkpoint",
                 "minutes": 6,
-                "summary": "All four, correctly placed."
+                "summary": "All four, placed where you meant them, judged by ear. Nothing labels an ornament."
               }
             ]
           },
@@ -1064,7 +1064,7 @@
               },
               {
                 "id": "v-l7-m2-08",
-                "title": "Checkpoint: One Song, Two Styles",
+                "title": "Self-Check: One Song, Two Styles",
                 "type": "checkpoint",
                 "minutes": 7,
                 "summary": "Both recognisable, both yours."
@@ -1096,7 +1096,7 @@
               },
               {
                 "id": "v-l7-m3-08",
-                "title": "Checkpoint: Three Modes on Cue",
+                "title": "Self-Check: Three Modes on Cue",
                 "type": "checkpoint",
                 "minutes": 6,
                 "summary": "Called at random, with a return to easy neutral voice between attempts. Strain is not measured."
@@ -1188,7 +1188,7 @@
                 "title": "Microphone and Phrase Rehearsal",
                 "type": "song",
                 "minutes": 9,
-                "summary": "Rehearse the supplied melody first. This native study supplies one line, not simultaneous lead and harmony parts."
+                "summary": "Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts."
               },
               {
                 "id": "v-l7-m6-08",
