@@ -244,6 +244,36 @@ try {
     console.log("PASS loop: snapping handles, named drill, locked while running, back to whole song");
     await context.close();
   }
+
+  // 5. Record and review: a recorded run hands its take to the summary, where it plays and saves to Recordings.
+  {
+    const { context, page, errors } = await open();
+    await chooseMode(page, "Performance");
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
+    await dismissOverlays(page);
+    // A one-note loop keeps the run short.
+    await page.getByLabel("Loop to", { exact: true }).fill("2");
+    await page.getByLabel("Loop from", { exact: true }).fill("1");
+    const record = page.getByRole("button", { name: "Record my take", exact: true });
+    await record.click();
+    assert.equal(await record.getAttribute("aria-pressed"), "true");
+    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    assert.equal(await record.isDisabled(), true, "recording can't be toggled mid-run");
+    const main = page.locator("main");
+    await main.getByText("Performance complete").waitFor({ timeout: 60_000 });
+    const audio = main.getByLabel("Your take of Silent Night");
+    await audio.waitFor({ timeout: 10_000 });
+    assert.match(await audio.getAttribute("src"), /^blob:/);
+    await main.getByRole("button", { name: "Save to Recordings", exact: true }).click();
+    await main.getByRole("button", { name: "Saved to Recordings", exact: true }).waitFor();
+    await main.getByRole("link", { name: "Open Recordings", exact: true }).click();
+    await page.getByText(/^Silent Night — /).first().waitFor({ timeout: 15_000 });
+    assert.deepEqual(errors, []);
+    console.log("PASS take: recorded run, playable take in the summary, saved to Recordings");
+    await context.close();
+  }
 } finally {
   await browser.close();
 }

@@ -8,6 +8,8 @@ import { ProCrescendoNudge } from "@/components/pro/gate";
 import { useProgress, type SessionLog } from "@/lib/progress";
 import { computeGrade, starGlyphs, starRatingLabel, type Tone } from "./grade";
 import { ResultCard } from "./result-card";
+import { TakeReview } from "./take-review";
+import type { TakeState } from "./take";
 import { JUDGMENTS, PASS_LABEL, formatTempoPct, type Judgment, type SessionSummaryData } from "./lib";
 import type { SessionMode, Song } from "./types";
 
@@ -105,8 +107,11 @@ export function SessionSummary({
   onLibrary,
   nextInSetlist,
   onNext,
+  take,
 }: {
   data: SessionSummaryData;
+  /** The recorded take; undefined when the singer didn't record this run. */
+  take?: TakeState;
   onAgain: () => void;
   onLibrary: () => void;
   /** Title of the next queued song, when a setlist is mid-run. */
@@ -275,6 +280,7 @@ export function SessionSummary({
           </div>
         )}
       </Card>
+      {take !== undefined && <TakeReview take={take} />}
 
       {scored && (
         <Card>
