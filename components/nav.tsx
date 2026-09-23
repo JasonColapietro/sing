@@ -22,12 +22,12 @@ import { accountsReady } from "@/lib/accounts";
 import { SING_APPEARANCE } from "@/lib/clerk-appearance";
 
 /**
- * Ten tabs, not thirteen: Recorder and Analyze fold into Tools, and the two
- * books share one Books tab. The absorbed rooms keep their pages (each ranks
- * for its own queries and is linked from its host tab and the footer) — `also`
- * keeps the host tab lit while you're inside one, so the header never claims
- * you are nowhere. Order follows the practice loop: warm up and sing, measure
- * and compare, then read and review.
+ * Ten tabs, not thirteen: Recorder and Analyze fold into Tools, and Learn is
+ * the front door for the two books, glossary and training guides. The absorbed
+ * rooms keep their pages (each ranks for its own queries and is linked from its
+ * host tab and the footer) — `also` keeps the host tab lit while you're inside
+ * one, so the header never claims you are nowhere. Order follows the practice
+ * loop: warm up and sing, measure and compare, then read and review.
  */
 const LINKS: { href: string; label: string; also?: string[] }[] = [
   { href: "/studio", label: "Studio" },
@@ -38,7 +38,7 @@ const LINKS: { href: string; label: string; also?: string[] }[] = [
   { href: "/breath", label: "Breath" },
   { href: "/songs", label: "Songs" },
   { href: "/tools", label: "Tools", also: ["/recorder", "/analyze"] },
-  { href: "/book", label: "Books", also: ["/atlas"] },
+  { href: "/learn", label: "Learn", also: ["/book", "/atlas", "/glossary"] },
   { href: "/progress", label: "Progress" },
 ];
 

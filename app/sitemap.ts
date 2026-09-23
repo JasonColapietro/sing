@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/studio",
     "/warmups",
     "/range",
+    "/learn",
     "/voice",
     "/singers",
     "/singers/methodology",
@@ -48,7 +49,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${SITE_URL}${path}`,
     changeFrequency: "weekly" as const,
     priority:
-      path === "" ? 1 : path === "/singers" || path === "/atlas" ? 0.9 : 0.7,
+      path === ""
+        ? 1
+        : path === "/learn" || path === "/singers" || path === "/atlas"
+          ? 0.9
+          : 0.7,
   }));
 
   // Hubs sit above the leaves in priority: they are the pages that gather the
