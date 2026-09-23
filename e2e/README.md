@@ -135,3 +135,11 @@ the true median in `usePitch` and the detector's 4 kHz pre-filter.
 The vibrato bias came from `usePitch`'s median of 4 taking the upper middle
 value (`lib/audio/median.ts` now averages the two). The spread on vibrato
 cases is the vibrato itself, not error.
+
+## Short-loop scoring
+
+`node e2e/song-loop-scoring.mjs [baseUrl] [--executable=path]` plays a
+perfectly held G4 into a one-note loop of Silent Night and requires every loop
+to score at least 95%. It guards the songs player's lag-aware loop close:
+while loops closed on the audio clock, the last reports of each loop's final
+note arrived after that loop was already scored, and this run read 77–81%.

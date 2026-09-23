@@ -123,6 +123,13 @@ try {
     await loopPill.waitFor();
     // Wait for the first loop line: Auto reads the silent loop as poor and steps down one notch.
     await page.waitForFunction(() => /^Loop [2-9]/.test([...document.querySelectorAll("span")].map((s) => s.textContent).find((t) => /^Loop \d+$/.test(t ?? "")) ?? ""), null, { timeout: 120_000 });
+    // Auto steps when the *scored* position crosses the loop line, which trails
+    // the on-screen loop number by the pitch-report lag (~0.1 s), so wait for it.
+    await page.waitForFunction(
+      () => document.querySelector('input[aria-valuetext$="%"][type="range"][disabled]')?.getAttribute("aria-valuetext") === "120%",
+      null,
+      { timeout: 5_000 },
+    ).catch(() => {});
     assert.equal(await tempoText(page), "120%", "Auto stepped the rate down after a silent loop");
     // Planned loops for this song; a rehearsal must run past them.
     const planned = await page.evaluate(() => {
@@ -195,6 +202,46 @@ try {
     assert.match(await page.getByRole("region", { name: "Steady band" }).innerText(), /Locked/, "the third band is still locked");
     assert.deepEqual(errors, []);
     console.log(`PASS bands: five-band ladder, real lock, mastering ${firstIds.join(" + ")} opened the next band`);
+    await context.close();
+  }
+
+  // 4. Free loop: handles snap to notes, a partial loop is named and drilled, the handles lock while running,
+  //    and pulling them back to the ends returns to the whole song.
+  {
+    const { context, page, errors } = await open();
+    await chooseMode(page, "Performance");
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
+    await dismissOverlays(page);
+    const from = page.getByLabel("Loop from", { exact: true });
+    const to = page.getByLabel("Loop to", { exact: true });
+    assert.match(await from.getAttribute("aria-valuetext"), /^Bar 1, beat \d/, "start handle reads bar and beat");
+    assert.equal(await to.getAttribute("aria-valuetext"), "End of song");
+    const max = Number(await to.getAttribute("max"));
+    await from.fill("2");
+    await to.fill(String(Math.min(max, 8)));
+    const helper = page.getByText(/^Looping .+ 4× — only those notes are played and scored\.$/);
+    await helper.waitFor();
+    assert.match(await helper.innerText(), /^Looping (Bars? \d+(–\d+)?|.+) 4×/);
+    // Dragging the start past the end pushes the end along instead of inverting the loop.
+    await from.fill(String(Math.min(max, 8)));
+    assert.ok(Number(await to.inputValue()) > Number(await from.inputValue()), "loop stays at least one note long");
+    // Back to both ends is the whole song again, not a "loop" of all of it.
+    await from.fill("0");
+    await to.fill(String(max));
+    await page.getByText(/^Singing the whole song\./).waitFor();
+    await from.fill("2");
+    await to.fill(String(Math.min(max, 8)));
+    await helper.waitFor();
+    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
+    await page.getByText(/^Drilling /).first().waitFor();
+    await page.getByText(/^Loop 1 of 4$/).first().waitFor();
+    assert.equal(await from.isDisabled(), true, "handles lock while the score denominator is fixed");
+    assert.equal(await to.isDisabled(), true);
+    assert.deepEqual(errors, []);
+    console.log("PASS loop: snapping handles, named drill, locked while running, back to whole song");
     await context.close();
   }
 } finally {

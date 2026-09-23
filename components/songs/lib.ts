@@ -658,3 +658,87 @@ export function countSongsFitting(songs: readonly Song[], range: VocalRange): nu
   }
   return n;
 }
+
+/**
+ * A span of the beat timeline the singer loops, from a free A–B choice or a
+ * section preset. `endBeat` is exclusive, like `SongSection`.
+ */
+export interface LoopRange {
+  startBeat: number;
+  endBeat: number;
+}
+
+/**
+ * Where a free loop handle is allowed to sit: every beat a note starts on,
+ * plus the end of the song.
+ *
+ * Snapping to note starts is what keeps a free loop honest. The player only
+ * sings and scores notes that *start* inside the span, so a start handle
+ * dropped mid-note would silently lose that note, and an end handle mid-note
+ * would clamp it. On these boundaries neither can happen.
+ */
+export function loopBoundaries(song: Song): number[] {
+  const starts = new Set(song.notes.map((n) => n.startBeat));
+  starts.add(songTotalBeats(song));
+  return [...starts].sort((a, b) => a - b);
+}
+
+/** Index of the boundary closest to `beat`; ties go to the earlier one. */
+export function nearestBoundaryIndex(bounds: readonly number[], beat: number): number {
+  let best = 0;
+  for (let i = 1; i < bounds.length; i++) {
+    if (Math.abs(bounds[i] - beat) < Math.abs(bounds[best] - beat)) best = i;
+  }
+  return best;
+}
+
+/**
+ * The loop two handles describe, as boundary indices. Always at least one
+ * note long: a handle dragged past the other pushes against it instead of
+ * inverting the span, and `moved` says which handle the singer is dragging so
+ * the other one stays put.
+ */
+export function loopRangeFromHandles(
+  bounds: readonly number[],
+  startIndex: number,
+  endIndex: number,
+  moved: "start" | "end",
+): { startIndex: number; endIndex: number; range: LoopRange } {
+  const last = bounds.length - 1;
+  let s = Math.max(0, Math.min(last - 1, Math.round(startIndex)));
+  let e = Math.max(1, Math.min(last, Math.round(endIndex)));
+  if (e <= s) {
+    if (moved === "start") s = e - 1;
+    else e = s + 1;
+  }
+  return { startIndex: s, endIndex: e, range: { startBeat: bounds[s], endBeat: bounds[e] } };
+}
+
+/** True when the range is the whole song, i.e. nothing is being drilled. */
+export function isWholeSongRange(range: LoopRange | null, song: Song): boolean {
+  return range === null || (range.startBeat <= 0 && range.endBeat >= songTotalBeats(song));
+}
+
+/** 1-based bar and beat of a beat position, for handle readouts. */
+export function barBeatLabel(beat: number, beatsPerBar: number): string {
+  const perBar = Math.max(1, beatsPerBar);
+  const bar = Math.floor(beat / perBar) + 1;
+  const inBar = Math.floor(beat - (bar - 1) * perBar) + 1;
+  return `Bar ${bar}, beat ${inBar}`;
+}
+
+/**
+ * What the loop is called in pills and helper text: a section's own label
+ * when the range is exactly that section, otherwise its bars.
+ */
+export function describeLoopRange(song: Song, range: LoopRange): string {
+  const section = song.sections?.find(
+    (s) => s.startBeat === range.startBeat && s.endBeat === range.endBeat,
+  );
+  if (section) return section.label;
+  const perBar = Math.max(1, song.beatsPerBar);
+  const first = Math.floor(range.startBeat / perBar) + 1;
+  // endBeat is exclusive: a loop ending exactly on a barline ends in the bar before.
+  const last = Math.max(first, Math.ceil(range.endBeat / perBar));
+  return first === last ? `Bar ${first}` : `Bars ${first}–${last}`;
+}
