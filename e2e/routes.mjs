@@ -1,7 +1,7 @@
 /**
  * One route per distinct template, not all 726 sitemap URLs.
  *
- * The singer, song, genre, voice-type and atlas pages are generated from data,
+ * The singer, song, genre, voice-type, atlas and voice-lesson pages are generated from data,
  * so a defect in one is a defect in every sibling. Auditing one of each keeps a
  * full pass inside a few minutes; `--all-singers` widens it when a data-shaped
  * bug is suspected.
@@ -24,6 +24,8 @@ export const ROUTES = [
   { path: "/ear-training", name: "ear-training", kind: "room", mic: true },
 
   { path: "/progress", name: "progress", kind: "app" },
+  { path: "/learn", name: "learn", kind: "reference" },
+  { path: "/learn/voice", name: "learn-voice", kind: "reference" },
   { path: "/glossary", name: "glossary", kind: "reference" },
   { path: "/book", name: "book", kind: "reference" },
   { path: "/atlas", name: "atlas", kind: "reference" },
@@ -55,6 +57,9 @@ export async function discoverTemplateRoutes(baseUrl) {
     { path: firstUnder("/songs/", 2), name: "song-detail", kind: "detail" },
     { path: firstUnder("/book/", 2), name: "book-chapter", kind: "reference" },
     { path: firstUnder("/atlas/", 2), name: "atlas-chapter", kind: "reference" },
+    { path: firstUnder("/learn/voice/", 3), name: "learn-stage", kind: "reference" },
+    { path: firstUnder("/learn/voice/", 4), name: "learn-module", kind: "reference" },
+    { path: firstUnder("/learn/voice/", 5), name: "learn-lesson", kind: "reference" },
   ].filter((r) => r.path);
 
   return picks;

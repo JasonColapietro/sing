@@ -12,6 +12,7 @@ import {
 import { POP_SONGS } from "@/lib/pop-songs";
 import { getSingerLastModified } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
+import { VOICE_LEARN_PATH, coursePaths } from "@/lib/voice-lessons";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = [
@@ -20,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/warmups",
     "/range",
     "/learn",
+    VOICE_LEARN_PATH,
     "/voice",
     "/singers",
     "/singers/methodology",
@@ -98,5 +100,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...pages, ...hubs, ...singers, ...songs, ...popSongs];
+  // Voice-course stage, module and lesson pages. Every one is free and
+  // indexable; a lesson not yet ported has no page and so no entry.
+  const { stages, modules, lessons } = coursePaths();
+  const course = [
+    ...[...stages, ...modules].map((path) => ({ path, priority: 0.7 })),
+    ...lessons.map((path) => ({ path, priority: 0.6 })),
+  ].map(({ path, priority }) => ({
+    url: `${SITE_URL}${path}`,
+    changeFrequency: "monthly" as const,
+    priority,
+  }));
+
+  return [...pages, ...hubs, ...singers, ...songs, ...popSongs, ...course];
 }

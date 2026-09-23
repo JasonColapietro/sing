@@ -237,7 +237,11 @@ async function checkDisabledAffordances(ctx, findings) {
  */
 async function checkDestructiveActions(ctx, findings) {
   const unconfirmed = await ctx.page.evaluate(() => {
-    const destructiveRe = /delete|remove|clear|reset|erase/i;
+    // Anchored to the start of the label, where a destructive action names its
+    // verb ("Delete take", "Clear history", "Reset progress"). Unanchored, it
+    // flagged "Morning reset", a routine card, and a lesson link titled
+    // "Self-Check: A Clear Recording", neither of which destroys anything.
+    const destructiveRe = /^(?:delete|remove|clear|reset|erase)\b/i;
     const confirmHintRe = /cancel|undo|are you sure|confirm/i;
     const out = [];
     document.querySelectorAll("button, [role='button'], a[href]").forEach((el) => {
