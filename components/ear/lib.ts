@@ -1,5 +1,7 @@
 "use client";
 
+import { median } from "@/lib/audio/median";
+
 export type Difficulty = "easy" | "medium" | "hard";
 export type GameId = "interval" | "pitch-match" | "melody-echo" | "higher-lower";
 
@@ -172,11 +174,6 @@ export function midiMatches(
 export interface VoicedFrame {
   t: number; // ms
   midi: number; // float
-}
-
-function median(xs: number[]): number {
-  const s = [...xs].sort((a, b) => a - b);
-  return s[Math.floor(s.length / 2)];
 }
 
 /**
