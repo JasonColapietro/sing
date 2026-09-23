@@ -6007,5 +6007,3245 @@ export const LESSONS: Lesson[] = [
       "shows": "I used notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic key adherence, improvisation quality, originality, or continuity as evidence that the material was improvised."
     }
+  },
+  {
+    "id": "v-l6-m1-01",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m1",
+    "stageSlug": "agility",
+    "moduleSlug": "three-note-runs",
+    "slug": "a-run-is-a-scale-in-a-hurry",
+    "title": "A Run Is a Scale in a Hurry",
+    "type": "concept",
+    "minutes": 4,
+    "objective": "Why slow practice is the only route to fast runs.",
+    "prerequisites": [
+      "v-l5-m5-07"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Agility run. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose the three-note turnaround in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Melodic agility",
+        "body": "Why slow practice is the only route to fast runs. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
+        "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “A Run Is a Scale in a Hurry.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.",
+        "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
+        "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 30,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “A Run Is a Scale in a Hurry.”"
+      },
+      {
+        "seconds": 60,
+        "instruction": "Isolate the melodic agility target in short, comfortable examples."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Practise or record the complete “A Run Is a Scale in a Hurry” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
+        "Three separate pitches remain audible; the middle note does not smear into a slide.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
+    }
+  },
+  {
+    "id": "v-l6-m1-03",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m1",
+    "stageSlug": "agility",
+    "moduleSlug": "three-note-runs",
+    "slug": "turnaround-slow-to-fast",
+    "title": "Turnaround, Slow to Fast",
+    "type": "exercise",
+    "minutes": 6,
+    "objective": "Rehearse slowly and move on only when you can hear separate, repeatable notes.",
+    "prerequisites": [
+      "v-l6-m1-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Agility run. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose the three-note turnaround in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Melodic agility",
+        "body": "Rehearse slowly and move on only when you can hear separate, repeatable notes. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
+        "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
+      },
+      {
+        "title": "Alternate attempt and reset",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.",
+        "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
+        "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Turnaround, Slow to Fast.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the melodic agility target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Turnaround, Slow to Fast” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
+        "Three separate pitches remain audible; the middle note does not smear into a slide.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
+    }
+  },
+  {
+    "id": "v-l6-m1-08",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m1",
+    "stageSlug": "agility",
+    "moduleSlug": "three-note-runs",
+    "slug": "self-check-a-clear-agility-pattern",
+    "title": "Self-Check: A Clear Agility Pattern",
+    "type": "checkpoint",
+    "minutes": 6,
+    "objective": "isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a listening and reflection check.",
+    "prerequisites": [
+      "v-l6-m1-03"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Agility run. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose the three-note turnaround in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Melodic agility",
+        "body": "Every note landing, not smeared. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
+        "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.",
+        "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
+        "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: A Clear Agility Pattern.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the melodic agility target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Self-Check: A Clear Agility Pattern” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment.",
+        "Three separate pitches remain audible; the middle note does not smear into a slide.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tongue or jaw freedom, vocal health, stylistic cleanliness, or accuracy outside the scored target sequence."
+    }
+  },
+  {
+    "id": "v-l6-m2-01",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m2",
+    "stageSlug": "agility",
+    "moduleSlug": "four-note-turnarounds-and-melisma",
+    "slug": "one-syllable-many-notes",
+    "title": "One Syllable, Many Notes",
+    "type": "concept",
+    "minutes": 4,
+    "objective": "Melisma, and why it needs a stable vowel underneath.",
+    "prerequisites": [
+      "v-l6-m1-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Hoo descent. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Establish one easy vowel on the starting note, then sing the four-note pattern slowly without changing the vowel under each pitch.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Melisma",
+        "body": "Melisma, and why it needs a stable vowel underneath. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
+        "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “One Syllable, Many Notes.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.",
+        "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
+        "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 30,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “One Syllable, Many Notes.”"
+      },
+      {
+        "seconds": 60,
+        "instruction": "Isolate the melisma target in short, comfortable examples."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Practise or record the complete “One Syllable, Many Notes” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
+        "One syllable carries all four notes with clear centers and no swallowed middle pitches.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
+    }
+  },
+  {
+    "id": "v-l6-m2-04",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m2",
+    "stageSlug": "agility",
+    "moduleSlug": "four-note-turnarounds-and-melisma",
+    "slug": "four-note-ladder",
+    "title": "Four-Note Ladder",
+    "type": "exercise",
+    "minutes": 7,
+    "objective": "Four-note patterns across the scale, both directions.",
+    "prerequisites": [
+      "v-l6-m2-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Hoo descent. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Establish one easy vowel on the starting note, then sing the four-note pattern slowly without changing the vowel under each pitch.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Melisma",
+        "body": "Four-note patterns across the scale, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
+        "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
+      },
+      {
+        "title": "Alternate attempt and reset",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.",
+        "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
+        "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Four-Note Ladder.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the melisma target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “Four-Note Ladder” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
+        "One syllable carries all four notes with clear centers and no swallowed middle pitches.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
+    }
+  },
+  {
+    "id": "v-l6-m2-08",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m2",
+    "stageSlug": "agility",
+    "moduleSlug": "four-note-turnarounds-and-melisma",
+    "slug": "self-check-four-notes-on-one-syllable",
+    "title": "Self-Check: Four Notes on One Syllable",
+    "type": "checkpoint",
+    "minutes": 6,
+    "objective": "sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a listening and reflection check.",
+    "prerequisites": [
+      "v-l6-m2-04"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Hoo descent. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Establish one easy vowel on the starting note, then sing the four-note pattern slowly without changing the vowel under each pitch.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Melisma",
+        "body": "Listen for each of the four displayed pitches; this is a self-check without an automatic score. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
+        "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.",
+        "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
+        "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Notes on One Syllable.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the melisma target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Self-Check: Four Notes on One Syllable” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers.",
+        "One syllable carries all four notes with clear centers and no swallowed middle pitches.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vowel or formant stability, melisma style, vocal health, or cleanliness of notes the detector could not follow."
+    }
+  },
+  {
+    "id": "v-l6-m3-01",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m3",
+    "stageSlug": "agility",
+    "moduleSlug": "vibrato-on-demand",
+    "slug": "rate-extent-onset",
+    "title": "Rate, Extent, Onset",
+    "type": "concept",
+    "minutes": 5,
+    "objective": "Vibrato has three parameters. Controlling them is what separates it from a wobble.",
+    "prerequisites": [
+      "v-l6-m2-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose a comfortable sustained note and establish three easy seconds of straight tone before adding any oscillation.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Vibrato control",
+        "body": "Vibrato has three parameters. Controlling them is what separates it from a wobble. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “Rate, Extent, Onset.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Rate, Extent, Onset.”"
+      },
+      {
+        "seconds": 75,
+        "instruction": "Isolate the vibrato control target in short, comfortable examples."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Practise or record the complete “Rate, Extent, Onset” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
+        "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato rate, extent, onset time, healthy production, or a five-to-seven-hertz result; the app does not analyze vibrato."
+    }
+  },
+  {
+    "id": "v-l6-m3-03",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m3",
+    "stageSlug": "agility",
+    "moduleSlug": "vibrato-on-demand",
+    "slug": "straight-then-vibrato",
+    "title": "Straight Then Vibrato",
+    "type": "exercise",
+    "minutes": 7,
+    "objective": "Start straight, introduce vibrato deliberately, stop it again.",
+    "prerequisites": [
+      "v-l6-m3-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose a comfortable sustained note and establish three easy seconds of straight tone before adding any oscillation.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Vibrato control",
+        "body": "Start straight, introduce vibrato deliberately, stop it again. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
+      },
+      {
+        "title": "Alternate attempt and reset",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Straight Then Vibrato.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the vibrato control target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “Straight Then Vibrato” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
+        "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato rate, extent, onset time, healthy production, or a five-to-seven-hertz result; the app does not analyze vibrato."
+    }
+  },
+  {
+    "id": "v-l6-m3-08",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m3",
+    "stageSlug": "agility",
+    "moduleSlug": "vibrato-on-demand",
+    "slug": "self-check-straight-to-vibrato-on-cue",
+    "title": "Self-Check: Straight to Vibrato on Cue",
+    "type": "checkpoint",
+    "minutes": 6,
+    "objective": "Heard and held, not scored. Nothing measures vibrato rate yet, so this one is your ear and your recording.",
+    "prerequisites": [
+      "v-l6-m3-03"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose a comfortable sustained note and establish three easy seconds of straight tone before adding any oscillation.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Vibrato control",
+        "body": "Heard and held, not scored. Nothing measures vibrato rate yet, so this one is your ear and your recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Straight to Vibrato on Cue.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the vibrato control target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Self-Check: Straight to Vibrato on Cue” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble.",
+        "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato rate, extent, onset time, healthy production, or a five-to-seven-hertz result; the app does not analyze vibrato."
+    }
+  },
+  {
+    "id": "v-l6-m4-01",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m4",
+    "stageSlug": "agility",
+    "moduleSlug": "scoops-falls-bends-slides",
+    "slug": "four-ornaments-named",
+    "title": "Four Ornaments, Named",
+    "type": "concept",
+    "minutes": 4,
+    "objective": "Naming them is what turns habits into choices.",
+    "prerequisites": [
+      "v-l6-m3-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Use one short phrase in an easy range and sing a plain version first. Keep the underlying pitch and rhythm map visible.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Ornament vocabulary",
+        "body": "Naming them is what turns habits into choices. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
+        "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “Four Ornaments, Named.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Add one ornament at its marked place, return to plain, then contrast it with the next. Keep scoops, falls, bends, and slides small and intentional.",
+        "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
+        "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 30,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Four Ornaments, Named.”"
+      },
+      {
+        "seconds": 60,
+        "instruction": "Isolate the ornament vocabulary target in short, comfortable examples."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Practise or record the complete “Four Ornaments, Named” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
+        "The four versions are recognizably different and the underlying words and melody remain intact.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
+    }
+  },
+  {
+    "id": "v-l6-m4-04",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m4",
+    "stageSlug": "agility",
+    "moduleSlug": "scoops-falls-bends-slides",
+    "slug": "ornament-on-cue",
+    "title": "Ornament on Cue",
+    "type": "exercise",
+    "minutes": 7,
+    "objective": "Choose and say the ornament yourself before the next phrase; there is no automatic spoken cue.",
+    "prerequisites": [
+      "v-l6-m4-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Use one short phrase in an easy range and sing a plain version first. Keep the underlying pitch and rhythm map visible.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Ornament vocabulary",
+        "body": "Choose and say the ornament yourself before the next phrase; there is no automatic spoken cue. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
+        "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
+      },
+      {
+        "title": "Alternate attempt and reset",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Add one ornament at its marked place, return to plain, then contrast it with the next. Keep scoops, falls, bends, and slides small and intentional.",
+        "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
+        "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Ornament on Cue.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the ornament vocabulary target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “Ornament on Cue” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
+        "The four versions are recognizably different and the underlying words and melody remain intact.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
+    }
+  },
+  {
+    "id": "v-l6-m4-08",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m4",
+    "stageSlug": "agility",
+    "moduleSlug": "scoops-falls-bends-slides",
+    "slug": "self-check-four-ornaments-one-phrase",
+    "title": "Self-Check: Four Ornaments, One Phrase",
+    "type": "checkpoint",
+    "minutes": 6,
+    "objective": "All four, placed where you meant them, judged by ear. Nothing labels an ornament.",
+    "prerequisites": [
+      "v-l6-m4-04"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Chromatic neighbor or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Use one short phrase in an easy range and sing a plain version first. Keep the underlying pitch and rhythm map visible.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Ornament vocabulary",
+        "body": "All four, correctly placed. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
+        "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Add one ornament at its marked place, return to plain, then contrast it with the next. Keep scoops, falls, bends, and slides small and intentional.",
+        "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
+        "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Four Ornaments, One Phrase.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the ornament vocabulary target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Self-Check: Four Ornaments, One Phrase” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor.",
+        "The four versions are recognizably different and the underlying words and melody remain intact.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I named and compared small pitch gestures in one comfortable phrase, using the written reference as an anchor. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic ornament classification, stylistic taste, pitch accuracy inside every gesture, or freedom from strain."
+    }
+  },
+  {
+    "id": "v-l6-m5-01",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m5",
+    "stageSlug": "agility",
+    "moduleSlug": "blues-and-pentatonic-lines",
+    "slug": "the-notes-that-sound-like-feeling",
+    "title": "The Notes That Sound Like Feeling",
+    "type": "concept",
+    "minutes": 4,
+    "objective": "Blue thirds and sevenths, and how they resolve toward the tonic.",
+    "prerequisites": [
+      "v-l6-m4-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, lower the study’s Key setting by two semitones, hear its first note, then restore the original Key. Choose a key above the control’s lowest setting so that this adjustment is available. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Eight-bar improvisation",
+        "body": "Blue thirds and sevenths, and how they resolve toward the tonic. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “The Notes That Sound Like Feeling.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. At the starting Key of −12, those pitches are C3, E♭3, G3, and B♭2; transpose the whole exercise if needed. Record the call and answer together in one take.",
+        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 30,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “The Notes That Sound Like Feeling.”"
+      },
+      {
+        "seconds": 60,
+        "instruction": "Isolate the eight-bar improvisation target in short, comfortable examples."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Practise or record the complete “The Notes That Sound Like Feeling” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
+        "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
+    }
+  },
+  {
+    "id": "v-l6-m5-04",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m5",
+    "stageSlug": "agility",
+    "moduleSlug": "blues-and-pentatonic-lines",
+    "slug": "blue-thirds-and-sevenths",
+    "title": "Blue Thirds and Sevenths",
+    "type": "exercise",
+    "minutes": 7,
+    "objective": "Bend into them deliberately rather than arriving flat.",
+    "prerequisites": [
+      "v-l6-m5-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, lower the study’s Key setting by two semitones, hear its first note, then restore the original Key. Choose a key above the control’s lowest setting so that this adjustment is available. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Eight-bar improvisation",
+        "body": "Bend into them deliberately rather than arriving flat. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
+      },
+      {
+        "title": "Alternate attempt and reset",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. At the starting Key of −12, those pitches are C3, E♭3, G3, and B♭2; transpose the whole exercise if needed. Record the call and answer together in one take.",
+        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Blue Thirds and Sevenths.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the eight-bar improvisation target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “Blue Thirds and Sevenths” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
+        "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
+    }
+  },
+  {
+    "id": "v-l6-m5-08",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m5",
+    "stageSlug": "agility",
+    "moduleSlug": "blues-and-pentatonic-lines",
+    "slug": "self-check-your-improvised-phrases",
+    "title": "Self-Check: Your Improvised Phrases",
+    "type": "checkpoint",
+    "minutes": 7,
+    "objective": "used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a listening and reflection check.",
+    "prerequisites": [
+      "v-l6-m5-04"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Minor five-note scale or Pentatonic run. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, lower the study’s Key setting by two semitones, hear its first note, then restore the original Key. Choose a key above the control’s lowest setting so that this adjustment is available. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Eight-bar improvisation",
+        "body": "Rung two of the ladder. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. At the starting Key of −12, those pitches are C3, E♭3, G3, and B♭2; transpose the whole exercise if needed. Record the call and answer together in one take.",
+        "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
+        "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Improvised Phrases.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the eight-bar improvisation target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “Self-Check: Your Improvised Phrases” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I used the supplied minor and pentatonic patterns to make my own short answering phrases.",
+        "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Improvisation quality or originality; even an unbroken voiced run cannot show that a phrase was improvised."
+    }
+  },
+  {
+    "id": "v-l6-m6-01",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m6",
+    "stageSlug": "agility",
+    "moduleSlug": "phrase-and-ornament-study",
+    "slug": "range-and-ornaments-in-a-short-phrase",
+    "title": "Range and Ornaments in a Short Phrase",
+    "type": "concept",
+    "minutes": 4,
+    "objective": "Range and agility at the same time, which is the actual difficulty.",
+    "prerequisites": [
+      "v-l6-m5-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Verse 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Transpose the supplied study so both ends remain repeatable. Mark each ornament and the phrase that crosses the widest interval.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Extended-range repertoire",
+        "body": "Range and agility at the same time, which is the actual difficulty. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.",
+        "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “Range and Ornaments in a Short Phrase.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.",
+        "look": "The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.",
+        "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 30,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Range and Ornaments in a Short Phrase.”"
+      },
+      {
+        "seconds": 60,
+        "instruction": "Isolate the extended-range repertoire target in short, comfortable examples."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Practise or record the complete “Range and Ornaments in a Short Phrase” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
+        "The full take keeps the authored melody recognizable and the planned ornaments audible.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
+    }
+  },
+  {
+    "id": "v-l6-m6-05",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m6",
+    "stageSlug": "agility",
+    "moduleSlug": "phrase-and-ornament-study",
+    "slug": "phrase-and-ornament-study",
+    "title": "Phrase and Ornament Study",
+    "type": "song",
+    "minutes": 8,
+    "objective": "Choose a comfortable key for the supplied phrase, then add one familiar small ornament and compare by ear.",
+    "prerequisites": [
+      "v-l6-m6-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Verse 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Transpose the supplied study so both ends remain repeatable. Mark each ornament and the phrase that crosses the widest interval.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Extended-range repertoire",
+        "body": "Choose a comfortable key for the supplied phrase, then add one familiar small ornament and compare by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.",
+        "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
+      },
+      {
+        "title": "Build the song from phrases",
+        "body": "Mark the key, breaths, range edges, and lesson target before a full take of “supplied study.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.",
+        "look": "The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.",
+        "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Phrase and Ornament Study.”"
+      },
+      {
+        "seconds": 120,
+        "instruction": "Isolate the extended-range repertoire target in short, comfortable examples."
+      },
+      {
+        "seconds": 180,
+        "instruction": "Practise or record the complete “Phrase and Ornament Study” task, resetting between attempts."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
+        "The full take keeps the authored melody recognizable and the planned ornaments audible.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
+    }
+  },
+  {
+    "id": "v-l6-m6-08",
+    "stageId": "v-l6",
+    "moduleId": "v-l6-m6",
+    "stageSlug": "agility",
+    "moduleSlug": "phrase-and-ornament-study",
+    "slug": "self-check-your-ornamented-study",
+    "title": "Self-Check: Your Ornamented Study",
+    "type": "checkpoint",
+    "minutes": 7,
+    "objective": "rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a listening and reflection check.",
+    "prerequisites": [
+      "v-l6-m6-05"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Deep River or Amazing Grace (Verse 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Transpose the supplied study so both ends remain repeatable. Mark each ornament and the phrase that crosses the widest interval.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Extended-range repertoire",
+        "body": "Review your supplied study and describe which small ornament stayed clear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.",
+        "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.",
+        "look": "The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.",
+        "listen": "The full take keeps the authored melody recognizable and the planned ornaments audible."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Ornamented Study.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the extended-range repertoire target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “Self-Check: Your Ornamented Study” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it.",
+        "The full take keeps the authored melody recognizable and the planned ornaments audible.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ornament classification, absence of a register break, range safety, stylistic quality, or freedom from strain."
+    }
+  },
+  {
+    "id": "v-l7-m1-01",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m1",
+    "stageSlug": "signature",
+    "moduleSlug": "look-after-it",
+    "slug": "hydration-humidity-and-why-whispering-hurts",
+    "title": "Hydration, Humidity, and Why Whispering Hurts",
+    "type": "concept",
+    "minutes": 5,
+    "objective": "Whispering is on the harmful list. So is talking over noise. Neither is obvious.",
+    "prerequisites": [
+      "v-l6-m6-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. Hear the reference, choose a comfortable key, then stop it before singing. The reading Stamina, warming up, and not hurting yourself is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Check how the voice feels before making sound. Choose only drills that have previously felt easy, and plan pauses and water breaks.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Vocal health",
+        "body": "Whispering is on the harmful list. So is talking over noise. Neither is obvious. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “Hydration, Humidity, and Why Whispering Hurts.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Hydration, Humidity, and Why Whispering Hurts.”"
+      },
+      {
+        "seconds": 75,
+        "instruction": "Isolate the vocal health target in short, comfortable examples."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Practise or record the complete “Hydration, Humidity, and Why Whispering Hurts” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
+        "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
+    }
+  },
+  {
+    "id": "v-l7-m1-03",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m1",
+    "stageSlug": "signature",
+    "moduleSlug": "look-after-it",
+    "slug": "build-your-own-warm-up",
+    "title": "Build Your Own Warm-Up",
+    "type": "exercise",
+    "minutes": 8,
+    "objective": "Assemble a routine from the drills you already own, ordered correctly.",
+    "prerequisites": [
+      "v-l7-m1-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. Hear the reference, choose a comfortable key, then stop it before singing. The reading Stamina, warming up, and not hurting yourself is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Check how the voice feels before making sound. Choose only drills that have previously felt easy, and plan pauses and water breaks.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Vocal health",
+        "body": "Assemble a routine from the drills you already own, ordered correctly. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
+      },
+      {
+        "title": "Alternate attempt and reset",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Build Your Own Warm-Up.”"
+      },
+      {
+        "seconds": 120,
+        "instruction": "Isolate the vocal health target in short, comfortable examples."
+      },
+      {
+        "seconds": 180,
+        "instruction": "Practise or record the complete “Build Your Own Warm-Up” task, resetting between attempts."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
+        "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
+    }
+  },
+  {
+    "id": "v-l7-m1-08",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m1",
+    "stageSlug": "signature",
+    "moduleSlug": "look-after-it",
+    "slug": "self-check-warm-up-and-stop-plan",
+    "title": "Self-Check: Warm-Up and Stop Plan",
+    "type": "checkpoint",
+    "minutes": 6,
+    "objective": "assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a listening and reflection check.",
+    "prerequisites": [
+      "v-l7-m1-03"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose First hum or Humming thirds or Descending five. Hear the reference, choose a comfortable key, then stop it before singing. The reading Stamina, warming up, and not hurting yourself is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Check how the voice feels before making sound. Choose only drills that have previously felt easy, and plan pauses and water breaks.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Vocal health",
+        "body": "Review this module before effect study. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound.",
+        "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
+        "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Warm-Up and Stop Plan.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the vocal health target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Self-Check: Warm-Up and Stop Plan” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I assembled a short warm-up with rests and wrote the warning signs that would make me stop.",
+        "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
+    }
+  },
+  {
+    "id": "v-l7-m2-01",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m2",
+    "stageSlug": "signature",
+    "moduleSlug": "style-rooms",
+    "slug": "style-is-a-set-of-choices-not-a-sound",
+    "title": "Style Is a Set of Choices, Not a Sound",
+    "type": "concept",
+    "minutes": 5,
+    "objective": "Onset, vibrato, diction, and placement, decided per genre.",
+    "prerequisites": [
+      "v-l7-m1-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name two style rooms before singing.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Genre choices",
+        "body": "Onset, vibrato, diction, and placement, decided per genre. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
+        "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “Style Is a Set of Choices, Not a Sound.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Change onset, diction, vibrato amount, rhythmic placement, and phrase shape deliberately while keeping the melody recognizable.",
+        "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
+        "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Style Is a Set of Choices, Not a Sound.”"
+      },
+      {
+        "seconds": 75,
+        "instruction": "Isolate the genre choices target in short, comfortable examples."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Practise or record the complete “Style Is a Set of Choices, Not a Sound” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
+        "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
+    }
+  },
+  {
+    "id": "v-l7-m2-05",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m2",
+    "stageSlug": "signature",
+    "moduleSlug": "style-rooms",
+    "slug": "same-song-two-rooms",
+    "title": "Same Song, Two Rooms",
+    "type": "song",
+    "minutes": 8,
+    "objective": "One melody, two complete stylistic treatments.",
+    "prerequisites": [
+      "v-l7-m2-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name two style rooms before singing.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Genre choices",
+        "body": "One melody, two complete stylistic treatments. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
+        "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
+      },
+      {
+        "title": "Build the song from phrases",
+        "body": "Mark the key, breaths, range edges, and lesson target before a full take of “Same Song, Two Rooms.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Change onset, diction, vibrato amount, rhythmic placement, and phrase shape deliberately while keeping the melody recognizable. Choose a phrase short enough to sing both treatments in one take within two minutes. Leave a quiet breath between them. Record your takes in the recorder.",
+        "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
+        "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Same Song, Two Rooms.”"
+      },
+      {
+        "seconds": 120,
+        "instruction": "Isolate the genre choices target in short, comfortable examples."
+      },
+      {
+        "seconds": 180,
+        "instruction": "Practise or record the complete “Same Song, Two Rooms” task, resetting between attempts."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
+        "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
+    }
+  },
+  {
+    "id": "v-l7-m2-08",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m2",
+    "stageSlug": "signature",
+    "moduleSlug": "style-rooms",
+    "slug": "self-check-one-song-two-styles",
+    "title": "Self-Check: One Song, Two Styles",
+    "type": "checkpoint",
+    "minutes": 7,
+    "objective": "Both recognisable, both yours.",
+    "prerequisites": [
+      "v-l7-m2-05"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name two style rooms before singing.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Genre choices",
+        "body": "Both recognisable, both yours. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
+        "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Change onset, diction, vibrato amount, rhythmic placement, and phrase shape deliberately while keeping the melody recognizable. Choose a phrase short enough to sing both treatments in one take within two minutes. Leave a quiet breath between them. Record your takes in the recorder.",
+        "look": "Each treatment has written choices rather than a vague instruction to sound like a particular artist.",
+        "listen": "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: One Song, Two Styles.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the genre choices target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “Self-Check: One Song, Two Styles” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared two stylistic choices in the same supplied phrase and could explain what I changed.",
+        "A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared two stylistic choices in the same supplied phrase and could explain what I changed. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic style classification, authenticity, ownership of a genre, vocal health, or similarity to a named singer."
+    }
+  },
+  {
+    "id": "v-l7-m3-01",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m3",
+    "stageSlug": "signature",
+    "moduleSlug": "modes-of-weight",
+    "slug": "neutral-restrained-driven-edged",
+    "title": "Neutral, Restrained, Driven, Edged",
+    "type": "concept",
+    "minutes": 6,
+    "objective": "Four production choices, decoupled from pitch height. Any of them can happen anywhere in your range.",
+    "prerequisites": [
+      "v-l7-m2-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Use one mid-range phrase at moderate volume and establish a neutral baseline. Define the three intended weights in words before recording.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Weight and mode switching",
+        "body": "Four production choices, decoupled from pitch height. Any of them can happen anywhere in your range. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
+        "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “Neutral, Restrained, Driven, Edged.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Change vocal weight without moving the pitch or using loudness as the only cue. Return to neutral between every attempt.",
+        "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
+        "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Neutral, Restrained, Driven, Edged.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the weight and mode switching target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Neutral, Restrained, Driven, Edged” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
+        "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
+    }
+  },
+  {
+    "id": "v-l7-m3-04",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m3",
+    "stageSlug": "signature",
+    "moduleSlug": "modes-of-weight",
+    "slug": "one-phrase-three-weights",
+    "title": "One Phrase, Three Weights",
+    "type": "exercise",
+    "minutes": 7,
+    "objective": "Same phrase, same pitch, different weight.",
+    "prerequisites": [
+      "v-l7-m3-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Use one mid-range phrase at moderate volume and establish a neutral baseline. Define the three intended weights in words before recording.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Weight and mode switching",
+        "body": "Same phrase, same pitch, different weight. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
+        "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
+      },
+      {
+        "title": "Alternate attempt and reset",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Change vocal weight without moving the pitch or using loudness as the only cue. Return to neutral between every attempt.",
+        "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
+        "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “One Phrase, Three Weights.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the weight and mode switching target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “One Phrase, Three Weights” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
+        "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
+    }
+  },
+  {
+    "id": "v-l7-m3-08",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m3",
+    "stageSlug": "signature",
+    "moduleSlug": "modes-of-weight",
+    "slug": "self-check-three-modes-on-cue",
+    "title": "Self-Check: Three Modes on Cue",
+    "type": "checkpoint",
+    "minutes": 6,
+    "objective": "Called at random, with a return to easy neutral voice between attempts. Strain is not measured.",
+    "prerequisites": [
+      "v-l7-m3-04"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Use one mid-range phrase at moderate volume and establish a neutral baseline. Define the three intended weights in words before recording.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Weight and mode switching",
+        "body": "Called at random, with a return to easy neutral voice between attempts. Strain is not measured. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
+        "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Change vocal weight without moving the pitch or using loudness as the only cue. Return to neutral between every attempt.",
+        "look": "The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.",
+        "listen": "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Three Modes on Cue.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the weight and mode switching target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Self-Check: Three Modes on Cue” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared comfortable production choices in one short phrase and returned to an easy neutral sound.",
+        "Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared comfortable production choices in one short phrase and returned to an easy neutral sound. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Automatic mode classification, strain, pressed phonation, tissue health, or safe production."
+    }
+  },
+  {
+    "id": "v-l7-m4-01",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m4",
+    "stageSlug": "signature",
+    "moduleSlug": "effects-carefully",
+    "slug": "what-a-growl-actually-is",
+    "title": "What a Growl Actually Is",
+    "type": "concept",
+    "minutes": 6,
+    "objective": "The physiology, the specific ways it goes wrong, and why you should review the health module first.",
+    "prerequisites": [
+      "v-l7-m3-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and read The safety rail. Use its written exercise and stop rules. The reading The safety rail is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Do not learn a growl, scream, distortion, or other new effect from written directions. If a qualified teacher has already taught you an effect and it remains easy today, you may review that existing technique briefly; otherwise make this an observation-and-planning session without producing the effect.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Creak, growl, slide, scream",
+        "body": "The physiology, the specific ways it goes wrong, and why you should review the health module first. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
+        "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
+      },
+      {
+        "title": "Use prior supervision—or observe",
+        "body": "Do not learn or imitate a new vocal effect from this lesson. For “What a Growl Actually Is,” either review an effect already taught to you by a qualified teacher at the prescribed dose, or complete the anatomy, listening, warning-sign, and stop-plan work without producing the effect. For an already-taught effect only, begin and end on the teacher's clean baseline and use the dose they prescribed. Otherwise compare your own earlier supervised recordings, name the audible change, and write the stop plan without imitating it.",
+        "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
+        "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “What a Growl Actually Is.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review the anatomy, warning signs, prior supervision, and written stop plan without attempting a new effect."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Complete the observation-only “What a Growl Actually Is” task, or briefly review only a previously taught effect at the prescribed dose."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
+        "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
+    }
+  },
+  {
+    "id": "v-l7-m4-04",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m4",
+    "stageSlug": "signature",
+    "moduleSlug": "effects-carefully",
+    "slug": "effects-listening-and-a-stop-plan",
+    "title": "Effects: Listening and a Stop Plan",
+    "type": "exercise",
+    "minutes": 7,
+    "objective": "Short bursts, with a hard stop the moment it tightens.",
+    "prerequisites": [
+      "v-l7-m4-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and read The safety rail. Use its written exercise and stop rules. The reading The safety rail is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Do not learn a growl, scream, distortion, or other new effect from written directions. If a qualified teacher has already taught you an effect and it remains easy today, you may review that existing technique briefly; otherwise make this an observation-and-planning session without producing the effect.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Creak, growl, slide, scream",
+        "body": "Short bursts, with a hard stop the moment it tightens. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
+        "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
+      },
+      {
+        "title": "Use prior supervision—or observe",
+        "body": "Do not learn or imitate a new vocal effect from this lesson. For “Effects: Listening and a Stop Plan,” either review an effect already taught to you by a qualified teacher at the prescribed dose, or complete the anatomy, listening, warning-sign, and stop-plan work without producing the effect. For an already-taught effect only, begin and end on the teacher's clean baseline and use the dose they prescribed. Otherwise compare your own earlier supervised recordings, name the audible change, and write the stop plan without imitating it.",
+        "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
+        "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Effects: Listening and a Stop Plan.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Review the anatomy, warning signs, prior supervision, and written stop plan without attempting a new effect."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Complete the observation-only “Effects: Listening and a Stop Plan” task, or briefly review only a previously taught effect at the prescribed dose."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
+        "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
+    }
+  },
+  {
+    "id": "v-l7-m4-08",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m4",
+    "stageSlug": "signature",
+    "moduleSlug": "effects-carefully",
+    "slug": "self-check-your-effects-stop-plan",
+    "title": "Self-Check: Your Effects Stop Plan",
+    "type": "checkpoint",
+    "minutes": 6,
+    "objective": "read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a listening and reflection check.",
+    "prerequisites": [
+      "v-l7-m4-04"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and read The safety rail. Use its written exercise and stop rules. The reading The safety rail is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Do not learn a growl, scream, distortion, or other new effect from written directions. If a qualified teacher has already taught you an effect and it remains easy today, you may review that existing technique briefly; otherwise make this an observation-and-planning session without producing the effect.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Creak, growl, slide, scream",
+        "body": "Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
+        "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
+      },
+      {
+        "title": "Use prior supervision—or observe",
+        "body": "Do not learn or imitate a new vocal effect from this lesson. For “Self-Check: Your Effects Stop Plan,” either review an effect already taught to you by a qualified teacher at the prescribed dose, or complete the anatomy, listening, warning-sign, and stop-plan work without producing the effect. For an already-taught effect only, begin and end on the teacher's clean baseline and use the dose they prescribed. Otherwise compare your own earlier supervised recordings, name the audible change, and write the stop plan without imitating it.",
+        "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
+        "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Effects Stop Plan.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review the anatomy, warning signs, prior supervision, and written stop plan without attempting a new effect."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Complete the observation-only “Self-Check: Your Effects Stop Plan” task, or briefly review only a previously taught effect at the prescribed dose."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app.",
+        "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
+    }
+  },
+  {
+    "id": "v-l7-m5-01",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m5",
+    "stageSlug": "signature",
+    "moduleSlug": "higher-and-lower",
+    "slug": "range-grows-at-the-edges-slowly",
+    "title": "Range Grows at the Edges, Slowly",
+    "type": "concept",
+    "minutes": 5,
+    "objective": "Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app.",
+    "prerequisites": [
+      "v-l7-m4-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading Tracking change over months, not days is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes before approaching either edge.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Range extension",
+        "body": "Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
+        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Make two brief, comfortable examples of the idea in “Range Grows at the Edges, Slowly.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly, release, and rescan only after rest.",
+        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
+        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Range Grows at the Edges, Slowly.”"
+      },
+      {
+        "seconds": 75,
+        "instruction": "Isolate the range extension target in short, comfortable examples."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Practise or record the complete “Range Grows at the Edges, Slowly” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
+        "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
+    }
+  },
+  {
+    "id": "v-l7-m5-04",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m5",
+    "stageSlug": "signature",
+    "moduleSlug": "higher-and-lower",
+    "slug": "semitone-at-a-time",
+    "title": "Semitone at a Time",
+    "type": "exercise",
+    "minutes": 7,
+    "objective": "Extend, hold, rescan. Open the range tool yourself when you want to compare another comfortable scan.",
+    "prerequisites": [
+      "v-l7-m5-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading Tracking change over months, not days is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes before approaching either edge.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Range extension",
+        "body": "Extend, hold, rescan. Open the range tool yourself when you want to compare another comfortable scan. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
+        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+      },
+      {
+        "title": "Alternate attempt and reset",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly, release, and rescan only after rest.",
+        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
+        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 60,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Semitone at a Time.”"
+      },
+      {
+        "seconds": 105,
+        "instruction": "Isolate the range extension target in short, comfortable examples."
+      },
+      {
+        "seconds": 165,
+        "instruction": "Practise or record the complete “Semitone at a Time” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
+        "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
+    }
+  },
+  {
+    "id": "v-l7-m5-08",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m5",
+    "stageSlug": "signature",
+    "moduleSlug": "higher-and-lower",
+    "slug": "self-check-compare-your-comfortable-range",
+    "title": "Self-Check: Compare Your Comfortable Range",
+    "type": "checkpoint",
+    "minutes": 6,
+    "objective": "compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a listening and reflection check.",
+    "prerequisites": [
+      "v-l7-m5-04"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Small three-note climb or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading Tracking change over months, not days is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes before approaching either edge.",
+        "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
+        "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
+      },
+      {
+        "title": "Name the target: Range extension",
+        "body": "Compare your observation with an earlier comfortable range; a new note is not required to finish this reflection. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
+        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly, release, and rescan only after rest.",
+        "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
+        "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Compare Your Comfortable Range.”"
+      },
+      {
+        "seconds": 90,
+        "instruction": "Isolate the range extension target in short, comfortable examples."
+      },
+      {
+        "seconds": 135,
+        "instruction": "Practise or record the complete “Self-Check: Compare Your Comfortable Range” task, resetting between attempts."
+      },
+      {
+        "seconds": 90,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
+        "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
+    }
+  },
+  {
+    "id": "v-l7-m6-01",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m6",
+    "stageSlug": "signature",
+    "moduleSlug": "the-room",
+    "slug": "mic-distance-is-a-dynamic-control",
+    "title": "Mic Distance Is a Dynamic Control",
+    "type": "concept",
+    "minutes": 5,
+    "objective": "Working the mic, monitors, and what changes when there is an audience.",
+    "prerequisites": [
+      "v-l7-m5-08"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Home on the Range (Verse & Chorus). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Name the target: Performance and harmony",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Hear the distinction",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 45,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Mic Distance Is a Dynamic Control.”"
+      },
+      {
+        "seconds": 75,
+        "instruction": "Isolate the performance and harmony target in short, comfortable examples."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Practise or record the complete “Mic Distance Is a Dynamic Control” task, resetting between attempts."
+      },
+      {
+        "seconds": 60,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
+        "On playback, the melody keeps its own contour and the full song remains complete from first entry to release. A harmony line, if you add one, is listening practice: nothing here measures two parts at once.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
+    }
+  },
+  {
+    "id": "v-l7-m6-05",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m6",
+    "stageSlug": "signature",
+    "moduleSlug": "the-room",
+    "slug": "microphone-and-phrase-rehearsal",
+    "title": "Microphone and Phrase Rehearsal",
+    "type": "song",
+    "minutes": 9,
+    "objective": "Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts.",
+    "prerequisites": [
+      "v-l7-m6-01"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Home on the Range (Verse & Chorus). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Name the target: Performance and harmony",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Build the song from phrases",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 75,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Microphone and Phrase Rehearsal.”"
+      },
+      {
+        "seconds": 135,
+        "instruction": "Isolate the performance and harmony target in short, comfortable examples."
+      },
+      {
+        "seconds": 210,
+        "instruction": "Practise or record the complete “Microphone and Phrase Rehearsal” task, resetting between attempts."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
+        "On playback, the melody keeps its own contour and the full song remains complete from first entry to release. A harmony line, if you add one, is listening practice: nothing here measures two parts at once.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
+    }
+  },
+  {
+    "id": "v-l7-m6-08",
+    "stageId": "v-l7",
+    "moduleId": "v-l7-m6",
+    "stageSlug": "signature",
+    "moduleSlug": "the-room",
+    "slug": "self-check-your-performance-study",
+    "title": "Self-Check: Your Performance Study",
+    "type": "checkpoint",
+    "minutes": 10,
+    "objective": "rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a listening and reflection check.",
+    "prerequisites": [
+      "v-l7-m6-05"
+    ],
+    "references": [
+      "nidcd-voice-care",
+      "asha-voice-disorders"
+    ],
+    "steps": [
+      {
+        "title": "Use the practice material",
+        "body": "Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Home on the Range (Verse & Chorus). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.",
+        "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
+        "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
+      },
+      {
+        "title": "Set a safe baseline",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Name the target: Performance and harmony",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Make one evidence take",
+        "body": "Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.",
+        "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
+        "listen": "The phrase remains understandable from its first entry to its final release."
+      },
+      {
+        "title": "Review your own attempt",
+        "body": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. Compare your attempt with the supplied material and choose one smaller adjustment for next time.",
+        "look": "Note the pitch, key, or setup you used so that your next comparison is useful.",
+        "listen": "Listen for the specific change taught in this lesson. A self-check is your own reflection, not an automatic vocal score."
+      }
+    ],
+    "mistakes": [
+      {
+        "observation": "The target disappears when the range, volume, speed, or duration increases.",
+        "recovery": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
+      },
+      {
+        "observation": "The reference and your own sound seem different, or you cannot judge the result.",
+        "recovery": "Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement."
+      }
+    ],
+    "blocks": [
+      {
+        "seconds": 90,
+        "instruction": "Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Performance Study.”"
+      },
+      {
+        "seconds": 150,
+        "instruction": "Isolate the performance and harmony target in short, comfortable examples."
+      },
+      {
+        "seconds": 240,
+        "instruction": "Practise or record the complete “Self-Check: Your Performance Study” task, resetting between attempts."
+      },
+      {
+        "seconds": 120,
+        "instruction": "Review one take against the stated listening goal and write the next smaller correction."
+      }
+    ],
+    "selfCheck": {
+      "criteria": [
+        "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.",
+        "On playback, the melody keeps its own contour and the full song remains complete from first entry to release. A harmony line, if you add one, is listening practice: nothing here measures two parts at once.",
+        "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
+      ],
+      "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
+      "ifNotReady": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
+    }
   }
 ];

@@ -68,7 +68,7 @@ const CLAIM_PATTERNS: Record<string, RegExp> = {
   "personal-passaggio-from-range-scan": /\bpassaggio\b[^.]{0,80}\b(?:range (?:scan|test)|scan)\b|\b(?:range (?:scan|test)|scan)\b[^.]{0,80}\bpassaggio\b/i,
   "strain-free-verdict": /\bstrain[- ]free\b|\b(?:no|without|free (?:of|from)|absence of)\s+strain\b/i,
   "vibrato-rate-on-cue": /\bvibrato (?:rate|speed)\b|\bhertz\b|\b\d+\s?Hz\b|\bfive[- ]to[- ]seven\b/i,
-  "held-harmony-against-a-lead": /\bheld harmony\b|\bharmony\b[^.]{0,40}\b(?:against|over|with) (?:the |a )?lead\b/i,
+  "held-harmony-against-a-lead": /\bheld harmony\b|\bharmony\b[^.]{0,40}\b(?:against|over|with) (?:the |a )?lead\b|\bthe harmony (?:keeps|holds|stays)\b/i,
 };
 
 /** Every piece of lesson text that promises something, labelled for the failure message. */
@@ -221,6 +221,8 @@ describe("the lessons make no claim sing can't keep", () => {
       expect(m, claim).toBeTruthy();
       expect(NEGATION.test(text.slice(0, m!.index)), claim).toBe(false);
     }
+    // GuitarHub's wording for the performance module, before it was reworded here.
+    expect(CLAIM_PATTERNS["held-harmony-against-a-lead"].test("On playback, the harmony keeps its own contour.")).toBe(true);
     const disclaimer = "Nothing measures vibrato rate yet, so this one is your ear.";
     const m = CLAIM_PATTERNS["vibrato-rate-on-cue"].exec(disclaimer);
     expect(NEGATION.test(disclaimer.slice(0, m!.index))).toBe(true);
