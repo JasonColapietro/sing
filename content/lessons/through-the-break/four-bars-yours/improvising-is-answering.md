@@ -5,7 +5,7 @@ stage: "v-l5"
 title: "Improvising Is Answering"
 type: "concept"
 minutes: 4
-objective: "Rung one of the ladder."
+objective: "Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing."
 prerequisites: "v-l5-m4-07"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,7 +29,7 @@ Choose Pentatonic run in the practice material on this page and hear its 8â€“6â€
 
 ### Name the target: Four-bar improvisation
 
-Rung one of the ladder. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.
 - Listen: The take sounds like an answer to the call and returns convincingly to the tonal center.

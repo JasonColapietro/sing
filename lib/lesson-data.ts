@@ -2418,7 +2418,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Up and Down, Listening for a Crack",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "Three vowels, both directions.",
+    "objective": "Three vowels, both directions. Judged by ear: nothing detects a register break.",
     "prerequisites": [
       "v-l3-m2-02"
     ],
@@ -5118,7 +5118,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Three Vowels Through the Break",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "Both directions across the zone.",
+    "objective": "Both directions across the zone. Judged by ear: nothing detects a register break.",
     "prerequisites": [
       "v-l5-m2-03"
     ],
@@ -5568,7 +5568,7 @@ export const LESSONS: Lesson[] = [
     "title": "An Easy Pattern Through Your Transition",
     "type": "song",
     "minutes": 6,
-    "objective": "A chorus that sits exactly in your zone — pick the key that puts it there.",
+    "objective": "A short supplied pattern that crosses your transition zone — pick the key that puts it there.",
     "prerequisites": [
       "v-l5-m4-01"
     ],
@@ -5591,13 +5591,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "A chorus that sits exactly in your zone — pick the key that puts it there. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "A short supplied pattern that crosses your transition zone — pick the key that puts it there. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
       {
-        "title": "Build the song from phrases",
-        "body": "Mark the key, breaths, range edges, and lesson target before a full take of “An Easy Pattern Through Your Transition.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.",
+        "title": "Build the pattern in pieces",
+        "body": "Mark the key, breaths, range edges, and lesson target before a full take of the supplied pattern, Wee from the fifth or Legato triad. Rehearse the hardest part alone, join two repetitions, then record one uninterrupted take. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5748,7 +5748,7 @@ export const LESSONS: Lesson[] = [
     "title": "Improvising Is Answering",
     "type": "concept",
     "minutes": 4,
-    "objective": "Rung one of the ladder.",
+    "objective": "Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing.",
     "prerequisites": [
       "v-l5-m4-07"
     ],
@@ -5771,7 +5771,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Four-bar improvisation",
-        "body": "Rung one of the ladder. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Rung one of the improvising ladder: answer a short call with notes from the supplied pattern, then vary one thing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.",
         "listen": "The take sounds like an answer to the call and returns convincingly to the tonal center."
       },

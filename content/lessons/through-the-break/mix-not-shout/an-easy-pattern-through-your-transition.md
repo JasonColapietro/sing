@@ -5,7 +5,7 @@ stage: "v-l5"
 title: "An Easy Pattern Through Your Transition"
 type: "song"
 minutes: 6
-objective: "A chorus that sits exactly in your zone — pick the key that puts it there."
+objective: "A short supplied pattern that crosses your transition zone — pick the key that puts it there."
 prerequisites: "v-l5-m4-01"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,14 +29,14 @@ Work only after an easy warm-up, on a pitch below the top of your comfortable ra
 
 ### Name the target: Comfortable mixed-voice coordination
 
-A chorus that sits exactly in your zone — pick the key that puts it there. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+A short supplied pattern that crosses your transition zone — pick the key that puts it there. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
 - Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
 
-### Build the song from phrases
+### Build the pattern in pieces
 
-Mark the key, breaths, range edges, and lesson target before a full take of “An Easy Pattern Through Your Transition.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.
+Mark the key, breaths, range edges, and lesson target before a full take of the supplied pattern, Wee from the fifth or Legato triad. Rehearse the hardest part alone, join two repetitions, then record one uninterrupted take. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
 - Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.

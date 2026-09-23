@@ -5,7 +5,7 @@ stage: "v-l5"
 title: "Self-Check: Three Vowels Through the Break"
 type: "checkpoint"
 minutes: 5
-objective: "Both directions across the zone."
+objective: "Both directions across the zone. Judged by ear: nothing detects a register break."
 prerequisites: "v-l5-m2-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
