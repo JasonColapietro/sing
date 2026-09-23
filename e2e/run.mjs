@@ -2,7 +2,7 @@
  * UI/UX end-to-end audit for sing.
  *
  *   npm run dev          # in another shell — the account surfaces need it
- *   node e2e/run.mjs [baseUrl] [--only=id,id] [--route=name] [--json=path]
+ *   node e2e/run.mjs [baseUrl] [--only=id,id] [--route=name] [--json=path] [--executable=path]
  *
  * Exits non-zero when any blocker or major finding survives, so this is usable
  * as a gate. Chrome is driven through `channel: "chrome"`: the bundled
@@ -30,6 +30,8 @@ const ONLY = flag("only")?.split(",").map((s) => s.trim()).filter(Boolean) ?? nu
 const ROUTE_FILTER = flag("route")?.split(",").map((s) => s.trim()).filter(Boolean) ?? null;
 const VIEWPORT_FILTER = flag("viewport")?.split(",").map((s) => s.trim()).filter(Boolean) ?? null;
 const JSON_OUT = flag("json");
+/** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
+const EXECUTABLE = flag("executable");
 
 async function loadAudits() {
   const dir = path.join(HERE, "audits");
@@ -127,7 +129,7 @@ async function main() {
   );
 
   const browser = await chromium.launch({
-    channel: "chrome",
+    ...(EXECUTABLE ? { executablePath: EXECUTABLE } : { channel: "chrome" }),
     args: [
       "--use-fake-ui-for-media-stream",
       "--use-fake-device-for-media-stream",

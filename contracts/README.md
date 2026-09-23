@@ -10,6 +10,25 @@ until a singer notices.
 A contract here is the reference surface's numbers, serialized, so the other
 surfaces can assert against them instead of re-typing them.
 
+## suede-voice-curriculum
+
+`suede-voice-curriculum.json` is Sing's canonical voice-curriculum catalog:
+seven levels, 34 modules and 102 published lessons. Its `curriculum` member
+is an exact copy of GuitarHub's published voice catalog
+(`lib/learning/data/voice.json` in `JasonColapietro/suede-guitar-hub`, as of
+that repo's #47). It carries identifiers, titles, summaries and module
+outcomes, not lesson bodies.
+
+The contract also records the six automatic classifier labels, the
+`historyOnly` imported-session policy, and the evidence required before any
+lesson URL moves. Version 1 is authored here and is not generated. GuitarHub
+vendors the whole file byte for byte and checks its catalog against it, so
+update this file first. Otherwise a consumer can quietly become the source of
+the curriculum.
+
+`lib/voice-curriculum.ts` validates the JSON at the data boundary and rejects
+any lesson ID that isn't in the catalog instead of inventing a route.
+
 ## practice-parity
 
 `practice-parity.json` holds the web's practice and song-scoring reference:
