@@ -90,3 +90,46 @@ prefetch aborting under the dev server (LINK_FETCH_TIMEOUT); same routes answer 
 0.4–0.7 s by curl locally and on production. Real majors: the "Pro" chip and the
 "Monthly · $4.99" toggle (ink on violet, 4.05:1 at 10–11 px), Clerk's show-password
 icon (third-party), and "Morning reset" misread as destructive by the states audit.
+
+## Refresh 2026-09-23
+
+New exercise mechanics found on a public-web pass (Sing Sharp, Singing Carrots, SingTrue,
+Erol Singer's Studio, Swiftscales, 30 Day Singer, Vocal Image). Web status is origin/main
+c412d33. Rows above are unchanged; none were contradicted.
+
+| Mechanic | Source | Web | Notes |
+|---|---|---|---|
+| Multi-week named programs (days to 7 weeks), worked day by day | Sing Sharp ([site](https://singsharp.com/en)) | ✗ | Routines are single sessions |
+| Breath detection: mic hears the inhale / support, gates the drill | Sing Sharp ([site](https://singsharp.com/en)) | ✗ | Sustain test reads volume only |
+| Live pitch-vs-target overlay | Sing Sharp, Erol "vocal blob" ([manual](https://www.erolstudios.com/SingersStudio-UserManual/voice-lessons/)) | ✓ | Highway, pitch match |
+| Vocal-fry recovery drill | Sing Sharp Recovery Warmup ([site](https://singsharp.com/en)) | ✗ | Glossary entry only |
+| Harmony: thirds against a melody, then triads, on solfège | Sing Sharp Harmony & Trio ([plan](https://singsharp.com/en/training-plans/harmony-trio)) | ✗ | |
+| Vibrato training drill | Sing Sharp Vibrato Pro ([site](https://singsharp.com/en)) | ◐ | Analyzer shows vibrato; no drill |
+| Mix (chest/head blend) program | Sing Sharp Mix Mastery ([site](https://singsharp.com/en)) | ◐ | Ng/octave sirens exist; no program |
+| Range-expansion program | Sing Sharp Sing High Notes ([site](https://singsharp.com/en)) | ◐ | Sirens exist; no program |
+| Labelled range test | Singing Carrots ([site](https://singingcarrots.com/)), Erol slide test ([manual](https://www.erolstudios.com/SingersStudio-UserManual/my-vocal-range/)) | ✓ | /range |
+| Standalone pitch-accuracy test with a % score | Singing Carrots ([site](https://singingcarrots.com/)) | ◐ | Pitch match scores; no single test |
+| Exercise adapted to voice type, speed control (0.4–0.7×) | Singing Carrots ([site](https://singingcarrots.com/)) | ✓ | Warmups in range, tempo under Adjust |
+| Songs filtered by your tested range | Singing Carrots ([site](https://singingcarrots.com/)) | ✓ | fitsRange, /can-you-sing |
+| Sing along to an uploaded MIDI melody | Singing Carrots ([site](https://singingcarrots.com/)) | ✗ | |
+| Sustain / breath-support tool | Singing Carrots ([site](https://singingcarrots.com/)) | ✓ | /breath sustain test, Farinelli drill |
+| Ear-only drills (no mic) | SingTrue ([Musical U](https://www.musical-u.com/learn/learn-to-sing-with-the-new-singtrue-app/)) | ✓ | Higher/lower, intervals |
+| Solfège sing-back with a lives system | SingTrue ([Musical U](https://www.musical-u.com/learn/learn-to-sing-with-the-new-singtrue-app/)) | ✗ | No solfège, no lives |
+| Per-session range bar coloured by accuracy | Erol ([manual](https://www.erolstudios.com/SingersStudio-UserManual/my-vocal-range/)) | ◐ | Range history, no accuracy colouring |
+| Custom exercise editor (scales, arpeggios, song snippets) | Erol ([site](https://www.erolstudios.com/singers-studio-voice-and-ear-training/)), Swiftscales ([App Store](https://apps.apple.com/us/app/swiftscales-vocal-trainer/id1079277628)) | ✗ | |
+| Score rewards breadth across keys (points ÷ keys) | Erol ([manual](https://www.erolstudios.com/SingersStudio-UserManual/voice-lessons/)) | ✗ | |
+| Hold and slide to isolate one key of an exercise | Erol ([manual](https://www.erolstudios.com/SingersStudio-UserManual/voice-lessons/)) | ✗ | |
+| Coach video feedback, live group sessions | 30 Day Singer ([site](https://www.30daysinger.com/)) | — | Human service, out of scope |
+| Voice Arena community rating | Vocal Image ([site](https://www.vocalimage.app/)) | — | Speech, not singing |
+| Published outcome data (range gained, accuracy delta) | Singing Carrots ([site](https://singingcarrots.com/)) | ✗ | Needs measured data first (see #141) |
+
+Not confirmed: Singeo AI scoring (official pages mention only video lessons, a progress
+tracker and streaks); Smule scored practice beyond karaoke.
+
+Source column note: the GuitarHub voice curriculum (7 stages, 34 modules, 102 lessons,
+live on guitarhub.org) moves to sing as the only voice-lesson host (decision 2026-09-23).
+
+These ✗ and ◐ rows join the slice queue: programs + fry/vibrato/mix/high-notes drills and
+breath detection (with Sing Sharp parity), harmony trainer, solfège + lives, custom exercise
+editor with slide-to-isolate and cross-key scoring, MIDI sing-along, pitch-accuracy test,
+accuracy-coloured range bar.
