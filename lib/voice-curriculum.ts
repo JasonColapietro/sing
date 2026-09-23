@@ -104,7 +104,10 @@ function isVoiceModule(value: unknown): value is VoiceModule {
     isString(value.proofMetric) &&
     isNumber(value.lessonsTotal) &&
     isNumber(value.sampleLessonsShown) &&
+    // An empty array passes `every`, so a module with no lessons (or a level
+    // with no modules, below) has to be refused explicitly.
     Array.isArray(value.lessons) &&
+    value.lessons.length > 0 &&
     value.lessons.every(isVoiceLesson)
   );
 }
@@ -120,6 +123,7 @@ function isVoiceLevel(value: unknown): value is VoiceLevel {
     isNumber(value.lessonCount) &&
     isNumber(value.stage) &&
     Array.isArray(value.modules) &&
+    value.modules.length > 0 &&
     value.modules.every(isVoiceModule)
   );
 }
