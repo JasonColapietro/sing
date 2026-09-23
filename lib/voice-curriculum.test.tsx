@@ -72,6 +72,36 @@ describe("the Sing-owned voice curriculum contract", () => {
     );
   });
 
+  it("rejects a level whose modules array is empty", () => {
+    const candidate = {
+      ...voiceCurriculum,
+      curriculum: {
+        ...voiceCurriculum.curriculum,
+        levels: [{ ...levels[0], modules: [] }, ...levels.slice(1)],
+      },
+    };
+    expect(() => parseVoiceCurriculum(candidate)).toThrow(
+      /invalid voice curriculum contract/i,
+    );
+  });
+
+  it("rejects a module whose lessons array is empty", () => {
+    const [firstLevel, ...rest] = levels;
+    const candidate = {
+      ...voiceCurriculum,
+      curriculum: {
+        ...voiceCurriculum.curriculum,
+        levels: [
+          { ...firstLevel, modules: [{ ...firstLevel.modules[0], lessons: [] }, ...firstLevel.modules.slice(1)] },
+          ...rest,
+        ],
+      },
+    };
+    expect(() => parseVoiceCurriculum(candidate)).toThrow(
+      /invalid voice curriculum contract/i,
+    );
+  });
+
   it("rejects a level with no modules before the page can consume it", () => {
     const [firstLevel, ...rest] = levels;
     const levelWithoutModules = {

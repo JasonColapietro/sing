@@ -82,7 +82,7 @@ const UI_SUBSTITUTIONS = [
 ];
 const substitutionHits = UI_SUBSTITUTIONS.map(() => 0);
 
-function adapt(text) {
+function adaptUi(text) {
   let out = text;
   UI_SUBSTITUTIONS.forEach(([pattern, replacement], i) => {
     const next = out.replace(pattern, replacement);
@@ -98,8 +98,14 @@ function adapt(text) {
 /** One line of frontmatter. Values are JSON strings, so quotes and colons survive. */
 const fm = (key, value) => `${key}: ${JSON.stringify(value)}`;
 
-function lessonMarkdown(lesson, entry) {
-  const { level, module } = entry;
+function lessonMarkdown(lesson, source) {
+  const { level, module } = source;
+  // sing's catalog may retitle a lesson (a "Checkpoint:" that measures nothing
+  // became a "Self-Check:"). The body quotes its own title, so it follows.
+  const retitle = (text) =>
+    lesson.title === source.lesson.title ? text : text.split(lesson.title).join(source.lesson.title);
+  const adapt = (text) => adaptUi(retitle(text));
+  const entry = source;
   const lines = [
     "---",
     fm("id", lesson.id),

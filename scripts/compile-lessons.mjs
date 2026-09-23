@@ -313,6 +313,10 @@ if (CHECK) {
   }
   if (current !== out) problems.push("lib/lesson-data.ts is stale: run node scripts/compile-lessons.mjs");
   else console.log(`lib/lesson-data.ts is current (${lessons.length} of ${catalogLessons.size} lessons)`);
+} else if (problems.length) {
+  // Leave the last good output in place: a rejected compile must not become
+  // the generated file someone commits.
+  console.log("not writing lib/lesson-data.ts: the lessons failed validation");
 } else {
   writeFileSync(target, out);
   console.log(`wrote ${lessons.length} of ${catalogLessons.size} lessons`);
