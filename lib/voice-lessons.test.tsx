@@ -118,6 +118,20 @@ describe("the lesson data", () => {
     }
   });
 
+  /**
+   * The objective is the page's subtitle and its search description, so it has
+   * to say what the catalog says. Three lessons were authored on GuitarHub with
+   * a different objective from their catalog summary, and neither text is
+   * wrong, so they are named rather than rewritten.
+   */
+  it("states the catalog's summary as the lesson objective", () => {
+    const authoredApart = new Set(["v-l1-m3-02", "v-l3-m5-07", "v-l6-m5-01"]);
+    for (const lesson of LESSONS) {
+      if (authoredApart.has(lesson.id)) continue;
+      expect(lesson.objective, lesson.id).toBe(catalogLessons.get(lesson.id)!.lesson.summary);
+    }
+  });
+
   it("gives every lesson a unique URL", () => {
     const urls = LESSONS.map(lessonHref);
     expect(new Set(urls).size).toBe(urls.length);

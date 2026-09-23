@@ -5,7 +5,7 @@ stage: "v-l3"
 title: "Self-Check: Up and Down, Listening for a Crack"
 type: "checkpoint"
 minutes: 5
-objective: "Three vowels, both directions."
+objective: "Three vowels, both directions. Judged by ear: nothing detects a register break."
 prerequisites: "v-l3-m2-02"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
