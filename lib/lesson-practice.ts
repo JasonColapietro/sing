@@ -254,9 +254,12 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
 
   // Stage 6 · Agility
   "v-l6-m1": {
+    // GuitarHub bundled only Agility run here, which is a five-note scale up
+    // and down twice; the module's lessons teach a three-note turn. Small
+    // three-note climb (1-2-3-2-1) is that turn, so it is what the room scores.
     basis: measured("scorePercent"),
-    companion: { room: "warmups", param: "exercise", value: "agility-run" },
-    studies: ["agility-run"],
+    companion: { room: "warmups", param: "exercise", value: "morning-three-note" },
+    studies: ["morning-three-note", "agility-run"],
     readings: ["weeks-3-4-middle"],
   },
   "v-l6-m2": {
