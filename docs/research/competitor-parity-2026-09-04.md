@@ -100,7 +100,7 @@ c412d33. Rows above are unchanged; none were contradicted.
 | Mechanic | Source | Web | Notes |
 |---|---|---|---|
 | Multi-week named programs (days to 7 weeks), worked day by day | Sing Sharp ([site](https://singsharp.com/en)) | ✓ | /programs: five plans, 1–6 weeks, 10–20 min a day with rest days; days tick off from the practice log, one per calendar day |
-| Breath detection: mic hears the inhale / support, gates the drill | Sing Sharp ([site](https://singsharp.com/en)) | ✗ | Sustain test reads volume only |
+| Breath detection: mic hears the inhale / support, gates the drill | Sing Sharp ([site](https://singsharp.com/en)) | ◐ | Inhale heard and gates the sustain test and Breathe and sing (S9c); support is not measured |
 | Live pitch-vs-target overlay | Sing Sharp, Erol "vocal blob" ([manual](https://www.erolstudios.com/SingersStudio-UserManual/voice-lessons/)) | ✓ | Highway, pitch match |
 | Vocal-fry recovery drill | Sing Sharp Recovery Warmup ([site](https://singsharp.com/en)) | ✓ | Easy recovery routine: quiet hums, soft trill, creak-to-tone onset. Fry itself is not detected; only the pitched note is scored |
 | Harmony: thirds against a melody, then triads, on solfège | Sing Sharp Harmony & Trio ([plan](https://singsharp.com/en/training-plans/harmony-trio)) | ✗ | |

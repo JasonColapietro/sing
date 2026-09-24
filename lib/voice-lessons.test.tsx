@@ -69,6 +69,7 @@ const CLAIM_PATTERNS: Record<string, RegExp> = {
   "strain-free-verdict": /\bstrain[- ]free\b|\b(?:no|without|free (?:of|from)|absence of)\s+strain\b/i,
   "vibrato-rate-on-cue": /\bvibrato (?:rate|speed)\b|\bhertz\b|\b\d+\s?Hz\b|\bfive[- ]to[- ]seven\b/i,
   "held-harmony-against-a-lead": /\bheld harmony\b|\bharmony\b[^.]{0,40}\b(?:against|over|with) (?:the |a )?lead\b|\bthe harmony (?:keeps|holds|stays)\b/i,
+  "breath-support-from-inhale": /\b(?:app|mic|microphone|sing|breath room)\b[^.]{0,60}\b(?:measures?|reads?|scores?|checks?|detects?|hears?|tracks?)\b[^.]{0,40}\b(?:support|lung|diaphragm|how (?:deep|much air))|\blung capacity\b|\bdiaphragm(?:atic)? (?:engagement|activation)\b/i,
 };
 
 /** Every piece of lesson text that promises something, labelled for the failure message. */
@@ -225,6 +226,7 @@ describe("the lessons make no claim sing can't keep", () => {
       "strain-free-verdict": "Hold the belt for six seconds without strain.",
       "vibrato-rate-on-cue": "Switch to a vibrato rate of 5 Hz on cue.",
       "held-harmony-against-a-lead": "Sing a held harmony against the lead.",
+      "breath-support-from-inhale": "The mic hears your inhale and measures your breath support.",
     };
     for (const [claim, text] of Object.entries(promises)) {
       const m = CLAIM_PATTERNS[claim].exec(text);

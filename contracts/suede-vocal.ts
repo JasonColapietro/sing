@@ -49,6 +49,11 @@
  * parameter and the ids it accepts, so a curriculum can send a singer to a
  * multi-week plan by id instead of by a hand-written URL.
  *
+ * Version 6 adds the breath gate: two measurement rows for the inhale the mic
+ * now hears (`inhaleDetected`, `inhaleSeconds`), the claim that must never be
+ * built on them (`breath-support-from-inhale`), the breathe-and-sing drill,
+ * the sustain test's gate, and the breath room's deep-link values.
+ *
  * It is generated, not written: every number is imported from the modules the
  * app runs on, exactly like `practice-parity.ts`. See contracts/README.md.
  */
@@ -76,11 +81,17 @@ import {
 } from "@/lib/audio/pitch";
 import { PITCH_MEDIAN_WINDOW } from "@/lib/audio/latency";
 import { PITCH_FFT_SIZE } from "@/lib/audio/use-pitch";
+import { BREATH_RULES } from "@/lib/audio/breath-detect";
 import { TOLERANCE_CENTS } from "@/components/songs/lib";
 import { STAR_THRESHOLDS } from "@/lib/stars";
 import {
+  BREATH_DRILL_IDS,
+  BREATH_FALLBACK_SEC,
   BREATH_ROUTINES,
   BREATH_STEP_INTRO_SEC,
+  CUE_BREATH_SEC,
+  CUE_HOLD_SEC,
+  CUE_REP_CHOICES,
   FARINELLI_LEAD_SEC,
   FARINELLI_START_N,
   SUSTAIN_ATTEMPT_SEC,
@@ -88,6 +99,7 @@ import {
   SUSTAIN_STAR_SEC,
   boxSeconds,
   breathRoutineSeconds,
+  breathStepSeconds,
   farinelliSeconds,
   routineNeedsMic,
 } from "@/components/breath/routines";
@@ -113,7 +125,7 @@ import { PROGRAMS } from "@/lib/programs";
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 5;
+export const CONTRACT_VERSION = 6;
 
 /**
  * Every measurement this app can take from a microphone, and every one a
@@ -165,6 +177,25 @@ const MEASUREMENTS = {
     unit: "percent",
     module: "components/breath/sustain-test.tsx",
     note: "1 minus the coefficient of variation of RMS. This is a LOUDNESS measure. It is not airflow and it is not pitch.",
+  },
+  inhaleDetected: {
+    measurable: "yes",
+    unit: "event",
+    module: "lib/audio/breath-detect.ts",
+    note: "The mic heard an audible inhale: unvoiced, noise-like sound concentrated above 1 kHz, rising out of the room's own adaptive noise floor and falling back (or giving way to a note) within 0.25-2.5 s. Voiced sound never counts. It says a breath was heard and NOTHING about it: not depth, airflow, support, lung capacity or the diaphragm. Quiet nasal breaths and some mics are not heard, and every drill that waits on a breath offers to start without it, so a lesson must not make passing depend on one being heard. A hiss of about a second sounds the same and is heard as one. Measured on synthetic breaths: 72 of 72 heard in a quiet room, all at 6 dB over a fan, and no false inhales in 389 s of fans, hum, silence and vowels.",
+    evidence: [
+      "lib/audio/breath-detect.ts",
+      "lib/audio/breath-detect.test.ts",
+      "lib/audio/use-breath-detect.ts",
+      "e2e/breath-gate.mjs",
+    ],
+  },
+  inhaleSeconds: {
+    measurable: "yes",
+    unit: "seconds",
+    module: "lib/audio/breath-detect.ts",
+    note: "How long that breath was heard for, first to last breath-like frame; synthetic breaths read 0.05-0.17 s short. The length of a sound, not a volume of air. Reported beside the sustain hold it opened and in breathe-and-sing's status line.",
+    evidence: ["lib/audio/breath-detect.ts", "lib/audio/breath-detect.test.ts", "e2e/breath-gate.mjs"],
   },
   phonationSeconds: {
     measurable: "yes",
@@ -305,8 +336,14 @@ const UNSUPPORTED_CLAIMS = {
   "pitch-steadiness-in-breath-room": {
     claimedAs: "the breath room watching how steady the pitch stays",
     reality:
-      "The sustain test reads frame volume only and never reads f0. No cents drift is measured in the breath room at all.",
+      "The sustain test times and scores the hold from frame volume only and never reads f0. The breath gate before it listens for an inhale and uses periodicity only to rule voiced sound out. No cents drift is measured in the breath room at all.",
     useInstead: ["sustainSeconds", "loudnessSteadiness"],
+  },
+  "breath-support-from-inhale": {
+    claimedAs: "breath support, lung capacity, breath depth or diaphragm engagement read from the inhale",
+    reality:
+      "The inhale detector hears that a breath happened and for how long. A gasp and a quiet sip are the same event to it, and a quiet one may not be heard at all. Nothing measures how much air was taken or how it is managed.",
+    useInstead: ["inhaleDetected", "inhaleSeconds", "sustainSeconds"],
   },
   "personal-passaggio-from-range-scan": {
     claimedAs: "both passaggio pitches computed from a range scan",
@@ -344,6 +381,8 @@ const RULES = {
     "The scan records extremes reached by pushing. A usable working range trims the edges; the scan and the working range are different numbers and a curriculum must not call the scan 'the one you can use'.",
   sustainIsLoudnessNotPitch:
     "Sustain steadiness is the coefficient of variation of loudness. The breath room never reads f0.",
+  inhaleIsHeardNotMeasured:
+    "The breath room's mic hears the inhale and nothing more. Copy may say the mic heard the breath; it may never say it measured support, lung capacity, breath depth or the diaphragm, and no pass or fail may depend on a breath being heard, because every gated drill offers to start without detection.",
   freeExerciseGate:
     "A warmup is free if and only if it is in EXERCISES. Pro packs are gated by array membership, not by a flag, so a free surface must never deep-link a pack exercise.",
 } as const;
@@ -495,6 +534,7 @@ export function buildContract() {
         "lib/audio/pitch.ts",
         "lib/audio/use-pitch.ts",
         "lib/audio/latency.ts",
+        "lib/audio/breath-detect.ts",
         "components/warmups/exercises.ts",
         "components/warmups/routines.ts",
         "components/breath/routines.ts",
@@ -635,6 +675,42 @@ export function buildContract() {
         steadinessMetric: "loudness_cv",
         measuresPitchDrift: false,
         acceptsUnvoicedHiss: true,
+        /**
+         * Each attempt waits for the mic to hear an inhale before it arms, and
+         * reports that breath's length beside the hold. The singer can start
+         * without detection at any time, and is offered to after
+         * `fallbackAfterSec` with nothing heard.
+         */
+        breathGate: {
+          defaultOn: true,
+          fallbackAfterSec: BREATH_FALLBACK_SEC,
+          reportsInhaleSeconds: true,
+        },
+      },
+      /**
+       * Breathe and sing: short notes, each counted only once the mic has
+       * heard the breath before it. Scored by reps finished, never by whether
+       * the breath was heard, so a room that cannot carry one loses nothing.
+       */
+      cue: {
+        usesMicrophone: true,
+        gatedOnInhale: true,
+        fallbackAfterSec: BREATH_FALLBACK_SEC,
+        repChoices: [...CUE_REP_CHOICES],
+        holdSec: CUE_HOLD_SEC,
+        breathEstimateSec: CUE_BREATH_SEC,
+        exampleSeconds: breathStepSeconds({
+          drill: "cue",
+          reps: CUE_REP_CHOICES[0],
+          holdSec: CUE_HOLD_SEC,
+        }),
+      },
+      /** The inhale detector's bounds, as the app runs them. */
+      inhale: {
+        minSec: BREATH_RULES.minInhaleMs / 1000,
+        maxSec: BREATH_RULES.maxInhaleMs / 1000,
+        voicedNeverCounts: true,
+        measuresSupport: false,
       },
       box: {
         phases: ["Inhale", "Hold", "Exhale", "Hold"],
@@ -771,7 +847,15 @@ export function buildContract() {
       rooms: {
         range: { path: "/range", params: [] },
         warmups: { path: "/warmups", params: ["exercise", "routine"] },
-        breath: { path: "/breath", params: ["drill", "routine"] },
+        breath: {
+          path: "/breath",
+          params: ["drill", "routine"],
+          /** The ids each param accepts; anything else lands on the room's front page. */
+          values: {
+            drill: [...BREATH_DRILL_IDS],
+            routine: BREATH_ROUTINES.map((r) => r.id),
+          },
+        },
         earTraining: { path: "/ear-training", params: [] },
         studio: { path: "/studio", params: [] },
         songs: { path: "/songs", params: ["song"] },

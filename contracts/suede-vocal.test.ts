@@ -24,7 +24,13 @@ import { VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { VOICE_KINDS } from "@/lib/singers-core";
 import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
 import { isFreeExercise } from "@/components/warmups/routines";
-import { SUSTAIN_BENCHMARKS_SEC, SUSTAIN_STAR_SEC } from "@/components/breath/routines";
+import {
+  BREATH_DRILL_IDS,
+  BREATH_FALLBACK_SEC,
+  BREATH_ROUTINES,
+  SUSTAIN_BENCHMARKS_SEC,
+  SUSTAIN_STAR_SEC,
+} from "@/components/breath/routines";
 import { starsForSustain } from "@/components/breath/store";
 import { BOOK_CONTENTS, BOOK_WORDS } from "@/lib/book-data";
 import { ATLAS_CONTENTS, ATLAS_WORDS } from "@/lib/atlas-data";
@@ -41,6 +47,12 @@ const PLAYER_SRC = fileURLToPath(
   new URL("../components/warmups/exercise-player.tsx", import.meta.url),
 );
 const USE_PITCH_SRC = fileURLToPath(new URL("../lib/audio/use-pitch.ts", import.meta.url));
+/** Every surface that shows a singer anything about the breath gate. */
+const BREATH_GATE_SRCS = [
+  "../components/breath/sustain-test.tsx",
+  "../components/breath/breath-cue-drill.tsx",
+  "../components/breath/breath-gate.tsx",
+].map((rel) => fileURLToPath(new URL(rel, import.meta.url)));
 
 /** The exact bytes the committed file should hold: stable key order, 2-space, trailing newline. */
 function serialize(contract: unknown): string {
@@ -299,6 +311,54 @@ describe("suede-vocal contract", () => {
     });
 
     /**
+     * The inhale rows are "yes" for exactly one thing: a breath was heard, and
+     * for how long. If any surface that shows the gate starts describing the
+     * breath's quality, the rows are being read as something they are not.
+     */
+    it("the breath gate hears an inhale and claims nothing more", () => {
+      const c = buildContract();
+      for (const key of ["inhaleDetected", "inhaleSeconds"] as const) {
+        const row = c.measurement[key];
+        expect(row.measurable).toBe("yes");
+        expect(row.module).toBe("lib/audio/breath-detect.ts");
+      }
+      expect(c.measurement.inhaleDetected.note).toMatch(/NOTHING about it/);
+      expect(c.measurement.inhaleDetected.evidence).toContain("lib/audio/breath-detect.test.ts");
+      expect(c.measurement.inhaleDetected.evidence).toContain("e2e/breath-gate.mjs");
+      for (const path of [...c.measurement.inhaleDetected.evidence, ...c.measurement.inhaleSeconds.evidence]) {
+        expect(existsSync(fileURLToPath(new URL(`../${path}`, import.meta.url))), path).toBe(true);
+      }
+      expect(c.breath.inhale.measuresSupport).toBe(false);
+      expect(c.breath.inhale.voicedNeverCounts).toBe(true);
+      expect(c.unsupportedClaims["breath-support-from-inhale"].reality).toMatch(
+        /nothing measures how much air/i,
+      );
+      expect(c.breath.sustain.breathGate.fallbackAfterSec).toBe(BREATH_FALLBACK_SEC);
+      expect(c.breath.cue.fallbackAfterSec).toBe(BREATH_FALLBACK_SEC);
+
+      for (const path of BREATH_GATE_SRCS) {
+        // What a singer can see: the source with its comments removed, since
+        // the comments are where the denials are written down.
+        const shown = readFileSync(path, "utf8")
+          .replace(/\/\*[\s\S]*?\*\//g, "")
+          .replace(/^\s*\/\/.*$/gm, "");
+        // Words that would turn "the mic heard a breath" into a measurement
+        // of the body.
+        expect(shown, `${path} describes the breath as measured`).not.toMatch(
+          /\b(?:lung capacity|diaphragm(?:atic)?|breath support|support (?:level|score|quality))\b/i,
+        );
+      }
+      // Both gated drills keep the way round a mic that cannot hear a breath.
+      const gate = readFileSync(BREATH_GATE_SRCS[2], "utf8");
+      expect(gate).toContain("Start without breath detection");
+      for (const path of BREATH_GATE_SRCS.slice(0, 2)) {
+        const src = readFileSync(path, "utf8");
+        expect(src).toContain("useBreathDetect");
+        expect(src).toContain("BreathGatePanel");
+      }
+    });
+
+    /**
      * Every remedy offered in `unsupportedClaims.useInstead` has to be a real
      * measurement that is actually implemented, or the advice sends a consumer
      * at another gap.
@@ -444,6 +504,8 @@ describe("suede-vocal contract", () => {
     expect(rooms.songs.params).toEqual(["song"]);
     expect(rooms.breath.params).toEqual(["drill", "routine"]);
     expect(rooms.programs.params).toEqual(["program"]);
+    expect(rooms.breath.values.drill).toEqual([...BREATH_DRILL_IDS]);
+    expect(rooms.breath.values.routine).toEqual(BREATH_ROUTINES.map((r) => r.id));
     // Rooms with no parser must advertise none.
     expect(rooms.range.params).toEqual([]);
     expect(rooms.studio.params).toEqual([]);

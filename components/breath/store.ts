@@ -1,6 +1,6 @@
 "use client";
 
-import { SUSTAIN_STAR_SEC } from "./routines";
+import { CUE_REP_CHOICES, SUSTAIN_STAR_SEC } from "./routines";
 
 export interface SustainAttempt {
   /** Sustained duration in seconds. */
@@ -74,6 +74,8 @@ export interface BreathBests {
   boxMinutes: number;
   /** Highest Farinelli top count reached by finishing the drill. */
   farinelliCap: number;
+  /** Most breathe-and-sing reps in one run taken to its end. */
+  cueReps: number;
 }
 
 const BESTS_KEY = "suede-sing:breath-bests:v1";
@@ -82,6 +84,7 @@ export const EMPTY_BREATH_BESTS: BreathBests = {
   sustainSec: 0,
   boxMinutes: 0,
   farinelliCap: 0,
+  cueReps: 0,
 };
 
 function positive(v: unknown): number {
@@ -98,19 +101,21 @@ export function loadBreathBests(): BreathBests {
       sustainSec: positive(p.sustainSec),
       boxMinutes: positive(p.boxMinutes),
       farinelliCap: positive(p.farinelliCap),
+      cueReps: positive(p.cueReps),
     };
   } catch {
     return EMPTY_BREATH_BESTS;
   }
 }
 
-/** Raise any of the three bests. Never lowers one: a best is a high-water mark. */
+/** Raise any of the bests. Never lowers one: a best is a high-water mark. */
 export function recordBreathBest(patch: Partial<BreathBests>): BreathBests {
   const cur = loadBreathBests();
   const next: BreathBests = {
     sustainSec: Math.max(cur.sustainSec, positive(patch.sustainSec)),
     boxMinutes: Math.max(cur.boxMinutes, positive(patch.boxMinutes)),
     farinelliCap: Math.max(cur.farinelliCap, positive(patch.farinelliCap)),
+    cueReps: Math.max(cur.cueReps, positive(patch.cueReps)),
   };
   try {
     window.localStorage.setItem(BESTS_KEY, JSON.stringify(next));
@@ -148,5 +153,18 @@ export function starsForFarinelli(cap: number): Stars {
   if (cap >= 12) return 3;
   if (cap >= 10) return 2;
   if (cap >= 1) return 1;
+  return 0;
+}
+
+/**
+ * Breathe and sing is scored by how many reps a run was taken through, on the
+ * three lengths the drill offers. Whether the mic heard each breath is not
+ * part of it: a room that cannot carry one should not cap the stars.
+ */
+export function starsForCue(reps: number): Stars {
+  const [one, two, three] = CUE_REP_CHOICES;
+  if (reps >= three) return 3;
+  if (reps >= two) return 2;
+  if (reps >= one) return 1;
   return 0;
 }
