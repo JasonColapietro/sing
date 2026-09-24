@@ -249,6 +249,9 @@ describe("suede-vocal contract", () => {
       expect(pitchSrc).toContain("rms < SILENCE_RMS");
       expect(pitchSrc).toContain("lowpass(input, sampleRate, LOWPASS_HZ)");
       expect(pitchSrc).toContain("best * PEAK_TOLERANCE");
+      expect(pitchSrc).toContain("Math.abs(buf[i]) < TRIM_THRESHOLD");
+      expect(pitchSrc).toContain("Math.abs(buf[SIZE - i]) < TRIM_THRESHOLD");
+      expect(pitchSrc).toContain("size < MIN_WINDOW_SAMPLES");
       const hookSrc = readFileSync(USE_PITCH_SRC, "utf8");
       expect(hookSrc).toContain("?? DEFAULT_CLARITY_THRESHOLD");
       expect(hookSrc).toContain("hist.length > PITCH_MEDIAN_WINDOW");

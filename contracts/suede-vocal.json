@@ -34,6 +34,8 @@
       "method": "nsdf",
       "lowpassHz": 4000,
       "silenceRms": 0.01,
+      "trimThreshold": 0.2,
+      "minWindowSamples": 128,
       "peakTolerance": 0.9,
       "subrangeFloorHz": 40,
       "subrangeSearchRatio": 0.03,

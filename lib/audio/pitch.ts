@@ -84,6 +84,16 @@ export const LOWPASS_HZ = 4000;
 export const SILENCE_RMS = 0.01;
 
 /**
+ * Edge trim. From each end of the filtered frame, the analysis window starts
+ * at the first sample whose magnitude is below this. It changes which samples
+ * the NSDF sees, so a port has to use the same value to read the same peak.
+ */
+export const TRIM_THRESHOLD = 0.2;
+
+/** A trimmed window shorter than this many samples reads as no pitch. */
+export const MIN_WINDOW_SAMPLES = 128;
+
+/**
  * The clarity a reading needs before the live hooks trust it. Below this the
  * frame is treated as unvoiced and the median history is cleared.
  */
@@ -138,21 +148,20 @@ export function detectPitch(
   // the voiced middle of the frame.
   let r1 = 0;
   let r2 = SIZE - 1;
-  const thres = 0.2;
   for (let i = 0; i < SIZE / 2; i++) {
-    if (Math.abs(buf[i]) < thres) {
+    if (Math.abs(buf[i]) < TRIM_THRESHOLD) {
       r1 = i;
       break;
     }
   }
   for (let i = 1; i < SIZE / 2; i++) {
-    if (Math.abs(buf[SIZE - i]) < thres) {
+    if (Math.abs(buf[SIZE - i]) < TRIM_THRESHOLD) {
       r2 = SIZE - i;
       break;
     }
   }
   const size = r2 - r1;
-  if (size < 128) return null;
+  if (size < MIN_WINDOW_SAMPLES) return null;
 
   // Cumulative energy, so each lag's overlap energy is two lookups rather than
   // its own inner loop: `energy[k]` is the sum of squares of the first k

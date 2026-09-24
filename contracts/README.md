@@ -206,6 +206,8 @@ rooms put on it:
 
 - the pre-filter corner (`lowpassHz`)
 - the silence floor (`silenceRms`)
+- the edge trim and the shortest window it leaves (`trimThreshold`,
+  `minWindowSamples`)
 - the peak rule (`peakTolerance`)
 - the mains-hum check below C2 (`subrangeFloorHz`, `subrangeSearchRatio`,
   `subrangeMargin`, `subrangeMinClarity`)

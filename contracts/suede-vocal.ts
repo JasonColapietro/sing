@@ -60,8 +60,10 @@ import {
   MAX_FREQ,
   MIN_FREQ,
   PEAK_TOLERANCE,
+  MIN_WINDOW_SAMPLES,
   SILENCE_RMS,
   SUBRANGE_FLOOR_HZ,
+  TRIM_THRESHOLD,
   SUBRANGE_MARGIN,
   SUBRANGE_MIN_CLARITY,
   SUBRANGE_SEARCH_RATIO,
@@ -507,6 +509,13 @@ export function buildContract() {
         lowpassHz: LOWPASS_HZ,
         /** Raw-frame RMS below which a frame is silence. */
         silenceRms: SILENCE_RMS,
+        /**
+         * From each end of the filtered frame, the window starts at the first
+         * sample below this magnitude.
+         */
+        trimThreshold: TRIM_THRESHOLD,
+        /** A trimmed window shorter than this reads as no pitch. */
+        minWindowSamples: MIN_WINDOW_SAMPLES,
         /** The first peak within this share of the best one is the period. */
         peakTolerance: PEAK_TOLERANCE,
         /** The mains-hum check below C2. */
