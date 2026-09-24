@@ -266,6 +266,13 @@ describe("review fixes", () => {
       { label: "Sustain test", first: "6.0 s", last: "9.5 s" },
       { label: scale, first: "62%", last: "80%" },
     ]);
+    // Practice before a same-day start didn't count toward day one, so it
+    // isn't reported as the baseline either.
+    const early = { ...log(first, "warmup", scale), score: 95, date: "2026-10-01T00:00:01.000Z" };
+    const startedAt = sessions[0].date;
+    const withEarly = [...sessions, early];
+    const rows = programComparison(program, programProgress(program, withEarly, first, { startedAt }), withEarly, history, startedAt);
+    expect(rows.find((r) => r.label === scale)?.first).toBe("62%");
   });
 });
 

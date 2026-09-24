@@ -405,6 +405,8 @@ export function programComparison(
   progress: ProgramProgress,
   sessions: readonly SessionLog[],
   rangeHistory: readonly RangeEntry[],
+  /** The enrolment's start time: practice before it didn't count, so it isn't a baseline. */
+  startedAt?: string,
 ): ComparisonRow[] {
   const firstSpan = progress.spans[0];
   const lastSpan = progress.spans[program.days.length - 1];
@@ -416,7 +418,9 @@ export function programComparison(
   );
 
   const value = (t: ProgramTask, span: { from: string; to: string }): string | null => {
-    const inSpan = sessions.filter((s) => within(s.day, span) && taskDone(t, [s]));
+    const inSpan = sessions.filter(
+      (s) => within(s.day, span) && (!startedAt || s.date >= startedAt) && taskDone(t, [s]),
+    );
     switch (t.kind) {
       case "exercise": {
         const scores = inSpan.map((s) => s.score).filter((n): n is number => typeof n === "number");
@@ -427,7 +431,9 @@ export function programComparison(
         return `${Math.max(...inSpan.map((s) => s.durationSec)).toFixed(1)} s`;
       }
       case "range": {
-        const tests = rangeHistory.filter((r) => within(localDayOf(r.testedAt), span));
+        const tests = rangeHistory.filter(
+          (r) => within(localDayOf(r.testedAt), span) && (!startedAt || r.testedAt >= startedAt),
+        );
         const r = tests[tests.length - 1];
         return r ? `${midiToLabel(r.lowMidi)}–${midiToLabel(r.highMidi)}` : null;
       }

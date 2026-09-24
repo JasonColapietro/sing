@@ -93,7 +93,7 @@ export function ProgramDays({ programId }: { programId: string }) {
                   : `Day ${progress.current + 1} of ${program.days.length}. Started ${following.startedDay}.`}
               </p>
               {finished && <p className="text-sm text-mut">{program.compare}</p>}
-              {finished && <Comparison rows={programComparison(program, progress, sessions, rangeHistory)} />}
+              {finished && <Comparison rows={programComparison(program, progress, sessions, rangeHistory, following.startedAt)} />}
               <div className="flex flex-wrap gap-3">
                 <Button variant="outline" size="sm" onClick={() => startProgram(program.id)}>
                   Restart from today
