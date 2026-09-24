@@ -444,6 +444,10 @@ describe("suede-vocal contract", () => {
     expect(rooms.songs.params).toEqual(["song"]);
     expect(rooms.breath.params).toEqual(["drill", "routine"]);
     expect(rooms.programs.params).toEqual(["program"]);
+    // A Pro program's free weeks travel with it; a free program has none to list.
+    for (const p of buildContract().deepLinks.programs) {
+      expect(p.freeWeeks, p.id).toBe(p.pro ? 1 : 0);
+    }
     // Rooms with no parser must advertise none.
     expect(rooms.range.params).toEqual([]);
     expect(rooms.studio.params).toEqual([]);

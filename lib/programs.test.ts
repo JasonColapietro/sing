@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  FREE_WEEKS,
   PROGRAMS,
   addDays,
+  cappedDaySeconds,
   dayMinutes,
+  dayNeedsPro,
   isRestDay,
   itemDoneOn,
   itemsDoneOn,
@@ -28,6 +31,8 @@ import { breathRoutineById, isBreathDrillId } from "@/components/breath/routines
 import { SONGS } from "@/components/songs/data";
 import { BAND_ORDER, bandForSong } from "@/components/songs/lib";
 import type { SessionLog } from "./progress-shape";
+import { BOOK_CONTENTS } from "./book-data";
+import { FREE_DAILY_SEC } from "./free-cap";
 
 const allItems = (p: Program) => p.days.flatMap((d) => d.items);
 
@@ -50,9 +55,9 @@ function sessionsFor(d: ProgramDay, day: string): SessionLog[] {
 }
 
 describe("program data", () => {
-  it("has unique ids and four to five programs", () => {
+  it("has unique ids and four to six programs", () => {
     expect(PROGRAMS.length).toBeGreaterThanOrEqual(4);
-    expect(PROGRAMS.length).toBeLessThanOrEqual(5);
+    expect(PROGRAMS.length).toBeLessThanOrEqual(6);
     expect(new Set(PROGRAMS.map((p) => p.id)).size).toBe(PROGRAMS.length);
     for (const p of PROGRAMS) expect(programById(p.id)).toBe(p);
     expect(programById("nope")).toBeNull();
@@ -65,7 +70,8 @@ describe("program data", () => {
     const lengths = PROGRAMS.map((p) => p.weeks);
     expect(Math.min(...lengths)).toBe(1);
     expect(Math.max(...lengths)).toBeGreaterThanOrEqual(6);
-    expect(Math.max(...lengths)).toBeLessThanOrEqual(7);
+    // The book's plan is the longest: twelve weeks.
+    expect(Math.max(...lengths)).toBe(12);
   });
 
   it("resolves every id it names", () => {
@@ -101,13 +107,16 @@ describe("program data", () => {
     for (const id of ["vibrato", "recovery", "high-notes", "mix"]) expect(named.has(id), id).toBe(true);
   });
 
-  it("keeps each practice day at about 10 to 20 minutes", () => {
+  it("keeps each practice day at about 10 to 20 minutes, except a Pro program's free week", () => {
     for (const p of PROGRAMS) {
       p.days.forEach((d, i) => {
         if (isRestDay(d)) {
           expect(dayMinutes(d)).toBe(0);
           return;
         }
+        // A Pro program's free week is sized to the free plan's three guided
+        // minutes instead; the next test holds it to that.
+        if (p.pro && !dayNeedsPro(p, i)) return;
         const m = dayMinutes(d);
         expect(m, `${p.id} day ${i + 1} "${d.title}"`).toBeGreaterThanOrEqual(10);
         expect(m, `${p.id} day ${i + 1} "${d.title}"`).toBeLessThanOrEqual(20);
@@ -125,6 +134,66 @@ describe("program data", () => {
         expect(p.days.slice(w * 7, w * 7 + 7).some(isRestDay), `${p.id} week ${w + 1}`).toBe(true);
       }
     }
+  });
+
+  it("opens week 1 of a Pro program to everyone: free content only, inside the free cap", () => {
+    for (const p of PROGRAMS.filter((p) => p.pro)) {
+      for (let i = 0; i < FREE_WEEKS * 7; i++) {
+        const d = p.days[i];
+        expect(dayNeedsPro(p, i), `${p.id} day ${i + 1}`).toBe(false);
+        for (const item of d.items) expect(itemIsPro(item), `${p.id} day ${i + 1}: ${JSON.stringify(item)}`).toBe(false);
+        expect(cappedDaySeconds(d), `${p.id} day ${i + 1}`).toBeLessThanOrEqual(FREE_DAILY_SEC);
+        if (!isRestDay(d)) expect(cappedDaySeconds(d), `${p.id} day ${i + 1}`).toBeGreaterThanOrEqual(90);
+      }
+      expect(dayNeedsPro(p, FREE_WEEKS * 7)).toBe(true);
+      expect(p.days.slice(FREE_WEEKS * 7).flatMap((d) => d.items).some(itemIsPro), p.id).toBe(true);
+    }
+    for (const p of PROGRAMS.filter((p) => !p.pro)) {
+      p.days.forEach((_, i) => expect(dayNeedsPro(p, i)).toBe(false));
+    }
+  });
+
+  it("counts only warmups, breath, ear and songs against the free cap", () => {
+    const d: ProgramDay = { title: "", items: [{ kind: "range" }, { kind: "recorder" }] };
+    expect(cappedDaySeconds(d)).toBe(0);
+    const w: ProgramDay = { title: "", items: [{ kind: "drill", id: "sustain" }, { kind: "range" }] };
+    expect(cappedDaySeconds(w)).toBeGreaterThan(0);
+    expect(cappedDaySeconds(w)).toBeLessThan(dayMinutes(w) * 60);
+  });
+
+  it("follows the book: its chapters, three range tests where the book puts them, two recorded takes", () => {
+    const p = programById("measured-voice-12w")!;
+    expect(p.weeks).toBe(12);
+    expect(p.pro).toBe(true);
+    const chapters = p.chapters!;
+    expect(chapters.map((c) => c.slug)).toEqual([
+      "weeks-1-2-baseline",
+      "weeks-3-4-middle",
+      "weeks-5-6-passaggio",
+      "weeks-7-8-top",
+      "weeks-9-10-bottom",
+      "weeks-11-12-songs",
+    ]);
+    for (const c of chapters) {
+      const book = BOOK_CONTENTS.find((b) => b.slug === c.slug);
+      expect(book?.title, c.slug).toBe(c.title);
+    }
+    // Every week has exactly one chapter.
+    for (let w = 1; w <= p.weeks; w++) {
+      expect(chapters.filter((c) => w >= c.fromWeek && w <= c.toWeek), `week ${w}`).toHaveLength(1);
+    }
+    const on = (kind: ProgramItem["kind"]) =>
+      p.days.flatMap((d, i) => (d.items.some((x) => x.kind === kind) ? [i + 1] : []));
+    // Week 1, the end of week 6, the start of week 12.
+    expect(on("range")).toEqual([1, 42, 78]);
+    expect(on("recorder")).toEqual([1, 78]);
+    // Three or four sessions a week, and five only where a check-in is added.
+    for (let w = 0; w < p.weeks; w++) {
+      const sessions = p.days.slice(w * 7, w * 7 + 7).filter((d) => !isRestDay(d)).length;
+      expect(sessions, `week ${w + 1}`).toBeGreaterThanOrEqual(3);
+      expect(sessions, `week ${w + 1}`).toBeLessThanOrEqual(5);
+    }
+    expect(isRestDay(p.days.at(-1)!)).toBe(false);
   });
 
   it("gates Pro content: a free program starts nothing behind the paywall", () => {
@@ -168,12 +237,13 @@ describe("program data", () => {
 
   it("deep-links every item with a relative URL into its room", () => {
     const hrefs = PROGRAMS.flatMap((p) => allItems(p).map(itemHref));
-    for (const h of hrefs) expect(h).toMatch(/^\/(warmups|breath|range|songs)(\?|$)/);
+    for (const h of hrefs) expect(h).toMatch(/^\/(warmups|breath|range|songs|recorder)(\?|$)/);
     expect(itemHref({ kind: "routine", id: "quick" })).toBe("/warmups?routine=quick");
     expect(itemHref({ kind: "exercise", id: "vibrato-hold", reps: 4 })).toBe("/warmups?exercise=vibrato-hold");
     expect(itemHref({ kind: "breath", id: "daily" })).toBe("/breath?routine=daily");
     expect(itemHref({ kind: "drill", id: "sustain" })).toBe("/breath?drill=sustain");
     expect(itemHref({ kind: "range" })).toBe("/range");
+    expect(itemHref({ kind: "recorder" })).toBe("/recorder");
     expect(itemHref({ kind: "song", slug: "ode-to-joy" })).toBe("/songs?song=ode-to-joy");
   });
 });
