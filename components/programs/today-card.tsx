@@ -14,6 +14,7 @@ import {
   itemHref,
   itemIsPro,
   itemLabel,
+  itemStepHref,
   itemSteps,
   markDayDone,
   startProgram,
@@ -116,7 +117,7 @@ function ItemSteps({ item, done }: { item: ProgramDay["items"][number]; done: bo
             <span aria-hidden="true" className={done[k] ? "text-ok-ink" : "text-dim"}>
               {done[k] ? "✓" : "·"}
             </span>
-            <Link href={itemHref(st)} className="text-violet-ink underline-offset-4 hover:underline">
+            <Link href={itemStepHref(item, k)} className="text-violet-ink underline-offset-4 hover:underline">
               {itemLabel(st).title}
             </Link>
             {done[k] && <span className="sr-only">(done)</span>}

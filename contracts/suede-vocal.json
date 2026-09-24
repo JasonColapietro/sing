@@ -3379,7 +3379,8 @@
         "path": "/breath",
         "params": [
           "drill",
-          "routine"
+          "routine",
+          "step"
         ]
       },
       "earTraining": {

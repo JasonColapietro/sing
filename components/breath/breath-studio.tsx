@@ -50,7 +50,7 @@ import {
 
 type View =
   | { kind: "home" }
-  | { kind: "routine"; routine: BreathRoutine }
+  | { kind: "routine"; routine: BreathRoutine; startStep?: number }
   | { kind: "drill"; drill: BreathDrillId };
 
 const DRILL_ORDER: BreathDrillId[] = ["sustain", "box", "farinelli"];
@@ -149,7 +149,13 @@ export function BreathStudio() {
       return;
     }
     const routine = breathRoutineById(routineId);
-    if (routine) setView({ kind: "routine", routine });
+    // `step` (1-based) opens a set part way through, with that step's own
+    // preset: a program lists a set's steps one by one, for a singer the free
+    // plan stopped between them.
+    const step = Number(q.get("step"));
+    const startStep =
+      routine && Number.isInteger(step) && step >= 1 && step <= routine.steps.length ? step - 1 : 0;
+    if (routine) setView({ kind: "routine", routine, startStep });
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [handledDeepLink, cap.capped]);
 
@@ -164,7 +170,15 @@ export function BreathStudio() {
   };
 
   if (view.kind === "routine") {
-    return <BreathRunner routine={view.routine} pitch={pitch} onExit={goHome} capped={cap.capped} />;
+    return (
+      <BreathRunner
+        routine={view.routine}
+        startStep={view.startStep}
+        pitch={pitch}
+        onExit={goHome}
+        capped={cap.capped}
+      />
+    );
   }
   if (view.kind === "drill") {
     return <BreathDrillSession drill={view.drill} pitch={pitch} onExit={goHome} />;

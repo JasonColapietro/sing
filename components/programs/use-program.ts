@@ -81,7 +81,7 @@ export function useActiveProgram(): ActiveProgram | null {
   const program = programById(stored?.programId);
   const reconciled =
     stored && program && today ? reconcileProgress(program, stored, sessions, today) : stored;
-  const readings = program && reconciled ? programReadings(program, reconciled, sessions, rangeHistory) : [];
+  const readings = program && reconciled ? programReadings(program, reconciled, sessions, rangeHistory, attempts) : [];
   // Keep each check-in reading on its day: a short sustain hold is only in the
   // sustain room's ten-attempt record, and must still show on the last day.
   const progress = reconciled ? withReadings(reconciled, readings) : reconciled;

@@ -771,7 +771,7 @@ export function buildContract() {
       rooms: {
         range: { path: "/range", params: [] },
         warmups: { path: "/warmups", params: ["exercise", "routine"] },
-        breath: { path: "/breath", params: ["drill", "routine"] },
+        breath: { path: "/breath", params: ["drill", "routine", "step"] },
         earTraining: { path: "/ear-training", params: [] },
         studio: { path: "/studio", params: [] },
         songs: { path: "/songs", params: ["song"] },

@@ -250,12 +250,15 @@ export function starsForCompletion(done: number, total: number): Stars {
 export function BreathRunner({
   capped = false,
   routine,
+  startStep = 0,
   pitch,
   onExit,
 }: {
   /** The free allowance is spent: the next intro becomes the cap slide. */
   capped?: boolean;
   routine: BreathRoutine;
+  /** The step to open on (0-based), from a `?step=` link; "again" starts from the top. */
+  startStep?: number;
   pitch: UsePitchResult;
   /** Back to the room. */
   onExit: () => void;
@@ -263,7 +266,10 @@ export function BreathRunner({
   const cap = useFreeCap();
   const stepCount = routine.steps.length;
   const [runId, setRunId] = useState(0);
-  const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: 0 });
+  const [phase, setPhase] = useState<RunnerPhase>({
+    kind: "intro",
+    step: Math.min(Math.max(0, startStep), stepCount - 1),
+  });
   const [results, setResults] = useState<(BreathDrillResult | null)[]>([]);
 
   const progress = useProgress();

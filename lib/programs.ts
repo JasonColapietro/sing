@@ -501,6 +501,20 @@ export function itemSteps(item: ProgramItem): ProgramItem[] {
   return [];
 }
 
+/**
+ * Where step `k` of a routine or breath set is sung on its own. A warmup
+ * step opens its exercise; a breath step opens the set at that step, so it
+ * keeps the set's preset (a one-minute square, a cap of ten) rather than the
+ * drill's standalone defaults.
+ */
+export function itemStepHref(item: ProgramItem, k: number): string {
+  if (item.kind === "breath") {
+    return `/breath?routine=${encodeURIComponent(item.id)}&step=${k + 1}`;
+  }
+  const step = itemSteps(item)[k];
+  return step ? itemHref(step) : itemHref(item);
+}
+
 /** The local calendar day of an ISO timestamp, as lib/progress.ts files a session. */
 export function localDayOf(iso: string): string {
   const d = new Date(iso);
@@ -755,6 +769,11 @@ export function programReadings(
   progress: ProgramProgress,
   sessions: readonly SessionLog[],
   rangeHistory: readonly RangeEntry[],
+  /**
+   * The sustain room's attempt record, every length. The log rounds a
+   * session to whole seconds; the attempts keep the timer's tenths.
+   */
+  holds: readonly { sec: number; date: string }[] = [],
 ): ProgramReading[] {
   const counted = sessionsForRun(progress, sessions);
   const since = progress.startedAt ? Date.parse(progress.startedAt) : NaN;
@@ -776,10 +795,18 @@ export function programReadings(
       reading.range = last ? { lowMidi: last.lowMidi, highMidi: last.highMidi } : (done.range ?? null);
     }
     if (hasSustain) {
-      const holds = counted
-        .filter((s) => within(s.day) && s.type === "breath" && s.detail === breathDrillTitle("sustain"))
-        .map((s) => s.durationSec);
-      reading.sustainSec = holds.length ? Math.max(...holds, done.sustainSec ?? 0) : (done.sustainSec ?? null);
+      const secs = [
+        ...counted
+          .filter((s) => within(s.day) && s.type === "breath" && s.detail === breathDrillTitle("sustain"))
+          .map((s) => s.durationSec),
+        ...holds
+          .filter((h) => {
+            const t = Date.parse(h.date);
+            return Number.isFinite(t) && within(localDayOf(h.date)) && (!Number.isFinite(since) || t >= since);
+          })
+          .map((h) => h.sec),
+      ];
+      reading.sustainSec = secs.length ? Math.max(...secs, done.sustainSec ?? 0) : (done.sustainSec ?? null);
     }
     out.push(reading);
   });

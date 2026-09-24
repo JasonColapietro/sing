@@ -5,6 +5,7 @@ import {
   dayMinutes,
   isRestDay,
   itemDoneOn,
+  itemStepHref,
   itemSteps,
   itemsDoneOn,
   matchDay,
@@ -33,6 +34,7 @@ import { breathRoutineById, isBreathDrillId } from "@/components/breath/routines
 import { SONGS } from "@/components/songs/data";
 import { BAND_ORDER, bandForSong } from "@/components/songs/lib";
 import type { SessionLog } from "./progress-shape";
+import { buildContract } from "@/contracts/suede-vocal";
 
 const allItems = (p: Program) => p.days.flatMap((d) => d.items);
 
@@ -624,5 +626,45 @@ describe("check-in readings are kept on the record", () => {
     const shortOnly = withReadings(r, [{ index: 0, day: d0, range: null, sustainSec: 3.5 }]);
     const again = reviveProgress(JSON.parse(JSON.stringify(shortOnly)))!;
     expect(programReadings(program, again, [], [])[0].sustainSec).toBe(3.5);
+  });
+});
+
+describe("step links", () => {
+  it("open each step on its own, through params the rooms publish; a breath step keeps its set's preset", () => {
+    const rooms = Object.values(buildContract().deepLinks.rooms);
+    for (const prog of PROGRAMS) {
+      for (const item of allItems(prog)) {
+        itemSteps(item).forEach((_, k) => {
+          const href = itemStepHref(item, k);
+          const url = new URL(href, "https://x.invalid");
+          const room = rooms.find((r) => r.path === url.pathname);
+          expect(room, href).toBeDefined();
+          for (const key of url.searchParams.keys()) expect(room!.params, href).toContain(key);
+          if (item.kind === "breath") {
+            expect(url.searchParams.get("routine")).toBe(item.id);
+            expect(url.searchParams.get("step")).toBe(String(k + 1));
+          }
+        });
+      }
+    }
+  });
+});
+
+describe("sustain readings keep the timer's tenths", () => {
+  it("reads the attempt record alongside the rounded log", () => {
+    const program = programById("foundations-2w")!;
+    const d0 = "2026-09-21";
+    const p = begin(program.id, d0);
+    const log = sessionsFor(program.days[0], d0).map((x) =>
+      x.detail === "Sustain test" ? { ...x, durationSec: 12 } : x,
+    );
+    const r = reconcileProgress(program, p, log, d0);
+    const holds = [
+      { sec: 12.4, date: `${d0}T12:00:00.000Z` },
+      // Before the program started: not this run's.
+      { sec: 30.2, date: `${addDays(d0, -1)}T12:00:00.000Z` },
+    ];
+    expect(programReadings(program, r, log, [], holds)[0].sustainSec).toBe(12.4);
+    expect(programReadings(program, r, log, [])[0].sustainSec).toBe(12);
   });
 });
