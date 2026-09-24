@@ -445,6 +445,8 @@ function serializeExercise(ex: WarmupExercise, free: boolean) {
     noteDur: ex.noteDur ?? null,
     glide: ex.glide ?? false,
     ladder: ex.ladder ?? "up",
+    /** Open, unscored seconds before the first note; included in patternSeconds. */
+    unscoredLeadSec: ex.unscoredLeadSec ?? 0,
     /** Semitone offsets from the root, one array per step. */
     steps: exerciseOffsets(ex),
     segmentCount: segs.length,

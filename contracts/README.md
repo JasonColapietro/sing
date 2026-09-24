@@ -199,8 +199,8 @@ chapter has to say so.
 
 ### suede-vocal v3
 
-`version` moved to 3 on 2026-09-24. Two keys added under `measurement`, and one
-value changed that consumers have to meet:
+`version` moved to 3 on 2026-09-24. Two keys added under `measurement`, one on
+every warm-up exercise, and one value changed that consumers have to meet:
 
 - `measurement.vibratoRateHz` is now `measurable: "yes"`. `lib/audio/vibrato.ts`
   reads the rate and peak-to-peak width of a held note's pitch wobble, and the
@@ -213,6 +213,10 @@ value changed that consumers have to meet:
   "straight to vibrato on cue" self-check actually asks.
 - `unsupportedClaims["vibrato-rate-on-cue"]` keeps its key but is revised: the
   rate is measured and offered in `useInstead`; the cue is not.
+- Every warm-up exercise gains `unscoredLeadSec`: open time before the first
+  note with no target in it. It is 0 everywhere except "Creak to tone", whose
+  creak the detector cannot hear and so must not count against the score.
+  `patternSeconds` includes it.
 
 ### Versioning
 

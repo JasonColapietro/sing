@@ -5,9 +5,11 @@ import {
   MIN_RUNGS,
   PRO_PACKS,
   VIBRATO_TARGET_BAND,
+  buildSegments,
   computeRootLadder,
   ladderWalk,
 } from "./exercises";
+import { createRepScorer } from "./scoring";
 
 // five-note-scale's highest interval is the fifth (7 semitones).
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
@@ -58,6 +60,31 @@ describe("computeRootLadder", () => {
     expect(computeRootLadder(fiveNote, 48, 72)).toEqual(
       Array.from({ length: 9 }, (_, i) => 52 + i),
     );
+  });
+
+  it("never puts an octave-wide pattern above a narrow range's ceiling", () => {
+    // A tenth in a 50–66 range used to get root 54 and a top note of 70: the
+    // courtesy ladder collapsed to its floor and the fallback, one rung too,
+    // lost a strict tie. Every pattern an octave or wider, across ranges from
+    // an octave to two, has to keep its top note at or under the measured high.
+    const wide = ALL_EXERCISES.filter((e) => Math.max(...e.buildSteps(0).flat()) >= 12);
+    expect(wide.map((e) => e.id)).toContain("high-arpeggio-tenth");
+    for (const ex of wide) {
+      const maxOff = Math.max(...ex.buildSteps(0).flat());
+      for (let low = 40; low <= 60; low++) {
+        for (let span = 12; span <= 24; span++) {
+          const high = low + span;
+          const roots = computeRootLadder(ex, low, high);
+          expect(roots.length, `${ex.id} ${low}-${high}`).toBeGreaterThanOrEqual(1);
+          for (const root of roots) {
+            expect(root + maxOff, `${ex.id} ${low}-${high} root ${root}`).toBeLessThanOrEqual(high);
+          }
+          // It only gives up the floor when the pattern is wider than the range.
+          if (span >= maxOff) expect(roots[0], `${ex.id} ${low}-${high}`).toBeGreaterThanOrEqual(low);
+        }
+      }
+    }
+    expect(computeRootLadder(ALL_EXERCISES.find((e) => e.id === "high-arpeggio-tenth")!, 50, 66)).toEqual([50]);
   });
 
   it("never starts below MIDI 30", () => {
@@ -165,6 +192,31 @@ describe("the focus drills", () => {
       expect(copy, id).not.toMatch(/\b(?:detect|heal|repair|cure|strain)/i);
     }
     expect(byId("fry-onset").desc).toMatch(/only the pitched note is scored/i);
+  });
+
+  it("leaves the creak before the fry-onset note out of the score", () => {
+    const ex = byId("fry-onset");
+    for (const tempo of [0.5, 1, 1.25]) {
+      const { segs, totalSec } = buildSegments(ex, 52, tempo);
+      expect(segs).toHaveLength(1);
+      expect(segs[0].t0, `${tempo}x`).toBeCloseTo(ex.unscoredLeadSec! / tempo, 9);
+      expect(totalSec).toBeCloseTo(segs[0].t0 + segs[0].dur, 9);
+      // A creak the detector hears as nothing, or as a wild low pitch, then
+      // the note held on pitch: the score is the note's alone.
+      const scorer = createRepScorer(segs);
+      const dt = 1 / 60;
+      for (let t = 0; t < totalSec; t += dt) {
+        const onNote = t >= segs[0].t0;
+        const creak = Math.floor(t * 60) % 2 === 0 ? null : 70;
+        scorer.feed(t, onNote ? 440 * Math.pow(2, (52 - 69) / 12) : creak, dt);
+      }
+      expect(scorer.result(52)!.score, `${tempo}x`).toBeGreaterThanOrEqual(98);
+    }
+    // Every other exercise still starts on its first note.
+    for (const other of ALL_EXERCISES.filter((e) => e.id !== "fry-onset")) {
+      expect(other.unscoredLeadSec, other.id).toBeUndefined();
+      expect(buildSegments(other, 60, 1).segs[0].t0, other.id).toBe(0);
+    }
   });
 
   it("walks the high-note drills past the octave, inside the measured range", () => {

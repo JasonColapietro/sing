@@ -33,6 +33,13 @@ export interface WarmupExercise {
    * run, and a note change in the middle of it would read as modulation.
    */
   vibrato?: { minHz: number; maxHz: number };
+  /**
+   * Seconds at 1x of open time before the first note, inside the scored
+   * window but with no target in it, so nothing sung there is scored or
+   * counted against the score. For an onset the detector cannot hear, such
+   * as a creak rolling into a note.
+   */
+  unscoredLeadSec?: number;
   /** Each step is a small melody in midi numbers, built from a root note. */
   buildSteps(rootMidi: number): number[][];
 }
@@ -396,10 +403,11 @@ export const EXERCISES: WarmupExercise[] = [
   {
     id: "fry-onset",
     title: "Creak to tone",
-    desc: "Start in a quiet creak (vocal fry) and roll up into a clean, soft note, then hold it. Only the pitched note is scored.",
+    desc: "Start in a quiet creak (vocal fry) and roll up into a clean, soft note when the guide comes in, then hold it. Only the pitched note is scored.",
     tier: "beginner",
-    tip: "The app hears the note, not the creak. Keep the creak tiny and quiet; if it scratches, skip it and start on a soft sigh.",
-    noteDur: 3,
+    tip: "Creak through the gap before the bar, then roll into the note. The app hears the note, not the creak; if the creak scratches, start on a soft sigh instead.",
+    noteDur: 2.5,
+    unscoredLeadSec: 1.5,
     buildSteps: (r) => [[r]],
   },
   // Range expansion: arpeggios and sirens that reach past the octave to the
@@ -700,7 +708,9 @@ export function buildSegments(
   const gap = 0.08 / tempo;
   const steps = ex.buildSteps(rootMidi);
   const segs: Segment[] = [];
-  let t = 0;
+  // An unscored lead is a gap before the first segment: targetMidiAt reads
+  // null there, so the scorer neither credits it nor counts it as possible.
+  let t = (ex.unscoredLeadSec ?? 0) / tempo;
   if (ex.glide) {
     for (const step of steps) {
       const a = step[0];
@@ -757,7 +767,17 @@ export function computeRootLadder(
     // first-practice picker (lib/song-first-practice.ts) relies on them.
     const top2 = Math.max(30, highMidi - maxOff);
     const start2 = Math.max(30, lowMidi, Math.min(lowMidi + 4, top2 - (MIN_RUNGS - 1)));
-    if (top2 >= start2 && top2 - start2 + 1 > top - start + 1) return range(start2, top2);
+    // In a narrow range the courtesy ladder collapses to its floor, and that
+    // single rung can put a wide pattern's top above the measured high — a
+    // tenth from a root of 54 is 70 in a 50–66 range. The ceiling wins: take
+    // the fallback whenever the courtesy ladder would cross it, and when the
+    // range is narrower than the pattern itself, pin the top note to the
+    // measured high and let the bottom fall below the measured low instead.
+    const overCeiling = top + maxOff > highMidi;
+    if (top2 >= start2 && (top2 - start2 + 1 > top - start + 1 || overCeiling)) {
+      return range(start2, top2);
+    }
+    if (overCeiling) return [top2];
     return range(start, top);
   }
   return Array.from({ length: 8 }, (_, i) => 48 + i); // C3..G3

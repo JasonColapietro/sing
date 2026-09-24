@@ -1259,6 +1259,7 @@ function VibratoPanel({
       className={className}
       data-testid="vibrato-reading"
       data-vibrato={reading?.kind ?? "pending"}
+      data-reason={reading?.kind === "none" ? (reading.reason ?? undefined) : undefined}
       data-rate-hz={reading?.kind === "measured" ? reading.rateHz.toFixed(2) : undefined}
       data-extent-cents={reading?.kind === "measured" ? Math.round(reading.extentCents) : undefined}
       data-in-band={reading?.kind === "measured" ? String(reading.inBand) : undefined}

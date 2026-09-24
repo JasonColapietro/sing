@@ -76,7 +76,12 @@ const CASES = [
     name: "straight tone",
     spec: {},
     check(r) {
-      return [r.kind !== "none" && `read as "${r.kind}" (${r.headline}), expected no vibrato`].filter(Boolean);
+      return [
+        r.kind !== "none" && `read as "${r.kind}" (${r.headline}), expected no vibrato`,
+        // Detector noise on a steady voice must read as straight, not as an
+        // irregular wobble or a hold that could not be read.
+        r.kind === "none" && r.reason !== "too-narrow" && `reason "${r.reason}", expected "too-narrow"`,
+      ].filter(Boolean);
     },
   },
 ];
@@ -113,6 +118,7 @@ async function runCase(dir, testCase) {
     await panel.waitFor({ timeout: READING_TIMEOUT_MS });
     const reading = await panel.evaluate((el) => ({
       kind: el.getAttribute("data-vibrato"),
+      reason: el.getAttribute("data-reason"),
       rateHz: el.hasAttribute("data-rate-hz") ? Number(el.getAttribute("data-rate-hz")) : null,
       extentCents: el.hasAttribute("data-extent-cents") ? Number(el.getAttribute("data-extent-cents")) : null,
       inBand: el.hasAttribute("data-in-band") ? el.getAttribute("data-in-band") === "true" : null,

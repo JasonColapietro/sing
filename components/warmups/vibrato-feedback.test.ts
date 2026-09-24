@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { F0Frame } from "@/lib/audio/f0-trace";
+import { analyzeVibrato } from "@/lib/audio/vibrato";
 import { VIBRATO_TARGET_BAND } from "./exercises";
 import {
   createF0Recorder,
   readVibrato,
+  type VibratoReading,
   vibratoDetail,
   vibratoHeadline,
   windowGain,
@@ -81,7 +83,100 @@ describe("readVibrato", () => {
 
   it("reads nothing from silence", () => {
     const silent: F0Frame[] = Array.from({ length: 240 }, (_, i) => ({ t: i / 60, f0: null }));
-    expect(readVibrato(silent, VIBRATO_TARGET_BAND).kind).toBe("none");
+    const r = readVibrato(silent, VIBRATO_TARGET_BAND);
+    expect(r.kind).toBe("none");
+    // Silence is not a straight tone: nothing was heard to describe.
+    expect(vibratoHeadline(r)).toBe("Couldn't read this hold");
+    expect(vibratoDetail(r)).not.toMatch(/straight/i);
+  });
+
+  it("reads a vibrato that arrives late in the hold, as the drill asks", () => {
+    // Three straight seconds, then a second and a half of 5.5 Hz ±50 cents.
+    const frames: F0Frame[] = [];
+    for (let i = 0; i < 4.5 * 60; i++) {
+      const t = i / 60;
+      const cents = t >= 3 ? 50 * Math.sin(2 * Math.PI * 5.5 * (t - 3)) : 0;
+      frames.push({ t, f0: 220 * Math.pow(2, cents / 1200) });
+    }
+    // Over the whole run the straight windows dominate the median extent.
+    expect(analyzeVibrato(frames).reason).toBe("too-narrow");
+    const r = readVibrato(frames, VIBRATO_TARGET_BAND);
+    expect(r.kind).toBe("measured");
+    if (r.kind !== "measured") return;
+    expect(r.rateHz).toBeCloseTo(5.5, 0);
+    expect(r.extentCents).toBeGreaterThan(80);
+    expect(r.inBand).toBe(true);
+  });
+
+  it("does not find vibrato in the tail of a straight or irregular hold", () => {
+    expect(readVibrato(trace({ sec: 4.5 }), VIBRATO_TARGET_BAND).kind).toBe("none");
+    // A random walk of pitch, no cycle in it.
+    let cents = 0;
+    let seed = 7;
+    const walk: F0Frame[] = Array.from({ length: 270 }, (_, i) => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      cents += ((seed / 4294967296) * 2 - 1) * 12;
+      return { t: i / 60, f0: 220 * Math.pow(2, cents / 1200) };
+    });
+    expect(readVibrato(walk, VIBRATO_TARGET_BAND).kind).toBe("none");
+  });
+});
+
+describe("a straight tone with detector noise", () => {
+  it("reads as straight, not as an irregular wobble", () => {
+    // A few cents of frame-to-frame noise, as the live tracker gives a steady
+    // voice. vibrato.ts fails this on periodicity before it reaches width.
+    let seed = 3;
+    const noisy: F0Frame[] = Array.from({ length: 270 }, (_, i) => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      const cents = ((seed / 4294967296) * 2 - 1) * 3;
+      return { t: i / 60, f0: 220 * Math.pow(2, cents / 1200) };
+    });
+    expect(analyzeVibrato(noisy).reason).not.toBe("too-narrow");
+    const r = readVibrato(noisy, VIBRATO_TARGET_BAND);
+    expect(r.kind === "none" && r.reason).toBe("too-narrow");
+    expect(vibratoHeadline(r)).toBe("No steady vibrato yet");
+    expect(vibratoDetail(r)).toMatch(/straight tone is fine/i);
+  });
+});
+
+describe("the reading's words", () => {
+  const band = VIBRATO_TARGET_BAND;
+  type Reason = Extract<VibratoReading, { kind: "none" }>["reason"];
+  const none = (reason: Reason, rateHz: number | null = null): VibratoReading => ({
+    kind: "none",
+    reason,
+    rateHz,
+    band,
+  });
+
+  it("calls only a too-narrow wobble a straight tone", () => {
+    expect(vibratoDetail(none("too-narrow"))).toMatch(/straight tone is fine/i);
+    const others = [
+      "rate-out-of-band",
+      "not-periodic",
+      "no-periodic-peak",
+      "frame-rate-too-low",
+      "no-voiced-run",
+      "too-short",
+    ] as const;
+    for (const reason of others) {
+      expect(vibratoDetail(none(reason)), reason).not.toMatch(/straight/i);
+    }
+  });
+
+  it("gives an out-of-band rate as slower or faster than the band", () => {
+    expect(vibratoHeadline(none("rate-out-of-band", 3.4))).toBe("3.4 Hz wobble");
+    expect(vibratoDetail(none("rate-out-of-band", 3.4))).toMatch(/^Much slower than the 5–7 Hz/);
+    expect(vibratoDetail(none("rate-out-of-band", 9.2))).toMatch(/^Much faster than the 5–7 Hz/);
+    expect(vibratoDetail(none("rate-out-of-band"))).toMatch(/outside/);
+  });
+
+  it("names an irregular wobble, and stays neutral when it could not read", () => {
+    expect(vibratoHeadline(none("not-periodic"))).toBe("Irregular wobble");
+    expect(vibratoDetail(none("not-periodic"))).toMatch(/not in a steady cycle/);
+    expect(vibratoHeadline(none("frame-rate-too-low"))).toBe("Couldn't read this hold");
+    expect(vibratoHeadline(none("no-voiced-run"))).toBe("Couldn't read this hold");
   });
 });
 
