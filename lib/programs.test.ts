@@ -5,6 +5,7 @@ import {
   dayMinutes,
   isRestDay,
   itemDoneOn,
+  itemsDoneOn,
   itemEvidence,
   itemHref,
   itemIsPro,
@@ -15,6 +16,7 @@ import {
   programToday,
   reconcileProgress,
   reviveProgress,
+  sessionsForRun,
   startProgram,
   type Program,
   type ProgramDay,
@@ -30,9 +32,14 @@ import type { SessionLog } from "./progress-shape";
 const allItems = (p: Program) => p.days.flatMap((d) => d.items);
 
 let n = 0;
-function session(day: string, type: SessionLog["type"], detail?: string): SessionLog {
+function session(day: string, type: SessionLog["type"], detail?: string, time = "12:00:00"): SessionLog {
   n += 1;
-  return { id: `s${n}`, type, date: `${day}T12:00:00.000Z`, day, durationSec: 60, detail, xp: 1 };
+  return { id: `s${n}`, type, date: `${day}T${time}.000Z`, day, durationSec: 60, detail, xp: 1 };
+}
+
+/** Every item's evidence, one session each, logged at `time` UTC on `day`. */
+function sessionsForDay(d: ProgramDay, day: string, time = "12:00:00"): SessionLog[] {
+  return d.items.flatMap((item) => itemEvidence(item).map((e) => session(day, e.type, e.details?.[0], time)));
 }
 
 /** The sessions that would make every item of a program day done on `day`. */
@@ -204,19 +211,22 @@ describe("item completion from the log", () => {
   });
 });
 
+/** Start a program at midnight UTC of `day`, so that day's fixtures count. */
+const begin = (id: string, day: string) => startProgram(id, day, new Date(`${day}T00:00:00Z`));
+
 describe("advancing through a program", () => {
   const program = programById("foundations-2w")!;
   const d0 = "2026-09-21";
 
   it("starts on day 1 with nothing done", () => {
-    const p = startProgram(program.id, d0);
+    const p = begin(program.id, d0);
     const r = reconcileProgress(program, p, [], d0);
     expect(r).toBe(p);
     expect(programToday(program, r, d0)).toEqual({ status: "todo", index: 0, completed: 0 });
   });
 
   it("completes a day from the log, then holds the next until tomorrow", () => {
-    const p = startProgram(program.id, d0);
+    const p = begin(program.id, d0);
     const sessions = sessionsFor(program.days[0], d0);
     const r = reconcileProgress(program, p, sessions, d0);
     expect(r.done).toEqual([{ index: 0, day: d0 }]);
@@ -226,7 +236,7 @@ describe("advancing through a program", () => {
   });
 
   it("never completes two days on one calendar day, however much was sung", () => {
-    const p = startProgram(program.id, d0);
+    const p = begin(program.id, d0);
     const sessions = [...sessionsFor(program.days[0], d0), ...sessionsFor(program.days[1], d0), ...sessionsFor(program.days[2], d0)];
     const r = reconcileProgress(program, p, sessions, d0);
     expect(r.done.map((d) => d.index)).toEqual([0]);
@@ -235,7 +245,7 @@ describe("advancing through a program", () => {
   });
 
   it("rolls over at midnight: the next day opens on the next local day", () => {
-    const p = startProgram(program.id, d0);
+    const p = begin(program.id, d0);
     const r = reconcileProgress(program, p, sessionsFor(program.days[0], d0), d0);
     const tomorrow = addDays(d0, 1);
     expect(programToday(program, r, tomorrow)).toEqual({ status: "todo", index: 1, completed: 1 });
@@ -244,7 +254,7 @@ describe("advancing through a program", () => {
   });
 
   it("catches up on work logged on days the page was not open, one day per calendar day", () => {
-    const p = startProgram(program.id, d0);
+    const p = begin(program.id, d0);
     const sessions = [
       ...sessionsFor(program.days[0], d0),
       ...sessionsFor(program.days[1], addDays(d0, 1)),
@@ -262,13 +272,13 @@ describe("advancing through a program", () => {
   });
 
   it("does not count work logged before the program started", () => {
-    const p = startProgram(program.id, d0);
+    const p = begin(program.id, d0);
     const r = reconcileProgress(program, p, sessionsFor(program.days[0], addDays(d0, -1)), d0);
     expect(r.done).toEqual([]);
   });
 
   it("does not complete a day from a log dated after today", () => {
-    const p = startProgram(program.id, d0);
+    const p = begin(program.id, d0);
     const r = reconcileProgress(program, p, sessionsFor(program.days[0], addDays(d0, 1)), d0);
     expect(r.done).toEqual([]);
   });
@@ -288,7 +298,7 @@ describe("advancing through a program", () => {
   });
 
   it("lets the singer mark a day done by hand, once per calendar day", () => {
-    const p = startProgram(program.id, d0);
+    const p = begin(program.id, d0);
     const r = markDayDone(program, p, d0);
     expect(r.done).toEqual([{ index: 0, day: d0, manual: true }]);
     expect(markDayDone(program, r, d0)).toBe(r);
@@ -304,8 +314,91 @@ describe("advancing through a program", () => {
     expect(programToday(short, p, last)).toEqual({ status: "finished", index: short.days.length - 1, completed: short.days.length });
     expect(markDayDone(short, p, last)).toBe(p);
     expect(reconcileProgress(short, p, [], last)).toBe(p);
-    const again = startProgram(short.id, last);
+    const again = begin(short.id, last);
     expect(programToday(short, again, last)).toEqual({ status: "todo", index: 0, completed: 0 });
+  });
+});
+
+describe("one session pays for one item", () => {
+  const today = "2026-09-24";
+
+  it("does not let a single sustain test tick both the lone drill and the breath set", () => {
+    const day1 = programById("foundations-2w")!.days[0];
+    const sustainAt = day1.items.findIndex((i) => i.kind === "drill" && i.id === "sustain");
+    const setAt = day1.items.findIndex((i) => i.kind === "breath");
+    expect(sustainAt).toBeGreaterThanOrEqual(0);
+    expect(setAt).toBeGreaterThanOrEqual(0);
+    const one = ["Box breathing", "Farinelli drill", "Sustain test"].map((d) => session(today, "breath", d));
+    const done = itemsDoneOn(day1, one, today);
+    // One sustain session: the drill takes it, and the set is left a sustain short.
+    expect(done[sustainAt]).toBe(true);
+    expect(done[setAt]).toBe(false);
+    // A second sustain completes both.
+    const both = itemsDoneOn(day1, [...one, session(today, "breath", "Sustain test")], today);
+    expect(both[sustainAt] && both[setAt]).toBe(true);
+  });
+
+  it("does not let the vibrato routine's hold also count as the lone vibrato hold", () => {
+    const d: ProgramDay = {
+      title: "",
+      items: [
+        { kind: "routine", id: "vibrato" },
+        { kind: "exercise", id: "vibrato-hold", reps: 4 },
+      ],
+    };
+    const titles = routineById("vibrato")!.steps.map((s) => stepExercise(s).title);
+    const routineOnly = titles.map((t) => session(today, "warmup", t));
+    expect(itemsDoneOn(d, routineOnly, today)).toEqual([true, false]);
+    const hold = stepExercise({ exerciseId: "vibrato-hold", reps: 1 }).title;
+    expect(itemsDoneOn(d, [...routineOnly, session(today, "warmup", hold)], today)).toEqual([true, true]);
+  });
+
+  it("lets a later item take a session an earlier one can do without, in any log order", () => {
+    const d: ProgramDay = { title: "", items: [{ kind: "drill", id: "sustain" }, { kind: "breath", id: "quick" }] };
+    const log = ["Sustain test", "Box breathing", "Farinelli drill", "Sustain test"].map((x) => session(today, "breath", x));
+    expect(itemsDoneOn(d, log, today)).toEqual([true, true]);
+    expect(itemsDoneOn(d, [...log].reverse(), today)).toEqual([true, true]);
+  });
+
+  it("never completes a day from a session that has to tick two items", () => {
+    const program = programById("foundations-2w")!;
+    const d0 = "2026-09-21";
+    const p = begin(program.id, d0);
+    const quick = routineById("quick")!.steps.map((s) => session(d0, "warmup", stepExercise(s).title));
+    const log = [
+      session(d0, "range", "Range test"),
+      ...["Box breathing", "Farinelli drill", "Sustain test"].map((x) => session(d0, "breath", x)),
+      ...quick,
+    ];
+    expect(reconcileProgress(program, p, log, d0).done).toEqual([]);
+    const r = reconcileProgress(program, p, [...log, session(d0, "breath", "Sustain test")], d0);
+    expect(r.done).toEqual([{ index: 0, day: d0 }]);
+  });
+});
+
+describe("a restart on the same day", () => {
+  const program = programById("recovery-week")!;
+  const today = "2026-09-24";
+
+  it("ignores sessions from before the restart", () => {
+    const first = begin(program.id, today);
+    const log = sessionsForDay(program.days[0], today, "09:00:00");
+    expect(reconcileProgress(program, first, log, today).done.map((d) => d.index)).toEqual([0]);
+    // Restarted at 10:00: the 09:00 work belongs to the earlier run.
+    const again = startProgram(program.id, today, new Date(`${today}T10:00:00Z`));
+    expect(reconcileProgress(program, again, log, today)).toBe(again);
+    expect(programToday(program, again, today)).toEqual({ status: "todo", index: 0, completed: 0 });
+    // Work after the restart counts.
+    const later = sessionsForDay(program.days[0], today, "11:00:00");
+    expect(reconcileProgress(program, again, [...log, ...later], today).done).toEqual([{ index: 0, day: today }]);
+    expect(sessionsForRun(again, [...log, ...later])).toHaveLength(later.length);
+  });
+
+  it("falls back to the start day for records without a start time", () => {
+    const legacy = { programId: program.id, startedDay: today, done: [] };
+    const log = sessionsForDay(program.days[0], today, "09:00:00");
+    expect(reconcileProgress(program, legacy, log, today).done).toEqual([{ index: 0, day: today }]);
+    expect(reconcileProgress(program, legacy, sessionsForDay(program.days[0], "2026-09-23"), today).done).toEqual([]);
   });
 });
 
@@ -336,6 +429,30 @@ describe("the stored record", () => {
       { index: 1, day: "2026-09-02" },
     ]);
     expect(reviveProgress({ programId: "vibrato-3w", startedDay: "2026-09-01", done: "x" })?.done).toEqual([]);
+  });
+
+  it("drops impossible dates instead of crashing on them", () => {
+    expect(reviveProgress({ programId: "vibrato-3w", startedDay: "2026-99-99", done: [] })).toBeNull();
+    expect(reviveProgress({ programId: "vibrato-3w", startedDay: "2026-02-30", done: [] })).toBeNull();
+    const r = reviveProgress({
+      programId: "vibrato-3w",
+      startedDay: "2026-09-01",
+      startedAt: "not a time",
+      done: [
+        { index: 0, day: "2026-09-01" },
+        { index: 1, day: "2026-99-99" },
+        { index: 2, day: "2026-09-03" },
+      ],
+    });
+    expect(r).toEqual({ programId: "vibrato-3w", startedDay: "2026-09-01", done: [{ index: 0, day: "2026-09-01" }] });
+    // The repaired record reconciles and reports without throwing.
+    const program = programById("vibrato-3w")!;
+    expect(() => programToday(program, reconcileProgress(program, r!, [], "2026-09-24"), "2026-09-24")).not.toThrow();
+  });
+
+  it("keeps a valid start time", () => {
+    const at = "2026-09-01T08:30:00.000Z";
+    expect(reviveProgress({ programId: "vibrato-3w", startedDay: "2026-09-01", startedAt: at, done: [] })?.startedAt).toBe(at);
   });
 
   it("adds calendar days across month ends and DST changes", () => {

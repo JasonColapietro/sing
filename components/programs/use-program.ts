@@ -7,6 +7,7 @@ import {
   programById,
   programToday,
   reconcileProgress,
+  sessionsForRun,
   type Program,
   type ProgramProgress,
   type ProgramToday,
@@ -69,6 +70,8 @@ export function useActiveProgram(): ActiveProgram | null {
   if (!program || !progress || !today) return null;
   const view = programToday(program, progress, today);
   const itemsDone =
-    view.status === "todo" ? itemsDoneOn(program.days[view.index], sessions, today) : [];
+    view.status === "todo"
+      ? itemsDoneOn(program.days[view.index], sessionsForRun(progress, sessions), today)
+      : [];
   return { program, progress, today, view, itemsDone };
 }

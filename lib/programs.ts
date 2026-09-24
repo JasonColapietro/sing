@@ -369,22 +369,62 @@ export function itemEvidence(item: ProgramItem): Evidence[] {
   }
 }
 
-/** Whether the log shows the item done on `day`. */
-export function itemDoneOn(item: ProgramItem, sessions: readonly SessionLog[], day: string): boolean {
-  const evidence = itemEvidence(item);
-  if (evidence.length === 0) return false;
-  return evidence.every((e) =>
-    sessions.some(
-      (s) =>
-        s.day === day &&
-        s.type === e.type &&
-        (e.details === null || (s.detail !== undefined && e.details.includes(s.detail))),
-    ),
+function satisfies(s: SessionLog, e: Evidence, day: string): boolean {
+  return (
+    s.day === day &&
+    s.type === e.type &&
+    (e.details === null || (s.detail !== undefined && e.details.includes(s.detail)))
   );
 }
 
+/**
+ * Which items of a day the log shows done on `day`, in order.
+ *
+ * Each logged session pays for at most one requirement across the whole day:
+ * a routine of N exercises needs N sessions, and a lone Sustain test beside a
+ * breath set that also contains one needs a second sustain. Items are added in
+ * order to a bipartite matching of requirements to sessions, each by
+ * augmenting paths so an earlier item can give up a session it does not need;
+ * an item that cannot be fully matched is rolled back and left unticked. When
+ * the whole day can be matched at all, every item is.
+ */
 export function itemsDoneOn(d: ProgramDay, sessions: readonly SessionLog[], day: string): boolean[] {
-  return d.items.map((item) => itemDoneOn(item, sessions, day));
+  const pool = sessions.filter((s) => s.day === day);
+  const reqs: Evidence[] = [];
+  /** owner[sessionIndex] = the requirement it pays for. */
+  let owner: (number | undefined)[] = [];
+  const assign = (r: number, seen: Set<number>): boolean => {
+    for (let i = 0; i < pool.length; i++) {
+      if (seen.has(i) || !satisfies(pool[i], reqs[r], day)) continue;
+      seen.add(i);
+      const held = owner[i];
+      if (held === undefined || assign(held, seen)) {
+        owner[i] = r;
+        return true;
+      }
+    }
+    return false;
+  };
+  return d.items.map((item) => {
+    const evidence = itemEvidence(item);
+    if (evidence.length === 0) return false;
+    const before = owner.slice();
+    const start = reqs.length;
+    reqs.push(...evidence);
+    for (let r = start; r < reqs.length; r++) {
+      if (!assign(r, new Set())) {
+        owner = before;
+        reqs.length = start;
+        return false;
+      }
+    }
+    return true;
+  });
+}
+
+/** Whether the log shows the item done on `day`, on its own. */
+export function itemDoneOn(item: ProgramItem, sessions: readonly SessionLog[], day: string): boolean {
+  return itemsDoneOn({ title: "", items: [item] }, sessions, day)[0];
 }
 
 /* ------------------------------------------------------------------ *
@@ -405,6 +445,13 @@ export interface ProgramProgress {
   /** The local day the program was started, YYYY-MM-DD. */
   startedDay: string;
   /**
+   * The moment it was started, as an ISO timestamp. Sessions logged before it
+   * belong to an earlier run, so a restart on the same day starts clean.
+   * Absent on records written before it existed; those fall back to
+   * `startedDay`.
+   */
+  startedAt?: string;
+  /**
    * Completed days, in order: `done[i].index === i`, and each on a later
    * calendar day than the one before.
    */
@@ -413,14 +460,34 @@ export interface ProgramProgress {
 
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
 
+/**
+ * A YYYY-MM-DD string naming a real calendar date. The shape alone lets
+ * "2026-99-99" through, and addDays on that throws.
+ */
+export function isCalendarDay(value: unknown): value is string {
+  if (typeof value !== "string" || !DAY_RE.test(value)) return false;
+  const t = Date.parse(`${value}T00:00:00Z`);
+  return Number.isFinite(t) && new Date(t).toISOString().slice(0, 10) === value;
+}
+
 /** `day` plus `n` calendar days. Date-only arithmetic, so no clock or DST. */
 export function addDays(day: string, n: number): string {
   const t = Date.parse(`${day}T00:00:00Z`) + n * 86_400_000;
   return new Date(t).toISOString().slice(0, 10);
 }
 
-export function startProgram(programId: string, today: string): ProgramProgress {
-  return { programId, startedDay: today, done: [] };
+export function startProgram(programId: string, today: string, now: Date = new Date()): ProgramProgress {
+  return { programId, startedDay: today, startedAt: now.toISOString(), done: [] };
+}
+
+/** The sessions that can count toward this run: none from before it started. */
+export function sessionsForRun(progress: ProgramProgress, sessions: readonly SessionLog[]): readonly SessionLog[] {
+  const since = progress.startedAt ? Date.parse(progress.startedAt) : NaN;
+  if (!Number.isFinite(since)) return sessions;
+  return sessions.filter((s) => {
+    const t = Date.parse(s.date);
+    return !Number.isFinite(t) || t >= since;
+  });
 }
 
 /**
@@ -433,18 +500,20 @@ export function reviveProgress(raw: unknown): ProgramProgress | null {
   if (typeof raw !== "object" || raw === null) return null;
   const v = raw as Partial<ProgramProgress>;
   const program = programById(typeof v.programId === "string" ? v.programId : null);
-  if (!program || typeof v.startedDay !== "string" || !DAY_RE.test(v.startedDay)) return null;
+  if (!program || !isCalendarDay(v.startedDay)) return null;
   const done: DayDone[] = [];
   let prev = "";
   for (const d of Array.isArray(v.done) ? v.done : []) {
     if (typeof d !== "object" || d === null) break;
     const { index, day, manual } = d as Partial<DayDone>;
     if (index !== done.length || index >= program.days.length) break;
-    if (typeof day !== "string" || !DAY_RE.test(day) || day <= prev) break;
+    if (!isCalendarDay(day) || day <= prev || day < v.startedDay) break;
     done.push(manual === true ? { index, day, manual: true } : { index, day });
     prev = day;
   }
-  return { programId: program.id, startedDay: v.startedDay, done };
+  const startedAt =
+    typeof v.startedAt === "string" && Number.isFinite(Date.parse(v.startedAt)) ? v.startedAt : undefined;
+  return { programId: program.id, startedDay: v.startedDay, ...(startedAt ? { startedAt } : {}), done };
 }
 
 /** The first calendar day the next program day may be completed on. */
@@ -469,6 +538,7 @@ export function reconcileProgress(
   sessions: readonly SessionLog[],
   today: string,
 ): ProgramProgress {
+  const counted = sessionsForRun(progress, sessions);
   let done = progress.done;
   for (;;) {
     const index = done.length;
@@ -480,10 +550,10 @@ export function reconcileProgress(
     if (isRestDay(d)) {
       on = from;
     } else {
-      const candidates = [...new Set(sessions.map((s) => s.day))]
+      const candidates = [...new Set(counted.map((s) => s.day))]
         .filter((x) => x >= from && x <= today)
         .sort();
-      on = candidates.find((x) => itemsDoneOn(d, sessions, x).every(Boolean)) ?? null;
+      on = candidates.find((x) => itemsDoneOn(d, counted, x).every(Boolean)) ?? null;
     }
     if (on === null) break;
     done = [...done, { index, day: on }];

@@ -82,7 +82,9 @@ async function seedSessions(page, evidence, dayOffset = 0) {
         state.sessions.unshift({
           id: `e2e-${Math.random().toString(36).slice(2)}`,
           type: e.type,
-          date: `${day}T12:00:00`,
+          // Now, not noon: a session from before the program started belongs
+          // to an earlier run and does not count.
+          date: d.toISOString(),
           day,
           durationSec: 60,
           ...(e.detail ? { detail: e.detail } : {}),
@@ -103,12 +105,14 @@ async function shiftBackADay(page) {
         const t = Date.parse(`${day}T00:00:00Z`) - 86400000;
         return new Date(t).toISOString().slice(0, 10);
       };
+      const backTime = (iso) => new Date(Date.parse(iso) - 86400000).toISOString();
       const program = JSON.parse(localStorage.getItem(programKey));
       program.startedDay = back(program.startedDay);
+      if (program.startedAt) program.startedAt = backTime(program.startedAt);
       program.done = program.done.map((d) => ({ ...d, day: back(d.day) }));
       localStorage.setItem(programKey, JSON.stringify(program));
       const progress = JSON.parse(localStorage.getItem(progressKey));
-      progress.sessions = progress.sessions.map((s) => ({ ...s, day: back(s.day), date: `${back(s.day)}T12:00:00` }));
+      progress.sessions = progress.sessions.map((s) => ({ ...s, day: back(s.day), date: backTime(s.date) }));
       localStorage.setItem(progressKey, JSON.stringify(progress));
     },
     { progressKey: PROGRESS_KEY, programKey: PROGRAM_KEY },

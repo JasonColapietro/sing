@@ -14,6 +14,7 @@ import {
   itemIsPro,
   itemLabel,
   markDayDone,
+  startProgram,
   type ProgramDay,
 } from "@/lib/programs";
 import { saveProgramProgress } from "./store";
@@ -194,7 +195,7 @@ export function ProgramTodayCard({
           {view.status === "finished" && (
             <Button
               size="sm"
-              onClick={() => saveProgramProgress({ programId: program.id, startedDay: today, done: [] })}
+              onClick={() => saveProgramProgress(startProgram(program.id, today))}
             >
               Start again from day 1
             </Button>
