@@ -72,4 +72,4 @@ If not ready: If oscillation appears only through shaking or pressure, return to
 
 What this shows: I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.
 
-What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Vibrato rate, extent, onset time, healthy production, or a five-to-seven-hertz result; the app does not analyze vibrato.
+What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them.

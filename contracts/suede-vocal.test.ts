@@ -16,7 +16,7 @@
  * Regenerate with:
  *   CONTRACT_WRITE=1 npx vitest run contracts/suede-vocal.test.ts
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { buildContract, CONTRACT_VERSION } from "./suede-vocal";
@@ -36,6 +36,10 @@ const SUSTAIN_SRC = fileURLToPath(
   new URL("../components/breath/sustain-test.tsx", import.meta.url),
 );
 const PITCH_SRC = fileURLToPath(new URL("../lib/audio/pitch.ts", import.meta.url));
+const VIBRATO_SRC = fileURLToPath(new URL("../lib/audio/vibrato.ts", import.meta.url));
+const PLAYER_SRC = fileURLToPath(
+  new URL("../components/warmups/exercise-player.tsx", import.meta.url),
+);
 const USE_PITCH_SRC = fileURLToPath(new URL("../lib/audio/use-pitch.ts", import.meta.url));
 
 /** The exact bytes the committed file should hold: stable key order, 2-space, trailing newline. */
@@ -237,6 +241,25 @@ describe("suede-vocal contract", () => {
       // detectPitch returns a single {freq, clarity} or null. A polyphonic
       // rewrite would have to change this signature.
       expect(src).toMatch(/export function detectPitch\([^)]*\)\s*:\s*PitchResult \| null/);
+    });
+
+    /**
+     * Vibrato rate moved from "no" to "yes" in version 4. The row has to keep
+     * pointing at code that exists and is tested, and a singer has to be able
+     * to reach it: a measurement no surface calls is the "adaptable" row it
+     * used to be one step short of.
+     */
+    it("vibrato rate is measured, tested, and shown by a drill", () => {
+      const row = buildContract().measurement.vibratoRateHz;
+      expect(row.measurable).toBe("yes");
+      for (const path of row.evidence) {
+        expect(existsSync(fileURLToPath(new URL(`../${path}`, import.meta.url))), path).toBe(true);
+      }
+      expect(readFileSync(VIBRATO_SRC, "utf8")).toMatch(/export function analyzeVibrato\(/);
+      expect(readFileSync(PLAYER_SRC, "utf8")).toContain("readVibrato(");
+      expect(EXERCISES.some((e) => e.vibrato), "no free exercise shows a vibrato reading").toBe(true);
+      // The cue is still unmeasured, and the row says so rather than the rate.
+      expect(buildContract().measurement.vibratoOnCue.measurable).toBe("no");
     });
 
     /**

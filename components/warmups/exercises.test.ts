@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { ALL_EXERCISES, EXERCISES, MIN_RUNGS, PRO_PACKS, computeRootLadder, ladderWalk } from "./exercises";
+import {
+  ALL_EXERCISES,
+  EXERCISES,
+  MIN_RUNGS,
+  PRO_PACKS,
+  VIBRATO_TARGET_BAND,
+  buildSegments,
+  computeRootLadder,
+  ladderWalk,
+} from "./exercises";
+import { createRepScorer } from "./scoring";
 
 // five-note-scale's highest interval is the fifth (7 semitones).
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
@@ -50,6 +60,31 @@ describe("computeRootLadder", () => {
     expect(computeRootLadder(fiveNote, 48, 72)).toEqual(
       Array.from({ length: 9 }, (_, i) => 52 + i),
     );
+  });
+
+  it("never puts an octave-wide pattern above a narrow range's ceiling", () => {
+    // A tenth in a 50–66 range used to get root 54 and a top note of 70: the
+    // courtesy ladder collapsed to its floor and the fallback, one rung too,
+    // lost a strict tie. Every pattern an octave or wider, across ranges from
+    // an octave to two, has to keep its top note at or under the measured high.
+    const wide = ALL_EXERCISES.filter((e) => Math.max(...e.buildSteps(0).flat()) >= 12);
+    expect(wide.map((e) => e.id)).toContain("high-arpeggio-tenth");
+    for (const ex of wide) {
+      const maxOff = Math.max(...ex.buildSteps(0).flat());
+      for (let low = 40; low <= 60; low++) {
+        for (let span = 12; span <= 24; span++) {
+          const high = low + span;
+          const roots = computeRootLadder(ex, low, high);
+          expect(roots.length, `${ex.id} ${low}-${high}`).toBeGreaterThanOrEqual(1);
+          for (const root of roots) {
+            expect(root + maxOff, `${ex.id} ${low}-${high} root ${root}`).toBeLessThanOrEqual(high);
+          }
+          // It only gives up the floor when the pattern is wider than the range.
+          if (span >= maxOff) expect(roots[0], `${ex.id} ${low}-${high}`).toBeGreaterThanOrEqual(low);
+        }
+      }
+    }
+    expect(computeRootLadder(ALL_EXERCISES.find((e) => e.id === "high-arpeggio-tenth")!, 50, 66)).toEqual([50]);
   });
 
   it("never starts below MIDI 30", () => {
@@ -122,5 +157,96 @@ describe("pack descriptions stay true to the packs", () => {
   it("gives every pack a unique id, which the teaser now keys on", () => {
     const ids = PRO_PACKS.map((p) => p.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe("the focus drills", () => {
+  const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
+
+  it("makes every vibrato drill one long single note", () => {
+    const drills = EXERCISES.filter((e) => e.vibrato);
+    expect(drills.map((e) => e.id).sort()).toEqual(["vibrato-float-high", "vibrato-hold"]);
+    for (const ex of drills) {
+      // One unbroken run: a second note would read as modulation.
+      expect(ex.buildSteps(60).flat(), ex.id).toHaveLength(1);
+      expect(ex.glide, ex.id).toBeFalsy();
+      // At the fastest tempo the hold still leaves the analysis its onset skip
+      // and more than its one-second minimum, with room for the detrend edges.
+      expect((ex.noteDur ?? 0) / 1.25, ex.id).toBeGreaterThanOrEqual(3);
+      expect(ex.vibrato).toEqual(VIBRATO_TARGET_BAND);
+    }
+    expect(VIBRATO_TARGET_BAND).toEqual({ minHz: 5, maxHz: 7 });
+  });
+
+  it("keeps the recovery drills small, quiet and honest about fry", () => {
+    for (const id of ["quiet-hum-descent", "soft-trill-slide", "fry-onset"]) {
+      const ex = byId(id);
+      expect(EXERCISES).toContain(ex);
+      expect(ex.tier, id).toBe("beginner");
+      const offsets = ex.buildSteps(0).flat();
+      // A narrow band: no more than a major third above the root.
+      expect(Math.max(...offsets) - Math.min(...offsets), id).toBeLessThanOrEqual(4);
+      // The detector cannot hear fry, so no copy may say it does, and nothing
+      // here heals or measures anything about the voice's condition.
+      const copy = `${ex.title} ${ex.desc} ${ex.tip}`;
+      expect(copy, id).not.toMatch(/\b(?:detect|heal|repair|cure|strain)/i);
+    }
+    expect(byId("fry-onset").desc).toMatch(/only the pitched note is scored/i);
+  });
+
+  it("leaves the creak before the fry-onset note out of the score", () => {
+    const ex = byId("fry-onset");
+    for (const tempo of [0.5, 1, 1.25]) {
+      const { segs, totalSec } = buildSegments(ex, 52, tempo);
+      expect(segs).toHaveLength(1);
+      expect(segs[0].t0, `${tempo}x`).toBeCloseTo(ex.unscoredLeadSec! / tempo, 9);
+      expect(totalSec).toBeCloseTo(segs[0].t0 + segs[0].dur, 9);
+      // A creak the detector hears as nothing, or as a wild low pitch, then
+      // the note held on pitch: the score is the note's alone.
+      const scorer = createRepScorer(segs);
+      const dt = 1 / 60;
+      for (let t = 0; t < totalSec; t += dt) {
+        const onNote = t >= segs[0].t0;
+        const creak = Math.floor(t * 60) % 2 === 0 ? null : 70;
+        scorer.feed(t, onNote ? 440 * Math.pow(2, (52 - 69) / 12) : creak, dt);
+      }
+      expect(scorer.result(52)!.score, `${tempo}x`).toBeGreaterThanOrEqual(98);
+    }
+    // Every other exercise still starts on its first note.
+    for (const other of ALL_EXERCISES.filter((e) => e.id !== "fry-onset")) {
+      expect(other.unscoredLeadSec, other.id).toBeUndefined();
+      expect(buildSegments(other, 60, 1).segs[0].t0, other.id).toBe(0);
+    }
+  });
+
+  it("walks the high-note drills past the octave, inside the measured range", () => {
+    for (const id of ["high-arpeggio-tenth", "high-siren-tenth", "high-float-descent"]) {
+      const ex = byId(id);
+      expect(Math.max(...ex.buildSteps(0).flat()), id).toBe(16);
+      const roots = computeRootLadder(ex, 45, 72);
+      expect(roots.length, id).toBeGreaterThanOrEqual(MIN_RUNGS);
+      expect(roots[roots.length - 1] + 16, id).toBeLessThanOrEqual(72);
+    }
+  });
+
+  it("ships the mix pack as octave crossings behind Pro", () => {
+    const mix = PRO_PACKS.find((p) => p.id === "mix")!;
+    expect(mix.exercises.map((e) => e.id)).toEqual([
+      "mix-ng-slide",
+      "mix-mum-octave",
+      "mix-nay-fifth-octave",
+      "mix-goo-scale",
+    ]);
+    for (const ex of mix.exercises) {
+      expect(Math.max(...ex.buildSteps(0).flat()), ex.id).toBe(12);
+      expect(EXERCISES.some((e) => e.id === ex.id), ex.id).toBe(false);
+    }
+  });
+
+  it("gives every exercise a unique id and title", () => {
+    const ids = ALL_EXERCISES.map((e) => e.id);
+    const titles = ALL_EXERCISES.map((e) => e.title);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(new Set(titles).size).toBe(titles.length);
   });
 });

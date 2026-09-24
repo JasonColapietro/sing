@@ -43,6 +43,11 @@ describe("exerciseKind", () => {
     expect(byId("agility-run")).toBe("runs");
     expect(byId("sixth-leaps")).toBe("leaps");
     expect(byId("five-note-scale")).toBe("patterns");
+    // The focus drills land in kinds by shape too.
+    expect(byId("vibrato-hold")).toBe("holds");
+    expect(byId("fry-onset")).toBe("holds");
+    expect(byId("soft-trill-slide")).toBe("sirens");
+    expect(byId("high-arpeggio-tenth")).toBe("patterns");
   });
 });
 

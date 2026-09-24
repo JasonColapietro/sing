@@ -16,7 +16,9 @@
  *
  *   - There is no strain or pressed-phonation detector anywhere. `ringRatio`
  *     is a self-relative resonance share and is explicitly not a strain proxy.
- *   - There is no vibrato rate analysis.
+ *   - There was no vibrato rate analysis. There is now (version 4): the rate
+ *     and width of a held note's pitch wobble, and nothing about its quality
+ *     or whether it started on a cue.
  *   - The pitch detector is strictly monophonic, so "a held harmony against a
  *     lead" is not two measurable voices.
  *   - A passaggio is not derivable from a range scan. `VOICE_TYPE_PASSAGGIO`
@@ -106,7 +108,7 @@ import {
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 3;
+export const CONTRACT_VERSION = 4;
 
 /**
  * Every measurement this app can take from a microphone, and every one a
@@ -220,10 +222,23 @@ const MEASUREMENTS = {
     note: "The latency model needed to do this honestly exists, but there is no onset detector and no timing-error number.",
   },
   vibratoRateHz: {
-    measurable: "no",
+    measurable: "yes",
     unit: "hertz",
+    module: "lib/audio/vibrato.ts analyzeVibrato",
+    note: "Rate of the periodic modulation of a held note's f0 contour, from the autocorrelation of the detrended contour after a 0.25 s onset skip, reported with its peak-to-peak extent in cents (the live drill corrects the extent for the pitch tracker's 85 ms analysis frame, and still reads somewhat narrow). Shown after every hold of the warmups vibrato drills against a 5-7 Hz target band. It describes the contour only: nothing here says the vibrato is healthy or sounds good, and a wobble from any source (an unsteady breath, a moving microphone) measures the same.",
+    evidence: [
+      "lib/audio/vibrato.ts",
+      "lib/audio/vibrato.test.ts",
+      "components/warmups/vibrato-feedback.ts",
+      "components/warmups/vibrato-feedback.test.ts",
+      "e2e/vibrato-drill.mjs",
+    ],
+  },
+  vibratoOnCue: {
+    measurable: "no",
+    unit: null,
     module: null,
-    note: "No analysis of the f0 contour's periodicity. The data to build it is captured; zero code exists.",
+    note: "Nothing times when vibrato starts or stops against an instruction. vibratoRateHz reads one held note's rate and width; switching from straight tone to vibrato on a cue is a self-check.",
   },
   strainOrPressedPhonation: {
     measurable: "no",
@@ -300,9 +315,10 @@ const UNSUPPORTED_CLAIMS = {
     useInstead: [],
   },
   "vibrato-rate-on-cue": {
-    claimedAs: "vibrato rate in hertz",
-    reality: "No vibrato analysis exists.",
-    useInstead: [],
+    claimedAs: "vibrato switched on at a cue and judged by its rate in hertz",
+    reality:
+      "The rate and width of a held note's vibrato are measured (vibratoRateHz), but nothing times the switch on a cue, and a rate describes the wobble; it is not a pass for it.",
+    useInstead: ["vibratoRateHz"],
   },
   "held-harmony-against-a-lead": {
     claimedAs: "a harmony line measured against a simultaneous lead",
@@ -450,6 +466,8 @@ function serializeExercise(ex: WarmupExercise, free: boolean) {
     noteDur: ex.noteDur ?? null,
     glide: ex.glide ?? false,
     ladder: ex.ladder ?? "up",
+    /** Open, unscored seconds before the first note; included in patternSeconds. */
+    unscoredLeadSec: ex.unscoredLeadSec ?? 0,
     /** Semitone offsets from the root, one array per step. */
     steps: exerciseOffsets(ex),
     segmentCount: segs.length,

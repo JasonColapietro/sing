@@ -40,6 +40,13 @@ import {
 } from "./lib";
 import { COUNT_IN_CLICKS, clickTimes, leadSec, planRep, type RepPlan } from "./timeline";
 import { createRepScorer, type RepScorer } from "./scoring";
+import {
+  createF0Recorder,
+  readVibrato,
+  vibratoDetail,
+  vibratoHeadline,
+  type VibratoReading,
+} from "./vibrato-feedback";
 import { MODE_LABELS, setClick, setGuidePct, setWarmupMode, useWarmupPrefs } from "./prefs";
 
 // 0.5x matches the songs room: the room most likely to need slow is the one
@@ -203,6 +210,8 @@ export function ExercisePlayer({
   // score pill. Rendered in place while the next rep is already running, so
   // the ladder never stops to grade anyone.
   const [lastOutcome, setLastOutcome] = useState<"scored" | "silent" | null>(null);
+  // A vibrato drill's reading of the last hold, shown beside its score.
+  const [lastVibrato, setLastVibrato] = useState<VibratoReading | null>(null);
   const [cursorSec, setCursorSec] = useState<number | null>(null);
   const [hitSec, setHitSec] = useState<number[]>([]);
   const [trace, setTrace] = useState<TracePoint[]>([]);
@@ -231,6 +240,9 @@ export function ExercisePlayer({
   // everything it reads lives in refs that scheduleRep writes synchronously.
   const planRef = useRef<RepPlan | null>(null);
   const scorerRef = useRef<RepScorer | null>(null);
+  // The current hold's f0 trace, for a vibrato drill. Filled only while the
+  // scored window is open, so the teach pass and the count-in never reach it.
+  const f0Ref = useRef(createF0Recorder());
   const groupRef = useRef<ToneGroup | null>(null);
   // The gain node the governed guide pass plays through, so the slider is
   // live mid-rep: the pass is scheduled at full gain and this node carries
@@ -354,6 +366,7 @@ export function ExercisePlayer({
     planRef.current = plan;
     groupRef.current = group;
     scorerRef.current = createRepScorer(segs);
+    f0Ref.current.reset();
     patternSecRef.current = totalSec;
     noteDurRef.current = noteDur;
     rootRef.current = root;
@@ -403,6 +416,13 @@ export function ExercisePlayer({
       resultsRef.current = [...resultsRef.current, res];
       setResults(resultsRef.current);
       setLastOutcome("scored");
+      if (ex.vibrato) {
+        setLastVibrato(
+          readVibrato(f0Ref.current.frames(), ex.vibrato, {
+            windowSec: PITCH_FFT_SIZE / getAudioContext().sampleRate,
+          }),
+        );
+      }
     }
     // A bounded step ends itself: the routine, not the singer, decides when
     // this exercise is done. At least one rep was sung to get here.
@@ -474,6 +494,12 @@ export function ExercisePlayer({
           dt,
         );
         traceRef.current = [...traceRef.current, { t: drawSec, midi: midiFloat }].slice(-260);
+        // Stamped with the pitch frame's own time, not this tick's: vibrato is
+        // read off the spacing of the frames. A frame already seen is dropped
+        // by its timestamp, and one the scorer would refuse counts as unvoiced.
+        if (ex.vibrato && frame.t > 0) {
+          f0Ref.current.push(frame.t, scorable ? frame.freq : null);
+        }
         setTrace(traceRef.current);
         setHitSec(scorer.hitSec());
       } else if (stageNow === "teach") {
@@ -637,6 +663,11 @@ export function ExercisePlayer({
   const centsText =
     currentCents === null ? "—" : `${currentCents > 0 ? "+" : ""}${currentCents}`;
   const stageWord = singing ? "Sing" : stage === "teach" ? "Listen" : "Breathe";
+  // Only beside a sung rep: a skip or a silent window has no hold to read.
+  const vibratoReading =
+    ex.vibrato && lastOutcome === "scored" && lastResult && !lastResult.skipped
+      ? lastVibrato
+      : null;
 
   const segGroup =
     "flex items-center gap-1 rounded-2xl border border-[var(--s-line)] bg-[var(--s-bg)] p-1";
@@ -828,6 +859,16 @@ export function ExercisePlayer({
             {stage === "lead" && <CountIn beats={COUNT_IN_CLICKS} beat={leadBeat} />}
           </div>
           <p className="mt-2 max-w-md text-sm text-[var(--s-mut)]">{ex.tip}</p>
+          {ex.vibrato && (
+            <VibratoPanel
+              band={ex.vibrato}
+              reading={vibratoReading}
+              className="mt-3"
+              labelClass={panelLabel}
+              valueClass="text-[var(--s-ink)]"
+              noteClass="text-[var(--s-mut)]"
+            />
+          )}
           {pitch.error && (
             <p className="mt-2 font-mono text-xs text-[var(--s-rec)]" role="alert">
               {pitch.error}
@@ -962,6 +1003,16 @@ export function ExercisePlayer({
             )}
             <SectionLabel className="mt-3">{ex.title}</SectionLabel>
             <p className="mt-2 max-w-md text-sm text-mut">{ex.tip}</p>
+            {ex.vibrato && (
+              <VibratoPanel
+                band={ex.vibrato}
+                reading={vibratoReading}
+                className="mt-3"
+                labelClass="font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
+                valueClass="text-violet-ink"
+                noteClass="text-mut"
+              />
+            )}
           </div>
           <div className="text-right">
             <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -1181,6 +1232,50 @@ export function ExercisePlayer({
   // whole vocabulary of the Adjust panel, held here so a control cannot end up
   // styled one way in the mode row and another in the tempo row.
   return pageView;
+}
+
+/**
+ * A vibrato drill's reading of the last hold. Before the first hold it says
+ * what will be measured; after, the rate and width and where the rate sits
+ * against the band. Both views render it, in their own tokens.
+ */
+function VibratoPanel({
+  band,
+  reading,
+  className,
+  labelClass,
+  valueClass,
+  noteClass,
+}: {
+  band: { minHz: number; maxHz: number };
+  reading: VibratoReading | null;
+  className: string;
+  labelClass: string;
+  valueClass: string;
+  noteClass: string;
+}) {
+  return (
+    <div
+      className={className}
+      data-testid="vibrato-reading"
+      data-vibrato={reading?.kind ?? "pending"}
+      data-reason={reading?.kind === "none" ? (reading.reason ?? undefined) : undefined}
+      data-rate-hz={reading?.kind === "measured" ? reading.rateHz.toFixed(2) : undefined}
+      data-extent-cents={reading?.kind === "measured" ? Math.round(reading.extentCents) : undefined}
+      data-in-band={reading?.kind === "measured" ? String(reading.inBand) : undefined}
+    >
+      <div className={labelClass}>Vibrato · last hold</div>
+      <p aria-live="polite" className={`tabular mt-1 font-mono text-lg ${valueClass}`}>
+        {reading ? vibratoHeadline(reading) : "—"}
+      </p>
+      <p className={`mt-1 max-w-md text-xs ${noteClass}`}>
+        {reading
+          ? vibratoDetail(reading)
+          : `After each hold: how fast the pitch wobbled and how wide. Target ${band.minHz}–${band.maxHz} Hz.`}{" "}
+        It measures the wobble, not how it sounds.
+      </p>
+    </div>
+  );
 }
 
 /** The session surface's read-only chip — Pill's shape in the dark tokens. */

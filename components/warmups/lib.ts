@@ -69,9 +69,11 @@ export function playGuide(
       });
     }
   } else {
+    // playSequence starts at `at`, so an unscored lead delays it to the first
+    // segment, and the guide comes in where the scored note does.
     playSequence(
       segs.map((s) => s.startMidi),
-      { noteDur, gap, gain, at, out },
+      { noteDur, gap, gain, at: at + (segs[0]?.t0 ?? 0), out },
     );
   }
   return { segs, totalSec };
