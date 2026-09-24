@@ -22,16 +22,17 @@ import { accountsReady } from "@/lib/accounts";
 import { SING_APPEARANCE } from "@/lib/clerk-appearance";
 
 /**
- * Ten tabs, not thirteen: Recorder and Analyze fold into Tools, and Learn is
- * the front door for the two books, glossary and training guides. The absorbed
- * rooms keep their pages (each ranks for its own queries and is linked from its
- * host tab and the footer) — `also` keeps the host tab lit while you're inside
- * one, so the header never claims you are nowhere. Order follows the practice
- * loop: warm up and sing, measure and compare, then read and review.
+ * Ten tabs, not fourteen: Recorder and Analyze fold into Tools, Programs into
+ * Warmups, and Learn is the front door for the two books, glossary and
+ * training guides. The absorbed rooms keep their pages (each ranks for its own
+ * queries and is linked from its host tab and the footer) — `also` keeps the
+ * host tab lit while you're inside one, so the header never claims you are
+ * nowhere. Order follows the practice loop: warm up and sing, measure and
+ * compare, then read and review.
  */
 const LINKS: { href: string; label: string; also?: string[] }[] = [
   { href: "/studio", label: "Studio" },
-  { href: "/warmups", label: "Warmups" },
+  { href: "/warmups", label: "Warmups", also: ["/programs"] },
   { href: "/range", label: "Range" },
   { href: "/singers", label: "Singers" },
   { href: "/ear-training", label: "Ear" },

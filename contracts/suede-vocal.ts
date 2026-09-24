@@ -45,6 +45,10 @@
  * `detectPitch` has to read the same frames the same way, and until v3 those
  * numbers travelled as comments naming the constant each one mirrored.
  *
+ * Version 5 adds the `/programs` room to `deepLinks`, with its `program`
+ * parameter and the ids it accepts, so a curriculum can send a singer to a
+ * multi-week plan by id instead of by a hand-written URL.
+ *
  * It is generated, not written: every number is imported from the modules the
  * app runs on, exactly like `practice-parity.ts`. See contracts/README.md.
  */
@@ -102,13 +106,14 @@ import {
   isFreeExercise,
   routineSeconds,
 } from "@/components/warmups/routines";
+import { PROGRAMS } from "@/lib/programs";
 
 /**
  * Bumped only when the *shape* changes — a key added, removed or renamed.
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 4;
+export const CONTRACT_VERSION = 5;
 
 /**
  * Every measurement this app can take from a microphone, and every one a
@@ -777,7 +782,10 @@ export function buildContract() {
         atlas: { path: "/atlas", params: [] },
         glossary: { path: "/glossary", params: [] },
         singers: { path: "/singers", params: [] },
+        programs: { path: "/programs", params: ["program"] },
       },
+      /** The ids `/programs?program=` accepts; an unknown one lands on the list. */
+      programs: PROGRAMS.map((p) => ({ id: p.id, name: p.name, weeks: p.weeks, pro: p.pro })),
     },
 
     rules: RULES,

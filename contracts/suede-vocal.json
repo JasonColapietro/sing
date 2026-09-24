@@ -1,6 +1,6 @@
 {
   "contract": "suede-vocal",
-  "version": 4,
+  "version": 5,
   "reference": {
     "repo": "JasonColapietro/sing",
     "modules": [
@@ -3423,8 +3423,46 @@
       "singers": {
         "path": "/singers",
         "params": []
+      },
+      "programs": {
+        "path": "/programs",
+        "params": [
+          "program"
+        ]
       }
-    }
+    },
+    "programs": [
+      {
+        "id": "recovery-week",
+        "name": "Recovery week",
+        "weeks": 1,
+        "pro": false
+      },
+      {
+        "id": "foundations-2w",
+        "name": "Foundations in 2 weeks",
+        "weeks": 2,
+        "pro": false
+      },
+      {
+        "id": "vibrato-3w",
+        "name": "Vibrato in 3 weeks",
+        "weeks": 3,
+        "pro": false
+      },
+      {
+        "id": "high-notes-6w",
+        "name": "High notes in 6 weeks",
+        "weeks": 6,
+        "pro": false
+      },
+      {
+        "id": "mix-4w",
+        "name": "Mix in 4 weeks",
+        "weeks": 4,
+        "pro": true
+      }
+    ]
   },
   "rules": {
     "voiceTypeIsEstimate": "A range scan shows which conventional band overlaps a result. It cannot diagnose or permanently classify a voice, and no lesson may present the label as settled.",

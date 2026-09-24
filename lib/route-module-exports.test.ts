@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 import * as signInPage from "@/app/sign-in/[[...sign-in]]/page";
+import * as programsPage from "@/app/programs/page";
 
 describe("Next page module exports", () => {
   it("keeps the sign-in route limited to fields Next accepts", () => {
     expect(Object.keys(signInPage).sort()).toEqual(["default", "metadata"]);
+  });
+
+  it("keeps the programs route limited to fields Next accepts", () => {
+    expect(Object.keys(programsPage).sort()).toEqual(["default", "metadata"]);
   });
 });

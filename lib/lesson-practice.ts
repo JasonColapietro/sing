@@ -376,6 +376,7 @@ export const ROOM_PATHS: Record<string, string> = {
   atlas: "/atlas",
   glossary: "/glossary",
   singers: "/singers",
+  programs: "/programs",
 };
 
 /** What a singer calls each room. */
@@ -393,6 +394,7 @@ export const ROOM_LABELS: Record<string, string> = {
   atlas: "the voice atlas",
   glossary: "the glossary",
   singers: "the singer directory",
+  programs: "the practice programs",
 };
 
 const FREE_EXERCISES = new Map(EXERCISES.map((e) => [e.id, e]));

@@ -246,6 +246,17 @@ every warm-up exercise, and one value changed that consumers have to meet:
   creak the detector cannot hear and so must not count against the score.
   `patternSeconds` includes it.
 
+### suede-vocal v5
+
+`version` moved to 5 on 2026-09-24. One room and one list added under
+`deepLinks`, no changed values:
+
+- `deepLinks.rooms.programs` — `/programs?program=<id>` opens a multi-week
+  practice program's calendar (`lib/programs.ts`). The page reads the parameter
+  after mount, the same way `/warmups` does.
+- `deepLinks.programs` — the ids that parameter accepts, with each program's
+  name, length in weeks and Pro gate. An unknown id lands on the program list.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

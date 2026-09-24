@@ -99,14 +99,14 @@ c412d33. Rows above are unchanged; none were contradicted.
 
 | Mechanic | Source | Web | Notes |
 |---|---|---|---|
-| Multi-week named programs (days to 7 weeks), worked day by day | Sing Sharp ([site](https://singsharp.com/en)) | ✗ | Routines are single sessions |
+| Multi-week named programs (days to 7 weeks), worked day by day | Sing Sharp ([site](https://singsharp.com/en)) | ✓ | /programs: five plans, 1–6 weeks, 10–20 min a day with rest days; days tick off from the practice log, one per calendar day |
 | Breath detection: mic hears the inhale / support, gates the drill | Sing Sharp ([site](https://singsharp.com/en)) | ✗ | Sustain test reads volume only |
 | Live pitch-vs-target overlay | Sing Sharp, Erol "vocal blob" ([manual](https://www.erolstudios.com/SingersStudio-UserManual/voice-lessons/)) | ✓ | Highway, pitch match |
 | Vocal-fry recovery drill | Sing Sharp Recovery Warmup ([site](https://singsharp.com/en)) | ✓ | Easy recovery routine: quiet hums, soft trill, creak-to-tone onset. Fry itself is not detected; only the pitched note is scored |
 | Harmony: thirds against a melody, then triads, on solfège | Sing Sharp Harmony & Trio ([plan](https://singsharp.com/en/training-plans/harmony-trio)) | ✗ | |
 | Vibrato training drill | Sing Sharp Vibrato Pro ([site](https://singsharp.com/en)) | ✓ | Vibrato routine: rate and width measured after each hold, against a 5–7 Hz band |
-| Mix (chest/head blend) program | Sing Sharp Mix Mastery ([site](https://singsharp.com/en)) | ◐ | Mix builder routine (Pro pack); no multi-week program yet |
-| Range-expansion program | Sing Sharp Sing High Notes ([site](https://singsharp.com/en)) | ◐ | High notes routine, to the tenth; no multi-week program yet |
+| Mix (chest/head blend) program | Sing Sharp Mix Mastery ([site](https://singsharp.com/en)) | ✓ | Mix in 4 weeks (Pro): Mix builder with the head-voice and belt packs, range test at the start and end. Register is not detected |
+| Range-expansion program | Sing Sharp Sing High Notes ([site](https://singsharp.com/en)) | ✓ | High notes in 6 weeks: High notes routine, to the tenth, with a range test on day 1 and every second week. No range gain is promised |
 | Labelled range test | Singing Carrots ([site](https://singingcarrots.com/)), Erol slide test ([manual](https://www.erolstudios.com/SingersStudio-UserManual/my-vocal-range/)) | ✓ | /range |
 | Standalone pitch-accuracy test with a % score | Singing Carrots ([site](https://singingcarrots.com/)) | ◐ | Pitch match scores; no single test |
 | Exercise adapted to voice type, speed control (0.4–0.7×) | Singing Carrots ([site](https://singingcarrots.com/)) | ✓ | Warmups in range, tempo under Adjust |

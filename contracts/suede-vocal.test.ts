@@ -443,6 +443,7 @@ describe("suede-vocal contract", () => {
     expect(rooms.warmups.params).toEqual(["exercise", "routine"]);
     expect(rooms.songs.params).toEqual(["song"]);
     expect(rooms.breath.params).toEqual(["drill", "routine"]);
+    expect(rooms.programs.params).toEqual(["program"]);
     // Rooms with no parser must advertise none.
     expect(rooms.range.params).toEqual([]);
     expect(rooms.studio.params).toEqual([]);

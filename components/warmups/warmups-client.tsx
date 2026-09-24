@@ -23,6 +23,8 @@ import { recentWarmupResults, routineReason, routineStartingTempo, recommendRout
 import type { SessionSummaryData } from "./lib";
 import { DailyThreeCard } from "./daily-three-card";
 import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type DailyTempo } from "@/lib/daily-three";
+import { ProgramEntryCard } from "@/components/programs/today-card";
+import { useActiveProgram } from "@/components/programs/use-program";
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
 
@@ -59,6 +61,7 @@ export function WarmupsClient() {
   // checks it, so a capped singer sees the wall rather than a mic prompt.
   const cap = useFreeCap();
   const { goalSec } = useDailyGoal();
+  const activeProgram = useActiveProgram();
 
   const [view, setView] = useState<View>("home");
   const [activeEx, setActiveEx] = useState<WarmupExercise | null>(null);
@@ -320,6 +323,7 @@ export function WarmupsClient() {
               {routineReason(routineContext)}
             </p>
           </ContinueCard>
+          <ProgramEntryCard active={activeProgram} />
 
           {/*
             The mic card used to be returned INSTEAD of this page, so a first-time
