@@ -145,7 +145,7 @@ const THREE = [0, 2, 4] as const;
 
 /**
  * Four weeks above the transition, on the free high-notes routine. Week 1 is
- * short days that stay under the octave; the tenth arrives in week 2; each
+ * short days that go no higher than the octave; the tenth arrives in week 2; each
  * week ends on the quiet recovery set; the last session retakes the range test.
  */
 const HIGH_NOTES: Program = {
@@ -161,8 +161,8 @@ const HIGH_NOTES: Program = {
   days: [
     ...week(THREE, [
       day(steps("Sirens to the octave", [["lip-trill-scale", 6], ["octave-siren", 5], ["descending-five", 5]])),
-      day(steps("Fifths and floats", [["ng-siren-fifth", 6], ["octave-siren", 5], ["high-float-descent", 6]])),
-      day(steps("First tenth", [["lip-trill-scale", 6], ["high-arpeggio-tenth", 6], ["descending-five", 5]])),
+      day(steps("Fifths and sirens", [["ng-siren-fifth", 6], ["octave-siren", 5], ["hoo-four-note", 5]])),
+      day(steps("Octave arpeggios", [["lip-trill-scale", 6], ["octave-arpeggio", 5], ["descending-five", 5]])),
     ]),
     ...week(FIVE, [
       day(routine("high-notes")),
@@ -566,6 +566,11 @@ export interface ProgramProgress {
   finished: boolean;
 }
 
+/** The last programme day with something to do. The rest days after it are not waited for. */
+export function lastSessionDay(program: Program): number {
+  return program.days.findLastIndex((d) => !isRestDay(d));
+}
+
 /**
  * Where a singer is in a programme.
  *
@@ -573,20 +578,38 @@ export interface ProgramProgress {
  * enrolment day, each programme day is done on the earliest calendar day on or
  * after the one following the previous day's, where the log shows all of its
  * activities. A rest day is done simply by that next calendar day arriving.
- * A missed day does not expire: the programme waits.
+ * A missed day does not expire: the programme waits. The programme is
+ * finished the day its last session is done; any rest days after that are
+ * marked done on the same day rather than waited out.
  *
- * Pure: the same log, enrolment and `today` always give the same answer.
+ * `recorded` is a checkpoint: a `doneOn` this function returned earlier, kept
+ * with the enrolment. The practice log is capped (`MAX_SESSIONS` in
+ * lib/progress.ts), so the sessions that finished an early day can be evicted
+ * before the programme ends. Days the checkpoint already has are taken as
+ * done without re-reading the log, so progress never moves backwards. Only a
+ * leading run of days in order is trusted, and never a day after `today`.
+ *
+ * Pure: the same log, enrolment, checkpoint and `today` always give the same
+ * answer.
  */
 export function programProgress(
   program: Program,
   startedDay: string,
   sessions: readonly SessionLog[],
   today: string,
+  recorded: ReadonlyArray<string | null> = [],
 ): ProgramProgress {
   const logged = [...new Set(sessions.filter((s) => s.day >= startedDay && s.day <= today).map((s) => s.day))].sort();
+  const last = lastSessionDay(program);
   const doneOn: Array<string | null> = program.days.map(() => null);
   let cursor = startedDay;
-  for (let i = 0; i < program.days.length; i++) {
+  for (let i = 0; i <= last; i++) {
+    const kept = recorded[i];
+    if (typeof kept === "string" && kept >= cursor && kept <= today) {
+      doneOn[i] = kept;
+      cursor = nextDayKey(kept);
+      continue;
+    }
     if (cursor > today) break;
     const d = program.days[i];
     if (isRestDay(d)) {
@@ -599,6 +622,8 @@ export function programProgress(
     doneOn[i] = when;
     cursor = nextDayKey(when);
   }
+  const finishedOn = last >= 0 ? doneOn[last] : startedDay;
+  if (finishedOn) for (let i = last + 1; i < doneOn.length; i++) doneOn[i] = finishedOn;
   const current = doneOn.findIndex((d) => d === null);
   return { doneOn, currentDay: current === -1 ? null : current, finished: current === -1 };
 }

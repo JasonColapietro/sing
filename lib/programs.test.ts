@@ -14,6 +14,7 @@ import {
   cappedDaySeconds,
   dayNeedsPro,
   isRestDay,
+  lastSessionDay,
   nextDayKey,
   phaseForDay,
   programById,
@@ -116,9 +117,20 @@ describe("programme data", () => {
         expect(dayNeedsPro(FREE_WEEKS * WEEK_DAYS)).toBe(true);
       });
 
-      it("ends on a session, not a rest day", () => {
-        const last = p.days.findLastIndex((d) => !isRestDay(d));
-        expect(last).toBeGreaterThanOrEqual(p.days.length - WEEK_DAYS);
+      it("has its last session in its last week", () => {
+        expect(lastSessionDay(p)).toBeGreaterThanOrEqual(p.days.length - WEEK_DAYS);
+      });
+
+      it("finishes the day its last session is done, not after the rest days behind it", () => {
+        const sessions: SessionLog[] = [];
+        let day = START;
+        for (let i = 0; i <= lastSessionDay(p); i++) {
+          if (!isRestDay(p.days[i])) sessions.push(...sessionsFor(p, i, day));
+          if (i < lastSessionDay(p)) day = nextDayKey(day);
+        }
+        const r = programProgress(p, START, sessions, day);
+        expect(r.finished).toBe(true);
+        expect(r.doneOn.at(-1)).toBe(day);
       });
     });
   }
@@ -237,7 +249,25 @@ describe("programProgress", () => {
     const r = programProgress(p, START, sessions, day);
     expect(r.finished).toBe(true);
     expect(r.currentDay).toBeNull();
-    expect(r.doneOn[p.days.length - 1]).toBe(addDays(START, p.days.length - 1));
+    expect(r.doneOn[lastSessionDay(p)]).toBe(addDays(START, lastSessionDay(p)));
+  });
+
+  it("keeps checkpointed days when their sessions have left the capped log", () => {
+    const today = addDays(START, 3);
+    const full = [...sessionsFor(p, 0, START), ...sessionsFor(p, 2, addDays(START, 2))];
+    const before = programProgress(p, START, full, today);
+    expect(before.currentDay).toBe(4);
+    // Day 0's sessions are evicted; the checkpoint still carries it.
+    const evicted = sessionsFor(p, 2, addDays(START, 2));
+    expect(programProgress(p, START, evicted, today).currentDay).toBe(0);
+    const after = programProgress(p, START, evicted, today, before.doneOn);
+    expect(after.doneOn).toEqual(before.doneOn);
+  });
+
+  it("does not trust a checkpoint out of order or in the future", () => {
+    const today = addDays(START, 1);
+    expect(programProgress(p, START, [], today, [addDays(START, 5)]).currentDay).toBe(0);
+    expect(programProgress(p, START, [], today, ["2026-08-01"]).currentDay).toBe(0);
   });
 
   it("reads a warmup exercise under a title it used to carry", () => {
