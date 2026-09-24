@@ -308,19 +308,36 @@ export function programProgress(
   program: Program,
   sessions: readonly SessionLog[],
   startedDay: string,
+  opts: {
+    /** ISO time the program was (re)started; earlier sessions that day don't count. */
+    startedAt?: string;
+    /**
+     * Program days already recorded as done, in order. Kept because some
+     * evidence is not durable (the sustain room keeps only its last ten
+     * attempts), and a day once done must not come undone when it is evicted.
+     */
+    done?: readonly { from: string; to: string }[];
+  } = {},
 ): ProgramProgress {
+  const doneOn: (string | null)[] = program.days.map(() => null);
+  const spans: ProgramProgress["spans"] = program.days.map(() => null);
+  let current = 0;
+  let countsFrom = startedDay;
+  for (const span of (opts.done ?? []).slice(0, program.days.length)) {
+    doneOn[current] = span.to;
+    spans[current] = span;
+    current += 1;
+    countsFrom = nextDay(span.to);
+  }
   const byDay = new Map<string, SessionLog[]>();
   for (const s of sessions) {
-    if (s.day < startedDay) continue;
+    if (s.day < countsFrom) continue;
+    if (opts.startedAt && s.date < opts.startedAt) continue;
     const list = byDay.get(s.day);
     if (list) list.push(s);
     else byDay.set(s.day, [s]);
   }
-  const doneOn: (string | null)[] = program.days.map(() => null);
-  let current = 0;
-  let countsFrom = startedDay;
   let gathered: SessionLog[] = [];
-  const spans: ProgramProgress["spans"] = program.days.map(() => null);
   for (const day of [...byDay.keys()].sort()) {
     if (current >= program.days.length) break;
     gathered = gathered.concat(byDay.get(day)!);

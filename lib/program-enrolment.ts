@@ -18,7 +18,13 @@ export interface ProgramEnrolment {
   programId: string;
   /** Local calendar day the singer started, YYYY-MM-DD. */
   startedDay: string;
+  /** ISO time of the start, so a restart ignores practice earlier that day. */
+  startedAt?: string;
+  /** Program days recorded as done, in order (see programProgress). */
+  done?: { from: string; to: string }[];
 }
+
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 let cache: ProgramEnrolment | null | undefined;
 const listeners = new Set<() => void>();
@@ -27,10 +33,24 @@ let storageBound = false;
 /** Only a known program with a well-formed day is an enrolment. */
 export function parseEnrolment(raw: unknown): ProgramEnrolment | null {
   if (typeof raw !== "object" || raw === null) return null;
-  const { programId, startedDay } = raw as Record<string, unknown>;
+  const { programId, startedDay, startedAt, done } = raw as Record<string, unknown>;
   if (typeof programId !== "string" || !programById(programId)) return null;
-  if (typeof startedDay !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(startedDay)) return null;
-  return { programId, startedDay };
+  if (typeof startedDay !== "string" || !DAY.test(startedDay)) return null;
+  const out: ProgramEnrolment = { programId, startedDay };
+  if (typeof startedAt === "string" && !Number.isNaN(Date.parse(startedAt))) out.startedAt = startedAt;
+  if (Array.isArray(done)) {
+    const spans = done.filter(
+      (d): d is { from: string; to: string } =>
+        typeof d === "object" && d !== null &&
+        typeof (d as { from?: unknown }).from === "string" && DAY.test((d as { from: string }).from) &&
+        typeof (d as { to?: unknown }).to === "string" && DAY.test((d as { to: string }).to),
+    );
+    // Only a clean, ordered record is trusted; anything else is recomputed.
+    const ordered = spans.length === done.length &&
+      spans.every((s, i) => s.from <= s.to && (i === 0 || spans[i - 1].to < s.from));
+    if (ordered && spans.length) out.done = spans.map(({ from, to }) => ({ from, to }));
+  }
+  return out;
 }
 
 function read(): ProgramEnrolment | null {
@@ -74,10 +94,21 @@ export function useProgramEnrolment(): ProgramEnrolment | null {
   return useSyncExternalStore(subscribe, read, () => null);
 }
 
-/** Start (or restart) a program from today. Replaces any other enrolment. */
-export function startProgram(programId: string, today = localDay()): void {
+/** Start (or restart) a program from now. Replaces any other enrolment. */
+export function startProgram(programId: string, now = new Date()): void {
   if (!programById(programId)) return;
-  write({ programId, startedDay: today });
+  write({ programId, startedDay: localDay(now), startedAt: now.toISOString() });
+}
+
+/**
+ * Record program days as done once they are, so evidence that is later
+ * trimmed from a room's own record can't undo them. Only ever extends.
+ */
+export function recordProgramDays(programId: string, done: { from: string; to: string }[]): void {
+  const cur = read();
+  if (!cur || cur.programId !== programId) return;
+  if (done.length <= (cur.done?.length ?? 0)) return;
+  write({ ...cur, done });
 }
 
 export function leaveProgram(): void {

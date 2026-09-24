@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useProgress } from "@/lib/progress";
 import { loadBreath, type SustainAttempt } from "@/components/breath/store";
-import { leaveProgram, startProgram, useProgramEnrolment } from "@/lib/program-enrolment";
+import { leaveProgram, recordProgramDays, startProgram, useProgramEnrolment } from "@/lib/program-enrolment";
 import {
   dayMinutes,
   programById,
@@ -35,13 +35,32 @@ export function ProgramDays({ programId }: { programId: string }) {
     setAttempts(loadBreath().attempts);
   }, [logged]);
   const sessions = useMemo(() => [...logged, ...sustainAttemptLogs(attempts)], [logged, attempts]);
+  const following = program && enrolment?.programId === program.id ? enrolment : null;
+  const progress =
+    program && following
+      ? programProgress(program, sessions, following.startedDay, {
+          startedAt: following.startedAt,
+          done: following.done,
+        })
+      : null;
+  // Keep what's done: the next computation starts from these days.
+  const doneSpans = progress?.spans.filter((s): s is { from: string; to: string } => s !== null) ?? [];
+  const doneCount = doneSpans.length;
+  const doneKey = JSON.stringify(doneSpans);
+  useEffect(() => {
+    if (program && doneCount > (following?.done?.length ?? 0)) {
+      recordProgramDays(program.id, JSON.parse(doneKey));
+    }
+  }, [program, following, doneCount, doneKey]);
   if (!program) return null;
 
-  const following = enrolment?.programId === program.id ? enrolment : null;
-  const progress = following ? programProgress(program, sessions, following.startedDay) : null;
   const finished = progress !== null && progress.current >= program.days.length;
   // Practice gathered toward the current program day so far.
-  const gathered = progress ? sessions.filter((s) => s.day >= progress.countsFrom) : [];
+  const gathered = progress
+    ? sessions.filter(
+        (s) => s.day >= progress.countsFrom && (!following?.startedAt || s.date >= following.startedAt),
+      )
+    : [];
   const other = enrolment && !following ? programById(enrolment.programId) : undefined;
 
   return (

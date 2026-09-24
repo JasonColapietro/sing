@@ -179,6 +179,26 @@ describe("programProgress", () => {
     expect({ doneOn: p.doneOn, current: p.current, countsFrom: p.countsFrom }).toEqual({ doneOn: ["2026-10-03", null], current: 1, countsFrom: "2026-10-04" });
   });
 
+  it("ignores practice earlier on the day of a restart", () => {
+    const before = { ...log("2026-10-01", "range"), date: "2026-10-01T08:00:00.000Z" };
+    const after = { ...log("2026-10-01", "range"), date: "2026-10-01T10:00:00.000Z" };
+    const restartedAt = "2026-10-01T09:00:00.000Z";
+    expect(programProgress(tiny, [before], "2026-10-01", { startedAt: restartedAt }).current).toBe(0);
+    expect(programProgress(tiny, [before, after], "2026-10-01", { startedAt: restartedAt }).current).toBe(1);
+  });
+
+  it("keeps recorded days done when their evidence is gone, and resumes after them", () => {
+    const done = [{ from: "2026-10-01", to: "2026-10-02" }];
+    const p = programProgress(tiny, [log("2026-10-02", "breath", "Sustain test")], "2026-10-01", { done });
+    // Day one stays done with no sessions behind it; the sustain on its last
+    // day doesn't count toward day two, which gathers from the 3rd.
+    expect(p.doneOn).toEqual(["2026-10-02", null]);
+    expect(p.countsFrom).toBe("2026-10-03");
+    const q = programProgress(tiny, [log("2026-10-03", "breath", "Sustain test")], "2026-10-01", { done });
+    expect(q.doneOn).toEqual(["2026-10-02", "2026-10-03"]);
+    expect(q.spans[1]).toEqual({ from: "2026-10-03", to: "2026-10-03" });
+  });
+
   it("rolls the day over month ends", () => {
     const p = programProgress(tiny, [log("2026-10-31", "range")], "2026-10-01");
     expect(p.countsFrom).toBe("2026-11-01");
@@ -258,6 +278,17 @@ describe("parseEnrolment", () => {
     expect(parseEnrolment({ programId: "nope", startedDay: "2026-10-01" })).toBeNull();
     expect(parseEnrolment({ programId: "first-two-weeks", startedDay: "yesterday" })).toBeNull();
     expect(parseEnrolment(null)).toBeNull();
+    const withDone = {
+      programId: "first-two-weeks",
+      startedDay: "2026-10-01",
+      startedAt: "2026-10-01T09:00:00.000Z",
+      done: [{ from: "2026-10-01", to: "2026-10-02" }],
+    };
+    expect(parseEnrolment(withDone)).toEqual(withDone);
+    // An out-of-order or malformed record is dropped and recomputed from the log.
+    expect(parseEnrolment({ ...withDone, done: [{ from: "2026-10-03", to: "2026-10-02" }] })?.done).toBeUndefined();
+    expect(parseEnrolment({ ...withDone, done: [{ from: "x", to: "y" }] })?.done).toBeUndefined();
+    expect(parseEnrolment({ ...withDone, startedAt: "not a time" })?.startedAt).toBeUndefined();
     expect(parseEnrolment("first-two-weeks")).toBeNull();
   });
 });
