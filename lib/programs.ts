@@ -398,8 +398,27 @@ export function itemsDoneOn(
   day: string,
   from: string = day,
 ): boolean[] {
+  return matchDay(d, sessions, day, from).items;
+}
+
+/**
+ * The matching behind itemsDoneOn, with the requirement-level result too:
+ * `steps[i][k]` is whether requirement k of item i (a routine's k-th exercise,
+ * a set's k-th drill; see itemSteps) is paid for by a session. Unfinished
+ * items get partial credit afterwards, one requirement at a time, from the
+ * sessions the finished ones left, so a step tick never spends a session
+ * another row already uses.
+ */
+export function matchDay(
+  d: ProgramDay,
+  sessions: readonly SessionLog[],
+  day: string,
+  from: string = day,
+): { items: boolean[]; steps: boolean[][] } {
   const pool = sessions.filter((s) => s.day >= from && s.day <= day);
   const reqs: Evidence[] = [];
+  /** reqOf[r] = [item index, requirement index within the item]. */
+  const reqOf: [number, number][] = [];
   /** owner[sessionIndex] = the requirement it pays for. */
   let owner: (number | undefined)[] = [];
   const assign = (r: number, seen: Set<number>): boolean => {
@@ -414,21 +433,43 @@ export function itemsDoneOn(
     }
     return false;
   };
-  return d.items.map((item) => {
+  const items = d.items.map((item, idx) => {
     const evidence = itemEvidence(item);
     if (evidence.length === 0) return false;
     const before = owner.slice();
     const start = reqs.length;
     reqs.push(...evidence);
+    reqOf.push(...evidence.map((_, k): [number, number] => [idx, k]));
     for (let r = start; r < reqs.length; r++) {
       if (!assign(r, new Set())) {
         owner = before;
         reqs.length = start;
+        reqOf.length = start;
         return false;
       }
     }
     return true;
   });
+  d.items.forEach((item, idx) => {
+    if (items[idx]) return;
+    itemEvidence(item).forEach((e, k) => {
+      const before = owner.slice();
+      reqs.push(e);
+      reqOf.push([idx, k]);
+      if (!assign(reqs.length - 1, new Set())) {
+        owner = before;
+        reqs.pop();
+        reqOf.pop();
+      }
+    });
+  });
+  const steps = d.items.map((item) => itemEvidence(item).map(() => false));
+  for (const r of owner) {
+    if (r === undefined) continue;
+    const [i, k] = reqOf[r];
+    steps[i][k] = true;
+  }
+  return { items, steps };
 }
 
 /** Whether the log shows the item done from `from` through `day`, on its own. */
@@ -502,6 +543,13 @@ export interface DayDone {
   day: string;
   /** Marked by hand rather than read off the practice log. */
   manual?: boolean;
+  /**
+   * A check-in day's readings, kept once seen. A sustain hold under five
+   * seconds lives only in the sustain room's ten-attempt record, so the
+   * reading has to be kept here to still be there on the last day.
+   */
+  range?: { lowMidi: number; highMidi: number };
+  sustainSec?: number;
 }
 
 export interface ProgramProgress {
@@ -569,10 +617,18 @@ export function reviveProgress(raw: unknown): ProgramProgress | null {
   let prev = "";
   for (const d of Array.isArray(v.done) ? v.done : []) {
     if (typeof d !== "object" || d === null) break;
-    const { index, day, manual } = d as Partial<DayDone>;
+    const { index, day, manual, range, sustainSec } = d as Partial<DayDone>;
     if (index !== done.length || index >= program.days.length) break;
     if (!isCalendarDay(day) || day <= prev || day < v.startedDay) break;
-    done.push(manual === true ? { index, day, manual: true } : { index, day });
+    const entry: DayDone = manual === true ? { index, day, manual: true } : { index, day };
+    if (
+      typeof range === "object" && range !== null &&
+      Number.isFinite(range.lowMidi) && Number.isFinite(range.highMidi) && range.lowMidi <= range.highMidi
+    ) {
+      entry.range = { lowMidi: range.lowMidi, highMidi: range.highMidi };
+    }
+    if (typeof sustainSec === "number" && Number.isFinite(sustainSec) && sustainSec > 0) entry.sustainSec = sustainSec;
+    done.push(entry);
     prev = day;
   }
   const startedAt =
@@ -717,15 +773,42 @@ export function programReadings(
         return within(localDayOf(r.testedAt)) && (!Number.isFinite(since) || t >= since);
       });
       const last = tests.at(-1);
-      reading.range = last ? { lowMidi: last.lowMidi, highMidi: last.highMidi } : null;
+      reading.range = last ? { lowMidi: last.lowMidi, highMidi: last.highMidi } : (done.range ?? null);
     }
     if (hasSustain) {
       const holds = counted
         .filter((s) => within(s.day) && s.type === "breath" && s.detail === breathDrillTitle("sustain"))
         .map((s) => s.durationSec);
-      reading.sustainSec = holds.length ? Math.max(...holds) : null;
+      reading.sustainSec = holds.length ? Math.max(...holds, done.sustainSec ?? 0) : (done.sustainSec ?? null);
     }
     out.push(reading);
   });
   return out;
+}
+
+/**
+ * The record with each check-in reading kept on its day, so programReadings
+ * can still show it after the evidence ages out. Returns the same object when
+ * nothing new was read, so a caller can compare by identity before writing.
+ */
+export function withReadings(progress: ProgramProgress, readings: readonly ProgramReading[]): ProgramProgress {
+  let done = progress.done;
+  for (const r of readings) {
+    const cur = done[r.index];
+    if (!cur) continue;
+    const next: DayDone = { ...cur };
+    let changed = false;
+    if (r.range && (cur.range?.lowMidi !== r.range.lowMidi || cur.range?.highMidi !== r.range.highMidi)) {
+      next.range = { ...r.range };
+      changed = true;
+    }
+    if (typeof r.sustainSec === "number" && r.sustainSec !== cur.sustainSec) {
+      next.sustainSec = r.sustainSec;
+      changed = true;
+    }
+    if (!changed) continue;
+    if (done === progress.done) done = [...done];
+    done[r.index] = next;
+  }
+  return done === progress.done ? progress : { ...progress, done };
 }

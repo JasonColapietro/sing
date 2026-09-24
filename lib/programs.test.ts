@@ -7,6 +7,7 @@ import {
   itemDoneOn,
   itemSteps,
   itemsDoneOn,
+  matchDay,
   itemEvidence,
   itemHref,
   itemIsPro,
@@ -21,6 +22,7 @@ import {
   sessionsForRun,
   startProgram,
   sustainAttemptSessions,
+  withReadings,
   type Program,
   type ProgramDay,
   type ProgramItem,
@@ -571,5 +573,56 @@ describe("check-in readings", () => {
     const r = reconcileProgress(program, p, [...sessions, ...later], d0);
     expect(r.done).toHaveLength(1);
     expect(programReadings(program, r, [...sessions, ...later], history)[0].range).toBeNull();
+  });
+});
+
+describe("step ticks share the day's matching", () => {
+  it("spends one session on one step, even where two routines share an exercise", () => {
+    const today = "2026-09-24";
+    const d: ProgramDay = { title: "", items: [{ kind: "routine", id: "quick" }, { kind: "routine", id: "quick" }] };
+    const first = itemEvidence(d.items[0])[0];
+    const m = matchDay(d, [session(today, first.type, first.details?.[0])], today);
+    expect(m.items).toEqual([false, false]);
+    expect(m.steps.flat().filter(Boolean)).toHaveLength(1);
+    // A finished row keeps its sessions: the partial row gets only what is left.
+    const all = itemEvidence(d.items[0]).map((e) => session(today, e.type, e.details?.[0]));
+    const m2 = matchDay(d, all, today);
+    expect(m2.items).toEqual([true, false]);
+    expect(m2.steps[0].every(Boolean)).toBe(true);
+    expect(m2.steps[1].some(Boolean)).toBe(false);
+    expect(itemsDoneOn(d, all, today)).toEqual(m2.items);
+  });
+});
+
+describe("check-in readings are kept on the record", () => {
+  it("survive their evidence aging out, and a revive", () => {
+    const program = programById("foundations-2w")!;
+    const d0 = "2026-09-21";
+    const p = begin(program.id, d0);
+    const hold = sustainAttemptSessions([{ sec: 3.5, date: `${d0}T12:00:00.000Z` }]);
+    // Day 1 needs two sustain tests (the lone drill and the one in its breath
+    // set): one logged at 5 s, and one hold too short to be logged.
+    const logged = sessionsFor(program.days[0], d0);
+    const firstSustain = logged.findIndex((x) => x.detail === "Sustain test");
+    logged[firstSustain] = { ...logged[firstSustain], durationSec: 5 };
+    const second = logged.findIndex((x, i) => i > firstSustain && x.detail === "Sustain test");
+    const log = [...logged.filter((_, i) => i !== second), ...hold];
+    const history = [{ lowMidi: 50, highMidi: 70, testedAt: `${d0}T12:00:00.000Z` }];
+    const r = reconcileProgress(program, p, log, d0);
+    expect(r.done).toHaveLength(1);
+    const kept = withReadings(r, programReadings(program, r, log, history));
+    expect(kept.done[0]).toMatchObject({ range: { lowMidi: 50, highMidi: 70 }, sustainSec: 5 });
+    // Nothing new: the same object back, so the hook does not write again.
+    expect(withReadings(kept, programReadings(program, kept, log, history))).toBe(kept);
+    // The log and the range test are gone; the readings are not.
+    const revived = reviveProgress(JSON.parse(JSON.stringify(kept)))!;
+    expect(programReadings(program, revived, [], [])[0]).toMatchObject({
+      range: { lowMidi: 50, highMidi: 70 },
+      sustainSec: 5,
+    });
+    // A day whose only sustain was a short hold keeps that hold.
+    const shortOnly = withReadings(r, [{ index: 0, day: d0, range: null, sustainSec: 3.5 }]);
+    const again = reviveProgress(JSON.parse(JSON.stringify(shortOnly)))!;
+    expect(programReadings(program, again, [], [])[0].sustainSec).toBe(3.5);
   });
 });

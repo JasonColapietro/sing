@@ -5,15 +5,14 @@ import { localDay, useProgress } from "@/lib/progress";
 import { loadBreath, type SustainAttempt } from "@/components/breath/store";
 import {
   earliestNext,
-  itemDoneOn,
-  itemSteps,
-  itemsDoneOn,
+  matchDay,
   programReadings,
   programById,
   programToday,
   reconcileProgress,
   sessionsForRun,
   sustainAttemptSessions,
+  withReadings,
   type Program,
   type ProgramProgress,
   type ProgramReading,
@@ -80,8 +79,12 @@ export function useActiveProgram(): ActiveProgram | null {
   }, [logged]);
   const sessions = useMemo(() => [...logged, ...sustainAttemptSessions(attempts)], [logged, attempts]);
   const program = programById(stored?.programId);
-  const progress =
+  const reconciled =
     stored && program && today ? reconcileProgress(program, stored, sessions, today) : stored;
+  const readings = program && reconciled ? programReadings(program, reconciled, sessions, rangeHistory) : [];
+  // Keep each check-in reading on its day: a short sustain hold is only in the
+  // sustain room's ten-attempt record, and must still show on the last day.
+  const progress = reconciled ? withReadings(reconciled, readings) : reconciled;
 
   // Persist what the log completed, so the calendar keeps the day it happened
   // on even after the sessions age out of the capped log.
@@ -94,11 +97,9 @@ export function useActiveProgram(): ActiveProgram | null {
   const counted = sessionsForRun(progress, sessions);
   const countsFrom = earliestNext(progress);
   const day = program.days[view.index];
-  const todo = view.status === "todo";
-  const itemsDone = todo ? itemsDoneOn(day, counted, today, countsFrom) : [];
-  const stepsDone = todo
-    ? day.items.map((item) => itemSteps(item).map((st) => itemDoneOn(st, counted, today, countsFrom)))
-    : [];
-  const readings = programReadings(program, progress, sessions, rangeHistory);
+  // One matching for the rows and their steps, so a session ticks one thing.
+  const match = view.status === "todo" ? matchDay(day, counted, today, countsFrom) : null;
+  const itemsDone = match?.items ?? [];
+  const stepsDone = match?.steps ?? [];
   return { program, progress, today, view, itemsDone, stepsDone, countsFrom, readings };
 }
