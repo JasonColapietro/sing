@@ -1,9 +1,9 @@
 import { getAudioContext } from "./context";
 
 /**
- * Frames `usePitch` keeps in its median window. Mirrors the `hist.length > 4`
- * bound in lib/audio/use-pitch.ts; the two must move together, because this is
- * what converts that smoothing into a number of seconds.
+ * Frames `usePitch` keeps in its median window. `usePitch` bounds its history
+ * with this constant, so the smoothing and the seconds it is converted into
+ * below cannot drift apart.
  */
 export const PITCH_MEDIAN_WINDOW = 4;
 

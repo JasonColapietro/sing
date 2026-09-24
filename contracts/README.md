@@ -154,9 +154,10 @@ against the web's ±12) and the count-in (iOS was 3 beats against the web's 4).
 Both are now asserted as equalities rather than recorded as differences.
 
 The one that remains is `songTempo`, and it is a gap rather than a wrong number:
-native song practice is still playback without a microphone, so it offers two
-fixed rates where the web has a continuous tempo grid and auto-tempo. It closes
-when microphone-backed song scoring lands.
+native song practice offers two fixed rates where the web has a continuous tempo
+grid and auto-tempo. Native songs have been scored from the microphone since
+suede-voice #132 (S8, 2026-09-24). The gap closes when the tempo grid and
+auto-tempo arrive natively. No slice for that is confirmed yet.
 
 ### practice-parity v2
 
@@ -199,7 +200,34 @@ chapter has to say so.
 
 ### suede-vocal v3
 
-`version` moved to 3 on 2026-09-24. Two keys added under `measurement`, one on
+`version` moved to 3 on 2026-09-24, adding one key and changing no value:
+`pitch.engine`. It carries the detector's tuning and the smoothing the live
+rooms put on it:
+
+- the pre-filter corner (`lowpassHz`)
+- the silence floor (`silenceRms`)
+- the edge trim and the shortest window it leaves (`trimThreshold`,
+  `minWindowSamples`)
+- the peak rule (`peakTolerance`)
+- the mains-hum check below C2 (`subrangeFloorHz`, `subrangeSearchRatio`,
+  `subrangeMargin`, `subrangeMinClarity`)
+- the frame size (`frameSamples`), the clarity gate (`clarityThreshold`), and
+  the median window with its true-median rule (`medianWindow`, `smoothing`)
+
+It exists because the iOS song room ports `detectPitch` (suede-voice #132). A
+port reads the same frames the same way only when these match, and until v3
+they travelled as Swift comments naming the web constant each one mirrored.
+`usePitch` and `useAnalyser` now take the clarity gate and the median window
+from the named constants rather than from literals, and `suede-vocal.test.ts`
+checks the sources still use them. A literal creeping back in would otherwise
+let the contract and the detector disagree with every equality check green.
+
+`Suede-AI/suede-voice` vendors this file and asserts `version`, so the re-sync
+is a failing test there until its suite reads `pitch.engine`.
+
+### suede-vocal v4
+
+`version` moved to 4 on 2026-09-24. Two keys added under `measurement`, one on
 every warm-up exercise, and one value changed that consumers have to meet:
 
 - `measurement.vibratoRateHz` is now `measurable: "yes"`. `lib/audio/vibrato.ts`
