@@ -15,7 +15,8 @@
     "e2e:mobile": "node e2e/run.mjs --viewport=mobile-375",
     "e2e:pitch": "node e2e/pitch-precision.mjs",
     "e2e:vibrato": "node e2e/vibrato-drill.mjs",
-    "e2e:programs": "node e2e/programs.mjs"
+    "e2e:programs": "node e2e/programs.mjs",
+    "e2e:breath": "node e2e/breath-gate.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.8.0",

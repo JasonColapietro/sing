@@ -19,7 +19,9 @@ import type { LogResult } from "@/lib/progress";
 export type BreathStep =
   | { drill: "box"; side: number; minutes: 1 | 3 | 5 }
   | { drill: "farinelli"; cap: number }
-  | { drill: "sustain"; attempts: number };
+  | { drill: "sustain"; attempts: number }
+  /** Breathe and sing: `reps` notes of `holdSec`, each opened by a breath the mic heard. */
+  | { drill: "cue"; reps: number; holdSec: number };
 
 export type BreathDrillId = BreathStep["drill"];
 
@@ -42,6 +44,8 @@ export interface BreathDrillResult {
   label: string;
   /** The sustain test's longest single hold; the guided drills have none. */
   best?: number;
+  /** Breathe and sing's finished reps; the other drills have none. */
+  reps?: number;
 }
 
 /**
@@ -95,6 +99,27 @@ export const SUSTAIN_STAR_SEC = { one: 10, two: 20, three: 30 } as const;
 
 export const SUSTAIN_ATTEMPT_SEC = 25;
 
+/**
+ * How long a mic drill listens for a breath before it offers to start without
+ * one. Long enough for two unhurried breaths, which is what a singer tries
+ * before deciding the app is broken; some mics never carry a breath at all,
+ * and a drill that waits on one forever is a drill that cannot be done.
+ */
+export const BREATH_FALLBACK_SEC = 8;
+
+/**
+ * What one breathe-and-sing rep costs beyond its note: the breath itself, the
+ * moment between hearing it and the voice starting, and the pause after. An
+ * estimate, like SUSTAIN_ATTEMPT_SEC, since the singer sets the pace.
+ */
+export const CUE_BREATH_SEC = 3;
+
+/** The rep counts the standalone drill offers; the routine uses the first. */
+export const CUE_REP_CHOICES = [4, 6, 8] as const;
+
+/** One breathe-and-sing note: long enough to be a phrase, short enough to repeat. */
+export const CUE_HOLD_SEC = 4;
+
 export const BREATH_ROUTINES: BreathRoutine[] = [
   {
     id: "quick",
@@ -111,10 +136,11 @@ export const BREATH_ROUTINES: BreathRoutine[] = [
     id: "daily",
     name: "Daily breath",
     tagline:
-      "The everyday set: three minutes around the square, the four-to-eight climb, then two measured sustains.",
+      "The everyday set: three minutes around the square, the four-to-eight climb, four notes each started on a breath, then two measured sustains.",
     steps: [
       { drill: "box", side: 4, minutes: 3 },
       { drill: "farinelli", cap: 8 },
+      { drill: "cue", reps: CUE_REP_CHOICES[0], holdSec: CUE_HOLD_SEC },
       { drill: "sustain", attempts: 2 },
     ],
   },
@@ -178,6 +204,8 @@ export function breathStepSeconds(step: BreathStep): number {
       return boxSeconds(step);
     case "farinelli":
       return farinelliSeconds(step);
+    case "cue":
+      return step.reps * (step.holdSec + CUE_BREATH_SEC);
     default:
       return step.attempts * SUSTAIN_ATTEMPT_SEC;
   }
@@ -201,6 +229,8 @@ export function breathDrillTitle(drill: BreathDrillId): string {
       return "Box breathing";
     case "farinelli":
       return "Farinelli drill";
+    case "cue":
+      return "Breathe and sing";
     default:
       return "Sustain test";
   }
@@ -221,6 +251,8 @@ export function breathStepSummary(step: BreathStep): string {
       return `${step.minutes} min · ${step.side}s sides`;
     case "farinelli":
       return `Top count ${step.cap}`;
+    case "cue":
+      return `${step.reps} reps · ${step.holdSec}s notes`;
     default:
       return step.attempts === 1 ? "1 attempt" : `${step.attempts} attempts`;
   }
@@ -233,14 +265,15 @@ export function breathDrillDesc(drill: BreathDrillId): string {
       return "Breathe around the square — inhale, hold, exhale, hold, equal counts on every side. It settles the nerves and evens out the airflow before you sing.";
     case "farinelli":
       return "Inhale, hold and exhale for the same count, then add one count each round. The breath gets longer as you go, which is the whole point.";
+    case "cue":
+      return "Breathe in, then sing one easy note. The mic listens for the breath before each note counts, so every rep starts the way a phrase should.";
     default:
       return "One steady note, held for as long as your air lasts. The mic times it and scores how even you kept the level.";
   }
 }
 
-/** True when the drill needs the microphone. */
 /** The drill ids, so an untrusted string from a URL can be narrowed safely. */
-export const BREATH_DRILL_IDS: BreathDrillId[] = ["sustain", "box", "farinelli"];
+export const BREATH_DRILL_IDS: BreathDrillId[] = ["sustain", "cue", "box", "farinelli"];
 
 /**
  * Guards a `?drill=` value from a deep link. A curriculum on another origin
@@ -251,8 +284,13 @@ export function isBreathDrillId(value: string | null | undefined): value is Brea
   return !!value && (BREATH_DRILL_IDS as string[]).includes(value);
 }
 
+/** True when the drill needs the microphone. */
+export function breathDrillNeedsMic(drill: BreathDrillId): boolean {
+  return drill === "sustain" || drill === "cue";
+}
+
 export function breathStepNeedsMic(step: BreathStep): boolean {
-  return step.drill === "sustain";
+  return breathDrillNeedsMic(step.drill);
 }
 
 export function routineNeedsMic(r: BreathRoutine): boolean {

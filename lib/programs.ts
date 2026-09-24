@@ -37,6 +37,8 @@ import {
 import { titlesFor } from "@/components/warmups/exercises";
 import {
   BREATH_STEP_INTRO_SEC,
+  CUE_HOLD_SEC,
+  CUE_REP_CHOICES,
   breathDrillTitle,
   breathRoutineById,
   breathRoutineSeconds,
@@ -132,6 +134,8 @@ const DRILL_PRESET: Record<BreathDrillId, BreathStep> = {
   box: { drill: "box", side: 4, minutes: 1 },
   farinelli: { drill: "farinelli", cap: 8 },
   sustain: { drill: "sustain", attempts: 1 },
+  // The rep picker's starting value, as the breath room opens the drill.
+  cue: { drill: "cue", reps: CUE_REP_CHOICES[1], holdSec: CUE_HOLD_SEC },
 };
 
 const routine = (id: string): ProgramItem => ({ kind: "routine", id });

@@ -31,11 +31,11 @@ interface PlanItem {
  * under the measured ceiling — so 21 (4 + 12 + 5) is exactly the span at which
  * that top finally reaches the start. At 21 the band is a single root whose
  * glide lands on `highMidi - 5`, headroom intact; wider spans widen the band a
- * semitone at a time. Below 21 the `Math.max(start, …)` floor fabricates that
- * lone root anyway, and its glide to `lowMidi + 16` eats into the headroom the
- * ladder reserves — clearing the measured ceiling outright under 16 semitones.
- * (The MIDI-30 start floor only bites below lowMidi 26, so this holds for any
- * real voice.)
+ * semitone at a time. Below 21 the ladder gives up that headroom to stay under
+ * the ceiling: it roots the octave lower, down to `lowMidi`, and under 12
+ * semitones pins the top to `highMidi` with the bottom below the range. The
+ * glide then runs at the very top of what the singer measured, which is why a
+ * narrower span gets the fifth instead.
  */
 const OCTAVE_SIREN_MIN_SEMIS = 21;
 

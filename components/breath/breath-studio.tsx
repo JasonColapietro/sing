@@ -18,6 +18,7 @@ import { BreathDrillSession, BreathRunner } from "./breath-runner";
 import {
   BREATH_ROUTINES,
   breathDrillDesc,
+  breathDrillNeedsMic,
   breathDrillTitle,
   breathRoutineById,
   breathRoutineMinutes,
@@ -31,6 +32,7 @@ import {
   EMPTY_BREATH_BESTS,
   loadBreathBests,
   starsForBox,
+  starsForCue,
   starsForFarinelli,
   starsForSustain,
   type BreathBests,
@@ -53,7 +55,7 @@ type View =
   | { kind: "routine"; routine: BreathRoutine; startStep?: number }
   | { kind: "drill"; drill: BreathDrillId };
 
-const DRILL_ORDER: BreathDrillId[] = ["sustain", "box", "farinelli"];
+const DRILL_ORDER: BreathDrillId[] = ["sustain", "cue", "box", "farinelli"];
 
 function starsForDrill(drill: BreathDrillId, bests: BreathBests): Stars {
   switch (drill) {
@@ -61,6 +63,8 @@ function starsForDrill(drill: BreathDrillId, bests: BreathBests): Stars {
       return starsForBox(bests.boxMinutes);
     case "farinelli":
       return starsForFarinelli(bests.farinelliCap);
+    case "cue":
+      return starsForCue(bests.cueReps);
     default:
       return starsForSustain(bests.sustainSec);
   }
@@ -77,6 +81,8 @@ function bestLine(drill: BreathDrillId, bests: BreathBests): string {
       return bests.farinelliCap > 0
         ? `Top count ${bests.farinelliCap}`
         : "Not tried yet";
+    case "cue":
+      return bests.cueReps > 0 ? `Longest run ${bests.cueReps} reps` : "Not tried yet";
     default:
       return bests.sustainSec > 0
         ? `Best ${bests.sustainSec.toFixed(1)}s`
@@ -256,7 +262,7 @@ export function BreathStudio() {
       <section className="mt-10">
         <SectionHeading
           label="Path"
-          lede="The three drills on their own, with the stars each has earned so far."
+          lede="The four drills on their own, with the stars each has earned so far."
         >
           Your breath path
         </SectionHeading>
@@ -267,7 +273,7 @@ export function BreathStudio() {
               {
                 title: "Breath",
                 blurb:
-                  "One measured test and two guided drills. Stars come from how far you have taken each one.",
+                  "One measured test, one drill where the mic listens for your breath, and two guided drills. Stars come from how far you have taken each one.",
                 unit: "drills",
                 items: DRILL_ORDER.map((drill) => {
                   const stars = starsForDrill(drill, bests);
@@ -280,7 +286,7 @@ export function BreathStudio() {
                       ? { meta: bestLine(drill, bests) }
                       : { desc: breathDrillDesc(drill) }),
                     stars,
-                    mic: drill === "sustain",
+                    mic: breathDrillNeedsMic(drill),
                     onSelect: () => start({ kind: "drill", drill }),
                   };
                 }),

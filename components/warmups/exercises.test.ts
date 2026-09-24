@@ -29,9 +29,55 @@ describe("computeRootLadder", () => {
     );
   });
 
-  it("collapses a too-narrow range to a single root instead of a plateau", () => {
-    // start = 52, top = max(52, 55 - 5 - 7) = 52 — one root, no repeats.
-    expect(computeRootLadder(fiveNote, 48, 55)).toEqual([52]);
+  it("collapses a range exactly as wide as the pattern to one root at the ceiling", () => {
+    // The courtesy ladder would be [52], whose fifth (59) sits four semitones
+    // above the measured high. The ceiling wins: one root whose fifth is 55.
+    expect(computeRootLadder(fiveNote, 48, 55)).toEqual([48]);
+  });
+
+  it("keeps every exercise's notes under the measured high whenever the range holds the pattern", () => {
+    // Tens of thousands of cases: collect the violations and assert once, so
+    // the sweep stays fast rather than paying for an expect per check.
+    const failures: string[] = [];
+    for (const ex of ALL_EXERCISES) {
+      const offsets = ex.buildSteps(0).flat();
+      const maxOff = Math.max(...offsets);
+      for (let low = 36; low <= 64; low++) {
+        for (let span = 0; span <= 24; span++) {
+          const high = low + span;
+          const label = `${ex.id} ${low}-${high}`;
+          const roots = computeRootLadder(ex, low, high);
+          // Non-empty, consecutive semitones, never below the MIDI-30 floor.
+          if (roots.length < 1) {
+            failures.push(`${label}: empty ladder`);
+            continue;
+          }
+          if (roots.some((root, i) => !Number.isInteger(root) || (i > 0 && root - roots[i - 1] !== 1))) {
+            failures.push(`${label}: not consecutive semitones ${roots}`);
+          }
+          if (roots[0] < 30) failures.push(`${label}: root ${roots[0]} under MIDI 30`);
+          const notes = roots.flatMap((root) => ex.buildSteps(root).flat());
+          const top = Math.max(...notes);
+          const bottom = Math.min(...notes);
+          if (span >= maxOff) {
+            // The whole pattern fits: every note inside the measured range.
+            if (top > high || roots[0] < low || bottom < low) {
+              failures.push(`${label}: notes ${bottom}-${top} leave the range`);
+            }
+          } else {
+            // Narrower than the pattern: one rung, its top pinned to the high
+            // (unless that root would fall under the MIDI-30 floor).
+            const want = Math.max(30, high - maxOff);
+            if (roots.length !== 1 || roots[0] !== want) {
+              failures.push(`${label}: expected [${want}], got [${roots}]`);
+            } else if (high - maxOff >= 30 && top !== high) {
+              failures.push(`${label}: top ${top} is not the high`);
+            }
+          }
+        }
+      }
+    }
+    expect(failures).toEqual([]);
   });
 
   it("gives every exercise a ladder to walk in an ordinary range", () => {

@@ -1,6 +1,6 @@
 {
   "contract": "suede-vocal",
-  "version": 6,
+  "version": 7,
   "reference": {
     "repo": "JasonColapietro/sing",
     "modules": [
@@ -11,6 +11,7 @@
       "lib/audio/pitch.ts",
       "lib/audio/use-pitch.ts",
       "lib/audio/latency.ts",
+      "lib/audio/breath-detect.ts",
       "components/warmups/exercises.ts",
       "components/warmups/routines.ts",
       "components/breath/routines.ts",
@@ -246,6 +247,29 @@
       "module": "components/breath/sustain-test.tsx",
       "note": "1 minus the coefficient of variation of RMS. This is a LOUDNESS measure. It is not airflow and it is not pitch."
     },
+    "inhaleDetected": {
+      "measurable": "yes",
+      "unit": "event",
+      "module": "lib/audio/breath-detect.ts",
+      "note": "The mic heard an audible inhale: unvoiced, noise-like sound concentrated above 1 kHz, rising out of the room's own adaptive noise floor and falling back (or giving way to a note) within 0.25-2.5 s. Voiced sound never counts. It says a breath was heard and NOTHING about it: not depth, airflow, support, lung capacity or the diaphragm. Quiet nasal breaths and some mics are not heard, and every drill that waits on a breath offers to start without it, so a lesson must not make passing depend on one being heard. A hiss of about a second sounds the same and is heard as one. A breath run straight into a longer hiss is split off where the hiss steps up in level or brightness, so the sustain test's hiss hold still opens the gate; a hiss no louder or brighter than the breath cannot be split, and the fallback covers it. Measured on synthetic breaths: 72 of 72 heard in a quiet room, all at 6 dB over a fan, and no false inhales in 389 s of fans, hum, silence and vowels.",
+      "evidence": [
+        "lib/audio/breath-detect.ts",
+        "lib/audio/breath-detect.test.ts",
+        "lib/audio/use-breath-detect.ts",
+        "e2e/breath-gate.mjs"
+      ]
+    },
+    "inhaleSeconds": {
+      "measurable": "yes",
+      "unit": "seconds",
+      "module": "lib/audio/breath-detect.ts",
+      "note": "How long that breath was heard for, first to last breath-like frame; synthetic breaths read 0.05-0.17 s short. The length of a sound, not a volume of air. Reported beside the sustain hold it opened and in breathe-and-sing's status line.",
+      "evidence": [
+        "lib/audio/breath-detect.ts",
+        "lib/audio/breath-detect.test.ts",
+        "e2e/breath-gate.mjs"
+      ]
+    },
     "phonationSeconds": {
       "measurable": "yes",
       "unit": "seconds",
@@ -379,10 +403,19 @@
     },
     "pitch-steadiness-in-breath-room": {
       "claimedAs": "the breath room watching how steady the pitch stays",
-      "reality": "The sustain test reads frame volume only and never reads f0. No cents drift is measured in the breath room at all.",
+      "reality": "The sustain test times and scores the hold from frame volume only and never reads f0. The breath gate before it listens for an inhale and uses periodicity only to rule voiced sound out. No cents drift is measured in the breath room at all.",
       "useInstead": [
         "sustainSeconds",
         "loudnessSteadiness"
+      ]
+    },
+    "breath-support-from-inhale": {
+      "claimedAs": "breath support, lung capacity, breath depth or diaphragm engagement read from the inhale",
+      "reality": "The inhale detector hears that a breath happened and for how long. A gasp and a quiet sip are the same event to it, and a quiet one may not be heard at all. Nothing measures how much air was taken or how it is managed.",
+      "useInstead": [
+        "inhaleDetected",
+        "inhaleSeconds",
+        "sustainSeconds"
       ]
     },
     "personal-passaggio-from-range-scan": {
@@ -429,7 +462,31 @@
       "attemptEstimateSec": 25,
       "steadinessMetric": "loudness_cv",
       "measuresPitchDrift": false,
-      "acceptsUnvoicedHiss": true
+      "acceptsUnvoicedHiss": true,
+      "breathGate": {
+        "defaultOn": true,
+        "fallbackAfterSec": 8,
+        "reportsInhaleSeconds": true
+      }
+    },
+    "cue": {
+      "usesMicrophone": true,
+      "gatedOnInhale": true,
+      "fallbackAfterSec": 8,
+      "repChoices": [
+        4,
+        6,
+        8
+      ],
+      "holdSec": 4,
+      "breathEstimateSec": 3,
+      "exampleSeconds": 28
+    },
+    "inhale": {
+      "minSec": 0.25,
+      "maxSec": 2.5,
+      "voicedNeverCounts": true,
+      "measuresSupport": false
     },
     "box": {
       "phases": [
@@ -489,11 +546,16 @@
             "cap": 8
           },
           {
+            "drill": "cue",
+            "reps": 4,
+            "holdSec": 4
+          },
+          {
             "drill": "sustain",
             "attempts": 2
           }
         ],
-        "seconds": 345.5,
+        "seconds": 377.5,
         "needsMic": true
       },
       {
@@ -3382,7 +3444,20 @@
           "drill",
           "routine",
           "step"
-        ]
+        ],
+        "values": {
+          "drill": [
+            "sustain",
+            "cue",
+            "box",
+            "farinelli"
+          ],
+          "routine": [
+            "quick",
+            "daily",
+            "builder"
+          ]
+        }
       },
       "earTraining": {
         "path": "/ear-training",
@@ -3484,6 +3559,7 @@
     "rangeScanOutputs": "A range scan yields lowMidi, highMidi and an estimated voice type label. It yields nothing else, and in particular no passaggio and no register boundary.",
     "workingRangeIsTrimmed": "The scan records extremes reached by pushing. A usable working range trims the edges; the scan and the working range are different numbers and a curriculum must not call the scan 'the one you can use'.",
     "sustainIsLoudnessNotPitch": "Sustain steadiness is the coefficient of variation of loudness. The breath room never reads f0.",
+    "inhaleIsHeardNotMeasured": "The breath room's mic hears the inhale and nothing more. Copy may say the mic heard the breath; it may never say it measured support, lung capacity, breath depth or the diaphragm, and no pass or fail may depend on a breath being heard, because every gated drill offers to start without detection.",
     "freeExerciseGate": "A warmup is free if and only if it is in EXERCISES. Pro packs are gated by array membership, not by a flag, so a free surface must never deep-link a pack exercise."
   },
   "knownDivergences": {

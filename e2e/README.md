@@ -136,6 +136,24 @@ The vibrato bias came from `usePitch`'s median of 4 taking the upper middle
 value (`lib/audio/median.ts` now averages the two). The spread on vibrato
 cases is the vibrato itself, not error.
 
+## Breath gate
+
+`npm run e2e:breath -- [baseUrl] --executable=/opt/pw-browsers/chromium` plays
+synthetic scenes from `lib/audio/breath-fixture.ts` into `/breath` as the fake
+microphone and checks what the breath gate did, through the
+`window.__singBreathProbe` hook and the page:
+
+| Case | Passes when |
+|---|---|
+| Inhale, then a sung A3 | one inhale heard (0.92 s of a 1 s breath), the hold recorded (4.1 s of 4 s), and the results line reads `4.1 s · 0.9 s breath in` |
+| Inhale, then straight into a 4 s hiss | the breath is split off where the hiss steps up, the gate opens, and the hiss is timed as the hold from where it began |
+| Fan, then the same A3 | no inhale heard, the note alone does not start the hold, the fallback shows after 8 s, and taking it records the next note (4.1 s) on sound alone |
+| Breathe and sing, 4 reps | every rep's note counts after a breath, and all four breaths are heard |
+
+The fan case failed on its first run: a stream opens on a buffer of zeros, the
+detector learned its floor from them, and the fan already running read as a
+breath. The floor is now learned from the first frame with signal in it.
+
 ## Short-loop scoring
 
 `node e2e/song-loop-scoring.mjs [baseUrl] [--executable=path]` plays a

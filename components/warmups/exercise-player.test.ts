@@ -121,7 +121,7 @@ describe("ladderHeightPct", () => {
   it("reports 0, not a permanently complete 100, on a one-rung ladder", () => {
     // A real case: a narrow saved range collapses the ladder to a single root.
     const roots = computeRootLadder(fiveNote, 48, 55);
-    expect(roots).toEqual([52]);
+    expect(roots).toEqual([48]);
     expect(ladderHeightPct(0, roots.length)).toBe(0);
     expect(ladderHeightPct(0, 0)).toBe(0);
   });
