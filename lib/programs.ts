@@ -32,6 +32,8 @@ import {
 import { EAR_GAME_SECONDS } from "@/components/ear/routines";
 import type { GameId } from "@/components/ear/lib";
 import type { SessionLog } from "@/lib/progress-shape";
+import type { RangeEntry } from "@/lib/analytics";
+import { midiToLabel } from "@/lib/audio/notes";
 
 export type ProgramTask =
   | { kind: "routine"; id: string }
@@ -284,6 +286,8 @@ export interface ProgramProgress {
    * the start, or the day after the previous program day was done.
    */
   countsFrom: string;
+  /** For each done program day, the calendar days its practice was gathered over. */
+  spans: ({ from: string; to: string } | null)[];
 }
 
 /** The calendar day after a YYYY-MM-DD day. */
@@ -316,17 +320,108 @@ export function programProgress(
   let current = 0;
   let countsFrom = startedDay;
   let gathered: SessionLog[] = [];
+  const spans: ProgramProgress["spans"] = program.days.map(() => null);
   for (const day of [...byDay.keys()].sort()) {
     if (current >= program.days.length) break;
     gathered = gathered.concat(byDay.get(day)!);
     if (program.days[current].tasks.every((t) => taskDone(t, gathered))) {
       doneOn[current] = day;
+      spans[current] = { from: countsFrom, to: day };
       current += 1;
       countsFrom = nextDay(day);
       gathered = [];
     }
   }
-  return { doneOn, current, countsFrom };
+  return { doneOn, current, countsFrom, spans };
+}
+
+/**
+ * A routine's steps as separate exercise tasks. A free account's allowance
+ * can stop a routine between steps, and the routine room starts again from
+ * step one, so a program lists the steps too: the rest can be sung one at a
+ * time on a later day. taskDone already counts a routine by its steps.
+ */
+export function routineStepTasks(id: string): ProgramTask[] {
+  const r = routineById(id);
+  return r ? r.steps.map((s) => ex(stepExercise(s).id)) : [];
+}
+
+/** Local calendar day of an ISO timestamp, as lib/progress.ts localDay files it. */
+export function localDayOf(iso: string): string {
+  const d = new Date(iso);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+/**
+ * Sustain attempts as session rows. The sustain room keeps every attempt of a
+ * second or more in its own record but logs a session only from five
+ * seconds, so a beginner's shorter attempts would otherwise never complete a
+ * program's sustain task.
+ */
+export function sustainAttemptLogs(attempts: readonly { sec: number; date: string }[]): SessionLog[] {
+  return attempts.map((a, i) => ({
+    id: `sustain-attempt-${i}-${a.date}`,
+    type: "breath",
+    date: a.date,
+    day: localDayOf(a.date),
+    durationSec: a.sec,
+    detail: BREATH_LABELS.sustain,
+    xp: 0,
+  }));
+}
+
+export interface ComparisonRow {
+  label: string;
+  first: string | null;
+  last: string | null;
+}
+
+/**
+ * The first and last program days side by side, for the tasks they share:
+ * best exercise score, longest sustain, and the range test's notes. Read from
+ * the full session log and range history, so a baseline that has scrolled off
+ * /progress or been replaced as the latest range still shows. A value the
+ * record no longer holds is null, and the page says so rather than guessing.
+ */
+export function programComparison(
+  program: Program,
+  progress: ProgramProgress,
+  sessions: readonly SessionLog[],
+  rangeHistory: readonly RangeEntry[],
+): ComparisonRow[] {
+  const firstSpan = progress.spans[0];
+  const lastSpan = progress.spans[program.days.length - 1];
+  if (!firstSpan || !lastSpan) return [];
+  const within = (day: string, span: { from: string; to: string }) => day >= span.from && day <= span.to;
+  const lastTasks = program.days[program.days.length - 1].tasks;
+  const shared = program.days[0].tasks.filter((t) =>
+    lastTasks.some((u) => JSON.stringify(u) === JSON.stringify(t)),
+  );
+
+  const value = (t: ProgramTask, span: { from: string; to: string }): string | null => {
+    const inSpan = sessions.filter((s) => within(s.day, span) && taskDone(t, [s]));
+    switch (t.kind) {
+      case "exercise": {
+        const scores = inSpan.map((s) => s.score).filter((n): n is number => typeof n === "number");
+        return scores.length ? `${Math.round(Math.max(...scores))}%` : null;
+      }
+      case "breath": {
+        if (t.drill !== "sustain" || !inSpan.length) return null;
+        return `${Math.max(...inSpan.map((s) => s.durationSec)).toFixed(1)} s`;
+      }
+      case "range": {
+        const tests = rangeHistory.filter((r) => within(localDayOf(r.testedAt), span));
+        const r = tests[tests.length - 1];
+        return r ? `${midiToLabel(r.lowMidi)}–${midiToLabel(r.highMidi)}` : null;
+      }
+      default:
+        return null;
+    }
+  };
+
+  return shared
+    .filter((t) => t.kind === "exercise" || t.kind === "range" || (t.kind === "breath" && t.drill === "sustain"))
+    .map((t) => ({ label: taskLabel(t), first: value(t, firstSpan), last: value(t, lastSpan) }));
 }
 
 /** Every free routine a program may name, for the tests. */

@@ -6,12 +6,17 @@
  * the enrolment and the session log.
  */
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 import { useProgress } from "@/lib/progress";
+import { loadBreath, type SustainAttempt } from "@/components/breath/store";
 import { leaveProgram, startProgram, useProgramEnrolment } from "@/lib/program-enrolment";
 import {
   dayMinutes,
   programById,
+  programComparison,
   programProgress,
+  routineStepTasks,
+  sustainAttemptLogs,
   taskDone,
   taskHref,
   taskLabel,
@@ -21,7 +26,15 @@ import { Button, Card } from "@/components/ui";
 export function ProgramDays({ programId }: { programId: string }) {
   const program = programById(programId);
   const enrolment = useProgramEnrolment();
-  const { sessions } = useProgress();
+  const { sessions: logged, rangeHistory } = useProgress();
+  // The sustain room's own attempt record, deferred to an effect because it is
+  // localStorage: attempts under five seconds never reach the session log.
+  const [attempts, setAttempts] = useState<SustainAttempt[]>([]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAttempts(loadBreath().attempts);
+  }, [logged]);
+  const sessions = useMemo(() => [...logged, ...sustainAttemptLogs(attempts)], [logged, attempts]);
   if (!program) return null;
 
   const following = enrolment?.programId === program.id ? enrolment : null;
@@ -61,6 +74,7 @@ export function ProgramDays({ programId }: { programId: string }) {
                   : `Day ${progress.current + 1} of ${program.days.length}. Started ${following.startedDay}.`}
               </p>
               {finished && <p className="text-sm text-mut">{program.compare}</p>}
+              {finished && <Comparison rows={programComparison(program, progress, sessions, rangeHistory)} />}
               <div className="flex flex-wrap gap-3">
                 <Button variant="outline" size="sm" onClick={() => startProgram(program.id)}>
                   Restart from today
@@ -94,7 +108,7 @@ export function ProgramDays({ programId }: { programId: string }) {
                   {day.tasks.map((t, j) => {
                     const doneSoFar = isCurrent && taskDone(t, gathered);
                     return (
-                      <li key={j} className="flex items-baseline gap-2">
+                      <li key={j} className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                         <span aria-hidden="true" className={doneSoFar ? "text-ok-ink" : "text-dim"}>
                           {doneSoFar ? "✓" : "·"}
                         </span>
@@ -103,6 +117,9 @@ export function ProgramDays({ programId }: { programId: string }) {
                         </Link>
                         {t.kind === "ear" && <span className="text-xs text-dim">in ear training</span>}
                         {doneSoFar && <span className="sr-only">done</span>}
+                        {t.kind === "routine" && (
+                          <RoutineSteps id={t.id} gathered={isCurrent ? gathered : null} />
+                        )}
                       </li>
                     );
                   })}
@@ -113,5 +130,55 @@ export function ProgramDays({ programId }: { programId: string }) {
         })}
       </ol>
     </div>
+  );
+}
+
+/** A routine's steps, each openable alone so a stopped routine can be finished later. */
+function RoutineSteps({ id, gathered }: { id: string; gathered: ReturnType<typeof sustainAttemptLogs> | null }) {
+  const steps = routineStepTasks(id);
+  return (
+    <details className="w-full basis-full pl-4 text-xs">
+      <summary className="cursor-pointer text-dim">Its {steps.length} steps, one at a time</summary>
+      <ul className="mt-1 space-y-1">
+        {steps.map((st, k) => {
+          const done = gathered !== null && taskDone(st, gathered);
+          return (
+            <li key={k} className="flex items-baseline gap-2">
+              <span aria-hidden="true" className={done ? "text-ok-ink" : "text-dim"}>
+                {done ? "✓" : "·"}
+              </span>
+              <Link href={taskHref(st)} className="text-violet-ink hover:underline">
+                {taskLabel(st)}
+              </Link>
+              {done && <span className="sr-only">done</span>}
+            </li>
+          );
+        })}
+      </ul>
+    </details>
+  );
+}
+
+function Comparison({ rows }: { rows: ReturnType<typeof programComparison> }) {
+  if (!rows.length) return null;
+  return (
+    <table className="w-full max-w-md text-left text-sm">
+      <thead>
+        <tr className="text-xs text-dim">
+          <th className="py-1 font-normal">Task</th>
+          <th className="py-1 font-normal">First day</th>
+          <th className="py-1 font-normal">Last day</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr key={r.label} className="border-t border-line/60">
+            <td className="py-1 text-mut">{r.label}</td>
+            <td className="tabular py-1 font-mono">{r.first ?? "not kept"}</td>
+            <td className="tabular py-1 font-mono">{r.last ?? "not kept"}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }

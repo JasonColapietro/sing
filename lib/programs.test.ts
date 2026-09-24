@@ -17,7 +17,10 @@ import {
   PROGRAMS,
   PROGRAM_ROUTINE_IDS,
   programById,
+  programComparison,
   programProgress,
+  routineStepTasks,
+  sustainAttemptLogs,
   taskDone,
   taskHref,
   type Program,
@@ -133,7 +136,7 @@ describe("programProgress", () => {
 
   it("ignores practice before the start day", () => {
     const p = programProgress(tiny, [log("2026-09-30", "range")], "2026-10-01");
-    expect(p).toEqual({ doneOn: [null, null], current: 0, countsFrom: "2026-10-01" });
+    expect({ doneOn: p.doneOn, current: p.current, countsFrom: p.countsFrom }).toEqual({ doneOn: [null, null], current: 0, countsFrom: "2026-10-01" });
   });
 
   it("completes at most one program day per calendar day", () => {
@@ -142,7 +145,7 @@ describe("programProgress", () => {
       [log("2026-10-01", "range"), log("2026-10-01", "breath", "Sustain test")],
       "2026-10-01",
     );
-    expect(p).toEqual({ doneOn: ["2026-10-01", null], current: 1, countsFrom: "2026-10-02" });
+    expect({ doneOn: p.doneOn, current: p.current, countsFrom: p.countsFrom }).toEqual({ doneOn: ["2026-10-01", null], current: 1, countsFrom: "2026-10-02" });
   });
 
   it("does not skip ahead: day two's tasks done first do not count", () => {
@@ -151,7 +154,7 @@ describe("programProgress", () => {
       [log("2026-10-01", "breath", "Sustain test"), log("2026-10-02", "range")],
       "2026-10-01",
     );
-    expect(p).toEqual({ doneOn: ["2026-10-02", null], current: 1, countsFrom: "2026-10-03" });
+    expect({ doneOn: p.doneOn, current: p.current, countsFrom: p.countsFrom }).toEqual({ doneOn: ["2026-10-02", null], current: 1, countsFrom: "2026-10-03" });
   });
 
   it("finishes with current equal to the day count", () => {
@@ -160,7 +163,7 @@ describe("programProgress", () => {
       [log("2026-10-03", "breath", "Sustain test"), log("2026-10-01", "range")],
       "2026-10-01",
     );
-    expect(p).toEqual({ doneOn: ["2026-10-01", "2026-10-03"], current: 2, countsFrom: "2026-10-04" });
+    expect({ doneOn: p.doneOn, current: p.current, countsFrom: p.countsFrom }).toEqual({ doneOn: ["2026-10-01", "2026-10-03"], current: 2, countsFrom: "2026-10-04" });
   });
 
   it("gathers one program day's tasks across calendar days, as a capped free day needs", () => {
@@ -173,12 +176,76 @@ describe("programProgress", () => {
       [log("2026-10-01", "range"), log("2026-10-03", "breath", "Sustain test")],
       "2026-10-01",
     );
-    expect(p).toEqual({ doneOn: ["2026-10-03", null], current: 1, countsFrom: "2026-10-04" });
+    expect({ doneOn: p.doneOn, current: p.current, countsFrom: p.countsFrom }).toEqual({ doneOn: ["2026-10-03", null], current: 1, countsFrom: "2026-10-04" });
   });
 
   it("rolls the day over month ends", () => {
     const p = programProgress(tiny, [log("2026-10-31", "range")], "2026-10-01");
     expect(p.countsFrom).toBe("2026-11-01");
+  });
+});
+
+describe("review fixes", () => {
+  it("lists a routine's steps as free exercise tasks that together complete it", () => {
+    for (const id of PROGRAM_ROUTINE_IDS) {
+      const steps = routineStepTasks(id);
+      expect(steps.length).toBeGreaterThan(0);
+      for (const st of steps) {
+        expect(st.kind).toBe("exercise");
+        if (st.kind === "exercise") expect(isFreeExercise(st.id)).toBe(true);
+      }
+    }
+    // Sung one step per day, the steps still complete the routine task.
+    const day = (i: number) => `2026-10-${String(i + 1).padStart(2, "0")}`;
+    const logs = routineById("daily")!.steps.map((s, i) => log(day(i), "warmup", stepExercise(s).title));
+    expect(taskDone({ kind: "routine", id: "daily" }, logs)).toBe(true);
+  });
+
+  it("counts a sustain attempt under five seconds, which the room never logs as a session", () => {
+    const rows = sustainAttemptLogs([{ sec: 3.2, date: new Date(2026, 9, 1, 9).toISOString() }]);
+    expect(rows[0].day).toBe("2026-10-01");
+    expect(taskDone({ kind: "breath", drill: "sustain" }, rows)).toBe(true);
+  });
+
+  it("puts the first and last days' measurements side by side", () => {
+    const program = programById("first-two-weeks")!;
+    const first = "2026-10-01";
+    const last = "2026-10-20";
+    const scale = exTitle("five-note-scale");
+    // Day one on the 1st, each middle day on its own date, the last on the 20th.
+    const sessions: SessionLog[] = [
+      log(first, "range"),
+      { ...log(first, "breath", "Sustain test"), durationSec: 6 },
+      { ...log(first, "warmup", scale), score: 62 },
+    ];
+    program.days.slice(1, -1).forEach((d, i) => {
+      const day = `2026-10-${String(i + 2).padStart(2, "0")}`;
+      for (const t of d.tasks) {
+        const steps = t.kind === "routine" ? routineStepTasks(t.id) : [t];
+        for (const st of steps) {
+          if (st.kind === "exercise") sessions.push(log(day, "warmup", exTitle(st.id)));
+          if (st.kind === "breath") sessions.push(log(day, "breath", { box: "Box breathing", farinelli: "Farinelli drill", sustain: "Sustain test" }[st.drill]));
+          if (st.kind === "ear") sessions.push(log(day, "ear", GAME_NAMES[st.game]));
+          if (st.kind === "range") sessions.push(log(day, "range"));
+        }
+      }
+    });
+    sessions.push(
+      log(last, "range"),
+      { ...log(last, "breath", "Sustain test"), durationSec: 9.5 },
+      { ...log(last, "warmup", scale), score: 80 },
+    );
+    const progress = programProgress(program, sessions, first);
+    expect(progress.current).toBe(program.days.length);
+    const history = [
+      { lowMidi: 48, highMidi: 67, testedAt: new Date(2026, 9, 1, 12).toISOString() },
+      { lowMidi: 47, highMidi: 69, testedAt: new Date(2026, 9, 20, 12).toISOString() },
+    ];
+    expect(programComparison(program, progress, sessions, history)).toEqual([
+      { label: "Range test", first: "C3–G4", last: "B2–A4" },
+      { label: "Sustain test", first: "6.0 s", last: "9.5 s" },
+      { label: scale, first: "62%", last: "80%" },
+    ]);
   });
 });
 
