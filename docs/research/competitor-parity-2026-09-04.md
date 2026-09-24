@@ -40,9 +40,9 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 | Loop any section with sliders on the progress bar | Yousician | ◐ section picker, fixed 4 loops | ✗ |
 | Record and review inside the song | Yousician, Simply Sing "Recording Studio" | ✗ (separate /recorder) | ✗ |
 | Play mode: stars + points, multiplier starts 3× and climbs to 5× with correct notes and timing | Yousician | ✓ performance mode, 3×→5× (PR #129) | ✗ |
-| Staged session: lyrics read → demo in your key → sing with vocals → solo | Simply Sing | ✗ listen mode is unscored only | ✗ |
-| Pass threshold → song "mastered"; levels Basic→Easy→Medium→Hard→Extreme unlocked by XP | Simply Sing | ◐ Easy/Medium/Hard labels, best %; no pass/mastered, no unlock ladder | ✗ |
-| Breath cues in the lyric line ("when to hold a note and when to breathe") | Simply Sing | ✗ | ✗ |
+| Staged session: lyrics read → demo in your key → sing with vocals → solo | Simply Sing | ✓ Listen, Sing along and On your own passes (#130) | ✓ same three passes, Sing along by default (suede-voice #132) |
+| Pass threshold → song "mastered"; levels Basic→Easy→Medium→Hard→Extreme unlocked by XP | Simply Sing | ✓ solo mastery, five song bands, each opened by mastering 2 songs in the band below (#130; `BAND_UNLOCK_MASTERED`) | ◐ stars, XP and mastery (suede-voice #135); no band ladder |
+| Breath cues in the lyric line ("when to hold a note and when to breathe") | Simply Sing | ✓ breath marks in the lyric band (#130; `breathMarks`) | ✗ |
 | Playlists / setlist; recently sung | Simply Sing | ✓ | ✗ |
 | Real licensed songs | all | — (public-domain phrases; licensing) | — |
 
@@ -50,7 +50,7 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 
 | Mechanic | Source | Web | iOS |
 |---|---|---|---|
-| Path as levels of missions; every task in a mission must be sung to complete it; path unlocked to skip | Yousician | ◐ PathList tiers with stars, no mission completion state | ✗ list only |
+| Path as levels of missions; every task in a mission must be sung to complete it; path unlocked to skip | Yousician | ✓ a tier completes when every row has earned a star, with tier counts and a Continue card (#130) | ✗ list only |
 | Chase the Notes: sing back short melody segments that build to the mission's song | Yousician | ◐ melody-echo game exists, not tied to songs | ◐ |
 | Note Catcher: paddle moved by singing, gems right-to-left, speeds up, ends on a miss | Yousician | ✗ | ✗ |
 | Fixed routines 5–20 min (quick → full), pitch and range routines | Singeo | ✓ six routines + Pro | ✓ two fixed routines |
