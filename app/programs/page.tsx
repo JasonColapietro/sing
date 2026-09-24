@@ -6,7 +6,7 @@ import { RoomRailBand } from "@/components/discover/room-rail";
 export const metadata = withCanonicalOpenGraph({
   title: "Singing Practice Programs: Multi-Week Vocal Training Plans",
   description:
-    "Named singing practice plans from one week to six: warmups, breath work and range check-ins scheduled day by day, with rest days built in. Free in the browser, with one Pro program.",
+    "Named singing practice plans from one week to twelve: warmups, breath work and range check-ins scheduled day by day, with rest days built in. Free in the browser; the two Pro programs open their first week to everyone.",
   alternates: { canonical: `${SITE_URL}/programs` },
 });
 

@@ -45,6 +45,7 @@ import {
 import { SONGS } from "@/components/songs/data";
 import { COUNT_IN_BEATS, secPerBeat, sessionSeconds } from "@/components/songs/lib";
 import type { ActivityType, SessionLog } from "@/lib/progress-shape";
+import { CAPPED_TYPES } from "@/lib/free-cap";
 
 export type ProgramItem =
   /** A warmup routine, by its id in components/warmups/routines.ts. */
@@ -58,12 +59,28 @@ export type ProgramItem =
   /** The range test, as a check-in. */
   | { kind: "range" }
   /** A song from the free songbook, by slug. */
-  | { kind: "song"; slug: string };
+  | { kind: "song"; slug: string }
+  /** A recorded take in the Recorder, to compare against later. */
+  | { kind: "recorder" };
 
 export interface ProgramDay {
   title: string;
   /** Empty on a rest day. */
   items: ProgramItem[];
+}
+
+/** A stretch of weeks that a book chapter teaches. */
+export interface ProgramChapter {
+  /** 1-based, inclusive. */
+  fromWeek: number;
+  toWeek: number;
+  /** A slug in lib/book-data.ts, opened at /book/<slug>. */
+  slug: string;
+  /**
+   * The chapter's title, restated so the page need not ship the book's text
+   * to the browser. A test holds it to lib/book-data.ts.
+   */
+  title: string;
 }
 
 export interface Program {
@@ -77,9 +94,27 @@ export interface Program {
    */
   measures: string;
   weeks: number;
+  /**
+   * Days after the first `FREE_WEEKS` weeks need Pro. Week 1 of a Pro program
+   * is open to everyone and built only from free content, so a singer can try
+   * the program before paying for the rest of it.
+   */
   pro: boolean;
+  /** The book chapters that teach its weeks, when it follows the book. */
+  chapters?: ProgramChapter[];
   days: ProgramDay[];
 }
+
+/** Weeks of a Pro program that are free. */
+export const FREE_WEEKS = 1;
+
+/** True when this day of the program needs Pro: a Pro program past its free week. */
+export function dayNeedsPro(program: Program, index: number): boolean {
+  return program.pro && index >= FREE_WEEKS * 7;
+}
+
+/** A recorded take is a verse and a chorus, so its length is an estimate too. */
+export const RECORDER_SEC = 120;
 
 /**
  * The range test is self-paced — a slide down and a slide up, held two seconds
@@ -102,6 +137,7 @@ const breath = (id: string): ProgramItem => ({ kind: "breath", id });
 const drill = (id: BreathDrillId): ProgramItem => ({ kind: "drill", id });
 const range: ProgramItem = { kind: "range" };
 const song = (slug: string): ProgramItem => ({ kind: "song", slug });
+const recorder: ProgramItem = { kind: "recorder" };
 const day = (title: string, ...items: ProgramItem[]): ProgramDay => ({ title, items });
 const rest = (title = "Rest day"): ProgramDay => ({ title, items: [] });
 
@@ -205,6 +241,32 @@ const MIX_B = day("Chest voice into the crossing", routine("quick"), routine("be
 const MIX_C = day("The ten, then the crossing", routine("daily"), routine("mix"));
 const MIX_WEEK = [MIX_A, MIX_B, MIX_C, rest(), MIX_A, MIX_B, rest()];
 
+// Week 1 is the free week, so it uses free exercises only and each day fits
+// the free plan's three guided minutes: short sirens and slides that find where
+// the voice changes gear, before the Pro packs work across it.
+const MIX_FREE_A = day(
+  "Find the crossing",
+  exercise("ng-siren-fifth", 5),
+  exercise("octave-siren", 4),
+  exercise("hoo-four-note", 5),
+  exercise("descending-five", 4),
+);
+const MIX_FREE_B = day(
+  "Quiet slides",
+  exercise("morning-hum", 5),
+  exercise("soft-trill-slide", 5),
+  exercise("octave-siren", 4),
+  exercise("morning-sigh", 5),
+);
+const MIX_FREE_C = day(
+  "Light on top, then down",
+  exercise("lip-trill-scale", 6),
+  exercise("gee-octave", 4),
+  exercise("reverse-arpeggio", 4),
+  exercise("quiet-hum-descent", 5),
+);
+const MIX_FREE_WEEK = [MIX_FREE_A, MIX_FREE_B, MIX_FREE_C, rest(), MIX_FREE_A, MIX_FREE_B, rest()];
+
 const MIX: Program = {
   id: "mix-4w",
   name: "Mix in 4 weeks",
@@ -214,15 +276,132 @@ const MIX: Program = {
   weeks: 4,
   pro: true,
   days: [
-    ...week(MIX_WEEK, { 0: day("Where you start", range, routine("quick"), routine("mix")) }),
-    ...week(MIX_WEEK),
+    ...week(MIX_FREE_WEEK, {
+      0: day(
+        "Where you start",
+        range,
+        exercise("ng-siren-fifth", 5),
+        exercise("octave-siren", 4),
+        exercise("hoo-four-note", 5),
+        exercise("descending-five", 4),
+      ),
+    }),
+    ...week(MIX_WEEK, { 0: day("Into the mix pack", routine("quick"), routine("mix")) }),
     ...week(MIX_WEEK),
     ...week(MIX_WEEK, { 6: day("Check in", range, routine("daily"), routine("mix")) }),
   ],
 };
 
-/** Shortest first, the Pro program last. */
-export const PROGRAMS: Program[] = [RECOVERY, FOUNDATIONS, VIBRATO, HIGH_NOTES, MIX];
+/** Four sessions a week, spread out, as the book asks: "three is the floor, four is better". */
+function bookWeek(a: ProgramDay, b: ProgramDay, c: ProgramDay, d: ProgramDay): ProgramDay[] {
+  return [a, b, rest(), c, d, rest(), rest()];
+}
+
+/**
+ * The Measured Voice, chapters 13–19: twelve weeks in six fortnights, each
+ * taught by its chapter. The three range tests fall where the book puts them —
+ * week 1, the end of week 6 and the start of week 12 — and the recorded take
+ * from day 1 is sung again at the start of week 12 to compare.
+ *
+ * Week 1 is free, so it is short breath drills and single free exercises, each
+ * day inside the free plan's three guided minutes. The later weeks follow the
+ * book's twenty-minute session: breath, a warmup, the fortnight's work.
+ */
+const MEASURED_VOICE: Program = {
+  id: "measured-voice-12w",
+  name: "The Measured Voice: 12 weeks",
+  tagline:
+    "The book's twelve-week plan, four sessions a week: baseline and breath, the middle, the break, the top, the bottom, then songs.",
+  measures:
+    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear.",
+  weeks: 12,
+  pro: true,
+  chapters: [
+    { fromWeek: 1, toWeek: 2, slug: "weeks-1-2-baseline", title: "Weeks 1 and 2: baseline and breath" },
+    { fromWeek: 3, toWeek: 4, slug: "weeks-3-4-middle", title: "Weeks 3 and 4: the middle voice" },
+    { fromWeek: 5, toWeek: 6, slug: "weeks-5-6-passaggio", title: "Weeks 5 and 6: through the break" },
+    { fromWeek: 7, toWeek: 8, slug: "weeks-7-8-top", title: "Weeks 7 and 8: extending the top" },
+    { fromWeek: 9, toWeek: 10, slug: "weeks-9-10-bottom", title: "Weeks 9 and 10: the bottom and the long phrase" },
+    { fromWeek: 11, toWeek: 12, slug: "weeks-11-12-songs", title: "Weeks 11 and 12: putting it in a song" },
+  ],
+  days: [
+    // Weeks 1–2: baseline and breath.
+    ...bookWeek(
+      day("Your baseline", range, recorder, drill("sustain"), exercise("morning-hum", 5), exercise("lip-trill-scale", 6)),
+      day("Box breath, a gentle middle", drill("box"), exercise("morning-hum", 5), exercise("hoo-four-note", 5), exercise("descending-five", 4)),
+      day("The climb to eight", drill("farinelli"), exercise("lip-trill-scale", 6), exercise("morning-sustain", 4)),
+      day("Box breath, a held note", drill("box"), exercise("morning-sigh", 5), exercise("sustained-hold", 3), exercise("descending-five", 4)),
+    ),
+    ...bookWeek(
+      day("Breath and a morning set", breath("daily"), routine("morning")),
+      day("Breath and the easy four", breath("daily"), routine("quick")),
+      day("The long breath set", breath("builder"), routine("morning")),
+      day("A sustain, then the easy four", drill("sustain"), breath("quick"), routine("quick")),
+    ),
+    // Weeks 3–4: the middle voice.
+    ...[3, 4].flatMap(() =>
+      bookWeek(
+        day("The complete ten", breath("quick"), routine("daily")),
+        day("The easy four and a song", breath("daily"), routine("quick"), song("silent-night")),
+        day("The complete ten again", breath("quick"), routine("daily")),
+        day("The easy four and a song", breath("quick"), routine("quick"), song("ode-to-joy")),
+      ),
+    ),
+    // Weeks 5–6: through the break, quietly. The block closes with a retest.
+    ...bookWeek(
+      day("Slides across the break", routine("quick"), routine("mix")),
+      day("Reach both ends", breath("daily"), routine("range")),
+      day("Slides across the break", routine("quick"), routine("mix")),
+      day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
+    ),
+    ...week(
+      bookWeek(
+        day("Slides across the break", routine("quick"), routine("mix")),
+        day("Reach both ends", breath("daily"), routine("range")),
+        day("Slides across the break", routine("quick"), routine("mix")),
+        day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
+      ),
+      { 6: day("Halfway check-in", range, drill("sustain"), breath("quick"), routine("quick")) },
+    ),
+    // Weeks 7–8: height without weight, head voice before belt.
+    ...[7, 8].flatMap(() =>
+      bookWeek(
+        day("Light and high", routine("quick"), routine("high-notes")),
+        day("Head voice", routine("quick"), routine("head-voice-builder")),
+        day("The ten, then the tenth", routine("daily"), routine("high-notes")),
+        day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
+      ),
+    ),
+    // Weeks 9–10: the bottom, and long phrases rather than long notes.
+    ...[9, 10].flatMap(() =>
+      bookWeek(
+        day("Breath for a long phrase", breath("builder"), routine("daily")),
+        day("Down low, gently", breath("daily"), routine("recovery"), routine("morning"), drill("sustain")),
+        day("Breath for a long phrase", breath("builder"), routine("quick"), drill("sustain")),
+        day("Quiet and low", breath("daily"), routine("recovery"), routine("morning")),
+      ),
+    ),
+    // Weeks 11–12: songs. Week 12 opens on the last retest and the second take.
+    ...bookWeek(
+      day("A song, warmed up", breath("daily"), routine("quick"), song("silent-night")),
+      day("A song, warmed up", breath("daily"), routine("quick"), song("ode-to-joy")),
+      day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range")),
+      day("Two songs", breath("daily"), routine("morning"), song("silent-night"), song("ode-to-joy")),
+    ),
+    ...week(
+      bookWeek(
+        day("Where you are now", range, recorder, drill("sustain"), routine("quick")),
+        day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range")),
+        day("A song, warmed up", breath("daily"), routine("quick"), song("silent-night")),
+        day("Two songs", breath("daily"), routine("morning"), song("ode-to-joy"), song("home-on-the-range")),
+      ),
+      { 6: day("The last session", breath("quick"), routine("daily"), song("silent-night")) },
+    ),
+  ],
+};
+
+/** Shortest first, the Pro programs last. */
+export const PROGRAMS: Program[] = [RECOVERY, FOUNDATIONS, VIBRATO, HIGH_NOTES, MIX, MEASURED_VOICE];
 
 export function programById(id: string | null | undefined): Program | null {
   if (!id) return null;
@@ -254,6 +433,8 @@ export function itemSeconds(item: ProgramItem): number {
       return breathStepSeconds(DRILL_PRESET[item.id]) + BREATH_STEP_INTRO_SEC;
     case "range":
       return RANGE_TEST_SEC;
+    case "recorder":
+      return RECORDER_SEC;
     case "song": {
       const s = songBySlug(item.slug);
       return s ? sessionSeconds(s) + COUNT_IN_BEATS * secPerBeat(s.bpm, 1) : 0;
@@ -263,6 +444,32 @@ export function itemSeconds(item: ProgramItem): number {
 
 export function daySeconds(d: ProgramDay): number {
   return d.items.reduce((a, item) => a + itemSeconds(item), 0);
+}
+
+/** The kind of session an item logs, which is what the free plan's cap counts. */
+function itemType(item: ProgramItem): ActivityType {
+  switch (item.kind) {
+    case "routine":
+    case "exercise":
+      return "warmup";
+    case "breath":
+    case "drill":
+      return "breath";
+    case "range":
+      return "range";
+    case "song":
+      return "song";
+    case "recorder":
+      return "recording";
+  }
+}
+
+/**
+ * Seconds of a day the free plan's daily allowance counts (lib/free-cap
+ * `CAPPED_TYPES`). The range test and the Recorder sit outside it.
+ */
+export function cappedDaySeconds(d: ProgramDay): number {
+  return d.items.reduce((a, item) => a + (CAPPED_TYPES.has(itemType(item)) ? itemSeconds(item) : 0), 0);
 }
 
 /** Rounded minutes for a day; zero on a rest day. */
@@ -293,6 +500,8 @@ export function itemHref(item: ProgramItem): string {
       return `/breath?drill=${encodeURIComponent(item.id)}`;
     case "range":
       return "/range";
+    case "recorder":
+      return "/recorder";
     case "song":
       return `/songs?song=${encodeURIComponent(item.slug)}`;
   }
@@ -321,6 +530,8 @@ export function itemLabel(item: ProgramItem): { title: string; meta: string } {
       };
     case "range":
       return { title: "Range test", meta: `Check-in · about ${min}` };
+    case "recorder":
+      return { title: "Record a take", meta: `Recorder · a verse and a chorus · about ${min}` };
     case "song":
       return { title: songBySlug(item.slug)?.title ?? item.slug, meta: "Song · one run" };
   }
@@ -366,6 +577,8 @@ export function itemEvidence(item: ProgramItem): Evidence[] {
       return [{ type: "breath", details: [breathDrillTitle(item.id)] }];
     case "range":
       return [{ type: "range", details: null }];
+    case "recorder":
+      return [{ type: "recording", details: null }];
     case "song": {
       const s = songBySlug(item.slug);
       return s ? [{ type: "song", details: [s.title] }] : [];

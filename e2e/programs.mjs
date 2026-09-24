@@ -144,7 +144,7 @@ try {
   await page.goto(`${BASE}/programs`, { waitUntil: "networkidle" });
   check("list renders", (await page.locator("h1").innerText()).includes("Practice programs"));
   const cards = await page.locator("a", { hasText: /-day calendar/ }).count();
-  check("five programs listed", cards === 5, `${cards}`);
+  check("six programs listed", cards === 6, `${cards}`);
   await page.locator("a", { hasText: "See the 14-day calendar" }).click();
   await page.waitForURL(/program=foundations-2w/);
   check("detail view opens", (await page.locator("h2", { hasText: "Foundations in 2 weeks" }).count()) > 0);

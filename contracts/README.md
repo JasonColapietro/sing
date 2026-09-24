@@ -259,7 +259,22 @@ every warm-up exercise, and one value changed that consumers have to meet:
 
 ### suede-vocal v6
 
-`version` moved to 6 on 2026-09-24. The breath room's mic now hears the inhale
+`version` moved to 6 on 2026-09-24. One key added to every entry of
+`deepLinks.programs`, no changed values:
+
+- `freeWeeks` — how many opening weeks of a Pro program are open to everyone
+  (`FREE_WEEKS` in `lib/programs.ts`, currently 1). A free program carries 0,
+  since all of it is free. Week 1 of a Pro program uses free content only and
+  each of its days fits the free plan's daily allowance; from day 8 the
+  program asks for Pro. A consumer that gates on `pro` alone would lock the
+  week the web gives away.
+
+The same change adds `measured-voice-12w`, the book's twelve-week plan, to the
+list. That is a new value, not a new key, and needs no bump on its own.
+
+### suede-vocal v7
+
+`version` moved to 7 on 2026-09-24. The breath room's mic now hears the inhale
 (`lib/audio/breath-detect.ts`), and the contract says exactly how much that is
 worth. Key additions:
 
