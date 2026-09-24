@@ -57,7 +57,7 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 | Measured Singeo exercise shapes, note lengths, rep counts | Singeo videos | ✓ 13 exercises | ✓ 13 exercises |
 | Workouts by topic (ear, breath, voice health) | Yousician, Singeo | ✓ rooms | ✓ |
 | 10-level method / courses with video | Singeo | ◐ /book text chapters | ◐ Book |
-| Three personalised exercises a day, difficulty adapting to performance | Vanido | ◐ "Today's warmup" by hour/practised-today only | ◐ |
+| Three personalised exercises a day, difficulty adapting to performance | Vanido | ✓ "Today's three" on /warmups (lib/daily-three.ts): weakest/stale first, three kinds, one confidence pick, per-exercise starting tempo from recent scores | ◐ |
 
 ## Motivation loop
 

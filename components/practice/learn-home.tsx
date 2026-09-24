@@ -9,6 +9,7 @@ import type { ProgressState } from "@/lib/progress";
 import { Button, Card, Pill, SectionLabel } from "@/components/ui";
 import { MicAlert } from "@/components/mic-alert";
 import { starsForScore, type Stars } from "./results-screen";
+import { RETIRED_TITLES, titlesFor } from "@/components/warmups/exercises";
 
 // Re-exported so a room home can type its own star maths without reaching past
 // this module for the one type every piece in it speaks.
@@ -91,22 +92,11 @@ export function useDailyGoal(): {
  * `detail` carries — there is no exercise id in the log, and adding one would
  * be a store migration this lane has no business writing.
  */
-/**
- * Titles an exercise used to log under. Sessions carry the title, not an id,
- * so a rename would otherwise zero a returning singer's stars and "Best %"
- * for that row. Add a line here whenever a title changes; the test pins it.
- */
-export const RETIRED_TITLES: Record<string, readonly string[]> = {
-  "Lip-trill arpeggio": ["Lip-trill scale"],
-  "N run": ["N-hum scale"],
-  "Hoo descent": ["Four-note hoo", "Hoo descending arpeggio"],
-  "Hung-ee-mm": ["Hung-ee-mm scale"],
-};
-
-/** Every title a session for this exercise may have been filed under. */
-export function titlesFor(exerciseTitle: string): readonly string[] {
-  return [exerciseTitle, ...(RETIRED_TITLES[exerciseTitle] ?? [])];
-}
+// The retired-title table lives with the catalogue now, so the pure daily
+// planner (lib/daily-three.ts) can read it without importing a client
+// component. Re-exported because the path and its test have always found it
+// here.
+export { RETIRED_TITLES, titlesFor };
 
 export function bestScoreForExercise(
   progress: ProgressState,
