@@ -1,6 +1,6 @@
 {
   "contract": "suede-vocal",
-  "version": 2,
+  "version": 3,
   "reference": {
     "repo": "JasonColapietro/sing",
     "modules": [
@@ -289,10 +289,23 @@
       "note": "The latency model needed to do this honestly exists, but there is no onset detector and no timing-error number."
     },
     "vibratoRateHz": {
-      "measurable": "no",
+      "measurable": "yes",
       "unit": "hertz",
+      "module": "lib/audio/vibrato.ts analyzeVibrato",
+      "note": "Rate of the periodic modulation of a held note's f0 contour, from the autocorrelation of the detrended contour after a 0.25 s onset skip, reported with its peak-to-peak extent in cents (the live drill corrects the extent for the pitch tracker's 85 ms analysis frame, and still reads somewhat narrow). Shown after every hold of the warmups vibrato drills against a 5-7 Hz target band. It describes the contour only: nothing here says the vibrato is healthy or sounds good, and a wobble from any source (an unsteady breath, a moving microphone) measures the same.",
+      "evidence": [
+        "lib/audio/vibrato.ts",
+        "lib/audio/vibrato.test.ts",
+        "components/warmups/vibrato-feedback.ts",
+        "components/warmups/vibrato-feedback.test.ts",
+        "e2e/vibrato-drill.mjs"
+      ]
+    },
+    "vibratoOnCue": {
+      "measurable": "no",
+      "unit": null,
       "module": null,
-      "note": "No analysis of the f0 contour's periodicity. The data to build it is captured; zero code exists."
+      "note": "Nothing times when vibrato starts or stops against an instruction. vibratoRateHz reads one held note's rate and width; switching from straight tone to vibrato on a cue is a self-check."
     },
     "strainOrPressedPhonation": {
       "measurable": "no",
@@ -367,9 +380,11 @@
       "useInstead": []
     },
     "vibrato-rate-on-cue": {
-      "claimedAs": "vibrato rate in hertz",
-      "reality": "No vibrato analysis exists.",
-      "useInstead": []
+      "claimedAs": "vibrato switched on at a cue and judged by its rate in hertz",
+      "reality": "The rate and width of a held note's vibrato are measured (vibratoRateHz), but nothing times the switch on a cue, and a rate describes the wobble; it is not a pass for it.",
+      "useInstead": [
+        "vibratoRateHz"
+      ]
     },
     "held-harmony-against-a-lead": {
       "claimedAs": "a harmony line measured against a simultaneous lead",
@@ -1139,6 +1154,154 @@
         "patternSeconds": 2.5
       },
       {
+        "id": "vibrato-hold",
+        "title": "Vibrato hold",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 4.5,
+        "glide": false,
+        "ladder": "up",
+        "steps": [
+          [
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 4.5
+      },
+      {
+        "id": "vibrato-float-high",
+        "title": "Vibrato on the fourth",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 4.5,
+        "glide": false,
+        "ladder": "up",
+        "steps": [
+          [
+            5
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 4.5
+      },
+      {
+        "id": "quiet-hum-descent",
+        "title": "Quiet hum descent",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 0.8,
+        "glide": false,
+        "ladder": "down",
+        "steps": [
+          [
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 3,
+        "patternSeconds": 2.56
+      },
+      {
+        "id": "soft-trill-slide",
+        "title": "Soft lip-trill slide",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 1,
+        "glide": true,
+        "ladder": "down",
+        "steps": [
+          [
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 2
+      },
+      {
+        "id": "fry-onset",
+        "title": "Creak to tone",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 3,
+        "glide": false,
+        "ladder": "up",
+        "steps": [
+          [
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 3
+      },
+      {
+        "id": "high-arpeggio-tenth",
+        "title": "Arpeggio to the tenth",
+        "tier": "advanced",
+        "free": true,
+        "noteDur": 0.45,
+        "glide": false,
+        "ladder": "up",
+        "steps": [
+          [
+            0,
+            4,
+            7,
+            12,
+            16,
+            12,
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 9,
+        "patternSeconds": 4.69
+      },
+      {
+        "id": "high-siren-tenth",
+        "title": "Siren to the tenth",
+        "tier": "advanced",
+        "free": true,
+        "noteDur": 1.3,
+        "glide": true,
+        "ladder": "up",
+        "steps": [
+          [
+            0,
+            16
+          ],
+          [
+            16,
+            0
+          ]
+        ],
+        "segmentCount": 2,
+        "patternSeconds": 5.28
+      },
+      {
+        "id": "high-float-descent",
+        "title": "Top-down float",
+        "tier": "advanced",
+        "free": true,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "down",
+        "steps": [
+          [
+            16,
+            12,
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.32
+      },
+      {
         "id": "belt-hey-thirds",
         "title": "Hey on falling thirds",
         "tier": "intermediate",
@@ -1423,6 +1586,99 @@
         ],
         "segmentCount": 1,
         "patternSeconds": 3
+      },
+      {
+        "id": "mix-ng-slide",
+        "title": "Ng slide through the break",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 1.2,
+        "glide": true,
+        "ladder": "up",
+        "steps": [
+          [
+            0,
+            12
+          ],
+          [
+            12,
+            0
+          ]
+        ],
+        "segmentCount": 2,
+        "patternSeconds": 4.88
+      },
+      {
+        "id": "mix-mum-octave",
+        "title": "Mum octave",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.45,
+        "glide": false,
+        "ladder": "up",
+        "steps": [
+          [
+            0,
+            4,
+            7,
+            12,
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 7,
+        "patternSeconds": 3.63
+      },
+      {
+        "id": "mix-nay-fifth-octave",
+        "title": "Nay fifth to octave",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.55,
+        "glide": false,
+        "ladder": "up",
+        "steps": [
+          [
+            0,
+            7,
+            0,
+            12,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.07
+      },
+      {
+        "id": "mix-goo-scale",
+        "title": "Goo octave scale",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.32,
+        "glide": false,
+        "ladder": "up",
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            5,
+            7,
+            9,
+            11,
+            12,
+            11,
+            9,
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 15,
+        "patternSeconds": 5.92
       }
     ],
     "packs": [
@@ -1451,6 +1707,16 @@
           "head-loo-arpeggio",
           "head-fifth-siren",
           "head-float-hold"
+        ]
+      },
+      {
+        "id": "mix",
+        "name": "Mix builder",
+        "exerciseIds": [
+          "mix-ng-slide",
+          "mix-mum-octave",
+          "mix-nay-fifth-octave",
+          "mix-goo-scale"
         ]
       }
     ],
@@ -1690,6 +1956,97 @@
         "allStepsFree": true
       },
       {
+        "id": "recovery",
+        "name": "Easy recovery",
+        "pro": false,
+        "steps": [
+          {
+            "exerciseId": "morning-hum",
+            "reps": 6
+          },
+          {
+            "exerciseId": "quiet-hum-descent",
+            "reps": 6
+          },
+          {
+            "exerciseId": "soft-trill-slide",
+            "reps": 6
+          },
+          {
+            "exerciseId": "fry-onset",
+            "reps": 6
+          },
+          {
+            "exerciseId": "morning-sustain",
+            "reps": 4
+          }
+        ],
+        "seconds": 164.34,
+        "allStepsFree": true
+      },
+      {
+        "id": "vibrato",
+        "name": "Vibrato",
+        "pro": false,
+        "steps": [
+          {
+            "exerciseId": "lip-trill-scale",
+            "reps": 6
+          },
+          {
+            "exerciseId": "hoo-four-note",
+            "reps": 6
+          },
+          {
+            "exerciseId": "vibrato-hold",
+            "reps": 6
+          },
+          {
+            "exerciseId": "vibrato-float-high",
+            "reps": 5
+          },
+          {
+            "exerciseId": "descending-five",
+            "reps": 5
+          }
+        ],
+        "seconds": 204.88,
+        "allStepsFree": true
+      },
+      {
+        "id": "high-notes",
+        "name": "High notes",
+        "pro": false,
+        "steps": [
+          {
+            "exerciseId": "lip-trill-scale",
+            "reps": 6
+          },
+          {
+            "exerciseId": "octave-siren",
+            "reps": 5
+          },
+          {
+            "exerciseId": "high-arpeggio-tenth",
+            "reps": 8
+          },
+          {
+            "exerciseId": "high-siren-tenth",
+            "reps": 5
+          },
+          {
+            "exerciseId": "high-float-descent",
+            "reps": 6
+          },
+          {
+            "exerciseId": "descending-five",
+            "reps": 5
+          }
+        ],
+        "seconds": 249.96,
+        "allStepsFree": true
+      },
+      {
         "id": "belt-prep",
         "name": "Belt prep",
         "pro": true,
@@ -1765,6 +2122,31 @@
           }
         ],
         "seconds": 332.57,
+        "allStepsFree": false
+      },
+      {
+        "id": "mix",
+        "name": "Mix builder",
+        "pro": true,
+        "steps": [
+          {
+            "exerciseId": "mix-ng-slide",
+            "reps": 8
+          },
+          {
+            "exerciseId": "mix-mum-octave",
+            "reps": 8
+          },
+          {
+            "exerciseId": "mix-nay-fifth-octave",
+            "reps": 8
+          },
+          {
+            "exerciseId": "mix-goo-scale",
+            "reps": 8
+          }
+        ],
+        "seconds": 223.1,
         "allStepsFree": false
       }
     ]

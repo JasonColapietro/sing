@@ -78,7 +78,7 @@ number as a diff rather than never hearing about it.
 
 `suede-vocal.json` holds the vocal domain itself rather than the song scorer:
 the voice-type taxonomy and the published passaggio zones, the range-scan
-outputs, the breath drills, the 44 warm-up exercises with their root offsets,
+outputs, the breath drills, the 56 warm-up exercises with their root offsets,
 the ear games, and which rooms accept a deep link.
 
 Its most important section is `measurement`. Each row names something a
@@ -94,8 +94,8 @@ records — whose modules promise measured outcomes: a twelve-second even hiss
 judged on "flow consistency", five pitches inside twenty-five cents, "both
 passaggio pitches" computed from the stage-one range scan, a vibrato rate on
 cue, a six-second mix sustain with no strain. It was authored against an idea of
-this app, not against this app. There is no strain detector anywhere, no vibrato
-analysis, the detector is monophonic so a harmony against a lead is not two
+this app, not against this app. There is no strain detector anywhere, there was
+no vibrato analysis (there is now, for rate and width only; see v3), the detector is monophonic so a harmony against a lead is not two
 measurable parts, the breath room's steadiness reading is a coefficient of
 variation of **loudness** and never reads f0, and a passaggio is not derivable
 from a range scan at all — `lib/voice-types.ts` argues that point at length.
@@ -196,6 +196,23 @@ and the other cites it; a contract carrying the prose would make two sites
 compete to be the place the writing lives. `free` is the field a consumer has to
 read, because most of the library is behind Pro and a free lesson citing a gated
 chapter has to say so.
+
+### suede-vocal v3
+
+`version` moved to 3 on 2026-09-24. Two keys added under `measurement`, and one
+value changed that consumers have to meet:
+
+- `measurement.vibratoRateHz` is now `measurable: "yes"`. `lib/audio/vibrato.ts`
+  reads the rate and peak-to-peak width of a held note's pitch wobble, and the
+  warmups vibrato drills show both after every hold against a 5–7 Hz band. The
+  row gains an `evidence` list naming the module, its tests and the browser
+  check (`npm run e2e:vibrato`). It describes the contour only: not quality,
+  not health, and a wobble from any source measures the same.
+- `measurement.vibratoOnCue` is new and `"no"`. Nothing times when vibrato
+  starts or stops against an instruction, which is what the voice track's
+  "straight to vibrato on cue" self-check actually asks.
+- `unsupportedClaims["vibrato-rate-on-cue"]` keeps its key but is revised: the
+  rate is measured and offered in `useInstead`; the cue is not.
 
 ### Versioning
 

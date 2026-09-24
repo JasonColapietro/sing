@@ -57,9 +57,9 @@ export const FREE_CHAPTERS = BOOKS.reduce((n, b) => n + b.free, 0);
 export const SONG_COUNT = 26;
 
 /** Warmup exercises, split by tier. */
-export const FREE_EXERCISES = 29;
-export const PRO_EXERCISES = 15;
-export const PRO_PACK_COUNT = 2;
+export const FREE_EXERCISES = 37;
+export const PRO_EXERCISES = 19;
+export const PRO_PACK_COUNT = 3;
 export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
 
 /** Singers with a measured range and a page of their own. Free to read. */
@@ -98,7 +98,7 @@ export const UNLOCK_TILES: Array<{ figure: string; label: string; sub: string }>
     {
       figure: String(PRO_EXERCISES),
       label: "pro exercises",
-      sub: `${PRO_PACK_COUNT} packs: belt prep and head-voice builders`,
+      sub: `${PRO_PACK_COUNT} packs: belt prep, head voice and mix`,
     },
     {
       figure: "2",

@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { ALL_EXERCISES, EXERCISES, MIN_RUNGS, PRO_PACKS, computeRootLadder, ladderWalk } from "./exercises";
+import {
+  ALL_EXERCISES,
+  EXERCISES,
+  MIN_RUNGS,
+  PRO_PACKS,
+  VIBRATO_TARGET_BAND,
+  computeRootLadder,
+  ladderWalk,
+} from "./exercises";
 
 // five-note-scale's highest interval is the fifth (7 semitones).
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
@@ -122,5 +130,71 @@ describe("pack descriptions stay true to the packs", () => {
   it("gives every pack a unique id, which the teaser now keys on", () => {
     const ids = PRO_PACKS.map((p) => p.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe("the focus drills", () => {
+  const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
+
+  it("makes every vibrato drill one long single note", () => {
+    const drills = EXERCISES.filter((e) => e.vibrato);
+    expect(drills.map((e) => e.id).sort()).toEqual(["vibrato-float-high", "vibrato-hold"]);
+    for (const ex of drills) {
+      // One unbroken run: a second note would read as modulation.
+      expect(ex.buildSteps(60).flat(), ex.id).toHaveLength(1);
+      expect(ex.glide, ex.id).toBeFalsy();
+      // At the fastest tempo the hold still leaves the analysis its onset skip
+      // and more than its one-second minimum, with room for the detrend edges.
+      expect((ex.noteDur ?? 0) / 1.25, ex.id).toBeGreaterThanOrEqual(3);
+      expect(ex.vibrato).toEqual(VIBRATO_TARGET_BAND);
+    }
+    expect(VIBRATO_TARGET_BAND).toEqual({ minHz: 5, maxHz: 7 });
+  });
+
+  it("keeps the recovery drills small, quiet and honest about fry", () => {
+    for (const id of ["quiet-hum-descent", "soft-trill-slide", "fry-onset"]) {
+      const ex = byId(id);
+      expect(EXERCISES).toContain(ex);
+      expect(ex.tier, id).toBe("beginner");
+      const offsets = ex.buildSteps(0).flat();
+      // A narrow band: no more than a major third above the root.
+      expect(Math.max(...offsets) - Math.min(...offsets), id).toBeLessThanOrEqual(4);
+      // The detector cannot hear fry, so no copy may say it does, and nothing
+      // here heals or measures anything about the voice's condition.
+      const copy = `${ex.title} ${ex.desc} ${ex.tip}`;
+      expect(copy, id).not.toMatch(/\b(?:detect|heal|repair|cure|strain)/i);
+    }
+    expect(byId("fry-onset").desc).toMatch(/only the pitched note is scored/i);
+  });
+
+  it("walks the high-note drills past the octave, inside the measured range", () => {
+    for (const id of ["high-arpeggio-tenth", "high-siren-tenth", "high-float-descent"]) {
+      const ex = byId(id);
+      expect(Math.max(...ex.buildSteps(0).flat()), id).toBe(16);
+      const roots = computeRootLadder(ex, 45, 72);
+      expect(roots.length, id).toBeGreaterThanOrEqual(MIN_RUNGS);
+      expect(roots[roots.length - 1] + 16, id).toBeLessThanOrEqual(72);
+    }
+  });
+
+  it("ships the mix pack as octave crossings behind Pro", () => {
+    const mix = PRO_PACKS.find((p) => p.id === "mix")!;
+    expect(mix.exercises.map((e) => e.id)).toEqual([
+      "mix-ng-slide",
+      "mix-mum-octave",
+      "mix-nay-fifth-octave",
+      "mix-goo-scale",
+    ]);
+    for (const ex of mix.exercises) {
+      expect(Math.max(...ex.buildSteps(0).flat()), ex.id).toBe(12);
+      expect(EXERCISES.some((e) => e.id === ex.id), ex.id).toBe(false);
+    }
+  });
+
+  it("gives every exercise a unique id and title", () => {
+    const ids = ALL_EXERCISES.map((e) => e.id);
+    const titles = ALL_EXERCISES.map((e) => e.title);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(new Set(titles).size).toBe(titles.length);
   });
 });

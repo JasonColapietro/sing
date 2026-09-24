@@ -13,7 +13,8 @@
     "audit:warmup": "node scripts/audit-warmup-timing.mjs",
     "e2e": "node e2e/run.mjs",
     "e2e:mobile": "node e2e/run.mjs --viewport=mobile-375",
-    "e2e:pitch": "node e2e/pitch-precision.mjs"
+    "e2e:pitch": "node e2e/pitch-precision.mjs",
+    "e2e:vibrato": "node e2e/vibrato-drill.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.8.0",

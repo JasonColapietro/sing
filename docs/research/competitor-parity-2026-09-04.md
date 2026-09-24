@@ -102,11 +102,11 @@ c412d33. Rows above are unchanged; none were contradicted.
 | Multi-week named programs (days to 7 weeks), worked day by day | Sing Sharp ([site](https://singsharp.com/en)) | ✗ | Routines are single sessions |
 | Breath detection: mic hears the inhale / support, gates the drill | Sing Sharp ([site](https://singsharp.com/en)) | ✗ | Sustain test reads volume only |
 | Live pitch-vs-target overlay | Sing Sharp, Erol "vocal blob" ([manual](https://www.erolstudios.com/SingersStudio-UserManual/voice-lessons/)) | ✓ | Highway, pitch match |
-| Vocal-fry recovery drill | Sing Sharp Recovery Warmup ([site](https://singsharp.com/en)) | ✗ | Glossary entry only |
+| Vocal-fry recovery drill | Sing Sharp Recovery Warmup ([site](https://singsharp.com/en)) | ✓ | Easy recovery routine: quiet hums, soft trill, creak-to-tone onset. Fry itself is not detected; only the pitched note is scored |
 | Harmony: thirds against a melody, then triads, on solfège | Sing Sharp Harmony & Trio ([plan](https://singsharp.com/en/training-plans/harmony-trio)) | ✗ | |
-| Vibrato training drill | Sing Sharp Vibrato Pro ([site](https://singsharp.com/en)) | ◐ | Analyzer shows vibrato; no drill |
-| Mix (chest/head blend) program | Sing Sharp Mix Mastery ([site](https://singsharp.com/en)) | ◐ | Ng/octave sirens exist; no program |
-| Range-expansion program | Sing Sharp Sing High Notes ([site](https://singsharp.com/en)) | ◐ | Sirens exist; no program |
+| Vibrato training drill | Sing Sharp Vibrato Pro ([site](https://singsharp.com/en)) | ✓ | Vibrato routine: rate and width measured after each hold, against a 5–7 Hz band |
+| Mix (chest/head blend) program | Sing Sharp Mix Mastery ([site](https://singsharp.com/en)) | ◐ | Mix builder routine (Pro pack); no multi-week program yet |
+| Range-expansion program | Sing Sharp Sing High Notes ([site](https://singsharp.com/en)) | ◐ | High notes routine, to the tenth; no multi-week program yet |
 | Labelled range test | Singing Carrots ([site](https://singingcarrots.com/)), Erol slide test ([manual](https://www.erolstudios.com/SingersStudio-UserManual/my-vocal-range/)) | ✓ | /range |
 | Standalone pitch-accuracy test with a % score | Singing Carrots ([site](https://singingcarrots.com/)) | ◐ | Pitch match scores; no single test |
 | Exercise adapted to voice type, speed control (0.4–0.7×) | Singing Carrots ([site](https://singingcarrots.com/)) | ✓ | Warmups in range, tempo under Adjust |

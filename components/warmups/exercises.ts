@@ -27,11 +27,24 @@ export interface WarmupExercise {
    * half-steps from the top of the band, and the player honours that.
    */
   ladder?: "up" | "down";
+  /**
+   * Measure vibrato on every hold and report its rate against this band, in
+   * hertz. Only for a single held note: the analysis reads one unbroken voiced
+   * run, and a note change in the middle of it would read as modulation.
+   */
+  vibrato?: { minHz: number; maxHz: number };
   /** Each step is a small melody in midi numbers, built from a root note. */
   buildSteps(rootMidi: number): number[][];
 }
 
 const rel = (root: number, offsets: number[]) => offsets.map((o) => root + o);
+
+/**
+ * The rate band the vibrato drills aim for. Sung vibrato is conventionally
+ * five to seven cycles a second; lib/audio/vibrato.ts accepts a wider band as
+ * vibrato at all, and this is the narrower one the drill calls on target.
+ */
+export const VIBRATO_TARGET_BAND = { minHz: 5, maxHz: 7 } as const;
 
 export const EXERCISES: WarmupExercise[] = [
   {
@@ -331,6 +344,100 @@ export const EXERCISES: WarmupExercise[] = [
       noteDur: 2.5,
       buildSteps: (r) => [[r]],
     },
+  // Vibrato. Each hold is long enough for lib/audio/vibrato.ts to see several
+  // cycles after the onset it skips, and the player reports the rate and width
+  // of the wobble it measured. That is all it reports: two numbers about the
+  // pitch contour, never whether the vibrato sounded good.
+  {
+    id: "vibrato-hold",
+    title: "Vibrato hold",
+    desc: "One long, easy note. Start it straight, then let it wobble. After each hold you see how fast and how wide the pitch moved.",
+    tier: "intermediate",
+    tip: "Do not shake it out of the jaw or the belly. Relax and let the note move on its own; straight is a fine answer too.",
+    noteDur: 4.5,
+    vibrato: VIBRATO_TARGET_BAND,
+    buildSteps: (r) => [[r]],
+  },
+  {
+    id: "vibrato-float-high",
+    title: "Vibrato on the fourth",
+    desc: "The same long hold a fourth higher, sung light. The reading shows the rate and width of the wobble, nothing more.",
+    tier: "intermediate",
+    tip: "Lighter than you think. A higher note held softly is often where vibrato turns up first.",
+    noteDur: 4.5,
+    vibrato: VIBRATO_TARGET_BAND,
+    buildSteps: (r) => [[r + 5]],
+  },
+  // Recovery: small, quiet, low-effort patterns in a narrow comfortable band,
+  // for a voice that feels tired. The detector cannot hear vocal fry, so the
+  // creak in "Creak to tone" is for the singer; only the pitched note after it
+  // is scored, as everywhere else.
+  {
+    id: "quiet-hum-descent",
+    title: "Quiet hum descent",
+    desc: "A quiet hum down 3-2-1, each rep a half-step lower. The smallest sound that still has a pitch.",
+    tier: "beginner",
+    tip: "Half your usual volume. Lips closed, jaw loose, and let each note settle rather than place it.",
+    noteDur: 0.8,
+    ladder: "down",
+    buildSteps: (r) => [rel(r, [4, 2, 0])],
+  },
+  {
+    id: "soft-trill-slide",
+    title: "Soft lip-trill slide",
+    desc: 'A gentle "brr" sliding down a third, like a slow sigh through loose lips.',
+    tier: "beginner",
+    glide: true,
+    noteDur: 1,
+    ladder: "down",
+    tip: "Easy air, loose lips. If the trill stops, use a hum instead; nothing here needs effort.",
+    buildSteps: (r) => [[r + 4, r]],
+  },
+  {
+    id: "fry-onset",
+    title: "Creak to tone",
+    desc: "Start in a quiet creak (vocal fry) and roll up into a clean, soft note, then hold it. Only the pitched note is scored.",
+    tier: "beginner",
+    tip: "The app hears the note, not the creak. Keep the creak tiny and quiet; if it scratches, skip it and start on a soft sigh.",
+    noteDur: 3,
+    buildSteps: (r) => [[r]],
+  },
+  // Range expansion: arpeggios and sirens that reach past the octave to the
+  // tenth, walked up the root ladder a semitone at a time, and a top-down float
+  // that starts high and light. computeRootLadder keeps every top note inside
+  // the singer's measured range.
+  {
+    id: "high-arpeggio-tenth",
+    title: "Arpeggio to the tenth",
+    desc: 'Climb 1-3-5-8-10 and back down on "nee", one step past the octave.',
+    tier: "advanced",
+    tip: "Get lighter as you climb. The tenth should feel like the octave with less weight, not more.",
+    noteDur: 0.45,
+    buildSteps: (r) => [rel(r, [0, 4, 7, 12, 16, 12, 7, 4, 0])],
+  },
+  {
+    id: "high-siren-tenth",
+    title: "Siren to the tenth",
+    desc: 'Slide from the root up to the tenth and back on "oo", like a long siren.',
+    tier: "advanced",
+    glide: true,
+    noteDur: 1.3,
+    tip: "Keep the sound small at the top. If it cracks, slide on; the slide is the exercise.",
+    buildSteps: (r) => [
+      [r, r + 16],
+      [r + 16, r],
+    ],
+  },
+  {
+    id: "high-float-descent",
+    title: "Top-down float",
+    desc: "Start on the tenth, soft and high, and float down 10-8-5-3-1. Each rep starts a half-step lower.",
+    tier: "advanced",
+    tip: "Begin light on the top note and let the weight arrive as you come down.",
+    noteDur: 0.6,
+    ladder: "down",
+    buildSteps: (r) => [rel(r, [16, 12, 7, 4, 0])],
+  },
 ];
 
 export interface WarmupPack {
@@ -512,6 +619,58 @@ export const PRO_PACKS: WarmupPack[] = [
         tip: "Imagine the note resting on the breath, like a ball on a fountain.",
         noteDur: 3,
         buildSteps: (r) => [[r + 7]],
+      },
+    ],
+  },
+  {
+    // Chest-to-head blend. Every pattern spans an octave, so as the root ladder
+    // climbs the singer's range one of the rungs carries it across their break;
+    // the drill is to keep that crossing smooth. Nothing here detects the break
+    // or the register (see registerBreakDetection in contracts/suede-vocal.ts):
+    // the score is pitch, as everywhere else.
+    id: "mix",
+    name: "Mix builder",
+    desc: "Smooth, connected crossings through the break, 4 exercises.",
+    exercises: [
+      {
+        id: "mix-ng-slide",
+        title: "Ng slide through the break",
+        desc: 'Slide an octave up and back on "ng", keeping one sound all the way through the middle.',
+        tier: "intermediate",
+        glide: true,
+        noteDur: 1.2,
+        tip: "Where the note wants to flip, get quieter instead of pushing. The goal is no seam.",
+        buildSteps: (r) => [
+          [r, r + 12],
+          [r + 12, r],
+        ],
+      },
+      {
+        id: "mix-mum-octave",
+        title: "Mum octave",
+        desc: 'A dopey "mum" through 1-3-5-8-5-3-1, same weight on every note.',
+        tier: "intermediate",
+        tip: "Keep it a little silly and nasal. Do not carry chest weight up to the octave; let it thin out.",
+        noteDur: 0.45,
+        buildSteps: (r) => [rel(r, [0, 4, 7, 12, 7, 4, 0])],
+      },
+      {
+        id: "mix-nay-fifth-octave",
+        title: "Nay fifth to octave",
+        desc: 'A bratty "nay" leaping to the fifth, home, then to the octave and home: 1-5-1-8-1.',
+        tier: "intermediate",
+        tip: "Same bright buzz on both leaps. The octave borrows the fifth's placement, not more volume.",
+        noteDur: 0.55,
+        buildSteps: (r) => [rel(r, [0, 7, 0, 12, 0])],
+      },
+      {
+        id: "mix-goo-scale",
+        title: "Goo octave scale",
+        desc: 'A full octave scale up and down on "goo", eight notes up and back through the middle.',
+        tier: "intermediate",
+        tip: "The narrow vowel helps the middle notes blend. Keep the lips rounded all the way up.",
+        noteDur: 0.32,
+        buildSteps: (r) => [rel(r, [0, 2, 4, 5, 7, 9, 11, 12, 11, 9, 7, 5, 4, 2, 0])],
       },
     ],
   },

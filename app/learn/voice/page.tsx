@@ -90,7 +90,7 @@ export default function VoiceCoursePage() {
             written down. Where a Suede Sing room can measure part of the work,
             such as pitch against a target, a sustain or your range, the lesson
             links to it and says what the number does and doesn&apos;t tell
-            you. Where nothing can measure it, such as strain, vibrato rate or
+            you. Where nothing can measure it, such as strain, vibrato on cue or
             a register break, the lesson says so rather than pretending.
           </p>
           {PORTED_LESSON_COUNT < CATALOG_LESSON_COUNT && (

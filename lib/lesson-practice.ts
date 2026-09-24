@@ -270,8 +270,8 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
   },
   "v-l6-m3": {
     basis: selfCheck(
-      "vibratoRateHz",
-      "That you moved from straight tone to vibrato on cue. Nothing analyses vibrato rate, so a five-to-seven per second figure is something to listen for, not a result.",
+      "vibratoOnCue",
+      "That you moved from straight tone to vibrato on cue. The vibrato hold in the warmups reads how fast and how wide a held note wobbled, but nothing times the switch itself, so the cue is yours to judge.",
     ),
     companion: { room: "analyze" },
     studies: ["sustained-hold"],

@@ -52,6 +52,23 @@ describe("routine catalogue", () => {
     }
   });
 
+  it("keeps the focus routines under the ids programmes link to", () => {
+    // Multi-week programmes reference routines by id. These four must resolve,
+    // with the paywall where it was decided: recovery, vibrato and high notes
+    // free, the mix builder a Pro pack.
+    const focus = { recovery: false, vibrato: false, "high-notes": false, mix: true };
+    for (const [id, pro] of Object.entries(focus)) {
+      const r = routineById(id);
+      expect(r, id).not.toBeNull();
+      expect(r!.pro, id).toBe(pro);
+      expect(routineMinutes(r!), id).toBeGreaterThanOrEqual(3);
+      expect(routineMinutes(r!), id).toBeLessThanOrEqual(15);
+    }
+    expect(routineById("vibrato")!.steps.map((s) => stepExercise(s)).some((e) => e.vibrato)).toBe(true);
+    expect(routineById("recovery")!.steps.map((s) => s.exerciseId)).toContain("fry-onset");
+    expect(routineById("mix")!.steps.map((s) => s.exerciseId)).toContain("mix-ng-slide");
+  });
+
   it("finds a routine by id and returns null for anything else", () => {
     expect(routineById("daily")?.name).toBe("Daily warmup");
     expect(routineById("belt-prep")?.pro).toBe(true);

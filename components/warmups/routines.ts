@@ -141,6 +141,48 @@ export const ROUTINES: Routine[] = [
       step("straw-scale", 8),
     ],
   },
+  // The focus routines. Their ids are stable on purpose: multi-week programmes
+  // name a routine by id, so renaming one here breaks a programme elsewhere.
+  {
+    id: "recovery",
+    name: "Easy recovery",
+    tagline: "Quiet and low effort: small hums, a soft trill and a creak rolling into a clean note. For a voice that feels tired.",
+    pro: false,
+    steps: [
+      step("morning-hum", 6),
+      step("quiet-hum-descent", 6),
+      step("soft-trill-slide", 6),
+      step("fry-onset", 6),
+      step("morning-sustain", 4),
+    ],
+  },
+  {
+    id: "vibrato",
+    name: "Vibrato",
+    tagline: "Long, easy holds with a reading after each one: how fast and how wide the pitch wobbled.",
+    pro: false,
+    steps: [
+      step("lip-trill-scale", 6),
+      step("hoo-four-note", 6),
+      step("vibrato-hold", 6),
+      step("vibrato-float-high", 5),
+      step("descending-five", 5),
+    ],
+  },
+  {
+    id: "high-notes",
+    name: "High notes",
+    tagline: "Past the octave to the tenth, a half-step at a time, light on top and never above your measured range.",
+    pro: false,
+    steps: [
+      step("lip-trill-scale", 6),
+      step("octave-siren", 5),
+      step("high-arpeggio-tenth", 8),
+      step("high-siren-tenth", 5),
+      step("high-float-descent", 6),
+      step("descending-five", 5),
+    ],
+  },
 ];
 
 /**
