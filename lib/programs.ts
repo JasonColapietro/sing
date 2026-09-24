@@ -715,17 +715,16 @@ export function itemSteps(item: ProgramItem): ProgramItem[] {
 }
 
 /**
- * Where step `k` of a routine or breath set is sung on its own. A warmup
- * step opens its exercise; a breath step opens the set at that step, so it
- * keeps the set's preset (a one-minute square, a cap of ten) rather than the
- * drill's standalone defaults.
+ * Where step `k` of a routine or breath set is sung. Both open the routine or
+ * set at that step (1-based `step`), so the step keeps its preset (a
+ * routine's rep count, a one-minute square, a cap of ten) rather than the
+ * standalone defaults of the lone exercise or drill.
  */
 export function itemStepHref(item: ProgramItem, k: number): string {
-  if (item.kind === "breath") {
-    return `/breath?routine=${encodeURIComponent(item.id)}&step=${k + 1}`;
+  if (item.kind === "breath" || item.kind === "routine") {
+    return `${itemHref(item)}&step=${k + 1}`;
   }
-  const step = itemSteps(item)[k];
-  return step ? itemHref(step) : itemHref(item);
+  return itemHref(item);
 }
 
 /** The local calendar day of an ISO timestamp, as lib/progress.ts files a session. */

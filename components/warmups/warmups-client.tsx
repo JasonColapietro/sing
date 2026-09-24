@@ -67,6 +67,10 @@ export function WarmupsClient() {
   const [activeEx, setActiveEx] = useState<WarmupExercise | null>(null);
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
   const [activeRoutine, setActiveRoutine] = useState<Routine | null>(null);
+  // The step a `?routine=<id>&step=<n>` link opens on (0-based). A program
+  // lists a routine's steps one by one for a singer the free plan stopped
+  // between them; opening the routine there keeps the step's rep count.
+  const [routineStartStep, setRoutineStartStep] = useState(0);
   const [routineSummary, setRoutineSummary] = useState<RoutineSummaryData | null>(null);
   // The tempo the running exercise starts at: 1x, or the step today's plan
   // chose for it.
@@ -80,7 +84,7 @@ export function WarmupsClient() {
   // prerendered heading and copy — the same trade the singers directory
   // documents. `undefined` means the URL hasn't been read yet.
   const [deepLink, setDeepLink] = useState<
-    { exercise: string | null; routine: string | null } | undefined
+    { exercise: string | null; routine: string | null; step: string | null } | undefined
   >(undefined);
   // The local hour, for "today's warmup". The server has no idea what time it
   // is where the singer sits, so it renders the daily routine and the
@@ -91,7 +95,7 @@ export function WarmupsClient() {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     /* eslint-disable react-hooks/set-state-in-effect */
-    setDeepLink({ exercise: q.get("exercise"), routine: q.get("routine") });
+    setDeepLink({ exercise: q.get("exercise"), routine: q.get("routine"), step: q.get("step") });
     setHour(new Date().getHours());
     setToday(localDay());
     /* eslint-enable react-hooks/set-state-in-effect */
@@ -154,6 +158,7 @@ export function WarmupsClient() {
   function startRoutine(r: Routine) {
     if (!canStartRoutine(r) || cap.capped) return;
     setActiveRoutine(r);
+    setRoutineStartStep(0);
     setRoutineSummary(null);
     setView("routine");
   }
@@ -230,7 +235,11 @@ export function WarmupsClient() {
   if (!deepLinkDone && deepLink !== undefined && pitch.listening) {
     setDeepLinkDone(true);
     if (deepLinkRoutine && canStartRoutine(deepLinkRoutine)) {
+      const step = Number(deepLink.step);
       setActiveRoutine(deepLinkRoutine);
+      setRoutineStartStep(
+        Number.isInteger(step) && step >= 1 && step <= deepLinkRoutine.steps.length ? step - 1 : 0,
+      );
       setRoutineSummary(null);
       setView("routine");
     } else if (deepLinkEx && canStart(deepLinkEx)) {
@@ -398,6 +407,7 @@ export function WarmupsClient() {
           initialTempo={routineStartingTempo(routineContext)}
           capped={cap.capped}
           routine={activeRoutine}
+          startStep={routineStartStep}
           pitch={pitch}
           range={progress.range}
           onDone={(data) => {

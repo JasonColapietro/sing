@@ -3372,7 +3372,8 @@
         "path": "/warmups",
         "params": [
           "exercise",
-          "routine"
+          "routine",
+          "step"
         ]
       },
       "breath": {

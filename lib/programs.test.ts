@@ -700,7 +700,7 @@ describe("check-in readings are kept on the record", () => {
 });
 
 describe("step links", () => {
-  it("open each step on its own, through params the rooms publish; a breath step keeps its set's preset", () => {
+  it("open each step through params the rooms publish, keeping the routine's or set's preset", () => {
     const rooms = Object.values(buildContract().deepLinks.rooms);
     for (const prog of PROGRAMS) {
       for (const item of allItems(prog)) {
@@ -710,10 +710,9 @@ describe("step links", () => {
           const room = rooms.find((r) => r.path === url.pathname);
           expect(room, href).toBeDefined();
           for (const key of url.searchParams.keys()) expect(room!.params, href).toContain(key);
-          if (item.kind === "breath") {
-            expect(url.searchParams.get("routine")).toBe(item.id);
-            expect(url.searchParams.get("step")).toBe(String(k + 1));
-          }
+          // The routine or set itself, at that step: its preset, not a default.
+          expect(url.searchParams.get("routine")).toBe("id" in item ? item.id : null);
+          expect(url.searchParams.get("step")).toBe(String(k + 1));
         });
       }
     }

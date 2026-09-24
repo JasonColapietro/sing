@@ -774,7 +774,7 @@ export function buildContract() {
       origin: "https://sing.suedeai.ai",
       rooms: {
         range: { path: "/range", params: [] },
-        warmups: { path: "/warmups", params: ["exercise", "routine"] },
+        warmups: { path: "/warmups", params: ["exercise", "routine", "step"] },
         breath: { path: "/breath", params: ["drill", "routine", "step"] },
         earTraining: { path: "/ear-training", params: [] },
         studio: { path: "/studio", params: [] },

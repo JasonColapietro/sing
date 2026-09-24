@@ -440,7 +440,7 @@ describe("suede-vocal contract", () => {
    */
   it("only advertises deep-link params the room actually parses", () => {
     const rooms = buildContract().deepLinks.rooms;
-    expect(rooms.warmups.params).toEqual(["exercise", "routine"]);
+    expect(rooms.warmups.params).toEqual(["exercise", "routine", "step"]);
     expect(rooms.songs.params).toEqual(["song"]);
     expect(rooms.breath.params).toEqual(["drill", "routine", "step"]);
     expect(rooms.programs.params).toEqual(["program"]);
