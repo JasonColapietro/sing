@@ -23,14 +23,19 @@
  * authored here because the numbers and the words are here, and GuitarHub's
  * `web-practice.json` is authored there because its detector is there.
  *
- * What GuitarHub owns instead is the *mapping* — what a session of each activity
- * type counts as against its curriculum. That is the right split, because it is
- * the split along which each claim is checkable. Lesson identifiers are authored
- * in GuitarHub's curriculum and are meaningless here; a mapping table published
- * from this repository would be an assertion about a catalog this repository
- * cannot see and could not revalidate when a lesson is renamed. So: this side
- * publishes what a session *is*, that side decides what a session *counts as*,
- * and a test fails on whichever side moved.
+ * Lesson identifiers used to be GuitarHub's, and so was the *mapping*: what a
+ * session of each activity type counts as against the voice curriculum. Both
+ * moved here on 2026-09-23. The catalog is contracts/suede-voice-curriculum.json,
+ * sing hosts the lessons at /learn/voice, and GuitarHub redirects its copy
+ * (contracts/suede-voice-lesson-urls.json). The mapping is
+ * lib/lesson-practice.ts `practiceMatch`, and it only *counts* sessions: a
+ * lesson page shows how often its module's room was practised on this device.
+ * It never records a lesson as completed, so there is still no lesson field in
+ * the record and no `lesson` activity type. Adding one would change this shape
+ * and is a product decision, not a consequence of the move.
+ *
+ * GuitarHub keeps its guitar curriculum and any voice-lesson attempts already in
+ * its ledger. Those attempts are not imported here.
  *
  * ## What is deliberately not here
  *
@@ -178,10 +183,12 @@ export function buildContract() {
     reference:
       "JasonColapietro/sing is the reference surface for this shape: the record, " +
       "its validators and its caps are implemented here and nowhere else, so the " +
-      "contract is generated rather than transcribed. The session-to-lesson mapping " +
-      "is deliberately not here — lesson identifiers are authored in " +
-      "JasonColapietro/suede-guitar-hub, which is the only side that can revalidate " +
-      "them, so that side owns the mapping and this side owns the shape.",
+      "contract is generated rather than transcribed. Since 2026-09-23 this " +
+      "repository also authors the voice-lesson identifiers " +
+      "(contracts/suede-voice-curriculum.json) and hosts the lessons; GuitarHub " +
+      "redirects its old voice-lesson URLs here (contracts/suede-voice-lesson-urls.json). " +
+      "The record still carries no lesson identifier: sing derives a lesson's " +
+      "practice from its module's room sessions and records no lesson completion.",
     storage: {
       medium: "localStorage",
       key: PROGRESS_STORAGE_KEY,
@@ -247,8 +254,9 @@ export function buildContract() {
           "A session is an observation: an activity type, a day, a duration and " +
           "sometimes a percentage. A consumer can record that it happened. What a " +
           "session does not carry is a lesson identifier, so it cannot establish " +
-          "progress through a curriculum by itself — that is what the importing " +
-          "side's mapping has to decide.",
+          "progress through a curriculum by itself. sing's own lesson pages count " +
+          "matching sessions as practice, never as completion, and an importer " +
+          "must not do more with them.",
       },
       range: {
         importable: true,

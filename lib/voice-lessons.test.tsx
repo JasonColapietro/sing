@@ -132,6 +132,16 @@ describe("the lesson data", () => {
     }
   });
 
+  it("serves every lesson in the catalog, and publishes where each one lives", async () => {
+    expect(LESSONS.map((l) => l.id).sort()).toEqual([...catalogLessons.keys()].sort());
+    const { default: urls } = await import("@/contracts/suede-voice-lesson-urls.json");
+    for (const lesson of LESSONS) {
+      expect((urls.lessons as Record<string, string>)[lesson.id]).toBe(lessonHref(lesson));
+    }
+    expect(Object.keys(urls.modules)).toHaveLength(modules.length);
+    expect(Object.keys(urls.stages)).toHaveLength(voiceCurriculum.curriculum.levels.length);
+  });
+
   it("gives every lesson a unique URL", () => {
     const urls = LESSONS.map(lessonHref);
     expect(new Set(urls).size).toBe(urls.length);

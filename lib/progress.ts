@@ -18,7 +18,7 @@ import type {
   VocalRange,
   WarmupMode,
 } from "./progress-shape";
-import { starsForScore } from "./stars";
+import { weekBoundaries, weekTotals } from "./weekly-report";
 
 // The shape and its validators live in ./progress-shape so a server route can
 // import them without dragging this `"use client"` module along. Re-exported
@@ -662,22 +662,17 @@ export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
   return next;
 }
 
-/** Monday-based calendar weeks, using the same local day keys as the streak. */
+/**
+ * Monday-based calendar weeks, using the same local day keys as the streak:
+ * the week so far against the complete previous week. The boundaries and the
+ * totals live in ./weekly-report, which the Monday "Your week" card reads too.
+ */
 export function weeklyReport(sessions: readonly SessionLog[], now = new Date()) {
-  const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  monday.setDate(monday.getDate() - (monday.getDay() + 6) % 7);
-  const previous = new Date(monday);
-  previous.setDate(previous.getDate() - 7);
-  const start = localDay(monday), lastStart = localDay(previous), today = localDay(now);
-  const thisWeek = { stars: 0, sessions: 0, durationSec: 0 };
-  const lastWeek = { stars: 0, sessions: 0, durationSec: 0 };
-  for (const session of sessions) {
-    if (session.day < lastStart || session.day > today) continue;
-    const period = session.day >= start ? thisWeek : lastWeek;
-    period.sessions++;
-    period.durationSec += session.durationSec;
-    const score = session.score;
-    period.stars += starsForScore(score);
-  }
-  return { thisWeek, lastWeek, start, lastStart };
+  const { start, lastStart, lastEnd, today } = weekBoundaries(now);
+  return {
+    thisWeek: weekTotals(sessions, start, today),
+    lastWeek: weekTotals(sessions, lastStart, lastEnd),
+    start,
+    lastStart,
+  };
 }
