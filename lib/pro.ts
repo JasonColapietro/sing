@@ -392,7 +392,7 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "warmups",
     title: "Pro warmup packs",
-    desc: "Genre and voice-type routines: belt prep, head-voice builders, morning resets.",
+    desc: "Genre and voice-type routines: belt prep, head-voice builders, mix builders.",
   },
   {
     id: "book",

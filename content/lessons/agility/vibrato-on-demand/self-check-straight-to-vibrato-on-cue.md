@@ -5,7 +5,7 @@ stage: "v-l6"
 title: "Self-Check: Straight to Vibrato on Cue"
 type: "checkpoint"
 minutes: 6
-objective: "Heard and held, not scored. Nothing measures vibrato rate yet, so this one is your ear and your recording."
+objective: "Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording."
 prerequisites: "v-l6-m3-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,7 +29,7 @@ Choose a comfortable sustained note and establish three easy seconds of straight
 
 ### Name the target: Vibrato control
 
-Heard and held, not scored. Nothing measures vibrato rate yet, so this one is your ear and your recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.
@@ -72,4 +72,4 @@ If not ready: If oscillation appears only through shaking or pressure, return to
 
 What this shows: I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.
 
-What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Vibrato rate, extent, onset time, healthy production, or a five-to-seven-hertz result; the app does not analyze vibrato.
+What this does not show: An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them.

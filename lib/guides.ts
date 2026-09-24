@@ -200,7 +200,7 @@ export const WARMUPS_GUIDE: GuideContent = {
       "Warm toward the register your material actually sits in rather than sweeping the whole range every time",
       "Use the per-pattern accuracy scores to find the interval or vowel that reliably drifts, then drill that shape",
       "Pay attention to the semitone at which accuracy starts dropping — that is usually a passaggio, not a limit",
-      "Pro warmup packs add genre and voice-type routines: belt prep, head-voice builders, morning resets",
+      "Pro warmup packs add genre and voice-type routines: belt prep, head-voice builders, mix builders",
     ],
   },
   faq: [

@@ -6635,7 +6635,7 @@ export const LESSONS: Lesson[] = [
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato rate, extent, onset time, healthy production, or a five-to-seven-hertz result; the app does not analyze vibrato."
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
     }
   },
   {
@@ -6725,7 +6725,7 @@ export const LESSONS: Lesson[] = [
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato rate, extent, onset time, healthy production, or a five-to-seven-hertz result; the app does not analyze vibrato."
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
     }
   },
   {
@@ -6738,7 +6738,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Straight to Vibrato on Cue",
     "type": "checkpoint",
     "minutes": 6,
-    "objective": "Heard and held, not scored. Nothing measures vibrato rate yet, so this one is your ear and your recording.",
+    "objective": "Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording.",
     "prerequisites": [
       "v-l6-m3-03"
     ],
@@ -6761,7 +6761,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Vibrato control",
-        "body": "Heard and held, not scored. Nothing measures vibrato rate yet, so this one is your ear and your recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, but nothing times vibrato on cue, so the switch itself is your ear and your recording. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -6815,7 +6815,7 @@ export const LESSONS: Lesson[] = [
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
       "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
-      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato rate, extent, onset time, healthy production, or a five-to-seven-hertz result; the app does not analyze vibrato."
+      "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
     }
   },
   {
