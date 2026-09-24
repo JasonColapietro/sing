@@ -104,7 +104,7 @@ const KNOWN_DIVERGENCES = {
     ios: [0.75, 1.0],
     android: null,
     reason:
-      "Not a value drift but a gap: iOS SongPracticeViewModel.tempoRates offers two fixed playback rates. Native songs have been scored from the microphone since suede-voice #132 (S8), but the web's continuous tempo grid and the auto-tempo rules that step along it are part of the second iOS slice. Listed so the gap is a recorded state rather than an oversight.",
+      "Not a value drift but a gap: iOS SongPracticeViewModel.tempoRates offers two fixed playback rates. Native songs have been scored from the microphone since suede-voice #132 (S8), but the web's continuous tempo grid and the auto-tempo rules that step along it have no native counterpart yet. Listed so the gap is a recorded state rather than an oversight.",
   },
 } as const;
 

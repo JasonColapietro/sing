@@ -157,7 +157,7 @@ The one that remains is `songTempo`, and it is a gap rather than a wrong number:
 native song practice offers two fixed rates where the web has a continuous tempo
 grid and auto-tempo. Native songs have been scored from the microphone since
 suede-voice #132 (S8, 2026-09-24). The gap closes when the tempo grid and
-auto-tempo arrive natively, which is the second iOS slice.
+auto-tempo arrive natively. No slice for that is confirmed yet.
 
 ### practice-parity v2
 
