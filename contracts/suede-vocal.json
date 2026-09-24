@@ -3434,14 +3434,16 @@
         "path": "/warmups",
         "params": [
           "exercise",
-          "routine"
+          "routine",
+          "step"
         ]
       },
       "breath": {
         "path": "/breath",
         "params": [
           "drill",
-          "routine"
+          "routine",
+          "step"
         ],
         "values": {
           "drill": [

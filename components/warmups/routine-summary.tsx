@@ -27,7 +27,7 @@ export function RoutineSummary({
   /** Run the weakest step again on its own, where the room can start one. */
   onPractice?: (exerciseId: string) => void;
 }) {
-  const { routine, steps, completed } = data;
+  const { routine, steps, completed, startStep = 0 } = data;
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
 
@@ -77,7 +77,7 @@ export function RoutineSummary({
         return {
           label: stepExercise(s).title,
           score: r ? r.avgScore : null,
-          note: "skipped",
+          note: i < startStep ? "not in this run" : "skipped",
         };
       })}
       achievements={achievements}

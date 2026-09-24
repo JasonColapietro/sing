@@ -850,10 +850,10 @@ export function buildContract() {
       origin: "https://sing.suedeai.ai",
       rooms: {
         range: { path: "/range", params: [] },
-        warmups: { path: "/warmups", params: ["exercise", "routine"] },
+        warmups: { path: "/warmups", params: ["exercise", "routine", "step"] },
         breath: {
           path: "/breath",
-          params: ["drill", "routine"],
+          params: ["drill", "routine", "step"],
           /** The ids each param accepts; anything else lands on the room's front page. */
           values: {
             drill: [...BREATH_DRILL_IDS],

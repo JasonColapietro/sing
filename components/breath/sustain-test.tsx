@@ -16,7 +16,9 @@ import {
 import { RewardNote } from "./reward";
 import {
   BREATH_FALLBACK_SEC,
+  SUSTAIN_ATTEMPT_MIN_SEC,
   SUSTAIN_BENCHMARKS_SEC,
+  SUSTAIN_LOG_MIN_SEC,
   type BreathDrillResult,
 } from "./routines";
 import { BreathGatePanel } from "./breath-gate";
@@ -457,11 +459,11 @@ export function SustainTest({
       }
       const secFinal = Math.round(sec * 10) / 10;
       let logged: LogResult | null = null;
-      if (secFinal >= 1) {
+      if (secFinal >= SUSTAIN_ATTEMPT_MIN_SEC) {
         setData(recordAttempt(secFinal, steadiness));
         recordBreathBest({ sustainSec: secFinal });
       }
-      if (secFinal >= 5) {
+      if (secFinal >= SUSTAIN_LOG_MIN_SEC) {
         logged = logSession({
           type: "breath",
           durationSec: secFinal,

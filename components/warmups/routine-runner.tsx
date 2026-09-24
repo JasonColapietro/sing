@@ -46,6 +46,8 @@ export interface RoutineSummaryData {
   steps: (SessionSummaryData | null)[];
   /** False when the singer quit before the last step. */
   completed: boolean;
+  /** The step a `?step=` link opened on; the ones before it were not part of this run. */
+  startStep?: number;
 }
 
 /**
@@ -66,9 +68,12 @@ export function RoutineRunner({
   onQuit,
   capped = false,
   initialTempo = 1,
+  startStep = 0,
 }: {
   initialTempo?: 0.75 | 1 | 1.25;
   routine: Routine;
+  /** The step to open on (0-based), from a `?step=` link. */
+  startStep?: number;
   pitch: UsePitchResult;
   range: VocalRange;
   /** The free allowance is spent: the next intro becomes the cap slide. */
@@ -81,7 +86,8 @@ export function RoutineRunner({
   const stepCount = routine.steps.length;
   const [startingTempo] = useState(initialTempo);
   const cap = useFreeCap();
-  const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: 0 });
+  const [firstStep] = useState(() => Math.min(Math.max(0, startStep), stepCount - 1));
+  const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: firstStep });
   const [results, setResults] = useState<(SessionSummaryData | null)[]>([]);
 
   const stepIndex = phase.kind === "done" ? stepCount - 1 : phase.step;
@@ -95,7 +101,7 @@ export function RoutineRunner({
     const after = afterStep(i, stepCount);
     if (after.kind === "done") {
       setPhase(after);
-      onDone({ routine, steps: next, completed: true });
+      onDone({ routine, steps: next, completed: true, startStep: firstStep });
     } else {
       setPhase(after);
     }
@@ -103,15 +109,17 @@ export function RoutineRunner({
 
   function quit() {
     if (results.some((r) => r !== null)) {
-      onDone({ routine, steps: results, completed: false });
+      onDone({ routine, steps: results, completed: false, startStep: firstStep });
     } else {
       onQuit();
     }
   }
 
   const minutesLeft = Math.max(1, Math.round(remainingSeconds(routine, stepIndex) / 60));
-  const prev = stepIndex > 0 ? (results[stepIndex - 1] ?? null) : null;
-  const prevEx = stepIndex > 0 ? stepExercise(routine.steps[stepIndex - 1]) : null;
+  // Steps before a `?step=` link's first one weren't part of this run, so
+  // they get no "skipped" chip.
+  const prev = stepIndex > firstStep ? (results[stepIndex - 1] ?? null) : null;
+  const prevEx = stepIndex > firstStep ? stepExercise(routine.steps[stepIndex - 1]) : null;
 
   if (phase.kind === "play") {
     return (
