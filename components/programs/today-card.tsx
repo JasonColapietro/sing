@@ -7,8 +7,10 @@ import { useIsPro } from "@/lib/pro";
 import { FREE_DAILY_SEC } from "@/lib/free-cap";
 import { midiToLabel } from "@/lib/audio/notes";
 import {
+  FREE_WEEKS,
+  cappedDaySeconds,
   dayMinutes,
-  daySeconds,
+  dayNeedsPro,
   isRestDay,
   itemEvidence,
   itemHref,
@@ -188,8 +190,10 @@ export function ProgramTodayCard({
   const next = program.days[view.index + 1];
   const pct = (view.completed / total) * 100;
   const count = itemsDone.filter(Boolean).length;
-  // Everything but the range test runs against the free allowance.
-  const cappedSec = daySeconds({ ...day, items: day.items.filter((i) => i.kind !== "range") });
+  const cappedSec = cappedDaySeconds(day);
+  // Past a Pro program's free week, a free singer is asked for Pro instead of
+  // shown rows they cannot open. Their place is kept.
+  const paywalled = view.status === "todo" && !isRestDay(day) && !isPro && dayNeedsPro(program, view.index);
 
   return (
     <Card>
@@ -244,6 +248,17 @@ export function ProgramTodayCard({
             </div>
             {isRestDay(day) ? (
               <p className="mt-2 text-sm text-mut">Rest day. No program practice today.</p>
+            ) : paywalled ? (
+              <div className="mt-2 max-w-xl text-sm text-mut">
+                <p>
+                  {FREE_WEEKS === 1 ? "Week 1 was" : `Weeks 1–${FREE_WEEKS} were`} free. The rest of{" "}
+                  {program.name} needs Pro. Your place is kept, so you can carry on from day{" "}
+                  {view.index + 1} once it is unlocked.
+                </p>
+                <div className="mt-3">
+                  <LinkButton href="/pro" size="sm">Unlock with Pro</LinkButton>
+                </div>
+              </div>
             ) : (
               <>
                 <p className="mt-2 max-w-xl text-sm text-mut">
@@ -271,7 +286,7 @@ export function ProgramTodayCard({
         <Readings readings={readings} />
 
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          {view.status === "todo" && !isRestDay(day) && (
+          {view.status === "todo" && !isRestDay(day) && !paywalled && (
             <Button
               variant="outline"
               size="sm"
@@ -311,7 +326,7 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
       <Card tone="well">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="max-w-xl text-sm text-mut">
-            <span className="font-medium text-ink">Programs.</span> One to six weeks of warmups,
+            <span className="font-medium text-ink">Programs.</span> One to twelve weeks of warmups,
             breath and check-ins, planned day by day.
           </p>
           <Link href="/programs" className="text-sm text-violet-ink underline-offset-4 hover:underline">

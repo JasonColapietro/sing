@@ -49,6 +49,10 @@
  * parameter and the ids it accepts, so a curriculum can send a singer to a
  * multi-week plan by id instead of by a hand-written URL.
  *
+ * Version 6 adds `freeWeeks` to each of those programs: week 1 of a Pro
+ * program is open to everyone, so a native surface gating by `pro` alone
+ * would lock a week the web gives away.
+ *
  * It is generated, not written: every number is imported from the modules the
  * app runs on, exactly like `practice-parity.ts`. See contracts/README.md.
  */
@@ -106,14 +110,14 @@ import {
   isFreeExercise,
   routineSeconds,
 } from "@/components/warmups/routines";
-import { PROGRAMS } from "@/lib/programs";
+import { FREE_WEEKS, PROGRAMS } from "@/lib/programs";
 
 /**
  * Bumped only when the *shape* changes — a key added, removed or renamed.
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 5;
+export const CONTRACT_VERSION = 6;
 
 /**
  * Every measurement this app can take from a microphone, and every one a
@@ -784,8 +788,18 @@ export function buildContract() {
         singers: { path: "/singers", params: [] },
         programs: { path: "/programs", params: ["program"] },
       },
-      /** The ids `/programs?program=` accepts; an unknown one lands on the list. */
-      programs: PROGRAMS.map((p) => ({ id: p.id, name: p.name, weeks: p.weeks, pro: p.pro })),
+      /**
+       * The ids `/programs?program=` accepts; an unknown one lands on the list.
+       * `freeWeeks` is how many opening weeks of a Pro program are free: 0 on a
+       * free program, where every week already is.
+       */
+      programs: PROGRAMS.map((p) => ({
+        id: p.id,
+        name: p.name,
+        weeks: p.weeks,
+        pro: p.pro,
+        freeWeeks: p.pro ? FREE_WEEKS : 0,
+      })),
     },
 
     rules: RULES,
