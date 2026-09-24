@@ -43,14 +43,14 @@ export const MAX_FREQ = 1600;
  * That makes the 50/60 Hz fundamental of mains hum visible even when its
  * louder 100/120 Hz harmonic is the first reportable peak.
  */
-const SUBRANGE_FLOOR_HZ = 40;
+export const SUBRANGE_FLOOR_HZ = 40;
 // Windowing and broadband room noise can shift the fundamental peak a few
 // percent away from the exact multiple of the initially selected harmonic.
-const SUBRANGE_SEARCH_RATIO = 0.03;
+export const SUBRANGE_SEARCH_RATIO = 0.03;
 // Hum's hidden fundamental improves clarity by about 0.03; repeated periods
 // of a real low note remain nearly equal. Keep enough separation between them.
-const SUBRANGE_MARGIN = 0.02;
-const SUBRANGE_MIN_CLARITY = 0.8;
+export const SUBRANGE_MARGIN = 0.02;
+export const SUBRANGE_MIN_CLARITY = 0.8;
 
 /**
  * How close to the best peak a shorter-period peak has to be to win.
@@ -59,7 +59,7 @@ const SUBRANGE_MIN_CLARITY = 0.8;
  * too low and a half-frequency artefact wins outright. 0.9 is McLeod's
  * recommendation and it holds up across the vowel frames in the tests.
  */
-const PEAK_TOLERANCE = 0.9;
+export const PEAK_TOLERANCE = 0.9;
 
 /**
  * Corner of the low-pass applied before analysis.
@@ -74,7 +74,30 @@ const PEAK_TOLERANCE = 0.9;
  * was slightly better in noise and slightly worse clean, and nothing between
  * them is worth tuning to a synthetic signal.
  */
-const LOWPASS_HZ = 4000;
+export const LOWPASS_HZ = 4000;
+
+/**
+ * RMS below which a frame is silence and returns no pitch. Judged on the raw
+ * frame, before the low-pass, so filtering never changes which frames count
+ * as quiet.
+ */
+export const SILENCE_RMS = 0.01;
+
+/**
+ * Edge trim. From each end of the filtered frame, the analysis window starts
+ * at the first sample whose magnitude is below this. It changes which samples
+ * the NSDF sees, so a port has to use the same value to read the same peak.
+ */
+export const TRIM_THRESHOLD = 0.2;
+
+/** A trimmed window shorter than this many samples reads as no pitch. */
+export const MIN_WINDOW_SAMPLES = 128;
+
+/**
+ * The clarity a reading needs before the live hooks trust it. Below this the
+ * frame is treated as unvoiced and the median history is cleared.
+ */
+export const DEFAULT_CLARITY_THRESHOLD = 0.75;
 
 /**
  * Second-order Butterworth low-pass (RBJ biquad), into a new buffer.
@@ -117,7 +140,7 @@ export function detectPitch(
   let rms = 0;
   for (let i = 0; i < SIZE; i++) rms += input[i] * input[i];
   rms = Math.sqrt(rms / SIZE);
-  if (rms < 0.01) return null;
+  if (rms < SILENCE_RMS) return null;
   const buf =
     sampleRate > 2 * LOWPASS_HZ ? lowpass(input, sampleRate, LOWPASS_HZ) : input;
 
@@ -125,21 +148,20 @@ export function detectPitch(
   // the voiced middle of the frame.
   let r1 = 0;
   let r2 = SIZE - 1;
-  const thres = 0.2;
   for (let i = 0; i < SIZE / 2; i++) {
-    if (Math.abs(buf[i]) < thres) {
+    if (Math.abs(buf[i]) < TRIM_THRESHOLD) {
       r1 = i;
       break;
     }
   }
   for (let i = 1; i < SIZE / 2; i++) {
-    if (Math.abs(buf[SIZE - i]) < thres) {
+    if (Math.abs(buf[SIZE - i]) < TRIM_THRESHOLD) {
       r2 = SIZE - i;
       break;
     }
   }
   const size = r2 - r1;
-  if (size < 128) return null;
+  if (size < MIN_WINDOW_SAMPLES) return null;
 
   // Cumulative energy, so each lag's overlap energy is two lookups rather than
   // its own inner loop: `energy[k]` is the sum of squares of the first k

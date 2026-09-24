@@ -37,6 +37,12 @@
  * of through hand-written URLs, and lets a renamed chapter fail a test there
  * rather than rot into a dead link.
  *
+ * Version 3 adds `pitch.engine`: the detector's tuning (pre-filter corner,
+ * silence floor, peak tolerance, the mains-hum check) and the live smoothing
+ * (frame size, clarity gate, median window). A surface that ports
+ * `detectPitch` has to read the same frames the same way, and until v3 those
+ * numbers travelled as comments naming the constant each one mirrored.
+ *
  * It is generated, not written: every number is imported from the modules the
  * app runs on, exactly like `practice-parity.ts`. See contracts/README.md.
  */
@@ -48,7 +54,22 @@ import { SINGERS } from "@/lib/singers-data";
 import { REFERENCE_BANDS } from "@/lib/singers-analysis";
 import { VOICE_KINDS } from "@/lib/singers-core";
 import { A4, VOICE_TYPES } from "@/lib/audio/notes";
-import { MAX_FREQ, MIN_FREQ } from "@/lib/audio/pitch";
+import {
+  DEFAULT_CLARITY_THRESHOLD,
+  LOWPASS_HZ,
+  MAX_FREQ,
+  MIN_FREQ,
+  PEAK_TOLERANCE,
+  MIN_WINDOW_SAMPLES,
+  SILENCE_RMS,
+  SUBRANGE_FLOOR_HZ,
+  TRIM_THRESHOLD,
+  SUBRANGE_MARGIN,
+  SUBRANGE_MIN_CLARITY,
+  SUBRANGE_SEARCH_RATIO,
+} from "@/lib/audio/pitch";
+import { PITCH_MEDIAN_WINDOW } from "@/lib/audio/latency";
+import { PITCH_FFT_SIZE } from "@/lib/audio/use-pitch";
 import { TOLERANCE_CENTS } from "@/components/songs/lib";
 import { STAR_THRESHOLDS } from "@/lib/stars";
 import {
@@ -85,7 +106,7 @@ import {
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 2;
+export const CONTRACT_VERSION = 3;
 
 /**
  * Every measurement this app can take from a microphone, and every one a
@@ -449,6 +470,8 @@ export function buildContract() {
         "lib/singers-core.ts",
         "lib/audio/notes.ts",
         "lib/audio/pitch.ts",
+        "lib/audio/use-pitch.ts",
+        "lib/audio/latency.ts",
         "components/warmups/exercises.ts",
         "components/warmups/routines.ts",
         "components/breath/routines.ts",
@@ -473,6 +496,44 @@ export function buildContract() {
        */
       accidentalGlyph: "#",
       labelFormat: "scientific",
+      /**
+       * The detector's tuning and the smoothing the live rooms put on it. A
+       * surface that ports `detectPitch` (the iOS song room does) reads the
+       * same frames the same way only if these match; before v3 they
+       * travelled as comments naming the web constant each one mirrored.
+       */
+      engine: {
+        /** The normalized square difference function (McLeod & Wyvill). */
+        method: "nsdf",
+        /** Second-order Butterworth low-pass applied to each frame first. */
+        lowpassHz: LOWPASS_HZ,
+        /** Raw-frame RMS below which a frame is silence. */
+        silenceRms: SILENCE_RMS,
+        /**
+         * From each end of the filtered frame, the window starts at the first
+         * sample below this magnitude.
+         */
+        trimThreshold: TRIM_THRESHOLD,
+        /** A trimmed window shorter than this reads as no pitch. */
+        minWindowSamples: MIN_WINDOW_SAMPLES,
+        /** The first peak within this share of the best one is the period. */
+        peakTolerance: PEAK_TOLERANCE,
+        /** The mains-hum check below C2. */
+        subrangeFloorHz: SUBRANGE_FLOOR_HZ,
+        subrangeSearchRatio: SUBRANGE_SEARCH_RATIO,
+        subrangeMargin: SUBRANGE_MARGIN,
+        subrangeMinClarity: SUBRANGE_MIN_CLARITY,
+        /** Samples per analysis frame. */
+        frameSamples: PITCH_FFT_SIZE,
+        /** Readings below this clarity are unvoiced and clear the history. */
+        clarityThreshold: DEFAULT_CLARITY_THRESHOLD,
+        /**
+         * Readings in the smoothing window. The smoothed value is the true
+         * median: the mean of the two middle values when the count is even.
+         */
+        medianWindow: PITCH_MEDIAN_WINDOW,
+        smoothing: "true-median",
+      },
     },
 
     taxonomy: {

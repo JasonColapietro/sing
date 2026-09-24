@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { detectPitch } from "./pitch";
+import { DEFAULT_CLARITY_THRESHOLD, detectPitch } from "./pitch";
+import { PITCH_MEDIAN_WINDOW } from "./latency";
 import { median } from "./median";
 import { freqToNote, type NoteInfo } from "./notes";
 import { getAudioContext } from "./context";
@@ -60,7 +61,7 @@ export interface UsePitchResult {
  * called; always give users an explicit "enable microphone" button.
  */
 export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
-  const clarityThreshold = opts?.clarityThreshold ?? 0.75;
+  const clarityThreshold = opts?.clarityThreshold ?? DEFAULT_CLARITY_THRESHOLD;
   const [frame, setFrame] = useState<PitchFrame>(EMPTY_FRAME);
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -164,7 +165,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
       if (r && r.clarity >= clarityThreshold) {
         const hist = histRef.current;
         hist.push(r.freq);
-        if (hist.length > 4) hist.shift();
+        if (hist.length > PITCH_MEDIAN_WINDOW) hist.shift();
         freq = median(hist);
       } else {
         histRef.current = [];

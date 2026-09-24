@@ -36,6 +36,7 @@ const SUSTAIN_SRC = fileURLToPath(
   new URL("../components/breath/sustain-test.tsx", import.meta.url),
 );
 const PITCH_SRC = fileURLToPath(new URL("../lib/audio/pitch.ts", import.meta.url));
+const USE_PITCH_SRC = fileURLToPath(new URL("../lib/audio/use-pitch.ts", import.meta.url));
 
 /** The exact bytes the committed file should hold: stable key order, 2-space, trailing newline. */
 function serialize(contract: unknown): string {
@@ -236,6 +237,26 @@ describe("suede-vocal contract", () => {
       // detectPitch returns a single {freq, clarity} or null. A polyphonic
       // rewrite would have to change this signature.
       expect(src).toMatch(/export function detectPitch\([^)]*\)\s*:\s*PitchResult \| null/);
+    });
+
+    /**
+     * `pitch.engine` is only worth serializing if the app runs on those exact
+     * constants. A literal creeping back in beside a named constant would let
+     * the contract and the detector disagree with every equality check green.
+     */
+    it("the pitch engine is the constants the detector and usePitch run on", () => {
+      const pitchSrc = readFileSync(PITCH_SRC, "utf8");
+      expect(pitchSrc).toContain("rms < SILENCE_RMS");
+      expect(pitchSrc).toContain("lowpass(input, sampleRate, LOWPASS_HZ)");
+      expect(pitchSrc).toContain("best * PEAK_TOLERANCE");
+      expect(pitchSrc).toContain("Math.abs(buf[i]) < TRIM_THRESHOLD");
+      expect(pitchSrc).toContain("Math.abs(buf[SIZE - i]) < TRIM_THRESHOLD");
+      expect(pitchSrc).toContain("size < MIN_WINDOW_SAMPLES");
+      const hookSrc = readFileSync(USE_PITCH_SRC, "utf8");
+      expect(hookSrc).toContain("?? DEFAULT_CLARITY_THRESHOLD");
+      expect(hookSrc).toContain("hist.length > PITCH_MEDIAN_WINDOW");
+      expect(hookSrc).toContain("fftSize = PITCH_FFT_SIZE");
+      expect(hookSrc).toContain("median(hist)");
     });
 
     it("12 seconds is not a sustain threshold, so no lesson can pass or fail on it", () => {
