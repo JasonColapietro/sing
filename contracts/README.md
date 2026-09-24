@@ -272,6 +272,29 @@ every warm-up exercise, and one value changed that consumers have to meet:
 The same change adds `measured-voice-12w`, the book's twelve-week plan, to the
 list. That is a new value, not a new key, and needs no bump on its own.
 
+### suede-vocal v7
+
+`version` moved to 7 on 2026-09-24. The breath room's mic now hears the inhale
+(`lib/audio/breath-detect.ts`), and the contract says exactly how much that is
+worth. Key additions:
+
+- `measurement.inhaleDetected` and `measurement.inhaleSeconds`: a breath was
+  heard, and for how long. Both are `yes`, both carry an `evidence` list (the
+  classifier, its tests and `npm run e2e:breath`), and both notes say what
+  they are not: depth, airflow, support, lung capacity or the diaphragm.
+- `unsupportedClaims.breath-support-from-inhale`: the claim a curriculum would
+  be tempted to build on those rows, recorded before anyone builds it.
+- `breath.sustain.breathGate`, `breath.cue` (the breathe-and-sing drill) and
+  `breath.inhale` (the detector's bounds).
+- `deepLinks.rooms.breath.values`: the ids `?drill=` and `?routine=` accept,
+  now that `cue` is one of them.
+- `rules.inhaleIsHeardNotMeasured`.
+
+One value changed with them: the daily breath routine gained a breathe-and-sing
+step, so its steps and seconds moved. No lesson may make passing depend on a
+breath being heard. Every gated drill offers to start without detection, so a
+singer whose mic cannot hear breathing can always finish.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

@@ -54,7 +54,21 @@ export interface UsePitchResult {
    * so hold it only for as long as one recording.
    */
   getStream: () => MediaStream | null;
+  /**
+   * Hands every analysis frame's raw samples to `listener`, alongside the
+   * frame the loop made of them, and returns the unsubscribe. For a second
+   * reading of the same audio — the breath room's inhale detector — without a
+   * second AnalyserNode and animation loop over the same device. The buffer is
+   * reused, so read it inside the call and do not keep it.
+   */
+  subscribe: (listener: PitchFrameListener) => () => void;
 }
+
+export type PitchFrameListener = (
+  samples: Float32Array,
+  sampleRate: number,
+  frame: PitchFrame,
+) => void;
 
 /**
  * Microphone pitch tracking. Renders a valid idle state before start() is
@@ -89,7 +103,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
    * once, and both "Enable microphone" and any exercise card call start().
    */
   const pendingRef = useRef<Promise<boolean> | null>(null);
-
+  const listenersRef = useRef(new Set<PitchFrameListener>());
 
   // The input device and monitoring mode, so a change made in the picker can
   // reopen a stream that is already running.
@@ -180,6 +194,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
       };
       latest.current = next;
       setFrame(next);
+      for (const listener of listenersRef.current) listener(buf, ctx.sampleRate, next);
       // Test hook for e2e/pitch-precision.mjs, which plays a known note in as
       // the fake microphone and scores what the room actually heard. Inert
       // unless the harness created the array before the page loaded.
@@ -222,6 +237,13 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
   }, [inputId, monitoring, start, stop]);
 
   const getStream = useCallback(() => streamRef.current, []);
+  const subscribe = useCallback((listener: PitchFrameListener) => {
+    const listeners = listenersRef.current;
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }, []);
 
-  return { frame, latest, listening, error, start, stop, getStream };
+  return { frame, latest, listening, error, start, stop, getStream, subscribe };
 }

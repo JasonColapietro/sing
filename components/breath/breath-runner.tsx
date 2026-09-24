@@ -14,10 +14,13 @@ import { SessionShell } from "@/components/practice/session-shell";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
 import { useDailyGoal } from "@/components/practice/learn-home";
 import { BoxBreathing } from "./box-breathing";
+import { BreathCueDrill } from "./breath-cue-drill";
 import { FarinelliDrill } from "./farinelli-drill";
 import { SustainTest } from "./sustain-test";
 import {
   BREATH_STEP_INTRO_SEC,
+  CUE_HOLD_SEC,
+  CUE_REP_CHOICES,
   breathDrillDesc,
   breathDrillTitle,
   breathStepSeconds,
@@ -29,7 +32,7 @@ import {
   type BreathRoutine,
   type BreathStep,
 } from "./routines";
-import { starsForBox, starsForFarinelli, starsForSustain } from "./store";
+import { starsForBox, starsForCue, starsForFarinelli, starsForSustain } from "./store";
 
 type Stars = 0 | 1 | 2 | 3;
 
@@ -76,6 +79,16 @@ function StepDrill({
           variant="session"
           autoStart={autoStart}
           preset={{ cap: step.cap }}
+          onComplete={onComplete}
+          onExit={onExit}
+        />
+      );
+    case "cue":
+      return (
+        <BreathCueDrill
+          pitch={pitch}
+          autoStart={autoStart}
+          preset={{ reps: step.reps, holdSec: step.holdSec }}
           onComplete={onComplete}
           onExit={onExit}
         />
@@ -212,6 +225,8 @@ function starsForDrillResult(drill: BreathDrillId, r: BreathDrillResult): Stars 
       return starsForBox(Math.floor(r.durationSec / 60));
     case "farinelli":
       return starsForFarinelli(farinelliCapReached(r.durationSec));
+    case "cue":
+      return starsForCue(r.reps ?? 0);
     default:
       // The longest single hold, never the sum of attempts.
       return starsForSustain(r.best ?? r.durationSec);
@@ -235,8 +250,9 @@ function mergeAchievements(results: (BreathDrillResult | null)[]): Achievement[]
 /**
  * Stars when nothing in the routine was scored.
  *
- * Two of the three breath drills have no score at all — box breathing and the
- * Farinelli climb are pass/fail by doing them — so a routine of those two would
+ * Three of the four breath drills have no score at all — box breathing, the
+ * Farinelli climb and breathe-and-sing are pass/fail by doing them — so a
+ * routine of those would
  * otherwise land on a blank results screen. Finishing everything is three
  * stars, most of it two, any of it one. That is the honest reading of a set
  * whose only measure is whether the singer stayed with it.
@@ -387,20 +403,26 @@ export function BreathDrillSession({
   const { goalSec } = useDailyGoal();
 
   // The path's rows are drills, not presets, so the step handed to StepDrill is
-  // only a carrier for the drill id — every field the drills would read as a
-  // preset is ignored, because autoStart is false and the setup card decides.
+  // mostly a carrier for the drill id — the fields the drills would read as a
+  // preset are ignored, because autoStart is false and the setup card decides.
+  // Breathe and sing reads its note length from here, and its first rep count
+  // is only the picker's starting value.
   const step: BreathStep =
     drill === "box"
       ? { drill: "box", side: 4, minutes: 3 }
       : drill === "farinelli"
         ? { drill: "farinelli", cap: 8 }
-        : { drill: "sustain", attempts: 1 };
+        : drill === "cue"
+          ? { drill: "cue", reps: CUE_REP_CHOICES[1], holdSec: CUE_HOLD_SEC }
+          : { drill: "sustain", attempts: 1 };
 
   if (result) {
     return (
       <ResultsScreen
         title={breathDrillTitle(drill)}
-        subtitle="Breath"
+        // A scored row prints its score, not its note, so a scored drill's own
+        // line — the sustain's hold and the breath heard before it — goes here.
+        subtitle={result.score !== null ? `Breath · ${result.label}` : "Breath"}
         score={result.score}
         stars={starsForDrillResult(drill, result)}
         xp={result.logged?.xpGained ?? 0}

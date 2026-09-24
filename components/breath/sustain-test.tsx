@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
+import { useBreathDetect } from "@/lib/audio/use-breath-detect";
 import { logSession, type Achievement, type LogResult } from "@/lib/progress";
 import { Button, Card, MicGate, MIC_PRIVACY, Pill, Stat } from "@/components/ui";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
@@ -13,9 +14,18 @@ import {
   type BreathData,
 } from "./store";
 import { RewardNote } from "./reward";
-import { SUSTAIN_BENCHMARKS_SEC, type BreathDrillResult } from "./routines";
+import {
+  BREATH_FALLBACK_SEC,
+  SUSTAIN_BENCHMARKS_SEC,
+  type BreathDrillResult,
+} from "./routines";
+import { BreathGatePanel } from "./breath-gate";
 
-type Phase = "idle" | "armed" | "running" | "done";
+/**
+ * `breath` waits for the mic to hear an inhale before the attempt arms. It is
+ * skipped once the singer starts without breath detection.
+ */
+type Phase = "idle" | "breath" | "armed" | "running" | "done";
 
 const SILENCE_MS = 700;
 const METER_SEGS = 28;
@@ -27,7 +37,7 @@ function meterNorm(v: number) {
   return Math.min(1, Math.sqrt(Math.max(0, v) / 0.3));
 }
 
-function LevelMeter({
+export function LevelMeter({
   volume,
   threshold,
   tone = "page",
@@ -183,6 +193,14 @@ interface AttemptResult {
   sec: number;
   steadiness: number;
   logged: LogResult | null;
+  /** The inhale heard before this hold, in seconds; null when none was asked for. */
+  inhaleSec: number | null;
+}
+
+/** "18.4 s", and the breath before it when one was heard. */
+function holdLabel(a: AttemptResult): string {
+  const held = `${a.sec.toFixed(1)} s`;
+  return a.inhaleSec === null ? held : `${held} · ${a.inhaleSec.toFixed(1)} s breath in`;
 }
 
 /**
@@ -242,7 +260,8 @@ export function SustainTest({
   // `usePitch` opens no stream until start() is called, so the fallback costs a
   // few pieces of idle state and nothing else. Hooks cannot be conditional.
   const ownPitch = usePitch();
-  const { frame, listening, error, start, stop } = pitch ?? ownPitch;
+  const mic = pitch ?? ownPitch;
+  const { frame, listening, error, start, stop } = mic;
 
   const attemptsTarget = Math.max(1, preset?.attempts ?? 1);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -251,12 +270,24 @@ export function SustainTest({
   const [data, setData] = useState<BreathData | null>(null);
   const [result, setResult] = useState<AttemptResult | null>(null);
   const [doneCount, setDoneCount] = useState(0);
+  /**
+   * Whether an attempt waits for the mic to hear a breath first. On by
+   * default; the fallback turns it off for the rest of the drill, because a
+   * mic that could not hear one breath will not hear the next.
+   */
+  const [gated, setGated] = useState(true);
+  const [breathStale, setBreathStale] = useState(false);
+  const breath = useBreathDetect(mic, gated);
 
   const startRef = useRef(0);
   const lastLoudRef = useRef(0);
   const samplesRef = useRef<number[]>([]);
   const attemptsRef = useRef<AttemptResult[]>([]);
   const finishedRef = useRef(false);
+  /** When the current attempt started listening for a breath, on the frame clock. */
+  const breathSinceRef = useRef(0);
+  /** The inhale that opened this attempt, in seconds, once one has. */
+  const [heardSec, setHeardSec] = useState<number | null>(null);
 
   const completeRef = useRef(onComplete);
   useEffect(() => {
@@ -278,7 +309,11 @@ export function SustainTest({
     if (!done || finishedRef.current) return;
     finishedRef.current = true;
     const all = attemptsRef.current;
-    const best = all.reduce((m, a) => Math.max(m, a.sec), 0);
+    const bestAttempt = all.reduce<AttemptResult | null>(
+      (m, a) => (m === null || a.sec > m.sec ? a : m),
+      null,
+    );
+    const best = bestAttempt?.sec ?? 0;
     const scored = all.filter((a) => a.sec >= 1);
     const score = scored.length
       ? Math.round(scored.reduce((a, b) => a + b.steadiness, 0) / scored.length)
@@ -287,9 +322,25 @@ export function SustainTest({
       durationSec: all.reduce((a, b) => a + b.sec, 0),
       score,
       logged: foldAttempts(all),
-      label: `${best.toFixed(1)} s`,
+      label: bestAttempt ? holdLabel(bestAttempt) : "0.0 s",
       best,
     });
+  };
+
+  /** Start an attempt: listen for the breath first, unless that is switched off. */
+  const arm = (withGate = gated) => {
+    setElapsed(0);
+    setResult(null);
+    setBreathStale(false);
+    setHeardSec(null);
+    breathSinceRef.current = performance.now();
+    setPhase(withGate ? "breath" : "armed");
+  };
+
+  /** The fallback: this mic or room is not carrying the breath, so time on sound alone. */
+  const startWithoutBreath = () => {
+    setGated(false);
+    arm(false);
   };
 
   // If the mic is turned off mid-attempt, drop back to idle cleanly. Adjusted
@@ -298,7 +349,7 @@ export function SustainTest({
   const [prevListening, setPrevListening] = useState(listening);
   if (listening !== prevListening) {
     setPrevListening(listening);
-    if (!listening && (phase === "armed" || phase === "running")) {
+    if (!listening && (phase === "breath" || phase === "armed" || phase === "running")) {
       setPhase("idle");
       setElapsed(0);
     }
@@ -306,26 +357,62 @@ export function SustainTest({
 
   // A routine step arms itself the moment the mic is live — there is nothing to
   // set up on this drill, and a "Start attempt" button between two auto-running
-  // drills is a stop the routine did not need.
+  // drills is a stop the routine did not need. The session surface has no such
+  // button at all, so there the "Enable microphone" press is the start.
+  const selfArming = autoStart || variant === "session";
   useEffect(() => {
-    if (!autoStart || finishedRef.current) return;
+    if (!selfArming || finishedRef.current) return;
     if (listening && phase === "idle") {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- arming follows the mic stream going live, which is not a render-derivable value
-      setPhase("armed");
+      arm();
     }
-  }, [autoStart, listening, phase]);
+    // `arm` reads only state this effect already re-runs on.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selfArming, listening, phase]);
+
+  // The gate: an inhale heard since this attempt started listening arms it.
+  // One heard earlier — during the last hold's result card, say — does not.
+  const latest = mic.latest;
+  useEffect(() => {
+    const heard = breath.lastInhale;
+    if (phase !== "breath" || !heard || heard.endMs < breathSinceRef.current) return;
+    setHeardSec(Math.round(heard.durationSec * 10) / 10);
+    const now = latest.current;
+    if (heard.endedByHiss && now.volume > threshold) {
+      // The breath ran straight into the hiss, which has been sounding since
+      // the split — reported a moment after it, once the hiss had held. The
+      // hold is timed from the split, not from the report.
+      startRef.current = heard.endMs;
+      lastLoudRef.current = now.t;
+      samplesRef.current = [now.volume];
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- the inhale is an event from the mic stream, not render-derivable state
+      setElapsed(Math.max(0, (now.t - heard.endMs) / 1000));
+      setPhase("running");
+      return;
+    }
+    setPhase("armed");
+    // `threshold` is read at the moment the gate opens, not watched.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [breath.lastInhale, phase, latest]);
+
+  // Some mics and rooms never carry a breath. After a fair wait, say so and
+  // put the way round it first, rather than leaving the singer breathing at a
+  // screen that is not going to answer.
+  useEffect(() => {
+    if (phase !== "breath") return;
+    const id = window.setTimeout(() => setBreathStale(true), BREATH_FALLBACK_SEC * 1000);
+    return () => window.clearTimeout(id);
+  }, [phase, doneCount]);
 
   // Between attempts of a multi-attempt step: read the last figure, then the
   // next attempt arms itself, the way the routine's own steps do.
   const moreToDo = !!onComplete && doneCount > 0 && doneCount < attemptsTarget;
   useEffect(() => {
     if (!moreToDo || phase !== "done") return;
-    const id = window.setTimeout(() => {
-      setElapsed(0);
-      setResult(null);
-      setPhase("armed");
-    }, NEXT_ATTEMPT_MS);
+    const id = window.setTimeout(() => arm(), NEXT_ATTEMPT_MS);
     return () => window.clearTimeout(id);
+    // `arm` reads `gated`, which only the fallback changes, and never mid-card.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moreToDo, phase]);
 
   // Attempt state machine, driven by pitch frames (one per animation frame).
@@ -382,7 +469,12 @@ export function SustainTest({
           detail: "Sustain test",
         });
       }
-      const attempt: AttemptResult = { sec: secFinal, steadiness, logged };
+      const attempt: AttemptResult = {
+        sec: secFinal,
+        steadiness,
+        logged,
+        inhaleSec: heardSec,
+      };
       attemptsRef.current = [...attemptsRef.current, attempt];
       setResult(attempt);
       setDoneCount(attemptsRef.current.length);
@@ -431,14 +523,7 @@ export function SustainTest({
         bottom={
           <div className="flex items-center justify-center gap-3">
             {phase === "done" && !moreToDo && !onComplete && (
-              <SessionButton
-                label="Again"
-                onClick={() => {
-                  setElapsed(0);
-                  setResult(null);
-                  setPhase("armed");
-                }}
-              >
+              <SessionButton label="Again" onClick={() => arm()}>
                 <svg
                   width="16"
                   height="16"
@@ -488,8 +573,9 @@ export function SustainTest({
             </div>
             <h2 className="font-display text-3xl">Sustain test</h2>
             <p className="max-w-sm text-sm text-[var(--s-mut)]">
-              Sing or hiss one steady note for as long as you can. The timer
-              runs while the mic hears you and stops when you run out of air.
+              Breathe in, then sing or hiss one steady note for as long as you
+              can. The mic listens for your breath before it starts timing, and
+              stops when you run out of air.
             </p>
             <p className="text-xs text-[var(--s-dim)]">{MIC_PRIVACY}</p>
             <button
@@ -514,7 +600,11 @@ export function SustainTest({
                 ? "Hold"
                 : phase === "done"
                   ? "Breathe"
-                  : "Ready"}
+                  : phase === "breath"
+                    ? "Breathe in"
+                    : heardSec !== null
+                      ? "Sing"
+                      : "Ready"}
             </div>
             <div
               className="tabular font-mono text-[clamp(3.5rem,17vw,7rem)] leading-none text-[var(--s-voice)]"
@@ -537,18 +627,35 @@ export function SustainTest({
               role="status"
               aria-live="polite"
             >
-              {phase === "armed"
-                ? "Take a full breath, then hold one even “sss” or “ahh”."
-                : phase === "running"
-                  ? "Keep it steady. The timer stops after a moment of silence."
-                  : result
-                    ? `${result.steadiness}% steady · ${benchmark(result.sec)}${
-                        moreToDo
-                          ? ` · attempt ${doneCount + 1} of ${attemptsTarget} coming up`
-                          : ""
-                      }`
-                    : "Listening."}
+              {phase === "breath"
+                ? "Take a full breath in. The attempt starts once the mic hears it."
+                : phase === "armed"
+                  ? heardSec !== null
+                    ? `Breath heard (${heardSec.toFixed(1)} s). Now hold one even “sss” or “ahh”.`
+                    : "Take a full breath, then hold one even “sss” or “ahh”."
+                  : phase === "running"
+                    ? "Keep it steady. The timer stops after a moment of silence."
+                    : result
+                      ? `${result.steadiness}% steady · ${benchmark(result.sec)}${
+                          result.inhaleSec !== null
+                            ? ` · ${result.inhaleSec.toFixed(1)} s breath in`
+                            : ""
+                        }${
+                          moreToDo
+                            ? ` · attempt ${doneCount + 1} of ${attemptsTarget} coming up`
+                            : ""
+                        }`
+                      : "Listening."}
             </p>
+
+            {phase === "breath" && (
+              <BreathGatePanel
+                tone="session"
+                inhaling={breath.inhaling}
+                stale={breathStale}
+                onFallback={startWithoutBreath}
+              />
+            )}
 
             <div className="w-full max-w-md text-left">
               <label
@@ -583,7 +690,7 @@ export function SustainTest({
     return (
       <MicGate
         title="Sustain test"
-        description="Sing or hiss one steady note for as long as you can. The timer runs while the mic hears you and stops when you run out of air."
+        description="Breathe in, then sing or hiss one steady note for as long as you can. The mic listens for your breath before it starts timing, and stops when you run out of air."
         onEnable={() => {
           void start();
         }}
@@ -606,6 +713,8 @@ export function SustainTest({
               </Pill>
             ) : phase === "armed" ? (
               <Pill tone="violet">waiting for sound</Pill>
+            ) : phase === "breath" ? (
+              <Pill tone="cool">{breath.inhaling ? "inhale heard" : "listening for breath"}</Pill>
             ) : (
               <Pill tone="ok">mic ready</Pill>
             )}
@@ -631,27 +740,39 @@ export function SustainTest({
           {phase === "idle" && (
             <>
               <p className="max-w-sm text-center text-sm text-mut">
-                Take a full breath, press start, then hold one even
-                &ldquo;sss&rdquo; or &ldquo;ahh&rdquo;. Stopping for a moment
-                ends the attempt.
+                Press start and take a full breath. Once the mic hears it, hold
+                one even &ldquo;sss&rdquo; or &ldquo;ahh&rdquo;. Stopping for a
+                moment ends the attempt.
               </p>
-              <Button variant="violet" size="lg" onClick={() => setPhase("armed")}>
+              <Button variant="violet" size="lg" onClick={() => arm()}>
                 Start attempt
               </Button>
             </>
           )}
 
-          {(phase === "armed" || phase === "running") && (
+          {(phase === "breath" || phase === "armed" || phase === "running") && (
             <>
               <p
                 className="text-center text-sm text-mut"
                 role="status"
                 aria-live="polite"
               >
-                {phase === "armed"
-                  ? "Listening — begin whenever you're ready."
-                  : "Keep it steady. The timer stops after a moment of silence."}
+                {phase === "breath"
+                  ? "Breathe in — the attempt starts once the mic hears it."
+                  : phase === "armed"
+                    ? heardSec !== null
+                      ? `Breath heard (${heardSec.toFixed(1)} s) — begin whenever you're ready.`
+                      : "Listening — begin whenever you're ready."
+                    : "Keep it steady. The timer stops after a moment of silence."}
               </p>
+              {phase === "breath" && (
+                <BreathGatePanel
+                  tone="page"
+                  inhaling={breath.inhaling}
+                  stale={breathStale}
+                  onFallback={startWithoutBreath}
+                />
+              )}
               <Button
                 variant="outline"
                 size="sm"
@@ -680,6 +801,13 @@ export function SustainTest({
                   sub="volume consistency"
                   tone="cool"
                 />
+                {result.inhaleSec !== null && (
+                  <Stat
+                    label="Breath in"
+                    value={`${result.inhaleSec.toFixed(1)}s`}
+                    sub="heard before the hold"
+                  />
+                )}
               </div>
               {result.logged ? (
                 <RewardNote result={result.logged} />
@@ -688,14 +816,7 @@ export function SustainTest({
                   Attempts of 5 seconds or more are logged for XP.
                 </p>
               )}
-              <Button
-                variant="violet"
-                onClick={() => {
-                  setElapsed(0);
-                  setResult(null);
-                  setPhase("armed");
-                }}
-              >
+              <Button variant="violet" onClick={() => arm()}>
                 Go again
               </Button>
             </div>
