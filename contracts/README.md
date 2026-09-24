@@ -154,9 +154,10 @@ against the web's ±12) and the count-in (iOS was 3 beats against the web's 4).
 Both are now asserted as equalities rather than recorded as differences.
 
 The one that remains is `songTempo`, and it is a gap rather than a wrong number:
-native song practice is still playback without a microphone, so it offers two
-fixed rates where the web has a continuous tempo grid and auto-tempo. It closes
-when microphone-backed song scoring lands.
+native song practice offers two fixed rates where the web has a continuous tempo
+grid and auto-tempo. Native songs have been scored from the microphone since
+suede-voice #132 (S8, 2026-09-24). The gap closes when the tempo grid and
+auto-tempo arrive natively, which is the second iOS slice.
 
 ### practice-parity v2
 
