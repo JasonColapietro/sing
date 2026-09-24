@@ -95,7 +95,12 @@ export function StartingPaths() {
           <Link href="/learn" className="text-violet-ink hover:underline">
             learn-to-sing and vocal training guide
           </Link>{" "}
-          turns these rooms into a twenty-minute session and a seven-day plan.
+          turns these rooms into a twenty-minute session and a seven-day plan,
+          and the{" "}
+          <Link href="/learn/voice" className="text-violet-ink hover:underline">
+            free voice lessons
+          </Link>{" "}
+          take you through seven stages, one small skill at a time.
         </p>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2">
