@@ -25,8 +25,9 @@ Since 2026-09-23 sing also hosts the lessons. The bodies are markdown in
 `content/lessons`, compiled into `lib/lesson-data.ts` and served at
 `/learn/voice`. `ownership` and `migration` record that move. Each of the
 seven pieces of evidence GuitarHub required before redirecting has a line in
-`migration.resolution` saying what happened to it. Two are still open: a
-qualified vocal review, and the physical-microphone checks.
+`migration.resolution` saying what happened to it. The qualified vocal review
+and the physical-microphone checks are recorded as done on the owner's report
+(2026-09-24); their records are not stored in this repository.
 
 The file is authored here, not generated. GuitarHub vendors it byte for byte,
 so update it here first. `lib/voice-curriculum.ts` validates it at the data

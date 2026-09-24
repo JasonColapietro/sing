@@ -71,10 +71,13 @@ describe("the Sing-owned voice curriculum contract", () => {
     expect(Object.keys(resolution).sort()).toEqual(
       [...voiceCurriculum.migration.requiredEvidence].sort(),
     );
-    // Not claimed done: nobody has reviewed the advanced lessons or run the
-    // physical-microphone checks.
-    expect(resolution.vocalReview).toMatch(/^Open\./);
-    expect(resolution.deviceAudio).toMatch(/^Open\./);
+    // The two release checks are recorded as the owner reported them, with
+    // the date and the fact that the evidence lives outside this repository,
+    // rather than as if this repository held the proof.
+    for (const item of [resolution.vocalReview, resolution.deviceAudio]) {
+      expect(item).toMatch(/^Done, reported by the owner on \d{4}-\d{2}-\d{2}:/);
+      expect(item).toMatch(/not stored in this repository/);
+    }
   });
 
   it("makes every stage free, as decided on 2026-09-23", () => {
