@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/studio",
     "/warmups",
+    "/programs",
     "/range",
     "/learn",
     VOICE_LEARN_PATH,

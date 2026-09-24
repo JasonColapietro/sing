@@ -24,6 +24,7 @@ export const ROUTES = [
   { path: "/ear-training", name: "ear-training", kind: "room", mic: true },
 
   { path: "/progress", name: "progress", kind: "app" },
+  { path: "/programs", name: "programs", kind: "app" },
   { path: "/learn", name: "learn", kind: "reference" },
   { path: "/learn/voice", name: "learn-voice", kind: "reference" },
   { path: "/glossary", name: "glossary", kind: "reference" },

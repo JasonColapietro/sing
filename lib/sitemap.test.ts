@@ -15,6 +15,7 @@ vi.mock("server-only", () => ({}));
 import sitemap from "@/app/sitemap";
 import { generateMetadata as atlasMetadata } from "@/app/atlas/[slug]/page";
 import { generateMetadata as bookMetadata } from "@/app/book/[slug]/page";
+import { metadata as programsMetadata } from "@/app/programs/page";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { BOOK_CONTENTS } from "@/lib/book-data";
 import { SITE_URL } from "@/lib/site";
@@ -43,6 +44,14 @@ describe("sitemap indexability", () => {
         priority: 0.7,
       }),
     );
+  });
+
+  it("publishes the programs page with its canonical URL", () => {
+    expect(sitemap()).toContainEqual(
+      expect.objectContaining({ url: `${SITE_URL}/programs` }),
+    );
+    expect(programsMetadata.alternates?.canonical).toBe(`${SITE_URL}/programs`);
+    expect(programsMetadata.openGraph?.url).toBe(`${SITE_URL}/programs`);
   });
 
   it("never publishes an Atlas or book chapter whose route metadata says noindex", async () => {
