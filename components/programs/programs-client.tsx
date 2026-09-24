@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState, type MouseEvent } from "react";
-import { Button, Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
+import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { ProChip } from "@/components/pro/ui";
 import { useIsPro } from "@/lib/pro";
 import { localDay } from "@/lib/progress";
 import {
+  FREE_WEEKS,
   PROGRAMS,
   dayMinutes,
   isRestDay,
@@ -26,6 +27,10 @@ function minutesLabel(p: Program): string {
 
 function lengthLabel(p: Program): string {
   return p.weeks === 1 ? "1 week" : `${p.weeks} weeks`;
+}
+
+function freeLabel(): string {
+  return FREE_WEEKS === 1 ? "week 1" : `weeks 1–${FREE_WEEKS}`;
 }
 
 /** A plain left click, which the page handles in place; anything else keeps its browser meaning. */
@@ -52,6 +57,7 @@ function ProgramCard({
       <p className="mt-1 font-mono text-xs text-dim">
         {lengthLabel(program)} · {minutesLabel(program)} · {restDayCount(program)} rest{" "}
         {restDayCount(program) === 1 ? "day" : "days"}
+        {program.pro && ` · ${freeLabel()} free`}
       </p>
       <p className="mt-3 flex-1 text-sm text-mut">{program.tagline}</p>
       <div className="mt-4">
@@ -156,9 +162,10 @@ function ProgramDetail({
 }) {
   const isPro = useIsPro();
   const running = active?.program.id === program.id;
-  const locked = program.pro && !isPro;
+  // A Pro program starts for anyone: its first week is free, and the today
+  // card asks for Pro when the singer reaches the first day past it.
+  const trial = program.pro && !isPro;
   const start = () => {
-    if (locked) return;
     // Switching away from another program is a deliberate act; say what it costs.
     if (active && !running && !window.confirm(`Leave ${active.program.name}? Your place in it is not kept.`)) return;
     if (running && !window.confirm(`Restart ${program.name} from day 1?`)) return;
@@ -199,12 +206,32 @@ function ProgramDetail({
         <p className="mt-2 max-w-2xl text-sm text-rec">
           Sing at a comfortable volume. Stop if a note causes pain.
         </p>
+        {program.chapters && (
+          <div className="mt-4 max-w-2xl text-sm text-mut">
+            <span className="font-medium text-ink">Read along. </span>
+            Each fortnight has a chapter in the book:
+            <ul className="mt-2 space-y-1">
+              {program.chapters.map((c) => (
+                <li key={c.slug}>
+                  <Link href={`/book/${c.slug}`} className="text-violet-ink underline-offset-4 hover:underline">
+                    {c.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {trial && (
+          <p className="mt-4 max-w-2xl text-sm text-mut">
+            <span className="font-medium text-ink">
+              {freeLabel().replace(/^w/, "W")} is free.
+            </span>{" "}
+            It uses only free exercises, and each day&apos;s guided practice fits the free plan&apos;s three minutes. Day{" "}
+            {FREE_WEEKS * 7 + 1} onward needs <Link href="/pro" className="underline">Pro</Link>.
+          </p>
+        )}
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          {locked ? (
-            <LinkButton href="/pro">Unlock with Pro</LinkButton>
-          ) : (
-            <Button onClick={start}>{running ? "Restart from day 1" : active ? "Switch to this program" : "Start this program"}</Button>
-          )}
+          <Button onClick={start}>{running ? "Restart from day 1" : active ? "Switch to this program" : "Start this program"}</Button>
           {running && (
             <Button variant="ghost" onClick={() => window.confirm(`Stop ${program.name}?`) && leaveProgram()}>
               Stop program
@@ -252,7 +279,7 @@ export function ProgramsClient() {
     <PageShell
       kicker="Programs"
       title="Practice programs"
-      subtitle="Named plans from one week to six, worked a day at a time: warmups, breath and check-ins, with rest days built in. Every day opens the rooms you already use."
+      subtitle="Named plans from one week to twelve, worked a day at a time: warmups, breath and check-ins, with rest days built in. Every day opens the rooms you already use."
     >
       <div className="space-y-8">
         {active && (!program || program.id === active.program.id) && (
