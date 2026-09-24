@@ -758,22 +758,26 @@ export function computeRootLadder(
       Array.from({ length: top - start + 1 }, (_, i) => start + i);
     const start = Math.max(30, lowMidi + 4);
     const top = Math.max(start, highMidi - 5 - maxOff);
-    if (top - start + 1 >= MIN_RUNGS || maxOff < 12) return range(start, top);
-    // A pattern an octave or wider in an ordinary range: spend the headroom
-    // first (the pattern's top note may reach the measured top, which is what
-    // the recordings this catalogue mirrors do), then let the floor drop
-    // toward the measured low — never below it — until the ladder has rungs
-    // to walk. Narrower patterns keep the courtesies untouched: the coach's
-    // first-practice picker (lib/song-first-practice.ts) relies on them.
+    // In a narrow range the courtesy ladder collapses to its floor, and that
+    // single rung can put the pattern's top above the measured high — a fifth
+    // from a root of 52 is 59 in a 48–55 range, a tenth from 54 is 70 in a
+    // 50–66 range. The ceiling wins over the courtesies for every pattern.
+    const overCeiling = top + maxOff > highMidi;
+    if (!overCeiling && (top - start + 1 >= MIN_RUNGS || maxOff < 12)) {
+      return range(start, top);
+    }
+    // Spend the headroom first (the pattern's top note may reach the measured
+    // top, which is what the recordings this catalogue mirrors do), then let
+    // the floor drop toward the measured low — never below it — until the
+    // ladder has rungs to walk. Patterns narrower than an octave only get here
+    // when the courtesy ladder would cross the ceiling; while it fits they keep
+    // the courtesies untouched, which the coach's first-practice picker
+    // (lib/song-first-practice.ts) relies on.
     const top2 = Math.max(30, highMidi - maxOff);
     const start2 = Math.max(30, lowMidi, Math.min(lowMidi + 4, top2 - (MIN_RUNGS - 1)));
-    // In a narrow range the courtesy ladder collapses to its floor, and that
-    // single rung can put a wide pattern's top above the measured high — a
-    // tenth from a root of 54 is 70 in a 50–66 range. The ceiling wins: take
-    // the fallback whenever the courtesy ladder would cross it, and when the
-    // range is narrower than the pattern itself, pin the top note to the
-    // measured high and let the bottom fall below the measured low instead.
-    const overCeiling = top + maxOff > highMidi;
+    // Take the fallback whenever the courtesy ladder would cross the ceiling,
+    // and when the range is narrower than the pattern itself, pin the top note
+    // to the measured high and let the bottom fall below the measured low.
     if (top2 >= start2 && (top2 - start2 + 1 > top - start + 1 || overCeiling)) {
       return range(start2, top2);
     }
