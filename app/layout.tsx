@@ -9,6 +9,7 @@ import V2Banner from "@/components/v2-banner";
 import { SITE_URL } from "@/lib/site";
 import ProMoments from "@/components/pro/moments";
 import ProSync from "@/components/pro/sync";
+import WeeklyReportCard from "@/components/weekly-report-card";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -110,6 +111,9 @@ export default function RootLayout({
       <ProSync />
       <ProMoments />
       <div id="content" className="min-h-[70dvh]">
+        {/* The Monday summary. Inside #content so the skip link lands on it,
+            and in the flow rather than over it so it never blocks a room. */}
+        <WeeklyReportCard />
         {children}
       </div>
       <SiteFooter />
