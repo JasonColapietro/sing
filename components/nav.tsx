@@ -38,7 +38,7 @@ const LINKS: { href: string; label: string; also?: string[] }[] = [
   { href: "/breath", label: "Breath" },
   { href: "/songs", label: "Songs" },
   { href: "/tools", label: "Tools", also: ["/recorder", "/analyze"] },
-  { href: "/learn", label: "Learn", also: ["/learn/voice", "/book", "/atlas", "/glossary"] },
+  { href: "/learn", label: "Learn", also: ["/learn/voice", "/programs", "/book", "/atlas", "/glossary"] },
   { href: "/progress", label: "Progress" },
 ];
 

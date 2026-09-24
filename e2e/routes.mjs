@@ -26,6 +26,7 @@ export const ROUTES = [
   { path: "/progress", name: "progress", kind: "app" },
   { path: "/learn", name: "learn", kind: "reference" },
   { path: "/learn/voice", name: "learn-voice", kind: "reference" },
+  { path: "/programs", name: "programs", kind: "reference" },
   { path: "/glossary", name: "glossary", kind: "reference" },
   { path: "/book", name: "book", kind: "reference" },
   { path: "/atlas", name: "atlas", kind: "reference" },
@@ -60,6 +61,7 @@ export async function discoverTemplateRoutes(baseUrl) {
     { path: firstUnder("/learn/voice/", 3), name: "learn-stage", kind: "reference" },
     { path: firstUnder("/learn/voice/", 4), name: "learn-module", kind: "reference" },
     { path: firstUnder("/learn/voice/", 5), name: "learn-lesson", kind: "reference" },
+    { path: firstUnder("/programs/", 2), name: "program-detail", kind: "reference" },
   ].filter((r) => r.path);
 
   return picks;

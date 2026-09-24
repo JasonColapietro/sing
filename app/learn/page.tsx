@@ -278,6 +278,13 @@ export default function LearnPage() {
               </li>
             ))}
           </ol>
+          <p className="mt-5 text-sm text-mut">
+            Want the weeks after this one laid out too?{" "}
+            <Link href="/programs" className="text-violet-ink hover:underline">
+              Practice programs →
+            </Link>{" "}
+            run two to four weeks and keep your place as you go.
+          </p>
         </Card>
 
         <section aria-labelledby="fundamentals" className="space-y-4">

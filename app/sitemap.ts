@@ -13,6 +13,7 @@ import { POP_SONGS } from "@/lib/pop-songs";
 import { getSingerLastModified } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 import { VOICE_LEARN_PATH, coursePaths } from "@/lib/voice-lessons";
+import { PROGRAMS } from "@/lib/programs";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = [
@@ -22,6 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/range",
     "/learn",
     VOICE_LEARN_PATH,
+    "/programs",
+    ...PROGRAMS.map((p) => `/programs/${p.id}`),
     "/voice",
     "/singers",
     "/singers/methodology",

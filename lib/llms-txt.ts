@@ -123,6 +123,7 @@ export function buildLlmsTxt(): string {
 - [Suede Sing: the free vocal studio in your browser](${SING_HOME}/): the brand's canonical home
 - [Learn to sing](${SING_HOME}/learn): the free vocal-training hub — a twenty-minute beginner session, a seven-day practice plan, vocal fundamentals, and direct paths into the range, pitch, warmup, breath, song, and reference tools
 - [Voice lessons](${SING_HOME}/learn/voice): a free seven-stage singing course of ${CATALOG_LESSON_COUNT} short lessons, from room setup and range to registers, agility and style. Each lesson ends in a self-check and links to the room that practises it, and says plainly when nothing measures the skill
+- [Practice programs](${SING_HOME}/programs): free multi-week plans (two to four weeks) that order the warmups, breath drills, range test and ear games day by day, repeat the first day at the end for comparison, and say what that comparison does not show
 - [Suede Voice for iPhone and Android](${SING_HOME}/voice): the official mobile app page, with both store listings and the relationship to Suede Sing
 - [Studio](${SING_HOME}/studio): real-time pitch training
 - [Free vocal range test](${SING_HOME}/range): browser-based range test, no signup or download
