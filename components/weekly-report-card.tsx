@@ -47,14 +47,21 @@ export default function WeeklyReportCard() {
   const [report, setReport] = useState<WeekInReview | null>(null);
   const ref = useRef<HTMLElement>(null);
   const headingId = useId();
+  // Auth forms are the one place a card above the content is in the way.
+  // Read from the router rather than window.location: the card lives in the
+  // root layout and never remounts, so a one-time check on the first URL
+  // missed every client navigation to or from sign-in and sign-up.
+  const onAuthRoute = /^\/sign-(in|up)(\/|$)/.test(pathname ?? "");
 
   useEffect(() => {
+    // Off the auth forms only. An open report is kept (just not rendered)
+    // while the singer is on one, and a report not yet evaluated gets its
+    // first look as soon as they leave; the seen key stops a second showing.
+    if (onAuthRoute) return;
     // Inside a closure, same as ProMoments' gate(): a bare setState in an
     // effect body trips react-hooks/set-state-in-effect.
     const gate = () => {
       try {
-        // Auth forms are the one place a card above the content is in the way.
-        if (/^\/sign-(in|up)(\/|$)/.test(window.location.pathname)) return;
         const next = weekInReview(getProgressState().sessions, new Date());
         const seen = window.localStorage.getItem(WEEKLY_REPORT_SEEN_KEY);
         if (!shouldShowWeekInReview(next, seen)) return;
@@ -65,9 +72,9 @@ export default function WeeklyReportCard() {
       }
     };
     gate();
-  }, []);
+  }, [onAuthRoute]);
 
-  if (!report) return null;
+  if (!report || onAuthRoute) return null;
 
   const close = () => {
     const hadFocus = ref.current?.contains(document.activeElement);
