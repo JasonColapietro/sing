@@ -29,9 +29,44 @@ describe("computeRootLadder", () => {
     );
   });
 
-  it("collapses a too-narrow range to a single root instead of a plateau", () => {
-    // start = 52, top = max(52, 55 - 5 - 7) = 52 — one root, no repeats.
-    expect(computeRootLadder(fiveNote, 48, 55)).toEqual([52]);
+  it("collapses a range exactly as wide as the pattern to one root at the ceiling", () => {
+    // The courtesy ladder would be [52], whose fifth (59) sits four semitones
+    // above the measured high. The ceiling wins: one root whose fifth is 55.
+    expect(computeRootLadder(fiveNote, 48, 55)).toEqual([48]);
+  });
+
+  it("keeps every exercise's notes under the measured high whenever the range holds the pattern", () => {
+    for (const ex of ALL_EXERCISES) {
+      const offsets = ex.buildSteps(0).flat();
+      const maxOff = Math.max(...offsets);
+      for (let low = 36; low <= 64; low++) {
+        for (let span = 0; span <= 24; span++) {
+          const high = low + span;
+          const label = `${ex.id} ${low}-${high}`;
+          const roots = computeRootLadder(ex, low, high);
+          // Non-empty, consecutive semitones, never below the MIDI-30 floor.
+          expect(roots.length, label).toBeGreaterThanOrEqual(1);
+          roots.forEach((root, i) => {
+            expect(Number.isInteger(root), label).toBe(true);
+            if (i > 0) expect(root - roots[i - 1], label).toBe(1);
+          });
+          expect(roots[0], label).toBeGreaterThanOrEqual(30);
+          const notes = roots.flatMap((root) => ex.buildSteps(root).flat());
+          const top = Math.max(...notes);
+          if (span >= maxOff) {
+            // The whole pattern fits: every note inside the measured range.
+            expect(top, label).toBeLessThanOrEqual(high);
+            expect(roots[0], label).toBeGreaterThanOrEqual(low);
+            expect(Math.min(...notes), label).toBeGreaterThanOrEqual(low);
+          } else {
+            // Narrower than the pattern: one rung, its top pinned to the high
+            // (unless that root would fall under the MIDI-30 floor).
+            expect(roots, label).toEqual([Math.max(30, high - maxOff)]);
+            if (high - maxOff >= 30) expect(top, label).toBe(high);
+          }
+        }
+      }
+    }
   });
 
   it("gives every exercise a ladder to walk in an ordinary range", () => {
