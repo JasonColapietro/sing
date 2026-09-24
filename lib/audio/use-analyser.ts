@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { getAudioContext } from "./context";
 import { openMic } from "./mic";
 import { useAudioPrefs } from "./devices";
-import { detectPitch } from "./pitch";
+import { DEFAULT_CLARITY_THRESHOLD, detectPitch } from "./pitch";
 import { doseDay } from "./vocal-dose";
 
 /**
@@ -69,7 +69,7 @@ export function useAnalyser(opts?: {
   /** Called once per frame, after `latest` is updated. Keep it cheap. */
   onFrame?: (frame: AnalyserFrame, dtSec: number) => void;
 }): UseAnalyserResult {
-  const clarityThreshold = opts?.clarityThreshold ?? 0.75;
+  const clarityThreshold = opts?.clarityThreshold ?? DEFAULT_CLARITY_THRESHOLD;
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sampleRate, setSampleRate] = useState(48000);

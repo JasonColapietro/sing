@@ -1,6 +1,6 @@
 {
   "contract": "suede-vocal",
-  "version": 2,
+  "version": 3,
   "reference": {
     "repo": "JasonColapietro/sing",
     "modules": [
@@ -9,6 +9,8 @@
       "lib/singers-core.ts",
       "lib/audio/notes.ts",
       "lib/audio/pitch.ts",
+      "lib/audio/use-pitch.ts",
+      "lib/audio/latency.ts",
       "components/warmups/exercises.ts",
       "components/warmups/routines.ts",
       "components/breath/routines.ts",
@@ -27,7 +29,21 @@
     "sungToleranceCents": 50,
     "monophonic": true,
     "accidentalGlyph": "#",
-    "labelFormat": "scientific"
+    "labelFormat": "scientific",
+    "engine": {
+      "method": "nsdf",
+      "lowpassHz": 4000,
+      "silenceRms": 0.01,
+      "peakTolerance": 0.9,
+      "subrangeFloorHz": 40,
+      "subrangeSearchRatio": 0.03,
+      "subrangeMargin": 0.02,
+      "subrangeMinClarity": 0.8,
+      "frameSamples": 4096,
+      "clarityThreshold": 0.75,
+      "medianWindow": 4,
+      "smoothing": "true-median"
+    }
   },
   "taxonomy": {
     "voiceKinds": [

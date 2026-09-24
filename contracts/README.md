@@ -198,6 +198,31 @@ compete to be the place the writing lives. `free` is the field a consumer has to
 read, because most of the library is behind Pro and a free lesson citing a gated
 chapter has to say so.
 
+### suede-vocal v3
+
+`version` moved to 3 on 2026-09-24, adding one key and changing no value:
+`pitch.engine`. It carries the detector's tuning and the smoothing the live
+rooms put on it:
+
+- the pre-filter corner (`lowpassHz`)
+- the silence floor (`silenceRms`)
+- the peak rule (`peakTolerance`)
+- the mains-hum check below C2 (`subrangeFloorHz`, `subrangeSearchRatio`,
+  `subrangeMargin`, `subrangeMinClarity`)
+- the frame size (`frameSamples`), the clarity gate (`clarityThreshold`), and
+  the median window with its true-median rule (`medianWindow`, `smoothing`)
+
+It exists because the iOS song room ports `detectPitch` (suede-voice #132). A
+port reads the same frames the same way only when these match, and until v3
+they travelled as Swift comments naming the web constant each one mirrored.
+`usePitch` and `useAnalyser` now take the clarity gate and the median window
+from the named constants rather than from literals, and `suede-vocal.test.ts`
+checks the sources still use them. A literal creeping back in would otherwise
+let the contract and the detector disagree with every equality check green.
+
+`Suede-AI/suede-voice` vendors this file and asserts `version`, so the re-sync
+is a failing test there until its suite reads `pitch.engine`.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or
