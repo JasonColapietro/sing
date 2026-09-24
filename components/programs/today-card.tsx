@@ -5,6 +5,7 @@ import { Button, Card, LinkButton, ProgressBar, SectionLabel } from "@/component
 import { ProChip } from "@/components/pro/ui";
 import { useIsPro } from "@/lib/pro";
 import { FREE_DAILY_SEC } from "@/lib/free-cap";
+import { midiToLabel } from "@/lib/audio/notes";
 import {
   dayMinutes,
   daySeconds,
@@ -13,9 +14,11 @@ import {
   itemHref,
   itemIsPro,
   itemLabel,
+  itemSteps,
   markDayDone,
   startProgram,
   type ProgramDay,
+  type ProgramReading,
 } from "@/lib/programs";
 import { saveProgramProgress } from "./store";
 import type { ActiveProgram } from "./use-program";
@@ -44,7 +47,16 @@ function Chevron() {
  * it. `done` ticks the items today's log already shows; omitted, the list is a
  * preview with numbers instead of ticks.
  */
-export function DayItems({ day, done }: { day: ProgramDay; done?: boolean[] }) {
+export function DayItems({
+  day,
+  done,
+  stepsDone,
+}: {
+  day: ProgramDay;
+  done?: boolean[];
+  /** Per item, which of its steps are done; given, routines and sets list their steps. */
+  stepsDone?: boolean[][];
+}) {
   return (
     <ol className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel">
       {day.items.map((item, i) => {
@@ -77,10 +89,80 @@ export function DayItems({ day, done }: { day: ProgramDay; done?: boolean[] }) {
               </span>
               <Chevron />
             </Link>
+            {stepsDone && !sung && <ItemSteps item={item} done={stepsDone[i] ?? []} />}
           </li>
         );
       })}
     </ol>
+  );
+}
+
+/**
+ * A routine's or breath set's steps, each opening on its own. The rooms run a
+ * routine from its first step, so a singer the free plan stopped part way
+ * through can sing the rest one at a time, on this day or a later one.
+ */
+function ItemSteps({ item, done }: { item: ProgramDay["items"][number]; done: boolean[] }) {
+  const steps = itemSteps(item);
+  if (steps.length < 2) return null;
+  return (
+    <details className="border-t border-line px-4 py-2 pl-13 text-sm">
+      <summary className="cursor-pointer py-1 text-dim">
+        Its {steps.length} steps, one at a time ({done.filter(Boolean).length} done)
+      </summary>
+      <ul className="mt-1 space-y-1 pb-1">
+        {steps.map((st, k) => (
+          <li key={k} className="flex items-baseline gap-2">
+            <span aria-hidden="true" className={done[k] ? "text-ok-ink" : "text-dim"}>
+              {done[k] ? "✓" : "·"}
+            </span>
+            <Link href={itemHref(st)} className="text-violet-ink underline-offset-4 hover:underline">
+              {itemLabel(st).title}
+            </Link>
+            {done[k] && <span className="sr-only">(done)</span>}
+            {itemIsPro(st) && <ProChip />}
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+/** The check-in days' range and sustain readings, oldest first. */
+function Readings({ readings }: { readings: ProgramReading[] }) {
+  if (readings.length === 0) return null;
+  return (
+    <div className="mt-5" data-program-readings>
+      <h4 className="text-sm font-medium">Your check-in readings</h4>
+      <table className="mt-2 w-full max-w-lg text-left text-sm">
+        <thead>
+          <tr className="text-xs text-dim">
+            <th className="py-1 pr-3 font-normal">Day</th>
+            <th className="py-1 pr-3 font-normal">Range test</th>
+            <th className="py-1 font-normal">Longest sustain</th>
+          </tr>
+        </thead>
+        <tbody>
+          {readings.map((r) => (
+            <tr key={r.index} className="border-t border-line">
+              <td className="py-1 pr-3 text-mut">
+                Day {r.index + 1} <span className="text-xs text-dim">{r.day}</span>
+              </td>
+              <td className="tabular py-1 pr-3 font-mono">
+                {r.range ? `${midiToLabel(r.range.lowMidi)}–${midiToLabel(r.range.highMidi)}` : "not logged"}
+              </td>
+              <td className="tabular py-1 font-mono">
+                {r.sustainSec === undefined ? "—" : r.sustainSec === null ? "not logged" : `${r.sustainSec.toFixed(1)} s`}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="mt-2 max-w-xl text-xs text-dim">
+        The notes the range test found and the seconds the sustain timer counted, on the days
+        that took them. A single reading is one day&apos;s, not a lasting change.
+      </p>
+    </div>
   );
 }
 
@@ -99,7 +181,7 @@ export function ProgramTodayCard({
   onBrowse: (() => void) | null;
 }) {
   const isPro = useIsPro();
-  const { program, progress, today, view, itemsDone } = active;
+  const { program, progress, today, view, itemsDone, stepsDone, countsFrom, readings } = active;
   const total = program.days.length;
   const day = program.days[view.index];
   const next = program.days[view.index + 1];
@@ -164,15 +246,18 @@ export function ProgramTodayCard({
             ) : (
               <>
                 <p className="mt-2 max-w-xl text-sm text-mut">
-                  Each row opens its room. A row ticks itself once today&apos;s log shows it; if
-                  you did something the log cannot see, mark the day done yourself.
+                  Each row opens its room. A row ticks itself once your log shows it
+                  {countsFrom < today ? ` (anything since ${countsFrom} counts)` : ""}; if you did
+                  something the log cannot see, mark the day done yourself.
                 </p>
                 <div className="mt-4">
-                  <DayItems day={day} done={itemsDone} />
+                  <DayItems day={day} done={itemsDone} stepsDone={stepsDone} />
                 </div>
                 {!isPro && cappedSec > FREE_DAILY_SEC && (
                   <p className="mt-3 max-w-xl text-xs text-dim">
-                    The free plan covers three guided minutes a day, and this day runs longer.{" "}
+                    The free plan covers three guided minutes a day, and this day runs longer, so
+                    spread it over a few days: it completes once every row is ticked, and a
+                    routine&apos;s steps can be sung one at a time.{" "}
                     <Link href="/pro" className="underline">Pro</Link> removes the cap; the range
                     test is always free.
                   </p>
@@ -181,6 +266,8 @@ export function ProgramTodayCard({
             )}
           </div>
         )}
+
+        <Readings readings={readings} />
 
         <div className="mt-5 flex flex-wrap items-center gap-2">
           {view.status === "todo" && !isRestDay(day) && (

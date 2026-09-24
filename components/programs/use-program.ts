@@ -1,15 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { localDay, useProgress } from "@/lib/progress";
+import { loadBreath, type SustainAttempt } from "@/components/breath/store";
 import {
+  earliestNext,
+  itemDoneOn,
+  itemSteps,
   itemsDoneOn,
+  programReadings,
   programById,
   programToday,
   reconcileProgress,
   sessionsForRun,
+  sustainAttemptSessions,
   type Program,
   type ProgramProgress,
+  type ProgramReading,
   type ProgramToday,
 } from "@/lib/programs";
 import { saveProgramProgress, useProgramProgress } from "./store";
@@ -45,8 +52,14 @@ export interface ActiveProgram {
   progress: ProgramProgress;
   today: string;
   view: ProgramToday;
-  /** Per item of the day the card shows, in order: done on today's log. */
+  /** Per item of the day the card shows, in order: done on the log since the day opened. */
   itemsDone: boolean[];
+  /** Per item, its steps done (routines and breath sets; empty for the rest). */
+  stepsDone: boolean[][];
+  /** The first calendar day whose practice counts toward today's program day. */
+  countsFrom: string;
+  /** Range and sustain readings of the completed check-in days. */
+  readings: ProgramReading[];
 }
 
 /**
@@ -55,8 +68,17 @@ export interface ActiveProgram {
  */
 export function useActiveProgram(): ActiveProgram | null {
   const stored = useProgramProgress();
-  const { sessions } = useProgress();
+  const { sessions: logged, rangeHistory } = useProgress();
   const today = useLocalDay();
+  // The sustain room's own attempt record: holds under five seconds are kept
+  // there but never logged, and a program still counts them. localStorage, so
+  // read after mount, and again whenever the log moves.
+  const [attempts, setAttempts] = useState<SustainAttempt[]>([]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAttempts(loadBreath().attempts);
+  }, [logged]);
+  const sessions = useMemo(() => [...logged, ...sustainAttemptSessions(attempts)], [logged, attempts]);
   const program = programById(stored?.programId);
   const progress =
     stored && program && today ? reconcileProgress(program, stored, sessions, today) : stored;
@@ -69,9 +91,14 @@ export function useActiveProgram(): ActiveProgram | null {
 
   if (!program || !progress || !today) return null;
   const view = programToday(program, progress, today);
-  const itemsDone =
-    view.status === "todo"
-      ? itemsDoneOn(program.days[view.index], sessionsForRun(progress, sessions), today)
-      : [];
-  return { program, progress, today, view, itemsDone };
+  const counted = sessionsForRun(progress, sessions);
+  const countsFrom = earliestNext(progress);
+  const day = program.days[view.index];
+  const todo = view.status === "todo";
+  const itemsDone = todo ? itemsDoneOn(day, counted, today, countsFrom) : [];
+  const stepsDone = todo
+    ? day.items.map((item) => itemSteps(item).map((st) => itemDoneOn(st, counted, today, countsFrom)))
+    : [];
+  const readings = programReadings(program, progress, sessions, rangeHistory);
+  return { program, progress, today, view, itemsDone, stepsDone, countsFrom, readings };
 }

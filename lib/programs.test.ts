@@ -5,6 +5,7 @@ import {
   dayMinutes,
   isRestDay,
   itemDoneOn,
+  itemSteps,
   itemsDoneOn,
   itemEvidence,
   itemHref,
@@ -13,11 +14,13 @@ import {
   markDayDone,
   programById,
   programMinutesRange,
+  programReadings,
   programToday,
   reconcileProgress,
   reviveProgress,
   sessionsForRun,
   startProgram,
+  sustainAttemptSessions,
   type Program,
   type ProgramDay,
   type ProgramItem,
@@ -460,5 +463,113 @@ describe("the stored record", () => {
     expect(addDays("2026-03-08", 1)).toBe("2026-03-09");
     expect(addDays("2026-11-01", 1)).toBe("2026-11-02");
     expect(addDays("2026-01-01", -1)).toBe("2025-12-31");
+  });
+});
+
+describe("a free singer's day, spread over several calendar days", () => {
+  const program = programById("foundations-2w")!;
+  const d0 = "2026-09-21";
+
+  it("completes once the log since the day opened covers every item", () => {
+    const p = begin(program.id, d0);
+    const d = program.days[0];
+    // One item a day, over as many days as the program day has items.
+    const log = d.items.flatMap((item, k) =>
+      itemEvidence(item).map((e) => session(addDays(d0, k), e.type, e.details?.[0])),
+    );
+    const lastDay = addDays(d0, d.items.length - 1);
+    expect(reconcileProgress(program, p, log, addDays(lastDay, -1)).done).toEqual([]);
+    expect(reconcileProgress(program, p, log, lastDay).done).toEqual([{ index: 0, day: lastDay }]);
+    expect(itemsDoneOn(d, log, addDays(lastDay, -1), d0)).toEqual(d.items.map((_, k) => k < d.items.length - 1));
+  });
+
+  it("does not count practice from the day the previous program day completed", () => {
+    const p = begin(program.id, d0);
+    // Day 1 and all of day 2's work on the same calendar day, then nothing.
+    const log = [...sessionsFor(program.days[0], d0), ...sessionsFor(program.days[1], d0)];
+    const r = reconcileProgress(program, p, log, addDays(d0, 3));
+    expect(r.done.map((x) => x.index)).toEqual([0]);
+  });
+
+  it("lists a routine's and a set's steps, whose evidence together is the item's", () => {
+    for (const prog of PROGRAMS) {
+      for (const item of allItems(prog)) {
+        const steps = itemSteps(item);
+        if (item.kind === "routine" || item.kind === "breath") {
+          expect(steps.length, `${prog.id} ${item.id}`).toBeGreaterThan(0);
+          expect(steps.flatMap(itemEvidence)).toEqual(itemEvidence(item));
+          // A free routine's steps are free exercises: its step links gate nothing.
+          if (!itemIsPro(item)) for (const st of steps) expect(itemIsPro(st)).toBe(false);
+        } else {
+          expect(steps).toEqual([]);
+        }
+      }
+    }
+  });
+});
+
+describe("sustain attempts under the logging threshold", () => {
+  it("count toward a sustain test; logged ones are not counted twice", () => {
+    const at = new Date(2026, 8, 21, 9, 30).toISOString();
+    const rows = sustainAttemptSessions([
+      { sec: 3.4, date: at },
+      { sec: 7, date: at },
+      { sec: 2, date: "not a date" },
+    ]);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({ type: "breath", detail: "Sustain test", day: "2026-09-21", durationSec: 3.4 });
+    expect(itemDoneOn({ kind: "drill", id: "sustain" }, rows, "2026-09-21")).toBe(true);
+  });
+});
+
+describe("check-in readings", () => {
+  const program = programById("foundations-2w")!;
+  const d0 = "2026-09-21";
+  const last = program.days.length - 1;
+
+  function run(startedAt?: string) {
+    const p = startedAt
+      ? startProgram(program.id, d0, new Date(startedAt))
+      : begin(program.id, d0);
+    const sessions: SessionLog[] = [];
+    program.days.forEach((d, i) => sessions.push(...sessionsFor(d, addDays(d0, i))));
+    // The two sustain tests, with real lengths.
+    for (const s of sessions) {
+      if (s.detail === "Sustain test" && s.day === d0) s.durationSec = 6.2;
+      if (s.detail === "Sustain test" && s.day === addDays(d0, last)) s.durationSec = 9.8;
+    }
+    const history = [
+      { lowMidi: 48, highMidi: 67, testedAt: `${d0}T12:00:00.000Z` },
+      { lowMidi: 47, highMidi: 69, testedAt: `${addDays(d0, last)}T12:00:00.000Z` },
+    ];
+    const r = reconcileProgress(program, p, sessions, addDays(d0, last));
+    return { r, sessions, history };
+  }
+
+  it("reads the first and last check-ins back, so the program's comparison can be made", () => {
+    const { r, sessions, history } = run();
+    expect(r.done).toHaveLength(program.days.length);
+    const readings = programReadings(program, r, sessions, history);
+    expect(readings.map((x) => x.index)).toEqual([0, last]);
+    expect(readings[0]).toMatchObject({ day: d0, range: { lowMidi: 48, highMidi: 67 } });
+    expect(readings[1]).toMatchObject({ range: { lowMidi: 47, highMidi: 69 } });
+    // Only sustain-test sessions are read, not the day's other breath work.
+    expect(readings[0].sustainSec).toBeCloseTo(6.2);
+    expect(readings[1].sustainSec).toBeCloseTo(9.8);
+  });
+
+  it("says a reading is not on record rather than borrowing another day's", () => {
+    const { r, sessions } = run();
+    const readings = programReadings(program, r, sessions, []);
+    expect(readings[0].range).toBeNull();
+  });
+
+  it("ignores a range test from before a same-day start", () => {
+    const { sessions, history } = run();
+    const p = startProgram(program.id, d0, new Date(`${d0}T13:00:00Z`));
+    const later = sessionsFor(program.days[0], d0).map((s) => ({ ...s, date: `${d0}T14:00:00.000Z` }));
+    const r = reconcileProgress(program, p, [...sessions, ...later], d0);
+    expect(r.done).toHaveLength(1);
+    expect(programReadings(program, r, [...sessions, ...later], history)[0].range).toBeNull();
   });
 });

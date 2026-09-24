@@ -81,6 +81,15 @@ export const FARINELLI_START_N = 4;
  */
 export const SUSTAIN_BENCHMARKS_SEC = { fair: 10, good: 20, strong: 30, excellent: 45 } as const;
 
+/**
+ * A sustain attempt is kept in the room's own record from one second, but only
+ * logged as a practice session from this long. Programs read the attempts
+ * under it from that record, so a short first hold still counts as having
+ * done the test (lib/programs.ts sustainAttemptSessions).
+ */
+export const SUSTAIN_ATTEMPT_MIN_SEC = 1;
+export const SUSTAIN_LOG_MIN_SEC = 5;
+
 /** Star cuts for a sustain attempt. 45s is deliberately not the three-star bar. */
 export const SUSTAIN_STAR_SEC = { one: 10, two: 20, three: 30 } as const;
 
