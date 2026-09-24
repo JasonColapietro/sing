@@ -27,11 +27,15 @@ import { midiToHz, synthVoice } from "./voice-fixture";
  *   inhale over a fan at  0 dB ....................... 0 of 24 — no rise, by design
  *   duration vs the breath as synthesised ............ 0.05–0.17 s short, never long
  *   inhale then a sung vowel ......................... 12 of 12
- *   false inhales in 389 s of non-breath ............. 0
+ *   inhale straight into a hiss, louder / brighter /
+ *     both, butted and overlapped 0.1 s .............. 36 of 36, split within 0.13 s
+ *   inhale into a hiss at its own level and band ..... not split: no step to find
+ *   false inhales in 437 s of non-breath ............. 0
  *     (fans at three levels and two spectra, 50/60 Hz hum, digital silence,
  *      dither, vowels C3–E5 loud, quiet and at 10 dB SNR, a hum below the
  *      pitch detector's silence floor, a fan switching on, a fan already
- *      running as the mic opens and then a note, a 4 s hiss)
+ *      running as the mic opens and then a note, 4 s hisses steady, fading
+ *      and wavering)
  *   false inhales in 672 s of vowels A2–A5, RMS 0.004–0.3,
  *     with vibrato and jitter (a one-off sweep, not run here) ... 0
  *
@@ -194,6 +198,64 @@ describe("hears an inhale", () => {
   }, SWEEP_TIMEOUT_MS);
 });
 
+describe("hears the breath before a hiss", () => {
+  /**
+   * The sustain test holds on "sss" as well as on a note, and a singer who
+   * breathes straight into the hiss makes one unbroken run of noise. It is
+   * split where the hiss steps up in level or brightness; when it does neither
+   * there is nothing to split on, and the drill's fallback is the way through.
+   */
+  it("splits it off, whether the hiss is louder, brighter or both", () => {
+    const kinds = [
+      { name: "louder and brighter", level: 0.03, loHz: 3000 },
+      { name: "brighter", level: 0.012, loHz: 3000 },
+      { name: "louder", level: 0.03, loHz: 1000 },
+    ];
+    const misses: string[] = [];
+    let worst = 0;
+    for (const sampleRate of RATES) {
+      for (const seed of SEEDS) {
+        for (const kind of kinds) {
+          for (const overlapSec of [0, 0.1]) {
+            const breathSec = 0.9;
+            const hiss = inhale({ sampleRate, durationSec: 4, level: kind.level, loHz: kind.loHz, hiHz: 9000, seed: seed + 50 });
+            let sig = concat(
+              silence(sampleRate, 1),
+              inhale({ sampleRate, durationSec: breathSec, level: 0.012, seed: seed * 17 }),
+              silence(sampleRate, 5),
+            );
+            sig = mixAt(sig, hiss, Math.round((1 + breathSec - overlapSec) * sampleRate));
+            const { events } = detectInhales(over(sig, room(sampleRate, sig.length / sampleRate, seed)), sampleRate, SWEEP);
+            if (events.length !== 1 || !events[0].endedByHiss) {
+              misses.push(`${kind.name} @${sampleRate}/${seed}/${overlapSec}`);
+              continue;
+            }
+            // Ends where the hiss took over, not at the end of the hiss.
+            const endSec = events[0].endMs / 1000;
+            worst = Math.max(worst, Math.abs(endSec - (1 + breathSec - overlapSec)));
+          }
+        }
+      }
+    }
+    expect(misses).toEqual([]);
+    expect(worst).toBeLessThan(0.15);
+  }, SWEEP_TIMEOUT_MS);
+
+  it("cannot split a hiss that sounds exactly like the breath", () => {
+    // The limit, stated as a test so a change that moves it is seen.
+    const sampleRate = 48000;
+    const sig = concat(
+      silence(sampleRate, 1),
+      inhale({ sampleRate, durationSec: 0.9, level: 0.012, seed: 17 }),
+      inhale({ sampleRate, durationSec: 4, level: 0.012, seed: 51 }),
+      silence(sampleRate, 1),
+    );
+    const { events, rejected } = detectInhales(over(sig, room(sampleRate, sig.length / sampleRate)), sampleRate, SWEEP);
+    expect(events).toEqual([]);
+    expect(rejected).toContain("long");
+  });
+});
+
 describe("hears nothing that is not a breath", () => {
   /** Every non-breath scene, with its length, so the total is reported honestly. */
   function scenes(sampleRate: number, seed: number): Array<[string, Float32Array]> {
@@ -251,6 +313,15 @@ describe("hears nothing that is not a breath", () => {
         room(sampleRate, 6, seed),
       ),
     ]);
+    // A hiss that fades, and one that wavers three times a second: neither
+    // steps up, so neither may be split into a breath and a hiss.
+    const shaped = (gain: (t: number) => number) => {
+      const h = inhale({ sampleRate, durationSec: 4, level: 0.03, loHz: 3000, hiHz: 9000, seed });
+      for (let i = 0; i < h.length; i++) h[i] *= gain(i / sampleRate);
+      return over(concat(silence(sampleRate, 1), h, silence(sampleRate, 1)), room(sampleRate, 6, seed));
+    };
+    out.push(["fading hiss", shaped((t) => 1.4 - 0.3 * t)]);
+    out.push(["wavering hiss", shaped((t) => 1 + 0.3 * Math.sin(2 * Math.PI * 3 * t))]);
     // A long hiss, the other way to do the sustain test.
     out.push([
       "4 s hiss",
@@ -279,7 +350,7 @@ describe("hears nothing that is not a breath", () => {
       }
     }
     expect(offenders).toEqual([]);
-    expect(seconds).toBeCloseTo(388.8, 0);
+    expect(seconds).toBeCloseTo(436.8, 0);
   }, SWEEP_TIMEOUT_MS);
 
   it("never lights the live indicator on a voiced frame", () => {
@@ -318,20 +389,31 @@ describe("at 60 fps", () => {
 describe("InhaleDetector rules", () => {
   /** Feeds a synthetic feature stream at 60 fps. */
   function feed(
-    frames: Array<{ ms: number; hi: number; lo?: number; clarity?: number }>,
+    frames: Array<{ ms: number; hi: number; lo?: number; clarity?: number; hz?: number }>,
   ): InhaleEvent[] {
     const det = new InhaleDetector();
     const out: InhaleEvent[] = [];
     for (const f of frames) {
       const u = det.push(
-        { rms: 0.005, lowPower: f.lo ?? 0.01, highPower: f.hi, flatness: 0.5, clarity: f.clarity ?? 0.1 },
+        {
+          rms: 0.005,
+          lowPower: f.lo ?? 0.01,
+          highPower: f.hi,
+          flatness: 0.5,
+          centroidHz: f.hz ?? 3000,
+          clarity: f.clarity ?? 0.1,
+        },
         f.ms,
       );
       if (u.inhale) out.push(u.inhale);
     }
     return out;
   }
-  const at = (fromMs: number, toMs: number, frame: { hi: number; lo?: number; clarity?: number }) =>
+  const at = (
+    fromMs: number,
+    toMs: number,
+    frame: { hi: number; lo?: number; clarity?: number; hz?: number },
+  ) =>
     Array.from({ length: Math.round(((toMs - fromMs) * 60) / 1000) }, (_, i) => ({
       ms: fromMs + (i * 1000) / 60,
       ...frame,
@@ -360,6 +442,32 @@ describe("InhaleDetector rules", () => {
     expect(events).toHaveLength(1);
   });
 
+  it("splits a breath from the hiss it runs into, on a step in level or brightness", () => {
+    const quiet = { hi: 0.05 };
+    // Louder.
+    const louder = feed([...at(0, 1000, quiet), ...at(1000, 1800, { hi: 5 }), ...at(1800, 5000, { hi: 20 })]);
+    expect(louder).toHaveLength(1);
+    expect(louder[0].endedByHiss).toBe(true);
+    expect(louder[0].endMs).toBeGreaterThanOrEqual(1780);
+    expect(louder[0].endMs).toBeLessThanOrEqual(1820);
+    // Brighter, at the same level.
+    const brighter = feed([
+      ...at(0, 1000, quiet),
+      ...at(1000, 1800, { hi: 5, hz: 3000 }),
+      ...at(1800, 5000, { hi: 5, hz: 4500 }),
+    ]);
+    expect(brighter).toHaveLength(1);
+    expect(brighter[0].endedByHiss).toBe(true);
+  });
+
+  it("never splits a hiss that fades, or one that swells slowly", () => {
+    const quiet = { hi: 0.05 };
+    const ramp = (fromMs: number, toMs: number, a: number, b: number) =>
+      at(fromMs, toMs, { hi: 0 }).map((f, i, all) => ({ ...f, hi: a + ((b - a) * i) / all.length }));
+    expect(feed([...at(0, 1000, quiet), ...ramp(1000, 5000, 20, 4), ...at(5000, 6000, quiet)])).toEqual([]);
+    expect(feed([...at(0, 1000, quiet), ...ramp(1000, 5000, 4, 30), ...at(5000, 6000, quiet)])).toEqual([]);
+  });
+
   it("closes on the first voiced frame, and a voice never opens one", () => {
     const events = feed([
       ...at(0, 1000, { hi: 0.05 }),
@@ -373,8 +481,8 @@ describe("InhaleDetector rules", () => {
 
   it("learns the room from the first frame with signal in it, not the stream's zeros", () => {
     const det = new InhaleDetector();
-    const zeros = { rms: 0, lowPower: 0, highPower: 0, flatness: 0, clarity: 0 };
-    const fanFrame = { rms: 0.01, lowPower: 1, highPower: 5, flatness: 0.5, clarity: 0.1 };
+    const zeros = { rms: 0, lowPower: 0, highPower: 0, flatness: 0, centroidHz: 0, clarity: 0 };
+    const fanFrame = { rms: 0.01, lowPower: 1, highPower: 5, flatness: 0.5, centroidHz: 3000, clarity: 0.1 };
     for (let ms = 0; ms < 500; ms += 16) det.push(zeros, ms);
     let events = 0;
     let lit = 0;

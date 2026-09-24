@@ -129,14 +129,27 @@ export function BreathCueDrill({
   }, [autoStart, listening, phase]);
 
   // The gate: a breath heard since this rep began listening opens it.
+  const latest = pitch.latest;
   useEffect(() => {
     const inhale = breath.lastInhale;
     if (!gated || phase !== "breath" || !inhale || inhale.endMs < breathSinceRef.current) return;
     setHeard((n) => n + 1);
     setLastBreathSec(Math.round(inhale.durationSec * 10) / 10);
     setCutShort(false);
+    const now = latest.current;
+    if (inhale.endedByHiss && now.volume > threshold) {
+      // Straight into a hiss: the note began at the split, a moment before
+      // the breath was reported, and is timed from there.
+      holdStartRef.current = inhale.endMs;
+      lastLoudRef.current = now.t;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- the inhale is an event from the mic stream, not render-derivable state
+      setPhase("holding");
+      return;
+    }
     setPhase("ready");
-  }, [breath.lastInhale, gated, phase]);
+    // `threshold` is read at the moment the gate opens, not watched.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [breath.lastInhale, gated, phase, latest]);
 
   // Without detection the breath is a timed cue; with it, a long wait offers
   // the way round.

@@ -13,6 +13,9 @@
  *
  *   inhale then vowel  the gate opens on the breath, the hold is recorded, and
  *                      the results screen reports the breath beside the hold.
+ *   inhale then hiss   the breath runs straight into an "sss" with no gap; the
+ *                      breath is split off at the step, the gate opens, and
+ *                      the hiss is timed as the hold from where it began.
  *   fan then vowel     no inhale is reported, the note alone does not start
  *                      the hold, the fallback is offered after 8 s, and taking
  *                      it records the next note on sound alone.
@@ -58,6 +61,17 @@ function inhaleThenVowel() {
     inhale({ sampleRate: SR, durationSec: 1, level: 0.015 }),
     silence(SR, 0.1),
     vowel(),
+    silence(SR, 4),
+  );
+  return mixAt(room(take.length / SR), take);
+}
+
+/** The same breath, then straight into a 4 s "sss" — louder and brighter, no gap. */
+function inhaleThenHiss() {
+  const take = concat(
+    silence(SR, 1.5),
+    inhale({ sampleRate: SR, durationSec: 1, level: 0.015 }),
+    inhale({ sampleRate: SR, durationSec: VOWEL_SEC, level: 0.04, loHz: 3000, hiHz: 9000, seed: 51 }),
     silence(SR, 4),
   );
   return mixAt(room(take.length / SR), take);
@@ -119,6 +133,27 @@ const CASES = [
       const heard = await inhales(page);
       const result = await readResult(page);
       const first = heard[0];
+      if (!(first.durationSec >= 0.6 && first.durationSec <= 1.2))
+        failures.push(`inhale ${first.durationSec.toFixed(2)} s, expected 0.6–1.2`);
+      if (!(Math.abs(result.holdSec - VOWEL_SEC) <= 0.6))
+        failures.push(`hold ${result.holdSec} s, expected ${VOWEL_SEC} ± 0.6`);
+      if (result.breathSec === null) failures.push(`results did not report the breath: "${result.text}"`);
+      return { inhales: heard.length, inhaleSec: first.durationSec, ...result, failures };
+    },
+  },
+  {
+    name: "inhale then hiss",
+    drill: "sustain",
+    make: inhaleThenHiss,
+    async run(page) {
+      const failures = [];
+      await page.waitForFunction(() => window.__singBreathProbe.some((p) => p.inhale), null, {
+        timeout: 15000,
+      });
+      const heard = await inhales(page);
+      const result = await readResult(page);
+      const first = heard[0];
+      if (!first.endedByHiss) failures.push("the breath was not split from the hiss");
       if (!(first.durationSec >= 0.6 && first.durationSec <= 1.2))
         failures.push(`inhale ${first.durationSec.toFixed(2)} s, expected 0.6–1.2`);
       if (!(Math.abs(result.holdSec - VOWEL_SEC) <= 0.6))

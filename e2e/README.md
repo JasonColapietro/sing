@@ -146,6 +146,7 @@ microphone and checks what the breath gate did, through the
 | Case | Passes when |
 |---|---|
 | Inhale, then a sung A3 | one inhale heard (0.92 s of a 1 s breath), the hold recorded (4.1 s of 4 s), and the results line reads `4.1 s · 0.9 s breath in` |
+| Inhale, then straight into a 4 s hiss | the breath is split off where the hiss steps up, the gate opens, and the hiss is timed as the hold from where it began |
 | Fan, then the same A3 | no inhale heard, the note alone does not start the hold, the fallback shows after 8 s, and taking it records the next note (4.1 s) on sound alone |
 | Breathe and sing, 4 reps | every rep's note counts after a breath, and all four breaths are heard |
 

@@ -83,6 +83,21 @@ export const BREATH_RULES = {
   maxEndOverStart: 2.5,
   /** How long a candidate must have run before the live indicator lights. */
   indicatorMs: 100,
+  /**
+   * A breath straight into a hiss — the sustain test's other way to hold — is
+   * one unbroken run of noise, and without a split it runs past maxInhaleMs
+   * and is thrown out, so the gate never opens for anyone who hisses. It is
+   * split where the sound steps up: louder or brighter, abruptly, and staying
+   * that way. A hiss is both, next to a breath. `hissConfirmMs` is how long
+   * the new sound must have held before the breath is published.
+   */
+  hissConfirmMs: 400,
+  /** The span either side of a split compared for abruptness. */
+  hissLocalMs: 150,
+  /** A step up in level above 1 kHz… */
+  hissStepDb: 3,
+  /** …or in spectral centroid, 1–8 kHz. */
+  hissStepHz: 600,
 } as const;
 
 export interface BreathFeatures {
@@ -94,6 +109,8 @@ export interface BreathFeatures {
   highPower: number;
   /** Geometric over arithmetic mean of the power spectrum, 1 to 8 kHz, 0..1. */
   flatness: number;
+  /** Power-weighted mean frequency, 1 to 8 kHz. A hiss sits higher than a breath. */
+  centroidHz: number;
   /**
    * NSDF periodicity, 0..1, from `detectPitch` — or NaN on a frame too quiet
    * for the detector, until `measureClarity` is asked for it.
@@ -110,6 +127,11 @@ export interface InhaleEvent {
   durationSec: number;
   /** True when the breath gave way to a voiced note rather than fading. */
   endedByVoice: boolean;
+  /**
+   * True when the breath ran straight into a hiss, split off at the step. The
+   * hiss is still sounding when this is reported, `hissConfirmMs` in.
+   */
+  endedByHiss: boolean;
 }
 
 export interface BreathUpdate {
@@ -238,15 +260,25 @@ export function breathFeatures(
   for (let i = lowFrom; i < splitBin; i++) lowPower += power[i];
   let highPower = 0;
   let logSum = 0;
+  let moment = 0;
   const count = highTo - splitBin + 1;
   for (let i = splitBin; i <= highTo; i++) {
     highPower += power[i];
+    moment += power[i] * i * hz;
     logSum += Math.log(power[i] + 1e-20);
   }
   const mean = highPower / count;
   const flatness = mean > 0 ? Math.min(1, Math.exp(logSum / count) / mean) : 0;
+  const centroidHz = highPower > 0 ? moment / highPower : 0;
 
-  const features: BreathFeatures = { rms: level, lowPower, highPower, flatness, clarity: 0 };
+  const features: BreathFeatures = {
+    rms: level,
+    lowPower,
+    highPower,
+    flatness,
+    centroidHz,
+    clarity: 0,
+  };
   if (level >= SILENCE_RMS && clarity !== undefined) {
     features.clarity = clarity;
   } else if (level > 0) {
@@ -274,6 +306,71 @@ interface Candidate {
   /** High-band floor when the breath began, for the step check. */
   startHighFloor: number;
   overlong: boolean;
+  /** Every breath-like frame so far, for finding where a hiss took over. */
+  hist: { t: number; db: number; hz: number }[];
+  /** A breath was split off it and published; the rest is the hiss. */
+  spent: boolean;
+}
+
+function mean(xs: number[]): number {
+  return xs.reduce((a, b) => a + b, 0) / xs.length;
+}
+
+/** The `q` quantile, by nearest rank. */
+function quantile(xs: number[], q: number): number {
+  const s = [...xs].sort((a, b) => a - b);
+  return s[Math.min(s.length - 1, Math.floor(q * s.length))];
+}
+
+/**
+ * Where a breath became a hiss, if it did: the first frame of the louder or
+ * brighter sound, or -1.
+ *
+ * The step has to hold two ways. Abruptly — the span just after the split
+ * against the span just before — so a breath that swells never splits. And
+ * for good — nearly everything after it (its 20th percentile) against the
+ * middle of everything before (its median) — so a hiss that wavers, whose
+ * troughs sit where its peaks were, does not either. Not means: the breath's
+ * own rise and fall are far quieter than its middle and would drag a mean
+ * down into a false step. Only upward steps count: a hiss that starts loud and
+ * fades is one sound, not two.
+ */
+const STAY_Q = 0.2;
+
+function hissSplit(c: Candidate, nowMs: number): number {
+  const R = BREATH_RULES;
+  const h = c.hist;
+  let best = -1;
+  let bestScore = 1;
+  for (let k = 1; k < h.length; k++) {
+    const tk = h[k].t;
+    if (tk - c.startMs < R.minInhaleMs) continue;
+    // Every split whose span after is complete is weighed, so a better one
+    // just behind the first to qualify is not passed over.
+    if (tk - c.startMs > R.maxInhaleMs || nowMs - tk < R.hissLocalMs) break;
+    // Anchored on the last frame before the split, not on the split itself:
+    // a breath running into a hiss often dips for a frame or two between
+    // them, and those frames are not breath-like enough to be kept.
+    const before = h.slice(0, k).filter((f) => f.t > h[k - 1].t - R.hissLocalMs);
+    const after = h.slice(k).filter((f) => f.t < tk + R.hissLocalMs);
+    if (before.length < 2 || after.length < 2) continue;
+    const A = h.slice(0, k);
+    const B = h.slice(k);
+    const dbLocal = mean(after.map((f) => f.db)) - mean(before.map((f) => f.db));
+    const dbWhole = quantile(B.map((f) => f.db), STAY_Q) - quantile(A.map((f) => f.db), 0.5);
+    const hzLocal = mean(after.map((f) => f.hz)) - mean(before.map((f) => f.hz));
+    const hzWhole = quantile(B.map((f) => f.hz), STAY_Q) - quantile(A.map((f) => f.hz), 0.5);
+    const score = Math.max(
+      Math.min(dbLocal, dbWhole) / R.hissStepDb,
+      Math.min(hzLocal, hzWhole) / R.hissStepHz,
+    );
+    if (score >= bestScore) {
+      bestScore = score;
+      best = k;
+    }
+  }
+  // Published only once the new sound has held past the best split.
+  return best >= 0 && nowMs - h[best].t >= R.hissConfirmMs ? best : -1;
 }
 
 /**
@@ -357,6 +454,8 @@ export class InhaleDetector {
           breathyFrames: 1,
           startHighFloor: this.highFloor,
           overlong: false,
+          hist: [{ t: tMs, db: 10 * Math.log10(f.highPower + 1e-20), hz: f.centroidHz }],
+          spent: false,
         };
       }
     } else if (voiced) {
@@ -367,6 +466,26 @@ export class InhaleDetector {
         c.breathyFrames++;
         c.lastBreathyMs = tMs;
         c.frameMs = dt;
+        if (!c.spent && !c.overlong) {
+          c.hist.push({ t: tMs, db: 10 * Math.log10(f.highPower + 1e-20), hz: f.centroidHz });
+          const k = tMs - c.startMs >= R.minInhaleMs + R.hissConfirmMs ? hissSplit(c, tMs) : -1;
+          if (k > 0 && c.breathyFrames / c.frames >= R.minBreathyShare) {
+            // The breath is everything before the step; the hiss goes on.
+            c.spent = true;
+            const endMs = c.hist[k].t;
+            out = {
+              inhaling: false,
+              rejected: null,
+              inhale: {
+                startMs: c.startMs,
+                endMs,
+                durationSec: (endMs - c.startMs) / 1000,
+                endedByVoice: false,
+                endedByHiss: true,
+              },
+            };
+          }
+        }
       }
       if (!c.overlong && tMs - c.startMs > R.maxInhaleMs) {
         // Too long for a breath: a hiss, a vent, a fan being switched on. Take
@@ -378,7 +497,8 @@ export class InhaleDetector {
       if (tMs - c.lastBreathyMs > R.gapMs) out = this.close(c, f, share, false);
     }
     if (this.cand) {
-      out.inhaling = !this.cand.overlong && tMs - this.cand.startMs >= R.indicatorMs;
+      out.inhaling =
+        !this.cand.overlong && !this.cand.spent && tMs - this.cand.startMs >= R.indicatorMs;
     }
     return out;
   }
@@ -390,6 +510,8 @@ export class InhaleDetector {
     // a breath heard on two frames 33 ms apart lasted 66 ms, not 33.
     const durationMs = c.lastBreathyMs - c.startMs + c.frameMs;
     const none = { inhaling: false, inhale: null };
+    // Its breath has already been published; this is the hiss ending.
+    if (c.spent) return { ...none, rejected: null };
     if (c.overlong || durationMs > R.maxInhaleMs) return { ...none, rejected: "long" };
     if (durationMs < R.minInhaleMs) return { ...none, rejected: "short" };
     if (c.breathyFrames / c.frames < R.minBreathyShare) return { ...none, rejected: "sparse" };
@@ -410,6 +532,7 @@ export class InhaleDetector {
         endMs: c.startMs + durationMs,
         durationSec: durationMs / 1000,
         endedByVoice: byVoice,
+        endedByHiss: false,
       },
     };
   }

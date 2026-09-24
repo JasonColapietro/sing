@@ -372,12 +372,28 @@ export function SustainTest({
 
   // The gate: an inhale heard since this attempt started listening arms it.
   // One heard earlier — during the last hold's result card, say — does not.
+  const latest = mic.latest;
   useEffect(() => {
     const heard = breath.lastInhale;
     if (phase !== "breath" || !heard || heard.endMs < breathSinceRef.current) return;
     setHeardSec(Math.round(heard.durationSec * 10) / 10);
+    const now = latest.current;
+    if (heard.endedByHiss && now.volume > threshold) {
+      // The breath ran straight into the hiss, which has been sounding since
+      // the split — reported a moment after it, once the hiss had held. The
+      // hold is timed from the split, not from the report.
+      startRef.current = heard.endMs;
+      lastLoudRef.current = now.t;
+      samplesRef.current = [now.volume];
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- the inhale is an event from the mic stream, not render-derivable state
+      setElapsed(Math.max(0, (now.t - heard.endMs) / 1000));
+      setPhase("running");
+      return;
+    }
     setPhase("armed");
-  }, [breath.lastInhale, phase]);
+    // `threshold` is read at the moment the gate opens, not watched.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [breath.lastInhale, phase, latest]);
 
   // Some mics and rooms never carry a breath. After a fair wait, say so and
   // put the way round it first, rather than leaving the singer breathing at a
