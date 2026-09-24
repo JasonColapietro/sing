@@ -94,6 +94,27 @@ export function WarmupsClient() {
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
+  // A page left open across midnight must move to the new day: today's three
+  // is seeded by the date and ticked off by today's sessions, and the hour
+  // picks today's warmup. Re-read both when the tab comes back and once a
+  // minute; the setters bail out when nothing changed, so this costs no
+  // renders on an ordinary day.
+  useEffect(() => {
+    const refresh = () => {
+      setToday(localDay());
+      setHour(new Date().getHours());
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    const id = window.setInterval(refresh, 60_000);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.clearInterval(id);
+    };
+  }, []);
+
   const practicedToday = progress.sessions.some((s) => s.day === localDay());
   const routineContext = { practicedToday, hour: hour ?? 12, recent: recentWarmupResults(progress.sessions) };
   const recommended = recommendRoutine(routineContext);
