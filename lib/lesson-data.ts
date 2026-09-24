@@ -6029,13 +6029,13 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Agility run. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the three-note turnaround in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
+        "body": "Choose Small three-note climb (1–2–3–2–1), the three-note turn in the practice material, in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -6119,13 +6119,13 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Agility run. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the three-note turnaround in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
+        "body": "Choose Small three-note climb (1–2–3–2–1), the three-note turn in the practice material, in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -6209,13 +6209,13 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Agility run. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the three-note turnaround in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
+        "body": "Choose Small three-note climb (1–2–3–2–1), the three-note turn in the practice material, in a comfortable key and begin well below the goal tempo. Use light volume and a clean consonant or vowel onset.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -7115,7 +7115,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, lower the study’s Key setting by two semitones, hear its first note, then restore the original Key. Choose a key above the control’s lowest setting so that this adjustment is available. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
+        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, press Transpose down twice, hear its first note, then transpose back up to where you started. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -7127,7 +7127,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "Make two brief, comfortable examples of the idea in “The Notes That Sound Like Feeling.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. At the starting Key of −12, those pitches are C3, E♭3, G3, and B♭2; transpose the whole exercise if needed. Record the call and answer together in one take.",
+        "body": "Make two brief, comfortable examples of the idea in “The Notes That Sound Like Feeling.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -7205,7 +7205,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, lower the study’s Key setting by two semitones, hear its first note, then restore the original Key. Choose a key above the control’s lowest setting so that this adjustment is available. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
+        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, press Transpose down twice, hear its first note, then transpose back up to where you started. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -7217,7 +7217,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. At the starting Key of −12, those pitches are C3, E♭3, G3, and B♭2; transpose the whole exercise if needed. Record the call and answer together in one take.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
@@ -7295,7 +7295,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, lower the study’s Key setting by two semitones, hear its first note, then restore the original Key. Choose a key above the control’s lowest setting so that this adjustment is available. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
+        "body": "Hear Minor five-note scale in a comfortable key and remember its first note (1), third note (flat 3), and fifth note (5). To hear a flat 7 below the tonic, press Transpose down twice, hear its first note, then transpose back up to where you started. Stop the reference and tap four steady beats per bar; no backing loop is needed.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -7307,7 +7307,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. At the starting Key of −12, those pitches are C3, E♭3, G3, and B♭2; transpose the whole exercise if needed. Record the call and answer together in one take.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.",
         "look": "The eight bars have a clear form with room to breathe; bends are optional and never forced.",
         "listen": "The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording."
       },
