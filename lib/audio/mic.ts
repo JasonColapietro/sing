@@ -4,6 +4,7 @@ import {
   getMonitoring,
   type Monitoring,
 } from "./devices";
+import { requireAccountToUse } from "@/lib/account-gate";
 
 /**
  * Shared microphone acquisition for every listening surface.
@@ -107,6 +108,12 @@ export async function openMic(
 ): Promise<
   { stream: MediaStream; error: null } | { stream: null; error: string }
 > {
+  // Using a tool needs an account; this starts the redirect to sign-in before
+  // the browser's mic prompt can appear.
+  if (!requireAccountToUse()) {
+    return { stream: null, error: "Sign in to use the practice tools." };
+  }
+
   // No getUserMedia at all: an insecure origin (plain http beyond localhost)
   // or a browser too old for it. Telling this person to check a permission
   // sends them looking for a setting that isn't there.

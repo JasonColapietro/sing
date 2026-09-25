@@ -1,5 +1,6 @@
 import { canChooseOutput, getOutputDeviceId } from "./devices";
 import { preloadPiano } from "./piano";
+import { canUseTools, requireAccountToUse } from "@/lib/account-gate";
 
 let _ctx: AudioContext | null = null;
 let _appliedSinkId: string | null = null;
@@ -44,7 +45,7 @@ function wake(ctx: AudioContext): void {
  */
 function keepRunning(ctx: AudioContext): void {
   const retry = () => {
-    if (_ctx === ctx) wake(ctx);
+    if (_ctx === ctx && canUseTools()) wake(ctx);
   };
   for (const type of ["pointerdown", "touchend", "keydown"] as const) {
     document.addEventListener(type, retry, { capture: true, passive: true });
@@ -72,6 +73,9 @@ export function getAudioContext(): AudioContext {
     keepRunning(_ctx);
     preloadPiano(_ctx);
   }
+  // Signed out: start the trip to sign-in and leave the context silent, rather
+  // than throwing through whatever start handler called this.
+  if (!requireAccountToUse()) return _ctx;
   wake(_ctx);
   // Re-applied on every access rather than once at construction: the context is
   // a module singleton created on the first tone the app ever plays, which is
