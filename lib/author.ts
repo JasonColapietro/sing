@@ -5,7 +5,7 @@
  * guidance, so an unattributed expert voice is the weakest possible E-E-A-T
  * posture. The Book node previously credited an Organization called
  * "Suede Sing" — the product name, not a publisher and not a person. The
- * publisher stays Suede Labs AI; the author is a Person.
+ * publisher stays Suede AI; the author is a Person.
  *
  * Only claims that resolve to a live page are asserted here: both sameAs
  * targets returned 200 on 2026-08-09.

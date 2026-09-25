@@ -3,8 +3,8 @@
  *
  * `sameAs` is the assertion that binds these pages to an identity search and
  * answer engines already hold. Without it the Organization node here is a bare
- * name — "Suede Labs AI" — that a consumer has no way to reconcile with the
- * Suede Labs AI it knows from anywhere else, so every surface the studio
+ * name, "Suede AI", that a consumer has no way to reconcile with the
+ * Suede AI it knows from anywhere else, so every surface the studio
  * publishes accrues authority to a separate, unresolvable stub.
  *
  * These URLs are not chosen here. suedeai.ai is the authoritative home of
@@ -46,11 +46,12 @@ export const ORG_SAME_AS = [
  * "Suede Labs" while a third said "Suede Labs AI", under the identical `@id`.
  * A parser that resolves the entity from one page in isolation, which is the
  * ordinary case, then holds a different name for the same node depending on
- * which page it landed on. "Suede Labs AI" is what suedeai.ai's own canonical
- * node carries, so that is the value here and the shorter form is kept as an
- * alternateName rather than as a competing name.
+ * which page it landed on. "Suede AI" is what suedeai.ai's own canonical node
+ * carries (checked 2026-09-25), so that is the value here and the older forms
+ * are kept as alternateNames, in the same order, rather than as competing
+ * names.
  */
-export const ORG_NAME = "Suede Labs AI";
+export const ORG_NAME = "Suede AI";
 export const ORG_URL = "https://suedeai.ai";
 export const ORG_LOGO = "https://suedeai.ai/suede-ai-logo-transparent.png";
 
@@ -59,7 +60,7 @@ export const ORG_NODE = {
   "@type": "Organization",
   "@id": ORG_ID,
   name: ORG_NAME,
-  alternateName: ["Suede Labs", "Suede AI"],
+  alternateName: ["Suede Labs AI", "Suede", "Suede Labs"],
   url: ORG_URL,
   logo: ORG_LOGO,
   founder: { "@id": "https://suedeai.ai/founder#person" },

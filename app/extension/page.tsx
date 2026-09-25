@@ -99,7 +99,7 @@ const FAQ = [
   },
   {
     q: "What is the difference between Suede Sing and Suede Voice?",
-    a: "Suede Sing is the web app and the Chrome extension. Suede Voice: Vocal Range Test is the mobile app, available for iPhone and Android. Both are vocal training tools from Suede Labs AI, founded by Jason Colapietro.",
+    a: "Suede Sing is the web app and the Chrome extension. Suede Voice: Vocal Range Test is the mobile app, available for iPhone and Android. Both are vocal training tools from Suede AI, founded by Jason Colapietro.",
   },
 ];
 

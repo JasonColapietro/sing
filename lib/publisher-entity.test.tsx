@@ -3,7 +3,7 @@
  *
  * Two defects sat behind this file. The first: three pages wrote the
  * Organization out by hand under the identical `@id`, and two of them called
- * it "Suede Labs" while the third called it "Suede Labs AI". A consumer that
+ * it "Suede Labs" while the third called it "Suede AI". A consumer that
  * resolved the entity from the home page held a different name than one that
  * resolved it from /voice, for the same node. The second: every other page
  * pointed `publisher` at that `@id` without ever defining it, so a crawler
@@ -41,9 +41,9 @@ import { ORG_ID, ORG_NAME, ORG_PUBLISHER_NODE } from "./organization";
 /**
  * The literal, written out rather than imported, so that renaming the constant
  * is a test failure rather than a silent rename of the estate's publisher.
- * "Suede Labs AI" is what suedeai.ai's own canonical node carries.
+ * "Suede AI" is what suedeai.ai's own canonical node carries.
  */
-const CANONICAL_NAME = "Suede Labs AI";
+const CANONICAL_NAME = "Suede AI";
 
 const ROUTES: Array<[string, string]> = [
   ["/", renderToStaticMarkup(<Home />)],

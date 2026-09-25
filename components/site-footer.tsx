@@ -70,7 +70,7 @@ const PRACTICE: FooterLink[] = [
 const MORE_FROM_SUEDE: FooterLink[] = [
   { href: "/learn/voice", label: "Voice lessons" },
   { href: "https://strumly.suedeai.ai/capo", label: "Capo calculator on Strumly" },
-  { href: "https://suedeai.ai", label: "Suede Labs AI" },
+  { href: "https://suedeai.ai", label: "Suede AI" },
 ];
 
 const linkClass =
@@ -196,7 +196,7 @@ export default function SiteFooter() {
             the one canonical receipt, so the number is verified in one place
             rather than drifting per surface. */}
         <p className="mt-4 text-xs leading-relaxed text-dim">
-          A <a href="https://suedeai.ai" className={linkClass}>Suede Labs AI</a>{" "}
+          A <a href="https://suedeai.ai" className={linkClass}>Suede AI</a>{" "}
           product, built by{" "}
           <a href="https://suedeai.ai/founder" className={linkClass}>
             Jason Colapietro

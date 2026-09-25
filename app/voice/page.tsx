@@ -11,7 +11,7 @@ import { SITE_URL } from "@/lib/site";
 // different intents. This page is the install; /range is the test.
 const TITLE = "Download Suede Voice: the Vocal Practice App for iPhone & Android";
 const DESCRIPTION =
-  "Download Suede Voice, the vocal range and singing practice app from Suede Labs AI, for iPhone or Android. To run the test in a browser with no install, open Suede Sing instead.";
+  "Download Suede Voice, the vocal range and singing practice app from Suede AI, for iPhone or Android. To run the test in a browser with no install, open Suede Sing instead.";
 const PAGE_URL = `${SITE_URL}${VOICE_PAGE_PATH}`;
 
 export const metadata: Metadata = {
@@ -58,7 +58,7 @@ const JSON_LD = {
       url: `${PAGE_URL}#${id}`,
       installUrl: store,
       sameAs: [store],
-      description: "Vocal range testing and singing practice from Suede Labs AI.",
+      description: "Vocal range testing and singing practice from Suede AI.",
       publisher: { "@id": ORG_ID },
       author: { "@type": "Person", name: "Jason Colapietro", url: "https://suedeai.ai/founder" },
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD", url: store },
@@ -79,12 +79,12 @@ export default function VoicePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <section aria-labelledby="voice-title" className="grid items-start gap-10 lg:grid-cols-[1.25fr_1fr] lg:gap-16">
         <div>
-          <SectionLabel>Official app · Suede Labs AI</SectionLabel>
+          <SectionLabel>Official app · Suede AI</SectionLabel>
           <h1 id="voice-title" className="mt-5 text-5xl sm:text-7xl">Suede Voice</h1>
           <p className="mt-4 text-2xl text-violet-ink sm:text-3xl">Find your range. Know what to practice.</p>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-mut">
             Suede Voice: Vocal Range Test is the vocal range and singing practice
-            app from Suede Labs AI, built by Jason Colapietro. It is available
+            app from Suede AI, built by Jason Colapietro. It is available
             for iPhone and Android. Start with the notes you can sing, then make
             your next session count.
           </p>
@@ -127,7 +127,7 @@ export default function VoicePage() {
         <SectionHeading id="sing-and-voice">How Suede Voice and Suede Sing fit together</SectionHeading>
         <p className="mt-4 max-w-3xl leading-relaxed text-mut">
           Suede Voice is the mobile app. Suede Sing is the browser studio and
-          Chrome extension. Both are from Suede Labs AI. You can use the free
+          Chrome extension. Both are from Suede AI. You can use the free
           browser range test, pitch studio, and warmups without installing the
           mobile app. The iPhone app adds its own practice tools, on-device
           recordings, and register analysis.
