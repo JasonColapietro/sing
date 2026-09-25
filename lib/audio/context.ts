@@ -1,4 +1,5 @@
 import { canChooseOutput, getOutputDeviceId } from "./devices";
+import { preloadPiano } from "./piano";
 
 let _ctx: AudioContext | null = null;
 let _appliedSinkId: string | null = null;
@@ -69,6 +70,7 @@ export function getAudioContext(): AudioContext {
     _output = null;
     _appliedSinkId = null;
     keepRunning(_ctx);
+    preloadPiano(_ctx);
   }
   wake(_ctx);
   // Re-applied on every access rather than once at construction: the context is

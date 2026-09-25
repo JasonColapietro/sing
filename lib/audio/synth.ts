@@ -1,4 +1,5 @@
 import { getAudioContext, getOutput } from "./context";
+import { pianoSampleFor } from "./piano";
 import { midiToFreq } from "./notes";
 
 export interface ToneOptions {
@@ -43,14 +44,55 @@ const TONE_LEVEL = 1.6;
 const DETUNE_CENTS = 3;
 
 /**
- * Play a single reference tone. The default timbre is a warm, piano-like
+ * Play a single reference tone: a recorded grand piano note when its sample
+ * has loaded, otherwise the synthesized voice below. That fallback is a warm, piano-like
  * voice: a bright strike whose top end mellows within a quarter second, then a
  * steady sustain so a held guide note stays audible to the end. Passing `type`
  * asks for a plain oscillator instead.
  * Returns the offset in seconds from now at which the tone ends.
  */
+/** Level of the piano relative to the gain a caller asks for (samples peak at 1). */
+const PIANO_LEVEL = 1.5;
+
+/**
+ * Plays a recorded piano note, pitched by playback rate from the nearest
+ * sample. Glides ramp the rate, so sirens slide on the real instrument too.
+ * Returns false when no sample is ready, and the caller synthesizes instead.
+ */
+function playPiano(midi: number, opts: ToneOptions): boolean {
+  const sample = pianoSampleFor(midi);
+  if (!sample) return false;
+  const { dur = 0.7, gain = 0.2, at = 0, glideToMidi } = opts;
+  const ctx = getAudioContext();
+  const t0 = ctx.currentTime + at;
+  const rate = (m: number) => Math.pow(2, (m - sample.sampleMidi) / 12);
+
+  const src = ctx.createBufferSource();
+  src.buffer = sample.buffer;
+  src.playbackRate.setValueAtTime(rate(midi), t0);
+  if (glideToMidi !== undefined) {
+    src.playbackRate.exponentialRampToValueAtTime(rate(glideToMidi), t0 + dur);
+  }
+
+  // The recording carries its own attack and decay; this only sets the level
+  // and damps the note when the caller's duration is up, like lifting a key.
+  const level = Math.max(0.001, gain * PIANO_LEVEL);
+  const release = 0.12;
+  const out = ctx.createGain();
+  out.gain.setValueAtTime(level, t0);
+  out.gain.setValueAtTime(level, t0 + dur);
+  out.gain.exponentialRampToValueAtTime(0.0001, t0 + dur + release);
+  out.connect(opts.out ?? getOutput());
+
+  src.connect(out);
+  src.start(t0);
+  src.stop(t0 + dur + release + 0.02);
+  return true;
+}
+
 export function playTone(midi: number, opts: ToneOptions = {}): number {
   const { dur = 0.7, type, gain = 0.2, at = 0, glideToMidi } = opts;
+  if (!type && playPiano(midi, opts)) return at + dur;
   const ctx = getAudioContext();
   const t0 = ctx.currentTime + at;
   const freq = midiToFreq(midi);

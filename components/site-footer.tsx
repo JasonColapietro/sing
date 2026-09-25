@@ -182,6 +182,11 @@ export default function SiteFooter() {
             <Link href="/terms" prefetch={false} className={linkClass}>
               Terms
             </Link>
+            <span aria-hidden>·</span>
+            {/* CC BY 3.0 asks for a credit where the samples are used. */}
+            <a href="/audio/piano/CREDITS.txt" className={linkClass}>
+              Piano: Salamander Grand by Alexander Holm, CC BY
+            </a>
           </span>
           <span>practice loud — your voice never leaves this device</span>
         </div>
