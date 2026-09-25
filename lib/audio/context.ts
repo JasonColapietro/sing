@@ -56,14 +56,28 @@ export function getOutput(): AudioNode {
   const ctx = getAudioContext();
   if (_output && _output.context === ctx) return _output;
   const limiter = ctx.createDynamicsCompressor();
-  limiter.threshold.value = -14;
-  limiter.knee.value = 8;
-  limiter.ratio.value = 6;
+  limiter.threshold.value = -12;
+  limiter.knee.value = 6;
+  limiter.ratio.value = 12;
   limiter.attack.value = 0.003;
   limiter.release.value = 0.2;
+  // Measured in an offline render: a single guide note comes out well over
+  // twice the original tone's level, and far more in the band a phone speaker
+  // plays. Overlapping notes plus a click would then peak near 2, so the last
+  // stage is a tanh soft clip rather than hard clipping.
+  // A WaveShaper clamps its input to [-1, 1], so the signal is halved going
+  // in and the curve doubles it back: small signals pass at unity and
+  // nothing leaves above tanh(2), about 0.96.
   const makeup = ctx.createGain();
-  makeup.gain.value = 1.8;
-  limiter.connect(makeup).connect(ctx.destination);
+  makeup.gain.value = 3 / 2;
+  const soft = ctx.createWaveShaper();
+  const curve = new Float32Array(1024);
+  for (let i = 0; i < curve.length; i++) {
+    curve[i] = Math.tanh(2 * ((i / (curve.length - 1)) * 2 - 1));
+  }
+  soft.curve = curve;
+  soft.oversample = "2x";
+  limiter.connect(makeup).connect(soft).connect(ctx.destination);
   _output = limiter;
   return limiter;
 }

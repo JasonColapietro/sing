@@ -16,14 +16,14 @@ export interface ToneOptions {
 }
 
 /**
- * Harmonic recipe for the reference tone: a full, reedy series rather than a
- * triangle. A triangle's overtones fall off as 1/n^2, so a C3 reference put
- * almost all its energy at 130 Hz, which a phone speaker cannot reproduce,
- * and the note vanished. With real energy up through the 6th to 8th harmonic
- * the ear still hears the fundamental (the missing-fundamental effect), so the
- * pitch is identical and the note is audible on any speaker.
+ * Harmonic recipe for the reference tone, a warm piano-organ blend rather
+ * than a triangle. A triangle's overtones fall off as 1/n^2, so a C3
+ * reference put almost all its energy at 130 Hz, which a phone speaker cannot
+ * reproduce, and the note vanished. With real energy up through the 10th
+ * harmonic the ear still hears the fundamental (the missing-fundamental
+ * effect), so the pitch is identical and the note is audible on any speaker.
  */
-const TONE_HARMONICS = [0, 1, 0.7, 0.5, 0.38, 0.28, 0.2, 0.14, 0.1];
+const TONE_HARMONICS = [0, 1, 0.82, 0.56, 0.44, 0.32, 0.24, 0.17, 0.12, 0.08, 0.05];
 
 const waves = new WeakMap<BaseAudioContext, PeriodicWave>();
 
@@ -37,9 +37,16 @@ function referenceWave(ctx: AudioContext): PeriodicWave {
   return wave;
 }
 
+/** Output level of the reference tone relative to the gain a caller asks for. */
+const TONE_LEVEL = 1.6;
+/** Two voices a hair apart give the tone body without audible wobble. */
+const DETUNE_CENTS = 3;
+
 /**
- * Play a single reference tone. The default timbre is the bright harmonic
- * series above; passing `type` asks for a plain oscillator instead.
+ * Play a single reference tone. The default timbre is a warm, piano-like
+ * voice: a bright strike whose top end mellows within a quarter second, then a
+ * steady sustain so a held guide note stays audible to the end. Passing `type`
+ * asks for a plain oscillator instead.
  * Returns the offset in seconds from now at which the tone ends.
  */
 export function playTone(midi: number, opts: ToneOptions = {}): number {
@@ -47,32 +54,49 @@ export function playTone(midi: number, opts: ToneOptions = {}): number {
   const ctx = getAudioContext();
   const t0 = ctx.currentTime + at;
   const freq = midiToFreq(midi);
+  const peak = Math.max(0.001, gain * TONE_LEVEL);
 
+  // Amplitude: quick strike, settle to a sustain, short release at the end.
+  const attackEnd = t0 + Math.min(0.012, dur / 4);
+  const settleEnd = t0 + Math.min(0.3, dur / 2);
+  const releaseStart = Math.max(settleEnd, t0 + dur - 0.09);
   const out = ctx.createGain();
   out.gain.setValueAtTime(0.0001, t0);
-  out.gain.exponentialRampToValueAtTime(Math.max(0.001, gain), t0 + 0.02);
+  out.gain.exponentialRampToValueAtTime(peak, attackEnd);
+  out.gain.exponentialRampToValueAtTime(peak * 0.72, settleEnd);
+  out.gain.setValueAtTime(peak * 0.72, releaseStart);
   out.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
   out.connect(opts.out ?? getOutput());
 
-  // Takes the edge off the top harmonics without touching the band a phone
-  // speaker plays well.
+  // Brightness: opens on the strike, mellows to a warm sustain that still
+  // keeps the harmonics a phone speaker plays.
   const tone = ctx.createBiquadFilter();
   tone.type = "lowpass";
-  tone.frequency.value = 4500;
+  tone.Q.value = 0.6;
+  tone.frequency.setValueAtTime(Math.min(7000, Math.max(3500, freq * 12)), t0);
+  tone.frequency.exponentialRampToValueAtTime(
+    Math.min(4000, Math.max(1600, freq * 5)),
+    settleEnd,
+  );
   tone.connect(out);
 
-  const osc = ctx.createOscillator();
-  if (type) osc.type = type;
-  else osc.setPeriodicWave(referenceWave(ctx));
-  osc.frequency.setValueAtTime(freq, t0);
-
-  if (glideToMidi !== undefined) {
-    osc.frequency.exponentialRampToValueAtTime(midiToFreq(glideToMidi), t0 + dur);
+  const voices = type ? [0] : [-DETUNE_CENTS, DETUNE_CENTS];
+  const voiceGain = ctx.createGain();
+  voiceGain.gain.value = 1 / voices.length;
+  voiceGain.connect(tone);
+  for (const cents of voices) {
+    const osc = ctx.createOscillator();
+    if (type) osc.type = type;
+    else osc.setPeriodicWave(referenceWave(ctx));
+    osc.detune.value = cents;
+    osc.frequency.setValueAtTime(freq, t0);
+    if (glideToMidi !== undefined) {
+      osc.frequency.exponentialRampToValueAtTime(midiToFreq(glideToMidi), t0 + dur);
+    }
+    osc.connect(voiceGain);
+    osc.start(t0);
+    osc.stop(t0 + dur + 0.05);
   }
-
-  osc.connect(tone);
-  osc.start(t0);
-  osc.stop(t0 + dur + 0.05);
   return at + dur;
 }
 
