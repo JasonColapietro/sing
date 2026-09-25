@@ -146,7 +146,7 @@ export default function VoicePage() {
         <p className="mt-3 max-w-2xl text-mut">The range test measures the notes in a session. Treat a voice-type result as practice guidance; a singing teacher can help you interpret it in context.</p>
         <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm">
           <Link href="/support" className="text-violet-ink underline underline-offset-4">Suede Voice support</Link>
-          <Link href="/privacy" className="text-violet-ink underline underline-offset-4">Privacy policy</Link>
+          <Link href="/privacy" prefetch={false} className="text-violet-ink underline underline-offset-4">Privacy policy</Link>
           <a href="https://suedeai.ai/founder" className="text-violet-ink underline underline-offset-4">About Jason Colapietro</a>
         </div>
       </section>

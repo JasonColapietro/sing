@@ -96,14 +96,14 @@ export default async function StagePage({ params }: { params: Promise<Params> })
         })}
         <nav aria-label="Stages" className="flex flex-wrap justify-between gap-3 text-sm">
           {previous?.href ? (
-            <Link href={previous.href} className="text-violet-ink hover:underline">
+            <Link href={previous.href} className="inline-block py-0.5 text-violet-ink hover:underline">
               ← Stage {previous.catalog.stage}: {previous.catalog.name}
             </Link>
           ) : (
             <span />
           )}
           {next?.href && (
-            <Link href={next.href} className="text-violet-ink hover:underline">
+            <Link href={next.href} className="inline-block py-0.5 text-violet-ink hover:underline">
               Stage {next.catalog.stage}: {next.catalog.name} →
             </Link>
           )}

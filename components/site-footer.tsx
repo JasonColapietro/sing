@@ -173,11 +173,13 @@ export default function SiteFooter() {
             {/* Both pages were already live and neither was linked from
                 anywhere on the site. An app that asks for a microphone should
                 put its policy one click from every page. */}
-            <Link href="/privacy" className={linkClass}>
+            {/* prefetch off: /privacy and /terms redirect to suedeai.org, and a
+                cross-origin RSC prefetch of a redirect fails CORS on every page. */}
+            <Link href="/privacy" prefetch={false} className={linkClass}>
               Privacy
             </Link>
             <span aria-hidden>·</span>
-            <Link href="/terms" className={linkClass}>
+            <Link href="/terms" prefetch={false} className={linkClass}>
               Terms
             </Link>
           </span>
