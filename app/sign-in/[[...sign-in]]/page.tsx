@@ -40,12 +40,12 @@ export default function SignInPage() {
     <main className="mx-auto flex w-full max-w-md flex-col items-center px-4 py-12 sm:py-16">
       <SectionLabel className="mb-3">Free account</SectionLabel>
       <p className="text-center text-3xl font-extrabold tracking-[-0.01em]">
-        Pick your practice record back up
+        Sign in to practice
       </p>
       <p className="mt-3 text-center text-mut">
-        Your XP, streak, logged sessions and vocal range are stored in this
-        browser. Signing in restores the copy you saved, on this device or any
-        other.
+        The lessons and practice rooms open with a free account. Sign in with
+        Apple or Google and your XP, streak, sessions and range follow you to
+        any device.
       </p>
 
       <div className="mt-8 flex w-full justify-center">
@@ -60,11 +60,10 @@ export default function SignInPage() {
       </div>
 
       <p className="mt-10 text-center text-sm text-dim">
-        You never need an account to sing. The mic, every practice room and
-        every free feature work exactly the same signed out.
+        The account is free. Famous singers&apos; ranges stay open without one.
       </p>
-      <LinkButton href="/studio" variant="ghost" size="sm" className="mt-2">
-        Back to the studio
+      <LinkButton href="/singers" variant="ghost" size="sm" className="mt-2">
+        Browse singers&apos; ranges
       </LinkButton>
     </main>
   );

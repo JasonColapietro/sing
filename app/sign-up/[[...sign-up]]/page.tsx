@@ -24,12 +24,12 @@ export default function SignUpPage() {
           it re-labels itself at every step of the flow. The full reasoning is on
           the shared Clerk appearance module. */}
       <p className="text-center text-3xl font-extrabold tracking-[-0.01em]">
-        Keep a copy of your progress
+        Create your free account
       </p>
       <p className="mt-3 text-center text-mut">
-        Right now your XP, streak, logged sessions and vocal range live in this
-        browser and nowhere else. One cleared browser and they are gone. An
-        account is free and keeps a backup.
+        The lessons and practice rooms open with a free account. Sign up with
+        Apple or Google and your XP, streak, sessions and vocal range are backed
+        up too.
       </p>
 
       <div className="mt-8 flex w-full justify-center">
@@ -43,11 +43,10 @@ export default function SignUpPage() {
       </div>
 
       <p className="mt-10 text-center text-sm text-dim">
-        This buys you a backup, nothing else. Everything free stays free and
-        stays open signed out.
+        The account is free. Famous singers&apos; ranges stay open without one.
       </p>
-      <LinkButton href="/studio" variant="ghost" size="sm" className="mt-2">
-        Back to the studio
+      <LinkButton href="/singers" variant="ghost" size="sm" className="mt-2">
+        Browse singers&apos; ranges
       </LinkButton>
     </main>
   );
