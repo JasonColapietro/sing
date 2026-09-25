@@ -273,7 +273,7 @@ function SongCard({
         <span aria-hidden="true">·</span>
         <span className="tabular">
           {full
-            ? `${formatMinSec(sessionSeconds(song))} full song`
+            ? `${formatMinSec(sessionSeconds(song))} longer version`
             : `${formatMinSec(phraseSeconds(song))} phrase`}
         </span>
         {!full && (

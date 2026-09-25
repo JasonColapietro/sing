@@ -277,7 +277,7 @@ export default async function SongPage({
             <h2 className="mt-3 text-xl">
               {phraseVersion
                 ? "The short phrase version"
-                : "The full arrangement"}
+                : "The longer version"}
             </h2>
             <ul className="mt-4 space-y-2">
               {[...(phraseVersion ? [phraseVersion] : []), ...fullVersions].map(
@@ -290,7 +290,7 @@ export default async function SongPage({
                       <span className="text-sm font-medium">{other.title}</span>
                       <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim">
                         {other.form === "full"
-                          ? "full arrangement"
+                          ? "longer version"
                           : "opening phrase"}
                       </span>
                     </Link>

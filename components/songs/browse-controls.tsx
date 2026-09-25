@@ -113,7 +113,7 @@ export function browseOptions(songs: Song[]): BrowseOptions {
 }
 
 export function formLabel(form: SongForm): string {
-  return form === "phrase" ? "Phrase loop" : "Full song";
+  return form === "phrase" ? "Phrase loop" : "Longer version";
 }
 
 export interface BrowseContext {

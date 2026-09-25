@@ -13,7 +13,7 @@ import { SITE_URL } from "@/lib/site";
 export const metadata = withCanonicalOpenGraph({
   title: "Suede Pro: The Vocal Coach on Top of the Free Studio",
   description:
-    "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access, adding an adaptive coach, per-note analytics, take analysis, pro warmup packs, the full songbook, and two books with PDFs.",
+    "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access, adding an adaptive coach, per-note analytics, take analysis, pro warmup packs, scoring history for every song, and two books with PDFs.",
   alternates: { canonical: `${SITE_URL}/pro` },
 });
 
@@ -109,7 +109,7 @@ const PRO_JSON_LD = {
       "@id": `${SITE_URL}/pro#product`,
       name: "Suede Sing Pro",
       description:
-        "An adaptive daily practice plan, per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, the full songbook, cloud sync, and two books with PDFs.",
+        "An adaptive daily practice plan, per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, scoring history for every song, cloud sync, and two books with PDFs.",
       applicationCategory: "MusicApplication",
       operatingSystem: "Web Browser",
       publisher: { "@id": "https://suedeai.ai/#organization" },
