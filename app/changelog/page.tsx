@@ -52,7 +52,7 @@ const RELEASE_STORIES: Story[] = [
   {
     label: "Lessons",
     title: "A voice curriculum, 102 lessons deep",
-    body: "The full Suede voice course now lives here: 7 stages, 34 modules and 102 lessons, from posture and breath through the passaggio to mix and range. Modules link straight into the room that trains them, show your practice history from that room, and measure against the same 50-cent in-tune tolerance the studio scores with. A new Learn hub maps the whole path, with a 20-minute first session and a seven-day starter plan.",
+    body: "The full Suede voice course now lives here: 7 stages, 34 modules and 102 lessons, from posture and breath through the passaggio to style and performance. Every module links to a room to practise it in, and where the skill can be measured, it is scored against the same 50-cent in-tune tolerance the studio uses. A new Learn hub maps the whole path, with a 20-minute session template and a seven-day starter plan.",
     links: [
       { href: "/learn/voice", text: "Start the course" },
       { href: "/learn", text: "Open the Learn hub" },
@@ -61,7 +61,7 @@ const RELEASE_STORIES: Story[] = [
   {
     label: "Programs",
     title: "Multi-week programs, worked day by day",
-    body: "Six named programs, from a one-week recovery plan to the twelve-week plan from The Measured Voice. Each practice day runs 10 to 20 minutes of routines, breath sets, songs and range-test check-ins, every item deep-linked to the exact step it opens. Four programs are free, and the two Pro programs open their first week free.",
+    body: "Six named programs, from a one-week recovery plan to the twelve-week plan from The Measured Voice. Most practice days run 10 to 20 minutes of routines, breath sets, songs and range-test check-ins, every item deep-linked to the exact step it opens. Four programs are open to everyone, and the two Pro programs open their first week free.",
     links: [{ href: "/programs", text: "Choose a program" }],
   },
   {
@@ -73,7 +73,7 @@ const RELEASE_STORIES: Story[] = [
   {
     label: "Measurement",
     title: "Breath and vibrato, measured",
-    body: "The microphone now hears you breathe in. A 2048-point spectral classifier tracks its own adaptive noise floor and marks an unvoiced inhale of 0.25 to 2.5 seconds, and the breath drills wait for it. Vibrato drills read the rate in hertz and the width in cents of every hold against a 5 to 7 Hz target band. New drill sets cover vibrato, vocal recovery, mix and high notes.",
+    body: "The microphone now hears you breathe in. A 2048-point spectral classifier tracks its own adaptive noise floor and marks an unvoiced inhale of 0.25 to 2.5 seconds; the sustain test and a new Breathe and sing drill wait for it. Vibrato drills read the rate in hertz and the width in cents of every hold against a 5 to 7 Hz target band. New drill sets cover vibrato, vocal recovery and high notes, plus a Pro mix set.",
     links: [
       { href: "/breath", text: "Open breath training" },
       { href: "/warmups", text: "Open the warmups" },
@@ -82,13 +82,13 @@ const RELEASE_STORIES: Story[] = [
   {
     label: "Pitch engine",
     title: "A sharper pitch engine",
-    body: "The NSDF detector now reads through a 4 kHz low-pass, takes a true median of four readings, and rejects 50 and 60 Hz mains hum and periodic room tone while still hearing quiet voices. Measured on our precision harness, vibrato bias fell from 5.5 cents to 0.7 cents. Every room that listens gets the upgrade.",
+    body: "The NSDF detector now reads through a 4 kHz low-pass, takes a true median of four readings, and rejects 50 and 60 Hz mains hum and periodic room tone while still hearing quiet voices. On a synthetic A3 vibrato in our precision harness, bias fell from 5.5 cents to 0.7 cents. Every live room gets the upgrade.",
     links: [{ href: "/studio", text: "Step into the studio" }],
   },
   {
     label: "Daily practice",
     title: "A plan for today, and a report for the week",
-    body: "Today's three picks three exercises each day from your own scores, each starting at a tempo set by your recent results. Warmup routines run themselves in a full-screen session across warmups, ear training and breath. On the first visit of a new week, your progress page sums up the week before. And Note Catcher joins ear training: steer with your voice and hold within the target for 0.4 seconds to catch each note, including chases built from the songbook.",
+    body: "Today's three picks three warmups a day, weighted by your recent scores, each at a starting tempo those scores set. Routines run themselves, full-screen, across warmups, ear training and breath. On your first visit of a new week, a card sums up the week you just practised. And Note Catcher joins ear training: steer with your voice and hold on each target for 0.4 to 0.6 seconds, by difficulty, to catch it, including chases built from the songbook.",
     links: [
       { href: "/warmups", text: "See today's three" },
       { href: "/ear-training", text: "Play Note Catcher" },
@@ -149,10 +149,10 @@ const LOG: Array<{
   {
     month: "September 2026",
     entries: [
-      { day: "25", note: "Suede Sing 3.1." },
+      { day: "24", note: "Suede Sing 3.1." },
       {
         day: "23",
-        note: "Breath detection: the microphone hears the inhale, and breath drills wait for it.",
+        note: "Breath detection: the microphone hears the inhale, and the sustain test and Breathe and sing wait for it.",
       },
       {
         day: "23",
@@ -174,7 +174,7 @@ const LOG: Array<{
       { day: "23", note: "Loop any span of a song with two handles." },
       {
         day: "23",
-        note: "Pitch engine: a 4 kHz pre-filter and a true median bring vibrato bias down to 0.7 cents.",
+        note: "Pitch engine: a 4 kHz pre-filter, and a true median that brings vibrato bias down to 0.7 cents in our harness.",
       },
       {
         day: "23",

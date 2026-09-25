@@ -430,8 +430,8 @@ export function ProClient() {
                   The studio and the range test stay free, and free accounts
                   get three minutes of guided practice a day. Pro removes the
                   clock and layers a coach on top — adaptive daily plans,
-                  per-note analytics, pitch analysis on your takes, and the
-                  full songbook.
+                  per-note analytics, pitch analysis on your takes, and a
+                  scoring history for every song.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <LinkButton href="#plans" variant="violet" size="lg">
@@ -517,7 +517,7 @@ export function ProClient() {
               <div>
                 <SectionLabel className="mb-4">Plans</SectionLabel>
                 <h2 className="max-w-2xl text-2xl sm:text-3xl">
-                  One tier. Coach, analytics, songbook, two books.
+                  One tier. Coach, analytics, song history, two books.
                 </h2>
                 <p className="mt-3 max-w-xl text-mut">{plansBlurb}</p>
               </div>

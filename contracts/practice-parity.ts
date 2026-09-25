@@ -101,10 +101,10 @@ const RULES = {
 const KNOWN_DIVERGENCES = {
   songTempo: {
     web: { min: TEMPO_MIN, max: TEMPO_MAX, step: TEMPO_STEP },
-    ios: [0.75, 1.0],
+    ios: [0.5, 0.75, 1.0, 1.25],
     android: null,
     reason:
-      "Not a value drift but a gap: iOS SongPracticeViewModel.tempoRates offers two fixed playback rates. Native songs have been scored from the microphone since suede-voice #132 (S8), but the web's continuous tempo grid and the auto-tempo rules that step along it have no native counterpart yet. Listed so the gap is a recorded state rather than an oversight.",
+      "Not a value drift but a gap: since suede-voice #135 (S10) iOS has auto tempo, stepping across four fixed rates (SongAutoTempo.rates, 0.5-1.25x) from the last three scores. The web's continuous 25-125% grid in 5% steps has no native counterpart yet. Listed so the gap is a recorded state rather than an oversight.",
   },
 } as const;
 

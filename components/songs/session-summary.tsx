@@ -314,9 +314,9 @@ export function SessionSummary({
       {!listenMode && (
         <div>
           <ProCrescendoNudge
-            line="Pro unlocks the full songbook and per-note practice data"
+            line="Pro keeps every song's scoring history and per-note practice data"
             title="Keep building this score"
-            body="Pro unlocks the full songbook and builds per-note history across your scored practices."
+            body="Every song is free to sing. Pro keeps the scoring history for each one and builds per-note history across your scored practices."
             context="Song practice"
           />
         </div>
