@@ -8,9 +8,9 @@ import { SINGERS } from "@/lib/singers";
 import { proHeadlineLong } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 
-const TITLE = "What's New in Suede Sing v2 — Changelog";
+const TITLE = "What's New in Suede Sing 3.1: Changelog";
 const DESCRIPTION =
-  "Suede Sing v2, room by room: warmups that sing along with you, free accounts that back up your practice record, a voice analyzer, a deeper singers library, and a calmer design — with the month-by-month release log.";
+  "Suede Sing 3.1: a 102-lesson voice curriculum, multi-week practice programs, microphone-scored songs with mastery, breath and vibrato measurement, and a sharper pitch engine. Plus the v2 story and the month-by-month release log.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -40,13 +40,64 @@ export const metadata: Metadata = {
 const linkClass =
   "inline-block py-0.5 text-sm text-ink underline decoration-line2 underline-offset-4 transition-colors hover:decoration-ink";
 
-/** The five v2 stories, told in the order a singer meets them. */
-const STORIES: Array<{
+type Story = {
   label: string;
   title: string;
   body: string;
   links: Array<{ href: string; text: string }>;
-}> = [
+};
+
+/** The 3.1 stories, told in the order a singer meets them. */
+const RELEASE_STORIES: Story[] = [
+  {
+    label: "Lessons",
+    title: "A voice curriculum, 102 lessons deep",
+    body: "The full Suede voice course now lives here: 7 stages, 34 modules and 102 lessons, from posture and breath through the passaggio to mix and range. Modules link straight into the room that trains them, show your practice history from that room, and measure against the same 50-cent in-tune tolerance the studio scores with. A new Learn hub maps the whole path, with a 20-minute first session and a seven-day starter plan.",
+    links: [
+      { href: "/learn/voice", text: "Start the course" },
+      { href: "/learn", text: "Open the Learn hub" },
+    ],
+  },
+  {
+    label: "Programs",
+    title: "Multi-week programs, worked day by day",
+    body: "Six named programs, from a one-week recovery plan to the twelve-week plan from The Measured Voice. Each practice day runs 10 to 20 minutes of routines, breath sets, songs and range-test check-ins, every item deep-linked to the exact step it opens. Four programs are free, and the two Pro programs open their first week free.",
+    links: [{ href: "/programs", text: "Choose a program" }],
+  },
+  {
+    label: "Songs",
+    title: "Songs that listen, and remember",
+    body: "Pick a pass: Listen, Sing along with the guide under your voice, or On your own. Songs earn star grades and a mastery mark, and mastering two songs in a band opens the next of five bands. Set an A-to-B loop with two handles that snap to note starts, record your take and play it back in the summary, and run tempo anywhere from 25% to 125% in 5% steps, or on Auto, which follows your last loop's score. A short taste quiz picks your first songs.",
+    links: [{ href: "/songs", text: "Sing the songs" }],
+  },
+  {
+    label: "Measurement",
+    title: "Breath and vibrato, measured",
+    body: "The microphone now hears you breathe in. A 2048-point spectral classifier tracks its own adaptive noise floor and marks an unvoiced inhale of 0.25 to 2.5 seconds, and the breath drills wait for it. Vibrato drills read the rate in hertz and the width in cents of every hold against a 5 to 7 Hz target band. New drill sets cover vibrato, vocal recovery, mix and high notes.",
+    links: [
+      { href: "/breath", text: "Open breath training" },
+      { href: "/warmups", text: "Open the warmups" },
+    ],
+  },
+  {
+    label: "Pitch engine",
+    title: "A sharper pitch engine",
+    body: "The NSDF detector now reads through a 4 kHz low-pass, takes a true median of four readings, and rejects 50 and 60 Hz mains hum and periodic room tone while still hearing quiet voices. Measured on our precision harness, vibrato bias fell from 5.5 cents to 0.7 cents. Every room that listens gets the upgrade.",
+    links: [{ href: "/studio", text: "Step into the studio" }],
+  },
+  {
+    label: "Daily practice",
+    title: "A plan for today, and a report for the week",
+    body: "Today's three picks three exercises each day from your own scores, each starting at a tempo set by your recent results. Warmup routines run themselves in a full-screen session across warmups, ear training and breath. On the first visit of a new week, your progress page sums up the week before. And Note Catcher joins ear training: steer with your voice and hold within the target for 0.4 seconds to catch each note, including chases built from the songbook.",
+    links: [
+      { href: "/warmups", text: "See today's three" },
+      { href: "/ear-training", text: "Play Note Catcher" },
+    ],
+  },
+];
+
+/** The five v2 stories, told in the order a singer meets them. */
+const STORIES: Story[] = [
   {
     label: "Warmups",
     title: "Warmups that sing with you",
@@ -95,6 +146,68 @@ const LOG: Array<{
   month: string;
   entries: Array<{ day: string; note: string }>;
 }> = [
+  {
+    month: "September 2026",
+    entries: [
+      { day: "25", note: "Suede Sing 3.1." },
+      {
+        day: "23",
+        note: "Breath detection: the microphone hears the inhale, and breath drills wait for it.",
+      },
+      {
+        day: "23",
+        note: "Multi-week programs, including the twelve-week plan from The Measured Voice, with week 1 of every Pro program free.",
+      },
+      {
+        day: "23",
+        note: "New drills for vibrato, recovery, mix and high notes, with vibrato rate and width measured on every hold.",
+      },
+      {
+        day: "23",
+        note: "All 102 voice lessons, across 7 stages and 34 modules, now on Suede Sing.",
+      },
+      { day: "23", note: "Your week: a weekly report on the first visit of a new week." },
+      { day: "23", note: "Today's three: a daily set that adapts to your scores." },
+      { day: "23", note: "Note Catcher, a pitch-steered catching game, with song chases." },
+      { day: "23", note: "A taste quiz that picks your first songs." },
+      { day: "23", note: "Record your take inside a song and play it back in the summary." },
+      { day: "23", note: "Loop any span of a song with two handles." },
+      {
+        day: "23",
+        note: "Pitch engine: a 4 kHz pre-filter and a true median bring vibrato bias down to 0.7 cents.",
+      },
+      {
+        day: "23",
+        note: "The Learn hub: a map of vocal training, with a 20-minute first session and a seven-day plan.",
+      },
+      {
+        day: "5",
+        note: "Song mastery: Listen, Sing along and On your own passes, five bands, and breath marks in the lyrics.",
+      },
+      {
+        day: "5",
+        note: "Songs gain rehearsal and performance modes, and tempo from 25% to 125% with Auto.",
+      },
+      { day: "4", note: "See your tone: a door to the analyzer from every results screen." },
+      {
+        day: "3",
+        note: "Full-screen practice sessions across warmups, ear training and breath.",
+      },
+      { day: "3", note: "Warmup routines that run themselves, start to finish." },
+      {
+        day: "2",
+        note: "Song-range pages suggest a first practice step fitted to your saved range.",
+      },
+      {
+        day: "2",
+        note: "The pitch detector ignores room tone and 50/60 Hz mains hum, and still hears quiet voices.",
+      },
+      {
+        day: "1",
+        note: "Can you sing it? Vocal-range pages for 22 popular songs, with a verdict against your range.",
+      },
+    ],
+  },
   {
     month: "August 2026",
     entries: [
@@ -162,6 +275,30 @@ const LOG: Array<{
   },
 ];
 
+function StoryBlock({ story }: { story: Story }) {
+  return (
+    <section>
+      <SectionHeading label={story.label} lede={story.body}>
+        {story.title}
+      </SectionHeading>
+      <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+        {story.links.map((l, i) => (
+          <span key={l.href} className="flex items-center gap-3">
+            {i > 0 && (
+              <span aria-hidden className="text-line2">
+                ·
+              </span>
+            )}
+            <Link href={l.href} className={linkClass}>
+              {l.text}
+            </Link>
+          </span>
+        ))}
+      </p>
+    </section>
+  );
+}
+
 export default function ChangelogPage() {
   const entriesLogged = LOG.reduce((n, m) => n + m.entries.length, 0);
 
@@ -173,7 +310,7 @@ export default function ChangelogPage() {
           What we&apos;ve <em>changed</em>
         </>
       }
-      subtitle="Suede Sing v2: the studio rebuilt panel by panel — warmups that sing with you, free accounts that keep your record, a deeper library, and a calmer room around all of it."
+      subtitle="Suede Sing 3.1: a full voice curriculum, programs that plan your weeks, songs that score and remember you, and a pitch engine measured to the cent."
     >
       {/* The record head: the page's one accented surface. Cool hairline and
           trace glyph up top, tape counters below — data as ornament. */}
@@ -183,15 +320,15 @@ export default function ChangelogPage() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cool to-transparent"
         />
         <V2TraceGlyph className="shrink-0 text-cool" />
-        <span className="text-ink">V2</span>
+        <span className="text-ink">3.1</span>
         <span aria-hidden className="text-line2">
           ·
         </span>
-        <span>Shipped Aug 2026</span>
+        <span>Shipped Sep 2026</span>
         <span aria-hidden className="text-line2">
           ·
         </span>
-        <span className="tabular">{STORIES.length} stories</span>
+        <span className="tabular">{RELEASE_STORIES.length} stories</span>
         <span aria-hidden className="text-line2">
           ·
         </span>
@@ -199,26 +336,23 @@ export default function ChangelogPage() {
       </div>
 
       <div className="mt-12 space-y-12">
+        {RELEASE_STORIES.map((s) => (
+          <StoryBlock key={s.label} story={s} />
+        ))}
+      </div>
+
+      <section aria-label="Suede Sing v2" className="mt-14 border-t border-line2 pt-8">
+        <SectionLabel>Earlier: v2, August 2026</SectionLabel>
+        <p className="mt-3 max-w-prose text-meta text-mut">
+          The studio rebuilt panel by panel: warmups that sing with you, free
+          accounts that keep your record, a deeper library, and a calmer room
+          around all of it.
+        </p>
+      </section>
+
+      <div className="mt-8 space-y-12">
         {STORIES.map((s) => (
-          <section key={s.label}>
-            <SectionHeading label={s.label} lede={s.body}>
-              {s.title}
-            </SectionHeading>
-            <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-              {s.links.map((l, i) => (
-                <span key={l.href} className="flex items-center gap-3">
-                  {i > 0 && (
-                    <span aria-hidden className="text-line2">
-                      ·
-                    </span>
-                  )}
-                  <Link href={l.href} className={linkClass}>
-                    {l.text}
-                  </Link>
-                </span>
-              ))}
-            </p>
-          </section>
+          <StoryBlock key={s.label} story={s} />
         ))}
       </div>
 

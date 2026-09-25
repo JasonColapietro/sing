@@ -164,10 +164,10 @@ export default function SiteFooter() {
           <span className="flex flex-wrap items-center gap-x-2">
             <span>SUEDE SING</span>
             <span aria-hidden>·</span>
-            {/* The durable inbound link to /changelog: the v2 banner will
+            {/* The durable inbound link to /changelog: the release banner will
                 retire one day, and the crawl path must not retire with it. */}
             <Link href="/changelog" className={linkClass}>
-              v2 — what we&apos;ve changed
+              3.1: what we&apos;ve changed
             </Link>
             <span aria-hidden>·</span>
             {/* Both pages were already live and neither was linked from

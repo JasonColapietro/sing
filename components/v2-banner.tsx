@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import V2TraceGlyph from "@/components/v2-glyph";
 
-const SEEN_KEY = "suede-sing:v2-banner:v1";
+const SEEN_KEY = "suede-sing:v3-1-banner:v1";
 
 /**
- * The v2 announcement: a filled band above the sticky header that scrolls away
+ * The release announcement (3.1 as of 2026-09-25; it announced v2 before
+ * that): a filled band above the sticky header that scrolls away
  * with the page. It shares the header's max-w-6xl grid so the V2 chip sits on
  * the same left edge as the wordmark below it — part of the console, not a
  * toast. No violet anywhere in it: the strip hangs directly over the violet Pro
@@ -19,7 +20,8 @@ const SEEN_KEY = "suede-sing:v2-banner:v1";
  * meant phone visitors saw a bare "V2" chip and a link. It is now a solid cool
  * band carrying the message at every width. The dismiss key is deliberately
  * unchanged: making the banner louder is not a reason to re-show it to someone
- * who already closed it. Bump SEEN_KEY only to deliberately re-broadcast.
+ * who already closed it. Bump SEEN_KEY only to deliberately re-broadcast; it
+ * was bumped for 3.1, which is a release worth re-showing to v2 dismissers.
  *
  * Dismissal has to survive server rendering without a flash or a layout
  * shift, on a site that prerenders every page. The banner is always in the
@@ -77,16 +79,16 @@ export default function V2Banner() {
         <div className="mx-auto flex min-h-12 w-full max-w-6xl flex-wrap items-center gap-x-3 gap-y-1 py-2 pl-4 pr-12 sm:pl-6 sm:pr-14">
           <V2TraceGlyph className="shrink-0 text-white" />
           <span className="inline-block shrink-0 rounded border border-white/40 px-1.5 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-white">
-            V2
+            3.1
           </span>
           <span className="text-meta text-white/85">
-            The studio has been rebuilt.
+            102 voice lessons, multi-week programs, and songs that score you.
           </span>
           <Link
             href="/changelog"
             className="shrink-0 rounded-full bg-white/15 px-3 py-1 text-meta font-medium text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/25"
           >
-            See what we&apos;ve changed
+            See what&apos;s new
           </Link>
           {/* The drawer-close pattern from nav.tsx: a 44px square hit region
               around a small glyph, here pinned to the right edge so it stays
@@ -94,7 +96,7 @@ export default function V2Banner() {
           <button
             type="button"
             onClick={dismiss}
-            aria-label="Dismiss the v2 announcement"
+            aria-label="Dismiss the 3.1 announcement"
             className="absolute right-1 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white"
           >
             <svg
