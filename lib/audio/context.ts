@@ -17,6 +17,46 @@ interface SinkCapableContext extends AudioContext {
 }
 
 /**
+ * Resumes the context from any stopped state.
+ *
+ * Checking only for "suspended" missed iOS Safari, which reports
+ * "interrupted" when the mic opens, the tab goes to the background, or a call
+ * or notification takes the audio session. An interrupted context's clock
+ * stops, so everything scheduled on it stalls: the song and warmup players
+ * freeze waiting on currentTime and the analyzer reads silence.
+ */
+function wake(ctx: AudioContext): void {
+  const state = ctx.state as AudioContextState | "interrupted";
+  if (state !== "running" && state !== "closed") {
+    void ctx.resume().catch(() => {
+      // Needs a user gesture; the listeners in keepRunning try again on the
+      // next tap.
+    });
+  }
+}
+
+/**
+ * iOS will only resume audio inside a user gesture, and it can interrupt the
+ * context at any moment after it started. So every tap, key press and return
+ * to the tab gets a chance to bring it back, and a state change to a stopped
+ * state tries straight away.
+ */
+function keepRunning(ctx: AudioContext): void {
+  const retry = () => {
+    if (_ctx === ctx) wake(ctx);
+  };
+  for (const type of ["pointerdown", "touchend", "keydown"] as const) {
+    document.addEventListener(type, retry, { capture: true, passive: true });
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") retry();
+  });
+  ctx.addEventListener("statechange", () => {
+    if (document.visibilityState === "visible") retry();
+  });
+}
+
+/**
  * Shared AudioContext. Call only on the client, ideally from a user gesture
  * (click) so the browser allows it to start.
  */
@@ -24,8 +64,13 @@ export function getAudioContext(): AudioContext {
   if (typeof window === "undefined") {
     throw new Error("getAudioContext is client-only");
   }
-  if (!_ctx) _ctx = new AudioContext();
-  if (_ctx.state === "suspended") void _ctx.resume();
+  if (!_ctx || _ctx.state === "closed") {
+    _ctx = new AudioContext();
+    _output = null;
+    _appliedSinkId = null;
+    keepRunning(_ctx);
+  }
+  wake(_ctx);
   // Re-applied on every access rather than once at construction: the context is
   // a module singleton created on the first tone the app ever plays, which is
   // usually long before the singer opens the picker and chooses an output.
