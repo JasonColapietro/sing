@@ -16,7 +16,7 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 |---|---|---|---|
 | Range calibration by sliding down to lowest comfortable, then up to highest | Yousician | ✓ /range | ✓ RangeTest |
 | Voice type from range | Simply Sing, Yousician | ✓ | ✓ |
-| Onboarding quiz (genres, favourite singers) feeding song picks | Simply Sing | ✗ | ✗ |
+| Onboarding quiz (genres, favourite singers) feeding song picks | Simply Sing | ◐ genres, experience and goal feed "Picked for you" (#159); no favourite-singers question | ✗ |
 | Recalibrate any time from settings | Yousician | ✓ | ✓ |
 
 ## Practice screen (Yousician is the reference)
@@ -26,7 +26,7 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 | Notes flow right-to-left toward a playhead; own pitch vs reference | Yousician, Simply Sing | ✓ highway-canvas | ✗ PitchGauge only |
 | Sing-along by default, guide under the voice, guide-level slider | Yousician "Vocals" | ✓ | ✗ call-and-response only (PracticeViewModel: countIn → playingReference → listening) |
 | Count-in on the audio clock | Yousician | ✓ | ✓ |
-| Full-screen session shell, results screen with stars/XP/goal/streak | Yousician | ✓ PR #123 | ◐ RoutineResultView, no stars, no daily goal |
+| Full-screen session shell, results screen with stars/XP/goal/streak | Yousician | ✓ PR #123 | ✓ song and drill results carry stars and XP; daily goal ring and streak on Home (suede-voice #116, #135) |
 | Steps that advance themselves in a routine | Singeo, Yousician | ✓ | ✓ |
 
 ## Songs (Yousician Practice and Play modes; Simply Sing session)
@@ -34,12 +34,12 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 | Mechanic | Source | Web | iOS |
 |---|---|---|---|
 | Practice mode restarts at the end so you keep practicing | Yousician | ✓ rehearsal mode (PR #129) | ◐ |
-| Auto tempo: app raises or lowers speed from how you sing, 25–125 % in 5 % steps; manual slider too | Yousician | ✓ Auto + slider (PR #129) | ✗ |
+| Auto tempo: app raises or lowers speed from how you sing, 25–125 % in 5 % steps; manual slider too | Yousician | ✓ Auto + slider (PR #129) | ◐ auto tempo over four fixed rates, 0.5–1.25× (suede-voice #135) |
 | Transpose; auto-transpose to calibrated range | Yousician, Simply Sing | ✓ fitTransposeToRange | ✓ |
 | Guide-vocal and own-voice volume | Yousician | ✓ Mixer guidePct | ◐ |
-| Loop any section with sliders on the progress bar | Yousician | ◐ section picker, fixed 4 loops | ✗ |
-| Record and review inside the song | Yousician, Simply Sing "Recording Studio" | ✗ (separate /recorder) | ✗ |
-| Play mode: stars + points, multiplier starts 3× and climbs to 5× with correct notes and timing | Yousician | ✓ performance mode, 3×→5× (PR #129) | ✗ |
+| Loop any section with sliders on the progress bar | Yousician | ✓ two handles snapped to note starts (#155) | ◐ bar-snapped section loop (suede-voice #135) |
+| Record and review inside the song | Yousician, Simply Sing "Recording Studio" | ✓ record your take, review it in the summary (#157) | ✗ |
+| Play mode: stars + points, multiplier starts 3× and climbs to 5× with correct notes and timing | Yousician | ✓ performance mode, 3×→5× (PR #129) | ◐ On your own pass with stars (suede-voice #132, #135); no multiplier |
 | Staged session: lyrics read → demo in your key → sing with vocals → solo | Simply Sing | ✓ Listen, Sing along and On your own passes (#130) | ✓ same three passes, Sing along by default (suede-voice #132) |
 | Pass threshold → song "mastered"; levels Basic→Easy→Medium→Hard→Extreme unlocked by XP | Simply Sing | ✓ solo mastery, five song bands, each opened by mastering 2 songs in the band below (#130; `BAND_UNLOCK_MASTERED`) | ◐ stars, XP and mastery (suede-voice #135); no band ladder |
 | Breath cues in the lyric line ("when to hold a note and when to breathe") | Simply Sing | ✓ breath marks in the lyric band (#130; `breathMarks`) | ✗ |
@@ -52,7 +52,7 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 |---|---|---|---|
 | Path as levels of missions; every task in a mission must be sung to complete it; path unlocked to skip | Yousician | ✓ a tier completes when every row has earned a star, with tier counts and a Continue card (#130) | ✗ list only |
 | Chase the Notes: sing back short melody segments that build to the mission's song | Yousician | ◐ melody-echo game exists, not tied to songs | ◐ |
-| Note Catcher: paddle moved by singing, gems right-to-left, speeds up, ends on a miss | Yousician | ✗ | ✗ |
+| Note Catcher: paddle moved by singing, gems right-to-left, speeds up, ends on a miss | Yousician | ✓ Note Catcher with song chases (#161) | ✗ |
 | Fixed routines 5–20 min (quick → full), pitch and range routines | Singeo | ✓ six routines + Pro | ✓ two fixed routines |
 | Measured Singeo exercise shapes, note lengths, rep counts | Singeo videos | ✓ 13 exercises | ✓ 13 exercises |
 | Workouts by topic (ear, breath, voice health) | Yousician, Singeo | ✓ rooms | ✓ |
@@ -63,10 +63,10 @@ Legend: ✓ present · ◐ partial · ✗ missing · — not applicable / delibe
 
 | Mechanic | Source | Web | iOS |
 |---|---|---|---|
-| XP, levels with titles | Simply Sing, Singeo | ✓ 60 levels | ✗ |
+| XP, levels with titles | Simply Sing, Singeo | ✓ 60 levels | ✓ XP and titled levels from drills and songs (suede-voice #128, #135) |
 | Streaks, badges | Yousician, Simply Sing | ✓ | ✓ streak, ◐ achievements |
-| Daily goal ring | Yousician-style | ✓ | ✗ |
-| Weekly activity report: stars, notes sung, singing time | Yousician (Monday email) | ✗ | ✗ |
+| Daily goal ring | Yousician-style | ✓ | ✓ (suede-voice #116) |
+| Weekly activity report: stars, notes sung, singing time | Yousician (Monday email) | ◐ in-app "Your week" card on the first visit of a new week (#164); no email | ✗ |
 | Free tier: daily minutes | Yousician | ✓ 3 min/day | ✓ 180 s/day |
 
 ## Slices, in order (each is one graph-flo-xr run on sing; iOS follows)
@@ -99,7 +99,7 @@ c412d33. Rows above are unchanged; none were contradicted.
 
 | Mechanic | Source | Web | Notes |
 |---|---|---|---|
-| Multi-week named programs (days to 7 weeks), worked day by day | Sing Sharp ([site](https://singsharp.com/en)) | ✓ | /programs: five plans, 1–6 weeks, 10–20 min a day with rest days; days tick off from the practice log, one per calendar day |
+| Multi-week named programs (days to 7 weeks), worked day by day | Sing Sharp ([site](https://singsharp.com/en)) | ✓ /programs: six plans, 1–12 weeks, mostly 10–20 min a day with rest days; days tick off from the practice log (#176, #179, #180) | ✗ |
 | Breath detection: mic hears the inhale / support, gates the drill | Sing Sharp ([site](https://singsharp.com/en)) | ◐ | Inhale heard and gates the sustain test and Breathe and sing (S9c); support is not measured |
 | Live pitch-vs-target overlay | Sing Sharp, Erol "vocal blob" ([manual](https://www.erolstudios.com/SingersStudio-UserManual/voice-lessons/)) | ✓ | Highway, pitch match |
 | Vocal-fry recovery drill | Sing Sharp Recovery Warmup ([site](https://singsharp.com/en)) | ✓ | Easy recovery routine: quiet hums, soft trill, creak-to-tone onset. Fry itself is not detected; only the pitched note is scored |
