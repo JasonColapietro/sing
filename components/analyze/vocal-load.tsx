@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { Stat } from "@/components/ui";
 import {
   type DoseState,
@@ -8,6 +8,8 @@ import {
   recentDays,
   today,
 } from "@/lib/audio/vocal-dose";
+
+const noopSubscribe = () => () => {};
 
 /** "0s", "4m 20s", "1h 12m". */
 function fmtTime(sec: number): string {
@@ -49,6 +51,10 @@ export function VocalLoad({
     return () => window.clearInterval(id);
   }, [running]);
 
+  // The page is prerendered, so the server's "last 7 days" are the build's.
+  // Name the days only once mounted, or hydration on any later day renders
+  // different weekday text (React #418).
+  const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false);
   const days = recentDays(state, 7);
   const t = today(state);
   const peak = Math.max(1, ...days.map((d) => d.cycles));
@@ -81,13 +87,13 @@ export function VocalLoad({
                 style={{ height: `${Math.max(2, (d.cycles / peak) * 56)}px` }}
               />
               <span className="font-mono text-[10px] text-dim">
-                {WEEKDAY[new Date(`${d.day}T12:00:00`).getDay()]}
+                {mounted ? WEEKDAY[new Date(`${d.day}T12:00:00`).getDay()] : "\u00a0"}
               </span>
             </div>
           ))}
         </div>
         <ul className="sr-only">
-          {days.map((d) => (
+          {mounted && days.map((d) => (
             <li key={d.day}>
               {d.day}: {fmtTime(d.phonationSec)} voiced, {fmtCycles(d.cycles)} cycles
             </li>

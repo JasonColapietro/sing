@@ -233,14 +233,14 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
 
         <nav aria-label="Lessons" className="flex flex-wrap justify-between gap-3 text-sm">
           {previous ? (
-            <Link href={lessonHref(previous)} className="text-violet-ink hover:underline">
+            <Link href={lessonHref(previous)} className="inline-block py-0.5 text-violet-ink hover:underline">
               ← {previous.title}
             </Link>
           ) : (
             <span />
           )}
           {next && (
-            <Link href={lessonHref(next)} className="text-violet-ink hover:underline">
+            <Link href={lessonHref(next)} className="inline-block py-0.5 text-violet-ink hover:underline">
               {next.title} →
             </Link>
           )}
