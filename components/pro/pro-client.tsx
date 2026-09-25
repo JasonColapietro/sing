@@ -731,6 +731,17 @@ export function ProClient() {
                           ? `Get lifetime Pro: ${price} once`
                           : `Go Pro: ${price}/month`}
                     </Button>
+                    {checkout.kind === "error" && (
+                      // Repeated beside the button: the page-level notice sits
+                      // far above the plans, off-screen on a phone, so a
+                      // failed tap otherwise looks like nothing happened.
+                      <p
+                        role="alert"
+                        className="mt-3 rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-center text-sm text-rec"
+                      >
+                        {checkout.message}
+                      </p>
+                    )}
                     <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
                       Secure checkout by Stripe
                     </p>

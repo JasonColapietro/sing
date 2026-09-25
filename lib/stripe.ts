@@ -133,13 +133,74 @@ export async function resolvePriceId(plan: CheckoutPlan): Promise<string> {
     active: true,
     limit: 1,
   });
-  const price = data[0];
-  if (!price) throw new PriceNotConfiguredError(plan);
+  // A missing price is provisioned rather than refused: the app already
+  // knows the exact amount and billing shape, and a Stripe account switched
+  // between test and live (whose catalogs are separate) otherwise leaves the
+  // buy button dead until someone reruns the setup script by hand. A price
+  // that exists at the wrong amount is still refused below, never edited.
+  const price = data[0] ?? (await provisionPrice(plan));
   // Stripe holds cents, PRICING dollars.
   if (!priceMatchesPlan(plan, price)) {
     throw new PriceMismatchError(plan, price);
   }
   return price.id;
+}
+
+const PRODUCT_NAME = "Suede Pro";
+
+/** Finds the Suede Pro product in this Stripe account, creating it if absent. */
+async function resolveProductId(): Promise<string> {
+  const stripe = getStripe();
+  for (const lookupKey of [
+    ...Object.values(CHECKOUT_PRICE_LOOKUP_KEYS),
+    ...LEGACY_SUBSCRIPTION_LOOKUP_KEYS,
+  ]) {
+    const { data } = await stripe.prices.list({ lookup_keys: [lookupKey], limit: 1 });
+    const existing = data[0];
+    if (existing) {
+      return typeof existing.product === "string"
+        ? existing.product
+        : existing.product.id;
+    }
+  }
+  const search = await stripe.products.search({
+    query: `active:'true' AND name:'${PRODUCT_NAME}'`,
+    limit: 1,
+  });
+  if (search.data[0]) return search.data[0].id;
+  const created = await stripe.products.create({
+    name: PRODUCT_NAME,
+    description:
+      "The coach on top of the free vocal studio: adaptive daily plans, per-note analytics, take pitch analysis, full songbook, cloud sync.",
+  });
+  return created.id;
+}
+
+/**
+ * Creates the plan's price at exactly the amount PRICING quotes, mirroring
+ * scripts/stripe-setup.mjs. Idempotent in effect: the lookup key is
+ * transferred, so a rare concurrent double-create still leaves one price
+ * answering for the key.
+ */
+async function provisionPrice(plan: CheckoutPlan): Promise<Stripe.Price> {
+  const lookupKey = CHECKOUT_PRICE_LOOKUP_KEYS[plan];
+  try {
+    const product = await resolveProductId();
+    const price = await getStripe().prices.create({
+      product,
+      currency: "usd",
+      unit_amount: Math.round(PRICING[plan].amount * 100),
+      ...(plan === "monthly" ? { recurring: { interval: "month" as const } } : {}),
+      lookup_key: lookupKey,
+      nickname: `Suede Pro ${plan} - Early Access`,
+      transfer_lookup_key: true,
+    });
+    console.warn(`[stripe] provisioned missing price ${lookupKey} -> ${price.id}`);
+    return price;
+  } catch (error) {
+    console.error(`[stripe] could not provision price ${lookupKey}`, error);
+    throw new PriceNotConfiguredError(plan);
+  }
 }
 
 /** True when a subscription is one of ours, so restore ignores unrelated ones. */
