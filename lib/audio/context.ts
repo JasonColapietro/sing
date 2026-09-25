@@ -2,6 +2,7 @@ import { canChooseOutput, getOutputDeviceId } from "./devices";
 
 let _ctx: AudioContext | null = null;
 let _appliedSinkId: string | null = null;
+let _output: AudioNode | null = null;
 
 /**
  * An AudioContext that can be pointed at a chosen pair of speakers.
@@ -40,6 +41,31 @@ export function getAudioContext(): AudioContext {
     });
   }
   return _ctx;
+}
+
+/**
+ * Where every sound the app makes should connect, instead of ctx.destination.
+ *
+ * A gentle limiter with make-up gain. Phone speakers roll off below a few
+ * hundred hertz, which is exactly where most reference notes sit, so the notes
+ * were near silent on a phone while the high count-in clicks came through.
+ * Brighter tones (see synth.ts) fix most of that; this lets the whole mix sit
+ * louder without clipping when a guide, a drone and a click overlap.
+ */
+export function getOutput(): AudioNode {
+  const ctx = getAudioContext();
+  if (_output && _output.context === ctx) return _output;
+  const limiter = ctx.createDynamicsCompressor();
+  limiter.threshold.value = -14;
+  limiter.knee.value = 8;
+  limiter.ratio.value = 6;
+  limiter.attack.value = 0.003;
+  limiter.release.value = 0.2;
+  const makeup = ctx.createGain();
+  makeup.gain.value = 1.8;
+  limiter.connect(makeup).connect(ctx.destination);
+  _output = limiter;
+  return limiter;
 }
 
 /** Current time of the shared AudioContext, for scheduling. */

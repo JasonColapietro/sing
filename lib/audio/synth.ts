@@ -1,4 +1,4 @@
-import { getAudioContext } from "./context";
+import { getAudioContext, getOutput } from "./context";
 import { midiToFreq } from "./notes";
 
 export interface ToneOptions {
@@ -16,11 +16,34 @@ export interface ToneOptions {
 }
 
 /**
- * Play a single reference tone (warm triangle + quiet octave shimmer).
+ * Harmonic recipe for the reference tone: a full, reedy series rather than a
+ * triangle. A triangle's overtones fall off as 1/n^2, so a C3 reference put
+ * almost all its energy at 130 Hz, which a phone speaker cannot reproduce,
+ * and the note vanished. With real energy up through the 6th to 8th harmonic
+ * the ear still hears the fundamental (the missing-fundamental effect), so the
+ * pitch is identical and the note is audible on any speaker.
+ */
+const TONE_HARMONICS = [0, 1, 0.7, 0.5, 0.38, 0.28, 0.2, 0.14, 0.1];
+
+const waves = new WeakMap<BaseAudioContext, PeriodicWave>();
+
+function referenceWave(ctx: AudioContext): PeriodicWave {
+  let wave = waves.get(ctx);
+  if (!wave) {
+    const imag = new Float32Array(TONE_HARMONICS);
+    wave = ctx.createPeriodicWave(new Float32Array(imag.length), imag);
+    waves.set(ctx, wave);
+  }
+  return wave;
+}
+
+/**
+ * Play a single reference tone. The default timbre is the bright harmonic
+ * series above; passing `type` asks for a plain oscillator instead.
  * Returns the offset in seconds from now at which the tone ends.
  */
 export function playTone(midi: number, opts: ToneOptions = {}): number {
-  const { dur = 0.7, type = "triangle", gain = 0.2, at = 0, glideToMidi } = opts;
+  const { dur = 0.7, type, gain = 0.2, at = 0, glideToMidi } = opts;
   const ctx = getAudioContext();
   const t0 = ctx.currentTime + at;
   const freq = midiToFreq(midi);
@@ -29,29 +52,27 @@ export function playTone(midi: number, opts: ToneOptions = {}): number {
   out.gain.setValueAtTime(0.0001, t0);
   out.gain.exponentialRampToValueAtTime(Math.max(0.001, gain), t0 + 0.02);
   out.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-  out.connect(opts.out ?? ctx.destination);
+  out.connect(opts.out ?? getOutput());
+
+  // Takes the edge off the top harmonics without touching the band a phone
+  // speaker plays well.
+  const tone = ctx.createBiquadFilter();
+  tone.type = "lowpass";
+  tone.frequency.value = 4500;
+  tone.connect(out);
 
   const osc = ctx.createOscillator();
-  osc.type = type;
+  if (type) osc.type = type;
+  else osc.setPeriodicWave(referenceWave(ctx));
   osc.frequency.setValueAtTime(freq, t0);
-  const shimmer = ctx.createOscillator();
-  shimmer.type = "sine";
-  shimmer.frequency.setValueAtTime(freq * 2, t0);
-  const shimmerGain = ctx.createGain();
-  shimmerGain.gain.value = 0.12;
 
   if (glideToMidi !== undefined) {
-    const f2 = midiToFreq(glideToMidi);
-    osc.frequency.exponentialRampToValueAtTime(f2, t0 + dur);
-    shimmer.frequency.exponentialRampToValueAtTime(f2 * 2, t0 + dur);
+    osc.frequency.exponentialRampToValueAtTime(midiToFreq(glideToMidi), t0 + dur);
   }
 
-  osc.connect(out);
-  shimmer.connect(shimmerGain).connect(out);
+  osc.connect(tone);
   osc.start(t0);
-  shimmer.start(t0);
   osc.stop(t0 + dur + 0.05);
-  shimmer.stop(t0 + dur + 0.05);
   return at + dur;
 }
 
@@ -103,7 +124,7 @@ export function createToneGroup(): ToneGroup {
   const ctx = getAudioContext();
   const node = ctx.createGain();
   node.gain.setValueAtTime(1, ctx.currentTime);
-  node.connect(ctx.destination);
+  node.connect(getOutput());
   let cancelled = false;
   return {
     node,
@@ -133,14 +154,21 @@ export function startDrone(midi: number, gain = 0.09): () => void {
   const out = ctx.createGain();
   out.gain.setValueAtTime(0.0001, t0);
   out.gain.exponentialRampToValueAtTime(gain, t0 + 0.35);
-  out.connect(ctx.destination);
+  out.connect(getOutput());
+
+  const droneTone = ctx.createBiquadFilter();
+  droneTone.type = "lowpass";
+  droneTone.frequency.value = 3000;
+  droneTone.connect(out);
 
   const freq = midiToFreq(midi);
   const oscs = [-3, 3].map((cents) => {
     const o = ctx.createOscillator();
-    o.type = "sine";
+    // Same harmonic series as the reference tone, so a low drone is audible
+    // on a phone speaker, and a little quieter per voice since there are two.
+    o.setPeriodicWave(referenceWave(ctx));
     o.frequency.value = freq * Math.pow(2, cents / 1200);
-    o.connect(out);
+    o.connect(droneTone);
     o.start(t0);
     return o;
   });
@@ -172,7 +200,7 @@ export function clickAt(at: number, accent = false, out?: AudioNode): void {
   g.gain.setValueAtTime(0.0001, at);
   g.gain.exponentialRampToValueAtTime(accent ? 0.5 : 0.32, at + 0.002);
   g.gain.exponentialRampToValueAtTime(0.0001, at + 0.05);
-  osc.connect(g).connect(out ?? ctx.destination);
+  osc.connect(g).connect(out ?? getOutput());
   osc.start(at);
   osc.stop(at + 0.08);
 }
