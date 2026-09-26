@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import path from "path";
+import { EXERCISES } from "./components/warmups/exercises";
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -46,6 +47,16 @@ const nextConfig: NextConfig = {
         source: "/singers/genre/r-b",
         destination: "/singers/genre/randb",
         permanent: true,
+      },
+
+      {
+        // The warmups room deep-links as /warmups?exercise=<id>, but the id
+        // reads like a path segment and visitors type it as one: production
+        // logged /warmups/five-note-scale as a 404. Only real exercise ids
+        // match, so a typo under /warmups still gets the not-found page.
+        source: `/warmups/:exercise(${EXERCISES.map((e) => e.id).join("|")})`,
+        destination: "/warmups?exercise=:exercise",
+        permanent: false,
       },
 
       // --- Legacy paths Google still holds for this host (2026-08-08) ---
