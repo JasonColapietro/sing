@@ -172,7 +172,7 @@ export default function AtlasPage() {
             >
               {AUTHOR_NAME}
             </a>{" "}
-            ({AUTHOR_ALIAS}). Published by Suede Labs.
+            ({AUTHOR_ALIAS}). Published by Suede AI.
           </p>
           <p className="mt-5 max-w-3xl text-mut">
             This is the written study rather than the chart. The numbers on one

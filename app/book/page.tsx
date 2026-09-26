@@ -85,7 +85,7 @@ export default function BookPage() {
             >
               {AUTHOR_NAME}
             </a>{" "}
-            ({AUTHOR_ALIAS}). Published by Suede Labs.
+            ({AUTHOR_ALIAS}). Published by Suede AI.
           </p>
           <p className="mt-5 max-w-2xl text-mut">
             Twenty-three chapters on how the voice works, how to read the
