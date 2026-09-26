@@ -315,6 +315,25 @@ async function openEarTrainingGame(page) {
 }
 
 /**
+ * /breath asks for the microphone only inside a drill that needs it: every
+ * breath set opens on a silent drill, so the room's own start buttons read
+ * "Start breathing" and never call getUserMedia. Opening "Sustain test" (the
+ * first mic drill in the path, components/breath/drills.ts) puts its
+ * "Enable microphone" button on screen. Without this the probe found no
+ * control and the room's refusal state went unaudited.
+ */
+async function openBreathMicDrill(page) {
+  const row = page.getByRole("button").filter({ hasText: "Sustain test" }).last();
+  if ((await row.count().catch(() => 0)) === 0) return false;
+  try {
+    await row.click({ timeout: 5000 });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * A. Microphone refusal.
  *
  * getUserMedia is overridden via addInitScript, which only affects documents
@@ -364,6 +383,18 @@ async function checkMicRefusal(ctx, findings) {
         severity: "minor",
         summary: "Mic-refusal probe could not open a mic-based ear-training game",
         detail: ["Looked for the \"Pitch match\" row in the ear-training path and could not find or click it.", ...notes].join(" "),
+      });
+      return;
+    }
+  }
+
+  if (route.name === "breath") {
+    const opened = await openBreathMicDrill(page);
+    if (!opened) {
+      findings.push({
+        severity: "minor",
+        summary: "Mic-refusal probe could not open a mic-based breath drill",
+        detail: ["Looked for the \"Sustain test\" row in the breath path and could not find or click it.", ...notes].join(" "),
       });
       return;
     }

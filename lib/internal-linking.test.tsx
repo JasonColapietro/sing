@@ -155,7 +155,7 @@ describe("footer wires every hub into every page", () => {
   it("links the voice course on sing, not its old home", () => {
     expect(html, "footer missing the voice course").toContain('href="/learn/voice"');
     expect(html).not.toContain("guitarhub.org/learn/voice");
-    expect(html, "footer missing Suede Labs").toContain('href="https://suedeai.ai"');
+    expect(html, "footer missing Suede AI").toContain('href="https://suedeai.ai"');
   });
 
   it("links sibling properties as plain anchors, not prefetched routes", () => {
@@ -192,7 +192,8 @@ describe("footer wires every hub into every page", () => {
   // the footer, or /contact. A microphone app whose policy can only be found
   // by guessing the URL has a policy in name only.
   it("links the policy pages from every server-rendered page", () => {
-    for (const href of ["/privacy", "/terms"]) {
+    // Direct to the org site: /privacy and /terms here only 308 there.
+    for (const href of ["https://suedeai.org/voice/privacy/", "https://suedeai.org/voice/terms/"]) {
       expect(html, `footer missing ${href}`).toContain(`href="${href}"`);
     }
   });

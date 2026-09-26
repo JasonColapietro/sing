@@ -701,7 +701,7 @@ export default async function SingerPage({
         {/* Similar voices */}
         <Card>
           <SectionLabel>Similar voices</SectionLabel>
-          <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((r) => (
               <li key={r.slug}>
                 <Link

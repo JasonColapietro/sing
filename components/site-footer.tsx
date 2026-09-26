@@ -173,15 +173,16 @@ export default function SiteFooter() {
             {/* Both pages were already live and neither was linked from
                 anywhere on the site. An app that asks for a microphone should
                 put its policy one click from every page. */}
-            {/* prefetch off: /privacy and /terms redirect to suedeai.org, and a
-                cross-origin RSC prefetch of a redirect fails CORS on every page. */}
-            <Link href="/privacy" prefetch={false} className={linkClass}>
+            {/* Policy lives on the org site. Linked directly: /privacy and
+                /terms here are 308s kept for inbound links only, and a <Link>
+                to them cost a hop and a cross-origin RSC prefetch. */}
+            <a href="https://suedeai.org/voice/privacy/" className={linkClass}>
               Privacy
-            </Link>
+            </a>
             <span aria-hidden>·</span>
-            <Link href="/terms" prefetch={false} className={linkClass}>
+            <a href="https://suedeai.org/voice/terms/" className={linkClass}>
               Terms
-            </Link>
+            </a>
             <span aria-hidden>·</span>
             {/* CC BY 3.0 asks for a credit where the samples are used. */}
             <a href="/audio/piano/CREDITS.txt" className={linkClass}>
@@ -195,7 +196,7 @@ export default function SiteFooter() {
             sibling Suede properties carry, worded identically and pointed at
             the one canonical receipt, so the number is verified in one place
             rather than drifting per surface. */}
-        <p className="mt-4 text-xs leading-relaxed text-dim">
+        <p className="mt-4 max-w-3xl text-xs leading-relaxed text-dim">
           A <a href="https://suedeai.ai" className={linkClass}>Suede AI</a>{" "}
           product, built by{" "}
           <a href="https://suedeai.ai/founder" className={linkClass}>

@@ -71,7 +71,7 @@ const FEATURES = [
 const FAQ = [
   {
     q: "Is there a Chrome extension for singing practice?",
-    a: "Yes. Suede Sing is a free Chrome extension that turns any tab into a vocal studio. It shows the note you are singing and how many cents sharp or flat you are, and adds a vocal range test, guided warmups, and ear training to Chrome's side panel. It is made by Jason Colapietro at Suede Labs.",
+    a: "Yes. Suede Sing is a free Chrome extension that turns any tab into a vocal studio. It shows the note you are singing and how many cents sharp or flat you are, and adds a vocal range test, guided warmups, and ear training to Chrome's side panel. It is made by Jason Colapietro at Suede AI.",
   },
   {
     q: "How do I find my vocal range in a browser?",
@@ -83,7 +83,7 @@ const FAQ = [
   },
   {
     q: "Does Suede Sing use my voice to train AI?",
-    a: "No. Suede Sing contains no machine learning model. Pitch is measured with an autocorrelation algorithm running locally in the browser, and each audio frame is discarded as soon as it is analysed. No audio is recorded, stored, or transmitted, so there is no training set a singer's voice could end up in. Suede Labs builds measurement tools rather than data-collection tools.",
+    a: "No. Suede Sing contains no machine learning model. Pitch is measured with an autocorrelation algorithm running locally in the browser, and each audio frame is discarded as soon as it is analysed. No audio is recorded, stored, or transmitted, so there is no training set a singer's voice could end up in. Suede AI builds measurement tools rather than data-collection tools.",
   },
   {
     q: "Does the extension record or upload my voice?",
@@ -199,7 +199,7 @@ export default function ExtensionPage() {
           <p className="mt-3 text-sm text-mut">
             Your voice is never used to train anything. Measurement is signal
             processing on your own machine, not a model in someone else&rsquo;s
-            cloud, so there is no training set to opt out of. Suede Labs
+            cloud, so there is no training set to opt out of. Suede AI
             builds tools that measure rather than harvest.
           </p>
         </Card>
@@ -222,11 +222,11 @@ export default function ExtensionPage() {
       </section>
 
       <section className="mt-12">
-        <SectionLabel>Also from Suede Labs</SectionLabel>
+        <SectionLabel>Also from Suede AI</SectionLabel>
         <p className="mt-4 text-sm text-mut">
           Suede Sing is built by{" "}
           <a href="https://suedeai.ai/founder">Jason Colapietro</a> at{" "}
-          <a href="https://suedeai.ai">Suede Labs</a>, an independent studio
+          <a href="https://suedeai.ai">Suede AI</a>, an independent studio
           making measurement-first tools for musicians. The vocal work also
           ships as the free{" "}
           <a href={APP_STORE_URL}>{APP_NAME}</a>{" "}

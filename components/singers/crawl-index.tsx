@@ -31,9 +31,11 @@ export function SingerCrawlIndex({ singers = SINGERS }: { singers?: readonly Sin
             <ul className="mt-2 columns-2 gap-x-4 text-sm">
               {group.map((singer) => (
                 <li key={singer.slug} className="break-inside-avoid">
+                  {/* Block and py-0.5: a one-letter name like "V" was an 8x19
+                      target with rows 1px apart on a phone. */}
                   <Link
                     href={`/singers/${singer.slug}`}
-                    className="text-mut underline decoration-line underline-offset-4 hover:text-violet-ink hover:decoration-violet"
+                    className="block py-0.5 text-mut underline decoration-line underline-offset-4 hover:text-violet-ink hover:decoration-violet"
                   >
                     {singer.name}
                   </Link>

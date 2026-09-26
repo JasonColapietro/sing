@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import { EmptyState, LinkButton, PageShell } from "@/components/ui";
+
+// Without this the tab and history entry carry the home page's title, so a
+// dead link reads as the studio until the page itself says otherwise.
+export const metadata: Metadata = { title: "Page not found" };
 
 export default function NotFound() {
   return (
