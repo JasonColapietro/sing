@@ -71,7 +71,7 @@ export const QUERY_OWNERSHIP: readonly QueryCluster[] = [
         question: "Can I find out my range right now, in this browser?",
         scopeLine:
           "This is the test itself, free in the browser and with nothing to install.",
-        descriptionMark: "needs no signup",
+        descriptionMark: "needs nothing to install",
       },
       {
         href: "/voice",

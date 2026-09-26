@@ -192,7 +192,7 @@ export default function Home() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
           <SectionHeading
             label="Ten practice rooms"
-            lede="No install required, no signup, no ads. Open any room and sing — the browser studio does live pitch feedback, range testing, warmups, ear training, breath work and song practice."
+            lede="No install required, no ads. Open any room and sing — the browser studio does live pitch feedback, range testing, warmups, ear training, breath work and song practice."
           >
             Everything a practice session needs, one tab over
           </SectionHeading>
@@ -306,8 +306,7 @@ export default function Home() {
                 </LinkButton>
               </div>
               {/* The price used to appear nowhere on this page — a visitor had
-                  to click into /pro to learn what Pro costs. "No account
-                  needed" moves out; the privacy strip below still says it. */}
+                  to click into /pro to learn what Pro costs. The privacy strip below covers where the voice goes. */}
               <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
                 {PRO_PRICE_LINE}
                 <span className="mx-2 text-line2">·</span>The{" "}
@@ -332,7 +331,7 @@ export default function Home() {
           </p>
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             On-device analysis<span className="mx-2 text-line2">·</span>Nothing
-            uploaded<span className="mx-2 text-line2">·</span>No account
+            uploaded<span className="mx-2 text-line2">·</span>No ads
           </p>
         </div>
       </section>

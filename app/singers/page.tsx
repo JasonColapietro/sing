@@ -151,7 +151,7 @@ export default function SingersPage() {
             <p className="mt-2 text-sm text-mut">
               Find your lowest and highest notes in about two minutes, then open
               any singer to see exactly how your range overlaps theirs. Free in
-              your browser, with no signup.
+              your browser, nothing to install.
             </p>
           </div>
           <LinkButton href="/range" size="lg">

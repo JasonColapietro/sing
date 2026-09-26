@@ -111,7 +111,7 @@ export function HeroSplit() {
         </p>
         <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-dim">
           On-device analysis
-          <span className="mx-2 text-line2">·</span>No signup for the web studio
+          <span className="mx-2 text-line2">·</span>Free web studio
           <span className="mx-2 text-line2">·</span>
           <Link
             href="/singers"

@@ -74,7 +74,7 @@ const FREE_CARD_POINTS = [
   "Live pitch feedback + range test, unlimited",
   "Recorder with A/B compare",
   "XP, streaks, achievements",
-  "No ads, no signup, no trial clock",
+  "No ads, no trial clock",
 ];
 
 
@@ -258,7 +258,7 @@ function RestorePanel() {
         <p className="mt-3 text-sm text-rec">{task.message}</p>
       )}
       <p className="mt-3 text-xs text-dim">
-        Pro unlocks per browser, since there are no accounts. Paste the Pro key
+        Pro unlocks per browser. Paste the Pro key
         from the browser where you bought or subscribed. Lost it? Email
         hey@suedeai.ai and we&apos;ll send a new one.
       </p>

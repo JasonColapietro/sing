@@ -8,7 +8,7 @@ import { RoomRailBand } from "@/components/discover/room-rail";
 export const metadata = withCanonicalOpenGraph({
   title: "Pitch Training for Singers: Real-Time Pitch Feedback",
   description:
-    "Sing into your mic and watch your pitch trace against target notes, live. Free browser pitch training — scales, slides and hold-the-note drills with instant scoring, no signup.",
+    "Sing into your mic and watch your pitch trace against target notes, live. Free browser pitch training — scales, slides and hold-the-note drills with instant scoring, nothing to install.",
   alternates: { canonical: `${SITE_URL}/studio` },
 });
 

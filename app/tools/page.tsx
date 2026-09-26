@@ -15,7 +15,7 @@ import { AnalyzeGlyph, RecorderGlyph } from "@/components/landing/glyphs";
 export const metadata = withCanonicalOpenGraph({
   title: "Singing Practice Tools: Metronome, Keyboard and Drone",
   description:
-    "The console modules every practice session leans on: a metronome, an on-screen keyboard, and a sustained drone for pitch matching. Free in the browser, no signup, nothing to install.",
+    "The console modules every practice session leans on: a metronome, an on-screen keyboard, and a sustained drone for pitch matching. Free in the browser, nothing to install.",
   alternates: { canonical: `${SITE_URL}/tools` },
 });
 
