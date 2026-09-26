@@ -44,16 +44,8 @@ const store = createLocalStore<SetlistState>(KEY, EMPTY, (raw) => {
   return Object.freeze({ ids, cursor });
 });
 
-export function getSetlist(): SetlistState {
-  return store.get();
-}
-
 export function useSetlist(): SetlistState {
   return useSyncExternalStore(store.subscribe, store.get, store.serverSnapshot);
-}
-
-export function isQueued(state: SetlistState, id: string): boolean {
-  return state.ids.includes(id);
 }
 
 /** Queue a song at the end. A second call for the same song is a no-op. */

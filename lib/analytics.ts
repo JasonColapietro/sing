@@ -188,15 +188,6 @@ export function weakNotes(
     .slice(0, limit);
 }
 
-export function strongNotes(
-  tallies: NoteTallies,
-  { limit = 3, minSec = MIN_SCORED_SEC }: { limit?: number; minSec?: number } = {},
-): NoteReport[] {
-  return noteReports(tallies, { minSec })
-    .sort((a, b) => b.accuracy - a.accuracy || b.sec - a.sec)
-    .slice(0, limit);
-}
-
 /** In-tune rate across all scored time, or null when nothing is tallied. */
 export function overallAccuracy(tallies: NoteTallies): number | null {
   let sec = 0;
@@ -373,26 +364,3 @@ export function scoreTrend(
     .slice(-weeks);
 }
 
-/** Change in mean score between the first and last week on record. */
-export function scoreDelta(sessions: readonly SessionLike[]): number | null {
-  const trend = scoreTrend(sessions, { weeks: 520 });
-  if (trend.length < 2) return null;
-  return trend[trend.length - 1].score - trend[0].score;
-}
-
-/** Mean score for one activity type over recent days, or null if unscored. */
-export function meanScoreByType(
-  sessions: readonly SessionLike[],
-  type: string,
-  { sinceDay }: { sinceDay?: string } = {},
-): number | null {
-  let sum = 0;
-  let n = 0;
-  for (const session of sessions) {
-    if (session.type !== type || session.score === undefined) continue;
-    if (sinceDay && session.day < sinceDay) continue;
-    sum += session.score;
-    n += 1;
-  }
-  return n === 0 ? null : Math.round(sum / n);
-}

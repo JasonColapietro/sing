@@ -6,11 +6,6 @@ import { playSequence, playTone } from "@/lib/audio/synth";
 import type { Achievement, WarmupMode } from "@/lib/progress";
 import type { NoteScore } from "@/lib/analytics";
 
-/** Sing window = melody length + 20%, per the classic warmup ladder. */
-export function singWindowSec(totalSec: number): number {
-  return totalSec * 1.2;
-}
-
 /**
  * Target midi (possibly fractional, for glide segments) at time `t` seconds
  * from the melody's start. Returns null when `t` falls in a gap between

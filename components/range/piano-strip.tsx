@@ -57,11 +57,6 @@ export function midiToStripX(midi: number): number {
   return k.black ? k.x + BLACK_W / 2 : k.x + WHITE_W / 2;
 }
 
-/** 0..1 position of a midi note across the strip. Clamped. */
-export function midiToStripPct(midi: number): number {
-  return midiToStripX(midi) / STRIP_W;
-}
-
 export interface PianoStripProps {
   /** Currently sung note — lights up violet. */
   activeMidi?: number | null;

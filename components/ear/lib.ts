@@ -54,11 +54,6 @@ export function bestKey(game: GameId, diff: Difficulty, variant?: string): strin
   return variant ? `${game}:${diff}:${variant}` : `${game}:${diff}`;
 }
 
-export function bestFor(game: GameId, diff: Difficulty, variant?: string): number | null {
-  const v = readBests()[bestKey(game, diff, variant)];
-  return typeof v === "number" ? v : null;
-}
-
 /** Persist a finished score. Returns true when it's a new personal best. */
 export function saveBest(
   game: GameId,

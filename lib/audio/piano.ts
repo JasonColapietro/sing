@@ -84,6 +84,3 @@ export function pianoSampleFor(
   if (best === null || Math.abs(best - midi) > 2) return null;
   return { buffer: buffers.get(best)!, sampleMidi: best };
 }
-
-/** Test seam: the sample map, midi -> file. */
-export const PIANO_SAMPLES: ReadonlyMap<number, string> = SAMPLES;

@@ -336,11 +336,6 @@ export async function openBillingPortal(): Promise<void> {
   window.location.href = url;
 }
 
-/** Forgets Pro on this device only. Does not touch the Stripe subscription. */
-export function clearProLocally(): void {
-  save({ ...DEFAULT });
-}
-
 /* ---------------------------------------------------------------- pricing */
 
 /**

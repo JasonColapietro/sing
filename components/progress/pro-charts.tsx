@@ -2,7 +2,6 @@
 
 import { midiToLabel } from "@/lib/audio/notes";
 import {
-  accuracyOf,
   noteReports,
   overallAccuracy,
   rangeGrowth,
@@ -300,14 +299,4 @@ export function RangeHistoryChart({ history }: { history: RangeEntry[] }) {
       </p>
     </>
   );
-}
-
-/** Small helper the coach uses to name a note's accuracy inline. */
-export function noteAccuracyLabel(
-  tallies: NoteTallies,
-  midi: number,
-): string | null {
-  const tally = tallies[String(midi)];
-  if (!tally) return null;
-  return `${midiToLabel(midi)} at ${accuracyOf(tally)}%`;
 }

@@ -76,13 +76,6 @@ export const IconArrowLeft = (p: IconProps) => (
   </Svg>
 );
 
-export const IconArrowRight = (p: IconProps) => (
-  <Svg {...p}>
-    <line x1="5" y1="12" x2="19" y2="12" />
-    <polyline points="12 5 19 12 12 19" />
-  </Svg>
-);
-
 export const IconMetronome = (p: IconProps) => (
   <Svg {...p}>
     <path d="M9 3h6l4 18H5z" />
