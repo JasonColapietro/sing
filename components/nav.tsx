@@ -495,7 +495,13 @@ export default function Nav() {
             className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:hidden"
           >
             <MenuIcon />
-            <span className="truncate">{currentLabel}</span>
+            {/* The 404 page is pre-rendered once with no real path, so its
+                HTML says "Menu"; under /warmups/typo the client would compute
+                "Warmups". Keeping the server's text is also the right label
+                for a page that isn't there. */}
+            <span className="truncate" suppressHydrationWarning>
+              {currentLabel}
+            </span>
           </button>
 
           {/* Shown at every width: on a phone the header was the one place Pro

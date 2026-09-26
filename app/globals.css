@@ -6,6 +6,10 @@
   --color-panel2: #efe6d5;
   --color-line: #ddd4c4;
   --color-line2: #c9bda0;
+  /* Form-field borders. line and line2 are decorative rules at 1.4:1 to
+     1.7:1; a field's edge is how someone finds where to type, so it needs
+     the 3:1 non-text contrast (WCAG 1.4.11) on panel, bg and panel2 alike. */
+  --color-field: #8a7f6a;
   --color-ink: #20201d;
   --color-mut: #5c564d;
   /* Darkened from #8a8272, which read 3.07–3.66:1 on bg/panel/panel2 and so
@@ -226,4 +230,13 @@ h3 {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Unlayered on purpose, so it outranks the border-line utilities fields were
+   drawn with. Focused fields keep whatever focus colour their own classes
+   set. Sliders, checkboxes, radios and file pickers draw no text-field edge. */
+select:not(:focus),
+textarea:not(:focus),
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):not(:focus) {
+  border-color: var(--color-field, #8a7f6a);
 }

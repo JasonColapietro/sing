@@ -86,7 +86,7 @@ export default function V2Banner() {
           </span>
           <Link
             href="/changelog"
-            className="shrink-0 rounded-full bg-white/15 px-3 py-1 text-meta font-medium text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/25"
+            className="relative shrink-0 rounded-full bg-white/15 px-3 py-1 after:absolute after:-inset-y-2 after:inset-x-0 after:content-[''] text-meta font-medium text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/25"
           >
             See what&apos;s new
           </Link>

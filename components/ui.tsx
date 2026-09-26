@@ -8,19 +8,35 @@ function cn(...parts: Array<string | false | null | undefined>) {
 }
 
 /** Small mono uppercase label, styled like a console tape label. */
+const LABEL_CLASS =
+  "inline-block rounded border border-violet/35 bg-panel px-2 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-violet-ink";
+
 export function SectionLabel({
   children,
   className,
+  heading,
 }: {
   children: ReactNode;
   className?: string;
+  /**
+   * Also announce the label as an h2 to assistive tech, for a section whose
+   * only visible title is this label. The visual stays the same span.
+   */
+  heading?: boolean;
 }) {
+  if (heading) {
+    return (
+      <>
+        <h2 className="sr-only">{children}</h2>
+        <span aria-hidden="true" className={cn(LABEL_CLASS, className)}>
+          {children}
+        </span>
+      </>
+    );
+  }
   return (
     <span
-      className={cn(
-        "inline-block rounded border border-violet/35 bg-panel px-2 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-violet-ink",
-        className,
-      )}
+      className={cn(LABEL_CLASS, className)}
     >
       {children}
     </span>

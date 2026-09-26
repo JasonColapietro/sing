@@ -176,7 +176,7 @@ export default function ExtensionPage() {
       </div>
 
       <section className="mt-12">
-        <SectionLabel>What it does</SectionLabel>
+        <SectionLabel heading>What it does</SectionLabel>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {FEATURES.map((f) => (
             <Card key={f.name}>
@@ -206,7 +206,7 @@ export default function ExtensionPage() {
       </section>
 
       <section className="mt-12">
-        <SectionLabel>Questions</SectionLabel>
+        <SectionLabel heading>Questions</SectionLabel>
         {/* Headings, not a description list: the FAQPage markup above declares
             eight questions, and a <dt> is not a heading, so the visible
             structure carried none of them and the answers read as one long
