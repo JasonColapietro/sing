@@ -196,7 +196,7 @@ export default function SiteFooter() {
             sibling Suede properties carry, worded identically and pointed at
             the one canonical receipt, so the number is verified in one place
             rather than drifting per surface. */}
-        <p className="mt-4 text-xs leading-relaxed text-dim">
+        <p className="mt-4 max-w-3xl text-xs leading-relaxed text-dim">
           A <a href="https://suedeai.ai" className={linkClass}>Suede AI</a>{" "}
           product, built by{" "}
           <a href="https://suedeai.ai/founder" className={linkClass}>
