@@ -12,6 +12,27 @@ import { SITE_URL } from "@/lib/site";
 
 const ARTIST_INTENT_CASES = [
   {
+    slug: "celine-dion",
+    name: "Celine Dion",
+    opening: "Our catalog reports Celine Dion at A#2 to C6 (3.2 octaves). Individual endpoint review is pending. Compare your range free.",
+    title: "Celine Dion Vocal Range & Voice Type | Compare Yours",
+    heading: "Celine Dion Vocal Range: Reported A#2–C6",
+  },
+  {
+    slug: "peter-steele",
+    name: "Peter Steele",
+    opening: "Our catalog reports Peter Steele at F1 to G5 (4.2 octaves). Individual endpoint review is pending. Compare your range free.",
+    title: "Peter Steele Vocal Range & Voice Type | Compare Yours",
+    heading: "Peter Steele Vocal Range: Reported F1–G5",
+  },
+  {
+    slug: "michael-jackson",
+    name: "Michael Jackson",
+    opening: "Our catalog reports Michael Jackson at D#2 to F6 (4.2 octaves). Individual endpoint review is pending. Compare your range free.",
+    title: "Michael Jackson Vocal Range & Voice Type | Compare Yours",
+    heading: "Michael Jackson Vocal Range: Reported D#2–F6",
+  },
+  {
     slug: "bruno-mars",
     name: "Bruno Mars",
     opening: "Our catalog reports Bruno Mars at G2 to D6 (3.6 octaves). Individual endpoint review is pending. Compare your range free.",
@@ -89,7 +110,13 @@ const VOICE_TYPE_QUERY_SLUGS: ReadonlySet<string> = new Set([
 ]);
 const PRIORITY_PENDING_SLUGS: ReadonlySet<string> = new Set([
   "bruno-mars", "taylor-swift", "jeff-buckley", "billie-eilish",
+  "celine-dion", "peter-steele", "michael-jackson",
 ]);
+const COMPARISON_SNIPPETS: Readonly<Record<string, string>> = {
+  "celine-dion": "Explore Celine Dion's reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.",
+  "peter-steele": "Explore Peter Steele's reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.",
+  "michael-jackson": "Explore Michael Jackson's reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.",
+};
 const OLIVIA_SNIPPET = "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes.";
 const SINGER_RENDER_BATCH_SIZE = 32;
 const SINGER_RENDER_BATCHES = Array.from(
@@ -112,7 +139,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
 
       expect(metadata.title).toEqual({ absolute: title });
       if (PRIORITY_PENDING_SLUGS.has(slug)) expect(title.length).toBeLessThanOrEqual(60);
-      expect(metadata.description).toBe(slug === "olivia-rodrigo" ? OLIVIA_SNIPPET : opening);
+      expect(metadata.description).toBe(COMPARISON_SNIPPETS[slug] ?? (slug === "olivia-rodrigo" ? OLIVIA_SNIPPET : opening));
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
       expect(metadata.openGraph?.url).toBe(`${SITE_URL}/singers/${slug}`);
@@ -166,7 +193,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
 
       expect(metadata.title).toEqual({ absolute: title });
       expect(metadata.description).toBe(
-        singer.slug === "olivia-rodrigo" ? OLIVIA_SNIPPET : correction ? opening : defaultDescription,
+        COMPARISON_SNIPPETS[singer.slug] ?? (singer.slug === "olivia-rodrigo" ? OLIVIA_SNIPPET : correction ? opening : defaultDescription),
       );
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
@@ -216,7 +243,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
         );
         expect(html).toContain(opening);
         expect(html).toContain(`href="/range?compare=${singer.slug}"`);
-        expect(html).toContain("Test my range");
+        expect(html).toContain(COMPARISON_SNIPPETS[singer.slug] ? "Compare my range — free test" : "Test my range");
       }
     },
     30_000,
@@ -235,6 +262,20 @@ describe("every singer page answers its vocal range and voice type intent", () =
       expect(html).not.toContain("Full voice to");
     },
   );
+
+  it.each(Object.keys(COMPARISON_SNIPPETS))("%s keeps the CTR pilot honest and directly actionable", async (slug) => {
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug }) });
+    expect((metadata.title as { absolute: string }).absolute.length).toBeLessThanOrEqual(60);
+    expect(metadata.description!.length).toBeLessThanOrEqual(160);
+    expect(metadata.description).toContain("catalog voice type");
+    expect(metadata.description).toContain("Individual endpoint review is pending");
+    expect(metadata.alternates?.canonical).toBe(`${SITE_URL}/singers/${slug}`);
+    const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug }) }));
+    expect(html).toMatch(new RegExp(`<a[^>]+href="/range\\?compare=${slug}"[^>]*>Compare my range — free test →</a>`));
+    expect(html).toContain("Catalog label");
+    expect(html).not.toContain("Can You Sing It?");
+    expect(html).not.toContain("Full voice to");
+  });
 
   it("cites Jeff Buckley's official FAQ without using it as proof of the catalog endpoints", async () => {
     const page = await SingerPage({ params: Promise.resolve({ slug: "jeff-buckley" }) });

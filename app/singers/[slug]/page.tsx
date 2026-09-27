@@ -53,12 +53,20 @@ type SearchIntent = "voice-type" | "vocal-range";
 
 type SingerRecord = (typeof SINGERS)[number];
 
+/** September 27 CTR pilot; keep recently revised singer snippets stable. */
+const COMPARISON_SEARCH_SLUGS: ReadonlySet<string> = new Set([
+  "celine-dion",
+  "peter-steele",
+  "michael-jackson",
+]);
+
 /** High-interest GSC pages with catalog endpoints still awaiting individual review. */
 const PRIORITY_PENDING_SLUGS: ReadonlySet<string> = new Set([
   "bruno-mars",
   "taylor-swift",
   "jeff-buckley",
   "billie-eilish",
+  ...COMPARISON_SEARCH_SLUGS,
 ]);
 
 function isPriorityPending(s: SingerRecord): boolean {
@@ -89,6 +97,9 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
 }
 
 function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
+  if (COMPARISON_SEARCH_SLUGS.has(s.slug)) {
+    return `${s.name} Vocal Range & Voice Type | Compare Yours`;
+  }
   if (isPriorityPending(s)) {
     return `${s.name} Vocal Range: Reported ${rangeLabel(s)} | Compare Yours`;
   }
@@ -151,7 +162,9 @@ export async function generateMetadata({
   const title = queryAlignedTitle(s, intent);
   const description = s.slug === "olivia-rodrigo"
     ? "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes."
-    : queryAlignedDescription(s, intent);
+    : COMPARISON_SEARCH_SLUGS.has(s.slug) && isPriorityPending(s)
+      ? `Explore ${s.name}'s reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.`
+      : queryAlignedDescription(s, intent);
   const canonical = `${SITE_URL}/singers/${s.slug}`;
   return {
     title: { absolute: title },
@@ -417,7 +430,9 @@ export default async function SingerPage({
       actions={
         <>
           <LinkButton href={`/range?compare=${s.slug}`} size="md">
-            Test my range →
+            {COMPARISON_SEARCH_SLUGS.has(s.slug)
+              ? "Compare my range — free test →"
+              : "Test my range →"}
           </LinkButton>
           <LinkButton href="/singers" variant="outline" size="md">
             ← All singers
