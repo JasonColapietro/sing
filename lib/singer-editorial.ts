@@ -7,4 +7,4 @@ import "server-only";
  * from quietly assigning it different meanings.
  */
 export const SINGER_RANGE_DISCLAIMER =
-  "These are the approximate figures fans and music journalists commonly cite — the widest notes a singer has recorded, not the comfortable range they sing in every night, and not lab measurements. Treat them as a fun reference, not a target.";
+  "These are approximate catalog reference spans. Most profiles have not had both endpoints individually verified against named recordings or scores. They are not lab measurements or comfortable everyday ranges; use them for comparison, not as training targets.";

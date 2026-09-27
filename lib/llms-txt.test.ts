@@ -22,6 +22,7 @@ import { describe, expect, it } from "vitest";
 import { generateStaticParams as genreParams } from "@/app/singers/genre/[genre]/page";
 import { generateStaticParams as voiceTypeParams } from "@/app/singers/voice-type/[type]/page";
 import { APP_NAME } from "./app-store";
+import singerEvidence from "@/data/singer-evidence.json";
 import { GENRE_HUBS, SING_HOME, VOICE_TYPE_HUBS, buildLlmsTxt } from "./llms-txt";
 import { SINGERS } from "./singers-data";
 import {
@@ -255,7 +256,7 @@ describe("/llms.txt singers layer", () => {
     // The coverage line names each category with its live total.
     const line = llms
       .split("\n")
-      .find((l) => l.startsWith("- Voice-type coverage"));
+      .find((l) => l.startsWith("- Voice-type labels in this catalog"));
     expect(line).toBeDefined();
     for (const [voice, n] of counts) {
       expect(line).toContain(`${voice} ${n}`);
@@ -269,11 +270,15 @@ describe("/llms.txt singers layer", () => {
   });
 
   it("keeps the ranges honestly characterised", () => {
-    // The data file itself says these are cited figures, not measurements.
-    // If llms.txt ever drops that framing, models will quote them as clinical.
+    // A song title in lowSource/highSource is context, not an external citation.
+    // Only reviewed evidence records have linked sources and a scoped claim.
     expect(llms).toMatch(/not laboratory measurements|approximate/i);
-    const sourced = SINGERS.filter((s) => s.lowSource || s.highSource).length;
-    expect(llms).toContain(`${sourced} profiles carry an explicit citation`);
+    const reviewed = Object.values(singerEvidence).filter((record) => record.status !== "pending").length;
+    expect(llms).toContain(`${reviewed} of ${SINGERS.length} profiles have individual evidence reviews with linked sources`);
+    expect(llms).toContain("A song title named beside an endpoint is context, not a source citation");
+    expect(llms).not.toContain("citation-worthy");
+    expect(llms).not.toContain("no popular-music source provides one");
+    expect(llms).toContain("catalog counts, not population estimates");
   });
 });
 
