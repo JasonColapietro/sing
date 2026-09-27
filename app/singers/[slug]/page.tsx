@@ -76,6 +76,9 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
 }
 
 function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
+  if (s.slug === "bruno-mars") {
+    return `Bruno Mars Vocal Range: Reported ${rangeLabel(s)} | Compare Yours`;
+  }
   const reviewedTitles: Record<string, string> = {
     "olivia-rodrigo": "Olivia Rodrigo Voice Type: Classifications Vary | Reported Vocal Range B2–A#5",
     "reba-mcentire": "Reba McEntire Voice Type: Classifications Vary | Reported Vocal Range E3–F5",
@@ -94,6 +97,9 @@ function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
 }
 
 function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
+  if (s.slug === "bruno-mars") {
+    return `Bruno Mars Vocal Range: Reported ${rangeLabel(s)}`;
+  }
   if (intent === "voice-type") return `${s.name} Voice Type and Vocal Range`;
   return isSingerReviewed(s.slug)
     ? `${s.name} Vocal Range: Reported ${rangeLabel(s)}`
@@ -101,6 +107,9 @@ function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
 }
 
 function queryAlignedDescription(s: SingerRecord, intent: SearchIntent): string {
+  if (s.slug === "bruno-mars") {
+    return `Our catalog reports Bruno Mars at ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}; individual endpoint review is pending. Explore the notes and compare your range free.`;
+  }
   if (hasReviewedVoiceTypeCorrection(s)) {
     return `${voiceTypeEvidenceCopy(s)} The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
   }
@@ -153,6 +162,9 @@ function bothSpellings(midi: number): string {
 
 function answerSentence(s: SingerRecord): string {
   const semis = s.highMidi - s.lowMidi;
+  if (s.slug === "bruno-mars") {
+    return `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones). Individual evidence review is pending, so these endpoints are not verified physiological limits.`;
+  }
   if (isSingerReviewed(s.slug)) {
     return `The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones), not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
   }
@@ -183,6 +195,15 @@ function answerSentence(s: SingerRecord): string {
  */
 function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
   const semis = s.highMidi - s.lowMidi;
+  if (s.slug === "bruno-mars") {
+    const referenceSpan = `The catalog reports ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reference span; individual evidence review is pending.`;
+    return [
+      { q: `How high can ${s.name} sing?`, a: `${referenceSpan} The upper endpoint is not a verified individual maximum.` },
+      { q: `What is ${s.name}’s highest note?`, a: `${referenceSpan} The upper endpoint is not established as his individual highest note.` },
+      { q: `What is ${s.name}’s lowest note?`, a: `${referenceSpan} The lower endpoint is not established as his individual lowest note.` },
+      { q: `How many octaves can ${s.name} sing?`, a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of his working range.` },
+    ];
+  }
   if (isSingerReviewed(s.slug)) {
     const referenceSpan = `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span, not an independently verified physiological limit.`;
     return [
