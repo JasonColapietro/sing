@@ -249,7 +249,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
           step={1}
           value={bpm}
           onChange={(e) => applyBpm(Number(e.target.value))}
-          className="accent-violet h-6 min-w-40 flex-1 cursor-pointer"
+          className="accent-violet h-11 min-w-40 flex-1 cursor-pointer"
         />
         <label htmlFor="met-bpm-num" className="sr-only">
           Tempo, exact value
@@ -266,7 +266,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
           onKeyDown={(e) => {
             if (e.key === "Enter") commitBpmText();
           }}
-          className="tabular w-20 rounded-lg border border-line2 bg-panel2 px-2.5 py-1.5 text-center font-mono text-sm text-ink"
+          className="tabular min-h-11 w-20 rounded-lg border border-line2 bg-panel2 px-2.5 py-1.5 text-center font-mono text-sm text-ink"
         />
         <Button variant="outline" size="sm" onClick={tap}>
           Tap tempo
@@ -289,7 +289,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
               type="button"
               aria-pressed={sig === s.id}
               onClick={() => setSig(s.id)}
-              className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
+              className={`min-h-11 min-w-11 rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                 sig === s.id
                   ? "border-violet bg-panel2 text-violet-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
@@ -318,7 +318,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
               type="button"
               aria-pressed={sub === o.id}
               onClick={() => setSub(o.id)}
-              className={`rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
+              className={`min-h-11 min-w-11 rounded-full border px-2.5 py-1 font-mono text-xs transition-colors ${
                 sub === o.id
                   ? "border-violet bg-panel2 text-violet-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
