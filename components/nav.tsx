@@ -421,6 +421,7 @@ export default function Nav() {
                     key={l.href}
                     href={l.href}
                     onClick={() => setMenuOpen(false)}
+                    aria-current={active ? (pathname === l.href ? "page" : "location") : undefined}
                     className={`rounded-2xl border px-4 py-4 text-base transition-colors ${
                       active
                         ? "border-violet bg-panel2 text-violet-ink"
@@ -474,6 +475,7 @@ export default function Nav() {
                 <Link
                   key={l.href}
                   href={l.href}
+                  aria-current={active ? (pathname === l.href ? "page" : "location") : undefined}
                   className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
                     active
                       ? "bg-panel2 text-violet-ink"

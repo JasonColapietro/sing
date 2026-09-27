@@ -5,9 +5,9 @@ import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 
-const TITLE = "Singer Range Methodology and Evidence Standards";
+const TITLE = "Why Singer Vocal Ranges Differ: Sources and Methodology";
 const DESCRIPTION =
-  "How Suede Sing describes reported singer ranges, evaluates evidence, and accepts corrections.";
+  "Why vocal range websites disagree, how to compare song scores and performance claims, and what reported notes can tell you. Read sources and test your own range.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -29,12 +29,50 @@ export default function SingerMethodologyPage() {
       title="How we handle singer-range evidence"
       subtitle="What the catalog reports, what individual sources can establish, and how to correct the record."
       actions={
-        <LinkButton href="/singers" variant="outline" size="md">
-          ← All singers
-        </LinkButton>
+        <>
+          <LinkButton href="/range" size="md">Test my vocal range</LinkButton>
+          <LinkButton href="/singers" variant="outline" size="md">← All singers</LinkButton>
+        </>
       }
     >
       <div className="space-y-6">
+        <Card>
+          <h2 className="text-xl">Why do vocal range websites disagree?</h2>
+          <p className="mt-3 max-w-3xl text-mut">
+            Two range charts may be answering different questions. One may list
+            written notes in selected songs; another may include isolated notes
+            from live performances across a career. Neither number alone establishes
+            a comfortable range or definitive voice type. Check what was counted
+            before choosing the larger number.
+          </p>
+          <ol className="mt-5 max-w-3xl list-decimal space-y-4 pl-5 text-mut">
+            <li><strong className="text-ink">Match the version.</strong>{" "}
+              Are both sources discussing the same recording, live performance,
+              arrangement, and key? One score is not a record of everything its
+              performer has sung.
+            </li>
+            <li><strong className="text-ink">Check the note convention.</strong>{" "}
+              Confirm the octave numbering before comparing endpoints. A note label
+              without its convention can make two claims look farther apart than they are.
+            </li>
+            <li><strong className="text-ink">Ask what was counted.</strong>{" "}
+              Look for distinctions between sustained notes, brief effects, falsetto,
+              and whistle register. Do not silently combine different definitions of range.
+            </li>
+            <li><strong className="text-ink">Follow the evidence.</strong>{" "}
+              A recording and timestamp let another reader check a claim. Repeated
+              charts are not independent verification if they repeat the same
+              unsourced figure.
+            </li>
+          </ol>
+          <p className="mt-5 max-w-3xl text-mut">
+            See the{" "}
+            <Link href="/singers/olivia-rodrigo#evidence" className="text-violet-ink underline underline-offset-4">
+              Olivia Rodrigo source review
+            </Link>: song-level evidence and disputed voice-type labels are described
+            separately from the catalog&apos;s reported range.
+          </p>
+        </Card>
         <Card>
           <h2 className="text-xl">Scope of this index</h2>
           <p className="mt-3 max-w-3xl text-mut">{SINGER_RANGE_DISCLAIMER}</p>

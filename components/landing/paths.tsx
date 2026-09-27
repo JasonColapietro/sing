@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 /**
  * Two starting paths, placed above the ten-room grid.
@@ -50,7 +51,7 @@ const PATHS: Path[] = [
       },
     ],
     payoff:
-      "Fifteen minutes in, you know your range, your voice type, and whether you tend to sit under the note.",
+      "Leave with a range measurement and a clearer picture of your pitch. A suggested voice category is a starting point, not a definitive classification.",
   },
   {
     kicker: "If you already sing",
@@ -89,13 +90,14 @@ export function StartingPaths() {
           Two ways in, depending on where you&apos;re starting
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
-          Everything below is free and open right now. These are just the two
-          orders that waste the least time. If you want the whole sequence,
-          the free {" "}
+          The range test, pitch studio, and recorder are free without a practice
+          timer. Guided rooms share {FREE_DAILY_MINUTES} minutes a day on the free plan;
+          {" "}<Link href="/pro" className="text-violet-ink underline underline-offset-4">Pro</Link>{" "}
+          removes that cap. For a suggested sequence, the free {" "}
           <Link href="/learn" className="text-violet-ink hover:underline">
             learn-to-sing and vocal training guide
           </Link>{" "}
-          turns these rooms into a twenty-minute session and a seven-day plan,
+          offers an adaptable practice session and a seven-day plan,
           and the{" "}
           <Link href="/learn/voice" className="text-violet-ink hover:underline">
             free voice lessons

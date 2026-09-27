@@ -39,8 +39,9 @@ export function CompareWithMe({ s }: { s: Singer }) {
         <h2 className="mt-3 text-xl">Can you sing it?</h2>
         <p className="mt-3 max-w-xl text-sm text-mut">
           Take the free 2-minute range test — your mic finds your lowest and
-          highest notes, then this page shows exactly how your voice lines up
-          with {s.name}&rsquo;s.
+          highest notes, then compare your measured notes with {s.name}&rsquo;s
+          reported reference span. Matching endpoints does not establish the same
+          voice type or technique.
         </p>
         <div className="mt-4">
           <LinkButton href={`/range?compare=${s.slug}`} size="md">
@@ -83,13 +84,18 @@ export function CompareWithMe({ s }: { s: Singer }) {
       <h2 className="mt-3 text-xl">
         Your range covers{" "}
         <span className="text-violet-ink">{coverage}%</span> of {s.name}
-        &rsquo;s
+        &rsquo;s reported span
       </h2>
       <p className="mt-2 text-sm text-mut">
         {overlap} of {singerSpan} semitones overlap. Your {midiToLabel(youLow)}
         –{midiToLabel(youHigh)} ({spanOctaves(youHigh - youLow)} oct) against
         the cited {midiToLabel(s.lowMidi)}–{midiToLabel(s.highMidi)} (
         {spanOctaves(singerSpan)} oct).
+      </p>
+      <p className="mt-2 max-w-2xl text-sm text-mut">
+        A catalog comparison, not a training target. Use comfortable, repeatable
+        notes; matching these endpoints does not establish the same voice type
+        or technique.
       </p>
       <div className="mt-5 space-y-2">
         {bars.map((b) => (
@@ -126,7 +132,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
       {/* Where to go with the comparison — into practice, not a dead end. */}
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <LinkButton href="/warmups" variant="outline" size="sm">
-          Train toward the gap
+          Practice in your comfortable range
         </LinkButton>
         <LinkButton href="/songs" variant="ghost" size="sm">
           Practice songs in your range
@@ -138,7 +144,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
           Your range history
         </Link>
         <Link
-          href="/range"
+          href={`/range?compare=${s.slug}`}
           className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut underline decoration-line underline-offset-2 hover:text-ink"
         >
           Retake the range test
@@ -148,7 +154,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
           Pro line on them, and only after the visitor has a measured range to
           compare — value first, pitch second. Self-hides for Pro. */}
       <div className="mt-4">
-        <ProInlineNudge>The coach builds a daily plan around this gap</ProInlineNudge>
+        <ProInlineNudge>The coach builds a daily plan from your own practice and scores</ProInlineNudge>
       </div>
     </Card>
   );

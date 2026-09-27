@@ -77,7 +77,7 @@ export const VOCAL_LEARNING_FAQ: readonly VocalLearningFaq[] = [
   {
     question: "How long should I practice singing each day?",
     answer:
-      "A focused fifteen to twenty minutes is enough for a useful beginner session: warm up, work on one measurable skill, and apply it to a song. Stop earlier if the voice feels tired, scratchy, painful, or less coordinated than when you began.",
+      "The twenty-minute plan here is an example, not a required duration. Adapt or shorten it to your experience and comfort, with time to warm up, work on one skill, and listen back. Stop if the voice feels tired, scratchy, painful, or less coordinated than when you began.",
   },
   {
     question: "How do I find my voice type?",
@@ -95,4 +95,3 @@ export const VOCAL_LEARNING_FAQ: readonly VocalLearningFaq[] = [
       "A warmup prepares the voice for the work ahead. Vocal training changes a specific skill over repeated sessions: pitch accuracy, register coordination, breath control, endurance, or song technique. A warmup can contain useful exercises without being the whole training plan.",
   },
 ] as const;
-

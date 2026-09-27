@@ -43,7 +43,7 @@ const ARTIST_INTENT_CASES = [
     slug: "olivia-rodrigo",
     name: "Olivia Rodrigo",
     opening: "Olivia Rodrigo's voice type is disputed in the reviewed sources; this review does not establish a definitive classical classification. The displayed range of B2 to A#5 is a reported reference span, not an independently verified physiological limit.",
-    title: "Olivia Rodrigo Voice Type: Classifications Vary | Reported Vocal Range B2–A#5",
+    title: "Olivia Rodrigo Vocal Range & Voice Type | Test Yours",
     heading: "Olivia Rodrigo Voice Type and Vocal Range",
   },
   {
@@ -90,6 +90,7 @@ const VOICE_TYPE_QUERY_SLUGS: ReadonlySet<string> = new Set([
 const PRIORITY_PENDING_SLUGS: ReadonlySet<string> = new Set([
   "bruno-mars", "taylor-swift", "jeff-buckley", "billie-eilish",
 ]);
+const OLIVIA_SNIPPET = "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes.";
 const SINGER_RENDER_BATCH_SIZE = 32;
 const SINGER_RENDER_BATCHES = Array.from(
   { length: Math.ceil(SINGERS.length / SINGER_RENDER_BATCH_SIZE) },
@@ -111,7 +112,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
 
       expect(metadata.title).toEqual({ absolute: title });
       if (PRIORITY_PENDING_SLUGS.has(slug)) expect(title.length).toBeLessThanOrEqual(60);
-      expect(metadata.description).toMatch(new RegExp(`^${opening.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+      expect(metadata.description).toBe(slug === "olivia-rodrigo" ? OLIVIA_SNIPPET : opening);
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
       expect(metadata.openGraph?.url).toBe(`${SITE_URL}/singers/${slug}`);
@@ -165,7 +166,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
 
       expect(metadata.title).toEqual({ absolute: title });
       expect(metadata.description).toBe(
-        correction ? opening : defaultDescription,
+        singer.slug === "olivia-rodrigo" ? OLIVIA_SNIPPET : correction ? opening : defaultDescription,
       );
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
@@ -173,6 +174,14 @@ describe("every singer page answers its vocal range and voice type intent", () =
         `${SITE_URL}/singers/${singer.slug}`,
       );
     }
+  });
+
+  it("keeps Olivia's snippet concise and its disputed status explicit", async () => {
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug: "olivia-rodrigo" }) });
+    expect((metadata.title as { absolute: string }).absolute.length).toBeLessThanOrEqual(60);
+    expect(metadata.description!.length).toBeLessThanOrEqual(160);
+    expect(metadata.description).toContain("disputed");
+    expect(metadata.description).toContain("free range test");
   });
 
   /**
