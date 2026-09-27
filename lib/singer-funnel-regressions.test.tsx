@@ -26,8 +26,18 @@ import { StartingPaths } from "@/components/landing/paths";
 import { CompareWithMe } from "@/components/singers/singer-actions";
 import { singerBySlug } from "@/lib/singers";
 import { FREE_DAILY_SEC } from "@/lib/free-cap";
+import { RANGE_GUIDE } from "@/lib/guides";
 
 describe("singer evidence and comparison regressions", () => {
+  it("does not prescribe pushing past a vocal wall or infer anatomy from range", () => {
+    const copy = JSON.stringify(RANGE_GUIDE);
+    expect(copy).not.toContain("keep climbing");
+    expect(copy).not.toContain("probably holding chest voice");
+    expect(copy).not.toContain("voices built like yours");
+    expect(copy).not.toContain("Most voices reach further");
+    expect(copy).toContain("Stop rather than push past discomfort");
+    expect(copy).toContain("not a prediction of your maximum");
+  });
   it.each([
     ["sam-smith", "Evidence disputed"],
     ["olivia-rodrigo", "Evidence disputed"],
