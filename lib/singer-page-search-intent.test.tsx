@@ -12,6 +12,13 @@ import { SITE_URL } from "@/lib/site";
 
 const ARTIST_INTENT_CASES = [
   {
+    slug: "bruno-mars",
+    name: "Bruno Mars",
+    opening: "Our catalog reports Bruno Mars at G2 to D6; individual endpoint review is pending. Explore the notes and compare your range free.",
+    title: "Bruno Mars Vocal Range: Reported G2–D6 | Compare Yours",
+    heading: "Bruno Mars Vocal Range: Reported G2–D6",
+  },
+  {
     slug: "olivia-rodrigo",
     name: "Olivia Rodrigo",
     opening: "Olivia Rodrigo's voice type is disputed in the reviewed sources; this review does not establish a definitive classical classification. The displayed range of B2 to A#5 is a reported reference span, not an independently verified physiological limit.",
@@ -162,7 +169,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
         const html = renderToStaticMarkup(page).replaceAll("&#x27;", "'");
         const heading = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} Voice Type and Vocal Range`
-          : isSingerReviewed(singer.slug)
+          : singer.slug === "bruno-mars" || isSingerReviewed(singer.slug)
             ? `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`
             : `${singer.name} Vocal Range: ${rangeLabel(singer)}`;
         const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
@@ -180,4 +187,14 @@ describe("every singer page answers its vocal range and voice type intent", () =
     },
     30_000,
   );
+
+  it("does not present Bruno Mars catalog endpoints as verified extrema", async () => {
+    const page = await SingerPage({ params: Promise.resolve({ slug: "bruno-mars" }) });
+    const html = renderToStaticMarkup(page).replaceAll("&#x27;", "'");
+
+    expect(html).toContain("Individual evidence review is pending, so these endpoints are not verified physiological limits.");
+    expect(html).toContain("The upper endpoint is not established as his individual highest note.");
+    expect(html).toContain("The lower endpoint is not established as his individual lowest note.");
+    expect(html).not.toContain("Bruno Mars’s highest note is commonly cited as D6");
+  });
 });
