@@ -90,6 +90,7 @@ describe("/singers hub schema and crawl discovery", () => {
 
     expect(VOCAL_RANGE_PRIORITY_SLUGS.length).toBeGreaterThanOrEqual(12);
     expect(VOCAL_RANGE_PRIORITY_SLUGS).toContain("olivia-rodrigo");
+    expect(VOCAL_RANGE_PRIORITY_SLUGS).toContain("michael-jackson");
     expect(links.map((match) => match[1])).toEqual([...VOCAL_RANGE_PRIORITY_SLUGS]);
     expect(new Set(VOCAL_RANGE_PRIORITY_SLUGS).size).toBe(VOCAL_RANGE_PRIORITY_SLUGS.length);
 
