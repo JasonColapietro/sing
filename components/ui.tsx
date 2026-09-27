@@ -154,7 +154,7 @@ type ButtonVariant = "rec" | "violet" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
 const buttonBase =
-  "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40";
 const buttonVariants: Record<ButtonVariant, string> = {
   rec: "bg-rec text-[#fffaf2] hover:bg-[#b5493d]",
   violet: "bg-violet-ink text-white hover:bg-violet",

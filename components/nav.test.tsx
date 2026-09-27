@@ -29,4 +29,12 @@ describe("main navigation current location", () => {
     route.pathname = "/learning";
     expect(renderToStaticMarkup(<Nav />)).not.toContain("aria-current=");
   });
+
+  it("gives every desktop tab a 44px touch target", () => {
+    const html = renderToStaticMarkup(<Nav />);
+    const main = html.match(/<nav aria-label="Main"[^>]*>(.*?)<\/nav>/)?.[1] ?? "";
+    const links = main.match(/<a\b[^>]*>/g) ?? [];
+    expect(links).toHaveLength(10);
+    for (const link of links) expect(link).toContain("min-h-11");
+  });
 });

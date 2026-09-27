@@ -11,6 +11,8 @@ export const ROUTES = [
   { path: "/pro", name: "pro", kind: "marketing" },
   { path: "/tools", name: "tools", kind: "marketing" },
   { path: "/extension", name: "extension", kind: "marketing" },
+  { path: "/voice", name: "voice-app", kind: "marketing" },
+  { path: "/can-you-sing", name: "popular-songs", kind: "directory" },
   { path: "/contact", name: "contact", kind: "marketing" },
   { path: "/changelog", name: "changelog", kind: "marketing" },
 
@@ -48,14 +50,16 @@ export async function discoverTemplateRoutes(baseUrl) {
     .map((m) => { try { return new URL(m[1]).pathname; } catch { return null; } })
     .filter(Boolean);
 
+  const staticPaths = new Set(ROUTES.map((route) => route.path));
   const firstUnder = (prefix, depth) =>
-    paths.find((p) => p.startsWith(prefix) && p.split("/").filter(Boolean).length === depth);
+    paths.find((p) => !staticPaths.has(p) && p.startsWith(prefix) && p.split("/").filter(Boolean).length === depth);
 
   const picks = [
     { path: firstUnder("/singers/", 2), name: "singer-detail", kind: "detail" },
     { path: firstUnder("/singers/genre/", 3), name: "singer-genre", kind: "directory" },
     { path: firstUnder("/singers/voice-type/", 3), name: "singer-voice-type", kind: "directory" },
     { path: firstUnder("/songs/", 2), name: "song-detail", kind: "detail" },
+    { path: firstUnder("/can-you-sing/", 2), name: "popular-song-detail", kind: "detail" },
     { path: firstUnder("/book/", 2), name: "book-chapter", kind: "reference" },
     { path: firstUnder("/atlas/", 2), name: "atlas-chapter", kind: "reference" },
     { path: firstUnder("/learn/voice/", 3), name: "learn-stage", kind: "reference" },

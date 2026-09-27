@@ -3,7 +3,7 @@
  *
  *   npm run build && npm start   # in another shell
  *   (Node 22.18+, which imports the TypeScript fixtures directly)
- *   node e2e/breath-gate.mjs [baseUrl] [--channel=chrome] [--executable=path] [--json=path]
+ *   node e2e/breath-gate.mjs [baseUrl] [--channel=chrome] [--executable=path] [--json=path] [--case="breathe and sing"]
  *
  * `lib/audio/breath-detect.test.ts` scores the inhale classifier on frames
  * handed to it directly. This plays the same synthetic scenes in as Chrome's
@@ -43,6 +43,7 @@ const BASE = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3000").
 const CHANNEL = flag("channel") ?? "chrome";
 const EXECUTABLE = flag("executable");
 const JSON_OUT = flag("json");
+const CASE_FILTER = flag("case");
 
 const SR = 48000;
 const VOWEL_SEC = 4;
@@ -51,16 +52,16 @@ const FALLBACK_TEXT = /No breath heard in 8 seconds/;
 
 const room = (sec) =>
   bandNoise({ sampleRate: SR, length: Math.round(sec * SR), loHz: 0, hiHz: SR / 2, level: 0.0005, seed: 3 });
-const vowel = () =>
-  synthVoice({ freq: midiToHz(57), sampleRate: SR, length: SR * VOWEL_SEC, level: 0.3, snrDb: 30 });
+const vowel = (seconds = VOWEL_SEC) =>
+  synthVoice({ freq: midiToHz(57), sampleRate: SR, length: SR * seconds, level: 0.3, snrDb: 30 });
 
 /** 1.5 s of room, a 1 s breath, a sung A3, then room again until the file loops. */
-function inhaleThenVowel() {
+function inhaleThenVowel(seconds = VOWEL_SEC) {
   const take = concat(
     silence(SR, 1.5),
     inhale({ sampleRate: SR, durationSec: 1, level: 0.015 }),
     silence(SR, 0.1),
-    vowel(),
+    vowel(seconds),
     silence(SR, 4),
   );
   return mixAt(room(take.length / SR), take);
@@ -102,7 +103,18 @@ async function withBrowser(wav, drill, fn) {
     const page = await context.newPage();
     await page.goto(`${BASE}/breath?drill=${drill}`, { waitUntil: "networkidle" });
     await page.getByRole("button", { name: "Enable microphone" }).first().click();
-    return await fn(page);
+    const beganAt = await page.evaluate(() => performance.now());
+    try {
+      return await fn(page);
+    } catch (error) {
+      console.error("Breath test state:", JSON.stringify({
+        drill,
+        elapsedMs: await page.evaluate((began) => performance.now() - began, beganAt),
+        text: await page.locator('[role="dialog"]').allTextContents(),
+        inhales: await page.evaluate(() => window.__singBreathProbe.filter((p) => p.inhale).map((p) => p.inhale)),
+      }));
+      throw error;
+    }
   } finally {
     await browser.close();
   }
@@ -193,8 +205,10 @@ const CASES = [
   {
     name: "breathe and sing",
     drill: "cue",
-    // One breath and one note per pass of the file, so four reps is four loops.
-    make: inhaleThenVowel,
+    // The microphone's frame windows trim a little from each end of the note.
+    // Leave signal margin beyond the four-second target, as a singer holding
+    // until the completion cue would. Sustain cases still measure four seconds.
+    make: () => inhaleThenVowel(5),
     async run(page) {
       const failures = [];
       await page.getByRole("button", { name: "4", exact: true }).click();
@@ -212,11 +226,13 @@ const CASES = [
   },
 ];
 
+const selectedCases = CASES.filter((c) => !CASE_FILTER || c.name === CASE_FILTER);
+if (!selectedCases.length) throw new Error(`Unknown breath case: ${CASE_FILTER}`);
 const dir = await mkdtemp(path.join(os.tmpdir(), "sing-breath-"));
 const results = [];
 try {
-  console.log(`sing breath gate — ${CASES.length} cases against ${BASE}/breath (${EXECUTABLE ?? CHANNEL})\n`);
-  for (const testCase of CASES) {
+  console.log(`sing breath gate — ${selectedCases.length} cases against ${BASE}/breath (${EXECUTABLE ?? CHANNEL})\n`);
+  for (const testCase of selectedCases) {
     const wav = path.join(dir, `${testCase.name.replace(/\W+/g, "_")}.wav`);
     await writeFile(wav, encodeWav(testCase.make(), SR));
     let result;
