@@ -288,7 +288,7 @@ export function observationsFor(s: Singer): Observation[] {
     out.push({
       id: "no-ceiling-cited",
       weight: 36,
-      text: `No separate full-voice ceiling is cited, so the figures describe a range worked largely in full voice across its ${plural(sp, "semitone")}.`,
+      text: `This catalog has no separate full-voice ceiling for this singer, so its ${plural(sp, "semitone")} cannot establish how much is sung in full voice.`,
     });
   }
 

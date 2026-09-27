@@ -87,6 +87,27 @@ describe("singer-page evidence and provenance", () => {
     expect(page).not.toHaveProperty("citation");
   });
 
+  it.each([
+    ["bruno-mars", "Bruno Mars"],
+    ["taylor-swift", "Taylor Swift"],
+    ["jeff-buckley", "Jeff Buckley"],
+    ["billie-eilish", "Billie Eilish"],
+  ])("keeps %s schema aligned with pending evidence", async (slug, name) => {
+    const html = await rendered(slug);
+    const graph = graphFrom(html)["@graph"];
+    const page = graph.find((node) => node["@type"] === "WebPage")!;
+    const person = graph.find((node) => node["@type"] === "Person")!;
+    const faq = graph.find((node) => node["@type"] === "FAQPage")!;
+
+    expect(page.name).toMatch(/^.+ Vocal Range: Reported /);
+    expect(page.description).toContain("Individual endpoint review is pending");
+    expect(page).not.toHaveProperty("reviewedBy");
+    expect(page).not.toHaveProperty("citation");
+    expect(person.description).toContain(`The catalog lists ${name}`);
+    expect(person.description).toContain("individual evidence review is pending");
+    expect(JSON.stringify(faq)).toContain(`What voice type is ${name}?`);
+  });
+
   it("uses one breadcrumb source for visible navigation and JSON-LD", async () => {
     const html = await rendered("adele");
     const graph = graphFrom(html);

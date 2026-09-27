@@ -52,6 +52,18 @@ type SearchIntent = "voice-type" | "vocal-range";
 
 type SingerRecord = (typeof SINGERS)[number];
 
+/** High-interest GSC pages with catalog endpoints still awaiting individual review. */
+const PRIORITY_PENDING_SLUGS: ReadonlySet<string> = new Set([
+  "bruno-mars",
+  "taylor-swift",
+  "jeff-buckley",
+  "billie-eilish",
+]);
+
+function isPriorityPending(s: SingerRecord): boolean {
+  return PRIORITY_PENDING_SLUGS.has(s.slug) && !isSingerReviewed(s.slug);
+}
+
 /** Exact-page GSC voice-type intent observed for Jul 30–Aug 26, 2026. */
 const VOICE_TYPE_QUERY_SLUGS: ReadonlySet<string> = new Set([
   "olivia-rodrigo",
@@ -76,8 +88,8 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
 }
 
 function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
-  if (s.slug === "bruno-mars") {
-    return `Bruno Mars Vocal Range: Reported ${rangeLabel(s)} | Compare Yours`;
+  if (isPriorityPending(s)) {
+    return `${s.name} Vocal Range: Reported ${rangeLabel(s)} | Compare Yours`;
   }
   const reviewedTitles: Record<string, string> = {
     "olivia-rodrigo": "Olivia Rodrigo Voice Type: Classifications Vary | Reported Vocal Range B2–A#5",
@@ -97,8 +109,8 @@ function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
 }
 
 function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
-  if (s.slug === "bruno-mars") {
-    return `Bruno Mars Vocal Range: Reported ${rangeLabel(s)}`;
+  if (isPriorityPending(s)) {
+    return `${s.name} Vocal Range: Reported ${rangeLabel(s)}`;
   }
   if (intent === "voice-type") return `${s.name} Voice Type and Vocal Range`;
   return isSingerReviewed(s.slug)
@@ -107,8 +119,8 @@ function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
 }
 
 function queryAlignedDescription(s: SingerRecord, intent: SearchIntent): string {
-  if (s.slug === "bruno-mars") {
-    return `Our catalog reports Bruno Mars at ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}; individual endpoint review is pending. Explore the notes and compare your range free.`;
+  if (isPriorityPending(s)) {
+    return `Our catalog reports ${s.name} at ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(s.highMidi - s.lowMidi)} octaves). Individual endpoint review is pending. Compare your range free.`;
   }
   if (hasReviewedVoiceTypeCorrection(s)) {
     return `${voiceTypeEvidenceCopy(s)} The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
@@ -162,8 +174,8 @@ function bothSpellings(midi: number): string {
 
 function answerSentence(s: SingerRecord): string {
   const semis = s.highMidi - s.lowMidi;
-  if (s.slug === "bruno-mars") {
-    return `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones). Individual evidence review is pending, so these endpoints are not verified physiological limits.`;
+  if (isPriorityPending(s)) {
+    return `Our catalog reports ${s.name} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, a reference span of about ${spanOctaves(semis)} octaves (${semis} semitones). Individual endpoint review is pending; these are not verified physiological limits.`;
   }
   if (isSingerReviewed(s.slug)) {
     return `The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones), not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
@@ -195,13 +207,14 @@ function answerSentence(s: SingerRecord): string {
  */
 function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
   const semis = s.highMidi - s.lowMidi;
-  if (s.slug === "bruno-mars") {
-    const referenceSpan = `The catalog reports ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reference span; individual evidence review is pending.`;
+  if (isPriorityPending(s)) {
+    const referenceSpan = `Our catalog reports ${s.name} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}; individual endpoint review is pending.`;
     return [
       { q: `How high can ${s.name} sing?`, a: `${referenceSpan} The upper endpoint is not a verified individual maximum.` },
-      { q: `What is ${s.name}’s highest note?`, a: `${referenceSpan} The upper endpoint is not established as his individual highest note.` },
-      { q: `What is ${s.name}’s lowest note?`, a: `${referenceSpan} The lower endpoint is not established as his individual lowest note.` },
-      { q: `How many octaves can ${s.name} sing?`, a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of his working range.` },
+      { q: `What is ${s.name}’s highest note?`, a: `${referenceSpan} No reviewed source here establishes the upper endpoint as ${s.name}’s highest note.` },
+      { q: `What is ${s.name}’s lowest note?`, a: `${referenceSpan} No reviewed source here establishes the lower endpoint as ${s.name}’s lowest note.` },
+      { q: `How many octaves can ${s.name} sing?`, a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of ${s.name}’s working range.` },
+      { q: `What voice type is ${s.name}?`, a: voiceTypeEvidenceCopy(s) },
     ];
   }
   if (isSingerReviewed(s.slug)) {
@@ -284,7 +297,7 @@ export default async function SingerPage({
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
-  const observations = observationsFor(s).slice(0, 5);
+  const observations = isPriorityPending(s) ? [] : observationsFor(s).slice(0, 5);
   const lowMates = sharesLow(s).slice(0, 8);
   const highMates = sharesHigh(s).slice(0, 8);
 
@@ -327,7 +340,9 @@ export default async function SingerPage({
       {
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,
-        name: `${s.name} Vocal Range: ${rangeLabel(s)}`,
+        name: isPriorityPending(s)
+          ? queryAlignedHeading(s, intent)
+          : `${s.name} Vocal Range: ${rangeLabel(s)}`,
         url: pageUrl,
         description: answer,
         ...reviewedPageFields,
@@ -352,7 +367,7 @@ export default async function SingerPage({
         name: s.name,
         jobTitle: "Singer",
         nationality: s.country,
-        description: hasReviewedVoiceTypeCorrection(s)
+        description: isPriorityPending(s) || hasReviewedVoiceTypeCorrection(s)
           ? voiceTypeEvidenceCopy(s)
           : `${s.voiceType} known for "${s.signatureSong}". ${s.blurb}`,
         // Without an external identifier these are hundreds of unresolvable
@@ -441,7 +456,7 @@ export default async function SingerPage({
             <div className="flex flex-wrap gap-8">
               <Stat label="Octaves" value={spanOctaves(semis)} tone="violet" />
               <Stat label="Semitones" value={semis} tone="ink" />
-              {!reviewed && s.beltMidi != null && (
+              {!reviewed && !isPriorityPending(s) && s.beltMidi != null && (
                 <Stat
                   label="Full voice to"
                   value={midiToLabel(s.beltMidi)}
@@ -449,7 +464,7 @@ export default async function SingerPage({
                 />
               )}
               <Stat
-                label={hasReviewedVoiceTypeCorrection(s) ? "Catalog label" : "Voice type"}
+                label={isPriorityPending(s) || hasReviewedVoiceTypeCorrection(s) ? "Catalog label" : "Voice type"}
                 value={s.voiceType}
                 tone="cool"
               />
@@ -459,14 +474,14 @@ export default async function SingerPage({
             <ChromaticStrip
               low={s.lowMidi}
               high={s.highMidi}
-              beltMidi={reviewed ? undefined : s.beltMidi}
-              label={`Keyboard showing ${s.name}'s ${reviewed ? "reported reference span" : "cited range"} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}.`}
+              beltMidi={reviewed || isPriorityPending(s) ? undefined : s.beltMidi}
+              label={`Keyboard showing ${s.name}'s ${reviewed || isPriorityPending(s) ? "reported reference span" : "cited range"} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}.`}
             />
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <PlayRangeButton s={s} />
-            {!reviewed && s.whistle && <Pill tone="violet">Whistle register</Pill>}
-            {!reviewed && s.beltMidi != null && (
+            {!reviewed && !isPriorityPending(s) && s.whistle && <Pill tone="violet">Whistle register</Pill>}
+            {!reviewed && !isPriorityPending(s) && s.beltMidi != null && (
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 red dash = top of full voice
               </span>
@@ -522,10 +537,33 @@ export default async function SingerPage({
               </div>
             </>
           ) : (
-            <p className="mt-3 max-w-3xl text-sm text-mut">
-              Individual evidence review is pending. The displayed range is a reported
-              reference span, not an independently verified physiological limit.
-            </p>
+            <>
+              <p className="mt-3 max-w-3xl text-sm text-mut">
+                Individual evidence review is pending. The displayed range is a reported
+                reference span, not an independently verified physiological limit.
+              </p>
+              {isPriorityPending(s) && (
+                <p className="mt-3 max-w-3xl text-sm text-mut">
+                  The catalog has not verified recordings or scores for both endpoints.
+                  These figures cannot establish a repeatable singing range or an absolute
+                  highest or lowest note.
+                </p>
+              )}
+              {s.slug === "jeff-buckley" && (
+                <p className="mt-3 max-w-3xl text-sm text-mut">
+                  <a
+                    href="https://jeffbuckley.com/faq-2/"
+                    rel="noreferrer"
+                    target="_blank"
+                    className="text-violet-ink underline underline-offset-4"
+                  >
+                    Jeff Buckley&apos;s official FAQ
+                  </a>{" "}
+                  describes him as a tenor with an approximately four-octave range.
+                  It does not verify this catalog&apos;s exact E2 and D6 endpoints.
+                </p>
+              )}
+            </>
           )}
           <p className="mt-3 max-w-3xl text-sm text-mut">{SINGER_RANGE_DISCLAIMER}</p>
           <div className="mt-5 flex flex-wrap gap-3">
@@ -540,7 +578,7 @@ export default async function SingerPage({
 
         {/* How the voice works — the part a singer came for, and the only
             section here that is written rather than derived. */}
-        {s.technique && (
+        {s.technique && !isPriorityPending(s) && (
           <Card>
             <h2 className="text-xl">
               How {s.name} uses that range
@@ -563,7 +601,9 @@ export default async function SingerPage({
         <Card>
           <h2 className="text-xl">{question}</h2>
           <p className="mt-3 max-w-3xl text-mut">{answer}</p>
-          <p className="mt-3 max-w-3xl text-sm text-mut">{s.blurb}</p>
+          {!isPriorityPending(s) && (
+            <p className="mt-3 max-w-3xl text-sm text-mut">{s.blurb}</p>
+          )}
           <dl className="mt-5">
             <div>
               <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -590,8 +630,8 @@ export default async function SingerPage({
             </>
           )}
           <p className="mt-5 text-xs text-dim">
-            Commonly cited figures, not lab measurements — extreme notes are
-            one-off recorded moments, not the singer&rsquo;s everyday range.
+            Reported catalog figures, not lab measurements — an endpoint may be
+            an isolated performance and does not describe an everyday singing range.
           </p>
         </Card>
 
@@ -620,18 +660,18 @@ export default async function SingerPage({
             about one specific note actually wants next. */}
         {(lowMates.length > 0 || highMates.length > 0) && (
           <Card>
-            <SectionLabel>Same notes, other voices</SectionLabel>
+            <SectionLabel>Same reported notes, other voices</SectionLabel>
             <div className="mt-4 grid gap-6 sm:grid-cols-2">
               {lowMates.length > 0 && (
                 <div>
                   <h2 className="text-base">
-                    Also bottoming out on {midiToLabel(s.lowMidi)}
+                    Also listed from {midiToLabel(s.lowMidi)}
                   </h2>
                   <p className="mt-1 text-sm text-mut">
                     {sharesLow(s).length} other{" "}
                     {sharesLow(s).length === 1 ? "voice" : "voices"} here{" "}
-                    {sharesLow(s).length === 1 ? "is" : "are"} cited to the same
-                    floor.
+                    {sharesLow(s).length === 1 ? "has" : "have"} the same
+                    reported floor in this catalog.
                   </p>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {lowMates.map((m) => (
@@ -653,13 +693,13 @@ export default async function SingerPage({
               {highMates.length > 0 && (
                 <div>
                   <h2 className="text-base">
-                    Also topping out on {midiToLabel(s.highMidi)}
+                    Also listed up to {midiToLabel(s.highMidi)}
                   </h2>
                   <p className="mt-1 text-sm text-mut">
                     {sharesHigh(s).length} other{" "}
                     {sharesHigh(s).length === 1 ? "voice" : "voices"} here{" "}
-                    {sharesHigh(s).length === 1 ? "reaches" : "reach"} the same
-                    ceiling.
+                    {sharesHigh(s).length === 1 ? "has" : "have"} the same
+                    reported ceiling in this catalog.
                   </p>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {highMates.map((m) => (

@@ -14,9 +14,30 @@ const ARTIST_INTENT_CASES = [
   {
     slug: "bruno-mars",
     name: "Bruno Mars",
-    opening: "Our catalog reports Bruno Mars at G2 to D6; individual endpoint review is pending. Explore the notes and compare your range free.",
+    opening: "Our catalog reports Bruno Mars at G2 to D6 (3.6 octaves). Individual endpoint review is pending. Compare your range free.",
     title: "Bruno Mars Vocal Range: Reported G2–D6 | Compare Yours",
     heading: "Bruno Mars Vocal Range: Reported G2–D6",
+  },
+  {
+    slug: "taylor-swift",
+    name: "Taylor Swift",
+    opening: "Our catalog reports Taylor Swift at A2 to A#5 (3.1 octaves). Individual endpoint review is pending. Compare your range free.",
+    title: "Taylor Swift Vocal Range: Reported A2–A#5 | Compare Yours",
+    heading: "Taylor Swift Vocal Range: Reported A2–A#5",
+  },
+  {
+    slug: "jeff-buckley",
+    name: "Jeff Buckley",
+    opening: "Our catalog reports Jeff Buckley at E2 to D6 (3.8 octaves). Individual endpoint review is pending. Compare your range free.",
+    title: "Jeff Buckley Vocal Range: Reported E2–D6 | Compare Yours",
+    heading: "Jeff Buckley Vocal Range: Reported E2–D6",
+  },
+  {
+    slug: "billie-eilish",
+    name: "Billie Eilish",
+    opening: "Our catalog reports Billie Eilish at A2 to B5 (3.2 octaves). Individual endpoint review is pending. Compare your range free.",
+    title: "Billie Eilish Vocal Range: Reported A2–B5 | Compare Yours",
+    heading: "Billie Eilish Vocal Range: Reported A2–B5",
   },
   {
     slug: "olivia-rodrigo",
@@ -55,7 +76,7 @@ const ARTIST_INTENT_CASES = [
   },
 ] as const;
 
-const REVIEWED_TITLE_CORRECTIONS: Readonly<Record<string, { title: string; opening: string }>> =
+const SPECIAL_TITLE_CASES: Readonly<Record<string, { title: string; opening: string }>> =
   Object.fromEntries(
     ARTIST_INTENT_CASES.map(({ slug, title, opening }) => [slug, { title, opening }]),
   );
@@ -65,6 +86,9 @@ const VOICE_TYPE_QUERY_SLUGS: ReadonlySet<string> = new Set([
   "reba-mcentire",
   "alex-warren",
   "sam-smith",
+]);
+const PRIORITY_PENDING_SLUGS: ReadonlySet<string> = new Set([
+  "bruno-mars", "taylor-swift", "jeff-buckley", "billie-eilish",
 ]);
 const SINGER_RENDER_BATCH_SIZE = 32;
 const SINGER_RENDER_BATCHES = Array.from(
@@ -86,6 +110,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
       });
 
       expect(metadata.title).toEqual({ absolute: title });
+      if (PRIORITY_PENDING_SLUGS.has(slug)) expect(title.length).toBeLessThanOrEqual(60);
       expect(metadata.description).toMatch(new RegExp(`^${opening.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
@@ -126,7 +151,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
       const defaultDescription = `${defaultOpening} See every note${
         VOICE_TYPE_QUERY_SLUGS.has(singer.slug) ? "" : ", learn the voice type"
       }, and take the free two-minute test to compare yours.`;
-      const correction = REVIEWED_TITLE_CORRECTIONS[singer.slug];
+      const correction = SPECIAL_TITLE_CASES[singer.slug];
       const title = correction?.title ?? defaultTitle;
       const opening = correction?.opening ?? defaultOpening;
 
@@ -169,13 +194,13 @@ describe("every singer page answers its vocal range and voice type intent", () =
         const html = renderToStaticMarkup(page).replaceAll("&#x27;", "'");
         const heading = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} Voice Type and Vocal Range`
-          : singer.slug === "bruno-mars" || isSingerReviewed(singer.slug)
+          : PRIORITY_PENDING_SLUGS.has(singer.slug) || isSingerReviewed(singer.slug)
             ? `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`
             : `${singer.name} Vocal Range: ${rangeLabel(singer)}`;
         const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
           : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
-        const opening = REVIEWED_TITLE_CORRECTIONS[singer.slug]?.opening ?? defaultOpening;
+        const opening = SPECIAL_TITLE_CASES[singer.slug]?.opening ?? defaultOpening;
 
         expect(html).toContain(
           `<h1 class="text-4xl sm:text-5xl">${heading}</h1>`,
@@ -188,13 +213,33 @@ describe("every singer page answers its vocal range and voice type intent", () =
     30_000,
   );
 
-  it("does not present Bruno Mars catalog endpoints as verified extrema", async () => {
-    const page = await SingerPage({ params: Promise.resolve({ slug: "bruno-mars" }) });
-    const html = renderToStaticMarkup(page).replaceAll("&#x27;", "'");
+  it.each(ARTIST_INTENT_CASES.filter(({ slug }) => PRIORITY_PENDING_SLUGS.has(slug)))(
+    "$slug keeps unreviewed endpoints out of individual extrema claims",
+    async ({ slug, name }) => {
+      const page = await SingerPage({ params: Promise.resolve({ slug }) });
+      const html = renderToStaticMarkup(page).replaceAll("&#x27;", "'");
 
-    expect(html).toContain("Individual evidence review is pending, so these endpoints are not verified physiological limits.");
-    expect(html).toContain("The upper endpoint is not established as his individual highest note.");
-    expect(html).toContain("The lower endpoint is not established as his individual lowest note.");
-    expect(html).not.toContain("Bruno Mars’s highest note is commonly cited as D6");
+      expect(html).toContain("Individual endpoint review is pending; these are not verified physiological limits.");
+      expect(html).toContain(`No reviewed source here establishes the upper endpoint as ${name}’s highest note.`);
+      expect(html).toContain(`No reviewed source here establishes the lower endpoint as ${name}’s lowest note.`);
+      expect(html).toContain(`What voice type is ${name}?`);
+      expect(html).not.toContain("Full voice to");
+    },
+  );
+
+  it("cites Jeff Buckley's official FAQ without using it as proof of the catalog endpoints", async () => {
+    const page = await SingerPage({ params: Promise.resolve({ slug: "jeff-buckley" }) });
+    const html = renderToStaticMarkup(page);
+
+    expect(html).toContain('href="https://jeffbuckley.com/faq-2/"');
+    expect(html).toContain("It does not verify this catalog&#x27;s exact E2 and D6 endpoints.");
+  });
+
+  it("does not infer full-voice coverage from Billie's missing register marker", async () => {
+    const page = await SingerPage({ params: Promise.resolve({ slug: "billie-eilish" }) });
+    const html = renderToStaticMarkup(page);
+
+    expect(html).toContain("The catalog has not verified recordings or scores for both endpoints.");
+    expect(html).not.toContain("worked largely in full voice");
   });
 });
