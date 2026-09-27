@@ -439,7 +439,7 @@ export default async function SingerPage({
                 {index === breadcrumbs.length - 1 ? (
                   <span aria-current="page">{breadcrumb.name}</span>
                 ) : (
-                  <Link href={breadcrumb.href} className="hover:text-violet-ink">
+                  <Link href={breadcrumb.href} className="inline-flex min-h-11 items-center hover:text-violet-ink">
                     {breadcrumb.name}
                   </Link>
                 )}

@@ -223,11 +223,15 @@ export default function Nav() {
     const el = tabsRef.current;
     if (!el) return;
     const measure = () =>
-      setTabsOverflow(el.scrollWidth > el.clientWidth + 1);
+      setTabsOverflow(el.scrollWidth - el.clientWidth - el.scrollLeft > 1);
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
-    return () => ro.disconnect();
+    el.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      ro.disconnect();
+      el.removeEventListener("scroll", measure);
+    };
   }, []);
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -252,10 +256,19 @@ export default function Nav() {
       if (e.key === "Escape") setMenuOpen(false);
     };
     window.addEventListener("keydown", onKey);
+    // CSS hides the drawer at sm. Unmount it too, releasing its focus trap
+    // and scroll lock when a phone rotates or the window is widened.
+    const desktop = window.matchMedia("(min-width: 640px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setMenuOpen(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    closeOnDesktop();
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", closeOnDesktop);
       document.body.style.overflow = prevOverflow;
     };
   }, [menuOpen]);
@@ -445,7 +458,7 @@ export default function Nav() {
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-3 px-4 sm:gap-4 sm:px-6">
           <Link
             href="/"
-            className="flex min-h-11 shrink-0 items-center gap-2 sm:min-h-0"
+            className="flex min-h-11 shrink-0 items-center gap-2"
           >
             <Image
               src="/suede-logo.png"
@@ -459,11 +472,11 @@ export default function Nav() {
             </span>
           </Link>
 
-          {/* Desktop / tablet: scrollable link row, unchanged from before */}
+          {/* Desktop / tablet: thumb-sized tabs with a fade only while more remain. */}
           <nav
             aria-label="Main"
             ref={tabsRef}
-            className={`no-scrollbar hidden flex-1 items-center gap-1 overflow-x-auto sm:flex ${
+            className={`no-scrollbar hidden flex-1 items-center gap-2 overflow-x-auto sm:flex ${
               tabsOverflow
                 ? "[mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
                 : ""
@@ -476,7 +489,7 @@ export default function Nav() {
                   key={l.href}
                   href={l.href}
                   aria-current={active ? (pathname === l.href ? "page" : "location") : undefined}
-                  className={`whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
+                  className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
                     active
                       ? "bg-panel2 text-violet-ink"
                       : "text-mut hover:text-ink"
@@ -510,7 +523,7 @@ export default function Nav() {
               had no entry at all, and the drawer is two taps away. */}
           <Link
             href="/pro"
-            className={`flex min-h-11 shrink-0 items-center rounded-full px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:min-h-0 sm:px-3 ${
+            className={`flex min-h-11 shrink-0 items-center rounded-full px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:px-3 ${
               proActive
                 ? "bg-violet text-[#241a05] hover:bg-violet"
                 : "border border-violet/60 text-violet-ink hover:border-violet hover:bg-panel2"
@@ -521,7 +534,7 @@ export default function Nav() {
 
           <Link
             href="/progress"
-            className="hidden shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs sm:flex"
+            className="hidden min-h-11 shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs sm:flex"
           >
             <span className="text-violet-ink">LV {lvl.level}</span>
             <span className="text-dim">·</span>

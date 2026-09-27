@@ -29,6 +29,11 @@ import { FREE_DAILY_SEC } from "@/lib/free-cap";
 import { RANGE_GUIDE } from "@/lib/guides";
 
 describe("singer evidence and comparison regressions", () => {
+  it("keeps the singer-directory breadcrumb easy to tap", async () => {
+    const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug: "adele" }) }));
+    const breadcrumb = html.match(/<a\b[^>]*>Famous vocal ranges<\/a>/)?.[0];
+    expect(breadcrumb).toContain("min-h-11");
+  });
   it("does not prescribe pushing past a vocal wall or infer anatomy from range", () => {
     const copy = JSON.stringify(RANGE_GUIDE);
     expect(copy).not.toContain("keep climbing");
