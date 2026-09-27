@@ -24,6 +24,7 @@ import {
   getSingerEvidence,
   groupEvidenceSources,
   isSingerReviewed,
+  singerReviewLabel,
   voiceTypeEvidenceCopy,
 } from "@/lib/singer-evidence";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
@@ -92,7 +93,7 @@ function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
     return `${s.name} Vocal Range: Reported ${rangeLabel(s)} | Compare Yours`;
   }
   const reviewedTitles: Record<string, string> = {
-    "olivia-rodrigo": "Olivia Rodrigo Voice Type: Classifications Vary | Reported Vocal Range B2–A#5",
+    "olivia-rodrigo": "Olivia Rodrigo Vocal Range & Voice Type | Test Yours",
     "reba-mcentire": "Reba McEntire Voice Type: Classifications Vary | Reported Vocal Range E3–F5",
     "alex-warren": "Alex Warren Voice Type: Evidence Does Not Establish a Definitive Type | Reported Vocal Range A2–F#4",
     "sam-smith": "Sam Smith Voice Type: Baritone-to-Tenor Territory | Reported Vocal Range G2–C6",
@@ -148,7 +149,9 @@ export async function generateMetadata({
   if (!s) return {};
   const intent = searchIntentFor(s.slug);
   const title = queryAlignedTitle(s, intent);
-  const description = queryAlignedDescription(s, intent);
+  const description = s.slug === "olivia-rodrigo"
+    ? "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes."
+    : queryAlignedDescription(s, intent);
   const canonical = `${SITE_URL}/singers/${s.slug}`;
   return {
     title: { absolute: title },
@@ -297,7 +300,10 @@ export default async function SingerPage({
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
-  const observations = isPriorityPending(s) ? [] : observationsFor(s).slice(0, 5);
+  // Source-scoped review copy supersedes the legacy, unreviewed commentary.
+  // A record being reviewed does not verify the catalog's technique or register fields.
+  const showCatalogCommentary = !isSingerReviewed(s.slug) && !isPriorityPending(s);
+  const observations = showCatalogCommentary ? observationsFor(s).slice(0, 5) : [];
   const lowMates = sharesLow(s).slice(0, 8);
   const highMates = sharesHigh(s).slice(0, 8);
 
@@ -367,7 +373,7 @@ export default async function SingerPage({
         name: s.name,
         jobTitle: "Singer",
         nationality: s.country,
-        description: isPriorityPending(s) || hasReviewedVoiceTypeCorrection(s)
+        description: isPriorityPending(s) || isSingerReviewed(s.slug)
           ? voiceTypeEvidenceCopy(s)
           : `${s.voiceType} known for "${s.signatureSong}". ${s.blurb}`,
         // Without an external identifier these are hundreds of unresolvable
@@ -444,6 +450,12 @@ export default async function SingerPage({
 
         {/* Big readout */}
         <Card>
+          <p className="mb-4 text-sm text-mut">
+            {singerReviewLabel(s.slug)}{" · "}
+            <a href="#evidence" className="text-violet-ink underline underline-offset-4">
+              Read sources and limitations
+            </a>
+          </p>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <SectionLabel>Reported reference span</SectionLabel>
@@ -495,7 +507,7 @@ export default async function SingerPage({
 
         <Card>
           <SectionLabel>Evidence and review</SectionLabel>
-          <h2 className="mt-3 text-xl">Evidence and review</h2>
+          <h2 id="evidence" className="mt-3 scroll-mt-24 text-xl">Evidence and review</h2>
           {reviewed ? (
             <>
               <p className="mt-3 max-w-3xl text-sm text-mut">
@@ -578,7 +590,7 @@ export default async function SingerPage({
 
         {/* How the voice works — the part a singer came for, and the only
             section here that is written rather than derived. */}
-        {s.technique && !isPriorityPending(s) && (
+        {s.technique && showCatalogCommentary && (
           <Card>
             <h2 className="text-xl">
               How {s.name} uses that range
@@ -601,7 +613,7 @@ export default async function SingerPage({
         <Card>
           <h2 className="text-xl">{question}</h2>
           <p className="mt-3 max-w-3xl text-mut">{answer}</p>
-          {!isPriorityPending(s) && (
+          {showCatalogCommentary && (
             <p className="mt-3 max-w-3xl text-sm text-mut">{s.blurb}</p>
           )}
           <dl className="mt-5">

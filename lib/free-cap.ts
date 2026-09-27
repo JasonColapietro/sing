@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { localDay, useProgress, type ActivityType, type ProgressState } from "./progress";
 import { useIsPro } from "./pro";
+import { FREE_DAILY_SEC } from "./practice-limits";
 
 /**
  * The free tier's daily allowance of guided practice.
@@ -18,7 +19,7 @@ import { useIsPro } from "./pro";
  * streak does, and needs no second store. A step already under way is never
  * cut off: the check runs where a session or a step starts.
  */
-export const FREE_DAILY_SEC = 180;
+export { FREE_DAILY_SEC } from "./practice-limits";
 
 export const CAPPED_TYPES: ReadonlySet<ActivityType> = new Set<ActivityType>([
   "warmup",
