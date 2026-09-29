@@ -74,6 +74,13 @@ const ARTIST_INTENT_CASES = [
     title: "Arijit Singh Vocal Range: Reported C3–C5 — Compare Yours",
     heading: "Arijit Singh Vocal Range: Reported C3–C5",
   },
+  {
+    slug: "adele",
+    name: "Adele",
+    opening: "Reviewed expert analysis describes Adele as a mezzo-soprano, with chest mix to E5. The displayed range of C3 to A#5 is a reported reference span, not an independently verified physiological limit.",
+    title: "Adele Vocal Range: Reported C3–A#5 | Compare Yours",
+    heading: "Adele Vocal Range: Reported C3–A#5",
+  },
 ] as const;
 
 const SPECIAL_TITLE_CASES: Readonly<Record<string, { title: string; opening: string }>> =
@@ -87,7 +94,7 @@ const VOICE_TYPE_QUERY_SLUGS: ReadonlySet<string> = new Set([
   "alex-warren",
   "sam-smith",
 ]);
-const PRIORITY_PENDING_SLUGS: ReadonlySet<string> = new Set([
+const ORIGINAL_PRIORITY_SLUGS: ReadonlySet<string> = new Set([
   "bruno-mars", "taylor-swift", "jeff-buckley", "billie-eilish",
 ]);
 const SINGER_RENDER_BATCH_SIZE = 32;
@@ -110,7 +117,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
       });
 
       expect(metadata.title).toEqual({ absolute: title });
-      if (PRIORITY_PENDING_SLUGS.has(slug)) expect(title.length).toBeLessThanOrEqual(60);
+      if (ORIGINAL_PRIORITY_SLUGS.has(slug)) expect(title.length).toBeLessThanOrEqual(60);
       expect(metadata.description).toMatch(new RegExp(`^${opening.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
@@ -140,17 +147,25 @@ describe("every singer page answers its vocal range and voice type intent", () =
       });
       const answerTitle = `${singer.name} Vocal Range: ${rangeLabel(singer)}`;
       const challengeTitle = `${answerTitle} — Can You Sing It?`;
-      const defaultTitle = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
-        ? `${singer.name} Voice Type: ${singer.voiceType} | Vocal Range ${rangeLabel(singer)}`
-        : challengeTitle.length <= 60
-          ? challengeTitle
-          : `${answerTitle} | Test Yours`;
-      const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
-        ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
-        : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
-      const defaultDescription = `${defaultOpening} See every note${
-        VOICE_TYPE_QUERY_SLUGS.has(singer.slug) ? "" : ", learn the voice type"
-      }, and take the free two-minute test to compare yours.`;
+      const pendingTitle = `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`;
+      const pendingChallenge = `${pendingTitle} | Compare Yours`;
+      const defaultTitle = !isSingerReviewed(singer.slug)
+        ? pendingChallenge.length <= 60 ? pendingChallenge : pendingTitle
+        : VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
+          ? `${singer.name} Voice Type: ${singer.voiceType} | Vocal Range ${rangeLabel(singer)}`
+          : challengeTitle.length <= 60
+            ? challengeTitle
+            : `${answerTitle} | Test Yours`;
+      const defaultOpening = !isSingerReviewed(singer.slug)
+        ? `Our catalog reports ${singer.name} at ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). Individual endpoint review is pending. Compare your range free.`
+        : VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
+          ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
+          : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
+      const defaultDescription = !isSingerReviewed(singer.slug)
+        ? defaultOpening
+        : `${defaultOpening} See every note${
+          VOICE_TYPE_QUERY_SLUGS.has(singer.slug) ? "" : ", learn the voice type"
+        }, and take the free two-minute test to compare yours.`;
       const correction = SPECIAL_TITLE_CASES[singer.slug];
       const title = correction?.title ?? defaultTitle;
       const opening = correction?.opening ?? defaultOpening;
@@ -194,12 +209,12 @@ describe("every singer page answers its vocal range and voice type intent", () =
         const html = renderToStaticMarkup(page).replaceAll("&#x27;", "'");
         const heading = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} Voice Type and Vocal Range`
-          : PRIORITY_PENDING_SLUGS.has(singer.slug) || isSingerReviewed(singer.slug)
-            ? `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`
-            : `${singer.name} Vocal Range: ${rangeLabel(singer)}`;
-        const defaultOpening = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
-          ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
-          : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
+          : `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`;
+        const defaultOpening = !isSingerReviewed(singer.slug)
+          ? `Our catalog reports ${singer.name} at ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). Individual endpoint review is pending. Compare your range free.`
+          : VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
+            ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
+            : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
         const opening = SPECIAL_TITLE_CASES[singer.slug]?.opening ?? defaultOpening;
 
         expect(html).toContain(
@@ -213,7 +228,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
     30_000,
   );
 
-  it.each(ARTIST_INTENT_CASES.filter(({ slug }) => PRIORITY_PENDING_SLUGS.has(slug)))(
+  it.each(ARTIST_INTENT_CASES.filter(({ slug }) => ORIGINAL_PRIORITY_SLUGS.has(slug)))(
     "$slug keeps unreviewed endpoints out of individual extrema claims",
     async ({ slug, name }) => {
       const page = await SingerPage({ params: Promise.resolve({ slug }) });
@@ -232,7 +247,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
     const html = renderToStaticMarkup(page);
 
     expect(html).toContain('href="https://jeffbuckley.com/faq-2/"');
-    expect(html).toContain("It does not verify this catalog&#x27;s exact E2 and D6 endpoints.");
+    expect(html).toContain("it does not verify this catalog&#x27;s exact E2–D6 endpoints.");
   });
 
   it("does not infer full-voice coverage from Billie's missing register marker", async () => {

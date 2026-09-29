@@ -37,9 +37,8 @@ export async function generateMetadata({
   const { type } = await params;
   const voice = voiceTypeFromSlug(type);
   if (!voice) return {};
-  const note = VOICE_TYPE_NOTES[voice];
   const title = `Famous ${voice} Vocal Ranges Compared`;
-  const description = `The cited vocal ranges of famous ${pluralVoice(voice.toLowerCase())} on one keyboard — ${note.summary}. Compare spans, full-voice ceilings and your own range.`;
+  const description = `Reported catalog spans for singers labeled ${pluralVoice(voice.toLowerCase())} on one keyboard. Compare the figures and check each profile's evidence status.`;
   return withCanonicalOpenGraph({
     title,
     description,
@@ -77,11 +76,11 @@ export default async function VoiceTypePage({
   const faq = [
     {
       q: `How high can a ${lower} sing?`,
-      a: `The conventional ${lower} band tops out around ${midiToLabel(band.high)}, but recorded ${pluralVoice(lower)} are cited well past it: the highest note among the ${list.length} ${pluralVoice(lower)} indexed here is ${midiToLabel(stats.highest.highMidi)}, cited for ${stats.highest.name}.`,
+      a: `The conventional ${lower} band tops out around ${midiToLabel(band.high)}. Among ${list.length} catalog profiles labeled ${pluralVoice(lower)}, the highest listed endpoint is ${midiToLabel(stats.highest.highMidi)} for ${stats.highest.name}; it is not a verified individual maximum.`,
     },
     {
       q: `How low can a ${lower} sing?`,
-      a: `Conventionally the ${lower} band bottoms out around ${midiToLabel(band.low)}. The lowest cited note among the ${pluralVoice(lower)} here is ${midiToLabel(stats.lowest.lowMidi)}, cited for ${stats.lowest.name}.`,
+      a: `Conventionally the ${lower} band bottoms out around ${midiToLabel(band.low)}. The lowest listed endpoint in this catalog category is ${midiToLabel(stats.lowest.lowMidi)} for ${stats.lowest.name}; check the profile before treating it as a verified performance.`,
     },
   ];
 
@@ -141,7 +140,7 @@ export default async function VoiceTypePage({
     <PageShell
       kicker="Voice type"
       title={`Famous ${pluralVoice(lower)}`}
-      subtitle={`Cited ranges on one keyboard — ${note.summary}.`}
+      subtitle={`Reported catalog ranges for singers labeled ${pluralVoice(lower)} — ${note.summary}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
@@ -185,7 +184,7 @@ export default async function VoiceTypePage({
           </h3>
           <ul className="mt-3 max-w-3xl space-y-2 text-sm text-mut">
             <li>
-              Widest cited span:{" "}
+              Largest reported catalog span:{" "}
               <Link
                 href={`/singers/${stats.widest.slug}`}
                 className="text-violet-ink underline decoration-violet/40 underline-offset-2"
@@ -206,14 +205,14 @@ export default async function VoiceTypePage({
             <li>
               {stats.lowest.slug === stats.highest.slug ? (
                 <>
-                  Both extremes belong to the same singer:{" "}
+                  Both listed endpoints belong to the same profile:{" "}
                   <Link
                     href={`/singers/${stats.lowest.slug}`}
                     className="text-violet-ink underline decoration-violet/40 underline-offset-2"
                   >
                     {stats.lowest.name}
                   </Link>{" "}
-                  holds the category&rsquo;s floor at{" "}
+                  has the category&rsquo;s listed floor at{" "}
                   {midiToLabel(stats.lowest.lowMidi)} and its ceiling at{" "}
                   {midiToLabel(stats.highest.highMidi)}, {""}
                   {stats.highest.highMidi - stats.lowest.lowMidi} semitones
@@ -221,14 +220,14 @@ export default async function VoiceTypePage({
                 </>
               ) : (
                 <>
-                  The group bottoms out at {midiToLabel(stats.lowest.lowMidi)} (
+                  The catalog group starts at {midiToLabel(stats.lowest.lowMidi)} (
                   <Link
                     href={`/singers/${stats.lowest.slug}`}
                     className="text-violet-ink underline decoration-violet/40 underline-offset-2"
                   >
                     {stats.lowest.name}
                   </Link>
-                  ) and tops out at {midiToLabel(stats.highest.highMidi)} (
+                  ) and ends at {midiToLabel(stats.highest.highMidi)} (
                   <Link
                     href={`/singers/${stats.highest.slug}`}
                     className="text-violet-ink underline decoration-violet/40 underline-offset-2"
@@ -242,16 +241,15 @@ export default async function VoiceTypePage({
             </li>
             <li>
               Prominence spans {stats.eraFrom} to {stats.eraTo}, and the median
-              cited span is {stats.medianSpanSemitones} semitones against{" "}
+              catalog span is {stats.medianSpanSemitones} semitones against{" "}
               {midiToLabel(band.low)}–{midiToLabel(band.high)} for the
               conventional {lower} band.
             </li>
           </ul>
           <p className="mt-5 text-xs text-dim">
             Voice categories are guides borrowed from choral and operatic
-            practice, not boxes. Plenty of these singers are filed differently
-            by different sources, and a category says more about where a voice
-            is comfortable than about the notes it can reach.
+            practice. Most artist labels and endpoints in this catalog await
+            individual evidence review; open a profile for its source status.
           </p>
         </Card>
 

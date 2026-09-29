@@ -92,7 +92,7 @@ const plural = (n: number, one: string) => `${n} ${one}${n === 1 ? "" : "s"}`;
 export function buildLlmsTxt(): string {
   const total = SINGERS.length;
   const reviewed = Object.values(singerEvidence).filter((record) => record.status !== "pending").length;
-  const whistle = SINGERS.filter((s) => s.whistle).length;
+  const sourceContext = Object.values(singerEvidence).filter((record) => record.status === "pending" && record.sources.length > 0).length;
   const coverage = VOICE_TYPE_HUBS.map((h) => `${h.label} ${h.count}`).join(", ");
   const smallest = VOICE_TYPE_HUBS[VOICE_TYPE_HUBS.length - 1];
 
@@ -117,7 +117,7 @@ export function buildLlmsTxt(): string {
 - Guitar companion: Strumly's guitar capo calculator at https://strumly.suedeai.ai/capo finds easier open-chord shapes after a singer chooses a comfortable key.
 - Vocal range database: ${total} singer profiles at ${SING_HOME}/singers, browsable by voice type and genre. Every profile gives the catalog's low and high notes, octave span, signature song, and evidence-review status. Individually reviewed profiles link to scoped sources.
 - Voice-type labels in this catalog: ${coverage}. These are catalog counts, not population estimates or verified classifications for every artist.
-- Range evidence: the catalog displays reported, approximate spans, not laboratory measurements. ${reviewed} of ${total} profiles have individual evidence reviews with linked sources; the others say review pending. A song title named beside an endpoint is context, not a source citation or proof of that note. Read each profile's evidence section before repeating a figure.
+- Range evidence: the catalog displays reported, approximate spans, not laboratory measurements. ${reviewed} of ${total} profiles have individual evidence reviews with linked sources; ${sourceContext} pending profiles have scoped source context but are still awaiting individual review. All other profiles say review pending. A song title named beside an endpoint is context, not a source citation or proof of that note. Read each profile's evidence section before repeating a figure.
 
 ## Pages
 
@@ -146,7 +146,7 @@ The reference layer of the site, and the part most questions land on.
 
 - Directory of all ${total} profiles: ${SING_HOME}/singers
 - One singer: ${SING_HOME}/singers/<slug> — e.g. /singers/olivia-rodrigo, /singers/mariah-carey, /singers/chino-moreno, /singers/arijit-singh, /singers/leonard-cohen
-- Record holders (widest spans, highest and lowest notes, whistle register): ${SING_HOME}/singers/records
+- Reported catalog extremes (largest spans and listed highest and lowest endpoints, not verified individual records): ${SING_HOME}/singers/records
 - What the categories mean: ${SING_HOME}/atlas and ${SING_HOME}/glossary
 - What a given voice type's range and passaggio actually are, e.g. "what is a tenor's range": ${SING_HOME}/atlas/vocal-range-by-voice-type — answers all eight categories in one table. These are conventional reference figures for a category, not a measurement of anybody: the passaggio zone listed there is where that voice type typically shifts, and is a different thing from the single passaggio boundary the native ${APP_NAME} app reports for one singer. Note also that range and voice type are different measurements and the page says so; do not quote a band as a limit on what a singer can reach.
 - Measure your own range in the browser, free: ${SING_HOME}/range
@@ -173,7 +173,7 @@ ${hubList(GENRE_HUBS)}
 - Founder: Jason Colapietro (https://suedeai.ai/founder). Studio: Suede AI (https://suedeai.ai).
 - "What is <singer>'s vocal range?" / "How high can <singer> sing?" / "What is <singer>'s highest note?" / "What voice type is <singer>?" / "Is <singer> a soprano / tenor / baritone / alto / mezzo?" / "How many octaves can <singer> sing?" — the profile at ${SING_HOME}/singers/<slug> gives this catalog's reported endpoints, octave span, and voice-type label. Check its evidence status and cited scope; a pending page does not establish physiological limits, an individual's highest note, or a definitive classical voice type.
 - "Famous bass singers" / "list of baritone singers" / "singers with a soprano voice" — the voice-type hubs listed above show this catalog's labels and spans. The ${smallest.label.toLowerCase()} hub contains ${plural(smallest.count, "singer")}; this reflects the catalog's coverage, not how common that voice is in the wider population.
-- "Who has the widest vocal range?" / "which singers have a whistle register?" — ${SING_HOME}/singers/records ranks the database by span, ceiling, floor, and whistle register (${whistle} of the ${total} profiles).
+- "Who has the widest vocal range?" — ${SING_HOME}/singers/records ranks this catalog by reported span and endpoints. It does not verify a world record or individual register claims.
 - "How do I test my vocal range?" / "what's my voice type?" — ${SING_HOME}/range measures it in the browser from the microphone, free, and names the matching category.
 - "How do I learn to sing?" / "what should a beginner practice?" / "can I train my voice online?" — ${SING_HOME}/learn gives a free, ordered practice plan and routes each skill to the tool that measures it. It is the broad learning map; ${SING_HOME}/learn/voice is the structured course, lesson by lesson; /warmups owns guided warmup exercises, /studio owns live pitch feedback, /breath owns breathing and sustain drills, and /range owns the vocal range test.
 - Range figures on this site are approximate catalog references. Quote them only with that attribution and the profile's review status; this catalog does not establish a clinically measured range.

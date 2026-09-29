@@ -14,6 +14,7 @@ export type EvidenceSourceKind =
   | "expert-profile"
   | "first-person-statement"
   | "licensed-score"
+  | "producer-interview"
   | "song-analysis";
 
 export interface SingerEvidenceSource {
@@ -60,6 +61,7 @@ const SOURCE_KINDS = new Set<EvidenceSourceKind>([
   "expert-profile",
   "first-person-statement",
   "licensed-score",
+  "producer-interview",
   "song-analysis",
 ]);
 const KNOWN_SLUGS = new Set(SINGERS.map((singer) => singer.slug));
@@ -226,6 +228,9 @@ export function voiceTypeEvidenceCopy(
   singer: Pick<Singer, "slug" | "name" | "voiceType">,
 ): string {
   const evidence = getSingerEvidence(singer.slug);
+  if (evidence.status === "pending" && evidence.voiceTypeCopy) {
+    return `${evidence.voiceTypeCopy} Individual evidence review is pending.`;
+  }
   return (
     evidence.voiceTypeCopy ??
     `The catalog lists ${singer.name} as a ${singer.voiceType.toLowerCase()}; individual evidence review is pending.`

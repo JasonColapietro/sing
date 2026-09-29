@@ -6,8 +6,8 @@ import { SINGERS, rangeLabel, spanOctaves, type Singer } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 
-const TITLE = "Who Has the Widest Vocal Range? The Extremes, Ranked";
-const DESCRIPTION = `The widest cited vocal ranges, deepest low notes and highest high notes among famous singers — ranked, with the caveats that belong on figures like these.`;
+const TITLE = "Who Has the Widest Vocal Range? Reported Catalog Rankings";
+const DESCRIPTION = `Compare the widest reported spans and lowest and highest catalog endpoints. Individual records require source review.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   title: TITLE,
@@ -39,7 +39,7 @@ function Table({
                 {s.name}
               </span>
               <span className="block truncate font-mono text-[10px] uppercase tracking-[0.1em] text-mut">
-                {s.voiceType} · {rangeLabel(s)}
+                Catalog label: {s.voiceType} · reported {rangeLabel(s)}
               </span>
             </span>
             <span className="tabular shrink-0 font-mono text-sm text-violet-ink">
@@ -58,10 +58,6 @@ export default function RecordsPage() {
   const highest = [...SINGERS]
     .sort((a, b) => b.highMidi - a.highMidi)
     .slice(0, 15);
-  const belters = SINGERS.filter((s) => s.beltMidi != null)
-    .sort((a, b) => b.beltMidi! - a.beltMidi!)
-    .slice(0, 15);
-  const whistlers = SINGERS.filter((s) => s.whistle);
 
   // The absolute phrasings people actually type — "ever", "in the world",
   // "biggest" — answered from the same computed rankings the tables render,
@@ -73,15 +69,15 @@ export default function RecordsPage() {
   const faq = [
     {
       q: "Who has the biggest vocal range in the world?",
-      a: `No figure like this is lab-verified, so "in the world" claims are really "in circulation" claims. Among the ${SINGERS.length} famous voices indexed here, the widest commonly cited range is ${w.name}'s ${rangeLabel(w)} — about ${spanOctaves(span(w))} octaves. Spans that wide run from growled subharmonics to whistle register, not one continuous singing voice.`,
+      a: `This catalog cannot establish a world record. Among its ${SINGERS.length} profiles, the largest reported span is ${w.name}'s ${rangeLabel(w)} — about ${spanOctaves(span(w))} octaves. Individual endpoint evidence must be checked before treating that as a verified performance.`,
     },
     {
       q: "What is the highest note ever sung?",
-      a: `Claims vary and the extremes are one-off recorded moments rather than repeatable notes. The highest note cited in this collection is ${midiToLabel(hi.highMidi)}, for ${hi.name} — whistle register, a different mechanism from the voice doing the work an octave down.`,
+      a: `This catalog does not establish the highest note ever sung. Its highest listed endpoint is ${midiToLabel(hi.highMidi)} for ${hi.name}; check that profile's evidence status before repeating the note as a verified performance.`,
     },
     {
       q: "What is the lowest note ever sung?",
-      a: `The lowest note cited in this collection is ${midiToLabel(lo.lowMidi)}, for ${lo.name}. Notes this low carry almost no acoustic power, so cited floors depend on a microphone doing much of the work — the deeper the claim, the more that caveat applies.`,
+      a: `This catalog does not establish the lowest note ever sung. Its lowest listed endpoint is ${midiToLabel(lo.lowMidi)} for ${lo.name}; individual source review is needed to verify the performance and note.`,
     },
   ];
 
@@ -98,7 +94,7 @@ export default function RecordsPage() {
         isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
         mainEntity: {
           "@type": "ItemList",
-          name: "Widest cited vocal ranges",
+          name: "Largest reported catalog spans",
           numberOfItems: widest.length,
           itemListOrder: "https://schema.org/ItemListOrderDescending",
           itemListElement: widest.map((s, i) => ({
@@ -125,8 +121,8 @@ export default function RecordsPage() {
   return (
     <PageShell
       kicker="Extremes"
-      title="The record holders"
-      subtitle="The widest spans, deepest floors and highest ceilings among famous voices — and why these particular numbers deserve the most scepticism."
+      title="Reported range extremes"
+      subtitle="The largest catalog spans and note endpoints, ranked with their evidence limits in view."
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
@@ -142,32 +138,24 @@ export default function RecordsPage() {
         <Card className="border-violet/40">
           <h2 className="text-xl">Read these with the most caution</h2>
           <p className="mt-3 max-w-3xl text-mut">
-            Record figures are the least reliable entries in any range
-            collection, and for a structural reason: a number only becomes a
-            record by being the most extreme claim in circulation, so the
-            selection process actively favours whichever source exaggerated
-            most. The rankings below are the figures fans and journalists
-            repeat, not measurements.
+            These rankings compare catalog values. Many profiles still await
+            individual endpoint review, so a position here is not a verified
+            performance record or a physiological limit.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            The two specific things to distrust: a span this wide usually splits
-            across registers a listener would not call the same voice — a
-            six-octave figure typically runs from a growled subharmonic to a
-            whistle — and the extreme note is often a single recorded moment,
-            sometimes one produced with studio help, rather than anything the
-            singer performs nightly.
+            Open an artist profile for its source status and scope. A written
+            song arrangement, a single recording, and a repeatable working
+            range answer different questions.
           </p>
         </Card>
 
         <Card>
           <h2>
-            <SectionLabel>Widest cited span</SectionLabel>
+            <SectionLabel>Largest reported catalog span</SectionLabel>
           </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            Measured from the lowest cited note to the highest, regardless of
-            register. This is the number people mean by &ldquo;who has the
-            widest vocal range&rdquo;, and the one that rewards the most
-            generous source.
+            Calculated from each profile&apos;s listed endpoints. It does not
+            verify that both notes were sung in the same performance or register.
           </p>
           <Table
             rows={widest}
@@ -177,12 +165,11 @@ export default function RecordsPage() {
 
         <Card>
           <h2>
-            <SectionLabel>Deepest cited floor</SectionLabel>
+            <SectionLabel>Lowest listed endpoint</SectionLabel>
           </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            Very low notes are easier to claim than to use: below roughly F2 the
-            voice loses volume fast, so many cited floors are audible only in
-            isolation or with a microphone doing much of the work.
+            The source and recording for a low endpoint need individual review
+            before it can be described as a singer&apos;s lowest note.
           </p>
           <Table
             rows={lowest}
@@ -192,60 +179,17 @@ export default function RecordsPage() {
 
         <Card>
           <h2>
-            <SectionLabel>Highest cited ceiling</SectionLabel>
+            <SectionLabel>Highest listed endpoint</SectionLabel>
           </h2>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            Nearly everything at the top of this list is whistle register or
-            developed falsetto rather than full voice — a different mechanism
-            from the one doing the work lower down.
+            The source, performance, and register for a high endpoint need
+            individual review before it can be described as a singer&apos;s
+            highest note.
           </p>
           <Table
             rows={highest}
             value={(s) => midiToLabel(s.highMidi)}
           />
-        </Card>
-
-        <Card>
-          <h2>
-            <SectionLabel>Highest full voice</SectionLabel>
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm text-mut">
-            The more meaningful ranking for most singers: the top of the belted,
-            chest-dominant register rather than the top of the whole range.
-            Restricted to the voices here with a cited full-voice ceiling.
-          </p>
-          <Table
-            rows={belters}
-            value={(s) => midiToLabel(s.beltMidi!)}
-          />
-        </Card>
-
-        <Card>
-          <h2>
-            <SectionLabel>Whistle register</SectionLabel>
-          </h2>
-          <p className="mt-3 max-w-3xl text-sm text-mut">
-            The singers here are documented using whistle register — a separate
-            mechanism above the head voice, and the reason the top of this
-            library reaches as far as it does.
-          </p>
-          <ul className="mt-4 flex flex-wrap gap-2">
-            {whistlers
-              .sort((a, b) => b.highMidi - a.highMidi)
-              .map((s) => (
-                <li key={s.slug}>
-                  <Link
-                    href={`/singers/${s.slug}`}
-                    className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-violet"
-                  >
-                    {s.name}
-                    <span className="tabular font-mono text-[10px] text-violet-ink">
-                      {midiToLabel(s.highMidi)}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-          </ul>
         </Card>
 
         {/* The absolute questions, in the words people search — same array as

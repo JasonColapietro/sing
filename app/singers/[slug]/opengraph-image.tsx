@@ -51,7 +51,7 @@ export default async function Image({
             fontWeight: 600,
           }}
         >
-          VOCAL RANGE
+          REPORTED RANGE
         </div>
         <div style={{ marginTop: 18, fontSize: 64, fontWeight: 700 }}>
           {s.name}
@@ -60,7 +60,7 @@ export default async function Image({
           {`${midiToLabel(s.lowMidi)} — ${midiToLabel(s.highMidi)}`}
         </div>
         <div style={{ marginTop: 12, fontSize: 28, color: "#5c564d" }}>
-          {`${s.voiceType} · ${describeSpan(semis)} · ${semis} semitones`}
+          {`Catalog label: ${s.voiceType} · ${describeSpan(semis)} · ${semis} semitones`}
         </div>
 
         {/* Chromatic keyboard band */}

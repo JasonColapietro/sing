@@ -4,7 +4,7 @@ import { HubOgCard } from "@/components/singers/og-card";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "The widest cited vocal ranges, ranked";
+export const alt = "Reported catalog vocal range extremes, ranked";
 
 export default function Image() {
   const rows = [...SINGERS]
@@ -17,7 +17,7 @@ export default function Image() {
     (
       <HubOgCard
         kicker="Extremes"
-        title="The record holders"
+        title="Reported catalog extremes"
         stat={`The widest voices in the library — up to ${spanOctaves(rows[0].highMidi - rows[0].lowMidi)} octaves`}
         rows={rows}
         axisLow={axisLow}
