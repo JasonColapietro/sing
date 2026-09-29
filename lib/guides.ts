@@ -72,19 +72,19 @@ export const RANGE_GUIDE: GuideContent = {
     heading: "Your first number is a starting line, not a verdict",
     body: "Your first result reflects what you can coordinate today under the conditions of this test. Technique, microphone setup, and how honestly you stop at the edges all affect the number.",
     points: [
-      "Do not compare your first test to a famous singer's published range; those figures often collect extreme notes across years of recordings",
-      "If the top of your range feels like a wall, you are probably holding chest voice too high; let the tone go light and airy and keep climbing",
+      "Use singer comparisons as reference, not a target or a grade; a reported span may combine notes from different recordings and conditions",
+      "Stop rather than push past discomfort when a note feels out of reach. The test cannot tell you why a note is difficult or prescribe a technique to reach it",
       "Retest after several practice sessions instead of chasing a larger number in the same sitting",
       "Judge useful range by the notes you can sing clearly and repeatably, not by one extreme sound",
     ],
   },
   advanced: {
     heading: "Track the range you can use, not the one you can reach",
-    body: "Once the extremes are stable, the interesting number is the working range — the span where tone stays even and you would happily perform. That is the part that grows with training, and it grows from the middle outward.",
+    body: "A test records notes detected in one session. Your working range is the span you can sing comfortably and repeatably; keep that distinction when choosing songs or reviewing progress.",
     points: [
       "Log the test under fixed conditions (same time, same warmup) so the trend is signal rather than schedule",
-      "Watch where the tone changes character on the way up — that passaggio moving, or smoothing, is a better progress marker than a new top note",
-      "Compare your span against the singer library to find voices built like yours, then study how they handle their upper middle",
+      "Note where tone or effort changes, without treating the pitch trace as a diagnosis of register behavior",
+      "Explore overlapping reported spans in the singer library, while remembering that shared notes do not establish the same anatomy, voice type, or technique",
       "Suede Pro charts every test over time, so the range line and your accuracy trend sit on the same page",
     ],
   },
@@ -95,7 +95,7 @@ export const RANGE_GUIDE: GuideContent = {
     },
     {
       q: "How high can I sing?",
-      a: "As high as you can hold a clear, comfortable tone — that ceiling is exactly what this test finds. Most voices reach further than they think once they let go of chest weight and allow head voice or falsetto to carry the top. Test it, then compare your ceiling against the famous voices in the singer library.",
+      a: "The test reports the highest clear note it detects in this session, not a prediction of your maximum or a target to exceed. Stay within a comfortable volume and effort, and stop if you feel pain or strain. A singer's reported reference span is not a prescription for your voice.",
     },
     {
       q: "How many octaves should I have?",
@@ -111,7 +111,7 @@ export const RANGE_GUIDE: GuideContent = {
     },
     {
       q: "Can I increase my vocal range?",
-      a: "The ends usually move some with training, mostly because register transitions get easier rather than because the vocal folds change. The larger and faster gain is in the range you can use well: notes that were reachable but unreliable become dependable.",
+      a: "This test cannot predict whether or how much your range will change. Track comfortable, repeatable notes under similar conditions rather than chasing a larger span. For individual technique advice, work with a qualified voice teacher; pain or lasting voice changes need clinical assessment.",
     },
     {
       q: "Why is my range different every time I test?",
@@ -122,7 +122,7 @@ export const RANGE_GUIDE: GuideContent = {
     {
       href: "/warmups",
       label: "Warmups",
-      note: "Warm the voice before testing — a cold range test reads low.",
+      note: "Keep your warmup conditions consistent when comparing tests.",
     },
     {
       href: "/singers",
@@ -132,7 +132,7 @@ export const RANGE_GUIDE: GuideContent = {
     {
       href: "/studio",
       label: "Pitch studio",
-      note: "Practice holding the notes at the edges of your range.",
+      note: "Practice steady notes within your comfortable range.",
     },
     {
       href: "/glossary",

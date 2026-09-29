@@ -74,6 +74,15 @@ describe("singer editorial trust routes", () => {
     }
   });
 
+  it("helps readers compare sources and reach their own test", () => {
+    const html = renderToStaticMarkup(<MethodologyPage />);
+    expect(html).toContain("Why do vocal range websites disagree?");
+    expect(html).toContain("same recording");
+    expect(html).toContain("octave numbering");
+    expect(html).toContain('href="/range"');
+    expect(html).toContain('href="/singers/olivia-rodrigo#evidence"');
+  });
+
   it("uses the same disclaimer on the singer hub and an artist page", async () => {
     const hub = renderToStaticMarkup(<SingersPage />);
     const artist = renderToStaticMarkup(

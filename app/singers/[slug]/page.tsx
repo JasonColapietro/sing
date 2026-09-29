@@ -13,15 +13,12 @@ import {
   voiceTypeSlug,
   wikipediaUrl,
 } from "@/lib/singers";
-import {
-  observationsFor,
-  sharesHigh,
-  sharesLow,
-} from "@/lib/singers-analysis";
+import { sharesHigh, sharesLow } from "@/lib/singers-analysis";
 import {
   getSingerEvidence,
   groupEvidenceSources,
   isSingerReviewed,
+  singerReviewLabel,
   voiceTypeEvidenceCopy,
 } from "@/lib/singer-evidence";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
@@ -48,6 +45,13 @@ interface Params {
 type SearchIntent = "voice-type" | "vocal-range";
 
 type SingerRecord = (typeof SINGERS)[number];
+
+/** September 27 CTR pilot; keep recently revised singer snippets stable. */
+const COMPARISON_SEARCH_SLUGS: ReadonlySet<string> = new Set([
+  "celine-dion",
+  "peter-steele",
+  "michael-jackson",
+]);
 
 function isPending(s: SingerRecord): boolean {
   return !isSingerReviewed(s.slug);
@@ -77,13 +81,16 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
 }
 
 function queryAlignedTitle(s: SingerRecord): string {
+  if (COMPARISON_SEARCH_SLUGS.has(s.slug)) {
+    return `${s.name} Vocal Range & Voice Type | Compare Yours`;
+  }
   if (isPending(s)) {
     const answer = `${s.name} Vocal Range: Reported ${rangeLabel(s)}`;
     const challenge = `${answer} | Compare Yours`;
     return challenge.length <= 60 ? challenge : answer;
   }
   const reviewedTitles: Record<string, string> = {
-    "olivia-rodrigo": "Olivia Rodrigo Voice Type: Classifications Vary | Reported Vocal Range B2–A#5",
+    "olivia-rodrigo": "Olivia Rodrigo Vocal Range & Voice Type | Test Yours",
     "reba-mcentire": "Reba McEntire Voice Type: Classifications Vary | Reported Vocal Range E3–F5",
     "alex-warren": "Alex Warren Voice Type: Evidence Does Not Establish a Definitive Type | Reported Vocal Range A2–F#4",
     "sam-smith": "Sam Smith Voice Type: Baritone-to-Tenor Territory | Reported Vocal Range G2–C6",
@@ -123,7 +130,11 @@ export async function generateMetadata({
   const s = singerBySlug(slug);
   if (!s) return {};
   const title = queryAlignedTitle(s);
-  const description = queryAlignedDescription(s);
+  const description = s.slug === "olivia-rodrigo"
+    ? "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes."
+    : COMPARISON_SEARCH_SLUGS.has(s.slug) && isPending(s)
+      ? `Explore ${s.name}'s reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.`
+      : queryAlignedDescription(s);
   const canonical = `${SITE_URL}/singers/${s.slug}`;
   return {
     title: { absolute: title },
@@ -197,7 +208,6 @@ export default async function SingerPage({
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
-  const observations = isPending(s) ? [] : observationsFor(s).slice(0, 5);
   const lowMates = sharesLow(s).slice(0, 8);
   const highMates = sharesHigh(s).slice(0, 8);
 
@@ -307,7 +317,9 @@ export default async function SingerPage({
       actions={
         <>
           <LinkButton href={`/range?compare=${s.slug}`} size="md">
-            Test my range →
+            {COMPARISON_SEARCH_SLUGS.has(s.slug)
+              ? "Compare my range — free test →"
+              : "Test my range →"}
           </LinkButton>
           <LinkButton href="/singers" variant="outline" size="md">
             ← All singers
@@ -329,7 +341,7 @@ export default async function SingerPage({
                 {index === breadcrumbs.length - 1 ? (
                   <span aria-current="page">{breadcrumb.name}</span>
                 ) : (
-                  <Link href={breadcrumb.href} className="hover:text-violet-ink">
+                  <Link href={breadcrumb.href} className="inline-flex min-h-11 items-center hover:text-violet-ink">
                     {breadcrumb.name}
                   </Link>
                 )}
@@ -340,6 +352,12 @@ export default async function SingerPage({
 
         {/* Big readout */}
         <Card>
+          <p className="mb-4 text-sm text-mut">
+            {singerReviewLabel(s.slug)}{" · "}
+            <a href="#evidence" className="text-violet-ink underline underline-offset-4">
+              Read sources and limitations
+            </a>
+          </p>
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <SectionLabel>Reported reference span</SectionLabel>
@@ -377,7 +395,7 @@ export default async function SingerPage({
 
         <Card>
           <SectionLabel>Evidence and review</SectionLabel>
-          <h2 className="mt-3 text-xl">Evidence and review</h2>
+          <h2 id="evidence" className="mt-3 scroll-mt-24 text-xl">Evidence and review</h2>
           {reviewed ? (
             <>
               <p className="mt-3 max-w-3xl text-sm text-mut">
@@ -470,34 +488,10 @@ export default async function SingerPage({
           </div>
         </Card>
 
-        {/* How the voice works — the part a singer came for, and the only
-            section here that is written rather than derived. */}
-        {s.technique && !isPending(s) && (
-          <Card>
-            <h2 className="text-xl">
-              How {s.name} uses that range
-            </h2>
-            <p className="mt-3 max-w-3xl text-mut">{s.technique}</p>
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <LinkButton href="/warmups" variant="outline" size="sm">
-                Warm up for this
-              </LinkButton>
-              <span className="text-xs text-dim">
-                A description of the sound, not a technique to copy wholesale —
-                the top of anyone&rsquo;s cited range is the least imitable part
-                of it.
-              </span>
-            </div>
-          </Card>
-        )}
-
         {/* The answer, in prose a search snippet can lift */}
         <Card>
           <h2 className="text-xl">{question}</h2>
           <p className="mt-3 max-w-3xl text-mut">{answer}</p>
-          {!isPending(s) && (
-            <p className="mt-3 max-w-3xl text-sm text-mut">{s.blurb}</p>
-          )}
           <dl className="mt-5">
             <div>
               <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -506,23 +500,6 @@ export default async function SingerPage({
               <dd className="mt-1 text-sm">{s.signatureSong}</dd>
             </div>
           </dl>
-          {observations.length > 0 && (
-            <>
-              <h3 className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                Reading the numbers
-              </h3>
-              <ul className="mt-3 max-w-3xl space-y-2">
-                {observations.map((o) => (
-                  <li key={o.id} className="flex gap-3 text-sm text-mut">
-                    <span aria-hidden="true" className="text-violet-ink">
-                      ·
-                    </span>
-                    <span>{o.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
           <p className="mt-5 text-xs text-dim">
             Reported catalog figures, not lab measurements — an endpoint may be
             an isolated performance and does not describe an everyday singing range.

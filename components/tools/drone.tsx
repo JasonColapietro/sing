@@ -136,7 +136,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
         <legend className="mb-2 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           Root note
         </legend>
-        <div className="grid grid-cols-6 gap-1.5">
+        <div className="grid grid-cols-6 gap-2">
           {NOTE_NAMES.map((name, pc) => {
             const isPlaying =
               playingMidi !== null && ((playingMidi % 12) + 12) % 12 === pc;
@@ -147,7 +147,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
                 aria-label={`Start drone on ${name}${octave}`}
                 aria-pressed={isPlaying}
                 onClick={() => pickNote(pc)}
-                className={`rounded-lg border py-2 font-mono text-sm transition-colors ${
+                className={`min-h-11 rounded-lg border py-2 font-mono text-sm transition-colors ${
                   isPlaying
                     ? "border-violet bg-violet text-[#241a05]"
                     : pc === rootPc
@@ -178,7 +178,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
               type="button"
               aria-pressed={octave === o}
               onClick={() => pickOctave(o)}
-              className={`rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
+              className={`min-h-11 min-w-11 rounded-full border px-3 py-1 font-mono text-xs transition-colors ${
                 octave === o
                   ? "border-violet bg-panel2 text-violet-ink"
                   : "border-line text-mut hover:border-line2 hover:text-ink"
@@ -204,7 +204,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
             step={0.01}
             value={gain}
             onChange={(e) => setGain(Number(e.target.value))}
-            className="accent-violet h-6 w-32 cursor-pointer"
+            className="accent-violet h-11 w-32 cursor-pointer"
           />
         </div>
       </div>

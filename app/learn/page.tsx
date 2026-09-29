@@ -4,6 +4,7 @@ import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SINGERS } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import {
   VOCAL_LEARNING_FAQ,
   VOCAL_LEARNING_PATHS,
@@ -197,6 +198,16 @@ export default function LearnPage() {
 
       <div className="space-y-8">
         <Card>
+          <h2 className="text-xl">What is free?</h2>
+          <p className="mt-3 max-w-3xl text-mut">
+            The range test, pitch studio, recorder, and tools are free without a
+            practice timer. Guided practice includes {FREE_DAILY_MINUTES} minutes a day
+            shared across warmups, ear training, breath, and song practice.
+            {" "}<Link href="/pro" className="text-violet-ink underline underline-offset-4">Pro</Link>{" "}
+            removes that guided-practice cap. The written guide is free to read.
+          </p>
+        </Card>
+        <Card>
           <SectionLabel>Start here</SectionLabel>
           <h2 className="mt-3 text-2xl">Choose the problem you want to solve</h2>
           <p className="mt-3 max-w-3xl text-mut">
@@ -228,11 +239,17 @@ export default function LearnPage() {
 
         <Card>
           <SectionLabel>A repeatable session</SectionLabel>
-          <h2 className="mt-3 text-2xl">The 20-minute beginner vocal workout</h2>
+          <h2 className="mt-3 text-2xl">An example 20-minute practice plan</h2>
           <p className="mt-3 max-w-3xl text-mut">
             A useful session has four jobs: prepare the voice, train one skill,
-            use it in music, and collect evidence. Twenty focused minutes beats
-            an hour of singing everything at full volume.
+            use it in music, and listen back. This is an adaptable example, not a
+            required duration or a promise of results. Shorten it to suit your
+            experience and comfort; do not push through discomfort to finish a timer.
+          </p>
+          <p className="mt-3 max-w-3xl text-mut">
+            For a free self-directed session, use the pitch studio and recorder
+            after your guided allowance. Continuing with timed guided exercises
+            in the app requires Pro once that shared allowance is used.
           </p>
           <ol className="mt-6 grid gap-4 md:grid-cols-4">
             {[

@@ -1,10 +1,11 @@
 import { ImageResponse } from "next/og";
 import { midiToLabel } from "@/lib/audio/notes";
 import { describeSpan, singerBySlug } from "@/lib/singers";
+import { singerReviewLabel } from "@/lib/singer-evidence";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "Vocal range on a keyboard";
+export const alt = "Reported vocal range reference span on a keyboard, with evidence review status";
 
 const BLACK_PCS = new Set([1, 3, 6, 8, 10]);
 
@@ -44,14 +45,14 @@ export default async function Image({
       >
         <div
           style={{
-            marginTop: 84,
+            marginTop: 60,
             fontSize: 26,
             letterSpacing: 10,
             color: "#c59642",
             fontWeight: 600,
           }}
         >
-          REPORTED RANGE
+          REPORTED VOCAL RANGE
         </div>
         <div style={{ marginTop: 18, fontSize: 64, fontWeight: 700 }}>
           {s.name}
@@ -60,7 +61,10 @@ export default async function Image({
           {`${midiToLabel(s.lowMidi)} — ${midiToLabel(s.highMidi)}`}
         </div>
         <div style={{ marginTop: 12, fontSize: 28, color: "#5c564d" }}>
-          {`Catalog label: ${s.voiceType} · ${describeSpan(semis)} · ${semis} semitones`}
+          {`${describeSpan(semis)} · ${semis} semitones`}
+        </div>
+        <div style={{ marginTop: 12, fontSize: 22, color: "#5c564d" }}>
+          {`${singerReviewLabel(s.slug)} · Not a training target`}
         </div>
 
         {/* Chromatic keyboard band */}

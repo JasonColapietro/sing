@@ -215,6 +215,13 @@ export function getSingerReviewStatus(slug: string): SingerReviewStatus {
   return getSingerEvidence(slug).status;
 }
 
+/** Shared by the visible answer and share image; review is not endpoint verification. */
+export function singerReviewLabel(slug: string): string {
+  const status = getSingerReviewStatus(slug);
+  if (status === "disputed") return "Evidence disputed";
+  return status === "reviewed" ? "Sources reviewed" : "Individual review pending";
+}
+
 /** `disputed` still means a human reviewed the record and its sources. */
 export function isSingerReviewed(slug: string): boolean {
   return getSingerReviewStatus(slug) !== "pending";

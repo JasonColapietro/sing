@@ -138,6 +138,11 @@ cases is the vibrato itself, not error.
 
 ## Breath gate
 
+Use `--case="breathe and sing"` to isolate a named case. Unknown case names
+fail instead of reporting a zero-case success. The cue fixture sings for five
+seconds to clear the four-second target after microphone frame windowing;
+the sustain fixtures still measure four-second holds.
+
 `npm run e2e:breath -- [baseUrl] --executable=/opt/pw-browsers/chromium` plays
 synthetic scenes from `lib/audio/breath-fixture.ts` into `/breath` as the fake
 microphone and checks what the breath gate did, through the
@@ -161,3 +166,15 @@ perfectly held G4 into a one-note loop of Silent Night and requires every loop
 to score at least 95%. It guards the songs player's lag-aware loop close:
 while loops closed on the audio clock, the last reports of each loop's final
 note arrived after that loop was already scored, and this run read 77–81%.
+
+## Navigation journeys
+
+`node e2e/navigation.mjs [baseUrl]` opens every main-menu destination at
+320, 375, 768, and 1280px. It checks real link clicks, 44px tab targets,
+headings, horizontal overflow, Escape focus restoration, drawer cleanup when
+crossing the desktop breakpoint, and removal of the tab fade at the scroll
+end. It uses isolated browser contexts and never signs in or starts checkout.
+
+The general audit also covers `/voice`, `/can-you-sing`, and a popular-song
+detail. Template discovery excludes static hubs so singer-detail coverage
+cannot accidentally select `/singers/methodology` or `/singers/records`.
