@@ -117,7 +117,7 @@ export default function Image() {
         </div>
 
         <div style={{ marginTop: 34, fontSize: 22, color: "#8a8272" }}>
-          {`Commonly cited figures · test your own range free`}
+          {`Reported catalog figures · test your own range free`}
         </div>
       </div>
     ),

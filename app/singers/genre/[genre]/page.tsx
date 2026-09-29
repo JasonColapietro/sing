@@ -40,7 +40,7 @@ export async function generateMetadata({
   const list = singersByGenre(g);
   const stats = statsFor(list);
   const title = `${g} Singers' Vocal Ranges Compared`;
-  const description = `The cited vocal ranges of famous ${g} singers on one keyboard, from ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}. Compare spans and overlay your own range free.`;
+  const description = `Reported catalog ranges for ${g} singers on one keyboard, from ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}. Check each profile's evidence status.`;
   return withCanonicalOpenGraph({
     title,
     description,
@@ -111,7 +111,7 @@ export default async function GenrePage({
     <PageShell
       kicker="Genre"
       title={`${g} vocal ranges`}
-      subtitle={`${g} voices on one keyboard, ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`}
+      subtitle={`${g} catalog profiles on one keyboard, with reported endpoints from ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
@@ -149,7 +149,7 @@ export default async function GenrePage({
           <h2 className="text-xl">How ranges sit in {g}</h2>
           <ul className="mt-4 max-w-3xl space-y-2 text-sm text-mut">
             <li>
-              The median cited span across these voices is{" "}
+              The median reported catalog span across these profiles is{" "}
               {stats.medianSpanSemitones} semitones —{" "}
               {vsLibrary === 0
                 ? "level with the library as a whole"
@@ -159,21 +159,21 @@ export default async function GenrePage({
               .
             </li>
             <li>
-              Widest here is{" "}
+              Largest reported span here is{" "}
               <Link
                 href={`/singers/${stats.widest.slug}`}
                 className="text-violet-ink underline decoration-violet/40 underline-offset-2"
               >
                 {stats.widest.name}
               </Link>{" "}
-              ({rangeLabel(stats.widest)}); the deepest floor belongs to{" "}
+              ({rangeLabel(stats.widest)}); the lowest listed endpoint belongs to{" "}
               <Link
                 href={`/singers/${stats.lowest.slug}`}
                 className="text-violet-ink underline decoration-violet/40 underline-offset-2"
               >
                 {stats.lowest.name}
               </Link>{" "}
-              at {midiToLabel(stats.lowest.lowMidi)} and the highest ceiling to{" "}
+              at {midiToLabel(stats.lowest.lowMidi)} and the highest listed endpoint to{" "}
               <Link
                 href={`/singers/${stats.highest.slug}`}
                 className="text-violet-ink underline decoration-violet/40 underline-offset-2"
@@ -183,13 +183,18 @@ export default async function GenrePage({
               at {midiToLabel(stats.highest.highMidi)}.
             </li>
             <li>
-              Voice categories here, most common first:{" "}
+              Catalog voice labels here, most common first:{" "}
               {mixSorted
                 .map(([type, n]) => `${type.toLowerCase()}${n === 1 ? "" : "s"}`)
                 .join(", ")}
               .
             </li>
           </ul>
+          <p className="mt-5 text-xs text-dim">
+            These comparisons use catalog values. Most individual endpoints and
+            voice labels are pending evidence review; open a singer profile for
+            its source status.
+          </p>
         </Card>
 
         <Card>

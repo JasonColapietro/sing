@@ -76,6 +76,18 @@ describe("singer evidence", () => {
     expect(getSingerLastModified("aaliyah")).toBeUndefined();
   });
 
+  it.each(["jeff-buckley", "luciano-pavarotti", "jungkook", "peter-steele", "tom-jones", "paul-mccartney", "jimin"])(
+    "keeps collected source context for %s pending until human review",
+    (slug) => {
+      const evidence = getSingerEvidence(slug);
+      expect(evidence.status).toBe("pending");
+      expect(evidence.sources).toHaveLength(1);
+      expect(evidence.sources[0].scope).toMatch(/does not|not a/i);
+      expect(evidence.reviewedBy).toBeUndefined();
+      expect(getSingerLastModified(slug)).toBeUndefined();
+    },
+  );
+
   it("uses reviewed and pending voice-type language without overstating a catalog label", () => {
     expect(
       voiceTypeEvidenceCopy({

@@ -96,9 +96,9 @@ export const QUERY_OWNERSHIP: readonly QueryCluster[] = [
     pages: [
       {
         href: "/singers",
-        question: "What is this singer's cited range, and how does mine compare?",
+        question: "What range does the catalog report for this singer, and how does mine compare?",
         scopeLine:
-          "This page is the chart: every cited range on one keyboard, filterable, with your own range overlaid on top of them.",
+          "This page is the chart: every reported catalog range on one keyboard, filterable, with your own range overlaid on top of them.",
         descriptionMark: "on one keyboard",
       },
       {

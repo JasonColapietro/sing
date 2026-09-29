@@ -18,7 +18,7 @@ import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
-const DESCRIPTION = `The vocal ranges of famous singers on one keyboard — whistle notes to the deepest basses. Overlay your own range free.`;
+const DESCRIPTION = `Reported catalog ranges for famous singers on one keyboard. Check each profile's evidence status and compare your own range free.`;
 
 const VOCAL_RANGE_PRIORITY_SINGERS = VOCAL_RANGE_PRIORITY_SLUGS.map((slug) => {
   const singer = SINGERS.find((candidate) => candidate.slug === slug);
@@ -41,18 +41,18 @@ function buildFaq() {
   return [
     {
       q: "Who has the widest vocal range?",
-      a: `Of the ${total} singers indexed here, ${r.widest.name} has the widest commonly cited range: ${rangeLabel(r.widest)}, about ${spanOctaves(r.widest.highMidi - r.widest.lowMidi)} octaves.`,
+      a: `Among ${total} catalog profiles, ${r.widest.name} has the largest reported span: ${rangeLabel(r.widest)}, about ${spanOctaves(r.widest.highMidi - r.widest.lowMidi)} octaves. This is a catalog ranking, not a verified individual record.`,
     },
     {
       q: "What is the lowest note sung by a famous singer?",
-      a: `The lowest note in this index is ${r.lowest.name}'s ${rangeLabel(r.lowest).split("–")[0]}. ${r.lowest.name} is cited at ${rangeLabel(r.lowest)}.`,
+      a: `The lowest catalog endpoint is ${rangeLabel(r.lowest).split("–")[0]}, listed for ${r.lowest.name}. The profile's evidence status determines what the source material actually supports.`,
     },
     {
       q: "What is the highest note sung by a famous singer?",
-      a: `The highest note in this index is ${r.highest.name}'s ${rangeLabel(r.highest).split("–")[1]}. ${r.highest.name} is cited at ${rangeLabel(r.highest)}.`,
+      a: `The highest catalog endpoint is ${rangeLabel(r.highest).split("–")[1]}, listed for ${r.highest.name}. It is not a verified highest note without individual source review.`,
     },
     {
-      q: "What does a singer's “cited range” actually mean?",
+      q: "What does a singer's reported range mean?",
       a: SINGER_RANGE_DISCLAIMER,
     },
     {
@@ -118,7 +118,7 @@ export default function SingersPage() {
     <PageShell
       kicker="Reference"
       title="Famous vocal ranges"
-      subtitle="The commonly cited ranges of famous singers, every one on the same keyboard."
+      subtitle="Reported catalog ranges for famous singers, every one on the same keyboard."
       actions={
         <LinkButton href="/range" size="md">
           Test my vocal range →
@@ -133,7 +133,7 @@ export default function SingersPage() {
           voices. Both opened on "famous singers' vocal ranges", so each carried
           half of one query; the line below says which page answers what. */}
       <p className="max-w-3xl text-mut">
-        This page is the chart: every cited range on one keyboard, filterable,
+        This page is the chart: every reported catalog range on one keyboard, filterable,
         with your own range overlaid on top of them. It reports the figures
         rather than explaining them. The{" "}
         <Link href="/atlas" className="text-violet-ink hover:underline">
@@ -228,7 +228,7 @@ export default function SingersPage() {
 
         <div className="mt-8">
           <LinkButton href="/singers/records" variant="outline" size="sm">
-            The widest, lowest and highest, ranked →
+            Catalog extremes, ranked →
           </LinkButton>
         </div>
       </section>

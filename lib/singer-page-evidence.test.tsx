@@ -85,6 +85,29 @@ describe("singer-page evidence and provenance", () => {
     expect(page).not.toHaveProperty("dateModified");
     expect(page).not.toHaveProperty("reviewedBy");
     expect(page).not.toHaveProperty("citation");
+    expect(html).toContain("Rihanna Vocal Range: Reported");
+    expect(html).not.toContain("Rihanna’s highest note is commonly cited as");
+    expect(html).not.toContain("Full voice to");
+  });
+
+  it.each([
+    ["jeff-buckley", "https://jeffbuckley.com/faq-2/"],
+    ["luciano-pavarotti", "https://archives.metopera.org/MetOperaSearch/record.jsp?dockey=0374846"],
+    ["jungkook", "https://es.rollingstone.com/jung-kook-entre-el-exito-como-solista-y-su-faceta-como-compositor-de-bts-soy-una-persona-despreocupada-y-sincera/"],
+    ["peter-steele", "https://www.metalsucks.net/2011/04/12/metalsucks-exclusive-one-year-later-peter-steeles-people-speak-about-his-life-his-music-and-his-last-days/"],
+    ["tom-jones", "https://www.tomjones.com/blog/reviews/las-vegas-review-journal"],
+    ["paul-mccartney", "https://www.thebeatles.com/youll-be-mine"],
+    ["jimin", "https://magazine.weverse.io/article/view/1170?lang=en"],
+  ])("shows scoped source context for pending %s without review schema", async (slug, url) => {
+    const html = await rendered(slug);
+    const page = graphFrom(html)["@graph"].find((node) => node["@type"] === "WebPage")!;
+
+    expect(html).toContain(`href="${url.replaceAll("&", "&amp;")}"`);
+    expect(html).toContain("Source context awaiting individual review");
+    expect(html).toContain("They do not verify");
+    expect(page).not.toHaveProperty("reviewedBy");
+    expect(page).not.toHaveProperty("dateModified");
+    expect(page).not.toHaveProperty("citation");
   });
 
   it.each([
@@ -103,8 +126,8 @@ describe("singer-page evidence and provenance", () => {
     expect(page.description).toContain("Individual endpoint review is pending");
     expect(page).not.toHaveProperty("reviewedBy");
     expect(page).not.toHaveProperty("citation");
-    expect(person.description).toContain(`The catalog lists ${name}`);
-    expect(person.description).toContain("individual evidence review is pending");
+    expect(person.description).toContain(name);
+    expect(String(person.description)).toMatch(/individual evidence review is pending/i);
     expect(JSON.stringify(faq)).toContain(`What voice type is ${name}?`);
   });
 

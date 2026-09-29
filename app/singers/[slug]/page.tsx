@@ -1,25 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { altSpelling, midiToLabel } from "@/lib/audio/notes";
+import { midiToLabel } from "@/lib/audio/notes";
 import {
   SINGERS,
   rangeLabel,
   genreSlug,
-  hasUsefulPercentile,
   relatedSingers,
   singerBySlug,
   spanOctaves,
-  spanPercentile,
   pluralVoice,
   voiceTypeSlug,
   wikipediaUrl,
 } from "@/lib/singers";
-import {
-  observationsFor,
-  sharesHigh,
-  sharesLow,
-} from "@/lib/singers-analysis";
+import { sharesHigh, sharesLow } from "@/lib/singers-analysis";
 import {
   getSingerEvidence,
   groupEvidenceSources,
@@ -40,7 +34,6 @@ import {
   Card,
   LinkButton,
   PageShell,
-  Pill,
   SectionLabel,
   Stat,
 } from "@/components/ui";
@@ -60,17 +53,8 @@ const COMPARISON_SEARCH_SLUGS: ReadonlySet<string> = new Set([
   "michael-jackson",
 ]);
 
-/** High-interest GSC pages with catalog endpoints still awaiting individual review. */
-const PRIORITY_PENDING_SLUGS: ReadonlySet<string> = new Set([
-  "bruno-mars",
-  "taylor-swift",
-  "jeff-buckley",
-  "billie-eilish",
-  ...COMPARISON_SEARCH_SLUGS,
-]);
-
-function isPriorityPending(s: SingerRecord): boolean {
-  return PRIORITY_PENDING_SLUGS.has(s.slug) && !isSingerReviewed(s.slug);
+function isPending(s: SingerRecord): boolean {
+  return !isSingerReviewed(s.slug);
 }
 
 /** Exact-page GSC voice-type intent observed for Jul 30–Aug 26, 2026. */
@@ -96,12 +80,14 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
   ].includes(s.slug);
 }
 
-function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
+function queryAlignedTitle(s: SingerRecord): string {
   if (COMPARISON_SEARCH_SLUGS.has(s.slug)) {
     return `${s.name} Vocal Range & Voice Type | Compare Yours`;
   }
-  if (isPriorityPending(s)) {
-    return `${s.name} Vocal Range: Reported ${rangeLabel(s)} | Compare Yours`;
+  if (isPending(s)) {
+    const answer = `${s.name} Vocal Range: Reported ${rangeLabel(s)}`;
+    const challenge = `${answer} | Compare Yours`;
+    return challenge.length <= 60 ? challenge : answer;
   }
   const reviewedTitles: Record<string, string> = {
     "olivia-rodrigo": "Olivia Rodrigo Vocal Range & Voice Type | Test Yours",
@@ -111,37 +97,22 @@ function queryAlignedTitle(s: SingerRecord, intent: SearchIntent): string {
     "arijit-singh": "Arijit Singh Vocal Range: Reported C3–C5 — Compare Yours",
   };
   if (hasReviewedVoiceTypeCorrection(s)) return reviewedTitles[s.slug];
-  const voice = `Voice Type: ${s.voiceType}`;
-  if (intent === "voice-type") {
-    return `${s.name} ${voice} | Vocal Range ${rangeLabel(s)}`;
-  }
-  const answer = `${s.name} Vocal Range: ${rangeLabel(s)}`;
-  const challenge = `${answer} — Can You Sing It?`;
-  return challenge.length <= 60 ? challenge : `${answer} | Test Yours`;
+  return `${s.name} Vocal Range: Reported ${rangeLabel(s)} | Compare Yours`;
 }
 
 function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
-  if (isPriorityPending(s)) {
+  if (isPending(s)) {
     return `${s.name} Vocal Range: Reported ${rangeLabel(s)}`;
   }
   if (intent === "voice-type") return `${s.name} Voice Type and Vocal Range`;
-  return isSingerReviewed(s.slug)
-    ? `${s.name} Vocal Range: Reported ${rangeLabel(s)}`
-    : `${s.name} Vocal Range: ${rangeLabel(s)}`;
+  return `${s.name} Vocal Range: Reported ${rangeLabel(s)}`;
 }
 
-function queryAlignedDescription(s: SingerRecord, intent: SearchIntent): string {
-  if (isPriorityPending(s)) {
+function queryAlignedDescription(s: SingerRecord): string {
+  if (isPending(s)) {
     return `Our catalog reports ${s.name} at ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(s.highMidi - s.lowMidi)} octaves). Individual endpoint review is pending. Compare your range free.`;
   }
-  if (hasReviewedVoiceTypeCorrection(s)) {
-    return `${voiceTypeEvidenceCopy(s)} The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
-  }
-  const semis = s.highMidi - s.lowMidi;
-  if (intent === "voice-type") {
-    return `${s.name} is commonly classified as a ${s.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}. See every note, and take the free two-minute test to compare yours.`;
-  }
-  return `${s.name}'s cited vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} (${spanOctaves(semis)} octaves). See every note, learn the voice type, and take the free two-minute test to compare yours.`;
+  return `${voiceTypeEvidenceCopy(s)} The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
 }
 
 export const dynamicParams = false;
@@ -158,13 +129,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const s = singerBySlug(slug);
   if (!s) return {};
-  const intent = searchIntentFor(s.slug);
-  const title = queryAlignedTitle(s, intent);
+  const title = queryAlignedTitle(s);
   const description = s.slug === "olivia-rodrigo"
     ? "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes."
-    : COMPARISON_SEARCH_SLUGS.has(s.slug) && isPriorityPending(s)
+    : COMPARISON_SEARCH_SLUGS.has(s.slug) && isPending(s)
       ? `Explore ${s.name}'s reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.`
-      : queryAlignedDescription(s, intent);
+      : queryAlignedDescription(s);
   const canonical = `${SITE_URL}/singers/${s.slug}`;
   return {
     title: { absolute: title },
@@ -179,39 +149,12 @@ export async function generateMetadata({
   };
 }
 
-/** Voice categories whose upper register is head voice, not falsetto. */
-const HEAD_VOICE_TYPES = new Set(["Contralto", "Mezzo-soprano", "Soprano"]);
-
-/** "A#5 (Bb5)" where the two spellings differ, else just "A#5". */
-function bothSpellings(midi: number): string {
-  const alt = altSpelling(midi);
-  return alt ? `${midiToLabel(midi)} (${alt})` : midiToLabel(midi);
-}
-
 function answerSentence(s: SingerRecord): string {
   const semis = s.highMidi - s.lowMidi;
-  if (isPriorityPending(s)) {
+  if (isPending(s)) {
     return `Our catalog reports ${s.name} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, a reference span of about ${spanOctaves(semis)} octaves (${semis} semitones). Individual endpoint review is pending; these are not verified physiological limits.`;
   }
-  if (isSingerReviewed(s.slug)) {
-    return `The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones), not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
-  }
-  const parts = [
-    `${s.name}'s vocal range is commonly cited as ${bothSpellings(s.lowMidi)} to ${bothSpellings(s.highMidi)} — about ${spanOctaves(semis)} octaves, or ${semis} semitones, and is usually classified as ${s.voiceType.toLowerCase()}.`,
-  ];
-  if (s.beltMidi != null) {
-    const upper = HEAD_VOICE_TYPES.has(s.voiceType)
-      ? `head voice${s.whistle ? " or whistle register" : ""}`
-      : s.whistle
-        ? "falsetto, head voice, or whistle register"
-        : "falsetto or head voice";
-    parts.push(
-      `Full voice is cited up to around ${bothSpellings(s.beltMidi)}; everything above that comes from ${upper}.`,
-    );
-  } else if (s.whistle) {
-    parts.push(`The very top of that span sits in whistle register.`);
-  }
-  return parts.join(" ");
+  return `The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones), not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
 }
 
 /**
@@ -223,7 +166,7 @@ function answerSentence(s: SingerRecord): string {
  */
 function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
   const semis = s.highMidi - s.lowMidi;
-  if (isPriorityPending(s)) {
+  if (isPending(s)) {
     const referenceSpan = `Our catalog reports ${s.name} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}; individual endpoint review is pending.`;
     return [
       { q: `How high can ${s.name} sing?`, a: `${referenceSpan} The upper endpoint is not a verified individual maximum.` },
@@ -233,72 +176,24 @@ function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
       { q: `What voice type is ${s.name}?`, a: voiceTypeEvidenceCopy(s) },
     ];
   }
-  if (isSingerReviewed(s.slug)) {
-    const referenceSpan = `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span, not an independently verified physiological limit.`;
-    return [
-      {
-        q: `How high can ${s.name} sing?`,
-        a: `${referenceSpan} Its upper endpoint should not be read as a verified individual maximum.`,
-      },
-      {
-        q: `What is ${s.name}’s highest note?`,
-        a: `${referenceSpan} The reviewed sources do not independently establish the upper endpoint as an individual highest note.`,
-      },
-      {
-        q: `What is ${s.name}’s lowest note?`,
-        a: `${referenceSpan} The reviewed sources do not independently establish the lower endpoint as an individual physiological limit.`,
-      },
-      {
-        q: `How many octaves can ${s.name} sing?`,
-        a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in the catalog, not a reviewed measurement of the singer's full working range.`,
-      },
-    ];
-  }
-  // "How high can X sing" is its own query family, asked in those words, and
-  // it wants the register story — how far full voice goes and what carries the
-  // voice above it — not just the peak note (the next question owns that).
-  const howHigh: string[] = [];
-  if (s.beltMidi != null) {
-    const upper = HEAD_VOICE_TYPES.has(s.voiceType)
-      ? "head voice"
-      : "falsetto or head voice";
-    howHigh.push(
-      `${s.name} is commonly cited singing up to around ${bothSpellings(s.beltMidi)} in full voice, and as high as ${bothSpellings(s.highMidi)} overall — the stretch above ${midiToLabel(s.beltMidi)} comes from ${s.whistle ? `${upper} and whistle register` : upper}.`,
-    );
-  } else {
-    howHigh.push(
-      `${s.name} is commonly cited singing as high as ${bothSpellings(s.highMidi)}, the top of a cited range that starts down at ${midiToLabel(s.lowMidi)}.`,
-    );
-    if (s.whistle) {
-      howHigh.push("The very top of that span sits in whistle register.");
-    }
-  }
-  const high = [
-    `${s.name}’s highest note is commonly cited as ${bothSpellings(s.highMidi)}${s.highSource ? `, heard in ${s.highSource}` : ""}.`,
-  ];
-  if (s.whistle) {
-    high.push("That note sits in whistle register.");
-  } else if (s.beltMidi != null && s.beltMidi < s.highMidi) {
-    high.push(
-      `Full voice is cited up to around ${midiToLabel(s.beltMidi)}; the very top comes from ${HEAD_VOICE_TYPES.has(s.voiceType) ? "head voice" : "falsetto or head voice"}.`,
-    );
-  }
-  const octaves = [
-    `${s.name}’s commonly cited range spans about ${spanOctaves(semis)} octaves (${semis} semitones), from ${midiToLabel(s.lowMidi)} up to ${midiToLabel(s.highMidi)}.`,
-  ];
-  if (hasUsefulPercentile(s)) {
-    octaves.push(
-      `That span is wider than ${spanPercentile(s)}% of the ${SINGERS.length} voices in this library.`,
-    );
-  }
+  const referenceSpan = `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span, not an independently verified physiological limit.`;
   return [
-    { q: `How high can ${s.name} sing?`, a: howHigh.join(" ") },
-    { q: `What is ${s.name}’s highest note?`, a: high.join(" ") },
+    {
+      q: `How high can ${s.name} sing?`,
+      a: `${referenceSpan} Its upper endpoint should not be read as a verified individual maximum.`,
+    },
+    {
+      q: `What is ${s.name}’s highest note?`,
+      a: `${referenceSpan} The reviewed sources do not independently establish the upper endpoint as an individual highest note.`,
+    },
     {
       q: `What is ${s.name}’s lowest note?`,
-      a: `${s.name}’s lowest note is commonly cited as ${bothSpellings(s.lowMidi)}${s.lowSource ? `, heard in ${s.lowSource}` : ""}.`,
+      a: `${referenceSpan} The reviewed sources do not independently establish the lower endpoint as an individual physiological limit.`,
     },
-    { q: `How many octaves can ${s.name} sing?`, a: octaves.join(" ") },
+    {
+      q: `How many octaves can ${s.name} sing?`,
+      a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in the catalog, not a reviewed measurement of the singer's full working range.`,
+    },
   ];
 }
 
@@ -313,10 +208,6 @@ export default async function SingerPage({
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
-  // Source-scoped review copy supersedes the legacy, unreviewed commentary.
-  // A record being reviewed does not verify the catalog's technique or register fields.
-  const showCatalogCommentary = !isSingerReviewed(s.slug) && !isPriorityPending(s);
-  const observations = showCatalogCommentary ? observationsFor(s).slice(0, 5) : [];
   const lowMates = sharesLow(s).slice(0, 8);
   const highMates = sharesHigh(s).slice(0, 8);
 
@@ -359,9 +250,7 @@ export default async function SingerPage({
       {
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,
-        name: isPriorityPending(s)
-          ? queryAlignedHeading(s, intent)
-          : `${s.name} Vocal Range: ${rangeLabel(s)}`,
+        name: queryAlignedHeading(s, intent),
         url: pageUrl,
         description: answer,
         ...reviewedPageFields,
@@ -386,9 +275,7 @@ export default async function SingerPage({
         name: s.name,
         jobTitle: "Singer",
         nationality: s.country,
-        description: isPriorityPending(s) || isSingerReviewed(s.slug)
-          ? voiceTypeEvidenceCopy(s)
-          : `${s.voiceType} known for "${s.signatureSong}". ${s.blurb}`,
+        description: voiceTypeEvidenceCopy(s),
         // Without an external identifier these are hundreds of unresolvable
         // strings; the Wikipedia URL is the cheapest anchor to the real entity.
         // Derived via wikipediaUrl() rather than raw name-mangling — 18 singers
@@ -426,7 +313,7 @@ export default async function SingerPage({
     <PageShell
       kicker="Vocal range"
       title={queryAlignedHeading(s, intent)}
-      subtitle={queryAlignedDescription(s, intent)}
+      subtitle={queryAlignedDescription(s)}
       actions={
         <>
           <LinkButton href={`/range?compare=${s.slug}`} size="md">
@@ -483,15 +370,8 @@ export default async function SingerPage({
             <div className="flex flex-wrap gap-8">
               <Stat label="Octaves" value={spanOctaves(semis)} tone="violet" />
               <Stat label="Semitones" value={semis} tone="ink" />
-              {!reviewed && !isPriorityPending(s) && s.beltMidi != null && (
-                <Stat
-                  label="Full voice to"
-                  value={midiToLabel(s.beltMidi)}
-                  tone="rec"
-                />
-              )}
               <Stat
-                label={isPriorityPending(s) || hasReviewedVoiceTypeCorrection(s) ? "Catalog label" : "Voice type"}
+                label={isPending(s) || hasReviewedVoiceTypeCorrection(s) ? "Catalog label" : "Voice type"}
                 value={s.voiceType}
                 tone="cool"
               />
@@ -501,18 +381,11 @@ export default async function SingerPage({
             <ChromaticStrip
               low={s.lowMidi}
               high={s.highMidi}
-              beltMidi={reviewed || isPriorityPending(s) ? undefined : s.beltMidi}
-              label={`Keyboard showing ${s.name}'s ${reviewed || isPriorityPending(s) ? "reported reference span" : "cited range"} from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}.`}
+              label={`Keyboard showing ${s.name}'s reported reference span from ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}.`}
             />
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <PlayRangeButton s={s} />
-            {!reviewed && !isPriorityPending(s) && s.whistle && <Pill tone="violet">Whistle register</Pill>}
-            {!reviewed && !isPriorityPending(s) && s.beltMidi != null && (
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                red dash = top of full voice
-              </span>
-            )}
           </div>
         </Card>
 
@@ -569,26 +442,38 @@ export default async function SingerPage({
                 Individual evidence review is pending. The displayed range is a reported
                 reference span, not an independently verified physiological limit.
               </p>
-              {isPriorityPending(s) && (
+              {isPending(s) && (
                 <p className="mt-3 max-w-3xl text-sm text-mut">
                   The catalog has not verified recordings or scores for both endpoints.
                   These figures cannot establish a repeatable singing range or an absolute
                   highest or lowest note.
                 </p>
               )}
-              {s.slug === "jeff-buckley" && (
-                <p className="mt-3 max-w-3xl text-sm text-mut">
-                  <a
-                    href="https://jeffbuckley.com/faq-2/"
-                    rel="noreferrer"
-                    target="_blank"
-                    className="text-violet-ink underline underline-offset-4"
-                  >
-                    Jeff Buckley&apos;s official FAQ
-                  </a>{" "}
-                  describes him as a tenor with an approximately four-octave range.
-                  It does not verify this catalog&apos;s exact E2 and D6 endpoints.
-                </p>
+              {evidence.sources.length > 0 && (
+                <div className="mt-5 space-y-3">
+                  <h3 className="text-sm font-semibold">Source context awaiting individual review</h3>
+                  <p className="text-xs text-dim">
+                    These sources support only the claims named below. They do not verify
+                    the catalog&apos;s range endpoints or complete the individual review.
+                  </p>
+                  <ul className="space-y-3">
+                    {evidence.sources.map((source) => (
+                      <li key={source.url} className="border-l border-line pl-3 text-sm text-mut">
+                        <a
+                          href={source.url}
+                          rel="noreferrer"
+                          target="_blank"
+                          className="font-medium text-ink underline decoration-violet/60 underline-offset-4 hover:text-violet-ink"
+                        >
+                          {source.title} <span className="text-dim">({source.publisher})</span>
+                        </a>
+                        <p className="mt-1">Supports: {source.supportedClaim}</p>
+                        <p className="mt-1">Scope: {source.scope}</p>
+                        <p className="mt-1 text-xs">Confidence: {source.confidence}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </>
           )}
@@ -603,34 +488,10 @@ export default async function SingerPage({
           </div>
         </Card>
 
-        {/* How the voice works — the part a singer came for, and the only
-            section here that is written rather than derived. */}
-        {s.technique && showCatalogCommentary && (
-          <Card>
-            <h2 className="text-xl">
-              How {s.name} uses that range
-            </h2>
-            <p className="mt-3 max-w-3xl text-mut">{s.technique}</p>
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <LinkButton href="/warmups" variant="outline" size="sm">
-                Warm up for this
-              </LinkButton>
-              <span className="text-xs text-dim">
-                A description of the sound, not a technique to copy wholesale —
-                the top of anyone&rsquo;s cited range is the least imitable part
-                of it.
-              </span>
-            </div>
-          </Card>
-        )}
-
         {/* The answer, in prose a search snippet can lift */}
         <Card>
           <h2 className="text-xl">{question}</h2>
           <p className="mt-3 max-w-3xl text-mut">{answer}</p>
-          {showCatalogCommentary && (
-            <p className="mt-3 max-w-3xl text-sm text-mut">{s.blurb}</p>
-          )}
           <dl className="mt-5">
             <div>
               <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -639,23 +500,6 @@ export default async function SingerPage({
               <dd className="mt-1 text-sm">{s.signatureSong}</dd>
             </div>
           </dl>
-          {observations.length > 0 && (
-            <>
-              <h3 className="mt-7 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                Reading the numbers
-              </h3>
-              <ul className="mt-3 max-w-3xl space-y-2">
-                {observations.map((o) => (
-                  <li key={o.id} className="flex gap-3 text-sm text-mut">
-                    <span aria-hidden="true" className="text-violet-ink">
-                      ·
-                    </span>
-                    <span>{o.text}</span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
           <p className="mt-5 text-xs text-dim">
             Reported catalog figures, not lab measurements — an endpoint may be
             an isolated performance and does not describe an everyday singing range.

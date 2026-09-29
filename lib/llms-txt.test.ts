@@ -274,7 +274,9 @@ describe("/llms.txt singers layer", () => {
     // Only reviewed evidence records have linked sources and a scoped claim.
     expect(llms).toMatch(/not laboratory measurements|approximate/i);
     const reviewed = Object.values(singerEvidence).filter((record) => record.status !== "pending").length;
+    const pendingWithSources = Object.values(singerEvidence).filter((record) => record.status === "pending" && record.sources.length > 0).length;
     expect(llms).toContain(`${reviewed} of ${SINGERS.length} profiles have individual evidence reviews with linked sources`);
+    expect(llms).toContain(`${pendingWithSources} pending profiles have scoped source context but are still awaiting individual review`);
     expect(llms).toContain("A song title named beside an endpoint is context, not a source citation");
     expect(llms).not.toContain("citation-worthy");
     expect(llms).not.toContain("no popular-music source provides one");

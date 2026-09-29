@@ -258,5 +258,118 @@
         "song": "Rolling in the Deep"
       }
     ]
+  },
+  "jeff-buckley": {
+    "status": "pending",
+    "voiceTypeCopy": "Jeff Buckley's official FAQ describes him as a tenor with a four-octave range; it does not verify this catalog's exact E2–D6 endpoints.",
+    "sources": [
+      {
+        "title": "Jeff Buckley FAQ: vocal style and range",
+        "publisher": "Jeff Buckley official website",
+        "url": "https://jeffbuckley.com/faq-2/",
+        "accessedAt": "2026-09-27",
+        "supportedClaim": "The official FAQ describes Buckley as a tenor and says his range covered four octaves.",
+        "scope": "A qualitative voice description and approximate overall span; it does not identify or verify this catalog's E2 and D6 endpoints.",
+        "confidence": "moderate",
+        "kind": "artist-biography"
+      }
+    ]
+  },
+  "luciano-pavarotti": {
+    "status": "pending",
+    "voiceTypeCopy": "A Metropolitan Opera archival review describes Luciano Pavarotti as a lyric tenor; this does not verify the catalog's endpoints.",
+    "sources": [
+      {
+        "title": "La Fille du Régiment performance review",
+        "publisher": "Metropolitan Opera Archives",
+        "url": "https://archives.metopera.org/MetOperaSearch/record.jsp?dockey=0374846",
+        "accessedAt": "2026-09-27",
+        "supportedClaim": "The archived performance review describes Pavarotti as a lyric tenor in this repertory.",
+        "scope": "A review of a specific operatic performance and voice description; it does not establish full-career range endpoints.",
+        "confidence": "moderate",
+        "kind": "expert-analysis"
+      }
+    ]
+  },
+  "jungkook": {
+    "status": "pending",
+    "voiceTypeCopy": "A Rolling Stone profile describes Jung Kook's voice as a tenor; this journalistic description does not establish a classical classification or the catalog's endpoints.",
+    "sources": [
+      {
+        "title": "Jung Kook interview and profile",
+        "publisher": "Rolling Stone en Español",
+        "url": "https://es.rollingstone.com/jung-kook-entre-el-exito-como-solista-y-su-faceta-como-compositor-de-bts-soy-una-persona-despreocupada-y-sincera/",
+        "accessedAt": "2026-09-27",
+        "supportedClaim": "The profile describes Jung Kook's singing voice as a tenor.",
+        "scope": "Journalistic voice description, not a formal classification or measured full-career range.",
+        "confidence": "limited",
+        "kind": "artist-biography"
+      }
+    ]
+  },
+  "peter-steele": {
+    "status": "pending",
+    "voiceTypeCopy": "A MetalSucks memorial describes Peter Steele's singing voice as baritone; it does not establish a definitive bass-baritone classification or range endpoints.",
+    "sources": [
+      {
+        "title": "Peter Steele memorial and interviews",
+        "publisher": "MetalSucks",
+        "url": "https://www.metalsucks.net/2011/04/12/metalsucks-exclusive-one-year-later-peter-steeles-people-speak-about-his-life-his-music-and-his-last-days/",
+        "accessedAt": "2026-09-27",
+        "supportedClaim": "The memorial's editorial introduction describes Steele's voice as baritone.",
+        "scope": "Journalistic timbre description, not a measured range or definitive classical voice type.",
+        "confidence": "limited",
+        "kind": "artist-biography"
+      }
+    ]
+  },
+  "tom-jones": {
+    "status": "pending",
+    "voiceTypeCopy": "In a 2009 interview, Tom Jones said his voice had changed from tenor toward baritone with age; that account does not verify the catalog's exact endpoints.",
+    "sources": [
+      {
+        "title": "Tom Jones interview on his changing voice",
+        "publisher": "Las Vegas Review-Journal via Tom Jones official website",
+        "url": "https://www.tomjones.com/blog/reviews/las-vegas-review-journal",
+        "accessedAt": "2026-09-27",
+        "supportedClaim": "Jones described a shift from tenor toward baritone and a fuller lower register as he aged.",
+        "scope": "First-person account in 2009 about a changing voice; it does not establish a lifetime classical voice type or exact note endpoints.",
+        "confidence": "moderate",
+        "kind": "first-person-statement"
+      }
+    ]
+  },
+  "paul-mccartney": {
+    "status": "pending",
+    "voiceTypeCopy": "The Beatles' official note for You'll Be Mine describes Paul McCartney singing one deep baritone part with falsetto backing; it does not classify his overall voice or verify catalog endpoints.",
+    "sources": [
+      {
+        "title": "You'll Be Mine",
+        "publisher": "The Beatles official website",
+        "url": "https://www.thebeatles.com/youll-be-mine",
+        "accessedAt": "2026-09-27",
+        "supportedClaim": "The official song note describes a deep baritone lead and falsetto backing in this recording.",
+        "scope": "One song performance only; baritone describes the part, not a definitive classical voice type or full-career range.",
+        "confidence": "moderate",
+        "kind": "song-analysis",
+        "song": "You'll Be Mine"
+      }
+    ]
+  },
+  "jimin": {
+    "status": "pending",
+    "voiceTypeCopy": "Jimin's producer Pdogg described using high notes, deeper passages, and falsetto on MUSE; this does not establish a classical voice type or the catalog's exact endpoints.",
+    "sources": [
+      {
+        "title": "MUSE producers Pdogg and GHSTLOOP interview",
+        "publisher": "Weverse Magazine",
+        "url": "https://magazine.weverse.io/article/view/1170?lang=en",
+        "accessedAt": "2026-09-27",
+        "supportedClaim": "Producer Pdogg described changing keys and using high, moderate, deeper, and falsetto passages for MUSE.",
+        "scope": "Production account for Jimin's MUSE album only; it does not establish exact note endpoints or formal voice classification.",
+        "confidence": "moderate",
+        "kind": "producer-interview"
+      }
+    ]
   }
 }
