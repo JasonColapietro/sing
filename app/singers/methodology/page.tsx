@@ -4,12 +4,14 @@ import { Card, LinkButton, PageShell } from "@/components/ui";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
+import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Why Singer Vocal Ranges Differ: Sources and Methodology";
 const DESCRIPTION =
   "Why vocal range websites disagree, how to compare song scores and performance claims, and what reported notes can tell you. Read sources and test your own range.";
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/singers/methodology"),
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers/methodology` },

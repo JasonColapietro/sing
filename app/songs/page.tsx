@@ -10,6 +10,7 @@ import { ToolGuide } from "@/components/guide";
 import { SONGS_GUIDE } from "@/lib/guides";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { RoomRailBand } from "@/components/discover/room-rail";
+import { routeKeywords } from "@/lib/keywords";
 
 // Derived from the arrays rather than written down, so the counts cannot go
 // stale as the songbook grows.
@@ -17,6 +18,7 @@ const TITLE = `Sing ${SONGS.length} Free Public-Domain Songs with Live Pitch Fee
 const DESCRIPTION = `Sing ${SONGS.length} public-domain melodies with live pitch feedback in your browser. Each transposes to your range, and each has a page with its lyrics, key, tempo and note range.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/songs"),
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/songs` },

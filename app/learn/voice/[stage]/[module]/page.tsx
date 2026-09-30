@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { lessonKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { withCanonicalOpenGraph } from "@/lib/og";
@@ -33,6 +34,7 @@ export async function generateMetadata({
   const { catalog } = found.module;
   return withCanonicalOpenGraph({
     title: `${catalog.name} · Stage ${found.stage.catalog.stage} Voice Lessons`,
+    keywords: lessonKeywords(catalog.name, catalog.skill),
     description: `${catalog.skill}: ${catalog.lessons.length} short, free singing lessons. Outcome: I ${catalog.promise}`,
     alternates: { canonical: `${SITE_URL}${found.module.href}` },
   });

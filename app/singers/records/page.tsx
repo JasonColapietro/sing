@@ -5,11 +5,13 @@ import { midiToLabel } from "@/lib/audio/notes";
 import { SINGERS, rangeLabel, spanOctaves, type Singer } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
+import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Who Has the Widest Vocal Range? Reported Catalog Rankings";
 const DESCRIPTION = `Compare the widest reported spans and lowest and highest catalog endpoints. Individual records require source review.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/singers/records"),
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers/records` },

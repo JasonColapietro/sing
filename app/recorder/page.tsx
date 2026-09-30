@@ -5,8 +5,10 @@ import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { RECORDER_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
+import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/recorder"),
   title: "Voice Recorder for Singing Practice",
   description:
     "Cut a take, listen back, keep the good ones. A practice voice recorder for singers that stays on your device — nothing uploads.",

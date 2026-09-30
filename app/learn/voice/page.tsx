@@ -13,11 +13,13 @@ import {
 import { PracticedMark } from "@/components/learn/practice-count";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
+import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Voice Lessons: A Free Seven-Stage Singing Course";
 const DESCRIPTION = `A free singing course in seven stages and ${CATALOG_LESSON_COUNT} short lessons, from setting up your room and finding your range to registers, agility and style. Each lesson sends you to the Suede Sing room where you practise it.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/learn/voice"),
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}${VOICE_LEARN_PATH}` },

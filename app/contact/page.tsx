@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { Card, PageShell } from "@/components/ui";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
+import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Suggest a Singer Range Correction";
 const DESCRIPTION =
   "Send source-backed corrections for a Suede Sing singer-range page to the editorial team.";
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/contact"),
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/contact` },

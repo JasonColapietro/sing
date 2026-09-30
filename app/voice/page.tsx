@@ -4,6 +4,7 @@ import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { ORG_ID, ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
+import { routeKeywords } from "@/lib/keywords";
 
 // Deliberately not "Suede Voice: Vocal Range Test", which is the store name:
 // that exact string is also the title of /range, the free browser test, and the
@@ -15,6 +16,7 @@ const DESCRIPTION =
 const PAGE_URL = `${SITE_URL}${VOICE_PAGE_PATH}`;
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/voice"),
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: PAGE_URL },

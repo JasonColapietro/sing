@@ -12,11 +12,13 @@ import {
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
+import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Singing Terms Glossary — Passaggio, Cents, Tessitura";
 const DESCRIPTION = `What ${SING_GLOSSARY_TERMS.length} singing terms actually mean, in one sentence each: passaggio, tessitura, cents, chest and head voice, falsetto, whistle register, vocal fry, the singer's formant and the rest of the vocabulary Suede Sing uses. Free, with the room in the app where each word shows up.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/glossary"),
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/glossary` },

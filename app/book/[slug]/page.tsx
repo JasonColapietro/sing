@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { chapterKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
@@ -30,6 +31,7 @@ export async function generateMetadata({
   if (!c) return {};
   return withCanonicalOpenGraph({
     title: `${c.title} · ${BOOK_TITLE}`,
+    keywords: chapterKeywords(c.title, "book"),
     description: c.summary,
     alternates: { canonical: `${SITE_URL}/book/${c.slug}` },
     // A gated body has nothing here for an index to rank — list the chapter but

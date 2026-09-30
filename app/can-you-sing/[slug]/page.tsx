@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { popSongKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CanYouSingVerdict } from "@/components/can-you-sing/verdict";
@@ -49,6 +50,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title,
     description,
+    keywords: popSongKeywords(song),
     alternates: { canonical: `${SITE_URL}/can-you-sing/${song.slug}` },
     openGraph: { title, description, type: "article", images: [DEFAULT_OG_IMAGE] },
   });

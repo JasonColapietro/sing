@@ -6,12 +6,14 @@ import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { RANGE_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
+import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Free Vocal Range Test: Find Your Singing Range & Voice Type | Suede Sing";
 const DESCRIPTION =
   "Find your lowest and highest singing notes in about two minutes. This free vocal range test runs in your browser, shows your voice type, and needs nothing to install.";
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/range"),
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/range` },

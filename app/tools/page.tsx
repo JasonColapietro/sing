@@ -6,6 +6,7 @@ import { ToolGuide } from "@/components/guide";
 import { TOOLS_GUIDE } from "@/lib/guides";
 import { SectionLabel } from "@/components/ui";
 import { AnalyzeGlyph, RecorderGlyph } from "@/components/landing/glyphs";
+import { routeKeywords } from "@/lib/keywords";
 
 // The title and description used to enumerate the recorder and the spectrogram
 // analyzer, which are rooms with pages of their own. A hub that advertises its
@@ -13,6 +14,7 @@ import { AnalyzeGlyph, RecorderGlyph } from "@/components/landing/glyphs";
 // only the three modules it actually contains and links to the other two as
 // rooms.
 export const metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/tools"),
   title: "Singing Practice Tools: Metronome, Keyboard and Drone",
   description:
     "The console modules every practice session leans on: a metronome, an on-screen keyboard, and a sustained drone for pitch matching. Free in the browser, nothing to install.",

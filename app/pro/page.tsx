@@ -9,8 +9,10 @@ import {
 } from "@/lib/pro-shared";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
+import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/pro"),
   title: "Suede Pro: The Vocal Coach on Top of the Free Studio",
   description:
     "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access, adding an adaptive coach, per-note analytics, take analysis, pro warmup packs, scoring history for every song, and two books with PDFs.",

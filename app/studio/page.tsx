@@ -4,8 +4,10 @@ import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { STUDIO_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
+import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/studio"),
   title: "Pitch Training for Singers: Real-Time Pitch Feedback",
   description:
     "Sing into your mic and watch your pitch trace against target notes, live. Free browser pitch training — scales, slides and hold-the-note drills with instant scoring, nothing to install.",

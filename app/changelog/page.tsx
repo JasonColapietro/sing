@@ -7,12 +7,14 @@ import V2TraceGlyph from "@/components/v2-glyph";
 import { SINGERS } from "@/lib/singers";
 import { proHeadlineLong } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
+import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "What's New in Suede Sing 3.1: Changelog";
 const DESCRIPTION =
   "Suede Sing 3.1: a 102-lesson voice curriculum, multi-week practice programs, microphone-scored songs with mastery, breath and vibrato measurement, and a sharper pitch engine. Plus the v2 story and the month-by-month release log.";
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/changelog"),
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/changelog` },

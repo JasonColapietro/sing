@@ -2,8 +2,10 @@ import { ProgressClient } from "@/components/progress/progress-client";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { RoomRailBand } from "@/components/discover/room-rail";
+import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/progress"),
   title: "Singing Progress Tracker: Range, Accuracy and Streaks",
   description:
     "Every practice session logged: XP, streaks, achievements, range history and per-exercise scores, stored on your device. Watch your singing improve week over week.",
