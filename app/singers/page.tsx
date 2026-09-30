@@ -17,6 +17,7 @@ import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
+import { routeKeywords } from "@/lib/keywords";
 
 const DESCRIPTION = `Reported catalog ranges for famous singers on one keyboard. Check each profile's evidence status and compare your own range free.`;
 
@@ -63,6 +64,7 @@ function buildFaq() {
 }
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/singers"),
   title: "Famous Singers' Vocal Ranges and Vocal Range Chart",
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers` },

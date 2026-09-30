@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { songKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { midiToName } from "@/lib/audio/notes";
@@ -63,6 +64,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title,
     description,
+    keywords: songKeywords(song),
     alternates: { canonical: `${SITE_URL}/songs/${song.slug}` },
     openGraph: { title, description, type: "article" },
     // Same call the atlas makes for gated chapters: a Pro song page is a real

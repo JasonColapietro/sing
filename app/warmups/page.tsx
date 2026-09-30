@@ -4,8 +4,10 @@ import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { WARMUPS_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
+import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/warmups"),
   title: "Vocal Warmups: Guided Singing Warm-Up Exercises",
   description:
     "Guided vocal warmup routines with real-time pitch feedback: each exercise plays, counts you in, scores you and climbs by semitone. Three free minutes a day in the browser — no install.",

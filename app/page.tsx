@@ -25,6 +25,7 @@ import {
   ToolsGlyph,
   WarmupGlyph,
 } from "@/components/landing/glyphs";
+import { routeKeywords } from "@/lib/keywords";
 
 /** The complete Early Access offer, shared with every other sales surface. */
 const PRO_PRICE_LINE = proHeadlineLong();
@@ -115,6 +116,7 @@ const STEPS = [
 // absent sitewide at the root). Kept here rather than in layout.tsx so routes that
 // set their own canonical (e.g. /singers/[slug]) are not overridden.
 export const metadata: Metadata = {
+  keywords: routeKeywords("/"),
   alternates: { canonical: SITE_URL },
   openGraph: {
     title: "Suede Sing: Free Browser Vocal Studio, Pitch Training and Range Test",

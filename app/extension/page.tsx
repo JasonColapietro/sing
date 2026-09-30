@@ -5,6 +5,7 @@ import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui
 import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
 import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
+import { routeKeywords } from "@/lib/keywords";
 
 const STORE_URL =
   "https://chromewebstore.google.com/detail/suede-sing-vocal-coach-pi/dbimnmcokgmibdenmonoafhmdbjhpicd";
@@ -14,6 +15,7 @@ const DESCRIPTION =
   "Free Chrome extension that turns any tab into a vocal studio: live pitch tuner, vocal range test, guided warmups, ear training, and a sing-along pitch meter on YouTube. Nothing recorded, nothing uploaded.";
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/extension"),
   title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/extension` },

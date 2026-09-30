@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { singerGenreKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { midiToLabel } from "@/lib/audio/notes";
@@ -44,6 +45,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title,
     description,
+    keywords: singerGenreKeywords(g),
     alternates: { canonical: `${SITE_URL}/singers/genre/${genre}` },
     openGraph: { title, description, type: "website" },
   });

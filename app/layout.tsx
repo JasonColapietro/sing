@@ -10,6 +10,7 @@ import { SITE_URL } from "@/lib/site";
 import ProMoments from "@/components/pro/moments";
 import ProSync from "@/components/pro/sync";
 import WeeklyReportCard from "@/components/weekly-report-card";
+import { routeKeywords } from "@/lib/keywords";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -50,6 +51,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/"),
   metadataBase: new URL(SITE_URL),
   // Google Search Console ownership: set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
   // on the Vercel project to the token from GSC's URL-prefix "HTML tag"

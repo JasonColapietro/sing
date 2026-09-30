@@ -5,8 +5,10 @@ import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { ANALYZE_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
+import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/analyze"),
   title: "Voice Spectrogram and Tone Analyzer: See Your Own Harmonics",
   description:
     "Watch your voice as a live spectrogram, see where the harmonics and the 3 kHz ring sit, and track vocal load by vibration cycles rather than minutes. Runs in the browser; no audio leaves your device.",

@@ -16,6 +16,7 @@ import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { ORG_ID, ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
+import { routeKeywords } from "@/lib/keywords";
 
 /**
  * "What's a tenor's range?" — the question the site had no page for.
@@ -42,6 +43,7 @@ const DESCRIPTION =
   "What is a tenor's vocal range? A bass's, a mezzo-soprano's? The conventional two-octave band for all eight voice types, the passaggio zone where each one changes gear, and real singers who sit inside each band — with the caveat that range and voice type are different measurements.";
 
 export const metadata: Metadata = {
+  keywords: routeKeywords("/atlas/vocal-range-by-voice-type"),
   title: { absolute: QUESTION_TITLE },
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/atlas/vocal-range-by-voice-type` },

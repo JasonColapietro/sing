@@ -13,10 +13,12 @@ import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { BookCta } from "@/components/book/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
+import { routeKeywords } from "@/lib/keywords";
 
 const DESCRIPTION = `${BOOK_TITLE} — a ${BOOK_CONTENTS.length}-chapter guide to how the voice works, reading your own measurements, a twelve-week program and choosing repertoire. Included with Suede Sing Pro.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/book"),
   title: BOOK_TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/book` },

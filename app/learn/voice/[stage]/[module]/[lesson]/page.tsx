@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { lessonKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LESSON_REFERENCES, LESSONS } from "@/lib/lesson-data";
@@ -42,6 +43,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title: `${body.title} · ${found.module.catalog.name} Voice Lesson`,
     description: body.objective,
+    keywords: lessonKeywords(body.title, found.module.catalog.name),
     alternates: { canonical: `${SITE_URL}${lessonHref(body)}` },
   });
 }

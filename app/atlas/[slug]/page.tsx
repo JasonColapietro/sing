@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { chapterKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ATLAS, ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
@@ -30,6 +31,7 @@ export async function generateMetadata({
   if (!c) return {};
   return withCanonicalOpenGraph({
     title: `${c.title} · ${ATLAS_TITLE}`,
+    keywords: chapterKeywords(c.title, "atlas"),
     description: c.summary,
     alternates: { canonical: `${SITE_URL}/atlas/${c.slug}` },
     // Gated chapters have nothing for an index to rank — list them but keep

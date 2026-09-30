@@ -10,12 +10,14 @@ import {
   VOCAL_LEARNING_PATHS,
 } from "@/lib/vocal-learning";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
+import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Learn to Sing: Free Vocal Training Guide and Practice Plan";
 const DESCRIPTION =
   "Learn to sing with a free vocal training plan: test your range, improve pitch, warm up, train breath control, understand voice types, and practice songs.";
 
 export const metadata: Metadata = withCanonicalOpenGraph({
+  keywords: routeKeywords("/learn"),
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/learn` },

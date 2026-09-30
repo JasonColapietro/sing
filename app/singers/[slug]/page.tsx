@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { singerKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { midiToLabel } from "@/lib/audio/notes";
@@ -139,6 +140,7 @@ export async function generateMetadata({
   return {
     title: { absolute: title },
     description,
+    keywords: singerKeywords(s),
     alternates: { canonical },
     openGraph: {
       title,
