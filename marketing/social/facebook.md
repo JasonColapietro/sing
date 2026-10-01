@@ -111,14 +111,14 @@ full-bleed treatment in posts instead. Regenerate the cover any time with
    account**, log into the new IG, accept the permissions. This is the direct
    path; it registers the pair in Meta Business Suite automatically.
 4. Open **business.facebook.com**, confirm both the Page and IG appear under
-   the same portfolio, and confirm the existing Suede Labs AI Page sits in the
+   the same portfolio, and confirm the existing Suede AI Page sits in the
    same Business Portfolio if one exists — same portfolio, separate Pages. Do
    not merge the Pages and do not rename the parent.
 5. Composer check: with the accounts linked, Business Suite can cross-post one
    draft to both FB and IG — the practical win for a founder giving this
    channel ~1–2 hrs/week.
 
-**What stays where:** Suede Labs AI Page = company umbrella (multi-product
+**What stays where:** Suede AI Page = company umbrella (multi-product
 announcements, hiring, press). Suede Sing Page = everything in this package.
 The parent can share Suede Sing posts occasionally; product content never
 originates there.
