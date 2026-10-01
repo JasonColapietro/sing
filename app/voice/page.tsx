@@ -10,7 +10,7 @@ import { routeKeywords } from "@/lib/keywords";
 // that exact string is also the title of /range, the free browser test, and the
 // two pages were bidding against each other for one query while answering two
 // different intents. This page is the install; /range is the test.
-const TITLE = "Download Suede Voice: the Vocal Practice App for iPhone & Android";
+const TITLE = "Download Suede Voice: The Singing App for iPhone & Android";
 const DESCRIPTION =
   "Download Suede Voice, the vocal range and singing practice app from Suede AI, for iPhone or Android. To run the test in a browser with no install, open Suede Sing instead.";
 const PAGE_URL = `${SITE_URL}${VOICE_PAGE_PATH}`;

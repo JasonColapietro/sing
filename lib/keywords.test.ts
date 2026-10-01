@@ -150,8 +150,15 @@ describe("keyword map", () => {
 
   it("data-driven helpers keep page terms plus brand", () => {
     const s = singerKeywords({ slug: "adele", name: "Adele", voiceType: "mezzo-soprano" });
-    expect(s[0]).toBe("adele vocal range");
-    expect(s).toContain("adele songs");
+    expect(s.slice(0, 6)).toEqual([
+      "adele vocal range",
+      "adele voice type",
+      "adele highest note",
+      "adele lowest note",
+      "how many octaves does adele have",
+      "adele octave range",
+    ]);
+    expect(s).not.toContain("adele songs");
     expect(s.at(-1)).toBe("suede sing");
     expect(lessonKeywords({ name: "Breath Support" })).toContain("breath support");
   });

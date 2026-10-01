@@ -150,7 +150,7 @@ export const ROUTE_KEYWORDS = {
     "suede sing",
   ],
   "/glossary": [
-    "singing glossary",
+    "singing terms glossary",
     "vocal terms",
     "singing terminology",
     "passaggio meaning",
@@ -174,7 +174,6 @@ export const ROUTE_KEYWORDS = {
     "suede sing",
   ],
   "/pro": [
-    "ai vocal coach",
     "online vocal coach",
     "vocal coaching app",
     "singing coach subscription",
@@ -210,9 +209,9 @@ export const ROUTE_KEYWORDS = {
     "suede sing",
   ],
   "/singers/methodology": [
+    "why singer vocal ranges differ",
     "singer vocal range sources",
     "how vocal ranges are measured",
-    "why singer vocal ranges differ",
     "vocal range methodology",
     "suede sing",
   ],
@@ -296,10 +295,11 @@ export function singerKeywords(s: {
     [
       `${n} vocal range`,
       `${n} voice type`,
-      s.voiceType ? `${n} ${s.voiceType}` : null,
       `${n} highest note`,
       `${n} lowest note`,
-      `${n} songs`,
+      `how many octaves does ${n} have`,
+      `${n} octave range`,
+      s.voiceType ? `${n} ${s.voiceType}` : null,
     ],
     `/singers/${s.slug ?? ""}`,
   );

@@ -17,13 +17,16 @@ import { routeKeywords } from "@/lib/keywords";
 
 const DESCRIPTION = `${BOOK_TITLE} — a ${BOOK_CONTENTS.length}-chapter guide to how the voice works, reading your own measurements, a twelve-week program and choosing repertoire. Included with Suede Sing Pro.`;
 
+/** The search-facing title: the book's name plus the term people search for. */
+const PAGE_TITLE = `${BOOK_TITLE}: A Singing Book`;
+
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/book"),
-  title: BOOK_TITLE,
+  title: PAGE_TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/book` },
   openGraph: {
-    title: BOOK_TITLE,
+    title: PAGE_TITLE,
     description: DESCRIPTION,
     type: "book",
     images: [DEFAULT_OG_IMAGE],

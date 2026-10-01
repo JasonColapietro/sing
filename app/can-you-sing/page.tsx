@@ -11,7 +11,7 @@ import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
-const TITLE = "Can You Sing It? Vocal Ranges of Popular Songs";
+const TITLE = "Can I Sing This Song? Vocal Ranges of Popular Songs";
 const DESCRIPTION = `The key, vocal range and difficulty of ${POP_SONGS.length} popular songs — and whether each one fits your voice, measured against your free range test.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({

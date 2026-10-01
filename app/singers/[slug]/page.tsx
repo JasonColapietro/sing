@@ -47,7 +47,10 @@ type SearchIntent = "voice-type" | "vocal-range";
 
 type SingerRecord = (typeof SINGERS)[number];
 
-/** September 27 CTR pilot; keep recently revised singer snippets stable. */
+/**
+ * September 27 CTR pilot; keep these titles stable. (Their snippets dropped the
+ * trailing "review is pending" sentence on Sep 30; the page body still says it.)
+ */
 const COMPARISON_SEARCH_SLUGS: ReadonlySet<string> = new Set([
   "celine-dion",
   "peter-steele",
@@ -81,24 +84,36 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
   ].includes(s.slug);
 }
 
+/** Google cuts titles at roughly 60 characters. */
+const TITLE_MAX = 60;
+
+/**
+ * "{Singer} Vocal Range" always leads, because that is the query. After it,
+ * the longest of these that fits: the reported span plus the catalog voice
+ * type and the brand, then without the brand, then without the voice type.
+ */
 function queryAlignedTitle(s: SingerRecord): string {
   if (COMPARISON_SEARCH_SLUGS.has(s.slug)) {
     return `${s.name} Vocal Range & Voice Type | Compare Yours`;
   }
-  if (isPending(s)) {
-    const answer = `${s.name} Vocal Range: Reported ${rangeLabel(s)}`;
-    const challenge = `${answer} | Compare Yours`;
-    return challenge.length <= 60 ? challenge : answer;
-  }
+  // Reviewed voice-type corrections: the sources dispute or qualify the
+  // catalog label, so these titles never print it as settled.
   const reviewedTitles: Record<string, string> = {
     "olivia-rodrigo": "Olivia Rodrigo Vocal Range & Voice Type | Test Yours",
-    "reba-mcentire": "Reba McEntire Voice Type: Classifications Vary | Reported Vocal Range E3–F5",
-    "alex-warren": "Alex Warren Voice Type: Evidence Does Not Establish a Definitive Type | Reported Vocal Range A2–F#4",
-    "sam-smith": "Sam Smith Voice Type: Baritone-to-Tenor Territory | Reported Vocal Range G2–C6",
+    "reba-mcentire": "Reba McEntire Vocal Range & Voice Type: Classifications Vary",
+    "alex-warren": "Alex Warren Vocal Range & Voice Type: No Definitive Type",
+    "sam-smith": "Sam Smith Vocal Range & Voice Type: Baritone-to-Tenor",
     "arijit-singh": "Arijit Singh Vocal Range: Reported C3–C5 — Compare Yours",
   };
   if (hasReviewedVoiceTypeCorrection(s)) return reviewedTitles[s.slug];
-  return `${s.name} Vocal Range: Reported ${rangeLabel(s)} | Compare Yours`;
+  const answer = `${s.name} Vocal Range: Reported ${rangeLabel(s)}`;
+  const candidates = [
+    `${answer}, ${s.voiceType} | Suede Sing`,
+    `${answer}, ${s.voiceType}`,
+    `${answer} | Suede Sing`,
+    `${answer} | Compare Yours`,
+  ];
+  return candidates.find((t) => t.length <= TITLE_MAX) ?? answer;
 }
 
 function queryAlignedHeading(s: SingerRecord, intent: SearchIntent): string {
@@ -116,6 +131,31 @@ function queryAlignedDescription(s: SingerRecord): string {
   return `${voiceTypeEvidenceCopy(s)} The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
 }
 
+/**
+ * The search snippet, written for the click: the reported span, its size and
+ * the catalog voice type, then what the page offers. "Reported" carries the
+ * honesty here; the review status and the evidence limits are spelled out in
+ * the page body (opening, evidence card and FAQ), where there is room to
+ * explain them rather than truncate them into a disclaimer.
+ */
+function snippetDescription(s: SingerRecord): string {
+  if (s.slug === "olivia-rodrigo") {
+    return "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes.";
+  }
+  if (COMPARISON_SEARCH_SLUGS.has(s.slug)) {
+    return `Explore ${s.name}'s reported vocal range and catalog voice type. Take the free range test to compare yours.`;
+  }
+  const span = `${s.name}'s reported vocal range is ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}, about ${spanOctaves(s.highMidi - s.lowMidi)} octaves`;
+  // Reviewed corrections: the sources qualify or dispute the catalog label,
+  // so the snippet does not print it.
+  if (hasReviewedVoiceTypeCorrection(s)) {
+    return `${span}. Reviewed sources don't settle the voice type. See why, then test your own range free.`;
+  }
+  const typed = `${span} (${s.voiceType.toLowerCase()}).`;
+  const full = `${typed} See the highest and lowest notes, then test your own range free.`;
+  return full.length <= 160 ? full : `${typed} Test your own range free.`;
+}
+
 export const dynamicParams = false;
 
 export function generateStaticParams(): Params[] {
@@ -131,11 +171,7 @@ export async function generateMetadata({
   const s = singerBySlug(slug);
   if (!s) return {};
   const title = queryAlignedTitle(s);
-  const description = s.slug === "olivia-rodrigo"
-    ? "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes."
-    : COMPARISON_SEARCH_SLUGS.has(s.slug) && isPending(s)
-      ? `Explore ${s.name}'s reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.`
-      : queryAlignedDescription(s);
+  const description = snippetDescription(s);
   const canonical = `${SITE_URL}/singers/${s.slug}`;
   return {
     title: { absolute: title },
@@ -159,6 +195,8 @@ function answerSentence(s: SingerRecord): string {
   return `The displayed range of ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} is a reported reference span of about ${spanOctaves(semis)} octaves (${semis} semitones), not an independently verified physiological limit. ${voiceTypeEvidenceCopy(s)}`;
 }
 
+const VOICE_TYPE_QUESTION = (s: SingerRecord) => `What voice type is ${s.name}?`;
+
 /**
  * The other question families searchers type — "what is X's highest note",
  * "what is X's lowest note", "how many octaves can X sing" — answered from the
@@ -175,7 +213,7 @@ function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
       { q: `What is ${s.name}’s highest note?`, a: `${referenceSpan} No reviewed source here establishes the upper endpoint as ${s.name}’s highest note.` },
       { q: `What is ${s.name}’s lowest note?`, a: `${referenceSpan} No reviewed source here establishes the lower endpoint as ${s.name}’s lowest note.` },
       { q: `How many octaves can ${s.name} sing?`, a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in this catalog, not a verified measurement of ${s.name}’s working range.` },
-      { q: `What voice type is ${s.name}?`, a: voiceTypeEvidenceCopy(s) },
+      { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
     ];
   }
   const referenceSpan = `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span, not an independently verified physiological limit.`;
@@ -196,6 +234,7 @@ function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
       q: `How many octaves can ${s.name} sing?`,
       a: `${referenceSpan} It covers about ${spanOctaves(semis)} octaves (${semis} semitones) in the catalog, not a reviewed measurement of the singer's full working range.`,
     },
+    { q: VOICE_TYPE_QUESTION(s), a: voiceTypeEvidenceCopy(s) },
   ];
 }
 
@@ -510,7 +549,7 @@ export default async function SingerPage({
 
         {intent === "voice-type" && (
           <Card>
-            <h2 className="text-xl">What voice type is {s.name}?</h2>
+            <h2 className="text-xl">{VOICE_TYPE_QUESTION(s)}</h2>
             <p className="mt-3 max-w-3xl text-mut">{voiceTypeEvidenceCopy(s)}</p>
           </Card>
         )}
@@ -520,7 +559,10 @@ export default async function SingerPage({
         <Card>
           <h2 className="text-xl">More about {s.name}&rsquo;s voice</h2>
           <div className="mt-4 max-w-3xl space-y-5">
-            {faq.map((f) => (
+            {/* On voice-type intent pages that question has its own card above. */}
+            {faq
+              .filter((f) => intent !== "voice-type" || f.q !== VOICE_TYPE_QUESTION(s))
+              .map((f) => (
               <div key={f.q}>
                 <h3 className="text-sm font-semibold">{f.q}</h3>
                 <p className="mt-1 text-sm text-mut">{f.a}</p>

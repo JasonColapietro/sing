@@ -8,7 +8,7 @@ import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/warmups"),
-  title: "Vocal Warmups: Guided Singing Warm-Up Exercises",
+  title: "Vocal Warm-Up Exercises: Guided Singing Warmups",
   description:
     "Guided vocal warmup routines with real-time pitch feedback: each exercise plays, counts you in, scores you and climbs by semitone. Three free minutes a day in the browser — no install.",
   alternates: { canonical: `${SITE_URL}/warmups` },
