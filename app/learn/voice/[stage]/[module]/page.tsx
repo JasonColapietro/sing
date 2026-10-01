@@ -34,7 +34,7 @@ export async function generateMetadata({
   const { catalog } = found.module;
   return withCanonicalOpenGraph({
     title: `${catalog.name} · Stage ${found.stage.catalog.stage} Voice Lessons`,
-    keywords: lessonKeywords(catalog.name, catalog.skill),
+    keywords: lessonKeywords({ name: catalog.name, skill: catalog.skill }),
     description: `${catalog.skill}: ${catalog.lessons.length} short, free singing lessons. Outcome: I ${catalog.promise}`,
     alternates: { canonical: `${SITE_URL}${found.module.href}` },
   });

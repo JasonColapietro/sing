@@ -64,18 +64,20 @@ export function HeroSplit() {
 
             The name still gets a face: the nav wordmark is set in the display
             serif, and this line now carries the violet the rest of the estate uses. */}
-        <p className="font-mono text-label uppercase tracking-[0.16em] text-violet-ink">
-          Suede Sing
-          <span className="mx-2 text-line2" aria-hidden>
-            ·
+        {/* The kicker sits inside the h1 so the page's primary search term,
+            "free vocal studio", is part of the heading. It keeps the kicker's
+            mono label styling; the headline keeps its display scale. */}
+        <h1 id="hero-title">
+          <span className="block font-mono text-label uppercase leading-normal tracking-[0.16em] text-violet-ink">
+            Suede Sing
+            <span className="mx-2 text-line2" aria-hidden>
+              ·
+            </span>
+            <span className="text-dim">Free vocal studio in your browser</span>
           </span>
-          <span className="text-dim">Free in your browser</span>
-        </p>
-        <h1
-          id="hero-title"
-          className="mt-4 max-w-[19ch] text-[clamp(2.5rem,5.6vw,4.25rem)] leading-[1.04] tracking-[-0.025em]"
-        >
-          Sing one note. See exactly what came out.
+          <span className="mt-4 block max-w-[19ch] text-[clamp(2.5rem,5.6vw,4.25rem)] leading-[1.04] tracking-[-0.025em]">
+            Sing one note. See exactly what came out.
+          </span>
         </h1>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-mut sm:text-xl">
           Your voice has a signature. Suede Sing reads it: range, register

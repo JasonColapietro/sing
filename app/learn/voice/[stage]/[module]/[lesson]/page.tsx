@@ -43,7 +43,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title: `${body.title} · ${found.module.catalog.name} Voice Lesson`,
     description: body.objective,
-    keywords: lessonKeywords(body.title, found.module.catalog.name),
+    keywords: lessonKeywords({ name: body.title, group: found.module.catalog.name }),
     alternates: { canonical: `${SITE_URL}${lessonHref(body)}` },
   });
 }

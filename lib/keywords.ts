@@ -2,53 +2,81 @@
  * Per-route `<meta name="keywords">` terms.
  *
  * In the App Router a child segment's `keywords` replaces its parent's instead
- * of merging, so every list here is complete on its own. Terms are real search
- * phrasing for what each page actually offers, lowercase, 5-12 per page.
- * `lib/keywords.test.ts` fails when a routed page ships metadata without them.
+ * of merging, so every list here is complete on its own. Google ignores meta
+ * keywords; their value is as a per-page target map, so the rules are:
+ *
+ * - One owner page per head term (see HEAD_TERM_OWNERS). No other page,
+ *   static or data-driven, carries that exact term.
+ * - Each list leads with the page's own primary term, has 3-10 terms, and
+ *   ends with at most one brand term.
+ * - Terms are lowercase phrases with punctuation stripped, so a comma inside a
+ *   title never splits into fragments when the list is comma-joined.
+ *
+ * `lib/keywords.test.ts` enforces all of this.
  */
 
-/** Always-relevant terms a data-driven page appends after its own. */
-const BASE = [
-  "vocal range test",
-  "find my vocal range",
-  "suede sing",
-] as const;
+/** Hard cap on terms per page, brand included. */
+export const MAX_TERMS = 10;
+
+/** The one brand term a data-driven page appends after its own terms. */
+const BRAND = "suede sing";
+
+/**
+ * Head terms and the single route that owns each. Search volumes are monthly
+ * (US) estimates from the 2026-09 keyword review.
+ */
+export const HEAD_TERM_OWNERS: Readonly<Record<string, string>> = {
+  "vocal range test": "/range", // 22,200, KD19
+  "find my vocal range": "/range",
+  "what is my vocal range": "/range",
+  "how to find your vocal range": "/range", // 3,600, KD5
+  "vocal range chart": "/singers", // 6,600
+  "singers vocal range": "/singers",
+  "famous singers vocal ranges": "/singers",
+  "free vocal studio": "/",
+  "pitch training": "/studio",
+  "vocal warm up exercises": "/warmups",
+  "learn to sing": "/learn",
+  "free singing lessons online": "/learn",
+  "free voice lessons": "/learn/voice",
+  "singing book": "/book",
+  "vocal range by voice type": "/atlas/vocal-range-by-voice-type",
+  "voice types": "/atlas/vocal-range-by-voice-type",
+  "can i sing this song": "/can-you-sing",
+  "song vocal range": "/can-you-sing",
+  "public domain songs to sing": "/songs",
+  "singing app": "/voice",
+};
 
 export const ROUTE_KEYWORDS = {
   "/": [
-    "vocal range test",
-    "what is my vocal range",
-    "vocal range finder",
-    "find my vocal range",
-    "singing range test",
-    "pitch training",
-    "vocal warm up exercises",
+    "free vocal studio",
     "online vocal studio",
+    "singing practice app",
+    "pitch detector for singing",
+    "vocal training online",
+    "singing exercises",
     "suede sing",
-    "suede ai",
   ],
   "/range": [
     "vocal range test",
-    "what is my vocal range",
-    "vocal range finder",
     "find my vocal range",
+    "what is my vocal range",
+    "how to find your vocal range",
+    "vocal range finder",
     "singing range test",
     "voice range test",
     "vocal range calculator",
-    "how to find your vocal range",
-    "vocal range test app",
+    "voice type test",
     "suede sing",
   ],
   "/voice": [
-    "vocal range test app",
-    "vocal range test",
-    "find my vocal range",
-    "pitch detector app",
     "singing app",
-    "vocal exercises",
-    "singers vocal range",
-    "suede voice vocal range test",
-    "suede sing",
+    "vocal range test app",
+    "pitch detector app",
+    "vocal practice app",
+    "singing app for iphone",
+    "suede voice app",
   ],
   "/analyze": [
     "voice spectrogram",
@@ -56,35 +84,30 @@ export const ROUTE_KEYWORDS = {
     "vocal tone analyzer",
     "singing harmonics",
     "voice frequency analyzer",
-    "vocal range test",
     "suede sing",
   ],
   "/atlas": [
-    "singers vocal range",
-    "famous singers vocal ranges",
-    "vocal range chart",
-    "voice types",
-    "singing technique",
-    "vocal range test",
+    "voice atlas",
+    "famous singers tone and technique",
+    "how famous singers sing",
+    "singer vocal technique",
+    "singers by genre",
     "suede sing",
   ],
   "/atlas/vocal-range-by-voice-type": [
-    "vocal range chart",
     "vocal range by voice type",
     "voice types",
     "soprano alto tenor baritone bass range",
     "what is my voice type",
-    "vocal range test",
-    "what is my vocal range",
+    "voice type ranges",
     "suede sing",
   ],
   "/book": [
     "singing book",
-    "learn to sing",
     "singing technique",
     "vocal training guide",
-    "vocal range",
-    "vocal range test",
+    "the measured voice",
+    "voice science for singers",
     "suede sing",
   ],
   "/breath": [
@@ -92,32 +115,24 @@ export const ROUTE_KEYWORDS = {
     "breath support singing",
     "breath control for singing",
     "singing breathing technique",
-    "vocal warm up exercises",
     "suede sing",
   ],
   "/can-you-sing": [
     "can i sing this song",
     "song vocal range",
     "songs for my vocal range",
-    "vocal range test",
-    "what is my vocal range",
-    "find my vocal range",
+    "popular songs vocal range",
+    "song key finder for singers",
     "suede sing",
   ],
   "/changelog": [
     "suede sing changelog",
-    "suede sing updates",
-    "vocal range test",
-    "singing app",
-    "vocal training app",
-    "suede ai",
+    "singing app updates",
+    "vocal practice app release notes",
   ],
   "/contact": [
+    "singer range correction",
     "contact suede sing",
-    "suede sing support",
-    "suede ai",
-    "vocal range test",
-    "singing app",
   ],
   "/ear-training": [
     "ear training for singers",
@@ -128,62 +143,55 @@ export const ROUTE_KEYWORDS = {
     "suede sing",
   ],
   "/extension": [
-    "vocal range test extension",
     "pitch detector chrome extension",
     "singing browser extension",
-    "vocal range finder",
-    "vocal range test",
+    "vocal coach chrome extension",
+    "pitch tuner extension",
     "suede sing",
   ],
   "/glossary": [
     "singing glossary",
     "vocal terms",
     "singing terminology",
-    "voice types",
-    "vocal range",
-    "vocal range test",
+    "passaggio meaning",
+    "tessitura meaning",
     "suede sing",
   ],
   "/learn": [
-    "singing lessons",
+    "learn to sing",
     "free singing lessons online",
     "how to sing better",
-    "learn to sing",
-    "vocal range test",
-    "vocal warm up exercises",
+    "vocal training plan",
+    "singing practice plan for beginners",
     "suede sing",
   ],
   "/learn/voice": [
     "free voice lessons",
     "singing lessons online",
     "voice training curriculum",
-    "learn to sing",
-    "vocal exercises",
-    "vocal range test",
+    "free singing course",
+    "beginner voice lessons",
     "suede sing",
   ],
   "/pro": [
-    "suede pro",
     "ai vocal coach",
     "online vocal coach",
-    "singing lessons online",
-    "vocal range test",
-    "suede sing",
+    "vocal coaching app",
+    "singing coach subscription",
+    "suede pro",
   ],
   "/programs": [
-    "singing practice plan",
+    "singing practice programs",
     "vocal training program",
     "singing practice routine",
-    "vocal warm up exercises",
-    "vocal range test",
+    "multi week vocal training plan",
     "suede sing",
   ],
   "/progress": [
     "singing progress tracker",
     "vocal range progress",
-    "pitch accuracy",
+    "pitch accuracy tracker",
     "singing practice streak",
-    "vocal range test",
     "suede sing",
   ],
   "/recorder": [
@@ -191,51 +199,43 @@ export const ROUTE_KEYWORDS = {
     "singing recorder",
     "record yourself singing",
     "vocal practice recorder",
-    "vocal range test",
     "suede sing",
   ],
   "/singers": [
+    "vocal range chart",
     "singers vocal range",
     "famous singers vocal ranges",
-    "vocal range chart",
     "singer vocal range comparison",
-    "voice types",
-    "vocal range test",
-    "what is my vocal range",
+    "famous singers voice types",
     "suede sing",
   ],
   "/singers/methodology": [
     "singer vocal range sources",
     "how vocal ranges are measured",
-    "singers vocal range",
-    "vocal range chart",
-    "vocal range test",
+    "why singer vocal ranges differ",
+    "vocal range methodology",
     "suede sing",
   ],
   "/singers/records": [
     "widest vocal range",
     "highest note ever sung",
     "lowest note ever sung",
-    "singers vocal range",
-    "vocal range chart",
-    "vocal range test",
+    "who has the widest vocal range",
     "suede sing",
   ],
   "/songs": [
     "public domain songs to sing",
     "songs to practice singing",
     "song lyrics and key",
-    "song vocal range",
     "singing practice songs",
-    "vocal range test",
     "suede sing",
   ],
   "/studio": [
     "pitch training",
     "real time pitch feedback",
-    "pitch detector for singing",
+    "pitch detector for singing practice",
     "sing in tune",
-    "vocal range test",
+    "pitch training for singers",
     "suede sing",
   ],
   "/tools": [
@@ -244,7 +244,6 @@ export const ROUTE_KEYWORDS = {
     "online piano keyboard",
     "drone tone",
     "pitch pipe",
-    "vocal range test",
     "suede sing",
   ],
   "/warmups": [
@@ -252,8 +251,6 @@ export const ROUTE_KEYWORDS = {
     "vocal warmups",
     "singing warm ups",
     "voice warm up",
-    "vocal exercises",
-    "vocal range test",
     "suede sing",
   ],
 } as const satisfies Record<string, readonly string[]>;
@@ -264,98 +261,120 @@ export function routeKeywords(route: KeywordRoute): string[] {
   return [...ROUTE_KEYWORDS[route]];
 }
 
-/** Lowercase, trim, drop empties and duplicates, cap at 12 terms. */
+/** Lowercase, strip punctuation, trim, drop empties and duplicates, cap at MAX_TERMS. */
 export function normalizeKeywords(terms: readonly (string | null | undefined)[]): string[] {
   const seen = new Set<string>();
   for (const raw of terms) {
-    const t = (raw ?? "").toLowerCase().replace(/\s+/g, " ").trim();
+    const t = (raw ?? "")
+      .toLowerCase()
+      .replace(/[\u2018\u2019]/g, "'")
+      // Commas, colons, periods, quotes and the like would split or clutter a
+      // comma-joined keywords tag; keep letters, digits, apostrophes, & and -.
+      .replace(/[^\p{L}\p{N}\s'&-]+/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim();
     if (t) seen.add(t);
   }
-  return [...seen].slice(0, 12);
+  return [...seen].slice(0, MAX_TERMS);
+}
+
+/** Page-specific terms first (head terms owned elsewhere removed), then one brand term. */
+function pageKeywords(terms: readonly (string | null | undefined)[], route: string): string[] {
+  const own = normalizeKeywords(terms).filter(
+    (t) => !t.includes("suede") && (HEAD_TERM_OWNERS[t] ?? route) === route,
+  );
+  return [...own.slice(0, MAX_TERMS - 1), BRAND];
 }
 
 export function singerKeywords(s: {
+  slug?: string;
   name: string;
   voiceType?: string | null;
-  genres?: readonly string[];
-  signatureSong?: string | null;
 }): string[] {
   const n = s.name;
-  return normalizeKeywords([
-    `${n} vocal range`,
-    `${n} voice type`,
-    s.voiceType ? `${n} ${s.voiceType}` : null,
-    `${n} highest note`,
-    `${n} lowest note`,
-    s.signatureSong ? `${s.signatureSong} vocal range` : null,
-    "singers vocal range",
-    "vocal range chart",
-    ...BASE,
-  ]);
+  return pageKeywords(
+    [
+      `${n} vocal range`,
+      `${n} voice type`,
+      s.voiceType ? `${n} ${s.voiceType}` : null,
+      `${n} highest note`,
+      `${n} lowest note`,
+      `${n} songs`,
+    ],
+    `/singers/${s.slug ?? ""}`,
+  );
 }
 
 export function singerGenreKeywords(genre: string): string[] {
-  return normalizeKeywords([
-    `${genre} singers vocal range`,
-    `${genre} singers`,
-    `famous ${genre} singers`,
-    "singers vocal range",
-    "vocal range chart",
-    ...BASE,
-  ]);
+  return pageKeywords(
+    [
+      `${genre} singers vocal range`,
+      `${genre} singers`,
+      `famous ${genre} singers`,
+      `best ${genre} vocalists`,
+    ],
+    `/singers/genre/${genre}`,
+  );
 }
 
 export function singerVoiceTypeKeywords(voice: string): string[] {
-  return normalizeKeywords([
-    `${voice} vocal range`,
-    `famous ${voice} singers`,
-    `${voice} voice type`,
-    "voice types",
-    "singers vocal range",
-    "vocal range chart",
-    ...BASE,
-  ]);
+  return pageKeywords(
+    [
+      `${voice} vocal range`,
+      `famous ${voice} singers`,
+      `${voice} voice type`,
+      `${voice} range chart`,
+    ],
+    `/singers/voice-type/${voice}`,
+  );
 }
 
-export function popSongKeywords(song: { title: string; artist: string; key?: string | null }): string[] {
-  return normalizeKeywords([
-    `${song.title} vocal range`,
-    `${song.title} key`,
-    `can i sing ${song.title}`,
-    `${song.artist} ${song.title}`,
-    `${song.artist} vocal range`,
-    "song vocal range",
-    ...BASE,
-  ]);
+export function popSongKeywords(song: { slug?: string; title: string; artist: string }): string[] {
+  return pageKeywords(
+    [
+      `${song.title} vocal range`,
+      `${song.title} key`,
+      `can i sing ${song.title}`,
+      `${song.artist} ${song.title}`,
+      `${song.title} highest note`,
+    ],
+    `/can-you-sing/${song.slug ?? ""}`,
+  );
 }
 
-export function songKeywords(song: { title: string; tonic?: string | null }): string[] {
-  return normalizeKeywords([
-    `${song.title} lyrics`,
-    `${song.title} key`,
-    `${song.title} vocal range`,
-    `sing ${song.title}`,
-    "public domain songs to sing",
-    "song vocal range",
-    ...BASE,
-  ]);
+export function songKeywords(song: { slug?: string; title: string }): string[] {
+  return pageKeywords(
+    [
+      `${song.title} lyrics`,
+      `${song.title} key`,
+      `${song.title} vocal range`,
+      `sing ${song.title}`,
+    ],
+    `/songs/${song.slug ?? ""}`,
+  );
 }
 
 export function chapterKeywords(chapterTitle: string, section: "atlas" | "book"): string[] {
   const extra =
     section === "atlas"
-      ? ["singers vocal range", "vocal range chart", "singing technique"]
-      : ["singing book", "singing technique", "learn to sing"];
-  return normalizeKeywords([chapterTitle, ...extra, ...BASE]);
+      ? ["voice atlas chapter", "how famous singers sing", "singer tone and technique"]
+      : ["singing technique guide", "voice science for singers", "the measured voice"];
+  return pageKeywords([chapterTitle, ...extra], `/${section}/chapter`);
 }
 
-export function lessonKeywords(...names: string[]): string[] {
-  return normalizeKeywords([
-    ...names,
-    "free singing lessons online",
-    "voice lessons",
-    "vocal exercises",
-    "learn to sing",
-    ...BASE,
-  ]);
+/**
+ * Voice-course pages: a stage ({ name }), a module ({ name, skill }) or a
+ * lesson ({ name: lesson title, group: module name }).
+ */
+export function lessonKeywords(page: { name: string; skill?: string; group?: string }): string[] {
+  return pageKeywords(
+    [
+      page.name,
+      page.skill,
+      page.group,
+      `${page.group ?? page.name} voice lessons`,
+      "free voice course",
+    ],
+    "/learn/voice/lesson",
+  );
 }

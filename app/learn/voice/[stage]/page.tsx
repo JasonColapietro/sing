@@ -32,7 +32,7 @@ export async function generateMetadata({
   const { catalog } = stage;
   return withCanonicalOpenGraph({
     title: `Stage ${catalog.stage}: ${catalog.name} · Voice Lessons`,
-    keywords: lessonKeywords(catalog.name),
+    keywords: lessonKeywords({ name: catalog.name }),
     description: `${catalog.subtitle}. ${catalog.modules.length} modules of short, free singing lessons, each with a self-check and a room to practise in.`,
     alternates: { canonical: `${SITE_URL}${stage.href}` },
   });

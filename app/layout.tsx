@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
     : undefined,
   title: {
-    default: "Suede Sing: Free Browser Vocal Studio, Pitch Training and Range Test",
+    default: "Free Vocal Studio: Pitch Training in Your Browser | Suede Sing",
     template: "%s · Suede Sing",
   },
   description:

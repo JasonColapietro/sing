@@ -359,7 +359,7 @@ export function RangeTest() {
             )}
 
           <Card>
-            <h2 className="text-xl">How it works</h2>
+            <h2 className="text-xl">How to find your vocal range</h2>
             <ol className="mt-3 max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut">
               <li>
                 Sing a comfortable note out loud and hold it for two seconds.
