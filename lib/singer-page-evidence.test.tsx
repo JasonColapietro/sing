@@ -186,10 +186,17 @@ describe("singer-page evidence and provenance", () => {
     const visibleHtml = html.replace(/<script[\s\S]*?<\/script>/g, "");
     const graph = graphFrom(html);
     const faq = graph["@graph"].find((node) => node["@type"] === "FAQPage") as {
-      mainEntity: Array<{ acceptedAnswer: { text: string } }>;
+      mainEntity: Array<{ name: string; acceptedAnswer: { text: string } }>;
     };
-    const answers = faq.mainEntity.map((question) => question.acceptedAnswer.text);
+    // Range answers stay scoped to the reported span; the voice-type answer is
+    // the reviewed evidence copy and only has to be visible and register-free.
+    const voiceType = faq.mainEntity.filter((q) => q.name.startsWith("What voice type is"));
+    const answers = faq.mainEntity
+      .filter((q) => !q.name.startsWith("What voice type is"))
+      .map((question) => question.acceptedAnswer.text);
 
+    expect(voiceType).toHaveLength(1);
+    expect(visibleHtml).toContain(voiceType[0].acceptedAnswer.text);
     expect(answers).toHaveLength(5);
     for (const answer of answers) {
       expect(answer).toContain("reported reference span");

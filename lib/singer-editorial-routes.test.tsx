@@ -13,7 +13,7 @@ import SingersPage from "@/app/singers/page";
 import sitemap from "@/app/sitemap";
 import SiteFooter from "@/components/site-footer";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
-import { getSingerLastModified } from "@/lib/singer-evidence";
+import { SINGER_PAGE_REVISED, getSingerLastModified } from "@/lib/singer-evidence";
 import { SINGERS } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
@@ -124,20 +124,24 @@ describe("singer sitemap editorial freshness", () => {
     }
   });
 
-  it("uses only explicit evidence review dates and omits freshness for pending singers", () => {
+  it("dates singer pages by the later of their review and the fixed page revision", () => {
     const entries = sitemap();
     const reviewed = SINGERS.filter((singer) => getSingerLastModified(singer.slug));
     const pending = SINGERS.filter((singer) => !getSingerLastModified(singer.slug));
 
     expect(reviewed.length).toBeGreaterThan(0);
     expect(pending.length).toBeGreaterThan(0);
+    expect(SINGER_PAGE_REVISED).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     for (const singer of reviewed) {
       const entry = entries.find((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)!;
-      expect(entry.lastModified).toBe(getSingerLastModified(singer.slug));
+      const review = getSingerLastModified(singer.slug)!;
+      expect(entry.lastModified).toBe(review > SINGER_PAGE_REVISED ? review : SINGER_PAGE_REVISED);
     }
+    // Pending singers carry the page revision only: a content date, never a
+    // claimed evidence review (getSingerLastModified stays undefined for them).
     for (const singer of pending) {
       const entry = entries.find((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)!;
-      expect(entry).not.toHaveProperty("lastModified");
+      expect(entry.lastModified).toBe(SINGER_PAGE_REVISED);
     }
 
     const sitemapSource = readFileSync(new URL("../app/sitemap.ts", import.meta.url), "utf8");

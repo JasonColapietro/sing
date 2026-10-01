@@ -268,8 +268,25 @@ export function groupEvidenceSources(
   return [...groups.values()];
 }
 
-/** A sitemap date exists only when a human has explicitly reviewed the record. */
+/** The evidence date exists only when a human has explicitly reviewed the record. */
 export function getSingerLastModified(slug: string): string | undefined {
   const evidence = getSingerEvidence(slug);
   return isSingerReviewed(slug) ? evidence.reviewedAt : undefined;
+}
+
+/**
+ * The last date every singer page's own content changed (title, snippet, FAQ).
+ * A fixed, hand-set date, bumped only when the shared singer template's
+ * content actually changes, never a build timestamp.
+ */
+export const SINGER_PAGE_REVISED = "2026-09-30";
+
+/**
+ * Sitemap lastmod for a singer page: the later of its evidence review date
+ * and the shared page revision. Never claims a review that did not happen;
+ * getSingerLastModified stays the review date alone.
+ */
+export function getSingerPageLastModified(slug: string): string {
+  const reviewed = getSingerLastModified(slug);
+  return reviewed && reviewed > SINGER_PAGE_REVISED ? reviewed : SINGER_PAGE_REVISED;
 }

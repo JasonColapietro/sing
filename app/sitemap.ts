@@ -10,7 +10,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { POP_SONGS } from "@/lib/pop-songs";
-import { getSingerLastModified } from "@/lib/singer-evidence";
+import { getSingerPageLastModified } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 import { VOICE_LEARN_PATH, coursePaths } from "@/lib/voice-lessons";
 
@@ -73,15 +73,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ].map((h) => ({ ...h, changeFrequency: "monthly" as const }));
 
-  const singers = SINGERS.map((s) => {
-    const lastModified = getSingerLastModified(s.slug);
-    return {
-      url: `${SITE_URL}/singers/${s.slug}`,
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-      ...(lastModified ? { lastModified } : {}),
-    };
-  });
+  const singers = SINGERS.map((s) => ({
+    url: `${SITE_URL}/singers/${s.slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+    lastModified: getSingerPageLastModified(s.slug),
+  }));
 
   // Free song pages are leaves under /songs, so they get the same 0.6 the
   // singer leaves get. PRO_SONGS pages are robots-noindexed for the same reason

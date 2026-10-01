@@ -10,7 +10,7 @@ import { routeKeywords } from "@/lib/keywords";
 const STORE_URL =
   "https://chromewebstore.google.com/detail/suede-sing-vocal-coach-pi/dbimnmcokgmibdenmonoafhmdbjhpicd";
 
-const TITLE = "Suede Sing for Chrome: Free Vocal Coach, Pitch Tuner & Range Test";
+const TITLE = "Pitch Detector Chrome Extension for Singers | Suede Sing";
 const DESCRIPTION =
   "Free Chrome extension that turns any tab into a vocal studio: live pitch tuner, vocal range test, guided warmups, ear training, and a sing-along pitch meter on YouTube. Nothing recorded, nothing uploaded.";
 

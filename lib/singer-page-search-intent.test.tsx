@@ -36,28 +36,28 @@ const ARTIST_INTENT_CASES = [
     slug: "bruno-mars",
     name: "Bruno Mars",
     opening: "Our catalog reports Bruno Mars at G2 to D6 (3.6 octaves). Individual endpoint review is pending. Compare your range free.",
-    title: "Bruno Mars Vocal Range: Reported G2–D6 | Compare Yours",
+    title: "Bruno Mars Vocal Range: Reported G2–D6, Tenor | Suede Sing",
     heading: "Bruno Mars Vocal Range: Reported G2–D6",
   },
   {
     slug: "taylor-swift",
     name: "Taylor Swift",
     opening: "Our catalog reports Taylor Swift at A2 to A#5 (3.1 octaves). Individual endpoint review is pending. Compare your range free.",
-    title: "Taylor Swift Vocal Range: Reported A2–A#5 | Compare Yours",
+    title: "Taylor Swift Vocal Range: Reported A2–A#5, Mezzo-soprano",
     heading: "Taylor Swift Vocal Range: Reported A2–A#5",
   },
   {
     slug: "jeff-buckley",
     name: "Jeff Buckley",
     opening: "Our catalog reports Jeff Buckley at E2 to D6 (3.8 octaves). Individual endpoint review is pending. Compare your range free.",
-    title: "Jeff Buckley Vocal Range: Reported E2–D6 | Compare Yours",
+    title: "Jeff Buckley Vocal Range: Reported E2–D6, Tenor | Suede Sing",
     heading: "Jeff Buckley Vocal Range: Reported E2–D6",
   },
   {
     slug: "billie-eilish",
     name: "Billie Eilish",
     opening: "Our catalog reports Billie Eilish at A2 to B5 (3.2 octaves). Individual endpoint review is pending. Compare your range free.",
-    title: "Billie Eilish Vocal Range: Reported A2–B5 | Compare Yours",
+    title: "Billie Eilish Vocal Range: Reported A2–B5, Mezzo-soprano",
     heading: "Billie Eilish Vocal Range: Reported A2–B5",
   },
   {
@@ -71,21 +71,21 @@ const ARTIST_INTENT_CASES = [
     slug: "reba-mcentire",
     name: "Reba McEntire",
     opening: "Reba McEntire's reviewed sources describe a peak-career span of about three octaves but do not establish a definitive classical voice type. The displayed range of E3 to F5 is a reported reference span, not an independently verified physiological limit.",
-    title: "Reba McEntire Voice Type: Classifications Vary | Reported Vocal Range E3–F5",
+    title: "Reba McEntire Vocal Range & Voice Type: Classifications Vary",
     heading: "Reba McEntire Voice Type and Vocal Range",
   },
   {
     slug: "alex-warren",
     name: "Alex Warren",
     opening: "Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints. The displayed range of A2 to F#4 is a reported reference span, not an independently verified physiological limit.",
-    title: "Alex Warren Voice Type: Evidence Does Not Establish a Definitive Type | Reported Vocal Range A2–F#4",
+    title: "Alex Warren Vocal Range & Voice Type: No Definitive Type",
     heading: "Alex Warren Voice Type and Vocal Range",
   },
   {
     slug: "sam-smith",
     name: "Sam Smith",
     opening: "Sam Smith's long-time coach describes baritone-to-tenor territory; the reviewed sources do not establish a definitive countertenor classification. The displayed range of G2 to C6 is a reported reference span, not an independently verified physiological limit.",
-    title: "Sam Smith Voice Type: Baritone-to-Tenor Territory | Reported Vocal Range G2–C6",
+    title: "Sam Smith Vocal Range & Voice Type: Baritone-to-Tenor",
     heading: "Sam Smith Voice Type and Vocal Range",
   },
   {
@@ -99,7 +99,7 @@ const ARTIST_INTENT_CASES = [
     slug: "adele",
     name: "Adele",
     opening: "Reviewed expert analysis describes Adele as a mezzo-soprano, with chest mix to E5. The displayed range of C3 to A#5 is a reported reference span, not an independently verified physiological limit.",
-    title: "Adele Vocal Range: Reported C3–A#5 | Compare Yours",
+    title: "Adele Vocal Range: Reported C3–A#5, Mezzo-soprano",
     heading: "Adele Vocal Range: Reported C3–A#5",
   },
 ] as const;
@@ -120,11 +120,38 @@ const ORIGINAL_PRIORITY_SLUGS: ReadonlySet<string> = new Set([
   "celine-dion", "peter-steele", "michael-jackson",
 ]);
 const COMPARISON_SNIPPETS: Readonly<Record<string, string>> = {
-  "celine-dion": "Explore Celine Dion's reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.",
-  "peter-steele": "Explore Peter Steele's reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.",
-  "michael-jackson": "Explore Michael Jackson's reported vocal range and catalog voice type. Take the free range test to compare yours. Individual endpoint review is pending.",
+  "celine-dion": "Explore Celine Dion's reported vocal range and catalog voice type. Take the free range test to compare yours.",
+  "peter-steele": "Explore Peter Steele's reported vocal range and catalog voice type. Take the free range test to compare yours.",
+  "michael-jackson": "Explore Michael Jackson's reported vocal range and catalog voice type. Take the free range test to compare yours.",
 };
 const OLIVIA_SNIPPET = "Explore Olivia Rodrigo's reported vocal range, disputed voice-type labels, and song-level sources. Take the free range test to compare your notes.";
+const VOICE_TYPE_CORRECTION_SLUGS: ReadonlySet<string> = new Set([
+  "olivia-rodrigo", "reba-mcentire", "alex-warren", "sam-smith", "arijit-singh",
+]);
+
+/** The click-first search snippet each singer page should carry. */
+function expectedSnippet(singer: (typeof SINGERS)[number]): string {
+  if (singer.slug === "olivia-rodrigo") return OLIVIA_SNIPPET;
+  if (COMPARISON_SNIPPETS[singer.slug]) return COMPARISON_SNIPPETS[singer.slug];
+  const span = `${singer.name}'s reported vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}, about ${spanOctaves(singer.highMidi - singer.lowMidi)} octaves`;
+  if (VOICE_TYPE_CORRECTION_SLUGS.has(singer.slug)) {
+    return `${span}. Reviewed sources don't settle the voice type. See why, then test your own range free.`;
+  }
+  const typed = `${span} (${singer.voiceType.toLowerCase()}).`;
+  const full = `${typed} See the highest and lowest notes, then test your own range free.`;
+  return full.length <= 160 ? full : `${typed} Test your own range free.`;
+}
+
+/** "{Singer} Vocal Range: Reported {span}" plus the longest suffix that fits in 60. */
+function expectedDefaultTitle(singer: (typeof SINGERS)[number]): string {
+  const answer = `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`;
+  return [
+    `${answer}, ${singer.voiceType} | Suede Sing`,
+    `${answer}, ${singer.voiceType}`,
+    `${answer} | Suede Sing`,
+    `${answer} | Compare Yours`,
+  ].find((t) => t.length <= 60) ?? answer;
+}
 const SINGER_RENDER_BATCH_SIZE = 32;
 const SINGER_RENDER_BATCHES = Array.from(
   { length: Math.ceil(SINGERS.length / SINGER_RENDER_BATCH_SIZE) },
@@ -139,14 +166,14 @@ const SINGER_RENDER_BATCHES = Array.from(
 describe("every singer page answers its vocal range and voice type intent", () => {
   it.each(ARTIST_INTENT_CASES)(
     "$slug aligns search metadata to observed page-level query intent",
-    async ({ slug, opening, title }) => {
+    async ({ slug, title }) => {
       const metadata = await generateMetadata({
         params: Promise.resolve({ slug }),
       });
 
       expect(metadata.title).toEqual({ absolute: title });
       if (ORIGINAL_PRIORITY_SLUGS.has(slug) || slug === "olivia-rodrigo") expect(title.length).toBeLessThanOrEqual(60);
-      expect(metadata.description).toBe(COMPARISON_SNIPPETS[slug] ?? (slug === "olivia-rodrigo" ? OLIVIA_SNIPPET : opening));
+      expect(metadata.description).toBe(expectedSnippet(SINGERS.find((x) => x.slug === slug)!));
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
       expect(metadata.openGraph?.url).toBe(`${SITE_URL}/singers/${slug}`);
@@ -169,53 +196,47 @@ describe("every singer page answers its vocal range and voice type intent", () =
 
   it("covers every singer with an absolute answer title, description, and Open Graph URL", async () => {
     for (const singer of SINGERS) {
-      const semis = singer.highMidi - singer.lowMidi;
       const metadata = await generateMetadata({
         params: Promise.resolve({ slug: singer.slug }),
       });
-      const answerTitle = `${singer.name} Vocal Range: ${rangeLabel(singer)}`;
-      const challengeTitle = `${answerTitle} — Can You Sing It?`;
-      const pendingTitle = `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`;
-      const pendingChallenge = `${pendingTitle} | Compare Yours`;
-      const defaultTitle = !isSingerReviewed(singer.slug)
-        ? pendingChallenge.length <= 60 ? pendingChallenge : pendingTitle
-        : VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
-          ? `${singer.name} Voice Type: ${singer.voiceType} | Vocal Range ${rangeLabel(singer)}`
-          : challengeTitle.length <= 60
-            ? challengeTitle
-            : `${answerTitle} | Test Yours`;
-      const defaultOpening = !isSingerReviewed(singer.slug)
-        ? `Our catalog reports ${singer.name} at ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). Individual endpoint review is pending. Compare your range free.`
-        : VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
-          ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
-          : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
-      const defaultDescription = !isSingerReviewed(singer.slug)
-        ? defaultOpening
-        : `${defaultOpening} See every note${
-          VOICE_TYPE_QUERY_SLUGS.has(singer.slug) ? "" : ", learn the voice type"
-        }, and take the free two-minute test to compare yours.`;
-      const correction = SPECIAL_TITLE_CASES[singer.slug];
-      const title = correction?.title ?? defaultTitle;
-      const opening = correction?.opening ?? defaultOpening;
+      const title = SPECIAL_TITLE_CASES[singer.slug]?.title ?? expectedDefaultTitle(singer);
+      const description = expectedSnippet(singer);
 
-      if (!correction) {
-        expect(title.length, `${singer.slug} title length`).toBeLessThanOrEqual(60);
-        expect(
-          defaultDescription.length,
-          `${singer.slug} description length`,
-        ).toBeLessThanOrEqual(175);
-      }
+      expect(title.length, `${singer.slug} title length`).toBeLessThanOrEqual(60);
+      expect(title.startsWith(`${singer.name} Vocal Range`), `${singer.slug} title lead`).toBe(true);
+      expect(description.length, `${singer.slug} description length`).toBeLessThanOrEqual(160);
+      expect(description, `${singer.slug} description`).not.toMatch(/pending/i);
 
       expect(metadata.title).toEqual({ absolute: title });
-      expect(metadata.description).toBe(
-        COMPARISON_SNIPPETS[singer.slug] ?? (singer.slug === "olivia-rodrigo" ? OLIVIA_SNIPPET : correction ? opening : defaultDescription),
-      );
+      expect(metadata.description).toBe(description);
       expect(metadata.openGraph?.title).toBe(title);
       expect(metadata.openGraph?.description).toBe(metadata.description);
       expect(metadata.openGraph?.url).toBe(
         `${SITE_URL}/singers/${singer.slug}`,
       );
     }
+  });
+
+  it.each([
+    [
+      "freddie-mercury",
+      "Freddie Mercury Vocal Range: Reported F2–F6, Baritone",
+      "Freddie Mercury's reported vocal range is F2 to F6, about 4.0 octaves (baritone). See the highest and lowest notes, then test your own range free.",
+    ],
+    [
+      "bruno-mars",
+      "Bruno Mars Vocal Range: Reported G2–D6, Tenor | Suede Sing",
+      "Bruno Mars's reported vocal range is G2 to D6, about 3.6 octaves (tenor). See the highest and lowest notes, then test your own range free.",
+    ],
+    [
+      "reba-mcentire",
+      "Reba McEntire Vocal Range & Voice Type: Classifications Vary",
+      "Reba McEntire's reported vocal range is E3 to F5, about 2.1 octaves. Reviewed sources don't settle the voice type. See why, then test your own range free.",
+    ],
+  ])("%s reads as an answer in search results", async (slug, title, description) => {
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug }) });
+    expect(metadata.title).toEqual({ absolute: title });
+    expect(metadata.description).toBe(description);
   });
 
   it("keeps Olivia's snippet concise and its disputed status explicit", async () => {
@@ -283,7 +304,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
     expect((metadata.title as { absolute: string }).absolute.length).toBeLessThanOrEqual(60);
     expect(metadata.description!.length).toBeLessThanOrEqual(160);
     expect(metadata.description).toContain("catalog voice type");
-    expect(metadata.description).toContain("Individual endpoint review is pending");
+    expect(metadata.description).not.toMatch(/pending/i);
     expect(metadata.alternates?.canonical).toBe(`${SITE_URL}/singers/${slug}`);
     const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug }) }));
     expect(html).toMatch(new RegExp(`<a[^>]+href="/range\\?compare=${slug}"[^>]*>Compare my range — free test →</a>`));
