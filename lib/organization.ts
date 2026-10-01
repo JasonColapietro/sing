@@ -60,7 +60,7 @@ export const ORG_NODE = {
   "@type": "Organization",
   "@id": ORG_ID,
   name: ORG_NAME,
-  alternateName: ["Suede Labs AI", "Suede", "Suede Labs"],
+  alternateName: ["Suede", "Suede Labs"],
   url: ORG_URL,
   logo: ORG_LOGO,
   founder: { "@id": "https://suedeai.ai/founder#person" },
