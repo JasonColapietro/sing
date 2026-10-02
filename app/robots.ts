@@ -68,6 +68,6 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "*", ...ACCESS },
       ...AI_CRAWLERS.map((userAgent) => ({ userAgent, ...ACCESS })),
     ],
-    sitemap: [`${SITE_URL}/sitemap.xml`, "https://sing.suedeai.ai/ai-instructions-sitemap.xml"],
+    sitemap: [`${SITE_URL}/sitemap.xml`, `${SITE_URL}/ai-instructions-sitemap.xml`],
   };
 }

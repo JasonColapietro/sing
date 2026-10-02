@@ -88,6 +88,6 @@ describe("robots.txt", () => {
   });
 
   it("points at the sitemap on the canonical origin", () => {
-    expect(result.sitemap).toBe(`${SITE_URL}/sitemap.xml`);
+    expect(result.sitemap).toEqual([`${SITE_URL}/sitemap.xml`, `${SITE_URL}/ai-instructions-sitemap.xml`]);
   });
 });
