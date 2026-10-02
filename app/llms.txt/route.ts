@@ -15,7 +15,7 @@ import { buildLlmsTxt } from "@/lib/llms-txt";
 export const dynamic = "force-static";
 
 export function GET(): Response {
-  return new Response(buildLlmsTxt(), {
+  return new Response(buildLlmsTxt() + "\n\n## Source and citation guide\n\n- [AI Instructions](https://sing.suedeai.ai/ai-instructions): Site identity, authoritative sources and citation guidance.\n", {
     headers: {
       "content-type": "text/plain; charset=utf-8",
       // What Vercel served for the public/ asset. Keeps crawler-facing

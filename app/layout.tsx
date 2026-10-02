@@ -137,6 +137,7 @@ export default function RootLayout({
         ) : (
           shell
         )}
+      <nav aria-label="Site reference" style={{ padding: "1rem", textAlign: "center", fontSize: "0.875rem" }}><a href="/ai-instructions">AI Instructions</a></nav>
       </body>
     </html>
   );
