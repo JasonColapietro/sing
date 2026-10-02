@@ -43,10 +43,10 @@ export default async function Image({
           display: "flex",
           flexDirection: "column",
           padding: "68px 84px",
-          backgroundColor: "#f7f0e7",
+          backgroundColor: "#0f0c1f",
           backgroundImage:
             "radial-gradient(700px 300px at 50% -10%, rgba(197,150,66,0.16), rgba(197,150,66,0))",
-          color: "#20201d",
+          color: "#f6f4ff",
           fontFamily: "monospace",
         }}
       >
@@ -56,7 +56,7 @@ export default async function Image({
             fontSize: 24,
             letterSpacing: 8,
             fontWeight: 700,
-            color: pro ? "#9d3f33" : "#c59642",
+            color: pro ? "#ff5470" : "#ffc24a",
           }}
         >
           {pro ? "PRO SONGBOOK" : "PUBLIC DOMAIN · FREE TO SING"}
@@ -69,7 +69,7 @@ export default async function Image({
         </div>
 
         <div
-          style={{ display: "flex", marginTop: 10, fontSize: 27, color: "#5c564d" }}
+          style={{ display: "flex", marginTop: 10, fontSize: 27, color: "#c3bde3" }}
         >
           {`${song.genre} · ${song.era} · ${song.bpm} bpm · ${song.beatsPerBar}/bar · ${difficulty}`}
         </div>
@@ -80,7 +80,7 @@ export default async function Image({
               display: "flex",
               marginTop: 22,
               fontSize: 30,
-              color: "#20201d",
+              color: "#f6f4ff",
             }}
           >
             {`“${firstLine}”`}
@@ -106,7 +106,7 @@ export default async function Image({
                 top: ((hi - n.midi) / span) * (CONTOUR_H - BAR_H),
                 width: Math.max(6, (n.durBeats / totalBeats) * W - 4),
                 height: BAR_H,
-                backgroundColor: pro ? "#9d3f33" : "#c59642",
+                backgroundColor: pro ? "#ff5470" : "#ffc24a",
                 borderRadius: 4,
               }}
             />

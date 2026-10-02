@@ -68,7 +68,7 @@ export default function V2Banner() {
       <aside
         id="v2-banner"
         aria-label="What's new in Suede Sing"
-        className="relative bg-violet-ink text-white"
+        className="relative bg-brand text-white"
       >
         {/* The strip reads as a filled band rather than a hairline: white on
             --color-violet-ink is 7.10:1, so the announcement carries at a glance

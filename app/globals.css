@@ -1,44 +1,48 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-bg: #f7f0e7;
-  --color-panel: #fffaf2;
-  --color-panel2: #efe6d5;
-  --color-line: #ddd4c4;
-  --color-line2: #c9bda0;
+  --color-bg: #0f0c1f;
+  --color-panel: #1a1631;
+  --color-panel2: #241f42;
+  --color-line: #2f2953;
+  --color-line2: #463e75;
   /* Form-field borders. line and line2 are decorative rules at 1.4:1 to
      1.7:1; a field's edge is how someone finds where to type, so it needs
      the 3:1 non-text contrast (WCAG 1.4.11) on panel, bg and panel2 alike. */
-  --color-field: #8a7f6a;
-  --color-ink: #20201d;
-  --color-mut: #5c564d;
+  --color-field: #8379b8;
+  --color-ink: #f6f4ff;
+  --color-mut: #c3bde3;
   /* Darkened from #8a8272, which read 3.07–3.66:1 on bg/panel/panel2 and so
      failed WCAG AA for body text — and this token is text-only, carrying the
      mono kickers, table markers and meta lines. Now 4.74–5.65:1, still lighter
      than --color-mut so the type hierarchy is unchanged. */
-  --color-dim: #6b6455;
-  --color-amber: #c59642;
-  --color-amber-soft: #e0bb74;
+  --color-dim: #a39dc9;
+  --color-amber: #ffc24a;
+  --color-amber-soft: #ffd98c;
   /* Darker gold for text on paper/panel — --color-amber fails WCAG AA as
      foreground text (2.4–2.6:1); this clears 4.5:1+ on both surfaces while
      staying in the same gold family. Use for text-amber-ink; keep bg-amber /
      border-amber on the lighter value where it works as a fill or border. */
-  --color-amber-ink: #82631f;
-  --color-rec: #9d3f33;
-  --color-ok: #3f8f6e;
+  --color-amber-ink: #ffd27a;
+  --color-rec: #ff5470;
+  --color-ok: #2fd49a;
   /* Same split as amber above: --color-ok reads 3.16–3.77:1 as text, so it
      stays the fill and border value (progress bars, success chips, the canvas
      and SVG constants that mirror it) while text-ok-ink carries anything a
      reader has to read. 4.85–5.78:1. */
-  --color-ok-ink: #2a6f53;
-  --color-cool: #11615d;
+  --color-ok-ink: #6ff0bf;
+  --color-cool: #5ee7e0;
   /* Violet, shared with Suede AI Agent Studio: this fill value is byte-identical
      to that app's `--violet`, so the two surfaces read as one estate. Split the
      same way gold and green are, and for the same reason — #8b5cf6 measures
      3.42-4.07:1 on the three paper grounds, so it is a fill and border only.
      Anything a reader has to read takes --color-violet-ink (5.73-6.84:1). */
   --color-violet: #8b5cf6;
-  --color-violet-ink: #6d28d9;
+  /* Solid fill behind white button text: 5.7:1, where #8b5cf6 is 4.2:1. */
+  --color-brand: #7c3aed;
+  /* The second accent, the hot pink of the pitch trail and the hero glow. */
+  --color-pink: #ff4fa3;
+  --color-violet-ink: #c9b8ff;
   /* Playable piano keys (/tools, studio target practice). Held here rather
      than inline so the two keyboards cannot drift apart again — they had two
      white fills, two blacks, and a white key that darkened on hover in one
@@ -47,15 +51,16 @@
      and text-line2 over black (text-mut reads 2.7:1 on a black key).
      lib/chart-colors.ts mirrors these for the SVG and canvas keyboards, which
      cannot read a custom property. */
-  --color-key-white: #faf6ec;
-  --color-key-white-hover: #e4dccb;
-  --color-key-black: #0b0a07;
-  --color-key-black-hover: #171410;
+  --color-key-white: #f4f1ff;
+  --color-key-white-hover: #dcd5f7;
+  --color-key-label: #4a4470;
+  --color-key-black: #0a0816;
+  --color-key-black-hover: #1c1833;
   /* The editorial voice: h1 and h2, and nothing else. See app/layout.tsx for
      why this is a serif and why it is restricted. The fallbacks are the two
      book faces most likely to already be installed, so a failed webfont
      degrades to something with the same colour rather than to Times. */
-  --font-display: var(--font-instrument-serif), "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
 
@@ -70,7 +75,7 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
   /* A wide nested overflow-x-auto container (the landing page's comparison
      table, min-w-720px) inflates the mobile *layout* viewport (window.
      innerWidth) even though it's correctly clipped and scrollable within
@@ -86,8 +91,10 @@ html {
 body {
   overflow-x: clip;
   background:
-    radial-gradient(1100px 480px at 50% -12%, rgba(197, 150, 66, 0.08), transparent 60%),
+    radial-gradient(900px 520px at 85% -10%, rgba(255, 79, 163, 0.16), transparent 60%),
+    radial-gradient(900px 520px at 0% 0%, rgba(124, 58, 237, 0.22), transparent 60%),
     var(--color-bg);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-body);
 }
@@ -98,8 +105,8 @@ body {
  */
 h1,
 h2 {
-  font-family: var(--font-display);
-  font-weight: 400;
+  font-family: var(--font-body);
+  font-weight: 800;
   letter-spacing: -0.015em;
   line-height: 1.08;
 }
@@ -121,7 +128,7 @@ h3 {
  * translate is small enough to feel like a press rather than a jump.
  */
 .lift {
-  box-shadow: 0 1px 2px rgba(72, 58, 32, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   transition:
     box-shadow 0.2s ease,
     transform 0.2s ease,
@@ -130,13 +137,13 @@ h3 {
 
 @media (hover: hover) {
   .lift:hover {
-    box-shadow: 0 8px 20px -6px rgba(72, 58, 32, 0.16);
+    box-shadow: 0 8px 20px -6px rgba(124, 58, 237, 0.35);
     transform: translateY(-2px);
   }
 }
 
 .lift:active {
-  box-shadow: 0 1px 2px rgba(72, 58, 32, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   transform: translateY(0);
 }
 
@@ -147,16 +154,16 @@ h3 {
  */
 .well {
   background: var(--color-panel2);
-  box-shadow: inset 0 1px 2px rgba(72, 58, 32, 0.07);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 ::selection {
-  background: var(--color-amber);
-  color: var(--color-ink);
+  background: var(--color-violet);
+  color: #ffffff;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-rec);
+  outline: 2px solid var(--color-amber);
   outline-offset: 2px;
 }
 

@@ -11,11 +11,12 @@ import Nav from "./nav";
 
 describe("main navigation current location", () => {
   it.each([
-    ["/learn", "/learn", "page"],
-    ["/learn/voice", "/learn", "location"],
-    ["/glossary/tessitura", "/learn", "location"],
-    ["/singers/olivia-rodrigo", "/singers", "location"],
-    ["/recorder", "/tools", "location"],
+    ["/", "/", "page"],
+    ["/range", "/range", "page"],
+    ["/learn/voice", "/warmups", "location"],
+    ["/glossary/tessitura", "/warmups", "location"],
+    ["/singers/olivia-rodrigo", "/songs", "location"],
+    ["/recorder", "/range", "location"],
   ])("announces %s through the correct navigation link", (pathname, href, current) => {
     route.pathname = pathname;
     const html = renderToStaticMarkup(<Nav />);
@@ -34,7 +35,7 @@ describe("main navigation current location", () => {
     const html = renderToStaticMarkup(<Nav />);
     const main = html.match(/<nav aria-label="Main"[^>]*>(.*?)<\/nav>/)?.[1] ?? "";
     const links = main.match(/<a\b[^>]*>/g) ?? [];
-    expect(links).toHaveLength(10);
+    expect(links).toHaveLength(5);
     for (const link of links) expect(link).toContain("min-h-11");
   });
 });

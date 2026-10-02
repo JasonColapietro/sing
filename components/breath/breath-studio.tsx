@@ -249,7 +249,7 @@ export function BreathStudio() {
                 <button
                   type="button"
                   onClick={() => start({ kind: "routine", routine: r })}
-                  className="mt-4 min-h-11 rounded-full bg-violet-ink px-5 text-sm font-medium text-white transition-colors hover:bg-violet"
+                  className="mt-4 min-h-11 rounded-full bg-brand px-5 text-sm font-medium text-white transition-colors hover:bg-violet"
                 >
                   Start {r.name.toLowerCase()}
                 </button>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
-import { RangeTest } from "@/components/range/range-test";
+import { VoiceTest } from "@/components/range/voice-test";
 import { SITE_URL } from "@/lib/site";
 import { ToolGuide } from "@/components/guide";
 import { RANGE_GUIDE } from "@/lib/guides";
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 export default function RangePage() {
   return (
     <>
-      <RangeTest />
+      <VoiceTest />
       <RoomRailBand current="/range" />
       <section className="mx-auto max-w-4xl px-4 py-8" aria-label="Where this test lives">
         <p className="rounded-2xl border border-line bg-panel p-5 leading-relaxed text-mut">

@@ -149,7 +149,7 @@ export function Drone({ onActive }: { onActive: (active: boolean) => void }) {
                 onClick={() => pickNote(pc)}
                 className={`min-h-11 rounded-lg border py-2 font-mono text-sm transition-colors ${
                   isPlaying
-                    ? "border-violet bg-violet text-[#241a05]"
+                    ? "border-violet bg-brand text-white"
                     : pc === rootPc
                       ? "border-violet/50 bg-panel2 text-violet-ink"
                       : "border-line bg-panel2 text-mut hover:border-line2 hover:text-ink"

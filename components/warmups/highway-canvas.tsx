@@ -107,7 +107,7 @@ export function HighwayCanvas({
         ok: get("--s-ok") || "#7fd6a3",
         okSoft: get("--s-ok-soft") || "rgba(127,214,163,0.22)",
         voice: get("--s-voice") || "#9fd3d8",
-        amber: get("--s-amber") || "#e0bb74",
+        amber: get("--s-amber") || "#ffd98c",
       };
     };
 

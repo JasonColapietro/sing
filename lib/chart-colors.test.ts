@@ -126,15 +126,16 @@ describe("legibility", () => {
   });
 
   it("keeps MUT and INK above DIM in the type hierarchy", () => {
-    expect(luminance(MUT)).toBeLessThan(luminance(DIM));
-    expect(luminance(INK)).toBeLessThan(luminance(MUT));
+    // A dark ground: the stronger the type, the lighter the glyph.
+    expect(luminance(MUT)).toBeGreaterThan(luminance(DIM));
+    expect(luminance(INK)).toBeGreaterThan(luminance(MUT));
   });
 
   it("keeps key labels readable on the key they sit on", () => {
     // The studio keyboard used to letter its white keys in LINE2 — 1.3:1.
     expect(contrast(KEY_LABEL, KEY_WHITE)).toBeGreaterThanOrEqual(4.5);
     expect(contrast(KEY_LABEL_ON_BLACK, KEY_BLACK)).toBeGreaterThanOrEqual(4.5);
-    expect(contrast(INK, AMBER)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(BG, AMBER)).toBeGreaterThanOrEqual(4.5);
   });
 
   it("hovers a key darker, never lighter, on both key colours", () => {

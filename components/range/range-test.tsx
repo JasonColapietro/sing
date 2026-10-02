@@ -106,7 +106,7 @@ function ListeningPill() {
   );
 }
 
-export function RangeTest() {
+export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
   const { frame, listening, error, start, stop } = usePitch();
   const progress = useProgress();
 
@@ -308,15 +308,27 @@ export function RangeTest() {
   const liveLabel = frame.note?.label ?? "—";
   const savedRange = progress.range;
 
-  return (
-    <PageShell
-      kicker="Range test"
-      title="Find your vocal range"
-      subtitle="A guided two-minute test: hold a comfortable note, slide down to your lowest, then up to your highest."
-      actions={
-        stage !== "intro" && stage !== "result" ? <ListeningPill /> : undefined
-      }
-    >
+  const pill =
+    stage !== "intro" && stage !== "result" ? <ListeningPill /> : undefined;
+  const wrap = (children: React.ReactNode) =>
+    embedded ? (
+      <div>
+        {pill && <div className="mb-4 flex justify-end">{pill}</div>}
+        {children}
+      </div>
+    ) : (
+      <PageShell
+        kicker="Range test"
+        title="Find your vocal range"
+        subtitle="A guided two-minute test: hold a comfortable note, slide down to your lowest, then up to your highest."
+        actions={pill}
+      >
+        {children}
+      </PageShell>
+    );
+
+  return wrap(
+    <>
       {stage !== "intro" && (
         <div className="mb-6">
           <StepIndicator stage={stage} />
@@ -564,6 +576,6 @@ export function RangeTest() {
           The microphone stopped. Press start over and enable it again.
         </p>
       )}
-    </PageShell>
+    </>,
   );
 }

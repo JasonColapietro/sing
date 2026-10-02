@@ -14,7 +14,7 @@ import { AMBER, DIM, LINE, LINE2, MONO, MUT, PANEL } from "./charts";
 
 /** Weak enough to be worth practising on purpose. */
 const WEAK_BELOW = 70;
-const REC = "#9d3f33";
+const REC = "#ff5470";
 
 const emptyClass =
   "rounded-xl border border-dashed border-line2 px-4 py-8 text-center text-sm text-mut";

@@ -16,29 +16,29 @@
  */
 
 /* Surfaces */
-export const BG = "#f7f0e7";
-export const PANEL = "#fffaf2";
-export const PANEL2 = "#efe6d5";
+export const BG = "#0f0c1f";
+export const PANEL = "#1a1631";
+export const PANEL2 = "#241f42";
 
 /* Rules and borders */
-export const LINE = "#ddd4c4";
-export const LINE2 = "#c9bda0";
+export const LINE = "#2f2953";
+export const LINE2 = "#463e75";
 
 /* Type. DIM is the lightest value that still clears WCAG AA on all three
    surfaces; anything lighter belongs on a fill, not on a glyph. */
-export const INK = "#20201d";
-export const MUT = "#5c564d";
-export const DIM = "#6b6455";
+export const INK = "#f6f4ff";
+export const MUT = "#c3bde3";
+export const DIM = "#a39dc9";
 
 /* Accents. AMBER / OK are fill-and-stroke values; AMBER_INK / OK_INK are the
    darkened text variants — same split globals.css documents. */
-export const AMBER = "#c59642";
-export const AMBER_SOFT = "#e0bb74";
-export const AMBER_INK = "#82631f";
-export const OK = "#3f8f6e";
-export const OK_INK = "#2a6f53";
-export const REC = "#9d3f33";
-export const COOL = "#11615d";
+export const AMBER = "#ffc24a";
+export const AMBER_SOFT = "#ffd98c";
+export const AMBER_INK = "#ffd27a";
+export const OK = "#2fd49a";
+export const OK_INK = "#6ff0bf";
+export const REC = "#ff5470";
+export const COOL = "#5ee7e0";
 
 /* ------------------------------------------------------------------ */
 /* Keyboards                                                           */
@@ -53,19 +53,19 @@ export const COOL = "#11615d";
  * Mirrored into @theme as --color-key-* so the keyboards, which are HTML
  * buttons rather than SVG, can use real utility classes.
  */
-export const KEY_WHITE = "#faf6ec";
-export const KEY_WHITE_HOVER = "#e4dccb";
-export const KEY_BLACK = "#0b0a07";
-export const KEY_BLACK_HOVER = "#171410";
+export const KEY_WHITE = "#f4f1ff";
+export const KEY_WHITE_HOVER = "#dcd5f7";
+export const KEY_BLACK = "#0a0816";
+export const KEY_BLACK_HOVER = "#1c1833";
 /**
  * Note letters. Both keyboards are HTML, so they letter their keys with
  * `text-mut` / `text-line2` rather than importing these — the constants are
  * here to name the answer and to hold the contrast test that keeps it. The
  * studio keyboard lettered its white keys in LINE2 (1.3:1) until this landed.
  */
-export const KEY_LABEL = MUT;
+export const KEY_LABEL = "#4a4470";
 /** On a black key MUT reads 2.7:1 and LINE2 reads 10.6:1 — the reverse. */
-export const KEY_LABEL_ON_BLACK = LINE2;
+export const KEY_LABEL_ON_BLACK = DIM;
 
 /**
  * Read-only miniature strips — the range keyboard, the singers chromatic
@@ -74,7 +74,7 @@ export const KEY_LABEL_ON_BLACK = LINE2;
  * rather than as black keys, which is what keeps a 9px-per-semitone strip
  * legible. Kept distinct from the playable values on purpose.
  */
-export const STRIP_WHITE = "#e9e2d3";
+export const STRIP_WHITE = "#3a3363";
 export const STRIP_BLACK = PANEL;
 
 /* ------------------------------------------------------------------ */

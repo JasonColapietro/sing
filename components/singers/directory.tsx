@@ -79,7 +79,7 @@ function Ruler({ youLow, youHigh }: { youLow?: number; youHigh?: number }) {
               y={0}
               width={0.88}
               height={black ? 6 : 10}
-              fill={black ? "#fffaf2" : "#e9e2d3"}
+              fill={black ? "#1a1631" : "#3a3363"}
             />
           );
         })}

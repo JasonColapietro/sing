@@ -9,7 +9,7 @@ function cn(...parts: Array<string | false | null | undefined>) {
 
 /** Small mono uppercase label, styled like a console tape label. */
 const LABEL_CLASS =
-  "inline-block rounded border border-violet/35 bg-panel px-2 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-violet-ink";
+  "inline-block rounded-full bg-violet/15 px-3 py-1 text-label font-extrabold uppercase tracking-[0.12em] text-violet-ink";
 
 export function SectionLabel({
   children,
@@ -135,7 +135,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl",
+        "rounded-3xl",
         tone === "well"
           ? "well"
           : tone === "raised"
@@ -154,17 +154,17 @@ type ButtonVariant = "rec" | "violet" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
 const buttonBase =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-bold transition-[background-color,color,transform] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40";
 const buttonVariants: Record<ButtonVariant, string> = {
-  rec: "bg-rec text-[#fffaf2] hover:bg-[#b5493d]",
-  violet: "bg-violet-ink text-white hover:bg-violet",
+  rec: "bg-rec text-[#1b0711] hover:bg-[#ff7a90]",
+  violet: "bg-brand text-white shadow-[0_8px_24px_-8px_rgba(124,58,237,0.7)] hover:bg-violet",
   outline: "border border-line2 text-ink hover:border-violet hover:text-violet-ink",
   ghost: "text-mut hover:text-ink hover:bg-panel2",
 };
 const buttonSizes: Record<ButtonSize, string> = {
   sm: "px-3 py-1.5 text-sm",
   md: "px-5 py-2.5 text-sm",
-  lg: "px-7 py-3.5 text-base",
+  lg: "px-8 py-4 text-base",
 };
 
 export function Button({

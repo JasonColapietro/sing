@@ -834,7 +834,7 @@ export default function RecorderPageClient() {
                   className={cn(
                     "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors",
                     loadedId === selectedTake.id && isPlaying
-                      ? "border-violet bg-violet text-[#241a05]"
+                      ? "border-violet bg-brand text-white"
                       : "border-line2 text-ink hover:border-violet hover:text-violet-ink",
                   )}
                   aria-label={
@@ -1014,20 +1014,20 @@ export default function RecorderPageClient() {
                   className="block w-full"
                   aria-hidden="true"
                 >
-                  <line x1="16" y1="35" x2="624" y2="35" stroke="#ddd4c4" strokeWidth="1" />
-                  <line x1="16" y1="75" x2="624" y2="75" stroke="#ddd4c4" strokeWidth="1" />
-                  <line x1="16" y1="115" x2="624" y2="115" stroke="#ddd4c4" strokeWidth="1" />
+                  <line x1="16" y1="35" x2="624" y2="35" stroke="#2f2953" strokeWidth="1" />
+                  <line x1="16" y1="75" x2="624" y2="75" stroke="#2f2953" strokeWidth="1" />
+                  <line x1="16" y1="115" x2="624" y2="115" stroke="#2f2953" strokeWidth="1" />
                   <path
                     d="M16 108 C 70 106, 96 70, 150 66 S 240 96, 296 92 S 380 40, 440 38 S 540 74, 624 44"
                     fill="none"
-                    stroke="#c9bda0"
+                    stroke="#463e75"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                   />
                   <path
                     d="M16 96 C 64 98, 100 58, 158 56 S 250 84, 308 80 S 388 32, 452 32 S 552 64, 624 36"
                     fill="none"
-                    stroke="#c59642"
+                    stroke="#ffc24a"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                   />

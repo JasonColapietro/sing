@@ -27,10 +27,10 @@ export default function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: "#f7f0e7",
+          backgroundColor: "#0f0c1f",
           backgroundImage:
             "radial-gradient(760px 320px at 50% -10%, rgba(197,150,66,0.16), rgba(197,150,66,0))",
-          color: "#20201d",
+          color: "#f6f4ff",
           fontFamily: "monospace",
           padding: "64px 72px",
         }}
@@ -40,7 +40,7 @@ export default function Image() {
             style={{
               fontSize: 24,
               letterSpacing: 8,
-              color: "#c59642",
+              color: "#ffc24a",
               fontWeight: 600,
             }}
           >
@@ -59,7 +59,7 @@ export default function Image() {
           <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.05 }}>
             {`in your browser`}
           </div>
-          <div style={{ marginTop: 18, fontSize: 28, color: "#5c564d" }}>
+          <div style={{ marginTop: 18, fontSize: 28, color: "#c3bde3" }}>
             {`Live pitch · Range test · Warmups · Ear training · Free`}
           </div>
         </div>

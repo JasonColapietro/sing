@@ -12,7 +12,7 @@ import { LinkButton } from "@/components/ui";
 export function ProChip({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded bg-violet-ink px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-white ${className}`}
+      className={`inline-flex items-center rounded bg-brand px-1.5 py-px font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-white ${className}`}
     >
       Pro
     </span>

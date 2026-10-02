@@ -98,7 +98,7 @@ export function TakeRow({
           className={cn(
             "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors",
             playing
-              ? "border-violet bg-violet text-[#241a05]"
+              ? "border-violet bg-brand text-white"
               : "border-line2 text-ink hover:border-violet hover:text-violet-ink",
           )}
           aria-label={playing ? `Pause ${take.name}` : `Play ${take.name}`}
@@ -198,7 +198,7 @@ export function TakeRow({
           <span className="text-rec">Delete take? This can&rsquo;t be undone.</span>
           <button
             type="button"
-            className="rounded-full bg-rec px-2.5 py-1 font-medium text-[#fffaf2] hover:bg-[#b5493d]"
+            className="rounded-full bg-rec px-2.5 py-1 font-medium text-[#1b0711] hover:bg-[#ff7a90]"
             onClick={(e) => {
               e.stopPropagation();
               setArmed(false);

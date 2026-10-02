@@ -6,12 +6,8 @@ import { SONGS } from "@/components/songs/data";
 import { SINGERS } from "@/lib/singers";
 import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
-import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
+import { LinkButton, SectionLabel } from "@/components/ui";
 import { FamousVoices } from "@/components/landing/famous-voices";
-import { HeroSplit } from "@/components/landing/hero-split";
-import { IosBand } from "@/components/landing/ios-band";
-import { StartingPaths } from "@/components/landing/paths";
-import ComparisonTable from "@/components/landing/comparison";
 import ProVisual from "@/components/pro/pro-visual";
 import {
   BreathGlyph,
@@ -94,24 +90,6 @@ const FEATURES = [
   },
 ];
 
-const STEPS = [
-  {
-    n: "01",
-    title: "Enable your mic",
-    desc: "Grant mic access once. Audio is analyzed on your device and never leaves it.",
-  },
-  {
-    n: "02",
-    title: "Sing the guided exercises",
-    desc: "Follow the note lanes in warmups, ear training, and songs. Scoring is instant.",
-  },
-  {
-    n: "03",
-    title: "Watch your numbers grow",
-    desc: "Range, accuracy, and streaks build session by session on your progress page.",
-  },
-];
-
 // Homepage-only head additions (audit 2026-08-02: canonical, OG and schema were
 // absent sitewide at the root). Kept here rather than in layout.tsx so routes that
 // set their own canonical (e.g. /singers/[slug]) are not overridden.
@@ -174,199 +152,225 @@ const HOME_JSON_LD = {
   ],
 };
 
+/** Cover gradients for the song carousel, cycled so neighbours never match. */
+const COVERS = [
+  "from-[#7c3aed] to-[#ff4fa3]",
+  "from-[#0ea5e9] to-[#7c3aed]",
+  "from-[#ff4fa3] to-[#ffc24a]",
+  "from-[#10b981] to-[#0ea5e9]",
+  "from-[#f97316] to-[#ff4fa3]",
+  "from-[#6366f1] to-[#22d3ee]",
+];
+
+const LESSONS = [
+  { href: "/warmups", label: "Warmups", desc: "5 to 15 minute routines", Glyph: WarmupGlyph },
+  { href: "/ear-training", label: "Ear training", desc: "Intervals and pitch matching", Glyph: EarGlyph },
+  { href: "/breath", label: "Breath", desc: "Support and sustain", Glyph: BreathGlyph },
+  { href: "/learn", label: "Learn", desc: "The voice course and books", Glyph: ProgressGlyph },
+];
+
+const TOOLS = FEATURES.filter((f) =>
+  ["/studio", "/recorder", "/tools", "/singers"].includes(f.href),
+);
+
 export default function Home() {
+  const songs = SONGS.slice(0, 12);
   return (
-    <main>
+    <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-6 sm:px-6 sm:pt-10">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_JSON_LD) }}
       />
-      {/* 1 — Hero, carried over from the iOS app's landing page */}
-      <HeroSplit />
 
-      {/* 2 — Starting paths, above the grid: ten equal choices is the wrong
-              shape for a first visit, and a beginner and a working singer
-              need opposite entry points. */}
-      <StartingPaths />
-
-      {/* 3 — Feature grid */}
-      <section className="border-t border-line">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading
-            label="Ten practice rooms"
-            lede="No install required, no ads. Open any room and sing — the browser studio does live pitch feedback, range testing, warmups, ear training, breath work and song practice."
-          >
-            Everything a practice session needs, one tab over
-          </SectionHeading>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(({ href, label, desc, Glyph }) => (
-              <Link
-                key={href}
-                href={href}
-                className="lift group rounded-2xl border border-line bg-panel p-5 hover:border-violet/50 sm:p-6"
-              >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-violet-ink">
-                  <Glyph />
-                </span>
-                <span className="mt-4 block text-xl text-ink group-hover:text-violet-ink">
-                  {label}
-                </span>
-                <span className="mt-1 block text-sm text-mut">{desc}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4 — Head-query singer pages, linked straight from the strongest page
-              on the subdomain. See famous-voices.tsx for why the hubs alone
-              were not enough. */}
-      <FamousVoices />
-
-      {/* 5 — The iOS app, folded in from print.suedeai.ai */}
-      <IosBand />
-
-      {/* 6 — Comparison */}
-      <section className="border-t border-line bg-panel/40">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading
-            label="Side by side"
-            lede="Most trainers do a few of these things, behind an install requirement. Suede Sing does all of them on the web: the studio and the range test free without limits, three free minutes of guided practice a day, and unlimited practice on Pro."
-          >
-            The whole toolkit, in one tab
-          </SectionHeading>
-          <div className="mt-8">
-            <ComparisonTable />
-          </div>
-        </div>
-      </section>
-
-      {/* 7 — How practice works */}
-      <section className="border-t border-line">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <SectionHeading label="How practice works">
-            Three steps, no setup
-          </SectionHeading>
-          <ol className="mt-8 grid gap-4 md:grid-cols-3">
-            {STEPS.map((step) => (
-              <li
-                key={step.n}
-                className="rounded-2xl border border-line bg-panel p-5 sm:p-6"
-              >
-                <span className="tabular font-mono text-sm text-violet-ink">
-                  {step.n}
-                </span>
-                <h3 className="mt-3 text-xl">{step.title}</h3>
-                <p className="mt-2 text-sm text-mut">{step.desc}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* 8 — Pro teaser */}
-      <section className="border-t border-line">
-        <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-12">
-            <div>
-              <SectionLabel className="mb-4 border-violet/50 text-violet-ink">
-                Suede Pro · Early Access
-              </SectionLabel>
-              <h2 className="max-w-xl text-2xl sm:text-3xl">
-                The coach on top of the studio
-              </h2>
-              <p className="mt-3 max-w-xl text-mut">
-                The studio, the range test and {SINGERS.length} measured voices
-                are free. Free accounts get three minutes of guided
-                practice a day across warmups, ear training, breath and all{" "}
-                {SONGS.length} songs. Pro removes the clock and adds the library
-                and the long memory: both books in full, pitch analysis on
-                every take, and your range charted over months rather than one
-                test at a time.
-              </p>
-              <ul className="mt-5 space-y-2.5">
-                {[
-                  `Both books open at once — ${TOTAL_CHAPTERS} chapters, ${TOTAL_WORDS.toLocaleString("en-US")} words, two PDFs to keep`,
-                  "A practice plan that rebuilds itself around your weak notes",
-                  "Range growth and accuracy trends, week over week",
-                  "Pitch analysis on every recorded take",
-                ].map((line) => (
-                  <li
-                    key={line}
-                    className="flex items-start gap-2.5 text-sm text-mut"
-                  >
-                    <span aria-hidden className="mt-0.5 font-mono text-violet-ink">
-                      ✓
-                    </span>
-                    {line}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-7 flex flex-wrap items-center gap-3">
-                <LinkButton href="/pro" variant="violet" size="lg">
-                  See Suede Pro
-                </LinkButton>
-              </div>
-              {/* The price used to appear nowhere on this page — a visitor had
-                  to click into /pro to learn what Pro costs. The privacy strip below covers where the voice goes. */}
-              <p className="mt-5 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                {PRO_PRICE_LINE}
-                <span className="mx-2 text-line2">·</span>The{" "}
-                {PRO_MONTHLY_PRICE} monthly price stays while your subscription
-                remains active
-                <span className="mx-2 text-line2">·</span>Monthly cancels anytime
-                <span className="mx-2 text-line2">·</span>Lifetime never renews
-              </p>
-            </div>
-            <ProVisual />
-          </div>
-        </div>
-      </section>
-
-      {/* 9 — Privacy strip */}
-      <section className="border-t border-line bg-panel/40">
-        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 sm:px-6">
-          <p className="max-w-xl text-sm text-mut">
-            <span className="text-ink">Your voice stays yours.</span> All audio
-            analysis runs on this device — nothing is recorded to a server,
-            uploaded, or tied to an account.
+      {/* Hero: one job, start singing. */}
+      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#2a1460] via-[#3b1670] to-[#5b1450] px-6 py-10 sm:px-12 sm:py-16">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-pink/30 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-32 -left-16 size-80 rounded-full bg-violet/40 blur-3xl"
+        />
+        <div className="relative max-w-2xl">
+          <p className="text-label font-extrabold uppercase tracking-[0.14em] text-pink">
+            Free singing lessons in your browser
           </p>
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            On-device analysis<span className="mx-2 text-line2">·</span>Nothing
-            uploaded<span className="mx-2 text-line2">·</span>No ads
+          <h1 className="mt-3 text-[clamp(2.4rem,7vw,4.25rem)] leading-[1.02]">
+            Sing better, one note at a time
+          </h1>
+          <p className="mt-4 max-w-xl text-lg text-mut">
+            Sing into your mic and see your pitch live. Warm up, learn songs in
+            your key, and watch your range grow.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <LinkButton href="/range" variant="violet" size="lg">
+              Start singing
+            </LinkButton>
+            <LinkButton href="/range?mode=range" variant="outline" size="lg">
+              Find my vocal range
+            </LinkButton>
+          </div>
+          <p className="mt-5 text-sm text-dim">
+            No install. Audio stays on your device.
           </p>
         </div>
       </section>
 
-      {/* 10 — Final CTA */}
-      <section className="border-t border-line">
-        <div className="mx-auto w-full max-w-6xl px-4 py-20 text-center sm:px-6">
-          <h2 className="text-3xl sm:text-4xl">
-            Your mic is the only equipment
+      {/* Today */}
+      <section className="mt-10" aria-labelledby="today">
+        <h2 id="today" className="text-2xl sm:text-3xl">
+          Today&apos;s practice
+        </h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <Link
+            href="/warmups"
+            className="lift group relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0e6b5a] to-[#0b3d4f] p-6"
+          >
+            <span className="text-label font-extrabold uppercase tracking-[0.14em] text-ok-ink">
+              Daily workout
+            </span>
+            <span className="mt-2 block text-2xl font-extrabold">Warm up your voice</span>
+            <span className="mt-1 block text-mut">
+              A short guided routine, every note scored as you sing.
+            </span>
+            <span className="mt-5 inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm font-bold text-bg">
+              Start workout
+            </span>
+          </Link>
+          <Link
+            href="/range"
+            className="lift group relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4c1d95] to-[#1e1b4b] p-6"
+          >
+            <span className="text-label font-extrabold uppercase tracking-[0.14em] text-violet-ink">
+              Pitch meter
+            </span>
+            <span className="mt-2 block text-2xl font-extrabold">How in tune are you?</span>
+            <span className="mt-1 block text-mut">
+              Hold a note and watch the line. Green means you nailed it.
+            </span>
+            <span className="mt-5 inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm font-bold text-bg">
+              Open pitch meter
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* Songs carousel */}
+      <section className="mt-12" aria-labelledby="songs">
+        <div className="flex items-end justify-between gap-4">
+          <h2 id="songs" className="text-2xl sm:text-3xl">
+            Sing a song
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-mut">
-            Open the studio, sing one warmup, and see your pitch on screen in
-            under a minute.
-          </p>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <LinkButton href="/studio" variant="rec" size="lg">
-              Start singing — free
-            </LinkButton>
-            <LinkButton href="/warmups" variant="ghost" size="lg">
-              Browse warmups
-            </LinkButton>
-          </div>
-          <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-            Ready for the coach?{" "}
+          <Link href="/songs" className="text-sm font-bold text-violet-ink hover:text-ink">
+            See all {SONGS.length}
+          </Link>
+        </div>
+        <ul className="no-scrollbar -mx-4 mt-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6">
+          {songs.map((song, i) => (
+            <li key={song.id} className="w-40 shrink-0 snap-start sm:w-48">
+              <Link href={`/songs/${song.slug}`} className="group block">
+                <span
+                  className={`lift flex aspect-square items-end rounded-3xl bg-gradient-to-br p-4 ${COVERS[i % COVERS.length]}`}
+                >
+                  <span aria-hidden className="text-white/90">
+                    <SongGlyph />
+                  </span>
+                </span>
+                <span className="mt-2 block truncate font-bold text-ink group-hover:text-violet-ink">
+                  {song.title}
+                </span>
+                <span className="block truncate text-sm text-dim">{song.genre}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Lessons */}
+      <section className="mt-12" aria-labelledby="lessons">
+        <h2 id="lessons" className="text-2xl sm:text-3xl">
+          Lessons
+        </h2>
+        <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {LESSONS.map(({ href, label, desc, Glyph }) => (
             <Link
-              href="/pro"
-              className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+              key={href}
+              href={href}
+              className="lift rounded-3xl border border-line bg-panel p-5 hover:border-violet/50"
             >
-              See Suede Pro
+              <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-violet/15 text-violet-ink">
+                <Glyph />
+              </span>
+              <span className="mt-4 block text-lg font-extrabold">{label}</span>
+              <span className="mt-0.5 block text-sm text-mut">{desc}</span>
             </Link>
-          </p>
+          ))}
         </div>
       </section>
+
+      {/* Tools */}
+      <section className="mt-12" aria-labelledby="tools">
+        <h2 id="tools" className="text-2xl sm:text-3xl">
+          Tools
+        </h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {TOOLS.map(({ href, label, desc, Glyph }) => (
+            <Link
+              key={href}
+              href={href}
+              className="lift flex items-start gap-4 rounded-3xl border border-line bg-panel p-5 hover:border-violet/50"
+            >
+              <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-2xl bg-panel2 text-pink">
+                <Glyph />
+              </span>
+              <span>
+                <span className="block font-extrabold">{label}</span>
+                <span className="mt-0.5 block text-sm text-mut">{desc}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Famous voices: head-query singer pages, linked from the strongest
+          page on the subdomain. */}
+      <div className="-mx-4 mt-12 sm:-mx-6">
+        <FamousVoices />
+      </div>
+
+      {/* Pro */}
+      <section className="mt-12 overflow-hidden rounded-[2rem] border border-violet/40 bg-panel">
+        <div className="grid items-center gap-8 p-6 sm:p-10 lg:grid-cols-2">
+          <div>
+            <SectionLabel className="mb-4">Suede Pro · Early Access</SectionLabel>
+            <h2 className="max-w-xl text-2xl sm:text-3xl">Practice without the clock</h2>
+            <p className="mt-3 max-w-xl text-mut">
+              The pitch meter, the range test and {SINGERS.length} measured voices
+              are free. Free accounts get three minutes of guided practice a
+              day. Pro removes the clock and adds both books ({TOTAL_CHAPTERS}{" "}
+              chapters, {TOTAL_WORDS.toLocaleString("en-US")} words), pitch
+              analysis on every take, and your range charted over months.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <LinkButton href="/pro" variant="violet" size="lg">
+                See Suede Pro
+              </LinkButton>
+            </div>
+            <p className="mt-4 text-xs font-bold text-dim">
+              {PRO_PRICE_LINE} · The {PRO_MONTHLY_PRICE} monthly price stays
+              while your subscription remains active · Monthly cancels anytime ·
+              Lifetime never renews
+            </p>
+          </div>
+          <ProVisual />
+        </div>
+      </section>
+
+      <p className="mt-10 text-center text-sm text-dim">
+        <span className="text-ink">Your voice stays yours.</span> All audio
+        analysis runs on this device. Nothing is uploaded and there are no ads.
+      </p>
     </main>
   );
 }

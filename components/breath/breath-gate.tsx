@@ -32,7 +32,7 @@ export function BreathGatePanel({
   const lit = session ? "text-[var(--s-ink)]" : "text-ink";
   const primary = session
     ? "bg-[var(--s-ok)] text-[oklch(0.15_0.02_155)] hover:brightness-110"
-    : "bg-violet-ink text-white hover:bg-violet";
+    : "bg-brand text-white hover:bg-violet";
   const quiet = session
     ? "border border-[var(--s-line2)] text-[var(--s-mut)] hover:bg-[var(--s-over)] hover:text-[var(--s-ink)]"
     : "border border-line2 text-mut hover:bg-panel2 hover:text-ink";

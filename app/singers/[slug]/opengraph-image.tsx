@@ -36,10 +36,10 @@ export default async function Image({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#f7f0e7",
+          backgroundColor: "#0f0c1f",
           backgroundImage:
             "radial-gradient(700px 300px at 50% -10%, rgba(197,150,66,0.14), rgba(197,150,66,0))",
-          color: "#20201d",
+          color: "#f6f4ff",
           fontFamily: "monospace",
         }}
       >
@@ -48,7 +48,7 @@ export default async function Image({
             marginTop: 60,
             fontSize: 26,
             letterSpacing: 10,
-            color: "#c59642",
+            color: "#ffc24a",
             fontWeight: 600,
           }}
         >
@@ -60,10 +60,10 @@ export default async function Image({
         <div style={{ marginTop: 10, fontSize: 92, fontWeight: 700 }}>
           {`${midiToLabel(s.lowMidi)} — ${midiToLabel(s.highMidi)}`}
         </div>
-        <div style={{ marginTop: 12, fontSize: 28, color: "#5c564d" }}>
+        <div style={{ marginTop: 12, fontSize: 28, color: "#c3bde3" }}>
           {`${describeSpan(semis)} · ${semis} semitones`}
         </div>
-        <div style={{ marginTop: 12, fontSize: 22, color: "#5c564d" }}>
+        <div style={{ marginTop: 12, fontSize: 22, color: "#c3bde3" }}>
           {`${singerReviewLabel(s.slug)} · Not a training target`}
         </div>
 
@@ -88,8 +88,8 @@ export default async function Image({
                   top: 0,
                   width: cw - 2,
                   height: black ? 66 : 110,
-                  backgroundColor: black ? "#fffaf2" : "#e9e2d3",
-                  border: "1px solid #ddd4c4",
+                  backgroundColor: black ? "#1a1631" : "#3a3363",
+                  border: "1px solid #2f2953",
                   borderRadius: 3,
                 }}
               />
@@ -103,7 +103,7 @@ export default async function Image({
               width: bandWidth,
               height: 110,
               backgroundColor: "rgba(197,150,66,0.30)",
-              border: "2px solid #c59642",
+              border: "2px solid #ffc24a",
               borderRadius: 4,
             }}
           />
@@ -113,7 +113,7 @@ export default async function Image({
           style={{
             marginTop: 46,
             fontSize: 24,
-            color: "#8a8272",
+            color: "#a39dc9",
           }}
         >
           suede sing — test your own range free

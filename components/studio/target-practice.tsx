@@ -85,7 +85,7 @@ function MiniKeyboard({
               {/* Only the C keys are lettered. mut reads on the ivory key but
                   washes out on the violet or green one it becomes when picked. */}
               <span
-                className={`font-mono text-[10px] ${selected ? "text-ink" : "text-mut"}`}
+                className={`font-mono text-[10px] ${selected ? "text-white" : "text-key-label"}`}
               >
                 {midiToName(m) === "C" ? midiToLabel(m) : ""}
               </span>
