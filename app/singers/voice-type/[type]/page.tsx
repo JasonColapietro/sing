@@ -15,7 +15,8 @@ import {
 } from "@/lib/singers";
 import { REFERENCE_BANDS, statsFor } from "@/lib/singers-analysis";
 import { withCanonicalOpenGraph } from "@/lib/og";
-import { VOICE_TYPE_NOTES } from "@/lib/voice-types";
+import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
+import { VOICE_TYPE_HUB_COPY, fillTokens, splitContrast } from "@/lib/singer-hub-copy";
 import { SITE_URL } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
 import { Card, LinkButton, PageShell, SectionLabel, Stat } from "@/components/ui";
@@ -38,8 +39,13 @@ export async function generateMetadata({
   const { type } = await params;
   const voice = voiceTypeFromSlug(type);
   if (!voice) return {};
-  const title = `Famous ${voice} Vocal Ranges Compared`;
-  const description = `Reported catalog spans for singers labeled ${pluralVoice(voice.toLowerCase())} on one keyboard. Compare the figures and check each profile's evidence status.`;
+  const copy = VOICE_TYPE_HUB_COPY[voice];
+  const band = REFERENCE_BANDS[voice];
+  const count = singersByVoiceType(voice).length;
+  // The keyword lead stays in front; what follows it is this category's own, so
+  // no two hubs share a title or a description (lib/singer-hub-copy.test.tsx).
+  const title = `Famous ${voice} Vocal Ranges: ${copy.titleTag}`;
+  const description = `${copy.summary} Conventional band ${midiToLabel(band.low)} to ${midiToLabel(band.high)}, with catalog spans for ${count} ${pluralVoice(voice.toLowerCase())} on one keyboard.`;
   return withCanonicalOpenGraph({
     title,
     description,
@@ -63,6 +69,16 @@ export default async function VoiceTypePage({
   if (!stats) notFound();
   const note = VOICE_TYPE_NOTES[voice];
   const band = REFERENCE_BANDS[voice];
+  const copy = VOICE_TYPE_HUB_COPY[voice];
+  const passaggio = VOICE_TYPE_PASSAGGIO[voice];
+  const intro = fillTokens(copy.intro, {
+    low: midiToLabel(band.low),
+    high: midiToLabel(band.high),
+    pLow: midiToLabel(passaggio.low),
+    pHigh: midiToLabel(passaggio.high),
+  });
+  const neighbour = voiceTypeFromSlug(copy.neighbour);
+  const [contrastBefore, contrastAfter] = splitContrast(copy.contrast);
   const lower = voice.toLowerCase();
   const share = Math.round((list.length / SINGERS.length) * 100);
 
@@ -95,7 +111,7 @@ export default async function VoiceTypePage({
         "@id": `${pageUrl}#collection`,
         name: `Famous ${pluralVoice(voice)} and their vocal ranges`,
         url: pageUrl,
-        description: note.summary,
+        description: intro,
         isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
         breadcrumb: {
           "@type": "BreadcrumbList",
@@ -142,7 +158,7 @@ export default async function VoiceTypePage({
     <PageShell
       kicker="Voice type"
       title={`Famous ${pluralVoice(lower)}`}
-      subtitle={`Reported catalog ranges for singers labeled ${pluralVoice(lower)} — ${note.summary}.`}
+      subtitle={`Reported catalog ranges for singers labeled ${pluralVoice(lower)}: ${note.summary}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
@@ -155,6 +171,21 @@ export default async function VoiceTypePage({
       />
 
       <div className="space-y-6">
+        <Card>
+          <h2 className="text-xl">The {lower} voice at a glance</h2>
+          <p className="mt-3 max-w-3xl text-mut">{intro}</p>
+          <p className="mt-3 max-w-3xl text-sm text-mut">
+            {contrastBefore}
+            <Link
+              href={`/singers/voice-type/${copy.neighbour}`}
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2"
+            >
+              {neighbour?.toLowerCase()}
+            </Link>
+            {contrastAfter}
+          </p>
+        </Card>
+
         <Card>
           <div className="flex flex-wrap gap-8">
             <Stat

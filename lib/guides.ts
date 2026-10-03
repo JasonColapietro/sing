@@ -572,6 +572,8 @@ export const SONGS_GUIDE: GuideContent = {
 
 export const RECORDER_GUIDE: GuideContent = {
   path: "/recorder",
+  // The page's <title>. The H2 below is a section of the page, not its name.
+  pageName: "Voice Recorder for Singing Practice",
   heading: "Why singers record themselves",
   answer:
     "You cannot hear your own voice accurately while producing it — bone conduction, and the fact that you are busy singing, both get in the way. Recording a take and listening back is the only reliable way to hear what an audience hears, and it is the fastest feedback loop available to a singer without a teacher.",
@@ -679,6 +681,8 @@ export const RECORDER_GUIDE: GuideContent = {
 
 export const TOOLS_GUIDE: GuideContent = {
   path: "/tools",
+  // The page's <title>. The H2 below is a section of the page, not its name.
+  pageName: "Singing Practice Tools: Metronome, Keyboard and Drone",
   heading: "A metronome, a keyboard and a drone — and when each one helps",
   answer:
     "These are the three reference tools most vocal practice actually needs: a metronome for timing, a virtual piano for pitch reference and starting notes, and a sustained drone for practicing intonation against a fixed pitch. All three run in the browser with no install.",
