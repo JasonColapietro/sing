@@ -8,6 +8,7 @@ import { SINGERS } from "@/lib/singers";
 import { proHeadlineLong } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
+import { webPageJsonLd } from "@/lib/page-jsonld";
 
 const TITLE = "Suede Sing Changelog: What's New in 3.1";
 const DESCRIPTION =
@@ -314,6 +315,10 @@ export default function ChangelogPage() {
       }
       subtitle="Suede Sing 3.1: a full voice curriculum, programs that plan your weeks, songs that score and remember you, and a pitch engine measured to the cent."
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd({ path: "/changelog", name: TITLE, description: DESCRIPTION })) }}
+      />
       {/* The record head: the page's one accented surface. Cool hairline and
           trace glyph up top, tape counters below — data as ornament. */}
       <div className="well relative flex flex-wrap items-center gap-x-3 gap-y-1 overflow-hidden rounded-2xl px-4 py-3 font-mono text-label uppercase tracking-[0.14em] text-dim">

@@ -6,6 +6,7 @@ import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
 import { exitTestFor } from "@/lib/programme-exit-tests";
 import { withCanonicalOpenGraph } from "@/lib/og";
+import { chapterJsonLd } from "@/lib/page-jsonld";
 import { SITE_URL } from "@/lib/site";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
 import { FreeOnly } from "@/components/pro/gate";
@@ -76,6 +77,10 @@ export default async function ChapterPage({
         </Link>
       }
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(chapterJsonLd({ section: "book", bookTitle: BOOK_TITLE, ...chapter })) }}
+      />
       {exit && (
         <Card>
           <div className="max-w-2xl space-y-3">

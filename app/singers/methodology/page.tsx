@@ -5,6 +5,7 @@ import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
+import { webPageJsonLd } from "@/lib/page-jsonld";
 
 const TITLE = "Why Singer Vocal Ranges Differ: Sources and Methodology";
 const DESCRIPTION =
@@ -37,6 +38,10 @@ export default function SingerMethodologyPage() {
         </>
       }
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd({ path: "/singers/methodology", name: TITLE, description: DESCRIPTION })) }}
+      />
       <div className="space-y-6">
         <Card>
           <h2 className="text-xl">Why do vocal range websites disagree?</h2>

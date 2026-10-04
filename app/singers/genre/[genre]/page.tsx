@@ -15,6 +15,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { statsFor } from "@/lib/singers-analysis";
+import { GENRE_HUB_COPY, splitContrast } from "@/lib/singer-hub-copy";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
@@ -40,8 +41,11 @@ export async function generateMetadata({
   if (!g) return {};
   const list = singersByGenre(g);
   const stats = statsFor(list);
-  const title = `${g} Singers' Vocal Ranges Compared`;
-  const description = `Reported catalog ranges for ${g} singers on one keyboard, from ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}. Check each profile's evidence status.`;
+  const copy = GENRE_HUB_COPY[genre];
+  // The keyword lead stays in front; what follows it is this genre's own, so no
+  // two hubs share a title or a description (lib/singer-hub-copy.test.tsx).
+  const title = `${g} Singers' Vocal Ranges: ${copy.titleTag}`;
+  const description = `${copy.summary} Catalog ranges for ${list.length} ${g} singers on one keyboard, ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}.`;
   return withCanonicalOpenGraph({
     title,
     description,
@@ -63,6 +67,9 @@ export default async function GenrePage({
   const list = singersByGenre(g);
   const stats = statsFor(list);
   if (!stats) notFound();
+  const copy = GENRE_HUB_COPY[genre];
+  const neighbour = genreFromSlug(copy.neighbour);
+  const [contrastBefore, contrastAfter] = splitContrast(copy.contrast);
 
   const axisLow = Math.floor(stats.lowest.lowMidi / 12) * 12;
   const axisHigh = Math.ceil(stats.highest.highMidi / 12) * 12;
@@ -79,6 +86,7 @@ export default async function GenrePage({
     "@type": "CollectionPage",
     name: `${g} singers and their vocal ranges`,
     url: `${SITE_URL}/singers/genre/${genre}`,
+    description: copy.intro,
     isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
     breadcrumb: {
       "@type": "BreadcrumbList",
@@ -113,7 +121,7 @@ export default async function GenrePage({
     <PageShell
       kicker="Genre"
       title={`${g} vocal ranges`}
-      subtitle={`${g} catalog profiles on one keyboard, with reported endpoints from ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`}
+      subtitle={`${copy.summary} Reported endpoints run from ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
@@ -126,6 +134,21 @@ export default async function GenrePage({
       />
 
       <div className="space-y-6">
+        <Card>
+          <h2 className="text-xl">What sets {g} singing apart</h2>
+          <p className="mt-3 max-w-3xl text-mut">{copy.intro}</p>
+          <p className="mt-3 max-w-3xl text-sm text-mut">
+            {contrastBefore}
+            <Link
+              href={`/singers/genre/${copy.neighbour}`}
+              className="text-violet-ink underline decoration-violet/40 underline-offset-2"
+            >
+              {neighbour}
+            </Link>
+            {contrastAfter}
+          </p>
+        </Card>
+
         <Card>
           <div className="flex flex-wrap gap-8">
             <Stat

@@ -64,6 +64,32 @@ export interface GuideContent {
 
 export function guideJsonLd(guide: GuideContent) {
   const url = `${SITE_URL}${guide.path}`;
+  // The HowTo is what the page contains, not the page, so it sits under the
+  // WebPage's mainEntity rather than beside it in the graph. As a top-level
+  // node it read as a second claim about this URL, under a name ("How to use a
+  // drone...") that is neither the page title nor its H1.
+  const howTo = guide.howTo
+    ? {
+        "@type": "HowTo",
+        "@id": `${url}#howto`,
+        inLanguage: "en",
+        name: guide.howTo.name,
+        description: guide.howTo.intro,
+        // The tool is free and runs in the browser, so there is nothing to buy
+        // and nothing to install; saying so explicitly is more useful to an
+        // answer engine than omitting the fields.
+        supply: [{ "@type": "HowToSupply", name: "A microphone" }],
+        tool: [{ "@type": "HowToTool", name: "Suede Sing, in a web browser" }],
+        totalTime: "PT5M",
+        step: guide.howTo.steps.map((step, i) => ({
+          "@type": "HowToStep",
+          position: i + 1,
+          name: step.title,
+          text: step.body,
+          url: `${url}#step-${i + 1}`,
+        })),
+      }
+    : null;
   const graph: Record<string, unknown>[] = [
     ORG_PUBLISHER_NODE,
     // Without this the eight rooms emitted FAQPage and HowTo nodes floating
@@ -79,10 +105,7 @@ export function guideJsonLd(guide: GuideContent) {
       isPartOf: { "@id": `${SITE_URL}/#website` },
       publisher: { "@id": "https://suedeai.ai/#organization" },
       about: { "@id": `${SITE_URL}/#app` },
-      mainEntity: [
-        ...(guide.howTo ? [{ "@id": `${url}#howto` }] : []),
-        { "@id": `${url}#faq` },
-      ],
+      mainEntity: [...(howTo ? [howTo] : []), { "@id": `${url}#faq` }],
       ...(guide.safety
         ? {
             citation: guide.safety.sources.map((source) => ({
@@ -105,30 +128,6 @@ export function guideJsonLd(guide: GuideContent) {
       })),
     },
   ];
-
-  if (guide.howTo) {
-    graph.push({
-      "@type": "HowTo",
-      "@id": `${url}#howto`,
-      isPartOf: { "@id": `${url}#webpage` },
-      inLanguage: "en",
-      name: guide.howTo.name,
-      description: guide.howTo.intro,
-      // The tool is free and runs in the browser, so there is nothing to buy
-      // and nothing to install; saying so explicitly is more useful to an
-      // answer engine than omitting the fields.
-      supply: [{ "@type": "HowToSupply", name: "A microphone" }],
-      tool: [{ "@type": "HowToTool", name: "Suede Sing, in a web browser" }],
-      totalTime: "PT5M",
-      step: guide.howTo.steps.map((step, i) => ({
-        "@type": "HowToStep",
-        position: i + 1,
-        name: step.title,
-        text: step.body,
-        url: `${url}#step-${i + 1}`,
-      })),
-    });
-  }
 
   return { "@context": "https://schema.org", "@graph": graph };
 }
