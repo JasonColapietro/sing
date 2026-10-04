@@ -171,11 +171,12 @@ export const POP_SONGS: PopSong[] = [
     year: 2022,
     genre: "Pop",
     key: "E major",
-    lowMidi: noteMidi("E3"),
-    highMidi: noteMidi("C#5"),
-    sourceNote: "Musicnotes original-key arrangement, E3–C#5 in E major",
+    lowMidi: noteMidi("C#3"),
+    highMidi: noteMidi("B4"),
+    sourceNote: "Musicnotes leadsheet MN0264734, written vocal range C#3–B4 in E major",
+    sourceUrl: "https://www.musicnotes.com/sheetmusic/taylor-swift/anti-hero/MN0264734",
     blurb:
-      "Conversational verses in a comfortable mid register, a chorus that leans on sustained C#5s in mix, and a lot of quick, wordy phrasing between them. It sits almost entirely where an average female voice lives, which is much of why it took over — the top requires a settled mix but never a full belt.",
+      "This E-major leadsheet spans C#3 to B4. Check both ends against your comfortable range, then choose a key that lets you keep the conversational phrasing clear. The figures describe this published arrangement.",
   },
   {
     slug: "flowers",

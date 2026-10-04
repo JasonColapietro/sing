@@ -320,8 +320,9 @@ export function singerGenreKeywords(genre: string): string[] {
 export function singerVoiceTypeKeywords(voice: string): string[] {
   return pageKeywords(
     [
-      `${voice} vocal range`,
-      `famous ${voice} singers`,
+      ...(voice === "Contralto"
+        ? ["contralto singers", "contralto vocal range"]
+        : [`${voice} vocal range`, `famous ${voice} singers`]),
       `${voice} voice type`,
       `${voice} range chart`,
     ],

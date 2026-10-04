@@ -44,7 +44,9 @@ export async function generateMetadata({
   const count = singersByVoiceType(voice).length;
   // The keyword lead stays in front; what follows it is this category's own, so
   // no two hubs share a title or a description (lib/singer-hub-copy.test.tsx).
-  const title = `Famous ${voice} Vocal Ranges: ${copy.titleTag}`;
+  const title = voice === "Contralto"
+    ? `Famous Contralto Singers and Vocal Ranges: ${copy.titleTag}`
+    : `Famous ${voice} Vocal Ranges: ${copy.titleTag}`;
   const description = `${copy.summary} Conventional band ${midiToLabel(band.low)} to ${midiToLabel(band.high)}, with catalog spans for ${count} ${pluralVoice(voice.toLowerCase())} on one keyboard.`;
   return withCanonicalOpenGraph({
     title,
@@ -157,7 +159,7 @@ export default async function VoiceTypePage({
   return (
     <PageShell
       kicker="Voice type"
-      title={`Famous ${pluralVoice(lower)}`}
+      title={voice === "Contralto" ? "Famous Contralto Singers and Their Vocal Ranges" : `Famous ${pluralVoice(lower)}`}
       subtitle={`Reported catalog ranges for singers labeled ${pluralVoice(lower)}: ${note.summary}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
@@ -184,6 +186,16 @@ export default async function VoiceTypePage({
             </Link>
             {contrastAfter}
           </p>
+          {voice === "Contralto" && (
+            <div className="mt-4 flex flex-wrap gap-3">
+              <LinkButton href="/atlas/vocal-range-by-voice-type" variant="outline" size="sm">
+                Compare contralto, mezzo-soprano and soprano ranges
+              </LinkButton>
+              <LinkButton href="/range?mode=range" size="sm">
+                Find my vocal range
+              </LinkButton>
+            </div>
+          )}
         </Card>
 
         <Card>

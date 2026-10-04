@@ -2,21 +2,12 @@ import Link from "next/link";
 import { isSingerReviewed, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
 import { rangeLabel, singerBySlug } from "@/lib/singers";
 
-/**
- * The voices people actually search for, linked from the homepage.
- *
- * Every singer page is reachable from /singers and /atlas, but those hubs each
- * carry 420 links, so a leaf inherits ~1/420 of a hub's weight — and the
- * homepage is the only page on this subdomain with an inbound external link
- * (suedeai.ai's nav). Google had discovered the leaves and declined to crawl
- * them: 422 URLs sat in "Discovered - currently not indexed" on 2026-08-27.
- * These few dozen names are the head queries, so they get a direct path from
- * the strongest page rather than a share of a 420-way split.
- *
- * The list is deliberately short. Adding all 420 here would rebuild the same
- * flat hub and concentrate nothing.
+/** A compact set of direct homepage paths into the singer catalog.
+ * Damiano David joins the established cohort after September's Search Console
+ * report showed four clicks for his exact vocal-range query.
  */
 const FEATURED = [
+  "damiano-david",
   "freddie-mercury",
   "whitney-houston",
   "mariah-carey",
@@ -102,6 +93,21 @@ export function FamousVoices() {
           </Link>
         </div>
 
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/singers/voice-type/contralto"
+            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink hover:border-violet"
+          >
+            Contralto singers and their vocal ranges
+          </Link>
+          <Link
+            href="/atlas/vocal-range-by-voice-type"
+            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink hover:border-violet"
+          >
+            Compare vocal ranges by voice type
+          </Link>
+        </div>
+
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {VOICES.map(({ singer, evidenceCopy }) => (
             <li key={singer.slug}>
@@ -111,7 +117,7 @@ export function FamousVoices() {
               >
                 <span className="min-w-0">
                   <span className="block truncate text-ink group-hover:text-violet-ink">
-                    {singer.name}
+                    {singer.name}{singer.slug === "damiano-david" ? " vocal range" : ""}
                   </span>
                   <span className="mt-0.5 block text-xs text-dim">
                     {evidenceCopy ?? singer.voiceType}

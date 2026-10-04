@@ -434,6 +434,25 @@ export default async function SingerPage({
             directly under the answer rather than below the editorial detail. */}
         <CompareWithMe s={s} />
 
+        {/* Songs in the range catalog by this artist */}
+        {popSongsByArtistSlug(s.slug).length > 0 && (
+          <Card>
+            <SectionLabel>Can you sing their songs?</SectionLabel>
+            <ul className="mt-4 space-y-2">
+              {popSongsByArtistSlug(s.slug).map((song) => (
+                <li key={song.slug} className="text-sm">
+                  <Link
+                    className="inline-flex min-h-11 items-center text-violet-ink underline-offset-4 hover:underline"
+                    href={`/can-you-sing/${song.slug}`}
+                  >
+                    {song.title} vocal range: {popRangeLabel(song)} in {song.key}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        )}
+
         <Card>
           <SectionLabel>Evidence and review</SectionLabel>
           <h2 id="evidence" className="mt-3 scroll-mt-24 text-xl">Evidence and review</h2>
@@ -652,25 +671,6 @@ export default async function SingerPage({
                 </LinkButton>
               )}
             </div>
-          </Card>
-        )}
-
-        {/* Songs in the range catalog by this artist */}
-        {popSongsByArtistSlug(s.slug).length > 0 && (
-          <Card>
-            <SectionLabel>Can you sing their songs?</SectionLabel>
-            <ul className="mt-4 space-y-2">
-              {popSongsByArtistSlug(s.slug).map((song) => (
-                <li key={song.slug} className="text-sm">
-                  <Link
-                    className="text-violet-ink underline-offset-4 hover:underline"
-                    href={`/can-you-sing/${song.slug}`}
-                  >
-                    {song.title} vocal range: {popRangeLabel(song)} in {song.key}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </Card>
         )}
 

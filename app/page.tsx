@@ -29,6 +29,12 @@ const PRO_MONTHLY_PRICE = formatPrice(PRICING.monthly.amount);
 
 const FEATURES = [
   {
+    href: "/analyze",
+    label: "Analyze my voice",
+    desc: "See your voice on a live spectrogram and explore your tone and harmonics.",
+    Glyph: StudioGlyph,
+  },
+  {
     href: "/studio",
     label: "Pitch studio",
     desc: "Sing into your mic and watch your pitch trace against target notes, live.",
@@ -170,7 +176,7 @@ const LESSONS = [
 ];
 
 const TOOLS = FEATURES.filter((f) =>
-  ["/studio", "/recorder", "/tools", "/singers"].includes(f.href),
+  ["/analyze", "/studio", "/recorder", "/tools", "/singers"].includes(f.href),
 );
 
 export default function Home() {

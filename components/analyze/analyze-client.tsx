@@ -137,7 +137,7 @@ export default function AnalyzeClient() {
   return (
     <PageShell
       kicker="Analysis"
-      title="Analyze"
+      title="Voice Spectrogram and Tone Analyzer"
       subtitle="Watch the shape of your voice as you sing it — the harmonics, the ring, and how much work your folds have actually done today."
       actions={
         <div className="flex items-center gap-2">
