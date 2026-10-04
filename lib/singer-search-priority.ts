@@ -8,6 +8,8 @@
  * September 27 refresh (28 days ending September 25): Michael Jackson added
  * after 115 exact vocal-range query impressions; the latest week had 48
  * impressions and one click. Existing priority pages retain their order.
+ * October 4 monthly report: Damiano David added after four September clicks
+ * for the exact vocal-range query (up four from August).
  * Keep this list small and evidence-led: it exists to give the pages already
  * earning meaningful `[name] vocal range` impressions a prominent path from
  * the collection hub, not to pretend this is global search-volume data.
@@ -31,4 +33,5 @@ export const VOCAL_RANGE_PRIORITY_SLUGS = [
   "jennifer-hudson",
   "jimin",
   "michael-jackson",
+  "damiano-david",
 ] as const;

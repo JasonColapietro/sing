@@ -371,5 +371,39 @@
         "kind": "producer-interview"
       }
     ]
+  },
+  "damiano-david": {
+    "status": "pending",
+    "sources": [
+      {
+        "title": "Måneskin — Beggin’ (Singer Pro, MN0237754)",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/m%C3%A5neskin/beggin/MN0237754",
+        "accessedAt": "2026-10-04",
+        "supportedClaim": "Musicnotes lists the Beggin’ Singer Pro arrangement in B minor with a written vocal range of B3–F#5.",
+        "scope": "The written part in this specific song arrangement. The published octave notation is retained; it does not establish Damiano David’s performed endpoints or full-career range.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Beggin’",
+        "octaveConvention": "Written pitch labels as displayed by Musicnotes; no sounding-octave conversion."
+      }
+    ]
+  },
+  "taylor-swift": {
+    "status": "pending",
+    "sources": [
+      {
+        "title": "Taylor Swift — Anti-Hero (Leadsheet, MN0264734)",
+        "publisher": "Musicnotes",
+        "url": "https://www.musicnotes.com/sheetmusic/taylor-swift/anti-hero/MN0264734",
+        "accessedAt": "2026-10-04",
+        "supportedClaim": "Musicnotes lists the Anti-Hero leadsheet in E major with a written vocal range of C#3–B4.",
+        "scope": "Written compass for this specific song arrangement; it does not establish Taylor Swift’s full-career range or voice type.",
+        "confidence": "moderate",
+        "kind": "licensed-score",
+        "song": "Anti-Hero",
+        "octaveConvention": "Scientific pitch labels as published by Musicnotes."
+      }
+    ]
   }
 }

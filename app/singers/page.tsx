@@ -193,12 +193,7 @@ export default function SingersPage() {
         </ul>
       </section>
 
-      <SingersDirectory />
-      <SingerCrawlIndex />
-
-      {/* Hubs: the filters above are client state and invisible to a crawler,
-          so the same cuts exist as real pages — and they carry content the
-          directory can't (what a voice type is, how a genre distributes). */}
+      {/* Real voice-type destinations stay ahead of the long singer directory. */}
       <section className="mt-12">
         <h2 className="text-xl">Browse by voice type</h2>
         <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
@@ -206,14 +201,19 @@ export default function SingersPage() {
             <li key={v}>
               <Link
                 href={`/singers/voice-type/${voiceTypeSlug(v)}`}
-                className="flex items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
+                className="flex min-h-11 items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
               >
-                <span className="text-sm font-medium">{v}</span>
+                <span className="text-sm font-medium">{v === "Contralto" ? "Contralto singers and their vocal ranges" : `${v} singers`}</span>
               </Link>
             </li>
           ))}
         </ul>
+      </section>
 
+      <SingersDirectory />
+      <SingerCrawlIndex />
+
+      <section className="mt-12">
         <h2 className="mt-8 text-xl">Browse by genre</h2>
         <ul className="mt-4 flex flex-wrap gap-2">
           {HUB_GENRES.map((g) => (
