@@ -5,20 +5,21 @@ import { INACTIVE } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   entitlementFrom,
+  entitlementFromLifetime,
   getStripe,
   isOurSubscription,
   isStripeId,
 } from "@/lib/stripe";
 
 /**
- * Serves a chapter body to a verified subscriber — for either book.
+ * Serves a chapter body to a verified Pro customer — for either book.
  *
  * The books are the Pro benefits that are pure content, so gating them in the
  * client the way the rest of the app gates UI would mean shipping the whole
  * text to everyone and hiding it with CSS. Instead the bodies never enter the
  * browser bundle: the reader asks for one chapter at a time and this route
- * re-checks the subscription with Stripe — the same source of truth the rest
- * of the app uses — before returning anything.
+ * re-checks the subscription or lifetime payment with Stripe — the same source
+ * of truth the rest of the app uses — before returning anything.
  *
  * `book` selects the title: "measured-voice" (default) or "atlas". Atlas
  * responses also carry the chapter's structured singer entries. The atlas's
@@ -30,15 +31,18 @@ export async function POST(request: Request) {
   if (limited) return limited;
 
   let subscriptionId: unknown;
+  let paymentIntentId: unknown;
   let slug: unknown;
   let book: unknown;
   try {
     const body = (await request.json()) as {
       subscriptionId?: unknown;
+      paymentIntentId?: unknown;
       slug?: unknown;
       book?: unknown;
     };
     subscriptionId = body?.subscriptionId;
+    paymentIntentId = body?.paymentIntentId;
     slug = body?.slug;
     book = body?.book;
   } catch {
@@ -48,7 +52,17 @@ export async function POST(request: Request) {
   if (typeof slug !== "string" || !/^[a-z0-9-]{1,64}$/.test(slug)) {
     return NextResponse.json({ error: "Unknown chapter." }, { status: 400 });
   }
-  if (!isStripeId(subscriptionId, "sub_")) {
+  let billing:
+    | { kind: "subscription"; id: string }
+    | { kind: "lifetime"; id: string };
+  if (paymentIntentId == null && isStripeId(subscriptionId, "sub_")) {
+    billing = { kind: "subscription", id: subscriptionId };
+  } else if (
+    subscriptionId == null &&
+    isStripeId(paymentIntentId, "pi_")
+  ) {
+    billing = { kind: "lifetime", id: paymentIntentId };
+  } else {
     return NextResponse.json(
       { error: "Suede Pro is required to read this." },
       { status: 403 },
@@ -65,17 +79,28 @@ export async function POST(request: Request) {
 
   try {
     const stripe = getStripe();
-    const sub = await stripe.subscriptions.retrieve(subscriptionId, {
-      expand: ["customer"],
-    });
-    // Same guard as /api/restore: an id from another product on this Stripe
-    // account must not unlock a book sold with Suede Sing Pro.
-    const entitlement = isOurSubscription(sub)
-      ? entitlementFrom(sub, null)
-      : INACTIVE;
+    let entitlement = INACTIVE;
+    if (billing.kind === "subscription") {
+      const sub = await stripe.subscriptions.retrieve(billing.id, {
+        expand: ["customer"],
+      });
+      // Same guard as /api/restore: an id from another product on this Stripe
+      // account must not unlock a Suede Sing book.
+      if (isOurSubscription(sub)) entitlement = entitlementFrom(sub, null);
+    } else {
+      const payment = await stripe.paymentIntents.retrieve(billing.id, {
+        expand: ["customer", "latest_charge"],
+      });
+      entitlement = entitlementFromLifetime(payment, null);
+    }
     if (!entitlement.active) {
       return NextResponse.json(
-        { error: "That subscription is no longer active." },
+        {
+          error:
+            billing.kind === "subscription"
+              ? "That subscription is no longer active."
+              : "That lifetime purchase is no longer active.",
+        },
         { status: 403 },
       );
     }
@@ -100,7 +125,7 @@ export async function POST(request: Request) {
     }
     console.error("[api/book]", error);
     return NextResponse.json(
-      { error: "Could not verify your subscription. Try again in a moment." },
+      { error: "Could not verify your Pro access. Try again in a moment." },
       { status: 502 },
     );
   }

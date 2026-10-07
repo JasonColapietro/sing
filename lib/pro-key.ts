@@ -5,11 +5,11 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 /**
  * Pro keys — the credential that restores Pro on a new device.
  *
- * A key is an HMAC over the Stripe customer and subscription ids, so it is
+ * A key is an HMAC over the Stripe customer and billing ids, so it is
  * unguessable and needs no database to verify. It is proof of *purchase*, not
- * a grant: `verifyProKey` only tells you which subscription the holder paid
- * for, and the caller still asks Stripe whether that subscription is live. A
- * cancelled subscription's key stops working on its own.
+ * a grant: `verifyProKey` only tells you which billing record the holder paid
+ * for, and the caller still asks Stripe whether it remains entitled. A
+ * cancelled subscription or refunded lifetime purchase stops working.
  *
  * This replaced restoring by email address, which let anyone who knew a
  * subscriber's email unlock Pro in their own browser.
@@ -33,22 +33,31 @@ function sign(payload: string): string {
     .digest("base64url");
 }
 
-function encode(customerId: string, subscriptionId: string): string {
-  return Buffer.from(`${customerId}:${subscriptionId}`, "utf8").toString(
+function encode(customerId: string, billingId: string): string {
+  return Buffer.from(`${customerId}:${billingId}`, "utf8").toString(
     "base64url",
   );
 }
 
-/** Builds the key shown to a subscriber after checkout. */
-export function mintProKey(customerId: string, subscriptionId: string): string {
-  const payload = encode(customerId, subscriptionId);
+/** Builds the key shown after a subscription or lifetime checkout. */
+export function mintProKey(customerId: string, billingId: string): string {
+  const payload = encode(customerId, billingId);
   return `${PREFIX}_${payload}.${sign(payload)}`;
 }
 
-export interface ProKeyClaims {
+export interface SubscriptionProKeyClaims {
+  kind: "subscription";
   customerId: string;
   subscriptionId: string;
 }
+
+export interface LifetimeProKeyClaims {
+  kind: "lifetime";
+  customerId: string;
+  paymentIntentId: string;
+}
+
+export type ProKeyClaims = SubscriptionProKeyClaims | LifetimeProKeyClaims;
 
 /**
  * Returns the ids a valid key vouches for, or null. Never throws on bad
@@ -81,11 +90,17 @@ export function verifyProKey(key: unknown): ProKeyClaims | null {
   const b = Buffer.from(expected, "utf8");
   if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
 
-  const [customerId, subscriptionId] = Buffer.from(payload, "base64url")
+  const decoded = Buffer.from(payload, "base64url")
     .toString("utf8")
     .split(":");
-  if (!customerId?.startsWith("cus_") || !subscriptionId?.startsWith("sub_")) {
-    return null;
+  if (decoded.length !== 2) return null;
+  const [customerId, billingId] = decoded;
+  if (!customerId?.startsWith("cus_")) return null;
+  if (billingId?.startsWith("sub_")) {
+    return { kind: "subscription", customerId, subscriptionId: billingId };
   }
-  return { customerId, subscriptionId };
+  if (billingId?.startsWith("pi_")) {
+    return { kind: "lifetime", customerId, paymentIntentId: billingId };
+  }
+  return null;
 }

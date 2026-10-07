@@ -4,25 +4,43 @@ import { rateLimit } from "@/lib/rate-limit";
 import {
   emailOf,
   entitlementFrom,
+  entitlementFromLifetime,
   getStripe,
+  isOurLifetimePayment,
   isOurSubscription,
   isStripeId,
 } from "@/lib/stripe";
 import type Stripe from "stripe";
 
+function customerIdOf(
+  customer: { id: string } | string | null | undefined,
+): string | null {
+  if (!customer) return null;
+  return typeof customer === "string" ? customer : customer.id;
+}
+
+function isMissingStripeResource(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { type?: string }).type === "StripeInvalidRequestError" &&
+    (error as { code?: string }).code === "resource_missing"
+  );
+}
+
 /**
  * Resolves entitlement from Stripe — the only source of truth.
  *
- * Called two ways: with a `sessionId` right after checkout to unlock Pro on
- * this device, and with a `subscriptionId` periodically afterwards so a
- * cancellation or failed payment is reflected here. There is no database,
- * so every check goes straight to Stripe.
+ * Called with a `sessionId` right after checkout to unlock Pro on this device,
+ * then with either its `subscriptionId` or `paymentIntentId` periodically so a
+ * cancellation, failed payment, refund, or dispute is reflected here. There
+ * is no database, so every check goes straight to Stripe.
  *
- * Both paths confirm the subscription is actually one of ours before granting
- * anything. The id arrives from localStorage, which anyone can edit, and this
- * Stripe account bills other Suede products too — without the check, one of
- * their subscription ids would unlock Pro here. `/api/restore` and `/api/sync`
- * already enforce it, so this only makes the routes agree.
+ * Every path confirms the billing record is actually one of ours before
+ * granting anything. The id arrives from localStorage, which anyone can edit,
+ * and this Stripe account bills other Suede products too — without the check,
+ * one of their billing ids would unlock Pro here. `/api/restore` and
+ * `/api/sync` enforce the same boundary.
  */
 export async function POST(request: Request) {
   // Higher than the others: every page load may revalidate, and a shared NAT
@@ -35,13 +53,16 @@ export async function POST(request: Request) {
 
   let sessionId: unknown;
   let subscriptionId: unknown;
+  let paymentIntentId: unknown;
   try {
     const body = (await request.json()) as {
       sessionId?: unknown;
       subscriptionId?: unknown;
+      paymentIntentId?: unknown;
     };
     sessionId = body?.sessionId;
     subscriptionId = body?.subscriptionId;
+    paymentIntentId = body?.paymentIntentId;
   } catch {
     return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
   }
@@ -55,18 +76,43 @@ export async function POST(request: Request) {
 
     if (isStripeId(sessionId, "cs_")) {
       const session = await stripe.checkout.sessions.retrieve(sessionId, {
-        expand: ["subscription", "customer"],
+        expand: [
+          "subscription",
+          "customer",
+          "payment_intent.latest_charge",
+        ],
       });
       const sub = session.subscription;
-      if (!sub || typeof sub === "string") {
+      if (sub) {
+        if (typeof sub === "string") {
+          return NextResponse.json(INACTIVE);
+        }
+        if (!isOurSubscription(sub as Stripe.Subscription)) {
+          return NextResponse.json(INACTIVE);
+        }
+        const email =
+          session.customer_details?.email ?? emailOf(session.customer);
+        return NextResponse.json(
+          entitlementFrom(sub as Stripe.Subscription, email),
+        );
+      }
+
+      const payment = session.payment_intent;
+      if (!payment || typeof payment === "string") {
         return NextResponse.json(INACTIVE);
       }
-      if (!isOurSubscription(sub as Stripe.Subscription)) {
+      const sessionCustomerId = customerIdOf(session.customer);
+      const paymentCustomerId = customerIdOf(payment.customer);
+      if (
+        !sessionCustomerId ||
+        sessionCustomerId !== paymentCustomerId ||
+        !isOurLifetimePayment(payment)
+      ) {
         return NextResponse.json(INACTIVE);
       }
       const email =
         session.customer_details?.email ?? emailOf(session.customer);
-      return NextResponse.json(entitlementFrom(sub as Stripe.Subscription, email));
+      return NextResponse.json(entitlementFromLifetime(payment, email));
     }
 
     if (isStripeId(subscriptionId, "sub_")) {
@@ -103,22 +149,37 @@ export async function POST(request: Request) {
       });
     }
 
+    if (isStripeId(paymentIntentId, "pi_")) {
+      const payment = await stripe.paymentIntents.retrieve(paymentIntentId, {
+        expand: ["customer", "latest_charge"],
+      });
+      if (!isOurLifetimePayment(payment)) {
+        return NextResponse.json(INACTIVE);
+      }
+      const status = entitlementFromLifetime(payment, null);
+      return NextResponse.json({
+        ...status,
+        customerId: null,
+        proKey: null,
+        email: null,
+      });
+    }
+
     return NextResponse.json(
-      { error: "Provide a checkout session id or a subscription id." },
+      {
+        error:
+          "Provide a checkout session id, subscription id, or payment intent id.",
+      },
       { status: 400 },
     );
   } catch (error) {
     // A deleted or unknown id is a legitimate "not a member" answer.
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      (error as { type?: string }).type === "StripeInvalidRequestError"
-    ) {
+    if (isMissingStripeResource(error)) {
       return NextResponse.json(INACTIVE);
     }
     console.error("[api/entitlement]", error);
     return NextResponse.json(
-      { error: "Could not check your subscription. Try again in a moment." },
+      { error: "Could not check your Pro access. Try again in a moment." },
       { status: 502 },
     );
   }

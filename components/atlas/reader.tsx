@@ -20,10 +20,10 @@ type State =
   | { kind: "error"; message: string };
 
 /**
- * Fetches one atlas chapter for a verified subscriber. Bodies and entry prose
- * are not in the client bundle — /api/book re-checks the subscription with
- * Stripe and returns the markdown plus the chapter's singer entries, so a
- * non-subscriber has nothing to read in the page source.
+ * Fetches one atlas chapter for a verified Pro customer. Bodies and entry prose
+ * are not in the client bundle — /api/book re-checks the Stripe billing record
+ * and returns the markdown plus the chapter's singer entries, so a visitor
+ * without Pro has nothing to read in the page source.
  */
 export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry }) {
   const pro = useProState();
@@ -31,14 +31,20 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
   const [state, setState] = useState<State>({ kind: "idle" });
 
   const subscriptionId = pro.subscriptionId;
+  const paymentIntentId = pro.paymentIntentId;
 
   const load = useCallback(async () => {
-    if (!subscriptionId) return;
+    if (!subscriptionId && !paymentIntentId) return;
     try {
       const res = await fetch("/api/book", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ subscriptionId, slug: chapter.slug, book: "atlas" }),
+        body: JSON.stringify({
+          subscriptionId,
+          paymentIntentId,
+          slug: chapter.slug,
+          book: "atlas",
+        }),
       });
       const data = (await res.json()) as {
         body?: string;
@@ -66,7 +72,7 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
         message: "Could not reach the server. Check your connection.",
       });
     }
-  }, [subscriptionId, chapter.slug]);
+  }, [subscriptionId, paymentIntentId, chapter.slug]);
 
   useEffect(() => {
     // Every setState inside load() happens after `await fetch(...)`, so none of
@@ -79,10 +85,10 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
   // Gated chapter pages are statically prerendered (dynamicParams = false), and
   // the entitlement cache is local to the browser — so on the server there is
   // no subscription to find and the locked card would be baked into the HTML a
-  // subscriber downloads. Hold the neutral loading card until the store reports.
+  // Pro customer downloads. Hold the neutral loading card until the store reports.
   const view: State = !proReady
     ? { kind: "loading" }
-    : !subscriptionId
+    : !subscriptionId && !paymentIntentId
       ? { kind: "locked", message: "This chapter is part of Suede Pro." }
       : state.kind === "idle"
         ? { kind: "loading" }

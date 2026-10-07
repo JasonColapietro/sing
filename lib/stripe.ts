@@ -6,6 +6,7 @@ import {
   ENTITLING_STATUSES,
   INACTIVE,
   PRICING,
+  type CheckoutPlan,
   type Entitlement,
   type ProPlan,
 } from "./pro-shared";
@@ -34,38 +35,47 @@ export function getStripe(): Stripe {
  * code works against the Stripe sandbox and a claimed live account — you
  * recreate the prices with these keys and nothing here changes.
  */
-export const PRICE_LOOKUP_KEYS: Record<ProPlan, string> = {
-  monthly: "suede_pro_monthly",
-  annual: "suede_pro_annual",
+export const CHECKOUT_PRICE_LOOKUP_KEYS: Record<CheckoutPlan, string> = {
+  monthly: "suede_pro_monthly_early_access",
+  lifetime: "suede_pro_lifetime_early_access",
 };
+
+const LEGACY_SUBSCRIPTION_LOOKUP_KEYS = [
+  "suede_pro_monthly",
+  "suede_pro_annual",
+] as const;
+
+const SUBSCRIPTION_LOOKUP_KEYS = new Set([
+  ...LEGACY_SUBSCRIPTION_LOOKUP_KEYS,
+  CHECKOUT_PRICE_LOOKUP_KEYS.monthly,
+]);
+
+/** The product used by every previously sold Suede Pro subscription. */
+const SUEDE_PRO_PRODUCT_ID = "prod_UymwMKT9x94n1k";
 
 /**
  * Optional escape hatch: pin a plan to an exact price id instead of looking it
  * up. Useful when an account carries more than one price with the same lookup
  * key history, or to point a preview deployment at a throwaway price.
  *
- * A pinned price still needs its lookup key set in Stripe — isOurSubscription()
- * matches on lookup keys, and restore ignores anything without one. Pinning is
- * also the one way past the amount check below: an operator who names an exact
- * price id owns whether it matches what the page quotes.
+ * Pinned prices go through the same active, currency, amount, and billing-shape
+ * checks as lookup-key prices.
  */
-const PRICE_ID_ENV_VARS: Record<ProPlan, string> = {
+const PRICE_ID_ENV_VARS: Record<CheckoutPlan, string> = {
   monthly: "STRIPE_PRICE_MONTHLY",
-  annual: "STRIPE_PRICE_ANNUAL",
+  lifetime: "STRIPE_PRICE_LIFETIME",
 };
 
 /**
- * A plan with nothing behind it yet — the annual plan before its price has
- * been created. Kept distinct from a Stripe outage so checkout can answer
- * "not on sale" rather than "try again in a moment", which would send someone
- * back to a button that will never work.
+ * A sellable plan with no configured price. Kept distinct from a Stripe outage
+ * so checkout can answer "not on sale" rather than "try again in a moment".
  */
 export class PriceNotConfiguredError extends Error {
-  readonly plan: ProPlan;
+  readonly plan: CheckoutPlan;
 
-  constructor(plan: ProPlan) {
+  constructor(plan: CheckoutPlan) {
     super(
-      `No active Stripe price with lookup key "${PRICE_LOOKUP_KEYS[plan]}". Run \`npm run stripe:setup -- ${plan}\` to create one.`,
+      `No active Stripe price with lookup key "${CHECKOUT_PRICE_LOOKUP_KEYS[plan]}". Run \`npm run stripe:setup -- ${plan}\` to create one.`,
     );
     this.name = "PriceNotConfiguredError";
     this.plan = plan;
@@ -76,25 +86,34 @@ export class PriceNotConfiguredError extends Error {
  * A price exists under the plan's lookup key, but it charges something other
  * than what every surface quotes. Kept distinct from a missing price because
  * the fix is different — someone has to reconcile Stripe with PRICING — and
- * because this is a state a live account really reaches: an old annual price
- * can still hold `suede_pro_annual` long after the page moved on from it.
+ * because this is a state a live account can reach after a pricing change.
  * Checkout refuses rather than charging an amount nobody was shown.
  */
 export class PriceMismatchError extends Error {
-  readonly plan: ProPlan;
+  readonly plan: CheckoutPlan;
 
-  constructor(plan: ProPlan, price: Stripe.Price) {
+  constructor(plan: CheckoutPlan, price: Stripe.Price) {
     const shown = `$${PRICING[plan].amount}/${PRICING[plan].interval}`;
     const held = `$${(price.unit_amount ?? 0) / 100}/${price.recurring?.interval ?? "one-off"}`;
     super(
-      `Stripe price ${price.id} (lookup key "${PRICE_LOOKUP_KEYS[plan]}") charges ${held}, but /pro quotes ${shown}. Fix the price in Stripe or PRICING in lib/pro-shared.ts.`,
+      `Stripe price ${price.id} (lookup key "${CHECKOUT_PRICE_LOOKUP_KEYS[plan]}") charges ${held}, but /pro quotes ${shown}. Fix the price in Stripe or PRICING in lib/pro-shared.ts.`,
     );
     this.name = "PriceMismatchError";
     this.plan = plan;
   }
 }
 
-export async function resolvePriceId(plan: ProPlan): Promise<string> {
+function priceMatchesPlan(plan: CheckoutPlan, price: Stripe.Price): boolean {
+  const expectedRecurring = plan === "monthly" ? "month" : null;
+  return (
+    price.active &&
+    price.currency === "usd" &&
+    price.unit_amount === Math.round(PRICING[plan].amount * 100) &&
+    (price.recurring?.interval ?? null) === expectedRecurring
+  );
+}
+
+export async function resolvePriceId(plan: CheckoutPlan): Promise<string> {
   const pinned = process.env[PRICE_ID_ENV_VARS[plan]];
   if (pinned) {
     if (!isStripeId(pinned, "price_")) {
@@ -102,21 +121,22 @@ export async function resolvePriceId(plan: ProPlan): Promise<string> {
         `${PRICE_ID_ENV_VARS[plan]} is set but doesn't look like a Stripe price id.`,
       );
     }
-    return pinned;
+    const price = await getStripe().prices.retrieve(pinned);
+    if (!priceMatchesPlan(plan, price)) {
+      throw new PriceMismatchError(plan, price);
+    }
+    return price.id;
   }
 
   const { data } = await getStripe().prices.list({
-    lookup_keys: [PRICE_LOOKUP_KEYS[plan]],
+    lookup_keys: [CHECKOUT_PRICE_LOOKUP_KEYS[plan]],
     active: true,
     limit: 1,
   });
   const price = data[0];
   if (!price) throw new PriceNotConfiguredError(plan);
   // Stripe holds cents, PRICING dollars.
-  if (
-    price.unit_amount !== Math.round(PRICING[plan].amount * 100) ||
-    price.recurring?.interval !== PRICING[plan].interval
-  ) {
+  if (!priceMatchesPlan(plan, price)) {
     throw new PriceMismatchError(plan, price);
   }
   return price.id;
@@ -124,17 +144,28 @@ export async function resolvePriceId(plan: ProPlan): Promise<string> {
 
 /** True when a subscription is one of ours, so restore ignores unrelated ones. */
 export function isOurSubscription(sub: Stripe.Subscription): boolean {
-  const ours = Object.values(PRICE_LOOKUP_KEYS);
-  return sub.items.data.some(
-    (item) => item.price.lookup_key && ours.includes(item.price.lookup_key),
-  );
+  if (sub.metadata.app === "suede-sing") return true;
+  return sub.items.data.some((item) => {
+    const lookupKey = item.price.lookup_key;
+    if (lookupKey && SUBSCRIPTION_LOOKUP_KEYS.has(lookupKey)) return true;
+    const product = item.price.product;
+    const productId = typeof product === "string" ? product : product?.id;
+    return productId === SUEDE_PRO_PRODUCT_ID;
+  });
 }
 
 function planFromSubscription(sub: Stripe.Subscription): ProPlan | null {
   const price = sub.items.data[0]?.price;
   if (!price) return null;
-  if (price.lookup_key === PRICE_LOOKUP_KEYS.annual) return "annual";
-  if (price.lookup_key === PRICE_LOOKUP_KEYS.monthly) return "monthly";
+  if (price.lookup_key === "suede_pro_annual") return "annual";
+  if (
+    price.lookup_key === "suede_pro_monthly" ||
+    price.lookup_key === CHECKOUT_PRICE_LOOKUP_KEYS.monthly
+  ) {
+    return "monthly";
+  }
+  if (sub.metadata.plan === "annual") return "annual";
+  if (sub.metadata.plan === "monthly") return "monthly";
   return price.recurring?.interval === "year" ? "annual" : "monthly";
 }
 
@@ -167,12 +198,72 @@ export function entitlementFrom(
     plan: planFromSubscription(sub),
     status: sub.status,
     subscriptionId: sub.id,
+    paymentIntentId: null,
     customerId,
     email: email ?? null,
     currentPeriodEnd: periodEnd
       ? new Date(periodEnd * 1000).toISOString()
       : null,
     cancelAtPeriodEnd: sub.cancel_at_period_end,
+    proKey,
+  };
+}
+
+/** True only for an unreversed $79 Early Access lifetime purchase. */
+export function isOurLifetimePayment(payment: Stripe.PaymentIntent): boolean {
+  const customerId =
+    typeof payment.customer === "string"
+      ? payment.customer
+      : payment.customer?.id;
+  const charge = payment.latest_charge;
+  if (!charge || typeof charge === "string") return false;
+  return (
+    payment.status === "succeeded" &&
+    !!customerId?.startsWith("cus_") &&
+    payment.currency === "usd" &&
+    payment.amount_received === Math.round(PRICING.lifetime.amount * 100) &&
+    payment.metadata.app === "suede-sing" &&
+    payment.metadata.offer === "early-access" &&
+    payment.metadata.plan === "lifetime" &&
+    charge.paid &&
+    charge.status === "succeeded" &&
+    !charge.refunded &&
+    !charge.disputed &&
+    charge.amount_refunded === 0
+  );
+}
+
+/** Maps a verified one-time purchase onto the same client entitlement shape. */
+export function entitlementFromLifetime(
+  payment: Stripe.PaymentIntent,
+  email?: string | null,
+): Entitlement {
+  if (!isOurLifetimePayment(payment)) {
+    return { ...INACTIVE, status: payment.status };
+  }
+  const customerId =
+    typeof payment.customer === "string"
+      ? payment.customer
+      : payment.customer?.id;
+  if (!customerId) return { ...INACTIVE, status: payment.status };
+
+  let proKey: string | null = null;
+  try {
+    proKey = mintProKey(customerId, payment.id);
+  } catch (error) {
+    console.error("[stripe] could not mint lifetime pro key", error);
+  }
+
+  return {
+    active: true,
+    plan: "lifetime",
+    status: payment.status,
+    subscriptionId: null,
+    paymentIntentId: payment.id,
+    customerId,
+    email: email ?? null,
+    currentPeriodEnd: null,
+    cancelAtPeriodEnd: false,
     proKey,
   };
 }

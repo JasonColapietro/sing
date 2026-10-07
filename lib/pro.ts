@@ -1,9 +1,14 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { INACTIVE, type Entitlement, type ProPlan } from "./pro-shared";
+import {
+  INACTIVE,
+  type CheckoutPlan,
+  type Entitlement,
+  type ProPlan,
+} from "./pro-shared";
 
-export type { ProPlan, Entitlement };
+export type { CheckoutPlan, ProPlan, Entitlement };
 
 /**
  * Suede Pro — entitlement on the client.
@@ -130,15 +135,16 @@ async function post<T>(path: string, body: unknown): Promise<T> {
  *
  * `keepCredentials` exists because revalidation deliberately answers without
  * them. `/api/entitlement` will not mint a Pro key, a customer id or an email
- * from a bare subscription id — that id is a bearer string in localStorage, not
- * proof of ownership, and handing back the full entitlement turned it into a
- * master key for someone else's billing portal and practice record.
+ * from a bare subscription or PaymentIntent id — that id is a bearer string in
+ * localStorage, not proof of ownership, and handing back the full entitlement
+ * turned it into a master key for someone else's billing portal and practice
+ * record.
  *
  * So a status check returns nulls in those three fields, and blanking the
  * device's real credentials every twelve hours would take the portal and the
  * Pro key away from the subscriber who legitimately earned them at checkout.
- * They are kept while the subscription is active and cleared the moment it is
- * not, which is the only case where forgetting them is correct.
+ * They are kept while the purchase is active and cleared the moment it is not,
+ * which is the only case where forgetting them is correct.
  */
 function apply(
   entitlement: Entitlement,
@@ -151,6 +157,9 @@ function apply(
     customerId: carry
       ? (entitlement.customerId ?? prev.customerId)
       : entitlement.customerId,
+    paymentIntentId: carry
+      ? (entitlement.paymentIntentId ?? prev.paymentIntentId)
+      : entitlement.paymentIntentId,
     proKey: carry ? (entitlement.proKey ?? prev.proKey) : entitlement.proKey,
     email: carry ? (entitlement.email ?? prev.email) : entitlement.email,
     since: entitlement.active
@@ -163,7 +172,7 @@ function apply(
 }
 
 /** Hands the singer off to Stripe Checkout. Only returns if the redirect fails. */
-export async function startCheckout(plan: ProPlan): Promise<void> {
+export async function startCheckout(plan: CheckoutPlan): Promise<void> {
   const { url } = await post<{ url: string }>("/api/checkout", { plan });
   window.location.href = url;
 }
@@ -244,13 +253,14 @@ export async function confirmCheckout(
 const REVALIDATE_AFTER_MS = 12 * 60 * 60 * 1000;
 
 /**
- * Re-checks the subscription against Stripe so a cancellation or a failed
- * payment takes effect here. Network failures leave the current state alone
- * rather than locking out someone who is paying.
+ * Re-checks the subscription or lifetime payment against Stripe so a
+ * cancellation, failed payment, refund, or dispute takes effect here. Network
+ * failures leave the current state alone rather than locking out someone who
+ * is paying.
  */
 export async function revalidatePro({ force = false } = {}): Promise<void> {
   const state = load();
-  if (!state.subscriptionId) return;
+  if (!state.subscriptionId && !state.paymentIntentId) return;
   if (
     !force &&
     state.lastVerified &&
@@ -260,9 +270,12 @@ export async function revalidatePro({ force = false } = {}): Promise<void> {
   }
   try {
     apply(
-      await post<Entitlement>("/api/entitlement", {
-        subscriptionId: state.subscriptionId,
-      }),
+      await post<Entitlement>(
+        "/api/entitlement",
+        state.subscriptionId
+          ? { subscriptionId: state.subscriptionId }
+          : { paymentIntentId: state.paymentIntentId },
+      ),
       // Status-only reply — keep the Pro key and customer id this device got
       // at checkout. See `apply`.
       { keepCredentials: true },

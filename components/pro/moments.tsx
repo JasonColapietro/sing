@@ -219,16 +219,16 @@ export default function ProMoments() {
         </ul>
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Button variant="amber" size="md" onClick={goPro}>
-            {`Go Pro — ${proHeadline()}`}
+            {`Go Pro: ${proHeadline()}`}
           </Button>
           <Button variant="ghost" size="md" onClick={dismiss}>
             Not now
           </Button>
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Cancel anytime in Stripe
+          Monthly price stays while subscription is active
           <span className="mx-2 text-line2">·</span>
-          Review the plan next
+          Lifetime never renews
         </p>
       </div>
     </div>

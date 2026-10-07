@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isProPlan } from "@/lib/pro-shared";
+import { isCheckoutPlan } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   getStripe,
@@ -10,7 +10,7 @@ import {
 } from "@/lib/stripe";
 
 /**
- * Starts a Stripe Checkout Session for a Pro subscription and hands the
+ * Starts a Stripe Checkout Session for a Pro purchase and hands the
  * hosted URL back to the client. Hosted Checkout (rather than embedded)
  * means Stripe owns card entry, SCA, and receipts — no card data ever
  * touches this app.
@@ -27,30 +27,58 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Expected a JSON body." }, { status: 400 });
   }
 
-  if (!isProPlan(plan)) {
+  // Annual remains a valid legacy entitlement, but it must never begin a new
+  // sale. Keep this guard ahead of every Stripe lookup and client call.
+  if (plan === "annual") {
     return NextResponse.json(
-      { error: "Choose a monthly or annual plan." },
+      {
+        error:
+          "The yearly plan is no longer on sale. Choose monthly or lifetime.",
+      },
+      { status: 409 },
+    );
+  }
+
+  if (!isCheckoutPlan(plan)) {
+    return NextResponse.json(
+      { error: "Choose a monthly or lifetime plan." },
       { status: 400 },
     );
   }
 
   try {
-    // Resolved per request rather than pinned in the bundle, so the annual
-    // plan starts selling the moment its Stripe price exists — and answers
-    // honestly until then. Resolution also refuses a price that charges
-    // something other than the page quoted, so no session can open at an
-    // amount the singer never saw.
     const priceId = await resolvePriceId(plan);
     const origin = siteOrigin(request);
-    const session = await getStripe().checkout.sessions.create({
-      mode: "subscription",
+    const metadata = {
+      app: "suede-sing",
+      offer: "early-access",
+      plan,
+    };
+    const common = {
       line_items: [{ price: priceId, quantity: 1 }],
+      // This app confirms purchases synchronously after Checkout returns and
+      // has no async-payment webhook. Restrict the session to cards so a bank
+      // payment cannot settle later after the browser discarded its handle.
+      payment_method_types: ["card" as const],
       success_url: `${origin}/pro?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pro?checkout=cancelled`,
-      allow_promotion_codes: true,
-      billing_address_collection: "auto",
-      subscription_data: { metadata: { app: "suede-sing", plan } },
-    });
+      billing_address_collection: "auto" as const,
+      metadata,
+    };
+    const session =
+      plan === "monthly"
+        ? await getStripe().checkout.sessions.create({
+            ...common,
+            mode: "subscription",
+            allow_promotion_codes: true,
+            subscription_data: { metadata },
+          })
+        : await getStripe().checkout.sessions.create({
+            ...common,
+            mode: "payment",
+            customer_creation: "always",
+            payment_intent_data: { metadata },
+          });
 
     if (!session.url) {
       throw new Error("Stripe returned a session without a redirect URL.");
@@ -61,7 +89,7 @@ export async function POST(request: Request) {
       error instanceof PriceNotConfiguredError ||
       error instanceof PriceMismatchError
     ) {
-      // Same answer to the buyer either way — the plan can't be sold at the
+      // Same answer to the buyer either way: the plan can't be sold at the
       // price they were shown. The log carries which of the two it is.
       console.error(
         "[api/checkout] no sellable price for plan",
@@ -70,10 +98,7 @@ export async function POST(request: Request) {
       );
       return NextResponse.json(
         {
-          error:
-            error.plan === "annual"
-              ? "The yearly plan isn't on sale yet. Monthly is ready now."
-              : "That plan isn't on sale right now.",
+          error: "That plan isn't on sale right now.",
         },
         { status: 409 },
       );

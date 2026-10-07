@@ -15,7 +15,7 @@ import { entitlementFrom, getStripe, resolvePriceId } from "@/lib/stripe";
  * know comps exist.
  *
  * No payment method is collected, so Stripe cancels the subscription when the
- * trial ends rather than invoicing an uncollectable $9.99. The pass expires on
+ * trial ends rather than invoicing an uncollectable payment. The pass expires on
  * its own; there is nothing to clean up, and nobody gets billed by surprise.
  *
  * Codes live in PRO_COMP_CODES rather than in Stripe or a database, so handing

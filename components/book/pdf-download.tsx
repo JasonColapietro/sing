@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useProState } from "@/lib/pro";
 
 /**
- * Subscriber-only PDF download. Fetches /api/book/pdf (which re-checks the
- * subscription with Stripe) and hands the bytes to the browser as a download —
- * the PDFs have no public URL.
+ * Pro-only PDF download. Fetches /api/book/pdf (which re-checks the Stripe
+ * billing record) and hands the bytes to the browser as a download — the PDFs
+ * have no public URL.
  */
 export function PdfDownload({
   book,
@@ -19,13 +19,17 @@ export function PdfDownload({
   const [state, setState] = useState<"idle" | "working" | "error">("idle");
 
   const download = async () => {
-    if (!pro.subscriptionId) return;
+    if (!pro.subscriptionId && !pro.paymentIntentId) return;
     setState("working");
     try {
       const res = await fetch("/api/book/pdf", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ subscriptionId: pro.subscriptionId, book }),
+        body: JSON.stringify({
+          subscriptionId: pro.subscriptionId,
+          paymentIntentId: pro.paymentIntentId,
+          book,
+        }),
       });
       if (!res.ok) throw new Error(`status ${res.status}`);
       const blob = await res.blob();

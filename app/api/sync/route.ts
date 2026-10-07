@@ -3,16 +3,20 @@ import { ENTITLING_STATUSES } from "@/lib/pro-shared";
 import { verifyProKey } from "@/lib/pro-key";
 import { rateLimit } from "@/lib/rate-limit";
 import { getRedis } from "@/lib/redis";
-import { getStripe, isOurSubscription } from "@/lib/stripe";
+import {
+  getStripe,
+  isOurLifetimePayment,
+  isOurSubscription,
+} from "@/lib/stripe";
 
 /**
- * Cloud sync for a subscriber's practice progress.
+ * Cloud sync for a Pro customer's practice progress.
  *
  * The Pro key authenticates: its HMAC proves purchase and names the
- * subscription, which becomes the storage key — no accounts needed. Whether
- * that subscription is still paying is re-checked against Stripe at most
- * once a day (cached here in Redis), so a cancelled subscriber loses sync
- * within a day without every sync costing a Stripe call.
+ * subscription or lifetime payment, which becomes the storage key — no
+ * accounts needed. Whether that billing record still grants Pro is re-checked
+ * against Stripe at most once a day (cached here in Redis), so a cancellation,
+ * refund, or dispute removes sync without every request costing a Stripe call.
  *
  * One POST does either direction: body with `state` stores it, body without
  * `state` fetches what's stored. The client owns merging — this route never
@@ -46,6 +50,30 @@ async function subscriptionStillPro(subscriptionId: string, customerId: string) 
     owner === customerId &&
     isOurSubscription(sub) &&
     (ENTITLING_STATUSES as readonly string[]).includes(sub.status);
+  await redis.set(cacheKey, ok ? "yes" : "no", { ex: ENT_TTL_SEC });
+  return ok;
+}
+
+async function lifetimePaymentStillPro(
+  paymentIntentId: string,
+  customerId: string,
+) {
+  const redis = getRedis();
+  if (!redis) return false;
+
+  const cacheKey = `sync:ent:${paymentIntentId}`;
+  const cached = await redis.get<string>(cacheKey);
+  if (cached === "yes") return true;
+  if (cached === "no") return false;
+
+  const payment = await getStripe().paymentIntents.retrieve(paymentIntentId, {
+    expand: ["customer", "latest_charge"],
+  });
+  const owner =
+    typeof payment.customer === "string"
+      ? payment.customer
+      : payment.customer?.id;
+  const ok = owner === customerId && isOurLifetimePayment(payment);
   await redis.set(cacheKey, ok ? "yes" : "no", { ex: ENT_TTL_SEC });
   return ok;
 }
@@ -87,18 +115,30 @@ export async function POST(request: Request) {
   }
 
   try {
-    const entitled = await subscriptionStillPro(
-      claims.subscriptionId,
-      claims.customerId,
-    );
+    const billingId =
+      claims.kind === "subscription"
+        ? claims.subscriptionId
+        : claims.paymentIntentId;
+    const entitled =
+      claims.kind === "subscription"
+        ? await subscriptionStillPro(claims.subscriptionId, claims.customerId)
+        : await lifetimePaymentStillPro(
+            claims.paymentIntentId,
+            claims.customerId,
+          );
     if (!entitled) {
       return NextResponse.json(
-        { error: "That subscription is no longer active." },
+        {
+          error:
+            claims.kind === "subscription"
+              ? "That subscription is no longer active."
+              : "That lifetime purchase is no longer active.",
+        },
         { status: 403 },
       );
     }
 
-    const storeKey = `sync:state:${claims.subscriptionId}`;
+    const storeKey = `sync:state:${billingId}`;
 
     if (state !== undefined) {
       if (typeof state !== "object" || state === null || Array.isArray(state)) {

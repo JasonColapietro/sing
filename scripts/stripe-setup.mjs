@@ -7,13 +7,13 @@
  * over when you switch to live keys. Run this once against each mode:
  *
  *   node --env-file=.env.local scripts/stripe-setup.mjs
- *   STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs
+ *   vercel env run -e production -- node scripts/stripe-setup.mjs
  *
- * Name plans to work on only those — this is how the yearly price gets created
- * on its own, once, without touching a live monthly price:
+ * Name plans to work on only those. The sellable catalog is deliberately
+ * monthly and lifetime only; legacy annual prices are never modified:
  *
- *   npm run stripe:setup -- annual
- *   STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs annual
+ *   npm run stripe:setup -- lifetime
+ *   vercel env run -e production -- node scripts/stripe-setup.mjs lifetime
  *
  * Safe to re-run — it reuses whatever already exists and never deletes
  * anything. Prices are keyed by lookup key, which is what the app resolves at
@@ -32,17 +32,17 @@ import Stripe from "stripe";
 const PLANS = [
   {
     key: "monthly",
-    lookupKey: "suede_pro_monthly",
-    nickname: "Suede Pro monthly",
-    unitAmount: 999,
+    lookupKey: "suede_pro_monthly_early_access",
+    nickname: "Suede Pro monthly - Early Access",
+    unitAmount: 499,
     interval: "month",
   },
   {
-    key: "annual",
-    lookupKey: "suede_pro_annual",
-    nickname: "Suede Pro annual",
-    unitAmount: 2900,
-    interval: "year",
+    key: "lifetime",
+    lookupKey: "suede_pro_lifetime_early_access",
+    nickname: "Suede Pro lifetime - Early Access",
+    unitAmount: 7900,
+    interval: null,
   },
 ];
 
@@ -63,13 +63,18 @@ const selected = requested.length
 const PRODUCT_NAME = "Suede Pro";
 const PRODUCT_DESCRIPTION =
   "The coach on top of the free vocal studio: adaptive daily plans, per-note analytics, take pitch analysis, full songbook, cloud sync.";
+const PRODUCT_LOOKUP_KEYS = [
+  ...PLANS.map((plan) => plan.lookupKey),
+  "suede_pro_monthly",
+  "suede_pro_annual",
+];
 
 const key = process.env.STRIPE_SECRET_KEY;
 if (!key) {
   console.error(
     "STRIPE_SECRET_KEY is not set.\n" +
       "  Test mode: vercel env pull, then node --env-file=.env.local scripts/stripe-setup.mjs\n" +
-      "  Live mode: STRIPE_SECRET_KEY=sk_live_… node scripts/stripe-setup.mjs",
+      "  Live mode: vercel env run -e production -- node scripts/stripe-setup.mjs",
   );
   process.exit(1);
 }
@@ -77,13 +82,13 @@ if (!key) {
 const live = key.startsWith("sk_live_");
 const stripe = new Stripe(key, { appInfo: { name: "Suede Sing setup" } });
 
-console.log(`Stripe mode: ${live ? "LIVE — real cards will be charged" : "test"}`);
+console.log(`Stripe mode: ${live ? "LIVE catalog" : "test"}`);
 
-/** Reuses the product the existing prices point at, so re-runs don't duplicate. */
+/** Reuses the canonical product without changing any legacy prices. */
 async function resolveProduct() {
-  for (const plan of PLANS) {
+  for (const lookupKey of PRODUCT_LOOKUP_KEYS) {
     const { data } = await stripe.prices.list({
-      lookup_keys: [plan.lookupKey],
+      lookup_keys: [lookupKey],
       limit: 1,
     });
     const existing = data[0];
@@ -126,10 +131,13 @@ async function ensurePrice(productId, plan) {
   if (existing) {
     const amount = (existing.unit_amount ?? 0) / 100;
     const matches =
+      existing.active &&
+      existing.currency === "usd" &&
       existing.unit_amount === plan.unitAmount &&
-      existing.recurring?.interval === plan.interval;
+      (existing.recurring?.interval ?? null) === plan.interval;
+    const billing = existing.recurring?.interval ?? "one-time";
     console.log(
-      `price:    ${plan.lookupKey} -> ${existing.id} (reused, $${amount}/${existing.recurring?.interval})` +
+      `price:    ${plan.lookupKey} -> ${existing.id} (reused, $${amount}/${billing})` +
         (matches ? "" : "  ⚠️  differs from the price on /pro"),
     );
     return matches ? "reused" : "mismatch";
@@ -139,7 +147,7 @@ async function ensurePrice(productId, plan) {
     product: productId,
     currency: "usd",
     unit_amount: plan.unitAmount,
-    recurring: { interval: plan.interval },
+    ...(plan.interval ? { recurring: { interval: plan.interval } } : {}),
     lookup_key: plan.lookupKey,
     nickname: plan.nickname,
     // The key may still be held by an archived price — Stripe rejects the
@@ -147,39 +155,58 @@ async function ensurePrice(productId, plan) {
     transfer_lookup_key: true,
   });
   console.log(
-    `price:    ${plan.lookupKey} -> ${price.id} (created, $${plan.unitAmount / 100}/${plan.interval})`,
+    `price:    ${plan.lookupKey} -> ${price.id} (created, $${plan.unitAmount / 100}/${plan.interval ?? "one-time"})`,
   );
   return "created";
 }
 
-/** Without a default portal configuration, "cancel in one click" 500s. */
+const PORTAL_FEATURES = {
+  customer_update: { enabled: true, allowed_updates: ["email"] },
+  invoice_history: { enabled: true },
+  payment_method_update: { enabled: true },
+  subscription_cancel: { enabled: true, mode: "at_period_end" },
+};
+
+function portalReady(config) {
+  return (
+    config.features.customer_update.enabled &&
+    config.features.customer_update.allowed_updates.includes("email") &&
+    config.features.invoice_history.enabled &&
+    config.features.payment_method_update.enabled &&
+    config.features.subscription_cancel.enabled &&
+    config.features.subscription_cancel.mode === "at_period_end"
+  );
+}
+
+/** Ensures the monthly cancellation and card-update promises are operational. */
 async function ensurePortal() {
   const { data } = await stripe.billingPortal.configurations.list({ limit: 10 });
   const active = data.find((config) => config.is_default && config.active);
   if (active) {
-    console.log(`portal:   ${active.id} (reused)`);
+    if (portalReady(active)) {
+      console.log(`portal:   ${active.id} (reused)`);
+      return;
+    }
+    await stripe.billingPortal.configurations.update(active.id, {
+      business_profile: { headline: "Suede Sing - manage your Pro plan" },
+      features: PORTAL_FEATURES,
+    });
+    console.log(`portal:   ${active.id} (updated for self-service cancellation)`);
     return;
   }
 
   const config = await stripe.billingPortal.configurations.create({
-    business_profile: { headline: "Suede Sing — manage your Pro plan" },
-    features: {
-      customer_update: { enabled: true, allowed_updates: ["email"] },
-      invoice_history: { enabled: true },
-      payment_method_update: { enabled: true },
-      subscription_cancel: { enabled: true, mode: "at_period_end" },
-    },
+    business_profile: { headline: "Suede Sing - manage your Pro plan" },
+    features: PORTAL_FEATURES,
   });
   console.log(`portal:   ${config.id} (created)`);
 }
 
 const productId = await resolveProduct();
-const ready = new Set();
 const mismatched = [];
 for (const plan of selected) {
   const outcome = await ensurePrice(productId, plan);
   if (outcome === "mismatch") mismatched.push(plan);
-  else ready.add(plan.key);
 }
 await ensurePortal();
 
@@ -194,14 +221,6 @@ if (account) {
         "   (business details, bank account, identity) in the dashboard.",
     );
   }
-}
-
-if (ready.has("annual")) {
-  console.log(
-    "\nThe yearly price is in place. The pricing page still shows monthly only\n" +
-      "   until NEXT_PUBLIC_PRO_ANNUAL=1 is set in the environment and the app is\n" +
-      "   redeployed — that flag is what renders the monthly/yearly toggle.",
-  );
 }
 
 if (mismatched.length) {

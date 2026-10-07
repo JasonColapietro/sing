@@ -2,7 +2,23 @@ import { NextResponse } from "next/server";
 import { INACTIVE } from "@/lib/pro-shared";
 import { verifyProKey } from "@/lib/pro-key";
 import { rateLimit } from "@/lib/rate-limit";
-import { emailOf, entitlementFrom, getStripe, isOurSubscription } from "@/lib/stripe";
+import {
+  emailOf,
+  entitlementFrom,
+  entitlementFromLifetime,
+  getStripe,
+  isOurLifetimePayment,
+  isOurSubscription,
+} from "@/lib/stripe";
+
+function isMissingStripeResource(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { type?: string }).type === "StripeInvalidRequestError" &&
+    (error as { code?: string }).code === "resource_missing"
+  );
+}
 
 /**
  * Restores Pro on a new device from the subscriber's Pro key.
@@ -14,7 +30,7 @@ import { emailOf, entitlementFrom, getStripe, isOurSubscription } from "@/lib/st
  * to probe, and a key can't be guessed.
  *
  * The key proves purchase; Stripe still decides entitlement, so a cancelled
- * subscription's key stops unlocking anything.
+ * subscription or reversed lifetime payment stops unlocking anything.
  */
 export async function POST(request: Request) {
   const limited = rateLimit(request, "restore", { limit: 10, windowMs: 60_000 });
@@ -37,36 +53,55 @@ export async function POST(request: Request) {
   }
 
   try {
-    const sub = await getStripe().subscriptions.retrieve(claims.subscriptionId, {
-      expand: ["customer"],
-    });
+    if (claims.kind === "subscription") {
+      const sub = await getStripe().subscriptions.retrieve(claims.subscriptionId, {
+        expand: ["customer"],
+      });
 
+      const owner =
+        typeof sub.customer === "string" ? sub.customer : sub.customer.id;
+      if (owner !== claims.customerId || !isOurSubscription(sub)) {
+        return NextResponse.json({
+          ...INACTIVE,
+          error: "That Pro key doesn't match a Suede Pro subscription.",
+        });
+      }
+
+      const entitlement = entitlementFrom(sub, emailOf(sub.customer));
+      if (!entitlement.active) {
+        return NextResponse.json({
+          ...entitlement,
+          error: "That subscription is no longer active.",
+        });
+      }
+      return NextResponse.json(entitlement);
+    }
+
+    const payment = await getStripe().paymentIntents.retrieve(
+      claims.paymentIntentId,
+      { expand: ["customer", "latest_charge"] },
+    );
     const owner =
-      typeof sub.customer === "string" ? sub.customer : sub.customer.id;
-    if (owner !== claims.customerId || !isOurSubscription(sub)) {
+      typeof payment.customer === "string"
+        ? payment.customer
+        : payment.customer?.id;
+    if (owner !== claims.customerId || !isOurLifetimePayment(payment)) {
       return NextResponse.json({
         ...INACTIVE,
-        error: "That Pro key doesn't match a Suede Pro subscription.",
+        error: "That Pro key doesn't match a Suede Pro lifetime purchase.",
       });
     }
-
-    const entitlement = entitlementFrom(sub, emailOf(sub.customer));
-    if (!entitlement.active) {
-      return NextResponse.json({
-        ...entitlement,
-        error: "That subscription is no longer active.",
-      });
-    }
-    return NextResponse.json(entitlement);
+    return NextResponse.json(
+      entitlementFromLifetime(payment, emailOf(payment.customer)),
+    );
   } catch (error) {
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      (error as { type?: string }).type === "StripeInvalidRequestError"
-    ) {
+    if (isMissingStripeResource(error)) {
       return NextResponse.json({
         ...INACTIVE,
-        error: "That subscription no longer exists.",
+        error:
+          claims.kind === "subscription"
+            ? "That subscription no longer exists."
+            : "That lifetime purchase no longer exists.",
       });
     }
     console.error("[api/restore]", error);
