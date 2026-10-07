@@ -137,6 +137,8 @@ export function RangeTest() {
   });
   const dwellMapRef = useRef<Map<number, number>>(new Map());
   const startedAtRef = useRef(0);
+  /** Whichever "Hearing" readout is mounted; carries data-pitch-hz for e2e. */
+  const livePitchRef = useRef<HTMLDivElement>(null);
 
   const resetHunt = () => {
     dwellMapRef.current = new Map();
@@ -175,6 +177,10 @@ export function RangeTest() {
   // Per-frame analysis for the active wizard stages.
   useEffect(() => {
     if (stage !== "warm" && stage !== "low" && stage !== "high") return;
+    const liveEl = livePitchRef.current;
+    if (liveEl) {
+      liveEl.dataset.pitchHz = frame.freq !== null ? String(frame.freq) : "";
+    }
     const t = frame.t;
     const last = lastTRef.current;
     lastTRef.current = t;
@@ -416,6 +422,8 @@ export function RangeTest() {
                 Hearing
               </div>
               <div
+                ref={livePitchRef}
+                data-testid="range-live-pitch"
                 className="tabular mt-1 font-mono text-5xl font-bold text-violet-ink"
                 aria-live="polite"
               >
@@ -462,6 +470,8 @@ export function RangeTest() {
                 Hearing
               </div>
               <div
+                ref={livePitchRef}
+                data-testid="range-live-pitch"
                 className="tabular mt-1 font-mono text-5xl font-bold text-violet-ink"
                 aria-live="polite"
               >

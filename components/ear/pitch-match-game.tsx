@@ -31,6 +31,16 @@ const WINDOW_MS = 8000;
 type Phase = "listen" | "sing" | "result";
 
 /**
+ * Test hook for the e2e precision runner: the live Hz ("" when unvoiced) and
+ * whether the sing window is open. Written straight to the DOM, never state.
+ */
+function markLivePitch(el: HTMLElement | null, hz: string, singActive: "0" | "1") {
+  if (!el) return;
+  el.dataset.pitchHz = hz;
+  el.dataset.singActive = singActive;
+}
+
+/**
  * Live tuner needle, -60..+60 cents.
  *
  * Drawn on the session shell's dark tokens rather than the site's paper ones:
@@ -164,6 +174,7 @@ export function PitchMatchGame({
   const [liveCents, setLiveCents] = useState<number | null>(null);
   const [startedAt, setStartedAt] = useState(() => performance.now());
   const rafRef = useRef(0);
+  const livePitchRef = useRef<HTMLDivElement>(null);
   const phaseRef = useRef<Phase>("listen");
   useEffect(() => {
     phaseRef.current = phase;
@@ -211,6 +222,8 @@ export function PitchMatchGame({
     let elapsed = 0;
     let held = 0;
     let settled = false;
+    // Mounted by the time this runs: the sing phase always renders the needle.
+    const liveEl = livePitchRef.current;
 
     const tick = () => {
       const now = performance.now();
@@ -225,6 +238,8 @@ export function PitchMatchGame({
       // back re-credits a note that stopped sounding minutes ago — and pairs it
       // with the whole absence as a single delta, which cleared HOLD_MS
       // outright and scored the round correct for someone who sang nothing.
+      const fresh = f.freq !== null && isFrameFresh(f.t, now);
+      markLivePitch(liveEl, fresh ? String(f.freq) : "", "1");
       if (f.freq !== null && isFrameFresh(f.t, now)) {
         cents = centsToTarget(freqToMidiFloat(f.freq), target, octaveAgnostic);
         if (Math.abs(cents) <= tolerance) held += dt;
@@ -234,6 +249,7 @@ export function PitchMatchGame({
       setLeftMs(Math.max(0, WINDOW_MS - elapsed));
 
       if (held >= HOLD_MS) {
+        markLivePitch(liveEl, "", "0");
         settled = true;
         setCorrect(true);
         setPhase("result");
@@ -241,6 +257,7 @@ export function PitchMatchGame({
         return;
       }
       if (elapsed >= WINDOW_MS) {
+        markLivePitch(liveEl, "", "0");
         settled = true;
         setCorrect(false);
         setPhase("result");
@@ -251,6 +268,7 @@ export function PitchMatchGame({
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => {
+      markLivePitch(liveEl, "", "0");
       if (!settled) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -380,7 +398,11 @@ export function PitchMatchGame({
         )}
       </div>
 
-      <div className="mt-3 rounded-2xl border border-[var(--s-line)] bg-[var(--s-elev)] p-4">
+      <div
+        ref={livePitchRef}
+        data-testid="ear-live-pitch"
+        className="mt-3 rounded-2xl border border-[var(--s-line)] bg-[var(--s-elev)] p-4"
+      >
         <CentsNeedle
           cents={liveCents}
           tolerance={tolerance}

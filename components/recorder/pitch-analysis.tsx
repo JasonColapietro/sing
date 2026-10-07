@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { AMBER, DIM, LINE, LINE2, MONO } from "@/components/progress/charts";
 import type { TakeAnalysis } from "@/lib/audio/analyze-take";
 import { midiToLabel } from "@/lib/audio/notes";
@@ -93,6 +94,17 @@ function Gridlines({ cs, y }: { cs: number[]; y: (midi: number) => number }) {
 
 export function TakePitchPanel({ analysis, name }: { analysis: TakeAnalysis; name: string }) {
   const midis = voicedMidis(analysis);
+  const summaryRef = useRef<HTMLParagraphElement>(null);
+
+  // Test hook: the unrounded median as Hz, for manual and e2e QA. Written to
+  // the DOM, never state; above the early return so hook order is stable.
+  useEffect(() => {
+    const el = summaryRef.current;
+    if (!el) return;
+    const m = analysis.medianMidi;
+    el.dataset.pitchHz = m !== null ? String(440 * 2 ** ((m - 69) / 12)) : "";
+  }, [analysis]);
+
   if (midis.length === 0 || analysis.medianMidi === null || analysis.inTunePct === null) {
     return (
       <p className="rounded-xl border border-dashed border-line2 px-4 py-8 text-center text-sm text-mut">
@@ -125,7 +137,7 @@ export function TakePitchPanel({ analysis, name }: { analysis: TakeAnalysis; nam
           strokeLinecap="round"
         />
       </svg>
-      <p className="mt-2 text-xs text-mut">
+      <p ref={summaryRef} data-testid="recorder-take-median" className="mt-2 text-xs text-mut">
         Median note {midiToLabel(median)} · {analysis.inTunePct}% within ±25 cents of a note ·{" "}
         {fmtClock(analysis.durationSec)}
         {analysis.truncated && " — first 3:00 analyzed"}

@@ -258,3 +258,214 @@ describe("detectPitch", () => {
     expect(Math.abs(a!.freq - b!.freq)).toBeLessThan(2);
   });
 });
+
+/**
+ * Precision cases at the frame the live loop actually opens: PITCH_FFT_SIZE
+ * (4096) samples at 48 kHz (lib/audio/use-pitch.ts). Every case runs at three
+ * phase offsets so a result cannot hinge on where the frame happened to start.
+ * Helpers are local on purpose: lib never imports from e2e.
+ */
+describe("detectPitch precision at the live 4096-sample frame", () => {
+  const SR = 48000;
+  const SIZE = 4096;
+  const LEVEL = 0.3;
+  const PHASES = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
+
+  /** Same LCG as the helpers above. */
+  const lcg = (seed: number) => {
+    let s = seed;
+    return () => {
+      s = (s * 1664525 + 1013904223) % 4294967296;
+      return s / 4294967296;
+    };
+  };
+
+  /** Gaussian samples (Box-Muller) from the seeded LCG. */
+  const gaussian = (seed: number) => {
+    const rand = lcg(seed);
+    return () => {
+      const u = Math.max(rand(), 1e-12);
+      const v = rand();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    };
+  };
+
+  const cents = (freq: number, ref: number) => 1200 * Math.log2(freq / ref);
+
+  const sine = (freq: number, phase: number) =>
+    Float32Array.from(
+      { length: SIZE },
+      (_, i) => LEVEL * Math.sin((2 * Math.PI * freq * i) / SR + phase),
+    );
+
+  /** Harmonics 1-8 at amplitude 1/k, the classic sawtooth-like voice proxy. */
+  const harmonic = (freq: number, phase: number) =>
+    Float32Array.from({ length: SIZE }, (_, i) => {
+      const p = (2 * Math.PI * freq * i) / SR + phase;
+      let x = 0;
+      for (let k = 1; k <= 8; k++) x += Math.sin(k * p) / k;
+      return (LEVEL / 2) * x;
+    });
+
+  /** A sine plus white Gaussian noise at the given SNR in dB. */
+  const noisySine = (freq: number, snrDb: number, phase: number, seed: number) => {
+    const g = gaussian(seed);
+    const signalPower = (LEVEL * LEVEL) / 2;
+    const sigma = Math.sqrt(signalPower / 10 ** (snrDb / 10));
+    return Float32Array.from(
+      { length: SIZE },
+      (_, i) =>
+        LEVEL * Math.sin((2 * Math.PI * freq * i) / SR + phase) + sigma * g(),
+    );
+  };
+
+  /**
+   * An exponential glide from `from` to `to` Hz over `seconds`, sampled as one
+   * frame starting `startSample` into it. Returns the frame and the
+   * instantaneous frequency at the frame's centre.
+   */
+  const glide = (
+    from: number,
+    to: number,
+    seconds: number,
+    startSample: number,
+  ) => {
+    const total = seconds * SR;
+    const ratio = Math.log(to / from);
+    const instHz = (n: number) => from * Math.exp((ratio * n) / total);
+    // Phase is the integral of instantaneous frequency.
+    const phaseAt = (n: number) =>
+      ((2 * Math.PI * from * total) / (SR * ratio)) *
+      (Math.exp((ratio * n) / total) - 1);
+    const frame = Float32Array.from({ length: SIZE }, (_, i) =>
+      LEVEL * Math.sin(phaseAt(startSample + i)),
+    );
+    return { frame, centreHz: instHz(startSample + SIZE / 2) };
+  };
+
+  /** Sinusoidal vibrato around `centre` Hz, depth in cents, rate in Hz. */
+  const vibrato = (
+    centre: number,
+    rateHz: number,
+    depthCents: number,
+    lfoPhase: number,
+  ) => {
+    let phase = 0;
+    return Float32Array.from({ length: SIZE }, (_, i) => {
+      const f =
+        centre *
+        2 **
+          ((depthCents / 1200) *
+            Math.sin((2 * Math.PI * rateHz * i) / SR + lfoPhase));
+      phase += (2 * Math.PI * f) / SR;
+      return LEVEL * Math.sin(phase);
+    });
+  };
+
+  /** Pink noise via Paul Kellet's refined filter over seeded white noise. */
+  const pinkNoise = (seed: number, rms = 0.1) => {
+    const rand = lcg(seed);
+    let b0 = 0,
+      b1 = 0,
+      b2 = 0,
+      b3 = 0,
+      b4 = 0,
+      b5 = 0,
+      b6 = 0;
+    const out = new Float32Array(SIZE);
+    for (let i = 0; i < SIZE; i++) {
+      const w = rand() * 2 - 1;
+      b0 = 0.99886 * b0 + w * 0.0555179;
+      b1 = 0.99332 * b1 + w * 0.0750759;
+      b2 = 0.969 * b2 + w * 0.153852;
+      b3 = 0.8665 * b3 + w * 0.3104856;
+      b4 = 0.55 * b4 + w * 0.5329522;
+      b5 = -0.7616 * b5 - w * 0.016898;
+      out[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362;
+      b6 = w * 0.115926;
+    }
+    let power = 0;
+    for (const x of out) power += x * x;
+    const scale = rms / Math.sqrt(power / SIZE);
+    for (let i = 0; i < SIZE; i++) out[i] *= scale;
+    return out;
+  };
+
+  const SINES = [110, 130.81, 164.81, 220, 261.63, 440, 523.25, 659.26, 880];
+
+  for (const freq of SINES) {
+    it(`sine ${freq} Hz reads within 10 cents at every phase`, () => {
+      for (const phase of PHASES) {
+        const r = detectPitch(sine(freq, phase), SR);
+        expect(r, `phase ${phase.toFixed(2)}`).not.toBeNull();
+        expect(
+          Math.abs(cents(r!.freq, freq)),
+          `phase ${phase.toFixed(2)}: ${r!.freq.toFixed(3)} Hz`,
+        ).toBeLessThanOrEqual(10);
+      }
+    });
+  }
+
+  // fails today: 222.268 Hz (+17.8 c), 221.074 Hz (+8.4 c), 223.221 Hz (+25.1 c) at clarity 0.907/0.907/0.906
+  it.fails("220 Hz sine in white noise at 10 dB SNR reads within 10 cents", () => {
+    PHASES.forEach((phase, k) => {
+      const r = detectPitch(noisySine(220, 10, phase, k + 1), SR);
+      expect(r, `phase ${phase.toFixed(2)}`).not.toBeNull();
+      expect(
+        Math.abs(cents(r!.freq, 220)),
+        `phase ${phase.toFixed(2)}: ${r!.freq.toFixed(3)} Hz`,
+      ).toBeLessThanOrEqual(10);
+    });
+  });
+
+  for (const freq of [110, 220, 440]) {
+    it(`harmonic tone at ${freq} Hz has no octave error and reads within 10 cents`, () => {
+      for (const phase of PHASES) {
+        const r = detectPitch(harmonic(freq, phase), SR);
+        expect(r, `phase ${phase.toFixed(2)}`).not.toBeNull();
+        const off = Math.abs(cents(r!.freq, freq));
+        const msg = `phase ${phase.toFixed(2)}: ${r!.freq.toFixed(3)} Hz`;
+        expect(off, msg).toBeLessThanOrEqual(600);
+        expect(off, msg).toBeLessThanOrEqual(10);
+      }
+    });
+  }
+
+  it("glide 110 to 220 Hz tracks the frame-centre frequency within 25 cents", () => {
+    // A one-second octave glide, read at three points along it.
+    for (const start of [0.2 * SR, 0.45 * SR, 0.7 * SR]) {
+      const { frame, centreHz } = glide(110, 220, 1, start);
+      const r = detectPitch(frame, SR);
+      expect(r, `start ${start}`).not.toBeNull();
+      expect(
+        Math.abs(cents(r!.freq, centreHz)),
+        `start ${start}: ${r!.freq.toFixed(3)} Hz vs ${centreHz.toFixed(3)} Hz`,
+      ).toBeLessThanOrEqual(25);
+    }
+  });
+
+  it("5.5 Hz vibrato of +/-50 cents around 220 Hz reads within 60 cents of 220", () => {
+    for (const phase of PHASES) {
+      const r = detectPitch(vibrato(220, 5.5, 50, phase), SR);
+      expect(r, `lfo phase ${phase.toFixed(2)}`).not.toBeNull();
+      expect(
+        Math.abs(cents(r!.freq, 220)),
+        `lfo phase ${phase.toFixed(2)}: ${r!.freq.toFixed(3)} Hz`,
+      ).toBeLessThanOrEqual(60);
+    }
+  });
+
+  it("silence returns null", () => {
+    expect(detectPitch(new Float32Array(SIZE), SR)).toBeNull();
+  });
+
+  it("pink noise returns null or a clarity below the 0.75 gate", () => {
+    for (const seed of [1, 2, 3]) {
+      const r = detectPitch(pinkNoise(seed), SR);
+      expect(
+        r === null || r.clarity < 0.75,
+        `seed ${seed}: ${r ? `${r.freq.toFixed(3)} Hz @ ${r.clarity.toFixed(3)}` : "null"}`,
+      ).toBe(true);
+    }
+  });
+});

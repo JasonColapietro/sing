@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+e2e/precision/out/
 
 # next.js
 /.next/

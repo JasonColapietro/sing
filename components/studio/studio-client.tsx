@@ -115,6 +115,15 @@ export function StudioClient() {
   // Owned here rather than inside TargetPractice: stopping the mic unmounts
   // that component, and the session it scored is logged after it is gone.
   const statsRef = useRef<TargetStats>(emptyTargetStats());
+  /** Tuner Hz readout; carries data-pitch-hz for the e2e precision runner. */
+  const livePitchRef = useRef<HTMLDivElement>(null);
+
+  // Mirror the detected frequency onto the readout without adding state. Keyed
+  // on listening too, so a freshly mounted readout is written straight away.
+  useEffect(() => {
+    const el = livePitchRef.current;
+    if (el) el.dataset.pitchHz = frame.freq !== null ? String(frame.freq) : "";
+  }, [frame.freq, listening]);
 
   // Session timer while listening.
   useEffect(() => {
@@ -346,7 +355,11 @@ export function StudioClient() {
                 >
                   {note ? note.label : "--"}
                 </div>
-                <div className="tabular mt-2 font-mono text-sm text-mut">
+                <div
+                  ref={livePitchRef}
+                  data-testid="studio-live-pitch"
+                  className="tabular mt-2 font-mono text-sm text-mut"
+                >
                   {frame.freq !== null
                     ? `${frame.freq.toFixed(1)} Hz`
                     : "listening"}
