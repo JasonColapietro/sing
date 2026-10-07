@@ -15,10 +15,10 @@ import { getProState } from "@/lib/pro";
 import { Library } from "./library";
 import { SongPlayer } from "./song-player";
 import { SessionSummary } from "./session-summary";
-import { recordSongPlayed } from "./favorites";
+import { recordMastered, recordSongPlayed } from "./favorites";
 import { advanceSetlist, endSetlist, useSetlist } from "./setlist";
 import type { SessionSummaryData } from "./lib";
-import type { SessionMode } from "./types";
+import type { GuidePass, SessionMode } from "./types";
 
 type View = "library" | "practice" | "summary";
 
@@ -44,6 +44,9 @@ export function SongsClient() {
   // Rehearsal loops until the singer stops; performance is the scored take.
   // Chosen on the start step and switchable while paused, so it lives here.
   const [mode, setMode] = useState<SessionMode>("rehearsal");
+  // How much of the guide melody plays under the singer on this pass. Chosen
+  // on the start step alongside the mode, and switchable while paused.
+  const [pass, setPass] = useState<GuidePass>("guided");
   const [view, setView] = useState<View>("library");
   const [activeSong, setActiveSong] = useState<Song | null>(null);
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
@@ -122,9 +125,16 @@ export function SongsClient() {
         }
         error={pitch.error}
         onEnable={pitch.start}
-        onListen={() => setListenMode(true)}
+        onListen={() => {
+          // Listening without a mic is unscored by nature, so its entry
+          // preselects the pass that matches: the guide alone.
+          setPass("listen");
+          setListenMode(true);
+        }}
         mode={mode}
         onModeChange={setMode}
+        pass={pass}
+        onPassChange={setPass}
       />
     );
   }
@@ -162,7 +172,10 @@ export function SongsClient() {
           range={progress.range}
           mode={mode}
           onModeChange={setMode}
+          pass={pass}
+          onPassChange={setPass}
           onFinish={(data) => {
+            if (data.mastered) recordMastered(data.song.id);
             setSummary(data);
             setView("summary");
           }}

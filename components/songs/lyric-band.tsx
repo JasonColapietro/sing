@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import type { LyricLine, SongNote } from "./data";
-import { lyricLineAtBeat } from "./lib";
+import { breathMarks, lyricLineAtBeat } from "./lib";
 
 /** One syllable, plus the note index that carries its timing. */
 interface Syllable {
@@ -77,6 +77,12 @@ export function LyricBand({
   const line = lines[safeIndex];
   const words = useMemo(() => (line ? wordsOf(line, notes) : []), [line, notes]);
 
+  // Where to breathe: `breathMarks` names the note indices preceded by a rest
+  // of at least a beat. It is computed over the whole song rather than the
+  // current line, because a line's first note is the one most likely to carry
+  // a mark and its rest sits in the line before it.
+  const breaths = useMemo(() => new Set(breathMarks(notes)), [notes]);
+
   // Next line wraps around: on a looping phrase the line after the last one is
   // genuinely the first one again, and previewing it is the point.
   const nextLine =
@@ -147,17 +153,26 @@ export function LyricBand({
             {word.map((syllable) => {
               const slot = syllableSlot++;
               return (
-                <span key={syllable.noteIndex} className="relative inline-block">
-                  {syllable.text}
-                  <span
-                    ref={(el) => {
-                      fillsRef.current[slot] = el;
-                    }}
-                    className="absolute inset-y-0 left-0 w-0 overflow-hidden whitespace-nowrap text-violet-ink"
-                  >
+                <Fragment key={syllable.noteIndex}>
+                  {/* The breath mark sits outside the wiping span on purpose:
+                      the overlay is positioned from that span's left edge, so a
+                      glyph inside it would slide the two copies of the syllable
+                      apart. Inside the word span, so it never wraps alone. */}
+                  {breaths.has(syllable.noteIndex) && (
+                    <span className="mr-[0.08em] text-dim">&rsquo;</span>
+                  )}
+                  <span className="relative inline-block">
                     {syllable.text}
+                    <span
+                      ref={(el) => {
+                        fillsRef.current[slot] = el;
+                      }}
+                      className="absolute inset-y-0 left-0 w-0 overflow-hidden whitespace-nowrap text-violet-ink"
+                    >
+                      {syllable.text}
+                    </span>
                   </span>
-                </span>
+                </Fragment>
               );
             })}
           </span>

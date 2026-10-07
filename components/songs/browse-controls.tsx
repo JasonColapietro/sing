@@ -3,8 +3,16 @@
 import { useId, type ReactNode } from "react";
 import type { SessionLog, VocalRange } from "@/lib/progress";
 import { Button, Card } from "@/components/ui";
-import type { Song, SongForm } from "./types";
-import { bestScoreForSong, computeDifficulty, rangeFit, sessionSeconds } from "./lib";
+import type { Song, SongBand, SongForm } from "./types";
+import {
+  BAND_LABEL,
+  BAND_ORDER,
+  bandForSong,
+  bestScoreForSong,
+  computeDifficulty,
+  rangeFit,
+  sessionSeconds,
+} from "./lib";
 import { lastPlayedAt, type RecentPlay } from "./favorites";
 
 /**
@@ -34,6 +42,8 @@ export interface BrowseState {
   query: string;
   /** Selected difficulty labels ("Easy" | "Medium" | "Hard"). */
   difficulty: string[];
+  /** Selected mastery bands, named by BAND_LABEL and ordered by BAND_ORDER. */
+  band: SongBand[];
   genre: string[];
   era: string[];
   language: string[];
@@ -47,6 +57,7 @@ export interface BrowseState {
 export const DEFAULT_BROWSE: BrowseState = {
   query: "",
   difficulty: [],
+  band: [],
   genre: [],
   era: [],
   language: [],
@@ -61,6 +72,7 @@ export function activeFilterCount(s: BrowseState): number {
   return (
     (s.query.trim() ? 1 : 0) +
     s.difficulty.length +
+    s.band.length +
     s.genre.length +
     s.era.length +
     s.language.length +
@@ -72,6 +84,7 @@ export function activeFilterCount(s: BrowseState): number {
 
 export interface BrowseOptions {
   difficulty: string[];
+  band: SongBand[];
   genre: string[];
   era: string[];
   language: string[];
@@ -90,6 +103,7 @@ export function browseOptions(songs: Song[]): BrowseOptions {
     difficulty: DIFFICULTY_ORDER.filter((label) =>
       songs.some((s) => computeDifficulty(s).label === label),
     ),
+    band: BAND_ORDER.filter((b) => songs.some((s) => bandForSong(s) === b)),
     genre: unique(songs.map((s) => s.genre)).sort((a, b) => a.localeCompare(b)),
     // Eras are free text ("Traditional", "1800s") but sort usefully as strings.
     era: unique(songs.map((s) => s.era)).sort((a, b) => a.localeCompare(b)),
@@ -133,6 +147,7 @@ export function applyBrowse(
     if (state.difficulty.length && !state.difficulty.includes(computeDifficulty(song).label)) {
       return false;
     }
+    if (state.band.length && !state.band.includes(bandForSong(song))) return false;
     if (state.genre.length && !state.genre.includes(song.genre)) return false;
     if (state.era.length && !state.era.includes(song.era)) return false;
     if (state.language.length && !state.language.includes(song.language)) return false;
@@ -330,6 +345,18 @@ export function BrowseControls({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
+        {options.band.length > 1 && (
+          <ChipRow label="Band">
+            {options.band.map((b) => (
+              <Chip
+                key={b}
+                label={BAND_LABEL[b]}
+                active={state.band.includes(b)}
+                onClick={() => onChange({ ...state, band: toggleValue(state.band, b) })}
+              />
+            ))}
+          </ChipRow>
+        )}
         {options.difficulty.length > 1 && (
           <ChipRow label="Difficulty">
             {options.difficulty.map((d) => (

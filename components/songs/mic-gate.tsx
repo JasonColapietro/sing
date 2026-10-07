@@ -4,7 +4,8 @@ import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { IconHeadphones, IconMic } from "./icons";
-import type { SessionMode } from "./types";
+import { PASS_LABEL } from "./lib";
+import type { GuidePass, SessionMode } from "./types";
 
 /**
  * The first screen of /songs, for everyone.
@@ -49,6 +50,29 @@ const MODES: { id: SessionMode; label: string; blurb: string }[] = [
   },
 ];
 
+/**
+ * How much of the guide melody plays under the singer, in our own words.
+ * Listen is the unscored read-through, guided keeps the guide under the voice,
+ * and solo drops it so the singer carries the melody alone.
+ */
+const PASSES: { id: GuidePass; label: string; blurb: string }[] = [
+  {
+    id: "listen",
+    label: PASS_LABEL.listen,
+    blurb: "The guide sings it alone. Nothing is scored; just take it in.",
+  },
+  {
+    id: "guided",
+    label: PASS_LABEL.guided,
+    blurb: "The guide stays under your voice, and the pass is scored.",
+  },
+  {
+    id: "solo",
+    label: PASS_LABEL.solo,
+    blurb: "The guide goes quiet. Scored, and the pass that masters a song.",
+  },
+];
+
 export function SongsMicGate({
   heading = "Enable your microphone to get scored",
   error,
@@ -56,6 +80,8 @@ export function SongsMicGate({
   onListen,
   mode = "rehearsal",
   onModeChange,
+  pass = "guided",
+  onPassChange,
 }: {
   /** Overridden when a deep link names the song being opened. */
   heading?: string;
@@ -65,6 +91,9 @@ export function SongsMicGate({
   /** Chosen here so it applies to both entries below — mic and listen mode. */
   mode?: SessionMode;
   onModeChange?: (mode: SessionMode) => void;
+  /** Chosen here too: the pass the first run through the song will be. */
+  pass?: GuidePass;
+  onPassChange?: (pass: GuidePass) => void;
 }) {
   return (
     <PageShell
@@ -103,6 +132,31 @@ export function SongsMicGate({
           </div>
           <p className="mt-2 max-w-md text-sm text-mut">
             {MODES.find((m) => m.id === mode)?.blurb}
+          </p>
+        </fieldset>
+        <fieldset className="mt-5">
+          <legend className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            Guide track
+          </legend>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {PASSES.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                aria-pressed={pass === p.id}
+                onClick={() => onPassChange?.(p.id)}
+                className={`min-h-11 rounded-full border px-4 py-2 text-sm transition-colors ${
+                  pass === p.id
+                    ? "border-violet-ink bg-violet/10 text-violet-ink"
+                    : "border-line2 text-mut hover:text-ink"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 max-w-md text-sm text-mut">
+            {PASSES.find((p) => p.id === pass)?.blurb}
           </p>
         </fieldset>
         <div className="mt-5 flex flex-wrap gap-3">
