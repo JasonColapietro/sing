@@ -47,8 +47,8 @@ export const RANGE_GUIDE: GuideContent = {
         body: "A short, gentle warmup makes the test easier to repeat under similar conditions. If you test without warming up, record that context and compare it only with another test taken the same way.",
       },
       {
-        title: "Allow the microphone",
-        body: "Grant mic access when the browser asks. Pitch detection runs on your device; audio is never sent to a server. Use a quiet room, because background noise is what makes the detector hesitate. If nothing registers while you sing, your input level is the first thing to raise — automatic gain is switched off here so the signal being measured is the one you produced.",
+        title: "Choose Range test and allow the microphone",
+        body: "Select the Range test tab at the top of this page, then start the guided test. Grant mic access when the browser asks. Pitch detection runs on your device; audio is never sent to a server. Use a quiet room, because background noise is what makes the detector hesitate. If nothing registers while you sing, your input level is the first thing to raise — automatic gain is switched off here so the signal being measured is the one you produced.",
       },
       {
         title: "Hold a comfortable note",
@@ -91,7 +91,7 @@ export const RANGE_GUIDE: GuideContent = {
   faq: [
     {
       q: "How do I find my vocal range online?",
-      a: "Start the free test, allow microphone access, hold one comfortable note, then slide down and up while the pitch detector listens. Suede Sing marks the lowest and highest clear notes it hears, shows the span on a keyboard, and gives the conventional voice-type band that overlaps it most closely.",
+      a: "Choose the Range test tab, start the free test, allow microphone access, hold one comfortable note, then slide down and up while the pitch detector listens. Suede Sing marks the lowest and highest clear notes it hears, shows the span on a keyboard, and gives the conventional voice-type band that overlaps it most closely.",
     },
     {
       q: "How high can I sing?",
@@ -119,6 +119,11 @@ export const RANGE_GUIDE: GuideContent = {
     },
   ],
   related: [
+    {
+      href: "/atlas/vocal-range-by-voice-type",
+      label: "Vocal ranges by voice type",
+      note: "Compare conventional range bands and understand why range alone does not define your voice type.",
+    },
     {
       href: "/warmups",
       label: "Warmups",

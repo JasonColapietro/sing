@@ -8,9 +8,9 @@ import { RANGE_GUIDE } from "@/lib/guides";
 import { RoomRailBand } from "@/components/discover/room-rail";
 import { routeKeywords } from "@/lib/keywords";
 
-const TITLE = "Free Vocal Range Test: Find Your Singing Range & Voice Type | Suede Sing";
+const TITLE = "Vocal Range Test & Voice Type Estimate | Suede Sing";
 const DESCRIPTION =
-  "Find your lowest and highest singing notes in about two minutes. This free vocal range test runs in your browser, shows your voice type, and needs nothing to install.";
+  "Find your lowest and highest notes, octave span and a voice-type estimate. This free browser vocal range test needs nothing to install.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/range"),
