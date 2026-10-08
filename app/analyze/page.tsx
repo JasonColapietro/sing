@@ -9,9 +9,9 @@ import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/analyze"),
-  title: "Voice Spectrogram and Tone Analyzer: See Your Own Harmonics",
+  title: "Voice Spectrogram & Tone Analyzer Online",
   description:
-    "Watch your voice as a live spectrogram, see where the harmonics and the 3 kHz ring sit, and track vocal load by vibration cycles rather than minutes. Runs in the browser; no audio leaves your device.",
+    "See your singing voice on a live spectrogram. Explore harmonics, tone and estimated vocal load in your browser. Your microphone audio stays on your device.",
   alternates: { canonical: `${SITE_URL}/analyze` },
 });
 

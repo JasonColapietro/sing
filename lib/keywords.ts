@@ -22,18 +22,18 @@ export const MAX_TERMS = 10;
 const BRAND = "suede sing";
 
 /**
- * Head terms and the single route that owns each. Search volumes are monthly
- * (US) estimates from the 2026-09 keyword review.
+ * Head terms and the single route that owns each. This is an editorial intent
+ * map, not a search-volume or keyword-difficulty dataset.
  */
 export const HEAD_TERM_OWNERS: Readonly<Record<string, string>> = {
-  "vocal range test": "/range", // 22,200, KD19
+  "vocal range test": "/range",
   "find my vocal range": "/range",
   "what is my vocal range": "/range",
-  "how to find your vocal range": "/range", // 3,600, KD5
-  "vocal range chart": "/singers", // 6,600
+  "how to find your vocal range": "/range",
+  "vocal range chart": "/singers",
   "singers vocal range": "/singers",
   "famous singers vocal ranges": "/singers",
-  "free vocal studio": "/",
+  "online singing practice": "/",
   "pitch training": "/studio",
   "vocal warm up exercises": "/warmups",
   "learn to sing": "/learn",
@@ -50,7 +50,7 @@ export const HEAD_TERM_OWNERS: Readonly<Record<string, string>> = {
 
 export const ROUTE_KEYWORDS = {
   "/": [
-    "free vocal studio",
+    "online singing practice",
     "online vocal studio",
     "singing practice app",
     "pitch detector for singing",

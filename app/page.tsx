@@ -30,7 +30,7 @@ const PRO_MONTHLY_PRICE = formatPrice(PRICING.monthly.amount);
 const FEATURES = [
   {
     href: "/analyze",
-    label: "Analyze my voice",
+    label: "Voice spectrogram and tone analyzer",
     desc: "See your voice on a live spectrogram and explore your tone and harmonics.",
     Glyph: StudioGlyph,
   },
@@ -99,13 +99,18 @@ const FEATURES = [
 // Homepage-only head additions (audit 2026-08-02: canonical, OG and schema were
 // absent sitewide at the root). Kept here rather than in layout.tsx so routes that
 // set their own canonical (e.g. /singers/[slug]) are not overridden.
+const HOME_TITLE = "Online Singing Practice with Live Pitch | Suede Sing";
+const HOME_DESCRIPTION =
+  "Practice singing online with live pitch feedback, warmups and songs. Try the free pitch meter and vocal range test; guided practice has a daily free limit.";
+
 export const metadata: Metadata = {
+  title: { absolute: HOME_TITLE },
+  description: HOME_DESCRIPTION,
   keywords: routeKeywords("/"),
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: "Free Vocal Studio: Pitch Training in Your Browser | Suede Sing",
-    description:
-      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free in the browser, with no install required.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     url: SITE_URL,
     siteName: "Suede Sing",
     type: "website",
@@ -113,9 +118,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Vocal Studio: Pitch Training in Your Browser | Suede Sing",
-    description:
-      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free in the browser, with no install required.",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
   },
 };
 
@@ -134,6 +138,7 @@ const HOME_JSON_LD = {
       "@type": "SoftwareApplication",
       "@id": `${SITE_URL}/#app`,
       name: "Suede Sing",
+      description: HOME_DESCRIPTION,
       applicationCategory: "MusicApplication",
       operatingSystem: "Web Browser",
       browserRequirements: "Requires a microphone for pitch and range features",
@@ -150,6 +155,8 @@ const HOME_JSON_LD = {
       ],
       offers: {
         "@type": "Offer",
+        name: "Free pitch meter and vocal range test",
+        description: "Guided practice includes three free minutes a day; additional practice and Pro features require a paid plan.",
         price: "0",
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
@@ -200,14 +207,14 @@ export default function Home() {
         />
         <div className="relative max-w-2xl">
           <p className="text-label font-extrabold uppercase tracking-[0.14em] text-pink">
-            Free singing lessons in your browser
+            Singing practice tools from Suede AI
           </p>
           <h1 className="mt-3 text-[clamp(2.4rem,7vw,4.25rem)] leading-[1.02]">
-            Sing better, one note at a time
+            Practice singing with live pitch feedback
           </h1>
           <p className="mt-4 max-w-xl text-lg text-mut">
-            Sing into your mic and see your pitch live. Warm up, learn songs in
-            your key, and watch your range grow.
+            Sing into your mic and see the note you are singing. Explore warmups,
+            practice songs in your key, or test your vocal range in your browser.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <LinkButton href="/range" variant="violet" size="lg">
@@ -218,7 +225,8 @@ export default function Home() {
             </LinkButton>
           </div>
           <p className="mt-5 text-sm text-dim">
-            No install. Audio stays on your device.
+            The pitch meter and range test are free. Guided practice includes three
+            free minutes a day. No install; audio stays on your device.
           </p>
         </div>
       </section>

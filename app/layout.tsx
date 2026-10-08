@@ -34,11 +34,11 @@ export const metadata: Metadata = {
     ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
     : undefined,
   title: {
-    default: "Free Vocal Studio: Pitch Training in Your Browser | Suede Sing",
+    default: "Online Singing Practice with Live Pitch | Suede Sing",
     template: "%s · Suede Sing",
   },
   description:
-    "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free, in the browser, no install.",
+    "Practice singing online with live pitch feedback, warmups and songs. Try the free pitch meter and vocal range test; guided practice has a daily free limit.",
 };
 
 export const viewport: Viewport = {

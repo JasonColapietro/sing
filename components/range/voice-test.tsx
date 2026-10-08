@@ -39,11 +39,15 @@ export function VoiceTest() {
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-4xl sm:text-5xl">
-            {mode === "pitch" ? "Pitch meter" : "Vocal range test"}
+            Vocal range test &amp; pitch meter
           </h1>
           <p className="mt-2 max-w-prose text-mut">
+            Choose Range test for your lowest and highest notes, octave span and
+            a voice-type estimate. Choose Pitch to check a note live.
+          </p>
+          <p className="mt-2 max-w-prose text-mut">
             {mode === "pitch"
-              ? "Sing any note and see exactly where it lands."
+              ? "Sing a comfortable note and see its detected pitch."
               : "A guided two-minute test: hold a comfortable note, slide down to your lowest, then up to your highest."}
           </p>
         </div>
