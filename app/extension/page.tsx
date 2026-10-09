@@ -12,7 +12,7 @@ const STORE_URL =
 
 const TITLE = "Pitch Detector Chrome Extension for Singers | Suede Sing";
 const DESCRIPTION =
-  "Free Chrome extension that turns any tab into a vocal studio: live pitch tuner, vocal range test, guided warmups, ear training, and a sing-along pitch meter on YouTube. Nothing recorded, nothing uploaded.";
+  "Free Chrome extension that makes any tab a vocal studio: pitch tuner, range test, warmups, ear training and a YouTube sing-along meter. Nothing uploaded.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/extension"),

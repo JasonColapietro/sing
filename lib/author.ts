@@ -7,25 +7,15 @@
  * "Suede Sing" — the product name, not a publisher and not a person. The
  * publisher stays Suede AI; the author is a Person.
  *
- * Only claims that resolve to a live page are asserted here: both sameAs
- * targets returned 200 on 2026-08-09.
+ * Only the reference is asserted here; the identity is defined once, on
+ * https://suedeai.ai/founder.
+ *
+ * Satellite sites reference the founder by @id and never mint a copy, so every
+ * property (jobTitle, knowsAbout, sameAs) is maintained in one place.
  */
-import { SITE_URL } from "@/lib/site";
-
-export const AUTHOR_ID = `${SITE_URL}/#author`;
+export const AUTHOR_ID = "https://suedeai.ai/founder#person";
 
 export const AUTHOR_NAME = "Jason Colapietro";
 export const AUTHOR_ALIAS = "Johnny Suede";
 
-export const AUTHOR_NODE = {
-  "@type": "Person",
-  "@id": AUTHOR_ID,
-  name: AUTHOR_NAME,
-  alternateName: AUTHOR_ALIAS,
-  url: "https://jasoncolapietro.com",
-  sameAs: [
-    "https://jasoncolapietro.com",
-    "https://github.com/JasonColapietro",
-  ],
-  worksFor: { "@id": "https://suedeai.ai/#organization" },
-} as const;
+export const AUTHOR_NODE = { "@id": AUTHOR_ID } as const;

@@ -15,7 +15,7 @@ import { BookCta } from "@/components/book/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
-const DESCRIPTION = `${BOOK_TITLE} — a ${BOOK_CONTENTS.length}-chapter guide to how the voice works, reading your own measurements, a twelve-week program and choosing repertoire. Included with Suede Sing Pro.`;
+const DESCRIPTION = `${BOOK_TITLE}: a ${BOOK_CONTENTS.length}-chapter guide to how the voice works, reading your measurements, a twelve-week program and choosing songs. Included with Pro.`;
 
 /** The search-facing title: the book's name plus the term people search for. */
 const PAGE_TITLE = `${BOOK_TITLE}: A Singing Book`;

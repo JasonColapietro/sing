@@ -16,15 +16,15 @@ import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
 const DESCRIPTION =
-  "What is a famous singer's vocal range, really? The Voice Atlas answers it voice by voice: cited ranges with the songs where the extreme notes happened, tonal quality decoded in plain language, and how to borrow each technique safely. The full contents, each chapter and each singer covered, is free.";
+  "What is a famous singer's vocal range, really? The Voice Atlas answers it voice by voice: cited ranges, tone in plain language, and techniques to borrow safely.";
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/atlas"),
-  title: `${ATLAS_TITLE}: Famous Singers' Vocal Ranges, Tone and Technique`,
+  title: `${ATLAS_TITLE}: Famous Singers' Vocal Ranges`,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/atlas` },
   openGraph: {
-    title: `${ATLAS_TITLE}: Famous Singers' Vocal Ranges, Tone and Technique`,
+    title: `${ATLAS_TITLE}: Famous Singers' Vocal Ranges`,
     description: DESCRIPTION,
     type: "book",
     images: [DEFAULT_OG_IMAGE],

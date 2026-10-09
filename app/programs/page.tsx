@@ -5,9 +5,9 @@ import { RoomRailBand } from "@/components/discover/room-rail";
 import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
 
-const TITLE = "Singing Practice Programs: Multi-Week Vocal Training Plans";
+const TITLE = "Singing Practice Programs: Vocal Training Plans";
 const DESCRIPTION =
-  "Named singing practice plans from one week to twelve: warmups, breath work and range check-ins scheduled day by day, with rest days built in. Free in the browser; the two Pro programs open their first week to everyone.";
+  "Singing practice plans from one week to twelve: warmups, breath work and range check-ins, day by day, with rest days. Free; Pro programs open week one.";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/programs"),

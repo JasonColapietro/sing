@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MAX_TITLE, fitDescription, fitTitle } from "@/lib/meta-fit";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -62,12 +63,31 @@ export function withCanonicalOpenGraph(metadata: Metadata): Metadata {
   }
 
   const existing = metadata.openGraph;
-  const title = typeof metadata.title === "string" ? metadata.title : undefined;
+  // Titles here go through the root layout's " · Suede Sing" template, so the
+  // body gets the remaining budget; descriptions are held to the snippet limit.
+  // A route that opts out of the template with `{ absolute }` owns the whole
+  // 60-character budget.
+  const absolute =
+    metadata.title && typeof metadata.title === "object" && "absolute" in metadata.title
+      ? metadata.title.absolute
+      : undefined;
+  const title =
+    typeof metadata.title === "string"
+      ? fitTitle(metadata.title)
+      : absolute !== undefined
+        ? fitTitle(absolute, MAX_TITLE)
+        : undefined;
   const description =
-    typeof metadata.description === "string" ? metadata.description : undefined;
+    typeof metadata.description === "string"
+      ? fitDescription(metadata.description)
+      : undefined;
 
   return {
     ...metadata,
+    ...(title !== undefined
+      ? { title: absolute !== undefined ? { absolute: title } : title }
+      : {}),
+    ...(description !== undefined ? { description } : {}),
     openGraph: {
       title,
       description,

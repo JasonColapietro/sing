@@ -15,6 +15,7 @@ import {
   wikipediaUrl,
 } from "@/lib/singers";
 import { sharesHigh, sharesLow } from "@/lib/singers-analysis";
+import { catalogPositionFor } from "@/lib/singer-catalog-position";
 import {
   getSingerEvidence,
   groupEvidenceSources,
@@ -24,6 +25,7 @@ import {
 } from "@/lib/singer-evidence";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { popRangeLabel, popSongsByArtistSlug } from "@/lib/pop-songs";
+import { fitDescription } from "@/lib/meta-fit";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
@@ -153,7 +155,7 @@ function snippetDescription(s: SingerRecord): string {
   }
   const typed = `${span} (${s.voiceType.toLowerCase()}).`;
   const full = `${typed} See the highest and lowest notes, then test your own range free.`;
-  return full.length <= 160 ? full : `${typed} Test your own range free.`;
+  return full.length <= 155 ? full : fitDescription(`${typed} Test your own range free.`);
 }
 
 export const dynamicParams = false;
@@ -452,6 +454,28 @@ export default async function SingerPage({
             </ul>
           </Card>
         )}
+
+        {/* Computed from the catalog's own numbers only (no biography), so each
+            page says something specific about where this span falls. */}
+        <Card>
+          <h2 className="text-xl">
+            Where {s.name}&rsquo;s reported span sits in the catalog
+          </h2>
+          <dl className="mt-4 max-w-3xl space-y-4">
+            {catalogPositionFor(s).map((fact) => (
+              <div key={fact.id}>
+                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                  {fact.label}
+                </dt>
+                <dd className="mt-1 text-sm text-mut">{fact.text}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-4 text-xs text-dim">
+            Counted from the catalog&rsquo;s reported figures, which are not
+            verified measurements.
+          </p>
+        </Card>
 
         <Card>
           <SectionLabel>Evidence and review</SectionLabel>

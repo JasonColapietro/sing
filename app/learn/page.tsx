@@ -12,9 +12,9 @@ import {
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
-const TITLE = "Learn to Sing: Free Vocal Training Guide and Practice Plan";
+const TITLE = "Learn to Sing: Free Vocal Training Guide";
 const DESCRIPTION =
-  "Learn to sing with a free vocal training plan: test your range, improve pitch, warm up, train breath control, understand voice types, and practice songs.";
+  "Learn to sing with a free vocal training plan: test your range, improve pitch, warm up, train breath control and practice songs.";
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/learn"),

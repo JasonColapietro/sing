@@ -15,9 +15,9 @@ import { routeKeywords } from "@/lib/keywords";
 // rooms.
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/tools"),
-  title: "Singing Practice Tools: Metronome, Keyboard and Drone",
+  title: "Singing Practice Tools: Metronome and Drone",
   description:
-    "The console modules every practice session leans on: a metronome, an on-screen keyboard, and a sustained drone for pitch matching. Free in the browser, nothing to install.",
+    "The tools every practice session leans on: a metronome, an on-screen keyboard and a sustained drone for pitch matching. Free in the browser.",
   alternates: { canonical: `${SITE_URL}/tools` },
 });
 

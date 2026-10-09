@@ -65,7 +65,7 @@ function buildFaq() {
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/singers"),
-  title: "Famous Singers' Vocal Ranges and Vocal Range Chart",
+  title: "Singers' Vocal Ranges and Vocal Range Chart",
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers` },
   openGraph: {

@@ -5,9 +5,9 @@ import { RoomRailBand } from "@/components/discover/room-rail";
 import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
 
-const TITLE = "Singing Progress Tracker: Range, Accuracy and Streaks";
+const TITLE = "Singing Progress Tracker: Range and Streaks";
 const DESCRIPTION =
-  "Every practice session logged: XP, streaks, achievements, range history and per-exercise scores, stored on your device. Watch your singing improve week over week.";
+  "Every practice session logged: XP, streaks, achievements, range history and per-exercise scores, stored on your device. Watch your singing improve.";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/progress"),

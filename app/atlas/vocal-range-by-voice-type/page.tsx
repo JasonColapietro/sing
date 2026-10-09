@@ -40,7 +40,7 @@ const QUESTION_TITLE =
   "Vocal Range by Voice Type: Tenor, Soprano, Bass and the Rest";
 
 const DESCRIPTION =
-  "What is a tenor's vocal range? A bass's, a mezzo-soprano's? The conventional two-octave band for all eight voice types, the passaggio zone where each one changes gear, and real singers who sit inside each band — with the caveat that range and voice type are different measurements.";
+  "What is a tenor's vocal range? A bass's? The conventional band for all eight voice types, where each changes gear, and real singers in each.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/atlas/vocal-range-by-voice-type"),

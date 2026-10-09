@@ -45,11 +45,11 @@ export async function generateMetadata({
   // The keyword lead stays in front; what follows it is this category's own, so
   // no two hubs share a title or a description (lib/singer-hub-copy.test.tsx).
   const title = voice === "Contralto"
-    ? `Famous Contralto Singers and Vocal Ranges: ${copy.titleTag}`
+    ? `Contralto Singers and Vocal Ranges: ${copy.titleTag}`
     : `Famous ${voice} Vocal Ranges: ${copy.titleTag}`;
   const description = `${copy.summary} Conventional band ${midiToLabel(band.low)} to ${midiToLabel(band.high)}, with catalog spans for ${count} ${pluralVoice(voice.toLowerCase())} on one keyboard.`;
   return withCanonicalOpenGraph({
-    title,
+    title: { absolute: title },
     description,
     keywords: singerVoiceTypeKeywords(voice),
     alternates: { canonical: `${SITE_URL}/singers/voice-type/${type}` },

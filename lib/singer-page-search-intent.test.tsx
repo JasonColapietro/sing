@@ -139,7 +139,7 @@ function expectedSnippet(singer: (typeof SINGERS)[number]): string {
   }
   const typed = `${span} (${singer.voiceType.toLowerCase()}).`;
   const full = `${typed} See the highest and lowest notes, then test your own range free.`;
-  return full.length <= 160 ? full : `${typed} Test your own range free.`;
+  return full.length <= 155 ? full : `${typed} Test your own range free.`;
 }
 
 /** "{Singer} Vocal Range: Reported {span}" plus the longest suffix that fits in 60. */
@@ -204,7 +204,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
 
       expect(title.length, `${singer.slug} title length`).toBeLessThanOrEqual(60);
       expect(title.startsWith(`${singer.name} Vocal Range`), `${singer.slug} title lead`).toBe(true);
-      expect(description.length, `${singer.slug} description length`).toBeLessThanOrEqual(160);
+      expect(description.length, `${singer.slug} description length`).toBeLessThanOrEqual(155);
       expect(description, `${singer.slug} description`).not.toMatch(/pending/i);
 
       expect(metadata.title).toEqual({ absolute: title });
@@ -242,7 +242,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
   it("keeps Olivia's snippet concise and its disputed status explicit", async () => {
     const metadata = await generateMetadata({ params: Promise.resolve({ slug: "olivia-rodrigo" }) });
     expect((metadata.title as { absolute: string }).absolute.length).toBeLessThanOrEqual(60);
-    expect(metadata.description!.length).toBeLessThanOrEqual(160);
+    expect(metadata.description!.length).toBeLessThanOrEqual(155);
     expect(metadata.description).toContain("disputed");
     expect(metadata.description).toContain("free range test");
   });
@@ -302,7 +302,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
   it.each(Object.keys(COMPARISON_SNIPPETS))("%s keeps the CTR pilot honest and directly actionable", async (slug) => {
     const metadata = await generateMetadata({ params: Promise.resolve({ slug }) });
     expect((metadata.title as { absolute: string }).absolute.length).toBeLessThanOrEqual(60);
-    expect(metadata.description!.length).toBeLessThanOrEqual(160);
+    expect(metadata.description!.length).toBeLessThanOrEqual(155);
     expect(metadata.description).toContain("catalog voice type");
     expect(metadata.description).not.toMatch(/pending/i);
     expect(metadata.alternates?.canonical).toBe(`${SITE_URL}/singers/${slug}`);
