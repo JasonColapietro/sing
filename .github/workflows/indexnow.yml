@@ -1,0 +1,54 @@
+name: IndexNow
+
+# Tells the IndexNow network which URLs are live once a production deploy has
+# finished. IndexNow reaches Bing (which ChatGPT search and Copilot draw on),
+# plus Yandex, Seznam, Naver and Yep. Google does not take part; the sitemap in
+# Search Console covers Google.
+#
+# Four triggers, because no single one is guaranteed to fire:
+#   deployment_status    Vercel's GitHub deployment reached success (Production only)
+#   repository_dispatch  Vercel's newer vercel.deployment.success / promoted events
+#   schedule             weekly safety net, in case neither deploy event arrives
+#   workflow_dispatch    run it by hand from the Actions tab
+#
+# scripts/indexnow-submit.mjs reads the LIVE sitemaps and checks the LIVE key
+# file before it posts, so a run that fires early or twice cannot submit
+# anything wrong; at worst it resubmits unchanged URLs, which IndexNow ignores.
+on:
+  deployment_status:
+  repository_dispatch:
+    types: [vercel.deployment.success, vercel.deployment.promoted]
+  schedule:
+    - cron: "17 10 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    # One Vercel project ("sing") deploys this repo, and its GitHub deployments
+    # use the environment "Production". Only a successful Production deploy
+    # counts; the other three triggers always run.
+    if: >-
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' &&
+       startsWith(github.event.deployment_status.environment, 'Production'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Submit live sitemap URLs to IndexNow
+        run: >-
+          node scripts/indexnow-submit.mjs
+          --site https://sing.suedeai.ai
+          --sitemap /sitemap.xml
+          --sitemap /ai-instructions-sitemap.xml
+          --key-file public/79cdb9d5873525c71a296b9d7c494bf9.txt
