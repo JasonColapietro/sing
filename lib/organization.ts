@@ -17,6 +17,15 @@
  *
  * If a profile is retired, remove it here *and* on suedeai.ai. A sameAs
  * pointing at a 404 is a worse claim than no sameAs at all.
+ *
+ * 2026-10-09: replaced with the estate's canonical 16-entry Organization list,
+ * locked that day so every site declares the same set in the same order. It is
+ * suedeai.ai's list (which restored Crunchbase once the unrelated paragraph
+ * that got it pulled on 2026-09-13 was gone, and added PitchBook) plus three
+ * profiles: F6S, already declared by the brand-domain estate and the SEO site;
+ * TikTok @suedeaiseo, the company account publishing under the Suede AI brand
+ * since 2026-09-14; and a permanent invite (no expiry) to the "Suede Labs AI"
+ * Discord server, already declared on agents.suedeai.ai.
  */
 export const ORG_ID = "https://suedeai.ai/#organization";
 
@@ -35,8 +44,13 @@ export const ORG_SAME_AS = [
   "https://www.facebook.com/people/Suede-Labs-AI/61584534847516",
   "https://t.me/SUEDEAI",
   "https://linktr.ee/suedelabsai",
+  "https://www.crunchbase.com/organization/suede-labs-ai",
   "https://www.linkedin.com/company/suede-labs",
   "https://www.wikidata.org/wiki/Q141169484",
+  "https://pitchbook.com/profiles/company/937217-71",
+  "https://www.f6s.com/suede-ai",
+  "https://www.tiktok.com/@suedeaiseo",
+  "https://discord.gg/6WZEnnkPH4",
 ] as const;
 
 /**
