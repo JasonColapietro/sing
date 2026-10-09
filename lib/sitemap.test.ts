@@ -14,10 +14,13 @@ vi.mock("server-only", () => ({}));
 
 import sitemap from "@/app/sitemap";
 import { generateMetadata as atlasMetadata } from "@/app/atlas/[slug]/page";
+import { generateMetadata as singerMetadata } from "@/app/singers/[slug]/page";
 import { generateMetadata as bookMetadata } from "@/app/book/[slug]/page";
 import { metadata as programsMetadata } from "@/app/programs/page";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { BOOK_CONTENTS } from "@/lib/book-data";
+import { isSingerReviewed } from "@/lib/singer-evidence";
+import { SINGERS } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
 function saysNoindex(robots: Metadata["robots"]): boolean {
@@ -104,5 +107,35 @@ describe("sitemap indexability", () => {
     );
     expect(sitemap().some(({ url }) => url === alertUrl)).toBe(true);
     expect(saysNoindex(metadata.robots)).toBe(false);
+  });
+});
+
+describe("singer pages pending individual review", () => {
+  it("noindex pending singers and drop them from the sitemap; reviewed singers stay indexed and listed", async () => {
+    const published = new Set(sitemap().map(({ url }) => url));
+    let pending = 0;
+    let reviewed = 0;
+    for (const singer of SINGERS) {
+      const url = `${SITE_URL}/singers/${singer.slug}`;
+      const metadata = await singerMetadata({
+        params: Promise.resolve({ slug: singer.slug }),
+      });
+      if (isSingerReviewed(singer.slug)) {
+        reviewed += 1;
+        expect(saysNoindex(metadata.robots), url).toBe(false);
+        expect(published.has(url), url).toBe(true);
+      } else {
+        pending += 1;
+        expect(metadata.robots, url).toEqual({ index: false, follow: true });
+        expect(published.has(url), url).toBe(false);
+      }
+    }
+    // Both branches must be exercised or the guard is vacuous.
+    expect(pending).toBeGreaterThan(0);
+    expect(reviewed).toBeGreaterThan(0);
+  });
+
+  it("keeps pending singer pages linked from the /singers hub", () => {
+    expect(sitemap().some(({ url }) => url === `${SITE_URL}/singers`)).toBe(true);
   });
 });

@@ -180,6 +180,9 @@ export async function generateMetadata({
     description,
     keywords: singerKeywords(s),
     alternates: { canonical },
+    // Pending-review profiles stay live and linked but out of the index until
+    // their evidence record leaves "pending" (data/singer-evidence.json).
+    robots: isPending(s) ? { index: false, follow: true } : undefined,
     openGraph: {
       title,
       description,

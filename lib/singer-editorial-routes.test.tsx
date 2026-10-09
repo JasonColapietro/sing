@@ -137,11 +137,10 @@ describe("singer sitemap editorial freshness", () => {
       const review = getSingerLastModified(singer.slug)!;
       expect(entry.lastModified).toBe(review > SINGER_PAGE_REVISED ? review : SINGER_PAGE_REVISED);
     }
-    // Pending singers carry the page revision only: a content date, never a
-    // claimed evidence review (getSingerLastModified stays undefined for them).
+    // Pending singers are noindexed and absent from the sitemap entirely
+    // (pinned in lib/sitemap.test.ts); they have no lastModified to date.
     for (const singer of pending) {
-      const entry = entries.find((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)!;
-      expect(entry.lastModified).toBe(SINGER_PAGE_REVISED);
+      expect(entries.some((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)).toBe(false);
     }
 
     const sitemapSource = readFileSync(new URL("../app/sitemap.ts", import.meta.url), "utf8");

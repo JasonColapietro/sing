@@ -10,7 +10,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { POP_SONGS } from "@/lib/pop-songs";
-import { getSingerPageLastModified } from "@/lib/singer-evidence";
+import { getSingerPageLastModified, isSingerReviewed } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 import { VOICE_LEARN_PATH, coursePaths } from "@/lib/voice-lessons";
 
@@ -73,7 +73,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ].map((h) => ({ ...h, changeFrequency: "monthly" as const }));
 
-  const singers = SINGERS.map((s) => ({
+  // Singer pages still pending individual review are robots-noindexed (see
+  // app/singers/[slug]/page.tsx), so they stay out of the sitemap and rejoin
+  // it automatically once their evidence record is no longer "pending".
+  const singers = SINGERS.filter((s) => isSingerReviewed(s.slug)).map((s) => ({
     url: `${SITE_URL}/singers/${s.slug}`,
     changeFrequency: "monthly" as const,
     priority: 0.6,
