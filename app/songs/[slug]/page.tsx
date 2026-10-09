@@ -57,12 +57,20 @@ export async function generateMetadata({
   if (!song) return {};
   const f = songFacts(song);
   const pro = isProSong(song.id);
-  const title = `${song.title}: Lyrics, Key & Vocal Range`;
+  // The lyrics term leads every tail variant, so a long song name sheds the
+  // trailing words rather than the keyword (60-character budget).
+  const title =
+    [
+      `${song.title}: Lyrics, Key & Vocal Range`,
+      `${song.title}: Lyrics, Key & Range`,
+      `${song.title}: Lyrics & Key`,
+      `${song.title}: Lyrics`,
+    ].find((t) => t.length <= 60) ?? `${song.title}: Lyrics`;
   const description = pro
     ? `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel}. Lyrics, structure and why it is public domain. Part of the Suede Pro songbook.`
     : `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel} (${f.difficulty}). Full lyrics, why it is public domain, and free browser practice with live pitch feedback.`;
   return withCanonicalOpenGraph({
-    title,
+    title: { absolute: title },
     description,
     keywords: songKeywords(song),
     alternates: { canonical: `${SITE_URL}/songs/${song.slug}` },

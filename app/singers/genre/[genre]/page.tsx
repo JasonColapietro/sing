@@ -47,7 +47,7 @@ export async function generateMetadata({
   const title = `${g} Singers' Vocal Ranges: ${copy.titleTag}`;
   const description = `${copy.summary} Catalog ranges for ${list.length} ${g} singers on one keyboard, ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}.`;
   return withCanonicalOpenGraph({
-    title,
+    title: { absolute: title },
     description,
     keywords: singerGenreKeywords(g),
     alternates: { canonical: `${SITE_URL}/singers/genre/${genre}` },

@@ -44,12 +44,19 @@ function text(html: string): string {
     .replace(/\s+/g, " ");
 }
 
+/** Hub titles are `{ absolute }` objects so they own the full 60 characters. */
+function metaTitle(title: unknown): string {
+  return title && typeof title === "object" && "absolute" in title
+    ? String((title as { absolute: unknown }).absolute)
+    : String(title);
+}
+
 async function hubs() {
   const out = new Map<string, { title: string; description: string; html: string }>();
   for (const genre of GENRE_SLUGS) {
     const meta = await genreMetadata({ params: Promise.resolve({ genre }) });
     out.set(`/singers/genre/${genre}`, {
-      title: String(meta.title),
+      title: metaTitle(meta.title),
       description: String(meta.description),
       html: renderToStaticMarkup(await GenrePage({ params: Promise.resolve({ genre }) })),
     });
@@ -57,7 +64,7 @@ async function hubs() {
   for (const type of VOICE_SLUGS) {
     const meta = await voiceMetadata({ params: Promise.resolve({ type }) });
     out.set(`/singers/voice-type/${type}`, {
-      title: String(meta.title),
+      title: metaTitle(meta.title),
       description: String(meta.description),
       html: renderToStaticMarkup(await VoiceTypePage({ params: Promise.resolve({ type }) })),
     });

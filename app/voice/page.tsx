@@ -12,7 +12,7 @@ import { routeKeywords } from "@/lib/keywords";
 // different intents. This page is the install; /range is the test.
 const TITLE = "Download Suede Voice: The Singing App for iPhone & Android";
 const DESCRIPTION =
-  "Download Suede Voice, the vocal range and singing practice app from Suede AI, for iPhone or Android. To run the test in a browser with no install, open Suede Sing instead.";
+  "Download Suede Voice, the vocal range and singing practice app from Suede AI, for iPhone or Android. Prefer a browser? Open Suede Sing instead.";
 const PAGE_URL = `${SITE_URL}${VOICE_PAGE_PATH}`;
 
 export const metadata: Metadata = {
@@ -62,7 +62,7 @@ const JSON_LD = {
       sameAs: [store],
       description: "Vocal range testing and singing practice from Suede AI.",
       publisher: { "@id": ORG_ID },
-      author: { "@type": "Person", name: "Jason Colapietro", url: "https://suedeai.ai/founder" },
+      author: { "@id": "https://suedeai.ai/founder#person" },
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD", url: store },
     })),
     ORG_NODE,

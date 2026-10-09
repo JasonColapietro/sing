@@ -12,7 +12,7 @@ import { webPageJsonLd } from "@/lib/page-jsonld";
 
 const TITLE = "Suede Sing Changelog: What's New in 3.1";
 const DESCRIPTION =
-  "Suede Sing 3.1: a 102-lesson voice curriculum, multi-week practice programs, microphone-scored songs with mastery, breath and vibrato measurement, and a sharper pitch engine. Plus the v2 story and the month-by-month release log.";
+  "Suede Sing 3.1: a 102-lesson voice curriculum, multi-week programs, mic-scored songs, breath and vibrato measurement and a sharper pitch engine.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/changelog"),

@@ -18,9 +18,7 @@
  * Claim, 67433886 carries Suede Labs: The Human Authenticity Layer), and
  * declaring both ties them to one person.
  */
-import { SITE_URL } from "@/lib/site";
-
-export const AUTHOR_ID = `${SITE_URL}/#author`;
+export const AUTHOR_ID = "https://suedeai.ai/founder#person";
 
 export const AUTHOR_NAME = "Jason Colapietro";
 export const AUTHOR_ALIAS = "Johnny Suede";

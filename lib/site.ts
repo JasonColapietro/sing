@@ -4,5 +4,5 @@
  * nothing else needs to change.
  */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://sing-red.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://sing.suedeai.ai"
 ).replace(/\/+$/, "");

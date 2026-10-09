@@ -13,9 +13,9 @@ import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/pro"),
-  title: "Suede Pro: An Online Vocal Coach on Top of the Free Studio",
+  title: "Suede Pro: An Online Vocal Coach for Singers",
   description:
-    "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access, adding an adaptive coach, per-note analytics, take analysis, pro warmup packs, scoring history for every song, and two books with PDFs.",
+    "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access: adaptive coach, per-note analytics, take analysis, warmup packs and two books.",
   alternates: { canonical: `${SITE_URL}/pro` },
 });
 

@@ -7,9 +7,9 @@ import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
 
-const TITLE = "Why Singer Vocal Ranges Differ: Sources and Methodology";
+const TITLE = "Why Singer Vocal Ranges Differ: Sources";
 const DESCRIPTION =
-  "Why vocal range websites disagree, how to compare song scores and performance claims, and what reported notes can tell you. Read sources and test your own range.";
+  "Why vocal range websites disagree, how to compare song scores and performance claims, and what reported notes tell you. Test your own range.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/singers/methodology"),

@@ -355,7 +355,7 @@ export default function Nav() {
               >
                 <Image
                   src="/suede-logo.png"
-                  alt=""
+                  alt="Suede Sing logo"
                   width={22}
                   height={22}
                   className="rounded-full"
@@ -515,7 +515,7 @@ export default function Nav() {
           >
             <Image
               src="/suede-logo.png"
-              alt=""
+              alt="Suede Sing logo"
               width={22}
               height={22}
               className="rounded-full"

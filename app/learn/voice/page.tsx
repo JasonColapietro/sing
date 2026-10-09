@@ -15,8 +15,8 @@ import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
 import { routeKeywords } from "@/lib/keywords";
 
-const TITLE = "Free Voice Lessons: A Seven-Stage Singing Course";
-const DESCRIPTION = `A free singing course in seven stages and ${CATALOG_LESSON_COUNT} short lessons, from setting up your room and finding your range to registers, agility and style. Each lesson sends you to the Suede Sing room where you practise it.`;
+const TITLE = "Free Voice Lessons: Seven-Stage Singing Course";
+const DESCRIPTION = `A free singing course in seven stages and ${CATALOG_LESSON_COUNT} short lessons, from finding your range to registers, agility and style. Practise each in Suede Sing.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/learn/voice"),
