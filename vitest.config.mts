@@ -15,7 +15,13 @@ export default defineConfig({
      * a gate at exactly the moment a gate mattered. The failures also survive
      * `git stash`, which is a memorable way to lose an hour.
      */
-    exclude: [...configDefaults.exclude, "**/.claude/worktrees/**"],
+    exclude: [
+      ...configDefaults.exclude,
+      "**/.claude/worktrees/**",
+      // 2026-10-09: a node:test file, which vitest reports as "No test suite
+      // found". `npm test` runs it with `node --test` after vitest instead.
+      "scripts/indexnow-submit.test.mjs",
+    ],
   },
   resolve: {
     alias: {
