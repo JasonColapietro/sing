@@ -3,6 +3,7 @@ import {
   PRICING,
   formatPrice,
   isCheckoutPlan,
+  isPlanOnSale,
   isProPlan,
   proHeadline,
   proHeadlineLong,
@@ -39,7 +40,12 @@ describe("isProPlan", () => {
 });
 
 describe("isCheckoutPlan", () => {
-  it("sells monthly and lifetime but never annual", () => {
+  it("keeps monthly sold out: not on sale, still a known plan", () => {
+    expect(isPlanOnSale("monthly")).toBe(false);
+    expect(isPlanOnSale("lifetime")).toBe(true);
+  });
+
+  it("recognises monthly and lifetime but never annual", () => {
     expect(isCheckoutPlan("monthly")).toBe(true);
     expect(isCheckoutPlan("lifetime")).toBe(true);
     expect(isCheckoutPlan("annual")).toBe(false);
@@ -47,8 +53,10 @@ describe("isCheckoutPlan", () => {
 });
 
 describe("Early Access headline", () => {
-  it("shows both sellable prices without implying a lifetime subscription", () => {
-    expect(proHeadline()).toBe("$4.99 a month or $79 for life");
-    expect(proHeadlineLong()).toBe("Early Access: $4.99 a month or $79 once");
+  it("shows only the lifetime price without implying a lifetime subscription", () => {
+    expect(proHeadline()).toBe("$79 once for lifetime access");
+    expect(proHeadlineLong()).toBe(
+      "Early Access: $79 once for lifetime access",
+    );
   });
 });

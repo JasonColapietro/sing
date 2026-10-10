@@ -28,8 +28,10 @@ import {
 } from "@/lib/pro";
 import {
   formatPrice,
+  isPlanOnSale,
   PRICING,
   PRO_FAQ,
+  SOLD_OUT_PLANS,
   type CheckoutPlan,
 } from "@/lib/pro-shared";
 import {
@@ -268,7 +270,7 @@ function RestorePanel() {
 
 export function ProClient() {
   const pro = useProState();
-  const [billing, setBilling] = useState<CheckoutPlan>("monthly");
+  const [billing, setBilling] = useState<CheckoutPlan>("lifetime");
   const [justUpgraded, setJustUpgraded] = useState(false);
   const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
@@ -282,7 +284,7 @@ export function ProClient() {
   const priceNote = lifetimePurchase
     ? "One payment. Lifetime Pro. No renewal."
     : `Keep the ${formatPrice(PRICING.monthly.amount)} monthly price while your subscription remains active. Cancel anytime.`;
-  const plansBlurb = `Early Access is ${formatPrice(PRICING.monthly.amount)} a month. Keep that monthly price while your subscription remains active. Or pay ${formatPrice(PRICING.lifetime.amount)} once for lifetime access. Both unlock the same Pro tier; lifetime never renews.`;
+  const plansBlurb = `Early Access is ${formatPrice(PRICING.lifetime.amount)} once for lifetime access, with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out; existing monthly subscribers keep their price and can manage or cancel any time.`;
   const periodEnd = longDate(pro.currentPeriodEnd);
 
   // Stripe returns to /pro?checkout=success&session_id=… — confirm the
@@ -442,7 +444,7 @@ export function ProClient() {
                   </LinkButton>
                 </div>
                 <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                  Keep the monthly price while the subscription remains active
+                  Monthly plan sold out
                   <span className="mx-2 text-line2">·</span>Lifetime never
                   renews<span className="mx-2 text-line2">·</span>Voice stays
                   on device
@@ -559,19 +561,29 @@ export function ProClient() {
                     key={plan}
                     type="button"
                     aria-pressed={on}
-                    onClick={() => setBilling(plan)}
+                    disabled={!isPlanOnSale(plan)}
+                    onClick={() => {
+                      if (isPlanOnSale(plan)) setBilling(plan);
+                    }}
                     className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors ${
                       on
                         ? "bg-brand text-white"
-                        : "text-mut hover:text-ink"
+                        : isPlanOnSale(plan)
+                          ? "text-mut hover:text-ink"
+                          : "cursor-not-allowed text-dim line-through decoration-dim/60"
                     }`}
                   >
                     {plan === "monthly"
-                      ? `Monthly · ${formatPrice(PRICING.monthly.amount)}`
+                      ? `Monthly · ${formatPrice(PRICING.monthly.amount)}/mo`
                       : `Lifetime · ${formatPrice(PRICING.lifetime.amount)} once`}
                   </button>
                 );
               })}
+              {SOLD_OUT_PLANS.includes("monthly") && (
+                <span className="rounded-full border border-line2 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
+                  Monthly: Sold out
+                </span>
+              )}
             </div>
           )}
 
@@ -752,8 +764,8 @@ export function ProClient() {
           </div>
 
           <p className="mx-auto mt-6 max-w-4xl text-center font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Monthly price stays while subscription is active · Lifetime never
-            renews · Keep everything you earned
+            Monthly plan sold out · Existing subscribers keep their price ·
+            Lifetime never renews · Keep everything you earned
           </p>
 
           {!pro.active && (

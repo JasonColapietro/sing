@@ -89,6 +89,17 @@ export const PRICING: Record<CheckoutPlan, PlanPrice> = {
   },
 };
 
+/**
+ * Plans that exist (and keep serving current subscribers) but can no longer
+ * start a new sale. Checkout rejects these; the pricing UI shows them as
+ * "Sold out" and JSON-LD marks them schema.org/SoldOut.
+ */
+export const SOLD_OUT_PLANS: ReadonlyArray<CheckoutPlan> = ["monthly"];
+
+export function isPlanOnSale(plan: CheckoutPlan): boolean {
+  return !SOLD_OUT_PLANS.includes(plan);
+}
+
 /** "$4.99", "$79": a trailing ".00" on a whole-dollar price reads as a typo. */
 export function formatPrice(amount: number): string {
   return `$${amount.toFixed(2).replace(/\.00$/, "")}`;
@@ -100,18 +111,14 @@ export function formatPrice(amount: number): string {
 export function proHeadline(
   pricing: Record<CheckoutPlan, PlanPrice> = PRICING,
 ): string {
-  return `${formatPrice(pricing.monthly.amount)} a month or ${formatPrice(
-    pricing.lifetime.amount,
-  )} for life`;
+  return `${formatPrice(pricing.lifetime.amount)} once for lifetime access`;
 }
 
 /** The expanded line used when Early Access needs to be explicit. */
 export function proHeadlineLong(
   pricing: Record<CheckoutPlan, PlanPrice> = PRICING,
 ): string {
-  return `Early Access: ${formatPrice(pricing.monthly.amount)} a month or ${formatPrice(
-    pricing.lifetime.amount,
-  )} once`;
+  return `Early Access: ${formatPrice(pricing.lifetime.amount)} once for lifetime access`;
 }
 
 /**
@@ -138,7 +145,7 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "How does billing work?",
-    a: "Monthly renews at $4.99 and can be cancelled from the billing portal. Lifetime is a single $79 payment with no renewal. Either way, your recordings, scores, and streaks remain yours.",
+    a: "Lifetime is a single $79 payment with no renewal. The $4.99 monthly plan is sold out for now; existing monthly subscribers keep renewing at $4.99 and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.",
   },
   {
     q: "Why does a free app sell anything?",

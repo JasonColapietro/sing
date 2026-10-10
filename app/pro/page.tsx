@@ -15,7 +15,7 @@ export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/pro"),
   title: "Suede Pro: An Online Vocal Coach for Singers",
   description:
-    "Suede Pro Early Access is $4.99 monthly or $79 once for lifetime access: adaptive coach, per-note analytics, take analysis, warmup packs and two books.",
+    "Suede Pro Early Access is $79 once for lifetime access (the $4.99 monthly plan is sold out): adaptive coach, per-note analytics, take analysis, warmup packs and two books.",
   alternates: { canonical: `${SITE_URL}/pro` },
 });
 
@@ -34,10 +34,13 @@ function offerFor(plan: CheckoutPlan) {
     description:
       plan === "lifetime"
         ? "One payment for lifetime access. No renewal."
-        : `Renews monthly at ${formatPrice(amount)}. Keep that price while the subscription remains active. Cancel anytime.`,
+        : `Sold out. Renews monthly at ${formatPrice(amount)} for existing subscribers only.`,
     price,
     priceCurrency: "USD",
-    availability: "https://schema.org/InStock",
+    availability:
+      plan === "monthly"
+        ? "https://schema.org/SoldOut"
+        : "https://schema.org/InStock",
     priceSpecification: {
       "@type":
         plan === "monthly" ? "UnitPriceSpecification" : "PriceSpecification",
@@ -65,7 +68,7 @@ function offerFor(plan: CheckoutPlan) {
   return offer;
 }
 
-/** Only markets what can actually be bought today. */
+/** Lifetime is the only purchasable offer; monthly is listed as SoldOut. */
 const OFFERS = [offerFor("monthly"), offerFor("lifetime")];
 
 /**
