@@ -644,8 +644,8 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "Pushing a fretted string sideways across the neck to raise its pitch, usually by a semitone or a tone.",
         where:
-          "A lead line bends into the note a singer would have slid up to, and the tuner shows how far the bend actually went.",
-        href: "/tools",
+          "A lead line bends into the note a singer would have slid up to, and the Bends That Land in Tune drill scores each bend against its fretted target.",
+        href: "/advanced/bends-in-tune",
         domain: "guitar",
       },
       {

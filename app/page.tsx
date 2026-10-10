@@ -400,9 +400,8 @@ export default function Home() {
               </LinkButton>
             </div>
             <p className="mt-4 text-xs font-bold text-dim">
-              {PRO_PRICE_LINE} · The {PRO_MONTHLY_PRICE} monthly price stays
-              while your subscription remains active · Monthly cancels anytime ·
-              Lifetime never renews
+              {PRO_PRICE_LINE} · Monthly ({PRO_MONTHLY_PRICE}/mo): sold out ·
+              Existing subscribers keep their price · Lifetime never renews
             </p>
           </div>
           <ProVisual />

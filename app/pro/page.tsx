@@ -16,7 +16,7 @@ const PRO_TITLE = "Online Vocal Coach for Singers: Suede Pro";
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/pro"),
   title: PRO_TITLE,
-  description: `Online vocal coach for singers: adaptive daily plans, per-note analytics, take analysis and two books on top of the free studio. ${formatPrice(PRICING.monthly.amount)} a month or ${formatPrice(PRICING.lifetime.amount)} once.`,
+  description: `Online vocal coach for singers: adaptive daily plans, per-note analytics, take analysis and two books on top of the free studio. ${formatPrice(PRICING.lifetime.amount)} once, for life.`,
   alternates: { canonical: `${SITE_URL}/pro` },
 });
 
@@ -35,10 +35,13 @@ function offerFor(plan: CheckoutPlan) {
     description:
       plan === "lifetime"
         ? "One payment for lifetime access. No renewal."
-        : `Renews monthly at ${formatPrice(amount)}. Keep that price while the subscription remains active. Cancel anytime.`,
+        : `Sold out. Renews monthly at ${formatPrice(amount)} for existing subscribers only.`,
     price,
     priceCurrency: "USD",
-    availability: "https://schema.org/InStock",
+    availability:
+      plan === "monthly"
+        ? "https://schema.org/SoldOut"
+        : "https://schema.org/InStock",
     priceSpecification: {
       "@type":
         plan === "monthly" ? "UnitPriceSpecification" : "PriceSpecification",
@@ -66,7 +69,7 @@ function offerFor(plan: CheckoutPlan) {
   return offer;
 }
 
-/** Only markets what can actually be bought today. */
+/** Lifetime is the only purchasable offer; monthly is listed as SoldOut. */
 const OFFERS = [offerFor("monthly"), offerFor("lifetime")];
 
 /**

@@ -39,7 +39,7 @@ describe("Pro purchase choices", () => {
     proState.current = state();
   });
 
-  it("sells the two Early Access choices and never offers annual", () => {
+  it("sells lifetime, shows monthly as disabled and sold out, never offers annual", () => {
     const html = renderToStaticMarkup(<ProClient />);
 
     expect(html).toContain("Early Access");
@@ -49,9 +49,11 @@ describe("Pro purchase choices", () => {
     expect(html).toContain(
       "Founding offer: $79 lifetime is limited to the first 10 members.",
     );
-    expect(html).toContain(
-      "Keep the $4.99 monthly price while your subscription remains active.",
-    );
+    expect(html).toContain("Monthly: Sold out");
+    expect(html).toMatch(/<button[^>]*disabled[^>]*>Monthly · \$4\.99\/mo<\/button>/);
+    expect(html).toContain("Get lifetime Pro: $79 once");
+    expect(html).not.toContain("Go Pro: $4.99/month");
+    expect(html).not.toContain("Keep the $4.99 monthly price");
     expect(html).not.toMatch(/\b(?:annual|yearly)\b/i);
   });
 

@@ -16,7 +16,7 @@ function jsonLdFrom(html: string) {
 }
 
 describe("/pro Early Access offers", () => {
-  it("server-renders monthly and lifetime prices without an annual offer", () => {
+  it("server-renders lifetime as the offer and monthly as sold out, without an annual offer", () => {
     const html = renderToStaticMarkup(<ProPage />);
 
     expect(html).toContain("$4.99");
@@ -25,7 +25,7 @@ describe("/pro Early Access offers", () => {
     expect(html).not.toMatch(/\b(?:annual|yearly)\b/i);
   });
 
-  it("marks monthly as recurring and lifetime as a one-time purchase", () => {
+  it("marks monthly SoldOut and lifetime InStock as a one-time purchase", () => {
     const data = jsonLdFrom(renderToStaticMarkup(<ProPage />));
     const app = data["@graph"].find((node) =>
       String(node["@id"]).endsWith("/pro#product"),
@@ -51,14 +51,16 @@ describe("/pro Early Access offers", () => {
     ]);
     expect(offers[0]).toMatchObject({
       price: "4.99",
+      availability: "https://schema.org/SoldOut",
       description:
-        "Renews monthly at $4.99. Keep that price while the subscription remains active. Cancel anytime.",
+        "Sold out. Renews monthly at $4.99 for existing subscribers only.",
       priceSpecification: {
         referenceQuantity: { unitCode: "MON" },
       },
     });
     expect(offers[1]).toMatchObject({
       price: "79.00",
+      availability: "https://schema.org/InStock",
       description: "One payment for lifetime access. No renewal.",
       priceSpecification: { "@type": "PriceSpecification" },
     });
@@ -69,14 +71,12 @@ describe("/pro Early Access offers", () => {
 });
 
 describe("homepage Pro teaser", () => {
-  it("states both Early Access prices and the different billing shapes", () => {
+  it("states the lifetime price and that monthly is sold out", () => {
     const html = renderToStaticMarkup(<Home />);
 
-    expect(html).toContain("Early Access: $4.99 a month or $79 once");
-    expect(html).toContain(
-      "The $4.99 monthly price stays while your subscription remains active",
-    );
-    expect(html).toContain("Monthly cancels anytime");
+    expect(html).toContain("Early Access: $79 once for lifetime access");
+    expect(html).toContain("Monthly ($4.99/mo): sold out");
+    expect(html).toContain("Existing subscribers keep their price");
     expect(html).toContain("Lifetime never renews");
     expect(html).not.toContain("Cancel in one click");
   });

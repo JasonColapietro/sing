@@ -22,8 +22,9 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Payments (Suede Pro)
 
-Pro is sold at Early Access pricing: a $4.99 monthly subscription or a $79
-lifetime purchase. `STRIPE_SECRET_KEY` decides which Stripe account and mode
+Pro is sold at Early Access pricing: a $79 lifetime purchase. The $4.99
+monthly subscription is sold out (shown as such on /pro; existing subscribers
+keep renewing, the portal and cancellation). `STRIPE_SECRET_KEY` decides which Stripe account and mode
 the app talks to; see [Going live](#going-live) for where production points.
 Locally: `vercel link && vercel env pull`.
 
@@ -151,7 +152,7 @@ Live mode is already provisioned in the LLC account:
 | Lifetime Early Access | $79 once, lookup key `suede_pro_lifetime_early_access` |
 | Billing portal | the account's existing live default config, cancel-at-period-end enabled for subscriptions |
 
-New checkout sells monthly and lifetime only. The former $9.99 monthly price
+New checkout sells lifetime only; `/api/checkout` rejects monthly (409) like annual. The former $9.99 monthly price
 and old $30/yr `suede_pro_annual` price are left untouched and recognized for
 existing subscribers. `/api/checkout` hard-rejects annual before any Stripe
 lookup or Checkout Session call.

@@ -475,6 +475,9 @@ describe("/llms.txt free and Pro boundary", () => {
   it("quotes the price the pricing page renders, with a pointer to it", () => {
     expect(proPriceLine()).toContain(formatPrice(PRICING.monthly.amount));
     expect(proPriceLine()).toContain(formatPrice(PRICING.lifetime.amount));
+    // Monthly is sold out on /pro, so llms.txt must not offer it.
+    expect(proPriceLine()).toMatch(/monthly plan is sold out/);
+    expect(proPriceLine()).not.toMatch(/a month or/);
     expect(llms).toContain(proPriceLine());
     expect(llms).toContain(`Check ${SING_HOME}/pro before quoting a price`);
   });

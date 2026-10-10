@@ -36,7 +36,7 @@ import {
   PRO_PACK_COUNT,
   SONG_COUNT,
 } from "@/lib/pro-inventory";
-import { PRICING, formatPrice } from "@/lib/pro-shared";
+import { PRICING, SOLD_OUT_PLANS, formatPrice } from "@/lib/pro-shared";
 import {
   HUB_GENRES,
   HUB_GENRE_MINIMUM,
@@ -134,11 +134,16 @@ function listJoin(items: readonly string[]): string {
     : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
 }
 
-/** The Pro price as the pricing page states it, read from the same constants. */
+/**
+ * The Pro price as the pricing page states it, read from the same constants:
+ * a sold-out plan is named as sold out, never offered.
+ */
 export function proPriceLine(): string {
-  return `${formatPrice(PRICING.monthly.amount)} a month or ${formatPrice(
-    PRICING.lifetime.amount,
-  )} once for lifetime access`;
+  const lifetime = `${formatPrice(PRICING.lifetime.amount)} once for lifetime access`;
+  const monthly = `${formatPrice(PRICING.monthly.amount)} a month`;
+  return SOLD_OUT_PLANS.includes("monthly")
+    ? `${lifetime} (the ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out)`
+    : `${monthly} or ${lifetime}`;
 }
 
 export function buildLlmsTxt(): string {

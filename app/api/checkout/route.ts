@@ -33,15 +33,25 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "The yearly plan is no longer on sale. Choose monthly or lifetime.",
+          "The yearly plan is no longer on sale. Choose lifetime.",
       },
+      { status: 409 },
+    );
+  }
+
+  // Monthly is sold out. Existing monthly subscriptions (renewals, portal,
+  // cancellation) never pass through here; this only stops new sales. Keep
+  // this ahead of every Stripe lookup too.
+  if (plan === "monthly") {
+    return NextResponse.json(
+      { error: "The monthly plan is no longer on sale." },
       { status: 409 },
     );
   }
 
   if (!isCheckoutPlan(plan)) {
     return NextResponse.json(
-      { error: "Choose a monthly or lifetime plan." },
+      { error: "Choose the lifetime plan." },
       { status: 400 },
     );
   }
@@ -65,20 +75,15 @@ export async function POST(request: Request) {
       billing_address_collection: "auto" as const,
       metadata,
     };
-    const session =
-      plan === "monthly"
-        ? await getStripe().checkout.sessions.create({
-            ...common,
-            mode: "subscription",
-            allow_promotion_codes: true,
-            subscription_data: { metadata },
-          })
-        : await getStripe().checkout.sessions.create({
-            ...common,
-            mode: "payment",
-            customer_creation: "always",
-            payment_intent_data: { metadata },
-          });
+    // Lifetime is the only plan that can reach this point. Monthly
+    // subscription sessions are intentionally gone; existing subscriptions
+    // renew and cancel through Stripe and /api/portal, not here.
+    const session = await getStripe().checkout.sessions.create({
+      ...common,
+      mode: "payment",
+      customer_creation: "always",
+      payment_intent_data: { metadata },
+    });
 
     if (!session.url) {
       throw new Error("Stripe returned a session without a redirect URL.");
