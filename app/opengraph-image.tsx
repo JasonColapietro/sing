@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OG_IMAGE_ALT, OG_IMAGE_SIZE } from "@/lib/og";
+import { OG_IMAGE_ALT, OG_IMAGE_SIZE, OG_IMAGE_TAGLINE } from "@/lib/og";
 
 export const size = OG_IMAGE_SIZE;
 export const contentType = "image/png";
@@ -54,13 +54,13 @@ export default function Image() {
               lineHeight: 1.05,
             }}
           >
-            {`The vocal studio`}
+            {`Online singing practice`}
           </div>
           <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.05 }}>
-            {`in your browser`}
+            {`with live pitch feedback`}
           </div>
           <div style={{ marginTop: 18, fontSize: 28, color: "#c3bde3" }}>
-            {`Live pitch · Range test · Warmups · Ear training · Free`}
+            {OG_IMAGE_TAGLINE}
           </div>
         </div>
 

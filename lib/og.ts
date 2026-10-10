@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { MAX_TITLE, fitDescription, fitTitle } from "@/lib/meta-fit";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -9,8 +10,15 @@ import { SITE_URL } from "@/lib/site";
  */
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 
-export const OG_IMAGE_ALT =
-  "Suede Sing: the free browser vocal studio for live pitch, range test, warmups and ear training";
+/**
+ * Says what is free and what is metered, the same boundary the homepage
+ * states: the pitch meter and range test are free without limits, guided
+ * practice has a daily free allowance (lib/practice-limits.ts).
+ */
+export const OG_IMAGE_ALT = `Suede Sing: online singing practice with live pitch feedback. The pitch meter and vocal range test are free; guided practice includes ${FREE_DAILY_MINUTES} free minutes a day.`;
+
+/** The card's own fine print, kept beside the alt so the two cannot drift. */
+export const OG_IMAGE_TAGLINE = `Free pitch meter & range test · Guided practice: ${FREE_DAILY_MINUTES} free min a day`;
 
 /**
  * The sitewide card, shaped for a route's own `openGraph.images`.

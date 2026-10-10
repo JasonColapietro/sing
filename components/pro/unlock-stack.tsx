@@ -107,7 +107,7 @@ export function UnlockStack() {
           <h3 className="text-lg">Already yours, without paying</h3>
           <p className="mt-2 text-sm text-mut">
             {ROOM_COUNT} practice rooms, {SONG_COUNT} songs, {SINGER_COUNT}{" "}
-            measured voices, {GLOSSARY_COUNT} glossary terms and the range test
+            singer profiles, {GLOSSARY_COUNT} glossary terms and the range test
             are free and stay free. Pro adds {PRO_EXERCISES} exercises across{" "}
             {PRO_PACK_COUNT} packs, both books in full, pitch analysis on every
             take, and the long record of your own voice.

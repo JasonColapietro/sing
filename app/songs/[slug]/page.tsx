@@ -26,6 +26,7 @@ import type { Song } from "@/components/songs/types";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
 
 interface Params {
@@ -78,7 +79,7 @@ export async function generateMetadata({
     // Same call the atlas makes for gated chapters: a Pro song page is a real
     // page worth sharing, but it is not the page we want ranking for "sing
     // <title> free" when the practice room behind it is paid.
-    robots: pro ? { index: false, follow: true } : undefined,
+    robots: pageRobots(!pro),
   });
 }
 

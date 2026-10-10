@@ -73,7 +73,7 @@ export function FamousVoices() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
             <p className="mb-4 inline-block rounded border border-line bg-panel px-2 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              Measured voices
+              Reported ranges
             </p>
             <h2 className="text-2xl sm:text-3xl">
               Start with a voice you already know

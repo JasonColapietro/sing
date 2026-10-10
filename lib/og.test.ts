@@ -2,7 +2,8 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { DEFAULT_OG_IMAGE, OG_IMAGE_ALT, OG_IMAGE_SIZE } from "@/lib/og";
+import { DEFAULT_OG_IMAGE, OG_IMAGE_ALT, OG_IMAGE_SIZE, OG_IMAGE_TAGLINE } from "@/lib/og";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 const APP_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "app");
 
@@ -64,6 +65,17 @@ describe("share cards", () => {
     // 1200x630 is the size both platforms crop against; a smaller card is
     // downgraded to a thumbnail rather than a large summary image.
     expect(OG_IMAGE_SIZE).toEqual({ width: 1200, height: 630 });
+  });
+
+  it("states the free-plan boundary instead of calling the whole studio free", () => {
+    // Guided practice is metered (FREE_DAILY_MINUTES a day), so neither the
+    // alt nor the card's fine print may describe the product as simply free.
+    for (const text of [OG_IMAGE_ALT, OG_IMAGE_TAGLINE]) {
+      expect(text).not.toMatch(/free (?:browser )?vocal studio|· Free$/i);
+      expect(text).toMatch(/pitch meter/i);
+      expect(text).toMatch(/range test/i);
+      expect(text).toContain(`${FREE_DAILY_MINUTES} free min`);
+    }
   });
 
   it("points at an absolute URL, since crawlers do not resolve relative ones", () => {

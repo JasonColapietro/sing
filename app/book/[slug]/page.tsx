@@ -7,6 +7,7 @@ import { Markdown } from "@/lib/markdown";
 import { exitTestFor } from "@/lib/programme-exit-tests";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
+import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
 import { FreeOnly } from "@/components/pro/gate";
@@ -37,7 +38,7 @@ export async function generateMetadata({
     alternates: { canonical: `${SITE_URL}/book/${c.slug}` },
     // A gated body has nothing here for an index to rank — list the chapter but
     // keep it out of results. The free chapter is real content and ranks.
-    robots: c.free ? undefined : { index: false, follow: true },
+    robots: pageRobots(c.free),
   });
 }
 
