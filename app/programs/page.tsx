@@ -7,7 +7,7 @@ import { webPageJsonLd } from "@/lib/page-jsonld";
 
 const TITLE = "Singing Practice Programs: Vocal Training Plans";
 const DESCRIPTION =
-  "Singing practice plans from one week to twelve: warmups, breath work and range check-ins, day by day, with rest days. Free; Pro programs open week one.";
+  "Singing practice programs from one to twelve weeks: warmups, breath and range check-ins, day by day. Four are free; Pro plans open week one free.";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/programs"),

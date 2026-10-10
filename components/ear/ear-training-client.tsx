@@ -187,8 +187,8 @@ export default function EarTrainingClient() {
   return (
     <PageShell
       kicker="Ear training"
-      title="Train your ear"
-      subtitle="Short workouts and five games, ten rounds each. Start where the app points you."
+      title="Ear training for singers"
+      subtitle="Five short games that train your ear for pitch and intervals: match a pitch, catch moving notes, name intervals and sing melodies back, ten rounds each. Start with today's workout, or pick one below."
     >
       {cap.capped && <CapWall cap={cap} />}
       <ContinueCard
@@ -211,7 +211,7 @@ export default function EarTrainingClient() {
 
       <section className="mt-10">
         <div className="flex flex-wrap items-center gap-2">
-          <SectionLabel>Workouts</SectionLabel>
+          <SectionLabel heading>Ear training workouts</SectionLabel>
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             Pick a length, press start
           </span>

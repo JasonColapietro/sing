@@ -10,7 +10,7 @@ import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = `${RANGE_GUIDE.pageName} | Suede Sing`;
 const DESCRIPTION =
-  "Free vocal range test in your browser: find your lowest and highest notes, octave span and a voice-type estimate. No time limit, and it needs nothing to install.";
+  "Free vocal range test: find your lowest and highest notes, octave span and a voice-type estimate. It runs in your browser and needs nothing to install.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/range"),

@@ -12,7 +12,7 @@ const STORE_URL =
 
 const TITLE = "Pitch Detector Chrome Extension for Singers | Suede Sing";
 const DESCRIPTION =
-  "Free Chrome extension that makes any tab a vocal studio: pitch tuner, range test, warmups, ear training and a YouTube sing-along meter. Nothing uploaded.";
+  "A free pitch detector Chrome extension for singers: see your note in cents, test your vocal range, warm up and sing along on YouTube. No audio is uploaded.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/extension"),
@@ -126,7 +126,6 @@ const jsonLd = {
       isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
       permissions: "Microphone",
-      privacyPolicyUrl: `${SITE_URL}/privacy`,
       featureList: FEATURES.map((f) => f.name),
       author: { "@id": "https://suedeai.ai/founder#person" },
       publisher: { "@id": "https://suedeai.ai/#organization" },
@@ -157,8 +156,8 @@ export default function ExtensionPage() {
   return (
     <PageShell
       kicker="Suede Sing for Chrome"
-      title="A vocal coach in every browser tab"
-      subtitle="See the note you are singing, in real time, measured in cents. Free, and your voice never leaves your machine."
+      title="A pitch detector Chrome extension with a vocal coach built in"
+      subtitle="Suede Sing for Chrome shows the note you are singing in real time, measured in cents, and adds a vocal range test, warmups and ear training to the side panel. Free, with no account, and your voice never leaves your machine."
       actions={
         <LinkButton href={STORE_URL} size="lg">
           Add to Chrome, free
@@ -178,7 +177,7 @@ export default function ExtensionPage() {
       </div>
 
       <section className="mt-12">
-        <SectionLabel heading>What it does</SectionLabel>
+        <SectionLabel heading>What the singing extension does</SectionLabel>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {FEATURES.map((f) => (
             <Card key={f.name}>
@@ -190,7 +189,7 @@ export default function ExtensionPage() {
       </section>
 
       <section className="mt-12">
-        <SectionLabel>Your voice stays on your computer</SectionLabel>
+        <SectionLabel heading>Your voice stays on your computer</SectionLabel>
         <Card className="mt-4">
           <p className="text-sm text-mut">
             Suede Sing analyses each audio frame in your browser and throws it
@@ -204,11 +203,21 @@ export default function ExtensionPage() {
             cloud, so there is no training set to opt out of. Suede AI
             builds tools that measure rather than harvest.
           </p>
+          <p className="mt-3 text-sm text-mut">
+            The details are in the{" "}
+            <a
+              href="https://suedeai.org/voice/privacy/"
+              className="text-violet-ink underline underline-offset-4"
+            >
+              privacy policy
+            </a>
+            .
+          </p>
         </Card>
       </section>
 
       <section className="mt-12">
-        <SectionLabel heading>Questions</SectionLabel>
+        <SectionLabel heading>Questions about the Chrome extension</SectionLabel>
         {/* Headings, not a description list: the FAQPage markup above declares
             eight questions, and a <dt> is not a heading, so the visible
             structure carried none of them and the answers read as one long
@@ -224,7 +233,7 @@ export default function ExtensionPage() {
       </section>
 
       <section className="mt-12">
-        <SectionLabel>Also from Suede AI</SectionLabel>
+        <SectionLabel heading>Also from Suede AI</SectionLabel>
         <p className="mt-4 text-sm text-mut">
           Suede Sing is built by{" "}
           <a href="https://suedeai.ai/founder">Jason Colapietro</a> at{" "}
@@ -232,8 +241,10 @@ export default function ExtensionPage() {
           making measurement-first tools for musicians. The vocal work also
           ships as the free{" "}
           <a href={APP_STORE_URL}>{APP_NAME}</a>{" "}
-          iPhone app, and as a <Link href="/">browser studio</Link> that needs no
-          install at all.
+          iPhone app, and as a <Link href="/">browser singing studio</Link> that
+          needs no install at all, with a{" "}
+          <Link href="/range">free vocal range test</Link> and{" "}
+          <Link href="/studio">live pitch training</Link>.
         </p>
       </section>
     </PageShell>
