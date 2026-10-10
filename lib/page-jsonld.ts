@@ -11,14 +11,45 @@ import { AUTHOR_NODE } from "@/lib/author";
 import { ORG_ID, ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
-export function webPageJsonLd(page: { path: string; name: string; description: string }) {
+/** One step of a visible breadcrumb trail, as a site-relative path. */
+export interface Crumb {
+  name: string;
+  path: string;
+}
+
+/**
+ * A BreadcrumbList for a trail the page already renders. Only pages with a
+ * visible breadcrumb nav should emit one, so the markup describes navigation a
+ * reader can see rather than a hierarchy invented for the crawler.
+ */
+export function breadcrumbListJsonLd(crumbs: readonly Crumb[]) {
+  return {
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((crumb, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: crumb.name,
+      item: `${SITE_URL}${crumb.path}`,
+    })),
+  };
+}
+
+export function webPageJsonLd(page: {
+  path: string;
+  name: string;
+  description: string;
+  /** A hub that exists to list other pages is a CollectionPage. */
+  type?: "WebPage" | "CollectionPage";
+  /** The page's visible breadcrumb trail, ending at this page. */
+  breadcrumbs?: readonly Crumb[];
+}) {
   const url = `${SITE_URL}${page.path}`;
   return {
     "@context": "https://schema.org",
     "@graph": [
       ORG_PUBLISHER_NODE,
       {
-        "@type": "WebPage",
+        "@type": page.type ?? "WebPage",
         "@id": `${url}#webpage`,
         url,
         name: page.name,
@@ -26,6 +57,7 @@ export function webPageJsonLd(page: { path: string; name: string; description: s
         isPartOf: { "@id": `${SITE_URL}/#website` },
         publisher: { "@id": ORG_ID },
         inLanguage: "en",
+        ...(page.breadcrumbs ? { breadcrumb: breadcrumbListJsonLd(page.breadcrumbs) } : {}),
       },
     ],
   };

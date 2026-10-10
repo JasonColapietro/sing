@@ -3,7 +3,7 @@ title: "Metal"
 part: "Rock, metal and alternative"
 order: 13
 group: metal
-summary: "Air-raid tenors, operatic sopranos and controlled growls — the most technically demanding shouting on earth, and why metal singing is closer to opera than either camp admits."
+summary: "Air-raid tenors, operatic sopranos and controlled growls — trained singing at rock volume, and why metal singing is closer to opera than either camp admits."
 ---
 
 Metal is where rock's altitude arms race went professional. The air-raid sirens in this chapter sustain pitches, night after night, that classic rock visited on special occasions — and the entries make clear how: this is trained singing, head voice and reinforced mix developed with an athlete's discipline, far closer to operatic production than the leather suggests. The genre even reimported opera directly, in the symphonic wing's classically schooled sopranos, making this the one chapter where conservatory technique and blast beats share a stage.

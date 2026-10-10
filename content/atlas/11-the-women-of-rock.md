@@ -3,7 +3,7 @@ title: "The women of rock"
 part: "Rock, metal and alternative"
 order: 11
 group: rock-women
-summary: "Belters, banshees and deadpan cool — the women who fronted rock bands on their own terms, and why their entries are the atlas's best course in projection over a loud stage."
+summary: "Belters, banshees and deadpan cool — the women who fronted rock bands on their own terms, and what their entries teach about projection over a loud stage."
 ---
 
 The women in this chapter solved a problem the pop chapters never had to face at the same intensity: being heard, nightly, over drum kits and full stacks, in an era when the monitor engineer was optional and the audience was not. The solutions in these entries are a curriculum in projection. Some went through the middle of the noise — chest-dominant belts with enough twang to cut steel. Some went over it, in sirening head-voice registers the band could not touch. And some refused the fight entirely, planting a deadpan cool in the mix and letting the band rage around it.

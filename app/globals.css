@@ -86,6 +86,9 @@ html {
      the scroll symptom but not this. `clip` is the stricter, purpose-built
      containment value and is what actually fixes it. */
   overflow-x: clip;
+  /* The header is sticky and 56px tall, so an in-page jump (#content from the
+     skip link, #app, a heading id) used to land its target underneath it. */
+  scroll-padding-top: 4.5rem;
 }
 
 body {
@@ -109,12 +112,17 @@ h2 {
   font-weight: 800;
   letter-spacing: -0.015em;
   line-height: 1.08;
+  /* Display lines broke greedily, so a two-line heading often ended on a
+     single orphaned word ("...you already / know"). Balance evens the lines;
+     it never changes the line count, so nothing below moves. */
+  text-wrap: balance;
 }
 
 h3 {
   font-family: var(--font-body);
   font-weight: 700;
   letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 /*
@@ -145,6 +153,16 @@ h3 {
 .lift:active {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   transform: translateY(0);
+}
+
+/* The reduced-motion block below collapses the transition, but a collapsed
+   transition still jumps the card 2px on hover. Keep the shadow (it is the
+   affordance) and drop the movement. */
+@media (prefers-reduced-motion: reduce) {
+  .lift:hover,
+  .lift:active {
+    transform: none;
+  }
 }
 
 /*
@@ -236,6 +254,7 @@ h3 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

@@ -3,6 +3,7 @@ import { lessonKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { withCanonicalOpenGraph } from "@/lib/og";
+import { webPageJsonLd } from "@/lib/page-jsonld";
 import { SITE_URL } from "@/lib/site";
 import { MODULE_PRACTICE, practiceMatch } from "@/lib/lesson-practice";
 import {
@@ -39,6 +40,13 @@ function stageAnswer(stage: CourseStage): string {
   return `Stage ${catalog.stage} of ${COURSE.length} has ${stage.modules.length} modules and ${stageLessonCount(stage)} short lessons, each with a self-check. The goal: ${lowerFirst(catalog.subtitle)}.`;
 }
 
+type Stage = NonNullable<ReturnType<typeof findStage>>;
+
+function stageDescription(stage: Stage): string {
+  const { catalog } = stage;
+  return `${catalog.name} voice lessons: stage ${catalog.stage} of the free singing course, ${stage.modules.length} modules and ${stageLessonCount(stage)} short lessons. The goal: ${lowerFirst(catalog.subtitle)}.`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -51,7 +59,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title: `Stage ${catalog.stage}: ${catalog.name} · Voice Lessons`,
     keywords: lessonKeywords({ name: catalog.name }),
-    description: `${catalog.name} voice lessons: stage ${catalog.stage} of the free singing course, ${stage.modules.length} modules and ${stageLessonCount(stage)} short lessons. The goal: ${lowerFirst(catalog.subtitle)}.`,
+    description: stageDescription(stage),
     alternates: { canonical: `${SITE_URL}${stage.href}` },
   });
 }
@@ -64,6 +72,20 @@ export default async function StagePage({ params }: { params: Promise<Params> })
   const index = COURSE.indexOf(stage);
   const previous = COURSE[index - 1];
   const next = COURSE[index + 1];
+  const href = stage.href ?? VOICE_LEARN_PATH;
+  // The same trail the CourseBreadcrumbs nav renders, and the same names the
+  // lesson pages give it.
+  const jsonLd = webPageJsonLd({
+    type: "CollectionPage",
+    path: href,
+    name: `Stage ${catalog.stage}: ${catalog.name}`,
+    description: stageDescription(stage),
+    breadcrumbs: [
+      { name: "Learn to sing", path: "/learn" },
+      { name: "Voice lessons", path: VOICE_LEARN_PATH },
+      { name: catalog.name, path: href },
+    ],
+  });
 
   return (
     <PageShell
@@ -71,6 +93,10 @@ export default async function StagePage({ params }: { params: Promise<Params> })
       title={stageHeading(stage)}
       subtitle={stageAnswer(stage)}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <CourseBreadcrumbs trail={[{ href: VOICE_LEARN_PATH, label: "Voice lessons" }]} current={catalog.name} />
       <div className="space-y-6">
         {stage.modules.map((module) => {

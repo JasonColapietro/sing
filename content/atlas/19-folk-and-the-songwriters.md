@@ -3,7 +3,7 @@ title: "Folk and the songwriters"
 part: "Country, folk and jazz"
 order: 19
 group: folk
-summary: "The confiders — voices built to serve words, from coffeehouse sopranos to gravel philosophers — and why limited instruments produced unlimited careers here."
+summary: "The confiders — voices built to serve words, from coffeehouse sopranos to gravel philosophers — and how modest instruments built long careers here."
 ---
 
 This chapter houses the atlas's most persuasive argument that a voice is a delivery system before it is an instrument. The songwriters here include some of the narrowest cited ranges in the book alongside some of the most idiosyncratic timbres — reedy, cracked, nasal, whispered, weathered — and nearly every one of them built a longer, deeper catalog than singers with twice the span. The entries explain how: when the contract is *believe me* rather than *behold me*, intimacy, diction and timing do the work that range does elsewhere, and eccentricity of tone stops being a flaw and becomes a signature.

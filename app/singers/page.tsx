@@ -16,6 +16,7 @@ import {
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -73,6 +74,8 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     url: `${SITE_URL}/singers`,
+    siteName: OG_SITE_NAME,
+    locale: OG_LOCALE,
   },
 };
 

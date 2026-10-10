@@ -3,7 +3,9 @@ import {
   ALL_EXERCISES,
   EXERCISES,
   MIN_RUNGS,
+  PATH_ORDER,
   PRO_PACKS,
+  TIER_ORDER,
   VIBRATO_TARGET_BAND,
   buildSegments,
   computeRootLadder,
@@ -280,8 +282,8 @@ describe("the focus drills", () => {
     expect(mix.exercises.map((e) => e.id)).toEqual([
       "mix-ng-slide",
       "mix-mum-octave",
-      "mix-nay-fifth-octave",
       "mix-goo-scale",
+      "mix-nay-fifth-octave",
     ]);
     for (const ex of mix.exercises) {
       expect(Math.max(...ex.buildSteps(0).flat()), ex.id).toBe(12);
@@ -294,5 +296,80 @@ describe("the focus drills", () => {
     const titles = ALL_EXERCISES.map((e) => e.title);
     expect(new Set(ids).size).toBe(ids.length);
     expect(new Set(titles).size).toBe(titles.length);
+  });
+});
+
+describe("the path order", () => {
+  const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
+  const semiOccluded = /\b(?:hum|hummed|trill|straw|bubble|ng|raspberr)/i;
+
+  it("names every free exercise exactly once, and nothing else", () => {
+    expect(new Set(PATH_ORDER).size).toBe(PATH_ORDER.length);
+    expect([...PATH_ORDER].sort()).toEqual(EXERCISES.map((e) => e.id).sort());
+    expect(EXERCISES.map((e) => e.id)).toEqual([...PATH_ORDER]);
+  });
+
+  it("lists the tiers in order, so each tier's rows read top to bottom as written", () => {
+    const tiers = PATH_ORDER.map((id) => TIER_ORDER.indexOf(byId(id).tier));
+    for (let i = 1; i < tiers.length; i++) expect(tiers[i], PATH_ORDER[i]).toBeGreaterThanOrEqual(tiers[i - 1]);
+  });
+
+  it("opens each tier on a semi-occluded sound or a slide, the way a session starts", () => {
+    for (const tier of TIER_ORDER) {
+      const first = EXERCISES.find((e) => e.tier === tier)!;
+      const easyStart = first.glide === true || semiOccluded.test(`${first.title} ${first.desc}`);
+      expect(easyStart, `${tier} opens on ${first.id}`).toBe(true);
+    }
+  });
+
+  it("meets the hums and trills before an open vowel on the scale", () => {
+    const at = (id: string) => PATH_ORDER.indexOf(id);
+    for (const sovt of ["morning-hum", "humming-thirds", "lip-trill-scale", "straw-scale"]) {
+      expect(at(sovt), sovt).toBeLessThan(at("five-note-scale"));
+    }
+    // Speed comes last: the runs close the top tier.
+    expect(PATH_ORDER.slice(-2)).toEqual(["agility-run", "pentatonic-run"]);
+  });
+});
+
+describe("the gap-filling drills", () => {
+  const byId = (id: string) => EXERCISES.find((e) => e.id === id)!;
+
+  it("ships messa di voce as one long, free, unglided note that scores pitch only", () => {
+    const ex = byId("swell-and-fade");
+    expect(ex.buildSteps(60)).toEqual([[60]]);
+    expect(ex.glide).toBeFalsy();
+    expect(ex.vibrato).toBeUndefined();
+    // Long enough at the fastest tempo for a swell and a fade.
+    expect((ex.noteDur ?? 0) / 1.25).toBeGreaterThanOrEqual(4);
+    expect(ex.desc).toMatch(/only the pitch is scored/i);
+    // Comfortable, never a call for maximum volume.
+    expect(`${ex.desc} ${ex.tip}`).not.toMatch(/\b(?:as loud as|full voice|max(?:imum)?|forte)\b/i);
+  });
+
+  it("ships a straw cool-down that slides down and walks the ladder down", () => {
+    const ex = byId("straw-slide-down");
+    expect(ex.tier).toBe("beginner");
+    expect(ex.glide).toBe(true);
+    expect(ex.ladder).toBe("down");
+    const [[from, to]] = ex.buildSteps(0);
+    expect(from).toBeGreaterThan(to);
+    expect(from - to).toBeLessThanOrEqual(7);
+  });
+});
+
+describe("coaching copy", () => {
+  it("never asks for pushing, forcing or maximum effort", () => {
+    // Words like "push" may appear only as the thing to avoid.
+    const pushy = /\b(?:push (?:it|harder|through)|force it|as loud as you can|max(?:imum)? (?:volume|effort)|sing through the pain)\b/i;
+    for (const ex of ALL_EXERCISES) {
+      expect(`${ex.desc} ${ex.tip}`, ex.id).not.toMatch(pushy);
+    }
+  });
+
+  it("tells the loudest drill when to back off and when to stop", () => {
+    const forte = ALL_EXERCISES.find((e) => e.id === "belt-forte-ah")!;
+    expect(forte.tip).toMatch(/back off/i);
+    expect(forte.tip).toMatch(/stop/i);
   });
 });

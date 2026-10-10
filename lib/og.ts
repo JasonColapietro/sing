@@ -9,6 +9,18 @@ import { SITE_URL } from "@/lib/site";
  */
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 
+/**
+ * og:site_name and og:locale. The hand-written routes (home, /range, /voice,
+ * /extension, /changelog, /atlas/vocal-range-by-voice-type) always declared
+ * both; the ~250 templated routes that go through withCanonicalOpenGraph did
+ * not, because `openGraph` is replaced per segment rather than merged, so
+ * nothing at the root could supply them. Share previews (Slack, LinkedIn,
+ * Facebook) print the site name above the title, and it is one of the signals
+ * Google reads for a result's site name.
+ */
+export const OG_SITE_NAME = "Suede Sing";
+export const OG_LOCALE = "en_US";
+
 export const OG_IMAGE_ALT =
   "Suede Sing: the free browser vocal studio for live pitch, range test, warmups and ear training";
 
@@ -92,6 +104,8 @@ export function withCanonicalOpenGraph(metadata: Metadata): Metadata {
       title,
       description,
       type: "website",
+      siteName: OG_SITE_NAME,
+      locale: OG_LOCALE,
       ...(existing ? {} : { images: [DEFAULT_OG_IMAGE] }),
       ...existing,
       url,

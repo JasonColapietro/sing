@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Suede Sing: the vocal studio in your browser",
     short_name: "Suede Sing",
     description:
-      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice. Free, in the browser.",
+      "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice, in the browser. The pitch meter and range test are free.",
     start_url: "/",
     display: "standalone",
     background_color: "#0f0c1f",

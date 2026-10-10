@@ -491,7 +491,7 @@ export default function Nav() {
                     className={`rounded-2xl border px-4 py-4 text-base transition-colors ${
                       active
                         ? "border-violet bg-panel2 text-violet-ink"
-                        : "border-line bg-panel text-ink hover:border-line2"
+                        : "border-line bg-panel text-ink hover:border-line2 hover:bg-panel2"
                     }`}
                   >
                     {l.label}
@@ -570,7 +570,7 @@ export default function Nav() {
 
           <Link
             href="/progress"
-            className="hidden min-h-11 shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs sm:flex"
+            className="hidden min-h-11 shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs transition-colors hover:border-line2 hover:bg-panel2 sm:flex"
           >
             <span className="text-violet-ink">LV {lvl.level}</span>
             <span className="text-dim">·</span>
@@ -682,10 +682,19 @@ function TabBar({ pathname }: { pathname: string }) {
             <li key={l.href}>
               <Link
                 href={l.href}
-                className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-bold transition-colors ${
+                className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-bold transition-colors ${
                   active ? "text-ink" : "text-dim hover:text-mut"
                 }`}
               >
+                {/* The active tab was told apart by colour and stroke weight
+                    alone; the bar on the top edge is a cue that survives
+                    greyscale and a glance. Absolute, so no tab moves. */}
+                {active && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 mx-auto h-0.5 w-8 rounded-full bg-pink"
+                  />
+                )}
                 <span className={active ? "text-pink" : ""}>
                   <TabIcon name={l.icon} active={active} />
                 </span>

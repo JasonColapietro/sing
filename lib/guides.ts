@@ -12,9 +12,9 @@ import type { GuideContent } from "@/components/guide";
 export const RANGE_GUIDE: GuideContent = {
   path: "/range",
   pageName: "Free Vocal Range Test and Voice Type Finder",
-  heading: "What a vocal range test actually measures",
+  heading: "What does a vocal range test measure?",
   answer:
-    "Your vocal range is the span between the lowest and highest notes you can sing with a clear, usable tone. This online range test listens as you slide down and then up, then reports both notes, the size of the span, and the voice type that overlaps it most closely.",
+    "Your vocal range is the span between the lowest and highest notes you can sing with a clear, usable tone. This online range test listens as you slide down and then up, then reports the lowest and highest clear notes it heard in that session, the size of the span, and an estimate of the voice type whose conventional band overlaps it most closely.",
   body: [
     "Two singers with the same range can sound nothing alike because range does not show where each voice feels comfortable. The notes at the extremes are often not notes a singer would perform repeatedly. A range test gives you a boundary and a baseline, not a grade.",
     "The result can move with fatigue, illness, the time of day, the room, microphone position, and whether you warmed up. Test under similar conditions when you want to compare one result with another.",
@@ -64,7 +64,7 @@ export const RANGE_GUIDE: GuideContent = {
       },
       {
         title: "Read the result and save it",
-        body: "You get your low note, your high note, the span in octaves, and the voice type that span suggests. Saving it gives you a first data point — the number only means something once you have several taken the same way.",
+        body: "You get your low note, your high note, the span in octaves, and the voice type that span suggests — an estimate, not a classification. Saving it gives you a first data point — the number only means something once you have several taken the same way.",
       },
     ],
   },
@@ -92,6 +92,10 @@ export const RANGE_GUIDE: GuideContent = {
     {
       q: "How do I find my vocal range online?",
       a: "Choose the Range test tab, start the free test, allow microphone access, hold one comfortable note, then slide down and up while the pitch detector listens. Suede Sing marks the lowest and highest clear notes it hears, shows the span on a keyboard, and gives the conventional voice-type band that overlaps it most closely.",
+    },
+    {
+      q: "Is my vocal range the same as my voice type?",
+      a: "No. Vocal range is a measurement: the lowest and highest clear notes detected in one session. Voice type is an estimate that also depends on where your voice sits comfortably, its tone, and how it moves between registers. The test reports the conventional band that overlaps your range; it cannot permanently classify your voice.",
     },
     {
       q: "How high can I sing?",
@@ -149,12 +153,15 @@ export const RANGE_GUIDE: GuideContent = {
 
 export const WARMUPS_GUIDE: GuideContent = {
   path: "/warmups",
-  heading: "Why singers warm up, and what a warmup is doing",
+  // The page's <title>. The H2 below is a question the section answers, not
+  // the page's name, so it should not become the WebPage node's name.
+  pageName: "Vocal Warm-Up Exercises: Guided Singing Warmups",
+  heading: "Why do singers warm up?",
   answer:
-    "A vocal warmup gradually brings blood flow, breath coordination and register transitions online before you ask the voice for anything difficult. It is closer to a pianist's scales than to a runner's stretching: the point is coordination, not loosening. Ten minutes of gentle, connected sound does most of the work.",
+    "Singers warm up to coordinate breath, vocal-fold vibration and register changes before asking the voice for anything difficult. A warmup is closer to a pianist's scales than to a runner's stretching: the point is coordination, not loosening, and a short run of quiet, connected sound is the usual shape.",
   body: [
-    "The exercises that show up in every teacher's warmup — lip trills, hums, sirens, five-note scales — share a design. They keep the tone quiet, keep the airflow steady, and move pitch gradually so the voice changes register without a jolt. That is why they are boring, and why the boring version works.",
-    "Warming up is also the cheapest injury prevention available to a singer. Most voice strain comes from asking for volume or height before the mechanism is coordinated to produce it, which pushes a singer into squeezing rather than supporting. A warm voice reaches the same note with less force.",
+    "The exercises that show up in most teachers' warmups — lip trills, hums, sirens, five-note scales — share a design. They keep the tone quiet, keep the airflow steady, and move pitch gradually so the voice changes register without a jolt. That is why they are boring, and why the boring version works.",
+    "A warmup is also preparation for effort. Asking for volume or height before breath and fold closure are coordinated tends to push a singer into squeezing rather than supporting, and a coordinated voice usually reaches the same note with less force. A warmup does not make a voice ready for something it was never ready to sing.",
     "Each warmup here plays a short melody, then listens while you sing it back, scoring pitch accuracy in real time. When you clear a pattern, it transposes up a semitone and asks again, so the exercise climbs with you instead of sitting at one fixed height.",
   ],
   howTo: {
@@ -194,7 +201,7 @@ export const WARMUPS_GUIDE: GuideContent = {
     points: [
       "Keep every warmup quieter than you think you need to; volume is the last thing to add",
       "If a pattern is uncomfortable at the top, stop climbing rather than pushing through it",
-      "Lip trills and hums feel silly and are the single most useful thing in the list",
+      "Lip trills and hums feel silly and earn their place: they make clear tone easy at low effort",
       "Warm up before the range test, before song practice, and before recording anything you plan to keep",
     ],
   },
@@ -211,7 +218,7 @@ export const WARMUPS_GUIDE: GuideContent = {
   faq: [
     {
       q: "How long should a vocal warmup take?",
-      a: "About ten minutes for ordinary practice, and fifteen to twenty before a demanding performance. Longer is not better — past a point you are spending voice rather than preparing it.",
+      a: "There is no fixed rule. About ten minutes is a common length for ordinary practice, with a little longer before a demanding sing. Longer is not better — past a point you are spending voice rather than preparing it.",
     },
     {
       q: "Do I need to warm up before every practice session?",
@@ -256,12 +263,14 @@ export const WARMUPS_GUIDE: GuideContent = {
 
 export const BREATH_GUIDE: GuideContent = {
   path: "/breath",
-  heading: "Breath support, in plain terms",
+  // The page's <title>; the H2 below is the question the section answers.
+  pageName: "Breathing Exercises for Singers: Breath Support",
+  heading: "What is breath support in singing?",
   answer:
-    "Breath support is the steady, controlled release of air that keeps a sung note even in pitch and volume. Singers work on it because almost every audible problem in a phrase — wavering pitch, a note that thins at the end, running out mid-line — traces back to how the air was managed rather than to the throat.",
+    "Breath support is the steady, controlled release of air that keeps a sung note even in pitch and volume. Singers work on it because many audible problems in a phrase — wavering pitch, a note that thins at the end, running out mid-line — trace back to how the air was managed rather than to the throat.",
   body: [
     "The mechanics are unglamorous. You breathe low, so the diaphragm descends and the ribs stay open rather than the shoulders lifting. Then you resist the natural collapse of the ribcage while you sing, so air leaves at the rate the note needs instead of all at once. That resistance is the 'support' in breath support.",
-    "It is trainable in a way that most vocal qualities are not, because you can measure it directly: how long can you sustain an even tone on one breath, and does the pitch stay put while you do. Both numbers move with practice, and both are visible without a teacher in the room.",
+    "It is one of the easier vocal skills to track, because two parts of it can be observed directly: how long you sustain an even tone on one breath, and whether the pitch stays put while you do. Both are visible without a teacher in the room.",
     "This room runs two kinds of exercise. Timed breathing patterns build the habit of a low, unhurried inhale and a controlled exhale. The mic-based sustain test then checks the result — you hold a note while the app times how long the tone lasts and how even you keep its loudness.",
   ],
   howTo: {
@@ -291,7 +300,7 @@ export const BREATH_GUIDE: GuideContent = {
       },
       {
         title: "Practice short and often",
-        body: "Five focused minutes daily builds this faster than a long weekly session, and it avoids the dizziness that comes from over-breathing in one sitting.",
+        body: "A few focused minutes on most days suits this better than one long weekly session, and it avoids the dizziness that comes from over-breathing in one sitting.",
       },
     ],
   },
@@ -300,7 +309,7 @@ export const BREATH_GUIDE: GuideContent = {
     body: "Beginners usually take a big, high, shoulder-lifting breath and then spend it in the first two seconds. The fix is a smaller, lower breath released more slowly, which feels like doing less.",
     points: [
       "Breathe low and quietly — a noisy gasp is a high breath, and a high breath does not support",
-      "A steady twenty-second hiss is a reasonable early target; the number matters less than the evenness",
+      "Use your own first steady hiss as the baseline; the number matters less than the evenness",
       "Never sing to the very bottom of your air; the last of a breath is where tone and pitch both fall apart",
       "Stop immediately if you feel lightheaded — that is over-breathing, and rest fixes it",
     ],
@@ -312,17 +321,17 @@ export const BREATH_GUIDE: GuideContent = {
       "Practice sustains at the top of your working range, where support fails first and matters most",
       "Work on the fast, low catch-breath — most real songs never give you four counts to inhale",
       "Watch the steadiness reading rather than duration; a long note that fades away is a support problem, not a lung-capacity problem",
-      "Map your sustain length against dynamics — the same note loud spends air several times faster",
+      "Map your sustain length against dynamics — the same note sung louder spends air faster",
     ],
   },
   faq: [
     {
       q: "How long should a singer be able to hold a note?",
-      a: "Comfortably sustaining an even tone for fifteen to twenty-five seconds covers essentially all repertoire, and trained singers often exceed that. Steadiness of pitch and volume is worth more than raw duration — a long note that sags is not a usable one.",
+      a: "There is no single required duration; it depends on the phrases you sing. Steadiness of pitch and volume is worth more than raw duration — a long note that sags is not a usable one. Measure your own sustain under the same conditions each time and compare it with your earlier results.",
     },
     {
       q: "What is diaphragmatic breathing?",
-      a: "It describes a low breath in which the diaphragm descends and the belly and lower ribs expand, rather than a high breath that lifts the chest and shoulders. You cannot feel the diaphragm directly — it has no sensory nerves for this — so singers work from the belly and rib movement they can feel.",
+      a: "It describes a low breath in which the diaphragm descends and the belly and lower ribs expand, rather than a high breath that lifts the chest and shoulders. You cannot feel the diaphragm move the way you feel your belly and ribs, so singers work from the movement they can feel.",
     },
     {
       q: "Why do I run out of breath halfway through a phrase?",
@@ -363,13 +372,15 @@ export const BREATH_GUIDE: GuideContent = {
 
 export const EAR_GUIDE: GuideContent = {
   path: "/ear-training",
-  heading: "What ear training does for a singer",
+  // The page's <title>; the H2 below is the question the section answers.
+  pageName: "Ear Training for Singers: Pitch and Intervals",
+  heading: "What does ear training do for a singer?",
   answer:
-    "Ear training is practice at hearing pitch relationships accurately and reproducing them. For a singer it is the other half of pitch accuracy: your voice can only land on a note you can hear in advance, so a sharper ear directly produces better intonation.",
+    "Ear training is practice at hearing pitch relationships accurately and reproducing them. For a singer it is the other half of pitch accuracy: the voice aims at a note you hear in advance, so a clearer target in your ear gives your intonation something reliable to aim at.",
   body: [
-    "Singing in tune is not primarily a throat skill. The sequence is hear the target, predict the muscular gesture that produces it, then check the result against what you meant. Training the first link improves the whole chain, which is why singers who drift flat often improve faster from interval work than from more singing.",
+    "Singing in tune is not only a throat skill. The sequence is hear the target, predict the muscular gesture that produces it, then check the result against what you meant. Training the first link supports the whole chain, which is why a singer who drifts flat may need interval work as much as more singing.",
     "Interval recognition is the core drill: hear two notes and name the distance between them. Pitch matching is the singer's version — hear a note, sing it back, and get told how close you landed in cents. Melody playback extends both to short phrases, which is where memory joins the skill.",
-    "Progress here is unusually measurable. Accuracy on intervals and average deviation on pitch matching both improve week over week in a way that is visible long before it is audible to you in a song.",
+    "Progress here is measurable. Interval accuracy and average pitch-matching deviation are scored every session, so a trend can show up in the numbers before you notice it in a song.",
   ],
   howTo: {
     name: "How to train your ear as a singer",
@@ -398,13 +409,13 @@ export const EAR_GUIDE: GuideContent = {
       },
       {
         title: "Keep sessions short and daily",
-        body: "Ten minutes a day outperforms an hour on Sunday. Ear training is the clearest case in vocal practice where frequency beats volume.",
+        body: "Ten minutes on most days suits this better than an hour on Sunday. Ear training is memory work, and memory builds with repetition.",
       },
     ],
   },
   beginner: {
-    heading: "'Tone deaf' is almost never the problem",
-    body: "Genuine congenital amusia is rare. Most people who believe they cannot hear pitch have simply never practiced matching one, and their accuracy improves quickly once they start getting immediate feedback.",
+    heading: "'Tone deaf' is rarely the problem",
+    body: "Genuine congenital amusia is uncommon. Many people who believe they cannot hear pitch have simply never practiced matching one, and immediate feedback gives them something to correct against.",
     points: [
       "Begin with pitch matching in the middle of your range, where your voice is most controllable",
       "If you consistently sing under the note, try starting the sound slightly higher than feels right and let it settle",
@@ -425,11 +436,11 @@ export const EAR_GUIDE: GuideContent = {
   faq: [
     {
       q: "Can you actually learn perfect pitch as an adult?",
-      a: "Almost certainly not in the true sense — absolute pitch appears to require acquisition in early childhood. Relative pitch, which is the ability that actually matters for singing in tune, is trainable at any age and improves steadily with practice.",
+      a: "Probably not in the true sense — absolute pitch is generally thought to depend on early childhood. Relative pitch, which is the ability that actually matters for singing in tune, is trainable at any age.",
     },
     {
       q: "How long does ear training take to work?",
-      a: "Measurable improvement on pitch matching usually shows within a few weeks of daily ten-minute sessions. Carrying it into songs without thinking about it takes longer, because that requires the skill to become automatic rather than merely available.",
+      a: "It varies from person to person, and this app does not predict a timeline. Short, regular sessions give you a series of scores to compare. Carrying the skill into songs without thinking about it usually takes longer than improving the drill score, because it has to become automatic rather than merely available.",
     },
     {
       q: "I'm tone deaf. Is there any point?",
@@ -437,11 +448,11 @@ export const EAR_GUIDE: GuideContent = {
     },
     {
       q: "Should I train intervals or just sing more?",
-      a: "Both, but they fix different things. Singing more builds control of the instrument; ear training improves the target you are aiming at. Singers who drift flat despite plenty of practice usually gain more from the ear work.",
+      a: "Both, but they work on different things. Singing more builds control of the instrument; ear training works on the target you are aiming at. If you drift flat despite plenty of practice, the ear side is worth checking.",
     },
     {
       q: "Does ear training help with harmonies?",
-      a: "Directly. Holding a harmony line means keeping your interval against a moving part you can hear, which is interval recognition applied in real time. Singers who struggle to hold a harmony usually improve fastest through interval drills.",
+      a: "It is directly relevant. Holding a harmony line means keeping your interval against a moving part you can hear, which is interval recognition applied in real time.",
     },
   ],
   related: [
@@ -470,12 +481,14 @@ export const EAR_GUIDE: GuideContent = {
 
 export const SONGS_GUIDE: GuideContent = {
   path: "/songs",
-  heading: "Practicing songs with pitch feedback",
+  // The page's <title>; the H2 below is the question the section answers.
+  pageName: "Public Domain Songs to Sing with Pitch Feedback",
+  heading: "How does pitch feedback help you practice a song?",
   answer:
-    "Song practice is where technique either shows up or does not. Singing a known melody with live pitch feedback shows you exactly which notes and which phrases drift, which is information that no amount of listening back to a recording gives you as precisely.",
+    "Live pitch feedback shows which notes and phrases of a song drift while you are singing them, so you can practice those phrases instead of running the whole song again. Here each melody is transposed toward your measured range and scored against its target notes as you sing.",
   body: [
     "Exercises isolate one skill at a time. A song asks for all of them at once, plus words, rhythm, and breath points that were decided by whoever wrote it. That is why a singer can score well on warmup patterns and still lose the pitch in a chorus — the demands stack.",
-    "The most common cause of a song sitting badly is key rather than skill. A melody written for a voice higher or lower than yours will park its most important notes right at your weakest point. Transposing it is not cheating; it is what every professional does, and it is the difference between a phrase you can perform and one you can merely survive.",
+    "Often the problem is the key rather than the skill. A melody written for a voice higher or lower than yours can park its most important notes at your weakest point. Transposing it is not cheating; professional singers do it routinely, and it can be the difference between a phrase you can perform and one you can merely survive.",
     "Each melody here is transposed automatically into a key that suits your measured range, and your pitch is scored against the target notes as you sing. The result marks which phrases held and which came apart.",
   ],
   howTo: {
@@ -548,7 +561,7 @@ export const SONGS_GUIDE: GuideContent = {
     },
     {
       q: "Why do I sound flat only on high notes?",
-      a: "Almost always support and register rather than hearing. As the pitch rises the note needs more consistent airflow, and a voice dragging chest weight upward tends to land just under. It usually improves from breath work and letting the tone lighten near the transition.",
+      a: "Often support and register rather than hearing. As the pitch rises the note needs more consistent airflow, and a voice dragging chest weight upward tends to land just under. It usually improves from breath work and letting the tone lighten near the transition.",
     },
   ],
   related: [
@@ -579,9 +592,9 @@ export const RECORDER_GUIDE: GuideContent = {
   path: "/recorder",
   // The page's <title>. The H2 below is a section of the page, not its name.
   pageName: "Voice Recorder for Singing Practice",
-  heading: "Why singers record themselves",
+  heading: "Why should singers record themselves?",
   answer:
-    "You cannot hear your own voice accurately while producing it — bone conduction, and the fact that you are busy singing, both get in the way. Recording a take and listening back is the only reliable way to hear what an audience hears, and it is the fastest feedback loop available to a singer without a teacher.",
+    "Singers record themselves because you cannot hear your own voice accurately while producing it: bone conduction adds low frequencies, and your attention is on singing. Recording a take and listening back lets you hear something much closer to what a listener hears, and comparing takes over time shows change you cannot feel from the inside.",
   body: [
     "The first playback is uncomfortable for nearly everyone, and the discomfort is not about quality. Your recorded voice lacks the low-frequency reinforcement your skull adds when you speak or sing, so it sounds thinner and higher than the version you have heard your whole life. That reaction fades with exposure and it says nothing about the singing.",
     "What recording gives you that live feedback cannot is comparison over time. A take from four weeks ago against one from today is evidence, and it usually shows improvement that felt invisible day to day.",
@@ -620,7 +633,7 @@ export const RECORDER_GUIDE: GuideContent = {
   },
   beginner: {
     heading: "Getting past the first playback",
-    body: "Most singers record themselves once, dislike it, and never do it again — losing the single most useful practice tool they have. The reaction is physiological and it does fade.",
+    body: "Plenty of singers record themselves once, dislike it, and never do it again — losing one of the most useful practice tools they have. The reaction is physiological and it does fade.",
     points: [
       "Your recorded voice is the real one; the internal version is the one with an inaccurate bass boost",
       "Record short — one phrase, not a whole song — so listening back is not a chore",
@@ -645,7 +658,7 @@ export const RECORDER_GUIDE: GuideContent = {
     },
     {
       q: "Do I need a proper microphone?",
-      a: "Not for practice. A laptop or phone mic captures pitch, timing and phrasing perfectly well, and those are what you are studying. Better microphones matter for producing releases, not for hearing your own accuracy.",
+      a: "Not for practice. A laptop or phone mic captures pitch, timing and phrasing well enough to study them, and those are what you are listening for. Better microphones matter for producing releases, not for hearing your own accuracy.",
     },
     {
       q: "How often should I record myself?",
@@ -688,18 +701,18 @@ export const TOOLS_GUIDE: GuideContent = {
   path: "/tools",
   // The page's <title>. The H2 below is a section of the page, not its name.
   pageName: "Singing Practice Tools: Metronome, Keyboard and Drone",
-  heading: "A metronome, a keyboard and a drone — and when each one helps",
+  heading: "When does a singer need a metronome, a keyboard or a drone?",
   answer:
-    "These are the three reference tools most vocal practice actually needs: a metronome for timing, a virtual piano for pitch reference and starting notes, and a sustained drone for practicing intonation against a fixed pitch. All three run in the browser with no install.",
+    "Use a metronome when timing is the question, a virtual keyboard when you need a starting note or a pitch reference, and a sustained drone when you want to hear your intonation against a fixed pitch. All three run in the browser with no install.",
   body: [
-    "The metronome is the one singers skip and instrumentalists never do. Rhythm problems in singing hide easily, because a phrase that drags feels expressive from the inside. A click removes the argument.",
-    "The virtual keyboard covers the small jobs that otherwise interrupt practice: finding a starting note, checking an interval, giving yourself a reference before an unaccompanied entry. It is also the fastest way to check whether a note you think you cannot reach is actually where you think it is.",
+    "The metronome is the one singers often skip. Rhythm problems in singing hide easily, because a phrase that drags feels expressive from the inside. A click removes the argument.",
+    "The virtual keyboard covers the small jobs that otherwise interrupt practice: finding a starting note, checking an interval, giving yourself a reference before an unaccompanied entry. It is also a quick way to check whether a note you think you cannot reach is actually where you think it is.",
     "The drone is the least familiar and the most useful for intonation. Holding a sustained tonic while you sing a scale or a phrase against it makes small pitch errors immediately audible as beating and roughness — the same technique string players and singers in unaccompanied traditions have always used.",
   ],
   howTo: {
     name: "How to use a drone to improve your intonation",
     intro:
-      "A drone is the closest thing to having a perfectly in-tune accompanist who never adjusts to your mistakes. Ten minutes of it exposes more pitch detail than an hour of singing alone.",
+      "A drone works like an accompanist who holds one pitch and never adjusts to your mistakes, so small pitch differences become something you can hear.",
     steps: [
       {
         title: "Set the drone to a comfortable tonic",
@@ -762,7 +775,7 @@ export const TOOLS_GUIDE: GuideContent = {
     },
     {
       q: "Can I use the piano to find my range?",
-      a: "You can, by playing notes and singing along until you run out at either end. The range test does the same thing faster and more accurately, because it detects the pitch you actually produced rather than the one you were aiming for.",
+      a: "You can, by playing notes and singing along until you run out at either end. The range test automates this: it detects the pitch you actually produced rather than the one you were aiming for, and marks the lowest and highest clear notes it heard in that session.",
     },
     {
       q: "Why does my voice sound rough against the drone?",
@@ -795,11 +808,13 @@ export const TOOLS_GUIDE: GuideContent = {
 
 export const STUDIO_GUIDE: GuideContent = {
   path: "/studio",
-  heading: "What live pitch feedback shows you",
+  // The page's <title>; the H2 below is the question the section answers.
+  pageName: "Pitch Training for Singers: Real-Time Feedback",
+  heading: "What does live pitch feedback show you?",
   answer:
-    "The pitch studio draws the note you are actually singing against the note you are aiming at, as you sing it. Seeing that gap in real time closes the loop that is normally invisible to a singer: you find out you are under the note while you can still do something about it, rather than afterwards.",
+    "Live pitch feedback shows the note you are actually singing against the note you are aiming at, while you sing it. Seeing that gap in real time closes a loop that is normally invisible to a singer: you find out you are under the note while you can still do something about it, rather than afterwards.",
   body: [
-    "Pitch detection works by finding the repeating period in the sound your voice makes and converting it to a frequency, then to a note name and a deviation in cents. A hundred cents is one semitone, so a reading of minus twenty cents means you are a fifth of a semitone flat — audible to most listeners, and invisible without a display.",
+    "Pitch detection works by finding the repeating period in the sound your voice makes and converting it to a frequency, then to a note name and a deviation in cents. A hundred cents is one semitone, so a reading of minus twenty cents means you are a fifth of a semitone flat.",
     "The value of the display is that it separates two problems singers usually confuse. If you can see the target and still cannot land on it, the issue is production — support, register, or effort. If you land on it fine once you can see it, the issue was hearing the target, which is ear training rather than technique.",
     // Not "everything runs on your device" — lib/sync.ts uploads Pro progress
     // state to /api/sync. The audio claim is still exact; the scope of it isn't.
@@ -838,7 +853,7 @@ export const STUDIO_GUIDE: GuideContent = {
   },
   beginner: {
     heading: "Seeing the note makes it learnable",
-    body: "If you have been told you sing off-key without ever being told which way, this is the fastest fix available. Most people are flat rather than randomly off, and flat is a correctable habit.",
+    body: "If you have been told you sing off-key without ever being told which way, the display answers that first. Misses often lean one way, frequently flat, and a consistent lean is a correctable habit.",
     points: [
       "Work in the middle of your range first, where the voice is most controllable",
       "If you are consistently under the note, try beginning the sound slightly above and letting it settle",
@@ -863,7 +878,7 @@ export const STUDIO_GUIDE: GuideContent = {
     },
     {
       q: "What are cents in pitch?",
-      a: "A cent is one hundredth of a semitone. Deviations under about five cents are inaudible to most listeners; twenty cents or more reads clearly as out of tune. The display shows cents so you can see errors long before they become obvious.",
+      a: "A cent is one hundredth of a semitone, so 100 cents make one semitone and a reading of −20 cents is a fifth of a semitone flat. How small a difference a listener notices depends on the listener, the sound and the musical context, so the display shows the number rather than a pass-or-fail line.",
     },
     {
       q: "Why is the pitch reading jumping around?",
@@ -905,13 +920,13 @@ export const STUDIO_GUIDE: GuideContent = {
 export const ANALYZE_GUIDE: GuideContent = {
   path: "/analyze",
   pageName: "Voice Spectrogram, Tone Analyzer and Vocal Load Tracker",
-  heading: "What a spectrogram shows a singer",
+  heading: "What does a spectrogram show a singer?",
   answer:
     "A spectrogram plots every frequency in your voice against time, so one sung note appears as a stack of horizontal lines: the fundamental at the bottom and its harmonics above. It shows the parts of singing you cannot hear from the inside — where a register changes, how fast a vibrato moves, and how much energy sits in the band that makes a voice carry.",
   body: [
     "Pitch tells you which note. Everything else about how a voice sounds — bright or dark, thin or full, ringing or swallowed — comes from the relative strength of the harmonics above that note, and that is what a spectrogram makes visible. Two singers on the same pitch produce completely different pictures.",
-    "The band around 3 kHz is worth knowing about. Trained classical voices tend to show a cluster of energy there, usually called the singer's formant, and it is the accepted explanation for how one voice is heard over an orchestra that is measurably louder. It is not a target to chase directly; it tends to appear as a by-product of an efficient, well-resonated tone.",
-    "Vocal load is a different question from how long you practiced. The vocal-dosimetry literature counts vibration cycles rather than minutes, because pitch decides how much work the folds do in a given second: a soprano rehearsing high for an hour has put her folds through several times the cycles of an hour spent low in the range. Counting cycles is what makes two practice days comparable.",
+    "The band around 3 kHz is worth knowing about. Many trained classical voices show a cluster of energy there, usually called the singer's formant, and it is the standard explanation for how one unamplified voice is heard over an orchestra. It is not a target to chase directly; it tends to appear as a by-product of an efficient, well-resonated tone.",
+    "Vocal load is a different question from how long you practiced. The vocal-dosimetry literature counts vibration cycles rather than minutes, because pitch decides how many cycles the folds complete in a given second. The folds open and close once per cycle of the sung frequency, so an hour of voicing at A4 (440 Hz) is 1,584,000 cycles, four times the 396,000 of an hour at A2 (110 Hz). Counting cycles is what makes two practice days comparable.",
   ],
   howTo: {
     name: "How to read your voice on a spectrogram",
@@ -975,7 +990,7 @@ export const ANALYZE_GUIDE: GuideContent = {
     },
     {
       q: "What is vocal dose and why count cycles instead of minutes?",
-      a: "Vocal dose measures how much work the vocal folds have done. Cycle dose counts vibration cycles — pitch multiplied by the time you were actually voicing — because a minute sung high puts the folds through far more cycles than a minute sung low. Minutes alone treat those as equal.",
+      a: "Vocal dose measures how much work the vocal folds have done. Cycle dose counts vibration cycles — pitch multiplied by the time you were actually voicing — because a minute sung high puts the folds through more cycles than a minute sung low: a minute at A4 (440 Hz) is four times the cycles of a minute at A2 (110 Hz). Minutes alone treat those as equal.",
     },
     {
       q: "Does this measure how loud I am in decibels?",
@@ -1029,3 +1044,21 @@ export const ANALYZE_GUIDE: GuideContent = {
     ],
   },
 };
+
+/**
+ * Every tool guide, in the order the practice rooms are usually met: test,
+ * pitch, warm up, ear, breath, songs, record, tools, analyze. One list so the
+ * machine-readable reference (/llms-full.txt) and its tests cover exactly the
+ * guides the rooms render, and a new guide cannot be left out of either.
+ */
+export const TOOL_GUIDES: readonly GuideContent[] = [
+  RANGE_GUIDE,
+  STUDIO_GUIDE,
+  WARMUPS_GUIDE,
+  EAR_GUIDE,
+  BREATH_GUIDE,
+  SONGS_GUIDE,
+  RECORDER_GUIDE,
+  TOOLS_GUIDE,
+  ANALYZE_GUIDE,
+];

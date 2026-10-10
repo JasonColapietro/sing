@@ -200,10 +200,12 @@ const VIBRATO: Program = {
   ],
 };
 
-const HIGH_A = day("Sirens and the tenth", routine("quick"), routine("range"), routine("high-notes"));
-const HIGH_B = day("Breath, the ten, the tenth", breath("quick"), routine("daily"), routine("high-notes"));
+// Work above the octave ends on the cool-down wherever the day has room for it
+// inside twenty minutes; the full set's day already closes on a straw slide.
+const HIGH_A = day("Sirens and the tenth", routine("quick"), routine("range"), routine("high-notes"), routine("cooldown"));
+const HIGH_B = day("Breath, the ten, the tenth", breath("quick"), routine("daily"), routine("high-notes"), routine("cooldown"));
 const HIGH_C = day("The full set, then up", routine("full"), routine("high-notes"));
-const HIGH_CHECK = day("Range check-in", range, routine("quick"), routine("high-notes"));
+const HIGH_CHECK = day("Range check-in", range, routine("quick"), routine("high-notes"), routine("cooldown"));
 const HIGH_WEEK = [HIGH_A, HIGH_B, HIGH_C, rest(), HIGH_A, HIGH_B, rest()];
 
 const HIGH_NOTES: Program = {
@@ -215,12 +217,12 @@ const HIGH_NOTES: Program = {
   weeks: 6,
   pro: false,
   days: [
-    ...week(HIGH_WEEK, { 0: day("Where you start", range, routine("quick"), routine("high-notes")) }),
+    ...week(HIGH_WEEK, { 0: day("Where you start", range, routine("quick"), routine("high-notes"), routine("cooldown")) }),
     ...week(HIGH_WEEK, { 6: HIGH_CHECK }),
     ...week(HIGH_WEEK),
     ...week(HIGH_WEEK, { 6: HIGH_CHECK }),
     ...week(HIGH_WEEK),
-    ...week(HIGH_WEEK, { 6: day("Final check-in", range, routine("daily"), routine("high-notes")) }),
+    ...week(HIGH_WEEK, { 6: day("Final check-in", range, routine("daily"), routine("high-notes"), routine("cooldown")) }),
   ],
 };
 

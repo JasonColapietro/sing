@@ -155,3 +155,39 @@ describe("adaptive warmups", () => {
     expect(recentWarmupResults([])).toBeNull();
   });
 });
+
+describe("session shape", () => {
+  it("ships a free cool-down routine of small, downward drills", () => {
+    const r = routineById("cooldown")!;
+    expect(r).not.toBeNull();
+    expect(r.pro).toBe(false);
+    for (const s of r.steps) {
+      const ex = stepExercise(s);
+      expect(ex.tier, ex.id).toBe("beginner");
+      // Every pattern starts at or above where it ends: nothing climbs.
+      const notes = ex.buildSteps(60).flat();
+      expect(notes[0], ex.id).toBeGreaterThanOrEqual(notes[notes.length - 1]);
+      expect(Math.max(...notes) - Math.min(...notes), ex.id).toBeLessThanOrEqual(7);
+    }
+    expect(routineMinutes(r)).toBeGreaterThanOrEqual(2);
+    expect(routineMinutes(r)).toBeLessThanOrEqual(5);
+  });
+
+  it("ends the longer and harder sets on an easy descending sound", () => {
+    for (const id of ["full", "range", "agility", "high-notes", "daily"]) {
+      const r = routineById(id)!;
+      const last = stepExercise(r.steps[r.steps.length - 1]);
+      const notes = last.buildSteps(60).flat();
+      expect(notes[0], `${id} ends on ${last.id}`).toBeGreaterThan(notes[notes.length - 1]);
+      expect(last.tier, `${id} ends on ${last.id}`).toBe("beginner");
+    }
+  });
+
+  it("never recommends the cool-down as a warmup", () => {
+    for (const hour of [6, 9, 12, 20]) {
+      for (const practicedToday of [false, true]) {
+        expect(recommendRoutine({ practicedToday, hour }).id).not.toBe("cooldown");
+      }
+    }
+  });
+});

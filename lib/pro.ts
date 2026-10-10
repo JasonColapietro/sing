@@ -12,6 +12,7 @@ import {
   PRO_EXERCISES,
   PRO_PACK_COUNT,
   SINGER_COUNT,
+  GLOSSARY_COUNT,
 } from "./pro-inventory";
 
 export type { CheckoutPlan, ProPlan, Entitlement };
@@ -411,7 +412,7 @@ export const PLAN_ROWS: Array<{
   {
     label: "Guided practice (warmups, ear, breath, songs)",
     free: "3 minutes a day",
-    pro: "Unlimited",
+    pro: "No daily limit",
   },
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
@@ -433,5 +434,5 @@ export const PLAN_ROWS: Array<{
   // so — the single largest free asset in the product, invisible on the page
   // whose whole job is to argue that free is generous.
   { label: `Famous voices (all ${SINGER_COUNT})`, free: "Every singer page", pro: "+ the Atlas chapters behind them" },
-  { label: "Glossary (31 terms)", free: "Included", pro: "Included" },
+  { label: `Glossary (${GLOSSARY_COUNT} terms)`, free: "Included", pro: "Included" },
 ];

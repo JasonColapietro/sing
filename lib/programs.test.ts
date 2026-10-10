@@ -737,3 +737,19 @@ describe("sustain readings keep the timer's tenths", () => {
     expect(programReadings(program, r, log, [])[0].sustainSec).toBe(12);
   });
 });
+
+describe("cool-downs", () => {
+  it("ends every high-notes practice day on a descending, beginner-tier sound", () => {
+    const p = programById("high-notes-6w")!;
+    p.days.forEach((d, i) => {
+      if (isRestDay(d)) return;
+      const last = d.items[d.items.length - 1];
+      expect(last.kind, `day ${i + 1}`).toBe("routine");
+      const r = routineById((last as { id: string }).id)!;
+      const ex = stepExercise(r.steps[r.steps.length - 1]);
+      const notes = ex.buildSteps(60).flat();
+      expect(notes[0], `day ${i + 1} ends on ${ex.id}`).toBeGreaterThan(notes[notes.length - 1]);
+      expect(ex.tier, `day ${i + 1} ends on ${ex.id}`).toBe("beginner");
+    });
+  });
+});

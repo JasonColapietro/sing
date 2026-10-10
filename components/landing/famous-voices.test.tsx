@@ -60,4 +60,14 @@ describe("homepage famous voices", () => {
     expect(card).toContain(`Reported reference span: ${range}`);
     expect(card).not.toContain(`>${catalogType}<`);
   });
+
+  it("stacks reviewed rows so the evidence sentence gets the card's full width", () => {
+    const html = renderToStaticMarkup(<FamousVoices />);
+    const anchor = (slug: string) =>
+      html.match(new RegExp(`<a[^>]*href="/singers/${slug}"[^>]*>`))?.[0] ?? "";
+
+    expect(anchor("sam-smith")).toContain("flex-col");
+    expect(anchor("freddie-mercury")).not.toContain("flex-col");
+    expect(anchor("freddie-mercury")).toContain("justify-between");
+  });
 });
