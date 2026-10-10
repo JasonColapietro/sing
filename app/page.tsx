@@ -10,6 +10,7 @@ import { LinkButton, SectionLabel } from "@/components/ui";
 import { FamousVoices } from "@/components/landing/famous-voices";
 import ProVisual from "@/components/pro/pro-visual";
 import {
+  AnalyzeGlyph,
   BreathGlyph,
   EarGlyph,
   ProgressGlyph,
@@ -32,7 +33,7 @@ const FEATURES = [
     href: "/analyze",
     label: "Voice spectrogram and tone analyzer",
     desc: "See your voice on a live spectrogram and explore your tone and harmonics.",
-    Glyph: StudioGlyph,
+    Glyph: AnalyzeGlyph,
   },
   {
     href: "/studio",
@@ -49,7 +50,7 @@ const FEATURES = [
   {
     href: "/range",
     label: "Range test",
-    desc: "Find your lowest and highest notes and get your voice type.",
+    desc: "Find your lowest and highest notes and get a voice-type estimate.",
     Glyph: RangeGlyph,
   },
   {
@@ -101,7 +102,7 @@ const FEATURES = [
 // set their own canonical (e.g. /singers/[slug]) are not overridden.
 const HOME_TITLE = "Online Singing Practice with Live Pitch | Suede Sing";
 const HOME_DESCRIPTION =
-  "Practice singing online with live pitch feedback, warmups and songs. Try the free pitch meter and vocal range test; guided practice has a daily free limit.";
+  "Online singing practice with live pitch feedback, warmups and songs. The pitch meter and range test are free; guided practice is 3 free minutes a day.";
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
@@ -207,14 +208,16 @@ export default function Home() {
         />
         <div className="relative max-w-2xl">
           <p className="text-label font-extrabold uppercase tracking-[0.14em] text-pink">
-            Singing practice tools from Suede AI
+            Suede Sing · from Suede AI
           </p>
           <h1 className="mt-3 text-[clamp(2.4rem,7vw,4.25rem)] leading-[1.02]">
-            Practice singing with live pitch feedback
+            Online singing practice with live pitch feedback
           </h1>
           <p className="mt-4 max-w-xl text-lg text-mut">
-            Sing into your mic and see the note you are singing. Explore warmups,
-            practice songs in your key, or test your vocal range in your browser.
+            Suede Sing is a singing practice app that runs in your browser: sing
+            into your mic and see the note you are singing, in real time. Warm up
+            with guided singing exercises, practice songs in your key, or take
+            the vocal range test.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <LinkButton href="/range" variant="violet" size="lg">
@@ -225,8 +228,9 @@ export default function Home() {
             </LinkButton>
           </div>
           <p className="mt-5 text-sm text-dim">
-            The pitch meter and range test are free. Guided practice includes three
-            free minutes a day. No install; audio stays on your device.
+            The pitch meter and range test are free with no time limit. Guided
+            practice includes three free minutes a day. No install; audio stays
+            on your device.
           </p>
         </div>
       </section>
@@ -234,7 +238,7 @@ export default function Home() {
       {/* Today */}
       <section className="mt-10" aria-labelledby="today">
         <h2 id="today" className="text-2xl sm:text-3xl">
-          Today&apos;s practice
+          Start today&apos;s practice
         </h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           <Link
@@ -274,10 +278,10 @@ export default function Home() {
       <section className="mt-12" aria-labelledby="songs">
         <div className="flex items-end justify-between gap-4">
           <h2 id="songs" className="text-2xl sm:text-3xl">
-            Sing a song
+            Sing a song in your key
           </h2>
           <Link href="/songs" className="text-sm font-bold text-violet-ink hover:text-ink">
-            See all {SONGS.length}
+            See all {SONGS.length} practice songs
           </Link>
         </div>
         <ul className="no-scrollbar -mx-4 mt-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6">
@@ -304,7 +308,7 @@ export default function Home() {
       {/* Lessons */}
       <section className="mt-12" aria-labelledby="lessons">
         <h2 id="lessons" className="text-2xl sm:text-3xl">
-          Lessons
+          Vocal exercises and lessons
         </h2>
         <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {LESSONS.map(({ href, label, desc, Glyph }) => (
@@ -326,7 +330,7 @@ export default function Home() {
       {/* Tools */}
       <section className="mt-12" aria-labelledby="tools">
         <h2 id="tools" className="text-2xl sm:text-3xl">
-          Tools
+          Singing practice tools
         </h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {TOOLS.map(({ href, label, desc, Glyph }) => (

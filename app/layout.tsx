@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     template: "%s · Suede Sing",
   },
   description:
-    "Practice singing online with live pitch feedback, warmups and songs. Try the free pitch meter and vocal range test; guided practice has a daily free limit.",
+    "Online singing practice with live pitch feedback, warmups and songs. The pitch meter and range test are free; guided practice is 3 free minutes a day.",
 };
 
 export const viewport: Viewport = {

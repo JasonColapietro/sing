@@ -11,7 +11,8 @@ import type { GuideContent } from "@/components/guide";
 
 export const RANGE_GUIDE: GuideContent = {
   path: "/range",
-  pageName: "Free Vocal Range Test and Voice Type Finder",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Vocal Range Test & Voice Type Estimate",
   heading: "What a vocal range test actually measures",
   answer:
     "Your vocal range is the span between the lowest and highest notes you can sing with a clear, usable tone. This online range test listens as you slide down and then up, then reports both notes, the size of the span, and the voice type that overlaps it most closely.",
@@ -149,6 +150,8 @@ export const RANGE_GUIDE: GuideContent = {
 
 export const WARMUPS_GUIDE: GuideContent = {
   path: "/warmups",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Vocal Warm-Up Exercises: Guided Singing Warmups",
   heading: "Why singers warm up, and what a warmup is doing",
   answer:
     "A vocal warmup gradually brings blood flow, breath coordination and register transitions online before you ask the voice for anything difficult. It is closer to a pianist's scales than to a runner's stretching: the point is coordination, not loosening. Ten minutes of gentle, connected sound does most of the work.",
@@ -256,6 +259,8 @@ export const WARMUPS_GUIDE: GuideContent = {
 
 export const BREATH_GUIDE: GuideContent = {
   path: "/breath",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Breathing Exercises for Singers: Breath Support",
   heading: "Breath support, in plain terms",
   answer:
     "Breath support is the steady, controlled release of air that keeps a sung note even in pitch and volume. Singers work on it because almost every audible problem in a phrase — wavering pitch, a note that thins at the end, running out mid-line — traces back to how the air was managed rather than to the throat.",
@@ -363,6 +368,8 @@ export const BREATH_GUIDE: GuideContent = {
 
 export const EAR_GUIDE: GuideContent = {
   path: "/ear-training",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Ear Training for Singers: Pitch and Intervals",
   heading: "What ear training does for a singer",
   answer:
     "Ear training is practice at hearing pitch relationships accurately and reproducing them. For a singer it is the other half of pitch accuracy: your voice can only land on a note you can hear in advance, so a sharper ear directly produces better intonation.",
@@ -470,6 +477,8 @@ export const EAR_GUIDE: GuideContent = {
 
 export const SONGS_GUIDE: GuideContent = {
   path: "/songs",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Public Domain Songs to Sing with Pitch Feedback",
   heading: "Practicing songs with pitch feedback",
   answer:
     "Song practice is where technique either shows up or does not. Singing a known melody with live pitch feedback shows you exactly which notes and which phrases drift, which is information that no amount of listening back to a recording gives you as precisely.",
@@ -577,8 +586,8 @@ export const SONGS_GUIDE: GuideContent = {
 
 export const RECORDER_GUIDE: GuideContent = {
   path: "/recorder",
-  // The page's <title>. The H2 below is a section of the page, not its name.
-  pageName: "Voice Recorder for Singing Practice",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Voice Recorder for Singing: Compare Your Takes",
   heading: "Why singers record themselves",
   answer:
     "You cannot hear your own voice accurately while producing it — bone conduction, and the fact that you are busy singing, both get in the way. Recording a take and listening back is the only reliable way to hear what an audience hears, and it is the fastest feedback loop available to a singer without a teacher.",
@@ -686,8 +695,8 @@ export const RECORDER_GUIDE: GuideContent = {
 
 export const TOOLS_GUIDE: GuideContent = {
   path: "/tools",
-  // The page's <title>. The H2 below is a section of the page, not its name.
-  pageName: "Singing Practice Tools: Metronome, Keyboard and Drone",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Singing Practice Tools: Metronome, Piano, Drone",
   heading: "A metronome, a keyboard and a drone — and when each one helps",
   answer:
     "These are the three reference tools most vocal practice actually needs: a metronome for timing, a virtual piano for pitch reference and starting notes, and a sustained drone for practicing intonation against a fixed pitch. All three run in the browser with no install.",
@@ -795,6 +804,8 @@ export const TOOLS_GUIDE: GuideContent = {
 
 export const STUDIO_GUIDE: GuideContent = {
   path: "/studio",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Pitch Training for Singers: Real-Time Feedback",
   heading: "What live pitch feedback shows you",
   answer:
     "The pitch studio draws the note you are actually singing against the note you are aiming at, as you sing it. Seeing that gap in real time closes the loop that is normally invisible to a singer: you find out you are under the note while you can still do something about it, rather than afterwards.",
@@ -904,7 +915,8 @@ export const STUDIO_GUIDE: GuideContent = {
 
 export const ANALYZE_GUIDE: GuideContent = {
   path: "/analyze",
-  pageName: "Voice Spectrogram, Tone Analyzer and Vocal Load Tracker",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Voice Spectrogram & Tone Analyzer Online",
   heading: "What a spectrogram shows a singer",
   answer:
     "A spectrogram plots every frequency in your voice against time, so one sung note appears as a stack of horizontal lines: the fundamental at the bottom and its harmonics above. It shows the parts of singing you cannot hear from the inside — where a register changes, how fast a vibrato moves, and how much energy sits in the band that makes a voice carry.",
