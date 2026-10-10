@@ -367,7 +367,7 @@ export function WarmupsClient() {
                 browser and never leaves your device.
               </p>
               <p className="mt-2 max-w-xl text-sm text-rec">
-                Sing at a comfortable volume. Stop if a note causes pain or strain.
+                Sing at a comfortable volume. Stop if a note hurts or feels strained, and rest if your voice turns hoarse or scratchy.
               </p>
               <div className="mt-5">
                 <Button variant="rec" size="lg" onClick={startFromGate}>

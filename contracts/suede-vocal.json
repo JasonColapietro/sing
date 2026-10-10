@@ -572,11 +572,16 @@
             "cap": 10
           },
           {
+            "drill": "cue",
+            "reps": 4,
+            "holdSec": 4
+          },
+          {
             "drill": "sustain",
             "attempts": 3
           }
         ],
-        "seconds": 415.5,
+        "seconds": 447.5,
         "needsMic": true
       }
     ]
@@ -591,11 +596,11 @@
     ],
     "exercises": [
       {
-        "id": "five-note-scale",
-        "title": "Five-note scale",
+        "id": "morning-hum",
+        "title": "First hum",
         "tier": "beginner",
         "free": true,
-        "noteDur": 0.5,
+        "noteDur": 0.8,
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
@@ -603,17 +608,11 @@
           [
             0,
             2,
-            4,
-            5,
-            7,
-            5,
-            4,
-            2,
             0
           ]
         ],
-        "segmentCount": 9,
-        "patternSeconds": 5.14
+        "segmentCount": 3,
+        "patternSeconds": 2.56
       },
       {
         "id": "humming-thirds",
@@ -637,195 +636,26 @@
         "patternSeconds": 3.32
       },
       {
-        "id": "descending-five",
-        "title": "Descending five",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 0.55,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            7,
-            5,
-            4,
-            2,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.07
-      },
-      {
-        "id": "legato-triad",
-        "title": "Legato triad",
+        "id": "morning-lip-trill",
+        "title": "Lip-trill wake-up",
         "tier": "beginner",
         "free": true,
         "noteDur": 0.7,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            4,
-            7,
-            4,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.82
-      },
-      {
-        "id": "sustained-hold",
-        "title": "Sustained hold",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 3.5,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0
-          ]
-        ],
-        "segmentCount": 1,
-        "patternSeconds": 3.5
-      },
-      {
-        "id": "octave-arpeggio",
-        "title": "Octave arpeggio",
-        "tier": "intermediate",
-        "free": true,
-        "noteDur": 0.5,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            4,
-            7,
-            12,
-            7,
-            4,
-            0
-          ]
-        ],
-        "segmentCount": 7,
-        "patternSeconds": 3.98
-      },
-      {
-        "id": "minor-scale",
-        "title": "Minor five-note scale",
-        "tier": "intermediate",
-        "free": true,
-        "noteDur": 0.5,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            2,
-            3,
-            5,
-            7,
-            5,
-            3,
-            2,
-            0
-          ]
-        ],
-        "segmentCount": 9,
-        "patternSeconds": 5.14
-      },
-      {
-        "id": "ng-siren-fifth",
-        "title": "Ng siren to the fifth",
-        "tier": "intermediate",
-        "free": true,
-        "noteDur": 0.9,
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
         "steps": [
           [
             0,
-            7
+            4
           ],
           [
-            7,
+            4,
             0
           ]
         ],
         "segmentCount": 2,
-        "patternSeconds": 3.68
-      },
-      {
-        "id": "chromatic-neighbor",
-        "title": "Chromatic neighbor",
-        "tier": "intermediate",
-        "free": true,
-        "noteDur": 0.75,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            1,
-            0
-          ]
-        ],
-        "segmentCount": 3,
-        "patternSeconds": 2.41
-      },
-      {
-        "id": "octave-siren",
-        "title": "Octave siren",
-        "tier": "advanced",
-        "free": true,
-        "noteDur": 1.2,
-        "glide": true,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            12
-          ],
-          [
-            12,
-            0
-          ]
-        ],
-        "segmentCount": 2,
-        "patternSeconds": 4.88
-      },
-      {
-        "id": "sixth-leaps",
-        "title": "Major sixth leaps",
-        "tier": "advanced",
-        "free": true,
-        "noteDur": 0.65,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            9,
-            0,
-            9,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.57
+        "patternSeconds": 2.88
       },
       {
         "id": "lip-trill-scale",
@@ -876,6 +706,303 @@
         "patternSeconds": 4.78
       },
       {
+        "id": "morning-siren",
+        "title": "Easy fourth siren",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 0.6,
+        "glide": true,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            5
+          ],
+          [
+            5,
+            0
+          ]
+        ],
+        "segmentCount": 2,
+        "patternSeconds": 2.48
+      },
+      {
+        "id": "morning-sigh",
+        "title": "Sighing slide",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 1,
+        "glide": true,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 2
+      },
+      {
+        "id": "descending-five",
+        "title": "Descending five",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 0.55,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.07
+      },
+      {
+        "id": "hoo-four-note",
+        "title": "Hoo descent",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 1,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            12,
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 4,
+        "patternSeconds": 4.24
+      },
+      {
+        "id": "morning-three-note",
+        "title": "Small three-note climb",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.32
+      },
+      {
+        "id": "five-note-scale",
+        "title": "Five-note scale",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 0.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            2,
+            4,
+            5,
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 9,
+        "patternSeconds": 5.14
+      },
+      {
+        "id": "legato-triad",
+        "title": "Legato triad",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 0.7,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            4,
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.82
+      },
+      {
+        "id": "morning-sustain",
+        "title": "Soft sustain",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 2.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 2.5
+      },
+      {
+        "id": "sustained-hold",
+        "title": "Sustained hold",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 3.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 3.5
+      },
+      {
+        "id": "fry-onset",
+        "title": "Creak to tone",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 2.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 1.5,
+        "steps": [
+          [
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 4
+      },
+      {
+        "id": "quiet-hum-descent",
+        "title": "Quiet hum descent",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 0.8,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 3,
+        "patternSeconds": 2.56
+      },
+      {
+        "id": "soft-trill-slide",
+        "title": "Soft lip-trill slide",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 1,
+        "glide": true,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 2
+      },
+      {
+        "id": "straw-slide-down",
+        "title": "Straw cool-down",
+        "tier": "beginner",
+        "free": true,
+        "noteDur": 1,
+        "glide": true,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            7,
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 2
+      },
+      {
+        "id": "ng-siren-fifth",
+        "title": "Ng siren to the fifth",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 0.9,
+        "glide": true,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            7
+          ],
+          [
+            7,
+            0
+          ]
+        ],
+        "segmentCount": 2,
+        "patternSeconds": 3.68
+      },
+      {
+        "id": "tongue-trill-descent",
+        "title": "Tongue-trill descent",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.32
+      },
+      {
         "id": "n-hum-scale",
         "title": "N run",
         "tier": "intermediate",
@@ -905,45 +1032,33 @@
         "patternSeconds": 4.86
       },
       {
-        "id": "hoo-four-note",
-        "title": "Hoo descent",
-        "tier": "beginner",
+        "id": "v-double-arpeggio",
+        "title": "V double arpeggio",
+        "tier": "intermediate",
         "free": true,
-        "noteDur": 1,
+        "noteDur": 0.3,
         "glide": false,
-        "ladder": "down",
+        "ladder": "up",
         "unscoredLeadSec": 0,
         "steps": [
           [
+            0,
+            4,
+            7,
+            12,
+            7,
+            4,
+            0,
+            4,
+            7,
             12,
             7,
             4,
             0
           ]
         ],
-        "segmentCount": 4,
-        "patternSeconds": 4.24
-      },
-      {
-        "id": "tongue-trill-descent",
-        "title": "Tongue-trill descent",
-        "tier": "intermediate",
-        "free": true,
-        "noteDur": 0.6,
-        "glide": false,
-        "ladder": "down",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            7,
-            5,
-            4,
-            2,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.32
+        "segmentCount": 13,
+        "patternSeconds": 4.86
       },
       {
         "id": "hung-ee-mm",
@@ -987,6 +1102,96 @@
         "patternSeconds": 9.42
       },
       {
+        "id": "octave-arpeggio",
+        "title": "Octave arpeggio",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 0.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            4,
+            7,
+            12,
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 7,
+        "patternSeconds": 3.98
+      },
+      {
+        "id": "reverse-arpeggio",
+        "title": "Reverse arpeggio",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 0.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            12,
+            7,
+            4,
+            0,
+            4,
+            7,
+            12
+          ]
+        ],
+        "segmentCount": 7,
+        "patternSeconds": 3.98
+      },
+      {
+        "id": "minor-scale",
+        "title": "Minor five-note scale",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 0.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            2,
+            3,
+            5,
+            7,
+            5,
+            3,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 9,
+        "patternSeconds": 5.14
+      },
+      {
+        "id": "chromatic-neighbor",
+        "title": "Chromatic neighbor",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 0.75,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "segmentCount": 3,
+        "patternSeconds": 2.41
+      },
+      {
         "id": "gug-staccato",
         "title": "Staccato gug",
         "tier": "intermediate",
@@ -1016,56 +1221,187 @@
         "patternSeconds": 4.21
       },
       {
-        "id": "v-double-arpeggio",
-        "title": "V double arpeggio",
+        "id": "swell-and-fade",
+        "title": "Swell and fade",
         "tier": "intermediate",
         "free": true,
-        "noteDur": 0.3,
+        "noteDur": 5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 5
+      },
+      {
+        "id": "vibrato-hold",
+        "title": "Vibrato hold",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 4.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 4.5
+      },
+      {
+        "id": "vibrato-float-high",
+        "title": "Vibrato on the fourth",
+        "tier": "intermediate",
+        "free": true,
+        "noteDur": 4.5,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            5
+          ]
+        ],
+        "segmentCount": 1,
+        "patternSeconds": 4.5
+      },
+      {
+        "id": "octave-siren",
+        "title": "Octave siren",
+        "tier": "advanced",
+        "free": true,
+        "noteDur": 1.2,
+        "glide": true,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            12
+          ],
+          [
+            12,
+            0
+          ]
+        ],
+        "segmentCount": 2,
+        "patternSeconds": 4.88
+      },
+      {
+        "id": "gee-octave",
+        "title": "Gee to the octave",
+        "tier": "advanced",
+        "free": true,
+        "noteDur": 0.6,
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
         "steps": [
           [
             0,
-            4,
             7,
             12,
             7,
-            4,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.32
+      },
+      {
+        "id": "sixth-leaps",
+        "title": "Major sixth leaps",
+        "tier": "advanced",
+        "free": true,
+        "noteDur": 0.65,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
             0,
-            4,
-            7,
+            9,
+            0,
+            9,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.57
+      },
+      {
+        "id": "high-siren-tenth",
+        "title": "Siren to the tenth",
+        "tier": "advanced",
+        "free": true,
+        "noteDur": 1.3,
+        "glide": true,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            16
+          ],
+          [
+            16,
+            0
+          ]
+        ],
+        "segmentCount": 2,
+        "patternSeconds": 5.28
+      },
+      {
+        "id": "high-float-descent",
+        "title": "Top-down float",
+        "tier": "advanced",
+        "free": true,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "down",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            16,
             12,
             7,
             4,
             0
           ]
         ],
-        "segmentCount": 13,
-        "patternSeconds": 4.86
+        "segmentCount": 5,
+        "patternSeconds": 3.32
       },
       {
-        "id": "reverse-arpeggio",
-        "title": "Reverse arpeggio",
-        "tier": "intermediate",
+        "id": "high-arpeggio-tenth",
+        "title": "Arpeggio to the tenth",
+        "tier": "advanced",
         "free": true,
-        "noteDur": 0.5,
+        "noteDur": 0.45,
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
         "steps": [
           [
-            12,
-            7,
-            4,
             0,
             4,
             7,
-            12
+            12,
+            16,
+            12,
+            7,
+            4,
+            0
           ]
         ],
-        "segmentCount": 7,
-        "patternSeconds": 3.98
+        "segmentCount": 9,
+        "patternSeconds": 4.69
       },
       {
         "id": "agility-run",
@@ -1123,238 +1459,10 @@
         "patternSeconds": 2.2
       },
       {
-        "id": "gee-octave",
-        "title": "Gee to the octave",
-        "tier": "advanced",
-        "free": true,
-        "noteDur": 0.6,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            7,
-            12,
-            7,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.32
-      },
-      {
-        "id": "morning-lip-trill",
-        "title": "Lip-trill wake-up",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 0.7,
-        "glide": true,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            4
-          ],
-          [
-            4,
-            0
-          ]
-        ],
-        "segmentCount": 2,
-        "patternSeconds": 2.88
-      },
-      {
-        "id": "morning-hum",
-        "title": "First hum",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 0.8,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            2,
-            0
-          ]
-        ],
-        "segmentCount": 3,
-        "patternSeconds": 2.56
-      },
-      {
-        "id": "morning-three-note",
-        "title": "Small three-note climb",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 0.6,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            2,
-            4,
-            2,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.32
-      },
-      {
-        "id": "morning-siren",
-        "title": "Easy fourth siren",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 0.6,
-        "glide": true,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            5
-          ],
-          [
-            5,
-            0
-          ]
-        ],
-        "segmentCount": 2,
-        "patternSeconds": 2.48
-      },
-      {
-        "id": "morning-sigh",
-        "title": "Sighing slide",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 1,
-        "glide": true,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            4,
-            0
-          ]
-        ],
-        "segmentCount": 1,
-        "patternSeconds": 2
-      },
-      {
-        "id": "morning-sustain",
-        "title": "Soft sustain",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 2.5,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0
-          ]
-        ],
-        "segmentCount": 1,
-        "patternSeconds": 2.5
-      },
-      {
-        "id": "vibrato-hold",
-        "title": "Vibrato hold",
+        "id": "belt-nay-speech",
+        "title": "Speech-level nays",
         "tier": "intermediate",
-        "free": true,
-        "noteDur": 4.5,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0
-          ]
-        ],
-        "segmentCount": 1,
-        "patternSeconds": 4.5
-      },
-      {
-        "id": "vibrato-float-high",
-        "title": "Vibrato on the fourth",
-        "tier": "intermediate",
-        "free": true,
-        "noteDur": 4.5,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            5
-          ]
-        ],
-        "segmentCount": 1,
-        "patternSeconds": 4.5
-      },
-      {
-        "id": "quiet-hum-descent",
-        "title": "Quiet hum descent",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 0.8,
-        "glide": false,
-        "ladder": "down",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            4,
-            2,
-            0
-          ]
-        ],
-        "segmentCount": 3,
-        "patternSeconds": 2.56
-      },
-      {
-        "id": "soft-trill-slide",
-        "title": "Soft lip-trill slide",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 1,
-        "glide": true,
-        "ladder": "down",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            4,
-            0
-          ]
-        ],
-        "segmentCount": 1,
-        "patternSeconds": 2
-      },
-      {
-        "id": "fry-onset",
-        "title": "Creak to tone",
-        "tier": "beginner",
-        "free": true,
-        "noteDur": 2.5,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 1.5,
-        "steps": [
-          [
-            0
-          ]
-        ],
-        "segmentCount": 1,
-        "patternSeconds": 4
-      },
-      {
-        "id": "high-arpeggio-tenth",
-        "title": "Arpeggio to the tenth",
-        "tier": "advanced",
-        "free": true,
+        "free": false,
         "noteDur": 0.45,
         "glide": false,
         "ladder": "up",
@@ -1362,61 +1470,14 @@
         "steps": [
           [
             0,
-            4,
-            7,
-            12,
-            16,
-            12,
-            7,
-            4,
-            0
-          ]
-        ],
-        "segmentCount": 9,
-        "patternSeconds": 4.69
-      },
-      {
-        "id": "high-siren-tenth",
-        "title": "Siren to the tenth",
-        "tier": "advanced",
-        "free": true,
-        "noteDur": 1.3,
-        "glide": true,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
             0,
-            16
-          ],
-          [
-            16,
-            0
-          ]
-        ],
-        "segmentCount": 2,
-        "patternSeconds": 5.28
-      },
-      {
-        "id": "high-float-descent",
-        "title": "Top-down float",
-        "tier": "advanced",
-        "free": true,
-        "noteDur": 0.6,
-        "glide": false,
-        "ladder": "down",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            16,
-            12,
-            7,
-            4,
+            0,
+            0,
             0
           ]
         ],
         "segmentCount": 5,
-        "patternSeconds": 3.32
+        "patternSeconds": 2.57
       },
       {
         "id": "belt-hey-thirds",
@@ -1439,21 +1500,24 @@
         "patternSeconds": 2.64
       },
       {
-        "id": "belt-forte-ah",
-        "title": "Forte ah hold",
+        "id": "belt-bah-bursts",
+        "title": "Bah bursts",
         "tier": "intermediate",
         "free": false,
-        "noteDur": 3,
+        "noteDur": 0.4,
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
         "steps": [
           [
-            0
+            0,
+            2,
+            4,
+            5
           ]
         ],
-        "segmentCount": 1,
-        "patternSeconds": 3
+        "segmentCount": 4,
+        "patternSeconds": 1.84
       },
       {
         "id": "belt-yah-triad",
@@ -1477,65 +1541,21 @@
         "patternSeconds": 3.07
       },
       {
-        "id": "belt-octave-drop",
-        "title": "Octave-drop hey",
+        "id": "belt-forte-ah",
+        "title": "Forte ah hold",
         "tier": "intermediate",
         "free": false,
-        "noteDur": 0.6,
+        "noteDur": 3,
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
         "steps": [
           [
-            12,
-            0,
-            12,
             0
           ]
         ],
-        "segmentCount": 4,
-        "patternSeconds": 2.64
-      },
-      {
-        "id": "belt-nay-speech",
-        "title": "Speech-level nays",
-        "tier": "intermediate",
-        "free": false,
-        "noteDur": 0.45,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            0,
-            0,
-            0,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 2.57
-      },
-      {
-        "id": "belt-bah-bursts",
-        "title": "Bah bursts",
-        "tier": "intermediate",
-        "free": false,
-        "noteDur": 0.4,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            2,
-            4,
-            5
-          ]
-        ],
-        "segmentCount": 4,
-        "patternSeconds": 1.84
+        "segmentCount": 1,
+        "patternSeconds": 3
       },
       {
         "id": "belt-fifth-hold",
@@ -1554,6 +1574,26 @@
         ],
         "segmentCount": 2,
         "patternSeconds": 4.08
+      },
+      {
+        "id": "belt-octave-drop",
+        "title": "Octave-drop hey",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.6,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            12,
+            0,
+            12,
+            0
+          ]
+        ],
+        "segmentCount": 4,
+        "patternSeconds": 2.64
       },
       {
         "id": "belt-hah-descent",
@@ -1575,6 +1615,68 @@
         ],
         "segmentCount": 5,
         "patternSeconds": 2.82
+      },
+      {
+        "id": "head-hum-five",
+        "title": "Hummed five down",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.55,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            7,
+            5,
+            4,
+            2,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.07
+      },
+      {
+        "id": "head-fifth-siren",
+        "title": "Gentle fifth siren",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.8,
+        "glide": true,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            7
+          ],
+          [
+            7,
+            0
+          ]
+        ],
+        "segmentCount": 2,
+        "patternSeconds": 3.28
+      },
+      {
+        "id": "head-wee-descent",
+        "title": "Wee from the fifth",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.7,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            7,
+            4,
+            0
+          ]
+        ],
+        "segmentCount": 3,
+        "patternSeconds": 2.26
       },
       {
         "id": "head-oo-siren",
@@ -1599,67 +1701,6 @@
         "patternSeconds": 4.08
       },
       {
-        "id": "head-wee-descent",
-        "title": "Wee from the fifth",
-        "tier": "intermediate",
-        "free": false,
-        "noteDur": 0.7,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            7,
-            4,
-            0
-          ]
-        ],
-        "segmentCount": 3,
-        "patternSeconds": 2.26
-      },
-      {
-        "id": "head-hum-five",
-        "title": "Hummed five down",
-        "tier": "intermediate",
-        "free": false,
-        "noteDur": 0.55,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            7,
-            5,
-            4,
-            2,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.07
-      },
-      {
-        "id": "head-octave-leaps",
-        "title": "Octave leaps on oo",
-        "tier": "intermediate",
-        "free": false,
-        "noteDur": 0.6,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            12,
-            0,
-            12,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.32
-      },
-      {
         "id": "head-loo-arpeggio",
         "title": "Loo octave arpeggio",
         "tier": "intermediate",
@@ -1681,26 +1722,25 @@
         "patternSeconds": 3.32
       },
       {
-        "id": "head-fifth-siren",
-        "title": "Gentle fifth siren",
+        "id": "head-octave-leaps",
+        "title": "Octave leaps on oo",
         "tier": "intermediate",
         "free": false,
-        "noteDur": 0.8,
-        "glide": true,
+        "noteDur": 0.6,
+        "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
         "steps": [
           [
             0,
-            7
-          ],
-          [
-            7,
+            12,
+            0,
+            12,
             0
           ]
         ],
-        "segmentCount": 2,
-        "patternSeconds": 3.28
+        "segmentCount": 5,
+        "patternSeconds": 3.32
       },
       {
         "id": "head-float-hold",
@@ -1765,27 +1805,6 @@
         "patternSeconds": 3.63
       },
       {
-        "id": "mix-nay-fifth-octave",
-        "title": "Nay fifth to octave",
-        "tier": "intermediate",
-        "free": false,
-        "noteDur": 0.55,
-        "glide": false,
-        "ladder": "up",
-        "unscoredLeadSec": 0,
-        "steps": [
-          [
-            0,
-            7,
-            0,
-            12,
-            0
-          ]
-        ],
-        "segmentCount": 5,
-        "patternSeconds": 3.07
-      },
-      {
         "id": "mix-goo-scale",
         "title": "Goo octave scale",
         "tier": "intermediate",
@@ -1815,6 +1834,27 @@
         ],
         "segmentCount": 15,
         "patternSeconds": 5.92
+      },
+      {
+        "id": "mix-nay-fifth-octave",
+        "title": "Nay fifth to octave",
+        "tier": "intermediate",
+        "free": false,
+        "noteDur": 0.55,
+        "glide": false,
+        "ladder": "up",
+        "unscoredLeadSec": 0,
+        "steps": [
+          [
+            0,
+            7,
+            0,
+            12,
+            0
+          ]
+        ],
+        "segmentCount": 5,
+        "patternSeconds": 3.07
       }
     ],
     "packs": [
@@ -1822,13 +1862,13 @@
         "id": "belt-prep",
         "name": "Belt prep",
         "exerciseIds": [
-          "belt-hey-thirds",
-          "belt-forte-ah",
-          "belt-yah-triad",
-          "belt-octave-drop",
           "belt-nay-speech",
+          "belt-hey-thirds",
           "belt-bah-bursts",
+          "belt-yah-triad",
+          "belt-forte-ah",
           "belt-fifth-hold",
+          "belt-octave-drop",
           "belt-hah-descent"
         ]
       },
@@ -1836,12 +1876,12 @@
         "id": "head-voice-builder",
         "name": "Head-voice builder",
         "exerciseIds": [
-          "head-oo-siren",
-          "head-wee-descent",
           "head-hum-five",
-          "head-octave-leaps",
-          "head-loo-arpeggio",
           "head-fifth-siren",
+          "head-wee-descent",
+          "head-oo-siren",
+          "head-loo-arpeggio",
+          "head-octave-leaps",
           "head-float-hold"
         ]
       },
@@ -1851,8 +1891,8 @@
         "exerciseIds": [
           "mix-ng-slide",
           "mix-mum-octave",
-          "mix-nay-fifth-octave",
-          "mix-goo-scale"
+          "mix-goo-scale",
+          "mix-nay-fifth-octave"
         ]
       }
     ],
@@ -1981,11 +2021,11 @@
             "reps": 8
           },
           {
-            "exerciseId": "sustained-hold",
+            "exerciseId": "straw-slide-down",
             "reps": 4
           }
         ],
-        "seconds": 845.76,
+        "seconds": 838.26,
         "allStepsFree": true
       },
       {
@@ -2022,6 +2062,31 @@
         "allStepsFree": true
       },
       {
+        "id": "cooldown",
+        "name": "Cool-down",
+        "pro": false,
+        "steps": [
+          {
+            "exerciseId": "soft-trill-slide",
+            "reps": 6
+          },
+          {
+            "exerciseId": "straw-slide-down",
+            "reps": 6
+          },
+          {
+            "exerciseId": "morning-sigh",
+            "reps": 5
+          },
+          {
+            "exerciseId": "quiet-hum-descent",
+            "reps": 6
+          }
+        ],
+        "seconds": 125.57,
+        "allStepsFree": true
+      },
+      {
         "id": "range",
         "name": "Range builder",
         "pro": false,
@@ -2053,9 +2118,13 @@
           {
             "exerciseId": "octave-arpeggio",
             "reps": 8
+          },
+          {
+            "exerciseId": "straw-slide-down",
+            "reps": 5
           }
         ],
-        "seconds": 353.03,
+        "seconds": 380.78,
         "allStepsFree": true
       },
       {
@@ -2084,11 +2153,11 @@
             "reps": 12
           },
           {
-            "exerciseId": "straw-scale",
-            "reps": 8
+            "exerciseId": "straw-slide-down",
+            "reps": 6
           }
         ],
-        "seconds": 321.15,
+        "seconds": 296.07,
         "allStepsFree": true
       },
       {
@@ -2188,23 +2257,11 @@
         "pro": true,
         "steps": [
           {
-            "exerciseId": "belt-hey-thirds",
-            "reps": 8
-          },
-          {
-            "exerciseId": "belt-forte-ah",
-            "reps": 8
-          },
-          {
-            "exerciseId": "belt-yah-triad",
-            "reps": 8
-          },
-          {
-            "exerciseId": "belt-octave-drop",
-            "reps": 8
-          },
-          {
             "exerciseId": "belt-nay-speech",
+            "reps": 8
+          },
+          {
+            "exerciseId": "belt-hey-thirds",
             "reps": 8
           },
           {
@@ -2212,7 +2269,19 @@
             "reps": 8
           },
           {
+            "exerciseId": "belt-yah-triad",
+            "reps": 8
+          },
+          {
+            "exerciseId": "belt-forte-ah",
+            "reps": 8
+          },
+          {
             "exerciseId": "belt-fifth-hold",
+            "reps": 8
+          },
+          {
+            "exerciseId": "belt-octave-drop",
             "reps": 8
           },
           {
@@ -2229,7 +2298,11 @@
         "pro": true,
         "steps": [
           {
-            "exerciseId": "head-oo-siren",
+            "exerciseId": "head-hum-five",
+            "reps": 8
+          },
+          {
+            "exerciseId": "head-fifth-siren",
             "reps": 8
           },
           {
@@ -2237,11 +2310,7 @@
             "reps": 8
           },
           {
-            "exerciseId": "head-hum-five",
-            "reps": 8
-          },
-          {
-            "exerciseId": "head-octave-leaps",
+            "exerciseId": "head-oo-siren",
             "reps": 8
           },
           {
@@ -2249,7 +2318,7 @@
             "reps": 8
           },
           {
-            "exerciseId": "head-fifth-siren",
+            "exerciseId": "head-octave-leaps",
             "reps": 8
           },
           {
@@ -2274,11 +2343,11 @@
             "reps": 8
           },
           {
-            "exerciseId": "mix-nay-fifth-octave",
+            "exerciseId": "mix-goo-scale",
             "reps": 8
           },
           {
-            "exerciseId": "mix-goo-scale",
+            "exerciseId": "mix-nay-fifth-octave",
             "reps": 8
           }
         ],

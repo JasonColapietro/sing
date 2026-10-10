@@ -148,10 +148,13 @@ export const BREATH_ROUTINES: BreathRoutine[] = [
     id: "builder",
     name: "Breath builder",
     tagline:
-      "Longer sides, a higher count and three sustains — the set that grows the air supply rather than steadying it.",
+      "Longer sides, a higher count, notes started on a breath, then three sustains — the set that stretches the breath rather than settling it.",
     steps: [
       { drill: "box", side: 5, minutes: 3 },
       { drill: "farinelli", cap: 10 },
+      // The longer breath taken straight into sound, before the sustains ask
+      // for all of it: breath work that never meets a note stays a drill.
+      { drill: "cue", reps: CUE_REP_CHOICES[0], holdSec: CUE_HOLD_SEC },
       { drill: "sustain", attempts: 3 },
     ],
   },
@@ -262,13 +265,13 @@ export function breathStepSummary(step: BreathStep): string {
 export function breathDrillDesc(drill: BreathDrillId): string {
   switch (drill) {
     case "box":
-      return "Breathe around the square — inhale, hold, exhale, hold, equal counts on every side. It settles the nerves and evens out the airflow before you sing.";
+      return "Breathe around the square — inhale, hold, exhale, hold, equal counts on every side. Keep each hold soft and open, a pause rather than a locked throat, and shorten the sides if you feel short of air. It settles the nerves and evens out the airflow before you sing.";
     case "farinelli":
-      return "Inhale, hold and exhale for the same count, then add one count each round. The breath gets longer as you go, which is the whole point.";
+      return "Inhale, hold and exhale for the same count, then add one count each round. The breath gets longer as you go, which is the whole point. Breathe low and quietly, keep the shoulders still, and stop at the count you can do without gasping.";
     case "cue":
       return "Breathe in, then sing one easy note. The mic listens for the breath before each note counts, so every rep starts the way a phrase should.";
     default:
-      return "One steady note, held for as long as your air lasts. The mic times it and scores how even you kept the level.";
+      return "One steady note, held for as long as it stays easy. The mic times it and scores how even you kept the level. End the note when it starts to tighten rather than squeezing out the last seconds.";
   }
 }
 

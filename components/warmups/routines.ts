@@ -79,7 +79,7 @@ export const ROUTINES: Routine[] = [
   {
     id: "full",
     name: "Full warmup",
-    tagline: "The complete ten, then arpeggios, a reverse arpeggio and a run.",
+    tagline: "The complete ten, then arpeggios, a reverse arpeggio, a run and a straw slide to finish.",
     pro: false,
     steps: [
       step("ng-siren-fifth", 6),
@@ -95,7 +95,7 @@ export const ROUTINES: Routine[] = [
       step("octave-siren", 5),
       step("agility-run", 8),
       step("descending-five", 8),
-      step("sustained-hold", 4),
+      step("straw-slide-down", 4),
     ],
   },
   {
@@ -113,9 +113,24 @@ export const ROUTINES: Routine[] = [
     ],
   },
   {
+    // The end of a session, not the start of one: the same easy, semi-occluded
+    // sounds a warmup opens with, walked down the ladder instead of up, for
+    // after a long practice, a rehearsal or a set.
+    id: "cooldown",
+    name: "Cool-down",
+    tagline: "A few quiet minutes after you have sung: a soft trill, a straw slide, a sigh and a small hum, all heading down.",
+    pro: false,
+    steps: [
+      step("soft-trill-slide", 6),
+      step("straw-slide-down", 6),
+      step("morning-sigh", 5),
+      step("quiet-hum-descent", 6),
+    ],
+  },
+  {
     id: "range",
     name: "Range builder",
-    tagline: "Sirens and arpeggios that reach for the octave from both ends, light on top.",
+    tagline: "Sirens and arpeggios that reach for the octave from both ends, light on top, then a straw slide back down.",
     pro: false,
     steps: [
       step("lip-trill-scale", 8),
@@ -125,12 +140,13 @@ export const ROUTINES: Routine[] = [
       step("reverse-arpeggio", 9),
       step("gee-octave", 8),
       step("octave-arpeggio", 8),
+      step("straw-slide-down", 5),
     ],
   },
   {
     id: "agility",
     name: "Agility and runs",
-    tagline: "The speed challenge: staccato, fast five-note runs and a pentatonic riff shape.",
+    tagline: "The speed challenge: staccato, fast five-note runs and a pentatonic riff shape, then a straw slide to settle.",
     pro: false,
     steps: [
       step("lip-trill-scale", 8),
@@ -138,7 +154,7 @@ export const ROUTINES: Routine[] = [
       step("gug-staccato", 9),
       step("agility-run", 10),
       step("pentatonic-run", 12),
-      step("straw-scale", 8),
+      step("straw-slide-down", 6),
     ],
   },
   // The focus routines. Their ids are stable on purpose: multi-week programmes

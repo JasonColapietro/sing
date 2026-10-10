@@ -176,6 +176,14 @@ function candidates(
   });
 }
 
+/**
+ * The order a session warms a voice through the kinds: slides first, then
+ * stepwise patterns, then holds, then leaps, and speed last. Today's picks
+ * after the first are sung in this order, so a weak siren is not left until
+ * after a fast run it should have prepared.
+ */
+export const KIND_SESSION_ORDER: readonly ExerciseKind[] = ["sirens", "patterns", "holds", "leaps", "runs"];
+
 function pick(c: Candidate, role: PickRole, why: string): DailyPick {
   const tempo = tempoForScores(c.recent, c.exercise.tier);
   return {
@@ -229,7 +237,8 @@ function focusWhy(c: Candidate): { role: PickRole; why: string } {
  *
  * The confidence pick goes first — familiar ground to warm up on — then the
  * two exercises with the most need, each from a kind not already in the set.
- * Only if the catalogue runs out of kinds does a kind repeat.
+ * Only if the catalogue runs out of kinds does a kind repeat. Need decides
+ * which two; KIND_SESSION_ORDER decides which of them is sung first.
  */
 export function planDailyThree({
   sessions,
@@ -261,7 +270,11 @@ export function planDailyThree({
     if (picks.length >= 3) break;
     if (!picks.some((p) => p.exercise.id === c.exercise.id)) take(c);
   }
-  return { day, picks };
+  const lead = first ? 1 : 0;
+  const rest = picks
+    .slice(lead)
+    .sort((a, b) => KIND_SESSION_ORDER.indexOf(a.kind) - KIND_SESSION_ORDER.indexOf(b.kind));
+  return { day, picks: [...picks.slice(0, lead), ...rest] };
 }
 
 /**

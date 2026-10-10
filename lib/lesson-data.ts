@@ -4409,7 +4409,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4499,7 +4499,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -4589,7 +4589,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
+        "body": "Open the practice material on this page and choose Swell and fade, Sustained hold or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading Breath: support versus pressure is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6569,7 +6569,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Vibrato hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6659,7 +6659,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Vibrato hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6749,7 +6749,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
+        "body": "Open the practice material on this page and choose Vibrato hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading A vocabulary for tone is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
