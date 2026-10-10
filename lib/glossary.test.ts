@@ -201,3 +201,39 @@ describe("GLOSSARY", () => {
     }
   });
 });
+
+/**
+ * Evidence discipline for the definitions this site publishes as DefinedTerm
+ * markup and in /llms-full.txt. A listener-threshold figure ("under about five
+ * cents is inaudible") had no source; a voice-type label read as a verdict;
+ * the product was called by its bare surname.
+ */
+describe("published glossary claims", () => {
+  const byTerm = (term: string) =>
+    SING_GLOSSARY_TERMS.find((e) => e.term === term)!;
+
+  it("states no unsourced perceptual threshold", () => {
+    for (const entry of SING_GLOSSARY_TERMS) {
+      const text = `${entry.definition} ${entry.where}`;
+      expect(text).not.toMatch(/inaudible|most listeners|the fastest way/i);
+    }
+    expect(byTerm("Cent").where).toMatch(/100 cents make one semitone/);
+  });
+
+  it("calls the range result's voice type an estimate", () => {
+    expect(byTerm("Voice type").where).toMatch(/estimate/);
+  });
+
+  it("states the cycle-dose arithmetic correctly", () => {
+    // A minute at 440 Hz is 440 x 60 cycles; at 110 Hz, a quarter of that.
+    expect(byTerm("Vocal dose").where).toContain((440 * 60).toLocaleString("en-US"));
+    expect(byTerm("Vocal dose").where).toMatch(/four times/);
+  });
+
+  it("names the product, not a bare surname", () => {
+    for (const entry of SING_GLOSSARY_TERMS) {
+      const text = `${entry.definition} ${entry.where}`;
+      expect(text).not.toMatch(/\bSuede\b(?! Sing| Pro| AI| Voice)/);
+    }
+  });
+});
