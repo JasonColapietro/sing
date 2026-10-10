@@ -45,31 +45,20 @@ describe("POST /api/checkout", () => {
 
     expect(response.status).toBe(409);
     expect(body.error).toBe(
-      "The yearly plan is no longer on sale. Choose monthly or lifetime.",
+      "The yearly plan is no longer on sale. Choose lifetime.",
     );
     expect(stripe.resolvePriceId).not.toHaveBeenCalled();
     expect(stripe.createSession).not.toHaveBeenCalled();
   });
 
-  it("creates a recurring Checkout Session for the Early Access monthly plan", async () => {
+  it("rejects monthly before resolving a price or creating a Stripe session", async () => {
     const response = await checkout("monthly");
+    const body = (await response.json()) as { error?: string };
 
-    expect(response.status).toBe(200);
-    expect(stripe.resolvePriceId).toHaveBeenCalledWith("monthly");
-    expect(stripe.createSession).toHaveBeenCalledWith(
-      expect.objectContaining({
-        mode: "subscription",
-        payment_method_types: ["card"],
-        line_items: [{ price: "price_monthly", quantity: 1 }],
-        subscription_data: {
-          metadata: {
-            app: "suede-sing",
-            offer: "early-access",
-            plan: "monthly",
-          },
-        },
-      }),
-    );
+    expect(response.status).toBe(409);
+    expect(body.error).toBe("The monthly plan is no longer on sale.");
+    expect(stripe.resolvePriceId).not.toHaveBeenCalled();
+    expect(stripe.createSession).not.toHaveBeenCalled();
   });
 
   it("creates a one-time Checkout Session for the Early Access lifetime plan", async () => {
@@ -107,7 +96,7 @@ describe("POST /api/checkout", () => {
     const body = (await response.json()) as { error?: string };
 
     expect(response.status).toBe(400);
-    expect(body.error).toBe("Choose a monthly or lifetime plan.");
+    expect(body.error).toBe("Choose the lifetime plan.");
     expect(stripe.resolvePriceId).not.toHaveBeenCalled();
     expect(stripe.createSession).not.toHaveBeenCalled();
   });

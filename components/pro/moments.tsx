@@ -237,7 +237,7 @@ export default function ProMoments() {
           </Button>
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Monthly price stays while subscription is active
+          Monthly plan sold out
           <span className="mx-2 text-line2">·</span>
           Lifetime never renews
         </p>
