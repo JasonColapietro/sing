@@ -40,6 +40,19 @@ const DESCRIPTION_KIND: Record<string, string> = {
   checkpoint: "self-check",
 };
 
+type Found = NonNullable<ReturnType<typeof findLesson>>;
+
+/**
+ * The objective, then what and where the lesson is. Shown under the h1 and used
+ * as the search snippet, so the first thing a reader and a crawler meet is the
+ * same answer. Many objectives are one short line ("Called at random
+ * mid-phrase."), which on their own say nothing about the page.
+ */
+function lessonAnswer({ stage, module, lesson }: Found): string {
+  const body = lesson.body;
+  return `${body.objective} A ${body.minutes}-minute ${DESCRIPTION_KIND[body.type] ?? "lesson"} from ${module.catalog.name}, Stage ${stage.catalog.stage} of the free Suede Sing voice course.`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -50,9 +63,6 @@ export async function generateMetadata({
   if (!found) return {};
   const { body } = found.lesson;
   const moduleName = found.module.catalog.name;
-  // Self-check objectives are written to follow "I" ("compared a quiet
-  // recording…"), the module outcome's convention; a snippet needs the subject.
-  const objective = /^[a-z]/.test(body.objective) ? `I ${body.objective}` : body.objective;
   return withCanonicalOpenGraph({
     // fitTitle() alone sheds the whole tail, which left 94 of 102 lessons in
     // search as a bare phrase ("Drift Correction") with nothing saying it is a
@@ -66,7 +76,7 @@ export async function generateMetadata({
     // short line (64 of 102 under 100 characters), so the second sentence says
     // what and where the page is, from the same fields the kicker shows;
     // fitDescription drops it whole when the objective needs the room.
-    description: `${objective} A ${body.minutes}-minute ${DESCRIPTION_KIND[body.type] ?? "lesson"} from ${moduleName}, Stage ${found.stage.catalog.stage} of the free Suede Sing voice course.`,
+    description: lessonAnswer(found),
     keywords: lessonKeywords({ name: body.title, group: found.module.catalog.name }),
     alternates: { canonical: `${SITE_URL}${lessonHref(body)}` },
   });
@@ -78,6 +88,7 @@ const TYPE_LABEL: Record<string, string> = {
   song: "Song",
   checkpoint: "Self-check",
 };
+
 
 export default async function LessonPage({ params }: { params: Promise<Params> }) {
   const { stage: s, module: m, lesson: l } = await params;
@@ -128,7 +139,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
     <PageShell
       kicker={`Stage ${stage.catalog.stage} · ${module.catalog.name} · ${TYPE_LABEL[lesson.type] ?? lesson.type} · ${lesson.minutes} min`}
       title={lesson.title}
-      subtitle={lesson.objective}
+      subtitle={lessonAnswer(found)}
     >
       <script
         type="application/ld+json"

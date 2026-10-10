@@ -5,7 +5,7 @@ stage: "v-l1"
 title: "Self-Check: An Even Hiss"
 type: "checkpoint"
 minutes: 4
-objective: "counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. This is a listening and reflection check."
+objective: "Count an even hiss, keep your shoulders quiet, and release before you run out of comfortable breath. This is a listening and reflection check."
 prerequisites: "v-l1-m3-02"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

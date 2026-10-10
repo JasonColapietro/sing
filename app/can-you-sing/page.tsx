@@ -12,7 +12,7 @@ import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Can I Sing This Song? Popular Song Vocal Ranges";
-const DESCRIPTION = `The key, vocal range and difficulty of ${POP_SONGS.length} popular songs — and whether each one fits your voice, measured against your free range test.`;
+const DESCRIPTION = `Can I sing this song? The key, vocal range and difficulty of ${POP_SONGS.length} popular songs, and whether each one fits your voice, measured against your free range test.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/can-you-sing"),
@@ -75,8 +75,8 @@ export default function CanYouSingHub() {
   return (
     <PageShell
       kicker="Song ranges"
-      title="Can you sing it?"
-      subtitle={`The key, range and difficulty of ${songs.length} popular songs, from the commonly cited studio-version figures. Take the free range test and every page answers for your voice specifically.`}
+      title="Can I sing this song? Vocal ranges and keys of popular songs"
+      subtitle={`You can sing a song comfortably when its vocal range sits inside yours. Here are the key, range and difficulty of ${songs.length} popular songs, from the commonly cited studio-version figures; take the free range test and every page answers for your voice specifically.`}
       actions={<LinkButton href="/range">Find your range free</LinkButton>}
     >
       <script
@@ -84,14 +84,15 @@ export default function CanYouSingHub() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
+      <h2 className="mb-4 text-xl">Popular song vocal ranges, easiest first</h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {songs.map((s) => (
           <Link key={s.slug} href={`/can-you-sing/${s.slug}`} className="group">
             <Card tone="raised" className="h-full">
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-lg text-ink group-hover:text-violet-ink">
+                <h3 className="text-lg text-ink group-hover:text-violet-ink">
                   {s.title}
-                </h2>
+                </h3>
                 <span className="font-mono text-xs text-dim">{s.year}</span>
               </div>
               <div className="mt-1 text-sm text-mut">{s.artist}</div>
@@ -107,7 +108,7 @@ export default function CanYouSingHub() {
       </div>
 
       <Card tone="well" className="mt-8">
-        <SectionLabel>How these figures work</SectionLabel>
+        <SectionLabel heading>How these figures work</SectionLabel>
         <p className="mt-3 max-w-prose text-sm text-mut">
           Each page cites the published key and the commonly circulated
           lead-vocal range for the studio version — the same figures

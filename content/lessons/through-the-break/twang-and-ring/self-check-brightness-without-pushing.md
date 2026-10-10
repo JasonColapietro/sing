@@ -5,7 +5,7 @@ stage: "v-l5"
 title: "Self-Check: Brightness Without Pushing"
 type: "checkpoint"
 minutes: 5
-objective: "compared two easy tones on the same pitch and described a change in brightness by ear. This is a listening and reflection check."
+objective: "Compare two easy tones on the same pitch and describe a change in brightness by ear. This is a listening and reflection check."
 prerequisites: "v-l5-m3-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

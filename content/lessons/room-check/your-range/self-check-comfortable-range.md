@@ -5,7 +5,7 @@ stage: "v-l1"
 title: "Self-Check: Comfortable Range"
 type: "checkpoint"
 minutes: 4
-objective: "tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. This is a listening and reflection check."
+objective: "Try a comfortable low and high note without forcing either end, and note the pitches you can repeat. This is a listening and reflection check."
 prerequisites: "v-l1-m2-02"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

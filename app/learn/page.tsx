@@ -181,7 +181,7 @@ export default function LearnPage() {
     <PageShell
       kicker="Free vocal training guide"
       title="Learn to sing with a plan you can hear and measure"
-      subtitle="Start with your voice as it is today. Test it, train one skill at a time, apply that skill to a song, and listen back. Every tool below runs in the browser."
+      subtitle="To learn to sing, start from your voice as it is today: test your range, train one skill at a time, use that skill in a song, and listen back. Every tool below runs in the browser."
       actions={
         <div className="flex flex-wrap gap-2">
           <LinkButton href="/range" size="lg">

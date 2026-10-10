@@ -31,6 +31,13 @@ export function generateStaticParams(): Params[] {
   return HUB_GENRES.map((g) => ({ genre: genreSlug(g) }));
 }
 
+/** "Afrobeats singers", but "singer-songwriters" rather than "Singer-Songwriter singers". */
+function genreSingers(g: string): string {
+  return g === "Singer-Songwriter" ? "singer-songwriters" : `${g} singers`;
+}
+
+const upperFirst = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
 export async function generateMetadata({
   params,
 }: {
@@ -120,8 +127,8 @@ export default async function GenrePage({
   return (
     <PageShell
       kicker="Genre"
-      title={`${g} vocal ranges`}
-      subtitle={`${copy.summary} Reported endpoints run from ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`}
+      title={`${upperFirst(genreSingers(g))}' vocal ranges`}
+      subtitle={`Reported catalog ranges for ${list.length} ${genreSingers(g)} run from ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}, with a median span of about ${spanOctaves(stats.medianSpanSemitones)} octaves. ${copy.summary}`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers

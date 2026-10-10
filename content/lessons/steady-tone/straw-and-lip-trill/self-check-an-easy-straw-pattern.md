@@ -5,7 +5,7 @@ stage: "v-l2"
 title: "Self-Check: An Easy Straw Pattern"
 type: "checkpoint"
 minutes: 4
-objective: "tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. This is a listening and reflection check."
+objective: "Try the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. This is a listening and reflection check."
 prerequisites: "v-l2-m1-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

@@ -127,3 +127,28 @@ export function coursePaths(): {
     lessons: LESSONS.map(lessonHref),
   };
 }
+
+/** "Room setup and clean input" → "room setup and clean input", for mid-sentence use. */
+export function lowerFirst(text: string): string {
+  return text.charAt(0).toLowerCase() + text.slice(1);
+}
+
+/** Lessons in a stage, from the catalog, so the count matches what the stage lists. */
+export function stageLessonCount(stage: CourseStage): number {
+  return stage.modules.reduce((n, m) => n + m.lessons.length, 0);
+}
+
+/** Minutes across a module's lessons, from the catalog. */
+export function moduleMinutes(module: CourseModule): number {
+  return module.lessons.reduce((n, l) => n + l.catalog.minutes, 0);
+}
+
+/** The modules either side of this one across the whole course, for sideways links. */
+export function moduleNeighbours(module: CourseModule): {
+  previous?: CourseModule;
+  next?: CourseModule;
+} {
+  const all = COURSE.flatMap((s) => s.modules).filter((m) => m.href);
+  const i = all.indexOf(module);
+  return { previous: i > 0 ? all[i - 1] : undefined, next: all[i + 1] };
+}

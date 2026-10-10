@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   BOOK_CONTENTS,
   BOOK_PARTS,
-  BOOK_SUBTITLE,
   BOOK_TITLE,
   BOOK_WORDS,
 } from "@/lib/book-data";
@@ -15,7 +14,7 @@ import { BookCta } from "@/components/book/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
-const DESCRIPTION = `${BOOK_TITLE}: a ${BOOK_CONTENTS.length}-chapter guide to how the voice works, reading your measurements, a twelve-week program and choosing songs. Included with Pro.`;
+const DESCRIPTION = `${BOOK_TITLE}: a ${BOOK_CONTENTS.length}-chapter singing book on how the voice works, reading your measurements, a twelve-week program and song choice. Included with Pro.`;
 
 /** The search-facing title: the book's name plus the term people search for. */
 const PAGE_TITLE = `${BOOK_TITLE}: A Singing Book`;
@@ -62,8 +61,8 @@ export default function BookPage() {
   return (
     <PageShell
       kicker="Included with Pro · first chapter free"
-      title={BOOK_TITLE}
-      subtitle={BOOK_SUBTITLE}
+      title={`${BOOK_TITLE}: a singing book on how your voice works and how to train it`}
+      subtitle={`${BOOK_TITLE} is a ${BOOK_CONTENTS.length}-chapter singing book by ${AUTHOR_NAME}: how the voice works, how to read the numbers your own practice produces, a twelve-week program, and how to choose songs that fit. The contents and the first chapter are free; the rest comes with Suede Sing Pro.`}
     >
       <script
         type="application/ld+json"

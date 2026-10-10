@@ -5,7 +5,7 @@ stage: "v-l6"
 title: "Self-Check: Your Improvised Phrases"
 type: "checkpoint"
 minutes: 7
-objective: "used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a listening and reflection check."
+objective: "Use the supplied minor and pentatonic patterns to make your own short answering phrases. This is a listening and reflection check."
 prerequisites: "v-l6-m5-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ATLAS, ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
 import { Markdown } from "@/lib/markdown";
+import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
 import { pageRobots } from "@/lib/robots-meta";
@@ -32,7 +33,9 @@ export async function generateMetadata({
   const c = ATLAS_CONTENTS.find((x) => x.slug === slug);
   if (!c) return {};
   return withCanonicalOpenGraph({
-    title: `${c.title} · ${ATLAS_TITLE}`,
+    // The book's name when it fits, a shorter tail when it doesn't, so a
+    // chapter title never reaches search as a bare phrase identical to its H1.
+    title: firstFit([`${c.title} · ${ATLAS_TITLE}`, `${c.title} · Voice Atlas`, c.title]),
     keywords: chapterKeywords(c.title, "atlas"),
     description: c.summary,
     alternates: { canonical: `${SITE_URL}/atlas/${c.slug}` },

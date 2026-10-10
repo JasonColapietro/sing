@@ -30,6 +30,9 @@ export const metadata: Metadata = withCanonicalOpenGraph({
   },
 });
 
+/** The definition the opening paragraph quotes, so the answer is the page's own. */
+const PASSAGGIO = SING_GLOSSARY_TERMS.find((entry) => entry.term === "Passaggio");
+
 export default function GlossaryPage() {
   const setId = `${SITE_URL}/glossary#glossary`;
   const jsonLd = {
@@ -61,8 +64,12 @@ export default function GlossaryPage() {
   return (
     <PageShell
       kicker="Free reference"
-      title="A glossary for singers"
-      subtitle="Every term this app uses, defined in one sentence, with the room where you can go and see it."
+      title="Singing terms glossary: what each vocal term means"
+      subtitle={`What ${SING_GLOSSARY_TERMS.length} singing terms mean, one sentence each, with the room where you can see each one at work.${
+        PASSAGGIO
+          ? ` Passaggio, for example, is ${PASSAGGIO.definition.charAt(0).toLowerCase()}${PASSAGGIO.definition.slice(1)}`
+          : ""
+      }`}
     >
       <script
         type="application/ld+json"
@@ -110,14 +117,14 @@ export default function GlossaryPage() {
               {section.heading}
             </h2>
             <p className="mt-2 max-w-3xl text-sm text-mut">{section.blurb}</p>
-            <dl className="mt-5 divide-y divide-line/50">
+            <div className="mt-5 divide-y divide-line/50">
               {section.entries.map((entry) => (
                 <div
                   key={entry.term}
                   id={termId(entry.term)}
                   className="scroll-mt-20 py-4 first:pt-0 last:pb-0"
                 >
-                  <dt className="flex flex-wrap items-baseline gap-x-3">
+                  <div className="flex flex-wrap items-baseline gap-x-3">
                     <h3 className="text-lg font-extrabold text-ink">
                       {entry.term}
                     </h3>
@@ -126,11 +133,11 @@ export default function GlossaryPage() {
                         also {entry.aka.join(" · ")}
                       </span>
                     )}
-                  </dt>
-                  <dd className="mt-1.5 max-w-3xl text-mut">
+                  </div>
+                  <p className="mt-1.5 max-w-3xl text-mut">
                     {entry.definition}
-                  </dd>
-                  <dd className="mt-1.5 max-w-3xl text-sm text-dim">
+                  </p>
+                  <p className="mt-1.5 max-w-3xl text-sm text-dim">
                     {entry.where}{" "}
                     <Link
                       href={entry.href}
@@ -138,10 +145,10 @@ export default function GlossaryPage() {
                     >
                       Open {roomLabel(entry.href)} →
                     </Link>
-                  </dd>
+                  </p>
                 </div>
               ))}
-            </dl>
+            </div>
           </Card>
         ))}
 

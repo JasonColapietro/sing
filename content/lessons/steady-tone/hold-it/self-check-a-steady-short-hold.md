@@ -5,7 +5,7 @@ stage: "v-l2"
 title: "Self-Check: A Steady Short Hold"
 type: "checkpoint"
 minutes: 4
-objective: "matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. This is a listening and reflection check."
+objective: "Match the sustained reference, release comfortably, and listen for a steady center on repeated short holds. This is a listening and reflection check."
 prerequisites: "v-l2-m3-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

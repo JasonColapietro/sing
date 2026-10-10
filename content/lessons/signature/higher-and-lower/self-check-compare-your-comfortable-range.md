@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Self-Check: Compare Your Comfortable Range"
 type: "checkpoint"
 minutes: 6
-objective: "compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a listening and reflection check."
+objective: "Compare comfortable notes with an earlier baseline and record what you notice without forcing an extension. This is a listening and reflection check."
 prerequisites: "v-l7-m5-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

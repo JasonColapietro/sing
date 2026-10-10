@@ -120,7 +120,7 @@ export default async function CanYouSingSongPage({
   return (
     <PageShell
       kicker="Can you sing it?"
-      title={`${song.title} — ${song.artist}`}
+      title={`Can you sing “${song.title}” by ${song.artist}? Key and vocal range`}
       subtitle={answer}
     >
       <script
@@ -141,7 +141,7 @@ export default async function CanYouSingSongPage({
           </Card>
 
           <Card>
-            <SectionLabel>What the voice is asked to do</SectionLabel>
+            <SectionLabel heading>What the voice is asked to do</SectionLabel>
             <p className="mt-3 max-w-prose text-sm text-mut">{song.blurb}</p>
             <p className="mt-4 text-xs text-dim">
               Figures are the cited range and key for the published arrangement ({song.sourceUrl ? (
@@ -160,7 +160,7 @@ export default async function CanYouSingSongPage({
 
           {singers.length > 0 && (
             <Card>
-              <SectionLabel>
+              <SectionLabel heading>
                 {singers.length === 1 ? "The voice behind it" : "The voices behind it"}
               </SectionLabel>
               <ul className="mt-3 space-y-2">
@@ -189,7 +189,7 @@ export default async function CanYouSingSongPage({
 
           {related.length > 0 && (
             <Card>
-              <SectionLabel>Similar demands</SectionLabel>
+              <SectionLabel heading>Songs with similar vocal demands</SectionLabel>
               <ul className="mt-3 space-y-2">
                 {related.map((r) => (
                   <li key={r.slug} className="text-sm">
@@ -204,6 +204,13 @@ export default async function CanYouSingSongPage({
               </ul>
             </Card>
           )}
+
+          <Link
+            href="/can-you-sing"
+            className="inline-block text-sm text-violet-ink underline-offset-4 hover:underline"
+          >
+            ← Every popular song&apos;s key and vocal range
+          </Link>
         </div>
       </div>
     </PageShell>

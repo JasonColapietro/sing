@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   ATLAS_CONTENTS,
   ATLAS_PARTS,
-  ATLAS_SUBTITLE,
   ATLAS_TITLE,
   ATLAS_WORDS,
 } from "@/lib/atlas-data";
@@ -16,15 +15,23 @@ import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
 const DESCRIPTION =
-  "What is a famous singer's vocal range, really? The Voice Atlas answers it voice by voice: cited ranges, tone in plain language, and techniques to borrow safely.";
+  "How famous singers sing, voice by voice: The Voice Atlas covers cited ranges, tone in plain language and techniques to borrow safely.";
+
+/** Leads with the book's name and the query it owns; the range chart owns "famous singers' vocal ranges". */
+const TITLE = `${ATLAS_TITLE}: How Famous Singers Sing`;
+
+/** Every singer the chapters cover, counted once. */
+const ATLAS_SINGER_COUNT = new Set(
+  ATLAS_CONTENTS.flatMap((c) => c.singers.map((s) => s.slug)),
+).size;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/atlas"),
-  title: `${ATLAS_TITLE}: Famous Singers' Vocal Ranges`,
+  title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/atlas` },
   openGraph: {
-    title: `${ATLAS_TITLE}: Famous Singers' Vocal Ranges`,
+    title: TITLE,
     description: DESCRIPTION,
     type: "book",
     images: [DEFAULT_OG_IMAGE],
@@ -146,8 +153,8 @@ export default function AtlasPage() {
   return (
     <PageShell
       kicker="Included with Pro · first 3 chapters free"
-      title={ATLAS_TITLE}
-      subtitle={ATLAS_SUBTITLE}
+      title={`${ATLAS_TITLE}: how famous singers sing, voice by voice`}
+      subtitle={`${ATLAS_TITLE} is a ${ATLAS_CONTENTS.length}-chapter book on the range, tone and technique of ${ATLAS_SINGER_COUNT} singers: who sings what, how it sounds, and how to borrow it safely. The contents and the first three chapters are free.`}
     >
       <script
         type="application/ld+json"
@@ -196,6 +203,17 @@ export default function AtlasPage() {
             what the voice sounds like, and what to practice if you want some
             of it. Two generated appendices collect the records and shelve
             every voice by type.
+          </p>
+          <p className="mt-3 max-w-3xl text-mut">
+            Looking for the conventional range of a tenor, soprano or bass
+            rather than a particular singer? The free{" "}
+            <Link
+              href="/atlas/vocal-range-by-voice-type"
+              className="text-violet-ink hover:underline"
+            >
+              vocal range by voice type
+            </Link>{" "}
+            reference puts all eight voice types in one table.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
             The contents below list every chapter and every singer covered —

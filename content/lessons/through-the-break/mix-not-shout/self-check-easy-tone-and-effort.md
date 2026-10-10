@@ -5,7 +5,7 @@ stage: "v-l5"
 title: "Self-Check: Easy Tone and Effort"
 type: "checkpoint"
 minutes: 5
-objective: "tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a listening and reflection check."
+objective: "Try the supplied short pattern gently, return to an easy baseline, and note your own effort. This is a listening and reflection check."
 prerequisites: "v-l5-m4-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

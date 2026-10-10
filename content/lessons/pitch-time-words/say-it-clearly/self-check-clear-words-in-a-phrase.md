@@ -5,7 +5,7 @@ stage: "v-l4"
 title: "Self-Check: Clear Words in a Phrase"
 type: "checkpoint"
 minutes: 5
-objective: "spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. This is a listening and reflection check."
+objective: "Speak and sing the displayed lyric slowly enough for each word to stay understandable on playback. This is a listening and reflection check."
 prerequisites: "v-l4-m3-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

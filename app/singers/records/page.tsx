@@ -8,11 +8,13 @@ import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Who Has the Widest Vocal Range? Reported Catalog Rankings";
-const DESCRIPTION = `Compare the widest reported spans and lowest and highest catalog endpoints. Individual records require source review.`;
+const DESCRIPTION = `Who has the widest vocal range? Compare the widest reported spans and the lowest and highest catalog endpoints. Individual records require source review.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/singers/records"),
-  title: TITLE,
+  // Absolute, like the other singer hubs: with the " · Suede Sing" suffix the
+  // fitter cut this to "Who Has the Widest Vocal Range? Reported".
+  title: { absolute: TITLE },
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers/records` },
   openGraph: { title: TITLE, description: DESCRIPTION, type: "website" },
@@ -123,8 +125,8 @@ export default function RecordsPage() {
   return (
     <PageShell
       kicker="Extremes"
-      title="Reported range extremes"
-      subtitle="The largest catalog spans and note endpoints, ranked with their evidence limits in view."
+      title="Who has the widest vocal range? Reported catalog extremes"
+      subtitle={`Among ${SINGERS.length} catalog profiles, ${w.name} has the widest reported span: ${rangeLabel(w)}, about ${spanOctaves(span(w))} octaves. The rankings below list the largest spans and the lowest and highest endpoints, with their evidence limits in view; none is a verified world record.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers
