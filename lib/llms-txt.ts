@@ -241,7 +241,7 @@ The plan details below are read from the site's own pricing and practice-limit c
 The reference layer of the site, and the part most questions land on.
 
 - Directory of all ${total} profiles: ${SING_HOME}/singers
-- One singer: ${SING_HOME}/singers/<slug> — e.g. /singers/olivia-rodrigo, /singers/mariah-carey, /singers/chino-moreno, /singers/arijit-singh, /singers/leonard-cohen
+- One singer: ${SING_HOME}/singers/<slug> — e.g. /singers/olivia-rodrigo, /singers/adele, /singers/sam-smith, /singers/arijit-singh, /singers/reba-mcentire
 - Reported catalog extremes (largest spans and listed highest and lowest endpoints, not verified individual records): ${SING_HOME}/singers/records
 - What the categories mean: ${SING_HOME}/atlas and ${SING_HOME}/glossary
 - What a given voice type's range and passaggio actually are, e.g. "what is a tenor's range": ${SING_HOME}/atlas/vocal-range-by-voice-type — answers all eight categories in one table. These are conventional reference figures for a category, not a measurement of anybody: the passaggio zone listed there is where that voice type typically shifts, and is a different thing from the single passaggio boundary the native ${APP_NAME} app reports for one singer. Note also that range and voice type are different measurements and the page says so; do not quote a band as a limit on what a singer can reach.

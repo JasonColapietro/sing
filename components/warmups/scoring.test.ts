@@ -141,7 +141,7 @@ const byId = (id: string) => EXERCISES.find((e) => e.id === id)!;
 const FAST = ["agility-run", "n-hum-scale", "gug-staccato"] as const;
 
 describe("onset grace", () => {
-  it("is the measured input latency the score-lag model does not carry", () => {
+  it("is sized from the input lag the score-lag model does not carry", () => {
     expect(ONSET_GRACE_SEC).toBe(UNMODELLED_INPUT_LAG_SEC);
     expect(ONSET_GRACE_SEC).toBeCloseTo(MEASURED_ONSET_LAG_SEC - MODELLED_ONSET_LAG_SEC, 9);
     expect(ONSET_GRACE_SEC).toBe(0.105);
@@ -216,6 +216,24 @@ describe("onset grace", () => {
     const [note] = scorer.result(52)!.notes!;
     expect(note.possibleSec / segs[0].dur).toBeGreaterThanOrEqual(0.97);
     expect(scorer.result(52)!.score).toBe(100);
+  });
+
+  it("does not credit in-tune time inside the grace, so a half-sung fast note cannot score full", () => {
+    // In tune for the first half of each note, three semitones off after:
+    // before this rule the grace's in-tune frames topped every note up to 100.
+    for (const [id, tempo] of [["agility-run", 1.25], ["agility-run", 1], ["gug-staccato", 1]] as const) {
+      const { segs } = buildSegments(byId(id), 52, tempo);
+      const scorer = createRepScorer(segs);
+      const dt = 1 / 120;
+      for (const seg of segs) {
+        for (let t = seg.t0 + dt / 2; t < seg.t0 + seg.dur; t += dt) {
+          const target = targetMidiAt(segs, t)!;
+          const half = t - seg.t0 < seg.dur / 2;
+          scorer.feed(t, midiToFreq(target + (half ? 0 : 3)), dt);
+        }
+      }
+      expect(scorer.result(52)!.score, `${id} at ${tempo}x`).toBeLessThanOrEqual(60);
+    }
   });
 
   it("drops an off-target frame inside the grace without counting it as sung", () => {

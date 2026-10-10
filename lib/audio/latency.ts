@@ -62,9 +62,15 @@ export function scoreLagSec(pitchLag: number, outputLag: number): number {
  * How far behind the target an aligned voice actually read, measured end to end.
  *
  * scripts/audit-warmup-timing.mjs drives the real warmup room with a synthetic
- * voice sung exactly on the scored window. Probing the live cents readout of
- * that take (2026-08-23) showed the voice landing about 200 ms after the target
- * at every note boundary.
+ * voice. Probing the live cents readout of that take (2026-08-23) showed the
+ * voice landing about 200 ms after the target at every note boundary.
+ *
+ * Caveat: that probe's take was scheduled from Playwright after the stage
+ * switch, which started it 150-520 ms late at random (fixed in the audit on
+ * 2026-10-10). The fixed audit scores 99-100% from 100 ms early to 150 ms
+ * late with its curve centred within ~25 ms of zero, so most of this figure
+ * was the rig, not the input chain. Re-measure on real microphones before
+ * relying on it as a latency.
  */
 export const MEASURED_ONSET_LAG_SEC = 0.2;
 
@@ -76,11 +82,12 @@ export const MEASURED_ONSET_LAG_SEC = 0.2;
 export const MODELLED_ONSET_LAG_SEC = 0.095;
 
 /**
- * Input latency the model does not carry: stream buffering ahead of the
- * analyser, and the median window's real flip behaviour at a note change. About
- * 105 ms that every note onset still loses after the rewind. It is not rewound
- * as well, because it varies by device; the warmup scorer instead forgives a
- * window of this length at the front of each note (components/warmups/scoring).
+ * Input latency the model may not carry: stream buffering ahead of the
+ * analyser, and the median window's real flip behaviour at a note change. The
+ * 105 ms figure inherits MEASURED_ONSET_LAG_SEC's caveat, so it is used only as
+ * an onset tolerance: the warmup scorer neither credits nor penalises a window
+ * of this length at the front of each note (components/warmups/scoring). It is
+ * never rewound, because real input latency varies by device.
  */
 export const UNMODELLED_INPUT_LAG_SEC =
   // Rounded to the millisecond, so the published contract carries 0.105 rather

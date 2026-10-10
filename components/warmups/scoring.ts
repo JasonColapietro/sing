@@ -17,20 +17,22 @@ export const TOLERANCE_CENTS = 50;
  * Seconds at the front of every target note in which a frame off the target is
  * forgiven rather than counted against the singer.
  *
- * The player rewinds each frame by `scoreLagSec`, but the timing audit measured
- * an aligned voice still reading about 105 ms late at every note change
- * (UNMODELLED_INPUT_LAG_SEC in lib/audio/latency). On a 0.25 s note that is
- * two fifths of the note scored against a singer who sang it on time: the
- * staccato gug, the agility run and the N run lost that share of every note.
- * So the grace is that measured residual, not a tuned number, and it is in
- * seconds rather than a share of the note because latency does not change
- * with tempo.
+ * The player rewinds each frame by `scoreLagSec`, but a real singer still
+ * lands a fast note a little late: input-chain latency the rewind cannot see
+ * on every device, plus the onset of the note itself. On a 0.25 s note,
+ * 100 ms of that is two fifths of the note scored against a singer who sang it
+ * on time. This is an onset *tolerance*, sized from UNMODELLED_INPUT_LAG_SEC
+ * (lib/audio/latency). That figure came from a probe whose synthetic take
+ * started late, so treat it as an allowance to re-measure on real hardware,
+ * not a measured constant. It is in seconds rather than a share of the note
+ * because latency does not change with tempo.
  *
- * Inside the grace an in-tune frame is credited like any other and an
- * off-target frame is dropped entirely: it adds no error and no voiced frame.
- * The note's possible time shrinks by the grace, so a note sung on pitch from
- * the end of its grace to its end scores in full. A wrong note is still wrong
- * everywhere past the grace, so it still scores nothing.
+ * Inside the grace nothing counts for or against the singer: an off-target
+ * frame adds no error and no voiced frame, and an in-tune frame adds no
+ * credit (it still counts as voiced). Credit starts at the end of the grace,
+ * and the note's possible time is its length less the grace, so a note held
+ * on pitch from there to its end scores in full and a half-sung fast note
+ * does not. A wrong note is still wrong everywhere past the grace.
  */
 export const ONSET_GRACE_SEC = UNMODELLED_INPUT_LAG_SEC;
 
@@ -109,13 +111,14 @@ export function createRepScorer(
       // note's onset grace, where it is most likely the previous note still
       // arriving through the input chain.
       const idx = segmentIndexAt(segs, patternSec);
-      if (!inTune && idx >= 0 && patternSec - segs[idx].t0 < grace[idx]) return;
+      const inGrace = idx >= 0 && patternSec - segs[idx].t0 < grace[idx];
+      if (!inTune && inGrace) return;
       centsSum += Math.abs(cents);
       centsCount += 1;
       if (idx >= 0) {
         segCentsSum[idx] += Math.abs(cents);
         segCentsFrames[idx] += 1;
-        if (inTune) hitAccum[idx] += dt;
+        if (inTune && !inGrace) hitAccum[idx] += dt;
       }
     },
 

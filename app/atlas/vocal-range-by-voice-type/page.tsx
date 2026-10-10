@@ -159,7 +159,7 @@ const FAQ: Faq[] = [
   },
   {
     q: "How do I find out my own voice type?",
-    a: "Sing from your lowest comfortable note to your highest and back, and note where the voice is easy rather than where it stops. Suede Sing's free browser range test at https://sing.suedeai.ai/range does this in about sixty seconds and reports your lowest note, your highest note, your span in semitones, and an estimate of the voice type that range best fits. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
+    a: "Sing from your lowest comfortable note to your highest and back, and note where the voice is easy rather than where it stops. Suede Sing's free browser range test at https://sing.suedeai.ai/range does this in about two minutes and reports your lowest note, your highest note, your span in semitones, and an estimate of the voice type that range best fits. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
   },
   {
     q: "What is a passaggio?",
@@ -443,7 +443,7 @@ export default function VocalRangeByVoiceTypePage() {
               <Link href="/range" className="text-violet-ink hover:underline">
                 The free range test
               </Link>{" "}
-              — sixty seconds in the browser gives you your own two numbers to
+              — about two minutes in the browser gives you your own two numbers to
               read this table with.
             </li>
             <li>

@@ -301,19 +301,21 @@ singer whose mic cannot hear breathing can always finish.
 warm-up exercise and three rules. Some values changed as well:
 
 - `warmups.scoring`: `toleranceCents` (50), `onsetGraceSec` (0.105) and
-  `onsetGraceMaxShare` (0.5). The timing audit
-  (`scripts/audit-warmup-timing.mjs`) measured an aligned voice reading about
-  200 ms behind the target at each note change. `scoreLagSec` rewinds about
-  95 ms of that, which leaves about 105 ms of input latency that no rewind
-  covers. On the 0.25–0.3 s notes of the staccato gug, the agility run and the
-  N run, that lost about two fifths of every note sung on time. The web scorer
-  now forgives the first `min(onsetGraceSec, onsetGraceMaxShare × note
-  duration)` of each target note. In that window an in-tune frame is credited
-  and an off-target frame is dropped. The note's possible time is reduced by
-  the same amount. A note that is wrong past the grace still scores nothing. A
-  3.5 s hold loses 3% of its possible time. `rules.warmupOnsetGrace` states
-  the arithmetic exactly. The constants come from
-  `lib/audio/latency.ts`: `MEASURED_ONSET_LAG_SEC − MODELLED_ONSET_LAG_SEC`.
+  `onsetGraceMaxShare` (0.5). On the 0.25–0.3 s notes of the staccato gug,
+  the agility run and the N run, a singer landing ~100 ms late lost about two
+  fifths of every note. The web scorer now treats the first
+  `min(onsetGraceSec, onsetGraceMaxShare × note duration)` of each target
+  note as neutral: an off-target frame there is dropped, and an in-tune frame
+  counts as voiced but earns no credit. Credit starts at the end of the
+  grace, and the note's possible time is reduced by the same amount, so a
+  note held on pitch from there to its end scores in full and a half-sung
+  fast note does not. A note that is wrong past the grace still scores
+  nothing. A 3.5 s hold loses 3% of its possible time.
+  `rules.warmupOnsetGrace` states the arithmetic exactly. The value is
+  `UNMODELLED_INPUT_LAG_SEC` in `lib/audio/latency.ts`. Treat it as a
+  tolerance, not a measured latency: the 2026-08-23 probe it came from started
+  its synthetic take late, and the fixed timing audit centres within ~25 ms of
+  zero. It should be re-measured on real microphones.
 - `gapSec` on every exercise: the silence between consecutive notes or glide
   steps at 1x, divided by tempo. It is 0.08 everywhere except the staccato
   drills (`gug-staccato`, `belt-bah-bursts`), which now leave 0.15 s, so their
@@ -324,9 +326,19 @@ warm-up exercise and three rules. Some values changed as well:
   gives the exact rounding. `swell-and-fade` walks the middle half
   (`0.25–0.75`). The two strong belt holds (`belt-forte-ah`,
   `belt-fifth-hold`) walk the lower part (`0–0.6`).
-- Value changes with no new key: the daily routine now opens on
-  `lip-trill-scale`, then `ng-siren-fifth` and `octave-siren`. The steps and
-  rep counts are the same, in a new order.
+- Value changes with no new key, shipped in the same release:
+  - The daily routine now opens on `lip-trill-scale`, then `ng-siren-fifth`
+    and `octave-siren`. The steps and rep counts are the same, in a new order.
+  - Two new free exercises, `swell-and-fade` (messa di voce) and
+    `straw-slide-down` (straw cool-down), bringing the catalogue to 58.
+  - The free exercise array is now in learning-path order (semi-occluded
+    sounds and slides before open-vowel scales, fast runs last), and the belt,
+    head-voice and mix packs are reordered. Nothing should depend on array
+    position; read ids.
+  - A new free `cooldown` routine, and the range, agility and full routines
+    now end on `straw-slide-down`.
+  - The breath `builder` routine gained a breathe-and-sing cue step, so its
+    steps and seconds moved.
 
 What the other apps must do: re-sync the file, then:
 

@@ -19,6 +19,9 @@ const DESCRIPTION = `${BOOK_TITLE}: a ${BOOK_CONTENTS.length}-chapter singing bo
 /** The search-facing title: the book's name plus the term people search for. */
 const PAGE_TITLE = `${BOOK_TITLE}: A Singing Book`;
 
+/** Chapters readable without Pro, counted from the contents rather than stated. */
+const FREE_COUNT = BOOK_CONTENTS.filter((c) => c.free).length;
+
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/book"),
   title: PAGE_TITLE,
@@ -60,9 +63,9 @@ export default function BookPage() {
 
   return (
     <PageShell
-      kicker="Included with Pro · first chapter free"
+      kicker={`Included with Pro · ${FREE_COUNT} chapters free`}
       title={`${BOOK_TITLE}: a singing book on how your voice works and how to train it`}
-      subtitle={`${BOOK_TITLE} is a ${BOOK_CONTENTS.length}-chapter singing book by ${AUTHOR_NAME}: how the voice works, how to read the numbers your own practice produces, a twelve-week program, and how to choose songs that fit. The contents and the first chapter are free; the rest comes with Suede Sing Pro.`}
+      subtitle={`${BOOK_TITLE} is a ${BOOK_CONTENTS.length}-chapter singing book by ${AUTHOR_NAME}: how the voice works, how to read the numbers your own practice produces, a twelve-week program, and how to choose songs that fit. The contents and ${FREE_COUNT} chapters are free; the rest comes with Suede Sing Pro.`}
     >
       <script
         type="application/ld+json"
@@ -98,8 +101,8 @@ export default function BookPage() {
             you have today. Written for the reading you do between sessions.
           </p>
           <p className="mt-3 max-w-2xl text-sm text-mut">
-            The contents below are free, and so is the first chapter — read it
-            before you decide whether the writing is worth a subscription. Pro
+            The contents below are free, and so are {FREE_COUNT} chapters — read
+            them before you decide whether the writing is worth a subscription. Pro
             unlocks the other {BOOK_CONTENTS.filter((c) => !c.free).length} and
             the PDF.
           </p>

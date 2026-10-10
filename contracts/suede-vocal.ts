@@ -179,7 +179,7 @@ const MEASUREMENTS = {
     measurable: "yes",
     unit: "seconds",
     module: "components/warmups/scoring.ts, components/songs/song-player.tsx",
-    note: "Time held inside the tolerance window, latency-corrected before it is credited. In warmups the front of each note is forgiven for warmups.scoring.onsetGraceSec (rules.warmupOnsetGrace).",
+    note: "Time held inside the tolerance window, latency-corrected before it is credited. In warmups the front of each note (warmups.scoring.onsetGraceSec) is neither credited nor penalised (rules.warmupOnsetGrace).",
   },
   scorePercent: {
     measurable: "yes",
@@ -405,7 +405,7 @@ const RULES = {
   inhaleIsHeardNotMeasured:
     "The breath room's mic hears the inhale and nothing more. Copy may say the mic heard the breath; it may never say it measured support, lung capacity, breath depth or the diaphragm, and no pass or fail may depend on a breath being heard, because every gated drill offers to start without detection.",
   warmupOnsetGrace:
-    "Each warm-up target note forgives its first g seconds, g = min(warmups.scoring.onsetGraceSec, warmups.scoring.onsetGraceMaxShare * the note's duration at the tempo sung). Inside g a frame within toleranceCents is credited as usual and a frame outside it is dropped entirely: no hit, no cents error, no voiced frame. A note's possible time is its duration less g, its credited time is capped at that, and the rep score is total credited over total possible. The grace is the input latency the timing audit measured beyond the score-lag model, so it is in seconds and does not scale with tempo. Glide segments get it too.",
+    "Each warm-up target note forgives its first g seconds, g = min(warmups.scoring.onsetGraceSec, warmups.scoring.onsetGraceMaxShare * the note's duration at the tempo sung). Inside g a frame outside toleranceCents is dropped entirely (no hit, no cents error, no voiced frame) and a frame within it counts as voiced with its cents error but earns no hit time. Hit time is credited only from g to the note's end. A note's possible time is its duration less g, its credited time is capped at that, and the rep score is total credited over total possible. The grace is an onset tolerance for input latency beyond the score-lag model, so it is in seconds and does not scale with tempo. Glide segments get it too.",
   warmupGap:
     "Consecutive notes (or glide steps) of a warm-up are separated by gapSec / tempo seconds of silence, gapSec being the exercise's own value; the default is published on every exercise rather than left implicit. The gap is part of patternSeconds and is never scored, and the guide plays the same gaps.",
   warmupRangeCap:
