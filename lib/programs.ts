@@ -15,7 +15,7 @@
 // What the log cannot see, the singer marks by hand.
 //
 // A program day's items may be logged over several calendar days, from the
-// day it opens: the free plan stops guided practice after three minutes a day
+// day it opens: the free plan stops guided practice after five minutes a day
 // (lib/free-cap.ts) and most program days run longer, so requiring one sitting
 // would make a free program impossible to finish from the log.
 //
@@ -255,7 +255,7 @@ const MIX_C = day("The ten, then the crossing", routine("daily"), routine("mix")
 const MIX_WEEK = [MIX_A, MIX_B, MIX_C, rest(), MIX_A, MIX_B, rest()];
 
 // Week 1 is the free week, so it uses free exercises only and each day fits
-// the free plan's three guided minutes: short sirens and slides that find where
+// the free plan's five guided minutes: short sirens and slides that find where
 // the voice changes gear, before the Pro packs work across it.
 const MIX_FREE_A = day(
   "Find the crossing",
@@ -317,7 +317,7 @@ function bookWeek(a: ProgramDay, b: ProgramDay, c: ProgramDay, d: ProgramDay): P
  * from day 1 is sung again at the start of week 12 to compare.
  *
  * Week 1 is free, so it is short breath drills and single free exercises, each
- * day inside the free plan's three guided minutes. The later weeks follow the
+ * day inside the free plan's five guided minutes. The later weeks follow the
  * book's twenty-minute session: breath, a warmup, the fortnight's work, and
  * then the cool-down on every day that worked the voice. The quiet days built
  * from the morning and recovery sets are a cool-down already and are left as

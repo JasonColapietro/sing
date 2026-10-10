@@ -271,7 +271,7 @@ export function ProgramTodayCard({
                 </div>
                 {!isPro && cappedSec > FREE_DAILY_SEC && (
                   <p className="mt-3 max-w-xl text-xs text-dim">
-                    The free plan covers three guided minutes a day, and this day runs longer, so
+                    The free plan covers five guided minutes a day, and this day runs longer, so
                     spread it over a few days: it completes once every row is ticked, and a
                     routine&apos;s steps can be sung one at a time.{" "}
                     <Link href="/pro" className="underline">Pro</Link> removes the cap; the range

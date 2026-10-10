@@ -414,7 +414,7 @@ export const PLAN_ROWS: Array<{
   { label: "Practice rooms (all ten)", free: "Included", pro: "Included" },
   {
     label: "Guided practice (warmups, ear, breath, songs)",
-    free: "3 minutes a day",
+    free: "5 minutes a day",
     pro: "No daily limit",
   },
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },

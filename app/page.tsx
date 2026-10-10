@@ -102,7 +102,7 @@ const FEATURES = [
 // set their own canonical (e.g. /singers/[slug]) are not overridden.
 const HOME_TITLE = "Online Singing Practice with Live Pitch | Suede Sing";
 const HOME_DESCRIPTION =
-  "Online singing practice with live pitch feedback, warmups and songs. The pitch meter and range test are free; guided practice is 3 free minutes a day.";
+  "Online singing practice with live pitch feedback, warmups and songs. The pitch meter and range test are free; guided practice is 5 free minutes a day.";
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
@@ -157,7 +157,7 @@ const HOME_JSON_LD = {
       offers: {
         "@type": "Offer",
         name: "Free pitch meter and vocal range test",
-        description: "Guided practice includes three free minutes a day; additional practice and Pro features require a paid plan.",
+        description: "Guided practice includes five free minutes a day; additional practice and Pro features require a paid plan.",
         price: "0",
         priceCurrency: "USD",
         availability: "https://schema.org/InStock",
@@ -234,7 +234,7 @@ export default function Home() {
           </div>
           <p className="mt-5 text-sm text-mut">
             The pitch meter and range test are free with no time limit. Guided
-            practice includes three free minutes a day. No install; audio stays
+            practice includes five free minutes a day. No install; audio stays
             on your device.
           </p>
         </div>
@@ -389,7 +389,7 @@ export default function Home() {
             <h2 className="max-w-xl text-2xl sm:text-3xl">Practice without the clock</h2>
             <p className="mt-3 max-w-xl text-mut">
               The pitch meter, the range test and {SINGERS.length} famous singer ranges
-              are free. Free accounts get three minutes of guided practice a
+              are free. Free accounts get five minutes of guided practice a
               day. Pro removes the clock and adds both books ({TOTAL_CHAPTERS}{" "}
               chapters, {TOTAL_WORDS.toLocaleString("en-US")} words), pitch
               analysis on every take, and your range charted over months.

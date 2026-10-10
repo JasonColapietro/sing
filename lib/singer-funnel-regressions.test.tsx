@@ -55,11 +55,11 @@ describe("singer evidence and comparison regressions", () => {
     expect(html).toContain(status);
   });
   it("discloses the shared guided allowance before the exercise links", () => {
-    expect(FREE_DAILY_SEC).toBe(180);
+    expect(FREE_DAILY_SEC).toBe(300);
     const learn = renderToStaticMarkup(<LearnPage />).replace(/<!--.*?-->/g, "");
     expect(learn).toContain("An example 20-minute practice plan");
-    expect(learn).toContain("3 minutes a day");
-    expect(learn.indexOf("3 minutes a day")).toBeLessThan(learn.indexOf("Choose the problem"));
+    expect(learn).toContain("5 minutes a day");
+    expect(learn.indexOf("5 minutes a day")).toBeLessThan(learn.indexOf("Choose the problem"));
     expect(learn).toContain('href="/pro"');
     expect(learn).not.toContain("Twenty focused minutes beats");
   });

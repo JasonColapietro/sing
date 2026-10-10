@@ -57,7 +57,7 @@ export function WarmupsClient() {
   const pitch = usePitch();
   const progress = useProgress();
   const isPro = useIsPro();
-  // Three free minutes of guided practice a day; every way into a session
+  // Five free minutes of guided practice a day; every way into a session
   // checks it, so a capped singer sees the wall rather than a mic prompt.
   const cap = useFreeCap();
   const { goalSec } = useDailyGoal();

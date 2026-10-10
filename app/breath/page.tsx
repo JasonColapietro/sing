@@ -10,7 +10,7 @@ export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/breath"),
   title: BREATH_GUIDE.pageName,
   description:
-    "Breathing exercises for singers: guided breath sets and a mic-based sustain test for support on long notes. Guided practice is 3 free minutes a day.",
+    "Breathing exercises for singers: guided breath sets and a mic-based sustain test for support on long notes. Guided practice is 5 free minutes a day.",
   alternates: { canonical: `${SITE_URL}/breath` },
 });
 

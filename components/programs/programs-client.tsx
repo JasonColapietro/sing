@@ -226,7 +226,7 @@ function ProgramDetail({
             <span className="font-medium text-ink">
               {freeLabel().replace(/^w/, "W")} is free.
             </span>{" "}
-            It uses only free exercises, and each day&apos;s guided practice fits the free plan&apos;s three minutes. Day{" "}
+            It uses only free exercises, and each day&apos;s guided practice fits the free plan&apos;s five minutes. Day{" "}
             {FREE_WEEKS * 7 + 1} onward needs <Link href="/pro" className="underline">Pro</Link>.
           </p>
         )}

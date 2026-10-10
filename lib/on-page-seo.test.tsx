@@ -162,8 +162,8 @@ describe.each(Object.entries(ROUTES))("%s", (route, spec) => {
   it("states the free boundary lib/free-cap.ts enforces", async () => {
     const { description } = await page();
     if (spec.cap === "capped") {
-      // Warmups, ear training, breath and songs share three minutes a day.
-      expect(description).toMatch(/\b(?:3|three) free minutes a day\b/i);
+      // Warmups, ear training, breath and songs share five minutes a day.
+      expect(description).toMatch(/\b(?:5|five) free minutes a day\b/i);
     } else if (spec.cap === "uncapped") {
       expect(description).toMatch(/\bfree\b/i);
       expect(description, `${route} has no daily clock`).not.toMatch(/minutes a day/i);
