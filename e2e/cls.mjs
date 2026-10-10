@@ -25,6 +25,8 @@ const { chromium } = pw;
 const argv = process.argv.slice(2);
 const BASE = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3000").replace(/\/$/, "");
 const ONLY_VIEWPORT = argv.find((a) => a.startsWith("--viewport="))?.split("=")[1];
+/** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
+const EXECUTABLE = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
 
 const OBSERVER = `
 window.__cls = { value: 0, shifts: [] };
@@ -62,7 +64,7 @@ async function observerIsLive(page) {
   return page.evaluate(() => window.__cls.value > 0);
 }
 
-const browser = await chromium.launch({ channel: "chrome" });
+const browser = await chromium.launch(EXECUTABLE ? { executablePath: EXECUTABLE } : { channel: "chrome" });
 const templates = await discoverTemplateRoutes(BASE).catch(() => []);
 const routes = [...ROUTES, ...templates];
 const viewports = ONLY_VIEWPORT ? VIEWPORTS.filter((v) => v.name === ONLY_VIEWPORT) : VIEWPORTS;

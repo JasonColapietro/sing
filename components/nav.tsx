@@ -538,11 +538,15 @@ export default function Nav() {
             </span>
           </Link>
 
-          {/* Desktop / tablet: thumb-sized tabs with a fade only while more remain. */}
+          {/* Desktop / tablet: thumb-sized tabs with a fade only while more remain.
+              Safe centring, not justify-center: between sm and ~1000px the row
+              overflows, and plain centring pushes the overflow off the left
+              edge where a scroll container cannot reach, leaving "Home"
+              unclickable under the logo. Safe centring falls back to start. */}
           <nav
             aria-label="Main"
             ref={tabsRef}
-            className={`no-scrollbar hidden flex-1 items-center justify-center gap-1 overflow-x-auto sm:flex ${
+            className={`no-scrollbar hidden flex-1 items-center justify-center-safe gap-1 overflow-x-auto sm:flex ${
               tabsOverflow
                 ? "[mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
                 : ""

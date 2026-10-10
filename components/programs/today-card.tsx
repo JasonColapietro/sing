@@ -329,7 +329,12 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
             <span className="font-medium text-ink">Programs.</span> One to twelve weeks of warmups,
             breath and check-ins, planned day by day.
           </p>
-          <Link href="/programs" className="text-sm text-violet-ink underline-offset-4 hover:underline">
+          {/* min-h-11: a bare text-sm link is a 20px-tall target, under the
+              WCAG 2.5.8 floor and well under a thumb. The text stays put. */}
+          <Link
+            href="/programs"
+            className="inline-flex min-h-11 items-center text-sm text-violet-ink underline-offset-4 hover:underline"
+          >
             Browse programs
           </Link>
         </div>
