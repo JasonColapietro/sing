@@ -213,8 +213,8 @@ export function StudioClient() {
   return (
     <PageShell
       kicker="Studio"
-      title="Pitch studio"
-      subtitle="Sing into the mic and watch every note land — name, cents, and an eight-second trace."
+      title="Pitch training studio"
+      subtitle="Real-time pitch feedback for singers: sing into your mic and see the note name, how many cents sharp or flat you are, and an eight-second pitch trace. Free, with no time limit."
       actions={
         listening ? (
           <div className="flex flex-col items-end gap-1.5">

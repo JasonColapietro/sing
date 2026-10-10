@@ -37,8 +37,13 @@ export interface GuideLink {
 export interface GuideContent {
   /** Route this guide belongs to, e.g. "/range". */
   path: string;
-  /** Page entity name when the explanatory heading is not the page's H1. */
-  pageName?: string;
+  /**
+   * The page's <title> without the " · Suede Sing" suffix, used as the WebPage
+   * entity name. The H2 below is a section of the page, not its name, so a
+   * guide without this named its page after a section heading. The route reads
+   * its title from here, so the two cannot drift.
+   */
+  pageName: string;
   /** H2 above the explanatory half. */
   heading: string;
   /** The direct answer, in two or three sentences. */
@@ -100,7 +105,7 @@ export function guideJsonLd(guide: GuideContent) {
       "@type": "WebPage",
       "@id": `${url}#webpage`,
       url,
-      name: guide.pageName ?? guide.heading,
+      name: guide.pageName,
       description: guide.answer,
       isPartOf: { "@id": `${SITE_URL}/#website` },
       publisher: { "@id": "https://suedeai.ai/#organization" },

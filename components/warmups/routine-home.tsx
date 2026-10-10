@@ -149,7 +149,7 @@ export function RoutineGrid({
   return (
     <section>
       <div className="flex flex-wrap items-center gap-2">
-        <SectionLabel>Routines</SectionLabel>
+        <SectionLabel heading>Warmup routines</SectionLabel>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           Pick a length, press start
         </span>

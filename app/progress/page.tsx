@@ -7,7 +7,7 @@ import { webPageJsonLd } from "@/lib/page-jsonld";
 
 const TITLE = "Singing Progress Tracker: Range and Streaks";
 const DESCRIPTION =
-  "Every practice session logged: XP, streaks, achievements, range history and per-exercise scores, stored on your device. Watch your singing improve.";
+  "Singing progress tracker: XP, streaks, achievements, your saved range and a daily coached session, kept on your device. Pro adds per-note accuracy charts.";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/progress"),

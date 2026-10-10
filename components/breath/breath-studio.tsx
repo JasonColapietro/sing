@@ -194,8 +194,8 @@ export function BreathStudio() {
   return (
     <PageShell
       kicker="Breath training"
-      title="Breath"
-      subtitle="Build the air supply behind every long note — start the set that fits the moment, or pick one drill and work it."
+      title="Breathing exercises for singers"
+      subtitle="Guided breath sets and a mic-based sustain test that build breath support for long phrases. Start the set that fits the moment, or pick one drill and work it."
     >
       {cap.capped && <CapWall cap={cap} />}
       <ContinueCard

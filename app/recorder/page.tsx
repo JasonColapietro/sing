@@ -9,9 +9,9 @@ import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/recorder"),
-  title: "Voice Recorder for Singing Practice",
+  title: RECORDER_GUIDE.pageName,
   description:
-    "Cut a take, listen back, keep the good ones. A practice voice recorder for singers that stays on your device — nothing uploads.",
+    "A voice recorder for singers: record yourself singing, A/B two takes and keep the good ones. Free with no time limit, and every take stays on your device.",
   alternates: { canonical: `${SITE_URL}/recorder` },
 });
 

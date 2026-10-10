@@ -101,8 +101,8 @@ export default function ToolsClient() {
   return (
     <PageShell
       kicker="Studio tools"
-      title="Tools"
-      subtitle="Metronome, keyboard, and drone — the console modules every practice session leans on. No mic needed."
+      title="Singing practice tools"
+      subtitle="A metronome, an online piano keyboard and a drone tone for pitch reference: the three tools a practice session leans on. Free, with no time limit, and no mic needed."
       actions={xpNote ? <Pill tone="ok">{xpNote}</Pill> : undefined}
     >
       <div className="grid gap-6 lg:grid-cols-2">
