@@ -66,7 +66,7 @@ function buildFaq() {
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/singers"),
-  title: "Singers' Vocal Ranges and Vocal Range Chart",
+  title: "Famous Singers' Vocal Ranges: Vocal Range Chart",
   description: DESCRIPTION,
   alternates: { canonical: `${SITE_URL}/singers` },
   openGraph: {
@@ -122,8 +122,8 @@ export default function SingersPage() {
   return (
     <PageShell
       kicker="Reference"
-      title="Famous vocal ranges"
-      subtitle="Reported catalog ranges for famous singers, every one on the same keyboard."
+      title="Famous singers' vocal ranges on one chart"
+      subtitle={`A vocal range chart of ${SINGERS.length} famous singers: each reported catalog range, lowest note to highest, drawn on the same keyboard so you can compare voices, and your own range, at a glance.`}
       actions={
         <LinkButton href="/range" size="md">
           Test my vocal range →
@@ -233,7 +233,7 @@ export default function SingersPage() {
 
         <div className="mt-8">
           <LinkButton href="/singers/records" variant="outline" size="sm">
-            Catalog extremes, ranked →
+            Widest vocal ranges and catalog extremes, ranked →
           </LinkButton>
         </div>
       </section>

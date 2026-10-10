@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
 import { exitTestFor } from "@/lib/programme-exit-tests";
+import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
 import { SITE_URL } from "@/lib/site";
@@ -31,7 +32,9 @@ export async function generateMetadata({
   const c = BOOK_CONTENTS.find((x) => x.slug === slug);
   if (!c) return {};
   return withCanonicalOpenGraph({
-    title: `${c.title} · ${BOOK_TITLE}`,
+    // The book's name when it fits, a shorter tail when it doesn't, so a
+    // chapter title never reaches search as a bare phrase identical to its H1.
+    title: firstFit([`${c.title} · ${BOOK_TITLE}`, `${c.title} · Singing Book`, c.title]),
     keywords: chapterKeywords(c.title, "book"),
     description: c.summary,
     alternates: { canonical: `${SITE_URL}/book/${c.slug}` },

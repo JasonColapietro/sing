@@ -47,7 +47,7 @@ function moduleTitle({ stage, module }: Found): string {
 
 function moduleDescription({ module }: Found): string {
   const { catalog } = module;
-  return `${catalog.name}: ${catalog.lessons.length} short, free voice lessons on ${lowerFirst(catalog.skill)}. The outcome: I ${catalog.promise}`;
+  return `${catalog.name}: ${catalog.lessons.length} short, free voice lessons on ${lowerFirst(catalog.skill)}, each ending in a self-check you judge by ear.`;
 }
 
 export async function generateMetadata({

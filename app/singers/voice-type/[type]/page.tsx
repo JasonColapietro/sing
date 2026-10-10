@@ -159,8 +159,12 @@ export default async function VoiceTypePage({
   return (
     <PageShell
       kicker="Voice type"
-      title={voice === "Contralto" ? "Famous Contralto Singers and Their Vocal Ranges" : `Famous ${pluralVoice(lower)}`}
-      subtitle={`Reported catalog ranges for singers labeled ${pluralVoice(lower)}: ${note.summary}.`}
+      title={
+        voice === "Contralto"
+          ? "Famous contralto singers and the contralto vocal range"
+          : `${voice} vocal range and famous ${lower} singers`
+      }
+      subtitle={`A ${lower}'s conventional range runs from about ${midiToLabel(band.low)} to ${midiToLabel(band.high)}. Below are reported catalog ranges for ${list.length} singers labeled ${pluralVoice(lower)}: ${note.summary}.`}
       actions={
         <LinkButton href="/singers" variant="outline" size="md">
           ← All singers

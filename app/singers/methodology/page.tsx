@@ -7,9 +7,9 @@ import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
 
-const TITLE = "Why Singer Vocal Ranges Differ: Sources";
+const TITLE = "Why Singer Vocal Ranges Differ Between Sources";
 const DESCRIPTION =
-  "Why vocal range websites disagree, how to compare song scores and performance claims, and what reported notes tell you. Test your own range.";
+  "Why singer vocal ranges differ between websites, how to compare song scores and performance claims, and what reported notes tell you. Test your own range.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/singers/methodology"),
@@ -31,8 +31,8 @@ export default function SingerMethodologyPage() {
   return (
     <PageShell
       kicker="Editorial standards"
-      title="How we handle singer-range evidence"
-      subtitle="What the catalog reports, what individual sources can establish, and how to correct the record."
+      title="Why singer vocal ranges differ, and how we handle the evidence"
+      subtitle="Singer vocal ranges differ between sources because they count different things: written notes in selected songs, isolated live notes across a career, or brief effects. This page explains what our catalog reports, what individual sources can establish, and how to correct the record."
       actions={
         <>
           <LinkButton href="/range" size="md">Test my vocal range</LinkButton>
