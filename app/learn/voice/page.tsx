@@ -13,10 +13,11 @@ import {
 import { PracticedMark } from "@/components/learn/practice-count";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
+import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Free Voice Lessons: Seven-Stage Singing Course";
-const DESCRIPTION = `A free singing course in seven stages and ${CATALOG_LESSON_COUNT} short lessons, from finding your range to registers, agility and style. Practise each in Suede Sing.`;
+const DESCRIPTION = `Free voice lessons: a seven-stage singing course of ${CATALOG_LESSON_COUNT} short lessons, from finding your range to registers, agility and style, each with a self-check.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/learn/voice"),
@@ -69,8 +70,8 @@ export default function VoiceCoursePage() {
   return (
     <PageShell
       kicker="Free voice course"
-      title="Voice lessons, one small skill at a time"
-      subtitle={`Seven stages, ${COURSE.reduce((n, s) => n + s.modules.length, 0)} modules and ${CATALOG_LESSON_COUNT} short lessons. Each lesson tells you what to practise, what to listen for, and which Suede Sing room to do it in.`}
+      title="Free voice lessons, one small skill at a time"
+      subtitle={`A free singing course of ${CATALOG_LESSON_COUNT} short voice lessons in ${COURSE.length} stages and ${COURSE.reduce((n, s) => n + s.modules.length, 0)} modules, from finding your range to registers, agility and style. Each lesson tells you what to practise, what to listen for, and which Suede Sing room to do it in.`}
       actions={
         firstLesson?.href ? (
           <LinkButton href={firstLesson.href} size="lg">
@@ -83,6 +84,7 @@ export default function VoiceCoursePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <CourseBreadcrumbs trail={[]} current="Voice lessons" />
       <div className="space-y-8">
         <Card>
           <SectionLabel>How it works</SectionLabel>

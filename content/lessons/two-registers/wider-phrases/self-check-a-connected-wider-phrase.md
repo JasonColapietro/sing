@@ -5,7 +5,7 @@ stage: "v-l3"
 title: "Self-Check: A Connected Wider Phrase"
 type: "checkpoint"
 minutes: 5
-objective: "rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. This is a listening and reflection check."
+objective: "Rehearse the supplied Deep River phrase in a comfortable key and mark where your voice changes. This is a listening and reflection check."
 prerequisites: "v-l3-m4-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

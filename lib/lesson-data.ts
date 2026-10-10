@@ -258,7 +258,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: A Clear Recording",
     "type": "checkpoint",
     "minutes": 4,
-    "objective": "compared a quiet recording with my initial room setup and could hear my voice clearly. This is a listening and reflection check.",
+    "objective": "Compare a quiet recording with your initial room setup and check that you can hear your voice clearly. This is a listening and reflection check.",
     "prerequisites": [
       "v-l1-m1-02"
     ],
@@ -528,7 +528,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Comfortable Range",
     "type": "checkpoint",
     "minutes": 4,
-    "objective": "tried a comfortable low and high note without forcing either end and noted the pitches I could repeat. This is a listening and reflection check.",
+    "objective": "Try a comfortable low and high note without forcing either end, and note the pitches you can repeat. This is a listening and reflection check.",
     "prerequisites": [
       "v-l1-m2-02"
     ],
@@ -798,7 +798,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: An Even Hiss",
     "type": "checkpoint",
     "minutes": 4,
-    "objective": "counted an even hiss, kept my shoulders quiet, and released before running out of comfortable breath. This is a listening and reflection check.",
+    "objective": "Count an even hiss, keep your shoulders quiet, and release before you run out of comfortable breath. This is a listening and reflection check.",
     "prerequisites": [
       "v-l1-m3-02"
     ],
@@ -1068,7 +1068,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: An Easy Straw Pattern",
     "type": "checkpoint",
     "minutes": 4,
-    "objective": "tried the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. This is a listening and reflection check.",
+    "objective": "Try the straw or lip-trill pattern gently, with an easy breath and a full rest between attempts. This is a listening and reflection check.",
     "prerequisites": [
       "v-l2-m1-03"
     ],
@@ -1338,7 +1338,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Match the Five-Note Pattern",
     "type": "checkpoint",
     "minutes": 4,
-    "objective": "heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear. This is a listening and reflection check.",
+    "objective": "Hear the five-note scale reference, sing the pattern from silence, and compare each entry by ear. This is a listening and reflection check.",
     "prerequisites": [
       "v-l2-m2-03"
     ],
@@ -1608,7 +1608,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: A Steady Short Hold",
     "type": "checkpoint",
     "minutes": 4,
-    "objective": "matched the sustained reference, released comfortably, and listened for a steady center on repeated short holds. This is a listening and reflection check.",
+    "objective": "Match the sustained reference, release comfortably, and listen for a steady center on repeated short holds. This is a listening and reflection check.",
     "prerequisites": [
       "v-l2-m3-04"
     ],
@@ -1878,7 +1878,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Your Amazing Grace Study",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable. This is a listening and reflection check.",
+    "objective": "Rehearse the supplied Amazing Grace phrase and study arrangement in a key that feels comfortable. This is a listening and reflection check.",
     "prerequisites": [
       "v-l2-m4-04"
     ],
@@ -2958,7 +2958,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: A Connected Wider Phrase",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "rehearsed the supplied Deep River phrase in a comfortable key and marked where my voice changed. This is a listening and reflection check.",
+    "objective": "Rehearse the supplied Deep River phrase in a comfortable key and mark where your voice changes. This is a listening and reflection check.",
     "prerequisites": [
       "v-l3-m4-04"
     ],
@@ -3498,7 +3498,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Intonation by Listening",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a listening and reflection check.",
+    "objective": "Compare your Amazing Grace study with the note reference and identify one pitch to revisit by ear. This is a listening and reflection check.",
     "prerequisites": [
       "v-l4-m1-03"
     ],
@@ -3768,7 +3768,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Count, Clap, Sing",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. This is a listening and reflection check.",
+    "objective": "Count and clap the displayed rhythm before singing it, then review by ear where your entries line up. This is a listening and reflection check.",
     "prerequisites": [
       "v-l4-m2-03"
     ],
@@ -4038,7 +4038,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Clear Words in a Phrase",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "spoke and sang the displayed lyric slowly enough for each word to remain understandable on playback. This is a listening and reflection check.",
+    "objective": "Speak and sing the displayed lyric slowly enough for each word to stay understandable on playback. This is a listening and reflection check.",
     "prerequisites": [
       "v-l4-m3-04"
     ],
@@ -5388,7 +5388,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Brightness Without Pushing",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "compared two easy tones on the same pitch and described a change in brightness by ear. This is a listening and reflection check.",
+    "objective": "Compare two easy tones on the same pitch and describe a change in brightness by ear. This is a listening and reflection check.",
     "prerequisites": [
       "v-l5-m3-04"
     ],
@@ -5658,7 +5658,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Easy Tone and Effort",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a listening and reflection check.",
+    "objective": "Try the supplied short pattern gently, return to an easy baseline, and note your own effort. This is a listening and reflection check.",
     "prerequisites": [
       "v-l5-m4-04"
     ],
@@ -5928,7 +5928,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Your Answering Phrase",
     "type": "checkpoint",
     "minutes": 5,
-    "objective": "used notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a listening and reflection check.",
+    "objective": "Use notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a listening and reflection check.",
     "prerequisites": [
       "v-l5-m5-03"
     ],
@@ -6198,7 +6198,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: A Clear Agility Pattern",
     "type": "checkpoint",
     "minutes": 6,
-    "objective": "isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a listening and reflection check.",
+    "objective": "Isolate the agility pattern slowly and connect its notes without rushing, judged by your own listening. This is a listening and reflection check.",
     "prerequisites": [
       "v-l6-m1-03"
     ],
@@ -6468,7 +6468,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Four Notes on One Syllable",
     "type": "checkpoint",
     "minutes": 6,
-    "objective": "sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a listening and reflection check.",
+    "objective": "Sing the supplied four-note descent on one syllable, then listen for four separate pitch centers. This is a listening and reflection check.",
     "prerequisites": [
       "v-l6-m2-04"
     ],
@@ -7278,7 +7278,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Your Improvised Phrases",
     "type": "checkpoint",
     "minutes": 7,
-    "objective": "used the supplied minor and pentatonic patterns to make my own short answering phrases. This is a listening and reflection check.",
+    "objective": "Use the supplied minor and pentatonic patterns to make your own short answering phrases. This is a listening and reflection check.",
     "prerequisites": [
       "v-l6-m5-04"
     ],
@@ -7548,7 +7548,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Your Ornamented Study",
     "type": "checkpoint",
     "minutes": 7,
-    "objective": "rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a listening and reflection check.",
+    "objective": "Rehearse the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a listening and reflection check.",
     "prerequisites": [
       "v-l6-m6-05"
     ],
@@ -7818,7 +7818,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Warm-Up and Stop Plan",
     "type": "checkpoint",
     "minutes": 6,
-    "objective": "assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a listening and reflection check.",
+    "objective": "Assemble a short warm-up with rests and write down the warning signs that would make you stop. This is a listening and reflection check.",
     "prerequisites": [
       "v-l7-m1-03"
     ],
@@ -8628,7 +8628,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Your Effects Stop Plan",
     "type": "checkpoint",
     "minutes": 6,
-    "objective": "read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a listening and reflection check.",
+    "objective": "Read the safety material and write a stop plan, without attempting to learn a new vocal effect from an app. This is a listening and reflection check.",
     "prerequisites": [
       "v-l7-m4-04"
     ],
@@ -8898,7 +8898,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Compare Your Comfortable Range",
     "type": "checkpoint",
     "minutes": 6,
-    "objective": "compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a listening and reflection check.",
+    "objective": "Compare comfortable notes with an earlier baseline and record what you notice without forcing an extension. This is a listening and reflection check.",
     "prerequisites": [
       "v-l7-m5-04"
     ],
@@ -9168,7 +9168,7 @@ export const LESSONS: Lesson[] = [
     "title": "Self-Check: Your Performance Study",
     "type": "checkpoint",
     "minutes": 10,
-    "objective": "rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a listening and reflection check.",
+    "objective": "Rehearse the supplied study arrangement and compare microphone distance or phrasing on separate takes. This is a listening and reflection check.",
     "prerequisites": [
       "v-l7-m6-05"
     ],

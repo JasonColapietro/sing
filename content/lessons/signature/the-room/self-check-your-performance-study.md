@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Self-Check: Your Performance Study"
 type: "checkpoint"
 minutes: 10
-objective: "rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a listening and reflection check."
+objective: "Rehearse the supplied study arrangement and compare microphone distance or phrasing on separate takes. This is a listening and reflection check."
 prerequisites: "v-l7-m6-05"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

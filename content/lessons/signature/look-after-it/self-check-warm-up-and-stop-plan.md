@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Self-Check: Warm-Up and Stop Plan"
 type: "checkpoint"
 minutes: 6
-objective: "assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a listening and reflection check."
+objective: "Assemble a short warm-up with rests and write down the warning signs that would make you stop. This is a listening and reflection check."
 prerequisites: "v-l7-m1-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

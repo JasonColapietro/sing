@@ -4,7 +4,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
-import { COURSE, VOICE_LEARN_PATH, findModule } from "@/lib/voice-lessons";
+import {
+  COURSE,
+  VOICE_LEARN_PATH,
+  findModule,
+  lowerFirst,
+  moduleMinutes,
+  moduleNeighbours,
+} from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { ModulePractice } from "@/components/learn/module-practice";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
@@ -35,7 +42,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title: `${catalog.name} · Stage ${found.stage.catalog.stage} Voice Lessons`,
     keywords: lessonKeywords({ name: catalog.name, skill: catalog.skill }),
-    description: `${catalog.skill}: ${catalog.lessons.length} short, free singing lessons. Outcome: I ${catalog.promise}`,
+    description: `${catalog.name}: ${catalog.lessons.length} short, free voice lessons on ${lowerFirst(catalog.skill)}. The outcome: I ${catalog.promise}`,
     alternates: { canonical: `${SITE_URL}${found.module.href}` },
   });
 }
@@ -45,12 +52,13 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
   const found = findModule(stageSlug, moduleSlug);
   if (!found) notFound();
   const { stage, module } = found;
+  const { previous, next } = moduleNeighbours(module);
 
   return (
     <PageShell
       kicker={`Stage ${stage.catalog.stage} · ${stage.catalog.name}`}
-      title={module.catalog.name}
-      subtitle={module.catalog.skill}
+      title={`${module.catalog.name}: voice lessons on ${lowerFirst(module.catalog.skill)}`}
+      subtitle={`${module.lessons.length} short, free lessons, ${moduleMinutes(module)} minutes in all, from stage ${stage.catalog.stage} of the voice course, ${stage.catalog.name}. Each one ends in a self-check you judge by ear.`}
     >
       <CourseBreadcrumbs
         trail={[
@@ -89,6 +97,20 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
           </div>
         </Card>
         <ModulePractice moduleId={module.catalog.id} />
+        <nav aria-label="Modules" className="flex flex-wrap justify-between gap-3 text-sm">
+          {previous?.href ? (
+            <Link href={previous.href} className="inline-block py-0.5 text-violet-ink hover:underline">
+              ← {previous.catalog.name} lessons
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next?.href && (
+            <Link href={next.href} className="inline-block py-0.5 text-violet-ink hover:underline">
+              {next.catalog.name} lessons →
+            </Link>
+          )}
+        </nav>
         <VoiceSafetyNote />
       </div>
     </PageShell>

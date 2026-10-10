@@ -5,7 +5,7 @@ stage: "v-l4"
 title: "Self-Check: Count, Clap, Sing"
 type: "checkpoint"
 minutes: 5
-objective: "counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. This is a listening and reflection check."
+objective: "Count and clap the displayed rhythm before singing it, then review by ear where your entries line up. This is a listening and reflection check."
 prerequisites: "v-l4-m2-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

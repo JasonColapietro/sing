@@ -5,7 +5,7 @@ stage: "v-l5"
 title: "Self-Check: Your Answering Phrase"
 type: "checkpoint"
 minutes: 5
-objective: "used notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a listening and reflection check."
+objective: "Use notes from the supplied pattern to invent a short answer with a clear beginning and ending. This is a listening and reflection check."
 prerequisites: "v-l5-m5-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { lessonKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LESSON_REFERENCES, LESSONS } from "@/lib/lesson-data";
+import { LESSON_REFERENCES, LESSONS, type Lesson } from "@/lib/lesson-data";
 import { Markdown } from "@/lib/markdown";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { withCanonicalOpenGraph } from "@/lib/og";
@@ -42,7 +42,7 @@ export async function generateMetadata({
   const { body } = found.lesson;
   return withCanonicalOpenGraph({
     title: `${body.title} · ${found.module.catalog.name} Voice Lesson`,
-    description: body.objective,
+    description: lessonDescription(body, found.module.catalog.name),
     keywords: lessonKeywords({ name: body.title, group: found.module.catalog.name }),
     alternates: { canonical: `${SITE_URL}${lessonHref(body)}` },
   });
@@ -54,6 +54,17 @@ const TYPE_LABEL: Record<string, string> = {
   song: "Song",
   checkpoint: "Self-check",
 };
+
+/**
+ * The search snippet: the lesson's objective, which is the answer, then what
+ * kind of lesson it is and where it sits. Many objectives are one short line
+ * ("What to move and what to leave alone."), too thin to stand as a snippet on
+ * their own; withCanonicalOpenGraph trims the tail back off a long one.
+ */
+function lessonDescription(lesson: Lesson, moduleName: string): string {
+  const kind = (TYPE_LABEL[lesson.type] ?? lesson.type).toLowerCase();
+  return `${lesson.objective} A free ${lesson.minutes}-minute ${kind} lesson from the ${moduleName} voice lessons, with practice steps and a self-check.`;
+}
 
 export default async function LessonPage({ params }: { params: Promise<Params> }) {
   const { stage: s, module: m, lesson: l } = await params;

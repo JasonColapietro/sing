@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Self-Check: Your Effects Stop Plan"
 type: "checkpoint"
 minutes: 6
-objective: "read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a listening and reflection check."
+objective: "Read the safety material and write a stop plan, without attempting to learn a new vocal effect from an app. This is a listening and reflection check."
 prerequisites: "v-l7-m4-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
