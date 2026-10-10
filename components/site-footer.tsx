@@ -9,7 +9,7 @@ import {
 /**
  * Site-wide footer. A Server Component with no client state, so every link
  * below ships in the raw server-rendered HTML of every page — including all
- * ~420 singer pages and the homepage.
+ * ~636 singer pages and the homepage.
  *
  * This is the estate's hub-and-spoke crawl spine: the singer pages already
  * link to each other, but the *hubs* that gather them (the voice-type and
