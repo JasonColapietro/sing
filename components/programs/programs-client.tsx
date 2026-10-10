@@ -226,7 +226,7 @@ function ProgramDetail({
             <span className="font-medium text-ink">
               {freeLabel().replace(/^w/, "W")} is free.
             </span>{" "}
-            It uses only free exercises, and each day&apos;s guided practice fits the free plan&apos;s three minutes. Day{" "}
+            It uses only free exercises, and each day&apos;s guided practice fits the free plan&apos;s five minutes. Day{" "}
             {FREE_WEEKS * 7 + 1} onward needs <Link href="/pro" className="underline">Pro</Link>.
           </p>
         )}
@@ -278,8 +278,8 @@ export function ProgramsClient() {
   return (
     <PageShell
       kicker="Programs"
-      title="Practice programs"
-      subtitle="Named plans from one week to twelve, worked a day at a time: warmups, breath and check-ins, with rest days built in. Every day opens the rooms you already use."
+      title="Singing practice programs"
+      subtitle="Vocal training programs from one week to twelve, worked a day at a time: warmups, breath and range check-ins, with rest days built in. Four are free, and every day opens the rooms you already use."
     >
       <div className="space-y-8">
         {active && (!program || program.id === active.program.id) && (

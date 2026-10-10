@@ -94,7 +94,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "One hundredth of a semitone, the unit the pitch readout uses for how far off a note landed.",
         where:
-          "The studio's gauge shows cents live; under about five is inaudible to most listeners, twenty or more reads clearly as out of tune.",
+          "The studio's gauge shows cents live: 100 cents make one semitone, so a reading of −20 means a fifth of a semitone flat.",
         href: "/studio",
         domain: "music",
       },
@@ -277,7 +277,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "One of the eight conventional labels, soprano through bass, for the band a voice sits in and the weight it carries.",
         where:
-          "The range result names the type whose band overlaps your span most closely, and the singer library files every voice by type.",
+          "The range result names the type whose band overlaps your span most closely, as an estimate rather than a classification, and the singer library files every voice by its catalog label.",
         href: "/range",
         domain: "voice",
       },
@@ -348,9 +348,9 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Vocal dose",
         aka: ["Cycle dose"],
         definition:
-          "A measure of how much work the folds have done, counted in vibration cycles rather than minutes, because a minute sung high costs far more than a minute sung low.",
+          "A measure of how much work the folds have done, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
         where:
-          "The vocal-load panel counts cycles while you practice.",
+          "The vocal-load panel counts cycles while you practice: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
         href: "/analyze",
         domain: "voice",
       },
@@ -359,7 +359,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A continuously sustained reference pitch you sing against; when your note is slightly off, the two tones beat audibly.",
         where:
-          "The drone in Tools is the fastest way to hear intonation errors that a screen would have to tell you about.",
+          "The drone in Tools lets you hear an intonation error as beating, without looking at a screen.",
         href: "/tools",
         domain: "music",
       },
@@ -398,7 +398,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "Voicing produced with more vocal-fold compression than the note needs, heard as a tight or squeezed tone rather than a louder one.",
         where:
-          "Lessons use the word and nothing in Suede measures it: the tone panel's ring share is a self-relative resonance number rather than a strain reading, so no figure here can confirm or rule out pressing.",
+          "Lessons use the word and nothing in Suede Sing measures it: the tone panel's ring share is a self-relative resonance number rather than a strain reading, so no figure here can confirm or rule out pressing.",
         href: "/analyze",
         domain: "voice",
       },

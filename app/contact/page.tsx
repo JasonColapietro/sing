@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Card, PageShell } from "@/components/ui";
-import { DEFAULT_OG_IMAGE } from "@/lib/og";
+import { DEFAULT_OG_IMAGE, OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
-const TITLE = "Suggest a Singer Range Correction";
+const TITLE = "Singer Range Correction Requests";
 const DESCRIPTION =
-  "Send source-backed corrections for a Suede Sing singer-range page to the editorial team.";
+  "Send a singer range correction for a Suede Sing vocal range page: the recording, a timestamp and a source. Editors review the evidence before any change.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/contact"),
@@ -18,6 +19,8 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     url: `${SITE_URL}/contact`,
+    siteName: OG_SITE_NAME,
+    locale: OG_LOCALE,
     images: [DEFAULT_OG_IMAGE],
   },
 };
@@ -26,11 +29,11 @@ export default function ContactPage() {
   return (
     <PageShell
       kicker="Corrections"
-      title="Suggest a correction"
-      subtitle="Help us make the singer-range reference clearer and better sourced."
+      title="Suggest a singer range correction"
+      subtitle="Found a singer vocal range that does not match the recording? Email the recording, the timestamp and a source, and the editors will review the evidence."
     >
       <Card className="max-w-3xl">
-        <h2 className="text-xl">Send a source-backed correction</h2>
+        <h2 className="text-xl">How do I send a source-backed correction?</h2>
         <p className="mt-3 text-mut">
           Email{" "}
           <a
@@ -50,6 +53,16 @@ export default function ContactPage() {
           <li>Supporting URL</li>
           <li>Suggested correction</li>
         </ul>
+        <p className="mt-5 text-sm text-mut">
+          Before you send one, read{" "}
+          <Link
+            href="/singers/methodology"
+            className="text-violet-ink underline underline-offset-4"
+          >
+            how singer vocal ranges are sourced and reported
+          </Link>
+          .
+        </p>
       </Card>
     </PageShell>
   );

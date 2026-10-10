@@ -22,7 +22,6 @@ vi.mock("@/components/pro/gate", () => ({
 import SingerPage from "@/app/singers/[slug]/page";
 import SingerImage from "@/app/singers/[slug]/opengraph-image";
 import LearnPage from "@/app/learn/page";
-import { StartingPaths } from "@/components/landing/paths";
 import { CompareWithMe } from "@/components/singers/singer-actions";
 import { singerBySlug } from "@/lib/singers";
 import { FREE_DAILY_SEC } from "@/lib/free-cap";
@@ -56,14 +55,11 @@ describe("singer evidence and comparison regressions", () => {
     expect(html).toContain(status);
   });
   it("discloses the shared guided allowance before the exercise links", () => {
-    expect(FREE_DAILY_SEC).toBe(180);
-    const landing = renderToStaticMarkup(<StartingPaths />);
-    expect(landing).not.toContain("Everything below is free");
-    expect(landing).toContain("3 minutes a day");
+    expect(FREE_DAILY_SEC).toBe(300);
     const learn = renderToStaticMarkup(<LearnPage />).replace(/<!--.*?-->/g, "");
     expect(learn).toContain("An example 20-minute practice plan");
-    expect(learn).toContain("3 minutes a day");
-    expect(learn.indexOf("3 minutes a day")).toBeLessThan(learn.indexOf("Choose the problem"));
+    expect(learn).toContain("5 minutes a day");
+    expect(learn.indexOf("5 minutes a day")).toBeLessThan(learn.indexOf("Choose the problem"));
     expect(learn).toContain('href="/pro"');
     expect(learn).not.toContain("Twenty focused minutes beats");
   });

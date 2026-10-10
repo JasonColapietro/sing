@@ -5,7 +5,7 @@ stage: "v-l6"
 title: "Self-Check: A Clear Agility Pattern"
 type: "checkpoint"
 minutes: 6
-objective: "isolated the existing agility pattern slowly and connected its notes without rushing by my own listening judgment. This is a listening and reflection check."
+objective: "Isolate the agility pattern slowly and connect its notes without rushing, judged by your own listening. This is a listening and reflection check."
 prerequisites: "v-l6-m1-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

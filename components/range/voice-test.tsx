@@ -42,8 +42,10 @@ export function VoiceTest() {
             Vocal range test &amp; pitch meter
           </h1>
           <p className="mt-2 max-w-prose text-mut">
-            Choose Range test for your lowest and highest notes, octave span and
-            a voice-type estimate. Choose Pitch to check a note live.
+            Find your vocal range in about two minutes: the range test listens
+            as you slide down and up, then shows your lowest and highest notes,
+            octave span and a voice-type estimate. Choose Range test to start,
+            or Pitch to check a single note live.
           </p>
           <p className="mt-2 max-w-prose text-mut">
             {mode === "pitch"

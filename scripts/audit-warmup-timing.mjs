@@ -2,7 +2,12 @@
  * Independent audit of the warmup player's timing and scoring alignment.
  *
  * Usage: npm run dev, then
- *   node scripts/audit-warmup-timing.mjs [baseUrl]   # default http://localhost:3000
+ *   node scripts/audit-warmup-timing.mjs [baseUrl] [--executable=path]
+ *
+ * baseUrl defaults to http://localhost:3000. Pass `--executable` for a
+ * Chromium build this Playwright did not install, e.g.
+ * /opt/pw-browsers/chromium-1194/chrome-linux/chrome in a cloud container.
+ * A run takes about 55 s.
  *
  * The unit suite can prove the timeline's arithmetic and the scorer's window,
  * but not that the two meet correctly once a real audio clock, a real
@@ -14,22 +19,48 @@
  *   1. A silent mic scores nothing, even with the guide at full level. This
  *      is the check that fails if the app ever scores its own guide through
  *      the analysis path.
- *   2. A voice aligned to the scored window scores well. The bound here is
- *      55, not higher, and that number is a measurement, not a hedge: probing
- *      the live cents readout during an aligned synthetic take (2026-08-23)
- *      showed the voice reading ~200 ms behind the target at every note
- *      boundary, of which scoreLagSec's model compensates ~95 ms. The
- *      residual ~100 ms is input-chain latency the model does not carry
- *      (stream buffering, and the median window's actual flip behaviour at
- *      transitions), and it caps an aligned take in this rig at roughly
- *      65-75% — before dev-server load jitter, which measured as a 43% vs
- *      67% spread on identical takes. Best-of-two reps absorbs the jitter;
- *      55 is the floor that survives it. If this check starts failing, the
- *      compensation regressed; if it starts passing near 100, the residual
- *      got fixed — raise the bound.
- *   3. The same voice 250 ms late scores materially lower, and at least 20
- *      points under the aligned take. Without this differential, check 2
+ *   2. A voice aligned to the scored window scores at least 90 (ALIGNED_FLOOR),
+ *      best of two reps.
+ *   3. The same voice 350 ms late (LATE_SEC) scores at most 65, and at least
+ *      30 points under the aligned take. Without this differential, check 2
  *      would pass against a scorer that ignored timing altogether.
+ *
+ *   Where those bounds come from (measured 2026-10-10, `next dev --webpack`,
+ *   headless Chromium 1194, five-note scale at 1x on root E3):
+ *
+ *   - The take is now armed in the page and starts on the DOM flip to "Sing"
+ *     (see armTake). The audit used to wait for the word through Playwright
+ *     and then schedule the take; a probe of that path saw the flip 150-520 ms
+ *     after the DOM made it, so every "aligned" take was really a random
+ *     150-520 ms late. That, not the scorer, is what produced the 43% vs 67%
+ *     spread on identical takes the old floor of 55 was set against, and the
+ *     same run of this script before the change scored reps of 65%, 4% and a
+ *     late take of 2%.
+ *   - With in-page arming, rep 1 by start offset after the flip: -250 ms 68%,
+ *     -200 ms 85%, -150 ms 89%, -100 ms to +150 ms 99-100%, +200 ms 87-89%,
+ *     +250 ms 78-80%, +300 ms 62%, +350 ms 47-51%, +400 ms 38%. Three full
+ *     runs of this script scored every aligned rep 100% (six of six) and the
+ *     late take 47%, 51% and 51%.
+ *   - So the floor of 90 keeps 10 points of margin under every measured
+ *     aligned rep and still fails if alignment drifts by more than about
+ *     150-200 ms either way: a scoreLagSec or onset-grace regression, or a
+ *     timeline that moved the window. The late ceiling of 65 sits 14 points
+ *     over the worst late take, and the spread of 30 sits 19 under the
+ *     smallest measured one (49).
+ *   - The flat top of that curve is centred within about 25 ms of a zero
+ *     offset. In this rig, then, scoreLagSec's model already covers the whole
+ *     input chain, and the ~105 ms residual the onset grace forgives
+ *     (ONSET_GRACE_SEC in components/warmups/scoring.ts, from
+ *     MEASURED_ONSET_LAG_SEC and MODELLED_ONSET_LAG_SEC in lib/audio/latency.ts)
+ *     does not show up. The 200 ms those constants record was probed through
+ *     the old Playwright-armed take, so it probably carries the same arming
+ *     latency. This audit does not change them: a real microphone adds input
+ *     latency this rig has none of. Re-measure on real hardware before
+ *     moving them.
+ *
+ *   If check 2 starts failing, the compensation or the window regressed. If
+ *   check 3 starts failing at the top, the scorer has stopped caring about
+ *   timing, or the grace has grown.
  *   4. With the guide level at zero, the only oscillators scheduled from one
  *      rep to the next are the count-in clicks — no pattern tones leak.
  *
@@ -49,7 +80,14 @@
 import pw from "playwright";
 
 const { chromium } = pw;
-const BASE = (process.argv[2] ?? "http://localhost:3000").replace(/\/$/, "");
+const argv = process.argv.slice(2);
+const flag = (name) => {
+  const hit = argv.find((a) => a.startsWith(`--${name}=`));
+  return hit ? hit.slice(name.length + 3) : null;
+};
+const BASE = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3000").replace(/\/$/, "");
+/** A browser build this Playwright did not install, as in e2e/run.mjs. */
+const EXECUTABLE = flag("executable");
 const VIEW = { width: 1280, height: 900 };
 
 /** The ladder these checks assume: range 48–72 starts the walk at MIDI 52. */
@@ -58,6 +96,14 @@ const ROOT = 52;
 const NOTE_DUR = 0.5;
 const NOTE_GAP = 0.08;
 const OFFSETS = [0, 2, 4, 5, 7, 5, 4, 2, 0];
+
+/** Seconds after the flip to "Sing" an aligned take starts, and a late one. */
+const ALIGNED_SEC = 0;
+const LATE_SEC = 0.35;
+/** The bounds checks 2 and 3 hold the measured scores to; see the header. */
+const ALIGNED_FLOOR = 90;
+const LATE_CEILING = 65;
+const MIN_TIMING_SPREAD = 30;
 
 /**
  * Replace getUserMedia with a controllable oscillator voice, and count every
@@ -88,6 +134,35 @@ const SYNTH_MIC = `
       return dest.stream;
     };
   }
+  // The stage banner is the session dialog's live region; "Sing" is the word
+  // it shows from the first animation frame of the scored window.
+  const singing = () =>
+    [...(document.querySelector('[role="dialog"]')?.querySelectorAll("[aria-live]") ?? [])]
+      .some((el) => el.textContent.trim() === "Sing");
+  window.__take = null;
+  window.__armTake = (delay, root, noteDur, gap, offsets) => {
+    const take = { fired: false };
+    window.__take = take;
+    let was = singing();
+    const mo = new MutationObserver(() => {
+      const now = singing();
+      if (now && !was) {
+        mo.disconnect();
+        const { ctx, osc, gain } = window.__voice;
+        const freq = (m) => 440 * Math.pow(2, (m - 69) / 12);
+        const t0 = ctx.currentTime + delay;
+        offsets.forEach((o, i) => {
+          const t = t0 + i * (noteDur + gap);
+          osc.frequency.setValueAtTime(freq(root + o), t);
+          gain.gain.setValueAtTime(0.15, t);
+          gain.gain.setValueAtTime(0, t + noteDur);
+        });
+        take.fired = true;
+      }
+      was = now;
+    });
+    mo.observe(document.body, { subtree: true, childList: true, characterData: true });
+  };
   localStorage.setItem("suede-sing:coach-intro:v1", new Date().toISOString());
   localStorage.setItem("suede-sing:progress:v1", JSON.stringify({
     xp: 0, sessions: [], streak: { current: 0, best: 0, lastDay: null },
@@ -112,6 +187,7 @@ function check(label, pass, detail) {
 }
 
 const browser = await chromium.launch({
+  ...(EXECUTABLE ? { executablePath: EXECUTABLE } : {}),
   args: ["--autoplay-policy=no-user-gesture-required"],
 });
 
@@ -124,41 +200,63 @@ async function freshPage(prefs) {
   return { ctx, page };
 }
 
-async function startExercise(page, title) {
-  await page
-    .locator("button", { has: page.locator("h3", { hasText: title }) })
-    .first()
-    .click();
+const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * The exercise's row on the room's path. A row is a button whose accessible
+ * name opens with the title (then its pills, ladder and stars), so anchoring
+ * the name picks it out from the routine cards, whose names open with the
+ * routine's, and from "Minor five-note scale". Today's three are links, not
+ * buttons, and start at the plan's tempo, so they must not be what this hits.
+ */
+function pathRow(page, title) {
+  return page.getByRole("button", { name: new RegExp(`^${escapeRe(title)}`) });
 }
 
 /**
- * Sing the five-note pattern from the synthetic voice, starting `delaySec`
- * after the call, on the given root — the ladder climbs a semitone per rep,
- * so rep 2 is sung at ROOT + 1. Frequencies and spacing mirror buildSegments
- * exactly, so a delay of ~0 sung at "Your turn" is an aligned take.
+ * Start an exercise from its path row and return the running session: the
+ * full-screen player, a dialog labelled with the exercise's title. Every read
+ * below is scoped to it.
  */
-async function singPattern(page, delaySec, root = ROOT) {
+async function startExercise(page, title) {
+  await pathRow(page, title).click();
+  const session = page.getByRole("dialog", { name: title, exact: true });
+  await session.waitFor({ state: "visible", timeout: 20_000 });
+  return session;
+}
+
+/**
+ * Sing the five-note pattern from the synthetic voice `delaySec` after the
+ * next time the stage banner flips to "Sing", on the given root — the ladder
+ * climbs a semitone per rep, so rep 2 is sung at ROOT + 1. Frequencies and
+ * spacing mirror buildSegments exactly, so a delay of 0 is an aligned take.
+ *
+ * The take is armed in the page, on a MutationObserver, and must be armed
+ * while the banner does not yet say "Sing". Waiting for the word from here and
+ * then scheduling the take is what the audit used to do, and Playwright's
+ * polling saw the flip 150-520 ms after the DOM made it (probed 2026-10-10),
+ * which is a random lateness on every "aligned" take.
+ */
+async function armTake(page, delaySec, root = ROOT) {
   await page.evaluate(
-    ([delay, root, noteDur, gap, offsets]) => {
-      const { ctx, osc, gain } = window.__voice;
-      const freq = (m) => 440 * Math.pow(2, (m - 69) / 12);
-      const t0 = ctx.currentTime + delay;
-      offsets.forEach((o, i) => {
-        const t = t0 + i * (noteDur + gap);
-        osc.frequency.setValueAtTime(freq(root + o), t);
-        gain.gain.setValueAtTime(0.15, t);
-        gain.gain.setValueAtTime(0, t + noteDur);
-      });
-    },
+    ([delay, root, noteDur, gap, offsets]) =>
+      window.__armTake(delay, root, noteDur, gap, offsets),
     [delaySec, root, NOTE_DUR, NOTE_GAP, OFFSETS],
   );
 }
 
-async function readRepScore(page, timeout) {
-  const pill = page.locator("text=/Rep score \\d+%/").first();
+/** Wait for the armed take to have been scheduled. */
+async function takeFired(page, timeout) {
+  await page.waitForFunction(() => window.__take?.fired === true, null, { timeout });
+}
+
+/** The last rep's result pill, "Rep 67%", as distinct from the "Rep 2" counter. */
+const REP_SCORE = /^Rep (\d+)%$/;
+
+async function readRepScore(session, timeout) {
+  const pill = session.getByText(REP_SCORE);
   await pill.waitFor({ state: "visible", timeout });
-  const text = await pill.textContent();
-  return Number(/Rep score (\d+)%/.exec(text ?? "")[1]);
+  return Number(REP_SCORE.exec((await pill.textContent())?.trim() ?? "")[1]);
 }
 
 /* ---------------------------------------------- 1. silence scores nothing */
@@ -166,10 +264,10 @@ async function readRepScore(page, timeout) {
 console.log("\n1. a silent mic scores nothing, guide at full");
 {
   const { ctx, page } = await freshPage({ mode: "sing-along", guidePct: 100, click: true });
-  await startExercise(page, "Sustained hold");
+  const session = await startExercise(page, "Sustained hold");
   // The voice's gain stays at 0: nobody sings. The first unsung rep shows the
   // pill; the second ends the session without logging anything.
-  const silentPill = page.locator("text=No sound picked up").first();
+  const silentPill = session.getByText("No sound picked up", { exact: true });
   let pillShown = true;
   try {
     await silentPill.waitFor({ state: "visible", timeout: 40_000 });
@@ -178,13 +276,12 @@ console.log("\n1. a silent mic scores nothing, guide at full");
   }
   check("the first unsung rep says so on screen", pillShown);
 
-  // Nothing was ever sung, so the walk exits back to the library.
+  // Nothing was ever sung, so the walk exits back to the room's home: the
+  // session dialog closes and the path row that started it is back.
   let backAtLibrary = true;
   try {
-    await page
-      .locator("text=Pick an exercise")
-      .first()
-      .waitFor({ state: "visible", timeout: 30_000 });
+    await session.waitFor({ state: "hidden", timeout: 30_000 });
+    await pathRow(page, "Sustained hold").waitFor({ state: "visible", timeout: 5_000 });
   } catch {
     backAtLibrary = false;
   }
@@ -204,34 +301,34 @@ console.log("\n2. an aligned voice scores well (guide at 0: the voice is the onl
 let alignedScore = null;
 {
   const { ctx, page } = await freshPage({ mode: "sing-along", guidePct: 0, click: true });
-  await startExercise(page, "Five-note scale");
+  const session = await startExercise(page, "Five-note scale");
 
-  // Rep 1: sing when the scored window opens.
-  await page.locator("h2", { hasText: "Your turn" }).waitFor({ state: "visible", timeout: 20_000 });
-  await singPattern(page, 0.05);
-  const rep1 = await readRepScore(page, 20_000);
+  // Rep 1: the teach pass ("Listen"), the count-in ("Breathe"), then the take
+  // starts on the flip to "Sing", when the scored window opens.
+  await armTake(page, ALIGNED_SEC);
+  await takeFired(page, 20_000);
+  // The result pill only shows outside a scored window, so once it is up the
+  // next flip to "Sing" is rep 2's.
+  const rep1 = await readRepScore(session, 20_000);
+  await armTake(page, ALIGNED_SEC, ROOT + 1); // rep 2 sits one rung up the ladder
 
-  // Check 4 rides the same session: between one rep pill and the next, the
-  // only oscillators created are the next rep's two count-in clicks. A guide
-  // leaking past level 0 would add a pattern's worth (each guide note is an
-  // oscillator plus its shimmer).
-  await page.locator("text=Rep 2").first().waitFor({ state: "visible", timeout: 5_000 });
+  // Check 4 rides the same session: between one rep counter and the next,
+  // the only oscillators created are the next rep's two count-in clicks. A
+  // guide leaking past level 0 would add a pattern's worth (each guide note is
+  // an oscillator plus its shimmer).
+  await session.getByText("Rep 2", { exact: true }).waitFor({ state: "visible", timeout: 5_000 });
   const c1 = await page.evaluate(() => window.__oscCount);
-  // Rep 1's "Your turn" can still be on screen when the Rep 2 pill lands, so
-  // wait for the heading to flip back to "Listen" before arming on the next
-  // "Your turn" — firing on the stale heading sings a rep early.
-  await page.locator("h2", { hasText: "Listen" }).waitFor({ state: "visible", timeout: 20_000 });
-  await page.locator("h2", { hasText: "Your turn" }).waitFor({ state: "visible", timeout: 20_000 });
-  await singPattern(page, 0.05, ROOT + 1); // rep 2 sits one rung up the ladder
-  await page.locator("text=Rep 3").first().waitFor({ state: "visible", timeout: 20_000 });
-  const rep2Text = await page.locator("text=/Rep score \\d+%/").first().textContent();
-  const rep2 = Number(/Rep score (\d+)%/.exec(rep2Text ?? "")[1]);
+  // Sing-along teaches only rep 0, so rep 2 goes straight to its count-in and
+  // then its window.
+  await takeFired(page, 20_000);
+  await session.getByText("Rep 3", { exact: true }).waitFor({ state: "visible", timeout: 20_000 });
+  const rep2 = await readRepScore(session, 5_000);
   const c2 = await page.evaluate(() => window.__oscCount);
 
-  // Best of two: an identical take measured 43% and 67% across runs purely
-  // from load jitter, so one rep is not a stable measurement of alignment.
+  // Best of two, as a guard against a dev-server stall landing inside one
+  // window. With the take armed in the page, both reps measure the same.
   alignedScore = Math.max(rep1, rep2);
-  check("best aligned rep scores at least 55", alignedScore >= 55,
+  check(`best aligned rep scores at least ${ALIGNED_FLOOR}`, alignedScore >= ALIGNED_FLOOR,
     `reps scored ${rep1}% and ${rep2}%`);
 
   console.log("\n4. the guide is silent at level zero");
@@ -242,17 +339,17 @@ let alignedScore = null;
 
 /* --------------------------------------------- 3. a late voice scores low */
 
-console.log("\n3. the same voice 250 ms late scores materially lower");
+console.log(`\n3. the same voice ${Math.round(LATE_SEC * 1000)} ms late scores materially lower`);
 {
   const { ctx, page } = await freshPage({ mode: "sing-along", guidePct: 0, click: true });
-  await startExercise(page, "Five-note scale");
-  await page.locator("h2", { hasText: "Your turn" }).waitFor({ state: "visible", timeout: 20_000 });
-  await singPattern(page, 0.3);
-  const lateScore = await readRepScore(page, 20_000);
-  check("late take scores at most 70", lateScore <= 70, `scored ${lateScore}%`);
+  const session = await startExercise(page, "Five-note scale");
+  await armTake(page, LATE_SEC);
+  await takeFired(page, 20_000);
+  const lateScore = await readRepScore(session, 20_000);
+  check(`late take scores at most ${LATE_CEILING}`, lateScore <= LATE_CEILING, `scored ${lateScore}%`);
   check(
-    "and at least 20 points under the aligned take",
-    alignedScore !== null && alignedScore - lateScore >= 20,
+    `and at least ${MIN_TIMING_SPREAD} points under the aligned take`,
+    alignedScore !== null && alignedScore - lateScore >= MIN_TIMING_SPREAD,
     `aligned ${alignedScore}% vs late ${lateScore}%`,
   );
   await ctx.close();

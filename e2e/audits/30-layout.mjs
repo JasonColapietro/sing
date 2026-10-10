@@ -1,12 +1,14 @@
 /**
- * Responsive layout integrity — six checks against the rendered page:
+ * Responsive layout integrity — seven checks against the rendered page:
  * sideways page scroll, content silently clipped by an overflow-hidden
  * ancestor, overlapping text, unreadable paragraph line lengths, fixed/sticky
- * chrome eating the mobile viewport, and images missing intrinsic sizing.
+ * chrome eating the mobile viewport, fixed bottom chrome still covering the
+ * end of the page at full scroll, and images missing intrinsic sizing.
  *
- * Runs as ONE `page.evaluate` so all six checks share a single DOM walk and
+ * Runs as ONE `page.evaluate` so all seven checks share a single DOM walk and
  * node budget instead of paying the JS bridge round trip — and re-querying
- * the tree — six separate times.
+ * the tree — seven separate times. (The end-of-page check widens its walk to
+ * the whole tree; see auditFixedChromeCoversEnd.)
  */
 
 export const id = "layout";
@@ -178,7 +180,18 @@ export async function run(ctx) {
       }
 
       for (const el of outermostOnly(candidates).slice(0, 8)) {
-        const hasText = (el.textContent || "").trim().length > 0;
+        // Judge the text on what is actually cut off, not on the clipping
+        // box as a whole. The home hero is a rounded overflow-hidden card
+        // whose two blurred colour blobs (absolute, pointer-events-none, no
+        // text) deliberately bleed past its edge; reading the hero's own
+        // headline as "clipped text" filed a major for a decoration doing its
+        // job. A text node that reaches past the box still makes it major.
+        const box = el.getBoundingClientRect();
+        const hasText = [...el.querySelectorAll("*")].some((d) => {
+          if (!(d.textContent || "").trim()) return false;
+          const r = d.getBoundingClientRect();
+          return r.width > 0 && (r.right > box.right + 1 || r.left < box.left - 1);
+        });
         findings.push({
           severity: hasText ? "major" : "minor",
           summary: hasText
@@ -229,6 +242,25 @@ export async function run(ctx) {
       }
 
       /**
+       * Fixed chrome and the page are separate layers. The phone tab bar is
+       * pinned to the bottom of the viewport, so on arrival it always sits
+       * over whatever paragraph happens to be 750px down -- that is how a tab
+       * bar works, and the paragraph scrolls clear of it. Comparing the two
+       * filed 267 "overlapping text" majors on a full run, one per tab per
+       * page, none of them a defect. The failure that IS possible -- the bar
+       * still covering the end of the page when you cannot scroll any
+       * further -- is checked on its own below (auditFixedChromeCoversEnd).
+       * Two fixed elements, or two in-flow ones, are still compared.
+       */
+      const fixedLayer = (el) => {
+        for (let n = el; n && n !== document.body; n = n.parentElement) {
+          if (getComputedStyle(n).position === "fixed") return true;
+        }
+        return false;
+      };
+      const isFixed = candidates.map(fixedLayer);
+
+      /**
        * The rect a person can actually see, not the rect the element claims.
        *
        * An element inside a scroll container keeps its full width in its
@@ -274,6 +306,7 @@ export async function run(ctx) {
           const xOverlap = Math.min(a.right, b.right) - Math.max(a.left, b.left);
           const yOverlap = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
           if (xOverlap <= 4 || yOverlap <= 4) continue;
+          if (isFixed[i] !== isFixed[j]) continue;
           if (candidates[i].contains(candidates[j]) || candidates[j].contains(candidates[i])) continue;
 
           // Neither rect may fully contain the other — that's nesting
@@ -405,6 +438,65 @@ export async function run(ctx) {
     }
 
     // -----------------------------------------------------------------
+    // 5b. Fixed bottom chrome covering the end of the page
+    // -----------------------------------------------------------------
+    /**
+     * The half of "the tab bar overlaps content" that is a real defect: with
+     * the page scrolled as far as it goes, the last text or control must
+     * clear the top of any bar pinned to the bottom of the viewport. If it
+     * does not, that content can never be read or tapped. (The overlap check
+     * above deliberately ignores fixed-vs-flow pairs; this is what replaces
+     * it.) Scrolls inside the evaluate and puts the scroll position back.
+     */
+    function auditFixedChromeCoversEnd() {
+      // The whole tree, not WALKABLE: the tab bar renders after the page, so
+      // on a long directory it sits past the walk budget, and so does the
+      // content at the end of the page that this check is about.
+      const all = Array.from(document.body.querySelectorAll("*"));
+      const bars = all.filter((el) => {
+        if (isSvgNode(el) || !isRendered(el)) return false;
+        if (getComputedStyle(el).position !== "fixed") return false;
+        const r = el.getBoundingClientRect();
+        return r.bottom >= window.innerHeight - 1 && r.height < window.innerHeight * 0.5 && r.width >= window.innerWidth * 0.5;
+      });
+      if (bars.length === 0) return;
+
+      const startY = window.scrollY;
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" });
+      try {
+        const barTop = Math.min(...bars.map((b) => b.getBoundingClientRect().top));
+        const inBar = (el) => bars.some((b) => b.contains(el));
+        let worst = null;
+        for (const el of all) {
+          // Rect first: it rules out nearly every node without a style read.
+          if (el.getBoundingClientRect().bottom - barTop <= 4) continue;
+          if (isSvgNode(el) || inBar(el) || !isRendered(el)) continue;
+          let fixed = false;
+          for (let n = el; n && n !== document.body; n = n.parentElement) {
+            if (getComputedStyle(n).position === "fixed") { fixed = true; break; }
+          }
+          if (fixed) continue;
+          const interactive = el.matches("a[href], button, input, select, textarea, [role=button]");
+          const ownsText = [...el.childNodes].some((c) => c.nodeType === Node.TEXT_NODE && c.textContent.trim());
+          if (!interactive && !ownsText) continue;
+          const r = el.getBoundingClientRect();
+          const covered = r.bottom - barTop;
+          if (covered > 4 && (!worst || covered > worst.covered)) worst = { el, covered };
+        }
+        if (worst) {
+          findings.push({
+            severity: "major",
+            summary: "Fixed bottom chrome covers the end of the page",
+            detail: `scrolled to the bottom, ${Math.round(worst.covered)}px of "${(worst.el.textContent || "").trim().slice(0, 30)}" is still under ${bars.map(describe).join(", ")}; the body needs bottom padding at least as tall as the bar`,
+            selector: describe(worst.el),
+          });
+        }
+      } finally {
+        window.scrollTo({ top: startY, behavior: "instant" });
+      }
+    }
+
+    // -----------------------------------------------------------------
     // 6. Images without intrinsic sizing
     // -----------------------------------------------------------------
     function auditImageSizing() {
@@ -445,12 +537,13 @@ export async function run(ctx) {
       auditTextOverlap,
       auditLineLength,
       auditFixedChrome,
+      auditFixedChromeCoversEnd,
       auditImageSizing,
     ]) {
       try {
         audit();
       } catch {
-        // A bug in one check shouldn't silence the other five for this
+        // A bug in one check shouldn't silence the other six for this
         // route+viewport; run.mjs reports rig errors separately from this
         // return value anyway.
       }

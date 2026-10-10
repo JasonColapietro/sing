@@ -8,9 +8,9 @@ import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/breath"),
-  title: "Breathing Exercises for Singers: Breath Support",
+  title: BREATH_GUIDE.pageName,
   description:
-    "Build the air supply behind every long note: a mic-based sustain test plus guided breathing exercises for singers. Free in the browser.",
+    "Breathing exercises for singers: guided breath sets and a mic-based sustain test for support on long notes. Guided practice is 5 free minutes a day.",
   alternates: { canonical: `${SITE_URL}/breath` },
 });
 

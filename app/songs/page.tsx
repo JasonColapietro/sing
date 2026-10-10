@@ -14,8 +14,8 @@ import { routeKeywords } from "@/lib/keywords";
 
 // Derived from the arrays rather than written down, so the counts cannot go
 // stale as the songbook grows.
-const TITLE = "Public Domain Songs to Sing with Pitch Feedback";
-const DESCRIPTION = `Sing ${SONGS.length} public-domain melodies with live pitch feedback. Each transposes to your range and has a page with lyrics, key, tempo and note range.`;
+const TITLE = SONGS_GUIDE.pageName;
+const DESCRIPTION = `Public domain songs to sing with live pitch feedback: ${SONGS.length} melodies transposed to your range, with lyrics, key and note range. 5 free minutes a day.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/songs"),

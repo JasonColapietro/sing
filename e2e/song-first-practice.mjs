@@ -1,12 +1,17 @@
 /**
  * Focused song-range journeys against a running local app:
- *   node e2e/song-first-practice.mjs http://localhost:3100
+ *   node e2e/song-first-practice.mjs http://localhost:3100 [--executable=path]
  * Seeds saved ranges; a fake microphone verifies handoffs, not singing accuracy.
  */
 import assert from "node:assert/strict";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { chromium } from "playwright";
 
-const base = process.argv[2] ?? "http://localhost:3100";
+const argv = process.argv.slice(2);
+const base = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3100").replace(/\/$/, "");
+/** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
+const executable = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
 const path = "/can-you-sing/espresso";
 const progressKey = "suede-sing:progress:v1";
 const proKey = "suede-sing:pro:v2";
@@ -19,10 +24,10 @@ const cases = [
   { name: "high", range: { lowMidi: 48, highMidi: 64 }, href: "/warmups?exercise=ng-siren-fifth", title: "Ng siren to the fifth" },
   { name: "low", range: { lowMidi: 58, highMidi: 76 }, href: "/warmups?exercise=descending-five", title: "Descending five" },
   { name: "wide", range: { lowMidi: 60, highMidi: 73 }, href: "/warmups?exercise=humming-thirds", title: "Humming thirds" },
-  { name: "narrow", range: { lowMidi: 60, highMidi: 64 }, href: "/studio", title: "Pitch studio" },
+  { name: "narrow", range: { lowMidi: 60, highMidi: 64 }, href: "/studio", title: "Pitch training studio" },
 ];
 const browser = await chromium.launch({
-  channel: "chrome", headless: true,
+  ...(executable ? { executablePath: executable } : { channel: "chrome" }), headless: true,
   args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream"],
 });
 
@@ -36,7 +41,10 @@ async function session(viewport, range = {}, pro = false) {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(`${base}${path}`);
-  await page.getByRole("heading", { level: 1, name: "Espresso — Sabrina Carpenter" }).waitFor();
+  // The H1 is the SEO question form ("Can you sing “Espresso” by Sabrina
+  // Carpenter? …", pinned by lib/on-page-headings.test.tsx); match the part
+  // that names the song rather than the whole sentence.
+  await page.getByRole("heading", { level: 1, name: "“Espresso” by Sabrina Carpenter" }).waitFor();
   return { context, page, errors };
 }
 
@@ -56,7 +64,7 @@ try {
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
         if (viewport.width === 375 && test.name === "high") {
           await practice.scrollIntoViewIfNeeded();
-          await page.screenshot({ path: "/private/tmp/sing-song-funnel-mobile.png", fullPage: true });
+          await page.screenshot({ path: join(tmpdir(), "sing-song-funnel-mobile.png"), fullPage: true });
         }
 
         await first.click();
@@ -85,7 +93,7 @@ try {
   try {
     assert.equal(await page.getByRole("region", { name: "Your first practice" }).count(), 0);
     await page.getByRole("link", { name: "Find your range free", exact: true }).click();
-    await page.getByRole("heading", { level: 1, name: "Find your vocal range" }).waitFor();
+    await page.getByRole("heading", { level: 1, name: "Vocal range test & pitch meter" }).waitFor();
     // Another tab saving a range must update the comparison on return.
     const other = await context.newPage();
     await other.goto(`${base}/range`);

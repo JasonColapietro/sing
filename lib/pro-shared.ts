@@ -129,11 +129,11 @@ export function proHeadlineLong(
 export const PRO_FAQ: Array<{ q: string; a: string }> = [
   {
     q: "Does the free studio stay free?",
-    a: "Yes — permanently. All ten rooms, live pitch feedback, the range test, the recorder: none of it moves behind Pro. Pro only adds things that don't exist today.",
+    a: "Yes — permanently. All ten rooms stay open on the free plan. Live pitch feedback, the range test and the recorder have no daily limit; guided practice (warmups, ear training, breath and songs) shares five free minutes a day. Pro removes that limit and adds things that don't exist on the free plan.",
   },
   {
     q: "Do I need Pro to get better?",
-    a: "Not to practice — the studio, the range test and the warmups are free and stay free. Pro is for the singer who wants the record: every test charted, every take analysed, and the two books that explain what the numbers mean.",
+    a: "Not to practice — the studio and the range test are free with no daily limit, and the warmups are free for five minutes a day. Pro is for the singer who wants the record: every test charted, every take analysed, and the two books that explain what the numbers mean.",
   },
   {
     q: "Is my voice uploaded?",

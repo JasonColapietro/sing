@@ -1,6 +1,6 @@
 /**
  * Songs room: rehearsal and performance modes, against a running local app:
- *   node e2e/songs-modes.mjs http://localhost:3011
+ *   node e2e/songs-modes.mjs http://localhost:3011 [--executable=path]
  * A fake microphone (silence) drives the real player, so scores are 0 and every
  * loop is "poor" — which is exactly what makes Auto tempo's downward step, the
  * rehearsal wrap, and the performance readout deterministic to assert.
@@ -8,14 +8,17 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
 
-const base = process.argv[2] ?? "http://localhost:3011";
+const argv = process.argv.slice(2);
+const base = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3011").replace(/\/$/, "");
+/** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
+const executable = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
 const progressKey = "suede-sing:progress:v1";
 /** The one-time Pro moment opens over the first result it sees; mark it seen so it stays out of the way. */
 const coachIntroKey = "suede-sing:coach-intro:v1";
 const record = { xp: 0, sessions: [], range: { lowMidi: 52, highMidi: 72 }, rangeHistory: [], achievements: [],
   streak: { current: 0, best: 0, lastDay: null } };
 const browser = await chromium.launch({
-  channel: "chrome", headless: true,
+  ...(executable ? { executablePath: executable } : { channel: "chrome" }), headless: true,
   args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream", "--autoplay-policy=no-user-gesture-required"],
 });
 

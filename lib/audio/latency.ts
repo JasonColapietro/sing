@@ -58,6 +58,42 @@ export function scoreLagSec(pitchLag: number, outputLag: number): number {
   return Math.max(0, pitchLag) + Math.max(0, outputLag);
 }
 
+/**
+ * How far behind the target an aligned voice actually read, measured end to end.
+ *
+ * scripts/audit-warmup-timing.mjs drives the real warmup room with a synthetic
+ * voice. Probing the live cents readout of that take (2026-08-23) showed the
+ * voice landing about 200 ms after the target at every note boundary.
+ *
+ * Caveat: that probe's take was scheduled from Playwright after the stage
+ * switch, which started it 150-520 ms late at random (fixed in the audit on
+ * 2026-10-10). The fixed audit scores 99-100% from 100 ms early to 150 ms
+ * late with its curve centred within ~25 ms of zero, so most of this figure
+ * was the rig, not the input chain. Re-measure on real microphones before
+ * relying on it as a latency.
+ */
+export const MEASURED_ONSET_LAG_SEC = 0.2;
+
+/**
+ * The part of MEASURED_ONSET_LAG_SEC that `scoreLagSec` already rewinds, in the
+ * same rig and the same probe: about 95 ms (the analyser half-window and the
+ * median window from `pitchReportLagSec`, plus the context's output latency).
+ */
+export const MODELLED_ONSET_LAG_SEC = 0.095;
+
+/**
+ * Input latency the model may not carry: stream buffering ahead of the
+ * analyser, and the median window's real flip behaviour at a note change. The
+ * 105 ms figure inherits MEASURED_ONSET_LAG_SEC's caveat, so it is used only as
+ * an onset tolerance: the warmup scorer neither credits nor penalises a window
+ * of this length at the front of each note (components/warmups/scoring). It is
+ * never rewound, because real input latency varies by device.
+ */
+export const UNMODELLED_INPUT_LAG_SEC =
+  // Rounded to the millisecond, so the published contract carries 0.105 rather
+  // than the float subtraction's 0.10500000000000001.
+  Math.round((MEASURED_ONSET_LAG_SEC - MODELLED_ONSET_LAG_SEC) * 1000) / 1000;
+
 /** Both lags for the live context, in one call, for a room about to score. */
 export function liveLags(sampleRate: number, fftSize: number): {
   pitchLag: number;

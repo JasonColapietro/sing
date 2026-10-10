@@ -5,7 +5,7 @@ stage: "v-l4"
 title: "Self-Check: Intonation by Listening"
 type: "checkpoint"
 minutes: 5
-objective: "compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a listening and reflection check."
+objective: "Compare your Amazing Grace study with the note reference and identify one pitch to revisit by ear. This is a listening and reflection check."
 prerequisites: "v-l4-m1-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

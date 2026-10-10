@@ -8,7 +8,7 @@ import { FREE_DAILY_SEC } from "./practice-limits";
 /**
  * The free tier's daily allowance of guided practice.
  *
- * Free accounts get three minutes a day across the rooms that run a scored
+ * Free accounts get five minutes a day across the rooms that run a scored
  * session — warmups, ear training, breath and song practice. The pitch
  * studio, the range test, the recorder and the tools stay free without a
  * clock: they are the front door, and the range test is what fits every

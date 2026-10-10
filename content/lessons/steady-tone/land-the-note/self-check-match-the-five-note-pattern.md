@@ -5,7 +5,7 @@ stage: "v-l2"
 title: "Self-Check: Match the Five-Note Pattern"
 type: "checkpoint"
 minutes: 4
-objective: "heard the five-note scale reference, sang the pattern from silence, and compared each entry by ear. This is a listening and reflection check."
+objective: "Hear the five-note scale reference, sing the pattern from silence, and compare each entry by ear. This is a listening and reflection check."
 prerequisites: "v-l2-m2-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

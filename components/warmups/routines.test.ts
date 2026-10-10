@@ -155,3 +155,60 @@ describe("adaptive warmups", () => {
     expect(recentWarmupResults([])).toBeNull();
   });
 });
+
+describe("session shape", () => {
+  it("ships a free cool-down routine of small, downward drills", () => {
+    const r = routineById("cooldown")!;
+    expect(r).not.toBeNull();
+    expect(r.pro).toBe(false);
+    for (const s of r.steps) {
+      const ex = stepExercise(s);
+      expect(ex.tier, ex.id).toBe("beginner");
+      // Every pattern starts at or above where it ends: nothing climbs.
+      const notes = ex.buildSteps(60).flat();
+      expect(notes[0], ex.id).toBeGreaterThanOrEqual(notes[notes.length - 1]);
+      expect(Math.max(...notes) - Math.min(...notes), ex.id).toBeLessThanOrEqual(7);
+    }
+    expect(routineMinutes(r)).toBeGreaterThanOrEqual(2);
+    expect(routineMinutes(r)).toBeLessThanOrEqual(5);
+  });
+
+  it("ends the longer and harder sets on an easy descending sound", () => {
+    for (const id of ["full", "range", "agility", "high-notes", "daily"]) {
+      const r = routineById(id)!;
+      const last = stepExercise(r.steps[r.steps.length - 1]);
+      const notes = last.buildSteps(60).flat();
+      expect(notes[0], `${id} ends on ${last.id}`).toBeGreaterThan(notes[notes.length - 1]);
+      expect(last.tier, `${id} ends on ${last.id}`).toBe("beginner");
+    }
+  });
+
+  it("opens the daily warmup on the bubble, then the sirens, with the recording's exercises and reps", () => {
+    const r = routineById("daily")!;
+    expect(r.steps.map((s) => s.exerciseId).slice(0, 3)).toEqual([
+      "lip-trill-scale",
+      "ng-siren-fifth",
+      "octave-siren",
+    ]);
+    // A reorder, not a new set: the same steps and rep counts as before.
+    expect(r.steps).toEqual([
+      { exerciseId: "lip-trill-scale", reps: 22 },
+      { exerciseId: "ng-siren-fifth", reps: 6 },
+      { exerciseId: "octave-siren", reps: 5 },
+      { exerciseId: "tongue-trill-descent", reps: 7 },
+      { exerciseId: "hung-ee-mm", reps: 11 },
+      { exerciseId: "hoo-four-note", reps: 7 },
+      { exerciseId: "gug-staccato", reps: 11 },
+      { exerciseId: "descending-five", reps: 7 },
+    ]);
+    expect(r.tagline).toMatch(/^The complete ten: the bubble, sirens/);
+  });
+
+  it("never recommends the cool-down as a warmup", () => {
+    for (const hour of [6, 9, 12, 20]) {
+      for (const practicedToday of [false, true]) {
+        expect(recommendRoutine({ practicedToday, hour }).id).not.toBe("cooldown");
+      }
+    }
+  });
+});

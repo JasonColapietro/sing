@@ -3,7 +3,7 @@
  *
  * These are literals rather than `SONGS.length` on purpose: every number here
  * is rendered on marketing surfaces that are client components, and importing
- * the arrays to measure them would pull the whole songbook, the 420-singer
+ * the arrays to measure them would pull the whole songbook, the 636-singer
  * table and both books' contents into the bundle just to print an integer.
  * `lib/book-data.ts` already takes this approach with BOOK_WORDS.
  *
@@ -57,13 +57,20 @@ export const FREE_CHAPTERS = BOOKS.reduce((n, b) => n + b.free, 0);
 export const SONG_COUNT = 26;
 
 /** Warmup exercises, split by tier. */
-export const FREE_EXERCISES = 37;
+export const FREE_EXERCISES = 39;
 export const PRO_EXERCISES = 19;
 export const PRO_PACK_COUNT = 3;
 export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
 
-/** Singers with a measured range and a page of their own. Free to read. */
+/**
+ * Singers with a reported range and a page of their own. Free to read. The
+ * ranges are cited catalog spans, not measurements we took, so copy built on
+ * this number says "reported" or "singer ranges", never "measured".
+ */
 export const SINGER_COUNT = 636;
+
+/** Singer entries in The Voice Atlas's genre chapters, one per profile. */
+export const ATLAS_VOICE_COUNT = 636;
 
 /**
  * Terms defined in the free glossary on this site. The shared set is larger:
@@ -92,7 +99,7 @@ export const UNLOCK_TILES: Array<{ figure: string; label: string; sub: string }>
     },
     {
       figure: String(SINGER_COUNT),
-      label: "voices measured",
+      label: "singer ranges",
       sub: "The Atlas chapters that explain how to borrow them",
     },
     {

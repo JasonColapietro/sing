@@ -2,7 +2,16 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { DEFAULT_OG_IMAGE, OG_IMAGE_ALT, OG_IMAGE_SIZE } from "@/lib/og";
+import {
+  DEFAULT_OG_IMAGE,
+  OG_IMAGE_ALT,
+  OG_IMAGE_SIZE,
+  OG_IMAGE_TAGLINE,
+  OG_LOCALE,
+  OG_SITE_NAME,
+  withCanonicalOpenGraph,
+} from "@/lib/og";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 const APP_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "app");
 
@@ -66,8 +75,48 @@ describe("share cards", () => {
     expect(OG_IMAGE_SIZE).toEqual({ width: 1200, height: 630 });
   });
 
+  it("states the free-plan boundary instead of calling the whole studio free", () => {
+    // Guided practice is metered (FREE_DAILY_MINUTES a day), so neither the
+    // alt nor the card's fine print may describe the product as simply free.
+    for (const text of [OG_IMAGE_ALT, OG_IMAGE_TAGLINE]) {
+      expect(text).not.toMatch(/free (?:browser )?vocal studio|· Free$/i);
+      expect(text).toMatch(/pitch meter/i);
+      expect(text).toMatch(/range test/i);
+      expect(text).toContain(`${FREE_DAILY_MINUTES} free min`);
+    }
+  });
+
   it("points at an absolute URL, since crawlers do not resolve relative ones", () => {
     expect(DEFAULT_OG_IMAGE.url).toMatch(/^https:\/\//);
     expect(DEFAULT_OG_IMAGE.url.endsWith("/opengraph-image")).toBe(true);
+  });
+});
+
+describe("withCanonicalOpenGraph", () => {
+  it("names the site and locale, which the root cannot supply once a route declares openGraph", () => {
+    const meta = withCanonicalOpenGraph({
+      title: "Breath",
+      description: "A description.",
+      alternates: { canonical: "https://sing.suedeai.ai/breath" },
+    });
+    expect(meta.openGraph).toMatchObject({
+      siteName: OG_SITE_NAME,
+      locale: OG_LOCALE,
+      url: "https://sing.suedeai.ai/breath",
+      images: [DEFAULT_OG_IMAGE],
+    });
+  });
+
+  it("lets a route's own openGraph fields win, except the canonical URL", () => {
+    const meta = withCanonicalOpenGraph({
+      title: "Song",
+      alternates: { canonical: "https://sing.suedeai.ai/songs/x" },
+      openGraph: { type: "article", siteName: "Other", url: "https://elsewhere.example/" },
+    });
+    expect(meta.openGraph).toMatchObject({
+      type: "article",
+      siteName: "Other",
+      url: "https://sing.suedeai.ai/songs/x",
+    });
   });
 });

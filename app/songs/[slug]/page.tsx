@@ -26,6 +26,7 @@ import type { Song } from "@/components/songs/types";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
 
 interface Params {
@@ -66,9 +67,11 @@ export async function generateMetadata({
       `${song.title}: Lyrics & Key`,
       `${song.title}: Lyrics`,
     ].find((t) => t.length <= 60) ?? `${song.title}: Lyrics`;
+  // Lyrics, key and range lead, as the title does; whole sentences only, so a
+  // long song name sheds the second sentence rather than a clause.
   const description = pro
-    ? `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel}. Lyrics, structure and why it is public domain. Part of the Suede Pro songbook.`
-    : `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel} (${f.difficulty}). Full lyrics, why it is public domain, and free browser practice with live pitch feedback.`;
+    ? `${song.title} lyrics, key and vocal range: ${f.lowLabel} to ${f.highLabel} with its tonic on ${f.tonic}. Public domain; the practice arrangement is in the Suede Pro songbook.`
+    : `${song.title} lyrics, key and vocal range: ${f.lowLabel} to ${f.highLabel} with its tonic on ${f.tonic}, rated ${f.difficulty.toLowerCase()}. Public domain, with browser practice and live pitch feedback.`;
   return withCanonicalOpenGraph({
     title: { absolute: title },
     description,
@@ -78,7 +81,7 @@ export async function generateMetadata({
     // Same call the atlas makes for gated chapters: a Pro song page is a real
     // page worth sharing, but it is not the page we want ranking for "sing
     // <title> free" when the practice room behind it is paid.
-    robots: pro ? { index: false, follow: true } : undefined,
+    robots: pageRobots(!pro),
   });
 }
 
@@ -215,9 +218,9 @@ export default async function SongPage({
 
   return (
     <PageShell
-      kicker={pro ? "Pro songbook" : "Free songbook"}
-      title={song.title}
-      subtitle={`${song.genre} · ${song.era} · ${song.origin}`}
+      kicker={`${pro ? "Pro songbook" : "Free songbook"} · ${song.genre} · ${song.era}`}
+      title={`Sing ${song.title}: lyrics, key and vocal range`}
+      subtitle={`“${song.title}” runs from ${f.lowLabel} to ${f.highLabel}, ${f.rangeSemis} semitones, with its tonic on ${f.tonic} at ${song.bpm} bpm, and rates ${f.difficulty.toLowerCase()} to sing. Origin: ${song.origin}.`}
       actions={
         <LinkButton href="/songs" variant="outline" size="md">
           ← All songs

@@ -8,10 +8,14 @@ import {
   type ProPlan,
 } from "./pro-shared";
 import {
+  ATLAS_VOICE_COUNT,
   FREE_EXERCISES,
   PRO_EXERCISES,
   PRO_PACK_COUNT,
   SINGER_COUNT,
+  GLOSSARY_COUNT,
+  TOTAL_CHAPTERS,
+  TOTAL_WORDS,
 } from "./pro-inventory";
 
 export type { CheckoutPlan, ProPlan, Entitlement };
@@ -392,7 +396,7 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "book",
     title: "Two books, with PDFs",
-    desc: "50 chapters and 82,734 words: The Measured Voice (how the voice works, plus a twelve-week program) and The Voice Atlas (420 measured voices). Both open in full the moment you subscribe, and both as PDFs to keep.",
+    desc: `${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words: The Measured Voice (how the voice works, plus a twelve-week program) and The Voice Atlas (${ATLAS_VOICE_COUNT} singer profiles: reported range, tone and technique). Both open in full the moment you subscribe, and both as PDFs to keep.`,
   },
   {
     id: "history",
@@ -410,8 +414,8 @@ export const PLAN_ROWS: Array<{
   { label: "Practice rooms (all ten)", free: "Included", pro: "Included" },
   {
     label: "Guided practice (warmups, ear, breath, songs)",
-    free: "3 minutes a day",
-    pro: "Unlimited",
+    free: "5 minutes a day",
+    pro: "No daily limit",
   },
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
@@ -433,5 +437,5 @@ export const PLAN_ROWS: Array<{
   // so — the single largest free asset in the product, invisible on the page
   // whose whole job is to argue that free is generous.
   { label: `Famous voices (all ${SINGER_COUNT})`, free: "Every singer page", pro: "+ the Atlas chapters behind them" },
-  { label: "Glossary (31 terms)", free: "Included", pro: "Included" },
+  { label: `Glossary (${GLOSSARY_COUNT} terms)`, free: "Included", pro: "Included" },
 ];

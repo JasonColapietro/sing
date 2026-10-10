@@ -67,7 +67,7 @@ export function SongsClient() {
   const [playToken, setPlayToken] = useState(0);
 
   function startSong(song: Song) {
-    // Song practice is guided practice: the free day's three minutes apply.
+    // Song practice is guided practice: the free day's five minutes apply.
     if (cap.capped || !canStart(song)) return;
     setActiveSong(song);
     setSummary(null);
@@ -160,7 +160,7 @@ export function SongsClient() {
           ? activeSong.title
           : view === "summary" && summary
             ? "Practice summary"
-            : "Song practice"
+            : "Public domain songs to sing in your key"
       }
       subtitle={view === "library" ? "Pick a song to start your practice loop." : undefined}
       actions={

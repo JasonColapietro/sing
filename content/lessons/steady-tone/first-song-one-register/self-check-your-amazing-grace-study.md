@@ -5,7 +5,7 @@ stage: "v-l2"
 title: "Self-Check: Your Amazing Grace Study"
 type: "checkpoint"
 minutes: 5
-objective: "rehearsed the supplied Amazing Grace phrase and study arrangement in a key that felt comfortable. This is a listening and reflection check."
+objective: "Rehearse the supplied Amazing Grace phrase and study arrangement in a key that feels comfortable. This is a listening and reflection check."
 prerequisites: "v-l2-m4-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

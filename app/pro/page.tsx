@@ -11,11 +11,12 @@ import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
+const PRO_TITLE = "Online Vocal Coach for Singers: Suede Pro";
+
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/pro"),
-  title: "Suede Pro: An Online Vocal Coach for Singers",
-  description:
-    "Suede Pro Early Access is $79 once for lifetime access (the $4.99 monthly plan is sold out): adaptive coach, per-note analytics, take analysis, warmup packs and two books.",
+  title: PRO_TITLE,
+  description: `Online vocal coach for singers: adaptive daily plans, per-note analytics, take analysis and two books on top of the free studio. ${formatPrice(PRICING.lifetime.amount)} once, for life.`,
   alternates: { canonical: `${SITE_URL}/pro` },
 });
 
@@ -93,7 +94,7 @@ const PRO_JSON_LD = {
       "@type": "WebPage",
       "@id": `${SITE_URL}/pro#webpage`,
       url: `${SITE_URL}/pro`,
-      name: "Suede Pro",
+      name: PRO_TITLE,
       isPartOf: { "@id": `${SITE_URL}/#website` },
       publisher: { "@id": "https://suedeai.ai/#organization" },
       inLanguage: "en",

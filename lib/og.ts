@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { MAX_TITLE, fitDescription, fitTitle } from "@/lib/meta-fit";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -9,8 +10,27 @@ import { SITE_URL } from "@/lib/site";
  */
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 };
 
-export const OG_IMAGE_ALT =
-  "Suede Sing: the free browser vocal studio for live pitch, range test, warmups and ear training";
+/**
+ * og:site_name and og:locale. The hand-written routes (home, /range, /voice,
+ * /extension, /changelog, /atlas/vocal-range-by-voice-type) always declared
+ * both; the ~250 templated routes that go through withCanonicalOpenGraph did
+ * not, because `openGraph` is replaced per segment rather than merged, so
+ * nothing at the root could supply them. Share previews (Slack, LinkedIn,
+ * Facebook) print the site name above the title, and it is one of the signals
+ * Google reads for a result's site name.
+ */
+export const OG_SITE_NAME = "Suede Sing";
+export const OG_LOCALE = "en_US";
+
+/**
+ * Says what is free and what is metered, the same boundary the homepage
+ * states: the pitch meter and range test are free without limits, guided
+ * practice has a daily free allowance (lib/practice-limits.ts).
+ */
+export const OG_IMAGE_ALT = `Suede Sing: online singing practice with live pitch feedback. The pitch meter and vocal range test are free; guided practice includes ${FREE_DAILY_MINUTES} free minutes a day.`;
+
+/** The card's own fine print, kept beside the alt so the two cannot drift. */
+export const OG_IMAGE_TAGLINE = `Free pitch meter & range test · Guided practice: ${FREE_DAILY_MINUTES} free min a day`;
 
 /**
  * The sitewide card, shaped for a route's own `openGraph.images`.
@@ -92,6 +112,8 @@ export function withCanonicalOpenGraph(metadata: Metadata): Metadata {
       title,
       description,
       type: "website",
+      siteName: OG_SITE_NAME,
+      locale: OG_LOCALE,
       ...(existing ? {} : { images: [DEFAULT_OG_IMAGE] }),
       ...existing,
       url,

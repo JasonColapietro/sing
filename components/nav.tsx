@@ -66,7 +66,20 @@ export function isActiveLink(
   );
 }
 
-export type TabIconName = "home" | "mic" | "note" | "book" | "chart";
+/**
+ * aria-current for a nav link: "page" on the tab's own URL, "location" inside
+ * a route it owns, nothing elsewhere. Shared by every navigation landmark so
+ * the header row, the bottom tab bar and the drawer announce the same tab.
+ */
+export function ariaCurrentFor(
+  l: { href: string; also?: string[] },
+  pathname: string,
+): "page" | "location" | undefined {
+  if (!isActiveLink(l, pathname)) return undefined;
+  return pathname === l.href ? "page" : "location";
+}
+
+export type TabIconName ="home" | "mic" | "note" | "book" | "chart";
 
 export function TabIcon({ name, active }: { name: TabIconName; active: boolean }) {
   const common = {
@@ -487,11 +500,11 @@ export default function Nav() {
                     key={l.href}
                     href={l.href}
                     onClick={() => setMenuOpen(false)}
-                    aria-current={active ? (pathname === l.href ? "page" : "location") : undefined}
+                    aria-current={ariaCurrentFor(l, pathname)}
                     className={`rounded-2xl border px-4 py-4 text-base transition-colors ${
                       active
                         ? "border-violet bg-panel2 text-violet-ink"
-                        : "border-line bg-panel text-ink hover:border-line2"
+                        : "border-line bg-panel text-ink hover:border-line2 hover:bg-panel2"
                     }`}
                   >
                     {l.label}
@@ -525,11 +538,15 @@ export default function Nav() {
             </span>
           </Link>
 
-          {/* Desktop / tablet: thumb-sized tabs with a fade only while more remain. */}
+          {/* Desktop / tablet: thumb-sized tabs with a fade only while more remain.
+              Safe centring, not justify-center: between sm and ~1000px the row
+              overflows, and plain centring pushes the overflow off the left
+              edge where a scroll container cannot reach, leaving "Home"
+              unclickable under the logo. Safe centring falls back to start. */}
           <nav
             aria-label="Main"
             ref={tabsRef}
-            className={`no-scrollbar hidden flex-1 items-center justify-center gap-1 overflow-x-auto sm:flex ${
+            className={`no-scrollbar hidden flex-1 items-center justify-center-safe gap-1 overflow-x-auto sm:flex ${
               tabsOverflow
                 ? "[mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
                 : ""
@@ -541,7 +558,7 @@ export default function Nav() {
                 <Link
                   key={l.href}
                   href={l.href}
-                  aria-current={active ? (pathname === l.href ? "page" : "location") : undefined}
+                  aria-current={ariaCurrentFor(l, pathname)}
                   className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-bold transition-colors ${
                     active
                       ? "bg-ink text-bg"
@@ -570,7 +587,7 @@ export default function Nav() {
 
           <Link
             href="/progress"
-            className="hidden min-h-11 shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs sm:flex"
+            className="hidden min-h-11 shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs transition-colors hover:border-line2 hover:bg-panel2 sm:flex"
           >
             <span className="text-violet-ink">LV {lvl.level}</span>
             <span className="text-dim">·</span>
@@ -682,10 +699,20 @@ function TabBar({ pathname }: { pathname: string }) {
             <li key={l.href}>
               <Link
                 href={l.href}
-                className={`flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-bold transition-colors ${
+                aria-current={ariaCurrentFor(l, pathname)}
+                className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-bold transition-colors ${
                   active ? "text-ink" : "text-dim hover:text-mut"
                 }`}
               >
+                {/* The active tab was told apart by colour and stroke weight
+                    alone; the bar on the top edge is a cue that survives
+                    greyscale and a glance. Absolute, so no tab moves. */}
+                {active && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 mx-auto h-0.5 w-8 rounded-full bg-pink"
+                  />
+                )}
                 <span className={active ? "text-pink" : ""}>
                   <TabIcon name={l.icon} active={active} />
                 </span>

@@ -3,9 +3,17 @@ import { lessonKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { withCanonicalOpenGraph } from "@/lib/og";
+import { webPageJsonLd } from "@/lib/page-jsonld";
 import { SITE_URL } from "@/lib/site";
 import { MODULE_PRACTICE, practiceMatch } from "@/lib/lesson-practice";
-import { COURSE, VOICE_LEARN_PATH, findStage } from "@/lib/voice-lessons";
+import {
+  COURSE,
+  VOICE_LEARN_PATH,
+  findStage,
+  lowerFirst,
+  stageLessonCount,
+  type CourseStage,
+} from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
 import { PracticedMark } from "@/components/learn/practice-count";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
@@ -21,6 +29,24 @@ export function generateStaticParams(): Params[] {
   return COURSE.flatMap((s) => (s.slug ? [{ stage: s.slug }] : []));
 }
 
+/** "Room Check: stage 1 of the free voice course". */
+function stageHeading(stage: CourseStage): string {
+  return `${stage.catalog.name}: stage ${stage.catalog.stage} of the free voice course`;
+}
+
+/** What the stage is and what it leaves you with, from the catalog alone. */
+function stageAnswer(stage: CourseStage): string {
+  const { catalog } = stage;
+  return `Stage ${catalog.stage} of ${COURSE.length} has ${stage.modules.length} modules and ${stageLessonCount(stage)} short lessons, each with a self-check. The goal: ${lowerFirst(catalog.subtitle)}.`;
+}
+
+type Stage = NonNullable<ReturnType<typeof findStage>>;
+
+function stageDescription(stage: Stage): string {
+  const { catalog } = stage;
+  return `${catalog.name} voice lessons: stage ${catalog.stage} of the free singing course, ${stage.modules.length} modules and ${stageLessonCount(stage)} short lessons. The goal: ${lowerFirst(catalog.subtitle)}.`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -33,7 +59,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title: `Stage ${catalog.stage}: ${catalog.name} · Voice Lessons`,
     keywords: lessonKeywords({ name: catalog.name }),
-    description: `${catalog.subtitle}. ${catalog.modules.length} modules of short, free singing lessons, each with a self-check and a room to practise in.`,
+    description: stageDescription(stage),
     alternates: { canonical: `${SITE_URL}${stage.href}` },
   });
 }
@@ -46,13 +72,31 @@ export default async function StagePage({ params }: { params: Promise<Params> })
   const index = COURSE.indexOf(stage);
   const previous = COURSE[index - 1];
   const next = COURSE[index + 1];
+  const href = stage.href ?? VOICE_LEARN_PATH;
+  // The same trail the CourseBreadcrumbs nav renders, and the same names the
+  // lesson pages give it.
+  const jsonLd = webPageJsonLd({
+    type: "CollectionPage",
+    path: href,
+    name: `Stage ${catalog.stage}: ${catalog.name}`,
+    description: stageDescription(stage),
+    breadcrumbs: [
+      { name: "Learn to sing", path: "/learn" },
+      { name: "Voice lessons", path: VOICE_LEARN_PATH },
+      { name: catalog.name, path: href },
+    ],
+  });
 
   return (
     <PageShell
       kicker={`Voice lessons · Stage ${catalog.stage} of ${COURSE.length}`}
-      title={catalog.name}
-      subtitle={catalog.subtitle}
+      title={stageHeading(stage)}
+      subtitle={stageAnswer(stage)}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <CourseBreadcrumbs trail={[{ href: VOICE_LEARN_PATH, label: "Voice lessons" }]} current={catalog.name} />
       <div className="space-y-6">
         {stage.modules.map((module) => {

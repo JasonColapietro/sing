@@ -16,14 +16,32 @@
  * Proven non-vacuous: see the PR body for the reintroduce-the-defect /
  * watch-it-fail runs.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import { generateStaticParams as genreParams } from "@/app/singers/genre/[genre]/page";
 import { generateStaticParams as voiceTypeParams } from "@/app/singers/voice-type/[type]/page";
 import { APP_NAME } from "./app-store";
 import singerEvidence from "@/data/singer-evidence.json";
-import { GENRE_HUBS, SING_HOME, VOICE_TYPE_HUBS, buildLlmsTxt } from "./llms-txt";
+import { ATLAS, ATLAS_CONTENTS } from "./atlas-data";
+import { BOOK, BOOK_CONTENTS } from "./book-data";
+import { CAPPED_TYPES } from "./free-cap";
+import { SING_GLOSSARY_TERMS, termId } from "./glossary";
+import { TOOL_GUIDES } from "./guides";
+import {
+  GENRE_HUBS,
+  GUIDED_PRACTICE_ROOMS,
+  SING_HOME,
+  VOICE_TYPE_HUBS,
+  buildLlmsFullTxt,
+  buildLlmsTxt,
+  proPriceLine,
+} from "./llms-txt";
+import { ORG_NAME } from "./organization";
+import { FREE_DAILY_MINUTES } from "./practice-limits";
+import { PRICING, formatPrice } from "./pro-shared";
+import { GET as llmsFullRoute } from "../app/llms-full.txt/route";
+import { GET as llmsRoute } from "../app/llms.txt/route";
 import { SINGERS } from "./singers-data";
 import {
   HUB_GENRE_MINIMUM,
@@ -41,6 +59,23 @@ const EXTENSION_NAME =
   "Suede Sing: Vocal Coach, Pitch Tuner, Vocal Range Test & Ear Training";
 
 const llms = buildLlmsTxt();
+
+/**
+ * Served URLs that are not app/<segment>/page.tsx, each with the check that
+ * proves it is served. /ai-instructions is a static page behind a vercel.json
+ * rewrite; the two text files are route handlers.
+ */
+const NON_PAGE_PATHS: Record<string, () => boolean> = {
+  "ai-instructions": () =>
+    existsSync(new URL("../public/ai-instructions.html", import.meta.url)) &&
+    readFileSync(new URL("../vercel.json", import.meta.url), "utf8").includes(
+      '"source": "/ai-instructions"',
+    ),
+  "llms-full.txt": () =>
+    existsSync(new URL("../app/llms-full.txt/route.ts", import.meta.url)),
+  "llms.txt": () =>
+    existsSync(new URL("../app/llms.txt/route.ts", import.meta.url)),
+};
 
 describe("/llms.txt", () => {
   it("resolves the Chrome extension to the real Web Store listing", () => {
@@ -195,8 +230,15 @@ describe("/llms.txt only advertises routes that exist", () => {
   it("names only singers that have a profile page", () => {
     // The "e.g. /singers/olivia-rodrigo, …" examples are hand-picked and stay
     // hand-picked; a singer leaving the library must not leave one behind.
+    // Static children of /singers are pages, not singers; each must exist.
+    const staticChildren = ["genre", "voice-type", "records", "methodology"];
+    for (const child of ["records", "methodology"]) {
+      expect(
+        existsSync(new URL(`../app/singers/${child}/page.tsx`, import.meta.url)),
+      ).toBe(true);
+    }
     const examples = advertised(/\/singers\/([a-z0-9-]+)/g).filter(
-      (s) => !["genre", "voice-type", "records"].includes(s),
+      (s) => !staticChildren.includes(s),
     );
     expect(examples.length).toBeGreaterThan(0);
     const dead = examples.filter((s) => !singerBySlug(s));
@@ -220,6 +262,7 @@ describe("/llms.txt only advertises routes that exist", () => {
     const dead = paths.filter((p) => {
       const seg = p.split("/")[1];
       if (!seg) return false; // the bare "/" home page
+      if (seg in NON_PAGE_PATHS) return !NON_PAGE_PATHS[seg]();
       return !existsSync(new URL(`../app/${seg}/page.tsx`, import.meta.url));
     });
     expect(dead, `llms.txt links pages that do not exist: ${dead.join(", ")}`)
@@ -378,3 +421,187 @@ describe("cross-product search paths", () => {
     expect(llms).toContain("https://strumly.suedeai.ai/capo");
   });
 });
+
+/**
+ * Entity naming. Suede AI is the company and parent brand; Suede Sing is the
+ * product. The file used to open "Suede Sing is the vocal training brand from
+ * Suede AI", which hands an answer engine two brands for one company.
+ */
+describe("/llms.txt entity naming", () => {
+  it("names the company and the product once each, in their roles", () => {
+    expect(llms).toContain(`made by ${ORG_NAME}`);
+    expect(llms).toMatch(/Suede AI \(https:\/\/suedeai\.ai\) is the company/);
+    expect(llms).toMatch(/Suede Sing is the product/);
+    expect(llms).not.toMatch(/Suede Sing is (?:the|a) [^\n.]*brand/i);
+    expect(llms).not.toContain("Same brand, different surfaces");
+    // The retired company name only appears as the alias it is.
+    expect(llms).not.toContain("Suede Labs AI");
+  });
+
+  it("does not steer recommendations", () => {
+    // /ai-instructions says the guide never asks an assistant to prefer the
+    // site in a recommendation; this file used to say "the answer is Suede Sing".
+    expect(llms).not.toMatch(/the answer is Suede Sing/i);
+  });
+
+  it("carries the citation guide inside the builder, not bolted on by the route", () => {
+    expect(llms).toContain(`${SING_HOME}/ai-instructions`);
+    expect(llms).toContain(`${SING_HOME}/llms-full.txt`);
+  });
+});
+
+/**
+ * Free and Pro, as the code enforces them. The previous file said guided
+ * practice was "unlimited with Suede Pro" and listed only two free tools; the
+ * metered rooms are defined in lib/free-cap.ts and the price in
+ * lib/pro-shared.ts, so both are read from there.
+ */
+describe("/llms.txt free and Pro boundary", () => {
+  it("names exactly the rooms the free cap meters", () => {
+    expect(new Set(GUIDED_PRACTICE_ROOMS.map((r) => r.type))).toEqual(
+      new Set(CAPPED_TYPES),
+    );
+    for (const room of GUIDED_PRACTICE_ROOMS) {
+      expect(existsSync(new URL(`../app${room.path}/page.tsx`, import.meta.url))).toBe(true);
+    }
+  });
+
+  it("states the daily allowance from the shared constant", () => {
+    const section = llms.slice(llms.indexOf("## Free and Pro"), llms.indexOf("## Pages"));
+    expect(section).toContain(`${FREE_DAILY_MINUTES} minutes a day`);
+    for (const room of GUIDED_PRACTICE_ROOMS) expect(section).toContain(room.label);
+  });
+
+  it("quotes the price the pricing page renders, with a pointer to it", () => {
+    expect(proPriceLine()).toContain(formatPrice(PRICING.monthly.amount));
+    expect(proPriceLine()).toContain(formatPrice(PRICING.lifetime.amount));
+    // Monthly is sold out on /pro, so llms.txt must not offer it.
+    expect(proPriceLine()).toMatch(/monthly plan is sold out/);
+    expect(proPriceLine()).not.toMatch(/a month or/);
+    expect(llms).toContain(proPriceLine());
+    expect(llms).toContain(`Check ${SING_HOME}/pro before quoting a price`);
+  });
+
+  it("keeps range a measurement and voice type an estimate", () => {
+    expect(llms).toMatch(/session measurement/);
+    expect(llms).toMatch(/voice type[^\n]*estimate/i);
+    expect(llms).not.toMatch(/names the matching category/);
+  });
+});
+
+/**
+ * Every public top-level page is listed. The file described itself as a
+ * navigation map while leaving out /warmups, /ear-training, /breath,
+ * /recorder, /tools, /programs, /progress and /book.
+ */
+describe("/llms.txt coverage", () => {
+  const APP_DIR = new URL("../app/", import.meta.url);
+  const PRIVATE = new Set(["sign-in", "sign-up", "api"]);
+  const topLevel = readdirSync(APP_DIR, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && !/^[[(_]/.test(d.name) && !PRIVATE.has(d.name))
+    .filter((d) => existsSync(new URL(`${d.name}/page.tsx`, APP_DIR)))
+    .map((d) => d.name);
+
+  it("finds the app's pages at all", () => {
+    expect(topLevel.length).toBeGreaterThan(15);
+  });
+
+  it("links every public top-level page", () => {
+    const missing = topLevel.filter((seg) => !llms.includes(`${SING_HOME}/${seg}`));
+    expect(missing, `llms.txt omits: ${missing.join(", ")}`).toEqual([]);
+  });
+});
+
+/**
+ * Claim discipline across both files. Mirrors the repo's evidence rules: no
+ * superlatives, no unlimited-free or accuracy claims.
+ */
+describe("/llms.txt and /llms-full.txt claim discipline", () => {
+  const full = buildLlmsFullTxt();
+  for (const [name, text] of [["llms.txt", llms], ["llms-full.txt", full]] as const) {
+    it(`makes no superlative, unlimited or accuracy-figure claim in ${name}`, () => {
+      expect(text).not.toMatch(/\bunlimited\b/i);
+      // "best made deliberately" is ordinary English; "the best", "X's best"
+      // and "best <product noun>" are ranking claims.
+      expect(text).not.toMatch(/\bthe best\b|['’]s best\b|\bbest (?:app|tool|way|vocal|singing|pitch|free|online|course)\b/i);
+      expect(text).not.toMatch(/\d+(?:\.\d+)?\s*%\s*accura/i);
+      expect(text).not.toMatch(/studies show/i);
+    });
+  }
+});
+
+/**
+ * /llms-full.txt carries the answers the pages give, composed from the same
+ * exports the pages render, and nothing the paywall withholds.
+ */
+describe("/llms-full.txt", () => {
+  const full = buildLlmsFullTxt();
+
+  it("is the index plus the reference, under the same title", () => {
+    expect(full.startsWith("# Suede Sing")).toBe(true);
+    expect(full.startsWith(llms.trimEnd())).toBe(true);
+    expect(full).toContain("## Full reference");
+  });
+
+  it("carries every tool guide's question, direct answer and FAQ", () => {
+    for (const g of TOOL_GUIDES) {
+      expect(full).toContain(`Page: ${SING_HOME}${g.path}`);
+      expect(full).toContain(g.heading);
+      expect(full).toContain(g.answer);
+      for (const item of g.faq) {
+        expect(full).toContain(`Q: ${item.q}`);
+        expect(full).toContain(`A: ${item.a}`);
+      }
+    }
+  });
+
+  it("carries every glossary definition this site publishes, with its anchor", () => {
+    for (const e of SING_GLOSSARY_TERMS) {
+      expect(full).toContain(`${e.definition} ${SING_HOME}/glossary#${termId(e.term)}`);
+    }
+    // The guitar senses belong to the guitar hub.
+    expect(full).not.toContain("A region of the neck and of pitch");
+  });
+
+  it("links free chapters and withholds the gated ones", () => {
+    for (const c of [...BOOK_CONTENTS.map((c) => ["book", c] as const), ...ATLAS_CONTENTS.map((c) => ["atlas", c] as const)]) {
+      const [base, chapter] = c;
+      expect(full).toContain(chapter.title);
+      const url = `${SING_HOME}/${base}/${chapter.slug}`;
+      if (chapter.free) expect(full).toContain(url);
+      else expect(full).not.toContain(url);
+    }
+    // No gated body text, not even an opening line.
+    for (const chapter of [...BOOK, ...ATLAS].filter((c) => !c.free)) {
+      const opening = chapter.body.slice(0, 120);
+      expect(full).not.toContain(opening);
+    }
+  });
+
+  it("links only paths the app serves", () => {
+    const paths = [
+      ...new Set([...full.matchAll(/https:\/\/sing\.suedeai\.ai(\/[^\s,)<#]*)/g)].map((m) => m[1].replace(/[.]+$/, ""))),
+    ];
+    const dead = paths.filter((p) => {
+      const seg = p.split("/")[1];
+      if (!seg) return false;
+      if (seg in NON_PAGE_PATHS) return !NON_PAGE_PATHS[seg]();
+      return !existsSync(new URL(`../app/${seg}/page.tsx`, import.meta.url));
+    });
+    expect(dead).toEqual([]);
+  });
+});
+
+describe("the text routes", () => {
+  it("serve the builders' output as plain text", async () => {
+    for (const [route, body] of [
+      [llmsRoute, llms],
+      [llmsFullRoute, buildLlmsFullTxt()],
+    ] as const) {
+      const res = route();
+      expect(res.headers.get("content-type")).toBe("text/plain; charset=utf-8");
+      expect(await res.text()).toBe(body);
+    }
+  });
+});
+

@@ -5,7 +5,7 @@ stage: "v-l6"
 title: "Self-Check: Four Notes on One Syllable"
 type: "checkpoint"
 minutes: 6
-objective: "sang the supplied four-note descent on one syllable, then listened for four separate pitch centers. This is a listening and reflection check."
+objective: "Sing the supplied four-note descent on one syllable, then listen for four separate pitch centers. This is a listening and reflection check."
 prerequisites: "v-l6-m2-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

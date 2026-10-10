@@ -5,8 +5,10 @@ import { notFound } from "next/navigation";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
 import { exitTestFor } from "@/lib/programme-exit-tests";
+import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
+import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
 import { FreeOnly } from "@/components/pro/gate";
@@ -31,13 +33,15 @@ export async function generateMetadata({
   const c = BOOK_CONTENTS.find((x) => x.slug === slug);
   if (!c) return {};
   return withCanonicalOpenGraph({
-    title: `${c.title} · ${BOOK_TITLE}`,
+    // The book's name when it fits, a shorter tail when it doesn't, so a
+    // chapter title never reaches search as a bare phrase identical to its H1.
+    title: firstFit([`${c.title} · ${BOOK_TITLE}`, `${c.title} · Singing Book`, c.title]),
     keywords: chapterKeywords(c.title, "book"),
     description: c.summary,
     alternates: { canonical: `${SITE_URL}/book/${c.slug}` },
     // A gated body has nothing here for an index to rank — list the chapter but
     // keep it out of results. The free chapter is real content and ranks.
-    robots: c.free ? undefined : { index: false, follow: true },
+    robots: pageRobots(c.free),
   });
 }
 

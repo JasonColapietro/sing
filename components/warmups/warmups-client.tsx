@@ -21,7 +21,7 @@ import { RoutineSummary } from "./routine-summary";
 import { PathSection, RoutineGrid, RoutineMeta, routineStats } from "./routine-home";
 import { recentWarmupResults, routineReason, routineStartingTempo, recommendRoutine, routineById, stepExercise, type Routine } from "./routines";
 import type { SessionSummaryData } from "./lib";
-import { DailyThreeCard } from "./daily-three-card";
+import { DailyThreeCard, DailyThreeCardPlaceholder } from "./daily-three-card";
 import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type DailyTempo } from "@/lib/daily-three";
 import { ProgramEntryCard } from "@/components/programs/today-card";
 import { useActiveProgram } from "@/components/programs/use-program";
@@ -57,7 +57,7 @@ export function WarmupsClient() {
   const pitch = usePitch();
   const progress = useProgress();
   const isPro = useIsPro();
-  // Three free minutes of guided practice a day; every way into a session
+  // Five free minutes of guided practice a day; every way into a session
   // checks it, so a capped singer sees the wall rather than a mic prompt.
   const cap = useFreeCap();
   const { goalSec } = useDailyGoal();
@@ -281,12 +281,12 @@ export function WarmupsClient() {
       // Every other view runs inside the full-screen session surface, which
       // covers this heading entirely — only the summary of a single exercise
       // still renders as a page under it.
-      title={view === "summary" ? "Session summary" : "Guided vocal warmups"}
+      title={view === "summary" ? "Session summary" : "Guided vocal warm-up exercises"}
       subtitle={
         view === "home"
           ? pitch.listening
             ? "Start today's warmup, or pick a length. Every exercise is scored as you sing."
-            : "Pick a warmup. The mic comes on when you press start, and nothing leaves this device."
+            : "Singing warm-ups that play each exercise, count you in and score your pitch as you sing it back. Pick a routine: the mic comes on only when you press start, and nothing leaves this device."
           : undefined
       }
     >
@@ -305,6 +305,10 @@ export function WarmupsClient() {
               error={errorAt.kind === "exercise" && errorAt.id === nextExercise.id ? pitch.error : null}
             />
           )}
+          {/* today is null until mount (the plan is seeded by the viewer's
+              local date); the placeholder keeps the card's slot so nothing
+              below it jumps when the plan arrives. */}
+          {today === null && <DailyThreeCardPlaceholder />}
           {dailyPlan && (
             <DailyThreeCard
               plan={dailyPlan}
@@ -367,7 +371,7 @@ export function WarmupsClient() {
                 browser and never leaves your device.
               </p>
               <p className="mt-2 max-w-xl text-sm text-rec">
-                Sing at a comfortable volume. Stop if a note causes pain or strain.
+                Sing at a comfortable volume. Stop if a note hurts or feels strained, and rest if your voice turns hoarse or scratchy.
               </p>
               <div className="mt-5">
                 <Button variant="rec" size="lg" onClick={startFromGate}>

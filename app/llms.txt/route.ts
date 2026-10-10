@@ -11,11 +11,15 @@ import { buildLlmsTxt } from "@/lib/llms-txt";
  *
  * The public/ copy had to go: static assets shadow routes at the same path, so
  * leaving it there would have served the stale text forever.
+ *
+ * The source-and-citation section used to be appended here, outside the
+ * builder, which put it beyond the reach of every assertion in
+ * lib/llms-txt.test.ts. It now lives in buildLlmsTxt() with the rest.
  */
 export const dynamic = "force-static";
 
 export function GET(): Response {
-  return new Response(buildLlmsTxt() + "\n\n## Source and citation guide\n\n- [AI Instructions](https://sing.suedeai.ai/ai-instructions): Site identity, authoritative sources and citation guidance.\n", {
+  return new Response(buildLlmsTxt(), {
     headers: {
       "content-type": "text/plain; charset=utf-8",
       // What Vercel served for the public/ asset. Keeps crawler-facing

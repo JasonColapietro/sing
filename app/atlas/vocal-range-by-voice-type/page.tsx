@@ -159,7 +159,7 @@ const FAQ: Faq[] = [
   },
   {
     q: "How do I find out my own voice type?",
-    a: "Sing from your lowest comfortable note to your highest and back, and note where the voice is easy rather than where it stops. Suede Sing's free browser range test at https://sing.suedeai.ai/range does this in about sixty seconds and reports your lowest note, your highest note, your span in semitones, and the voice type that range best fits. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
+    a: "Sing from your lowest comfortable note to your highest and back, and note where the voice is easy rather than where it stops. Suede Sing's free browser range test at https://sing.suedeai.ai/range does this in about two minutes and reports your lowest note, your highest note, your span in semitones, and an estimate of the voice type that range best fits. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
   },
   {
     q: "What is a passaggio?",
@@ -244,8 +244,8 @@ export default function VocalRangeByVoiceTypePage() {
   return (
     <PageShell
       kicker="Reference · free"
-      title="What is a tenor's vocal range? Every voice type, bass to soprano"
-      subtitle="The conventional band for each of the eight voice types, the passaggio zone where each one changes gear, and singers whose cited ranges actually sit there."
+      title="Vocal range by voice type: what range does a tenor, soprano or bass sing?"
+      subtitle={`A tenor's conventional range is ${row("Tenor").band}, a soprano's ${row("Soprano").band} and a bass's ${row("Bass").band}. Below are all eight voice types, the passaggio zone where each one changes gear, and singers whose cited ranges sit there.`}
       actions={
         <LinkButton href="/range" size="md">
           Test your own range
@@ -261,10 +261,9 @@ export default function VocalRangeByVoiceTypePage() {
         <Card>
           <h2 className="text-xl">The short answer</h2>
           <p className="mt-3 max-w-3xl text-mut">
-            A tenor&rsquo;s conventional range is {row("Tenor").band}; a
-            soprano&rsquo;s is {row("Soprano").band}; a bass&rsquo;s is {row("Bass").band}.
             Each of the eight traditional categories is defined across two
-            octaves, and the table below gives all eight along with the{" "}
+            octaves, from the bass at {row("Bass").band} to the soprano at{" "}
+            {row("Soprano").band}, and the table below gives all eight along with the{" "}
             <em>passaggio</em> — the zone where that voice changes gear between
             registers, which predicts what a singer finds hard far better than
             the extremes do.
@@ -444,7 +443,7 @@ export default function VocalRangeByVoiceTypePage() {
               <Link href="/range" className="text-violet-ink hover:underline">
                 The free range test
               </Link>{" "}
-              — sixty seconds in the browser gives you your own two numbers to
+              — about two minutes in the browser gives you your own two numbers to
               read this table with.
             </li>
             <li>

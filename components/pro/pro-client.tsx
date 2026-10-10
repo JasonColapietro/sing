@@ -72,7 +72,7 @@ const PRO_CARD_POINTS = [
 ];
 
 const FREE_CARD_POINTS = [
-  "All ten practice rooms, 3 minutes of guided practice a day",
+  "All ten practice rooms, 5 minutes of guided practice a day",
   "Live pitch feedback + range test, unlimited",
   "Recorder with A/B compare",
   "XP, streaks, achievements",
@@ -424,16 +424,16 @@ export function ProClient() {
             ) : (
               <>
                 <h1 className="text-4xl leading-tight sm:text-5xl">
-                  Keep the free studio.
+                  Keep the free studio.{" "}
                   <br />
-                  Add the coach.
+                  Add an online vocal coach.
                 </h1>
                 <p className="mt-4 max-w-xl text-lg text-mut">
-                  The studio and the range test stay free, and free accounts
-                  get three minutes of guided practice a day. Pro removes the
-                  clock and layers a coach on top — adaptive daily plans,
-                  per-note analytics, pitch analysis on your takes, and a
-                  scoring history for every song.
+                  Suede Pro is the vocal coaching layer on top of Suede Sing:
+                  adaptive daily plans, per-note analytics, pitch analysis on
+                  your takes, and a scoring history for every song. The pitch
+                  meter and range test stay free, free accounts get five
+                  minutes of guided practice a day, and Pro removes that clock.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <LinkButton href="#plans" variant="violet" size="lg">

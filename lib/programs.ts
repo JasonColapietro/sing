@@ -15,7 +15,7 @@
 // What the log cannot see, the singer marks by hand.
 //
 // A program day's items may be logged over several calendar days, from the
-// day it opens: the free plan stops guided practice after three minutes a day
+// day it opens: the free plan stops guided practice after five minutes a day
 // (lib/free-cap.ts) and most program days run longer, so requiring one sitting
 // would make a free program impossible to finish from the log.
 //
@@ -200,10 +200,12 @@ const VIBRATO: Program = {
   ],
 };
 
-const HIGH_A = day("Sirens and the tenth", routine("quick"), routine("range"), routine("high-notes"));
-const HIGH_B = day("Breath, the ten, the tenth", breath("quick"), routine("daily"), routine("high-notes"));
+// Work above the octave ends on the cool-down wherever the day has room for it
+// inside twenty minutes; the full set's day already closes on a straw slide.
+const HIGH_A = day("Sirens and the tenth", routine("quick"), routine("range"), routine("high-notes"), routine("cooldown"));
+const HIGH_B = day("Breath, the ten, the tenth", breath("quick"), routine("daily"), routine("high-notes"), routine("cooldown"));
 const HIGH_C = day("The full set, then up", routine("full"), routine("high-notes"));
-const HIGH_CHECK = day("Range check-in", range, routine("quick"), routine("high-notes"));
+const HIGH_CHECK = day("Range check-in", range, routine("quick"), routine("high-notes"), routine("cooldown"));
 const HIGH_WEEK = [HIGH_A, HIGH_B, HIGH_C, rest(), HIGH_A, HIGH_B, rest()];
 
 const HIGH_NOTES: Program = {
@@ -215,12 +217,12 @@ const HIGH_NOTES: Program = {
   weeks: 6,
   pro: false,
   days: [
-    ...week(HIGH_WEEK, { 0: day("Where you start", range, routine("quick"), routine("high-notes")) }),
+    ...week(HIGH_WEEK, { 0: day("Where you start", range, routine("quick"), routine("high-notes"), routine("cooldown")) }),
     ...week(HIGH_WEEK, { 6: HIGH_CHECK }),
     ...week(HIGH_WEEK),
     ...week(HIGH_WEEK, { 6: HIGH_CHECK }),
     ...week(HIGH_WEEK),
-    ...week(HIGH_WEEK, { 6: day("Final check-in", range, routine("daily"), routine("high-notes")) }),
+    ...week(HIGH_WEEK, { 6: day("Final check-in", range, routine("daily"), routine("high-notes"), routine("cooldown")) }),
   ],
 };
 
@@ -243,13 +245,17 @@ const RECOVERY: Program = {
   ],
 };
 
-const MIX_A = day("Head voice into the crossing", routine("quick"), routine("head-voice-builder"), routine("mix"));
-const MIX_B = day("Chest voice into the crossing", routine("quick"), routine("belt-prep"), routine("mix"));
-const MIX_C = day("The ten, then the crossing", routine("daily"), routine("mix"));
+// The Pro weeks end every day on the cool-down, inside the twenty minutes. The
+// free week does not: its days are sized to the free plan's three guided
+// minutes, which the cool-down alone would nearly fill, and each of them
+// already ends on a descending or quiet sound.
+const MIX_A = day("Head voice into the crossing", routine("quick"), routine("head-voice-builder"), routine("mix"), routine("cooldown"));
+const MIX_B = day("Chest voice into the crossing", routine("quick"), routine("belt-prep"), routine("mix"), routine("cooldown"));
+const MIX_C = day("The ten, then the crossing", routine("daily"), routine("mix"), routine("cooldown"));
 const MIX_WEEK = [MIX_A, MIX_B, MIX_C, rest(), MIX_A, MIX_B, rest()];
 
 // Week 1 is the free week, so it uses free exercises only and each day fits
-// the free plan's three guided minutes: short sirens and slides that find where
+// the free plan's five guided minutes: short sirens and slides that find where
 // the voice changes gear, before the Pro packs work across it.
 const MIX_FREE_A = day(
   "Find the crossing",
@@ -293,9 +299,9 @@ const MIX: Program = {
         exercise("descending-five", 4),
       ),
     }),
-    ...week(MIX_WEEK, { 0: day("Into the mix pack", routine("quick"), routine("mix")) }),
+    ...week(MIX_WEEK, { 0: day("Into the mix pack", routine("quick"), routine("mix"), routine("cooldown")) }),
     ...week(MIX_WEEK),
-    ...week(MIX_WEEK, { 6: day("Check in", range, routine("daily"), routine("mix")) }),
+    ...week(MIX_WEEK, { 6: day("Check in", range, routine("daily"), routine("mix"), routine("cooldown")) }),
   ],
 };
 
@@ -311,8 +317,11 @@ function bookWeek(a: ProgramDay, b: ProgramDay, c: ProgramDay, d: ProgramDay): P
  * from day 1 is sung again at the start of week 12 to compare.
  *
  * Week 1 is free, so it is short breath drills and single free exercises, each
- * day inside the free plan's three guided minutes. The later weeks follow the
- * book's twenty-minute session: breath, a warmup, the fortnight's work.
+ * day inside the free plan's five guided minutes. The later weeks follow the
+ * book's twenty-minute session: breath, a warmup, the fortnight's work, and
+ * then the cool-down on every day that worked the voice. The quiet days built
+ * from the morning and recovery sets are a cool-down already and are left as
+ * they are.
  */
 const MEASURED_VOICE: Program = {
   id: "measured-voice-12w",
@@ -341,68 +350,68 @@ const MEASURED_VOICE: Program = {
     ),
     ...bookWeek(
       day("Breath and a morning set", breath("daily"), routine("morning")),
-      day("Breath and the easy four", breath("daily"), routine("quick")),
+      day("Breath and the easy four", breath("daily"), routine("quick"), routine("cooldown")),
       day("The long breath set", breath("builder"), routine("morning")),
-      day("A sustain, then the easy four", drill("sustain"), breath("quick"), routine("quick")),
+      day("A sustain, then the easy four", drill("sustain"), breath("quick"), routine("quick"), routine("cooldown")),
     ),
     // Weeks 3–4: the middle voice.
     ...[3, 4].flatMap(() =>
       bookWeek(
-        day("The complete ten", breath("quick"), routine("daily")),
-        day("The easy four and a song", breath("daily"), routine("quick"), song("silent-night")),
-        day("The complete ten again", breath("quick"), routine("daily")),
-        day("The easy four and a song", breath("quick"), routine("quick"), song("ode-to-joy")),
+        day("The complete ten", breath("quick"), routine("daily"), routine("cooldown")),
+        day("The easy four and a song", breath("daily"), routine("quick"), song("silent-night"), routine("cooldown")),
+        day("The complete ten again", breath("quick"), routine("daily"), routine("cooldown")),
+        day("The easy four and a song", breath("quick"), routine("quick"), song("ode-to-joy"), routine("cooldown")),
       ),
     ),
     // Weeks 5–6: through the break, quietly. The block closes with a retest.
     ...bookWeek(
-      day("Slides across the break", routine("quick"), routine("mix")),
-      day("Reach both ends", breath("daily"), routine("range")),
-      day("Slides across the break", routine("quick"), routine("mix")),
+      day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
+      day("Reach both ends", breath("daily"), routine("range"), routine("cooldown")),
+      day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
       day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
     ),
     ...week(
       bookWeek(
-        day("Slides across the break", routine("quick"), routine("mix")),
-        day("Reach both ends", breath("daily"), routine("range")),
-        day("Slides across the break", routine("quick"), routine("mix")),
+        day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
+        day("Reach both ends", breath("daily"), routine("range"), routine("cooldown")),
+        day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
-      { 6: day("Halfway check-in", range, drill("sustain"), breath("quick"), routine("quick")) },
+      { 6: day("Halfway check-in", range, drill("sustain"), breath("quick"), routine("quick"), routine("cooldown")) },
     ),
     // Weeks 7–8: height without weight, head voice before belt.
     ...[7, 8].flatMap(() =>
       bookWeek(
-        day("Light and high", routine("quick"), routine("high-notes")),
-        day("Head voice", routine("quick"), routine("head-voice-builder")),
-        day("The ten, then the tenth", routine("daily"), routine("high-notes")),
+        day("Light and high", routine("quick"), routine("high-notes"), routine("cooldown")),
+        day("Head voice", routine("quick"), routine("head-voice-builder"), routine("cooldown")),
+        day("The ten, then the tenth", routine("daily"), routine("high-notes"), routine("cooldown")),
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
     ),
     // Weeks 9–10: the bottom, and long phrases rather than long notes.
     ...[9, 10].flatMap(() =>
       bookWeek(
-        day("Breath for a long phrase", breath("builder"), routine("daily")),
+        day("Breath for a long phrase", breath("builder"), routine("daily"), routine("cooldown")),
         day("Down low, gently", breath("daily"), routine("recovery"), routine("morning"), drill("sustain")),
-        day("Breath for a long phrase", breath("builder"), routine("quick"), drill("sustain")),
+        day("Breath for a long phrase", breath("builder"), routine("quick"), drill("sustain"), routine("cooldown")),
         day("Quiet and low", breath("daily"), routine("recovery"), routine("morning")),
       ),
     ),
     // Weeks 11–12: songs. Week 12 opens on the last retest and the second take.
     ...bookWeek(
-      day("A song, warmed up", breath("daily"), routine("quick"), song("silent-night")),
-      day("A song, warmed up", breath("daily"), routine("quick"), song("ode-to-joy")),
-      day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range")),
-      day("Two songs", breath("daily"), routine("morning"), song("silent-night"), song("ode-to-joy")),
+      day("A song, warmed up", breath("daily"), routine("quick"), song("silent-night"), routine("cooldown")),
+      day("A song, warmed up", breath("daily"), routine("quick"), song("ode-to-joy"), routine("cooldown")),
+      day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
+      day("Two songs", breath("daily"), routine("morning"), song("silent-night"), song("ode-to-joy"), routine("cooldown")),
     ),
     ...week(
       bookWeek(
-        day("Where you are now", range, recorder, drill("sustain"), routine("quick")),
-        day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range")),
-        day("A song, warmed up", breath("daily"), routine("quick"), song("silent-night")),
-        day("Two songs", breath("daily"), routine("morning"), song("ode-to-joy"), song("home-on-the-range")),
+        day("Where you are now", range, recorder, drill("sustain"), routine("quick"), routine("cooldown")),
+        day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
+        day("A song, warmed up", breath("daily"), routine("quick"), song("silent-night"), routine("cooldown")),
+        day("Two songs", breath("daily"), routine("morning"), song("ode-to-joy"), song("home-on-the-range"), routine("cooldown")),
       ),
-      { 6: day("The last session", breath("quick"), routine("daily"), song("silent-night")) },
+      { 6: day("The last session", breath("quick"), routine("daily"), song("silent-night"), routine("cooldown")) },
     ),
   ],
 };

@@ -5,7 +5,7 @@ stage: "v-l1"
 title: "Self-Check: A Clear Recording"
 type: "checkpoint"
 minutes: 4
-objective: "compared a quiet recording with my initial room setup and could hear my voice clearly. This is a listening and reflection check."
+objective: "Compare a quiet recording with your initial room setup and check that you can hear your voice clearly. This is a listening and reflection check."
 prerequisites: "v-l1-m1-02"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"

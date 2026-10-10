@@ -200,7 +200,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "That the levels sound distinct on one note. Input level is uncalibrated, so discrete dynamic levels are not measurable.",
     ),
     companion: { room: "analyze" },
-    studies: ["sustained-hold", "simple-gifts"],
+    // Swell and fade is the dynamics drill itself: one note, soft to medium
+    // and back. Only its pitch is scored, which is the honest half.
+    studies: ["swell-and-fade", "sustained-hold", "simple-gifts"],
     readings: ["breath", "resonance"],
   },
 
@@ -273,8 +275,10 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "vibratoOnCue",
       "That you moved from straight tone to vibrato on cue. The vibrato hold in the warmups reads how fast and how wide a held note wobbled, but nothing times the switch itself, so the cue is yours to judge.",
     ),
-    companion: { room: "analyze" },
-    studies: ["sustained-hold"],
+    // The drill that asks for exactly this, a straight start and then a wobble
+    // if one comes, rather than a plain hold that only allows it.
+    companion: { room: "warmups", param: "exercise", value: "vibrato-hold" },
+    studies: ["vibrato-hold", "sustained-hold"],
     readings: ["atlas:a-vocabulary-for-tone", "stamina-and-health"],
   },
   "v-l6-m4": {

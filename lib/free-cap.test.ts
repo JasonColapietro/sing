@@ -27,8 +27,8 @@ function state(...sessions: SessionLog[]): ProgressState {
 }
 
 describe("free daily cap", () => {
-  it("is three minutes, and covers exactly the four guided rooms", () => {
-    expect(FREE_DAILY_SEC).toBe(180);
+  it("is five minutes, and covers exactly the four guided rooms", () => {
+    expect(FREE_DAILY_SEC).toBe(300);
     expect([...CAPPED_TYPES].sort()).toEqual(["breath", "ear", "song", "warmup"]);
   });
 
@@ -44,11 +44,11 @@ describe("free daily cap", () => {
   });
 
   it("runs the allowance down and stops at zero", () => {
-    expect(freeSecondsLeft(state(), false, DAY)).toBe(180);
-    expect(freeSecondsLeft(state(session("warmup", 100)), false, DAY)).toBe(80);
+    expect(freeSecondsLeft(state(), false, DAY)).toBe(300);
+    expect(freeSecondsLeft(state(session("warmup", 100)), false, DAY)).toBe(200);
     expect(freeSecondsLeft(state(session("warmup", 400)), false, DAY)).toBe(0);
-    expect(isCapped(state(session("warmup", 179)), false, DAY)).toBe(false);
-    expect(isCapped(state(session("warmup", 180)), false, DAY)).toBe(true);
+    expect(isCapped(state(session("warmup", 299)), false, DAY)).toBe(false);
+    expect(isCapped(state(session("warmup", 300)), false, DAY)).toBe(true);
   });
 
   it("never caps Pro", () => {

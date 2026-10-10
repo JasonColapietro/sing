@@ -5,7 +5,7 @@ stage: "v-l6"
 title: "Self-Check: Your Ornamented Study"
 type: "checkpoint"
 minutes: 7
-objective: "rehearsed the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a listening and reflection check."
+objective: "Rehearse the supplied phrase and study arrangement in a comfortable key, isolating one ornament before adding it. This is a listening and reflection check."
 prerequisites: "v-l6-m6-05"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
