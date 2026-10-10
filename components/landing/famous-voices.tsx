@@ -77,7 +77,7 @@ export function FamousVoices() {
           <div className="max-w-2xl">
             {/* The same tape label the Pro panel below wears; this was the one
                 section label on the page drawn as a grey mono box. */}
-            <SectionLabel className="mb-4">Measured voices</SectionLabel>
+            <SectionLabel className="mb-4">Reported ranges</SectionLabel>
             <h2 className="text-2xl sm:text-3xl">
               Start with a voice you already know
             </h2>

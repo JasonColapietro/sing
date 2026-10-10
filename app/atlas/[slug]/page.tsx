@@ -6,6 +6,7 @@ import { ATLAS, ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
 import { Markdown } from "@/lib/markdown";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
+import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
 import { AtlasChapterNav, AtlasChapterReader } from "@/components/atlas/reader";
 import { AtlasEntryCard } from "@/components/atlas/entry";
@@ -37,7 +38,7 @@ export async function generateMetadata({
     alternates: { canonical: `${SITE_URL}/atlas/${c.slug}` },
     // Gated chapters have nothing for an index to rank — list them but keep
     // them out of results. The free sample chapter is real content and ranks.
-    robots: c.free ? undefined : { index: false, follow: true },
+    robots: pageRobots(c.free),
   });
 }
 

@@ -66,7 +66,20 @@ export function isActiveLink(
   );
 }
 
-export type TabIconName = "home" | "mic" | "note" | "book" | "chart";
+/**
+ * aria-current for a nav link: "page" on the tab's own URL, "location" inside
+ * a route it owns, nothing elsewhere. Shared by every navigation landmark so
+ * the header row, the bottom tab bar and the drawer announce the same tab.
+ */
+export function ariaCurrentFor(
+  l: { href: string; also?: string[] },
+  pathname: string,
+): "page" | "location" | undefined {
+  if (!isActiveLink(l, pathname)) return undefined;
+  return pathname === l.href ? "page" : "location";
+}
+
+export type TabIconName ="home" | "mic" | "note" | "book" | "chart";
 
 export function TabIcon({ name, active }: { name: TabIconName; active: boolean }) {
   const common = {
@@ -487,7 +500,7 @@ export default function Nav() {
                     key={l.href}
                     href={l.href}
                     onClick={() => setMenuOpen(false)}
-                    aria-current={active ? (pathname === l.href ? "page" : "location") : undefined}
+                    aria-current={ariaCurrentFor(l, pathname)}
                     className={`rounded-2xl border px-4 py-4 text-base transition-colors ${
                       active
                         ? "border-violet bg-panel2 text-violet-ink"
@@ -541,7 +554,7 @@ export default function Nav() {
                 <Link
                   key={l.href}
                   href={l.href}
-                  aria-current={active ? (pathname === l.href ? "page" : "location") : undefined}
+                  aria-current={ariaCurrentFor(l, pathname)}
                   className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-bold transition-colors ${
                     active
                       ? "bg-ink text-bg"
@@ -682,6 +695,7 @@ function TabBar({ pathname }: { pathname: string }) {
             <li key={l.href}>
               <Link
                 href={l.href}
+                aria-current={ariaCurrentFor(l, pathname)}
                 className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-bold transition-colors ${
                   active ? "text-ink" : "text-dim hover:text-mut"
                 }`}
