@@ -1,5 +1,26 @@
 import { describe, expect, it } from "vitest";
-import { pitchReportLagSec, scoreLagSec } from "./latency";
+import {
+  MEASURED_ONSET_LAG_SEC,
+  MODELLED_ONSET_LAG_SEC,
+  UNMODELLED_INPUT_LAG_SEC,
+  pitchReportLagSec,
+  scoreLagSec,
+} from "./latency";
+
+describe("UNMODELLED_INPUT_LAG_SEC", () => {
+  it("is what the timing audit measured less what the model already rewinds", () => {
+    expect(UNMODELLED_INPUT_LAG_SEC).toBe(0.105);
+    expect(UNMODELLED_INPUT_LAG_SEC).toBeCloseTo(MEASURED_ONSET_LAG_SEC - MODELLED_ONSET_LAG_SEC, 9);
+  });
+
+  it("names a modelled share the model can actually produce", () => {
+    // The pitch-report half of the model at the frame every room opens is
+    // ~68 ms; the rest of the 95 ms the audit saw rewound was output latency.
+    const pitchPart = pitchReportLagSec(48000, 4096);
+    expect(pitchPart).toBeLessThan(MODELLED_ONSET_LAG_SEC);
+    expect(scoreLagSec(pitchPart, MODELLED_ONSET_LAG_SEC - pitchPart)).toBeCloseTo(MODELLED_ONSET_LAG_SEC, 9);
+  });
+});
 
 describe("pitchReportLagSec", () => {
   it("reports ~68 ms for the analyser and median window every room opens", () => {

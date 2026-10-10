@@ -41,11 +41,15 @@ const step = (exerciseId: string, reps: number): RoutineStep => ({ exerciseId, r
 
 /**
  * The free routines, quickest first. The first two follow Singeo's two
- * published warmups exercise for exercise — the "Easy 7-minute" (bubble, straw,
- * N, V) and the "Complete 10-minute" (sirens, bubble, raspberries, hung-ee-mm,
- * hoo, gug, then a melody) — because those are the two sequences the singer
- * we are matching can be checked against. The rest extend the same order into
- * a longer set, a range set and an agility set.
+ * published warmups — the "Easy 7-minute" (bubble, straw, N, V) and the
+ * "Complete 10-minute" (sirens, bubble, raspberries, hung-ee-mm, hoo, gug, then
+ * a melody) — with the recordings' exercises and rep counts, because those are
+ * the two sequences the singer we are matching can be checked against. One
+ * deliberate departure: the daily set opens on the bubble, not the sirens. A
+ * lip trill is the gentlest semi-occluded sound there is, and an octave siren
+ * as the second thing a cold voice does is a wide reach to ask for that early.
+ * The rest extend the same order into a longer set, a range set and an agility
+ * set.
  */
 export const ROUTINES: Routine[] = [
   {
@@ -63,12 +67,12 @@ export const ROUTINES: Routine[] = [
   {
     id: "daily",
     name: "Daily warmup",
-    tagline: "The complete ten: sirens, bubble, raspberries, hung-ee-mm, hoo, staccato gug, then a slow descent.",
+    tagline: "The complete ten: the bubble, sirens, raspberries, hung-ee-mm, hoo, staccato gug, then a slow descent.",
     pro: false,
     steps: [
+      step("lip-trill-scale", 22),
       step("ng-siren-fifth", 6),
       step("octave-siren", 5),
-      step("lip-trill-scale", 22),
       step("tongue-trill-descent", 7),
       step("hung-ee-mm", 11),
       step("hoo-four-note", 7),

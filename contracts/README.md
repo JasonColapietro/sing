@@ -78,7 +78,7 @@ number as a diff rather than never hearing about it.
 
 `suede-vocal.json` holds the vocal domain itself rather than the song scorer:
 the voice-type taxonomy and the published passaggio zones, the range-scan
-outputs, the breath drills, the 56 warm-up exercises with their root offsets,
+outputs, the breath drills, the 58 warm-up exercises with their root offsets,
 the ear games, and which rooms accept a deep link.
 
 Its most important section is `measurement`. Each row names something a
@@ -294,6 +294,49 @@ One value changed with them: the daily breath routine gained a breathe-and-sing
 step, so its steps and seconds moved. No lesson may make passing depend on a
 breath being heard. Every gated drill offers to start without detection, so a
 singer whose mic cannot hear breathing can always finish.
+
+### suede-vocal v8
+
+`version` moved to 8 on 2026-10-10. It adds one section, two keys on every
+warm-up exercise and three rules. Some values changed as well:
+
+- `warmups.scoring`: `toleranceCents` (50), `onsetGraceSec` (0.105) and
+  `onsetGraceMaxShare` (0.5). The timing audit
+  (`scripts/audit-warmup-timing.mjs`) measured an aligned voice reading about
+  200 ms behind the target at each note change. `scoreLagSec` rewinds about
+  95 ms of that, which leaves about 105 ms of input latency that no rewind
+  covers. On the 0.25–0.3 s notes of the staccato gug, the agility run and the
+  N run, that lost about two fifths of every note sung on time. The web scorer
+  now forgives the first `min(onsetGraceSec, onsetGraceMaxShare × note
+  duration)` of each target note. In that window an in-tune frame is credited
+  and an off-target frame is dropped. The note's possible time is reduced by
+  the same amount. A note that is wrong past the grace still scores nothing. A
+  3.5 s hold loses 3% of its possible time. `rules.warmupOnsetGrace` states
+  the arithmetic exactly. The constants come from
+  `lib/audio/latency.ts`: `MEASURED_ONSET_LAG_SEC − MODELLED_ONSET_LAG_SEC`.
+- `gapSec` on every exercise: the silence between consecutive notes or glide
+  steps at 1x, divided by tempo. It is 0.08 everywhere except the staccato
+  drills (`gug-staccato`, `belt-bah-bursts`), which now leave 0.15 s, so their
+  `patternSeconds` and the seconds of the routines that contain them moved.
+  `rules.warmupGap`.
+- `rangeCap` on every exercise: `null` (walk the whole fitted ladder) or
+  `{ from, to }`, which keeps only that slice of the ladder. `rules.warmupRangeCap`
+  gives the exact rounding. `swell-and-fade` walks the middle half
+  (`0.25–0.75`). The two strong belt holds (`belt-forte-ah`,
+  `belt-fifth-hold`) walk the lower part (`0–0.6`).
+- Value changes with no new key: the daily routine now opens on
+  `lip-trill-scale`, then `ng-siren-fifth` and `octave-siren`. The steps and
+  rep counts are the same, in a new order.
+
+What the other apps must do: re-sync the file, then:
+
+1. Apply the onset grace in their own warm-up scorers. Without it, the same
+   take scores lower natively than on the web.
+2. Read `gapSec` instead of assuming 0.08 when they lay out and play a pattern.
+3. Apply `rangeCap` after fitting the root ladder.
+
+Until then, `version` is a failing assertion on their side, which is
+intended. Exercise ids and titles are unchanged.
 
 ### Versioning
 
