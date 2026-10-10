@@ -26,6 +26,7 @@ import {
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
 import { popRangeLabel, popSongsByArtistSlug } from "@/lib/pop-songs";
 import { fitDescription } from "@/lib/meta-fit";
+import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
@@ -188,6 +189,8 @@ export async function generateMetadata({
       description,
       type: "profile",
       url: canonical,
+      siteName: OG_SITE_NAME,
+      locale: OG_LOCALE,
     },
   };
 }

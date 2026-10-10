@@ -10,7 +10,7 @@ export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/breath"),
   title: "Breathing Exercises for Singers: Breath Support",
   description:
-    "Build the air supply behind every long note: a mic-based sustain test plus guided breathing exercises for singers. Free in the browser.",
+    "Build the air supply behind every long note: a mic-based sustain test plus guided breathing exercises for singers. Three free minutes a day.",
   alternates: { canonical: `${SITE_URL}/breath` },
 });
 

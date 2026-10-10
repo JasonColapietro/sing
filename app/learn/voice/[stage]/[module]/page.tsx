@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { lessonKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
+import { webPageJsonLd } from "@/lib/page-jsonld";
 import { SITE_URL } from "@/lib/site";
 import { COURSE, VOICE_LEARN_PATH, findModule } from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
@@ -23,6 +25,24 @@ export function generateStaticParams(): Params[] {
   );
 }
 
+type Found = NonNullable<ReturnType<typeof findModule>>;
+
+// The stage number is dropped first when the budget is short: the module name
+// is the distinct part, and the bare name is still unique across the course.
+function moduleTitle({ stage, module }: Found): string {
+  const { name } = module.catalog;
+  return firstFit([
+    `${name} · Stage ${stage.catalog.stage} Voice Lessons`,
+    `${name} · Voice Lessons`,
+    name,
+  ]);
+}
+
+function moduleDescription({ module }: Found): string {
+  const { catalog } = module;
+  return `${catalog.skill}: ${catalog.lessons.length} short, free singing lessons. Outcome: I ${catalog.promise}`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -33,9 +53,9 @@ export async function generateMetadata({
   if (!found) return {};
   const { catalog } = found.module;
   return withCanonicalOpenGraph({
-    title: `${catalog.name} · Stage ${found.stage.catalog.stage} Voice Lessons`,
+    title: moduleTitle(found),
     keywords: lessonKeywords({ name: catalog.name, skill: catalog.skill }),
-    description: `${catalog.skill}: ${catalog.lessons.length} short, free singing lessons. Outcome: I ${catalog.promise}`,
+    description: moduleDescription(found),
     alternates: { canonical: `${SITE_URL}${found.module.href}` },
   });
 }
@@ -45,6 +65,22 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
   const found = findModule(stageSlug, moduleSlug);
   if (!found) notFound();
   const { stage, module } = found;
+  const stageHref = stage.href ?? VOICE_LEARN_PATH;
+  const href = module.href ?? stageHref;
+  // The same trail the CourseBreadcrumbs nav renders, and the same names the
+  // lesson pages give it.
+  const jsonLd = webPageJsonLd({
+    type: "CollectionPage",
+    path: href,
+    name: module.catalog.name,
+    description: moduleDescription(found),
+    breadcrumbs: [
+      { name: "Learn to sing", path: "/learn" },
+      { name: "Voice lessons", path: VOICE_LEARN_PATH },
+      { name: stage.catalog.name, path: stageHref },
+      { name: module.catalog.name, path: href },
+    ],
+  });
 
   return (
     <PageShell
@@ -52,6 +88,10 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
       title={module.catalog.name}
       subtitle={module.catalog.skill}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <CourseBreadcrumbs
         trail={[
           { href: VOICE_LEARN_PATH, label: "Voice lessons" },

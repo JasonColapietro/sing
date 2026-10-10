@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Card, PageShell } from "@/components/ui";
-import { DEFAULT_OG_IMAGE } from "@/lib/og";
+import { DEFAULT_OG_IMAGE, OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -18,6 +18,8 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     url: `${SITE_URL}/contact`,
+    siteName: OG_SITE_NAME,
+    locale: OG_LOCALE,
     images: [DEFAULT_OG_IMAGE],
   },
 };

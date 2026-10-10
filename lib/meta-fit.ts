@@ -55,6 +55,20 @@ export function fitTitle(title: string, max: number = MAX_TITLE_BODY): string {
 }
 
 /**
+ * The first candidate that fits whole, else the last one fitted.
+ *
+ * fitTitle() sheds trailing clauses, which is right for a hand-written title
+ * but wrong for a templated one whose tail is the context: "Drift Correction ·
+ * In Tune, All the Way Voice Lesson" lost its whole tail and reached search as
+ * "Drift Correction", with nothing saying it is a singing lesson. Listing shorter
+ * tails in order keeps as much of that context as the budget allows.
+ */
+export function firstFit(candidates: readonly string[], max: number = MAX_TITLE_BODY): string {
+  if (candidates.length === 0) throw new Error("firstFit requires at least one candidate");
+  return candidates.find((c) => c.trim().length <= max)?.trim() ?? fitTitle(candidates[candidates.length - 1], max);
+}
+
+/**
  * Fit a description by keeping whole sentences, then whole clauses, then
  * whole words. The result always ends in a full stop.
  */
