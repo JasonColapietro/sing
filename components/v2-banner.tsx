@@ -71,7 +71,7 @@ export default function V2Banner() {
         className="relative bg-brand text-white"
       >
         {/* The strip reads as a filled band rather than a hairline: white on
-            --color-violet-ink is 7.10:1, so the announcement carries at a glance
+            --color-brand is 5.70:1, so the announcement carries at a glance
             without borrowing violet, which on this site means a pricing event
             (see the file header). The dismiss control is positioned rather
             than in flow so the row can wrap to two lines on a narrow phone
@@ -84,9 +84,13 @@ export default function V2Banner() {
           <span className="text-meta text-white/85">
             102 voice lessons, multi-week programs, and songs that score you.
           </span>
+          {/* The pill is recessed (a black tint), not raised: white/15 over
+              the brand fill lifted the backdrop to rgb(144,87,240), where
+              white 13px text drops to 4.37:1. Black/15 is 7.25:1 at rest and
+              8.54:1 on hover. */}
           <Link
             href="/changelog"
-            className="relative inline-flex min-h-11 shrink-0 items-center rounded-full bg-white/15 px-3 py-1 text-meta font-medium text-white ring-1 ring-inset ring-white/30 transition-colors hover:bg-white/25"
+            className="relative inline-flex min-h-11 shrink-0 items-center rounded-full bg-black/15 px-3 py-1 text-meta font-medium text-white ring-1 ring-inset ring-white/40 transition-colors hover:bg-black/25"
           >
             See what&apos;s new
           </Link>

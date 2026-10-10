@@ -207,7 +207,7 @@ export default async function CanYouSingSongPage({
 
           <Link
             href="/can-you-sing"
-            className="inline-block text-sm text-violet-ink underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 items-center text-sm text-violet-ink underline-offset-4 hover:underline"
           >
             ← Every popular song&apos;s key and vocal range
           </Link>

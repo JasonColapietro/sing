@@ -21,7 +21,7 @@ import { RoutineSummary } from "./routine-summary";
 import { PathSection, RoutineGrid, RoutineMeta, routineStats } from "./routine-home";
 import { recentWarmupResults, routineReason, routineStartingTempo, recommendRoutine, routineById, stepExercise, type Routine } from "./routines";
 import type { SessionSummaryData } from "./lib";
-import { DailyThreeCard } from "./daily-three-card";
+import { DailyThreeCard, DailyThreeCardPlaceholder } from "./daily-three-card";
 import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type DailyTempo } from "@/lib/daily-three";
 import { ProgramEntryCard } from "@/components/programs/today-card";
 import { useActiveProgram } from "@/components/programs/use-program";
@@ -305,6 +305,10 @@ export function WarmupsClient() {
               error={errorAt.kind === "exercise" && errorAt.id === nextExercise.id ? pitch.error : null}
             />
           )}
+          {/* today is null until mount (the plan is seeded by the viewer's
+              local date); the placeholder keeps the card's slot so nothing
+              below it jumps when the plan arrives. */}
+          {today === null && <DailyThreeCardPlaceholder />}
           {dailyPlan && (
             <DailyThreeCard
               plan={dailyPlan}

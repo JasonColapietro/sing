@@ -169,11 +169,21 @@ note arrived after that loop was already scored, and this run read 77–81%.
 
 ## Navigation journeys
 
-`node e2e/navigation.mjs [baseUrl]` opens every main-menu destination at
-320, 375, 768, and 1280px. It checks real link clicks, 44px tab targets,
-headings, horizontal overflow, Escape focus restoration, drawer cleanup when
-crossing the desktop breakpoint, and removal of the tab fade at the scroll
-end. It uses isolated browser contexts and never signs in or starts checkout.
+`node e2e/navigation.mjs [baseUrl] [--executable=path]` opens all ten rooms
+through the "All rooms" sheet and the five primary destinations through the
+"Tabs" bar (below 640px) or the header's "Main" row (640px up), at 320, 375,
+768, and 1280px. It checks real link clicks, 44px targets, headings,
+horizontal overflow, Escape focus restoration, the scroll lock being released
+after crossing the 640px breakpoint with the sheet open, and removal of the
+tab fade at the scroll end. It uses isolated browser contexts and never signs
+in or starts checkout. `cls.mjs`, `song-first-practice.mjs` and
+`songs-modes.mjs` take the same `--executable=` flag for machines without a
+Chrome channel.
+
+The header row is `justify-center-safe`, not `justify-center`: between 640px
+and about 1000px the five tabs overflow it, and plain centring pushed "Home"
+off the row's left edge, under the logo, where no scroll could reach it. This
+journey caught it at 768px.
 
 The general audit also covers `/voice`, `/can-you-sing`, and a popular-song
 detail. Template discovery excludes static hubs so singer-detail coverage
