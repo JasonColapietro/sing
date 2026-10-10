@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, LinkButton, PageShell } from "@/components/ui";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
-import { DEFAULT_OG_IMAGE } from "@/lib/og";
+import { DEFAULT_OG_IMAGE, OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
@@ -21,6 +21,8 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     url: `${SITE_URL}/singers/methodology`,
+    siteName: OG_SITE_NAME,
+    locale: OG_LOCALE,
     images: [DEFAULT_OG_IMAGE],
   },
 };

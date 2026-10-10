@@ -11,7 +11,7 @@ import { useSyncExternalStore } from "react";
  * - **Phonation time** — seconds the voice was actually sounding.
  * - **Cycle dose** — the number of times the vocal folds have opened and
  *   closed, which is just fundamental frequency integrated over phonation
- *   time. An hour of practice at A4 is roughly six times the folds' work of an
+ *   time. An hour of practice at A4 is four times the folds' work of an
  *   hour at A2, and neither a stopwatch nor a level meter shows that.
  *
  * Everything below is pure except `load`/`save`, which are the only functions

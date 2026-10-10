@@ -8,3 +8,12 @@ describe("shared touch targets", () => {
     expect(renderToStaticMarkup(<LinkButton href="/range" size={size}>Test</LinkButton>)).toContain("min-h-11");
   });
 });
+
+describe("shared button motion", () => {
+  it("drops the press scale under prefers-reduced-motion", () => {
+    expect(renderToStaticMarkup(<Button>Start</Button>)).toContain("motion-reduce:active:scale-100");
+    expect(renderToStaticMarkup(<LinkButton href="/range">Test</LinkButton>)).toContain(
+      "motion-reduce:active:scale-100",
+    );
+  });
+});

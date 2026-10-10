@@ -248,3 +248,23 @@ describe("stars", () => {
     }
   });
 });
+
+describe("breath routine shape", () => {
+  it("takes the breath into sound in every set past the quick one", () => {
+    for (const r of BREATH_ROUTINES.filter((x) => x.id !== "quick")) {
+      const drills = r.steps.map((s) => s.drill);
+      expect(drills, r.id).toContain("cue");
+      // The note started on a breath comes before the sustains ask for all of it.
+      expect(drills.indexOf("cue"), r.id).toBeLessThan(drills.indexOf("sustain"));
+    }
+  });
+
+  it("asks for holds that stay open and attempts that stop before they tighten", () => {
+    expect(breathDrillDesc("box")).toMatch(/pause rather than a locked throat/i);
+    expect(breathDrillDesc("farinelli")).toMatch(/without gasping/i);
+    expect(breathDrillDesc("sustain")).toMatch(/starts to tighten/i);
+    for (const d of BREATH_DRILL_IDS) {
+      expect(breathDrillDesc(d), d).not.toMatch(/support|lung|capacity|diaphragm/i);
+    }
+  });
+});

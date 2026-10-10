@@ -68,7 +68,7 @@ export async function generateMetadata({
     ].find((t) => t.length <= 60) ?? `${song.title}: Lyrics`;
   const description = pro
     ? `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel}. Lyrics, structure and why it is public domain. Part of the Suede Pro songbook.`
-    : `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel} (${f.difficulty}). Full lyrics, why it is public domain, and free browser practice with live pitch feedback.`;
+    : `“${song.title}” in ${f.tonic} at ${song.bpm} bpm, ranging ${f.lowLabel}–${f.highLabel} (${f.difficulty}). Full lyrics, why it is public domain, and browser practice with live pitch feedback.`;
   return withCanonicalOpenGraph({
     title: { absolute: title },
     description,

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ALL_EXERCISES, EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
 import type { SessionLog } from "@/lib/progress-shape";
 import {
+  KIND_SESSION_ORDER,
   dailyTempoFor,
   dailyThreeDone,
   exerciseKind,
@@ -224,6 +225,34 @@ describe("seededUnit", () => {
       const v = seededUnit(k);
       expect(v).toBeGreaterThanOrEqual(0);
       expect(v).toBeLessThan(1);
+    }
+  });
+});
+
+describe("the order of today's three", () => {
+  it("keeps the warm-up pick first and sings the other two gentlest kind first", () => {
+    // Weak at a fast run and a siren: both are picked on need, and the siren,
+    // which prepares the voice, is sung before the run whatever their scores.
+    for (const [run, siren] of [[20, 40], [40, 20]]) {
+      const sessions = [
+        ...baseline(),
+        warmup(title("agility-run"), run, "2026-09-22"),
+        warmup(title("octave-siren"), siren, "2026-09-22"),
+        warmup(title("humming-thirds"), 98, "2026-09-22"),
+      ];
+      const plan = planDailyThree({ sessions, day: TODAY });
+      expect(plan.picks[0].role).toBe("confidence");
+      expect(ids(plan).slice(1)).toEqual(["octave-siren", "agility-run"]);
+    }
+  });
+
+  it("puts every pick after the first in session order, on any day", () => {
+    for (let d = 1; d <= 28; d++) {
+      const day = `2026-10-${String(d).padStart(2, "0")}`;
+      const plan = planDailyThree({ sessions: baseline("2026-09-22"), day });
+      const ranks = plan.picks.slice(1).map((p) => KIND_SESSION_ORDER.indexOf(p.kind));
+      expect(ranks.every((r) => r >= 0), day).toBe(true);
+      expect(ranks, day).toEqual([...ranks].sort((a, b) => a - b));
     }
   });
 });

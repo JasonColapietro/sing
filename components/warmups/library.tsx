@@ -23,11 +23,11 @@ import type { WarmupExercise, WarmupTier } from "./exercises";
  *  checkable against the catalogue instead of reading like a brochure. */
 export const TIER_BLURBS: Record<WarmupTier, string> = {
   beginner:
-    "Hums, the bubble, the straw and a slow hoo. Start here if you have never warmed up on purpose.",
+    "Hums, the bubble, the straw and a slow hoo, then easy scales, a held note and a straw slide to cool down. Start here if you have never warmed up on purpose.",
   intermediate:
-    "Wider intervals, a minor ladder, and your first siren. The everyday middle of a practice session.",
+    "Your first siren, wider intervals, a minor ladder, staccato, and long holds that swell or wobble. The everyday middle of a practice session.",
   advanced:
-    "A full-octave siren and clean sixth leaps, for a voice that is already moving freely.",
+    "A full-octave siren, clean sixth leaps, work past the octave and fast runs, for a voice that is already moving freely.",
 };
 
 const RECENT_WINDOW_MS = 3 * 24 * 3600 * 1000;

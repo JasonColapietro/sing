@@ -3,6 +3,7 @@ import { lessonKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { withCanonicalOpenGraph } from "@/lib/og";
+import { webPageJsonLd } from "@/lib/page-jsonld";
 import { SITE_URL } from "@/lib/site";
 import { MODULE_PRACTICE, practiceMatch } from "@/lib/lesson-practice";
 import { COURSE, VOICE_LEARN_PATH, findStage } from "@/lib/voice-lessons";
@@ -21,6 +22,12 @@ export function generateStaticParams(): Params[] {
   return COURSE.flatMap((s) => (s.slug ? [{ stage: s.slug }] : []));
 }
 
+type Stage = NonNullable<ReturnType<typeof findStage>>;
+
+function stageDescription({ catalog }: Stage): string {
+  return `${catalog.subtitle}. ${catalog.modules.length} modules of short, free singing lessons, each with a self-check and a room to practise in.`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -33,7 +40,7 @@ export async function generateMetadata({
   return withCanonicalOpenGraph({
     title: `Stage ${catalog.stage}: ${catalog.name} · Voice Lessons`,
     keywords: lessonKeywords({ name: catalog.name }),
-    description: `${catalog.subtitle}. ${catalog.modules.length} modules of short, free singing lessons, each with a self-check and a room to practise in.`,
+    description: stageDescription(stage),
     alternates: { canonical: `${SITE_URL}${stage.href}` },
   });
 }
@@ -46,6 +53,20 @@ export default async function StagePage({ params }: { params: Promise<Params> })
   const index = COURSE.indexOf(stage);
   const previous = COURSE[index - 1];
   const next = COURSE[index + 1];
+  const href = stage.href ?? VOICE_LEARN_PATH;
+  // The same trail the CourseBreadcrumbs nav renders, and the same names the
+  // lesson pages give it.
+  const jsonLd = webPageJsonLd({
+    type: "CollectionPage",
+    path: href,
+    name: `Stage ${catalog.stage}: ${catalog.name}`,
+    description: stageDescription(stage),
+    breadcrumbs: [
+      { name: "Learn to sing", path: "/learn" },
+      { name: "Voice lessons", path: VOICE_LEARN_PATH },
+      { name: catalog.name, path: href },
+    ],
+  });
 
   return (
     <PageShell
@@ -53,6 +74,10 @@ export default async function StagePage({ params }: { params: Promise<Params> })
       title={catalog.name}
       subtitle={catalog.subtitle}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <CourseBreadcrumbs trail={[{ href: VOICE_LEARN_PATH, label: "Voice lessons" }]} current={catalog.name} />
       <div className="space-y-6">
         {stage.modules.map((module) => {

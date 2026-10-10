@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { LESSON_REFERENCES, LESSONS } from "@/lib/lesson-data";
 import { Markdown } from "@/lib/markdown";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import {
@@ -31,6 +32,14 @@ export function generateStaticParams(): Params[] {
   return LESSONS.map((l) => ({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }));
 }
 
+/** What the description calls each lesson type, in running text. */
+const DESCRIPTION_KIND: Record<string, string> = {
+  concept: "lesson",
+  exercise: "exercise",
+  song: "song lesson",
+  checkpoint: "self-check",
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -40,9 +49,24 @@ export async function generateMetadata({
   const found = findLesson(stage, module, lesson);
   if (!found) return {};
   const { body } = found.lesson;
+  const moduleName = found.module.catalog.name;
+  // Self-check objectives are written to follow "I" ("compared a quiet
+  // recording…"), the module outcome's convention; a snippet needs the subject.
+  const objective = /^[a-z]/.test(body.objective) ? `I ${body.objective}` : body.objective;
   return withCanonicalOpenGraph({
-    title: `${body.title} · ${found.module.catalog.name} Voice Lesson`,
-    description: body.objective,
+    // fitTitle() alone sheds the whole tail, which left 94 of 102 lessons in
+    // search as a bare phrase ("Drift Correction") with nothing saying it is a
+    // singing lesson. Keep "Voice Lesson" whenever the budget allows.
+    title: firstFit([
+      `${body.title} · ${moduleName} Voice Lesson`,
+      `${body.title} · Voice Lesson`,
+      body.title,
+    ]),
+    // The objective leads, as the catalog wrote it. Most objectives are one
+    // short line (64 of 102 under 100 characters), so the second sentence says
+    // what and where the page is, from the same fields the kicker shows;
+    // fitDescription drops it whole when the objective needs the room.
+    description: `${objective} A ${body.minutes}-minute ${DESCRIPTION_KIND[body.type] ?? "lesson"} from ${moduleName}, Stage ${found.stage.catalog.stage} of the free Suede Sing voice course.`,
     keywords: lessonKeywords({ name: body.title, group: found.module.catalog.name }),
     alternates: { canonical: `${SITE_URL}${lessonHref(body)}` },
   });
@@ -83,7 +107,9 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
         isAccessibleForFree: true,
         inLanguage: "en",
         isPartOf: { "@id": `${SITE_URL}${VOICE_LEARN_PATH}#course` },
-        publisher: { "@id": ORG_PUBLISHER_NODE["@id"] },
+        // The node itself, not a bare @id: nothing else in this document
+        // defines the publisher, so a pointer resolved to no name or logo.
+        publisher: ORG_PUBLISHER_NODE,
       },
       {
         "@type": "BreadcrumbList",
