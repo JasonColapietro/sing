@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SectionLabel } from "@/components/ui";
 import { isSingerReviewed, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
 import { rangeLabel, singerBySlug } from "@/lib/singers";
 
@@ -69,12 +70,14 @@ const VOICES = FEATURED.map((slug) => {
 export function FamousVoices() {
   return (
     <section className="border-t border-line">
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
+      {/* py-12 on a phone, where the page's own section gap is mt-12 too; the
+          bottom padding is the whole gap to the Pro panel that follows. */}
+      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
-            <p className="mb-4 inline-block rounded border border-line bg-panel px-2 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              Measured voices
-            </p>
+            {/* The same tape label the Pro panel below wears; this was the one
+                section label on the page drawn as a grey mono box. */}
+            <SectionLabel className="mb-4">Measured voices</SectionLabel>
             <h2 className="text-2xl sm:text-3xl">
               Start with a voice you already know
             </h2>
@@ -87,7 +90,7 @@ export function FamousVoices() {
           </div>
           <Link
             href="/singers"
-            className="font-mono text-xs uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+            className="inline-flex min-h-11 items-center font-mono text-xs uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 transition-colors hover:decoration-violet"
           >
             Browse every voice
           </Link>
@@ -96,13 +99,13 @@ export function FamousVoices() {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/singers/voice-type/contralto"
-            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink hover:border-violet"
+            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink transition-colors hover:border-violet hover:bg-panel2"
           >
             Contralto singers and their vocal ranges
           </Link>
           <Link
             href="/atlas/vocal-range-by-voice-type"
-            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink hover:border-violet"
+            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink transition-colors hover:border-violet hover:bg-panel2"
           >
             Compare vocal ranges by voice type
           </Link>
@@ -111,15 +114,25 @@ export function FamousVoices() {
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {VOICES.map(({ singer, evidenceCopy }) => (
             <li key={singer.slug}>
+              {/* A reviewed singer carries a sentence of evidence and a longer
+                  range label. Side by side, the shrink-0 label left that
+                  sentence a column a few words wide — fourteen lines tall on a
+                  phone — so those rows stack: name, evidence, then the span. */}
               <Link
                 href={`/singers/${singer.slug}`}
-                className="lift group flex items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 hover:border-violet/50"
+                className={`lift group flex h-full rounded-xl border border-line bg-panel px-4 py-3 hover:border-violet/50 ${
+                  evidenceCopy
+                    ? "flex-col gap-2"
+                    : "items-baseline justify-between gap-3"
+                }`}
               >
                 <span className="min-w-0">
-                  <span className="block truncate text-ink group-hover:text-violet-ink">
+                  <span className="block truncate text-ink transition-colors group-hover:text-violet-ink">
                     {singer.name}{singer.slug === "damiano-david" ? " vocal range" : ""}
                   </span>
-                  <span className="mt-0.5 block text-xs text-dim">
+                  <span
+                    className={`mt-0.5 block text-xs text-dim ${evidenceCopy ? "leading-relaxed" : ""}`}
+                  >
                     {evidenceCopy ?? singer.voiceType}
                   </span>
                 </span>

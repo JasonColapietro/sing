@@ -76,6 +76,14 @@ const MORE_FROM_SUEDE: FooterLink[] = [
 const linkClass =
   "text-mut transition-colors hover:text-ink hover:underline underline-offset-4";
 
+/** Column heading: the 12px label tier from the type scale, not a one-off 11px. */
+const headingClass = "font-mono text-label uppercase tracking-[0.14em] text-dim";
+
+/* Two-line wrapped labels ("Famous singers' vocal ranges") sat 8px from the
+   next link on a phone, so the rows read as one block; the extra 2px below sm
+   separates them and gives each tap a little more room. */
+const listClass = "mt-3 space-y-2.5 text-sm sm:space-y-2";
+
 function Column({
   heading,
   links,
@@ -85,10 +93,10 @@ function Column({
 }) {
   return (
     <div>
-      <h2 className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+      <h2 className={headingClass}>
         {heading}
       </h2>
-      <ul className="mt-3 space-y-2 text-sm">
+      <ul className={listClass}>
         {links.map((l) => (
           <li key={l.href}>
             {/* next/link is for in-app routes; a sibling property is a plain
@@ -123,10 +131,10 @@ export default function SiteFooter() {
 
           {/* Every voice-type hub, one click from any page. */}
           <div>
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            <h2 className={headingClass}>
               By voice type
             </h2>
-            <ul className="mt-3 space-y-2 text-sm">
+            <ul className={listClass}>
               {VOICE_KINDS.map((v) => (
                 <li key={v}>
                   <Link
@@ -142,10 +150,10 @@ export default function SiteFooter() {
 
           {/* Every genre hub that clears the singer-count threshold. */}
           <div className="col-span-2 sm:col-span-1 lg:col-span-2">
-            <h2 className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+            <h2 className={headingClass}>
               By genre
             </h2>
-            <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm lg:grid-cols-2">
+            <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm sm:gap-y-2">
               {HUB_GENRES.map((g) => (
                 <li key={g}>
                   <Link
@@ -161,7 +169,7 @@ export default function SiteFooter() {
         </nav>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6 font-mono text-xs text-dim">
-          <span className="flex flex-wrap items-center gap-x-2">
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
             <span>SUEDE SING</span>
             <span aria-hidden>·</span>
             {/* The durable inbound link to /changelog: the release banner will

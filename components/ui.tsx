@@ -153,8 +153,15 @@ export function Card({
 type ButtonVariant = "rec" | "violet" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
 
+/*
+ * The outline variant's hover is a border change and the violet one carries a
+ * shadow, so both are transitioned with the fill; otherwise those two snapped
+ * while the colour faded. The press scale is a small movement, but movement
+ * all the same, and is dropped under prefers-reduced-motion. A disabled
+ * control does not press.
+ */
 const buttonBase =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-bold transition-[background-color,color,transform] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-bold transition-[background-color,border-color,color,box-shadow,transform] duration-150 active:scale-[0.98] motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100";
 const buttonVariants: Record<ButtonVariant, string> = {
   rec: "bg-rec text-[#1b0711] hover:bg-[#ff7a90]",
   violet: "bg-brand text-white shadow-[0_8px_24px_-8px_rgba(124,58,237,0.7)] hover:bg-violet",
@@ -312,7 +319,7 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-line2 px-6 py-14 text-center">
-      <div className="text-xl">{title}</div>
+      <div className="text-xl font-bold">{title}</div>
       {hint && <p className="mt-2 max-w-sm text-sm text-mut">{hint}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>

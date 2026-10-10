@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { LinkButton } from "@/components/ui";
+import { Button, LinkButton, SectionLabel } from "@/components/ui";
 
 /**
  * Route-level error boundary.
@@ -29,9 +29,9 @@ export default function Error({
 
   return (
     <main className="mx-auto w-full max-w-2xl px-4 py-24 text-center sm:px-6">
-      <p className="font-mono text-xs uppercase tracking-[0.14em] text-violet-ink">
-        Something broke
-      </p>
+      {/* The same tape label not-found.tsx gets from PageShell, so the two
+          dead ends read as one family. */}
+      <SectionLabel>Something broke</SectionLabel>
       <h1 className="mt-4 text-3xl sm:text-4xl">This room stopped working</h1>
       <p className="mx-auto mt-4 max-w-md text-mut">
         Not your microphone and not your practice — an error in the page itself.
@@ -42,13 +42,11 @@ export default function Error({
         this.
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={() => unstable_retry()}
-          className="inline-flex items-center justify-center rounded-full bg-rec px-5 py-2.5 font-mono text-sm font-semibold text-bg transition-opacity hover:opacity-90"
-        >
+        {/* The shared rec button: it was a one-off in the mono face with no
+            44px floor, the only primary action on the site drawn that way. */}
+        <Button type="button" variant="rec" onClick={() => unstable_retry()}>
           Try this room again
-        </button>
+        </Button>
         <LinkButton href="/studio" variant="outline" size="md">
           Go to the studio
         </LinkButton>
@@ -57,7 +55,7 @@ export default function Error({
         </LinkButton>
       </div>
       {error.digest && (
-        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+        <p className="mt-8 font-mono text-label uppercase tracking-[0.14em] text-dim">
           Reference {error.digest}
         </p>
       )}
