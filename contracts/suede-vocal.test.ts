@@ -22,7 +22,12 @@ import { describe, expect, it } from "vitest";
 import { buildContract, CONTRACT_VERSION } from "./suede-vocal";
 import { VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { VOICE_KINDS } from "@/lib/singers-core";
-import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
+import { EXERCISES, NOTE_GAP_SEC, PRO_PACKS } from "@/components/warmups/exercises";
+import {
+  ONSET_GRACE_MAX_SHARE,
+  ONSET_GRACE_SEC,
+  TOLERANCE_CENTS as WARMUP_TOLERANCE_CENTS,
+} from "@/components/warmups/scoring";
 import { isFreeExercise } from "@/components/warmups/routines";
 import {
   BREATH_DRILL_IDS,
@@ -154,6 +159,45 @@ describe("suede-vocal contract", () => {
       expect(ex.title, `exercise ${ex.id} has no title`).toBeTruthy();
       expect(ex.steps.length, `exercise ${ex.id} serialized no steps`).toBeGreaterThan(0);
     }
+  });
+
+  /**
+   * v8. The warm-up scorer's onset grace, each exercise's note gap and its
+   * range cap are what a native port needs to score and walk a warm-up the
+   * way the web does, so each is published with its default spelled out.
+   */
+  it("publishes how a warm-up is scored, spaced and walked", () => {
+    const c = buildContract();
+    expect(c.warmups.scoring).toEqual({
+      toleranceCents: WARMUP_TOLERANCE_CENTS,
+      onsetGraceSec: ONSET_GRACE_SEC,
+      onsetGraceMaxShare: ONSET_GRACE_MAX_SHARE,
+    });
+    expect(c.warmups.scoring.onsetGraceSec).toBe(0.105);
+    const byId = new Map(c.warmups.exercises.map((e) => [e.id, e]));
+    for (const ex of [...EXERCISES, ...PRO_PACKS.flatMap((p) => p.exercises)]) {
+      const row = byId.get(ex.id)!;
+      expect(row.gapSec, ex.id).toBe(ex.gapSec ?? NOTE_GAP_SEC);
+      expect(row.rangeCap, ex.id).toEqual(ex.rangeCap ?? null);
+    }
+    expect(byId.get("gug-staccato")!.gapSec).toBeGreaterThan(NOTE_GAP_SEC);
+    expect(byId.get("swell-and-fade")!.rangeCap).not.toBeNull();
+    expect(byId.get("five-note-scale")!.gapSec).toBe(NOTE_GAP_SEC);
+    expect(byId.get("five-note-scale")!.rangeCap).toBeNull();
+    for (const rule of ["warmupOnsetGrace", "warmupGap", "warmupRangeCap"] as const) {
+      expect(c.rules[rule], rule).toBeTruthy();
+    }
+  });
+
+  /**
+   * The published grace is only true if the room scores with it. A player that
+   * passed its own `onsetGraceSec` would score differently from the contract
+   * with every equality check green.
+   */
+  it("the warmup room scores with the published grace", () => {
+    const src = readFileSync(PLAYER_SRC, "utf8");
+    expect(src).toContain("createRepScorer(segs)");
+    expect(src).not.toContain("onsetGraceSec");
   });
 
   /**

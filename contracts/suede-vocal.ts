@@ -115,7 +115,18 @@ import {
   GAME_TRAINS,
   earRoutineSeconds,
 } from "@/components/ear/routines";
-import { EXERCISES, PRO_PACKS, buildSegments, type WarmupExercise } from "@/components/warmups/exercises";
+import {
+  EXERCISES,
+  NOTE_GAP_SEC,
+  PRO_PACKS,
+  buildSegments,
+  type WarmupExercise,
+} from "@/components/warmups/exercises";
+import {
+  ONSET_GRACE_MAX_SHARE,
+  ONSET_GRACE_SEC,
+  TOLERANCE_CENTS as WARMUP_TOLERANCE_CENTS,
+} from "@/components/warmups/scoring";
 import {
   ALL_ROUTINES,
   STEP_INTRO_SEC,
@@ -129,7 +140,13 @@ import { FREE_WEEKS, PROGRAMS } from "@/lib/programs";
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 7;
+export const CONTRACT_VERSION = 8;
+/*
+ * 8: added warmups.scoring (the warmup scorer's tolerance and its per-note
+ *    onset grace), gapSec and rangeCap on every warm-up exercise, and
+ *    rules.warmupOnsetGrace, rules.warmupGap and rules.warmupRangeCap. See
+ *    contracts/README.md, "suede-vocal v8".
+ */
 
 /**
  * Every measurement this app can take from a microphone, and every one a
@@ -162,7 +179,7 @@ const MEASUREMENTS = {
     measurable: "yes",
     unit: "seconds",
     module: "components/warmups/scoring.ts, components/songs/song-player.tsx",
-    note: "Time held inside the tolerance window, latency-corrected before it is credited.",
+    note: "Time held inside the tolerance window, latency-corrected before it is credited. In warmups the front of each note is forgiven for warmups.scoring.onsetGraceSec (rules.warmupOnsetGrace).",
   },
   scorePercent: {
     measurable: "yes",
@@ -387,6 +404,12 @@ const RULES = {
     "Sustain steadiness is the coefficient of variation of loudness. The breath room never reads f0.",
   inhaleIsHeardNotMeasured:
     "The breath room's mic hears the inhale and nothing more. Copy may say the mic heard the breath; it may never say it measured support, lung capacity, breath depth or the diaphragm, and no pass or fail may depend on a breath being heard, because every gated drill offers to start without detection.",
+  warmupOnsetGrace:
+    "Each warm-up target note forgives its first g seconds, g = min(warmups.scoring.onsetGraceSec, warmups.scoring.onsetGraceMaxShare * the note's duration at the tempo sung). Inside g a frame within toleranceCents is credited as usual and a frame outside it is dropped entirely: no hit, no cents error, no voiced frame. A note's possible time is its duration less g, its credited time is capped at that, and the rep score is total credited over total possible. The grace is the input latency the timing audit measured beyond the score-lag model, so it is in seconds and does not scale with tempo. Glide segments get it too.",
+  warmupGap:
+    "Consecutive notes (or glide steps) of a warm-up are separated by gapSec / tempo seconds of silence, gapSec being the exercise's own value; the default is published on every exercise rather than left implicit. The gap is part of patternSeconds and is never scored, and the guide plays the same gaps.",
+  warmupRangeCap:
+    "A non-null rangeCap trims the fitted root ladder before it is walked: with n rungs counted from the bottom (index 0), keep indexes round(from * (n - 1)) through max(that, round(to * (n - 1))), inclusive. A ladder of one rung is kept as it is. A down ladder is capped first and reversed after. Null walks the whole fitted ladder.",
   freeExerciseGate:
     "A warmup is free if and only if it is in EXERCISES. Pro packs are gated by array membership, not by a flag, so a free surface must never deep-link a pack exercise.",
 } as const;
@@ -516,6 +539,10 @@ function serializeExercise(ex: WarmupExercise, free: boolean) {
     ladder: ex.ladder ?? "up",
     /** Open, unscored seconds before the first note; included in patternSeconds. */
     unscoredLeadSec: ex.unscoredLeadSec ?? 0,
+    /** Silence between consecutive notes at 1x; see rules.warmupGap. */
+    gapSec: ex.gapSec ?? NOTE_GAP_SEC,
+    /** The slice of the fitted ladder walked, or null for all of it; see rules.warmupRangeCap. */
+    rangeCap: ex.rangeCap ? { from: ex.rangeCap.from, to: ex.rangeCap.to } : null,
     /** Semitone offsets from the root, one array per step. */
     steps: exerciseOffsets(ex),
     segmentCount: segs.length,
@@ -540,6 +567,7 @@ export function buildContract() {
         "lib/audio/latency.ts",
         "lib/audio/breath-detect.ts",
         "components/warmups/exercises.ts",
+        "components/warmups/scoring.ts",
         "components/warmups/routines.ts",
         "components/breath/routines.ts",
         "components/ear/routines.ts",
@@ -741,6 +769,14 @@ export function buildContract() {
     warmups: {
       stepIntroSec: STEP_INTRO_SEC,
       tempos: [0.5, 0.75, 1, 1.25],
+      /** How a warm-up rep is scored; see rules.warmupOnsetGrace. */
+      scoring: {
+        toleranceCents: WARMUP_TOLERANCE_CENTS,
+        /** Seconds at the front of each note in which an off-target frame is forgiven. */
+        onsetGraceSec: ONSET_GRACE_SEC,
+        /** The most of one note the grace may cover, as a share of its duration. */
+        onsetGraceMaxShare: ONSET_GRACE_MAX_SHARE,
+      },
       exercises: [
         ...EXERCISES.map((ex) => serializeExercise(ex, true)),
         ...PRO_PACKS.flatMap((pack) => pack.exercises.map((ex) => serializeExercise(ex, false))),

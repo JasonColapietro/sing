@@ -227,6 +227,54 @@ describe("program data", () => {
     }
   });
 
+  it("ends the Mix and Measured Voice days that work the voice on the cool-down", () => {
+    // The quiet days, built only from the morning and recovery sets, are a
+    // cool-down already; every other paid day ends on the real one.
+    const gentle = new Set(["morning", "recovery"]);
+    const worksVoice = (d: ProgramDay) =>
+      d.items.some(
+        (i) => i.kind === "song" || i.kind === "exercise" || (i.kind === "routine" && !gentle.has(i.id)),
+      );
+    for (const id of ["mix-4w", "measured-voice-12w"]) {
+      const p = programById(id)!;
+      let ended = 0;
+      p.days.forEach((d, i) => {
+        const label = `${id} day ${i + 1} "${d.title}"`;
+        const last = d.items.at(-1);
+        const endsCool = last?.kind === "routine" && last.id === "cooldown";
+        // Nothing but the last item may be the cool-down.
+        expect(d.items.slice(0, -1).some((x) => x.kind === "routine" && x.id === "cooldown"), label).toBe(false);
+        if (isRestDay(d) || !dayNeedsPro(p, i)) {
+          // The free week is sized to the free plan's three guided minutes.
+          expect(endsCool, label).toBe(false);
+          return;
+        }
+        expect(endsCool, label).toBe(worksVoice(d));
+        if (endsCool) {
+          ended++;
+          expect(dayMinutes(d), label).toBeLessThanOrEqual(20);
+        }
+      });
+      expect(ended, id).toBeGreaterThan(0);
+    }
+  });
+
+  it("keeps every program's calendar where saved progress expects it", () => {
+    // Saved progress is a list of completed day indexes, so the days, and
+    // which of them are rest days, stay put.
+    const rests = (id: string) => programById(id)!.days.flatMap((d, i) => (isRestDay(d) ? [i] : []));
+    expect(programById("mix-4w")!.days).toHaveLength(28);
+    // Week 4 closes on the check-in.
+    expect(rests("mix-4w")).toEqual([3, 6, 10, 13, 17, 20, 24]);
+    expect(programById("measured-voice-12w")!.days).toHaveLength(84);
+    expect(rests("measured-voice-12w")).toEqual(
+      Array.from({ length: 12 }, (_, w) => [2, 5, 6].map((d) => w * 7 + d))
+        .flat()
+        // Weeks 6 and 12 close on a session instead of a rest.
+        .filter((i) => i !== 41 && i !== 83),
+    );
+  });
+
   it("puts a range test at day 1 and at the end of each two weeks of the high-notes program", () => {
     const p = programById("high-notes-6w")!;
     const withRange = p.days.flatMap((d, i) => (d.items.some((x) => x.kind === "range") ? [i + 1] : []));

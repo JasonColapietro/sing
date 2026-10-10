@@ -52,7 +52,12 @@ and singeo.com/chorus/complete-10-minute-vocal-warm-up.
   ladder for it.
 - Routine rep counts now match the recordings; the Quick routine is the
   7-minute warm-up exercise for exercise; the Daily routine is the 10-minute
-  one with our sirens in front and a slow descent standing in for puffy cheeks.
+  one with a slow descent standing in for puffy cheeks. It opens on the bubble
+  and then our sirens (the recording opens on the sirens): the gentlest
+  semi-occluded sound goes first, before the octave siren's wider reach.
+- `gug-staccato` is now detached: 0.25 s notes with 0.15 s of silence after
+  each (`gapSec`), rather than the 0.08 s re-articulation every other pattern
+  uses, so the recording's note length is kept and the staccato is real.
 
 Keys are not copied: Singeo's are fixed for the coach's voice, ours are fitted
 to the singer's measured range, which is what Singeo's own calibration advice

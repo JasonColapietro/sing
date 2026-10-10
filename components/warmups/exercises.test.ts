@@ -2,12 +2,17 @@ import { describe, expect, it } from "vitest";
 import {
   ALL_EXERCISES,
   EXERCISES,
+  LOWER_MIDDLE_OF_RANGE,
+  MIDDLE_OF_RANGE,
   MIN_RUNGS,
+  NOTE_GAP_SEC,
   PATH_ORDER,
   PRO_PACKS,
+  STACCATO_GAP_SEC,
   TIER_ORDER,
   VIBRATO_TARGET_BAND,
   buildSegments,
+  capLadder,
   computeRootLadder,
   ladderWalk,
 } from "./exercises";
@@ -371,5 +376,116 @@ describe("coaching copy", () => {
     const forte = ALL_EXERCISES.find((e) => e.id === "belt-forte-ah")!;
     expect(forte.tip).toMatch(/back off/i);
     expect(forte.tip).toMatch(/stop/i);
+  });
+});
+
+describe("the note gap", () => {
+  const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
+  const STACCATO = ["gug-staccato", "belt-bah-bursts"];
+
+  /** Seconds of silence between each pair of consecutive segments. */
+  const gaps = (id: string, tempo: number) => {
+    const { segs } = buildSegments(byId(id), 52, tempo);
+    return segs.slice(1).map((s, i) => s.t0 - (segs[i].t0 + segs[i].dur));
+  };
+
+  it("keeps the 0.08 s re-articulation for every exercise that does not opt out", () => {
+    expect(NOTE_GAP_SEC).toBe(0.08);
+    for (const ex of ALL_EXERCISES.filter((e) => !STACCATO.includes(e.id))) {
+      expect(ex.gapSec, ex.id).toBeUndefined();
+      for (const g of gaps(ex.id, 1)) expect(g, ex.id).toBeCloseTo(NOTE_GAP_SEC, 9);
+    }
+  });
+
+  it("detaches the staccato drills with a real silence, scaled by tempo", () => {
+    expect(STACCATO_GAP_SEC).toBeGreaterThan(NOTE_GAP_SEC);
+    for (const id of STACCATO) {
+      expect(byId(id).gapSec, id).toBe(STACCATO_GAP_SEC);
+      for (const tempo of [0.5, 1, 1.25]) {
+        for (const g of gaps(id, tempo)) expect(g, `${id} ${tempo}x`).toBeCloseTo(STACCATO_GAP_SEC / tempo, 9);
+      }
+      // The pattern's length is its notes plus its gaps, which is what the
+      // timeline and the guide schedule from.
+      const ex = byId(id);
+      const { segs, totalSec } = buildSegments(ex, 52, 1);
+      expect(totalSec).toBeCloseTo(segs.length * ex.noteDur! + (segs.length - 1) * STACCATO_GAP_SEC, 9);
+    }
+  });
+
+  it("scores nothing in the gap, so the silence costs the singer nothing", () => {
+    const { segs, totalSec } = buildSegments(byId("gug-staccato"), 52, 1);
+    const scorer = createRepScorer(segs);
+    const dt = 1 / 60;
+    // On pitch through every note, silent in every gap.
+    for (let t = 0; t < totalSec; t += dt) {
+      const seg = segs.find((s) => t >= s.t0 && t <= s.t0 + s.dur);
+      scorer.feed(t, seg ? 440 * Math.pow(2, (seg.startMidi - 69) / 12) : null, dt);
+    }
+    expect(scorer.result(52)!.score).toBeGreaterThanOrEqual(98);
+  });
+
+  it("tells the staccato singer to leave the gap", () => {
+    const gug = byId("gug-staccato");
+    expect(`${gug.desc} ${gug.tip}`).toMatch(/\b(?:gap|silence)\b/i);
+    expect(gug.desc).toMatch(/detached/i);
+    expect(gug.title).toBe("Staccato gug");
+    expect(byId("belt-bah-bursts").tip).toMatch(/silence/i);
+  });
+});
+
+describe("the range cap", () => {
+  const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
+  const CAPPED = ["swell-and-fade", "belt-forte-ah", "belt-fifth-hold"];
+
+  it("keeps the ladder as it is without a cap, and at least one rung with one", () => {
+    const ladder = [50, 51, 52, 53, 54, 55, 56, 57, 58];
+    expect(capLadder(ladder, undefined)).toBe(ladder);
+    expect(capLadder(ladder, { from: 0, to: 1 })).toEqual(ladder);
+    expect(capLadder(ladder, MIDDLE_OF_RANGE)).toEqual([52, 53, 54, 55, 56]);
+    expect(capLadder(ladder, LOWER_MIDDLE_OF_RANGE)).toEqual([50, 51, 52, 53, 54, 55]);
+    expect(capLadder([60], MIDDLE_OF_RANGE)).toEqual([60]);
+    expect(capLadder(ladder, { from: 0.5, to: 0.5 })).toEqual([54]);
+    expect(capLadder(ladder, { from: 0.8, to: 0.2 })).toEqual([56]);
+  });
+
+  it("is off for every exercise that does not opt in", () => {
+    for (const ex of ALL_EXERCISES.filter((e) => !CAPPED.includes(e.id))) {
+      expect(ex.rangeCap, ex.id).toBeUndefined();
+    }
+  });
+
+  it("keeps messa di voce in the middle of the comfortable range", () => {
+    const ex = byId("swell-and-fade");
+    expect(ex.rangeCap).toEqual(MIDDLE_OF_RANGE);
+    const uncapped = computeRootLadder({ ...ex, rangeCap: undefined }, 48, 72);
+    const roots = computeRootLadder(ex, 48, 72);
+    expect(roots.length).toBeGreaterThan(1);
+    expect(roots.length).toBeLessThan(uncapped.length);
+    // Strictly inside the whole span: off the bottom rungs and off the top ones.
+    expect(roots[0]).toBeGreaterThan(uncapped[0]);
+    expect(roots[roots.length - 1]).toBeLessThan(uncapped[uncapped.length - 1]);
+    // Centred: as many rungs left out above as below, give or take one.
+    const below = uncapped.indexOf(roots[0]);
+    const above = uncapped.length - 1 - uncapped.indexOf(roots[roots.length - 1]);
+    expect(Math.abs(above - below)).toBeLessThanOrEqual(1);
+  });
+
+  it("keeps the strong belt holds off the top of the range", () => {
+    for (const id of ["belt-forte-ah", "belt-fifth-hold"]) {
+      const ex = byId(id);
+      const uncapped = computeRootLadder({ ...ex, rangeCap: undefined }, 48, 72);
+      const roots = computeRootLadder(ex, 48, 72);
+      expect(roots[0], id).toBe(uncapped[0]);
+      expect(roots[roots.length - 1], id).toBeLessThan(uncapped[uncapped.length - 1]);
+      for (const r of roots) expect(uncapped, id).toContain(r);
+    }
+  });
+
+  it("still gives a narrow range a rung to sing", () => {
+    for (const id of CAPPED) {
+      for (const [low, high] of [[48, 55], [50, 62], [45, 80]]) {
+        expect(computeRootLadder(byId(id), low, high).length, `${id} ${low}-${high}`).toBeGreaterThanOrEqual(1);
+      }
+    }
   });
 });

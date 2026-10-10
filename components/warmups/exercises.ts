@@ -40,9 +40,58 @@ export interface WarmupExercise {
    * as a creak rolling into a note.
    */
   unscoredLeadSec?: number;
+  /**
+   * Seconds at 1x of silence between consecutive notes (or glide steps).
+   * Defaults to NOTE_GAP_SEC, which is a re-articulation rather than a rest; a
+   * staccato drill sets a longer one so each note is genuinely detached. The
+   * gap is part of the pattern's length and is never scored: targetMidiAt
+   * reads null there.
+   */
+  gapSec?: number;
+  /**
+   * Walk only this slice of the fitted root ladder, as fractions of it from
+   * the bottom rung (0) to the top rung (1). Off by default, so the drill walks
+   * the singer's whole comfortable span. For drills that belong in the middle
+   * of the voice rather than at its edges, such as a swell or a strong hold.
+   * See capLadder for the exact rounding.
+   */
+  rangeCap?: RangeCap;
   /** Each step is a small melody in midi numbers, built from a root note. */
   buildSteps(rootMidi: number): number[][];
 }
+
+/** A slice of the root ladder, as fractions from its bottom rung (0) to its top (1). */
+export interface RangeCap {
+  from: number;
+  to: number;
+}
+
+/**
+ * Seconds at 1x between consecutive notes when an exercise sets no `gapSec`:
+ * long enough for the guide to re-strike a repeated note, short enough to read
+ * as connected singing.
+ */
+export const NOTE_GAP_SEC = 0.08;
+
+/**
+ * The gap the staccato drills leave after each note at 1x: a short silence a
+ * singer can hear and the detector reads as unvoiced, rather than the
+ * re-articulation NOTE_GAP_SEC is.
+ */
+export const STACCATO_GAP_SEC = 0.15;
+
+/**
+ * The middle of the comfortable range: the ladder's middle half. Where a swell
+ * or a strong hold is practised before it is taken toward either edge.
+ */
+export const MIDDLE_OF_RANGE: RangeCap = { from: 0.25, to: 0.75 };
+
+/**
+ * The lower part of the comfortable range, for loud, speech-like holds: a
+ * strong sound held high is the version of the drill to build toward, not the
+ * one to repeat every rung.
+ */
+export const LOWER_MIDDLE_OF_RANGE: RangeCap = { from: 0, to: 0.6 };
 
 const rel = (root: number, offsets: number[]) => offsets.map((o) => root + o);
 
@@ -237,10 +286,11 @@ const CATALOGUE: WarmupExercise[] = [
   {
     id: "gug-staccato",
     title: "Staccato gug",
-    desc: 'Thirteen bouncy "gug"s — up the arpeggio to the twelfth, down the scale — each note restarted by its own "g".',
+    desc: 'Thirteen short, detached "gug"s — up the arpeggio to the twelfth, down the scale — with a little silence after each one.',
     tier: "intermediate",
-    tip: 'Short and bouncy, but give every note its pitch: the "g" is the break between notes, not a gap of silence. Each one starts from the breath, never a squeeze in the throat.',
+    tip: 'Short and bouncy, and leave a small gap of silence after every note. The "g" restarts each one from the breath, never a squeeze in the throat, and every note still gets its pitch.',
     noteDur: 0.25,
+    gapSec: STACCATO_GAP_SEC,
     buildSteps: (r) => [rel(r, [0, 4, 7, 12, 16, 19, 17, 14, 11, 7, 5, 2, 0])],
   },
   {
@@ -462,8 +512,9 @@ const CATALOGUE: WarmupExercise[] = [
     title: "Swell and fade",
     desc: 'Messa di voce: one long "ah" that starts soft, grows to a comfortable medium and fades back to soft. Only the pitch is scored, so the drill is keeping it level while the volume moves.',
     tier: "intermediate",
-    tip: "Grow it with air, not squeeze, and stop well short of loud. Pitch likes to rise as you swell and sag as you fade; keep it on the line. Keep the swell smaller on the higher rungs.",
+    tip: "Grow it with air, not squeeze, and stop well short of loud. Pitch likes to rise as you swell and sag as you fade; keep it on the line. The ladder stays in the middle of your range, where the swell is easiest to control.",
     noteDur: 5,
+    rangeCap: MIDDLE_OF_RANGE,
     buildSteps: (r) => [[r]],
   },
   {
@@ -602,8 +653,9 @@ export const PRO_PACKS: WarmupPack[] = [
         title: "Bah bursts",
         desc: 'Four short "bah" bursts climbing 1-2-3-4 — crisp starts, no sliding.',
         tier: "intermediate",
-        tip: "Each burst starts from air, not from squeeze. Reset between notes.",
+        tip: "Each burst starts from air, not from squeeze. Leave a short silence to reset between notes.",
         noteDur: 0.4,
+        gapSec: STACCATO_GAP_SEC,
         buildSteps: (r) => [rel(r, [0, 2, 4, 5])],
       },
       {
@@ -622,6 +674,7 @@ export const PRO_PACKS: WarmupPack[] = [
         tier: "intermediate",
         tip: "Big sound, low effort. If your neck tightens or the sound turns rough, back off; if it tickles or hurts, stop for the day.",
         noteDur: 3,
+        rangeCap: LOWER_MIDDLE_OF_RANGE,
         buildSteps: (r) => [[r]],
       },
       {
@@ -631,6 +684,7 @@ export const PRO_PACKS: WarmupPack[] = [
         tier: "intermediate",
         tip: "Match the fifth to the root's effort — same body, higher pitch.",
         noteDur: 2,
+        rangeCap: LOWER_MIDDLE_OF_RANGE,
         buildSteps: (r) => [rel(r, [0, 7])],
       },
       {
@@ -806,7 +860,7 @@ export function buildSegments(
   tempo: number,
 ): { segs: Segment[]; totalSec: number; noteDur: number; gap: number } {
   const noteDur = (ex.noteDur ?? 0.55) / tempo;
-  const gap = 0.08 / tempo;
+  const gap = (ex.gapSec ?? NOTE_GAP_SEC) / tempo;
   const steps = ex.buildSteps(rootMidi);
   const segs: Segment[] = [];
   // An unscored lead is a gap before the first segment: targetMidiAt reads
@@ -832,14 +886,6 @@ export function buildSegments(
 }
 
 /**
- * Every semitone root from the ladder's bottom to its top. With a saved
- * range, start a major third above the low note and stop a fourth below the
- * high note (accounting for the exercise's highest interval). Without one,
- * default to the classic C3→G3 ladder. The player walks this band up and
- * down endlessly — see ladderWalk — so the ladder is the singer's whole
- * comfortable span, not a fixed rep count.
- */
-/**
  * The fewest rungs a fitted ladder should have before the courtesies above
  * give way. The 13-note runs reach a 12th above the root, so with the usual
  * major-third floor and fourth of headroom a two-octave singer got a ladder of
@@ -847,7 +893,39 @@ export function buildSegments(
  */
 export const MIN_RUNGS = 5;
 
+/**
+ * The rungs of `ladder` a range cap keeps: from rung round(from * (n - 1)) to
+ * rung round(to * (n - 1)), inclusive, so a cap always keeps at least one rung
+ * and a ladder of one rung is returned as it is. No cap returns the ladder.
+ */
+export function capLadder(ladder: number[], cap: RangeCap | undefined): number[] {
+  if (!cap || ladder.length <= 1) return ladder;
+  const last = ladder.length - 1;
+  const clamp = (f: number) => Math.min(last, Math.max(0, Math.round(f * last)));
+  const lo = clamp(cap.from);
+  const hi = Math.max(lo, clamp(cap.to));
+  return ladder.slice(lo, hi + 1);
+}
+
+/**
+ * Every semitone root from the ladder's bottom to its top. With a saved
+ * range, start a major third above the low note and stop a fourth below the
+ * high note (accounting for the exercise's highest interval). Without one,
+ * default to the classic C3→G3 ladder. The player walks this band up and
+ * down endlessly — see ladderWalk — so the ladder is the singer's whole
+ * comfortable span, not a fixed rep count, unless the exercise sets a
+ * `rangeCap`, which keeps only that slice of it.
+ */
 export function computeRootLadder(
+  ex: WarmupExercise,
+  lowMidi?: number,
+  highMidi?: number,
+): number[] {
+  return capLadder(fitRootLadder(ex, lowMidi, highMidi), ex.rangeCap);
+}
+
+/** The whole comfortable ladder, before any range cap. */
+function fitRootLadder(
   ex: WarmupExercise,
   lowMidi?: number,
   highMidi?: number,

@@ -58,6 +58,35 @@ export function scoreLagSec(pitchLag: number, outputLag: number): number {
   return Math.max(0, pitchLag) + Math.max(0, outputLag);
 }
 
+/**
+ * How far behind the target an aligned voice actually read, measured end to end.
+ *
+ * scripts/audit-warmup-timing.mjs drives the real warmup room with a synthetic
+ * voice sung exactly on the scored window. Probing the live cents readout of
+ * that take (2026-08-23) showed the voice landing about 200 ms after the target
+ * at every note boundary.
+ */
+export const MEASURED_ONSET_LAG_SEC = 0.2;
+
+/**
+ * The part of MEASURED_ONSET_LAG_SEC that `scoreLagSec` already rewinds, in the
+ * same rig and the same probe: about 95 ms (the analyser half-window and the
+ * median window from `pitchReportLagSec`, plus the context's output latency).
+ */
+export const MODELLED_ONSET_LAG_SEC = 0.095;
+
+/**
+ * Input latency the model does not carry: stream buffering ahead of the
+ * analyser, and the median window's real flip behaviour at a note change. About
+ * 105 ms that every note onset still loses after the rewind. It is not rewound
+ * as well, because it varies by device; the warmup scorer instead forgives a
+ * window of this length at the front of each note (components/warmups/scoring).
+ */
+export const UNMODELLED_INPUT_LAG_SEC =
+  // Rounded to the millisecond, so the published contract carries 0.105 rather
+  // than the float subtraction's 0.10500000000000001.
+  Math.round((MEASURED_ONSET_LAG_SEC - MODELLED_ONSET_LAG_SEC) * 1000) / 1000;
+
 /** Both lags for the live context, in one call, for a room about to score. */
 export function liveLags(sampleRate: number, fftSize: number): {
   pitchLag: number;

@@ -183,6 +183,27 @@ describe("session shape", () => {
     }
   });
 
+  it("opens the daily warmup on the bubble, then the sirens, with the recording's exercises and reps", () => {
+    const r = routineById("daily")!;
+    expect(r.steps.map((s) => s.exerciseId).slice(0, 3)).toEqual([
+      "lip-trill-scale",
+      "ng-siren-fifth",
+      "octave-siren",
+    ]);
+    // A reorder, not a new set: the same steps and rep counts as before.
+    expect(r.steps).toEqual([
+      { exerciseId: "lip-trill-scale", reps: 22 },
+      { exerciseId: "ng-siren-fifth", reps: 6 },
+      { exerciseId: "octave-siren", reps: 5 },
+      { exerciseId: "tongue-trill-descent", reps: 7 },
+      { exerciseId: "hung-ee-mm", reps: 11 },
+      { exerciseId: "hoo-four-note", reps: 7 },
+      { exerciseId: "gug-staccato", reps: 11 },
+      { exerciseId: "descending-five", reps: 7 },
+    ]);
+    expect(r.tagline).toMatch(/^The complete ten: the bubble, sirens/);
+  });
+
   it("never recommends the cool-down as a warmup", () => {
     for (const hour of [6, 9, 12, 20]) {
       for (const practicedToday of [false, true]) {

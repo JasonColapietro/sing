@@ -26,7 +26,13 @@
  *      67% spread on identical takes. Best-of-two reps absorbs the jitter;
  *      55 is the floor that survives it. If this check starts failing, the
  *      compensation regressed; if it starts passing near 100, the residual
- *      got fixed — raise the bound.
+ *      got fixed — raise the bound. Since suede-vocal v8 the scorer forgives
+ *      that residual at the front of each note (ONSET_GRACE_SEC in
+ *      components/warmups/scoring.ts, derived from MEASURED_ONSET_LAG_SEC and
+ *      MODELLED_ONSET_LAG_SEC in lib/audio/latency.ts, which are this probe's
+ *      numbers), so an aligned take should now land well above 55. Raise the
+ *      bound once a run has measured the new figure; if the probe is re-run
+ *      and the residual has moved, update those two constants with it.
  *   3. The same voice 250 ms late scores materially lower, and at least 20
  *      points under the aligned take. Without this differential, check 2
  *      would pass against a scorer that ignored timing altogether.

@@ -1,6 +1,6 @@
 {
   "contract": "suede-vocal",
-  "version": 7,
+  "version": 8,
   "reference": {
     "repo": "JasonColapietro/sing",
     "modules": [
@@ -13,6 +13,7 @@
       "lib/audio/latency.ts",
       "lib/audio/breath-detect.ts",
       "components/warmups/exercises.ts",
+      "components/warmups/scoring.ts",
       "components/warmups/routines.ts",
       "components/breath/routines.ts",
       "components/ear/routines.ts",
@@ -227,7 +228,7 @@
       "measurable": "yes",
       "unit": "seconds",
       "module": "components/warmups/scoring.ts, components/songs/song-player.tsx",
-      "note": "Time held inside the tolerance window, latency-corrected before it is credited."
+      "note": "Time held inside the tolerance window, latency-corrected before it is credited. In warmups the front of each note is forgiven for warmups.scoring.onsetGraceSec (rules.warmupOnsetGrace)."
     },
     "scorePercent": {
       "measurable": "yes",
@@ -594,6 +595,11 @@
       1,
       1.25
     ],
+    "scoring": {
+      "toleranceCents": 50,
+      "onsetGraceSec": 0.105,
+      "onsetGraceMaxShare": 0.5
+    },
     "exercises": [
       {
         "id": "morning-hum",
@@ -604,6 +610,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -623,6 +631,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -644,6 +654,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -666,6 +678,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -689,6 +703,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -714,6 +730,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -736,6 +754,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             4,
@@ -754,6 +774,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             7,
@@ -775,6 +797,8 @@
         "glide": false,
         "ladder": "down",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             12,
@@ -795,6 +819,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -816,6 +842,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -841,6 +869,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -862,6 +892,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0
@@ -879,6 +911,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0
@@ -896,6 +930,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 1.5,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0
@@ -913,6 +949,8 @@
         "glide": false,
         "ladder": "down",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             4,
@@ -932,6 +970,8 @@
         "glide": true,
         "ladder": "down",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             4,
@@ -950,6 +990,8 @@
         "glide": true,
         "ladder": "down",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             7,
@@ -968,6 +1010,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -990,6 +1034,8 @@
         "glide": false,
         "ladder": "down",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             7,
@@ -1011,6 +1057,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1040,6 +1088,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1069,6 +1119,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1110,6 +1162,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1133,6 +1187,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             12,
@@ -1156,6 +1212,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1181,6 +1239,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1200,6 +1260,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.15,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1218,7 +1280,7 @@
           ]
         ],
         "segmentCount": 13,
-        "patternSeconds": 4.21
+        "patternSeconds": 5.05
       },
       {
         "id": "swell-and-fade",
@@ -1229,6 +1291,11 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0.25,
+          "to": 0.75
+        },
         "steps": [
           [
             0
@@ -1246,6 +1313,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0
@@ -1263,6 +1332,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             5
@@ -1280,6 +1351,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1302,6 +1375,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1323,6 +1398,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1344,6 +1421,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1366,6 +1445,8 @@
         "glide": false,
         "ladder": "down",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             16,
@@ -1387,6 +1468,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1412,6 +1495,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1445,6 +1530,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             12,
@@ -1467,6 +1554,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1488,6 +1577,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             4,
@@ -1508,6 +1599,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.15,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1517,7 +1610,7 @@
           ]
         ],
         "segmentCount": 4,
-        "patternSeconds": 1.84
+        "patternSeconds": 2.05
       },
       {
         "id": "belt-yah-triad",
@@ -1528,6 +1621,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1549,6 +1644,11 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.6
+        },
         "steps": [
           [
             0
@@ -1566,6 +1666,11 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": {
+          "from": 0,
+          "to": 0.6
+        },
         "steps": [
           [
             0,
@@ -1584,6 +1689,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             12,
@@ -1604,6 +1711,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             7,
@@ -1625,6 +1734,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             7,
@@ -1646,6 +1757,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1668,6 +1781,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             7,
@@ -1687,6 +1802,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1709,6 +1826,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1730,6 +1849,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1751,6 +1872,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             7
@@ -1768,6 +1891,8 @@
         "glide": true,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1790,6 +1915,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1813,6 +1940,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1844,6 +1973,8 @@
         "glide": false,
         "ladder": "up",
         "unscoredLeadSec": 0,
+        "gapSec": 0.08,
+        "rangeCap": null,
         "steps": [
           [
             0,
@@ -1928,16 +2059,16 @@
         "pro": false,
         "steps": [
           {
+            "exerciseId": "lip-trill-scale",
+            "reps": 22
+          },
+          {
             "exerciseId": "ng-siren-fifth",
             "reps": 6
           },
           {
             "exerciseId": "octave-siren",
             "reps": 5
-          },
-          {
-            "exerciseId": "lip-trill-scale",
-            "reps": 22
           },
           {
             "exerciseId": "tongue-trill-descent",
@@ -1960,7 +2091,7 @@
             "reps": 7
           }
         ],
-        "seconds": 527.88,
+        "seconds": 537.96,
         "allStepsFree": true
       },
       {
@@ -2025,7 +2156,7 @@
             "reps": 4
           }
         ],
-        "seconds": 838.26,
+        "seconds": 848.34,
         "allStepsFree": true
       },
       {
@@ -2157,7 +2288,7 @@
             "reps": 6
           }
         ],
-        "seconds": 296.07,
+        "seconds": 304.47,
         "allStepsFree": true
       },
       {
@@ -2289,7 +2420,7 @@
             "reps": 8
           }
         ],
-        "seconds": 339.94,
+        "seconds": 341.83,
         "allStepsFree": false
       },
       {
@@ -3629,6 +3760,9 @@
     "workingRangeIsTrimmed": "The scan records extremes reached by pushing. A usable working range trims the edges; the scan and the working range are different numbers and a curriculum must not call the scan 'the one you can use'.",
     "sustainIsLoudnessNotPitch": "Sustain steadiness is the coefficient of variation of loudness. The breath room never reads f0.",
     "inhaleIsHeardNotMeasured": "The breath room's mic hears the inhale and nothing more. Copy may say the mic heard the breath; it may never say it measured support, lung capacity, breath depth or the diaphragm, and no pass or fail may depend on a breath being heard, because every gated drill offers to start without detection.",
+    "warmupOnsetGrace": "Each warm-up target note forgives its first g seconds, g = min(warmups.scoring.onsetGraceSec, warmups.scoring.onsetGraceMaxShare * the note's duration at the tempo sung). Inside g a frame within toleranceCents is credited as usual and a frame outside it is dropped entirely: no hit, no cents error, no voiced frame. A note's possible time is its duration less g, its credited time is capped at that, and the rep score is total credited over total possible. The grace is the input latency the timing audit measured beyond the score-lag model, so it is in seconds and does not scale with tempo. Glide segments get it too.",
+    "warmupGap": "Consecutive notes (or glide steps) of a warm-up are separated by gapSec / tempo seconds of silence, gapSec being the exercise's own value; the default is published on every exercise rather than left implicit. The gap is part of patternSeconds and is never scored, and the guide plays the same gaps.",
+    "warmupRangeCap": "A non-null rangeCap trims the fitted root ladder before it is walked: with n rungs counted from the bottom (index 0), keep indexes round(from * (n - 1)) through max(that, round(to * (n - 1))), inclusive. A ladder of one rung is kept as it is. A down ladder is capped first and reversed after. Null walks the whole fitted ladder.",
     "freeExerciseGate": "A warmup is free if and only if it is in EXERCISES. Pro packs are gated by array membership, not by a flag, so a free surface must never deep-link a pack exercise."
   },
   "knownDivergences": {
