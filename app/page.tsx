@@ -207,14 +207,15 @@ export default function Home() {
         />
         <div className="relative max-w-2xl">
           <p className="text-label font-extrabold uppercase tracking-[0.14em] text-pink">
-            Singing practice tools from Suede AI
+            Suede Sing · from Suede AI
           </p>
           <h1 className="mt-3 text-[clamp(2.4rem,7vw,4.25rem)] leading-[1.02]">
-            Practice singing with live pitch feedback
+            Online singing practice with live pitch feedback
           </h1>
           <p className="mt-4 max-w-xl text-lg text-mut">
-            Sing into your mic and see the note you are singing. Explore warmups,
-            practice songs in your key, or test your vocal range in your browser.
+            Sing into your mic and see the note you are singing, in real time. Warm
+            up with guided vocal exercises, practice songs in your key, and take the
+            vocal range test, all in your browser.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <LinkButton href="/range" variant="violet" size="lg">
