@@ -137,8 +137,8 @@ export default function AnalyzeClient() {
   return (
     <PageShell
       kicker="Analysis"
-      title="Voice Spectrogram and Tone Analyzer"
-      subtitle="Sing into your microphone to see a live voice spectrogram, explore your harmonics and tone, and track estimated vocal load."
+      title="Live voice spectrogram and tone analyzer"
+      subtitle="A voice analyzer for singers: sing into your microphone to see your harmonics on a live spectrogram, read your tone, and track estimated vocal load. Free, with no time limit."
       actions={
         <div className="flex items-center gap-2">
           {xpNote && <Pill tone="ok">{xpNote}</Pill>}

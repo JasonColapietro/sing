@@ -650,6 +650,11 @@ function DataControls() {
 /* Main assembly                                                       */
 /* ------------------------------------------------------------------ */
 
+/** Shared by the pre-mount skeleton and the dashboard, so the first paint and
+ *  the hydrated page carry the same intro. */
+const PROGRESS_SUBTITLE =
+  "Track your singing practice in one place: XP, streaks, achievements, your saved vocal range and today's coached session, kept on this device. Pro adds per-note accuracy and range over time.";
+
 export function ProgressClient() {
   const state = useProgress();
   const isPro = useIsPro();
@@ -678,9 +683,9 @@ export function ProgressClient() {
   if (!mounted) {
     return (
       <PageShell
-        kicker="Practice room 9"
-        title="Progress"
-        subtitle="XP, streaks, achievements, and a coach that reads your last two weeks of practice."
+        kicker="Progress"
+        title="Singing progress tracker"
+        subtitle={PROGRESS_SUBTITLE}
       >
         <DashboardSkeleton />
       </PageShell>
@@ -689,9 +694,9 @@ export function ProgressClient() {
 
   return (
     <PageShell
-      kicker="Practice room 9"
-      title="Progress"
-      subtitle="XP, streaks, achievements, and a coach that reads your last two weeks of practice."
+      kicker="Progress"
+      title="Singing progress tracker"
+      subtitle={PROGRESS_SUBTITLE}
     >
       <div className="space-y-10">
         {/* Keeps the signed-in singer's record backed up. Renders nothing and

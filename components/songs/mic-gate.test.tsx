@@ -55,7 +55,7 @@ describe("songs mic gate", () => {
   });
 
   it("carries the hub's <h1>, which its static HTML previously had nowhere", () => {
-    expect(renderToStaticMarkup(<SongsMicGate />)).toMatch(/<h1[^>]*>Song practice<\/h1>/);
+    expect(renderToStaticMarkup(<SongsMicGate />)).toMatch(/<h1[^>]*>Public domain songs to sing in your key<\/h1>/);
   });
 
   it("lets a deep link name the song without changing the shape of the gate", () => {

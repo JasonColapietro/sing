@@ -15,9 +15,9 @@ import { routeKeywords } from "@/lib/keywords";
 // rooms.
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/tools"),
-  title: "Singing Practice Tools: Metronome and Drone",
+  title: TOOLS_GUIDE.pageName,
   description:
-    "The tools every practice session leans on: a metronome, an on-screen keyboard and a sustained drone for pitch matching. Free in the browser.",
+    "Singing practice tools in your browser: a metronome, an on-screen keyboard and a sustained drone for pitch matching. Free, no time limit, no mic needed.",
   alternates: { canonical: `${SITE_URL}/tools` },
 });
 
@@ -64,7 +64,9 @@ export default function ToolsPage() {
       <section className="border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
           <SectionLabel>Also in this tab</SectionLabel>
-          <h2 className="mt-4 max-w-2xl text-2xl sm:text-3xl">Two more rooms, both listening</h2>
+          <h2 className="mt-4 max-w-2xl text-2xl sm:text-3xl">
+            The take recorder and voice spectrogram: two rooms that listen
+          </h2>
           <p className="mt-3 max-w-2xl text-mut">
             This tab is the metronome, the keyboard and the drone. The recorder
             and the spectrogram are separate rooms with pages of their own,

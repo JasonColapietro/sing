@@ -19,7 +19,7 @@ const cases = [
   { name: "high", range: { lowMidi: 48, highMidi: 64 }, href: "/warmups?exercise=ng-siren-fifth", title: "Ng siren to the fifth" },
   { name: "low", range: { lowMidi: 58, highMidi: 76 }, href: "/warmups?exercise=descending-five", title: "Descending five" },
   { name: "wide", range: { lowMidi: 60, highMidi: 73 }, href: "/warmups?exercise=humming-thirds", title: "Humming thirds" },
-  { name: "narrow", range: { lowMidi: 60, highMidi: 64 }, href: "/studio", title: "Pitch studio" },
+  { name: "narrow", range: { lowMidi: 60, highMidi: 64 }, href: "/studio", title: "Pitch training studio" },
 ];
 const browser = await chromium.launch({
   channel: "chrome", headless: true,

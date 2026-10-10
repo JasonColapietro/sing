@@ -160,7 +160,7 @@ export function SongsClient() {
           ? activeSong.title
           : view === "summary" && summary
             ? "Practice summary"
-            : "Song practice"
+            : "Public domain songs to sing in your key"
       }
       subtitle={view === "library" ? "Pick a song to start your practice loop." : undefined}
       actions={

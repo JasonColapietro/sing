@@ -10,9 +10,9 @@ import { routeKeywords } from "@/lib/keywords";
 // that exact string is also the title of /range, the free browser test, and the
 // two pages were bidding against each other for one query while answering two
 // different intents. This page is the install; /range is the test.
-const TITLE = "Download Suede Voice: The Singing App for iPhone & Android";
+const TITLE = "Singing App for iPhone & Android: Download Suede Voice";
 const DESCRIPTION =
-  "Download Suede Voice, the vocal range and singing practice app from Suede AI, for iPhone or Android. Prefer a browser? Open Suede Sing instead.";
+  "Download Suede Voice, the singing app from Suede AI for iPhone and Android. Test your vocal range on your phone; prefer a browser? Use Suede Sing.";
 const PAGE_URL = `${SITE_URL}${VOICE_PAGE_PATH}`;
 
 export const metadata: Metadata = {
@@ -82,12 +82,18 @@ export default function VoicePage() {
       <section aria-labelledby="voice-title" className="grid items-start gap-10 lg:grid-cols-[1.25fr_1fr] lg:gap-16">
         <div>
           <SectionLabel>Official app · Suede AI</SectionLabel>
-          <h1 id="voice-title" className="mt-5 text-5xl sm:text-7xl">Suede Voice</h1>
-          <p className="mt-4 text-2xl text-violet-ink sm:text-3xl">Find your range. Know what to practice.</p>
+          <h1 id="voice-title" className="mt-5">
+            <span className="block text-5xl sm:text-7xl">Suede Voice</span>
+            <span className="sr-only">, </span>
+            <span className="mt-3 block text-2xl text-ink sm:text-3xl">
+              the singing app for iPhone and Android
+            </span>
+          </h1>
+          <p className="mt-4 text-xl text-violet-ink sm:text-2xl">Find your range. Know what to practice.</p>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-mut">
             Suede Voice: Vocal Range Test is the vocal range and singing practice
-            app from Suede AI, built by Jason Colapietro. It is available
-            for iPhone and Android. Start with the notes you can sing, then make
+            app from Suede AI, built by Jason Colapietro. It is a free download
+            for iPhone and Android: start with the notes you can sing, then make
             your next session count.
           </p>
           <p className="mt-5 max-w-xl text-mut">

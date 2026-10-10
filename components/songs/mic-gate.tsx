@@ -98,8 +98,8 @@ export function SongsMicGate({
   return (
     <PageShell
       kicker="Songs"
-      title="Song practice"
-      subtitle="Listen to a short phrase from a well-known melody, then sing it back on a scrolling piano roll."
+      title="Public domain songs to sing in your key"
+      subtitle="Songs to practice singing, transposed to your range: listen to a phrase from a well-known public domain melody, then sing it back on a scrolling piano roll with live pitch scoring."
     >
       <Card>
         <h2 className="text-xl">{heading}</h2>

@@ -624,8 +624,8 @@ export default function RecorderPageClient() {
   return (
     <PageShell
       kicker="Practice studio"
-      title="Recorder"
-      subtitle="Cut a take, listen back, keep the good ones. Everything stays on this device — nothing uploads."
+      title="Voice recorder for singing practice"
+      subtitle="Record yourself singing, listen back, A/B two takes and star the ones worth keeping. Free with no time limit, and every take stays on this device."
       actions={
         takes.length > 0 ? (
           <>

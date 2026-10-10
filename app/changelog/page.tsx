@@ -12,7 +12,7 @@ import { webPageJsonLd } from "@/lib/page-jsonld";
 
 const TITLE = "Suede Sing Changelog: What's New in 3.1";
 const DESCRIPTION =
-  "Suede Sing 3.1: a 102-lesson voice curriculum, multi-week programs, mic-scored songs, breath and vibrato measurement and a sharper pitch engine.";
+  "Suede Sing changelog for 3.1: a 102-lesson voice curriculum, multi-week programs, mic-scored songs, breath and vibrato measurement, a sharper pitch engine.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/changelog"),
@@ -310,7 +310,7 @@ export default function ChangelogPage() {
       kicker="Changelog"
       title={
         <>
-          What we&apos;ve <em>changed</em>
+          Suede Sing changelog: what we&apos;ve <em>changed</em>
         </>
       }
       subtitle="Suede Sing 3.1: a full voice curriculum, programs that plan your weeks, songs that score and remember you, and a pitch engine measured to the cent."
@@ -382,7 +382,7 @@ export default function ChangelogPage() {
       </section>
 
       <section aria-label="Release log" className="mt-14 border-t border-line2 pt-8">
-        <SectionLabel>The running log</SectionLabel>
+        <SectionLabel heading>The running log</SectionLabel>
         <div className="mt-6 space-y-10">
           {LOG.map((m) => (
             <div key={m.month}>

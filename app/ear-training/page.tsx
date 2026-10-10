@@ -8,9 +8,9 @@ import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/ear-training"),
-  title: "Ear Training for Singers: Pitch and Intervals",
+  title: EAR_GUIDE.pageName,
   description:
-    "Five short ear training games for singers: match pitch, catch moving notes, name intervals and sing melodies back. Three free minutes a day.",
+    "Ear training for singers in five short games: match pitch, catch moving notes, name intervals, sing melodies back. Guided practice is 3 free minutes a day.",
   alternates: { canonical: `${SITE_URL}/ear-training` },
 });
 

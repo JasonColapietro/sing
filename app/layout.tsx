@@ -11,6 +11,7 @@ import ProMoments from "@/components/pro/moments";
 import ProSync from "@/components/pro/sync";
 import WeeklyReportCard from "@/components/weekly-report-card";
 import { routeKeywords } from "@/lib/keywords";
+import { INDEXABLE_ROBOTS } from "@/lib/robots-meta";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -27,6 +28,9 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   keywords: routeKeywords("/"),
   metadataBase: new URL(SITE_URL),
+  // Inherited by every page that does not set `robots`; pages that do go
+  // through pageRobots() so the preview directives survive the shallow merge.
+  robots: INDEXABLE_ROBOTS,
   // Google Search Console ownership: set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
   // on the Vercel project to the token from GSC's URL-prefix "HTML tag"
   // method — no code change needed to (re)verify.
@@ -38,7 +42,7 @@ export const metadata: Metadata = {
     template: "%s · Suede Sing",
   },
   description:
-    "Practice singing online with live pitch feedback, warmups and songs. Try the free pitch meter and vocal range test; guided practice has a daily free limit.",
+    "Online singing practice with live pitch feedback, warmups and songs. The pitch meter and range test are free; guided practice is 3 free minutes a day.",
 };
 
 export const viewport: Viewport = {

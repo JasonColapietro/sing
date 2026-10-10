@@ -254,7 +254,7 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   // Footer
   ctx.fillStyle = DIM;
   ctx.font = `500 22px ${mono}`;
-  ctx.fillText("sing.suedeai — free vocal studio", W / 2, H - 52);
+  ctx.fillText("sing.suedeai.ai — online singing practice", W / 2, H - 52);
 
   return canvas.toDataURL("image/png");
 }

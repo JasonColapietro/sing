@@ -142,7 +142,7 @@ try {
 
   // 1. The list, then a program's calendar, then start it.
   await page.goto(`${BASE}/programs`, { waitUntil: "networkidle" });
-  check("list renders", (await page.locator("h1").innerText()).includes("Practice programs"));
+  check("list renders", (await page.locator("h1").innerText()).includes("Singing practice programs"));
   const cards = await page.locator("a", { hasText: /-day calendar/ }).count();
   check("six programs listed", cards === 6, `${cards}`);
   await page.locator("a", { hasText: "See the 14-day calendar" }).click();

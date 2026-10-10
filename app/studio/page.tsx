@@ -8,9 +8,9 @@ import { routeKeywords } from "@/lib/keywords";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/studio"),
-  title: "Pitch Training for Singers: Real-Time Feedback",
+  title: STUDIO_GUIDE.pageName,
   description:
-    "Sing into your mic and watch your pitch trace against target notes, live. Free browser pitch training with scales, slides and hold drills. No install.",
+    "Pitch training for singers with real-time feedback: see the note, how many cents off you are and an 8-second trace. Free in your browser, no time limit.",
   alternates: { canonical: `${SITE_URL}/studio` },
 });
 

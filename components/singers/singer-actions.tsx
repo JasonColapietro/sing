@@ -150,7 +150,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
           Retake the range test
         </Link>
       </div>
-      {/* The ~420 singer pages are where search traffic lands; this is the one
+      {/* The ~636 singer pages are where search traffic lands; this is the one
           Pro line on them, and only after the visitor has a measured range to
           compare — value first, pitch second. Self-hides for Pro. */}
       <div className="mt-4">

@@ -11,7 +11,8 @@ import type { GuideContent } from "@/components/guide";
 
 export const RANGE_GUIDE: GuideContent = {
   path: "/range",
-  pageName: "Free Vocal Range Test and Voice Type Finder",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Vocal Range Test & Voice Type Estimate",
   heading: "What does a vocal range test measure?",
   answer:
     "Your vocal range is the span between the lowest and highest notes you can sing with a clear, usable tone. This online range test listens as you slide down and then up, then reports the lowest and highest clear notes it heard in that session, the size of the span, and an estimate of the voice type whose conventional band overlaps it most closely.",
@@ -153,8 +154,7 @@ export const RANGE_GUIDE: GuideContent = {
 
 export const WARMUPS_GUIDE: GuideContent = {
   path: "/warmups",
-  // The page's <title>. The H2 below is a question the section answers, not
-  // the page's name, so it should not become the WebPage node's name.
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
   pageName: "Vocal Warm-Up Exercises: Guided Singing Warmups",
   heading: "Why do singers warm up?",
   answer:
@@ -263,7 +263,7 @@ export const WARMUPS_GUIDE: GuideContent = {
 
 export const BREATH_GUIDE: GuideContent = {
   path: "/breath",
-  // The page's <title>; the H2 below is the question the section answers.
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
   pageName: "Breathing Exercises for Singers: Breath Support",
   heading: "What is breath support in singing?",
   answer:
@@ -372,7 +372,7 @@ export const BREATH_GUIDE: GuideContent = {
 
 export const EAR_GUIDE: GuideContent = {
   path: "/ear-training",
-  // The page's <title>; the H2 below is the question the section answers.
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
   pageName: "Ear Training for Singers: Pitch and Intervals",
   heading: "What does ear training do for a singer?",
   answer:
@@ -481,7 +481,7 @@ export const EAR_GUIDE: GuideContent = {
 
 export const SONGS_GUIDE: GuideContent = {
   path: "/songs",
-  // The page's <title>; the H2 below is the question the section answers.
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
   pageName: "Public Domain Songs to Sing with Pitch Feedback",
   heading: "How does pitch feedback help you practice a song?",
   answer:
@@ -590,8 +590,8 @@ export const SONGS_GUIDE: GuideContent = {
 
 export const RECORDER_GUIDE: GuideContent = {
   path: "/recorder",
-  // The page's <title>. The H2 below is a section of the page, not its name.
-  pageName: "Voice Recorder for Singing Practice",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Voice Recorder for Singing: Compare Your Takes",
   heading: "Why should singers record themselves?",
   answer:
     "Singers record themselves because you cannot hear your own voice accurately while producing it: bone conduction adds low frequencies, and your attention is on singing. Recording a take and listening back lets you hear something much closer to what a listener hears, and comparing takes over time shows change you cannot feel from the inside.",
@@ -699,8 +699,8 @@ export const RECORDER_GUIDE: GuideContent = {
 
 export const TOOLS_GUIDE: GuideContent = {
   path: "/tools",
-  // The page's <title>. The H2 below is a section of the page, not its name.
-  pageName: "Singing Practice Tools: Metronome, Keyboard and Drone",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Singing Practice Tools: Metronome, Piano, Drone",
   heading: "When does a singer need a metronome, a keyboard or a drone?",
   answer:
     "Use a metronome when timing is the question, a virtual keyboard when you need a starting note or a pitch reference, and a sustained drone when you want to hear your intonation against a fixed pitch. All three run in the browser with no install.",
@@ -808,7 +808,7 @@ export const TOOLS_GUIDE: GuideContent = {
 
 export const STUDIO_GUIDE: GuideContent = {
   path: "/studio",
-  // The page's <title>; the H2 below is the question the section answers.
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
   pageName: "Pitch Training for Singers: Real-Time Feedback",
   heading: "What does live pitch feedback show you?",
   answer:
@@ -919,7 +919,8 @@ export const STUDIO_GUIDE: GuideContent = {
 
 export const ANALYZE_GUIDE: GuideContent = {
   path: "/analyze",
-  pageName: "Voice Spectrogram, Tone Analyzer and Vocal Load Tracker",
+  // The page's <title> without the site suffix; the WebPage JSON-LD name.
+  pageName: "Voice Spectrogram & Tone Analyzer Online",
   heading: "What does a spectrogram show a singer?",
   answer:
     "A spectrogram plots every frequency in your voice against time, so one sung note appears as a stack of horizontal lines: the fundamental at the bottom and its harmonics above. It shows the parts of singing you cannot hear from the inside — where a register changes, how fast a vibrato moves, and how much energy sits in the band that makes a voice carry.",

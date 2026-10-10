@@ -281,12 +281,12 @@ export function WarmupsClient() {
       // Every other view runs inside the full-screen session surface, which
       // covers this heading entirely — only the summary of a single exercise
       // still renders as a page under it.
-      title={view === "summary" ? "Session summary" : "Guided vocal warmups"}
+      title={view === "summary" ? "Session summary" : "Guided vocal warm-up exercises"}
       subtitle={
         view === "home"
           ? pitch.listening
             ? "Start today's warmup, or pick a length. Every exercise is scored as you sing."
-            : "Pick a warmup. The mic comes on when you press start, and nothing leaves this device."
+            : "Singing warm-ups that play each exercise, count you in and score your pitch as you sing it back. Pick a routine: the mic comes on only when you press start, and nothing leaves this device."
           : undefined
       }
     >
