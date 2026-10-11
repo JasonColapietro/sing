@@ -97,8 +97,10 @@ async function claimRedemption(
   }
   const used = await redis.incr(usageKey(code));
   if (used > cap) {
-    // Give the slot back so a later cap raise starts from the true count.
-    await redis.decr(usageKey(code));
+    // Give the slot back so a later cap raise starts from the true count. The
+    // code is still exhausted if that DECR fails, so it must not turn a 409
+    // into a retryable 503.
+    await releaseRedemption(code);
     return "exhausted";
   }
   return null;
