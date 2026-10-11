@@ -64,6 +64,3 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: '1'
 
-      # No test step: this repo has no test script and no test files. Add one
-      # here when it does — omitted rather than stubbed, so the gate never
-      # reports green for a suite that does not exist.
