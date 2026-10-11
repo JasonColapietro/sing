@@ -19,6 +19,11 @@ import type {
   WarmupMode,
 } from "./progress-shape";
 import { weekBoundaries, weekTotals } from "./weekly-report";
+import {
+  getProgressCloudState,
+  pauseProgressCloud,
+  retryProgressCloudPersistence,
+} from "./progress-cloud";
 
 // The shape and its validators live in ./progress-shape so a server route can
 // import them without dragging this `"use client"` module along. Re-exported
@@ -51,6 +56,7 @@ const KEY = PROGRESS_STORAGE_KEY;
 const DEFAULT = DEFAULT_PROGRESS;
 
 let cache: ProgressState | null = null;
+let cacheResetGeneration: string | null = null;
 const listeners = new Set<() => void>();
 let storageBound = false;
 
@@ -117,13 +123,15 @@ function migrate(state: ProgressState): ProgressState {
  * better than this one does; the next real save heals the record anyway.
  */
 function load(): ProgressState {
-  if (cache) return cache;
   if (typeof window === "undefined") return DEFAULT;
+  const resetGeneration = getProgressCloudState().resetGeneration;
+  if (cache && cacheResetGeneration === resetGeneration) return cache;
+  cacheResetGeneration = resetGeneration;
   try {
     const raw = window.localStorage.getItem(KEY);
     cache = migrate(sanitizeProgress(raw ? JSON.parse(raw) : null));
   } catch {
-    cache = sanitizeProgress(null);
+    cache ??= sanitizeProgress(null);
   }
   return cache;
 }
@@ -134,6 +142,7 @@ function emit() {
 
 function save(next: ProgressState) {
   cache = next;
+  cacheResetGeneration = getProgressCloudState().resetGeneration;
   try {
     window.localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
@@ -515,10 +524,14 @@ export function todayPracticeSec(s: ProgressState = load()): number {
 
 /** Wipe all progress. Ask the user to confirm before calling. */
 export function clearProgress(): void {
+  // Pause before save emits: the reset must never enqueue a cloud restore.
+  // The generation also fences requests already waiting for a response.
+  pauseProgressCloud();
   // A fresh state rather than a spread of DEFAULT: the spread would share
   // DEFAULT's nested streak/range objects with the live store, and DEFAULT is
   // now a const other modules hold too.
   save(sanitizeProgress(null));
+  retryProgressCloudPersistence();
 }
 
 /** Export progress as a JSON string (for backup / transfer). */

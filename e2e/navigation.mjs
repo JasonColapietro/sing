@@ -39,10 +39,13 @@ async function clickTo(page, link, label, path, width) {
   await assertLanded(page, path);
 }
 
-const browser = await chromium.launch(executable ? { executablePath: executable } : { channel: "chrome" });
+const browser = await chromium.launch({
+  ...(executable ? { executablePath: executable } : { channel: "chrome" }),
+  args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream", "--autoplay-policy=no-user-gesture-required"],
+});
 try {
   for (const width of [320, 375, 768, 1280]) {
-    const context = await browser.newContext({ viewport: { width, height: 900 } });
+    const context = await browser.newContext({ viewport: { width, height: 900 }, permissions: ["microphone"] });
     const page = await context.newPage();
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
@@ -89,8 +92,29 @@ try {
       await page.getByRole("dialog", { name: "Navigation menu", includeHidden: true }).waitFor({ state: "detached" });
       await page.waitForFunction(() => document.body.style.overflow !== "hidden");
 
+      // Starting a warmup removes its home card. On exit the old DOM button
+      // cannot receive focus: the remounted room heading is the fallback.
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`${base}/warmups`, { waitUntil: "networkidle" });
+      const starter = page.getByRole("button", { name: "Enable mic and start", exact: true }).first();
+      const originalStarter = await starter.elementHandle();
+      await starter.focus();
+      await page.keyboard.press("Enter");
+      const session = page.locator("[data-session-shell]");
+      await session.waitFor({ state: "visible" });
+      assert.equal(await originalStarter.evaluate((el) => el.isConnected), false, "warmup start card unmounted");
+      await page.keyboard.press("Escape");
+      await session.waitFor({ state: "detached" });
+      await page.waitForFunction(() => document.activeElement === document.querySelector("main h1"));
+      assert.equal(await page.evaluate(() => document.body.style.overflow === "hidden"), false, "warmup exit releases scroll lock");
+      await page.keyboard.press("Tab");
+      assert.equal(await page.evaluate(() => {
+        const active = document.activeElement;
+        return active?.tagName === "BUTTON" && active.closest("main") !== null && active.getClientRects().length > 0;
+      }), true, "Tab resumes at a visible warmup control");
+
       assert.deepEqual(errors, []);
-      console.log(`PASS ${width}px: ten rooms via the sheet, five primary tabs, touch targets, overflow, menu cleanup`);
+      console.log(`PASS ${width}px: ten rooms via the sheet, five primary tabs, touch targets, overflow, menu cleanup, warmup exit focus`);
     } finally { await context.close(); }
   }
 } finally { await browser.close(); }

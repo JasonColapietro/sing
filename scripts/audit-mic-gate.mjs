@@ -2,11 +2,11 @@
  * Independent audit of what a practice room shows when the microphone is refused.
  *
  * Usage: npm run dev, then
- *   node scripts/audit-mic-gate.mjs [baseUrl]      # default http://localhost:3000
+ *   node scripts/audit-mic-gate.mjs [baseUrl] [--executable=path]
  *
  * A room's mic card is not always what the singer pressed. /warmups lists its
- * whole catalogue under the gate card and starts the mic from any of those
- * cards; /range starts it again from the saved-result card. The refusal used to
+ * whole learning path under the gate card and starts the mic from any row;
+ * /range starts it again from the saved-result card. The refusal used to
  * render in the card either way, which on /warmups put it up to 843px above the
  * fold — real text, correctly announced, and invisible to the person who pressed
  * the button. That is a layout fact, so it cannot be caught by the unit suite:
@@ -18,7 +18,9 @@
 import pw from "playwright";
 
 const { chromium } = pw;
-const BASE = (process.argv[2] ?? "http://localhost:3000").replace(/\/$/, "");
+const argv = process.argv.slice(2);
+const BASE = (argv.find((arg) => !arg.startsWith("--")) ?? "http://localhost:3000").replace(/\/$/, "");
+const EXECUTABLE = argv.find((arg) => arg.startsWith("--executable="))?.slice("--executable=".length);
 const VIEW = { width: 1280, height: 900 };
 
 /**
@@ -26,14 +28,28 @@ const VIEW = { width: 1280, height: 900 };
  * bare [role="alert"] also counts Next.js's empty dev-mode route announcer.
  */
 const ALERT = 'main [role="alert"]';
+// PathList puts each exercise in an li, with a microphone description until
+// listening starts. Routine and daily-plan controls are separate entry points.
+const PATH_ROWS = 'main li > button[aria-describedby~="practice-mic-note"]';
 
 /** Refuse the mic the way a blocked site permission does, before app code runs. */
 const REFUSE_MIC = `
+  localStorage.clear();
+  sessionStorage.clear();
   const md = navigator.mediaDevices;
   if (md) {
-    md.getUserMedia = () => Promise.reject(
-      Object.assign(new Error("Permission denied"), { name: "NotAllowedError" })
-    );
+    md.getUserMedia = () => {
+      if (window.__micAuditAllow) {
+        // A silent, entirely synthetic input for the recorder retry check.
+        // This never opens a real microphone or records a take.
+        const context = new AudioContext();
+        window.__micAuditContext = context;
+        return Promise.resolve(context.createMediaStreamDestination().stream);
+      }
+      return Promise.reject(
+        Object.assign(new Error("Permission denied"), { name: "NotAllowedError" })
+      );
+    };
   }
   // Keep the Pro moment from covering the button this audit needs to press.
   localStorage.setItem("suede-sing:coach-intro:v1", new Date().toISOString());
@@ -55,7 +71,7 @@ function check(label, pass, detail) {
   console.log(`${pass ? "  ok  " : "FAIL  "}${label}${detail ? `  — ${detail}` : ""}`);
 }
 
-const browser = await chromium.launch();
+const browser = await chromium.launch({ ...(EXECUTABLE ? { executablePath: EXECUTABLE } : {}) });
 
 async function freshPage(extraInit = "") {
   const ctx = await browser.newContext({ viewport: VIEW });
@@ -85,6 +101,8 @@ async function pressAndMeasure(page, control) {
   // Let the alert's own scroll-into-view settle before measuring.
   await page.waitForTimeout(400);
   const box = await page.locator(ALERT).first().boundingBox();
+  if (!box || !pressed) return { count: await page.locator(ALERT).count(), onScreen: false,
+    top: null, fromPressed: null, note: "message or pressed control has no visible bounds" };
   return {
     count: await page.locator(ALERT).count(),
     onScreen: box.y >= 0 && box.y + box.height <= VIEW.height,
@@ -107,34 +125,35 @@ function describeFromPressed(r) {
 
 /* ------------------------------------------------------------- /warmups */
 
-console.log("\n/warmups — every exercise card starts the mic");
+try {
+console.log("\n/warmups — every exercise row starts the mic");
 {
   const { ctx, page } = await freshPage();
   await page.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
 
-  const titles = await page.locator("button h3").allTextContents();
+  const titles = await page.locator(PATH_ROWS).locator("span.font-medium").allTextContents();
   check("catalogue is readable before any mic prompt", titles.length > 0,
-    `${titles.length} cards`);
+    `${titles.length} exercise rows`);
   check("nothing is announced before the singer acts",
     (await page.locator(ALERT).count()) === 0);
 
   let worst = null;
-  for (const title of titles) {
-    // Reload per card so the alert starts absent every time.
+  let rowsPassed = titles.length > 0;
+  for (const [index, title] of titles.entries()) {
+    // Reload per row so the alert starts absent every time.
     await page.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
-    const card = page.locator("button", {
-      has: page.locator("h3", { hasText: title }),
-    }).first();
-    const r = await pressAndMeasure(page, card);
-    const cardBox = await card.boundingBox();
-    // The message belongs at the card, not merely somewhere on screen.
-    const gap = r.top === null ? null : Math.round(r.top - (cardBox.y + cardBox.height));
+    const row = page.locator(PATH_ROWS).nth(index);
+    const r = await pressAndMeasure(page, row);
+    const rowBox = await row.boundingBox();
+    // The message belongs at the row, not merely somewhere on screen.
+    const gap = r.top === null || !rowBox ? null : Math.round(r.top - (rowBox.y + rowBox.height));
     const good = r.onScreen && r.count === 1 && gap !== null && Math.abs(gap) <= 40;
+    rowsPassed &&= good;
     if (!good) check(title, false, `${describe(r)} gap=${gap}px`);
     if (gap !== null && (worst === null || Math.abs(gap) > Math.abs(worst))) worst = gap;
   }
-  check(`all ${titles.length} cards: one alert, on screen, at the card`,
-    failed === 0, `worst gap ${worst}px`);
+  check(`all ${titles.length} rows: one alert, on screen, at the row`,
+    rowsPassed, `worst gap ${worst}px`);
   await ctx.close();
 }
 
@@ -147,7 +166,7 @@ console.log("\n/warmups — the gate card's own button");
   check("one alert, on screen", r.count === 1 && r.onScreen, describe(r));
   // The gate card owns the message when the gate button is what was pressed.
   const inGateCard = r.count === 1 && await page.locator(ALERT).evaluate((el) =>
-    !!el.parentElement?.querySelector("#warmups-mic-note"));
+    !!el.parentElement?.querySelector("#practice-mic-note"));
   check("message stays in the gate card", inGateCard);
   await ctx.close();
 }
@@ -156,16 +175,15 @@ console.log("\n/warmups — switching between the two sources");
 {
   const { ctx, page } = await freshPage();
   await page.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
-  const titles = await page.locator("button h3").allTextContents();
-  const sequence = [
-    ["last card", page.locator("button", {
-      has: page.locator("h3", { hasText: titles[titles.length - 1] }) }).first()],
+  const rows = page.locator(PATH_ROWS);
+  const count = await rows.count();
+  check("exercise rows exist for repeated permission checks", count > 0);
+  const sequence = count > 0 ? [
+    ["last row", rows.last()],
     ["gate button", page.getByRole("button", { name: "Enable microphone" })],
-    ["first card", page.locator("button", {
-      has: page.locator("h3", { hasText: titles[0] }) }).first()],
-    ["that card again", page.locator("button", {
-      has: page.locator("h3", { hasText: titles[0] }) }).first()],
-  ];
+    ["first row", rows.first()],
+    ["that row again", rows.first()],
+  ] : [];
   for (const [label, control] of sequence) {
     const r = await pressAndMeasure(page, control);
     check(`after ${label}: one alert, on screen`, r.count === 1 && r.onScreen,
@@ -182,7 +200,7 @@ for (const [label, name, init] of [
   ["saved range", "Retake test", SAVED_RANGE],
 ]) {
   const { ctx, page } = await freshPage(init);
-  await page.goto(`${BASE}/range`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/range?mode=range`, { waitUntil: "networkidle" });
   const r = await pressAndMeasure(page, page.getByRole("button", { name }).first());
   check(`${label} (${name})`, r.count === 1 && r.onScreen,
     describeFromPressed(r));
@@ -202,7 +220,27 @@ console.log("\n/studio — its single start button");
   await ctx.close();
 }
 
-await browser.close();
+/* ------------------------------------------------------------ /recorder */
+
+console.log("\n/recorder — permission refusal and a successful retry");
+{
+  const { ctx, page } = await freshPage();
+  await page.goto(`${BASE}/recorder`, { waitUntil: "networkidle" });
+  const r = await pressAndMeasure(page,
+    page.getByRole("button", { name: "Enable microphone", exact: true }));
+  check("recorder refusal is visible once", r.count === 1 && r.onScreen, describe(r));
+  await page.evaluate(() => { window.__micAuditAllow = true; });
+  await page.getByRole("button", { name: "Try again", exact: true }).click();
+  await page.getByRole("button", { name: "Start recording", exact: true }).waitFor({ state: "visible", timeout: 5000 });
+  check("recorder retry opens the record deck", (await page.locator(ALERT).count()) === 0);
+  await ctx.close();
+}
+} catch (error) {
+  failed++;
+  console.error(`Mic audit could not complete: ${error.message}`);
+} finally {
+  await browser.close();
+}
 console.log(failed === 0
   ? "\nEvery room shows a refused mic where the singer pressed."
   : `\n${failed} check(s) failed.`);

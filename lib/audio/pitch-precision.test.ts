@@ -75,7 +75,9 @@ function quantile(sorted: number[], q: number): number {
   return sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))];
 }
 
-describe("detectPitch precision", () => {
+// Each sweep synthesizes and detects 294 frames. Allow shared CI workers time
+// to finish that CPU work; the cents, missed-note and octave gates stay exact.
+describe("detectPitch precision", { timeout: 15_000 }, () => {
   it("reads clean notes within a fraction of a cent across C2–C6", () => {
     const s = sweep((midi, sampleRate, seed) => ({ freq: midiToHz(midi), sampleRate, seed }));
     expect(s.missed).toBe(0);

@@ -18,12 +18,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Deliberately one unconditional job with no path filters. This repo is a
-  # single Next.js app, so there is no expensive native half to gate behind a
-  # classifier, and an unconditional job always reports a conclusion — which
-  # means branch protection can require `ci` directly. A path-filtered job that
-  # skips never reports, and would leave docs-only PRs pending forever.
-  ci:
+  # Build once, then exercise that exact production output in isolated browser
+  # jobs. The final `ci` gate below keeps the existing required-check name.
+  checks:
+    name: Static checks and build
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -64,6 +62,160 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: '1'
 
-      # No test step: this repo has no test script and no test files. Add one
-      # here when it does — omitted rather than stubbed, so the gate never
-      # reports green for a suite that does not exist.
+      - name: Save production build
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build
+          path: |
+            .next/
+            !.next/cache/**
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 2
+
+  browser:
+    name: Browser (${{ matrix.suite }})
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      # One failed suite must not cancel the independent evidence from others.
+      fail-fast: false
+      matrix:
+        suite: [journeys, mobile-audit, desktop-audit, audio, layout-shift]
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      SING_BASE_URL: http://127.0.0.1:3100
+      # All fixtures live in fresh browser contexts against a local server.
+      # Never attach an account, payment, comp-code, or production data store.
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ''
+      CLERK_SECRET_KEY: ''
+      STRIPE_SECRET_KEY: ''
+      PRO_KEY_SECRET: ''
+      PRO_COMP_CODES: ''
+      UPSTASH_REDIS_REST_URL: ''
+      UPSTASH_REDIS_REST_TOKEN: ''
+      KV_REST_API_URL: ''
+      KV_REST_API_TOKEN: ''
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # upload-artifact stores the contents of .next at the artifact root.
+      - name: Restore production build
+        uses: actions/download-artifact@v4
+        with:
+          name: production-build
+          path: .next
+
+      - name: Install full Chromium
+        shell: bash
+        run: |
+          mkdir -p browser-results
+          npx playwright install --with-deps --no-shell chromium 2>&1 | tee browser-results/browser-install.log
+          browser_path="$(node --input-type=module -e 'import { chromium } from "playwright"; console.log(chromium.executablePath())')"
+          test -x "$browser_path"
+          echo "SING_BROWSER_EXECUTABLE=$browser_path" >> "$GITHUB_ENV"
+
+      - name: Run browser suite
+        shell: bash
+        env:
+          SING_SUITE: ${{ matrix.suite }}
+        run: |
+          mkdir -p browser-results
+          npm start -- --hostname 127.0.0.1 --port 3100 > browser-results/server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          node --input-type=module <<'NODE'
+          import { setTimeout } from 'node:timers/promises';
+          const deadline = Date.now() + 60_000;
+          while (Date.now() < deadline) {
+            try {
+              const response = await fetch(process.env.SING_BASE_URL, {
+                signal: AbortSignal.timeout(1000),
+              });
+              if (response.ok) process.exit(0);
+            } catch {}
+            await setTimeout(500);
+          }
+          console.error('Local production server did not become ready within 60 seconds.');
+          process.exit(1);
+          NODE
+
+          failed=0
+          # Keep going after a failed command to capture every suite's evidence,
+          # but retain its non-zero status for this matrix job and the ci gate.
+          run_check() {
+            local label="$1"
+            shift
+            if timeout --kill-after=10s 12m "$@" 2>&1 | tee "browser-results/$label.log"; then
+              echo "- PASS: $label" >> "$GITHUB_STEP_SUMMARY"
+            else
+              failed=1
+              echo "- FAIL: $label (see browser-results artifact)" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          }
+
+          case "$SING_SUITE" in
+            journeys)
+              run_check navigation node e2e/navigation.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check progress-reset node e2e/progress-reset.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check mic-refusal node scripts/audit-mic-gate.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check programs node e2e/programs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/programs.json
+              run_check song-first-practice node e2e/song-first-practice.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check songs-modes node e2e/songs-modes.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              ;;
+            mobile-audit)
+              run_check mobile-audit node e2e/run.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=mobile-375 --json=browser-results/mobile-audit.json
+              ;;
+            desktop-audit)
+              run_check desktop-audit node e2e/run.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=desktop-1280 --json=browser-results/desktop-audit.json
+              ;;
+            audio)
+              run_check pitch-precision node e2e/pitch-precision.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/pitch-precision.json
+              run_check breath-gate node e2e/breath-gate.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/breath-gate.json
+              run_check vibrato-drill node e2e/vibrato-drill.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/vibrato-drill.json
+              run_check song-loop-scoring node e2e/song-loop-scoring.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check warmup-timing node scripts/audit-warmup-timing.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              ;;
+            layout-shift)
+              run_check layout-shift node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=mobile-375
+              ;;
+            *)
+              echo "Unknown browser suite: $SING_SUITE" >&2
+              exit 2
+              ;;
+          esac
+          exit "$failed"
+
+      - name: Save browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-${{ matrix.suite }}
+          path: browser-results/
+          if-no-files-found: warn
+          retention-days: 7
+
+  # No path filters, and always report even when an upstream job failed,
+  # skipped, or was cancelled. Branch protection can keep requiring `ci`.
+  ci:
+    if: always()
+    needs: [checks, browser]
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Require static and browser checks
+        env:
+          CHECKS_RESULT: ${{ needs.checks.result }}
+          BROWSER_RESULT: ${{ needs.browser.result }}
+        run: |
+          test "$CHECKS_RESULT" = success
+          test "$BROWSER_RESULT" = success
