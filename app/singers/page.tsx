@@ -125,7 +125,7 @@ export default function SingersPage() {
       title="Famous singers' vocal ranges on one chart"
       subtitle={`A vocal range chart of ${SINGERS.length} famous singers: each reported catalog range, lowest note to highest, drawn on the same keyboard so you can compare voices, and your own range, at a glance.`}
       actions={
-        <LinkButton href="/range" size="md">
+        <LinkButton href="/range?mode=range" size="md">
           Test my vocal range →
         </LinkButton>
       }
@@ -159,7 +159,7 @@ export default function SingersPage() {
               your browser, nothing to install.
             </p>
           </div>
-          <LinkButton href="/range" size="lg">
+          <LinkButton href="/range?mode=range" size="lg">
             Test my vocal range →
           </LinkButton>
         </div>

@@ -28,7 +28,7 @@ describe("song comparison to first practice", () => {
     for (const range of [{}, { lowMidi: 50 }, { highMidi: 72 }]) {
       state.range = range;
       const html = render();
-      expect(html).toContain('href="/range"');
+      expect(html).toContain('href="/range?mode=range"');
       expect(html).toContain("Find your range free");
       expect(html).not.toContain("Your first practice");
       expect(html).not.toContain('href="/pro');

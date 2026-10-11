@@ -93,7 +93,7 @@ export default function GlossaryPage() {
               warmups
             </Link>{" "}
             and the{" "}
-            <Link href="/range" className="text-violet-ink hover:underline">
+            <Link href="/range?mode=range" className="text-violet-ink hover:underline">
               range test
             </Link>{" "}
             do that part, and none of this is medical advice.
@@ -140,7 +140,7 @@ export default function GlossaryPage() {
                   <p className="mt-1.5 max-w-3xl text-sm text-dim">
                     {entry.where}{" "}
                     <Link
-                      href={entry.href}
+                      href={entry.href === "/range" ? "/range?mode=range" : entry.href}
                       className="text-violet-ink hover:underline"
                     >
                       Open {roomLabel(entry.href)} →

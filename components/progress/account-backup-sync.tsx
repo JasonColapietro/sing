@@ -6,7 +6,6 @@ import { Button } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
 import {
   BackupError,
-  backupNow,
   lastBackupAt,
   maybeBackup,
   reconcileBackup,
@@ -116,7 +115,9 @@ export function AccountBackupControls() {
     setNotice(null);
     try {
       if (kind === "backup") {
-        await backupNow();
+        // Another device may have backed up since this browser last loaded.
+        // Merge that record before writing so a manual backup keeps both.
+        await reconcileBackup();
         setNotice({
           kind: "ok",
           text: "Backed up. Your account now holds a copy of this record.",

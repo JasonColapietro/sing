@@ -139,7 +139,7 @@ describe("footer wires every hub into every page", () => {
    * link from anywhere on the site.
    */
   it("links every practice room, including the two that were missing", () => {
-    for (const href of ["/breath", "/tools", "/studio", "/warmups", "/range"]) {
+    for (const href of ["/breath", "/tools", "/studio", "/warmups", "/range?mode=range"]) {
       expect(html, `footer missing ${href}`).toContain(`href="${href}"`);
     }
   });

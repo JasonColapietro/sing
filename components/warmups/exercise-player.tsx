@@ -10,6 +10,7 @@ import { clickAt, createToneGroup, type ToneGroup } from "@/lib/audio/synth";
 import { liveLags } from "@/lib/audio/latency";
 import { logSession, type VocalRange, type WarmupMode } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
+import { createPracticeClock } from "@/lib/practice-clock";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
 import {
   IconArrowLeft,
@@ -92,9 +93,9 @@ export function unsungRepAction(
 }
 
 /**
- * Seconds of practice to log: mount → the end of the last scored rep, never
- * mount → now. The walk is endless, so wall-clock time would bill every idle
- * minute of a forgotten tab as singing — enough to read as a heavy day.
+ * Seconds of practice to log, ending at the last scored rep. Both timestamps
+ * must come from the active practice clock: hidden time and the silent tail
+ * after the final sung rep must never be billed as singing.
  */
 export function practicedDurationSec(
   sessionStart: number,
@@ -263,7 +264,8 @@ export function ExercisePlayer({
   const stageRef = useRef<Stage>("lead");
   const lagsRef = useRef({ pitchLag: 0, outputLag: 0, scoreLag: 0 });
   const unsungRepsRef = useRef(0);
-  const lastScoredAtRef = useRef<number | null>(null);
+  const lastScoredActiveMsRef = useRef<number | null>(null);
+  const [practiceClock] = useState(() => createPracticeClock());
   const lastTickRef = useRef(0);
   const rafRef = useRef(0);
   // Set once the session has handed off (finish, exit, or unmount): the loop
@@ -278,13 +280,10 @@ export function ExercisePlayer({
     guidePctRef.current = guidePct;
     clickRef.current = click;
   }, [mode, guidePct, click]);
-  // Lazy state initializer: performance.now() only runs once, on mount.
-  const [sessionStart] = useState(() => performance.now());
-
   function finalize(finalResults: RepResult[]) {
     const avgScore = repAvgScore(finalResults);
     const best = bestRep(finalResults);
-    const durationSec = practicedDurationSec(sessionStart, lastScoredAtRef.current);
+    const durationSec = practicedDurationSec(0, lastScoredActiveMsRef.current);
     const log = logSession({
       type: "warmup",
       durationSec,
@@ -412,7 +411,7 @@ export function ExercisePlayer({
       setLastOutcome("silent");
     } else {
       unsungRepsRef.current = 0;
-      lastScoredAtRef.current = performance.now();
+      lastScoredActiveMsRef.current = practiceClock.elapsedMs();
       resultsRef.current = [...resultsRef.current, res];
       setResults(resultsRef.current);
       setLastOutcome("scored");
@@ -441,6 +440,7 @@ export function ExercisePlayer({
   // position the frame in hand actually describes.
   useEffect(() => {
     finishedRef.current = false;
+    if (document.visibilityState !== "hidden") practiceClock.resume();
     lagsRef.current = liveLags(getAudioContext().sampleRate, PITCH_FFT_SIZE);
     // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the rep whose audio the effect just scheduled, same as the old listen effect
     scheduleRep(0, audioNow() + SCHEDULE_LEAD_SEC);
@@ -535,9 +535,11 @@ export function ExercisePlayer({
     // the current rep from the clock when the singer comes back.
     const onVisibility = () => {
       if (document.visibilityState === "hidden") {
+        practiceClock.pause();
         groupRef.current?.cancel();
         cancelAnimationFrame(rafRef.current);
       } else if (!finishedRef.current) {
+        practiceClock.resume();
         lastTickRef.current = performance.now();
         scheduleRep(repIndexRef.current, audioNow() + SCHEDULE_LEAD_SEC);
         rafRef.current = requestAnimationFrame(tick);
@@ -547,6 +549,7 @@ export function ExercisePlayer({
 
     return () => {
       finishedRef.current = true;
+      practiceClock.pause();
       document.removeEventListener("visibilitychange", onVisibility);
       cancelAnimationFrame(rafRef.current);
       groupRef.current?.cancel();

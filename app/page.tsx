@@ -48,7 +48,7 @@ const FEATURES = [
     Glyph: WarmupGlyph,
   },
   {
-    href: "/range",
+    href: "/range?mode=range",
     label: "Range test",
     desc: "Find your lowest and highest notes and get a voice-type estimate.",
     Glyph: RangeGlyph,

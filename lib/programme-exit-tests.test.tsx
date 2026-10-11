@@ -134,7 +134,8 @@ describe("a reader can see the exit test", () => {
     expect(html).toContain(escaped(exit!.test));
     expect(html).toContain(escaped(exit!.blocker));
     expect(html).toContain(escaped(exit!.doesNotProve));
-    expect(html).toContain(`href="${exit!.roomPath}"`);
+    const destination = exit!.room === "range" ? "/range?mode=range" : exit!.roomPath;
+    expect(html).toContain(`href="${destination}"`);
   });
 
   it("prints nothing extra on a chapter that sets no condition", async () => {

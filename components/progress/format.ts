@@ -7,7 +7,7 @@ export const TYPE_META: Record<
 > = {
   warmup: { label: "Warmup", href: "/warmups", tone: "violet" },
   pitch: { label: "Pitch", href: "/studio", tone: "violet" },
-  range: { label: "Range", href: "/range", tone: "cool" },
+  range: { label: "Range", href: "/range?mode=range", tone: "cool" },
   ear: { label: "Ear", href: "/ear-training", tone: "cool" },
   breath: { label: "Breath", href: "/breath", tone: "ok" },
   song: { label: "Song", href: "/songs", tone: "violet" },

@@ -60,6 +60,9 @@ export function WarmupsClient() {
   // Five free minutes of guided practice a day; every way into a session
   // checks it, so a capped singer sees the wall rather than a mic prompt.
   const cap = useFreeCap();
+  const unavailableReason = cap.capped
+    ? "Free practice is used for today. It resets at midnight; the free studio is still open."
+    : undefined;
   const { goalSec } = useDailyGoal();
   const activeProgram = useActiveProgram();
 
@@ -217,6 +220,7 @@ export function WarmupsClient() {
   // The gate card's button, which is its own place on screen. Set before the
   // await, but nothing renders during it: start() clears the error first.
   function startFromGate() {
+    if (cap.capped) return;
     setErrorAt({ kind: "gate" });
     void pitch.start();
   }
@@ -232,7 +236,7 @@ export function WarmupsClient() {
   // during render rather than in an effect, per
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
   const [deepLinkDone, setDeepLinkDone] = useState(false);
-  if (!deepLinkDone && deepLink !== undefined && pitch.listening) {
+  if (!deepLinkDone && deepLink !== undefined && pitch.listening && !cap.capped) {
     setDeepLinkDone(true);
     if (deepLinkRoutine && canStartRoutine(deepLinkRoutine)) {
       const step = Number(deepLink.step);
@@ -300,8 +304,9 @@ export function WarmupsClient() {
               title={nextExercise.title}
               tagline="The next exercise in your lowest unfinished tier. You can still choose any exercise below."
               onStart={() => void selectExercise(nextExercise)}
-              startLabel={pitch.listening ? "Start exercise" : "Enable mic and start"}
+              startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start exercise" : "Enable mic and start"}
               micReady={pitch.listening}
+              unavailableReason={unavailableReason}
               error={errorAt.kind === "exercise" && errorAt.id === nextExercise.id ? pitch.error : null}
             />
           )}
@@ -316,6 +321,7 @@ export function WarmupsClient() {
               onStart={(p) => void selectDailyPick(p)}
               error={errorAt.kind === "daily" ? pitch.error : null}
               errorExerciseId={errorAt.kind === "daily" ? errorAt.id : null}
+              unavailableReason={unavailableReason}
             />
           )}
           <ContinueCard
@@ -328,7 +334,8 @@ export function WarmupsClient() {
             goal={{ doneSec: todayPracticeSec(progress), goalSec }}
             streakDays={progress.streak.current}
             micReady={pitch.listening}
-            startLabel={pitch.listening ? "Start warmup" : "Enable mic and start"}
+            unavailableReason={unavailableReason}
+            startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start warmup" : "Enable mic and start"}
             error={errorAt.kind === "today" ? pitch.error : null}
             onStart={() => void selectRoutine(recommended, "today")}
           >
@@ -343,7 +350,7 @@ export function WarmupsClient() {
             visitor could not read a single exercise title before granting
             permission. /range already solved this: explain the loop, then ask.
           */}
-          {!pitch.listening && (
+          {!pitch.listening && !cap.capped && (
             <Card>
               <h2 className="text-xl">{gateTitle}</h2>
               <ol className="mt-3 max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut">
@@ -394,6 +401,7 @@ export function WarmupsClient() {
             onStart={(r) => void selectRoutine(r, "grid")}
             error={errorAt.kind === "routine" ? pitch.error : null}
             errorRoutineId={errorAt.kind === "routine" ? errorAt.id : null}
+            unavailableReason={unavailableReason}
           />
 
           <PathSection
@@ -402,6 +410,7 @@ export function WarmupsClient() {
             micReady={pitch.listening}
             error={errorAt.kind === "exercise" ? pitch.error : null}
             errorExerciseId={errorAt.kind === "exercise" ? errorAt.id : null}
+            unavailableReason={unavailableReason}
           />
         </div>
       )}

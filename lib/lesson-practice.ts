@@ -417,6 +417,7 @@ function companionValue(c: Companion): string | undefined {
 export function companionHref(c: Companion): string {
   const path = ROOM_PATHS[c.room];
   if (!path) throw new Error(`Unknown room ${c.room}`);
+  if (c.room === "range") return `${path}?mode=range`;
   const value = companionValue(c);
   return c.param && value ? `${path}?${c.param}=${encodeURIComponent(value)}` : path;
 }

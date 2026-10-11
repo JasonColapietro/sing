@@ -43,7 +43,7 @@ const PRACTICE: FooterLink[] = [
   { href: "/studio", label: "Vocal studio" },
   { href: "/warmups", label: "Guided warmups" },
   { href: "/programs", label: "Multi-week practice programs" },
-  { href: "/range", label: "Free vocal range test" },
+  { href: "/range?mode=range", label: "Free vocal range test" },
   { href: "/voice", label: "Suede Voice for iPhone & Android" },
   { href: "/ear-training", label: "Ear training" },
   // Both rooms are live and were in no footer column, so neither had a

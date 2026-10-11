@@ -35,7 +35,7 @@ const WEEK = [
     focus: "Baseline",
     body: "Take the range test, then hold three comfortable notes in the pitch studio. Save the result; today is a measurement, not an audition.",
     links: [
-      { href: "/range", label: "Vocal range test" },
+      { href: "/range?mode=range", label: "Vocal range test" },
       { href: "/studio", label: "Pitch studio" },
     ],
   },
@@ -88,7 +88,7 @@ const FUNDAMENTALS = [
     title: "Range is not voice type",
     body: "Vocal range is the distance between your lowest and highest repeatable notes. Voice type also considers where the voice is comfortable—its tessitura—plus timbre, weight, and transition points. The range test gives you a useful estimate; the voice-type guide explains why the label stays provisional.",
     links: [
-      { href: "/range", label: "Measure your range" },
+      { href: "/range?mode=range", label: "Measure your range" },
       {
         href: "/atlas/vocal-range-by-voice-type",
         label: "Compare all eight voice types",
@@ -184,7 +184,7 @@ export default function LearnPage() {
       subtitle="To learn to sing, start from your voice as it is today: test your range, train one skill at a time, use that skill in a song, and listen back. Every tool below runs in the browser."
       actions={
         <div className="flex flex-wrap gap-2">
-          <LinkButton href="/range" size="lg">
+          <LinkButton href="/range?mode=range" size="lg">
             Test my vocal range
           </LinkButton>
           <LinkButton href="/warmups" variant="outline" size="lg">
@@ -334,7 +334,7 @@ export default function LearnPage() {
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <LinkButton href="/singers">Browse famous vocal ranges</LinkButton>
-            <LinkButton href="/range" variant="outline">
+            <LinkButton href="/range?mode=range" variant="outline">
               Compare with my range
             </LinkButton>
             <LinkButton href="/atlas" variant="ghost">

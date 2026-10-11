@@ -17,7 +17,7 @@ import { MicAlert } from "@/components/mic-alert";
 import { clickAt } from "@/lib/audio/synth";
 import { useIsPro } from "@/lib/pro";
 import { logSession, type Achievement } from "@/lib/progress";
-import { openTakesStore, type TakeRecord, type TakesStore } from "./db";
+import { openTakesStore, type TakeRecord } from "./db";
 import { computePeaks, decodeTakeBlob, encodeWavMono, type Peaks } from "./wav";
 import { IconMic, IconPause, IconPlay, IconRecordDot, IconStar, IconStop } from "./icons";
 import { LiveWaveform, PeaksWaveform } from "./waveforms";
@@ -30,7 +30,7 @@ import { AccountBackupSync } from "@/components/progress/account-backup-sync";
 import { FreeOnly, ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
-import { pickMimeType } from "./mime";
+import { createRecorderMic, createTakeMutations, startRecorder } from "./runtime";
 
 const MAX_SEC = 300; // 5 minute take limit
 const COUNT_IN_BEAT = 0.5; // seconds per count-in click
@@ -95,13 +95,19 @@ function downloadBlob(blob: Blob, filename: string) {
 
 export default function RecorderPageClient() {
   const isPro = useIsPro();
+  const mountedRef = useRef(true);
 
   // --- store + takes ---
-  const storeRef = useRef<TakesStore | null>(null);
   const [takes, setTakes] = useState<TakeRecord[]>([]);
   const takesRef = useRef<TakeRecord[]>([]);
   const [persistent, setPersistent] = useState<boolean | null>(null);
   const [estimate, setEstimate] = useState<{ usage: number; quota: number } | null>(null);
+  const [loadError, setLoadError] = useState(false);
+  const [loadingTakes, setLoadingTakes] = useState(true);
+  const [storageIssues, setStorageIssues] = useState<Map<string, { action: "save" | "delete" }>>(() => new Map());
+  const [mutations] = useState(() => createTakeMutations(openTakesStore));
+  const deletingRef = useRef(new Set<string>());
+  const deletedRef = useRef(new Set<string>());
 
   // --- mic + recording ---
   const [micState, setMicState] = useState<MicState>("idle");
@@ -111,7 +117,7 @@ export default function RecorderPageClient() {
   const [countBeat, setCountBeat] = useState(0);
   const [countIn, setCountIn] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-  const streamRef = useRef<MediaStream | null>(null);
+  const micRef = useRef<ReturnType<typeof createRecorderMic> | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startedAtRef = useRef(0);
@@ -123,6 +129,7 @@ export default function RecorderPageClient() {
   const urlRef = useRef<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loadedId, setLoadedId] = useState<string | null>(null);
+  const loadedIdRef = useRef<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [positionSec, setPositionSec] = useState(0);
 
@@ -158,30 +165,41 @@ export default function RecorderPageClient() {
       .catch(() => {});
   }, []);
 
+  const loadTakes = useCallback(async () => {
+    setLoadingTakes(true);
+    setLoadError(false);
+    try {
+      const store = await openTakesStore();
+      if (!mountedRef.current) return;
+      setPersistent(store.persistent);
+      const all = await store.getAll();
+      if (!mountedRef.current) return;
+      // Reading can finish after a new take or edit. Keep the current version
+      // and never restore a take deleted while the read was outstanding.
+      const merged = new Map([...all, ...takesRef.current].map((take) => [take.id, take]));
+      const next = [...merged.values()].filter((take) => !deletedRef.current.has(take.id))
+        .sort((a, b) => b.createdAt - a.createdAt);
+      takesRef.current = next;
+      setTakes(next);
+    } catch {
+      if (mountedRef.current) setLoadError(true);
+    } finally {
+      if (mountedRef.current) setLoadingTakes(false);
+    }
+  }, []);
+
   // Load persisted takes on mount.
   useEffect(() => {
-    let alive = true;
-    void openTakesStore().then(async (store) => {
-      if (!alive) return;
-      storeRef.current = store;
-      setPersistent(store.persistent);
-      try {
-        const all = await store.getAll();
-        if (!alive) return;
-        setTakes(all.sort((a, b) => b.createdAt - a.createdAt));
-      } catch {
-        // leave the list empty
-      }
-    });
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- starts the asynchronous local store read
+    void loadTakes();
     refreshEstimate();
-    return () => {
-      alive = false;
-    };
-  }, [refreshEstimate]);
+  }, [loadTakes, refreshEstimate]);
 
   // Teardown: stop mic, timers, playback.
   useEffect(() => {
+    mountedRef.current = true;
     return () => {
+      mountedRef.current = false;
       window.clearInterval(tickRef.current);
       window.clearInterval(countTimerRef.current);
       const rec = recorderRef.current;
@@ -192,7 +210,8 @@ export default function RecorderPageClient() {
           // already stopped
         }
       }
-      streamRef.current?.getTracks().forEach((t) => t.stop());
+      micRef.current?.dispose();
+      micRef.current = null;
       audioRef.current?.pause();
       if (urlRef.current) URL.revokeObjectURL(urlRef.current);
     };
@@ -265,38 +284,50 @@ export default function RecorderPageClient() {
   const enableMic = useCallback(async () => {
     setMicState("requesting");
     setMicError(null);
-    const opened = await openMic();
-    if (opened.stream === null) {
+    const session = micRef.current ?? createRecorderMic(openMic, getAudioContext);
+    micRef.current = session;
+    const opened = await session.start();
+    if (!opened || !mountedRef.current || micRef.current !== session) return;
+    if (opened.error !== null) {
       setMicState("blocked");
       setMicError(opened.error);
       return;
     }
-    streamRef.current = opened.stream;
-    const ctx = getAudioContext();
-    const source = ctx.createMediaStreamSource(opened.stream);
-    const an = ctx.createAnalyser();
-    an.fftSize = 2048;
-    source.connect(an);
-    setAnalyser(an);
+    setAnalyser(opened.analyser);
     setMicState("ready");
   }, []);
 
   // --- persistence helpers ---
-  const persistTake = useCallback((take: TakeRecord) => {
-    const store = storeRef.current;
-    if (store) void store.put(take).catch(() => {});
+  const clearStorageIssue = useCallback((id: string) => {
+    setStorageIssues((previous) => {
+      const next = new Map(previous);
+      next.delete(id);
+      return next;
+    });
   }, []);
+
+  const persistTake = useCallback(async (take: TakeRecord) => {
+    if (deletingRef.current.has(take.id) || deletedRef.current.has(take.id)) return;
+    try {
+      await mutations.put(take);
+      if (mountedRef.current) clearStorageIssue(take.id);
+    } catch {
+      // Keep the in-memory blob available to play/download even when storage
+      // is full or unavailable. A retry uses the newest edited take.
+      if (mountedRef.current) setStorageIssues((previous) => new Map(previous).set(take.id, { action: "save" }));
+    }
+  }, [mutations, clearStorageIssue]);
 
   const updateTake = useCallback(
     (id: string, patch: Partial<TakeRecord>) => {
-      setTakes((prev) =>
-        prev.map((t) => {
-          if (t.id !== id) return t;
-          const next = { ...t, ...patch };
-          persistTake(next);
-          return next;
-        }),
-      );
+      if (deletingRef.current.has(id)) return;
+      const take = takesRef.current.find((t) => t.id === id);
+      if (!take) return;
+      const updated = { ...take, ...patch };
+      const next = takesRef.current.map((t) => t.id === id ? updated : t);
+      takesRef.current = next;
+      setTakes(next);
+      void persistTake(updated);
     },
     [persistTake],
   );
@@ -310,8 +341,10 @@ export default function RecorderPageClient() {
       const blob = new Blob(chunksRef.current, { type: mimeType });
       chunksRef.current = [];
       recorderRef.current = null;
-      setRecPhase("idle");
-      setElapsed(0);
+      if (mountedRef.current) {
+        setRecPhase("idle");
+        setElapsed(0);
+      }
       if (blob.size === 0 || durationSec < 0.3) return;
 
       const take: TakeRecord = {
@@ -323,20 +356,22 @@ export default function RecorderPageClient() {
         blob,
         starred: false,
       };
-      setTakes((prev) => [take, ...prev]);
-      persistTake(take);
+      takesRef.current = [take, ...takesRef.current];
+      void persistTake(take);
+      const result = durationSec >= 10 ? logSession({
+        type: "recording",
+        durationSec,
+        detail: take.name,
+      }) : null;
+      if (!mountedRef.current) return;
+      setTakes(takesRef.current);
       setSelectedId(take.id);
       setReviewId(take.id);
       setReviewRating(0);
       setReviewNote("");
       refreshEstimate();
 
-      if (durationSec >= 10) {
-        const result = logSession({
-          type: "recording",
-          durationSec,
-          detail: take.name,
-        });
+      if (result) {
         setToast({ xp: result.xpGained, achievements: result.newAchievements });
       }
     },
@@ -344,25 +379,29 @@ export default function RecorderPageClient() {
   );
 
   const beginCapture = useCallback(() => {
-    const stream = streamRef.current;
+    const stream = micRef.current?.getStream();
     if (!stream) return;
-    const mime = pickMimeType();
-    let rec: MediaRecorder;
-    try {
-      rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
-    } catch {
-      setMicError("Recording isn't supported in this browser.");
+    if (recorderRef.current) return;
+    setMicError(null);
+    chunksRef.current = [];
+    startedAtRef.current = performance.now();
+    const capture = startRecorder(stream, {
+      onData: (blob) => chunksRef.current.push(blob),
+      onStop: finalizeTake,
+      onError: () => {
+        window.clearInterval(tickRef.current);
+        if (mountedRef.current) {
+          setMicError("Recording was interrupted. Any audio captured is kept below. Check your microphone before trying again.");
+          setRecPhase("saving");
+        }
+      },
+    });
+    if (!capture.recorder) {
+      setMicError(capture.error);
       setRecPhase("idle");
       return;
     }
-    chunksRef.current = [];
-    rec.ondataavailable = (e) => {
-      if (e.data.size > 0) chunksRef.current.push(e.data);
-    };
-    rec.onstop = () => finalizeTake(rec.mimeType || mime || "audio/webm");
-    recorderRef.current = rec;
-    startedAtRef.current = performance.now();
-    rec.start(1000);
+    recorderRef.current = capture.recorder;
     setElapsed(0);
     setRecPhase("recording");
     tickRef.current = window.setInterval(() => {
@@ -441,6 +480,7 @@ export default function RecorderPageClient() {
       if (urlRef.current) URL.revokeObjectURL(urlRef.current);
       urlRef.current = URL.createObjectURL(take.blob);
       a.src = urlRef.current;
+      loadedIdRef.current = take.id;
       setLoadedId(take.id);
       setPositionSec(0);
       return a;
@@ -486,13 +526,27 @@ export default function RecorderPageClient() {
   );
 
   const deleteTake = useCallback(
-    (take: TakeRecord) => {
-      if (loadedId === take.id) {
+    async (take: TakeRecord) => {
+      if (deletingRef.current.has(take.id)) return;
+      deletingRef.current.add(take.id);
+      try {
+        await mutations.remove(take.id);
+      } catch {
+        if (mountedRef.current) setStorageIssues((previous) => new Map(previous).set(take.id, { action: "delete" }));
+        return;
+      } finally {
+        deletingRef.current.delete(take.id);
+      }
+      deletedRef.current.add(take.id);
+      if (!mountedRef.current) return;
+      clearStorageIssue(take.id);
+      if (loadedIdRef.current === take.id) {
         audioRef.current?.pause();
         if (urlRef.current) {
           URL.revokeObjectURL(urlRef.current);
           urlRef.current = null;
         }
+        loadedIdRef.current = null;
         setLoadedId(null);
         setPositionSec(0);
       }
@@ -511,12 +565,11 @@ export default function RecorderPageClient() {
       setAbPicks((prev) => prev.filter((id) => id !== take.id));
       setSelectedId((prev) => (prev === take.id ? null : prev));
       setReviewId((prev) => (prev === take.id ? null : prev));
-      setTakes((prev) => prev.filter((t) => t.id !== take.id));
-      const store = storeRef.current;
-      if (store) void store.remove(take.id).catch(() => {});
+      takesRef.current = takesRef.current.filter((t) => t.id !== take.id);
+      setTakes(takesRef.current);
       refreshEstimate();
     },
-    [loadedId, refreshEstimate],
+    [refreshEstimate, mutations, clearStorageIssue],
   );
 
   const downloadOriginal = useCallback((take: TakeRecord) => {
@@ -765,6 +818,7 @@ export default function RecorderPageClient() {
                   </div>
                 </div>
                 <LiveWaveform analyser={analyser} height={110} />
+                {micError && <MicAlert message={micError} className="mt-4 text-sm text-mut" />}
               </>
             )}
           </Card>
@@ -1069,12 +1123,54 @@ export default function RecorderPageClient() {
 
             {persistent === false && (
               <p className="mb-3 rounded-xl border border-rec/30 bg-panel2 px-3 py-2 text-xs text-mut">
-                Private browsing detected — takes are kept in memory only and will be lost when
+                Browser storage is unavailable — takes are kept in memory only and will be lost when
                 you close this tab. Download anything you want to keep.
               </p>
             )}
 
-            {takes.length === 0 ? (
+            {loadError && (
+              <div role="alert" className="mb-3 rounded-xl border border-rec/30 bg-panel2 p-3 text-sm text-mut">
+                <p>Your saved takes couldn&rsquo;t be loaded. They haven&rsquo;t been deleted.</p>
+                <Button variant="outline" size="sm" className="mt-2" onClick={() => void loadTakes()} disabled={loadingTakes}>
+                  Retry loading takes
+                </Button>
+              </div>
+            )}
+
+            {storageIssues.size > 0 && (
+              <div role="alert" className="mb-3 space-y-3 rounded-xl border border-rec/30 bg-panel2 p-3 text-sm text-mut">
+                {[...storageIssues].map(([id, issue]) => {
+                  const take = takes.find((item) => item.id === id);
+                  if (!take) return null;
+                  return (
+                    <div key={id}>
+                      <p>
+                        {issue.action === "save"
+                          ? `“${take.name}” couldn't be saved. Download it before leaving this page, or free up browser storage and retry.`
+                          : `“${take.name}” couldn't be deleted. It is still in your takes.`}
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <Button variant="outline" size="sm" onClick={() => {
+                          if (issue.action === "save") void persistTake(take);
+                          else void deleteTake(take);
+                        }}>
+                          {issue.action === "save" ? "Retry saving" : "Retry deleting"}
+                        </Button>
+                        {issue.action === "save" && (
+                          <Button variant="outline" size="sm" onClick={() => downloadOriginal(take)}>
+                            Download take
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {takes.length === 0 && loadingTakes ? (
+              <p role="status" className="py-6 text-sm text-mut">Loading your takes…</p>
+            ) : takes.length === 0 && !loadError ? (
               <EmptyState
                 title="No takes yet — hit record"
                 hint="Your takes will show up here with playback, stars, and downloads. They stay on this device."
@@ -1097,7 +1193,7 @@ export default function RecorderPageClient() {
                     onTogglePlay={() => togglePlay(take)}
                     onToggleStar={() => updateTake(take.id, { starred: !take.starred })}
                     onRename={(name) => updateTake(take.id, { name })}
-                    onDelete={() => deleteTake(take)}
+                    onDelete={() => void deleteTake(take)}
                     onDownloadOriginal={() => downloadOriginal(take)}
                     onDownloadWav={() => void downloadWav(take)}
                     onToggleAb={() => toggleAb(take.id)}

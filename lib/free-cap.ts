@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { localDay, useProgress, type ActivityType, type ProgressState } from "./progress";
 import { useIsPro } from "./pro";
 import { FREE_DAILY_SEC } from "./practice-limits";
@@ -65,6 +65,33 @@ export interface FreeCap {
   capSec: number;
 }
 
+/** Recheck the local day at midnight and after a suspended tab wakes up. */
+export function subscribePracticeDay(onChange: () => void): () => void {
+  let timer: number;
+  const schedule = () => {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    // Check at least once a minute for clock/time-zone changes, but do not
+    // make a singer wait a full minute when midnight falls between ticks.
+    timer = window.setTimeout(() => {
+      onChange();
+      schedule();
+    }, Math.min(60_000, midnight.getTime() - now.getTime()));
+  };
+  const onVisibility = () => {
+    if (document.visibilityState === "visible") onChange();
+  };
+  schedule();
+  document.addEventListener("visibilitychange", onVisibility);
+  return () => {
+    window.clearTimeout(timer);
+    document.removeEventListener("visibilitychange", onVisibility);
+  };
+}
+
+const serverDay = () => "";
+
 /**
  * The cap as the rooms read it. The server snapshot has no sessions and no
  * entitlement, so it renders uncapped and the client corrects once — the
@@ -73,8 +100,9 @@ export interface FreeCap {
 export function useFreeCap(): FreeCap {
   const progress = useProgress();
   const isPro = useIsPro();
+  const day = useSyncExternalStore(subscribePracticeDay, localDay, serverDay);
   return useMemo(() => {
-    const usedSec = guidedSecondsToday(progress);
+    const usedSec = guidedSecondsToday(progress, day);
     return {
       isPro,
       usedSec,
@@ -82,5 +110,5 @@ export function useFreeCap(): FreeCap {
       capped: !isPro && usedSec >= FREE_DAILY_SEC,
       capSec: FREE_DAILY_SEC,
     };
-  }, [progress, isPro]);
+  }, [progress, isPro, day]);
 }

@@ -342,7 +342,7 @@ export default async function SongPage({
               <LinkButton href="/songs" variant="outline" size="sm">
                 Every song
               </LinkButton>
-              <LinkButton href="/range" variant="ghost" size="sm">
+              <LinkButton href="/range?mode=range" variant="ghost" size="sm">
                 Find your range first
               </LinkButton>
             </div>

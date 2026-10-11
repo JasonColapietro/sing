@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useId } from "react";
 import type { ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
 import { midiToLabel } from "@/lib/audio/notes";
@@ -99,20 +100,23 @@ export function RoutineGrid({
   onStart,
   error,
   errorRoutineId,
+  unavailableReason,
 }: {
   progress: ProgressState;
   onStart: (routine: Routine) => void;
   error: string | null;
   errorRoutineId: string | null;
+  unavailableReason?: string;
 }) {
   const isPro = useIsPro();
+  const unavailableId = useId();
 
   const card = (routine: Routine) => {
     const locked = routine.pro && !isPro;
     const failed = error !== null && errorRoutineId === routine.id;
     const { stars, best } = routineStats(progress, routine);
     const body = (
-      <Card tone="raised" className={`h-full ${failed ? "border-rec/50" : ""}`}>
+      <Card tone={!locked && unavailableReason ? "flat" : "raised"} className={`h-full ${failed ? "border-rec/50" : ""}`}>
         <div className="flex items-start justify-between gap-2">
           <h3 className="text-lg">{routine.name}</h3>
           {routine.pro ? locked ? <ProLockTag /> : <ProChip /> : null}
@@ -137,7 +141,9 @@ export function RoutineGrid({
             {body}
           </Link>
         ) : (
-          <button type="button" onClick={() => onStart(routine)} className="flex-1 text-left">
+          <button type="button" onClick={() => onStart(routine)}
+            disabled={Boolean(unavailableReason)} aria-describedby={unavailableReason ? unavailableId : undefined}
+            className="flex-1 text-left disabled:cursor-not-allowed disabled:opacity-50">
             {body}
           </button>
         )}
@@ -151,9 +157,10 @@ export function RoutineGrid({
       <div className="flex flex-wrap items-center gap-2">
         <SectionLabel heading>Warmup routines</SectionLabel>
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Pick a length, press start
+          {unavailableReason ? "Routines for your next practice" : "Pick a length, press start"}
         </span>
       </div>
+      {unavailableReason && <p id={unavailableId} className="mt-3 text-sm text-mut">{unavailableReason}</p>}
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ROUTINES.map(card)}
         {PRO_ROUTINES.map(card)}
@@ -176,6 +183,7 @@ export function PathSection({
   micReady,
   error,
   errorExerciseId,
+  unavailableReason,
 }: {
   progress: ProgressState;
   onSelect: (ex: WarmupExercise) => void;
@@ -186,6 +194,7 @@ export function PathSection({
    *  gate card above — which renders it itself. */
   error: string | null;
   errorExerciseId: string | null;
+  unavailableReason?: string;
 }) {
   const isPro = useIsPro();
 
@@ -242,7 +251,7 @@ export function PathSection({
         </span>
       </div>
       <RangePrompt progress={progress} />
-      <PathList levels={levels} />
+      <PathList levels={levels} unavailableReason={unavailableReason} />
     </section>
   );
 }

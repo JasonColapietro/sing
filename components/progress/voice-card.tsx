@@ -110,7 +110,7 @@ export function VoiceCard({ range }: { range: VocalRange }) {
         <EmptyState
           title="No range on file"
           hint="Take the 2-minute range test to find your lowest and highest comfortable notes and your voice type."
-          action={<LinkButton href="/range">Take the range test</LinkButton>}
+          action={<LinkButton href="/range?mode=range">Take the range test</LinkButton>}
         />
       </Card>
     );
@@ -145,7 +145,7 @@ export function VoiceCard({ range }: { range: VocalRange }) {
         <MiniKeyboard low={range.lowMidi} high={range.highMidi} />
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <LinkButton href="/range" variant="outline" size="sm">
+        <LinkButton href="/range?mode=range" variant="outline" size="sm">
           Retake the test
         </LinkButton>
         <LinkButton href="/singers" variant="ghost" size="sm">

@@ -99,7 +99,7 @@ export default function VoicePage() {
           <p className="mt-5 max-w-xl text-mut">
             This page is the app download rather than the test itself. If you
             want the test, it is free in the browser and needs no install:{" "}
-            <Link href="/range" className="text-violet-ink underline underline-offset-4">take the vocal range test</Link> in Suede Sing, our browser studio.
+            <Link href="/range?mode=range" className="text-violet-ink underline underline-offset-4">take the vocal range test</Link> in Suede Sing, our browser studio.
           </p>
         </div>
         <div className="rounded-2xl border border-line bg-panel p-6 sm:p-8">

@@ -35,7 +35,7 @@ export default function SingerMethodologyPage() {
       subtitle="Singer vocal ranges differ between sources because they count different things: written notes in selected songs, isolated live notes across a career, or brief effects. This page explains what our catalog reports, what individual sources can establish, and how to correct the record."
       actions={
         <>
-          <LinkButton href="/range" size="md">Test my vocal range</LinkButton>
+          <LinkButton href="/range?mode=range" size="md">Test my vocal range</LinkButton>
           <LinkButton href="/singers" variant="outline" size="md">← All singers</LinkButton>
         </>
       }

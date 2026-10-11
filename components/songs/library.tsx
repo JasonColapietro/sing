@@ -504,7 +504,7 @@ export function Library({
                 say whether it sits in your range as written.
               </p>
             </div>
-            <LinkButton href="/range" variant="outline" size="sm">
+            <LinkButton href="/range?mode=range" variant="outline" size="sm">
               Take the range test
             </LinkButton>
           </div>

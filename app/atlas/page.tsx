@@ -223,7 +223,7 @@ export default function AtlasPage() {
             </Link>
             . Pro unlocks the chapter text, the entry notes and the PDF, and
             the{" "}
-            <Link href="/range" className="text-violet-ink hover:underline">
+            <Link href="/range?mode=range" className="text-violet-ink hover:underline">
               range test
             </Link>{" "}
             gives you your own numbers to read it with.

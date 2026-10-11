@@ -247,7 +247,7 @@ export default function VocalRangeByVoiceTypePage() {
       title="Vocal range by voice type: what range does a tenor, soprano or bass sing?"
       subtitle={`A tenor's conventional range is ${row("Tenor").band}, a soprano's ${row("Soprano").band} and a bass's ${row("Bass").band}. Below are all eight voice types, the passaggio zone where each one changes gear, and singers whose cited ranges sit there.`}
       actions={
-        <LinkButton href="/range" size="md">
+        <LinkButton href="/range?mode=range" size="md">
           Test your own range
         </LinkButton>
       }
@@ -440,7 +440,7 @@ export default function VocalRangeByVoiceTypePage() {
               a teacher. Free.
             </li>
             <li>
-              <Link href="/range" className="text-violet-ink hover:underline">
+              <Link href="/range?mode=range" className="text-violet-ink hover:underline">
                 The free range test
               </Link>{" "}
               — about two minutes in the browser gives you your own two numbers to

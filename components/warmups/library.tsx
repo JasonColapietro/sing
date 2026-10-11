@@ -70,7 +70,7 @@ export function RangePrompt({ progress }: { progress: ProgressState }) {
             auto-fit your voice.
           </p>
         </div>
-        <LinkButton href="/range" variant="outline" size="sm">
+        <LinkButton href="/range?mode=range" variant="outline" size="sm">
           Take the range test
         </LinkButton>
       </div>

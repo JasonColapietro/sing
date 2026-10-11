@@ -249,7 +249,7 @@ export const WARMUPS_GUIDE: GuideContent = {
       note: "Build the support the warmup assumes.",
     },
     {
-      href: "/range",
+      href: "/range?mode=range",
       label: "Range test",
       note: "Test warm for a number that reflects your real range.",
     },
@@ -566,7 +566,7 @@ export const SONGS_GUIDE: GuideContent = {
   ],
   related: [
     {
-      href: "/range",
+      href: "/range?mode=range",
       label: "Range test",
       note: "Set your range so songs transpose into the right key.",
     },
@@ -905,7 +905,7 @@ export const STUDIO_GUIDE: GuideContent = {
       note: "Fix the target if you can't hear it, not just the production.",
     },
     {
-      href: "/range",
+      href: "/range?mode=range",
       label: "Range test",
       note: "Find the edges the studio helps you strengthen.",
     },
@@ -1018,7 +1018,7 @@ export const ANALYZE_GUIDE: GuideContent = {
       note: "Record the take, then come back and look at it.",
     },
     {
-      href: "/range",
+      href: "/range?mode=range",
       label: "Range test",
       note: "Find the register transitions the spectrogram shows.",
     },

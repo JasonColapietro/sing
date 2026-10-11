@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_PROGRESS, type ProgressState, type SessionLog } from "./progress-shape";
 import {
   CAPPED_TYPES,
@@ -7,7 +7,9 @@ import {
   freeSecondsLeft,
   guidedSecondsToday,
   isCapped,
+  subscribePracticeDay,
 } from "./free-cap";
+import { localDay } from "./progress";
 
 const DAY = "2026-09-03";
 
@@ -67,5 +69,60 @@ describe("free daily cap", () => {
     expect(formatClock(0)).toBe("0:00");
     expect(formatClock(130)).toBe("2:10");
     expect(formatClock(180)).toBe("3:00");
+  });
+});
+
+describe("daily allowance rollover", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  function observeAllowance() {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 8, 3, 23, 59, 45));
+    const visibility = new EventTarget();
+    const document = Object.assign(visibility, { visibilityState: "visible" });
+    vi.stubGlobal("window", { setTimeout, clearTimeout });
+    vi.stubGlobal("document", document);
+    const progress = state(session("warmup", FREE_DAILY_SEC, localDay()));
+    let capped = isCapped(progress, false);
+    const changes: boolean[] = [];
+    const unsubscribe = subscribePracticeDay(() => {
+      capped = isCapped(progress, false);
+      changes.push(capped);
+    });
+    return { document, unsubscribe, changes, capped: () => capped };
+  }
+
+  it("restores the allowance at local midnight without a new session or reload", () => {
+    const observed = observeAllowance();
+    expect(observed.capped()).toBe(true);
+    vi.advanceTimersByTime(14_999);
+    expect(observed.capped()).toBe(true);
+    vi.advanceTimersByTime(1);
+    expect(observed.capped()).toBe(false);
+    observed.unsubscribe();
+  });
+
+  it("refreshes on return to a tab whose timers were suspended overnight", () => {
+    const observed = observeAllowance();
+    observed.document.visibilityState = "hidden";
+    vi.setSystemTime(new Date(2026, 8, 4, 9));
+    observed.document.dispatchEvent(new Event("visibilitychange"));
+    expect(observed.capped()).toBe(true);
+    observed.document.visibilityState = "visible";
+    observed.document.dispatchEvent(new Event("visibilitychange"));
+    expect(observed.capped()).toBe(false);
+    observed.unsubscribe();
+  });
+
+  it("removes its timer and visibility listener when the room closes", () => {
+    const observed = observeAllowance();
+    observed.unsubscribe();
+    vi.advanceTimersByTime(60_000);
+    observed.document.dispatchEvent(new Event("visibilitychange"));
+    expect(observed.changes).toEqual([]);
+    expect(vi.getTimerCount()).toBe(0);
   });
 });

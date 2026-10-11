@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 const route = vi.hoisted(() => ({ pathname: "/learn" }));
 vi.mock("next/navigation", () => ({ usePathname: () => route.pathname }));
@@ -7,7 +7,26 @@ vi.mock("@/lib/use-account-auth", () => ({
   useAccountAuth: () => ({ isLoaded: false, isSignedIn: false }),
 }));
 
-import Nav from "./nav";
+import Nav, { streakChipState } from "./nav";
+
+const originalTz = process.env.TZ;
+afterEach(() => {
+  if (originalTz === undefined) delete process.env.TZ;
+  else process.env.TZ = originalTz;
+});
+
+describe("practice streak calendar days", () => {
+  it("keeps yesterday's streak alive after a short daylight-saving day", () => {
+    process.env.TZ = "America/New_York";
+    expect(streakChipState({ current: 7, lastDay: "2026-03-08" }, new Date(2026, 2, 9, 0, 30))).toBe("at-risk");
+  });
+
+  it("keeps yesterday distinct from today and older days after a long daylight-saving day", () => {
+    process.env.TZ = "America/New_York";
+    expect(streakChipState({ current: 7, lastDay: "2026-10-31" }, new Date(2026, 10, 1, 23, 30))).toBe("at-risk");
+    expect(streakChipState({ current: 7, lastDay: "2026-10-30" }, new Date(2026, 10, 1, 23, 30))).toBe("none");
+  });
+});
 
 /** The <nav> landmarks Nav renders closed: the header row and the phone tab bar. */
 const LANDMARKS = ["Main", "Tabs"] as const;

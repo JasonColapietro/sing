@@ -261,7 +261,9 @@ export function streakChipState(
 ): StreakChipState {
   if (streak.current <= 0 || !streak.lastDay) return "none";
   if (streak.lastDay === localDay(now)) return "banked";
-  const yesterday = localDay(new Date(now.getTime() - 24 * 3600 * 1000));
+  const previousDay = new Date(now);
+  previousDay.setDate(previousDay.getDate() - 1);
+  const yesterday = localDay(previousDay);
   return streak.lastDay === yesterday ? "at-risk" : "none";
 }
 

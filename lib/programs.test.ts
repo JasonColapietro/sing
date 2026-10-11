@@ -297,7 +297,7 @@ describe("program data", () => {
     expect(itemHref({ kind: "exercise", id: "vibrato-hold", reps: 4 })).toBe("/warmups?exercise=vibrato-hold");
     expect(itemHref({ kind: "breath", id: "daily" })).toBe("/breath?routine=daily");
     expect(itemHref({ kind: "drill", id: "sustain" })).toBe("/breath?drill=sustain");
-    expect(itemHref({ kind: "range" })).toBe("/range");
+    expect(itemHref({ kind: "range" })).toBe("/range?mode=range");
     expect(itemHref({ kind: "recorder" })).toBe("/recorder");
     expect(itemHref({ kind: "song", slug: "ode-to-joy" })).toBe("/songs?song=ode-to-joy");
   });

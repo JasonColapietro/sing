@@ -740,7 +740,7 @@ export function ProgressClient() {
                     <LinkButton href="/studio" variant="rec">
                       Open the studio
                     </LinkButton>
-                    <LinkButton href="/range" variant="outline">
+                    <LinkButton href="/range?mode=range" variant="outline">
                       Find your range
                     </LinkButton>
                     <LinkButton href="/warmups" variant="outline">
