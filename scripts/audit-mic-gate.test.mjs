@@ -7,12 +7,12 @@ const exec = promisify(execFile);
 const auditFile = fileURLToPath(new URL("./audit-mic-gate.mjs", import.meta.url));
 
 /** Run the real CLI against the current room structure, without a browser install. */
-async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = false } = {}) {
+async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = false, wrongContinue = false } = {}) {
   const browserModule = `
-    const settings = ${JSON.stringify({ rows, broken, alerts, missingAlert })};
+    const settings = ${JSON.stringify({ rows, broken, alerts, missingAlert, wrongContinue })};
     const rowSelector = 'main li > button[aria-describedby~="practice-mic-note"]';
     function page() {
-      let url = '', shown = false, ready = false;
+      let url = '', shown = false, ready = false, source = '';
       const pageWindow = {};
       const locator = (kind, index = 0) => ({
         first() { return this; }, last() { return locator(kind, settings.rows - 1); },
@@ -23,18 +23,21 @@ async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = f
         count: async () => kind === 'rows' ? settings.rows : kind === 'alert' ? (shown ? settings.alerts : 0) : 1,
         boundingBox: async () => ({ x: 0, y: kind === 'alert' ? 156 : 100, width: 400, height: kind === 'alert' ? 20 : 56 }),
         scrollIntoViewIfNeeded: async () => {},
-        click: async () => { shown = !pageWindow.__micAuditAllow && !settings.missingAlert; ready = !!pageWindow.__micAuditAllow; },
+        click: async () => { source = kind; shown = !pageWindow.__micAuditAllow && !settings.missingAlert; ready = !!pageWindow.__micAuditAllow; },
         waitFor: async () => {
           if ((kind === 'alert' && !shown) || (kind === 'ready' && !ready)) throw new Error('element missing');
         },
-        evaluate: async (fn) => fn({ parentElement: { querySelector: (selector) => selector === '#practice-mic-note' ? {} : null } }),
+        evaluate: async (fn) => fn({ parentElement: {
+          querySelector: (selector) => selector === '#practice-mic-note' ? {} : null,
+          textContent: source === 'continue' && !settings.wrongContinue ? 'Continue your path' : '',
+        } }),
       });
       return {
         goto: async (next) => { if (settings.broken) throw new Error('fixture navigation failure'); url = next; shown = false; ready = false; console.log('VISIT ' + next); },
         locator: (selector) => locator(selector === rowSelector ? 'rows' : selector === 'main [role="alert"]' ? 'alert' : 'unknown'),
         getByRole: (_role, { name }) => {
           if (['Start free range test', 'Retake test'].includes(name) && !url.includes('/range?mode=range')) throw new Error('range mode is not open');
-          return locator(name === 'Start recording' ? 'ready' : 'control');
+          return locator(name === 'Start recording' ? 'ready' : name === 'Enable mic and start' ? 'continue' : 'control');
         },
         waitForTimeout: async () => {},
         evaluate: async (fn) => { const previous = globalThis.window; globalThis.window = pageWindow; try { return fn(); } finally { globalThis.window = previous; } },
@@ -74,7 +77,16 @@ describe('microphone audit CLI', () => {
     expect(result.stdout).toContain('"executablePath":"/fixture/chromium"');
     expect(result.stdout).toContain('2 exercise rows');
     expect(result.stdout).toContain('http://127.0.0.1:3100/range?mode=range');
+    expect(result.stdout).toContain('  ok  default pitch meter (Start singing)');
     expect(result.stdout).toContain('recorder retry opens the record deck');
+    expect(result.stdout).toContain('  ok  continue-card refusal stays in the card, not its matching path row');
+    expect(result.stdout).toContain('BROWSER_CLOSED');
+  });
+
+  it('fails when the continue-card refusal lands in its matching path row', async () => {
+    const result = await runAudit({ wrongContinue: true });
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain('FAIL  continue-card refusal stays in the card, not its matching path row');
     expect(result.stdout).toContain('BROWSER_CLOSED');
   });
 

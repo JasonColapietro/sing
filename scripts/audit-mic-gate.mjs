@@ -171,7 +171,7 @@ console.log("\n/warmups — the gate card's own button");
   await ctx.close();
 }
 
-console.log("\n/warmups — switching between the two sources");
+console.log("\n/warmups — switching between path, continue card and gate sources");
 {
   const { ctx, page } = await freshPage();
   await page.goto(`${BASE}/warmups`, { waitUntil: "networkidle" });
@@ -182,25 +182,32 @@ console.log("\n/warmups — switching between the two sources");
     ["last row", rows.last()],
     ["gate button", page.getByRole("button", { name: "Enable microphone" })],
     ["first row", rows.first()],
+    ["continue card", page.getByRole("button", { name: "Enable mic and start", exact: true }).first()],
     ["that row again", rows.first()],
   ] : [];
   for (const [label, control] of sequence) {
     const r = await pressAndMeasure(page, control);
     check(`after ${label}: one alert, on screen`, r.count === 1 && r.onScreen,
       describe(r));
+    if (label === "continue card") {
+      const inContinueCard = r.count === 1 && await page.locator(ALERT).evaluate((el) =>
+        el.parentElement?.textContent?.includes("Continue your path") ?? false);
+      check("continue-card refusal stays in the card, not its matching path row", inContinueCard);
+    }
   }
   await ctx.close();
 }
 
 /* --------------------------------------------------------------- /range */
 
-console.log("\n/range — both of its start buttons");
-for (const [label, name, init] of [
-  ["cold visitor", "Start free range test", ""],
-  ["saved range", "Retake test", SAVED_RANGE],
+console.log("\n/range — pitch meter and both range-test start buttons");
+for (const [label, path, name, init] of [
+  ["default pitch meter", "/range", "Start singing", ""],
+  ["cold visitor", "/range?mode=range", "Start free range test", ""],
+  ["saved range", "/range?mode=range", "Retake test", SAVED_RANGE],
 ]) {
   const { ctx, page } = await freshPage(init);
-  await page.goto(`${BASE}/range?mode=range`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}${path}`, { waitUntil: "networkidle" });
   const r = await pressAndMeasure(page, page.getByRole("button", { name }).first());
   check(`${label} (${name})`, r.count === 1 && r.onScreen,
     describeFromPressed(r));

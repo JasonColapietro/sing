@@ -48,6 +48,7 @@ function canStartRoutine(r: Routine): boolean {
 /** Where a mic failure has to be shown: the one control the singer pressed. */
 type ErrorAt =
   | { kind: "gate" }
+  | { kind: "continue" }
   | { kind: "today" }
   | { kind: "routine"; id: string }
   | { kind: "exercise"; id: string }
@@ -180,14 +181,16 @@ export function WarmupsClient() {
   // the singer was actually looking.
   const [errorAt, setErrorAt] = useState<ErrorAt>({ kind: "gate" });
 
-  async function selectExercise(ex: WarmupExercise) {
+  async function selectExercise(ex: WarmupExercise, from: "path" | "continue" = "path") {
     if (cap.capped) return;
     if (pitch.listening) {
       startExercise(ex);
       return;
     }
     setPending({ kind: "exercise", ex });
-    setErrorAt({ kind: "exercise", id: ex.id });
+    // The next exercise also appears in the catalogue. Its two controls need
+    // separate error destinations so only the pressed one announces and scrolls.
+    setErrorAt(from === "continue" ? { kind: "continue" } : { kind: "exercise", id: ex.id });
     const ok = await pitch.start();
     if (!ok) setPending(null);
   }
@@ -303,11 +306,11 @@ export function WarmupsClient() {
               streakDays={progress.streak.current}
               title={nextExercise.title}
               tagline="The next exercise in your lowest unfinished tier. You can still choose any exercise below."
-              onStart={() => void selectExercise(nextExercise)}
+              onStart={() => void selectExercise(nextExercise, "continue")}
               startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start exercise" : "Enable mic and start"}
               micReady={pitch.listening}
               unavailableReason={unavailableReason}
-              error={errorAt.kind === "exercise" && errorAt.id === nextExercise.id ? pitch.error : null}
+              error={errorAt.kind === "continue" ? pitch.error : null}
             />
           )}
           {/* today is null until mount (the plan is seeded by the viewer's
