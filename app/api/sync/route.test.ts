@@ -106,4 +106,28 @@ describe("POST /api/sync", () => {
       updatedAt: null,
     });
   });
+
+  it.each([
+    ["subscription", "cus_annual", "sub_gone", "retrieveSubscription"],
+    ["lifetime payment", "cus_lifetime", "pi_gone", "retrievePaymentIntent"],
+  ] as const)(
+    "answers 403 and caches 'no' when Stripe no longer has the %s",
+    async (_label, customerId, billingId, retrieve) => {
+      dependencies[retrieve].mockRejectedValue(
+        Object.assign(new Error("No such object"), {
+          type: "StripeInvalidRequestError",
+          code: "resource_missing",
+        }),
+      );
+      const key = mintProKey(customerId, billingId);
+
+      const first = await request({ key });
+      expect(first.status).toBe(403);
+      expect(dependencies.store.get(`sync:ent:${billingId}`)).toBe("no");
+
+      const second = await request({ key });
+      expect(second.status).toBe(403);
+      expect(dependencies[retrieve]).toHaveBeenCalledTimes(1);
+    },
+  );
 });
