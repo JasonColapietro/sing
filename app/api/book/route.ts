@@ -116,7 +116,8 @@ export async function POST(request: Request) {
     if (
       typeof error === "object" &&
       error !== null &&
-      (error as { type?: string }).type === "StripeInvalidRequestError"
+      (error as { type?: string }).type === "StripeInvalidRequestError" &&
+      (error as { code?: string }).code === "resource_missing"
     ) {
       return NextResponse.json(
         { error: "Suede Pro is required to read this." },
