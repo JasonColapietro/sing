@@ -72,12 +72,6 @@ export function midiToFlatLabel(midi: number): string {
   return `${FLAT_NAMES[((midi % 12) + 12) % 12]}${midiToOctave(midi)}`;
 }
 
-/** The flat spelling only when it differs from the sharp one, else null. */
-export function altSpelling(midi: number): string | null {
-  const flat = midiToFlatLabel(midi);
-  return flat === midiToLabel(midi) ? null : flat;
-}
-
 const LABEL_RE = /^([A-Ga-g])([#b♯♭]?)(-?\d)$/;
 const LETTER_PC: Record<string, number> = {
   C: 0,

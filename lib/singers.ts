@@ -53,26 +53,6 @@ export function relatedSingers(s: Singer, count = 6): Singer[] {
     .map((x) => x.o);
 }
 
-/** Percent (0–100) of the library whose cited span is narrower than this singer's. */
-export function spanPercentile(s: Singer): number {
-  const span = s.highMidi - s.lowMidi;
-  const narrower = SINGERS.filter(
-    (o) => o.highMidi - o.lowMidi < span,
-  ).length;
-  return Math.round((narrower / SINGERS.length) * 100);
-}
-
-/**
- * Whether a "wider than N% of the library" line is worth printing. At the
- * extremes the rounded percentile states something false — the narrowest
- * singers tie rather than being beaten by nobody, and the widest is not wider
- * than himself — so those pages get no comparison line rather than a wrong one.
- */
-export function hasUsefulPercentile(s: Singer): boolean {
-  const p = spanPercentile(s);
-  return p > 0 && p < 100;
-}
-
 /* ------------------------------------------------------------------ hubs --- */
 
 /** Genres with enough singers to make a page worth having on its own. */
