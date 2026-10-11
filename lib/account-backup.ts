@@ -1,6 +1,11 @@
 "use client";
 
 import { getState, mergeRemoteProgress, type ProgressState } from "./progress";
+import {
+  assertProgressCloudGeneration,
+  captureProgressCloudGeneration,
+  requireProgressCloudGeneration,
+} from "./progress-cloud";
 
 /**
  * Client for the free account backup (/api/account/progress).
@@ -96,11 +101,19 @@ export function fetchBackup(): Promise<RemoteBackup> {
 
 /** Push the current local record. Resolves with the server's save time. */
 export async function backupNow(): Promise<string> {
+  return pushBackup(requireProgressCloudGeneration());
+}
+
+async function pushBackup(generation: string): Promise<string> {
+  assertProgressCloudGeneration(generation);
+  const state = getState();
+  assertProgressCloudGeneration(generation);
   const { savedAt } = await call<{ ok: boolean; savedAt: string }>({
     method: "PUT",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ state: getState(), updatedAt: new Date().toISOString() }),
+    body: JSON.stringify({ state, updatedAt: new Date().toISOString() }),
   });
+  assertProgressCloudGeneration(generation);
   markBackedUp(savedAt);
   return savedAt;
 }
@@ -114,9 +127,17 @@ export async function backupNow(): Promise<string> {
  * can add work but never remove it.
  */
 export async function restoreBackup(): Promise<boolean> {
+  return pullBackup(requireProgressCloudGeneration());
+}
+
+async function pullBackup(generation: string): Promise<boolean> {
+  assertProgressCloudGeneration(generation);
   const remote = await fetchBackup();
+  assertProgressCloudGeneration(generation);
   if (!remote.state) return false;
   mergeRemoteProgress(remote.state);
+  // A subscriber can synchronously erase during the merge's emit().
+  assertProgressCloudGeneration(generation);
   return true;
 }
 
@@ -129,8 +150,10 @@ export async function restoreBackup(): Promise<boolean> {
  * backed up too, rather than being the thing the next restore quietly loses.
  */
 export async function reconcileBackup(): Promise<{ restored: boolean }> {
-  const restored = await restoreBackup();
-  await backupNow();
+  const generation = requireProgressCloudGeneration();
+  const restored = await pullBackup(generation);
+  await pushBackup(generation);
+  assertProgressCloudGeneration(generation);
   return { restored };
 }
 
@@ -161,6 +184,7 @@ export async function reconcileBackup(): Promise<{ restored: boolean }> {
  * the snapshot honest about every device that has fed it.
  */
 export async function maybeBackup(): Promise<void> {
+  if (captureProgressCloudGeneration() === null) return;
   const last = lastBackupAt();
   if (last && Date.now() - Date.parse(last) < BACKUP_MIN_INTERVAL_MS) return;
   try {

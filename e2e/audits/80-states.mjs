@@ -31,9 +31,10 @@ export function appliesTo() {
 }
 
 // Confirmed against source, not guessed: every one of the eight rooms shows
-// one of these two strings on a cold `!listening` mount (studio, warmups,
+// one of these strings on a cold `!listening` mount (studio, warmups,
 // songs, recorder, analyze and breath all say "Enable microphone"; range
-// says "Start free range test"). ear-training shows neither until a mic-based
+// says "Start singing" in pitch mode or "Start free range test" in range
+// mode). ear-training shows neither until a mic-based
 // game is opened — see openEarTrainingGame below.
 //
 // /warmups and /range can each start the mic from more than one card: every
@@ -47,7 +48,7 @@ export function appliesTo() {
 // alert-detection below queries the live DOM for wherever role="alert"
 // actually lands, rather than assuming a fixed position, so it stays correct
 // no matter which of a room's cards triggered the failure.
-const MIC_START_RE = /enable microphone|start free range test/i;
+const MIC_START_RE = /enable microphone|start singing|start free range test/i;
 
 // Every string lib/audio/mic.ts's micErrorMessage() can return contains one
 // of these action phrases ("try again", "Plug one in", "Pick a different

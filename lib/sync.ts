@@ -2,6 +2,12 @@
 
 import { getProState } from "./pro";
 import { getState, mergeRemoteProgress, subscribe } from "./progress";
+import {
+  assertProgressCloudGeneration,
+  captureProgressCloudGeneration,
+  requireProgressCloudGeneration,
+  subscribeProgressCloud,
+} from "./progress-cloud";
 
 /**
  * Cloud sync client. Pull-merge-push against /api/sync, authenticated by
@@ -54,10 +60,12 @@ function proKeyOrNull(): string | null {
 
 /** Full pull → merge → push round trip. Throws with a readable message. */
 export async function syncNow(): Promise<{ mergedRemote: boolean }> {
+  const generation = requireProgressCloudGeneration();
   const key = proKeyOrNull();
   if (!key) throw new Error("Cloud sync needs an active Pro subscription.");
 
   const remote = await post<{ state: unknown }>({ key });
+  assertProgressCloudGeneration(generation);
   const hadRemote = remote.state !== null && remote.state !== undefined;
   if (hadRemote) {
     applyingRemote = true;
@@ -68,11 +76,15 @@ export async function syncNow(): Promise<{ mergedRemote: boolean }> {
     }
   }
 
+  assertProgressCloudGeneration(generation);
+  const state = getState();
+  assertProgressCloudGeneration(generation);
   await post<{ ok: boolean }>({
     key,
-    state: getState(),
+    state,
     updatedAt: new Date().toISOString(),
   });
+  assertProgressCloudGeneration(generation);
   markSynced();
   return { mergedRemote: hadRemote };
 }
@@ -98,27 +110,12 @@ export async function syncNow(): Promise<{ mergedRemote: boolean }> {
  */
 async function pushOnly(): Promise<void> {
   const key = proKeyOrNull();
-  if (!key) return;
+  if (!key || captureProgressCloudGeneration() === null) return;
 
   // A failed pull must not become a blind push — that is the exact overwrite
   // this function exists to avoid. Let it throw; the caller swallows it and the
   // next practice write tries again.
-  const remote = await post<{ state: unknown }>({ key });
-  if (remote.state !== null && remote.state !== undefined) {
-    applyingRemote = true;
-    try {
-      mergeRemoteProgress(remote.state);
-    } finally {
-      applyingRemote = false;
-    }
-  }
-
-  await post<{ ok: boolean }>({
-    key,
-    state: getState(),
-    updatedAt: new Date().toISOString(),
-  });
-  markSynced();
+  await syncNow();
 }
 
 /**
@@ -131,11 +128,26 @@ export function startAutoSync(): void {
   if (!key) return;
 
   const last = lastSyncedAt();
-  if (!last || Date.now() - Date.parse(last) > AUTO_SYNC_AFTER_MS) {
+  if (captureProgressCloudGeneration() !== null &&
+      (!last || Date.now() - Date.parse(last) > AUTO_SYNC_AFTER_MS)) {
     syncNow().catch(() => {});
   }
 
+  const cancelPush = () => {
+    if (pushTimer !== null) window.clearTimeout(pushTimer);
+    pushTimer = null;
+  };
+  subscribeProgressCloud(() => {
+    if (captureProgressCloudGeneration() === null) cancelPush();
+  });
+
+  // Keep this subscription while paused: an explicit resume must allow future
+  // practice to sync without reloading the page.
   subscribe(() => {
+    if (captureProgressCloudGeneration() === null) {
+      cancelPush();
+      return;
+    }
     if (applyingRemote || !proKeyOrNull()) return;
     if (pushTimer !== null) window.clearTimeout(pushTimer);
     pushTimer = window.setTimeout(() => {

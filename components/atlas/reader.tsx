@@ -192,7 +192,7 @@ export function AtlasChapterNav({ slug }: { slug: string }) {
       : null;
 
   return (
-    <nav className="flex items-center justify-between gap-4">
+    <nav aria-label="Atlas chapters" className="flex items-center justify-between gap-4">
       {prev ? (
         <Link
           href={`/atlas/${prev.slug}`}

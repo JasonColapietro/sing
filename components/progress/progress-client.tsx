@@ -34,7 +34,8 @@ import { streakChipState } from "@/components/nav";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { useIsPro } from "@/lib/pro";
 import { aggregateNotes } from "@/lib/analytics";
-import { lastSyncedAt, syncNow } from "@/lib/sync";
+import { SyncControls } from "./sync-controls";
+import { useProgressCloudState } from "@/lib/progress-cloud";
 import { NoteAccuracyChart, RangeHistoryChart } from "./pro-charts";
 import { PracticeCalendar } from "./calendar";
 import { MinutesBarChart, PracticeMixChart, ScoreTrendChart } from "./charts";
@@ -419,80 +420,10 @@ function SessionLogTable({
 /* Data controls                                                       */
 /* ------------------------------------------------------------------ */
 
-function SyncControls() {
-  const [notice, setNotice] = useState<
-    { kind: "ok" | "err"; text: string } | null
-  >(null);
-  const [working, setWorking] = useState(false);
-  const [lastSync, setLastSync] = useState<string | null>(null);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reads localStorage, so it can only run after hydration
-    setLastSync(lastSyncedAt());
-  }, []);
-
-  const runSync = async () => {
-    setWorking(true);
-    setNotice(null);
-    try {
-      const { mergedRemote } = await syncNow();
-      setLastSync(lastSyncedAt());
-      setNotice({
-        kind: "ok",
-        text: mergedRemote
-          ? "Synced — progress from your other devices is merged in."
-          : "Synced — this device's progress is backed up.",
-      });
-    } catch (error) {
-      setNotice({
-        kind: "err",
-        text:
-          error instanceof Error && error.message
-            ? error.message
-            : "Sync failed. Try again in a moment.",
-      });
-    } finally {
-      setWorking(false);
-    }
-  };
-
-  const lastLabel = lastSync
-    ? new Date(lastSync).toLocaleString(undefined, {
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-      })
-    : null;
-
-  return (
-    <div className="mt-3">
-      <div className="flex flex-wrap items-center gap-2.5">
-        <Button variant="outline" size="sm" onClick={runSync} disabled={working}>
-          {working ? "Syncing…" : "Sync now"}
-        </Button>
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          {lastLabel ? `Last synced ${lastLabel}` : "Syncs automatically as you practice"}
-        </span>
-      </div>
-      {notice && (
-        <p
-          className={
-            notice.kind === "ok"
-              ? "mt-3 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok-ink"
-              : "mt-3 rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-xs text-rec"
-          }
-          role="status"
-        >
-          {notice.text}
-        </p>
-      )}
-    </div>
-  );
-}
 
 function DataControls() {
   const isPro = useIsPro();
+  const { paused } = useProgressCloudState();
   const { isLoaded, isSignedIn } = useAccountAuth();
   // Pro's own sync supersedes the account snapshot, so a Pro member is shown
   // the sync controls and never both. Nothing waits on Clerk: while it is
@@ -555,7 +486,9 @@ function DataControls() {
       <Card>
         <h2 className="text-lg">Backup &amp; transfer</h2>
         <p className="mt-1.5 text-sm text-mut">
-          {isPro
+          {paused
+            ? "Progress is saved in this browser. Automatic backup and cloud sync are paused here. Export a copy to keep a separate backup."
+            : isPro
             ? "Progress syncs to the cloud automatically and follows your Pro key to any device. Export still works if you want a file of your own."
             : accountBackup
               ? "Your account keeps a copy of this record, so clearing this browser doesn't put you back at zero. Export still works if you want a file of your own."
@@ -607,18 +540,21 @@ function DataControls() {
       <Card className="border-rec/30">
         <h2 className="text-lg text-rec">Danger zone</h2>
         <p className="mt-1.5 text-sm text-mut">
-          Permanently erase all XP, sessions, streaks, range data, and
-          achievements from this browser. This can&apos;t be undone — export a
-          backup first if you want one.
+          Erase XP, sessions, streaks, range data, and achievements from this
+          browser. Export a backup first if you want one. This also pauses
+          automatic backup and cloud sync here, so saved progress stays erased
+          until you choose to restore it. Cloud copies, other devices, and
+          recordings are kept.
         </p>
-        {erased ? (
+        {erased && paused && (
           <p
             className="mt-4 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok-ink"
             role="status"
           >
-            Progress erased. Your dashboard has been reset.
+            Progress erased from this browser. Automatic backup and cloud sync
+            are paused here.
           </p>
-        ) : (
+        )}
           <div className="mt-4 flex flex-wrap items-center gap-2.5">
             <label className="sr-only" htmlFor="erase-confirm">
               Type &quot;erase&quot; to confirm
@@ -637,10 +573,9 @@ function DataControls() {
               disabled={confirmText.trim().toLowerCase() !== "erase"}
               onClick={handleErase}
             >
-              Erase everything
+              Erase browser progress
             </Button>
           </div>
-        )}
       </Card>
     </div>
   );

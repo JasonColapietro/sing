@@ -112,9 +112,17 @@ async function main() {
     process.exit(2);
   }
 
-  const templateRoutes = await discoverTemplateRoutes(BASE).catch(() => []);
+  const templateRoutes = await discoverTemplateRoutes(BASE);
   let routes = [...ROUTES, ...templateRoutes];
-  if (ROUTE_FILTER) routes = routes.filter((r) => ROUTE_FILTER.includes(r.name));
+  if (ROUTE_FILTER) {
+    const known = new Set(routes.map((route) => route.name));
+    const unknown = ROUTE_FILTER.filter((name) => !known.has(name));
+    if (ROUTE_FILTER.length === 0 || unknown.length > 0) {
+      console.error(`unknown route filter: ${unknown.join(", ") || "(empty)"}; known: ${[...known].join(", ")}`);
+      process.exit(2);
+    }
+    routes = routes.filter((r) => ROUTE_FILTER.includes(r.name));
+  }
 
   const viewports = VIEWPORT_FILTER
     ? VIEWPORTS.filter((v) => VIEWPORT_FILTER.includes(v.name))
@@ -201,7 +209,9 @@ async function main() {
   if (JSON_OUT) await writeFile(JSON_OUT, JSON.stringify({ findings, errors }, null, 2));
 
   const blocking = findings.filter((f) => f.severity === "blocker" || f.severity === "major");
-  process.exit(blocking.length > 0 ? 1 : 0);
+  // An incomplete audit cannot certify the site just because the checks that
+  // never ran produced no findings. Keep rig failures distinct from defects.
+  process.exit(errors.length > 0 ? 2 : blocking.length > 0 ? 1 : 0);
 }
 
 /**

@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useAccountAuth } from "@/lib/use-account-auth";
 import { Button } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
+import { resumeProgressCloud, useProgressCloudState } from "@/lib/progress-cloud";
 import {
-  BackupError,
   lastBackupAt,
   maybeBackup,
   reconcileBackup,
@@ -95,6 +95,7 @@ export function AccountBackupSync() {
  * is a snapshot the singer can take and pull back, not a live mirror.
  */
 export function AccountBackupControls() {
+  const { paused } = useProgressCloudState();
   const [notice, setNotice] = useState<
     { kind: "ok" | "err"; text: string } | null
   >(null);
@@ -110,10 +111,11 @@ export function AccountBackupControls() {
   // hook order between deployments that have real keys and ones that do not.
   if (!accountsReady()) return null;
 
-  const run = async (kind: "backup" | "restore") => {
+  const run = async (kind: "backup" | "restore", resume = false) => {
     setWorking(kind);
     setNotice(null);
     try {
+      if (resume) resumeProgressCloud();
       if (kind === "backup") {
         // Another device may have backed up since this browser last loaded.
         // Merge that record before writing so a manual backup keeps both.
@@ -138,7 +140,7 @@ export function AccountBackupControls() {
       setNotice({
         kind: "err",
         text:
-          error instanceof BackupError && error.message
+          error instanceof Error && error.message
             ? error.message
             : "Backup failed. Try again in a moment.",
       });
@@ -158,32 +160,44 @@ export function AccountBackupControls() {
 
   return (
     <div>
+      {paused && (
+        <p className="mb-3 text-sm text-mut">
+          Backup is paused on this browser. Your account copy is still saved.
+          Resuming restores your saved account progress and merges any new practice.
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-2.5">
         <Button
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => void run("backup")}
+          onClick={() => void run(paused ? "restore" : "backup", paused)}
           disabled={working !== null}
         >
-          {working === "backup" ? "Backing up…" : "Back up now"}
+          {working === "backup"
+            ? "Backing up…"
+            : working === "restore"
+              ? "Restoring…"
+              : paused ? "Resume backup and restore" : "Back up now"}
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => void run("restore")}
-          disabled={working !== null}
-        >
-          {working === "restore" ? "Restoring…" : "Restore from account"}
-        </Button>
+        {!paused && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => void run("restore")}
+            disabled={working !== null}
+          >
+            {working === "restore" ? "Restoring…" : "Restore from account"}
+          </Button>
+        )}
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          {lastLabel
+          {paused ? "Paused on this browser" : lastLabel
             ? `Last backed up ${lastLabel}`
             : "Backs up in the background"}
         </span>
       </div>
-      {notice && (
+      {notice && !paused && (
         <p
           className={
             notice.kind === "ok"
