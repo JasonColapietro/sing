@@ -92,4 +92,18 @@ describe("POST /api/sync", () => {
       updatedAt: "2026-08-23T00:00:00.000Z",
     });
   });
+
+  it("does not store an unbounded updatedAt past the state size cap", async () => {
+    const key = mintProKey("cus_lifetime", "pi_lifetime");
+    const push = await request({
+      key,
+      state: { xp: 1 },
+      updatedAt: "x".repeat(500_000),
+    });
+
+    expect(push.status).toBe(200);
+    expect(dependencies.store.get("sync:state:pi_lifetime")).toMatchObject({
+      updatedAt: null,
+    });
+  });
 });

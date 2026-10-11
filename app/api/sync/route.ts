@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ENTITLING_STATUSES } from "@/lib/pro-shared";
 import { verifyProKey } from "@/lib/pro-key";
+import { isCleanString } from "@/lib/progress-shape";
 import { rateLimit } from "@/lib/rate-limit";
 import { getRedis } from "@/lib/redis";
 import {
@@ -156,7 +157,7 @@ export async function POST(request: Request) {
       }
       const record: StoredSync = {
         state,
-        updatedAt: typeof updatedAt === "string" ? updatedAt : null,
+        updatedAt: isCleanString(updatedAt, 64) ? updatedAt : null,
         savedAt: new Date().toISOString(),
       };
       await redis.set(storeKey, record);
