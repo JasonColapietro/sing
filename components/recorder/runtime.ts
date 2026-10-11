@@ -1,0 +1,116 @@
+import type { TakeRecord, TakesStore } from "./db";
+import { pickMimeType } from "./mime";
+
+type OpenMic = () => Promise<{ stream: MediaStream; error: null } | { stream: null; error: string }>;
+type MicResult = { analyser: AnalyserNode; error: null } | { analyser?: never; error: string } | null;
+
+export function createRecorderMic(open: OpenMic, getContext: () => AudioContext) {
+  let stream: MediaStream | null = null;
+  let source: MediaStreamAudioSourceNode | null = null;
+  let analyser: AnalyserNode | null = null;
+  let pending: Promise<MicResult> | null = null;
+  let disposed = false;
+  const release = () => {
+    stream?.getTracks().forEach((track) => track.stop());
+    stream = null;
+    source?.disconnect();
+    source = null;
+    analyser = null;
+  };
+  return {
+    async start(): Promise<MicResult> {
+      if (disposed) return null;
+      if (analyser) return { analyser, error: null };
+      if (pending) return pending;
+      pending = (async (): Promise<MicResult> => {
+        try {
+          const opened = await open();
+          if (disposed) {
+            opened.stream?.getTracks().forEach((track) => track.stop());
+            return null;
+          }
+          if (!opened.stream) return { error: opened.error };
+          stream = opened.stream;
+          const context = getContext();
+          source = context.createMediaStreamSource(stream);
+          analyser = context.createAnalyser();
+          analyser.fftSize = 2048;
+          source.connect(analyser);
+          return { analyser, error: null };
+        } catch {
+          release();
+          return { error: "The microphone couldn't start. Check your input and try again." };
+        }
+      })();
+      try {
+        return await pending;
+      } finally {
+        pending = null;
+      }
+    },
+    getStream: () => stream,
+    dispose() { disposed = true; release(); },
+  };
+}
+
+export function startRecorder(stream: MediaStream, callbacks: {
+  onData: (blob: Blob) => void;
+  onStop: (mimeType: string) => void;
+  onError: () => void;
+}): { recorder: MediaRecorder; error: null } | { recorder: null; error: string } {
+  let recorder: MediaRecorder | null = null;
+  try {
+    const mime = pickMimeType();
+    const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+    recorder = rec;
+    rec.ondataavailable = (event) => { if (event.data.size) callbacks.onData(event.data); };
+    rec.onstop = () => callbacks.onStop(rec.mimeType || mime || "audio/webm");
+    // MediaRecorder delivers its last dataavailable and stop after error.
+    // Leave these handlers intact so any captured audio remains recoverable.
+    rec.onerror = callbacks.onError;
+    rec.start(1000);
+    return { recorder: rec, error: null };
+  } catch {
+    if (recorder) {
+      recorder.ondataavailable = null;
+      recorder.onstop = null;
+      recorder.onerror = null;
+      if (recorder.state !== "inactive") {
+        try { recorder.stop(); } catch { /* already stopped */ }
+      }
+    }
+    return { recorder: null, error: "Recording couldn't start. Check your microphone and try again." };
+  }
+}
+
+export function createTakeMutations(getStore: () => Promise<TakesStore>) {
+  // A rename/save followed immediately by Delete must commit in that order.
+  // Failed writes reject to the UI but must not block a later retry.
+  const pending = new Map<string, Promise<void>>();
+  const deleting = new Set<string>();
+  const deleted = new Set<string>();
+  const run = (id: string, mutate: (store: TakesStore) => Promise<void>) => {
+    const task = (pending.get(id) ?? Promise.resolve())
+      .catch(() => {})
+      .then(async () => mutate(await getStore()));
+    const settled = task.then(() => {}, () => {});
+    pending.set(id, settled);
+    void settled.then(() => { if (pending.get(id) === settled) pending.delete(id); });
+    return task;
+  };
+  return {
+    put: (take: TakeRecord) => deleting.has(take.id) || deleted.has(take.id)
+      ? Promise.resolve()
+      : run(take.id, (store) => store.put(take)),
+    remove: (id: string) => {
+      deleting.add(id);
+      return run(id, (store) => store.remove(id)).then(() => {
+        deleted.add(id);
+        deleting.delete(id);
+      }, (error) => {
+        deleting.delete(id);
+        throw error;
+      });
+    },
+  };
+}

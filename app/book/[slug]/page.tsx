@@ -93,7 +93,7 @@ export default async function ChapterPage({
             </p>
             <p className="text-sm text-mut">
               The evidence comes from{" "}
-              <Link href={exit.roomPath} className="text-violet-ink hover:underline">
+              <Link href={exit.room === "range" ? "/range?mode=range" : exit.roomPath} className="text-violet-ink hover:underline">
                 {exit.roomLabel}
               </Link>
               , which is where this app measures it.

@@ -326,7 +326,7 @@ export default async function VoiceTypePage({
             ))}
           </div>
           <div className="mt-5">
-            <LinkButton href="/range" variant="outline" size="sm">
+            <LinkButton href="/range?mode=range" variant="outline" size="sm">
               Find out how high you can sing
             </LinkButton>
           </div>

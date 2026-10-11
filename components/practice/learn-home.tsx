@@ -4,7 +4,7 @@ import { useIsPro } from "@/lib/pro";
 import { FREE_DAILY_SEC } from "@/lib/free-cap";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
 import type { ProgressState } from "@/lib/progress";
 import { Button, Card, Pill, SectionLabel } from "@/components/ui";
 import { MicAlert } from "@/components/mic-alert";
@@ -242,6 +242,7 @@ export function ContinueCard({
   stars,
   goal,
   children,
+  unavailableReason,
 }: {
   /** The tape label — "Today's warmup", "Continue learning". */
   kicker: string;
@@ -264,7 +265,10 @@ export function ContinueCard({
   stars?: Stars;
   goal?: { doneSec: number; goalSec: number };
   children?: ReactNode;
+  /** Why starting is unavailable; shown beside the disabled action. */
+  unavailableReason?: string;
 }) {
+  const unavailableId = useId();
   const shown = stepTitles.slice(0, 5);
   const more = stepTitles.length - shown.length;
   return (
@@ -310,9 +314,11 @@ export function ContinueCard({
               </span>
             </div>
           )}
-          <Button variant="rec" size="lg" onClick={onStart} className="w-full sm:w-auto">
+          <Button variant="rec" size="lg" onClick={onStart} className="w-full sm:w-auto"
+            disabled={Boolean(unavailableReason)} aria-describedby={unavailableReason ? unavailableId : undefined}>
             {startLabel ?? (micReady ? "Start" : "Enable mic and start")}
           </Button>
+          {unavailableReason && <p id={unavailableId} className="max-w-xs text-sm text-mut sm:text-right">{unavailableReason}</p>}
           {children}
         </div>
       </div>
@@ -368,6 +374,7 @@ export function levelCompletion(level: PathLevel) {
 export function PathList({
   levels,
   micNoteId = "practice-mic-note",
+  unavailableReason,
 }: {
   levels: PathLevel[];
   /**
@@ -376,10 +383,13 @@ export function PathList({
    * accessibility defect, not a harmless default.
    */
   micNoteId?: string | null;
+  unavailableReason?: string;
 }) {
+  const unavailableId = useId();
   const nextId = nextUpId(levels);
   return (
     <div className="space-y-8">
+      {unavailableReason && <p id={unavailableId} className="text-sm text-mut">{unavailableReason}</p>}
       {levels.map((level) => (
         <section key={level.title}>
           <div className="flex flex-wrap items-center gap-2">
@@ -395,7 +405,8 @@ export function PathList({
           <ul className="mt-3 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel">
             {level.items.map((item) => (
               <li key={item.id}>
-                <PathRow item={item} isNext={item.id === nextId} micNoteId={micNoteId} />
+                <PathRow item={item} isNext={item.id === nextId} micNoteId={micNoteId}
+                  unavailableId={unavailableReason ? unavailableId : undefined} />
                 {item.error && (
                   <MicAlert message={item.error} className="px-4 pb-3 text-sm text-rec" />
                 )}
@@ -425,10 +436,12 @@ function PathRow({
   item,
   isNext,
   micNoteId,
+  unavailableId,
 }: {
   item: PathItem;
   isNext: boolean;
   micNoteId: string | null;
+  unavailableId?: string;
 }) {
   const secondary = item.meta ?? item.desc;
   const body = (
@@ -471,7 +484,7 @@ function PathRow({
   );
 
   const rowClass =
-    "flex min-h-[3.5rem] w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-panel2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet";
+    "flex min-h-[3.5rem] w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-panel2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet";
 
   if (item.locked && item.href) {
     return (
@@ -484,7 +497,8 @@ function PathRow({
     <button
       type="button"
       onClick={item.onSelect}
-      aria-describedby={item.mic && micNoteId ? micNoteId : undefined}
+      disabled={Boolean(unavailableId)}
+      aria-describedby={unavailableId ?? (item.mic && micNoteId ? micNoteId : undefined)}
       className={rowClass}
     >
       {body}

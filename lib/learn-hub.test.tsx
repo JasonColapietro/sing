@@ -38,7 +38,7 @@ describe("/learn vocal training hub", () => {
 
   it("routes every major beginner need to the existing page that owns it", () => {
     for (const href of [
-      "/range",
+      "/range?mode=range",
       "/studio",
       "/warmups",
       "/breath",
@@ -84,7 +84,8 @@ describe("/learn vocal training hub", () => {
     expect(paths.itemListElement).toHaveLength(7);
     for (const path of paths.itemListElement) {
       expect(path.url).toMatch(new RegExp(`^${SITE_URL.replaceAll(".", "\\.")}/`));
-      expect(html).toContain(`href="${new URL(path.url).pathname}"`);
+      const destination = new URL(path.url);
+      expect(html).toContain(`href="${destination.pathname}${destination.search}"`);
     }
   });
 

@@ -243,7 +243,7 @@ export default function ExtensionPage() {
           <a href={APP_STORE_URL}>{APP_NAME}</a>{" "}
           iPhone app, and as a <Link href="/">browser singing studio</Link> that
           needs no install at all, with a{" "}
-          <Link href="/range">free vocal range test</Link> and{" "}
+          <Link href="/range?mode=range">free vocal range test</Link> and{" "}
           <Link href="/studio">live pitch training</Link>.
         </p>
       </section>

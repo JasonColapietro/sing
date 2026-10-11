@@ -115,7 +115,7 @@ function buildPlan(state: ProgressState, now: Date): {
     rangeFirst = true;
     items.push({
       title: "Vocal range test",
-      href: "/range",
+      href: "/range?mode=range",
       minutes: 3,
       reason:
         "You haven't measured your range yet — it anchors every other exercise to your voice.",
@@ -124,7 +124,7 @@ function buildPlan(state: ProgressState, now: Date): {
     rangeFirst = true;
     items.push({
       title: "Retake the range test",
-      href: "/range",
+      href: "/range?mode=range",
       minutes: 3,
       reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test keeps the growth chart honest.`,
     });

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { PitchMeter } from "./pitch-meter";
 import { RangeTest } from "./range-test";
 
-type Mode = "pitch" | "range";
+export type VoiceTestMode = "pitch" | "range";
 
-const MODES: { id: Mode; label: string }[] = [
+const MODES: { id: VoiceTestMode; label: string }[] = [
   { id: "pitch", label: "Pitch" },
   { id: "range", label: "Range test" },
 ];
@@ -14,25 +15,46 @@ const MODES: { id: Mode; label: string }[] = [
 /**
  * The voice test. It opens on a plain pitch measurement; the guided range test
  * is one tap away for anyone who chooses it, and `?mode=range` deep-links
- * straight to it so old links and search snippets about the range test land on
- * the thing they promised.
+ * straight to it. Singer comparison links predate the mode parameter, so a
+ * comparison also opens the range test unless an explicit mode says otherwise.
  */
 export function VoiceTest() {
-  const [mode, setMode] = useState<Mode>("pitch");
+  return (
+    <Suspense fallback={<VoiceTestContent mode="pitch" />}>
+      <VoiceTestFromLocation />
+    </Suspense>
+  );
+}
 
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get("mode");
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- read once from the URL after hydration
-    if (q === "range") setMode("range");
-  }, []);
+export function voiceTestMode(params: Pick<URLSearchParams, "get"> | null): VoiceTestMode {
+  const explicit = params?.get("mode");
+  if (explicit === "pitch" || explicit === "range") return explicit;
+  return params?.get("compare")?.trim() ? "range" : "pitch";
+}
 
-  const choose = (m: Mode) => {
-    setMode(m);
-    const url = new URL(window.location.href);
-    if (m === "range") url.searchParams.set("mode", "range");
-    else url.searchParams.delete("mode");
-    window.history.replaceState(null, "", url);
+/** Keep the singer return path and any other query while changing modes. */
+export function voiceTestModeUrl(href: string, mode: VoiceTestMode): URL {
+  const url = new URL(href);
+  url.searchParams.set("mode", mode);
+  return url;
+}
+
+function VoiceTestFromLocation() {
+  const params = useSearchParams();
+  const mode = voiceTestMode(params);
+  const choose = (next: VoiceTestMode) => {
+    window.history.replaceState(null, "", voiceTestModeUrl(window.location.href, next));
   };
+  return <VoiceTestContent mode={mode} onModeChange={choose} />;
+}
+
+function VoiceTestContent({
+  mode,
+  onModeChange,
+}: {
+  mode: VoiceTestMode;
+  onModeChange?: (mode: VoiceTestMode) => void;
+}) {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
@@ -64,7 +86,8 @@ export function VoiceTest() {
               type="button"
               role="tab"
               aria-selected={mode === m.id}
-              onClick={() => choose(m.id)}
+              onClick={() => onModeChange?.(m.id)}
+              disabled={!onModeChange}
               className={`min-h-11 rounded-full px-5 text-sm font-bold transition-colors ${
                 mode === m.id ? "bg-ink text-bg" : "text-mut hover:text-ink"
               }`}
@@ -74,7 +97,9 @@ export function VoiceTest() {
           ))}
         </div>
       </div>
-      {mode === "pitch" ? <PitchMeter /> : <RangeTest embedded />}
+      {!onModeChange ? (
+        <p className="py-8 text-sm text-mut" role="status">Loading voice tools…</p>
+      ) : mode === "pitch" ? <PitchMeter /> : <RangeTest embedded />}
     </main>
   );
 }

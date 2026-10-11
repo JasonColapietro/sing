@@ -454,7 +454,7 @@ export function SingersDirectory() {
             Your own range can sit on this chart — the test takes two minutes
             and never leaves your device.
           </span>
-          <LinkButton href="/range" size="sm" className="ml-auto">
+          <LinkButton href="/range?mode=range" size="sm" className="ml-auto">
             Find my range
           </LinkButton>
         </div>

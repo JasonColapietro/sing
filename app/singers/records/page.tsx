@@ -220,7 +220,7 @@ export default function RecordsPage() {
             sing — which the range test and the main chart do together.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <LinkButton href="/range" size="sm">
+            <LinkButton href="/range?mode=range" size="sm">
               Find my range
             </LinkButton>
             <LinkButton href="/singers" variant="outline" size="sm">

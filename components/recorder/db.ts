@@ -59,13 +59,19 @@ function run<T>(
 ): Promise<T> {
   return new Promise((resolve, reject) => {
     let req: IDBRequest<T>;
+    let transaction: IDBTransaction;
     try {
-      req = fn(db.transaction(STORE, mode).objectStore(STORE));
+      transaction = db.transaction(STORE, mode);
+      req = fn(transaction.objectStore(STORE));
     } catch (err) {
       reject(err instanceof Error ? err : new Error("IndexedDB transaction failed"));
       return;
     }
-    req.onsuccess = () => resolve(req.result);
+    // A request can succeed before its transaction aborts (for example when
+    // storage fills). Only the transaction's commit makes a take durable.
+    transaction.oncomplete = () => resolve(req.result);
+    transaction.onabort = () => reject(transaction.error ?? new Error("IndexedDB transaction aborted"));
+    transaction.onerror = () => reject(transaction.error ?? req.error ?? new Error("IndexedDB transaction failed"));
     req.onerror = () => reject(req.error ?? new Error("IndexedDB request failed"));
   });
 }

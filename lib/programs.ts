@@ -515,7 +515,7 @@ export function itemHref(item: ProgramItem): string {
     case "drill":
       return `/breath?drill=${encodeURIComponent(item.id)}`;
     case "range":
-      return "/range";
+      return "/range?mode=range";
     case "recorder":
       return "/recorder";
     case "song":

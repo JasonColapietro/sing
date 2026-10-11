@@ -22,7 +22,7 @@ export const VOCAL_LEARNING_PATHS: readonly VocalLearningPath[] = [
   {
     title: "Find your vocal range",
     need: "Measure your lowest and highest comfortable notes, then use the result as a starting point for songs and warmups.",
-    href: "/range",
+    href: "/range?mode=range",
     action: "Take the free range test",
   },
   {

@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import Link from "next/link";
 import { Card, Pill, SectionLabel } from "@/components/ui";
 import { MicAlert } from "@/components/mic-alert";
@@ -29,6 +29,7 @@ export function DailyThreeCard({
   onStart,
   errorExerciseId,
   error,
+  unavailableReason,
 }: {
   plan: DailyThree;
   /** Per pick, in plan order: sung today. */
@@ -36,7 +37,9 @@ export function DailyThreeCard({
   onStart: (pick: DailyPick) => void;
   errorExerciseId: string | null;
   error: string | null;
+  unavailableReason?: string;
 }) {
+  const unavailableId = useId();
   if (plan.picks.length === 0) return null;
   const count = done.filter(Boolean).length;
   const all = count === plan.picks.length;
@@ -49,22 +52,14 @@ export function DailyThreeCard({
           </span>
           {all && <Pill tone="ok">All done today</Pill>}
         </DailyThreeIntro>
+        {unavailableReason && <p id={unavailableId} className="mt-3 text-sm text-mut">{unavailableReason}</p>}
         <ol className="mt-4 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel">
           {plan.picks.map((p, i) => {
             const sung = done[i] ?? false;
             const failed = error !== null && errorExerciseId === p.exercise.id;
             return (
               <li key={p.exercise.id}>
-                <Link
-                  href={`/warmups?exercise=${encodeURIComponent(p.exercise.id)}`}
-                  onClick={(e) => {
-                    // Modified clicks keep their browser meaning (new tab, etc.).
-                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-                    e.preventDefault();
-                    onStart(p);
-                  }}
-                  className="flex min-h-[3.5rem] w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-panel2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet"
-                >
+                <DailyPickAction pick={p} onStart={onStart} unavailableId={unavailableReason ? unavailableId : undefined}>
                   <span
                     aria-hidden="true"
                     className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs ${
@@ -99,7 +94,7 @@ export function DailyThreeCard({
                   >
                     <path d="m9 6 6 6-6 6" />
                   </svg>
-                </Link>
+                </DailyPickAction>
                 {failed && error !== null && <MicAlert message={error} className="px-4 pb-3 text-sm text-rec" />}
               </li>
             );
@@ -107,6 +102,32 @@ export function DailyThreeCard({
         </ol>
       </section>
     </Card>
+  );
+}
+
+function DailyPickAction({ pick, onStart, unavailableId, children }: {
+  pick: DailyPick;
+  onStart: (pick: DailyPick) => void;
+  unavailableId?: string;
+  children: ReactNode;
+}) {
+  const rowClass = "flex min-h-[3.5rem] w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-panel2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet";
+  if (unavailableId) {
+    return <button type="button" disabled aria-describedby={unavailableId} className={rowClass}>{children}</button>;
+  }
+  return (
+    <Link
+      href={`/warmups?exercise=${encodeURIComponent(pick.exercise.id)}`}
+      onClick={(e) => {
+        // Modified clicks keep their browser meaning (new tab, etc.).
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        onStart(pick);
+      }}
+      className={rowClass}
+    >
+      {children}
+    </Link>
   );
 }
 

@@ -32,7 +32,7 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
           by how much when it does not.
         </p>
         <div className="mt-4">
-          <LinkButton href="/range">Find your range free</LinkButton>
+          <LinkButton href="/range?mode=range">Find your range free</LinkButton>
         </div>
       </Card>
     );
@@ -90,7 +90,7 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
         </section>
       )}
       <div className="mt-5">
-        <LinkButton href="/range" variant="ghost" size="sm">
+        <LinkButton href="/range?mode=range" variant="ghost" size="sm">
           Retest your range
         </LinkButton>
       </div>

@@ -93,7 +93,7 @@ export function RoomRail({
         {rooms.map(({ href, label, blurb, Glyph, mic }) => (
           <li key={href}>
             <Link
-              href={href}
+              href={href === "/range" ? "/range?mode=range" : href}
               className="lift group flex h-full flex-col rounded-xl border border-line bg-panel p-3 hover:border-violet/50 sm:p-4"
             >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-panel2 text-violet-ink">

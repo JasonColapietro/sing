@@ -105,7 +105,7 @@ describe("/singers hub schema and crawl discovery", () => {
   });
 
   it("makes the free range test an immediate next step from the hub", () => {
-    expect(html).toContain('href="/range"');
+    expect(html).toContain('href="/range?mode=range"');
     expect(html).toContain("Test my vocal range");
     expect(html).toContain("Can you sing it?");
   });

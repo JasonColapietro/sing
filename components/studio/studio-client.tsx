@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { logSession, type LogResult } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
+import { createPracticeClock } from "@/lib/practice-clock";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { Button, Card, MicGate, PageShell, Pill, SectionLabel } from "@/components/ui";
@@ -106,12 +107,10 @@ export function StudioClient() {
   const [elapsed, setElapsed] = useState(0);
   const [toast, setToast] = useState<StudioResult | null>(null);
   const [targetMidi, setTargetMidi] = useState<number | null>(null);
-  const startedAtRef = useRef<number | null>(null);
-  // Seconds already sung this session that were too short to log on their own.
-  // A phone that hides the page every time the screen locks flushes below the
-  // floor over and over; without this, each of those stretches would be thrown
-  // away and a long interrupted practice would log nothing at all.
-  const carriedSecRef = useRef(0);
+  // Keeps short stretches until they clear the logging floor, while hidden
+  // intervals contribute nothing. The monotonic clock also ignores wall-clock
+  // corrections during a session.
+  const [practiceClock] = useState(() => createPracticeClock());
   // Owned here rather than inside TargetPractice: stopping the mic unmounts
   // that component, and the session it scored is logged after it is gone.
   const statsRef = useRef<TargetStats>(emptyTargetStats());
@@ -120,21 +119,16 @@ export function StudioClient() {
   useEffect(() => {
     if (!listening) return;
     const id = window.setInterval(() => {
-      if (startedAtRef.current !== null) {
-        setElapsed(
-          carriedSecRef.current +
-            Math.floor((Date.now() - startedAtRef.current) / 1000),
-        );
-      }
+      setElapsed(Math.floor(practiceClock.elapsedMs() / 1000));
     }, 1000);
     return () => window.clearInterval(id);
-  }, [listening]);
+  }, [listening, practiceClock]);
 
   const handleStart = async () => {
     const ok = await start();
     if (ok) {
-      startedAtRef.current = Date.now();
-      carriedSecRef.current = 0;
+      practiceClock.reset();
+      if (document.visibilityState !== "hidden") practiceClock.resume();
       statsRef.current = emptyTargetStats();
       setElapsed(0);
       setToast(null);
@@ -143,31 +137,27 @@ export function StudioClient() {
 
   /**
    * Close out the session: bank the personal best and log the practice if it
-   * ran long enough. Idempotent — `startedAtRef` is nulled first, so every
-   * later call falls straight out. That is what makes it safe to fire from
+   * ran long enough. Idempotent — the clock pauses first, so every later
+   * call falls straight out. That is what makes it safe to fire from
    * the stop button, from unmount, and from the page going away.
    */
   const finishSession = useCallback((): StudioResult | null => {
-    const startedAt = startedAtRef.current;
-    startedAtRef.current = null;
-    if (startedAt === null) return null;
+    if (!practiceClock.pause()) return null;
 
     const { hits, scoredMs, inTuneMs } = statsRef.current;
     // Banked before the duration floor: a short session that locked notes
     // still earned the best it set.
     const newBest = hits > 0 && saveStudioBest(hits);
 
-    const durationSec =
-      carriedSecRef.current + Math.floor((Date.now() - startedAt) / 1000);
+    const durationSec = Math.floor(practiceClock.elapsedMs() / 1000);
     if (durationSec < MIN_LOG_SEC) {
       // Nothing was logged, so nothing is thrown away either: the seconds and
       // the locks stay banked for the next flush, and the singer interrupted
       // twice still logs the practice they actually did.
-      carriedSecRef.current = durationSec;
       return { log: null, locks: hits, newBest };
     }
 
-    carriedSecRef.current = 0;
+    practiceClock.reset();
     statsRef.current = emptyTargetStats();
     return {
       log: logSession({
@@ -189,7 +179,7 @@ export function StudioClient() {
       locks: hits,
       newBest,
     };
-  }, []);
+  }, [practiceClock]);
 
   const handleStop = () => {
     stop();
@@ -197,15 +187,24 @@ export function StudioClient() {
     if (result && (result.log || result.locks > 0)) setToast(result);
   };
 
-  // Unmount alone loses the session: a closed tab, a closed laptop, and a
-  // swiped-away PWA never fire it. Backgrounding also fires here and usually
-  // isn't the end of anything, so the clock picks up again when the mic is
-  // still on — either from zero because the first stretch banked a log, or
-  // from carriedSecRef because it was too short to.
-  const flushOnExit = useCallback(() => {
-    if (finishSession() && listening) startedAtRef.current = Date.now();
-  }, [finishSession, listening]);
-  useFlushOnExit(flushOnExit);
+  // Flush at the last reliable mobile lifecycle event, but leave the clock
+  // paused throughout the absence. Only returning to a visible page while
+  // the mic is still on begins another stretch.
+  useFlushOnExit(finishSession);
+  useEffect(() => {
+    if (!listening) return;
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") practiceClock.resume();
+    };
+    onVisibility();
+    document.addEventListener("visibilitychange", onVisibility);
+    // A bfcache restore can already be visible, with no visibility transition.
+    window.addEventListener("pageshow", onVisibility);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pageshow", onVisibility);
+    };
+  }, [listening, practiceClock]);
 
   const note = frame.note;
   const inTune = note !== null && Math.abs(note.cents) <= 15;
