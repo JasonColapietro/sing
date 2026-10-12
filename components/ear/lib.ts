@@ -127,8 +127,12 @@ export const SHORTCUT_KEYS = [
 /* ---------------- register ---------------- */
 
 /**
- * A comfortable register for reference tones: saved range midpoint ±5
- * semitones, else C3–C4.
+ * A comfortable register for the notes the games ask a singer to sing: saved
+ * range midpoint ±5 semitones, kept inside the measured range, else C3–C4.
+ *
+ * With a range saved, medium and hard score the exact octave, so a target
+ * outside a narrow range fails the singer for being out of range rather than
+ * out of tune.
  */
 export function singableRegister(range: {
   lowMidi?: number;
@@ -136,7 +140,13 @@ export function singableRegister(range: {
 }): { lo: number; hi: number } {
   if (range.lowMidi !== undefined && range.highMidi !== undefined) {
     const mid = Math.round((range.lowMidi + range.highMidi) / 2);
-    return { lo: mid - 5, hi: mid + 5 };
+    // Kept inside a narrow measured range, as songRegister does. A span under
+    // five semitones (saved before the range test's minimum) is not a
+    // measurement, so it keeps the ±5 band instead of a register too small
+    // to hold a melody.
+    const lo = Math.max(range.lowMidi, mid - 5);
+    const hi = Math.min(range.highMidi, mid + 5);
+    return hi - lo >= 5 ? { lo, hi } : { lo: mid - 5, hi: mid + 5 };
   }
   return { lo: 48, hi: 60 }; // C3–C4
 }
@@ -181,7 +191,9 @@ export function generateMelody(
     const m = toMidi(d);
     if (m >= lo && m <= hi) inRange.push(d);
   }
-  let deg = randInt(0, 4);
+  // Starts on do to sol, as far as the register holds them: a five- or
+  // six-semitone register has no room for sol above the tonic.
+  let deg = pick(inRange.filter((d) => d >= 0 && d <= 4));
   const notes = [toMidi(deg)];
   while (notes.length < len) {
     const prev = deg;

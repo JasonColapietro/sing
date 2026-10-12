@@ -28,8 +28,9 @@ export type { CheckoutPlan, ProPlan, Entitlement };
 /**
  * Suede Pro — entitlement on the client.
  *
- * There are no accounts and no database: Stripe is the source of truth, and
- * this store is a local cache of what Stripe last said. That means it can go
+ * Pro hangs off no account and no database (a sign-in, where accounts are
+ * configured, never touches it): Stripe is the source of truth, and this store
+ * is a local cache of what Stripe last said. That means it can go
  * stale (someone cancels in the portal), so `revalidatePro` re-checks on a
  * schedule, and `restorePro` recovers access on a new device or a cleared
  * browser.
@@ -112,8 +113,8 @@ const NOT_READY = () => false;
  * Whether the entitlement cache has been read on this device yet.
  *
  * Every gated page is prerendered, and there is no server-side entitlement to
- * prerender with — no accounts, no database, and the cache lives in
- * localStorage — so the static HTML always says "not Pro". Rendering the upsell
+ * prerender with — Pro hangs off no account or database, and the cache lives
+ * in localStorage — so the static HTML always says "not Pro". Rendering the upsell
  * straight from `useIsPro()` therefore ships a sales pitch to the subscriber
  * who already paid, and flashes it away on hydration. Surfaces that would
  * assert something false in that window hold a neutral state until this flips
@@ -129,12 +130,25 @@ export function useProReady(): boolean {
 
 /* ------------------------------------------------------------------ stripe */
 
+/**
+ * What a dropped connection says. fetch() rejects with the browser's own
+ * TypeError ("Failed to fetch", Safari's "Load failed"), which tells a buyer
+ * neither what happened nor whether anything was charged.
+ */
+export const NETWORK_ERROR_MESSAGE =
+  "Couldn't reach Suede Sing. Check your connection and try again.";
+
 async function post<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(path, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  let res: Response;
+  try {
+    res = await fetch(path, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new Error(NETWORK_ERROR_MESSAGE);
+  }
   const data = (await res.json().catch(() => null)) as
     | (T & { error?: string })
     | null;

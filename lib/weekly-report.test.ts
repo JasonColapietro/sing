@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { ActivityType, SessionLog } from "./progress-shape";
 import {
   shouldShowWeekInReview,
+  suggestionWords,
   weekBoundaries,
   weekInReview,
   weekTotals,
@@ -241,6 +242,53 @@ describe("weekInReview", () => {
       const report = weekInReview([session("2026-09-14"), session("2026-09-14")], WED)!;
       expect(report.suggestion).toEqual({ kind: "more-days", days: 1 });
     });
+  });
+});
+
+describe("suggestionWords", () => {
+  it("names a dropped room the way a sentence would, never by its pill label", () => {
+    const words = suggestionWords({ kind: "neglected", type: "song", label: "Song", href: "/songs", before: 7 });
+    expect(words.text).toBe("You didn't open song practice last week, after 7 sessions there in the three weeks before.");
+    expect(words.link).toEqual({ href: "/songs", label: "Open song practice" });
+    const one = suggestionWords({ kind: "neglected", type: "breath", label: "Breath", href: "/breath", before: 1 });
+    expect(one.text).toContain("after 1 session there");
+    expect(one.link.label).toBe("Open breath training");
+  });
+
+  it("does not credit the studio with pitch-meter sessions, which only the studio scores", () => {
+    // Pitch sessions are logged by the pitch meter on /range as well as the
+    // studio, so a dropped pitch habit names both; only studio runs score.
+    const dropped = suggestionWords({ kind: "neglected", type: "pitch", label: "Pitch", href: "/studio", before: 3 });
+    expect(dropped.text).toContain("You didn't open the pitch meter or pitch studio last week");
+    const weak = suggestionWords({ kind: "weakest", type: "pitch", label: "Pitch", href: "/studio", average: 40, overall: 63 });
+    expect(weak.text).toBe("Scores in the pitch studio averaged 40% against 63% across your week, the widest gap of any room.");
+    expect(weak.link.label).toBe("Practise in the pitch studio");
+  });
+
+  it("reads as a sentence for every room the log can name", () => {
+    const types: ActivityType[] = ["warmup", "pitch", "range", "ear", "breath", "song", "recording", "tools", "analyze"];
+    for (const type of types) {
+      for (const s of [
+        { kind: "neglected" as const, type, label: "X", href: "/x", before: 2 },
+        { kind: "weakest" as const, type, label: "X", href: "/x", average: 40, overall: 60 },
+      ]) {
+        const { text, link } = suggestionWords(s);
+        // No pill label in the sentence, and no "Your the warmups" or "Open Song".
+        expect(text, type).not.toMatch(/\bX\b|\b(?:open|in) [A-Z]|\bYour the\b/);
+        expect(link.label, type).toMatch(/^(?:Open|Practise|Record) [a-z]/);
+        expect(link.href).toBe("/x");
+      }
+    }
+  });
+
+  it("links the habit steps to a warmup", () => {
+    expect(suggestionWords({ kind: "more-days", days: 1 })).toEqual({
+      text: "You practised on 1 day. Aim for one more this week; a short session counts.",
+      link: { href: "/warmups", label: "Start a warmup" },
+    });
+    expect(suggestionWords({ kind: "keep-going", days: 4 }).text).toBe(
+      "4 practice days last week. Match that this week to keep the habit.",
+    );
   });
 });
 

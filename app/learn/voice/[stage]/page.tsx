@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { webPageJsonLd } from "@/lib/page-jsonld";
 import { SITE_URL } from "@/lib/site";
-import { MODULE_PRACTICE, practiceMatch } from "@/lib/lesson-practice";
+import { distinctPracticeMatch } from "@/lib/lesson-practice";
 import {
   COURSE,
   VOICE_LEARN_PATH,
@@ -103,8 +103,8 @@ export default async function StagePage({ params }: { params: Promise<Params> })
       <CourseBreadcrumbs trail={[{ href: VOICE_LEARN_PATH, label: "Voice lessons" }]} current={catalog.name} />
       <div className="space-y-6">
         {stage.modules.map((module) => {
-          const practice = MODULE_PRACTICE[module.catalog.id];
-          const match = practice ? practiceMatch(practice.companion) : undefined;
+          // Only a room session no other module shares marks a module practised.
+          const match = distinctPracticeMatch(module.catalog.id);
           return (
             <Card key={module.catalog.id}>
               <div data-course-module={module.catalog.id} className="max-w-3xl">

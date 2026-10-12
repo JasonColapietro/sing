@@ -34,7 +34,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
     chapters: 23,
-    words: 32597,
+    words: 32633,
     free: 3,
     pdfMb: 1.0,
     href: "/book",
@@ -42,7 +42,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Voice Atlas",
     chapters: 27,
-    words: 72471,
+    words: 72468,
     free: 3,
     pdfMb: 5.0,
     href: "/atlas",
@@ -69,6 +69,15 @@ export const FREE_EXERCISES = 39;
 export const PRO_EXERCISES = 19;
 export const PRO_PACK_COUNT = 3;
 export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
+
+/**
+ * Where the Pro packs start on /warmups: the id on the first Pro routine card.
+ * The packs render after every free routine, about eight phone screens down,
+ * so a buyer told to sing a pro warmup is sent straight to them rather than
+ * to a page whose only start button on screen runs a free set.
+ */
+export const PRO_PACKS_ANCHOR = "pro-packs";
+export const PRO_PACKS_HREF = `/warmups#${PRO_PACKS_ANCHOR}`;
 
 /**
  * Singers with a reported range and a page of their own. Free to read. The

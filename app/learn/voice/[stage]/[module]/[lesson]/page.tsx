@@ -5,12 +5,7 @@ import { notFound } from "next/navigation";
 import { LESSON_REFERENCES, LESSONS } from "@/lib/lesson-data";
 import { Markdown } from "@/lib/markdown";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import {
-  MODULE_PRACTICE,
-  companionHref,
-  companionLabel,
-  isGuidedPractice,
-} from "@/lib/lesson-practice";
+import { MODULE_PRACTICE, lessonCompanion } from "@/lib/lesson-practice";
 import { MAX_TITLE, MAX_TITLE_BODY } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
@@ -24,9 +19,9 @@ import {
   shownSteps,
 } from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
-import { GuidedCapNote, ModulePractice } from "@/components/learn/module-practice";
+import { CompanionButtons, ModulePractice } from "@/components/learn/module-practice";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
-import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
+import { Card, PageShell, SectionLabel } from "@/components/ui";
 
 interface Params {
   stage: string;
@@ -119,6 +114,9 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
   const references = LESSON_REFERENCES.filter((r) => lesson.references.includes(r.id));
   const url = `${SITE_URL}${lessonHref(lesson)}`;
   const practice = MODULE_PRACTICE[module.catalog.id];
+  // The room this lesson's own steps send the singer to, which for an
+  // exercise practised in the recorder is not the module's range test.
+  const companion = practice ? lessonCompanion(practice, lesson.id) : undefined;
   // The course-wide lines (UNIVERSAL_LESSON_TEXT) are stated once on
   // /learn/voice; here they would bury what this lesson says of its own.
   const own = (text: string) => !UNIVERSAL_LESSON_TEXT.has(text);
@@ -175,15 +173,10 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
       title={lesson.title}
       subtitle={lessonAnswer(found)}
       actions={
-        practice ? (
+        companion ? (
           // The room first, for a reader who came to sing: the panel further
-          // down says what the room measures.
-          <div className="flex flex-col items-start gap-2">
-            <LinkButton href={companionHref(practice.companion)} size="lg">
-              Open {companionLabel(practice.companion)}
-            </LinkButton>
-            {isGuidedPractice(practice.companion) && <GuidedCapNote />}
-          </div>
+          // down says what the module's room measures.
+          <CompanionButtons companion={companion} size="lg" />
         ) : undefined
       }
     >
@@ -262,7 +255,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
           </section>
         </Card>
 
-        <ModulePractice moduleId={module.catalog.id} />
+        <ModulePractice moduleId={module.catalog.id} lessonId={lesson.id} />
 
         <Card>
           <section aria-labelledby="blocks" className="max-w-2xl">

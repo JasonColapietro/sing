@@ -5,7 +5,8 @@
  * Erasing (lib/progress.ts clearProgress) pauses automatic backup and cloud
  * sync for good, until Pro's SyncControls or a signed-in AccountBackupControls
  * resumes it. A free singer with neither — every free singer while accounts are
- * off — has no backup to pause and nothing to restore, so telling them a
+ * off — has no backup to pause and nothing to restore (the Danger zone's
+ * eraseBrowserProgress lifts the pause again for them), so telling them a
  * backup is "paused" or that "cloud copies are kept" was a false sense of
  * safety about the only copy of their record. Copy must be true with or
  * without accounts.

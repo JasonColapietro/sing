@@ -522,7 +522,7 @@ function serializePopSong(song: (typeof POP_SONGS)[number], pathPrefix: string) 
     /** Spelled out because the two repos print accidentals differently. */
     rangeLabel: popRangeLabel(song),
     spanSemitones: song.highMidi - song.lowMidi,
-    /** Derived by `popDifficulty`, not authored, so the cut cannot drift. */
+    /** From popDifficulty (span plus altitude, or a documented editorial override), never typed into the contract by hand. */
     difficulty: popDifficulty(song),
     /** Where the cited key and range come from. Not a measurement. */
     sourceNote: song.sourceNote,

@@ -8,12 +8,15 @@ import { TOLERANCE_CENTS } from "@/components/songs/lib";
 import { IN_TUNE_CENTS } from "@/lib/audio/notes";
 import {
   MODULE_PRACTICE,
+  RANGE_WARM_UP,
   ROOM_LABELS,
   companionHref,
   companionLabel,
   isGuidedPractice,
   moduleMaterial,
   practiceMatch,
+  warmsUpFirst,
+  type Companion,
 } from "@/lib/lesson-practice";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { PracticeCount } from "@/components/learn/practice-count";
@@ -24,8 +27,6 @@ import { Card, LinkButton, SectionLabel } from "@/components/ui";
  * contract reports as implemented appear here; the test holds this list to it.
  */
 export const MEASUREMENT_WORDS: Record<string, string> = {
-  phonationSeconds:
-    "how long your voice sounded, in seconds of confidently voiced time",
   rangeExtremes: "the lowest and highest clear notes the range test heard you hold in one session",
   sustainSeconds:
     "how long one sustain lasts, in seconds. The timer reads loudness, so a steady hiss counts as well as a sung note",
@@ -59,12 +60,70 @@ export function GuidedCapNote({ full = false }: { full?: boolean }) {
   );
 }
 
-export function ModulePractice({ moduleId }: { moduleId: string }) {
+/**
+ * The buttons into a lesson's room. The range test comes after the warm-up
+ * the lessons prescribe, because a cold voice under-reports at both ends and
+ * the result replaces the saved range; the warm-up is guided practice, so the
+ * allowance is said beside it. Every other room is one button.
+ */
+export function CompanionButtons({
+  companion,
+  size,
+  full = false,
+}: {
+  companion: Companion;
+  size: "md" | "lg";
+  /** Passed to GuidedCapNote: also name the rooms that have no clock. */
+  full?: boolean;
+}) {
+  if (warmsUpFirst(companion)) {
+    return (
+      <div className="flex flex-col items-start gap-2" data-warm-up-first>
+        <div className="flex flex-wrap gap-3">
+          <LinkButton href={RANGE_WARM_UP.href} size={size}>
+            {RANGE_WARM_UP.label}
+          </LinkButton>
+          <LinkButton href={companionHref(companion)} size={size} variant="outline">
+            Then take the range test once
+          </LinkButton>
+        </div>
+        <p className="text-xs text-dim" data-guided-cap>
+          The Morning reset is about four minutes of guided practice, out of
+          the free plan&apos;s {FREE_DAILY_MINUTES} minutes a day;{" "}
+          <Link href="/pro" className="underline hover:text-ink">
+            Pro
+          </Link>{" "}
+          removes the limit. The range test itself has no clock.
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className="flex flex-col items-start gap-2">
+      <LinkButton href={companionHref(companion)} size={size}>
+        Open {companionLabel(companion)}
+      </LinkButton>
+      {isGuidedPractice(companion) && <GuidedCapNote full={full} />}
+    </div>
+  );
+}
+
+export function ModulePractice({
+  moduleId,
+  lessonId,
+}: {
+  moduleId: string;
+  /** On a lesson page: the lesson, whose own room may differ from the module's. */
+  lessonId?: string;
+}) {
   const practice = MODULE_PRACTICE[moduleId];
   if (!practice) return null;
   const { basis, companion } = practice;
   const match = practiceMatch(companion);
   const material = moduleMaterial(moduleId);
+  // A lesson practised somewhere else says so here, so the panel's room
+  // and the page's first button never read as two answers to one question.
+  const lessonRoom = lessonId ? practice.lessonCompanion?.[lessonId] : undefined;
 
   return (
     <Card>
@@ -72,6 +131,13 @@ export function ModulePractice({ moduleId }: { moduleId: string }) {
         <SectionLabel>Practice</SectionLabel>
         <div className="max-w-2xl space-y-2">
           <h2 className="text-xl">Where to practise</h2>
+          {lessonRoom && (
+            <p className="text-sm text-mut" data-lesson-room={lessonRoom.room}>
+              You practise this lesson in {companionLabel(lessonRoom)}, the button
+              at the top of the page; {companionLabel(companion)} below is for the
+              module&apos;s self-check.
+            </p>
+          )}
           {basis.kind === "measured" ? (
             <p className="text-sm text-mut" data-proof-basis="measured">
               Suede Sing measures part of this: {MEASUREMENT_WORDS[basis.measurement]}. The
@@ -85,11 +151,8 @@ export function ModulePractice({ moduleId }: { moduleId: string }) {
             </p>
           )}
           <div className="pt-1">
-            <LinkButton href={companionHref(companion)} size="md">
-              Open {companionLabel(companion)}
-            </LinkButton>
+            <CompanionButtons companion={companion} size="md" full />
           </div>
-          {isGuidedPractice(companion) && <GuidedCapNote full />}
           {match && <PracticeCount match={match} room={ROOM_LABELS[companion.room]} />}
         </div>
 

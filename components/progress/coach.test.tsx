@@ -9,6 +9,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_PROGRESS, type ProgressState, type SessionLog } from "@/lib/progress-shape";
+import { RANGE_RETEST_DAYS } from "@/lib/progress";
 
 const capState = vi.hoisted(() => ({ capped: null as boolean | null }));
 vi.mock("@/lib/free-cap", async (importOriginal) => {
@@ -126,5 +127,23 @@ describe("the coached session after the free minutes are used", () => {
     const html = renderToStaticMarkup(<CoachCard state={state()} />);
     expect(html).not.toContain("open again at midnight");
     expect(html).toContain("guided minutes a day");
+  });
+});
+
+describe("the coach's range retest", () => {
+  const DAY = 86_400_000;
+  const withRange = (ageDays: number): ProgressState => ({
+    ...state(),
+    range: { lowMidi: 48, highMidi: 69, testedAt: new Date(NOW.getTime() - ageDays * DAY).toISOString() },
+  });
+
+  it("waits RANGE_RETEST_DAYS, then asks for a retest without promising growth", () => {
+    const early = buildPlan(withRange(RANGE_RETEST_DAYS - 1), NOW).items;
+    expect(early.map((i) => i.title)).not.toContain("Retake the range test");
+    const due = buildPlan(withRange(RANGE_RETEST_DAYS), NOW).items.find((i) => i.title === "Retake the range test");
+    expect(due?.reason).toBe(
+      `Your range was last measured ${RANGE_RETEST_DAYS} days ago — a fresh test adds a current point to your range over time.`,
+    );
+    expect(due?.reason).not.toMatch(/growth/i);
   });
 });

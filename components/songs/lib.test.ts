@@ -32,6 +32,7 @@ import {
   rangeFit,
   snapTempo,
   songTranspose,
+  startableRecents,
   startingNote,
   transposedNotes,
   COUNT_IN_BEATS,
@@ -353,6 +354,53 @@ describe("bandOpen", () => {
   it("takes BAND_UNLOCK_MASTERED at its word", () => {
     const ids = new Set(songs.slice(0, BAND_UNLOCK_MASTERED).map((s) => s.id));
     expect(bandOpen("easy", ids, songs)).toBe(true);
+  });
+});
+
+describe("startableRecents: the recently-sung row never offers a locked song", () => {
+  const songs = [
+    stepwise("first-1", 0),
+    stepwise("first-2", 2),
+    stepwise("easy-1", 7),
+    stepwise("steady-1", 11),
+  ];
+  const at = "2026-10-01T12:00:00.000Z";
+
+  it("drops a song whose band is shut, as a deep link can leave in recents", () => {
+    const recents = [
+      { id: "steady-1", at },
+      { id: "first-2", at },
+    ];
+    const row = startableRecents(recents, songs, new Set());
+    expect(row.map((r) => r.song.id)).toEqual(["first-2"]);
+  });
+
+  it("offers the song once its band opens, keeping recency order", () => {
+    const recents = [
+      { id: "easy-1", at },
+      { id: "first-2", at },
+    ];
+    const row = startableRecents(recents, songs, new Set(["first-1", "first-2"]));
+    expect(row.map((r) => r.song.id)).toEqual(["easy-1", "first-2"]);
+  });
+
+  it("skips ids outside the list it was handed and caps the row", () => {
+    const recents = [{ id: "gone", at }, ...songs.map((s) => ({ id: s.id, at }))];
+    const all = new Set(songs.map((s) => s.id));
+    expect(startableRecents(recents, songs, all, 2).map((r) => r.song.id)).toEqual([
+      "first-1",
+      "first-2",
+    ]);
+  });
+
+  it("agrees with the real book: every free song in the row is startable", () => {
+    const recents = SONGS.map((s) => ({ id: s.id, at }));
+    for (const { song: s } of startableRecents(recents, SONGS, new Set(), SONGS.length)) {
+      expect(bandOpen(bandForSong(s), new Set(), SONGS), s.id).toBe(true);
+    }
+    const locked = SONGS.find((s) => bandForSong(s) !== "first");
+    expect(locked).toBeDefined();
+    expect(startableRecents([{ id: locked!.id, at }], SONGS, new Set())).toEqual([]);
   });
 });
 

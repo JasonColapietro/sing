@@ -26,9 +26,11 @@ import {
   popFit,
   popNoteLabel,
   popRangeLabel,
+  relatedPopSongs,
 } from "@/lib/pop-songs";
 import { SINGERS } from "@/lib/singers-data";
 import { SITE_URL } from "@/lib/site";
+import { VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 
 describe("catalog data sanity", () => {
   it("covers the current Search Console song-range gaps with published-key evidence", () => {
@@ -246,11 +248,79 @@ describe("crawl path", () => {
   });
 
   it("rates a top above F5 as Hard, as the rule's comment says", () => {
-    const base = POP_SONGS[0];
+    // No editorial override, so the rule alone decides.
+    const base = { ...POP_SONGS[0], difficulty: undefined };
     // Narrow span, so altitude alone decides.
     expect(popDifficulty({ ...base, lowMidi: noteMidi("C5"), highMidi: noteMidi("F5") })).toBe("Medium");
     expect(popDifficulty({ ...base, lowMidi: noteMidi("C5"), highMidi: noteMidi("F#5") })).toBe("Hard");
     const babe = POP_SONGS.find((s) => s.slug === "good-luck-babe");
     if (babe) expect(popDifficulty(babe)).toBe("Hard");
+  });
+
+  it("rates a sustained full-voice top above the tenor passaggio as Hard", () => {
+    // Span alone reads Medium for both; their blurbs document full-voice
+    // choruses held above G4, the top of the tenor passaggio.
+    for (const slug of ["lose-control", "someone-you-loved"]) {
+      const song = POP_SONGS.find((s) => s.slug === slug)!;
+      expect(song, slug).toBeDefined();
+      expect(popDifficulty(song), slug).toBe("Hard");
+      expect(popDifficulty({ ...song, difficulty: undefined }), slug).toBe("Medium");
+      expect(song.blurb, slug).toMatch(/full (voice|chest)/);
+    }
+  });
+
+  it("keeps the override for what span and altitude cannot see", () => {
+    // An override that only repeats the rule is noise, and one that lowers a
+    // rating hides a demand the numbers caught.
+    const rank = { Easy: 0, Medium: 1, Hard: 2 } as const;
+    for (const s of POP_SONGS.filter((p) => p.difficulty)) {
+      const ruled = popDifficulty({ ...s, difficulty: undefined });
+      expect(rank[s.difficulty!], s.slug).toBeGreaterThan(rank[ruled]);
+    }
+  });
+
+  it("sets an override only where its documented reason holds", () => {
+    // The page's answer states the reason for every override ("Its top, held
+    // in full voice above the tenor passaggio"), so each one must
+    // have a top above the tenor passaggio and a blurb that says full voice.
+    const tenorTop = VOICE_TYPE_PASSAGGIO.Tenor.high;
+    for (const s of POP_SONGS.filter((p) => p.difficulty)) {
+      expect(s.highMidi, s.slug).toBeGreaterThan(tenorTop);
+      expect(s.blurb, s.slug).toMatch(/full (voice|chest)/);
+    }
+  });
+
+  it("gives an overridden rating its reason instead of crediting the span", async () => {
+    const page = async (slug: string) =>
+      renderToStaticMarkup(await CanYouSingSongPage({ params: Promise.resolve({ slug }) }));
+    for (const slug of ["lose-control", "someone-you-loved"]) {
+      const html = await page(slug);
+      expect(html, slug).toContain(
+        "semitones. Its top, held in full voice above the tenor passaggio, rates it hard for an untrained voice.",
+      );
+      expect(html, slug).not.toContain("which rates hard");
+    }
+    // A song the rule rates keeps the sentence that credits its range.
+    expect(await page("unchained-melody")).toContain(
+      "— 21 semitones — which rates medium for an untrained voice.",
+    );
+  });
+
+  it("links every song from at least two other songs' lists", () => {
+    // By raw distance the lowest-centred song (Hallelujah) made no sibling's
+    // list, leaving its only indexable inbound link the hub.
+    for (const s of POP_SONGS) {
+      const inbound = POP_SONGS.filter((o) => o !== s && relatedPopSongs(o).includes(s));
+      expect(inbound.length, s.slug).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("offers four neighbours, never the song itself, without repeats", () => {
+    for (const s of POP_SONGS) {
+      const related = relatedPopSongs(s);
+      expect(related, s.slug).toHaveLength(4);
+      expect(related, s.slug).not.toContain(s);
+      expect(new Set(related).size, s.slug).toBe(related.length);
+    }
   });
 });

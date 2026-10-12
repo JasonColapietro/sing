@@ -11,6 +11,7 @@ import {
 import type { GlossaryDomain } from "./glossary";
 import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
 import { breathDrillTitle, isBreathDrillId } from "@/components/breath/routines";
+import { VOICE_TYPES } from "@/lib/audio/notes";
 import { readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
@@ -261,6 +262,26 @@ describe("published glossary claims", () => {
 
   it("calls the range result's voice type an estimate", () => {
     expect(byTerm("Voice type").where).toMatch(/estimate/);
+  });
+
+  /**
+   * The entry defines eight labels, and the range result can return only six
+   * of them; a countertenor span is told the closest of those six. The atlas
+   * and the voice-type hubs say so, and the glossary says it the same way.
+   */
+  it("says the range result names one of six types, never the two it cannot return", () => {
+    const where = byTerm("Voice type").where;
+    expect(VOICE_TYPES).toHaveLength(6);
+    expect(where).toMatch(/six types, bass to soprano/);
+    for (const label of ["bass-baritone", "countertenor"]) {
+      expect(VOICE_TYPES.some((v) => v.label.toLowerCase() === label), label).toBe(false);
+      expect(where).toMatch(new RegExp(`never[^.]*${label}`));
+    }
+  });
+
+  /** The free messa di voce drill trains dynamics, and the entry links it. */
+  it("links dynamics to the swell-and-fade drill", () => {
+    expect(byTerm("Dynamics").drill).toBe("swell-and-fade");
   });
 
   /**

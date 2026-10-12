@@ -25,6 +25,9 @@ describe("generateMelody", () => {
     singableRegister({}), // the no-range fallback, C3–C4
     singableRegister({ lowMidi: 45, highMidi: 64 }),
     singableRegister({ lowMidi: 57, highMidi: 79 }),
+    singableRegister({ lowMidi: 60, highMidi: 65 }), // the narrowest savable span
+    singableRegister({ lowMidi: 60, highMidi: 66 }),
+    singableRegister({ lowMidi: 57, highMidi: 57 }), // a legacy no-span save
   ];
 
   for (const difficulty of ["easy", "medium", "hard"] as const) {
@@ -54,6 +57,33 @@ describe("generateMelody", () => {
         }
       }
     }
+  });
+});
+
+describe("singableRegister", () => {
+  it("keeps the ±5 band around the middle of a wide range", () => {
+    expect(singableRegister({ lowMidi: 45, highMidi: 64 })).toEqual({ lo: 50, hi: 60 });
+    expect(singableRegister({ lowMidi: 57, highMidi: 79 })).toEqual({ lo: 63, hi: 73 });
+  });
+
+  it("stays inside a narrow measured range, which medium and hard score exactly", () => {
+    expect(singableRegister({ lowMidi: 60, highMidi: 65 })).toEqual({ lo: 60, hi: 65 });
+    expect(singableRegister({ lowMidi: 60, highMidi: 68 })).toEqual({ lo: 60, hi: 68 });
+    for (let span = 5; span <= 30; span++) {
+      const r = singableRegister({ lowMidi: 55, highMidi: 55 + span });
+      expect(r.lo, `span ${span}`).toBeGreaterThanOrEqual(55);
+      expect(r.hi, `span ${span}`).toBeLessThanOrEqual(55 + span);
+      expect(r.hi - r.lo, `span ${span}`).toBeGreaterThanOrEqual(5);
+    }
+  });
+
+  it("keeps a legacy save under five semitones playable rather than shrinking to it", () => {
+    expect(singableRegister({ lowMidi: 57, highMidi: 57 })).toEqual({ lo: 52, hi: 62 });
+    expect(singableRegister({ lowMidi: 60, highMidi: 63 })).toEqual({ lo: 57, hi: 67 });
+  });
+
+  it("falls back to C3–C4 with no range saved", () => {
+    expect(singableRegister({})).toEqual({ lo: 48, hi: 60 });
   });
 });
 

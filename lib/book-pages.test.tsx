@@ -99,6 +99,19 @@ describe("the free chapters", () => {
     expect(html).toMatch(/minutes a day/);
   });
 
+  /**
+   * The chapter says a cold voice under-reports at both ends, so its buttons
+   * offer the Morning reset before the test, in the header and the end card,
+   * as the Your Range lessons and /learn's Day 1 do.
+   */
+  it("offers the warm-up before the range test wherever chapter 8 links the test", async () => {
+    const html = await page("reading-the-range-test");
+    const warm = '<a[^>]*href="/warmups\\?routine=morning"';
+    const test = '<a[^>]*href="/range\\?mode=range#start"[^>]*>Take the range test honestly';
+    const pairs = [...html.matchAll(new RegExp(`(${warm})|(${test})`, "g"))].map((m) => (m[1] ? "warm" : "test"));
+    expect(pairs).toEqual(["warm", "test", "warm", "test"]);
+  });
+
   it("does not add the free-chapter extras to a gated chapter", async () => {
     const html = await page("registers");
     expect(html).not.toContain("Try this now");

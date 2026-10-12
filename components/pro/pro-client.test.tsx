@@ -15,6 +15,8 @@ vi.mock("@/lib/pro", async (importOriginal) => {
 });
 
 import { ProClient, WelcomePanel } from "./pro-client";
+import { SUPPORT_EMAIL } from "@/lib/organization";
+import { PRO_PACKS_HREF } from "@/lib/pro-inventory";
 
 function state(overrides: Partial<ProState> = {}): ProState {
   return {
@@ -281,5 +283,41 @@ describe("Pro sales copy on the page", () => {
     expect(wrapper).toBeGreaterThan(-1);
     expect(html.slice(wrapper, button)).toContain("sm:order-2");
     expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Suede Pro is the vocal coaching layer/);
+  });
+});
+
+describe("after the purchase", () => {
+  beforeEach(() => {
+    proState.current = state();
+  });
+
+  it("sends 'Sing your first pro warmup' to the Pro packs, not a free set", () => {
+    const html = renderToStaticMarkup(
+      <WelcomePanel how="purchase" proKey="suede-pro_test" periodEnd={null} />,
+    );
+    expect(html).toMatch(
+      new RegExp(`<a[^>]*href="${PRO_PACKS_HREF}"[^>]*>\\s*Sing your first pro warmup`),
+    );
+  });
+
+  it("sends a Pro member's 'Start a pro warmup' to the Pro packs", () => {
+    proState.current = state({
+      active: true,
+      plan: "lifetime",
+      status: "active",
+      customerId: "cus_lifetime",
+      paymentIntentId: "pi_lifetime",
+    });
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).toMatch(new RegExp(`<a[^>]*href="${PRO_PACKS_HREF}"[^>]*>\\s*Start a pro warmup`));
+  });
+
+  it("names the one support address, with the words around it intact", () => {
+    const key = renderToStaticMarkup(
+      <WelcomePanel how="purchase" proKey="suede-pro_test" periodEnd={null} />,
+    );
+    expect(key).toContain(`Lost it? Email ${SUPPORT_EMAIL}.`);
+    const restore = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
+    expect(restore).toContain(`Lost it? Email ${SUPPORT_EMAIL} and we'll send a new one.`);
   });
 });

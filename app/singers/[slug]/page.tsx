@@ -592,6 +592,9 @@ export default async function SingerPage({
                         <p className="mt-1">Supports: {source.supportedClaim}</p>
                         <p className="mt-1">Scope: {source.scope}</p>
                         <p className="mt-1 text-xs">Confidence: {source.confidence}</p>
+                        {source.octaveConvention && (
+                          <p className="mt-1 text-xs">Octave convention: {source.octaveConvention}</p>
+                        )}
                       </li>
                     ))}
                   </ul>

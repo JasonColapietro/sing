@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AUTHOR_NAME } from "@/lib/author";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
+import { RANGE_WARM_UP } from "@/lib/lesson-practice";
 import { freeLessonsReading } from "@/lib/lesson-readings";
 import { Markdown } from "@/lib/markdown";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
@@ -42,6 +43,10 @@ const TRY_IT: Record<
     href: rangeTestHref(),
     label: "Take the range test honestly",
     line: "Warm up first, stop at the first note that needs effort, and count only notes you can hold for two beats.",
+    // The warm-up button comes before the test wherever the page offers it,
+    // and opens the Morning reset the Your Range lessons and /learn's Day 1
+    // name: a cold voice under-reports at both ends, and every finished test
+    // replaces the saved range.
     warmUpFirst: true,
   },
   "when-numbers-lie": {
@@ -58,6 +63,17 @@ const TRY_IT: Record<
  * a client module this server page cannot read values from.
  */
 const GUIDED_ROOMS: ReadonlySet<string> = new Set(["warmups", "breath", "earTraining", "songs"]);
+
+/** Said beside every warm-up button: the warm-up is capped, the test is not. */
+function WarmUpCapNote() {
+  return (
+    <p className="text-xs text-dim">
+      The Morning reset is about four minutes of guided practice, out of the
+      free plan&apos;s {FREE_DAILY_MINUTES} minutes a day; Pro removes the limit.
+      The range test itself has no clock.
+    </p>
+  );
+}
 
 export const dynamicParams = false;
 
@@ -125,18 +141,26 @@ export default async function ChapterPage({
       title={chapter.title}
       subtitle={chapter.summary || undefined}
       actions={
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/book"
-            className="inline-flex min-h-11 items-center rounded-full border border-line px-4 py-2 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
-          >
-            ← Contents
-          </Link>
-          {tryIt && (
-            <LinkButton href={tryIt.href} size="md">
-              {tryIt.label}
-            </LinkButton>
-          )}
+        <div className="flex flex-col items-start gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/book"
+              className="inline-flex min-h-11 items-center rounded-full border border-line px-4 py-2 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
+            >
+              ← Contents
+            </Link>
+            {tryIt?.warmUpFirst && (
+              <LinkButton href={RANGE_WARM_UP.href} size="md">
+                {RANGE_WARM_UP.label}
+              </LinkButton>
+            )}
+            {tryIt && (
+              <LinkButton href={tryIt.href} size="md" variant={tryIt.warmUpFirst ? "outline" : "violet"}>
+                {tryIt.label}
+              </LinkButton>
+            )}
+          </div>
+          {tryIt?.warmUpFirst && <WarmUpCapNote />}
         </div>
       }
     >
@@ -205,21 +229,19 @@ export default async function ChapterPage({
                   <SectionLabel>Try this now</SectionLabel>
                   <p className="mt-3 max-w-2xl text-sm text-mut">{tryIt.line}</p>
                   <div className="mt-4 flex flex-wrap gap-3">
-                    <LinkButton href={tryIt.href} size="md">
-                      {tryIt.label}
-                    </LinkButton>
                     {tryIt.warmUpFirst && (
-                      <LinkButton href="/warmups" variant="outline" size="md">
-                        Warm up first
+                      <LinkButton href={RANGE_WARM_UP.href} size="md">
+                        {RANGE_WARM_UP.label}
                       </LinkButton>
                     )}
+                    <LinkButton href={tryIt.href} size="md" variant={tryIt.warmUpFirst ? "outline" : "violet"}>
+                      {tryIt.label}
+                    </LinkButton>
                   </div>
                   {tryIt.warmUpFirst && (
-                    <p className="mt-3 max-w-2xl text-xs text-dim">
-                      Warmups are guided practice, which the free plan gives{" "}
-                      {FREE_DAILY_MINUTES} minutes a day; Pro removes the limit.
-                      The range test itself has no clock.
-                    </p>
+                    <div className="mt-3 max-w-2xl">
+                      <WarmUpCapNote />
+                    </div>
                   )}
                 </>
               )}

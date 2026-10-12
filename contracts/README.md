@@ -42,6 +42,16 @@ kind (2026-10-12):
   self-check basis. `lib/voice-lessons.test.tsx` now requires a module's
   `proofMetric` to be `self_reported` exactly when its lesson pages state a
   self-check basis.
+- Module `v-l1-m1` (Set Up Your Space)'s `proofMetric` changed from
+  `phonation_sec` to `self_reported`. Its lessons and its self-check grade a
+  recording played back, so they now open the recorder instead of the voice
+  analyzer, which cannot record, and seconds of voiced time say nothing about
+  whether a take is clean.
+- Lessons `v-l2-m3-04` (One Note Per Bar) and `v-l5-m4-04` (An Easy Pattern
+  Through Your Transition) changed `type` from `song` to `exercise`. Neither
+  uses a song: one holds a supplied sustained note, the other sings a short
+  supplied pattern. The type sets each page's description and its
+  `learningResourceType`.
 
 Don't "re-sync" those edits away: parity with GuitarHub is by stage, module
 and lesson ID, not by text. GuitarHub's copy has to be re-synced byte for byte
@@ -495,8 +505,16 @@ What the other apps must do: re-sync the file and apply the two new
 No key was added, so `version` stays 9:
 
 - `editorial`: word counts moved with this round's text edits. Book:
-  `breath` (1568), `weeks-1-2-baseline` (1421), `totalWords` 32597. Atlas:
-  `the-safety-rail` (838), `totalWords` 72471.
+  `breath` (1568), `weeks-1-2-baseline` (1421), `stamina-and-health` (1230),
+  `learning-from-other-voices` (1412), `totalWords` 32633. Atlas:
+  `the-safety-rail` (838), `the-classic-rock-men` (5131), `totalWords` 72468.
+- `editorial.repertoire`: `difficulty` for `lose-control` and
+  `someone-you-loved` is now `Hard` (was `Medium`). Span plus altitude reads
+  both as Medium, but each chorus holds a sustained full-voice top above the
+  tenor passaggio (A4–C#5 and Ab4–Bb4). `popDifficulty` now honours an
+  editorial override that an entry sets only for that documented reason, and
+  the song's page states the reason beside the rating. The contract still
+  reads the value from `popDifficulty`; nothing types it by hand.
 - `measurement.rangeExtremes.note` no longer calls the result the "lowest and
   highest comfortable note". The range test asks for the furthest clear notes
   and counts a note once the detector has heard it for 600 ms in total, so the

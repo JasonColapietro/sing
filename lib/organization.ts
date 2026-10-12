@@ -69,6 +69,15 @@ export const ORG_NAME = "Suede AI";
 export const ORG_URL = "https://suedeai.ai";
 export const ORG_LOGO = "https://suedeai.ai/suede-ai-logo-transparent.png";
 
+/**
+ * The one support address, for the moments that need a person: a lost Pro
+ * key, a charge that didn't confirm, a subscription Stripe can't find. It is
+ * the customer-support contactPoint on suedeai.ai's canonical Organization
+ * node (the `@id` above) and the address /contact links, so a buyer is never
+ * sent to an inbox the company publishes nowhere else.
+ */
+export const SUPPORT_EMAIL = "support@suedeai.ai";
+
 /** The full node, for the pages that stand as the site's own entity surface. */
 export const ORG_NODE = {
   "@type": "Organization",

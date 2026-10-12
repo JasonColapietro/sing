@@ -291,7 +291,7 @@ export function RangeHistoryChart({ history }: { history: RangeEntry[] }) {
         {midiToLabel(latest.lowMidi)}–{midiToLabel(latest.highMidi)} ·{" "}
         {latest.semitones} semitones
         {growth === null
-          ? " · retest about six weeks after this one to start charting growth"
+          ? " · retest about six weeks after this one to chart any change"
           : growth === 0
             ? " · unchanged since your first test"
             : ` · ${growth > 0 ? "+" : ""}${growth} semitones since your first test`}

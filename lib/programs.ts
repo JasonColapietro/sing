@@ -286,7 +286,7 @@ const RECOVERY: Program = {
   name: "Recovery week",
   tagline: "Seven quiet days for a voice that feels tired: small hums, soft trills and gentle breath, with a day off in the middle.",
   measures:
-    "Only what every warmup measures: how close each note landed to its target. It is practice, not treatment. A voice that hurts or stays rough needs a doctor, not an app.",
+    "Only what every warmup measures: how close each note landed to its target. It is practice, not treatment. A voice that hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist, not an app.",
   weeks: 1,
   pro: false,
   days: [
@@ -390,23 +390,16 @@ const LONG_BREATH: ProgramItem[] = [
  * test. Chapter 14 asks for "five to ten minutes from one of the shorter
  * warmup packs" because a cold voice under-reports at both ends, and the set
  * still fits the free week's five guided minutes with day 1's sustain. The
- * halfway and closing check-ins sing the same set: chapter 8's protocol is
- * the same warmup every time, and chapter 16 retests under the conditions
- * "you used in week 1, or the two results are not comparable".
+ * halfway and closing check-ins sing the same set and nothing else before
+ * the test, breath drills included: chapter 8's protocol is the same warmup
+ * every time, and chapter 16 retests under the conditions "you used in week
+ * 1, or the two results are not comparable". Day 1 has no room for chapter
+ * 14's box and Farinelli lead-in inside the free plan's five guided minutes,
+ * so the later check-ins leave it out too rather than prime a sustain the
+ * baseline was taken without. They make up the session afterwards, on the
+ * recovery set and the cool-down.
  */
 const BASELINE_WARMUP: ProgramItem[] = [routine("morning")];
-
-/**
- * The breath that opens the halfway and closing check-ins, before the
- * baseline warmup: three minutes around the square and the climb to eight,
- * both silent. Chapter 16 opens a session with "box breathing from Breath,
- * then two or three minutes of the lightest warmup pack you have". The quick
- * set is not used here because it ends on a sustain: a maximal hold sung
- * before the warmup, and a second attempt the day-1 baseline never had, when
- * the check-in's reading is the longest hold of the day. Each check-in takes
- * one sustain, after the range test, as day 1 does.
- */
-const RETEST_BREATH: ProgramItem[] = [drill("box", { drill: "box", side: 4, minutes: 3 }), drill("farinelli")];
 
 /**
  * Weeks 5 and 6's second session: the morning set, then six reps of the ng
@@ -427,6 +420,53 @@ const QUIET_SIRENS = day(
   { kind: "recorder", take: "one slow ng siren through your transition, about two seconds a whole step" },
   routine("cooldown"),
 );
+
+/**
+ * Weeks 5 and 6's first session: box breathing and the morning set, then
+ * chapter 16's two kinds of work, sirens and slides. Eight ng sirens at 0.5×,
+ * the slowest the room offers, as on the quiet-siren day; eight reps still
+ * top out about five semitones under the measured high. Then the slow "hoo"
+ * descent, 8-5-3-1 a half-step lower each rep, as the slide. The chapter's
+ * slide is a five-note descending scale on "oo" that "starts above your
+ * transition and ends below it" with the top note light; the room's own
+ * Descending five climbs its ladder from near the bottom of the range and,
+ * for a lower voice, never starts above the transition, while the Hoo descent
+ * starts two semitones under the measured high, on a light top note ("Start
+ * the top note light"), and comes down through the break. Not the Mix builder
+ * pack, which runs its ng glide at about half a second a whole step, a fast
+ * scale and bright octave leaps to within two semitones of the measured top:
+ * the speed, the volume and the agility the chapter rules out ("pick a pack
+ * with slides and sustained patterns rather than agility or staccato").
+ */
+const SLIDES_ACROSS = day(
+  "Slides across the break",
+  drill("box"),
+  routine("morning"),
+  { kind: "exercise", id: "ng-siren-fifth", reps: 8, tempo: 0.5 },
+  exercise("hoo-four-note", 8),
+  routine("cooldown"),
+);
+
+/**
+ * The middle-voice on-ramp weeks 7 and 8 start from: the Morning reset and
+ * six reps of the five-note scale, the middle work weeks 3 and 4 sang.
+ * Chapter 17: "The middle-voice work from the earlier blocks is your on-ramp
+ * … five or six minutes of it in the Warmups packs before anything goes above
+ * the transition. A cold voice at the top of your range is where the trouble
+ * is." The Quick and Daily sets are not it: they climb from the bottom of
+ * the measured range to near its top, the Quick set within its first minute.
+ */
+const MIDDLE_ON_RAMP: ProgramItem[] = [routine("morning"), exercise("five-note-scale", 6)];
+
+/**
+ * Weeks 3 and 4's onset work, as chapter 15 asks: "One note in your middle,
+ * sung five times: short, clean, a full stop and a fresh breath between each.
+ * Then run the recorder and listen back."
+ */
+const ONSET_TAKE: ProgramItem = {
+  kind: "recorder",
+  take: "one middle note, five short clean onsets with a fresh breath between, then listen back",
+};
 
 /** Four sessions a week, spread out, as the book asks: "three is the floor, four is better". */
 function bookWeek(a: ProgramDay, b: ProgramDay, c: ProgramDay, d: ProgramDay): ProgramDay[] {
@@ -452,7 +492,7 @@ const MEASURED_VOICE: Program = {
   tagline:
     "The book's twelve-week plan, four sessions a week: baseline and breath, the middle, the break, the top, the bottom, then one song.",
   measures:
-    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear, and one early in week 11 is a working copy of your song. Takes in weeks 5 to 8, a siren and a top-note pattern, are for the A/B comparisons chapters 16 and 17 ask for.",
+    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear, and one early in week 11 is a working copy of your song. Takes of five onsets in weeks 3 and 4 are for listening back, as chapter 15 asks, and takes in weeks 5 to 8, a siren and a top-note pattern, are for the A/B comparisons chapters 16 and 17 ask for.",
   weeks: 12,
   pro: true,
   chapters: [
@@ -492,51 +532,54 @@ const MEASURED_VOICE: Program = {
     // Warmups stay in the middle block chapter 15 asks for: the Morning reset,
     // six reps of the five-note scale and a held note, never the Quick or
     // Daily sets, whose twelfth runs and octave sirens span most of the
-    // measured range.
+    // measured range. Once a week the held note is followed by a recorded
+    // take of five clean onsets, the onset the weeks 3–4 exit test names.
     ...[3, 4].flatMap(() =>
       bookWeek(
         day("Five notes and a held note", breath("quick"), routine("morning"), exercise("five-note-scale", 6), exercise("sustained-hold", 5), ear, routine("cooldown")),
         day("A quiet set and a song", breath("daily"), routine("morning"), ear, song("silent-night"), routine("cooldown")),
-        day("Five notes and a held note again", breath("quick"), routine("morning"), exercise("five-note-scale", 6), exercise("sustained-hold", 5), ear, routine("cooldown")),
+        day("Five notes and a held note again", breath("quick"), routine("morning"), exercise("five-note-scale", 6), exercise("sustained-hold", 5), ONSET_TAKE, ear, routine("cooldown")),
         day("Five notes and a song", breath("quick"), routine("morning"), exercise("five-note-scale", 6), ear, song("ode-to-joy"), routine("cooldown")),
       ),
     ),
     // Weeks 5–6: through the break, quietly. Chapter 16 opens each session on
     // box breathing and "the lightest warmup pack you have, staying entirely
     // below your transition", so the warmup is the Morning reset, not the
-    // Quick or Daily sets. The block closes with a retest, warmed up as day 1
-    // was.
+    // Quick or Daily sets, and the work is slow sirens and slides, not a full
+    // pack. The block closes with a retest, warmed up as day 1 was.
     ...bookWeek(
-      day("Slides across the break", drill("box"), routine("morning"), routine("mix"), routine("cooldown")),
+      SLIDES_ACROSS,
       QUIET_SIRENS,
-      day("Slides across the break", drill("box"), routine("morning"), routine("mix"), routine("cooldown")),
+      SLIDES_ACROSS,
       day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
     ),
     ...week(
       bookWeek(
-        day("Slides across the break", drill("box"), routine("morning"), routine("mix"), routine("cooldown")),
+        SLIDES_ACROSS,
         QUIET_SIRENS,
-        day("Slides across the break", drill("box"), routine("morning"), routine("mix"), routine("cooldown")),
+        SLIDES_ACROSS,
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
       {
-        6: day("Halfway check-in", ...RETEST_BREATH, ...BASELINE_WARMUP, range, drill("sustain"), routine("cooldown")),
+        6: day("Halfway check-in", ...BASELINE_WARMUP, range, drill("sustain"), routine("recovery"), routine("cooldown")),
       },
     ),
-    // Weeks 7–8: height without weight, head voice before belt. Chapter 17
-    // asks for one recorded take a week of the same pattern, to A/B two
-    // weeks later, so the first session of each week records one.
+    // Weeks 7–8: height without weight, head voice before belt. Every session
+    // that goes above the transition starts on the middle-voice on-ramp
+    // chapter 17 asks for. Chapter 17 also asks for one recorded take a week
+    // of the same pattern, to A/B two weeks later, so the first session of
+    // each week records one.
     ...[7, 8].flatMap(() =>
       bookWeek(
         day(
           "Light and high",
-          routine("quick"),
+          ...MIDDLE_ON_RAMP,
           routine("high-notes"),
           { kind: "recorder", take: "a short ascending pattern through your transition to a comfortable top note, quietly" },
           routine("cooldown"),
         ),
-        day("Head voice", routine("quick"), routine("head-voice-builder"), routine("cooldown")),
-        day("The everyday set, then the tenth", routine("daily"), routine("high-notes"), routine("cooldown")),
+        day("Head voice", ...MIDDLE_ON_RAMP, routine("head-voice-builder"), routine("cooldown")),
+        day("The middle set, then the tenth", ...MIDDLE_ON_RAMP, exercise("sustained-hold", 5), routine("high-notes"), routine("cooldown")),
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
     ),
@@ -572,7 +615,7 @@ const MEASURED_VOICE: Program = {
     ),
     ...week(
       bookWeek(
-        day("Where you are now", ...RETEST_BREATH, ...BASELINE_WARMUP, range, recorder, drill("sustain"), routine("cooldown")),
+        day("Where you are now", ...BASELINE_WARMUP, range, recorder, drill("sustain"), routine("recovery"), routine("cooldown")),
         day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
         day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
         day("The same song again", breath("daily"), routine("morning"), song("home-on-the-range"), routine("cooldown")),
@@ -651,11 +694,21 @@ function itemType(item: ProgramItem): ActivityType {
 }
 
 /**
+ * Whether the free plan's daily allowance counts this item (lib/free-cap
+ * `CAPPED_TYPES`): warmups, breath, ear training and songs. The range test and
+ * the Recorder sit outside it, so a free singer can still do them once the
+ * day's guided minutes are used.
+ */
+export function itemIsCapped(item: ProgramItem): boolean {
+  return CAPPED_TYPES.has(itemType(item));
+}
+
+/**
  * Seconds of a day the free plan's daily allowance counts (lib/free-cap
  * `CAPPED_TYPES`). The range test and the Recorder sit outside it.
  */
 export function cappedDaySeconds(d: ProgramDay): number {
-  return d.items.reduce((a, item) => a + (CAPPED_TYPES.has(itemType(item)) ? itemSeconds(item) : 0), 0);
+  return d.items.reduce((a, item) => a + (itemIsCapped(item) ? itemSeconds(item) : 0), 0);
 }
 
 /**
@@ -667,7 +720,7 @@ export function cappedDaySeconds(d: ProgramDay): number {
  */
 function cappedPieces(d: ProgramDay): number[] {
   return d.items.flatMap((item) => {
-    if (!CAPPED_TYPES.has(itemType(item))) return [];
+    if (!itemIsCapped(item)) return [];
     if (item.kind === "routine") {
       const r = routineById(item.id);
       return r ? r.steps.map((s) => stepSeconds(s) + STEP_INTRO_SEC) : [];

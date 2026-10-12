@@ -165,6 +165,11 @@ export const RANGE_GUIDE: GuideContent = {
       label: "Your Range lessons",
       note: "Three short free lessons on finding your low and high notes without forcing either end.",
     },
+    {
+      href: "/can-you-sing",
+      label: "Popular song vocal ranges",
+      note: "The key and cited vocal range of popular songs; once your range is saved, each song's page checks it against yours.",
+    },
   ],
 };
 
@@ -293,7 +298,7 @@ export const BREATH_GUIDE: GuideContent = {
     "Breath support is the steady, controlled release of air that keeps a sung note even in pitch and volume. Singers work on it because many audible problems in a phrase — wavering pitch, a note that thins at the end, running out mid-line — trace back to how the air was managed rather than to the throat.",
   body: [
     "The mechanics are unglamorous. You breathe low, so the diaphragm descends and the ribs stay open rather than the shoulders lifting. Then you resist the natural collapse of the ribcage while you sing, so air leaves at the rate the note needs instead of all at once. That resistance is the 'support' in breath support.",
-    "It is one of the easier vocal skills to track, because two parts of it can be observed directly: how long you sustain an even tone on one breath, and whether the pitch stays put while you do. Both are visible without a teacher in the room.",
+    "It is one of the easier vocal skills to track, because two parts of it can be observed directly: how long you sustain an even tone on one breath, and whether the pitch stays put while you do. Both are visible without a teacher in the room: the sustain test here times the first, and the pitch studio's trace shows whether the pitch held.",
     "This room runs two kinds of exercise. Timed breathing patterns build the habit of a low, unhurried inhale and a controlled exhale. The mic-based sustain test then checks the result — you hold a note while the app times how long the tone lasts and how even you keep its loudness.",
   ],
   howTo: {
@@ -331,7 +336,7 @@ export const BREATH_GUIDE: GuideContent = {
     heading: "If a phrase runs out of air, start here",
     body: "Beginners usually take a big, high, shoulder-lifting breath and then spend it in the first two seconds. The fix is a smaller, lower breath released more slowly, which feels like doing less.",
     points: [
-      "Breathe low and quietly — a noisy gasp is a high breath, and a high breath does not support",
+      "Breathe low and quietly — shoulders still, and no gasp: a noisy inhale means air is squeezing through a narrow throat, and a throat that is narrow on the way in tends to stay narrow on the first note",
       "Use your own first steady hiss as the baseline; the number matters less than the evenness",
       "Never sing to the very bottom of your air; the last of a breath is where tone and pitch both fall apart",
       "Stop immediately if you feel lightheaded — that is over-breathing, and rest fixes it",
@@ -379,7 +384,7 @@ export const BREATH_GUIDE: GuideContent = {
     {
       href: "/studio",
       label: "Pitch studio",
-      note: "Watch loudness steadiness on a sustained note.",
+      note: "Watch whether the pitch holds through a sustained note.",
     },
     {
       href: "/songs",
@@ -626,6 +631,11 @@ export const SONGS_GUIDE: GuideContent = {
       label: "First Song, One Register lessons",
       note: "A first song in your own key, in three short free lessons.",
     },
+    {
+      href: "/can-you-sing",
+      label: "Popular song vocal ranges",
+      note: "Key, cited range and difficulty of popular songs you can't sing along to here; once your range is saved, each song's page checks it against yours.",
+    },
   ],
 };
 
@@ -823,7 +833,7 @@ export const TOOLS_GUIDE: GuideContent = {
     },
     {
       q: "Can I use the piano to find my range?",
-      a: "You can, by playing notes and singing along until you run out at either end. The range test automates this: it detects the pitch you actually produced rather than the one you were aiming for, and marks the lowest and highest clear notes it heard in that session.",
+      a: "You can: play a note, sing it back, and step outward until your voice runs out. The keyboard here spans C3 to C6, and the conventional bass and baritone bands reach below C3, so a low voice can run out of keys before it runs out of notes. The range test is not limited to those keys: it detects the pitch you actually produced rather than the one you were aiming for, and marks the lowest and highest clear notes it heard in that session.",
     },
     {
       q: "Why does my voice sound rough against the drone?",

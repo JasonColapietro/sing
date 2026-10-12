@@ -79,6 +79,31 @@ describe("browser-only progress reset", () => {
     expect(fresh.getProgressCloudState().paused).toBe(true);
   });
 
+  it("lifts the Danger zone erase's pause when no remote copy can exist, keeping the reset fence", async () => {
+    // A free singer with accounts off: the pause would guard nothing, and left
+    // behind it would stop Pro sync from starting if they bought Pro later.
+    const env = await setup();
+    const reset = env.cloud.getProgressCloudState().resetGeneration;
+    env.progress.eraseBrowserProgress({ remoteCopyPossible: false });
+    expect(env.progress.getState().sessions).toEqual([]);
+    const state = env.cloud.getProgressCloudState();
+    expect(state.paused).toBe(false);
+    expect(env.cloud.captureProgressCloudGeneration()).not.toBeNull();
+    // Still an erase: another tab's pre-erase record is fenced off.
+    expect(state.resetGeneration).not.toBe(reset);
+    vi.resetModules();
+    const fresh = await import("./progress-cloud");
+    expect(fresh.getProgressCloudState().paused).toBe(false);
+  });
+
+  it("keeps the Danger zone erase's pause when a cloud copy or an account snapshot can exist", async () => {
+    const env = await setup();
+    env.progress.eraseBrowserProgress({ remoteCopyPossible: true });
+    expect(env.progress.getState().sessions).toEqual([]);
+    expect(env.cloud.getProgressCloudState().paused).toBe(true);
+    expect(env.cloud.captureProgressCloudGeneration()).toBeNull();
+  });
+
   it("invalidates the previous operation even after pause followed by resume", async () => {
     const { cloud } = await setup();
     const before = cloud.requireProgressCloudGeneration();

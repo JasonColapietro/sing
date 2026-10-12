@@ -39,6 +39,8 @@ import StagePage, { generateMetadata as stageMetadata } from "@/app/learn/voice/
 import { ALL_SONGS } from "@/components/songs/data";
 import { TOLERANCE_CENTS } from "@/components/songs/lib";
 import { EXERCISES } from "@/components/warmups/exercises";
+import { routineById, routineSeconds, stepExercise } from "@/components/warmups/routines";
+import { TOLERANCE_CENTS as WARMUP_TOLERANCE_CENTS } from "@/components/warmups/scoring";
 import { MEASUREMENT_WORDS } from "@/components/learn/module-practice";
 import { CAPPED_TYPES } from "@/lib/free-cap";
 import { SING_GLOSSARY_TERMS, termId } from "@/lib/glossary";
@@ -47,13 +49,20 @@ import { MODULE_TERMS, courseModuleForTerm } from "@/lib/lesson-glossary";
 import {
   GUIDED_ACTIVITY,
   MODULE_PRACTICE,
+  RANGE_WARM_UP,
   ROOM_PATHS,
   companionHref,
   companionLabel,
+  distinctPracticeMatch,
   isGuidedPractice,
+  lessonCompanion,
+  linksGuidedPractice,
   moduleMaterial,
   practiceMatch,
+  warmsUpFirst,
+  type Companion,
 } from "@/lib/lesson-practice";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { SITE_URL } from "@/lib/site";
 import { voiceCurriculum } from "@/lib/voice-curriculum";
 import {
@@ -110,6 +119,12 @@ function promisingText(lesson: Lesson): Array<[string, string]> {
     ["ready when", lesson.selfCheck.readyWhen],
     ["what this shows", lesson.selfCheck.shows],
   ];
+}
+
+/** Every room a module's pages open: the module's own, then any lesson's. */
+function companionsOf(moduleId: string): Companion[] {
+  const p = MODULE_PRACTICE[moduleId];
+  return [p.companion, ...Object.values(p.lessonCompanion ?? {}).filter((c): c is Companion => !!c)];
 }
 
 function hrefs(html: string): string[] {
@@ -301,6 +316,19 @@ describe("what a module says sing measures", () => {
     }
     expect(contract.knownDivergences.pitchToleranceCents.surfaces.singWeb).toBe(TOLERANCE_CENTS);
   });
+
+  /**
+   * A lesson that names the warm-up's scoring window in its own words (Hold
+   * It's self-check: a sag inside the window is yours to hear) names the
+   * window the warm-up room scores against.
+   */
+  it("names the warm-up's scoring window as the warm-up room scores it", () => {
+    const stated = LESSONS.flatMap((l) =>
+      [...JSON.stringify(l).matchAll(/within (\d+) cents/g)].map((m) => [l.id, Number(m[1])] as const),
+    );
+    expect(stated.length).toBeGreaterThan(0);
+    for (const [id, cents] of stated) expect(cents, id).toBe(WARMUP_TOLERANCE_CENTS);
+  });
 });
 
 describe("the lessons make no claim sing can't keep", () => {
@@ -376,7 +404,9 @@ describe("links from the lessons", () => {
   });
 
   it("uses only rooms and parameters the contract publishes", () => {
-    for (const [id, { companion }] of Object.entries(MODULE_PRACTICE)) {
+    for (const [id, companion] of Object.keys(MODULE_PRACTICE).flatMap((id) =>
+      companionsOf(id).map((c) => [id, c] as const),
+    )) {
       const room = rooms[companion.room];
       expect(room, `${id} names unknown room ${companion.room}`).toBeTruthy();
       if (companion.param) {
@@ -390,9 +420,11 @@ describe("links from the lessons", () => {
 
   it("never deep-links a Pro exercise", () => {
     const free = new Set(EXERCISES.map((e) => e.id));
-    for (const [id, { companion }] of Object.entries(MODULE_PRACTICE)) {
-      if (companion.room === "warmups" && companion.param === "exercise") {
-        expect(free.has(companion.value!), `${id} deep-links Pro exercise ${companion.value}`).toBe(true);
+    for (const id of Object.keys(MODULE_PRACTICE)) {
+      for (const companion of companionsOf(id)) {
+        if (companion.room === "warmups" && companion.param === "exercise") {
+          expect(free.has(companion.value!), `${id} deep-links Pro exercise ${companion.value}`).toBe(true);
+        }
       }
       for (const item of moduleMaterial(id)) {
         if (item.pro && (item.kind === "exercise" || item.kind === "song")) {
@@ -431,11 +463,48 @@ describe("links from the lessons", () => {
    * live analyzer is not the Pro "take analysis" of recorded takes.
    */
   it("sends every module to a room it can be practised in, named as the site names it", () => {
-    for (const [id, { companion }] of Object.entries(MODULE_PRACTICE)) {
-      expect(["atlas", "glossary", "singers", "programs", "progress"], id).not.toContain(companion.room);
-      expect(companionLabel(companion), id).not.toMatch(/take analysis/i);
+    for (const id of Object.keys(MODULE_PRACTICE)) {
+      for (const companion of companionsOf(id)) {
+        expect(["atlas", "glossary", "singers", "programs", "progress"], id).not.toContain(companion.room);
+        expect(companionLabel(companion), id).not.toMatch(/take analysis/i);
+      }
     }
     expect(companionLabel({ room: "analyze" })).toBe("the voice analyzer");
+  });
+
+  it("gives a lesson its own room only for a lesson of that module", () => {
+    for (const [id, p] of Object.entries(MODULE_PRACTICE)) {
+      for (const lessonId of Object.keys(p.lessonCompanion ?? {})) {
+        expect(catalogLessons.get(lessonId)?.module.id, `${id}: ${lessonId}`).toBe(id);
+        // The panel on such a lesson calls the module's room the one "for the
+        // module's self-check", so the self-check itself keeps that room.
+        expect(catalogLessons.get(lessonId)?.lesson.type, `${id}: ${lessonId}`).not.toBe("checkpoint");
+      }
+    }
+  });
+
+  /**
+   * Set Up Your Space has the singer record a take with playback on and one
+   * with it stopped, and compare them. The analyzer cannot record or play
+   * back, and its voiced-time figure rises with a reference bleeding in.
+   */
+  it("sends the room-setup module to the recorder its lessons record in", () => {
+    const p = MODULE_PRACTICE["v-l1-m1"];
+    expect(p.companion.room).toBe("recorder");
+    expect(p.basis.kind).toBe("selfCheck");
+  });
+
+  /**
+   * Your Range's first two lessons practise the slides in the recorder; only
+   * the self-check takes the test. Every finished test replaces the saved
+   * range, so repeating an exercise lesson must not repeat the test.
+   */
+  it("keeps the Your Range exercise lessons out of the range test", () => {
+    for (const l of LESSONS.filter((l) => l.moduleId === "v-l1-m2")) {
+      const room = lessonCompanion(MODULE_PRACTICE[l.moduleId], l.id).room;
+      if (l.type === "checkpoint") expect(room, l.id).toBe("range");
+      else expect(room, l.id).toBe("recorder");
+    }
   });
 
   it("never sends the passaggio module to the range test, which shows no passaggio", () => {
@@ -489,6 +558,58 @@ describe("links from the lessons", () => {
     expect(isGuidedPractice({ room: "breath", param: "drill", value: "sustain" })).toBe(true);
     for (const room of ["studio", "range", "recorder", "analyze", "tools", "atlas"]) {
       expect(isGuidedPractice({ room }), room).toBe(false);
+    }
+    // The range test has no clock, but its buttons offer the warm-up first.
+    expect(warmsUpFirst({ room: "range" })).toBe(true);
+    expect(linksGuidedPractice({ room: "range" })).toBe(true);
+    for (const room of ["studio", "recorder", "analyze", "tools"]) {
+      expect(linksGuidedPractice({ room }), room).toBe(false);
+    }
+    expect(RANGE_WARM_UP.href).toBe("/warmups?routine=morning");
+    expect(RANGE_WARM_UP.href).toBe(`/warmups?routine=${RANGE_WARM_UP.routine}`);
+    expect(rooms.warmups.params).toContain("routine");
+    // The note beside it says the Morning reset's four or so minutes come out
+    // of the free allowance, which has to stay large enough to hold them.
+    expect(FREE_DAILY_MINUTES).toBeGreaterThanOrEqual(4);
+    // The button names the routine it opens, which is free, and the note's
+    // "about four minutes" is that routine's length, as the lessons say.
+    const morning = routineById(RANGE_WARM_UP.routine)!;
+    expect(morning.pro).toBe(false);
+    expect(RANGE_WARM_UP.label).toBe(`Warm up first: ${morning.name}`);
+    expect(Math.round(routineSeconds(morning) / 60)).toBe(4);
+    expect(routineSeconds(morning)).toBeLessThanOrEqual(FREE_DAILY_MINUTES * 60);
+  });
+
+  /**
+   * The course and stage pages mark a module "Practised" only on evidence for
+   * that module. One recording once marked eleven modules across Stages 3 to
+   * 7, and one front-door pitch-meter session four more.
+   */
+  it("marks a module practised only on a session no other module shares", () => {
+    const shared = new Set(["recorder", "studio", "analyze"]);
+    for (const [id, { companion }] of Object.entries(MODULE_PRACTICE)) {
+      if (shared.has(companion.room)) expect(distinctPracticeMatch(id), id).toBeUndefined();
+    }
+    // Two modules sing Deep River.
+    expect(distinctPracticeMatch("v-l3-m4")).toBeUndefined();
+    expect(distinctPracticeMatch("v-l6-m6")).toBeUndefined();
+    // The range test, the sustain test and the one tools module are their own.
+    expect(distinctPracticeMatch("v-l1-m2")).toEqual({ type: "range" });
+    expect(distinctPracticeMatch("v-l1-m3")).toEqual({ type: "breath", detail: "Sustain test" });
+    expect(distinctPracticeMatch("v-l4-m2")).toEqual({ type: "tools" });
+    // A warm-up deep link names its exercise, so it is one module's.
+    expect(distinctPracticeMatch("v-l2-m3")?.detail).toBeTruthy();
+    // Unless Stage 1 sends every singer through it first: the Morning reset
+    // before the range test logs each of its drills under the drill's title,
+    // and Stage 6's three-note turn is scored on one of them.
+    const morning = routineById(RANGE_WARM_UP.routine)!.steps.map((st) => stepExercise(st).id);
+    expect(morning).toContain("morning-three-note");
+    expect(MODULE_PRACTICE["v-l6-m1"].companion.value).toBe("morning-three-note");
+    expect(distinctPracticeMatch("v-l6-m1")).toBeUndefined();
+    for (const [id, { companion }] of Object.entries(MODULE_PRACTICE)) {
+      if (companion.room === "warmups" && morning.includes(companion.value!)) {
+        expect(distinctPracticeMatch(id), id).toBeUndefined();
+      }
     }
   });
 
@@ -607,17 +728,30 @@ describe("the pages", () => {
   });
 
   it("put the practise button before the steps, with the daily allowance where it applies", async () => {
+    const at = (html: string, href: string) => html.indexOf(`href="${href.replace(/&/g, "&amp;")}"`);
     for (const l of LESSONS) {
       const html = renderToStaticMarkup(
         await LessonPage({
           params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
         }),
       );
-      const { companion } = MODULE_PRACTICE[l.moduleId];
-      const button = html.indexOf(`href="${companionHref(companion).replace(/&/g, "&amp;")}"`);
+      const practice = MODULE_PRACTICE[l.moduleId];
+      const companion = lessonCompanion(practice, l.id);
+      const steps = html.indexOf('id="steps"');
+      const button = at(html, companionHref(companion));
       expect(button, l.id).toBeGreaterThan(-1);
-      expect(button, l.id).toBeLessThan(html.indexOf('id="steps"'));
-      expect(html.includes("data-guided-cap"), l.id).toBe(isGuidedPractice(companion));
+      expect(button, l.id).toBeLessThan(steps);
+      // A range test is offered after the warm-up the lessons prescribe.
+      if (warmsUpFirst(companion)) {
+        const warm = at(html, RANGE_WARM_UP.href);
+        expect(warm, l.id).toBeGreaterThan(-1);
+        expect(warm, l.id).toBeLessThan(button);
+      }
+      // The header and the practice panel each say so when they send the
+      // singer to guided practice.
+      expect(html.includes("data-guided-cap"), l.id).toBe(
+        linksGuidedPractice(companion) || linksGuidedPractice(practice.companion),
+      );
       expect(html, l.id).not.toMatch(/\bA (?:8|11|18)-minute/);
     }
   });
@@ -682,6 +816,48 @@ describe("the pages", () => {
     expect(warm).toBeLessThan(week.indexOf('href="/range?mode=range#start"'));
   });
 
+  /**
+   * The Your Range lessons say a cold voice under-reports at both ends, so no
+   * link on their pages reaches the range test before the warm-up does.
+   */
+  it("warm up before any range-test link on the Your Range lessons", async () => {
+    const range = LESSONS.filter((l) => l.moduleId === "v-l1-m2");
+    expect(range.length).toBeGreaterThan(0);
+    for (const l of range) {
+      const html = renderToStaticMarkup(
+        await LessonPage({
+          params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
+        }),
+      );
+      const warm = html.indexOf(`href="${RANGE_WARM_UP.href}"`);
+      expect(warm, l.id).toBeGreaterThan(-1);
+      expect(warm, l.id).toBeLessThan(html.indexOf(`href="${companionHref({ room: "range" })}"`));
+    }
+  });
+
+  /**
+   * A lesson practised outside its module's room opens that room first, and
+   * the practice panel further down says why it then offers the module's.
+   */
+  it("explain the module's room on a lesson that practises somewhere else", async () => {
+    for (const l of LESSONS) {
+      const p = MODULE_PRACTICE[l.moduleId];
+      if (!p.lessonCompanion) continue;
+      const html = renderToStaticMarkup(
+        await LessonPage({
+          params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
+        }),
+      );
+      const own = p.lessonCompanion[l.id];
+      if (own) {
+        expect(html, l.id).toContain(`data-lesson-room="${own.room}"`);
+        expect(html, l.id).toContain(`You practise this lesson in ${companionLabel(own)}`);
+      } else {
+        expect(html, l.id).not.toContain("data-lesson-room");
+      }
+    }
+  });
+
   it("are linked from the learn hub by pages that exist", () => {
     const html = renderToStaticMarkup(<LearnPage />);
     const published = new Set([VOICE_LEARN_PATH, ...Object.values(coursePaths()).flat()]);
@@ -701,8 +877,14 @@ describe("the pages", () => {
         const kind = basis.kind;
         expect(html).toContain(`data-proof-basis="${kind === "measured" ? "measured" : "self-check"}"`);
         if (kind !== "measured") expect(html).not.toContain("Suede Sing measures part of this");
-        // Sent into a room with a daily allowance, the page says so.
-        expect(html.includes("data-guided-cap"), mod.catalog.id).toBe(isGuidedPractice(companion));
+        // Sent into a room with a daily allowance, or to the warm-up before
+        // a range test, the page says so.
+        expect(html.includes("data-guided-cap"), mod.catalog.id).toBe(linksGuidedPractice(companion));
+        if (warmsUpFirst(companion)) {
+          const warm = html.indexOf(`href="${RANGE_WARM_UP.href}"`);
+          expect(warm, mod.catalog.id).toBeGreaterThan(-1);
+          expect(warm, mod.catalog.id).toBeLessThan(html.indexOf(`href="${companionHref(companion)}"`));
+        }
       }
     }
   });

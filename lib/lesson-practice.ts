@@ -25,6 +25,7 @@ import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { BOOK_CONTENTS } from "@/lib/book-data";
 import { ALL_SONGS, isProSong } from "@/components/songs/data";
 import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
+import { routineById, stepExercise } from "@/components/warmups/routines";
 import type { ActivityType } from "@/lib/progress-shape";
 import { rangeTestHref } from "@/lib/site";
 
@@ -47,6 +48,13 @@ export interface Companion {
 export interface ModulePractice {
   basis: ProofBasis;
   companion: Companion;
+  /**
+   * A lesson whose own steps send the singer somewhere other than the
+   * module's room, keyed by lesson ID. Its page's first button opens this
+   * room instead; the practice panel, which describes the module's evidence,
+   * keeps the module's.
+   */
+  lessonCompanion?: Partial<Record<string, Companion>>;
   /** Warm-up exercise IDs and song IDs, in the order GuitarHub listed them. */
   studies: string[];
   /** Book slugs, or `atlas:<slug>` for an atlas chapter. */
@@ -67,9 +75,16 @@ const selfCheck = (missing: string, showsInstead: string): ProofBasis => ({
 export const MODULE_PRACTICE: Record<string, ModulePractice> = {
   // Stage 1 · Room Check
   "v-l1-m1": {
-    // Usable input time is what a confidently-voiced time measurement reports.
-    basis: measured("phonationSeconds"),
-    companion: { room: "analyze" },
+    // The module's evidence is a recording heard back: its lessons compare
+    // takes made with playback on and with it stopped, and its self-check is
+    // one clear recording. Voiced time was the basis once, but it counts any
+    // confident pitch, so a reference bleeding in from a speaker raises it;
+    // and the analyzer, where it was read, has no record or playback.
+    basis: selfCheck(
+      "simultaneousVoices",
+      "That a take recorded with playback stopped holds only your voice when you play it back. The pitch detector reports one pitch from everything the microphone hears, so it cannot pick a reference out from under your voice; your ear on playback can.",
+    ),
+    companion: { room: "recorder" },
     studies: ["sustained-hold"],
     // Chapter 12 covers room noise, mic placement and headphone bleed, which
     // is this module, so it comes first. Chapter 1, how the voice works, stays
@@ -81,6 +96,14 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     // Strain is not measurable. What a scan establishes is the two extremes.
     basis: measured("rangeExtremes"),
     companion: { room: "range" },
+    // The first two lessons practise the slides in the recorder, as their
+    // steps say; only the self-check takes the range test, because every
+    // finished test replaces the saved range and refits the warm-ups and
+    // songs. Repeating an exercise lesson must not mean repeating the test.
+    lessonCompanion: {
+      "v-l1-m2-01": { room: "recorder" },
+      "v-l1-m2-02": { room: "recorder" },
+    },
     studies: ["morning-hum", "morning-siren"],
     readings: ["reading-the-range-test", "range-is-not-one-number"],
   },
@@ -473,6 +496,28 @@ export function companionLabel(c: Companion): string {
   return ROOM_LABELS[c.room] ?? c.room;
 }
 
+/** The room a lesson page's first button opens: the lesson's own, else its module's. */
+export function lessonCompanion(practice: ModulePractice, lessonId: string): Companion {
+  return practice.lessonCompanion?.[lessonId] ?? practice.companion;
+}
+
+/**
+ * The warm-up offered ahead of every link into the range test: a cold voice
+ * under-reports at both ends, and the result replaces the saved range. The
+ * Morning reset is about four minutes, inside the free daily allowance, and
+ * it is the set the Your Range lessons and /learn's Day 1 name.
+ */
+export const RANGE_WARM_UP = {
+  routine: "morning",
+  href: "/warmups?routine=morning",
+  label: "Warm up first: Morning reset",
+} as const;
+
+/** True when a link into this room comes after the warm-up. */
+export function warmsUpFirst(c: Companion): boolean {
+  return c.room === "range";
+}
+
 /**
  * Which logged sessions count as practising a module. Derived from what the
  * rooms already log (lib/progress.ts `logSession`), so there is no separate
@@ -519,6 +564,15 @@ export function isGuidedPractice(c: Companion): boolean {
   return type !== undefined && GUIDED_ACTIVITY.has(type);
 }
 
+/**
+ * True when the buttons into this room send the singer to guided practice:
+ * the room itself, or the warm-up offered before a range test. Wherever this
+ * holds, the page states the daily allowance.
+ */
+export function linksGuidedPractice(c: Companion): boolean {
+  return isGuidedPractice(c) || warmsUpFirst(c);
+}
+
 export function practiceMatch(c: Companion): PracticeMatch | undefined {
   const type = ROOM_ACTIVITY[c.room];
   if (!type) return undefined;
@@ -532,6 +586,46 @@ export function practiceMatch(c: Companion): PracticeMatch | undefined {
   }
   if (c.room === "breath" && c.value === "sustain") return { type, detail: "Sustain test" };
   return { type };
+}
+
+/**
+ * Every session a module's pages send the singer to log: its room, any
+ * lesson's own room, and each step of the warm-up offered before a range
+ * test, which logs under its exercises' titles like any other warm-up.
+ */
+function sessionsSentTo(p: ModulePractice): PracticeMatch[] {
+  const rooms = [p.companion, ...Object.values(p.lessonCompanion ?? {})].filter(
+    (c): c is Companion => c !== undefined,
+  );
+  const matches = rooms.flatMap((c) => practiceMatch(c) ?? []);
+  if (rooms.some(warmsUpFirst)) {
+    for (const step of routineById(RANGE_WARM_UP.routine)?.steps ?? []) {
+      matches.push({ type: "warmup", detail: stepExercise(step).title });
+    }
+  }
+  return matches;
+}
+
+/**
+ * A module's match for the "Practised" mark on the course and stage pages,
+ * or nothing when a session another module sends the singer to would satisfy
+ * it too. A recording, a studio or analyzer session, or a song that two
+ * modules share is evidence for none of them in particular: one take in the
+ * recorder once marked eleven modules across Stages 3 to 7 as practised. So
+ * is a drill inside the Morning reset that Stage 1 prescribes before the
+ * range test: every new singer sings it on day one. The module and lesson
+ * pages still count the room's sessions, naming the room they count.
+ */
+export function distinctPracticeMatch(moduleId: string): PracticeMatch | undefined {
+  const own = MODULE_PRACTICE[moduleId];
+  const match = own ? practiceMatch(own.companion) : undefined;
+  if (!match) return undefined;
+  const shared = Object.entries(MODULE_PRACTICE).some(
+    ([id, p]) =>
+      id !== moduleId &&
+      sessionsSentTo(p).some((other) => other.type === match.type && other.detail === match.detail),
+  );
+  return shared ? undefined : match;
 }
 
 export interface MaterialItem {

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TYPE_META } from "@/components/progress/format";
-import { weeklyReport, localDay } from "./progress";
+import { RANGE_RETEST_DAYS, rangeRetestDue, weeklyReport, localDay } from "./progress";
 
 describe("localDay", () => {
   it("formats the local calendar day, zero-padded", () => {
@@ -868,5 +868,29 @@ describe("weeklyReport", () => {
     expect(report.lastWeek).toEqual({ stars: 3, sessions: 1, durationSec: 45 });
     expect(report.start).toBe("2026-08-31");
     expect(weeklyReport([], new Date(2026, 8, 7)).lastStart).toBe("2026-08-31");
+  });
+});
+
+describe("rangeRetestDue", () => {
+  const now = Date.parse("2026-10-12T12:00:00Z");
+  const ago = (days: number) => new Date(now - days * 86_400_000).toISOString();
+
+  it("suggests a test with no saved range", () => {
+    expect(rangeRetestDue({}, now)).toBe(true);
+    expect(rangeRetestDue({ lowMidi: 47 }, now)).toBe(true);
+  });
+
+  it("holds a retest back until the saved range is six weeks old", () => {
+    expect(RANGE_RETEST_DAYS).toBe(42);
+    expect(rangeRetestDue({ lowMidi: 47, highMidi: 69, testedAt: ago(0) }, now)).toBe(false);
+    expect(rangeRetestDue({ lowMidi: 47, highMidi: 69, testedAt: new Date(now - 3_600_000).toISOString() }, now)).toBe(false);
+    expect(rangeRetestDue({ lowMidi: 47, highMidi: 69, testedAt: ago(41) }, now)).toBe(false);
+    expect(rangeRetestDue({ lowMidi: 47, highMidi: 69, testedAt: ago(42) }, now)).toBe(true);
+    expect(rangeRetestDue({ lowMidi: 47, highMidi: 69, testedAt: ago(74) }, now)).toBe(true);
+  });
+
+  it("treats a saved range with no date as current, as the coach does", () => {
+    expect(rangeRetestDue({ lowMidi: 47, highMidi: 69 }, now)).toBe(false);
+    expect(rangeRetestDue({ lowMidi: 47, highMidi: 69, testedAt: "not a date" }, now)).toBe(false);
   });
 });

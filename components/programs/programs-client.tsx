@@ -85,7 +85,13 @@ function ProgramCard({
           runs it as written.
         </p>
       )}
-      <p className="mt-3 flex-1 text-sm text-mut">{program.tagline}</p>
+      <p className="mt-3 text-sm text-mut">{program.tagline}</p>
+      {/* What each plan measures, on the list itself: the detail view opens
+          from the query after mount, so the list is all a crawler reads. */}
+      <p className="mt-2 flex-1 text-xs text-mut">
+        <span className="font-medium text-ink">What gets measured. </span>
+        {program.measures}
+      </p>
       <div className="mt-4">
         <Link
           href={`/programs?program=${encodeURIComponent(program.id)}`}

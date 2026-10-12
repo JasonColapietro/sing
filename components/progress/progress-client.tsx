@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAccountAuth } from "@/lib/use-account-auth";
 import {
   ACHIEVEMENTS,
-  clearProgress,
+  eraseBrowserProgress,
   getState,
   importProgress,
   levelForXp,
@@ -36,6 +36,7 @@ import { ProgramEntryCard } from "@/components/programs/today-card";
 import { programDayNeedsPro } from "@/components/practice/program-day";
 import { isRestDay } from "@/lib/programs";
 import { useIsPro } from "@/lib/pro";
+import { accountsReady } from "@/lib/accounts";
 import { MAX_SESSIONS } from "@/lib/progress-shape";
 import { FREE_DAILY_SEC } from "@/lib/practice-limits";
 import { dataControlsCopy } from "./data-copy";
@@ -518,7 +519,11 @@ function DataControls() {
 
   function handleErase() {
     if (confirmText.trim().toLowerCase() !== "erase") return;
-    clearProgress();
+    // With no Pro and accounts off there is no copy anywhere else, so the
+    // erase's sync pause would guard nothing; left behind, it would silently
+    // stop Pro sync if this singer bought Pro here later. Pro and account
+    // erases keep it, so a remote copy cannot undo the erase.
+    eraseBrowserProgress({ remoteCopyPossible: isPro || accountsReady() });
     setConfirmText("");
     setErased(true);
   }
@@ -580,7 +585,10 @@ function DataControls() {
         <p className="mt-1.5 text-sm text-mut">
           {copy.danger}
         </p>
-        {erased && paused && (
+        {/* A free singer's erase lifts its own pause, so the note does not
+            wait for one; a Pro or account erase's note says sync is paused,
+            and goes once it is resumed. */}
+        {erased && (paused || !(isPro || accountBackup)) && (
           <p
             className="mt-4 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok-ink"
             role="status"

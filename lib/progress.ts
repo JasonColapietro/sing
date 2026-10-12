@@ -22,6 +22,7 @@ import { weekBoundaries, weekTotals } from "./weekly-report";
 import {
   getProgressCloudState,
   pauseProgressCloud,
+  resumeProgressCloud,
   retryProgressCloudPersistence,
 } from "./progress-cloud";
 
@@ -518,6 +519,26 @@ export function setVocalRange(lowMidi: number, highMidi: number): LogResult {
   return { xpGained: newAchievements.length * XP_PER_ACHIEVEMENT, newAchievements, state: next };
 }
 
+/**
+ * Days before a range test is worth suggesting again. The book spaces range
+ * tests six weeks apart (chapter 8: "a number that still means something in
+ * six weeks"; chapter 13: "Do not retest between those points"), because
+ * testing more often mostly measures the day.
+ */
+export const RANGE_RETEST_DAYS = 42;
+
+/**
+ * Whether a range test is worth suggesting: no saved range, or one
+ * RANGE_RETEST_DAYS or more old. A saved range with no date is treated as
+ * current, as the /progress coach does, so the two never disagree.
+ */
+export function rangeRetestDue(range: ProgressState["range"], nowMs: number): boolean {
+  if (range.lowMidi === undefined || range.highMidi === undefined) return true;
+  const t = range.testedAt ? Date.parse(range.testedAt) : NaN;
+  if (Number.isNaN(t)) return false;
+  return Math.floor((nowMs - t) / 86_400_000) >= RANGE_RETEST_DAYS;
+}
+
 export function todayPracticeSec(s: ProgressState = load()): number {
   return sumDaySec(s, localDay());
 }
@@ -532,6 +553,23 @@ export function clearProgress(): void {
   // now a const other modules hold too.
   save(sanitizeProgress(null));
   retryProgressCloudPersistence();
+}
+
+/**
+ * Erase this browser's progress, as /progress's Danger zone does.
+ *
+ * clearProgress pauses automatic backup and cloud sync, so a cloud copy or an
+ * account snapshot cannot quietly restore what was just erased. When no such
+ * copy can exist — not Pro, and accounts switched off (lib/accounts.ts) — the
+ * pause guards nothing, and nothing on the free plan shows it. Left in place
+ * it would stop Pro sync from ever starting if this singer bought Pro in this
+ * browser later (startAutoSync skips a paused browser). So it is lifted again
+ * at once; the resume keeps the erase's reset generation, so the cross-tab
+ * fence in load() still drops another tab's pre-erase record.
+ */
+export function eraseBrowserProgress({ remoteCopyPossible }: { remoteCopyPossible: boolean }): void {
+  clearProgress();
+  if (!remoteCopyPossible) resumeProgressCloud();
 }
 
 /** Export progress as a JSON string (for backup / transfer). */

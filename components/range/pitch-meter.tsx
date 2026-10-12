@@ -8,7 +8,7 @@ import {
   midiToName,
   tuneZone,
 } from "@/lib/audio/notes";
-import { logSession, type LogResult } from "@/lib/progress";
+import { logSession, rangeRetestDue, useProgress, type LogResult } from "@/lib/progress";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { createPracticeClock } from "@/lib/practice-clock";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
@@ -83,18 +83,25 @@ function tuneWord(cents: number): string {
  * stop saved (and what it earned), and the next step once the singer has
  * explored enough for the range test to sharpen. Not "your last run": after a
  * second start the notes can come from both runs.
+ *
+ * A singer whose saved range is recent is not sent to retest: the book spaces
+ * range tests weeks apart, and their warmups and songs already fit the saved
+ * one. They get the practice that builds on it instead.
  */
 export function LastRun({
   low,
   high,
   lastLog,
   onTryRange,
+  retestDue = true,
 }: {
   low: number;
   high: number;
   /** What the run's flush saved; null when it was under the floor. */
   lastLog: Pick<LogResult, "xpGained"> | null;
   onTryRange?: () => void;
+  /** No saved range, or one old enough to retest (lib/progress rangeRetestDue). */
+  retestDue?: boolean;
 }) {
   return (
     <Card className="mb-4">
@@ -105,14 +112,28 @@ export function LastRun({
           ? `+${lastLog.xpGained} XP, saved to your progress.`
           : `Not saved yet: the meter saves once you have sung ${MIN_LOG_SEC} seconds in all, and singing again adds to that time.`}
       </p>
-      {high - low >= SUGGEST_RANGE_SEMIS && (
-        <div className="mt-3 flex flex-wrap gap-3">
-          {onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
-          <LinkButton href="/warmups" variant="outline">
-            Warm up first
-          </LinkButton>
-        </div>
-      )}
+      {high - low >= SUGGEST_RANGE_SEMIS &&
+        (retestDue ? (
+          <div className="mt-3 flex flex-wrap gap-3">
+            {onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
+            <LinkButton href="/warmups" variant="outline">
+              Warm up first
+            </LinkButton>
+          </div>
+        ) : (
+          <>
+            <p className="mt-2 text-sm text-mut">
+              Your saved range already fits your warmups and songs. Retest weeks apart,
+              not in the same session.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-3">
+              <LinkButton href="/warmups">Warm up</LinkButton>
+              <LinkButton href="/songs" variant="outline">
+                Sing a song
+              </LinkButton>
+            </div>
+          </>
+        ))}
     </Card>
   );
 }
@@ -132,6 +153,13 @@ export function PitchMeter({
   const { frame, latest, listening, error, start, stop } = usePitch();
   const isPro = useIsPro();
   const proReady = useProReady();
+  const { range } = useProgress();
+  /**
+   * Whether the range test is worth suggesting: no saved range, or one six
+   * weeks old (lib/progress RANGE_RETEST_DAYS). Read when the mic starts, so
+   * the clock is read in an event handler rather than during render.
+   */
+  const [retestDue, setRetestDue] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointsRef = useRef<Point[]>([]);
   /** The midi value the view is centered on, eased toward the singer. */
@@ -345,6 +373,7 @@ export function PitchMeter({
   }, [listening]);
 
   const begin = async () => {
+    setRetestDue(rangeRetestDue(range, Date.now()));
     pointsRef.current = [];
     heldRef.current = { midi: null, ms: 0, lastT: 0 };
     // Cleared once the mic is on, so a later short run is never reported
@@ -369,7 +398,7 @@ export function PitchMeter({
             measurement survives the stop, and "Sing again" carries it on
             (begin() clears the save, not the notes) until Reset. */}
         {low !== null && high !== null && (
-          <LastRun low={low} high={high} lastLog={lastLog} onTryRange={onTryRange} />
+          <LastRun low={low} high={high} lastLog={lastLog} onTryRange={onTryRange} retestDue={retestDue} />
         )}
         <MicGate
           title="See your pitch"
@@ -388,6 +417,10 @@ export function PitchMeter({
   const color = on ? tuneColor(on.cents) : undefined;
   const explored =
     low !== null && high !== null && high - low >= SUGGEST_RANGE_SEMIS;
+  const saved =
+    range.lowMidi !== undefined && range.highMidi !== undefined
+      ? { low: range.lowMidi, high: range.highMidi }
+      : null;
 
   return (
     <div className="space-y-4">
@@ -455,14 +488,41 @@ export function PitchMeter({
       {/* The meter used to end at two numbers and a Reset button. Once a
           singer has explored a little, those numbers are a rough range with
           nowhere to go; the guided test is what turns them into a saved
-          result the warmups and songs can use. */}
-      {explored && low !== null && high !== null && (
+          result the warmups and songs can use. A singer whose saved range is
+          recent already has that result, and the book spaces retests weeks
+          apart, so they are pointed at practice that uses it instead. */}
+      {explored && low !== null && high !== null && !retestDue && saved && (
         <div className="rounded-3xl border border-violet/40 bg-panel p-4">
           <p className="text-sm text-mut">
-            You have held {midiToLabel(low)} to {midiToLabel(high)} so far. The
-            2-minute range test turns that into a saved result: your lowest
-            and highest clear notes, the span, and a voice-type estimate.
-            Warmups and songs then open fitted to it.
+            You have held {midiToLabel(low)} to {midiToLabel(high)} so far. Your saved
+            range, {midiToLabel(saved.low)}–{midiToLabel(saved.high)}, already fits your
+            warmups and songs. Retest weeks apart, under similar conditions, rather than
+            today.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <LinkButton href="/warmups">Warm up</LinkButton>
+            <LinkButton href="/songs" variant="outline">
+              Sing a song
+            </LinkButton>
+          </div>
+          {proReady && !isPro && (
+            <p className="mt-3 text-xs text-dim">
+              On the free plan, warmups, songs, ear and breath training share{" "}
+              {FREE_DAILY_MINUTES} minutes of guided practice a day, and Pro removes
+              that limit.
+            </p>
+          )}
+        </div>
+      )}
+      {explored && low !== null && high !== null && (retestDue || !saved) && (
+        <div className="rounded-3xl border border-violet/40 bg-panel p-4">
+          {/* retestDue with a saved range means it is six weeks old or more
+              (an undated one counts as current), so a retest is due rather
+              than a first result. */}
+          <p className="text-sm text-mut">
+            {saved
+              ? `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far. Your saved range, ${midiToLabel(saved.low)}–${midiToLabel(saved.high)}, is six weeks old or more, so a retest is due: the 2-minute range test saves your lowest and highest clear notes today, the span, and a voice-type estimate, and warmups and songs then open fitted to it.`
+              : `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far. The 2-minute range test turns that into a saved result: your lowest and highest clear notes, the span, and a voice-type estimate. Warmups and songs then open fitted to it.`}
           </p>
           <div className="mt-3 flex flex-wrap gap-3">
             {onTryRange && (

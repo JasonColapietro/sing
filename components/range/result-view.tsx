@@ -11,7 +11,7 @@ import {
   type VoiceType,
 } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
-import { useProgress, type Achievement } from "@/lib/progress";
+import { RANGE_RETEST_DAYS, useProgress, type Achievement } from "@/lib/progress";
 import { MAX_RANGE_HISTORY } from "@/lib/progress-shape";
 import type { RangeEntry } from "@/lib/analytics";
 import { useIsPro, useProReady } from "@/lib/pro";
@@ -173,8 +173,12 @@ function warmupForSpan(semis: number): { id: string; title: string; why: string 
       };
 }
 
-/** About six weeks between tests: the interval pro-charts.tsx and the coach (RANGE_RETEST_DAYS) use. */
-const SAMPLE_INTERVAL_DAYS = 42;
+/**
+ * About six weeks between tests: RANGE_RETEST_DAYS in lib/progress.ts, the
+ * interval the coach and the pitch meter wait before suggesting a retest, and
+ * the spacing pro-charts.tsx asks for.
+ */
+const SAMPLE_INTERVAL_DAYS = RANGE_RETEST_DAYS;
 
 /**
  * A worked example of the range chart, not the singer's data: three tests six
@@ -664,7 +668,7 @@ export function ResultView({
         <p className="mt-2 max-w-2xl text-sm text-mut">
           {altVoice
             ? altBandsCopy(voice, altVoice)
-            : `Voice types are rough guides borrowed from choral music. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.`}
+            : `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.`}
         </p>
         {/* The classification used to end here. Every label the classifier can
             produce has a page of singers behind it, so it should be the next
