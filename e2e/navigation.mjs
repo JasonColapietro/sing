@@ -108,10 +108,18 @@ try {
       await page.waitForFunction(() => document.activeElement === document.querySelector("main h1"));
       assert.equal(await page.evaluate(() => document.body.style.overflow === "hidden"), false, "warmup exit releases scroll lock");
       await page.keyboard.press("Tab");
+      // Tab continues from the heading: focus lands on the room's first
+      // visible control after it. For a free singer that is the allowance
+      // line's "Pro has no daily limit" link (components/practice/free-cap.tsx),
+      // ahead of the start buttons, so a link counts as well as a button.
       assert.equal(await page.evaluate(() => {
         const active = document.activeElement;
-        return active?.tagName === "BUTTON" && active.closest("main") !== null && active.getClientRects().length > 0;
-      }), true, "Tab resumes at a visible warmup control");
+        const heading = document.querySelector("main h1");
+        const next = [...document.querySelectorAll("main a[href], main button, main input, main select, main textarea, main summary, main [tabindex]")]
+          .find((el) => (heading.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
+            && el.tabIndex >= 0 && !el.matches(":disabled") && el.getClientRects().length > 0);
+        return (active?.tagName === "BUTTON" || active?.tagName === "A") && active === next;
+      }), true, "Tab resumes at the first visible warmup control after the heading");
 
       assert.deepEqual(errors, []);
       console.log(`PASS ${width}px: ten rooms via the sheet, five primary tabs, touch targets, overflow, menu cleanup, warmup exit focus`);

@@ -32,7 +32,10 @@ import GlossaryPage from "@/app/glossary/page";
 import Home from "@/app/page";
 import ProPage from "@/app/pro/page";
 import RecorderPage from "@/app/recorder/page";
+import GenrePage from "@/app/singers/genre/[genre]/page";
 import SingersPage from "@/app/singers/page";
+import RecordsPage from "@/app/singers/records/page";
+import VoiceTypePage from "@/app/singers/voice-type/[type]/page";
 import SongsPage from "@/app/songs/page";
 import ToolsPage from "@/app/tools/page";
 import VoicePage from "@/app/voice/page";
@@ -59,6 +62,17 @@ const ROUTES: Array<[string, string]> = [
   ["/pro", renderToStaticMarkup(<ProPage />)],
   ["/recorder", renderToStaticMarkup(<RecorderPage />)],
   ["/singers", renderToStaticMarkup(<SingersPage />)],
+  // The 38 genre, voice-type and records hubs used to declare an anonymous
+  // WebSite and no publisher at all; one of each template stands for them.
+  [
+    "/singers/genre/grunge",
+    renderToStaticMarkup(await GenrePage({ params: Promise.resolve({ genre: "grunge" }) })),
+  ],
+  [
+    "/singers/voice-type/soprano",
+    renderToStaticMarkup(await VoiceTypePage({ params: Promise.resolve({ type: "soprano" }) })),
+  ],
+  ["/singers/records", renderToStaticMarkup(<RecordsPage />)],
   ["/songs", renderToStaticMarkup(<SongsPage />)],
   ["/tools", renderToStaticMarkup(<ToolsPage />)],
   ["/voice", renderToStaticMarkup(<VoicePage />)],

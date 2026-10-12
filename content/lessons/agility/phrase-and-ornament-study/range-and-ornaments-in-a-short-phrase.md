@@ -11,18 +11,22 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+An ornament that is easy in the middle of your voice gets harder near the top or bottom, because the edges of your range already take most of your control. That is the real difficulty of a phrase with both a wide leap and an ornament: each demand is manageable alone, and they compete when they arrive together. So choose a key where both ends of the phrase are repeatable, rehearse the leap and the ornament separately, and keep the top lighter rather than louder when you join them.
+
 ## Steps
 
 ### Use the practice material
 
-Open the practice material on this page and choose Deep River or Amazing Grace (Verse 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.
+Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Transpose the supplied study so both ends remain repeatable. Mark each ornament and the phrase that crosses the widest interval.
+Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -31,14 +35,14 @@ Transpose the supplied study so both ends remain repeatable. Mark each ornament 
 
 Range and agility at the same time, which is the actual difficulty. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.
+- Look: The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.
 - Listen: The full take keeps the authored melody recognizable and the planned ornaments audible.
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Range and Ornaments in a Short Phrase.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.
+Take the phrase you marked as crossing the widest interval and sing it twice in the same key: first plain, then with one small scoop or fall on the note at the top of the leap. Change only the ornament. Record both in one take in the recorder with a breath between them, and on playback check that the ornamented version still lands the top note as cleanly as the plain one. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.
 
-- Look: The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.
+- Look: The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.
 - Listen: The full take keeps the authored melody recognizable and the planned ornaments audible.
 
 ### Review your own attempt

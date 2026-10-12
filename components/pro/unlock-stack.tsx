@@ -46,7 +46,7 @@ export function UnlockStack() {
           Included, instantly
         </SectionLabel>
         <h2 id="unlocks-heading" className="max-w-2xl text-2xl sm:text-3xl">
-          Everything below opens the second you subscribe
+          Everything below opens the second you upgrade
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
           No drip feed, no unlock schedule, no chapter that arrives in month
@@ -58,7 +58,7 @@ export function UnlockStack() {
         {/* A plain list rather than a <dl>: the description-list version needed
             an sr-only <dt> carrying the same words as the visible label, so a
             screen reader read every tile's label twice ("words, two books —
-            82,734 words, two books"). Nothing here is a term/definition pair
+            [N] words, two books"). Nothing here is a term/definition pair
             anyway; it is four figures. */}
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {UNLOCK_TILES.map((tile) => (
@@ -108,9 +108,11 @@ export function UnlockStack() {
           <p className="mt-2 text-sm text-mut">
             {ROOM_COUNT} practice rooms, {SONG_COUNT} songs, {SINGER_COUNT}{" "}
             singer range profiles, {GLOSSARY_COUNT} glossary terms and the range test
-            are free and stay free. Pro adds {PRO_EXERCISES} exercises across{" "}
-            {PRO_PACK_COUNT} packs, both books in full, pitch analysis on every
-            take, and the long record of your own voice.
+            are free and stay free; guided practice (warmups, ear training,
+            breath and songs) shares five minutes a day. Pro removes that daily
+            limit and adds {PRO_EXERCISES} exercises across {PRO_PACK_COUNT}{" "}
+            packs, both books in full, pitch analysis on every take, and the
+            long record of your own voice.
           </p>
         </div>
       </div>
@@ -142,7 +144,16 @@ function BookContents({
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <h3 className="text-xl text-ink">{title}</h3>
+        {/* The book's own hub, by name: this page sells the book and was the
+            one place on the site that never linked to it. */}
+        <h3 className="text-xl text-ink">
+          <Link
+            href={href}
+            className="outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
+          >
+            {title}
+          </Link>
+        </h3>
         <span className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           {entries.length} chapters
           <span className="mx-1.5 text-line2">·</span>

@@ -1,8 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { ALL_EXERCISES, EXERCISES } from "./exercises";
 import { useIsPro } from "@/lib/pro";
+import { useProgress } from "@/lib/progress";
+import type { DailyPick, DailyThree } from "@/lib/daily-three";
+import { liveStreak } from "@/components/account/save-state";
 import { Button, Card, LinkButton, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { midiToLabel } from "@/lib/audio/notes";
@@ -14,6 +17,7 @@ import {
   type Tone,
 } from "@/components/songs/grade";
 import { ShareableResult } from "@/components/songs/result-card";
+import { SITE_URL } from "@/lib/site";
 import { TOLERANCE_CENTS } from "./scoring";
 import { MODE_LABELS } from "./prefs";
 import { sungReps, type SessionSummaryData } from "./lib";
@@ -43,16 +47,43 @@ const TONE_TEXT: Record<Tone, string> = {
   rec: "text-rec",
 };
 
+/** Why a start is unavailable, in the room's own words. */
+const CAPPED_REASON =
+  "Free practice is used for today. It resets at midnight; the free studio is still open.";
+
 export function SessionSummary({
   data,
   onNext,
   onLibrary,
+  daily = null,
+  capped = false,
+  onDaily,
 }: {
   data: SessionSummaryData;
   onNext: (id: string) => void;
   onLibrary: () => void;
+  /**
+   * Today's three and which of them are sung. When the exercise just sung is
+   * one of them, "keep going" continues the plan, not the catalogue: the
+   * next exercise in catalogue order would walk the singer out of the set
+   * they came to finish.
+   */
+  daily?: { plan: DailyThree; done: boolean[] } | null;
+  /** Today's free minutes are used: every start here would do nothing. */
+  capped?: boolean;
+  /** Start one of today's three at the tempo the plan set for it. */
+  onDaily?: (p: DailyPick) => void;
 }) {
   const { ex, results, avgScore, best, xpGained, newAchievements, mode } = data;
+  const cappedId = useId();
+  // Read just after the session logged, so it is today's streak — but read
+  // live anyway, so a summary never names a streak that has lapsed.
+  const streak = liveStreak(useProgress().streak);
+  const inPlan = Boolean(daily?.plan.picks.some((p) => p.exercise.id === ex.id));
+  const nextDaily =
+    inPlan && daily ? daily.plan.picks.find((_, i) => !daily.done[i]) : undefined;
+  const dailySung = daily ? daily.done.filter(Boolean).length : 0;
+  const dailyTotal = daily ? daily.plan.picks.length : 0;
 
   const isPro = useIsPro();
   const nextEx = useMemo(() => {
@@ -222,7 +253,13 @@ export function SessionSummary({
             )}
           </p>
           <div className="mt-5">
-            <Button variant="outline" size="sm" onClick={() => onNext(ex.id)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onNext(ex.id)}
+              disabled={capped}
+              aria-describedby={capped ? cappedId : undefined}
+            >
               Run this ladder again
             </Button>
           </div>
@@ -241,6 +278,10 @@ export function SessionSummary({
             { label: "Reps sung", value: String(diagnosis.sung.length) },
             ...(best ? [{ label: "Best rep", value: `${best.score}%`, tone: "cool" as const }] : []),
           ]}
+          // A friend lands on the same exercise. A Pro pack id is ignored for
+          // a free visitor (the room's deep link checks canStart), so the
+          // link still lands on the warmups room.
+          url={`${SITE_URL}/warmups?exercise=${ex.id}`}
         />
       )}
 
@@ -248,7 +289,15 @@ export function SessionSummary({
         <div className="flex flex-wrap items-center gap-3">
           <Pill tone="ok">Saved to your progress</Pill>
           <span className="tabular font-mono text-sm text-ok-ink">+{xpGained} XP</span>
+          {streak > 0 && (
+            <span className="tabular font-mono text-sm text-rec">
+              <span aria-hidden="true">🔥</span> {streak}-day streak
+            </span>
+          )}
         </div>
+        {streak > 0 && (
+          <p className="mt-2 text-sm text-mut">Sing tomorrow to make it {streak + 1}.</p>
+        )}
         {newAchievements.length > 0 && (
           <ul className="mt-4 space-y-2">
             {newAchievements.map((a) => (
@@ -272,22 +321,67 @@ export function SessionSummary({
       </div>
 
       <Card>
-        <SectionLabel>Keep going</SectionLabel>
-        <h3 className="mt-3 text-lg">
-          Next up: <span className="text-violet-ink">{nextEx.title}</span>
-        </h3>
-        <p className="mt-1.5 max-w-md text-sm text-mut">{nextEx.desc}</p>
+        {nextDaily ? (
+          <>
+            <SectionLabel>
+              Today&apos;s three · {dailySung} of {dailyTotal} done
+            </SectionLabel>
+            <h3 className="mt-3 text-lg">
+              Next: <span className="text-violet-ink">{nextDaily.exercise.title}</span>
+            </h3>
+            <p className="mt-1.5 max-w-md text-sm text-mut">{nextDaily.why}</p>
+          </>
+        ) : inPlan ? (
+          <>
+            <SectionLabel>
+              Today&apos;s three · {dailySung} of {dailyTotal} done
+            </SectionLabel>
+            <h3 className="mt-3 text-lg">Today&apos;s three: done</h3>
+            <p className="mt-1.5 max-w-md text-sm text-mut">
+              A new three is picked from your scores tomorrow.
+            </p>
+          </>
+        ) : (
+          <>
+            <SectionLabel>Keep going</SectionLabel>
+            <h3 className="mt-3 text-lg">
+              Next up: <span className="text-violet-ink">{nextEx.title}</span>
+            </h3>
+            <p className="mt-1.5 max-w-md text-sm text-mut">{nextEx.desc}</p>
+          </>
+        )}
         <div className="mt-5 flex flex-wrap gap-3">
-          <Button variant="violet" onClick={() => onNext(nextEx.id)}>
-            Next exercise
-          </Button>
-          <Button variant="outline" onClick={onLibrary}>
+          {nextDaily ? (
+            <Button
+              variant="violet"
+              onClick={() => onDaily?.(nextDaily)}
+              disabled={capped}
+              aria-describedby={capped ? cappedId : undefined}
+            >
+              {capped ? "Available tomorrow" : "Sing it"}
+            </Button>
+          ) : inPlan ? null : (
+            <Button
+              variant="violet"
+              onClick={() => onNext(nextEx.id)}
+              disabled={capped}
+              aria-describedby={capped ? cappedId : undefined}
+            >
+              {capped ? "Available tomorrow" : "Next exercise"}
+            </Button>
+          )}
+          <Button variant={inPlan && !nextDaily ? "violet" : "outline"} onClick={onLibrary}>
             Back to library
           </Button>
           <LinkButton href="/analyze" variant="ghost">
             See your tone
           </LinkButton>
         </div>
+        {capped && (
+          <p id={cappedId} className="mt-3 max-w-md text-sm text-mut">
+            {CAPPED_REASON}
+          </p>
+        )}
       </Card>
     </div>
   );

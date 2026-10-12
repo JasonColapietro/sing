@@ -67,4 +67,4 @@ Record the context somewhere too — a line in a notebook is enough. Tested with
 
 ## Try this
 
-Open the warmups library, run a short set, then take the range test — this time stopping the moment a note needs effort rather than height, and counting only pitches you could hold for two beats. Compare that reading against your last one in Progress, and note which of the two you took more honestly.
+Open the [warmups library](/warmups), run a short set, then take the [range test](/range?mode=range) — this time stopping the moment a note needs effort rather than height, and counting only pitches you could hold for two beats. Compare that reading against your last one in [Progress](/progress), and note which of the two you took more honestly.

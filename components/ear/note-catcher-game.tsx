@@ -7,7 +7,7 @@ import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import { SONGS } from "@/components/songs/data";
-import { centsToTarget, ROUNDS, type Difficulty } from "./lib";
+import { centsToTarget, hasSavedRange, ROUNDS, type Difficulty } from "./lib";
 import {
   CATCHER_LEVELS,
   INITIAL_CATCHER,
@@ -82,7 +82,15 @@ export function NoteCatcherGame({
   const session = useEarSession();
   const { latest, listening, error, start, stop } = usePitch();
   const progress = useProgress();
-  const level = CATCHER_LEVELS[difficulty];
+  // Medium and hard count the exact octave, but only once a range is saved:
+  // until then the targets sit in a fallback register that a higher voice
+  // answers an octave up. Memoised because `begin` and the game loop depend
+  // on `level`, and a fresh object every render would rebuild both.
+  const noRange = !hasSavedRange(progress.range);
+  const level = useMemo(() => {
+    const base = CATCHER_LEVELS[difficulty];
+    return noRange && !base.octaveAgnostic ? { ...base, octaveAgnostic: true } : base;
+  }, [difficulty, noRange]);
   const song = useMemo(
     () => (songId ? (SONGS.find((s) => s.id === songId) ?? null) : null),
     [songId],

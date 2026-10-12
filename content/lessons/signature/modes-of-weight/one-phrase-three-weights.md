@@ -22,7 +22,7 @@ Open the practice material on this page and choose Soft sustain. Hear the refere
 
 ### Set a safe baseline
 
-Use one mid-range phrase at moderate volume and establish a neutral baseline. Define the three intended weights in words before recording.
+Use one mid-range phrase at moderate volume and establish a neutral baseline. Use neutral plus two others, and leave edged out until a teacher has heard it. Neutral: your easy, speech-like default. Restrained: the same note held back, softer and more contained. Driven: fuller and more speech-like, like calling across a room at a moderate level. Edged: brighter and more cutting, still not loud.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.

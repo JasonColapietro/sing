@@ -4,6 +4,7 @@ import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { practiceMatch, MODULE_PRACTICE } from "@/lib/lesson-practice";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import {
   CATALOG_LESSON_COUNT,
   COURSE,
@@ -96,6 +97,48 @@ export default function VoiceCoursePage() {
             links to it and says what the number does and doesn&apos;t tell
             you. Where nothing can measure it, such as strain, vibrato on cue or
             a register break, the lesson says so rather than pretending.
+          </p>
+          <p className="mt-3 max-w-3xl text-mut" data-course-pacing>
+            Take one module at a time: repeat its exercise lessons over several
+            short sessions, and move on when the module&apos;s self-check still
+            holds on a second day.
+          </p>
+          {/*
+            The lines the lessons share word for word (UNIVERSAL_LESSON_TEXT in
+            lib/voice-lessons.ts), said once here; the lesson pages leave them out.
+          */}
+          <div className="mt-5 max-w-3xl" data-course-rules>
+            <h3 className="text-lg">The same rules in every lesson</h3>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-mut">
+              <li>
+                Before the first attempt, settle your posture, room and device,
+                and decide where you will stop.
+              </li>
+              <li>
+                Start from an easy, repeatable sound, and silence playback before
+                you judge your own voice.
+              </li>
+              <li>
+                Reference notes are synthesized pitches, not recordings of a
+                singer showing you a technique.
+              </li>
+              <li>Note the key and setup you used, so the next comparison is fair.</li>
+              <li>Treat a missing or uncertain reading as missing, never as a pass.</li>
+              <li>
+                Unless a self-check says otherwise, it is ready when you can
+                describe the result and choose one useful next attempt.
+              </li>
+            </ul>
+          </div>
+          <p className="mt-5 max-w-3xl text-sm text-mut" data-guided-cap>
+            Reading every lesson is free. Lessons that send you to warm-ups,
+            breath, ear training or songs use the shared {FREE_DAILY_MINUTES}-minute
+            daily allowance of guided practice, which{" "}
+            <Link href="/pro" className="text-violet-ink underline underline-offset-4">
+              Pro
+            </Link>{" "}
+            removes. The pitch studio, range test, recorder and tools have no
+            clock.
           </p>
           {PORTED_LESSON_COUNT < CATALOG_LESSON_COUNT && (
             <p className="mt-3 max-w-3xl text-sm text-dim" data-ported-lessons={PORTED_LESSON_COUNT}>

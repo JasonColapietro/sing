@@ -51,7 +51,7 @@ describe("songs mic gate", () => {
     const html = renderToStaticMarkup(<SongsMicGate />);
     expect(html).toContain("Enable microphone");
     expect(html).toContain("Continue without a mic");
-    expect(html).toContain("Enable your microphone to get scored");
+    expect(html).toContain("Sing along and see every note you hit");
   });
 
   it("carries the hub's <h1>, which its static HTML previously had nowhere", () => {
@@ -66,10 +66,28 @@ describe("songs mic gate", () => {
     expect(html).toContain("Continue without a mic");
   });
 
-  it("offers all three guide passes on the start step", () => {
+  it("asks for the mic and nothing else before a song is on screen", () => {
     const html = renderToStaticMarkup(<SongsMicGate />);
-    expect(html).toContain("Guide track");
-    expect(html).toContain("Sing along");
-    expect(html).toContain("On your own");
+    // Mode and guide track start at their defaults and switch in the player.
+    expect(html).not.toContain("Session mode");
+    expect(html).not.toContain("Guide track");
+    // A singer who came to pick a song can reach the songbook without the mic.
+    expect(html).toContain('href="#songbook"');
+  });
+
+  it("shows a mic failure right under the buttons, ahead of the songbook link", () => {
+    // At 375px the second button wraps; with the link in between, the alert
+    // landed 59px below the fold (e2e/audits/80-states.mjs on mobile-375).
+    const html = renderToStaticMarkup(<SongsMicGate error="No microphone found. Plug one in." />);
+    const alert = html.indexOf('role="alert"');
+    expect(alert).toBeGreaterThan(html.indexOf("Continue without a mic"));
+    expect(alert).toBeLessThan(html.indexOf('href="#songbook"'));
+  });
+
+  it("states the free allowance before sending anyone into capped practice", () => {
+    // Shared with warmups, ear training and breath, so it is not called song time.
+    const html = renderToStaticMarkup(<SongsMicGate />);
+    expect(html).toContain("5 minutes of guided practice a day");
+    expect(html).toContain("Pro has no daily limit");
   });
 });

@@ -260,6 +260,82 @@ describe("Pro background sync", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
+  it("syncs on load when practice is newer than the last sync, even inside 30 minutes", async () => {
+    // The seeded session is at 12:00. The last sync finished at 11:55, so the
+    // 12:00 session's debounced push died with its tab, and this load is only
+    // 25 minutes after the sync.
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-10T12:20:00Z"));
+    const env = await setup();
+    env.storage.set("suede-sing:sync:last", "2026-10-10T11:55:00.000Z");
+    const fetchMock = vi.fn(async () => Response.json({ state: null, ok: true }));
+    vi.stubGlobal("fetch", fetchMock);
+    env.sync.startAutoSync();
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+  });
+
+  it("dates the sync marker to the snapshot it pushed, so practice logged mid-push still counts as unsynced", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-10T12:20:00Z"));
+    const env = await setup();
+    const push = deferred<Response>();
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(Response.json({ state: null }))
+      .mockImplementationOnce(() => push.promise);
+    vi.stubGlobal("fetch", fetchMock);
+    const result = env.sync.syncNow();
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    // Logged while the push is in flight, so it is not in what was sent.
+    vi.setSystemTime(new Date("2026-10-10T12:20:05Z"));
+    env.progress.logSession({ type: "pitch", durationSec: 60 });
+    push.resolve(Response.json({ ok: true }));
+    await result;
+
+    // Before the mid-push session (waitFor's polling moves the fake clock a
+    // few milliseconds), so the next load sees it as practice to sync.
+    const last = env.storage.get("suede-sing:sync:last")!;
+    expect(Date.parse(last)).toBeLessThan(Date.parse("2026-10-10T12:20:05Z"));
+    expect(Date.parse(env.progress.getState().sessions[0].date)).toBeGreaterThan(Date.parse(last));
+  });
+
+  it("leaves a fresh sync alone when nothing was logged after it", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-10T12:20:00Z"));
+    const env = await setup();
+    env.storage.set("suede-sing:sync:last", "2026-10-10T12:05:00.000Z");
+    const fetchMock = vi.fn(async () => Response.json({ state: null, ok: true }));
+    vi.stubGlobal("fetch", fetchMock);
+    env.sync.startAutoSync();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("flushes a queued push when the page is hidden instead of waiting out the debounce", async () => {
+    vi.useFakeTimers();
+    const env = await setup();
+    env.storage.set("suede-sing:sync:last", new Date().toISOString());
+    const listeners = new Map<string, () => void>();
+    const doc = {
+      visibilityState: "visible",
+      addEventListener: (name: string, callback: () => void) => listeners.set(name, callback),
+    };
+    vi.stubGlobal("document", doc);
+    const fetchMock = vi.fn(async () => Response.json({ state: null, ok: true }));
+    vi.stubGlobal("fetch", fetchMock);
+    env.sync.startAutoSync();
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    env.progress.logSession({ type: "pitch", durationSec: 60 });
+    doc.visibilityState = "hidden";
+    listeners.get("visibilitychange")!();
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    // The debounce was cancelled, not left to push a second time.
+    await vi.advanceTimersByTimeAsync(45_000);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it("keeps future practice subscribed when the page starts paused", async () => {
     vi.useFakeTimers();
     const env = await setup();

@@ -56,7 +56,7 @@ I spoke and sang the displayed lyric slowly enough for each word to remain under
 ## Practice blocks
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Consonant Sprint.”
-- 90s: Isolate the diction as a scored axis target in short, comfortable examples.
+- 90s: Isolate the clear, intelligible diction target in short, comfortable examples.
 - 135s: Practise or record the complete “Consonant Sprint” task, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 

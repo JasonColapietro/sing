@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Vibrato is a small, regular swing in pitch around the note's center, with three separate dials: rate is how many times a second the pitch swings, from a fast flutter to a slow wave; extent is how far above and below the center it moves, from a narrow shimmer to a wide wobble; and onset is when it starts, straight away or after a stretch of straight tone. What separates vibrato from an unsteady note is regularity, an even rate and extent around a steady center. The Vibrato hold warm-up shows how fast and how wide your pitch moved after each hold, but nothing times the onset, so that dial is yours to judge. It is also the easiest one to practise first, because it begins from a plain, straight note.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Vibrato has three parameters. Controlling them is what separates it from a wobbl
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Rate, Extent, Onset.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.
+On Vibrato hold, sing two long holds on the same comfortable note, changing only the onset: in the first, stay straight for about one second before you let the vibrato in; in the second, stay straight for about three, which still leaves the vibrato time to settle before the hold ends. Record both in one take in the recorder with a breath between them, and on playback listen for where the wobble starts in each. If vibrato does not come on its own, a straight note is a fine answer. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.

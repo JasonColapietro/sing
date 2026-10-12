@@ -66,7 +66,7 @@ I listened for my own transition during a small comfortable slide and noted wher
 - You can anticipate the change and cross the same general area in both directions without forcing the endpoints.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: You can name the note where your effort first rises, and on two different days you cross that zone on a quiet slide in both directions, three times in a row, without a crack or a push.
 
 If not ready: If no transition is clear, reduce volume, change vowel, or work with a qualified voice teacher. Do not manufacture one by pressing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

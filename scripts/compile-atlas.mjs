@@ -350,8 +350,9 @@ const wordCount = (t) => t.split(/\s+/).filter(Boolean).length;
 const spanText = (semis) => {
   const oct = Math.floor(semis / 12);
   const rem = semis % 12;
-  if (oct === 0) return `${rem} semitones`;
-  return rem > 0 ? `${oct} octaves + ${rem}` : `${oct} octaves`;
+  if (oct === 0) return `${rem} semitone${rem === 1 ? "" : "s"}`;
+  const octaves = `${oct} octave${oct === 1 ? "" : "s"}`;
+  return rem > 0 ? `${octaves} + ${rem}` : octaves;
 };
 
 /** Generated markdown for the records appendix. */

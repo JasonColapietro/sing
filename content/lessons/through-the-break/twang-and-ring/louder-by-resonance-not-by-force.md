@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Carrying power is mostly a matter of resonance rather than loudness: a voice with more energy in the bright upper band, where hearing is sharpest, cuts through without being pushed. Twang gets there by narrowing the space just above the vocal folds, which brightens the tone by reshaping the tube rather than by driving more air or squeezing harder. Pressed phonation, more squeeze at the folds than the note needs, also sounds intense but costs effort and tires the voice; one rough check is that brightness from resonance costs you nothing and still works when you sing the same phrase quietly.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Where carrying power actually comes from, and why pressed phonation is the costl
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Louder by Resonance, Not by Force.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short.
+To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. Then record the same note on “eh” twice in one take at the same microphone distance: your plain baseline first, then the bright version. Brightness is the only thing that changes, so keep the volume the same. Change resonance before volume, and keep each attempt short.
 
 - Look: Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.
 - Listen: The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone.

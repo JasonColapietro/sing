@@ -24,6 +24,8 @@ import {
   noteMidi,
   popDifficulty,
   popFit,
+  popNoteLabel,
+  popRangeLabel,
 } from "@/lib/pop-songs";
 import { SINGERS } from "@/lib/singers-data";
 import { SITE_URL } from "@/lib/site";
@@ -46,8 +48,10 @@ describe("catalog data sanity", () => {
           title: "Unchained Melody",
           artist: "The Righteous Brothers",
           key: "Bb major",
-          lowMidi: noteMidi("C4"),
-          highMidi: noteMidi("A5"),
+          // Musicnotes writes the male lead in treble clef, an octave above
+          // the sounding C3–A4.
+          lowMidi: noteMidi("C3"),
+          highMidi: noteMidi("A4"),
           sourceUrl: "https://www.musicnotes.com/sheetmusic/the-righteous-brothers/unchained-melody/MN0133818",
         }),
       ]),
@@ -79,6 +83,70 @@ describe("catalog data sanity", () => {
     for (const s of POP_SONGS) {
       expect(s.sourceNote.length, s.slug).toBeGreaterThan(0);
       expect(s.blurb.length, s.slug).toBeGreaterThan(40);
+    }
+  });
+
+  it("stores the sounding range its own source note cites", () => {
+    // "written E4–A5, sounding E3–A4": the page states the sounding pair.
+    const note = "([A-G][#b]?\\d)";
+    const sounding = new RegExp(`sounding ${note}–${note}`);
+    for (const s of POP_SONGS) {
+      const m = sounding.exec(s.sourceNote);
+      if (!m) continue;
+      expect([s.lowMidi, s.highMidi], s.slug).toEqual([noteMidi(m[1]), noteMidi(m[2])]);
+    }
+  });
+
+  it("never states a semitone count in a blurb that disagrees with the span", () => {
+    const units = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    const words: Record<string, number> = {
+      ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15,
+      sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20, thirty: 30,
+    };
+    units.forEach((u, i) => {
+      words[u] = i + 1;
+      words[`twenty-${u}`] = 21 + i;
+    });
+    // Longest first, so "twenty-one" is read before "twenty".
+    const alternatives = Object.keys(words).sort((a, b) => b.length - a.length);
+    const count = new RegExp(`\\b(\\d+|${alternatives.join("|")})[- ]semitones?\\b`, "gi");
+    let checked = 0;
+    for (const s of POP_SONGS) {
+      for (const m of s.blurb.matchAll(count)) {
+        const said = m[1].toLowerCase();
+        const n = /^\d+$/.test(said) ? Number(said) : words[said];
+        expect(n, `${s.slug}: "${m[0]}"`).toBe(s.highMidi - s.lowMidi);
+        checked++;
+      }
+    }
+    // Espresso and Stick Season state their spans in words.
+    expect(checked).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe("note spelling", () => {
+  it("spells flat-key songs with flats, as their source notes do", () => {
+    const label = (slug: string) => popRangeLabel(POP_SONGS.find((s) => s.slug === slug)!);
+    expect(label("drop-dead")).toBe("Ab3–F5");
+    expect(label("someone-you-loved")).toBe("Eb3–Bb4");
+    expect(label("rolling-in-the-deep")).toBe("Bb3–D5");
+  });
+
+  it("keeps sharps in sharp and natural keys", () => {
+    const label = (slug: string) => popRangeLabel(POP_SONGS.find((s) => s.slug === slug)!);
+    expect(label("die-with-a-smile")).toBe("G#3–E5");
+    expect(label("good-luck-babe")).toBe("A3–F#5");
+    expect(popNoteLabel({ key: "F# minor" }, noteMidi("F#3"))).toBe("F#3");
+    // A minor's raised leading tone is a G#, never an Ab.
+    expect(popNoteLabel({ key: "A minor" }, noteMidi("G#3"))).toBe("G#3");
+  });
+
+  it("treats the flat minor keys as flat keys", () => {
+    for (const key of ["D minor", "G minor", "C minor", "F minor", "Bb minor", "Eb minor"]) {
+      expect(popNoteLabel({ key }, noteMidi("Eb4")), key).toBe("Eb4");
+    }
+    for (const key of ["A minor", "E minor", "B minor", "F# minor", "C# minor"]) {
+      expect(popNoteLabel({ key }, noteMidi("Eb4")), key).toBe("D#4");
     }
   });
 });

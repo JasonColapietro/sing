@@ -1,4 +1,5 @@
 import type { GuideContent } from "@/components/guide";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 /**
  * The explanatory copy under each practice room.
@@ -8,6 +9,13 @@ import type { GuideContent } from "@/components/guide";
  * pedagogy stated without embellishment — no invented statistics, no
  * physiological claims the app can't stand behind, no "studies show".
  */
+
+/**
+ * Said beside the start button of every room that shares the free plan's
+ * daily guided-practice allowance (lib/free-cap.ts CAPPED_TYPES), so a guide
+ * that sends a reader into capped practice says so where it sends them.
+ */
+const GUIDED_CAP_NOTE = `Warmups, ear training, breath drills and song practice share ${FREE_DAILY_MINUTES} free minutes of guided practice a day; Suede Pro removes the limit.`;
 
 export const RANGE_GUIDE: GuideContent = {
   path: "/range",
@@ -24,7 +32,7 @@ export const RANGE_GUIDE: GuideContent = {
   safety: {
     heading: "Test the notes you can sing without forcing",
     body:
-      "Use a comfortable volume and stop if a note causes pain, strain, or persistent hoarseness. Suede Sing is a practice and measurement tool, not a medical assessment. A sudden or lasting loss of range belongs with a qualified voice professional or clinician.",
+      "Use a comfortable volume and stop if a note causes pain, strain, or persistent hoarseness. Suede Sing is a practice and measurement tool, not a medical assessment. A sudden or lasting loss of range belongs with a doctor who can examine the vocal folds, such as an ENT or laryngologist.",
     sources: [
       {
         href: "https://www.nidcd.nih.gov/health/taking-care-your-voice",
@@ -42,6 +50,7 @@ export const RANGE_GUIDE: GuideContent = {
     name: "How to test your vocal range",
     intro:
       "The test runs in the browser with your microphone. It takes about two minutes, and nothing you sing is uploaded or recorded.",
+    totalTime: "PT2M",
     steps: [
       {
         title: "Warm up first, or note that you didn't",
@@ -64,8 +73,8 @@ export const RANGE_GUIDE: GuideContent = {
         body: "Come back to the middle, then climb the same way. Let the voice move into head voice or falsetto instead of forcing a heavier sound upward. Stop before the note causes pain or strain.",
       },
       {
-        title: "Read the result and save it",
-        body: "You get your low note, your high note, the span in octaves, and the voice type that span suggests — an estimate, not a classification. Saving it gives you a first data point — the number only means something once you have several taken the same way.",
+        title: "Read the result",
+        body: "You get your low note, your high note, the span in octaves, and the voice type that span suggests — an estimate, not a classification. The result is saved as a first data point, and song practice then opens each song fitted to it. The number only means something once you have several taken the same way.",
       },
     ],
   },
@@ -86,7 +95,7 @@ export const RANGE_GUIDE: GuideContent = {
       "Log the test under fixed conditions (same time, same warmup) so the trend is signal rather than schedule",
       "Note where tone or effort changes, without treating the pitch trace as a diagnosis of register behavior",
       "Explore overlapping reported spans in the singer library, while remembering that shared notes do not establish the same anatomy, voice type, or technique",
-      "Suede Pro charts every test over time, so the range line and your accuracy trend sit on the same page",
+      "Suede Pro charts your range tests over time, so the range line and your accuracy trend sit on the same page",
     ],
   },
   faq: [
@@ -123,6 +132,7 @@ export const RANGE_GUIDE: GuideContent = {
       a: "Fatigue, illness, the time of day, warming up, room noise, and microphone position can all change what the test hears. One result is a snapshot. For a useful comparison, retest under similar conditions and stop at the same standard of clear, comfortable tone.",
     },
   ],
+  start: { label: "Start the range test", href: "/range?mode=range#content" },
   related: [
     {
       href: "/atlas/vocal-range-by-voice-type",
@@ -149,6 +159,11 @@ export const RANGE_GUIDE: GuideContent = {
       label: "Glossary",
       note: "Fry, falsetto, tessitura — the words on this result, defined.",
     },
+    {
+      href: "/learn/voice/room-check/your-range",
+      label: "Your Range lessons",
+      note: "Three short free lessons on finding your low and high notes without forcing either end.",
+    },
   ],
 };
 
@@ -168,6 +183,7 @@ export const WARMUPS_GUIDE: GuideContent = {
     name: "How to warm up your voice before singing",
     intro:
       "A useful warmup runs about ten minutes and stays quiet throughout. If you are getting loud or reaching, the warmup has turned into practice.",
+    totalTime: "PT10M",
     steps: [
       {
         title: "Start with breath, not sound",
@@ -237,6 +253,7 @@ export const WARMUPS_GUIDE: GuideContent = {
       a: "Mostly, yes. Hums, lip trills and straw phonation are quiet enough for thin walls, and they are the effective part of the routine anyway. Silent breathing exercises prepare the support but do not warm the voice itself.",
     },
   ],
+  start: { label: "Start a warmup", href: "/warmups#content", note: GUIDED_CAP_NOTE },
   related: [
     {
       href: "/studio",
@@ -257,6 +274,11 @@ export const WARMUPS_GUIDE: GuideContent = {
       href: "/glossary",
       label: "Glossary",
       note: "Siren, lip trill, passaggio — what these exercises are named after.",
+    },
+    {
+      href: "/learn/voice/steady-tone/straw-and-lip-trill",
+      label: "Straw and lip-trill lessons",
+      note: "Semi-occluded warm-ups, in three short free lessons.",
     },
   ],
 };
@@ -346,6 +368,7 @@ export const BREATH_GUIDE: GuideContent = {
       a: "It is common and it is a signal to stop. Dizziness means you are moving more air than your body needs. Rest until it passes, then resume with smaller breaths and longer gaps.",
     },
   ],
+  start: { label: "Start the sustain test", href: "/breath#content", note: GUIDED_CAP_NOTE },
   related: [
     {
       href: "/warmups",
@@ -366,6 +389,11 @@ export const BREATH_GUIDE: GuideContent = {
       href: "/glossary",
       label: "Glossary",
       note: "Support, steadiness and the rest of the breath vocabulary.",
+    },
+    {
+      href: "/learn/voice/room-check/breathe-low",
+      label: "Breathe Low lessons",
+      note: "Low breath and rib expansion, in three short free lessons.",
     },
   ],
 };
@@ -444,7 +472,7 @@ export const EAR_GUIDE: GuideContent = {
     },
     {
       q: "I'm tone deaf. Is there any point?",
-      a: "If you can tell a siren rising from a siren falling, you are not tone deaf in the clinical sense, and your pitch matching will improve with feedback. What most people call tone deafness is an untrained loop between hearing a pitch and producing it.",
+      a: "Usually, yes. Clinical tone deafness (congenital amusia) is uncommon, and what most people call tone deafness is an untrained loop between hearing a pitch and producing it, which pitch matching with feedback can improve. Telling a siren rising from a siren falling does not rule amusia out, because it shows up in much finer pitch differences than a siren's sweep. A closer check is the game Higher or lower on Hard, where the second note is a semitone above, a semitone below or the same: if you can tell those apart reliably, pitch hearing is unlikely to be what is holding you back.",
     },
     {
       q: "Should I train intervals or just sing more?",
@@ -455,6 +483,7 @@ export const EAR_GUIDE: GuideContent = {
       a: "It is directly relevant. Holding a harmony line means keeping your interval against a moving part you can hear, which is interval recognition applied in real time.",
     },
   ],
+  start: { label: "Start ear training", href: "/ear-training#content", note: GUIDED_CAP_NOTE },
   related: [
     {
       href: "/studio",
@@ -476,6 +505,11 @@ export const EAR_GUIDE: GuideContent = {
       label: "Glossary",
       note: "Interval, semitone, cent — the units these drills count in.",
     },
+    {
+      href: "/learn/voice/steady-tone/land-the-note",
+      label: "Land the Note lessons",
+      note: "Onset and pitch matching, in three short free lessons.",
+    },
   ],
 };
 
@@ -485,11 +519,11 @@ export const SONGS_GUIDE: GuideContent = {
   pageName: "Public Domain Songs to Sing with Pitch Feedback",
   heading: "How does pitch feedback help you practice a song?",
   answer:
-    "Live pitch feedback shows which notes and phrases of a song drift while you are singing them, so you can practice those phrases instead of running the whole song again. Here each melody is transposed toward your measured range and scored against its target notes as you sing.",
+    "Live pitch feedback shows which notes and phrases of a song drift while you are singing them, so you can practice those phrases instead of running the whole song again. Here each melody is scored against its target notes as you sing, and once you have taken the range test it opens fitted to your measured range.",
   body: [
     "Exercises isolate one skill at a time. A song asks for all of them at once, plus words, rhythm, and breath points that were decided by whoever wrote it. That is why a singer can score well on warmup patterns and still lose the pitch in a chorus — the demands stack.",
     "Often the problem is the key rather than the skill. A melody written for a voice higher or lower than yours can park its most important notes at your weakest point. Transposing it is not cheating; professional singers do it routinely, and it can be the difference between a phrase you can perform and one you can merely survive.",
-    "Each melody here is transposed automatically into a key that suits your measured range, and your pitch is scored against the target notes as you sing. The result marks which phrases held and which came apart.",
+    "Once you have taken the range test, each melody here opens fitted to your measured range, and you can shift it a semitone at a time from there; without a saved range it opens in its written key. Your pitch is scored against the target notes as you sing, and the result marks which phrases held and which came apart.",
   ],
   howTo: {
     name: "How to practice a song properly",
@@ -498,7 +532,7 @@ export const SONGS_GUIDE: GuideContent = {
     steps: [
       {
         title: "Get the key right first",
-        body: "Run the range test so the app can transpose into a key that suits your voice. A song in the wrong key will make every other problem look worse than it is.",
+        body: "Take the range test first: once your range is saved, each song opens fitted to it as a starting key. Then step a semitone either side and keep the key where the chorus feels easiest. A song in the wrong key will make every other problem look worse than it is.",
       },
       {
         title: "Learn the melody without words",
@@ -564,11 +598,12 @@ export const SONGS_GUIDE: GuideContent = {
       a: "Often support and register rather than hearing. As the pitch rises the note needs more consistent airflow, and a voice dragging chest weight upward tends to land just under. It usually improves from breath work and letting the tone lighten near the transition.",
     },
   ],
+  start: { label: "Pick a song to sing", href: "/songs#content", note: GUIDED_CAP_NOTE },
   related: [
     {
       href: "/range?mode=range",
       label: "Range test",
-      note: "Set your range so songs transpose into the right key.",
+      note: "Once your range is saved, songs open fitted to it.",
     },
     {
       href: "/recorder",
@@ -584,6 +619,11 @@ export const SONGS_GUIDE: GuideContent = {
       href: "/glossary",
       label: "Glossary",
       note: "Transposition, tessitura, belt — the words behind song fit.",
+    },
+    {
+      href: "/learn/voice/steady-tone/first-song-one-register",
+      label: "First Song, One Register lessons",
+      note: "A first song in your own key, in three short free lessons.",
     },
   ],
 };
@@ -673,6 +713,7 @@ export const RECORDER_GUIDE: GuideContent = {
       a: "Both are worth doing. With a track shows whether you hold pitch against a fixed reference; without one exposes drift that a track would otherwise cover.",
     },
   ],
+  start: { label: "Record a take", href: "/recorder#content" },
   related: [
     {
       href: "/songs",
@@ -694,6 +735,11 @@ export const RECORDER_GUIDE: GuideContent = {
       label: "Glossary",
       note: "Vibrato, resonance, register — names for what you hear back.",
     },
+    {
+      href: "/learn/voice/room-check/set-up-your-space",
+      label: "Set Up Your Space lessons",
+      note: "Room setup and clean input, in three short free lessons.",
+    },
   ],
 };
 
@@ -713,6 +759,7 @@ export const TOOLS_GUIDE: GuideContent = {
     name: "How to use a drone to improve your intonation",
     intro:
       "A drone works like an accompanist who holds one pitch and never adjusts to your mistakes, so small pitch differences become something you can hear.",
+    needsMic: false,
     steps: [
       {
         title: "Set the drone to a comfortable tonic",
@@ -782,6 +829,7 @@ export const TOOLS_GUIDE: GuideContent = {
       a: "That roughness is the beating between two nearly-identical pitches, and it means you are slightly off. It is the tool working — adjust until the two tones fuse into one and the roughness disappears.",
     },
   ],
+  start: { label: "Open the practice tools", href: "/tools#content" },
   related: [
     {
       href: "/ear-training",
@@ -802,6 +850,11 @@ export const TOOLS_GUIDE: GuideContent = {
       href: "/glossary",
       label: "Glossary",
       note: "A440, cents, drone — what these tools are actually doing.",
+    },
+    {
+      href: "/learn/voice/pitch-time-words/on-the-beat",
+      label: "On the Beat lessons",
+      note: "Rhythm and syncopation, in three short free lessons.",
     },
   ],
 };
@@ -865,7 +918,7 @@ export const STUDIO_GUIDE: GuideContent = {
     heading: "Hunt the drift, not the miss",
     body: "For an accurate singer the interesting information is not whether you hit the note but what happens across the two seconds after you do — where sustained tone bends, and where the trace changes character across a register break.",
     points: [
-      "Sustain long notes and watch for a slow sag; that is a support problem showing up as a pitch problem",
+      "Sustain long notes and watch for a slow sag; that is often a support problem showing up as a pitch problem",
       "Sing through your passaggio slowly and watch what the trace does at the transition",
       "Check whether accuracy degrades with volume — many singers go sharp when they push",
       "Pro keeps per-note accuracy across sessions, so a weak note becomes a trend rather than a hunch",
@@ -878,7 +931,7 @@ export const STUDIO_GUIDE: GuideContent = {
     },
     {
       q: "What are cents in pitch?",
-      a: "A cent is one hundredth of a semitone, so 100 cents make one semitone and a reading of −20 cents is a fifth of a semitone flat. How small a difference a listener notices depends on the listener, the sound and the musical context, so the display shows the number rather than a pass-or-fail line.",
+      a: "A cent is one hundredth of a semitone, so 100 cents make one semitone and a reading of −20 cents is a fifth of a semitone flat. The studio colours anything within 15 cents green as in tune; treat that band as a practice target, since how small a difference a listener notices depends on the listener, the sound and the musical context.",
     },
     {
       q: "Why is the pitch reading jumping around?",
@@ -893,6 +946,7 @@ export const STUDIO_GUIDE: GuideContent = {
       a: "No. All pitch analysis happens on your device, and nothing is sent to a server or stored unless you explicitly record a take in the recorder — and those stay on your device too.",
     },
   ],
+  start: { label: "Sing a note and see its pitch", href: "/studio#content" },
   related: [
     {
       href: "/warmups",
@@ -914,6 +968,11 @@ export const STUDIO_GUIDE: GuideContent = {
       label: "Glossary",
       note: "Cents, sharp and flat, fundamental — the readout, defined.",
     },
+    {
+      href: "/learn/voice/pitch-time-words/in-tune-all-the-way",
+      label: "In Tune, All the Way lessons",
+      note: "Sustained intonation, in three short free lessons.",
+    },
   ],
 };
 
@@ -927,7 +986,7 @@ export const ANALYZE_GUIDE: GuideContent = {
   body: [
     "Pitch tells you which note. Everything else about how a voice sounds — bright or dark, thin or full, ringing or swallowed — comes from the relative strength of the harmonics above that note, and that is what a spectrogram makes visible. Two singers on the same pitch produce completely different pictures.",
     "The band around 3 kHz is worth knowing about. Many trained classical voices show a cluster of energy there, usually called the singer's formant, and it is the standard explanation for how one unamplified voice is heard over an orchestra. It is not a target to chase directly; it tends to appear as a by-product of an efficient, well-resonated tone.",
-    "Vocal load is a different question from how long you practiced. The vocal-dosimetry literature counts vibration cycles rather than minutes, because pitch decides how many cycles the folds complete in a given second. The folds open and close once per cycle of the sung frequency, so an hour of voicing at A4 (440 Hz) is 1,584,000 cycles, four times the 396,000 of an hour at A2 (110 Hz). Counting cycles is what makes two practice days comparable.",
+    "Vocal load is a different question from how long you practiced. The vocal-dosimetry literature counts vibration cycles rather than minutes, because pitch decides how many cycles the folds complete in a given second. The folds open and close once per cycle of the sung frequency, so an hour of voicing at A4 (440 Hz) is 1,584,000 cycles, four times the 396,000 of an hour at A2 (110 Hz). Counting cycles makes two practice days more comparable than minutes do, though it still ignores loudness: an hour sung loudly and an hour sung softly at the same pitch count the same.",
   ],
   howTo: {
     name: "How to read your voice on a spectrogram",
@@ -940,7 +999,7 @@ export const ANALYZE_GUIDE: GuideContent = {
       },
       {
         title: "Count how far the stack goes",
-        body: "A bright, well-supported tone shows many harmonics reaching high up the display. A breathy or pressed tone shows fewer, and more of the fuzzy grey between them, which is air rather than tone.",
+        body: "A tone with firm, complete fold closure shows many harmonics reaching high up the display — and so does a pressed, squeezed one, so a full stack is not proof of good support. A breathy tone shows fewer, with more of the fuzzy grey between them, which is air rather than tone. Let how your throat feels decide between firm and pressed; the picture cannot.",
       },
       {
         title: "Slide slowly from low to high",
@@ -962,9 +1021,9 @@ export const ANALYZE_GUIDE: GuideContent = {
   },
   beginner: {
     heading: "Look at the shape, not the numbers",
-    body: "Early on the useful thing is noticing that the picture changes when you change something. You do not need to interpret a spectrogram to benefit from seeing that a supported note and a breathy one look nothing alike.",
+    body: "Early on the useful thing is noticing that the picture changes when you change something. You do not need to interpret a spectrogram to benefit from seeing that a firm note and a breathy one look nothing alike.",
     points: [
-      "Sing one note two ways — breathy, then firm — and watch how much of the stack fills in",
+      "Sing one note two ways — breathy, then firm — and watch how much of the stack fills in; if 'firm' starts to feel tight in the throat it has become pressed, and the picture will not warn you",
       "Find where your register changes by sliding slowly, and remember roughly which note it happens on",
       "Ignore the ring percentage at first; the spectrogram picture is more useful to a new singer",
       "Use vocal load to see whether you actually practiced twenty minutes or four",
@@ -974,8 +1033,8 @@ export const ANALYZE_GUIDE: GuideContent = {
     heading: "Use it to compare, not to score",
     body: "Every reading here is relative to your microphone, your distance from it, and your room. That makes it excellent for comparing two of your own takes recorded the same way, and close to meaningless as an absolute measurement against another singer.",
     points: [
-      "A/B two vowel shapes on the same pitch and watch the ring band rather than trusting the sensation",
-      "Track cycle dose across a heavy rehearsal week — the number climbs faster than practice minutes do",
+      "A/B two vowel shapes on the same pitch and watch the ring band move, then check that the brighter one still feels easy — pressing can raise it too",
+      "Track cycle dose across a heavy rehearsal week — high, sustained material raises it faster than the minutes alone suggest",
       "Watch the harmonic stack through a passaggio to see whether the transition is smoothing out over months",
       "Keep microphone position consistent between sessions or the comparison is not one",
     ],
@@ -991,7 +1050,7 @@ export const ANALYZE_GUIDE: GuideContent = {
     },
     {
       q: "What is vocal dose and why count cycles instead of minutes?",
-      a: "Vocal dose measures how much work the vocal folds have done. Cycle dose counts vibration cycles — pitch multiplied by the time you were actually voicing — because a minute sung high puts the folds through more cycles than a minute sung low: a minute at A4 (440 Hz) is four times the cycles of a minute at A2 (110 Hz). Minutes alone treat those as equal.",
+      a: "Vocal dose is a family of measures of how much the vocal folds have been used. Cycle dose counts vibration cycles — pitch multiplied by the time you were actually voicing — because a minute sung high puts the folds through more cycles than a minute sung low: a minute at A4 (440 Hz) is four times the cycles of a minute at A2 (110 Hz). Minutes alone treat those as equal. Cycles leave out loudness, though, so a loud minute and a soft one at the same pitch count the same.",
     },
     {
       q: "Does this measure how loud I am in decibels?",
@@ -1006,6 +1065,7 @@ export const ANALYZE_GUIDE: GuideContent = {
       a: "No. The microphone is read in the browser and the analysis runs on your device. No audio is sent to a server.",
     },
   ],
+  start: { label: "See your voice on the spectrogram", href: "/analyze#content" },
   related: [
     {
       href: "/studio",
@@ -1027,10 +1087,15 @@ export const ANALYZE_GUIDE: GuideContent = {
       label: "Glossary",
       note: "Harmonic, formant, vocal dose — the spectrogram's vocabulary.",
     },
+    {
+      href: "/learn/voice/through-the-break/twang-and-ring",
+      label: "Twang and Ring lessons",
+      note: "Resonance over force, in three short free lessons.",
+    },
   ],
   safety: {
     heading: "Vocal load is a practice signal, not a health check",
-    body: "Cycle dose can show that today was heavier than yesterday. It cannot tell you what is safe for your voice, because that depends on the individual and on factors no microphone can see. Persistent hoarseness, pain, or a loss of range belongs with a qualified voice teacher or a clinician rather than a number on a screen.",
+    body: "Cycle dose can show that today put your folds through more cycles than yesterday. It cannot tell you what is safe for your voice, because that depends on the individual and on factors no microphone can see. Persistent hoarseness, pain, or a loss of range belongs with a doctor who can examine the vocal folds — an ENT or laryngologist, often working with a voice-specialist speech-language pathologist — not with a number on a screen.",
     sources: [
       {
         href: "https://www.nidcd.nih.gov/health/taking-care-your-voice",

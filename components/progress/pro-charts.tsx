@@ -1,6 +1,6 @@
 "use client";
 
-import { midiToLabel } from "@/lib/audio/notes";
+import { midiToLabel, voiceFitLabel } from "@/lib/audio/notes";
 import {
   noteReports,
   overallAccuracy,
@@ -246,8 +246,8 @@ export function RangeHistoryChart({ history }: { history: RangeEntry[] }) {
             <g key={`${point.testedAt}-${i}`}>
               <title>
                 {dateLabel(point.testedAt)}: {midiToLabel(point.lowMidi)}–
-                {midiToLabel(point.highMidi)} ({point.semitones} semitones
-                {point.voiceTypeLabel ? `, ${point.voiceTypeLabel}` : ""})
+                {midiToLabel(point.highMidi)}{" "}
+                {`(${point.semitones} semitones, closest fit ${voiceFitLabel(point.lowMidi, point.highMidi)})`}
               </title>
               <rect
                 x={padL + i * slot}

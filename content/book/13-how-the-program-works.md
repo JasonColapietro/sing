@@ -41,7 +41,7 @@ Not seven. Voices adapt in the gaps as much as in the work, and daily singing at
 
 Three is the floor. Four is better. Five is fine if the sessions stay at twenty minutes and stay gentle. Spread them out — Monday, Wednesday, Friday beats three sessions crammed into a weekend, because the point is repeated exposure, not total volume.
 
-Coach, on the Progress page, reads your recent scored sessions and range tests and builds a short plan around whichever area came back weakest: ear training, warmups, or song work. It is arithmetic on your own numbers, not a second opinion. Free accounts see the first step of the plan; Pro shows all of it. Either way, it is a reasonable way to fill the middle of a session without deciding for yourself every time. It does not replace the block structure — Coach picks what to drill, the program decides what the fortnight is for.
+Coach, on the Progress page, reads your recent scored sessions and range tests and builds a short plan around whichever area came back weakest: ear training, warmups, or song work. It is arithmetic on your own numbers, not a second opinion. On the free plan you see the first two steps of the plan; Pro shows all of it. Either way, it is a reasonable way to fill the middle of a session without deciding for yourself every time. It does not replace the block structure — Coach picks what to drill, the program decides what the fortnight is for.
 
 ## Before you start: what to record
 
@@ -79,4 +79,4 @@ Two rules override all of the above. First, when in doubt, go back rather than f
 
 ## Try this
 
-Before your first session, take a range test, then record one verse and chorus of a song you already know into the Recorder — and leave both alone. In week eleven you will record that same song again and put the two takes side by side in A/B compare. Whatever sits between them is the only honest evidence you will have.
+Before your first session, take a range test, then record one verse and chorus of a song you already know into the Recorder — and leave both alone. At the start of week twelve you will record that same song again and put the two takes side by side in A/B compare. Whatever sits between them is the only honest evidence you will have.

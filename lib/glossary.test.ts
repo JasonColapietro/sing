@@ -9,6 +9,7 @@ import {
   termId,
 } from "./glossary";
 import type { GlossaryDomain } from "./glossary";
+import { EXERCISES } from "@/components/warmups/exercises";
 import { readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
@@ -193,6 +194,20 @@ describe("GLOSSARY", () => {
     }
   });
 
+  /**
+   * A drill is linked as /warmups?exercise=<id>, so it has to be a warmup that
+   * exists, and a free one: a Pro-pack id would put a locked exercise behind a
+   * "Try it" link on a free reference page.
+   */
+  it("names only free warmups as drills", () => {
+    const free = new Set(EXERCISES.map((exercise) => exercise.id));
+    const drills = SING_GLOSSARY_TERMS.filter((e) => e.drill);
+    expect(drills.length).toBeGreaterThan(0);
+    for (const entry of drills) {
+      expect(free.has(entry.drill!), `${entry.term}: ${entry.drill}`).toBe(true);
+    }
+  });
+
   it("never lists a term as its own alternate name", () => {
     for (const entry of GLOSSARY_TERMS) {
       for (const alias of entry.aka ?? []) {
@@ -228,6 +243,27 @@ describe("published glossary claims", () => {
     // A minute at 440 Hz is 440 x 60 cycles; at 110 Hz, a quarter of that.
     expect(byTerm("Vocal dose").where).toContain((440 * 60).toLocaleString("en-US"));
     expect(byTerm("Vocal dose").where).toMatch(/four times/);
+  });
+
+  /**
+   * Cycle dose counts vibrations and ignores loudness, so it is a measure of
+   * use, not of the work the tissue did.
+   */
+  it("does not call cycle dose the folds' work", () => {
+    expect(byTerm("Vocal dose").definition).not.toMatch(/\bwork\b/);
+  });
+
+  /**
+   * Songs open fitted to a saved range and can be shifted by semitones; with
+   * no range they open in the written key. Nothing knows where a voice is
+   * comfortable, so the entry may not say it does.
+   */
+  it("describes song key fitting as the player does it", () => {
+    const where = byTerm("Transposition").where;
+    expect(where).toMatch(/range test/);
+    expect(where).toMatch(/fitted to your measured range/);
+    expect(where).toMatch(/written key/);
+    expect(where).not.toMatch(/comfortable/);
   });
 
   it("names the product, not a bare surname", () => {

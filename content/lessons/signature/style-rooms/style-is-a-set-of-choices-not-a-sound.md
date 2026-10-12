@@ -11,18 +11,22 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A style is a set of decisions, not a voice you put on: how notes start, when vibrato arrives, how crisp the consonants are, where the rhythm sits against the beat and how each phrase is shaped. Genres tend to make those decisions differently; straight tone that lets vibrato in late is common in modern pop and jazz, while vibrato from the start of the note is more usual in opera and much of musical theater. Copy what singers decide rather than what they are made of: your timbre comes from the shape of your own throat and mouth, so the same choices sung in your body sound like you, which is the point.
+
 ## Steps
 
 ### Use the practice material
 
-Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.
+Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name two style rooms before singing.
+Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +40,7 @@ Onset, vibrato, diction, and placement, decided per genre. Say what will count a
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Style Is a Set of Choices, Not a Sound.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Change onset, diction, vibrato amount, rhythmic placement, and phrase shape deliberately while keeping the melody recognizable.
+Take the first phrase of Amazing Grace and sing it twice, changing only one choice: first with a clean onset on each phrase start, then with a little air before the tone. Keep the key, tempo, words and volume the same. Record both in one take in the recorder with a breath between them, and name on playback what changed and what it did to the feel. Then make the same one-choice contrast with vibrato (from the start of a long note versus late) or with rhythmic placement (on the beat versus a little behind it), keeping the melody recognizable.
 
 - Look: Each treatment has written choices rather than a vague instruction to sound like a particular artist.
 - Listen: A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.

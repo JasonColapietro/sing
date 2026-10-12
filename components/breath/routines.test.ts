@@ -262,6 +262,8 @@ describe("breath routine shape", () => {
   it("asks for holds that stay open and attempts that stop before they tighten", () => {
     expect(breathDrillDesc("box")).toMatch(/pause rather than a locked throat/i);
     expect(breathDrillDesc("farinelli")).toMatch(/without gasping/i);
+    // The Farinelli holds grow every round, so they say how to hold too.
+    expect(breathDrillDesc("farinelli")).toMatch(/not by shutting your throat/i);
     expect(breathDrillDesc("sustain")).toMatch(/starts to tighten/i);
     for (const d of BREATH_DRILL_IDS) {
       expect(breathDrillDesc(d), d).not.toMatch(/support|lung|capacity|diaphragm/i);

@@ -1,25 +1,26 @@
 "use client";
 
-import { useFreeCap } from "@/lib/free-cap";
-import { CapWall } from "@/components/practice/free-cap";
+import { formatClock, useFreeCap } from "@/lib/free-cap";
+import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
+import { liveStreak } from "@/components/account/save-state";
 
 import { useEffect, useMemo, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
-import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
+import { localDay, useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
 import { AudioSetup } from "@/components/audio/audio-setup";
-import { ContinueCard, useDailyGoal, nextUpId, starsForExercise } from "@/components/practice/learn-home";
+import { ContinueCard, useDailyGoal, useGoalDoneSec, nextUpId, starsForExercise } from "@/components/practice/learn-home";
 import { IconMic } from "./icons";
 import { ALL_EXERCISES, EXERCISES, PRO_PACKS, TIER_ORDER, type WarmupExercise } from "./exercises";
-import { getProState, useIsPro } from "@/lib/pro";
+import { getProState, useIsPro, useProReady } from "@/lib/pro";
 import { ExercisePlayer } from "./exercise-player";
 import { SessionSummary } from "./session-summary";
 import { RoutineRunner, type RoutineSummaryData } from "./routine-runner";
 import { RoutineSummary } from "./routine-summary";
 import { PathSection, RoutineGrid, RoutineMeta, routineStats } from "./routine-home";
-import { recentWarmupResults, routineReason, routineStartingTempo, recommendRoutine, routineById, stepExercise, type Routine } from "./routines";
+import { recentWarmupResults, routineReason, routineStartingTempo, recommendRoutine, routineById, sizeRoutineToAllowance, stepExercise, type Routine } from "./routines";
 import type { SessionSummaryData } from "./lib";
 import { DailyThreeCard, DailyThreeCardPlaceholder } from "./daily-three-card";
 import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type DailyTempo } from "@/lib/daily-three";
@@ -65,6 +66,11 @@ export function WarmupsClient() {
     ? "Free practice is used for today. It resets at midnight; the free studio is still open."
     : undefined;
   const { goalSec } = useDailyGoal();
+  // On free, the ring counts the guided minutes the goal is clamped to, not
+  // time in the uncapped studio.
+  const goalDoneSec = useGoalDoneSec(progress);
+  // The stored count outlives a lapsed streak; only a live one is named.
+  const streakDays = liveStreak(progress.streak);
   const activeProgram = useActiveProgram();
 
   const [view, setView] = useState<View>("home");
@@ -128,7 +134,24 @@ export function WarmupsClient() {
 
   const practicedToday = progress.sessions.some((s) => s.day === localDay());
   const routineContext = { practicedToday, hour: hour ?? 12, recent: recentWarmupResults(progress.sessions) };
-  const recommended = recommendRoutine(routineContext);
+  // A free singer's guided session has to be one they can finish. The daily
+  // and full sets run past the five free minutes, so a first session would end
+  // on the cap slide halfway through; when the pick does not fit what is left
+  // today, the shorter morning set takes its place, if that fits.
+  const preferred = recommendRoutine(routineContext);
+  const recommended = cap.capped ? preferred : sizeRoutineToAllowance(preferred, cap.leftSec);
+  const sizedToAllowance = recommended !== preferred;
+  // The prerender has no entitlement, so it always sizes for free. Until the
+  // entitlement is read the line holds its place without naming free minutes:
+  // a Pro singer would otherwise be told about a limit they paid to remove.
+  const proReady = useProReady();
+  const recommendedReason = sizedToAllowance
+    ? !proReady
+      ? " "
+      : cap.usedSec <= 0
+        ? `Fits in today's ${Math.round(cap.capSec / 60)} free minutes.`
+        : `Fits in the ${formatClock(cap.leftSec)} of free practice left today.`
+    : routineReason(routineContext);
   const pathExercises = isPro ? ALL_EXERCISES : EXERCISES;
   const pathItem = (e: WarmupExercise) => ({ id: e.id, title: e.title, stars: starsForExercise(progress, e.title) });
   const nextId = nextUpId([
@@ -265,6 +288,19 @@ export function WarmupsClient() {
       ? deepLinkRoutine
       : null;
 
+  // A link that names an exercise or a routine (the range result's "Start
+  // this warmup", the coach, a program day) lands on the card that names it.
+  // The room's own start cards sit above that card, and pressing one of them
+  // outranks the link, so without this the first button a visitor sees starts
+  // something else. Scrolled to rather than hiding the cards above it: those
+  // are server-rendered, and removing them after first paint would shift the
+  // whole page.
+  const deepLinkWaiting =
+    !pitch.listening && !cap.capped && Boolean(pendingDeepLinkEx || pendingDeepLinkRoutine);
+  useEffect(() => {
+    if (deepLinkWaiting) document.getElementById("warmup-gate")?.scrollIntoView({ block: "start" });
+  }, [deepLinkWaiting]);
+
   // Resolved after the deep link, not before it: both land in the same render
   // when permission arrives, and whoever writes the view last wins. A visitor
   // who pressed a specific card asked for that card, so their pick has to
@@ -299,11 +335,15 @@ export function WarmupsClient() {
     >
       {view === "home" && (
         <div className="space-y-8">
-          {cap.capped && <CapWall cap={cap} />}
+          {cap.capped ? <CapWall cap={cap} /> : <FreeAllowance cap={cap} />}
+          {/* A program day still to do is the plan the singer committed to,
+              so it leads; done or finished, it drops back below today's cards. */}
+          {activeProgram?.view.status === "todo" && <ProgramEntryCard active={activeProgram} />}
           {nextExercise && (
             <ContinueCard
               kicker="Continue your path"
-              streakDays={progress.streak.current}
+              streakDays={streakDays}
+              streakBest={progress.streak.best}
               title={nextExercise.title}
               tagline="The next exercise in your lowest unfinished tier. You can still choose any exercise below."
               onStart={() => void selectExercise(nextExercise, "continue")}
@@ -334,8 +374,9 @@ export function WarmupsClient() {
             meta={<RoutineMeta routine={recommended} />}
             stepTitles={recommended.steps.map((s) => stepExercise(s).title)}
             stars={routineStats(progress, recommended).stars}
-            goal={{ doneSec: todayPracticeSec(progress), goalSec }}
-            streakDays={progress.streak.current}
+            goal={{ doneSec: goalDoneSec, goalSec }}
+            streakDays={streakDays}
+            streakBest={progress.streak.best}
             micReady={pitch.listening}
             unavailableReason={unavailableReason}
             startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start warmup" : "Enable mic and start"}
@@ -343,10 +384,10 @@ export function WarmupsClient() {
             onStart={() => void selectRoutine(recommended, "today")}
           >
             <p className="text-xs text-dim sm:text-right">
-              {routineReason(routineContext)}
+              {recommendedReason}
             </p>
           </ContinueCard>
-          <ProgramEntryCard active={activeProgram} />
+          {activeProgram?.view.status !== "todo" && <ProgramEntryCard active={activeProgram} />}
 
           {/*
             The mic card used to be returned INSTEAD of this page, so a first-time
@@ -354,49 +395,54 @@ export function WarmupsClient() {
             permission. /range already solved this: explain the loop, then ask.
           */}
           {!pitch.listening && !cap.capped && (
-            <Card>
-              <h2 className="text-xl">{gateTitle}</h2>
-              <ol className="mt-3 max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut">
-                <li>
-                  Each exercise plays its pattern once, counts you in with two
-                  beats, then scores your pitch as you sing it back with the
-                  guide underneath you.
-                </li>
-                <li>
-                  The key climbs a semitone every rep. After the set number of
-                  reps the next exercise introduces itself and starts on its
-                  own — you never have to pick what comes next.
-                </li>
-                <li>
-                  At the end you get one summary: score, stars, XP, and the
-                  streak you just kept alive.
-                </li>
-              </ol>
-              {/* The id the path rows point their aria-describedby at, so a
-                  screen reader user hears that a row asks for the microphone
-                  before they press it. It only exists while the gate does,
-                  which is exactly while the rows set that attribute. */}
-              <p id="practice-mic-note" className="mt-3 max-w-xl text-sm text-dim">
-                Scoring needs your microphone. Audio is read and analyzed in this
-                browser and never leaves your device.
-              </p>
-              <p className="mt-2 max-w-xl text-sm text-rec">
-                Sing at a comfortable volume. Stop if a note hurts or feels strained, and rest if your voice turns hoarse or scratchy.
-              </p>
-              <div className="mt-5">
-                <Button variant="rec" size="lg" onClick={startFromGate}>
-                  <IconMic /> Enable microphone
-                </Button>
-              </div>
-              {pitch.error && errorAt.kind === "gate" && (
-                <MicAlert
-                  message={pitch.error}
-                  className="mt-4 max-w-md text-sm text-rec"
-                />
-              )}
-              <AudioSetup className="mt-6 max-w-xl" />
-              <ProWhisper className="mt-4" />
-            </Card>
+            <div id="warmup-gate" className="scroll-mt-20">
+              <Card>
+                <h2 className="text-xl">{gateTitle}</h2>
+                <ol className="mt-3 max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut">
+                  <li>
+                    Each exercise plays its pattern once, counts you in with two
+                    beats, then scores your pitch as you sing it back with the
+                    guide underneath you.
+                  </li>
+                  <li>
+                    The key moves a semitone every rep: most exercises climb and
+                    then come back down, and the descending ones start high and
+                    step down. After the set number of reps the next exercise
+                    introduces itself and starts on its own — you never have to
+                    pick what comes next.
+                  </li>
+                  <li>
+                    At the end you get one summary: score, stars, XP, and the
+                    streak you just kept alive.
+                  </li>
+                </ol>
+                {/* The id the path rows point their aria-describedby at, so a
+                    screen reader user hears that a row asks for the microphone
+                    before they press it. It only exists while the gate does,
+                    which is exactly while the rows set that attribute. */}
+                <p id="practice-mic-note" className="mt-3 max-w-xl text-sm text-dim">
+                  Scoring needs your microphone. Audio is read and analyzed in this
+                  browser and never leaves your device.
+                </p>
+                <p className="mt-2 max-w-xl text-sm text-rec">
+                  Sing at a comfortable volume. Stop if a note hurts or feels strained, and rest if your voice turns hoarse or scratchy.
+                </p>
+                <div className="mt-5">
+                  <Button variant="rec" size="lg" onClick={startFromGate}>
+                    <IconMic />{" "}
+                    {pendingDeepLinkEx || pendingDeepLinkRoutine ? "Enable mic and start" : "Enable microphone"}
+                  </Button>
+                </div>
+                {pitch.error && errorAt.kind === "gate" && (
+                  <MicAlert
+                    message={pitch.error}
+                    className="mt-4 max-w-md text-sm text-rec"
+                  />
+                )}
+                <AudioSetup className="mt-6 max-w-xl" />
+                <ProWhisper className="mt-4" />
+              </Card>
+            </div>
           )}
 
           <RoutineGrid
@@ -461,6 +507,11 @@ export function WarmupsClient() {
       {view === "summary" && summary && (
         <SessionSummary
           data={summary}
+          daily={dailyPlan ? { plan: dailyPlan, done: dailyDone } : null}
+          capped={cap.capped}
+          onDaily={(p) => {
+            if (canStart(p.exercise)) startExercise(p.exercise, p.tempo);
+          }}
           onNext={startExerciseById}
           onLibrary={() => setView("home")}
         />

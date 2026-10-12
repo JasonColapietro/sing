@@ -350,6 +350,50 @@ What the other apps must do: re-sync the file, then:
 Until then, `version` is a failing assertion on their side, which is
 intended. Exercise ids and titles are unchanged.
 
+### suede-vocal v9
+
+`version` moved to 9 on 2026-10-12. Two keys and two rules added; some values
+changed with them:
+
+- `warmups.scoring.glideTimeSlack` (0.1). A glide used to be scored against
+  the guide's ramp at one instant. A siren is taught as one unbroken slide,
+  and a natural one eases out of the bottom and into the top rather than
+  moving at constant speed: an eased octave siren with exact endpoints scored
+  24, and a straight slide about 100 ms late scored 0. A glide frame is now
+  measured against the nearest pitch the ramp passes through within this
+  share of the glide on either side, plus the onset grace on the late side.
+  A singer stuck on the start pitch, or stepping instead of sliding, still
+  scores low: the window follows the ramp and does not cover the whole sweep.
+  `rules.warmupGlideWindow` states the arithmetic exactly.
+- `warmups.nominalRange` (`lowMidi` 45, `highMidi` 64: A2–E4). Before a range
+  test, every ladder is fitted to this span instead of fixed C3→G3 roots, and
+  the scorer counts any octave of each target, so one nominal span serves
+  lower and higher voices. It is a placeholder, not a guess at anyone's voice;
+  the range test replaces it. Per-note results and the rep's root are reported
+  in the octave mostly sung. With a saved range only the written octave
+  counts. `rules.warmupOctaveWithoutRange`.
+- Value changes with no new key, shipped in the same release:
+  - Eight exercises gained a `rangeCap`. The belt calls `belt-nay-speech`,
+    `belt-hey-thirds`, `belt-bah-bursts`, `belt-yah-triad` and
+    `belt-hah-descent` now walk the lower 60% of the ladder (`0–0.6`), as the
+    two strong belt holds already did. The cool-downs `quiet-hum-descent`,
+    `soft-trill-slide` and `straw-slide-down` walk the lower half (`0–0.5`).
+  - `editorial`: book and atlas chapter word counts, one atlas summary, and
+    the repertoire figures for `unchained-melody` (now its sounding range,
+    C3–A4) and `die-with-a-smile` (the lead line, G#3–E5). Flat-key songs now
+    spell their `rangeLabel` in flats (`Eb3–Bb4`, `Bb3–D5`, `Ab3–F5`).
+
+What the other apps must do: re-sync the file, then:
+
+1. Score glide frames against the ramp window in `rules.warmupGlideWindow`.
+2. Without a saved range, fit ladders to `nominalRange` and fold sung pitch
+   to the target's octave before comparing.
+3. Apply the new `rangeCap` values (no code change if v8's cap is already
+   implemented).
+
+Until then, `version` is a failing assertion on their side, which is
+intended. Exercise ids and titles are unchanged.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

@@ -15,14 +15,14 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.
+Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name two style rooms before singing.
+Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -66,7 +66,7 @@ I compared two stylistic choices in the same supplied phrase and could explain w
 - A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: One take holds the same phrase in both styles, you can name at least two written choices that differ between them, and both still sound like your own voice at a comfortable volume.
 
 If not ready: If the styles differ only in volume or caricature, keep one choice, return to neutral, and add a second controlled choice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

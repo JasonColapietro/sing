@@ -5,10 +5,18 @@ import { LinkButton, PageShell, SectionHeading, SectionLabel } from "@/component
 import { ProChip } from "@/components/pro/ui";
 import V2TraceGlyph from "@/components/v2-glyph";
 import { SINGERS } from "@/lib/singers";
-import { proHeadlineLong } from "@/lib/pro-shared";
+import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
+import { accountsReady } from "@/lib/accounts";
+
+/**
+ * Accounts were built in v2 but are not open on every deployment
+ * (lib/accounts.ts). The account copy below says what a visitor can actually
+ * do on this one, so it never sells a backup they cannot create.
+ */
+const ACCOUNTS_OPEN = accountsReady();
 
 const TITLE = "Suede Sing Changelog: What's New in 3.1";
 const DESCRIPTION =
@@ -110,7 +118,11 @@ const STORIES: Story[] = [
   {
     label: "Accounts",
     title: "Your practice record, kept",
-    body: "Until now this browser held the only copy of your sessions, streaks and range history. A free account backs that record up and restores it on any device you sign into. The backup carries your numbers — never your audio: pitch analysis still runs entirely on your own machine.",
+    // With accounts closed, "until now this browser held the only copy" would
+    // be contradicted a sentence later, so that deployment gets its own body.
+    body: ACCOUNTS_OPEN
+      ? "Until now this browser held the only copy of your sessions, streaks and range history. A free account backs that record up and restores it on any device you sign into. The backup carries your numbers — never your audio: pitch analysis still runs entirely on your own machine."
+      : "v2 built an account backup for your sessions, streaks and range history, restored on any device you sign into. Accounts are not open on this site yet; until they are, your record stays in this browser and can be exported from Progress. The backup carries your numbers — never your audio: pitch analysis still runs entirely on your own machine.",
     links: [{ href: "/progress", text: "See your progress" }],
   },
   {
@@ -149,6 +161,29 @@ const LOG: Array<{
   month: string;
   entries: Array<{ day: string; note: string }>;
 }> = [
+  {
+    month: "October 2026",
+    entries: [
+      {
+        day: "11",
+        note: "Fixes to practice timing, recorder recovery and the range-test journey.",
+      },
+      {
+        day: "10",
+        note: "Guided practice (warmups, ear training, breath and songs) is now five free minutes a day, up from three. The pitch studio, range test, recorder and tools stay free with no daily limit, and Pro removes the limit.",
+      },
+      {
+        // The lifetime price did not change on the 9th; the monthly plan
+        // stopped selling. Prices come from PRICING so the log cannot drift.
+        day: "9",
+        note: `Pro is now sold as lifetime access only: ${formatPrice(PRICING.lifetime.amount)} once, with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out; existing monthly subscribers keep renewing at ${formatPrice(PRICING.monthly.amount)}.`,
+      },
+      {
+        day: "2",
+        note: "A phone-first redesign: five tabs with a bottom tab bar on phones, and a live pitch meter as the default voice test, with the guided range test one tap away.",
+      },
+    ],
+  },
   {
     month: "September 2026",
     entries: [
@@ -226,7 +261,9 @@ const LOG: Array<{
       },
       {
         day: "21",
-        note: "Free accounts: your practice record, backed up and restorable anywhere.",
+        note: ACCOUNTS_OPEN
+          ? "Free accounts: your practice record, backed up and restorable anywhere."
+          : "Account backup for your practice record, built ahead of accounts opening on this site.",
       },
       {
         day: "21",
@@ -351,9 +388,11 @@ export default function ChangelogPage() {
       <section aria-label="Suede Sing v2" className="mt-14 border-t border-line2 pt-8">
         <SectionLabel>Earlier: v2, August 2026</SectionLabel>
         <p className="mt-3 max-w-prose text-meta text-mut">
-          The studio rebuilt panel by panel: warmups that sing with you, free
-          accounts that keep your record, a deeper library, and a calmer room
-          around all of it.
+          The studio rebuilt panel by panel: warmups that sing with you,{" "}
+          {ACCOUNTS_OPEN
+            ? "free accounts that keep your record"
+            : "account backup for your record (accounts are not open yet)"}
+          , a deeper library, and a calmer room around all of it.
         </p>
       </section>
 
@@ -372,9 +411,9 @@ export default function ChangelogPage() {
         <ProChip />
         <h2 className="mt-3 text-2xl sm:text-3xl">{proHeadlineLong()}</h2>
         <p className="mt-3 max-w-prose text-mut">
-          Both books in full, the pro warmup packs, pitch analysis on every
-          take, your range history, and cloud sync. v2 grew the free studio;
-          Pro is what keeps it free.
+          Guided practice with no daily clock, both books in full, the pro
+          warmup packs, pitch analysis on every take, your range history, and
+          cloud sync. v2 grew the free studio; Pro is what keeps it free.
         </p>
         <LinkButton href="/pro" variant="violet" size="md" className="mt-5">
           See what Pro adds

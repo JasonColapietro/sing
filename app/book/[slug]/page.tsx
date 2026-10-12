@@ -2,20 +2,67 @@ import type { Metadata } from "next";
 import { chapterKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AUTHOR_NAME } from "@/lib/author";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
+import { MODULE_PRACTICE } from "@/lib/lesson-practice";
 import { Markdown } from "@/lib/markdown";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { exitTestFor } from "@/lib/programme-exit-tests";
 import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
+import { COURSE } from "@/lib/voice-lessons";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
 import { FreeOnly } from "@/components/pro/gate";
-import { Card, LinkButton, PageShell } from "@/components/ui";
+import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 
 interface Params {
   slug: string;
+}
+
+/**
+ * The room each free chapter's "Try this" sends the reader to. The chapter
+ * names the room in its prose; this is the button, so a reader who arrived from
+ * search can do the exercise the chapter just prescribed before being asked to
+ * pay for anything. Keyed by slug, so a chapter without an entry shows nothing.
+ */
+const TRY_IT: Record<
+  string,
+  { href: string; label: string; line: string; warmUpFirst?: boolean }
+> = {
+  "what-your-voice-is": {
+    href: "/studio",
+    label: "Try it in the pitch studio",
+    line: "Hold one note on “ah”, then “ee”: the trace stays on one line while the sound changes.",
+  },
+  "reading-the-range-test": {
+    href: "/range?mode=range",
+    label: "Take the range test honestly",
+    line: "Warm up first, stop at the first note that needs effort, and count only notes you can hold for two beats.",
+    warmUpFirst: true,
+  },
+  "when-numbers-lie": {
+    href: "/studio",
+    label: "Check your room in the pitch studio",
+    line: "Stay silent for fifteen seconds and watch the trace: any pitch it shows is your room, not your voice.",
+  },
+};
+
+/**
+ * Free voice-course modules that list this chapter as reading. The lessons
+ * already link here; this is the way back, so a chapter is not the end of the
+ * road for someone who found it first.
+ */
+function lessonsUsing(slug: string): Array<{ href: string; name: string; skill: string }> {
+  const modules = COURSE.filter((s) => s.catalog.access === "free").flatMap((s) => s.modules);
+  return Object.entries(MODULE_PRACTICE)
+    .filter(([, practice]) => practice.readings.includes(slug))
+    .flatMap(([id]) => {
+      const m = modules.find((x) => x.catalog.id === id);
+      return m?.href ? [{ href: m.href, name: m.catalog.name, skill: m.catalog.skill }] : [];
+    });
 }
 
 export const dynamicParams = false;
@@ -32,15 +79,19 @@ export async function generateMetadata({
   const { slug } = await params;
   const c = BOOK_CONTENTS.find((x) => x.slug === slug);
   if (!c) return {};
+  // A literary chapter title ("When the numbers lie to you") matches nothing a
+  // singer types, so a chapter can carry search wording for the title tag. The
+  // H1 and the structured data keep the chapter's own title.
+  const name = c.searchTitle || c.title;
   return withCanonicalOpenGraph({
     // The book's name when it fits, a shorter tail when it doesn't, so a
     // chapter title never reaches search as a bare phrase identical to its H1.
-    title: firstFit([`${c.title} · ${BOOK_TITLE}`, `${c.title} · Singing Book`, c.title]),
-    keywords: chapterKeywords(c.title, "book"),
+    title: firstFit([`${name} · ${BOOK_TITLE}`, `${name} · Singing Book`, name]),
+    keywords: chapterKeywords(name, "book"),
     description: c.summary,
     alternates: { canonical: `${SITE_URL}/book/${c.slug}` },
     // A gated body has nothing here for an index to rank — list the chapter but
-    // keep it out of results. The free chapter is real content and ranks.
+    // keep it out of results. The free chapters are real content and rank.
     robots: pageRobots(c.free),
   });
 }
@@ -54,11 +105,14 @@ export default async function ChapterPage({
   const chapter = BOOK_CONTENTS.find((c) => c.slug === slug);
   if (!chapter) notFound();
 
-  // The free chapter renders on the server: indexable, no subscription round
+  // A free chapter renders on the server: indexable, no entitlement round
   // trip. Everything else goes through the gated reader.
   const full = chapter.free ? BOOK.find((c) => c.slug === slug) : undefined;
   const next = BOOK_CONTENTS[BOOK_CONTENTS.indexOf(chapter) + 1];
   const gated = BOOK_CONTENTS.filter((c) => !c.free).length;
+  const freeCount = BOOK_CONTENTS.length - gated;
+  const tryIt = full ? TRY_IT[chapter.slug] : undefined;
+  const lessons = full ? lessonsUsing(chapter.slug) : [];
   /**
    * Shown whether or not the body is gated, and on purpose. The chapter is the
    * paid thing; the condition that tells a singer the fortnight is finished is
@@ -73,12 +127,19 @@ export default async function ChapterPage({
       title={chapter.title}
       subtitle={chapter.summary || undefined}
       actions={
-        <Link
-          href="/book"
-          className="inline-flex min-h-11 items-center rounded-full border border-line px-4 py-2 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
-        >
-          ← Contents
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/book"
+            className="inline-flex min-h-11 items-center rounded-full border border-line px-4 py-2 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
+          >
+            ← Contents
+          </Link>
+          {tryIt && (
+            <LinkButton href={tryIt.href} size="md">
+              {tryIt.label}
+            </LinkButton>
+          )}
+        </div>
       }
     >
       <script
@@ -111,19 +172,76 @@ export default async function ChapterPage({
         <div className="space-y-6">
           <Card>
             <article className="max-w-2xl">
+              {/* The visible counterpart of the chapter's author markup. */}
+              <p className="text-sm text-mut">
+                By{" "}
+                <a
+                  href="https://jasoncolapietro.com"
+                  rel="author"
+                  className="text-violet-ink hover:underline"
+                >
+                  {AUTHOR_NAME}
+                </a>{" "}
+                · Chapter {chapter.order} of{" "}
+                <Link href="/book" className="text-violet-ink hover:underline">
+                  {BOOK_TITLE}
+                </Link>
+              </p>
               <Markdown source={full.body} />
             </article>
           </Card>
+          {(tryIt || lessons.length > 0) && (
+            <Card>
+              {tryIt && (
+                <>
+                  <SectionLabel>Try this now</SectionLabel>
+                  <p className="mt-3 max-w-2xl text-sm text-mut">{tryIt.line}</p>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <LinkButton href={tryIt.href} size="md">
+                      {tryIt.label}
+                    </LinkButton>
+                    {tryIt.warmUpFirst && (
+                      <LinkButton href="/warmups" variant="outline" size="md">
+                        Warm up first
+                      </LinkButton>
+                    )}
+                  </div>
+                  {tryIt.warmUpFirst && (
+                    <p className="mt-3 max-w-2xl text-xs text-dim">
+                      Warmups are guided practice, which the free plan gives{" "}
+                      {FREE_DAILY_MINUTES} minutes a day; Pro removes the limit.
+                      The range test itself has no clock.
+                    </p>
+                  )}
+                </>
+              )}
+              {lessons.length > 0 && (
+                <div className={tryIt ? "mt-6 border-t border-line pt-5" : undefined}>
+                  <SectionLabel>Free lessons that use this chapter</SectionLabel>
+                  <ul className="mt-3 space-y-2">
+                    {lessons.map((l) => (
+                      <li key={l.href} className="text-sm text-mut">
+                        <Link href={l.href} className="text-violet-ink hover:underline">
+                          {l.name}
+                        </Link>{" "}
+                        — {l.skill}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </Card>
+          )}
           {/* A subscriber arrives here from "Start reading" — sell Pro only to
               someone who does not already have it. */}
           <FreeOnly>
             <Card>
               <p className="max-w-2xl text-sm text-mut">
-                That was the free chapter. The other {gated} — the rest of how
-                the voice works, how to read the numbers your own sessions
-                produce, the twelve-week program, and choosing songs that fit
-                the voice you have today — come with Suede Pro, along with a PDF
-                of the whole book.
+                That was one of {freeCount} free chapters. The remaining {gated}{" "}
+                — the rest of how the voice works, how to read the numbers your
+                own sessions produce, the twelve-week program, and choosing songs
+                that fit the voice you have today — come with Suede Pro, along
+                with a PDF of the whole book.
               </p>
               {next && (
                 <p className="mt-2 max-w-2xl text-sm text-mut">

@@ -5,11 +5,15 @@ stage: "v-l7"
 title: "Neutral, Restrained, Driven, Edged"
 type: "concept"
 minutes: 6
-objective: "Four production choices, decoupled from pitch height. Any of them can happen anywhere in your range."
+objective: "Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first."
 prerequisites: "v-l7-m2-08"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
+
+## In short
+
+These are four production choices you can make on a note, separate from how high it is. Neutral is your easy, speech-like default; restrained is the same note held back, softer and more contained; driven is fuller and more speech-like, like calling across a room at a moderate level; edged is brighter and more cutting, still not loud. Neutral and restrained work across your range, while driven and edged get harder the higher you go, so try them low in your range first and leave edged until a teacher has heard it.
 
 ## Steps
 
@@ -22,21 +26,21 @@ Open the practice material on this page and choose Soft sustain. Hear the refere
 
 ### Set a safe baseline
 
-Use one mid-range phrase at moderate volume and establish a neutral baseline. Define the three intended weights in words before recording.
+Use one mid-range phrase at moderate volume and establish a neutral baseline. Use neutral plus two others, and leave edged out until a teacher has heard it. Neutral: your easy, speech-like default. Restrained: the same note held back, softer and more contained. Driven: fuller and more speech-like, like calling across a room at a moderate level. Edged: brighter and more cutting, still not loud.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
 
 ### Name the target: Weight and mode switching
 
-Four production choices, decoupled from pitch height. Any of them can happen anywhere in your range. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Four production choices that are separate from pitch height. Neutral and restrained work across your range; driven and edged get harder the higher you go, so try them low in your range first. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.
 - Listen: Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Neutral, Restrained, Driven, Edged.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Change vocal weight without moving the pitch or using loudness as the only cue. Return to neutral between every attempt.
+Take one short mid-range phrase and sing it twice: neutral, then restrained. Keep the pitch, words and tempo the same and change only the weight, not just the volume. Record both in one take in the recorder with a breath between them. If both were easy, add driven as a third version low in your range, and stop the moment it tightens. Change vocal weight without moving the pitch or using loudness as the only cue. Return to neutral between every attempt.
 
 - Look: The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.
 - Listen: Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.

@@ -306,12 +306,16 @@ export function singerKeywords(s: {
 }
 
 export function singerGenreKeywords(genre: string): string[] {
+  // "singer-songwriters", not "singer-songwriter singers", matching the hub's
+  // title and H1. No "best" term: the hubs rank catalog figures, not singers.
+  const singers =
+    genre === "Singer-Songwriter" ? "singer-songwriters" : `${genre} singers`;
   return pageKeywords(
     [
-      `${genre} singers vocal range`,
-      `${genre} singers`,
-      `famous ${genre} singers`,
-      `best ${genre} vocalists`,
+      `${singers} vocal range`,
+      singers,
+      `famous ${singers}`,
+      `${genre} vocalists`,
     ],
     `/singers/genre/${genre}`,
   );
@@ -343,7 +347,29 @@ export function popSongKeywords(song: { slug?: string; title: string; artist: st
   );
 }
 
-export function songKeywords(song: { slug?: string; title: string }): string[] {
+/**
+ * Song pages. Most entries transcribe only a song's opening phrase
+ * (`form: "phrase"`), so they do not answer "<song> lyrics" or "<song> vocal
+ * range" and lead with "sing <song>" instead; only full arrangements keep the
+ * lyrics, key and range terms.
+ */
+export function songKeywords(song: {
+  slug?: string;
+  title: string;
+  form?: string;
+}): string[] {
+  const route = `/songs/${song.slug ?? ""}`;
+  if (song.form === "phrase") {
+    return pageKeywords(
+      [
+        `sing ${song.title}`,
+        `${song.title} melody`,
+        `${song.title} notes`,
+        `${song.title} opening phrase`,
+      ],
+      route,
+    );
+  }
   return pageKeywords(
     [
       `${song.title} lyrics`,
@@ -351,7 +377,7 @@ export function songKeywords(song: { slug?: string; title: string }): string[] {
       `${song.title} vocal range`,
       `sing ${song.title}`,
     ],
-    `/songs/${song.slug ?? ""}`,
+    route,
   );
 }
 

@@ -45,9 +45,9 @@ Breath is the first block's real subject because it changes slowly and it barely
 
 Use the three drills in Breath, in a fixed order.
 
-**Box breathing** first, two or three minutes. In for four, hold four, out for four, hold four. This is not singing practice. It is the part that teaches you to stop gasping, and to tell the difference between having no air and only feeling like you have none. Singers tend to be working with more air than they think.
+**Box breathing** first, two or three minutes. In for four, hold four, out for four, hold four. Hold by keeping the ribs open, not by closing your throat; the hold should feel like a pause, not a lock. This is not singing practice. It is the part that teaches you to stop gasping, and to tell the difference between having no air and only feeling like you have none. Singers tend to be working with more air than they think.
 
-**The Farinelli drill** next. Inhale over a slow count, hold, exhale over a slow count, and extend the counts across the fortnight. What you want is an unhurried exhale that does not collapse at the end. Watch for one specific failure: a smooth first half, then a rush through the last two counts. That rush is the same thing that shows up in singing as a phrase running out before the line does. When it happens, shorten the count instead of muscling through it.
+**The Farinelli drill** next. Inhale over a slow count, hold the same open way, exhale over a slow count, and extend the counts across the fortnight. What you want is an unhurried exhale that does not collapse at the end. Watch for one specific failure: a smooth first half, then a rush through the last two counts. That rush is the same thing that shows up in singing as a phrase running out before the line does. When it happens, shorten the count instead of muscling through it.
 
 **The sustain test** last, once or twice, not more. Treat it as a measurement rather than an event. You are not setting a personal record, and pushing past the point where you feel lightheaded buys you nothing. If you feel dizzy at all, stop the drill and breathe normally.
 

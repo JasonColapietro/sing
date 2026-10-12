@@ -20,24 +20,36 @@
  *     relative, and never deep-links a Pro exercise from these free pages.
  */
 import { spawnSync } from "node:child_process";
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 import { buildContract } from "@/contracts/suede-vocal";
 import sitemap from "@/app/sitemap";
+import LearnPage from "@/app/learn/page";
 import VoiceCoursePage from "@/app/learn/voice/page";
-import LessonPage from "@/app/learn/voice/[stage]/[module]/[lesson]/page";
+import LessonPage, {
+  generateMetadata as lessonMetadata,
+} from "@/app/learn/voice/[stage]/[module]/[lesson]/page";
 import ModulePage from "@/app/learn/voice/[stage]/[module]/page";
-import StagePage from "@/app/learn/voice/[stage]/page";
+import StagePage, { generateMetadata as stageMetadata } from "@/app/learn/voice/[stage]/page";
+import { ALL_SONGS } from "@/components/songs/data";
 import { TOLERANCE_CENTS } from "@/components/songs/lib";
 import { EXERCISES } from "@/components/warmups/exercises";
 import { MEASUREMENT_WORDS } from "@/components/learn/module-practice";
+import { CAPPED_TYPES } from "@/lib/free-cap";
+import { SING_GLOSSARY_TERMS, termId } from "@/lib/glossary";
 import { LESSONS, type Lesson } from "@/lib/lesson-data";
+import { MODULE_TERMS, courseModuleForTerm } from "@/lib/lesson-glossary";
 import {
+  GUIDED_ACTIVITY,
   MODULE_PRACTICE,
   ROOM_PATHS,
   companionHref,
+  isGuidedPractice,
   moduleMaterial,
   practiceMatch,
 } from "@/lib/lesson-practice";
@@ -45,9 +57,12 @@ import { SITE_URL } from "@/lib/site";
 import { voiceCurriculum } from "@/lib/voice-curriculum";
 import {
   COURSE,
+  REVIEW_STEP_TITLE,
+  UNIVERSAL_LESSON_TEXT,
   VOICE_LEARN_PATH,
   coursePaths,
   lessonHref,
+  shownSteps,
 } from "@/lib/voice-lessons";
 
 const contract = buildContract();
@@ -81,6 +96,8 @@ function promisingText(lesson: Lesson): Array<[string, string]> {
     ["module outcome", module.promise],
     ["module skill", module.skill],
     ["objective", lesson.objective],
+    // The answer that leads the page and is its structured-data description.
+    ["in short", lesson.explanation],
     // A step's body is an instruction ("hold with steady airflow"), which is
     // practice, not a promise, so only its title and its checks are read.
     ...lesson.steps.flatMap((s): Array<[string, string]> => [
@@ -104,6 +121,47 @@ describe("the lesson data", () => {
       encoding: "utf8",
     });
     expect(run.status, run.stdout + run.stderr).toBe(0);
+  });
+
+  /**
+   * "## In short" leads the lesson and is plain text, because the page prints
+   * it as a paragraph and the structured data reuses it as the description. A
+   * concept lesson exists to explain an idea, so it must have one; an exercise
+   * or a self-check may lead with the practice instead.
+   */
+  it("requires an \"In short\" paragraph on concept lessons, first and as plain text", () => {
+    const dir = mkdtempSync(join(tmpdir(), "lessons-"));
+    try {
+      cpSync("content/lessons", dir, { recursive: true });
+      const path = (l: Lesson) => join(dir, l.stageSlug, l.moduleSlug, `${l.slug}.md`);
+      const compile = (file: string, text: string) => {
+        writeFileSync(file, text);
+        return spawnSync(process.execPath, ["scripts/compile-lessons.mjs", dir, "--check"], { encoding: "utf8" })
+          .stdout;
+      };
+      const SHORT = /## In short\n[\s\S]*?(?=## Steps)/;
+      const answer = "## In short\n\nSpeakers put the reference into the microphone.\n\n";
+
+      const concept = path(LESSONS.find((l) => l.type === "concept")!);
+      const original = readFileSync(concept, "utf8");
+      expect(original).toMatch(SHORT);
+      const withShort = (section: string) => original.replace(SHORT, section);
+      expect(compile(concept, withShort(answer))).not.toMatch(/In short/);
+      expect(compile(concept, withShort(""))).toMatch(/a concept lesson needs "## In short"/);
+      expect(
+        compile(concept, withShort("").replace("## If it goes wrong", `${answer}## If it goes wrong`)),
+      ).toMatch(/"## In short" must be the first section/);
+      expect(compile(concept, withShort("## In short\n\n- a list item\n\n"))).toMatch(/one plain paragraph/);
+      expect(compile(concept, withShort("## In short\n\n"))).toMatch(/"## In short" is empty/);
+      writeFileSync(concept, original);
+
+      const other = path(LESSONS.find((l) => l.type !== "concept" && !l.explanation)!);
+      const plain = readFileSync(other, "utf8");
+      expect(compile(other, plain)).not.toMatch(/In short/);
+      expect(compile(other, plain.replace("## Steps", `${answer}## Steps`))).not.toMatch(/In short/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it("keys every lesson to the catalog, with the catalog's title, type and length", () => {
@@ -305,6 +363,43 @@ describe("links from the lessons", () => {
     }
   });
 
+  /**
+   * A lesson tells you which song to choose from its practice panel, and the
+   * panel prints the songbook's title. When a song is renamed ("Amazing Grace
+   * (Verse 1 & 2)" became "(Opening Lines, Verses 1 & 2)"), a lesson still
+   * naming the old one points at a row that isn't there.
+   */
+  it("names each song arrangement by the title the songbook shows", () => {
+    const titles = new Set(ALL_SONGS.map((s) => s.title));
+    const bases = new Set(ALL_SONGS.map((s) => s.title.split(" (")[0]));
+    const escape = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    for (const l of LESSONS) {
+      const text = [l.objective, l.explanation, ...l.steps.map((s) => s.body), ...l.blocks.map((b) => b.instruction)].join("\n");
+      for (const base of bases) {
+        for (const [named] of text.matchAll(new RegExp(`${escape(base)} \\([^)]*\\)`, "g"))) {
+          expect(titles.has(named), `${l.id} names "${named}"`).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("never sends the passaggio module to the range test, which shows no passaggio", () => {
+    for (const [id, { basis, companion }] of Object.entries(MODULE_PRACTICE)) {
+      if (basis.kind === "selfCheck" && basis.missing === "passaggioPitches") {
+        expect(companion.room, id).not.toBe("range");
+      }
+    }
+  });
+
+  it("knows which rooms draw on the free daily allowance, as the cap counts them", () => {
+    expect([...GUIDED_ACTIVITY].sort()).toEqual([...CAPPED_TYPES].sort());
+    expect(isGuidedPractice({ room: "warmups" })).toBe(true);
+    expect(isGuidedPractice({ room: "breath", param: "drill", value: "sustain" })).toBe(true);
+    for (const room of ["studio", "range", "recorder", "analyze", "tools", "atlas"]) {
+      expect(isGuidedPractice({ room }), room).toBe(false);
+    }
+  });
+
   it("matches practice sessions for every room that logs one", () => {
     for (const [id, { companion }] of Object.entries(MODULE_PRACTICE)) {
       const match = practiceMatch(companion);
@@ -330,12 +425,128 @@ describe("the pages", () => {
       );
       expect(html, l.id).toContain("What this does not show");
       expect(html, l.id).toContain("data-voice-safety");
-      for (const step of l.steps) expect(html).toContain(step.title.replace(/&/g, "&amp;"));
+      if (l.type === "concept") expect(html, l.id).toContain("data-lesson-answer");
+      for (const step of shownSteps(l)) expect(html).toContain(step.title.replace(/&/g, "&amp;"));
       for (const href of hrefs(html)) {
         expect(href, `${l.id} links ${href}`).not.toMatch(/sing\.suedeai\.ai|guitarhub\.org/);
         if (!href.startsWith("https://www.")) expect(href.startsWith("/"), `${l.id}: ${href}`).toBe(true);
       }
     }
+  });
+
+  /**
+   * The port gave all 102 lessons the same frame, so a few lines were the same
+   * on every page and outweighed what each lesson says of its own. They are
+   * said once on the course page; a lesson page keeps only its own text.
+   */
+  it("leave the course-wide lines to the course page and keep each lesson's own", async () => {
+    const shared = [...UNIVERSAL_LESSON_TEXT];
+    expect(shared).toContain(
+      "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.",
+    );
+    const escape = (t: string) => renderToStaticMarkup(<>{t}</>);
+    for (const l of LESSONS) {
+      const html = renderToStaticMarkup(
+        await LessonPage({
+          params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
+        }),
+      );
+      for (const line of shared) expect(html, `${l.id} repeats "${line}"`).not.toContain(escape(line));
+      for (const c of l.selfCheck.criteria.filter((c) => !UNIVERSAL_LESSON_TEXT.has(c))) {
+        expect(html, l.id).toContain(escape(c));
+      }
+      if (!UNIVERSAL_LESSON_TEXT.has(l.selfCheck.readyWhen)) {
+        expect(html, l.id).toContain(escape(l.selfCheck.readyWhen));
+      }
+      expect(html, l.id).toContain(escape(l.selfCheck.ifNotReady));
+    }
+    const course = renderToStaticMarkup(<VoiceCoursePage />);
+    expect(course).toContain("data-course-rules");
+    expect(course).toMatch(/Unless a self-check says otherwise, it is ready when you can\s+describe the result/);
+    expect(course).toContain("never as a pass");
+    // The disclosure the shared Listen line carried on every lesson.
+    expect(course).toMatch(/Reference notes are synthesized pitches, not recordings of a\s+singer/);
+  });
+
+  it("leave out a review step only when it restates the self-check", () => {
+    const l = LESSONS[0];
+    const review = l.steps.find((s) => s.title === REVIEW_STEP_TITLE)!;
+    expect(shownSteps(l)).not.toContain(review);
+    const own = { ...review, body: "Play both takes back to back and name the one that sounds easier." };
+    const rewritten: Lesson = { ...l, steps: l.steps.map((s) => (s === review ? own : s)) };
+    expect(shownSteps(rewritten)).toContain(own);
+  });
+
+  it("put the practise button before the steps, with the daily allowance where it applies", async () => {
+    for (const l of LESSONS) {
+      const html = renderToStaticMarkup(
+        await LessonPage({
+          params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
+        }),
+      );
+      const { companion } = MODULE_PRACTICE[l.moduleId];
+      const button = html.indexOf(`href="${companionHref(companion).replace(/&/g, "&amp;")}"`);
+      expect(button, l.id).toBeGreaterThan(-1);
+      expect(button, l.id).toBeLessThan(html.indexOf('id="steps"'));
+      expect(html.includes("data-guided-cap"), l.id).toBe(isGuidedPractice(companion));
+      expect(html, l.id).not.toMatch(/\bA (?:8|11|18)-minute/);
+    }
+  });
+
+  it("title every lesson as a voice lesson unless the name alone fills the budget", async () => {
+    for (const l of LESSONS) {
+      const meta = await lessonMetadata({
+        params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
+      });
+      const t = meta.title;
+      const text = typeof t === "string" ? t : t && "absolute" in t ? t.absolute : "";
+      if (`${l.title} · Voice Lesson`.length <= 60) expect(text, l.id).toMatch(/Voice Lesson$/);
+      else expect(text, l.id).toBe(l.title);
+    }
+  });
+
+  it("describe each stage by its goal, not only its counts", async () => {
+    for (const stage of COURSE) {
+      if (!stage.slug) continue;
+      const meta = await stageMetadata({ params: Promise.resolve({ stage: stage.slug }) });
+      expect(String(meta.description).toLowerCase(), stage.catalog.id).toContain(
+        stage.catalog.subtitle.toLowerCase(),
+      );
+    }
+  });
+
+  it("link each module page to the glossary terms it trains, and back", async () => {
+    const published = new Set(SING_GLOSSARY_TERMS.map((e) => e.term));
+    const seen = new Set<string>();
+    for (const [id, terms] of Object.entries(MODULE_TERMS)) {
+      expect(modules.some((m) => m.id === id), id).toBe(true);
+      for (const term of terms) {
+        expect(published.has(term), `${id}: ${term} is not in the glossary`).toBe(true);
+        expect(seen.has(term), `${term} belongs to two modules`).toBe(false);
+        seen.add(term);
+      }
+    }
+    for (const stage of COURSE) {
+      for (const mod of stage.modules) {
+        const terms = MODULE_TERMS[mod.catalog.id] ?? [];
+        if (!mod.slug || terms.length === 0) continue;
+        const html = renderToStaticMarkup(
+          await ModulePage({ params: Promise.resolve({ stage: stage.slug!, module: mod.slug }) }),
+        );
+        for (const term of terms) {
+          expect(html, mod.catalog.id).toContain(`href="/glossary#${termId(term)}"`);
+          expect(courseModuleForTerm(term)?.href).toBe(mod.href);
+        }
+      }
+    }
+  });
+
+  it("are linked from the learn hub by pages that exist", () => {
+    const html = renderToStaticMarkup(<LearnPage />);
+    const published = new Set([VOICE_LEARN_PATH, ...Object.values(coursePaths()).flat()]);
+    const links = hrefs(html).filter((h) => h.startsWith(VOICE_LEARN_PATH));
+    expect(links.length).toBeGreaterThan(1);
+    for (const href of links) expect(published.has(href), href).toBe(true);
   });
 
   it("say sing measures a module only when the contract says it can", async () => {
@@ -345,9 +556,12 @@ describe("the pages", () => {
         const html = renderToStaticMarkup(
           await ModulePage({ params: Promise.resolve({ stage: stage.slug!, module: mod.slug }) }),
         );
-        const kind = MODULE_PRACTICE[mod.catalog.id].basis.kind;
+        const { basis, companion } = MODULE_PRACTICE[mod.catalog.id];
+        const kind = basis.kind;
         expect(html).toContain(`data-proof-basis="${kind === "measured" ? "measured" : "self-check"}"`);
         if (kind !== "measured") expect(html).not.toContain("Suede Sing measures part of this");
+        // Sent into a room with a daily allowance, the page says so.
+        expect(html.includes("data-guided-cap"), mod.catalog.id).toBe(isGuidedPractice(companion));
       }
     }
   });

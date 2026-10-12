@@ -336,7 +336,8 @@ export function TargetPractice({
                   )}
                 </div>
                 <p className="mt-1 text-xs text-mut">
-                  Hold within ±50 cents for 3 cumulative seconds.
+                  Hold within ±50 cents for 3 cumulative seconds to lock it;
+                  the tuner&rsquo;s green zone (±15) is the tighter goal.
                 </p>
                 <Button
                   variant="outline"

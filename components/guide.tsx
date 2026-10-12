@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SectionLabel } from "@/components/ui";
+import { LinkButton, SectionLabel } from "@/components/ui";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
@@ -55,10 +55,24 @@ export interface GuideContent {
     name: string;
     intro: string;
     steps: GuideStep[];
+    /**
+     * ISO 8601 duration, set only when the intro states one ("about two
+     * minutes" is PT2M). Left out otherwise, so the markup never names a
+     * duration the reader was not told.
+     */
+    totalTime?: string;
+    /** False when the procedure needs no microphone, e.g. singing against a drone. */
+    needsMic?: boolean;
   };
   beginner: { heading: string; body: string; points: string[] };
   advanced: { heading: string; body: string; points: string[] };
   faq: GuideFaq[];
+  /**
+   * The way back to the room's own tool, shown where the guide ends. Someone
+   * who has just read the steps should not have to scroll back up to start.
+   * `note` carries any limit the room has, said beside the button.
+   */
+  start: { label: string; href: string; note?: string };
   related: GuideLink[];
   safety?: {
     heading: string;
@@ -80,12 +94,16 @@ export function guideJsonLd(guide: GuideContent) {
         inLanguage: "en",
         name: guide.howTo.name,
         description: guide.howTo.intro,
-        // The tool is free and runs in the browser, so there is nothing to buy
-        // and nothing to install; saying so explicitly is more useful to an
-        // answer engine than omitting the fields.
-        supply: [{ "@type": "HowToSupply", name: "A microphone" }],
+        // The tool runs in the browser, so there is nothing to install. The
+        // microphone and the duration are stated per guide, from the visible
+        // copy: a fixed "PT5M" and a mic on every guide contradicted the range
+        // intro ("about two minutes"), the warmups intro ("about ten") and the
+        // drone, which needs no mic at all.
+        ...(guide.howTo.needsMic === false
+          ? {}
+          : { supply: [{ "@type": "HowToSupply", name: "A microphone" }] }),
         tool: [{ "@type": "HowToTool", name: "Suede Sing, in a web browser" }],
-        totalTime: "PT5M",
+        ...(guide.howTo.totalTime ? { totalTime: guide.howTo.totalTime } : {}),
         step: guide.howTo.steps.map((step, i) => ({
           "@type": "HowToStep",
           position: i + 1,
@@ -256,6 +274,15 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="mt-12 flex flex-col items-start gap-3">
+          <LinkButton href={guide.start.href} size="lg">
+            {guide.start.label}
+          </LinkButton>
+          {guide.start.note && (
+            <p className="max-w-3xl text-sm text-mut">{guide.start.note}</p>
+          )}
         </div>
 
         <div className="mt-12">

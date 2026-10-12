@@ -287,9 +287,9 @@ export function FarinelliDrill({
         ) : (
           <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-5 py-6 text-center">
             <p className="max-w-sm text-sm text-[var(--s-mut)]">
-              Inhale for four counts, hold for four, exhale for four — then add
-              a count each round. Counts tick at one a second. No microphone
-              needed.
+              Inhale for four counts, hold for four with the ribs and throat
+              open, exhale for four — then add a count each round. Counts tick
+              at one a second. No microphone needed.
             </p>
             <div className="w-full max-w-sm text-left">
               <label
@@ -344,9 +344,9 @@ export function FarinelliDrill({
         <h3 className="text-xl">Farinelli drill</h3>
         <p className="mt-2 max-w-lg text-sm text-mut">
           A classic singer&rsquo;s exercise: inhale for four counts, hold for
-          four, exhale for four. Each round adds one count, so the breath gets
-          longer as you go. Counts tick at one per second. No microphone
-          needed.
+          four with the throat open, exhale for four. Each round adds one
+          count, so the breath gets longer as you go. Counts tick at one per
+          second. No microphone needed.
         </p>
         <div className="mt-5">
           <label

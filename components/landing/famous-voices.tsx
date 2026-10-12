@@ -118,8 +118,13 @@ export function FamousVoices() {
                   range label. Side by side, the shrink-0 label left that
                   sentence a column a few words wide — fourteen lines tall on a
                   phone — so those rows stack: name, evidence, then the span. */}
+              {/* prefetch={false}: otherwise every card that scrolls into view
+                  fetches its singer route in the background, a whole grid of
+                  requests on a phone for pages few visitors open next. The
+                  <a href> a crawler reads is unchanged. */}
               <Link
                 href={`/singers/${singer.slug}`}
+                prefetch={false}
                 className={`lift group flex h-full rounded-xl border border-line bg-panel px-4 py-3 hover:border-violet/50 ${
                   evidenceCopy
                     ? "flex-col gap-2"

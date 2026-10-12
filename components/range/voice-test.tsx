@@ -69,16 +69,16 @@ function VoiceTestContent({
             octave span and a voice-type estimate. Choose Range test to start,
             or Pitch to check a single note live.
           </p>
-          <p className="mt-2 max-w-prose text-mut">
-            {mode === "pitch"
-              ? "Sing a comfortable note and see its detected pitch."
-              : "A guided two-minute test: hold a comfortable note, slide down to your lowest, then up to your highest."}
-          </p>
         </div>
+        {/* #start is where "Start singing" links land: the tool is under
+            the fold on a phone, and a singer who already pressed start should
+            not have to scroll past the headline to find the button again.
+            scroll-mt clears the sticky header. */}
         <div
+          id="start"
           role="tablist"
           aria-label="Voice test mode"
-          className="inline-flex rounded-full border border-line bg-panel p-1"
+          className="inline-flex scroll-mt-20 rounded-full border border-line bg-panel p-1"
         >
           {MODES.map((m) => (
             <button
@@ -97,9 +97,30 @@ function VoiceTestContent({
           ))}
         </div>
       </div>
-      {!onModeChange ? (
-        <p className="py-8 text-sm text-mut" role="status">Loading voice tools…</p>
-      ) : mode === "pitch" ? <PitchMeter /> : <RangeTest embedded />}
+      {/* The Suspense fallback (mode "pitch", no onModeChange) renders the
+          meter's cold mic card, not a one-line "Loading…". useSearchParams
+          makes this boundary client-render, so the static HTML is the
+          fallback; a line ~400px shorter than the card put the "More practice
+          rooms" rail in a 375px phone's first frame, then hydration pushed it
+          off screen (CLS 0.17 in e2e/cls.mjs). Same trade as the songs hub
+          (components/songs/mic-gate.tsx): the box is the right size from the
+          first paint and its button goes live a moment later. A ?mode=range
+          link then swaps in the range test, a little taller, below the fold. */}
+      {mode === "pitch" ? (
+        <PitchMeter
+          onTryRange={
+            onModeChange &&
+            (() => {
+              onModeChange("range");
+              // The range intro is shorter than the meter, so without this
+              // the singer is left scrolled past it.
+              document.getElementById("start")?.scrollIntoView({ block: "start" });
+            })
+          }
+        />
+      ) : (
+        <RangeTest embedded />
+      )}
     </main>
   );
 }

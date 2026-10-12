@@ -257,3 +257,21 @@ describe("every classifiable voice type routes", () => {
     expect(unreachable).toEqual(["Bass-baritone", "Countertenor"]);
   });
 });
+
+/**
+ * scripts/compile-singers.mjs only warns about this at compile time, so the
+ * suite is what keeps it out of the shipped library. A male-category floor at
+ * G3 or above sits over the singer's own speaking pitch: almost always a
+ * treble-clef score's written compass, which sounds an octave lower, copied
+ * as if it were the sounding range.
+ */
+describe("cited floors", () => {
+  it("puts no male-category floor at or above G3, the signature of a written treble-clef figure", () => {
+    const MALE = new Set(["Countertenor", "Tenor", "Baritone", "Bass-baritone", "Bass"]);
+    expect(
+      SINGERS.filter((s) => MALE.has(s.voiceType) && s.lowMidi >= 55).map(
+        (s) => `${s.name} (${s.voiceType})`,
+      ),
+    ).toEqual([]);
+  });
+});

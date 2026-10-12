@@ -56,7 +56,7 @@ I spoke and sang the displayed lyric slowly enough for each word to remain under
 ## Practice blocks
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Clear Words in a Phrase.”
-- 75s: Isolate the diction as a scored axis target in short, comfortable examples.
+- 75s: Isolate the clear, intelligible diction target in short, comfortable examples.
 - 120s: Practise or record the complete “Self-Check: Clear Words in a Phrase” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
@@ -66,7 +66,7 @@ I spoke and sang the displayed lyric slowly enough for each word to remain under
 - A listener can write down the words from the recording without seeing the lyric.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: Someone who has not seen the lyric, or you a day later without looking at it, can write down every word of the recorded phrase from playback at the tempo you sang it.
 
 If not ready: If words blur, speak the line rhythmically, exaggerate only the missing consonant, then sing it again at a lower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

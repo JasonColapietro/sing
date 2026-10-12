@@ -42,7 +42,6 @@ export default function BookPage() {
     name: BOOK_TITLE,
     description: DESCRIPTION,
     url: `${SITE_URL}/book`,
-    numberOfPages: BOOK_CONTENTS.length,
     inLanguage: "en",
     isAccessibleForFree: false,
     // Was an Organization named "Suede Sing" — the product name, not the
@@ -102,7 +101,7 @@ export default function BookPage() {
           </p>
           <p className="mt-3 max-w-2xl text-sm text-mut">
             The contents below are free, and so are {FREE_COUNT} chapters — read
-            them before you decide whether the writing is worth a subscription. Pro
+            them before you decide whether the writing is worth paying for. Pro
             unlocks the other {BOOK_CONTENTS.filter((c) => !c.free).length} and
             the PDF.
           </p>

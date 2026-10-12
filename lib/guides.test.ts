@@ -8,10 +8,16 @@
  * a question must carry a page name or the page would be named after a
  * question.
  */
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import * as guides from "./guides";
 import { TOOL_GUIDES } from "./guides";
-import { guideJsonLd, type GuideContent } from "@/components/guide";
+import { GUIDED_PRACTICE_ROOMS } from "./llms-txt";
+import { FREE_DAILY_MINUTES } from "./practice-limits";
+import { COURSE } from "./voice-lessons";
+import { ToolGuide, guideJsonLd, type GuideContent } from "@/components/guide";
+import { DIFFICULTIES, GAME_NAMES } from "@/components/ear/lib";
 
 const exported = Object.entries(guides).filter(
   (entry): entry is [string, GuideContent] => entry[0].endsWith("_GUIDE"),
@@ -101,5 +107,154 @@ describe("analyze guide", () => {
     expect(body).toContain(`${(440 * 3600).toLocaleString("en-US")} cycles`);
     expect(body).toContain(`${(110 * 3600).toLocaleString("en-US")}`);
     expect(body).toMatch(/four times/);
+  });
+});
+
+/**
+ * The way back to the tool. A reader who has finished the steps gets a button
+ * to the room the guide is about, anchored to the #content wrapper the root
+ * layout renders, because a same-URL link would not reliably scroll anywhere.
+ * A room that shares the free plan's daily guided-practice allowance says so
+ * beside the button.
+ */
+describe("start button", () => {
+  const guided = new Set<string>(GUIDED_PRACTICE_ROOMS.map((room) => room.path));
+
+  it.each(TOOL_GUIDES.map((g) => [g.path, g] as const))("%s starts its own tool", (path, guide) => {
+    const target = new URL(guide.start.href, "https://sing.suedeai.ai");
+    expect(target.pathname).toBe(path);
+    expect(target.hash).toBe("#content");
+    expect(guide.start.label.length).toBeGreaterThan(0);
+  });
+
+  it.each(TOOL_GUIDES.map((g) => [g.path, g] as const))(
+    "%s states the daily limit only where there is one",
+    (path, guide) => {
+      if (guided.has(path)) {
+        expect(guide.start.note).toContain(`${FREE_DAILY_MINUTES} free minutes`);
+        expect(guide.start.note).toMatch(/Pro removes the limit/);
+        // The capped rooms, named the way llms.txt and the glossary name them.
+        const labels = GUIDED_PRACTICE_ROOMS.map((room) => room.label);
+        const rooms = `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+        expect(guide.start.note!.toLowerCase()).toContain(rooms);
+      } else {
+        expect(guide.start.note ?? "").not.toMatch(/minutes/);
+      }
+    },
+  );
+
+  it("renders the button with the guide", () => {
+    const html = renderToStaticMarkup(createElement(ToolGuide, { guide: guides.RANGE_GUIDE }));
+    expect(html).toContain(`href="${guides.RANGE_GUIDE.start.href}"`);
+    expect(html).toContain(guides.RANGE_GUIDE.start.label);
+  });
+});
+
+/**
+ * Every guide hands a reader on to the free course, and every course link is a
+ * module page that exists with the three lessons its note promises.
+ */
+describe("course links", () => {
+  const modules = new Map(
+    COURSE.flatMap((stage) => stage.modules).flatMap((m) => (m.href ? [[m.href, m] as const] : [])),
+  );
+
+  it.each(TOOL_GUIDES.map((g) => [g.path, g] as const))("%s links one free module", (_, guide) => {
+    const course = guide.related.filter((link) => link.href.startsWith("/learn/voice/"));
+    expect(course).toHaveLength(1);
+    const mod = modules.get(course[0].href);
+    expect(mod, course[0].href).toBeDefined();
+    const words = (text: string) => text.toLowerCase().replace(/[^a-z]+/g, " ").trim();
+    expect(words(course[0].label)).toContain(words(mod!.catalog.name));
+    const published = mod!.lessons.filter((lesson) => lesson.href).length;
+    if (/three short free lessons/.test(course[0].note)) expect(published).toBe(3);
+  });
+});
+
+/**
+ * HowTo markup states only what the visible copy states: a duration where the
+ * intro names one, and a microphone only where the procedure needs one.
+ */
+describe("HowTo markup", () => {
+  const howTo = (guide: GuideContent) => {
+    const page = guideJsonLd(guide)["@graph"].find((n) => n["@type"] === "WebPage") as {
+      mainEntity: Array<Record<string, unknown>>;
+    };
+    return page.mainEntity.find((n) => n["@type"] === "HowTo")!;
+  };
+
+  it("matches the durations the intros give", () => {
+    expect(guides.RANGE_GUIDE.howTo?.intro).toMatch(/about two minutes/);
+    expect(howTo(guides.RANGE_GUIDE).totalTime).toBe("PT2M");
+    expect(guides.WARMUPS_GUIDE.howTo?.intro).toMatch(/about ten minutes/);
+    expect(howTo(guides.WARMUPS_GUIDE).totalTime).toBe("PT10M");
+    expect(howTo(guides.STUDIO_GUIDE)).not.toHaveProperty("totalTime");
+  });
+
+  it("names a microphone only where the procedure needs one", () => {
+    expect(howTo(guides.TOOLS_GUIDE)).not.toHaveProperty("supply");
+    expect(howTo(guides.RANGE_GUIDE).supply).toEqual([
+      { "@type": "HowToSupply", name: "A microphone" },
+    ]);
+  });
+});
+
+/**
+ * Voice-science corrections, pinned so the old claims cannot return. Each
+ * pattern is a sentence these guides used to contain.
+ */
+describe("voice-science claims", () => {
+  const all = JSON.stringify(TOOL_GUIDES);
+
+  it("does not read a full harmonic stack as good support", () => {
+    expect(all).not.toMatch(/breathy or pressed tone shows fewer/);
+    expect(all).not.toMatch(/well-supported tone shows many harmonics/);
+    const step = guides.ANALYZE_GUIDE.howTo!.steps.find((s) => s.title === "Count how far the stack goes");
+    expect(step?.body).toMatch(/pressed/);
+    expect(step?.body).toMatch(/not proof of good support/);
+  });
+
+  it("does not use a siren as a test for amusia", () => {
+    expect(all).not.toMatch(/you are not tone deaf in the clinical sense/);
+  });
+
+  /**
+   * The finer check the answer offers is a real level of a real game, named as
+   * the ear-training room names it, so a renamed game or level fails here
+   * rather than leaving the answer pointing at nothing.
+   */
+  it("points a worried singer at an ear-game level that exists", () => {
+    const a = guides.EAR_GUIDE.faq.find((f) => /tone deaf/i.test(f.q))!.a;
+    const hard = DIFFICULTIES.find((d) => d.id === "hard")!.label;
+    expect(a).toContain(`${GAME_NAMES["higher-lower"]} on ${hard}`);
+    expect(a).toMatch(/semitone/);
+    expect(a).not.toMatch(/will improve/);
+  });
+
+  /** The range test saves its own result; the steps may not ask for a save. */
+  it("does not ask for a save the range test makes itself", () => {
+    const steps = guides.RANGE_GUIDE.howTo!.steps;
+    expect(steps.map((s) => s.title).join(" ")).not.toMatch(/save it/i);
+    expect(steps[steps.length - 1].body).toMatch(/fitted to it/);
+  });
+
+  it("sends pain, hoarseness and lost range to a doctor, not a teacher", () => {
+    for (const guide of TOOL_GUIDES) {
+      if (!guide.safety) continue;
+      expect(guide.safety.body).toMatch(/doctor who can examine the vocal folds/);
+      expect(guide.safety.body).not.toMatch(/voice teacher or a clinician|voice professional or clinician/);
+    }
+  });
+
+  it("says cycle dose leaves out loudness", () => {
+    expect(guides.ANALYZE_GUIDE.body.join(" ")).toMatch(/ignores loudness/);
+    expect(all).not.toMatch(/how much work the vocal folds have done/);
+  });
+
+  it("describes song keys the way the player sets them", () => {
+    const copy = JSON.stringify(guides.SONGS_GUIDE);
+    expect(copy).not.toMatch(/transposed automatically|into a key that suits your (?:measured range|voice)/);
+    expect(copy).toMatch(/fitted to your measured range/);
+    expect(copy).toMatch(/written key/);
   });
 });

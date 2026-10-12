@@ -25,7 +25,7 @@ You can feel this without singing a note. Sit up, hand on the side of your lower
 
 When a note feels weak, the instinct is to send more air at it. It almost never works.
 
-Too much airflow blows the folds apart harder than they can spring back. The closure gets sloppier. Instead of a clean, efficient cycle you get a leaky one, where a lot of air escapes as noise rather than converting to tone. The note gets breathier and quieter for more effort, so you push harder, and now you are working the throat to hold the folds together against a gale you created. That is where singers get tired fast and blame their stamina.
+Send more air than the folds are closing firmly enough to meet, and the closure gets sloppier. Instead of a clean, efficient cycle you get a leaky one, where a lot of air escapes as noise rather than converting to tone. The note gets breathier for more effort, so you push harder, and now you are working the throat to hold the folds together against a gale you created. That is where singers get tired fast and blame their stamina.
 
 There is a second failure, and it is the noisier one. If you press the abdominal wall in hard while the folds stay firmly closed, pressure climbs fast. Pitch rides on pressure to a degree, so the note goes sharp. Tone gets hard and pinched. Vibrato either flattens out or turns into a shudder. It sounds like commitment. It is squeezing.
 

@@ -74,7 +74,7 @@ const FEATURES = [
   {
     href: "/songs",
     label: "Song practice",
-    desc: "Practice melodies auto-transposed into your comfortable range.",
+    desc: "Practice melodies fitted to your measured range once you've taken the range test.",
     Glyph: SongGlyph,
   },
   {
@@ -213,18 +213,16 @@ export default function Home() {
           <h1 className="mt-3 text-[clamp(2.4rem,7vw,4.25rem)] leading-[1.02]">
             Online singing practice with live pitch feedback
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-mut">
-            Suede Sing is a singing practice app that runs in your browser: sing
-            into your mic and see the note you are singing, in real time. Warm up
-            with guided vocal exercises, practice songs in your key, and take the
-            vocal range test.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <LinkButton href="/range" variant="violet" size="lg">
+          {/* The buttons sit directly under the headline so a phone's first
+              screen carries the action, not only a description of it. #start
+              lands on the tool row on /range, past its intro, so the tap that
+              said "start" is one step from the mic prompt. */}
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <LinkButton href="/range#start" variant="violet" size="lg">
               Start singing
             </LinkButton>
             <LinkButton
-              href="/range?mode=range"
+              href="/range?mode=range#start"
               variant="outline"
               size="lg"
               className="bg-white/5"
@@ -232,6 +230,12 @@ export default function Home() {
               Find my vocal range
             </LinkButton>
           </div>
+          <p className="mt-5 max-w-xl text-lg text-mut">
+            Suede Sing is a singing practice app that runs in your browser: sing
+            into your mic and see the note you are singing, in real time. Warm up
+            with guided vocal exercises, practice songs in your key, and take the
+            vocal range test.
+          </p>
           <p className="mt-5 text-sm text-mut">
             The pitch meter and range test are free with no time limit. Guided
             practice includes five free minutes a day. No install; audio stays
@@ -268,7 +272,7 @@ export default function Home() {
             </span>
           </Link>
           <Link
-            href="/range"
+            href="/range#start"
             className="lift group relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4c1d95] to-[#1e1b4b] p-6"
           >
             <span className="text-label font-extrabold uppercase tracking-[0.14em] text-violet-ink">
@@ -304,6 +308,11 @@ export default function Home() {
             See all {SONGS.length} practice songs
           </Link>
         </div>
+        <p className="mt-2 max-w-2xl text-sm text-mut">
+          Once you&apos;ve taken the range test, songs open fitted to your
+          measured range, and you can shift any song by semitones. Without a
+          range they open in the written key.
+        </p>
         <ul className="no-scrollbar -mx-4 mt-4 flex snap-x scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6">
           {songs.map((song, i) => (
             <li key={song.id} className="w-40 shrink-0 snap-start sm:w-48">
@@ -389,8 +398,8 @@ export default function Home() {
             <h2 className="max-w-xl text-2xl sm:text-3xl">Practice without the clock</h2>
             <p className="mt-3 max-w-xl text-mut">
               The pitch meter, the range test and {SINGERS.length} famous singer ranges
-              are free. Free accounts get five minutes of guided practice a
-              day. Pro removes the clock and adds both books ({TOTAL_CHAPTERS}{" "}
+              are free. The free plan includes five minutes of guided practice
+              a day. Pro removes the clock and adds both books ({TOTAL_CHAPTERS}{" "}
               chapters, {TOTAL_WORDS.toLocaleString("en-US")} words), pitch
               analysis on every take, and your range charted over months.
             </p>
@@ -410,7 +419,8 @@ export default function Home() {
 
       <p className="mt-12 text-center text-sm text-dim">
         <span className="text-ink">Your voice stays yours.</span> All audio
-        analysis runs on this device. Nothing is uploaded and there are no ads.
+        analysis runs on this device. No audio is uploaded, and there are no
+        ads.
       </p>
     </main>
   );

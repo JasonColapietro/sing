@@ -74,6 +74,7 @@ for (const file of readdirSync(SRC).filter((f) => f.endsWith(".md")).sort()) {
     slug: file.replace(/^\d+-/, "").replace(/\.md$/, ""),
     order,
     title: meta.title,
+    searchTitle: meta.searchTitle ?? "",
     part: meta.part,
     summary: meta.summary ?? "",
     free: FREE_CHAPTER_ORDERS.has(order),
@@ -104,6 +105,11 @@ export interface BookChapter {
   slug: string;
   order: number;
   title: string;
+  /**
+   * Title-tag wording when the literary title carries no search terms. The H1,
+   * the contents and the structured data keep \`title\`; empty means use it.
+   */
+  searchTitle: string;
   part: string;
   summary: string;
   /** Renders in full on /book/[slug] instead of going through the gate. */

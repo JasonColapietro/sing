@@ -1,19 +1,39 @@
 "use client";
 
-import { useId, useSyncExternalStore } from "react";
-import {SignInButton, SignUpButton} from "@clerk/nextjs";
+import { useId, useState, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import { useAccountAuth } from "@/lib/use-account-auth";
 import { Button, Card, SectionLabel } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { useProgress, type ProgressState } from "@/lib/progress";
+import { hasSomethingToSave, liveStreak } from "./save-state";
+import { downloadProgressBackup } from "./download-backup";
+
+export { hasSomethingToSave } from "./save-state";
+
+/**
+ * The account offer's Clerk buttons, loaded only when that branch renders, so
+ * a page that mounts this prompt never ships Clerk's SDK while accounts are
+ * off. The placeholder holds the button row's height while the chunk loads.
+ */
+const SavePromptAccountActions = dynamic(() => import("./save-prompt-actions"), {
+  loading: () => <div aria-hidden className="mt-4 min-h-16" />,
+});
 
 /**
  * Dismissed once, dismissed for good. A snooze would be kinder to the funnel
  * and worse for the singer: the offer is worth exactly one ask, and anyone who
  * declines it has told us what they think of it.
+ *
+ * The file-backup card (accounts off) and the account offer are different
+ * asks, so they keep separate keys: waving away a download today must not
+ * silently suppress the account offer on the deploy that turns accounts on.
+ * accountsReady() is a build constant, so a build only ever uses one key.
  */
-const DISMISS_KEY = "suede-sing:account-prompt:v1";
+const DISMISS_KEY = accountsReady()
+  ? "suede-sing:account-prompt:v1"
+  : "suede-sing:backup-prompt:v1";
 
 /* ------------------------------------------------------- dismissal store */
 
@@ -73,23 +93,6 @@ function markDismissed(): void {
   for (const l of listeners) l();
 }
 
-/**
- * True once the visitor has practice worth losing.
- *
- * Deliberately independent of the caller's own trigger. A wiring mistake that
- * drops this on a cold page is a wall in disguise on a site whose entire funnel
- * is organic search, so the component refuses on its own evidence as well as
- * on the caller's. Recorded takes are covered by `sessions` — they land there
- * as type "recording" (lib/progress.ts ActivityType).
- */
-export function hasSomethingToSave(s: ProgressState): boolean {
-  return (
-    s.sessions.length > 0 ||
-    s.streak.current >= 2 ||
-    s.range.lowMidi !== undefined
-  );
-}
-
 /** House prose joins lists without the Oxford comma. */
 function joinList(parts: string[]): string {
   if (parts.length <= 1) return parts[0] ?? "";
@@ -107,7 +110,10 @@ function stakeSentence(s: ProgressState): string {
   const parts: string[] = [];
   const n = s.sessions.length;
   if (n > 0) parts.push(`${n} practice ${n === 1 ? "session" : "sessions"}`);
-  if (s.streak.current >= 2) parts.push(`a ${s.streak.current}-day streak`);
+  // The live streak, not streak.current: a lapsed 12-day streak is gone, and
+  // naming it here would offer to protect something the next session resets.
+  const streak = liveStreak(s.streak);
+  if (streak >= 2) parts.push(`a ${streak}-day streak`);
   if (s.range.lowMidi !== undefined) parts.push("your measured range");
   return `This browser holds the only copy of ${joinList(parts)}.`;
 }
@@ -130,15 +136,35 @@ function bodyCopy(s: ProgressState): string {
 }
 
 /**
+ * What the file backup offers when accounts are off. "Can clear" rather than
+ * "clears": WebKit's seven-day cap on script-writable storage counts days of
+ * Safari use without a visit, so it is a real risk, not a schedule.
+ *
+ * The file is exportProgress(): the practice record, not the recorder's audio,
+ * which lives in IndexedDB. The card fires on the recorder right after a take,
+ * so it says so rather than promising to bring "it all" back.
+ */
+const FILE_PROMISE =
+  "Some browsers, Safari among them, can clear a site's saved data after about a week without a visit. A backup file restores your practice record from the Progress page, in any browser. Recorded audio is not in the file.";
+
+/**
  * A quiet, earned offer to back up the practice record.
  *
- * Everything on this site works signed out and stays that way, so this is an
- * offer and never a gate. It is pitched below the Pro nudges on purpose: no
- * gold, no chip, no price. Pro is being sold; this is being mentioned.
+ * Signing in to use the tools is handled by lib/account-gate.ts; this card is
+ * the earned offer to back up a record that already exists, pitched below the
+ * Pro nudges on purpose: no gold, no chip, no price. Pro is being sold; this is
+ * being mentioned.
  *
  * What it promises is bounded by what the free tier actually delivers, which
  * is a second copy of localStorage "suede-sing:progress:v1". Continuous
  * multi-device sync is a Pro benefit and this copy must never imply it.
+ *
+ * With accounts off on this deployment (accountsReady() false) there is no
+ * account to offer, and ClerkProvider is not mounted, so Clerk's buttons would
+ * throw. The card then offers the one backup that exists, a JSON file of the
+ * record that /progress can import, behind the same refusals below. Without
+ * it a free singer's only copy sat several screens down /progress, and a week
+ * away from Safari could wipe it.
  *
  * Four independent refusals, any one of which renders nothing:
  *
@@ -180,15 +206,61 @@ export function AccountSavePrompt({
     readDismissed,
     serverDismissed,
   );
+  // Set by the download, so the card can confirm it before the dismissal it
+  // also records hides it for good.
+  const [downloaded, setDownloaded] = useState(false);
+
+  if (!isLoaded || isSignedIn) return null;
+  if (!proReady || isPro) return null;
+  if (dismissed && !downloaded) return null;
+  if (!when || !hasSomethingToSave(progress)) return null;
 
   // Never offer an account this deployment cannot actually create. On a
   // development Clerk instance the sign-in completes and then every call comes
-  // back 401, which is a worse experience than no offer at all.
-  if (!accountsReady()) return null;
-  if (!isLoaded || isSignedIn) return null;
-  if (!proReady || isPro) return null;
-  if (dismissed) return null;
-  if (!when || !hasSomethingToSave(progress)) return null;
+  // back 401, which is a worse experience than no offer at all. Offer the
+  // backup that does exist instead.
+  if (!accountsReady()) {
+    const download = () => {
+      downloadProgressBackup();
+      setDownloaded(true);
+      markDismissed();
+    };
+    return (
+      <section aria-labelledby={headingId} className={className}>
+        <Card className="animate-fadeup">
+          <SectionLabel>{context}</SectionLabel>
+          <h2 id={headingId} className="mt-3 text-xl font-extrabold text-ink">
+            Keep a copy of your progress
+          </h2>
+          {downloaded ? (
+            <p role="status" className="mt-1.5 max-w-xl text-sm text-mut">
+              Backup downloaded. If this browser is ever cleared, import the
+              file on the Progress page.
+            </p>
+          ) : (
+            <>
+              <p className="mt-1.5 max-w-xl text-sm text-mut">
+                {`${stakeSentence(progress)} ${FILE_PROMISE}`}
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={download}>
+                  Download a backup
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={markDismissed}
+                >
+                  Not now
+                </Button>
+              </div>
+            </>
+          )}
+        </Card>
+      </section>
+    );
+  }
 
   return (
     <section aria-labelledby={headingId} className={className}>
@@ -203,41 +275,7 @@ export function AccountSavePrompt({
           Keep a copy of your progress
         </h2>
         <p className="mt-1.5 max-w-xl text-sm text-mut">{bodyCopy(progress)}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {/* Explicit type on both: <button> defaults to submit, and this
-              card is meant to be droppable anywhere, forms included. */}
-          <SignUpButton mode="modal">
-            <Button type="button" variant="outline" size="sm">
-              Back up my progress
-            </Button>
-          </SignUpButton>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={markDismissed}
-          >
-            Not now
-          </Button>
-        </div>
-        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          <span>Free</span>
-          <span aria-hidden className="text-line2">
-            ·
-          </span>
-          <span>Everything keeps working signed out</span>
-          <span aria-hidden className="text-line2">
-            ·
-          </span>
-          <SignInButton mode="modal">
-            <button
-              type="button"
-              className="uppercase tracking-[0.14em] text-mut underline decoration-line2 underline-offset-4 hover:text-ink hover:decoration-ink"
-            >
-              Sign in
-            </button>
-          </SignInButton>
-        </p>
+        <SavePromptAccountActions onDismiss={markDismissed} />
       </Card>
     </section>
   );

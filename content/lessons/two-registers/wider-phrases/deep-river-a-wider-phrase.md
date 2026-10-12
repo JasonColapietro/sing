@@ -31,14 +31,14 @@ Transpose the supplied study so its low and high phrases both fit, then mark the
 
 Pick a key so the register change lands where yours is. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: The written span fits inside the scanned range and the crossing phrase has a planned vowel and breath.
+- Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 
 ### Build the song from phrases
 
-Mark the key, breaths, range edges, and lesson target before a full take of “supplied study.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.
+Mark the key, breaths, range edges, and lesson target before a full take of Deep River. Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.
 
-- Look: The written span fits inside the scanned range and the crossing phrase has a planned vowel and breath.
+- Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 
 ### Review your own attempt

@@ -29,14 +29,14 @@ Use one short phrase in an easy range and sing a plain version first. Keep the u
 
 ### Name the target: Ornament vocabulary
 
-All four, correctly placed. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+All four, placed where you marked them before singing. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.
 - Listen: The four versions are recognizably different and the underlying words and melody remain intact.
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Add one ornament at its marked place, return to plain, then contrast it with the next. Keep scoops, falls, bends, and slides small and intentional.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Scoop: start a little below the note and slide up into it. Fall: drop away in pitch off the end of a note. Bend: push the pitch slightly off the note and bring it back. Slide: glide from one written note to the next. A scoop here is a choice you place, unlike the accidental scoop Stage 2 trained out. Before singing, mark which note of the phrase each will go on, then sing the phrase once with all four at the places you marked. Keep scoops, falls, bends, and slides small and intentional.
 
 - Look: Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.
 - Listen: The four versions are recognizably different and the underlying words and melody remain intact.
@@ -66,7 +66,7 @@ I named and compared small pitch gestures in one comfortable phrase, using the w
 - The four versions are recognizably different and the underlying words and melody remain intact.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: In one take of one phrase, all four ornaments land where you marked them beforehand, you can name each one on playback, and the melody returns to its written notes after each.
 
 If not ready: If ornaments blur together, isolate two notes, slow the gesture, and record plain-versus-ornament pairs before rebuilding the phrase. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

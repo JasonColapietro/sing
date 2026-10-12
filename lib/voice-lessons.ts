@@ -128,6 +128,46 @@ export function coursePaths(): {
   };
 }
 
+/**
+ * Lines the port repeats on most lessons, word for word: the look and listen
+ * checks of the shared steps, the "treat the reading as missing" recovery,
+ * the closing self-check criterion and the default "Ready when". Printed on
+ * every page they outweigh the hundred-odd words each lesson has of its own,
+ * so the lesson page leaves them out and /learn/voice states them once.
+ *
+ * "Most" is more than half. Text that belongs to one lesson is shared at most
+ * by a module or a reading (about a fifth of the course), so the cut sits well
+ * clear of it, and a line stays left out while lessons get their own wording
+ * one at a time.
+ */
+export const UNIVERSAL_LESSON_TEXT: ReadonlySet<string> = (() => {
+  const counts = new Map<string, number>();
+  for (const l of LESSONS) {
+    const lines = new Set([
+      ...l.steps.flatMap((s) => [s.look, s.listen]),
+      ...l.mistakes.map((m) => m.recovery),
+      ...l.selfCheck.criteria,
+      l.selfCheck.readyWhen,
+    ]);
+    for (const line of lines) counts.set(line, (counts.get(line) ?? 0) + 1);
+  }
+  return new Set([...counts].filter(([, n]) => n > LESSONS.length / 2).map(([line]) => line));
+})();
+
+/** The port's closing step, which restates the first self-check criterion. */
+export const REVIEW_STEP_TITLE = "Review your own attempt";
+
+/**
+ * The steps a lesson page shows: all of them, less a review step that only
+ * restates the self-check printed further down the same page.
+ */
+export function shownSteps(lesson: Lesson): Lesson["steps"] {
+  const first = lesson.selfCheck.criteria[0];
+  return lesson.steps.filter(
+    (s) => !(s.title === REVIEW_STEP_TITLE && first !== undefined && s.body.startsWith(first)),
+  );
+}
+
 /** "Room setup and clean input" → "room setup and clean input", for mid-sentence use. */
 export function lowerFirst(text: string): string {
   return text.charAt(0).toLowerCase() + text.slice(1);

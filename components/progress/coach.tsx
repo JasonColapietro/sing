@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Card } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
 import { LockGlyph } from "@/components/pro/ui";
@@ -31,10 +32,12 @@ interface PlanItem {
  * under the measured ceiling — so 21 (4 + 12 + 5) is exactly the span at which
  * that top finally reaches the start. At 21 the band is a single root whose
  * glide lands on `highMidi - 5`, headroom intact; wider spans widen the band a
- * semitone at a time. Below 21 the ladder gives up that headroom to stay under
- * the ceiling: it roots the octave lower, down to `lowMidi`, and under 12
- * semitones pins the top to `highMidi` with the bottom below the range. The
- * glide then runs at the very top of what the singer measured, which is why a
+ * semitone at a time. Below 21 the ladder gives up most of that headroom to
+ * stay under the ceiling: it roots the octave lower, down to `lowMidi`,
+ * keeping the glide's top two semitones under `highMidi` from a 16-semitone
+ * span up and letting it reach `highMidi` below that (under 12 semitones it
+ * pins the top to `highMidi` with the bottom below the range). The glide then
+ * runs at or near the very top of what the singer measured, which is why a
  * narrower span gets the fifth instead.
  */
 const OCTAVE_SIREN_MIN_SEMIS = 21;
@@ -308,6 +311,15 @@ export function CoachCard({ state }: { state: ProgressState }) {
         Built from your scored notes, range tests, and recent practice — no AI,
         just the numbers.
       </p>
+      {/* The plan can run past the free allowance, so say so here rather than
+          at the cap wall halfway through step two. */}
+      {!isPro && (
+        <p className="mt-1 text-xs text-dim">
+          On the free plan, warmups, ear training, breath and songs share{" "}
+          {FREE_DAILY_MINUTES} guided minutes a day; the range test and the
+          pitch studio have no clock.
+        </p>
+      )}
       <div className="mt-3">
         <ProInlineNudge>
           Pro unlocks the full daily plan

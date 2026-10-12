@@ -11,17 +11,20 @@ import {
 } from "@/lib/chart-colors";
 import { ProChip } from "./ui";
 
-/** Weekly range span, chart units above the floor. [low, high] per week —
-    the band widens week over week: lows drop, highs climb. */
+/** Weekly range span, chart units above the floor. [low, high] per week.
+    Sample data: a roughly level band with test-to-test scatter, because range
+    edges move slowly, and sometimes not at all (see /book/when-numbers-lie).
+    A band that widened week over week read as a promise of new notes in two
+    months, which is not how voices work and not something Pro can sell. */
 const RANGE_WEEKS = [
-  [96, 118],
-  [93, 124],
-  [89, 130],
-  [84, 136],
-  [78, 142],
-  [71, 148],
-  [61, 154],
-  [50, 160],
+  [52, 156],
+  [54, 158],
+  [51, 157],
+  [53, 159],
+  [52, 157],
+  [50, 158],
+  [53, 160],
+  [51, 159],
 ] as const;
 
 /** Per-note accuracy bars: label, height (of 96 max), weak note flagged. */
@@ -55,8 +58,9 @@ const LOW_LINE = sparkPoints((w) => w[0]);
 const BAND = `${HIGH_LINE} ${LOW_LINE.split(" ").reverse().join(" ")}`;
 
 /**
- * The Pro "coach report": range growth over eight weeks plus per-note
- * accuracy with the weak note flagged. Same console-card frame as the
+ * An example Pro "coach report", labelled as one: range history over eight
+ * weeks plus per-note accuracy with the weak note flagged. Every figure in it
+ * is sample data, and the header says so. Same console-card frame as the
  * landing hero visual, in gold. Pure CSS animation.
  */
 export default function ProVisual() {
@@ -66,21 +70,21 @@ export default function ProVisual() {
         <span className="flex items-center gap-2">
           <ProChip />
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
-            Coach report — week 8
+            Example coach report
           </span>
         </span>
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ok-ink">
-          Range +4 st
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+          Sample data
         </span>
       </div>
 
       <svg
         viewBox="0 0 640 300"
         role="img"
-        aria-label="Pro coach report: a chart of vocal range widening over eight weeks, and per-note accuracy bars with E4 flagged as the note to work on"
+        aria-label="Example Pro coach report with sample data: range tests charted over eight weeks, and per-note accuracy bars with E4 flagged as the note to work on"
         className="block w-full"
       >
-        {/* ---- left: range growth band ---- */}
+        {/* ---- left: range history band ---- */}
         <text
           x="36"
           y="52"

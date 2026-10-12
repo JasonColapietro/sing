@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccountAuth } from "@/lib/use-account-auth";
 import { Button } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
@@ -31,19 +31,30 @@ import {
 const RECONCILED_KEY = "suede-sing:backup:account";
 
 /**
+ * The account this page life has already run the backup for. Module scope
+ * rather than a ref, so a second mount (a stale page-level copy, or a remount)
+ * cannot reconcile twice; the localStorage key below is what guards across
+ * page loads.
+ */
+let handledUserId: string | null = null;
+
+/**
  * Runs the backup for whoever is signed in. Renders nothing, blocks nothing,
  * and reports nothing: a failed backup must never interrupt practice, and a
  * signed-out visitor must never notice this exists.
  *
- * Mounted on /progress and in the recorder, which are the two rooms where the
- * record is most likely to have moved. Both calls are safe to repeat, so a
- * singer who visits both in one sitting still does at most one round trip.
+ * Mounted once, in the root layout, so a singer who signs up from any room is
+ * reconciled and backed up there. It used to be mounted only on /progress and
+ * in the recorder, so someone who created an account to back up their
+ * progress from warmups, ear training, breath or songs got no backup until
+ * they happened to open one of those two pages.
+ *
+ * Besides the once-per-load run, hiding the page asks for the throttled
+ * refresh, so a long single-page session is captured too. maybeBackup does
+ * nothing inside its six-hour window, which makes repeating it free.
  */
 export function AccountBackupSync() {
   const { isLoaded, isSignedIn, userId } = useAccountAuth();
-  // Guards against a second run inside one page life; the localStorage key
-  // below is what guards across page loads.
-  const handled = useRef<string | null>(null);
 
   useEffect(() => {
     // A development Clerk instance never resolves a session on a custom domain,
@@ -51,8 +62,8 @@ export function AccountBackupSync() {
     // rather than as an early return so the hook order cannot change.
     if (!accountsReady()) return;
     if (!isLoaded || !isSignedIn || !userId) return;
-    if (handled.current === userId) return;
-    handled.current = userId;
+    if (handledUserId === userId) return;
+    handledUserId = userId;
 
     void (async () => {
       let reconciled: string | null = null;
@@ -82,6 +93,16 @@ export function AccountBackupSync() {
         // Offline, signed out mid-flight, or the store is down. Next load.
       }
     })();
+  }, [isLoaded, isSignedIn, userId]);
+
+  useEffect(() => {
+    if (!accountsReady()) return;
+    if (!isLoaded || !isSignedIn || !userId) return;
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") void maybeBackup();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
   }, [isLoaded, isSignedIn, userId]);
 
   return null;

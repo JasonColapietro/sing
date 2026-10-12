@@ -516,6 +516,42 @@ describe("/llms.txt coverage", () => {
  * Claim discipline across both files. Mirrors the repo's evidence rules: no
  * superlatives, no unlimited-free or accuracy claims.
  */
+/**
+ * What the file says a page contains has to be what the page renders. The
+ * studio line credited it with scale and slide drills that live in warmups,
+ * and the genre note said singer pages list their other genres, which they do
+ * not: each links one hub, for its primary genre.
+ */
+describe("/llms.txt describes pages as they render", () => {
+  const line = (prefix: string) => llms.split("\n").find((l) => l.startsWith(prefix)) ?? "";
+
+  it("gives the studio only the drill it has", () => {
+    const studio = line("- [Pitch studio]");
+    expect(studio).toMatch(/target-note drill/);
+    expect(studio).not.toMatch(/scales, slides and hold drills/);
+    expect(studio).toContain(`${SING_HOME}/warmups`);
+  });
+
+  it("states song key fitting as it behaves, with and without a saved range", () => {
+    const songs = line("- [Songs]");
+    expect(songs).toMatch(/range test/);
+    expect(songs).toMatch(/fitted to that measured range/);
+    expect(songs).toMatch(/written key/);
+    expect(songs).not.toMatch(/comfortable/);
+  });
+
+  it("describes genre hub links the way singer pages make them", () => {
+    expect(llms).not.toMatch(/remaining genres are listed/);
+    expect(llms).toMatch(/links the hub for its primary genre/);
+    // The claim holds only while every primary genre has a hub to link to.
+    const hubs = new Set(HUB_GENRES);
+    const orphaned = SINGERS.filter((s) => s.genres[0] && !hubs.has(s.genres[0]));
+    expect(orphaned.map((s) => `${s.slug}: ${s.genres[0]}`)).toEqual([]);
+    // The exception is named from the data, so it moves when the data does.
+    expect(llms).toContain("(Grunge is kept as a deliberate exception)");
+  });
+});
+
 describe("/llms.txt and /llms-full.txt claim discipline", () => {
   const full = buildLlmsFullTxt();
   for (const [name, text] of [["llms.txt", llms], ["llms-full.txt", full]] as const) {

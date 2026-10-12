@@ -9,6 +9,7 @@ import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import {
   generateMelody,
+  hasSavedRange,
   midiMatches,
   segmentNotes,
   singableRegister,
@@ -44,7 +45,9 @@ export function MelodyEchoGame({
   const session = useEarSession();
   const { latest, listening, error, start, stop } = usePitch();
   const progress = useProgress();
-  const octaveAgnostic = difficulty === "easy";
+  // Any octave on easy, and on every level until a range is saved: the
+  // targets sit in a C3–C4 fallback that a higher voice answers an octave up.
+  const octaveAgnostic = difficulty === "easy" || !hasSavedRange(progress.range);
 
   const [melody, setMelody] = useState<number[] | null>(null);
   const [phase, setPhase] = useState<Phase>("listen");

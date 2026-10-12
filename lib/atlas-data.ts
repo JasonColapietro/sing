@@ -52,10 +52,10 @@ export const ATLAS: AtlasChapter[] = [
     "order": 1,
     "title": "How to read an entry",
     "part": "How to read a voice",
-    "summary": "The anatomy of an atlas entry — what the cited range, the full-voice ceiling, the whistle flag and the sourced extremes actually claim, and how conservative those claims are.",
+    "summary": "The anatomy of an atlas entry — what the cited range, the full-voice ceiling, the whistle flag and the sourced extremes actually claim, and how far to trust those claims.",
     "free": true,
-    "words": 902,
-    "body": "Every entry in this atlas has the same skeleton: a name, a voice type, a cited range, sometimes a full-voice ceiling, occasionally a whistle flag, a signature song, and two short paragraphs — one on what the voice sounds like, one on how it works and how to practice toward it. This chapter is the key to that skeleton. Read it once and every one of the hundreds of entries after it becomes legible.\n\n## The cited range\n\nThe headline figure — F2–G7, C3–Bb5 — is a *cited* range, and the word is doing real work. It means: this is the span between the lowest and highest pitches that circulate in public discussion of this singer, transcribed by listeners from recordings and performances. Nobody ran the singer through a range test. The low note may come from a murmured album cut in one decade and the high note from a single live shriek in another. The companion book, *The Measured Voice*, spends a whole chapter on how those figures get made and what they flatten; the short version is that a cited range is an aggregate of best moments, not a description of an ordinary night.\n\nThis atlas leans conservative on purpose. Where public figures disagree — and for almost every famous singer, they disagree — the entry takes the span that is defensible from well-known recordings, not the wildest claim. If a singer's fans circulate a seven-octave figure and their records document four, the entry says four. You will find numbers here slightly smaller than the largest ones on the internet. That is a feature. A figure you can trust at the edges is worth more than a figure that impresses.\n\n## Where the extreme notes happened\n\nWhere an extreme is strongly tied to one recording, the entry names it: the note and the song it lives in. Axl Rose's cited top comes from \"Ain't It Fun.\" Minnie Riperton's F#7 sits in \"You Take My Breath Away.\" Chris Cornell's A5 is the wail in \"Beyond the Wheel.\" Mariah Carey's G7 belongs to \"Emotions.\"\n\nTreat those citations as listening assignments, because they carry information the bare note cannot. A top note *sustained through a chorus* tells you the singer owns that pitch. A top note that is one glissando at the end of a live take tells you they visited it once. Both are real; they are not the same fact. When an entry names no source, the extreme is the kind that appears across many recordings rather than famously in one — or the honest answer is that the commonly cited figure travels without its receipt, which is itself worth knowing.\n\n## The full-voice ceiling\n\nMany entries carry a second, smaller number: the highest note the singer takes in full, connected voice — a belt or a strong mix — before handing the rest of the span to falsetto, head voice or whistle. On the singer pages this draws as a red dash on the keyboard. In print it reads \"full voice to G5.\"\n\nFor a working singer this is the most useful number on the page. The distance between the ceiling and the cited top is the falsetto-and-above zone, and it changes what the range figure means. Two singers can both show a span to C6; if one belts to A5 and the other flips at E4, they are running completely different machines. When no ceiling is listed, either the singer genuinely takes full voice to the top of the figure — common in opera, where that is the whole job — or their span is narrow enough that the question never comes up.\n\n## The whistle flag\n\nA few entries note whistle register: the flute-like mechanism above head voice. The flag exists so you do not read a G7 as a G7 of singing in any ordinary sense. Whistle notes are real, rare and almost entirely separate from the rest of the voice — a different valve, not a higher gear. The safety chapter has more to say about chasing them; the summary is *don't, yet*.\n\n## The two paragraphs\n\nThe first paragraph, in the singer's entry, is the sound: what you would notice in ten seconds of listening. The second is the mechanism and the lesson — how the voice appears to be produced, what to practice if you want to borrow from it, and the mistake imitators reliably make. These are editorial. They describe technique as it presents on recordings; they are not claims about a singer's private practice, health or biography. Where a voice has paid obvious costs for its style, the entry says so plainly, because you are reading this book partly to decide which costs to pay with your own.\n\n## What an entry will not tell you\n\nAn entry cannot tell you the singer's tessitura — the narrow band where the voice actually lives night to night — because no public figure records it. It cannot tell you what the voice sounds like this year. And it cannot tell you what *your* voice should do with the information. The method chapters at the end of Part II exist for exactly that translation, and the range test in the app will give you your own numbers to translate from. The atlas is a map of other people's territory. The point of a map is to plan your own route, not to stand on it.",
+    "words": 878,
+    "body": "Every entry in this atlas has the same skeleton: a name, a voice type, a cited range, sometimes a full-voice ceiling, occasionally a whistle flag, a signature song, and two short paragraphs — one on what the voice sounds like, one on how it works and how to practice toward it. This chapter is the key to that skeleton. Read it once and every one of the hundreds of entries after it becomes legible.\n\n## The cited range\n\nThe headline figure — F2–G7, C3–Bb5 — is a *cited* range, and the word is doing real work. It means: this is the span between the lowest and highest pitches that circulate in public discussion of this singer, transcribed by listeners from recordings and performances. Nobody ran the singer through a range test. The low note may come from a murmured album cut in one decade and the high note from a single live shriek in another. The companion book, *The Measured Voice*, spends a whole chapter on how those figures get made and what they flatten; the short version is that a cited range is an aggregate of best moments, not a description of an ordinary night.\n\nMost of these figures have not been individually verified against a named recording or score. Where public figures disagree, which for famous singers they usually do, read the entry as one defensible version rather than a ruling, and treat the edges as claims to check, not measurements.\n\n## Where the extreme notes happened\n\nWhere an extreme is strongly tied to one recording, the entry names it: the note and the song it lives in. Axl Rose's cited top comes from \"Ain't It Fun.\" Minnie Riperton's F#7 sits in \"You Take My Breath Away.\" Chris Cornell's A5 is the wail in \"Beyond the Wheel.\" Mariah Carey's G7 belongs to \"Emotions.\"\n\nTreat those citations as listening assignments, because they carry information the bare note cannot. A top note *sustained through a chorus* tells you the singer owns that pitch. A top note that is one glissando at the end of a live take tells you they visited it once. Both are real; they are not the same fact. When an entry names no source, the extreme is the kind that appears across many recordings rather than famously in one — or the honest answer is that the commonly cited figure travels without its receipt, which is itself worth knowing.\n\n## The full-voice ceiling\n\nMany entries carry a second, smaller number: the highest note the singer takes in full, connected voice — a belt or a strong mix — before handing the rest of the span to falsetto, head voice or whistle. On the singers chart it is the solid part of each bar, and a singer's page states it in words as the catalog's highest full or belted note. In print it reads \"full voice to G5.\"\n\nFor a working singer this is the most useful number on the page. The distance between the ceiling and the cited top is the falsetto-and-above zone, and it changes what the range figure means. Two singers can both show a span to C6; if one belts to A5 and the other flips at E4, they are running completely different machines. When no ceiling is listed, either the singer genuinely takes full voice to the top of the figure — common in opera, where that is the whole job — or their span is narrow enough that the question never comes up.\n\n## The whistle flag\n\nA few entries note whistle register: the flute-like mechanism above head voice. The flag exists so you do not read a G7 as a G7 of singing in any ordinary sense. Whistle notes are real, rare and almost entirely separate from the rest of the voice — a different valve, not a higher gear. The safety chapter has more to say about chasing them; the summary is *don't, yet*.\n\n## The two paragraphs\n\nThe first paragraph, in the singer's entry, is the sound: what you would notice in ten seconds of listening. The second is the mechanism and the lesson — how the voice appears to be produced, what to practice if you want to borrow from it, and the mistake imitators reliably make. These are editorial. They describe technique as it presents on recordings; they are not claims about a singer's private practice, health or biography. Where a voice has paid obvious costs for its style, the entry says so plainly, because you are reading this book partly to decide which costs to pay with your own.\n\n## What an entry will not tell you\n\nAn entry cannot tell you the singer's tessitura — the narrow band where the voice actually lives night to night — because no public figure records it. It cannot tell you what the voice sounds like this year. And it cannot tell you what *your* voice should do with the information. The method chapters at the end of Part II exist for exactly that translation, and the range test in the app will give you your own numbers to translate from. The atlas is a map of other people's territory. The point of a map is to plan your own route, not to stand on it.",
     "entries": []
   },
   {
@@ -65,8 +65,8 @@ export const ATLAS: AtlasChapter[] = [
     "part": "How to read a voice",
     "summary": "Scientific pitch notation in five minutes — what C4 means, why F#5 and Gb5 are the same note, how octave spans are counted, and why identical voices get different figures.",
     "free": true,
-    "words": 861,
-    "body": "Every range in this book is written in scientific pitch notation: a letter, maybe a sharp or flat, and a number. The system takes five minutes to learn and then never leaves you, and without it the atlas is a wall of code. Here is the whole thing.\n\n## The letter and the number\n\nThe letter names the note inside an octave — the white keys run C, D, E, F, G, A, B, and then the pattern repeats. The number tells you *which* octave, and octaves change at C, not at A. So the count runs A3, B3, **C4**, D4 — the number ticks up as you cross C.\n\nC4 is middle C, the C nearest the middle of a piano. Everything else hangs off that anchor. A4 is the A above middle C, the orchestra's tuning note at 440 Hz. C5 is an octave above middle C; C3 an octave below. The lowest note on a standard piano is A0, the highest C8. Almost every singing voice on earth lives somewhere between C2 and C6; the atlas's outliers stretch past both ends, which is what makes them outliers.\n\nFor quick intuition: most men speak somewhere around C3, most women around G3–A3. Find your speaking pitch on a keyboard once and the whole notation system snaps into focus, because every figure in this book becomes \"so far above where I talk, so far below.\"\n\n## Sharps, flats and the same-note problem\n\nThe black keys carry two names each. The key between F and G is F# — F raised a semitone — and also Gb, G lowered one. F#5 and Gb5 are the *same pitch*, and which spelling you see is convention and habit, nothing more. The atlas mostly picks one spelling per entry and sticks with it, but when you cross-reference other sources you will meet the twin. Do not read Eb6 versus D#6 as a disagreement; it is one note wearing two name tags.\n\nA semitone is the distance between any key and its immediate neighbor, black keys included — the smallest step Western music uses. Twelve of them make an octave. Those two facts are the entire arithmetic of this book.\n\n## Counting a span\n\nA range like C3–C5 spans two octaves: count the Cs. When the ends do not line up so neatly, count semitones and divide. B2 to E5 is 29 semitones; 29 ÷ 12 is 2.4 octaves, and the entry will say so. The singer pages do this math for you, showing both the semitone count and the decimal.\n\nTwo warnings about spans, because they are the most misread numbers in the atlas. First, a span says nothing about what fills it. A 2.1-octave voice that is strong everywhere is a better instrument than a 4-octave figure held together by two party tricks — the full-voice ceiling from the last chapter tells you which you are looking at. Second, octaves are not linearly impressive. Almost every healthy adult can be trained to two octaves; three connected octaves is genuinely uncommon; four is a handful of people per generation. The difference between 2.0 and 2.5 is practice. The difference between 3.5 and 4.5 is mostly genetics and mechanism-switching, which is why the method chapters keep pointing you at the middle of your voice instead of the ends of someone else's.\n\n## Why sources disagree\n\nLook up any singer in this book elsewhere and you will find a different figure — sometimes wildly different. The variance has boring causes, and knowing them inoculates you against range-war arguments online.\n\nDifferent evidence pools: one transcriber counts studio recordings only, another counts every live bootleg, a third counts a warm-up clip posted on social media. Different rules: some count vocal fry rumbling below the chest voice, some count a squealed glissando as the top, some insist a note must be sustained and musical to count at all. Different ears: transcription at the extremes is hard, and a note at the edge of hearing on a distorted live tape gets called D8 by one listener and C#8 by the next. Stack three lenient rules and a singer gains an octave without singing a note.\n\nThe atlas's rules, for the record: fry lows count only where they are a documented, deliberate part of the singer's recorded work; glissando peaks count as the cited top only when they are the figure that genuinely circulates; whistle is flagged as whistle; and between two defensible figures, the entry takes the smaller. When your favorite singer looks shortchanged here by a semitone, that is why.\n\n## What to do with all this\n\nLearn to hear the notation, not just read it. The singer pages will play any cited range out loud on a keyboard — use that until F#5 is a sound in your head and not a string. Then take your own range test, write your own two numbers in the same notation, and the atlas stops being trivia. Every figure in the next several hundred entries becomes a measurement on the same ruler you have been measured with, which is the only way a compendium like this becomes useful rather than merely long.",
+    "words": 848,
+    "body": "Every range in this book is written in scientific pitch notation: a letter, maybe a sharp or flat, and a number. The system takes five minutes to learn and then never leaves you, and without it the atlas is a wall of code. Here is the whole thing.\n\n## The letter and the number\n\nThe letter names the note inside an octave — the white keys run C, D, E, F, G, A, B, and then the pattern repeats. The number tells you *which* octave, and octaves change at C, not at A. So the count runs A3, B3, **C4**, D4 — the number ticks up as you cross C.\n\nC4 is middle C, the C nearest the middle of a piano. Everything else hangs off that anchor. A4 is the A above middle C, the orchestra's tuning note at 440 Hz. C5 is an octave above middle C; C3 an octave below. The lowest note on a standard piano is A0, the highest C8. Almost every singing voice on earth lives somewhere between C2 and C6; the atlas's outliers stretch past both ends, which is what makes them outliers.\n\nFor quick intuition: most men speak somewhere around C3, most women around G3–A3. Find your speaking pitch on a keyboard once and the whole notation system snaps into focus, because every figure in this book becomes \"so far above where I talk, so far below.\"\n\n## Sharps, flats and the same-note problem\n\nThe black keys carry two names each. The key between F and G is F# — F raised a semitone — and also Gb, G lowered one. F#5 and Gb5 are the *same pitch*, and which spelling you see is convention and habit, nothing more. The atlas mostly picks one spelling per entry and sticks with it, but when you cross-reference other sources you will meet the twin. Do not read Eb6 versus D#6 as a disagreement; it is one note wearing two name tags.\n\nA semitone is the distance between any key and its immediate neighbor, black keys included — the smallest step Western music uses. Twelve of them make an octave. Those two facts are the entire arithmetic of this book.\n\n## Counting a span\n\nA range like C3–C5 spans two octaves: count the Cs. When the ends do not line up so neatly, count semitones and divide. B2 to E5 is 29 semitones; 29 ÷ 12 is 2.4 octaves, and the entry will say so. The singer pages do this math for you, showing both the semitone count and the decimal.\n\nTwo warnings about spans, because they are the most misread numbers in the atlas. First, a span says nothing about what fills it. A 2.1-octave voice that is strong everywhere is a better instrument than a 4-octave figure held together by two party tricks — the full-voice ceiling from the last chapter tells you which you are looking at. Second, octaves are not linearly impressive. Each extra half-octave at the edges is harder won than the last, and the far ends depend more on anatomy and on switching between mechanisms than on practice, which is why the method chapters keep pointing you at the middle of your voice instead of the ends of someone else's.\n\n## Why sources disagree\n\nLook up any singer in this book elsewhere and you will find a different figure — sometimes wildly different. The variance has boring causes, and knowing them inoculates you against range-war arguments online.\n\nDifferent evidence pools: one transcriber counts studio recordings only, another counts every live bootleg, a third counts a warm-up clip posted on social media. Different rules: some count vocal fry rumbling below the chest voice, some count a squealed glissando as the top, some insist a note must be sustained and musical to count at all. Different ears: transcription at the extremes is hard, and a note at the edge of hearing on a distorted live tape gets called D8 by one listener and C#8 by the next. Stack three lenient rules and a singer gains an octave without singing a note.\n\nThe atlas does not settle those disagreements. Its figures are the ones that circulate, so they carry the same mix of rules; what it adds is a whistle flag where whistle is documented and, where an extreme is tied to one recording, the song it lives in. When your favorite singer's number here differs from one you have seen elsewhere, one of the causes above is usually why.\n\n## What to do with all this\n\nLearn to hear the notation, not just read it. The singer pages will play any cited range out loud on a keyboard — use that until F#5 is a sound in your head and not a string. Then take your own range test, write your own two numbers in the same notation, and the atlas stops being trivia. Every figure in the next several hundred entries becomes a point on the same ruler you have been measured with, which is the only way a compendium like this becomes useful rather than merely long.",
     "entries": []
   },
   {
@@ -87,8 +87,8 @@ export const ATLAS: AtlasChapter[] = [
     "part": "How to read a voice",
     "summary": "The working lexicon behind every entry — weight, placement, vibrato, onset, grit, breathiness, twang, cry and their friends, each defined by ear with exemplars from the atlas.",
     "free": false,
-    "words": 1040,
-    "body": "Range is easy to write down. Tone is where description usually collapses into perfume copy — \"velvety,\" \"angelic,\" \"smoky\" — words that sound like meaning and pin down nothing. The entries in this atlas avoid that by leaning on a small technical vocabulary, maybe fifteen words, each of which names something you can actually hear and, more usefully, something you can practice. This chapter defines them once, with singers from these pages as the reference recordings. Learn the words and every entry doubles in resolution; so does your ear.\n\n## Weight\n\nWeight is how much of the vocal folds' mass engages in the sound — the difference between a flute and a cello playing the same pitch. Heavy production reads as thick, muscular, consequential: Céline Dion's middle voice, Luke Combs's belt, Patti LaBelle nearly everywhere. Light production reads as slim and quick: Chris Brown, Ellie Goulding, Juan Diego Flórez, whose entire career is proof of how high a voice can go precisely because it refuses to carry weight up the scale. Weight trades against agility and altitude — the recurring tragedy of amateur singing is hauling a heavy setup into territory only light setups can hold.\n\n## Placement and brightness\n\nPlacement is where the sound seems to resonate — a sensation with fuzzy physics but perfectly real acoustics. Forward placement, \"in the mask,\" gives ring and cut: Steven Tyler, Ailee, Rema's high nasal shine. Back placement gives warmth and hoot: Josh Groban, Samara Joy's plush low register. Related but not identical is brightness — the balance of high overtones in the tone. Bright and dark are the equalizer; forward and back are where the equalizer seems to live in the singer's head.\n\n## Vibrato: rate, width, onset\n\nVibrato is the pitch oscillating around its center, and it carries three separate dials. *Rate*: fast flutter (Ellie Goulding, Dolly Parton) versus slow undulation (Johnny Mathis, Christian Nodal's ranchera wave). *Width*: narrow shimmer versus Giveon's famously wide wobble that flirts with the next semitone over. *Onset*: immediate (opera, most of musical theatre) versus delayed — straight tone first, bloom on beat three — which is the default across modern pop and jazz, from Billie Eilish to Samara Joy. When an entry says \"vibrato arrives late,\" that is the dial it means. All three are trainable; delayed-onset control is the single highest-value tone skill an amateur can practice.\n\n## Onset\n\nOnset is how a note begins. A breathy onset lets air through before the folds meet: intimate, confessional, Enrique Iglesias's entire brand. A glottal onset snaps the folds shut first — the little click that starts so many Britney Spears and Björk phrases. A balanced onset starts clean, air and closure arriving together, which is the trained default and what you should practice even if you never plan to use anything else, because the other two are choices only when you can do all three.\n\n## Breathiness\n\nAir deliberately mixed into the tone throughout the note, not just at the start. One notch of it reads as closeness (Selena Gomez); several notches read as whisper-singing (Summer Walker, Gracie Abrams). Breathiness is expensive — it spends lung volume fast and disappears without a microphone — which is why it barely existed as a technique before amplification and why it fails on unamplified stages today.\n\n## Grit, rasp and distortion\n\nThe controlled noise family, from a light sizzle on the tone (Myles Smith, Anderson .Paak) through committed rasp (Joe Cocker, Luke Combs) to full distortion (metal's growls and screams). Produced sustainably, the noise comes from structures *above* the vocal folds fluttering against the airstream while the folds themselves stay healthy underneath. Produced unsustainably, it is the folds slamming — and the difference is invisible from the audience and unmistakable within a week of practice. The safety chapter returns to this; the entries flag singers whose grit is a supervised skill rather than an accident.\n\n## Twang and nasality\n\nTwang is a narrowing above the folds that adds a bright, brassy, penetrating edge — country's calling card (Morgan Wallen's curl, Dolly Parton), but also the secret cutting agent in most big pop belts. True nasality is air actually escaping through the nose; twang often gets mislabeled as nasal because both are bright. Test: pinch your nose shut mid-note. If the tone barely changes, it was twang; if it chokes, it was nasal. Both are legitimate colors — Peso Pluma builds a whole style on the pinched version — but you want to *choose* them, not default to them.\n\n## Cry\n\nA slight sob placed in the tone — the larynx tilting into the posture of weeping — that makes intensity read as emotion instead of volume. Yebba's mix is the atlas's clearest exemplar; Jeff Buckley and Sam Smith run on it; Camila Cabello turns it into ornament. Cry is also mechanically useful: the tilt thins the folds and makes high notes easier, which is why \"add a little whimper\" is one of the oldest teacher tricks for a strained top.\n\n## Register colors\n\nWords the entries use for where a note is made rather than how it is flavored. *Chest voice*: the speaking mechanism, full and grounded. *Head voice*: the lighter upper mechanism, clear and rounded. *Falsetto*: the flutey, disconnected version of the upper voice, air-adjacent at the edges (Frank Ocean's confessional top). *Mix*: chest and head blended so the seam disappears — the sound of essentially every big modern pop chorus. *Belt*: chest-dominant production carried above the natural break, brassy and loud (Reneé Rapp, Idina Menzel). *Whistle*: the separate top-floor mechanism above head voice (Mariah Carey, Minnie Riperton). *Fry*: the creaking sub-basement below chest (Britney Spears's onsets, half of modern pop's verse texture).\n\n## Using the vocabulary\n\nTwo habits turn this list from glossary into equipment. First, when you listen to any singer — in this book or out of it — name three dials instead of reaching for an adjective: \"light weight, forward placement, delayed narrow vibrato\" says more than \"airy\" ever will, and it hands you a practice plan. Second, when an entry's technique paragraph names a dial, treat that as the entry telling you *what to isolate first* if you want to borrow the voice. The next chapter is the borrowing method itself.",
+    "words": 1045,
+    "body": "Range is easy to write down. Tone is where description usually collapses into perfume copy — \"velvety,\" \"angelic,\" \"smoky\" — words that sound like meaning and pin down nothing. The entries in this atlas avoid that by leaning on a small technical vocabulary, maybe fifteen words, each of which names something you can actually hear and, more usefully, something you can practice. This chapter defines them once, with singers from these pages as the reference recordings. Learn the words and every entry doubles in resolution; so does your ear.\n\n## Weight\n\nWeight is how much of the vocal folds' mass engages in the sound — the difference between a flute and a cello playing the same pitch. Heavy production reads as thick, muscular, consequential: Céline Dion's middle voice, Luke Combs's belt, Patti LaBelle nearly everywhere. Light production reads as slim and quick: Chris Brown, Ellie Goulding, Juan Diego Flórez, whose entire career is proof of how high a voice can go precisely because it refuses to carry weight up the scale. Weight trades against agility and altitude — the recurring tragedy of amateur singing is hauling a heavy setup into territory only light setups can hold.\n\n## Placement and brightness\n\nPlacement is where the sound seems to resonate — a sensation with fuzzy physics but perfectly real acoustics. Forward placement, \"in the mask,\" gives ring and cut: Steven Tyler, Ailee, Rema's high nasal shine. Back placement gives warmth and hoot: Josh Groban, Samara Joy's plush low register. Related but not identical is brightness — the balance of high overtones in the tone. Bright and dark are the equalizer; forward and back are where the equalizer seems to live in the singer's head.\n\n## Vibrato: rate, width, onset\n\nVibrato is the pitch oscillating around its center, and it carries three separate dials. *Rate*: fast flutter (Ellie Goulding, Dolly Parton) versus slow undulation (Johnny Mathis, Christian Nodal's ranchera wave). *Width*: narrow shimmer versus Giveon's famously wide wobble that flirts with the next semitone over. *Onset*: immediate (opera, most of musical theatre) versus delayed — straight tone first, bloom on beat three — which is the default across modern pop and jazz, from Billie Eilish to Samara Joy. When an entry says \"vibrato arrives late,\" that is the dial it means. All three are trainable; delayed onset is a good first one to practice, because it starts from a plain, straight tone.\n\n## Onset\n\nOnset is how a note begins. A breathy onset lets air through before the folds meet: intimate, confessional, Enrique Iglesias's entire brand. A glottal onset snaps the folds shut first — the little click that starts so many Britney Spears and Björk phrases. A balanced onset starts clean, air and closure arriving together, which is the trained default and what you should practice even if you never plan to use anything else, because the other two are choices only when you can do all three.\n\n## Breathiness\n\nAir deliberately mixed into the tone throughout the note, not just at the start. One notch of it reads as closeness (Selena Gomez); several notches read as whisper-singing (Summer Walker, Gracie Abrams). Breathiness is expensive — it spends lung volume fast and disappears without a microphone — which is why it barely existed as a technique before amplification and why it fails on unamplified stages today.\n\n## Grit, rasp and distortion\n\nThe controlled noise family, from a light sizzle on the tone (Myles Smith, Anderson .Paak) through committed rasp (Joe Cocker, Luke Combs) to full distortion (metal's growls and screams). Produced sustainably, the noise comes from structures *above* the vocal folds fluttering against the airstream while the folds themselves stay healthy underneath. Produced unsustainably, it is the folds slamming — and the difference is invisible from the audience and unmistakable within a week of practice. The safety chapter returns to this; the entries flag singers whose grit is a supervised skill rather than an accident.\n\n## Twang and nasality\n\nTwang is a narrowing above the folds that adds a bright, brassy, penetrating edge — country's calling card (Morgan Wallen's curl, Dolly Parton), but also the secret cutting agent in most big pop belts. True nasality is air actually escaping through the nose; twang often gets mislabeled as nasal because both are bright. Test: pinch your nose shut mid-note. If the tone barely changes, it was twang; if it chokes, it was nasal. Both are legitimate colors — Peso Pluma builds a whole style on the pinched version — but you want to *choose* them, not default to them.\n\n## Cry\n\nA slight sob placed in the tone — the larynx tilting into the posture of weeping — that makes intensity read as emotion instead of volume. Yebba's mix is the atlas's clearest exemplar; Jeff Buckley and Sam Smith run on it; Camila Cabello turns it into ornament. Cry is also mechanically useful: the tilt thins the folds and makes high notes easier, which is why \"add a little whimper\" is one of the oldest teacher tricks for a strained top.\n\n## Register colors\n\nWords the entries use for where a note is made rather than how it is flavored. *Chest voice*: the speaking mechanism, full and grounded. *Head voice*: the lighter upper mechanism, clear and rounded. *Falsetto*: the flutey, disconnected version of the upper voice, air-adjacent at the edges (Frank Ocean's confessional top). *Mix*: chest and head blended so the seam disappears — the sound of essentially every big modern pop chorus. *Belt*: chest-dominant production carried above the natural break, brassy and loud (Reneé Rapp, Idina Menzel). *Whistle*: the separate top-floor mechanism above head voice (Mariah Carey, Minnie Riperton). *Fry*: the creaking sub-basement below chest (Britney Spears's onsets, half of modern pop's verse texture).\n\n## Using the vocabulary\n\nTwo habits turn this list from glossary into equipment. First, when you listen to any singer — in this book or out of it — name three dials instead of reaching for an adjective: \"light weight, forward placement, delayed narrow vibrato\" says more than \"airy\" ever will, and it hands you a practice plan. Second, when an entry's technique paragraph names a dial, treat that as the entry telling you *what to isolate first* if you want to borrow the voice. The next chapter is the borrowing method itself.",
     "entries": []
   },
   {
@@ -98,8 +98,8 @@ export const ATLAS: AtlasChapter[] = [
     "part": "The borrower's method",
     "summary": "The five-step method behind every technique paragraph in this book: pick a trait, match the habitat, change one dial at a time, close the loop with recordings, and time-box the costume.",
     "free": false,
-    "words": 922,
-    "body": "Imitation has a bad reputation in singing, and it earned it honestly: the karaoke Axl, the coffee-shop Adele, the church soloist doing a full Mariah on a congregation that asked for a hymn. But the reputation confuses bad imitation with imitation itself. Every distinctive singer you admire built their voice by borrowing — deliberately, specifically, and temporarily — from singers before them. The entries in this atlas each end with practice guidance, and all of it assumes the same underlying method. Here is the method in full, once, so the entries can stay short.\n\n## Step one: pick a trait, not a person\n\n\"I want to sound like Freddie Mercury\" is not an executable instruction. It names a whole person — range, tone, taste, theatricality, four decades of habits — and whole people cannot be practiced. \"I want Freddie's squillo-bright vowels on sustained notes\" can be practiced this afternoon.\n\nSo the first move is always decomposition. Take the singer you admire and, using the tone vocabulary from the last chapter, write down the three dials that most make them *them*. For Amy Winehouse you might write: behind-the-beat phrasing, dark rounded vowels, lazy late vibrato. For Chester Bennington: clean-to-distorted onset control, forward placement, sustained belts. Then pick **one**. The technique paragraph in each entry usually does this decomposition for you and names the trait imitators reliably get wrong — that sentence is the entry telling you where the bodies are buried.\n\n## Step two: match the habitat, not the notes\n\nAlmost every failed imitation fails here. You cannot practice someone's tone in a part of your range where you are fighting for survival; tone work only sticks in territory you already hold comfortably.\n\nSo find where the trait actually lives in the original — which notes, which part of *their* voice — and then move it into the equivalent part of *yours*. If they demonstrate the trait around their comfortable upper-middle, practice it around your comfortable upper-middle, wherever that is on the absolute keyboard. In practice this means transposing: take the song down (or up) until its busiest band sits where your voice is at ease, and do the trait work there. A baritone practicing Sam Cooke's end-of-phrase turns a fourth below the record is learning them; a baritone cracking at the record's pitch is learning to crack. Keys are a free parameter. Your vocal folds are not.\n\n## Step three: one dial at a time\n\nChange a single variable per practice block. If you are working on Winehouse's timing, sing the phrase in *your own* tone with *her* timing — resist the tribute-act instinct to do the accent, the vowels and the attitude at once. Multi-dial imitation feels productive because it sounds superficially closer, but nothing transfers; you are performing a wax figure, not acquiring a skill. Ten minutes on one dial, done daily for two weeks, transfers.\n\nThe order that works: rhythm and phrasing first (cheapest, safest, most distinctive), then vowel color and placement, then onset and vibrato behavior, then — last, and only in comfortable range — weight and grit. Notice that \"their high notes\" appears nowhere on that list. The top of a famous voice is its least imitable part and its most expensive, which is why the entries keep steering you toward each singer's *middle*.\n\n## Step four: close the loop\n\nImitation without recording is guessing. The loop is: listen to four bars of the original, sing the same four bars, record, compare, name one difference in vocabulary terms, adjust, repeat. Twenty minutes of loop beats two hours of singing along, because singing along lets the original mask you — you literally cannot hear yourself failing to match. The recorder in the app exists for this; so does the compare-with-me strip on every singer page, which puts your measured range next to theirs and tells you honestly how much of their territory you currently hold.\n\nExpect the comparison to be humbling in a specific, encouraging way: the differences you find will almost never be range. They will be onsets, releases, timing, vowel shapes — all learnable. Singers listen for pitch; listeners hear everything else.\n\n## Step five: time-box the costume\n\nA borrowed trait starts as a costume: it only exists while you concentrate on it. Worn deliberately for two or three weeks, it either integrates — starts showing up unprompted in songs where it belongs, at which point it is wardrobe, yours — or it stays a costume, in which case take it off and pick a different trait. Both outcomes are wins. The failure mode is the permanent costume: the singer who spent five years being a knockoff of one idol and never noticed the lease expired. The cure is volume and variety — borrow from many voices, one trait each, and your own style assembles itself out of the overlaps. That is not a consolation prize; it is the actual mechanism by which every original voice you admire became original.\n\n## What borrowing cannot do\n\nIt cannot get you another person's anatomy — fold length, tract shape, resonance real estate. It cannot get you their extremes, and chasing those is where imitation stops being education and starts being expense; the next chapter draws that line precisely. And it cannot substitute for having something to say with the trait once you own it. The atlas gives you several hundred voices' worth of things worth stealing. Steal small, steal often, and pay attention to which thefts feel like coming home — that feeling is your own voice voting.",
+    "words": 949,
+    "body": "Imitation has a bad reputation in singing, and it earned it honestly: the karaoke Axl, the coffee-shop Adele, the church soloist doing a full Mariah on a congregation that asked for a hymn. But the reputation confuses bad imitation with imitation itself. Every distinctive singer you admire built their voice by borrowing — deliberately, specifically, and temporarily — from singers before them. The entries in this atlas each end with practice guidance, and all of it assumes the same underlying method. Here is the method in full, once, so the entries can stay short.\n\n## Step one: pick a trait, not a person\n\n\"I want to sound like Freddie Mercury\" is not an executable instruction. It names a whole person — range, tone, taste, theatricality, four decades of habits — and whole people cannot be practiced. \"I want Freddie's squillo-bright vowels on sustained notes\" can be practiced this afternoon.\n\nSo the first move is always decomposition. Take the singer you admire and, using the tone vocabulary from the last chapter, write down the three dials that most make them *them*. For Amy Winehouse you might write: behind-the-beat phrasing, dark rounded vowels, lazy late vibrato. For Chester Bennington: clean-to-distorted onset control, forward placement, sustained belts. Then pick **one**. The technique paragraph in each entry usually does this decomposition for you and names the trait imitators reliably get wrong — that sentence is the entry telling you where the bodies are buried.\n\n## Step two: match the habitat, not the notes\n\nAlmost every failed imitation fails here. You cannot practice someone's tone in a part of your range where you are fighting for survival; tone work only sticks in territory you already hold comfortably.\n\nSo find where the trait actually lives in the original — which notes, which part of *their* voice — and then move it into the equivalent part of *yours*. If they demonstrate the trait around their comfortable upper-middle, practice it around your comfortable upper-middle, wherever that is on the absolute keyboard. In practice this means transposing: take the song down (or up) until its busiest band sits where your voice is at ease, and do the trait work there. A baritone practicing Sam Cooke's end-of-phrase turns a fourth below the record is learning them; a baritone cracking at the record's pitch is learning to crack. Keys are a free parameter. Your vocal folds are not.\n\n## Step three: one dial at a time\n\nChange a single variable per practice block. If you are working on Winehouse's timing, sing the phrase in *your own* tone with *her* timing — resist the tribute-act instinct to do the accent, the vowels and the attitude at once. Multi-dial imitation feels productive because it sounds superficially closer, but nothing transfers; you are performing a wax figure, not acquiring a skill. Ten minutes on one dial, done daily for two weeks, transfers.\n\nThe order that works: rhythm and phrasing first (cheapest, safest, most distinctive), then vowel color and placement, then onset and vibrato behavior, then — last, and only in comfortable range — weight and grit, with grit kept to the next chapter's rules: quiet before loud, none that leaves you hoarse, and a teacher's ears on it as soon as you can. Notice that \"their high notes\" appears nowhere on that list. The top of a famous voice is its least imitable part and its most expensive, which is why the entries keep steering you toward each singer's *middle*.\n\n## Step four: close the loop\n\nImitation without recording is guessing. The loop is: listen to four bars of the original, sing the same four bars, record, compare, name one difference in vocabulary terms, adjust, repeat. Twenty minutes of loop beats two hours of singing along, because singing along lets the original mask you — you literally cannot hear yourself failing to match. The recorder in the app exists for this; so does the compare-with-me strip on every singer page, which puts your measured range next to theirs and tells you honestly how much of their territory you currently hold.\n\nExpect the comparison to be humbling in a specific, encouraging way: the differences you find will almost never be range. They will be onsets, releases, timing, vowel shapes — all learnable. Singers listen for pitch; listeners hear everything else.\n\n## Step five: time-box the costume\n\nA borrowed trait starts as a costume: it only exists while you concentrate on it. Worn deliberately for two or three weeks, it either integrates — starts showing up unprompted in songs where it belongs, at which point it is wardrobe, yours — or it stays a costume, in which case take it off and pick a different trait. Both outcomes are wins. The failure mode is the permanent costume: the singer who spent five years being a knockoff of one idol and never noticed the lease expired. The cure is volume and variety — borrow from many voices, one trait each, and your own style assembles itself out of the overlaps. That is not a consolation prize; it is the actual mechanism by which every original voice you admire became original.\n\n## What borrowing cannot do\n\nIt cannot get you another person's anatomy — fold length, tract shape, resonance real estate. It cannot get you their extremes, and chasing those is where imitation stops being education and starts being expense; the next chapter draws that line precisely. And it cannot substitute for having something to say with the trait once you own it. The atlas gives you several hundred voices' worth of things worth stealing. Steal small, steal often, and pay attention to which thefts feel like coming home — that feeling is your own voice voting.",
     "entries": []
   },
   {
@@ -983,7 +983,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Baby-doll alt-pop soprano — breathy, curled vowels, half-whispered chest tone, and quick falsetto flips.",
         "technique": "Character voice comes first: Martinez curls vowels into a babyish pout, singing with a breathy, half-whispered chest tone that rarely rises above conversational volume. Her range in use is compact — F3 to D5 — so interest comes from cracks, flips into falsetto, and vocal-fry onsets used as punctuation. Vibrato is minimal, pitch glides constant. Singers copying the whisper usually lose pitch center; hers stays exact under the air, and the stylized diction never swallows the consonants.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       },
       {
         "slug": "aurora",
@@ -1289,7 +1289,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Whisper-pop with a diarist's cadence: airy, close, fast-worded verses that bloom into brief, clear head-voice hooks.",
         "technique": "Everything happens within arm's reach of speech. Verses run wordy and fast, half-whispered, with the breathiness dialed so high that the consonants carry the pitch. The chorus lift is small but real: air comes off the tone, head voice clears, and that sudden clarity is the payoff. To study it, practice singing at true whisper volume while keeping every note centered, which is far harder than belting. The style fails loud; it also fails when the whisper goes off-pitch.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "tate-mcrae",
@@ -1862,7 +1862,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Festival folk-pop: a warm, sandpapered tenor built for singalongs, all short punchy phrases and open-hearted rasp.",
         "technique": "Warmth with grit is the recipe. The tone carries a light, even rasp across its whole range, more texture than distortion, over short, rhythmically punchy phrases designed for a crowd to shout back. Melodies stay inside an octave; the energy comes from drive and repetition, not altitude. Keep the rasp consistent rather than saving it for peaks, and place phrases slightly ahead of the beat for urgency. Over-singing the simple lines with runs and swells works against what makes them land.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       },
       {
         "slug": "alex-warren",
@@ -1879,7 +1879,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Stadium-folk balladry: a husky baritone that builds from hushed verse to a huge, hymn-like chorus with choir-sized reverb.",
         "technique": "Dynamics do the storytelling. Verses sit husky and close, almost spoken over fingerpicking, then the chorus opens into a full-throated, anthemic belt with the vowels widened and a slight rasp on top, a shape borrowed from worship music as much as from pop. Vibrato stays narrow even at volume. Map the crescendo across the whole song and rehearse the quiet sections quieter than feels natural, so the lift has somewhere to go. Peaking in verse one flattens the entire arc.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       },
       {
         "slug": "sombr",
@@ -1896,7 +1896,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Brooding bedroom rock: a low, reverb-drowned croon that murmurs through verses and aches upward at the hook.",
         "technique": "Mood is managed through register contrast. Verses live in a dark, low murmur with fry at the onsets, mixed so wet that the words blur at the edges, and the hook lifts into a strained, yearning upper-chest push that stays deliberately unpolished. Vibrato is nearly absent. Practice the low murmur with clear pitch centers despite the softness, then let the lifted notes carry a little honest strain instead of smoothing them. Polishing the top note into prettiness breaks the ache.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       }
     ]
   },
@@ -2656,7 +2656,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Ride Like the Wind",
         "blurb": "Placid, glassy high tenor; even, unforced tone that floats over smooth late-night arrangements.",
         "technique": "Evenness is the whole method: a placid high tenor that keeps one dynamic, one color, and one unforced placement across the entire phrase. Onsets are soft, vibrato slight and slow, vowels tall with no rasp anywhere. He floats above the staff without announcing effort, because he never carries chest weight upward. Students mistake the calm for easiness and oversing it; the control required to stay this level, this long, without swelling is the hard part.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       },
       {
         "slug": "boy-george",
@@ -3144,7 +3144,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Somebody to Love",
         "blurb": "Flat declamatory chest tone with little vibrato; builds by adding volume, not by climbing.",
         "technique": "Notes get stated, not sung around. The tone stays flat and straight, vibrato is minimal, and intensity builds by adding volume and hardening the vowel while the pitch stays put. Onsets are firm and unornamented, and lines land squarely on the beat with an almost spoken conviction. A student's instinct is to add vibrato and slides, which immediately softens the menace this approach depends on.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "janis-joplin",
@@ -3195,7 +3195,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Husky breath-driven alto in a narrow working band; wide vibrato, almost entirely chest voice.",
         "technique": "Breath is part of the tone, not a flaw in it: air rides through every note and creates the huskiness. Onsets are soft, consonants get swallowed, and phrases lean slightly behind the beat. Vibrato is wide and slow, and it usually arrives late in a sustain. Everything sits in chest voice inside a narrow band, so colour has to come from texture. The instinct is to tighten the throat to manufacture that texture, when the sound depends on staying loose.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "debbie-harry",
@@ -3212,7 +3212,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Heart of Glass",
         "blurb": "Cool deadpan delivery that flips to a thin bright top; light onsets, very little vibrato.",
         "technique": "The detachment is the performance: light onsets, almost no vibrato, short clipped vowels, and a delivery that sits exactly on the beat without pushing. When the line rises the tone thins into a bright, narrow upper register instead of belting, which keeps the deadpan intact. Over-emote, or add weight up top, and the flat unbothered quality that is the actual style disappears.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "joan-jett",
@@ -3229,7 +3229,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Speech-level snarl in a narrow chest band; drive comes from consonants and timing, not pitch.",
         "technique": "Drive comes from the consonants. She sings at speech level in a narrow chest band, snarling the front of each word and clipping the ends, so rhythm rather than pitch carries the energy. Vibrato is nearly absent and the vowel stays bright and tight. Trying to make it pretty, or adding runs, kills the effect — it depends on staying blunt and dead on the groove.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       },
       {
         "slug": "pat-benatar",
@@ -3331,7 +3331,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Nasal mezzo with flat, speech-like phrasing and a hard chest belt she rarely lifts to head voice.",
         "technique": "Flat and speech-like by design: phrasing tracks how a sentence would be spoken, vowels stay nasal and forward, vibrato is nearly absent. Notes get approached with a slur or scoop from below, then held dead straight. Chest weight dominates the climb and she rarely lifts into head voice, which keeps the sound blunt and young. Placement is forward rather than clamped, so the nasality is where the tone sits, not a squeezed throat.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "amy-lee",
@@ -3411,7 +3411,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Joy Division's flat-affect baritone: a gray, unornamented monotone whose power is its refusal to perform feeling.",
         "technique": "Affectlessness is the aesthetic. The voice sits in a narrow, low band, nearly vibrato-free, vowels unglamorous and consonants plain, delivered as if reading rather than performing, and the emotional charge comes from that refusal colliding with desperate lyrics. Intonation drifts flat-ward at phrase ends, part of the grain. Practice singing a melody at conversational volume while stripping every learned expressive habit: no swells, no scoops, no vibrato. It is harder than it sounds, and the restraint is the entire art.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       },
       {
         "slug": "dave-gahan",
@@ -3445,7 +3445,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "The Cure's eternal adolescent: a quavering, tearful tenor that sounds perpetually on the verge of either sobbing or smiling.",
         "technique": "The wobble is the signature: an unstable, sped-up vibrato that reads as barely held-back crying, over a thin, forward tenor with almost no chest weight. Pitch bends sharp-ward at moments of excitement, a controlled mannerism rather than error. Phrases tumble out slightly ahead of the beat, breathless. To borrow it, sing with a deliberately loose jaw and let the vibrato run faster and narrower than feels polished, keeping the core of each note centered. Stabilizing the wobble kills the character.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "anthony-kiedis",
@@ -4795,7 +4795,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Sixties soul in present tense: a gentle, grain-warmed tenor with Sam Cooke's poise and none of his-era's shouting.",
         "technique": "Poise over power, always. The tone is soft-grained and slightly covered, phrases delivered with a calm, upright placement that echoes Sam Cooke, and ornament limited to small end-of-phrase turns and the occasional yodel-flip. Dynamics move gently; the voice invites rather than insists. Sing his melodies at genuinely low volume with full breath support, resisting every urge to lean in on peaks. The restraint is a positive act, and its difficulty is invisible until you try to hold it for a whole song.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       }
     ]
   },
@@ -4858,7 +4858,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Warm, slightly husky mezzo that stays in chest voice and leans on phrasing over altitude.",
         "technique": "Nothing here is about altitude. The whole story happens between E3 and D5, in chest voice, at close to speaking weight. Notes are entered gently and often a shade behind where the band puts them, then pulled back into time by the end of the line. Huskiness lives in the tone rather than in force. Singers hear soul and start adding runs, when the effect actually comes from restraint and from finishing every consonant.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "patti-labelle",
@@ -5431,7 +5431,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Beautiful",
         "blurb": "Reedy, lilting tenor with mournful slides and West African-inflected trills over club beats.",
         "technique": "High, lilting tenor with a reedy, slightly nasal core and constant gentle portamento between notes. He sits in a narrow band from the C3 floor to a Bb4 ceiling and gets variety from ornament rather than range: quick mordent-like trills, West African-inflected melisma, and long sustained vowels with almost no vibrato. Students copying him push volume into the nasality and go flat on the slides; the style needs light breath pressure and a precise landing pitch under every ornament.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "ciara",
@@ -6191,7 +6191,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Conversational mezzo close to speech range; slight rasp, little ornament, breath-driven phrasing.",
         "technique": "Speech is the reference point. Most lines sit between F3 and the C5 belt, close to talking pitch, with a light dryness in the tone and a trace of rasp underneath. Ornament is nearly absent, and phrases are shaped by where the breath falls rather than by riffs. The E5 top comes lightly. Over-singing flattens the whole effect, because the intimacy depends on staying at conversational volume.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "sandi-patty",
@@ -6526,7 +6526,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Warm contralto with a controlled sob on held notes and heavy, deliberate slides between them.",
         "technique": "Weight sits in the chest register for most of the range, with slow, heavy portamento carrying you between notes rather than clean intervals. Vibrato arrives late on a sustained tone, often preceded by a small catch that reads as a sob. Toward D5 the sound thins gently instead of belting. Overdone, that catch turns into a wobble; it works as one placed break inside an otherwise steady line.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "loretta-lynn",
@@ -6543,7 +6543,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Nasal Appalachian mezzo, hard consonants, a bent and talking approach to the melody line.",
         "technique": "You hear the nose first: placement is high and forward, vowels flattened toward speech, consonants struck hard enough to become part of the rhythm. Melody gets bent, notes approached from under and pushed up into, sometimes talked more than sung. Chest-weighted tone covers most of the G3-D5 span with no flip into anything lighter. Round the vowels out and the accent goes with them, and the accent is where the feeling actually lives.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       },
       {
         "slug": "willie-nelson",
@@ -6560,7 +6560,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Light nasal tenor that lags behind the beat and slides into notes instead of landing on them.",
         "technique": "Almost everything here is timing. Notes arrive late, behind where the band puts them, then slide up or down into pitch instead of starting there. Tone stays light and nasal, close to speech, with very little vibrato and no push at the F4 ceiling. Copy the drag but resolve early and you land back on the beat too soon; the phrase should only catch up at the very end of the line.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "merle-haggard",
@@ -6577,7 +6577,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Relaxed baritone with jazz-tinged timing; bends up into notes and stays behind the beat.",
         "technique": "Phrasing leans back the way a jazz singer's does, notes set a hair behind the beat and bent up into from below. Tone is relaxed and mid-weight, never pressed, with light vibrato that only surfaces as a note is ending. The E4 top is reached by opening the vowel rather than adding volume. Students copy the looseness and lose the tuning; behind the beat still has to be precisely behind it.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "waylon-jennings",
@@ -6594,7 +6594,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Dark chesty bass-baritone pushed against a hard backbeat; almost no head-voice extension.",
         "technique": "Chest register does all the work: dark, thick, and driven straight at a hard backbeat, consonants landing on the accent. There is essentially no lighter extension above the D4 top, so lines stay low and repeat instead of climbing. Onsets are firm, close to glottal, and vibrato is minimal. Copying the darkness by dropping the jaw and swallowing the tone just makes it muddy; this sound is dark but still forward.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "tammy-wynette",
@@ -6611,7 +6611,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Stand by Your Man",
         "blurb": "Mezzo who uses her own register break as a teardrop catch at the ends of lines.",
         "technique": "The register break is not hidden, it is used. Phrases build in chest, then at the end of a line the voice deliberately cracks up into a lighter register for a beat, the teardrop catch. Otherwise the tone is warm and even, with moderate vibrato and slow, weighted slides. Get this wrong and you crack randomly mid-word; the catch has to be placed, in the same spot in the phrase every time.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       },
       {
         "slug": "dolly-parton",
@@ -6696,7 +6696,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Silvery soprano with a fragile edge on sustained notes; built to sit above a lead vocal.",
         "technique": "Tone is silvery and slightly thin, with a fine tremor rather than a wide vibrato on sustained notes, and that thinness is what lets it sit above a lead vocal without fighting it. Onsets are gentle, pitch placed a touch high in the note. Ornament is sparse and vowels are matched carefully, the mark of a harmony singer. Reach for more volume and the tone thickens, and the fragile edge is the first thing lost.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       },
       {
         "slug": "reba-mcentire",
@@ -6730,7 +6730,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Unhurried baritone, almost no vibrato, phrasing shaped for two-step and Western swing.",
         "technique": "Restraint is the technique. The tone is even and unbrightened, vibrato nearly absent, onsets clean with no scoop into pitch. Phrasing sits inside the shuffle or swing feel and rarely displaces a note for effect. Melody gets sung close to as written, ornament limited to a small turn at a cadence. Singers imitating this add runs and vibrato to fill the space, which is exactly what the style takes out.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       },
       {
         "slug": "vince-gill",
@@ -6781,7 +6781,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Round, resonant baritone with long downward slides and a heavy drawl on line endings.",
         "technique": "Resonance is low and round, the sound sitting behind the teeth rather than up in the nose. Long downward slides finish most phrases, and diphthongs get drawled so the second vowel becomes its own small note. Vibrato is narrow and arrives late, when it arrives. Take on the drawl and the pitch tends to sag with it; every slide still has to land on a definite note instead of trailing away.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "alison-krauss",
@@ -6798,7 +6798,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Straight-tone soprano, nearly breathless, exact intonation and very little ornament.",
         "technique": "Very little happens on purpose here, which is what makes it hard. Tone stays straight with only a trace of vibrato late in a long note, dynamics stay quiet, and pitch is placed dead center with no scoop in. Onsets are soft, almost breath-first. Ornament is nearly absent, so every vowel is exposed. Sing this with normal vibrato habits and you find out how much of your tuning the vibrato was hiding.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       },
       {
         "slug": "garth-brooks",
@@ -7053,7 +7053,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Somethin' Bad",
         "blurb": "Bright, pressurized chest-mix with a controlled snarl — intimacy to full blast inside one phrase.",
         "technique": "Lambert trades range for pressure: a bright, brassy chest-mix driven hard through the middle of the voice, with Texas vowels and a controlled snarl on consonants. Quiet verses turn suddenly intimate, almost airy, before she slams back to full voice. Vibrato stays narrow. The student error is treating her belt as anger; the volume is supported and placed forward, never squeezed at the throat.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "kacey-musgraves",
@@ -7070,7 +7070,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Soft-edged mezzo close to the mic, breath left in the tone, melody kept conversational.",
         "technique": "Everything stays close to the microphone and close to speech. Air is left in the tone deliberately, onsets are soft, and vibrato is minimal, a small tail at the end of a note rather than through it. The line sits mid-staff where talking is comfortable, consonants relaxed. Sung at full volume the style disappears, so the real work is staying intelligible and in tune at that low a dynamic.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       },
       {
         "slug": "sturgill-simpson",
@@ -7172,7 +7172,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "The defining country voice of its moment: a curled, nasal East Tennessee baritone with a built-in break in the vowels.",
         "technique": "The curl is everything: vowels bend through a nasal, back-of-the-throat shape, the East Tennessee accent left fully intact, and the tone carries a light perpetual rasp that thickens on pushed notes. Phrase ends drop into a little spoken fall-off, half sigh, half shrug. The melody rides speech rhythm rather than strict meter. To study the sound, exaggerate the accent on the vowels first and add pitch second. Singers who neutralize the accent have removed the actual instrument.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "cody-johnson",
@@ -7240,7 +7240,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Heart Like a Truck",
         "blurb": "Brassy, nasal chest-mix in a thick Louisiana drawl — vowel bends carry the groove and the attitude.",
         "technique": "Wilson sings through a broad Louisiana drawl with the twang cranked high: nasal, brassy, and proudly regional. Her chest-mix stays thick through the middle, and she bends into notes with quick country scoops, adding a rasp flare on emphasis. Vibrato is moderate and late. Students copying her flatten the accent to be safe; the vowel bends are structural, carrying both the groove and the attitude.",
-        "span": "1 octaves + 4"
+        "span": "1 octave + 4"
       },
       {
         "slug": "zach-bryan",
@@ -7257,7 +7257,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Anti-polish as principle: a cracked, shouting-from-the-porch baritone that treats roughness as proof of honesty.",
         "technique": "Rawness is the contract with the listener. The voice strains visibly at the top of phrases, cracks left in the take, with a reedy, wind-burned tone and volume that surges on emotional peaks rather than building smoothly. Meter stretches to fit the words, a songwriter's phrasing, not a session singer's. If you borrow this style, keep the support honest underneath the apparent strain: the crack should be a controlled release, not an actual failure. Manufactured roughness over weak breath is the fastest route to real damage.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       }
     ]
   },
@@ -7618,15 +7618,15 @@ export const ATLAS: AtlasChapter[] = [
         "country": "USA",
         "activeFrom": 2022,
         "low": "B2",
-        "high": "G#4",
+        "high": "A4",
         "belt": "F#4",
         "whistle": false,
         "signatureSong": "Stick Season",
         "lowSource": null,
-        "highSource": null,
+        "highSource": "Stick Season",
         "blurb": "New England folk urgency: a bright, keening tenor that gallops through wordy verses and breaks upward like a shout across a field.",
         "technique": "Urgency drives the phrasing: verses tumble out in dense, galloping strings of syllables, almost patter, then the hook leaps upward into a keening, open-throated call with a folk singer's forward bite and a hint of yodel at the flip. The tone is bright, reedy and unglamorous on purpose. Practice the verse diction at full speed with a metronome until no syllable clips, then let the chorus leap carry a touch of break. Muddying the words loses the breathless, confiding effect the style depends on.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 10"
       },
       {
         "slug": "gigi-perez",
@@ -7643,7 +7643,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "A striking true contralto: deep, hollow-toned and hymn-like, sitting an octave below where pop sopranos live.",
         "technique": "Depth is the identity. The voice rests where many women speak, around the octave below middle C's neighborhood, with a hollow, woody color and a straight tone that breaks into slow vibrato only on held notes. Phrases repeat like liturgy, gathering weight through accumulation rather than climb. If your voice sits here, resist the industry pull toward brighter, higher keys; train the low register's resonance with descending slides on oh. Chasing soprano keys wastes what makes a voice like this rare.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       }
     ]
   },
@@ -7706,7 +7706,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Narrow compass, heavy inflection: bent pitches, behind-the-beat placement, thin reedy top.",
         "technique": "Two things carry this style, and neither is range: placement behind the beat and constant pitch inflection. Notes are approached from underneath, bent up into tune, then left before they settle. The top of a narrow F3 to C5 compass turns reedy and thin rather than opening out, and vibrato shows up late as a small flutter. Students copy the breathiness and the scoops, then sing them squarely on the beat, which loses the whole effect.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       },
       {
         "slug": "ella-fitzgerald",
@@ -8063,7 +8063,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Low, husky and unforced; lines sit close to speech pitch and rarely climb.",
         "technique": "Low and unhurried, with a dry huskiness that comes from slightly loose closure rather than from pushing. Lines sit near speech pitch and rarely climb, so tone colour and timing carry the interest. Onsets are soft, vibrato is minimal, and phrases land late and resolve quietly. Anyone imitating this tends to add volume; the style depends on holding it back.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       },
       {
         "slug": "tamela-mann",
@@ -8148,7 +8148,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Breathy alto that stays mid-range: soft onsets, little vibrato, country-tinged slides.",
         "technique": "Air is part of the sound. Onsets are aspirate, the tone stays warm and unpressed through the middle of the range, and vibrato is close to absent. The ornament habit is a short slide up or down into a note rather than a run, and nothing above C5 is asked for. The trap is confusing breathy with unsupported: the breathiness only works over steady airflow and firm ribs.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       },
       {
         "slug": "smokie-norful",
@@ -8318,7 +8318,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Bedroom jazz for a streaming generation: a cello-dark low voice, close-miked to a murmur, over standards-shaped songs.",
         "technique": "Cello training shows in the singing: long bowed phrases, a dark, woody low register she keeps deliberately quiet, and vibrato applied late and evenly like a string player's, over melodies that resolve the way standards do. The microphone does the projection; the voice never pushes past mezzo-piano. Practice singing full phrases at whisper-adjacent volume while keeping the tone round rather than breathy, and let the lowest notes speak without pressing. Volume would break the spell this style depends on.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       }
     ]
   },
@@ -8347,7 +8347,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Dark, baritonal tenor timbre on acoustic discs; transposed music down rather than reach past Bb4.",
         "technique": "The color is dark for a tenor, close to a baritone through the middle of the staff, and the weight sits low rather than up in the mask. Attacks land firm and immediate, lines are joined with audible portamento, and the vibrato holds one moderate speed from start to finish. Up top the vowel is covered rather than opened out, and with Bb4 as the ceiling the interest is in how much happens underneath it. Press the larynx down to imitate that darkness and all you get is muffled tone.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "maria-callas",
@@ -8636,7 +8636,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Nessun dorma",
         "blurb": "Light lyric tenor recorded close to the mic; softer, more crooned attack than stage projection.",
         "technique": "Recorded close, this is a light lyric sound with a crooner's attack: breath leaks in ahead of the tone, and the resonance sits forward and a little nasal. Vibrato is quick and shallow. Notes near the B4 ceiling are thinned and mixed rather than fully opened, so they read intimate instead of projected. Reach for operatic size by adding chest weight and the softness that defines the sound disappears.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "anna-netrebko",
@@ -8733,7 +8733,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Unamplified chest belt with a trumpet-like edge, no audible register shift, pitch dead center.",
         "technique": "This is chest voice used like a brass instrument: bright, forward, and remarkably even in volume across the whole range to D5, with no register shift anywhere to hear. Pitch sits dead centre and the note arrives at full size immediately instead of growing into it. Vibrato stays narrow and steady rather than wide. Vowels are open and consonants crisp enough to carry a room without a microphone. That volume is resonance and breath balance at work, not throat force.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       },
       {
         "slug": "judy-garland",
@@ -8750,7 +8750,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "The Man That Got Away",
         "blurb": "Contralto with a tremulous forward vibrato, thick chest resonance, and an audible catch on held notes.",
         "technique": "Listen for the shake: a fast, narrow vibrato placed well forward in the mask, sometimes widening into an audible waver across a sustained note. That waver rides on a pulse in the breath rather than a squeeze in the throat, which is why the tone stays open even while it moves. Chest resonance holds thick well above the middle of the staff, and phrase endings tend to break off with a small catch instead of tapering out. Consonants get attacked firmly, vowels stay wide and speech-like.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "julie-andrews",
@@ -9090,7 +9090,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "How Far I'll Go",
         "blurb": "Bright youthful mezzo; unforced belt into the fifth octave, steady pitch, very little vibrato.",
         "technique": "Bright and forward from the first syllable, with a thin, focused tone and almost no vibrato, so long notes read as very straight and very young. Each note starts dead on pitch, never scooped up into. Across the top of the staff the belt stays in a bright mix rather than gaining chest weight, opening toward E5 with more space instead of more push. The pressure comes off at exactly the point where a louder singer would add it, and resonance does the carrying.",
-        "span": "1 octaves + 11"
+        "span": "1 octave + 11"
       },
       {
         "slug": "loren-allred",
@@ -9408,7 +9408,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "The whispering heartthrob: a breathy, intimate light tenor that made proximity, not power, the selling point.",
         "technique": "Proximity is the product: a light tenor delivered half-whispered into a close microphone, air deliberately mixed into the tone, consonants softened to a murmur, so every listener hears a private serenade. Pitch rises into a gentle, strained upper register that stays sympathetic rather than impressive. Dynamics barely move; intensity comes from getting quieter, not louder. Practice singing at whisper volume while keeping the pitch line exact, and resist clearing the breathiness. Cleaning up this voice would erase its entire appeal.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       },
       {
         "slug": "natalia-lafourcade",
@@ -9459,7 +9459,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Mariachi weight in a young frame: a dark, wide-vibrato baritone built on ranchera's long-breath phrasing.",
         "technique": "Ranchera discipline underpins everything: long phrases sustained on one enormous breath, a wide, slow vibrato that opens fully on held notes, and a dark, chesty tone that stays rich even at the top of the staff. The famous quiebre, a small controlled crack into falsetto and back, decorates phrase peaks. Practice sustaining eight-second tones with the vibrato arriving after two counts, then add the quiebre as a quick flip. Thin, pop-placed tone cannot carry this repertoire's weight.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "karol-g",
@@ -9544,7 +9544,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Corridos tumbados' rasped-reed voice: nasal, pinched and buzzing, phrased against tuba and charchetas like a lead instrument.",
         "technique": "The pinch is deliberate: a nasal, reed-like buzz produced by narrowing the tone until it cuts through brass-heavy corridos arrangements, with phrasing that rides ahead of the beat in short, urgent spurts. Vibrato is quick and shallow, almost a flutter. The style speaks more than croons, and ornament comes as slides between chest tones. To explore it, sing through the nose deliberately on a mid-range line, then reduce until the buzz remains without the honk. The color is an acquired taste and an acquired skill.",
-        "span": "1 octaves + 7"
+        "span": "1 octave + 7"
       }
     ]
   },
@@ -9607,7 +9607,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "La Bohème",
         "blurb": "Grainy, nasal-tinged French tenor that talks its way into song, warm below and pleading up top.",
         "technique": "Aznavour half-speaks his lines, letting pitch emerge from inflection, then leans into sustained notes with a reedy, fast vibrato that sits high in the mask. The grain in the tone is deliberate: loose closure low around D3 for gravel, firmer closure as he climbs toward B4 so the top pleads instead of rasps. Phrasing follows text stress, not bar lines. Students copying him focus on the rasp and miss the discipline underneath: every syllable lands exactly on intent.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       },
       {
         "slug": "julio-iglesias",
@@ -9624,7 +9624,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Solamente una vez",
         "blurb": "Hushed romantic baritone crooning at half-volume, all breath and intimacy over strings.",
         "technique": "Iglesias sings at conversation volume on purpose: a low-pressure, breathy onset, minimal vibrato until the tail of the note, and phrases shaped like murmured speech. He rarely leaves the middle of the voice, keeping everything between B2 and G4, so the art is in micro-dynamics, rubato, and vowel color rather than range. The tone is placed softly in the mask with plenty of air in the mix. Students copying him usually over-sing; the aesthetic collapses above mezzo-piano.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       },
       {
         "slug": "teresa-teng",
@@ -9658,7 +9658,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "愛你痛到不知痛",
         "blurb": "Rich Cantopop baritone with a metallic core, crooner phrasing and high notes pushed with open-throated ease.",
         "technique": "Cheung centers everything on mid-range tone shaping: thick, resonant chest with a faint metallic ring, vowels rounded, vibrato settled and even. He works the octave above E3 for most of a song, spending climactic pushes toward C5 sparingly, approached with covered vowels and a firm breath lean. Dynamics do the storytelling — he crescendos through held notes instead of re-attacking them. Students copying him underrate his consonant timing; the crooner smoothness rides on precisely released word endings.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       },
       {
         "slug": "alejandro-fernandez",
@@ -9709,7 +9709,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Cool, weightless alt-pop voice: breathy attacks, sliding ornaments and a detached shimmer borrowed from dream-pop.",
         "technique": "Wong sings off the breath deliberately: soft onsets, tone half-air and half-core, so notes seem to condense out of the track rather than start. Pitch is ornamented with slow slides and small falls, borrowed from dream-pop and Chinese inflection alike. Her comfortable band runs from about E3 to D5, and she rarely presses; dynamics move by microphone distance instead of muscle. Vibrato is minimal, almost incidental. Students copying the breathiness collapse support entirely — hers floats on a quietly firm column.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "laura-pausini",
@@ -9794,7 +9794,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Aquí Estoy Yo",
         "blurb": "Polished pop tenor, clean sustained ballad peaks and a smiling, forward tone that rides reggaeton just as easily.",
         "technique": "Fonsi keeps the voice forward and smiling, with a clean, quick onset and a polished, even vibrato reserved for sustained peaks. Ballads sit squarely between E3 and A4, where he leans on crescendo-release shapes: start straight, swell, spin the vibrato, taper. Consonants stay crisp for rhythmic tracks and he never lets the tone splay. What students miss when copying him is the taper; ending big notes at full pressure reads as strain where his phrase endings float.",
-        "span": "1 octaves + 5"
+        "span": "1 octave + 5"
       },
       {
         "slug": "misia",
@@ -9913,7 +9913,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Concerning the UFO Sighting Near Highland, Illinois",
         "blurb": "Whisper-soft indie tenor — breathy falsetto home base, close self-harmonies, zero-vibrato calm.",
         "technique": "Hushed almost to a whisper, this tenor treats falsetto and breathy head tone as home base, dropping to full voice only for grounding phrases near the bottom of the staff. Sufjan double-tracks himself in close harmony, keeps vibrato out entirely, and shapes lines in long, even eighth-note ribbons. Consonants are feathered so nothing punctures the calm. Imitators who add projection break the spell; the technique is sustained quiet phonation with unwavering pitch.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "jenni-rivera",
@@ -10083,7 +10083,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Just Like You",
         "blurb": "Bright, narrow light tenor with a built-in cry — compact melodies ridden at the top of chest voice.",
         "technique": "Thin, bright, and instantly identifiable, this light tenor carries a permanent adolescent edge: forward placement, fast airflow, and a slight cry in every sustained vowel. Louis keeps melodies compact and rides the top of chest voice rather than mixing high, which gives choruses their strained-heart urgency. Vibrato is minimal. Copying the sound with a wide-open throat loses the character; it needs narrow vowels and a touch of nasality, kept honest by exact pitch.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       },
       {
         "slug": "niall-horan",
@@ -10465,15 +10465,15 @@ export const ATLAS: AtlasChapter[] = [
         "voiceType": "Tenor",
         "country": "UK",
         "activeFrom": 2015,
-        "low": "B3",
-        "high": "C#6",
+        "low": "B2",
+        "high": "C#5",
         "belt": null,
         "whistle": false,
         "signatureSong": "You Are the Reason",
         "lowSource": "Heaven",
         "highSource": "Roots",
         "blurb": "Cried, legato pop tenor — swelling sustains that flip into a glass-clear falsetto at the top.",
-        "technique": "Everything here is legato: Calum joins notes with portamento-smooth onsets, swells through the middle of long tones, and releases with a taper instead of a cut. The money register is a cried, head-leaning mix in the fifth octave, flipping into pure falsetto for peaks. Vibrato is wide and emotional. Students copying him often start phrases at full volume; he begins small, which makes the climb audible and keeps the top from sounding pushed.",
+        "technique": "Everything here is legato: Calum joins notes with portamento-smooth onsets, swells through the middle of long tones, and releases with a taper instead of a cut. The money register is a cried, head-leaning mix in the fourth octave, flipping into pure falsetto for peaks. Vibrato is wide and emotional. Students copying him often start phrases at full volume; he begins small, which makes the climb audible and keeps the top from sounding pushed.",
         "span": "2 octaves + 2"
       },
       {
@@ -10491,7 +10491,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Felices los 4",
         "blurb": "Low-slung, conversational reggaeton croon: soft-edged, rhythmic, and closer to a murmur than a belt.",
         "technique": "Maluma works almost entirely in a relaxed low mix, D3 to F4, and treats rhythm as the lead element: syllables land slightly behind the beat while the tone stays low-larynxed and conversational. He uses light vocal fry as an onset ornament and slides into pitches rather than attacking them. Dynamics barely move; intimacy is the whole engine. Singers copying him tend to add projection and vibrato, which breaks the murmured contract of the style. Keep it small, dry, and rhythmically exact.",
-        "span": "1 octaves + 3"
+        "span": "1 octave + 3"
       },
       {
         "slug": "ozuna",
@@ -10559,7 +10559,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "Sofia",
         "blurb": "Murmuring, low-lit contralto — near-speech volume, stepwise melodies, endings that dissolve into breath.",
         "technique": "Murmured close-mic singing raised to a method: Clairo phonates at near-speech volume in a low, warm register, letting breath and room tone become part of the timbre. Melodies move stepwise, vibrato is nearly absent, and phrase endings dissolve instead of resolving. The upper limit stays a gentle mixed head tone. Copying this by simply singing quietly misses the core: her pitch and rhythm are exact, and the softness is compression, not collapse.",
-        "span": "1 octaves + 5"
+        "span": "1 octave + 5"
       },
       {
         "slug": "dimash-kudaibergen",
@@ -10686,15 +10686,15 @@ export const ATLAS: AtlasChapter[] = [
         "voiceType": "Tenor",
         "country": "USA",
         "activeFrom": 2020,
-        "low": "C4",
-        "high": "F6",
+        "low": "C3",
+        "high": "F5",
         "belt": null,
         "whistle": false,
         "signatureSong": "golden hour",
         "lowSource": "this is what losing someone feels like",
         "highSource": "this is what losing someone feels like",
         "blurb": "Featherweight tenor living above the staff — sighing onsets gliding into stacked head-voice hooks.",
-        "technique": "Head voice is the main event: JVKE writes hooks that live above the staff, gliding from a light chest mix into ringing head tones and stacking falsetto harmonies over the top. His onset is soft, almost sighed, and he bends into peak notes with portamento instead of attacking them. Below the fifth octave he keeps things plain and rhythmic. Copying the top without slow siren practice ends in cracking; the transitions are the actual skill.",
+        "technique": "Head voice is the main event: JVKE writes hooks that live above the staff, gliding from a light chest mix into ringing head tones and stacking falsetto harmonies over the top. His onset is soft, almost sighed, and he bends into peak notes with portamento instead of attacking them. Below the fourth octave he keeps things plain and rhythmic. Copying the top without slow siren practice ends in cracking; the transitions are the actual skill.",
         "span": "2 octaves + 5"
       },
       {
@@ -10746,7 +10746,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": "ceilings",
         "blurb": "Hushed, air-first mezzo — speechy low tessitura, jazz-tinged passing tones, brief clear head-voice peaks.",
         "technique": "Feather-light onsets define the style: Lizzy begins tones with air already moving, so notes seem to fade in rather than start. She sits in a low, speechy mezzo tessitura, orbiting a few steps around the melody with jazz-tinged passing tones, and saves her clear head voice for brief, unforced peaks. Dynamics stay hushed. Students copying her usually whisper; she is quiet but fully phonated, with pitch dead-centre under all that air.",
-        "span": "1 octaves + 9"
+        "span": "1 octave + 9"
       },
       {
         "slug": "sam-ryder",
@@ -10754,15 +10754,15 @@ export const ATLAS: AtlasChapter[] = [
         "voiceType": "Tenor",
         "country": "UK",
         "activeFrom": 2022,
-        "low": "C4",
-        "high": "E6",
+        "low": "C3",
+        "high": "E5",
         "belt": null,
         "whistle": false,
         "signatureSong": "Space Man",
         "lowSource": "Somebody",
         "highSource": "Set You Free",
         "blurb": "Sunny rock-pop voice with ringing high belts and a feathery falsetto that flips on a dime.",
-        "technique": "Ryder rides a high-set, sunny placement, mixing so far up that full-sounding notes and reinforced falsetto blur into one column. His head voice up to E6 stays connected because he keeps the vowel narrow and the soft palate high rather than blowing air. Onsets are clean and springy, vibrato quick and even, and around C4 he keeps the text conversational. The common mistake when copying him is belting the top instead of spinning it, which trades his release for shout.",
+        "technique": "Ryder rides a high-set, sunny placement, mixing so far up that full-sounding notes and reinforced falsetto blur into one column. His head voice up to E5 stays connected because he keeps the vowel narrow and the soft palate high rather than blowing air. Onsets are clean and springy, vibrato quick and even, and around C3 he keeps the text conversational. The common mistake when copying him is belting the top instead of spinning it, which trades his release for shout.",
         "span": "2 octaves + 4"
       },
       {
@@ -10771,8 +10771,8 @@ export const ATLAS: AtlasChapter[] = [
         "voiceType": "Baritone",
         "country": "USA",
         "activeFrom": 2023,
-        "low": "F3",
-        "high": "G5",
+        "low": "F2",
+        "high": "G4",
         "belt": null,
         "whistle": false,
         "signatureSong": "Daylight",
@@ -10809,7 +10809,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Rich forward mezzo; crisp multilingual diction, click consonants, bell-clear controlled top.",
         "technique": "Diction is half of it: crisp consonants, clean vowel changes across languages, and click sounds placed rhythmically inside the melodic line. Tone is rich and forward in the mask, with an even, controlled top that arrives bell-clear rather than pushed. Onsets are precise, vibrato moderate and steady, phrasing dance-driven and exact. Students smear the consonants chasing a smoother legato, and the rhythmic snap that carries the whole thing goes flat.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "fela-kuti",
@@ -10945,7 +10945,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Flat-toned contralto pitched near speech; hard consonants, dry chest resonance, vibrato withheld.",
         "technique": "This contralto sits near speaking pitch and stays there, flat and dry and deliberately unwarmed. Chest resonance is present but never blooms, vibrato is withheld almost entirely, and consonants are struck hard so lines come out clipped and mechanical. Long notes hold straight through with no swell. Anyone imitating it tends to add expression — a vibrato, a crescendo, a lift toward Bb4 — and the coolness that carries the sound evaporates.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       },
       {
         "slug": "youssou-ndour",
@@ -10996,7 +10996,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Restrained contralto: narrow range, level dynamics, straight tone with vibrato barely used.",
         "technique": "Restraint is the technique. Dynamics stay level, tone stays straight, and vibrato is applied so lightly you catch it only at the very end of a phrase. Onsets are soft and unaspirated, vowels rounded and cool, and lines stay inside a narrow working band without reaching for a climax. Melisma is rare. Nothing gets added that the line does not ask for, which is why extra volume or decoration reads immediately as wrong.",
-        "span": "1 octaves + 10"
+        "span": "1 octave + 10"
       },
       {
         "slug": "cesaria-evora",
@@ -11013,7 +11013,7 @@ export const ATLAS: AtlasChapter[] = [
         "highSource": null,
         "blurb": "Smoky low contralto sung softly close to the mic; conversational, unhurried, vibrato minimal.",
         "technique": "Sung inches from the microphone at low volume, this contralto trades projection for detail — you hear the breath, the consonants, the smoke in the lower middle. Onsets are soft, the tempo unhurried, and phrases float a little behind the accompaniment. Vibrato is minimal and vowels stay dark and loose. Push it any louder and the intimacy that makes those low notes work is gone.",
-        "span": "1 octaves + 8"
+        "span": "1 octave + 8"
       },
       {
         "slug": "buju-banton",
@@ -11172,7 +11172,7 @@ export const ATLAS: AtlasChapter[] = [
     "summary": "The whole library shelved by classification, basses to sopranos, with each voice's cited range — the shopping index for borrowing along your own shelf.",
     "free": false,
     "words": 3364,
-    "body": "The method chapters recommend borrowing first from voices built like yours; this appendix is the shelving system that makes it practical. Every entry in the atlas appears below exactly once, grouped by voice type and ordered low to high — basses first, sopranos last — with the cited range beside each name so you can scan a whole shelf at a glance.\n\nA few reminders before you shop. The labels are habitat descriptions, not certifications — the voice-types chapter explains how loosely popular music wears them — and the ranges beside the names are cited spans, with everything that phrase implies about extremes and evidence. Within your own type, expect enormous variety: the point of a shelf is not that its voices sound alike but that their *architecture* is similar enough for techniques to transfer at face value. One shelf away, techniques still transfer with adjustment — usually a transposition — and the chapter on borrowing covers the exchange rate.\n\nIf you have taken the range test, find the shelf whose typical spans bracket your own numbers and start reading there; each name links to the singer's full entry and page. If you have not, the test takes a few minutes and turns this appendix from a list into a mirror. Either way, the shelf you belong to holds more careers, in more genres, than most singers expect to find there — which is the last thing this book has to say, and the most useful.\n\n## Basss\n- **Avi Kaplan** — `Eb1–Db5`\n- **Barry White** — `D2–E4`\n- **Ivan Rebroff** — `F1–F5`\n- **Samuel Ramey** — `Eb2–F4`\n- **Tim Storms** — `B0–B4`\n\n## Bass-baritones\n- **Bryn Terfel** — `F2–A4`\n- **Buju Banton** — `E2–A4`\n- **Fred Hammond** — `E2–Bb4`\n- **Geoff Castellucci** — `B0–Bb5`\n- **Johnny Cash** — `E2–E4`\n- **Josh Turner** — `Ab1–C#5`\n- **Leonard Cohen** — `D2–E4`\n- **Peter Steele** — `F1–G5`\n- **Shaggy** — `E2–F4`\n- **Till Lindemann** — `E2–F4`\n- **Tom Waits** — `A1–G5`\n- **Trace Adkins** — `D2–G4`\n- **Waylon Jennings** — `E2–D4`\n\n## Baritones\n- **Alan Jackson** — `E2–B4`\n- **Alejandro Fernández** — `F#2–C5`\n- **Alex Warren** — `A2–F#4`\n- **Andy Biersack** — `D2–F5`\n- **Anthony Kiedis** — `F2–E5`\n- **Bad Bunny** — `F2–G4`\n- **Bill Withers** — `F2–A4`\n- **Bing Crosby** — `F2–F4`\n- **Blake Shelton** — `D2–C#5`\n- **Bobby Darin** — `G2–E5`\n- **Bobby McFerrin** — `E2–E6`\n- **Bruce Springsteen** — `F2–C5`\n- **Burna Boy** — `F2–C5`\n- **Carín León** — `F#2–A#4`\n- **Chad Kroeger** — `A1–E5`\n- **Chris Stapleton** — `F2–B4`\n- **Christian Nodal** — `A2–G4`\n- **Cody Johnson** — `F#2–G#4`\n- **Corey Taylor** — `E2–A5`\n- **Damiano David** — `A2–B4`\n- **Dan Reynolds** — `G2–G#5`\n- **Dave Gahan** — `F2–G4`\n- **David Bowie** — `E2–A5`\n- **David Coverdale** — `F2–A5`\n- **David Draiman** — `Bb1–G#5`\n- **David Kushner** — `F3–G5`\n- **David Lee Roth** — `E1–D6`\n- **Dean Martin** — `F2–G4`\n- **Dermot Kennedy** — `E2–C6`\n- **Dmitri Hvorostovsky** — `G2–A4`\n- **Drake** — `D2–C5`\n- **Eddie Vedder** — `D2–E5`\n- **Elvis Presley** — `G2–Db5`\n- **Fela Kuti** — `F2–A4`\n- **Frank Sinatra** — `G2–A4`\n- **Freddie Mercury** — `F2–F6`\n- **Fujii Kaze** — `G2–D5`\n- **Garth Brooks** — `G2–A4`\n- **George Ezra** — `G2–B5`\n- **George Jones** — `B1–B4`\n- **George Michael** — `E2–A5`\n- **George Strait** — `A2–E4`\n- **Giveon** — `F#2–F#4`\n- **Glenn Danzig** — `C#2–Eb5`\n- **Glenn Hughes** — `D2–D6`\n- **Gregory Porter** — `F2–G4`\n- **Harry Connick Jr.** — `E2–A#4`\n- **Harry Styles** — `E2–F5`\n- **Hozier** — `E2–E5`\n- **Hugh Jackman** — `A2–B4`\n- **Ian Curtis** — `G2–E4`\n- **Jacky Cheung** — `E3–C5`\n- **Jacob Collier** — `D2–D6`\n- **James Arthur** — `Bb2–A5`\n- **James Brown** — `F2–C5`\n- **James Hetfield** — `E2–C5`\n- **James Taylor** — `F2–A4`\n- **Jay Chou** — `A2–B4`\n- **Jelly Roll** — `G2–G4`\n- **Jim Morrison** — `E2–Bb4`\n- **Joe Cocker** — `G2–Bb4`\n- **Joe Elliott** — `D2–G#5`\n- **Jonathan Davis** — `A1–F#5`\n- **Josh Groban** — `G2–A4`\n- **Juice WRLD** — `G2–C5`\n- **Julian Casablancas** — `C2–F#5`\n- **Julio Iglesias** — `B2–G4`\n- **Kane Brown** — `E2–F4`\n- **Kenny Rogers** — `D2–D5`\n- **Kenshi Yonezu** — `F2–D5`\n- **Kid Cudi** — `A1–F5`\n- **Kurt Cobain** — `F2–E5`\n- **Layne Staley** — `E2–G5`\n- **Lewis Capaldi** — `F2–E5`\n- **Liam Payne** — `C#2–Bb5`\n- **Louis Armstrong** — `F2–G4`\n- **Luke Combs** — `A2–A4`\n- **M. Shadows** — `D2–A5`\n- **Mac Miller** — `C#2–E4`\n- **Maluma** — `D3–F4`\n- **Marvin Sapp** — `D#2–F5`\n- **Merle Haggard** — `F2–E4`\n- **Michael Bublé** — `G2–A4`\n- **Michael Hutchence** — `B1–F#5`\n- **Michael McDonald** — `G#2–A5`\n- **Mike Patton** — `Eb1–Eb7`\n- **Morgan Wallen** — `A2–G4`\n- **Morrissey** — `F#2–B4`\n- **Nat King Cole** — `F2–G4`\n- **Neil Diamond** — `D2–G#4`\n- **Nick Cave** — `D2–G5`\n- **Noah Sebastian** — `A2–D5`\n- **Orville Peck** — `E2–F#5`\n- **Otis Redding** — `F2–C5`\n- **Paul Rodgers** — `E2–G#5`\n- **Peter Gabriel** — `F#2–A4`\n- **Peter Tosh** — `F2–G4`\n- **Post Malone** — `E2–E5`\n- **Rag'n'Bone Man** — `G2–B5`\n- **Randy Travis** — `F2–E4`\n- **Rauw Alejandro** — `G2–C5`\n- **Rick Astley** — `F2–D5`\n- **Scott Hoying** — `F2–Bb5`\n- **Scott Stapp** — `D2–D5`\n- **Scott Weiland** — `E2–C#5`\n- **Serj Tankian** — `F2–C6`\n- **Sombr** — `A2–F#4`\n- **Stephen Sanchez** — `C#3–F#5`\n- **Stromae** — `G2–G4`\n- **Sturgill Simpson** — `Eb2–C#6`\n- **Teddy Pendergrass** — `E2–Bb4`\n- **Teddy Swims** — `E2–A5`\n- **Tim McGraw** — `F2–B4`\n- **Tobias Forge** — `D2–G#5`\n- **Tom Jones** — `G2–Bb4`\n- **Tom Petty** — `C2–Bb5`\n- **Tony Bennett** — `A2–A4`\n- **Tyler, the Creator** — `B1–B5`\n- **V** — `D2–D5`\n- **Ville Valo** — `F#1–B5`\n- **XXXTentacion** — `C3–F5`\n- **Zach Bryan** — `G2–F#4`\n\n## Tenors\n- **Aaron Neville** — `G2–Bb5`\n- **Aaron Tveit** — `A2–D5`\n- **Adam Lambert** — `F2–C6`\n- **Adam Levine** — `A2–C6`\n- **Akon** — `C3–Bb4`\n- **Al Green** — `F2–Bb5`\n- **Al Jarreau** — `G2–A5`\n- **Alex Turner** — `E2–G5`\n- **Anderson .Paak** — `C3–F5`\n- **Andrea Bocelli** — `C3–B4`\n- **Arijit Singh** — `C3–C5`\n- **Axl Rose** — `F1–Bb6`\n- **Baekhyun** — `F2–E5`\n- **Barry Gibb** — `F2–D6`\n- **Barry Manilow** — `D2–G5`\n- **BeBe Winans** — `A2–E5`\n- **Ben Platt** — `A2–F5`\n- **Benson Boone** — `G2–A5`\n- **Billie Joe Armstrong** — `F2–C5`\n- **Billy Corgan** — `F2–E5`\n- **Billy Joel** — `F2–C6`\n- **Bob Dylan** — `E2–A4`\n- **Bob Marley** — `F2–C5`\n- **Bobby Hatfield** — `B2–Eb6`\n- **Bono** — `Eb2–Db5`\n- **Boy George** — `D2–A5`\n- **Brad Delp** — `G#2–D6`\n- **Brandon Boyd** — `F2–A5`\n- **Brandon Flowers** — `F#2–G#5`\n- **Brendon Urie** — `E2–C6`\n- **Brian Johnson** — `A2–E5`\n- **Brian McKnight** — `A2–Bb5`\n- **Brian Wilson** — `C2–Bb5`\n- **Bruce Dickinson** — `E2–C6`\n- **Bruno Mars** — `G2–D6`\n- **Bryan Adams** — `Eb2–E6`\n- **Bryson Tiller** — `A2–C6`\n- **Caetano Veloso** — `A2–C5`\n- **Caleb Followill** — `A2–E5`\n- **Calum Scott** — `B3–C#6`\n- **Camilo Sesto** — `A2–E5`\n- **CeeLo Green** — `Bb1–C6`\n- **Charles Aznavour** — `D3–B4`\n- **Charlie Puth** — `G2–C6`\n- **Chen** — `G2–F5`\n- **Chester Bennington** — `G2–A5`\n- **Childish Gambino** — `Bb1–C6`\n- **Chino Moreno** — `F2–A5`\n- **Chris Brown** — `C3–G#5`\n- **Chris Cornell** — `E2–A5`\n- **Chris Martin** — `D2–C6`\n- **Chris Tomlin** — `A2–D5`\n- **Christopher Cross** — `D3–A#4`\n- **Colm Wilkinson** — `G2–C5`\n- **Conan Gray** — `C3–G5`\n- **Cristian Castro** — `G2–C6`\n- **Curtis Mayfield** — `G2–Bb5`\n- **D.O.** — `F2–F#5`\n- **D'Angelo** — `G2–Bb5`\n- **Daniel Caesar** — `C#3–F#5`\n- **Daryl Hall** — `E2–C6`\n- **David Phelps** — `E2–D5`\n- **David Ruffin** — `A2–E6`\n- **Dennis Brown** — `G2–D5`\n- **Dennis DeYoung** — `E2–A5`\n- **Devin Townsend** — `F2–C6`\n- **Dimash Kudaibergen** — `C2–C8`\n- **Don Henley** — `F#2–D#5`\n- **Donnie McClurkin** — `B2–E5`\n- **Donny Hathaway** — `F2–C5`\n- **Ed Sheeran** — `G2–A5`\n- **Elton John** — `F2–F5`\n- **Enrico Caruso** — `B2–Bb4`\n- **Enrique Iglesias** — `C#3–G#4`\n- **Frank Ocean** — `C#2–G5`\n- **Frankie Valli** — `A2–C6`\n- **Geddy Lee** — `F2–Bb5`\n- **Geoff Tate** — `E2–C6`\n- **Gerard Way** — `F#2–F#5`\n- **Glen Campbell** — `F2–A4`\n- **Hank Williams** — `A2–A4`\n- **Hua Chenyu** — `G2–Bb5`\n- **Ian Gillan** — `G2–Bb5`\n- **Jack White** — `E2–A6`\n- **Jackie Wilson** — `A2–C#6`\n- **James Bay** — `G2–C6`\n- **James Blake** — `F2–F5`\n- **Jason Derulo** — `A2–Bb5`\n- **Jason Mraz** — `F2–Bb5`\n- **Jeff Buckley** — `E2–D6`\n- **Jeremy Jordan** — `A2–E5`\n- **Jimin** — `A2–F5`\n- **Jimmy Cliff** — `F2–C5`\n- **Jin** — `Bb2–B5`\n- **JJ Lin** — `G2–G5`\n- **John Denver** — `G2–B5`\n- **John Legend** — `E2–Bb5`\n- **John Lennon** — `G2–D5`\n- **Johnny Mathis** — `B2–G5`\n- **Jon Anderson** — `C#3–F#5`\n- **Jon Bon Jovi** — `E2–D5`\n- **Jonas Kaufmann** — `B2–C5`\n- **Jonathan Groff** — `A2–C5`\n- **Jongho** — `A2–D6`\n- **Jonghyun** — `F2–E5`\n- **José Carreras** — `C3–C5`\n- **José José** — `A2–D5`\n- **Josh Kiszka** — `C3–C#6`\n- **Juan Diego Flórez** — `C3–E5`\n- **Juan Gabriel** — `A2–C5`\n- **Jungkook** — `F2–A5`\n- **Justin Bieber** — `A2–Bb5`\n- **Justin Timberlake** — `A2–C6`\n- **Justin Vernon** — `F2–F5`\n- **JVKE** — `C4–F6`\n- **Keith Urban** — `F2–A5`\n- **Kellin Quinn** — `B2–A5`\n- **Kenny Chesney** — `D#2–F#4`\n- **Kenny Loggins** — `D2–C#6`\n- **Kevin Cronin** — `G2–A4`\n- **Klaus Meine** — `G2–C6`\n- **Lenny Kravitz** — `A2–Bb5`\n- **Leon Bridges** — `B2–G4`\n- **Lionel Richie** — `F2–G5`\n- **Little Richard** — `F2–Bb5`\n- **Lou Gramm** — `B1–A5`\n- **Louis Tomlinson** — `C3–A4`\n- **Luciano Pavarotti** — `C3–C5`\n- **Luis Fonsi** — `E3–A4`\n- **Luis Miguel** — `A2–D5`\n- **Luther Vandross** — `B2–A5`\n- **Marc Anthony** — `A2–E5`\n- **Mario Lanza** — `C3–C5`\n- **Marvin Gaye** — `F2–Bb5`\n- **Marvin Winans** — `A2–F5`\n- **Matt Bellamy** — `E2–D6`\n- **Matty Healy** — `F2–A5`\n- **Maxwell** — `A2–C6`\n- **Maynard James Keenan** — `F2–A5`\n- **Meat Loaf** — `F2–Eb6`\n- **Mel Tormé** — `G2–C5`\n- **Michael Crawford** — `A2–Bb4`\n- **Michael Jackson** — `Eb2–F6`\n- **Michael Kiske** — `F2–C6`\n- **Michael W. Smith** — `A2–D5`\n- **Mick Jagger** — `F2–F5`\n- **Miguel** — `C3–Bb5`\n- **Mika** — `F#2–G#5`\n- **Milton Nascimento** — `G2–Bb5`\n- **Morten Harket** — `A2–E5`\n- **Musiq Soulchild** — `C3–F#5`\n- **Myles Kennedy** — `Bb1–D6`\n- **Myles Smith** — `B2–G4`\n- **Nate Ruess** — `G2–A5`\n- **Ne-Yo** — `Eb2–A5`\n- **Neil Young** — `G2–C5`\n- **Niall Horan** — `F#2–B5`\n- **Noah Kahan** — `B2–G#4`\n- **Oli Sykes** — `Eb2–G#5`\n- **Omar Apollo** — `C3–F#5`\n- **Ozuna** — `F#2–C5`\n- **Ozzy Osbourne** — `G2–D5`\n- **Park Hyo Shin** — `F2–E5`\n- **Passenger** — `D#2–A4`\n- **Patrick Stump** — `C3–B5`\n- **Paul McCartney** — `F2–E5`\n- **Paul Simon** — `A2–D5`\n- **Peso Pluma** — `B2–F#4`\n- **Pharrell Williams** — `Eb2–Bb5`\n- **Phil Collins** — `F2–Db5`\n- **Plácido Domingo** — `A2–C5`\n- **Prince** — `E2–B5`\n- **Ramin Karimloo** — `G2–C5`\n- **Ray Charles** — `C2–Bb5`\n- **Rema** — `C#3–E5`\n- **Ricky Martin** — `B2–C5`\n- **Rivers Cuomo** — `Eb2–G5`\n- **Rob Halford** — `F2–C6`\n- **Robbie Williams** — `F2–B5`\n- **Robert Plant** — `F2–A5`\n- **Robert Smith** — `C#3–C5`\n- **Rod Stewart** — `E2–C5`\n- **Roger Daltrey** — `F2–C5`\n- **Ronnie James Dio** — `F2–Bb5`\n- **Ronnie Radke** — `D2–G5`\n- **Roy Orbison** — `E2–E5`\n- **Rufus Wainwright** — `A2–D5`\n- **Salif Keita** — `B2–D5`\n- **Sam Cooke** — `A2–E5`\n- **Sam Fender** — `F#2–F5`\n- **Sam Ryder** — `C4–E6`\n- **Sammy Hagar** — `D2–B5`\n- **Seal** — `Eb2–G5`\n- **Sebastian Bach** — `F2–C6`\n- **Shawn Mendes** — `G2–E5`\n- **Smokey Robinson** — `A2–Bb5`\n- **Smokie Norful** — `D2–D#5`\n- **Steve Lacy** — `C#3–E5`\n- **Steve Perry** — `G2–A5`\n- **Steven Tyler** — `F2–C6`\n- **Stevie Wonder** — `C2–E6`\n- **Sting** — `Eb2–E5`\n- **Sufjan Stevens** — `B2–A4`\n- **T-Pain** — `B2–F5`\n- **Taeyang** — `A2–F5`\n- **The Weeknd** — `G2–B5`\n- **Thom Yorke** — `F2–F5`\n- **Toots Hibbert** — `G2–C5`\n- **Trey Songz** — `F2–G5`\n- **Troye Sivan** — `C3–F5`\n- **Tyler Childers** — `E2–C6`\n- **Tyler Joseph** — `A2–F6`\n- **Usher** — `Bb2–A5`\n- **Van Morrison** — `G2–D5`\n- **Vance Joy** — `B2–A5`\n- **Vicente Fernández** — `A2–C5`\n- **Vince Gill** — `A2–C5`\n- **Vitas** — `D2–Eb6`\n- **Willie Nelson** — `G2–F4`\n- **Wilson Pickett** — `Bb2–E6`\n- **Wizkid** — `G2–C5`\n- **Youssou N'Dour** — `A2–D5`\n- **Zayn** — `D3–B5`\n\n## Countertenors\n- **King Diamond** — `F2–D6`\n- **Mitch Grassi** — `F2–C7`\n- **Philip Bailey** — `G2–D6`\n- **Philippe Jaroussky** — `D3–G#5`\n- **Sam Smith** — `G2–C6`\n\n## Contraltos\n- **Amy Winehouse** — `C3–Eb5`\n- **Anita Baker** — `C#3–C#6`\n- **Annie Lennox** — `G2–A5`\n- **ANOHNI** — `A2–F5`\n- **Billie Holiday** — `F3–C5`\n- **Celia Cruz** — `E3–G5`\n- **Cesária Évora** — `D3–Bb4`\n- **Cher** — `F2–A5`\n- **Clairo** — `G3–C5`\n- **Diana Krall** — `E3–C5`\n- **Etta James** — `G#2–B5`\n- **Fiona Apple** — `C3–A5`\n- **Gigi Perez** — `E3–C#5`\n- **Grace Jones** — `D3–Bb4`\n- **Grace Slick** — `E3–D5`\n- **India.Arie** — `A2–C6`\n- **Joan Jett** — `E3–C5`\n- **Judy Garland** — `F3–Eb5`\n- **Julie London** — `C#3–C#5`\n- **Karen Carpenter** — `D3–Eb5`\n- **Laufey** — `F3–D5`\n- **Mahalia Jackson** — `E3–F5`\n- **Mercedes Sosa** — `E3–E5`\n- **Monica** — `B2–B5`\n- **Nina Simone** — `G2–F5`\n- **Norah Jones** — `F3–C5`\n- **Patsy Cline** — `E3–D5`\n- **Peggy Lee** — `D3–A5`\n- **Sade Adu** — `E3–D5`\n- **Sarah Vaughan** — `Eb3–C6`\n- **Shirley Manson** — `F3–A5`\n- **Stevie Nicks** — `E3–D5`\n- **Tasha Cobbs Leonard** — `D3–A5`\n- **Tems** — `D3–D5`\n- **Tina Turner** — `G2–Eb5`\n- **Toni Braxton** — `Bb2–Bb5`\n- **Tracy Chapman** — `D3–D5`\n- **Wynonna Judd** — `E3–E5`\n\n## Mezzo-sopranos\n- **Adele** — `C3–Bb5`\n- **Ado** — `E3–Bb5`\n- **Ailee** — `F3–C6`\n- **Alanis Morissette** — `B2–C6`\n- **Alicia Keys** — `A2–Bb5`\n- **Amy Grant** — `F3–E5`\n- **Amy Lee** — `E3–E6`\n- **Andra Day** — `E3–F#5`\n- **Ángela Aguilar** — `Eb3–G5`\n- **Angélique Kidjo** — `E3–E5`\n- **Ann Wilson** — `G2–E6`\n- **Aretha Franklin** — `G2–E6`\n- **Ashanti** — `F3–C6`\n- **Auli'i Cravalho** — `F3–E5`\n- **Avril Lavigne** — `F3–E5`\n- **Ayra Starr** — `E3–E5`\n- **Ayumi Hamasaki** — `F3–Bb5`\n- **Barbra Streisand** — `Bb2–C6`\n- **Beyoncé** — `B2–Eb6`\n- **Billie Eilish** — `A2–B5`\n- **Bonnie Tyler** — `D3–G5`\n- **Brandy** — `G2–E6`\n- **Cécile McLorin Salvant** — `F3–Bb5`\n- **Cecilia Bartoli** — `F3–D6`\n- **Chaka Khan** — `F2–B5`\n- **Charli XCX** — `F3–F5`\n- **Christina Aguilera** — `C3–C7`\n- **Ciara** — `Bb2–A5`\n- **Coco Jones** — `B2–C#6`\n- **Cynthia Erivo** — `E3–C6`\n- **Debbie Harry** — `F3–E5`\n- **Demi Lovato** — `C#3–D6`\n- **Dinah Washington** — `Eb3–E5`\n- **Dolores O'Riordan** — `E3–C6`\n- **Dua Lipa** — `B2–G5`\n- **Dusty Springfield** — `C3–Eb5`\n- **Édith Piaf** — `B2–D5`\n- **Elis Regina** — `E3–Bb5`\n- **Ella Fitzgerald** — `D3–C6`\n- **Ella Mai** — `C3–G#5`\n- **Emeli Sandé** — `D3–F5`\n- **Erykah Badu** — `G2–D5`\n- **Ethel Merman** — `F3–D5`\n- **Faith Evans** — `C#3–C#6`\n- **Faith Hill** — `C3–Bb5`\n- **Fantasia** — `C3–Bb5`\n- **Faye Wong** — `E3–D5`\n- **Florence Welch** — `F3–B5`\n- **Gladys Knight** — `E3–D5`\n- **Gloria Estefan** — `E3–Bb5`\n- **Gwen Stefani** — `F3–Bb5`\n- **H.E.R.** — `C3–F#5`\n- **Halsey** — `C3–G5`\n- **Hikaru Utada** — `E3–Bb5`\n- **Idina Menzel** — `G2–D6`\n- **Janis Joplin** — `A2–Bb5`\n- **Jazmine Sullivan** — `A2–C#6`\n- **Jenni Rivera** — `C3–E5`\n- **Jennifer Hudson** — `A2–C6`\n- **Jessie J** — `C#3–C6`\n- **Jill Scott** — `C3–E5`\n- **JoJo** — `A2–Bb6`\n- **Joss Stone** — `C3–G5`\n- **Kacey Musgraves** — `G3–D5`\n- **Kali Uchis** — `C3–F5`\n- **Karol G** — `E3–A5`\n- **Katy Perry** — `A2–C6`\n- **Kehlani** — `D3–E5`\n- **Kelly Clarkson** — `D3–Eb6`\n- **Kelly Rowland** — `C3–Eb6`\n- **Kesha** — `D3–E6`\n- **Keyshia Cole** — `C3–Bb5`\n- **Kim Burrell** — `E3–D6`\n- **Kirstin Maldonado** — `F3–C6`\n- **Lady Gaga** — `G2–C6`\n- **Lainey Wilson** — `A3–C#5`\n- **Lana Del Rey** — `C3–D6`\n- **Laura Pausini** — `B2–F5`\n- **Lauren Daigle** — `E3–A5`\n- **Lauryn Hill** — `Bb2–A5`\n- **Lea Michele** — `F3–Bb5`\n- **LiSA** — `F3–F5`\n- **Lizzo** — `E3–Bb5`\n- **Lizzy McAlpine** — `E3–C#5`\n- **Lola Young** — `E3–Bb5`\n- **Lorde** — `D3–A5`\n- **Loreen** — `B2–B5`\n- **Loren Allred** — `E3–F#5`\n- **Loretta Lynn** — `G3–D5`\n- **Lzzy Hale** — `G2–C6`\n- **Macy Gray** — `A2–D6`\n- **Madonna** — `F3–Bb5`\n- **MARINA** — `Bb2–C#6`\n- **Mary J. Blige** — `A2–C6`\n- **Meghan Trainor** — `Eb3–B5`\n- **Miley Cyrus** — `G2–E6`\n- **Miranda Lambert** — `E3–D5`\n- **Miriam Makeba** — `E3–D5`\n- **Normani** — `C#3–Eb7`\n- **Olivia Newton-John** — `F3–Bb5`\n- **Olivia Rodrigo** — `B2–Bb5`\n- **Pat Benatar** — `F3–Bb5`\n- **Patti LuPone** — `E3–G5`\n- **Pink** — `G2–Bb5`\n- **Rachelle Ferrell** — `G2–D7`\n- **RAYE** — `C#3–D6`\n- **Reba McEntire** — `E3–F5`\n- **Reneé Rapp** — `E3–G#5`\n- **Rihanna** — `B2–B5`\n- **Rosalía** — `F3–Bb5`\n- **Samara Joy** — `B2–D5`\n- **Sara Bareilles** — `B2–E6`\n- **Selena** — `E3–Bb5`\n- **Selena Gomez** — `C3–F5`\n- **Shakira** — `E3–D6`\n- **Shania Twain** — `E3–E5`\n- **Sia** — `C3–C6`\n- **Simone Simons** — `G3–C#6`\n- **Sinéad O'Connor** — `F3–A5`\n- **Summer Walker** — `D3–E5`\n- **Sutton Foster** — `F3–A5`\n- **SZA** — `E3–C6`\n- **Tamia** — `Eb3–D6`\n- **Tammy Wynette** — `G3–E5`\n- **Tatiana Shmayluk** — `A2–G5`\n- **Taylor Swift** — `A2–Bb5`\n- **Tori Amos** — `E3–C6`\n- **Trisha Yearwood** — `D3–A5`\n- **Tyla** — `D3–D5`\n- **Victoria Monét** — `B2–A5`\n- **Whitney Houston** — `A2–C6`\n- **Yebba** — `D3–G5`\n- **Yolanda Adams** — `E3–C6`\n\n## Sopranos\n- **Aaliyah** — `C#3–A5`\n- **Alison Krauss** — `G3–D5`\n- **Anna Netrebko** — `G3–D6`\n- **Ari Lennox** — `Bb2–E6`\n- **Ariana Grande** — `D3–E7`\n- **Audra McDonald** — `F3–C6`\n- **Aurora** — `Eb3–E6`\n- **Ava Max** — `E3–C#6`\n- **Bebe Rexha** — `D3–B5`\n- **Bernadette Peters** — `G3–A5`\n- **Birgit Nilsson** — `C#3–D6`\n- **Björk** — `E3–C6`\n- **BoA** — `D3–C#6`\n- **Britney Spears** — `B2–F#5`\n- **Camila Cabello** — `D3–G5`\n- **Caroline Polachek** — `G#2–F6`\n- **Carrie Underwood** — `F3–C6`\n- **CeCe Winans** — `F3–C6`\n- **Celine Dion** — `Bb2–C6`\n- **Chappell Roan** — `E3–Bb5`\n- **Cyndi Lauper** — `F3–C6`\n- **Diana Damrau** — `Bb3–G#6`\n- **Diana Ross** — `Eb3–C6`\n- **Doja Cat** — `C3–B5`\n- **Dolly Parton** — `F3–Bb5`\n- **Elize Ryd** — `E3–F#6`\n- **Ellie Goulding** — `D3–A5`\n- **Emmylou Harris** — `G3–D5`\n- **Faouzia** — `C#3–G6`\n- **FKA twigs** — `E3–F6`\n- **Floor Jansen** — `E3–E6`\n- **G.E.M.** — `D3–F6`\n- **Gracie Abrams** — `F3–E5`\n- **Grimes** — `D3–G6`\n- **Halle Bailey** — `C3–C6`\n- **Hayley Williams** — `F3–D6`\n- **IU** — `D3–C6`\n- **Jackie Evancho** — `G#3–A5`\n- **Janelle Monáe** — `C#3–Eb6`\n- **Janet Jackson** — `C3–D6`\n- **Jessye Norman** — `E3–C6`\n- **Jewel** — `E3–E6`\n- **Jhené Aiko** — `B2–E6`\n- **Joan Baez** — `F3–B5`\n- **Joan Sutherland** — `G3–F6`\n- **Joni Mitchell** — `E3–C6`\n- **Julie Andrews** — `G3–C6`\n- **Karen Clark Sheard** — `F3–Eb6`\n- **Kate Bush** — `C3–C6`\n- **Kim Petras** — `D3–Bb6`\n- **Kristin Chenoweth** — `G3–F6`\n- **Lara Fabian** — `Eb3–D6`\n- **Lata Mangeshkar** — `G3–Bb5`\n- **Lea Salonga** — `F3–D6`\n- **LeAnn Rimes** — `F3–F5`\n- **Leona Lewis** — `C3–F#6`\n- **Leontyne Price** — `G3–C6`\n- **Linda Ronstadt** — `E3–Bb5`\n- **Madison Beer** — `C3–C6`\n- **Maria Callas** — `F#3–Eb6`\n- **Mariah Carey** — `F2–G7`\n- **Martina McBride** — `F3–F5`\n- **Melanie Martinez** — `F3–D5`\n- **Minnie Riperton** — `D3–F#7`\n- **Misia** — `F3–F6`\n- **Mitski** — `E3–F#5`\n- **Montserrat Caballé** — `G3–C6`\n- **Natalia Lafourcade** — `F3–Bb5`\n- **Nicole Scherzinger** — `D3–G#6`\n- **Patti LaBelle** — `Bb2–E6`\n- **Phoebe Bridgers** — `C#3–E5`\n- **Rachel Zegler** — `Db3–E6`\n- **Ravyn Lenae** — `C#3–C#6`\n- **Regina Spektor** — `F3–C6`\n- **Renée Fleming** — `G3–C6`\n- **Rosé** — `F3–C6`\n- **Sabrina Carpenter** — `E3–C6`\n- **Sandi Patty** — `F3–C6`\n- **Sarah Brightman** — `G3–E6`\n- **Sarah McLachlan** — `F3–B5`\n- **Sharon den Adel** — `G3–D6`\n- **Sierra Boggess** — `G3–E6`\n- **Sohyang** — `E3–C7`\n- **Solange** — `D3–E6`\n- **Solar** — `G#3–A5`\n- **Sumi Jo** — `A3–F6`\n- **Taeyeon** — `E3–C6`\n- **Tamela Mann** — `F3–C#6`\n- **Tarja Turunen** — `F3–E6`\n- **Tate McRae** — `E3–F5`\n- **Teresa Teng** — `Eb3–B5`\n- **Thalía** — `F3–Bb5`\n- **Tinashe** — `B2–E6`\n- **Tori Kelly** — `B2–E6`\n- **Wendy** — `C#3–Eb7`\n- **Yma Sumac** — `B2–C#7`\n- **Zara Larsson** — `D3–C#6`\n",
+    "body": "The method chapters recommend borrowing first from voices built like yours; this appendix is the shelving system that makes it practical. Every entry in the atlas appears below exactly once, grouped by voice type and ordered low to high — basses first, sopranos last — with the cited range beside each name so you can scan a whole shelf at a glance.\n\nA few reminders before you shop. The labels are habitat descriptions, not certifications — the voice-types chapter explains how loosely popular music wears them — and the ranges beside the names are cited spans, with everything that phrase implies about extremes and evidence. Within your own type, expect enormous variety: the point of a shelf is not that its voices sound alike but that their *architecture* is similar enough for techniques to transfer at face value. One shelf away, techniques still transfer with adjustment — usually a transposition — and the chapter on borrowing covers the exchange rate.\n\nIf you have taken the range test, find the shelf whose typical spans bracket your own numbers and start reading there; each name links to the singer's full entry and page. If you have not, the test takes a few minutes and turns this appendix from a list into a mirror. Either way, the shelf you belong to holds more careers, in more genres, than most singers expect to find there — which is the last thing this book has to say, and the most useful.\n\n## Basss\n- **Avi Kaplan** — `Eb1–Db5`\n- **Barry White** — `D2–E4`\n- **Ivan Rebroff** — `F1–F5`\n- **Samuel Ramey** — `Eb2–F4`\n- **Tim Storms** — `B0–B4`\n\n## Bass-baritones\n- **Bryn Terfel** — `F2–A4`\n- **Buju Banton** — `E2–A4`\n- **Fred Hammond** — `E2–Bb4`\n- **Geoff Castellucci** — `B0–Bb5`\n- **Johnny Cash** — `E2–E4`\n- **Josh Turner** — `Ab1–C#5`\n- **Leonard Cohen** — `D2–E4`\n- **Peter Steele** — `F1–G5`\n- **Shaggy** — `E2–F4`\n- **Till Lindemann** — `E2–F4`\n- **Tom Waits** — `A1–G5`\n- **Trace Adkins** — `D2–G4`\n- **Waylon Jennings** — `E2–D4`\n\n## Baritones\n- **Alan Jackson** — `E2–B4`\n- **Alejandro Fernández** — `F#2–C5`\n- **Alex Warren** — `A2–F#4`\n- **Andy Biersack** — `D2–F5`\n- **Anthony Kiedis** — `F2–E5`\n- **Bad Bunny** — `F2–G4`\n- **Bill Withers** — `F2–A4`\n- **Bing Crosby** — `F2–F4`\n- **Blake Shelton** — `D2–C#5`\n- **Bobby Darin** — `G2–E5`\n- **Bobby McFerrin** — `E2–E6`\n- **Bruce Springsteen** — `F2–C5`\n- **Burna Boy** — `F2–C5`\n- **Carín León** — `F#2–A#4`\n- **Chad Kroeger** — `A1–E5`\n- **Chris Stapleton** — `F2–B4`\n- **Christian Nodal** — `A2–G4`\n- **Cody Johnson** — `F#2–G#4`\n- **Corey Taylor** — `E2–A5`\n- **Damiano David** — `A2–B4`\n- **Dan Reynolds** — `G2–G#5`\n- **Dave Gahan** — `F2–G4`\n- **David Bowie** — `E2–A5`\n- **David Coverdale** — `F2–A5`\n- **David Draiman** — `Bb1–G#5`\n- **David Kushner** — `F2–G4`\n- **David Lee Roth** — `E1–D6`\n- **Dean Martin** — `F2–G4`\n- **Dermot Kennedy** — `E2–C6`\n- **Dmitri Hvorostovsky** — `G2–A4`\n- **Drake** — `D2–C5`\n- **Eddie Vedder** — `D2–E5`\n- **Elvis Presley** — `G2–Db5`\n- **Fela Kuti** — `F2–A4`\n- **Frank Sinatra** — `G2–A4`\n- **Freddie Mercury** — `F2–F6`\n- **Fujii Kaze** — `G2–D5`\n- **Garth Brooks** — `G2–A4`\n- **George Ezra** — `G2–B5`\n- **George Jones** — `B1–B4`\n- **George Michael** — `E2–A5`\n- **George Strait** — `A2–E4`\n- **Giveon** — `F#2–F#4`\n- **Glenn Danzig** — `C#2–Eb5`\n- **Glenn Hughes** — `D2–D6`\n- **Gregory Porter** — `F2–G4`\n- **Harry Connick Jr.** — `E2–A#4`\n- **Harry Styles** — `E2–F5`\n- **Hozier** — `E2–E5`\n- **Hugh Jackman** — `A2–B4`\n- **Ian Curtis** — `G2–E4`\n- **Jacky Cheung** — `E3–C5`\n- **Jacob Collier** — `D2–D6`\n- **James Arthur** — `Bb2–A5`\n- **James Brown** — `F2–C5`\n- **James Hetfield** — `E2–C5`\n- **James Taylor** — `F2–A4`\n- **Jay Chou** — `A2–B4`\n- **Jelly Roll** — `G2–G4`\n- **Jim Morrison** — `E2–Bb4`\n- **Joe Cocker** — `G2–Bb4`\n- **Joe Elliott** — `D2–G#5`\n- **Jonathan Davis** — `A1–F#5`\n- **Josh Groban** — `G2–A4`\n- **Juice WRLD** — `G2–C5`\n- **Julian Casablancas** — `C2–F#5`\n- **Julio Iglesias** — `B2–G4`\n- **Kane Brown** — `E2–F4`\n- **Kenny Rogers** — `D2–D5`\n- **Kenshi Yonezu** — `F2–D5`\n- **Kid Cudi** — `A1–F5`\n- **Kurt Cobain** — `F2–E5`\n- **Layne Staley** — `E2–G5`\n- **Lewis Capaldi** — `F2–E5`\n- **Liam Payne** — `C#2–Bb5`\n- **Louis Armstrong** — `F2–G4`\n- **Luke Combs** — `A2–A4`\n- **M. Shadows** — `D2–A5`\n- **Mac Miller** — `C#2–E4`\n- **Maluma** — `D3–F4`\n- **Marvin Sapp** — `D#2–F5`\n- **Merle Haggard** — `F2–E4`\n- **Michael Bublé** — `G2–A4`\n- **Michael Hutchence** — `B1–F#5`\n- **Michael McDonald** — `G#2–A5`\n- **Mike Patton** — `Eb1–Eb7`\n- **Morgan Wallen** — `A2–G4`\n- **Morrissey** — `F#2–B4`\n- **Nat King Cole** — `F2–G4`\n- **Neil Diamond** — `D2–G#4`\n- **Nick Cave** — `D2–G5`\n- **Noah Sebastian** — `A2–D5`\n- **Orville Peck** — `E2–F#5`\n- **Otis Redding** — `F2–C5`\n- **Paul Rodgers** — `E2–G#5`\n- **Peter Gabriel** — `F#2–A4`\n- **Peter Tosh** — `F2–G4`\n- **Post Malone** — `E2–E5`\n- **Rag'n'Bone Man** — `G2–B5`\n- **Randy Travis** — `F2–E4`\n- **Rauw Alejandro** — `G2–C5`\n- **Rick Astley** — `F2–D5`\n- **Scott Hoying** — `F2–Bb5`\n- **Scott Stapp** — `D2–D5`\n- **Scott Weiland** — `E2–C#5`\n- **Serj Tankian** — `F2–C6`\n- **Sombr** — `A2–F#4`\n- **Stephen Sanchez** — `C#3–F#5`\n- **Stromae** — `G2–G4`\n- **Sturgill Simpson** — `Eb2–C#6`\n- **Teddy Pendergrass** — `E2–Bb4`\n- **Teddy Swims** — `E2–A5`\n- **Tim McGraw** — `F2–B4`\n- **Tobias Forge** — `D2–G#5`\n- **Tom Jones** — `G2–Bb4`\n- **Tom Petty** — `C2–Bb5`\n- **Tony Bennett** — `A2–A4`\n- **Tyler, the Creator** — `B1–B5`\n- **V** — `D2–D5`\n- **Ville Valo** — `F#1–B5`\n- **XXXTentacion** — `C3–F5`\n- **Zach Bryan** — `G2–F#4`\n\n## Tenors\n- **Aaron Neville** — `G2–Bb5`\n- **Aaron Tveit** — `A2–D5`\n- **Adam Lambert** — `F2–C6`\n- **Adam Levine** — `A2–C6`\n- **Akon** — `C3–Bb4`\n- **Al Green** — `F2–Bb5`\n- **Al Jarreau** — `G2–A5`\n- **Alex Turner** — `E2–G5`\n- **Anderson .Paak** — `C3–F5`\n- **Andrea Bocelli** — `C3–B4`\n- **Arijit Singh** — `C3–C5`\n- **Axl Rose** — `F1–Bb6`\n- **Baekhyun** — `F2–E5`\n- **Barry Gibb** — `F2–D6`\n- **Barry Manilow** — `D2–G5`\n- **BeBe Winans** — `A2–E5`\n- **Ben Platt** — `A2–F5`\n- **Benson Boone** — `G2–A5`\n- **Billie Joe Armstrong** — `F2–C5`\n- **Billy Corgan** — `F2–E5`\n- **Billy Joel** — `F2–C6`\n- **Bob Dylan** — `E2–A4`\n- **Bob Marley** — `F2–C5`\n- **Bobby Hatfield** — `B2–Eb6`\n- **Bono** — `Eb2–Db5`\n- **Boy George** — `D2–A5`\n- **Brad Delp** — `G#2–D6`\n- **Brandon Boyd** — `F2–A5`\n- **Brandon Flowers** — `F#2–G#5`\n- **Brendon Urie** — `E2–C6`\n- **Brian Johnson** — `A2–E5`\n- **Brian McKnight** — `A2–Bb5`\n- **Brian Wilson** — `C2–Bb5`\n- **Bruce Dickinson** — `E2–C6`\n- **Bruno Mars** — `G2–D6`\n- **Bryan Adams** — `Eb2–E6`\n- **Bryson Tiller** — `A2–C6`\n- **Caetano Veloso** — `A2–C5`\n- **Caleb Followill** — `A2–E5`\n- **Calum Scott** — `B2–C#5`\n- **Camilo Sesto** — `A2–E5`\n- **CeeLo Green** — `Bb1–C6`\n- **Charles Aznavour** — `D3–B4`\n- **Charlie Puth** — `G2–C6`\n- **Chen** — `G2–F5`\n- **Chester Bennington** — `G2–A5`\n- **Childish Gambino** — `Bb1–C6`\n- **Chino Moreno** — `F2–A5`\n- **Chris Brown** — `C3–G#5`\n- **Chris Cornell** — `E2–A5`\n- **Chris Martin** — `D2–C6`\n- **Chris Tomlin** — `A2–D5`\n- **Christopher Cross** — `D3–A#4`\n- **Colm Wilkinson** — `G2–C5`\n- **Conan Gray** — `C3–G5`\n- **Cristian Castro** — `G2–C6`\n- **Curtis Mayfield** — `G2–Bb5`\n- **D.O.** — `F2–F#5`\n- **D'Angelo** — `G2–Bb5`\n- **Daniel Caesar** — `C#3–F#5`\n- **Daryl Hall** — `E2–C6`\n- **David Phelps** — `E2–D5`\n- **David Ruffin** — `A2–E6`\n- **Dennis Brown** — `G2–D5`\n- **Dennis DeYoung** — `E2–A5`\n- **Devin Townsend** — `F2–C6`\n- **Dimash Kudaibergen** — `C2–C8`\n- **Don Henley** — `F#2–D#5`\n- **Donnie McClurkin** — `B2–E5`\n- **Donny Hathaway** — `F2–C5`\n- **Ed Sheeran** — `G2–A5`\n- **Elton John** — `F2–F5`\n- **Enrico Caruso** — `B2–Bb4`\n- **Enrique Iglesias** — `C#3–G#4`\n- **Frank Ocean** — `C#2–G5`\n- **Frankie Valli** — `A2–C6`\n- **Geddy Lee** — `F2–Bb5`\n- **Geoff Tate** — `E2–C6`\n- **Gerard Way** — `F#2–F#5`\n- **Glen Campbell** — `F2–A4`\n- **Hank Williams** — `A2–A4`\n- **Hua Chenyu** — `G2–Bb5`\n- **Ian Gillan** — `G2–Bb5`\n- **Jack White** — `E2–A6`\n- **Jackie Wilson** — `A2–C#6`\n- **James Bay** — `G2–C6`\n- **James Blake** — `F2–F5`\n- **Jason Derulo** — `A2–Bb5`\n- **Jason Mraz** — `F2–Bb5`\n- **Jeff Buckley** — `E2–D6`\n- **Jeremy Jordan** — `A2–E5`\n- **Jimin** — `A2–F5`\n- **Jimmy Cliff** — `F2–C5`\n- **Jin** — `Bb2–B5`\n- **JJ Lin** — `G2–G5`\n- **John Denver** — `G2–B5`\n- **John Legend** — `E2–Bb5`\n- **John Lennon** — `G2–D5`\n- **Johnny Mathis** — `B2–G5`\n- **Jon Anderson** — `C#3–F#5`\n- **Jon Bon Jovi** — `E2–D5`\n- **Jonas Kaufmann** — `B2–C5`\n- **Jonathan Groff** — `A2–C5`\n- **Jongho** — `A2–D6`\n- **Jonghyun** — `F2–E5`\n- **José Carreras** — `C3–C5`\n- **José José** — `A2–D5`\n- **Josh Kiszka** — `C3–C#6`\n- **Juan Diego Flórez** — `C3–E5`\n- **Juan Gabriel** — `A2–C5`\n- **Jungkook** — `F2–A5`\n- **Justin Bieber** — `A2–Bb5`\n- **Justin Timberlake** — `A2–C6`\n- **Justin Vernon** — `F2–F5`\n- **JVKE** — `C3–F5`\n- **Keith Urban** — `F2–A5`\n- **Kellin Quinn** — `B2–A5`\n- **Kenny Chesney** — `D#2–F#4`\n- **Kenny Loggins** — `D2–C#6`\n- **Kevin Cronin** — `G2–A4`\n- **Klaus Meine** — `G2–C6`\n- **Lenny Kravitz** — `A2–Bb5`\n- **Leon Bridges** — `B2–G4`\n- **Lionel Richie** — `F2–G5`\n- **Little Richard** — `F2–Bb5`\n- **Lou Gramm** — `B1–A5`\n- **Louis Tomlinson** — `C3–A4`\n- **Luciano Pavarotti** — `C3–C5`\n- **Luis Fonsi** — `E3–A4`\n- **Luis Miguel** — `A2–D5`\n- **Luther Vandross** — `B2–A5`\n- **Marc Anthony** — `A2–E5`\n- **Mario Lanza** — `C3–C5`\n- **Marvin Gaye** — `F2–Bb5`\n- **Marvin Winans** — `A2–F5`\n- **Matt Bellamy** — `E2–D6`\n- **Matty Healy** — `F2–A5`\n- **Maxwell** — `A2–C6`\n- **Maynard James Keenan** — `F2–A5`\n- **Meat Loaf** — `F2–Eb6`\n- **Mel Tormé** — `G2–C5`\n- **Michael Crawford** — `A2–Bb4`\n- **Michael Jackson** — `Eb2–F6`\n- **Michael Kiske** — `F2–C6`\n- **Michael W. Smith** — `A2–D5`\n- **Mick Jagger** — `F2–F5`\n- **Miguel** — `C3–Bb5`\n- **Mika** — `F#2–G#5`\n- **Milton Nascimento** — `G2–Bb5`\n- **Morten Harket** — `A2–E5`\n- **Musiq Soulchild** — `C3–F#5`\n- **Myles Kennedy** — `Bb1–D6`\n- **Myles Smith** — `B2–G4`\n- **Nate Ruess** — `G2–A5`\n- **Ne-Yo** — `Eb2–A5`\n- **Neil Young** — `G2–C5`\n- **Niall Horan** — `F#2–B5`\n- **Noah Kahan** — `B2–A4`\n- **Oli Sykes** — `Eb2–G#5`\n- **Omar Apollo** — `C3–F#5`\n- **Ozuna** — `F#2–C5`\n- **Ozzy Osbourne** — `G2–D5`\n- **Park Hyo Shin** — `F2–E5`\n- **Passenger** — `D#2–A4`\n- **Patrick Stump** — `C3–B5`\n- **Paul McCartney** — `F2–E5`\n- **Paul Simon** — `A2–D5`\n- **Peso Pluma** — `B2–F#4`\n- **Pharrell Williams** — `Eb2–Bb5`\n- **Phil Collins** — `F2–Db5`\n- **Plácido Domingo** — `A2–C5`\n- **Prince** — `E2–B5`\n- **Ramin Karimloo** — `G2–C5`\n- **Ray Charles** — `C2–Bb5`\n- **Rema** — `C#3–E5`\n- **Ricky Martin** — `B2–C5`\n- **Rivers Cuomo** — `Eb2–G5`\n- **Rob Halford** — `F2–C6`\n- **Robbie Williams** — `F2–B5`\n- **Robert Plant** — `F2–A5`\n- **Robert Smith** — `C#3–C5`\n- **Rod Stewart** — `E2–C5`\n- **Roger Daltrey** — `F2–C5`\n- **Ronnie James Dio** — `F2–Bb5`\n- **Ronnie Radke** — `D2–G5`\n- **Roy Orbison** — `E2–E5`\n- **Rufus Wainwright** — `A2–D5`\n- **Salif Keita** — `B2–D5`\n- **Sam Cooke** — `A2–E5`\n- **Sam Fender** — `F#2–F5`\n- **Sam Ryder** — `C3–E5`\n- **Sammy Hagar** — `D2–B5`\n- **Seal** — `Eb2–G5`\n- **Sebastian Bach** — `F2–C6`\n- **Shawn Mendes** — `G2–E5`\n- **Smokey Robinson** — `A2–Bb5`\n- **Smokie Norful** — `D2–D#5`\n- **Steve Lacy** — `C#3–E5`\n- **Steve Perry** — `G2–A5`\n- **Steven Tyler** — `F2–C6`\n- **Stevie Wonder** — `C2–E6`\n- **Sting** — `Eb2–E5`\n- **Sufjan Stevens** — `B2–A4`\n- **T-Pain** — `B2–F5`\n- **Taeyang** — `A2–F5`\n- **The Weeknd** — `G2–B5`\n- **Thom Yorke** — `F2–F5`\n- **Toots Hibbert** — `G2–C5`\n- **Trey Songz** — `F2–G5`\n- **Troye Sivan** — `C3–F5`\n- **Tyler Childers** — `E2–C6`\n- **Tyler Joseph** — `A2–F6`\n- **Usher** — `Bb2–A5`\n- **Van Morrison** — `G2–D5`\n- **Vance Joy** — `B2–A5`\n- **Vicente Fernández** — `A2–C5`\n- **Vince Gill** — `A2–C5`\n- **Vitas** — `D2–Eb6`\n- **Willie Nelson** — `G2–F4`\n- **Wilson Pickett** — `Bb2–E6`\n- **Wizkid** — `G2–C5`\n- **Youssou N'Dour** — `A2–D5`\n- **Zayn** — `D3–B5`\n\n## Countertenors\n- **King Diamond** — `F2–D6`\n- **Mitch Grassi** — `F2–C7`\n- **Philip Bailey** — `G2–D6`\n- **Philippe Jaroussky** — `D3–G#5`\n- **Sam Smith** — `G2–C6`\n\n## Contraltos\n- **Amy Winehouse** — `C3–Eb5`\n- **Anita Baker** — `C#3–C#6`\n- **Annie Lennox** — `G2–A5`\n- **ANOHNI** — `A2–F5`\n- **Billie Holiday** — `F3–C5`\n- **Celia Cruz** — `E3–G5`\n- **Cesária Évora** — `D3–Bb4`\n- **Cher** — `F2–A5`\n- **Clairo** — `G3–C5`\n- **Diana Krall** — `E3–C5`\n- **Etta James** — `G#2–B5`\n- **Fiona Apple** — `C3–A5`\n- **Gigi Perez** — `E3–C#5`\n- **Grace Jones** — `D3–Bb4`\n- **Grace Slick** — `E3–D5`\n- **India.Arie** — `A2–C6`\n- **Joan Jett** — `E3–C5`\n- **Judy Garland** — `F3–Eb5`\n- **Julie London** — `C#3–C#5`\n- **Karen Carpenter** — `D3–Eb5`\n- **Laufey** — `F3–D5`\n- **Mahalia Jackson** — `E3–F5`\n- **Mercedes Sosa** — `E3–E5`\n- **Monica** — `B2–B5`\n- **Nina Simone** — `G2–F5`\n- **Norah Jones** — `F3–C5`\n- **Patsy Cline** — `E3–D5`\n- **Peggy Lee** — `D3–A5`\n- **Sade Adu** — `E3–D5`\n- **Sarah Vaughan** — `Eb3–C6`\n- **Shirley Manson** — `F3–A5`\n- **Stevie Nicks** — `E3–D5`\n- **Tasha Cobbs Leonard** — `D3–A5`\n- **Tems** — `D3–D5`\n- **Tina Turner** — `G2–Eb5`\n- **Toni Braxton** — `Bb2–Bb5`\n- **Tracy Chapman** — `D3–D5`\n- **Wynonna Judd** — `E3–E5`\n\n## Mezzo-sopranos\n- **Adele** — `C3–Bb5`\n- **Ado** — `E3–Bb5`\n- **Ailee** — `F3–C6`\n- **Alanis Morissette** — `B2–C6`\n- **Alicia Keys** — `A2–Bb5`\n- **Amy Grant** — `F3–E5`\n- **Amy Lee** — `E3–E6`\n- **Andra Day** — `E3–F#5`\n- **Ángela Aguilar** — `Eb3–G5`\n- **Angélique Kidjo** — `E3–E5`\n- **Ann Wilson** — `G2–E6`\n- **Aretha Franklin** — `G2–E6`\n- **Ashanti** — `F3–C6`\n- **Auli'i Cravalho** — `F3–E5`\n- **Avril Lavigne** — `F3–E5`\n- **Ayra Starr** — `E3–E5`\n- **Ayumi Hamasaki** — `F3–Bb5`\n- **Barbra Streisand** — `Bb2–C6`\n- **Beyoncé** — `B2–Eb6`\n- **Billie Eilish** — `A2–B5`\n- **Bonnie Tyler** — `D3–G5`\n- **Brandy** — `G2–E6`\n- **Cécile McLorin Salvant** — `F3–Bb5`\n- **Cecilia Bartoli** — `F3–D6`\n- **Chaka Khan** — `F2–B5`\n- **Charli XCX** — `F3–F5`\n- **Christina Aguilera** — `C3–C7`\n- **Ciara** — `Bb2–A5`\n- **Coco Jones** — `B2–C#6`\n- **Cynthia Erivo** — `E3–C6`\n- **Debbie Harry** — `F3–E5`\n- **Demi Lovato** — `C#3–D6`\n- **Dinah Washington** — `Eb3–E5`\n- **Dolores O'Riordan** — `E3–C6`\n- **Dua Lipa** — `B2–G5`\n- **Dusty Springfield** — `C3–Eb5`\n- **Édith Piaf** — `B2–D5`\n- **Elis Regina** — `E3–Bb5`\n- **Ella Fitzgerald** — `D3–C6`\n- **Ella Mai** — `C3–G#5`\n- **Emeli Sandé** — `D3–F5`\n- **Erykah Badu** — `G2–D5`\n- **Ethel Merman** — `F3–D5`\n- **Faith Evans** — `C#3–C#6`\n- **Faith Hill** — `C3–Bb5`\n- **Fantasia** — `C3–Bb5`\n- **Faye Wong** — `E3–D5`\n- **Florence Welch** — `F3–B5`\n- **Gladys Knight** — `E3–D5`\n- **Gloria Estefan** — `E3–Bb5`\n- **Gwen Stefani** — `F3–Bb5`\n- **H.E.R.** — `C3–F#5`\n- **Halsey** — `C3–G5`\n- **Hikaru Utada** — `E3–Bb5`\n- **Idina Menzel** — `G2–D6`\n- **Janis Joplin** — `A2–Bb5`\n- **Jazmine Sullivan** — `A2–C#6`\n- **Jenni Rivera** — `C3–E5`\n- **Jennifer Hudson** — `A2–C6`\n- **Jessie J** — `C#3–C6`\n- **Jill Scott** — `C3–E5`\n- **JoJo** — `A2–Bb6`\n- **Joss Stone** — `C3–G5`\n- **Kacey Musgraves** — `G3–D5`\n- **Kali Uchis** — `C3–F5`\n- **Karol G** — `E3–A5`\n- **Katy Perry** — `A2–C6`\n- **Kehlani** — `D3–E5`\n- **Kelly Clarkson** — `D3–Eb6`\n- **Kelly Rowland** — `C3–Eb6`\n- **Kesha** — `D3–E6`\n- **Keyshia Cole** — `C3–Bb5`\n- **Kim Burrell** — `E3–D6`\n- **Kirstin Maldonado** — `F3–C6`\n- **Lady Gaga** — `G2–C6`\n- **Lainey Wilson** — `A3–C#5`\n- **Lana Del Rey** — `C3–D6`\n- **Laura Pausini** — `B2–F5`\n- **Lauren Daigle** — `E3–A5`\n- **Lauryn Hill** — `Bb2–A5`\n- **Lea Michele** — `F3–Bb5`\n- **LiSA** — `F3–F5`\n- **Lizzo** — `E3–Bb5`\n- **Lizzy McAlpine** — `E3–C#5`\n- **Lola Young** — `E3–Bb5`\n- **Lorde** — `D3–A5`\n- **Loreen** — `B2–B5`\n- **Loren Allred** — `E3–F#5`\n- **Loretta Lynn** — `G3–D5`\n- **Lzzy Hale** — `G2–C6`\n- **Macy Gray** — `A2–D6`\n- **Madonna** — `F3–Bb5`\n- **MARINA** — `Bb2–C#6`\n- **Mary J. Blige** — `A2–C6`\n- **Meghan Trainor** — `Eb3–B5`\n- **Miley Cyrus** — `G2–E6`\n- **Miranda Lambert** — `E3–D5`\n- **Miriam Makeba** — `E3–D5`\n- **Normani** — `C#3–Eb7`\n- **Olivia Newton-John** — `F3–Bb5`\n- **Olivia Rodrigo** — `B2–Bb5`\n- **Pat Benatar** — `F3–Bb5`\n- **Patti LuPone** — `E3–G5`\n- **Pink** — `G2–Bb5`\n- **Rachelle Ferrell** — `G2–D7`\n- **RAYE** — `C#3–D6`\n- **Reba McEntire** — `E3–F5`\n- **Reneé Rapp** — `E3–G#5`\n- **Rihanna** — `B2–B5`\n- **Rosalía** — `F3–Bb5`\n- **Samara Joy** — `B2–D5`\n- **Sara Bareilles** — `B2–E6`\n- **Selena** — `E3–Bb5`\n- **Selena Gomez** — `C3–F5`\n- **Shakira** — `E3–D6`\n- **Shania Twain** — `E3–E5`\n- **Sia** — `C3–C6`\n- **Simone Simons** — `G3–C#6`\n- **Sinéad O'Connor** — `F3–A5`\n- **Summer Walker** — `D3–E5`\n- **Sutton Foster** — `F3–A5`\n- **SZA** — `E3–C6`\n- **Tamia** — `Eb3–D6`\n- **Tammy Wynette** — `G3–E5`\n- **Tatiana Shmayluk** — `A2–G5`\n- **Taylor Swift** — `A2–Bb5`\n- **Tori Amos** — `E3–C6`\n- **Trisha Yearwood** — `D3–A5`\n- **Tyla** — `D3–D5`\n- **Victoria Monét** — `B2–A5`\n- **Whitney Houston** — `A2–C6`\n- **Yebba** — `D3–G5`\n- **Yolanda Adams** — `E3–C6`\n\n## Sopranos\n- **Aaliyah** — `C#3–A5`\n- **Alison Krauss** — `G3–D5`\n- **Anna Netrebko** — `G3–D6`\n- **Ari Lennox** — `Bb2–E6`\n- **Ariana Grande** — `D3–E7`\n- **Audra McDonald** — `F3–C6`\n- **Aurora** — `Eb3–E6`\n- **Ava Max** — `E3–C#6`\n- **Bebe Rexha** — `D3–B5`\n- **Bernadette Peters** — `G3–A5`\n- **Birgit Nilsson** — `C#3–D6`\n- **Björk** — `E3–C6`\n- **BoA** — `D3–C#6`\n- **Britney Spears** — `B2–F#5`\n- **Camila Cabello** — `D3–G5`\n- **Caroline Polachek** — `G#2–F6`\n- **Carrie Underwood** — `F3–C6`\n- **CeCe Winans** — `F3–C6`\n- **Celine Dion** — `Bb2–C6`\n- **Chappell Roan** — `E3–Bb5`\n- **Cyndi Lauper** — `F3–C6`\n- **Diana Damrau** — `Bb3–G#6`\n- **Diana Ross** — `Eb3–C6`\n- **Doja Cat** — `C3–B5`\n- **Dolly Parton** — `F3–Bb5`\n- **Elize Ryd** — `E3–F#6`\n- **Ellie Goulding** — `D3–A5`\n- **Emmylou Harris** — `G3–D5`\n- **Faouzia** — `C#3–G6`\n- **FKA twigs** — `E3–F6`\n- **Floor Jansen** — `E3–E6`\n- **G.E.M.** — `D3–F6`\n- **Gracie Abrams** — `F3–E5`\n- **Grimes** — `D3–G6`\n- **Halle Bailey** — `C3–C6`\n- **Hayley Williams** — `F3–D6`\n- **IU** — `D3–C6`\n- **Jackie Evancho** — `G#3–A5`\n- **Janelle Monáe** — `C#3–Eb6`\n- **Janet Jackson** — `C3–D6`\n- **Jessye Norman** — `E3–C6`\n- **Jewel** — `E3–E6`\n- **Jhené Aiko** — `B2–E6`\n- **Joan Baez** — `F3–B5`\n- **Joan Sutherland** — `G3–F6`\n- **Joni Mitchell** — `E3–C6`\n- **Julie Andrews** — `G3–C6`\n- **Karen Clark Sheard** — `F3–Eb6`\n- **Kate Bush** — `C3–C6`\n- **Kim Petras** — `D3–Bb6`\n- **Kristin Chenoweth** — `G3–F6`\n- **Lara Fabian** — `Eb3–D6`\n- **Lata Mangeshkar** — `G3–Bb5`\n- **Lea Salonga** — `F3–D6`\n- **LeAnn Rimes** — `F3–F5`\n- **Leona Lewis** — `C3–F#6`\n- **Leontyne Price** — `G3–C6`\n- **Linda Ronstadt** — `E3–Bb5`\n- **Madison Beer** — `C3–C6`\n- **Maria Callas** — `F#3–Eb6`\n- **Mariah Carey** — `F2–G7`\n- **Martina McBride** — `F3–F5`\n- **Melanie Martinez** — `F3–D5`\n- **Minnie Riperton** — `D3–F#7`\n- **Misia** — `F3–F6`\n- **Mitski** — `E3–F#5`\n- **Montserrat Caballé** — `G3–C6`\n- **Natalia Lafourcade** — `F3–Bb5`\n- **Nicole Scherzinger** — `D3–G#6`\n- **Patti LaBelle** — `Bb2–E6`\n- **Phoebe Bridgers** — `C#3–E5`\n- **Rachel Zegler** — `Db3–E6`\n- **Ravyn Lenae** — `C#3–C#6`\n- **Regina Spektor** — `F3–C6`\n- **Renée Fleming** — `G3–C6`\n- **Rosé** — `F3–C6`\n- **Sabrina Carpenter** — `E3–C6`\n- **Sandi Patty** — `F3–C6`\n- **Sarah Brightman** — `G3–E6`\n- **Sarah McLachlan** — `F3–B5`\n- **Sharon den Adel** — `G3–D6`\n- **Sierra Boggess** — `G3–E6`\n- **Sohyang** — `E3–C7`\n- **Solange** — `D3–E6`\n- **Solar** — `G#3–A5`\n- **Sumi Jo** — `A3–F6`\n- **Taeyeon** — `E3–C6`\n- **Tamela Mann** — `F3–C#6`\n- **Tarja Turunen** — `F3–E6`\n- **Tate McRae** — `E3–F5`\n- **Teresa Teng** — `Eb3–B5`\n- **Thalía** — `F3–Bb5`\n- **Tinashe** — `B2–E6`\n- **Tori Kelly** — `B2–E6`\n- **Wendy** — `C#3–Eb7`\n- **Yma Sumac** — `B2–C#7`\n- **Zara Larsson** — `D3–C#6`\n",
     "entries": []
   }
 ];
@@ -11199,9 +11199,9 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "order": 1,
     "title": "How to read an entry",
     "part": "How to read a voice",
-    "summary": "The anatomy of an atlas entry — what the cited range, the full-voice ceiling, the whistle flag and the sourced extremes actually claim, and how conservative those claims are.",
+    "summary": "The anatomy of an atlas entry — what the cited range, the full-voice ceiling, the whistle flag and the sourced extremes actually claim, and how far to trust those claims.",
     "free": true,
-    "words": 902,
+    "words": 878,
     "singers": []
   },
   {
@@ -11211,7 +11211,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "How to read a voice",
     "summary": "Scientific pitch notation in five minutes — what C4 means, why F#5 and Gb5 are the same note, how octave spans are counted, and why identical voices get different figures.",
     "free": true,
-    "words": 861,
+    "words": 848,
     "singers": []
   },
   {
@@ -11231,7 +11231,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "How to read a voice",
     "summary": "The working lexicon behind every entry — weight, placement, vibrato, onset, grit, breathiness, twang, cry and their friends, each defined by ear with exemplars from the atlas.",
     "free": false,
-    "words": 1040,
+    "words": 1045,
     "singers": []
   },
   {
@@ -11241,7 +11241,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
     "part": "The borrower's method",
     "summary": "The five-step method behind every technique paragraph in this book: pick a trait, match the habitat, change one dial at a time, close the loop with recordings, and time-box the costume.",
     "free": false,
-    "words": 922,
+    "words": 949,
     "singers": []
   },
   {
@@ -14424,7 +14424,7 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "name": "Noah Kahan",
         "voiceType": "Tenor",
         "low": "B2",
-        "high": "G#4"
+        "high": "A4"
       },
       {
         "slug": "gigi-perez",
@@ -15626,8 +15626,8 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "slug": "calum-scott",
         "name": "Calum Scott",
         "voiceType": "Tenor",
-        "low": "B3",
-        "high": "C#6"
+        "low": "B2",
+        "high": "C#5"
       },
       {
         "slug": "maluma",
@@ -15717,8 +15717,8 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "slug": "jvke",
         "name": "JVKE",
         "voiceType": "Tenor",
-        "low": "C4",
-        "high": "F6"
+        "low": "C3",
+        "high": "F5"
       },
       {
         "slug": "rauw-alejandro",
@@ -15745,15 +15745,15 @@ export const ATLAS_CONTENTS: AtlasContentsEntry[] = [
         "slug": "sam-ryder",
         "name": "Sam Ryder",
         "voiceType": "Tenor",
-        "low": "C4",
-        "high": "E6"
+        "low": "C3",
+        "high": "E5"
       },
       {
         "slug": "david-kushner",
         "name": "David Kushner",
         "voiceType": "Baritone",
-        "low": "F3",
-        "high": "G5"
+        "low": "F2",
+        "high": "G4"
       }
     ]
   },
@@ -15949,4 +15949,4 @@ export const ATLAS_PARTS: Array<{ part: string; chapters: AtlasContentsEntry[] }
     [],
   );
 
-export const ATLAS_WORDS = 72394;
+export const ATLAS_WORDS = 72389;

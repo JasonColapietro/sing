@@ -131,7 +131,6 @@ export default function AtlasPage() {
     name: ATLAS_TITLE,
     description: DESCRIPTION,
     url: `${SITE_URL}/atlas`,
-    numberOfPages: ATLAS_CONTENTS.length,
     inLanguage: "en",
     isAccessibleForFree: false,
     // Was an Organization named "Suede Sing" — the product name, not the

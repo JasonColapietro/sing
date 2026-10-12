@@ -1,6 +1,8 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { accountsReady } from "./accounts";
+import { MAX_RANGE_HISTORY, MAX_SESSIONS } from "./progress-shape";
 import {
   INACTIVE,
   type CheckoutPlan,
@@ -386,7 +388,7 @@ export const PRO_PERKS: ProPerk[] = [
     // record of singing them, which is the thing that compounds. No cadence
     // promise: the catalog is a checked-in array, so "new songs every week" is
     // a claim only a weekly deploy could keep.
-    desc: "All 26 songs are free. Pro keeps the scoring history for each one, so you can hear month one against month six.",
+    desc: "All 26 songs are free. Pro keeps the scoring history for each one, so you can compare month one against month six.",
   },
   {
     id: "warmups",
@@ -396,7 +398,7 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "book",
     title: "Two books, with PDFs",
-    desc: `${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words: The Measured Voice (how the voice works, plus a twelve-week program) and The Voice Atlas (${ATLAS_VOICE_COUNT} singer profiles: reported range, tone and technique). Both open in full the moment you subscribe, and both as PDFs to keep.`,
+    desc: `${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words: The Measured Voice (how the voice works, plus a twelve-week program) and The Voice Atlas (${ATLAS_VOICE_COUNT} singer profiles: reported range, tone and technique). Both open in full the moment you upgrade, and both as PDFs to keep.`,
   },
   {
     id: "history",
@@ -428,9 +430,31 @@ export const PLAN_ROWS: Array<{
   },
   { label: "Coach plan", free: "First two steps each day", pro: "Full adaptive plan, daily" },
   { label: "Vocal analytics", free: "Session scores", pro: "Per-note accuracy and trends" },
-  { label: "Range history", free: "Latest test", pro: "Every test, charted over time" },
-  { label: "Practice history", free: "Last 20 sessions", pro: "Every session you have ever sung" },
-  { label: "Backup & sync", free: "Account backup, every 6 hours", pro: "Continuous two-way sync across devices" },
+  // The record keeps the latest MAX_RANGE_HISTORY tests and MAX_SESSIONS
+  // sessions (lib/progress-shape.ts), Pro included, and a daily singer passes
+  // 500 sessions within months. "Every session you have ever sung" was false
+  // for exactly the singers most likely to check it.
+  {
+    label: "Range history",
+    free: "Latest test",
+    pro: `Your latest ${MAX_RANGE_HISTORY} tests, charted over time`,
+  },
+  {
+    label: "Practice history",
+    free: "Last 20 sessions",
+    pro: `Your latest ${MAX_SESSIONS} sessions`,
+  },
+  {
+    label: "Backup & sync",
+    // Account backup is only real where accounts are (see lib/accounts.ts).
+    // Until then the free record lives in this browser, and selling a backup
+    // nobody can switch on is the one row that would be false. accountsReady
+    // reads only inlined env, so this matches on server and client.
+    free: accountsReady()
+      ? "Account backup, every 6 hours"
+      : "Saved in this browser; export it from Progress",
+    pro: "Continuous two-way sync across devices",
+  },
   { label: "The Measured Voice (book)", free: "Contents + 3 chapters", pro: "All 23 chapters + PDF" },
   { label: "The Voice Atlas (book)", free: "Contents + first 3 chapters", pro: "All 27 chapters + PDF" },
   // Singer pages have always been free and the comparison table never said

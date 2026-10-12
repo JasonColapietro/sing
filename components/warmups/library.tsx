@@ -53,8 +53,10 @@ export function latestRecentSession(
 }
 
 /**
- * Shown above the path when no range test has been taken: every ladder falls
- * back to C3–G3 until one has, which fits almost nobody.
+ * Shown above the path when no range test has been taken: until one has, every
+ * ladder is fitted to the nominal A2–E4 span (NOMINAL_RANGE in ./exercises) and
+ * either octave of it is scored. A placeholder fitted to nobody, so the copy
+ * names the notes rather than calling them anyone's comfortable range.
  */
 export function RangePrompt({ progress }: { progress: ProgressState }) {
   const hasRange =
@@ -66,8 +68,9 @@ export function RangePrompt({ progress }: { progress: ProgressState }) {
         <div>
           <SectionLabel>No range saved</SectionLabel>
           <p className="mt-2 max-w-md text-sm text-mut">
-            Warmups default to a C3–G3 ladder. Take the range test and warmups
-            auto-fit your voice.
+            Until you take the range test, warmups stay between A2 and E4 (A3
+            and E5 an octave up), and either octave counts. Take the range test
+            and they fit your measured range.
           </p>
         </div>
         <LinkButton href="/range?mode=range" variant="outline" size="sm">

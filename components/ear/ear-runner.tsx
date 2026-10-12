@@ -5,9 +5,10 @@ import { useFreeCap } from "@/lib/free-cap";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
-import { useDailyGoal } from "@/components/practice/learn-home";
+import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { SessionShell } from "@/components/practice/session-shell";
-import { todayPracticeSec, useProgress, type Achievement } from "@/lib/progress";
+import { useProgress, type Achievement } from "@/lib/progress";
+import { SITE_URL } from "@/lib/site";
 import { DIFFICULTIES, GAME_NAMES, type Difficulty, type GameId } from "./lib";
 import {
   EAR_STEP_INTRO_SEC,
@@ -203,6 +204,7 @@ function EarResults({
 }) {
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
   const played = steps.filter((s) => s.result !== null);
   const score =
@@ -231,7 +233,7 @@ function EarResults({
       stars={starsForScore(score)}
       xp={xp}
       streakDays={progress.streak.current}
-      goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+      goal={{ doneSec: goalDoneSec, goalSec }}
       rows={steps.map((s) => ({
         label: s.label,
         score: s.result?.score ?? null,
@@ -240,7 +242,7 @@ function EarResults({
       achievements={achievements}
       onContinue={onContinue}
       onAgain={onAgain}
-      share={{ title, subtitle }}
+      share={{ title, subtitle, url: `${SITE_URL}/ear-training` }}
     />
   );
 }

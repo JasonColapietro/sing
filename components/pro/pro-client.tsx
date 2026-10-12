@@ -31,9 +31,11 @@ import {
   isPlanOnSale,
   PRICING,
   PRO_FAQ,
+  proHeadline,
   SOLD_OUT_PLANS,
   type CheckoutPlan,
 } from "@/lib/pro-shared";
+import { SITE_URL } from "@/lib/site";
 import {
   PRO_EXERCISES,
   PRO_PACK_COUNT,
@@ -62,6 +64,9 @@ const PERK_GLYPHS: Record<string, React.ComponentType> = {
  * build by lib/pro-inventory.test.ts.
  */
 const PRO_CARD_POINTS = [
+  // First because it is what a singer arriving from the free-practice wall
+  // came for, and the wall's button promised it.
+  "No daily limit on guided practice: warmups, ear training, breath and songs",
   `${TOTAL_WORDS.toLocaleString("en-US")} words across ${TOTAL_CHAPTERS} chapters — both books, in full`,
   "Both PDFs, downloadable and yours to keep",
   `${PRO_EXERCISES} pro warmup exercises in ${PRO_PACK_COUNT} packs`,
@@ -76,7 +81,7 @@ const FREE_CARD_POINTS = [
   "Live pitch feedback + range test, unlimited",
   "Recorder with A/B compare",
   "XP, streaks, achievements",
-  "No ads, no trial clock",
+  "No ads, and no trial that expires",
 ];
 
 
@@ -143,12 +148,24 @@ function ProKeyRow({ proKey }: { proKey: string }) {
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
-      <code className="mt-1.5 block truncate font-mono text-xs text-mut">
+      {/* The whole key, wrapped, and one tap selects it: when the clipboard
+          is blocked this is the only way to copy it, and a truncated key
+          cannot be copied by hand. */}
+      <code className="mt-1.5 block select-all break-all font-mono text-xs text-mut">
         {proKey}
       </code>
       <p className="mt-1.5 text-xs text-dim">
-        Unlocks Pro in another browser. Worth keeping somewhere safe.
+        Save this now. Pro lives in this browser, and this key unlocks it in
+        any other browser, or in this one after its data is cleared. Lost it?
+        Email hey@suedeai.ai.
       </p>
+      {/* A mailto link: the singer's own mail app, nothing sent anywhere. */}
+      <a
+        href={`mailto:?subject=${encodeURIComponent("My Suede Pro key")}&body=${encodeURIComponent(`${proKey}\n\nUnlock at ${SITE_URL}/pro`)}`}
+        className="mt-2 inline-block font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+      >
+        Email it to myself
+      </a>
     </div>
   );
 }
@@ -275,10 +292,23 @@ export function ProClient() {
   const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
   const [abandoned, setAbandoned] = useState(false);
+  // Between the buy tap and Stripe's page. Kept apart from `checkout`, whose
+  // "working" state means a payment is being confirmed: before a card has
+  // been entered, nobody should read that a payment is being confirmed.
+  const [opening, setOpening] = useState(false);
 
+  // A 30-day pass is a trialing subscription that ends on its own (see
+  // app/api/redeem). It is not a plan with renewals or anything to cancel,
+  // and its holder is the free singer most ready to keep Pro for life.
+  const onPass = pro.active && pro.status === "trialing";
   const lifetimePurchase = billing === "lifetime";
-  const subscriptionPlan = pro.plan === "monthly" || pro.plan === "annual";
-  const showPurchaseOptions = !pro.active;
+  const subscriptionPlan =
+    !onPass && (pro.plan === "monthly" || pro.plan === "annual");
+  const showPurchaseOptions = !pro.active || onPass;
+  // Someone was charged and confirmation failed. Until that is sorted, the
+  // page must not offer them a second $79 button under "your payment went
+  // through".
+  const paidButUnconfirmed = checkout.kind === "error" && Boolean(checkout.ref);
   const price = formatPrice(PRICING[billing].amount);
   const priceUnit = lifetimePurchase ? "one time" : "per month";
   const priceNote = lifetimePurchase
@@ -302,55 +332,139 @@ export function ProClient() {
     if (fromUrl || outcome) window.history.replaceState({}, "", "/pro");
     if (!sessionId && !outcome) return;
 
+    // Stripe returns to the top of the page, where the hero's buttons lead
+    // away, while every message about the purchase (confirming, welcome and
+    // the Pro key, error, cancelled) renders in the plans section several
+    // screens down. Bring that section into view at each of those moments.
+    // The section's top does not move as its contents change, so scrolling
+    // before React commits the new message still lands on it.
+    const revealPlans = () =>
+      requestAnimationFrame(() =>
+        document.getElementById("plans")?.scrollIntoView({ block: "start" }),
+      );
+
     if (sessionId) {
       rememberPendingCheckout(sessionId);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- the session id only exists in the URL, so confirmation can only start after hydration
       setCheckout({ kind: "working" });
+      revealPlans();
       confirmCheckout(sessionId)
         .then((state) => {
           if (state.active) {
             setCheckout({ kind: "idle" });
             setJustUpgraded(true);
+            revealPlans();
             return;
           }
-          // Stripe answered, and the answer wasn't "active" — retrying
-          // won't change that, so stop and hand over something support can act on.
+          // Stripe answered, and the answer wasn't "active". For a card
+          // Checkout that came back to the success URL that is definitive (a
+          // refund, a dispute, a mismatch or a bogus id), so a reload will not
+          // change it; say so, and hand over something support can act on.
           clearPendingCheckout();
           setCheckout({
             kind: "error",
             message:
-              "Your payment went through, but Stripe doesn't show active Pro access yet. Give it a minute and reload. If it sticks, email hey@suedeai.ai with this reference and we'll sort it out.",
+              "Stripe doesn't show a completed Pro purchase for this checkout, so reloading won't change it. If you were charged, please don't buy again: email hey@suedeai.ai with this reference and we'll sort it out.",
             ref: sessionId,
           });
+          revealPlans();
         })
-        .catch(() =>
+        .catch(() => {
           // Deliberately not the API's message. Whatever Stripe's outage
           // sounded like, the thing this person needs to read is that the
           // charge is safe, the retry is automatic, and support has a handle.
+          // The parked id survives this branch, so "reload" really retries.
           setCheckout({
             kind: "error",
             message:
               "Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again. Nothing is lost. If it keeps failing, email hey@suedeai.ai with this reference.",
             ref: sessionId,
-          }),
-        );
+          });
+          revealPlans();
+        });
       return;
     }
     setAbandoned(true);
+    revealPlans();
+  }, []);
+
+  // Back from Stripe's page via the browser's back button, the page can come
+  // out of the back/forward cache with the button still reading "Opening
+  // Stripe…" and disabled.
+  useEffect(() => {
+    const onShow = (event: PageTransitionEvent) => {
+      if (event.persisted) setOpening(false);
+    };
+    window.addEventListener("pageshow", onShow);
+    return () => window.removeEventListener("pageshow", onShow);
   }, []);
 
   const goPro = useCallback(async () => {
-    setCheckout({ kind: "working" });
+    setOpening(true);
+    setCheckout({ kind: "idle" });
     setAbandoned(false);
     try {
       await startCheckout(billing);
     } catch (error) {
+      setOpening(false);
       setCheckout({
         kind: "error",
         message: messageOf(error, "Could not start checkout."),
       });
     }
   }, [billing]);
+
+  /**
+   * The buy button and what sits under it, for a free singer and for a pass
+   * holder alike.
+   */
+  const buyControls = (label: string) => (
+    <>
+      {paidButUnconfirmed ? (
+        <p
+          role="alert"
+          className="rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-center text-sm text-rec"
+        >
+          A payment from this browser hasn&apos;t been confirmed yet. If you
+          were charged, don&apos;t buy again: follow the note above, or email
+          hey@suedeai.ai with its reference.
+        </p>
+      ) : (
+        <Button
+          variant="violet"
+          size="md"
+          className="w-full"
+          onClick={goPro}
+          disabled={opening || checkout.kind === "working"}
+        >
+          {opening
+            ? "Opening Stripe…"
+            : checkout.kind === "working"
+              ? "Confirming payment…"
+              : label}
+        </Button>
+      )}
+      {checkout.kind === "error" && !checkout.ref && (
+        // A failed checkout start, repeated beside the button: the
+        // page-level notice sits above the plans, off-screen on a phone, so
+        // a failed tap otherwise looks like nothing happened. Confirmation
+        // errors carry a ref and are answered by the alert above instead.
+        <p
+          role="alert"
+          className="mt-3 rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-center text-sm text-rec"
+        >
+          {checkout.message}
+        </p>
+      )}
+      {/* What a buyer should know before paying, not after: Pro unlocks per
+          browser, and the key is how it follows them. */}
+      <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
+        Secure checkout by Stripe
+        <span className="mx-1.5 text-line2">·</span>
+        Your Pro key unlocks other browsers
+      </p>
+    </>
+  );
 
   const manageBilling = useCallback(async () => {
     setPortal({ kind: "working" });
@@ -382,8 +496,11 @@ export function ProClient() {
                 </h1>
                 <p className="mt-4 max-w-xl text-lg text-mut">
                   Every session now feeds your coach report: per-note accuracy,
-                  range history, and tomorrow&apos;s plan. Thanks for keeping
-                  the free studio free.
+                  range history, and tomorrow&apos;s plan.
+                  {/* A pass holder has paid nothing, so is not thanked for paying. */}
+                  {onPass
+                    ? " Your pass ends on its own; lifetime Pro is below if you want to keep it."
+                    : " Thanks for keeping the free studio free."}
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <LinkButton href="/progress" variant="violet" size="lg">
@@ -406,11 +523,19 @@ export function ProClient() {
                   </p>
                 )}
                 <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                  {pro.plan === "lifetime"
-                    ? "Lifetime access"
-                    : pro.plan === "annual"
-                      ? "Annual plan"
-                      : "Monthly plan"}
+                  {onPass
+                    ? "30-day pass"
+                    : pro.plan === "lifetime"
+                      ? "Lifetime access"
+                      : pro.plan === "annual"
+                        ? "Annual plan"
+                        : "Monthly plan"}
+                  {onPass && periodEnd && (
+                    <>
+                      <span className="mx-2 text-line2">·</span>
+                      Ends {periodEnd}
+                    </>
+                  )}
                   {subscriptionPlan && periodEnd && (
                     <>
                       <span className="mx-2 text-line2">·</span>
@@ -432,22 +557,26 @@ export function ProClient() {
                   Suede Pro is the vocal coaching layer on top of Suede Sing:
                   adaptive daily plans, per-note analytics, pitch analysis on
                   your takes, and a scoring history for every song. The pitch
-                  meter and range test stay free, free accounts get five
-                  minutes of guided practice a day, and Pro removes that clock.
+                  meter, range test and recorder stay free with no daily limit.
+                  The free plan includes five minutes of guided practice a day,
+                  and Pro removes that clock.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
-                  <LinkButton href="#plans" variant="violet" size="lg">
-                    Go Pro
+                  {/* Straight to the buy card, with the price on the button:
+                      on a phone the price was otherwise first seen about four
+                      screens down. */}
+                  <LinkButton href="#buy" variant="violet" size="lg">
+                    {`Get lifetime Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
                   </LinkButton>
                   <LinkButton href="/studio" variant="ghost" size="lg">
                     Keep practicing free
                   </LinkButton>
                 </div>
                 <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
-                  Monthly plan sold out
-                  <span className="mx-2 text-line2">·</span>Lifetime never
-                  renews<span className="mx-2 text-line2">·</span>Voice stays
-                  on device
+                  {proHeadline()}
+                  <span className="mx-2 text-line2">·</span>Monthly plan sold
+                  out<span className="mx-2 text-line2">·</span>Voice stays on
+                  device
                 </p>
               </>
             )}
@@ -466,8 +595,8 @@ export function ProClient() {
             A coach&apos;s ear on every session
           </h2>
           <p className="mt-3 max-w-2xl text-mut">
-            Free tells you how today went. Pro remembers every session, finds
-            the patterns, and plans what to sing tomorrow.
+            Free tells you how today went. Pro keeps the months behind it,
+            finds the patterns, and plans what to sing tomorrow.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {PRO_PERKS.map((perk) => {
@@ -587,12 +716,6 @@ export function ProClient() {
             </div>
           )}
 
-          {showPurchaseOptions && (
-            <p className="mx-auto mt-3 w-fit max-w-full rounded-xl border border-violet/40 bg-violet/10 px-3 py-2 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-violet-ink">
-              Founding offer: $79 lifetime is limited to the first 10 members.
-            </p>
-          )}
-
           <div
             className={`mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 ${
               showPurchaseOptions ? "mt-6" : "mt-10"
@@ -629,8 +752,15 @@ export function ProClient() {
 
             {/* Pro — deliberately the louder card: this is the recommendation,
                 not a second option of equal weight. Roomier sides only, so both
-                cards' CTAs still land on the same baseline. */}
-            <div className="relative flex flex-col overflow-hidden rounded-2xl border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:px-8 sm:py-7">
+                cards' CTAs still land on the same baseline. First on a phone,
+                and the `#buy` target the buy links land on (this page's hero
+                and final CTA, the free-practice wall, the first-result
+                modal), so the price and its button arrive without scrolling
+                past the Free card. */}
+            <div
+              id="buy"
+              className="relative order-first flex scroll-mt-20 flex-col overflow-hidden rounded-2xl border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:order-none sm:px-8 sm:py-7"
+            >
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-violet via-violet to-violet"
@@ -648,18 +778,22 @@ export function ProClient() {
                 <>
                   <div className="mt-3 flex items-baseline gap-2">
                     <span className="font-mono text-4xl text-violet-ink sm:text-5xl">
-                      {pro.plan === "lifetime"
-                        ? "Lifetime"
-                        : pro.plan === "annual"
-                          ? "Annual"
-                          : "Monthly"}
+                      {onPass
+                        ? "Pass"
+                        : pro.plan === "lifetime"
+                          ? "Lifetime"
+                          : pro.plan === "annual"
+                            ? "Annual"
+                            : "Monthly"}
                     </span>
                     <span className="text-sm text-mut">your plan</span>
                   </div>
                   <p className="mt-1.5 text-sm text-mut">
-                    {pro.plan === "lifetime"
-                      ? "No subscription. No renewal. Yours for life."
-                      : "Manage or cancel it below."}
+                    {onPass
+                      ? "Free for 30 days, with nothing to cancel. Keep Pro for life below."
+                      : pro.plan === "lifetime"
+                        ? "No subscription. No renewal. Yours for life."
+                        : "Manage or cancel it below."}
                   </p>
                 </>
               ) : (
@@ -705,6 +839,15 @@ export function ProClient() {
                         Runs through {periodEnd}, then ends on its own.
                       </p>
                     )}
+                    {onPass && (
+                      <div className="mt-2">
+                        {buyControls(
+                          lifetimePurchase
+                            ? `Keep Pro for life: ${price} once`
+                            : `Go Pro: ${price}/month`,
+                        )}
+                      </div>
+                    )}
                     {subscriptionPlan && (
                       <>
                         <Button
@@ -729,35 +872,11 @@ export function ProClient() {
                     )}
                   </div>
                 ) : (
-                  <>
-                    <Button
-                      variant="violet"
-                      size="md"
-                      className="w-full"
-                      onClick={goPro}
-                      disabled={checkout.kind === "working"}
-                    >
-                      {checkout.kind === "working"
-                        ? "Opening Stripe…"
-                        : lifetimePurchase
-                          ? `Get lifetime Pro: ${price} once`
-                          : `Go Pro: ${price}/month`}
-                    </Button>
-                    {checkout.kind === "error" && (
-                      // Repeated beside the button: the page-level notice sits
-                      // far above the plans, off-screen on a phone, so a
-                      // failed tap otherwise looks like nothing happened.
-                      <p
-                        role="alert"
-                        className="mt-3 rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-center text-sm text-rec"
-                      >
-                        {checkout.message}
-                      </p>
-                    )}
-                    <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
-                      Secure checkout by Stripe
-                    </p>
-                  </>
+                  buyControls(
+                    lifetimePurchase
+                      ? `Get lifetime Pro: ${price} once`
+                      : `Go Pro: ${price}/month`,
+                  )
                 )}
               </div>
             </div>
@@ -935,12 +1054,18 @@ export function ProClient() {
             never hits a paywall it didn&apos;t have yesterday.
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-            <LinkButton href="#plans" variant="violet" size="lg">
-              {pro.active
-                ? subscriptionPlan
-                  ? "Manage your plan"
-                  : "Your Pro access"
-                : "Go Pro"}
+            <LinkButton
+              href={pro.active && !onPass ? "#plans" : "#buy"}
+              variant="violet"
+              size="lg"
+            >
+              {onPass
+                ? "Keep Pro for life"
+                : pro.active
+                  ? subscriptionPlan
+                    ? "Manage your plan"
+                    : "Your Pro access"
+                  : "Go Pro"}
             </LinkButton>
             <LinkButton href="/studio" variant="ghost" size="lg">
               Back to the studio

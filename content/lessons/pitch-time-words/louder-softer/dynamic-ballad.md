@@ -36,7 +36,7 @@ A song that lives or dies on its dynamic arc. Say what will count as complete in
 
 ### Build the song from phrases
 
-Mark the key, breaths, range edges, and lesson target before a full take of “Dynamic Ballad.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short.
+Use Simple Gifts. Sing its first phrase (“’Tis the gift to be simple”) at your quiet level and its second (“’tis the gift to be free”) at your fuller level, then sing both in one take with that arc. Create the levels by changing breath-energy and resonance gradually, not by squeezing the throat.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
 - Listen: The four recordings form an audible progression while pitch stays centered.

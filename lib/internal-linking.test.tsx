@@ -128,10 +128,27 @@ describe("footer wires every hub into every page", () => {
       "/singers",
       "/singers/records",
       "/atlas",
+      "/book",
       "/glossary",
     ]) {
       expect(html, `footer missing ${href}`).toContain(`href="${href}"`);
     }
+  });
+
+  /**
+   * The money page's only sitewide inbound anchor was the header pill's
+   * three-letter "Pro", which says nothing about what the page is.
+   */
+  it("links /pro with descriptive anchor text", () => {
+    expect(html).toMatch(/<a[^>]*href="\/pro"[^>]*>Suede Pro online vocal coach<\/a>/);
+  });
+
+  /**
+   * /ai-instructions is a static file behind a vercel.json rewrite. It used to
+   * hang below the footer in an unstyled nav of its own on every page.
+   */
+  it("links the AI instructions page from the credits row", () => {
+    expect(html).toContain('href="/ai-instructions"');
   });
 
   /**

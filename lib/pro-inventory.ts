@@ -34,7 +34,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
     chapters: 23,
-    words: 31738,
+    words: 31980,
     free: 3,
     pdfMb: 1.0,
     href: "/book",
@@ -42,7 +42,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Voice Atlas",
     chapters: 27,
-    words: 72394,
+    words: 72389,
     free: 3,
     pdfMb: 5.0,
     href: "/atlas",
@@ -95,7 +95,7 @@ export const UNLOCK_TILES: Array<{ figure: string; label: string; sub: string }>
     {
       figure: TOTAL_WORDS.toLocaleString("en-US"),
       label: "words, two books",
-      sub: `${TOTAL_CHAPTERS} chapters, open the moment you subscribe`,
+      sub: `${TOTAL_CHAPTERS} chapters, open the moment you upgrade`,
     },
     {
       figure: String(SINGER_COUNT),

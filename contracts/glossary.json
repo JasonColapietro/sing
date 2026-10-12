@@ -304,7 +304,7 @@
             "Transposing"
           ],
           "definition": "Moving a whole song up or down by a fixed number of semitones, which changes the key without changing the tune.",
-          "where": "Song practice transposes the backing to land the melody where your voice is comfortable.",
+          "where": "Once you have taken the range test, song practice opens each melody fitted to your measured range, and you can shift it a semitone at a time from there; without a saved range it opens in its written key.",
           "href": "/songs",
           "domain": "music",
           "publisher": "sing"
@@ -383,7 +383,7 @@
           "aka": [
             "Cycle dose"
           ],
-          "definition": "A measure of how much work the folds have done, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
+          "definition": "A measure of how much the folds have been used, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
           "where": "The vocal-load panel counts cycles while you practice: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
           "href": "/analyze",
           "domain": "voice",

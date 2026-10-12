@@ -66,7 +66,7 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 - The four recordings form an audible progression while pitch stays centered.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: In one take on one comfortable note, you can put the four levels in order from playback alone, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.
 
 If not ready: If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

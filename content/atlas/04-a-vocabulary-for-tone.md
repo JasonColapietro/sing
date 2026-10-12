@@ -17,7 +17,7 @@ Placement is where the sound seems to resonate — a sensation with fuzzy physic
 
 ## Vibrato: rate, width, onset
 
-Vibrato is the pitch oscillating around its center, and it carries three separate dials. *Rate*: fast flutter (Ellie Goulding, Dolly Parton) versus slow undulation (Johnny Mathis, Christian Nodal's ranchera wave). *Width*: narrow shimmer versus Giveon's famously wide wobble that flirts with the next semitone over. *Onset*: immediate (opera, most of musical theatre) versus delayed — straight tone first, bloom on beat three — which is the default across modern pop and jazz, from Billie Eilish to Samara Joy. When an entry says "vibrato arrives late," that is the dial it means. All three are trainable; delayed-onset control is the single highest-value tone skill an amateur can practice.
+Vibrato is the pitch oscillating around its center, and it carries three separate dials. *Rate*: fast flutter (Ellie Goulding, Dolly Parton) versus slow undulation (Johnny Mathis, Christian Nodal's ranchera wave). *Width*: narrow shimmer versus Giveon's famously wide wobble that flirts with the next semitone over. *Onset*: immediate (opera, most of musical theatre) versus delayed — straight tone first, bloom on beat three — which is the default across modern pop and jazz, from Billie Eilish to Samara Joy. When an entry says "vibrato arrives late," that is the dial it means. All three are trainable; delayed onset is a good first one to practice, because it starts from a plain, straight tone.
 
 ## Onset
 

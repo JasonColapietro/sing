@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Blue notes are the third and seventh of the scale sung flat of their major-scale pitches, or bent somewhere between the minor and major versions; blues and soul phrasing lives in that space between the written pitches. They sound like feeling because they lean against the tonic, the home note, so a phrase that leans on a flat third or flat seventh and then settles on the tonic sounds like tension let go. What separates a blue note from a flat one is intent: you aim for it and land it, rather than sagging into it.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Blue thirds and sevenths, and how they resolve toward the tonic. Say what will c
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “The Notes That Sound Like Feeling.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.
+From the Minor five-note scale you just heard, sing 1, flat 3, 1 twice. The first time, place the flat 3 squarely on the minor third you heard in the scale; the second time, start a touch below it and bend up into it on purpose before returning to 1. Change only how you arrive at the flat 3. Record both in one take in the recorder with a breath between them, and check that each ends back on the tonic you heard. Use blue thirds and sevenths as deliberate destinations, not pitches reached by accidental flatness. Leave space and repeat a motif before varying it. Begin with a two-bar call: sing 1, flat 3, 5, rest, then 5, flat 3, 1, rest, one event per tapped beat. Answer with flat 7 below the tonic, 1, flat 3, rest, then flat 3, 1, 1, rest. Repeat those four bars with one rhythmic change to make eight. Pitch every note from the tonic you just heard; transpose the whole exercise if it sits too low or too high. Record the call and answer together in one take.
 
 - Look: The eight bars have a clear form with room to breathe; bends are optional and never forced.
 - Listen: The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.

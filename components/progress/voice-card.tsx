@@ -1,7 +1,7 @@
 "use client";
 
 import type { VocalRange } from "@/lib/progress";
-import { midiToLabel } from "@/lib/audio/notes";
+import { midiToLabel, voiceFitLabel } from "@/lib/audio/notes";
 import { Card, EmptyState, LinkButton, Pill } from "@/components/ui";
 import {
   AMBER_INK,
@@ -109,7 +109,7 @@ export function VoiceCard({ range }: { range: VocalRange }) {
       <Card pad={false}>
         <EmptyState
           title="No range on file"
-          hint="Take the 2-minute range test to find your lowest and highest comfortable notes and your voice type."
+          hint="Take the 2-minute range test to find the lowest and highest clear notes you can sing today, plus a voice-type estimate."
           action={<LinkButton href="/range?mode=range">Take the range test</LinkButton>}
         />
       </Card>
@@ -130,7 +130,11 @@ export function VoiceCard({ range }: { range: VocalRange }) {
     <Card>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-lg">Your voice</h2>
-        {range.voiceTypeLabel && <Pill tone="violet">{range.voiceTypeLabel}</Pill>}
+        {/* An estimate from one test, worded the way the result screen words
+            it, never a classification. Worked out from the notes rather than
+            the stored label, which names one band where the result screen
+            names two when the other set of bands fits about as well. */}
+        <Pill tone="violet">Closest fit: {voiceFitLabel(range.lowMidi, range.highMidi)}</Pill>
       </div>
       <div className="tabular mt-3 font-mono text-2xl text-ink">
         {midiToLabel(range.lowMidi)}

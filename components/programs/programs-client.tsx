@@ -10,6 +10,7 @@ import {
   FREE_WEEKS,
   PROGRAMS,
   dayMinutes,
+  freePlanCalendarDays,
   isRestDay,
   programById,
   programMinutesRange,
@@ -33,6 +34,23 @@ function freeLabel(): string {
   return FREE_WEEKS === 1 ? "week 1" : `weeks 1–${FREE_WEEKS}`;
 }
 
+/**
+ * About how many weeks a free program takes at the free plan's five guided
+ * minutes a day, or null when that rounds to its own length. A Pro program's
+ * free week already fits the allowance, and its later weeks are Pro anyway.
+ * Rounded rather than rounded up: the day count already leans long.
+ */
+function freePlanWeeks(p: Program): number | null {
+  if (p.pro) return null;
+  const weeks = Math.round(freePlanCalendarDays(p) / 7);
+  return weeks > p.weeks ? weeks : null;
+}
+
+/** Whether a program has a range test, which the free plan never caps. */
+function hasRangeTest(p: Program): boolean {
+  return p.days.some((d) => d.items.some((i) => i.kind === "range"));
+}
+
 /** A plain left click, which the page handles in place; anything else keeps its browser meaning. */
 function plainClick(e: MouseEvent): boolean {
   return !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0);
@@ -47,6 +65,8 @@ function ProgramCard({
   active: boolean;
   onOpen: (id: string) => void;
 }) {
+  const isPro = useIsPro();
+  const freeWeeks = freePlanWeeks(program);
   return (
     <Card tone="raised" className="flex flex-col">
       <div className="flex flex-wrap items-center gap-2">
@@ -59,6 +79,12 @@ function ProgramCard({
         {restDayCount(program) === 1 ? "day" : "days"}
         {program.pro && ` · ${freeLabel()} free`}
       </p>
+      {!isPro && freeWeeks !== null && (
+        <p className="mt-1 text-xs text-dim">
+          On the free plan&apos;s five guided minutes a day, this takes about {freeWeeks} weeks. Pro
+          runs it as written.
+        </p>
+      )}
       <p className="mt-3 flex-1 text-sm text-mut">{program.tagline}</p>
       <div className="mt-4">
         <Link
@@ -165,6 +191,9 @@ function ProgramDetail({
   // A Pro program starts for anyone: its first week is free, and the today
   // card asks for Pro when the singer reaches the first day past it.
   const trial = program.pro && !isPro;
+  // A free program runs past the free plan's daily allowance most days, so it
+  // takes longer than its name; say how much longer before it is started.
+  const freeWeeks = isPro ? null : freePlanWeeks(program);
   const start = () => {
     // Switching away from another program is a deliberate act; say what it costs.
     if (active && !running && !window.confirm(`Leave ${active.program.name}? Your place in it is not kept.`)) return;
@@ -230,6 +259,14 @@ function ProgramDetail({
             {FREE_WEEKS * 7 + 1} onward needs <Link href="/pro" className="underline">Pro</Link>.
           </p>
         )}
+        {freeWeeks !== null && (
+          <p className="mt-4 max-w-2xl text-sm text-mut">
+            <span className="font-medium text-ink">On the free plan.</span> Its days run longer than
+            the five guided minutes a day, so each spreads over a few calendar days and the whole
+            program takes about {freeWeeks} weeks. <Link href="/pro" className="underline">Pro</Link>{" "}
+            removes the cap{hasRangeTest(program) ? "; the range test is always free" : ""}.
+          </p>
+        )}
         <div className="mt-5 flex flex-wrap items-center gap-2">
           <Button onClick={start}>{running ? "Restart from day 1" : active ? "Switch to this program" : "Start this program"}</Button>
           {running && (
@@ -279,7 +316,7 @@ export function ProgramsClient() {
     <PageShell
       kicker="Programs"
       title="Singing practice programs"
-      subtitle="Vocal training programs from one week to twelve, worked a day at a time: warmups, breath and range check-ins, with rest days built in. Four are free, and every day opens the rooms you already use."
+      subtitle="Vocal training programs from one week to twelve, worked a day at a time: warmups, breath and range check-ins, with rest days built in. Four are free to follow; on the free plan guided practice is five minutes a day, so a longer day can be spread over several. Pro removes the cap."
     >
       <div className="space-y-8">
         {active && (!program || program.id === active.program.id) && (

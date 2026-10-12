@@ -1,5 +1,5 @@
 import { midiToLabel } from "@/lib/audio/notes";
-import { SINGERS, type Singer } from "@/lib/singers";
+import { SINGERS, pluralVoice, type Singer } from "@/lib/singers";
 import { REFERENCE_BANDS } from "@/lib/singers-analysis";
 
 /**
@@ -33,9 +33,10 @@ function semis(n: number): string {
   return `${n} ${n === 1 ? "semitone" : "semitones"}`;
 }
 
-function against(delta: number, above: string, below: string): string {
-  if (delta === 0) return "exactly on";
-  return `${semis(Math.abs(delta))} ${delta > 0 ? above : below}`;
+/** "matches the band's bottom note" / "sits 3 semitones below the band's top note". */
+function againstBand(delta: number, end: "bottom" | "top"): string {
+  if (delta === 0) return `matches the band's ${end} note`;
+  return `sits ${semis(Math.abs(delta))} ${delta > 0 ? "above" : "below"} the band's ${end} note`;
 }
 
 export function catalogPositionFor(
@@ -57,7 +58,11 @@ export function catalogPositionFor(
   facts.push({
     id: "type-rank",
     label: `Span, ${type} group`,
-    text: `Number ${spanRank(s, sameType)} of ${sameType.length} catalog ${type}${sameType.length === 1 ? "" : "s"}; that group's median span is ${semis(typeMedian)}, so this span is ${against(sp - typeMedian, "wider", "narrower")} it.`,
+    text: `Number ${spanRank(s, sameType)} of ${sameType.length} catalog ${sameType.length === 1 ? type : pluralVoice(type)}; that group's median span is ${semis(typeMedian)}, and this span is ${
+      sp === typeMedian
+        ? "the same as that median"
+        : `${semis(Math.abs(sp - typeMedian))} ${sp > typeMedian ? "wider" : "narrower"} than that median`
+    }.`,
   });
 
   const genre = s.genres[0];
@@ -76,7 +81,7 @@ export function catalogPositionFor(
   facts.push({
     id: "band",
     label: "Against the textbook band",
-    text: `The conventional ${type} band runs ${midiToLabel(band.low)} to ${midiToLabel(band.high)}. The reported floor sits ${against(s.lowMidi - band.low, "above", "below")} it and the reported ceiling ${against(s.highMidi - band.high, "above", "below")} it.`,
+    text: `The conventional ${type} band runs ${midiToLabel(band.low)} to ${midiToLabel(band.high)}. The reported floor ${againstBand(s.lowMidi - band.low, "bottom")}, and the reported ceiling ${againstBand(s.highMidi - band.high, "top")}.`,
   });
 
   if (s.beltMidi !== null && s.beltMidi < s.highMidi) {

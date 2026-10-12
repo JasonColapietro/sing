@@ -41,7 +41,7 @@ const SEEN_KEY = "suede-sing:coach-intro:v1";
  *    that may move.
  *
  * 2. The Pro page itself. A full-screen modal whose only CTA pushes to
- *    /pro#plans has nothing to offer someone already reading that page. The
+ *    /pro#buy has nothing to offer someone already reading that page. The
  *    test is exact-segment on purpose: a bare prefix match would also swallow
  *    /progress, which is precisely the page a returning free user with logged
  *    sessions is most likely to hard-load — the cohort the mount pass exists
@@ -125,9 +125,14 @@ export default function ProMoments() {
         // storage unavailable — never show rather than show repeatedly
       }
     };
-    // Runs once for a result that landed before this mount, then on every
-    // later one. The early returns above skip OPENING, never subscribing.
-    gate();
+    // The mount pass is for /progress only: a returning singer hard-loading
+    // their dashboard is looking at their results, which is what this sells.
+    // On any other cold load (the homepage, a practice room) there is no
+    // result on screen, and a dialog headed "Your result is in" over it was an
+    // interruption that claimed something false. Every later result signal
+    // still runs the gate on any route. The early returns above skip OPENING,
+    // never subscribing.
+    if (window.location.pathname === "/progress") gate();
     return subscribeProResult(gate);
   }, []);
 
@@ -174,7 +179,9 @@ export default function ProMoments() {
   const goPro = () => {
     markSeen();
     setShow(false);
-    router.push("/pro#plans");
+    // The button states the price, so it lands on the card that sells at
+    // that price, not on the top of the plans section.
+    router.push("/pro#buy");
   };
 
   if (!show) return null;
@@ -208,8 +215,8 @@ export default function ProMoments() {
         <h2 className="mt-4 text-2xl sm:text-3xl">Turn this result into a plan</h2>
         <p className="mt-3 text-sm text-mut sm:text-base">
           Suede Pro turns your numbers into tomorrow&apos;s practice: a daily
-          plan, weak notes drilled on purpose, and your range charted as it
-          grows.
+          plan, weak notes drilled on purpose, and your range tests charted
+          over time.
         </p>
         <ul className="mt-4 space-y-2">
           {[

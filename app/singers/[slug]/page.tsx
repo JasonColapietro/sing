@@ -88,6 +88,16 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
   ].includes(s.slug);
 }
 
+/**
+ * Catalog-position facts that read the catalog voice label (or its register
+ * split) as settled; pages with a reviewed voice-type correction omit them.
+ */
+const LABEL_DEPENDENT_FACTS: ReadonlySet<string> = new Set([
+  "type-rank",
+  "band",
+  "belt",
+]);
+
 /** Google cuts titles at roughly 60 characters. */
 const TITLE_MAX = 60;
 
@@ -469,14 +479,25 @@ export default async function SingerPage({
             Where {s.name}&rsquo;s reported span sits in the catalog
           </h2>
           <dl className="mt-4 max-w-3xl space-y-4">
-            {catalogPositionFor(s).map((fact) => (
-              <div key={fact.id}>
-                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                  {fact.label}
-                </dt>
-                <dd className="mt-1 text-sm text-mut">{fact.text}</dd>
-              </div>
-            ))}
+            {/* A reviewed correction means the sources do not establish the
+                catalog voice label. The facts that measure this singer
+                against that label (group rank, textbook band) or restate the
+                catalog's register split (full-voice ceiling) would put back
+                what the review set aside, so those pages leave them out. */}
+            {catalogPositionFor(s)
+              .filter(
+                (fact) =>
+                  !hasReviewedVoiceTypeCorrection(s) ||
+                  !LABEL_DEPENDENT_FACTS.has(fact.id),
+              )
+              .map((fact) => (
+                <div key={fact.id}>
+                  <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    {fact.label}
+                  </dt>
+                  <dd className="mt-1 text-sm text-mut">{fact.text}</dd>
+                </div>
+              ))}
           </dl>
           <p className="mt-4 text-xs text-dim">
             Counted from the catalog&rsquo;s reported figures, which are not

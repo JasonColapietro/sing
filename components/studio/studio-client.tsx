@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
+import { tuneZone } from "@/lib/audio/notes";
 import { logSession, type LogResult } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { createPracticeClock } from "@/lib/practice-clock";
@@ -207,7 +208,12 @@ export function StudioClient() {
   }, [listening, practiceClock]);
 
   const note = frame.note;
-  const inTune = note !== null && Math.abs(note.cents) <= 15;
+  // The same zones as the pitch meter on /range. These cents are measured to
+  // the nearest note, so they never pass ±50: anything not in tune used to
+  // read as a red "Sharp" while target practice, scoring to ±50 against its
+  // own target, showed the same note green.
+  const zone = note ? tuneZone(note.cents) : null;
+  const inTune = zone === "in-tune";
 
   return (
     <PageShell
@@ -333,6 +339,10 @@ export function StudioClient() {
                 {note &&
                   (inTune ? (
                     <Pill tone="ok">In tune</Pill>
+                  ) : zone === "close" ? (
+                    <Pill tone="violet">
+                      {note.cents > 0 ? "A little sharp" : "A little flat"}
+                    </Pill>
                   ) : (
                     <Pill tone="rec">{note.cents > 0 ? "Sharp" : "Flat"}</Pill>
                   ))}

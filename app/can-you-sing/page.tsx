@@ -111,11 +111,11 @@ export default function CanYouSingHub() {
         <SectionLabel heading>How these figures work</SectionLabel>
         <p className="mt-3 max-w-prose text-sm text-mut">
           Each page cites the published key and the commonly circulated
-          lead-vocal range for the studio version — the same figures
-          sheet-music arrangements and fan transcriptions agree on, framed as
-          approximations, never lab measurements. No lyrics or melodies are
-          reproduced. For what the artists themselves can do beyond one song,
-          see the{" "}
+          lead-vocal range for the studio version, usually from a named
+          original-key sheet-music arrangement. Sources can differ by a note
+          or two at either end, so treat these as approximations, never lab
+          measurements. No lyrics or melodies are reproduced. For what the
+          artists themselves can do beyond one song, see the{" "}
           <Link
             className="text-violet-ink underline-offset-4 hover:underline"
             href="/singers"

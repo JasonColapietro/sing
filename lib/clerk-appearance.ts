@@ -16,8 +16,8 @@ type ClerkAppearance = NonNullable<ComponentProps<typeof SignIn>["appearance"]>;
  * links as well as button fills, and the lighter gold reads 2.4:1 on paper —
  * fine as a fill, a WCAG AA failure as text.
  *
- * components/nav.tsx carries its own copy of the same variables, for the
- * header's sign-in modal and user button; keep the two in step.
+ * components/account/nav-account.tsx uses this object for the header's
+ * sign-in modal and user button.
  */
 export const SING_APPEARANCE: ClerkAppearance = {
   variables: {

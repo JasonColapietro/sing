@@ -267,6 +267,22 @@ export function routineMinutes(r: Routine): number {
   return Math.max(1, Math.round(routineSeconds(r) / 60));
 }
 
+/**
+ * The recommendation sized to the free guided practice left today.
+ *
+ * A routine that runs past the allowance stops at the cap slide between two
+ * steps, so a free singer's first guided session would end on a sales slide
+ * instead of a summary. When `preferred` does not fit in `leftSec`, the short
+ * morning set takes its place if that one fits; otherwise nothing shorter
+ * would finish either, and the pick stands. Pro passes Infinity and always
+ * gets `preferred`.
+ */
+export function sizeRoutineToAllowance(preferred: Routine, leftSec: number): Routine {
+  if (routineSeconds(preferred) <= leftSec) return preferred;
+  const morning = routineById("morning");
+  return morning && routineSeconds(morning) <= leftSec ? morning : preferred;
+}
+
 export interface RecentWarmups { averageScore: number; averageStars: number; count: number }
 
 /** Ignore unscored listens; sort by date so imported history is handled too. */

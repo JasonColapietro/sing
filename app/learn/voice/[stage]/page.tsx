@@ -42,9 +42,12 @@ function stageAnswer(stage: CourseStage): string {
 
 type Stage = NonNullable<ReturnType<typeof findStage>>;
 
+// The goal leads: the counts alone ("3 modules and 9 short lessons") say
+// nothing about what the stage teaches, and a longer template ran past the
+// snippet budget for five of the seven stages, so fitDescription cut the goal.
 function stageDescription(stage: Stage): string {
   const { catalog } = stage;
-  return `${catalog.name} voice lessons: stage ${catalog.stage} of the free singing course, ${stage.modules.length} modules and ${stageLessonCount(stage)} short lessons. The goal: ${lowerFirst(catalog.subtitle)}.`;
+  return `${catalog.name} voice lessons, stage ${catalog.stage} of ${COURSE.length}: ${lowerFirst(catalog.subtitle)}. ${stage.modules.length} modules, ${stageLessonCount(stage)} short free lessons.`;
 }
 
 export async function generateMetadata({

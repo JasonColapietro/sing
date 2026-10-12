@@ -15,10 +15,10 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and read Breath: support versus pressure. Use its written exercise and stop rules. The reading Breath: support versus pressure is listed there too.
+Open the sustain test in the breath room with the Practise button on this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound.
+- Listen: A quiet, even hiss is the whole task; you do not need to make a pitched sound.
 
 ### Set a safe baseline
 
@@ -55,7 +55,7 @@ I counted an even hiss, kept my shoulders quiet, and released before running out
 
 ## Practice blocks
 
-- 30s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: An Even Hiss.”
+- 30s: Open the sustain test. Prepare the room, body, and safe baseline for “Self-Check: An Even Hiss.”
 - 60s: Isolate the low breath and rib expansion target in short, comfortable examples.
 - 90s: Practise or record the complete “Self-Check: An Even Hiss” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
@@ -66,7 +66,7 @@ I counted an even hiss, kept my shoulders quiet, and released before running out
 - The hiss stays even rather than surging at the start and fading to almost nothing at the end.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, three hisses in a row stay even to your ear from start to finish and end with air to spare, shoulders down.
 
 If not ready: If the hiss pulses or rushes out, use less air, shorten the attempt, rest for a normal breath, and repeat at an easier duration. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

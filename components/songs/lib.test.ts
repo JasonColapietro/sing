@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SONGS, PRO_SONGS } from "./data";
+import { SONGS, PRO_SONGS, songBySlug } from "./data";
 import {
   AUTO_TEMPO_DOWN_SCORE,
   AUTO_TEMPO_UP_SCORE,
@@ -17,12 +17,15 @@ import {
   bandOpen,
   breathMarks,
   countSongsFitting,
+  defaultOctaveAgnostic,
+  fitTransposeToRange,
   isMastered,
   MASTERY_MIN_TEMPO,
   multiplierStep,
   pointsFor,
   rangeFit,
   snapTempo,
+  songTranspose,
 } from "./lib";
 import type { Song, SongNote } from "./types";
 
@@ -355,5 +358,49 @@ describe("breathMarks", () => {
   it("does not mark a line change after a short note", () => {
     const notes = timed([0, 1, 2, 3], [1, 1, 1, 1]).map((n, i) => ({ ...n, line: i === 3 ? 1 : 0 }));
     expect(breathMarks(notes)).toEqual([]);
+  });
+});
+
+describe("songTranspose: the key a song opens in", () => {
+  const twinkle = song("twinkle", [60, 60, 67, 67, 69, 69, 67]);
+  const other = song("other", [55, 57, 59, 60]);
+  const baritone = { lowMidi: 45, highMidi: 64 };
+
+  it("opens in the written key when no range is saved", () => {
+    expect(songTranspose(twinkle, {}, null)).toBe(0);
+    expect(songTranspose(twinkle, { lowMidi: 45 }, null)).toBe(0);
+  });
+
+  it("opens fitted to a saved range, where Fit to my range would put it", () => {
+    const fitted = songTranspose(twinkle, baritone, null);
+    expect(fitted).toBe(fitTransposeToRange(twinkle, baritone));
+    expect(fitted).toBeLessThan(0);
+    expect(rangeFit(twinkle, baritone, fitted).verdict).toBe("fits");
+  });
+
+  it("lets the singer's pick override the fit, for that song only", () => {
+    const picked = { songId: twinkle.id, semis: 2 };
+    expect(songTranspose(twinkle, baritone, picked)).toBe(2);
+    // The player is not re-mounted between songs: the next song refits.
+    expect(songTranspose(other, baritone, picked)).toBe(fitTransposeToRange(other, baritone));
+    expect(songTranspose(other, {}, picked)).toBe(0);
+  });
+});
+
+describe("defaultOctaveAgnostic", () => {
+  it("scores any octave until a saved range places the song in the singer's octave", () => {
+    expect(defaultOctaveAgnostic({})).toBe(true);
+    expect(defaultOctaveAgnostic({ highMidi: 72 })).toBe(true);
+    expect(defaultOctaveAgnostic({ lowMidi: 45, highMidi: 64 })).toBe(false);
+  });
+});
+
+describe("songbook transcriptions", () => {
+  // Regression guard for two corrected transcriptions: London Bridge's third
+  // "fall-ing down" rises E4–F4–G4, and Danny Boy's opening line.
+  it("transcribes the corrected folk melodies", () => {
+    const midis = (slug: string) => songBySlug(slug)!.notes.map((n) => n.midi);
+    expect(midis("london-bridge-is-falling-down").slice(-3)).toEqual([64, 65, 67]);
+    expect(midis("danny-boy")).toEqual([59, 60, 62, 64, 62, 64, 69, 67, 64, 62, 57]);
   });
 });

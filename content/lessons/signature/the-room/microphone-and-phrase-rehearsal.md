@@ -15,7 +15,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Home on the Range (Verse & Chorus). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.
+Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Home on the Range (Opening Lines). Hear the reference, choose a comfortable key, then stop it before singing. The reading Building a set you can survive is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
@@ -29,14 +29,14 @@ Rehearse the displayed melody alone. Record two short examples in one take at di
 
 ### Name the target: Performance and harmony
 
-Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.
+Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The displayed study contains one melody line. Keep the microphone position consistent within each comparison.
 - Listen: The phrase remains understandable from its first entry to its final release.
 
 ### Build the song from phrases
 
-Rehearse the displayed melody alone. Record two short examples in one take at different comfortable microphone distances, keeping the phrase and volume similar. Leave a quiet gap while changing distance so handling noise is separate; record your takes in the recorder. Listen for clarity before attempting a longer study.
+Mark your breaths and the highest phrase of Amazing Grace or Home on the Range. Rehearse that phrase alone, join two phrases, then record the whole arrangement in one uninterrupted take in the recorder at the microphone distance that sounded clearest in your comparison, keeping it fixed so the take is a fair comparison with the next one.
 
 - Look: The displayed study contains one melody line. Keep the microphone position consistent within each comparison.
 - Listen: The phrase remains understandable from its first entry to its final release.
@@ -63,7 +63,7 @@ I rehearsed the supplied study arrangement and compared microphone distance or p
 ## Self-check
 
 - I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes.
-- On playback, the melody keeps its own contour and the full song remains complete from first entry to release. A harmony line, if you add one, is listening practice: nothing here measures two parts at once.
+- On playback, the melody keeps its own contour and the whole arrangement stays complete from first entry to release. A harmony line, if you add one, is listening practice: nothing here measures two parts at once.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.

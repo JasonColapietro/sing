@@ -56,7 +56,7 @@ Two adjustments, both subtractive.
 
 **Weight.** Let the sound thin as you approach the zone. Not breathier, not collapsing — thinner. A dimmer, not a switch. Sing the approach a little quieter than feels natural, so the muscular handover can happen over several notes instead of as an emergency. Once you are above the zone, the volume can come back. It is the crossing that needs to be quiet.
 
-**Vowel.** Since part of the trouble is a harmonic arriving at a fixed resonant peak, move the peak. That is all vowel modification is. Shading a bright, narrow vowel toward a rounder, more neutral one changes the shape of the tube, which moves where the reinforcement sits, which lets the harmonic pass without the sudden dropout. Chapter five gives the ladder of which vowel shades toward which. Small amounts. If a listener can hear the word change, you have gone too far.
+**Vowel.** Since part of the trouble is a harmonic arriving at a fixed resonant peak, move the peak. That is all vowel modification is. Shading the vowel a little toward the neutral middle — a bright "ee" opening slightly toward "ih", a wide "ah" rounding slightly toward "aw" — changes the shape of the tube, which moves where the reinforcement sits, which lets the harmonic pass without the sudden dropout. Chapter five gives the ladder of which vowel shades toward which. Small amounts. If a listener can hear the word change, you have gone too far.
 
 The two work together. Vowel without weight release still fights the handover. Weight release without the vowel gives you a note that is easy and hollow. Together they spread the transition across more notes, which leaves less of a seam to hear.
 

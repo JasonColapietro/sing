@@ -66,7 +66,7 @@ I tried a comfortable low and high note without forcing either end and noted the
 - Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: You have written down one easy low note and one easy high note you could sing again tomorrow, and the range test has saved a result.
 
 If not ready: If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

@@ -5,12 +5,16 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   VOICE_TYPES,
   classifyVoice,
+  crossFamilyAlternative,
   midiToLabel,
+  voiceFitLabel,
+  type VoiceType,
 } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
 import { useProgress, type Achievement } from "@/lib/progress";
 import type { RangeEntry } from "@/lib/analytics";
 import { useIsPro, useProReady } from "@/lib/pro";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Button, Card, LinkButton, Pill, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
@@ -66,6 +70,44 @@ function comparisonSlugFromLocation() {
 
 function noServerComparison() {
   return null;
+}
+
+const SONG_SLUG = /^[a-z0-9-]{1,80}$/;
+
+/**
+ * The /can-you-sing song that sent the singer here, or null. Read from
+ * ?check=, with ?song= accepted as well so either spelling of the link works.
+ * Only the slug's shape is checked: the song catalogue imports the whole
+ * singer library, which this route keeps out of its bundle on purpose, and an
+ * unknown slug lands on the site's 404 page rather than anywhere harmful.
+ */
+export function returnSongSlugFromSearch(search: string): string | null {
+  const params = new URLSearchParams(search);
+  const slug = params.get("check") ?? params.get("song");
+  return slug && SONG_SLUG.test(slug) ? slug : null;
+}
+
+function returnSongFromLocation() {
+  return returnSongSlugFromSearch(window.location.search);
+}
+
+/**
+ * The note under a two-band result. The pair is always one band from the
+ * bass-to-tenor set and one from the contralto-to-soprano set, which the
+ * singer library describes as male and female categories, so the honest
+ * tiebreaker is the singer's own voice rather than anything a pitch tracker
+ * can hear.
+ */
+function altBandsCopy(voice: VoiceType, alt: VoiceType): string {
+  const [lower, higher] =
+    voice.lowMidi <= alt.lowMidi ? [voice, alt] : [alt, voice];
+  return `Your range fits the ${voice.label.toLowerCase()} and ${alt.label.toLowerCase()} bands about equally well, and a range test alone can't tell them apart: ${lower.label.toLowerCase()} is a male voice category and ${higher.label.toLowerCase()} a female one, and their notes overlap. Go with the one that describes your voice, and treat it as an estimate, not a box.`;
+}
+
+/** "basses", "tenors", "mezzo-sopranos". */
+export function voicePlural(label: string): string {
+  const lower = label.toLowerCase();
+  return lower.endsWith("s") ? `${lower}es` : `${lower}s`;
 }
 
 function describeSpan(semitones: number): string {
@@ -190,16 +232,20 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   ctx.font = `700 124px ${mono}`;
   ctx.fillText(`${midiToLabel(lowMidi)} — ${midiToLabel(highMidi)}`, W / 2, 268);
 
-  // Voice type + span
-  const voice = classifyVoice(lowMidi, highMidi);
+  // Voice type + span. This is the copy of the result that leaves the site,
+  // so it carries the same "closest fit" hedge as the page: a voice type from
+  // one range test is an estimate, not a classification.
   const semis = highMidi - lowMidi;
+  const voiceLine = `Closest fit: ${voiceFitLabel(lowMidi, highMidi)} · ${semis} semitones · ${describeSpan(semis)}`;
   ctx.fillStyle = MUT;
-  ctx.font = `500 30px ${mono}`;
-  ctx.fillText(
-    `${voice.label} · ${semis} semitones · ${describeSpan(semis)}`,
-    W / 2,
-    330,
-  );
+  let lineSize = 30;
+  ctx.font = `500 ${lineSize}px ${mono}`;
+  // Two band names make the longest line overrun the frame; shrink to fit.
+  while (lineSize > 18 && ctx.measureText(voiceLine).width > W - 140) {
+    lineSize -= 2;
+    ctx.font = `500 ${lineSize}px ${mono}`;
+  }
+  ctx.fillText(voiceLine, W / 2, 330);
 
   // Mini keyboard C2..C6 with range band
   const kbX = 120;
@@ -283,9 +329,18 @@ export function ResultView({
     noServerComparison,
   );
   const comparisonSinger = comparisonSingerFromSlug(comparisonSlug);
+  const returnSongSlug = useSyncExternalStore(
+    subscribeToLocation,
+    returnSongFromLocation,
+    noServerComparison,
+  );
   const semis = highMidi - lowMidi;
   const voice = useMemo(
     () => classifyVoice(lowMidi, highMidi),
+    [lowMidi, highMidi],
+  );
+  const altVoice = useMemo(
+    () => crossFamilyAlternative(lowMidi, highMidi),
     [lowMidi, highMidi],
   );
 
@@ -378,7 +433,16 @@ export function ResultView({
           <div className="flex gap-8">
             <Stat label="Semitones" value={semis} tone="violet" />
             <Stat label="Span" value={describeSpan(semis)} tone="ink" />
-            <Stat label="Voice type" value={voice.label} tone="cool" />
+            <Stat
+              label="Voice type"
+              value={voice.label}
+              sub={
+                altVoice
+                  ? `Or ${altVoice.label}, an estimate`
+                  : "Closest fit, an estimate"
+              }
+              tone="cool"
+            />
           </div>
         </div>
         <div className="mt-6">
@@ -422,6 +486,25 @@ export function ResultView({
           <div className="mt-4">
             <LinkButton href={`/singers/${comparisonSinger.slug}`} size="md">
               Compare with {comparisonSinger.name} →
+            </LinkButton>
+          </div>
+        </Card>
+      )}
+
+      {/* The song-page twin of the card above. "Can you sing it?" sends a
+          visitor here with ?check=<song>, and the answer is back on that
+          page, so the result says so instead of leaving them to find it. */}
+      {returnSongSlug && (
+        <Card className="border-violet/40">
+          <SectionLabel>Finish the check</SectionLabel>
+          <h2 className="mt-3 text-xl">Now see if the song fits your range</h2>
+          <p className="mt-2 max-w-2xl text-sm text-mut">
+            Your result is saved in this browser. The song page now compares it
+            with the song&rsquo;s cited range.
+          </p>
+          <div className="mt-4">
+            <LinkButton href={`/can-you-sing/${returnSongSlug}`} size="md">
+              Back to the song →
             </LinkButton>
           </div>
         </Card>
@@ -501,10 +584,10 @@ export function ResultView({
             </h3>
             <p className="mt-1.5 text-sm text-mut">
               {counted === null
-                ? "Every song shifts up to an octave either way, so the book comes to the range you just measured."
+                ? "Songs now open fitted to the range you just measured, and you can shift any of them by semitones."
                 : counted.fitting > 0
-                  ? `${counted.fitting} of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key. The rest transpose.`
-                  : `None of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key, so start from one that transposes — every song shifts up to an octave either way.`}
+                  ? `${counted.fitting} of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key. Every song now opens fitted to your range, and you can shift any of them by semitones.`
+                  : `None of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key, but every song now opens fitted to your range, and you can shift any of them by semitones.`}
             </p>
             <div className="mt-4">
               {/* Plain /songs, no filter param: the library seeds its browse
@@ -517,6 +600,15 @@ export function ResultView({
             </div>
           </div>
         </div>
+        {/* Both cards lead into capped practice; say so before the click
+            rather than at the paywall. */}
+        {proReady && !isPro && (
+          <p className="mt-4 text-xs text-dim">
+            On the free plan, warmups and songs count toward{" "}
+            {FREE_DAILY_MINUTES} minutes of guided practice a day, and Pro
+            removes that limit. The range test has no daily limit.
+          </p>
+        )}
       </Card>
 
       {/* Voice type chart */}
@@ -524,28 +616,38 @@ export function ResultView({
         <SectionLabel>Voice type</SectionLabel>
         <h2 className="mt-3 text-xl">
           Closest fit: <span className="text-violet-ink">{voice.label}</span>
+          {altVoice && (
+            <>
+              {" "}
+              or <span className="text-violet-ink">{altVoice.label}</span>
+            </>
+          )}
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-mut">
-          Voice types are rough guides borrowed from choral music. Your range
-          overlaps the {voice.label.toLowerCase()} band the most, but plenty of
-          great singers sit between categories — treat this as a starting
-          point, not a box.
+          {altVoice
+            ? altBandsCopy(voice, altVoice)
+            : `Voice types are rough guides borrowed from choral music. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.`}
         </p>
         {/* The classification used to end here. Every label the classifier can
             produce has a page of singers behind it, so it should be the next
             click rather than the last word. */}
-        <Link
-          href={`/singers/voice-type/${voiceTypeSlug(voice.label)}`}
-          className="mt-3 inline-flex items-center gap-1.5 text-sm text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
-        >
-          See the {voice.label.toLowerCase()}s in the library
-          <span aria-hidden>→</span>
-        </Link>
+        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+          {(altVoice ? [voice, altVoice] : [voice]).map((v) => (
+            <Link
+              key={v.id}
+              href={`/singers/voice-type/${voiceTypeSlug(v.label)}`}
+              className="inline-flex items-center gap-1.5 text-sm text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
+            >
+              See the {voicePlural(v.label)} in the library
+              <span aria-hidden>→</span>
+            </Link>
+          ))}
+        </div>
         <div className="mt-6 space-y-2">
           {VOICE_TYPES.map((v) => {
             const left = axisPct(v.lowMidi, 36, 84);
             const width = axisPct(v.highMidi, 36, 84) - left;
-            const isMatch = v.id === voice.id;
+            const isMatch = v.id === voice.id || v.id === altVoice?.id;
             return (
               <div key={v.id} className="flex items-center gap-3">
                 <span
@@ -622,7 +724,7 @@ export function ResultView({
               <div key={f.name} className="flex items-center gap-3">
                 <Link
                   href={`/singers/${f.slug}`}
-                  className={`w-36 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current ${isBest ? "text-violet-ink" : "text-mut"}`}
+                  className={`w-24 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current sm:w-36 ${isBest ? "text-violet-ink" : "text-mut"}`}
                 >
                   {f.name}
                 </Link>
@@ -636,8 +738,12 @@ export function ResultView({
                     style={{ left: `${uLeft}%`, width: `${uWidth}%` }}
                   />
                 </div>
-                <span className="tabular w-24 shrink-0 font-mono text-[11px] text-dim">
-                  {midiToLabel(f.lowMidi)}–{midiToLabel(f.highMidi)}{" "}
+                {/* The note range is dropped on phones: with it, the bar
+                    between the name and the label was about 37px wide. */}
+                <span className="tabular w-14 shrink-0 font-mono text-[11px] text-dim sm:w-24">
+                  <span className="hidden sm:inline">
+                    {midiToLabel(f.lowMidi)}–{midiToLabel(f.highMidi)}{" "}
+                  </span>
                   <span className={isBest ? "text-violet-ink" : ""}>
                     ({f.overlap}st)
                   </span>
@@ -647,7 +753,7 @@ export function ResultView({
           })}
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Amber = your range · st = semitones of overlap
+          Violet = your range · st = semitones of overlap
         </p>
         <div className="mt-4">
           <Link

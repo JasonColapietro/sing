@@ -5,7 +5,7 @@ import { useAccountAuth } from "@/lib/use-account-auth";
 import {
   ACHIEVEMENTS,
   clearProgress,
-  exportProgress,
+  getState,
   importProgress,
   levelForXp,
   todayPracticeSec,
@@ -25,23 +25,26 @@ import {
   Stat,
 } from "@/components/ui";
 import { AccountSavePrompt } from "@/components/account/save-prompt";
-import {
-  AccountBackupControls,
-  AccountBackupSync,
-} from "./account-backup-sync";
+import { downloadProgressBackup } from "@/components/account/download-backup";
+import { AccountBackupControls } from "./account-backup-sync";
 import { FreeOnly, ProInlineNudge } from "@/components/pro/gate";
 import { streakChipState } from "@/components/nav";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
+import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
+import { useActiveProgram } from "@/components/programs/use-program";
+import { ProgramEntryCard } from "@/components/programs/today-card";
 import { useIsPro } from "@/lib/pro";
+import { MAX_SESSIONS } from "@/lib/progress-shape";
+import { FREE_DAILY_MINUTES, FREE_DAILY_SEC } from "@/lib/practice-limits";
 import { aggregateNotes } from "@/lib/analytics";
 import { SyncControls } from "./sync-controls";
 import { useProgressCloudState } from "@/lib/progress-cloud";
 import { NoteAccuracyChart, RangeHistoryChart } from "./pro-charts";
-import { PracticeCalendar } from "./calendar";
+import { PracticeCalendar, calendarStartDay } from "./calendar";
 import { MinutesBarChart, PracticeMixChart, ScoreTrendChart } from "./charts";
 import { CoachCard } from "./coach";
 import { VoiceCard } from "./voice-card";
-import { TYPE_META, fmtDur, localDayStr, relDay } from "./format";
+import { TYPE_META, fmtDur, localDayStr, parseDay, relDay } from "./format";
 
 /**
  * How many sessions the free tier lists.
@@ -181,18 +184,24 @@ export function DashboardSkeleton() {
 /* ------------------------------------------------------------------ */
 
 /**
- * The day's practice target the "Today" bar fills against. Ten minutes is the
- * length the guides give for an ordinary warmup, so it is a day that counts
- * rather than a day that impresses.
+ * The overview's four cards.
+ *
+ * The "Today" bar fills against the same goal, counted the same way, as the
+ * ring in every practice room (useDailyGoal and useGoalDoneSec): ten minutes
+ * of any practice on Pro, and on the free plan the five guided minutes a day
+ * the allowance covers. It used to fill against a fixed ten minutes of all
+ * practice, so a free singer who had used their five minutes saw a full ring
+ * in the room and half a red bar here, for a goal the free plan cannot reach.
+ *
+ * Exported for its test.
  */
-const DAILY_GOAL_SEC = 10 * 60;
-
-function HeaderRow({
+export function HeaderRow({
   xp,
   streakCurrent,
   streakBest,
   streakLastDay,
   todaySec,
+  goal,
   sessionCount,
   totalSec,
 }: {
@@ -200,7 +209,10 @@ function HeaderRow({
   streakCurrent: number;
   streakBest: number;
   streakLastDay: string | null;
+  /** All practice logged today, whatever the room. */
   todaySec: number;
+  /** Today's goal and what counts toward it, as the practice rooms measure them. */
+  goal: { doneSec: number; goalSec: number; isPro: boolean };
   sessionCount: number;
   totalSec: number;
 }) {
@@ -210,8 +222,23 @@ function HeaderRow({
   // died days ago still reads as a live count. Say so rather than colouring a
   // dead number coral.
   const lapsed = streak === "none" && streakCurrent > 0;
-  const goalMet = todaySec >= DAILY_GOAL_SEC;
-  const goalPct = Math.min(100, (todaySec / DAILY_GOAL_SEC) * 100);
+  const goalMin = Math.max(1, Math.round(goal.goalSec / 60));
+  const goalMet = goal.doneSec >= goal.goalSec;
+  const goalPct = goal.goalSec > 0 ? Math.min(100, (goal.doneSec / goal.goalSec) * 100) : 0;
+  // On free the goal is the daily allowance. A stored goal below it is the
+  // singer's own, and calling that "free guided minutes" would misstate the cap.
+  const freeAllowance = !goal.isPro && goal.goalSec >= FREE_DAILY_SEC;
+  const goalLine = !freeAllowance
+    ? goalMet
+      ? `today's ${goalMin}-minute goal met`
+      : `of today's ${goalMin}-minute goal`
+    : goalMet
+      ? `today's ${goalMin} free guided minutes done`
+      : `${Math.floor(goal.doneSec / 60)} of today's ${goalMin} free guided minutes`;
+  // The store keeps the newest MAX_SESSIONS. Past that the count stops and the
+  // total covers only what is kept, so both say so instead of reading as a
+  // lifetime figure that can go down.
+  const atCap = sessionCount >= MAX_SESSIONS;
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -261,11 +288,7 @@ function HeaderRow({
         <Stat
           label="Today"
           value={fmtDur(todaySec)}
-          sub={
-            goalMet
-              ? `past today's ${DAILY_GOAL_SEC / 60} minutes`
-              : `of a ${DAILY_GOAL_SEC / 60}-minute day`
-          }
+          sub={goalLine}
           tone={goalMet ? "ok" : "ink"}
         />
         <ProgressBar value={goalPct} tone={goalMet ? "ok" : "rec"} className="mt-3" />
@@ -273,8 +296,16 @@ function HeaderRow({
 
       <Card>
         <div className="grid grid-cols-2 gap-3">
-          <Stat label="Sessions" value={sessionCount.toLocaleString()} />
-          <Stat label="Total time" value={fmtDur(totalSec)} />
+          <Stat
+            label="Sessions"
+            value={atCap ? `${MAX_SESSIONS}+` : sessionCount.toLocaleString()}
+            sub={atCap ? `latest ${MAX_SESSIONS} kept` : undefined}
+          />
+          <Stat
+            label="Total time"
+            value={fmtDur(totalSec)}
+            sub={atCap ? `across the latest ${MAX_SESSIONS} sessions` : undefined}
+          />
         </div>
       </Card>
     </div>
@@ -437,20 +468,6 @@ function DataControls() {
   const [confirmText, setConfirmText] = useState("");
   const [erased, setErased] = useState(false);
 
-  function handleExport() {
-    const json = exportProgress();
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    const stamp = localDayStr(new Date());
-    a.href = url;
-    a.download = `suede-sing-progress-${stamp}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
   function handleImportClick() {
     fileInputRef.current?.click();
   }
@@ -461,12 +478,23 @@ function DataControls() {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
+      const before = getState().sessions.map((s) => s.id);
       const ok = importProgress(String(reader.result ?? ""));
-      setImportNotice(
-        ok
-          ? { kind: "ok", text: "Progress imported. Your dashboard is now up to date." }
-          : { kind: "err", text: "That file didn't parse as valid progress data." },
-      );
+      if (!ok) {
+        setImportNotice({ kind: "err", text: "That file didn't parse as valid progress data." });
+        return;
+      }
+      // The import merges, but the store still keeps only the newest
+      // MAX_SESSIONS, so a big file can push this browser's oldest sessions
+      // out. Say so rather than claim they were all kept.
+      const kept = new Set(getState().sessions.map((s) => s.id));
+      const dropped = before.some((id) => !kept.has(id));
+      setImportNotice({
+        kind: "ok",
+        text: dropped
+          ? `Progress imported. Only the latest ${MAX_SESSIONS} sessions are kept, so the oldest ones on this device were dropped.`
+          : "Progress imported. Sessions already on this device were kept.",
+      });
     };
     reader.onerror = () => {
       setImportNotice({ kind: "err", text: "Couldn't read that file." });
@@ -492,10 +520,12 @@ function DataControls() {
             ? "Progress syncs to the cloud automatically and follows your Pro key to any device. Export still works if you want a file of your own."
             : accountBackup
               ? "Your account keeps a copy of this record, so clearing this browser doesn't put you back at zero. Export still works if you want a file of your own."
-              : "Progress lives only in this browser. Export a copy to back it up or move it to another device, then import it there."}
+              : "Progress lives only in this browser. Export a copy to back it up or move it to another device, then import it there. An import adds to what that browser already holds."}
         </p>
         <div className="mt-4 flex flex-wrap gap-2.5">
-          <Button variant="outline" size="sm" onClick={handleExport}>
+          {/* The same file the save prompt offers, from the same helper, so the
+              two can never drift into backups the Import button can't read. */}
+          <Button variant="outline" size="sm" onClick={downloadProgressBackup}>
             <DownloadIcon />
             Export JSON
           </Button>
@@ -593,6 +623,11 @@ const PROGRESS_SUBTITLE =
 export function ProgressClient() {
   const state = useProgress();
   const isPro = useIsPro();
+  const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(state);
+  // Null before mount and with no program running, so the card below only
+  // appears for a singer who has started one.
+  const activeProgram = useActiveProgram();
   const todaySec = todayPracticeSec(state);
   const weekly = weeklyReport(state.sessions);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
@@ -627,6 +662,18 @@ export function ProgressClient() {
     );
   }
 
+  // Past the store's cap the oldest kept session can fall inside the
+  // calendar's twelve weeks, and the days before it would read as days off.
+  // After the mount gate because it reads today's date.
+  const oldestKeptDay =
+    state.sessions.length >= MAX_SESSIONS
+      ? state.sessions.reduce((min, s) => (s.day < min ? s.day : min), state.sessions[0].day)
+      : null;
+  const calendarCutoff =
+    oldestKeptDay && oldestKeptDay > calendarStartDay()
+      ? parseDay(oldestKeptDay).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+      : null;
+
   return (
     <PageShell
       kicker="Progress"
@@ -634,26 +681,51 @@ export function ProgressClient() {
       subtitle={PROGRESS_SUBTITLE}
     >
       <div className="space-y-10">
-        {/* Keeps the signed-in singer's record backed up. Renders nothing and
-            never blocks; a signed-out visitor cannot tell it is here. */}
-        <AccountBackupSync />
-        <Card>
-          <SectionLabel>This week so far</SectionLabel>
-          <p className="mt-2 text-sm text-mut">Since Monday, compared with the full previous week. Up to three stars per scored session.</p>
-          <dl className="mt-4 grid gap-4 sm:grid-cols-3">
-            {([
-              ["Stars earned", String(weekly.thisWeek.stars), String(weekly.lastWeek.stars)],
-              ["Sessions", String(weekly.thisWeek.sessions), String(weekly.lastWeek.sessions)],
-              ["Practice time", fmtDur(weekly.thisWeek.durationSec), fmtDur(weekly.lastWeek.durationSec)],
-            ] as const).map(([label, current, previous]) => (
-              <div key={label}>
-                <dt className="text-sm text-mut">{label}</dt>
-                <dd className="mt-1 font-mono text-xl">{current}</dd>
-                <dd className="mt-1 text-xs text-dim">{previous} last week</dd>
+        {/* A first visit lands here from search for "singing progress
+            tracker". The way to start comes first, ahead of a wall of zeros. */}
+        {isFresh && (
+          <EmptyState
+            title="Nothing logged yet"
+            hint={`Finish any exercise — a warmup, a range test, an ear-training round — and it starts filling in your XP, streak, and charts below.${
+              isPro
+                ? ""
+                : ` The studio and the range test have no daily clock; warmups, ear training, breath and songs share ${FREE_DAILY_MINUTES} free minutes a day.`
+            }`}
+            action={
+              <div className="flex flex-wrap justify-center gap-2.5">
+                <LinkButton href="/studio" variant="rec">
+                  Open the studio
+                </LinkButton>
+                <LinkButton href="/range?mode=range" variant="outline">
+                  Find your range
+                </LinkButton>
+                <LinkButton href="/warmups" variant="outline">
+                  Try a warmup
+                </LinkButton>
               </div>
-            ))}
-          </dl>
-        </Card>
+            }
+          />
+        )}
+
+        {!isFresh && (
+          <Card>
+            <SectionLabel>This week so far</SectionLabel>
+            <p className="mt-2 text-sm text-mut">Since Monday, compared with the full previous week. Up to three stars per scored session.</p>
+            <dl className="mt-4 grid gap-4 sm:grid-cols-3">
+              {([
+                ["Stars earned", String(weekly.thisWeek.stars), String(weekly.lastWeek.stars)],
+                ["Sessions", String(weekly.thisWeek.sessions), String(weekly.lastWeek.sessions)],
+                ["Practice time", fmtDur(weekly.thisWeek.durationSec), fmtDur(weekly.lastWeek.durationSec)],
+              ] as const).map(([label, current, previous]) => (
+                <div key={label}>
+                  <dt className="text-sm text-mut">{label}</dt>
+                  <dd className="mt-1 font-mono text-xl">{current}</dd>
+                  <dd className="mt-1 text-xs text-dim">{previous} last week</dd>
+                </div>
+              ))}
+            </dl>
+          </Card>
+        )}
 
         <section aria-label="Overview">
           <HeaderRow
@@ -662,37 +734,25 @@ export function ProgressClient() {
             streakBest={state.streak.best}
             streakLastDay={state.streak.lastDay}
             todaySec={todaySec}
+            goal={{ doneSec: goalDoneSec, goalSec, isPro }}
             sessionCount={state.sessions.length}
             totalSec={totalSec}
           />
-          {isFresh && (
-            <div className="mt-4">
-              <EmptyState
-                title="Nothing logged yet"
-                hint="Finish any exercise — a warmup, a range test, an ear-training round — and it starts filling in your XP, streak, and charts below."
-                action={
-                  <div className="flex flex-wrap justify-center gap-2.5">
-                    <LinkButton href="/studio" variant="rec">
-                      Open the studio
-                    </LinkButton>
-                    <LinkButton href="/range?mode=range" variant="outline">
-                      Find your range
-                    </LinkButton>
-                    <LinkButton href="/warmups" variant="outline">
-                      Try a warmup
-                    </LinkButton>
-                  </div>
-                }
-              />
-            </div>
-          )}
           {/* Directly under the numbers it is talking about. The stat row above
               is the whole practice record in four cards, so this is where its
-              loss is legible — and the nearest Pro surface is the locked chart
-              two sections down, far enough that neither is competing with the
-              other. `when` is false on a fresh dashboard, which also means this
-              and the empty state above can never both be on screen. */}
+              loss is legible. `when` is false on a fresh dashboard, which also
+              means this and the empty state above can never both be on
+              screen. */}
           <AccountSavePrompt when={!isFresh} className="mt-4" />
+        </section>
+
+        {/* Today's plan right after the numbers, not six phone screens down
+            under the charts: the running program first, since it is the plan
+            the singer chose, then the coached session. */}
+        {activeProgram && <ProgramEntryCard active={activeProgram} />}
+
+        <section aria-label="Today's coached session">
+          <CoachCard state={state} />
         </section>
 
         <section aria-label="Practice calendar">
@@ -701,6 +761,12 @@ export function ProgressClient() {
           </div>
           <Card>
             <PracticeCalendar sessions={state.sessions} />
+            {calendarCutoff && (
+              <p className="mt-2 text-xs text-dim">
+                Your practice record keeps the latest {MAX_SESSIONS} sessions,
+                so the calendar shows no practice before {calendarCutoff}.
+              </p>
+            )}
           </Card>
         </section>
 
@@ -766,17 +832,15 @@ export function ProgressClient() {
           <AchievementsGallery unlocked={state.achievements} />
         </section>
 
-        <section aria-label="Today's coached session">
-          <CoachCard state={state} />
-        </section>
-
         <section aria-label="Session log">
           <Card pad>
             <div className="mb-1 flex items-baseline justify-between gap-2">
               <h2 className="text-lg">Recent sessions</h2>
               <span className="tabular font-mono text-xs text-dim">
                 {isPro
-                  ? `all ${state.sessions.length}`
+                  ? state.sessions.length >= MAX_SESSIONS
+                    ? `latest ${MAX_SESSIONS}`
+                    : `all ${state.sessions.length}`
                   : `last ${Math.min(FREE_SESSION_LOG, state.sessions.length)}`}
               </span>
             </div>

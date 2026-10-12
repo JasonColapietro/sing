@@ -83,8 +83,11 @@ export function HubChart({
                   : 100;
               return (
                 <li key={s.slug} className="cv-auto">
+                  {/* prefetch off: a hub lists up to 300 singers, and the
+                      default fetched each page's payload on scroll. */}
                   <Link
                     href={`/singers/${s.slug}`}
+                    prefetch={false}
                     aria-label={`${s.name}, ${s.voiceType}, cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`}
                     className="group block rounded-xl px-2 py-2.5 transition-colors hover:bg-panel sm:grid sm:grid-cols-[11rem_minmax(0,1fr)_5.5rem] sm:items-center sm:gap-x-4"
                   >

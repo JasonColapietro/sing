@@ -28,8 +28,8 @@ describe("song comparison to first practice", () => {
     for (const range of [{}, { lowMidi: 50 }, { highMidi: 72 }]) {
       state.range = range;
       const html = render();
-      expect(html).toContain('href="/range?mode=range"');
-      expect(html).toContain("Find your range free");
+      expect(html).toContain(`href="/range?mode=range&amp;check=${song.slug}"`);
+      expect(html).toContain(`See if “${song.title}” fits my voice`);
       expect(html).not.toContain("Your first practice");
       expect(html).not.toContain('href="/pro');
     }
@@ -49,6 +49,7 @@ describe("song comparison to first practice", () => {
     expect(html).toContain(benefit);
     expect(html).toContain('href="/pro#plans"');
     expect(html.indexOf(`href="${href}`)).toBeLessThan(html.indexOf('href="/pro#plans"'));
+    expect(html).toContain("free for 5 minutes a day");
     expect(html).toContain("commonly cited studio-version range");
     expect(html).toContain("not a judgment of your voice");
     expect(html).not.toContain("Extend it with warmups");
@@ -62,6 +63,13 @@ describe("song comparison to first practice", () => {
     expect(html).not.toContain('href="/warmups?exercise=');
     expect(html).toContain("comfortable note");
     expect(html).toContain("no key change");
+    // The pitch studio has no daily clock, so it is not described as having one.
+    expect(html).not.toContain("minutes a day");
+  });
+
+  it("sends a retest back to this song's verdict too", () => {
+    state.range = { lowMidi: 52, highMidi: 72 };
+    expect(render()).toContain(`href="/range?mode=range&amp;check=${song.slug}"`);
   });
 
   it.each(["member", "loading"])("keeps free practice available without an upsell for %s entitlement", (mode) => {

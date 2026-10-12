@@ -195,9 +195,9 @@ export const SONGS: Song[] = [
       { midi: 62, startBeat: 7, durBeats: 1, lyric: "fall", line: 1, wordEnd: false },
       { midi: 64, startBeat: 8, durBeats: 1, lyric: "ing", line: 1 },
       { midi: 65, startBeat: 9, durBeats: 1, lyric: "down,", line: 1 },
-      { midi: 67, startBeat: 10, durBeats: 1, lyric: "fall", line: 1, wordEnd: false },
-      { midi: 64, startBeat: 11, durBeats: 1, lyric: "ing", line: 1 },
-      { midi: 60, startBeat: 12, durBeats: 2, lyric: "down", line: 1 },
+      { midi: 64, startBeat: 10, durBeats: 1, lyric: "fall", line: 1, wordEnd: false },
+      { midi: 65, startBeat: 11, durBeats: 1, lyric: "ing", line: 1 },
+      { midi: 67, startBeat: 12, durBeats: 2, lyric: "down", line: 1 },
     ],
   },
   {
@@ -298,12 +298,13 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Full arrangement: the verse climbs from the dominant-below up to the
-    // sixth-leap on "buf-FA-lo," then the chorus enters on its own peak. The
-    // two halves together span more than either does alone.
+    // Longer arrangement: the first line of the verse climbs from the
+    // dominant-below up to the sixth-leap on "buf-FA-lo," then the first line
+    // of the chorus enters on its own peak. The two lines together span more
+    // than either does alone.
     id: "home-on-the-range-full",
     slug: "home-on-the-range-full",
-    title: "Home on the Range (Verse & Chorus)",
+    title: "Home on the Range (Opening Lines)",
     origin: "Poem “My Western Home” by Dr. Brewster Higley, 1873; melody by Daniel E. Kelley, 1873",
     publicDomain:
       "Higley’s poem and Kelley’s melody were both published in 1873; Higley died in 1911 and Kelley in 1905 — long out of copyright.",
@@ -315,7 +316,7 @@ export const SONGS: Song[] = [
     genre: "Folk",
     era: "1800s",
     language: "English",
-    tags: ["cowboy song", "full song", "verse and chorus"],
+    tags: ["cowboy song", "longer arrangement", "verse and chorus"],
     arrangementOf: "home-on-the-range",
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh," },
@@ -336,8 +337,8 @@ export const SONGS: Song[] = [
       { midi: 64, startBeat: 18, durBeats: 3, lyric: "range,", line: 1 },
     ],
     sections: [
-      { kind: "verse", label: "Verse 1", startBeat: 0, endBeat: 12 },
-      { kind: "chorus", label: "Chorus", startBeat: 12, endBeat: 21 },
+      { kind: "verse", label: "Verse 1, line 1", startBeat: 0, endBeat: 12 },
+      { kind: "chorus", label: "Chorus, line 1", startBeat: 12, endBeat: 21 },
     ],
   },
   {
@@ -406,8 +407,12 @@ export const SONGS: Song[] = [
   },
   {
     // 6/8, counted in eighths: the lilting compound meter is the whole
-    // character of the tune, and a 3/4 reduction loses it. A repeated dominant
-    // that falls a third and comes back — genuinely Easy.
+    // character of the tune, and a 3/4 reduction loses it. Gruber's line is
+    // sol-la-sol-mi, twice, but the la is a sixteenth-note upper neighbour
+    // slurred onto "Si-" and "ho-": "lent" and "ly" are back on the G and
+    // "night" is the long E. As with every melisma in the book, that turn is
+    // reduced to its main note, so each syllable carries one pitch: a
+    // repeated dominant that falls a third and comes back — genuinely Easy.
     id: "silent-night",
     slug: "silent-night",
     title: "Silent Night",
@@ -653,13 +658,19 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Contour: rising step opening, phrase peak on "call" — Medium (span 14 st).
+    // The Londonderry Air as Petrie printed it (1855), moved to C: a stepwise
+    // rise from the leading tone to "boy," a step down and back, then a 4th up
+    // to the phrase peak, A4, on the second "the", and a fall through "are
+    // call-" to A3, the sixth below the tonic, on "-ing". "Call-" is a
+    // slurred D4–C4 pair; the C4 is left out, one note per syllable as
+    // elsewhere in the book.
+    // Hard (span 12 st, two leaps).
     id: "danny-boy",
     slug: "danny-boy",
     title: "Danny Boy",
     origin: "Traditional (Londonderry Air, publ. 1855); lyrics Frederic Weatherly, 1913",
     publicDomain:
-      "The Londonderry Air melody was published in 1855; Frederic Weatherly’s lyrics date from 1913, before the 1929 US public-domain cutoff.",
+      "The Londonderry Air melody was published in 1855 and Frederic Weatherly’s lyrics in 1913; both are long out of US copyright, and Weatherly died in 1929.",
     bpm: 63,
     beatsPerBar: 4,
     defaultKeyRootMidi: 60,
@@ -670,17 +681,17 @@ export const SONGS: Song[] = [
     language: "English",
     tags: ["ballad", "wide range", "legato"],
     notes: [
-      { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh" },
+      { midi: 59, startBeat: 0, durBeats: 1, lyric: "Oh" },
       { midi: 60, startBeat: 1, durBeats: 1, lyric: "Dan", wordEnd: false },
       { midi: 62, startBeat: 2, durBeats: 1, lyric: "ny" },
       { midi: 64, startBeat: 3, durBeats: 2, lyric: "boy," },
-      { midi: 64, startBeat: 5, durBeats: 1, lyric: "the" },
-      { midi: 65, startBeat: 6, durBeats: 1, lyric: "pipes," },
-      { midi: 64, startBeat: 7, durBeats: 1, lyric: "the" },
-      { midi: 65, startBeat: 8, durBeats: 1, lyric: "pipes" },
-      { midi: 67, startBeat: 9, durBeats: 1, lyric: "are" },
-      { midi: 69, startBeat: 10, durBeats: 2, lyric: "call", wordEnd: false },
-      { midi: 67, startBeat: 12, durBeats: 2, lyric: "ing" },
+      { midi: 62, startBeat: 5, durBeats: 1, lyric: "the" },
+      { midi: 64, startBeat: 6, durBeats: 1, lyric: "pipes," },
+      { midi: 69, startBeat: 7, durBeats: 1, lyric: "the" },
+      { midi: 67, startBeat: 8, durBeats: 1, lyric: "pipes" },
+      { midi: 64, startBeat: 9, durBeats: 1, lyric: "are" },
+      { midi: 62, startBeat: 10, durBeats: 2, lyric: "call", wordEnd: false },
+      { midi: 57, startBeat: 12, durBeats: 2, lyric: "ing" },
     ],
   },
   {
@@ -742,13 +753,15 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Full arrangement: verse 1 is the phrase entry's melody; verse 2 repeats
-    // the exact same tune (this hymn is strophic — every stanza reuses it)
-    // with the second stanza of Newton's original text. Two passes of the
-    // phrase's own range-plus-leaps keep it Hard across the whole thing.
+    // Longer arrangement: the first two lines of verse 1 are the phrase
+    // entry's melody; the first two lines of verse 2 repeat the exact same
+    // tune (this hymn is strophic — every stanza reuses it) with the second
+    // stanza of Newton's original text. The second half of each stanza is not
+    // transcribed. Two passes of the phrase's own range-plus-leaps keep it
+    // Hard across the whole thing.
     id: "amazing-grace-full",
     slug: "amazing-grace-full",
-    title: "Amazing Grace (Verse 1 & 2)",
+    title: "Amazing Grace (Opening Lines, Verses 1 & 2)",
     origin: "Traditional tune “New Britain” (American shape-note, printed 1829); words by John Newton, 1779",
     publicDomain:
       "John Newton’s hymn text — including this second stanza — was published in his 1779 Olney Hymns; the “New Britain” tune it is now sung to first appeared in an 1829 shape-note tunebook. Both are centuries out of copyright.",
@@ -760,7 +773,7 @@ export const SONGS: Song[] = [
     genre: "Hymn",
     era: "1700s",
     language: "English",
-    tags: ["hymn", "wide range", "leap", "full song", "two verses"],
+    tags: ["hymn", "wide range", "leap", "longer arrangement", "two verses"],
     arrangementOf: "amazing-grace",
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "A", wordEnd: false },
@@ -793,8 +806,8 @@ export const SONGS: Song[] = [
       { midi: 67, startBeat: 40, durBeats: 2, lyric: "lieved;", line: 3 },
     ],
     sections: [
-      { kind: "verse", label: "Verse 1", startBeat: 0, endBeat: 21 },
-      { kind: "verse", label: "Verse 2", startBeat: 21, endBeat: 42 },
+      { kind: "verse", label: "Verse 1, lines 1–2", startBeat: 0, endBeat: 21 },
+      { kind: "verse", label: "Verse 2, lines 1–2", startBeat: 21, endBeat: 42 },
     ],
   },
   {

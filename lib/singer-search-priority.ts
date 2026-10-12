@@ -13,6 +13,12 @@
  * Keep this list small and evidence-led: it exists to give the pages already
  * earning meaningful `[name] vocal range` impressions a prominent path from
  * the collection hub, not to pretend this is global search-volume data.
+ *
+ * Since 2026-10-09 a singer page without a reviewed or disputed evidence
+ * record is noindexed, which covers most of this list (on 2026-10-12 only
+ * olivia-rodrigo had one). The hub therefore presents these as frequently
+ * looked-up singers, not as pages drawing search traffic, and the reviewed
+ * profiles, which can rank, get their own section on /singers.
  */
 export const VOCAL_RANGE_PRIORITY_SLUGS = [
   "bruno-mars",

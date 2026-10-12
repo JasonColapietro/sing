@@ -6,10 +6,20 @@ import {
   popRangeLabel,
   type PopSong,
 } from "@/lib/pop-songs";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { useProgress } from "@/lib/progress";
 import { songFirstPractice } from "@/lib/song-first-practice";
 import { FreeOnly } from "@/components/pro/gate";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
+
+/**
+ * The range test, told which song to send the visitor back to: the result
+ * screen reads `check=<slug>` and offers the way back to this song's verdict
+ * rather than leaving the visitor to find the page again.
+ */
+function rangeTestHref(song: PopSong): string {
+  return `/range?mode=range&check=${song.slug}`;
+}
 
 /**
  * The personal answer on a popular-song page. Server HTML carries all the
@@ -32,7 +42,10 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
           by how much when it does not.
         </p>
         <div className="mt-4">
-          <LinkButton href="/range?mode=range">Find your range free</LinkButton>
+          <LinkButton href={rangeTestHref(song)}>
+            {/* Quoted: several titles are styled lowercase ("vampire", "drop dead"). */}
+            See if “{song.title}” fits my voice
+          </LinkButton>
         </div>
       </Card>
     );
@@ -72,6 +85,14 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
               {practice.free.label}
             </LinkButton>
           </div>
+          {/* Songs and warmups are guided practice, on the free day's clock; the studio is not. */}
+          {!practice.free.href.startsWith("/studio") && (
+            <FreeOnly>
+              <p className="mt-2 text-xs text-mut">
+                Guided practice is free for {FREE_DAILY_MINUTES} minutes a day.
+              </p>
+            </FreeOnly>
+          )}
           <p className="mt-3 text-xs text-dim">
             These tools use exercises and public-domain melodies, not this
             popular song’s audio or melody. Stop if singing feels strained.
@@ -90,7 +111,7 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
         </section>
       )}
       <div className="mt-5">
-        <LinkButton href="/range?mode=range" variant="ghost" size="sm">
+        <LinkButton href={rangeTestHref(song)} variant="ghost" size="sm">
           Retest your range
         </LinkButton>
       </div>

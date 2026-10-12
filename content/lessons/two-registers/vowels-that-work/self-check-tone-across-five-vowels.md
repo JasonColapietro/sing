@@ -66,7 +66,7 @@ I sang the same short pattern on five vowels and compared the resulting tone by 
 - Each vowel remains intelligible while the phrase keeps a related tone and pitch center.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On playback, the same phrase on all five vowels keeps one pitch and a related tone, with every vowel still recognizable and none of them pinched, spread or pushed louder than the rest.
 
 If not ready: If one vowel pinches, return to the neutral vowel, make the troublesome shape smaller, and alternate the pair slowly. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

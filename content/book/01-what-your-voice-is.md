@@ -1,5 +1,6 @@
 ---
 title: "What your voice actually is"
+searchTitle: "How your singing voice works"
 part: "How the voice works"
 order: 1
 summary: "Breath as the power, the folds as the vibrator, the throat and mouth as the filter — the three-part model the rest of this book runs on."
@@ -61,4 +62,4 @@ One last note on the apparatus. None of these parts were designed for singing. T
 
 ## Try this
 
-Open the pitch studio, pick a comfortable note in the middle of your range, and hold it for eight seconds on "ah" — then do it again on "ee" without changing anything else. The trace stays on the same line while the sound changes completely. That is the filter working independently of the source.
+Open the [pitch studio](/studio), pick a comfortable note in the middle of your range, and hold it for eight seconds on "ah" — then do it again on "ee" without changing anything else. The trace stays on the same line while the sound changes completely. That is the filter working independently of the source.

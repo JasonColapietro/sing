@@ -44,7 +44,7 @@ const FEATURES = [
   {
     name: "Vocal range test",
     detail:
-      "Siren low to high. Get your span in semitones and a voice type: bass, baritone, tenor, alto, mezzo-soprano, soprano.",
+      "Siren low to high. Get your span in semitones and a voice-type estimate: bass, baritone, tenor, alto, mezzo-soprano, soprano.",
   },
   {
     name: "Guided warmups",
@@ -77,7 +77,7 @@ const FAQ = [
   },
   {
     q: "How do I find my vocal range in a browser?",
-    a: "Install the Suede Sing Chrome extension, open the side panel, choose Range, and siren slowly from your lowest comfortable note to your highest and back down. Sixty seconds is enough. The extension reports your lowest and highest notes, your span in semitones, and the voice type that range fits: bass, baritone, tenor, alto, mezzo-soprano, or soprano.",
+    a: "Install the Suede Sing Chrome extension, open the side panel, choose Range, and siren slowly from your lowest comfortable note to your highest and back down. Sixty seconds is enough. The extension reports your lowest and highest notes, your span in semitones, and an estimated voice type for that range: bass, baritone, tenor, alto, mezzo-soprano, or soprano.",
   },
   {
     q: "Can I see my pitch while singing along to YouTube?",
@@ -85,7 +85,7 @@ const FAQ = [
   },
   {
     q: "Does Suede Sing use my voice to train AI?",
-    a: "No. Suede Sing contains no machine learning model. Pitch is measured with an autocorrelation algorithm running locally in the browser, and each audio frame is discarded as soon as it is analysed. No audio is recorded, stored, or transmitted, so there is no training set a singer's voice could end up in. Suede AI builds measurement tools rather than data-collection tools.",
+    a: "No. Suede Sing contains no machine learning model. Pitch is measured with an autocorrelation algorithm running locally in the browser, and each audio frame is discarded as soon as it is analysed. No audio leaves your device, so there is no training set a singer's voice could end up in. Suede AI builds measurement tools rather than data-collection tools.",
   },
   {
     q: "Does the extension record or upload my voice?",
@@ -96,8 +96,8 @@ const FAQ = [
     a: "A cent is one hundredth of a semitone. Within roughly 10 cents of a note a listener hears you as in tune; beyond about 25 cents most people can hear the error. Suede Sing shows the exact number so singers can measure improvement instead of guessing.",
   },
   {
-    q: "Is Suede Sing free?",
-    a: "Yes. The Suede Sing Chrome extension is free with no trial, no paywall, and no account. The companion Suede Voice iPhone app is also free on the App Store.",
+    q: "Is the Suede Sing Chrome extension free?",
+    a: "Yes. The Suede Sing Chrome extension is free with no trial, no paywall and no account. On the Suede Sing website, the pitch studio and range test are free with no daily limit, guided practice is five free minutes a day, and Suede Pro removes that limit. The companion Suede Voice iPhone app is also free on the App Store.",
   },
   {
     q: "What is the difference between Suede Sing and Suede Voice?",

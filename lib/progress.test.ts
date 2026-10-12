@@ -621,6 +621,129 @@ describe("importProgress refuses a file that is not a practice record", () => {
   });
 });
 
+describe("importProgress merges into what this browser already holds", () => {
+  /**
+   * /progress tells a signed-out singer to move devices by exporting on one
+   * and importing on the other. Import used to replace the record wholesale,
+   * so a laptop's export imported onto a phone with newer practice deleted the
+   * phone's sessions and reset its streak and XP to the file's — and then said
+   * "Progress imported."
+   */
+  const session = (id: string, day: string) => ({
+    id,
+    type: "warmup",
+    date: `${day}T09:00:00.000Z`,
+    day,
+    durationSec: 300,
+    xp: 50,
+  });
+  const PHONE = JSON.stringify({
+    xp: 80,
+    sessions: [session("phone-a", "2026-06-10")],
+    streak: { current: 1, best: 3, lastDay: "2026-06-10" },
+    range: {},
+    rangeHistory: [],
+    achievements: ["first-note"],
+  });
+  const LAPTOP_EXPORT = JSON.stringify({
+    xp: 200,
+    sessions: [session("laptop-b", "2026-05-01")],
+    streak: { current: 5, best: 5, lastDay: "2026-05-01" },
+    range: {
+      lowMidi: 45,
+      highMidi: 69,
+      voiceTypeLabel: "Baritone",
+      testedAt: "2026-05-01T09:10:00.000Z",
+    },
+    rangeHistory: [],
+    achievements: ["first-note", "range-found"],
+  });
+
+  it("keeps the sessions already here and adds the file's", async () => {
+    const { importProgress, getState } = await withStoredRecord(PHONE);
+    expect(importProgress(LAPTOP_EXPORT)).toBe(true);
+
+    const state = getState();
+    expect(state.sessions.map((s) => s.id).sort()).toEqual(["laptop-b", "phone-a"]);
+    // Newest first, the order every reader of the log assumes.
+    expect(state.sessions[0].id).toBe("phone-a");
+    expect(state.streak.best).toBe(5);
+    // The phone's day stays the live end of the streak.
+    expect(state.streak.lastDay).toBe("2026-06-10");
+    expect(state.achievements.sort()).toEqual(["first-note", "range-found"]);
+    expect(state.range.lowMidi).toBe(45);
+    // Never below what either side had.
+    expect(state.xp).toBeGreaterThanOrEqual(200);
+  });
+
+  it("is a no-op when the same file is imported twice", async () => {
+    const { importProgress, getState } = await withStoredRecord(PHONE);
+    importProgress(LAPTOP_EXPORT);
+    const once = getState();
+    importProgress(LAPTOP_EXPORT);
+    expect(getState().sessions.map((s) => s.id)).toEqual(once.sessions.map((s) => s.id));
+    expect(getState().xp).toBe(once.xp);
+  });
+
+  it("keeps a file's range that has no readable test date when this browser has none", async () => {
+    // Replacing the record used to carry this range across; the merge's
+    // latest-date rule must not hand it to an empty range instead.
+    const UNDATED = JSON.stringify({
+      xp: 10,
+      sessions: [],
+      streak: { current: 0, best: 0, lastDay: null },
+      range: { lowMidi: 48, highMidi: 72, voiceTypeLabel: "Baritone" },
+      rangeHistory: [],
+      achievements: [],
+    });
+    const { importProgress, getState } = await withStoredRecord("{}");
+    expect(importProgress(UNDATED)).toBe(true);
+    expect(getState().range.lowMidi).toBe(48);
+    expect(getState().range.highMidi).toBe(72);
+  });
+
+  it("never lets a file with no range replace the one measured here", async () => {
+    const NO_RANGE = JSON.stringify({
+      xp: 10,
+      sessions: [],
+      streak: { current: 0, best: 0, lastDay: null },
+      range: { testedAt: "2026-09-01T09:00:00.000Z" },
+      rangeHistory: [],
+      achievements: [],
+    });
+    const { importProgress, getState } = await withStoredRecord(LAPTOP_EXPORT);
+    expect(importProgress(NO_RANGE)).toBe(true);
+    expect(getState().range.lowMidi).toBe(45);
+  });
+
+  it("still keeps only the newest 500, which is why /progress checks what survived", async () => {
+    // A full browser plus one newer session from the file: the union is 501,
+    // and the oldest one on this device is the one that goes. The import
+    // notice on /progress says so instead of "were kept".
+    const day = (n: number) => new Date(Date.UTC(2026, 0, 1) + n * 3_600_000).toISOString();
+    const full = JSON.stringify({
+      xp: 0,
+      sessions: Array.from({ length: 500 }, (_, i) => ({
+        id: `local-${i}`, type: "pitch", date: day(i), day: day(i).slice(0, 10), durationSec: 60, xp: 1,
+      })),
+      streak: { current: 0, best: 0, lastDay: null },
+      range: {}, rangeHistory: [], achievements: [],
+    });
+    const newer = JSON.stringify({
+      xp: 1,
+      sessions: [{ id: "file-new", type: "pitch", date: day(600), day: day(600).slice(0, 10), durationSec: 60, xp: 1 }],
+      streak: { current: 0, best: 0, lastDay: null },
+      range: {}, rangeHistory: [], achievements: [],
+    });
+    const { importProgress, getState } = await withStoredRecord(full);
+    expect(importProgress(newer)).toBe(true);
+    const ids = getState().sessions.map((s) => s.id);
+    expect(ids).toHaveLength(500);
+    expect(ids).toContain("file-new");
+    expect(ids).not.toContain("local-0");
+  });
+});
+
 describe("a record whose sessions could overflow the XP sum", () => {
   /**
    * mergeRemoteProgress recomputes the total by summing every session's xp and

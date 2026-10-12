@@ -560,12 +560,23 @@ export function exportProgress(): string {
  *
  * migrate() runs here as well as in load(), so an old export shows its
  * backfilled range chart immediately rather than only after the next reload.
+ *
+ * An import merges; it never removes a session. /progress tells a signed-out
+ * singer to move devices by exporting on one and importing on the other, and
+ * this used to replace the record wholesale, so importing a laptop's export
+ * onto a phone with two newer weeks of practice deleted those weeks and reset
+ * the streak and XP to the file's values, under a success message. It now
+ * goes through the same union the cloud restore uses (mergeRemoteProgress):
+ * sessions by id, achievements and range tests unioned, the latest range
+ * measurement kept, XP and streaks never lower than either side. Into an
+ * empty or just-erased browser that is exactly the file's record, which is
+ * what a restore after the erase control expects.
  */
 export function importProgress(json: string): boolean {
   try {
     const parsed: unknown = JSON.parse(json);
     if (!looksLikeProgress(parsed)) return false;
-    save(migrate(sanitizeProgress(parsed)));
+    mergeRemoteProgress(migrate(sanitizeProgress(parsed)));
     return true;
   } catch {
     return false;
@@ -590,11 +601,11 @@ function streakFromSessions(sessions: SessionLog[]): number {
 
 /**
  * Two-way merge of a remote ProgressState into the local one, for cloud
- * sync. Every rule is a union, max, or latest-wins, which makes the merge
- * commutative and idempotent — the properties an eventually-consistent
- * two-device sync actually needs. Nothing a device recorded is ever lost,
- * beyond what the store's own caps (500 sessions, 60 range tests) already
- * discard.
+ * sync, the account backup and file import. Every rule is a union, max, or
+ * latest-wins, which makes the merge commutative and idempotent — the
+ * properties an eventually-consistent two-device sync actually needs. Nothing
+ * a device recorded is ever lost, beyond what the store's own caps (500
+ * sessions, 60 range tests) already discard.
  */
 export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
   const local = load();
@@ -634,12 +645,20 @@ export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
     .slice(-MAX_RANGE_HISTORY);
 
   // Latest measurement wins wholesale, keeping voiceType consistent with it.
+  // A side with no measurement never wins over one that has a measurement,
+  // whatever their dates say: a backup file whose range carries no readable
+  // testedAt, imported into a browser that has never tested, used to lose its
+  // range to the empty one here.
+  const measured = (r: VocalRange) => r.lowMidi !== undefined && r.highMidi !== undefined;
   const localTested = Date.parse(local.range.testedAt ?? "");
   const remoteTested = Date.parse(remote.range.testedAt ?? "");
-  const range =
-    Number.isNaN(remoteTested) || remoteTested <= (localTested || 0)
-      ? local.range
-      : { ...remote.range };
+  const range = !measured(remote.range)
+    ? local.range
+    : !measured(local.range)
+      ? { ...remote.range }
+      : Number.isNaN(remoteTested) || remoteTested <= (localTested || 0)
+        ? local.range
+        : { ...remote.range };
 
   // XP: recomputing from the merged work credits both devices exactly; the
   // max() floor guarantees no device ever watches its number go down.

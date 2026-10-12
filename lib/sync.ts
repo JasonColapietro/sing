@@ -45,9 +45,9 @@ export function lastSyncedAt(): string | null {
   }
 }
 
-function markSynced() {
+function markSynced(at: string) {
   try {
-    window.localStorage.setItem(LAST_KEY, new Date().toISOString());
+    window.localStorage.setItem(LAST_KEY, at);
   } catch {
     // storage unavailable — auto-sync just runs more often
   }
@@ -77,15 +77,19 @@ export async function syncNow(): Promise<{ mergedRemote: boolean }> {
   }
 
   assertProgressCloudGeneration(generation);
+  // The marker records when the pushed snapshot was read, not when the push
+  // came back. startAutoSync treats any session dated after it as unsynced,
+  // so a session logged while the push was in flight must not land before it.
+  const snapshotAt = new Date().toISOString();
   const state = getState();
   assertProgressCloudGeneration(generation);
   await post<{ ok: boolean }>({
     key,
     state,
-    updatedAt: new Date().toISOString(),
+    updatedAt: snapshotAt,
   });
   assertProgressCloudGeneration(generation);
-  markSynced();
+  markSynced(snapshotAt);
   return { mergedRemote: hadRemote };
 }
 
@@ -94,8 +98,8 @@ export async function syncNow(): Promise<{ mergedRemote: boolean }> {
  *
  * This used to push without pulling, and `/api/sync` stores with an
  * unconditional `redis.set`, so the cloud copy became whichever device wrote
- * last rather than the union of all of them. The full round trip runs once per
- * page load and only when the last sync is over thirty minutes old, so a
+ * last rather than the union of all of them. The full round trip runs at most
+ * once per page load, when the last sync is stale, so a
  * long-lived tab pulled once and then overwrote every other device for the
  * rest of the day: practise on the phone at ten, practise on the laptop at
  * eleven, and the phone's ten o'clock session is gone from the cloud. It
@@ -119,9 +123,25 @@ async function pushOnly(): Promise<void> {
 }
 
 /**
+ * True when this device holds a session logged after its last completed sync.
+ *
+ * The debounced push below is a window timer, and a timer dies with its tab.
+ * Practise soon after a sync, close the tab inside the debounce, and that
+ * session used to stay local until this device next loaded more than thirty
+ * minutes after the sync, while the other device showed the streak at risk.
+ */
+function hasUnsyncedPractice(last: string): boolean {
+  const lastMs = Date.parse(last);
+  return getState().sessions.some((s) => Date.parse(s.date) > lastMs);
+}
+
+let exitFlushBound = false;
+
+/**
  * Called once per page load (from ProSync): a full round trip when the last
- * sync is stale, plus a debounced push whenever practice writes new data.
- * Every failure is swallowed — sync must never break practice.
+ * sync is stale or this device has practice newer than it, plus a debounced
+ * push whenever practice writes new data, flushed early when the page is
+ * hidden. Every failure is swallowed — sync must never break practice.
  */
 export function startAutoSync(): void {
   const key = proKeyOrNull();
@@ -129,7 +149,9 @@ export function startAutoSync(): void {
 
   const last = lastSyncedAt();
   if (captureProgressCloudGeneration() !== null &&
-      (!last || Date.now() - Date.parse(last) > AUTO_SYNC_AFTER_MS)) {
+      (!last ||
+        hasUnsyncedPractice(last) ||
+        Date.now() - Date.parse(last) > AUTO_SYNC_AFTER_MS)) {
     syncNow().catch(() => {});
   }
 
@@ -137,6 +159,26 @@ export function startAutoSync(): void {
     if (pushTimer !== null) window.clearTimeout(pushTimer);
     pushTimer = null;
   };
+
+  // Best effort: the page may be frozen or discarded before the round trip
+  // finishes, which is why the load-time check above is the reliable half.
+  // Only a push that is already queued is flushed, so hiding the tab with
+  // nothing new to send costs nothing. pushOnly still checks the cloud
+  // generation and pulls before it writes.
+  const flushQueuedPush = () => {
+    if (pushTimer === null) return;
+    window.clearTimeout(pushTimer);
+    pushTimer = null;
+    pushOnly().catch(() => {});
+  };
+  if (!exitFlushBound && typeof document !== "undefined") {
+    exitFlushBound = true;
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") flushQueuedPush();
+    });
+    window.addEventListener("pagehide", flushQueuedPush);
+  }
+
   subscribeProgressCloud(() => {
     if (captureProgressCloudGeneration() === null) cancelPush();
   });

@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Pitch and tone ride on the vowels; the words live mostly on the consonants, the quick stops, hums and hisses between vowels. Singers listen for pitch, but listeners hear everything else, and a lyric they cannot make out is lost however well it was tuned. Nothing in Suede Sing analyzes consonants or scores how clear your words are, so this is the axis you judge by ear: consonants quick, clear and on time, then straight back to the vowel so the line stays connected.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Pitch and time get all the attention. Words are where amateur performances actua
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Consonants Are the Axis Nobody Scores.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Keep consonants quick and vowels connected. Increase tempo only while every word remains understandable on playback.
+Choose one line of Yankee Doodle and sing it twice at the same easy tempo, pitch and volume: first with lazy consonants that barely touch, then with every consonant quick, clear and on time, releasing straight back into the vowel. Change only the consonants. Record both in one take in the recorder with a breath between them, then play them back without looking at the lyric and write down the words you can actually hear in each. Keep consonants quick and vowels connected. Increase tempo only while every word remains understandable on playback.
 
 - Look: The jaw and tongue remain available for the text; consonants do not interrupt the breath with a whole-body push.
 - Listen: A listener can write down the words from the recording without seeing the lyric.
@@ -56,7 +60,7 @@ I spoke and sang the displayed lyric slowly enough for each word to remain under
 ## Practice blocks
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Consonants Are the Axis Nobody Scores.”
-- 60s: Isolate the diction as a scored axis target in short, comfortable examples.
+- 60s: Isolate the clear, intelligible diction target in short, comfortable examples.
 - 90s: Practise or record the complete “Consonants Are the Axis Nobody Scores” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 

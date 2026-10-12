@@ -213,6 +213,39 @@ export function fitTransposeToRange(song: Song, range: VocalRange): number | nul
   return clampTranspose(Math.round(rangeCenter - songCenter));
 }
 
+/** A key the singer picked, tagged with the song it was picked on. */
+export interface PickedTranspose {
+  songId: string;
+  semis: number;
+}
+
+/**
+ * The key a song is sung in. A key the singer picked on this song wins;
+ * otherwise the song opens fitted to the saved range — the same placement
+ * "Fit to my range" gives — or in its written key when no range is saved.
+ * Tagged by song id because the player is not re-mounted between songs, so a
+ * pick on one song must not carry into the next.
+ */
+export function songTranspose(
+  song: Song,
+  range: VocalRange,
+  picked: PickedTranspose | null,
+): number {
+  if (picked && picked.songId === song.id) return picked.semis;
+  return fitTransposeToRange(song, range) ?? 0;
+}
+
+/**
+ * Whether scoring starts octave-agnostic. With a saved range the song is
+ * already placed in the singer's own octave, so the exact octave is scored.
+ * Without one it sits at its written pitch — most of this book is written at
+ * treble pitch — and a lower voice singing it an octave down would otherwise
+ * score zero on every note it sang in tune.
+ */
+export function defaultOctaveAgnostic(range: VocalRange): boolean {
+  return range.lowMidi === undefined || range.highMidi === undefined;
+}
+
 export function transposedNotes(song: Song, transpose: number): SongNote[] {
   if (transpose === 0) return song.notes;
   return song.notes.map((n) => ({ ...n, midi: n.midi + transpose }));
