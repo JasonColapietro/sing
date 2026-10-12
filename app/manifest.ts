@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { rangeTestHref } from "@/lib/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -37,7 +38,9 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: "Vocal range test",
         short_name: "Range",
-        url: "/range",
+        // The range test itself, at its start button: bare /range opens the
+        // pitch meter, which never finds a lowest or highest note.
+        url: rangeTestHref(),
         description: "Find your lowest and highest notes",
       },
     ],

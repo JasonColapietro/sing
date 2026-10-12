@@ -48,10 +48,11 @@ const SAMPLE_RATE = 48000;
  */
 const FILE_SECONDS = 30;
 /**
- * Rep 0's root on the nominal no-range ladder (C#3), which a fresh browser
- * gets: vibrato-hold fitted to NOMINAL_RANGE in components/warmups/exercises.
+ * Rep 0's root on the nominal no-range ladder (E3), which a fresh browser
+ * gets: vibrato-hold fitted to NOMINAL_RANGE in components/warmups/exercises,
+ * then trimmed to the middle of it (rangeCap MIDDLE_OF_RANGE).
  */
-const ROOT_MIDI = 49;
+const ROOT_MIDI = 52;
 /** Rep 0 closes around 12 s in; the rest is headroom for a slow machine. */
 const READING_TIMEOUT_MS = 40000;
 

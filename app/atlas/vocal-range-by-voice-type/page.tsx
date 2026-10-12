@@ -16,7 +16,7 @@ import { REFERENCE_BANDS, representativeSingers } from "@/lib/singers-analysis";
 import { getSingerReviewStatus } from "@/lib/singer-evidence";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { ORG_ID, ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -301,7 +301,7 @@ export default function VocalRangeByVoiceTypePage() {
       title="Vocal range by voice type: what range does a tenor, soprano or bass sing?"
       subtitle={`A tenor's conventional range is ${row("Tenor").band}, a soprano's ${row("Soprano").band} and a bass's ${row("Bass").band}. Below are all eight voice types, the passaggio zone where each one changes gear, and singers whose cited ranges sit there.`}
       actions={
-        <LinkButton href="/range?mode=range" size="md">
+        <LinkButton href={rangeTestHref()} size="md">
           Test your own range
         </LinkButton>
       }
@@ -323,13 +323,16 @@ export default function VocalRangeByVoiceTypePage() {
             the extremes do.
           </p>
           <p className="mt-3 max-w-3xl text-mut">
-            Read those numbers as a description of where a voice{" "}
-            <em>lives</em>, not a fence around what it can reach. Range and
-            voice type are different measurements: the type tracks the band
-            where a voice works comfortably for hours, while the range tracks
-            the furthest it has ever been photographed. A soprano with a
-            practiced low extension can show a floor below a contralto who never
-            records down there, and the{" "}
+            Read those numbers as the span a trained voice of each type is
+            conventionally expected to cover. They are not a fence around what
+            it can reach, and not where it lives: where a voice works
+            comfortably for hours, its <em>tessitura</em>, is a much narrower
+            band inside that span, clear of both ends. Range and voice type are
+            different measurements: the type is judged by that comfortable
+            band, the voice&apos;s timbre and where it changes gear, while a
+            cited range tracks the furthest it has ever been photographed. A
+            soprano with a practiced low extension can show a floor below a
+            contralto who never records down there, and the{" "}
             <Link
               href="/singers"
               className="text-violet-ink underline decoration-violet/40 underline-offset-2"
@@ -503,7 +506,7 @@ export default function VocalRangeByVoiceTypePage() {
               a teacher. Free.
             </li>
             <li>
-              <Link href="/range?mode=range" className="text-violet-ink hover:underline">
+              <Link href={rangeTestHref()} className="text-violet-ink hover:underline">
                 The free range test
               </Link>{" "}
               — about two minutes in the browser gives you your own two numbers to
@@ -531,7 +534,7 @@ export default function VocalRangeByVoiceTypePage() {
               <Link href="/glossary" className="text-violet-ink hover:underline">
                 The glossary
               </Link>{" "}
-              — passaggio, tessitura, fach, belt and the rest, defined.
+              — passaggio, tessitura, belt and the rest, defined.
             </li>
           </ul>
         </Card>

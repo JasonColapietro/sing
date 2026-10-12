@@ -26,6 +26,7 @@ import { BOOK_CONTENTS } from "@/lib/book-data";
 import { ALL_SONGS, isProSong } from "@/components/songs/data";
 import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
 import type { ActivityType } from "@/lib/progress-shape";
+import { rangeTestHref } from "@/lib/site";
 
 export type ProofBasis =
   /** A measurement the contract reports as implemented. */
@@ -101,13 +102,15 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     basis: measured("centsFromTarget"),
     companion: { room: "studio" },
     studies: ["five-note-scale", "chromatic-neighbor"],
-    readings: ["pitch-accuracy"],
+    // Chapter 15 (weeks 3-4) is the book's onset and steady-tone block, so it
+    // is read here and in Hold It, not beside the Stage 6 runs.
+    readings: ["pitch-accuracy", "weeks-3-4-middle"],
   },
   "v-l2-m3": {
     basis: measured("inTuneHoldTime"),
     companion: { room: "warmups", param: "exercise", value: "sustained-hold" },
     studies: ["sustained-hold", "morning-sustain"],
-    readings: ["breath", "pitch-accuracy"],
+    readings: ["breath", "pitch-accuracy", "weeks-3-4-middle"],
   },
   "v-l2-m4": {
     basis: measured("scorePercent"),
@@ -258,7 +261,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "keyAdherence",
       "That your answering phrase stayed in key, by ear. With no written target there is nothing for a score to compare against.",
     ),
-    companion: { room: "earTraining" },
+    // The lessons record the call and answer in one take; the reference
+    // patterns are in the practice material. Ear training can do neither.
+    companion: { room: "recorder" },
     studies: ["pentatonic-run", "minor-scale"],
     readings: ["pitch-accuracy", "atlas:a-vocabulary-for-tone"],
   },
@@ -271,13 +276,13 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     basis: measured("scorePercent"),
     companion: { room: "warmups", param: "exercise", value: "morning-three-note" },
     studies: ["morning-three-note", "agility-run"],
-    readings: ["weeks-3-4-middle"],
+    readings: ["pitch-accuracy"],
   },
   "v-l6-m2": {
     basis: measured("scorePercent"),
     companion: { room: "warmups", param: "exercise", value: "hoo-four-note" },
     studies: ["hoo-four-note"],
-    readings: ["breath", "weeks-3-4-middle"],
+    readings: ["breath", "pitch-accuracy"],
   },
   "v-l6-m3": {
     basis: selfCheck(
@@ -306,7 +311,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "improvisationQuality",
       "That you made your own phrases over the pattern rather than repeating a line. Nothing judges improvisation.",
     ),
-    companion: { room: "earTraining" },
+    // The lessons record the call and answer in one take; the reference
+    // patterns are in the practice material. Ear training can do neither.
+    companion: { room: "recorder" },
     studies: ["minor-scale", "pentatonic-run"],
     readings: ["atlas:a-vocabulary-for-tone", "pitch-accuracy"],
   },
@@ -433,7 +440,7 @@ function companionValue(c: Companion): string | undefined {
 export function companionHref(c: Companion): string {
   const path = ROOM_PATHS[c.room];
   if (!path) throw new Error(`Unknown room ${c.room}`);
-  if (c.room === "range") return `${path}?mode=range`;
+  if (c.room === "range") return rangeTestHref();
   const value = companionValue(c);
   return c.param && value ? `${path}?${c.param}=${encodeURIComponent(value)}` : path;
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AUTHOR_NAME } from "@/lib/author";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
-import { MODULE_PRACTICE } from "@/lib/lesson-practice";
+import { freeLessonsReading } from "@/lib/lesson-readings";
 import { Markdown } from "@/lib/markdown";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { exitTestFor, PROGRAMME_PART } from "@/lib/programme-exit-tests";
@@ -12,10 +12,10 @@ import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
 import { pageRobots } from "@/lib/robots-meta";
-import { SITE_URL } from "@/lib/site";
-import { COURSE } from "@/lib/voice-lessons";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { BookProgramNote } from "@/components/book/program-link";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
+import { LessonList } from "@/components/learn/lesson-list";
 import { FreeOnly } from "@/components/pro/gate";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 
@@ -39,7 +39,7 @@ const TRY_IT: Record<
     line: "Hold one note on “ah”, then “ee”: the trace stays on one line while the sound changes.",
   },
   "reading-the-range-test": {
-    href: "/range?mode=range",
+    href: rangeTestHref(),
     label: "Take the range test honestly",
     line: "Warm up first, stop at the first note that needs effort, and count only notes you can hold for two beats.",
     warmUpFirst: true,
@@ -50,21 +50,6 @@ const TRY_IT: Record<
     line: "Stay silent for fifteen seconds and watch the trace: any pitch it shows is your room, not your voice.",
   },
 };
-
-/**
- * Free voice-course modules that list this chapter as reading. The lessons
- * already link here; this is the way back, so a chapter is not the end of the
- * road for someone who found it first.
- */
-function lessonsUsing(slug: string): Array<{ href: string; name: string; skill: string }> {
-  const modules = COURSE.filter((s) => s.catalog.access === "free").flatMap((s) => s.modules);
-  return Object.entries(MODULE_PRACTICE)
-    .filter(([, practice]) => practice.readings.includes(slug))
-    .flatMap(([id]) => {
-      const m = modules.find((x) => x.catalog.id === id);
-      return m?.href ? [{ href: m.href, name: m.catalog.name, skill: m.catalog.skill }] : [];
-    });
-}
 
 /**
  * Exit-test rooms (keys of the contract's `deepLinks.rooms`) that run guided
@@ -123,7 +108,7 @@ export default async function ChapterPage({
   const tryIt = full ? TRY_IT[chapter.slug] : undefined;
   // Gated chapters list them too: a locked page is where a free lesson's
   // reading link lands, and "pay or go back" is not a next step.
-  const lessons = lessonsUsing(chapter.slug);
+  const lessons = freeLessonsReading(chapter.slug);
   /** The other chapters anyone can read, so the free sample is not one page. */
   const otherFree = BOOK_CONTENTS.filter((c) => c.free && c.slug !== chapter.slug);
   /**
@@ -167,7 +152,7 @@ export default async function ChapterPage({
             </p>
             <p className="text-sm text-mut">
               The evidence comes from{" "}
-              <Link href={exit.room === "range" ? "/range?mode=range" : exit.roomPath} className="text-violet-ink hover:underline">
+              <Link href={exit.room === "range" ? rangeTestHref() : exit.roomPath} className="text-violet-ink hover:underline">
                 {exit.roomLabel}
               </Link>
               , which is where this app measures it.
@@ -308,23 +293,5 @@ export default async function ChapterPage({
         </div>
       )}
     </PageShell>
-  );
-}
-
-function LessonList({ lessons }: { lessons: ReturnType<typeof lessonsUsing> }) {
-  return (
-    <>
-      <SectionLabel>Free lessons that use this chapter</SectionLabel>
-      <ul className="mt-3 space-y-2">
-        {lessons.map((l) => (
-          <li key={l.href} className="text-sm text-mut">
-            <Link href={l.href} className="text-violet-ink hover:underline">
-              {l.name}
-            </Link>{" "}
-            — {l.skill}
-          </li>
-        ))}
-      </ul>
-    </>
   );
 }

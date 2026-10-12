@@ -8,7 +8,7 @@ vi.mock("@/lib/use-account-auth", () => ({
   useAccountAuth: () => ({ isLoaded: false, isSignedIn: false }),
 }));
 
-import Nav, { streakChipState } from "./nav";
+import Nav, { LINKS, PRIMARY, streakChipState } from "./nav";
 
 const originalTz = process.env.TZ;
 afterEach(() => {
@@ -60,6 +60,18 @@ describe("main navigation current location", () => {
     // Nothing outside the landmarks (logo, Pro pill, LV chip) claims to be current.
     const total = html.match(/aria-current=/g) ?? [];
     expect(total).toHaveLength(LANDMARKS.length);
+  });
+
+  /**
+   * Bare /range opens at the top, and on a phone its start button sits under
+   * the tab bar. The More sheet renders only once opened, so its tile is
+   * checked here in the data the sheet maps (`target ?? href`), and in
+   * e2e/navigation.mjs by a real tap.
+   */
+  it("sends the Sing tab and the More sheet's Pitch & range tile to #start", () => {
+    const routed = [...PRIMARY, ...LINKS].filter((l) => l.href === "/range");
+    expect(routed.map((l) => l.label)).toEqual(["Sing", "Pitch & range"]);
+    for (const l of routed) expect(l.target, l.label).toBe("/range#start");
   });
 
   it("does not claim an unrelated prefix is a current destination", () => {

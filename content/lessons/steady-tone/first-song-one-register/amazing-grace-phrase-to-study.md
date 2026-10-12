@@ -22,7 +22,7 @@ Open the practice material on this page and choose Amazing Grace or Amazing Grac
 
 ### Set a safe baseline
 
-Start from the key the song opens in, fitted to your measured range if you have taken the range test or the written key if not, and shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.
+Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.

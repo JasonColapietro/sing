@@ -18,7 +18,7 @@ import { statsFor } from "@/lib/singers-analysis";
 import { GENRE_HUB_COPY, splitContrast } from "@/lib/singer-hub-copy";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
 import { LinkedNames } from "@/components/singers/linked-names";
 import { Card, LinkButton, PageShell, SectionLabel, Stat } from "@/components/ui";
@@ -150,7 +150,7 @@ export default async function GenrePage({
       actions={
         // Own wrapping row: two md buttons are wider than a 320px phone.
         <div className="flex flex-wrap items-center gap-2">
-          <LinkButton href="/range?mode=range" size="md">
+          <LinkButton href={rangeTestHref()} size="md">
             Find my vocal range →
           </LinkButton>
           <LinkButton href="/singers" variant="outline" size="md">
@@ -257,7 +257,7 @@ export default async function GenrePage({
             every bar below.
           </p>
           <div className="mt-4">
-            <LinkButton href="/range?mode=range" size="md">
+            <LinkButton href={rangeTestHref()} size="md">
               Find my vocal range →
             </LinkButton>
           </div>

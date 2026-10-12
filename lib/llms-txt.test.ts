@@ -567,6 +567,7 @@ describe("/llms.txt describes pages as they render", () => {
     expect(songs).toMatch(/range test/);
     expect(songs).toMatch(/fitted to that measured range/);
     expect(songs).toMatch(/written key/);
+    expect(songs).toMatch(/scored in either octave/);
     expect(songs).not.toMatch(/comfortable/);
   });
 

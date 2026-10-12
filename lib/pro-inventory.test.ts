@@ -118,6 +118,15 @@ describe("singer-range copy", () => {
     expect(copy.filter((c) => /\bmeasured\b/i.test(c))).toEqual([]);
   });
 
+  it("never counts the free singer ranges as something Pro unlocks", () => {
+    // Under "opens the second you upgrade": what Pro adds is the Atlas
+    // profiles. Every singer page and its range is free.
+    for (const t of UNLOCK_TILES) expect(t.label, t.label).not.toMatch(/singer ranges?/i);
+    const atlas = UNLOCK_TILES.find((t) => /Atlas/.test(t.label))!;
+    expect(atlas.figure).toBe(String(ATLAS_VOICE_COUNT));
+    expect(atlas.sub).toMatch(/ranges stay free/);
+  });
+
   it("prints the book totals it can prove", () => {
     const book = PRO_PERKS.find((p) => p.id === "book")!;
     expect(book.desc).toContain(`${TOTAL_CHAPTERS} chapters`);

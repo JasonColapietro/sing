@@ -22,7 +22,7 @@ Open the practice material on this page and choose Deep River or Amazing Grace (
 
 ### Set a safe baseline
 
-Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.
+Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key and is scored in either octave. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.

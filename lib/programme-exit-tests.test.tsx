@@ -134,7 +134,7 @@ describe("a reader can see the exit test", () => {
     expect(html).toContain(escaped(exit!.test));
     expect(html).toContain(escaped(exit!.blocker));
     expect(html).toContain(escaped(exit!.doesNotProve));
-    const destination = exit!.room === "range" ? "/range?mode=range" : exit!.roomPath;
+    const destination = exit!.room === "range" ? "/range?mode=range#start" : exit!.roomPath;
     expect(html).toContain(`href="${destination}"`);
   });
 

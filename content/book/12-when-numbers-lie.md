@@ -78,4 +78,4 @@ When one of those shows up, stop treating the session as data. Fix the setup, or
 
 ## Try this
 
-Before your next [range test](/range?mode=range), open the [pitch studio](/studio) and stay silent for fifteen seconds while you watch the trace. If it reports any pitch at all in your silence, find the noise and kill it before you test. Otherwise your low notes are measuring your room.
+Before your next [range test](/range?mode=range#start), open the [pitch studio](/studio) and stay silent for fifteen seconds while you watch the trace. If it reports any pitch at all in your silence, find the noise and kill it before you test. Otherwise your low notes are measuring your room.

@@ -156,7 +156,10 @@ describe("restoring Pro on a new browser", () => {
     // closed form, under a button selling the same purchase again.
     const html = renderToStaticMarkup(<ProClient />);
     expect(html).toMatch(/<details[^>]*id="restore"/);
-    expect(html).toContain("Already have Pro? Unlock it on this device");
+    // The cap wall's link says "in this browser"; the form it lands on says
+    // the same, because Pro unlocks per browser, not per device.
+    expect(html).toContain("Already have Pro? Unlock it in this browser");
+    expect(html).not.toContain("Unlock it on this device");
   });
 
   it("turns the buy card's Pro key note into the way to the unlock form", () => {

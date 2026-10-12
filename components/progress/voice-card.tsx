@@ -3,6 +3,7 @@
 import type { VocalRange } from "@/lib/progress";
 import { midiToLabel, voiceFitLabel } from "@/lib/audio/notes";
 import { Card, EmptyState, LinkButton, Pill } from "@/components/ui";
+import { rangeTestHref } from "@/lib/site";
 import {
   AMBER_INK,
   DIM,
@@ -110,7 +111,7 @@ export function VoiceCard({ range }: { range: VocalRange }) {
         <EmptyState
           title="No range on file"
           hint="Take the 2-minute range test to find the lowest and highest clear notes you can sing today, plus a voice-type estimate."
-          action={<LinkButton href="/range?mode=range">Take the range test</LinkButton>}
+          action={<LinkButton href={rangeTestHref()}>Take the range test</LinkButton>}
         />
       </Card>
     );
@@ -149,7 +150,7 @@ export function VoiceCard({ range }: { range: VocalRange }) {
         <MiniKeyboard low={range.lowMidi} high={range.highMidi} />
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        <LinkButton href="/range?mode=range" variant="outline" size="sm">
+        <LinkButton href={rangeTestHref()} variant="outline" size="sm">
           Retake the test
         </LinkButton>
         <LinkButton href="/singers" variant="ghost" size="sm">

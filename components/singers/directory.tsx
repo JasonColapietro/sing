@@ -20,6 +20,7 @@ import {
   visibleRichSingerRows,
 } from "@/lib/singer-directory-pagination";
 import { Button, EmptyState, LinkButton } from "@/components/ui";
+import { rangeTestHref } from "@/lib/site";
 import {
   FULL_VOICE_FILL_CLASS,
   RangeBarKey,
@@ -463,7 +464,7 @@ export function SingersDirectory() {
             Your own range can sit on this chart — the test takes two minutes
             and never leaves your device.
           </span>
-          <LinkButton href="/range?mode=range" size="sm" className="ml-auto">
+          <LinkButton href={rangeTestHref()} size="sm" className="ml-auto">
             Find my range
           </LinkButton>
         </div>

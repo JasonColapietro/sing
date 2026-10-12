@@ -88,6 +88,8 @@ describe("the routine summary", () => {
     expect(html).toContain("Continue");
     expect(html).toContain("That&#x27;s today&#x27;s 5 free minutes of guided practice.");
     expect(html).toContain("opens at midnight");
+    // The way out names the limit just reached, as ear and breath's notes do.
+    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Pro has no daily limit<\/a>/);
   });
 
   it("shows no lapsed streak as alive when nothing was logged", () => {

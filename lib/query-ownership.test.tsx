@@ -105,7 +105,7 @@ describe("a differentiated split is navigable in both directions", () => {
           // two room cards from an array, so the link is authored as
           // `href: "/recorder"` and only becomes an attribute on render.
           const source = readFileSync(PAGES[from].file, "utf8");
-          const destination = to === "/range" ? "/range?mode=range" : to;
+          const destination = to === "/range" ? "/range?mode=range#start" : to;
           expect(source, `${from} must name ${to} in its own copy`).toContain(`"${destination}"`);
           expect(PAGES[from].render(), `${from} must render its link to ${to}`).toContain(
             `href="${destination}"`,

@@ -13,7 +13,8 @@
  * it needs a real browser, a real refusal, and a real click.
  *
  * Exits non-zero if any room fails to put the message on screen, or puts two
- * copies of it on screen — two role="alert" nodes is two announcements.
+ * copies of it on screen — two role="alert" nodes is two announcements — or,
+ * on a 375×667 phone, leaves it behind the fixed tab bar.
  */
 import pw from "playwright";
 
@@ -22,6 +23,13 @@ const argv = process.argv.slice(2);
 const BASE = (argv.find((arg) => !arg.startsWith("--")) ?? "http://localhost:3000").replace(/\/$/, "");
 const EXECUTABLE = argv.find((arg) => arg.startsWith("--executable="))?.slice("--executable=".length);
 const VIEW = { width: 1280, height: 900 };
+/**
+ * A small phone, where the fixed tab bar covers the bottom 57px. The desktop
+ * pass above cannot see it: a refusal on /studio and /songs used to render at
+ * 625–667px, behind the bar at 610, and the press looked dead.
+ */
+const PHONE = { width: 375, height: 667 };
+const TAB_BAR = 'nav[aria-label="Tabs"]';
 
 /**
  * Scoped to the app's own markup. Playwright's locators pierce shadow DOM, so a
@@ -73,8 +81,8 @@ function check(label, pass, detail) {
 
 const browser = await chromium.launch({ ...(EXECUTABLE ? { executablePath: EXECUTABLE } : {}) });
 
-async function freshPage(extraInit = "") {
-  const ctx = await browser.newContext({ viewport: VIEW });
+async function freshPage(extraInit = "", viewport = VIEW) {
+  const ctx = await browser.newContext({ viewport });
   await ctx.clearPermissions();
   await ctx.addInitScript(REFUSE_MIC + extraInit);
   return { ctx, page: await ctx.newPage() };
@@ -226,6 +234,35 @@ console.log("\n/studio — its single start button");
     page.getByRole("button", { name: "Enable microphone" }));
   check("one alert, on screen", r.count === 1 && r.onScreen,
     describeFromPressed(r));
+  await ctx.close();
+}
+
+/* ------------------------------------------------- phone: the tab bar */
+
+console.log(`\n/studio and /songs at ${PHONE.width}×${PHONE.height} — the message clears the tab bar`);
+for (const path of ["/studio", "/songs", "/songs?song=twinkle-twinkle-little-star"]) {
+  const { ctx, page } = await freshPage("", PHONE);
+  await page.goto(`${BASE}${path}`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Enable microphone", exact: true }).first().click();
+  let alertBox = null;
+  try {
+    await page.locator(ALERT).first().waitFor({ state: "visible", timeout: 5000 });
+    // Let MicAlert's own scroll settle before measuring.
+    await page.waitForTimeout(400);
+    alertBox = await page.locator(ALERT).first().boundingBox();
+  } catch {
+    // Reported below as a failure, not a crash.
+  }
+  const barBox = await page.locator(TAB_BAR).boundingBox();
+  const bottom = alertBox ? Math.round(alertBox.y + alertBox.height) : null;
+  const clear = !!alertBox && !!barBox && alertBox.y >= 0 && alertBox.y + alertBox.height <= barBox.y;
+  check(`${path}: refusal sits above the tab bar`, clear,
+    alertBox && barBox
+      ? `alert ${Math.round(alertBox.y)}–${bottom}, bar from ${Math.round(barBox.y)}`
+      : "no alert or no tab bar measured");
+  // The press is a retry now; an unchanged label read as a dead button.
+  check(`${path}: the gate button offers to try again`,
+    (await page.getByRole("button", { name: "Try again" }).count()) > 0);
   await ctx.close();
 }
 

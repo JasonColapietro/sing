@@ -737,10 +737,10 @@ export default function RecorderPageClient() {
                   </>
                 ) : (
                   <>
-                    <p className="max-w-sm text-sm text-mut">
-                      Record practice takes and listen back. Takes stay on this device — they
-                      never leave your browser.
-                    </p>
+                    {/* One short privacy line beside the prompt, not a repeat of
+                        the page subtitle: the three-line version put "Enable
+                        microphone" under a 375×667 phone's tab bar. */}
+                    <p className="text-xs text-dim">Takes stay on this device.</p>
                     <Button
                       variant="rec"
                       onClick={() => void enableMic()}

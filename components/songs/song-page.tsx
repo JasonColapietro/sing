@@ -112,7 +112,10 @@ export function SongStats({ song }: { song: Song }) {
           <p className="mt-2 text-sm text-mut">
             {f.rangeSemis} semitones as transcribed. Once you have taken the
             range test, the practice room opens it fitted to your range, and
-            you can shift it by semitones from there.
+            you can shift it by semitones from there. Without a saved range it
+            opens at this written pitch and is scored in either octave, so a
+            lower voice can sing it an octave down and a higher voice an
+            octave up.
           </p>
         </div>
         <div className="flex flex-wrap gap-x-8 gap-y-5">

@@ -26,6 +26,10 @@ import {
   rangeFit,
   snapTempo,
   songTranspose,
+  startingNote,
+  transposedNotes,
+  COUNT_IN_BEATS,
+  secPerBeat,
 } from "./lib";
 import type { Song, SongNote } from "./types";
 
@@ -384,6 +388,31 @@ describe("songTranspose: the key a song opens in", () => {
     // The player is not re-mounted between songs: the next song refits.
     expect(songTranspose(other, baritone, picked)).toBe(fitTransposeToRange(other, baritone));
     expect(songTranspose(other, {}, picked)).toBe(0);
+  });
+});
+
+describe("startingNote: the pitch a run hears before the downbeat", () => {
+  const tune = song("tune", [62, 64, 66, 67]);
+  const sungAll = [1, 1, 1, 1];
+
+  it("is the first note the run sings, in the key it is sung in", () => {
+    const spb = secPerBeat(tune.bpm, 1);
+    expect(startingNote(tune.notes, sungAll, spb)?.midi).toBe(62);
+    // Fitted or shifted by the singer: the reference moves with the key.
+    expect(startingNote(transposedNotes(tune, -5), sungAll, spb)?.midi).toBe(57);
+  });
+
+  it("starts a looped span from that span's own first note", () => {
+    expect(startingNote(tune.notes, [0, 0, 1, 1], 0.6)?.midi).toBe(66);
+    expect(startingNote(tune.notes, [0, 0, 0, 0], 0.6)).toBeNull();
+  });
+
+  it("ends well before the downbeat at any tempo, so no scored frame hears it", () => {
+    for (const spb of [0.25, 0.4, 0.6, 1, 2.4]) {
+      const { dur } = startingNote(tune.notes, sungAll, spb)!;
+      // Sounded on the first count-in beat; the downbeat is COUNT_IN_BEATS later.
+      expect(COUNT_IN_BEATS * spb - dur).toBeGreaterThanOrEqual(2.5 * spb - 1e-9);
+    }
   });
 });
 

@@ -6,7 +6,7 @@ import { SONGS } from "@/components/songs/data";
 import { ROUTINES, routineMinutes } from "@/components/warmups/routines";
 import { SINGERS } from "@/lib/singers";
 import { ORG_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { FamousVoices } from "@/components/landing/famous-voices";
 import ProVisual from "@/components/pro/pro-visual";
@@ -57,7 +57,7 @@ const FEATURES = [
     Glyph: WarmupGlyph,
   },
   {
-    href: "/range?mode=range",
+    href: rangeTestHref(),
     label: "Range test",
     desc: "Find your lowest and highest notes and get a voice-type estimate.",
     Glyph: RangeGlyph,
@@ -227,11 +227,11 @@ export default function Home() {
               lands on the tool row on /range, past its intro, so the tap that
               said "start" is one step from the mic prompt. */}
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <LinkButton href="/range#start" variant="violet" size="lg">
+            <LinkButton href={rangeTestHref({ mode: "pitch" })} variant="violet" size="lg">
               Start singing
             </LinkButton>
             <LinkButton
-              href="/range?mode=range#start"
+              href={rangeTestHref()}
               variant="outline"
               size="lg"
               className="bg-white/5"
@@ -281,7 +281,7 @@ export default function Home() {
             </span>
           </Link>
           <Link
-            href="/range#start"
+            href={rangeTestHref({ mode: "pitch" })}
             className="lift group relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#4c1d95] to-[#1e1b4b] p-6"
           >
             <span className="text-label font-extrabold uppercase tracking-[0.14em] text-violet-ink">
@@ -320,7 +320,7 @@ export default function Home() {
         <p className="mt-2 max-w-2xl text-sm text-mut">
           Once you&apos;ve taken the range test, songs open fitted to your
           measured range, and you can shift any song by semitones. Without a
-          range they open in the written key.
+          range they open in the written key and are scored in either octave.
         </p>
         <ul className="no-scrollbar -mx-4 mt-4 flex snap-x scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6">
           {songs.map((song, i) => (

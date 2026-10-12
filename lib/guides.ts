@@ -1,5 +1,6 @@
 import type { GuideContent } from "@/components/guide";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { rangeTestHref } from "@/lib/site";
 
 /**
  * The explanatory copy under each practice room.
@@ -266,7 +267,7 @@ export const WARMUPS_GUIDE: GuideContent = {
       note: "Build the support the warmup assumes.",
     },
     {
-      href: "/range?mode=range#start",
+      href: rangeTestHref(),
       label: "Range test",
       note: "Test warm for a number that reflects your real range.",
     },
@@ -523,7 +524,7 @@ export const SONGS_GUIDE: GuideContent = {
   body: [
     "Exercises isolate one skill at a time. A song asks for all of them at once, plus words, rhythm, and breath points that were decided by whoever wrote it. That is why a singer can score well on warmup patterns and still lose the pitch in a chorus — the demands stack.",
     "Often the problem is the key rather than the skill. A melody written for a voice higher or lower than yours can park its most important notes at your weakest point. Transposing it is not cheating; professional singers do it routinely, and it can be the difference between a phrase you can perform and one you can merely survive.",
-    "Once you have taken the range test, each melody here opens fitted to your measured range, and you can shift it a semitone at a time from there; without a saved range it opens in its written key. Your pitch is scored against the target notes as you sing, and the result marks which phrases held and which came apart.",
+    "Once you have taken the range test, each melody here opens fitted to your measured range, and you can shift it a semitone at a time from there; without a saved range it opens in its written key and is scored in either octave, so a lower voice can sing it an octave down. Your pitch is scored against the target notes as you sing, and the result marks which phrases held and which came apart.",
   ],
   howTo: {
     name: "How to practice a song properly",
@@ -601,7 +602,7 @@ export const SONGS_GUIDE: GuideContent = {
   start: { label: "Pick a song to sing", href: "/songs#content", note: GUIDED_CAP_NOTE },
   related: [
     {
-      href: "/range?mode=range#start",
+      href: rangeTestHref(),
       label: "Range test",
       note: "Once your range is saved, songs open fitted to it.",
     },
@@ -959,7 +960,7 @@ export const STUDIO_GUIDE: GuideContent = {
       note: "Fix the target if you can't hear it, not just the production.",
     },
     {
-      href: "/range?mode=range#start",
+      href: rangeTestHref(),
       label: "Range test",
       note: "Find the edges the studio helps you strengthen.",
     },
@@ -1075,10 +1076,10 @@ export const ANALYZE_GUIDE: GuideContent = {
     {
       href: "/recorder",
       label: "Take recorder",
-      note: "Record the take, then come back and look at it.",
+      note: "Record the phrase you just watched here, then listen back to it.",
     },
     {
-      href: "/range?mode=range#start",
+      href: rangeTestHref(),
       label: "Range test",
       note: "Find the register transitions the spectrogram shows.",
     },

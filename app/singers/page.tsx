@@ -19,7 +19,7 @@ import { isSingerReviewed, singerReviewLabel } from "@/lib/singer-evidence";
 import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
 const DESCRIPTION = `Reported catalog ranges for famous singers on one keyboard. Check each profile's evidence status and compare your own range free.`;
@@ -143,7 +143,7 @@ export default function SingersPage() {
       title="Famous singers' vocal ranges on one chart"
       subtitle={`A vocal range chart of ${SINGERS.length} famous singers: each reported catalog range, lowest note to highest, drawn on the same keyboard so you can compare voices, and your own range, at a glance.`}
       actions={
-        <LinkButton href="/range?mode=range" size="md">
+        <LinkButton href={rangeTestHref()} size="md">
           Test my vocal range →
         </LinkButton>
       }
@@ -177,7 +177,7 @@ export default function SingersPage() {
               your browser, nothing to install.
             </p>
           </div>
-          <LinkButton href="/range?mode=range" size="lg">
+          <LinkButton href={rangeTestHref()} size="lg">
             Test my vocal range →
           </LinkButton>
         </div>

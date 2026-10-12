@@ -40,7 +40,7 @@ Why this is Stage 7 and not Stage 1, despite being the reason most people downlo
 
 ### Hear the distinction
 
-After warming up in the middle, sing Small three-note climb with its top note on your current comfortable high note, then once more a semitone higher, both at low-to-moderate volume. Change only the key. Record both in one take in the recorder with a breath between them, and on playback ask whether the higher top note is a usable sung note you could repeat or a one-off reach. Count the new note only if it is easy on three separate days, and take the range test again only after rest.
+After warming up in the middle, sing Small three-note climb with its top note on your current comfortable high note, then once more a semitone higher, both at low-to-moderate volume. Change only the key. Record both in one take in the recorder with a breath between them, and on playback ask whether the higher top note is a usable sung note you could repeat or a one-off reach. Count the new note only if it is easy on three separate days, and leave the range test for your next retest, weeks apart, after the same warm-up as your baseline.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.

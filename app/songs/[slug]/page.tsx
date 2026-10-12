@@ -30,7 +30,7 @@ import { withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { pageRobots } from "@/lib/robots-meta";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 
 interface Params {
   slug: string;
@@ -406,8 +406,9 @@ export default async function SongPage({
               </LinkButton>
               <span className="text-xs text-dim">
                 Opens {song.title} in the practice room, fitted to your
-                measured range if you have taken the range test and in the
-                written key if not. Free in the browser: song practice counts
+                measured range if you have taken the range test; if not, it
+                opens in the written key and is scored in either octave. Free
+                in the browser: song practice counts
                 toward {FREE_DAILY_MINUTES} free minutes of guided practice a
                 day.
               </span>
@@ -484,7 +485,7 @@ export default async function SongPage({
               <LinkButton href="/songs" variant="outline" size="sm">
                 Every song
               </LinkButton>
-              <LinkButton href="/range?mode=range#start" variant="ghost" size="sm">
+              <LinkButton href={rangeTestHref()} variant="ghost" size="sm">
                 Find your range first
               </LinkButton>
             </div>

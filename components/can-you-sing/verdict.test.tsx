@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { DEFAULT_PROGRESS, type VocalRange } from "@/lib/progress-shape";
+import { DEFAULT_PROGRESS, MAX_SESSIONS, type VocalRange } from "@/lib/progress-shape";
 import { POP_SONGS } from "@/lib/pop-songs";
 
 const state = vi.hoisted(() => ({ range: {} as VocalRange, pro: false, ready: true }));
@@ -54,6 +54,17 @@ describe("song comparison to first practice", () => {
     expect(html).toContain("not a judgment of your voice");
     expect(html).not.toContain("Extend it with warmups");
     expect(html).not.toContain("extending your range is the move");
+    // Pro keeps the latest MAX_SESSIONS sessions, not a "full" history, and
+    // range retests are weeks apart, not the next day.
+    expect(html).not.toContain("full practice history");
+    expect(html).not.toContain("another day");
+  });
+
+  it("states the Pro history limit /pro states, and the weeks-apart retest rule", () => {
+    state.range = { lowMidi: 52, highMidi: 72 };
+    expect(render()).toContain(`your latest ${MAX_SESSIONS} sessions instead of the last 20`);
+    state.range = { lowMidi: 60, highMidi: 73 };
+    expect(render()).toContain("Retest after a few weeks of practice");
   });
 
   it("offers a comfortable single-note practice when the saved range cannot hold a ladder", () => {

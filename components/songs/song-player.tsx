@@ -52,6 +52,7 @@ import {
   snapTempo,
   songTotalBeats,
   songTranspose,
+  startingNote,
   transposedNotes,
   type JudgmentTally,
   type PickedTranspose,
@@ -940,6 +941,14 @@ export function SongPlayer({
     const countInStart = audioNow() + LEAD;
     t0Ref.current = countInStart + COUNT_IN_BEATS * spb;
     for (let i = 0; i < COUNT_IN_BEATS; i++) clickAt(countInStart + i * spb, i === 0);
+    // Give the starting note, as an accompanist would: the first note this run
+    // sings, in the key it is sung in, on the first count-in beat. On your own
+    // has no guide, so this is the only pitch a solo run hears before the
+    // downbeat; it ends well before t0, so it never overlaps a scored frame.
+    const start = startingNote(notes, playBeats, spb);
+    if (start) {
+      playTone(start.midi, { at: countInStart - audioNow(), dur: start.dur, gain: GUIDE_MAX_GAIN });
+    }
     pausedGlobalBeatsRef.current = 0;
 
     // A restart throws the unfinished take away; a new one starts with the
@@ -1403,8 +1412,8 @@ export function SongPlayer({
           <p className="mt-3 max-w-xl text-xs text-mut">
             To master a song, sing a full Performance On your own at{" "}
             {Math.round(MASTERY_MIN_TEMPO * 100)}% tempo or faster and score{" "}
-            {MASTERY_SCORE} or more; mastered songs open the next band of the
-            songbook.
+            {MASTERY_SCORE} or more. The count-in plays your first note.
+            Mastered songs open the next band of the songbook.
           </p>
         )}
 

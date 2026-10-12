@@ -28,7 +28,7 @@ export function SingerCrawlIndex({ singers = SINGERS }: { singers?: readonly Sin
     <section data-singer-crawl-index="true" className="mt-12 border-t border-line pt-8">
       <h2 className="text-xl">Complete A–Z singer index</h2>
       <p className="mt-2 max-w-2xl text-sm text-mut">
-        Every singer page, grouped alphabetically for direct reference and crawl discovery.
+        Every singer in the catalog, A to Z. Each name opens that singer&apos;s reported range and its evidence status.
       </p>
       <div className="mt-5 grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
         {singersByInitial(singers).map(([initial, group]) => (

@@ -55,6 +55,7 @@ import type { ActivityType, SessionLog } from "@/lib/progress-shape";
 import type { RangeEntry } from "@/lib/analytics";
 import { CAPPED_TYPES } from "@/lib/free-cap";
 import { FREE_DAILY_SEC } from "@/lib/practice-limits";
+import { rangeTestHref } from "@/lib/site";
 
 export type ProgramItem =
   /** A warmup routine, by its id in components/warmups/routines.ts. */
@@ -73,8 +74,11 @@ export type ProgramItem =
   | { kind: "range" }
   /** A song from the free songbook, by slug. */
   | { kind: "song"; slug: string }
-  /** A recorded take in the Recorder, to compare against later. */
-  | { kind: "recorder" }
+  /**
+   * A recorded take in the Recorder, to compare against later. `take` names
+   * what to sing when it is not a verse and a chorus of a song.
+   */
+  | { kind: "recorder"; take?: string }
   /** A few minutes of ear training: the Quick ear workout, pitch match and both recognition games. */
   | { kind: "ear" };
 
@@ -128,7 +132,10 @@ export function dayNeedsPro(program: Program, index: number): boolean {
   return program.pro && index >= FREE_WEEKS * 7;
 }
 
-/** A recorded take is a verse and a chorus, so its length is an estimate too. */
+/**
+ * A recorded take, a verse and a chorus or a shorter named one, plus saving
+ * it under a name you can find later: an estimate too.
+ */
 export const RECORDER_SEC = 120;
 
 /**
@@ -387,13 +394,16 @@ const RETEST_BREATH: ProgramItem[] = [drill("box", { drill: "box", side: 4, minu
  * Weeks 5 and 6's second session: the morning set, then six reps of the ng
  * siren to the fifth. Six reps climb only the first six rungs of its ladder,
  * which starts a few semitones above the bottom of the range, so the session
- * slides a fifth at a time without reaching for the top.
+ * slides a fifth at a time without reaching for the top. Then one siren is
+ * recorded: chapter 16 asks for one "twice across the two weeks", to A/B the
+ * week-5 take against the week-6 one.
  */
 const QUIET_SIRENS = day(
   "Quiet ng sirens",
   breath("daily"),
   routine("morning"),
   exercise("ng-siren-fifth", 6),
+  { kind: "recorder", take: "one slow ng siren through your transition" },
   routine("cooldown"),
 );
 
@@ -421,7 +431,7 @@ const MEASURED_VOICE: Program = {
   tagline:
     "The book's twelve-week plan, four sessions a week: baseline and breath, the middle, the break, the top, the bottom, then one song.",
   measures:
-    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear, and one early in week 11 is a working copy of your song.",
+    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear, and one early in week 11 is a working copy of your song. Takes in weeks 5 to 8, a siren and a top-note pattern, are for the A/B comparisons chapters 16 and 17 ask for.",
   weeks: 12,
   pro: true,
   chapters: [
@@ -487,10 +497,18 @@ const MEASURED_VOICE: Program = {
         6: day("Halfway check-in", ...RETEST_BREATH, ...BASELINE_WARMUP, range, drill("sustain"), routine("cooldown")),
       },
     ),
-    // Weeks 7–8: height without weight, head voice before belt.
+    // Weeks 7–8: height without weight, head voice before belt. Chapter 17
+    // asks for one recorded take a week of the same pattern, to A/B two
+    // weeks later, so the first session of each week records one.
     ...[7, 8].flatMap(() =>
       bookWeek(
-        day("Light and high", routine("quick"), routine("high-notes"), routine("cooldown")),
+        day(
+          "Light and high",
+          routine("quick"),
+          routine("high-notes"),
+          { kind: "recorder", take: "a short ascending pattern through your transition to a comfortable top note, quietly" },
+          routine("cooldown"),
+        ),
         day("Head voice", routine("quick"), routine("head-voice-builder"), routine("cooldown")),
         day("The everyday set, then the tenth", routine("daily"), routine("high-notes"), routine("cooldown")),
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
@@ -694,7 +712,7 @@ export function itemHref(item: ProgramItem): string {
       // rather than the setup card's defaults.
       return item.preset ? `/breath?${drillPresetQuery(item.preset)}` : `/breath?drill=${encodeURIComponent(item.id)}`;
     case "range":
-      return "/range?mode=range";
+      return rangeTestHref();
     case "recorder":
       return "/recorder";
     case "ear":
@@ -728,7 +746,10 @@ export function itemLabel(item: ProgramItem): { title: string; meta: string } {
     case "range":
       return { title: "Range test", meta: `Check-in · about ${min}` };
     case "recorder":
-      return { title: "Record a take", meta: `Recorder · a verse and a chorus · about ${min}` };
+      return {
+        title: "Record a take",
+        meta: `Recorder · ${item.take ?? "a verse and a chorus"} · about ${min}`,
+      };
     case "ear":
       return {
         title: EAR_ROUTINE_NAME,

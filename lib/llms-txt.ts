@@ -222,7 +222,7 @@ The plan details below are read from the site's own pricing and practice-limit c
 - [Warmups](${SING_HOME}/warmups): guided vocal warmups that play each pattern, count you in, score pitch note by note, and move the key a semitone every rep whatever the score: most climb and then come back down, and the descending ones start high and step down
 - [Ear training](${SING_HOME}/ear-training): short games for singers — match pitch, catch moving notes, name intervals and sing melodies back
 - [Breath](${SING_HOME}/breath): timed breathing patterns plus a microphone sustain test that times a held note and how even its loudness stays
-- [Songs](${SING_HOME}/songs): ${SONG_COUNT} public-domain song pages covering ${melodies} melodies; most hold a song's opening phrase and ${arrangements} are longer arrangements. Each gives the words sung, the key and note range, and scores the singer against its target notes. Once a singer has taken the range test, each song opens fitted to that measured range and can be shifted by semitones; without a saved range it opens in its written key
+- [Songs](${SING_HOME}/songs): ${SONG_COUNT} public-domain song pages covering ${melodies} melodies; most hold a song's opening phrase and ${arrangements} are longer arrangements. Each gives the words sung, the key and note range, and scores the singer against its target notes. Once a singer has taken the range test, each song opens fitted to that measured range and can be shifted by semitones; without a saved range it opens in its written key and is scored in either octave
 - [Recorder](${SING_HOME}/recorder): record takes on your device and compare two back to back
 - [Tools](${SING_HOME}/tools): metronome, virtual keyboard and drone
 - [Analyze](${SING_HOME}/analyze): live voice spectrogram, a tone view of the energy near 3 kHz, and a vocal-load estimate counted in phonation time and vibration cycles while that page is open and on screen (voiced speech counts too; practice in other rooms does not)
@@ -356,8 +356,9 @@ function glossarySection(): string {
 }
 
 function learningSection(): string {
+  // Page URLs: the range card's #start is where a tap scrolls, not a page.
   const paths = VOCAL_LEARNING_PATHS.map(
-    (p) => `- ${p.title}: ${p.need} ${SING_HOME}${p.href}`,
+    (p) => `- ${p.title}: ${p.need} ${SING_HOME}${p.href.split("#")[0]}`,
   );
   const faq = VOCAL_LEARNING_FAQ.flatMap((f) => [`- Q: ${f.question}`, `  A: ${f.answer}`]);
   return [`Page: ${SING_HOME}/learn`, "", ...paths, "", "**Questions**", "", ...faq].join("\n");

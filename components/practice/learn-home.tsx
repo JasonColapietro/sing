@@ -301,25 +301,33 @@ export function ContinueCard({
   const more = stepTitles.length - shown.length;
   return (
     <Card className="border-violet/40 bg-[radial-gradient(700px_260px_at_0%_0%,rgba(139,92,246,0.07),transparent_65%)]">
-      <div className="flex flex-wrap items-start justify-between gap-6">
-        <div className="max-w-xl">
-          <div className="flex flex-wrap items-center gap-2">
+      {/* On a phone the two columns dissolve (`contents`) into one flex column
+          and the start button is ordered straight under the title: with the
+          tagline, chips and goal ring first, a 375×667 phone put the room's
+          only action under the tab bar on /warmups, /ear-training and
+          /breath. DOM order — and so focus and reading order — is unchanged,
+          and from sm up the two-column layout is exactly as before. */}
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-6">
+        <div className="contents sm:block sm:max-w-xl">
+          <div className="order-1 flex flex-wrap items-center gap-2">
             <SectionLabel>{kicker}</SectionLabel>
             <StreakChip days={streakDays} best={streakBest} />
           </div>
-          <h2 className="mt-3 text-3xl sm:text-4xl">{title}</h2>
-          {tagline && <p className="mt-2 text-mut">{tagline}</p>}
+          <h2 className="order-1 mt-3 text-3xl sm:text-4xl">{title}</h2>
+          {/* mt-4 on a phone, where it follows the full-width button rather
+              than the title; mt-2 under the title from sm up, as before. */}
+          {tagline && <p className="order-3 mt-4 text-mut sm:mt-2">{tagline}</p>}
           {stars !== undefined && (
-            <div className="mt-3 flex items-center gap-2">
+            <div className="order-3 mt-3 flex items-center gap-2">
               <StarTrio stars={stars} size={16} />
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 {stars === 0 ? "Not started" : stars === 3 ? "All three stars" : "So far"}
               </span>
             </div>
           )}
-          {meta && <div className="mt-4">{meta}</div>}
+          {meta && <div className="order-3 mt-4">{meta}</div>}
           {shown.length > 0 && (
-            <ol className="mt-4 flex flex-wrap gap-1.5" aria-label="What is inside">
+            <ol className="order-3 mt-4 flex flex-wrap gap-1.5" aria-label="What is inside">
               {shown.map((t, i) => (
                 <li key={`${t}-${i}`}>
                   <Pill tone="mut">{t}</Pill>
@@ -333,21 +341,21 @@ export function ContinueCard({
             </ol>
           )}
         </div>
-        <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:items-end">
+        <div className="contents sm:flex sm:w-auto sm:flex-col sm:items-end sm:gap-3">
           {goal && (
-            <div className="flex items-center gap-3 sm:flex-row-reverse">
+            <div className="order-3 mt-4 flex items-center gap-3 sm:order-none sm:mt-0 sm:flex-row-reverse">
               <GoalRing doneSec={goal.doneSec} goalSec={goal.goalSec} />
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                 Today&apos;s goal
               </span>
             </div>
           )}
-          <Button variant="rec" size="lg" onClick={onStart} className="w-full sm:w-auto"
+          <Button variant="rec" size="lg" onClick={onStart} className="order-2 mt-4 w-full sm:order-none sm:mt-0 sm:w-auto"
             disabled={Boolean(unavailableReason)} aria-describedby={unavailableReason ? unavailableId : undefined}>
             {startLabel ?? (micReady ? "Start" : "Enable mic and start")}
           </Button>
-          {unavailableReason && <p id={unavailableId} className="max-w-xs text-sm text-mut sm:text-right">{unavailableReason}</p>}
-          {children}
+          {unavailableReason && <p id={unavailableId} className="order-2 mt-2 max-w-xs text-sm text-mut sm:order-none sm:mt-0 sm:text-right">{unavailableReason}</p>}
+          {children && <div className="order-3 mt-3 sm:order-none sm:mt-0">{children}</div>}
         </div>
       </div>
       {error && <MicAlert message={error} className="mt-4 text-sm text-rec" />}

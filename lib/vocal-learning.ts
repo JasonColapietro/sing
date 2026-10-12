@@ -1,3 +1,5 @@
+import { rangeTestHref } from "@/lib/site";
+
 export interface VocalLearningPath {
   title: string;
   need: string;
@@ -22,7 +24,7 @@ export const VOCAL_LEARNING_PATHS: readonly VocalLearningPath[] = [
   {
     title: "Find your vocal range",
     need: "Measure the lowest and highest clear notes you can sing today. Once the result is saved, warmups are pitched to it and songs open in a key fitted to it.",
-    href: "/range?mode=range",
+    href: rangeTestHref(),
     action: "Take the free range test",
   },
   {

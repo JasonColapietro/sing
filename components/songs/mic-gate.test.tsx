@@ -88,10 +88,17 @@ describe("songs mic gate", () => {
     // With the paragraph first, "Enable microphone" sat behind the tab bar on
     // a 375×667 phone, on the hub and on every song page's deep link.
     const html = renderToStaticMarkup(<SongsMicGate error="No microphone found. Plug one in." />);
-    const button = html.indexOf("Enable microphone");
+    const button = html.indexOf("Try again");
     expect(button).toBeGreaterThan(html.indexOf("Sing along and see every note you hit"));
     expect(button).toBeLessThan(html.indexOf("Audio never leaves your browser"));
     expect(html.indexOf('role="alert"')).toBeLessThan(html.indexOf("Audio never leaves your browser"));
+  });
+
+  it("labels the button as a retry once the mic has failed", () => {
+    expect(renderToStaticMarkup(<SongsMicGate />)).toContain("Enable microphone");
+    const html = renderToStaticMarkup(<SongsMicGate error="Microphone access is blocked." />);
+    expect(html).toContain("Try again");
+    expect(html).not.toContain("Enable microphone");
   });
 
   it("states the free allowance before sending anyone into capped practice", () => {

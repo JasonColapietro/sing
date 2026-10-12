@@ -56,7 +56,7 @@ describe("warmup starts after the daily allowance", () => {
     expect(starts.length).toBeGreaterThan(0);
     expect(starts.every((button) => button.includes('disabled=""'))).toBe(true);
     expect(html).toContain(reason);
-    expect(html).toContain('href="/range?mode=range"');
+    expect(html).toContain('href="/range?mode=range#start"');
     expect(html).toContain('href="/pro"');
   });
 

@@ -11,20 +11,18 @@ import {
 } from "@/lib/chart-colors";
 import { ProChip } from "./ui";
 
-/** Weekly range span, chart units above the floor. [low, high] per week.
-    Sample data: a roughly level band with test-to-test scatter, because range
-    edges move slowly, and sometimes not at all (see /book/when-numbers-lie).
-    A band that widened week over week read as a promise of new notes in two
-    months, which is not how voices work and not something Pro can sell. */
-const RANGE_WEEKS = [
+/** Saved range tests, chart units above the floor. [low, high] per test.
+    Sample data: three tests about six weeks apart, the spacing the coach
+    prompts a retest at (RANGE_RETEST_DAYS) and book ch. 8 advises; testing
+    weekly mostly measures noise. A roughly level band with test-to-test
+    scatter, because range edges move slowly, and sometimes not at all (see
+    /book/when-numbers-lie). A band that widened test over test read as a
+    promise of new notes, which is not how voices work and not something Pro
+    can sell. */
+const RANGE_TESTS = [
   [52, 156],
   [54, 158],
-  [51, 157],
-  [53, 159],
-  [52, 157],
-  [50, 158],
-  [53, 160],
-  [51, 159],
+  [53, 157],
 ] as const;
 
 /** Per-note accuracy bars: label, height (of 96 max), weak note flagged. */
@@ -45,10 +43,10 @@ const NOTE_BARS: Array<{
 
 const SPARK_X0 = 36;
 const SPARK_W = 250;
-const SPARK_STEP = SPARK_W / (RANGE_WEEKS.length - 1);
+const SPARK_STEP = SPARK_W / (RANGE_TESTS.length - 1);
 
 function sparkPoints(pick: (w: readonly [number, number]) => number): string {
-  return RANGE_WEEKS.map(
+  return RANGE_TESTS.map(
     (w, i) => `${SPARK_X0 + i * SPARK_STEP},${230 - pick(w)}`,
   ).join(" ");
 }
@@ -58,10 +56,14 @@ const LOW_LINE = sparkPoints((w) => w[0]);
 const BAND = `${HIGH_LINE} ${LOW_LINE.split(" ").reverse().join(" ")}`;
 
 /**
- * An example Pro "coach report", labelled as one: range history over eight
- * weeks plus per-note accuracy with the weak note flagged. Every figure in it
- * is sample data, and the header says so. Same console-card frame as the
- * landing hero visual, in gold. Pure CSS animation.
+ * An example Pro "coach report", labelled as one: three saved range tests
+ * about six weeks apart plus per-note accuracy with the weak note flagged.
+ * Every figure in it is sample data, and the header says so — but each is one
+ * the product can produce: the footer's next step is what the coach's
+ * buildPlan names for a weak E4 in this E2–G4 range (components/progress/
+ * coach.tsx: a weak note within five semitones of the ceiling, in a span of at
+ * least OCTAVE_SIREN_MIN_SEMIS, gets the Octave siren for 6 minutes). Same
+ * console-card frame as the landing hero visual, in gold. Pure CSS animation.
  */
 export default function ProVisual() {
   return (
@@ -81,7 +83,7 @@ export default function ProVisual() {
       <svg
         viewBox="0 0 640 300"
         role="img"
-        aria-label="Example Pro coach report with sample data: range tests charted over eight weeks, and per-note accuracy bars with E4 flagged as the note to work on"
+        aria-label="Example Pro coach report with sample data: three range tests about six weeks apart, and per-note accuracy bars with E4 flagged as the note to work on"
         className="block w-full"
       >
         {/* ---- left: range history band ---- */}
@@ -93,7 +95,7 @@ export default function ProVisual() {
           letterSpacing="1.5"
           fill={DIM}
         >
-          RANGE / 8 WEEKS
+          RANGE / 3 TESTS · 12 WEEKS
         </text>
         {[86, 134, 182, 230].map((y) => (
           <line
@@ -221,7 +223,7 @@ export default function ProVisual() {
       </svg>
 
       <div className="flex items-center justify-between border-t border-line px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em]">
-        <span className="text-dim">Tomorrow: head-voice builder, 12 min</span>
+        <span className="text-dim">Tomorrow: Octave siren, 6 min</span>
         <span className="text-violet-ink">Accuracy 87%</span>
       </div>
     </div>

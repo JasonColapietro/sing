@@ -30,7 +30,7 @@ import { fitDescription } from "@/lib/meta-fit";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { pageRobots } from "@/lib/robots-meta";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import {
   CompareWithMe,
@@ -381,7 +381,7 @@ export default async function SingerPage({
       subtitle={queryAlignedDescription(s)}
       actions={
         <>
-          <LinkButton href={`/range?compare=${s.slug}`} size="md">
+          <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">
             {COMPARISON_SEARCH_SLUGS.has(s.slug)
               ? "Compare my range — free test →"
               : "Test my range →"}

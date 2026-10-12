@@ -11,7 +11,7 @@ import {
   type Singer,
 } from "@/lib/singers";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -187,7 +187,7 @@ export default function RecordsPage() {
       actions={
         // Own wrapping row: two md buttons are wider than a 320px phone.
         <div className="flex flex-wrap items-center gap-2">
-          <LinkButton href="/range?mode=range" size="md">
+          <LinkButton href={rangeTestHref()} size="md">
             Find my vocal range →
           </LinkButton>
           <LinkButton href="/singers" variant="outline" size="md">
@@ -286,7 +286,7 @@ export default function RecordsPage() {
             sing — which the range test and the main chart do together.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <LinkButton href="/range?mode=range" size="sm">
+            <LinkButton href={rangeTestHref()} size="sm">
               Find my range
             </LinkButton>
             <LinkButton href="/singers" variant="outline" size="sm">

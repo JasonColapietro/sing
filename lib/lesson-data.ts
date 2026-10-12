@@ -1719,7 +1719,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "The song moves to you. This is the singing equivalent of a capo.",
-    "explanation": "A recording's key was chosen for one singer on one set of days, so it is a fact about that session, not about the song, and changing it is ordinary practice. Move the whole song up or down by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the highest note comes without a push and the lowest is still clearly audible. Once you have taken the range test, songs open fitted to your measured range and you can shift them a semitone at a time; without a saved range they open in the written key.",
+    "explanation": "A recording's key was chosen for one singer on one set of days, so it is a fact about that session, not about the song, and changing it is ordinary practice. Move the whole song up or down by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the highest note comes without a push and the lowest is still clearly audible. Once you have taken the range test, songs open fitted to your measured range and you can shift them a semitone at a time; without a saved range they open in the written key and are scored in either octave.",
     "prerequisites": [
       "v-l2-m3-06"
     ],
@@ -1736,7 +1736,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Start from the key the song opens in, fitted to your measured range if you have taken the range test or the written key if not, and shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
+        "body": "Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -1827,7 +1827,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Start from the key the song opens in, fitted to your measured range if you have taken the range test or the written key if not, and shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
+        "body": "Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -1918,7 +1918,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Start from the key the song opens in, fitted to your measured range if you have taken the range test or the written key if not, and shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
+        "body": "Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -5540,7 +5540,7 @@ export const LESSONS: Lesson[] = [
     "title": "The Difference You Can Hear",
     "type": "concept",
     "minutes": 4,
-    "objective": "Belt and shout sound similar for about two seconds. Then one of them stops.",
+    "objective": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time.",
     "explanation": "A shout gets its size from more air and more squeeze at the folds, so as it climbs it turns tight, goes sharp or cracks, and it tires the voice. Mix is the middle ground between chest and head voice, part fold setup and part vowel and resonance, where the transition can be crossed without a seam, and a belt carries a chest-like sound higher by getting brighter rather than by pushing. The difference you can hear is in repetition: an easy call sounds the same the third time, a shout costs more each time, and any grip in the throat means stop and go lighter.",
     "prerequisites": [
       "v-l5-m3-07"
@@ -5564,7 +5564,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Comfortable mixed-voice coordination",
-        "body": "Belt and shout sound similar for about two seconds. Then one of them stops. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -6098,7 +6098,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6189,7 +6189,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -6280,7 +6280,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.",
+        "body": "Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -7469,7 +7469,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
+        "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key and is scored in either octave. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -7560,7 +7560,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
+        "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key and is scored in either octave. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -7651,7 +7651,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
+        "body": "Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key and is scored in either octave. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -8847,7 +8847,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "After warming up in the middle, sing Small three-note climb with its top note on your current comfortable high note, then once more a semitone higher, both at low-to-moderate volume. Change only the key. Record both in one take in the recorder with a breath between them, and on playback ask whether the higher top note is a usable sung note you could repeat or a one-off reach. Count the new note only if it is easy on three separate days, and take the range test again only after rest.",
+        "body": "After warming up in the middle, sing Small three-note climb with its top note on your current comfortable high note, then once more a semitone higher, both at low-to-moderate volume. Change only the key. Record both in one take in the recorder with a breath between them, and on playback ask whether the higher top note is a usable sung note you could repeat or a one-off reach. Count the new note only if it is easy on three separate days, and leave the range test for your next retest, weeks apart, after the same warm-up as your baseline.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },
@@ -8908,7 +8908,7 @@ export const LESSONS: Lesson[] = [
     "title": "Semitone at a Time",
     "type": "exercise",
     "minutes": 7,
-    "objective": "Extend, hold, rescan. Open the range tool yourself when you want to compare another comfortable scan.",
+    "objective": "Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today.",
     "explanation": "",
     "prerequisites": [
       "v-l7-m5-01"
@@ -8932,13 +8932,13 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range extension",
-        "body": "Extend, hold, rescan. Open the range tool yourself when you want to compare another comfortable scan. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly, release, and rescan only after rest.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly and release. Do not rescan today: a finished range test replaces your saved range. Count the note only when it is easy on three separate days, and compare it at your next retest, weeks apart, with the same warm-up, room and microphone distance as your baseline.",
         "look": "The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.",
         "listen": "The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once."
       },

@@ -438,6 +438,41 @@ export const MASTERY_SCORE = 80;
 export const MASTERY_MIN_TEMPO = 1;
 
 /**
+ * The starting note an accompanist gives before an unaccompanied run.
+ *
+ * An On your own pass plays no guide, and the count-in is four unpitched
+ * clicks, so without this a singer had no reference for a key the app may
+ * have chosen (fitted to the saved range). A tune sung perfectly a semitone
+ * off is 100 cents from every target, outside TOLERANCE_CENTS on every frame,
+ * and the only pass that can master a song scored about zero. Every
+ * unaccompanied setting — choir, audition, graded exam — gives the note first.
+ *
+ * Returns the earliest note this run sings (playBeats > 0, so a looped span
+ * starts from its own first note) and when to sound it: on the first count-in
+ * beat, short enough to end at least COUNT_IN_BEATS − 1.5 beats before the
+ * downbeat, so it never overlaps a scored frame.
+ */
+export const STARTING_NOTE_MAX_SEC = 1.2;
+export const STARTING_NOTE_MAX_BEATS = 1.5;
+
+export function startingNote(
+  notes: SongNote[],
+  playBeats: number[],
+  spb: number,
+): { midi: number; dur: number } | null {
+  let first: SongNote | undefined;
+  for (let i = 0; i < notes.length; i++) {
+    const n = notes[i];
+    if ((playBeats[i] ?? 0) > 0 && (!first || n.startBeat < first.startBeat)) first = n;
+  }
+  if (!first) return null;
+  return {
+    midi: first.midi,
+    dur: Math.min(STARTING_NOTE_MAX_SEC, STARTING_NOTE_MAX_BEATS * spb),
+  };
+}
+
+/**
  * Whether a finished run masters the song: a solo pass, sung in performance
  * mode, at or above written tempo, scoring at or above MASTERY_SCORE. An
  * unscored run — a listen pass, or no microphone — masters nothing, because it

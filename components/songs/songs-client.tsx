@@ -92,6 +92,15 @@ export function SongsClient() {
     document.getElementById("song-transport")?.scrollIntoView({ block: "end" });
   }, [view, playToken]);
 
+  // The summary inherits the practice view's scroll, which the effect above
+  // left aligned to the transport: on a 375×667 phone the score, grade and
+  // heading opened above the screen and "Sing again" under the tab bar. Open
+  // it at the top, score first. A capped "Sing again" keeps the view as
+  // "summary", so this never fights showCapWall.
+  useEffect(() => {
+    if (view === "summary") window.scrollTo({ top: 0 });
+  }, [view]);
+
   // A song page links here as /songs?song=<slug>, so arriving from search
   // lands on the melody that was being read about rather than the library.
   // Resolved through `entitled`, so a Pro link cannot open a Pro song for a

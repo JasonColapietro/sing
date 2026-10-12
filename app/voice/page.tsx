@@ -96,10 +96,12 @@ export default function VoicePage() {
             for iPhone and Android: start with the notes you can sing, then make
             your next session count.
           </p>
+          {/* A literal, not rangeTestHref(): lib/query-ownership.test.tsx reads
+              this file for its link to the test, which lands on #start. */}
           <p className="mt-5 max-w-xl text-mut">
             This page is the app download rather than the test itself. If you
             want the test, it is free in the browser and needs no install:{" "}
-            <Link href="/range?mode=range" className="text-violet-ink underline underline-offset-4">take the vocal range test</Link> in Suede Sing, our browser studio.
+            <Link href="/range?mode=range#start" className="text-violet-ink underline underline-offset-4">take the vocal range test</Link> in Suede Sing, our browser studio.
           </p>
         </div>
         <div className="rounded-2xl border border-line bg-panel p-6 sm:p-8">

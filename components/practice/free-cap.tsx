@@ -20,6 +20,15 @@ const PRO_BUY_HREF = "/pro#buy";
 const GO_PRO_LABEL = `Go Pro: no daily limit, ${formatPrice(PRICING.lifetime.amount)} once`;
 
 /**
+ * Pro unlocks per browser, so an owner who opens the app in a second browser,
+ * or after clearing site data, meets this wall before anything else. Offering
+ * them only a second purchase invited one; /pro#restore opens the key form
+ * (RestorePanel), the same way out the locked book and Atlas chapters give.
+ */
+const PRO_RESTORE_HREF = "/pro#restore";
+const RESTORE_LABEL = "Already have Pro? Unlock it in this browser";
+
+/**
  * The time left before the wall, shown before the wall. Without it the cap
  * arrives as a surprise, and the only meter on screen (the day's goal ring)
  * measured something else. Renders nothing until the entitlement is read, so
@@ -89,6 +98,12 @@ export function CapWall({ cap }: { cap: FreeCap }) {
             <LinkButton href="/progress" variant="ghost" className="w-full sm:w-auto">
               See your streak
             </LinkButton>
+            <Link
+              href={PRO_RESTORE_HREF}
+              className="flex min-h-11 items-center justify-center text-center text-sm text-mut underline underline-offset-4 hover:text-ink"
+            >
+              {RESTORE_LABEL}
+            </Link>
           </div>
         </div>
       </Card>
@@ -140,6 +155,12 @@ export function CapSlide({ cap, onExit }: { cap: FreeCap; onExit: () => void }) 
           {CAP_MIN} minutes opens at midnight; the pitch studio and the range
           test stay open now. Pro practises without a clock.
         </p>
+        <Link
+          href={PRO_RESTORE_HREF}
+          className={`mt-4 inline-flex min-h-11 items-center text-sm text-[var(--s-mut)] underline underline-offset-4 hover:text-[var(--s-ink)] ${SESSION_FOCUS}`}
+        >
+          {RESTORE_LABEL}
+        </Link>
       </div>
     </SessionShell>
   );
