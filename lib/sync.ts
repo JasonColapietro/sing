@@ -70,6 +70,32 @@ function markSynced(at: string) {
   } catch {
     // storage unavailable — auto-sync just runs more often
   }
+  notifySyncStatus();
+}
+
+const statusListeners = new Set<() => void>();
+
+function notifySyncStatus(): void {
+  for (const listener of statusListeners) listener();
+}
+
+/**
+ * Calls `listener` whenever lastSyncedAt() or lastSyncError() may have
+ * changed: after a sync in this tab, background ones included, or a write to
+ * either key from another tab. A mounted page reads both once, so without
+ * this a refusal from the load-time sync never showed, and a warning stayed
+ * up after a later sync succeeded.
+ */
+export function subscribeSyncStatus(listener: () => void): () => void {
+  statusListeners.add(listener);
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === null || e.key === LAST_KEY || e.key === ERROR_KEY) listener();
+  };
+  window.addEventListener("storage", onStorage);
+  return () => {
+    statusListeners.delete(listener);
+    window.removeEventListener("storage", onStorage);
+  };
 }
 
 /**
@@ -98,6 +124,7 @@ function noteAutoSyncFailure(error: unknown): void {
   } catch {
     // storage unavailable — the manual Sync now still shows the error
   }
+  notifySyncStatus();
 }
 
 function proKeyOrNull(): string | null {

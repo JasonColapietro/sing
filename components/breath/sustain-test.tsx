@@ -18,6 +18,7 @@ import {
   BREATH_FALLBACK_SEC,
   SUSTAIN_ATTEMPT_MIN_SEC,
   SUSTAIN_LOG_MIN_SEC,
+  SUSTAIN_STAR_SEC,
   type BreathDrillResult,
 } from "./routines";
 import { BreathGatePanel } from "./breath-gate";
@@ -872,14 +873,17 @@ export function SustainTest({
         <div className="mt-4 border-t border-line pt-3">
           {/* No length ladder: the drill asks the singer to end the note
               while it is still easy, so grading length here would reward
-              the squeeze the prompt warns against. */}
+              the squeeze the prompt warns against. The path's stars still
+              count seconds (SUSTAIN_STAR_SEC, the contract's starsSec), so
+              the card says so rather than calling the test ungraded. */}
           <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
             How to read it
           </div>
           <p className="mt-1.5 text-sm text-mut">
-            No length to hit. Compare each hold with your own earlier ones, on the same note at the
-            same volume. An even hold you end while it is still easy beats a longer one squeezed
-            out.
+            Stars mark a clear hold of {SUSTAIN_STAR_SEC.one}, {SUSTAIN_STAR_SEC.two} and{" "}
+            {SUSTAIN_STAR_SEC.three} seconds, but length is not the goal. Compare each hold with your
+            own earlier ones, on the same note at the same volume. An even hold you end while it is
+            still easy beats a longer one squeezed out.
           </p>
         </div>
       </Card>

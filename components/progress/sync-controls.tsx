@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui";
-import { lastSyncError, lastSyncedAt, syncNow } from "@/lib/sync";
+import { lastSyncError, lastSyncedAt, subscribeSyncStatus, syncNow } from "@/lib/sync";
 import { resumeProgressCloud, useProgressCloudState } from "@/lib/progress-cloud";
 
 export function SyncControls() {
@@ -18,9 +18,14 @@ export function SyncControls() {
   const [autoError, setAutoError] = useState<string | null>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reads localStorage, so it can only run after hydration
-    setLastSync(lastSyncedAt());
-    setAutoError(lastSyncError());
+    const read = () => {
+      setLastSync(lastSyncedAt());
+      setAutoError(lastSyncError());
+    };
+    // Reads localStorage, so it can only run after hydration; then follows the
+    // background syncs, which can fail or recover while this page is open.
+    read();
+    return subscribeSyncStatus(read);
   }, []);
 
   const runSync = async () => {
