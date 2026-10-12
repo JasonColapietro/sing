@@ -12,7 +12,7 @@ vi.mock("@/lib/pro", () => ({
   useProReady: () => state.ready,
 }));
 
-import { CanYouSingVerdict } from "./verdict";
+import { CanYouSingAction, CanYouSingVerdict } from "./verdict";
 
 const song = POP_SONGS.find((s) => s.slug === "espresso")!;
 const render = () => renderToStaticMarkup(<CanYouSingVerdict song={song} />);
@@ -28,7 +28,7 @@ describe("song comparison to first practice", () => {
     for (const range of [{}, { lowMidi: 50 }, { highMidi: 72 }]) {
       state.range = range;
       const html = render();
-      expect(html).toContain(`href="/range?mode=range&amp;check=${song.slug}"`);
+      expect(html).toContain(`href="/range?mode=range&amp;check=${song.slug}#start"`);
       expect(html).toContain(`See if “${song.title}” fits my voice`);
       expect(html).not.toContain("Your first practice");
       expect(html).not.toContain('href="/pro');
@@ -69,7 +69,77 @@ describe("song comparison to first practice", () => {
 
   it("sends a retest back to this song's verdict too", () => {
     state.range = { lowMidi: 52, highMidi: 72 };
-    expect(render()).toContain(`href="/range?mode=range&amp;check=${song.slug}"`);
+    expect(render()).toContain(`href="/range?mode=range&amp;check=${song.slug}#start"`);
+  });
+
+  it("does not call a song whose top note is the tested ceiling a plain fit", () => {
+    // Espresso is G3–A4.
+    state.range = { lowMidi: 50, highMidi: 69 };
+    let html = render();
+    expect(html).toContain("its top note is your tested ceiling");
+    expect(html).toContain("not your comfortable band");
+    expect(html).not.toContain("of headroom");
+    // Centring G3–A4 in D3–A4 drops it round(59.5 - 62) = 2.
+    expect(html).toContain("Dropping the key by 2 centres it in your range.");
+    state.range = { lowMidi: 50, highMidi: 70 };
+    html = render();
+    expect(html).toContain("one semitone under your tested ceiling");
+    state.range = { lowMidi: 52, highMidi: 72 };
+    html = render();
+    expect(html).toContain("leaves you 3 semitones of headroom");
+    expect(html).not.toContain("comfortable band");
+    expect(html).not.toContain("centres it");
+  });
+
+  it("treats the tested floor as a limit too", () => {
+    // Espresso G3–A4 (55–69) against G3–D5 (55–74): bottom on the floor,
+    // 5 semitones of headroom; centring raises it round(64.5 - 62) = 3.
+    state.range = { lowMidi: 55, highMidi: 74 };
+    let html = render();
+    expect(html).toContain("its lowest note is your tested floor");
+    expect(html).toContain("expect the bottom of this song to be work");
+    expect(html).toContain("Raising the key by 3 centres it in your range.");
+    expect(html).not.toContain("of headroom");
+    state.range = { lowMidi: 54, highMidi: 74 };
+    html = render();
+    expect(html).toContain("one semitone above your tested floor");
+    // Both ends on the limits: the top is named, and no shift can centre it.
+    state.range = { lowMidi: 55, highMidi: 69 };
+    html = render();
+    expect(html).toContain("its top note is your tested ceiling");
+    expect(html).not.toContain("centres it");
+    // Three semitones of slack in all: any shift leaves an end within one
+    // semitone of a limit, so no move is suggested.
+    state.range = { lowMidi: 54, highMidi: 71 };
+    html = render();
+    expect(html).toContain("one semitone above your tested floor");
+    expect(html).not.toContain("centres it");
+  });
+
+  it("names the shift that centres a song, not only the one that parks it on a limit", () => {
+    // Espresso G3–A4 (55–69) against A2–F4 (45–65): 4 above the ceiling;
+    // centring drops it by round(55 - 62) = 7.
+    state.range = { lowMidi: 45, highMidi: 65 };
+    let html = render();
+    expect(html).toContain("Dropping the key by 4 would bring it inside, with the top note on that ceiling; dropping it by 7 centres it in your range.");
+    // A range exactly as wide as the song: the minimum shift is the centred one.
+    state.range = { lowMidi: 51, highMidi: 65 };
+    html = render();
+    expect(html).toContain("Dropping the key by 4 would bring it inside, with the top note on that ceiling.");
+    // Low side: 4 below the floor of B3–D5 (59–74); centring raises it by round(66.5 - 62) = 5.
+    state.range = { lowMidi: 59, highMidi: 74 };
+    html = render();
+    expect(html).toContain("Raising the key by 4 would bring it inside, with the bottom note on that floor; raising it by 5 centres it in your range.");
+  });
+
+  it("puts the page's action in reach before the verdict card: the test, or the way down to the answer", () => {
+    const action = () => renderToStaticMarkup(<CanYouSingAction song={song} />);
+    state.range = {};
+    expect(action()).toContain(`href="/range?mode=range&amp;check=${song.slug}#start"`);
+    expect(action()).toContain("Test my range for this song");
+    state.range = { lowMidi: 52, highMidi: 72 };
+    expect(action()).toContain('href="#fit"');
+    expect(action()).not.toContain("/range?");
   });
 
   it.each(["member", "loading"])("keeps free practice available without an upsell for %s entitlement", (mode) => {

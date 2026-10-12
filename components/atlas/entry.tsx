@@ -13,8 +13,11 @@ export function AtlasEntryCard({ entry }: { entry: AtlasEntry }) {
     <article className="rounded-xl border border-line bg-bg p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h3 className="text-lg font-semibold">
+          {/* No prefetch: a genre chapter holds up to seventy entries, and
+              each name scrolling into view would fetch a singer page. */}
           <Link
             href={`/singers/${entry.slug}`}
+            prefetch={false}
             className="transition-colors hover:text-violet-ink"
           >
             {entry.name}

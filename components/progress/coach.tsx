@@ -42,6 +42,14 @@ interface PlanItem {
  */
 const OCTAVE_SIREN_MIN_SEMIS = 21;
 
+/**
+ * Days before the plan suggests a retest. The book spaces range tests six
+ * weeks apart (chapter 8: "a number that still means something in six
+ * weeks"; chapter 13: "Do not retest between those points"), because testing
+ * more often mostly measures the day.
+ */
+const RANGE_RETEST_DAYS = 42;
+
 function buildPlan(state: ProgressState, now: Date): {
   banner: string | null;
   items: PlanItem[];
@@ -123,7 +131,7 @@ function buildPlan(state: ProgressState, now: Date): {
       reason:
         "You haven't measured your range yet — it anchors every other exercise to your voice.",
     });
-  } else if (rangeAgeDays !== null && rangeAgeDays >= 21) {
+  } else if (rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS) {
     rangeFirst = true;
     items.push({
       title: "Retake the range test",

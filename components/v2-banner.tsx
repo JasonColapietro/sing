@@ -31,8 +31,9 @@ const SEEN_KEY = "suede-sing:v3-1-banner:v1";
  * was bumped for 3.1, which is a release worth re-showing to v2 dismissers.
  *
  * Dismissal has to survive server rendering without a flash or a layout
- * shift, on a site that prerenders every page. The banner is always in the
- * server HTML (so every page carries a crawlable link to /changelog), and the
+ * shift, on a site that prerenders every page. On every page but /changelog
+ * and /pro the banner is always in the server HTML (so each one carries a
+ * crawlable link to /changelog besides the footer's), and the
  * inline script directly after it hides it before first paint when the seen
  * key is set or there is no progress record — the parser executes the script
  * synchronously, so neither a returning dismisser nor a first-time visitor
@@ -64,8 +65,11 @@ export default function V2Banner() {
     sync();
   }, []);
 
-  // On /changelog the banner would link to the page it is already on.
-  if (dismissed || pathname === "/changelog") return null;
+  // On /changelog the banner would link to the page it is already on. On /pro
+  // it sat above the price: at 375px it pushed the buy button off a returning
+  // singer's first screen, and returning singers are the likeliest buyers.
+  // The footer keeps the crawlable /changelog link on both.
+  if (dismissed || pathname === "/changelog" || pathname === "/pro") return null;
 
   const dismiss = () => {
     try {

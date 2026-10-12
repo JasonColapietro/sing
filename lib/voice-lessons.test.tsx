@@ -49,6 +49,7 @@ import {
   MODULE_PRACTICE,
   ROOM_PATHS,
   companionHref,
+  companionLabel,
   isGuidedPractice,
   moduleMaterial,
   practiceMatch,
@@ -178,16 +179,31 @@ describe("the lesson data", () => {
   });
 
   /**
-   * The objective is the page's subtitle and its search description, so it has
-   * to say what the catalog says. Three lessons were authored on GuitarHub with
-   * a different objective from their catalog summary, and neither text is
-   * wrong, so they are named rather than rewritten.
+   * The objective is the page's subtitle and its search description, and the
+   * module page lists the lesson by its catalog summary, so the two are one
+   * sentence. Three were once authored apart, and one of those promised a
+   * Stage 2 comparison no lesson asked for; the compile now refuses a drift.
    */
   it("states the catalog's summary as the lesson objective", () => {
-    const authoredApart = new Set(["v-l1-m3-02", "v-l3-m5-07", "v-l6-m5-01"]);
     for (const lesson of LESSONS) {
-      if (authoredApart.has(lesson.id)) continue;
       expect(lesson.objective, lesson.id).toBe(catalogLessons.get(lesson.id)!.lesson.summary);
+    }
+  });
+
+  /**
+   * A lesson that says stop for pain or hoarseness, or see a clinician, must
+   * not tell the singer in the next breath to try again; the port's closing
+   * "Repeat a smaller version on another fresh attempt" did exactly that.
+   */
+  it("never follows a stop-for-pain or see-a-clinician rule with a retry", () => {
+    for (const lesson of LESSONS) {
+      const { ifNotReady } = lesson.selfCheck;
+      if (/\bpain\b|hoarse|clinician|pathologist/i.test(ifNotReady)) {
+        expect(ifNotReady, lesson.id).not.toMatch(/Repeat a smaller version on another fresh attempt/);
+      }
+      if (lesson.moduleId === "v-l7-m4") {
+        expect(ifNotReady, lesson.id).toMatch(/Do not try the effect again/);
+      }
     }
   });
 
@@ -383,6 +399,19 @@ describe("links from the lessons", () => {
     }
   });
 
+  /**
+   * The lesson page's first button opens the module's room. A book's contents
+   * page is not somewhere to sing a phrase two ways and record it, and the
+   * live analyzer is not the Pro "take analysis" of recorded takes.
+   */
+  it("sends every module to a room it can be practised in, named as the site names it", () => {
+    for (const [id, { companion }] of Object.entries(MODULE_PRACTICE)) {
+      expect(["atlas", "glossary", "singers", "programs", "progress"], id).not.toContain(companion.room);
+      expect(companionLabel(companion), id).not.toMatch(/take analysis/i);
+    }
+    expect(companionLabel({ room: "analyze" })).toBe("the voice analyzer");
+  });
+
   it("never sends the passaggio module to the range test, which shows no passaggio", () => {
     for (const [id, { basis, companion }] of Object.entries(MODULE_PRACTICE)) {
       if (basis.kind === "selfCheck" && basis.missing === "passaggioPitches") {
@@ -468,6 +497,37 @@ describe("the pages", () => {
     expect(course).toMatch(/Reference notes are synthesized pitches, not recordings of a\s+singer/);
   });
 
+  /**
+   * The port printed a step's look/listen checks again, word for word, under
+   * the next step, and headed every recovery with the same generic symptom
+   * ("The target disappears when…") over a fix for something else.
+   */
+  it("print each step check once, and each recovery without the shared symptom", async () => {
+    expect(
+      UNIVERSAL_LESSON_TEXT.has("The target disappears when the range, volume, speed, or duration increases."),
+    ).toBe(true);
+    const escape = (t: string) => renderToStaticMarkup(<>{t}</>);
+    for (const l of LESSONS) {
+      const html = renderToStaticMarkup(
+        await LessonPage({
+          params: Promise.resolve({ stage: l.stageSlug, module: l.moduleSlug, lesson: l.slug }),
+        }),
+      );
+      const start = html.indexOf('id="steps"');
+      const steps = html.slice(start, html.indexOf("</section>", start));
+      const checks = [...steps.matchAll(/<dd class="inline text-mut">([\s\S]*?)<\/dd>/g)].map((m) => m[1]);
+      expect(checks.length, `${l.id} repeats a step check`).toBe(new Set(checks).size);
+      for (const step of shownSteps(l)) {
+        for (const check of [step.look, step.listen]) {
+          if (!UNIVERSAL_LESSON_TEXT.has(check)) expect(checks, l.id).toContain(escape(check));
+        }
+      }
+      for (const mk of l.mistakes) {
+        if (!UNIVERSAL_LESSON_TEXT.has(mk.recovery)) expect(html, l.id).toContain(escape(mk.recovery));
+      }
+    }
+  });
+
   it("leave out a review step only when it restates the self-check", () => {
     const l = LESSONS[0];
     const review = l.steps.find((s) => s.title === REVIEW_STEP_TITLE)!;
@@ -539,6 +599,18 @@ describe("the pages", () => {
         }
       }
     }
+  });
+
+  /**
+   * A cold voice under-reports at both ends, so the learn hub's first week
+   * warms up before its range test, as every program day does.
+   */
+  it("warm up before the learn hub's day-one range test", () => {
+    const html = renderToStaticMarkup(<LearnPage />);
+    const week = html.slice(html.indexOf("A seven-day learn-to-sing plan"));
+    const warm = week.indexOf('href="/warmups?routine=morning"');
+    expect(warm).toBeGreaterThan(-1);
+    expect(warm).toBeLessThan(week.indexOf('href="/range?mode=range"'));
   });
 
   it("are linked from the learn hub by pages that exist", () => {

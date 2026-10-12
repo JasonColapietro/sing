@@ -65,7 +65,7 @@ The second is hearing everything. A retest showing three extra semitones at the 
 
 The honest summary is usually undramatic and specific: the middle is steadier, the onsets are cleaner, the passage that fell apart in week one survives at low volume but not at full volume. That is a real result. Write it down somewhere you will find it in three months.
 
-Then find the sentence you wrote in chapter 14 about why you wanted to sing, and read it next to that summary. The numbers say what changed; the sentence says whether what changed is the thing you came for.
+Then find the sentence you wrote before week one (chapter 13) about why you wanted to sing, and read it next to that summary. The numbers say what changed; the sentence says whether what changed is the thing you came for.
 
 ## Choosing what comes next
 

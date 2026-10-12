@@ -83,8 +83,11 @@ function Table({
               <span className="block truncate text-sm font-medium">
                 {s.name}
               </span>
-              <span className="block truncate font-mono text-[10px] uppercase tracking-[0.1em] text-mut">
-                Catalog label: {s.voiceType} · reported {rangeLabel(s)}
+              {/* Wraps rather than truncates, range first: at phone widths the
+                  truncated line cut the reported range off every row, so a
+                  "6.0 oct" record showed no notes at all. */}
+              <span className="block font-mono text-[10px] uppercase tracking-[0.1em] text-mut">
+                Reported {rangeLabel(s)} · catalog label: {s.voiceType}
               </span>
             </span>
             <span className="tabular shrink-0 font-mono text-sm text-violet-ink">

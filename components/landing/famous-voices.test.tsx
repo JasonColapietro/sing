@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import { FamousVoices } from "@/components/landing/famous-voices";
+import { isSingerReviewed } from "@/lib/singer-evidence";
 
 describe("homepage famous voices", () => {
   it.each([
@@ -69,5 +70,31 @@ describe("homepage famous voices", () => {
     expect(anchor("sam-smith")).toContain("flex-col");
     expect(anchor("freddie-mercury")).not.toContain("flex-col");
     expect(anchor("freddie-mercury")).toContain("justify-between");
+  });
+
+  /** Each card's singer slug and the name line it shows, in grid order. */
+  function cards() {
+    const html = renderToStaticMarkup(<FamousVoices />);
+    return [
+      ...html.matchAll(
+        /href="\/singers\/([a-z0-9-]+)"[^>]*>\s*<span class="min-w-0"><span[^>]*>([^<]*)<\/span>/g,
+      ),
+    ].map((m) => ({ slug: m[1], name: m[2].replaceAll("&#x27;", "'") }));
+  }
+
+  it("leads with the reviewed profiles, the ones search can index", () => {
+    const reviewed = cards().map(({ slug }) => isSingerReviewed(slug));
+
+    expect(reviewed.length).toBeGreaterThan(20);
+    expect(reviewed[0]).toBe(true);
+    // Every reviewed card before every pending one, however many of each.
+    expect(reviewed).toEqual([...reviewed].sort((a, b) => Number(b) - Number(a)));
+  });
+
+  it("names each card by the singer alone, with no keyword anchor on any", () => {
+    for (const { slug, name } of cards()) {
+      expect(name, slug).not.toMatch(/vocal range/i);
+    }
+    expect(cards().find((c) => c.slug === "damiano-david")?.name).toBe("Damiano David");
   });
 });

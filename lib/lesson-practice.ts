@@ -201,7 +201,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "absoluteLoudness",
       "That the levels sound distinct on one note. Input level is uncalibrated, so discrete dynamic levels are not measurable.",
     ),
-    companion: { room: "analyze" },
+    // The recorder, where the lesson has you record the levels in one take
+    // and play them back; the analyzer has no record or playback.
+    companion: { room: "recorder" },
     // Swell and fade is the dynamics drill itself: one note, soft to medium
     // and back. Only its pitch is scored, which is the honest half.
     studies: ["swell-and-fade", "sustained-hold", "simple-gifts"],
@@ -315,9 +317,11 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
 
   // Stage 7 · Signature
   "v-l7-m1": {
-    // The one module where cycle dose is the right evidence.
+    // The one module where cycle dose is the right evidence, and the analyzer
+    // is the room that shows it. The studies are the drills a singer builds
+    // the short warm-up from; the Full warmup is a 14-minute routine.
     basis: measured("cycleDose"),
-    companion: { room: "warmups", param: "routine", value: "full" },
+    companion: { room: "analyze" },
     studies: ["morning-hum", "humming-thirds", "descending-five"],
     readings: ["stamina-and-health", "how-the-program-works"],
   },
@@ -326,7 +330,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "vowelOrFormant",
       "That you sang one phrase two recognisably different ways. Style is a human judgement and is not scored.",
     ),
-    companion: { room: "atlas" },
+    // The lessons record both styles in one take; the atlas chapter stays
+    // listed under the readings.
+    companion: { room: "recorder" },
     studies: ["amazing-grace-full", "simple-gifts"],
     readings: ["atlas:how-to-borrow-a-voice", "learning-from-other-voices"],
   },
@@ -335,7 +341,7 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "strainOrPressedPhonation",
       "That you tried production choices on cue and returned to neutral. Neither the choices nor the absence of strain is measured.",
     ),
-    companion: { room: "analyze" },
+    companion: { room: "recorder" },
     studies: ["morning-sustain"],
     readings: ["atlas:a-vocabulary-for-tone", "atlas:the-safety-rail"],
   },
@@ -344,7 +350,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "strainOrPressedPhonation",
       "That you read the safety material and wrote a stop plan. Effects carry real injury risk and nothing here can verify safety.",
     ),
-    companion: { room: "analyze" },
+    // Where earlier supervised takes are played back; nothing here asks for
+    // the effect to be produced.
+    companion: { room: "recorder" },
     studies: [],
     readings: ["atlas:the-safety-rail", "stamina-and-health"],
   },
@@ -396,7 +404,8 @@ export const ROOM_LABELS: Record<string, string> = {
   earTraining: "ear training",
   studio: "the pitch studio",
   songs: "the songbook",
-  analyze: "take analysis",
+  // The live analyzer, not the Pro "take analysis" of recorded takes.
+  analyze: "the voice analyzer",
   recorder: "the recorder",
   progress: "your progress",
   tools: "the practice tools",
@@ -436,7 +445,6 @@ export function companionLabel(c: Companion): string {
     return `${SONGS_BY_ID.get(c.value)?.title ?? c.value} in the songbook`;
   }
   if (c.room === "breath" && c.value === "sustain") return "the sustain test in the breath room";
-  if (c.room === "warmups" && c.param === "routine") return "the full warm-up routine";
   return ROOM_LABELS[c.room] ?? c.room;
 }
 

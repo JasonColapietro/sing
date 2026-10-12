@@ -68,7 +68,7 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.
 
 What this shows: I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.
 

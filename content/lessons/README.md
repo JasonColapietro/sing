@@ -7,9 +7,10 @@ URL slugs. The frontmatter `id` is the lesson's ID in
 outcomes and order.
 
 After editing, run `node scripts/compile-lessons.mjs` to regenerate
-`lib/lesson-data.ts`. The compile fails on a missing section, a title or
-length that disagrees with the catalog, or practice blocks that don't add up
-to the lesson's minutes. `lib/voice-lessons.test.tsx` fails if the generated
+`lib/lesson-data.ts`. The compile fails on a missing section, a title,
+length or objective that disagrees with the catalog (the objective must equal
+the catalog's summary), or practice blocks that don't add up to the lesson's
+minutes. `lib/voice-lessons.test.tsx` fails if the generated
 file is stale, if a lesson promises something sing can't measure, or if a
 link leaves the rooms the suede-vocal contract publishes.
 
@@ -23,7 +24,7 @@ stage: "v-l1"
 title: "…"            # must equal the catalog
 type: "concept"       # must equal the catalog
 minutes: 3            # must equal the catalog
-objective: "…"
+objective: "…"        # must equal the catalog's summary
 prerequisites: "v-l1-m1-01,…"
 references: "nidcd-voice-care,…"   # ids in references.json
 ---

@@ -15,7 +15,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the sustain test in the breath room with the Practise button on this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.
+Open the sustain test in the breath room with the button at the top of this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: A quiet, even hiss is the whole task; you do not need to make a pitched sound.
@@ -29,7 +29,7 @@ Stand or sit tall without locking the ribs. Let the shoulders remain quiet while
 
 ### Name the target: Low breath and rib expansion
 
-Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; duration is your own observation, not an automatic pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; the sustain test's seconds are a record, not an automatic pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.
 - Listen: The hiss stays even rather than surging at the start and fading to almost nothing at the end.

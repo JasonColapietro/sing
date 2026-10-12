@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, LinkButton, SectionLabel } from "@/components/ui";
 import ProVisual from "./pro-visual";
 import { ProChip } from "./ui";
@@ -109,6 +109,23 @@ function messageOf(error: unknown, fallback: string): string {
   return error instanceof Error && error.message ? error.message : fallback;
 }
 
+/**
+ * Brings the plans section into view. Every message about a purchase or an
+ * unlock (confirming, the welcome panel with the Pro key, an error, a
+ * cancelled checkout) renders there, while the buttons that lead to those
+ * moments sit at the top of the page or several screens further down. The
+ * section's top does not move as its contents change, so scrolling before
+ * React commits the new message still lands on it.
+ */
+function revealPlans() {
+  requestAnimationFrame(() =>
+    document.getElementById("plans")?.scrollIntoView({ block: "start" }),
+  );
+}
+
+/** How Pro just arrived in this browser, which decides what the welcome says. */
+export type Welcome = "purchase" | "restore" | "pass";
+
 function longDate(iso: string | null): string | null {
   if (!iso) return null;
   const when = new Date(iso);
@@ -161,7 +178,7 @@ function ProKeyRow({ proKey }: { proKey: string }) {
       </p>
       {/* A mailto link: the singer's own mail app, nothing sent anywhere. */}
       <a
-        href={`mailto:?subject=${encodeURIComponent("My Suede Pro key")}&body=${encodeURIComponent(`${proKey}\n\nUnlock at ${SITE_URL}/pro`)}`}
+        href={`mailto:?subject=${encodeURIComponent("My Suede Pro key")}&body=${encodeURIComponent(`${proKey}\n\nUnlock at ${SITE_URL}/pro#restore`)}`}
         className="mt-2 inline-block font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
       >
         Email it to myself
@@ -171,7 +188,7 @@ function ProKeyRow({ proKey }: { proKey: string }) {
 }
 
 /** Turns a comp code into a 30-day pass. No card, no checkout. */
-function RedeemPanel() {
+function RedeemPanel({ onUnlocked }: { onUnlocked: () => void }) {
   const [code, setCode] = useState("");
   const [task, setTask] = useState<Task>({ kind: "idle" });
 
@@ -181,6 +198,10 @@ function RedeemPanel() {
     try {
       await redeemCode(code);
       setTask({ kind: "idle" });
+      // This panel unmounts the moment the pass is stored, taking the form
+      // with it. Without a confirmation the singer saw their code vanish and
+      // sales copy slide into its place.
+      onUnlocked();
     } catch (error) {
       setTask({
         kind: "error",
@@ -229,9 +250,28 @@ function RedeemPanel() {
 }
 
 /** Recovers Pro on a fresh browser, where the local entitlement is gone. */
-function RestorePanel() {
+function RestorePanel({ onUnlocked }: { onUnlocked: () => void }) {
   const [key, setKey] = useState("");
   const [task, setTask] = useState<Task>({ kind: "idle" });
+  const panel = useRef<HTMLDetailsElement>(null);
+
+  // "Already have Pro?" on every locked book and Atlas chapter, and the
+  // emailed Pro key, all point at /pro#restore. The panel is in the server
+  // HTML whenever Pro is inactive, so the browser's own hash scroll finds it,
+  // but it would stay closed. Open it and bring it into view, on arrival and
+  // on a same-page jump. Set through the DOM rather than a controlled `open`
+  // prop, so no state is set in an effect and the singer can still close it.
+  useEffect(() => {
+    const reveal = () => {
+      const details = panel.current;
+      if (window.location.hash !== "#restore" || !details) return;
+      details.open = true;
+      requestAnimationFrame(() => details.scrollIntoView({ block: "start" }));
+    };
+    reveal();
+    window.addEventListener("hashchange", reveal);
+    return () => window.removeEventListener("hashchange", reveal);
+  }, []);
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -239,6 +279,9 @@ function RestorePanel() {
     try {
       await restorePro(key);
       setTask({ kind: "idle" });
+      // Same as a redeemed pass: the form unmounts once Pro is stored, so the
+      // confirmation has to come from the page.
+      onUnlocked();
     } catch (error) {
       setTask({
         kind: "error",
@@ -248,7 +291,11 @@ function RestorePanel() {
   };
 
   return (
-    <details className="rounded-2xl border border-line bg-panel px-5 py-4">
+    <details
+      id="restore"
+      ref={panel}
+      className="scroll-mt-20 rounded-2xl border border-line bg-panel px-5 py-4"
+    >
       <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
         Already have Pro? Unlock it on this device
       </summary>
@@ -285,10 +332,95 @@ function RestorePanel() {
   );
 }
 
+/**
+ * What the plans section says the moment Pro arrives in this browser: after a
+ * checkout, a restored Pro key or a redeemed pass. The restore and redeem
+ * forms unmount as soon as Pro is stored, so without this a singer saw their
+ * input vanish and sales copy take its place.
+ */
+export function WelcomePanel({
+  how,
+  proKey,
+  periodEnd,
+}: {
+  how: Welcome;
+  proKey: string | null;
+  /** The pass's end date, already formatted for reading. */
+  periodEnd: string | null;
+}) {
+  const panel = useRef<HTMLDivElement>(null);
+  // The button that unlocked Pro unmounts with its form, which drops keyboard
+  // and screen-reader focus to the top of the document. Hand it to the
+  // confirmation instead; revealPlans does the scrolling.
+  useEffect(() => {
+    panel.current?.focus({ preventScroll: true });
+  }, []);
+
+  return (
+    <div
+      ref={panel}
+      role="status"
+      tabIndex={-1}
+      className="animate-fadeup mx-auto mb-10 max-w-2xl rounded-2xl border border-violet bg-panel p-6 text-center outline-none sm:p-8"
+    >
+      <ProChip className="mx-auto" />
+      {how === "restore" ? (
+        <>
+          {/* Someone who already paid, on a new or cleared browser. The
+              "Already have Pro?" links that bring them here sit on locked
+              book and Atlas chapters, so the way back to both books comes
+              first; nobody is welcomed to something they already own. */}
+          <h2 className="mt-3 text-2xl sm:text-3xl">
+            Pro is unlocked on this browser
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-mut">
+            Everything Pro includes is open here now: both books in full, the
+            pro warmup packs, and no daily limit on guided practice. Keep your
+            Pro key for the next browser.
+          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            <LinkButton href="/book" variant="violet" size="md">
+              Read The Measured Voice
+            </LinkButton>
+            <LinkButton href="/atlas" variant="outline" size="md">
+              Read The Voice Atlas
+            </LinkButton>
+          </div>
+        </>
+      ) : (
+        <>
+          <h2 className="mt-3 text-2xl sm:text-3xl">
+            {how === "pass"
+              ? "Your 30-day pass is on"
+              : "Welcome to the gold channel"}
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-mut">
+            {how === "pass"
+              ? `Every Pro feature is open in this browser${periodEnd ? ` until ${periodEnd}` : " for 30 days"}, and the pass ends by itself. `
+              : ""}
+            Your coach starts listening on your next session. Sing one
+            warmup and watch the report build itself.
+          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+            <LinkButton href="/warmups" variant="violet" size="md">
+              Sing your first pro warmup
+            </LinkButton>
+            <LinkButton href="/progress" variant="outline" size="md">
+              See your dashboard
+            </LinkButton>
+          </div>
+        </>
+      )}
+      {proKey && <ProKeyRow proKey={proKey} />}
+    </div>
+  );
+}
+
 export function ProClient() {
   const pro = useProState();
   const [billing, setBilling] = useState<CheckoutPlan>("lifetime");
-  const [justUpgraded, setJustUpgraded] = useState(false);
+  const [welcome, setWelcome] = useState<Welcome | null>(null);
+  const justUpgraded = welcome !== null;
   const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
   const [abandoned, setAbandoned] = useState(false);
@@ -333,16 +465,8 @@ export function ProClient() {
     if (!sessionId && !outcome) return;
 
     // Stripe returns to the top of the page, where the hero's buttons lead
-    // away, while every message about the purchase (confirming, welcome and
-    // the Pro key, error, cancelled) renders in the plans section several
-    // screens down. Bring that section into view at each of those moments.
-    // The section's top does not move as its contents change, so scrolling
-    // before React commits the new message still lands on it.
-    const revealPlans = () =>
-      requestAnimationFrame(() =>
-        document.getElementById("plans")?.scrollIntoView({ block: "start" }),
-      );
-
+    // away, while every message about the purchase renders in the plans
+    // section several screens down: revealPlans at each of those moments.
     if (sessionId) {
       rememberPendingCheckout(sessionId);
       // eslint-disable-next-line react-hooks/set-state-in-effect -- the session id only exists in the URL, so confirmation can only start after hydration
@@ -352,7 +476,7 @@ export function ProClient() {
         .then((state) => {
           if (state.active) {
             setCheckout({ kind: "idle" });
-            setJustUpgraded(true);
+            setWelcome("purchase");
             revealPlans();
             return;
           }
@@ -466,6 +590,14 @@ export function ProClient() {
     </>
   );
 
+  // A restored key or a redeemed pass unlocks Pro without leaving the page,
+  // and the form that did it unmounts at that moment. Answer it with the same
+  // welcome a checkout gets, worded for how Pro arrived.
+  const unlockedBy = useCallback((how: Welcome) => {
+    setWelcome(how);
+    revealPlans();
+  }, []);
+
   const manageBilling = useCallback(async () => {
     setPortal({ kind: "working" });
     try {
@@ -553,24 +685,33 @@ export function ProClient() {
                   <br />
                   Add an online vocal coach.
                 </h1>
-                <p className="mt-4 max-w-xl text-lg text-mut">
-                  Suede Pro is the vocal coaching layer on top of Suede Sing:
-                  adaptive daily plans, per-note analytics, pitch analysis on
-                  your takes, and a scoring history for every song. The pitch
-                  meter, range test and recorder stay free with no daily limit.
-                  The free plan includes five minutes of guided practice a day,
-                  and Pro removes that clock.
-                </p>
-                <div className="mt-7 flex flex-wrap items-center gap-3">
-                  {/* Straight to the buy card, with the price on the button:
-                      on a phone the price was otherwise first seen about four
-                      screens down. */}
-                  <LinkButton href="#buy" variant="violet" size="lg">
-                    {`Get lifetime Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
-                  </LinkButton>
-                  <LinkButton href="/studio" variant="ghost" size="lg">
-                    Keep practicing free
-                  </LinkButton>
+                {/* On a phone the buttons come straight after the headline and
+                    the paragraph follows them. In reading order a four-line
+                    headline and a nine-line paragraph put the price button
+                    under the tab bar on a 375×667 screen, and wholly below the
+                    fold once the release banner sits above it. Wider screens
+                    keep the paragraph first; nothing in it is focusable, so
+                    tab order is the same either way. */}
+                <div className="flex flex-col">
+                  <p className="order-2 mt-5 max-w-xl text-lg text-mut sm:order-1 sm:mt-4">
+                    Suede Pro is the vocal coaching layer on top of Suede Sing:
+                    adaptive daily plans, per-note accuracy from the warmups
+                    and songs you sing, and pitch analysis on your takes. The
+                    pitch meter, range test and recorder stay free with no
+                    daily limit. The free plan includes five minutes of guided
+                    practice a day, and Pro removes that clock.
+                  </p>
+                  <div className="order-1 mt-6 flex flex-wrap items-center gap-3 sm:order-2 sm:mt-7">
+                    {/* Straight to the buy card, with the price on the button:
+                        on a phone the price was otherwise first seen about four
+                        screens down. */}
+                    <LinkButton href="#buy" variant="violet" size="lg">
+                      {`Get lifetime Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
+                    </LinkButton>
+                    <LinkButton href="/studio" variant="ghost" size="lg">
+                      Keep practicing free
+                    </LinkButton>
+                  </div>
                 </div>
                 <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
                   {proHeadline()}
@@ -594,8 +735,11 @@ export function ProClient() {
           <h2 className="max-w-2xl text-2xl sm:text-3xl">
             A coach&apos;s ear on every session
           </h2>
+          {/* "Charts", not "keeps": the free record stores the same sessions
+              and range tests (progress says "older sessions are stored — Pro
+              shows all of them"). What Pro adds is the view across them. */}
           <p className="mt-3 max-w-2xl text-mut">
-            Free tells you how today went. Pro keeps the months behind it,
+            Free tells you how today went. Pro charts the months behind it,
             finds the patterns, and plans what to sing tomorrow.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -625,30 +769,14 @@ export function ProClient() {
       {/* 3 — Plans */}
       <section id="plans" className="scroll-mt-20 border-t border-line bg-panel/40">
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
-          {justUpgraded ? (
-            <div className="animate-fadeup mx-auto mb-10 max-w-2xl rounded-2xl border border-violet bg-panel p-6 text-center sm:p-8">
-              <ProChip className="mx-auto" />
-              <h2 className="mt-3 text-2xl sm:text-3xl">Welcome to the gold channel</h2>
-              <p className="mx-auto mt-2 max-w-md text-mut">
-                Your coach starts listening on your next session. Sing one
-                warmup and watch the report build itself.
-              </p>
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-                <LinkButton href="/warmups" variant="violet" size="md">
-                  Sing your first pro warmup
-                </LinkButton>
-                <LinkButton href="/progress" variant="outline" size="md">
-                  See your dashboard
-                </LinkButton>
-              </div>
-              {pro.proKey && <ProKeyRow proKey={pro.proKey} />}
-            </div>
+          {welcome ? (
+            <WelcomePanel how={welcome} proKey={pro.proKey} periodEnd={periodEnd} />
           ) : (
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div>
                 <SectionLabel className="mb-4">Plans</SectionLabel>
                 <h2 className="max-w-2xl text-2xl sm:text-3xl">
-                  One tier. Coach, analytics, song history, two books.
+                  One tier. Coach, analytics, no daily limit, two books.
                 </h2>
                 <p className="mt-3 max-w-xl text-mut">{plansBlurb}</p>
               </div>
@@ -889,8 +1017,8 @@ export function ProClient() {
 
           {!pro.active && (
             <div className="mx-auto mt-6 grid max-w-4xl gap-3">
-              <RedeemPanel />
-              <RestorePanel />
+              <RedeemPanel onUnlocked={() => unlockedBy("pass")} />
+              <RestorePanel onUnlocked={() => unlockedBy("restore")} />
             </div>
           )}
         </div>

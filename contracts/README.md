@@ -18,8 +18,13 @@ exact copy of GuitarHub's voice catalog (`lib/learning/data/voice.json` in
 `JasonColapietro/suede-guitar-hub`, as of that repo's #47). Sing has since
 edited it on purpose. Twelve "Checkpoint:" lessons that nothing measures
 became "Self-Check:", three summaries that promised an unmeasured outcome were
-reworded, and every stage is free. Don't "re-sync" those edits away: parity
-with GuitarHub is by stage, module and lesson ID, not by text.
+reworded, three more were set to their lessons' objectives
+(`scripts/compile-lessons.mjs` now requires a lesson's objective to equal its
+catalog summary, and Hiss for Twelve's no longer calls the hiss's length "your
+own observation", since the sustain test times it), module `v-l3-m5` was
+renamed from "Fix the Wobble" to "Breathy, Nasal or Tight" because the course
+uses "wobble" for vibrato, and every stage is free. Don't "re-sync" those edits
+away: parity with GuitarHub is by stage, module and lesson ID, not by text.
 
 Since 2026-09-23 sing also hosts the lessons. The bodies are markdown in
 `content/lessons`, compiled into `lib/lesson-data.ts` and served at

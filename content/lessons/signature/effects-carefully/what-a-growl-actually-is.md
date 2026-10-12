@@ -72,7 +72,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Do not try the effect again to check; leave it until a teacher has heard it.
 
 What this shows: I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.
 

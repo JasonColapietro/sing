@@ -5,6 +5,8 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import VocalRangeByVoiceTypePage from "@/app/atlas/vocal-range-by-voice-type/page";
+import { SINGERS, VOICE_KINDS } from "@/lib/singers";
+import { REFERENCE_BANDS } from "@/lib/singers-analysis";
 import {
   getSingerEvidence,
   getSingerLastModified,
@@ -246,5 +248,51 @@ describe("a disputed review", () => {
     }
     expect(body).not.toContain('href="/singers/arijit-singh"');
     expect(body).not.toContain('href="/singers/sam-smith"');
+  });
+});
+
+describe("the voice-type reference footnote", () => {
+  /**
+   * The examples are the three closest to each band, and the footnote used to
+   * call them "illustrative rather than exceptional". With five basses, the
+   * third closest was Avi Kaplan (D#1–C#5), whose floor sits more than an
+   * octave under the bass band, so the claim was false for that row. Any
+   * example far from its band must be named in the footnote as not typical.
+   */
+  const MAX_DISTANCE = 6;
+  const decode = (html: string) =>
+    html.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+
+  it("names every shown example that sits far from its band as not typical", () => {
+    const html = renderToStaticMarkup(createElement(VocalRangeByVoiceTypePage));
+    const body = html.match(/<tbody[\s\S]*?<\/tbody>/)?.[0] ?? "";
+    const footnote = decode(
+      html.match(/<p[^>]*>Example singers are not the most famous[\s\S]*?<\/p>/)?.[0] ?? "",
+    );
+    expect(footnote).not.toBe("");
+    expect(footnote).not.toContain("illustrative rather than exceptional");
+
+    const rows = body.split("</tr>").filter((r) => r.includes("<th"));
+    expect(rows.length).toBe(VOICE_KINDS.length);
+    const far: string[] = [];
+    rows.forEach((row, i) => {
+      const band = REFERENCE_BANDS[VOICE_KINDS[i]];
+      const slugs = [...row.matchAll(/href="\/singers\/([a-z0-9-]+)"/g)].map((m) => m[1]);
+      for (const slug of slugs) {
+        const s = SINGERS.find((x) => x.slug === slug)!;
+        if (Math.abs(s.lowMidi - band.low) + Math.abs(s.highMidi - band.high) > MAX_DISTANCE) {
+          far.push(s.name);
+        }
+      }
+    });
+
+    if (far.length === 0) {
+      expect(footnote).not.toContain("Closest is not always close");
+      return;
+    }
+    const caveat =
+      footnote.match(/Closest is not always close:[\s\S]*?not (a )?typical examples?\./)?.[0] ?? "";
+    expect(caveat, "footnote does not flag the far examples").not.toBe("");
+    for (const name of far) expect(caveat, `${name} is far from its band`).toContain(name);
   });
 });

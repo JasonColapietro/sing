@@ -9,18 +9,49 @@ import { liveStreak } from "@/components/account/save-state";
 import { Button, Card, LinkButton, Pill, ProgressBar, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { midiToLabel } from "@/lib/audio/notes";
-import { ladderBreak, tallyFromScores, weakNotes } from "@/lib/analytics";
+import {
+  ladderBreak,
+  tallyFromScores,
+  weakNotes,
+  type LadderBreak,
+  type LadderRep,
+} from "@/lib/analytics";
 import {
   gradeForScore,
   starGlyphs,
   starRatingLabel,
   type Tone,
 } from "@/components/songs/grade";
+import { STAR_THRESHOLDS, starsForScore } from "@/lib/stars";
 import { ShareableResult } from "@/components/songs/result-card";
 import { SITE_URL } from "@/lib/site";
 import { TOLERANCE_CENTS } from "./scoring";
 import { MODE_LABELS } from "./prefs";
 import { sungReps, type SessionSummaryData } from "./lib";
+
+/**
+ * The practice rooms' three-star scale (lib/stars.ts), the one the warmups
+ * library, the routine results and /progress all count. The songbook's
+ * five-star grade is a different instrument, and showing it here gave one
+ * exercise two star counts: on the row under the grade and on the share card.
+ */
+const PRACTICE_STAR_MAX = STAR_THRESHOLDS.length;
+
+/**
+ * ladderBreak measured along the direction the drill travels. ladderBreak
+ * treats a root at or below the last as the foot of a new climb, so on a
+ * "down" drill every descending rep reset it and a low end that collapsed was
+ * reported as a ladder that held. Mirroring the roots makes the descent the
+ * climb; the break's root is mirrored back for the message.
+ */
+export function ladderBreakAlongWalk(
+  reps: readonly LadderRep[],
+  descending: boolean,
+): LadderBreak | null {
+  if (!descending) return ladderBreak(reps);
+  const b = ladderBreak(reps.map((r) => ({ ...r, root: -r.root })));
+  return b && { ...b, root: -b.root };
+}
 
 /** Under this a rep didn't hold — the violet floor the whole page reads from. */
 const HELD_FLOOR = 50;
@@ -107,14 +138,15 @@ export function SessionSummary({
       // Null when no single note got enough scored time to judge — a short
       // or heavily skipped session says nothing about any one note.
       weakest: weakNotes(tallies, { limit: 1 })[0] ?? null,
-      broke: ladderBreak(results),
+      broke: ladderBreakAlongWalk(results, ex.ladder === "down"),
       roots: sung.map((r) => r.root),
     };
-  }, [results]);
+  }, [results, ex.ladder]);
 
   // No grade for a session where every rep was skipped: there is nothing to
   // grade, and a D would read as a judgment of singing that never happened.
   const grade = diagnosis ? gradeForScore(avgScore) : null;
+  const stars = starsForScore(avgScore);
 
   // Only the rendered list is bounded. `hidden` doubles as the offset of the
   // first row, so the rep numbers stay the real ones — row 84 of 95, not a
@@ -171,9 +203,9 @@ export function SessionSummary({
               aria-hidden="true"
               className="tabular font-mono text-base tracking-wider text-violet-ink"
             >
-              {starGlyphs(grade.stars)}
+              {starGlyphs(stars, PRACTICE_STAR_MAX)}
             </span>
-            <span className="sr-only">{starRatingLabel(grade.stars)}</span>
+            <span className="sr-only">{starRatingLabel(stars, PRACTICE_STAR_MAX)}</span>
           </div>
         )}
 
@@ -274,6 +306,7 @@ export function SessionSummary({
           )}`}
           score={avgScore}
           grade={grade}
+          starScale={{ stars, max: PRACTICE_STAR_MAX }}
           stats={[
             { label: "Reps sung", value: String(diagnosis.sung.length) },
             ...(best ? [{ label: "Best rep", value: `${best.score}%`, tone: "cool" as const }] : []),

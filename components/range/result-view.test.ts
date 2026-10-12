@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   ResultView,
   comparisonSingerFromSlug,
+  rankFamousVoices,
   returnSongSlugFromSearch,
   voicePlural,
 } from "./result-view";
@@ -90,5 +91,58 @@ describe("range result voice type", () => {
     expect(html).toContain("See the basses in the library");
     expect(html).not.toContain("basss");
     expect(html).toContain("Violet = your range");
+  });
+});
+
+describe("famous-voice comparison", () => {
+  it("names the singer whose reported range is closest, not the widest", () => {
+    // Wide ranges used to tie on raw overlap and the list order picked
+    // Freddie Mercury for almost everyone, sopranos included.
+    expect(rankFamousVoices(45, 69)[0].slug).toBe("johnny-cash");
+    expect(rankFamousVoices(48, 72)[0].slug).toBe("adele");
+    expect(rankFamousVoices(57, 81)[0].slug).toBe("adele");
+    expect(rankFamousVoices(60, 84)[0].slug).toBe("whitney-houston");
+  });
+
+  it("spreads ordinary ranges across several singers", () => {
+    const heads = new Set<string>();
+    for (let low = 36; low <= 70; low++) {
+      for (let span = 10; span <= 36; span++) {
+        heads.add(rankFamousVoices(low, low + span)[0].slug);
+      }
+    }
+    expect(heads.size).toBeGreaterThanOrEqual(5);
+  });
+
+  it("keeps raw overlap as the tiebreaker and the label it shows", () => {
+    const rows = rankFamousVoices(48, 72);
+    for (let i = 1; i < rows.length; i++) {
+      const [a, b] = [rows[i - 1], rows[i]];
+      expect(a.fit > b.fit || (a.fit === b.fit && a.overlap >= b.overlap)).toBe(
+        true,
+      );
+    }
+  });
+
+  it("headlines the closest reported range without a superlative", () => {
+    const html = renderToStaticMarkup(
+      createElement(ResultView, { lowMidi: 48, highMidi: 72, onRetake: () => {} }),
+    );
+    expect(html).toContain("Closest reported range to yours:");
+    expect(html).not.toContain("overlaps most with");
+    // The (Nst) column is overlap, not the sort key, so the order is explained.
+    expect(html).toContain("combined span that");
+  });
+});
+
+describe("range result headline stats", () => {
+  it("lets the three stats wrap, so a long voice type is not clipped on a phone", () => {
+    const html = renderToStaticMarkup(
+      createElement(ResultView, { lowMidi: 57, highMidi: 81, onRetake: () => {} }),
+    );
+    expect(html).toContain("Mezzo-soprano");
+    expect(html).toMatch(
+      /<div class="flex flex-wrap[^"]*"><div><div[^>]*>Semitones</,
+    );
   });
 });

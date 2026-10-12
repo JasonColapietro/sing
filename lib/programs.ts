@@ -62,14 +62,20 @@ export type ProgramItem =
   | { kind: "exercise"; id: string; reps: number }
   /** A breath set, by its id in components/breath/routines.ts. */
   | { kind: "breath"; id: string }
-  /** A single breath drill. */
-  | { kind: "drill"; id: BreathDrillId }
+  /**
+   * A single breath drill. `preset` is the setting the day asks for on the
+   * drill's setup card (the row's meta line names it); without one, the
+   * lone-drill preset below.
+   */
+  | { kind: "drill"; id: BreathDrillId; preset?: BreathStep }
   /** The range test, as a check-in. */
   | { kind: "range" }
   /** A song from the free songbook, by slug. */
   | { kind: "song"; slug: string }
   /** A recorded take in the Recorder, to compare against later. */
-  | { kind: "recorder" };
+  | { kind: "recorder" }
+  /** A few minutes of ear training: pitch match and one recognition game. */
+  | { kind: "ear" };
 
 export interface ProgramDay {
   title: string;
@@ -125,6 +131,23 @@ export function dayNeedsPro(program: Program, index: number): boolean {
 export const RECORDER_SEC = 120;
 
 /**
+ * Ear training, as chapter 15 asks: "three or four minutes a session" of
+ * "pitch-match and interval work". The games are paced by the singer
+ * (components/ear/routines.ts EAR_GAME_SECONDS has a pitch-match game at
+ * about two minutes and the two tapping games at one), so this is one of
+ * each: the chapter's lower figure, an estimate like the Recorder's.
+ */
+export const EAR_SEC = 180;
+
+/**
+ * The ear games that make up that item, by the titles the ear room logs them
+ * under (components/ear/lib.ts GAME_NAMES, held to it by a test): pitch match,
+ * then either of the games chapter 15 says "ask you to recognise, not to sing".
+ */
+export const EAR_PITCH_GAME = "Pitch match";
+export const EAR_RECOGNITION_GAMES: readonly string[] = ["Interval ID", "Higher or lower"];
+
+/**
  * The range test is self-paced — a slide down and a slide up, held two seconds
  * at each end — so its length is an estimate, like the sustain attempt's.
  */
@@ -139,10 +162,16 @@ const DRILL_PRESET: Record<BreathDrillId, BreathStep> = {
   cue: { drill: "cue", reps: CUE_REP_CHOICES[1], holdSec: CUE_HOLD_SEC },
 };
 
+/** The setting a drill item asks for: its own preset, or the lone-drill one. */
+export function drillPreset(item: { id: BreathDrillId; preset?: BreathStep }): BreathStep {
+  return item.preset ?? DRILL_PRESET[item.id];
+}
+
 const routine = (id: string): ProgramItem => ({ kind: "routine", id });
 const exercise = (id: string, reps: number): ProgramItem => ({ kind: "exercise", id, reps });
 const breath = (id: string): ProgramItem => ({ kind: "breath", id });
-const drill = (id: BreathDrillId): ProgramItem => ({ kind: "drill", id });
+const drill = <D extends BreathDrillId>(id: D, preset?: Extract<BreathStep, { drill: D }>): ProgramItem =>
+  preset ? { kind: "drill", id, preset } : { kind: "drill", id };
 /**
  * The range test. Every day that takes one warms up first, as chapters 8 and 14
  * ask: a cold voice under-reports at both ends. Check-ins a program compares
@@ -152,6 +181,7 @@ const drill = (id: BreathDrillId): ProgramItem => ({ kind: "drill", id });
 const range: ProgramItem = { kind: "range" };
 const song = (slug: string): ProgramItem => ({ kind: "song", slug });
 const recorder: ProgramItem = { kind: "recorder" };
+const ear: ProgramItem = { kind: "ear" };
 const day = (title: string, ...items: ProgramItem[]): ProgramDay => ({ title, items });
 const rest = (title = "Rest day"): ProgramDay => ({ title, items: [] });
 
@@ -171,16 +201,16 @@ const FOUNDATIONS: Program = {
   days: [
     day("Where you start", breath("quick"), routine("quick"), range, drill("sustain")),
     day("Breath, then the easy four", breath("daily"), routine("quick")),
-    day("The complete ten", breath("quick"), routine("daily")),
+    day("The everyday set", breath("quick"), routine("daily")),
     day("A first song", breath("daily"), routine("quick"), song("silent-night")),
-    day("The complete ten again", breath("quick"), routine("daily"), song("ode-to-joy")),
+    day("The everyday set again", breath("quick"), routine("daily"), song("ode-to-joy")),
     day("Reach both ends", breath("daily"), routine("range")),
     rest(),
     day("A longer breath", breath("builder"), routine("quick")),
-    day("Breath and the ten", breath("daily"), routine("daily")),
+    day("Breath and the everyday set", breath("daily"), routine("daily")),
     day("Quick feet", breath("builder"), routine("agility"), song("home-on-the-range")),
     day("The full set", breath("daily"), routine("full")),
-    day("Builder and the ten", breath("builder"), routine("daily")),
+    day("Builder and the everyday set", breath("builder"), routine("daily")),
     rest(),
     day("Check in", breath("daily"), routine("quick"), range, drill("sustain")),
   ],
@@ -188,7 +218,7 @@ const FOUNDATIONS: Program = {
 
 const VIBRATO_A = day("Holds after the easy four", breath("quick"), routine("quick"), routine("vibrato"));
 const VIBRATO_B = day("Long holds", breath("daily"), routine("morning"), routine("vibrato"), exercise("vibrato-hold", 4));
-const VIBRATO_C = day("The ten, then holds", routine("daily"), routine("vibrato"));
+const VIBRATO_C = day("The everyday set, then holds", routine("daily"), routine("vibrato"));
 
 const VIBRATO: Program = {
   id: "vibrato-3w",
@@ -210,7 +240,7 @@ const VIBRATO: Program = {
 // Work above the octave ends on the cool-down wherever the day has room for it
 // inside twenty minutes; the full set's day already closes on a straw slide.
 const HIGH_A = day("Sirens and the tenth", routine("quick"), routine("range"), routine("high-notes"), routine("cooldown"));
-const HIGH_B = day("Breath, the ten, the tenth", breath("quick"), routine("daily"), routine("high-notes"), routine("cooldown"));
+const HIGH_B = day("Breath, the everyday set, the tenth", breath("quick"), routine("daily"), routine("high-notes"), routine("cooldown"));
 const HIGH_C = day("The full set, then up", routine("full"), routine("high-notes"));
 const HIGH_CHECK = day("Range check-in", routine("quick"), range, routine("high-notes"), routine("cooldown"));
 const HIGH_WEEK = [HIGH_A, HIGH_B, HIGH_C, rest(), HIGH_A, HIGH_B, rest()];
@@ -258,7 +288,7 @@ const RECOVERY: Program = {
 // already ends on a descending or quiet sound.
 const MIX_A = day("Head voice into the crossing", routine("quick"), routine("head-voice-builder"), routine("mix"), routine("cooldown"));
 const MIX_B = day("Chest voice into the crossing", routine("quick"), routine("belt-prep"), routine("mix"), routine("cooldown"));
-const MIX_C = day("The ten, then the crossing", routine("daily"), routine("mix"), routine("cooldown"));
+const MIX_C = day("The everyday set, then the crossing", routine("daily"), routine("mix"), routine("cooldown"));
 const MIX_WEEK = [MIX_A, MIX_B, MIX_C, rest(), MIX_A, MIX_B, rest()];
 
 // Week 1 is the free week, so it uses free exercises only and each day fits
@@ -311,6 +341,17 @@ const MIX: Program = {
     ...week(MIX_WEEK, { 6: day("Check in", routine("daily"), range, routine("mix"), routine("cooldown")) }),
   ],
 };
+
+/**
+ * The Measured Voice's breath for weeks 9 and 10: a five-count square, the
+ * climb to ten and notes started on a breath (the builder set's counts, a beat
+ * or two past weeks 1 and 2's four and eight), with no sustain in it.
+ */
+const LONG_BREATH: ProgramItem[] = [
+  drill("box", { drill: "box", side: 5, minutes: 1 }),
+  drill("farinelli", { drill: "farinelli", cap: 10 }),
+  drill("cue"),
+];
 
 /** Four sessions a week, spread out, as the book asks: "three is the floor, four is better". */
 function bookWeek(a: ProgramDay, b: ProgramDay, c: ProgramDay, d: ProgramDay): ProgramDay[] {
@@ -370,13 +411,14 @@ const MEASURED_VOICE: Program = {
       day("The long breath set", breath("builder"), routine("morning")),
       day("A sustain, then the easy four", drill("sustain"), breath("quick"), routine("quick"), routine("cooldown")),
     ),
-    // Weeks 3–4: the middle voice.
+    // Weeks 3–4: the middle voice, with ear training every session, as
+    // chapter 15 asks: "Three or four minutes a session, every session."
     ...[3, 4].flatMap(() =>
       bookWeek(
-        day("The complete ten", breath("quick"), routine("daily"), routine("cooldown")),
-        day("The easy four and a song", breath("daily"), routine("quick"), song("silent-night"), routine("cooldown")),
-        day("The complete ten again", breath("quick"), routine("daily"), routine("cooldown")),
-        day("The easy four and a song", breath("quick"), routine("quick"), song("ode-to-joy"), routine("cooldown")),
+        day("The everyday set", breath("quick"), routine("daily"), ear, routine("cooldown")),
+        day("The easy four and a song", breath("daily"), routine("quick"), ear, song("silent-night"), routine("cooldown")),
+        day("The everyday set again", breath("quick"), routine("daily"), ear, routine("cooldown")),
+        day("The easy four and a song", breath("quick"), routine("quick"), ear, song("ode-to-joy"), routine("cooldown")),
       ),
     ),
     // Weeks 5–6: through the break, quietly. The block closes with a retest.
@@ -400,26 +442,30 @@ const MEASURED_VOICE: Program = {
       bookWeek(
         day("Light and high", routine("quick"), routine("high-notes"), routine("cooldown")),
         day("Head voice", routine("quick"), routine("head-voice-builder"), routine("cooldown")),
-        day("The ten, then the tenth", routine("daily"), routine("high-notes"), routine("cooldown")),
+        day("The everyday set, then the tenth", routine("daily"), routine("high-notes"), routine("cooldown")),
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
     ),
     // Weeks 9–10: the bottom, and long phrases rather than long notes. The
     // phrase work is in a song, the one weeks 11 and 12 go on with, and the
-    // sustain test runs once a week, as chapter 18 asks.
+    // sustain test runs once a week, as chapter 18 asks. The breath work is
+    // single drills rather than the sets, every one of which ends on sustains,
+    // at the builder set's longer counts: chapter 18 wants "four or five
+    // minutes" of chapter 14's drills "with the exhale counts a beat or two
+    // longer than you used in weeks 1 and 2", then a breath taken into a note.
     ...[9, 10].flatMap(() =>
       bookWeek(
-        day("Breath for a long phrase", breath("builder"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
-        day("Down low, gently", breath("daily"), routine("recovery"), routine("morning")),
+        day("Breath for a long phrase", ...LONG_BREATH, routine("quick"), song("home-on-the-range"), routine("cooldown")),
+        day("Down low, gently", ...LONG_BREATH, routine("recovery"), routine("morning")),
         day(
           "Breath for a long phrase",
-          breath("builder"),
+          ...LONG_BREATH,
           routine("quick"),
           drill("sustain"),
           song("home-on-the-range"),
           routine("cooldown"),
         ),
-        day("Quiet and low", breath("daily"), routine("recovery"), routine("morning")),
+        day("Quiet and low", ...LONG_BREATH, routine("recovery"), routine("morning")),
       ),
     ),
     // Weeks 11–12: one song, as chapter 19 asks, recorded once early in week 11
@@ -472,11 +518,13 @@ export function itemSeconds(item: ProgramItem): number {
       return r ? breathRoutineSeconds(r) : 0;
     }
     case "drill":
-      return breathStepSeconds(DRILL_PRESET[item.id]) + BREATH_STEP_INTRO_SEC;
+      return breathStepSeconds(drillPreset(item)) + BREATH_STEP_INTRO_SEC;
     case "range":
       return RANGE_TEST_SEC;
     case "recorder":
       return RECORDER_SEC;
+    case "ear":
+      return EAR_SEC;
     case "song": {
       const s = songBySlug(item.slug);
       return s ? sessionSeconds(s) + COUNT_IN_BEATS * secPerBeat(s.bpm, 1) : 0;
@@ -503,6 +551,8 @@ function itemType(item: ProgramItem): ActivityType {
       return "song";
     case "recorder":
       return "recording";
+    case "ear":
+      return "ear";
   }
 }
 
@@ -592,6 +642,8 @@ export function itemHref(item: ProgramItem): string {
       return "/range?mode=range";
     case "recorder":
       return "/recorder";
+    case "ear":
+      return "/ear-training";
     case "song":
       return `/songs?song=${encodeURIComponent(item.slug)}`;
   }
@@ -616,12 +668,17 @@ export function itemLabel(item: ProgramItem): { title: string; meta: string } {
     case "drill":
       return {
         title: breathDrillTitle(item.id),
-        meta: `Breath · ${breathStepSummary(DRILL_PRESET[item.id])}`,
+        meta: `Breath · ${breathStepSummary(drillPreset(item))}`,
       };
     case "range":
       return { title: "Range test", meta: `Check-in · about ${min}` };
     case "recorder":
       return { title: "Record a take", meta: `Recorder · a verse and a chorus · about ${min}` };
+    case "ear":
+      return {
+        title: "Ear training",
+        meta: `Ear · ${EAR_PITCH_GAME}, plus ${EAR_RECOGNITION_GAMES.join(" or ")} · about ${min}`,
+      };
     case "song":
       return { title: songBySlug(item.slug)?.title ?? item.slug, meta: "Song · one run" };
   }
@@ -669,6 +726,11 @@ export function itemEvidence(item: ProgramItem): Evidence[] {
       return [{ type: "range", details: null }];
     case "recorder":
       return [{ type: "recording", details: null }];
+    case "ear":
+      return [
+        { type: "ear", details: [EAR_PITCH_GAME] },
+        { type: "ear", details: EAR_RECOGNITION_GAMES },
+      ];
     case "song": {
       const s = songBySlug(item.slug);
       return s ? [{ type: "song", details: [s.title] }] : [];

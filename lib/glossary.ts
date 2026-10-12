@@ -60,6 +60,14 @@ export interface GlossaryEntry {
    * where the drill is about the term itself, not merely uses it.
    */
   drill?: string;
+  /**
+   * A drill in another room that measures the word, for a one-tap deep link
+   * beside the room link, e.g. the breath room's sustain test. `href` is the
+   * room's own deep link and `label` the drill's name as that room shows it.
+   * Kept off entries that already name a warmup `drill`, so an entry never
+   * shows two "Try it" links.
+   */
+  tryIt?: { href: string; label: string };
   domain: GlossaryDomain;
 }
 
@@ -312,6 +320,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "The sustain test scores steadiness alongside duration, because a long note that wobbles is not a supported one.",
         href: "/breath",
+        tryIt: { href: "/breath?drill=sustain", label: "Sustain test" },
         domain: "voice",
       },
       {
@@ -330,7 +339,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "The throat and mouth shaping the buzz from the folds into a vowel and a colour, without changing the pitch.",
         where:
-          "Hold one note and change vowel: the trace stays on the same line while the spectrogram redraws.",
+          "Hold one note and change vowel: on the spectrogram the stack of lines stays at the same heights while the brightness shifts between them.",
         href: "/analyze",
         domain: "voice",
       },
@@ -358,7 +367,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A measure of how much the folds have been used, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
         where:
-          "The vocal-load panel counts cycles while you practice: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
+          "The analyzer's vocal-load panel counts cycles while that page is open and on screen: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
         href: "/analyze",
         domain: "voice",
       },
@@ -398,7 +407,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A bright, carrying resonance made by narrowing the space just above the vocal folds, which adds high-frequency energy rather than volume.",
         where:
-          "The warmups that run on nay and gug are twang exercises, and the analyzer shows the change as energy arriving in the upper bands while the pitch trace holds its line.",
+          "The bratty nay drills in the Pro belt-prep and mix-builder packs train twang, and on the analyzer's spectrogram it shows as energy arriving in the upper bands while the bottom line, the note itself, stays put.",
         href: "/warmups",
         domain: "voice",
       },

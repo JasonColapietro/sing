@@ -98,7 +98,7 @@ const STUDIO_PARTS = [
   },
   {
     name: "Target practice",
-    desc: "Pick a note and hold it in tune until it locks. Locks in a row build a run, and your best session is kept on this device.",
+    desc: "Pick a note, then hold within fifty cents of it for three seconds in total to lock it. The gauge's fifteen-cent in-tune zone is the tighter goal. Locks in a row build a run, and your best session is kept on this device.",
   },
 ] as const;
 
@@ -274,7 +274,7 @@ export function StudioClient() {
           </div>
           <div className="mt-2">
             <ProInlineNudge>
-              Pro keeps a per-note report of this session
+              Pro charts your scored warmups and songs note by note
             </ProInlineNudge>
           </div>
         </Card>

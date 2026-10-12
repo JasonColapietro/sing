@@ -6,6 +6,7 @@ import {
   repAscending,
   scoresEitherOctave,
   unsungRepAction,
+  walkRep,
 } from "./exercise-player";
 import { MAX_FRAME_MS, STALE_FRAME_MS, frameDelta } from "@/lib/audio/frame-clock";
 import { EXERCISES, computeRootLadder, ladderWalk } from "./exercises";
@@ -175,6 +176,33 @@ describe("repAscending", () => {
       const current = ladderWalk(ladder, rep).index;
       expect(repAscending(ladder, rep)).toBe(current > prev);
     }
+  });
+});
+
+describe("walkRep", () => {
+  // A "down" band as the player walks it: top note first.
+  const down = [55, 54, 53, 52];
+  const walk = (bounded: boolean, reps = 7) =>
+    Array.from({ length: reps }, (_, rep) => walkRep(down, rep, { down: true, bounded }));
+
+  it("takes a routine's descending step down once and rests at the bottom, never climbing", () => {
+    const steps = walk(true);
+    expect(steps.map((s) => s.root)).toEqual([55, 54, 53, 52, 52, 52, 52]);
+    // The pill reads "Descending" on every rep, the resting ones included.
+    expect(steps.every((s) => !s.climbing)).toBe(true);
+  });
+
+  it("keeps the endless deep-link walk's triangle, labelled by pitch", () => {
+    const steps = walk(false);
+    expect(steps.map((s) => s.root)).toEqual([55, 54, 53, 52, 53, 54, 55]);
+    expect(steps.map((s) => s.climbing)).toEqual([false, false, false, false, true, true, true]);
+  });
+
+  it("leaves a routine's climbing step on the triangle", () => {
+    const up = [52, 53, 54];
+    const steps = Array.from({ length: 5 }, (_, rep) => walkRep(up, rep, { down: false, bounded: true }));
+    expect(steps.map((s) => s.root)).toEqual([52, 53, 54, 53, 52]);
+    expect(steps.map((s) => s.climbing)).toEqual([true, true, true, false, false]);
   });
 });
 

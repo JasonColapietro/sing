@@ -68,7 +68,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 Ready when: Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.
 
-If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Do not try the effect again to check; leave it until a teacher has heard it.
 
 What this shows: I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.
 

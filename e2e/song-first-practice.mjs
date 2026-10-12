@@ -95,6 +95,12 @@ try {
   const { context, page, errors } = await session({ width: 375, height: 812 });
   try {
     assert.equal(await page.getByRole("region", { name: "Your first practice" }).count(), 0);
+    // The page's action sits in the header, on the first screen above the
+    // fixed tab bar, and lands the range test on its start button.
+    const headerAction = page.getByRole("link", { name: "Test my range for this song", exact: true });
+    assert.equal(await headerAction.getAttribute("href"), "/range?mode=range&check=espresso#start");
+    const box = await headerAction.boundingBox();
+    assert.ok(box && box.y + box.height <= 812 - 80, `header action at ${JSON.stringify(box)}`);
     await page.getByRole("link", { name: "See if “Espresso” fits my voice", exact: true }).click();
     await page.getByRole("heading", { level: 1, name: "Vocal range test & pitch meter" }).waitFor();
     // Another tab saving a range must update the comparison on return.

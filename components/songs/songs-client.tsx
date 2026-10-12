@@ -82,6 +82,16 @@ export function SongsClient() {
   // the effect below keys off it as well as the song identity.
   const [playToken, setPlayToken] = useState(0);
 
+  // Every start — a library card, the dice, the setlist, "Sing again", a deep
+  // link — lands with Play on screen. Switching views kept the library's
+  // scroll position, so a phone showed the player's settings with Play and
+  // the piano roll above the viewport, or below the tab bar. Aligning the
+  // transport row to the bottom keeps the piano roll above it in view.
+  useEffect(() => {
+    if (view !== "practice") return;
+    document.getElementById("song-transport")?.scrollIntoView({ block: "end" });
+  }, [view, playToken]);
+
   // A song page links here as /songs?song=<slug>, so arriving from search
   // lands on the melody that was being read about rather than the library.
   // Resolved through `entitled`, so a Pro link cannot open a Pro song for a

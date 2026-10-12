@@ -40,6 +40,8 @@ import {
 import { ORG_NAME } from "./organization";
 import { FREE_DAILY_MINUTES } from "./practice-limits";
 import { PRICING, formatPrice } from "./pro-shared";
+import { MAX_RANGE_HISTORY } from "./progress-shape";
+import { SONGS } from "@/components/songs/data";
 import { GET as llmsFullRoute } from "../app/llms-full.txt/route";
 import { GET as llmsRoute } from "../app/llms.txt/route";
 import { SINGERS } from "./singers-data";
@@ -538,6 +540,45 @@ describe("/llms.txt describes pages as they render", () => {
     expect(songs).toMatch(/fitted to that measured range/);
     expect(songs).toMatch(/written key/);
     expect(songs).not.toMatch(/comfortable/);
+  });
+
+  /**
+   * /songs counts melodies, not pages (two pages are longer arrangements of a
+   * melody already in the book), and most pages hold a song's opening phrase
+   * rather than its lyrics.
+   */
+  it("counts songs the way /songs does, and does not promise whole lyrics", () => {
+    const songs = line("- [Songs]");
+    const melodies = SONGS.filter((s) => !s.arrangementOf).length;
+    expect(songs).toContain(`${melodies} melodies`);
+    expect(songs).toMatch(/opening phrase/);
+    expect(songs).not.toMatch(/melodies with lyrics/);
+  });
+
+  /** The warmup ladder moves every rep, scored or not, and turns back down. */
+  it("describes the warmup ladder as it moves", () => {
+    const warmups = line("- [Warmups]");
+    expect(warmups).toMatch(/a semitone every rep/);
+    expect(warmups).toMatch(/come back down/);
+    expect(warmups).not.toMatch(/climb by semitone/);
+    expect(buildLlmsFullTxt()).not.toMatch(/clear a pattern|cleared pattern/);
+  });
+
+  /**
+   * The vocal-load panel counts voiced frames, speech included, and only
+   * while /analyze is open and visible; the guide on that page says so too.
+   */
+  it("says where and what vocal load counts", () => {
+    const analyze = line("- [Analyze]");
+    expect(analyze).toMatch(/open and on screen/);
+    expect(analyze).toMatch(/speech counts/);
+    expect(analyze).toMatch(/other rooms does not/);
+  });
+
+  /** Pro keeps the same capped range history as the record; /pro says so. */
+  it("states Pro's range history at the cap the record keeps", () => {
+    expect(llms).toContain(`latest ${MAX_RANGE_HISTORY} range tests charted over time`);
+    expect(llms).not.toMatch(/every range test/);
   });
 
   it("describes genre hub links the way singer pages make them", () => {

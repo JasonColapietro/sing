@@ -13,9 +13,12 @@ import { useModalFocus } from "@/lib/use-modal-focus";
 const SEEN_KEY = "suede-sing:coach-intro:v1";
 
 /**
- * One-time full-screen sales moment after the first completed result. Never
- * fires for Pro members and never repeats after dismissal; recurring selling
- * happens in session summaries.
+ * One-time full-screen sales moment after a completed result other than a
+ * singer's first range test. That first range result is the moment the app
+ * earns its keep, so components/range/range-test.tsx does not emit the result
+ * signal for it; any later result can open this. Never fires for Pro members
+ * and never repeats after dismissal; recurring selling happens in session
+ * summaries.
  *
  * It cannot interrupt an exercise in progress, because it listens for an
  * explicit "a result is on screen" signal (`lib/pro-signal`) rather than

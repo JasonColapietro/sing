@@ -2,6 +2,7 @@
 
 import { CapSlide } from "@/components/practice/free-cap";
 import { useFreeCap } from "@/lib/free-cap";
+import { liveStreak } from "@/components/account/save-state";
 
 import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
@@ -334,7 +335,7 @@ export function BreathRunner({
             : starsForCompletion(doneSteps, stepCount)
         }
         xp={results.reduce((a, r) => a + (r?.logged?.xpGained ?? 0), 0)}
-        streakDays={progress.streak.current}
+        streakDays={liveStreak(progress.streak)}
         goal={{ doneSec: goalDoneSec, goalSec }}
         rows={routine.steps.map((s, i) => ({
           label: breathStepTitle(s),
@@ -430,7 +431,7 @@ export function BreathDrillSession({
         score={result.score}
         stars={starsForDrillResult(drill, result)}
         xp={result.logged?.xpGained ?? 0}
-        streakDays={progress.streak.current}
+        streakDays={liveStreak(progress.streak)}
         goal={{ doneSec: goalDoneSec, goalSec }}
         rows={[
           {

@@ -137,6 +137,21 @@ describe("the glossary page's onward links", () => {
     }
   });
 
+  /**
+   * A drill in another room links by that room's deep link, so "Breath
+   * support" opens the sustain test its sentence names rather than the top of
+   * the breath room, a few screens above it on a phone.
+   */
+  it("links another room's named drill by its deep link", () => {
+    const withTryIt = SING_GLOSSARY_TERMS.filter((e) => e.tryIt);
+    expect(withTryIt.map((e) => e.term)).toContain("Breath support");
+    for (const entry of withTryIt) {
+      const html = entryHtml(entry.term);
+      expect(html).toContain(`href="${entry.tryIt!.href.replace(/&/g, "&amp;")}"`);
+      expect(html).toContain(`Try it: ${entry.tryIt!.label}`);
+    }
+  });
+
   it("links the free lessons a module trains each term in", () => {
     let linked = 0;
     for (const entry of SING_GLOSSARY_TERMS) {

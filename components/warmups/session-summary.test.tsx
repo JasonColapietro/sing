@@ -21,7 +21,7 @@ vi.mock("@/lib/progress", async (importOriginal) => {
   };
 });
 
-import { SessionSummary } from "./session-summary";
+import { SessionSummary, ladderBreakAlongWalk } from "./session-summary";
 
 const plan = planDailyThree({ sessions: [], day: "2026-09-03" });
 const noop = () => {};
@@ -101,5 +101,41 @@ describe("the saved card", () => {
     const html = render(summaryFor(plan.picks[0].exercise.id), { daily: false });
     expect(html).not.toContain("day streak");
     expect(html).not.toContain("Sing tomorrow");
+  });
+});
+
+describe("the ladder diagnosis on a descending drill", () => {
+  // tongue-trill-descent walks C4 down to F#3, and the low end came apart.
+  const scores = [92, 90, 88, 85, 60, 40, 30];
+  const reps = scores.map((score, i) => ({ root: 60 - i, score, avgCentsErr: 20, skipped: false }));
+
+  it("finds the break along the descent, not only on a climb", () => {
+    expect(ladderBreakAlongWalk(reps, true)).toEqual({ root: 56, heldAt: 92, score: 60, drop: 32 });
+    // The climb-only reading resets on every falling root and finds nothing.
+    expect(ladderBreakAlongWalk(reps, false)).toBeNull();
+  });
+
+  it("does not tell a singer whose low notes fell apart that the ladder held", () => {
+    const ex = EXERCISES.find((e) => e.id === "tongue-trill-descent")!;
+    const avgScore = Math.round(scores.reduce((a, s) => a + s, 0) / scores.length);
+    const html = render(
+      { ex, results: reps, avgScore, best: reps[0], xpGained: 20, newAchievements: [], mode: "sing-along" },
+      { daily: false },
+    );
+    expect(html).not.toContain("held together across the whole ladder");
+    expect(html).toContain("The ladder held at 92% until");
+    expect(html).toContain("then dropped 32 points");
+  });
+
+  it("draws the practice rooms' three-star scale, not the songbook's five", () => {
+    const html = render(summaryFor(plan.picks[0].exercise.id), { daily: false });
+    // An 82 is two of three practice stars, as the library and /progress count it.
+    expect(html).toContain('★★☆</span><span class="sr-only">2 of 3 stars</span>');
+    // The share card on the same screen counts the same stars: an 82 is four
+    // of five on the songbook's scale, which is the second rating this
+    // screen used to show for one run.
+    expect(html).not.toContain("of 5 stars");
+    expect(html).not.toContain("★★★★☆");
+    expect(html.match(/2 of 3 stars/g)?.length).toBe(2);
   });
 });

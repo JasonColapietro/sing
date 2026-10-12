@@ -37,8 +37,12 @@ const WEEK = [
   {
     day: "Day 1",
     focus: "Baseline",
-    body: "Take the range test, then hold three comfortable notes in the pitch studio. Save the result; today is a measurement, not an audition.",
+    // Warm first, as every program's range day does: a cold voice
+    // under-reports at both ends. The Morning reset is about four minutes,
+    // inside the free daily allowance.
+    body: "Warm up for about four minutes with the Morning reset (hums, lip trills, a small siren), then take the range test and hold three comfortable notes in the pitch studio. The test saves your result; today is a measurement, not an audition.",
     links: [
+      { href: "/warmups?routine=morning", label: "Morning reset warmup" },
       { href: "/range?mode=range", label: "Vocal range test" },
       { href: "/studio", label: "Pitch studio" },
     ],

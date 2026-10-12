@@ -575,9 +575,10 @@ export function SustainTest({
             </div>
             <h2 className="font-display text-3xl">Sustain test</h2>
             <p className="max-w-sm text-sm text-[var(--s-mut)]">
-              Breathe in, then sing or hiss one steady note for as long as you
-              can. The mic listens for your breath before it starts timing, and
-              stops when you run out of air.
+              Breathe in, then sing or hiss one steady note for as long as it
+              stays easy. The mic listens for your breath before it starts
+              timing, and stops when the sound stops. End the note when it
+              starts to tighten, before the last of your air.
             </p>
             <p className="text-xs text-[var(--s-dim)]">{MIC_PRIVACY}</p>
             <button
@@ -692,7 +693,7 @@ export function SustainTest({
     return (
       <MicGate
         title="Sustain test"
-        description="Breathe in, then sing or hiss one steady note for as long as you can. The mic listens for your breath before it starts timing, and stops when you run out of air."
+        description="Breathe in, then sing or hiss one steady note for as long as it stays easy. The mic listens for your breath before it starts timing, and stops when the sound stops. End the note when it starts to tighten, before the last of your air."
         onEnable={() => {
           void start();
         }}

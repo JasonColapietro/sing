@@ -149,7 +149,7 @@ describe("keyword map", () => {
     expect(singerGenreKeywords("Pop")[0]).toBe("pop singers vocal range");
   });
 
-  it("does not target lyrics or vocal-range queries on opening-phrase song pages", () => {
+  it("does not target lyrics or vocal-range queries on opening-phrase or arrangement song pages", () => {
     const phrases = ALL_SONGS.filter((s) => s.form === "phrase");
     expect(phrases.length).toBeGreaterThan(0);
     for (const song of phrases) {
@@ -157,7 +157,16 @@ describe("keyword map", () => {
       expect(terms[0], song.slug).toBe(normalizeKeywords([`sing ${song.title}`])[0]);
       expect(terms.filter((t) => /lyrics|vocal range/.test(t)), song.slug).toEqual([]);
     }
-    for (const song of ALL_SONGS.filter((s) => s.form !== "phrase")) {
+    // Longer arrangements sing selected lines, so they target neither the
+    // song's lyrics nor its vocal range; only whole-song pages lead with lyrics.
+    const arrangements = ALL_SONGS.filter((s) => s.arrangementOf !== undefined);
+    expect(arrangements.length).toBeGreaterThan(0);
+    for (const song of arrangements) {
+      const terms = songKeywords(song);
+      expect(terms[0], song.slug).toBe(normalizeKeywords([`sing ${song.title}`])[0]);
+      expect(terms.filter((t) => /lyrics|vocal range/.test(t)), song.slug).toEqual([]);
+    }
+    for (const song of ALL_SONGS.filter((s) => s.form !== "phrase" && s.arrangementOf === undefined)) {
       expect(songKeywords(song)[0], song.slug).toMatch(/ lyrics$/);
     }
   });

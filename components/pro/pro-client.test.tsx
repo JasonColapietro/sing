@@ -14,7 +14,7 @@ vi.mock("@/lib/pro", async (importOriginal) => {
   };
 });
 
-import { ProClient } from "./pro-client";
+import { ProClient, WelcomePanel } from "./pro-client";
 
 function state(overrides: Partial<ProState> = {}): ProState {
   return {
@@ -142,5 +142,96 @@ describe("Pro purchase choices", () => {
     expect(html).not.toContain("Manage or cancel");
     expect(html).not.toContain("Renews");
     expect(html).not.toContain("Ends January");
+  });
+});
+
+describe("restoring Pro on a new browser", () => {
+  beforeEach(() => {
+    proState.current = state();
+  });
+
+  it("gives every 'Already have Pro?' link a target in the server HTML", () => {
+    // Locked book and Atlas chapters link to /pro#restore. Without the id the
+    // buyer landed on the sales hero, about seven phone screens above a
+    // closed form, under a button selling the same purchase again.
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).toMatch(/<details[^>]*id="restore"/);
+    expect(html).toContain("Already have Pro? Unlock it on this device");
+  });
+
+  it("sends the emailed Pro key to the unlock form, not the sales hero", () => {
+    proState.current = state({
+      active: true,
+      plan: "lifetime",
+      status: "active",
+      paymentIntentId: "pi_lifetime",
+      proKey: "suede-pro_test",
+    });
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).toContain(encodeURIComponent("/pro#restore"));
+  });
+
+  it("confirms a restored key in words a buyer recognises", () => {
+    const html = renderToStaticMarkup(
+      <WelcomePanel how="restore" proKey="suede-pro_test" periodEnd={null} />,
+    );
+    expect(html).toContain("Pro is unlocked on this browser");
+    expect(html).not.toContain("Welcome to the gold channel");
+    expect(html).toMatch(/href="\/book"/);
+    expect(html).toMatch(/href="\/atlas"/);
+    expect(html).toContain("suede-pro_test");
+  });
+
+  it("confirms a redeemed pass with its end date and nothing to cancel", () => {
+    const html = renderToStaticMarkup(
+      <WelcomePanel how="pass" proKey={null} periodEnd="November 10, 2026" />,
+    );
+    expect(html).toContain("Your 30-day pass is on");
+    expect(html).toContain("until November 10, 2026");
+    expect(html).toContain("ends by itself");
+  });
+
+  it("keeps the checkout welcome for a purchase", () => {
+    const html = renderToStaticMarkup(
+      <WelcomePanel how="purchase" proKey="suede-pro_test" periodEnd={null} />,
+    );
+    expect(html).toContain("Welcome to the gold channel");
+    expect(html).toContain("Your Pro key");
+  });
+});
+
+describe("Pro sales copy on the page", () => {
+  beforeEach(() => {
+    proState.current = state();
+  });
+
+  it("does not sell a song's free score record as Pro", () => {
+    // Every song summary shows a personal best and a score sparkline to
+    // every singer, so "song history" is not something Pro adds.
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).not.toMatch(/scoring history|song history/i);
+    expect(html).not.toMatch(/\bgenres?\b|voice-type routines/i);
+  });
+
+  it("does not say Pro keeps a record the free plan also keeps", () => {
+    // Free stores the same sessions and range tests; /progress tells a free
+    // singer "older sessions are stored — Pro shows all of them". Pro adds
+    // the charts across them, not the keeping.
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).not.toContain("Pro keeps the months");
+    expect(html).not.toContain("long record of your own voice");
+    expect(html).toContain("Pro charts the months behind it");
+  });
+
+  it("puts the price button straight under the headline on a phone", () => {
+    // At 375x667 the paragraph pushed the button under the tab bar; on small
+    // screens the buttons now come first and the paragraph follows.
+    const html = renderToStaticMarkup(<ProClient />);
+    const button = html.indexOf(">Get lifetime Pro: $79 once</a>");
+    const wrapper = html.lastIndexOf('class="order-1 ', button);
+    expect(button).toBeGreaterThan(-1);
+    expect(wrapper).toBeGreaterThan(-1);
+    expect(html.slice(wrapper, button)).toContain("sm:order-2");
+    expect(html).toMatch(/<p class="order-2 [^"]*sm:order-1[^"]*">Suede Pro is the vocal coaching layer/);
   });
 });

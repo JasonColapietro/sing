@@ -7,8 +7,12 @@ import { Button, Card, SectionLabel } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { useProgress, type ProgressState } from "@/lib/progress";
-import { hasSomethingToSave, liveStreak } from "./save-state";
-import { downloadProgressBackup } from "./download-backup";
+import { backupFileStatus, hasSomethingToSave, liveStreak } from "./save-state";
+import {
+  downloadProgressBackup,
+  readBackupFileAt,
+  subscribeBackupFileAt,
+} from "./download-backup";
 
 export { hasSomethingToSave } from "./save-state";
 
@@ -24,7 +28,12 @@ const SavePromptAccountActions = dynamic(() => import("./save-prompt-actions"), 
 /**
  * Dismissed once, dismissed for good. A snooze would be kinder to the funnel
  * and worse for the singer: the offer is worth exactly one ask, and anyone who
- * declines it has told us what they think of it.
+ * declines it has told us what they think of it. Only "Not now" dismisses: a
+ * downloaded backup file is not a dismissal. A file restores the record as of
+ * its download, so with accounts off the card offers a fresh one once practice
+ * has run a couple of weeks past it (BACKUP_FILE_AT_KEY in download-backup.ts,
+ * written by both buttons that save a file), instead of going quiet for good
+ * while the file silently goes stale.
  *
  * The file-backup card (accounts off) and the account offer are different
  * asks, so they keep separate keys: waving away a download today must not
@@ -91,6 +100,23 @@ function markDismissed(): void {
     // ignore — the in-memory cache still hides it for this page session
   }
   for (const l of listeners) l();
+}
+
+/**
+ * No backup file on the server. The dismissal snapshot already keeps the
+ * server and hydration render empty; the stored date is read right after.
+ */
+function serverFileAt(): string | null {
+  return null;
+}
+
+/** "September 3, 2026": the backup file's date, as the card names it. */
+function fileDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 /** House prose joins lists without the Oxford comma. */
@@ -174,8 +200,10 @@ const FILE_PROMISE =
  * 2. Pro. A Pro member's record is already syncing (ProSync in the layout),
  *    which makes "this browser holds the only copy" simply false for them.
  *    This is an accuracy refusal, not a courtesy one.
- * 3. Dismissed, per the localStorage-backed store above.
- * 4. Nothing at risk — the caller's `when`, and our own check.
+ * 3. Dismissed, per the localStorage-backed store above ("Not now" only).
+ * 4. Nothing at risk — the caller's `when`, and our own check. With accounts
+ *    off, a backup file that practice has not yet run a couple of weeks past
+ *    counts as nothing at risk too; a stale one brings the card back.
  *
  * It is inline rather than a modal, so there is no scroll lock, no overlay and
  * no focus trap to escape from. The named <section> makes it one stop for a
@@ -206,8 +234,14 @@ export function AccountSavePrompt({
     readDismissed,
     serverDismissed,
   );
-  // Set by the download, so the card can confirm it before the dismissal it
-  // also records hides it for good.
+  const fileAt = useSyncExternalStore(
+    subscribeBackupFileAt,
+    readBackupFileAt,
+    serverFileAt,
+  );
+  // Set by the download, so the card can confirm it on this mount. The next
+  // page load finds a fresh file on record and stays quiet until practice has
+  // run past it (backupFileStatus).
   const [downloaded, setDownloaded] = useState(false);
 
   if (!isLoaded || isSignedIn) return null;
@@ -220,11 +254,22 @@ export function AccountSavePrompt({
   // back 401, which is a worse experience than no offer at all. Offer the
   // backup that does exist instead.
   if (!accountsReady()) {
+    const file = backupFileStatus(progress.sessions, fileAt);
+    if (!downloaded && !file.stale) return null;
+    // downloadProgressBackup records the file's date itself, so this card
+    // stays quiet on the next load whichever button saved the file.
     const download = () => {
       downloadProgressBackup();
       setDownloaded(true);
-      markDismissed();
     };
+    // With a file on record, say how old it is and what it is missing rather
+    // than "the only copy", which the file makes untrue.
+    const stake =
+      fileAt && file.hasFile && file.sessionsSince > 0
+        ? `Your last backup file is from ${fileDate(fileAt)}; ${file.sessionsSince} ${
+            file.sessionsSince === 1 ? "session since then is" : "sessions since then are"
+          } only in this browser.`
+        : stakeSentence(progress);
     return (
       <section aria-labelledby={headingId} className={className}>
         <Card className="animate-fadeup">
@@ -234,13 +279,14 @@ export function AccountSavePrompt({
           </h2>
           {downloaded ? (
             <p role="status" className="mt-1.5 max-w-xl text-sm text-mut">
-              Backup downloaded. If this browser is ever cleared, import the
-              file on the Progress page.
+              Backup downloaded. It holds your record as of today; if this
+              browser is ever cleared, import it on the Progress page. A fresh
+              one is offered here after a couple more weeks of practice.
             </p>
           ) : (
             <>
               <p className="mt-1.5 max-w-xl text-sm text-mut">
-                {`${stakeSentence(progress)} ${FILE_PROMISE}`}
+                {`${stake} ${FILE_PROMISE}`}
               </p>
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <Button type="button" variant="outline" size="sm" onClick={download}>

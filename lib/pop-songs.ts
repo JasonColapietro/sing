@@ -52,7 +52,7 @@ export type PopDifficulty = "Easy" | "Medium" | "Hard";
  */
 export function popDifficulty(song: PopSong): PopDifficulty {
   const span = song.highMidi - song.lowMidi;
-  if (span >= 22 || song.highMidi >= 81) return "Hard";
+  if (span >= 22 || song.highMidi >= 78) return "Hard";
   if (span <= 14 && song.highMidi <= 72) return "Easy";
   return "Medium";
 }

@@ -45,7 +45,7 @@ Coach, on the Progress page, reads your recent scored sessions and range tests a
 
 ## Before you start: what to record
 
-Do this in one sitting, before week one, and do not skip it because you are impatient to sing. Everything in week eleven depends on having something honest to compare against, and you cannot go back and collect it later.
+Do this in one sitting, before week one, and do not skip it because you are impatient to sing. Everything at the start of week twelve depends on having something honest to compare against, and you cannot go back and collect it later.
 
 **A range test, taken by the rules.** Warmed up, same room, counting only notes you would let someone else hear. Note the conditions somewhere — time of day, how you slept, whether you had a cold.
 
@@ -53,7 +53,7 @@ Do this in one sitting, before week one, and do not skip it because you are impa
 
 **A sustain test.** From Breath. One number, thirty seconds of your attention.
 
-**A sentence about why.** What you want to be able to do that you currently cannot — sing the second chorus without running out, get through a bridge without the break showing, sing at all in front of someone. Write it down. Wants drift over three months, and in week eleven that sentence will tell you whether you got closer to the thing you actually cared about better than any chart can.
+**A sentence about why.** What you want to be able to do that you currently cannot — sing the second chorus without running out, get through a bridge without the break showing, sing at all in front of someone. Write it down. Wants drift over three months, and at the start of week twelve that sentence will tell you whether you got closer to the thing you actually cared about better than any chart can.
 
 That is the baseline. Twenty minutes of setup for three months of comparison.
 

@@ -177,7 +177,7 @@ export const WARMUPS_GUIDE: GuideContent = {
   body: [
     "The exercises that show up in most teachers' warmups — lip trills, hums, sirens, five-note scales — share a design. They keep the tone quiet, keep the airflow steady, and move pitch gradually so the voice changes register without a jolt. That is why they are boring, and why the boring version works.",
     "A warmup is also preparation for effort. Asking for volume or height before breath and fold closure are coordinated tends to push a singer into squeezing rather than supporting, and a coordinated voice usually reaches the same note with less force. A warmup does not make a voice ready for something it was never ready to sing.",
-    "Each warmup here plays a short melody, then listens while you sing it back, scoring pitch accuracy in real time. When you clear a pattern, it transposes up a semitone and asks again, so the exercise climbs with you instead of sitting at one fixed height.",
+    "Each warmup here plays its pattern once, counts you in, then scores your pitch as you sing it back. The key moves a semitone every rep, whatever the score: most exercises climb and then come back down, and the descending ones start high and step down, so one exercise covers a run of keys instead of sitting at one fixed height.",
   ],
   howTo: {
     name: "How to warm up your voice before singing",
@@ -202,8 +202,8 @@ export const WARMUPS_GUIDE: GuideContent = {
         body: "Now open the sound. Sing the pattern back, matching pitch as closely as you can; the score tells you where you drifted. Keep the volume moderate — accuracy first, size later.",
       },
       {
-        title: "Climb by semitone and stop early",
-        body: "Let each cleared pattern transpose up. Stop climbing while it still feels easy. Ending a warmup at the edge of your range is how a warmup becomes fatigue.",
+        title: "Let the key move, and stop early",
+        body: "Each rep moves the key a semitone, whether or not the last rep scored well, so stopping is your job. If the top of a ladder stops feeling easy, open Adjust and nudge Transpose down, or end the exercise, rather than pushing through. Ending a warmup at the edge of your range is how a warmup becomes fatigue.",
       },
       {
         title: "Finish where you started",
@@ -216,7 +216,7 @@ export const WARMUPS_GUIDE: GuideContent = {
     body: "The most common beginner mistake is treating a warmup as a performance — full volume, top of the range, straight in. That fatigues the voice before the real practice starts.",
     points: [
       "Keep every warmup quieter than you think you need to; volume is the last thing to add",
-      "If a pattern is uncomfortable at the top, stop climbing rather than pushing through it",
+      "If a pattern is uncomfortable at the top, transpose it down or end it rather than pushing through it",
       "Lip trills and hums feel silly and earn their place: they make clear tone easy at low effort",
       "Warm up before the range test, before song practice, and before recording anything you plan to keep",
     ],
@@ -227,8 +227,8 @@ export const WARMUPS_GUIDE: GuideContent = {
     points: [
       "Warm toward the register your material actually sits in rather than sweeping the whole range every time",
       "Use the per-pattern accuracy scores to find the interval or vowel that reliably drifts, then drill that shape",
-      "Pay attention to the semitone at which accuracy starts dropping — that is usually a passaggio, not a limit",
-      "Pro warmup packs add genre and voice-type routines: belt prep, head-voice builders, mix builders",
+      "Note the semitone where accuracy dips: a dip that turns up in the same place every session is usually a passaggio, not a limit",
+      "Pro adds three technique packs: belt prep, a head-voice builder and a mix builder",
     ],
   },
   faq: [
@@ -408,7 +408,7 @@ export const EAR_GUIDE: GuideContent = {
   body: [
     "Singing in tune is not only a throat skill. The sequence is hear the target, predict the muscular gesture that produces it, then check the result against what you meant. Training the first link supports the whole chain, which is why a singer who drifts flat may need interval work as much as more singing.",
     "Interval recognition is the core drill: hear two notes and name the distance between them. Pitch matching is the singer's version — hear a note, sing it back, and get told how close you landed in cents. Melody playback extends both to short phrases, which is where memory joins the skill.",
-    "Progress here is measurable. Interval accuracy and average pitch-matching deviation are scored every session, so a trend can show up in the numbers before you notice it in a song.",
+    "Progress here is measurable. Every game is scored on its ten rounds, each finished game goes into your practice log, and your best score is kept for each game at each level, so a trend can show up in the numbers before you notice it in a song.",
   ],
   howTo: {
     name: "How to train your ear as a singer",
@@ -455,7 +455,7 @@ export const EAR_GUIDE: GuideContent = {
     heading: "Push toward the intervals that stay slippery",
     body: "Most trained ears have a distinct weak set — often the tritone, the minor sixth, or major versus minor sevenths under time pressure. Drilling the whole set equally leaves those exactly where they are.",
     points: [
-      "Use the per-interval accuracy breakdown to find your weak pairs, then practice only those",
+      "Note which intervals you keep missing (each wrong answer names the right one), then play just those pairs on the piano in Tools and sing them until they land without searching",
       "Add descending intervals — they are meaningfully harder than ascending ones and get skipped",
       "Shorten your response time; recognition that takes four seconds is not fast enough to use mid-phrase",
       "Move to longer melodies to train pitch memory, which is what carries you through a line without a reference tone",
@@ -1014,8 +1014,8 @@ export const ANALYZE_GUIDE: GuideContent = {
         body: "The gold column marks 2.8 to 3.2 kHz. Sing the same phrase with different amounts of space and brightness and watch the percentage move. Compare it against your own takes rather than against any fixed number, because it depends on your microphone and how close you are to it.",
       },
       {
-        title: "Let vocal load run through a normal session",
-        body: "Leave the page listening while you practice. It counts only the time your voice is actually sounding, so silences and talking between exercises do not inflate it.",
+        title: "Let vocal load run while you sing on this page",
+        body: "Leave this page open and on screen while you sing. It only counts while it is visible, so practice in the warmup or song rooms is not added here. It counts the time your voice is sounding: silence adds nothing, but talking near the mic counts, because speaking uses the folds too.",
       },
     ],
   },
@@ -1026,7 +1026,7 @@ export const ANALYZE_GUIDE: GuideContent = {
       "Sing one note two ways — breathy, then firm — and watch how much of the stack fills in; if 'firm' starts to feel tight in the throat it has become pressed, and the picture will not warn you",
       "Find where your register changes by sliding slowly, and remember roughly which note it happens on",
       "Ignore the ring percentage at first; the spectrogram picture is more useful to a new singer",
-      "Use vocal load to see whether you actually practiced twenty minutes or four",
+      "Use vocal load to see how much of a session on this page was actually sung, not just how long the page was open",
     ],
   },
   advanced: {

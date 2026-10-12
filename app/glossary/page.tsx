@@ -118,9 +118,10 @@ export default function GlossaryPage() {
             <Link href="/range?mode=range" className="text-violet-ink hover:underline">
               range test
             </Link>
-            ; where a free warmup trains a term, its entry links straight to
-            it. None of this is medical advice. Warmups, ear training, breath
-            drills and song practice share the free plan&apos;s{" "}
+            ; where a free warmup or breath drill trains a term, its entry
+            links straight to it. None of this is medical advice. Warmups,
+            ear training, breath drills and song practice share the free
+            plan&apos;s{" "}
             {FREE_DAILY_MINUTES} minutes of guided practice a day; the other
             rooms linked here have no daily limit.
           </p>
@@ -182,6 +183,17 @@ export default function GlossaryPage() {
                             className="text-violet-ink hover:underline"
                           >
                             Try it: {drill.title} →
+                          </Link>
+                        </>
+                      )}
+                      {entry.tryIt && (
+                        <>
+                          {" · "}
+                          <Link
+                            href={entry.tryIt.href}
+                            className="text-violet-ink hover:underline"
+                          >
+                            Try it: {entry.tryIt.label} →
                           </Link>
                         </>
                       )}

@@ -5,6 +5,7 @@
  */
 import Link from "next/link";
 import { TOLERANCE_CENTS } from "@/components/songs/lib";
+import { IN_TUNE_CENTS } from "@/lib/audio/notes";
 import {
   MODULE_PRACTICE,
   ROOM_LABELS,
@@ -28,7 +29,9 @@ export const MEASUREMENT_WORDS: Record<string, string> = {
   rangeExtremes: "your lowest and highest comfortable notes",
   sustainSeconds:
     "how long one sustain lasts, in seconds. The timer reads loudness, so a steady hiss counts as well as a sung note",
-  centsFromTarget: `how far each note sits from its target, in cents. A note counts as in tune within ${TOLERANCE_CENTS} cents`,
+  // The scoring window is not the definition of in tune: it passes a phrase
+  // sung clearly flat (book chapter 9), and the studio's green zone is tighter.
+  centsFromTarget: `how far each note sits from its target, in cents. Scoring counts a note as a hit anywhere within ${TOLERANCE_CENTS} cents, a wide window that still passes a clearly flat note; the studio's green zone, ±${IN_TUNE_CENTS} cents, is the in-tune goal`,
   inTuneHoldTime: `how long you hold a note within ${TOLERANCE_CENTS} cents of the target`,
   scorePercent: `the share of each note you held within ${TOLERANCE_CENTS} cents of the target`,
   ringRatio:
@@ -83,7 +86,7 @@ export function ModulePractice({ moduleId }: { moduleId: string }) {
           )}
           <div className="pt-1">
             <LinkButton href={companionHref(companion)} size="md">
-              Practise in {companionLabel(companion)}
+              Open {companionLabel(companion)}
             </LinkButton>
           </div>
           {isGuidedPractice(companion) && <GuidedCapNote full />}

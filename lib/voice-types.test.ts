@@ -17,13 +17,19 @@
  * restoring the primo-only male passaggi (55-57, 57-60, 59-62, 64-67)
  * fails both of the registration-event tests below.
  */
-import { describe, expect, it } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
 
 import { REFERENCE_BANDS, representativeSingers } from "./singers-analysis";
 import { SINGERS, VOICE_KINDS, pluralVoice, singersByVoiceType } from "./singers";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "./voice-types";
 import { VOICE_TYPES } from "./audio/notes";
 import { BOOK } from "./book-data";
+import { ATLAS } from "./atlas-data";
+import VocalRangeByVoiceTypePage from "@/app/atlas/vocal-range-by-voice-type/page";
+
+vi.mock("server-only", () => ({}));
 
 describe("voice category coverage", () => {
   it("has a note and a passaggio for every category, with no strays", () => {
@@ -139,6 +145,15 @@ describe("pluralVoice", () => {
     expect(bad, `mangled plurals: ${bad.map(pluralVoice).join(", ")}`).toEqual([]);
   });
 
+  it("never prints the typo in the atlas, whose voice-type appendix is generated", () => {
+    // scripts/compile-atlas.mjs built its headings with its own `${type}s`
+    // and printed "## Basss" for Pro readers and in the PDF, out of reach
+    // of every guard on the site's own pages.
+    const body = ATLAS.map((c) => c.body).join("\n");
+    expect(body).not.toMatch(/\bbasss\b/i);
+    expect(body).toContain("## Basses");
+  });
+
   it("pluralises the sibilant category correctly", () => {
     expect(pluralVoice("Bass")).toBe("Basses");
     expect(pluralVoice("bass")).toBe("basses");
@@ -219,6 +234,52 @@ describe("the book's passaggio chapter agrees with VOICE_TYPE_PASSAGGIO", () => 
    */
   it("does not claim a fifth between the turning points", () => {
     expect(chapter?.body ?? "").not.toContain("fourth or fifth");
+  });
+});
+
+/**
+ * The female zones are the commercial belt-or-mix break, several notes above
+ * the first flip out of chest that a woman's quiet slide finds. The reference
+ * page's per-type answers are written to be quoted alone, and the soprano one
+ * used to give C5-E5 as "where the voice changes gear" with no word of the
+ * earlier shift. Every answer that prints a female zone must name it.
+ */
+describe("the reference page names the earlier female shift", () => {
+  const faq = () => {
+    const html = renderToStaticMarkup(createElement(VocalRangeByVoiceTypePage));
+    const answers = new Map<string, string>();
+    for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+      const graph = (JSON.parse(m[1])["@graph"] ?? []) as {
+        "@type"?: string;
+        mainEntity?: { name: string; acceptedAnswer: { text: string } }[];
+      }[];
+      for (const node of graph) {
+        if (node["@type"] !== "FAQPage") continue;
+        for (const q of node.mainEntity ?? []) answers.set(q.name, q.acceptedAnswer.text);
+      }
+    }
+    return answers;
+  };
+  const EARLIER = /earlier, lighter shift out of chest voice somewhere around E4 to G4/;
+
+  it("in each female category's answer and in the passaggio definition", () => {
+    const answers = faq();
+    for (const q of [
+      "What is a contralto's vocal range?",
+      "What is a mezzo-soprano's vocal range?",
+      "What is a soprano's vocal range?",
+      "What is a passaggio?",
+    ]) {
+      expect(answers.get(q), `missing FAQ: ${q}`).toBeTruthy();
+      expect(answers.get(q), q).toMatch(EARLIER);
+    }
+  });
+
+  it("and not in the male answers, whose zones already span both turning points", () => {
+    const answers = faq();
+    for (const kind of ["bass", "bass-baritone", "baritone", "tenor"]) {
+      expect(answers.get(`What is a ${kind}'s vocal range?`), kind).not.toMatch(EARLIER);
+    }
   });
 });
 

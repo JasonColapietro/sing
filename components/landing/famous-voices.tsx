@@ -3,17 +3,26 @@ import { SectionLabel } from "@/components/ui";
 import { isSingerReviewed, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
 import { rangeLabel, singerBySlug } from "@/lib/singers";
 
-/** A compact set of direct homepage paths into the singer catalog.
- * Damiano David joins the established cohort after September's Search Console
- * report showed four clicks for his exact vocal-range query.
+/**
+ * A compact set of direct homepage paths into the singer catalog.
+ *
+ * The reviewed profiles lead: they are the indexable ones, so the homepage's
+ * first singer links point at pages search can actually show. The rest stay
+ * live and linked for visitors but are noindexed pending review (see
+ * isPending in app/singers/[slug]/page.tsx), and VOICES below keeps reviewed
+ * cards first even if a later review changes which ones they are.
  */
 const FEATURED = [
-  "damiano-david",
+  "adele",
+  "olivia-rodrigo",
+  "reba-mcentire",
+  "alex-warren",
+  "sam-smith",
+  "arijit-singh",
   "freddie-mercury",
   "whitney-houston",
   "mariah-carey",
   "jeff-buckley",
-  "adele",
   "beyonce",
   "michael-jackson",
   "aretha-franklin",
@@ -27,11 +36,7 @@ const FEATURED = [
   "axl-rose",
   "chris-cornell",
   "dimash-kudaibergen",
-  "olivia-rodrigo",
-  "reba-mcentire",
-  "alex-warren",
-  "sam-smith",
-  "arijit-singh",
+  "damiano-david",
 ] as const;
 
 const EVIDENCE_FEATURED = new Set<string>([
@@ -63,9 +68,11 @@ const VOICES = FEATURED.map((slug) => {
   }
   return {
     singer,
+    reviewed: isSingerReviewed(singer.slug),
     evidenceCopy: needsEvidenceCopy ? voiceTypeEvidenceCopy(singer) : undefined,
   };
-});
+  // Stable: reviewed (indexable) profiles first, FEATURED order within each.
+}).sort((a, b) => Number(b.reviewed) - Number(a.reviewed));
 
 export function FamousVoices() {
   return (
@@ -133,7 +140,7 @@ export function FamousVoices() {
               >
                 <span className="min-w-0">
                   <span className="block truncate text-ink transition-colors group-hover:text-violet-ink">
-                    {singer.name}{singer.slug === "damiano-david" ? " vocal range" : ""}
+                    {singer.name}
                   </span>
                   <span
                     className={`mt-0.5 block text-xs text-dim ${evidenceCopy ? "leading-relaxed" : ""}`}

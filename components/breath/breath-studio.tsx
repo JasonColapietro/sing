@@ -1,7 +1,8 @@
 "use client";
 
 import { isCapped, useFreeCap } from "@/lib/free-cap";
-import { getProState } from "@/lib/pro";
+import { getProState, useProReady } from "@/lib/pro";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { liveStreak } from "@/components/account/save-state";
 
@@ -28,6 +29,7 @@ import {
   breathStepTitle,
   isBreathDrillId,
   recommendBreathRoutine,
+  sizeBreathRoutineToAllowance,
   type BreathDrillId,
   type BreathRoutine,
 } from "./routines";
@@ -190,7 +192,20 @@ export function BreathStudio() {
   const practicedToday = progress.sessions.some(
     (s) => s.type === "breath" && s.day === localDay(),
   );
-  const recommended = recommendBreathRoutine({ practicedToday });
+  // Sized to the free minutes left, like the warmups room: the daily set runs
+  // past five minutes and would reach the cap before its sustain test, so a
+  // free singer's first set would end on the cap slide instead of a score.
+  const preferred = recommendBreathRoutine({ practicedToday });
+  const recommended = cap.capped ? preferred : sizeBreathRoutineToAllowance(preferred, cap.leftSec);
+  // "Ends on a score" holds on the free plan only for the quick set: the daily
+  // set and the builder run past the free minutes and stop on the cap slide
+  // before their sustain test. Said only once the entitlement is read, so a
+  // Pro singer is never told about a limit they paid to remove.
+  const proReady = useProReady();
+  const setsLede =
+    proReady && !cap.isPro
+      ? `Three sets, shortest first. Each runs its drills back to back and ends on a score. Free guided practice is ${FREE_DAILY_MINUTES} minutes a day: the quick set fits, and the longer two stop when it runs out.`
+      : "Three sets, shortest first. Each runs its drills back to back and ends on a score.";
 
   const goHome = () => {
     pitch.stop();
@@ -258,7 +273,7 @@ export function BreathStudio() {
       <section className="mt-10">
         <SectionHeading
           label="Workouts"
-          lede="Three sets, shortest first. Each runs its drills back to back and ends on a score."
+          lede={setsLede}
         >
           Breath sets
         </SectionHeading>

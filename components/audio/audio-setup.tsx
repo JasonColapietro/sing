@@ -131,13 +131,13 @@ export function AudioSetup({
               value="headphones"
               current={monitoring}
               title="Headphones"
-              note="Best accuracy. Nothing leaks back into the mic."
+              note="Best accuracy. At a moderate volume, nothing leaks back into the mic."
             />
             <MonitorChoice
               value="speakers"
               current={monitoring}
               title="Speakers"
-              note="Filters the app's own sound out, so it can't score itself."
+              note="Filters most of the app's own sound out of the mic. Headphones are still more accurate."
             />
           </div>
         </fieldset>

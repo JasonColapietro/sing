@@ -96,14 +96,14 @@ export const PROGRAMME_EXIT_TESTS: Record<string, ProgrammeExitTest> = {
   },
   "weeks-7-8-top": {
     chapter: "weeks-7-8-top",
-    test: "The top note of the High notes routine in the warm-up room, sung at conversational volume and landed inside tolerance on three separate days.",
+    test: "Each note from the upper edge of the transition you found in chapter 10 up to three semitones above it, set one at a time as the target in the pitch studio and landed inside tolerance at conversational volume, in order, on three separate days.",
     measurement: "centsFromTarget",
-    room: "warmups",
-    roomPath: "/warmups",
-    roomLabel: "the warm-up room",
-    blocker: "Weight, not height. A top note that lands only when you get louder is the heavier setup being carried up; sing the whole routine quieter and count three days again.",
+    room: "studio",
+    roomPath: "/studio",
+    roomLabel: "the pitch studio",
+    blocker: "Weight, not height. A note above the transition that lands only when you get louder is the heavier setup being carried up; halve the volume, slide down into it from a note above, and count three days again.",
     doesNotProve:
-      "That the note is in head voice or mix, or that it would hold at full volume. Only pitch against the target is scored; nothing here classifies register or detects strain.",
+      "That the notes are in head voice or mix, or that they would hold at full volume. Only pitch against the target is scored; nothing here classifies register or detects strain.",
   },
   "weeks-9-10-bottom": {
     chapter: "weeks-9-10-bottom",

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { popSongKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CanYouSingVerdict } from "@/components/can-you-sing/verdict";
+import { CanYouSingAction, CanYouSingVerdict } from "@/components/can-you-sing/verdict";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { firstFit } from "@/lib/meta-fit";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
@@ -132,6 +132,7 @@ export default async function CanYouSingSongPage({
       kicker="Can you sing it?"
       title={`Can you sing “${song.title}” by ${song.artist}? Key and vocal range`}
       subtitle={answer}
+      actions={<CanYouSingAction song={song} />}
     >
       <script
         type="application/ld+json"
@@ -154,9 +155,13 @@ export default async function CanYouSingSongPage({
           {/*
             The personal answer, straight after the figures: on a phone the
             sidebar column stacks below everything else, which put the page's
-            only action under the stats, the blurb and the singer cards.
+            only action under the stats, the blurb and the singer cards. The
+            header action points here once a range is saved; Card takes no
+            id, so the anchor is on the wrapper.
           */}
-          <CanYouSingVerdict song={song} />
+          <div id="fit" className="scroll-mt-20">
+            <CanYouSingVerdict song={song} />
+          </div>
 
           <Card>
             <SectionLabel heading>What the voice is asked to do</SectionLabel>

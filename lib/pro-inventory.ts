@@ -34,7 +34,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
     chapters: 23,
-    words: 31980,
+    words: 32297,
     free: 3,
     pdfMb: 1.0,
     href: "/book",
@@ -42,7 +42,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Voice Atlas",
     chapters: 27,
-    words: 72389,
+    words: 72449,
     free: 3,
     pdfMb: 5.0,
     href: "/atlas",
@@ -55,6 +55,14 @@ export const FREE_CHAPTERS = BOOKS.reduce((n, b) => n + b.free, 0);
 
 /** Songs in the practice catalogue. All public domain, all free. */
 export const SONG_COUNT = 26;
+
+/**
+ * Distinct melodies behind those songs. Two catalogue entries are longer
+ * arrangements of a melody that is already in the list (`arrangementOf`), so
+ * /songs counts melodies, and any copy that says "melodies" has to use this
+ * number rather than SONG_COUNT.
+ */
+export const MELODY_COUNT = 24;
 
 /** Warmup exercises, split by tier. */
 export const FREE_EXERCISES = 39;

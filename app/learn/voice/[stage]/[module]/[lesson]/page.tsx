@@ -123,6 +123,18 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
   // /learn/voice; here they would bury what this lesson says of its own.
   const own = (text: string) => !UNIVERSAL_LESSON_TEXT.has(text);
   const steps = shownSteps(lesson);
+  // The port repeats a step's look/listen checks word for word under the next
+  // step; print each check once, under the first step that sets it.
+  const printedChecks = new Set<string>();
+  const stepChecks = steps.map((step) => {
+    const fresh = (text: string) => own(text) && !printedChecks.has(text);
+    const checks = {
+      look: fresh(step.look) ? step.look : "",
+      listen: fresh(step.listen) ? step.listen : "",
+    };
+    printedChecks.add(step.look).add(step.listen);
+    return checks;
+  });
   const mistakes = lesson.mistakes.filter((mk) => own(mk.recovery));
   const criteria = lesson.selfCheck.criteria.filter(own);
 
@@ -168,7 +180,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
           // down says what the room measures.
           <div className="flex flex-col items-start gap-2">
             <LinkButton href={companionHref(practice.companion)} size="lg">
-              Practise in {companionLabel(practice.companion)}
+              Open {companionLabel(practice.companion)}
             </LinkButton>
             {isGuidedPractice(practice.companion) && <GuidedCapNote />}
           </div>
@@ -228,18 +240,18 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                     {step.title}
                   </h3>
                   <Markdown source={step.body} />
-                  {(own(step.look) || own(step.listen)) && (
+                  {(stepChecks[i].look || stepChecks[i].listen) && (
                     <dl className="mt-3 space-y-1 text-sm">
-                      {own(step.look) && (
+                      {stepChecks[i].look && (
                         <div>
                           <dt className="inline font-medium text-ink">Look: </dt>
-                          <dd className="inline text-mut">{step.look}</dd>
+                          <dd className="inline text-mut">{stepChecks[i].look}</dd>
                         </div>
                       )}
-                      {own(step.listen) && (
+                      {stepChecks[i].listen && (
                         <div>
                           <dt className="inline font-medium text-ink">Listen: </dt>
-                          <dd className="inline text-mut">{step.listen}</dd>
+                          <dd className="inline text-mut">{stepChecks[i].listen}</dd>
                         </div>
                       )}
                     </dl>
@@ -279,9 +291,15 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
                 If it goes wrong
               </h2>
               <ul className="mt-3 space-y-3 text-sm">
+                {/*
+                  The port gave every lesson the same generic symptom; its
+                  recovery names its own ("If …", "Stop …"), so the shared
+                  observation is left out rather than printed over an
+                  answer to something else.
+                */}
                 {mistakes.map((mk) => (
-                  <li key={mk.observation}>
-                    <p className="text-ink">{mk.observation}</p>
+                  <li key={mk.recovery}>
+                    {own(mk.observation) && <p className="text-ink">{mk.observation}</p>}
                     <p className="text-mut">{mk.recovery}</p>
                   </li>
                 ))}

@@ -27,6 +27,19 @@ import { ResultView, type SaveSummary } from "./result-view";
 
 type Stage = "intro" | "warm" | "low" | "high" | "result";
 
+/**
+ * Whether finishing a range test may signal the one-time Pro moment, given
+ * the range history as it stood before this test was saved. A singer's first
+ * range result is the screen the whole funnel leads to, so it is never
+ * covered by a full-screen sales dialog; a retake can carry it. (A history
+ * migrated from a pre-history saved range counts as a prior test.)
+ */
+export function offersProMomentAfterRangeTest(
+  priorRangeHistory: readonly unknown[],
+): boolean {
+  return priorRangeHistory.length > 0;
+}
+
 /** Continuous hold needed on one note to establish the register. */
 const WARM_HOLD_MS = 2000;
 /** Cumulative voiced time on a note before it counts as reached. */
@@ -278,6 +291,8 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
       1,
       Math.round((performance.now() - startedAtRef.current) / 1000),
     );
+    // Read before the save below appends this test to the history.
+    const offerPro = offersProMomentAfterRangeTest(progress.rangeHistory);
     const r1 = setVocalRange(low, high);
     const r2 = logSession({
       type: "range",
@@ -295,7 +310,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
       save: { xpGained: r1.xpGained + r2.xpGained, newAchievements: achievements },
     });
     setStage("result");
-    emitProResult();
+    if (offerPro) emitProResult();
   };
 
   const retake = () => {

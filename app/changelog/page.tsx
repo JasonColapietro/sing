@@ -63,7 +63,7 @@ const RELEASE_STORIES: Story[] = [
   {
     label: "Lessons",
     title: "A voice curriculum, 102 lessons deep",
-    body: "The full Suede voice course now lives here: 7 stages, 34 modules and 102 lessons, from posture and breath through the passaggio to style and performance. Every module links to a room to practise it in, and where the skill can be measured, it is scored against the same 50-cent in-tune tolerance the studio uses. A new Learn hub maps the whole path, with a 20-minute session template and a seven-day starter plan.",
+    body: "The full Suede voice course now lives here: 7 stages, 34 modules and 102 lessons, from posture and breath through the passaggio to style and performance. Every module links to a room to practise it in, and where the skill can be measured, it is scored within 50 cents of the target, the same window the warmups and songs score against. A new Learn hub maps the whole path, with a 20-minute session template and a seven-day starter plan.",
     links: [
       { href: "/learn/voice", text: "Start the course" },
       { href: "/learn", text: "Open the Learn hub" },

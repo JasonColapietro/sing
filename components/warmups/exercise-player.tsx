@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   buildSegments,
   computeRootLadder,
+  descentWalk,
   ladderWalk,
   type Segment,
   type WarmupExercise,
@@ -159,6 +160,32 @@ export function repAscending(roots: number[], repIndex: number): boolean {
 }
 
 /**
+ * The root rep `repIndex` sings, its rung, and whether the pill reads
+ * "Climbing". `roots` is the band as the player walks it, top note first on a
+ * "down" ladder. A routine step (`bounded`) on a "down" ladder walks
+ * descentWalk: down once, then rests on the bottom rung, because the step has
+ * a fixed rep count and the triangle walk would turn a short descending ladder
+ * round and climb it inside one cool-down step. It never turns, so it reads
+ * "Descending" throughout, resting reps included. Everything else, the
+ * endless deep-link walk included, keeps ladderWalk's triangle, where
+ * "climbing" is about pitch, not ladder index: on a reversed ladder an
+ * ascending index is a falling root.
+ */
+export function walkRep(
+  roots: number[],
+  repIndex: number,
+  { down, bounded }: { down: boolean; bounded: boolean },
+): { root: number; index: number; climbing: boolean } {
+  if (down && bounded) {
+    const { root, index } = descentWalk(roots, repIndex);
+    return { root, index, climbing: false };
+  }
+  const { root, index } = ladderWalk(roots, repIndex);
+  const up = repAscending(roots, repIndex);
+  return { root, index, climbing: down ? !up : up };
+}
+
+/**
  * Whether a rep counts any octave of its targets. Without a saved range every
  * ladder is fitted to NOMINAL_RANGE, a placeholder span, so a higher voice
  * singing it an octave up is singing it right, and the lane draws her voice in
@@ -222,6 +249,9 @@ export function ExercisePlayer({
     const band = computeRootLadder(ex, range.lowMidi, range.highMidi);
     return ex.ladder === "down" ? [...band].reverse() : band;
   }, [ex, range.lowMidi, range.highMidi]);
+  // A routine step on a "down" ladder heads down and stays down (walkRep).
+  const descends = ex.ladder === "down";
+  const bounded = bounds !== undefined;
   const eitherOctave = scoresEitherOctave(range);
 
   const { mode, guidePct, click } = useWarmupPrefs();
@@ -249,12 +279,9 @@ export function ExercisePlayer({
   const [adjustOpen, setAdjustOpen] = useState(false);
   const adjustId = useId();
 
-  const { index: ladderIndex } = ladderWalk(roots, repIndex);
   // The direction that produced this rep, not the one the walk turns to next.
-  // "Climbing" is about pitch, not ladder index: on a reversed ladder an
-  // ascending index is a falling root.
-  const climbing = ex.ladder === "down" ? !repAscending(roots, repIndex) : repAscending(roots, repIndex);
-  const currentRoot = Math.max(24, Math.min(96, ladderWalk(roots, repIndex).root + transpose));
+  const { index: ladderIndex, root: walkRoot, climbing } = walkRep(roots, repIndex, { down: descends, bounded });
+  const currentRoot = Math.max(24, Math.min(96, walkRoot + transpose));
   const { segs, totalSec } = useMemo(
     () => buildSegments(ex, currentRoot, tempo),
     [ex, currentRoot, tempo],
@@ -345,7 +372,7 @@ export function ExercisePlayer({
    */
   function scheduleRep(repIdx: number, t0: number, opts?: { teach?: boolean }) {
     groupRef.current?.cancel();
-    const ladderRoot = ladderWalk(roots, repIdx).root;
+    const ladderRoot = walkRep(roots, repIdx, { down: descends, bounded }).root;
     const root = Math.max(24, Math.min(96, ladderRoot + transposeRef.current));
     const { segs, totalSec, noteDur } = buildSegments(ex, root, tempoRef.current);
     const plan = planRep({

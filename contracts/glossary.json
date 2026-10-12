@@ -349,7 +349,7 @@
             "The filter"
           ],
           "definition": "The throat and mouth shaping the buzz from the folds into a vowel and a colour, without changing the pitch.",
-          "where": "Hold one note and change vowel: the trace stays on the same line while the spectrogram redraws.",
+          "where": "Hold one note and change vowel: on the spectrogram the stack of lines stays at the same heights while the brightness shifts between them.",
           "href": "/analyze",
           "domain": "voice",
           "publisher": "sing"
@@ -384,7 +384,7 @@
             "Cycle dose"
           ],
           "definition": "A measure of how much the folds have been used, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
-          "where": "The vocal-load panel counts cycles while you practice: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
+          "where": "The analyzer's vocal-load panel counts cycles while that page is open and on screen: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
           "href": "/analyze",
           "domain": "voice",
           "publisher": "sing"
@@ -432,7 +432,7 @@
             "Epilaryngeal narrowing"
           ],
           "definition": "A bright, carrying resonance made by narrowing the space just above the vocal folds, which adds high-frequency energy rather than volume.",
-          "where": "The warmups that run on nay and gug are twang exercises, and the analyzer shows the change as energy arriving in the upper bands while the pitch trace holds its line.",
+          "where": "The bratty nay drills in the Pro belt-prep and mix-builder packs train twang, and on the analyzer's spectrogram it shows as energy arriving in the upper bands while the bottom line, the note itself, stays put.",
           "href": "/warmups",
           "domain": "voice",
           "publisher": "sing"

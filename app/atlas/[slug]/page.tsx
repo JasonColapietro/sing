@@ -3,6 +3,7 @@ import { chapterKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ATLAS, ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
+import { AUTHOR_NAME } from "@/lib/author";
 import { Markdown } from "@/lib/markdown";
 import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
@@ -143,6 +144,21 @@ export default async function AtlasChapterPage({
         <div className="space-y-6">
           <Card>
             <div className="max-w-3xl">
+              {/* The visible counterpart of the chapter's author markup. */}
+              <p className="mb-4 text-sm text-mut">
+                By{" "}
+                <a
+                  href="https://jasoncolapietro.com"
+                  rel="author"
+                  className="text-violet-ink hover:underline"
+                >
+                  {AUTHOR_NAME}
+                </a>{" "}
+                · Chapter {chapter.order} of{" "}
+                <Link href="/atlas" className="text-violet-ink hover:underline">
+                  {ATLAS_TITLE}
+                </Link>
+              </p>
               <Markdown source={full.body} />
             </div>
           </Card>

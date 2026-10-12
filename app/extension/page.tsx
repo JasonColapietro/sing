@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import Link from "next/link";
 import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
-import { APP_NAME, APP_STORE_URL } from "@/lib/app-store";
+import { APP_NAME, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
@@ -76,8 +76,11 @@ const FAQ = [
     a: "Yes. Suede Sing is a free Chrome extension that turns any tab into a vocal studio. It shows the note you are singing and how many cents sharp or flat you are, and adds a vocal range test, guided warmups, and ear training to Chrome's side panel. It is made by Jason Colapietro at Suede AI.",
   },
   {
-    q: "How do I find my vocal range in a browser?",
-    a: "Install the Suede Sing Chrome extension, open the side panel, choose Range, and siren slowly from your lowest comfortable note to your highest and back down. Sixty seconds is enough. The extension reports your lowest and highest notes, your span in semitones, and an estimated voice type for that range: bass, baritone, tenor, alto, mezzo-soprano, or soprano.",
+    q: "How do I test my vocal range with the Chrome extension?",
+    a: "Open the Suede Sing side panel, choose Range, and siren slowly from your lowest comfortable note to your highest and back down. Sixty seconds is enough. The extension reports your lowest and highest notes, your span in semitones, and an estimated voice type for that range. To test without installing anything, the free range test at sing.suedeai.ai/range runs in any browser tab.",
+    // The quoted answer names the canonical URL; on the page it is a link, and
+    // straight to the range tab (bare /range opens on the pitch meter).
+    link: { text: "sing.suedeai.ai/range", href: "/range?mode=range#start" },
   },
   {
     q: "Can I see my pitch while singing along to YouTube?",
@@ -97,7 +100,7 @@ const FAQ = [
   },
   {
     q: "Is the Suede Sing Chrome extension free?",
-    a: "Yes. The Suede Sing Chrome extension is free with no trial, no paywall and no account. On the Suede Sing website, the pitch studio and range test are free with no daily limit, guided practice is five free minutes a day, and Suede Pro removes that limit. The companion Suede Voice iPhone app is also free on the App Store.",
+    a: "Yes. The Suede Sing Chrome extension is free with no trial, no paywall and no account. On the Suede Sing website, the pitch studio and range test are free with no daily limit, guided practice is five free minutes a day, and Suede Pro removes that limit. The companion Suede Voice app is a free download for iPhone and Android.",
   },
   {
     q: "What is the difference between Suede Sing and Suede Voice?",
@@ -151,6 +154,25 @@ const jsonLd = {
     },
   ],
 };
+
+/**
+ * An answer's text exactly as the FAQPage markup states it, with the one
+ * phrase it names as a destination turned into a link, so the visible answer
+ * and the structured one never drift apart.
+ */
+function FaqAnswer({ text, link }: { text: string; link?: { text: string; href: string } }) {
+  const at = link ? text.indexOf(link.text) : -1;
+  if (!link || at < 0) return text;
+  return (
+    <>
+      {text.slice(0, at)}
+      <Link href={link.href} className="text-violet-ink underline underline-offset-4">
+        {link.text}
+      </Link>
+      {text.slice(at + link.text.length)}
+    </>
+  );
+}
 
 export default function ExtensionPage() {
   return (
@@ -226,7 +248,9 @@ export default function ExtensionPage() {
           {FAQ.map((item) => (
             <div key={item.q}>
               <h3 className="font-semibold text-ink">{item.q}</h3>
-              <p className="mt-1 text-sm text-mut">{item.a}</p>
+              <p className="mt-1 text-sm text-mut">
+                <FaqAnswer text={item.a} link={item.link} />
+              </p>
             </div>
           ))}
         </div>
@@ -239,9 +263,9 @@ export default function ExtensionPage() {
           <a href="https://suedeai.ai/founder">Jason Colapietro</a> at{" "}
           <a href="https://suedeai.ai">Suede AI</a>, an independent studio
           making measurement-first tools for musicians. The vocal work also
-          ships as the free{" "}
-          <a href={APP_STORE_URL}>{APP_NAME}</a>{" "}
-          iPhone app, and as a <Link href="/">browser singing studio</Link> that
+          ships as the{" "}
+          <Link href={VOICE_PAGE_PATH}>{APP_NAME} app for iPhone and Android</Link>,
+          a free download, and as a <Link href="/">browser singing studio</Link> that
           needs no install at all, with a{" "}
           <Link href="/range?mode=range">free vocal range test</Link> and{" "}
           <Link href="/studio">live pitch training</Link>.

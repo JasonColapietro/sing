@@ -270,14 +270,25 @@ function ProgramDetail({
         <div className="mt-5 flex flex-wrap items-center gap-2">
           <Button onClick={start}>{running ? "Restart from day 1" : active ? "Switch to this program" : "Start this program"}</Button>
           {running && (
-            <Button variant="ghost" onClick={() => window.confirm(`Stop ${program.name}?`) && leaveProgram()}>
+            <Button
+              variant="ghost"
+              onClick={() =>
+                window.confirm(
+                  `Stop ${program.name}? Your place in it is not kept. To take a break, just come back later: days wait for you.`,
+                ) && leaveProgram()
+              }
+            >
               Stop program
             </Button>
           )}
         </div>
         <p className="mt-3 max-w-2xl text-xs text-dim">
-          Day 1 is today. A day ticks itself off once the practice log shows each of its items, one
-          program day per calendar day at most. Your place is kept in this browser only.
+          {running ? "A restart makes today day 1 again." : "Day 1 is today."} A day ticks itself off
+          once the practice log shows each of its items, one program day per calendar day at most.
+          Your place is kept in this browser only.
+          {running
+            ? " Taking a break? You don't need to stop: the next day waits until you sing it."
+            : " Miss a day and the program waits: the next day is there when you come back."}
         </p>
       </Card>
       <Calendar key={program.id + (active?.progress.startedDay ?? "")} program={program} active={active} />

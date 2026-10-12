@@ -54,6 +54,23 @@ const FAMOUS_VOICES = COMPARISON_SLUGS.flatMap((slug) => {
   return s ? [s] : [];
 });
 
+/**
+ * The quick comparison, closest first. Five of the seven listed singers have
+ * very wide reported ranges, so ranking by raw semitones of overlap left most
+ * ordinary ranges tied at the top and the list order picked the headline:
+ * nearly everyone, sopranos included, "overlapped most" with whoever was
+ * first. Ranking by the share of the two ranges' combined span that they
+ * share rewards a singer whose range is close to yours rather than one whose
+ * range simply contains it. Raw overlap breaks ties.
+ */
+export function rankFamousVoices(lowMidi: number, highMidi: number) {
+  return FAMOUS_VOICES.map((f) => {
+    const overlap = rangeOverlap(lowMidi, highMidi, f.lowMidi, f.highMidi);
+    const union = Math.max(highMidi, f.highMidi) - Math.min(lowMidi, f.lowMidi);
+    return { ...f, overlap, fit: union > 0 ? overlap / union : 0 };
+  }).sort((a, b) => b.fit - a.fit || b.overlap - a.overlap);
+}
+
 export function comparisonSingerFromSlug(slug: string | null) {
   if (!slug) return null;
   return SINGERS.find((singer) => singer.slug === slug) ?? null;
@@ -380,10 +397,7 @@ export function ResultView({
   );
 
   const famous = useMemo(() => {
-    const rows = FAMOUS_VOICES.map((f) => ({
-      ...f,
-      overlap: rangeOverlap(lowMidi, highMidi, f.lowMidi, f.highMidi),
-    })).sort((a, b) => b.overlap - a.overlap);
+    const rows = rankFamousVoices(lowMidi, highMidi);
     return { rows, best: rows[0] };
   }, [lowMidi, highMidi]);
 
@@ -430,7 +444,7 @@ export function ResultView({
               {midiToLabel(highMidi)}
             </div>
           </div>
-          <div className="flex gap-8">
+          <div className="flex flex-wrap gap-x-8 gap-y-4">
             <Stat label="Semitones" value={semis} tone="violet" />
             <Stat label="Span" value={describeSpan(semis)} tone="ink" />
             <Stat
@@ -703,12 +717,17 @@ export function ResultView({
       <Card>
         <SectionLabel>Famous company</SectionLabel>
         <h2 className="mt-3 text-xl">
-          Your range overlaps most with{" "}
+          Closest reported range to yours:{" "}
           <span className="text-violet-ink">{famous.best.name}</span>
         </h2>
+        {/* The order is not the (Nst) column: a much wider range can share
+            every note of yours and still sit below a closer one, and without
+            this line that reads as a sorting bug. */}
         <p className="mt-2 max-w-2xl text-sm text-mut">
-          Reported ranges — approximate figures fans and journalists commonly
-          cite, not lab measurements.
+          Ranked by the share of your two ranges&rsquo; combined span that
+          overlaps, so a much wider range can contain all of yours and still
+          rank lower. Reported ranges are approximate figures fans and
+          journalists commonly cite, not lab measurements.
         </p>
         <div className="mt-6 space-y-2">
           {famous.rows.map((f, i) => {

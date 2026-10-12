@@ -5,6 +5,7 @@ import { Button, Card, Pill, SectionLabel } from "@/components/ui";
 import { midiToName } from "@/lib/audio/notes";
 import { SITE_URL } from "@/lib/site";
 import {
+  STAR_MAX,
   computeGrade,
   starGlyphs,
   starRatingLabel,
@@ -58,17 +59,28 @@ function serverFalse(): boolean {
   return false;
 }
 
-function shareText(
+/**
+ * The star count a card shows. Songs use the grade's own five-star songbook
+ * scale; a practice room passes its three-star scale (lib/stars.ts), so the
+ * card agrees with the stars at the top of the same screen and on /progress.
+ */
+export interface StarScale {
+  stars: number;
+  max: number;
+}
+
+export function shareText(
   title: string,
   subtitle: string | undefined,
   score: number,
   grade: GradeResult,
   stats: ResultStat[],
+  scale: StarScale = { stars: grade.stars, max: STAR_MAX },
 ): string {
   const figures = [`Score ${score}/100`, ...stats.map((s) => `${s.label} ${s.value}`)];
   return [
     `Suede Sing — "${title}"`,
-    `Grade ${grade.grade} · ${starGlyphs(grade.stars)} (${grade.stars}/5)`,
+    `Grade ${grade.grade} · ${starGlyphs(scale.stars, scale.max)} (${scale.stars}/${scale.max})`,
     figures.join(" · "),
     ...(subtitle ? [subtitle] : []),
   ].join("\n");
@@ -91,6 +103,7 @@ export function ShareableResult({
   grade,
   stats = [],
   url,
+  starScale,
 }: {
   title: string;
   subtitle?: string;
@@ -98,6 +111,12 @@ export function ShareableResult({
   score: number;
   grade: GradeResult;
   stats?: ResultStat[];
+  /**
+   * The stars to show instead of the grade's five-star songbook rating. A
+   * practice room passes its own three-star count so one screen never shows
+   * two ratings for the same run.
+   */
+  starScale?: StarScale;
   /**
    * Where a friend who opens the share should land: the page they can sing
    * the same thing on. Defaults to the site's home page.
@@ -108,7 +127,8 @@ export function ShareableResult({
   const canShare = useSyncExternalStore(noopSubscribe, hasShare, serverFalse);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
 
-  const text = shareText(title, subtitle, score, grade, stats);
+  const scale = starScale ?? { stars: grade.stars, max: STAR_MAX };
+  const text = shareText(title, subtitle, score, grade, stats, scale);
   const link = url ?? SITE_URL;
 
   async function handleCopy() {
@@ -143,9 +163,9 @@ export function ShareableResult({
         <div className="text-right">
           <div className={`text-5xl ${TONE_TEXT[grade.tone]}`}>{grade.grade}</div>
           <div className="tabular mt-1 font-mono text-lg tracking-wider text-violet-ink" aria-hidden="true">
-            {starGlyphs(grade.stars)}
+            {starGlyphs(scale.stars, scale.max)}
           </div>
-          <span className="sr-only">{starRatingLabel(grade.stars)}</span>
+          <span className="sr-only">{starRatingLabel(scale.stars, scale.max)}</span>
         </div>
       </div>
 

@@ -2677,7 +2677,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure — included with Suede Sing Pro.",
       "pathPrefix": "/book",
-      "totalWords": 31980,
+      "totalWords": 32297,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -2706,7 +2706,7 @@
           "part": "How the voice works",
           "summary": "Why your voice has a transition zone, roughly where it sits for your voice type, and why vowel and weight get you through it when force never will.",
           "free": false,
-          "words": 1442,
+          "words": 1508,
           "path": "/book/the-passaggio"
         },
         {
@@ -2726,7 +2726,7 @@
           "part": "How the voice works",
           "summary": "How the throat and mouth shape one buzzy fold vibration into vowels, brightness and carrying power — and how to change tone without changing effort.",
           "free": false,
-          "words": 1326,
+          "words": 1377,
           "path": "/book/resonance"
         },
         {
@@ -2756,7 +2756,7 @@
           "part": "Reading your own voice",
           "summary": "How to take the range test honestly, what a disappointing result usually means, and how much the voice-type label is worth.",
           "free": true,
-          "words": 1340,
+          "words": 1398,
           "path": "/book/reading-the-range-test"
         },
         {
@@ -2776,7 +2776,7 @@
           "part": "Reading your own voice",
           "summary": "How to locate your own transition with the pitch studio and range test, read a belt ceiling honestly, and tell head voice from falsetto.",
           "free": false,
-          "words": 1284,
+          "words": 1335,
           "path": "/book/finding-your-break"
         },
         {
@@ -2796,7 +2796,7 @@
           "part": "Reading your own voice",
           "summary": "How room noise, mic placement, headphone bleed and a rough day distort your readings — and how to catch a bad session before you act on it.",
           "free": true,
-          "words": 1360,
+          "words": 1443,
           "path": "/book/when-numbers-lie"
         },
         {
@@ -2806,7 +2806,7 @@
           "part": "The twelve-week program",
           "summary": "The shape of the twelve weeks — four blocks, short sessions, and the rules for skipping, repeating, and going back.",
           "free": false,
-          "words": 1403,
+          "words": 1409,
           "path": "/book/how-the-program-works"
         },
         {
@@ -2866,7 +2866,7 @@
           "part": "The twelve-week program",
           "summary": "Move the last two weeks onto real repertoire, retest, and compare against your week-one recording without fooling yourself.",
           "free": false,
-          "words": 1604,
+          "words": 1606,
           "path": "/book/weeks-11-12-songs"
         },
         {
@@ -2915,7 +2915,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it — the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 72389,
+      "totalWords": 72449,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -2924,7 +2924,7 @@
           "part": "How to read a voice",
           "summary": "The anatomy of an atlas entry — what the cited range, the full-voice ceiling, the whistle flag and the sourced extremes actually claim, and how far to trust those claims.",
           "free": true,
-          "words": 878,
+          "words": 893,
           "path": "/atlas/how-to-read-an-entry"
         },
         {
@@ -2944,7 +2944,7 @@
           "part": "How to read a voice",
           "summary": "What the eight classification labels mean, why a pop mezzo and an opera mezzo are different claims, tessitura versus range, and how to guess your own type without a teacher.",
           "free": true,
-          "words": 857,
+          "words": 868,
           "path": "/atlas/voice-types-in-the-wild"
         },
         {
@@ -2954,7 +2954,7 @@
           "part": "How to read a voice",
           "summary": "The working lexicon behind every entry — weight, placement, vibrato, onset, grit, breathiness, twang, cry and their friends, each defined by ear with exemplars from the atlas.",
           "free": false,
-          "words": 1045,
+          "words": 1043,
           "path": "/atlas/a-vocabulary-for-tone"
         },
         {
@@ -2974,7 +2974,7 @@
           "part": "The borrower's method",
           "summary": "The four expensive things in this book — whistle notes, extreme lows, distortion and sustained belting — what makes each risky to chase, and the warning signs that mean stop.",
           "free": false,
-          "words": 796,
+          "words": 811,
           "path": "/atlas/the-safety-rail"
         },
         {
@@ -2984,7 +2984,7 @@
           "part": "Pop",
           "summary": "The women who defined what a pop lead vocal is — from torch-song discipline through the belt arms race — and what their entries teach about power built to last.",
           "free": false,
-          "words": 1713,
+          "words": 1726,
           "path": "/atlas/pop-women-the-founders"
         },
         {
@@ -3004,7 +3004,7 @@
           "part": "Pop",
           "summary": "From crooners to falsetto-forward streaming stars — why the male pop lead keeps climbing, and what the tenor arms race costs the baritones who enter it.",
           "free": false,
-          "words": 2937,
+          "words": 2912,
           "path": "/atlas/the-pop-men"
         },
         {
@@ -3014,7 +3014,7 @@
           "part": "Rock, metal and alternative",
           "summary": "The wailers, shouters and art-rock baritones of rock's imperial decades — where the famous highs really came from, and the era's quiet lesson about sustainable volume.",
           "free": false,
-          "words": 6758,
+          "words": 6764,
           "path": "/atlas/the-classic-rock-men"
         },
         {
@@ -3124,7 +3124,7 @@
           "part": "The trained voice",
           "summary": "The unamplified athletes — what filling a hall without a microphone actually requires, why opera ranges look modest, and what every amplified singer can steal from the fach system.",
           "free": false,
-          "words": 2174,
+          "words": 2195,
           "path": "/atlas/opera-and-classical-crossover"
         },
         {
@@ -3174,7 +3174,7 @@
           "part": "Appendices",
           "summary": "The atlas's extremes in one place — lowest floors, highest ceilings, widest spans and the whistle club, each with the recording where the note happened when one is famously known.",
           "free": false,
-          "words": 999,
+          "words": 1005,
           "path": "/atlas/the-records"
         },
         {
@@ -3257,7 +3257,7 @@
           "highMidi": 78,
           "rangeLabel": "A3–F#5",
           "spanSemitones": 21,
-          "difficulty": "Medium",
+          "difficulty": "Hard",
           "sourceNote": "Musicnotes original-key arrangement, A3–F#5 in D major",
           "path": "/can-you-sing/good-luck-babe"
         },

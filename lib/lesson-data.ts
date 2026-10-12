@@ -638,7 +638,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the sustain test in the breath room with the Practise button on this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.",
+        "body": "Open the sustain test in the breath room with the button at the top of this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "A quiet, even hiss is the whole task; you do not need to make a pitched sound."
       },
@@ -717,7 +717,7 @@ export const LESSONS: Lesson[] = [
     "title": "Hiss for Twelve",
     "type": "exercise",
     "minutes": 4,
-    "objective": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; duration is your own observation.",
+    "objective": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass.",
     "explanation": "",
     "prerequisites": [
       "v-l1-m3-01"
@@ -729,7 +729,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the sustain test in the breath room with the Practise button on this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.",
+        "body": "Open the sustain test in the breath room with the button at the top of this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "A quiet, even hiss is the whole task; you do not need to make a pitched sound."
       },
@@ -741,7 +741,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Low breath and rib expansion",
-        "body": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; duration is your own observation. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -820,7 +820,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the sustain test in the breath room with the Practise button on this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.",
+        "body": "Open the sustain test in the breath room with the button at the top of this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "A quiet, even hiss is the whole task; you do not need to make a pitched sound."
       },
@@ -832,7 +832,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Low breath and rib expansion",
-        "body": "Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; duration is your own observation, not an automatic pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Count a comfortable hiss and listen for evenness. Twelve seconds is an optional practice goal that clears the first mark at ten; the sustain test's seconds are a record, not an automatic pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -3159,7 +3159,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
@@ -3250,7 +3250,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
@@ -3341,7 +3341,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one recording, you sing your baseline and one deliberate change, name the difference you hear as breathy, nasal or tight, and return to a baseline that sounds like the first, with no hoarseness or lingering effort afterward.",
-      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, injury, nasality, breathiness, or a clinical voice condition; the app measures none of those."
     }
@@ -3400,7 +3400,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center."
+        "recovery": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -3432,7 +3432,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
     }
@@ -3491,7 +3491,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center."
+        "recovery": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -3523,7 +3523,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
     }
@@ -3582,7 +3582,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center."
+        "recovery": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -3614,7 +3614,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On playback you can name one note of the study that sat sharp or flat, and a fresh attempt at that note, sung from silence after hearing the reference once, sounds settled on it without a scoop.",
-      "ifNotReady": "Hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Tone quality, diction, rhythm outside authored targets, vibrato quality, or freedom from strain."
     }
@@ -4474,13 +4474,13 @@ export const LESSONS: Lesson[] = [
         "title": "Name the target: Dynamics without pushing",
         "body": "Loud from resonance, quiet from support, neither from the throat. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
-        "listen": "The four recordings form an audible progression while pitch stays centered."
+        "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
       {
         "title": "Hear the distinction",
         "body": "Sing two short holds on one comfortable note: the first at your easy quiet level, the second at a comfortable fuller level made with a little more breath energy and a brighter vowel, with the chin and neck exactly where they were. Change only the level. Record both in one take in the recorder with a breath between them, and check on playback that the fuller one did not creep sharp. Then build four audible levels from quiet to full the same way, changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
-        "listen": "The four recordings form an audible progression while pitch stays centered."
+        "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
       {
         "title": "Review your own attempt",
@@ -4492,7 +4492,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears."
+        "recovery": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -4520,11 +4520,11 @@ export const LESSONS: Lesson[] = [
     "selfCheck": {
       "criteria": [
         "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
-        "The four recordings form an audible progression while pitch stays centered.",
+        "The four levels in your take form an audible progression while pitch stays centered.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
     }
@@ -4565,13 +4565,13 @@ export const LESSONS: Lesson[] = [
         "title": "Name the target: Dynamics without pushing",
         "body": "A song that lives or dies on its dynamic arc. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
-        "listen": "The four recordings form an audible progression while pitch stays centered."
+        "listen": "The second phrase is audibly fuller than the first while the pitch stays centered."
       },
       {
         "title": "Build the song from phrases",
         "body": "Use Simple Gifts. Sing its first phrase (“’Tis the gift to be simple”) at your quiet level and its second (“’tis the gift to be free”) at your fuller level, then sing both in one take with that arc. Create the levels by changing breath-energy and resonance gradually, not by squeezing the throat.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
-        "listen": "The four recordings form an audible progression while pitch stays centered."
+        "listen": "The second phrase is audibly fuller than the first while the pitch stays centered."
       },
       {
         "title": "Review your own attempt",
@@ -4583,7 +4583,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears."
+        "recovery": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -4611,11 +4611,11 @@ export const LESSONS: Lesson[] = [
     "selfCheck": {
       "criteria": [
         "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
-        "The four recordings form an audible progression while pitch stays centered.",
+        "The second phrase is audibly fuller than the first while the pitch stays centered.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
     }
@@ -4656,13 +4656,13 @@ export const LESSONS: Lesson[] = [
         "title": "Name the target: Dynamics without pushing",
         "body": "Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
-        "listen": "The four recordings form an audible progression while pitch stays centered."
+        "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
       {
         "title": "Make one evidence take",
         "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short.",
         "look": "Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.",
-        "listen": "The four recordings form an audible progression while pitch stays centered."
+        "listen": "The four levels in your take form an audible progression while pitch stays centered."
       },
       {
         "title": "Review your own attempt",
@@ -4674,7 +4674,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears."
+        "recovery": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -4702,11 +4702,11 @@ export const LESSONS: Lesson[] = [
     "selfCheck": {
       "criteria": [
         "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.",
-        "The four recordings form an audible progression while pitch stays centered.",
+        "The four levels in your take form an audible progression while pitch stays centered.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take on one comfortable note, you can put the four levels in order from playback alone, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.",
-      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Absolute loudness in decibels, calibrated dynamic labels, resonance efficiency, or freedom from strain."
     }
@@ -5311,7 +5311,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated."
+        "recovery": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -5343,7 +5343,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
     }
@@ -5402,7 +5402,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated."
+        "recovery": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -5434,7 +5434,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
     }
@@ -5493,7 +5493,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated."
+        "recovery": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -5525,7 +5525,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "In one take at a fixed microphone distance, the second example sounds brighter than the baseline rather than just louder, and you can sing it again quietly with no grip in the throat.",
-      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Strain, pressed phonation, healthy technique, absolute carrying power, or comparison with another singer."
     }
@@ -5616,7 +5616,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
       "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
@@ -5707,7 +5707,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
       "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
@@ -5798,7 +5798,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "Three times in a row, the pattern crosses your transition at moderate volume with the same easy, call-like effort you have below it, you hold its top note for six comfortable seconds, and your speaking voice feels unchanged afterward.",
-      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.",
       "shows": "I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safe belt, absence of strain, pressed-phonation status, tissue health, or medical readiness; the app cannot judge those."
     }
@@ -7768,7 +7768,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7800,7 +7800,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
@@ -7859,7 +7859,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7891,7 +7891,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
@@ -7950,7 +7950,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7982,7 +7982,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear means a doctor or speech-language pathologist), and your voice feels at least as easy after running it as before.",
-      "ifNotReady": "If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
@@ -8619,7 +8619,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
@@ -8710,7 +8710,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
@@ -8801,7 +8801,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
@@ -8817,7 +8817,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 5,
     "objective": "Why this is Stage 7 and not Stage 1, despite being the reason most people download a singing app.",
-    "explanation": "The highest and lowest notes you can make are set largely by your anatomy, and practice does not redesign anatomy; what it changes is your access to notes that were already there but badly coordinated. The edges follow the middle and rarely lead it, which is why range work comes this late, once the middle is reliable. Add one semitone at a time, count it only when it is comfortable on three separate days, and read your range history over months rather than sessions.",
+    "explanation": "The highest and lowest notes you can make are set largely by your anatomy, and practice does not redesign anatomy; what it changes is your access to notes that were already there but badly coordinated. The edges follow the middle and rarely lead it, which is why range work comes this late, once the middle is reliable. Add one semitone at a time, count it only when it is comfortable on three separate days, and compare readings over months rather than sessions.",
     "prerequisites": [
       "v-l7-m4-08"
     ],
@@ -8892,7 +8892,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
     }
@@ -8983,7 +8983,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
     }
@@ -9074,7 +9074,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You have written today's easy low and high notes next to an earlier baseline taken the same way (same warm-up, room and microphone distance), and you count a note as new only if it has been easy on three separate days.",
-      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Permanent range growth, vocal health, absence of strain, passaggio movement, or readiness to sing repertoire at the new edge."
     }

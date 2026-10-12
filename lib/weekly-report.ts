@@ -142,6 +142,7 @@ function scoredAverage(list: readonly SessionLog[]): number | null {
  *
  * 1. A room the singer used in the three weeks before and skipped last week —
  *    the one they used most, so the claim is "you dropped this", not a guess.
+ *    Never the range test, which the book spaces weeks apart.
  * 2. The room whose scores trailed the week's average by 10+ points, with at
  *    least two scored sessions so one bad take cannot name a room.
  * 3. Fewer than three practice days: ask for one more.
@@ -155,6 +156,9 @@ function pickSuggestion(
   const used = new Set(week.map((s) => s.type));
   const skipped = new Map<ActivityType, number>();
   for (const s of earlier) {
+    // The range test is a scheduled check-in (book chapters 8 and 13), not a
+    // room to keep up weekly: a week without one is the plan, not a lapse.
+    if (s.type === "range") continue;
     if (!used.has(s.type)) skipped.set(s.type, (skipped.get(s.type) ?? 0) + 1);
   }
   if (skipped.size > 0) {

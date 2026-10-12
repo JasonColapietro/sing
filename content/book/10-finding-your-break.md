@@ -5,7 +5,7 @@ order: 10
 summary: "How to locate your own transition with the pitch studio and range test, read a belt ceiling honestly, and tell head voice from falsetto."
 ---
 
-Chapter 3's table puts a tenor's transition zone around D4 to G4 and a soprano's around C5 to E5. Those figures are a rough middle of a wide spread, and a rough middle is useful right up until you try to sing one. Your transition sits where your folds and your vocal tract put it. It can land either side of the printed zone, it can be wider or narrower than the table suggests, and it can shift with the vowel, the volume, and how long you have been awake.
+Chapter 3's table puts a tenor's transition zone around D4 to G4 and a soprano's around C5 to E5. Those figures are a rough middle of a wide spread, and a rough middle is useful right up until you try to sing one. Your transition sits where your folds and your vocal tract put it. It can land either side of the printed zone, it can be wider or narrower than the table suggests, and it can shift with the vowel, the volume, and how long you have been awake. If you are a woman, the quiet slide below will often find the earlier, lighter shift out of chest voice that chapter 3 also describes, somewhere around E4 to G4, at or below the table's figures. That is not a failed measurement. It is the first of the two gear changes.
 
 So the job is not to look up your break. It is to find it, write down a note name, and keep checking whether that name still holds.
 

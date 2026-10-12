@@ -20,6 +20,14 @@ import {
   visibleRichSingerRows,
 } from "@/lib/singer-directory-pagination";
 import { Button, EmptyState, LinkButton } from "@/components/ui";
+import {
+  FULL_VOICE_FILL_CLASS,
+  RangeBarKey,
+  WHISTLE_DOT_CLASS,
+  fullVoicePct,
+  rangeBarWords,
+  spanBarClass,
+} from "@/components/singers/range-bar";
 
 /* ---------------------------------------------------------------- axis --- */
 
@@ -114,17 +122,15 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
   const left = pct(s.lowMidi);
   // Inclusive of the top semitone cell, matching the ruler and you-band.
   const width = Math.max(0.8, pct(s.highMidi + 1) - left);
-  const beltPct =
-    s.beltMidi != null
-      ? ((s.beltMidi - s.lowMidi + 1) / (s.highMidi - s.lowMidi + 1)) * 100
-      : 100;
+  // null when the catalog cites no full-voice ceiling: the bar is then drawn
+  // dashed and unfilled, never as full voice to the top.
+  const beltPct = fullVoicePct(s);
   const semis = s.highMidi - s.lowMidi;
   const ariaBits = [
     `${s.name}, ${s.voiceType}`,
     `cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`,
-    s.beltMidi != null ? `full voice to ${midiToLabel(s.beltMidi)}` : null,
-    s.whistle ? "uses whistle register" : null,
-  ].filter(Boolean);
+    ...rangeBarWords(s),
+  ];
 
   return (
     <li className="cv-auto">
@@ -155,19 +161,20 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
           className="relative mt-1.5 block h-7 sm:mt-0"
           style={{ backgroundImage: trackBg }}
         >
-          {/* Reach above the cited full-voice ceiling (head / falsetto / whistle) */}
+          {/* Whole cited span; the faded part above the full-voice portion is
+              the reach above the ceiling (head / falsetto / whistle). */}
           <span
-            className="absolute inset-y-1.5 rounded-full bg-cool/30 transition-colors group-hover:bg-cool/45"
+            className={`absolute inset-y-1.5 ${spanBarClass(s)}`}
             style={{ left: `${left}%`, width: `${width}%` }}
           >
-            {/* Full-voice portion (whole bar when no ceiling is cited) */}
-            <span
-              className="absolute inset-y-0 left-0 rounded-full bg-cool/70 transition-colors group-hover:bg-cool"
-              style={{ width: `${beltPct}%` }}
-            />
-            {s.whistle && (
-              <span className="absolute right-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full border border-cool bg-bg" />
+            {/* Full-voice portion, only where a ceiling is cited */}
+            {beltPct != null && (
+              <span
+                className={FULL_VOICE_FILL_CLASS}
+                style={{ width: `${beltPct}%` }}
+              />
             )}
+            {s.whistle && <span className={WHISTLE_DOT_CLASS} />}
           </span>
         </span>
 
@@ -436,19 +443,10 @@ export function SingersDirectory() {
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] text-mut">
         {/* "cited range" for the solid segment implied the faded part was
             uncited, which is backwards — both come from the same figures.
-            beltMidi: null means full voice essentially to the top, so a
-            fully-solid bar reading "full voice" is accurate. */}
-        <span className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-cool/70" /> full voice
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-cool/30" /> falsetto · head ·
-          whistle
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full border border-cool bg-bg" />{" "}
-          whistle register
-        </span>
+            beltMidi: null means the catalog cites no full-voice ceiling, not
+            full voice to the top, so those bars are drawn dashed and unfilled.
+            The same key sits above every hub chart. */}
+        <RangeBarKey />
         {hasYou && (
           <span className="flex items-center gap-1.5">
             <span className="h-3 w-6 rounded-sm bg-violet/30" /> you (

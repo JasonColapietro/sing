@@ -130,14 +130,17 @@ const TEMPLATES: Template[] = [
     terms: (p) => [`can you sing ${popSongBySlug(p.slug)!.title}`, "vocal range"],
   },
   {
-    // Most entries transcribe a song's opening phrase; their heading says so
-    // rather than promising the whole song's lyrics and vocal range.
+    // Most entries transcribe a song's opening phrase, and the two longer
+    // arrangements sing selected lines; their heading says so rather than
+    // promising the whole song's lyrics and vocal range.
     dir: "songs/[slug]",
     terms: (p) => {
       const song = songBySlug(p.slug)!;
       return song.form === "phrase"
         ? [`sing ${song.title}`, "opening phrase"]
-        : [`sing ${song.title}`, "lyrics", "vocal range"];
+        : song.arrangementOf
+          ? [`sing ${song.title}`, "note range"]
+          : [`sing ${song.title}`, "lyrics", "vocal range"];
     },
   },
 ];
