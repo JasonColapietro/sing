@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ProgressClient } from "@/components/progress/progress-client";
 import { withCanonicalOpenGraph } from "@/lib/og";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { RoomRailBand } from "@/components/discover/room-rail";
 import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
@@ -50,7 +50,7 @@ export default function ProgressPage() {
           </p>
           <p className="mt-3 max-w-3xl text-mut">
             Nothing logged yet?{" "}
-            <Link href="/range?mode=range" className="text-violet-ink underline">
+            <Link href={rangeTestHref()} className="text-violet-ink underline">
               Take the vocal range test
             </Link>{" "}
             or{" "}

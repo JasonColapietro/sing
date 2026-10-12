@@ -418,7 +418,7 @@ export function WarmupsClient() {
         view === "home"
           ? pitch.listening
             ? "Start today's warmup, or pick a length. Every exercise is scored as you sing."
-            : "Singing warm-ups that play each exercise, count you in and score your pitch as you sing it back. Pick a routine: the mic comes on only when you press start, and your audio never leaves this device."
+            : "Singing warm-ups that count you in and score your pitch as you sing. The mic comes on only when you press start, and your audio never leaves this device."
           : undefined
       }
     >

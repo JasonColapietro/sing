@@ -10,6 +10,7 @@ import { LockGlyph } from "@/components/pro/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { aggregateNotes, overallAccuracy, weakNotes } from "@/lib/analytics";
 import { EXERCISES } from "@/components/warmups/exercises";
+import { rangeTestHref } from "@/lib/site";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
 interface PlanItem {
@@ -148,7 +149,7 @@ export function buildPlan(
     rangeFirst = true;
     items.push({
       title: "Vocal range test",
-      href: "/range?mode=range",
+      href: rangeTestHref(),
       minutes: 3,
       reason:
         "You haven't measured your range yet — it anchors every other exercise to your voice.",
@@ -157,7 +158,7 @@ export function buildPlan(
     rangeFirst = true;
     items.push({
       title: "Retake the range test",
-      href: "/range?mode=range",
+      href: rangeTestHref(),
       minutes: 3,
       reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test keeps the growth chart honest.`,
     });

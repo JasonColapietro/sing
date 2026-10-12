@@ -642,7 +642,7 @@ describe("the pages", () => {
     const week = html.slice(html.indexOf("A seven-day learn-to-sing plan"));
     const warm = week.indexOf('href="/warmups?routine=morning"');
     expect(warm).toBeGreaterThan(-1);
-    expect(warm).toBeLessThan(week.indexOf('href="/range?mode=range"'));
+    expect(warm).toBeLessThan(week.indexOf('href="/range?mode=range#start"'));
   });
 
   it("are linked from the learn hub by pages that exist", () => {

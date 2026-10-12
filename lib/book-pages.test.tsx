@@ -21,6 +21,7 @@ import { FREE_WEEKS, programById } from "@/lib/programs";
 import { VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import BookPage from "@/app/book/page";
 import ChapterPage, { generateMetadata } from "@/app/book/[slug]/page";
+import AtlasChapterPage from "@/app/atlas/[slug]/page";
 import { BOOK_PROGRAM_HREF, BOOK_PROGRAM_ID, BOOK_PROGRAM_NAME } from "@/components/book/program-link";
 
 const APP_DIR = join(__dirname, "..", "app");
@@ -84,7 +85,7 @@ describe("the free chapters", () => {
       expect(html).toContain('rel="author"');
       expect(html).toContain(AUTHOR_NAME);
       expect(html).toContain("Try this now");
-      expect(html).toMatch(/href="\/(studio|range\?mode=range)"/);
+      expect(html).toMatch(/href="\/(studio|range\?mode=range#start)"/);
       expect(html).toContain("Free lessons that use this chapter");
       expect(html).toMatch(/href="\/learn\/voice\/[^"]+\/[^"]+"/);
       // Markdown link syntax never reaches the page raw.
@@ -134,6 +135,40 @@ describe("a locked chapter", () => {
     const html = await page("registers");
     expect(html).toContain("Free lessons that use this chapter");
     expect(html).toMatch(/href="\/learn\/voice\/[^"]+\/[^"]+"/);
+  });
+});
+
+describe("chapter 15's lesson list", () => {
+  it("names the Stage 2 lessons it teaches, not the Stage 6 runs", async () => {
+    // Weeks 3-4 are onsets, steady tone and sustain, which Land the Note and
+    // Hold It teach; nothing in the chapter is about runs or melisma.
+    const html = await page("weeks-3-4-middle");
+    expect(html).toContain('href="/learn/voice/steady-tone/land-the-note"');
+    expect(html).toContain('href="/learn/voice/steady-tone/hold-it"');
+    expect(html).not.toContain('href="/learn/voice/agility/');
+  });
+});
+
+describe("a locked atlas chapter", () => {
+  async function atlasPage(slug: string): Promise<string> {
+    return renderToStaticMarkup(await AtlasChapterPage({ params: Promise.resolve({ slug }) }));
+  }
+
+  it.each([
+    ["a-vocabulary-for-tone", "/learn/voice/two-registers/fix-the-wobble"],
+    ["the-safety-rail", "/learn/voice/through-the-break/mix-not-shout"],
+    ["how-to-borrow-a-voice", "/learn/voice/signature/style-rooms"],
+  ])("%s lists the free lessons that cite it", async (slug, href) => {
+    const html = await atlasPage(slug);
+    expect(html).toContain("Free lessons that use this chapter");
+    expect(html).toContain(`href="${href}"`);
+  });
+
+  it("offers a free chapter other than the one its back link already names", async () => {
+    const html = await atlasPage("a-vocabulary-for-tone");
+    const sample = /<a [^>]*href="(\/atlas\/[^"]+)"[^>]*>Read a free chapter<\/a>/.exec(html)?.[1];
+    // Chapter 4's "←" is chapter 3; the sample was chapter 3 too.
+    expect(sample).toBe("/atlas/how-to-read-an-entry");
   });
 });
 

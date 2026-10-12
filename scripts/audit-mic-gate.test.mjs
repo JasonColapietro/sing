@@ -7,9 +7,9 @@ const exec = promisify(execFile);
 const auditFile = fileURLToPath(new URL("./audit-mic-gate.mjs", import.meta.url));
 
 /** Run the real CLI against the current room structure, without a browser install. */
-async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = false, wrongContinue = false, continueKicker = 'Continue your path' } = {}) {
+async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = false, wrongContinue = false, continueKicker = 'Continue your path', alertBehindBar = false } = {}) {
   const browserModule = `
-    const settings = ${JSON.stringify({ rows, broken, alerts, missingAlert, wrongContinue, continueKicker })};
+    const settings = ${JSON.stringify({ rows, broken, alerts, missingAlert, wrongContinue, continueKicker, alertBehindBar })};
     const rowSelector = 'main li > button[aria-describedby~="practice-mic-note"]';
     function page() {
       let url = '', shown = false, ready = false, source = '';
@@ -21,7 +21,11 @@ async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = f
         allTextContents: async () => kind === 'titles'
           ? Array.from({ length: settings.rows }, (_, n) => 'Exercise ' + (n + 1)) : [],
         count: async () => kind === 'rows' ? settings.rows : kind === 'alert' ? (shown ? settings.alerts : 0) : 1,
-        boundingBox: async () => ({ x: 0, y: kind === 'alert' ? 156 : 100, width: 400, height: kind === 'alert' ? 20 : 56 }),
+        // The phone tab bar sits at 610 on a 375×667 screen; a refusal that
+        // renders behind it is what the phone pass exists to catch.
+        boundingBox: async () => kind === 'tabbar'
+          ? { x: 0, y: 610, width: 375, height: 57 }
+          : { x: 0, y: kind === 'alert' ? (settings.alertBehindBar ? 625 : 156) : 100, width: 400, height: kind === 'alert' ? 20 : 56 },
         scrollIntoViewIfNeeded: async () => {},
         click: async () => { source = kind; shown = !pageWindow.__micAuditAllow && !settings.missingAlert; ready = !!pageWindow.__micAuditAllow; },
         waitFor: async () => {
@@ -34,7 +38,7 @@ async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = f
       });
       return {
         goto: async (next) => { if (settings.broken) throw new Error('fixture navigation failure'); url = next; shown = false; ready = false; console.log('VISIT ' + next); },
-        locator: (selector) => locator(selector === rowSelector ? 'rows' : selector === 'main [role="alert"]' ? 'alert' : 'unknown'),
+        locator: (selector) => locator(selector === rowSelector ? 'rows' : selector === 'main [role="alert"]' ? 'alert' : selector === 'nav[aria-label="Tabs"]' ? 'tabbar' : 'unknown'),
         getByRole: (_role, { name }) => {
           if (['Start free range test', 'Retake test'].includes(name) && !url.includes('/range?mode=range')) throw new Error('range mode is not open');
           return locator(name === 'Start recording' ? 'ready' : name === 'Enable mic and start' ? 'continue' : 'control');
@@ -89,6 +93,21 @@ describe('microphone audit CLI', () => {
     const result = await runAudit({ continueKicker: 'Start here' });
     expect(result.code).toBe(0);
     expect(result.stdout).toContain('  ok  continue-card refusal stays in the card, not its matching path row');
+  });
+
+  it('checks on a phone that a refusal on /studio and /songs clears the tab bar', async () => {
+    const result = await runAudit();
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain('  ok  /studio: refusal sits above the tab bar');
+    expect(result.stdout).toContain('  ok  /songs?song=twinkle-twinkle-little-star: refusal sits above the tab bar');
+    expect(result.stdout).toContain('  ok  /songs: the gate button offers to try again');
+  });
+
+  it('fails when a refusal renders behind the phone tab bar', async () => {
+    const result = await runAudit({ alertBehindBar: true });
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain('FAIL  /studio: refusal sits above the tab bar');
+    expect(result.stdout).toContain('BROWSER_CLOSED');
   });
 
   it('fails when the continue-card refusal lands in its matching path row', async () => {

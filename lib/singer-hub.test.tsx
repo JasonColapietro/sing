@@ -101,6 +101,14 @@ describe("/singers hub schema and crawl discovery", () => {
     for (const initial of initials) expect(initial, initial).toMatch(/^[A-Z0-9]$/);
   });
 
+  // The index is for readers too: its visible copy says what a name opens,
+  // not that the section exists for crawlers.
+  it("introduces the A-Z index to readers without SEO jargon", () => {
+    const visible = crawlIndexHtml(html).replace(/<[^>]+>/g, " ");
+    expect(visible).not.toMatch(/\bcrawl|\bSEO\b|search engine|\bindexed\b/i);
+    expect(visible).toMatch(/reported range/);
+  });
+
   it("gives every reviewed profile (the indexable ones) a named link with its status", () => {
     const reviewed = reviewedHtml(html);
     expect(REVIEWED_SLUGS.length).toBeGreaterThan(0);
@@ -139,7 +147,7 @@ describe("/singers hub schema and crawl discovery", () => {
   });
 
   it("makes the free range test an immediate next step from the hub", () => {
-    expect(html).toContain('href="/range?mode=range"');
+    expect(html).toContain('href="/range?mode=range#start"');
     expect(html).toContain("Test my vocal range");
     expect(html).toContain("Can you sing it?");
   });

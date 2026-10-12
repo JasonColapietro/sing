@@ -61,8 +61,10 @@ export function SongsMicGate({
             the explanation first, a 375×667 phone put "Enable microphone"
             behind the tab bar, on the hub and on every "Sing <song>" link. */}
         <div className="mt-4 flex flex-wrap gap-3">
+          {/* After a failure the press is a retry, as MicGate in the other
+              rooms labels it; an unchanged label read as a dead button. */}
           <Button variant="rec" size="lg" onClick={onEnable}>
-            <IconMic /> Enable microphone
+            <IconMic /> {error ? "Try again" : "Enable microphone"}
           </Button>
           <Button variant="outline" size="lg" onClick={onListen}>
             <IconHeadphones /> Continue without a mic

@@ -5,7 +5,7 @@ stage: "v-l5"
 title: "The Difference You Can Hear"
 type: "concept"
 minutes: 4
-objective: "Belt and shout sound similar for about two seconds. Then one of them stops."
+objective: "Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time."
 prerequisites: "v-l5-m3-07"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -33,7 +33,7 @@ Work only after an easy warm-up, on a pitch below the top of your comfortable ra
 
 ### Name the target: Comfortable mixed-voice coordination
 
-Belt and shout sound similar for about two seconds. Then one of them stops. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Belt and shout can sound alike at first. The difference is in repetition: an easy call sounds the same the third time, a shout costs more each time. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
 - Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.

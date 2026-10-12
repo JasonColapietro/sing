@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
@@ -115,7 +116,14 @@ export function RoutineSummary({
         <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
           That&apos;s today&apos;s {FREE_DAILY_MINUTES} free minutes of guided
           practice. A fresh {FREE_DAILY_MINUTES} minutes opens at midnight; the
-          pitch studio and the range test stay open now.
+          pitch studio and the range test stay open now.{" "}
+          <Link
+            href="/pro#buy"
+            className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+          >
+            Pro has no daily limit
+          </Link>
+          .
         </p>
       )}
       {/* The nudge is built from the site's paper tokens, and the results

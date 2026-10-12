@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { EmptyState, LinkButton, PageShell } from "@/components/ui";
+import { rangeTestHref } from "@/lib/site";
 
 // Without this the tab and history entry carry the home page's title, so a
 // dead link reads as the studio until the page itself says otherwise.
@@ -16,7 +17,7 @@ export default function NotFound() {
         hint="The page may have moved, or the link had a typo. The range test, the song lookup and the pitch studio are each one tap away."
         action={
           <div className="flex flex-wrap justify-center gap-3">
-            <LinkButton href="/range?mode=range">Find your vocal range</LinkButton>
+            <LinkButton href={rangeTestHref()}>Find your vocal range</LinkButton>
             <LinkButton href="/can-you-sing" variant="outline">
               Look up a song&apos;s key and range
             </LinkButton>

@@ -1,4 +1,5 @@
 import type { ActivityType, SessionLog } from "@/lib/progress";
+import { rangeTestHref } from "@/lib/site";
 
 /** Route + display metadata for each activity type. */
 export const TYPE_META: Record<
@@ -7,7 +8,7 @@ export const TYPE_META: Record<
 > = {
   warmup: { label: "Warmup", href: "/warmups", tone: "violet" },
   pitch: { label: "Pitch", href: "/studio", tone: "violet" },
-  range: { label: "Range", href: "/range?mode=range", tone: "cool" },
+  range: { label: "Range", href: rangeTestHref(), tone: "cool" },
   ear: { label: "Ear", href: "/ear-training", tone: "cool" },
   breath: { label: "Breath", href: "/breath", tone: "ok" },
   song: { label: "Song", href: "/songs", tone: "violet" },

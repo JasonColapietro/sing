@@ -4,11 +4,14 @@ import Link from "next/link";
 import { Card, LinkButton, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { APP_NAME, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { ORG_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
 const STORE_URL =
   "https://chromewebstore.google.com/detail/suede-sing-vocal-coach-pi/dbimnmcokgmibdenmonoafhmdbjhpicd";
+
+/** The page's in-body link style, as on the FAQ and privacy-policy links. */
+const LINK = "text-violet-ink underline underline-offset-4";
 
 const TITLE = "Pitch Detector Chrome Extension for Singers | Suede Sing";
 const DESCRIPTION =
@@ -80,7 +83,7 @@ const FAQ = [
     a: "Open the Suede Sing side panel, choose Range, and siren slowly from your lowest comfortable note to your highest and back down. Sixty seconds is enough. The extension reports your lowest and highest notes, your span in semitones, and an estimated voice type for that range. To test without installing anything, the free range test at sing.suedeai.ai/range runs in any browser tab.",
     // The quoted answer names the canonical URL; on the page it is a link, and
     // straight to the range tab (bare /range opens on the pitch meter).
-    link: { text: "sing.suedeai.ai/range", href: "/range?mode=range#start" },
+    link: { text: "sing.suedeai.ai/range", href: rangeTestHref() },
   },
   {
     q: "Can I see my pitch while singing along to YouTube?",
@@ -166,7 +169,7 @@ function FaqAnswer({ text, link }: { text: string; link?: { text: string; href: 
   return (
     <>
       {text.slice(0, at)}
-      <Link href={link.href} className="text-violet-ink underline underline-offset-4">
+      <Link href={link.href} className={LINK}>
         {link.text}
       </Link>
       {text.slice(at + link.text.length)}
@@ -258,17 +261,21 @@ export default function ExtensionPage() {
 
       <section className="mt-12">
         <SectionLabel heading>Also from Suede AI</SectionLabel>
+        {/* Styled as links, like the page's other in-body links: in the
+            paragraph's own colour and weight they could not be told apart
+            from the text (WCAG 1.4.1), and they are the page's no-install
+            paths for a phone visitor who cannot add a Chrome extension. */}
         <p className="mt-4 text-sm text-mut">
           Suede Sing is built by{" "}
-          <a href="https://suedeai.ai/founder">Jason Colapietro</a> at{" "}
-          <a href="https://suedeai.ai">Suede AI</a>, an independent studio
+          <a href="https://suedeai.ai/founder" className={LINK}>Jason Colapietro</a> at{" "}
+          <a href="https://suedeai.ai" className={LINK}>Suede AI</a>, an independent studio
           making measurement-first tools for musicians. The vocal work also
           ships as the{" "}
-          <Link href={VOICE_PAGE_PATH}>{APP_NAME} app for iPhone and Android</Link>,
-          a free download, and as a <Link href="/">browser singing studio</Link> that
+          <Link href={VOICE_PAGE_PATH} className={LINK}>{APP_NAME} app for iPhone and Android</Link>,
+          a free download, and as a <Link href="/" className={LINK}>browser singing studio</Link> that
           needs no install at all, with a{" "}
-          <Link href="/range?mode=range">free vocal range test</Link> and{" "}
-          <Link href="/studio">live pitch training</Link>.
+          <Link href={rangeTestHref()} className={LINK}>free vocal range test</Link> and{" "}
+          <Link href="/studio" className={LINK}>live pitch training</Link>.
         </p>
       </section>
     </PageShell>

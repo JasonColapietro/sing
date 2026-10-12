@@ -548,7 +548,8 @@ describe("the range cap", () => {
     "belt-hah-descent",
   ];
   const COOL_DOWNS = ["quiet-hum-descent", "soft-trill-slide", "straw-slide-down"];
-  const CAPPED = ["swell-and-fade", "head-float-hold", ...BELT_CAPPED, ...COOL_DOWNS];
+  const VIBRATO = ["vibrato-hold", "vibrato-float-high"];
+  const CAPPED = ["swell-and-fade", "head-float-hold", ...VIBRATO, ...BELT_CAPPED, ...COOL_DOWNS];
 
   it("keeps the ladder as it is without a cap, and at least one rung with one", () => {
     const ladder = [50, 51, 52, 53, 54, 55, 56, 57, 58];
@@ -581,6 +582,20 @@ describe("the range cap", () => {
     const below = uncapped.indexOf(roots[0]);
     const above = uncapped.length - 1 - uncapped.indexOf(roots[roots.length - 1]);
     expect(Math.abs(above - below)).toBeLessThanOrEqual(1);
+  });
+
+  it("holds the vibrato drills in the middle of the range, not at its floor", () => {
+    for (const id of VIBRATO) {
+      const ex = byId(id);
+      expect(ex.rangeCap, id).toEqual(MIDDLE_OF_RANGE);
+      const uncapped = computeRootLadder({ ...ex, rangeCap: undefined }, 48, 72);
+      const roots = computeRootLadder(ex, 48, 72);
+      // A routine step walks from rung 0: that first hold is off the bottom rungs.
+      expect(roots[0], id).toBeGreaterThan(uncapped[0]);
+      expect(roots[roots.length - 1], id).toBeLessThan(uncapped[uncapped.length - 1]);
+    }
+    // A tenor C3–C5 starts the hold on G#3, not E3 a third above his floor.
+    expect(computeRootLadder(byId("vibrato-hold"), 48, 72)[0]).toBe(56);
   });
 
   it("keeps the strong belt holds and calls off the top of the range", () => {

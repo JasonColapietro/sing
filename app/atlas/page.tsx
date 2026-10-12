@@ -9,7 +9,7 @@ import {
 } from "@/lib/atlas-data";
 import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { AtlasCta } from "@/components/atlas/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -229,7 +229,7 @@ export default function AtlasPage() {
             </Link>
             . Pro unlocks the chapter text, the entry notes and the PDF, and
             the{" "}
-            <Link href="/range?mode=range" className="text-violet-ink hover:underline">
+            <Link href={rangeTestHref()} className="text-violet-ink hover:underline">
               range test
             </Link>{" "}
             gives you your own numbers to read it with.

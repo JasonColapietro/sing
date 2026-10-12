@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo } from "react";
+import Link from "next/link";
 import { ALL_EXERCISES, EXERCISES } from "./exercises";
 import { useIsPro } from "@/lib/pro";
 import { useProgress } from "@/lib/progress";
@@ -421,7 +422,16 @@ export function SessionSummary({
         </div>
         {capped && (
           <p id={cappedId} className="mt-3 max-w-md text-sm text-mut">
-            {CAPPED_REASON}
+            {CAPPED_REASON}{" "}
+            {/* The same way out as every other room's cap note: the offer
+                names the limit the singer just reached. */}
+            <Link
+              href="/pro#buy"
+              className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+            >
+              Pro has no daily limit
+            </Link>
+            .
           </p>
         )}
       </Card>

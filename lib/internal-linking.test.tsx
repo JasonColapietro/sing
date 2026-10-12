@@ -156,7 +156,7 @@ describe("footer wires every hub into every page", () => {
    * link from anywhere on the site.
    */
   it("links every practice room, including the two that were missing", () => {
-    for (const href of ["/breath", "/tools", "/studio", "/warmups", "/range?mode=range"]) {
+    for (const href of ["/breath", "/tools", "/studio", "/warmups", "/range?mode=range#start"]) {
       expect(html, `footer missing ${href}`).toContain(`href="${href}"`);
     }
   });
@@ -217,5 +217,19 @@ describe("footer wires every hub into every page", () => {
     }
     expect(html).not.toContain('href="https://suedeai.org/voice/privacy/"');
     expect(html).not.toContain('href="https://suedeai.org/voice/terms/"');
+  });
+});
+
+describe("/extension's onward links", () => {
+  it("styles every 'Also from Suede AI' link as a link, not as body text", async () => {
+    const { default: ExtensionPage } = await import("@/app/extension/page");
+    const html = renderToStaticMarkup(<ExtensionPage />);
+    const section = html.slice(html.indexOf("Also from Suede AI"));
+    const anchors = section.match(/<a\b[^>]*>/g) ?? [];
+    // The founder, Suede AI, /voice, /, the range test and /studio.
+    expect(anchors.length).toBeGreaterThanOrEqual(6);
+    for (const a of anchors) expect(a, a).toMatch(/class="[^"]*\bunderline\b/);
+    expect(section).toContain('href="/voice"');
+    expect(section).toContain('href="/studio"');
   });
 });

@@ -3,6 +3,7 @@
 import { useId, useMemo, type ReactNode } from "react";
 import { Button, LinkButton } from "@/components/ui";
 import type { Song, SongSection } from "./data";
+import { rangeTestHref } from "@/lib/site";
 import {
   TEMPO_MAX,
   TEMPO_MIN,
@@ -252,7 +253,7 @@ export function Mixer({
               </Button>
             )
           ) : (
-            <LinkButton href="/range?mode=range#start" variant="ghost" size="sm">
+            <LinkButton href={rangeTestHref()} variant="ghost" size="sm">
               Take the range test to fit
             </LinkButton>
           )}

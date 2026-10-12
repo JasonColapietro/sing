@@ -31,9 +31,10 @@ const SEEN_KEY = "suede-sing:v3-1-banner:v1";
  * was bumped for 3.1, which is a release worth re-showing to v2 dismissers.
  *
  * Dismissal has to survive server rendering without a flash or a layout
- * shift, on a site that prerenders every page. On every page but /changelog
- * and /pro the banner is always in the server HTML (so each one carries a
- * crawlable link to /changelog besides the footer's), and the
+ * shift, on a site that prerenders every page. On every page but those in
+ * HIDDEN_ON (/changelog, /pro and the practice rooms) the banner is always in
+ * the server HTML (so each one carries a crawlable link to /changelog besides
+ * the footer's), and the
  * inline script directly after it hides it before first paint when the seen
  * key is set or there is no progress record — the parser executes the script
  * synchronously, so neither a returning dismisser nor a first-time visitor
@@ -43,6 +44,29 @@ const SEEN_KEY = "suede-sing:v3-1-banner:v1";
  * `[hidden]` display:none with !important, so no display utility here can
  * override it.
  */
+/**
+ * Pages the banner never renders on. On /changelog it would link to the page
+ * it is already on. On /pro it sat above the price: at 375px it pushed the buy
+ * button off a returning singer's first screen, and returning singers are the
+ * likeliest buyers. The practice rooms are the same case: rounds 2 and 3 moved
+ * each room's start button clear of a 375×667 phone's tab bar, and the
+ * banner's 131px put it back underneath for exactly the returning singers it
+ * targets. It still shows on / (the installed app's start_url), /progress and
+ * the content pages, and the footer keeps the crawlable /changelog link
+ * everywhere.
+ */
+const HIDDEN_ON: ReadonlySet<string> = new Set([
+  "/changelog",
+  "/pro",
+  "/range",
+  "/studio",
+  "/songs",
+  "/warmups",
+  "/ear-training",
+  "/breath",
+  "/recorder",
+]);
+
 export default function V2Banner() {
   const pathname = usePathname();
   const [dismissed, setDismissed] = useState(false);
@@ -65,11 +89,7 @@ export default function V2Banner() {
     sync();
   }, []);
 
-  // On /changelog the banner would link to the page it is already on. On /pro
-  // it sat above the price: at 375px it pushed the buy button off a returning
-  // singer's first screen, and returning singers are the likeliest buyers.
-  // The footer keeps the crawlable /changelog link on both.
-  if (dismissed || pathname === "/changelog" || pathname === "/pro") return null;
+  if (dismissed || HIDDEN_ON.has(pathname)) return null;
 
   const dismiss = () => {
     try {

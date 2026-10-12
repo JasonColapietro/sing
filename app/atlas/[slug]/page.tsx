@@ -4,14 +4,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ATLAS, ATLAS_CONTENTS, ATLAS_TITLE } from "@/lib/atlas-data";
 import { AUTHOR_NAME } from "@/lib/author";
+import { freeLessonsReading } from "@/lib/lesson-readings";
 import { Markdown } from "@/lib/markdown";
 import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
 import { pageRobots } from "@/lib/robots-meta";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { AtlasChapterNav, AtlasChapterReader } from "@/components/atlas/reader";
 import { AtlasEntryCard } from "@/components/atlas/entry";
+import { LessonList } from "@/components/learn/lesson-list";
 import { FreeOnly } from "@/components/pro/gate";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 
@@ -68,7 +70,7 @@ const TRY_IT: Record<string, TryIt> = {
   },
 };
 
-const RANGE_TEST_HREF = "/range?mode=range";
+const RANGE_TEST_HREF = rangeTestHref();
 
 export const dynamicParams = false;
 
@@ -114,6 +116,10 @@ export default async function AtlasChapterPage({
   const free = ATLAS_CONTENTS.filter((c) => c.free);
   const nextFree = free[free.indexOf(chapter) + 1];
   const tryIt = full ? (TRY_IT[chapter.slug] ?? DEFAULT_TRY_IT) : undefined;
+  // Free lessons cite atlas chapters as reading, most of them locked. A
+  // locked page is where that reading link lands, so it lists the way back,
+  // as the book's locked chapters do.
+  const lessons = freeLessonsReading(`atlas:${chapter.slug}`);
 
   return (
     <PageShell
@@ -185,6 +191,11 @@ export default async function AtlasChapterPage({
               </div>
             </Card>
           )}
+          {lessons.length > 0 && (
+            <Card>
+              <LessonList lessons={lessons} />
+            </Card>
+          )}
           {/* A subscriber reads the free chapters in order like any other —
               sell Pro only to someone who does not already have it. */}
           <FreeOnly>
@@ -220,7 +231,14 @@ export default async function AtlasChapterPage({
           <AtlasChapterNav slug={chapter.slug} />
         </div>
       ) : (
-        <AtlasChapterReader chapter={chapter} />
+        <div className="space-y-6">
+          <AtlasChapterReader chapter={chapter} />
+          {lessons.length > 0 && (
+            <Card>
+              <LessonList lessons={lessons} />
+            </Card>
+          )}
+        </div>
       )}
     </PageShell>
   );

@@ -79,7 +79,7 @@ describe("singer editorial trust routes", () => {
     expect(html).toContain("Why do vocal range websites disagree?");
     expect(html).toContain("same recording");
     expect(html).toContain("octave numbering");
-    expect(html).toContain('href="/range?mode=range"');
+    expect(html).toContain('href="/range?mode=range#start"');
     expect(html).toContain('href="/singers/olivia-rodrigo#evidence"');
   });
 

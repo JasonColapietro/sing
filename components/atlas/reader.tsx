@@ -94,10 +94,12 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
         ? { kind: "loading" }
         : state;
 
+  // The next free chapter after this one, else the first, as The Measured
+  // Voice's reader does. Every gated chapter sits after every free one, so
+  // this is always chapter 1. The last free chapter is what chapter 4's "←"
+  // already links, so offering it here gave that page the same link twice.
   const free = ATLAS_CONTENTS.filter((c) => c.free);
-  // Every gated chapter sits after every free one, so the last free chapter is
-  // the one immediately before whatever the reader landed on.
-  const sample = free[free.length - 1] ?? null;
+  const sample = free.find((c) => c.order > chapter.order) ?? free[0] ?? null;
 
   // Shared by the loading and locked states: none of these links claim anything
   // about the reader's entitlement, so they are safe to bake into the prerendered

@@ -19,6 +19,8 @@ vi.mock("./range-test", () => ({
 }));
 
 import { VoiceTest, switchVoiceTestMode, voiceTestModeUrl } from "./voice-test";
+import { returnSongSlugFromSearch } from "./result-view";
+import { rangeTestHref, type RangeTestLink } from "@/lib/site";
 
 describe("voice-tool deep links", () => {
   it.each([
@@ -76,6 +78,30 @@ describe("voice-tool deep links", () => {
     switchVoiceTestMode("range", "pitch", change, scroll);
     expect(change).toHaveBeenLastCalledWith("pitch");
     expect(scroll).toHaveBeenCalledTimes(1);
+  });
+
+  /**
+   * rangeTestHref (lib/site.ts) is how every page links here. Each link it
+   * builds has to open the tool it asks for, on the #start anchor above, and
+   * keep the song or singer the result reads.
+   */
+  it.each<[RangeTestLink, string, string]>([
+    [{}, "/range?mode=range#start", "range"],
+    [{ mode: "pitch" }, "/range#start", "pitch"],
+    [{ compare: "adele" }, "/range?compare=adele#start", "range"],
+    [{ compare: "adele", mode: "pitch" }, "/range?mode=pitch&compare=adele#start", "pitch"],
+    [{ check: "espresso" }, "/range?mode=range&check=espresso#start", "range"],
+  ])("rangeTestHref(%o) is %s and opens the %s tool", (link, href, tool) => {
+    expect(rangeTestHref(link)).toBe(href);
+    const url = new URL(href, "https://sing.example");
+    expect(url.pathname).toBe("/range");
+    expect(url.hash).toBe("#start");
+    location.search = url.search;
+    const html = renderToStaticMarkup(<VoiceTest />);
+    expect(html).toContain(`data-tool="${tool}"`);
+    expect(html).toMatch(/<div[^>]*id="start"[^>]*role="tablist"/);
+    if (link.compare) expect(url.searchParams.get("compare")).toBe(link.compare);
+    if (link.check) expect(returnSongSlugFromSearch(url.search)).toBe(link.check);
   });
 
   it("keeps the singer comparison when switching to pitch and back", () => {

@@ -299,14 +299,16 @@ describe("published glossary claims", () => {
 
   /**
    * Songs open fitted to a saved range and can be shifted by semitones; with
-   * no range they open in the written key. Nothing knows where a voice is
-   * comfortable, so the entry may not say it does.
+   * no range they open in the written key and are scored in either octave
+   * (components/songs/lib.ts defaultOctaveAgnostic). Nothing knows where a
+   * voice is comfortable, so the entry may not say it does.
    */
   it("describes song key fitting as the player does it", () => {
     const where = byTerm("Transposition").where;
     expect(where).toMatch(/range test/);
     expect(where).toMatch(/fitted to your measured range/);
     expect(where).toMatch(/written key/);
+    expect(where).toMatch(/scored in either octave/);
     expect(where).not.toMatch(/comfortable/);
   });
 

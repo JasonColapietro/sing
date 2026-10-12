@@ -4,7 +4,7 @@ import { BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SINGERS } from "@/lib/singers";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { CATALOG_LESSON_COUNT } from "@/lib/voice-lessons";
 import {
@@ -43,7 +43,7 @@ const WEEK = [
     body: "Warm up for about four minutes with the Morning reset (hums, lip trills, a small siren), then take the range test and hold three comfortable notes in the pitch studio. The test saves your result; today is a measurement, not an audition.",
     links: [
       { href: "/warmups?routine=morning", label: "Morning reset warmup" },
-      { href: "/range?mode=range", label: "Vocal range test" },
+      { href: rangeTestHref(), label: "Vocal range test" },
       { href: "/studio", label: "Pitch studio" },
     ],
   },
@@ -102,7 +102,7 @@ const FUNDAMENTALS = [
     title: "Range is not voice type",
     body: "Vocal range is the distance between your lowest and highest repeatable notes. Voice type also considers where the voice is comfortable—its tessitura—plus timbre, weight, and transition points. The range test gives you a useful estimate; the voice-type guide explains why the label stays provisional.",
     links: [
-      { href: "/range?mode=range", label: "Measure your range" },
+      { href: rangeTestHref(), label: "Measure your range" },
       {
         href: "/atlas/vocal-range-by-voice-type",
         label: "Compare all eight voice types",
@@ -187,7 +187,8 @@ export default function LearnPage() {
           position: index + 1,
           name: path.title,
           description: path.need,
-          url: `${SITE_URL}${path.href}`,
+          // The page, not the scroll position: the range card links #start.
+          url: `${SITE_URL}${path.href.split("#")[0]}`,
         })),
       },
       {
@@ -208,7 +209,7 @@ export default function LearnPage() {
       subtitle="To learn to sing, start from your voice as it is today: test your range, train one skill at a time, use that skill in a song, and listen back. Every tool below runs in the browser."
       actions={
         <div className="flex flex-wrap gap-2">
-          <LinkButton href="/range?mode=range" size="lg">
+          <LinkButton href={rangeTestHref()} size="lg">
             Test my vocal range
           </LinkButton>
           <LinkButton href="/warmups" variant="outline" size="lg">
@@ -359,7 +360,7 @@ export default function LearnPage() {
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <LinkButton href="/singers">Browse famous vocal ranges</LinkButton>
-            <LinkButton href="/range?mode=range" variant="outline">
+            <LinkButton href={rangeTestHref()} variant="outline">
               Compare with my range
             </LinkButton>
             <LinkButton href="/atlas" variant="ghost">

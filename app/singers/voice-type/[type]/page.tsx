@@ -19,7 +19,7 @@ import { withCanonicalOpenGraph } from "@/lib/og";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { VOICE_TYPE_HUB_COPY, fillTokens, splitContrast } from "@/lib/singer-hub-copy";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
 import { LinkedNames } from "@/components/singers/linked-names";
 import { Card, LinkButton, PageShell, SectionLabel, Stat } from "@/components/ui";
@@ -178,7 +178,7 @@ export default async function VoiceTypePage({
       actions={
         // Own wrapping row: two md buttons are wider than a 320px phone.
         <div className="flex flex-wrap items-center gap-2">
-          <LinkButton href="/range?mode=range" size="md">
+          <LinkButton href={rangeTestHref()} size="md">
             Find my vocal range →
           </LinkButton>
           <LinkButton href="/singers" variant="outline" size="md">
@@ -211,7 +211,7 @@ export default async function VoiceTypePage({
               because the header's "Find my vocal range" button, a few lines
               up, is the page's one primary action and goes to the same test. */}
           <div className="mt-4 flex flex-wrap gap-3">
-            <LinkButton href="/range?mode=range" variant="outline" size="sm">
+            <LinkButton href={rangeTestHref()} variant="outline" size="sm">
               Estimate my voice type
             </LinkButton>
             {voice === "Contralto" && (
@@ -350,7 +350,7 @@ export default async function VoiceTypePage({
             ))}
           </div>
           <div className="mt-5">
-            <LinkButton href="/range?mode=range" variant="outline" size="sm">
+            <LinkButton href={rangeTestHref()} variant="outline" size="sm">
               Find your lowest and highest notes
             </LinkButton>
           </div>

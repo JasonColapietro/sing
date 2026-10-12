@@ -210,8 +210,10 @@ describe("program data", () => {
       p.days.flatMap((d, i) => (d.items.some((x) => x.kind === kind) ? [i + 1] : []));
     // Week 1, the end of week 6, the start of week 12.
     expect(on("range")).toEqual([1, 42, 78]);
-    // Day 1's baseline, the week-11 working copy (ch. 19), and week 12's take.
-    expect(on("recorder")).toEqual([1, 71, 78]);
+    // Day 1's baseline, a siren in weeks 5 and 6 (ch. 16, "twice across the
+    // two weeks"), one top-note take in each of weeks 7 and 8 (ch. 17, "one
+    // take a week"), the week-11 working copy (ch. 19), and week 12's take.
+    expect(on("recorder")).toEqual([1, 30, 37, 43, 50, 71, 78]);
     // Three or four sessions a week, and five only where a check-in is added.
     for (let w = 0; w < p.weeks; w++) {
       const sessions = p.days.slice(w * 7, w * 7 + 7).filter((d) => !isRestDay(d)).length;
@@ -219,6 +221,19 @@ describe("program data", () => {
       expect(sessions, `week ${w + 1}`).toBeLessThanOrEqual(5);
     }
     expect(isRestDay(p.days.at(-1)!)).toBe(false);
+  });
+
+  it("names the take each weeks 5-8 recording is for, as chapters 16 and 17 describe it", () => {
+    const p = programById("measured-voice-12w")!;
+    const takes = (day: number) =>
+      p.days[day - 1].items.filter((i) => i.kind === "recorder").map((i) => itemLabel(i).meta);
+    // Chapter 16: "record a single siren"; chapter 17: "a short ascending
+    // pattern through the transition to a comfortable top note".
+    for (const d of [30, 37]) expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · one slow ng siren/)]);
+    for (const d of [43, 50]) expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · a short ascending pattern through your transition to a comfortable top note/)]);
+    // A take that names nothing is still a verse and a chorus.
+    expect(itemLabel({ kind: "recorder" }).meta).toMatch(/^Recorder · a verse and a chorus · about \d+ min$/);
+    expect(p.measures).toMatch(/chapters 16 and 17/);
   });
 
   it("works one song in the last four weeks and runs one sustain test a week, as chapters 18 and 19 ask", () => {
@@ -509,7 +524,7 @@ describe("program data", () => {
     expect(itemHref({ kind: "exercise", id: "vibrato-hold", reps: 4 })).toBe("/warmups?exercise=vibrato-hold&reps=4");
     expect(itemHref({ kind: "breath", id: "daily" })).toBe("/breath?routine=daily");
     expect(itemHref({ kind: "drill", id: "sustain" })).toBe("/breath?drill=sustain");
-    expect(itemHref({ kind: "range" })).toBe("/range?mode=range");
+    expect(itemHref({ kind: "range" })).toBe("/range?mode=range#start");
     expect(itemHref({ kind: "recorder" })).toBe("/recorder");
     expect(itemHref({ kind: "ear" })).toBe("/ear-training?routine=quick");
     // A drill with a preset carries it, so the breath room opens on the day's counts.

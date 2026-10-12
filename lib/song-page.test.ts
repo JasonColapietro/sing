@@ -6,6 +6,7 @@
  * lyrics or its key, so no title, heading, snippet or structured data on
  * those pages may sell them as such.
  */
+import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
@@ -184,5 +185,29 @@ describe("song data a page states as fact", () => {
     expect(songLyricText(songBySlug("amazing-grace-full")!)).toContain(
       "'Twas grace that taught my heart to fear,",
     );
+  });
+});
+
+describe("the song key rule, both halves", () => {
+  // With a saved range a song opens fitted to it; without one it opens in
+  // the written key and is scored in either octave (components/songs/lib.ts
+  // defaultOctaveAgnostic). A treble-pitched written range reads as out of
+  // reach for a lower voice unless the octave half is said too.
+  it("is stated on every song page, by the button and by the written range", async () => {
+    const html = await render(SONGS[0].slug);
+    expect(html).toContain("fitted to your");
+    expect(html).toContain("measured range if you have taken the range test");
+    expect(html).toContain("written key and is scored in either octave");
+    expect(html).toContain("written pitch and is scored in either octave");
+    // Both directions: the lowest written songs (E3–C4) suit a high voice an
+    // octave up as much as the treble-pitched ones suit a low voice down.
+    expect(html).toContain("a lower voice can sing it an octave down and a higher voice an octave up");
+  });
+
+  it("is stated on the homepage's song shelf", async () => {
+    const { default: Home } = await import("@/app/page");
+    const html = renderToStaticMarkup(createElement(Home));
+    expect(html).toContain("songs open fitted to your");
+    expect(html).toContain("open in the written key and are scored in either octave");
   });
 });

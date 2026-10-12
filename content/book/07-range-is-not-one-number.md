@@ -31,7 +31,7 @@ You know your tessitura by feel more than by measurement. No test hands it to yo
 
 This is the number that decides what you can sing well. A song does not sit on its highest note. It sits in the band where the melody spends its time, and that band is usually a narrow one — which is why a song with one dramatic high note can be comfortable, and why a song that never leaves your middle can still wreck you if it parks there for four minutes and never lets you off.
 
-Your tessitura also moves in ways your absolute range does not. It shifts with the time of day, with how much you have talked, with how well you slept. Consistent work tends to widen it — not by adding notes at the edges, but because notes that used to cost you stop costing you. That is the change worth watching, and it is invisible if you only track your highest note.
+Your tessitura moves day to day too — with the time of day, how much you have talked, how well you slept — though less than the edges do, which chapter 8 calls the least stable part of your voice. Where it differs is how it answers practice. Consistent work tends to widen it — not by adding notes at the edges, but because notes that used to cost you stop costing you. That is the change worth watching, and it is invisible if you only track your highest note.
 
 ## The performable range
 

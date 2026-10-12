@@ -34,7 +34,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
     chapters: 23,
-    words: 32376,
+    words: 32505,
     free: 3,
     pdfMb: 1.0,
     href: "/book",
@@ -118,10 +118,13 @@ export const UNLOCK_TILES: Array<{ figure: string; label: string; sub: string }>
       label: "words, two books",
       sub: `${TOTAL_CHAPTERS} chapters, open the moment you upgrade`,
     },
+    // The Atlas profiles, not the ranges: every singer page and its range is
+    // free, and the same section's "Already yours" box says so. A tile under
+    // "opens the second you upgrade" that counted them sold a free asset.
     {
-      figure: String(SINGER_COUNT),
-      label: "singer ranges",
-      sub: "The Atlas chapters that explain how to borrow them",
+      figure: String(ATLAS_VOICE_COUNT),
+      label: "Atlas singer profiles",
+      sub: "Tone and technique for each voice; the ranges stay free on every singer page",
     },
     {
       figure: String(PRO_EXERCISES),

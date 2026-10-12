@@ -23,8 +23,23 @@ reworded, three more were set to their lessons' objectives
 catalog summary, and Hiss for Twelve's no longer calls the hiss's length "your
 own observation", since the sustain test times it), module `v-l3-m5` was
 renamed from "Fix the Wobble" to "Breathy, Nasal or Tight" because the course
-uses "wobble" for vibrato, and every stage is free. Don't "re-sync" those edits
-away: parity with GuitarHub is by stage, module and lesson ID, not by text.
+uses "wobble" for vibrato, and every stage is free. Later edits of the same
+kind (2026-10-12):
+
+- Module `v-l4-m4` was renamed from "Grace and Grit" to "Attack and Release".
+  Its lessons teach only grace notes, staccato and accent, and the site uses
+  "grit" for rasp and distortion, which the course never teaches: Stage 7's
+  Effects, Carefully tells singers not to learn an effect from the app.
+- The `v-l2` and `v-l7` stage subtitles were reworded to promise only what
+  their modules supply (a first song phrase rather than a whole song; a stop
+  plan for effects and a study rather than earned effects and a set).
+- The summaries of `v-l5-m4-01` (no invented two-second claim) and
+  `v-l7-m5-04` (no same-session rescan) were reworded, and their lessons'
+  objectives with them.
+
+Don't "re-sync" those edits away: parity with GuitarHub is by stage, module
+and lesson ID, not by text. GuitarHub's copy has to be re-synced byte for byte
+after each of them.
 
 Since 2026-09-23 sing also hosts the lessons. The bodies are markdown in
 `content/lessons`, compiled into `lib/lesson-data.ts` and served at
@@ -440,6 +455,34 @@ side that pins them sees the change as a failing assertion:
 What the other apps must do: re-sync the file, score one octave per rep as
 the rule states, and apply the new `rangeCap`. A consumer that builds
 warm-up deep links may add `&reps=`.
+
+#### Further value changes inside v9
+
+Again no key was added, so `version` stays 9:
+
+- `vibrato-hold` and `vibrato-float-high` gained `rangeCap`
+  `{ from: 0.25, to: 0.75 }`, the middle half of the ladder, as
+  `swell-and-fade` already had. Uncapped, a bounded routine step walks from
+  the bottom rung, so the vibrato routine and the program built on it held
+  every note low in the voice, where a free vibrato is least likely to turn up.
+- `editorial`: book word counts moved with this round's text edits:
+  `range-is-not-one-number` (1318), `pitch-accuracy` (1498),
+  `weeks-11-12-songs` (1612), `transposition` (1522), `totalWords` 32505.
+- `editorial`: atlas chapter word counts moved because 77 singers changed
+  chapter. `scripts/compile-atlas.mjs` now lets a hand placement (`ASSIGN`)
+  win over the batch file's chapter (`FILE_GROUPS`); the lookup used to run
+  the other way, so every exception in `ASSIGN` was dead (opera singers under
+  jazz, the Latin lane under K-pop). New counts: `pop-women-the-founders`
+  1912, `pop-women-the-moderns` 4975, `the-pop-men` 4424,
+  `the-classic-rock-men` 5134, `alternative-punk-and-new-wave` 3131, `metal`
+  3161, `the-soul-men` 3276, `the-soul-and-rnb-women` 2584, `modern-rnb`
+  4482, `gospel-and-a-cappella` 2528, `folk-and-the-songwriters` 3108,
+  `jazz-and-the-standards` 2728, `opera-and-classical-crossover` 2858,
+  `musical-theatre` 2675, `latin-voices` 3350, `kpop-jpop-and-global-pop`
+  4366. Atlas `totalWords` is unchanged at 72444, since the entries only moved.
+
+What the other apps must do: re-sync the file and apply the two new
+`rangeCap` values (no code change where v8's cap is already implemented).
 
 ### Versioning
 

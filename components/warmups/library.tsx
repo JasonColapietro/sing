@@ -4,6 +4,7 @@ import { titlesFor } from "@/components/practice/learn-home";
 
 import type { ProgressState, SessionLog } from "@/lib/progress";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
+import { rangeTestHref } from "@/lib/site";
 import type { WarmupExercise, WarmupTier } from "./exercises";
 
 /**
@@ -73,7 +74,7 @@ export function RangePrompt({ progress }: { progress: ProgressState }) {
             and they fit your measured range.
           </p>
         </div>
-        <LinkButton href="/range?mode=range" variant="outline" size="sm">
+        <LinkButton href={rangeTestHref()} variant="outline" size="sm">
           Take the range test
         </LinkButton>
       </div>

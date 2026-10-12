@@ -48,7 +48,9 @@ export const GAME_DESC: Record<GameId, string> = {
   interval: "Two notes play — name the distance between them.",
   "pitch-match": "Hear a note, sing it back, and hold it steady in tune.",
   "melody-echo": "Hear a short melody and echo it back note for note.",
-  "higher-lower": "Was the second note higher or lower? Fast rounds, tiny gaps.",
+  // Easy draws gaps of 3–7 semitones (higher-lower-game.tsx), so "tiny gaps"
+  // described the hardest level on the easiest step of Quick ear.
+  "higher-lower": "Was the second note higher or lower? Quick rounds; the gap shrinks from a few notes on Easy to a semitone, or none at all, on Hard.",
   "note-catcher": "Your voice steers a marker — catch each note as it slides in.",
 };
 
@@ -90,7 +92,7 @@ export const EAR_ROUTINES: EarRoutine[] = [
   {
     id: "quick",
     name: "Quick ear",
-    tagline: "Four minutes, all easy: direction, intervals, then one sung note.",
+    tagline: "Four minutes, all easy: direction, intervals, then ten notes to sing back.",
     steps: [
       step("higher-lower", "easy"),
       step("interval", "easy"),

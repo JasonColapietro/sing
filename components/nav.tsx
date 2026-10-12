@@ -13,6 +13,7 @@ import { ProChip } from "@/components/pro/ui";
 import { hasSomethingToSave, liveStreak } from "@/components/account/save-state";
 import { useModalFocus } from "@/lib/use-modal-focus";
 import { accountsReady } from "@/lib/accounts";
+import { rangeTestHref } from "@/lib/site";
 
 /**
  * The account controls are the nav's only use of Clerk's React SDK, so they
@@ -44,7 +45,7 @@ export const PRIMARY: {
   { href: "/", label: "Home", icon: "home" },
   {
     href: "/range",
-    target: "/range#start",
+    target: rangeTestHref({ mode: "pitch" }),
     label: "Sing",
     also: ["/studio", "/analyze", "/recorder", "/tools"],
     icon: "mic",
@@ -59,9 +60,12 @@ export const PRIMARY: {
   { href: "/progress", label: "Progress", icon: "chart" },
 ];
 
-/** Every room, for the More sheet. */
-const LINKS: { href: string; label: string; also?: string[] }[] = [
-  { href: "/range", label: "Pitch & range" },
+/**
+ * Every room, for the More sheet. `href` and `target` work as in PRIMARY:
+ * "Pitch & range" opens the same page as the Sing tab, at the same #start.
+ */
+export const LINKS: { href: string; target?: string; label: string; also?: string[] }[] = [
+  { href: "/range", target: rangeTestHref({ mode: "pitch" }), label: "Pitch & range" },
   { href: "/studio", label: "Studio" },
   { href: "/warmups", label: "Warmups", also: ["/programs"] },
   { href: "/songs", label: "Songs" },
@@ -429,7 +433,7 @@ export default function Nav() {
                 return (
                   <Link
                     key={l.href}
-                    href={l.href}
+                    href={l.target ?? l.href}
                     onClick={() => setMenuOpen(false)}
                     aria-current={ariaCurrentFor(l, pathname)}
                     className={`rounded-2xl border px-4 py-4 text-base transition-colors ${

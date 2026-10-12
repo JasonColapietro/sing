@@ -211,7 +211,7 @@ describe("hub snippets, next steps and structured data", () => {
       for (const [href, page] of await allHubs()) {
         const main = page.html.match(/<main\b[\s\S]*?<\/main>/)?.[0] ?? "";
         const header = main.slice(0, main.search(/<h2\b/));
-        expect(header, href).toContain('href="/range?mode=range"');
+        expect(header, href).toContain('href="/range?mode=range#start"');
       }
     },
     60_000,

@@ -620,11 +620,11 @@ export function SustainTest({
               aria-live="polite"
             >
               {phase === "breath"
-                ? "Take a full breath in. The attempt starts once the mic hears it."
+                ? "Take a low, easy breath in. The attempt starts once the mic hears it."
                 : phase === "armed"
                   ? heardSec !== null
                     ? `Breath heard (${heardSec.toFixed(1)} s). Now hold one even “sss” or “ahh”.`
-                    : "Take a full breath, then hold one even “sss” or “ahh”."
+                    : "Take a low, easy breath, then hold one even “sss” or “ahh”."
                   : phase === "running"
                     ? "Keep it steady. The timer stops after a moment of silence."
                     : result
@@ -732,9 +732,9 @@ export function SustainTest({
           {phase === "idle" && (
             <>
               <p className="max-w-sm text-center text-sm text-mut">
-                Press start and take a full breath. Once the mic hears it, hold
-                one even &ldquo;sss&rdquo; or &ldquo;ahh&rdquo;. Stopping for a
-                moment ends the attempt.
+                Press start and take a low, easy breath. Once the mic hears it,
+                hold one even &ldquo;sss&rdquo; or &ldquo;ahh&rdquo;. Stopping
+                for a moment ends the attempt.
               </p>
               <Button variant="violet" size="lg" onClick={() => arm()}>
                 Start attempt

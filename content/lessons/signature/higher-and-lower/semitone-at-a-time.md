@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Semitone at a Time"
 type: "exercise"
 minutes: 7
-objective: "Extend, hold, rescan. Open the range tool yourself when you want to compare another comfortable scan."
+objective: "Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today."
 prerequisites: "v-l7-m5-01"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,14 +29,14 @@ Warm up in the comfortable middle, then confirm today's repeatable low and high 
 
 ### Name the target: Range extension
 
-Extend, hold, rescan. Open the range tool yourself when you want to compare another comfortable scan. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly, release, and rescan only after rest.
+Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly and release. Do not rescan today: a finished range test replaces your saved range. Count the note only when it is easy on three separate days, and compare it at your next retest, weeks apart, with the same warm-up, room and microphone distance as your baseline.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.

@@ -437,6 +437,12 @@ const CATALOGUE: WarmupExercise[] = [
   // cycles after the onset it skips, and the player reports the rate and width
   // of the wobble it measured. That is all it reports: two numbers about the
   // pitch contour, never whether the vibrato sounded good.
+  //
+  // Both holds walk the middle of the range (MIDDLE_OF_RANGE), like the swell.
+  // Uncapped, a bounded routine step walks from rung 0, a third above the
+  // floor, so the vibrato routine and the program built on it held every note
+  // in the bottom of the voice, where a free vibrato is least likely to turn
+  // up, against the float's own tip.
   {
     id: "vibrato-hold",
     title: "Vibrato hold",
@@ -445,6 +451,7 @@ const CATALOGUE: WarmupExercise[] = [
     tip: "Do not shake it out of the jaw or the belly. Relax and let the note move on its own; straight is a fine answer too.",
     noteDur: 4.5,
     vibrato: VIBRATO_TARGET_BAND,
+    rangeCap: MIDDLE_OF_RANGE,
     buildSteps: (r) => [[r]],
   },
   {
@@ -455,6 +462,7 @@ const CATALOGUE: WarmupExercise[] = [
     tip: "Lighter than you think. A higher note held softly is often where vibrato turns up first.",
     noteDur: 4.5,
     vibrato: VIBRATO_TARGET_BAND,
+    rangeCap: MIDDLE_OF_RANGE,
     buildSteps: (r) => [[r + 5]],
   },
   // Recovery: small, quiet, low-effort patterns in a narrow comfortable band,

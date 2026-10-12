@@ -82,8 +82,12 @@ const FILE_GROUPS = {
   "specialists.json": "jazz",
 };
 
-/** The gap batches are grab-bags, so every singer in them is placed by hand. */
-const ASSIGN = {
+/**
+ * Singers placed by hand. The gap batches are grab-bags, so every singer in
+ * them is here; for the curated batches above, an entry here is an exception
+ * to the file's chapter, and it wins (see buildAtlas).
+ */
+export const ASSIGN = {
   // gap-1
   "elvis-presley": "rock-men",
   "axl-rose": "rock-men",
@@ -293,7 +297,11 @@ for (const file of readdirSync(DATA).filter((f) => f.endsWith(".json")).sort()) 
     const lowMidi = labelToMidi(r.lowNote);
     const highMidi = labelToMidi(r.highNote);
     if (lowMidi == null || highMidi == null) continue; // compile-singers reports it
-    const group = FILE_GROUPS[file] ?? ASSIGN[slug];
+    // A hand placement beats the file's chapter. The other way round, every
+    // batch exception below was dead: 77 singers were filed under their
+    // file's chapter (opera singers under jazz, Tom Waits under metal, the
+    // Latin lane under K-pop).
+    const group = ASSIGN[slug] ?? FILE_GROUPS[file];
     if (!group) {
       problems.push(`${file} → ${r.name}: no chapter assignment for "${slug}"`);
       continue;

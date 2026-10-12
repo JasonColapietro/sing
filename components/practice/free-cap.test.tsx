@@ -55,6 +55,13 @@ describe("the free-practice wall", () => {
     expect(html).not.toContain('href="/pro"');
   });
 
+  it("gives a Pro owner in a new browser a way to unlock it, not only a second purchase", () => {
+    const html = renderToStaticMarkup(<CapWall cap={capped} />);
+    expect(html).toMatch(/<a[^>]*href="\/pro#restore"[^>]*>Already have Pro\? Unlock it in this browser<\/a>/);
+    // After the offer, never ahead of it.
+    expect(html.indexOf('href="/pro#restore"')).toBeGreaterThan(html.indexOf('href="/pro#buy"'));
+  });
+
   it("ends the day with a reason to come back, and promises no account", () => {
     const html = renderToStaticMarkup(<CapWall cap={capped} />);
     expect(html).toContain("The free plan includes 5 minutes of guided practice a day");

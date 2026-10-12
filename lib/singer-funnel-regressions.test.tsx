@@ -73,7 +73,7 @@ describe("singer evidence and comparison regressions", () => {
     visitor.range = { lowMidi: 48, highMidi: 72 };
     const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
     const retake = html.match(/<a\b[^>]*>Retake the range test<\/a>/)?.[0];
-    expect(retake).toContain('href="/range?compare=olivia-rodrigo"');
+    expect(retake).toContain('href="/range?compare=olivia-rodrigo#start"');
   });
 
   it("does not send a free singer to a range history the free plan does not show", () => {
@@ -108,7 +108,7 @@ describe("singer evidence and comparison regressions", () => {
   it("preserves the first-time visitor's direct range-test path", () => {
     visitor.range = {};
     const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
-    expect(html).toContain('href="/range?compare=olivia-rodrigo"');
+    expect(html).toContain('href="/range?compare=olivia-rodrigo#start"');
     expect(html).toContain("reported reference span");
   });
 

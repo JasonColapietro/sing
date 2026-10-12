@@ -308,8 +308,11 @@ function RestorePanel({ onUnlocked }: { onUnlocked: () => void }) {
       ref={panel}
       className="scroll-mt-20 rounded-2xl border border-line bg-panel px-5 py-4"
     >
+      {/* "In this browser", as the cap wall's link to here says: Pro unlocks
+          per browser (the note below), so a second browser on the same
+          device needs the key too. */}
       <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
-        Already have Pro? Unlock it on this device
+        Already have Pro? Unlock it in this browser
       </summary>
       <form onSubmit={submit} className="mt-4 flex flex-wrap items-center gap-3">
         <input

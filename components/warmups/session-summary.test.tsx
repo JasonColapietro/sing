@@ -77,6 +77,8 @@ describe("the single-exercise summary after one of today's three", () => {
     expect(html).toContain("Free practice is used for today.");
     // The next pick, and running this ladder again, are both disabled.
     expect(html.match(/<button[^>]*disabled=""/g)?.length).toBe(2);
+    // The way out names the limit just reached, as every other room's cap note does.
+    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Pro has no daily limit<\/a>/);
   });
 
   it("keeps the catalogue's next exercise for one outside today's three", () => {

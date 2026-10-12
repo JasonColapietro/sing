@@ -9,6 +9,7 @@ import {
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { useProgress } from "@/lib/progress";
 import { songFirstPractice } from "@/lib/song-first-practice";
+import { rangeTestHref } from "@/lib/site";
 import { FreeOnly } from "@/components/pro/gate";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 
@@ -18,8 +19,8 @@ import { Card, LinkButton, SectionLabel } from "@/components/ui";
  * rather than leaving the visitor to find the page again. `#start` lands a
  * phone on the start button rather than on the intro above it.
  */
-function rangeTestHref(song: PopSong): string {
-  return `/range?mode=range&check=${song.slug}#start`;
+function rangeTestFor(song: PopSong): string {
+  return rangeTestHref({ check: song.slug });
 }
 
 /**
@@ -31,7 +32,7 @@ function rangeTestHref(song: PopSong): string {
 export function CanYouSingAction({ song }: { song: PopSong }) {
   const progress = useProgress();
   return popFit(song, progress.range).verdict === "unknown" ? (
-    <LinkButton href={rangeTestHref(song)}>Test my range for this song</LinkButton>
+    <LinkButton href={rangeTestFor(song)}>Test my range for this song</LinkButton>
   ) : (
     // `#fit` is the wrapper around CanYouSingVerdict on the song page. Not a
     // shared constant: a server page importing a value from this client
@@ -63,7 +64,7 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
           by how much when it does not.
         </p>
         <div className="mt-4">
-          <LinkButton href={rangeTestHref(song)}>
+          <LinkButton href={rangeTestFor(song)}>
             {/* Quoted: several titles are styled lowercase ("vampire", "drop dead"). */}
             See if “{song.title}” fits my voice
           </LinkButton>
@@ -149,7 +150,7 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
         </section>
       )}
       <div className="mt-5">
-        <LinkButton href={rangeTestHref(song)} variant="ghost" size="sm">
+        <LinkButton href={rangeTestFor(song)} variant="ghost" size="sm">
           Retest your range
         </LinkButton>
       </div>

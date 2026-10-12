@@ -56,6 +56,7 @@ import {
   type BrowseState,
 } from "./browse-controls";
 import { pickForTaste, tasteGenreOptions } from "@/lib/song-taste";
+import { rangeTestHref } from "@/lib/site";
 import { saveTaste, skipTaste, useTaste } from "./taste";
 import { PickedForYou, TasteQuiz } from "./taste-quiz";
 
@@ -510,7 +511,7 @@ export function Library({
                 every card will say whether it fits.
               </p>
             </div>
-            <LinkButton href="/range?mode=range#start" variant="outline" size="sm">
+            <LinkButton href={rangeTestHref()} variant="outline" size="sm">
               Take the range test
             </LinkButton>
           </div>

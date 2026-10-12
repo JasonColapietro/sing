@@ -376,5 +376,6 @@ describe("voice-science claims", () => {
     expect(copy).not.toMatch(/transposed automatically|into a key that suits your (?:measured range|voice)/);
     expect(copy).toMatch(/fitted to your measured range/);
     expect(copy).toMatch(/written key/);
+    expect(copy).toMatch(/scored in either octave/);
   });
 });

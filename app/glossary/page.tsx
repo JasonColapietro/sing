@@ -13,7 +13,7 @@ import {
 import { courseModuleForTerm } from "@/lib/lesson-glossary";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { EXERCISES } from "@/components/warmups/exercises";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -39,7 +39,7 @@ export const metadata: Metadata = withCanonicalOpenGraph({
  * voice-test.tsx carries, so a phone lands on the start button rather than the
  * intro above it (the guides and song pages link the test the same way).
  */
-const RANGE_TEST_HREF = "/range?mode=range#start";
+const RANGE_TEST_HREF = rangeTestHref();
 
 /** The definition the opening paragraph quotes, so the answer is the page's own. */
 const PASSAGGIO = SING_GLOSSARY_TERMS.find((entry) => entry.term === "Passaggio");

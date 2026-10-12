@@ -8,6 +8,7 @@ import { useIsPro } from "@/lib/pro";
 import { useProgress } from "@/lib/progress";
 import { rangeOverlap, spanOctaves } from "@/lib/singers-core";
 import type { Singer } from "@/lib/singers-data";
+import { rangeTestHref } from "@/lib/site";
 import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
 
@@ -49,7 +50,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
           voice type or technique.
         </p>
         <div className="mt-4">
-          <LinkButton href={`/range?compare=${s.slug}`} size="md">
+          <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">
             Take the free range test →
           </LinkButton>
         </div>
@@ -149,7 +150,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
           {isPro ? "Your range history" : "Your saved range"}
         </Link>
         <Link
-          href={`/range?compare=${s.slug}`}
+          href={rangeTestHref({ compare: s.slug })}
           className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut underline decoration-line underline-offset-2 hover:text-ink"
         >
           Retake the range test

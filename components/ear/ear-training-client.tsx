@@ -228,7 +228,7 @@ export default function EarTrainingClient() {
     <PageShell
       kicker="Ear training"
       title="Ear training for singers"
-      subtitle="Five short games that train your ear for pitch and intervals: match a pitch, catch moving notes, name intervals and sing melodies back, ten rounds each. Start with today's workout, or pick one below."
+      subtitle="Five short games that train your ear for pitch and intervals: match a pitch, catch moving notes, name intervals and sing melodies back, ten rounds each."
     >
       {cap.capped ? (
         <div className="mb-6">

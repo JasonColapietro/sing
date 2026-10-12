@@ -278,7 +278,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
           `<h1 class="text-4xl sm:text-5xl">${heading}</h1>`,
         );
         expect(html).toContain(opening);
-        expect(html).toContain(`href="/range?compare=${singer.slug}"`);
+        expect(html).toContain(`href="/range?compare=${singer.slug}#start"`);
         expect(html).toContain(COMPARISON_SNIPPETS[singer.slug] ? "Compare my range — free test" : "Test my range");
       }
     },
@@ -307,7 +307,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
     expect(metadata.description).not.toMatch(/pending/i);
     expect(metadata.alternates?.canonical).toBe(`${SITE_URL}/singers/${slug}`);
     const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug }) }));
-    expect(html).toMatch(new RegExp(`<a[^>]+href="/range\\?compare=${slug}"[^>]*>Compare my range — free test →</a>`));
+    expect(html).toMatch(new RegExp(`<a[^>]+href="/range\\?compare=${slug}#start"[^>]*>Compare my range — free test →</a>`));
     expect(html).toContain("Catalog label");
     expect(html).not.toContain("Can You Sing It?");
     expect(html).not.toContain("Full voice to");

@@ -36,7 +36,8 @@ import { ProgramEntryCard } from "@/components/programs/today-card";
 import { isRestDay } from "@/lib/programs";
 import { useIsPro } from "@/lib/pro";
 import { MAX_SESSIONS } from "@/lib/progress-shape";
-import { FREE_DAILY_MINUTES, FREE_DAILY_SEC } from "@/lib/practice-limits";
+import { FREE_DAILY_SEC } from "@/lib/practice-limits";
+import { dataControlsCopy } from "./data-copy";
 import { aggregateNotes } from "@/lib/analytics";
 import { SyncControls } from "./sync-controls";
 import { useProgressCloudState } from "@/lib/progress-cloud";
@@ -46,6 +47,7 @@ import { MinutesBarChart, PracticeMixChart, ScoreTrendChart } from "./charts";
 import { CoachCard } from "./coach";
 import { VoiceCard } from "./voice-card";
 import { TYPE_META, fmtDur, localDayStr, parseDay, relDay } from "./format";
+import { rangeTestHref } from "@/lib/site";
 
 /**
  * How many sessions the free tier lists.
@@ -470,6 +472,8 @@ function DataControls() {
   // still loading this reads false and the card looks exactly as it did
   // before accounts existed.
   const accountBackup = isLoaded && isSignedIn && !isPro;
+  // Worded by what actually holds a copy of the record (data-copy.ts).
+  const copy = dataControlsCopy({ paused, isPro, accountBackup });
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importNotice, setImportNotice] = useState<
     { kind: "ok" | "err"; text: string } | null
@@ -523,13 +527,7 @@ function DataControls() {
       <Card>
         <h2 className="text-lg">Backup &amp; transfer</h2>
         <p className="mt-1.5 text-sm text-mut">
-          {paused
-            ? "Progress is saved in this browser. Automatic backup and cloud sync are paused here. Export a copy to keep a separate backup."
-            : isPro
-            ? "Progress syncs to the cloud automatically and follows your Pro key to any device. Export still works if you want a file of your own."
-            : accountBackup
-              ? "Your account keeps a copy of this record, so clearing this browser doesn't put you back at zero. Export still works if you want a file of your own."
-              : "Progress lives only in this browser. Export a copy to back it up or move it to another device, then import it there. An import adds to what that browser already holds."}
+          {copy.backup}
         </p>
         <div className="mt-4 flex flex-wrap gap-2.5">
           {/* The same file the save prompt offers, from the same helper, so the
@@ -579,19 +577,14 @@ function DataControls() {
       <Card className="border-rec/30">
         <h2 className="text-lg text-rec">Danger zone</h2>
         <p className="mt-1.5 text-sm text-mut">
-          Erase XP, sessions, streaks, range data, and achievements from this
-          browser. Export a backup first if you want one. This also pauses
-          automatic backup and cloud sync here, so saved progress stays erased
-          until you choose to restore it. Cloud copies, other devices, and
-          recordings are kept.
+          {copy.danger}
         </p>
         {erased && paused && (
           <p
             className="mt-4 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok-ink"
             role="status"
           >
-            Progress erased from this browser. Automatic backup and cloud sync
-            are paused here.
+            {copy.erased}
           </p>
         )}
           <div className="mt-4 flex flex-wrap items-center gap-2.5">
@@ -699,21 +692,21 @@ export function ProgressClient() {
     >
       <div className="space-y-10">
         {/* A first visit lands here from search for "singing progress
-            tracker". The way to start comes first, ahead of a wall of zeros. */}
+            tracker". The way to start comes first, ahead of a wall of zeros.
+            The free-minutes rule is not repeated here: the coach card's
+            footnote and the server-rendered section on this page already say
+            it, and the extra lines put every start button behind a 375×667
+            phone's tab bar. */}
         {isFresh && (
           <EmptyState
             title="Nothing logged yet"
-            hint={`Finish any exercise — a warmup, a range test, an ear-training round — and it starts filling in your XP, streak, and charts below.${
-              isPro
-                ? ""
-                : ` The studio and the range test have no daily clock; warmups, ear training, breath and songs share ${FREE_DAILY_MINUTES} free minutes a day.`
-            }`}
+            hint="Finish any exercise — a warmup, a range test, an ear-training round — and it starts filling in your XP, streak, and charts below."
             action={
               <div className="flex flex-wrap justify-center gap-2.5">
                 <LinkButton href="/studio" variant="rec">
                   Open the studio
                 </LinkButton>
-                <LinkButton href="/range?mode=range" variant="outline">
+                <LinkButton href={rangeTestHref()} variant="outline">
                   Find your range
                 </LinkButton>
                 <LinkButton href="/warmups" variant="outline">

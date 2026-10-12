@@ -56,4 +56,25 @@ describe("3.1 release banner", () => {
       nav.pathname = "/";
     }
   });
+
+  it.each(["/studio", "/songs", "/warmups", "/ear-training", "/breath", "/range", "/recorder"])(
+    "stays off %s, where it would push the room's start button under a phone's tab bar",
+    (pathname) => {
+      nav.pathname = pathname;
+      try {
+        expect(renderToStaticMarkup(<V2Banner />)).toBe("");
+      } finally {
+        nav.pathname = "/";
+      }
+    },
+  );
+
+  it.each(["/", "/progress", "/book"])("still shows on %s", (pathname) => {
+    nav.pathname = pathname;
+    try {
+      expect(renderToStaticMarkup(<V2Banner />)).toContain('id="v2-banner"');
+    } finally {
+      nav.pathname = "/";
+    }
+  });
 });
