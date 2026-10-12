@@ -6,17 +6,29 @@
  * its module's room has a matching session, which is the only evidence sing
  * holds. A score shown here is the room's score, never a pass for the lesson.
  */
+import { isSessionOfSong } from "@/components/songs/lib";
+import { titlesFor } from "@/components/warmups/exercises";
 import type { PracticeMatch } from "@/lib/lesson-practice";
 import { useProgress } from "@/lib/progress";
 import type { SessionLog } from "@/lib/progress-shape";
 
+/**
+ * The sessions that count as this module's practice. A song or warm-up that
+ * was renamed keeps the sessions logged under its old title, the same way the
+ * song page's best score and the warm-up library's history read them.
+ */
 export function matchingSessions(
   sessions: readonly SessionLog[],
   match: PracticeMatch,
 ): SessionLog[] {
-  return sessions.filter(
-    (s) => s.type === match.type && (match.detail === undefined || s.detail === match.detail),
-  );
+  const { type, detail } = match;
+  if (detail === undefined) return sessions.filter((s) => s.type === type);
+  if (type === "song") return sessions.filter((s) => isSessionOfSong(s, detail));
+  if (type === "warmup") {
+    const titles = titlesFor(detail);
+    return sessions.filter((s) => s.type === type && s.detail !== undefined && titles.includes(s.detail));
+  }
+  return sessions.filter((s) => s.type === type && s.detail === detail);
 }
 
 /** One line: how many sessions, the best room score, and the last day. */

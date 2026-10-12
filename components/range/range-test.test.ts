@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { offersProMomentAfterRangeTest } from "./range-test";
+import { countedRange, MIN_SAVED_SPAN, offersProMomentAfterRangeTest } from "./range-test";
 
 describe("Pro moment after a range test", () => {
   it("keeps a singer's first range result clear of the sales dialog", () => {
@@ -78,5 +78,46 @@ describe("range test on a phone", () => {
     expect(top).toBeGreaterThan(-1);
     expect(top).toBeLessThan(body.indexOf("<StepIndicator"));
     expect(top).toBeLessThan(body.indexOf('{stage === "intro" && ('));
+  });
+});
+
+describe("a range too narrow to save", () => {
+  it("counts the starting note in both directions, and needs five semitones to save", () => {
+    // Bailed out at once: nothing counted beyond the A3 starting note.
+    expect(countedRange(57, 57, 57)).toEqual({ lowMidi: 57, highMidi: 57, savable: false });
+    expect(countedRange(57, null, null)).toEqual({ lowMidi: 57, highMidi: 57, savable: false });
+    expect(countedRange(57, 55, 59).savable).toBe(false);
+    expect(countedRange(57, 55, 60)).toEqual({ lowMidi: 55, highMidi: 60, savable: true });
+    expect(MIN_SAVED_SPAN).toBe(5);
+    // A note found on the wrong side of the anchor never shrinks the span.
+    expect(countedRange(57, 59, 55)).toEqual({ lowMidi: 57, highMidi: 57, savable: false });
+  });
+
+  it("saves, logs and offers nothing until the span is wide enough", () => {
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    const start = src.indexOf("const finish = () => {");
+    const body = src.slice(start, src.indexOf("\n  };", start));
+    const guard = body.indexOf("if (!savable) {");
+    expect(guard).toBeGreaterThan(-1);
+    for (const effect of ["stop();", "setVocalRange(", "logSession(", "emitProResult("]) {
+      expect(body.indexOf(effect), effect).toBeGreaterThan(guard);
+    }
+  });
+
+  it("says so above the buttons, where a phone shows it, not under them by the tab bar", () => {
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    const hunt = src.slice(src.indexOf('{(stage === "low" || stage === "high") && ('));
+    const status = hunt.indexOf("too narrow to save as your");
+    expect(status).toBeGreaterThan(-1);
+    expect(status).toBeLessThan(hunt.indexOf("I can&apos;t go higher"));
+    expect(status).toBeLessThan(hunt.indexOf("<PianoStrip"));
+  });
+});
+
+describe("the warm-up stage", () => {
+  it("offers Start over like the other stages, so a stalled singer is never stuck with the mic on", () => {
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    const warm = src.slice(src.indexOf('{stage === "warm" && ('), src.indexOf('{(stage === "low" || stage === "high") && ('));
+    expect(warm).toMatch(/<Button variant="ghost" size="sm" onClick=\{retake\}>\s*Start over\s*<\/Button>/);
   });
 });

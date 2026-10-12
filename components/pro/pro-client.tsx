@@ -729,8 +729,7 @@ export function ProClient() {
                 {/* On a phone the buttons come straight after the headline and
                     the paragraph follows them. In reading order a four-line
                     headline and a nine-line paragraph put the price button
-                    under the tab bar on a 375×667 screen, and wholly below the
-                    fold once the release banner sits above it. Wider screens
+                    under the tab bar on a 375×667 screen. Wider screens
                     keep the paragraph first; nothing in it is focusable, so
                     tab order is the same either way. */}
                 <div className="flex flex-col">

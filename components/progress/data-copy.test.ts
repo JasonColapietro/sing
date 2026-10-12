@@ -42,3 +42,21 @@ describe("data controls copy", () => {
       .toContain("Your account keeps a copy");
   });
 });
+
+describe("what a restore brings back", () => {
+  it("says on every backup line that song mastery and program place stay in this browser", () => {
+    // Mastery opens the songbook's later bands and lives outside the progress
+    // record, so neither the file nor Pro sync carries it.
+    for (const who of [
+      { isPro: false, accountBackup: false },
+      { isPro: true, accountBackup: false },
+      { isPro: false, accountBackup: true },
+    ]) {
+      for (const paused of [false, true]) {
+        const copy = dataControlsCopy({ ...who, paused });
+        expect(copy.backup, JSON.stringify({ who, paused })).toContain("Song mastery");
+        expect(copy.backup).toContain("your place in a program stay in this browser");
+      }
+    }
+  });
+});

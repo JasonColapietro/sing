@@ -2,6 +2,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { FreeCap } from "@/lib/free-cap";
 import { DEFAULT_PROGRESS, type ProgressState } from "@/lib/progress-shape";
+import { localDay } from "@/lib/progress";
+import { programById } from "@/lib/programs";
+import type { ActiveProgram } from "@/components/programs/use-program";
 import { routineById } from "./routines";
 
 const state = vi.hoisted(() => ({
@@ -9,6 +12,7 @@ const state = vi.hoisted(() => ({
   pro: false,
   ready: true,
   progress: null as ProgressState | null,
+  program: null as ActiveProgram | null,
 }));
 
 vi.mock("@/lib/progress", async (importOriginal) => {
@@ -24,6 +28,11 @@ vi.mock("@/lib/free-cap", async (importOriginal) => ({
   useFreeCap: () => state.cap,
 }));
 
+vi.mock("@/components/programs/use-program", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/components/programs/use-program")>(),
+  useActiveProgram: () => state.program,
+}));
+
 vi.mock("@/lib/pro", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/pro")>(),
   useIsPro: () => state.pro,
@@ -34,11 +43,28 @@ import { WarmupsClient, linkedRepCount } from "./warmups-client";
 
 const morning = routineById("morning")!;
 const daily = routineById("daily")!;
+const quick = routineById("quick")!;
 
-/** The "Today's warmup" card's title: the h2 right after its kicker. */
+/**
+ * The recommended routine's title: the h2 right after its kicker, which is
+ * "Today's warmup" for a returning singer and "Start here" for a newcomer,
+ * whose first card is that routine.
+ */
 function todaysWarmup(html: string): string | undefined {
-  const at = html.indexOf("Today&#x27;s warmup");
+  const kicker = html.includes("Today&#x27;s warmup") ? "Today&#x27;s warmup" : "Start here";
+  const at = html.indexOf(kicker);
   return html.slice(at).match(/<h2[^>]*>([^<]*)<\/h2>/)?.[1];
+}
+
+/** A singer with one warmup logged today, so the room plans a top-up. */
+function practisedToday(): ProgressState {
+  const day = localDay();
+  return {
+    ...DEFAULT_PROGRESS,
+    sessions: [
+      { id: "t1", type: "warmup", date: `${day}T09:00:00.000Z`, day, durationSec: 240, score: 70, detail: "First hum", xp: 20 },
+    ],
+  };
 }
 
 beforeEach(() => {
@@ -46,6 +72,7 @@ beforeEach(() => {
   state.pro = false;
   state.ready = true;
   state.progress = null;
+  state.program = null;
 });
 
 describe("today's warmup on the free plan", () => {
@@ -69,6 +96,26 @@ describe("today's warmup on the free plan", () => {
     expect(todaysWarmup(html)).toBe(morning.name);
     expect(html).not.toContain("free minutes");
     expect(html).not.toContain("free practice left");
+  });
+
+  it("says where a set that cannot fit the minutes left will stop, rather than calling it short", () => {
+    // 60 s left: Quick (~6 min) is the top-up, and nothing shorter fits.
+    state.progress = practisedToday();
+    state.cap = { isPro: false, usedSec: 240, leftSec: 60, capped: false, capSec: 300 };
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    expect(todaysWarmup(html)).toBe(quick.name);
+    expect(html).toContain("1:00 of free practice left today: this set stops after the step that uses it up.");
+    expect(html).not.toContain("A short top-up after today&#x27;s practice.");
+  });
+
+  it("keeps the top-up reason when the set fits, and on Pro", () => {
+    state.progress = practisedToday();
+    state.pro = true;
+    state.cap = { isPro: true, usedSec: 240, leftSec: Number.POSITIVE_INFINITY, capped: false, capSec: 300 };
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    expect(todaysWarmup(html)).toBe(quick.name);
+    expect(html).toContain("A short top-up after today&#x27;s practice.");
+    expect(html).not.toContain("this set stops after");
   });
 
   it("keeps the full recommendation on Pro", () => {
@@ -112,9 +159,21 @@ describe("the first card a newcomer sees", () => {
     const html = renderToStaticMarkup(<WarmupsClient />);
     expect(html).toContain("Start here");
     expect(html).not.toContain("Continue your path");
-    // Its start opens one endless ladder; the card says so, and where the
-    // sets that end on their own are.
-    expect(html).toContain("it keeps going until you press End");
+    // Its start opens the recommended routine, which ends on its own, not
+    // one endless ladder; and the routine is offered once, not twice.
+    expect(html).not.toContain("it keeps going until you press End");
+    expect(html).not.toContain("Today&#x27;s warmup");
+    expect(todaysWarmup(html)).toBe(morning.name);
+    // The first start button on the page is that routine's: nothing but
+    // its own card sits between the kicker and the button.
+    const start = html.indexOf("Start here");
+    const button = html.indexOf("Enable mic and start");
+    expect(start).toBeGreaterThan(-1);
+    expect(button).toBeGreaterThan(start);
+    const card = html.slice(start, button);
+    expect(card).toContain(morning.name);
+    expect(card).not.toContain("Today&#x27;s three");
+    expect(card).not.toContain("Your program");
   });
 
   it("keeps 'Continue your path' for a singer with warmups behind them", () => {
@@ -133,5 +192,38 @@ describe("the first card a newcomer sees", () => {
     const html = renderToStaticMarkup(<WarmupsClient />);
     expect(html).toContain("your audio never leaves this device");
     expect(html).not.toContain("nothing leaves this device");
+  });
+});
+
+describe("a program day the singer cannot open", () => {
+  const mix = programById("mix-4w")!;
+  const onDay = (index: number): ActiveProgram => ({
+    program: mix,
+    progress: { programId: mix.id, startedOn: "2026-09-01", completed: [] } as unknown as ActiveProgram["progress"],
+    today: "2026-10-12",
+    view: { status: "todo", index, completed: index },
+    itemsDone: [],
+    stepsDone: [],
+    countsFrom: "2026-10-12",
+    readings: [],
+  });
+
+  it("does not lead the room for a free singer past the free week", () => {
+    state.program = onDay(7);
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    const card = html.indexOf("Your program: day 8");
+    expect(card).toBeGreaterThan(-1);
+    expect(card).toBeGreaterThan(html.indexOf("Start here"));
+  });
+
+  it("still leads in the free week, and for Pro", () => {
+    state.program = onDay(2);
+    let html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html.indexOf("Your program: day 3")).toBeLessThan(html.indexOf("Start here"));
+    state.program = onDay(7);
+    state.pro = true;
+    state.cap = { isPro: true, usedSec: 0, leftSec: Number.POSITIVE_INFINITY, capped: false, capSec: 300 };
+    html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html.indexOf("Your program: day 8")).toBeLessThan(html.indexOf("Start here"));
   });
 });

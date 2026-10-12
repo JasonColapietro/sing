@@ -1,0 +1,80 @@
+import { renderToStaticMarkup } from "react-dom/server";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_PROGRESS, type ProgressState, type SessionLog } from "@/lib/progress-shape";
+import { localDay } from "@/lib/progress";
+import { songBySlug } from "./data";
+import type { SessionSummaryData } from "./lib";
+
+const state = vi.hoisted(() => ({ progress: null as ProgressState | null }));
+vi.mock("@/lib/progress", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/progress")>();
+  return { ...actual, useProgress: () => state.progress ?? actual.useProgress() };
+});
+vi.mock("@/lib/pro", () => ({ useIsPro: () => false, useProReady: () => true }));
+
+import { SessionSummary } from "./session-summary";
+
+const song = songBySlug("amazing-grace-full")!;
+
+function data(score: number | undefined): SessionSummaryData {
+  return {
+    song,
+    mode: "rehearsal",
+    pass: "guided",
+    mastered: false,
+    score,
+    perLoopScores: score === undefined ? [] : [score],
+    hardest: [],
+    xpGained: 12,
+    newAchievements: [],
+    listenMode: score === undefined,
+    maxCombo: 0,
+    judgments: { perfect: 0, great: 0, good: 0, miss: 0 },
+    sectionScores: [],
+    transpose: 0,
+    tempo: 1,
+    loops: 1,
+    points: 0,
+    topMultiplier: 1,
+  };
+}
+
+function log(n: number, detail: string, score: number): SessionLog {
+  const day = localDay();
+  return { id: `s${n}`, type: "song", date: `${day}T12:0${n}:00.000Z`, day, durationSec: 90, score, detail, xp: 10 };
+}
+
+const render = (d: SessionSummaryData) =>
+  renderToStaticMarkup(<SessionSummary data={d} onAgain={() => {}} onLibrary={() => {}} />);
+
+describe("the song summary", () => {
+  beforeEach(() => {
+    state.progress = null;
+  });
+
+  it("names the streak and the reason to come back tomorrow, like every other room", () => {
+    state.progress = { ...DEFAULT_PROGRESS, streak: { current: 3, best: 3, lastDay: localDay() } };
+    const html = render(data(undefined));
+    expect(html).toContain("3-day streak");
+    expect(html).toContain("Sing tomorrow to make it 4.");
+  });
+
+  it("names no streak once it has lapsed", () => {
+    state.progress = { ...DEFAULT_PROGRESS, streak: { current: 5, best: 5, lastDay: "2020-01-01" } };
+    const html = render(data(undefined));
+    expect(html).not.toContain("-day streak");
+    expect(html).not.toContain("Sing tomorrow");
+  });
+
+  it("compares a run with a best logged under the song's old title", () => {
+    // Newest first: this run (70) was just logged under the current title;
+    // the 88 was sung before the round-1 rename.
+    state.progress = {
+      ...DEFAULT_PROGRESS,
+      sessions: [log(2, song.title, 70), log(1, "Amazing Grace (Verse 1 & 2)", 88)],
+    };
+    const html = render(data(70));
+    expect(html).not.toContain("First time singing this one");
+    expect(html).toContain("Personal best is 88");
+  });
+});

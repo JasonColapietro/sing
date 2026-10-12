@@ -3,14 +3,13 @@
 import Link from "next/link";
 import { Button, Card, LinkButton, ProgressBar, SectionLabel } from "@/components/ui";
 import { ProChip } from "@/components/pro/ui";
-import { useIsPro } from "@/lib/pro";
+import { useIsPro, useProReady } from "@/lib/pro";
 import { FREE_DAILY_SEC } from "@/lib/free-cap";
 import { midiToLabel } from "@/lib/audio/notes";
 import {
   FREE_WEEKS,
   cappedDaySeconds,
   dayMinutes,
-  dayNeedsPro,
   isRestDay,
   itemEvidence,
   itemHref,
@@ -23,8 +22,12 @@ import {
   type ProgramDay,
   type ProgramReading,
 } from "@/lib/programs";
+import { programDayNeedsPro } from "@/components/practice/program-day";
 import { saveProgramProgress } from "./store";
 import type { ActiveProgram } from "./use-program";
+
+/** Where an unlock button goes: the offer itself, as every cap surface links it. */
+const PRO_BUY_HREF = "/pro#buy";
 
 function Chevron() {
   return (
@@ -193,7 +196,7 @@ export function ProgramTodayCard({
   const cappedSec = cappedDaySeconds(day);
   // Past a Pro program's free week, a free singer is asked for Pro instead of
   // shown rows they cannot open. Their place is kept.
-  const paywalled = view.status === "todo" && !isRestDay(day) && !isPro && dayNeedsPro(program, view.index);
+  const paywalled = programDayNeedsPro(active, isPro);
 
   return (
     <Card>
@@ -256,7 +259,7 @@ export function ProgramTodayCard({
                   {view.index + 1} once it is unlocked.
                 </p>
                 <div className="mt-3">
-                  <LinkButton href="/pro" size="sm">Unlock with Pro</LinkButton>
+                  <LinkButton href={PRO_BUY_HREF} size="sm">Unlock with Pro</LinkButton>
                 </div>
               </div>
             ) : (
@@ -318,9 +321,13 @@ export function ProgramTodayCard({
  * The warmups room's way in: "Your program: day N" with a link to today's
  * plan when a program is running, and a quiet pointer to the programs
  * otherwise. The rows themselves live on /programs, because a link from
- * /warmups back to /warmups?routine= would not re-read the query.
+ * /warmups back to /warmups?routine= would not re-read the query. A day past
+ * a Pro program's free week says it needs Pro rather than offering a plan
+ * that opens on a paywall, once the entitlement cache has been read.
  */
 export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
+  const isPro = useIsPro();
+  const proReady = useProReady();
   if (!active) {
     return (
       <Card tone="well">
@@ -343,8 +350,11 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
   }
   const { program, view } = active;
   const day = program.days[view.index];
-  const line =
-    view.status === "finished"
+  const locked = proReady && programDayNeedsPro(active, isPro);
+  const calendarHref = `/programs?program=${encodeURIComponent(program.id)}`;
+  const line = locked
+    ? `Day ${view.index + 1} needs Pro. ${FREE_WEEKS === 1 ? "Week 1 was" : `Weeks 1–${FREE_WEEKS} were`} free, and your place is kept.`
+    : view.status === "finished"
       ? "Finished. Start it again or pick another."
       : view.status === "done-today"
         ? isRestDay(day)
@@ -364,9 +374,23 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
             <p className="mt-2 font-medium">{program.name}</p>
             <p className="mt-1 text-sm text-mut">{line}</p>
           </div>
-          <LinkButton href={`/programs?program=${encodeURIComponent(program.id)}`}>
-            {view.status === "todo" && !isRestDay(day) ? "Open today’s plan" : "See the calendar"}
-          </LinkButton>
+          {locked ? (
+            <div className="flex flex-wrap items-center gap-3">
+              <LinkButton href={PRO_BUY_HREF} variant="outline">
+                Unlock day {view.index + 1} with Pro
+              </LinkButton>
+              <Link
+                href={calendarHref}
+                className="inline-flex min-h-11 items-center text-sm text-violet-ink underline-offset-4 hover:underline"
+              >
+                See the calendar
+              </Link>
+            </div>
+          ) : (
+            <LinkButton href={calendarHref}>
+              {view.status === "todo" && !isRestDay(day) ? "Open today’s plan" : "See the calendar"}
+            </LinkButton>
+          )}
         </div>
       </section>
     </Card>

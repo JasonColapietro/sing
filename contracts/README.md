@@ -36,6 +36,12 @@ kind (2026-10-12):
 - The summaries of `v-l5-m4-01` (no invented two-second claim) and
   `v-l7-m5-04` (no same-session rescan) were reworded, and their lessons'
   objectives with them.
+- Module `v-l7-m5`'s `proofMetric` changed from `range_midi_span` to
+  `self_reported`. Its lessons take their evidence in a recorded take and
+  leave the range test for a retest weeks apart, and its lesson pages state a
+  self-check basis. `lib/voice-lessons.test.tsx` now requires a module's
+  `proofMetric` to be `self_reported` exactly when its lesson pages state a
+  self-check basis.
 
 Don't "re-sync" those edits away: parity with GuitarHub is by stage, module
 and lesson ID, not by text. GuitarHub's copy has to be re-synced byte for byte
@@ -483,6 +489,21 @@ Again no key was added, so `version` stays 9:
 
 What the other apps must do: re-sync the file and apply the two new
 `rangeCap` values (no code change where v8's cap is already implemented).
+
+#### Editorial and wording changes inside v9 (2026-10-12)
+
+No key was added, so `version` stays 9:
+
+- `editorial`: word counts moved with this round's text edits. Book:
+  `breath` (1568), `weeks-1-2-baseline` (1421), `totalWords` 32597. Atlas:
+  `the-safety-rail` (838), `totalWords` 72471.
+- `measurement.rangeExtremes.note` no longer calls the result the "lowest and
+  highest comfortable note". The range test asks for the furthest clear notes
+  and counts a note once the detector has heard it for 600 ms in total, so the
+  row now says these are the limits reached in one test, not a comfortable
+  band. Nothing about the measurement changed.
+
+What the other apps must do: re-sync the file. Nothing else changes.
 
 ### Versioning
 

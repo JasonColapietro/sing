@@ -19,7 +19,7 @@ The pitch reading works by finding the one repeating pattern in whatever the mic
 
 ### Use the practice material
 
-Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading What your voice actually is is listed there too.
+Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.

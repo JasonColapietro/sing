@@ -1,7 +1,7 @@
 "use client";
 
 import { CapSlide } from "@/components/practice/free-cap";
-import { useFreeCap } from "@/lib/free-cap";
+import { formatClock, useFreeCap } from "@/lib/free-cap";
 
 import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
@@ -38,6 +38,19 @@ export function remainingSeconds(routine: Routine, from: number): number {
   return routine.steps
     .slice(from)
     .reduce((a, s) => a + stepSeconds(s) + STEP_INTRO_SEC, 0);
+}
+
+/**
+ * The clock on a step's intro slide. It counts the routine, unless the free
+ * guided minutes left today run out first: then it counts those, because the
+ * routine stops after the step that uses them up and "~6 min left" would
+ * promise minutes the singer will not get. `freeLeftSec` is null on Pro.
+ */
+export function introClockLabel(routineLeftSec: number, freeLeftSec: number | null): string {
+  if (freeLeftSec !== null && freeLeftSec < routineLeftSec) {
+    return `${formatClock(freeLeftSec)} free left today`;
+  }
+  return `~${Math.max(1, Math.round(routineLeftSec / 60))} min left`;
 }
 
 export interface RoutineSummaryData {
@@ -115,7 +128,10 @@ export function RoutineRunner({
     }
   }
 
-  const minutesLeft = Math.max(1, Math.round(remainingSeconds(routine, stepIndex) / 60));
+  const clockLabel = introClockLabel(
+    remainingSeconds(routine, stepIndex),
+    cap.isPro ? null : cap.leftSec,
+  );
   // Steps before a `?step=` link's first one weren't part of this run, so
   // they get no "skipped" chip.
   const prev = stepIndex > firstStep ? (results[stepIndex - 1] ?? null) : null;
@@ -151,7 +167,7 @@ export function RoutineRunner({
       routineName={routine.name}
       stepIndex={phase.step}
       stepCount={stepCount}
-      minutesLeft={minutesLeft}
+      clockLabel={clockLabel}
       title={ex.title}
       desc={ex.desc}
       tip={ex.tip}
@@ -176,7 +192,7 @@ function StepIntro({
   routineName,
   stepIndex,
   stepCount,
-  minutesLeft,
+  clockLabel,
   title,
   desc,
   tip,
@@ -191,7 +207,8 @@ function StepIntro({
   routineName: string;
   stepIndex: number;
   stepCount: number;
-  minutesLeft: number;
+  /** "~N min left", or the free minutes left when those run out first. */
+  clockLabel: string;
   title: string;
   desc: string;
   tip: string;
@@ -234,7 +251,7 @@ function StepIntro({
       closeLabel="Quit routine"
       topRight={
         <span className="tabular font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--s-dim)]">
-          ~{minutesLeft} min left
+          {clockLabel}
         </span>
       }
       bottom={

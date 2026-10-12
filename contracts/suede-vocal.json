@@ -287,7 +287,7 @@
       "measurable": "yes",
       "unit": "midi",
       "module": "components/range/range-test.tsx",
-      "note": "Lowest and highest comfortable note by cumulative dwell. Falsetto and head voice count toward the high note."
+      "note": "Lowest and highest clear notes reached in one test, each counted once the detector has heard it for 600 ms in total (cumulative dwell), so a passing octave error does not count. These are the limits the singer reached, not a comfortable band. Falsetto and head voice count toward the high note."
     },
     "ringRatio": {
       "measurable": "yes",
@@ -2686,7 +2686,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure — included with Suede Sing Pro.",
       "pathPrefix": "/book",
-      "totalWords": 32505,
+      "totalWords": 32597,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -2725,7 +2725,7 @@
           "part": "How the voice works",
           "summary": "What support actually means physically, why pushing more air makes tone worse, and how to feel the difference.",
           "free": false,
-          "words": 1477,
+          "words": 1568,
           "path": "/book/breath"
         },
         {
@@ -2825,7 +2825,7 @@
           "part": "The twelve-week program",
           "summary": "How to spend the first two weeks collecting honest data and building a breath habit, without trying to sing better yet.",
           "free": false,
-          "words": 1420,
+          "words": 1421,
           "path": "/book/weeks-1-2-baseline"
         },
         {
@@ -2924,7 +2924,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it — the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 72444,
+      "totalWords": 72471,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -2983,7 +2983,7 @@
           "part": "The borrower's method",
           "summary": "The four expensive things in this book — whistle notes, extreme lows, distortion and sustained belting — what makes each risky to chase, and the warning signs that mean stop.",
           "free": false,
-          "words": 811,
+          "words": 838,
           "path": "/atlas/the-safety-rail"
         },
         {

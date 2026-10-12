@@ -43,7 +43,7 @@ The other piece is breath work on the days you do not sing. Five minutes, no war
 
 Breath is the first block's real subject because it changes slowly and it barely cares how your voice feels that day. You can do useful breath work at eleven at night, in a room you would never sing in.
 
-Use the three drills in Breath, in a fixed order.
+Use three of the drills in Breath, in a fixed order.
 
 **Box breathing** first, two or three minutes. In for four, hold four, out for four, hold four. Hold by keeping the ribs open, not by closing your throat; the hold should feel like a pause, not a lock. This is not singing practice. It is the part that teaches you to stop gasping, and to tell the difference between having no air and only feeling like you have none. Singers tend to be working with more air than they think.
 

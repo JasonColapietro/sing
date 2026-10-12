@@ -92,11 +92,6 @@ const NOT_LINKS: Exception[] = [
     why: "The page's identity in the query-ownership register; lib/query-ownership.test.tsx checks the /voice page's own link to the test.",
   },
   {
-    file: "components/v2-banner.tsx",
-    line: /^\s*"\/range",$/,
-    why: "A route key in HIDDEN_ON, the pages the release banner stays off (practice rooms whose start button it would push under a phone's tab bar); not a link.",
-  },
-  {
     file: "lib/keywords.ts",
     line: /^\s*"[a-z ]+": "\/range",$|^\s*"\/range": \[$/,
     why: "Keyword ownership: which route a query belongs to, not a link.",

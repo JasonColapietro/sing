@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { rangeLabel, spanOctaves, type Singer } from "@/lib/singers";
+import { balancedChunks } from "@/lib/singers-core";
 import {
   FULL_VOICE_FILL_CLASS,
   RangeBarKey,
@@ -34,14 +35,7 @@ export function HubChart({
   for (let m = Math.ceil(axisLow / 12) * 12; m <= axisHigh; m += 12) {
     octaveCs.push(m);
   }
-  const groups = Array.from(
-    { length: Math.ceil(list.length / MAX_SINGERS_PER_SECTION) },
-    (_, index) =>
-      list.slice(
-        index * MAX_SINGERS_PER_SECTION,
-        (index + 1) * MAX_SINGERS_PER_SECTION,
-      ),
-  );
+  const groups = balancedChunks(list, MAX_SINGERS_PER_SECTION);
 
   return (
     <div>

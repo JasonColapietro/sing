@@ -12,8 +12,16 @@ import { rangeTestHref } from "@/lib/site";
 import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
 
+/**
+ * The four fields these client components use. A page passes exactly these,
+ * never the whole record: everything handed to a client component is
+ * serialized into the page's flight payload, and a full Singer carries the
+ * blurb and technique notes that are the paid atlas's entry prose.
+ */
+export type SingerRangeProps = Pick<Singer, "slug" | "name" | "lowMidi" | "highMidi">;
+
 /** Low → glide → high, same gesture as the range-test result card. */
-export function PlayRangeButton({ s }: { s: Singer }) {
+export function PlayRangeButton({ s }: { s: Pick<Singer, "lowMidi" | "highMidi"> }) {
   const play = () => {
     playTone(s.lowMidi, { dur: 0.6 });
     playTone(s.lowMidi, { dur: 1.4, at: 0.7, glideToMidi: s.highMidi });
@@ -30,7 +38,7 @@ export function PlayRangeButton({ s }: { s: Singer }) {
  * Compares the visitor's measured range (from the free range test, stored
  * locally) against this singer's cited range.
  */
-export function CompareWithMe({ s }: { s: Singer }) {
+export function CompareWithMe({ s }: { s: SingerRangeProps }) {
   const { range } = useProgress();
   // The free plan keeps only the latest test; range over time is Pro
   // (PLAN_ROWS "Range history"), so the link names what each plan will find.

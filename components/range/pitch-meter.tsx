@@ -8,12 +8,12 @@ import {
   midiToName,
   tuneZone,
 } from "@/lib/audio/notes";
-import { logSession } from "@/lib/progress";
+import { logSession, type LogResult } from "@/lib/progress";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { createPracticeClock } from "@/lib/practice-clock";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
-import { Button, LinkButton, MicGate } from "@/components/ui";
+import { Button, Card, LinkButton, MicGate, SectionLabel } from "@/components/ui";
 import { AudioSetup } from "@/components/audio/audio-setup";
 
 /** Ignore near-silent frames, the same floor the range test uses. */
@@ -78,6 +78,46 @@ function tuneWord(cents: number): string {
 }
 
 /**
+ * The stopped meter's summary: the notes held since the meter opened (or was
+ * last Reset; "Sing again" keeps them, as the live readout does), whether the
+ * stop saved (and what it earned), and the next step once the singer has
+ * explored enough for the range test to sharpen. Not "your last run": after a
+ * second start the notes can come from both runs.
+ */
+export function LastRun({
+  low,
+  high,
+  lastLog,
+  onTryRange,
+}: {
+  low: number;
+  high: number;
+  /** What the run's flush saved; null when it was under the floor. */
+  lastLog: Pick<LogResult, "xpGained"> | null;
+  onTryRange?: () => void;
+}) {
+  return (
+    <Card className="mb-4">
+      <SectionLabel>Held so far</SectionLabel>
+      <p className="mt-2 text-sm text-mut">
+        You have held {midiToLabel(low)} to {midiToLabel(high)} so far.{" "}
+        {lastLog
+          ? `+${lastLog.xpGained} XP, saved to your progress.`
+          : `Not saved yet: the meter saves once you have sung ${MIN_LOG_SEC} seconds in all, and singing again adds to that time.`}
+      </p>
+      {high - low >= SUGGEST_RANGE_SEMIS && (
+        <div className="mt-3 flex flex-wrap gap-3">
+          {onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
+          <LinkButton href="/warmups" variant="outline">
+            Warm up first
+          </LinkButton>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+/**
  * The default voice test: open the mic and see your pitch, nothing else. A
  * scrolling note lane shows where your voice is and where it has been, the
  * readout names the note and how far off center you are, and the lowest and
@@ -98,6 +138,12 @@ export function PitchMeter({
   const centerRef = useRef(57); // A3 until we hear something
   const [low, setLow] = useState<number | null>(null);
   const [high, setHigh] = useState<number | null>(null);
+  /**
+   * What the last flush saved, for the stopped view. Cleared on every start
+   * that opens the mic, so a later short run is never reported with an
+   * earlier run's XP.
+   */
+  const [lastLog, setLastLog] = useState<LogResult | null>(null);
   const lowRef = useRef<number | null>(null);
   const highRef = useRef<number | null>(null);
   const heldRef = useRef<{ midi: number | null; ms: number; lastT: number }>({
@@ -121,7 +167,7 @@ export function PitchMeter({
     const durationSec = Math.floor(practiceClock.elapsedMs() / 1000);
     if (durationSec < MIN_LOG_SEC) return;
     practiceClock.reset();
-    logSession({ type: "pitch", durationSec, detail: "Pitch meter" });
+    setLastLog(logSession({ type: "pitch", durationSec, detail: "Pitch meter" }));
   }, [practiceClock]);
   useFlushOnExit(flushLog);
 
@@ -284,10 +330,27 @@ export function PitchMeter({
     return () => cancelAnimationFrame(raf);
   }, [listening, latest]);
 
+  // "Stop mic" sits at the foot of the live view, so a phone is scrolled well
+  // down when it is pressed. The stopped view is far shorter, and the scroll
+  // position stays where it was: on a 375x667 phone that left the summary
+  // above the screen, with only the gate's lower half in view. Bring the top
+  // of the stopped view back, as the range test does on each stage change.
+  // Only on a stop, never on the first mount: that is where the page landed.
+  const stoppedRef = useRef<HTMLDivElement>(null);
+  const wasListeningRef = useRef(false);
+  useEffect(() => {
+    const was = wasListeningRef.current;
+    wasListeningRef.current = listening;
+    if (was && !listening) stoppedRef.current?.scrollIntoView({ block: "start" });
+  }, [listening]);
+
   const begin = async () => {
     pointsRef.current = [];
     heldRef.current = { midi: null, ms: 0, lastT: 0 };
-    await start();
+    // Cleared once the mic is on, so a later short run is never reported
+    // with an earlier run's XP. A start that fails (the mic refused or
+    // unplugged) leaves the last save on the card: it still happened.
+    if (await start()) setLastLog(null);
   };
 
   const reset = () => {
@@ -300,11 +363,18 @@ export function PitchMeter({
 
   if (!listening) {
     return (
-      <div>
+      <div ref={stoppedRef}>
+        {/* Stopping used to drop the singer back on a first-visit screen: the
+            notes they held, the save and the next step all vanished. The
+            measurement survives the stop, and "Sing again" carries it on
+            (begin() clears the save, not the notes) until Reset. */}
+        {low !== null && high !== null && (
+          <LastRun low={low} high={high} lastLog={lastLog} onTryRange={onTryRange} />
+        )}
         <MicGate
           title="See your pitch"
           description="Sing or hum any note. You will see exactly which note you are on, how close to center you are, and a live line of your voice."
-          enableLabel="Start singing"
+          enableLabel={low !== null ? "Sing again" : "Start singing"}
           onEnable={begin}
           error={error}
         />

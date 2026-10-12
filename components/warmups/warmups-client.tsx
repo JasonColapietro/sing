@@ -20,12 +20,13 @@ import { SessionSummary } from "./session-summary";
 import { RoutineRunner, type RoutineSummaryData } from "./routine-runner";
 import { RoutineSummary } from "./routine-summary";
 import { PathSection, RoutineGrid, RoutineMeta, routineStats } from "./routine-home";
-import { recentWarmupResults, routineReason, routineStartingTempo, recommendRoutine, routineById, sizeRoutineToAllowance, stepExercise, type Routine } from "./routines";
+import { recentWarmupResults, routineReason, routineSeconds, routineStartingTempo, recommendRoutine, routineById, sizeRoutineToAllowance, stepExercise, type Routine } from "./routines";
 import type { SessionSummaryData } from "./lib";
 import { DailyThreeCard, DailyThreeCardPlaceholder } from "./daily-three-card";
 import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type DailyTempo } from "@/lib/daily-three";
 import { ProgramEntryCard } from "@/components/programs/today-card";
 import { useActiveProgram } from "@/components/programs/use-program";
+import { programDayNeedsPro } from "@/components/practice/program-day";
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
 
@@ -166,13 +167,20 @@ export function WarmupsClient() {
   // entitlement is read the line holds its place without naming free minutes:
   // a Pro singer would otherwise be told about a limit they paid to remove.
   const proReady = useProReady();
+  // When nothing shorter fits what is left today, the pick stands, but the
+  // card says where it will stop rather than calling a longer set "short":
+  // the cap is checked between steps, so the step under way always finishes.
+  const overAllowance =
+    proReady && !cap.isPro && !cap.capped && routineSeconds(recommended) > cap.leftSec;
   const recommendedReason = sizedToAllowance
     ? !proReady
       ? " "
       : cap.usedSec <= 0
         ? `Fits in today's ${Math.round(cap.capSec / 60)} free minutes.`
         : `Fits in the ${formatClock(cap.leftSec)} of free practice left today.`
-    : routineReason(routineContext);
+    : overAllowance
+      ? `${formatClock(cap.leftSec)} of free practice left today: this set stops after the step that uses it up.`
+      : routineReason(routineContext);
   const pathExercises = isPro ? ALL_EXERCISES : EXERCISES;
   const pathItem = (e: WarmupExercise) => ({ id: e.id, title: e.title, stars: starsForExercise(progress, e.title) });
   const nextId = nextUpId([
@@ -349,6 +357,11 @@ export function WarmupsClient() {
       : "How a warmup works here";
 
   const newToWarmups = !progress.sessions.some((s) => s.type === "warmup");
+  // A program day still to do is the plan the singer committed to, so it
+  // leads, unless it is a Pro day a free singer cannot open: leading with a
+  // paywall every visit would cost them the room's real first action.
+  const programLeads =
+    activeProgram?.view.status === "todo" && !programDayNeedsPro(activeProgram, isPro);
 
   // The mic gate's three parts. Their order depends on whether a link is
   // waiting to start something; see the gate below.
@@ -425,30 +438,50 @@ export function WarmupsClient() {
       {view === "home" && (
         <div className="space-y-8">
           {cap.capped ? <CapWall cap={cap} /> : <FreeAllowance cap={cap} />}
-          {/* A program day still to do is the plan the singer committed to,
-              so it leads; done or finished, it drops back below today's cards. */}
-          {activeProgram?.view.status === "todo" && <ProgramEntryCard active={activeProgram} />}
-          {nextExercise && (
+          {/* A program day still to do leads; done, finished, or behind the
+              paywall, it drops back below today's cards. */}
+          {programLeads && activeProgram && <ProgramEntryCard active={activeProgram} />}
+          {newToWarmups ? (
+            // Someone who has never sung a warmup has no path to continue.
+            // The homepage's "Start workout" and the Lessons tab promise a
+            // short routine that ends, so the first button here starts one:
+            // the recommended set, sized to the free minutes. One gentle
+            // exercise on its own would walk until End.
             <ContinueCard
-              // Someone who has never sung a warmup has no path to continue,
-              // and this card's start opens one endless ladder, not the short
-              // routine the homepage promised: say so, and point at the sets
-              // that end on their own.
-              kicker={newToWarmups ? "Start here" : "Continue your path"}
+              kicker="Start here"
+              title={recommended.name}
+              tagline={recommended.tagline}
+              meta={<RoutineMeta routine={recommended} />}
+              stepTitles={recommended.steps.map((s) => stepExercise(s).title)}
+              stars={routineStats(progress, recommended).stars}
+              goal={{ doneSec: goalDoneSec, goalSec }}
               streakDays={streakDays}
               streakBest={progress.streak.best}
-              title={nextExercise.title}
-              tagline={
-                newToWarmups
-                  ? "One gentle exercise; it keeps going until you press End. The routines below finish on their own."
-                  : "The next exercise in your lowest unfinished tier. You can still choose any exercise below."
-              }
-              onStart={() => void selectExercise(nextExercise, "continue")}
-              startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start exercise" : "Enable mic and start"}
               micReady={pitch.listening}
               unavailableReason={unavailableReason}
-              error={errorAt.kind === "continue" ? pitch.error : null}
-            />
+              startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start warmup" : "Enable mic and start"}
+              error={errorAt.kind === "today" ? pitch.error : null}
+              onStart={() => void selectRoutine(recommended, "today")}
+            >
+              <p className="text-xs text-dim sm:text-right">
+                {recommendedReason}
+              </p>
+            </ContinueCard>
+          ) : (
+            nextExercise && (
+              <ContinueCard
+                kicker="Continue your path"
+                streakDays={streakDays}
+                streakBest={progress.streak.best}
+                title={nextExercise.title}
+                tagline="The next exercise in your lowest unfinished tier. You can still choose any exercise below."
+                onStart={() => void selectExercise(nextExercise, "continue")}
+                startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start exercise" : "Enable mic and start"}
+                micReady={pitch.listening}
+                unavailableReason={unavailableReason}
+                error={errorAt.kind === "continue" ? pitch.error : null}
+              />
+            )
           )}
           {/* today is null until mount (the plan is seeded by the viewer's
               local date); the placeholder keeps the card's slot so nothing
@@ -464,27 +497,30 @@ export function WarmupsClient() {
               unavailableReason={unavailableReason}
             />
           )}
-          <ContinueCard
-            kicker="Today's warmup"
-            title={recommended.name}
-            tagline={recommended.tagline}
-            meta={<RoutineMeta routine={recommended} />}
-            stepTitles={recommended.steps.map((s) => stepExercise(s).title)}
-            stars={routineStats(progress, recommended).stars}
-            goal={{ doneSec: goalDoneSec, goalSec }}
-            streakDays={streakDays}
-            streakBest={progress.streak.best}
-            micReady={pitch.listening}
-            unavailableReason={unavailableReason}
-            startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start warmup" : "Enable mic and start"}
-            error={errorAt.kind === "today" ? pitch.error : null}
-            onStart={() => void selectRoutine(recommended, "today")}
-          >
-            <p className="text-xs text-dim sm:text-right">
-              {recommendedReason}
-            </p>
-          </ContinueCard>
-          {activeProgram?.view.status !== "todo" && <ProgramEntryCard active={activeProgram} />}
+          {/* A newcomer's top card is this routine already; it is offered once. */}
+          {!newToWarmups && (
+            <ContinueCard
+              kicker="Today's warmup"
+              title={recommended.name}
+              tagline={recommended.tagline}
+              meta={<RoutineMeta routine={recommended} />}
+              stepTitles={recommended.steps.map((s) => stepExercise(s).title)}
+              stars={routineStats(progress, recommended).stars}
+              goal={{ doneSec: goalDoneSec, goalSec }}
+              streakDays={streakDays}
+              streakBest={progress.streak.best}
+              micReady={pitch.listening}
+              unavailableReason={unavailableReason}
+              startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start warmup" : "Enable mic and start"}
+              error={errorAt.kind === "today" ? pitch.error : null}
+              onStart={() => void selectRoutine(recommended, "today")}
+            >
+              <p className="text-xs text-dim sm:text-right">
+                {recommendedReason}
+              </p>
+            </ContinueCard>
+          )}
+          {!programLeads && <ProgramEntryCard active={activeProgram} />}
 
           {/*
             The mic card used to be returned INSTEAD of this page, so a first-time

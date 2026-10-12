@@ -124,8 +124,9 @@ export function centreShift(midis: readonly number[], register: { lo: number; hi
 }
 
 /**
- * Targets from the opening of a song: its first ten notes in order (the phrase
- * again from the top if it is shorter), transposed as a whole so the melody sits
+ * Targets from a song's songbook phrase (its opening, or the excerpt the entry
+ * names, such as Home on the Range's chorus hook): its first ten notes in order
+ * (the phrase again from the top if it is shorter), transposed as a whole so the melody sits
  * in the middle of the singer's range. The contour is kept exactly; nothing is
  * folded note by note, because a melody with one note an octave off is not the
  * song any more.

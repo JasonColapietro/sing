@@ -50,7 +50,8 @@ describe("song comparison to first practice", () => {
     expect(html).toContain('href="/pro#plans"');
     expect(html.indexOf(`href="${href}`)).toBeLessThan(html.indexOf('href="/pro#plans"'));
     expect(html).toContain("free for 5 minutes a day");
-    expect(html).toContain("commonly cited studio-version range");
+    expect(html).toContain("commonly cited lead-vocal range");
+    expect(html).not.toContain("studio-version");
     expect(html).toContain("not a judgment of your voice");
     expect(html).not.toContain("Extend it with warmups");
     expect(html).not.toContain("extending your range is the move");
@@ -141,6 +142,34 @@ describe("song comparison to first practice", () => {
     state.range = { lowMidi: 59, highMidi: 74 };
     html = render();
     expect(html).toContain("Raising the key by 4 would bring it inside, with the bottom note on that floor; raising it by 5 centres it in your range.");
+  });
+
+  it("names the octave a lower voice can sing a higher voice's song in", () => {
+    // Espresso G3–A4 (55–69) against F2–C4 (41–60): 9 above the ceiling as written; G2–A3 an octave down is inside.
+    state.range = { lowMidi: 41, highMidi: 60 };
+    const html = render();
+    expect(html).toContain("Sung an octave lower in the written key, it runs G2–A3, inside your tested range.");
+    expect(html).toContain('href="/songs?song=');
+    expect(html).not.toContain("ng-siren-fifth");
+    expect(html).not.toContain("Head-voice builder");
+  });
+
+  it("names the octave a higher voice can sing a lower voice's song in, and the limit it lands on", () => {
+    // Espresso G3–A4 (55–69) against F#4–A5 (66–81): 11 below the floor as
+    // written; G4–A5 an octave up is inside, with its top on the ceiling.
+    state.range = { lowMidi: 66, highMidi: 81 };
+    const html = render();
+    expect(html).toContain("The low end of Espresso is 11 semitones below your tested floor");
+    expect(html).toContain("Sung an octave higher in the written key, it runs G4–A5, inside your tested range. A range test finds your limits, not your comfortable band, so expect the top of it to be work.");
+    expect(html).not.toContain("descending-five");
+  });
+
+  it("says nothing about the octave when the other octave does not fit either", () => {
+    // Espresso G3–A4 (55–69) against C3–F4 (48–65): G2 an octave down is under the floor.
+    state.range = { lowMidi: 48, highMidi: 65 };
+    const html = render();
+    expect(html).not.toContain("Sung an octave");
+    expect(html).toContain('href="/warmups?exercise=');
   });
 
   it("puts the page's action in reach before the verdict card: the test, or the way down to the answer", () => {

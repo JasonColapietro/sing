@@ -6,6 +6,7 @@ import {
   formatMinSec,
   loopsFor,
   lyricLines,
+  phraseName,
   phraseSeconds,
   sessionSeconds,
   songNoteRange,
@@ -58,17 +59,13 @@ export function songFacts(song: Song): SongFacts {
 }
 
 /**
- * What a "phrase" entry holds, as its page names it: the song's opening phrase,
- * unless the entry marks it as another part of the song (`excerpt`).
- */
-export function phraseName(song: Song): string {
-  return song.excerpt ?? "opening phrase";
-}
-
-/**
  * Related songs for the cluster, in this order: same difficulty and genre,
  * then same difficulty, then same genre, then whatever is left. The page heads
- * the list "Other <difficulty> songs", so difficulty leads. Each melody appears
+ * the list "Other <difficulty> songs", so difficulty leads. Within a tier the
+ * song whose range sits closest to this one's comes first (the next song a
+ * singer can carry over the same notes), and remaining ties go round the
+ * pool from the song after this one, so no song is left out of every list
+ * just because it sits late in the data file. Each melody appears
  * once, and never this song's own melody: the other version of it
  * (`arrangementOf`, either direction) already has its own card on the page.
  * The pool is passed in rather than read from the data module so a free page
@@ -83,11 +80,19 @@ export function relatedSongs(song: Song, pool: Song[], max = 6): Song[] {
   const tier = (s: Song) =>
     (computeDifficulty(s).label === difficulty ? 0 : 2) +
     (s.genre === song.genre ? 0 : 1);
+  const centre = (s: Song) => {
+    const [lo, hi] = songNoteRange(s);
+    return (lo + hi) / 2;
+  };
+  const c = centre(song);
+  // Array sort is stable, so ties keep the scan order, which starts at the
+  // song after this one and wraps.
+  const at = pool.indexOf(song);
+  const ordered = at < 0 ? pool : [...pool.slice(at + 1), ...pool.slice(0, at + 1)];
   const related: Song[] = [];
-  // Array sort is stable, so within a tier the pool's own order holds.
-  for (const { s } of pool
-    .map((s) => ({ s, t: tier(s) }))
-    .sort((a, b) => a.t - b.t)) {
+  for (const { s } of ordered
+    .map((s) => ({ s, t: tier(s), d: Math.abs(centre(s) - c) }))
+    .sort((a, b) => a.t - b.t || a.d - b.d)) {
     if (related.length >= max) break;
     if (seen.has(melodyOf(s))) continue;
     seen.add(melodyOf(s));

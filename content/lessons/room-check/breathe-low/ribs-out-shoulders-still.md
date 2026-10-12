@@ -13,7 +13,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## In short
 
-On an easy breath in, the diaphragm flattens and the lower ribs swing out to the sides, so the movement you see is around the lower ribs and the belly; the shoulders and neck have no job to do. A breath that lifts the shoulders fills the least useful part of the lungs and tends to bring tension into the neck. On the way out, let the ribs stay wide a little longer than they want to and come in gradually: that slow release is what keeps a hiss, and later a sung note, even.
+On an easy breath in, the diaphragm flattens and the lower ribs swing out to the sides, so the movement you see is around the lower ribs and the belly; the shoulders and neck have no job to do. A breath that lifts the shoulders raises the upper chest with neck and shoulder muscles: a lot of effort for not much air, and tension right beside the larynx. On the way out, let the ribs stay wide a little longer than they want to and come in gradually: that slow release is what keeps a hiss, and later a sung note, even.
 
 ## Steps
 

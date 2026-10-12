@@ -35,7 +35,8 @@ import { PianoStrip } from "./piano-strip";
 import { SINGERS_LITE as SINGERS } from "@/lib/singers-lite";
 import { rangeOverlap, voiceTypeSlug } from "@/lib/singers-core";
 import type { Song } from "@/components/songs/types";
-import { countSongsFitting } from "@/components/songs/lib";
+import { countOpenSongsFitting } from "@/components/songs/lib";
+import { useMastered } from "@/components/songs/favorites";
 
 /**
  * Household names for the quick post-test comparison, pulled from the full
@@ -390,16 +391,18 @@ export function ResultView({
     };
   }, [isPro, proReady]);
 
+  // Counted over the bands open now, not the whole book: "Open the songbook"
+  // lands on a library where later bands show Locked until songs below them
+  // are mastered, so the count must be of songs the singer can start.
+  const mastered = useMastered();
   const counted = useMemo(
-    () =>
-      book === null
-        ? null
-        : {
-            fitting: countSongsFitting(book, { lowMidi, highMidi }),
-            total: book.length,
-          },
-    [book, lowMidi, highMidi],
+    () => (book === null ? null : countOpenSongsFitting(book, mastered, { lowMidi, highMidi })),
+    [book, mastered, lowMidi, highMidi],
   );
+  const lockedNote =
+    counted !== null && counted.locked > 0
+      ? `; the other ${counted.locked} open a band at a time as you master songs`
+      : "";
 
   const famous = useMemo(() => {
     const rows = rankFamousVoices(lowMidi, highMidi);
@@ -621,8 +624,8 @@ export function ResultView({
               {counted === null
                 ? "Songs now open fitted to the range you just measured, and you can shift any of them by semitones."
                 : counted.fitting > 0
-                  ? `${counted.fitting} of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key. Every song now opens fitted to your range, and you can shift any of them by semitones.`
-                  : `None of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key, but every song now opens fitted to your range, and you can shift any of them by semitones.`}
+                  ? `${counted.fitting} of the ${counted.total} songs open to you now stay inside your range in their written key${lockedNote}. Every song opens fitted to your range, and you can shift any of them by semitones.`
+                  : `None of the ${counted.total} songs open to you now stay inside your range in their written key${lockedNote}, but every song opens fitted to your range, and you can shift any of them by semitones.`}
             </p>
             <div className="mt-4">
               {/* Plain /songs, no filter param: the library seeds its browse

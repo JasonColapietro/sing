@@ -108,7 +108,7 @@ export default async function GenrePage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `${g} singers and their vocal ranges`,
+    name: `${upperFirst(genreSingers(g))} and their vocal ranges`,
     url: `${SITE_URL}/singers/genre/${genre}`,
     description: copy.intro,
     isPartOf: { "@id": `${SITE_URL}/#website` },

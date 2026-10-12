@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { singerVoiceTypeKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { midiToLabel } from "@/lib/audio/notes";
+import { VOICE_TYPES, midiToLabel } from "@/lib/audio/notes";
 import {
   SINGERS,
   VOICE_KINDS,
@@ -88,6 +88,9 @@ export default async function VoiceTypePage({
   const neighbour = voiceTypeFromSlug(copy.neighbour);
   const [contrastBefore, contrastAfter] = splitContrast(copy.contrast);
   const lower = voice.toLowerCase();
+  // Bass-baritone and countertenor are editorial categories: the range test
+  // classifies into six bands, bass to soprano, and can never return them.
+  const rangeTestCanName = VOICE_TYPES.some((t) => t.label === voice);
   const share = Math.round((list.length / SINGERS.length) * 100);
 
   const axisLow = Math.floor(stats.lowest.lowMidi / 12) * 12;
@@ -209,7 +212,10 @@ export default async function VoiceTypePage({
           {/* "Am I a {type}?" is the next question on every one of these
               hubs, and the range test answers it with an estimate. Outline,
               because the header's "Find my vocal range" button, a few lines
-              up, is the page's one primary action and goes to the same test. */}
+              up, is the page's one primary action and goes to the same test.
+              Two hubs, bass-baritone and countertenor, name a type the
+              classifier cannot return, so they say so under the buttons
+              rather than promise an answer the test can't give. */}
           <div className="mt-4 flex flex-wrap gap-3">
             <LinkButton href={rangeTestHref()} variant="outline" size="sm">
               Estimate my voice type
@@ -220,6 +226,13 @@ export default async function VoiceTypePage({
               </LinkButton>
             )}
           </div>
+          {!rangeTestCanName && (
+            <p className="mt-2 max-w-3xl text-xs text-dim">
+              The range test estimates one of six types, bass to soprano, and never
+              names {lower}: compare the notes it finds with this page&apos;s{" "}
+              {midiToLabel(band.low)}–{midiToLabel(band.high)} band.
+            </p>
+          )}
         </Card>
 
         <Card>

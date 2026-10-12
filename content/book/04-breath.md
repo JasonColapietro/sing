@@ -17,7 +17,7 @@ The diaphragm is a dome of muscle under your lungs. When it contracts it flatten
 
 So when a teacher says "support from the diaphragm," what is really happening is that you are letting the diaphragm release slowly instead of letting it snap back. Your ribs work the same way. The muscles between them can hold the ribcage open, and if you keep it open a little longer than it wants to stay open, the air leaves more slowly and more evenly. The abdominal wall comes back in gradually rather than in a lurch.
 
-That is the entire mechanism: two forces in a slow argument. Elastic recoil wants to empty you fast. A gentle inspiratory hold wants to keep you full. Support is the negotiated middle, and the tone tells you whether the negotiation is going well.
+That is the mechanism, and it changes as the phrase goes on. Early in a phrase, with the lungs well filled, elastic recoil pushes harder than the folds need, and a gentle inspiratory hold — the ribs staying open — keeps you from dumping the surplus. As the lungs empty, recoil pushes less and less, and well before you run out of air it stops supplying all the pressure the phrase needs, so the abdominal wall comes in steadily to make up the difference. Past the point where a relaxed breath out would stop, recoil starts pulling air back in, and the muscles are doing all of the work. Support is managing that handover so the pressure under the folds stays even, and the tone tells you whether it is going well.
 
 You can feel this without singing a note. Sit up, hand on the side of your lower ribs. Breathe in through the nose for four counts and notice the ribs widen sideways — not the shoulders rising, the ribs going out. Then hiss out on a steady "sss" for as long as it stays even, and pay attention to the ribs. If they drop at once, you are dumping. If you can keep them broad for most of the hiss and let them come in only near the end, that is the sensation you want under a sung phrase.
 
@@ -39,7 +39,7 @@ Most singers take too much air, not too little. A full-to-bursting inhale leaves
 
 Aim for comfortably full — think three-quarters, not the deepest breath you can manage — and take it in silently. A gasping inhale means air is rushing through a narrow throat, and a throat that is narrow on the way in tends to still be narrow on the first note. Silent means open.
 
-Breathe low and wide rather than high. If your shoulders climb toward your ears on the inhale, you are filling the top of your lungs, which is the least useful part and the one that most often drags tension into the neck. The visible movement should be around the lower ribs and the belly.
+Breathe low and wide rather than high. If your shoulders climb toward your ears on the inhale, you are lifting the upper chest with neck and shoulder muscles: a lot of effort for not much air, and tension that sits right beside the larynx. The visible movement should be around the lower ribs and the belly.
 
 ## What steady pressure feels like
 
@@ -57,7 +57,7 @@ Breath work is one of the few things worth practising with no singing attached, 
 
 Slow exhales on a hiss, a lip trill, or a straw into a glass of water all do the same thing: they put a small resistance in front of the airstream so you have something to meter against. The straw and the lip trill have a further advantage. The back pressure they create makes hard blowing obvious. You cannot blast through a lip trill — it just stops.
 
-Box breathing, the Farinelli drill and the sustain test each train that slow release from a different angle, and chapter fourteen describes all three in full. They are tabs in the Breath section of the app, and they belong early in a practice session rather than at the end, when you are tired and more likely to substitute effort for control. Lip trills live in Warmups.
+Box breathing, the Farinelli drill and the sustain test each train that slow release from a different angle, and chapter fourteen describes all three in full. Each is a drill in the app's Breath room, and all three belong early in a practice session rather than at the end, when you are tired and more likely to substitute effort for control. Lip trills live in Warmups.
 
 One caution, and it applies to every held-breath drill here. If you feel light-headed, stop — do not finish the round. Nothing in this chapter should hurt. Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
 

@@ -105,6 +105,27 @@ export function joinNames(names: readonly string[]): string {
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
 
+/**
+ * Splits a list into the fewest groups of at most `max`, as even as possible,
+ * so no group ends up holding one name. Fixed slices of `max` gave a 97-singer
+ * hub a last group of one ("Singers Zara Larsson through Zara Larsson"); this
+ * gives 20/20/19/19/19, and 25 gives 13/12.
+ */
+export function balancedChunks<T>(list: readonly T[], max: number): T[][] {
+  const count = Math.ceil(list.length / Math.max(1, max));
+  if (count <= 1) return list.length ? [[...list]] : [];
+  const base = Math.floor(list.length / count);
+  const extra = list.length % count;
+  const groups: T[][] = [];
+  let start = 0;
+  for (let index = 0; index < count; index++) {
+    const size = base + (index < extra ? 1 : 0);
+    groups.push(list.slice(start, start + size));
+    start += size;
+  }
+  return groups;
+}
+
 /** Semitones of overlap between two ranges (0 if disjoint). */
 export function rangeOverlap(
   aLow: number,

@@ -4,7 +4,6 @@ import { accountsReady } from "@/lib/accounts";
 import "./globals.css";
 import Nav from "@/components/nav";
 import SiteFooter from "@/components/site-footer";
-import V2Banner from "@/components/v2-banner";
 import { SITE_URL } from "@/lib/site";
 import ProMoments from "@/components/pro/moments";
 import ProSync from "@/components/pro/sync";
@@ -72,7 +71,6 @@ export default function RootLayout({
       >
         Skip to content
       </a>
-      <V2Banner />
       <Nav />
       <ProSync />
       {/* The free account backup, mounted once for the whole site so a singer

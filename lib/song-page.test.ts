@@ -14,7 +14,12 @@ vi.mock("server-only", () => ({}));
 
 import SongPage, { generateMetadata } from "@/app/songs/[slug]/page";
 import { ALL_SONGS, SONGS, songBySlug } from "@/components/songs/data";
-import { computeDifficulty } from "@/components/songs/lib";
+import {
+  computeDifficulty,
+  DIFFICULTY_EASY_MAX,
+  DIFFICULTY_MEDIUM_MAX,
+  songNoteRange,
+} from "@/components/songs/lib";
 import { relatedSongs, songLyricText } from "@/components/songs/song-page";
 
 const arrangements = ALL_SONGS.filter((s) => s.arrangementOf);
@@ -155,6 +160,35 @@ describe("sing next", () => {
     }
   });
 
+  it("links every song from at least two other songs' lists", () => {
+    // Ties inside a tier used to go to whichever songs sat first in the data
+    // file, so Silent Night and Shenandoah were on no other song's list.
+    for (const song of SONGS) {
+      const inbound = SONGS.filter((o) => o !== song && relatedSongs(o, SONGS).includes(song)).length;
+      expect(inbound, song.slug).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("lists the closest range first among songs the heading groups together", () => {
+    const centre = (s: (typeof SONGS)[number]) => {
+      const [lo, hi] = songNoteRange(s);
+      return (lo + hi) / 2;
+    };
+    for (const song of SONGS) {
+      const label = computeDifficulty(song).label;
+      const tier = (s: (typeof SONGS)[number]) =>
+        (computeDifficulty(s).label === label ? 0 : 2) + (s.genre === song.genre ? 0 : 1);
+      const related = relatedSongs(song, SONGS);
+      for (let i = 1; i < related.length; i++) {
+        const [a, b] = [related[i - 1], related[i]];
+        if (tier(a) !== tier(b)) continue;
+        expect(Math.abs(centre(a) - centre(song)), `${song.slug}: ${a.slug} before ${b.slug}`).toBeLessThanOrEqual(
+          Math.abs(centre(b) - centre(song)),
+        );
+      }
+    }
+  });
+
   it("lists only what its heading names: the page's difficulty, or its genre when the heading adds it", async () => {
     for (const song of SONGS) {
       const html = await render(song.slug);
@@ -179,6 +213,26 @@ describe("song data a page states as fact", () => {
     for (const song of ALL_SONGS.filter((s) => s.tags.includes("narrow range"))) {
       expect(computeDifficulty(song).label, song.slug).not.toBe("Hard");
     }
+  });
+
+  it("never tags a melody stepwise when its leaps raise its own rating", () => {
+    // computeDifficulty adds leaps to the span; a melody the page calls
+    // stepwise must rate as a stepwise melody of the same span would
+    // (components/songs/lib.test.ts "rates a leapy melody above a stepwise one").
+    for (const song of ALL_SONGS.filter((s) => s.tags.includes("stepwise"))) {
+      const d = computeDifficulty(song);
+      const spanOnly =
+        d.rangeSemis <= DIFFICULTY_EASY_MAX ? "Easy" : d.rangeSemis <= DIFFICULTY_MEDIUM_MAX ? "Medium" : "Hard";
+      expect(d.label, song.slug).toBe(spanOnly);
+    }
+  });
+
+  it("names Loch Lomond's scale by the notes it transcribes", () => {
+    const loch = songBySlug("loch-lomond")!;
+    // C, D, E, G and A only: five pitch classes, the major pentatonic.
+    expect(new Set(loch.notes.map((n) => n.midi % 12))).toEqual(new Set([0, 2, 4, 7, 9]));
+    expect(loch.tags).toContain("pentatonic");
+    expect(loch.tags).not.toContain("hexatonic");
   });
 
   it("prints Newton's second stanza without a comma inside its clause", () => {

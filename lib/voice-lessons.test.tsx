@@ -446,6 +446,43 @@ describe("links from the lessons", () => {
     }
   });
 
+  /**
+   * Step 1 of most lessons says "The reading X is listed there too", meaning the
+   * practice panel. It names the module's first reading, so a reading added to
+   * a module goes after it, and reordering a module's readings rewrites that
+   * sentence in every one of its lessons.
+   */
+  it("names the module's first listed reading wherever a lesson points at the practice panel's reading", () => {
+    let checked = 0;
+    for (const lesson of LESSONS) {
+      for (const step of lesson.steps) {
+        const named = /The reading (.+?) is listed there too\./.exec(step.body)?.[1];
+        if (named === undefined) continue;
+        checked++;
+        const readings = moduleMaterial(lesson.moduleId).filter((m) => m.kind === "book" || m.kind === "atlas");
+        expect(readings[0]?.title, lesson.id).toBe(named);
+      }
+    }
+    expect(checked).toBeGreaterThan(50);
+  });
+
+  it("keeps range extension out of the range test, which its lessons save for a retest weeks apart", () => {
+    // Every finished test replaces the saved range, and the practice counter
+    // would log each one as practice of this module.
+    expect(MODULE_PRACTICE["v-l7-m5"].companion.room).not.toBe("range");
+  });
+
+  it("files a module as self-reported in the catalog exactly when nothing here measures it", () => {
+    // The catalog's proofMetric and the basis a lesson page states name the
+    // same evidence, so the two never disagree about a module.
+    for (const m of modules) {
+      const { basis } = MODULE_PRACTICE[m.id];
+      expect(m.proofMetric === "self_reported", `${m.id}: ${m.proofMetric}`).toBe(
+        basis.kind === "selfCheck",
+      );
+    }
+  });
+
   it("knows which rooms draw on the free daily allowance, as the cap counts them", () => {
     expect([...GUIDED_ACTIVITY].sort()).toEqual([...CAPPED_TYPES].sort());
     expect(isGuidedPractice({ room: "warmups" })).toBe(true);

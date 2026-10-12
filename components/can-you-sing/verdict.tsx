@@ -3,6 +3,7 @@
 import { midiToLabel } from "@/lib/audio/notes";
 import {
   popFit,
+  popNoteLabel,
   popRangeLabel,
   type PopSong,
 } from "@/lib/pop-songs";
@@ -52,7 +53,6 @@ export function CanYouSingAction({ song }: { song: PopSong }) {
 export function CanYouSingVerdict({ song }: { song: PopSong }) {
   const progress = useProgress();
   const fit = popFit(song, progress.range);
-  const practice = songFirstPractice(fit, progress.range);
 
   if (fit.verdict === "unknown") {
     return (
@@ -90,6 +90,23 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
   const roomToCentre = headroom + footroom >= 4;
   const limitsNote = "A range test finds your limits, not your comfortable band";
 
+  // A song pitched for a higher or lower voice is usually sung an octave away
+  // in its written key (the either-octave rule the songbook scores by). When
+  // that octave puts every note inside the saved range, say so, and practise
+  // for a fit rather than for the extreme the written octave misses.
+  const octave = fit.verdict === "high" ? -12 : fit.verdict === "low" ? 12 : 0;
+  const octLow = song.lowMidi + octave;
+  const octHigh = song.highMidi + octave;
+  const octaveFits = octave !== 0 && octLow >= low && octHigh <= high;
+  const octaveEdge = high - octHigh <= 1 ? "top" : octLow - low <= 1 ? "bottom" : null;
+  const octaveNote = octaveFits
+    ? ` Sung an octave ${octave < 0 ? "lower" : "higher"} in the written key, it runs ${popNoteLabel(song, octLow)}–${popNoteLabel(song, octHigh)}, inside your tested range${octaveEdge ? `. ${limitsNote}, so expect the ${octaveEdge} of it to be work` : ""}.`
+    : "";
+  const practice = songFirstPractice(
+    octaveFits ? { verdict: "fits", offsetSemis: 0 } : fit,
+    progress.range,
+  );
+
   const message =
     fit.verdict === "fits"
       ? headroom <= 1
@@ -98,9 +115,9 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
           ? `As written, every note of ${song.title} is inside your tested range, but its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect the bottom of this song to be work.${roomToCentre && centre >= 1 ? ` Raising the key by ${centre} centres it in your range.` : ""}`
           : `As written, ${song.title} sits inside your range. The top of the song leaves you ${headroom} semitones of headroom.`
       : fit.verdict === "high"
-        ? `The top of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} above your tested ceiling of ${midiToLabel(high)}. Dropping the key by ${fit.offsetSemis} would bring it inside, with the top note on that ceiling${-centre > fit.offsetSemis ? `; dropping it by ${-centre} centres it in your range` : ""}.`
+        ? `The top of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} above your tested ceiling of ${midiToLabel(high)}. Dropping the key by ${fit.offsetSemis} would bring it inside, with the top note on that ceiling${-centre > fit.offsetSemis ? `; dropping it by ${-centre} centres it in your range` : ""}.${octaveNote}`
         : fit.verdict === "low"
-          ? `The low end of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} below your tested floor of ${midiToLabel(low)}. Raising the key by ${fit.offsetSemis} would bring it inside, with the bottom note on that floor${centre > fit.offsetSemis ? `; raising it by ${centre} centres it in your range` : ""}.`
+          ? `The low end of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} below your tested floor of ${midiToLabel(low)}. Raising the key by ${fit.offsetSemis} would bring it inside, with the bottom note on that floor${centre > fit.offsetSemis ? `; raising it by ${centre} centres it in your range` : ""}.${octaveNote}`
           : `${song.title} spans more semitones than your tested range covers, so no key change puts every note inside that saved range. Start with a smaller pattern rather than pushing for the extremes.`;
 
   return (
@@ -111,7 +128,7 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
         Your saved range: {yours}. Song as written: {popRangeLabel(song)}.
       </p>
       <p className="mt-4 text-xs text-dim">
-        Compared against the commonly cited studio-version range, not a
+        Compared against the commonly cited lead-vocal range, not a
         judgment of your voice on this material. Note bounds alone do not
         establish comfort, tone, or readiness to perform it.
       </p>

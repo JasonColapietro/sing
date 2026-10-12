@@ -10,6 +10,7 @@ import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { LinkButton, SectionLabel } from "@/components/ui";
 import { FamousVoices } from "@/components/landing/famous-voices";
 import ProVisual from "@/components/pro/pro-visual";
+import V2Banner from "@/components/v2-banner";
 import {
   AnalyzeGlyph,
   BreathGlyph,
@@ -252,6 +253,12 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {/* The 3.1 announcement, for returning singers only. This is the one
+          place it renders: after the hero, so it never pushes the start
+          buttons down. Above a page's content it put that page's main button
+          under a 375×667 phone's tab bar (see components/v2-banner.tsx). */}
+      <V2Banner />
 
       {/* Today */}
       <section className="mt-12 sm:mt-16" aria-labelledby="today">

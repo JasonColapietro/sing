@@ -266,6 +266,11 @@ export default async function SingerPage({
   const { slug } = await params;
   const s = singerBySlug(slug);
   if (!s) notFound();
+  // The client components get these four fields and nothing else. Whatever a
+  // server page hands a client component is serialized into the page source,
+  // and the full record carries the blurb and technique notes that are the
+  // Pro atlas's entry prose, which this page does not show.
+  const rangeProps = { slug: s.slug, name: s.name, lowMidi: s.lowMidi, highMidi: s.highMidi };
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
@@ -450,13 +455,13 @@ export default async function SingerPage({
             />
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            <PlayRangeButton s={s} />
+            <PlayRangeButton s={rangeProps} />
           </div>
         </Card>
 
         {/* The profile's unique value is the personal comparison, so it sits
             directly under the answer rather than below the editorial detail. */}
-        <CompareWithMe s={s} />
+        <CompareWithMe s={rangeProps} />
 
         {/* Songs in the range catalog by this artist */}
         {popSongsByArtistSlug(s.slug).length > 0 && (
