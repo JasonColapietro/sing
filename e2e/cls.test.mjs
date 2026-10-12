@@ -125,8 +125,12 @@ describe("CLS measurement CLI gate", () => {
     // every load, so without a seen key the report would open over every page.
     const { stdout } = await runCls("good", "mobile-375", ["--returning"]);
     const seed = Buffer.from(/^SEED:(.+)$/m.exec(stdout)[1], "base64").toString();
+    // The clear and the seed share one init script, clear first, since
+    // Playwright does not order separate init scripts.
+    expect(seed.indexOf("localStorage.clear()")).toBeGreaterThanOrEqual(0);
+    expect(seed.indexOf("localStorage.clear()")).toBeLessThan(seed.indexOf("cls-returning-seed"));
     for (const now of [new Date(2026, 9, 12, 9), new Date(2026, 9, 14, 21), new Date(2026, 9, 18, 23, 30)]) {
-      const store = new Map();
+      const store = new Map([["suede-sing:progress:v1", "stale"]]);
       class FixedDate extends Date {
         constructor(...args) {
           super(...(args.length ? args : [now.getTime()]));
@@ -136,7 +140,7 @@ describe("CLS measurement CLI gate", () => {
         Date: FixedDate,
         JSON,
         String,
-        localStorage: { setItem: (k, v) => store.set(k, String(v)) },
+        localStorage: { clear: () => store.clear(), setItem: (k, v) => store.set(k, String(v)) },
       });
       const progress = JSON.parse(store.get("suede-sing:progress:v1"));
       expect(progress.sessions).toHaveLength(1);

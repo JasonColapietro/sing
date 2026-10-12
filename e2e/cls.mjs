@@ -40,7 +40,7 @@ const RETURNING = argv.includes("--returning");
 /**
  * A returning singer's record (lib/progress-shape.ts ProgressState), dated
  * from the browser's own clock so "yesterday" is the viewer's local day.
- * Runs after the clear on every new document.
+ * Runs right after the clear, in the same init script, on every new document.
  *
  * On a Monday "yesterday" falls in last week, so the weekly report card
  * (components/weekly-report-card.tsx) would open above every page's content
@@ -136,8 +136,9 @@ for (const viewport of viewports) {
     viewport: { width: viewport.width, height: viewport.height },
     permissions: ["microphone"],
   });
-  await context.addInitScript(() => { try { localStorage.clear(); } catch {} });
-  if (RETURNING) await context.addInitScript(RETURNING_SEED);
+  // One script, because Playwright does not define the order of separate init
+  // scripts: a clear that ran after the seed would measure a newcomer.
+  await context.addInitScript(`try { localStorage.clear(); } catch {}\n${RETURNING ? RETURNING_SEED : ""}`);
   await context.addInitScript(OBSERVER);
 
   for (const route of routes) {
