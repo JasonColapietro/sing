@@ -7,6 +7,14 @@ import { BOOK_CONTENTS, type BookContentsEntry } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
 import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
 
+/** "1, 8 and 12" — the free chapters by number, from the contents. */
+const FREE_ORDERS = (() => {
+  const orders = BOOK_CONTENTS.filter((c) => c.free).map((c) => String(c.order));
+  return orders.length > 1
+    ? `${orders.slice(0, -1).join(", ")} and ${orders[orders.length - 1]}`
+    : orders.join("");
+})();
+
 type State =
   | { kind: "idle" }
   | { kind: "loading" }
@@ -99,7 +107,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
       </LinkButton>
       {sample && (
         <LinkButton href={`/book/${sample.slug}`} variant="outline" size="sm">
-          Read the free chapter
+          Read a free chapter
         </LinkButton>
       )}
       <LinkButton href="/pro#restore" variant="ghost" size="sm">
@@ -126,7 +134,7 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
           <p className="mt-2 max-w-xl text-sm text-mut">
             The Measured Voice comes with Suede Pro: all{" "}
             {BOOK_CONTENTS.length} chapters, and a PDF to keep. The studio
-            itself stays free either way, and so does the first chapter.
+            itself stays free either way, and so do chapters {FREE_ORDERS}.
           </p>
           {ctas}
         </Card>

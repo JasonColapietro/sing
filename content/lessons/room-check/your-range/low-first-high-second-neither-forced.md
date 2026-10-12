@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+The range test asks for your two ends one at a time: hold a comfortable note, slide down to your lowest, then slide up to your highest. Only notes you could let someone else hear count, with a clear pitch you could hold for a beat or two, so the creak below your lowest sung note and a squeezed top note both stay out. Stop each slide where the next note would need effort rather than height: that is a reading you can repeat next month, which an extreme reached once is not.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Comfortable, not extreme. The number we want is the one you can use. Say what wi
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Low First, High Second, Neither Forced.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.
+Record two slides down from the same comfortable note in one take, with a reset between them. On the first, stop at the first note that needs any effort: extra volume, a tucked chin or a pushed breath. On the second, stop one note earlier, while it is still completely easy. The stopping note is the only thing that changes. On playback, listen for the difference: the effortful note usually thins, rattles or wobbles, and the easy one sounds like the rest of your voice, so keep the easy one as your low end. Return to the middle and do the same pair going up. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.

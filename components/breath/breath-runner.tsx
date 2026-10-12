@@ -5,14 +5,10 @@ import { useFreeCap } from "@/lib/free-cap";
 
 import { useEffect, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
-import {
-  todayPracticeSec,
-  useProgress,
-  type Achievement,
-} from "@/lib/progress";
+import { useProgress, type Achievement } from "@/lib/progress";
 import { SessionShell } from "@/components/practice/session-shell";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
-import { useDailyGoal } from "@/components/practice/learn-home";
+import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { BoxBreathing } from "./box-breathing";
 import { BreathCueDrill } from "./breath-cue-drill";
 import { FarinelliDrill } from "./farinelli-drill";
@@ -290,6 +286,7 @@ export function BreathRunner({
 
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
   function closeStep(i: number, data: BreathDrillResult | null) {
     const next = [...results];
@@ -338,7 +335,7 @@ export function BreathRunner({
         }
         xp={results.reduce((a, r) => a + (r?.logged?.xpGained ?? 0), 0)}
         streakDays={progress.streak.current}
-        goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+        goal={{ doneSec: goalDoneSec, goalSec }}
         rows={routine.steps.map((s, i) => ({
           label: breathStepTitle(s),
           score: results[i]?.score ?? null,
@@ -407,6 +404,7 @@ export function BreathDrillSession({
 
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
   // The path's rows are drills, not presets, so the step handed to StepDrill is
   // mostly a carrier for the drill id — the fields the drills would read as a
@@ -433,7 +431,7 @@ export function BreathDrillSession({
         stars={starsForDrillResult(drill, result)}
         xp={result.logged?.xpGained ?? 0}
         streakDays={progress.streak.current}
-        goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+        goal={{ doneSec: goalDoneSec, goalSec }}
         rows={[
           {
             label: breathDrillTitle(drill),

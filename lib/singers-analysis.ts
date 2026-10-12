@@ -2,6 +2,7 @@ import { midiToLabel } from "@/lib/audio/notes";
 import {
   SINGERS,
   pluralVoice,
+  recordHolders,
   type Singer,
   type VoiceKind,
 } from "@/lib/singers";
@@ -413,6 +414,16 @@ export interface GroupStats {
   highest: Singer;
   widest: Singer;
   narrowest: Singer;
+  /**
+   * Every singer tied for each extreme, in list order (alphabetical for the
+   * hub lists). The single fields above each pick one member of the tie; any
+   * sentence that names a record holder should name the whole tie, or it
+   * reports an alphabetical accident as the sole holder.
+   */
+  lowestAll: Singer[];
+  highestAll: Singer[];
+  widestAll: Singer[];
+  narrowestAll: Singer[];
   /** Most common voice category in the group, with its share. */
   topVoiceType: { type: VoiceKind; count: number } | null;
   /** Decade ranges of prominence, oldest first. */
@@ -429,6 +440,9 @@ export function statsFor(list: Singer[]): GroupStats | null {
   for (const s of list) counts.set(s.voiceType, (counts.get(s.voiceType) ?? 0) + 1);
   const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
   const years = list.map((s) => s.activeFrom);
+  const holders = recordHolders(list);
+  const minSpan = Math.min(...list.map(span));
+  const narrowestAll = list.filter((s) => span(s) === minSpan);
   return {
     count: list.length,
     medianSpanSemitones: median(list.map(span)),
@@ -436,6 +450,10 @@ export function statsFor(list: Singer[]): GroupStats | null {
     highest: byHigh[0],
     widest: bySpan[0],
     narrowest: bySpan[bySpan.length - 1],
+    lowestAll: holders.lowest,
+    highestAll: holders.highest,
+    widestAll: holders.widest,
+    narrowestAll,
     topVoiceType: top ? { type: top[0], count: top[1] } : null,
     eraFrom: Math.min(...years),
     eraTo: Math.max(...years),

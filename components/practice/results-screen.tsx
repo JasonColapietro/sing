@@ -93,8 +93,12 @@ export function ResultsScreen({
   onAgain?: () => void;
   /** Run the weakest part again, where the room can. */
   onPractice?: () => void;
-  /** Renders the shareable card, but only when there is a score to share. */
-  share?: { title: string; subtitle?: string };
+  /**
+   * Renders the shareable card, but only when there is a score to share.
+   * `url` is where a friend who opens the share lands: the room the result
+   * came from. Without it the share links to the home page.
+   */
+  share?: { title: string; subtitle?: string; url?: string };
   /**
    * Anything the room wants under the rows — a nudge, a hint, a chart. This
    * renders on the dark surface, so anything built out of the site's paper
@@ -253,6 +257,7 @@ export function ResultsScreen({
                 subtitle={share.subtitle}
                 score={score}
                 grade={shareGrade}
+                url={share.url}
               />
             </div>
           )}

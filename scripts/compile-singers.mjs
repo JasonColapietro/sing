@@ -27,6 +27,10 @@ const VOICE_KINDS = new Set([
   "Bass",
 ]);
 
+const MALE_KINDS = new Set(["Countertenor", "Tenor", "Baritone", "Bass-baritone", "Bass"]);
+/** G3. No male-category floor in the library sits here or above. */
+const MALE_FLOOR_CEILING = 55;
+
 const GENRES = new Set([
   "Rock", "Hard Rock", "Metal", "Punk", "Grunge", "Alternative", "Indie",
   "Pop", "Synth-Pop", "New Wave", "Disco", "R&B", "Soul", "Funk", "Hip-Hop",
@@ -109,6 +113,14 @@ for (const file of files) {
     if (!VOICE_KINDS.has(r.voiceType)) {
       problems.push(`${where}: bad voiceType "${r.voiceType}" — skipped`);
       continue;
+    }
+    // A male-category floor at G3 or above sits over the singer's own speaking
+    // pitch. That is almost always a treble-clef score's written compass,
+    // which sounds an octave lower, copied as if it were the sounding range.
+    if (MALE_KINDS.has(r.voiceType) && lowMidi >= MALE_FLOOR_CEILING) {
+      problems.push(
+        `${where}: ${r.voiceType} floor ${r.lowNote} is at or above G3 — check for a written treble-clef figure an octave high`,
+      );
     }
     const genres = (Array.isArray(r.genres) ? r.genres : []).filter((g) => GENRES.has(g));
     if (!genres.length) {

@@ -69,6 +69,42 @@ export function computeRecords<T extends { lowMidi: number; highMidi: number }>(
   return { widest, lowest, highest };
 }
 
+export interface RecordHolders<T> {
+  widest: T[];
+  lowest: T[];
+  highest: T[];
+}
+
+/**
+ * Every holder of each record in `list`, in list order.
+ *
+ * computeRecords keeps one singer per record, and on a tie that is simply
+ * whoever comes first in the list, which for an alphabetical catalog means
+ * the alphabetically first name. Two singers sharing the widest span (or the
+ * lowest or highest note) is a fact about the data, so any sentence that names
+ * a record holder must name all of them; this is the helper for that.
+ */
+export function recordHolders<T extends { lowMidi: number; highMidi: number }>(
+  list: readonly T[],
+): RecordHolders<T> {
+  if (!list.length) return { widest: [], lowest: [], highest: [] };
+  const sp = (s: T) => s.highMidi - s.lowMidi;
+  const maxSpan = Math.max(...list.map(sp));
+  const minLow = Math.min(...list.map((s) => s.lowMidi));
+  const maxHigh = Math.max(...list.map((s) => s.highMidi));
+  return {
+    widest: list.filter((s) => sp(s) === maxSpan),
+    lowest: list.filter((s) => s.lowMidi === minLow),
+    highest: list.filter((s) => s.highMidi === maxHigh),
+  };
+}
+
+/** "A", "A and B", "A, B and C". */
+export function joinNames(names: readonly string[]): string {
+  if (names.length <= 1) return names.join("");
+  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
 /** Semitones of overlap between two ranges (0 if disjoint). */
 export function rangeOverlap(
   aLow: number,

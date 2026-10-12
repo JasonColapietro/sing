@@ -104,8 +104,10 @@ export function VocalLoad({
       <p className="mt-5 text-xs text-mut">
         Cycle dose counts how many times your vocal folds opened and closed —
         pitch multiplied by the time you were actually sounding. An hour spent
-        high in your range is far more work than an hour spent low, which is why
-        a stopwatch alone tends to understate a soprano&rsquo;s day.
+        high in your range puts the folds through far more cycles than an hour
+        spent low, which is why a stopwatch alone tends to understate a
+        soprano&rsquo;s day. Cycles ignore loudness, though: an hour sung
+        loudly and an hour sung softly at the same pitch count the same.
       </p>
     </div>
   );

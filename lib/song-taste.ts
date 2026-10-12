@@ -141,9 +141,11 @@ export interface TasteContext {
  *
  * The order of precedence is the point of this function:
  *   1. Eligibility is never negotiable. A song in a locked band, or a Pro song
- *      for a free singer, is dropped before anything is scored — a
- *      recommendation is a deep link, and a deep link to a lock is a dead end.
- *   2. Range fit outranks taste. With a saved range, songs "Fit to my range"
+ *      for a free singer, is dropped before anything is scored — a pick
+ *      starts from the library, which keeps to the band ladder (only a page
+ *      or lesson link that names a song skips it), so a locked pick would be
+ *      a dead end.
+ *   2. Range fit outranks taste. With a saved range, songs the automatic fit
  *      can place inside it (±12 semitones) always come before ones it cannot,
  *      whatever their genre: a favourite style sung out of reach is a worse
  *      first song than a hymn that fits.

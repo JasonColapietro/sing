@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+These are three ways to shape the start or length of a note while its pitch and timing stay where they are written. A grace note is a quick note a step above or below that falls straight into the main note; staccato cuts the note short, with a little silence after it; an accent gives the note a firmer, clearer start from the breath, not a much louder sound or a squeeze in the throat. Each changes how the line feels without changing the tune, which is why they are worth having on cue.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Three ways to attack the same note. Say what will count as complete in this less
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Grace Notes, Staccato, Accent.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Add one named articulation at a time: a connected grace, a short release, or a clear accent. Make the gesture small enough to remain repeatable.
+A grace note is a quick note a step above or below that falls straight into the main note; staccato is short and detached; an accent is a firmer start, not a louder note. Pick one note in the first phrase of Ode to Joy and sing the phrase four times, changing only how that note is shaped: plain, with a grace note from the step above, staccato, then accented. Keep the pitch, words and tempo the same. Record all four in one take in the recorder with a breath between them. Make each gesture small enough to remain repeatable.
 
 - Look: The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.
 - Listen: The three versions are distinguishable in playback without one simply being much louder than the others.

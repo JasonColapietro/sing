@@ -66,7 +66,7 @@ export function PageShell({
           <h1 className="text-4xl sm:text-5xl">{title}</h1>
           {subtitle && <p className="mt-3 max-w-prose text-mut">{subtitle}</p>}
         </div>
-        {actions && <div className="flex items-center gap-2">{actions}</div>}
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
       {children}
     </main>

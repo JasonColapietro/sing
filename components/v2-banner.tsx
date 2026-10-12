@@ -4,16 +4,23 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import V2TraceGlyph from "@/components/v2-glyph";
+import { PROGRESS_STORAGE_KEY } from "@/lib/progress";
 
 const SEEN_KEY = "suede-sing:v3-1-banner:v1";
 
 /**
  * The release announcement (3.1 as of 2026-09-25; it announced v2 before
  * that): a filled band above the sticky header that scrolls away
- * with the page. It shares the header's max-w-6xl grid so the V2 chip sits on
- * the same left edge as the wordmark below it — part of the console, not a
- * toast. No violet anywhere in it: the strip hangs directly over the violet Pro
- * pill, and a gold banner there would announce a pricing event, not a version.
+ * with the page.
+ *
+ * It is shown only to returning singers (a saved progress record exists); a
+ * first-time visitor has nothing to compare against, and on a phone the band
+ * pushed the primary CTA below the fold.
+ *
+ * It shares the header's max-w-6xl grid so the V2 chip sits on the same left
+ * edge as the wordmark below it — part of the console, not a toast. No violet
+ * anywhere in it: the strip hangs directly over the violet Pro pill, and a
+ * gold banner there would announce a pricing event, not a version.
  * Its accent is --color-cool, the pitch trace's colour (see v2-glyph.tsx).
  *
  * It started as a 40px hairline strip whose message was hidden below sm, which
@@ -27,12 +34,13 @@ const SEEN_KEY = "suede-sing:v3-1-banner:v1";
  * shift, on a site that prerenders every page. The banner is always in the
  * server HTML (so every page carries a crawlable link to /changelog), and the
  * inline script directly after it hides it before first paint when the seen
- * key is set — the parser executes the script synchronously, so a returning
- * dismisser never sees a frame of banner. React 19 leaves attributes it never
- * rendered alone during hydration, so the script-set `hidden` sticks; the
- * mount effect then reads the same key and unmounts for real. Tailwind's
- * preflight keeps `[hidden]` display:none with !important, so no display
- * utility here can override it.
+ * key is set or there is no progress record — the parser executes the script
+ * synchronously, so neither a returning dismisser nor a first-time visitor
+ * sees a frame of banner. React 19 leaves attributes it never rendered alone
+ * during hydration, so the script-set `hidden` sticks; the mount effect then
+ * reads the same keys and unmounts for real. Tailwind's preflight keeps
+ * `[hidden]` display:none with !important, so no display utility here can
+ * override it.
  */
 export default function V2Banner() {
   const pathname = usePathname();
@@ -43,7 +51,12 @@ export default function V2Banner() {
     // effect body trips react-hooks/set-state-in-effect.
     const sync = () => {
       try {
-        if (window.localStorage.getItem(SEEN_KEY)) setDismissed(true);
+        if (
+          window.localStorage.getItem(SEEN_KEY) ||
+          !window.localStorage.getItem(PROGRESS_STORAGE_KEY)
+        ) {
+          setDismissed(true);
+        }
       } catch {
         // storage unavailable — keep showing rather than flicker
       }
@@ -122,7 +135,7 @@ export default function V2Banner() {
       </aside>
       <script
         dangerouslySetInnerHTML={{
-          __html: `try{if(localStorage.getItem("${SEEN_KEY}"))document.getElementById("v2-banner").hidden=true}catch(e){}`,
+          __html: `try{if(localStorage.getItem("${SEEN_KEY}")||!localStorage.getItem("${PROGRESS_STORAGE_KEY}"))document.getElementById("v2-banner").hidden=true}catch(e){}`,
         }}
       />
     </>

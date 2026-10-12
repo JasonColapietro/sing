@@ -1,10 +1,15 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
-const location = vi.hoisted(() => ({ search: "" }));
+const location = vi.hoisted(() => ({ search: "", suspend: false }));
 
 vi.mock("next/navigation", () => ({
-  useSearchParams: () => new URLSearchParams(location.search),
+  // `suspend` stands in for the static prerender, where useSearchParams
+  // bails the boundary out to client rendering and the HTML is the fallback.
+  useSearchParams: () => {
+    if (location.suspend) throw new Promise(() => {});
+    return new URLSearchParams(location.search);
+  },
 }));
 vi.mock("./pitch-meter", () => ({
   PitchMeter: () => <div data-tool="pitch">Pitch meter</div>,
@@ -30,6 +35,31 @@ describe("voice-tool deep links", () => {
     const html = renderToStaticMarkup(<VoiceTest />);
     expect(html).toContain(`data-tool="${expected}"`);
     expect(html).not.toContain(`data-tool="${expected === "pitch" ? "range" : "pitch"}"`);
+  });
+
+  it("anchors #start on the mode tabs so start links land on the tool", () => {
+    for (const search of ["", "?mode=range"]) {
+      location.search = search;
+      const html = renderToStaticMarkup(<VoiceTest />);
+      expect(html).toMatch(/<div[^>]*id="start"[^>]*role="tablist"/);
+    }
+  });
+
+  it("prerenders the pitch meter's card as the fallback, so hydration does not grow the box", () => {
+    // A one-line "Loading voice tools…" here was ~400px shorter than the
+    // meter, and the swap shifted the page (CLS 0.17 at 375px, e2e/cls.mjs).
+    location.search = "";
+    location.suspend = true;
+    try {
+      const html = renderToStaticMarkup(<VoiceTest />);
+      // The fallback's tabs are inert until the live tree replaces it.
+      expect(html).toMatch(/<button[^>]*role="tab"[^>]*disabled/);
+      expect(html).toContain('data-tool="pitch"');
+      expect(html).not.toContain("Loading voice tools");
+      expect(html).toMatch(/<div[^>]*id="start"[^>]*role="tablist"/);
+    } finally {
+      location.suspend = false;
+    }
   });
 
   it("keeps the singer comparison when switching to pitch and back", () => {

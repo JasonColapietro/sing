@@ -22,7 +22,7 @@ Open the practice material on this page and choose Five-note scale or Chromatic 
 
 ### Set a safe baseline
 
-Choose a target near the middle of your scanned range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.
+Choose a target near the middle of your comfortable range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -66,7 +66,7 @@ I heard the five-note scale reference, sang the pattern from silence, and compar
 - The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, you sing the five-note pattern from silence three times in a row and, on playback, every note starts on its pitch rather than sliding up into it.
 
 If not ready: If you scoop, silently imagine the pitch, use a quiet hum first, then open to the vowel without changing pitch. Reduce volume if the onset feels hard. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

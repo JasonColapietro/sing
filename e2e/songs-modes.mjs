@@ -71,17 +71,16 @@ const tempoSlider = (page) => page.getByLabel("Tempo", { exact: true });
 const tempoText = async (page) => (await tempoSlider(page).getAttribute("aria-valuetext")) ?? "";
 
 try {
-  // 1. Performance: chosen on the start step, points + multiplier in stage mode, switch while paused, summary names the mode.
+  // 1. Performance: chosen in the player before the first run, points + multiplier in stage mode, switch while paused, summary names the mode.
   {
     const { context, page, errors } = await open();
-    await chooseMode(page, "Performance");
-    assert.equal(await page.getByRole("button", { name: "Rehearsal", exact: true }).getAttribute("aria-pressed"), "false");
-    assert.match(await page.locator("fieldset", { hasText: "Session mode" }).innerText(), /scored take/i);
     await dismissOverlays(page);
     await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
     await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
-    // Fastest rate before the run starts: the desk locks once the song is running.
     await dismissOverlays(page);
+    await chooseMode(page, "Performance");
+    assert.equal(await page.getByRole("button", { name: "Rehearsal", exact: true }).getAttribute("aria-pressed"), "false");
+    // Fastest rate before the run starts: the desk locks once the song is running.
     await tempoSlider(page).fill("1.25");
     assert.equal(await tempoText(page), "125%");
     await page.getByRole("button", { name: /Stage mode/ }).click();
@@ -109,10 +108,10 @@ try {
   // 2. Rehearsal (default): Auto tempo steps down after a silent loop; the song wraps past its planned loops instead of finishing.
   {
     const { context, page, errors } = await open();
-    assert.equal(await page.getByRole("button", { name: "Rehearsal", exact: true }).getAttribute("aria-pressed"), "true");
     await dismissOverlays(page);
     await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
     await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
+    assert.equal(await page.getByRole("button", { name: "Rehearsal", exact: true }).getAttribute("aria-pressed"), "true");
     // Fastest rate so loops pass quickly; then hand the rate to Auto.
     await dismissOverlays(page);
     const slider = tempoSlider(page);
@@ -154,19 +153,19 @@ try {
     await context.close();
   }
 
-  // 3. Passes and bands: the guide-track chips on the start step, a solo pass in the player and on the
+  // 3. Passes and bands: the pass chips in the player before the first run, a solo pass in the player and on the
   //    summary, and the library's ladder — bands, a real lock, and the check mark a mastered song earns.
   {
     const { context, page, errors } = await open();
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
+    await dismissOverlays(page);
     const solo = page.getByRole("button", { name: "On your own", exact: true });
     assert.equal(await page.getByRole("button", { name: "Sing along", exact: true }).getAttribute("aria-pressed"), "true", "guided is the default pass");
     for (let i = 0; i < 20 && (await solo.getAttribute("aria-pressed")) !== "true"; i++) { await dismissOverlays(page); await solo.click(); await page.waitForTimeout(250); }
     assert.equal(await solo.getAttribute("aria-pressed"), "true");
-    assert.match(await page.locator("fieldset", { hasText: "Guide track" }).innerText(), /masters a song/i);
     await chooseMode(page, "Performance");
-    await dismissOverlays(page);
-    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
-    await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
     await page.getByText("On your own", { exact: true }).first().waitFor(); // the pass pill
     assert.equal(await page.getByLabel(/Guide/).first().getAttribute("aria-valuetext"), "Off", "a solo pass silences the guide");
     await tempoSlider(page).fill("1.25");
@@ -212,11 +211,11 @@ try {
   //    and pulling them back to the ends returns to the whole song.
   {
     const { context, page, errors } = await open();
-    await chooseMode(page, "Performance");
     await dismissOverlays(page);
     await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
     await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
     await dismissOverlays(page);
+    await chooseMode(page, "Performance");
     const from = page.getByLabel("Loop from", { exact: true });
     const to = page.getByLabel("Loop to", { exact: true });
     assert.match(await from.getAttribute("aria-valuetext"), /^Bar 1, beat \d/, "start handle reads bar and beat");
@@ -251,11 +250,11 @@ try {
   // 5. Record and review: a recorded run hands its take to the summary, where it plays and saves to Recordings.
   {
     const { context, page, errors } = await open();
-    await chooseMode(page, "Performance");
     await dismissOverlays(page);
     await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
     await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
     await dismissOverlays(page);
+    await chooseMode(page, "Performance");
     // A one-note loop keeps the run short.
     await page.getByLabel("Loop to", { exact: true }).fill("2");
     await page.getByLabel("Loop from", { exact: true }).fill("1");

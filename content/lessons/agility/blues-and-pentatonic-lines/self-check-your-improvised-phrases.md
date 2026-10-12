@@ -29,7 +29,7 @@ Hear Minor five-note scale in a comfortable key and remember its first note (1),
 
 ### Name the target: Eight-bar improvisation
 
-Rung two of the ladder. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+An eight-bar answer built from the call, keeping the tapped pulse and ending on the tonic. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The eight bars have a clear form with room to breathe; bends are optional and never forced.
 - Listen: The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
@@ -66,7 +66,7 @@ I used the supplied minor and pentatonic patterns to make my own short answering
 - The take keeps the tapped pulse, develops one repeated idea, and resolves by ear to the tonic you heard before recording.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: One recorded take holds eight bars against your tapped pulse, builds its answer from the two-bar call rather than wandering, and ends on the tonic you heard before recording.
 
 If not ready: If the line wanders, return to tonic, remove bends, and improvise with only three notes over two bars before extending the form. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

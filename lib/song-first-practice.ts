@@ -45,7 +45,7 @@ export function songFirstPractice(fit: PopFit, range: VocalRange): {
       free = {
         href: `/songs?song=${practiceSong.slug}`,
         label: `Practice ${practiceSong.title} free`,
-        reason: `The notes fit on paper; now try keeping a short phrase steady. Start with ${practiceSong.title}, a different, public-domain melody with live pitch feedback. Choose “Fit to my range” before pressing Play.`,
+        reason: `The notes fit on paper; now try keeping a short phrase steady. Start with ${practiceSong.title}, a different, public-domain melody with live pitch feedback. It opens fitted to your saved range.`,
       };
     }
   } else {

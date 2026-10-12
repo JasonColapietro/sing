@@ -1,7 +1,10 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 
+import VocalRangeByVoiceTypePage from "@/app/atlas/vocal-range-by-voice-type/page";
 import {
   getSingerEvidence,
   getSingerLastModified,
@@ -222,5 +225,26 @@ describe("singer evidence", () => {
         }),
       ).toThrow('cannot prove a full-career range, physiology, tessitura, or voice type');
     }
+  });
+});
+
+describe("a disputed review", () => {
+  /**
+   * /atlas/vocal-range-by-voice-type defines the categories by example. It
+   * used to pick Arijit Singh as its first tenor and Sam Smith as a
+   * countertenor, both records whose catalog label was disputed on review.
+   */
+  it("keeps the singer out of the voice-type reference examples without leaving a row short", () => {
+    const html = renderToStaticMarkup(createElement(VocalRangeByVoiceTypePage));
+    const body = html.match(/<tbody[\s\S]*?<\/tbody>/)?.[0] ?? "";
+    const rows = body.split("</tr>").filter((r) => r.includes("<th"));
+    expect(rows.length).toBe(8);
+    for (const row of rows) {
+      const slugs = [...row.matchAll(/href="\/singers\/([a-z0-9-]+)"/g)].map((m) => m[1]);
+      expect(slugs).toHaveLength(3);
+      expect(slugs.filter((slug) => getSingerReviewStatus(slug) === "disputed")).toEqual([]);
+    }
+    expect(body).not.toContain('href="/singers/arijit-singh"');
+    expect(body).not.toContain('href="/singers/sam-smith"');
   });
 });

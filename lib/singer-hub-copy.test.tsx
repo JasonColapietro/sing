@@ -18,6 +18,7 @@ import VoiceTypePage, {
 } from "@/app/singers/voice-type/[type]/page";
 import { GENRE_HUB_COPY, VOICE_TYPE_HUB_COPY, type HubCopy } from "@/lib/singer-hub-copy";
 import { HUB_GENRES, VOICE_KINDS, genreSlug, voiceTypeSlug } from "@/lib/singers";
+import { SITE_URL } from "@/lib/site";
 
 const GENRE_SLUGS = HUB_GENRES.map(genreSlug);
 const VOICE_SLUGS = VOICE_KINDS.map(voiceTypeSlug);
@@ -72,6 +73,13 @@ async function hubs() {
   return out;
 }
 
+/** Rendering all 37 hubs is slow; the tests below share one pass. */
+let rendered: ReturnType<typeof hubs> | undefined;
+function allHubs() {
+  rendered ??= hubs();
+  return rendered;
+}
+
 const ALL_COPY: Array<[string, HubCopy]> = [
   ...Object.entries(GENRE_HUB_COPY),
   ...Object.entries(VOICE_TYPE_HUB_COPY).map(([v, c]) => [voiceTypeSlug(v as never), c] as [string, HubCopy]),
@@ -121,7 +129,7 @@ describe("rendered hubs", () => {
   it(
     "print their own intro and link the neighbour, with distinct titles and descriptions",
     async () => {
-      const pages = await hubs();
+      const pages = await allHubs();
 
       for (const [slug, copy] of Object.entries(GENRE_HUB_COPY)) {
         const page = pages.get(`/singers/genre/${slug}`)!;
@@ -153,6 +161,75 @@ describe("rendered hubs", () => {
         expect(pages.get(a)!.title, `${a} vs ${b}`).not.toBe(pages.get(b)!.title);
         expect(pages.get(a)!.description, `${a} vs ${b}`).not.toBe(pages.get(b)!.description);
       }
+    },
+    60_000,
+  );
+});
+
+describe("hub snippets, next steps and structured data", () => {
+  it(
+    "keeps the singer count and note span in every description",
+    async () => {
+      // fitDescription drops a whole trailing sentence once the total passes
+      // 155 characters, which used to leave 14 hubs with only their summary.
+      for (const [href, page] of await allHubs()) {
+        expect(page.description, href).toMatch(/\bcatalog ranges\b/);
+        expect(page.description, href).toMatch(/\b\d+ (famous )?[A-Za-z&-]+/);
+        expect(page.description, href).toMatch(/\b[A-G]#?\d\b/);
+        expect(page.description.length, href).toBeLessThanOrEqual(155);
+      }
+    },
+    60_000,
+  );
+
+  it(
+    "offers the range test from the page header of every hub",
+    async () => {
+      for (const [href, page] of await allHubs()) {
+        const main = page.html.match(/<main\b[\s\S]*?<\/main>/)?.[0] ?? "";
+        const header = main.slice(0, main.search(/<h2\b/));
+        expect(header, href).toContain('href="/range?mode=range"');
+      }
+    },
+    60_000,
+  );
+
+  it(
+    "joins the site and publisher entities instead of declaring a second WebSite",
+    async () => {
+      for (const [href, page] of await allHubs()) {
+        const json = page.html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1] ?? "";
+        expect(json, href).toContain(`"isPartOf":{"@id":"${SITE_URL}/#website"}`);
+        expect(json, href).toContain('"publisher":{"@type":"Organization"');
+        expect(json, href).not.toContain('"@type":"WebSite"');
+      }
+    },
+    60_000,
+  );
+
+  it(
+    "pluralises voice labels properly",
+    async () => {
+      for (const [href, page] of await allHubs()) {
+        expect(text(page.html), href).not.toMatch(/\bbasss\b/);
+      }
+    },
+    60_000,
+  );
+
+  it(
+    "links the genres that share the most singers, not the alphabetically first",
+    async () => {
+      const pages = await allHubs();
+      const chips = (href: string) => {
+        const html = pages.get(href)!.html;
+        const browse = html.slice(html.indexOf("Browse another way"));
+        return [...browse.matchAll(/href="\/singers\/genre\/([a-z0-9-]+)"/g)].map((m) => m[1]);
+      };
+      expect(chips("/singers/genre/metal")).toContain("rock");
+      expect(chips("/singers/genre/k-pop")).toContain("pop");
+      expect(chips("/singers/genre/pop")).toContain("randb");
+      expect(chips("/singers/genre/pop")).toContain("rock");
     },
     60_000,
   );

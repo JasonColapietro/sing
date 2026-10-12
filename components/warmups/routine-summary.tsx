@@ -3,8 +3,9 @@
 import { useMemo } from "react";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
-import { useDailyGoal } from "@/components/practice/learn-home";
-import { todayPracticeSec, useProgress, type Achievement } from "@/lib/progress";
+import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
+import { useProgress, type Achievement } from "@/lib/progress";
+import { SITE_URL } from "@/lib/site";
 import type { RoutineSummaryData } from "./routine-runner";
 import { routineMinutes, stepExercise } from "./routines";
 
@@ -30,6 +31,7 @@ export function RoutineSummary({
   const { routine, steps, completed, startStep = 0 } = data;
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
   const { sungCount, score, xp, achievements, weakestId } = useMemo(() => {
     const sung = steps.filter((s): s is NonNullable<typeof s> => s !== null);
@@ -71,7 +73,7 @@ export function RoutineSummary({
       stars={starsForScore(score)}
       xp={xp}
       streakDays={progress.streak.current}
-      goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+      goal={{ doneSec: goalDoneSec, goalSec }}
       rows={routine.steps.map((s, i) => {
         const r = steps[i] ?? null;
         return {
@@ -92,6 +94,7 @@ export function RoutineSummary({
           : {
               title: routine.name,
               subtitle: `Warmup routine · ${sungCount}/${routine.steps.length} exercises · ~${routineMinutes(routine)} min`,
+              url: `${SITE_URL}/warmups?routine=${routine.id}`,
             }
       }
     >

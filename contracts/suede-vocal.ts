@@ -117,12 +117,14 @@ import {
 } from "@/components/ear/routines";
 import {
   EXERCISES,
+  NOMINAL_RANGE,
   NOTE_GAP_SEC,
   PRO_PACKS,
   buildSegments,
   type WarmupExercise,
 } from "@/components/warmups/exercises";
 import {
+  GLIDE_TIME_SLACK,
   ONSET_GRACE_MAX_SHARE,
   ONSET_GRACE_SEC,
   TOLERANCE_CENTS as WARMUP_TOLERANCE_CENTS,
@@ -140,12 +142,16 @@ import { FREE_WEEKS, PROGRAMS } from "@/lib/programs";
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 8;
+export const CONTRACT_VERSION = 9;
 /*
  * 8: added warmups.scoring (the warmup scorer's tolerance and its per-note
  *    onset grace), gapSec and rangeCap on every warm-up exercise, and
  *    rules.warmupOnsetGrace, rules.warmupGap and rules.warmupRangeCap. See
  *    contracts/README.md, "suede-vocal v8".
+ * 9: added warmups.scoring.glideTimeSlack (glides scored against a window of
+ *    the guide's ramp), warmups.nominalRange (the ladder span used before a
+ *    range test), and rules.warmupGlideWindow and
+ *    rules.warmupOctaveWithoutRange. See contracts/README.md, "suede-vocal v9".
  */
 
 /**
@@ -410,6 +416,10 @@ const RULES = {
     "Consecutive notes (or glide steps) of a warm-up are separated by gapSec / tempo seconds of silence, gapSec being the exercise's own value; the default is published on every exercise rather than left implicit. The gap is part of patternSeconds and is never scored, and the guide plays the same gaps.",
   warmupRangeCap:
     "A non-null rangeCap trims the fitted root ladder before it is walked: with n rungs counted from the bottom (index 0), keep indexes round(from * (n - 1)) through max(that, round(to * (n - 1))), inclusive. A ladder of one rung is kept as it is. A down ladder is capped first and reversed after. Null walks the whole fitted ladder.",
+  warmupGlideWindow:
+    "A glide frame at pattern time t is measured against the nearest pitch the guide's straight-line ramp passes through between t - glideTimeSlack * d - onsetGraceSec and t + glideTimeSlack * d, d being the glide's duration at the tempo sung and the ramp held at its endpoints outside the glide. The frame is in tune when it is within toleranceCents of that pitch, and its cents error is measured from it. onsetGraceSec here is warmups.scoring.onsetGraceSec itself, not the per-note capped grace. Plain notes are scored against their one pitch.",
+  warmupOctaveWithoutRange:
+    "Without a saved range every warm-up ladder is fitted to warmups.nominalRange (A2–E4, before any rangeCap) and any octave of each target counts: each sung frame is moved by whole octaves to the octave nearest the target at that instant before it is compared. Each note's tallies are filed under its target moved by the rounded mean of the whole-octave shifts of that note's counted frames, and the rep's reported root is moved by the rounded mean over the whole rep. With a saved range only the written octave counts.",
   freeExerciseGate:
     "A warmup is free if and only if it is in EXERCISES. Pro packs are gated by array membership, not by a flag, so a free surface must never deep-link a pack exercise.",
 } as const;
@@ -776,7 +786,14 @@ export function buildContract() {
         onsetGraceSec: ONSET_GRACE_SEC,
         /** The most of one note the grace may cover, as a share of its duration. */
         onsetGraceMaxShare: ONSET_GRACE_MAX_SHARE,
+        /** Share of a glide's length the ramp window reaches either side; see rules.warmupGlideWindow. */
+        glideTimeSlack: GLIDE_TIME_SLACK,
       },
+      /**
+       * The span every ladder is fitted to before a range test, in midi; see
+       * rules.warmupOctaveWithoutRange.
+       */
+      nominalRange: { lowMidi: NOMINAL_RANGE.lowMidi, highMidi: NOMINAL_RANGE.highMidi },
       exercises: [
         ...EXERCISES.map((ex) => serializeExercise(ex, true)),
         ...PRO_PACKS.flatMap((pack) => pack.exercises.map((ex) => serializeExercise(ex, false))),

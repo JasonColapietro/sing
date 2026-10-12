@@ -66,7 +66,7 @@ I followed a comfortable portion of the siren up and down and listened for conti
 - Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, three slow sirens in a row, one on each vowel, sound continuous to you on playback, up and down, at conversational volume.
 
 If not ready: If the sound flips abruptly, reduce volume and span, return to a trill or hum, and cross the same area more slowly. Stop if it feels tight. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

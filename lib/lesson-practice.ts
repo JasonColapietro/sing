@@ -156,7 +156,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "That you can tell breathy, nasal and tight apart in your own takes. Nothing measures any of the three.",
     ),
     companion: { room: "recorder" },
-    studies: ["morning-sustain"],
+    // Tongue-trill descent first: "Release the Jaw and Tongue" needs a drill
+    // that works the tongue, which a plain sustain does not.
+    studies: ["tongue-trill-descent", "morning-sustain"],
     readings: ["when-numbers-lie", "stamina-and-health", "atlas:a-vocabulary-for-tone"],
   },
 
@@ -214,7 +216,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "passaggioPitches",
       "That you located your own transition by ear and can name the published zone for your voice type. A range scan does not give you a passaggio.",
     ),
-    companion: { room: "range" },
+    // The pitch studio, not the range test: its live trace is where the book
+    // has you find the gear change, and a range result shows no passaggio.
+    companion: { room: "studio" },
     studies: ["ng-siren-fifth"],
     readings: ["the-passaggio", "finding-your-break"],
   },
@@ -241,7 +245,8 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "That you tried the pattern gently and noted your own effort. Nothing detects strain, so a safe belt cannot be scored.",
     ),
     companion: { room: "studio" },
-    studies: ["head-wee-descent", "legato-triad"],
+    // The free Legato triad first, so a free reader's first choice opens.
+    studies: ["legato-triad", "head-wee-descent"],
     readings: ["registers", "atlas:the-safety-rail"],
   },
   "v-l5-m5": {
@@ -459,6 +464,24 @@ const ROOM_ACTIVITY: Partial<Record<string, ActivityType>> = {
   recorder: "recording",
   tools: "tools",
 };
+
+/**
+ * The activities that draw on the free daily allowance of guided practice.
+ * Restates CAPPED_TYPES from lib/free-cap.ts, which is client-only; the test
+ * holds the two together.
+ */
+export const GUIDED_ACTIVITY: ReadonlySet<ActivityType> = new Set<ActivityType>([
+  "warmup",
+  "ear",
+  "breath",
+  "song",
+]);
+
+/** True when practising here uses the free daily guided-practice allowance. */
+export function isGuidedPractice(c: Companion): boolean {
+  const type = ROOM_ACTIVITY[c.room];
+  return type !== undefined && GUIDED_ACTIVITY.has(type);
+}
 
 export function practiceMatch(c: Companion): PracticeMatch | undefined {
   const type = ROOM_ACTIVITY[c.room];

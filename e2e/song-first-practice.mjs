@@ -71,13 +71,16 @@ try {
         await page.waitForURL(`${base}${test.href}`);
         if (test.href.startsWith("/warmups")) {
           await page.getByRole("heading", { name: `Turn on your mic to start “${test.title}”`, exact: true }).waitFor();
-          await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+          // Scoped to the gate: the Continue card's own "Enable mic and start"
+          // comes first in the DOM and would start its pick, not the link's.
+          await page.locator("#warmup-gate").getByRole("button", { name: "Enable mic and start", exact: true }).click();
           await page.getByRole("dialog", { name: test.title, exact: true }).waitFor();
         } else if (test.href.startsWith("/songs")) {
           await page.getByRole("heading", { name: `Enable your microphone to sing “${test.title}”`, exact: true }).waitFor();
           await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
           await page.getByRole("heading", { level: 1, name: test.title, exact: true }).waitFor();
-          await page.getByRole("button", { name: "Fit to my range", exact: true }).click();
+          // With a saved range the song opens fitted; no button press needed.
+          await page.getByText("Fitted to your saved range", { exact: true }).waitFor();
           await page.getByRole("button", { name: "Play", exact: true }).first().click();
           await page.getByRole("button", { name: "Pause", exact: true }).first().waitFor();
         } else {
@@ -92,7 +95,7 @@ try {
   const { context, page, errors } = await session({ width: 375, height: 812 });
   try {
     assert.equal(await page.getByRole("region", { name: "Your first practice" }).count(), 0);
-    await page.getByRole("link", { name: "Find your range free", exact: true }).click();
+    await page.getByRole("link", { name: "See if “Espresso” fits my voice", exact: true }).click();
     await page.getByRole("heading", { level: 1, name: "Vocal range test & pitch meter" }).waitFor();
     // Another tab saving a range must update the comparison on return.
     const other = await context.newPage();
@@ -100,10 +103,12 @@ try {
     await other.evaluate(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)),
       { key: progressKey, value: record(cases[0].range) });
     await other.close();
-    // A result popup remains eligible on /range. Returning to a song page
-    // must remove it without consuming the one-time offer or its scroll lock.
+    // A cold load of /range opens no result dialog: no test has finished
+    // there yet (components/pro/moments.tsx mounts its gate on /progress only).
     await page.reload();
-    await page.getByRole("dialog", { name: "Go Pro", exact: true }).waitFor();
+    await page.getByRole("heading", { level: 1, name: "Vocal range test & pitch meter" }).waitFor();
+    await page.waitForLoadState("networkidle");
+    assert.equal(await page.getByRole("dialog", { name: "Go Pro", exact: true }).count(), 0);
     await page.goBack();
     const practice = page.getByRole("region", { name: "Your first practice" });
     await practice.waitFor();

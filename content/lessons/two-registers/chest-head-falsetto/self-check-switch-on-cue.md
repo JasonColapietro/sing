@@ -5,7 +5,7 @@ stage: "v-l3"
 title: "Self-Check: Switch on Cue"
 type: "checkpoint"
 minutes: 5
-objective: "Called at random, both directions."
+objective: "Before recording, roll a die six times and write the order (odd = fuller, even = lighter); switch on each cue in that order, both directions."
 prerequisites: "v-l3-m1-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,7 +29,7 @@ Choose one easy pitch that can be produced lightly in more than one way. Keep at
 
 ### Name the target: Register identification
 
-Called at random, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Before recording, roll a die six times and write the order (odd = fuller, even = lighter); switch on each cue in that order, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.
 - Listen: Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference.
@@ -66,7 +66,7 @@ I compared two easy productions of the same pitch and could describe the audible
 - Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On playback of one take, each of the six switches in your rolled order lands on the sound it called for, fuller or lighter, at the same pitch and in both directions, without getting louder to make the change.
 
 If not ready: If the second version only appears by getting louder or tighter, lower the pitch and volume and make the contrast smaller. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

@@ -66,7 +66,7 @@ I compared three vowels on a comfortable fifth slide and noted which small adjus
 - The pitch remains connected and the lyric is still understandable across all three vowels.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On playback, one word on each of three vowels crosses your zone in both directions with the pitch connected and the word still recognizable, using the smallest vowel change that works.
 
 If not ready: If the word disappears, reduce the modification. If the crossing tightens, return to a hum and rebuild the vowel from there. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

@@ -6,6 +6,7 @@ import { SINGERS } from "./singers-data";
 import { SONGS, PRO_SONGS } from "@/components/songs/data";
 import { ALL_EXERCISES, EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
 import { PRO_PERKS } from "./pro";
+import { PRO_FAQ } from "./pro-shared";
 import {
   ATLAS_VOICE_COUNT,
   BOOKS,
@@ -95,5 +96,24 @@ describe("singer-range copy", () => {
     expect(book.desc).toContain(`${TOTAL_CHAPTERS} chapters`);
     expect(book.desc).toContain(`${TOTAL_WORDS.toLocaleString("en-US")} words`);
     expect(book.desc).toContain(`${ATLAS_VOICE_COUNT} singer profiles`);
+  });
+
+  it("gives the FAQ (and its FAQPage markup) the same book totals", () => {
+    // This answer once hard-coded a word count ~21,000 words stale, while the
+    // buy card beside it printed TOTAL_WORDS.
+    const answer = PRO_FAQ.find((f) => f.q.startsWith("What do I get"))!.a;
+    expect(answer).toContain(`${TOTAL_CHAPTERS} chapters`);
+    expect(answer).toContain(`${TOTAL_WORDS.toLocaleString("en-US")} words`);
+  });
+
+  it("never sells the one-time purchase with subscription words", () => {
+    // Lifetime is the only plan on sale. "The moment you subscribe" beside a
+    // one-time price raises the "will this renew?" doubt the page removes.
+    const copy = [
+      ...UNLOCK_TILES.map((t) => t.sub),
+      ...PRO_PERKS.map((p) => p.desc),
+      ...PRO_FAQ.map((f) => f.a),
+    ];
+    expect(copy.filter((c) => /\bsubscribe\b/i.test(c))).toEqual([]);
   });
 });

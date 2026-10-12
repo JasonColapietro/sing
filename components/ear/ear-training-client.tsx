@@ -1,7 +1,8 @@
 "use client";
 
 import { useFreeCap } from "@/lib/free-cap";
-import { CapWall } from "@/components/practice/free-cap";
+import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
+import { liveStreak } from "@/components/account/save-state";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card, PageShell, Pill, SectionLabel } from "@/components/ui";
@@ -12,9 +13,10 @@ import {
   StarTrio,
   StreakChip,
   useDailyGoal,
+  useGoalDoneSec,
 } from "@/components/practice/learn-home";
 import { starsForScore } from "@/components/practice/results-screen";
-import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
+import { localDay, useProgress } from "@/lib/progress";
 import {
   DIFFICULTIES,
   GAME_NAMES,
@@ -57,6 +59,11 @@ const GAME_ORDER: GameId[] = [
 /** Computed once: the songbook is static, and so is which songs it offers. */
 const CHASE_SONGS = chaseSongs();
 
+/** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
+function showCapWall() {
+  document.getElementById("free-cap")?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 /** Stars for a whole workout: the average of its steps' best scores. */
 function routineStars(
   routine: EarRoutine,
@@ -72,15 +79,28 @@ export default function EarTrainingClient() {
   const [bests, setBests] = useState<Record<string, number>>({});
   const progress = useProgress();
   const cap = useFreeCap();
-  /** Every way into a game or workout, so a capped singer meets the wall, not a mic prompt. */
+  /**
+   * Every way into a game or workout, so a capped singer meets the wall, not a
+   * mic prompt. A capped tap scrolls to the wall: a Start that does nothing
+   * reads as a broken page, not as a fair limit.
+   */
   const start = useCallback(
     (next: Active) => {
-      if (cap.capped) return;
+      if (cap.capped) {
+        showCapWall();
+        return;
+      }
       setActive(next);
     },
     [cap.capped],
   );
+  const unavailableReason = cap.capped
+    ? "Free practice is used for today. It resets at midnight; the free studio is still open."
+    : undefined;
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
+  // The stored count outlives a lapsed streak; only a live one is named.
+  const streakDays = liveStreak(progress.streak);
 
   const refreshBests = useCallback(() => setBests(readBests()), []);
   useEffect(() => {
@@ -122,7 +142,7 @@ export default function EarTrainingClient() {
         d.id === "easy"
           ? "Wide gaps, four intervals, any octave counts."
           : d.id === "medium"
-            ? "Smaller gaps, seven intervals, the octave matters."
+            ? "Smaller gaps, seven intervals. Once your range is saved, the octave matters."
             : "Every interval, harmonic pairs, and a tighter tuning window.",
       items: GAME_ORDER.map((game) => {
         const best = bests[`${game}:${d.id}`];
@@ -190,7 +210,13 @@ export default function EarTrainingClient() {
       title="Ear training for singers"
       subtitle="Five short games that train your ear for pitch and intervals: match a pitch, catch moving notes, name intervals and sing melodies back, ten rounds each. Start with today's workout, or pick one below."
     >
-      {cap.capped && <CapWall cap={cap} />}
+      {cap.capped ? (
+        <div className="mb-6">
+          <CapWall cap={cap} />
+        </div>
+      ) : (
+        <FreeAllowance cap={cap} className="mb-4" />
+      )}
       <ContinueCard
         kicker={earToday ? "Top up today" : "Today's ear workout"}
         title={recommended.name}
@@ -198,15 +224,17 @@ export default function EarTrainingClient() {
         meta={`${recommended.steps.length} games · ~${earRoutineMinutes(recommended)} min`}
         stepTitles={recommended.steps.map((s) => GAME_NAMES[s.game])}
         onStart={() => start({ kind: "routine", routine: recommended })}
-        startLabel="Start workout"
+        startLabel={cap.capped ? "Available tomorrow" : "Start workout"}
+        unavailableReason={unavailableReason}
         micReady
         error={null}
-        streakDays={progress.streak.current}
+        streakDays={streakDays}
+        streakBest={progress.streak.best}
       />
 
       <div className="mt-6 flex flex-wrap items-center gap-4">
-        <GoalRing doneSec={todayPracticeSec(progress)} goalSec={goalSec} />
-        <StreakChip days={progress.streak.current} />
+        <GoalRing doneSec={goalDoneSec} goalSec={goalSec} />
+        <StreakChip days={streakDays} best={progress.streak.best} />
       </div>
 
       <section className="mt-10">
@@ -255,7 +283,7 @@ export default function EarTrainingClient() {
           </span>
         </div>
         <div className="mt-4">
-          <PathList levels={levels} micNoteId={null} />
+          <PathList levels={levels} micNoteId={null} unavailableReason={unavailableReason} />
         </div>
       </section>
 

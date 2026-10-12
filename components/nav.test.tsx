@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -70,5 +71,29 @@ describe("main navigation current location", () => {
     const links = main.match(/<a\b[^>]*>/g) ?? [];
     expect(links).toHaveLength(5);
     for (const link of links) expect(link).toContain("min-h-11");
+  });
+});
+
+/**
+ * The nav renders on every page, so any module it imports statically ships to
+ * every visitor. A static @clerk/nextjs import in the nav, the auth hook or
+ * the save prompt put about 42 KB (gzipped) of Clerk on every page of a build
+ * where accounts are off and no account control can render. Clerk belongs
+ * only in the lazily loaded account modules and in clerk-shell.tsx with its
+ * auth bridge. The layout reaches Clerk only through clerk-shell, so a build
+ * with accounts off swaps in clerk-shell-off.tsx (next.config.ts) and ships
+ * none of it.
+ */
+describe("Clerk stays out of the shared client bundle", () => {
+  it.each([
+    "./nav.tsx",
+    "./account/save-state.ts",
+    "./account/save-prompt.tsx",
+    "./account/clerk-shell-off.tsx",
+    "../lib/use-account-auth.ts",
+    "../app/layout.tsx",
+  ])("%s has no static Clerk import", (file) => {
+    const source = readFileSync(new URL(file, import.meta.url), "utf8");
+    expect(source).not.toMatch(/^import[^;]*from\s+["']@clerk\/nextjs["']/m);
   });
 });

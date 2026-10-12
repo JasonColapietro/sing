@@ -28,6 +28,7 @@ import {
   phraseSeconds,
   rangeFit,
   sessionSeconds,
+  songTranspose,
   type RangeFit,
 } from "./lib";
 import {
@@ -82,7 +83,12 @@ function semitones(n: number): string {
   return `${n} semitone${n === 1 ? "" : "s"}`;
 }
 
-/** Plain-language range verdict, or null when there's no saved range to judge against. */
+/**
+ * Plain-language range verdict for the key the song opens in — fitted to the
+ * saved range — or null when there's no saved range to judge against. Judging
+ * the written key instead would mark a song "5 semitones high" that the
+ * practice room is about to open five semitones lower.
+ */
 function rangeBadge(
   fit: RangeFit,
 ): { tone: "ok" | "violet" | "rec"; text: string } | null {
@@ -499,9 +505,9 @@ export function Library({
             <div>
               <SectionLabel>No range saved</SectionLabel>
               <p className="mt-2 max-w-md text-sm text-mut">
-                Take the range test and songs can auto-transpose to fit your
-                voice with &ldquo;Fit to my range,&rdquo; and every card will
-                say whether it sits in your range as written.
+                Take the range test and each song opens fitted to your
+                measured range, ready to shift a semitone either way, and
+                every card will say whether it fits.
               </p>
             </div>
             <LinkButton href="/range?mode=range" variant="outline" size="sm">
@@ -644,7 +650,7 @@ export function Library({
                       key={song.id}
                       song={song}
                       best={bestScoreForSong(progress.sessions, song.title)}
-                      fit={rangeFit(song, progress.range)}
+                      fit={rangeFit(song, progress.range, songTranspose(song, progress.range, null))}
                       favorite={favorites.includes(song.id)}
                       queued={setlist.ids.includes(song.id)}
                       mastered={mastered.has(song.id)}

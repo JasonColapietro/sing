@@ -66,7 +66,7 @@ I isolated the existing agility pattern slowly and connected its notes without r
 - Three separate pitches remain audible; the middle note does not smear into a slide.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, three reps in a row of the 1–2–3–2–1 turn at your current tempo play back with every note on its own pitch, the 2 included in both directions.
 
 If not ready: If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

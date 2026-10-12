@@ -1424,8 +1424,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Singer-Songwriter"
     ],
     "activeFrom": 2015,
-    "lowMidi": 59,
-    "highMidi": 85,
+    "lowMidi": 47,
+    "highMidi": 73,
     "beltMidi": null,
     "whistle": false
   },
@@ -2184,8 +2184,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Alternative"
     ],
     "activeFrom": 2023,
-    "lowMidi": 53,
-    "highMidi": 79,
+    "lowMidi": 41,
+    "highMidi": 67,
     "beltMidi": null,
     "whistle": false
   },
@@ -4604,8 +4604,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Pop"
     ],
     "activeFrom": 2020,
-    "lowMidi": 60,
-    "highMidi": 89,
+    "lowMidi": 48,
+    "highMidi": 77,
     "beltMidi": null,
     "whistle": false
   },
@@ -6497,7 +6497,7 @@ export const SINGERS_LITE: SingerLite[] = [
     ],
     "activeFrom": 2022,
     "lowMidi": 47,
-    "highMidi": 68,
+    "highMidi": 69,
     "beltMidi": 66,
     "whistle": false
   },
@@ -7512,8 +7512,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Rock"
     ],
     "activeFrom": 2022,
-    "lowMidi": 60,
-    "highMidi": 88,
+    "lowMidi": 48,
+    "highMidi": 76,
     "beltMidi": null,
     "whistle": false
   },

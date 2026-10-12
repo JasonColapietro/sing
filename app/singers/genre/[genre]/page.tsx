@@ -17,8 +17,10 @@ import {
 import { statsFor } from "@/lib/singers-analysis";
 import { GENRE_HUB_COPY, splitContrast } from "@/lib/singer-hub-copy";
 import { withCanonicalOpenGraph } from "@/lib/og";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
+import { LinkedNames } from "@/components/singers/linked-names";
 import { Card, LinkButton, PageShell, SectionLabel, Stat } from "@/components/ui";
 
 interface Params {
@@ -51,8 +53,13 @@ export async function generateMetadata({
   const copy = GENRE_HUB_COPY[genre];
   // The keyword lead stays in front; what follows it is this genre's own, so no
   // two hubs share a title or a description (lib/singer-hub-copy.test.tsx).
-  const title = `${g} Singers' Vocal Ranges: ${copy.titleTag}`;
-  const description = `${copy.summary} Catalog ranges for ${list.length} ${g} singers on one keyboard, ${stats ? midiToLabel(stats.lowest.lowMidi) : ""} to ${stats ? midiToLabel(stats.highest.highMidi) : ""}.`;
+  const title = `${g === "Singer-Songwriter" ? "Singer-Songwriters'" : `${g} Singers'`} Vocal Ranges: ${copy.titleTag}`;
+  // Short enough that fitDescription never drops it: the longest hub comes to
+  // 150 characters. A longer sentence was cut whole on ten hubs, leaving a
+  // snippet with no singer count and no note span.
+  const description = stats
+    ? `${copy.summary} ${list.length} ${genreSingers(g)}' catalog ranges, ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}.`
+    : copy.summary;
   return withCanonicalOpenGraph({
     title: { absolute: title },
     description,
@@ -88,13 +95,24 @@ export default async function GenrePage({
   for (const s of list) mix.set(s.voiceType, (mix.get(s.voiceType) ?? 0) + 1);
   const mixSorted = [...mix.entries()].sort((a, b) => b[1] - a[1]);
 
+  // Related hubs ranked by how many of this hub's singers they share, so Metal
+  // links Rock and K-Pop links Pop, rather than every hub linking the same ten
+  // alphabetically early genres.
+  const relatedGenres = HUB_GENRES.filter((x) => x !== g)
+    .map((x) => ({ x, shared: list.filter((s) => s.genres.includes(x)).length }))
+    .filter(({ shared }) => shared > 0)
+    .sort((a, b) => b.shared - a.shared || a.x.localeCompare(b.x))
+    .slice(0, 10)
+    .map(({ x }) => x);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: `${g} singers and their vocal ranges`,
     url: `${SITE_URL}/singers/genre/${genre}`,
     description: copy.intro,
-    isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    publisher: ORG_PUBLISHER_NODE,
     breadcrumb: {
       "@type": "BreadcrumbList",
       itemListElement: [
@@ -130,9 +148,15 @@ export default async function GenrePage({
       title={`${upperFirst(genreSingers(g))}' vocal ranges`}
       subtitle={`Reported catalog ranges for ${list.length} ${genreSingers(g)} run from ${midiToLabel(stats.lowest.lowMidi)} to ${midiToLabel(stats.highest.highMidi)}, with a median span of about ${spanOctaves(stats.medianSpanSemitones)} octaves. ${copy.summary}`}
       actions={
-        <LinkButton href="/singers" variant="outline" size="md">
-          ← All singers
-        </LinkButton>
+        // Own wrapping row: two md buttons are wider than a 320px phone.
+        <div className="flex flex-wrap items-center gap-2">
+          <LinkButton href="/range?mode=range" size="md">
+            Find my vocal range →
+          </LinkButton>
+          <LinkButton href="/singers" variant="outline" size="md">
+            ← All singers
+          </LinkButton>
+        </div>
       }
     >
       <script
@@ -191,33 +215,27 @@ export default async function GenrePage({
               .
             </li>
             <li>
-              Largest reported span here is{" "}
-              <Link
-                href={`/singers/${stats.widest.slug}`}
-                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
-              >
-                {stats.widest.name}
-              </Link>{" "}
-              ({rangeLabel(stats.widest)}); the lowest listed endpoint belongs to{" "}
-              <Link
-                href={`/singers/${stats.lowest.slug}`}
-                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
-              >
-                {stats.lowest.name}
-              </Link>{" "}
-              at {midiToLabel(stats.lowest.lowMidi)} and the highest listed endpoint to{" "}
-              <Link
-                href={`/singers/${stats.highest.slug}`}
-                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
-              >
-                {stats.highest.name}
-              </Link>{" "}
-              at {midiToLabel(stats.highest.highMidi)}.
+              {/* Every tied holder is named: on a shared record the first
+                  name alphabetically is not the record holder. */}
+              {stats.widestAll.length === 1
+                ? "Largest reported span here is "
+                : "Largest reported span here is shared by "}
+              <LinkedNames
+                singers={stats.widestAll}
+                after={(s) => ` (${rangeLabel(s)})`}
+              />
+              ; the lowest listed endpoint belongs to{" "}
+              <LinkedNames singers={stats.lowestAll} /> at{" "}
+              {midiToLabel(stats.lowest.lowMidi)} and the highest listed
+              endpoint to <LinkedNames singers={stats.highestAll} /> at{" "}
+              {midiToLabel(stats.highest.highMidi)}.
             </li>
             <li>
               Catalog voice labels here, most common first:{" "}
               {mixSorted
-                .map(([type, n]) => `${type.toLowerCase()}${n === 1 ? "" : "s"}`)
+                .map(([type, n]) =>
+                  n === 1 ? type.toLowerCase() : pluralVoice(type.toLowerCase()),
+                )
                 .join(", ")}
               .
             </li>
@@ -227,6 +245,22 @@ export default async function GenrePage({
             voice labels are pending evidence review; open a singer profile for
             its source status.
           </p>
+        </Card>
+
+        {/* The question this chart raises, answered by the free tool that
+            measures it. Sits right above the chart it refers to. */}
+        <Card className="border-violet/40">
+          <h2 className="text-xl">Where would your voice sit on this chart?</h2>
+          <p className="mt-2 max-w-2xl text-sm text-mut">
+            The free range test runs in your browser in about two minutes and
+            reports your lowest and highest notes in the same note names as
+            every bar below.
+          </p>
+          <div className="mt-4">
+            <LinkButton href="/range?mode=range" size="md">
+              Find my vocal range →
+            </LinkButton>
+          </div>
         </Card>
 
         <Card>
@@ -251,18 +285,16 @@ export default async function GenrePage({
                 </Link>
               </li>
             ))}
-            {HUB_GENRES.filter((x) => x !== g)
-              .slice(0, 10)
-              .map((x) => (
-                <li key={x}>
-                  <Link
-                    href={`/singers/genre/${genreSlug(x)}`}
-                    className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-violet hover:text-ink"
-                  >
-                    {x}
-                  </Link>
-                </li>
-              ))}
+            {relatedGenres.map((x) => (
+              <li key={x}>
+                <Link
+                  href={`/singers/genre/${genreSlug(x)}`}
+                  className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-violet hover:text-ink"
+                >
+                  {x}
+                </Link>
+              </li>
+            ))}
           </ul>
         </Card>
       </div>

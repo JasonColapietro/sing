@@ -12,6 +12,7 @@ import {
   computeDifficulty,
   rangeFit,
   sessionSeconds,
+  songTranspose,
 } from "./lib";
 import { lastPlayedAt, type RecentPlay } from "./favorites";
 
@@ -48,7 +49,10 @@ export interface BrowseState {
   era: string[];
   language: string[];
   form: SongForm[];
-  /** Only songs that sit inside the saved vocal range as written. */
+  /**
+   * Only songs that sit inside the saved vocal range in the key they open in
+   * (fitted to that range), the same judgment the cards' range badges make.
+   */
   fitsRange: boolean;
   favoritesOnly: boolean;
   sort: SortKey;
@@ -152,7 +156,11 @@ export function applyBrowse(
     if (state.era.length && !state.era.includes(song.era)) return false;
     if (state.language.length && !state.language.includes(song.language)) return false;
     if (state.form.length && !state.form.includes(song.form)) return false;
-    if (state.fitsRange && rangeFit(song, ctx.range).verdict !== "fits") return false;
+    if (
+      state.fitsRange &&
+      rangeFit(song, ctx.range, songTranspose(song, ctx.range, null)).verdict !== "fits"
+    )
+      return false;
     return true;
   });
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { lessonKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { moduleTerms } from "@/lib/lesson-glossary";
 import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { webPageJsonLd } from "@/lib/page-jsonld";
@@ -73,6 +74,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
   if (!found) notFound();
   const { stage, module } = found;
   const { previous, next } = moduleNeighbours(module);
+  const terms = moduleTerms(module.catalog.id);
   const stageHref = stage.href ?? VOICE_LEARN_PATH;
   const href = module.href ?? stageHref;
   // The same trail the CourseBreadcrumbs nav renders, and the same names the
@@ -134,6 +136,20 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 </li>
               ))}
             </ol>
+            {terms.length > 0 && (
+              <p className="mt-6 text-sm text-mut" data-module-terms>
+                Terms used here:{" "}
+                {terms.map((t, i) => (
+                  <span key={t.term}>
+                    {i > 0 && ", "}
+                    <Link href={t.href} className="text-violet-ink hover:underline">
+                      {t.term}
+                    </Link>
+                  </span>
+                ))}
+                , defined in the glossary.
+              </p>
+            )}
           </div>
         </Card>
         <ModulePractice moduleId={module.catalog.id} />

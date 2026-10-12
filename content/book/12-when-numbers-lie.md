@@ -1,5 +1,6 @@
 ---
 title: "When the numbers lie to you"
+searchTitle: "Why pitch readings go wrong"
 part: "Reading your own voice"
 order: 12
 summary: "How room noise, mic placement, headphone bleed and a rough day distort your readings — and how to catch a bad session before you act on it."
@@ -27,11 +28,11 @@ Test it in ten seconds. Open the pitch studio, stay silent, and watch. A clean s
 
 ## Mic placement and distance
 
-Phone microphones are close-range devices with automatic gain. Move from a hand's width to arm's length and the app is hearing a different instrument.
+Phone microphones are close-range devices. Move from a hand's width to arm's length and the app is hearing a different instrument.
 
 Too close and loud notes clip: the waveform flattens, the pitch estimate wobbles, and your best-supported belt reads as the least accurate note of the session. Too far and quiet notes fall under the noise floor, so the top of your head voice and the bottom of your chest voice never register at all. That is the classic false range test. You sang the note, the app did not hear it, and the result says you cannot reach it.
 
-Most people move the phone as they sing without noticing. You lift it as you go up. You bring it in on the quiet notes. Automatic gain rides those movements, and your loudness data becomes a record of your arm.
+Most people move the phone as they sing without noticing. You lift it as you go up. You bring it in on the quiet notes. The app asks the browser to switch automatic gain off so it measures what you actually produced, which means every one of those movements lands in the reading, and your loudness data becomes a record of your arm.
 
 Pick a distance — roughly a foot, a hand's span and a bit — and a position, and keep both the same every time. Propped on a stand or a stack of books beats held in a hand, because a stack of books does not flinch on the high note. Angle it slightly off-axis so your breath is not blasting into the capsule, which keeps plosives and breath noise out of the signal.
 
@@ -55,7 +56,7 @@ The consequence is simple. A range test taken cold at 7am and compared against o
 
 Congestion changes what you hear more than it changes what comes out. A blocked nose alters the resonance you perceive through your own skull, so you can feel badly out of tune while the trace says you are fine, or feel fine while you drift.
 
-The practical part is easy: put the numbers aside. A range test taken with a cold measures the cold. Go by how you feel about singing at all, and start measuring again when you are back to ordinary.
+The practical part is easy: put the numbers aside. A range test taken with a cold measures the cold. If the cold has stayed in your nose, gentle, quiet singing is usually fine. If it has reached your voice — hoarse, husky, or sore to sing — rest it rather than practising through it, and start measuring again when you are back to ordinary.
 
 Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
 
@@ -77,4 +78,4 @@ When one of those shows up, stop treating the session as data. Fix the setup, or
 
 ## Try this
 
-Before your next range test, open the pitch studio and stay silent for fifteen seconds while you watch the trace. If it reports any pitch at all in your silence, find the noise and kill it before you test. Otherwise your low notes are measuring your room.
+Before your next [range test](/range?mode=range), open the [pitch studio](/studio) and stay silent for fifteen seconds while you watch the trace. If it reports any pitch at all in your silence, find the noise and kill it before you test. Otherwise your low notes are measuring your room.

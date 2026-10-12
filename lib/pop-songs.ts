@@ -1,4 +1,4 @@
-import { midiToLabel } from "@/lib/audio/notes";
+import { midiToFlatLabel, midiToLabel } from "@/lib/audio/notes";
 import { SINGERS } from "@/lib/singers-data";
 
 /**
@@ -91,8 +91,20 @@ export function popFit(
   return { verdict: "fits", offsetSemis: 0 };
 }
 
+/**
+ * Keys whose signatures carry flats. Notes in these keys are spelled with
+ * flats ("Ab3", not "G#3"), the way the cited sheet music and the source
+ * notes spell them; every other key keeps the site's default sharps.
+ */
+const FLAT_KEY = /^(F|Bb|Eb|Ab|Db|Gb) major$|^(D|G|C|F|Bb|Eb) minor$/;
+
+/** One of the song's notes, spelled for the song's key. */
+export function popNoteLabel(song: Pick<PopSong, "key">, midi: number): string {
+  return FLAT_KEY.test(song.key) ? midiToFlatLabel(midi) : midiToLabel(midi);
+}
+
 export function popRangeLabel(song: PopSong): string {
-  return `${midiToLabel(song.lowMidi)}–${midiToLabel(song.highMidi)}`;
+  return `${popNoteLabel(song, song.lowMidi)}–${popNoteLabel(song, song.highMidi)}`;
 }
 
 export function popSongBySlug(slug: string): PopSong | undefined {
@@ -133,7 +145,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("A4"),
     sourceNote: "Musicnotes original-key arrangement, G3–A4 in A minor",
     blurb:
-      "A nine-semitone range makes this one of the most reachable hits of its decade on paper. What the record actually trades on is delivery: a lazy, behind-the-beat vocal fry drawl, quick flips into light head voice for the hook's decorations, and total rhythmic confidence. Sing it accurately but stiffly and it collapses; the notes are the least of it.",
+      "A fourteen-semitone range (G3 to A4, a ninth) keeps the notes within reach on paper. What the record actually trades on is delivery: a lazy, behind-the-beat vocal fry drawl, quick flips into light head voice for the hook's decorations, and total rhythmic confidence. Sing it accurately but stiffly and it collapses; the notes are the least of it.",
   },
   {
     slug: "birds-of-a-feather",
@@ -232,7 +244,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("E5"),
     sourceNote: "Musicnotes original-key arrangement, E3–E5 in A major",
     blurb:
-      "Two full octaves from a hushed E3 to the chorus's repeated E5 peaks, sung over nothing but piano. The chorus tessitura hangs high and stays there, and the emotional dynamic asks for those top notes in a cry-adjacent mix rather than a hard belt. The most commonly attempted and most commonly transposed karaoke ballad of its era, for exactly these reasons.",
+      "Two full octaves from a hushed E3 to the chorus's repeated E5 peaks, sung over nothing but piano. The chorus tessitura hangs high and stays there, and the emotional dynamic asks for those top notes in a cry-adjacent mix rather than a hard belt. Those two demands are what to check against your own range before choosing a key.",
   },
   {
     slug: "shallow",
@@ -274,7 +286,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("F5"),
     sourceNote: "Musicnotes original-key arrangement, written F4–F6, sounding F3–F5 in Bb major",
     blurb:
-      "A quiet folk-pop opening that detonates into one of the hardest choruses in current pop: two octaves of range topping out at a screamed-belt F5 that even trained tenors treat with respect. The dynamic whiplash is the point — the song is engineered around the jump from a whisper to that note.",
+      "A quiet folk-pop opening that detonates into a demanding chorus: two octaves of range topping out at a screamed-belt F5 that even trained tenors treat with respect. The dynamic whiplash is the point — the song is engineered around the jump from a whisper to that note.",
   },
   {
     slug: "i-will-always-love-you",
@@ -288,7 +300,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("G#5"),
     sourceNote: "Musicnotes original-key arrangement, F#3–G#5 in A major",
     blurb:
-      "Long a-cappella phrases with nowhere to hide, then a modulation up to B major for the final chorus that plants the famous belted climax near the top of the soprano break. The verses sit low and conversational, so the voice has to cover more than two octaves of dynamic and emotional ground in under five minutes. Written by Dolly Parton, whose original sits far lower and gentler.",
+      "Long a-cappella phrases with nowhere to hide, then a modulation up to B major for the final chorus that plants the famous belted climax near the top of the soprano break. The verses sit low and conversational, so the voice has to cover more than two octaves of dynamic and emotional ground in under five minutes. Written by Dolly Parton, whose own recording is a gentler country ballad.",
   },
   {
     slug: "take-me-to-church",
@@ -317,7 +329,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("Bb4"),
     sourceNote: "Musicnotes original-key arrangement, sounding Eb3–Bb4 in Db major",
     blurb:
-      "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is barely an octave and a half, but the tessitura of the chorus parks a male voice right in the passaggio and keeps it there — the classic reason it feels so much harder than its range suggests.",
+      "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is only an octave and a fifth, but the tessitura of the chorus parks a male voice right in the passaggio and keeps it there — the classic reason it feels so much harder than its range suggests.",
   },
   {
     slug: "rolling-in-the-deep",
@@ -374,7 +386,7 @@ export const POP_SONGS: PopSong[] = [
     sourceNote:
       "Musicnotes original-key arrangement of the Buckley version, sounding C3–F4 in C major; some sources cite F#4 at the top",
     blurb:
-      "Leonard Cohen's hymn, in the version most people now mean: Buckley keeps the written range barely over an octave and makes the song entirely about breath control, dynamics and sustained quiet head-mix. It is one of the most singable ranges in the catalog and one of the hardest songs to sing well, because there is nothing to hide behind.",
+      "Leonard Cohen's hymn, in the version most people now mean: Buckley keeps the written range to an octave and a fourth and makes the song entirely about breath control, dynamics and sustained quiet head-mix. The range itself is modest; singing it well is not, because there is nothing to hide behind.",
   },
   {
     slug: "tennessee-whiskey",
@@ -399,11 +411,11 @@ export const POP_SONGS: PopSong[] = [
     genre: "Pop",
     key: "A major",
     lowMidi: noteMidi("G#3"),
-    highMidi: noteMidi("C#6"),
+    highMidi: noteMidi("E5"),
     sourceNote:
-      "Musicnotes original-key duet arrangement, combined voice range G#3–C#6 in A major; the notated lead line tops near E5",
+      "Musicnotes original-key duet arrangement in A major: notated lead line G#3 to about E5; harmonized falsetto ad-libs take the combined voice range to C#6",
     blurb:
-      "A retro-soul duet whose combined range looks terrifying on paper — the C#6 ceiling belongs to the harmonized falsetto ad-libs, while the lead melody itself crests around E5. Sung solo it demands both a warm low verse register and a committed belt; sung as written it needs two voices trading and stacking. The span is the widest in this catalog.",
+      "A retro-soul duet whose combined range looks terrifying on paper — the C#6 ceiling belongs to the harmonized falsetto ad-libs, while the lead melody itself crests around E5. Sung solo it demands both a warm low verse register and a committed belt; sung as written it needs two voices trading and stacking.",
   },
   {
     slug: "stick-season",
@@ -417,7 +429,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("A4"),
     sourceNote: "Musicnotes original-key arrangement, written E4–A5, sounding E3–A4",
     blurb:
-      "Strummed folk-pop with a fast, wordy verse and a chorus that sits on A4 at the top of an untrained male range without ever leaving it much room to rest. The song is a stamina-and-diction test: eleven semitones of range, a relentless syllable count, and a top note that recurs just often enough to find out whether it is really there.",
+      "Strummed folk-pop with a fast, wordy verse and a chorus that sits on A4 at the top of an untrained male range without ever leaving it much room to rest. The song is a stamina-and-diction test: seventeen semitones of range (an octave and a fourth), a relentless syllable count, and a top note that recurs just often enough to find out whether it is really there.",
   },
   {
     slug: "drop-dead",
@@ -434,7 +446,7 @@ export const POP_SONGS: PopSong[] = [
     sourceUrl:
       "https://www.musicnotes.com/sheetmusic/olivia-rodrigo/drop-dead/MN0309204",
     blurb:
-      "Almost two octaves separate the grounded Ab3 low from the F5 peak, so this is less about one isolated high note than keeping every register available at a brisk pop pace. Start the phrases lighter than the recording suggests, map the two range edges separately, and only join the full song after both ends stay free of strain.",
+      "An octave and a sixth separates the grounded Ab3 low from the F5 peak, so this is less about one isolated high note than keeping every register available at a brisk pop pace. Start the phrases lighter than the recording suggests, map the two range edges separately, and only join the full song after both ends stay free of strain.",
   },
   {
     slug: "unchained-melody",
@@ -444,14 +456,14 @@ export const POP_SONGS: PopSong[] = [
     year: 1965,
     genre: "Pop",
     key: "Bb major",
-    lowMidi: noteMidi("C4"),
-    highMidi: noteMidi("A5"),
+    lowMidi: noteMidi("C3"),
+    highMidi: noteMidi("A4"),
     sourceNote:
-      "Musicnotes original-key Singer Pro arrangement MN0133818, C4–A5 in Bb major",
+      "Musicnotes original-key Singer Pro arrangement MN0133818, written C4–A5, sounding C3–A4 in Bb major",
     sourceUrl:
       "https://www.musicnotes.com/sheetmusic/the-righteous-brothers/unchained-melody/MN0133818",
     blurb:
-      "The climb from C4 to A5 makes the ending the obvious headline, but the first job is controlled breath and an even legato line through the quieter opening. Practice the upper section softly and separately; the page's range fit is a boundary check, not permission to push for the recording's full volume or color.",
+      "The climb from C3 to A4 makes the ending the obvious headline, but the first job is controlled breath and an even legato line through the quieter opening. Practice the upper section softly and separately; the page's range fit is a boundary check, not permission to push for the recording's full volume or color.",
   },
   {
     slug: "greedy",

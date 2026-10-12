@@ -100,7 +100,7 @@ export const EAR_ROUTINES: EarRoutine[] = [
   {
     id: "daily",
     name: "Daily ear workout",
-    tagline: "The everyday set: all four games, the listening ones at medium.",
+    tagline: "The everyday set: four of the five games, three at medium and an easy melody echo to finish.",
     steps: [
       step("higher-lower", "medium"),
       step("interval", "medium"),
@@ -111,7 +111,7 @@ export const EAR_ROUTINES: EarRoutine[] = [
   {
     id: "full",
     name: "Full ear workout",
-    tagline: "Ten minutes: every game at medium, then intervals and pitch at hard.",
+    tagline: "Ten minutes: four games at medium, then intervals and pitch at hard.",
     steps: [
       step("higher-lower", "medium"),
       step("interval", "medium"),

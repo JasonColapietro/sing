@@ -67,7 +67,7 @@ function allPageKeywords(): Record<string, readonly string[]> {
   for (const v of VOICE_KINDS) out[`/singers/voice-type/${v}`] = singerVoiceTypeKeywords(v);
   for (const s of ALL_SONGS) out[`/songs/${s.slug}`] = songKeywords(s);
   for (const s of POP_SONGS) out[`/can-you-sing/${s.slug}`] = popSongKeywords(s);
-  for (const c of BOOK_CONTENTS) out[`/book/${c.slug}`] = chapterKeywords(c.title, "book");
+  for (const c of BOOK_CONTENTS) out[`/book/${c.slug}`] = chapterKeywords(c.searchTitle || c.title, "book");
   for (const c of ATLAS_CONTENTS) out[`/atlas/${c.slug}`] = chapterKeywords(c.title, "atlas");
   const moduleNames = new Map<string, string>();
   for (const st of COURSE) {
@@ -131,6 +131,34 @@ describe("keyword map", () => {
       const terms = singerKeywords(s);
       const name = normalizeKeywords([s.name])[0];
       expect(terms.every((t) => t.includes(name) || t.includes("suede")), s.slug).toBe(true);
+    }
+  });
+
+  it("targets no superlative ranking queries", () => {
+    // The singer pages rank catalog figures, never singers; a "best" term
+    // targets a question the pages deliberately do not answer.
+    for (const [route, terms] of Object.entries(pages)) {
+      expect(terms.filter((t) => /\bbest\b/.test(t)), route).toEqual([]);
+    }
+  });
+
+  it("names singer-songwriters the way their hub's title does", () => {
+    const terms = singerGenreKeywords("Singer-Songwriter");
+    expect(terms[0]).toBe("singer-songwriters vocal range");
+    expect(terms.filter((t) => t.includes("singer-songwriter singers"))).toEqual([]);
+    expect(singerGenreKeywords("Pop")[0]).toBe("pop singers vocal range");
+  });
+
+  it("does not target lyrics or vocal-range queries on opening-phrase song pages", () => {
+    const phrases = ALL_SONGS.filter((s) => s.form === "phrase");
+    expect(phrases.length).toBeGreaterThan(0);
+    for (const song of phrases) {
+      const terms = songKeywords(song);
+      expect(terms[0], song.slug).toBe(normalizeKeywords([`sing ${song.title}`])[0]);
+      expect(terms.filter((t) => /lyrics|vocal range/.test(t)), song.slug).toEqual([]);
+    }
+    for (const song of ALL_SONGS.filter((s) => s.form !== "phrase")) {
+      expect(songKeywords(song)[0], song.slug).toMatch(/ lyrics$/);
     }
   });
 

@@ -17,7 +17,7 @@ Those peaks are called formants. The buzz already contains a fundamental plus a 
 
 This is why one pitch can produce several completely different sounds. Sing a comfortable note in your middle and slide the vowel from "ee" to "eh" to "ah" to "oh" to "oo" without changing pitch or volume. The note stays exactly where it was. The colour changes enormously. You moved two formants with your tongue and lips and never touched the note.
 
-So a vowel is not a mouth position you memorise. A vowel is a pair of resonant frequencies. Different mouth shapes that land on the same pair produce the same vowel, which is why someone whose face and throat are nothing like yours can say "ah" and you recognise it instantly.
+So a vowel is not a mouth position you memorise. It is a pattern of resonances — chiefly the first two — and different mouth shapes can land on the same pattern. Listeners judge that pattern relative to the voice making it, which is why a child's "ah" and a bass's "ah" read as the same vowel even though every resonance sits at a different frequency.
 
 ## Vowel modification, and why it is not cheating
 

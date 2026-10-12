@@ -66,7 +66,7 @@ I sang the supplied four-note descent on one syllable, then listened for four se
 - One syllable carries all four notes with clear centers and no swallowed middle pitches.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, three reps in a row of Hoo descent on one unbroken “oo” play back as four separate pitches, with no new syllable or vowel change between them.
 
 If not ready: If the vowel changes or the notes smear, sing the pattern on a lip trill, then reopen to the vowel at a slower tempo. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

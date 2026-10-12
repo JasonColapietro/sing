@@ -36,7 +36,7 @@ Choose and say the ornament yourself before the next phrase; there is no automat
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Add one ornament at its marked place, return to plain, then contrast it with the next. Keep scoops, falls, bends, and slides small and intentional.
+Work in short repetitions with a normal breath and complete release between them. Scoop: start a little below the note and slide up into it. Fall: drop away in pitch off the end of a note. Bend: push the pitch slightly off the note and bring it back. Slide: glide from one written note to the next. A scoop here is a choice you place, unlike the accidental scoop Stage 2 trained out. Before singing, mark which note of the phrase each will go on. Add one ornament at the place you marked, return to plain, then contrast it with the next. Keep scoops, falls, bends, and slides small and intentional.
 
 - Look: Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.
 - Listen: The four versions are recognizably different and the underlying words and melody remain intact.

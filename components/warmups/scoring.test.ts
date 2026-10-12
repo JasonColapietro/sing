@@ -8,10 +8,13 @@ import {
   UNMODELLED_INPUT_LAG_SEC,
 } from "@/lib/audio/latency";
 import {
+  GLIDE_TIME_SLACK,
   ONSET_GRACE_MAX_SHARE,
   ONSET_GRACE_SEC,
   createRepScorer,
+  foldToOctaveOf,
   onsetGraceFor,
+  referenceMidiAt,
 } from "./scoring";
 
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
@@ -255,5 +258,176 @@ describe("onset grace", () => {
       expect(sec, `note ${i}`).toBeGreaterThanOrEqual(segs[i].dur * 0.9);
       expect(sec, `note ${i}`).toBeLessThanOrEqual(segs[i].dur + 1e-9);
     });
+  });
+});
+
+describe("glide scoring", () => {
+  const SIRENS = ["ng-siren-fifth", "octave-siren", "high-siren-tenth"] as const;
+  const smoothstep = (x: number) => x * x * (3 - 2 * x);
+
+  /**
+   * A siren sung with exact endpoints along `shape` (0..1 → 0..1 of the
+   * slide), reported `lagSec` late, silent between the two glides.
+   */
+  function feedGlide(
+    scorer: ReturnType<typeof createRepScorer>,
+    segs: Segment[],
+    shape: (x: number) => number,
+    lagSec = 0,
+  ) {
+    const dt = 1 / 60;
+    const last = segs[segs.length - 1];
+    for (let t = 0; t < last.t0 + last.dur + 0.35; t += dt) {
+      const meant = t - lagSec;
+      const seg = segs.find((s) => meant >= s.t0 && meant <= s.t0 + s.dur);
+      if (!seg) {
+        scorer.feed(t, null, dt);
+        continue;
+      }
+      const x = Math.min(1, Math.max(0, (meant - seg.t0) / seg.dur));
+      const midi = seg.startMidi + (seg.endMidi - seg.startMidi) * shape(x);
+      scorer.feed(t, midiToFreq(midi), dt);
+    }
+  }
+
+  it("scores a natural, eased siren with exact endpoints as sung", () => {
+    // Scored against the bare ramp this read 24 on the octave siren and 17 on
+    // the tenth: the drill was rewarding a straight line, not a smooth slide.
+    for (const id of SIRENS) {
+      for (const tempo of [0.75, 1, 1.25]) {
+        const { segs } = buildSegments(byId(id), 52, tempo);
+        const scorer = createRepScorer(segs);
+        feedGlide(scorer, segs, smoothstep);
+        expect(scorer.result(52)!.score, `${id} at ${tempo}x`).toBeGreaterThanOrEqual(90);
+      }
+    }
+  });
+
+  it("scores a straight slide sung ~100 ms late as sung", () => {
+    for (const id of SIRENS) {
+      const { segs } = buildSegments(byId(id), 52, 1);
+      const scorer = createRepScorer(segs);
+      feedGlide(scorer, segs, (x) => x, UNMODELLED_INPUT_LAG_SEC);
+      expect(scorer.result(52)!.score, id).toBeGreaterThanOrEqual(90);
+    }
+  });
+
+  it("still scores a slide that never leaves the start pitch low", () => {
+    for (const id of ["octave-siren", "high-siren-tenth"]) {
+      const { segs } = buildSegments(byId(id), 52, 1);
+      const scorer = createRepScorer(segs);
+      feedGlide(scorer, segs, () => 0);
+      expect(scorer.result(52)!.score, id).toBeLessThan(30);
+    }
+  });
+
+  it("still scores a step in place of a slide low", () => {
+    for (const id of ["octave-siren", "high-siren-tenth"]) {
+      const { segs } = buildSegments(byId(id), 52, 1);
+      const scorer = createRepScorer(segs);
+      feedGlide(scorer, segs, (x) => (x < 0.5 ? 0 : 1));
+      expect(scorer.result(52)!.score, id).toBeLessThan(50);
+    }
+  });
+
+  it("publishes a slack that is a small share of the glide", () => {
+    expect(GLIDE_TIME_SLACK).toBeGreaterThan(0);
+    expect(GLIDE_TIME_SLACK).toBeLessThanOrEqual(0.15);
+  });
+
+  it("gives the live readout the reference the scorer uses", () => {
+    // Plain notes measure against the note; gaps have nothing to measure.
+    const plain = buildSegments(fiveNote, 52, 1).segs;
+    expect(referenceMidiAt(plain, plain[1].t0 + 0.2, 60)).toBe(plain[1].startMidi);
+    expect(referenceMidiAt(plain, plain[1].t0 - 0.01, 60)).toBeNull();
+
+    // A glide measures against the stretch of ramp around the frame: a pitch
+    // inside that stretch reads 0 cents off, one outside it reads its distance
+    // to the near end, and the stretch is held at the glide's endpoints.
+    const { segs } = buildSegments(byId("octave-siren"), 52, 1);
+    const up = segs[0];
+    const mid = up.t0 + up.dur / 2; // the bare ramp reads 58 here
+    const w = GLIDE_TIME_SLACK * up.dur;
+    const span = up.endMidi - up.startMidi;
+    const lo = 58 - (span * (w + ONSET_GRACE_SEC)) / up.dur;
+    const hi = 58 + (span * w) / up.dur;
+    expect(referenceMidiAt(segs, mid, 57.2)).toBeCloseTo(57.2, 9);
+    expect(referenceMidiAt(segs, mid, 50)).toBeCloseTo(lo, 9);
+    expect(referenceMidiAt(segs, mid, 70)).toBeCloseTo(hi, 9);
+    expect(referenceMidiAt(segs, up.t0, 49)).toBe(52);
+
+    // And the scorer credits a frame exactly when the readout would call it
+    // within tolerance (both sides of the window, in and out).
+    const verdicts = [55.5, 56, 57.2, 59.6, 61].map((sung) => {
+      const scorer = createRepScorer(segs);
+      scorer.feed(mid, midiToFreq(sung), 0.1);
+      const inTune = Math.abs(sung - referenceMidiAt(segs, mid, sung)!) * 100 <= 50;
+      expect(scorer.hitSec()[0] > 0, `sung ${sung}`).toBe(inTune);
+      return inTune;
+    });
+    expect(verdicts).toEqual([false, true, true, true, false]);
+  });
+});
+
+describe("octave-agnostic scoring", () => {
+  it("folds a pitch to the octave nearest the target", () => {
+    expect(foldToOctaveOf(64, 52)).toBe(52);
+    expect(foldToOctaveOf(40.3, 52)).toBeCloseTo(52.3, 9);
+    expect(foldToOctaveOf(57.5, 52)).toBeCloseTo(57.5, 9);
+    expect(foldToOctaveOf(58.5, 52)).toBeCloseTo(46.5, 9);
+    expect(foldToOctaveOf(52, 52)).toBe(52);
+  });
+
+  it("counts a take an octave up or down only when told to", () => {
+    for (const octaves of [1, -1, 2]) {
+      const { segs } = buildSegments(fiveNote, 52, 1);
+      const strict = createRepScorer(segs);
+      const either = createRepScorer(segs, { octaveAgnostic: true });
+      feedThroughout(strict, segs, 12 * octaves);
+      feedThroughout(either, segs, 12 * octaves);
+      expect(strict.result(52)!.score, `${octaves} octaves`).toBe(0);
+      expect(either.result(52)!.score, `${octaves} octaves`).toBe(100);
+      expect(either.result(52)!.avgCentsErr, `${octaves} octaves`).toBe(0);
+    }
+  });
+
+  it("still fails a wrong note in the other octave", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const scorer = createRepScorer(segs, { octaveAgnostic: true });
+    // An octave up and 60 cents sharp: wrong in any octave.
+    feedThroughout(scorer, segs, 12.6);
+    expect(scorer.result(52)!.score).toBe(0);
+    const tritone = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(tritone, segs, 6);
+    expect(tritone.result(52)!.score).toBe(0);
+  });
+
+  it("files the per-note analytics under the octave actually sung", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const up = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(up, segs, 12);
+    expect(up.result(52)!.notes!.map((n) => n.midi)).toEqual(segs.map((s) => s.startMidi + 12));
+    // The rep's root reads in the same octave, so the summary never names
+    // the rung an octave away from the notes listed under it.
+    expect(up.result(52)!.root).toBe(64);
+    const asWritten = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(asWritten, segs, 0);
+    expect(asWritten.result(52)!.notes!.map((n) => n.midi)).toEqual(segs.map((s) => s.startMidi));
+    expect(asWritten.result(52)!.root).toBe(52);
+    const down = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(down, segs, -12);
+    expect(down.result(52)!.root).toBe(40);
+    // Exact-octave scoring never moves a note or the root.
+    const strict = createRepScorer(segs);
+    feedThroughout(strict, segs, 12);
+    expect(strict.result(52)!.notes!.map((n) => n.midi)).toEqual(segs.map((s) => s.startMidi));
+    expect(strict.result(52)!.root).toBe(52);
+  });
+
+  it("counts a siren an octave up when told to", () => {
+    const { segs } = buildSegments(byId("octave-siren"), 52, 1);
+    const either = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(either, segs, 12);
+    expect(either.result(52)!.score).toBeGreaterThanOrEqual(98);
   });
 });

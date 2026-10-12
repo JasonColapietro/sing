@@ -3,6 +3,7 @@
 import { useState, useSyncExternalStore } from "react";
 import { Button, Card, Pill, SectionLabel } from "@/components/ui";
 import { midiToName } from "@/lib/audio/notes";
+import { SITE_URL } from "@/lib/site";
 import {
   computeGrade,
   starGlyphs,
@@ -70,7 +71,6 @@ function shareText(
     `Grade ${grade.grade} · ${starGlyphs(grade.stars)} (${grade.stars}/5)`,
     figures.join(" · "),
     ...(subtitle ? [subtitle] : []),
-    "sing.suedeai.ai",
   ].join("\n");
 }
 
@@ -90,6 +90,7 @@ export function ShareableResult({
   score,
   grade,
   stats = [],
+  url,
 }: {
   title: string;
   subtitle?: string;
@@ -97,16 +98,25 @@ export function ShareableResult({
   score: number;
   grade: GradeResult;
   stats?: ResultStat[];
+  /**
+   * Where a friend who opens the share should land: the page they can sing
+   * the same thing on. Defaults to the site's home page.
+   */
+  url?: string;
 }) {
   const canCopy = useSyncExternalStore(noopSubscribe, hasClipboardWrite, serverFalse);
   const canShare = useSyncExternalStore(noopSubscribe, hasShare, serverFalse);
   const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
 
   const text = shareText(title, subtitle, score, grade, stats);
+  const link = url ?? SITE_URL;
 
   async function handleCopy() {
     try {
-      await navigator.clipboard.writeText(text);
+      // The copied text carries the link itself; the share sheet gets it as
+      // its own field instead, because most share targets append the url to
+      // the text and would otherwise show it twice.
+      await navigator.clipboard.writeText(`${text}\n${link}`);
       setCopyState("copied");
       window.setTimeout(() => setCopyState("idle"), 2000);
     } catch {
@@ -116,7 +126,7 @@ export function ShareableResult({
 
   async function handleShare() {
     try {
-      await navigator.share({ title: `Suede Sing — ${title}`, text });
+      await navigator.share({ title: `Suede Sing — ${title}`, text, url: link });
     } catch {
       // User cancelled or the OS declined — Copy result stays available.
     }
@@ -204,6 +214,7 @@ export function ResultCard({ data }: { data: SessionSummaryData }) {
       score={score}
       grade={grade}
       stats={stats}
+      url={`${SITE_URL}/songs/${song.slug}`}
     />
   );
 }

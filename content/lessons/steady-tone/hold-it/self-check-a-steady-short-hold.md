@@ -66,7 +66,7 @@ I matched the sustained reference, released comfortably, and listened for a stea
 - The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, three short holds in a row start and end on the same pitch to your ear at a comfortable volume.
 
 If not ready: If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

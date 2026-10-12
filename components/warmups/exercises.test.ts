@@ -1,10 +1,17 @@
 import { describe, expect, it } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { midiToLabel } from "@/lib/audio/notes";
+import { DEFAULT_PROGRESS } from "@/lib/progress-shape";
+import { RangePrompt } from "./library";
 import {
   ALL_EXERCISES,
   EXERCISES,
+  LOWER_HALF_OF_RANGE,
   LOWER_MIDDLE_OF_RANGE,
   MIDDLE_OF_RANGE,
   MIN_RUNGS,
+  NOMINAL_RANGE,
   NOTE_GAP_SEC,
   PATH_ORDER,
   PRO_PACKS,
@@ -22,8 +29,48 @@ import { createRepScorer } from "./scoring";
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
 
 describe("computeRootLadder", () => {
-  it("defaults to the classic C3–G3 ladder without a saved range", () => {
-    expect(computeRootLadder(fiveNote)).toEqual([48, 49, 50, 51, 52, 53, 54, 55]);
+  it("fits a nominal A2–E4 range without a saved range", () => {
+    expect(NOMINAL_RANGE).toEqual({ lowMidi: 45, highMidi: 64 });
+    expect(computeRootLadder(fiveNote)).toEqual([49, 50, 51, 52]);
+    expect(computeRootLadder(fiveNote)).toEqual(
+      computeRootLadder(fiveNote, NOMINAL_RANGE.lowMidi, NOMINAL_RANGE.highMidi),
+    );
+  });
+
+  it("keeps every note of every exercise inside A2–E4 without a saved range", () => {
+    // The old fixed C3–G3 roots ignored the pattern's width: the twelfth runs
+    // in Daily and Quick topped out on D5, a first-time singer's first minute.
+    for (const ex of ALL_EXERCISES) {
+      const notes = computeRootLadder(ex).flatMap((root) => ex.buildSteps(root).flat());
+      expect(Math.max(...notes), ex.id).toBeLessThanOrEqual(NOMINAL_RANGE.highMidi);
+      expect(Math.min(...notes), ex.id).toBeGreaterThanOrEqual(NOMINAL_RANGE.lowMidi);
+    }
+  });
+
+  it("names the nominal span in the no-range prompt, and only without a range", () => {
+    const { lowMidi, highMidi } = NOMINAL_RANGE;
+    const html = renderToStaticMarkup(createElement(RangePrompt, { progress: DEFAULT_PROGRESS }));
+    expect(html).toContain(`between ${midiToLabel(lowMidi)} and ${midiToLabel(highMidi)}`);
+    expect(html).toContain(
+      `(${midiToLabel(lowMidi + 12)} and ${midiToLabel(highMidi + 12)} an octave up)`,
+    );
+    expect(html).toContain("either octave counts");
+    const withRange = { ...DEFAULT_PROGRESS, range: { lowMidi: 48, highMidi: 72 } };
+    expect(renderToStaticMarkup(createElement(RangePrompt, { progress: withRange }))).toBe("");
+  });
+
+  it("keeps two semitones under a two-octave singer's measured top", () => {
+    // The measured top is the extreme a cold range test found, falsetto
+    // included. The octave and twelfth patterns used to land on it every climb.
+    for (const ex of ALL_EXERCISES) {
+      const roots = computeRootLadder(ex, 48, 72);
+      const top = Math.max(...roots.flatMap((r) => ex.buildSteps(r).flat()));
+      expect(top, ex.id).toBeLessThanOrEqual(70);
+    }
+    const hoo = ALL_EXERCISES.find((e) => e.id === "hoo-four-note")!;
+    const lipTrill = ALL_EXERCISES.find((e) => e.id === "lip-trill-scale")!;
+    expect(computeRootLadder(lipTrill, 48, 72)).toEqual([52, 53, 54, 55, 56, 57, 58]);
+    expect(Math.max(...computeRootLadder(hoo, 48, 72)) + 12).toBe(70);
   });
 
   it("covers every semitone of the range-derived band, however wide", () => {
@@ -372,6 +419,22 @@ describe("coaching copy", () => {
     }
   });
 
+  it("spells out the twelfth runs' descent degree by degree, since it is not a scale", () => {
+    // Major-scale degree of each semitone offset the runs use.
+    const DEGREE: Record<number, number> = {
+      0: 1, 2: 2, 4: 3, 5: 4, 7: 5, 9: 6, 11: 7, 12: 8, 14: 9, 16: 10, 17: 11, 19: 12,
+    };
+    for (const id of ["n-hum-scale", "gug-staccato"]) {
+      const ex = ALL_EXERCISES.find((e) => e.id === id)!;
+      const offsets = ex.buildSteps(0).flat();
+      const peak = offsets.indexOf(Math.max(...offsets));
+      const down = offsets.slice(peak + 1).map((o) => DEGREE[o]).join("-");
+      expect(down, id).toBe("11-9-7-5-4-2-1");
+      expect(ex.desc, id).toContain(down);
+      expect(ex.desc, id).not.toMatch(/down the scale/i);
+    }
+  });
+
   it("tells the loudest drill when to back off and when to stop", () => {
     const forte = ALL_EXERCISES.find((e) => e.id === "belt-forte-ah")!;
     expect(forte.tip).toMatch(/back off/i);
@@ -435,7 +498,17 @@ describe("the note gap", () => {
 
 describe("the range cap", () => {
   const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
-  const CAPPED = ["swell-and-fade", "belt-forte-ah", "belt-fifth-hold"];
+  const BELT_CAPPED = [
+    "belt-forte-ah",
+    "belt-fifth-hold",
+    "belt-nay-speech",
+    "belt-hey-thirds",
+    "belt-bah-bursts",
+    "belt-yah-triad",
+    "belt-hah-descent",
+  ];
+  const COOL_DOWNS = ["quiet-hum-descent", "soft-trill-slide", "straw-slide-down"];
+  const CAPPED = ["swell-and-fade", ...BELT_CAPPED, ...COOL_DOWNS];
 
   it("keeps the ladder as it is without a cap, and at least one rung with one", () => {
     const ladder = [50, 51, 52, 53, 54, 55, 56, 57, 58];
@@ -470,15 +543,41 @@ describe("the range cap", () => {
     expect(Math.abs(above - below)).toBeLessThanOrEqual(1);
   });
 
-  it("keeps the strong belt holds off the top of the range", () => {
-    for (const id of ["belt-forte-ah", "belt-fifth-hold"]) {
+  it("keeps the strong belt holds and calls off the top of the range", () => {
+    for (const id of BELT_CAPPED) {
       const ex = byId(id);
+      expect(ex.rangeCap, id).toEqual(LOWER_MIDDLE_OF_RANGE);
       const uncapped = computeRootLadder({ ...ex, rangeCap: undefined }, 48, 72);
       const roots = computeRootLadder(ex, 48, 72);
       expect(roots[0], id).toBe(uncapped[0]);
       expect(roots[roots.length - 1], id).toBeLessThan(uncapped[uncapped.length - 1]);
       for (const r of roots) expect(uncapped, id).toContain(r);
     }
+  });
+
+  it("leaves the octave-drop uncapped: its top note is sung light, not belted", () => {
+    expect(byId("belt-octave-drop").rangeCap).toBeUndefined();
+    expect(byId("belt-octave-drop").tip).toMatch(/light up top/i);
+  });
+
+  it("walks the cool-downs in the lower half, easing toward speaking pitch", () => {
+    for (const id of COOL_DOWNS) {
+      const ex = byId(id);
+      expect(ex.rangeCap, id).toEqual(LOWER_HALF_OF_RANGE);
+      expect(ex.ladder, id).toBe("down");
+      for (const [low, high] of [[48, 72], [60, 84]]) {
+        const uncapped = computeRootLadder({ ...ex, rangeCap: undefined }, low, high);
+        const roots = computeRootLadder(ex, low, high);
+        // Same floor, and the top rung (where a down ladder starts) no higher
+        // than the middle of the fitted span.
+        expect(roots[0], `${id} ${low}-${high}`).toBe(uncapped[0]);
+        const mid = uncapped[Math.round((uncapped.length - 1) / 2)];
+        expect(roots[roots.length - 1], `${id} ${low}-${high}`).toBeLessThanOrEqual(mid);
+      }
+    }
+    // A C4–C6 voice starts the quiet hum on a top note of D5, not G5.
+    const hum = computeRootLadder(byId("quiet-hum-descent"), 60, 84);
+    expect(hum[hum.length - 1] + 4).toBe(74);
   });
 
   it("still gives a narrow range a rung to sing", () => {

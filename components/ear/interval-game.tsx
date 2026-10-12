@@ -5,6 +5,7 @@ import { playSequence, playTone } from "@/lib/audio/synth";
 import {
   INTERVAL_NAMES,
   INTERVAL_SETS,
+  intervalWithArticle,
   SHORTCUT_KEYS,
   pick,
   randInt,
@@ -188,8 +189,8 @@ export function IntervalGame({
             correct={answered === round.semi}
             message={
               answered === round.semi
-                ? `That was a ${INTERVAL_NAMES[round.semi].toLowerCase()}.`
-                : `It was a ${INTERVAL_NAMES[round.semi].toLowerCase()}.`
+                ? `That was ${intervalWithArticle(round.semi)}.`
+                : `It was ${intervalWithArticle(round.semi)}.`
             }
           />
           <ShellButton tone="primary" onClick={next}>

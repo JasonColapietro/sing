@@ -6,6 +6,7 @@ import {
   cappedDaySeconds,
   dayMinutes,
   dayNeedsPro,
+  freePlanCalendarDays,
   isRestDay,
   itemDoneOn,
   itemStepHref,
@@ -121,7 +122,7 @@ describe("program data", () => {
           expect(dayMinutes(d)).toBe(0);
           return;
         }
-        // A Pro program's free week is sized to the free plan's three guided
+        // A Pro program's free week is sized to the free plan's five guided
         // minutes instead; the next test holds it to that.
         if (p.pro && !dayNeedsPro(p, i)) return;
         const m = dayMinutes(d);
@@ -168,7 +169,7 @@ describe("program data", () => {
     expect(cappedDaySeconds(w)).toBeLessThan(dayMinutes(w) * 60);
   });
 
-  it("follows the book: its chapters, three range tests where the book puts them, two recorded takes", () => {
+  it("follows the book: its chapters, and the range tests and recorded takes where the book puts them", () => {
     const p = programById("measured-voice-12w")!;
     expect(p.weeks).toBe(12);
     expect(p.pro).toBe(true);
@@ -193,7 +194,8 @@ describe("program data", () => {
       p.days.flatMap((d, i) => (d.items.some((x) => x.kind === kind) ? [i + 1] : []));
     // Week 1, the end of week 6, the start of week 12.
     expect(on("range")).toEqual([1, 42, 78]);
-    expect(on("recorder")).toEqual([1, 78]);
+    // Day 1's baseline, the week-11 working copy (ch. 19), and week 12's take.
+    expect(on("recorder")).toEqual([1, 71, 78]);
     // Three or four sessions a week, and five only where a check-in is added.
     for (let w = 0; w < p.weeks; w++) {
       const sessions = p.days.slice(w * 7, w * 7 + 7).filter((d) => !isRestDay(d)).length;
@@ -201,6 +203,60 @@ describe("program data", () => {
       expect(sessions, `week ${w + 1}`).toBeLessThanOrEqual(5);
     }
     expect(isRestDay(p.days.at(-1)!)).toBe(false);
+  });
+
+  it("works one song in the last four weeks and runs one sustain test a week, as chapters 18 and 19 ask", () => {
+    const p = programById("measured-voice-12w")!;
+    const weekDays = (w: number) => p.days.slice((w - 1) * 7, w * 7);
+    // Weeks 9 and 10: "Run one sustain test a week", and phrase work in a song.
+    for (const w of [9, 10]) {
+      const items = weekDays(w).flatMap((d) => d.items);
+      expect(items.filter((i) => i.kind === "drill" && i.id === "sustain"), `week ${w}`).toHaveLength(1);
+      expect(items.some((i) => i.kind === "song"), `week ${w}`).toBe(true);
+    }
+    // Weeks 11 and 12: "One song. Not three, not a set." The same one weeks 9
+    // and 10 phrased.
+    const songs = (from: number, to: number) =>
+      new Set(
+        p.days
+          .slice((from - 1) * 7, to * 7)
+          .flatMap((d) => d.items.flatMap((i) => (i.kind === "song" ? [i.slug] : []))),
+      );
+    expect([...songs(11, 12)]).toHaveLength(1);
+    expect(songs(9, 12)).toEqual(songs(11, 12));
+    expect(p.days.some((d) => d.items.filter((i) => i.kind === "song").length > 1)).toBe(false);
+  });
+
+  it("counts the calendar days a program takes on the free plan's daily allowance", () => {
+    const base: Program = { id: "t", name: "t", tagline: "", measures: "", weeks: 1, pro: false, days: [] };
+    const calendarDays = (...days: ProgramDay[]) => freePlanCalendarDays({ ...base, days });
+    // A rest day is one calendar day, and so is a day outside the cap.
+    expect(calendarDays({ title: "Rest day", items: [] })).toBe(1);
+    expect(calendarDays({ title: "Check in", items: [{ kind: "range" }, { kind: "recorder" }] })).toBe(1);
+    // The cap is checked where a piece starts, so a piece begun with time left
+    // runs to its end: two that together pass the allowance still fit one day,
+    // and a third, begun once it is spent, waits for the next.
+    const piece: ProgramItem = { kind: "exercise", id: "hoo-four-note", reps: 30 };
+    const sec = cappedDaySeconds({ title: "", items: [piece] });
+    expect(sec).toBeLessThan(FREE_DAILY_SEC);
+    expect(2 * sec).toBeGreaterThanOrEqual(FREE_DAILY_SEC);
+    expect(calendarDays({ title: "", items: [piece, piece] })).toBe(1);
+    expect(calendarDays({ title: "", items: [piece, piece, piece] })).toBe(2);
+    // Days add up, and nothing carries from one program day into the next.
+    expect(calendarDays({ title: "", items: [piece] }, { title: "", items: [piece] })).toBe(2);
+    // A routine stops between its steps, not only at its end: it takes the
+    // same days as its steps sung one by one, and more than one.
+    const full: ProgramItem = { kind: "routine", id: "full" };
+    expect(calendarDays({ title: "", items: [full] })).toBe(calendarDays({ title: "", items: itemSteps(full) }));
+    expect(calendarDays({ title: "", items: [full] })).toBeGreaterThan(1);
+    // A Pro program's free week fits the allowance as written.
+    for (const p of PROGRAMS.filter((p) => p.pro)) {
+      expect(freePlanCalendarDays({ ...p, days: p.days.slice(0, FREE_WEEKS * 7) }), p.id).toBe(FREE_WEEKS * 7);
+    }
+    // The free programs do not, which /programs says before one is started.
+    for (const p of PROGRAMS.filter((p) => !p.pro)) {
+      expect(freePlanCalendarDays(p), p.id).toBeGreaterThan(p.days.length);
+    }
   });
 
   it("gates Pro content: a free program starts nothing behind the paywall", () => {
@@ -245,7 +301,7 @@ describe("program data", () => {
         // Nothing but the last item may be the cool-down.
         expect(d.items.slice(0, -1).some((x) => x.kind === "routine" && x.id === "cooldown"), label).toBe(false);
         if (isRestDay(d) || !dayNeedsPro(p, i)) {
-          // The free week is sized to the free plan's three guided minutes.
+          // The free week is sized to the free plan's five guided minutes.
           expect(endsCool, label).toBe(false);
           return;
         }
@@ -273,6 +329,29 @@ describe("program data", () => {
         // Weeks 6 and 12 close on a session instead of a rest.
         .filter((i) => i !== 41 && i !== 83),
     );
+  });
+
+  it("warms up before every range test, and records after it, as chapters 8 and 14 ask", () => {
+    const sings = (i: ProgramItem) => i.kind === "routine" || i.kind === "exercise";
+    for (const p of PROGRAMS) {
+      p.days.forEach((d, n) => {
+        const at = d.items.findIndex((i) => i.kind === "range");
+        if (at < 0) return;
+        const label = `${p.id} day ${n + 1} "${d.title}"`;
+        // "Do not skip this to get a 'true' cold reading."
+        expect(d.items.slice(0, at).some(sings), label).toBe(true);
+        // The take is sung after the test, "without warming up further".
+        const rec = d.items.findIndex((i) => i.kind === "recorder");
+        if (rec >= 0) expect(rec, label).toBeGreaterThan(at);
+      });
+    }
+    // Readings a program compares are taken after the same warmup.
+    const warmupBeforeRange = (d: ProgramDay) =>
+      JSON.stringify(d.items.slice(0, d.items.findIndex((i) => i.kind === "range")).filter(sings));
+    const checks = (id: string) => programById(id)!.days.filter((d) => d.items.some((i) => i.kind === "range"));
+    for (const id of ["foundations-2w", "high-notes-6w"]) {
+      expect(new Set(checks(id).map(warmupBeforeRange)).size, id).toBe(1);
+    }
   });
 
   it("puts a range test at day 1 and at the end of each two weeks of the high-notes program", () => {
@@ -455,9 +534,10 @@ describe("one session pays for one item", () => {
     expect(setAt).toBeGreaterThanOrEqual(0);
     const one = ["Box breathing", "Farinelli drill", "Sustain test"].map((d) => session(today, "breath", d));
     const done = itemsDoneOn(day1, one, today);
-    // One sustain session: the drill takes it, and the set is left a sustain short.
-    expect(done[sustainAt]).toBe(true);
-    expect(done[setAt]).toBe(false);
+    // One sustain session: whichever comes first in the day takes it, and the
+    // other is left a sustain short.
+    expect(done[Math.min(sustainAt, setAt)]).toBe(true);
+    expect(done[Math.max(sustainAt, setAt)]).toBe(false);
     // A second sustain completes both.
     const both = itemsDoneOn(day1, [...one, session(today, "breath", "Sustain test")], today);
     expect(both[sustainAt] && both[setAt]).toBe(true);

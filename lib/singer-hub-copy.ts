@@ -388,9 +388,11 @@ export const VOICE_TYPE_HUB_COPY: Record<VoiceKind, HubCopy> = {
     neighbour: "contralto",
     contrast:
       "A {link} covers similar notes with a female voice's full chest register underneath, where a countertenor works mostly in falsetto.",
-    titleTag: "Men in Alto Range",
+    // Ungendered on purpose: this shelf includes Sam Smith, who uses
+    // they/them (see their source in data/singer-evidence.json).
+    titleTag: "Voices in Alto Range",
     summary:
-      "Male singers working in alto and mezzo territory through developed falsetto.",
+      "Singers working in alto and mezzo territory through a developed falsetto.",
   },
   Contralto: {
     intro:

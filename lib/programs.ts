@@ -53,6 +53,7 @@ import { COUNT_IN_BEATS, secPerBeat, sessionSeconds } from "@/components/songs/l
 import type { ActivityType, SessionLog } from "@/lib/progress-shape";
 import type { RangeEntry } from "@/lib/analytics";
 import { CAPPED_TYPES } from "@/lib/free-cap";
+import { FREE_DAILY_SEC } from "@/lib/practice-limits";
 
 export type ProgramItem =
   /** A warmup routine, by its id in components/warmups/routines.ts. */
@@ -142,6 +143,12 @@ const routine = (id: string): ProgramItem => ({ kind: "routine", id });
 const exercise = (id: string, reps: number): ProgramItem => ({ kind: "exercise", id, reps });
 const breath = (id: string): ProgramItem => ({ kind: "breath", id });
 const drill = (id: BreathDrillId): ProgramItem => ({ kind: "drill", id });
+/**
+ * The range test. Every day that takes one warms up first, as chapters 8 and 14
+ * ask: a cold voice under-reports at both ends. Check-ins a program compares
+ * warm up alike where the free week allows, since chapter 8's protocol is the
+ * same warmup every time.
+ */
 const range: ProgramItem = { kind: "range" };
 const song = (slug: string): ProgramItem => ({ kind: "song", slug });
 const recorder: ProgramItem = { kind: "recorder" };
@@ -162,7 +169,7 @@ const FOUNDATIONS: Program = {
   weeks: 2,
   pro: false,
   days: [
-    day("Where you start", range, drill("sustain"), breath("quick"), routine("quick")),
+    day("Where you start", breath("quick"), routine("quick"), range, drill("sustain")),
     day("Breath, then the easy four", breath("daily"), routine("quick")),
     day("The complete ten", breath("quick"), routine("daily")),
     day("A first song", breath("daily"), routine("quick"), song("silent-night")),
@@ -175,7 +182,7 @@ const FOUNDATIONS: Program = {
     day("The full set", breath("daily"), routine("full")),
     day("Builder and the ten", breath("builder"), routine("daily")),
     rest(),
-    day("Check in", range, drill("sustain"), breath("daily"), routine("daily")),
+    day("Check in", breath("daily"), routine("quick"), range, drill("sustain")),
   ],
 };
 
@@ -205,7 +212,7 @@ const VIBRATO: Program = {
 const HIGH_A = day("Sirens and the tenth", routine("quick"), routine("range"), routine("high-notes"), routine("cooldown"));
 const HIGH_B = day("Breath, the ten, the tenth", breath("quick"), routine("daily"), routine("high-notes"), routine("cooldown"));
 const HIGH_C = day("The full set, then up", routine("full"), routine("high-notes"));
-const HIGH_CHECK = day("Range check-in", range, routine("quick"), routine("high-notes"), routine("cooldown"));
+const HIGH_CHECK = day("Range check-in", routine("quick"), range, routine("high-notes"), routine("cooldown"));
 const HIGH_WEEK = [HIGH_A, HIGH_B, HIGH_C, rest(), HIGH_A, HIGH_B, rest()];
 
 const HIGH_NOTES: Program = {
@@ -217,12 +224,12 @@ const HIGH_NOTES: Program = {
   weeks: 6,
   pro: false,
   days: [
-    ...week(HIGH_WEEK, { 0: day("Where you start", range, routine("quick"), routine("high-notes"), routine("cooldown")) }),
+    ...week(HIGH_WEEK, { 0: day("Where you start", routine("quick"), range, routine("high-notes"), routine("cooldown")) }),
     ...week(HIGH_WEEK, { 6: HIGH_CHECK }),
     ...week(HIGH_WEEK),
     ...week(HIGH_WEEK, { 6: HIGH_CHECK }),
     ...week(HIGH_WEEK),
-    ...week(HIGH_WEEK, { 6: day("Final check-in", range, routine("daily"), routine("high-notes"), routine("cooldown")) }),
+    ...week(HIGH_WEEK, { 6: day("Final check-in", routine("quick"), range, routine("high-notes"), routine("cooldown")) }),
   ],
 };
 
@@ -246,8 +253,8 @@ const RECOVERY: Program = {
 };
 
 // The Pro weeks end every day on the cool-down, inside the twenty minutes. The
-// free week does not: its days are sized to the free plan's three guided
-// minutes, which the cool-down alone would nearly fill, and each of them
+// free week does not: its days are sized to the free plan's five guided
+// minutes, of which the cool-down alone would take two, and each of them
 // already ends on a descending or quiet sound.
 const MIX_A = day("Head voice into the crossing", routine("quick"), routine("head-voice-builder"), routine("mix"), routine("cooldown"));
 const MIX_B = day("Chest voice into the crossing", routine("quick"), routine("belt-prep"), routine("mix"), routine("cooldown"));
@@ -292,16 +299,16 @@ const MIX: Program = {
     ...week(MIX_FREE_WEEK, {
       0: day(
         "Where you start",
-        range,
         exercise("ng-siren-fifth", 5),
         exercise("octave-siren", 4),
+        range,
         exercise("hoo-four-note", 5),
         exercise("descending-five", 4),
       ),
     }),
     ...week(MIX_WEEK, { 0: day("Into the mix pack", routine("quick"), routine("mix"), routine("cooldown")) }),
     ...week(MIX_WEEK),
-    ...week(MIX_WEEK, { 6: day("Check in", range, routine("daily"), routine("mix"), routine("cooldown")) }),
+    ...week(MIX_WEEK, { 6: day("Check in", routine("daily"), range, routine("mix"), routine("cooldown")) }),
   ],
 };
 
@@ -327,9 +334,9 @@ const MEASURED_VOICE: Program = {
   id: "measured-voice-12w",
   name: "The Measured Voice: 12 weeks",
   tagline:
-    "The book's twelve-week plan, four sessions a week: baseline and breath, the middle, the break, the top, the bottom, then songs.",
+    "The book's twelve-week plan, four sessions a week: baseline and breath, the middle, the break, the top, the bottom, then one song.",
   measures:
-    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear.",
+    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear, and one early in week 11 is a working copy of your song.",
   weeks: 12,
   pro: true,
   chapters: [
@@ -343,7 +350,16 @@ const MEASURED_VOICE: Program = {
   days: [
     // Weeks 1–2: baseline and breath.
     ...bookWeek(
-      day("Your baseline", range, recorder, drill("sustain"), exercise("morning-hum", 5), exercise("lip-trill-scale", 6)),
+      day(
+        "Your baseline",
+        exercise("morning-hum", 5),
+        exercise("lip-trill-scale", 6),
+        exercise("hoo-four-note", 5),
+        exercise("descending-five", 4),
+        range,
+        recorder,
+        drill("sustain"),
+      ),
       day("Box breath, a gentle middle", drill("box"), exercise("morning-hum", 5), exercise("hoo-four-note", 5), exercise("descending-five", 4)),
       day("The climb to eight", drill("farinelli"), exercise("lip-trill-scale", 6), exercise("morning-sustain", 4)),
       day("Box breath, a held note", drill("box"), exercise("morning-sigh", 5), exercise("sustained-hold", 3), exercise("descending-five", 4)),
@@ -377,7 +393,7 @@ const MEASURED_VOICE: Program = {
         day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
-      { 6: day("Halfway check-in", range, drill("sustain"), breath("quick"), routine("quick"), routine("cooldown")) },
+      { 6: day("Halfway check-in", breath("quick"), routine("quick"), range, drill("sustain"), routine("cooldown")) },
     ),
     // Weeks 7–8: height without weight, head voice before belt.
     ...[7, 8].flatMap(() =>
@@ -388,30 +404,40 @@ const MEASURED_VOICE: Program = {
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
     ),
-    // Weeks 9–10: the bottom, and long phrases rather than long notes.
+    // Weeks 9–10: the bottom, and long phrases rather than long notes. The
+    // phrase work is in a song, the one weeks 11 and 12 go on with, and the
+    // sustain test runs once a week, as chapter 18 asks.
     ...[9, 10].flatMap(() =>
       bookWeek(
-        day("Breath for a long phrase", breath("builder"), routine("daily"), routine("cooldown")),
-        day("Down low, gently", breath("daily"), routine("recovery"), routine("morning"), drill("sustain")),
-        day("Breath for a long phrase", breath("builder"), routine("quick"), drill("sustain"), routine("cooldown")),
+        day("Breath for a long phrase", breath("builder"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
+        day("Down low, gently", breath("daily"), routine("recovery"), routine("morning")),
+        day(
+          "Breath for a long phrase",
+          breath("builder"),
+          routine("quick"),
+          drill("sustain"),
+          song("home-on-the-range"),
+          routine("cooldown"),
+        ),
         day("Quiet and low", breath("daily"), routine("recovery"), routine("morning")),
       ),
     ),
-    // Weeks 11–12: songs. Week 12 opens on the last retest and the second take.
+    // Weeks 11–12: one song, as chapter 19 asks, recorded once early in week 11
+    // as a working copy. Week 12 opens on the last retest and the second take.
     ...bookWeek(
-      day("A song, warmed up", breath("daily"), routine("quick"), song("silent-night"), routine("cooldown")),
-      day("A song, warmed up", breath("daily"), routine("quick"), song("ode-to-joy"), routine("cooldown")),
+      day("Your working copy", breath("daily"), routine("quick"), recorder, song("home-on-the-range"), routine("cooldown")),
       day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
-      day("Two songs", breath("daily"), routine("morning"), song("silent-night"), song("ode-to-joy"), routine("cooldown")),
+      day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
+      day("The same song again", breath("daily"), routine("morning"), song("home-on-the-range"), routine("cooldown")),
     ),
     ...week(
       bookWeek(
-        day("Where you are now", range, recorder, drill("sustain"), routine("quick"), routine("cooldown")),
+        day("Where you are now", routine("quick"), range, recorder, drill("sustain"), routine("cooldown")),
         day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
-        day("A song, warmed up", breath("daily"), routine("quick"), song("silent-night"), routine("cooldown")),
-        day("Two songs", breath("daily"), routine("morning"), song("ode-to-joy"), song("home-on-the-range"), routine("cooldown")),
+        day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
+        day("The same song again", breath("daily"), routine("morning"), song("home-on-the-range"), routine("cooldown")),
       ),
-      { 6: day("The last session", breath("quick"), routine("daily"), song("silent-night"), routine("cooldown")) },
+      { 6: day("The last session", breath("quick"), routine("daily"), song("home-on-the-range"), routine("cooldown")) },
     ),
   ],
 };
@@ -486,6 +512,54 @@ function itemType(item: ProgramItem): ActivityType {
  */
 export function cappedDaySeconds(d: ProgramDay): number {
   return d.items.reduce((a, item) => a + (CAPPED_TYPES.has(itemType(item)) ? itemSeconds(item) : 0), 0);
+}
+
+/**
+ * The pieces of a day's guided practice that the free plan's cap can stop
+ * between, in seconds: each step of a warmup routine or breath set, and every
+ * other capped item whole. The cap is checked where a session or a step
+ * starts (lib/free-cap.ts), so a piece begun inside the allowance runs to its
+ * end. Items outside the cap are left out.
+ */
+function cappedPieces(d: ProgramDay): number[] {
+  return d.items.flatMap((item) => {
+    if (!CAPPED_TYPES.has(itemType(item))) return [];
+    if (item.kind === "routine") {
+      const r = routineById(item.id);
+      return r ? r.steps.map((s) => stepSeconds(s) + STEP_INTRO_SEC) : [];
+    }
+    if (item.kind === "breath") {
+      const r = breathRoutineById(item.id);
+      return r ? r.steps.map((s) => breathStepSeconds(s) + BREATH_STEP_INTRO_SEC) : [];
+    }
+    return [itemSeconds(item)];
+  });
+}
+
+/**
+ * About how many calendar days a program takes on the free plan's guided
+ * allowance, practising every day. A rest day is one. A practice day is sung
+ * in order, a piece at a time, and a piece may start while any of the day's
+ * `FREE_DAILY_SEC` is left; once it is spent, the rest waits for the next
+ * calendar day. Leftover allowance does not carry into the next program day,
+ * whose practice counts only from the calendar day after the last
+ * completion. Wall-clock seconds stand in for the logged ones, which leave
+ * out each step's introduction, so this leans long rather than short. On
+ * Pro, with no allowance, a program takes its own length.
+ */
+export function freePlanCalendarDays(p: Program): number {
+  return p.days.reduce((n, d) => {
+    let days = 1;
+    let used = 0;
+    for (const sec of cappedPieces(d)) {
+      if (used >= FREE_DAILY_SEC) {
+        days += 1;
+        used = 0;
+      }
+      used += sec;
+    }
+    return n + days;
+  }, 0);
 }
 
 /** Rounded minutes for a day; zero on a rest day. */

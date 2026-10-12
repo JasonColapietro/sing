@@ -5,7 +5,7 @@ stage: "v-l4"
 title: "Self-Check: Three Articulations on Cue"
 type: "checkpoint"
 minutes: 5
-objective: "Called at random mid-phrase."
+objective: "Before recording, shuffle three slips marked grace, staccato and accent; sing the phrase once per slip in the order drawn."
 prerequisites: "v-l4-m4-03"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,14 +29,14 @@ Choose a short comfortable phrase and establish a neutral version first. Keep pi
 
 ### Name the target: Grace notes, staccato, accent
 
-Called at random mid-phrase. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Before recording, shuffle three slips marked grace, staccato and accent; sing the phrase once per slip in the order drawn. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.
 - Listen: The three versions are distinguishable in playback without one simply being much louder than the others.
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Add one named articulation at a time: a connected grace, a short release, or a clear accent. Make the gesture small enough to remain repeatable.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Shuffle the slips, then sing the phrase once per slip in the order drawn, with a breath between versions: a connected grace, a short release, or a clear accent. Make the gesture small enough to remain repeatable.
 
 - Look: The articulation lands on the planned note and does not shift the whole phrase or replace the vowel.
 - Listen: The three versions are distinguishable in playback without one simply being much louder than the others.
@@ -66,7 +66,7 @@ I used one supplied phrase to compare connected, detached, and gently accented a
 - The three versions are distinguishable in playback without one simply being much louder than the others.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: In one take sung in the order you drew, you can name each articulation from playback without checking the slips, and the phrase keeps the same pitch and tempo in all three.
 
 If not ready: If an articulation changes pitch or timing, slow the phrase, isolate two notes, and rebuild the gesture before returning to the full line. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

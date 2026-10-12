@@ -12,6 +12,7 @@ import {
   type VoiceKind,
 } from "@/lib/singers";
 import { REFERENCE_BANDS, representativeSingers } from "@/lib/singers-analysis";
+import { getSingerReviewStatus } from "@/lib/singer-evidence";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { ORG_ID, ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
@@ -89,6 +90,19 @@ function row(voice: VoiceKind): Row {
   return found;
 }
 
+/**
+ * The singers closest to the conventional band, minus any whose catalog label
+ * was disputed on individual review. A page that defines the categories must
+ * not illustrate one with a singer this repo has found does not belong in it.
+ * Ranks the whole category before filtering, so a disputed name near the top
+ * never leaves a row short.
+ */
+function exampleSingers(voice: VoiceKind): Row["examples"] {
+  return representativeSingers(voice, singersByVoiceType(voice).length)
+    .filter((s) => getSingerReviewStatus(s.slug) !== "disputed")
+    .slice(0, EXAMPLE_COUNT);
+}
+
 const ROWS: Row[] = VOICE_KINDS.map((voice) => {
   const band = REFERENCE_BANDS[voice];
   const p = VOICE_TYPE_PASSAGGIO[voice];
@@ -99,7 +113,7 @@ const ROWS: Row[] = VOICE_KINDS.map((voice) => {
     band: `${midiToLabel(band.low)}–${midiToLabel(band.high)}`,
     passaggio: `${midiToLabel(p.low)}–${midiToLabel(p.high)}`,
     caveat: p.caveat,
-    examples: representativeSingers(voice, EXAMPLE_COUNT),
+    examples: exampleSingers(voice),
     count: singersByVoiceType(voice).length,
   };
 });
@@ -377,9 +391,10 @@ export default function VocalRangeByVoiceTypePage() {
           <p className="mt-5 max-w-3xl text-xs text-dim">
             Example singers are not the most famous of each category — they are
             the three whose cited ranges sit closest to the conventional band,
-            which is what makes them illustrative rather than exceptional. Their
-            figures are commonly cited approximations compiled from recordings
-            and public discussion, not lab measurements.
+            which is what makes them illustrative rather than exceptional.
+            Singers whose catalog label was disputed on individual review are
+            left out. Their figures are commonly cited approximations compiled
+            from recordings and public discussion, not lab measurements.
             {SMALL_CATEGORIES.length > 0 && (
               <>
                 {" "}

@@ -11,14 +11,18 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A growl is noise laid over the sung note, and it can come from two places that sound the same from the audience: structures above the vocal folds fluttering in the airstream while the folds keep vibrating normally underneath, or the folds themselves being slammed together under pressure, which is how voices get hurt. You cannot reliably teach yourself the difference from text, this lesson included, which is why a growl is learned with a qualified teacher listening and why the health module comes first. Until then the rule is simple: grit that leaves you hoarse afterward was the wrong kind, and pain means stop.
+
 ## Steps
 
-### Use the practice material
+### Start with the stop rules
 
-Open the practice material on this page and read The safety rail. Use its written exercise and stop rules. The reading The safety rail is listed there too.
+Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor or speech-language pathologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound.
+- Listen: For the planning task, work from the stop rules on this page; you do not need to make a pitched sound.
 
 ### Set a safe baseline
 
@@ -55,7 +59,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 ## Practice blocks
 
-- 45s: Open the practice material. Prepare the room, body, and safe baseline for “What a Growl Actually Is.”
+- 45s: Copy the stop rules into your stop plan. Prepare the room, body, and safe baseline for “What a Growl Actually Is.”
 - 90s: Review the anatomy, warning signs, prior supervision, and written stop plan without attempting a new effect.
 - 135s: Complete the observation-only “What a Growl Actually Is” task, or briefly review only a previously taught effect at the prescribed dose.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.

@@ -13,12 +13,12 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## Steps
 
-### Use the practice material
+### Start with the stop rules
 
-Open the practice material on this page and read The safety rail. Use its written exercise and stop rules. The reading The safety rail is listed there too.
+Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor or speech-language pathologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound.
+- Listen: For the planning task, work from the stop rules on this page; you do not need to make a pitched sound.
 
 ### Set a safe baseline
 
@@ -55,7 +55,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 ## Practice blocks
 
-- 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Your Effects Stop Plan.”
+- 45s: Copy the stop rules into your stop plan. Prepare the room, body, and safe baseline for “Self-Check: Your Effects Stop Plan.”
 - 90s: Review the anatomy, warning signs, prior supervision, and written stop plan without attempting a new effect.
 - 135s: Complete the observation-only “Self-Check: Your Effects Stop Plan” task, or briefly review only a previously taught effect at the prescribed dose.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
@@ -66,7 +66,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 - Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.
 
 If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

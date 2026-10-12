@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 /**
  * Minimal markdown renderer for the book — headings, paragraphs, lists,
- * blockquotes, bold/italic and inline code.
+ * blockquotes, bold/italic, inline code and internal links.
  *
  * The book is the only markdown in the app and it is written in-house, so a
  * parser dependency would be more surface than the job needs. Output is React
@@ -12,10 +13,19 @@ import type { ReactNode } from "react";
 
 type Inline = ReactNode;
 
-/** Bold, italic and code, applied in that order so `**a *b* **` nests. */
+/**
+ * `[label](/path)` — a site-relative path only. A "Try this" that names a room
+ * should be one tap from it, but a chapter has no business sending a reader off
+ * the site, so anything else (`https://…`, a protocol-relative `//host`) stays
+ * literal text rather than becoming a link.
+ */
+const LINK = /^\[([^\]]+)\]\((\/(?!\/)[^)\s]*)\)$/;
+
+/** Bold, italic, code and internal links, in that order so `**a *b* **` nests. */
 function renderInline(text: string, keyPrefix: string): Inline[] {
   const out: Inline[] = [];
-  const re = /(\*\*[^*]+\*\*|(?<!\*)\*[^*]+\*(?!\*)|`[^`]+`)/g;
+  const re =
+    /(\*\*[^*]+\*\*|(?<!\*)\*[^*]+\*(?!\*)|`[^`]+`|\[[^\]]+\]\(\/(?!\/)[^)\s]*\))/g;
   let last = 0;
   let m: RegExpExecArray | null;
   let i = 0;
@@ -28,6 +38,17 @@ function renderInline(text: string, keyPrefix: string): Inline[] {
         <strong key={key} className="font-semibold">
           {tok.slice(2, -2)}
         </strong>,
+      );
+    } else if (tok.startsWith("[")) {
+      const [, label, href] = LINK.exec(tok)!;
+      out.push(
+        <Link
+          key={key}
+          href={href}
+          className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+        >
+          {label}
+        </Link>,
       );
     } else if (tok.startsWith("`")) {
       out.push(

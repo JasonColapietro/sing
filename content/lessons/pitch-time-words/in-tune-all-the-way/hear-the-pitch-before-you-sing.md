@@ -11,11 +11,15 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Hearing the pitch first means playing the reference once, stopping it, and holding that note in your head for a moment before you make a sound. A voice that starts without that picture tends to search for the note, sliding up into it or settling on a neighboring pitch, and those scoops and steady-but-wrong notes are much of what reads as out of tune. Singing from silence also leaves your own voice as the only thing you are judging, so the comparison with the reference is honest.
+
 ## Steps
 
 ### Use the practice material
 
-Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.
+Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Chromatic neighbor. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
@@ -36,7 +40,7 @@ Compare your note with the synthesized reference and listen for whether your nex
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Hear the Pitch Before You Sing.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Correct drift in separate attempts: identify whether the center was sharp or flat, release, imagine the adjustment, then sing again.
+Play the reference note once and stop it. Sing the same note twice from silence: the first time, breathe and start straight away without picturing it; the second time, hear it in your head for a slow count of three, then sing. Change only that pause. Record both in one take in the recorder with a breath between them, and on playback listen to the first instant of each: which one starts on the note instead of sliding up into it or settling somewhere nearby? Correct drift in separate attempts: identify whether the center was sharp or flat, release, imagine the adjustment, then sing again.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The pitch sounds settled and the correction does not arrive through a scoop or sudden volume change.

@@ -4,7 +4,13 @@ import { SINGERS, type Singer } from "@/lib/singers";
 function singersByInitial(singers: readonly Singer[]) {
   const groups = new Map<string, Singer[]>();
   for (const singer of [...singers].sort((a, b) => a.name.localeCompare(b.name))) {
-    const initial = singer.name.slice(0, 1).toUpperCase();
+    // Fold accents so Ángela and Édith file under A and E, where localeCompare
+    // already sorts them, instead of under their own one-name headings.
+    const initial = singer.name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .slice(0, 1)
+      .toUpperCase();
     const group = groups.get(initial) ?? [];
     group.push(singer);
     groups.set(initial, group);
@@ -32,9 +38,12 @@ export function SingerCrawlIndex({ singers = SINGERS }: { singers?: readonly Sin
               {group.map((singer) => (
                 <li key={singer.slug} className="break-inside-avoid">
                   {/* Block and py-0.5: a one-letter name like "V" was an 8x19
-                      target with rows 1px apart on a phone. */}
+                      target with rows 1px apart on a phone. prefetch off:
+                      the default fetched a page payload for every one of
+                      these 600-plus names as it scrolled into view. */}
                   <Link
                     href={`/singers/${singer.slug}`}
+                    prefetch={false}
                     className="block py-0.5 text-mut underline decoration-line underline-offset-4 hover:text-violet-ink hover:decoration-violet"
                   >
                     {singer.name}

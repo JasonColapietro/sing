@@ -95,6 +95,17 @@ describe("singer evidence and comparison regressions", () => {
     expect(html).not.toContain("How Olivia Rodrigo uses that range");
     expect(html).toContain('href="#evidence"');
     expect(html).toContain('id="evidence"');
+    // The catalog-position section used to bring both claims back in other words.
+    expect(html).not.toContain("conventional mezzo-soprano band");
+    expect(html).not.toContain("highest full or belted note of E5");
+  });
+
+  it("does not measure Sam Smith against the countertenor label the review did not establish", async () => {
+    const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug: "sam-smith" }) }));
+    expect(html).not.toContain("conventional countertenor band");
+    expect(html).not.toContain("catalog countertenors");
+    // The label-free catalog facts stay.
+    expect(html).toContain("by reported span");
   });
 
   it("does not restore Arijit's disputed tenor label in editorial copy", async () => {

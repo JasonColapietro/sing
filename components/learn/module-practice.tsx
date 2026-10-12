@@ -10,9 +10,11 @@ import {
   ROOM_LABELS,
   companionHref,
   companionLabel,
+  isGuidedPractice,
   moduleMaterial,
   practiceMatch,
 } from "@/lib/lesson-practice";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { PracticeCount } from "@/components/learn/practice-count";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 
@@ -34,6 +36,25 @@ export const MEASUREMENT_WORDS: Record<string, string> = {
   cycleDose:
     "how many vocal fold cycles a session used. It measures load, and there is no published safe ceiling to compare it with",
 };
+
+/**
+ * Said wherever a lesson sends someone into a room that draws on the free
+ * daily allowance (warm-ups, ear training, breath, songs), so the limit is
+ * never a surprise halfway through a free lesson. `full` adds which rooms
+ * have no clock, for the practice panel where there is room to say it.
+ */
+export function GuidedCapNote({ full = false }: { full?: boolean }) {
+  return (
+    <p className="text-xs text-dim" data-guided-cap>
+      Guided practice is {FREE_DAILY_MINUTES} free minutes a day;{" "}
+      <Link href="/pro" className="underline hover:text-ink">
+        Pro
+      </Link>{" "}
+      removes the limit.
+      {full && " The pitch studio, range test, recorder and tools have no clock."}
+    </p>
+  );
+}
 
 export function ModulePractice({ moduleId }: { moduleId: string }) {
   const practice = MODULE_PRACTICE[moduleId];
@@ -65,6 +86,7 @@ export function ModulePractice({ moduleId }: { moduleId: string }) {
               Practise in {companionLabel(companion)}
             </LinkButton>
           </div>
+          {isGuidedPractice(companion) && <GuidedCapNote full />}
           {match && <PracticeCount match={match} room={ROOM_LABELS[companion.room]} />}
         </div>
 

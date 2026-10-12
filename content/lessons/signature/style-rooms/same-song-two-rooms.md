@@ -15,14 +15,14 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Amazing Grace (Verse 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.
+Open the practice material on this page and choose Amazing Grace (Opening Lines, Verses 1 & 2) or Simple Gifts. Hear the reference, choose a comfortable key, then stop it before singing. The reading How to borrow a voice is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name two style rooms before singing.
+Choose one well-learned song in a comfortable key so pitch and words do not consume the whole task. Name the two styles before singing.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +36,7 @@ One melody, two complete stylistic treatments. Say what will count as complete i
 
 ### Build the song from phrases
 
-Mark the key, breaths, range edges, and lesson target before a full take of “Same Song, Two Rooms.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Change onset, diction, vibrato amount, rhythmic placement, and phrase shape deliberately while keeping the melody recognizable. Choose a phrase short enough to sing both treatments in one take within two minutes. Leave a quiet breath between them. Record your takes in the recorder.
+Mark the key, breaths, range edges, and both treatments before a full take of your chosen song, Amazing Grace or Simple Gifts. Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Change onset, diction, vibrato amount, rhythmic placement, and phrase shape deliberately while keeping the melody recognizable. Choose a phrase short enough to sing both treatments in one take within two minutes. Leave a quiet breath between them. Record your takes in the recorder.
 
 - Look: Each treatment has written choices rather than a vague instruction to sound like a particular artist.
 - Listen: A listener can describe the contrast between the two examples in the same recording, and both still sound like your own voice.

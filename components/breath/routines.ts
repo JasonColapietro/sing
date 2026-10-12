@@ -267,7 +267,7 @@ export function breathDrillDesc(drill: BreathDrillId): string {
     case "box":
       return "Breathe around the square — inhale, hold, exhale, hold, equal counts on every side. Keep each hold soft and open, a pause rather than a locked throat, and shorten the sides if you feel short of air. It settles the nerves and evens out the airflow before you sing.";
     case "farinelli":
-      return "Inhale, hold and exhale for the same count, then add one count each round. The breath gets longer as you go, which is the whole point. Breathe low and quietly, keep the shoulders still, and stop at the count you can do without gasping.";
+      return "Inhale, hold and exhale for the same count, then add one count each round. Hold by keeping the ribs open, not by shutting your throat. Breathe low and quietly, keep the shoulders still, and stop at the count you can do without gasping.";
     case "cue":
       return "Breathe in, then sing one easy note. The mic listens for the breath before each note counts, so every rep starts the way a phrase should.";
     default:

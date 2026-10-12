@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Around your transition, a strong harmonic of the note you are singing meets the main resonance of the vowel and then climbs past it, and the reinforcement drops out from under the sound. Shading the vowel a little toward the neutral middle moves that resonance so the crossing stays smooth: a bright “ee” opens slightly toward “ih”, an “oo” toward “oh”, and a wide “ah” rounds slightly toward “aw”. Use the smallest change that works; listeners rebuild a word from context generously, but if they can hear the word change, you have gone too far.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Small shape adjustments that keep the crossing smooth and the lyric intelligible
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Change the Vowel, Keep the Word.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word. Compare modified and unmodified attempts at the same pitch and volume.
+Pick a word with an “ah” in it, such as “far”, and sing it on a slide up a fifth, starting a little below your transition so the slide crosses it. Do it twice in one take: first keeping the vowel exactly as you speak it, then letting the “ah” round slightly toward “aw” as you climb. The vowel shape is the only thing that changes, so keep the pitch and the volume the same. On playback, listen for which crossing stays connected and whether the word is still clearly “far”. Record your takes in the recorder. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word.
 
 - Look: The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.
 - Listen: The pitch remains connected and the lyric is still understandable across all three vowels.

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFreeCap } from "@/lib/free-cap";
-import { CapWall } from "@/components/practice/free-cap";
+import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -24,15 +24,30 @@ import type { GuidePass, SessionMode } from "./types";
 type View = "library" | "practice" | "summary";
 
 /**
- * Whether this song may be started at all. Membership in SONGS is the
- * paywall; everything else in the songbook needs an active Pro entitlement.
- * Every entry point routes through here — a card, a deep link, a setlist, a
- * "sing again" — so none of them can become the one that leaks a Pro song.
+ * The paywall alone: is this song in the book this visitor is entitled to?
+ * Membership in SONGS is free; everything else in the songbook needs an
+ * active Pro entitlement. Every entry point routes through here — a card, a
+ * deep link, a setlist, a "sing again" — so none of them can become the one
+ * that leaks a Pro song.
+ */
+export function entitled(song: Song): boolean {
+  const accessible = getProState().active ? ALL_SONGS : SONGS;
+  return accessible.some((s) => s.id === song.id);
+}
+
+/**
+ * Whether a song may be started from the library: entitled, and in a band the
+ * ladder has opened. The ladder governs browsing — cards, the dice, picks and
+ * the setlist — not a song a page or lesson explicitly sent the singer to.
  */
 function canStart(song: Song): boolean {
   const accessible = getProState().active ? ALL_SONGS : SONGS;
-  return accessible.some((s) => s.id === song.id) &&
-    bandOpen(bandForSong(song), getMastered(), accessible);
+  return entitled(song) && bandOpen(bandForSong(song), getMastered(), accessible);
+}
+
+/** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
+function showCapWall() {
+  document.getElementById("free-cap")?.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
 export function SongsClient() {
@@ -44,10 +59,11 @@ export function SongsClient() {
 
   const [listenMode, setListenMode] = useState(false);
   // Rehearsal loops until the singer stops; performance is the scored take.
-  // Chosen on the start step and switchable while paused, so it lives here.
+  // Chosen in the player before a run or while paused, and kept here so it
+  // survives moving from one song to the next.
   const [mode, setMode] = useState<SessionMode>("rehearsal");
   // How much of the guide melody plays under the singer on this pass. Chosen
-  // on the start step alongside the mode, and switchable while paused.
+  // beside the mode; listen mode preselects the guide alone.
   const [pass, setPass] = useState<GuidePass>("guided");
   const [view, setView] = useState<View>("library");
   const [activeSong, setActiveSong] = useState<Song | null>(null);
@@ -66,9 +82,28 @@ export function SongsClient() {
   // the effect below keys off it as well as the song identity.
   const [playToken, setPlayToken] = useState(0);
 
+  // A song page links here as /songs?song=<slug>, so arriving from search
+  // lands on the melody that was being read about rather than the library.
+  // Resolved through `entitled`, so a Pro link cannot open a Pro song for a
+  // free reader — it drops them in the library instead. The band ladder does
+  // not apply: the page or lesson already said which song the singer came for,
+  // and a link that opens a lock is a dead end.
+  const deepLinkSlug = searchParams.get("song");
+  const deepLinkSong = deepLinkSlug
+    ? (ALL_SONGS.find((s) => s.slug === deepLinkSlug) ?? null)
+    : null;
+  const linkedId = deepLinkSong && entitled(deepLinkSong) ? deepLinkSong.id : null;
+  // The linked song stays startable for the whole visit, so "Sing again" on it
+  // works; everything else still goes through the ladder.
+  const mayStart = (song: Song) => canStart(song) || song.id === linkedId;
+
   function startSong(song: Song) {
     // Song practice is guided practice: the free day's five minutes apply.
-    if (cap.capped || !canStart(song)) return;
+    if (cap.capped) {
+      showCapWall();
+      return;
+    }
+    if (!mayStart(song)) return;
     setActiveSong(song);
     setSummary(null);
     replaceTake(undefined);
@@ -78,7 +113,7 @@ export function SongsClient() {
 
   function startSongById(id: string) {
     const song = ALL_SONGS.find((s) => s.id === id);
-    if (!song || !canStart(song)) return;
+    if (!song || !mayStart(song)) return;
     startSong(song);
   }
 
@@ -89,25 +124,19 @@ export function SongsClient() {
     if (activeSong) recordSongPlayed(activeSong.id);
   }, [activeSong, playToken]);
 
-  const gated = !pitch.listening && !listenMode;
-
-  // A song page links here as /songs?song=<slug>, so arriving from search
-  // lands on the melody that was being read about rather than the library.
-  // Resolved through canStart, so a Pro link cannot open a Pro song for a
-  // free reader — it drops them in the library instead.
-  const deepLinkSlug = searchParams.get("song");
-  const deepLinkSong = deepLinkSlug
-    ? (ALL_SONGS.find((s) => s.slug === deepLinkSlug) ?? null)
-    : null;
+  // A singer who has used today's free minutes meets the cap wall, not a
+  // microphone prompt for practice they cannot start.
+  const gated = !pitch.listening && !listenMode && !cap.capped;
 
   // Consumed once, and only after the mic gate clears, so the singer still
   // gets asked for a microphone first and lands on the requested song after.
+  // Never while capped: the link must not walk around the daily allowance.
   // Adjusted during render rather than in an effect, per
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
   const [deepLinkDone, setDeepLinkDone] = useState(false);
   if (!deepLinkDone && !gated) {
     setDeepLinkDone(true);
-    if (deepLinkSong && canStart(deepLinkSong)) {
+    if (deepLinkSong && linkedId && !cap.capped) {
       setActiveSong(deepLinkSong);
       setSummary(null);
       setView("practice");
@@ -115,7 +144,7 @@ export function SongsClient() {
     }
   }
 
-  const pendingDeepLink = !deepLinkDone && deepLinkSong && canStart(deepLinkSong);
+  const pendingDeepLink = !deepLinkDone && deepLinkSong && linkedId;
 
   // Peek at the next queued song without advancing: the singer reads their
   // score first and moves on deliberately.
@@ -144,10 +173,6 @@ export function SongsClient() {
           setPass("listen");
           setListenMode(true);
         }}
-        mode={mode}
-        onModeChange={setMode}
-        pass={pass}
-        onPassChange={setPass}
       />
     );
   }
@@ -164,7 +189,7 @@ export function SongsClient() {
       }
       subtitle={view === "library" ? "Pick a song to start your practice loop." : undefined}
       actions={
-        !pitch.listening && view === "library" ? (
+        !pitch.listening && view === "library" && !cap.capped ? (
           <Button variant="rec" size="sm" onClick={pitch.start}>
             <IconMic /> Enable microphone
           </Button>
@@ -176,6 +201,7 @@ export function SongsClient() {
           <CapWall cap={cap} />
         </div>
       )}
+      {view === "library" && !cap.capped && <FreeAllowance cap={cap} className="mb-4" />}
       {view === "library" && <Library progress={progress} onSelect={startSong} />}
 
       {view === "practice" && activeSong && (
@@ -223,6 +249,11 @@ export function SongsClient() {
           onNext={
             showNext
               ? () => {
+                  // Capped: show why, and keep the setlist where it is.
+                  if (cap.capped) {
+                    showCapWall();
+                    return;
+                  }
                   const id = advanceSetlist();
                   if (id) startSongById(id);
                   else setView("library");
@@ -230,6 +261,16 @@ export function SongsClient() {
               : undefined
           }
         />
+      )}
+      {/*
+        A run that crossed the day's allowance ends here: the score first, then
+        the reason "Sing again" and "Next" will not start another run today —
+        which is where a capped tap on either scrolls to.
+      */}
+      {view === "summary" && cap.capped && (
+        <div className="mt-6">
+          <CapWall cap={cap} />
+        </div>
       )}
     </PageShell>
   );

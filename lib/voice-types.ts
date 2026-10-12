@@ -20,7 +20,7 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
       "the lowest male category, built on weight and depth rather than reach",
     body: "A bass carries more vocal-fold mass than any other category, which is what gives the bottom of the range its size — notes that another singer can technically hit but not fill. The trade is at the top: where a baritone still has room, a bass is already working hard, so the repertoire tends to sit low and move slowly.",
     challenge:
-      "Basses are the rarest category in recorded popular music, and the figures collected here reflect that — a handful of voices against a hundred-plus tenors.",
+      "Basses are among the rarest categories in recorded popular music, and the figures collected here reflect that: a handful of voices against more than two hundred tenors.",
   },
   "Bass-baritone": {
     summary:
@@ -67,7 +67,7 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
   Soprano: {
     summary:
       "the highest female category, with the most headroom above the staff",
-    body: "Sopranos carry the lightest fold mass and the most usable range above middle C, which is what makes coloratura and whistle register possible at all. In this library the soprano group holds most of the extreme top figures, and nearly all of the whistle-register entries.",
+    body: "Sopranos carry the lightest fold mass and the most usable range above middle C, which is what makes coloratura and whistle register possible at all. In this library the soprano group holds most of the extreme top figures, and most of the whistle-register entries.",
     challenge:
       "A soprano's cited top note is usually the least representative number about them — it is a one-off recorded moment, not where the voice actually works.",
   },

@@ -117,15 +117,15 @@
     "genres": ["Pop", "Singer-Songwriter"],
     "country": "UK",
     "activeFrom": 2015,
-    "lowNote": "B3",
-    "highNote": "C#6",
+    "lowNote": "B2",
+    "highNote": "C#5",
     "beltNote": null,
     "whistle": false,
     "signatureSong": "You Are the Reason",
     "lowSource": "Heaven",
     "highSource": "Roots",
     "blurb": "Cried, legato pop tenor — swelling sustains that flip into a glass-clear falsetto at the top.",
-    "technique": "Everything here is legato: Calum joins notes with portamento-smooth onsets, swells through the middle of long tones, and releases with a taper instead of a cut. The money register is a cried, head-leaning mix in the fifth octave, flipping into pure falsetto for peaks. Vibrato is wide and emotional. Students copying him often start phrases at full volume; he begins small, which makes the climb audible and keeps the top from sounding pushed."
+    "technique": "Everything here is legato: Calum joins notes with portamento-smooth onsets, swells through the middle of long tones, and releases with a taper instead of a cut. The money register is a cried, head-leaning mix in the fourth octave, flipping into pure falsetto for peaks. Vibrato is wide and emotional. Students copying him often start phrases at full volume; he begins small, which makes the climb audible and keeps the top from sounding pushed."
   },
   {
     "name": "James Arthur",
@@ -197,8 +197,8 @@
     "genres": ["Pop", "Singer-Songwriter", "Alternative"],
     "country": "USA",
     "activeFrom": 2023,
-    "lowNote": "F3",
-    "highNote": "G5",
+    "lowNote": "F2",
+    "highNote": "G4",
     "beltNote": null,
     "whistle": false,
     "signatureSong": "Daylight",
@@ -309,15 +309,15 @@
     "genres": ["Pop"],
     "country": "USA",
     "activeFrom": 2020,
-    "lowNote": "C4",
-    "highNote": "F6",
+    "lowNote": "C3",
+    "highNote": "F5",
     "beltNote": null,
     "whistle": false,
     "signatureSong": "golden hour",
     "lowSource": "this is what losing someone feels like",
     "highSource": "this is what losing someone feels like",
     "blurb": "Featherweight tenor living above the staff — sighing onsets gliding into stacked head-voice hooks.",
-    "technique": "Head voice is the main event: JVKE writes hooks that live above the staff, gliding from a light chest mix into ringing head tones and stacking falsetto harmonies over the top. His onset is soft, almost sighed, and he bends into peak notes with portamento instead of attacking them. Below the fifth octave he keeps things plain and rhythmic. Copying the top without slow siren practice ends in cracking; the transitions are the actual skill."
+    "technique": "Head voice is the main event: JVKE writes hooks that live above the staff, gliding from a light chest mix into ringing head tones and stacking falsetto harmonies over the top. His onset is soft, almost sighed, and he bends into peak notes with portamento instead of attacking them. Below the fourth octave he keeps things plain and rhythmic. Copying the top without slow siren practice ends in cracking; the transitions are the actual skill."
   },
   {
     "name": "Lizzy McAlpine",

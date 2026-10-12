@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { buildSegments, computeRootLadder, ladderWalk, type WarmupExercise } from "./exercises";
+import {
+  buildSegments,
+  computeRootLadder,
+  ladderWalk,
+  type Segment,
+  type WarmupExercise,
+} from "./exercises";
 import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
@@ -40,7 +46,7 @@ import {
   type SessionSummaryData,
 } from "./lib";
 import { COUNT_IN_CLICKS, clickTimes, leadSec, planRep, type RepPlan } from "./timeline";
-import { createRepScorer, type RepScorer } from "./scoring";
+import { createRepScorer, foldToOctaveOf, referenceMidiAt, type RepScorer } from "./scoring";
 import {
   createF0Recorder,
   readVibrato,
@@ -153,6 +159,24 @@ export function repAscending(roots: number[], repIndex: number): boolean {
 }
 
 /**
+ * Whether a rep counts any octave of its targets. Without a saved range every
+ * ladder is fitted to NOMINAL_RANGE, a placeholder span, so a higher voice
+ * singing it an octave up is singing it right, and the lane draws her voice in
+ * the octave she is matching. With a saved range the ladder is fitted to the
+ * singer, and the octave is part of the target.
+ */
+export function scoresEitherOctave(range: VocalRange): boolean {
+  return range.lowMidi === undefined || range.highMidi === undefined;
+}
+
+/**
+ * Shown beside the root while either octave counts. The root is printed in
+ * the nominal ladder's octave (C#3, say), and a higher voice reading it
+ * should know her own octave is the right answer, not a note to reach down for.
+ */
+export const ANY_OCTAVE_NOTE = "Any octave counts";
+
+/**
  * What a routine tells the player about the step it is running. With bounds
  * the step completes itself after `reps` reps, sung or skipped, and the header
  * counts reps instead of ladder height; the runner owns the session, so the
@@ -198,6 +222,7 @@ export function ExercisePlayer({
     const band = computeRootLadder(ex, range.lowMidi, range.highMidi);
     return ex.ladder === "down" ? [...band].reverse() : band;
   }, [ex, range.lowMidi, range.highMidi]);
+  const eitherOctave = scoresEitherOctave(range);
 
   const { mode, guidePct, click } = useWarmupPrefs();
   const guideSliderId = useId();
@@ -253,6 +278,10 @@ export function ExercisePlayer({
   const guidePctRef = useRef(guidePct);
   const clickRef = useRef(click);
   const patternSecRef = useRef(0);
+  // The scheduled rep's segments, and the last target the lane folded the
+  // voice toward, for drawing an either-octave take where it is scored.
+  const segsRef = useRef<Segment[]>([]);
+  const foldTargetRef = useRef(48);
   const noteDurRef = useRef(0.55);
   const leadBeatRef = useRef(0);
   const rootRef = useRef(48);
@@ -364,7 +393,11 @@ export function ExercisePlayer({
 
     planRef.current = plan;
     groupRef.current = group;
-    scorerRef.current = createRepScorer(segs);
+    scorerRef.current = eitherOctave
+      ? createRepScorer(segs, { octaveAgnostic: true })
+      : createRepScorer(segs);
+    segsRef.current = segs;
+    foldTargetRef.current = segs[0]?.startMidi ?? root;
     f0Ref.current.reset();
     patternSecRef.current = totalSec;
     noteDurRef.current = noteDur;
@@ -479,13 +512,21 @@ export function ExercisePlayer({
 
       const frame = pitch.latest.current;
       const scorable = isScorableFrame(frame, nowPerf);
-      const midiFloat = scorable && frame.freq !== null ? freqToMidiFloat(frame.freq) : null;
+      const sungMidi = scorable && frame.freq !== null ? freqToMidiFloat(frame.freq) : null;
 
       if (stageNow === "sing") {
         // Drawn where the guide is heard; scored where the voice actually was.
         // The two corrections differ by the pitch-report lag, and neither is
         // the raw clock — see lib/audio/latency.
         const drawSec = Math.min(patternSec, Math.max(0, elapsed - plan.singAt - outputLag));
+        // When either octave counts, draw the voice in the octave the scorer
+        // credits it to; in a gap, keep folding toward the last target.
+        let midiFloat = sungMidi;
+        if (eitherOctave && sungMidi !== null) {
+          const target = targetMidiAt(segsRef.current, drawSec);
+          if (target !== null) foldTargetRef.current = target;
+          midiFloat = foldToOctaveOf(sungMidi, foldTargetRef.current);
+        }
         setCursorSec(drawSec);
         setLiveMidiFloat(midiFloat);
         scorer.feed(
@@ -645,11 +686,15 @@ export function ExercisePlayer({
   }
 
   const singing = stage === "sing";
+  // Measured the way the scorer measures it: a glide against its ramp window,
+  // not one instant of the ramp, so an eased siren that scores well does not
+  // read hundreds of cents off on the way.
   const currentCents =
     singing && liveMidiFloat !== null
       ? Math.round(
           (liveMidiFloat -
-            (targetMidiAt(segs, Math.min(cursorSec ?? 0, totalSec)) ?? liveMidiFloat)) *
+            (referenceMidiAt(segs, Math.min(cursorSec ?? 0, totalSec), liveMidiFloat) ??
+              liveMidiFloat)) *
             100,
         )
       : null;
@@ -833,6 +878,9 @@ export function ExercisePlayer({
             Root · <span className="text-[var(--s-ink)]">{midiToLabel(currentRoot)}</span>
           </div>
           <div className="tabular font-mono text-[11px] text-[var(--s-dim)]">{repLabel}</div>
+          {eitherOctave && (
+            <div className="font-mono text-[11px] text-[var(--s-dim)]">{ANY_OCTAVE_NOTE}</div>
+          )}
         </div>
       }
       bottom={sessionBottom}
@@ -1024,6 +1072,9 @@ export function ExercisePlayer({
             <div className="tabular mt-1 font-mono text-3xl font-bold text-violet-ink">
               {midiToLabel(currentRoot)}
             </div>
+            {eitherOctave && (
+              <div className="mt-1 font-mono text-[11px] text-dim">{ANY_OCTAVE_NOTE}</div>
+            )}
           </div>
         </div>
 

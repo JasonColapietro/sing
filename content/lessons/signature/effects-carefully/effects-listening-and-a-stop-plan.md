@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Effects: Listening and a Stop Plan"
 type: "exercise"
 minutes: 7
-objective: "Short bursts, with a hard stop the moment it tightens."
+objective: "Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it."
 prerequisites: "v-l7-m4-01"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -13,12 +13,12 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ## Steps
 
-### Use the practice material
+### Start with the stop rules
 
-Open the practice material on this page and read The safety rail. Use its written exercise and stop rules. The reading The safety rail is listed there too.
+Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor or speech-language pathologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound.
+- Listen: For the planning task, work from the stop rules on this page; you do not need to make a pitched sound.
 
 ### Set a safe baseline
 
@@ -29,7 +29,7 @@ Do not learn a growl, scream, distortion, or other new effect from written direc
 
 ### Name the target: Creak, growl, slide, scream
 
-Short bursts, with a hard stop the moment it tightens. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.
 - Listen: Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration.
@@ -55,7 +55,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 ## Practice blocks
 
-- 60s: Open the practice material. Prepare the room, body, and safe baseline for “Effects: Listening and a Stop Plan.”
+- 60s: Copy the stop rules into your stop plan. Prepare the room, body, and safe baseline for “Effects: Listening and a Stop Plan.”
 - 105s: Review the anatomy, warning signs, prior supervision, and written stop plan without attempting a new effect.
 - 165s: Complete the observation-only “Effects: Listening and a Stop Plan” task, or briefly review only a previously taught effect at the prescribed dose.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.

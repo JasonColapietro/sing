@@ -1,6 +1,6 @@
 "use client";
 
-import { centsOff } from "@/lib/audio/notes";
+import { freqToMidiFloat } from "@/lib/audio/notes";
 import { UNMODELLED_INPUT_LAG_SEC } from "@/lib/audio/latency";
 import type { Segment } from "./exercises";
 import {
@@ -54,13 +54,69 @@ export function onsetGraceFor(dur: number, graceSec: number = ONSET_GRACE_SEC): 
 }
 
 /**
+ * How far either side of the guide's straight-line ramp a glide may run, as a
+ * share of the glide's length. A siren is taught as one unbroken slide (see
+ * the tips on the siren drills), and a natural one eases out of the bottom and
+ * into the top rather than moving at constant speed; scored against the bare
+ * ramp, an eased octave siren with exact endpoints scored 24 and a perfect
+ * ramp sung ~100 ms late scored 0. So a glide frame is measured against the
+ * nearest pitch the ramp passes through within this share of the glide on
+ * either side, plus the onset grace on the late side for input latency.
+ * A singer stuck on the start pitch or stepping instead of sliding still
+ * scores low: the window follows the ramp, it does not cover the whole sweep.
+ */
+export const GLIDE_TIME_SLACK = 0.1;
+
+/**
+ * The pitch a frame sung at `sungMidi`, at pattern time `t`, is measured
+ * against: a plain note's own pitch, or, inside a glide, the nearest pitch the
+ * guide's ramp passes through from (GLIDE_TIME_SLACK of the glide + the onset
+ * grace) before `t` to GLIDE_TIME_SLACK after it, the ramp held at its
+ * endpoints outside the glide. Null between notes, where nothing is scored.
+ * The scorer and the player's live "Cents off" readout both use this, so the
+ * readout judges a glide the same way the score does.
+ */
+export function referenceMidiAt(
+  segs: Segment[],
+  t: number,
+  sungMidi: number,
+  graceSec: number = ONSET_GRACE_SEC,
+): number | null {
+  const idx = segmentIndexAt(segs, t);
+  if (idx < 0) return null;
+  const seg = segs[idx];
+  if (seg.startMidi === seg.endMidi || !(seg.dur > 0)) return seg.startMidi;
+  const w = GLIDE_TIME_SLACK * seg.dur;
+  const ramp = (at: number) =>
+    seg.startMidi +
+    (seg.endMidi - seg.startMidi) * Math.min(1, Math.max(0, (at - seg.t0) / seg.dur));
+  const a = ramp(t - w - graceSec);
+  const b = ramp(t + w);
+  return Math.min(Math.max(sungMidi, Math.min(a, b)), Math.max(a, b));
+}
+
+/**
+ * `midi` moved by whole octaves to the octave nearest `target`. Used when
+ * either octave of a target counts, so a higher voice singing the ladder an
+ * octave up is scored, and drawn, on the note she is actually matching.
+ */
+export function foldToOctaveOf(midi: number, target: number): number {
+  return midi - 12 * Math.round((midi - target) / 12);
+}
+
+/**
  * The accumulation behind one rep's score, pulled out of the player's
  * animation-frame callback so a test can drive it frame by frame.
  *
  * Score is the share of each note's possible time held within TOLERANCE_CENTS,
  * where a note's possible time is its length less its onset grace. Cents error
  * is the mean over the voiced frames that count, and a glide segment credits
- * each of its endpoints with half the segment.
+ * each of its endpoints with half the segment. A glide frame is measured
+ * against the ramp's pitch window (GLIDE_TIME_SLACK), not one instant of it.
+ *
+ * `octaveAgnostic` counts any octave of the target as the target. The player
+ * sets it when no range is saved: the ladder is then a nominal one, and a
+ * higher voice singing it an octave up is singing it right.
  */
 export interface RepScorer {
   /**
@@ -74,7 +130,12 @@ export interface RepScorer {
   feed(patternSec: number, freq: number | null, dt: number): void;
   /** Voiced frames that landed on a target so far. Zero means nobody sang. */
   readonly voicedFrames: number;
-  /** The finished rep, or null when nothing voiced ever landed on a target. */
+  /**
+   * The finished rep, or null when nothing voiced ever landed on a target.
+   * Its root is `root`, moved (when either octave counts) to the octave most
+   * of the rep was sung in, so the summary names the rung in the same octave
+   * as the per-note results beside it.
+   */
   result(root: number): RepResult | null;
   /**
    * Per-segment fill for the note lane, in seconds of the segment's own length:
@@ -85,14 +146,18 @@ export interface RepScorer {
 
 export function createRepScorer(
   segs: Segment[],
-  opts: { onsetGraceSec?: number } = {},
+  opts: { onsetGraceSec?: number; octaveAgnostic?: boolean } = {},
 ): RepScorer {
   const graceSec = opts.onsetGraceSec ?? ONSET_GRACE_SEC;
+  const octaveAgnostic = opts.octaveAgnostic === true;
   const grace = segs.map((s) => onsetGraceFor(s.dur, graceSec));
   const possible = segs.map((s, i) => s.dur - grace[i]);
   const hitAccum = segs.map(() => 0);
   const segCentsSum = segs.map(() => 0);
   const segCentsFrames = segs.map(() => 0);
+  // Octaves the counted frames were folded by, per segment, so the per-note
+  // analytics file an either-octave take under the octave actually sung.
+  const segOctaveSum = segs.map(() => 0);
   let centsSum = 0;
   let centsCount = 0;
 
@@ -104,13 +169,18 @@ export function createRepScorer(
       if (freq === null) return;
       const target = targetMidiAt(segs, patternSec);
       if (target === null) return;
-      const cents = centsOff(freq, target);
-      const inTune = Math.abs(cents) <= TOLERANCE_CENTS;
       // Resolve the segment before the tolerance check: an out-of-tune frame
       // is exactly the signal weak-note detection needs, unless it sits in the
       // note's onset grace, where it is most likely the previous note still
       // arriving through the input chain.
       const idx = segmentIndexAt(segs, patternSec);
+      const raw = freqToMidiFloat(freq);
+      // Folded toward the ramp's own pitch at this instant, then measured
+      // against the glide window (or the note) like any other frame.
+      const sung = octaveAgnostic ? foldToOctaveOf(raw, target) : raw;
+      const reference = referenceMidiAt(segs, patternSec, sung, graceSec) ?? target;
+      const cents = Math.round((sung - reference) * 100);
+      const inTune = Math.abs(cents) <= TOLERANCE_CENTS;
       const inGrace = idx >= 0 && patternSec - segs[idx].t0 < grace[idx];
       if (!inTune && inGrace) return;
       centsSum += Math.abs(cents);
@@ -118,6 +188,7 @@ export function createRepScorer(
       if (idx >= 0) {
         segCentsSum[idx] += Math.abs(cents);
         segCentsFrames[idx] += 1;
+        segOctaveSum[idx] += Math.round((raw - sung) / 12);
         if (inTune && !inGrace) hitAccum[idx] += dt;
       }
     },
@@ -133,8 +204,12 @@ export function createRepScorer(
       const score =
         denom > 0 ? Math.round(Math.min(100, (hitTotal / denom) * 100)) : 0;
       const avgCentsErr = Math.round(centsSum / centsCount);
+      // Always 0 unless either octave counts.
+      const octaveFrames = segCentsFrames.reduce((a, b) => a + b, 0);
+      const repOctave =
+        octaveFrames > 0 ? Math.round(segOctaveSum.reduce((a, b) => a + b, 0) / octaveFrames) : 0;
       return {
-        root,
+        root: root + 12 * repOctave,
         score,
         avgCentsErr,
         skipped: false,
@@ -142,6 +217,9 @@ export function createRepScorer(
           const hitSec = credited(i);
           const centsSumSeg = segCentsSum[i] ?? 0;
           const centsFrames = segCentsFrames[i] ?? 0;
+          // Always 0 unless either octave counts; then the octave most of
+          // the note was sung in.
+          const octave = centsFrames > 0 ? Math.round(segOctaveSum[i] / centsFrames) : 0;
           // A glide sweeps between two pitches, so credit each endpoint
           // with half the segment rather than pinning it to one note.
           const endpoints =
@@ -150,7 +228,7 @@ export function createRepScorer(
               : [seg.startMidi, seg.endMidi];
           const share = 1 / endpoints.length;
           return endpoints.map((midi) => ({
-            midi,
+            midi: midi + 12 * octave,
             hitSec: hitSec * share,
             possibleSec: possible[i] * share,
             centsSum: centsSumSeg * share,

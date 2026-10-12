@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Straight, triplet and swing are three ways of dividing the same steady beat. Straight splits each beat into two equal halves, counted 1-and; triplet splits it into three equal parts, counted 1-trip-let; swing keeps the first and third of those three parts, so each pair of notes becomes long-short. The beat itself does not move in any of them, which is why you tap it while you sing: only the subdivision changes, and that is what makes a phrase feel even, rolling or swung.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ On one comfortable pitch, compare two even sounds per tap (say “1-and”), thr
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Swing, Triplet, Straight.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. If recording, tap the pulse gently through each version so you can hear your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.
+On one comfortable pitch, tap a steady pulse and sing two notes per tap on “da” for two bars: first straight (1-and, both halves equal), then swung (long-short, on the first and third triplet positions). Keep the taps at the same tempo and change only how each beat is split. Record both in one take in the recorder with a breath between them, and on playback check that the second note of each pair moved later in the swung version while your taps stayed put. Then return to the written phrase: clap it, sing its rhythm on one pitch, then restore the melody, tapping the pulse gently through each version. An external click is optional.
 
 - Look: Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.
 - Listen: On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.

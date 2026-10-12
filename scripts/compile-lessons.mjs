@@ -14,6 +14,12 @@
  * one. A missing or misspelled section fails the compile rather than
  * rendering a half-empty lesson.
  *
+ * One more section, `## In short`, is a plain paragraph that answers the
+ * question the title asks ("why does whispering hurt?") before the steps tell
+ * you what to do about it. A concept lesson must have one; for the other types
+ * it is optional. It comes first when present, and the page shows it above the
+ * steps.
+ *
  * The directory names are the URL slugs: /learn/voice/<stage>/<module>/<lesson>.
  * They were derived from the catalog names once, when the lessons were ported,
  * and are kept fixed so a later catalog rename doesn't move a URL. Identity
@@ -108,9 +114,19 @@ function parseLesson(raw, file) {
     if (!s.has(name)) throw new Error(`${file}: missing "## ${name}"`);
     return s.get(name);
   };
-  const expected = ["Steps", "If it goes wrong", "Practice blocks", "Self-check"];
+  const expected = ["In short", "Steps", "If it goes wrong", "Practice blocks", "Self-check"];
   const unknown = [...s.keys()].filter((k) => !expected.includes(k));
   if (unknown.length) throw new Error(`${file}: unknown section(s) ${unknown.join(", ")}`);
+  const short = s.get("In short");
+  if (short) {
+    if ([...s.keys()][0] !== "In short") throw new Error(`${file}: "## In short" must be the first section`);
+    // One plain paragraph: the page prints it as text and the structured data
+    // uses it as the lesson's description, so markdown would show as symbols.
+    if (short.some((l) => /^\s*(?:#|[-*] |\d+\. )|\]\(|\*\*|`/.test(l))) {
+      throw new Error(`${file}: "## In short" is one plain paragraph, with no headings, lists, links or emphasis`);
+    }
+    if (!short.some((l) => l.trim())) throw new Error(`${file}: "## In short" is empty`);
+  }
 
   const mistakes = bullets(need("If it goes wrong")).map((b) => {
     const [observation, recovery] = b.split(" => ");
@@ -126,6 +142,7 @@ function parseLesson(raw, file) {
 
   return {
     meta,
+    explanation: (short ?? []).map((l) => l.trim()).filter(Boolean).join(" "),
     steps: parseSteps(need("Steps"), file),
     mistakes,
     blocks,
@@ -196,6 +213,11 @@ for (const stageSlug of dirs(SRC)) {
       }
       if (!parsed.steps.length) problems.push(`${file}: no steps`);
       if (!parsed.selfCheck.criteria.length) problems.push(`${file}: no self-check criteria`);
+      // A concept lesson exists to explain an idea, so it answers its title in
+      // words before any steps; the others may lead with the practice.
+      if (meta.type === "concept" && !parsed.explanation) {
+        problems.push(`${file}: a concept lesson needs "## In short"`);
+      }
 
       lessons.push({
         id: meta.id,
@@ -209,6 +231,7 @@ for (const stageSlug of dirs(SRC)) {
         type: meta.type,
         minutes: meta.minutes,
         objective: meta.objective,
+        explanation: parsed.explanation,
         prerequisites: meta.prerequisites ? meta.prerequisites.split(",") : [],
         references: meta.references ? meta.references.split(",") : [],
         steps: parsed.steps,
@@ -273,6 +296,8 @@ export interface Lesson {
   type: string;
   minutes: number;
   objective: string;
+  /** Plain answer to the title, from "## In short"; empty until one is written. */
+  explanation: string;
   /** Lesson IDs. */
   prerequisites: string[];
   /** IDs in LESSON_REFERENCES. */

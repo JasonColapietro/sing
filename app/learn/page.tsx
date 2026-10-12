@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SINGERS } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { CATALOG_LESSON_COUNT } from "@/lib/voice-lessons";
 import {
   VOCAL_LEARNING_FAQ,
   VOCAL_LEARNING_PATHS,
@@ -29,6 +31,8 @@ export const metadata: Metadata = withCanonicalOpenGraph({
   },
 });
 
+const FREE_BOOK_CHAPTERS = BOOK_CONTENTS.filter((c) => c.free).length;
+
 const WEEK = [
   {
     day: "Day 1",
@@ -52,7 +56,10 @@ const WEEK = [
     day: "Day 3",
     focus: "Breath",
     body: "Run one breathing drill and the sustain test. Aim for an even note from beginning to end, not the longest possible time.",
-    links: [{ href: "/breath", label: "Breath and sustain training" }],
+    links: [
+      { href: "/breath", label: "Breath and sustain training" },
+      { href: "/learn/voice/room-check/breathe-low", label: "Breathe Low lessons" },
+    ],
   },
   {
     day: "Day 4",
@@ -93,6 +100,7 @@ const FUNDAMENTALS = [
         href: "/atlas/vocal-range-by-voice-type",
         label: "Compare all eight voice types",
       },
+      { href: "/learn/voice/room-check/your-range", label: "Free lessons: Your Range" },
     ],
   },
   {
@@ -101,6 +109,7 @@ const FUNDAMENTALS = [
     links: [
       { href: "/studio", label: "See your pitch live" },
       { href: "/ear-training", label: "Train pitch matching" },
+      { href: "/learn/voice/steady-tone/land-the-note", label: "Free lessons: Land the Note" },
     ],
   },
   {
@@ -108,7 +117,11 @@ const FUNDAMENTALS = [
     body: "A vocal warmup gets the voice ready for today's demand. Training repeats a focused task across days until coordination becomes more reliable. Use warmups before range, volume, and song work; use your scores and recordings to decide what the next session should train.",
     links: [
       { href: "/warmups", label: "Warm up" },
-      { href: "/book", label: "Read the structured training manual" },
+      { href: "/learn/voice", label: "Follow the free voice course" },
+      {
+        href: "/book",
+        label: `${BOOK_TITLE} (${FREE_BOOK_CHAPTERS} ${FREE_BOOK_CHAPTERS === 1 ? "chapter" : "chapters"} free)`,
+      },
     ],
   },
   {
@@ -117,6 +130,10 @@ const FUNDAMENTALS = [
     links: [
       { href: "/glossary", label: "Define the vocal terms" },
       { href: "/analyze", label: "See your voice's harmonics" },
+      {
+        href: "/learn/voice/two-registers/chest-head-falsetto",
+        label: "Free lessons: Chest, Head, Falsetto",
+      },
     ],
   },
 ] as const;
@@ -206,7 +223,8 @@ export default function LearnPage() {
             practice timer. Guided practice includes {FREE_DAILY_MINUTES} minutes a day
             shared across warmups, ear training, breath, and song practice.
             {" "}<Link href="/pro" className="text-violet-ink underline underline-offset-4">Pro</Link>{" "}
-            removes that guided-practice cap. The written guide is free to read.
+            removes that guided-practice cap. This guide and all{" "}
+            {CATALOG_LESSON_COUNT} voice lessons are free to read.
           </p>
         </Card>
         <Card>

@@ -63,10 +63,10 @@ export const ROOMS: readonly Room[] = [
   { href: "/warmups", label: "Warmups", blurb: "Warmup routines by length, scored while you sing.", Glyph: WarmupGlyph, mic: true },
   { href: "/recorder", label: "Take recorder", blurb: "Cut a take, compare two, keep the good ones.", Glyph: RecorderGlyph, mic: true },
   { href: "/analyze", label: "Spectrogram and tone", blurb: "Your harmonics live, plus today's vocal load.", Glyph: AnalyzeGlyph, mic: true },
-  { href: "/range", label: "Range test", blurb: "Your lowest and highest note, and your voice type.", Glyph: RangeGlyph, mic: true },
+  { href: "/range", label: "Range test", blurb: "Your lowest and highest notes, plus a voice-type estimate.", Glyph: RangeGlyph, mic: true },
   { href: "/ear-training", label: "Ear training", blurb: "Interval, pitch-matching, and melody games.", Glyph: EarGlyph, mic: true },
   { href: "/breath", label: "Breath control", blurb: "Timed breathing and sustain for steadier phrases.", Glyph: BreathGlyph, mic: true },
-  { href: "/songs", label: "Song practice", blurb: "Melodies transposed into your comfortable range.", Glyph: SongGlyph, mic: true },
+  { href: "/songs", label: "Song practice", blurb: "Melodies that open fitted to your range once you have tested it.", Glyph: SongGlyph, mic: true },
   { href: "/singers", label: "Famous ranges", blurb: "Famous voices on one keyboard, with yours overlaid.", Glyph: SingersGlyph, mic: false },
   { href: "/tools", label: "Tools", blurb: "Metronome, keyboard, and a drone for reference.", Glyph: ToolsGlyph, mic: false },
   { href: "/progress", label: "Progress", blurb: "XP, streaks, and a coach that plans the next session.", Glyph: ProgressGlyph, mic: false },
@@ -93,7 +93,7 @@ export function RoomRail({
         {rooms.map(({ href, label, blurb, Glyph, mic }) => (
           <li key={href}>
             <Link
-              href={href === "/range" ? "/range?mode=range" : href}
+              href={href === "/range" ? "/range?mode=range#start" : href}
               className="lift group flex h-full flex-col rounded-xl border border-line bg-panel p-3 hover:border-violet/50 sm:p-4"
             >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-panel2 text-violet-ink">

@@ -66,7 +66,7 @@ I counted and clapped the displayed rhythm before singing it, then reviewed wher
 - On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On playback of one take, every sung entry of the phrase lands with your recorded taps, held notes last their full count, and the melody version keeps the same pulse as the clapped version.
 
 If not ready: If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

@@ -43,7 +43,8 @@ and singeo.com/chorus/complete-10-minute-vocal-warm-up.
 - `lip-trill-scale` became the bubble arpeggio (1-3-5-8-5-3-1, 0.42 s), not a
   five-note scale.
 - `n-hum-scale` and `gug-staccato` became the 13-note run (up the arpeggio to
-  the 12th, down the scale) at 0.30 s and 0.25 s.
+  the 12th, 1-3-5-8-10-12, then back down 11-9-7-5-4-2-1, mostly in skips
+  rather than down the scale) at 0.30 s and 0.25 s.
 - `hung-ee-mm` became three five-note passes in one breath at 0.30 s.
 - `hoo-four-note` became the slow 8-5-3-1 that descends by key; the duplicate
   `hoo-descending-arpeggio` was removed.

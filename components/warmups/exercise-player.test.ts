@@ -4,6 +4,7 @@ import {
   ladderHeightPct,
   practicedDurationSec,
   repAscending,
+  scoresEitherOctave,
   unsungRepAction,
 } from "./exercise-player";
 import { MAX_FRAME_MS, STALE_FRAME_MS, frameDelta } from "@/lib/audio/frame-clock";
@@ -331,5 +332,32 @@ describe("the loop's contracts with its extracted modules", () => {
     expect(scorer.result(52)).toBeNull();
     expect(unsungRepAction(1, 3)).toBe("continue");
     expect(unsungRepAction(2, 0)).toBe("exit");
+  });
+});
+
+describe("a first-time singer without a saved range", () => {
+  it("counts either octave only until a range is saved", () => {
+    expect(scoresEitherOctave({})).toBe(true);
+    expect(scoresEitherOctave({ lowMidi: 48 })).toBe(true);
+    expect(scoresEitherOctave({ highMidi: 72 })).toBe(true);
+    expect(scoresEitherOctave({ lowMidi: 48, highMidi: 72 })).toBe(false);
+  });
+
+  it("scores rep 0 sung an octave up instead of zeroing it", async () => {
+    // The bug: with no range every ladder sat around C3, the scorer matched
+    // the exact octave only, and a higher voice singing in her own octave
+    // scored 0 on every rep.
+    const { createRepScorer } = await import("./scoring");
+    const { buildSegments } = await import("./exercises");
+    const { midiToFreq } = await import("@/lib/audio/notes");
+    const root = ladderWalk(computeRootLadder(fiveNote), 0).root;
+    const { segs, totalSec } = buildSegments(fiveNote, root, 1);
+    const scorer = createRepScorer(segs, { octaveAgnostic: scoresEitherOctave({}) });
+    const dt = 1 / 60;
+    for (let t = 0; t < totalSec; t += dt) {
+      const seg = segs.find((s) => t >= s.t0 && t <= s.t0 + s.dur);
+      scorer.feed(t, seg ? midiToFreq(seg.startMidi + 12) : null, dt);
+    }
+    expect(scorer.result(root)!.score).toBeGreaterThanOrEqual(95);
   });
 });

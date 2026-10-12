@@ -1,9 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { usePitch, type PitchFrame } from "@/lib/audio/use-pitch";
-import { freqToMidiFloat, midiToLabel, midiToName } from "@/lib/audio/notes";
-import { Button, MicGate } from "@/components/ui";
+import {
+  freqToMidiFloat,
+  midiToLabel,
+  midiToName,
+  tuneZone,
+} from "@/lib/audio/notes";
+import { logSession } from "@/lib/progress";
+import { useIsPro, useProReady } from "@/lib/pro";
+import { createPracticeClock } from "@/lib/practice-clock";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { useFlushOnExit } from "@/lib/use-flush-on-exit";
+import { Button, LinkButton, MicGate } from "@/components/ui";
 import { AudioSetup } from "@/components/audio/audio-setup";
 
 /** Ignore near-silent frames, the same floor the range test uses. */
@@ -17,9 +27,14 @@ const SCROLL_PX_PER_S = 110;
 const VISIBLE_SEMITONES = 15;
 /** Where "now" sits, as a fraction of the width. History lives to its left. */
 const PLAYHEAD = 0.78;
-/** In tune within this many cents. */
-const IN_TUNE_CENTS = 15;
-const CLOSE_CENTS = 35;
+/** Practice under this long is not logged: the same floor the studio uses. */
+const MIN_LOG_SEC = 45;
+/**
+ * Semitones between lowest and highest held before the meter suggests the
+ * range test. Under that the singer has not explored yet, so there is nothing
+ * for the test to sharpen.
+ */
+const SUGGEST_RANGE_SEMIS = 5;
 
 const COLORS = {
   laneA: "rgba(255,255,255,0.025)",
@@ -48,16 +63,18 @@ function voiced(f: PitchFrame): boolean {
 }
 
 function tuneColor(cents: number): string {
-  const a = Math.abs(cents);
-  if (a <= IN_TUNE_CENTS) return COLORS.inTune;
-  if (a <= CLOSE_CENTS) return COLORS.close;
+  const zone = tuneZone(cents);
+  if (zone === "in-tune") return COLORS.inTune;
+  if (zone === "close") return COLORS.close;
   return COLORS.off;
 }
 
+/** Matches the color: amber is a little off, pink is plainly off. */
 function tuneWord(cents: number): string {
-  const a = Math.abs(cents);
-  if (a <= IN_TUNE_CENTS) return "In tune";
-  return cents < 0 ? "A little flat" : "A little sharp";
+  const zone = tuneZone(cents);
+  if (zone === "in-tune") return "In tune";
+  if (zone === "close") return cents < 0 ? "A little flat" : "A little sharp";
+  return cents < 0 ? "Flat" : "Sharp";
 }
 
 /**
@@ -66,8 +83,15 @@ function tuneWord(cents: number): string {
  * readout names the note and how far off center you are, and the lowest and
  * highest notes you have held this session are kept as a running measurement.
  */
-export function PitchMeter() {
+export function PitchMeter({
+  onTryRange,
+}: {
+  /** Switches the voice test to the guided range test. */
+  onTryRange?: () => void;
+} = {}) {
   const { frame, latest, listening, error, start, stop } = usePitch();
+  const isPro = useIsPro();
+  const proReady = useProReady();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointsRef = useRef<Point[]>([]);
   /** The midi value the view is centered on, eased toward the singer. */
@@ -81,6 +105,42 @@ export function PitchMeter() {
     ms: 0,
     lastT: 0,
   });
+  // This is where the homepage's "Start singing" lands, and it used to save
+  // nothing: no session, no streak, no reason to come back tomorrow. It logs
+  // the way the studio does, counting only time the mic is on and the page is
+  // on screen.
+  const [practiceClock] = useState(() => createPracticeClock());
+
+  /**
+   * Log the practice once it has run long enough to count. Idempotent: the
+   * clock pauses first, so stopping the mic, hiding the tab and unmounting can
+   * all call it. A stretch under the floor stays banked for the next flush.
+   */
+  const flushLog = useCallback(() => {
+    if (!practiceClock.pause()) return;
+    const durationSec = Math.floor(practiceClock.elapsedMs() / 1000);
+    if (durationSec < MIN_LOG_SEC) return;
+    practiceClock.reset();
+    logSession({ type: "pitch", durationSec, detail: "Pitch meter" });
+  }, [practiceClock]);
+  useFlushOnExit(flushLog);
+
+  useEffect(() => {
+    if (!listening) return;
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") practiceClock.resume();
+    };
+    onVisibility();
+    document.addEventListener("visibilitychange", onVisibility);
+    // A bfcache restore can already be visible, with no visibility transition.
+    window.addEventListener("pageshow", onVisibility);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pageshow", onVisibility);
+      // The mic stopped (or the meter is going away): close the stretch.
+      flushLog();
+    };
+  }, [listening, practiceClock, flushLog]);
 
   // The lane: its own rAF loop reading the latest frame by ref.
   useEffect(() => {
@@ -256,6 +316,8 @@ export function PitchMeter() {
   const on = voiced(frame) && frame.note ? frame.note : null;
   const cents = on ? Math.round(on.cents) : 0;
   const color = on ? tuneColor(on.cents) : undefined;
+  const explored =
+    low !== null && high !== null && high - low >= SUGGEST_RANGE_SEMIS;
 
   return (
     <div className="space-y-4">
@@ -320,6 +382,36 @@ export function PitchMeter() {
         </div>
       </div>
 
+      {/* The meter used to end at two numbers and a Reset button. Once a
+          singer has explored a little, those numbers are a rough range with
+          nowhere to go; the guided test is what turns them into a saved
+          result the warmups and songs can use. */}
+      {explored && low !== null && high !== null && (
+        <div className="rounded-3xl border border-violet/40 bg-panel p-4">
+          <p className="text-sm text-mut">
+            You have held {midiToLabel(low)} to {midiToLabel(high)} so far. The
+            2-minute range test turns that into a saved result: your lowest
+            and highest clear notes, the span, and a voice-type estimate.
+            Warmups and songs then open fitted to it.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            {onTryRange && (
+              <Button onClick={onTryRange}>Take the 2-minute range test</Button>
+            )}
+            <LinkButton href="/warmups" variant="outline">
+              Warm up first
+            </LinkButton>
+          </div>
+          {proReady && !isPro && (
+            <p className="mt-3 text-xs text-dim">
+              The range test has no daily limit. On the free plan, warmups,
+              songs, ear and breath training share {FREE_DAILY_MINUTES}{" "}
+              minutes of guided practice a day, and Pro removes that limit.
+            </p>
+          )}
+        </div>
+      )}
+
       <div className="flex flex-wrap items-center gap-3">
         <Button variant="outline" onClick={reset}>
           Reset
@@ -327,6 +419,9 @@ export function PitchMeter() {
         <Button variant="ghost" onClick={stop}>
           Stop mic
         </Button>
+        <span className="text-xs text-dim">
+          Singing for {MIN_LOG_SEC} seconds or more saves to your progress.
+        </span>
       </div>
     </div>
   );

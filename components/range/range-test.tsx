@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
-import { midiToLabel } from "@/lib/audio/notes";
+import { midiToLabel, voiceFitLabel } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
 import {
   logSession,
@@ -349,7 +349,11 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
                       {midiToLabel(savedRange.highMidi)}
                     </div>
                     <p className="mt-1 text-sm text-mut">
-                      {savedRange.voiceTypeLabel ?? "Unclassified"}
+                      {/* Worked out from the notes, not the stored label: a
+                          label saved before the two-band rule would name one
+                          band where the result screen names both. */}
+                      Closest fit:{" "}
+                      {voiceFitLabel(savedRange.lowMidi, savedRange.highMidi)}
                       {savedRange.testedAt &&
                         ` · tested ${new Date(savedRange.testedAt).toLocaleDateString()}`}
                     </p>
@@ -382,8 +386,8 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
               </li>
               <li>Slide up the same way — falsetto counts.</li>
               <li>
-                Get your range, voice type, and how you compare to famous
-                singers.
+                Get your range, a voice-type estimate, and how you compare to
+                famous singers.
               </li>
             </ol>
             <p className="mt-3 text-sm text-dim">

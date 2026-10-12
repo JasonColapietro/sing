@@ -101,6 +101,9 @@ function mdToHtml(md) {
 function inline(t) {
   return crossLink(
     esc(t)
+      // A site link ("[pitch studio](/studio)") has nowhere to go on paper:
+      // print its label, not the raw markdown.
+      .replace(/\[([^\]]+)\]\(\/[^)\s]*\)/g, "$1")
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
       .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>")
       .replace(/`([^`]+)`/g, "<code>$1</code>"),

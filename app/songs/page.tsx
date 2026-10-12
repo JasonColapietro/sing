@@ -13,9 +13,11 @@ import { RoomRailBand } from "@/components/discover/room-rail";
 import { routeKeywords } from "@/lib/keywords";
 
 // Derived from the arrays rather than written down, so the counts cannot go
-// stale as the songbook grows.
+// stale as the songbook grows. A longer arrangement of a melody already in the
+// book is not another melody, so it is not counted as one.
 const TITLE = SONGS_GUIDE.pageName;
-const DESCRIPTION = `Public domain songs to sing with live pitch feedback: ${SONGS.length} melodies transposed to your range, with lyrics, key and note range. 5 free minutes a day.`;
+const MELODIES = SONGS.filter((s) => !s.arrangementOf).length;
+const DESCRIPTION = `Public domain songs to sing with live pitch feedback: ${MELODIES} melodies, fitted to your range once you take the range test. 5 free minutes a day.`;
 
 export const metadata: Metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/songs"),
@@ -60,14 +62,14 @@ export default function SongsPage() {
         songs are listed the way the atlas contents page lists its gated
         chapters — visible and linked, with the pages themselves noindexed.
       */}
-      <section className="mt-16 border-t border-line">
+      <section id="songbook" className="mt-16 scroll-mt-20 border-t border-line">
         <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6">
           <SectionLabel className="mb-4">Every song</SectionLabel>
           <h2 className="max-w-3xl text-2xl sm:text-3xl">The songbook, one page each</h2>
           <p className="mt-4 max-w-3xl text-mut">
             Every melody here is public domain, and every page says why — plus
-            its lyrics as transcribed, the key it sits in, its tempo, and the
-            exact note range you need to sing it.
+            the phrase you sing, the tonic it is transcribed on, its tempo, and
+            its note span.
           </p>
 
           <h3 className="mt-10 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">

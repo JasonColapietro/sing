@@ -54,6 +54,12 @@ export interface GlossaryEntry {
   where: string;
   /** The room or page that shows it — a path in the publishing site. */
   href: string;
+  /**
+   * A free warmup that trains or measures the word, by its EXERCISES id, for
+   * a one-tap link to /warmups?exercise=<id> beside the room link. Only set
+   * where the drill is about the term itself, not merely uses it.
+   */
+  drill?: string;
   domain: GlossaryDomain;
 }
 
@@ -226,6 +232,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "The range test asks you not to count fry as your low note — the floor is the lowest note you can hold clearly.",
         href: "/range",
+        drill: "fry-onset",
         domain: "voice",
       },
       {
@@ -287,7 +294,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "Moving a whole song up or down by a fixed number of semitones, which changes the key without changing the tune.",
         where:
-          "Song practice transposes the backing to land the melody where your voice is comfortable.",
+          "Once you have taken the range test, song practice opens each melody fitted to your measured range, and you can shift it a semitone at a time from there; without a saved range it opens in its written key.",
         href: "/songs",
         domain: "music",
       },
@@ -314,6 +321,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "On the spectrogram, a steady ripple in the harmonic stack is vibrato; the stack jumping instead is a register change.",
         href: "/analyze",
+        drill: "vibrato-hold",
         domain: "music",
       },
       {
@@ -348,7 +356,7 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Vocal dose",
         aka: ["Cycle dose"],
         definition:
-          "A measure of how much work the folds have done, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
+          "A measure of how much the folds have been used, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
         where:
           "The vocal-load panel counts cycles while you practice: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
         href: "/analyze",
@@ -371,6 +379,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Several warmups run on lip trills, and they are hard to blast through — the trill stops if you push.",
         href: "/warmups",
+        drill: "lip-trill-scale",
         domain: "voice",
       },
       {
@@ -380,6 +389,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Warmup sirens are the standard way to find a register transition and then smooth it.",
         href: "/warmups",
+        drill: "morning-siren",
         domain: "voice",
       },
       {
@@ -464,6 +474,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Sirens and glides are legato by definition, and the studio draws them as one unbroken line instead of a row of steps.",
         href: "/warmups",
+        drill: "legato-triad",
         domain: "music",
       },
       {
@@ -473,6 +484,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Staccato warmup patterns break the pitch trace into separate marks, which is the same picture a lost note makes.",
         href: "/warmups",
+        drill: "gug-staccato",
         domain: "music",
       },
       {

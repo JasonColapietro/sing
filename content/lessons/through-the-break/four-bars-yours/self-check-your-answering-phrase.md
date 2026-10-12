@@ -66,7 +66,7 @@ I used notes from the supplied pattern to invent a short answer with a clear beg
 - The take sounds like an answer to the call and returns convincingly to the tonal center.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, you sing call and answer as four bars in one take, keeping the tapped pulse through the rests, and a different answer each day ends on the tonic.
 
 If not ready: If you lose the key, stop, sing the tonic, reduce the note set, and rebuild one two-bar answer before trying four bars. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
