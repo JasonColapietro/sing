@@ -378,4 +378,43 @@ describe("voice-science claims", () => {
     expect(copy).toMatch(/written key/);
     expect(copy).toMatch(/scored in either octave/);
   });
+
+  /**
+   * Inhale noise is turbulence at a narrow throat, wherever the breath fills
+   * (book ch. 4), and a shoulder-lifting breath is a separate fault.
+   */
+  it("does not call a noisy inhale a high breath", () => {
+    const points = guides.BREATH_GUIDE.beginner.points.join(" ");
+    expect(points).not.toMatch(/noisy gasp is a high breath/);
+    expect(points).toMatch(/narrow throat/);
+  });
+
+  /**
+   * The breath room reads only loudness and time; pitch steadiness is seen in
+   * the studio's trace, so the guide says which room shows which half.
+   */
+  it("sends pitch steadiness to the studio and keeps the breath room to loudness", () => {
+    expect(guides.BREATH_GUIDE.body.join(" ")).toMatch(/pitch studio's trace shows whether the pitch held/);
+    const studio = guides.BREATH_GUIDE.related.find((r) => r.href === "/studio")!;
+    expect(studio.note).not.toMatch(/loudness/);
+    expect(studio.note).toMatch(/pitch/);
+  });
+
+  /** The keyboard on /tools stops at C3, above the bass and baritone bands' floors. */
+  it("does not promise the C3 keyboard finds a low voice's floor", () => {
+    const a = guides.TOOLS_GUIDE.faq.find((f) => /piano to find my range/.test(f.q))!.a;
+    expect(a).not.toMatch(/until you run out at either end/);
+    expect(a).toMatch(/C3 to C6/);
+  });
+});
+
+/**
+ * The popular-song hub owns "can I sing this song"; the range and songs
+ * guides are where that question comes up, so both link it in the body.
+ */
+describe("popular-song links", () => {
+  it("range and songs guides link the popular-song hub", () => {
+    expect(guides.RANGE_GUIDE.related.map((r) => r.href)).toContain("/can-you-sing");
+    expect(guides.SONGS_GUIDE.related.map((r) => r.href)).toContain("/can-you-sing");
+  });
 });

@@ -29,6 +29,7 @@ import {
   rangeFit,
   sessionSeconds,
   songTranspose,
+  startableRecents,
   type RangeFit,
 } from "./lib";
 import {
@@ -450,16 +451,11 @@ export function Library({
     if (song) start(song);
   }
 
+  // Filtered by band like the cards, the dice and the setlist: a song sung
+  // through its page's deep link can sit in recents while its band is shut.
   const recentSongs = useMemo(
-    () =>
-      recents
-        .map((r) => {
-          const song = accessible.find((s) => s.id === r.id);
-          return song ? { song, at: r.at } : null;
-        })
-        .filter((r): r is { song: Song; at: string } => r !== null)
-        .slice(0, 6),
-    [recents, accessible],
+    () => startableRecents(recents, accessible, mastered),
+    [recents, accessible, mastered],
   );
 
   return (

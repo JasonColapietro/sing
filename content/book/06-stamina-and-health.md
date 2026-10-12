@@ -15,7 +15,7 @@ A warmup is not stretching. You cannot stretch a vocal fold the way you stretch 
 
 What changes is coordination. Muscle that has been moving behaves differently from muscle that has been still since you woke up. The thin fluid layer over the folds behaves differently too. Most of all, the relationship between breath pressure and fold closure gets recalibrated, and that relationship drifts — overnight, after a silent afternoon, when you are tired. A warmup is mostly the work of finding it again.
 
-Which is why good warmups feel boringly small. Quiet, mid-range, narrow. Lip trills, a hum, an "ng", singing through a straw into water, a five-note pattern that barely leaves the middle of your voice. They share one structural trick: a partial obstruction in front of the folds changes the pressure balance above and below them, so the folds can vibrate fully without you pressing. You get the movement at a fraction of the effort.
+Which is why good warmups feel boringly small. Quiet, mid-range, narrow. Lip trills, a hum, an "ng", singing through a straw into water, a five-note pattern on any of them that barely leaves the middle of your voice. They share one structural trick: a partial obstruction in front of the folds changes the pressure balance above and below them, so the folds can vibrate fully without you pressing. You get the movement at a fraction of the effort.
 
 The shape is small to large. Start where your voice is already comfortable and quiet. Widen the range before you add volume. Add volume before you add anything sustained or high. Ten to fifteen minutes covers a practice session. The moment it starts to feel like work, you have crossed out of the warmup and into training — fine, but be honest about which one you are doing.
 

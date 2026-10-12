@@ -4,21 +4,25 @@ import Link from "next/link";
 import { Button, Card, LinkButton, ProgressBar, SectionLabel } from "@/components/ui";
 import { ProChip } from "@/components/pro/ui";
 import { useIsPro, useProReady } from "@/lib/pro";
-import { FREE_DAILY_SEC } from "@/lib/free-cap";
+import { FREE_DAILY_SEC, useFreeCap } from "@/lib/free-cap";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { midiToLabel } from "@/lib/audio/notes";
 import {
   FREE_WEEKS,
   cappedDaySeconds,
   dayMinutes,
+  dayNeedsPro,
   isRestDay,
   itemEvidence,
   itemHref,
+  itemIsCapped,
   itemIsPro,
   itemLabel,
   itemStepHref,
   itemSteps,
   markDayDone,
   startProgram,
+  type Program,
   type ProgramDay,
   type ProgramReading,
 } from "@/lib/programs";
@@ -28,6 +32,45 @@ import type { ActiveProgram } from "./use-program";
 
 /** Where an unlock button goes: the offer itself, as every cap surface links it. */
 const PRO_BUY_HREF = "/pro#buy";
+
+/** "Week 1 was free" / "weeks 1–2 were free", for the free week's end. */
+function freeWeeksWere(capital: boolean): string {
+  const w = capital ? "Week" : "week";
+  return FREE_WEEKS === 1 ? `${w} 1 was free` : `${w}s 1–${FREE_WEEKS} were free`;
+}
+
+/**
+ * True when the day after `index` is one a free singer cannot open: the first
+ * practice day past a Pro program's free week. A rest day ends both Pro
+ * programs' free week, so "opens tomorrow" there would promise a paywall.
+ */
+function nextNeedsPro(program: Program, index: number, isPro: boolean): boolean {
+  const next = program.days[index + 1];
+  return !isPro && next !== undefined && !isRestDay(next) && dayNeedsPro(program, index + 1);
+}
+
+/**
+ * True when today's free guided minutes are used and the day still has a row
+ * the allowance counts. The range test and the Recorder sit outside it, so a
+ * day with only those left is still open now.
+ */
+function waitsForTomorrow(capped: boolean, day: ProgramDay, itemsDone: readonly boolean[]): boolean {
+  return capped && !isRestDay(day) && day.items.some((item, i) => !itemsDone[i] && itemIsCapped(item));
+}
+
+/** The rows still open once the allowance is used, by name: "The range test". */
+function openUncappedRows(day: ProgramDay, itemsDone: readonly boolean[]): string | null {
+  const names = [
+    ...new Set(
+      day.items.flatMap((item, i) =>
+        itemsDone[i] || itemIsCapped(item) ? [] : [item.kind === "range" ? "the range test" : "the recorded take"],
+      ),
+    ),
+  ];
+  if (names.length === 0) return null;
+  const list = names.join(" and ");
+  return `${list[0].toUpperCase()}${list.slice(1)} ${names.length === 1 ? "sits" : "sit"} outside the allowance and ${names.length === 1 ? "is" : "are"} open now.`;
+}
 
 function Chevron() {
   return (
@@ -176,7 +219,9 @@ function Readings({ readings }: { readings: ProgramReading[] }) {
  * Today's program day: what to sing, a tick on what the log already shows,
  * and a way to mark the day done by hand for what it cannot. Once today has
  * completed a day the card says so and names tomorrow's, rather than offering
- * the next day early.
+ * the next day early, or says tomorrow's needs Pro when the free week ends.
+ * Once a free singer's guided minutes for today are used, it says the day
+ * picks up after midnight instead of inviting a start now.
  */
 export function ProgramTodayCard({
   active,
@@ -187,6 +232,7 @@ export function ProgramTodayCard({
   onBrowse: (() => void) | null;
 }) {
   const isPro = useIsPro();
+  const cap = useFreeCap();
   const { program, progress, today, view, itemsDone, stepsDone, countsFrom, readings } = active;
   const total = program.days.length;
   const day = program.days[view.index];
@@ -197,6 +243,13 @@ export function ProgramTodayCard({
   // Past a Pro program's free week, a free singer is asked for Pro instead of
   // shown rows they cannot open. Their place is kept.
   const paywalled = programDayNeedsPro(active, isPro);
+  // Today's free guided minutes are used: the rows the allowance counts open
+  // on their rooms' cap walls, so the card says the day resumes after midnight
+  // rather than inviting a start now.
+  const waits = view.status === "todo" && !paywalled && waitsForTomorrow(cap.capped, day, itemsDone);
+  const stillOpen = waits ? openUncappedRows(day, itemsDone) : null;
+  // A rest day ends a Pro program's free week, so tomorrow's day needs Pro.
+  const nextLocked = view.status === "done-today" && nextNeedsPro(program, view.index, isPro);
 
   return (
     <Card>
@@ -230,10 +283,19 @@ export function ProgramTodayCard({
               {isRestDay(day)
                 ? "No program practice today. Your voice gets the day off."
                 : `${day.title}. Nice work.`}{" "}
-              {next
-                ? `Day ${view.index + 2}, “${next.title}”, opens tomorrow.`
-                : "That was the last day."}
+              {!next
+                ? "That was the last day."
+                : nextLocked
+                  ? `${freeWeeksWere(true)}. Day ${view.index + 2} onward needs Pro, and your place is kept.`
+                  : isRestDay(next)
+                    ? `Tomorrow, day ${view.index + 2}, is a rest day.`
+                    : `Day ${view.index + 2}, “${next.title}”, opens tomorrow.`}
             </p>
+            {nextLocked && (
+              <div className="mt-3">
+                <LinkButton href={PRO_BUY_HREF} size="sm">Unlock with Pro</LinkButton>
+              </div>
+            )}
           </div>
         )}
 
@@ -264,11 +326,21 @@ export function ProgramTodayCard({
               </div>
             ) : (
               <>
-                <p className="mt-2 max-w-xl text-sm text-mut">
-                  Each row opens its room. A row ticks itself once your log shows it
-                  {countsFrom < today ? ` (anything since ${countsFrom} counts)` : ""}; if you did
-                  something the log cannot see, mark the day done yourself.
-                </p>
+                {waits ? (
+                  <p className="mt-2 max-w-xl text-sm text-mut" data-program-waits>
+                    Today&apos;s {FREE_DAILY_MINUTES} free guided minutes are used.{" "}
+                    {count > 0
+                      ? `Rows already ticked stay ticked, and day ${view.index + 1} picks up where you left off after midnight.`
+                      : `Day ${view.index + 1} is kept, and its guided rows open again after midnight.`}
+                    {stillOpen ? ` ${stillOpen}` : ""}
+                  </p>
+                ) : (
+                  <p className="mt-2 max-w-xl text-sm text-mut">
+                    Each row opens its room. A row ticks itself once your log shows it
+                    {countsFrom < today ? ` (anything since ${countsFrom} counts)` : ""}; if you did
+                    something the log cannot see, mark the day done yourself.
+                  </p>
+                )}
                 <div className="mt-4">
                   <DayItems day={day} done={itemsDone} stepsDone={stepsDone} />
                 </div>
@@ -323,11 +395,17 @@ export function ProgramTodayCard({
  * otherwise. The rows themselves live on /programs, because a link from
  * /warmups back to /warmups?routine= would not re-read the query. A day past
  * a Pro program's free week says it needs Pro rather than offering a plan
- * that opens on a paywall, once the entitlement cache has been read.
+ * that opens on a paywall, once the entitlement cache has been read; so does
+ * the rest day that ends the free week, about tomorrow. Once a free singer's
+ * guided minutes for today are used, the day says it carries on after
+ * midnight rather than leading with "Open today's plan".
  */
 export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
   const isPro = useIsPro();
   const proReady = useProReady();
+  // Read before the early return below, so the hook order never changes when
+  // a program starts or stops.
+  const cap = useFreeCap();
   if (!active) {
     return (
       <Card tone="well">
@@ -348,21 +426,33 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
       </Card>
     );
   }
-  const { program, view } = active;
+  const { program, view, itemsDone } = active;
   const day = program.days[view.index];
+  const next = program.days[view.index + 1];
   const locked = proReady && programDayNeedsPro(active, isPro);
+  // Today's free guided minutes are used and the day still has rows they
+  // count: those open on cap walls until midnight, so this card must not be
+  // the one surface still saying "open today's plan".
+  const waits = proReady && !locked && view.status === "todo" && waitsForTomorrow(cap.capped, day, itemsDone);
+  // Tomorrow is past a Pro program's free week (a rest day ends it).
+  const nextLocked = proReady && view.status === "done-today" && nextNeedsPro(program, view.index, isPro);
   const calendarHref = `/programs?program=${encodeURIComponent(program.id)}`;
+  const doneLine = isRestDay(day) ? `Day ${view.index + 1}: rest day.` : `Day ${view.index + 1} done.`;
   const line = locked
-    ? `Day ${view.index + 1} needs Pro. ${FREE_WEEKS === 1 ? "Week 1 was" : `Weeks 1–${FREE_WEEKS} were`} free, and your place is kept.`
+    ? `Day ${view.index + 1} needs Pro. ${freeWeeksWere(true)}, and your place is kept.`
     : view.status === "finished"
       ? "Finished. Start it again or pick another."
       : view.status === "done-today"
-        ? isRestDay(day)
-          ? `Day ${view.index + 1}: rest day. The next day opens tomorrow.`
-          : `Day ${view.index + 1} done. The next day opens tomorrow.`
+        ? nextLocked
+          ? `${doneLine} Day ${view.index + 2} onward needs Pro; ${freeWeeksWere(false)}.`
+          : next && isRestDay(next)
+            ? `${doneLine} Tomorrow is a rest day${isRestDay(day) ? " too" : ""}.`
+            : `${doneLine} The next day opens tomorrow.`
         : isRestDay(day)
           ? `Day ${view.index + 1}: rest day.`
-          : `Day ${view.index + 1}: ${day.title} · ${dayMinutes(day)} min`;
+          : waits
+            ? `Day ${view.index + 1}: ${day.title} · ${itemsDone.filter(Boolean).length} of ${day.items.length} done. Today’s ${FREE_DAILY_MINUTES} free guided minutes are used; carry on after midnight.`
+            : `Day ${view.index + 1}: ${day.title} · ${dayMinutes(day)} min`;
   return (
     <Card>
       <section aria-labelledby="program-entry-heading" data-program-day={view.index} data-status={view.status}>
@@ -387,8 +477,12 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
               </Link>
             </div>
           ) : (
-            <LinkButton href={calendarHref}>
-              {view.status === "todo" && !isRestDay(day) ? "Open today’s plan" : "See the calendar"}
+            <LinkButton href={calendarHref} variant={waits ? "outline" : undefined}>
+              {waits
+                ? "See today’s plan"
+                : view.status === "todo" && !isRestDay(day)
+                  ? "Open today’s plan"
+                  : "See the calendar"}
             </LinkButton>
           )}
         </div>

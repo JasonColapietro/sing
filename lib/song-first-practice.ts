@@ -16,8 +16,9 @@ const PRO_CONTEXT: Record<Exclude<PopFit["verdict"], "unknown">, string> = {
   fits: `As you log scored song practices, Pro adds accuracy by note across sessions, and your practice history lists your latest ${MAX_SESSIONS} sessions instead of the last 20. This range comparison is not a scored song attempt.`,
   high: "For more upper-register exercises, Pro adds the Head-voice builder warmup pack. It does not guarantee higher notes or make this song fit.",
   low: "After you log scored practice, Pro opens the full daily plan built from your notes and recent sessions. A song sitting too low does not, by itself, identify a technique problem.",
-  // The retest rule the site teaches everywhere (lib/guides.ts, the coach's
-  // RANGE_RETEST_DAYS, book ch. 8): weeks apart, never the next day.
+  // The retest rule the site teaches everywhere (lib/guides.ts,
+  // RANGE_RETEST_DAYS in lib/progress.ts, book ch. 8): weeks apart, never the
+  // next day.
   wide: "Pro charts your saved range tests over time. Retest after a few weeks of practice to compare measurements; one test cannot show a trend or promise range growth.",
 };
 

@@ -36,9 +36,11 @@ import {
   type CheckoutPlan,
 } from "@/lib/pro-shared";
 import { SITE_URL } from "@/lib/site";
+import { SUPPORT_EMAIL } from "@/lib/organization";
 import {
   PRO_EXERCISES,
   PRO_PACK_COUNT,
+  PRO_PACKS_HREF,
   PRO_PROGRAM_NAMES,
   TOTAL_CHAPTERS,
   TOTAL_WORDS,
@@ -186,7 +188,7 @@ function ProKeyRow({ proKey }: { proKey: string }) {
       <p className="mt-1.5 text-xs text-dim">
         Save this now. Pro lives in this browser, and this key unlocks it in
         any other browser, or in this one after its data is cleared. Lost it?
-        Email hey@suedeai.ai.
+        Email {SUPPORT_EMAIL}.
       </p>
       {/* A mailto link: the singer's own mail app, nothing sent anywhere. */}
       <a
@@ -340,8 +342,8 @@ function RestorePanel({ onUnlocked }: { onUnlocked: () => void }) {
       )}
       <p className="mt-3 text-xs text-dim">
         Pro unlocks per browser. Paste the Pro key
-        from the browser where you bought or subscribed. Lost it? Email
-        hey@suedeai.ai and we&apos;ll send a new one.
+        from the browser where you bought or subscribed. Lost it?
+        Email {SUPPORT_EMAIL} and we&apos;ll send a new one.
       </p>
     </details>
   );
@@ -424,7 +426,7 @@ export function WelcomePanel({
               warmup" led away from the only credential for the purchase. */}
           {proKey && <ProKeyRow proKey={proKey} />}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-            <LinkButton href="/warmups" variant="violet" size="md">
+            <LinkButton href={PRO_PACKS_HREF} variant="violet" size="md">
               Sing your first pro warmup
             </LinkButton>
             <LinkButton href="/progress" variant="outline" size="md">
@@ -509,7 +511,7 @@ export function ProClient() {
           setCheckout({
             kind: "error",
             message:
-              "Stripe doesn't show a completed Pro purchase for this checkout, so reloading won't change it. If you were charged, please don't buy again: email hey@suedeai.ai with this reference and we'll sort it out.",
+              `Stripe doesn't show a completed Pro purchase for this checkout, so reloading won't change it. If you were charged, please don't buy again: email ${SUPPORT_EMAIL} with this reference and we'll sort it out.`,
             ref: sessionId,
           });
           revealPlans();
@@ -522,7 +524,7 @@ export function ProClient() {
           setCheckout({
             kind: "error",
             message:
-              "Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again. Nothing is lost. If it keeps failing, email hey@suedeai.ai with this reference.",
+              `Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again. Nothing is lost. If it keeps failing, email ${SUPPORT_EMAIL} with this reference.`,
             ref: sessionId,
           });
           revealPlans();
@@ -571,8 +573,8 @@ export function ProClient() {
           className="rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-center text-sm text-rec"
         >
           A payment from this browser hasn&apos;t been confirmed yet. If you
-          were charged, don&apos;t buy again: follow the note above, or email
-          hey@suedeai.ai with its reference.
+          were charged, don&apos;t buy again: follow the note above, or
+          email {SUPPORT_EMAIL} with its reference.
         </p>
       ) : (
         <Button
@@ -679,7 +681,7 @@ export function ProClient() {
                   <LinkButton href="/progress" variant="violet" size="lg">
                     Open your coach report
                   </LinkButton>
-                  <LinkButton href="/warmups" variant="outline" size="lg">
+                  <LinkButton href={PRO_PACKS_HREF} variant="outline" size="lg">
                     Start a pro warmup
                   </LinkButton>
                 </div>

@@ -2686,7 +2686,7 @@
       "title": "The Measured Voice",
       "subtitle": "A practical guide to building a voice you can measure — included with Suede Sing Pro.",
       "pathPrefix": "/book",
-      "totalWords": 32597,
+      "totalWords": 32633,
       "chapters": [
         {
           "slug": "what-your-voice-is",
@@ -2745,7 +2745,7 @@
           "part": "How the voice works",
           "summary": "What warming up and cooling down actually do, how water and sleep really reach your voice, and where normal tiredness ends and a doctor begins.",
           "free": false,
-          "words": 1226,
+          "words": 1230,
           "path": "/book/stamina-and-health"
         },
         {
@@ -2905,7 +2905,7 @@
           "part": "Range and repertoire",
           "summary": "How to read the singer library for tessitura and craft instead of ceilings, and what those cited figures can and cannot tell you.",
           "free": false,
-          "words": 1380,
+          "words": 1412,
           "path": "/book/learning-from-other-voices"
         },
         {
@@ -2924,7 +2924,7 @@
       "title": "The Voice Atlas",
       "subtitle": "Who sings what, how it sounds, and how to borrow it — the range, tone and technique of every voice in the library.",
       "pathPrefix": "/atlas",
-      "totalWords": 72471,
+      "totalWords": 72468,
       "chapters": [
         {
           "slug": "how-to-read-an-entry",
@@ -3023,7 +3023,7 @@
           "part": "Rock, metal and alternative",
           "summary": "The wailers, shouters and art-rock baritones of rock's imperial decades — where the famous highs really came from, and the era's quiet lesson about sustainable volume.",
           "free": false,
-          "words": 5134,
+          "words": 5131,
           "path": "/atlas/the-classic-rock-men"
         },
         {
@@ -3392,7 +3392,7 @@
           "highMidi": 73,
           "rangeLabel": "E3–C#5",
           "spanSemitones": 21,
-          "difficulty": "Medium",
+          "difficulty": "Hard",
           "sourceNote": "Musicnotes original-key arrangement, written E4–C#6, sounding E3–C#5 in A major",
           "path": "/can-you-sing/lose-control"
         },
@@ -3465,7 +3465,7 @@
           "highMidi": 70,
           "rangeLabel": "Eb3–Bb4",
           "spanSemitones": 19,
-          "difficulty": "Medium",
+          "difficulty": "Hard",
           "sourceNote": "Musicnotes original-key arrangement, sounding Eb3–Bb4 in Db major",
           "path": "/can-you-sing/someone-you-loved"
         },

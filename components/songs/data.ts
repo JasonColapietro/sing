@@ -218,7 +218,7 @@ export const SONGS: Song[] = [
     form: "phrase",
     defaultLoops: 4,
     genre: "Hymn",
-    era: "1700s",
+    era: "1800s",
     language: "English",
     tags: ["hymn", "wide range", "leap"],
     notes: [
@@ -782,7 +782,7 @@ export const SONGS: Song[] = [
     form: "full",
     defaultLoops: 1,
     genre: "Hymn",
-    era: "1700s",
+    era: "1800s",
     language: "English",
     tags: ["hymn", "wide range", "leap", "longer arrangement", "two verses"],
     arrangementOf: "amazing-grace",

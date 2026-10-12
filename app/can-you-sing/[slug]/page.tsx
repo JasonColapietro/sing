@@ -33,10 +33,22 @@ export function generateStaticParams(): Params[] {
   return POP_SONGS.map((s) => ({ slug: s.slug }));
 }
 
-/** One sentence that answers the search query from the data alone. */
+/**
+ * The answer to the search query, from the data alone.
+ *
+ * "— N semitones — which rates …" credits the rating to the range, which is
+ * how popDifficulty's rule reads. An editorial override rates a song above
+ * what its range says, so the answer names the reason the override exists;
+ * otherwise "19 semitones — which rates hard" would sit beside another
+ * song's "19 semitones — which rates medium".
+ */
 function answerSentence(song: PopSong): string {
   const span = song.highMidi - song.lowMidi;
-  return `“${song.title}” by ${song.artist} is in ${song.key}, and the commonly cited lead-vocal range is ${popRangeLabel(song)} — ${span} semitones — which rates ${popDifficulty(song).toLowerCase()} for an untrained voice.`;
+  const opening = `“${song.title}” by ${song.artist} is in ${song.key}, and the commonly cited lead-vocal range is ${popRangeLabel(song)} — ${span} semitones`;
+  const rating = popDifficulty(song).toLowerCase();
+  return song.difficulty
+    ? `${opening}. Its top, held in full voice above the tenor passaggio, rates it ${rating} for an untrained voice.`
+    : `${opening} — which rates ${rating} for an untrained voice.`;
 }
 
 export async function generateMetadata({

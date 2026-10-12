@@ -187,6 +187,28 @@ export function bandOpen(
   return false;
 }
 
+/**
+ * The recently-sung row: each recent play resolved against the songs passed
+ * in (the entitlement-aware list the songbook browses), newest first, keeping
+ * only songs in an open band. A song page's deep link skips the band ladder,
+ * so a song sung that way lands in recents while its band is still shut; the
+ * library refuses to start it, and a recents button for it would do nothing.
+ */
+export function startableRecents(
+  recents: readonly { id: string; at: string }[],
+  songs: readonly Song[],
+  masteredIds: ReadonlySet<string>,
+  limit = 6,
+): Array<{ song: Song; at: string }> {
+  const out: Array<{ song: Song; at: string }> = [];
+  for (const r of recents) {
+    if (out.length >= limit) break;
+    const song = songs.find((s) => s.id === r.id);
+    if (song && bandOpen(bandForSong(song), masteredIds, songs)) out.push({ song, at: r.at });
+  }
+  return out;
+}
+
 /** Seconds per beat at a given bpm and tempo multiplier. */
 export function secPerBeat(bpm: number, tempo: number): number {
   return 60 / (bpm * tempo);

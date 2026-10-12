@@ -3,7 +3,7 @@ id: "v-l5-m4-04"
 module: "v-l5-m4"
 stage: "v-l5"
 title: "An Easy Pattern Through Your Transition"
-type: "song"
+type: "exercise"
 minutes: 6
 objective: "A short supplied pattern that crosses your transition zone — pick the key that puts it there."
 prerequisites: "v-l5-m4-01"

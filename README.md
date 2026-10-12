@@ -28,8 +28,9 @@ keep renewing, the portal and cancellation). `STRIPE_SECRET_KEY` decides which S
 the app talks to; see [Going live](#going-live) for where production points.
 Locally: `vercel link && vercel env pull`.
 
-There are no accounts and no database, so **Stripe is the only source of
-truth** and the flow is built around that:
+Pro hangs off no account and no database: a sign-in, on a deployment with
+accounts configured, never touches it. So **Stripe is the only source of
+truth** for entitlement, and the flow is built around that:
 
 | Route | Job |
 |---|---|
@@ -44,23 +45,24 @@ truth** and the flow is built around that:
 `PRO_COMP_CODES` is a comma-separated list; handing a code out and revoking it
 are both an env var edit. Matching is case- and whitespace-insensitive.
 
-**A code is reusable without limit by default.** That suits a code sent to a
-mailing list and is dangerous for one that ends up somewhere public, because
-every redemption mints a real Stripe customer and subscription — so an
-uncapped leaked code is both unbounded free Pro and unbounded object creation.
+**Each code is capped at 25 redemptions by default.** Every redemption mints a
+real Stripe customer and subscription, so an uncapped code that ends up
+somewhere public is both unbounded free Pro and unbounded object creation.
 
-Set a total per code to bound it:
+Change the total per code with `PRO_COMP_MAX_REDEMPTIONS` (set it to `0` to
+remove the cap, for example for a mailing-list code):
 
 ```bash
 PRO_COMP_MAX_REDEMPTIONS=50
 ```
 
 The counter is atomic and lives in the same Upstash store as cloud sync, keyed
-`comp:used:<CODE>`. It only runs when the cap is set, so the store stays
-optional otherwise. Raising the cap later resumes from the true count; to reset
-a code, delete its key. If a cap is configured and the store can't be reached,
-redemption fails closed with a 503 rather than silently granting uncapped
-passes — the opposite of what setting the cap asked for.
+`comp:used:<CODE>`. It runs whenever a cap applies, which is the default, so
+comp codes need the Upstash store unless `PRO_COMP_MAX_REDEMPTIONS=0`. Raising
+the cap later resumes from the true count; to reset a code, delete its key. If
+a cap applies and the store can't be reached, redemption fails closed with a
+503 rather than silently granting uncapped passes — the opposite of what the
+cap is for.
 
 ### Pro keys
 

@@ -1534,7 +1534,7 @@ export const LESSONS: Lesson[] = [
     "moduleSlug": "hold-it",
     "slug": "one-note-per-bar",
     "title": "One Note Per Bar",
-    "type": "song",
+    "type": "exercise",
     "minutes": 5,
     "objective": "Use the supplied sustained reference for short holds, resting between them.",
     "explanation": "",
@@ -1651,7 +1651,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Sustained tone",
-        "body": "Compare the beginning and ending of a comfortable hold by ear; no cents score is produced. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Compare the beginning and ending of a comfortable hold by ear; the warm-up's score only counts time within 50 cents of the note, so a slow sag inside that window is yours to hear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -5629,7 +5629,7 @@ export const LESSONS: Lesson[] = [
     "moduleSlug": "mix-not-shout",
     "slug": "an-easy-pattern-through-your-transition",
     "title": "An Easy Pattern Through Your Transition",
-    "type": "song",
+    "type": "exercise",
     "minutes": 6,
     "objective": "A short supplied pattern that crosses your transition zone — pick the key that puts it there.",
     "explanation": "",

@@ -3,7 +3,7 @@ id: "v-l2-m3-04"
 module: "v-l2-m3"
 stage: "v-l2"
 title: "One Note Per Bar"
-type: "song"
+type: "exercise"
 minutes: 5
 objective: "Use the supplied sustained reference for short holds, resting between them."
 prerequisites: "v-l2-m3-01"

@@ -385,7 +385,7 @@
         "confidence": "moderate",
         "kind": "licensed-score",
         "song": "Beggin’",
-        "octaveConvention": "Written pitch labels as displayed by Musicnotes; no sounding-octave conversion."
+        "octaveConvention": "Written pitch labels as displayed by Musicnotes. A male vocal line in treble clef is written an octave above where it sounds, so this arrangement’s written B3–F#5 sounds B2–F#4."
       }
     ]
   },

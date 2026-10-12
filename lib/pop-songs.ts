@@ -31,6 +31,14 @@ export interface PopSong {
   sourceUrl?: string;
   /** What the voice is actually asked to do. No lyric quotes. */
   blurb: string;
+  /**
+   * Editorial override, set only where the blurb documents a sustained
+   * full-voice top above the tenor passaggio (D4–G4), which span plus
+   * altitude cannot see for a song sung in the male octave. The song's page
+   * states that reason beside the rating, so an override set for any other
+   * reason would make the page say something false.
+   */
+  difficulty?: PopDifficulty;
 }
 
 /** Parse scientific pitch ("A3", "F#5", "Bb2") to MIDI. C4 = 60. */
@@ -48,9 +56,12 @@ export type PopDifficulty = "Easy" | "Medium" | "Hard";
  * Difficulty from the two facts every entry carries. The songbook scores
  * melodic leaps too, but this catalog stores no melodies, so the read is
  * span plus altitude: a wide span or a top above F5 is what defeats most
- * untrained singers, regardless of the tune between the extremes.
+ * untrained singers, regardless of the tune between the extremes. An entry
+ * may set `difficulty` where its blurb documents a sustained full-voice top
+ * above the tenor passaggio.
  */
 export function popDifficulty(song: PopSong): PopDifficulty {
+  if (song.difficulty) return song.difficulty;
   const span = song.highMidi - song.lowMidi;
   if (span >= 22 || song.highMidi >= 78) return "Hard";
   if (span <= 14 && song.highMidi <= 72) return "Easy";
@@ -115,14 +126,29 @@ export function popSongsByArtistSlug(artistSlug: string): PopSong[] {
   return POP_SONGS.filter((s) => s.artistSlugs.includes(artistSlug));
 }
 
-/** Catalog songs nearest in range center, for the "try these next" links. */
+/**
+ * Catalog songs nearest in range center, for the "try these next" links.
+ *
+ * Neighbours are taken in rank order, alternating below and above the song,
+ * rather than by raw distance. By distance alone the song with the lowest
+ * center (Hallelujah) ranked fifth or lower on every list and was linked
+ * from none of its siblings; by rank, every song sits within two places of
+ * at least two others and so appears on their lists.
+ */
 export function relatedPopSongs(song: PopSong, count = 4): PopSong[] {
-  const center = (song.lowMidi + song.highMidi) / 2;
-  return POP_SONGS.filter((s) => s.slug !== song.slug)
-    .map((s) => ({ s, d: Math.abs((s.lowMidi + s.highMidi) / 2 - center) }))
-    .sort((a, b) => a.d - b.d)
-    .slice(0, count)
-    .map((x) => x.s);
+  const center = (s: PopSong) => (s.lowMidi + s.highMidi) / 2;
+  const order = [...POP_SONGS].sort(
+    (a, b) => center(a) - center(b) || a.slug.localeCompare(b.slug),
+  );
+  const i = order.findIndex((s) => s.slug === song.slug);
+  if (i < 0) return [];
+  const picks: PopSong[] = [];
+  for (let d = 1; picks.length < count && d < order.length; d++) {
+    for (const j of [i - d, i + d]) {
+      if (j >= 0 && j < order.length && picks.length < count) picks.push(order[j]);
+    }
+  }
+  return picks;
 }
 
 /** Library singers credited on this song, resolved to full records. */
@@ -273,6 +299,8 @@ export const POP_SONGS: PopSong[] = [
     sourceNote: "Musicnotes original-key arrangement, written E4–C#6, sounding E3–C#5 in A major",
     blurb:
       "A modern soul feature for a big male voice: gritty low verses, then choruses that park on sustained A4s and push to C#5 in full chest. The rasp is optional; the sheer sustained weight at the top of the tenor range is not, and the song repeats that demand until the last chorus.",
+    // Span 21 reads Medium, but the chorus holds full-chest A4s to C#5.
+    difficulty: "Hard",
   },
   {
     slug: "beautiful-things",
@@ -330,6 +358,8 @@ export const POP_SONGS: PopSong[] = [
     sourceNote: "Musicnotes original-key arrangement, sounding Eb3–Bb4 in Db major",
     blurb:
       "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is only an octave and a fifth, but the tessitura of the chorus parks a male voice at or above the top of its passaggio and keeps it there — the classic reason it feels so much harder than its range suggests.",
+    // Span 19 reads Medium, but the chorus holds full-voice Ab4–Bb4.
+    difficulty: "Hard",
   },
   {
     slug: "rolling-in-the-deep",

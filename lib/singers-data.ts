@@ -10529,9 +10529,9 @@ export const SINGERS: Singer[] = [
     "whistle": false,
     "signatureSong": "Oh, Pretty Woman",
     "lowSource": null,
-    "highSource": "Running Scared",
+    "highSource": null,
     "blurb": "Operatic tenor that swells from a soft low murmur to full-voice high notes with no audible break.",
-    "technique": "Rather than belting, he crescendos. A phrase can start nearly murmured down low and grow through the transition with no audible seam, so the top near E5 arrives as ringing head voice instead of a shout — the long build in Running Scared is the clearest example. Vibrato stays narrow and quick, legato unbroken. The tone tilts lighter as it rises instead of thickening, which is why nothing jams up at the passaggio and the climb reads as one line."
+    "technique": "Rather than belting, he crescendos. A phrase can start nearly murmured down low and grow through the transition with no audible seam, so the top arrives ringing rather than shouted — the long build in Running Scared is the clearest example of that crescendo. Vibrato stays narrow and quick, legato unbroken. The tone tilts lighter as it rises instead of thickening, which is why nothing jams up at the passaggio and the climb reads as one line."
   },
   {
     "slug": "rufus-wainwright",

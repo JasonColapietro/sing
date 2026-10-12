@@ -112,6 +112,18 @@ describe("singer-page evidence and provenance", () => {
     expect(page).not.toHaveProperty("citation");
   });
 
+  it("shows a pending score's octave convention beside its written range", async () => {
+    // Beggin' is written in treble clef an octave above Damiano David's sung
+    // line; without the note the written F#5 reads as seven semitones above
+    // the page's own reported ceiling.
+    const html = await rendered("damiano-david");
+    expect(html).toContain("Source context awaiting individual review");
+    expect(html).toContain("written vocal range of B3–F#5");
+    expect(html).toContain("Octave convention:");
+    expect(html).toContain("written B3–F#5 sounds B2–F#4");
+    expect(await rendered("taylor-swift")).toContain("Octave convention:");
+  });
+
   it.each([
     ["bruno-mars", "Bruno Mars"],
     ["taylor-swift", "Taylor Swift"],

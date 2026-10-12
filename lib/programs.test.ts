@@ -210,10 +210,12 @@ describe("program data", () => {
       p.days.flatMap((d, i) => (d.items.some((x) => x.kind === kind) ? [i + 1] : []));
     // Week 1, the end of week 6, the start of week 12.
     expect(on("range")).toEqual([1, 42, 78]);
-    // Day 1's baseline, a siren in weeks 5 and 6 (ch. 16, "twice across the
-    // two weeks"), one top-note take in each of weeks 7 and 8 (ch. 17, "one
-    // take a week"), the week-11 working copy (ch. 19), and week 12's take.
-    expect(on("recorder")).toEqual([1, 30, 37, 43, 50, 71, 78]);
+    // Day 1's baseline, five onsets in weeks 3 and 4 (ch. 15, "run the
+    // recorder and listen back"), a siren in weeks 5 and 6 (ch. 16, "twice
+    // across the two weeks"), one top-note take in each of weeks 7 and 8
+    // (ch. 17, "one take a week"), the week-11 working copy (ch. 19), and
+    // week 12's take.
+    expect(on("recorder")).toEqual([1, 18, 25, 30, 37, 43, 50, 71, 78]);
     // Three or four sessions a week, and five only where a check-in is added.
     for (let w = 0; w < p.weeks; w++) {
       const sessions = p.days.slice(w * 7, w * 7 + 7).filter((d) => !isRestDay(d)).length;
@@ -223,10 +225,19 @@ describe("program data", () => {
     expect(isRestDay(p.days.at(-1)!)).toBe(false);
   });
 
-  it("names the take each weeks 5-8 recording is for, as chapters 16 and 17 describe it", () => {
+  it("names the take each weeks 3-8 recording is for, as chapters 15 to 17 describe it", () => {
     const p = programById("measured-voice-12w")!;
     const takes = (day: number) =>
       p.days[day - 1].items.filter((i) => i.kind === "recorder").map((i) => itemLabel(i).meta);
+    // Chapter 15: "One note in your middle, sung five times: short, clean, a
+    // full stop and a fresh breath between each. Then run the recorder and
+    // listen back." After the held note, so the onsets are sung warm.
+    for (const d of [18, 25]) {
+      expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · one middle note, five short clean onsets/)]);
+      const items = p.days[d - 1].items;
+      const rec = items.findIndex((i) => i.kind === "recorder");
+      expect(items.slice(0, rec).some((i) => i.kind === "exercise" && i.id === "sustained-hold"), `day ${d}`).toBe(true);
+    }
     // Chapter 16: "record a single siren"; chapter 17: "a short ascending
     // pattern through the transition to a comfortable top note".
     for (const d of [30, 37]) expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · one slow ng siren/)]);
@@ -372,10 +383,35 @@ describe("program data", () => {
     // block, and chapter 16 warms up on "the lightest warmup pack you have,
     // staying entirely below your transition". The Quick and Daily sets run a
     // twelfth from the bottom of the measured range on every rep.
+    // The Mix builder pack runs its ng glide at about half a second a whole
+    // step and its scales and leaps to two semitones under the measured top,
+    // against chapter 16's two seconds a whole step and "slides and sustained
+    // patterns rather than agility or staccato".
     const p = programById("measured-voice-12w")!;
     const items = p.days.slice(7, 42).flatMap((d) => d.items);
-    for (const id of ["quick", "daily", "full", "range", "agility", "high-notes"]) {
+    for (const id of ["quick", "daily", "full", "range", "agility", "high-notes", "mix"]) {
       expect(items.some((i) => i.kind === "routine" && i.id === id), id).toBe(false);
+    }
+  });
+
+  it("opens weeks 7 and 8 on the middle-voice on-ramp, as chapter 17 asks", () => {
+    // "The middle-voice work from the earlier blocks is your on-ramp … five or
+    // six minutes of it in the Warmups packs before anything goes above the
+    // transition. A cold voice at the top of your range is where the trouble is."
+    const p = programById("measured-voice-12w")!;
+    const days = p.days.slice(42, 56).filter((d) => !isRestDay(d));
+    const items = days.flatMap((d) => d.items);
+    for (const id of ["quick", "daily"]) {
+      expect(items.some((i) => i.kind === "routine" && i.id === id), id).toBe(false);
+    }
+    const top = new Set(["high-notes", "head-voice-builder"]);
+    for (const d of days) {
+      const at = d.items.findIndex((i) => i.kind === "routine" && top.has(i.id));
+      if (at < 0) continue;
+      // The weeks 3-4 middle work first: the Morning reset and the five-note scale.
+      const before = d.items.slice(0, at);
+      expect(before.some((i) => i.kind === "routine" && i.id === "morning"), d.title).toBe(true);
+      expect(before.some((i) => i.kind === "exercise" && i.id === "five-note-scale"), d.title).toBe(true);
     }
   });
 
@@ -531,9 +567,14 @@ describe("program data", () => {
         if (rec >= 0) expect(rec, label).toBeGreaterThan(at);
       });
     }
-    // Readings a program compares are taken after the same warmup.
+    // Readings a program compares are taken after the same warmup, and the
+    // same breath work: three minutes of exhale training before one check-in's
+    // sustain and none before another's is a different measurement.
+    const breathes = (i: ProgramItem) => i.kind === "breath" || i.kind === "drill";
     const warmupBeforeRange = (d: ProgramDay) =>
-      JSON.stringify(d.items.slice(0, d.items.findIndex((i) => i.kind === "range")).filter(sings));
+      JSON.stringify(
+        d.items.slice(0, d.items.findIndex((i) => i.kind === "range")).filter((i) => sings(i) || breathes(i)),
+      );
     const checks = (id: string) => programById(id)!.days.filter((d) => d.items.some((i) => i.kind === "range"));
     // And with the same number of sustain attempts, since a check-in's
     // reading is the longest hold of its day.
@@ -561,6 +602,17 @@ describe("program data", () => {
     for (const p of PROGRAMS) {
       const copy = [p.name, p.tagline, p.measures, ...p.days.map((d) => d.title)].join(" \n ");
       expect(copy, p.id).not.toMatch(forbidden);
+    }
+  });
+
+  it("refers a voice that hurts to a doctor who can examine the vocal folds, in the site's own words", () => {
+    // Every card's measures line is in /programs' server HTML, so a referral
+    // there reads as the site's safety advice and must say what the rest of
+    // the site says, not a bare "a doctor".
+    const referrals = PROGRAMS.filter((p) => /\bdoctor\b/i.test(p.measures));
+    expect(referrals.map((p) => p.id)).toEqual(["recovery-week"]);
+    for (const p of referrals) {
+      expect(p.measures, p.id).toContain("a doctor who can examine the vocal folds, such as an ENT or laryngologist");
     }
   });
 

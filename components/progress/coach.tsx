@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { ProgressState } from "@/lib/progress";
+import { RANGE_RETEST_DAYS, type ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
 import { useFreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
@@ -43,14 +43,6 @@ interface PlanItem {
  * narrower span gets the fifth instead.
  */
 const OCTAVE_SIREN_MIN_SEMIS = 21;
-
-/**
- * Days before the plan suggests a retest. The book spaces range tests six
- * weeks apart (chapter 8: "a number that still means something in six
- * weeks"; chapter 13: "Do not retest between those points"), because testing
- * more often mostly measures the day.
- */
-const RANGE_RETEST_DAYS = 42;
 
 /**
  * Today's plan from the singer's own numbers. `restDayOf` names the running
@@ -130,7 +122,7 @@ export function buildPlan(
   const heavyYesterday =
     yesterdaySec >= 25 * 60 && yesterdaySec > meanDaySec * 1.6;
 
-  // Range staleness: growth charts need fresh measurements.
+  // Range staleness: the range-over-time chart needs fresh measurements.
   const testedAt = state.range.testedAt ? Date.parse(state.range.testedAt) : NaN;
   const rangeAgeDays = Number.isNaN(testedAt)
     ? null
@@ -161,7 +153,7 @@ export function buildPlan(
       title: "Retake the range test",
       href: rangeTestHref(),
       minutes: 3,
-      reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test keeps the growth chart honest.`,
+      reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test adds a current point to your range over time.`,
     });
   }
 
@@ -171,7 +163,7 @@ export function buildPlan(
     minutes: heavyYesterday ? 4 : 2,
     reason: heavyYesterday
       ? `Yesterday was a heavy one (${Math.round(yesterdaySec / 60)} min) — start slow and give the voice time to settle.`
-      : "Every session starts here — low, steady breaths set up the rest.",
+      : "Low, steady breaths set up the rest of the session.",
   });
 
   // The core of the plan: measured weak notes drive the warmup choice.

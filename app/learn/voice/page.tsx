@@ -3,7 +3,7 @@ import Link from "next/link";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
-import { practiceMatch, MODULE_PRACTICE } from "@/lib/lesson-practice";
+import { distinctPracticeMatch } from "@/lib/lesson-practice";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import {
   CATALOG_LESSON_COUNT,
@@ -175,8 +175,8 @@ export default function VoiceCoursePage() {
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {stage.modules.map((module) => {
-                const practice = MODULE_PRACTICE[module.catalog.id];
-                const match = practice ? practiceMatch(practice.companion) : undefined;
+                // Only a room session no other module shares marks a module practised.
+                const match = distinctPracticeMatch(module.catalog.id);
                 return (
                   <Card key={module.catalog.id}>
                     <div data-course-module={module.catalog.id}>

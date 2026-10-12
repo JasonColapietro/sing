@@ -10,6 +10,7 @@ import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { useIsPro } from "@/lib/pro";
 import {
   shouldShowWeekInReview,
+  suggestionWords,
   weekInReview,
   type WeekInReview,
   type WeeklySuggestion,
@@ -179,8 +180,11 @@ export default function WeeklyReportCard() {
  * Following the link closes the card. It lives in the root layout and would
  * otherwise sit above the room it just sent the singer to, and on that room's
  * own page the link would do nothing at all.
+ *
+ * Exported for its render test: the card itself only opens after an effect
+ * reads localStorage, which a static render never runs.
  */
-function Suggestion({
+export function Suggestion({
   suggestion: s,
   isPro,
   onFollow,
@@ -189,31 +193,9 @@ function Suggestion({
   isPro: boolean;
   onFollow: () => void;
 }) {
-  let text: string;
-  let link: { href: string; label: string };
-  let capped: boolean;
-  switch (s.kind) {
-    case "neglected":
-      text = `You didn't open ${s.label} last week, after ${plural(s.before, "session")} there in the three weeks before.`;
-      link = { href: s.href, label: `Open ${s.label}` };
-      capped = CAPPED_TYPES.has(s.type);
-      break;
-    case "weakest":
-      text = `${s.label} averaged ${s.average}% against ${s.overall}% across your week, the widest gap of any room.`;
-      link = { href: s.href, label: `Practise ${s.label}` };
-      capped = CAPPED_TYPES.has(s.type);
-      break;
-    case "more-days":
-      text = `You practised on ${plural(s.days, "day")}. Aim for one more this week; a short session counts.`;
-      link = { href: "/warmups", label: "Start a warmup" };
-      capped = true;
-      break;
-    case "keep-going":
-      text = `${plural(s.days, "practice day")} last week. Match that this week to keep the habit.`;
-      link = { href: "/warmups", label: "Start a warmup" };
-      capped = true;
-      break;
-  }
+  const { text, link } = suggestionWords(s);
+  // Rooms on the free plan's daily allowance; the habit steps open a warmup.
+  const capped = s.kind === "neglected" || s.kind === "weakest" ? CAPPED_TYPES.has(s.type) : true;
   return (
     <>
       <p className="mt-4 text-sm text-ink">

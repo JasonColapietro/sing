@@ -292,7 +292,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "One of the eight conventional labels, soprano through bass, for the band a voice sits in and the weight it carries.",
         where:
-          "The range result names the type whose band overlaps your span most closely, as an estimate rather than a classification, and the singer library files every voice by its catalog label.",
+          "The range result names whichever of six types, bass to soprano, has the band that overlaps your span most closely (never bass-baritone or countertenor), as an estimate rather than a classification, and the singer library files every voice by its catalog label.",
         href: "/range",
         domain: "voice",
       },
@@ -472,8 +472,10 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "How loud a passage is and how its loudness moves across it.",
         where:
-          "The breath room's steadiness score reads loudness rather than pitch, so a deliberate swell and an unsteady note look alike to it.",
+          "Swell and fade in the warmups grows one note from soft to medium and back while only its pitch is scored; the breath room's steadiness score reads loudness, so a deliberate swell and an unsteady note look alike to it.",
         href: "/breath",
+        // Messa di voce, the free drill built for this term.
+        drill: "swell-and-fade",
         domain: "music",
       },
       {

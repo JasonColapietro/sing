@@ -21,8 +21,10 @@ import { CLOUD_STATE_MAX_CHARS } from "@/lib/progress-cloud-fit";
  * (mergeRemoteProgress in lib/progress.ts is commutative and idempotent), so
  * this route never interprets the payload beyond validating it.
  *
- * Signing in is an offer, never a requirement: the whole app works signed out
- * and simply has no backup. That is the only thing an account buys here.
+ * Where accounts are configured, lib/account-gate.ts asks a visitor to sign in
+ * before using the practice tools; where they are not, the app works signed
+ * out and simply has no backup. Either way this backup is the only thing kept
+ * against an account here; Pro never touches it.
  */
 
 /** Namespaced away from `sync:*` so the two stores can never collide. */

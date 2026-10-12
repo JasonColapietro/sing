@@ -44,6 +44,30 @@ describe("the pitch meter after Stop mic", () => {
     expect(html).not.toContain("range test");
   });
 
+  it("points a singer with a recent saved range at practice, not a retest", () => {
+    // The book spaces range tests weeks apart, and their warmups and songs
+    // already fit the saved range.
+    const html = renderToStaticMarkup(<LastRun low={47} high={61} lastLog={null} retestDue={false} onTryRange={() => {}} />);
+    expect(html).toContain("You have held B2 to C#4 so far.");
+    expect(html).not.toContain("range test");
+    expect(html).not.toContain("Take the 2-minute range test");
+    expect(html).toContain('href="/warmups"');
+    expect(html).toContain('href="/songs"');
+    expect(html).toContain("Retest weeks apart");
+  });
+
+  it("reads whether a retest is due when the mic starts, not during render", () => {
+    const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
+    const begin = src.slice(src.indexOf("const begin = async"), src.indexOf("const reset = () =>"));
+    expect(begin).toContain("setRetestDue(rangeRetestDue(range, Date.now()));");
+    // Both prompts follow it: the live panel and the stopped card.
+    expect(src).toContain("retestDue={retestDue}");
+    expect(src).toMatch(/explored && low !== null && high !== null && !retestDue && saved &&/);
+    // A singer whose saved range is due a retest already has a result, so the
+    // live panel says the retest is due rather than offering a first one.
+    expect(src).toContain("is six weeks old or more, so a retest is due");
+  });
+
   it("clears the last save on every new start that opens the mic", () => {
     // A singer who saved a 50 s run, sang again for 20 s and stopped must not
     // be told the second run earned the first one's XP.

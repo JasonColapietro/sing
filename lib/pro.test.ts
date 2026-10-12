@@ -1,5 +1,13 @@
-import { describe, expect, it } from "vitest";
-import { PLAN_ROWS, PRICING, PRO_PERKS } from "./pro";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  NETWORK_ERROR_MESSAGE,
+  PLAN_ROWS,
+  PRICING,
+  PRO_PERKS,
+  redeemCode,
+  restorePro,
+  startCheckout,
+} from "./pro";
 import { PRICING as SHARED_PRICING } from "./pro-shared";
 import { ATLAS_CONTENTS } from "./atlas-data";
 import { BOOK_CONTENTS } from "./book-data";
@@ -102,5 +110,26 @@ describe("Pro sales copy", () => {
       expect(row, `missing PLAN_ROWS entry: ${label}`).toBeDefined();
       expect(row?.free).toBe(free);
     }
+  });
+});
+
+describe("a dropped connection on the buy, unlock and pass paths", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("says so in plain words instead of the browser's 'Failed to fetch'", async () => {
+    vi.stubGlobal("fetch", () => Promise.reject(new TypeError("Failed to fetch")));
+    await expect(startCheckout("lifetime")).rejects.toThrow(NETWORK_ERROR_MESSAGE);
+    await expect(restorePro("key")).rejects.toThrow(NETWORK_ERROR_MESSAGE);
+    await expect(redeemCode("code")).rejects.toThrow(NETWORK_ERROR_MESSAGE);
+    expect(NETWORK_ERROR_MESSAGE).not.toMatch(/fetch|load failed/i);
+  });
+
+  it("still passes the server's own error through when the request lands", async () => {
+    vi.stubGlobal("fetch", () =>
+      Promise.resolve(new Response(JSON.stringify({ error: "That code has expired." }), { status: 400 })),
+    );
+    await expect(redeemCode("code")).rejects.toThrow("That code has expired.");
   });
 });
