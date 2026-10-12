@@ -17,7 +17,7 @@ import VoiceTypePage, {
   generateMetadata as voiceMetadata,
 } from "@/app/singers/voice-type/[type]/page";
 import { GENRE_HUB_COPY, VOICE_TYPE_HUB_COPY, type HubCopy } from "@/lib/singer-hub-copy";
-import { HUB_GENRES, VOICE_KINDS, genreSlug, voiceTypeSlug } from "@/lib/singers";
+import { HUB_GENRES, VOICE_KINDS, genreSlug, singersByGenre, voiceTypeSlug } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
 const GENRE_SLUGS = HUB_GENRES.map(genreSlug);
@@ -112,6 +112,29 @@ describe("hub copy coverage", () => {
         expect(seen.get(value), `${slug} repeats ${field} of ${seen.get(value)}`).toBeUndefined();
         seen.set(value, slug);
       }
+    }
+  });
+
+  it("names every pre-2010s singer the Afrobeats hub lists, since its intro dates the genre to the 2010s", () => {
+    // The intro defines Afrobeats as 2010s West African pop, so each older
+    // profile the hub carries has to be accounted for by name, or the page
+    // lists singers its own definition excludes.
+    const intro = GENRE_HUB_COPY.afrobeats.intro;
+    const older = singersByGenre("Afrobeats").filter((s) => s.activeFrom < 2010);
+    expect(older.length).toBeGreaterThan(0);
+    for (const s of older) expect(intro, s.name).toContain(s.name);
+  });
+
+  it("names the earlier chest-voice shift wherever a female hub prints its belt-or-mix zone", () => {
+    // VOICE_TYPE_PASSAGGIO's female zones are the commercial belt-or-mix break,
+    // several notes above the first shift out of chest voice. A hub that prints
+    // only the higher zone tells a woman who breaks at F4 she is in the wrong
+    // category; the atlas and the book name both, and so must the hubs.
+    for (const voice of ["Contralto", "Mezzo-soprano", "Soprano"] as const) {
+      const intro = VOICE_TYPE_HUB_COPY[voice].intro;
+      if (!intro.includes("{pLow}")) continue;
+      expect(intro, voice).toContain("belt-or-mix transition");
+      expect(intro, voice).toContain("E4 to G4");
     }
   });
 

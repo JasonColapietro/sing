@@ -77,11 +77,13 @@ function fmtTime(sec: number): string {
 const PARTS_LABEL = "Inside the studio";
 
 /**
- * The four surfaces this room actually has. The mic card names all four in a
- * single sentence, which is enough to sell the tuner and not enough to explain
- * the rest: the in-tune window, what the trace is good for, and the fact that
- * target practice keeps a record at all were only discoverable after the
- * browser prompt. One line each, before the prompt instead of after it.
+ * The four surfaces this room actually has. The page subtitle names three of
+ * them in one sentence and the mic card gives the fourth one line (kept to
+ * one so its button clears a 375px phone's tab bar), which is enough to sell
+ * the tuner and not enough to explain the rest: the in-tune window, what the
+ * trace is good for, and the fact that target practice keeps a record at all
+ * were only discoverable after the browser prompt. One line each, before the
+ * prompt instead of after it.
  */
 const STUDIO_PARTS = [
   {
@@ -219,7 +221,7 @@ export function StudioClient() {
     <PageShell
       kicker="Studio"
       title="Pitch training studio"
-      subtitle="Real-time pitch feedback for singers: sing into your mic and see the note name, how many cents sharp or flat you are, and an eight-second pitch trace. Free, with no time limit."
+      subtitle="Real-time pitch feedback for singers: the note you sing, how many cents sharp or flat, and an eight-second trace. Free, no time limit."
       actions={
         listening ? (
           <div className="flex flex-col items-end gap-1.5">
@@ -284,7 +286,7 @@ export function StudioClient() {
         <>
           <MicGate
             title="The voice oscilloscope"
-            description="Sing or hum any note and watch it land on the dial in real time — note name, cents sharp or flat, and a scrolling trace of your last eight seconds. Pick a target note to practice locking your pitch."
+            description="Pick a target note to lock onto."
             onEnable={handleStart}
             error={error}
             footer={

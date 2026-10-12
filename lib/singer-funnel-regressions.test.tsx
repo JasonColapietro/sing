@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 
 const visitor = vi.hoisted(() => ({ range: { lowMidi: 48, highMidi: 72 } as { lowMidi?: number; highMidi?: number } }));
+const plan = vi.hoisted(() => ({ pro: false }));
 
 vi.mock("server-only", () => ({}));
 vi.mock("next/og", () => ({
@@ -14,6 +15,10 @@ vi.mock("next/og", () => ({
 vi.mock("@/lib/progress", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/progress")>(),
   useProgress: () => visitor,
+}));
+vi.mock("@/lib/pro", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/lib/pro")>(),
+  useIsPro: () => plan.pro,
 }));
 vi.mock("@/components/pro/gate", () => ({
   ProInlineNudge: ({ children }: { children: ReactNode }) => <p>{children}</p>,
@@ -69,6 +74,35 @@ describe("singer evidence and comparison regressions", () => {
     const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
     const retake = html.match(/<a\b[^>]*>Retake the range test<\/a>/)?.[0];
     expect(retake).toContain('href="/range?compare=olivia-rodrigo"');
+  });
+
+  it("does not send a free singer to a range history the free plan does not show", () => {
+    visitor.range = { lowMidi: 48, highMidi: 72 };
+    const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
+    expect(html).not.toContain("range history");
+    expect(html).toMatch(/<a\b[^>]*href="\/progress"[^>]*>Your saved range<\/a>/);
+  });
+
+  it("keeps the range-history label for Pro, where Progress charts it", () => {
+    visitor.range = { lowMidi: 48, highMidi: 72 };
+    plan.pro = true;
+    try {
+      const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
+      expect(html).toMatch(/<a\b[^>]*href="\/progress"[^>]*>Your range history<\/a>/);
+    } finally {
+      plan.pro = false;
+    }
+  });
+
+  it("names the free guided allowance where the comparison sends singers into practice", () => {
+    visitor.range = { lowMidi: 48, highMidi: 72 };
+    const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
+    expect(html).toContain('href="/warmups"');
+    expect(html).toContain(`${FREE_DAILY_SEC / 60} free minutes a day`);
+    // Free already gets the coach's first two steps a day (PLAN_ROWS "Coach
+    // plan"); what Pro adds is the full plan, not the coach.
+    expect(html).toContain("full coach plan");
+    expect(html).not.toContain("coach plans each day");
   });
 
   it("preserves the first-time visitor's direct range-test path", () => {

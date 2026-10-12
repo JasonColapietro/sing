@@ -27,6 +27,7 @@ async function setup() {
   const localStorage = {
     getItem: vi.fn((key: string) => storage.get(key) ?? null),
     setItem: vi.fn((key: string, value: string) => { storage.set(key, value); }),
+    removeItem: vi.fn((key: string) => { storage.delete(key); }),
   };
   vi.stubGlobal("window", {
     localStorage,
@@ -246,7 +247,78 @@ describe.each<Client>(["account", "pro"])("%s cloud operation fencing", (client)
   });
 });
 
+/** A full log of routine steps, each with about sixteen notes' tallies: past the routes' 400,000-character limit. */
+function tallyHeavyRecord(): ProgressState {
+  const start = Date.UTC(2026, 6, 1, 8);
+  const sessions = Array.from({ length: 500 }, (_, i) => {
+    const date = new Date(start + (499 - i) * 3 * 3_600_000).toISOString();
+    const notes: Record<string, { sec: number; hitSec: number; cents: number; frames: number }> = {};
+    for (let k = 0; k < 16; k++) notes[String(45 + k)] = { sec: 1.84 + k / 10, hitSec: 1.31, cents: 12.7 + k, frames: 110 + k };
+    return { id: `w${i}`, type: "warmup" as const, date, day: date.slice(0, 10), durationSec: 95, score: 82, detail: "Lip trill five-note scale", xp: 12, notes };
+  });
+  return { ...record("unused"), sessions, streak: { current: 1, best: 1, lastDay: sessions[0].day } };
+}
+
+describe("cloud pushes over the routes' size limit", () => {
+  it.each<Client>(["pro", "account"])("%s: sends the record with its oldest tallies trimmed, and keeps them here", async (client) => {
+    const env = await setup();
+    expect(env.progress.importProgress(JSON.stringify(tallyHeavyRecord()))).toBe(true);
+    expect(JSON.stringify(env.progress.getState()).length).toBeGreaterThan(400_000);
+    let pushed: ProgressState | undefined;
+    vi.stubGlobal("fetch", vi.fn(async (_url: string, init: RequestInit = {}) => {
+      const body = init.body ? JSON.parse(String(init.body)) : {};
+      if (body.state) {
+        pushed = body.state;
+        return Response.json({ ok: true, savedAt: "2026-10-10T12:00:00.000Z" });
+      }
+      return Response.json({ state: null, updatedAt: null, savedAt: null });
+    }));
+    await run(client, env);
+    expect(pushed).toBeDefined();
+    expect(JSON.stringify(pushed).length).toBeLessThanOrEqual(400_000);
+    expect(pushed!.sessions.map((s) => s.id)).toEqual(env.progress.getState().sessions.map((s) => s.id));
+    // The newest routine step keeps its tallies; the oldest kept one does not.
+    expect(pushed!.sessions.find((s) => s.id === "w0")!.notes).toBeDefined();
+    expect(pushed!.sessions.at(-1)!.notes).toBeUndefined();
+    // This device still has every tally.
+    const local = env.progress.getState().sessions.filter((s) => s.type === "warmup");
+    expect(local.length).toBeGreaterThan(400);
+    expect(local.every((s) => s.notes !== undefined)).toBe(true);
+  });
+});
+
 describe("Pro background sync", () => {
+  it("keeps a refused automatic sync for the page to show, and clears it on the next success", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-10T12:20:00Z"));
+    const env = await setup();
+    const fetchMock = vi.fn(async (_url: string, init: RequestInit) => {
+      const body = JSON.parse(String(init.body));
+      if (!body.state) return Response.json({ state: null });
+      return Response.json({ error: "That lifetime purchase is no longer active." }, { status: 403 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    // Never synced, so the load-time round trip runs.
+    env.sync.startAutoSync();
+    await vi.waitFor(() => expect(env.sync.lastSyncError()).toBe("That lifetime purchase is no longer active."));
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ state: null, ok: true })));
+    await env.sync.syncNow();
+    expect(env.sync.lastSyncError()).toBeNull();
+  });
+
+  it("does not report a dropped connection as a refusal", async () => {
+    vi.useFakeTimers();
+    const env = await setup();
+    const fetchMock = vi.fn(async () => {
+      throw new TypeError("Failed to fetch");
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    env.sync.startAutoSync();
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    await vi.advanceTimersByTimeAsync(0);
+    expect(env.sync.lastSyncError()).toBeNull();
+  });
+
   it("cancels an already queued push when progress is erased", async () => {
     vi.useFakeTimers();
     const env = await setup();

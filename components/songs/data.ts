@@ -284,6 +284,9 @@ export const SONGS: Song[] = [
     beatsPerBar: 3,
     defaultKeyRootMidi: 60,
     form: "phrase",
+    // The song opens on the verse ("Oh, give me a home…", in the longer
+    // arrangement below); this phrase is the chorus, so its page says so.
+    excerpt: "chorus hook",
     defaultLoops: 4,
     genre: "Folk",
     era: "1800s",
@@ -798,7 +801,7 @@ export const SONGS: Song[] = [
       { midi: 55, startBeat: 21, durBeats: 1, lyric: "'Twas", line: 2 },
       { midi: 60, startBeat: 22, durBeats: 2, lyric: "grace", line: 2 },
       { midi: 64, startBeat: 24, durBeats: 1, lyric: "that", line: 2 },
-      { midi: 64, startBeat: 25, durBeats: 2, lyric: "taught,", line: 2 },
+      { midi: 64, startBeat: 25, durBeats: 2, lyric: "taught", line: 2 },
       { midi: 62, startBeat: 27, durBeats: 1, lyric: "my", line: 2 },
       { midi: 60, startBeat: 28, durBeats: 2, lyric: "heart", line: 2 },
       { midi: 57, startBeat: 30, durBeats: 1, lyric: "to", line: 2 },
@@ -872,7 +875,7 @@ export const SONGS: Song[] = [
     genre: "Spiritual",
     era: "1800s",
     language: "English",
-    tags: ["spiritual", "narrow range", "repeated note"],
+    tags: ["spiritual", "repeated note"],
     notes: [
       { midi: 64, startBeat: 0, durBeats: 1, lyric: "Swing" },
       { midi: 60, startBeat: 1, durBeats: 2, lyric: "low," },

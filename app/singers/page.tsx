@@ -77,7 +77,7 @@ function buildFaq() {
     },
     {
       q: "How do I find my own vocal range?",
-      a: "Sing your lowest comfortable note, then your highest, into your microphone. Suede Sing's free range test detects both and marks them on the same keyboard as every singer in this index, so you can overlay yours against theirs.",
+      a: "Slide down to the lowest note you can hold clearly, then up to the highest, into your microphone. Suede Sing's free range test detects both in about two minutes and marks them on the same keyboard as every singer in this index, so you can overlay yours against theirs.",
     },
   ];
 }

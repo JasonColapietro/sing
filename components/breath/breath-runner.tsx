@@ -5,6 +5,8 @@ import { useFreeCap } from "@/lib/free-cap";
 import { liveStreak } from "@/components/account/save-state";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { useProgress, type Achievement } from "@/lib/progress";
 import { SessionShell } from "@/components/practice/session-shell";
@@ -392,11 +394,18 @@ export function BreathRunner({
  * the path and the workouts grid agree on what finishing something looks like.
  */
 export function BreathDrillSession({
+  capped = false,
   drill,
   preset,
   pitch,
   onExit,
 }: {
+  /**
+   * The free allowance is spent. A drill under way still finishes and logs,
+   * but its results offer no "Play again": that would start a new session
+   * past the cap, which every other way into the room refuses.
+   */
+  capped?: boolean;
   drill: BreathDrillId;
   /** A setting a link asked for, such as a program day's five-count square; it seeds the setup card. */
   preset?: BreathStep;
@@ -447,11 +456,33 @@ export function BreathDrillSession({
         ]}
         achievements={result.logged?.newAchievements ?? []}
         onContinue={onExit}
-        onAgain={() => {
-          setResult(null);
-          setRunId((n) => n + 1);
-        }}
-      />
+        onAgain={
+          capped
+            ? undefined
+            : () => {
+                setResult(null);
+                setRunId((n) => n + 1);
+              }
+        }
+      >
+        {/* Why "Play again" is gone, and when it comes back. On the paper
+            panel, like the warmup summaries' version, because the results
+            screen is dark. */}
+        {capped && (
+          <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
+            That&apos;s today&apos;s {FREE_DAILY_MINUTES} free minutes of guided practice. A
+            fresh {FREE_DAILY_MINUTES} minutes opens at midnight; the pitch studio and the range
+            test stay open now.{" "}
+            <Link
+              href="/pro#buy"
+              className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+            >
+              Pro has no daily limit
+            </Link>
+            .
+          </p>
+        )}
+      </ResultsScreen>
     );
   }
 

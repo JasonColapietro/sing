@@ -221,12 +221,25 @@ function pick(c: Candidate, role: PickRole, why: string): DailyPick {
 }
 
 /**
+ * Whether an exercise can open a session on a cold voice: a foundation-tier
+ * one that is neither a fast run nor a wide leap. The slot is sung first and
+ * labelled as the warm-up, and the order a session warms through
+ * (KIND_SESSION_ORDER) leaves reaches and speed for later.
+ */
+function warmsUp(c: Candidate): boolean {
+  return c.exercise.tier === "beginner" && c.kind !== "runs" && c.kind !== "leaps";
+}
+
+/**
  * The confidence slot: an exercise the singer already sings well, rotated
  * day to day by staleness and the seed so it is not the same favourite every
  * morning. With nothing at two stars yet it falls back to their best scored
- * exercise, and with no history at all to an easy foundation exercise.
+ * exercise, and with no history at all to an easy foundation exercise. Only
+ * exercises that warm a voice up are eligible, however well the singer sings
+ * an advanced run: the slot opens the session.
  */
-function confidencePick(pool: Candidate[]): DailyPick | null {
+function confidencePick(all: Candidate[]): DailyPick | null {
+  const pool = all.filter(warmsUp);
   const strong = pool.filter((c) => c.avg !== null && c.avg >= CONFIDENT_AVG);
   if (strong.length > 0) {
     const c = strong.reduce((best, c) => (rotation(c) > rotation(best) ? c : best));
@@ -237,9 +250,8 @@ function confidencePick(pool: Candidate[]): DailyPick | null {
     const c = scored.reduce((best, c) => (c.avg! > best.avg! ? c : best));
     return pick(c, "confidence", `Your best lately (${Math.round(c.avg!)}%), to warm up on.`);
   }
-  const easy = pool.filter((c) => c.exercise.tier === "beginner");
-  if (easy.length === 0) return null;
-  const c = easy.reduce((best, c) => (c.jitter > best.jitter ? c : best));
+  if (pool.length === 0) return null;
+  const c = pool.reduce((best, c) => (c.jitter > best.jitter ? c : best));
   return pick(c, "new", "An easy one to start with.");
 }
 

@@ -13,11 +13,12 @@ import {
 import {
   ATLAS_VOICE_COUNT,
   FREE_EXERCISES,
+  FREE_PROGRAM_COUNT,
   PRO_EXERCISES,
   PRO_PACK_COUNT,
+  PRO_PROGRAM_COUNT,
   SINGER_COUNT,
   SONG_COUNT,
-  GLOSSARY_COUNT,
   TOTAL_CHAPTERS,
   TOTAL_WORDS,
 } from "./pro-inventory";
@@ -431,7 +432,6 @@ export const PLAN_ROWS: Array<{
     free: "5 minutes a day",
     pro: "No daily limit",
   },
-  { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
   { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis per take" },
   // Each song's best score and score trend are free (the song summary and the
@@ -450,6 +450,13 @@ export const PLAN_ROWS: Array<{
     pro: `${FREE_EXERCISES} + ${PRO_EXERCISES} in ${PRO_PACK_COUNT} pro packs`,
   },
   { label: "Coach plan", free: "First two steps each day", pro: "Full adaptive plan, daily" },
+  // Two programs need Pro after their free first week (lib/programs.ts), and
+  // a table headed "no asterisks" has to say so before day 8 does.
+  {
+    label: "Programs",
+    free: `${FREE_PROGRAM_COUNT}, plus week 1 of ${PRO_PROGRAM_COUNT} more`,
+    pro: `All ${FREE_PROGRAM_COUNT + PRO_PROGRAM_COUNT}`,
+  },
   { label: "Vocal analytics", free: "Session scores", pro: "Per-note accuracy and trends" },
   // The record keeps the latest MAX_RANGE_HISTORY tests and MAX_SESSIONS
   // sessions (lib/progress-shape.ts), Pro included, and a daily singer passes
@@ -482,5 +489,4 @@ export const PLAN_ROWS: Array<{
   // so — the single largest free asset in the product, invisible on the page
   // whose whole job is to argue that free is generous.
   { label: `Famous voices (all ${SINGER_COUNT})`, free: "Every singer page", pro: "+ the Atlas chapters behind them" },
-  { label: `Glossary (${GLOSSARY_COUNT} terms)`, free: "Included", pro: "Included" },
 ];

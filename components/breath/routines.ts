@@ -65,17 +65,20 @@ export const FARINELLI_START_N = 4;
  * What one sustain attempt costs in wall-clock time.
  *
  * There is no arithmetic for this one — the attempt is over when the singer
- * runs out of air. Twenty-five seconds is the middle of our own benchmark table
- * (10s fair, 20s good, 30s strong, 45s excellent) plus the couple of seconds
- * between arming and the first sound, which is close enough for a "~7 min" on a
- * card and honest about being an estimate.
+ * ends the note. Twenty-five seconds is the middle of the old length table
+ * (SUSTAIN_BENCHMARKS_SEC: 10, 20, 30, 45) plus the couple of seconds between
+ * arming and the first sound, which is close enough for a "~7 min" on a card
+ * and honest about being an estimate.
  */
 /**
  * The sustain ladder, in one place.
  *
  * These were inline literals in `sustain-test.tsx` (the benchmark words and the
  * printed "10s fair · 20s ..." line) and again in `store.ts` (the star cuts),
- * and `contracts/suede-vocal.ts` restated them a third time. A contract that
+ * and `contracts/suede-vocal.ts` restated them a third time. The test no
+ * longer prints or grades by the benchmark ladder: it asks the singer to end
+ * the note while it is still easy, and a length grade rewarded the squeeze.
+ * The ladder stays exported because the contract publishes it (benchmarksSec). A contract that
  * copies its values instead of importing them regenerates byte-for-byte while
  * publishing stale numbers to its consumers, which is the drift it exists to
  * detect — the same defect the star thresholds had before `lib/stars.ts`.
@@ -125,7 +128,7 @@ export const BREATH_ROUTINES: BreathRoutine[] = [
     id: "quick",
     name: "Quick breath",
     tagline:
-      "Three minutes to settle: one round of the square, the climbing count, and a single sustain.",
+      "Three minutes to settle: a minute around the square, the climbing count, and a single sustain.",
     steps: [
       { drill: "box", side: 4, minutes: 1 },
       { drill: "farinelli", cap: 8 },

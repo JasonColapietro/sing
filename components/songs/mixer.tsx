@@ -252,7 +252,7 @@ export function Mixer({
               </Button>
             )
           ) : (
-            <LinkButton href="/range?mode=range" variant="ghost" size="sm">
+            <LinkButton href="/range?mode=range#start" variant="ghost" size="sm">
               Take the range test to fit
             </LinkButton>
           )}

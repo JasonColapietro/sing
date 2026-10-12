@@ -331,6 +331,15 @@ export function SessionSummary({
         {streak > 0 && (
           <p className="mt-2 text-sm text-mut">Sing tomorrow to make it {streak + 1}.</p>
         )}
+        {/* What this score does for tomorrow, on every plan. Today's three
+            is planned from the free catalogue, so a pack exercise's score is
+            not read; and the line is left out when the today's-three card
+            below already says it. */}
+        {EXERCISES.some((e) => e.id === ex.id) && !(inPlan && !nextDaily) && (
+          <p className="mt-1 text-sm text-mut">
+            Tomorrow&apos;s three reads your recent scores, this one included.
+          </p>
+        )}
         {newAchievements.length > 0 && (
           <ul className="mt-4 space-y-2">
             {newAchievements.map((a) => (
@@ -346,9 +355,9 @@ export function SessionSummary({
 
       <div>
         <ProCrescendoNudge
-          line="Pro plans tomorrow's warmup from this score"
-          title="Make tomorrow's warmup count"
-          body="Pro plans tomorrow's session from this score — weak notes first."
+          line="Pro shows the full daily coach plan, not just its first two steps"
+          title="See the whole plan"
+          body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, this one included. Pro adds the full daily coach plan, per-note accuracy over time and no daily limit."
           context="Warmups"
         />
       </div>

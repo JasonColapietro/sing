@@ -1,6 +1,7 @@
 "use client";
 
 import { getState, mergeRemoteProgress, type ProgressState } from "./progress";
+import { fitForCloud } from "./progress-cloud-fit";
 import {
   assertProgressCloudGeneration,
   captureProgressCloudGeneration,
@@ -106,7 +107,9 @@ export async function backupNow(): Promise<string> {
 
 async function pushBackup(generation: string): Promise<string> {
   assertProgressCloudGeneration(generation);
-  const state = getState();
+  // The route has the same size limit as Pro sync; the oldest sessions'
+  // per-note tallies stay on this device rather than failing the backup.
+  const state = fitForCloud(getState());
   assertProgressCloudGeneration(generation);
   const { savedAt } = await call<{ ok: boolean; savedAt: string }>({
     method: "PUT",

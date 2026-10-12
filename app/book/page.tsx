@@ -9,8 +9,10 @@ import {
 } from "@/lib/book-data";
 import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { PROGRAMME_PART } from "@/lib/programme-exit-tests";
 import { SITE_URL } from "@/lib/site";
 import { BookCta } from "@/components/book/cta";
+import { BookProgramNote } from "@/components/book/program-link";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -146,6 +148,10 @@ export default function BookPage() {
                 </li>
               ))}
             </ol>
+            {/* The plan this part describes, run day by day in the app. */}
+            {part.part === PROGRAMME_PART && (
+              <BookProgramNote scope="plan" className="mt-4 max-w-2xl text-sm text-mut" />
+            )}
           </Card>
         ))}
 

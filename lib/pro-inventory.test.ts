@@ -5,17 +5,21 @@ import { SING_GLOSSARY_TERMS } from "./glossary";
 import { SINGERS } from "./singers-data";
 import { SONGS, PRO_SONGS } from "@/components/songs/data";
 import { ALL_EXERCISES, EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
-import { PRO_PERKS } from "./pro";
+import { PLAN_ROWS, PRO_PERKS } from "./pro";
+import { FREE_WEEKS, PROGRAMS } from "./programs";
 import { PRO_FAQ } from "./pro-shared";
 import {
   ATLAS_VOICE_COUNT,
   BOOKS,
   FREE_CHAPTERS,
   FREE_EXERCISES,
+  FREE_PROGRAM_COUNT,
   GLOSSARY_COUNT,
   MELODY_COUNT,
   PRO_EXERCISES,
   PRO_PACK_COUNT,
+  PRO_PROGRAM_COUNT,
+  PRO_PROGRAM_NAMES,
   SINGER_COUNT,
   SONG_COUNT,
   TOTAL_CHAPTERS,
@@ -78,6 +82,21 @@ describe("pro inventory matches what actually ships", () => {
   it("counts the singers and the glossary", () => {
     expect(SINGER_COUNT).toBe(SINGERS.length);
     expect(GLOSSARY_COUNT).toBe(SING_GLOSSARY_TERMS.length);
+  });
+
+  it("counts the programs on both sides of the paywall", () => {
+    // The comparison table promises "no asterisks", so the two programs that
+    // need Pro after week 1 have to be named and counted from the real list.
+    expect(FREE_PROGRAM_COUNT).toBe(PROGRAMS.filter((p) => !p.pro).length);
+    expect(PRO_PROGRAM_COUNT).toBe(PROGRAMS.filter((p) => p.pro).length);
+    expect([...PRO_PROGRAM_NAMES]).toEqual(
+      PROGRAMS.filter((p) => p.pro).map((p) => p.name),
+    );
+    // The copy says "week 1" is free.
+    expect(FREE_WEEKS).toBe(1);
+    const row = PLAN_ROWS.find((r) => r.label === "Programs")!;
+    expect(row.free).toContain(String(FREE_PROGRAM_COUNT));
+    expect(row.pro).toContain(String(FREE_PROGRAM_COUNT + PRO_PROGRAM_COUNT));
   });
 });
 

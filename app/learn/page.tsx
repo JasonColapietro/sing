@@ -74,7 +74,7 @@ const WEEK = [
   {
     day: "Day 5",
     focus: "Song",
-    body: "Practice one verse or chorus. Slow the difficult phrase, choose breaths, and transpose if the melody sits outside your comfortable band.",
+    body: "Practice one verse or chorus. Slow the difficult phrase and choose breaths. Songs open fitted to the range you measured on Day 1; shift the key a semitone at a time if the melody still sits outside your comfortable band.",
     links: [{ href: "/songs", label: "Song practice" }],
   },
   {
@@ -89,8 +89,11 @@ const WEEK = [
   {
     day: "Day 7",
     focus: "Rest and review",
-    body: "Rest from demanding singing. Review the week's scores and recordings, then choose one skill—not five—to carry into the next week.",
-    links: [{ href: "/progress", label: "Practice progress" }],
+    body: "Rest from demanding singing. Review the week's scores and recordings, then choose one skill—not five—to carry into the next week, or start a multi-week program that plans the next weeks day by day.",
+    links: [
+      { href: "/progress", label: "Practice progress" },
+      { href: "/programs", label: "Multi-week practice programs" },
+    ],
   },
 ] as const;
 

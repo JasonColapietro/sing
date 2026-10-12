@@ -30,7 +30,7 @@ describe("homepage famous voices", () => {
     [
       "reba-mcentire",
       "Mezzo-soprano",
-      "Reba McEntire's reviewed sources describe a peak-career span of about three octaves but do not establish a definitive classical voice type.",
+      "Reba McEntire's own lesson describes a peak-career span of about three octaves, wider than this catalog's listed span, but gives no endpoints; the reviewed sources do not establish a definitive classical voice type.",
       "E3–F5",
     ],
     [
@@ -60,6 +60,22 @@ describe("homepage famous voices", () => {
     expect(card).toContain(evidenceCopy);
     expect(card).toContain(`Reported reference span: ${range}`);
     expect(card).not.toContain(`>${catalogType}<`);
+  });
+
+  it("labels an unreviewed voice type as the catalog's, as its profile does", () => {
+    const html = renderToStaticMarkup(<FamousVoices />);
+    const card = (slug: string) =>
+      html.match(new RegExp(`href="/singers/${slug}"[^>]*>([\\s\\S]*?)</a>`))?.[1] ?? "";
+
+    // Pending review: the profile calls this field "Catalog label".
+    expect(isSingerReviewed("freddie-mercury")).toBe(false);
+    expect(card("freddie-mercury")).toContain(">Catalog label: Baritone<");
+    // Reviewed with no evidence sentence on the card: the label stands bare.
+    expect(isSingerReviewed("adele")).toBe(true);
+    expect(card("adele")).toContain(">Mezzo-soprano<");
+    expect(card("adele")).not.toContain("Catalog label");
+    // The section says most of what it shows is still awaiting review.
+    expect(html).toContain("still await individual evidence review");
   });
 
   it("stacks reviewed rows so the evidence sentence gets the card's full width", () => {

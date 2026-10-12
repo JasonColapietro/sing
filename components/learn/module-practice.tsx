@@ -26,7 +26,7 @@ import { Card, LinkButton, SectionLabel } from "@/components/ui";
 export const MEASUREMENT_WORDS: Record<string, string> = {
   phonationSeconds:
     "how long your voice sounded, in seconds of confidently voiced time",
-  rangeExtremes: "your lowest and highest comfortable notes",
+  rangeExtremes: "the lowest and highest clear notes the range test heard you hold in one session",
   sustainSeconds:
     "how long one sustain lasts, in seconds. The timer reads loudness, so a steady hiss counts as well as a sung note",
   // The scoring window is not the definition of in tune: it passes a phrase

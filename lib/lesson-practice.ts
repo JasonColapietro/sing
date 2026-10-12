@@ -90,7 +90,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
 
   // Stage 2 · Steady Tone
   "v-l2-m1": {
-    basis: measured("sustainSeconds"),
+    // Straw scale is a pitched pattern scored by the warm-up room; the
+    // sustain timer lives in the breath room and never sees this drill.
+    basis: measured("scorePercent"),
     companion: { room: "warmups", param: "exercise", value: "straw-scale" },
     studies: ["straw-scale", "lip-trill-scale"],
     readings: ["breath", "stamina-and-health"],
@@ -367,7 +369,7 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     // lead is not two measurable parts.
     basis: selfCheck(
       "simultaneousVoices",
-      "That you rehearsed the study and compared takes. The harmony half cannot be measured: the pitch detector hears one voice at a time.",
+      "That you rehearsed the study and compared takes. A harmony, if you add one, cannot be measured: the pitch detector hears one voice at a time.",
     ),
     companion: { room: "recorder" },
     studies: ["amazing-grace-full", "home-on-the-range-full"],

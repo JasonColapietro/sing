@@ -301,6 +301,12 @@ export function MelodyEchoGame({
             {melody.map((t, i) => {
               const d = detected[i];
               const hit = d !== null && midiMatches(d, t, octaveAgnostic);
+              // When any octave counts the lanes above fold the sung note to
+              // the target's octave, so the pill names pitch classes only,
+              // as pitch match does; otherwise a higher voice's F4 against a
+              // D3 read as fifteen semitones off.
+              const label = (m: number) =>
+                octaveAgnostic ? midiToLabel(m).replace(/-?\d+$/, "") : midiToLabel(m);
               return (
                 <span
                   key={i}
@@ -311,9 +317,9 @@ export function MelodyEchoGame({
                   }}
                 >
                   {hit ? <CheckIcon /> : <CrossIcon />}
-                  {midiToLabel(t)}
+                  {label(t)}
                   {!hit && d !== null && (
-                    <span className="text-[var(--s-dim)]">you sang {midiToLabel(d)}</span>
+                    <span className="text-[var(--s-dim)]">you sang {label(d)}</span>
                   )}
                   {!hit && d === null && <span className="text-[var(--s-dim)]">missed</span>}
                 </span>

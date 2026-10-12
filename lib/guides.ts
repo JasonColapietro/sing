@@ -49,7 +49,7 @@ export const RANGE_GUIDE: GuideContent = {
   howTo: {
     name: "How to test your vocal range",
     intro:
-      "The test runs in the browser with your microphone. It takes about two minutes, and nothing you sing is uploaded or recorded.",
+      "The test runs in the browser with your microphone. It takes about two minutes, and no audio is uploaded or recorded.",
     totalTime: "PT2M",
     steps: [
       {
@@ -84,7 +84,7 @@ export const RANGE_GUIDE: GuideContent = {
     points: [
       "Use singer comparisons as reference, not a target or a grade; a reported span may combine notes from different recordings and conditions",
       "Stop rather than push past discomfort when a note feels out of reach. The test cannot tell you why a note is difficult or prescribe a technique to reach it",
-      "Retest after several practice sessions instead of chasing a larger number in the same sitting",
+      "Retest after a few weeks of regular practice rather than chasing a larger number in the same sitting; each test asks something of the top of your voice",
       "Judge useful range by the notes you can sing clearly and repeatably, not by one extreme sound",
     ],
   },
@@ -266,7 +266,7 @@ export const WARMUPS_GUIDE: GuideContent = {
       note: "Build the support the warmup assumes.",
     },
     {
-      href: "/range?mode=range",
+      href: "/range?mode=range#start",
       label: "Range test",
       note: "Test warm for a number that reflects your real range.",
     },
@@ -573,7 +573,7 @@ export const SONGS_GUIDE: GuideContent = {
       "Work the two bars either side of a register transition rather than the phrase as a whole",
       "Try the same song a semitone up and down to find where the melody sits best against your passaggio",
       "Use the take recorder's A/B compare to check whether a change actually improved anything",
-      "Pro tracks pitch accuracy per note across sessions, so a phrase's history is visible rather than remembered",
+      "Each song keeps your personal best and a score trend on the free plan; Pro adds every note you sing to a per-note accuracy chart, so a weak note becomes a trend rather than a hunch",
     ],
   },
   faq: [
@@ -601,7 +601,7 @@ export const SONGS_GUIDE: GuideContent = {
   start: { label: "Pick a song to sing", href: "/songs#content", note: GUIDED_CAP_NOTE },
   related: [
     {
-      href: "/range?mode=range",
+      href: "/range?mode=range#start",
       label: "Range test",
       note: "Once your range is saved, songs open fitted to it.",
     },
@@ -638,7 +638,7 @@ export const RECORDER_GUIDE: GuideContent = {
   body: [
     "The first playback is uncomfortable for nearly everyone, and the discomfort is not about quality. Your recorded voice lacks the low-frequency reinforcement your skull adds when you speak or sing, so it sounds thinner and higher than the version you have heard your whole life. That reaction fades with exposure and it says nothing about the singing.",
     "What recording gives you that live feedback cannot is comparison over time. A take from four weeks ago against one from today is evidence, and it usually shows improvement that felt invisible day to day.",
-    "Takes here stay on your device — nothing is uploaded. You can play any two back to back to compare them directly, which is far more informative than remembering how the last one felt.",
+    "Takes here stay on your device, and no audio is uploaded. You can play any two back to back to compare them directly, which is far more informative than remembering how the last one felt.",
   ],
   howTo: {
     name: "How to record and review a vocal take",
@@ -921,7 +921,7 @@ export const STUDIO_GUIDE: GuideContent = {
       "Sustain long notes and watch for a slow sag; that is often a support problem showing up as a pitch problem",
       "Sing through your passaggio slowly and watch what the trace does at the transition",
       "Check whether accuracy degrades with volume — many singers go sharp when they push",
-      "Pro keeps per-note accuracy across sessions, so a weak note becomes a trend rather than a hunch",
+      "Pro charts per-note accuracy from your scored warmups and songs, so a weak note becomes a trend rather than a hunch",
     ],
   },
   faq: [
@@ -943,7 +943,7 @@ export const STUDIO_GUIDE: GuideContent = {
     },
     {
       q: "Is my microphone audio recorded or uploaded?",
-      a: "No. All pitch analysis happens on your device, and nothing is sent to a server or stored unless you explicitly record a take in the recorder — and those stay on your device too.",
+      a: "No. All pitch analysis happens on your device, and no audio is sent to a server or stored unless you explicitly record a take in the recorder — and those takes stay on your device too. Pro's cloud sync backs up progress numbers, never audio.",
     },
   ],
   start: { label: "Sing a note and see its pitch", href: "/studio#content" },
@@ -959,7 +959,7 @@ export const STUDIO_GUIDE: GuideContent = {
       note: "Fix the target if you can't hear it, not just the production.",
     },
     {
-      href: "/range?mode=range",
+      href: "/range?mode=range#start",
       label: "Range test",
       note: "Find the edges the studio helps you strengthen.",
     },
@@ -991,7 +991,7 @@ export const ANALYZE_GUIDE: GuideContent = {
   howTo: {
     name: "How to read your voice on a spectrogram",
     intro:
-      "The analysis runs in your browser on your own device. Nothing is uploaded, and nothing is recorded unless you use the take recorder separately.",
+      "The analysis runs in your browser on your own device. No audio is uploaded, and none is recorded unless you use the take recorder separately.",
     steps: [
       {
         title: "Allow the microphone and sing a steady note",
@@ -1078,7 +1078,7 @@ export const ANALYZE_GUIDE: GuideContent = {
       note: "Record the take, then come back and look at it.",
     },
     {
-      href: "/range?mode=range",
+      href: "/range?mode=range#start",
       label: "Range test",
       note: "Find the register transitions the spectrogram shows.",
     },

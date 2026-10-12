@@ -193,14 +193,17 @@ export default function SiteFooter() {
             {/* Both pages were already live and neither was linked from
                 anywhere on the site. An app that asks for a microphone should
                 put its policy one click from every page. */}
-            {/* Policy lives on the org site. Linked directly: /privacy and
-                /terms here are 308s kept for inbound links only, and a <Link>
-                to them cost a hop and a cross-origin RSC prefetch. */}
-            <a href="https://suedeai.org/voice/privacy/" className={linkClass}>
+            {/* The company policy and terms cover suedeai.ai and its
+                subdomains, including Stripe purchases, so they govern this
+                site. suedeai.org/voice/* is the mobile app's policy. /privacy
+                and /terms here still 308 there for the app-store and Chrome
+                Web Store listings that declared them. Plain anchors: a <Link>
+                to another origin buys nothing but a prefetch. */}
+            <a href="https://suedeai.org/privacy/" className={linkClass}>
               Privacy
             </a>
             <span aria-hidden>·</span>
-            <a href="https://suedeai.org/voice/terms/" className={linkClass}>
+            <a href="https://suedeai.org/terms/" className={linkClass}>
               Terms
             </a>
             <span aria-hidden>·</span>

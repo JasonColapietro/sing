@@ -39,6 +39,26 @@ export function voiceTestModeUrl(href: string, mode: VoiceTestMode): URL {
   return url;
 }
 
+function scrollToStart() {
+  document.getElementById("start")?.scrollIntoView({ block: "start" });
+}
+
+/**
+ * Change modes, and when that opens the range test, bring its start button
+ * into view. The intro tells a visitor to choose Range test, and on a 375px
+ * phone the button it reveals would otherwise sit under the bottom tab bar.
+ * The pitch meter's "try the range test" link goes through here too.
+ */
+export function switchVoiceTestMode(
+  current: VoiceTestMode,
+  next: VoiceTestMode,
+  onModeChange: (mode: VoiceTestMode) => void,
+  scroll: () => void = scrollToStart,
+) {
+  onModeChange(next);
+  if (next === "range" && current !== "range") scroll();
+}
+
 function VoiceTestFromLocation() {
   const params = useSearchParams();
   const mode = voiceTestMode(params);
@@ -73,12 +93,14 @@ function VoiceTestContent({
         {/* #start is where "Start singing" links land: the tool is under
             the fold on a phone, and a singer who already pressed start should
             not have to scroll past the headline to find the button again.
-            scroll-mt clears the sticky header. */}
+            The page's scroll-padding-top (app/globals.css) already clears the
+            sticky header; a scroll-mt here added 80px to it and left the start
+            button under a 375px phone's tab bar. */}
         <div
           id="start"
           role="tablist"
           aria-label="Voice test mode"
-          className="inline-flex scroll-mt-20 rounded-full border border-line bg-panel p-1"
+          className="inline-flex rounded-full border border-line bg-panel p-1"
         >
           {MODES.map((m) => (
             <button
@@ -86,7 +108,9 @@ function VoiceTestContent({
               type="button"
               role="tab"
               aria-selected={mode === m.id}
-              onClick={() => onModeChange?.(m.id)}
+              onClick={() =>
+                onModeChange && switchVoiceTestMode(mode, m.id, onModeChange)
+              }
               disabled={!onModeChange}
               className={`min-h-11 rounded-full px-5 text-sm font-bold transition-colors ${
                 mode === m.id ? "bg-ink text-bg" : "text-mut hover:text-ink"
@@ -110,12 +134,9 @@ function VoiceTestContent({
         <PitchMeter
           onTryRange={
             onModeChange &&
-            (() => {
-              onModeChange("range");
-              // The range intro is shorter than the meter, so without this
-              // the singer is left scrolled past it.
-              document.getElementById("start")?.scrollIntoView({ block: "start" });
-            })
+            // The range intro is shorter than the meter, so without the
+            // scroll the singer is left scrolled past it.
+            (() => switchVoiceTestMode("pitch", "range", onModeChange))
           }
         />
       ) : (

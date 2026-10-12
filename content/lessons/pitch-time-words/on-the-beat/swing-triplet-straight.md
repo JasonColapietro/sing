@@ -26,7 +26,7 @@ Open the practice material on this page and choose Row Row Row Your Boat or Ode 
 
 ### Set a safe baseline
 
-Choose the included Ode to Joy phrase. Hear it at Half speed, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.
+Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.

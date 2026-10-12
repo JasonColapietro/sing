@@ -41,6 +41,13 @@ const LABELS: Record<Answer, string> = {
   same: "Same",
 };
 
+/** The answer inside a sentence: "it was the same", not "it was same". */
+const SAID: Record<Answer, string> = {
+  higher: "higher",
+  lower: "lower",
+  same: "the same",
+};
+
 export function HigherLowerGame({
   difficulty,
   onExit,
@@ -197,11 +204,11 @@ export function HigherLowerGame({
           <span className="text-[var(--s-dim)]">Answer with the arrow keys for speed.</span>
         ) : answered === correctAnswer ? (
           <span style={{ color: "var(--s-ok)" }}>
-            Correct — it was {LABELS[correctAnswer].toLowerCase()}.
+            Correct — it was {SAID[correctAnswer]}.
           </span>
         ) : (
           <span className="text-[var(--s-mut)]">
-            It was {LABELS[correctAnswer].toLowerCase()}.
+            It was {SAID[correctAnswer]}.
           </span>
         )}
       </div>

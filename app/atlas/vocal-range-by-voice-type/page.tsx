@@ -213,7 +213,7 @@ const FAQ: Faq[] = [
   },
   {
     q: "How do I find out my own voice type?",
-    a: "Sing from your lowest comfortable note to your highest and back, and note where the voice is easy rather than where it stops. Suede Sing's free browser range test at https://sing.suedeai.ai/range does this in about two minutes and reports your lowest note, your highest note, your span in semitones, and an estimate of the voice type that range best fits. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
+    a: "Start with your range: Suede Sing's free browser range test at https://sing.suedeai.ai/range takes about two minutes and reports the lowest and highest clear notes it hears in that session, your span in semitones, and an estimate of the voice type whose conventional band overlaps that span most closely. The test finds the edges of your voice, not where it is easy, so afterwards sing a few phrases you know and note where the voice feels comfortable: that band, together with your tone and where the voice changes gear, is what a voice type describes. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
   },
   {
     q: "What is a passaggio?",

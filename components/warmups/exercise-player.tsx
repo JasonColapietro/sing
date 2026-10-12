@@ -208,12 +208,19 @@ export const ANY_OCTAVE_NOTE = "Any octave counts";
  * the step completes itself after `reps` reps, sung or skipped, and the header
  * counts reps instead of ladder height; the runner owns the session, so the
  * Exit button goes away and End becomes "Finish step". Without bounds the
- * exercise is the endless walk a deep link still opens.
+ * exercise is the endless walk a plain deep link still opens.
  */
 export interface ExerciseBounds {
   reps: number;
   stepIndex: number;
   stepCount: number;
+  /**
+   * A set rep count on one exercise outside any routine, such as a program
+   * row's `?exercise=<id>&reps=<n>` link. It still finishes itself after
+   * `reps`, but the header names the reps rather than "Step 1 of 1", and End
+   * stays End.
+   */
+  standalone?: boolean;
 }
 
 export function ExercisePlayer({
@@ -252,6 +259,14 @@ export function ExercisePlayer({
   // A routine step on a "down" ladder heads down and stays down (walkRep).
   const descends = ex.ladder === "down";
   const bounded = bounds !== undefined;
+  // Inside a routine: the labels speak of steps. A standalone set count does not.
+  const inRoutine = bounded && !bounds.standalone;
+  const endLabel = inRoutine ? "Finish step" : "End";
+  const stepLine = !bounds
+    ? null
+    : bounds.standalone
+      ? `${bounds.reps} ${bounds.reps === 1 ? "rep" : "reps"}`
+      : `Step ${bounds.stepIndex + 1} of ${bounds.stepCount}`;
   const eitherOctave = scoresEitherOctave(range);
 
   const { mode, guidePct, click } = useWarmupPrefs();
@@ -547,12 +562,18 @@ export function ExercisePlayer({
         // the raw clock — see lib/audio/latency.
         const drawSec = Math.min(patternSec, Math.max(0, elapsed - plan.singAt - outputLag));
         // When either octave counts, draw the voice in the octave the scorer
-        // credits it to; in a gap, keep folding toward the last target.
+        // credits it to: the octave leading the rep once one leads
+        // (RepScorer.octaveShift), so a top note dropped an octave is drawn
+        // where it was sung; before that, folded toward the target (in a
+        // gap, toward the last target).
         let midiFloat = sungMidi;
         if (eitherOctave && sungMidi !== null) {
           const target = targetMidiAt(segsRef.current, drawSec);
           if (target !== null) foldTargetRef.current = target;
-          midiFloat = foldToOctaveOf(sungMidi, foldTargetRef.current);
+          midiFloat =
+            scorer.octaveShift !== null
+              ? sungMidi - 12 * scorer.octaveShift
+              : foldToOctaveOf(sungMidi, foldTargetRef.current);
         }
         setCursorSec(drawSec);
         setLiveMidiFloat(midiFloat);
@@ -882,7 +903,7 @@ export function ExercisePlayer({
         </SessionButton>
         <span className="flex-1" />
         <SessionButton
-          label={bounds ? "Finish step" : "End"}
+          label={endLabel}
           onClick={endExercise}
           tone="danger"
         >
@@ -895,10 +916,10 @@ export function ExercisePlayer({
   const sessionView = (
     <SessionShell
       title={ex.title}
-      subtitle={bounds ? `Step ${bounds.stepIndex + 1} of ${bounds.stepCount}` : "Endless ladder"}
+      subtitle={stepLine ?? "Endless ladder"}
       progress={progressPct}
       onClose={endExercise}
-      closeLabel={bounds ? "Finish step" : "Exit exercise"}
+      closeLabel={inRoutine ? "Finish step" : "Exit exercise"}
       topRight={
         <div className="text-right leading-tight">
           <div className="font-mono text-[11px] text-[var(--s-dim)]">
@@ -995,9 +1016,9 @@ export function ExercisePlayer({
   const pageView = (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        {bounds ? (
+        {inRoutine ? (
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Step {bounds.stepIndex + 1} of {bounds.stepCount}
+            {stepLine}
           </span>
         ) : (
           <button
@@ -1195,7 +1216,7 @@ export function ExercisePlayer({
           <span className="flex-1" />
 
           <Button variant="rec" size="sm" onClick={endExercise}>
-            <IconStop /> {bounds ? "Finish step" : "End exercise"}
+            <IconStop /> {inRoutine ? "Finish step" : "End exercise"}
           </Button>
         </div>
 

@@ -161,8 +161,10 @@ export default function AnalyzeClient() {
       {!listening && !error && (
         <Card className="mb-6">
           <p className="text-sm text-mut">
-            Nothing is uploaded. The microphone is read in your browser, the
-            analysis runs on your device, and no audio leaves it.
+            {/* About the audio, not "nothing": the analyzer logs sessions,
+                and a Pro member's progress record syncs (lib/sync.ts). */}
+            Your audio is never uploaded. The microphone is read in your
+            browser and the analysis runs on your device.
           </p>
         </Card>
       )}

@@ -263,6 +263,26 @@ describe("published glossary claims", () => {
     expect(byTerm("Voice type").where).toMatch(/estimate/);
   });
 
+  /**
+   * The records page lost its whistle section, so the entry points at the
+   * singers chart, which draws a dot at the high (right-hand) end of each bar
+   * with a whistle register listed (WHISTLE_DOT_CLASS). The atlas says most
+   * voices never engage whistle, not that they lack one.
+   */
+  it("points whistle register at the chart that marks it", () => {
+    const entry = byTerm("Whistle register");
+    expect(entry.href).toBe("/singers");
+    expect(entry.where).toMatch(/high end of a bar/);
+    expect(entry.where).not.toMatch(/records page|most voices never have/);
+  });
+
+  /** Twang buys loudness through brightness, as atlas ch. 6 teaches belters. */
+  it("does not deny twang's loudness", () => {
+    const definition = byTerm("Twang").definition;
+    expect(definition).not.toMatch(/rather than volume/);
+    expect(definition).toMatch(/louder without more breath pressure/);
+  });
+
   it("states the cycle-dose arithmetic correctly", () => {
     // A minute at 440 Hz is 440 x 60 cycles; at 110 Hz, a quarter of that.
     expect(byTerm("Vocal dose").where).toContain((440 * 60).toLocaleString("en-US"));

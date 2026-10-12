@@ -336,3 +336,43 @@ describe("cited floors", () => {
     ).toEqual([]);
   });
 });
+
+/**
+ * The soprano note prints two counts about this library as fact, on an
+ * indexable hub, and /singers/records publishes the table that checks the
+ * first one. "Most of the extreme top figures" survived round 1 of the audit
+ * while the records page showed 7 sopranos of 15; these assertions mirror
+ * that table's cut (top 15 by highest endpoint, plus ties) so the sentence
+ * cannot drift from it again.
+ */
+describe("soprano note counts", () => {
+  const countBy = (rows: typeof SINGERS) => {
+    const counts = new Map<string, number>();
+    for (const s of rows) counts.set(s.voiceType, (counts.get(s.voiceType) ?? 0) + 1);
+    return counts;
+  };
+
+  it("says sopranos hold more of the top figures than any other category, which the records cut bears out", () => {
+    expect(VOICE_TYPE_NOTES.Soprano.body).toContain(
+      "more of the extreme top figures than any other category",
+    );
+    const sorted = [...SINGERS].sort((a, b) => b.highMidi - a.highMidi);
+    const cut = sorted[14].highMidi;
+    const top = sorted.filter((s, i) => i < 15 || s.highMidi === cut);
+    const counts = countBy(top);
+    const soprano = counts.get("Soprano") ?? 0;
+    const others = [...counts].filter(([type]) => type !== "Soprano");
+    for (const [type, n] of others) {
+      expect(soprano, `${type} has ${n} of the top figures, sopranos ${soprano}`).toBeGreaterThan(n);
+    }
+  });
+
+  it("says sopranos hold most of the whistle-register entries, which the flags bear out", () => {
+    expect(VOICE_TYPE_NOTES.Soprano.body).toContain("most of the whistle-register entries");
+    const whistle = SINGERS.filter((s) => s.whistle);
+    const soprano = whistle.filter((s) => s.voiceType === "Soprano").length;
+    expect(soprano * 2, `${soprano} of ${whistle.length} whistle entries are sopranos`).toBeGreaterThan(
+      whistle.length,
+    );
+  });
+});

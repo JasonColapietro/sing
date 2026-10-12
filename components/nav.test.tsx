@@ -38,12 +38,14 @@ function landmark(html: string, label: string): string {
 
 describe("main navigation current location", () => {
   it.each([
+    // Sing's link lands on the range page's start button (#start); it is
+    // still current on /range itself and inside the rooms it owns.
     ["/", "/", "page"],
-    ["/range", "/range", "page"],
+    ["/range", "/range#start", "page"],
     ["/learn/voice", "/warmups", "location"],
     ["/glossary/tessitura", "/warmups", "location"],
     ["/singers/olivia-rodrigo", "/songs", "location"],
-    ["/recorder", "/range", "location"],
+    ["/recorder", "/range#start", "location"],
   ])("announces %s through the correct link in each navigation landmark", (pathname, href, current) => {
     route.pathname = pathname;
     const html = renderToStaticMarkup(<Nav />);

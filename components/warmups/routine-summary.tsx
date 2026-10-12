@@ -126,9 +126,9 @@ export function RoutineSummary({
           they would get a blank cream block where the pitch used to be. */}
       <div className="rounded-2xl bg-panel p-4 empty:hidden sm:p-5">
         <ProCrescendoNudge
-          line="Pro plans tomorrow's routine from these scores"
-          title="Make tomorrow's warmup count"
-          body="Pro plans tomorrow's session from these scores — weak notes first."
+          line="Pro shows the full daily coach plan, not just its first two steps"
+          title="See the whole plan"
+          body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, these included. Pro adds the full daily coach plan, per-note accuracy over time and no daily limit."
           context="Warmups"
         />
       </div>

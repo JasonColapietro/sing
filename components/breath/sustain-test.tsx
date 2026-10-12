@@ -17,7 +17,6 @@ import { RewardNote } from "./reward";
 import {
   BREATH_FALLBACK_SEC,
   SUSTAIN_ATTEMPT_MIN_SEC,
-  SUSTAIN_BENCHMARKS_SEC,
   SUSTAIN_LOG_MIN_SEC,
   type BreathDrillResult,
 } from "./routines";
@@ -490,17 +489,6 @@ export function SustainTest({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [frame, phase, threshold]);
 
-  const benchmark = (sec: number) =>
-    sec >= SUSTAIN_BENCHMARKS_SEC.excellent
-      ? "excellent"
-      : sec >= SUSTAIN_BENCHMARKS_SEC.strong
-        ? "strong"
-        : sec >= SUSTAIN_BENCHMARKS_SEC.good
-          ? "good"
-          : sec >= SUSTAIN_BENCHMARKS_SEC.fair
-            ? "fair"
-            : "keep at it";
-
   /* ---------------------------------------------------------------- *
    * Session — the full-screen dark surface.
    * ---------------------------------------------------------------- */
@@ -639,7 +627,7 @@ export function SustainTest({
                   : phase === "running"
                     ? "Keep it steady. The timer stops after a moment of silence."
                     : result
-                      ? `${result.steadiness}% steady · ${benchmark(result.sec)}${
+                      ? `${result.steadiness}% steady${
                           result.inhaleSec !== null
                             ? ` · ${result.inhaleSec.toFixed(1)} s breath in`
                             : ""
@@ -795,7 +783,7 @@ export function SustainTest({
                 <Stat
                   label="Held for"
                   value={`${result.sec.toFixed(1)}s`}
-                  sub={benchmark(result.sec)}
+                  sub="on one breath"
                   tone="violet"
                 />
                 <Stat
@@ -882,12 +870,16 @@ export function SustainTest({
           </p>
         )}
         <div className="mt-4 border-t border-line pt-3">
+          {/* No length ladder: the drill asks the singer to end the note
+              while it is still easy, so grading length here would reward
+              the squeeze the prompt warns against. */}
           <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Benchmarks
+            How to read it
           </div>
-          <p className="tabular mt-1.5 font-mono text-xs text-mut">
-            {SUSTAIN_BENCHMARKS_SEC.fair}s fair · {SUSTAIN_BENCHMARKS_SEC.good}s good ·{" "}
-            {SUSTAIN_BENCHMARKS_SEC.strong}s strong · {SUSTAIN_BENCHMARKS_SEC.excellent}s+ excellent
+          <p className="mt-1.5 text-sm text-mut">
+            No length to hit. Compare each hold with your own earlier ones, on the same note at the
+            same volume. An even hold you end while it is still easy beats a longer one squeezed
+            out.
           </p>
         </div>
       </Card>

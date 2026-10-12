@@ -215,6 +215,7 @@ export default function EarTrainingClient() {
       <EarRunner routine={active.routine} onExit={exit} capped={cap.capped} />
     ) : (
       <EarGameSession
+        capped={cap.capped}
         game={active.game}
         difficulty={active.difficulty}
         song={active.song}

@@ -77,7 +77,7 @@ export default function CanYouSingHub() {
       kicker="Song ranges"
       title="Can I sing this song? Vocal ranges and keys of popular songs"
       subtitle={`A song is within reach when its vocal range sits inside yours, and it is easier to sing with room to spare at both ends. Here are the key, range and difficulty of ${songs.length} popular songs, from the commonly cited studio-version figures; take the free range test and every page answers for your voice specifically.`}
-      actions={<LinkButton href="/range?mode=range">Find your range free</LinkButton>}
+      actions={<LinkButton href="/range?mode=range#start">Find your range free</LinkButton>}
     >
       <script
         type="application/ld+json"

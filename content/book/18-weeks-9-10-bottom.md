@@ -29,7 +29,7 @@ Keep the shape you have been running: three or four sessions a week, twenty minu
 
 Give roughly six minutes to descending warmups. Pick exercises from the Warmups packs that sit in your lower middle and move downward — five-note descents, slow slides, hums. Start each one above the bottom of your range and let it walk down. When it stops being easy, stop that repetition. There is no version of this where forcing one more semitone helps.
 
-Use a closed, relaxed sound for most of it: a hum, an "uh" as in "cup", a soft "oh". Closed sounds keep the tone gathered without asking you to darken it by hand. If you catch yourself trying to sound low, you have already started pushing.
+Use a small, relaxed sound for most of it: a hum, a soft "oh", or a neutral "uh" as in "cup". Small, easy sounds keep the tone gathered without asking you to darken it by hand. If you catch yourself trying to sound low, you have already started pushing.
 
 Watch the pitch trace on the descents. The low register tends to go flat before it goes rough. A trace that sags a few cents under the target on the way down, session after session, is usually telling you the note is under-supported rather than out of reach.
 

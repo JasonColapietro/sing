@@ -136,6 +136,20 @@ describe("singer evidence", () => {
     ]);
   });
 
+  // The voice-type copy renders directly above these source cards. Round 3
+  // briefly said Reba McEntire's "reviewed sources ... give no endpoints"
+  // while two of her three cards document the compass of Fancy; only the
+  // first-person lesson lacks endpoints, so the copy has to say which source.
+  it("never says the reviewed sources as a whole give no endpoints beside song evidence that has them", () => {
+    for (const [slug] of REVIEWED_SLUGS) {
+      const evidence = getSingerEvidence(slug);
+      if (!evidence.sources.some((source) => source.song)) continue;
+      expect(evidence.voiceTypeCopy ?? "", slug).not.toMatch(
+        /\bsources\b[^.;]*\bgives? no endpoints/i,
+      );
+    }
+  });
+
   it("pins the approved source URLs and their narrow scopes", () => {
     for (const [slug, urls] of Object.entries(APPROVED_SOURCE_URLS)) {
       expect(getSingerEvidence(slug).sources.map((source) => source.url)).toEqual(urls);

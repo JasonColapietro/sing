@@ -68,7 +68,7 @@ I compared straight tone with naturally occurring vibrato, without shaking the j
 
 Ready when: On two different days, in three holds in a row, you start straight, let the vibrato in at the count you chose before singing, and return to straight tone before the release, with no jaw or belly shake.
 
-If not ready: If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, work with a teacher before adding speed, and repeat a smaller version on another fresh attempt rather than forcing the checkpoint. If no vibrato comes on its own yet, that is not a fault to fix here: keep the holds straight, steady and easy, move on to the next module, and come back to this one in a few weeks rather than shaking one in.
 
 What this shows: I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.
 

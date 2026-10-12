@@ -353,7 +353,7 @@ export const LESSONS: Lesson[] = [
     "title": "Low First, High Second, Neither Forced",
     "type": "concept",
     "minutes": 3,
-    "objective": "Comfortable, not extreme. The number we want is the one you can use.",
+    "objective": "Comfortable, not extreme. The number we want is one you can repeat next month.",
     "explanation": "The range test asks for your two ends one at a time: hold a comfortable note, slide down to your lowest, then slide up to your highest. Only notes you could let someone else hear count, with a clear pitch you could hold for a beat or two, so the creak below your lowest sung note and a squeezed top note both stay out. Stop each slide where the next note would need effort rather than height: that is a reading you can repeat next month, which an extreme reached once is not.",
     "prerequisites": [
       "v-l1-m1-04"
@@ -377,7 +377,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Name the target: Range scan and voice type",
-        "body": "Comfortable, not extreme. The number we want is the one you can use. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
+        "body": "Comfortable, not extreme. The number we want is one you can repeat next month. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -2385,7 +2385,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.",
         "look": "Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2476,7 +2476,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.",
         "look": "Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -3647,7 +3647,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the included Ode to Joy phrase. Hear it at Half speed, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
+        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -3738,7 +3738,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the included Ode to Joy phrase. Hear it at Half speed, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
+        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -3829,7 +3829,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the included Ode to Joy phrase. Hear it at Half speed, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
+        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -4722,7 +4722,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 4,
     "objective": "Your scan gives the ends of your range, not this. You find the gear change by ear, then read the published zone for your voice type.",
-    "explanation": "Your passaggio is the zone of two to four notes where the voice has to hand over from a thicker fold setup to a thinner one while the resonance that was helping the sound drops away, so notes start to need effort, thin out or crack. It sits where your own folds and vocal tract put it: often near the published zone for your voice type, but it can land a semitone or more either side, and it shifts with the vowel and the volume. A range test reports only your two ends, so you find this zone by ear on a slow, quiet slide, starting from the note where the effort first rises.",
+    "explanation": "Your passaggio is the zone of two to four notes where the voice has to hand over from a thicker fold setup to a thinner one while the resonance that was helping the sound drops away, so notes start to need effort, thin out or crack. It sits where your own folds and vocal tract put it: often near the published zone for your voice type, but it can land a semitone or more either side, and it shifts with the vowel and the volume. For contralto, mezzo and soprano the published zones mark where a belt or full mix changes gear; a quiet slide will often find an earlier, lighter shift out of chest voice first, somewhere around E4 to G4, at or below the published zone, and that is expected rather than a failed search. A range test reports only your two ends, so you find this zone by ear on a slow, quiet slide, starting from the note where the effort first rises.",
     "prerequisites": [
       "v-l4-m5-07"
     ],
@@ -4751,7 +4751,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "In the pitch studio, slide slowly on a quiet “ng” from a comfortable middle note up through the place where the sound starts to change, then back down. Do it twice: once at your usual volume, once at about half that. Volume is the only thing that changes, and the quieter pass usually lets you hear the change coming as a gradual thinning instead of a sudden flip. Note the first note where effort rises on the way up and where the sound settles on the way down: that is a zone, not a single magic pitch. Then compare it with the published zone for your estimated voice type.",
+        "body": "In the pitch studio, slide slowly on a quiet “ng” from a comfortable middle note up through the place where the sound starts to change, then back down. Do it twice: once at your usual volume, once at about half that. Volume is the only thing that changes, and the quieter pass usually lets you hear the change coming as a gradual thinning instead of a sudden flip. Note the first note where effort rises on the way up and where the sound settles on the way down: that is a zone, not a single magic pitch. Then compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4842,7 +4842,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated category.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -4933,7 +4933,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated category.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -6890,7 +6890,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "On two different days, in three holds in a row, you start straight, let the vibrato in at the count you chose before singing, and return to straight tone before the release, with no jaw or belly shake.",
-      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, work with a teacher before adding speed, and repeat a smaller version on another fresh attempt rather than forcing the checkpoint. If no vibrato comes on its own yet, that is not a fault to fix here: keep the holds straight, steady and easy, move on to the next module, and come back to this one in a few weeks rather than shaking one in.",
       "shows": "I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Vibrato onset time, switching on cue, or healthy production. The vibrato drill in warm-ups reads rate and width after a hold, but this lesson does not score them."
     }
@@ -7981,7 +7981,7 @@ export const LESSONS: Lesson[] = [
         "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
-      "readyWhen": "You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear means a doctor or speech-language pathologist), and your voice feels at least as easy after running it as before.",
+      "readyWhen": "You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.",
       "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
@@ -8546,7 +8546,8 @@ export const LESSONS: Lesson[] = [
     "objective": "The physiology, the specific ways it goes wrong, and why you should review the health module first.",
     "explanation": "A growl is noise laid over the sung note, and it can come from two places that sound the same from the audience: structures above the vocal folds fluttering in the airstream while the folds keep vibrating normally underneath, or the folds themselves being slammed together under pressure, which is how voices get hurt. You cannot reliably teach yourself the difference from text, this lesson included, which is why a growl is learned with a qualified teacher listening and why the health module comes first. Until then the rule is simple: grit that leaves you hoarse afterward was the wrong kind, and pain means stop.",
     "prerequisites": [
-      "v-l7-m3-08"
+      "v-l7-m3-08",
+      "v-l7-m1-08"
     ],
     "references": [
       "nidcd-voice-care",
@@ -8555,7 +8556,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor or speech-language pathologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8566,7 +8567,7 @@ export const LESSONS: Lesson[] = [
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
-        "title": "Name the target: Creak, growl, slide, scream",
+        "title": "Name the target: Effects safety and a stop plan",
         "body": "The physiology, the specific ways it goes wrong, and why you should review the health module first. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
@@ -8587,7 +8588,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist."
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -8619,7 +8620,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Do not try the effect again to check; leave it until a teacher has heard it.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
@@ -8646,7 +8647,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor or speech-language pathologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8657,7 +8658,7 @@ export const LESSONS: Lesson[] = [
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
-        "title": "Name the target: Creak, growl, slide, scream",
+        "title": "Name the target: Effects safety and a stop plan",
         "body": "Only for an effect a teacher has already taught you: short bursts, with a hard stop the moment it tightens. Otherwise, listen and plan without producing it. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
@@ -8678,7 +8679,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist."
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -8710,7 +8711,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Do not try the effect again to check; leave it until a teacher has heard it.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
@@ -8737,7 +8738,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Start with the stop rules",
-        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor or speech-language pathologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
+        "body": "Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "For the planning task, work from the stop rules on this page; you do not need to make a pitched sound."
       },
@@ -8748,7 +8749,7 @@ export const LESSONS: Lesson[] = [
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
-        "title": "Name the target: Creak, growl, slide, scream",
+        "title": "Name the target: Effects safety and a stop plan",
         "body": "Stop on pain, sudden hoarseness, loss of range, or a changed speaking voice. The app cannot certify a safe attempt. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The record says whether this was observation only or a review of prior supervised technique, and it names a strict stop point before any sound is made.",
         "listen": "Any vocalized effect was previously taught, deliberately brief, and followed by an unchanged speaking voice; observation-only work is never counted as a vocal demonstration."
@@ -8769,7 +8770,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist."
+        "recovery": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -8801,7 +8802,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "Your written stop plan names each stop signal (pain, rawness, sudden hoarseness, loss of range, a changed speaking voice), what you will do for each, and who you would see if hoarseness does not clear, and you produced no effect today beyond one a teacher had already taught you.",
-      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Do not try the effect again to check; leave it until a teacher has heard it.",
+      "ifNotReady": "Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.",
       "shows": "I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Safety, absence of strain or injury, correct effect physiology, medical clearance, completion of an effect checkpoint, or readiness for screams; the app cannot verify any of these."
     }
@@ -9112,7 +9113,7 @@ export const LESSONS: Lesson[] = [
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
       {
-        "title": "Name the target: Performance and harmony",
+        "title": "Name the target: Performance and mic technique",
         "body": "Working the mic, monitors, and what changes when there is an audience. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
@@ -9133,7 +9134,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
+        "recovery": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -9147,7 +9148,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the performance and harmony target in short, comfortable examples."
+        "instruction": "Isolate the performance and mic technique target in short, comfortable examples."
       },
       {
         "seconds": 120,
@@ -9165,7 +9166,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
     }
@@ -9203,7 +9204,7 @@ export const LESSONS: Lesson[] = [
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
       {
-        "title": "Name the target: Performance and harmony",
+        "title": "Name the target: Performance and mic technique",
         "body": "Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
@@ -9224,7 +9225,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
+        "recovery": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -9238,7 +9239,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 135,
-        "instruction": "Isolate the performance and harmony target in short, comfortable examples."
+        "instruction": "Isolate the performance and mic technique target in short, comfortable examples."
       },
       {
         "seconds": 210,
@@ -9256,7 +9257,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
     }
@@ -9294,7 +9295,7 @@ export const LESSONS: Lesson[] = [
         "listen": "The phrase remains understandable from its first entry to its final release."
       },
       {
-        "title": "Name the target: Performance and harmony",
+        "title": "Name the target: Performance and mic technique",
         "body": "Rehearse the supplied study arrangement and compare microphone distance or phrasing on separate takes. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
         "look": "The displayed study contains one melody line. Keep the microphone position consistent within each comparison.",
         "listen": "The phrase remains understandable from its first entry to its final release."
@@ -9315,7 +9316,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
+        "recovery": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -9329,7 +9330,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 150,
-        "instruction": "Isolate the performance and harmony target in short, comfortable examples."
+        "instruction": "Isolate the performance and mic technique target in short, comfortable examples."
       },
       {
         "seconds": 240,
@@ -9347,7 +9348,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "One uninterrupted take of the whole study, at a fixed microphone distance you chose by comparing takes, stays understandable from its first entry to its final release, with no distorted loud notes or lost quiet ones.",
-      "ifNotReady": "If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
+      "ifNotReady": "If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Two simultaneous vocal parts, harmony accuracy, blend, independence, absence of a register break, or vocal health; the detector returns one fundamental per frame."
     }

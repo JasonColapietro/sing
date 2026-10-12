@@ -35,6 +35,7 @@ import {
   FREE_EXERCISES,
   PRO_EXERCISES,
   PRO_PACK_COUNT,
+  PRO_PROGRAM_NAMES,
   SONG_COUNT,
 } from "@/lib/pro-inventory";
 import { PRICING, SOLD_OUT_PLANS, formatPrice } from "@/lib/pro-shared";
@@ -208,7 +209,7 @@ The plan details below are read from the site's own pricing and practice-limit c
 
 - Free, with no daily limit: the pitch studio (/studio), the vocal range test (/range), the take recorder (/recorder), the metronome, keyboard and drone (/tools), the spectrogram and vocal-load analyzer (/analyze), the ${CATALOG_LESSON_COUNT}-lesson voice course (/learn/voice), every singer page (/singers), song-fit checks (/can-you-sing), the glossary (/glossary), ${measured.free} free chapters of ${BOOK_TITLE} and ${atlas.free} of ${ATLAS_TITLE}.
 - Free, with a daily limit: guided practice — ${guided} — shares ${FREE_DAILY_MINUTES} minutes a day on the free plan. The time is counted from logged practice and resets with the local calendar day; a step already under way is not cut off. All ${SONG_COUNT} songs and ${FREE_EXERCISES} warmup exercises are available inside that allowance.
-- Suede Pro removes the daily guided-practice limit and adds ${PRO_EXERCISES} more warmup exercises in ${PRO_PACK_COUNT} packs, both books in full with PDFs (${measured.chapters} and ${atlas.chapters} chapters), pitch analysis on recorded takes, per-note accuracy trends, the singer's latest ${MAX_RANGE_HISTORY} range tests charted over time, the full adaptive coach plan, and progress sync across devices. Some multi-week programs at /programs are Pro-only.
+- Suede Pro removes the daily guided-practice limit and adds ${PRO_EXERCISES} more warmup exercises in ${PRO_PACK_COUNT} packs, both books in full with PDFs (${measured.chapters} and ${atlas.chapters} chapters), pitch analysis on recorded takes, per-note accuracy trends, the singer's latest ${MAX_RANGE_HISTORY} range tests charted over time, the full adaptive coach plan, and progress sync across devices. The programs at /programs are free except ${PRO_PROGRAM_NAMES.join(" and ")}, which need Pro after their free first week.
 - Price when this file was built: Suede Pro Early Access is ${proPriceLine()}. Check ${SING_HOME}/pro before quoting a price.
 - On every plan, pitch analysis runs in the browser on the singer's device and microphone audio is not uploaded. Recorder takes stay on the device. Pro's sync backs up progress numbers (scores, streaks, range), never audio.
 
@@ -226,7 +227,7 @@ The plan details below are read from the site's own pricing and practice-limit c
 - [Tools](${SING_HOME}/tools): metronome, virtual keyboard and drone
 - [Analyze](${SING_HOME}/analyze): live voice spectrogram, a tone view of the energy near 3 kHz, and a vocal-load estimate counted in phonation time and vibration cycles while that page is open and on screen (voiced speech counts too; practice in other rooms does not)
 - [Programs](${SING_HOME}/programs): practice plans from one week to twelve, built day by day from the rooms above, with rest days
-- [Progress](${SING_HOME}/progress): practice log, streaks and range history, stored on your device
+- [Progress](${SING_HOME}/progress): XP, streaks, achievements, a practice calendar, recent sessions and your latest saved range, stored on your device; range over time and per-note accuracy are part of Suede Pro
 
 ### Learning and reference
 

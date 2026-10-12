@@ -81,7 +81,7 @@ describe("planDailyThree", () => {
   it("brings back an exercise that has gone stale", () => {
     // Two sung well long ago, everything else sung well yesterday: the stale
     // pair take the set — one as the warm-up, the other as a refresh.
-    const stale = new Set(["sixth-leaps", "octave-siren"]);
+    const stale = new Set(["humming-thirds", "octave-siren"]);
     const sessions = [
       ...EXERCISES.filter((e) => !stale.has(e.id)).map((e) => warmup(e.title, 85, "2026-09-22")),
       ...[...stale].map((id) => warmup(title(id), 85, "2026-08-01")),
@@ -112,6 +112,32 @@ describe("planDailyThree", () => {
     expect(plan.picks[0].exercise.id).toBe("humming-thirds");
     expect(plan.picks[0].role).toBe("confidence");
     expect(plan.picks.slice(1).every((p) => p.role === "focus")).toBe(true);
+  });
+
+  it("never opens on a run, a leap or an advanced exercise, however well it is sung", () => {
+    // A singer who sings every free exercise well: the warm-up slot used to
+    // land on a sixth leap or a pentatonic run at 1.25x on about one day in six.
+    for (let i = 0; i < 60; i++) {
+      const day = new Date(Date.UTC(2026, 9, 1 + i)).toISOString().slice(0, 10);
+      const back = (n: number) => new Date(Date.UTC(2026, 9, 1 + i - n)).toISOString().slice(0, 10);
+      const sessions = EXERCISES.flatMap((e) => [warmup(e.title, 88, back(1)), warmup(e.title, 88, back(2))]);
+      const first = planDailyThree({ sessions, day }).picks[0];
+      expect(first.role, day).toBe("confidence");
+      expect(first.exercise.tier, `${day} ${first.exercise.id}`).toBe("beginner");
+      expect(["runs", "leaps"], `${day} ${first.exercise.id}`).not.toContain(first.kind);
+    }
+  });
+
+  it("does not hand the warm-up slot to a run the singer sings best", () => {
+    const sessions = [
+      ...EXERCISES.map((e) => warmup(e.title, 40, "2026-09-22")),
+      warmup(title("pentatonic-run"), 95, "2026-09-22"),
+      warmup(title("pentatonic-run"), 95, "2026-09-21"),
+      warmup(title("humming-thirds"), 70, "2026-09-21"),
+    ];
+    const plan = planDailyThree({ sessions, day: TODAY });
+    expect(plan.picks[0].exercise.id).not.toBe("pentatonic-run");
+    expect(plan.picks[0].exercise.tier).toBe("beginner");
   });
 
   it("falls back to the best-scored exercise when nothing is confident yet", () => {

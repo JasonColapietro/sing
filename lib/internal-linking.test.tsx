@@ -209,9 +209,13 @@ describe("footer wires every hub into every page", () => {
   // the footer, or /contact. A microphone app whose policy can only be found
   // by guessing the URL has a policy in name only.
   it("links the policy pages from every server-rendered page", () => {
-    // Direct to the org site: /privacy and /terms here only 308 there.
-    for (const href of ["https://suedeai.org/voice/privacy/", "https://suedeai.org/voice/terms/"]) {
+    // The company policy and terms, which cover suedeai.ai and its
+    // subdomains (Stripe purchases included). suedeai.org/voice/* covers only
+    // the mobile app and calls "Suede Sing" one of its former names.
+    for (const href of ["https://suedeai.org/privacy/", "https://suedeai.org/terms/"]) {
       expect(html, `footer missing ${href}`).toContain(`href="${href}"`);
     }
+    expect(html).not.toContain('href="https://suedeai.org/voice/privacy/"');
+    expect(html).not.toContain('href="https://suedeai.org/voice/terms/"');
   });
 });

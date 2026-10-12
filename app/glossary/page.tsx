@@ -3,6 +3,7 @@ import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
+import { BOOK_CONTENTS } from "@/lib/book-data";
 import {
   roomLabel,
   SING_GLOSSARY,
@@ -32,6 +33,13 @@ export const metadata: Metadata = withCanonicalOpenGraph({
     images: [DEFAULT_OG_IMAGE],
   },
 });
+
+/**
+ * Where "the range test" links land: the test tab, at the #start anchor
+ * voice-test.tsx carries, so a phone lands on the start button rather than the
+ * intro above it (the guides and song pages link the test the same way).
+ */
+const RANGE_TEST_HREF = "/range?mode=range#start";
 
 /** The definition the opening paragraph quotes, so the answer is the page's own. */
 const PASSAGGIO = SING_GLOSSARY_TERMS.find((entry) => entry.term === "Passaggio");
@@ -71,6 +79,9 @@ export default function GlossaryPage() {
   // The atlas chapters that teach notation and the voice-type labels are free,
   // so the glossary can hand a reader the long version without a paywall.
   const freeChapters = ATLAS_CONTENTS.filter((c) => c.free);
+  // The Measured Voice samples chapters across the book (not only its first),
+  // so each free one is listed and linked rather than summed up as "the first".
+  const freeBookChapters = BOOK_CONTENTS.filter((c) => c.free);
 
   return (
     <PageShell
@@ -115,7 +126,7 @@ export default function GlossaryPage() {
               warmups
             </Link>{" "}
             and the{" "}
-            <Link href="/range?mode=range" className="text-violet-ink hover:underline">
+            <Link href={RANGE_TEST_HREF} className="text-violet-ink hover:underline">
               range test
             </Link>
             ; where a free warmup or breath drill trains a term, its entry
@@ -170,7 +181,7 @@ export default function GlossaryPage() {
                     <p className="mt-1.5 max-w-3xl text-sm text-dim">
                       {entry.where}{" "}
                       <Link
-                        href={entry.href === "/range" ? "/range?mode=range" : entry.href}
+                        href={entry.href === "/range" ? RANGE_TEST_HREF : entry.href}
                         className="text-violet-ink hover:underline"
                       >
                         Open {roomLabel(entry.href)} →
@@ -241,9 +252,22 @@ export default function GlossaryPage() {
               The Measured Voice
             </Link>{" "}
             takes the same ground from the other side — how the voice works,
-            then how to read your own numbers — and its first chapter is free
-            too.
+            then how to read your own numbers — and {freeBookChapters.length} of
+            its chapters are free to read:
           </p>
+          <ul className="mt-4 space-y-2">
+            {freeBookChapters.map((c) => (
+              <li key={c.slug} className="max-w-3xl text-sm text-mut">
+                <Link
+                  href={`/book/${c.slug}`}
+                  className="text-violet-ink hover:underline"
+                >
+                  {c.title}
+                </Link>
+                {c.summary && <span> — {c.summary}</span>}
+              </li>
+            ))}
+          </ul>
         </Card>
       </div>
     </PageShell>

@@ -33,6 +33,7 @@ import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { useActiveProgram } from "@/components/programs/use-program";
 import { ProgramEntryCard } from "@/components/programs/today-card";
+import { isRestDay } from "@/lib/programs";
 import { useIsPro } from "@/lib/pro";
 import { MAX_SESSIONS } from "@/lib/progress-shape";
 import { FREE_DAILY_MINUTES, FREE_DAILY_SEC } from "@/lib/practice-limits";
@@ -204,11 +205,19 @@ export function HeaderRow({
   goal,
   sessionCount,
   totalSec,
+  restDay = false,
 }: {
   xp: number;
   streakCurrent: number;
   streakBest: number;
   streakLastDay: string | null;
+  /**
+   * Today is a rest day in the singer's running program. A streak still
+   * waiting on today's session is then labelled as the rest day rather than
+   * "Keep it alive", so the page does not tell the singer to sing on the day
+   * their program says to rest.
+   */
+  restDay?: boolean;
   /** All practice logged today, whatever the room. */
   todaySec: number;
   /** Today's goal and what counts toward it, as the practice rooms measure them. */
@@ -272,7 +281,7 @@ export function HeaderRow({
               streak === "banked" ? "text-ok-ink" : "text-violet-ink"
             }`}
           >
-            {streak === "banked" ? "Banked today" : "Keep it alive"}
+            {streak === "banked" ? "Banked today" : restDay ? "Program rest day" : "Keep it alive"}
           </p>
         ) : lapsed ? (
           <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
@@ -628,6 +637,14 @@ export function ProgressClient() {
   // Null before mount and with no program running, so the card below only
   // appears for a singer who has started one.
   const activeProgram = useActiveProgram();
+  // The running program's name when today is one of its rest days: a rest day
+  // is done as soon as it is reached, so it shows as today's completed day.
+  const programRestDay =
+    activeProgram &&
+    activeProgram.view.status === "done-today" &&
+    isRestDay(activeProgram.program.days[activeProgram.view.index])
+      ? activeProgram.program.name
+      : null;
   const todaySec = todayPracticeSec(state);
   const weekly = weeklyReport(state.sessions);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
@@ -737,6 +754,7 @@ export function ProgressClient() {
             goal={{ doneSec: goalDoneSec, goalSec, isPro }}
             sessionCount={state.sessions.length}
             totalSec={totalSec}
+            restDay={programRestDay !== null}
           />
           {/* Directly under the numbers it is talking about. The stat row above
               is the whole practice record in four cards, so this is where its
@@ -752,7 +770,7 @@ export function ProgressClient() {
         {activeProgram && <ProgramEntryCard active={activeProgram} />}
 
         <section aria-label="Today's coached session">
-          <CoachCard state={state} />
+          <CoachCard state={state} restDayOf={programRestDay} />
         </section>
 
         <section aria-label="Practice calendar">

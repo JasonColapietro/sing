@@ -350,14 +350,17 @@ export function popSongKeywords(song: { slug?: string; title: string; artist: st
 /**
  * Song pages. Most entries transcribe only a song's opening phrase
  * (`form: "phrase"`), so they do not answer "<song> lyrics" or "<song> vocal
- * range" and lead with "sing <song>" instead. A longer arrangement
- * (`arrangementOf`) sings selected lines, so it is treated the same way; only
- * whole-song transcriptions keep the lyrics, key and range terms.
+ * range" and lead with "sing <song>" instead. A phrase entry that holds another
+ * part of the song (`excerpt`, e.g. "chorus hook") names that part, as its
+ * page does. A longer arrangement (`arrangementOf`) sings selected lines, so it
+ * is treated the same way; only whole-song transcriptions keep the lyrics, key
+ * and range terms.
  */
 export function songKeywords(song: {
   slug?: string;
   title: string;
   form?: string;
+  excerpt?: string;
   arrangementOf?: string;
 }): string[] {
   const route = `/songs/${song.slug ?? ""}`;
@@ -378,7 +381,7 @@ export function songKeywords(song: {
         `sing ${song.title}`,
         `${song.title} melody`,
         `${song.title} notes`,
-        `${song.title} opening phrase`,
+        `${song.title} ${song.excerpt ?? "opening phrase"}`,
       ],
       route,
     );

@@ -21,7 +21,7 @@ export const VOCAL_LEARNING_PATHS: readonly VocalLearningPath[] = [
   },
   {
     title: "Find your vocal range",
-    need: "Measure your lowest and highest comfortable notes, then use the result as a starting point for songs and warmups.",
+    need: "Measure the lowest and highest clear notes you can sing today. Once the result is saved, warmups are pitched to it and songs open in a key fitted to it.",
     href: "/range?mode=range",
     action: "Take the free range test",
   },
@@ -45,7 +45,7 @@ export const VOCAL_LEARNING_PATHS: readonly VocalLearningPath[] = [
   },
   {
     title: "Practice a song",
-    need: "Learn a melody, transpose it toward your comfortable range, and isolate the phrases that need work.",
+    need: "Learn a melody, isolate the phrases that need work, and shift the key by semitones. After the range test, songs open fitted to your measured range.",
     href: "/songs",
     action: "Choose a practice song",
   },
@@ -82,7 +82,7 @@ export const VOCAL_LEARNING_FAQ: readonly VocalLearningFaq[] = [
   {
     question: "How do I find my voice type?",
     answer:
-      "Measure your comfortable low and high notes, then notice the smaller band where singing feels easiest. A range test can suggest a nearby category, but voice type also depends on tessitura, timbre, weight, and register transitions, so treat the result as a starting point rather than a verdict.",
+      "Measure the lowest and highest clear notes you can sing, then notice the smaller band inside them where singing feels easiest. A range test can suggest a nearby category, but voice type also depends on tessitura, timbre, weight, and register transitions, so treat the result as a starting point rather than a verdict.",
   },
   {
     question: "How can I increase my vocal range?",
