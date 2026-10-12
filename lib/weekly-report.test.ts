@@ -185,6 +185,25 @@ describe("weekInReview", () => {
       });
     });
 
+    it("never sends a singer back to the range test for skipping it last week", () => {
+      // The book spaces range tests weeks apart (chapters 8 and 13), so a
+      // week without one is the plan, and four practice days earn keep-going.
+      const report = weekInReview(
+        [
+          session("2026-09-01", { type: "range" }),
+          session("2026-09-02"),
+          session("2026-09-03"),
+          session("2026-09-08"),
+          session("2026-09-14"),
+          session("2026-09-15"),
+          session("2026-09-17"),
+          session("2026-09-19"),
+        ],
+        WED,
+      )!;
+      expect(report.suggestion).toEqual({ kind: "keep-going", days: 4 });
+    });
+
     it("names a room whose scores trailed the week by ten points or more", () => {
       const report = weekInReview(
         [

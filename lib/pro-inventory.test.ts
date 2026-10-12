@@ -13,6 +13,7 @@ import {
   FREE_CHAPTERS,
   FREE_EXERCISES,
   GLOSSARY_COUNT,
+  MELODY_COUNT,
   PRO_EXERCISES,
   PRO_PACK_COUNT,
   SINGER_COUNT,
@@ -57,6 +58,13 @@ describe("pro inventory matches what actually ships", () => {
     // The songbook was un-gated deliberately: six public-domain folk tunes
     // against twenty free ones was a paywall that argued against buying.
     expect(PRO_SONGS.length).toBe(0);
+  });
+
+  it("counts the melodies behind the songs", () => {
+    // Two entries are longer arrangements of a melody already in the list, so
+    // "N melodies" and "N songs" are different numbers.
+    expect(MELODY_COUNT).toBe(SONGS.filter((s) => !s.arrangementOf).length);
+    expect(MELODY_COUNT).toBeLessThanOrEqual(SONG_COUNT);
   });
 
   it("counts the warmups on both sides of the paywall", () => {

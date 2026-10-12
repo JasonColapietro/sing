@@ -227,7 +227,9 @@ describe("session shape", () => {
       { exerciseId: "gug-staccato", reps: 11 },
       { exerciseId: "descending-five", reps: 7 },
     ]);
-    expect(r.tagline).toMatch(/^The complete ten: the bubble, sirens/);
+    // "The everyday set", the name ear and breath give their daily sets: the
+    // old "complete ten" read as an exercise count beside "8 exercises".
+    expect(r.tagline).toMatch(/^The everyday set: the bubble, sirens/);
   });
 
   it("never recommends the cool-down as a warmup", () => {

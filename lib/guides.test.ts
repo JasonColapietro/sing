@@ -18,6 +18,7 @@ import { FREE_DAILY_MINUTES } from "./practice-limits";
 import { COURSE } from "./voice-lessons";
 import { ToolGuide, guideJsonLd, type GuideContent } from "@/components/guide";
 import { DIFFICULTIES, GAME_NAMES } from "@/components/ear/lib";
+import { PRO_PACKS } from "@/components/warmups/exercises";
 
 const exported = Object.entries(guides).filter(
   (entry): entry is [string, GuideContent] => entry[0].endsWith("_GUIDE"),
@@ -249,6 +250,68 @@ describe("voice-science claims", () => {
   it("says cycle dose leaves out loudness", () => {
     expect(guides.ANALYZE_GUIDE.body.join(" ")).toMatch(/ignores loudness/);
     expect(all).not.toMatch(/how much work the vocal folds have done/);
+  });
+
+  /**
+   * The warmup ladder moves a semitone every rep whatever the score, and walks
+   * back down; nothing waits for a clean rep. The room's own explainer says so,
+   * and the guide under it, its HowTo markup included, may not say otherwise.
+   */
+  it("does not make the warmup key wait for a cleared pattern", () => {
+    expect(all).not.toMatch(/clear a pattern|cleared pattern/);
+    const copy = JSON.stringify(guides.WARMUPS_GUIDE);
+    expect(copy).toMatch(/semitone every rep, whatever the score/);
+    expect(copy).toMatch(/come back down/);
+  });
+
+  /** The packs Pro sells are the three technique packs, named as the room names them. */
+  it("sells only the Pro warmup packs the room has", () => {
+    const point = guides.WARMUPS_GUIDE.advanced.points.find((p) => /^Pro /.test(p))!;
+    expect(point).not.toMatch(/\bgenre\b|voice-type/i);
+    const count = ["one", "two", "three", "four", "five"][PRO_PACKS.length - 1];
+    expect(point).toContain(`${count} technique packs`);
+    for (const pack of PRO_PACKS) expect(point.toLowerCase()).toContain(pack.name.toLowerCase());
+  });
+
+  /** Ear games keep a score per game and a best per level; nothing per interval or in cents. */
+  it("promises no ear-training metric the games do not keep", () => {
+    const copy = JSON.stringify(guides.EAR_GUIDE);
+    expect(copy).not.toMatch(/per-interval|pitch-matching deviation/);
+  });
+
+  /**
+   * The advanced section says drilling the whole set equally leaves the weak
+   * intervals where they are, so its advice for the missed ones cannot be to
+   * replay a level that shuffles the whole set again. The piano in Tools
+   * plays any pair on demand, free and without a clock.
+   */
+  it("drills missed intervals on their own, as the ear guide says to", () => {
+    const point = guides.EAR_GUIDE.advanced.points.find((p) => /keep missing/.test(p))!;
+    expect(point).not.toMatch(/replay the level/);
+    expect(point).toMatch(/piano in Tools/);
+    expect(guides.EAR_GUIDE.related.map((r) => r.href)).toContain("/tools");
+  });
+
+  /**
+   * A score that falls as the ladder climbs can be a limit as easily as a
+   * passaggio; only a dip that repeats at the same place reads as a break,
+   * which is how the glossary's Passaggio entry puts it.
+   */
+  it("calls a repeating dip a passaggio, not any drop", () => {
+    const copy = JSON.stringify(guides.WARMUPS_GUIDE);
+    expect(copy).not.toMatch(/starts dropping/);
+    expect(copy).toMatch(/same place every session is usually a passaggio/);
+  });
+
+  /**
+   * Vocal load counts any voiced frame, speech included, and only while
+   * /analyze is the visible tab.
+   */
+  it("says what vocal load counts and where", () => {
+    const copy = JSON.stringify(guides.ANALYZE_GUIDE);
+    expect(copy).not.toMatch(/talking between exercises do not/);
+    expect(copy).toMatch(/talking near the mic counts/);
+    expect(copy).toMatch(/only counts while it is visible/);
   });
 
   it("describes song keys the way the player sets them", () => {

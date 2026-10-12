@@ -421,7 +421,9 @@ function voiceTypesMarkdown() {
       .filter((s) => s.voiceType === type)
       .sort((a, b) => a.name.localeCompare(b.name));
     if (!list.length) continue;
-    rows.push(`## ${type}s`);
+    // "Bass" takes -es: a bare `${type}s` printed "## Basss" here, the same
+    // typo pluralVoice in lib/singers-core.ts exists to stop on the site.
+    rows.push(`## ${/s$/i.test(type) ? `${type}es` : `${type}s`}`);
     for (const s of list) rows.push(`- **${s.name}** — \`${s.low}–${s.high}\``);
     rows.push("");
   }

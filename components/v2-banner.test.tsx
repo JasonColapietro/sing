@@ -2,7 +2,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { PROGRESS_STORAGE_KEY } from "@/lib/progress";
 
-vi.mock("next/navigation", () => ({ usePathname: () => "/" }));
+const nav = vi.hoisted(() => ({ pathname: "/" }));
+vi.mock("next/navigation", () => ({ usePathname: () => nav.pathname }));
 
 import V2Banner from "./v2-banner";
 
@@ -45,5 +46,14 @@ describe("3.1 release banner", () => {
     expect(
       hiddenBeforePaint(html, { [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-01" }),
     ).toBe(true);
+  });
+
+  it("stays off /pro, where it would sit above the price", () => {
+    nav.pathname = "/pro";
+    try {
+      expect(renderToStaticMarkup(<V2Banner />)).toBe("");
+    } finally {
+      nav.pathname = "/";
+    }
   });
 });

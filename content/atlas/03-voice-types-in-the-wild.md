@@ -27,7 +27,7 @@ Range is the two extreme notes. Tessitura is where the melody spends its time �
 
 Without a teacher you can get usefully close in ten minutes.
 
-- **Find your speaking pitch.** Say a relaxed sentence and match it on a keyboard. Most baritones idle around A2–C3, tenors C3–E3, mezzos G3–A3, sopranos A3–C4. Speech sits near the bottom third of your comfortable singing band, not the middle.
+- **Find your speaking pitch.** Say a relaxed sentence and match it on a keyboard. Speech usually sits near the bottom third of your comfortable singing band, so it hints at where that band starts, but speaking pitch overlaps a lot between types: treat it as a clue, not a sorter.
 - **Find your yawn floor and easy ceiling.** The lowest note you can sound with full tone before it crumbles to fry; the highest you can sing softly in connected voice without reaching. Ignore your extremes on both ends — comfort, not conquest.
 - **Notice where songs betray you.** If everything on the radio feels slightly high, you are probably a step lower than the artists singing it; the average pop lead is a tenor or a mezzo, and the average human is not.
 

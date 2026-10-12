@@ -36,6 +36,8 @@ Teaching traditions describe two turning points rather than one: a lower one whe
 - **Mezzo-soprano:** A4 up to C5
 - **Soprano:** C5 up to E5
 
+Most women also meet an earlier, lighter shift, somewhere around E4 to G4, where chest voice hands over to a lighter middle voice. A quiet slide on "oo" will often flip there, at or below the contralto, mezzo and soprano zones above. Those zones mark where a belt or a full mix has to change gear, which happens higher than that first flip out of chest.
+
 Treat those as a neighbourhood, not an address. Individual voices sit a semitone or three off the list in either direction, and the vowel you are singing shifts the acoustic half of it, because different vowels put their resonant peaks in different places. An "ee" and an "ah" on the same pitch do not meet the wall at the same moment.
 
 The pattern is the part you can use. If you find a zone of two to four notes where sustaining feels like work while the notes just below it feel free, that zone is probably yours, and it tends to stay put rather than wander week to week. Chapter ten covers pinning down your own in the pitch studio. For now it is enough to know the thing exists and has a physical address.

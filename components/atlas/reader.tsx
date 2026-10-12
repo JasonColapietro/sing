@@ -113,6 +113,12 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
           Read a free chapter
         </LinkButton>
       )}
+      {/* A buyer on a new browser, or after clearing site data, lands here
+          locked out of a book they own: same restore path as The Measured
+          Voice's reader. */}
+      <LinkButton href="/pro#restore" variant="ghost" size="md">
+        Already have Pro?
+      </LinkButton>
       <LinkButton href="/atlas" variant="ghost" size="md">
         Back to contents
       </LinkButton>

@@ -16,7 +16,7 @@
 // plan, and sessions logged today are ignored for picking, so singing one of
 // the three does not reshuffle the other two mid-afternoon.
 
-import { EXERCISES, titlesFor, type WarmupExercise } from "@/components/warmups/exercises";
+import { EXERCISES, buildSegments, titlesFor, type WarmupExercise } from "@/components/warmups/exercises";
 import type { SessionLog } from "@/lib/progress-shape";
 
 /** Starting tempos the planner may hand the player — a subset of its TEMPOS. */
@@ -184,8 +184,31 @@ function candidates(
  */
 export const KIND_SESSION_ORDER: readonly ExerciseKind[] = ["sirens", "patterns", "holds", "leaps", "runs"];
 
+/**
+ * The longest one rep may run at the tempo the plan hands out, in seconds. A
+ * rep is sung on one breath, so slowing a long one-breath pattern makes it
+ * harder, not easier: Hung-ee-mm is 9.4s at 1x and 18.8s at 0.5x, close to
+ * the sustain ladder's "good" hold. Every other free exercise stays under
+ * this at 0.5x.
+ */
+export const MAX_ONE_BREATH_SEC = 12;
+
+/**
+ * The slowest tempo at which one rep still fits a comfortable breath. The
+ * root does not change a rep's length, only its notes, so any root will do.
+ */
+export function slowestOneBreathTempo(ex: WarmupExercise): DailyTempo {
+  return (
+    ([0.5, 0.75, 1] as const).find((t) => buildSegments(ex, 60, t).totalSec <= MAX_ONE_BREATH_SEC) ?? 1
+  );
+}
+
 function pick(c: Candidate, role: PickRole, why: string): DailyPick {
-  const tempo = tempoForScores(c.recent, c.exercise.tier);
+  // A step down never stretches a rep past one comfortable breath.
+  const tempo = Math.max(
+    tempoForScores(c.recent, c.exercise.tier),
+    slowestOneBreathTempo(c.exercise),
+  ) as DailyTempo;
   return {
     exercise: c.exercise,
     kind: c.kind,

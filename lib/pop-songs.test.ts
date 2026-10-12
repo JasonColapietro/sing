@@ -244,4 +244,13 @@ describe("crawl path", () => {
       expect(["Easy", "Medium", "Hard"]).toContain(popDifficulty(s));
     }
   });
+
+  it("rates a top above F5 as Hard, as the rule's comment says", () => {
+    const base = POP_SONGS[0];
+    // Narrow span, so altitude alone decides.
+    expect(popDifficulty({ ...base, lowMidi: noteMidi("C5"), highMidi: noteMidi("F5") })).toBe("Medium");
+    expect(popDifficulty({ ...base, lowMidi: noteMidi("C5"), highMidi: noteMidi("F#5") })).toBe("Hard");
+    const babe = POP_SONGS.find((s) => s.slug === "good-luck-babe");
+    if (babe) expect(popDifficulty(babe)).toBe("Hard");
+  });
 });

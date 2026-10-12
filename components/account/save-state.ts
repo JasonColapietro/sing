@@ -50,3 +50,35 @@ export function hasSomethingToSave(s: ProgressState, now: Date = new Date()): bo
     s.range.lowMidi !== undefined
   );
 }
+
+/** How far practice must run past the last backup file before a fresh one is offered. */
+export const BACKUP_REFRESH_MS = 14 * 86_400_000;
+
+/**
+ * Where the singer's backup file stands against the record, for the file
+ * backup the save prompt offers while accounts are off.
+ *
+ * A download is not a dismissal. A file saved on day 3 restores day 3, so once
+ * the singer has practised more than BACKUP_REFRESH_MS past it the file is
+ * stale and the card asks again, naming how many sessions the file is
+ * missing. `fileAt` is the stored ISO time of the last download; null or an
+ * unreadable value means no file, which is always worth offering.
+ */
+export function backupFileStatus(
+  sessions: ProgressState["sessions"],
+  fileAt: string | null,
+): { hasFile: boolean; stale: boolean; sessionsSince: number } {
+  const at = fileAt ? Date.parse(fileAt) : NaN;
+  if (!Number.isFinite(at)) {
+    return { hasFile: false, stale: true, sessionsSince: sessions.length };
+  }
+  let sessionsSince = 0;
+  let stale = false;
+  for (const s of sessions) {
+    const when = Date.parse(s.date);
+    if (!(when > at)) continue;
+    sessionsSince++;
+    if (when - at > BACKUP_REFRESH_MS) stale = true;
+  }
+  return { hasFile: true, stale, sessionsSince };
+}

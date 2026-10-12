@@ -41,7 +41,7 @@ A disappointing result usually has a boring explanation. Work through these befo
 
 **Rushing the edges.** Some people sweep through the last few notes too fast for anything to lock on. Give each note near the edge a moment to settle before deciding it is not there.
 
-If two of those are plausible, you do not have a result. Discard it and test another day. A reading you know was compromised should never enter your history as evidence.
+If two of those are plausible, you do not have a result. The app saves every finished test as your range and fits your warmups and songs to it, so take a fresh one on a better day, under your usual conditions, and let it replace this one. Mark the bad reading in your notebook so you never compare against it.
 
 ## The voice-type label
 
@@ -61,10 +61,10 @@ Fix the protocol first: same warmup, same room, same mic distance, same time of 
 
 The programme retests three times: week one for a baseline, the end of week six, and the start of week twelve. Testing more often than that mostly measures noise — and there is a subtler cost, which is that frequent testing quietly becomes daily edge-pushing, and the edges are the worst place to spend practice time. Every range test makes a small demand on the top of your voice. Do not make it a habit.
 
-When you read the range history in Progress, look at the shape of the line across several tests rather than the gap between the last two. Three readings leaning the same way say more than one jump, and one jump usually means a condition changed rather than a voice. Chapter 11 covers how long to wait before concluding anything.
+When you look back over your tests (Pro charts them in Progress; on the free plan, keep each low note, high note and date in your notebook), read the shape of the line across several tests rather than the gap between the last two. Three readings leaning the same way say more than one jump, and one jump usually means a condition changed rather than a voice. Chapter 11 covers how long to wait before concluding anything.
 
-Record the context somewhere too — a line in a notebook is enough. Tested with a cold. Tested after a late night. Tested in a hotel room. In three months you will not remember, and the point on the chart will look like information.
+Record the context somewhere too — a line in a notebook is enough. Tested with a cold. Tested after a late night. Tested in a hotel room. In three months you will not remember, and the bare reading will look like information.
 
 ## Try this
 
-Open the [warmups library](/warmups), run a short set, then take the [range test](/range?mode=range) — this time stopping the moment a note needs effort rather than height, and counting only pitches you could hold for two beats. Compare that reading against your last one in [Progress](/progress), and note which of the two you took more honestly.
+Open the [warmups library](/warmups), run a short set, then take the [range test](/range?mode=range) — this time stopping the moment a note needs effort rather than height, and counting only pitches you could hold for two beats. Write down the two notes and the date, compare them against the last reading you wrote down if you have one, and note which of the two you took more honestly.

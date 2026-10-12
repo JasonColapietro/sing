@@ -148,6 +148,11 @@ export default function VoiceCoursePage() {
           )}
         </Card>
 
+        {/*
+          The course links don't prefetch: with seven stages, 34 modules and
+          102 lessons, prefetching each one as it scrolled into view pulled
+          about 860 KB of pages nobody had opened.
+        */}
         {COURSE.map((stage) => (
           <section
             key={stage.catalog.id}
@@ -159,7 +164,7 @@ export default function VoiceCoursePage() {
               <SectionLabel>Stage {stage.catalog.stage}</SectionLabel>
               <h2 id={`stage-${stage.catalog.stage}`} className="mt-3 text-2xl">
                 {stage.href ? (
-                  <Link href={stage.href} className="hover:text-violet-ink">
+                  <Link href={stage.href} prefetch={false} className="hover:text-violet-ink">
                     {stage.catalog.name}
                   </Link>
                 ) : (
@@ -178,7 +183,7 @@ export default function VoiceCoursePage() {
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <h3 className="text-lg">
                           {module.href ? (
-                            <Link href={module.href} className="hover:text-violet-ink">
+                            <Link href={module.href} prefetch={false} className="hover:text-violet-ink">
                               {module.catalog.name}
                             </Link>
                           ) : (
@@ -197,6 +202,7 @@ export default function VoiceCoursePage() {
                             {lesson.href ? (
                               <Link
                                 href={lesson.href}
+                                prefetch={false}
                                 data-lesson-id={lesson.catalog.id}
                                 className="text-violet-ink hover:underline"
                               >

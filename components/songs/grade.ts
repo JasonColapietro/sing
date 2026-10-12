@@ -120,16 +120,20 @@ export function gradeForScore(score: number | undefined): GradeResult | null {
   return computeGrade(score, 0, emptyTally());
 }
 
-/** Screen-reader text for a star rating — never rely on glyphs alone. */
-export function starRatingLabel(stars: number): string {
-  return `${stars} of ${STAR_MAX} stars`;
+/**
+ * Screen-reader text for a star rating — never rely on glyphs alone. `max`
+ * defaults to the songbook's five; a practice room passes its own three
+ * (lib/stars.ts) so a shared card never shows a second scale.
+ */
+export function starRatingLabel(stars: number, max: number = STAR_MAX): string {
+  return `${stars} of ${max} stars`;
 }
 
 const FILLED_STAR = "★";
 const EMPTY_STAR = "☆";
 
 /** Plain-text star glyphs, filled then empty. Pair with starRatingLabel for a11y. */
-export function starGlyphs(stars: number): string {
-  const filled = Math.max(0, Math.min(STAR_MAX, stars));
-  return FILLED_STAR.repeat(filled) + EMPTY_STAR.repeat(STAR_MAX - filled);
+export function starGlyphs(stars: number, max: number = STAR_MAX): string {
+  const filled = Math.max(0, Math.min(max, stars));
+  return FILLED_STAR.repeat(filled) + EMPTY_STAR.repeat(max - filled);
 }

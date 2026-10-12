@@ -196,9 +196,17 @@ for (const stageSlug of dirs(SRC)) {
       if (meta.module !== module.id || meta.stage !== level.id) {
         problems.push(`${file}: filed as ${meta.stage}/${meta.module}, catalog says ${level.id}/${module.id}`);
       }
-      for (const key of ["title", "type", "minutes"]) {
-        if (meta[key] !== lesson[key]) {
-          problems.push(`${file}: ${key} ${JSON.stringify(meta[key])} differs from the catalog's ${JSON.stringify(lesson[key])}`);
+      // The module page lists a lesson by its catalog summary and the lesson
+      // page leads with its objective, so the two are one sentence: three had
+      // drifted apart, one promising a Stage 2 recording no lesson asked for.
+      for (const [key, catalogKey] of [
+        ["title", "title"],
+        ["type", "type"],
+        ["minutes", "minutes"],
+        ["objective", "summary"],
+      ]) {
+        if (meta[key] !== lesson[catalogKey]) {
+          problems.push(`${file}: ${key} ${JSON.stringify(meta[key])} differs from the catalog's ${JSON.stringify(lesson[catalogKey])}`);
         }
       }
       // One directory per stage and per module, in both directions.

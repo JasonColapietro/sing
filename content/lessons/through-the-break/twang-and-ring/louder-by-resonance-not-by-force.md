@@ -54,7 +54,7 @@ I compared two easy tones on the same pitch and described a change in brightness
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated.
+- The target disappears when the range, volume, speed, or duration increases. => If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -72,7 +72,7 @@ I compared two easy tones on the same pitch and described a change in brightness
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
 What this shows: I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.
 

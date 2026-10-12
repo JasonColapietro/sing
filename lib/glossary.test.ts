@@ -9,7 +9,8 @@ import {
   termId,
 } from "./glossary";
 import type { GlossaryDomain } from "./glossary";
-import { EXERCISES } from "@/components/warmups/exercises";
+import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
+import { breathDrillTitle, isBreathDrillId } from "@/components/breath/routines";
 import { readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
@@ -208,6 +209,29 @@ describe("GLOSSARY", () => {
     }
   });
 
+  /**
+   * A drill in another room is linked by that room's own deep link and named
+   * the way the room names it, so a renamed drill or a dropped query parameter
+   * fails here rather than leaving "Try it" pointing at the room's front page.
+   * The only room this is used for so far is breath, whose deep link is
+   * /breath?drill=<id>.
+   */
+  it("links other rooms' drills by a deep link the room reads", () => {
+    const linked = SING_GLOSSARY_TERMS.filter((e) => e.tryIt);
+    expect(linked.map((e) => e.term)).toContain("Breath support");
+    for (const entry of linked) {
+      // One "Try it" per entry: a warmup drill and another room's drill would
+      // render two links with the same label.
+      expect(entry.drill, entry.term).toBeUndefined();
+      const target = new URL(entry.tryIt!.href, "https://sing.suedeai.ai");
+      expect(APP_ROUTES).toContain(target.pathname);
+      expect(target.pathname, entry.term).toBe("/breath");
+      const drill = target.searchParams.get("drill");
+      expect(isBreathDrillId(drill), `${entry.term}: ${drill}`).toBe(true);
+      if (isBreathDrillId(drill)) expect(entry.tryIt!.label).toBe(breathDrillTitle(drill));
+    }
+  });
+
   it("never lists a term as its own alternate name", () => {
     for (const entry of GLOSSARY_TERMS) {
       for (const alias of entry.aka ?? []) {
@@ -264,6 +288,47 @@ describe("published glossary claims", () => {
     expect(where).toMatch(/fitted to your measured range/);
     expect(where).toMatch(/written key/);
     expect(where).not.toMatch(/comfortable/);
+  });
+
+  /**
+   * Gug is the library's staccato drill, a dark closure sound, not a twang
+   * one. The bright, bratty nays are the twang drills, and all of them sit in
+   * Pro packs, so the entry says Pro; a free nay drill would make that wrong.
+   */
+  it("names the twang drills the library actually has", () => {
+    const where = byTerm("Twang").where;
+    expect(where).not.toMatch(/\bgug\b/i);
+    expect(where).toMatch(/\bnay\b/);
+    expect(where).toMatch(/\bPro\b/);
+    const isNay = (x: { title: string; desc: string }) => /\bnay/i.test(`${x.title} ${x.desc}`);
+    expect(EXERCISES.filter(isNay).map((x) => x.id)).toEqual([]);
+    // Every Pro pack that holds a nay drill is named, the way the sentence
+    // spells it ("belt-prep", "mix-builder").
+    const nayPacks = PRO_PACKS.filter((p) => p.exercises.some(isNay));
+    expect(nayPacks.length).toBeGreaterThan(0);
+    for (const pack of nayPacks) {
+      expect(where.toLowerCase()).toContain(pack.name.toLowerCase().replace(/\s+/g, "-"));
+    }
+  });
+
+  /**
+   * The analyzer draws a spectrogram, a tone view and a vocal-load panel; it
+   * has no pitch trace (that is the studio's). An entry sending a reader to
+   * /analyze describes what that page draws.
+   */
+  it("describes the analyzer by what it draws", () => {
+    for (const entry of SING_GLOSSARY_TERMS.filter((e) => e.href === "/analyze")) {
+      expect(entry.where, entry.term).not.toMatch(/\btrace\b/);
+    }
+  });
+
+  /**
+   * The vocal-load panel counts only while /analyze is open and visible;
+   * practice in the other rooms adds nothing to it.
+   */
+  it("says where vocal dose is counted", () => {
+    expect(byTerm("Vocal dose").where).not.toMatch(/while you practi[cs]e/);
+    expect(byTerm("Vocal dose").where).toMatch(/open and on screen/);
   });
 
   it("names the product, not a bare surname", () => {

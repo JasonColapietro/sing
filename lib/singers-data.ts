@@ -6298,7 +6298,7 @@ export const SINGERS: Singer[] = [
     "whistle": false,
     "signatureSong": "Ah! mes amis (La Fille du régiment)",
     "lowSource": null,
-    "highSource": "Ah! mes amis — the nine high Cs",
+    "highSource": null,
     "blurb": "Bel canto's high-C machine: a light, agile leggero tenor that fires nine full-voice C5s in one aria, every night, no falsetto.",
     "technique": "Leggero lightness makes the altitude possible: the instrument is deliberately lean, brilliant and forward, never carrying more weight up the scale than the top can support, which is how nine full-voice high Cs in a single aria stay repeatable across a career. Coloratura runs are articulated from the diaphragm, each note struck, not smeared. The lesson for any voice is proportion: match the weight you carry upward to what your lightest top note can hold. Heavier is not better; sustainable is better."
   },

@@ -84,6 +84,16 @@ describe("songs mic gate", () => {
     expect(alert).toBeLessThan(html.indexOf('href="#songbook"'));
   });
 
+  it("puts the buttons straight under the heading, ahead of the explanation", () => {
+    // With the paragraph first, "Enable microphone" sat behind the tab bar on
+    // a 375×667 phone, on the hub and on every song page's deep link.
+    const html = renderToStaticMarkup(<SongsMicGate error="No microphone found. Plug one in." />);
+    const button = html.indexOf("Enable microphone");
+    expect(button).toBeGreaterThan(html.indexOf("Sing along and see every note you hit"));
+    expect(button).toBeLessThan(html.indexOf("Audio never leaves your browser"));
+    expect(html.indexOf('role="alert"')).toBeLessThan(html.indexOf("Audio never leaves your browser"));
+  });
+
   it("states the free allowance before sending anyone into capped practice", () => {
     // Shared with warmups, ear training and breath, so it is not called song time.
     const html = renderToStaticMarkup(<SongsMicGate />);

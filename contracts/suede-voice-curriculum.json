@@ -143,7 +143,7 @@
                 "title": "Hiss for Twelve",
                 "type": "exercise",
                 "minutes": 4,
-                "summary": "Twelve seconds is an optional practice goal that clears the first mark at ten; duration is your own observation, not an automatic pass."
+                "summary": "Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass."
               },
               {
                 "id": "v-l1-m3-04",
@@ -434,7 +434,7 @@
           },
           {
             "id": "v-l3-m5",
-            "name": "Fix the Wobble",
+            "name": "Breathy, Nasal or Tight",
             "promise": "compared a relaxed baseline with a later take and described one audible change without forcing a rough sound.",
             "skill": "Breathiness, nasality, tension",
             "proofMetric": "self_reported",
@@ -460,7 +460,7 @@
                 "title": "Self-Check: Compare With Your Baseline",
                 "type": "checkpoint",
                 "minutes": 5,
-                "summary": "Same phrase as Stage 2, judged against how it sounded then."
+                "summary": "Use the same short phrase for the relaxed baseline and the changed example, then compare both in the same recording."
               }
             ]
           }
@@ -959,7 +959,7 @@
                 "title": "The Notes That Sound Like Feeling",
                 "type": "concept",
                 "minutes": 4,
-                "summary": "Blue thirds and sevenths, and where they sit against the chord."
+                "summary": "Blue thirds and sevenths, and how they resolve toward the tonic."
               },
               {
                 "id": "v-l6-m5-04",

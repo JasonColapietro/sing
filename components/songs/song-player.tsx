@@ -1357,7 +1357,12 @@ export function SongPlayer({
       </Card>
 
       <Card>
-        <div className="flex flex-wrap items-center gap-3">
+        {/* Anchor for SongsClient, which brings this row into view on every
+            start. The bottom scroll margin clears the phone's fixed tab bar. */}
+        <div
+          id="song-transport"
+          className="flex scroll-mb-24 flex-wrap items-center gap-3 sm:scroll-mb-6"
+        >
           <Transport phase={phase} size="sm" onToggle={togglePlayPause} onRestart={restart} />
           <Button variant="outline" size="sm" onClick={enterStage}>
             <IconExpand /> Stage mode

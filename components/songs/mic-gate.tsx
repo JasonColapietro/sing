@@ -57,15 +57,10 @@ export function SongsMicGate({
     >
       <Card>
         <h2 className="text-xl">{heading}</h2>
-        <p className="mt-2 max-w-md text-sm text-mut">
-          Suede Sing needs the mic to score your pitch against the melody in
-          real time. Audio never leaves your browser. You can also practice
-          without a mic in listen mode — the guide melody still plays, just
-          without scoring. Song practice counts toward the free plan&apos;s{" "}
-          {FREE_DAILY_MINUTES} minutes of guided practice a day; Pro has no
-          daily limit.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-3">
+        {/* The buttons come straight after the heading that asks for them: with
+            the explanation first, a 375×667 phone put "Enable microphone"
+            behind the tab bar, on the hub and on every "Sing <song>" link. */}
+        <div className="mt-4 flex flex-wrap gap-3">
           <Button variant="rec" size="lg" onClick={onEnable}>
             <IconMic /> Enable microphone
           </Button>
@@ -73,13 +68,20 @@ export function SongsMicGate({
             <IconHeadphones /> Continue without a mic
           </Button>
         </div>
-        {/* Right under the buttons that cause it, ahead of the songbook link:
-            the failure belongs next to the press. MicAlert scrolls itself into
-            view, because at 375px the second button wraps and the line can
-            land below the fold. */}
+        {/* Right under the buttons that cause it, ahead of the explanation and
+            the songbook link: the failure belongs next to the press. MicAlert
+            scrolls itself into view, because at 375px the second button wraps
+            and the line can land below the fold. */}
         {error && (
           <MicAlert message={error} className="mt-4 max-w-md text-sm text-rec" />
         )}
+        <p className="mt-4 max-w-md text-sm text-mut">
+          Suede Sing needs the mic to score your pitch against the melody in
+          real time. Audio never leaves your browser. Without a mic, listen
+          mode still plays the guide melody, just without scoring. Song
+          practice counts toward the free plan&apos;s {FREE_DAILY_MINUTES}{" "}
+          minutes of guided practice a day; Pro has no daily limit.
+        </p>
         <a
           href="#songbook"
           className="mt-4 inline-flex min-h-11 items-center text-sm text-violet-ink underline underline-offset-4"

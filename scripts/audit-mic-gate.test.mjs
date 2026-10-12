@@ -7,9 +7,9 @@ const exec = promisify(execFile);
 const auditFile = fileURLToPath(new URL("./audit-mic-gate.mjs", import.meta.url));
 
 /** Run the real CLI against the current room structure, without a browser install. */
-async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = false, wrongContinue = false } = {}) {
+async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = false, wrongContinue = false, continueKicker = 'Continue your path' } = {}) {
   const browserModule = `
-    const settings = ${JSON.stringify({ rows, broken, alerts, missingAlert, wrongContinue })};
+    const settings = ${JSON.stringify({ rows, broken, alerts, missingAlert, wrongContinue, continueKicker })};
     const rowSelector = 'main li > button[aria-describedby~="practice-mic-note"]';
     function page() {
       let url = '', shown = false, ready = false, source = '';
@@ -29,7 +29,7 @@ async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = f
         },
         evaluate: async (fn) => fn({ parentElement: {
           querySelector: (selector) => selector === '#practice-mic-note' ? {} : null,
-          textContent: source === 'continue' && !settings.wrongContinue ? 'Continue your path' : '',
+          textContent: source === 'continue' && !settings.wrongContinue ? settings.continueKicker : '',
         } }),
       });
       return {
@@ -81,6 +81,14 @@ describe('microphone audit CLI', () => {
     expect(result.stdout).toContain('recorder retry opens the record deck');
     expect(result.stdout).toContain('  ok  continue-card refusal stays in the card, not its matching path row');
     expect(result.stdout).toContain('BROWSER_CLOSED');
+  });
+
+  it("finds a fresh visitor's continue card, which is titled Start here", async () => {
+    // CI runs on a clean profile, so the card it presses is the new singer's
+    // (components/warmups/warmups-client.tsx), not the returning one's.
+    const result = await runAudit({ continueKicker: 'Start here' });
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain('  ok  continue-card refusal stays in the card, not its matching path row');
   });
 
   it('fails when the continue-card refusal lands in its matching path row', async () => {

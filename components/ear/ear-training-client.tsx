@@ -1,6 +1,7 @@
 "use client";
 
-import { useFreeCap } from "@/lib/free-cap";
+import { isCapped, useFreeCap } from "@/lib/free-cap";
+import { getProState } from "@/lib/pro";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { liveStreak } from "@/components/account/save-state";
 
@@ -16,7 +17,7 @@ import {
   useGoalDoneSec,
 } from "@/components/practice/learn-home";
 import { starsForScore } from "@/components/practice/results-screen";
-import { localDay, useProgress } from "@/lib/progress";
+import { getState, localDay, useProgress } from "@/lib/progress";
 import {
   DIFFICULTIES,
   GAME_NAMES,
@@ -31,6 +32,7 @@ import {
   EAR_ROUTINES,
   GAME_DESC,
   GAME_MIC,
+  earRoutineById,
   earRoutineMinutes,
   recommendEarRoutine,
   type EarRoutine,
@@ -116,6 +118,23 @@ export default function EarTrainingClient() {
     setActive(null);
     refreshBests();
   }, [refreshBests]);
+
+  // A program day links its ear item at a whole workout, as
+  // /ear-training?routine=quick (lib/programs.ts itemHref), the way the breath
+  // and warmup rooms take ?routine=. Read once after mount rather than with
+  // useSearchParams, which would need a Suspense boundary that blanks this
+  // route's prerendered copy. The cap is asked of the stores, not of `cap`,
+  // which is still the prerender's in the hydration commit.
+  const [handledDeepLink, setHandledDeepLink] = useState(false);
+  useEffect(() => {
+    if (handledDeepLink) return;
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setHandledDeepLink(true);
+    const routine = earRoutineById(new URLSearchParams(window.location.search).get("routine"));
+    if (!routine || isCapped(getState(), getProState().active)) return;
+    setActive({ kind: "routine", routine });
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [handledDeepLink]);
 
   // "Practised ear today" is what decides between the top-up and the full
   // workout, so it asks about ear sessions specifically, not practice at large.

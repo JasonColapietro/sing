@@ -7,7 +7,7 @@ import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Singer Range Correction Requests";
 const DESCRIPTION =
-  "Send a singer range correction for a Suede Sing vocal range page: the recording, a timestamp and a source. Editors review the evidence before any change.";
+  "Send a singer range correction for a Suede Sing vocal range page: the recording, a timestamp and a source. The evidence is reviewed before any change.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/contact"),
@@ -30,7 +30,7 @@ export default function ContactPage() {
     <PageShell
       kicker="Corrections"
       title="Suggest a singer range correction"
-      subtitle="Found a singer vocal range that does not match the recording? Email the recording, the timestamp and a source, and the editors will review the evidence."
+      subtitle="Found a singer vocal range that does not match the recording? Email the recording, the timestamp and a source, and the evidence will be reviewed before anything changes."
     >
       <Card className="max-w-3xl">
         <h2 className="text-xl">How do I send a source-backed correction?</h2>

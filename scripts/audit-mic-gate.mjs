@@ -191,7 +191,9 @@ console.log("\n/warmups — switching between path, continue card and gate sourc
       describe(r));
     if (label === "continue card") {
       const inContinueCard = r.count === 1 && await page.locator(ALERT).evaluate((el) =>
-        el.parentElement?.textContent?.includes("Continue your path") ?? false);
+        // A fresh visitor's card is titled "Start here"; a returning one's
+        // "Continue your path" (components/warmups/warmups-client.tsx).
+        /Continue your path|Start here/.test(el.parentElement?.textContent ?? ""));
       check("continue-card refusal stays in the card, not its matching path row", inContinueCard);
     }
   }

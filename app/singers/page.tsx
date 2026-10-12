@@ -196,11 +196,15 @@ export default function SingersPage() {
             A person has checked the sources behind each of these profiles.
             Open one to see what those sources support.
           </p>
+          {/* prefetch off on this page's link lists (profiles, voice types,
+              genres): by default each fetched its route payload on scroll,
+              about 70 background requests for pages nobody had opened. */}
           <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {REVIEWED_SINGERS.map((singer) => (
               <li key={singer.slug}>
                 <Link
                   href={`/singers/${singer.slug}`}
+                  prefetch={false}
                   className="flex h-full flex-col gap-1 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
                 >
                   <span className="flex items-baseline justify-between gap-3">
@@ -238,6 +242,7 @@ export default function SingersPage() {
             <li key={singer.slug}>
               <Link
                 href={`/singers/${singer.slug}`}
+                prefetch={false}
                 className="flex h-full items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
               >
                 <span className="text-sm font-medium">
@@ -260,6 +265,7 @@ export default function SingersPage() {
             <li key={v}>
               <Link
                 href={`/singers/voice-type/${voiceTypeSlug(v)}`}
+                prefetch={false}
                 className="flex min-h-11 items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
               >
                 <span className="text-sm font-medium">{v === "Contralto" ? "Contralto singers and their vocal ranges" : `${v} singers`}</span>
@@ -279,6 +285,7 @@ export default function SingersPage() {
             <li key={g}>
               <Link
                 href={`/singers/genre/${genreSlug(g)}`}
+                prefetch={false}
                 className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1.5 text-sm transition-colors hover:border-violet"
               >
                 {g}

@@ -19,7 +19,7 @@ On an easy breath in, the diaphragm flattens and the lower ribs swing out to the
 
 ### Use the practice material
 
-Open the sustain test in the breath room with the Practise button on this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.
+Open the sustain test in the breath room with the button at the top of this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: A quiet, even hiss is the whole task; you do not need to make a pitched sound.

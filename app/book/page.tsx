@@ -65,6 +65,10 @@ export default function BookPage() {
       kicker={`Included with Pro · ${FREE_COUNT} chapters free`}
       title={`${BOOK_TITLE}: a singing book on how your voice works and how to train it`}
       subtitle={`${BOOK_TITLE} is a ${BOOK_CONTENTS.length}-chapter singing book by ${AUTHOR_NAME}: how the voice works, how to read the numbers your own practice produces, a twelve-week program, and how to choose songs that fit. The contents and ${FREE_COUNT} chapters are free; the rest comes with Suede Sing Pro.`}
+      // In the header, not at the foot of the first card: on a phone the card's
+      // stats and paragraphs pushed "Read a free chapter" a screen and a half
+      // below the subtitle that promises it.
+      actions={<BookCta />}
     >
       <script
         type="application/ld+json"
@@ -105,9 +109,6 @@ export default function BookPage() {
             unlocks the other {BOOK_CONTENTS.filter((c) => !c.free).length} and
             the PDF.
           </p>
-          <div className="mt-5">
-            <BookCta />
-          </div>
         </Card>
 
         {BOOK_PARTS.map((part, i) => (
@@ -164,9 +165,10 @@ export default function BookPage() {
         <p className="max-w-2xl text-xs text-dim">
           This book is about practice, not medicine. Nothing here diagnoses or
           treats anything. If singing hurts, if you are hoarse and it will not
-          clear, or if you ever see blood, that is a question for a doctor or a
-          speech-language pathologist — there is no waiting period, and you do
-          not need to be sure it is serious before you go.
+          clear, or if you ever see blood, that is a question for a doctor who
+          can examine the vocal folds, such as an ENT or laryngologist — there
+          is no waiting period, and you do not need to be sure it is serious
+          before you go.
         </p>
       </div>
     </PageShell>

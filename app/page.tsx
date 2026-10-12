@@ -3,6 +3,7 @@ import Link from "next/link";
 import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "@/lib/pro-inventory";
 import { SONGS } from "@/components/songs/data";
+import { ROUTINES, routineMinutes } from "@/components/warmups/routines";
 import { SINGERS } from "@/lib/singers";
 import { ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
@@ -24,6 +25,14 @@ import {
 } from "@/components/landing/glyphs";
 import { routeKeywords } from "@/lib/keywords";
 
+/**
+ * The span of the free warmup routines, read from the routines themselves so
+ * a new short routine (the cool-down) or a longer one cannot leave the
+ * homepage quoting a range nothing on /warmups matches.
+ */
+const WARMUP_MINUTES = ROUTINES.filter((r) => !r.pro).map(routineMinutes);
+const WARMUP_SPAN = `${Math.min(...WARMUP_MINUTES)} to ${Math.max(...WARMUP_MINUTES)}`;
+
 /** The complete Early Access offer, shared with every other sales surface. */
 const PRO_PRICE_LINE = proHeadlineLong();
 const PRO_MONTHLY_PRICE = formatPrice(PRICING.monthly.amount);
@@ -44,7 +53,7 @@ const FEATURES = [
   {
     href: "/warmups",
     label: "Warmups",
-    desc: "Warmup routines from five to fifteen minutes, every exercise scored as you sing.",
+    desc: `Warmup routines from ${WARMUP_SPAN} minutes, every exercise scored as you sing.`,
     Glyph: WarmupGlyph,
   },
   {
@@ -177,7 +186,7 @@ const COVERS = [
 ];
 
 const LESSONS = [
-  { href: "/warmups", label: "Warmups", desc: "5 to 15 minute routines", Glyph: WarmupGlyph },
+  { href: "/warmups", label: "Warmups", desc: `${WARMUP_SPAN} minute routines`, Glyph: WarmupGlyph },
   { href: "/ear-training", label: "Ear training", desc: "Intervals and pitch matching", Glyph: EarGlyph },
   { href: "/breath", label: "Breath", desc: "Support and sustain", Glyph: BreathGlyph },
   { href: "/learn", label: "Learn", desc: "The voice course and books", Glyph: ProgressGlyph },
@@ -384,8 +393,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Famous voices: head-query singer pages, linked from the strongest
-          page on the subdomain. */}
+      {/* Famous voices: the indexable (reviewed) singer profiles lead; the
+          rest stay noindexed pending review and are linked for visitors. */}
       <div className="-mx-4 mt-12 sm:-mx-6 sm:mt-16">
         <FamousVoices />
       </div>

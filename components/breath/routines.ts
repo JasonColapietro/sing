@@ -225,6 +225,21 @@ export function breathRoutineMinutes(r: BreathRoutine): number {
   return Math.max(1, Math.round(breathRoutineSeconds(r) / 60));
 }
 
+/**
+ * The recommendation sized to the free guided practice left today, the same
+ * rule as warmups' sizeRoutineToAllowance. A set that runs past the allowance
+ * stops on the cap slide before its sustain test, the only step that scores,
+ * so a free singer's first set would end on a sales slide instead of a score.
+ * When `preferred` does not fit in `leftSec`, the quick set takes its place if
+ * that one fits; otherwise nothing shorter would finish either, and the pick
+ * stands. Pro passes Infinity and always gets `preferred`.
+ */
+export function sizeBreathRoutineToAllowance(preferred: BreathRoutine, leftSec: number): BreathRoutine {
+  if (breathRoutineSeconds(preferred) <= leftSec) return preferred;
+  const quick = breathRoutineById("quick");
+  return quick && breathRoutineSeconds(quick) <= leftSec ? quick : preferred;
+}
+
 /** The drill's own name, as it appears everywhere in the room. */
 export function breathDrillTitle(drill: BreathDrillId): string {
   switch (drill) {
@@ -285,6 +300,75 @@ export const BREATH_DRILL_IDS: BreathDrillId[] = ["sustain", "cue", "box", "fari
  */
 export function isBreathDrillId(value: string | null | undefined): value is BreathDrillId {
   return !!value && (BREATH_DRILL_IDS as string[]).includes(value);
+}
+
+/** The ranges each drill's setup card offers, so a link can't ask for more. */
+export const BOX_SIDE_RANGE = { min: 3, max: 8 } as const;
+export const BOX_MINUTE_CHOICES = [1, 3, 5] as const;
+export const FARINELLI_CAP_RANGE = { min: 8, max: 12 } as const;
+export const SUSTAIN_ATTEMPT_CHOICES = [1, 2, 3] as const;
+
+/**
+ * The query string that opens a drill on a given preset, for a link such as a
+ * program day's: "?drill=box" alone opens the setup card's defaults, so a day
+ * that asks for a five-count square has to say so in the link.
+ */
+export function drillPresetQuery(step: BreathStep): string {
+  const q = new URLSearchParams({ drill: step.drill });
+  switch (step.drill) {
+    case "box":
+      q.set("side", String(step.side));
+      q.set("minutes", String(step.minutes));
+      break;
+    case "farinelli":
+      q.set("cap", String(step.cap));
+      break;
+    case "sustain":
+      q.set("attempts", String(step.attempts));
+      break;
+    case "cue":
+      q.set("reps", String(step.reps));
+      break;
+  }
+  return q.toString();
+}
+
+/**
+ * Reads back what drillPresetQuery wrote, for the drill the link names. Null
+ * when the link carries no preset, or one the setup card could not show, so a
+ * hand-edited or stale link opens the drill's own defaults instead.
+ */
+export function drillPresetFromQuery(drill: BreathDrillId, q: URLSearchParams): BreathStep | null {
+  const int = (key: string) => {
+    const raw = q.get(key);
+    const n = raw === null ? NaN : Number(raw);
+    return Number.isInteger(n) ? n : null;
+  };
+  const within = (n: number | null, min: number, max: number) => n !== null && n >= min && n <= max;
+  switch (drill) {
+    case "box": {
+      const side = int("side");
+      const minutes = int("minutes");
+      const m = BOX_MINUTE_CHOICES.find((c) => c === minutes);
+      return within(side, BOX_SIDE_RANGE.min, BOX_SIDE_RANGE.max) && m
+        ? { drill: "box", side: side as number, minutes: m }
+        : null;
+    }
+    case "farinelli": {
+      const cap = int("cap");
+      return within(cap, FARINELLI_CAP_RANGE.min, FARINELLI_CAP_RANGE.max)
+        ? { drill: "farinelli", cap: cap as number }
+        : null;
+    }
+    case "sustain": {
+      const attempts = SUSTAIN_ATTEMPT_CHOICES.find((c) => c === int("attempts"));
+      return attempts ? { drill: "sustain", attempts } : null;
+    }
+    case "cue": {
+      const reps = CUE_REP_CHOICES.find((c) => c === int("reps"));
+      return reps ? { drill: "cue", reps, holdSec: CUE_HOLD_SEC } : null;
+    }
+  }
 }
 
 /** True when the drill needs the microphone. */

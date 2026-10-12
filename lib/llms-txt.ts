@@ -29,6 +29,7 @@ import { SING_GLOSSARY, SING_GLOSSARY_TERMS, termId } from "@/lib/glossary";
 import { TOOL_GUIDES } from "@/lib/guides";
 import { ORG_NAME, ORG_URL } from "@/lib/organization";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { MAX_RANGE_HISTORY } from "@/lib/progress-shape";
 import {
   BOOKS,
   FREE_EXERCISES,
@@ -37,6 +38,7 @@ import {
   SONG_COUNT,
 } from "@/lib/pro-inventory";
 import { PRICING, SOLD_OUT_PLANS, formatPrice } from "@/lib/pro-shared";
+import { SONGS } from "@/components/songs/data";
 import {
   HUB_GENRES,
   HUB_GENRE_MINIMUM,
@@ -157,6 +159,10 @@ export function buildLlmsTxt(): string {
   const stages = COURSE.length;
   const guided = listJoin(GUIDED_PRACTICE_ROOMS.map((r) => r.label));
   const glossaryCount = SING_GLOSSARY_TERMS.length;
+  // The /songs page counts melodies, not pages: an arrangement is a longer
+  // take on a melody already in the book (components/songs/data.ts).
+  const melodies = SONGS.filter((s) => !s.arrangementOf).length;
+  const arrangements = SONGS.length - melodies;
   // Hubs kept below the floor on purpose (lib/singers.ts), named from the data
   // so the sentence about the floor cannot go stale when one is added.
   const belowFloor = HUB_GENRES.filter((g) => singersByGenre(g).length < HUB_GENRE_MINIMUM);
@@ -202,7 +208,7 @@ The plan details below are read from the site's own pricing and practice-limit c
 
 - Free, with no daily limit: the pitch studio (/studio), the vocal range test (/range), the take recorder (/recorder), the metronome, keyboard and drone (/tools), the spectrogram and vocal-load analyzer (/analyze), the ${CATALOG_LESSON_COUNT}-lesson voice course (/learn/voice), every singer page (/singers), song-fit checks (/can-you-sing), the glossary (/glossary), ${measured.free} free chapters of ${BOOK_TITLE} and ${atlas.free} of ${ATLAS_TITLE}.
 - Free, with a daily limit: guided practice — ${guided} — shares ${FREE_DAILY_MINUTES} minutes a day on the free plan. The time is counted from logged practice and resets with the local calendar day; a step already under way is not cut off. All ${SONG_COUNT} songs and ${FREE_EXERCISES} warmup exercises are available inside that allowance.
-- Suede Pro removes the daily guided-practice limit and adds ${PRO_EXERCISES} more warmup exercises in ${PRO_PACK_COUNT} packs, both books in full with PDFs (${measured.chapters} and ${atlas.chapters} chapters), pitch analysis on recorded takes, per-note accuracy trends, every range test charted over time, the full adaptive coach plan, and progress sync across devices. Some multi-week programs at /programs are Pro-only.
+- Suede Pro removes the daily guided-practice limit and adds ${PRO_EXERCISES} more warmup exercises in ${PRO_PACK_COUNT} packs, both books in full with PDFs (${measured.chapters} and ${atlas.chapters} chapters), pitch analysis on recorded takes, per-note accuracy trends, the singer's latest ${MAX_RANGE_HISTORY} range tests charted over time, the full adaptive coach plan, and progress sync across devices. Some multi-week programs at /programs are Pro-only.
 - Price when this file was built: Suede Pro Early Access is ${proPriceLine()}. Check ${SING_HOME}/pro before quoting a price.
 - On every plan, pitch analysis runs in the browser on the singer's device and microphone audio is not uploaded. Recorder takes stay on the device. Pro's sync backs up progress numbers (scores, streaks, range), never audio.
 
@@ -212,13 +218,13 @@ The plan details below are read from the site's own pricing and practice-limit c
 
 - [Pitch studio](${SING_HOME}/studio): live pitch feedback — the note you sing, its frequency and deviation in cents, a scrolling eight-second pitch trace, and a target-note drill that completes when you hold a chosen note within ±50 cents for three cumulative seconds. Scored scales and slides are in the warmups (${SING_HOME}/warmups)
 - [Vocal range test](${SING_HOME}/range): measures the lowest and highest clear notes you sing in one session and the span in octaves, then estimates the conventional voice type that overlaps it; nothing to download
-- [Warmups](${SING_HOME}/warmups): guided vocal warmups that play each pattern, count you in, score pitch note by note and climb by semitone
+- [Warmups](${SING_HOME}/warmups): guided vocal warmups that play each pattern, count you in, score pitch note by note, and move the key a semitone every rep whatever the score: most climb and then come back down, and the descending ones start high and step down
 - [Ear training](${SING_HOME}/ear-training): short games for singers — match pitch, catch moving notes, name intervals and sing melodies back
 - [Breath](${SING_HOME}/breath): timed breathing patterns plus a microphone sustain test that times a held note and how even its loudness stays
-- [Songs](${SING_HOME}/songs): ${SONG_COUNT} public-domain melodies with lyrics, key and note range, each scored against its target notes. Once a singer has taken the range test, each song opens fitted to that measured range and can be shifted by semitones; without a saved range it opens in its written key
+- [Songs](${SING_HOME}/songs): ${SONG_COUNT} public-domain song pages covering ${melodies} melodies; most hold a song's opening phrase and ${arrangements} are longer arrangements. Each gives the words sung, the key and note range, and scores the singer against its target notes. Once a singer has taken the range test, each song opens fitted to that measured range and can be shifted by semitones; without a saved range it opens in its written key
 - [Recorder](${SING_HOME}/recorder): record takes on your device and compare two back to back
 - [Tools](${SING_HOME}/tools): metronome, virtual keyboard and drone
-- [Analyze](${SING_HOME}/analyze): live voice spectrogram, a tone view of the energy near 3 kHz, and a vocal-load estimate counted in phonation time and vibration cycles
+- [Analyze](${SING_HOME}/analyze): live voice spectrogram, a tone view of the energy near 3 kHz, and a vocal-load estimate counted in phonation time and vibration cycles while that page is open and on screen (voiced speech counts too; practice in other rooms does not)
 - [Programs](${SING_HOME}/programs): practice plans from one week to twelve, built day by day from the rooms above, with rest days
 - [Progress](${SING_HOME}/progress): practice log, streaks and range history, stored on your device
 

@@ -115,7 +115,9 @@ const PRO_JSON_LD = {
       "@id": `${SITE_URL}/pro#product`,
       name: "Suede Sing Pro",
       description:
-        "An adaptive daily practice plan, per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, scoring history for every song, cloud sync, and two books with PDFs.",
+        // Song scores and their trend are free on every song summary, so the
+        // paid tier is not described by them.
+        "An adaptive daily practice plan, per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, no daily limit on guided practice, cloud sync, and two books with PDFs.",
       applicationCategory: "MusicApplication",
       operatingSystem: "Web Browser",
       publisher: { "@id": "https://suedeai.ai/#organization" },

@@ -131,9 +131,12 @@ export function coursePaths(): {
 /**
  * Lines the port repeats on most lessons, word for word: the look and listen
  * checks of the shared steps, the "treat the reading as missing" recovery,
- * the closing self-check criterion and the default "Ready when". Printed on
- * every page they outweigh the hundred-odd words each lesson has of its own,
- * so the lesson page leaves them out and /learn/voice states them once.
+ * the generic symptoms ("The target disappears when…") that head each
+ * recovery, the closing self-check criterion and the default "Ready when".
+ * Printed on every page they outweigh the hundred-odd words each lesson has
+ * of its own, so the lesson page leaves them out and /learn/voice states the
+ * rules once. A lesson's own recovery names its own symptom ("If the hiss
+ * pulses…"), so it reads whole without the shared one above it.
  *
  * "Most" is more than half. Text that belongs to one lesson is shared at most
  * by a module or a reading (about a fifth of the course), so the cut sits well
@@ -146,6 +149,7 @@ export const UNIVERSAL_LESSON_TEXT: ReadonlySet<string> = (() => {
     const lines = new Set([
       ...l.steps.flatMap((s) => [s.look, s.listen]),
       ...l.mistakes.map((m) => m.recovery),
+      ...l.mistakes.map((m) => m.observation),
       ...l.selfCheck.criteria,
       l.selfCheck.readyWhen,
     ]);

@@ -318,6 +318,8 @@ export function WarmupsClient() {
       ? `Turn on your mic to start “${pendingDeepLinkEx.title}”`
       : "How a warmup works here";
 
+  const newToWarmups = !progress.sessions.some((s) => s.type === "warmup");
+
   return (
     <PageShell
       kicker="Warmups"
@@ -329,7 +331,7 @@ export function WarmupsClient() {
         view === "home"
           ? pitch.listening
             ? "Start today's warmup, or pick a length. Every exercise is scored as you sing."
-            : "Singing warm-ups that play each exercise, count you in and score your pitch as you sing it back. Pick a routine: the mic comes on only when you press start, and nothing leaves this device."
+            : "Singing warm-ups that play each exercise, count you in and score your pitch as you sing it back. Pick a routine: the mic comes on only when you press start, and your audio never leaves this device."
           : undefined
       }
     >
@@ -341,11 +343,19 @@ export function WarmupsClient() {
           {activeProgram?.view.status === "todo" && <ProgramEntryCard active={activeProgram} />}
           {nextExercise && (
             <ContinueCard
-              kicker="Continue your path"
+              // Someone who has never sung a warmup has no path to continue,
+              // and this card's start opens one endless ladder, not the short
+              // routine the homepage promised: say so, and point at the sets
+              // that end on their own.
+              kicker={newToWarmups ? "Start here" : "Continue your path"}
               streakDays={streakDays}
               streakBest={progress.streak.best}
               title={nextExercise.title}
-              tagline="The next exercise in your lowest unfinished tier. You can still choose any exercise below."
+              tagline={
+                newToWarmups
+                  ? "One gentle exercise; it keeps going until you press End. The routines below finish on their own."
+                  : "The next exercise in your lowest unfinished tier. You can still choose any exercise below."
+              }
               onStart={() => void selectExercise(nextExercise, "continue")}
               startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start exercise" : "Enable mic and start"}
               micReady={pitch.listening}
@@ -486,6 +496,7 @@ export function WarmupsClient() {
           onRepeat={() => startRoutine(routineSummary.routine)}
           onHome={() => setView("home")}
           onPractice={startExerciseById}
+          capped={cap.capped}
         />
       )}
 

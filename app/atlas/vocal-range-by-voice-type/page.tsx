@@ -5,6 +5,7 @@ import { midiToLabel } from "@/lib/audio/notes";
 import {
   SINGERS,
   VOICE_KINDS,
+  joinNames,
   pluralVoice,
   rangeLabel,
   singersByVoiceType,
@@ -119,14 +120,35 @@ const ROWS: Row[] = VOICE_KINDS.map((voice) => {
 });
 
 /**
- * Categories too small for "closest to the band" to be a selection at all.
- *
- * With three basses in the library, picking the three closest to the band
- * returns all three, and the footnote's claim that they are illustrative
- * rather than exceptional would be doing no work. Derived, not listed, so it
+ * Categories too small for "closest to the band" to be a selection at all:
+ * picking the three closest returns every voice the library holds, so the
+ * footnote says the row is the whole population. Derived, not listed, so it
  * corrects itself when the library grows.
  */
 const SMALL_CATEGORIES = ROWS.filter((r) => r.count <= EXAMPLE_COUNT);
+
+/** Low-end gap plus high-end gap, in semitones, past which an example is not close to its band. */
+const MAX_EXAMPLE_DISTANCE = 6;
+
+/**
+ * Examples that are only the nearest the library has, so the footnote must not
+ * let them pass as typical. Being among the closest is not the same as being
+ * close: when this was written the third-closest of five basses was Avi
+ * Kaplan, whose cited floor sits more than an octave under the band. The
+ * footnote used to call every example "illustrative rather than exceptional",
+ * which that row made false. Named per singer rather than per row, and
+ * derived, so it clears itself as the library fills in.
+ */
+const STRETCHED_EXAMPLES = ROWS.flatMap((r) => {
+  const band = REFERENCE_BANDS[r.voice];
+  return r.examples
+    .filter(
+      (s) =>
+        Math.abs(s.lowMidi - band.low) + Math.abs(s.highMidi - band.high) >
+        MAX_EXAMPLE_DISTANCE,
+    )
+    .map((s) => `${s.name} (${r.lower}, ${rangeLabel(s)})`);
+});
 
 /* ------------------------------------------------------------------- faq --- */
 
@@ -144,6 +166,21 @@ interface Faq {
   a: string;
 }
 
+/**
+ * The female passaggio zones are the commercial belt-or-mix break, not the
+ * first flip out of chest voice (see VOICE_TYPE_PASSAGGIO). A woman who does a
+ * quiet slide will find that first flip several notes lower, so every answer
+ * that prints a female zone names it too, with the same E4-G4 band book
+ * chapter three gives.
+ */
+const CCM_ZONE_TYPES: ReadonlySet<VoiceKind> = new Set<VoiceKind>([
+  "Contralto",
+  "Mezzo-soprano",
+  "Soprano",
+]);
+const EARLIER_SHIFT =
+  "most women also meet an earlier, lighter shift out of chest voice somewhere around E4 to G4";
+
 function typeAnswer(row: Row): string {
   const note = VOICE_TYPE_NOTES[row.voice];
   const group = singersByVoiceType(row.voice);
@@ -158,6 +195,9 @@ function typeAnswer(row: Row): string {
     row.caveat
       ? `${row.caveat} It is usually placed around ${row.passaggio}.`
       : `The passaggio, where the voice changes gear between registers, usually falls around ${row.passaggio}.`,
+    ...(CCM_ZONE_TYPES.has(row.voice)
+      ? [`That is the commercial-singing zone where a belt or mix changes gear; ${EARLIER_SHIFT}.`]
+      : []),
     `Range and voice type are different measurements, though: the type describes where a voice sits comfortably, not the furthest notes it can reach. The ${row.count} ${plural} in Suede Sing's library of ${SINGERS.length} singers carry cited ranges running ${observed}, well outside the conventional band at both ends.`,
   ].join(" ");
 }
@@ -181,7 +221,7 @@ const FAQ: Faq[] = [
     // one that can drift from the table. Built from the same constant the
     // table renders: the hand-typed version of this sentence outlived a
     // correction to the figures once already.
-    a: `The passaggio is the pitch zone where a singing voice changes gear between registers — it runs from where the voice has to start shedding weight up to where chest voice stops working the way it did and a lighter production has to take over. It is a few notes wide rather than a single note, and it is felt as a break, a wobble, or a sudden need to push. Each voice type has its own zone: roughly ${row("Bass").passaggio} for a bass, ${row("Baritone").passaggio} for a baritone, ${row("Tenor").passaggio} for a tenor, ${row("Mezzo-soprano").passaggio} for a mezzo-soprano, and ${row("Soprano").passaggio} for a soprano. Most of the difficulty in a song lives at or just under the singer's passaggio, which is why two singers with identical ranges can find completely different songs hard.`,
+    a: `The passaggio is the pitch zone where a singing voice changes gear between registers — it runs from where the voice has to start shedding weight up to where chest voice stops working the way it did and a lighter production has to take over. It is a few notes wide rather than a single note, and it is felt as a break, a wobble, or a sudden need to push. Each voice type has its own zone: roughly ${row("Bass").passaggio} for a bass, ${row("Baritone").passaggio} for a baritone, ${row("Tenor").passaggio} for a tenor, ${row("Mezzo-soprano").passaggio} for a mezzo-soprano, and ${row("Soprano").passaggio} for a soprano. For mezzo-sopranos and sopranos those figures are the commercial-singing zone where a belt or mix changes gear; ${EARLIER_SHIFT}. Most of the difficulty in a song lives at or just under the singer's passaggio, which is why two singers with identical ranges can find completely different songs hard.`,
   },
 ];
 
@@ -390,8 +430,7 @@ export default function VocalRangeByVoiceTypePage() {
 
           <p className="mt-5 max-w-3xl text-xs text-dim">
             Example singers are not the most famous of each category — they are
-            the three whose cited ranges sit closest to the conventional band,
-            which is what makes them illustrative rather than exceptional.
+            the three whose cited ranges sit closest to the conventional band.
             Singers whose catalog label was disputed on individual review are
             left out. Their figures are commonly cited approximations compiled
             from recordings and public discussion, not lab measurements.
@@ -410,6 +449,15 @@ export default function VocalRangeByVoiceTypePage() {
                 are the whole population rather than a selection from it — true
                 to the record, in which these categories really are that rare,
                 but not a claim that the singers named are typical.
+              </>
+            )}
+            {STRETCHED_EXAMPLES.length > 0 && (
+              <>
+                {" "}
+                Closest is not always close: {joinNames(STRETCHED_EXAMPLES)}{" "}
+                {STRETCHED_EXAMPLES.length === 1
+                  ? "is the nearest the library has for that row, not a typical example."
+                  : "are the nearest the library has for those rows, not typical examples."}
               </>
             )}
             {ROWS.some((r) => r.caveat) && (
@@ -492,8 +540,9 @@ export default function VocalRangeByVoiceTypePage() {
           Voice categories are guides borrowed from choral and operatic
           practice, not boxes, and plenty of singers are filed differently by
           different sources. Nothing here is medical advice — a voice that
-          hurts, stays hoarse, or loses easy notes is a question for a doctor or
-          a speech-language pathologist, not a practice plan.
+          hurts, stays hoarse, or loses easy notes is a question for a doctor
+          who can examine the vocal folds, such as an ENT or laryngologist, not
+          a practice plan.
         </p>
       </div>
     </PageShell>

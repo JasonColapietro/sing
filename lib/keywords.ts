@@ -350,15 +350,28 @@ export function popSongKeywords(song: { slug?: string; title: string; artist: st
 /**
  * Song pages. Most entries transcribe only a song's opening phrase
  * (`form: "phrase"`), so they do not answer "<song> lyrics" or "<song> vocal
- * range" and lead with "sing <song>" instead; only full arrangements keep the
- * lyrics, key and range terms.
+ * range" and lead with "sing <song>" instead. A longer arrangement
+ * (`arrangementOf`) sings selected lines, so it is treated the same way; only
+ * whole-song transcriptions keep the lyrics, key and range terms.
  */
 export function songKeywords(song: {
   slug?: string;
   title: string;
   form?: string;
+  arrangementOf?: string;
 }): string[] {
   const route = `/songs/${song.slug ?? ""}`;
+  if (song.arrangementOf !== undefined) {
+    return pageKeywords(
+      [
+        `sing ${song.title}`,
+        `${song.title} melody`,
+        `${song.title} notes`,
+        `${song.title} note range`,
+      ],
+      route,
+    );
+  }
   if (song.form === "phrase") {
     return pageKeywords(
       [

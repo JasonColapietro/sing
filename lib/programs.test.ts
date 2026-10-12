@@ -6,6 +6,12 @@ import {
   cappedDaySeconds,
   dayMinutes,
   dayNeedsPro,
+  drillPreset,
+  EAR_PITCH_GAME,
+  EAR_RECOGNITION_GAMES,
+  EAR_ROUTINE_ID,
+  EAR_ROUTINE_NAME,
+  EAR_SEC,
   freePlanCalendarDays,
   isRestDay,
   itemDoneOn,
@@ -17,6 +23,7 @@ import {
   itemHref,
   itemIsPro,
   itemLabel,
+  itemSeconds,
   markDayDone,
   programById,
   programMinutesRange,
@@ -34,7 +41,14 @@ import {
 } from "./programs";
 import { routineById, isFreeExercise, stepExercise } from "@/components/warmups/routines";
 import { ALL_EXERCISES } from "@/components/warmups/exercises";
-import { breathRoutineById, isBreathDrillId } from "@/components/breath/routines";
+import {
+  breathRoutineById,
+  drillPresetFromQuery,
+  isBreathDrillId,
+  type BreathStep,
+} from "@/components/breath/routines";
+import { GAME_NAMES } from "@/components/ear/lib";
+import { earRoutineById, earRoutineSeconds } from "@/components/ear/routines";
 import { SONGS } from "@/components/songs/data";
 import { BAND_ORDER, bandForSong } from "@/components/songs/lib";
 import type { SessionLog } from "./progress-shape";
@@ -98,6 +112,8 @@ describe("program data", () => {
             break;
           case "drill":
             expect(isBreathDrillId(item.id)).toBe(true);
+            // A day's own setting is for the drill it names.
+            expect(drillPreset(item).drill, `${p.id}: drill ${item.id}`).toBe(item.id);
             break;
           case "song":
             expect(SONGS.some((s) => s.slug === item.slug), `${p.id}: song ${item.slug}`).toBe(true);
@@ -208,10 +224,18 @@ describe("program data", () => {
   it("works one song in the last four weeks and runs one sustain test a week, as chapters 18 and 19 ask", () => {
     const p = programById("measured-voice-12w")!;
     const weekDays = (w: number) => p.days.slice((w - 1) * 7, w * 7);
+    // Sustain attempts an item asks for: a lone drill is one, and a breath
+    // set runs every attempt its sustain steps name.
+    const sustainAttempts = (i: ProgramItem): number => {
+      if (i.kind === "drill") return i.id === "sustain" ? 1 : 0;
+      if (i.kind !== "breath") return 0;
+      return breathRoutineById(i.id)!.steps.reduce((n, s) => n + (s.drill === "sustain" ? s.attempts : 0), 0);
+    };
     // Weeks 9 and 10: "Run one sustain test a week", and phrase work in a song.
+    // The breath sets each end on sustains, so they count too.
     for (const w of [9, 10]) {
       const items = weekDays(w).flatMap((d) => d.items);
-      expect(items.filter((i) => i.kind === "drill" && i.id === "sustain"), `week ${w}`).toHaveLength(1);
+      expect(items.reduce((n, i) => n + sustainAttempts(i), 0), `week ${w}`).toBe(1);
       expect(items.some((i) => i.kind === "song"), `week ${w}`).toBe(true);
     }
     // Weeks 11 and 12: "One song. Not three, not a set." The same one weeks 9
@@ -225,6 +249,70 @@ describe("program data", () => {
     expect([...songs(11, 12)]).toHaveLength(1);
     expect(songs(9, 12)).toEqual(songs(11, 12));
     expect(p.days.some((d) => d.items.filter((i) => i.kind === "song").length > 1)).toBe(false);
+  });
+
+  it("trains the ear every session of weeks 3 and 4, as chapter 15 asks", () => {
+    // "Three or four minutes a session, every session."
+    const p = programById("measured-voice-12w")!;
+    const days = p.days.slice(14, 28).filter((d) => !isRestDay(d));
+    expect(days.length).toBeGreaterThan(0);
+    for (const d of days) {
+      const ear = d.items.filter((i) => i.kind === "ear");
+      expect(ear, d.title).toHaveLength(1);
+      // After the warmup, never on a cold voice.
+      const at = d.items.findIndex((i) => i.kind === "ear");
+      expect(d.items.slice(0, at).some((i) => i.kind === "routine"), d.title).toBe(true);
+    }
+    const ear: ProgramItem = { kind: "ear" };
+    expect(itemIsPro(ear)).toBe(false);
+    expect(itemLabel(ear).title).toBe("Quick ear");
+    expect(itemLabel(ear).meta).toBe("Ear · Higher or lower, Interval ID and pitch match · about 4 min");
+    expect(cappedDaySeconds({ title: "", items: [ear] })).toBe(EAR_SEC);
+    // The link starts a real workout, and the row's name and length are that
+    // workout's: pitch match plus a recognition game, as the item promises.
+    const routine = earRoutineById(EAR_ROUTINE_ID)!;
+    expect(routine.name).toBe(EAR_ROUTINE_NAME);
+    expect(earRoutineSeconds(routine)).toBe(EAR_SEC);
+    const games = routine.steps.map((st) => GAME_NAMES[st.game]);
+    expect(games).toContain(EAR_PITCH_GAME);
+    expect(games.some((g) => EAR_RECOGNITION_GAMES.includes(g))).toBe(true);
+    // Chapter 15's "three or four minutes a session".
+    expect(EAR_SEC).toBeGreaterThanOrEqual(180);
+    expect(EAR_SEC).toBeLessThanOrEqual(240 + 4 * routine.steps.length);
+  });
+
+  it("runs weeks 9 and 10's breath at longer counts than weeks 1 and 2, for four or five minutes, as chapter 18 asks", () => {
+    // "four or five minutes: the breath drills chapter fourteen describes, run
+    // with the exhale counts a beat or two longer than you used in weeks 1 and 2."
+    const p = programById("measured-voice-12w")!;
+    const breathSteps = (d: ProgramDay): BreathStep[] =>
+      d.items.flatMap((i) =>
+        i.kind === "drill" ? [drillPreset(i)] : i.kind === "breath" ? breathRoutineById(i.id)!.steps : [],
+      );
+    const sides = (days: ProgramDay[]) => days.flatMap(breathSteps).flatMap((s) => (s.drill === "box" ? [s.side] : []));
+    const caps = (days: ProgramDay[]) => days.flatMap(breathSteps).flatMap((s) => (s.drill === "farinelli" ? [s.cap] : []));
+    const early = p.days.slice(0, 14);
+    const late = p.days.slice(56, 70).filter((d) => !isRestDay(d));
+    expect(late.length).toBe(8);
+    // Longer than weeks 1 and 2 ran most days: four-count sides, a climb to eight.
+    expect(Math.min(...sides(late))).toBeGreaterThan(Math.min(...sides(early)));
+    expect(Math.min(...caps(late))).toBeGreaterThan(Math.min(...caps(early)));
+    for (const d of late) {
+      // Every session has the square and the climb, at a count past weeks 1-2's.
+      expect(sides([d]).length, d.title).toBeGreaterThan(0);
+      expect(caps([d]).length, d.title).toBeGreaterThan(0);
+      // Four or five minutes of it, the weekly sustain test aside.
+      const sec = d.items
+        .filter((i) => (i.kind === "drill" && i.id !== "sustain") || i.kind === "breath")
+        .reduce((n, i) => n + itemSeconds(i), 0);
+      expect(sec / 60, d.title).toBeGreaterThanOrEqual(4);
+      expect(sec / 60, d.title).toBeLessThanOrEqual(5);
+    }
+    // The card says which setting to pick on the drill's setup card.
+    const box = late[0].items.find((i) => i.kind === "drill" && i.id === "box")!;
+    expect(itemLabel(box).meta).toBe("Breath · 1 min · 5s sides");
+    const climb = late[0].items.find((i) => i.kind === "drill" && i.id === "farinelli")!;
+    expect(itemLabel(climb).meta).toBe("Breath · Top count 10");
   });
 
   it("counts the calendar days a program takes on the free plan's daily allowance", () => {
@@ -371,13 +459,23 @@ describe("program data", () => {
 
   it("deep-links every item with a relative URL into its room", () => {
     const hrefs = PROGRAMS.flatMap((p) => allItems(p).map(itemHref));
-    for (const h of hrefs) expect(h).toMatch(/^\/(warmups|breath|range|songs|recorder)(\?|$)/);
+    for (const h of hrefs) expect(h).toMatch(/^\/(warmups|breath|range|songs|recorder|ear-training)(\?|$)/);
     expect(itemHref({ kind: "routine", id: "quick" })).toBe("/warmups?routine=quick");
     expect(itemHref({ kind: "exercise", id: "vibrato-hold", reps: 4 })).toBe("/warmups?exercise=vibrato-hold");
     expect(itemHref({ kind: "breath", id: "daily" })).toBe("/breath?routine=daily");
     expect(itemHref({ kind: "drill", id: "sustain" })).toBe("/breath?drill=sustain");
     expect(itemHref({ kind: "range" })).toBe("/range?mode=range");
     expect(itemHref({ kind: "recorder" })).toBe("/recorder");
+    expect(itemHref({ kind: "ear" })).toBe("/ear-training?routine=quick");
+    // A drill with a preset carries it, so the breath room opens on the day's counts.
+    expect(itemHref({ kind: "drill", id: "box", preset: { drill: "box", side: 5, minutes: 1 } })).toBe(
+      "/breath?drill=box&side=5&minutes=1",
+    );
+    for (const item of PROGRAMS.flatMap(allItems)) {
+      if (item.kind !== "drill" || !item.preset) continue;
+      const q = new URLSearchParams(itemHref(item).split("?")[1]);
+      expect(drillPresetFromQuery(item.id, q), itemHref(item)).toEqual(item.preset);
+    }
     expect(itemHref({ kind: "song", slug: "ode-to-joy" })).toBe("/songs?song=ode-to-joy");
   });
 });
@@ -406,6 +504,24 @@ describe("item completion from the log", () => {
     expect(itemDoneOn({ kind: "drill", id: "sustain" }, [drills[0]], today)).toBe(false);
     expect(itemDoneOn({ kind: "range" }, [session(today, "range", "Range test")], today)).toBe(true);
     expect(itemDoneOn({ kind: "range" }, [], today)).toBe(false);
+  });
+
+  it("counts ear training once pitch match and a recognition game are logged, as chapter 15 pairs them", () => {
+    const ear: ProgramItem = { kind: "ear" };
+    const game = (detail: string, type: SessionLog["type"] = "ear") => session(today, type, detail);
+    // The titles the ear room logs its games under.
+    expect(EAR_PITCH_GAME).toBe(GAME_NAMES["pitch-match"]);
+    expect(EAR_RECOGNITION_GAMES).toEqual([GAME_NAMES.interval, GAME_NAMES["higher-lower"]]);
+    expect(itemDoneOn(ear, [game("Pitch match"), game("Interval ID")], today)).toBe(true);
+    expect(itemDoneOn(ear, [game("Higher or lower"), game("Pitch match")], today)).toBe(true);
+    // One game is not the three minutes the row asks for.
+    expect(itemDoneOn(ear, [game("Pitch match")], today)).toBe(false);
+    expect(itemDoneOn(ear, [game("Interval ID")], today)).toBe(false);
+    expect(itemDoneOn(ear, [game("Interval ID"), game("Higher or lower")], today)).toBe(false);
+    expect(itemDoneOn(ear, [game("Pitch match"), game("Pitch match")], today)).toBe(false);
+    expect(itemDoneOn(ear, [game("Pitch match", "warmup"), game("Interval ID")], today)).toBe(false);
+    // Quick ear plays all three, so it ticks the row by itself.
+    expect(itemDoneOn(ear, ["Higher or lower", "Interval ID", "Pitch match"].map((d) => game(d)), today)).toBe(true);
   });
 
   it("counts a song by its title", () => {

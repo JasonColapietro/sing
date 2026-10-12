@@ -1,13 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { ALL_EXERCISES, EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
+import { ALL_EXERCISES, EXERCISES, PRO_PACKS, buildSegments } from "@/components/warmups/exercises";
 import type { SessionLog } from "@/lib/progress-shape";
 import {
   KIND_SESSION_ORDER,
+  MAX_ONE_BREATH_SEC,
   dailyTempoFor,
   dailyThreeDone,
   exerciseKind,
   planDailyThree,
   seededUnit,
+  slowestOneBreathTempo,
   tempoForScores,
 } from "./daily-three";
 
@@ -203,6 +205,30 @@ describe("difficulty steps", () => {
     expect(dailyTempoFor(plan, "octave-siren")).toBe(0.5);
     expect(dailyTempoFor(plan, "not-in-plan")).toBeNull();
     expect(dailyTempoFor(null, "octave-siren")).toBeNull();
+  });
+
+  it("never slows a one-breath pattern past one comfortable breath", () => {
+    // Hung-ee-mm is three passes on one breath: 9.4s at 1x, 18.8s at 0.5x.
+    const hung = EXERCISES.find((e) => e.id === "hung-ee-mm")!;
+    const rep = (t: number) => buildSegments(hung, 60, t).totalSec;
+    expect(rep(0.5)).toBeGreaterThan(MAX_ONE_BREATH_SEC);
+    expect(slowestOneBreathTempo(hung)).toBe(1);
+    const sessions = [
+      ...baseline(),
+      warmup(title("hung-ee-mm"), 30, "2026-09-22"),
+      warmup(title("hung-ee-mm"), 35, "2026-09-21"),
+    ];
+    const plan = planDailyThree({ sessions, day: TODAY });
+    const p = plan.picks.find((x) => x.exercise.id === "hung-ee-mm")!;
+    expect(p.role).toBe("focus");
+    expect(p).toMatchObject({ tempo: 1, step: "hold" });
+    expect(rep(p.tempo)).toBeLessThanOrEqual(MAX_ONE_BREATH_SEC);
+    // Every free exercise's floor fits one breath.
+    for (const e of EXERCISES) {
+      expect(buildSegments(e, 60, slowestOneBreathTempo(e)).totalSec, e.id).toBeLessThanOrEqual(MAX_ONE_BREATH_SEC);
+    }
+    // Shorter patterns still step down as far as their scores ask.
+    expect(slowestOneBreathTempo(EXERCISES.find((e) => e.id === "octave-siren")!)).toBe(0.5);
   });
 });
 

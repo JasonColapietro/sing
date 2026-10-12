@@ -57,8 +57,41 @@ function isPhrase(song: Song): boolean {
   return song.form === "phrase";
 }
 
+/**
+ * A longer arrangement (`arrangementOf`) sings selected lines, not every
+ * verse, so like a phrase it is a partial transcription: its words are not the
+ * song's lyrics and its tonic is where this transcription sits, not the
+ * song's key.
+ */
+function isPartial(song: Song): boolean {
+  return song.form === "phrase" || song.arrangementOf !== undefined;
+}
+
+/**
+ * Tags that name what a melody asks of a voice, as opposed to its genre,
+ * occasion or origin ("christmas", "scottish", "hymn"), its meter ("waltz"),
+ * its scale ("modal", "dorian", "hexatonic") or its shape ("chorus hook",
+ * "pickup").
+ * Those describe where a melody comes from or how it sounds; only these say
+ * what singing it takes.
+ */
+const DEMAND_TAGS = new Set([
+  "stepwise",
+  "narrow range",
+  "wide range",
+  "leap",
+  "octave leap",
+  "long tones",
+  "legato",
+  "repeated note",
+  "dotted rhythm",
+]);
+
 /** The page's title: what the page actually answers, in the 60-character budget. */
 function songTitle(song: Song): string {
+  if (song.arrangementOf) {
+    return firstFit([`Sing ${song.title}: Key & Note Range`, `Sing ${song.title}`], MAX_TITLE);
+  }
   return isPhrase(song)
     ? firstFit(
         [
@@ -105,13 +138,18 @@ export async function generateMetadata({
   // What the title promises leads; whole sentences only, so a long song name
   // sheds the tail rather than a clause.
   const phraseFacts = `${f.lowLabel} to ${f.highLabel}, tonic ${f.tonic}, rated ${f.difficulty.toLowerCase()}.`;
-  const description = isPhrase(song)
+  // A partial transcription leads with singing, not "<song> lyrics". A longer
+  // arrangement's own title already names the lines it holds.
+  const partialName = song.arrangementOf
+    ? song.title
+    : `the opening phrase of ${song.title}`;
+  const description = isPartial(song)
     ? pro
-      ? `The opening phrase of ${song.title}: ${phraseFacts} Public domain; the practice arrangement is in the Suede Pro songbook.`
+      ? `${song.arrangementOf ? song.title : `The opening phrase of ${song.title}`}: ${phraseFacts} Public domain; the practice arrangement is in the Suede Pro songbook.`
       : firstFit(
           [
-            `Sing the opening phrase of ${song.title} with live pitch feedback: ${phraseFacts} Public domain; fitted to your range after the range test.`,
-            `Sing the opening phrase of ${song.title} with live pitch feedback: ${phraseFacts} Public domain.`,
+            `Sing ${partialName} with live pitch feedback: ${phraseFacts} Public domain; fitted to your range after the range test.`,
+            `Sing ${partialName} with live pitch feedback: ${phraseFacts} Public domain.`,
           ],
           MAX_DESCRIPTION,
         )
@@ -145,7 +183,9 @@ export default async function SongPage({
 
   const pro = isProSong(song.id);
   const phrase = isPhrase(song);
+  const partial = isPartial(song);
   const f = songFacts(song);
+  const drill = song.tags.find((t) => DEMAND_TAGS.has(t));
   const pageUrl = `${SITE_URL}/songs/${song.slug}`;
   const answer = answerSentence(song);
   const lyrics = songLyricText(song);
@@ -206,10 +246,11 @@ export default async function SongPage({
         // `musicalKey` wants a key name, so it gets the pitch class without the
         // octave; the octave-specific tonic the page actually prints goes in
         // additionalProperty below. No mode is asserted — several of these are
-        // modal rather than major or minor. A phrase transcription carries
-        // neither: its tonic is where this transcription sits, not the song's
-        // key, and its words are one phrase, not the song's lyrics.
-        ...(phrase
+        // modal rather than major or minor. A partial transcription (a phrase,
+        // or a longer arrangement of selected lines) carries neither: its tonic
+        // is where this transcription sits, not the song's key, and its words
+        // are some lines, not the song's lyrics.
+        ...(partial
           ? {}
           : {
               musicalKey: midiToName(song.defaultKeyRootMidi),
@@ -222,7 +263,7 @@ export default async function SongPage({
         additionalProperty: [
           {
             "@type": "PropertyValue",
-            name: phrase ? "Transcription tonic" : "Tonic",
+            name: partial ? "Transcription tonic" : "Tonic",
             value: f.tonic,
           },
           {
@@ -238,12 +279,20 @@ export default async function SongPage({
           },
           {
             "@type": "PropertyValue",
-            name: phrase ? "Lowest note (opening phrase)" : "Lowest note",
+            name: phrase
+              ? "Lowest note (opening phrase)"
+              : song.arrangementOf
+                ? "Lowest note (these lines)"
+                : "Lowest note",
             value: f.lowLabel,
           },
           {
             "@type": "PropertyValue",
-            name: phrase ? "Highest note (opening phrase)" : "Highest note",
+            name: phrase
+              ? "Highest note (opening phrase)"
+              : song.arrangementOf
+                ? "Highest note (these lines)"
+                : "Highest note",
             value: f.highLabel,
           },
           {
@@ -278,7 +327,9 @@ export default async function SongPage({
       title={
         phrase
           ? `Sing ${song.title}: the opening phrase, its key and note range`
-          : `Sing ${song.title}: lyrics, key and vocal range`
+          : song.arrangementOf
+            ? `Sing ${song.title}: the lines, their key and note range`
+            : `Sing ${song.title}: lyrics, key and vocal range`
       }
       subtitle={`${phrase ? `The opening phrase of “${song.title}”` : `“${song.title}”`} runs from ${f.lowLabel} to ${f.highLabel}, ${f.rangeSemis} semitones, with its tonic on ${f.tonic} at ${song.bpm} bpm, and rates ${f.difficulty.toLowerCase()} to sing. Origin: ${song.origin}.`}
       actions={
@@ -394,15 +445,18 @@ export default async function SongPage({
 
         <Card>
           <SectionLabel>How it is filed</SectionLabel>
-          <h2 className="mt-3 text-xl">Genre, era and what it drills</h2>
+          <h2 className="mt-3 text-xl">
+            {drill ? "Genre, era and what it drills" : "Genre, era and tags"}
+          </h2>
           <div className="mt-4">
             <SongTags song={song} />
           </div>
-          <p className="mt-5 max-w-3xl text-sm text-mut">
-            Tags describe what the melody asks of a voice, not what it sounds
-            like — &ldquo;{song.tags[0] ?? song.genre.toLowerCase()}&rdquo; is
-            the reason to pick it on a given day.
-          </p>
+          {drill && (
+            <p className="mt-5 max-w-3xl text-sm text-mut">
+              Genre and era say where the melody comes from; &ldquo;{drill}&rdquo;
+              is what it asks of a voice.
+            </p>
+          )}
         </Card>
 
         {related.length > 0 && (

@@ -2,6 +2,7 @@
 
 import { CapSlide } from "@/components/practice/free-cap";
 import { useFreeCap } from "@/lib/free-cap";
+import { liveStreak } from "@/components/account/save-state";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
@@ -232,7 +233,7 @@ function EarResults({
       score={score}
       stars={starsForScore(score)}
       xp={xp}
-      streakDays={progress.streak.current}
+      streakDays={liveStreak(progress.streak)}
       goal={{ doneSec: goalDoneSec, goalSec }}
       rows={steps.map((s) => ({
         label: s.label,

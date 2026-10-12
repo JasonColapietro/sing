@@ -673,12 +673,12 @@ export function Library({
 
         {/* The songbook is no longer the paywall — all 26 melodies are free,
             because six public-domain folk tunes held back from someone who
-            already had twenty was a gate that argued against buying. What Pro
-            adds on this surface is the record of singing them. */}
+            already had twenty was a gate that argued against buying. Each
+            song's best score and score trend are free too, so what Pro adds
+            here is the per-note report the song runs feed. */}
         <FreeOnly>
           <ProInlineNudge>
-            Pro charts every take of every song, so you can hear month one
-            against month six
+            Pro adds every song you sing to your per-note accuracy report
           </ProInlineNudge>
         </FreeOnly>
       </section>

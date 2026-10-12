@@ -54,7 +54,7 @@ I compared my Amazing Grace study with the note reference and identified one pit
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => Hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center.
+- The target disappears when the range, volume, speed, or duration increases. => If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -72,7 +72,7 @@ I compared my Amazing Grace study with the note reference and identified one pit
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: Hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If a note drifts off center or you hear yourself searching for it, hear the reference once, then sing from silence and review your recording. Shorten long notes that lose center. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
 What this shows: I compared my Amazing Grace study with the note reference and identified one pitch to revisit by ear. This is a self-report, not an automatic assessment.
 

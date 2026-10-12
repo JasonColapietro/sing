@@ -111,8 +111,8 @@ export function UnlockStack() {
             are free and stay free; guided practice (warmups, ear training,
             breath and songs) shares five minutes a day. Pro removes that daily
             limit and adds {PRO_EXERCISES} exercises across {PRO_PACK_COUNT}{" "}
-            packs, both books in full, pitch analysis on every take, and the
-            long record of your own voice.
+            packs, both books in full, pitch analysis on every take, and
+            charts of your per-note accuracy and range over time.
           </p>
         </div>
       </div>

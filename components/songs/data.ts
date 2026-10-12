@@ -695,7 +695,10 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Long held tones over a gentle arch — Easy tempo, Medium reach to A4.
+    // Pickup on the dominant below, three repeated tonics on "Shen-an-doah",
+    // a stepwise climb to the fourth, then a third up to the sixth on "hear":
+    // G3 to A4. Scores Hard (span 14, two leaps) and sits in the "A stretch"
+    // band.
     id: "shenandoah",
     slug: "shenandoah",
     title: "Shenandoah",
@@ -712,19 +715,21 @@ export const SONGS: Song[] = [
     language: "English",
     tags: ["ballad", "legato", "long tones"],
     notes: [
-      { midi: 60, startBeat: 0, durBeats: 1, lyric: "Oh" },
-      { midi: 64, startBeat: 1, durBeats: 1, lyric: "Shen", wordEnd: false },
-      { midi: 65, startBeat: 2, durBeats: 1, lyric: "an", wordEnd: false },
-      { midi: 67, startBeat: 3, durBeats: 2, lyric: "doah," },
-      { midi: 67, startBeat: 5, durBeats: 1, lyric: "I" },
-      { midi: 69, startBeat: 6, durBeats: 2, lyric: "long" },
-      { midi: 67, startBeat: 8, durBeats: 1, lyric: "to" },
-      { midi: 64, startBeat: 9, durBeats: 1, lyric: "hear" },
+      { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh" },
+      { midi: 60, startBeat: 1, durBeats: 1, lyric: "Shen", wordEnd: false },
+      { midi: 60, startBeat: 2, durBeats: 1, lyric: "an", wordEnd: false },
+      { midi: 60, startBeat: 3, durBeats: 2, lyric: "doah," },
+      { midi: 62, startBeat: 5, durBeats: 1, lyric: "I" },
+      { midi: 64, startBeat: 6, durBeats: 2, lyric: "long" },
+      { midi: 65, startBeat: 8, durBeats: 1, lyric: "to" },
+      { midi: 69, startBeat: 9, durBeats: 1, lyric: "hear" },
       { midi: 67, startBeat: 10, durBeats: 2, lyric: "you" },
     ],
   },
   {
-    // Dorian: the raised sixth on "to" is the tune's signature color.
+    // D Dorian. The opening phrase leaps a fifth on "go-" and falls back
+    // E–F–E to the tonic; the Dorian raised sixth (B) arrives in the
+    // untranscribed "parsley, sage" line.
     id: "scarborough-fair",
     slug: "scarborough-fair",
     title: "Scarborough Fair",
@@ -745,9 +750,9 @@ export const SONGS: Song[] = [
       { midi: 62, startBeat: 1, durBeats: 1, lyric: "you" },
       { midi: 69, startBeat: 2, durBeats: 2, lyric: "go", wordEnd: false },
       { midi: 69, startBeat: 4, durBeats: 1, lyric: "ing" },
-      { midi: 71, startBeat: 5, durBeats: 1, lyric: "to" },
-      { midi: 69, startBeat: 6, durBeats: 2, lyric: "Scar", wordEnd: false },
-      { midi: 67, startBeat: 8, durBeats: 1, lyric: "bo", wordEnd: false },
+      { midi: 69, startBeat: 5, durBeats: 1, lyric: "to" },
+      { midi: 64, startBeat: 6, durBeats: 2, lyric: "Scar", wordEnd: false },
+      { midi: 65, startBeat: 8, durBeats: 1, lyric: "bo", wordEnd: false },
       { midi: 64, startBeat: 9, durBeats: 1, lyric: "rough" },
       { midi: 62, startBeat: 10, durBeats: 3, lyric: "Fair?" },
     ],
@@ -898,9 +903,9 @@ export const SONGS: Song[] = [
  * argument against it. A number you cannot say out loud is not an asset.
  *
  * The export stays so that the type and the split stay expressible if a genuine
- * Pro song — something licensed, or something recorded — ever arrives. What Pro
- * sells on this surface now is the record: scoring history per song, and the
- * transposition report.
+ * Pro song — something licensed, or something recorded — ever arrives. Each
+ * song's personal best and score trend are free; what Pro adds on this surface
+ * is the per-note accuracy report that song runs feed, and no daily limit.
  */
 export const PRO_SONGS: Song[] = [];
 

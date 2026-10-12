@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { accountsReady } from "./accounts";
+import { FREE_DAILY_MINUTES } from "./practice-limits";
 import { MAX_RANGE_HISTORY, MAX_SESSIONS } from "./progress-shape";
 import {
   INACTIVE,
@@ -15,6 +16,7 @@ import {
   PRO_EXERCISES,
   PRO_PACK_COUNT,
   SINGER_COUNT,
+  SONG_COUNT,
   GLOSSARY_COUNT,
   TOTAL_CHAPTERS,
   TOTAL_WORDS,
@@ -382,18 +384,28 @@ export const PRO_PERKS: ProPerk[] = [
   },
   {
     id: "songs",
-    title: "Every song, scored and kept",
+    title: "Every song, no daily limit",
     // The songbook itself moved to free — six public-domain folk tunes were a
-    // gate that argued against buying. What Pro sells on this surface is the
-    // record of singing them, which is the thing that compounds. No cadence
-    // promise: the catalog is a checked-in array, so "new songs every week" is
-    // a claim only a weekly deploy could keep.
-    desc: "All 26 songs are free. Pro keeps the scoring history for each one, so you can compare month one against month six.",
+    // gate that argued against buying. So is each song's own record: the song
+    // summary shows every singer their personal best and a sparkline of past
+    // scores, and library cards show the best score. This perk once sold
+    // "scoring history for each one", which a free singer could see directly
+    // under the line that sold it. What Pro really adds here is no daily limit
+    // (songs share the free plan's guided-practice minutes, so "all free"
+    // without the cap read as unlimited), and that a scored song run's
+    // per-note tallies feed the Pro-only "Accuracy by note" chart on
+    // /progress. No cadence promise: the catalog is a checked-in array, so "new
+    // songs every week" is a claim only a weekly deploy could keep.
+    desc: `All ${SONG_COUNT} songs are free to sing in your ${FREE_DAILY_MINUTES} free minutes a day, and each song's personal best and score trend are free too. Pro lifts that limit and adds every note you sing to your per-note accuracy report.`,
   },
   {
     id: "warmups",
     title: "Pro warmup packs",
-    desc: "Genre and voice-type routines: belt prep, head-voice builders, mix builders.",
+    // Exactly what PRO_PACKS holds: three technique packs, one of each, fitted
+    // to no genre and no voice type. This line once sold "genre and voice-type
+    // routines" and plural builders that do not exist. It also makes no fit
+    // claim: without a saved range the packs run on the nominal ladder.
+    desc: `${PRO_PACK_COUNT} extra sets, ${PRO_EXERCISES} exercises: belt prep, a head-voice builder and a mix builder.`,
   },
   {
     id: "book",
@@ -421,8 +433,17 @@ export const PLAN_ROWS: Array<{
   },
   { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
-  { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis on every take" },
-  { label: "Song library (all 26)", free: "Included", pro: "+ scoring history per song" },
+  { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis per take" },
+  // Each song's best score and score trend are free (the song summary and the
+  // library cards show them), so the Pro cell names the one thing Pro adds:
+  // a scored run's notes in the per-note accuracy chart. Kept short: every
+  // cell renders twice (phone list and table), and the section has a word cap
+  // (lib/seo-section-structure.test.tsx).
+  {
+    label: `Song library (all ${SONG_COUNT})`,
+    free: "Included, with best score and trend",
+    pro: "+ per-note accuracy",
+  },
   {
     label: "Warmup routines",
     free: `${FREE_EXERCISES} exercises`,
@@ -437,12 +458,12 @@ export const PLAN_ROWS: Array<{
   {
     label: "Range history",
     free: "Latest test",
-    pro: `Your latest ${MAX_RANGE_HISTORY} tests, charted over time`,
+    pro: `Latest ${MAX_RANGE_HISTORY} tests, charted over time`,
   },
   {
     label: "Practice history",
     free: "Last 20 sessions",
-    pro: `Your latest ${MAX_SESSIONS} sessions`,
+    pro: `Latest ${MAX_SESSIONS} sessions`,
   },
   {
     label: "Backup & sync",
@@ -452,7 +473,7 @@ export const PLAN_ROWS: Array<{
     // reads only inlined env, so this matches on server and client.
     free: accountsReady()
       ? "Account backup, every 6 hours"
-      : "Saved in this browser; export it from Progress",
+      : "Saved in this browser; export from Progress",
     pro: "Continuous two-way sync across devices",
   },
   { label: "The Measured Voice (book)", free: "Contents + 3 chapters", pro: "All 23 chapters + PDF" },

@@ -102,12 +102,14 @@ for (const file of files) {
       problems.push(`${where}: implausible ${r.lowNote}–${r.highNote} — skipped`);
       continue;
     }
-    // A null beltNote renders as one solid bar, i.e. "full voice all the way to
-    // the top". That is fine for a 2-octave crooner and absurd for a 4-octave
-    // falsetto specialist, so wide spans must state a ceiling explicitly.
+    // A null beltNote means the catalog cites no full-voice ceiling, and the
+    // singers charts draw it as a dashed "no full-voice ceiling cited" bar
+    // rather than full voice to the top. On a 4-octave span that leaves most of
+    // the figure unexplained, so wide spans should state a ceiling where one is
+    // sourced.
     if (r.beltNote == null && highMidi - lowMidi > 42) {
       problems.push(
-        `${where}: ${r.lowNote}–${r.highNote} spans ${((highMidi - lowMidi) / 12).toFixed(1)} octaves with no beltNote — would render as full voice throughout`,
+        `${where}: ${r.lowNote}–${r.highNote} spans ${((highMidi - lowMidi) / 12).toFixed(1)} octaves with no beltNote — would chart with no full-voice ceiling cited`,
       );
     }
     if (!VOICE_KINDS.has(r.voiceType)) {

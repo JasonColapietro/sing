@@ -28,7 +28,7 @@ At that point the vowel fights you. Closed vowels have low first formants, so "e
 Vowel modification is the fix. You nudge the vowel toward a neighbour so its resonance moves back into a workable relationship with the pitch. In practice that means:
 
 - Bright, closed vowels open a little as you ascend. "Ee" drifts toward "ih", then toward "eh". "Oo" drifts toward "uh" or "oh".
-- Wide open vowels round a little at the very top. "Ah" drifts toward "aw" or "uh", which is why high notes often come out vaguer than the printed word.
+- Wide open vowels round a little through the transition. "Ah" drifts toward "aw" or "uh" as the voice climbs past its break. Right at the top of a high voice the direction reverses: once the note climbs toward the first resonance of even "ah", the jaw drops further and every vowel opens toward a wide "ah", which keeps that resonance at or just above the note. That is why a soprano's top notes come out vaguer than the printed word.
 - The jaw usually needs to release more than you think, and the tongue usually needs to stay higher and further forward than you think. Two separate levers. Beginners weld them together.
 
 The word "modification" makes it sound like a compromise, a degraded version of the real vowel. It is the opposite. A listener rebuilds the intended word from context far more generously than you expect, and a well-modified high note reads as clearer than a stubbornly literal one that has gone shrill. Plenty of singers who do this could not tell you they were doing it.

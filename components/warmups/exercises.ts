@@ -1026,6 +1026,18 @@ export function ladderWalk(ladder: number[], rep: number): LadderStep {
   return { root: ladder[index], index, ascending: pos < n - 1 };
 }
 
+/**
+ * A bounded routine step on a "down" ladder walks down once and then stays
+ * on its bottom rung, so a step with more reps than rungs never turns round
+ * and climbs: a cool-down that heads back up partway through breaks its own
+ * "each rep a half-step lower". The endless deep-link walk keeps ladderWalk's
+ * triangle. `ladder` is the reversed band the player walks, top note first.
+ */
+export function descentWalk(ladder: number[], rep: number): LadderStep {
+  const index = Math.min(Math.max(0, rep), Math.max(0, ladder.length - 1));
+  return { root: ladder[index] ?? 48, index, ascending: index < ladder.length - 1 };
+}
+
 /** Rough length of one climb of the ladder: each rep plays the guide then a 120% sing window. */
 export function estimateMinutes(ex: WarmupExercise, reps: number): number {
   const { totalSec } = buildSegments(ex, 60, 1);

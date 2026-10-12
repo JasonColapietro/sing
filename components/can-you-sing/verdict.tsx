@@ -15,10 +15,31 @@ import { Card, LinkButton, SectionLabel } from "@/components/ui";
 /**
  * The range test, told which song to send the visitor back to: the result
  * screen reads `check=<slug>` and offers the way back to this song's verdict
- * rather than leaving the visitor to find the page again.
+ * rather than leaving the visitor to find the page again. `#start` lands a
+ * phone on the start button rather than on the intro above it.
  */
 function rangeTestHref(song: PopSong): string {
-  return `/range?mode=range&check=${song.slug}`;
+  return `/range?mode=range&check=${song.slug}#start`;
+}
+
+/**
+ * The page's one action, in the header where a phone sees it on the first
+ * screen. The full verdict card sits under the stats, which put its button
+ * a screen and a half down. With no saved range this starts the test; with
+ * one it points at the personal answer below.
+ */
+export function CanYouSingAction({ song }: { song: PopSong }) {
+  const progress = useProgress();
+  return popFit(song, progress.range).verdict === "unknown" ? (
+    <LinkButton href={rangeTestHref(song)}>Test my range for this song</LinkButton>
+  ) : (
+    // `#fit` is the wrapper around CanYouSingVerdict on the song page. Not a
+    // shared constant: a server page importing a value from this client
+    // module would get a client reference, not the string.
+    <LinkButton href="#fit" variant="outline">
+      See how it fits your range ↓
+    </LinkButton>
+  );
 }
 
 /**
@@ -55,13 +76,30 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
   const high = progress.range.highMidi as number;
   const yours = `${midiToLabel(low)}–${midiToLabel(high)}`;
 
+  // The range test reports limits, not a comfortable band, so an end note on
+  // (or a semitone inside) a tested limit is not called a plain fit, and key
+  // advice names the shift that centres the song when it differs from the
+  // minimum one that parks an end on a limit. Centring a song that is no
+  // wider than the range keeps both ends inside it. A song that already fits
+  // is only told to move when centring leaves at least two semitones at each
+  // end, so the advice never lands it on the limit this message warns about.
+  const headroom = high - song.highMidi;
+  const footroom = song.lowMidi - low;
+  const centre = Math.round((low + high) / 2 - (song.lowMidi + song.highMidi) / 2);
+  const roomToCentre = headroom + footroom >= 4;
+  const limitsNote = "A range test finds your limits, not your comfortable band";
+
   const message =
     fit.verdict === "fits"
-      ? `As written, ${song.title} sits inside your range. The top of the song leaves you ${high - song.highMidi} semitone${high - song.highMidi === 1 ? "" : "s"} of headroom.`
+      ? headroom <= 1
+        ? `As written, every note of ${song.title} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"}. ${limitsNote}, so expect the top of this song to be work.${roomToCentre && -centre >= 1 ? ` Dropping the key by ${-centre} centres it in your range.` : ""}`
+        : footroom <= 1
+          ? `As written, every note of ${song.title} is inside your tested range, but its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect the bottom of this song to be work.${roomToCentre && centre >= 1 ? ` Raising the key by ${centre} centres it in your range.` : ""}`
+          : `As written, ${song.title} sits inside your range. The top of the song leaves you ${headroom} semitones of headroom.`
       : fit.verdict === "high"
-        ? `The top of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} above your tested ceiling of ${midiToLabel(high)}. Dropping the key by ${fit.offsetSemis} would bring it inside.`
+        ? `The top of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} above your tested ceiling of ${midiToLabel(high)}. Dropping the key by ${fit.offsetSemis} would bring it inside, with the top note on that ceiling${-centre > fit.offsetSemis ? `; dropping it by ${-centre} centres it in your range` : ""}.`
         : fit.verdict === "low"
-          ? `The low end of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} below your tested floor of ${midiToLabel(low)}. Raising the key by ${fit.offsetSemis} would bring it inside.`
+          ? `The low end of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} below your tested floor of ${midiToLabel(low)}. Raising the key by ${fit.offsetSemis} would bring it inside, with the bottom note on that floor${centre > fit.offsetSemis ? `; raising it by ${centre} centres it in your range` : ""}.`
           : `${song.title} spans more semitones than your tested range covers, so no key change puts every note inside that saved range. Start with a smaller pattern rather than pushing for the extremes.`;
 
   return (

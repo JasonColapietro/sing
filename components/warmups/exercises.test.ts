@@ -21,8 +21,10 @@ import {
   buildSegments,
   capLadder,
   computeRootLadder,
+  descentWalk,
   ladderWalk,
 } from "./exercises";
+import { ROUTINES } from "./routines";
 import { createRepScorer } from "./scoring";
 
 // five-note-scale's highest interval is the fifth (7 semitones).
@@ -225,6 +227,43 @@ describe("ladderWalk", () => {
   it("holds steady on a single-root ladder", () => {
     for (let rep = 0; rep < 5; rep++) {
       expect(ladderWalk([52], rep)).toEqual({ root: 52, index: 0, ascending: true });
+    }
+  });
+});
+
+describe("descentWalk", () => {
+  it("walks a bounded descent down once and rests on the bottom rung", () => {
+    const roots = Array.from({ length: 7 }, (_, rep) => descentWalk([55, 54, 53, 52], rep).root);
+    expect(roots).toEqual([55, 54, 53, 52, 52, 52, 52]);
+  });
+
+  it("holds steady on a single-root ladder", () => {
+    for (let rep = 0; rep < 4; rep++) {
+      expect(descentWalk([52], rep)).toEqual({ root: 52, index: 0, ascending: false });
+    }
+  });
+
+  it("never climbs inside a routine's descending step, with or without a saved range", () => {
+    // The player reverses a "down" band (top note first) and walks a routine
+    // step with descentWalk. With no saved range the nominal ladder has only
+    // a few rungs, fewer than most steps' reps, which is where the triangle
+    // walk used to turn a cool-down round and climb it.
+    const ranges: Array<[number | undefined, number | undefined]> = [
+      [undefined, undefined],
+      [48, 72],
+    ];
+    for (const routine of ROUTINES) {
+      for (const step of routine.steps) {
+        const ex = ALL_EXERCISES.find((e) => e.id === step.exerciseId);
+        if (!ex || ex.ladder !== "down") continue;
+        for (const [lo, hi] of ranges) {
+          const roots = [...computeRootLadder(ex, lo, hi)].reverse();
+          const walked = Array.from({ length: step.reps }, (_, rep) => descentWalk(roots, rep).root);
+          for (let i = 1; i < walked.length; i++) {
+            expect(walked[i], `${routine.id}/${ex.id} rep ${i}`).toBeLessThanOrEqual(walked[i - 1]);
+          }
+        }
+      }
     }
   });
 });
