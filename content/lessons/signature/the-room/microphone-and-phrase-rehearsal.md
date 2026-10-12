@@ -27,7 +27,7 @@ Rehearse the displayed melody alone. Record two short examples in one take at di
 - Look: The displayed study contains one melody line. Keep the microphone position consistent within each comparison.
 - Listen: The phrase remains understandable from its first entry to its final release.
 
-### Name the target: Performance and harmony
+### Name the target: Performance and mic technique
 
 Rehearse the supplied melody first. This study supplies one line, not simultaneous lead and harmony parts. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
@@ -50,13 +50,13 @@ I rehearsed the supplied study arrangement and compared microphone distance or p
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume.
+- The target disappears when the range, volume, speed, or duration increases. => If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
 
 - 75s: Open the practice material. Prepare the room, body, and safe baseline for “Microphone and Phrase Rehearsal.”
-- 135s: Isolate the performance and harmony target in short, comfortable examples.
+- 135s: Isolate the performance and mic technique target in short, comfortable examples.
 - 210s: Practise or record the complete “Microphone and Phrase Rehearsal” task, resetting between attempts.
 - 120s: Review one take against the stated listening goal and write the next smaller correction.
 
@@ -68,7 +68,7 @@ I rehearsed the supplied study arrangement and compared microphone distance or p
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If you practise a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If a loud note distorts or a quiet one disappears on playback, keep your volume the same and move the microphone instead: a little further back for the fullest phrase, closer for the quietest, then record that phrase again. If you add a harmony and it collapses into the melody, stop the reference, sing the harmony alone from its anchor notes, then bring the melody back at lower volume. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
 What this shows: I rehearsed the supplied study arrangement and compared microphone distance or phrasing on separate takes. This is a self-report, not an automatic assessment.
 

@@ -18,7 +18,7 @@ vi.mock("./range-test", () => ({
   RangeTest: () => <div data-tool="range">Start free range test</div>,
 }));
 
-import { VoiceTest, voiceTestModeUrl } from "./voice-test";
+import { VoiceTest, switchVoiceTestMode, voiceTestModeUrl } from "./voice-test";
 
 describe("voice-tool deep links", () => {
   it.each([
@@ -60,6 +60,22 @@ describe("voice-tool deep links", () => {
     } finally {
       location.suspend = false;
     }
+  });
+
+  it("brings the range test's start button into view when the tab opens it", () => {
+    // The intro says "Choose Range test to start"; at 375px the start button
+    // that tab reveals sat under the bottom tab bar until the page scrolled.
+    const change = vi.fn();
+    const scroll = vi.fn();
+    switchVoiceTestMode("pitch", "range", change, scroll);
+    expect(change).toHaveBeenCalledWith("range");
+    expect(scroll).toHaveBeenCalledTimes(1);
+
+    // Re-tapping the open tab, or going back to pitch, leaves the page alone.
+    switchVoiceTestMode("range", "range", change, scroll);
+    switchVoiceTestMode("range", "pitch", change, scroll);
+    expect(change).toHaveBeenLastCalledWith("pitch");
+    expect(scroll).toHaveBeenCalledTimes(1);
   });
 
   it("keeps the singer comparison when switching to pitch and back", () => {

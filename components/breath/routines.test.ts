@@ -238,7 +238,7 @@ describe("breath step copy", () => {
 });
 
 describe("stars", () => {
-  it("scores a sustain against the printed benchmarks", () => {
+  it("stars a sustain by length, at the contract's starsSec cuts", () => {
     expect(starsForSustain(0)).toBe(0);
     expect(starsForSustain(9.9)).toBe(0);
     expect(starsForSustain(10)).toBe(1);

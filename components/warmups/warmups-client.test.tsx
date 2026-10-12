@@ -30,7 +30,7 @@ vi.mock("@/lib/pro", async (importOriginal) => ({
   useProReady: () => state.ready,
 }));
 
-import { WarmupsClient } from "./warmups-client";
+import { WarmupsClient, linkedRepCount } from "./warmups-client";
 
 const morning = routineById("morning")!;
 const daily = routineById("daily")!;
@@ -86,6 +86,24 @@ describe("the warmups mic gate", () => {
     expect(html).toContain('id="warmup-gate"');
     expect(html).not.toContain("The key climbs a semitone every rep");
     expect(html).toContain("most exercises climb and");
+  });
+
+  it("promises a self-advancing set only for routines, and says a single exercise runs until End", () => {
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).not.toContain("you never have to pick what comes next");
+    expect(html).toContain("In a routine, after the set number of reps");
+    expect(html).toContain("A single exercise keeps going until you press End.");
+  });
+});
+
+describe("a rep count on an exercise link", () => {
+  it("reads a whole number from 1 to 30 and ignores anything else", () => {
+    expect(linkedRepCount("5")).toBe(5);
+    expect(linkedRepCount("1")).toBe(1);
+    expect(linkedRepCount("30")).toBe(30);
+    for (const raw of [null, undefined, "", " ", "0", "31", "4.5", "-2", "five", "1e1x"]) {
+      expect(linkedRepCount(raw), String(raw)).toBeNull();
+    }
   });
 });
 

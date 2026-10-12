@@ -18,6 +18,7 @@ import { sharesHigh, sharesLow } from "@/lib/singers-analysis";
 import { catalogPositionFor } from "@/lib/singer-catalog-position";
 import {
   getSingerEvidence,
+  getSingerPageLastModified,
   groupEvidenceSources,
   isSingerReviewed,
   singerReviewLabel,
@@ -281,9 +282,13 @@ export default async function SingerPage({
     { name: "Famous vocal ranges", href: "/singers", url: `${SITE_URL}/singers` },
     { name: s.name, href: `/singers/${s.slug}`, url: pageUrl },
   ];
+  // dateModified follows the sitemap lastmod (the later of the review and the
+  // shared template revision) so the two freshness signals agree; the review
+  // date itself is what schema.org's lastReviewed is for.
   const reviewedPageFields = reviewed
     ? {
-        dateModified: evidence.reviewedAt,
+        dateModified: getSingerPageLastModified(s.slug),
+        lastReviewed: evidence.reviewedAt,
         reviewedBy: { "@type": "Person", name: evidence.reviewedBy },
         citation: evidence.sources.map((source) => ({
           "@type": "CreativeWork",

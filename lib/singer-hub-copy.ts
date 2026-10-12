@@ -50,7 +50,7 @@ export interface HubCopy {
 export const GENRE_HUB_COPY: Record<string, HubCopy> = {
   afrobeats: {
     intro:
-      "Afrobeats is the West African pop that rose from Nigeria and Ghana in the 2010s, and it is a different thing from the older Afrobeat of Fela Kuti, whose profile is also listed here. The vocals are melodic and relaxed, riding the rhythm in a comfortable middle range and moving freely between English, Nigerian Pidgin and Yoruba.",
+      "Afrobeats is the West African pop that rose from Nigeria and Ghana in the 2010s, and this hub also lists the West African stars who came before it: Fela Kuti, whose Afrobeat is a different style, along with Salif Keita, Youssou N'Dour and Angélique Kidjo. Afrobeats vocals are melodic and relaxed, riding the rhythm in a comfortable middle range and moving freely between English, Nigerian Pidgin and Yoruba.",
     neighbour: "reggae",
     contrast:
       "{link} shares the laid-back, behind-the-beat delivery but comes from Jamaica and sits over an offbeat guitar rather than a layered percussion groove.",
@@ -406,7 +406,7 @@ export const VOICE_TYPE_HUB_COPY: Record<VoiceKind, HubCopy> = {
   },
   "Mezzo-soprano": {
     intro:
-      "The mezzo-soprano is the middle female voice, conventionally {low} to {high}, and the category where most women in popular music, and most modern pop belting, sit. Its transition falls around {pLow} to {pHigh}.",
+      "The mezzo-soprano is the middle female voice, conventionally {low} to {high}, and the category where most women in popular music, and most modern pop belting, sit. Its belt-or-mix transition falls around {pLow} to {pHigh}, above an earlier, lighter shift out of chest voice that most women meet around E4 to G4.",
     neighbour: "soprano",
     contrast:
       "A {link} has more headroom above that, where a mezzo's strength is a fuller middle and lower range.",
@@ -416,7 +416,7 @@ export const VOICE_TYPE_HUB_COPY: Record<VoiceKind, HubCopy> = {
   },
   Soprano: {
     intro:
-      "The soprano is the highest standard female voice, conventionally {low} to {high}, with the most usable range above the staff and most of this catalog's whistle-register entries. Its transition comes around {pLow} to {pHigh}, higher than any other category.",
+      "The soprano is the highest standard female voice, conventionally {low} to {high}, with the most usable range above the staff and most of this catalog's whistle-register entries. Its belt-or-mix transition comes around {pLow} to {pHigh}, higher than any other category and above the earlier shift out of chest voice that most women meet around E4 to G4.",
     neighbour: "mezzo-soprano",
     contrast:
       "A {link} reaches many of the same notes with a darker, heavier middle and less sustained time at the top.",

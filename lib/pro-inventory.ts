@@ -34,7 +34,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
     chapters: 23,
-    words: 32297,
+    words: 32376,
     free: 3,
     pdfMb: 1.0,
     href: "/book",
@@ -42,7 +42,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Voice Atlas",
     chapters: 27,
-    words: 72449,
+    words: 72444,
     free: 3,
     pdfMb: 5.0,
     href: "/atlas",
@@ -89,6 +89,19 @@ export const GLOSSARY_COUNT = 42;
 
 /** Practice rooms, all free. */
 export const ROOM_COUNT = 10;
+
+/**
+ * Guided programs at /programs. Week 1 of a Pro program is free (FREE_WEEKS
+ * in lib/programs.ts); the weeks after it need Pro. /pro's "Exactly where
+ * free ends" table has to say so, or a free singer meets the day-8 wall
+ * after reading "no asterisks".
+ */
+export const PRO_PROGRAM_NAMES: readonly string[] = [
+  "Mix in 4 weeks",
+  "The Measured Voice: 12 weeks",
+];
+export const PRO_PROGRAM_COUNT = PRO_PROGRAM_NAMES.length;
+export const FREE_PROGRAM_COUNT = 4;
 
 /**
  * The headline tiles under the buy button.

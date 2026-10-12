@@ -50,8 +50,22 @@ const OCTAVE_SIREN_MIN_SEMIS = 21;
  */
 const RANGE_RETEST_DAYS = 42;
 
-function buildPlan(state: ProgressState, now: Date): {
+/**
+ * Today's plan from the singer's own numbers. `restDayOf` names the running
+ * program when today is one of its rest days: the program the singer chose
+ * says rest, so the plan does not tell them in red to sing or lose the streak.
+ * It says what resting costs the streak instead, and leaves the plan below
+ * as optional.
+ *
+ * Exported for its test.
+ */
+export function buildPlan(
+  state: ProgressState,
+  now: Date,
+  restDayOf: string | null = null,
+): {
   banner: string | null;
+  restNote: string | null;
   items: PlanItem[];
 } {
   const todayKey = localDayStr(now);
@@ -59,13 +73,21 @@ function buildPlan(state: ProgressState, now: Date): {
   const cutoff = localDayStr(addDays(now, -13));
 
   const practicedToday = state.sessions.some((s) => s.day === todayKey);
+  // A streak that ends tonight unless the singer sings today.
+  const streakAtRisk =
+    !practicedToday && state.streak.current > 0 && state.streak.lastDay === yesterdayKey;
   const banner =
-    !practicedToday &&
-    now.getHours() >= 12 &&
-    state.streak.current > 0 &&
-    state.streak.lastDay === yesterdayKey
+    restDayOf === null && streakAtRisk && now.getHours() >= 12
       ? `Keep your ${state.streak.current}-day streak alive — one short session today keeps the tape rolling.`
       : null;
+  const restNote =
+    restDayOf === null
+      ? null
+      : `Today is a rest day in ${restDayOf}, and the program counts it as done. Nothing below is required.${
+          streakAtRisk
+            ? " Your streak counts only days you practise, so if you rest today it starts again from 1 at your next session."
+            : ""
+        }`;
 
   /* ---- signals, all from the singer's own numbers ---- */
 
@@ -244,12 +266,19 @@ function buildPlan(state: ProgressState, now: Date): {
     });
   }
 
-  return { banner, items };
+  return { banner, restNote, items };
 }
 
-export function CoachCard({ state }: { state: ProgressState }) {
+export function CoachCard({
+  state,
+  restDayOf = null,
+}: {
+  state: ProgressState;
+  /** The running program's name when today is one of its rest days. */
+  restDayOf?: string | null;
+}) {
   const isPro = useIsPro();
-  const { banner, items } = buildPlan(state, new Date());
+  const { banner, restNote, items } = buildPlan(state, new Date(), restDayOf);
   // One step is not a plan, it is a screenshot of one. A singer who can see two
   // steps has watched the coach make a decision — this after that, and why —
   // which is the thing Pro actually sells; a singer who sees one has been shown
@@ -270,6 +299,7 @@ export function CoachCard({ state }: { state: ProgressState }) {
           {banner}
         </p>
       )}
+      {restNote && <p className="mt-3 text-sm text-mut">{restNote}</p>}
       <ol className="mt-4 space-y-3">
         {items.map((item, i) =>
           i < shown ? (

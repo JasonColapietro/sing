@@ -171,6 +171,17 @@ describe("keyword map", () => {
     }
   });
 
+  it("names the part of the song a phrase page holds, not an opening it does not transcribe", () => {
+    const home = ALL_SONGS.find((s) => s.slug === "home-on-the-range")!;
+    expect(home.excerpt).toBe("chorus hook");
+    const terms = songKeywords(home);
+    expect(terms).toContain("home on the range chorus hook");
+    expect(terms.filter((t) => t.includes("opening phrase"))).toEqual([]);
+    // Entries that do open their song keep the opening-phrase term.
+    const opener = ALL_SONGS.find((s) => s.form === "phrase" && s.excerpt === undefined)!;
+    expect(songKeywords(opener)).toContain(normalizeKeywords([`${opener.title} opening phrase`])[0]);
+  });
+
   it("normalizeKeywords strips punctuation, lowercases, dedupes and caps", () => {
     const out = normalizeKeywords([
       "A b",

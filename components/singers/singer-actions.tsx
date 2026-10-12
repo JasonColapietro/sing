@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { useIsPro } from "@/lib/pro";
 import { useProgress } from "@/lib/progress";
 import { rangeOverlap, spanOctaves } from "@/lib/singers-core";
 import type { Singer } from "@/lib/singers-data";
@@ -29,6 +31,9 @@ export function PlayRangeButton({ s }: { s: Singer }) {
  */
 export function CompareWithMe({ s }: { s: Singer }) {
   const { range } = useProgress();
+  // The free plan keeps only the latest test; range over time is Pro
+  // (PLAN_ROWS "Range history"), so the link names what each plan will find.
+  const isPro = useIsPro();
   const youLow = range.lowMidi;
   const youHigh = range.highMidi;
 
@@ -141,7 +146,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
           href="/progress"
           className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut underline decoration-line underline-offset-2 hover:text-ink"
         >
-          Your range history
+          {isPro ? "Your range history" : "Your saved range"}
         </Link>
         <Link
           href={`/range?compare=${s.slug}`}
@@ -152,9 +157,13 @@ export function CompareWithMe({ s }: { s: Singer }) {
       </div>
       {/* The ~636 singer pages are where search traffic lands; this is the one
           Pro line on them, and only after the visitor has a measured range to
-          compare — value first, pitch second. Self-hides for Pro. */}
+          compare — value first, pitch second. Both links above lead into
+          capped guided practice, so the line names the free allowance too.
+          The free plan already gets the coach's first two steps a day
+          (PLAN_ROWS "Coach plan"), so Pro is credited with the full plan, not
+          with the coach itself. Self-hides for Pro. */}
       <div className="mt-4">
-        <ProInlineNudge>The coach builds a daily plan from your own practice and scores</ProInlineNudge>
+        <ProInlineNudge>{`Guided practice is ${FREE_DAILY_MINUTES} free minutes a day; Pro removes the limit and unlocks the full coach plan`}</ProInlineNudge>
       </div>
     </Card>
   );

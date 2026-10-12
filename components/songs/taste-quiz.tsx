@@ -221,6 +221,12 @@ export function PickedForYou({
   onChange: () => void;
 }) {
   const anyMatch = picks.some((p) => p.genreMatch);
+  const genreMiss = answers.genres.length > 0 && !anyMatch;
+  // The longer arrangements rate hard, so a singer who asked for them usually
+  // gets short phrases first; the card says why instead of leaving the
+  // summary's "Longer arrangements" beside three looped phrases.
+  const noLongerPick =
+    answers.goal === "full" && picks.length > 0 && !picks.some((p) => p.song.form === "full");
   return (
     <section aria-labelledby="picked-for-you">
       <Card className="border-violet/30">
@@ -233,12 +239,19 @@ export function PickedForYou({
           </Button>
         </div>
         <p className="mt-2 text-sm text-mut">{summarize(answers)}</p>
-        {answers.genres.length > 0 && !anyMatch && (
+        {genreMiss && (
           // Said out loud rather than papered over: band locks outrank taste,
           // so a Nursery fan's first picks may all be from other styles.
           <p className="mt-1 text-sm text-mut">
             Nothing in those styles is open yet. These are the easiest songs you
             can sing now; master two to open the next band.
+          </p>
+        )}
+        {noLongerPick && (
+          <p className="mt-1 text-sm text-mut">
+            The longer arrangements rate hard, so these picks are short phrases
+            to start on.
+            {!genreMiss && " Master two songs in a band to open the next one."}
           </p>
         )}
         <ul className="mt-4 grid gap-2 sm:grid-cols-3">

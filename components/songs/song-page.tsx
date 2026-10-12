@@ -58,24 +58,42 @@ export function songFacts(song: Song): SongFacts {
 }
 
 /**
- * Related songs for the cluster: same genre first, then anything rated the same
- * difficulty, then whatever is left. The pool is passed in rather than read
- * from the data module so a free page links free pages and a Pro page links Pro
- * pages — the noindexed half of the songbook should not be the destination of
- * every internal link on the indexed half.
+ * What a "phrase" entry holds, as its page names it: the song's opening phrase,
+ * unless the entry marks it as another part of the song (`excerpt`).
+ */
+export function phraseName(song: Song): string {
+  return song.excerpt ?? "opening phrase";
+}
+
+/**
+ * Related songs for the cluster, in this order: same difficulty and genre,
+ * then same difficulty, then same genre, then whatever is left. The page heads
+ * the list "Other <difficulty> songs", so difficulty leads. Each melody appears
+ * once, and never this song's own melody: the other version of it
+ * (`arrangementOf`, either direction) already has its own card on the page.
+ * The pool is passed in rather than read from the data module so a free page
+ * links free pages and a Pro page links Pro pages — the noindexed half of the
+ * songbook should not be the destination of every internal link on the
+ * indexed half.
  */
 export function relatedSongs(song: Song, pool: Song[], max = 6): Song[] {
-  const others = pool.filter((s) => s.slug !== song.slug);
+  const melodyOf = (s: Song) => s.arrangementOf ?? s.id;
+  const seen = new Set([melodyOf(song)]);
   const difficulty = computeDifficulty(song).label;
-  const sameGenre = others.filter((s) => s.genre === song.genre);
-  const sameDifficulty = others.filter(
-    (s) =>
-      s.genre !== song.genre && computeDifficulty(s).label === difficulty,
-  );
-  const rest = others.filter(
-    (s) => !sameGenre.includes(s) && !sameDifficulty.includes(s),
-  );
-  return [...sameGenre, ...sameDifficulty, ...rest].slice(0, max);
+  const tier = (s: Song) =>
+    (computeDifficulty(s).label === difficulty ? 0 : 2) +
+    (s.genre === song.genre ? 0 : 1);
+  const related: Song[] = [];
+  // Array sort is stable, so within a tier the pool's own order holds.
+  for (const { s } of pool
+    .map((s) => ({ s, t: tier(s) }))
+    .sort((a, b) => a.t - b.t)) {
+    if (related.length >= max) break;
+    if (seen.has(melodyOf(s))) continue;
+    seen.add(melodyOf(s));
+    related.push(s);
+  }
+  return related;
 }
 
 /** The measured facts, as a readout. */
@@ -174,8 +192,8 @@ export function LyricSheet({ song }: { song: Song }) {
       </ol>
       {song.form === "phrase" && (
         <p className="mt-5 max-w-2xl text-sm text-mut">
-          The songbook transcribes the opening phrase rather than the whole
-          song, because {song.defaultLoops} tight repetitions of a phrase you
+          The songbook transcribes the {phraseName(song)} rather than the
+          whole song, because {song.defaultLoops} tight repetitions of a phrase you
           can hear yourself improve on beats one distracted run at the full
           thing.
         </p>

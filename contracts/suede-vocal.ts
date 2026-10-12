@@ -419,7 +419,7 @@ const RULES = {
   warmupGlideWindow:
     "A glide frame at pattern time t is measured against the nearest pitch the guide's straight-line ramp passes through between t - glideTimeSlack * d - onsetGraceSec and t + glideTimeSlack * d, d being the glide's duration at the tempo sung and the ramp held at its endpoints outside the glide. The frame is in tune when it is within toleranceCents of that pitch, and its cents error is measured from it. onsetGraceSec here is warmups.scoring.onsetGraceSec itself, not the per-note capped grace. Plain notes are scored against their one pitch.",
   warmupOctaveWithoutRange:
-    "Without a saved range every warm-up ladder is fitted to warmups.nominalRange (A2–E4, before any rangeCap) and any octave of each target counts: each sung frame is moved by whole octaves to the octave nearest the target at that instant before it is compared. Each note's tallies are filed under its target moved by the rounded mean of the whole-octave shifts of that note's counted frames, and the rep's reported root is moved by the rounded mean over the whole rep. With a saved range only the written octave counts.",
+    "Without a saved range every warm-up ladder is fitted to warmups.nominalRange (A2–E4, before any rangeCap) and any octave counts, but one octave per rep: the rep is scored as if every sung frame were moved by the same whole number of octaves, for each shift from 2 octaves down to 2 octaves up, and the shift whose score is highest before rounding is the rep's octave (on a tie, the one with the smaller mean cents error, then the one nearer the written octave, the lower first). The rep's score, its cents error and every note's tallies come from that shift alone, and each note and the rep's reported root are moved by it. With a saved range only the written octave counts.",
   freeExerciseGate:
     "A warmup is free if and only if it is in EXERCISES. Pro packs are gated by array membership, not by a flag, so a free surface must never deep-link a pack exercise.",
 } as const;
@@ -709,7 +709,11 @@ export function buildContract() {
          * The published benchmark ladder, imported rather than restated. Note
          * 12 seconds is NOT a rung: it sits inside the lowest band, so a
          * curriculum promising a twelve-second milestone has no threshold here
-         * to pass or fail against.
+         * to pass or fail against. The web room no longer prints this ladder
+         * or labels a hold by it: the drill asks for a note ended while it is
+         * still easy, so a length grade rewarded the squeeze it warns against.
+         * starsSec still awards path stars by length; both are for review at
+         * the next contract version.
          */
         benchmarksSec: { ...SUSTAIN_BENCHMARKS_SEC },
         starsSec: { ...SUSTAIN_STAR_SEC },
@@ -903,7 +907,13 @@ export function buildContract() {
       origin: "https://sing.suedeai.ai",
       rooms: {
         range: { path: "/range", params: [] },
-        warmups: { path: "/warmups", params: ["exercise", "routine", "step"] },
+        /**
+         * `reps` (a whole number 1–30, with `exercise`) stops a deep-linked
+         * exercise after that many reps ("Rep 2 of 5"); without it the
+         * exercise walks its ladder until the singer ends it. Anything else
+         * is ignored and opens the ordinary exercise.
+         */
+        warmups: { path: "/warmups", params: ["exercise", "routine", "step", "reps"] },
         breath: {
           path: "/breath",
           params: ["drill", "routine", "step"],

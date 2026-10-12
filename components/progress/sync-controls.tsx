@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui";
-import { lastSyncedAt, syncNow } from "@/lib/sync";
+import { lastSyncError, lastSyncedAt, subscribeSyncStatus, syncNow } from "@/lib/sync";
 import { resumeProgressCloud, useProgressCloudState } from "@/lib/progress-cloud";
 
 export function SyncControls() {
@@ -12,10 +12,20 @@ export function SyncControls() {
   >(null);
   const [working, setWorking] = useState(false);
   const [lastSync, setLastSync] = useState<string | null>(null);
+  // Why the last automatic sync was refused. The background syncs never
+  // interrupt practice, so without this a refused push only showed as a
+  // "Last synced" date that stopped moving.
+  const [autoError, setAutoError] = useState<string | null>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- reads localStorage, so it can only run after hydration
-    setLastSync(lastSyncedAt());
+    const read = () => {
+      setLastSync(lastSyncedAt());
+      setAutoError(lastSyncError());
+    };
+    // Reads localStorage, so it can only run after hydration; then follows the
+    // background syncs, which can fail or recover while this page is open.
+    read();
+    return subscribeSyncStatus(read);
   }, []);
 
   const runSync = async () => {
@@ -25,6 +35,7 @@ export function SyncControls() {
       if (paused) resumeProgressCloud();
       const { mergedRemote } = await syncNow();
       setLastSync(lastSyncedAt());
+      setAutoError(lastSyncError());
       setNotice({
         kind: "ok",
         text: mergedRemote
@@ -70,6 +81,14 @@ export function SyncControls() {
           {paused ? "Paused on this browser" : lastLabel ? `Last synced ${lastLabel}` : "Syncs automatically as you practice"}
         </span>
       </div>
+      {autoError && !notice && !paused && (
+        <p className="mt-3 rounded-lg border border-rec/40 bg-rec/10 px-3 py-2 text-xs text-rec" role="status">
+          {/* The route's messages already end in a full stop, and some say
+              "Try again", so the next step here is the button above. */}
+          The last automatic sync did not go through: {autoError} Your practice is still saved on
+          this browser, and Sync now tries again.
+        </p>
+      )}
       {notice && !paused && (
         <p
           className={

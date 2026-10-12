@@ -87,13 +87,13 @@
     "activeFrom": 2011,
     "lowNote": "Bb1",
     "highNote": "C6",
-    "beltNote": "Bb5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Redbone",
     "lowSource": "Algorhythm",
     "highSource": "Me and Your Mama",
     "blurb": "Shape-shifting funk tenor sliding from talky lows to screamed belts and quivering falsetto.",
-    "technique": "Elastic and theatrical, moving from a talky low register near Bb1 up through screamed full-voice climaxes and a keening falsetto. He treats registration as costume: airy croon, funk yelp, preacher rasp, sometimes all inside one verse. Falsetto carries whole songs with a fast flicker vibrato; belts around Bb5 are distorted on purpose. Students copying him chase the scream first; the control lives in his soft singing, pitch-true falsetto with a released jaw, and the distortion must sit over support or it shreds."
+    "technique": "Elastic and theatrical, moving from a talky low register near Bb1 up through screamed full-voice climaxes and a keening falsetto. He treats registration as costume: airy croon, funk yelp, preacher rasp, sometimes all inside one verse. Falsetto carries whole songs with a fast flicker vibrato; his high belts are distorted on purpose. Students copying him chase the scream first; the control lives in his soft singing, pitch-true falsetto with a released jaw, and the distortion must sit over support or it shreds."
   },
   {
     "name": "Trey Songz",
@@ -135,13 +135,13 @@
     "activeFrom": 1957,
     "lowNote": "A2",
     "highNote": "C#6",
-    "beltNote": "Bb5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Higher and Higher",
     "lowSource": "What Kind of Fool Am I?",
     "highSource": "Baby Workout",
     "blurb": "Ringing, vibrato-rich soul tenor with operatic swoops and full-voice altitude.",
-    "technique": "Operatic power in a rhythm-and-blues frame: a ringing tenor with fast, wide vibrato, immaculate legato, and full-voice attacks to Bb5 that never thin out. He swoops into notes from below, ornaments with rapid turns, and shifts from croon to shout inside a single bar. The larynx stays remarkably free at the extremes. Students copying him try to muscle the top notes; his altitude comes from released, forward resonance and a vibrato that keeps the tone spinning instead of locking."
+    "technique": "Operatic power in a rhythm-and-blues frame: a ringing tenor with fast, wide vibrato, immaculate legato, and high full-voice attacks that never thin out. He swoops into notes from below, ornaments with rapid turns, and shifts from croon to shout inside a single bar. The larynx stays remarkably free at the extremes. Students copying him try to muscle the top notes; his altitude comes from released, forward resonance and a vibrato that keeps the tone spinning instead of locking."
   },
   {
     "name": "David Ruffin",
@@ -151,13 +151,13 @@
     "activeFrom": 1964,
     "lowNote": "A2",
     "highNote": "E6",
-    "beltNote": "Bb5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "My Girl",
     "lowSource": "I Get Excited",
     "highSource": "Rainy Night in Georgia",
     "blurb": "Gravel-and-plead soul tenor whose controlled fray climbs into screamed full-voice peaks.",
-    "technique": "Raw-grained tenor whose signature is controlled fray: a pleading rasp that intensifies as lines climb, stretched over a firm rhythmic core. He belts to Bb5 in full voice and rides screamed peaks above that, using hoarseness as expression rather than accident. Phrasing tugs against the pulse, with sobs and spoken asides breaking the line. Students copying him start with the rasp and lose the pitch; his grit sits on top of accurate, supported tone, and the cracks are placed, not accidental."
+    "technique": "Raw-grained tenor whose signature is controlled fray: a pleading rasp that intensifies as lines climb, stretched over a firm rhythmic core. He belts high and rides screamed peaks at the top of the range, using hoarseness as expression rather than accident. Phrasing tugs against the pulse, with sobs and spoken asides breaking the line. Students copying him start with the rasp and lose the pitch; his grit sits on top of accurate, supported tone, and the cracks are placed, not accidental."
   },
   {
     "name": "Wilson Pickett",
@@ -167,7 +167,7 @@
     "activeFrom": 1965,
     "lowNote": "Bb2",
     "highNote": "E6",
-    "beltNote": "D6",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "In the Midnight Hour",
     "lowSource": "I'm in Love",

@@ -50,6 +50,7 @@ describe("/learn vocal training hub", () => {
       "/atlas/vocal-range-by-voice-type",
       "/glossary",
       "/book",
+      "/programs",
     ]) {
       expect(html, `learn hub missing ${href}`).toContain(`href="${href}"`);
     }

@@ -199,6 +199,19 @@ function ProgramDetail({
     if (active && !running && !window.confirm(`Leave ${active.program.name}? Your place in it is not kept.`)) return;
     if (running && !window.confirm(`Restart ${program.name} from day 1?`)) return;
     beginProgram(program.id, active?.today ?? localDay());
+    // Today's card appears above this detail, so on a phone it lands a screen
+    // or more above the button just pressed and the page looks unchanged.
+    // Once it has rendered, take the singer to Day 1 unless it is in view.
+    requestAnimationFrame(() => {
+      const heading = document.getElementById("program-today-heading");
+      if (!heading) return;
+      // Below the sticky header (html's scroll-padding-top, 4.5rem) and in
+      // the top half of the screen already: leave the page where it is.
+      const { top } = heading.getBoundingClientRect();
+      if (top >= 72 && top <= window.innerHeight / 2) return;
+      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+      heading.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+    });
   };
 
   return (
@@ -268,7 +281,11 @@ function ProgramDetail({
           </p>
         )}
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          <Button onClick={start}>{running ? "Restart from day 1" : active ? "Switch to this program" : "Start this program"}</Button>
+          {/* Running, what to press next is today's rows above; a restart is
+              the rare case, so it gets the quieter style. */}
+          <Button variant={running ? "outline" : "violet"} onClick={start}>
+            {running ? "Restart from day 1" : active ? "Switch to this program" : "Start this program"}
+          </Button>
           {running && (
             <Button
               variant="ghost"

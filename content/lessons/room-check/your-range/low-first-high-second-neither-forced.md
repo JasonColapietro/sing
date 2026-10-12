@@ -5,7 +5,7 @@ stage: "v-l1"
 title: "Low First, High Second, Neither Forced"
 type: "concept"
 minutes: 3
-objective: "Comfortable, not extreme. The number we want is the one you can use."
+objective: "Comfortable, not extreme. The number we want is one you can repeat next month."
 prerequisites: "v-l1-m1-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -33,7 +33,7 @@ Start near the middle of your comfortable speaking range after a gentle hum. Kee
 
 ### Name the target: Range scan and voice type
 
-Comfortable, not extreme. The number we want is the one you can use. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Comfortable, not extreme. The number we want is one you can repeat next month. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.

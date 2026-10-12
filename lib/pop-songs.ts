@@ -315,7 +315,7 @@ export const POP_SONGS: PopSong[] = [
     sourceNote:
       "Musicnotes original-key arrangement, sounding C3–B4 in E minor; some range sites cite a low growl near E2",
     blurb:
-      "A slow gospel-blues build that lives in the baritone's strongest octave, then leans on a sustained, full-voiced B4 in the choruses — comfortable territory for a high baritone, a strain for anyone who reaches it from below. The difficulty is stamina, not acrobatics: the chorus top repeats over and over at full volume.",
+      "A slow gospel-blues build that lives in the baritone's strongest octave, then leans on a sustained, full-voiced B4 in the choruses — a note above the conventional baritone band, so even a high baritone is working at the top of the voice. The difficulty is stamina, not acrobatics: the chorus top repeats over and over at full volume.",
   },
   {
     slug: "someone-you-loved",
@@ -329,7 +329,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("Bb4"),
     sourceNote: "Musicnotes original-key arrangement, sounding Eb3–Bb4 in Db major",
     blurb:
-      "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is only an octave and a fifth, but the tessitura of the chorus parks a male voice right in the passaggio and keeps it there — the classic reason it feels so much harder than its range suggests.",
+      "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is only an octave and a fifth, but the tessitura of the chorus parks a male voice at or above the top of its passaggio and keeps it there — the classic reason it feels so much harder than its range suggests.",
   },
   {
     slug: "rolling-in-the-deep",

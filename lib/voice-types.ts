@@ -62,12 +62,12 @@ export const VOICE_TYPE_NOTES: Record<VoiceKind, VoiceTypeNote> = {
       "the middle female category, and the home of most modern pop belting",
     body: "Mezzo-soprano is where the majority of women in popular music sit, and where the belt-driven pop of the last three decades lives. The interesting figure for a mezzo is rarely the highest note reached but the highest note held in full voice, which is why this library tracks the two separately.",
     challenge:
-      "Belting near the top of the range is the most commonly injured technique in popular singing, and the cited ceilings here are peaks rather than sustainable nightly territory.",
+      "Belting near the top of the range is not dangerous in itself; pushing it, or repeating it without rest, is what wears a voice down. The cited ceilings here are peaks rather than sustainable nightly territory.",
   },
   Soprano: {
     summary:
       "the highest female category, with the most headroom above the staff",
-    body: "Sopranos carry the lightest fold mass and the most usable range above middle C, which is what makes coloratura and whistle register possible at all. In this library the soprano group holds most of the extreme top figures, and most of the whistle-register entries.",
+    body: "Sopranos carry the lightest fold mass and the most usable range above middle C, so the highest written repertoire sits with them. In this library the soprano group holds more of the extreme top figures than any other category, and most of the whistle-register entries.",
     challenge:
       "A soprano's cited top note is usually the least representative number about them — it is a one-off recorded moment, not where the voice actually works.",
   },

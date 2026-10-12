@@ -17,6 +17,7 @@ import {
   SongSectionMap,
   SongStats,
   SongTags,
+  phraseName,
   relatedSongs,
   songFacts,
   songLyricText,
@@ -51,10 +52,17 @@ export function generateStaticParams(): Params[] {
  * Most entries transcribe a song's opening phrase, not the whole song. Their
  * range, tonic and words are facts about that phrase, so every claim the page
  * makes — title, heading, snippet, structured data — says so rather than
- * presenting them as the song's lyrics and vocal range.
+ * presenting them as the song's lyrics and vocal range. One phrase entry is
+ * not the opening (Home on the Range holds its chorus hook), so the phrase is
+ * named by `phraseName`, never by a literal.
  */
 function isPhrase(song: Song): boolean {
   return song.form === "phrase";
+}
+
+/** The phrase's name in title case, for the page title. */
+function phraseTitle(song: Song): string {
+  return phraseName(song).replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 /**
@@ -95,9 +103,9 @@ function songTitle(song: Song): string {
   return isPhrase(song)
     ? firstFit(
         [
-          `Sing ${song.title}: Opening Phrase, Key & Range`,
-          `Sing ${song.title}: Opening Phrase & Key`,
-          `Sing ${song.title}: Opening Phrase`,
+          `Sing ${song.title}: ${phraseTitle(song)}, Key & Range`,
+          `Sing ${song.title}: ${phraseTitle(song)} & Key`,
+          `Sing ${song.title}: ${phraseTitle(song)}`,
           `Sing ${song.title}`,
         ],
         MAX_TITLE,
@@ -119,7 +127,7 @@ function songTitle(song: Song): string {
 function answerSentence(song: Song): string {
   const f = songFacts(song);
   const what = isPhrase(song)
-    ? `The opening phrase of “${song.title}”`
+    ? `The ${phraseName(song)} of “${song.title}”`
     : `“${song.title}”`;
   return `${what} is transcribed here with its tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} — ${f.rangeSemis} semitones — which rates ${f.difficulty} to sing, and a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
 }
@@ -142,10 +150,10 @@ export async function generateMetadata({
   // arrangement's own title already names the lines it holds.
   const partialName = song.arrangementOf
     ? song.title
-    : `the opening phrase of ${song.title}`;
+    : `the ${phraseName(song)} of ${song.title}`;
   const description = isPartial(song)
     ? pro
-      ? `${song.arrangementOf ? song.title : `The opening phrase of ${song.title}`}: ${phraseFacts} Public domain; the practice arrangement is in the Suede Pro songbook.`
+      ? `${song.arrangementOf ? song.title : `The ${phraseName(song)} of ${song.title}`}: ${phraseFacts} Public domain; the practice arrangement is in the Suede Pro songbook.`
       : firstFit(
           [
             `Sing ${partialName} with live pitch feedback: ${phraseFacts} Public domain; fitted to your range after the range test.`,
@@ -280,7 +288,7 @@ export default async function SongPage({
           {
             "@type": "PropertyValue",
             name: phrase
-              ? "Lowest note (opening phrase)"
+              ? `Lowest note (${phraseName(song)})`
               : song.arrangementOf
                 ? "Lowest note (these lines)"
                 : "Lowest note",
@@ -289,7 +297,7 @@ export default async function SongPage({
           {
             "@type": "PropertyValue",
             name: phrase
-              ? "Highest note (opening phrase)"
+              ? `Highest note (${phraseName(song)})`
               : song.arrangementOf
                 ? "Highest note (these lines)"
                 : "Highest note",
@@ -326,12 +334,12 @@ export default async function SongPage({
       kicker={`${pro ? "Pro songbook" : "Free songbook"} · ${song.genre} · ${song.era}`}
       title={
         phrase
-          ? `Sing ${song.title}: the opening phrase, its key and note range`
+          ? `Sing ${song.title}: the ${phraseName(song)}, its key and note range`
           : song.arrangementOf
             ? `Sing ${song.title}: the lines, their key and note range`
             : `Sing ${song.title}: lyrics, key and vocal range`
       }
-      subtitle={`${phrase ? `The opening phrase of “${song.title}”` : `“${song.title}”`} runs from ${f.lowLabel} to ${f.highLabel}, ${f.rangeSemis} semitones, with its tonic on ${f.tonic} at ${song.bpm} bpm, and rates ${f.difficulty.toLowerCase()} to sing. Origin: ${song.origin}.`}
+      subtitle={`${phrase ? `The ${phraseName(song)} of “${song.title}”` : `“${song.title}”`} runs from ${f.lowLabel} to ${f.highLabel}, ${f.rangeSemis} semitones, with its tonic on ${f.tonic} at ${song.bpm} bpm, and rates ${f.difficulty.toLowerCase()} to sing. Origin: ${song.origin}.`}
       actions={
         // The singing action sits in the first screen, above the facts, so a
         // visitor who came to sing does not scroll past two paragraphs of
@@ -433,7 +441,7 @@ export default async function SongPage({
                       <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim">
                         {other.form === "full"
                           ? "longer version"
-                          : "opening phrase"}
+                          : phraseName(other)}
                       </span>
                     </Link>
                   </li>
@@ -476,7 +484,7 @@ export default async function SongPage({
               <LinkButton href="/songs" variant="outline" size="sm">
                 Every song
               </LinkButton>
-              <LinkButton href="/range?mode=range" variant="ghost" size="sm">
+              <LinkButton href="/range?mode=range#start" variant="ghost" size="sm">
                 Find your range first
               </LinkButton>
             </div>

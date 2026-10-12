@@ -1002,8 +1002,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Baritone",
     "genres": [
       "Latin",
-      "Hip-Hop",
-      "Reggae"
+      "Hip-Hop"
     ],
     "country": "Puerto Rico",
     "activeFrom": 2017,
@@ -2470,13 +2469,13 @@ export const SINGERS: Singer[] = [
     "activeFrom": 2011,
     "lowMidi": 34,
     "highMidi": 84,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "Redbone",
     "lowSource": "Algorhythm",
     "highSource": "Me and Your Mama",
     "blurb": "Shape-shifting funk tenor sliding from talky lows to screamed belts and quivering falsetto.",
-    "technique": "Elastic and theatrical, moving from a talky low register near Bb1 up through screamed full-voice climaxes and a keening falsetto. He treats registration as costume: airy croon, funk yelp, preacher rasp, sometimes all inside one verse. Falsetto carries whole songs with a fast flicker vibrato; belts around Bb5 are distorted on purpose. Students copying him chase the scream first; the control lives in his soft singing, pitch-true falsetto with a released jaw, and the distortion must sit over support or it shreds."
+    "technique": "Elastic and theatrical, moving from a talky low register near Bb1 up through screamed full-voice climaxes and a keening falsetto. He treats registration as costume: airy croon, funk yelp, preacher rasp, sometimes all inside one verse. Falsetto carries whole songs with a fast flicker vibrato; his high belts are distorted on purpose. Students copying him chase the scream first; the control lives in his soft singing, pitch-true falsetto with a released jaw, and the distortion must sit over support or it shreds."
   },
   {
     "slug": "chino-moreno",
@@ -3161,13 +3160,13 @@ export const SINGERS: Singer[] = [
     "activeFrom": 1964,
     "lowMidi": 45,
     "highMidi": 88,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "My Girl",
     "lowSource": "I Get Excited",
     "highSource": "Rainy Night in Georgia",
     "blurb": "Gravel-and-plead soul tenor whose controlled fray climbs into screamed full-voice peaks.",
-    "technique": "Raw-grained tenor whose signature is controlled fray: a pleading rasp that intensifies as lines climb, stretched over a firm rhythmic core. He belts to Bb5 in full voice and rides screamed peaks above that, using hoarseness as expression rather than accident. Phrasing tugs against the pulse, with sobs and spoken asides breaking the line. Students copying him start with the rasp and lose the pitch; his grit sits on top of accurate, supported tone, and the cracks are placed, not accidental."
+    "technique": "Raw-grained tenor whose signature is controlled fray: a pleading rasp that intensifies as lines climb, stretched over a firm rhythmic core. He belts high and rides screamed peaks at the top of the range, using hoarseness as expression rather than accident. Phrasing tugs against the pulse, with sobs and spoken asides breaking the line. Students copying him start with the rasp and lose the pitch; his grit sits on top of accurate, supported tone, and the cracks are placed, not accidental."
   },
   {
     "slug": "dean-martin",
@@ -5152,13 +5151,13 @@ export const SINGERS: Singer[] = [
     "activeFrom": 1957,
     "lowMidi": 45,
     "highMidi": 85,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "Higher and Higher",
     "lowSource": "What Kind of Fool Am I?",
     "highSource": "Baby Workout",
     "blurb": "Ringing, vibrato-rich soul tenor with operatic swoops and full-voice altitude.",
-    "technique": "Operatic power in a rhythm-and-blues frame: a ringing tenor with fast, wide vibrato, immaculate legato, and full-voice attacks to Bb5 that never thin out. He swoops into notes from below, ornaments with rapid turns, and shifts from croon to shout inside a single bar. The larynx stays remarkably free at the extremes. Students copying him try to muscle the top notes; his altitude comes from released, forward resonance and a vibrato that keeps the tone spinning instead of locking."
+    "technique": "Operatic power in a rhythm-and-blues frame: a ringing tenor with fast, wide vibrato, immaculate legato, and high full-voice attacks that never thin out. He swoops into notes from below, ornaments with rapid turns, and shifts from croon to shout inside a single bar. The larynx stays remarkably free at the extremes. Students copying him try to muscle the top notes; his altitude comes from released, forward resonance and a vibrato that keeps the tone spinning instead of locking."
   },
   {
     "slug": "jacky-cheung",
@@ -11524,13 +11523,13 @@ export const SINGERS: Singer[] = [
     "activeFrom": 2014,
     "lowMidi": 39,
     "highMidi": 85,
-    "beltMidi": 83,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "Turtles All the Way Down",
     "lowSource": null,
     "highSource": "Call to Arms (live)",
     "blurb": "Slurred outlaw baritone that builds from croon to overdriven full-voice wail without losing pitch.",
-    "technique": "Simpson starts from a slurred, marble-mouthed outlaw baritone, then detonates: he drags belts upward with increasing rasp until full voice rings around B5. The low register is loose and conversational; the top is compressed, distorted on purpose, and held with startling breath support. Vowels stay dark even at extreme volume. Students copying the scream first get hurt; the graduated build from croon to overdrive is the actual technique."
+    "technique": "Simpson starts from a slurred, marble-mouthed outlaw baritone, then detonates: he drags belts upward with increasing rasp toward the top of the range. The low register is loose and conversational; the top is compressed, distorted on purpose, and held with startling breath support. Vowels stay dark even at extreme volume. Students copying the scream first get hurt; the graduated build from croon to overdrive is the actual technique."
   },
   {
     "slug": "sufjan-stevens",
@@ -12624,8 +12623,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Tenor",
     "genres": [
       "Pop",
-      "Electronic",
-      "Opera"
+      "Electronic"
     ],
     "country": "Russia",
     "activeFrom": 2000,
@@ -12734,7 +12732,7 @@ export const SINGERS: Singer[] = [
     "activeFrom": 1965,
     "lowMidi": 46,
     "highMidi": 88,
-    "beltMidi": 86,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "In the Midnight Hour",
     "lowSource": "I'm in Love",

@@ -201,6 +201,9 @@ describe("the lesson data", () => {
       if (/\bpain\b|hoarse|clinician|pathologist/i.test(ifNotReady)) {
         expect(ifNotReady, lesson.id).not.toMatch(/Repeat a smaller version on another fresh attempt/);
       }
+      // An exit that says move on and come back later is the last word; a
+      // retry after it sends the singer straight back to the checkpoint.
+      expect(ifNotReady, lesson.id).not.toMatch(/move on to the next module[^]*repeat a smaller version/i);
       if (lesson.moduleId === "v-l7-m4") {
         expect(ifNotReady, lesson.id).toMatch(/Do not try the effect again/);
       }
@@ -260,6 +263,29 @@ describe("what a module says sing measures", () => {
         expect(row.measurable, `${id} calls ${basis.missing} missing`).not.toBe("yes");
         expect(basis.showsInstead.length).toBeGreaterThan(40);
       }
+    }
+  });
+
+  /**
+   * The panel says "Suede Sing measures part of this" and then opens the
+   * companion room, so the measurement must be one that room shows. Straw and
+   * Lip Trill once named the breath room's sustain timer while its button
+   * opened a pitch-scored warm-up.
+   */
+  it("names only a measurement the companion room takes", () => {
+    const ROOM_MEASURES: Record<string, readonly string[]> = {
+      warmups: ["scorePercent", "inTuneHoldTime", "centsFromTarget"],
+      songs: ["scorePercent", "inTuneHoldTime", "centsFromTarget"],
+      studio: ["centsFromTarget"],
+      range: ["rangeExtremes"],
+      breath: ["sustainSeconds", "loudnessSteadiness", "inhaleDetected", "inhaleSeconds"],
+      analyze: ["phonationSeconds", "ringRatio", "cycleDose"],
+    };
+    for (const [id, { basis, companion }] of Object.entries(MODULE_PRACTICE)) {
+      if (basis.kind !== "measured") continue;
+      expect(ROOM_MEASURES[companion.room] ?? [], `${id} opens ${companion.room}`).toContain(
+        basis.measurement,
+      );
     }
   });
 
@@ -456,6 +482,12 @@ describe("the pages", () => {
       expect(html, l.id).toContain("data-voice-safety");
       if (l.type === "concept") expect(html, l.id).toContain("data-lesson-answer");
       for (const step of shownSteps(l)) expect(html).toContain(step.title.replace(/&/g, "&amp;"));
+      // Hoarseness that will not clear needs the folds examined, so the
+      // lessons name the doctor who can, as the book and guides do, and never
+      // offer a speech-language pathologist as the alternative to one.
+      expect(html, l.id).not.toMatch(
+        /doctor or (?:a )?speech-language pathologist|seek an ENT or voice-specialized/,
+      );
       for (const href of hrefs(html)) {
         expect(href, `${l.id} links ${href}`).not.toMatch(/sing\.suedeai\.ai|guitarhub\.org/);
         if (!href.startsWith("https://www.")) expect(href.startsWith("/"), `${l.id}: ${href}`).toBe(true);

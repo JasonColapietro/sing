@@ -14,7 +14,7 @@ Bad data does not feel like bad data. It feels like a verdict. A range test that
 
 The pitch trace, the range test scoring, the per-note accuracy Pro reports — all of it runs on your device, from your device's microphone. No audio is uploaded (Pro's cloud sync backs up your progress numbers, never the sound), and no engineer is cleaning up the signal on the way. That is good for privacy and good for speed. It also means the input is exactly as good as your room and your setup make it.
 
-Pitch detection works by finding a repeating pattern in the incoming sound and reporting how often it repeats. That is reliable when the loudest thing in the signal is one voice on one note. It gets less reliable as other steady sounds compete, as the signal drops toward the noise floor, and at the edges of your range where your tone carries less energy in the fundamental.
+Pitch detection works by finding a repeating pattern in the incoming sound and reporting how often it repeats. That is reliable when the loudest thing in the signal is one voice on one note. It gets less reliable as other steady sounds compete, as the signal drops toward the noise floor, and at the edges of your range: at the bottom, where your tone carries little energy in the fundamental, and at the top, when a thin or breathy tone gives the detector less to lock onto.
 
 Which gives you a short list of things that can corrupt a session.
 

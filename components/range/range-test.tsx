@@ -277,6 +277,24 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     }
   }, [frame, stage]);
 
+  // Each stage swaps in a card of a different height while the page stays put,
+  // so on a phone the "counted" line, the too-quiet hint and the button that
+  // moves the test on ended up under the bottom tab bar, and the result opened
+  // with its readout under the header. Align each new stage with the top of
+  // the screen instead. "Start over" goes back to the intro from a page
+  // scrolled down to the stage card, which left the intro's heading under the
+  // header, so it brings the top of the test back. The first render is left
+  // alone: it is where the page landed.
+  const topRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const shownStageRef = useRef<Stage>("intro");
+  useEffect(() => {
+    const from = shownStageRef.current;
+    shownStageRef.current = stage;
+    if (stage === from) return;
+    (stage === "intro" ? topRef : stageRef).current?.scrollIntoView({ block: "start" });
+  }, [stage]);
+
   const advanceToHigh = () => {
     resetHunt();
     setStage("high");
@@ -344,6 +362,8 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
 
   return wrap(
     <>
+      {/* Where "Start over" scrolls back to: the top of the intro. */}
+      <div ref={topRef} />
       {stage !== "intro" && (
         <div className="mb-6">
           <StepIndicator stage={stage} />
@@ -432,6 +452,14 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
         </div>
       )}
 
+      {/* Where each stage after the intro scrolls to. No scroll-mt: the
+          page's scroll-padding-top already clears the sticky header, and the
+          extra 80px would put the button back under a 375x667 phone's tab
+          bar. Measured there: "I can't go lower" sits at 499-543 against a
+          bar at 610. While the four-line too-quiet hint shows, the hint is in
+          view and the button drops to about 595-639, but that hint means no
+          pitch is coming through yet, and it clears as soon as one does. */}
+      <div id="range-stage" ref={stageRef} />
       {stage === "warm" && (
         <Card>
           <SectionLabel>Step 1 of 4</SectionLabel>

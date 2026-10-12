@@ -40,3 +40,43 @@ describe("Pro moment after a range test", () => {
     expect(body).toMatch(/if \(offerPro\) emitProResult\(\);/);
   });
 });
+
+describe("range test on a phone", () => {
+  /**
+   * Each stage swaps in a card of a different height while the page stays
+   * where it was, which left the "counted" line, the too-quiet hint and the
+   * "I can't go lower" button under a 375px phone's tab bar, and opened the
+   * result with its readout under the header.
+   */
+  it("brings every stage after the intro to the top of the screen", () => {
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    // The anchor sits directly above the stage cards, so its top is theirs.
+    const anchor = src.indexOf('<div id="range-stage" ref={stageRef} />');
+    expect(anchor).toBeGreaterThan(-1);
+    expect(src.indexOf('{stage === "intro" && (')).toBeLessThan(anchor);
+    for (const block of [
+      '{stage === "warm" && (',
+      '{(stage === "low" || stage === "high") && (',
+      '{stage === "result" && result && (',
+    ]) {
+      expect(src.indexOf(block)).toBeGreaterThan(anchor);
+    }
+    // Only a change of stage scrolls, so the first render stays where the
+    // page landed, and the intro (after "Start over") goes to its own top.
+    expect(src).toMatch(
+      /if \(stage === from\) return;\s*\(stage === "intro" \? topRef : stageRef\)\.current\?\.scrollIntoView\(\{ block: "start" \}\);\s*\}, \[stage\]\);/,
+    );
+  });
+
+  it("brings the intro's heading back into view after Start over", () => {
+    // The stage scroll leaves the page at the stage card, so returning to
+    // the intro without a scroll put "How to find your vocal range" under
+    // the header.
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    const body = src.slice(src.indexOf("return wrap("));
+    const top = body.indexOf("<div ref={topRef} />");
+    expect(top).toBeGreaterThan(-1);
+    expect(top).toBeLessThan(body.indexOf("<StepIndicator"));
+    expect(top).toBeLessThan(body.indexOf('{stage === "intro" && ('));
+  });
+});

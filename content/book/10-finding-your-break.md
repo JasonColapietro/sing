@@ -25,7 +25,7 @@ The third is the trace. Watch the pitch line through that zone. A slide that is 
 
 Three or four passes usually give you a zone rather than a note: "it gets strange between D4 and F4." That zone is the honest answer. Write down its lowest note, because that is where preparation has to start, not where the trouble becomes obvious.
 
-Then do it on more than one vowel. Try "ee", then "ah". If your transition sits higher on the closed vowel than the open one, that is not sloppy measurement. It is a real property of your voice, and knowing it is worth more than one tidy number.
+Then do it on more than one vowel. Try "ee", then "ah". If your transition sits at a different note on the closed vowel than on the open one, that is not sloppy measurement. It is a real property of your voice, and knowing it is worth more than one tidy number.
 
 ## What the range test adds
 

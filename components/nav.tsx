@@ -28,10 +28,27 @@ const NavAccount = dynamic(() => import("@/components/account/nav-account"));
  * ear, breath and the reading) and Progress. Every room still has its own page
  * and ranks for its own queries; `also` keeps the owning tab lit inside one.
  * The full room list lives in the More sheet.
+ *
+ * `href` is the tab's route, the one isActiveLink and ariaCurrentFor match on;
+ * `target`, when set, is where tapping it goes. Sing lands on #start, as the
+ * homepage's "Start singing" does: bare /range opens at the top, and on a
+ * phone the start button sits under this tab bar.
  */
-export const PRIMARY: { href: string; label: string; also?: string[]; icon: TabIconName }[] = [
+export const PRIMARY: {
+  href: string;
+  target?: string;
+  label: string;
+  also?: string[];
+  icon: TabIconName;
+}[] = [
   { href: "/", label: "Home", icon: "home" },
-  { href: "/range", label: "Sing", also: ["/studio", "/analyze", "/recorder", "/tools"], icon: "mic" },
+  {
+    href: "/range",
+    target: "/range#start",
+    label: "Sing",
+    also: ["/studio", "/analyze", "/recorder", "/tools"],
+    icon: "mic",
+  },
   { href: "/songs", label: "Songs", also: ["/singers", "/can-you-sing"], icon: "note" },
   {
     href: "/warmups",
@@ -471,7 +488,7 @@ export default function Nav() {
               return (
                 <Link
                   key={l.href}
-                  href={l.href}
+                  href={l.target ?? l.href}
                   aria-current={ariaCurrentFor(l, pathname)}
                   className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-bold transition-colors ${
                     active
@@ -587,7 +604,7 @@ function TabBar({ pathname }: { pathname: string }) {
           return (
             <li key={l.href}>
               <Link
-                href={l.href}
+                href={l.target ?? l.href}
                 aria-current={ariaCurrentFor(l, pathname)}
                 className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-bold transition-colors ${
                   active ? "text-ink" : "text-dim hover:text-mut"

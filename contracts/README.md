@@ -399,6 +399,48 @@ What the other apps must do: re-sync the file, then:
 Until then, `version` is a failing assertion on their side, which is
 intended. Exercise ids and titles are unchanged.
 
+#### Value changes inside v9
+
+No key was added, so `version` stays 9. These values moved, and a native
+side that pins them sees the change as a failing assertion:
+
+- `rules.warmupOctaveWithoutRange`: either octave still counts without a
+  saved range, but one octave per rep, not per frame. The rep is scored as
+  if every frame were moved by the same whole number of octaves, for each
+  shift from two down to two up, and the shift that scores highest is the
+  rep's octave; its score, cents error, per-note tallies and reported root
+  all come from that shift. Folded frame by frame, octave leaps sung
+  entirely on the root scored 99 and an arpeggio with its top note dropped
+  an octave scored 100; now each scores what the written octave gives. A
+  whole take sung an octave up or down still scores in full. The best
+  shift, rather than one settled by the first notes, keeps a descent whose
+  opening top note dropped an octave from losing every note after it. The
+  span is `MAX_OCTAVE_SHIFT` in `components/warmups/scoring.ts`, stated in
+  the rule text rather than as a key so the shape does not change.
+- `head-float-hold` ("Top-note float") gained `rangeCap` `{ from: 0.5, to: 1 }`,
+  the upper half of the ladder. Walked from the bottom, a bass held it at
+  D#3–A#3, under his first transition, while the copy asked for head voice.
+- `breath.sustain.benchmarksSec` and `starsSec` keep their values, but the web
+  sustain test no longer prints the benchmark ladder or labels a hold by it:
+  it asks the singer to end the note while it is still easy. Both are for
+  review at the next version.
+- `deepLinks.rooms.warmups.params` gained `reps`, a value in an existing
+  list, as `measured-voice-12w` was in v6. `?reps=<n>` (a whole number from 1
+  to 30, used with `?exercise=`) stops a deep-linked exercise after that many
+  reps and counts them as "Rep k of N"; without it the exercise walks its
+  ladder until the singer ends it, and any other value is ignored. The
+  program rows on `/programs` now link exercises this way, so a day sized to
+  the free minutes stops where the row says.
+- `editorial`: word counts moved with this round's text edits. Book:
+  `reading-the-range-test` (1450), `finding-your-break` (1339),
+  `when-numbers-lie` (1463), `weeks-9-10-bottom` (1375), `totalWords` 32376.
+  Atlas: `voice-types-in-the-wild` (865), `modern-rnb` (5390), `the-records`
+  (1004), `totalWords` 72444.
+
+What the other apps must do: re-sync the file, score one octave per rep as
+the rule states, and apply the new `rangeCap`. A consumer that builds
+warm-up deep links may add `&reps=`.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

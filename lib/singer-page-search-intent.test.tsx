@@ -70,7 +70,7 @@ const ARTIST_INTENT_CASES = [
   {
     slug: "reba-mcentire",
     name: "Reba McEntire",
-    opening: "Reba McEntire's reviewed sources describe a peak-career span of about three octaves but do not establish a definitive classical voice type. The displayed range of E3 to F5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Reba McEntire's own lesson describes a peak-career span of about three octaves, wider than this catalog's listed span, but gives no endpoints; the reviewed sources do not establish a definitive classical voice type. The displayed range of E3 to F5 is a reported reference span, not an independently verified physiological limit.",
     title: "Reba McEntire Vocal Range & Voice Type: Classifications Vary",
     heading: "Reba McEntire Voice Type and Vocal Range",
   },

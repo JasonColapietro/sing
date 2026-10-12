@@ -2,6 +2,7 @@
 
 import { getProState } from "./pro";
 import { getState, mergeRemoteProgress, subscribe } from "./progress";
+import { fitForCloud } from "./progress-cloud-fit";
 import {
   assertProgressCloudGeneration,
   captureProgressCloudGeneration,
@@ -16,12 +17,29 @@ import {
  */
 
 const LAST_KEY = "suede-sing:sync:last";
+/** Why the last automatic sync was refused, until a sync succeeds. */
+const ERROR_KEY = "suede-sing:sync:error";
 const AUTO_SYNC_AFTER_MS = 30 * 60 * 1000;
 const PUSH_DEBOUNCE_MS = 45 * 1000;
 
 /** True while a sync-driven save is happening, so the change feed skips it. */
 let applyingRemote = false;
 let pushTimer: number | null = null;
+
+/**
+ * The sync route answered and said no: a lapsed purchase, a record over its
+ * size limit, the store down. Unlike a dropped connection, trying again in
+ * the background will not fix most of these, so the page has to say so.
+ */
+export class SyncRefusedError extends Error {
+  readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "SyncRefusedError";
+    this.status = status;
+  }
+}
 
 async function post<T>(body: unknown): Promise<T> {
   const res = await fetch("/api/sync", {
@@ -32,7 +50,7 @@ async function post<T>(body: unknown): Promise<T> {
   const data = (await res.json().catch(() => null)) as
     | (T & { error?: string })
     | null;
-  if (!res.ok) throw new Error(data?.error ?? "Sync failed. Try again.");
+  if (!res.ok) throw new SyncRefusedError(data?.error ?? "Sync failed. Try again.", res.status);
   if (!data) throw new Error("Sync returned an empty response.");
   return data;
 }
@@ -48,9 +66,65 @@ export function lastSyncedAt(): string | null {
 function markSynced(at: string) {
   try {
     window.localStorage.setItem(LAST_KEY, at);
+    window.localStorage.removeItem(ERROR_KEY);
   } catch {
     // storage unavailable — auto-sync just runs more often
   }
+  notifySyncStatus();
+}
+
+const statusListeners = new Set<() => void>();
+
+function notifySyncStatus(): void {
+  for (const listener of statusListeners) listener();
+}
+
+/**
+ * Calls `listener` whenever lastSyncedAt() or lastSyncError() may have
+ * changed: after a sync in this tab, background ones included, or a write to
+ * either key from another tab. A mounted page reads both once, so without
+ * this a refusal from the load-time sync never showed, and a warning stayed
+ * up after a later sync succeeded.
+ */
+export function subscribeSyncStatus(listener: () => void): () => void {
+  statusListeners.add(listener);
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === null || e.key === LAST_KEY || e.key === ERROR_KEY) listener();
+  };
+  window.addEventListener("storage", onStorage);
+  return () => {
+    statusListeners.delete(listener);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+/**
+ * Why the last automatic sync was refused, or null when the last one that
+ * reached the route succeeded. The automatic syncs swallow their errors so
+ * practice never breaks; this is how a refusal still reaches the page.
+ */
+export function lastSyncError(): string | null {
+  try {
+    return window.localStorage.getItem(ERROR_KEY);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The automatic syncs' error handler. Keeps a refusal for the page to show;
+ * a dropped connection, or a pause or reset that interrupted the round trip,
+ * is left for the next attempt.
+ */
+function noteAutoSyncFailure(error: unknown): void {
+  // A rate limit clears itself within the minute.
+  if (!(error instanceof SyncRefusedError) || error.status === 429) return;
+  try {
+    window.localStorage.setItem(ERROR_KEY, error.message);
+  } catch {
+    // storage unavailable — the manual Sync now still shows the error
+  }
+  notifySyncStatus();
 }
 
 function proKeyOrNull(): string | null {
@@ -81,7 +155,10 @@ export async function syncNow(): Promise<{ mergedRemote: boolean }> {
   // came back. startAutoSync treats any session dated after it as unsynced,
   // so a session logged while the push was in flight must not land before it.
   const snapshotAt = new Date().toISOString();
-  const state = getState();
+  // The route refuses a record over its size limit, which a daily-routine
+  // singer's full log of per-note tallies passes; the oldest sessions' tallies
+  // stay on this device and out of the push.
+  const state = fitForCloud(getState());
   assertProgressCloudGeneration(generation);
   await post<{ ok: boolean }>({
     key,
@@ -141,7 +218,8 @@ let exitFlushBound = false;
  * Called once per page load (from ProSync): a full round trip when the last
  * sync is stale or this device has practice newer than it, plus a debounced
  * push whenever practice writes new data, flushed early when the page is
- * hidden. Every failure is swallowed — sync must never break practice.
+ * hidden. Every failure is swallowed — sync must never break practice — but
+ * a refusal from the route is kept for SyncControls to show.
  */
 export function startAutoSync(): void {
   const key = proKeyOrNull();
@@ -152,7 +230,7 @@ export function startAutoSync(): void {
       (!last ||
         hasUnsyncedPractice(last) ||
         Date.now() - Date.parse(last) > AUTO_SYNC_AFTER_MS)) {
-    syncNow().catch(() => {});
+    syncNow().catch(noteAutoSyncFailure);
   }
 
   const cancelPush = () => {
@@ -169,7 +247,7 @@ export function startAutoSync(): void {
     if (pushTimer === null) return;
     window.clearTimeout(pushTimer);
     pushTimer = null;
-    pushOnly().catch(() => {});
+    pushOnly().catch(noteAutoSyncFailure);
   };
   if (!exitFlushBound && typeof document !== "undefined") {
     exitFlushBound = true;
@@ -194,7 +272,7 @@ export function startAutoSync(): void {
     if (pushTimer !== null) window.clearTimeout(pushTimer);
     pushTimer = window.setTimeout(() => {
       pushTimer = null;
-      pushOnly().catch(() => {});
+      pushOnly().catch(noteAutoSyncFailure);
     }, PUSH_DEBOUNCE_MS);
   });
 }

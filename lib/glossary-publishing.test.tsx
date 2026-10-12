@@ -22,7 +22,9 @@ vi.mock("server-only", () => ({}));
 
 import GlossaryPage from "@/app/glossary/page";
 import { EXERCISES } from "@/components/warmups/exercises";
+import { ATLAS_CONTENTS } from "./atlas-data";
 import { AUTHOR_NAME } from "./author";
+import { BOOK_CONTENTS } from "./book-data";
 import {
   GLOSSARY_TERMS,
   publisherFor,
@@ -177,6 +179,31 @@ describe("the glossary page's onward links", () => {
     const labels = GUIDED_PRACTICE_ROOMS.map((room) => room.label);
     const rooms = `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
     expect(HTML.toLowerCase()).toContain(`${rooms} share`);
+  });
+
+  /**
+   * The Measured Voice samples chapters across the book, not only its first, so
+   * the long-version card links each free one instead of "its first chapter".
+   */
+  it("links every free chapter of both books", () => {
+    expect(HTML).not.toMatch(/first chapter is free/);
+    const free = BOOK_CONTENTS.filter((c) => c.free);
+    expect(free.length).toBeGreaterThan(1);
+    expect(HTML).toContain(`${free.length} of its chapters are free to read`);
+    for (const c of free) expect(HTML).toContain(`href="/book/${c.slug}"`);
+    for (const c of ATLAS_CONTENTS.filter((x) => x.free)) {
+      expect(HTML).toContain(`href="/atlas/${c.slug}"`);
+    }
+  });
+
+  /**
+   * Without #start a phone lands on the range page's intro with the start
+   * button under the tab bar; the intro link and every "/range" entry go there.
+   */
+  it("links the range test at its start button", () => {
+    const rangeHrefs = [...HTML.matchAll(/href="(\/range[^"]*)"/g)].map((m) => m[1]);
+    expect(rangeHrefs.length).toBeGreaterThan(SING_GLOSSARY_TERMS.filter((e) => e.href === "/range").length);
+    for (const href of rangeHrefs) expect(href).toBe("/range?mode=range#start");
   });
 
   /** The intro may not say nothing is prescribed above entries that link a drill. */

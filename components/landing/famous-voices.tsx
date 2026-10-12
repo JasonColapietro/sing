@@ -88,9 +88,13 @@ export function FamousVoices() {
             <h2 className="text-2xl sm:text-3xl">
               Start with a voice you already know
             </h2>
+            {/* No count of reviewed profiles here: VOICES re-sorts as reviews
+                land, and a number in this sentence would go stale with them. */}
             <p className="mt-3 text-mut">
               Every range below is the span a singer is commonly cited as
-              covering, low note to high. Open one to see it drawn on a
+              covering, low note to high. Most voice-type labels and endpoints
+              in this catalog still await individual evidence review; open a
+              profile to see its source status and the span drawn on a
               keyboard, then run the range test and put your own voice beside
               it.
             </p>
@@ -119,7 +123,7 @@ export function FamousVoices() {
         </div>
 
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {VOICES.map(({ singer, evidenceCopy }) => (
+          {VOICES.map(({ singer, reviewed, evidenceCopy }) => (
             <li key={singer.slug}>
               {/* A reviewed singer carries a sentence of evidence and a longer
                   range label. Side by side, the shrink-0 label left that
@@ -145,7 +149,12 @@ export function FamousVoices() {
                   <span
                     className={`mt-0.5 block text-xs text-dim ${evidenceCopy ? "leading-relaxed" : ""}`}
                   >
-                    {evidenceCopy ?? singer.voiceType}
+                    {/* An unreviewed voice type is the catalog's label, as
+                        the profile it links to calls it, not a finding. */}
+                    {evidenceCopy ??
+                      (reviewed
+                        ? singer.voiceType
+                        : `Catalog label: ${singer.voiceType}`)}
                   </span>
                 </span>
                 <span className="tabular shrink-0 font-mono text-xs text-mut">

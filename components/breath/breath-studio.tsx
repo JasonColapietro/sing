@@ -229,7 +229,15 @@ export function BreathStudio() {
     );
   }
   if (view.kind === "drill") {
-    return <BreathDrillSession drill={view.drill} preset={view.preset} pitch={pitch} onExit={goHome} />;
+    return (
+      <BreathDrillSession
+        capped={cap.capped}
+        drill={view.drill}
+        preset={view.preset}
+        pitch={pitch}
+        onExit={goHome}
+      />
+    );
   }
 
 

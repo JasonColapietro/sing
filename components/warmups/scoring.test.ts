@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { midiToFreq } from "@/lib/audio/notes";
-import { EXERCISES, buildSegments, type Segment } from "./exercises";
+import { EXERCISES, PRO_PACKS, buildSegments, type Segment } from "./exercises";
 import { targetMidiAt } from "./lib";
 import {
   MEASURED_ONSET_LAG_SEC,
@@ -9,6 +9,8 @@ import {
 } from "@/lib/audio/latency";
 import {
   GLIDE_TIME_SLACK,
+  MAX_OCTAVE_SHIFT,
+  OCTAVE_LEAD_SEC,
   ONSET_GRACE_MAX_SHARE,
   ONSET_GRACE_SEC,
   createRepScorer,
@@ -429,5 +431,112 @@ describe("octave-agnostic scoring", () => {
     const either = createRepScorer(segs, { octaveAgnostic: true });
     feedThroughout(either, segs, 12);
     expect(either.result(52)!.score).toBeGreaterThanOrEqual(98);
+  });
+
+  /**
+   * Feed 60 fps frames at `sungAt(t, target)` for the whole pattern, the way
+   * the player does, rather than one exact segment length at a time.
+   */
+  function feedFrames(
+    scorer: ReturnType<typeof createRepScorer>,
+    segs: Segment[],
+    sungAt: (t: number, target: number) => number,
+    afterEach?: () => void,
+  ) {
+    const dt = 1 / 60;
+    const end = Math.max(...segs.map((s) => s.t0 + s.dur));
+    for (let t = dt / 2; t < end; t += dt) {
+      const target = targetMidiAt(segs, t);
+      if (target === null) continue;
+      scorer.feed(t, midiToFreq(sungAt(t, target)), dt);
+      afterEach?.();
+    }
+  }
+
+  const proById = (id: string) =>
+    PRO_PACKS.flatMap((p) => p.exercises).find((e) => e.id === id)!;
+  const anyById = (id: string) => EXERCISES.find((e) => e.id === id) ?? proById(id);
+
+  it("scores one octave per rep, so a leap never sung is not a pass", () => {
+    // Octave leaps sung entirely on the root: folded frame by frame this
+    // scored 99. One octave per rep marks the missed tops as missed, and the
+    // lane keeps drawing the voice in the root's octave throughout.
+    const leaps = buildSegments(proById("head-octave-leaps"), 52, 1).segs;
+    const flat = createRepScorer(leaps, { octaveAgnostic: true });
+    const drawn = new Set<number | null>();
+    feedFrames(flat, leaps, () => 52, () => drawn.add(flat.octaveShift));
+    expect([...drawn].filter((s) => s !== null)).toEqual([0]);
+    expect(flat.result(52)!.score).toBeLessThan(70);
+
+    // An octave arpeggio with its top note dropped an octave loses that note.
+    for (const id of ["gee-octave", "octave-arpeggio", "lip-trill-scale"]) {
+      const { segs } = buildSegments(byId(id), 52, 1);
+      const dropped = createRepScorer(segs, { octaveAgnostic: true });
+      feedFrames(dropped, segs, (_, target) => (target >= 64 ? target - 12 : target));
+      const exact = createRepScorer(segs);
+      feedFrames(exact, segs, (_, target) => (target >= 64 ? target - 12 : target));
+      expect(dropped.result(52)!.score, id).toBe(exact.result(52)!.score);
+      expect(dropped.result(52)!.score, id).toBeLessThan(90);
+    }
+  });
+
+  it("does not let a descent's dropped first note sink the notes after it", () => {
+    // These start on their top note. Dropping that one note an octave and
+    // singing the rest as written is one missed note, as in exact-octave
+    // scoring; an octave settled by the first note alone would have marked
+    // every later note an octave out (17-29 where the written octave gives
+    // 71-81).
+    for (const id of ["reverse-arpeggio", "pentatonic-run", "hoo-four-note", "high-float-descent"]) {
+      const { segs } = buildSegments(anyById(id), 52, 1);
+      const top = Math.max(...segs.map((s) => s.startMidi));
+      expect(segs[0].startMidi, id).toBe(top);
+      const sing = (t: number, target: number) => (t < segs[0].t0 + segs[0].dur ? target - 12 : target);
+      const either = createRepScorer(segs, { octaveAgnostic: true });
+      feedFrames(either, segs, sing);
+      const exact = createRepScorer(segs);
+      feedFrames(exact, segs, sing);
+      expect(either.result(52)!.score, id).toBe(exact.result(52)!.score);
+      expect(either.result(52)!.score, id).toBeGreaterThanOrEqual(70);
+      expect(either.result(52)!.root, id).toBe(52);
+      expect(either.octaveShift, id).toBe(0);
+    }
+  });
+
+  it("still counts a whole take sung an octave up or down", () => {
+    const leaps = buildSegments(proById("head-octave-leaps"), 52, 1).segs;
+    for (const octaves of [1, -1]) {
+      const either = createRepScorer(leaps, { octaveAgnostic: true });
+      feedFrames(either, leaps, (_, target) => target + 12 * octaves);
+      expect(either.octaveShift, `${octaves}`).toBe(octaves);
+      expect(either.result(52)!.score, `${octaves}`).toBeGreaterThanOrEqual(98);
+    }
+  });
+
+  it("tries the rep in up to MAX_OCTAVE_SHIFT octaves either way, no further", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const far = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(far, segs, 12 * MAX_OCTAVE_SHIFT);
+    expect(far.result(52)!.score).toBe(100);
+    const beyond = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(beyond, segs, 12 * (MAX_OCTAVE_SHIFT + 1));
+    expect(beyond.result(52)!.score).toBe(0);
+  });
+
+  it("does not let one octave slip at the onset decide the rep", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const scorer = createRepScorer(segs, { octaveAgnostic: true });
+    // The tracker reads the first few frames an octave up, for less than the
+    // lead time, then the singer is heard in the written octave throughout.
+    const slip = OCTAVE_LEAD_SEC * 0.6;
+    feedFrames(scorer, segs, (t, target) => (t < slip ? target + 12 : target));
+    expect(scorer.octaveShift).toBe(0);
+    expect(scorer.result(52)!.score).toBeGreaterThanOrEqual(98);
+  });
+
+  it("never draws in another octave when either octave does not count", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const strict = createRepScorer(segs);
+    feedThroughout(strict, segs, 0);
+    expect(strict.octaveShift).toBeNull();
   });
 });

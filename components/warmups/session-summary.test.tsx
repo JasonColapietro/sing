@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_PROGRESS, type ProgressState } from "@/lib/progress-shape";
 import { localDay } from "@/lib/progress";
 import { planDailyThree } from "@/lib/daily-three";
-import { EXERCISES } from "./exercises";
+import { EXERCISES, PRO_PACKS } from "./exercises";
 import type { SessionSummaryData } from "./lib";
 
 const stored = vi.hoisted(() => ({ progress: null as ProgressState | null }));
@@ -94,6 +94,21 @@ describe("the saved card", () => {
     const html = render(summaryFor(plan.picks[0].exercise.id), { daily: false });
     expect(html).toContain("4-day streak");
     expect(html).toContain("Sing tomorrow to make it 5.");
+  });
+
+  it("says tomorrow's three reads this score, once and only where it does", () => {
+    const line = "Tomorrow&#x27;s three reads your recent scores, this one included.";
+    expect(render(summaryFor(plan.picks[0].exercise.id), { daily: false })).toContain(line);
+    // The done card below already says a new three is picked from the scores.
+    expect(render(summaryFor(plan.picks[0].exercise.id), { done: [true, true, true] })).not.toContain(line);
+    // Today's three is planned from the free catalogue: a pack score is not read.
+    const pack = PRO_PACKS[0].exercises[0];
+    const rep = { root: 50, score: 82, avgCentsErr: 12, skipped: false };
+    const html = render(
+      { ex: pack, results: [rep], avgScore: 82, best: rep, xpGained: 20, newAchievements: [], mode: "sing-along" },
+      { daily: false },
+    );
+    expect(html).not.toContain(line);
   });
 
   it("names no streak that has lapsed", () => {

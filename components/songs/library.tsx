@@ -510,7 +510,7 @@ export function Library({
                 every card will say whether it fits.
               </p>
             </div>
-            <LinkButton href="/range?mode=range" variant="outline" size="sm">
+            <LinkButton href="/range?mode=range#start" variant="outline" size="sm">
               Take the range test
             </LinkButton>
           </div>

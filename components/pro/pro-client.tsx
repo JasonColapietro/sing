@@ -39,6 +39,7 @@ import { SITE_URL } from "@/lib/site";
 import {
   PRO_EXERCISES,
   PRO_PACK_COUNT,
+  PRO_PROGRAM_NAMES,
   TOTAL_CHAPTERS,
   TOTAL_WORDS,
 } from "@/lib/pro-inventory";
@@ -70,6 +71,11 @@ const PRO_CARD_POINTS = [
   `${TOTAL_WORDS.toLocaleString("en-US")} words across ${TOTAL_CHAPTERS} chapters — both books, in full`,
   "Both PDFs, downloadable and yours to keep",
   `${PRO_EXERCISES} pro warmup exercises in ${PRO_PACK_COUNT} packs`,
+  // Week 1 of each is free on /programs (the table below says so); the rest
+  // is a Pro benefit the card never named. "In full", like the books above,
+  // and kept short: on a phone each extra line pushes the buy button further
+  // down. The names go in parentheses because one has a colon of its own.
+  `${PRO_PROGRAM_NAMES.length === 2 ? "Both" : "All"} Pro programs in full (${new Intl.ListFormat("en", { type: "conjunction" }).format(PRO_PROGRAM_NAMES)})`,
   "Pitch analysis on every recorded take",
   "Per-note accuracy and your range charted over months",
   "Adaptive coach plan, rebuilt daily",
@@ -121,6 +127,12 @@ function revealPlans() {
   requestAnimationFrame(() =>
     document.getElementById("plans")?.scrollIntoView({ block: "start" }),
   );
+}
+
+/** Opens the "Already have Pro?" form before a link's own jump reaches it. */
+function openRestore() {
+  const details = document.getElementById("restore");
+  if (details instanceof HTMLDetailsElement) details.open = true;
 }
 
 /** How Pro just arrived in this browser, which decides what the welcome says. */
@@ -386,6 +398,8 @@ export function WelcomePanel({
               Read The Voice Atlas
             </LinkButton>
           </div>
+          {/* The key the singer just pasted, so it can follow the books. */}
+          {proKey && <ProKeyRow proKey={proKey} />}
         </>
       ) : (
         <>
@@ -401,6 +415,11 @@ export function WelcomePanel({
             Your coach starts listening on your next session. Sing one
             warmup and watch the report build itself.
           </p>
+          {/* A new key, and the line telling the buyer to save it, come
+              before the next-step buttons. Below them, on a 375x667 phone,
+              the save line sat under the tab bar while "Sing your first pro
+              warmup" led away from the only credential for the purchase. */}
+          {proKey && <ProKeyRow proKey={proKey} />}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             <LinkButton href="/warmups" variant="violet" size="md">
               Sing your first pro warmup
@@ -411,7 +430,6 @@ export function WelcomePanel({
           </div>
         </>
       )}
-      {proKey && <ProKeyRow proKey={proKey} />}
     </div>
   );
 }
@@ -581,11 +599,31 @@ export function ProClient() {
         </p>
       )}
       {/* What a buyer should know before paying, not after: Pro unlocks per
-          browser, and the key is how it follows them. */}
+          browser, and the key is how it follows them. The buy links (this
+          page's hero, the free-practice wall) land here, an owner's too when
+          they hit the wall on a second browser, so while Pro is off here the
+          note opens the unlock form instead of leaving them a second $79
+          button.
+          A pass holder has no unlock form on the page, so for them it stays
+          plain text. */}
       <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
         Secure checkout by Stripe
         <span className="mx-1.5 text-line2">·</span>
-        Your Pro key unlocks other browsers
+        {pro.active ? (
+          "Your Pro key unlocks other browsers"
+        ) : (
+          // A plain <a>, not next/link: the hash jump scrolls to the form and
+          // RestorePanel's hashchange listener opens it. The click opens it
+          // too, for when the address already ends in #restore and no
+          // hashchange fires.
+          <a
+            href="#restore"
+            onClick={openRestore}
+            className="underline decoration-line2 underline-offset-4 hover:text-ink"
+          >
+            Your Pro key unlocks other browsers
+          </a>
+        )}
       </p>
     </>
   );

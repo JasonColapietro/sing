@@ -315,6 +315,50 @@ describe("program data", () => {
     expect(itemLabel(climb).meta).toBe("Breath · Top count 10");
   });
 
+  it("takes the sustain test last among a session's breath drills, once or twice at most, as chapter 14 asks", () => {
+    // "The sustain test last, once or twice, not more."
+    const p = programById("measured-voice-12w")!;
+    p.days.forEach((d, n) => {
+      const steps = d.items.flatMap((i): BreathStep[] =>
+        i.kind === "drill" ? [drillPreset(i)] : i.kind === "breath" ? breathRoutineById(i.id)!.steps : [],
+      );
+      const label = `day ${n + 1} "${d.title}"`;
+      const attempts = steps.reduce((k, s) => k + (s.drill === "sustain" ? s.attempts : 0), 0);
+      expect(attempts, label).toBeLessThanOrEqual(2);
+      const first = steps.findIndex((s) => s.drill === "sustain");
+      if (first >= 0) expect(steps.slice(first).every((s) => s.drill === "sustain"), label).toBe(true);
+    });
+  });
+
+  it("takes The Measured Voice's retests the way day 1 took the baseline: nothing sung before the warmup, one sustain after the range test", () => {
+    // Chapter 16 retests under "the same ones you used in week 1, or the two
+    // results are not comparable"; chapter 13's sustain test is "one number".
+    // A check-in's sustain reading is the longest hold of its day, so a second
+    // attempt, or one sung cold before the warmup, is a different measurement.
+    const p = programById("measured-voice-12w")!;
+    const steps = (i: ProgramItem): BreathStep[] =>
+      i.kind === "drill" ? [drillPreset(i)] : i.kind === "breath" ? breathRoutineById(i.id)!.steps : [];
+    const voiced = (s: BreathStep) => s.drill === "sustain" || s.drill === "cue";
+    const checks = p.days.filter((d) => d.items.some((i) => i.kind === "range"));
+    expect(checks.map((d) => d.title)).toEqual(["Your baseline", "Halfway check-in", "Where you are now"]);
+    for (const d of checks) {
+      const at = d.items.findIndex((i) => i.kind === "range");
+      expect(d.items.slice(0, at).flatMap(steps).some(voiced), d.title).toBe(false);
+      const attempts = d.items.flatMap(steps).reduce((k, s) => k + (s.drill === "sustain" ? s.attempts : 0), 0);
+      expect(attempts, d.title).toBe(1);
+      expect(d.items.findIndex((i) => i.kind === "drill" && i.id === "sustain"), d.title).toBeGreaterThan(at);
+    }
+  });
+
+  it("keeps weeks 5 and 6 off both ends of the range, which chapters 13 and 16 leave to weeks 7 and 8", () => {
+    // "Starting in the middle and only reaching the edges in weeks 7 through
+    // 9 is the whole point of the sequence."
+    const p = programById("measured-voice-12w")!;
+    const items = p.days.slice(28, 42).flatMap((d) => d.items);
+    expect(items.some((i) => i.kind === "routine" && i.id === "range")).toBe(false);
+    expect(items.some((i) => i.kind === "routine" && i.id === "high-notes")).toBe(false);
+  });
+
   it("counts the calendar days a program takes on the free plan's daily allowance", () => {
     const base: Program = { id: "t", name: "t", tagline: "", measures: "", weeks: 1, pro: false, days: [] };
     const calendarDays = (...days: ProgramDay[]) => freePlanCalendarDays({ ...base, days });
@@ -437,7 +481,7 @@ describe("program data", () => {
     const warmupBeforeRange = (d: ProgramDay) =>
       JSON.stringify(d.items.slice(0, d.items.findIndex((i) => i.kind === "range")).filter(sings));
     const checks = (id: string) => programById(id)!.days.filter((d) => d.items.some((i) => i.kind === "range"));
-    for (const id of ["foundations-2w", "high-notes-6w"]) {
+    for (const id of ["foundations-2w", "high-notes-6w", "measured-voice-12w"]) {
       expect(new Set(checks(id).map(warmupBeforeRange)).size, id).toBe(1);
     }
   });
@@ -461,7 +505,8 @@ describe("program data", () => {
     const hrefs = PROGRAMS.flatMap((p) => allItems(p).map(itemHref));
     for (const h of hrefs) expect(h).toMatch(/^\/(warmups|breath|range|songs|recorder|ear-training)(\?|$)/);
     expect(itemHref({ kind: "routine", id: "quick" })).toBe("/warmups?routine=quick");
-    expect(itemHref({ kind: "exercise", id: "vibrato-hold", reps: 4 })).toBe("/warmups?exercise=vibrato-hold");
+    // With its rep count, so the room stops after the reps the row names.
+    expect(itemHref({ kind: "exercise", id: "vibrato-hold", reps: 4 })).toBe("/warmups?exercise=vibrato-hold&reps=4");
     expect(itemHref({ kind: "breath", id: "daily" })).toBe("/breath?routine=daily");
     expect(itemHref({ kind: "drill", id: "sustain" })).toBe("/breath?drill=sustain");
     expect(itemHref({ kind: "range" })).toBe("/range?mode=range");
@@ -477,6 +522,17 @@ describe("program data", () => {
       expect(drillPresetFromQuery(item.id, q), itemHref(item)).toEqual(item.preset);
     }
     expect(itemHref({ kind: "song", slug: "ode-to-joy" })).toBe("/songs?song=ode-to-joy");
+    // Every exercise row's link carries the count its meta line names, and a
+    // count the warmups room honours (a whole number from 1 to 30), so the
+    // exercise stops itself there instead of running as the endless walk.
+    for (const item of PROGRAMS.flatMap(allItems)) {
+      if (item.kind !== "exercise") continue;
+      const q = new URLSearchParams(itemHref(item).split("?")[1]);
+      expect(q.get("exercise")).toBe(item.id);
+      expect(Number(q.get("reps")), itemHref(item)).toBe(item.reps);
+      expect(Number.isInteger(item.reps) && item.reps >= 1 && item.reps <= 30, itemHref(item)).toBe(true);
+      expect(itemLabel(item).meta).toContain(`${item.reps} reps`);
+    }
   });
 });
 

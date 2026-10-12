@@ -17,6 +17,7 @@ import {
   PRO_PACKS,
   STACCATO_GAP_SEC,
   TIER_ORDER,
+  UPPER_HALF_OF_RANGE,
   VIBRATO_TARGET_BAND,
   buildSegments,
   capLadder,
@@ -547,7 +548,7 @@ describe("the range cap", () => {
     "belt-hah-descent",
   ];
   const COOL_DOWNS = ["quiet-hum-descent", "soft-trill-slide", "straw-slide-down"];
-  const CAPPED = ["swell-and-fade", ...BELT_CAPPED, ...COOL_DOWNS];
+  const CAPPED = ["swell-and-fade", "head-float-hold", ...BELT_CAPPED, ...COOL_DOWNS];
 
   it("keeps the ladder as it is without a cap, and at least one rung with one", () => {
     const ladder = [50, 51, 52, 53, 54, 55, 56, 57, 58];
@@ -592,6 +593,20 @@ describe("the range cap", () => {
       expect(roots[roots.length - 1], id).toBeLessThan(uncapped[uncapped.length - 1]);
       for (const r of roots) expect(uncapped, id).toContain(r);
     }
+  });
+
+  it("floats the head-voice hold in the upper half, never under a low voice's break", () => {
+    const ex = byId("head-float-hold");
+    expect(ex.rangeCap).toEqual(UPPER_HALF_OF_RANGE);
+    for (const [low, high] of [[40, 64], [48, 72]]) {
+      const uncapped = computeRootLadder({ ...ex, rangeCap: undefined }, low, high);
+      const roots = computeRootLadder(ex, low, high);
+      // Same top rung, off the bottom ones.
+      expect(roots[roots.length - 1], `${low}-${high}`).toBe(uncapped[uncapped.length - 1]);
+      expect(roots[0], `${low}-${high}`).toBeGreaterThan(uncapped[0]);
+    }
+    // A bass E2–E4 floats from G3, at his transition, not from D#3 under it.
+    expect(computeRootLadder(ex, 40, 64)[0] + 7).toBe(55);
   });
 
   it("leaves the octave-drop uncapped: its top note is sung light, not belted", () => {

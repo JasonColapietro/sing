@@ -152,6 +152,63 @@ describe("start button", () => {
 });
 
 /**
+ * A related link into the range test lands on the start button (#start, the
+ * anchor voice-test.tsx carries) rather than the intro above it, which on a
+ * phone leaves the button under the tab bar.
+ */
+describe("range-test links", () => {
+  const rangeLinks = TOOL_GUIDES.flatMap((g) =>
+    g.related.filter((link) => link.href.startsWith("/range")).map((link) => [g.path, link.href] as const),
+  );
+
+  it("exist", () => {
+    expect(rangeLinks.length).toBeGreaterThan(0);
+  });
+
+  it.each(rangeLinks)("%s links %s at #start", (_, href) => {
+    expect(new URL(href, "https://sing.suedeai.ai").hash).toBe("#start");
+  });
+});
+
+/**
+ * What the guides say Pro and the privacy model do, as they behave: studio
+ * sessions log no per-note tallies (only scored warmups and songs do), and Pro
+ * sync uploads progress records, so only audio is never uploaded.
+ */
+describe("product claims", () => {
+  const all = JSON.stringify(TOOL_GUIDES);
+
+  it("does not say Pro tracks studio notes", () => {
+    expect(all).not.toMatch(/Pro keeps per-note accuracy across sessions/);
+    expect(guides.STUDIO_GUIDE.advanced.points.join(" ")).toMatch(/scored warmups and songs/);
+  });
+
+  it("scopes the upload claim to audio", () => {
+    expect(all).not.toMatch(/nothing is uploaded|nothing uploads/i);
+    // Every room logs a session record, and Pro sync uploads it, so "nothing"
+    // sent, stored or recorded is false for a Pro singer; audio is the claim.
+    expect(all).not.toMatch(/nothing is sent|nothing you sing|nothing is recorded/i);
+  });
+
+  /**
+   * Each song's personal best and score trend are free (the song summary);
+   * Pro's per-note chart pools notes by pitch across sessions, so it shows no
+   * phrase's history.
+   */
+  it("sells songs' Pro extra as the per-note chart, not a history free singers have", () => {
+    const songs = guides.SONGS_GUIDE.advanced.points.join(" ");
+    expect(songs).not.toMatch(/phrase's history/);
+    expect(songs).toMatch(/personal best and a score trend on the free plan/);
+    expect(songs).toMatch(/per-note accuracy chart/);
+  });
+
+  it("does not urge a range retest within a few sessions", () => {
+    expect(all).not.toMatch(/Retest after several practice sessions/);
+    expect(guides.RANGE_GUIDE.beginner.points.join(" ")).toMatch(/few weeks/);
+  });
+});
+
+/**
  * Every guide hands a reader on to the free course, and every course link is a
  * module page that exists with the three lessons its note promises.
  */

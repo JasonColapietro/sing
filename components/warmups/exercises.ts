@@ -102,6 +102,13 @@ export const LOWER_MIDDLE_OF_RANGE: RangeCap = { from: 0, to: 0.6 };
 export const LOWER_HALF_OF_RANGE: RangeCap = { from: 0, to: 0.5 };
 
 /**
+ * The upper half of the comfortable range, for a light hold meant to sit at or
+ * near the singer's transition rather than below it. Walked from the bottom of
+ * the whole ladder, a bass's float sat at D#3–A#3, under his first break.
+ */
+export const UPPER_HALF_OF_RANGE: RangeCap = { from: 0.5, to: 1 };
+
+/**
  * The span every ladder is fitted to before a range test has been taken:
  * A2–E4, inside the baritone band lib/audio/notes.ts uses (A2–A4) and, an
  * octave up (A3–E5), inside its mezzo band (A3–A5). Without a saved range the
@@ -808,10 +815,11 @@ export const PRO_PACKS: WarmupPack[] = [
       {
         id: "head-float-hold",
         title: "Top-note float",
-        desc: "Hold one light note at the fifth and let it hover — pure head voice.",
+        desc: "Hold one note at the fifth and let it hover, as light as it will go.",
         tier: "intermediate",
         tip: "Imagine the note resting on the breath, like a ball on a fountain.",
         noteDur: 3,
+        rangeCap: UPPER_HALF_OF_RANGE,
         buildSteps: (r) => [[r + 7]],
       },
     ],

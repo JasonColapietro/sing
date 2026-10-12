@@ -12,6 +12,7 @@ import type { Song } from "@/components/songs/types";
 import {
   pickForTaste,
   reviveTaste,
+  TASTE_GOALS,
   tasteGenreOptions,
   type TasteAnswers,
   type TasteContext,
@@ -153,5 +154,29 @@ describe("pickForTaste", () => {
     expect(a).toHaveLength(2);
     expect(ids(a)).toEqual(ids(b));
     expect(pickForTaste(answers(), ctx(), 0)).toEqual([]);
+  });
+});
+
+describe("TASTE_GOALS", () => {
+  it("does not promise whole songs while every longer entry sings selected lines", () => {
+    const full = SONGS.filter((s) => s.form === "full");
+    expect(full.length).toBeGreaterThan(0);
+    // Every longer entry is a partial arrangement of a phrase entry, so the
+    // quiz option that picks them must not offer the whole song. A genuine
+    // whole-song transcription would fail the first check, which is the cue
+    // to revisit this copy.
+    for (const song of full) expect(song.arrangementOf, song.slug).toBeDefined();
+    const goal = TASTE_GOALS.find((g) => g.value === "full")!;
+    expect(`${goal.label} ${goal.hint}`).not.toMatch(/whole|full song|full arrangement/i);
+  });
+
+  it("says the longer arrangements start locked when they do", () => {
+    // The hint tells a new singer they open later; that is only honest while
+    // none of them is open on a first visit.
+    const goal = TASTE_GOALS.find((g) => g.value === "full")!;
+    expect(goal.hint).toMatch(/open as you master/);
+    for (const song of SONGS.filter((s) => s.form === "full")) {
+      expect(bandOpen(bandForSong(song), new Set(), SONGS), song.slug).toBe(false);
+    }
   });
 });

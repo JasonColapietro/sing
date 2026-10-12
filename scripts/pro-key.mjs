@@ -115,7 +115,8 @@ for (const purchase of purchases) {
   const entitles =
     value.status === "succeeded" &&
     value.currency === "usd" &&
-    value.amount_received === 7900 &&
+    // Same amounts as HONOURED_LIFETIME_CENTS in lib/stripe.ts: when the lifetime price changes, append the new one in both places and keep the old ones.
+    [7900].includes(value.amount_received) &&
     value.metadata.app === "suede-sing" &&
     value.metadata.offer === "early-access" &&
     value.metadata.plan === "lifetime" &&

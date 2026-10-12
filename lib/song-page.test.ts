@@ -12,7 +12,9 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import SongPage, { generateMetadata } from "@/app/songs/[slug]/page";
-import { ALL_SONGS } from "@/components/songs/data";
+import { ALL_SONGS, SONGS, songBySlug } from "@/components/songs/data";
+import { computeDifficulty } from "@/components/songs/lib";
+import { relatedSongs, songLyricText } from "@/components/songs/song-page";
 
 const arrangements = ALL_SONGS.filter((s) => s.arrangementOf);
 
@@ -85,5 +87,102 @@ describe("the tag sentence", () => {
     const html = await render(plain!.slug);
     expect(html).not.toContain("is what it asks of a voice");
     expect(html).toContain("Genre, era and tags");
+  });
+});
+
+describe("a phrase that is not the song's opening", () => {
+  /**
+   * Home on the Range opens on its verse ("Oh, give me a home…", as its own
+   * longer arrangement shows); the phrase entry holds the chorus hook. Round
+   * 1's "opening phrase" template made every search-facing claim on that page
+   * false, so the page names the excerpt it actually holds.
+   */
+  it("names the chorus hook, never the opening phrase, on every claim", async () => {
+    const slug = "home-on-the-range";
+    expect(songBySlug(slug)!.excerpt).toBe("chorus hook");
+
+    const meta = await generateMetadata({ params: Promise.resolve({ slug }) });
+    const title = (meta.title as { absolute: string }).absolute;
+    expect(title).toBe("Sing Home on the Range: Chorus Hook, Key & Range");
+    expect(String(meta.description)).toMatch(/^Sing the chorus hook of Home on the Range/);
+    // Keywords come from lib/keywords.ts (songKeywords), checked there.
+    expect(JSON.stringify({ ...meta, keywords: undefined })).not.toMatch(/opening phrase/i);
+
+    const html = await render(slug);
+    expect(html).not.toMatch(/opening phrase/i);
+    const h1 = /<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(html)![1];
+    expect(h1).toContain("the chorus hook, its key and note range");
+    expect(html).toContain("The songbook transcribes the chorus hook rather than the");
+    const composition = jsonLd(html)["@graph"].find((n) => n["@type"] === "MusicComposition")!;
+    const names = (composition.additionalProperty as { name: string }[]).map((p) => p.name);
+    expect(names).toContain("Lowest note (chorus hook)");
+    expect(names).toContain("Highest note (chorus hook)");
+
+    // The longer version links back to it by what it is.
+    const full = await render("home-on-the-range-full");
+    expect(full).toContain("chorus hook</span>");
+    expect(full).not.toMatch(/opening phrase/i);
+  });
+
+  it("still calls every other phrase entry its opening phrase", async () => {
+    const meta = await generateMetadata({ params: Promise.resolve({ slug: "silent-night" }) });
+    expect((meta.title as { absolute: string }).absolute).toMatch(/Opening Phrase/);
+  });
+});
+
+describe("sing next", () => {
+  it("never relists this song's own melody, and lists each melody once", () => {
+    for (const song of SONGS) {
+      const related = relatedSongs(song, SONGS);
+      const melodies = related.map((s) => s.arrangementOf ?? s.id);
+      expect(melodies, song.slug).not.toContain(song.arrangementOf ?? song.id);
+      expect(new Set(melodies).size, song.slug).toBe(melodies.length);
+    }
+  });
+
+  it("fills the list from the difficulty its heading names before anything else", () => {
+    // The heading reads "Other <difficulty> songs", so an Easy page must not
+    // offer a Hard ballad while Easy songs are left over.
+    for (const song of SONGS) {
+      const label = computeDifficulty(song).label;
+      const related = relatedSongs(song, SONGS);
+      const sameDifficulty = SONGS.filter(
+        (s) => s !== song && (s.arrangementOf ?? s.id) !== (song.arrangementOf ?? song.id) && computeDifficulty(s).label === label,
+      );
+      const matching = related.filter((s) => computeDifficulty(s).label === label).length;
+      expect(matching, song.slug).toBe(Math.min(related.length, sameDifficulty.length));
+    }
+  });
+
+  it("lists only what its heading names: the page's difficulty, or its genre when the heading adds it", async () => {
+    for (const song of SONGS) {
+      const html = await render(song.slug);
+      const m = /<h2[^>]*>Other (easy|medium|hard) songs(?: and more ([^<]+))?<\/h2>/.exec(html);
+      expect(m, song.slug).not.toBeNull();
+      const [, difficulty, genre] = m!;
+      expect(difficulty, song.slug).toBe(computeDifficulty(song).label.toLowerCase());
+      if (genre !== undefined) expect(genre, song.slug).toBe(song.genre);
+      for (const r of relatedSongs(song, SONGS)) {
+        const named =
+          computeDifficulty(r).label.toLowerCase() === difficulty || (genre !== undefined && r.genre === genre);
+        expect(named, `${song.slug} lists ${r.slug}`).toBe(true);
+      }
+    }
+  });
+});
+
+describe("song data a page states as fact", () => {
+  it("never tags a song rated Hard as narrow range", () => {
+    // The tag sentence prints the first demand tag as "what it asks of a
+    // voice", and the /songs guide sends beginners to narrow-range melodies.
+    for (const song of ALL_SONGS.filter((s) => s.tags.includes("narrow range"))) {
+      expect(computeDifficulty(song).label, song.slug).not.toBe("Hard");
+    }
+  });
+
+  it("prints Newton's second stanza without a comma inside its clause", () => {
+    expect(songLyricText(songBySlug("amazing-grace-full")!)).toContain(
+      "'Twas grace that taught my heart to fear,",
+    );
   });
 });

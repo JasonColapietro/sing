@@ -40,6 +40,7 @@ import {
 import { ORG_NAME } from "./organization";
 import { FREE_DAILY_MINUTES } from "./practice-limits";
 import { PRICING, formatPrice } from "./pro-shared";
+import { FREE_WEEKS, PROGRAMS } from "./programs";
 import { MAX_RANGE_HISTORY } from "./progress-shape";
 import { SONGS } from "@/components/songs/data";
 import { GET as llmsFullRoute } from "../app/llms-full.txt/route";
@@ -484,6 +485,21 @@ describe("/llms.txt free and Pro boundary", () => {
     expect(llms).toContain(`Check ${SING_HOME}/pro before quoting a price`);
   });
 
+  /**
+   * Week 1 of each Pro program is free (FREE_WEEKS in lib/programs.ts). The
+   * file used to call some programs "Pro-only", which the free first week
+   * makes untrue, and named none of them.
+   */
+  it("names the Pro programs and their free first week", () => {
+    const section = llms.slice(llms.indexOf("## Free and Pro"), llms.indexOf("## Pages"));
+    expect(section).not.toMatch(/Pro-only/);
+    const pro = PROGRAMS.filter((p) => p.pro);
+    expect(pro.length).toBeGreaterThan(0);
+    for (const p of pro) expect(section).toContain(p.name);
+    expect(FREE_WEEKS).toBe(1);
+    expect(section).toMatch(/need Pro after their free first week/);
+  });
+
   it("keeps range a measurement and voice type an estimate", () => {
     expect(llms).toMatch(/session measurement/);
     expect(llms).toMatch(/voice type[^\n]*estimate/i);
@@ -532,6 +548,18 @@ describe("/llms.txt describes pages as they render", () => {
     expect(studio).toMatch(/target-note drill/);
     expect(studio).not.toMatch(/scales, slides and hold drills/);
     expect(studio).toContain(`${SING_HOME}/warmups`);
+  });
+
+  /**
+   * Free /progress shows the latest saved range; the range-over-time chart
+   * renders only for Pro (components/progress/progress-client.tsx), as the
+   * /pro table says.
+   */
+  it("does not give free Progress the Pro range history", () => {
+    const progress = line("- [Progress]");
+    expect(progress).not.toMatch(/range history/);
+    expect(progress).toMatch(/latest saved range/);
+    expect(progress).toMatch(/range over time and per-note accuracy are part of Suede Pro/);
   });
 
   it("states song key fitting as it behaves, with and without a saved range", () => {

@@ -2,7 +2,7 @@
   {
     "name": "Vitas",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Electronic", "Opera"],
+    "genres": ["Pop", "Electronic"],
     "country": "Russia",
     "activeFrom": 2000,
     "lowNote": "D2",

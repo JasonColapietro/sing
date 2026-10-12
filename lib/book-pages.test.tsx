@@ -15,9 +15,13 @@ import { AUTHOR_NAME } from "@/lib/author";
 import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
 import { PLAN_ROWS } from "@/lib/pro";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { PROGRAMME_EXIT_TESTS, programmePhaseChapters } from "@/lib/programme-exit-tests";
+import { FREE_WEEKS, programById } from "@/lib/programs";
 import { VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import BookPage from "@/app/book/page";
 import ChapterPage, { generateMetadata } from "@/app/book/[slug]/page";
+import { BOOK_PROGRAM_HREF, BOOK_PROGRAM_ID, BOOK_PROGRAM_NAME } from "@/components/book/program-link";
 
 const APP_DIR = join(__dirname, "..", "app");
 const FREE = BOOK.filter((c) => c.free);
@@ -98,6 +102,84 @@ describe("the free chapters", () => {
     const html = await page("registers");
     expect(html).not.toContain("Try this now");
     expect(html).not.toContain('rel="author"');
+  });
+
+  it("link one another in the server HTML, before entitlement is known", async () => {
+    for (const chapter of FREE) {
+      const html = await page(chapter.slug);
+      for (const other of FREE.filter((c) => c.slug !== chapter.slug)) {
+        expect(html, `${chapter.slug} -> ${other.slug}`).toContain(`href="/book/${other.slug}"`);
+      }
+    }
+  });
+});
+
+describe("a locked chapter", () => {
+  /** The href of the locked page's "Read a free chapter" button. */
+  async function freeChapterButton(slug: string): Promise<string | undefined> {
+    const html = await page(slug);
+    return /<a [^>]*href="(\/book\/[^"]+)"[^>]*>Read a free chapter<\/a>/.exec(html)?.[1];
+  }
+
+  it("offers the next free chapter, not the one the reader just finished", async () => {
+    // Chapter 1's Next is chapter 2, which is locked; sending that reader
+    // back to chapter 1 was a loop.
+    expect(await freeChapterButton("registers")).toBe("/book/reading-the-range-test");
+    expect(await freeChapterButton("pitch-accuracy")).toBe("/book/when-numbers-lie");
+    // Past the last free chapter there is none ahead, so the first.
+    expect(await freeChapterButton("weeks-7-8-top")).toBe("/book/what-your-voice-is");
+  });
+
+  it("lists the free lessons that cite it, as a free chapter does", async () => {
+    const html = await page("registers");
+    expect(html).toContain("Free lessons that use this chapter");
+    expect(html).toMatch(/href="\/learn\/voice\/[^"]+\/[^"]+"/);
+  });
+});
+
+describe("the twelve-week program", () => {
+  it("names the in-app program as it is, Pro past a free first week", () => {
+    const program = programById(BOOK_PROGRAM_ID);
+    expect(program?.name).toBe(BOOK_PROGRAM_NAME);
+    expect(program?.pro).toBe(true);
+    // The bridge says "first week is free".
+    expect(FREE_WEEKS).toBe(1);
+    expect(program?.chapters?.map((c) => c.slug)).toEqual(programmePhaseChapters());
+  });
+
+  it("links the program from the contents page and from every chapter of its part", async () => {
+    // The free week is guided practice, so every bridge into it names the cap.
+    const cap = new RegExp(`free plan&#x27;s ${FREE_DAILY_MINUTES} guided minutes`);
+    const contents = renderToStaticMarkup(<BookPage />);
+    expect(contents).toContain(`href="${BOOK_PROGRAM_HREF}"`);
+    expect(contents).toMatch(cap);
+    for (const slug of ["how-the-program-works", ...programmePhaseChapters()]) {
+      const html = await page(slug);
+      expect(html, slug).toContain(`href="${BOOK_PROGRAM_HREF}"`);
+      expect(html, slug).toContain("a Suede Pro program");
+      expect(html, slug).toMatch(/first\s+week is free/);
+      expect(html, slug).toMatch(cap);
+    }
+  });
+
+  it("names the daily cap where an exit test sends a reader into guided practice", async () => {
+    const note = `guided minutes a day; Pro removes the limit`;
+    for (const slug of programmePhaseChapters()) {
+      const room = PROGRAMME_EXIT_TESTS[slug].room;
+      const html = await page(slug);
+      // The studio and the range test have no clock; breath and songs do.
+      if (room === "studio" || room === "range") expect(html, slug).not.toContain(note);
+      else expect(html, `${slug} (${room})`).toContain(note);
+    }
+    // Both kinds are exercised, so neither branch is vacuous.
+    const rooms = programmePhaseChapters().map((s) => PROGRAMME_EXIT_TESTS[s].room);
+    expect(rooms).toContain("studio");
+    expect(rooms).toContain("breath");
+    expect(rooms).toContain("songs");
+  });
+
+  it("does not link it from chapters outside the program", async () => {
+    expect(await page("registers")).not.toContain(BOOK_PROGRAM_HREF);
   });
 });
 

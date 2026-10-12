@@ -12,6 +12,7 @@ import {
 } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
 import { useProgress, type Achievement } from "@/lib/progress";
+import { MAX_RANGE_HISTORY } from "@/lib/progress-shape";
 import type { RangeEntry } from "@/lib/analytics";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
@@ -136,13 +137,14 @@ function describeSpan(semitones: number): string {
 }
 
 /**
- * Semitones trimmed off each end to get from "the notes I reached" to "the
- * notes I can sing a phrase on". Both extremes came out of pushing, so
- * practising at them trains the reach rather than the voice.
+ * Semitones trimmed off each end as a first guess at "the notes I can sing a
+ * phrase on". Both extremes are the furthest notes reached, so practising at
+ * them trains the reach rather than the voice. The trim is arithmetic, not a
+ * measurement, and the result card says so.
  */
 const EDGE_TRIM_SEMIS = 3;
 
-/** The middle of the span, with the pushed edges trimmed. Never inverts. */
+/** The middle of the span, with the edges trimmed. Never inverts. */
 function workingRange(lowMidi: number, highMidi: number): [number, number] {
   const trim = Math.min(EDGE_TRIM_SEMIS, Math.floor((highMidi - lowMidi) / 4));
   return [lowMidi + trim, highMidi - trim];
@@ -170,37 +172,35 @@ function warmupForSpan(semis: number): { id: string; title: string; why: string 
       };
 }
 
-/** Seven tests a fortnight apart spans exactly the three months the caption claims. */
-const SAMPLE_TESTS = 7;
-const SAMPLE_INTERVAL_DAYS = 15;
+/** About six weeks between tests: the interval pro-charts.tsx and the coach (RANGE_RETEST_DAYS) use. */
+const SAMPLE_INTERVAL_DAYS = 42;
 
 /**
- * A worked example of the range chart, not the singer's data: a test every
- * couple of weeks, ending on the range just measured, widening the way a
- * practising voice does. Shown only when there is nothing real to plot,
- * because an empty chart is the one thing that cannot sell the chart.
+ * A worked example of the range chart, not the singer's data: three tests six
+ * weeks apart, ending on the range just measured, with the edges wobbling by a
+ * semitone rather than trending, because range edges move slowly if at all
+ * (content/book/11-tracking-change.md). Shown only when there is nothing real
+ * to plot. It used to widen by up to eight semitones over three months of
+ * fortnightly tests, an outcome nobody measured and a testing habit the book
+ * advises against.
  */
-function sampleHistory(lowMidi: number, highMidi: number): RangeEntry[] {
-  const span = highMidi - lowMidi;
-  // Clamped so the earliest sample still spans at least two semitones —
+export function sampleHistory(lowMidi: number, highMidi: number): RangeEntry[] {
   // rangeSeries drops any entry whose high is not above its low.
-  const growth = Math.max(
-    0,
-    Math.min(4, Math.floor(span / 6), Math.floor((span - 2) / 2)),
-  );
+  const wobble = highMidi - lowMidi >= 4 ? 1 : 0;
+  const day = 24 * 60 * 60 * 1000;
   const end = Date.now();
-  const steps = SAMPLE_TESTS - 1;
-  return Array.from({ length: SAMPLE_TESTS }, (_, i) => {
-    const back = steps - i;
-    const inset = Math.round((back / steps) * growth);
-    return {
-      lowMidi: lowMidi + inset,
-      highMidi: highMidi - inset,
-      testedAt: new Date(
-        end - back * SAMPLE_INTERVAL_DAYS * 24 * 60 * 60 * 1000,
-      ).toISOString(),
-    };
-  });
+  const spans: Array<[number, number]> = [
+    [lowMidi, highMidi],
+    [lowMidi + wobble, highMidi - wobble],
+    [lowMidi, highMidi],
+  ];
+  return spans.map(([low, high], i) => ({
+    lowMidi: low,
+    highMidi: high,
+    testedAt: new Date(
+      end - (spans.length - 1 - i) * SAMPLE_INTERVAL_DAYS * day,
+    ).toISOString(),
+  }));
 }
 
 /** 0..100 position of a midi value on a fixed axis. */
@@ -362,6 +362,11 @@ export function ResultView({
   );
 
   const [workLow, workHigh] = workingRange(lowMidi, highMidi);
+  const trimmed = workLow - lowMidi;
+  const middleIs =
+    trimmed > 0
+      ? `your span with ${trimmed} semitone${trimmed === 1 ? "" : "s"} trimmed from each end`
+      : "the whole span you reached";
   const warmup = warmupForSpan(semis);
 
   const isPro = useIsPro();
@@ -553,17 +558,33 @@ export function ResultView({
       <Card>
         <SectionLabel>What to do with this</SectionLabel>
         <h2 className="mt-3 text-xl">
-          Practise in the middle:{" "}
+          Start in the middle:{" "}
           <span className="text-violet-ink">
             {midiToLabel(workLow)}–{midiToLabel(workHigh)}
           </span>
         </h2>
+        {/* The test asks for the furthest clear notes, falsetto included, and
+            never for comfort, so the middle band is a guess and says so: a
+            baritone whose top was falsetto would otherwise be told to put
+            his songs up there. Warmups start in the band rather than stay in
+            it: the octave siren this card can recommend sweeps the span, and
+            for a span under four semitones the "middle" is all of it, which
+            is still not a measured comfortable band. */}
         <p className="mt-2 max-w-2xl text-sm text-mut">
-          {midiToLabel(lowMidi)} and {midiToLabel(highMidi)} are edges — you
-          found them by pushing, and a note you can only just reach is not a
-          note you can hold a phrase on. The middle of the span is where
-          warmups and songs should sit, and it is the part that widens with
-          practice.
+          {midiToLabel(lowMidi)} and {midiToLabel(highMidi)} are the furthest
+          clear notes you reached today, and a note you can only just reach is
+          not a note you can hold a phrase on.{" "}
+          {midiToLabel(workLow)}–{midiToLabel(workHigh)} is {middleIs}: a
+          starting guess at where you sing comfortably, not a measurement of
+          it. If your top notes were falsetto, the top of that guess may sit
+          above your comfortable band. Find the band by ear in the{" "}
+          <Link
+            href="/studio"
+            className="text-violet-ink underline decoration-violet/50 underline-offset-2 hover:decoration-violet"
+          >
+            pitch studio
+          </Link>
+          , then start warmups there and keep songs inside it.
         </p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-line bg-panel2/60 p-4">
@@ -786,11 +807,14 @@ export function ResultView({
 
       {/* Every other completion screen carries the offer; this one, the
           highest-intent moment in the product, carried only a locked chart.
-          Self-hides for Pro, so it collapses out of the stack entirely. */}
+          Self-hides for Pro, so it collapses out of the stack entirely.
+          Free singers keep their tests too (the latest MAX_RANGE_HISTORY), so
+          Pro's part is the chart, not the keeping, and it shows change at the
+          edges rather than promising growth. */}
       <ProCrescendoNudge
-        line="Pro charts every retake, so gained semitones show as a line"
-        title="Watch this number move"
-        body="Pro keeps every range test on one chart — the semitones you gain show up as growth instead of a number you have to remember."
+        line="Pro charts each retest, so you can see whether either edge moves"
+        title="See your tests on one chart"
+        body={`Pro charts your latest ${MAX_RANGE_HISTORY} range tests on one chart, so a real change at either edge shows up instead of a number you have to remember.`}
         context="Range test"
       />
 
@@ -840,7 +864,7 @@ function RangeOverTime({
             bottom of whatever it wraps, and a caption there would be buried. */}
         {!hasHistory && (
           <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Sample — this is what three months of tests looks like
+            Sample — three tests about six weeks apart
           </p>
         )}
         <RangeHistoryChart

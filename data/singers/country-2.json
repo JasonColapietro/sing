@@ -215,13 +215,13 @@
     "activeFrom": 2014,
     "lowNote": "Eb2",
     "highNote": "C#6",
-    "beltNote": "B5",
+    "beltNote": null,
     "whistle": false,
     "signatureSong": "Turtles All the Way Down",
     "lowSource": null,
     "highSource": "Call to Arms (live)",
     "blurb": "Slurred outlaw baritone that builds from croon to overdriven full-voice wail without losing pitch.",
-    "technique": "Simpson starts from a slurred, marble-mouthed outlaw baritone, then detonates: he drags belts upward with increasing rasp until full voice rings around B5. The low register is loose and conversational; the top is compressed, distorted on purpose, and held with startling breath support. Vowels stay dark even at extreme volume. Students copying the scream first get hurt; the graduated build from croon to overdrive is the actual technique."
+    "technique": "Simpson starts from a slurred, marble-mouthed outlaw baritone, then detonates: he drags belts upward with increasing rasp toward the top of the range. The low register is loose and conversational; the top is compressed, distorted on purpose, and held with startling breath support. Vowels stay dark even at extreme volume. Students copying the scream first get hurt; the graduated build from croon to overdrive is the actual technique."
   },
   {
     "name": "Cody Johnson",

@@ -180,8 +180,7 @@ const drill = <D extends BreathDrillId>(id: D, preset?: Extract<BreathStep, { dr
 /**
  * The range test. Every day that takes one warms up first, as chapters 8 and 14
  * ask: a cold voice under-reports at both ends. Check-ins a program compares
- * warm up alike where the free week allows, since chapter 8's protocol is the
- * same warmup every time.
+ * warm up alike, since chapter 8's protocol is the same warmup every time.
  */
 const range: ProgramItem = { kind: "range" };
 const song = (slug: string): ProgramItem => ({ kind: "song", slug });
@@ -358,6 +357,46 @@ const LONG_BREATH: ProgramItem[] = [
   drill("cue"),
 ];
 
+/**
+ * The Measured Voice's warmup before every range test: day 1's four free
+ * exercises, short enough for the free week's five guided minutes. The
+ * halfway and closing check-ins sing the same four: chapter 8's protocol is
+ * the same warmup every time, and chapter 16 retests under the conditions
+ * "you used in week 1, or the two results are not comparable".
+ */
+const BASELINE_WARMUP: ProgramItem[] = [
+  exercise("morning-hum", 5),
+  exercise("lip-trill-scale", 6),
+  exercise("hoo-four-note", 5),
+  exercise("descending-five", 4),
+];
+
+/**
+ * The breath that opens the halfway and closing check-ins, before the
+ * baseline warmup: three minutes around the square and the climb to eight,
+ * both silent. Chapter 16 opens a session with "box breathing from Breath,
+ * then two or three minutes of the lightest warmup pack you have". The quick
+ * set is not used here because it ends on a sustain: a maximal hold sung
+ * before the warmup, and a second attempt the day-1 baseline never had, when
+ * the check-in's reading is the longest hold of the day. Each check-in takes
+ * one sustain, after the range test, as day 1 does.
+ */
+const RETEST_BREATH: ProgramItem[] = [drill("box", { drill: "box", side: 4, minutes: 3 }), drill("farinelli")];
+
+/**
+ * Weeks 5 and 6's second session: the morning set, then six reps of the ng
+ * siren to the fifth. Six reps climb only the first six rungs of its ladder,
+ * which starts a few semitones above the bottom of the range, so the session
+ * slides a fifth at a time without reaching for the top.
+ */
+const QUIET_SIRENS = day(
+  "Quiet ng sirens",
+  breath("daily"),
+  routine("morning"),
+  exercise("ng-siren-fifth", 6),
+  routine("cooldown"),
+);
+
 /** Four sessions a week, spread out, as the book asks: "three is the floor, four is better". */
 function bookWeek(a: ProgramDay, b: ProgramDay, c: ProgramDay, d: ProgramDay): ProgramDay[] {
   return [a, b, rest(), c, d, rest(), rest()];
@@ -396,25 +435,26 @@ const MEASURED_VOICE: Program = {
   days: [
     // Weeks 1–2: baseline and breath.
     ...bookWeek(
-      day(
-        "Your baseline",
-        exercise("morning-hum", 5),
-        exercise("lip-trill-scale", 6),
-        exercise("hoo-four-note", 5),
-        exercise("descending-five", 4),
-        range,
-        recorder,
-        drill("sustain"),
-      ),
+      day("Your baseline", ...BASELINE_WARMUP, range, recorder, drill("sustain")),
       day("Box breath, a gentle middle", drill("box"), exercise("morning-hum", 5), exercise("hoo-four-note", 5), exercise("descending-five", 4)),
       day("The climb to eight", drill("farinelli"), exercise("lip-trill-scale", 6), exercise("morning-sustain", 4)),
       day("Box breath, a held note", drill("box"), exercise("morning-sigh", 5), exercise("sustained-hold", 3), exercise("descending-five", 4)),
     ),
+    // Chapter 14 runs the breath drills in a fixed order with "the sustain
+    // test last, once or twice, not more", so the long set is the builder's
+    // counts with one sustain at the end rather than the builder's three.
     ...bookWeek(
       day("Breath and a morning set", breath("daily"), routine("morning")),
       day("Breath and the easy four", breath("daily"), routine("quick"), routine("cooldown")),
-      day("The long breath set", breath("builder"), routine("morning")),
-      day("A sustain, then the easy four", drill("sustain"), breath("quick"), routine("quick"), routine("cooldown")),
+      day(
+        "The long breath set",
+        drill("box", { drill: "box", side: 5, minutes: 3 }),
+        drill("farinelli", { drill: "farinelli", cap: 10 }),
+        drill("cue"),
+        drill("sustain"),
+        routine("morning"),
+      ),
+      day("Quick breath and the easy four", breath("quick"), routine("quick"), routine("cooldown")),
     ),
     // Weeks 3–4: the middle voice, with ear training every session, as
     // chapter 15 asks: "Three or four minutes a session, every session."
@@ -426,21 +466,26 @@ const MEASURED_VOICE: Program = {
         day("The easy four and a song", breath("quick"), routine("quick"), ear, song("ode-to-joy"), routine("cooldown")),
       ),
     ),
-    // Weeks 5–6: through the break, quietly. The block closes with a retest.
+    // Weeks 5–6: through the break, quietly. Chapter 16 keeps every exercise
+    // near the transition and leaves the edges of the range to weeks 7 and 8,
+    // so nothing here reaches for both ends. The block closes with a retest,
+    // warmed up as day 1 was.
     ...bookWeek(
       day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
-      day("Reach both ends", breath("daily"), routine("range"), routine("cooldown")),
+      QUIET_SIRENS,
       day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
       day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
     ),
     ...week(
       bookWeek(
         day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
-        day("Reach both ends", breath("daily"), routine("range"), routine("cooldown")),
+        QUIET_SIRENS,
         day("Slides across the break", routine("quick"), routine("mix"), routine("cooldown")),
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
-      { 6: day("Halfway check-in", breath("quick"), routine("quick"), range, drill("sustain"), routine("cooldown")) },
+      {
+        6: day("Halfway check-in", ...RETEST_BREATH, ...BASELINE_WARMUP, range, drill("sustain"), routine("cooldown")),
+      },
     ),
     // Weeks 7–8: height without weight, head voice before belt.
     ...[7, 8].flatMap(() =>
@@ -483,7 +528,7 @@ const MEASURED_VOICE: Program = {
     ),
     ...week(
       bookWeek(
-        day("Where you are now", routine("quick"), range, recorder, drill("sustain"), routine("cooldown")),
+        day("Where you are now", ...RETEST_BREATH, ...BASELINE_WARMUP, range, recorder, drill("sustain"), routine("cooldown")),
         day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
         day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
         day("The same song again", breath("daily"), routine("morning"), song("home-on-the-range"), routine("cooldown")),
@@ -638,7 +683,10 @@ export function itemHref(item: ProgramItem): string {
     case "routine":
       return `/warmups?routine=${encodeURIComponent(item.id)}`;
     case "exercise":
-      return `/warmups?exercise=${encodeURIComponent(item.id)}`;
+      // With the rep count, so the room stops the exercise after the reps the
+      // row names ("Rep 2 of 5") rather than opening the endless walk, which
+      // would run a free week's day past its five guided minutes.
+      return `/warmups?exercise=${encodeURIComponent(item.id)}&reps=${item.reps}`;
     case "breath":
       return `/breath?routine=${encodeURIComponent(item.id)}`;
     case "drill":

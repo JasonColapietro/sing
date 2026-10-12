@@ -73,7 +73,7 @@ export default function ToolsPage() {
             because each does considerably more than a console module and each
             answers a question this tab does not. The three above only need
             speakers. These two read your microphone and draw what they hear.
-            Nothing uploads.
+            No audio is uploaded.
           </p>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">
             {MIC_ROOMS.map(({ href, label, desc, Glyph, inside }) => (

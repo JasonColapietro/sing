@@ -159,6 +159,30 @@ describe("restoring Pro on a new browser", () => {
     expect(html).toContain("Already have Pro? Unlock it on this device");
   });
 
+  it("turns the buy card's Pro key note into the way to the unlock form", () => {
+    // Every buy link lands on #buy, an owner's on a second browser too, and
+    // the unlock form sits about 1,400px further down, closed.
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).toMatch(
+      /<a[^>]*href="#restore"[^>]*>Your Pro key unlocks other browsers<\/a>/,
+    );
+  });
+
+  it("leaves the note as plain text for a pass holder, who has no unlock form", () => {
+    proState.current = state({
+      active: true,
+      plan: "monthly",
+      status: "trialing",
+      subscriptionId: "sub_pass",
+      customerId: "cus_pass",
+      currentPeriodEnd: "2026-11-10T12:00:00.000Z",
+    });
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).toContain("Your Pro key unlocks other browsers");
+    expect(html).not.toContain('href="#restore"');
+    expect(html).not.toMatch(/<details[^>]*id="restore"/);
+  });
+
   it("sends the emailed Pro key to the unlock form, not the sales hero", () => {
     proState.current = state({
       active: true,
@@ -198,6 +222,16 @@ describe("restoring Pro on a new browser", () => {
     expect(html).toContain("Welcome to the gold channel");
     expect(html).toContain("Your Pro key");
   });
+
+  it("puts a new buyer's key and its save line above the next-step buttons", () => {
+    // Below them, on a 375x667 phone, "Save this now" sat under the tab bar.
+    const html = renderToStaticMarkup(
+      <WelcomePanel how="purchase" proKey="suede-pro_test" periodEnd={null} />,
+    );
+    const save = html.indexOf("Save this now");
+    expect(save).toBeGreaterThan(-1);
+    expect(save).toBeLessThan(html.indexOf("Sing your first pro warmup"));
+  });
 });
 
 describe("Pro sales copy on the page", () => {
@@ -211,6 +245,17 @@ describe("Pro sales copy on the page", () => {
     const html = renderToStaticMarkup(<ProClient />);
     expect(html).not.toMatch(/scoring history|song history/i);
     expect(html).not.toMatch(/\bgenres?\b|voice-type routines/i);
+  });
+
+  it("says where free ends for the programs, and names the Pro ones", () => {
+    // Two programs need Pro after week 1. A table headed "No asterisks" that
+    // left them out was contradicted by the day-8 wall.
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).toContain("4, plus week 1 of 2 more");
+    expect(html).toContain("All 6");
+    expect(html).toContain(
+      "Both Pro programs in full (Mix in 4 weeks and The Measured Voice: 12 weeks)",
+    );
   });
 
   it("does not say Pro keeps a record the free plan also keeps", () => {

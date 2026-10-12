@@ -94,7 +94,12 @@ export function ChapterReader({ chapter }: { chapter: BookContentsEntry }) {
         ? { kind: "loading" }
         : state;
 
-  const sample = BOOK_CONTENTS.find((c) => c.free);
+  // The next free chapter after this one, so a reader who followed "Next" out
+  // of chapter 1 is offered chapter 8 rather than the page they just read.
+  // Past the last free chapter there is nothing ahead, so back to the first.
+  const sample =
+    BOOK_CONTENTS.find((c) => c.free && c.order > chapter.order) ??
+    BOOK_CONTENTS.find((c) => c.free);
 
   // Shared by the loading and locked states: none of these links claim anything
   // about the reader's entitlement, so they are safe to bake into the prerendered

@@ -7,13 +7,14 @@ import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { MODULE_PRACTICE } from "@/lib/lesson-practice";
 import { Markdown } from "@/lib/markdown";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
-import { exitTestFor } from "@/lib/programme-exit-tests";
+import { exitTestFor, PROGRAMME_PART } from "@/lib/programme-exit-tests";
 import { firstFit } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { chapterJsonLd } from "@/lib/page-jsonld";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL } from "@/lib/site";
 import { COURSE } from "@/lib/voice-lessons";
+import { BookProgramNote } from "@/components/book/program-link";
 import { ChapterNav, ChapterReader } from "@/components/book/reader";
 import { FreeOnly } from "@/components/pro/gate";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
@@ -65,6 +66,14 @@ function lessonsUsing(slug: string): Array<{ href: string; name: string; skill: 
     });
 }
 
+/**
+ * Exit-test rooms (keys of the contract's `deepLinks.rooms`) that run guided
+ * practice, which the free plan caps at FREE_DAILY_MINUTES a day. The studio
+ * and the range test have no clock. Mirrors CAPPED_TYPES in lib/free-cap.ts,
+ * a client module this server page cannot read values from.
+ */
+const GUIDED_ROOMS: ReadonlySet<string> = new Set(["warmups", "breath", "earTraining", "songs"]);
+
 export const dynamicParams = false;
 
 export function generateStaticParams(): Params[] {
@@ -112,7 +121,11 @@ export default async function ChapterPage({
   const gated = BOOK_CONTENTS.filter((c) => !c.free).length;
   const freeCount = BOOK_CONTENTS.length - gated;
   const tryIt = full ? TRY_IT[chapter.slug] : undefined;
-  const lessons = full ? lessonsUsing(chapter.slug) : [];
+  // Gated chapters list them too: a locked page is where a free lesson's
+  // reading link lands, and "pay or go back" is not a next step.
+  const lessons = lessonsUsing(chapter.slug);
+  /** The other chapters anyone can read, so the free sample is not one page. */
+  const otherFree = BOOK_CONTENTS.filter((c) => c.free && c.slug !== chapter.slug);
   /**
    * Shown whether or not the body is gated, and on purpose. The chapter is the
    * paid thing; the condition that tells a singer the fortnight is finished is
@@ -158,6 +171,8 @@ export default async function ChapterPage({
                 {exit.roomLabel}
               </Link>
               , which is where this app measures it.
+              {GUIDED_ROOMS.has(exit.room) &&
+                ` Time there counts toward the free plan's ${FREE_DAILY_MINUTES} guided minutes a day; Pro removes the limit.`}
             </p>
             <p className="text-sm text-mut">
               When it does not pass, the blocker is usually this one. {exit.blocker}
@@ -165,7 +180,15 @@ export default async function ChapterPage({
             <p className="text-sm text-mut">
               What passing does not prove: {exit.doesNotProve}
             </p>
+            <BookProgramNote scope="fortnight" className="text-sm text-mut" />
           </div>
+        </Card>
+      )}
+      {/* The chapter that explains the plan's shape sets no exit test, so its
+          bridge to the in-app program stands on its own. */}
+      {!exit && chapter.part === PROGRAMME_PART && (
+        <Card>
+          <BookProgramNote scope="plan" className="max-w-2xl text-sm text-mut" />
         </Card>
       )}
       {full ? (
@@ -217,19 +240,26 @@ export default async function ChapterPage({
               )}
               {lessons.length > 0 && (
                 <div className={tryIt ? "mt-6 border-t border-line pt-5" : undefined}>
-                  <SectionLabel>Free lessons that use this chapter</SectionLabel>
-                  <ul className="mt-3 space-y-2">
-                    {lessons.map((l) => (
-                      <li key={l.href} className="text-sm text-mut">
-                        <Link href={l.href} className="text-violet-ink hover:underline">
-                          {l.name}
-                        </Link>{" "}
-                        — {l.skill}
-                      </li>
-                    ))}
-                  </ul>
+                  <LessonList lessons={lessons} />
                 </div>
               )}
+            </Card>
+          )}
+          {/* Server-rendered for everyone, so the free chapters link one another
+              in the HTML a crawler reads, not only after entitlement resolves. */}
+          {otherFree.length > 0 && (
+            <Card>
+              <SectionLabel>The other free chapters</SectionLabel>
+              <ul className="mt-3 space-y-2">
+                {otherFree.map((c) => (
+                  <li key={c.slug} className="text-sm text-mut">
+                    <Link href={`/book/${c.slug}`} className="text-violet-ink hover:underline">
+                      {c.title}
+                    </Link>
+                    {c.summary && <span> — {c.summary}</span>}
+                  </li>
+                ))}
+              </ul>
             </Card>
           )}
           {/* A subscriber arrives here from "Start reading" — sell Pro only to
@@ -268,8 +298,33 @@ export default async function ChapterPage({
           <ChapterNav slug={chapter.slug} />
         </div>
       ) : (
-        <ChapterReader chapter={chapter} />
+        <div className="space-y-6">
+          <ChapterReader chapter={chapter} />
+          {lessons.length > 0 && (
+            <Card>
+              <LessonList lessons={lessons} />
+            </Card>
+          )}
+        </div>
       )}
     </PageShell>
+  );
+}
+
+function LessonList({ lessons }: { lessons: ReturnType<typeof lessonsUsing> }) {
+  return (
+    <>
+      <SectionLabel>Free lessons that use this chapter</SectionLabel>
+      <ul className="mt-3 space-y-2">
+        {lessons.map((l) => (
+          <li key={l.href} className="text-sm text-mut">
+            <Link href={l.href} className="text-violet-ink hover:underline">
+              {l.name}
+            </Link>{" "}
+            — {l.skill}
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }

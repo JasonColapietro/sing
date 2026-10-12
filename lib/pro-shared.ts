@@ -79,6 +79,9 @@ export interface PlanPrice {
  * what Stripe holds, and both ends enforce that rather than trust it —
  * `scripts/stripe-setup.mjs` exits non-zero on a price that differs, and
  * resolvePriceId() refuses to open a session against one.
+ *
+ * A new lifetime amount also goes into HONOURED_LIFETIME_CENTS in
+ * lib/stripe.ts, beside the old ones, so earlier buyers keep their access.
  */
 export const PRICING: Record<CheckoutPlan, PlanPrice> = {
   monthly: {
@@ -92,6 +95,14 @@ export const PRICING: Record<CheckoutPlan, PlanPrice> = {
     note: "one payment",
   },
 };
+
+/**
+ * The `offer` tag checkout writes on every lifetime payment, and that
+ * isOurLifetimePayment requires each time a buyer is checked again. It names
+ * the sale, not the label on /pro: keep it when "Early Access" ends, because
+ * changing it refuses every lifetime buyer who paid under the old tag.
+ */
+export const LIFETIME_OFFER = "early-access";
 
 /**
  * Plans that exist (and keep serving current subscribers) but can no longer

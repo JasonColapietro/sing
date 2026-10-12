@@ -228,8 +228,8 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A setup above head voice in which only a short section of the folds vibrates, giving a thin, flute-like tone.",
         where:
-          "The records page lists the whistle notes in the library; most voices never have one, and nothing depends on it.",
-        href: "/singers/records",
+          "On the singers' range chart, a dot at the high end of a bar marks a voice with a whistle register listed; most singers never use one, and nothing depends on it.",
+        href: "/singers",
         domain: "voice",
       },
       {
@@ -405,7 +405,7 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Twang",
         aka: ["Epilaryngeal narrowing"],
         definition:
-          "A bright, carrying resonance made by narrowing the space just above the vocal folds, which adds high-frequency energy rather than volume.",
+          "A bright, carrying resonance made by narrowing the space just above the vocal folds, which boosts the high frequencies the ear is most sensitive to, so the voice sounds louder without more breath pressure.",
         where:
           "The bratty nay drills in the Pro belt-prep and mix-builder packs train twang, and on the analyzer's spectrogram it shows as energy arriving in the upper bands while the bottom line, the note itself, stays put.",
         href: "/warmups",
@@ -436,7 +436,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "The shape of the vocal tract that sets which frequencies a note is loudest at, colouring it without changing its pitch.",
         where:
-          "Warmups name the vowel each pattern is sung on, because the same scale on ee and on ah asks different things of the tract.",
+          "Most warmups name the vowel or sound a pattern is sung on, because the same scale on ee and on ah asks different things of the tract.",
         href: "/warmups",
         domain: "voice",
       },

@@ -46,6 +46,17 @@ function canStartRoutine(r: Routine): boolean {
   return !r.pro || getProState().active;
 }
 
+/**
+ * The rep count a `?reps=<n>` link asks for, or null for the endless walk.
+ * Anything that is not a whole number from 1 to 30 is ignored rather than
+ * clamped: a mangled link should open the ordinary exercise.
+ */
+export function linkedRepCount(raw: string | null | undefined): number | null {
+  if (raw === null || raw === undefined || raw.trim() === "") return null;
+  const n = Number(raw);
+  return Number.isInteger(n) && n >= 1 && n <= 30 ? n : null;
+}
+
 /** Where a mic failure has to be shown: the one control the singer pressed. */
 type ErrorAt =
   | { kind: "gate" }
@@ -85,6 +96,10 @@ export function WarmupsClient() {
   // The tempo the running exercise starts at: 1x, or the step today's plan
   // chose for it.
   const [activeTempo, setActiveTempo] = useState<DailyTempo>(1);
+  // A set rep count from a `?exercise=<id>&reps=<n>` link (a program row
+  // sized to the free minutes): the exercise stops itself after n reps
+  // instead of walking until End. Null for every other way in.
+  const [activeReps, setActiveReps] = useState<number | null>(null);
 
   // The coach links here as /warmups?exercise=<id> and the routine cards
   // elsewhere as /warmups?routine=<id>, so a singer arrives on the thing that
@@ -94,7 +109,8 @@ export function WarmupsClient() {
   // prerendered heading and copy — the same trade the singers directory
   // documents. `undefined` means the URL hasn't been read yet.
   const [deepLink, setDeepLink] = useState<
-    { exercise: string | null; routine: string | null; step: string | null } | undefined
+    | { exercise: string | null; routine: string | null; step: string | null; reps: string | null }
+    | undefined
   >(undefined);
   // The local hour, for "today's warmup". The server has no idea what time it
   // is where the singer sits, so it renders the daily routine and the
@@ -105,7 +121,12 @@ export function WarmupsClient() {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     /* eslint-disable react-hooks/set-state-in-effect */
-    setDeepLink({ exercise: q.get("exercise"), routine: q.get("routine"), step: q.get("step") });
+    setDeepLink({
+      exercise: q.get("exercise"),
+      routine: q.get("routine"),
+      step: q.get("step"),
+      reps: q.get("reps"),
+    });
     setHour(new Date().getHours());
     setToday(localDay());
     /* eslint-enable react-hooks/set-state-in-effect */
@@ -171,6 +192,7 @@ export function WarmupsClient() {
     if (cap.capped) return;
     setActiveEx(ex);
     setActiveTempo(tempo);
+    setActiveReps(null);
     setSummary(null);
     setView("session");
   }
@@ -276,6 +298,7 @@ export function WarmupsClient() {
       setActiveEx(deepLinkEx);
       // A link to one of today's three starts at the tempo the plan set.
       setActiveTempo(dailyTempoFor(dailyPlan, deepLinkEx.id) ?? 1);
+      setActiveReps(linkedRepCount(deepLink.reps));
       setSummary(null);
       setView("session");
     }
@@ -312,6 +335,13 @@ export function WarmupsClient() {
     if (p.kind === "routine" && canStartRoutine(p.routine)) startRoutine(p.routine);
   }
 
+  const deepLinkPending = Boolean(pendingDeepLinkEx || pendingDeepLinkRoutine);
+  // A program row's link sets a rep count; any other single exercise walks
+  // until End. The gate says which, so it never promises an ending that
+  // will not come.
+  const pendingLinkReps =
+    pendingDeepLinkEx && !pendingDeepLinkRoutine ? linkedRepCount(deepLink?.reps) : null;
+
   const gateTitle = pendingDeepLinkRoutine
     ? `Turn on your mic to start “${pendingDeepLinkRoutine.name}”`
     : pendingDeepLinkEx
@@ -319,6 +349,63 @@ export function WarmupsClient() {
       : "How a warmup works here";
 
   const newToWarmups = !progress.sessions.some((s) => s.type === "warmup");
+
+  // The mic gate's three parts. Their order depends on whether a link is
+  // waiting to start something; see the gate below.
+  const gateSteps = (
+    <ol
+      className={`${deepLinkPending ? "mt-5" : "mt-3"} max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut`}
+    >
+      <li>
+        Each exercise plays its pattern once, counts you in with two
+        beats, then scores your pitch as you sing it back with the
+        guide underneath you.
+      </li>
+      <li>
+        The key moves a semitone every rep: most exercises climb and
+        then come back down, and the descending ones start high and
+        step down. In a routine, after the set number of reps the next
+        exercise introduces itself and starts on its own.{" "}
+        {pendingLinkReps !== null
+          ? `This exercise stops by itself after ${pendingLinkReps} ${pendingLinkReps === 1 ? "rep" : "reps"}.`
+          : "A single exercise keeps going until you press End."}
+      </li>
+      <li>
+        At the end you get one summary: score, stars, XP, and the
+        streak you just kept alive.
+      </li>
+    </ol>
+  );
+  const gateNotes = (
+    <>
+      {/* The id the path rows point their aria-describedby at, so a
+          screen reader user hears that a row asks for the microphone
+          before they press it. It only exists while the gate does,
+          which is exactly while the rows set that attribute. */}
+      <p id="practice-mic-note" className="mt-3 max-w-xl text-sm text-dim">
+        Scoring needs your microphone. Audio is read and analyzed in this
+        browser and never leaves your device.
+      </p>
+      <p className="mt-2 max-w-xl text-sm text-rec">
+        Sing at a comfortable volume. Stop if a note hurts or feels strained, and rest if your voice turns hoarse or scratchy.
+      </p>
+    </>
+  );
+  const gateStart = (
+    <>
+      <div className="mt-5">
+        <Button variant="rec" size="lg" onClick={startFromGate}>
+          <IconMic /> {deepLinkPending ? "Enable mic and start" : "Enable microphone"}
+        </Button>
+      </div>
+      {pitch.error && errorAt.kind === "gate" && (
+        <MicAlert
+          message={pitch.error}
+          className="mt-4 max-w-md text-sm text-rec"
+        />
+      )}
+    </>
+  );
 
   return (
     <PageShell
@@ -408,46 +495,23 @@ export function WarmupsClient() {
             <div id="warmup-gate" className="scroll-mt-20">
               <Card>
                 <h2 className="text-xl">{gateTitle}</h2>
-                <ol className="mt-3 max-w-xl list-decimal space-y-2 pl-5 text-sm text-mut">
-                  <li>
-                    Each exercise plays its pattern once, counts you in with two
-                    beats, then scores your pitch as you sing it back with the
-                    guide underneath you.
-                  </li>
-                  <li>
-                    The key moves a semitone every rep: most exercises climb and
-                    then come back down, and the descending ones start high and
-                    step down. After the set number of reps the next exercise
-                    introduces itself and starts on its own — you never have to
-                    pick what comes next.
-                  </li>
-                  <li>
-                    At the end you get one summary: score, stars, XP, and the
-                    streak you just kept alive.
-                  </li>
-                </ol>
-                {/* The id the path rows point their aria-describedby at, so a
-                    screen reader user hears that a row asks for the microphone
-                    before they press it. It only exists while the gate does,
-                    which is exactly while the rows set that attribute. */}
-                <p id="practice-mic-note" className="mt-3 max-w-xl text-sm text-dim">
-                  Scoring needs your microphone. Audio is read and analyzed in this
-                  browser and never leaves your device.
-                </p>
-                <p className="mt-2 max-w-xl text-sm text-rec">
-                  Sing at a comfortable volume. Stop if a note hurts or feels strained, and rest if your voice turns hoarse or scratchy.
-                </p>
-                <div className="mt-5">
-                  <Button variant="rec" size="lg" onClick={startFromGate}>
-                    <IconMic />{" "}
-                    {pendingDeepLinkEx || pendingDeepLinkRoutine ? "Enable mic and start" : "Enable microphone"}
-                  </Button>
-                </div>
-                {pitch.error && errorAt.kind === "gate" && (
-                  <MicAlert
-                    message={pitch.error}
-                    className="mt-4 max-w-md text-sm text-rec"
-                  />
+                {/* A link that named something (the range result, the coach,
+                    a program day) brings the singer here to press one button,
+                    so the button comes straight after the privacy and safety
+                    lines and the how-it-works list follows it. On a 375×667
+                    phone the old order put the button under the tab bar. */}
+                {deepLinkPending ? (
+                  <>
+                    {gateNotes}
+                    {gateStart}
+                    {gateSteps}
+                  </>
+                ) : (
+                  <>
+                    {gateSteps}
+                    {gateNotes}
+                    {gateStart}
+                  </>
                 )}
                 <AudioSetup className="mt-6 max-w-xl" />
                 <ProWhisper className="mt-4" />
@@ -503,6 +567,11 @@ export function WarmupsClient() {
       {view === "session" && activeEx && (
         <ExercisePlayer
           ex={activeEx}
+          bounds={
+            activeReps === null
+              ? undefined
+              : { reps: activeReps, stepIndex: 0, stepCount: 1, standalone: true }
+          }
           initialTempo={activeTempo}
           pitch={pitch}
           range={progress.range}

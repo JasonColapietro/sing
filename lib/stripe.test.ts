@@ -7,9 +7,13 @@ const {
   CHECKOUT_PRICE_LOOKUP_KEYS,
   entitlementFrom,
   entitlementFromLifetime,
+  HONOURED_LIFETIME_CENTS,
   isOurLifetimePayment,
   isOurSubscription,
+  PriceNotConfiguredError,
+  resolvePriceId,
 } = await import("./stripe");
+const { LIFETIME_OFFER, PRICING } = await import("./pro-shared");
 
 beforeEach(() => {
   process.env.PRO_KEY_SECRET = "test-pro-key-secret";
@@ -135,5 +139,54 @@ describe("lifetime entitlement", () => {
     };
 
     expect(isOurLifetimePayment(payment)).toBe(false);
+  });
+
+  it("honours the price on sale today", () => {
+    // A new lifetime price has to be added to the honoured set, or the
+    // people who pay it would be refused the access they just bought.
+    expect(
+      HONOURED_LIFETIME_CENTS.has(Math.round(PRICING.lifetime.amount * 100)),
+    ).toBe(true);
+  });
+
+  it("keeps an earlier buyer's lifetime access when the display price changes", () => {
+    const shown = PRICING.lifetime.amount;
+    PRICING.lifetime.amount = 99;
+    try {
+      const payment = lifetimePayment();
+      expect(isOurLifetimePayment(payment)).toBe(true);
+      expect(entitlementFromLifetime(payment).active).toBe(true);
+    } finally {
+      PRICING.lifetime.amount = shown;
+    }
+  });
+
+  it("keeps the offer tag every past lifetime payment carries", () => {
+    // Checkout writes this tag and every recheck requires it, so renaming it
+    // when Early Access ends would refuse everyone who bought under it.
+    expect(LIFETIME_OFFER).toBe("early-access");
+    expect(isOurLifetimePayment(lifetimePayment())).toBe(true);
+  });
+
+  it("does not grant lifetime access for an amount it was never sold at", () => {
+    const payment = lifetimePayment();
+    payment.amount_received = 100;
+
+    expect(isOurLifetimePayment(payment)).toBe(false);
+  });
+
+  it("refuses to sell lifetime at a price it would not honour afterwards", async () => {
+    // Otherwise the buyer is charged, and the confirmation and every recheck
+    // after it refuse the payment: paid, and never Pro. Refused before any
+    // Stripe call, so no client is needed here.
+    const shown = PRICING.lifetime.amount;
+    PRICING.lifetime.amount = 99;
+    try {
+      await expect(resolvePriceId("lifetime")).rejects.toBeInstanceOf(
+        PriceNotConfiguredError,
+      );
+    } finally {
+      PRICING.lifetime.amount = shown;
+    }
   });
 });

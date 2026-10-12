@@ -58,7 +58,10 @@ export const TASTE_LEVELS: ReadonlyArray<{ value: TasteLevel; label: string; hin
 
 export const TASTE_GOALS: ReadonlyArray<{ value: TasteGoal; label: string; hint: string }> = [
   { value: "phrase", label: "Short drills", hint: "One phrase, looped until it sits right." },
-  { value: "full", label: "Whole songs", hint: "Sing a full arrangement through once." },
+  // The book's longer entries sing selected lines, not whole songs, and they
+  // rate hard, so their band is shut to a new singer until easier songs are
+  // mastered. The label and hint say both rather than promising whole songs.
+  { value: "full", label: "Longer arrangements", hint: "A few lines sung through once; they open as you master easier songs." },
   { value: "either", label: "Either is fine", hint: "Mix them up." },
 ];
 
