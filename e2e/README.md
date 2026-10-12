@@ -178,7 +178,14 @@ after crossing the 640px breakpoint with the sheet open, and removal of the
 tab fade at the scroll end. It uses isolated browser contexts and never signs
 in or starts checkout. `cls.mjs`, `song-first-practice.mjs` and
 `songs-modes.mjs` take the same `--executable=` flag for machines without a
-Chrome channel.
+Chrome channel. `cls.mjs --returning` seeds a returning singer's progress
+record (a warmup yesterday, a streak, a saved range) before every load: the
+prerender is always the newcomer's layout, so a page whose layout depends on
+progress, such as `/warmups`, shifts at hydration only for a singer with a
+record, and a fresh-profile run cannot see it. It also marks last week's
+weekly report as seen: on a Monday the seeded session falls in last week, and
+the once-a-week report card would otherwise open above every page's content
+on every load and swamp the shift being measured.
 
 The header row is `justify-center-safe`, not `justify-center`: between 640px
 and about 1000px the five tabs overflow it, and plain centring pushed "Home"

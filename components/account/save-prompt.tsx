@@ -7,6 +7,7 @@ import { Button, Card, SectionLabel } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { useProgress, type ProgressState } from "@/lib/progress";
+import { NOT_IN_BACKUP_FILE } from "@/components/progress/data-copy";
 import { backupFileStatus, hasSomethingToSave, liveStreak } from "./save-state";
 import {
   downloadProgressBackup,
@@ -170,8 +171,7 @@ function bodyCopy(s: ProgressState): string {
  * which lives in IndexedDB. The card fires on the recorder right after a take,
  * so it says so rather than promising to bring "it all" back.
  */
-const FILE_PROMISE =
-  "Some browsers, Safari among them, can clear a site's saved data after about a week without a visit. A backup file restores your practice record from the Progress page, in any browser. Recorded audio is not in the file.";
+const FILE_PROMISE = `Some browsers, Safari among them, can clear a site's saved data after about a week without a visit. A backup file restores your practice record from the Progress page, in any browser. Recorded audio is not in the file. ${NOT_IN_BACKUP_FILE}`;
 
 /**
  * A quiet, earned offer to back up the practice record.

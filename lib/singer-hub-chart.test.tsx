@@ -17,7 +17,10 @@ import { fullVoicePct, rangeBarWords } from "@/components/singers/range-bar";
 import { midiToLabel } from "@/lib/audio/notes";
 import GenrePage from "@/app/singers/genre/[genre]/page";
 import RecordsPage from "@/app/singers/records/page";
+import VoiceTypePage from "@/app/singers/voice-type/[type]/page";
+import AtlasPage from "@/app/atlas/page";
 import { SINGERS, rangeLabel, type Singer } from "@/lib/singers";
+import { balancedChunks } from "@/lib/singers-core";
 
 function singer(slug: string): Singer {
   const s = SINGERS.find((x) => x.slug === slug);
@@ -105,6 +108,69 @@ describe("range bars", () => {
     expect(html).toContain("full voice, up to the cited ceiling");
     expect(html).not.toContain("no full-voice ceiling cited");
     expect(html).not.toContain("whistle register listed");
+  });
+});
+
+describe("chart and roster group headings", () => {
+  const sizes = (n: number, max: number) =>
+    balancedChunks(Array.from({ length: n }, (_, i) => i), max).map((g) => g.length);
+
+  it("split a long list into the fewest even groups, never leaving one name alone", () => {
+    expect(sizes(97, 24)).toEqual([20, 20, 19, 19, 19]);
+    expect(sizes(25, 24)).toEqual([13, 12]);
+    expect(sizes(24, 24)).toEqual([24]);
+    expect(sizes(7, 3)).toEqual([3, 2, 2]);
+    expect(sizes(0, 24)).toEqual([]);
+    for (let n = 25; n <= 200; n++) {
+      const groups = sizes(n, 24);
+      expect(Math.max(...groups), `${n}`).toBeLessThanOrEqual(24);
+      expect(Math.min(...groups), `${n}`).toBeGreaterThan(1);
+      expect(groups.reduce((a, b) => a + b, 0)).toBe(n);
+    }
+    const list = Array.from({ length: 49 }, (_, i) => i);
+    expect(balancedChunks(list, 24).flat()).toEqual(list);
+  });
+
+  it("never read 'Singers X through X' on the hubs and the atlas contents", async () => {
+    const pages = [
+      renderToStaticMarkup(await VoiceTypePage({ params: Promise.resolve({ type: "soprano" }) })),
+      renderToStaticMarkup(await GenrePage({ params: Promise.resolve({ genre: "opera" }) })),
+      renderToStaticMarkup(<AtlasPage />),
+    ];
+    for (const html of pages) {
+      const headings = [...html.matchAll(/>Singers ([^<]+?) through ([^<]+?)</g)];
+      expect(headings.length).toBeGreaterThan(1);
+      for (const [heading, first, last] of headings) expect(first, heading).not.toBe(last);
+    }
+  });
+});
+
+describe("the singer-songwriter hub's structured data", () => {
+  it("names the page as its heading does, not 'Singer-Songwriter singers'", async () => {
+    const html = renderToStaticMarkup(await GenrePage({ params: Promise.resolve({ genre: "singer-songwriter" }) }));
+    expect(html).toContain('"name":"Singer-songwriters and their vocal ranges"');
+    expect(html).not.toContain("Singer-Songwriter singers");
+  });
+});
+
+describe("voice-type hubs the range test cannot answer", () => {
+  // The classifier has six bands, bass to soprano (lib/voice-types.test.ts
+  // records the two it can never assign), so "Estimate my voice type" on these
+  // two hubs says it will not name the page's own type.
+  it.each([
+    ["countertenor", "G3–G5"],
+    ["bass-baritone", "F#2–F#4"],
+  ])("%s says the estimate never names it, and points at the page's band", async (type, band) => {
+    const html = renderToStaticMarkup(await VoiceTypePage({ params: Promise.resolve({ type }) }));
+    expect(html).toContain("Estimate my voice type");
+    expect(html).toContain(`never names ${type}`);
+    expect(html).toContain(`${band} band.`);
+  });
+
+  it("adds nothing on a hub the estimate can return", async () => {
+    const html = renderToStaticMarkup(await VoiceTypePage({ params: Promise.resolve({ type: "tenor" }) }));
+    expect(html).toContain("Estimate my voice type");
+    expect(html).not.toContain("never names");
   });
 });
 

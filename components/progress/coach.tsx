@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
+import { useFreeCap } from "@/lib/free-cap";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Card } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
@@ -279,6 +280,11 @@ export function CoachCard({
   restDayOf?: string | null;
 }) {
   const isPro = useIsPro();
+  // The cap wall's "See your streak" lands here. Today's plan is still
+  // today's (its reasons read yesterday and today), so it is not relabelled
+  // as tomorrow's; the card says plainly which steps wait for midnight and
+  // what is open now.
+  const cap = useFreeCap();
   const { banner, restNote, items } = buildPlan(state, new Date(), restDayOf);
   // One step is not a plan, it is a screenshot of one. A singer who can see two
   // steps has watched the coach make a decision — this after that, and why —
@@ -295,6 +301,21 @@ export function CoachCard({
           {items.slice(0, shown).reduce((a, i) => a + i.minutes, 0)} min planned
         </span>
       </div>
+      {cap.capped && (
+        <p className="mt-3 text-sm text-mut">
+          Today&apos;s {FREE_DAILY_MINUTES} free guided minutes are used, so
+          warmups, ear training, breath and songs open again at midnight.
+          The{" "}
+          <Link href="/studio" className="text-violet-ink underline underline-offset-4">
+            pitch studio
+          </Link>{" "}
+          and the{" "}
+          <Link href={rangeTestHref()} className="text-violet-ink underline underline-offset-4">
+            range test
+          </Link>{" "}
+          are open now.
+        </p>
+      )}
       {banner && (
         <p className="mt-3 rounded-xl border border-rec/40 bg-rec/10 px-3 py-2 text-sm text-rec">
           {banner}
@@ -352,7 +373,7 @@ export function CoachCard({
       </p>
       {/* The plan can run past the free allowance, so say so here rather than
           at the cap wall halfway through step two. */}
-      {!isPro && (
+      {!isPro && !cap.capped && (
         <p className="mt-1 text-xs text-dim">
           On the free plan, warmups, ear training, breath and songs share{" "}
           {FREE_DAILY_MINUTES} guided minutes a day; the range test and the

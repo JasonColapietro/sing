@@ -9,6 +9,22 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_PROGRESS, type ProgressState, type SessionLog } from "@/lib/progress-shape";
+
+const capState = vi.hoisted(() => ({ capped: null as boolean | null }));
+vi.mock("@/lib/free-cap", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/free-cap")>();
+  return {
+    ...actual,
+    // The real hook under renderToStaticMarkup (server day "", never capped)
+    // unless a test sets the allowance.
+    useFreeCap: () => {
+      const real = actual.useFreeCap();
+      return capState.capped === null
+        ? real
+        : { ...real, capped: capState.capped, usedSec: capState.capped ? 300 : 0, leftSec: capState.capped ? 0 : 300 };
+    },
+  };
+});
 import { HeaderRow } from "./progress-client";
 import { CoachCard, buildPlan } from "./coach";
 
@@ -31,6 +47,7 @@ function state(extra: SessionLog[] = []): ProgressState {
 
 afterEach(() => {
   vi.useRealTimers();
+  capState.capped = null;
 });
 
 describe("buildPlan on a program rest day", () => {
@@ -86,5 +103,28 @@ describe("the progress page on a program rest day", () => {
     const rest = renderToStaticMarkup(<HeaderRow {...props} restDay />);
     expect(rest).toContain("Program rest day");
     expect(rest).not.toContain("Keep it alive");
+  });
+});
+
+describe("the coached session after the free minutes are used", () => {
+  it("says which steps wait for midnight and what is open now", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    capState.capped = true;
+    const html = renderToStaticMarkup(<CoachCard state={state([session("2026-10-14", 3)])} />);
+    expect(html).toContain("Today&#x27;s session");
+    expect(html).toContain("free guided minutes are used, so");
+    expect(html).toContain("open again at midnight");
+    expect(html).toContain('href="/studio"');
+    expect(html).toContain('href="/range?mode=range#start"');
+    // The generic allowance footnote would repeat it.
+    expect(html).not.toContain("share 5 guided minutes a day");
+  });
+
+  it("keeps the allowance footnote, and no midnight line, before the cap", () => {
+    capState.capped = false;
+    const html = renderToStaticMarkup(<CoachCard state={state()} />);
+    expect(html).not.toContain("open again at midnight");
+    expect(html).toContain("guided minutes a day");
   });
 });

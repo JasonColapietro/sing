@@ -33,6 +33,7 @@ import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { useActiveProgram } from "@/components/programs/use-program";
 import { ProgramEntryCard } from "@/components/programs/today-card";
+import { programDayNeedsPro } from "@/components/practice/program-day";
 import { isRestDay } from "@/lib/programs";
 import { useIsPro } from "@/lib/pro";
 import { MAX_SESSIONS } from "@/lib/progress-shape";
@@ -638,6 +639,9 @@ export function ProgressClient() {
     isRestDay(activeProgram.program.days[activeProgram.view.index])
       ? activeProgram.program.name
       : null;
+  // A Pro day a free singer cannot open is not today's plan: it follows the
+  // coached session instead of leading the dashboard with a paywall.
+  const programPaywalled = activeProgram !== null && programDayNeedsPro(activeProgram, isPro);
   const todaySec = todayPracticeSec(state);
   const weekly = weeklyReport(state.sessions);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
@@ -760,11 +764,13 @@ export function ProgressClient() {
         {/* Today's plan right after the numbers, not six phone screens down
             under the charts: the running program first, since it is the plan
             the singer chose, then the coached session. */}
-        {activeProgram && <ProgramEntryCard active={activeProgram} />}
+        {activeProgram && !programPaywalled && <ProgramEntryCard active={activeProgram} />}
 
         <section aria-label="Today's coached session">
           <CoachCard state={state} restDayOf={programRestDay} />
         </section>
+
+        {activeProgram && programPaywalled && <ProgramEntryCard active={activeProgram} />}
 
         <section aria-label="Practice calendar">
           <div className="mb-3 flex items-baseline justify-between gap-2">

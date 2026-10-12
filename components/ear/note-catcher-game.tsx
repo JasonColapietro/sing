@@ -7,6 +7,7 @@ import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import { SONGS } from "@/components/songs/data";
+import { phraseName } from "@/components/songs/lib";
 import { centsToTarget, hasSavedRange, ROUNDS, type Difficulty } from "./lib";
 import {
   CATCHER_LEVELS,
@@ -72,7 +73,7 @@ export function NoteCatcherGame({
   onComplete,
 }: {
   difficulty: Difficulty;
-  /** Chase this song's opening instead of random notes. Free songs only. */
+  /** Chase this song's songbook phrase instead of random notes. Free songs only. */
   songId?: string;
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
@@ -311,7 +312,7 @@ export function NoteCatcherGame({
           title={song ? `Chase the notes of ${song.title}` : "This game listens to you sing"}
           description={
             song
-              ? "The song's opening notes slide toward a line, in your range. Your voice moves the marker; hold each note as it crosses to catch it."
+              ? `The notes of its ${phraseName(song)} slide toward a line, in your range. Your voice moves the marker; hold each note as it crosses to catch it.`
               : "Notes slide toward a line. Your voice moves the marker up and down; hold each note as it crosses to catch it."
           }
           onEnable={() => {

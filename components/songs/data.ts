@@ -35,7 +35,9 @@ export const SONGS: Song[] = [
     genre: "Nursery",
     era: "1700s",
     language: "English",
-    tags: ["first song", "stepwise", "narrow range"],
+    // Not "stepwise": the opening "twinkle, twinkle" is a rising fifth, the
+    // textbook reference for that interval.
+    tags: ["first song", "narrow range"],
     notes: [
       { midi: 60, startBeat: 0, durBeats: 1, lyric: "Twin", wordEnd: false },
       { midi: 60, startBeat: 1, durBeats: 1, lyric: "kle" },
@@ -534,7 +536,8 @@ export const SONGS: Song[] = [
   },
   {
     // Two quarter-note pickups on the dominant below, then a bright climb to
-    // the dominant above. Mostly stepwise, with one 3rd on "'tis the."
+    // the dominant above: a 4th up on "the gift", 3rds on "sim-ple, 'tis",
+    // and an octave from the pickup to the top.
     id: "simple-gifts",
     slug: "simple-gifts",
     title: "Simple Gifts",
@@ -548,7 +551,7 @@ export const SONGS: Song[] = [
     genre: "Traditional",
     era: "1800s",
     language: "English",
-    tags: ["shaker", "stepwise", "pickup"],
+    tags: ["shaker", "wide range", "pickup"],
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "'Tis" },
       { midi: 55, startBeat: 1, durBeats: 1, lyric: "the" },
@@ -581,7 +584,7 @@ export const SONGS: Song[] = [
     genre: "Traditional",
     era: "1800s",
     language: "English",
-    tags: ["ballad", "narrow range", "stepwise"],
+    tags: ["ballad", "narrow range"],
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1.5, lyric: "As" },
       { midi: 60, startBeat: 1.5, durBeats: 0.5, lyric: "the" },
@@ -598,7 +601,7 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Hexatonic — the tune never touches the 4th or the 7th, which is what
+    // Pentatonic — the tune never touches the 4th or the 7th, which is what
     // gives it the open, pipe-like colour. Stepwise apart from the pickup.
     id: "loch-lomond",
     slug: "loch-lomond",
@@ -613,7 +616,7 @@ export const SONGS: Song[] = [
     genre: "Folk",
     era: "1700s",
     language: "English",
-    tags: ["scottish", "ballad", "hexatonic"],
+    tags: ["scottish", "ballad", "pentatonic"],
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "By" },
       { midi: 60, startBeat: 1, durBeats: 1, lyric: "yon" },

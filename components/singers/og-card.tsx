@@ -56,7 +56,17 @@ export function HubOgCard({
       >
         {kicker}
       </div>
-      <div style={{ marginTop: 14, fontSize: 76, fontWeight: 700, display: "flex" }}>
+      {/* 76px fits 28 characters on one line ("Musical Theatre vocal ranges");
+          longer titles step down, or the second line is drawn over the stat. */}
+      <div
+        style={{
+          marginTop: 14,
+          fontSize: title.length > 28 ? 60 : 76,
+          lineHeight: 1.05,
+          fontWeight: 700,
+          display: "flex",
+        }}
+      >
         {title}
       </div>
       <div style={{ marginTop: 8, fontSize: 30, color: "#c3bde3", display: "flex" }}>

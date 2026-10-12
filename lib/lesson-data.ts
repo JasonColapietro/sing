@@ -92,7 +92,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading What your voice actually is is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -183,7 +183,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading What your voice actually is is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -274,7 +274,7 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading What your voice actually is is listed there too.",
+        "body": "Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
@@ -371,7 +371,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Start near the middle of your comfortable speaking range after a gentle hum. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
+        "body": "Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -383,7 +383,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "Record two slides down from the same comfortable note in one take, with a reset between them. On the first, stop at the first note that needs any effort: extra volume, a tucked chin or a pushed breath. On the second, stop one note earlier, while it is still completely easy. The stopping note is the only thing that changes. On playback, listen for the difference: the effortful note usually thins, rattles or wobbles, and the easy one sounds like the rest of your voice, so keep the easy one as your low end. Return to the middle and do the same pair going up. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
+        "body": "Record two slides down from the same comfortable note in one take in the recorder, with a reset between them. On the first, stop at the first note that needs any effort: extra volume, a tucked chin or a pushed breath. On the second, stop one note earlier, while it is still completely easy. The stopping note is the only thing that changes. On playback, listen for the difference: the effortful note usually thins, rattles or wobbles, and the easy one sounds like the rest of your voice, so keep the easy one as your low end. Return to the middle and do the same pair going up. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -462,7 +462,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Start near the middle of your comfortable speaking range after a gentle hum. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
+        "body": "Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -474,7 +474,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practise these slides in the recorder, as this module's first lesson does: nothing you record there replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -553,7 +553,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Start near the middle of your comfortable speaking range after a gentle hum. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
+        "body": "Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -565,7 +565,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
+        "body": "Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -627,7 +627,7 @@ export const LESSONS: Lesson[] = [
     "type": "concept",
     "minutes": 3,
     "objective": "What to move and what to leave alone.",
-    "explanation": "On an easy breath in, the diaphragm flattens and the lower ribs swing out to the sides, so the movement you see is around the lower ribs and the belly; the shoulders and neck have no job to do. A breath that lifts the shoulders fills the least useful part of the lungs and tends to bring tension into the neck. On the way out, let the ribs stay wide a little longer than they want to and come in gradually: that slow release is what keeps a hiss, and later a sung note, even.",
+    "explanation": "On an easy breath in, the diaphragm flattens and the lower ribs swing out to the sides, so the movement you see is around the lower ribs and the belly; the shoulders and neck have no job to do. A breath that lifts the shoulders raises the upper chest with neck and shoulder muscles: a lot of effort for not much air, and tension right beside the larynx. On the way out, let the ribs stay wide a little longer than they want to and come in gradually: that slow release is what keeps a hiss, and later a sung note, even.",
     "prerequisites": [
       "v-l1-m2-04"
     ],
@@ -1748,7 +1748,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "Open Amazing Grace in the songbook and sing the first verse in the key it opens in. Then shift it one semitone up or down with the transpose control, whichever way looks easier, and sing the same verse again. The key is the only thing that changes. Compare the last line of each: keep the key in which the highest note comes without a push and the lowest is still clearly audible, and write it down. Keep one consistent, comfortable production through the song.",
+        "body": "Open Amazing Grace in the songbook and sing its opening phrase (“Amazing grace, how sweet the sound, that saved a wretch like me”) in the key it opens in. Then shift it one semitone up or down with the transpose control, whichever way looks easier, and sing the same phrase again. The key is the only thing that changes. Compare the second line of each: keep the key in which the highest note comes without a push and the lowest is still clearly audible, and write it down. Keep one consistent, comfortable production through the phrase.",
         "look": "The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.",
         "listen": "The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note."
       },

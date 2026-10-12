@@ -251,11 +251,44 @@ export function transposedNotes(song: Song, transpose: number): SongNote[] {
   return song.notes.map((n) => ({ ...n, midi: n.midi + transpose }));
 }
 
+/**
+ * What a "phrase" entry holds, as its page and the ear room name it: the
+ * song's opening phrase, unless the entry marks it as another part of the
+ * song (`excerpt`).
+ */
+export function phraseName(song: Song): string {
+  return song.excerpt ?? "opening phrase";
+}
+
+/**
+ * Titles a song's sessions were logged under before a rename. The song player
+ * files each session by `detail: song.title`, so a renamed song would lose its
+ * best score and score trend without these. Add a line whenever a song title
+ * changes; never remove one, since old sessions keep the old title for good.
+ * Warmups do the same with RETIRED_TITLES (components/warmups/exercises.ts).
+ */
+export const RETIRED_SONG_TITLES: Readonly<Record<string, readonly string[]>> = {
+  // Round 1 (2026-10) renames.
+  "Home on the Range (Opening Lines)": ["Home on the Range (Verse & Chorus)"],
+  "Amazing Grace (Opening Lines, Verses 1 & 2)": ["Amazing Grace (Verse 1 & 2)"],
+};
+
+/** Every title this song's sessions can be logged under: its own, then retired ones. */
+export function songTitlesFor(title: string): readonly string[] {
+  const retired = RETIRED_SONG_TITLES[title];
+  return retired ? [title, ...retired] : [title];
+}
+
+/** True when a logged session belongs to the song with this current title. */
+export function isSessionOfSong(session: Pick<SessionLog, "type" | "detail">, title: string): boolean {
+  return session.type === "song" && session.detail !== undefined && songTitlesFor(title).includes(session.detail);
+}
+
 /** Best (highest) previously logged score for this song, if any. */
 export function bestScoreForSong(sessions: SessionLog[], title: string): number | undefined {
   let best: number | undefined;
   for (const s of sessions) {
-    if (s.type === "song" && s.detail === title && s.score !== undefined) {
+    if (isSessionOfSong(s, title) && s.score !== undefined) {
       best = best === undefined ? s.score : Math.max(best, s.score);
     }
   }
@@ -725,6 +758,26 @@ export function countSongsFitting(songs: readonly Song[], range: VocalRange): nu
     if (rangeFit(song, range).verdict === "fits") n++;
   }
   return n;
+}
+
+/**
+ * countSongsFitting over the songs a singer can start right now: the bands
+ * opened so far (bandOpen, the songbook's own rule), out of the book they are
+ * entitled to. `locked` is how many of that book wait behind a later band, so
+ * a count quoted before "Open the songbook" never promises songs the
+ * library shows as Locked.
+ */
+export function countOpenSongsFitting(
+  book: readonly Song[],
+  masteredIds: ReadonlySet<string>,
+  range: VocalRange,
+): { fitting: number; total: number; locked: number } {
+  const open = book.filter((s) => bandOpen(bandForSong(s), masteredIds, book));
+  return {
+    fitting: countSongsFitting(open, range),
+    total: open.length,
+    locked: book.length - open.length,
+  };
 }
 
 /**

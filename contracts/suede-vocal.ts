@@ -240,7 +240,7 @@ const MEASUREMENTS = {
     measurable: "yes",
     unit: "midi",
     module: "components/range/range-test.tsx",
-    note: "Lowest and highest comfortable note by cumulative dwell. Falsetto and head voice count toward the high note.",
+    note: "Lowest and highest clear notes reached in one test, each counted once the detector has heard it for 600 ms in total (cumulative dwell), so a passing octave error does not count. These are the limits the singer reached, not a comfortable band. Falsetto and head voice count toward the high note.",
   },
   ringRatio: {
     measurable: "yes",

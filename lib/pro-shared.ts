@@ -148,7 +148,7 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Do I need Pro to get better?",
-    a: "Not to practice — the studio and the range test are free with no daily limit, and the warmups are free for five minutes a day. Pro is for the singer who wants the record: range tests charted over time, every take analysed, and the two books that explain what the numbers mean.",
+    a: "Not to practice — the studio and the range test are free with no daily limit, and guided practice (warmups, ear training, breath and songs) is free for five minutes a day. Pro is for the singer who wants the record: range tests charted over time, every take analysed, and the two books that explain what the numbers mean.",
   },
   {
     q: "Is my voice uploaded?",

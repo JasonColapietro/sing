@@ -35,9 +35,10 @@ export const WEEKLY_REPORT_SEEN_KEY = "suede-sing:weekly-report-seen:v1";
  * Placement is deliberate. It is an inline card in the flow, not a dialog and
  * not a fixed toast: ProMoments already owns the one full-screen moment and
  * the body scroll lock, a fixed panel would cover the transport controls on a
- * 375px phone, and the v2 banner sits above the nav rather than under it. So
- * nothing here can stack over either of them or block a practice control; at
- * worst the Pro modal's backdrop sits over this card, which is correct. Focus
+ * 375px phone, and the release banner is an in-flow card on the homepage,
+ * below its hero. So nothing here can stack over either of them or block a
+ * practice control; at worst the Pro modal's backdrop sits over this card,
+ * which is correct. Focus
  * is not moved on open for the same reason — a summary is not an interruption.
  * Escape closes it while focus is inside it, and closing hands focus to the
  * page content rather than dropping it on <body>.

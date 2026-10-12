@@ -1,7 +1,7 @@
 /** Regressions from the September 27 adversarial singer-funnel audit. */
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import type { ReactNode } from "react";
+import { isValidElement, type ReactElement, type ReactNode } from "react";
 
 const visitor = vi.hoisted(() => ({ range: { lowMidi: 48, highMidi: 72 } as { lowMidi?: number; highMidi?: number } }));
 const plan = vi.hoisted(() => ({ pro: false }));
@@ -27,7 +27,7 @@ vi.mock("@/components/pro/gate", () => ({
 import SingerPage from "@/app/singers/[slug]/page";
 import SingerImage from "@/app/singers/[slug]/opengraph-image";
 import LearnPage from "@/app/learn/page";
-import { CompareWithMe } from "@/components/singers/singer-actions";
+import { CompareWithMe, PlayRangeButton } from "@/components/singers/singer-actions";
 import { singerBySlug } from "@/lib/singers";
 import { FREE_DAILY_SEC } from "@/lib/free-cap";
 import { RANGE_GUIDE } from "@/lib/guides";
@@ -147,4 +147,41 @@ describe("singer evidence and comparison regressions", () => {
     expect(html).toContain("dispute a definitive tenor label");
     expect(html).not.toContain("Light nasal tenor");
   });
+
+  /**
+   * Whatever a server page hands a client component is serialized into the
+   * page source. The full singer record carries the blurb and technique notes,
+   * which are the Pro atlas's entry prose and appear on no free page, so
+   * neither may reach the element tree at all: not the client components'
+   * props, and not any other element's.
+   */
+  it.each(["adele", "sam-smith", "olivia-rodrigo"])(
+    "keeps %s's paid atlas entry notes out of the page's payload",
+    async (slug) => {
+      const tree = await SingerPage({ params: Promise.resolve({ slug }) });
+      const elements: ReactElement[] = [];
+      const walk = (node: unknown): void => {
+        if (Array.isArray(node)) node.forEach(walk);
+        else if (isValidElement(node)) {
+          elements.push(node);
+          Object.values(node.props as Record<string, unknown>).forEach(walk);
+        }
+      };
+      walk(tree);
+
+      const record = singerBySlug(slug)!;
+      const paid = [record.blurb, record.technique ?? ""];
+      for (const text of paid) expect(text.length, `${slug} has entry notes to leak`).toBeGreaterThan(40);
+
+      const clients = elements.filter((el) => el.type === CompareWithMe || el.type === PlayRangeButton);
+      expect(clients.map((el) => el.type)).toEqual(expect.arrayContaining([CompareWithMe, PlayRangeButton]));
+      for (const el of elements) {
+        const own = Object.entries(el.props as Record<string, unknown>).filter(
+          ([, value]) => !isValidElement(value) && !Array.isArray(value),
+        );
+        const json = JSON.stringify(Object.fromEntries(own)) ?? "";
+        for (const text of paid) expect(json, `${slug}: ${String(el.type)}`).not.toContain(text);
+      }
+    },
+  );
 });

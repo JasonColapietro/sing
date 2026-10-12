@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { SONGS, PRO_SONGS, songBySlug } from "./data";
+import { ALL_SONGS, SONGS, PRO_SONGS, songBySlug } from "./data";
 import {
   AUTO_TEMPO_DOWN_SCORE,
   AUTO_TEMPO_UP_SCORE,
   BAND_ORDER,
   BAND_UNLOCK_MASTERED,
   INITIAL_MULTIPLIER,
+  RETIRED_SONG_TITLES,
+  bestScoreForSong,
+  isSessionOfSong,
+  phraseName,
+  songTitlesFor,
   MASTERY_SCORE,
   MULTIPLIER_RUNGS,
   MULTIPLIER_STREAK,
@@ -16,6 +21,7 @@ import {
   bandForSong,
   bandOpen,
   breathMarks,
+  countOpenSongsFitting,
   countSongsFitting,
   defaultOctaveAgnostic,
   fitTransposeToRange,
@@ -58,6 +64,29 @@ function song(id: string, midis: number[]): Song {
     })),
   };
 }
+
+describe("countOpenSongsFitting: what the range result can promise", () => {
+  // B2–A4: 25 of the 26 free songs fit as written, but a new singer can
+  // start only the first band; the rest show Locked in the library.
+  const range = { lowMidi: 47, highMidi: 69 };
+
+  it("counts only the bands a singer has opened, and says how many wait", () => {
+    const counted = countOpenSongsFitting(SONGS, new Set(), range);
+    const first = SONGS.filter((s) => bandForSong(s) === "first");
+    expect(counted.total).toBe(first.length);
+    expect(counted.locked).toBe(SONGS.length - first.length);
+    expect(counted.fitting).toBeLessThanOrEqual(counted.total);
+    expect(counted.fitting).toBe(countSongsFitting(first, range));
+  });
+
+  it("grows as mastery opens the next band", () => {
+    const firstTwo = SONGS.filter((s) => bandForSong(s) === "first").slice(0, BAND_UNLOCK_MASTERED);
+    const before = countOpenSongsFitting(SONGS, new Set(), range);
+    const after = countOpenSongsFitting(SONGS, new Set(firstTwo.map((s) => s.id)), range);
+    expect(after.total).toBeGreaterThan(before.total);
+    expect(after.total + after.locked).toBe(SONGS.length);
+  });
+});
 
 describe("countSongsFitting", () => {
   const range = { lowMidi: 55, highMidi: 72 };
@@ -431,5 +460,52 @@ describe("songbook transcriptions", () => {
     const midis = (slug: string) => songBySlug(slug)!.notes.map((n) => n.midi);
     expect(midis("london-bridge-is-falling-down").slice(-3)).toEqual([64, 65, 67]);
     expect(midis("danny-boy")).toEqual([59, 60, 62, 64, 62, 64, 69, 67, 64, 62, 57]);
+  });
+});
+
+describe("song history across a rename", () => {
+  const log = (detail: string, score: number) => ({
+    id: `${detail}-${score}`,
+    type: "song" as const,
+    date: "2026-10-01T12:00:00.000Z",
+    day: "2026-10-01",
+    durationSec: 60,
+    xp: 5,
+    detail,
+    score,
+  });
+
+  it("keeps a best score logged under a song's old title", () => {
+    expect(bestScoreForSong([log("Amazing Grace (Verse 1 & 2)", 88)], "Amazing Grace (Opening Lines, Verses 1 & 2)")).toBe(88);
+    expect(bestScoreForSong([log("Home on the Range (Verse & Chorus)", 91)], "Home on the Range (Opening Lines)")).toBe(91);
+    // Old and new sessions count together; the best of both is the best.
+    expect(
+      bestScoreForSong(
+        [log("Amazing Grace (Opening Lines, Verses 1 & 2)", 70), log("Amazing Grace (Verse 1 & 2)", 88)],
+        "Amazing Grace (Opening Lines, Verses 1 & 2)",
+      ),
+    ).toBe(88);
+  });
+
+  it("never hands one song's history to another", () => {
+    // The short Amazing Grace is a different arrangement with its own record.
+    expect(bestScoreForSong([log("Amazing Grace (Verse 1 & 2)", 88)], "Amazing Grace")).toBeUndefined();
+    expect(isSessionOfSong({ type: "warmup", detail: "Amazing Grace (Verse 1 & 2)" }, "Amazing Grace (Opening Lines, Verses 1 & 2)")).toBe(false);
+    expect(songTitlesFor("Ode to Joy")).toEqual(["Ode to Joy"]);
+  });
+
+  it("maps every retired title to a current song title, and retires no title still in use", () => {
+    const live = new Set(ALL_SONGS.map((s) => s.title));
+    for (const [current, olds] of Object.entries(RETIRED_SONG_TITLES)) {
+      expect(live.has(current), current).toBe(true);
+      for (const old of olds) expect(live.has(old), old).toBe(false);
+    }
+  });
+});
+
+describe("phraseName", () => {
+  it("names an excerpt by what it is, and anything else as the opening phrase", () => {
+    expect(phraseName(songBySlug("home-on-the-range")!)).toBe("chorus hook");
+    expect(phraseName(songBySlug("silent-night")!)).toBe("opening phrase");
   });
 });

@@ -427,7 +427,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "How a note starts — breath before tone, breath and tone together, or a click as the folds release.",
         where:
-          "In the studio the pitch trace arrives a moment late on a breathy onset and starts already on the note on a glottal one.",
+          "In the studio the pitch trace arrives a moment late on a breathy onset, hooks up into the note on a scoop, and starts on the note from the first moment on a balanced onset sung on its pitch.",
         href: "/studio",
         domain: "voice",
       },
@@ -502,8 +502,8 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A steady click at a chosen tempo, counted in beats per minute.",
         where:
-          "Song practice runs against the tempo you set, so a phrase that only works when you rush it stops working.",
-        href: "/songs",
+          "The metronome in Tools clicks at any tempo from 30 to 240 bpm, in 2/4, 3/4, 4/4 or 6/8, free with no time limit and no mic; song practice can also play a click under the melody at the tempo you set.",
+        href: "/tools",
         domain: "music",
       },
       {

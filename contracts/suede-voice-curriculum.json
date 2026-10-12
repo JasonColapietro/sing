@@ -1153,7 +1153,7 @@
             "name": "Higher and Lower",
             "promise": "compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension.",
             "skill": "Range extension",
-            "proofMetric": "range_midi_span",
+            "proofMetric": "self_reported",
             "lessonsTotal": 8,
             "sampleLessonsShown": 3,
             "lessons": [

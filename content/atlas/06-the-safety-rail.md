@@ -21,7 +21,7 @@ Every raspy voice in this book falls into one of two categories, and from the au
 
 ## Sustained belting
 
-The belt is not inherently dangerous; the belt *schedule* is. One F5 proves nothing either way — the question is whether the production survives a chorus repeated forty times, which is what a song, a set, a run of shows actually demands. The belters in this book with long careers all show the same tells on recordings: they belt on narrow vowels, they place the loudest moment once per song rather than throughout, and they get *louder by getting brighter*, not by pushing more air. Practice belts at eighty percent, add the last twenty only in performance, and treat any belt that requires a running start or a neck full of tension as a belt you do not own yet at that pitch. Take it down a whole step; own it there first.
+The belt is not inherently dangerous; the belt *schedule* is. One F5 proves nothing either way — the question is whether the production survives a chorus repeated forty times, which is what a song, a set, a run of shows actually demands. The belters in this book with long careers all show the same tells on recordings: they belt on narrow vowels, they place the loudest moment once per song rather than throughout, and they get *louder by getting brighter*, not by pushing more air. Practice belts at about eighty percent most of the time; once that version is easy, rehearse the full-volume version a few times in a session, so nothing you sing in performance is louder than something you have rehearsed — and treat any belt that requires a running start or a neck full of tension as a belt you do not own yet at that pitch. Take it down a whole step; own it there first.
 
 ## The signals that mean stop
 

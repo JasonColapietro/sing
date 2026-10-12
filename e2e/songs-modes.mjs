@@ -40,7 +40,10 @@ async function open(song = "silent-night") {
   return { context, page, errors };
 }
 
-/** The Pro upsell and the v2 banner open over the page with a full-screen Dismiss backdrop that eats clicks. */
+/**
+ * The Pro upsell opens over the page with a full-screen Dismiss backdrop that eats clicks.
+ * (The release banner renders only on the homepage, never on /songs.)
+ */
 async function dismissOverlays(page) {
   for (let i = 0; i < 3; i++) {
     const notNow = page.getByRole("button", { name: /^Not now$/ });

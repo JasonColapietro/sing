@@ -149,6 +149,23 @@ describe("chapter 15's lesson list", () => {
   });
 });
 
+describe("the free chapters' lesson lists", () => {
+  it("send chapter 1 to the breath, register and vowel modules its three sections teach", async () => {
+    // "The power: breath", "The vibrator: the folds" and "The filter: the
+    // tract" are Breathe Low, Chest, Head, Falsetto and Vowels That Work; the
+    // room-setup module alone once stood in for all three.
+    const html = await page("what-your-voice-is");
+    expect(html).toContain('href="/learn/voice/room-check/breathe-low"');
+    expect(html).toContain('href="/learn/voice/two-registers/chest-head-falsetto"');
+    expect(html).toContain('href="/learn/voice/two-registers/vowels-that-work"');
+  });
+
+  it("send chapter 8, whose 'Retesting fairly' is its retest rule, to Higher and Lower", async () => {
+    const html = await page("reading-the-range-test");
+    expect(html).toContain('href="/learn/voice/signature/higher-and-lower"');
+  });
+});
+
 describe("a locked atlas chapter", () => {
   async function atlasPage(slug: string): Promise<string> {
     return renderToStaticMarkup(await AtlasChapterPage({ params: Promise.resolve({ slug }) }));

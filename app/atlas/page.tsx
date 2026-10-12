@@ -10,6 +10,7 @@ import {
 import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
+import { balancedChunks } from "@/lib/singers-core";
 import { AtlasCta } from "@/components/atlas/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -93,14 +94,7 @@ function ChapterSingerIndex({
     );
   }
 
-  const groups = Array.from(
-    { length: Math.ceil(singers.length / MAX_SINGERS_PER_CHAPTER_SECTION) },
-    (_, index) =>
-      singers.slice(
-        index * MAX_SINGERS_PER_CHAPTER_SECTION,
-        (index + 1) * MAX_SINGERS_PER_CHAPTER_SECTION,
-      ),
-  );
+  const groups = balancedChunks(singers, MAX_SINGERS_PER_CHAPTER_SECTION);
 
   return (
     <div className="mt-2">

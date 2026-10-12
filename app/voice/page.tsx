@@ -4,6 +4,7 @@ import { LinkButton, SectionHeading, SectionLabel } from "@/components/ui";
 import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { ORG_ID, ORG_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { routeKeywords } from "@/lib/keywords";
 
 // Deliberately not "Suede Voice: Vocal Range Test", which is the store name:
@@ -90,6 +91,14 @@ export default function VoicePage() {
             </span>
           </h1>
           <p className="mt-4 text-xl text-violet-ink sm:text-2xl">Find your range. Know what to practice.</p>
+          {/* The install, on a phone's first screen. Below lg the store card
+              stacks after both intro paragraphs, a screen and a half down on
+              the device the app is for; from lg up it sits beside the hero,
+              so this row is hidden there rather than shown twice. */}
+          <div className="mt-6 flex flex-wrap gap-3 lg:hidden">
+            <LinkButton href={APP_STORE_URL}>Download on the App Store</LinkButton>
+            <LinkButton href={PLAY_STORE_URL} variant="outline">Get it on Google Play</LinkButton>
+          </div>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-mut">
             Suede Voice: Vocal Range Test is the vocal range and singing practice
             app from Suede AI, built by Jason Colapietro. It is a free download
@@ -137,10 +146,12 @@ export default function VoicePage() {
         <SectionHeading id="sing-and-voice">How Suede Voice and Suede Sing fit together</SectionHeading>
         <p className="mt-4 max-w-3xl leading-relaxed text-mut">
           Suede Voice is the mobile app. Suede Sing is the browser studio and
-          Chrome extension. Both are from Suede AI. You can use the free
-          browser range test, pitch studio, and warmups without installing the
-          mobile app. The iPhone app adds its own practice tools, on-device
-          recordings, and register analysis.
+          Chrome extension. Both are from Suede AI. Without installing the
+          mobile app, you can use the free browser range test, pitch studio,
+          take recorder and tools with no daily clock, and warmups, ear
+          training, breath and songs for {FREE_DAILY_MINUTES} free minutes of
+          guided practice a day. The iPhone app has its own practice tools,
+          recorder and register analysis.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <LinkButton href="/studio" variant="outline">Open Suede Sing</LinkButton>

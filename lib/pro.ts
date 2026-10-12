@@ -416,7 +416,9 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "history",
     title: "Cloud sync",
-    desc: "Progress that follows you across devices, backed up automatically — no export files.",
+    // Song mastery (suede-sing:mastered:v2) and program place live in their
+    // own browser keys, outside the synced progress record.
+    desc: "Your sessions, streaks, scores and range follow you across devices, backed up automatically. Song mastery and your place in a program stay in the browser where you earned them.",
   },
 ];
 

@@ -9,6 +9,14 @@
  *
  *   npm run build && npm start &     # NOT alongside `next dev` — the build
  *   node e2e/cls.mjs                 # clobbers .next out from under it
+ *   node e2e/cls.mjs --returning --viewport=desktop-1280
+ *
+ * `--returning` measures as a returning singer: a progress record with a
+ * warmup sung yesterday, a streak and a saved range is seeded before every
+ * load. The prerender always has the newcomer's empty record, so a page whose
+ * layout depends on progress (/warmups leads a newcomer with a routine and a
+ * returning singer with their path) changes shape at hydration only for them,
+ * and a fresh-profile run can never see that shift.
  *
  * Reads `entry.sources[]`, which names the element that MOVED. That element is
  * the victim; the cause is whatever above it changed size. Reporting the mover
@@ -27,6 +35,41 @@ const BASE = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3000").
 const ONLY_VIEWPORT = argv.find((a) => a.startsWith("--viewport="))?.slice("--viewport=".length);
 /** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
 const EXECUTABLE = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
+const RETURNING = argv.includes("--returning");
+
+/**
+ * A returning singer's record (lib/progress-shape.ts ProgressState), dated
+ * from the browser's own clock so "yesterday" is the viewer's local day.
+ * Runs right after the clear, in the same init script, on every new document.
+ *
+ * On a Monday "yesterday" falls in last week, so the weekly report card
+ * (components/weekly-report-card.tsx) would open above every page's content
+ * on every load, because the clear wipes its seen key each time. That card
+ * shifts the page once a week by design and would swamp the hydration shift
+ * this mode exists to measure, so last week's report is marked as seen.
+ */
+const RETURNING_SEED = `
+try {
+  // cls-returning-seed
+  const pad = (n) => String(n).padStart(2, "0");
+  const key = (t) => t.getFullYear() + "-" + pad(t.getMonth() + 1) + "-" + pad(t.getDate());
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  const day = key(d);
+  const lastMonday = new Date();
+  lastMonday.setHours(12, 0, 0, 0);
+  lastMonday.setDate(lastMonday.getDate() - ((lastMonday.getDay() + 6) % 7) - 7);
+  localStorage.setItem("suede-sing:weekly-report-seen:v1", key(lastMonday));
+  localStorage.setItem("suede-sing:progress:v1", JSON.stringify({
+    xp: 40,
+    sessions: [{ id: "cls-seed", type: "warmup", date: day + "T09:00:00.000Z", day, durationSec: 240, score: 72, detail: "First hum", xp: 40 }],
+    streak: { current: 1, best: 1, lastDay: day },
+    range: { lowMidi: 45, highMidi: 67 },
+    rangeHistory: [],
+    achievements: [],
+  }));
+} catch {}
+`;
 
 const OBSERVER = `
 window.__cls = { value: 0, shifts: [] };
@@ -93,7 +136,9 @@ for (const viewport of viewports) {
     viewport: { width: viewport.width, height: viewport.height },
     permissions: ["microphone"],
   });
-  await context.addInitScript(() => { try { localStorage.clear(); } catch {} });
+  // One script, because Playwright does not define the order of separate init
+  // scripts: a clear that ran after the seed would measure a newcomer.
+  await context.addInitScript(`try { localStorage.clear(); } catch {}\n${RETURNING ? RETURNING_SEED : ""}`);
   await context.addInitScript(OBSERVER);
 
   for (const route of routes) {
@@ -126,7 +171,7 @@ const dead = rows.filter((r) => !r.error && r.live !== true);
 const scored = rows.filter((r) => !r.error && r.live === true);
 scored.sort((a, b) => b.value - a.value);
 
-console.log(`\nCLS against ${BASE} — good <= 0.10, poor > 0.25\n${"=".repeat(64)}`);
+console.log(`\nCLS against ${BASE}${RETURNING ? " as a returning singer" : ""} — good <= 0.10, poor > 0.25\n${"=".repeat(64)}`);
 for (const r of scored) {
   if (r.value < 0.01) continue;
   const verdict = r.value > 0.25 ? "POOR" : r.value > 0.1 ? "NEEDS WORK" : "ok";

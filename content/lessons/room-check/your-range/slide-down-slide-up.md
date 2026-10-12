@@ -22,7 +22,7 @@ Open the practice material on this page and choose First hum or Easy fourth sire
 
 ### Set a safe baseline
 
-Start near the middle of your comfortable speaking range after a gentle hum. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.
+Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +36,7 @@ Slide to your lowest comfortable note, then your highest. Stop before strain, ev
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.
+Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practise these slides in the recorder, as this module's first lesson does: nothing you record there replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.

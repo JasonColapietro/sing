@@ -360,3 +360,18 @@ describe("published glossary claims", () => {
     }
   });
 });
+
+describe("entries that name a room", () => {
+  const entry = (term: string) => SING_GLOSSARY_TERMS.find((t) => t.term === term)!;
+
+  it("sends Metronome to the metronome, in Tools, rather than to song practice", () => {
+    expect(entry("Metronome").href).toBe("/tools");
+    expect(entry("Metronome").where).toMatch(/30 to 240 bpm/);
+  });
+
+  it("credits the clean trace to the balanced onset the course trains, not the glottal one", () => {
+    const { where } = entry("Onset");
+    expect(where).toMatch(/balanced onset/);
+    expect(where).not.toMatch(/glottal/);
+  });
+});

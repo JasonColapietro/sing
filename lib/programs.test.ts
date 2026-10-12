@@ -365,13 +365,52 @@ describe("program data", () => {
     }
   });
 
-  it("keeps weeks 5 and 6 off both ends of the range, which chapters 13 and 16 leave to weeks 7 and 8", () => {
+  it("keeps weeks 2 to 6 off both ends of the range and out of the full-range sets, as chapters 14 to 16 ask", () => {
     // "Starting in the middle and only reaching the edges in weeks 7 through
-    // 9 is the whole point of the sequence."
+    // 9 is the whole point of the sequence." Chapter 14 stays "in the middle
+    // of your range", chapter 15 keeps almost everything inside the middle
+    // block, and chapter 16 warms up on "the lightest warmup pack you have,
+    // staying entirely below your transition". The Quick and Daily sets run a
+    // twelfth from the bottom of the measured range on every rep.
     const p = programById("measured-voice-12w")!;
-    const items = p.days.slice(28, 42).flatMap((d) => d.items);
-    expect(items.some((i) => i.kind === "routine" && i.id === "range")).toBe(false);
-    expect(items.some((i) => i.kind === "routine" && i.id === "high-notes")).toBe(false);
+    const items = p.days.slice(7, 42).flatMap((d) => d.items);
+    for (const id of ["quick", "daily", "full", "range", "agility", "high-notes"]) {
+      expect(items.some((i) => i.kind === "routine" && i.id === id), id).toBe(false);
+    }
+  });
+
+  it("schedules chapter 15's own work in weeks 3 and 4: the five-note pattern and a held note", () => {
+    const p = programById("measured-voice-12w")!;
+    const items = p.days.slice(14, 28).flatMap((d) => d.items);
+    const has = (id: string) => items.some((i) => i.kind === "exercise" && i.id === id);
+    expect(has("five-note-scale")).toBe(true);
+    expect(has("sustained-hold")).toBe(true);
+  });
+
+  it("opens chapter 16's sessions on breath, as it asks: box breathing, then the lightest pack", () => {
+    const p = programById("measured-voice-12w")!;
+    const sessions = p.days.slice(28, 42).filter((d) => d.title === "Slides across the break");
+    expect(sessions).toHaveLength(4);
+    for (const d of sessions) {
+      expect(d.items[0]).toEqual({ kind: "drill", id: "box" });
+      expect(d.items[1]).toEqual({ kind: "routine", id: "morning" });
+    }
+  });
+
+  it("runs chapter 16's ng sirens at the slowest tempo and says so on the row", () => {
+    // "Slow enough that a whole step takes about two seconds"; at 1x the
+    // room's glide covers one in about half a second.
+    const p = programById("measured-voice-12w")!;
+    const sirens = p.days
+      .slice(28, 42)
+      .flatMap((d) => d.items)
+      .filter((i): i is Extract<ProgramItem, { kind: "exercise" }> => i.kind === "exercise" && i.id === "ng-siren-fifth");
+    expect(sirens.length).toBeGreaterThan(0);
+    for (const item of sirens) {
+      expect(item.tempo).toBe(0.5);
+      expect(itemLabel(item).meta).toMatch(/· set Adjust to 0\.5×$/);
+      expect(itemSeconds(item)).toBeGreaterThan(itemSeconds({ ...item, tempo: undefined }));
+    }
   });
 
   it("counts the calendar days a program takes on the free plan's daily allowance", () => {
@@ -496,8 +535,17 @@ describe("program data", () => {
     const warmupBeforeRange = (d: ProgramDay) =>
       JSON.stringify(d.items.slice(0, d.items.findIndex((i) => i.kind === "range")).filter(sings));
     const checks = (id: string) => programById(id)!.days.filter((d) => d.items.some((i) => i.kind === "range"));
-    for (const id of ["foundations-2w", "high-notes-6w", "measured-voice-12w"]) {
+    // And with the same number of sustain attempts, since a check-in's
+    // reading is the longest hold of its day.
+    const attempts = (d: ProgramDay) =>
+      d.items
+        .flatMap((i): BreathStep[] =>
+          i.kind === "drill" ? [drillPreset(i)] : i.kind === "breath" ? breathRoutineById(i.id)!.steps : [],
+        )
+        .reduce((k, s) => k + (s.drill === "sustain" ? s.attempts : 0), 0);
+    for (const id of ["foundations-2w", "high-notes-6w", "mix-4w", "measured-voice-12w"]) {
       expect(new Set(checks(id).map(warmupBeforeRange)).size, id).toBe(1);
+      expect(new Set(checks(id).map(attempts)).size, id).toBe(1);
     }
   });
 

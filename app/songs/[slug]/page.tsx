@@ -17,12 +17,11 @@ import {
   SongSectionMap,
   SongStats,
   SongTags,
-  phraseName,
   relatedSongs,
   songFacts,
   songLyricText,
 } from "@/components/songs/song-page";
-import { formatMinSec } from "@/components/songs/lib";
+import { formatMinSec, phraseName } from "@/components/songs/lib";
 import type { Song } from "@/components/songs/types";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { firstFit, MAX_DESCRIPTION, MAX_TITLE } from "@/lib/meta-fit";
@@ -78,7 +77,7 @@ function isPartial(song: Song): boolean {
 /**
  * Tags that name what a melody asks of a voice, as opposed to its genre,
  * occasion or origin ("christmas", "scottish", "hymn"), its meter ("waltz"),
- * its scale ("modal", "dorian", "hexatonic") or its shape ("chorus hook",
+ * its scale ("modal", "dorian", "pentatonic") or its shape ("chorus hook",
  * "pickup").
  * Those describe where a melody comes from or how it sounds; only these say
  * what singing it takes.

@@ -26,7 +26,7 @@ Open the practice material on this page and choose First hum or Easy fourth sire
 
 ### Set a safe baseline
 
-Start near the middle of your comfortable speaking range after a gentle hum. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.
+Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -40,7 +40,7 @@ Comfortable, not extreme. The number we want is one you can repeat next month. S
 
 ### Hear the distinction
 
-Record two slides down from the same comfortable note in one take, with a reset between them. On the first, stop at the first note that needs any effort: extra volume, a tucked chin or a pushed breath. On the second, stop one note earlier, while it is still completely easy. The stopping note is the only thing that changes. On playback, listen for the difference: the effortful note usually thins, rattles or wobbles, and the easy one sounds like the rest of your voice, so keep the easy one as your low end. Return to the middle and do the same pair going up. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.
+Record two slides down from the same comfortable note in one take in the recorder, with a reset between them. On the first, stop at the first note that needs any effort: extra volume, a tucked chin or a pushed breath. On the second, stop one note earlier, while it is still completely easy. The stopping note is the only thing that changes. On playback, listen for the difference: the effortful note usually thins, rattles or wobbles, and the easy one sounds like the rest of your voice, so keep the easy one as your low end. Return to the middle and do the same pair going up. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.

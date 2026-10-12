@@ -76,7 +76,7 @@ export default function CanYouSingHub() {
     <PageShell
       kicker="Song ranges"
       title="Can I sing this song? Vocal ranges and keys of popular songs"
-      subtitle={`A song is within reach when its vocal range sits inside yours, and it is easier to sing with room to spare at both ends. Here are the key, range and difficulty of ${songs.length} popular songs, from the commonly cited studio-version figures; take the free range test and every page answers for your voice specifically.`}
+      subtitle={`A song is within reach when its vocal range sits inside yours, and it is easier to sing with room to spare at both ends. Here are the key, range and difficulty of ${songs.length} popular songs, from the commonly cited lead-vocal figures; take the free range test and every page answers for your voice specifically.`}
       actions={<LinkButton href={rangeTestHref()}>Find your range free</LinkButton>}
     >
       <script
@@ -111,8 +111,9 @@ export default function CanYouSingHub() {
         <SectionLabel heading>How these figures work</SectionLabel>
         <p className="mt-3 max-w-prose text-sm text-mut">
           Each page cites the published key and the commonly circulated
-          lead-vocal range for the studio version, usually from a named
-          original-key sheet-music arrangement. Sources can differ by a note
+          lead-vocal range, usually from a named original-key sheet-music
+          arrangement; runs and ad-libs on the recording can go past its top
+          note. Sources can differ by a note
           or two at either end, so treat these as approximations, never lab
           measurements. No lyrics or melodies are reproduced. For what the
           artists themselves can do beyond one song, see the{" "}

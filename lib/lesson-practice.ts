@@ -71,7 +71,11 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     basis: measured("phonationSeconds"),
     companion: { room: "analyze" },
     studies: ["sustained-hold"],
-    readings: ["what-your-voice-is", "when-numbers-lie"],
+    // Chapter 12 covers room noise, mic placement and headphone bleed, which
+    // is this module, so it comes first. Chapter 1, how the voice works, stays
+    // as the course's opening read and is listed again in the breath, register
+    // and vowel modules its three sections teach.
+    readings: ["when-numbers-lie", "what-your-voice-is"],
   },
   "v-l1-m2": {
     // Strain is not measurable. What a scan establishes is the two extremes.
@@ -86,7 +90,8 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     basis: measured("sustainSeconds"),
     companion: { room: "breath", param: "drill", value: "sustain" },
     studies: [],
-    readings: ["breath", "weeks-1-2-baseline"],
+    // Chapter 1's "The power: breath" is the free reading of this module.
+    readings: ["breath", "weeks-1-2-baseline", "what-your-voice-is"],
   },
 
   // Stage 2 · Steady Tone
@@ -127,7 +132,8 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     ),
     companion: { room: "analyze" },
     studies: ["humming-thirds", "head-wee-descent"],
-    readings: ["registers"],
+    // Chapter 1's "The vibrator: the folds" is the free reading of this module.
+    readings: ["registers", "what-your-voice-is"],
   },
   "v-l3-m2": {
     // A crack stays voiced, so a longest-voiced-run figure reports one
@@ -147,7 +153,8 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     ),
     companion: { room: "warmups", param: "exercise", value: "hung-ee-mm" },
     studies: ["hung-ee-mm", "legato-triad"],
-    readings: ["resonance"],
+    // Chapter 1's "The filter: the tract" is the free reading of this module.
+    readings: ["resonance", "what-your-voice-is"],
   },
   "v-l3-m4": {
     basis: measured("scorePercent"),
@@ -366,10 +373,19 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     readings: ["atlas:the-safety-rail", "stamina-and-health"],
   },
   "v-l7-m5": {
-    basis: measured("rangeExtremes"),
-    companion: { room: "range" },
+    // The lessons take their evidence in one recorded take and save the range
+    // test for the next retest, weeks apart; a test is not practice, and every
+    // finished one replaces the saved range. Not the warm-up room either: it
+    // fits each pattern under the measured high, so it can never place the
+    // semitone past today's comfortable endpoint that these lessons ask for.
+    basis: selfCheck(
+      "strainOrPressedPhonation",
+      "That you compared today's easy low and high notes with an earlier baseline taken the same way, by ear and on playback, without forcing an extension. Whether a new note is usable rather than forced is your judgement; the range test measures your extremes, and it belongs to your next retest, weeks apart.",
+    ),
+    companion: { room: "recorder" },
     studies: ["morning-three-note", "chromatic-neighbor"],
-    readings: ["tracking-change", "range-is-not-one-number"],
+    // Chapter 8's "Retesting fairly" is this module's retest rule, and free.
+    readings: ["tracking-change", "range-is-not-one-number", "reading-the-range-test"],
   },
   "v-l7-m6": {
     // The detector returns one fundamental per frame, so a harmony against a
@@ -466,7 +482,10 @@ export function companionLabel(c: Companion): string {
  */
 export interface PracticeMatch {
   type: ActivityType;
-  /** When set, the session's `detail` must equal it. */
+  /**
+   * When set, the session's `detail` must name it: this title, or for a song
+   * or warm-up exercise one of the titles it was logged under before a rename.
+   */
   detail?: string;
 }
 

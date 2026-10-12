@@ -40,7 +40,7 @@ The song moves to you. This is the singing equivalent of a capo. Say what will c
 
 ### Hear the distinction
 
-Open Amazing Grace in the songbook and sing the first verse in the key it opens in. Then shift it one semitone up or down with the transpose control, whichever way looks easier, and sing the same verse again. The key is the only thing that changes. Compare the last line of each: keep the key in which the highest note comes without a push and the lowest is still clearly audible, and write it down. Keep one consistent, comfortable production through the song.
+Open Amazing Grace in the songbook and sing its opening phrase (“Amazing grace, how sweet the sound, that saved a wretch like me”) in the key it opens in. Then shift it one semitone up or down with the transpose control, whichever way looks easier, and sing the same phrase again. The key is the only thing that changes. Compare the second line of each: keep the key in which the highest note comes without a push and the lowest is still clearly audible, and write it down. Keep one consistent, comfortable production through the phrase.
 
 - Look: The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.
 - Listen: The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note.
