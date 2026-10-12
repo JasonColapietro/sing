@@ -393,10 +393,13 @@ export function BreathRunner({
  */
 export function BreathDrillSession({
   drill,
+  preset,
   pitch,
   onExit,
 }: {
   drill: BreathDrillId;
+  /** A setting a link asked for, such as a program day's five-count square; it seeds the setup card. */
+  preset?: BreathStep;
   pitch: UsePitchResult;
   onExit: () => void;
 }) {
@@ -407,19 +410,21 @@ export function BreathDrillSession({
   const { goalSec } = useDailyGoal();
   const goalDoneSec = useGoalDoneSec(progress);
 
-  // The path's rows are drills, not presets, so the step handed to StepDrill is
-  // mostly a carrier for the drill id — the fields the drills would read as a
-  // preset are ignored, because autoStart is false and the setup card decides.
-  // Breathe and sing reads its note length from here, and its first rep count
-  // is only the picker's starting value.
+  // The path's rows are drills, not presets, so without a linked preset the
+  // step handed to StepDrill carries the setup card's usual starting values.
+  // Either way autoStart is false: the preset only seeds the card, and the
+  // singer can still change it before starting. Breathe and sing reads its
+  // note length from here.
   const step: BreathStep =
-    drill === "box"
-      ? { drill: "box", side: 4, minutes: 3 }
-      : drill === "farinelli"
-        ? { drill: "farinelli", cap: 8 }
-        : drill === "cue"
-          ? { drill: "cue", reps: CUE_REP_CHOICES[1], holdSec: CUE_HOLD_SEC }
-          : { drill: "sustain", attempts: 1 };
+    preset && preset.drill === drill
+      ? preset
+      : drill === "box"
+        ? { drill: "box", side: 4, minutes: 3 }
+        : drill === "farinelli"
+          ? { drill: "farinelli", cap: 8 }
+          : drill === "cue"
+            ? { drill: "cue", reps: CUE_REP_CHOICES[1], holdSec: CUE_HOLD_SEC }
+            : { drill: "sustain", attempts: 1 };
 
   if (result) {
     return (

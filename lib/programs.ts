@@ -44,6 +44,7 @@ import {
   breathRoutineSeconds,
   breathStepSeconds,
   breathStepSummary,
+  drillPresetQuery,
   SUSTAIN_LOG_MIN_SEC,
   type BreathDrillId,
   type BreathStep,
@@ -74,7 +75,7 @@ export type ProgramItem =
   | { kind: "song"; slug: string }
   /** A recorded take in the Recorder, to compare against later. */
   | { kind: "recorder" }
-  /** A few minutes of ear training: pitch match and one recognition game. */
+  /** A few minutes of ear training: the Quick ear workout, pitch match and both recognition games. */
   | { kind: "ear" };
 
 export interface ProgramDay {
@@ -132,12 +133,16 @@ export const RECORDER_SEC = 120;
 
 /**
  * Ear training, as chapter 15 asks: "three or four minutes a session" of
- * "pitch-match and interval work". The games are paced by the singer
- * (components/ear/routines.ts EAR_GAME_SECONDS has a pitch-match game at
- * about two minutes and the two tapping games at one), so this is one of
- * each: the chapter's lower figure, an estimate like the Recorder's.
+ * "pitch-match and interval work". The item opens the ear room's Quick ear
+ * workout, which runs higher or lower, interval ID and pitch match back to
+ * back, so the day's link starts exactly what the row describes. Its length
+ * comes from the routine (components/ear/routines.ts EAR_GAME_SECONDS), the
+ * chapter's upper figure, an estimate like the Recorder's.
  */
-export const EAR_SEC = 180;
+export const EAR_ROUTINE_ID = "quick";
+/** Quick ear's name and length (held to components/ear/routines.ts by a test; that module pulls in a client one). */
+export const EAR_ROUTINE_NAME = "Quick ear";
+export const EAR_SEC = 252;
 
 /**
  * The ear games that make up that item, by the titles the ear room logs them
@@ -637,13 +642,15 @@ export function itemHref(item: ProgramItem): string {
     case "breath":
       return `/breath?routine=${encodeURIComponent(item.id)}`;
     case "drill":
-      return `/breath?drill=${encodeURIComponent(item.id)}`;
+      // With the preset in the link, so the drill opens on the day's counts
+      // rather than the setup card's defaults.
+      return item.preset ? `/breath?${drillPresetQuery(item.preset)}` : `/breath?drill=${encodeURIComponent(item.id)}`;
     case "range":
       return "/range?mode=range";
     case "recorder":
       return "/recorder";
     case "ear":
-      return "/ear-training";
+      return `/ear-training?routine=${EAR_ROUTINE_ID}`;
     case "song":
       return `/songs?song=${encodeURIComponent(item.slug)}`;
   }
@@ -676,8 +683,8 @@ export function itemLabel(item: ProgramItem): { title: string; meta: string } {
       return { title: "Record a take", meta: `Recorder · a verse and a chorus · about ${min}` };
     case "ear":
       return {
-        title: "Ear training",
-        meta: `Ear · ${EAR_PITCH_GAME}, plus ${EAR_RECOGNITION_GAMES.join(" or ")} · about ${min}`,
+        title: EAR_ROUTINE_NAME,
+        meta: `Ear · ${EAR_RECOGNITION_GAMES[1]}, ${EAR_RECOGNITION_GAMES[0]} and ${EAR_PITCH_GAME.toLowerCase()} · about ${min}`,
       };
     case "song":
       return { title: songBySlug(item.slug)?.title ?? item.slug, meta: "Song · one run" };

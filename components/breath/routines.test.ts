@@ -4,11 +4,14 @@ import {
   BREATH_ROUTINES,
   BREATH_STEP_INTRO_SEC,
   CUE_BREATH_SEC,
+  CUE_HOLD_SEC,
   CUE_REP_CHOICES,
   FARINELLI_LEAD_SEC,
   SUSTAIN_ATTEMPT_SEC,
   boxSeconds,
   breathDrillDesc,
+  drillPresetFromQuery,
+  drillPresetQuery,
   breathDrillTitle,
   breathRoutineById,
   breathRoutineMinutes,
@@ -291,5 +294,33 @@ describe("breath routine shape", () => {
     for (const d of BREATH_DRILL_IDS) {
       expect(breathDrillDesc(d), d).not.toMatch(/support|lung|capacity|diaphragm/i);
     }
+  });
+});
+
+describe("drill preset links", () => {
+  const q = (s: string) => new URLSearchParams(s);
+
+  it("round-trips every preset the setup cards can show", () => {
+    const presets: BreathStep[] = [
+      { drill: "box", side: 5, minutes: 1 },
+      { drill: "box", side: 8, minutes: 5 },
+      { drill: "farinelli", cap: 10 },
+      { drill: "sustain", attempts: 2 },
+      { drill: "cue", reps: 8, holdSec: CUE_HOLD_SEC },
+      ...BREATH_ROUTINES.flatMap((r) => r.steps),
+    ];
+    for (const step of presets) {
+      expect(drillPresetFromQuery(step.drill, q(drillPresetQuery(step))), JSON.stringify(step)).toEqual(step);
+    }
+  });
+
+  it("opens the drill's own defaults for a bare or out-of-range link", () => {
+    expect(drillPresetFromQuery("box", q("drill=box"))).toBeNull();
+    expect(drillPresetFromQuery("box", q("drill=box&side=12&minutes=1"))).toBeNull();
+    expect(drillPresetFromQuery("box", q("drill=box&side=5&minutes=2"))).toBeNull();
+    expect(drillPresetFromQuery("farinelli", q("drill=farinelli&cap=40"))).toBeNull();
+    expect(drillPresetFromQuery("farinelli", q("drill=farinelli&cap=9.5"))).toBeNull();
+    expect(drillPresetFromQuery("sustain", q("drill=sustain&attempts=9"))).toBeNull();
+    expect(drillPresetFromQuery("cue", q("drill=cue&reps=5"))).toBeNull();
   });
 });

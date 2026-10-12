@@ -9,6 +9,9 @@ import {
   drillPreset,
   EAR_PITCH_GAME,
   EAR_RECOGNITION_GAMES,
+  EAR_ROUTINE_ID,
+  EAR_ROUTINE_NAME,
+  EAR_SEC,
   freePlanCalendarDays,
   isRestDay,
   itemDoneOn,
@@ -38,9 +41,14 @@ import {
 } from "./programs";
 import { routineById, isFreeExercise, stepExercise } from "@/components/warmups/routines";
 import { ALL_EXERCISES } from "@/components/warmups/exercises";
-import { breathRoutineById, isBreathDrillId, type BreathStep } from "@/components/breath/routines";
+import {
+  breathRoutineById,
+  drillPresetFromQuery,
+  isBreathDrillId,
+  type BreathStep,
+} from "@/components/breath/routines";
 import { GAME_NAMES } from "@/components/ear/lib";
-import { EAR_GAME_SECONDS } from "@/components/ear/routines";
+import { earRoutineById, earRoutineSeconds } from "@/components/ear/routines";
 import { SONGS } from "@/components/songs/data";
 import { BAND_ORDER, bandForSong } from "@/components/songs/lib";
 import type { SessionLog } from "./progress-shape";
@@ -257,12 +265,20 @@ describe("program data", () => {
     }
     const ear: ProgramItem = { kind: "ear" };
     expect(itemIsPro(ear)).toBe(false);
-    expect(itemLabel(ear).title).toBe("Ear training");
-    expect(itemLabel(ear).meta).toBe("Ear · Pitch match, plus Interval ID or Higher or lower · about 3 min");
-    expect(cappedDaySeconds({ title: "", items: [ear] })).toBe(180);
-    // The estimate is one game of each: pitch match and a tapping game.
-    expect(EAR_GAME_SECONDS["pitch-match"] + EAR_GAME_SECONDS.interval).toBe(180);
-    expect(EAR_GAME_SECONDS["pitch-match"] + EAR_GAME_SECONDS["higher-lower"]).toBe(180);
+    expect(itemLabel(ear).title).toBe("Quick ear");
+    expect(itemLabel(ear).meta).toBe("Ear · Higher or lower, Interval ID and pitch match · about 4 min");
+    expect(cappedDaySeconds({ title: "", items: [ear] })).toBe(EAR_SEC);
+    // The link starts a real workout, and the row's name and length are that
+    // workout's: pitch match plus a recognition game, as the item promises.
+    const routine = earRoutineById(EAR_ROUTINE_ID)!;
+    expect(routine.name).toBe(EAR_ROUTINE_NAME);
+    expect(earRoutineSeconds(routine)).toBe(EAR_SEC);
+    const games = routine.steps.map((st) => GAME_NAMES[st.game]);
+    expect(games).toContain(EAR_PITCH_GAME);
+    expect(games.some((g) => EAR_RECOGNITION_GAMES.includes(g))).toBe(true);
+    // Chapter 15's "three or four minutes a session".
+    expect(EAR_SEC).toBeGreaterThanOrEqual(180);
+    expect(EAR_SEC).toBeLessThanOrEqual(240 + 4 * routine.steps.length);
   });
 
   it("runs weeks 9 and 10's breath at longer counts than weeks 1 and 2, for four or five minutes, as chapter 18 asks", () => {
@@ -450,7 +466,16 @@ describe("program data", () => {
     expect(itemHref({ kind: "drill", id: "sustain" })).toBe("/breath?drill=sustain");
     expect(itemHref({ kind: "range" })).toBe("/range?mode=range");
     expect(itemHref({ kind: "recorder" })).toBe("/recorder");
-    expect(itemHref({ kind: "ear" })).toBe("/ear-training");
+    expect(itemHref({ kind: "ear" })).toBe("/ear-training?routine=quick");
+    // A drill with a preset carries it, so the breath room opens on the day's counts.
+    expect(itemHref({ kind: "drill", id: "box", preset: { drill: "box", side: 5, minutes: 1 } })).toBe(
+      "/breath?drill=box&side=5&minutes=1",
+    );
+    for (const item of PROGRAMS.flatMap(allItems)) {
+      if (item.kind !== "drill" || !item.preset) continue;
+      const q = new URLSearchParams(itemHref(item).split("?")[1]);
+      expect(drillPresetFromQuery(item.id, q), itemHref(item)).toEqual(item.preset);
+    }
     expect(itemHref({ kind: "song", slug: "ode-to-joy" })).toBe("/songs?song=ode-to-joy");
   });
 });

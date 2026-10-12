@@ -27,11 +27,13 @@ import {
   breathRoutineById,
   breathRoutineMinutes,
   breathStepTitle,
+  drillPresetFromQuery,
   isBreathDrillId,
   recommendBreathRoutine,
   sizeBreathRoutineToAllowance,
   type BreathDrillId,
   type BreathRoutine,
+  type BreathStep,
 } from "./routines";
 import {
   EMPTY_BREATH_BESTS,
@@ -58,7 +60,8 @@ import {
 type View =
   | { kind: "home" }
   | { kind: "routine"; routine: BreathRoutine; startStep?: number }
-  | { kind: "drill"; drill: BreathDrillId };
+  /** `preset` is a setting a link asked for (a program day's counts); none opens the setup card's defaults. */
+  | { kind: "drill"; drill: BreathDrillId; preset?: BreathStep };
 
 const DRILL_ORDER: BreathDrillId[] = ["sustain", "cue", "box", "farinelli"];
 
@@ -175,7 +178,9 @@ export function BreathStudio() {
     // capped), and a capped singer on a lesson link would land in the drill.
     if (isCapped(getState(), getProState().active)) return;
     if (drill && isBreathDrillId(drill)) {
-      setView({ kind: "drill", drill });
+      // A program day links its drill with the counts it asks for
+      // (lib/programs.ts itemHref); a bare ?drill= opens the usual setup.
+      setView({ kind: "drill", drill, preset: drillPresetFromQuery(drill, q) ?? undefined });
       return;
     }
     const routine = breathRoutineById(routineId);
@@ -224,7 +229,7 @@ export function BreathStudio() {
     );
   }
   if (view.kind === "drill") {
-    return <BreathDrillSession drill={view.drill} pitch={pitch} onExit={goHome} />;
+    return <BreathDrillSession drill={view.drill} preset={view.preset} pitch={pitch} onExit={goHome} />;
   }
 
 
