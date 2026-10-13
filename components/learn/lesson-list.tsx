@@ -4,12 +4,19 @@ import { SectionLabel } from "@/components/ui";
 
 /**
  * "Free lessons that use this chapter", on book and atlas chapter pages,
- * locked or free. Built from lib/lesson-readings.ts on the server.
+ * locked or free, and "Free lessons that use this song" on the songbook pages
+ * a lesson practises on. Built from lib/lesson-readings.ts on the server.
  */
-export function LessonList({ lessons }: { lessons: ChapterLesson[] }) {
+export function LessonList({
+  lessons,
+  label = "Free lessons that use this chapter",
+}: {
+  lessons: ChapterLesson[];
+  label?: string;
+}) {
   return (
     <>
-      <SectionLabel>Free lessons that use this chapter</SectionLabel>
+      <SectionLabel>{label}</SectionLabel>
       <ul className="mt-3 space-y-2">
         {lessons.map((l) => (
           <li key={l.href} className="text-sm text-mut">

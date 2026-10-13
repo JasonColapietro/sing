@@ -191,6 +191,55 @@ describe("song comparison to first practice", () => {
     expect(html).not.toContain("descending-five");
   });
 
+  it("names a move of an octave or more as the octave, not as a key change", () => {
+    for (const s of POP_SONGS) {
+      // The last three are the range test's extremes: two octaves away, and
+      // wide enough that a song inside it centres an octave up.
+      for (const [lowMidi, highMidi] of [[40, 64], [41, 65], [45, 67], [53, 77], [57, 81], [60, 84], [33, 50], [72, 93], [55, 94]]) {
+        state.range = { lowMidi, highMidi };
+        const html = renderToStaticMarkup(<CanYouSingVerdict song={s} />);
+        expect(html, `${s.slug} ${lowMidi}–${highMidi}`).not.toMatch(/(?:dropping|raising) (?:the key|it) by (?:1[2-9]|[2-9]\d)\b/i);
+      }
+    }
+    // vampire F3–E5 against E2–E4: the minimum shift is the octave, said once.
+    const vampire = POP_SONGS.find((s) => s.slug === "vampire")!;
+    state.range = { lowMidi: 40, highMidi: 64 };
+    let html = renderToStaticMarkup(<CanYouSingVerdict song={vampire} />);
+    expect(html).toContain("The top of “vampire” is 12 semitones above your tested ceiling of E4. Sung an octave lower in the written key, it runs F2–E4, inside your tested range.");
+    expect(html).not.toContain("both ends of the song");
+    // Creep B2–B4 (47–71) against C4–C6 (60–84): 13 under the floor is the
+    // octave and one more semitone.
+    const creep = POP_SONGS.find((s) => s.slug === "creep")!;
+    state.range = { lowMidi: 60, highMidi: 84 };
+    html = renderToStaticMarkup(<CanYouSingVerdict song={creep} />);
+    expect(html).toContain("The low end of “Creep” is 13 semitones below your tested floor of C4. Singing it an octave higher and raising the key by 1 more would bring it inside, with the bottom note on that floor");
+    // Two octaves away is two octaves, not a key change of twelve more.
+    const hallelujah = POP_SONGS.find((s) => s.slug === "hallelujah")!;
+    state.range = { lowMidi: 72, highMidi: 91 };
+    html = renderToStaticMarkup(<CanYouSingVerdict song={hallelujah} />);
+    expect(html).toContain("is 24 semitones below your tested floor of C5. Singing it two octaves higher would bring it inside, with the bottom note on that floor.");
+    // A song already inside a very wide range centres an octave up.
+    state.range = { lowMidi: 55, highMidi: 92 };
+    html = renderToStaticMarkup(<CanYouSingVerdict song={song} />);
+    expect(html).toContain("so expect the bottom of this song to be work. Singing it an octave higher centres it in your range.");
+  });
+
+  it("spells the saved range in the song's key, beside the song's own notes", () => {
+    // Someone You Loved is in Db major (Eb3–Bb4): a saved D#3–A#4 is the
+    // same two notes, and the card spells them the way the song does.
+    const syl = POP_SONGS.find((s) => s.slug === "someone-you-loved")!;
+    expect(syl.key).toBe("Db major");
+    state.range = { lowMidi: syl.lowMidi, highMidi: syl.highMidi };
+    let html = renderToStaticMarkup(<CanYouSingVerdict song={syl} />);
+    expect(html).toContain(`Your saved range: Eb3–Bb4. Song as written: Eb3–Bb4.`);
+    expect(html).not.toMatch(/[A-G]#\d/);
+    // An octave down: the ceiling named is Bb3, the note the octave lands on.
+    state.range = { lowMidi: syl.lowMidi - 12, highMidi: syl.highMidi - 12 };
+    html = renderToStaticMarkup(<CanYouSingVerdict song={syl} />);
+    expect(html).toContain("above your tested ceiling of Bb3.");
+    expect(html).toContain("it runs Eb2–Bb3");
+  });
+
   it("says nothing about the octave when the other octave does not fit either", () => {
     // Espresso G3–A4 (55–69) against C3–F4 (48–65): G2 an octave down is under the floor.
     state.range = { lowMidi: 48, highMidi: 65 };

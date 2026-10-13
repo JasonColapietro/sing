@@ -27,7 +27,7 @@ import { STAR_THRESHOLDS, starsForScore } from "@/lib/stars";
 import { ShareableResult } from "@/components/songs/result-card";
 import { SITE_URL } from "@/lib/site";
 import { TOLERANCE_CENTS } from "./scoring";
-import { MODE_LABELS } from "./prefs";
+import { MODE_LABELS, useWarmupPrefs } from "./prefs";
 import { sungReps, type SessionSummaryData } from "./lib";
 
 /**
@@ -83,6 +83,25 @@ const TONE_TEXT: Record<Tone, string> = {
 const CAPPED_REASON =
   "Free practice is used for today. It resets at midnight; the free studio is still open.";
 
+/**
+ * What the score measured, by what the singer heard. In sing-along the guide
+ * plays the pattern once before the first rep at full level, then sounds
+ * under the voice at the guide level, so at Off nothing sounds while they
+ * sing. In call-and-response the level governs the reference itself
+ * (exercise-player.tsx), so at Off no pitch plays at all. Read from the
+ * level as it stands when the summary shows.
+ */
+export function scoreMeasuredLine(mode: SessionSummaryData["mode"], guidePct: number): string {
+  if (mode === "sing-along") {
+    return guidePct > 0
+      ? "The guide was sounding while you sang, so this score measures how well you held to a note you could hear."
+      : "The guide was off while you sang (it played the pattern once at the start), so this score measures how well you held to notes you were carrying yourself.";
+  }
+  return guidePct > 0
+    ? "The guide had stopped before you sang, so this score measures how well you held to a note you were carrying yourself."
+    : "The reference was off, so no note played before you sang, and this score measures how well you found and held each note on your own.";
+}
+
 export function SessionSummary({
   data,
   onNext,
@@ -107,6 +126,10 @@ export function SessionSummary({
   onDaily?: (p: DailyPick) => void;
 }) {
   const { ex, results, avgScore, best, xpGained, newAchievements, mode } = data;
+  // With the guide at Off, sing-along plays the pattern once at the start and
+  // then nothing under the voice (exercise-player.tsx), so the score is of
+  // notes the singer carried, not notes they could hear.
+  const { guidePct } = useWarmupPrefs();
   const cappedId = useId();
   // Read just after the session logged, so it is today's streak — but read
   // live anyway, so a summary never names a streak that has lapsed.
@@ -138,7 +161,9 @@ export function SessionSummary({
       sung,
       // Null when no single note got enough scored time to judge — a short
       // or heavily skipped session says nothing about any one note.
-      weakest: weakNotes(tallies, { limit: 1 })[0] ?? null,
+      // A note held for all of its scored time is not shaky, even if it
+      // was the least steady of a clean session.
+      weakest: weakNotes(tallies, { limit: 1 }).find((n) => n.accuracy < 100) ?? null,
       broke: ladderBreakAlongWalk(results, ex.ladder === "down"),
       roots: sung.map((r) => r.root),
     };
@@ -246,9 +271,7 @@ export function SessionSummary({
             Your score is the share of each phrase you held within{" "}
             {TOLERANCE_CENTS} cents of the target — how close to the note you
             stayed, not how good it sounded.{" "}
-            {mode === "sing-along"
-              ? "The guide was sounding while you sang, so this score measures how well you held to a note you could hear."
-              : "The guide had stopped before you sang, so this score measures how well you held to a note you were carrying yourself."}
+            {scoreMeasuredLine(mode, guidePct)}
           </p>
           <p className="mt-2 max-w-xl text-sm text-ink">
             {diagnosis.broke ? (
@@ -361,7 +384,7 @@ export function SessionSummary({
         <ProCrescendoNudge
           line="Pro shows the full daily coach plan, not just its first two steps"
           title="See the whole plan"
-          body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, this one included. Pro adds the full daily coach plan, per-note accuracy over time and no daily limit."
+          body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, this one included. Pro adds the full daily coach plan, a per-note accuracy chart and no daily limit."
           context="Warmups"
         />
       </div>

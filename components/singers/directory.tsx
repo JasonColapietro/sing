@@ -40,10 +40,14 @@ import {
  * page thousands of pixels shorter and every return landed far from the row.
  */
 const RETURN_KEY = "suede-sing:singers:return";
-/** The two lists a visitor taps a singer in, each searched only within itself:
- * the same href also appears in the cards above the chart, and in the other
- * list. */
-const RETURN_SCOPES = ["#singer-directory-results", "[data-singer-crawl-index]"] as const;
+/** The lists a visitor taps a singer in (the chart's own rows and the two
+ * link lists after it), each searched only within itself: the same href can
+ * appear in more than one list and in the reviewed cards above the chart. */
+const RETURN_SCOPES = [
+  "#singer-directory-results",
+  "[data-singer-crawl-index]",
+  "[data-singer-search-priority]",
+] as const;
 /** How recently a history traversal must have happened to count as "Back". */
 const TRAVERSAL_WINDOW_MS = 10_000;
 
@@ -74,7 +78,7 @@ function arrivedByHistory(tappedAt: number): boolean {
   }
 }
 
-/** Remember the singer link a visitor tapped in one of the two lists. */
+/** Remember the singer link a visitor tapped in one of those lists. */
 function rememberTappedSinger(e: MouseEvent) {
   const target = e.target instanceof Element ? e.target : null;
   const link = target?.closest('a[href^="/singers/"]');

@@ -9,9 +9,19 @@ import { SessionButton, SessionShell } from "@/components/practice/session-shell
 import { BreathGatePanel } from "./breath-gate";
 import { LevelMeter } from "./sustain-test";
 import { recordBreathBest } from "./store";
+import { trackHiddenTime } from "@/components/practice/hidden-time";
+import {
+  activeElapsedMs,
+  markActive,
+  skipHidden,
+  startActiveClock,
+  trackActivity,
+} from "@/components/practice/active-clock";
 import {
   BREATH_FALLBACK_SEC,
   CUE_REP_CHOICES,
+  CUE_REST_SEC,
+  cueDrillLoggedSeconds,
   type BreathDrillResult,
 } from "./routines";
 
@@ -38,7 +48,7 @@ type Phase = "setup" | "breath" | "ready" | "holding" | "rest";
 
 /** A note that stops for this long has ended. The sustain test's own figure. */
 const SILENCE_MS = 700;
-const REST_MS = 1500;
+const REST_MS = CUE_REST_SEC * 1000;
 /** Without detection, the breath is a count rather than something heard. */
 const TIMED_BREATH_MS = 2500;
 /** An early-ended run shorter than this is not logged. */
@@ -76,11 +86,38 @@ export function BreathCueDrill({
 
   const breath = useBreathDetect(pitch, gated);
 
-  const t0Ref = useRef(0);
+  /** The run's play clock: hidden time and idle time past the grace left out. */
+  const clockRef = useRef(startActiveClock(0));
   const breathSinceRef = useRef(0);
   const holdStartRef = useRef(0);
   const lastLoudRef = useRef(0);
   const finishedRef = useRef(false);
+
+  /** A tap, a key, a breath heard or a note sung: the singer is still here. */
+  const markActiveAt = (t: number) => {
+    clockRef.current = markActive(clockRef.current, t);
+  };
+
+  // The run is timed on an active clock (components/practice/active-clock.ts).
+  // A hidden tab moves its start past the time it was away, and a stretch of
+  // more than thirty seconds with no tap, key, breath or note counts as
+  // thirty, so a phone left on "Breathe in" is not logged as practice.
+  useEffect(() => {
+    const stopHidden = trackHiddenTime(
+      document,
+      () => performance.now(),
+      (ms) => {
+        clockRef.current = skipHidden(clockRef.current, ms, performance.now());
+      },
+    );
+    const stopInput = trackActivity(document, () => {
+      clockRef.current = markActive(clockRef.current, performance.now());
+    });
+    return () => {
+      stopHidden();
+      stopInput();
+    };
+  }, []);
 
   /** Begin a rep: listen for the breath (or count one, without detection). */
   const startRep = () => {
@@ -91,7 +128,7 @@ export function BreathCueDrill({
   };
 
   const begin = () => {
-    t0Ref.current = performance.now();
+    clockRef.current = startActiveClock(performance.now());
     setDone(0);
     setHeard(0);
     setCutShort(false);
@@ -102,7 +139,11 @@ export function BreathCueDrill({
   const finish = (repsDone: number, heardCount: number, early: boolean) => {
     if (finishedRef.current) return;
     finishedRef.current = true;
-    const sec = Math.max(0, Math.round((performance.now() - t0Ref.current) / 1000));
+    const sec = cueDrillLoggedSeconds(
+      activeElapsedMs(clockRef.current, performance.now()) / 1000,
+      reps,
+      holdSec,
+    );
     const logged: LogResult | null =
       repsDone > 0 && (!early || sec >= MIN_LOG_SEC)
         ? logSession({ type: "breath", durationSec: sec, detail: "Breathe and sing" })
@@ -133,6 +174,7 @@ export function BreathCueDrill({
   useEffect(() => {
     const inhale = breath.lastInhale;
     if (!gated || phase !== "breath" || !inhale || inhale.endMs < breathSinceRef.current) return;
+    markActiveAt(performance.now());
     setHeard((n) => n + 1);
     setLastBreathSec(Math.round(inhale.durationSec * 10) / 10);
     setCutShort(false);
@@ -175,6 +217,7 @@ export function BreathCueDrill({
     const v = frame.volume;
     const now = frame.t;
     if (now === 0) return;
+    if (v > threshold) markActiveAt(now);
     if (phase === "ready") {
       if (v > threshold) {
         holdStartRef.current = now;

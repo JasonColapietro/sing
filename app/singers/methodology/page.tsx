@@ -61,8 +61,13 @@ export default function SingerMethodologyPage() {
               performer has sung.
             </li>
             <li><strong className="text-ink">Check the note convention.</strong>{" "}
-              Confirm the octave numbering before comparing endpoints. A note label
-              without its convention can make two claims look farther apart than they are.
+              Confirm the octave numbering before comparing endpoints: this site writes
+              every note in{" "}
+              <Link href="/atlas/notes-octaves-and-the-keyboard" className="text-violet-ink underline underline-offset-4">
+                scientific pitch notation, where C4 is middle C
+              </Link>
+              . A note label without its convention can make two claims look farther
+              apart than they are.
             </li>
             <li><strong className="text-ink">Ask what was counted.</strong>{" "}
               Look for distinctions between sustained notes, brief effects, falsetto,

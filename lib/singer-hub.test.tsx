@@ -127,7 +127,7 @@ describe("/singers hub schema and crawl discovery", () => {
     expect(searchPriorityHtml(html)).not.toContain("Google");
   });
 
-  it("gives current high-demand vocal-range pages prominent exact-answer links", () => {
+  it("gives frequently looked-up singers named exact-answer links", () => {
     const priority = searchPriorityHtml(html);
     const links = [...priority.matchAll(/href="\/singers\/([a-z0-9-]+)"[^>]*>([\s\S]*?)<\/a>/g)];
 
@@ -145,6 +145,20 @@ describe("/singers hub schema and crawl discovery", () => {
       );
       expect(links[index][2]).toContain(rangeLabel(singer!));
     }
+  });
+
+  it("lists the frequently looked-up singers after the chart, not above it", () => {
+    // The chart (SingersDirectory) mounts where the server leaves nothing,
+    // between the voice-type links and this list; on a phone the list above
+    // it put the chart five screens down.
+    const priority = html.indexOf('data-singer-search-priority="true"');
+    expect(priority).toBeGreaterThan(html.indexOf("Browse by voice type"));
+    expect(priority).toBeGreaterThan(html.indexOf('data-singer-reviewed="true"'));
+    expect(priority).toBeLessThan(html.indexOf('data-singer-crawl-index="true"'));
+    // Back from a singer tapped in it returns to that link.
+    expect(
+      readFileSync(new URL("../components/singers/directory.tsx", import.meta.url), "utf8"),
+    ).toContain('"[data-singer-search-priority]"');
   });
 
   it("makes the free range test an immediate next step from the hub", () => {

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { tallyFromScores } from "@/lib/analytics";
 import { ALL_SONGS, SONGS, PRO_SONGS, songBySlug } from "./data";
 import {
   AUTO_TEMPO_DOWN_SCORE,
@@ -25,6 +26,12 @@ import {
   countSongsFitting,
   createPassOctave,
   defaultOctaveAgnostic,
+  displayMidi,
+  hardestNotes,
+  notesInSungOctave,
+  scoredOctaveShift,
+  sungOctaveShift,
+  sungOctaveTag,
   TOLERANCE_CENTS,
   fitTransposeToRange,
   isMastered,
@@ -577,6 +584,121 @@ describe("either octave counts: one octave per pass", () => {
     // The written octave now has to lead the pass's octave to replace it.
     expect(passOctave.cents(60.1, 60, 0.05)).toBeCloseTo(1210);
     expect(passOctave.shift).toBe(-1);
+  });
+});
+
+describe("a voice sung an octave from the written melody: drawn and filed where it was sung", () => {
+  it("draws the voice in the pass's octave once one leads, folded toward the target before that", () => {
+    // Before an octave leads: folded to the octave nearest the target.
+    expect(displayMidi(48, 60, true, null)).toBe(60);
+    expect(displayMidi(48.3, 60, true, null)).toBeCloseTo(60.3);
+    // Once one leads, moved by it, so a top note dropped an octave in a pass sung
+    // in the written octave is drawn where it was sung, not folded onto the note.
+    expect(displayMidi(50.3, 72, true, -2)).toBeCloseTo(74.3);
+    expect(displayMidi(60, 72, true, 0)).toBe(60);
+    // Nothing to fold toward: left where it was sung.
+    expect(displayMidi(50, null, true, null)).toBe(50);
+    // The exact octave is drawn exactly as sung.
+    expect(displayMidi(48, 60, false, null)).toBe(48);
+    expect(displayMidi(48, 60, false, -1)).toBe(48);
+  });
+
+  it("tags a pass drawn from another octave, since the lanes name the written notes", () => {
+    expect(sungOctaveTag(null)).toBeNull();
+    expect(sungOctaveTag(0)).toBeNull();
+    expect(sungOctaveTag(-1)).toBe("Sung an octave down");
+    expect(sungOctaveTag(1)).toBe("Sung an octave up");
+    expect(sungOctaveTag(-2)).toBe("Sung two octaves down");
+    expect(sungOctaveTag(2)).toBe("Sung two octaves up");
+  });
+
+  it("names the octave a frame is scored in: 0 in the exact octave, else the pass's, else the nearest", () => {
+    expect(scoredOctaveShift(48.1, 60, false, -1)).toBe(0);
+    expect(scoredOctaveShift(48.1, 60, true, null)).toBe(-1);
+    expect(scoredOctaveShift(72.2, 60, true, null)).toBe(1);
+    expect(scoredOctaveShift(60.1, 60, true, -1)).toBe(-1);
+  });
+
+  it("files a session in the octave that earned the most in-tune seconds, the written one on a tie", () => {
+    expect(sungOctaveShift(new Map())).toBe(0);
+    expect(sungOctaveShift(new Map([[-1, 4.2], [0, 1.1]]))).toBe(-1);
+    expect(sungOctaveShift(new Map([[1, 2], [0, 2]]))).toBe(0);
+    expect(sungOctaveShift(new Map([[0, 0.5], [1, 3], [-1, 2]]))).toBe(1);
+    const notes = [{ midi: 67, startBeat: 0, durBeats: 1, lyric: "star" }];
+    expect(notesInSungOctave(notes, 0)).toBe(notes);
+    expect(notesInSungOctave(notes, -1)).toEqual([{ midi: 55, startBeat: 0, durBeats: 1, lyric: "star" }]);
+    expect(notes[0].midi).toBe(67);
+  });
+
+  /**
+   * One run of Twinkle at 60 fps the way the song player runs it: a fresh
+   * createPassOctave each pass, every note sung `octave` octaves from its
+   * written pitch and slightly sharp, with what the piano roll draws and what
+   * the session files.
+   */
+  const twinkle = SONGS.find((s) => s.id === "twinkle")!;
+  const FPS = 60;
+  function run(octave: number, octaveAgnostic: boolean, passes = 2) {
+    const spb = secPerBeat(twinkle.bpm, 1);
+    const hitSec = twinkle.notes.map(() => 0);
+    const possibleSec = twinkle.notes.map((n) => n.durBeats * spb * passes);
+    const inTuneByShift = new Map<number, number>();
+    const drawn: number[] = [];
+    for (let p = 0; p < passes; p++) {
+      const passOctave = createPassOctave();
+      twinkle.notes.forEach((n, i) => {
+        const frames = Math.round(n.durBeats * spb * FPS);
+        for (let f = 0; f < frames; f++) {
+          const sung = n.midi + 12 * octave + 0.1;
+          const cents = octaveAgnostic ? passOctave.cents(sung, n.midi, 1 / FPS) : (sung - n.midi) * 100;
+          drawn.push(displayMidi(sung, n.midi, octaveAgnostic, passOctave.shift));
+          if (Math.abs(cents) > TOLERANCE_CENTS) continue;
+          hitSec[i] += 1 / FPS;
+          const shift = scoredOctaveShift(sung, n.midi, octaveAgnostic, passOctave.shift);
+          inTuneByShift.set(shift, (inTuneByShift.get(shift) ?? 0) + 1 / FPS);
+        }
+      });
+    }
+    const filed = notesInSungOctave(twinkle.notes, sungOctaveShift(inTuneByShift));
+    return { hitSec, possibleSec, drawn, filed };
+  }
+
+  it("draws every frame of Twinkle sung an octave down inside the roll's lanes", () => {
+    // The roll's lanes: the written notes, two semitones either side.
+    const written = twinkle.notes.map((n) => n.midi);
+    const lo = Math.min(...written) - 2;
+    const hi = Math.max(...written) + 2;
+    expect(lo).toBeGreaterThan(Math.max(...written) - 12);
+    for (const octave of [-1, 1]) {
+      const { drawn } = run(octave, true);
+      for (const midi of drawn) {
+        expect(midi, `${octave}`).toBeGreaterThanOrEqual(lo);
+        expect(midi, `${octave}`).toBeLessThanOrEqual(hi);
+      }
+    }
+  });
+
+  it("files the per-note tally and hardest notes of a run sung an octave down an octave below the written notes", () => {
+    const { hitSec, possibleSec, filed } = run(-1, true);
+    expect(filed.map((n) => n.midi)).toEqual(twinkle.notes.map((n) => n.midi - 12));
+    const tally = tallyFromScores(
+      filed.map((n, i) => ({ midi: n.midi, hitSec: hitSec[i], possibleSec: possibleSec[i] })),
+    );
+    const keys = Object.keys(tally).map(Number);
+    expect(Math.max(...keys)).toBe(Math.max(...twinkle.notes.map((n) => n.midi)) - 12);
+    expect(Math.min(...keys)).toBe(Math.min(...twinkle.notes.map((n) => n.midi)) - 12);
+    // A note that came out weak is named in the octave it was sung in.
+    const ratios = twinkle.notes.map((_, i) => (i === 2 ? 0.2 : 1));
+    const [hardest] = hardestNotes(filed, ratios);
+    expect(hardest.midi).toBe(twinkle.notes[2].midi - 12);
+  });
+
+  it("files a run in the written octave when it was sung there, or when only the exact octave counts", () => {
+    expect(run(0, true).filed).toBe(twinkle.notes);
+    // Exact octave, sung an octave down: nothing is credited, and nothing moves.
+    const exact = run(-1, false);
+    expect(exact.filed).toBe(twinkle.notes);
+    expect(exact.hitSec.every((s) => s === 0)).toBe(true);
   });
 });
 

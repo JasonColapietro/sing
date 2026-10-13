@@ -184,13 +184,14 @@ const LADDER_MAX_SEMIS = 15;
 /**
  * The five-note scale's own width (offsets 0-2-4-5-7). A narrower span cannot
  * hold it: the fitted ladder pins its top to the measured high and lets its
- * bottom fall below the measured low.
+ * bottom fall below the measured low, so a narrower result gets humming
+ * thirds instead.
  */
 export const FIVE_NOTE_SCALE_SEMIS = 7;
 
 /**
- * Which warmup a fresh result should send the singer to. Both targets are
- * free-tier exercises from components/warmups/exercises.ts — a Pro pack id
+ * Which warmup a fresh result should send the singer to. Every target is a
+ * free-tier exercise from components/warmups/exercises.ts — a Pro pack id
  * would be silently dropped by the player's entitlement check. The octave
  * siren waits for the coach's span rule (OCTAVE_SIREN_MIN_SEMIS in
  * components/warmups/exercises.ts): below it the siren's fitted ladder roots
@@ -198,21 +199,32 @@ export const FIVE_NOTE_SCALE_SEMIS = 7;
  * onto the measured high, so its first rep would sing the edge notes this
  * card tells the singer to start away from. It is also the room's advanced
  * tier, for a voice already moving freely. Round 9 offered it from 15.
+ *
+ * Under the five-note scale's width its fitted ladder pins the top to the
+ * measured high and sings every rep's bottom below the measured low, so a
+ * narrower result (the range test saves 5 semitones or more, MIN_SAVED_SPAN
+ * in ./range-test) gets humming thirds instead: four semitones wide, its
+ * ladder stays inside the span and still moves a semitone a rep.
  */
 function warmupForSpan(semis: number): { id: string; title: string; why: string } {
+  if (semis < FIVE_NOTE_SCALE_SEMIS) {
+    return {
+      id: "humming-thirds",
+      title: "Humming thirds",
+      why: "Hum from a note up to the third above it and back, lips together and easy. The pattern is four semitones wide, so it stays inside the notes you reached, though a rep can touch your lowest or highest: keep those notes light, and stop any rep that strains.",
+    };
+  }
   const fiveNote = "Five notes up and back down on “ah”, light and connected.";
   return semis < OCTAVE_SIREN_MIN_SEMIS
     ? {
         id: "five-note-scale",
         title: "Five-note scale",
         why:
-          semis < FIVE_NOTE_SCALE_SEMIS
-            ? `${fiveNote} The pattern is wider than the span you measured, so it may stay in one key, with its top on the highest note you reached and its bottom below your lowest: keep those notes light, and stop any rep that strains.`
-            : semis < LADDER_MAX_SEMIS
-              ? `${fiveNote} Your span leaves this pattern little room to change key, so it may stay in one key and come close to the lowest or highest note you reached: keep those notes light, and stop any rep that strains.`
-              : // From 15 the fitted ladder roots at low + 4 and its top note
-                // sits 4–5 semitones under the high (result-view.test.ts).
-                `${fiveNote} It starts a major third above the lowest note you reached and stays a few notes under your highest: keep it light, and stop any rep that strains.`,
+          semis < LADDER_MAX_SEMIS
+            ? `${fiveNote} Your span leaves this pattern little room to change key, so it may stay in one key and come close to the lowest or highest note you reached: keep those notes light, and stop any rep that strains.`
+            : // From 15 the fitted ladder roots at low + 4 and its top note
+              // sits 4–5 semitones under the high (result-view.test.ts).
+              `${fiveNote} It starts a major third above the lowest note you reached and stays a few notes under your highest: keep it light, and stop any rep that strains.`,
       }
     : {
         id: "octave-siren",

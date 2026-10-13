@@ -18,6 +18,7 @@ import {
   ShellButton,
   StepDone,
   SummaryView,
+  useActiveStart,
   useEarSession,
   type OnEarComplete,
 } from "./session";
@@ -49,7 +50,7 @@ export function IntervalGame({
   const [round, setRound] = useState<Round>(() => makeRound(difficulty));
   const [answered, setAnswered] = useState<number | null>(null);
   const [key, setKey] = useState(0); // remount trigger for replay
-  const [startedAt, setStartedAt] = useState(() => performance.now());
+  const [playClock, restartClock] = useActiveStart(session.results.length);
 
   const play = useCallback(() => {
     if (harmonic) {
@@ -107,7 +108,7 @@ export function IntervalGame({
     session.reset();
     setAnswered(null);
     setRound(makeRound(difficulty));
-    setStartedAt(performance.now());
+    restartClock();
     setKey((k) => k + 1);
   };
 
@@ -118,7 +119,7 @@ export function IntervalGame({
           game="interval"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt}
+          startedAt={playClock}
           onExit={onExit}
           onComplete={onComplete}
         />
@@ -130,7 +131,7 @@ export function IntervalGame({
           game="interval"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt}
+          startedAt={playClock}
           onReplay={replayAll}
           onExit={onExit}
         />

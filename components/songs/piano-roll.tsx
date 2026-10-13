@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import type { PitchFrame } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import type { SongNote } from "./data";
-import { noteIndexAtBeat } from "./lib";
+import { TOLERANCE_CENTS, displayMidi, noteIndexAtBeat, sungOctaveTag } from "./lib";
 import {
   AMBER,
   BG,
@@ -61,6 +61,14 @@ function roundRect(
  * inside, playhead fixed near 30% width, timeline scrolls right-to-left in
  * beat time. Live violet pitch trace overlays; note blocks fill ok-green as
  * the singer holds them in tune.
+ *
+ * When either octave counts, the trace and dot are drawn in the octave the
+ * pass is scored in (displayMidi), as the warm-ups draw the voice, so a lower
+ * voice singing a treble-written song an octave down lands on the notes it is
+ * credited for instead of below the roll, and the dot is judged on the
+ * scorer's tolerance in the octave the scorer measures in. The lanes still
+ * name the written notes, so a pass drawn from another octave carries a tag
+ * saying so (sungOctaveTag).
  */
 export function PianoRoll({
   notes,
@@ -71,6 +79,8 @@ export function PianoRoll({
   hitRatioRef,
   latest,
   showLive,
+  octaveAgnostic,
+  passOctaveRef,
   className,
 }: {
   notes: SongNote[];
@@ -90,6 +100,13 @@ export function PianoRoll({
   hitRatioRef: React.RefObject<number[]>;
   latest: React.RefObject<PitchFrame>;
   showLive: boolean;
+  /** Whether either octave counts — the player's "Any octave". */
+  octaveAgnostic: boolean;
+  /**
+   * The current pass's octave (createPassOctave). Read every frame, because the
+   * player replaces it at each loop line.
+   */
+  passOctaveRef: React.RefObject<{ readonly shift: number | null }>;
   className?: string;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -116,6 +133,13 @@ export function PianoRoll({
     const lo = Math.min(...midis) - 2;
     const hi = Math.max(...midis) + 2;
     const lanes = Math.max(1, Math.round(hi - lo) + 1);
+    // Before an octave leads, a frame between notes folds toward the last note
+    // sung (the first note, before any), as the warm-ups fold a gap.
+    let foldTarget: number | null = drawn[0]?.midi ?? notes[0]?.midi ?? null;
+    // The octave the tag names: the last pass octave that led, held through the
+    // moment each new pass takes to settle one, so the tag does not blink off at
+    // every loop line. Cleared while idle, so a new session starts without one.
+    let tagShift: number | null = null;
 
     const draw = () => {
       raf = requestAnimationFrame(draw);
@@ -214,9 +238,18 @@ export function PianoRoll({
       });
 
       // Live violet pitch trace + leading dot.
+      if (pos === null) tagShift = null;
       if (showLive && pos !== null) {
         const f = latest.current;
-        const midiFloat = f.freq !== null ? freqToMidiFloat(f.freq) : null;
+        const idx = noteIndexAtBeat(notes, pos);
+        const target = idx >= 0 ? notes[idx].midi : null;
+        if (target !== null) foldTarget = target;
+        const passShift = octaveAgnostic ? passOctaveRef.current.shift : null;
+        if (passShift !== null) tagShift = passShift;
+        const midiFloat =
+          f.freq !== null
+            ? displayMidi(freqToMidiFloat(f.freq), foldTarget, octaveAgnostic, passShift)
+            : null;
         const samples = samplesRef.current;
         samples.push({ pos, midi: midiFloat });
         while (samples.length > 400) samples.shift();
@@ -248,13 +281,29 @@ export function PianoRoll({
         ctx.stroke();
 
         if (midiFloat !== null) {
-          const idx = noteIndexAtBeat(notes, pos);
-          const target = idx >= 0 ? notes[idx].midi : null;
-          const inTune = target !== null && Math.abs((midiFloat - target) * 100) <= 50;
+          const inTune =
+            target !== null && Math.abs((midiFloat - target) * 100) <= TOLERANCE_CENTS;
           ctx.fillStyle = inTune ? C.ok : C.violet;
           ctx.beginPath();
           ctx.arc(playheadX, yFor(midiFloat) + laneH / 2, 4.5, 0, Math.PI * 2);
           ctx.fill();
+        }
+
+        // Top right, in the two empty lanes above the highest note: the lanes
+        // name the written notes, so say when the voice on them was sung in
+        // another octave.
+        const tag = octaveAgnostic ? sungOctaveTag(tagShift) : null;
+        if (tag !== null) {
+          ctx.font = `10px ${monoFontStack()}`;
+          ctx.textAlign = "right";
+          ctx.textBaseline = "top";
+          const tw = ctx.measureText(tag).width;
+          ctx.globalAlpha = 0.85;
+          ctx.fillStyle = C.bg;
+          ctx.fillRect(w - 10 - tw, 1, tw + 8, 13);
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = C.mut;
+          ctx.fillText(tag, w - 6, 3);
         }
       }
 
@@ -280,6 +329,8 @@ export function PianoRoll({
     hitRatioRef,
     latest,
     showLive,
+    octaveAgnostic,
+    passOctaveRef,
   ]);
 
   return (

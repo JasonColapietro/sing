@@ -25,6 +25,7 @@ vi.mock("@/components/pro/gate", () => ({
 }));
 
 import SingerPage from "@/app/singers/[slug]/page";
+import { ATLAS } from "@/lib/atlas-data";
 import SingerImage from "@/app/singers/[slug]/opengraph-image";
 import LearnPage from "@/app/learn/page";
 import { CompareWithMe, PlayRangeButton } from "@/components/singers/singer-actions";
@@ -146,6 +147,16 @@ describe("singer evidence and comparison regressions", () => {
     const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug: "arijit-singh" }) }));
     expect(html).toContain("dispute a definitive tenor label");
     expect(html).not.toContain("Light nasal tenor");
+  });
+
+  it("keeps the reviewed-disputed labels out of the atlas prose", () => {
+    // The Pro atlas links each entry to the singer page whose evidence record
+    // disputes these labels (data/singer-evidence.json), so its prose may not
+    // assert them either. The catalog-label pill stays, as on the free hubs.
+    const entry = (slug: string) => ATLAS.flatMap((c) => c.entries).find((x) => x.slug === slug)!;
+    const prose = (slug: string) => `${entry(slug).blurb} ${entry(slug).technique}`;
+    expect(prose("arijit-singh")).not.toMatch(/tenor/i);
+    expect(prose("alex-warren")).not.toMatch(/baritone/i);
   });
 
   /**

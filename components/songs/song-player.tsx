@@ -47,13 +47,16 @@ import {
   lyricLines,
   multiplierStep,
   noteIndexAtBeat,
+  notesInSungOctave,
   pointsFor,
+  scoredOctaveShift,
   secPerBeat,
   sectionAtBeat,
   snapTempo,
   songTotalBeats,
   songTranspose,
   startingNote,
+  sungOctaveShift,
   transposedNotes,
   type JudgmentTally,
   type PickedTranspose,
@@ -240,6 +243,14 @@ export function SongPlayer({
   const octaveAgnosticRef = useRef(octaveAgnostic);
   /** While either octave counts, the octave this pass is sung in (one per pass, not per frame). */
   const passOctaveRef = useRef(createPassOctave());
+  /**
+   * In-tune seconds this session, by the octave shift each frame was scored in
+   * (0 in the exact octave), restated with the hit seconds whenever the tempo
+   * changes (applyTempoRate). The session's notes are filed in the octave that
+   * earned the most (sungOctaveShift), so a pass sung an octave down is logged
+   * and summarised at the notes actually sung, not the written ones.
+   */
+  const sungShiftSecRef = useRef(new Map<number, number>());
   const scoringRef = useRef(scoring);
   const modeRef = useRef(mode);
   const passRef = useRef(pass);
@@ -516,6 +527,9 @@ export function SongPlayer({
     hitSecRef.current = hitSecRef.current.map((sec) => sec * scale);
     loopStartHitRef.current = loopStartHitRef.current.map((sec) => sec * scale);
     loopSnapshotRef.current *= scale;
+    // Restated like the hit seconds, so the octave a session is filed in is
+    // weighed in one beat length, not tilted toward passes Auto slowed down.
+    for (const [shift, sec] of sungShiftSecRef.current) sungShiftSecRef.current.set(shift, sec * scale);
     perLoopDenomSecRef.current *= scale;
     refreshPossibleSec();
     sessionTempoRef.current = next;
@@ -569,6 +583,11 @@ export function SongPlayer({
 
     const notes = currentNotesRef.current;
     if (scoringRef.current) flushJudgments(); // the last loop's tail
+    // Per-note results are filed where the singer sang them: a run sung an
+    // octave from the written melody names its notes in that octave, in the
+    // practice log (and so the coach and the per-note chart) and in the
+    // summary's hardest notes, as the warm-ups file a rep at its octave.
+    const sungNotes = notesInSungOctave(notes, sungOctaveShift(sungShiftSecRef.current));
 
     const denom = perLoopDenomSecRef.current;
     const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
@@ -597,7 +616,7 @@ export function SongPlayer({
       // Only meaningful on a scored run — a listen pass scores nothing.
       notes: scoringRef.current
         ? tallyFromScores(
-            notes.map((n, i) => ({
+            sungNotes.map((n, i) => ({
               midi: n.midi,
               hitSec: hitSecRef.current[i] ?? 0,
               possibleSec: possibleSecRef.current[i] ?? 0,
@@ -615,7 +634,7 @@ export function SongPlayer({
     const ratiosForHardest = hitRatioRef.current.map((ratio, i) =>
       (possibleSecRef.current[i] ?? 0) > 0 ? ratio : 1,
     );
-    const hardest = scoringRef.current ? hardestNotes(notes, ratiosForHardest) : [];
+    const hardest = scoringRef.current ? hardestNotes(sungNotes, ratiosForHardest) : [];
 
     const sectionScores = scoringRef.current
       ? sections
@@ -814,6 +833,14 @@ export function SongPlayer({
           centsFramesRef.current[idx] = (centsFramesRef.current[idx] ?? 0) + 1;
           if (Math.abs(cents) <= TOLERANCE_CENTS) {
             hitSecRef.current[idx] = (hitSecRef.current[idx] ?? 0) + dt;
+            const shift = scoredOctaveShift(
+              midiFloat,
+              target,
+              octaveAgnosticRef.current,
+              passOctaveRef.current.shift,
+            );
+            const byShift = sungShiftSecRef.current;
+            byShift.set(shift, (byShift.get(shift) ?? 0) + dt);
           }
         }
       }
@@ -901,6 +928,7 @@ export function SongPlayer({
 
     hitSecRef.current = notes.map(() => 0);
     passOctaveRef.current = createPassOctave();
+    sungShiftSecRef.current = new Map();
     hitRatioRef.current = notes.map(() => 0);
     centsSumRef.current = notes.map(() => 0);
     centsFramesRef.current = notes.map(() => 0);
@@ -1343,6 +1371,8 @@ export function SongPlayer({
             hitRatioRef={hitRatioRef}
             latest={pitch.latest}
             showLive={listening}
+            octaveAgnostic={octaveAgnostic}
+            passOctaveRef={passOctaveRef}
             className="h-48 w-full"
           />
         </div>

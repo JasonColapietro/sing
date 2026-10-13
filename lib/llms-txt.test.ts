@@ -516,6 +516,16 @@ describe("/llms.txt free and Pro boundary", () => {
     expect(llms).toMatch(/voice type[^\n]*estimate/i);
     expect(llms).not.toMatch(/names the matching category/);
   });
+
+  /**
+   * Pro's per-note chart (components/progress/pro-charts.tsx) is one tally
+   * over every kept session with no time axis, so it is not a trend.
+   */
+  it("describes Pro's per-note accuracy as a chart, not a trend", () => {
+    const section = llms.slice(llms.indexOf("## Free and Pro"), llms.indexOf("## Pages"));
+    expect(section).toMatch(/a per-note accuracy chart across every kept session/);
+    expect(llms).not.toMatch(/per-note accuracy (trends?|over time)/i);
+  });
 });
 
 /**

@@ -123,7 +123,7 @@ export function UnlockStack() {
             breath and songs) shares five minutes a day. Pro removes that daily
             limit and adds {PRO_EXERCISES} exercises across {PRO_PACK_COUNT}{" "}
             packs, both books in full, pitch analysis on every take, and
-            charts of your per-note accuracy and range over time.
+            a per-note accuracy chart and your range over time.
           </p>
         </div>
       </div>

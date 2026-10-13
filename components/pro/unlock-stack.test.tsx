@@ -39,6 +39,14 @@ describe("the unlock stack on /pro", () => {
     expect(freeLabels).toBeLessThan(freeChapters);
   });
 
+  it("sells Pro's per-note chart as one chart, not a view over time", () => {
+    // The chart is one tally across every kept session (pro-charts.tsx);
+    // only the range has a history. Same wording as lib/pro.ts and /progress.
+    const html = render();
+    expect(html).toContain("a per-note accuracy chart and your range over time.");
+    expect(html).not.toMatch(/per-note accuracy and range over time|charts of your per-note/);
+  });
+
   it("prerenders the sales version until the entitlement is read", () => {
     state.active = true;
     state.ready = false;

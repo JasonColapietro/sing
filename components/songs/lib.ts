@@ -390,6 +390,86 @@ export function createPassOctave(): {
   };
 }
 
+/**
+ * The whole-octave shift a frame against `target` is scored in: 0 while only
+ * the written octave counts; when either octave counts, the pass's octave
+ * (createPassOctave's `shift`) once one leads, and before that the octave
+ * nearest the target, where the fold puts it.
+ */
+export function scoredOctaveShift(
+  midiFloat: number,
+  target: number,
+  octaveAgnostic: boolean,
+  passShift: number | null,
+): number {
+  if (!octaveAgnostic) return 0;
+  return passShift ?? Math.round((midiFloat - target) / 12);
+}
+
+/**
+ * Where the piano roll draws a sung frame. When either octave counts, the
+ * voice is drawn in the octave the pass is scored in, as the warm-ups draw it:
+ * moved by the pass's shift once one leads; before that, folded to the octave
+ * nearest the target (null with no note to fold toward, which leaves it). In
+ * the exact octave it is drawn where it was sung. Without this a lower voice
+ * singing a treble-written song an octave down, as the songbook invites, was
+ * scored in full while its trace and dot ran below the bottom of the roll.
+ */
+export function displayMidi(
+  midiFloat: number,
+  target: number | null,
+  octaveAgnostic: boolean,
+  passShift: number | null,
+): number {
+  if (!octaveAgnostic) return midiFloat;
+  if (passShift !== null) return midiFloat - 12 * passShift;
+  if (target === null) return midiFloat;
+  return midiFloat - 12 * scoredOctaveShift(midiFloat, target, true, null);
+}
+
+/**
+ * The tag the piano roll shows while it draws a pass sung in another octave
+ * on the written melody's lanes, or null in the written octave. The lanes
+ * name the written notes, so without it a baritone singing Twinkle an octave
+ * down would read his C3 off a lane labelled C4.
+ */
+export function sungOctaveTag(shift: number | null): string | null {
+  if (shift === null || shift === 0) return null;
+  const n = Math.abs(shift);
+  const count = n === 1 ? "an octave" : `${n === 2 ? "two" : n} octaves`;
+  return `Sung ${count} ${shift < 0 ? "down" : "up"}`;
+}
+
+/**
+ * The octave a song session was sung in, for filing its notes: the shift
+ * whose frames earned the most in-tune seconds (keyed by scoredOctaveShift),
+ * and the written octave (0) when nothing was credited or on a tie with it.
+ * One shift for the whole session, so the summary and the practice log name
+ * every note of the melody in the same octave.
+ */
+export function sungOctaveShift(inTuneSecByShift: ReadonlyMap<number, number>): number {
+  let best = 0;
+  let bestSec = inTuneSecByShift.get(0) ?? 0;
+  for (const [shift, sec] of inTuneSecByShift) {
+    if (sec > bestSec) {
+      best = shift;
+      bestSec = sec;
+    }
+  }
+  return best;
+}
+
+/**
+ * The notes as sung `shift` octaves from where they are written, for filing a
+ * session's per-note tallies and hardest notes where the singer actually sang
+ * them (as the warm-ups file a rep's notes at the rep's octave). The same
+ * array when the shift is 0.
+ */
+export function notesInSungOctave(notes: SongNote[], shift: number): SongNote[] {
+  if (shift === 0) return notes;
+  return notes.map((n) => ({ ...n, midi: n.midi + 12 * shift }));
+}
+
 export interface HardestNote {
   index: number;
   midi: number;

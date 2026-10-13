@@ -622,6 +622,49 @@ function DataControls() {
   );
 }
 
+/**
+ * The first screen of an empty record: a first visit, from search for
+ * "singing progress tracker", or a browser that was cleared. The way to start
+ * comes first, ahead of a wall of zeros. The free-minutes rule is not repeated
+ * here: the coach card's footnote and the server-rendered section on this
+ * page already say it, and the extra lines put every start button behind a
+ * 375×667 phone's tab bar.
+ */
+export function FreshStart() {
+  return (
+    <EmptyState
+      title="Nothing logged yet"
+      hint="Finish any exercise — a warmup, a range test, an ear-training round — and it starts filling in your XP, streak, and charts below."
+      action={
+        <div>
+          <div className="flex flex-wrap justify-center gap-2.5">
+            <LinkButton href="/studio" variant="rec">
+              Open the studio
+            </LinkButton>
+            <LinkButton href={rangeTestHref()} variant="outline">
+              Find your range
+            </LinkButton>
+            <LinkButton href="/warmups" variant="outline">
+              Try a warmup
+            </LinkButton>
+          </div>
+          {/* A cleared browser lands here too, and the backup card sent
+              its singer to this page to restore. Under the start
+              buttons, so they keep their place on a phone; the import
+              itself is at the foot of the page. */}
+          <p className="mt-4 text-center text-sm text-mut">
+            Back on a cleared browser with a backup file?{" "}
+            <a href="#your-data" className="text-violet-ink underline underline-offset-4">
+              Import it under Your data
+            </a>
+            .
+          </p>
+        </div>
+      }
+    />
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* Main assembly                                                       */
 /* ------------------------------------------------------------------ */
@@ -629,7 +672,7 @@ function DataControls() {
 /** Shared by the pre-mount skeleton and the dashboard, so the first paint and
  *  the hydrated page carry the same intro. */
 const PROGRESS_SUBTITLE =
-  "Track your singing practice in one place: XP, streaks, achievements, your saved vocal range and today's coached session, kept on this device. Pro adds per-note accuracy and range over time.";
+  "Track your singing practice in one place: XP, streaks, achievements, your saved vocal range and today's coached session, kept on this device. Pro adds a per-note accuracy chart and your range over time.";
 
 export function ProgressClient() {
   const state = useProgress();
@@ -708,31 +751,7 @@ export function ProgressClient() {
       subtitle={PROGRESS_SUBTITLE}
     >
       <div className="space-y-10">
-        {/* A first visit lands here from search for "singing progress
-            tracker". The way to start comes first, ahead of a wall of zeros.
-            The free-minutes rule is not repeated here: the coach card's
-            footnote and the server-rendered section on this page already say
-            it, and the extra lines put every start button behind a 375×667
-            phone's tab bar. */}
-        {isFresh && (
-          <EmptyState
-            title="Nothing logged yet"
-            hint="Finish any exercise — a warmup, a range test, an ear-training round — and it starts filling in your XP, streak, and charts below."
-            action={
-              <div className="flex flex-wrap justify-center gap-2.5">
-                <LinkButton href="/studio" variant="rec">
-                  Open the studio
-                </LinkButton>
-                <LinkButton href={rangeTestHref()} variant="outline">
-                  Find your range
-                </LinkButton>
-                <LinkButton href="/warmups" variant="outline">
-                  Try a warmup
-                </LinkButton>
-              </div>
-            }
-          />
-        )}
+        {isFresh && <FreshStart />}
 
         {!isFresh && (
           <Card>
@@ -890,7 +909,7 @@ export function ProgressClient() {
           </Card>
         </section>
 
-        <section aria-label="Data controls">
+        <section id="your-data" aria-label="Data controls" className="scroll-mt-24">
           <h2 className="mb-3 text-lg">Your data</h2>
           <DataControls />
         </section>

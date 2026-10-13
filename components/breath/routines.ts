@@ -117,6 +117,26 @@ export const BREATH_FALLBACK_SEC = 8;
  */
 export const CUE_BREATH_SEC = 3;
 
+/** The beat between one breathe-and-sing rep and the next breath. */
+export const CUE_REST_SEC = 1.5;
+
+/**
+ * Seconds of a breathe-and-sing run to log as practice.
+ *
+ * The drill waits as long as it takes for each breath and each note, so a
+ * phone left on "Breathe in" would otherwise log the wait as singing, use up a
+ * free singer's daily minutes and earn XP for it. The drill's own clock
+ * (components/practice/active-clock.ts) already leaves out hidden time and
+ * any stretch past thirty seconds with no tap, breath or note; as a backstop,
+ * a run is also held to twice a slow one, every rep waiting out the full
+ * breath fallback before its note and its rest. The doubling leaves room for
+ * notes cut short and sung again.
+ */
+export function cueDrillLoggedSeconds(elapsedSec: number, reps: number, holdSec: number): number {
+  const ceiling = Math.round(reps * (BREATH_FALLBACK_SEC + holdSec + CUE_REST_SEC) * 2);
+  return Math.min(Math.max(0, Math.round(elapsedSec)), ceiling);
+}
+
 /** The rep counts the standalone drill offers; the routine uses the first. */
 export const CUE_REP_CHOICES = [4, 6, 8] as const;
 

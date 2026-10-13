@@ -76,6 +76,27 @@ describe("Pro sales copy", () => {
     expect(claims.filter((c) => songHistory.test(c))).toEqual([]);
   });
 
+  it("sells the per-note chart as one tally, not a trend over time", () => {
+    // 'Accuracy by note' adds up every kept session, one bar per note with no
+    // time axis (components/progress/pro-charts.tsx), and the score trend by
+    // week is on everyone's /progress. A per-note "trend" is a view Pro does
+    // not draw.
+    const perNoteTrend = /per-note[^.]*\b(trends?|over time)\b/i;
+    expect(claims.filter((c) => perNoteTrend.test(c))).toEqual([]);
+    const analytics = PLAN_ROWS.find((r) => r.label === "Vocal analytics")!;
+    expect(analytics.free).toMatch(/trend/);
+  });
+
+  it("names every record that a sync leaves in the browser", () => {
+    // The ear and breath paths' stars come from their own browser keys
+    // (components/ear/lib.ts, components/breath/store.ts), which neither the
+    // backup file nor Pro sync carries, so a second device shows them unplayed.
+    const sync = PRO_PERKS.find((p) => p.id === "history")!;
+    expect(sync.desc).toContain(
+      "Song mastery, ear-training and breath path stars, and your place in a program stay in the browser where you earned them.",
+    );
+  });
+
   it("says songs share the free daily minutes when it calls them free", () => {
     // Songs are guided practice, so on the free plan they run on the daily
     // allowance. "All 26 songs are free" with no cap beside it read as

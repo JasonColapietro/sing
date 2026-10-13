@@ -234,6 +234,44 @@ describe("the coach's accuracy lines", () => {
     expect(mid?.reason).toContain("Ladder through it slowly.");
   });
 
+  it("names no weak note when every note lands at the two-star floor or better", () => {
+    // Every note at 100% but A3 at 97%: the quietest note of a strong
+    // fortnight is not a weakness, and the plan must not open with six
+    // minutes of sirens for it.
+    const strong = (): ProgressState => {
+      const base = tallied();
+      return {
+        ...base,
+        sessions: base.sessions.map((s) => ({
+          ...s,
+          notes: {
+            "52": { sec: 5, hitSec: 5, cents: 6, frames: 100 },
+            "57": { sec: 100, hitSec: 97, cents: 8, frames: 2000 },
+            "60": { sec: 5, hitSec: 5, cents: 5, frames: 100 },
+          },
+        })),
+      };
+    };
+    const items = buildPlan(strong(), NOW).items;
+    for (const i of items) expect(i.reason, i.title).not.toMatch(/weakest note/);
+    const warmups = items.find((i) => i.title === "Warmups");
+    expect(warmups?.reason).toBe(
+      "No stand-out weak note in the last two weeks — a general ladder keeps the whole range honest.",
+    );
+    // A note under the floor is still named, alone.
+    const shaky = buildPlan(
+      {
+        ...strong(),
+        sessions: strong().sessions.map((s) => ({
+          ...s,
+          notes: { ...s.notes, "64": { sec: 5, hitSec: 3.5, cents: 30, frames: 100 } },
+        })),
+      },
+      NOW,
+    ).items.find((i) => i.reason.includes("weakest note"));
+    expect(shaky?.reason).toMatch(/^E4 is your weakest note right now — E4 lands within 50 cents of the target just 70% of the time/);
+  });
+
   it("says a weak note outside the measured range is outside it, not that the siren keeps clear", () => {
     // Sung above F#4 (a song's top note, say): no fitted ladder goes there.
     const high = buildPlan(narrow(68), NOW).items.find((i) => i.reason.includes("weakest note"));

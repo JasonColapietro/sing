@@ -1,12 +1,10 @@
 "use client";
 
-import { CapSlide } from "@/components/practice/free-cap";
+import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
 import { useFreeCap } from "@/lib/free-cap";
 import { liveStreak } from "@/components/account/save-state";
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import Link from "next/link";
-import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { SessionShell } from "@/components/practice/session-shell";
@@ -256,24 +254,37 @@ function EarResults({
 }
 
 /**
- * Why "Play again" is gone from a single game's results, and when it comes
- * back. On the paper panel, like the warmup summaries' version, because the
- * results screen is dark.
+ * The end of a workout. Once the free minutes are spent, whether the cap
+ * stopped the set or its last game used them up, "Play again" could only
+ * reopen the cap slide, so it is left off and the note says why the set
+ * stopped and when it opens again.
  */
-export function CappedAgainNote() {
+export function EarRunResults({
+  routine,
+  results,
+  capped,
+  onContinue,
+  onAgain,
+}: {
+  routine: EarRoutine;
+  results: (EarStepResult | null)[];
+  capped: boolean;
+  onContinue: () => void;
+  onAgain: () => void;
+}) {
   return (
-    <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
-      That&apos;s today&apos;s {FREE_DAILY_MINUTES} free minutes of guided practice. A fresh{" "}
-      {FREE_DAILY_MINUTES} minutes opens at midnight; the pitch studio and the range test stay
-      open now.{" "}
-      <Link
-        href="/pro#buy"
-        className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
-      >
-        Pro has no daily limit
-      </Link>
-      .
-    </p>
+    <EarResults
+      title={routine.name}
+      subtitle={routine.tagline}
+      steps={routine.steps.map((s, i) => ({
+        label: earStepLabel(s),
+        result: results[i] ?? null,
+      }))}
+      onContinue={onContinue}
+      onAgain={capped ? undefined : onAgain}
+    >
+      {capped && <CappedAgainNote />}
+    </EarResults>
   );
 }
 
@@ -324,13 +335,10 @@ export function EarRunner({
 
   if (phase.kind === "done") {
     return (
-      <EarResults
-        title={routine.name}
-        subtitle={routine.tagline}
-        steps={routine.steps.map((s, i) => ({
-          label: earStepLabel(s),
-          result: results[i] ?? null,
-        }))}
+      <EarRunResults
+        routine={routine}
+        results={results}
+        capped={capped}
         onContinue={onExit}
         onAgain={again}
       />

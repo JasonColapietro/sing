@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FREE_WEEKS, isRestDay, programById, startProgram, type ProgramToday } from "@/lib/programs";
-import { programDayNeedsPro, programRangeTest } from "./program-day";
+import { programDayNeedsPro, programRangeNote, programRangeTest, staleRangeProgramNote } from "./program-day";
 
 describe("programDayNeedsPro", () => {
   const mix = programById("mix-4w")!;
@@ -65,5 +65,50 @@ describe("programRangeTest", () => {
 
   it("is null on a finished run", () => {
     expect(programRangeTest(at(84, { status: "finished", index: 83, completed: 84 }), true)).toBeNull();
+  });
+});
+
+describe("programRangeNote", () => {
+  const name = "Foundations in 2 weeks";
+
+  it("says when the program's own test falls, and that an earlier one does not count", () => {
+    expect(programRangeNote(50, { name, day: 14, today: false })).toBe(
+      "Your range was last measured 50 days ago. Your next range test is on day 14 of Foundations in 2 weeks. Wait for that day: a test taken earlier does not count toward it.",
+    );
+  });
+
+  it("sends a singer whose program day is today to take it there, after its warm-up", () => {
+    expect(programRangeNote(50, { name, day: 14, today: true })).toBe(
+      "Your range was last measured 50 days ago. Today's program day is day 14 of Foundations in 2 weeks. It takes your next range test after its warm-up, so take the test there.",
+    );
+  });
+
+  it("never says a retest is due", () => {
+    for (const today of [false, true]) {
+      expect(programRangeNote(60, { name, day: 14, today })).not.toMatch(/retest is due/);
+    }
+  });
+});
+
+describe("staleRangeProgramNote", () => {
+  const DAY = 86_400_000;
+  const NOW = Date.parse("2026-10-13T12:00:00Z");
+  const scheduled = { name: "Foundations in 2 weeks", day: 14, today: false };
+  const range = (ageDays: number | null) => ({
+    lowMidi: 45,
+    highMidi: 67,
+    ...(ageDays === null ? {} : { testedAt: new Date(NOW - ageDays * DAY).toISOString() }),
+  });
+
+  it("gives the coach's note for a range six weeks old while the program schedules the next test", () => {
+    expect(staleRangeProgramNote(range(50), scheduled, NOW)).toBe(programRangeNote(50, scheduled));
+  });
+
+  it("is null for a current or undated range, with no program test, and with no saved range", () => {
+    expect(staleRangeProgramNote(range(10), scheduled, NOW)).toBeNull();
+    expect(staleRangeProgramNote(range(null), scheduled, NOW)).toBeNull();
+    expect(staleRangeProgramNote(range(50), null, NOW)).toBeNull();
+    // A singer with no range still takes the range test first.
+    expect(staleRangeProgramNote({}, scheduled, NOW)).toBeNull();
   });
 });
