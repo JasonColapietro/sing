@@ -35,6 +35,72 @@ export function PlayRangeButton({ s }: { s: Pick<Singer, "lowMidi" | "highMidi">
 }
 
 /**
+ * The header action's labels: the server's (no saved range) and the one that
+ * replaces it once a saved range hydrates, for each kind of singer page, and
+ * the width both share. "compare" is the comparison-search CTR pilot's
+ * wording (COMPARISON_SEARCH_SLUGS on the singer page); "test" is every other
+ * profile.
+ *
+ * The swap happens after the server HTML has painted, beside "← All singers",
+ * so the two labels of a pair must take the same room. Unequal labels moved
+ * the page: "See how your range compares ↓" (256px) beside "Test my range →"
+ * (151px) wrapped "← All singers" onto a second line at every phone width
+ * from 320 to 424 and dropped the actions under the title at 1024–1128, a
+ * 52–60px shift of the whole page for every returning singer; a shorter
+ * label unwrapped rows the other way. A shared min-width holds both labels
+ * of a pair at one width, measured against the built page from 300 to 1280px
+ * with no change in the header's height.
+ */
+const RANGE_ACTIONS = {
+  test: {
+    label: "Test my range →",
+    saved: "See the overlap ↓",
+    width: "min-w-[10rem]",
+  },
+  compare: {
+    label: "Compare my range — free test →",
+    saved: "See how your range compares ↓",
+    width: "min-w-[16.5rem]",
+  },
+} as const;
+
+export type SingerRangeActionKind = keyof typeof RANGE_ACTIONS;
+
+/**
+ * The header action on a singer page, where a phone sees it on the first
+ * screen. With no saved range it starts the test, told which singer to come
+ * back to; with one it points at the comparison below, which sits about a
+ * screen and a half down. Before this, a singer back from the test met
+ * "Test my range →" again, pointing them at the test they had just taken.
+ * The server HTML (no saved range) keeps the range-test link.
+ */
+export function SingerRangeAction({
+  s,
+  kind,
+}: {
+  s: SingerRangeProps;
+  kind: SingerRangeActionKind;
+}) {
+  const { range } = useProgress();
+  const { label, saved, width } = RANGE_ACTIONS[kind];
+  if (range.lowMidi === undefined || range.highMidi === undefined) {
+    return (
+      <LinkButton href={rangeTestHref({ compare: s.slug })} size="md" className={width}>
+        {label}
+      </LinkButton>
+    );
+  }
+  // `#you-vs` is the wrapper around CompareWithMe on the singer page. Not a
+  // shared constant: a server page importing a value from this client module
+  // would get a client reference, not the string.
+  return (
+    <LinkButton href="#you-vs" variant="outline" size="md" className={width}>
+      {saved}
+    </LinkButton>
+  );
+}
+
+/**
  * Compares the visitor's measured range (from the free range test, stored
  * locally) against this singer's cited range.
  */

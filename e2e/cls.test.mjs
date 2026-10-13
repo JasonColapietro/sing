@@ -181,6 +181,27 @@ describe("CLS measurement CLI gate", () => {
     ]);
   });
 
+  it("measures the state-only deep links only when a route names them", async () => {
+    // The other programs' own views and the saved-range pages belong to the
+    // states that need them; a plain run's page count stays as it was.
+    const all = await runCls("good");
+    const gotos = [...all.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1]);
+    // (/singers/adele is also the fixture sitemap's singer-detail template.)
+    for (const path of ["/programs?program=high-notes-6w", "/singers/celine-dion", "/can-you-sing/someone-like-you"]) {
+      expect(gotos).not.toContain(path);
+    }
+    const some = await runCls("good", "mobile-375", ["--state=saved-range", "--route=singer-adele,singer-celine-dion,song-someone-like-you"]);
+    expect(some.code).toBe(0);
+    expect([...some.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1])).toEqual([
+      "/singers/adele",
+      "/singers/celine-dion",
+      "/can-you-sing/someone-like-you",
+    ]);
+    const finished = await runCls("good", "mobile-375", ["--state=finished-high-notes", "--route=programs,program-high-notes"]);
+    expect(finished.code).toBe(0);
+    expect([...finished.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1])).toEqual(["/programs", "/programs?program=high-notes-6w"]);
+  });
+
   it("refuses an unknown state before launching a browser", async () => {
     const result = await runCls("good", "mobile-375", ["--state=nope"]);
     expect(result.code).toBe(2);
@@ -206,7 +227,16 @@ describe("CLS measurement CLI gate", () => {
     program: { blocks: ["program"], capped: false, program: { id: "foundations-2w", status: "todo", index: 1 }, prepaint: { plan: "free", program: "todo" } },
     "program-capped": { blocks: ["program", "capped"], capped: true, program: { id: "foundations-2w", status: "todo", index: 1 }, prepaint: { plan: "capped", program: "todo waits" } },
     "rest-day": { blocks: ["rest-day"], capped: false, program: { id: "mix-4w", status: "done-today", index: 6 }, prepaint: { plan: "free", program: "done rest next-locked" } },
-    finished: { blocks: ["finished"], capped: false, program: { id: "measured-voice-12w", status: "finished", index: 83 }, prepaint: { plan: "free", program: "finished book" } },
+    finished: { blocks: ["finished"], capped: false, program: { id: "measured-voice-12w", status: "finished", index: 83, readings: [0, 10, 41, 59, 66, 77] }, prepaint: { plan: "free", program: "finished book" } },
+    // Each finished program's card is sized by its own token (app/globals.css
+    // --finished-slot), so each has a seed with every check-in read.
+    "finished-high-notes": { blocks: ["finished-high-notes"], capped: false, program: { id: "high-notes-6w", status: "finished", index: 41, readings: [0, 13, 27, 41] }, prepaint: { plan: "free", program: "finished high-notes-6w" } },
+    "finished-mix": { blocks: ["finished-mix"], capped: false, program: { id: "mix-4w", status: "finished", index: 27, readings: [0, 27] }, prepaint: { plan: "free", program: "finished mix-4w" } },
+    "finished-foundations": { blocks: ["finished-foundations"], capped: false, program: { id: "foundations-2w", status: "finished", index: 13, readings: [0, 13] }, prepaint: { plan: "free", program: "finished foundations-2w" } },
+    "finished-recovery": { blocks: ["finished-recovery"], capped: false, program: { id: "recovery-week", status: "finished", index: 6, readings: [] }, prepaint: { plan: "free", program: "finished recovery-week" } },
+    "finished-vibrato": { blocks: ["finished-vibrato"], capped: false, program: { id: "vibrato-3w", status: "finished", index: 20, readings: [] }, prepaint: { plan: "free", program: "finished vibrato-3w" } },
+    // A2–F4, the range the singer and song pages compare with once it hydrates.
+    "saved-range": { blocks: ["saved-range"], capped: false, program: null, range: { lowMidi: 45, highMidi: 65 }, prepaint: { plan: "free", program: null } },
   };
 
   for (const [name, expected] of Object.entries(STATE_EXPECTATIONS)) {
@@ -235,6 +265,7 @@ describe("CLS measurement CLI gate", () => {
         expect(progress.sessions.length).toBeGreaterThan(0);
         expect(isCapped(progress, false, today)).toBe(expected.capped);
         expect(shouldShowWeekInReview(weekInReview(progress.sessions, now), store.get("suede-sing:weekly-report-seen:v1") ?? null)).toBe(false);
+        if (expected.range) expect(progress.range).toEqual(expected.range);
 
         const stored = store.has("suede-sing:program:v1") ? reviveProgress(JSON.parse(store.get("suede-sing:program:v1"))) : null;
         if (expected.program === null) {
@@ -248,21 +279,24 @@ describe("CLS measurement CLI gate", () => {
             expect(isRestDay(program.days[view.index])).toBe(true);
             expect(dayNeedsPro(program, view.index + 1)).toBe(true);
           }
-          if (name === "finished") {
-            // Every check-in day keeps its readings, so the card shows all six
+          if (expected.program.readings) {
+            // Every check-in day keeps its readings, so the card shows all its
             // rows with nothing "not logged" (a day without a range test has
-            // no range; one without a sustain test has no seconds).
+            // no range key; one without a sustain test has no seconds key).
             const readings = programReadings(program, stored, progress.sessions, progress.rangeHistory);
-            expect(readings.map((r) => r.index)).toEqual([0, 10, 41, 59, 66, 77]);
+            expect(readings.map((r) => r.index)).toEqual(expected.program.readings);
             for (const r of readings) {
-              expect(r.sustainSec, `day ${r.index + 1}`).not.toBeNull();
-              expect(r.range !== null || typeof r.sustainSec === "number", `day ${r.index + 1}`).toBe(true);
+              if ("range" in r) expect(r.range, `day ${r.index + 1}`).not.toBeNull();
+              if ("sustainSec" in r) expect(r.sustainSec, `day ${r.index + 1}`).not.toBeNull();
+              expect("range" in r || "sustainSec" in r, `day ${r.index + 1}`).toBe(true);
             }
           }
         }
 
         const prepaint = prepaintState({ getItem: (k) => store.get(k) ?? null }, now, PREPAINT_CONFIG);
         expect({ plan: prepaint.plan, program: prepaint.program }).toEqual(expected.prepaint);
+        // Every seed is a returning singer's, with a saved range.
+        expect(prepaint.range).toBe(true);
       }
     });
   }

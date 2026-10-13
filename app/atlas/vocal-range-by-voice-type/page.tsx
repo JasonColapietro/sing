@@ -400,8 +400,12 @@ export default function VocalRangeByVoiceTypePage() {
                 {ROWS.map((row) => (
                   <tr key={row.voice} className="align-baseline">
                     <th scope="row" className="py-3 pr-4 font-medium text-ink">
+                      {/* No prefetch on this table's links or the hub links
+                          under Keep reading: each hub's payload is its whole
+                          chart, and this page fetched eight of them twice. */}
                       <Link
                         href={`/singers/voice-type/${row.slug}`}
+                        prefetch={false}
                         className="hover:text-violet-ink hover:underline"
                       >
                         {row.voice}
@@ -424,6 +428,7 @@ export default function VocalRangeByVoiceTypePage() {
                           {i > 0 && ", "}
                           <Link
                             href={`/singers/${s.slug}`}
+                            prefetch={false}
                             className="text-violet-ink underline decoration-violet/40 underline-offset-2"
                           >
                             {s.name}
@@ -531,6 +536,7 @@ export default function VocalRangeByVoiceTypePage() {
                   {i > 0 && (i === ROWS.length - 1 ? " and " : ", ")}
                   <Link
                     href={`/singers/voice-type/${row.slug}`}
+                    prefetch={false}
                     className="text-violet-ink hover:underline"
                   >
                     {pluralVoice(row.lower)}

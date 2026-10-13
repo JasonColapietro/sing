@@ -115,8 +115,15 @@ export default function CanYouSingHub() {
           arrangement; runs and ad-libs on the recording can go past its top
           note. Sources can differ by a note
           or two at either end, so treat these as approximations, never lab
-          measurements. No lyrics or melodies are reproduced. For what the
-          artists themselves can do beyond one song, see the{" "}
+          measurements. No lyrics or melodies are reproduced. Easy, Medium and
+          Hard here come from the span and the top note: Easy is 14 semitones
+          or fewer topping out at C5 or lower, Hard is 22 semitones or more or
+          a top of F#5 or higher, and Medium is everything between; a few
+          songs whose top is held in full voice above the tenor passaggio are
+          rated Hard for that reason. The free songbook rates its short
+          practice phrases on its own, stricter scale, from span and leaps, so
+          its labels do not carry over to this list. For what the artists
+          themselves can do beyond one song, see the{" "}
           <Link
             className="text-violet-ink underline-offset-4 hover:underline"
             href="/singers"

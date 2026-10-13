@@ -3,6 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { PrepaintText, prepaintMarker, prepaintWords } from "./prepaint";
 import { HIDE_RULES, paintedFor } from "./prepaint.testing";
+import { PREPAINT_CONFIG } from "@/lib/prepaint-config";
+import { programById } from "@/lib/programs";
 
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
 
@@ -44,6 +46,47 @@ describe("pre-paint markers", () => {
     expect(css).toContain('html[data-sing-program~="waits"] [data-prepaint-slot="program-lead"]');
     // The book's finished card, about twice another program's.
     expect(css).toContain('html[data-sing-program~="finished"][data-sing-program~="book"] [data-prepaint-slot="program-today"]');
+  });
+
+  it("size a finished run's slot for its own program, at both widths", () => {
+    // Every program with check-in rows has its own size; the plain finished
+    // rule is a card with none (lib/programs.ts programReadings).
+    const rules = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    const [phone, wide] = rules.split("@media (min-width: 40rem)");
+    for (const [id, [, , , token]] of Object.entries(PREPAINT_CONFIG.programs)) {
+      const program = programById(id)!;
+      const rows = program.days.filter((d) =>
+        d.items.some((it) => it.kind === "range" || (it.kind === "drill" && it.id === "sustain")),
+      ).length;
+      const selector = `html[data-sing-program~="finished"][data-sing-program~="${token}"] [data-prepaint-slot="program-today"]`;
+      for (const [width, block] of [["375", phone], ["1280", wide]] as const) {
+        if (rows === 0) expect(block, `${id} at ${width}`).not.toContain(selector);
+        else expect(block, `${id} at ${width}`).toContain(selector);
+      }
+    }
+    // A program's own view drops the list's calendar button.
+    expect(rules).toMatch(/\[data-prepaint-slot="program-today"\]\[data-prepaint-view\]\s*\{\s*min-height: calc\(var\(--finished-slot\) - 3\.25rem\);/);
+  });
+});
+
+describe("pre-paint slot for a saved range", () => {
+  it("holds a popular song's answer for free and Pro singers, and nothing without a range", () => {
+    const rules = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    const rule = (selector: string) =>
+      new RegExp(`${selector.replace(/[[\]"=]/g, "\\$&")}\\s*\\{\\s*min-height: ([\\d.]+)rem;`).exec(rules)?.[1];
+    const free = rule('html[data-sing-range="saved"] [data-prepaint-slot="song-verdict"]');
+    const pro = rule('html[data-sing-range="saved"][data-sing-plan="pro"] [data-prepaint-slot="song-verdict"]');
+    expect(free).toBeDefined();
+    expect(pro).toBeDefined();
+    // Pro's answer has no free-plan lines and no Pro box, so its slot is shorter.
+    expect(Number(pro)).toBeLessThan(Number(free));
+    // Only a saved range sizes it: a newcomer's card keeps its own height.
+    const selectors = [...rules.matchAll(/([^{}]*)\{[^{}]*\}/g)]
+      .flatMap((m) => m[1].split(","))
+      .map((sel) => sel.trim())
+      .filter((sel) => sel.includes('[data-prepaint-slot="song-verdict"]'));
+    expect(selectors).toHaveLength(2);
+    for (const sel of selectors) expect(sel).toMatch(/^html\[data-sing-range="saved"\]/);
   });
 });
 

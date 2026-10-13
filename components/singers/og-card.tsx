@@ -1,7 +1,15 @@
-import { midiToLabel } from "@/lib/audio/notes";
 import type { Singer } from "@/lib/singers";
 
 const BLACK_PCS = new Set([1, 3, 6, 8, 10]);
+
+/**
+ * Bump this whenever HubOgCard's layout changes. The hub cards' URLs carry a
+ * version built from what they draw (hubCardVersion in lib/og-cards.ts), and a
+ * layout fix changes the picture without changing a word of it: round 5's
+ * smaller Singer-Songwriter title shipped at the URL share scrapers had
+ * cached the overlapping one under.
+ */
+export const HUB_OG_CARD_REVISION = "2026-10-12";
 
 /**
  * Shared OG card body for the hub pages, so a shared "famous tenors" link
@@ -16,14 +24,22 @@ export function HubOgCard({
   rows,
   axisLow,
   axisHigh,
+  caption,
 }: {
   kicker: string;
   title: string;
   stat: string;
   /** Up to 5 ranges drawn as stacked bars on a shared axis. */
   rows: Singer[];
+  /** Where the bars sit. Rounded out to octave Cs, so never printed. */
   axisLow: number;
   axisHigh: number;
+  /**
+   * The span the card states, from the group itself. The footer used to print
+   * the rounded axis ("C0 — C6" for bass-baritones, whose cited ranges run
+   * B0 to A#5), a span nobody in the group has.
+   */
+  caption: string;
 }) {
   const span = axisHigh - axisLow;
   const kbW = 1000;
@@ -136,9 +152,7 @@ export function HubOgCard({
           color: "#a39dc9",
         }}
       >
-        <div style={{ display: "flex" }}>
-          {midiToLabel(axisLow)} — {midiToLabel(axisHigh)}
-        </div>
+        <div style={{ display: "flex" }}>{caption}</div>
         <div style={{ display: "flex" }}>
           suede sing · test your own range free
         </div>

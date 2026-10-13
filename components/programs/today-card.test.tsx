@@ -420,6 +420,25 @@ describe("going back a fortnight in the book's program", () => {
     }
   });
 
+  it("does not read a sustain-only check-in's range cell as a test missed", () => {
+    // Days 11, 60 and 67 take a sustain test and no range test (chapters 13,
+    // 14 and 18 ask for no retest there); day 42's test is on record as none.
+    const rows: ProgramReading[] = [
+      readings[0],
+      { index: 10, day: "2026-06-11", sustainSec: 9.9 },
+      { index: 41, day: "2026-07-12", range: null, sustainSec: 11 },
+      { index: 59, day: "2026-07-30", sustainSec: 12.4 },
+    ];
+    const html = renderToStaticMarkup(
+      <ProgramTodayCard active={active(mv.id, mv.days.length - 1, finished, [], [], rows)} onBrowse={null} />,
+    ).replace(/<!-- -->/g, "");
+    const cells = [...html.matchAll(/<tr class="border-t[^"]*">([\s\S]*?)<\/tr>/g)].map((m) =>
+      [...m[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((c) => c[1].replace(/<[^>]+>/g, "")),
+    );
+    expect(cells.map((c) => c[1])).toEqual(["C3–G4", "—", "not logged", "—"]);
+    expect(cells.map((c) => c[2])).toEqual(["7.0 s", "9.9 s", "11.0 s", "12.4 s"]);
+  });
+
   it("says which readings are kept and which are sung again", () => {
     expect(goBackQuestion(week(5), readings)).toBe(
       "Go back to the start of weeks 5–6? Days from day 29 on are sung again, and the check-in readings before day 29 are kept. The readings from days 42 and 78 are cleared.",

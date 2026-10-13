@@ -339,6 +339,57 @@ export function foldedCents(midiFloat: number, targetMidi: number, octaveAgnosti
   return d * 100;
 }
 
+/** Whole-octave shifts a pass may be sung in when either octave counts, the written octave first. */
+export const SONG_OCTAVE_SHIFTS = [0, -1, 1, -2, 2] as const;
+
+/**
+ * In-tune seconds an octave needs before a pass is scored in it, and the lead
+ * it needs over the pass's current octave to replace it (as the warmups'
+ * OCTAVE_LEAD_SEC).
+ */
+export const SONG_OCTAVE_LEAD_SEC = 0.1;
+
+/**
+ * Scoring for one pass through a song when either octave counts (no saved
+ * range, or the singer chose "Any octave"): one octave per pass, not per
+ * frame. Folding every frame to its nearest octave on its own let a melody
+ * sung with its octave leap skipped, or its top notes dropped an octave,
+ * score Perfect on notes it never sang, and master a song rated hard for that
+ * leap. The warm-ups already score one octave per rep (contracts rule
+ * warmupOctaveWithoutRange).
+ *
+ * Each shift in SONG_OCTAVE_SHIFTS earns the seconds a frame sung that many
+ * octaves from its note lands within TOLERANCE_CENTS. Once one has
+ * SONG_OCTAVE_LEAD_SEC of them it is the pass's octave, and every frame is
+ * measured from its note moved by that shift; a later shift replaces it only
+ * by getting that far ahead of it. A whole pass sung an octave down or up
+ * still scores in full. Until an octave leads, a frame folds to its nearest
+ * octave as before. Make a fresh one at the start of every pass.
+ */
+export function createPassOctave(): {
+  /** Signed cents from `midiFloat` to `target` in the pass's octave, crediting `dt` seconds to it. */
+  cents(midiFloat: number, target: number, dt: number): number;
+  /** The pass's octave shift so far, or null before one leads. */
+  readonly shift: number | null;
+} {
+  const credit = new Map<number, number>();
+  let shift: number | null = null;
+  const held = (s: number | null) => (s === null ? 0 : (credit.get(s) ?? 0));
+  return {
+    cents(midiFloat, target, dt) {
+      for (const s of SONG_OCTAVE_SHIFTS) {
+        if (Math.abs((midiFloat - 12 * s - target) * 100) <= TOLERANCE_CENTS) credit.set(s, held(s) + dt);
+      }
+      const lead = SONG_OCTAVE_SHIFTS.reduce<number>((best, s) => (held(s) > held(best) ? s : best), 0);
+      if (lead !== shift && held(lead) >= held(shift) + SONG_OCTAVE_LEAD_SEC) shift = lead;
+      return shift === null ? foldedCents(midiFloat, target, true) : (midiFloat - 12 * shift - target) * 100;
+    },
+    get shift() {
+      return shift;
+    },
+  };
+}
+
 export interface HardestNote {
   index: number;
   midi: number;

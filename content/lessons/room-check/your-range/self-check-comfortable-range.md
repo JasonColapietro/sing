@@ -36,7 +36,7 @@ An estimated voice type and both ends of your range, to fit every later exercise
 
 ### Make one evidence take
 
-Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, sing the test as one uninterrupted attempt, and keep its saved result even when it does not pass. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.
+Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, sing the test as one uninterrupted attempt, and keep its saved result. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. If an end needs extra volume, a lifted chin or neck effort, press Start over before the test finishes: a finished test becomes the range your warm-ups and songs are fitted to.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.

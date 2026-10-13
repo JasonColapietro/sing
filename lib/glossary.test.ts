@@ -285,6 +285,19 @@ describe("published glossary claims", () => {
   });
 
   /**
+   * The free warmups built around a term are linked from it: Gee to the
+   * octave is billed as the head-voice wake-up, and Chromatic neighbor drills
+   * the single semitone step.
+   */
+  it("links head voice and semitone to the free drills built for them", () => {
+    expect(byTerm("Head voice").drill).toBe("gee-octave");
+    expect(byTerm("Semitone").drill).toBe("chromatic-neighbor");
+    const free = new Map(EXERCISES.map((exercise) => [exercise.id, exercise.desc]));
+    expect(free.get("gee-octave")).toMatch(/head-voice/);
+    expect(free.get("chromatic-neighbor")).toMatch(/semitone/);
+  });
+
+  /**
    * The records page lost its whistle section, so the entry points at the
    * singers chart, which draws a dot at the high (right-hand) end of each bar
    * with a whistle register listed (WHISTLE_DOT_CLASS). The atlas says most

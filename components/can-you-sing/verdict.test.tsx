@@ -199,6 +199,24 @@ describe("song comparison to first practice", () => {
     expect(html).toContain('href="/warmups?exercise=');
   });
 
+  it("marks the range-test pitch as the saved-range slot until hydration, and not the answer", () => {
+    // The server render (and the hydration pass) carries the marker the
+    // pre-paint CSS sizes; the personal answer, drawn after hydration, has none.
+    expect(render()).toContain('data-prepaint-slot="song-verdict"');
+    state.range = { lowMidi: 52, highMidi: 72 };
+    expect(render()).not.toContain("data-prepaint-slot");
+  });
+
+  it("gives both header labels one width, so the swap after hydration moves nothing", () => {
+    const action = () => renderToStaticMarkup(<CanYouSingAction song={song} />);
+    const width = (html: string) => /class="[^"]*\b(min-w-\[[^\]]+\])/.exec(html)?.[1];
+    state.range = {};
+    const before = width(action());
+    state.range = { lowMidi: 52, highMidi: 72 };
+    expect(before).toBeDefined();
+    expect(width(action())).toBe(before);
+  });
+
   it("puts the page's action in reach before the verdict card: the test, or the way down to the answer", () => {
     const action = () => renderToStaticMarkup(<CanYouSingAction song={song} />);
     state.range = {};

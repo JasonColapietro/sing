@@ -53,9 +53,18 @@ export const SESSION_FOCUS =
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
-/** Restore after the underlying room has remounted, unless it claimed focus. */
-export function restoreSessionFocus(previous: HTMLElement | null) {
+/**
+ * Restore after the underlying room has remounted, unless it claimed focus.
+ * `fromPath` is the pathname the shell opened on: when a link inside the shell
+ * has left that page (the cap slide's "Go Pro" to /pro#buy), the new page owns
+ * focus and scroll, and focusing its heading here would scroll it back to the
+ * top after the jump to the hash. Only the pathname is compared, so an exit
+ * that stays in the room (/warmups?routine=quick back to /warmups) still
+ * restores.
+ */
+export function restoreSessionFocus(previous: HTMLElement | null, fromPath?: string) {
   requestAnimationFrame(() => {
+    if (fromPath !== undefined && window.location.pathname !== fromPath) return;
     const active = document.activeElement;
     if (active && active !== document.body && active !== document.documentElement && active.isConnected) return;
 
@@ -156,8 +165,9 @@ export function SessionShell({
   // replaced that DOM subtree. A successor dialog keeps any focus it claims.
   useEffect(() => {
     const returnTo = document.activeElement as HTMLElement | null;
+    const fromPath = window.location.pathname;
     rootRef.current?.focus();
-    return () => restoreSessionFocus(returnTo);
+    return () => restoreSessionFocus(returnTo, fromPath);
   }, []);
 
   if (typeof document === "undefined") return null;

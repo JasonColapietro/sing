@@ -51,6 +51,14 @@ describe("a program's own view", () => {
     expect(paintedFor(html, { plan: "free", program: null })).not.toContain('data-prepaint-slot="program-today"');
     expect(paintedFor(html, { plan: "free", program: "todo" })).toContain('data-prepaint-slot="program-today"');
   });
+
+  it("marks the slot as a program's view, whose finished card has no calendar button", async () => {
+    // app/globals.css sizes a finished run's slot a button row shorter there on a phone.
+    expect(await view("high-notes-6w")).toMatch(/<div[^>]*data-prepaint-slot="program-today"[^>]*data-prepaint-view=""/);
+    const list = renderToStaticMarkup(<ProgramsListPage />);
+    expect(list).toContain('data-prepaint-slot="program-today"');
+    expect(list).not.toContain("data-prepaint-view");
+  });
 });
 
 describe("free-plan notes a Pro singer never sees", () => {

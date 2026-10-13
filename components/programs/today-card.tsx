@@ -375,7 +375,11 @@ function Readings({ readings }: { readings: ProgramReading[] }) {
                 Day {r.index + 1} <span className="text-xs text-dim">{r.day}</span>
               </td>
               <td className="tabular py-1 pr-3 font-mono">
-                {r.range ? `${midiToLabel(r.range.lowMidi)}–${midiToLabel(r.range.highMidi)}` : "not logged"}
+                {r.range === undefined
+                  ? "—"
+                  : r.range === null
+                    ? "not logged"
+                    : `${midiToLabel(r.range.lowMidi)}–${midiToLabel(r.range.highMidi)}`}
               </td>
               <td className="tabular py-1 font-mono">
                 {r.sustainSec === undefined ? "—" : r.sustainSec === null ? "not logged" : `${r.sustainSec.toFixed(1)} s`}

@@ -37,6 +37,7 @@ import { rangeOverlap, voiceTypeSlug } from "@/lib/singers-core";
 import type { Song } from "@/components/songs/types";
 import { countOpenSongsFitting } from "@/components/songs/lib";
 import { useMastered } from "@/components/songs/favorites";
+import { OCTAVE_SIREN_MIN_SEMIS } from "@/components/warmups/exercises";
 
 /**
  * Household names for the quick post-test comparison, pulled from the full
@@ -120,6 +121,18 @@ export function returnSongHref(slug: string): string {
 }
 
 /**
+ * Where "Compare with <singer>" and the famous-voices rows go. The singer
+ * page's comparison sits at #you-vs, about a screen and a half below the H1,
+ * so the plain path landed a phone singer on the header's range-test button
+ * with the comparison they came back for out of sight. A result screen only
+ * shows for a saved range, so the anchor always lands on the comparison
+ * itself, not its empty state.
+ */
+export function singerCompareHref(slug: string): string {
+  return `/singers/${slug}#you-vs`;
+}
+
+/**
  * The note under a two-band result. The pair is always one band from the
  * bass-to-tenor set and one from the contralto-to-soprano set, which the
  * singer library describes as male and female categories, so the honest
@@ -161,8 +174,8 @@ function workingRange(lowMidi: number, highMidi: number): [number, number] {
 }
 
 /**
- * Under an octave and a half, the five-note scale (7 semitones) has little or
- * no room to change key on the fitted ladder (fitRootLadder in
+ * Under an octave and a quarter, the five-note scale (7 semitones) has little
+ * or no room to change key on the fitted ladder (fitRootLadder in
  * components/warmups/exercises.ts), so the card says so instead of promising
  * a ladder or growth.
  */
@@ -178,18 +191,28 @@ export const FIVE_NOTE_SCALE_SEMIS = 7;
 /**
  * Which warmup a fresh result should send the singer to. Both targets are
  * free-tier exercises from components/warmups/exercises.ts — a Pro pack id
- * would be silently dropped by the player's entitlement check.
+ * would be silently dropped by the player's entitlement check. The octave
+ * siren waits for the coach's span rule (OCTAVE_SIREN_MIN_SEMIS in
+ * components/warmups/exercises.ts): below it the siren's fitted ladder roots
+ * its octave on or within two semitones of the measured low, and at 15 glides
+ * onto the measured high, so its first rep would sing the edge notes this
+ * card tells the singer to start away from. It is also the room's advanced
+ * tier, for a voice already moving freely. Round 9 offered it from 15.
  */
 function warmupForSpan(semis: number): { id: string; title: string; why: string } {
   const fiveNote = "Five notes up and back down on “ah”, light and connected.";
-  return semis < LADDER_MAX_SEMIS
+  return semis < OCTAVE_SIREN_MIN_SEMIS
     ? {
         id: "five-note-scale",
         title: "Five-note scale",
         why:
           semis < FIVE_NOTE_SCALE_SEMIS
             ? `${fiveNote} The pattern is wider than the span you measured, so it may stay in one key, with its top on the highest note you reached and its bottom below your lowest: keep those notes light, and stop any rep that strains.`
-            : `${fiveNote} Your span leaves this pattern little room to change key, so it may stay in one key and come close to the lowest or highest note you reached: keep those notes light, and stop any rep that strains.`,
+            : semis < LADDER_MAX_SEMIS
+              ? `${fiveNote} Your span leaves this pattern little room to change key, so it may stay in one key and come close to the lowest or highest note you reached: keep those notes light, and stop any rep that strains.`
+              : // From 15 the fitted ladder roots at low + 4 and its top note
+                // sits 4–5 semitones under the high (result-view.test.ts).
+                `${fiveNote} It starts a major third above the lowest note you reached and stays a few notes under your highest: keep it light, and stop any rep that strains.`,
       }
     : {
         id: "octave-siren",
@@ -563,7 +586,7 @@ export function ResultView({
             to see the overlap, shared notes, and the gap at each end.
           </p>
           <div className="mt-4">
-            <LinkButton href={`/singers/${comparisonSinger.slug}`} size="md">
+            <LinkButton href={singerCompareHref(comparisonSinger.slug)} size="md">
               Compare with {comparisonSinger.name} →
             </LinkButton>
           </div>
@@ -627,9 +650,10 @@ export function ResultView({
             never for comfort, so the middle band is a guess and says so: a
             baritone whose top was falsetto would otherwise be told to put
             his songs up there. Warmups start in the band rather than stay in
-            it: the octave siren this card can recommend sweeps the span, and
-            for a span under four semitones the "middle" is all of it, which
-            is still not a measured comfortable band. */}
+            it: the octave siren this card recommends from 21 semitones roots
+            in the band but glides above it, and for a span under four
+            semitones the "middle" is all of it, which is still not a measured
+            comfortable band. */}
         <p className="mt-2 max-w-2xl text-sm text-mut">
           {midiToLabel(lowMidi)} and {midiToLabel(highMidi)} are the furthest
           clear notes you reached today, and a note you can only just reach is
@@ -813,7 +837,7 @@ export function ResultView({
             return (
               <div key={f.name} className="flex items-center gap-3">
                 <Link
-                  href={`/singers/${f.slug}`}
+                  href={singerCompareHref(f.slug)}
                   className={`w-24 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current sm:w-36 ${isBest ? "text-violet-ink" : "text-mut"}`}
                 >
                   {f.name}

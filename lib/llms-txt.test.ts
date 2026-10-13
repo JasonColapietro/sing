@@ -722,3 +722,31 @@ describe("the text routes", () => {
   });
 });
 
+/**
+ * The site records voices: the recorder, and "Record my take" in song
+ * practice. The privacy answer used to open "No" to "upload or record my
+ * voice?", which an answer engine quotes as the whole answer. It now leads
+ * with what is true (nothing is uploaded) and names where audio is recorded.
+ */
+describe("/llms.txt privacy answer", () => {
+  const songPlayer = readFileSync(
+    new URL("../components/songs/song-player.tsx", import.meta.url),
+    "utf8",
+  );
+
+  it("never answers the record question with a bare No", () => {
+    for (const text of [llms, buildLlmsFullTxt()]) {
+      expect(text).toContain('"Does Suede Sing upload or record my voice?"');
+      expect(text).not.toContain('record my voice?" No.');
+      expect(text).toContain('record my voice?" It never uploads it.');
+    }
+  });
+
+  it("names both places the site records a take, by the label the app shows", () => {
+    expect(songPlayer).toContain("Record my take");
+    for (const text of [llms, buildLlmsFullTxt()]) {
+      expect(text).toContain(`in the recorder (${SING_HOME}/recorder)`);
+      expect(text).toContain('with "Record my take" in song practice');
+    }
+  });
+});

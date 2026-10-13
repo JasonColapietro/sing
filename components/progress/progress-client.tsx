@@ -33,7 +33,7 @@ import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { useActiveProgram } from "@/components/programs/use-program";
 import { ProgramEntryCard } from "@/components/programs/today-card";
-import { programDayNeedsPro } from "@/components/practice/program-day";
+import { programDayNeedsPro, programRangeTest } from "@/components/practice/program-day";
 import { isRestDay } from "@/lib/programs";
 import { useIsPro } from "@/lib/pro";
 import { accountsReady } from "@/lib/accounts";
@@ -650,6 +650,11 @@ export function ProgressClient() {
   // A Pro day a free singer cannot open is not today's plan: it follows the
   // coached session instead of leading the dashboard with a paywall.
   const programPaywalled = activeProgram !== null && programDayNeedsPro(activeProgram, isPro);
+  // The range test the running program schedules next: the coach leaves a
+  // stale range's retest to it rather than asking for an extra one between
+  // the program's own (null when none is left, or when it needs Pro this
+  // singer does not have).
+  const programRange = activeProgram ? programRangeTest(activeProgram, isPro) : null;
   const todaySec = todayPracticeSec(state);
   const weekly = weeklyReport(state.sessions);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
@@ -775,7 +780,7 @@ export function ProgressClient() {
         {activeProgram && !programPaywalled && <ProgramEntryCard active={activeProgram} />}
 
         <section aria-label="Today's coached session">
-          <CoachCard state={state} restDayOf={programRestDay} />
+          <CoachCard state={state} restDayOf={programRestDay} programRange={programRange} />
         </section>
 
         {activeProgram && programPaywalled && <ProgramEntryCard active={activeProgram} />}

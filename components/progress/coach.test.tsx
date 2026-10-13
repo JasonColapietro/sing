@@ -146,6 +146,39 @@ describe("the coach's range retest", () => {
     );
     expect(due?.reason).not.toMatch(/growth/i);
   });
+
+  // A singer on The Measured Voice a week behind the calendar, day 37 to do,
+  // with the day-1 range 45 days old. Chapter 13: "Do not retest between
+  // those points"; the program's next test is day 42.
+  const scheduled = { name: PROGRAM, day: 42, today: false };
+
+  it("leaves the retest to a running program that schedules one", () => {
+    const plan = buildPlan(withRange(RANGE_RETEST_DAYS + 3), NOW, null, scheduled);
+    expect(plan.items.map((i) => i.title)).not.toContain("Retake the range test");
+    expect(plan.rangeNote).toBe(
+      `Your range was last measured ${RANGE_RETEST_DAYS + 3} days ago. Your next range test is on day 42 of ${PROGRAM}. Wait for that day: a test taken earlier does not count toward it.`,
+    );
+    // Today's own program day takes it.
+    const today = buildPlan(withRange(RANGE_RETEST_DAYS + 3), NOW, null, { ...scheduled, today: true });
+    expect(today.items.map((i) => i.title)).not.toContain("Retake the range test");
+    expect(today.rangeNote).toBe(
+      `Your range was last measured ${RANGE_RETEST_DAYS + 3} days ago. Today's program day is day 42 of ${PROGRAM}. It takes your next range test after its warm-up, so take the test there.`,
+    );
+    // A current range needs no note, and no program keeps the coach's own retest.
+    expect(buildPlan(withRange(3), NOW, null, scheduled).rangeNote).toBeNull();
+    expect(buildPlan(withRange(RANGE_RETEST_DAYS + 3), NOW).rangeNote).toBeNull();
+    // A singer with no range is still asked to measure one.
+    expect(buildPlan(state(), NOW, null, scheduled).items[0].title).toBe("Vocal range test");
+  });
+
+  it("says so on the card, under the plan's heading", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    const html = renderToStaticMarkup(<CoachCard state={withRange(RANGE_RETEST_DAYS + 3)} programRange={scheduled} />);
+    expect(html).toContain("Your next range test is on day 42 of");
+    expect(html).not.toContain("Retake the range test");
+    expect(renderToStaticMarkup(<CoachCard state={withRange(RANGE_RETEST_DAYS + 3)} />)).toContain("Retake the range test");
+  });
 });
 
 describe("the coach's accuracy lines", () => {
@@ -165,11 +198,63 @@ describe("the coach's accuracy lines", () => {
     const items = buildPlan(tallied(), NOW).items;
     const weak = items.find((i) => i.reason.includes("weakest note"));
     expect(weak?.reason).toContain("C4 lands within 50 cents of the target just 40% of the time, off by ~35 cents.");
+    // Ng siren to the fifth's glides from 52 to 57 span B3–E4, through C4.
+    expect(weak?.id).toBe("ng-siren-fifth");
+    expect(weak?.reason).toContain("Ladder through it slowly.");
     const songs = items.find((i) => i.title === "Sing a song");
     expect(songs?.reason).toBe(
       "Finish on real music — you're within 50 cents of the target 40% of the scored time lately, and songs are where that shows.",
     );
     for (const i of items) expect(i.reason, i.title).not.toMatch(/in tune/i);
+  });
+
+  // C3–F#4, a span of 18: the fifth's ladder runs E3–F#3, so its glides peak
+  // on C#4 and never sing E4. The plan must not tell the singer to ladder
+  // through a note the exercise it opens never reaches.
+  const narrow = (midi: number): ProgressState => {
+    const base = tallied();
+    return {
+      ...base,
+      range: { lowMidi: 48, highMidi: 66, testedAt: NOW.toISOString() },
+      sessions: base.sessions.map((s) => ({ ...s, notes: { [String(midi)]: { sec: 5, hitSec: 2, cents: 35, frames: 100 } } })),
+    };
+  };
+
+  it("does not promise a ladder through a weak note the siren never reaches", () => {
+    const weak = buildPlan(narrow(64), NOW).items.find((i) => i.reason.includes("weakest note"));
+    expect(weak?.id).toBe("ng-siren-fifth");
+    expect(weak?.reason).toContain("its glides stop short of E4");
+    expect(weak?.reason).not.toContain("Ladder through it slowly");
+    // Below the ladder's lowest glide, it says the glides stay above it.
+    const low = buildPlan(narrow(49), NOW).items.find((i) => i.reason.includes("weakest note"));
+    expect(low?.reason).toContain("its glides stay above C#3");
+    expect(low?.reason).not.toContain("Ladder through it slowly");
+    // A note the glides do sing keeps the instruction.
+    const mid = buildPlan(narrow(58), NOW).items.find((i) => i.reason.includes("weakest note"));
+    expect(mid?.reason).toContain("Ladder through it slowly.");
+  });
+
+  it("says a weak note outside the measured range is outside it, not that the siren keeps clear", () => {
+    // Sung above F#4 (a song's top note, say): no fitted ladder goes there.
+    const high = buildPlan(narrow(68), NOW).items.find((i) => i.reason.includes("weakest note"));
+    expect(high?.reason).toContain(
+      "G#4 is above the top of your measured range (F#4), so this siren's glides stop short of it: let them carry you toward it lightly rather than pushing up to reach it.",
+    );
+    expect(high?.reason).not.toContain("keeps clear");
+    const low = buildPlan(narrow(46), NOW).items.find((i) => i.reason.includes("weakest note"));
+    expect(low?.reason).toContain("A#2 is below the bottom of your measured range (C3), so this siren's glides stay above it");
+    // In a span of 11 the fifth's glides run right up to the measured top, so
+    // only a note above the range is out of their reach.
+    const tight = (midi: number): ProgressState => ({
+      ...narrow(midi),
+      range: { lowMidi: 48, highMidi: 59, testedAt: NOW.toISOString() },
+    });
+    expect(buildPlan(tight(59), NOW).items.find((i) => i.reason.includes("weakest note"))?.reason).toContain(
+      "Ladder through it slowly.",
+    );
+    expect(buildPlan(tight(60), NOW).items.find((i) => i.reason.includes("weakest note"))?.reason).toContain(
+      "C4 is above the top of your measured range (B3)",
+    );
   });
 });
 

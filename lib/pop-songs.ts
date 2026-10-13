@@ -68,6 +68,24 @@ export function popDifficulty(song: PopSong): PopDifficulty {
   return "Medium";
 }
 
+/**
+ * Which input decided popDifficulty's rating, so a sentence that gives the
+ * rating can give the right reason. "top" is a top note that alone made the
+ * song Hard (F#5 or above) or alone kept a narrow one out of Easy (above C5);
+ * "span" is every other rule-rated song, whose rating the span sets once the
+ * top has been checked. Without it, Good Luck, Babe! (21 semitones, top F#5)
+ * read "21 semitones — which rates hard" beside two other songs'
+ * "21 semitones — which rates medium".
+ */
+export function popDifficultyReason(song: PopSong): "override" | "span" | "top" {
+  if (song.difficulty) return "override";
+  const span = song.highMidi - song.lowMidi;
+  if (span >= 22) return "span";
+  if (song.highMidi >= 78) return "top";
+  if (span <= 14 && song.highMidi > 72) return "top";
+  return "span";
+}
+
 export interface PopFit {
   verdict: "fits" | "high" | "low" | "wide" | "unknown";
   /** Semitones by which the song escapes the range, on the failing end. */

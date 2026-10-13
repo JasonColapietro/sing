@@ -304,7 +304,7 @@ export const BREATH_GUIDE: GuideContent = {
   body: [
     "The mechanics are unglamorous. You breathe low, so the diaphragm descends and the ribs stay open rather than the shoulders lifting. Then you resist the natural collapse of the ribcage while you sing, so air leaves at the rate the note needs instead of all at once. That resistance is the 'support' in breath support.",
     "It is one of the easier vocal skills to track, because two parts of it can be observed directly: how long you sustain an even tone on one breath, and whether the pitch stays put while you do. Both are visible without a teacher in the room: the sustain test here times the first, and the pitch studio's trace shows whether the pitch held.",
-    "This room runs two kinds of exercise. Timed breathing patterns build the habit of a low, unhurried inhale and a controlled exhale. The mic-based sustain test then checks the result — you hold a note while the app times how long the tone lasts and how even you keep its loudness.",
+    "This room runs three kinds of exercise. Timed breathing patterns (box breathing and the Farinelli drill) build the habit of a low, unhurried inhale and a controlled exhale. Breathe and sing joins that breath to a note: the mic listens for your inhale before each note counts. The mic-based sustain test then checks the result — you hold a note while the app times how long the tone lasts and how even you keep its loudness.",
   ],
   howTo: {
     name: "How to practice breath support for singing",
@@ -959,7 +959,7 @@ export const STUDIO_GUIDE: GuideContent = {
     },
     {
       q: "Is my microphone audio recorded or uploaded?",
-      a: "No. All pitch analysis happens on your device, and no audio is sent to a server or stored unless you explicitly record a take in the recorder — and those takes stay on your device too. Pro's cloud sync backs up progress numbers, never audio.",
+      a: "Not in the studio, and never uploaded. All pitch analysis happens on your device, and no audio is sent to a server. Audio is stored only when you choose to record a take, in the recorder or in song practice, and those takes stay on your device too. Pro's cloud sync backs up progress numbers, never audio.",
     },
   ],
   start: { label: "Sing a note and see its pitch", href: "/studio#content" },

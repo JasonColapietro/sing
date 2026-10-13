@@ -119,9 +119,10 @@ subscriber's address unlock Pro, and the endpoint doubled as an oracle for
 Two layers, and the edge one does the real work.
 
 `lib/rate-limit.ts` caps bursts inside the function (429 with `Retry-After`,
-8–40 per route). It's free but opportunistic: counters live per function
-instance, so a parallel burst that lands on fresh instances can slip past it
-entirely. Treat it as a floor, not a guarantee.
+from 5 per 10 minutes on `/api/redeem` to 60 per minute on `/api/book`).
+It's free but opportunistic: counters live per function instance, so a
+parallel burst that lands on fresh instances can slip past it entirely. Treat
+it as a floor, not a guarantee.
 
 The durable layer is a Vercel WAF rule, live on this project:
 
@@ -186,9 +187,10 @@ existing subscribers. `/api/checkout` hard-rejects annual before any Stripe
 lookup or Checkout Session call.
 
 **Production is live.** `STRIPE_SECRET_KEY` on the `sing` project holds the LLC's
-live secret key, and `/api/checkout` uses the prices above. Monthly Checkout is
-in subscription mode; lifetime Checkout is in one-time payment mode. No code
-differs between modes because both prices resolve by lookup key.
+live secret key, and `/api/checkout` uses the prices above. Checkout sells only
+lifetime, in one-time payment mode; the monthly price stays active for existing
+subscribers and for comp-code passes (`/api/redeem`). No code differs between
+test and live mode because both prices resolve by lookup key.
 
 `.env.local` still carries the sandbox key, so local development stays in test
 mode. That is deliberate — don't pull the live key onto a laptop.

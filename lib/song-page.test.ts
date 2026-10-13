@@ -117,10 +117,30 @@ describe("what a tag claims about the melody", () => {
     // The page says genre and era "say where the melody comes from".
     // London Bridge's modern tune was first printed in 1879; Down in the
     // Valley has no source before the 1920s; Scarborough Fair's tune was
-    // collected in 1947.
+    // collected in 1947; When the Saints has no source before the 1920s
+    // (first recorded 1923; the 1896 "When the Saints Are Marching In" is a
+    // different song).
     expect(songBySlug("london-bridge-is-falling-down")!.era).toBe("1800s");
     expect(songBySlug("down-in-the-valley")!.era).toBe("Traditional");
     expect(songBySlug("scarborough-fair")!.era).toBe("Traditional");
+    const saints = songBySlug("when-the-saints-go-marching-in")!;
+    expect(saints.era).toBe("Traditional");
+    expect(`${saints.origin} ${saints.publicDomain}`).not.toMatch(/19th.century/);
+  });
+
+  it("dates the tune in the origin line, not only the words", () => {
+    // The origin line prints in the page subtitle and its JSON-LD
+    // description, and the page says it is where the melody comes from.
+    // Row Row's 1852 and 1854 printings had other tunes, and this one was
+    // first printed with the words in 1881; Mary's tune is the "Goodnight,
+    // Ladies" chorus, printed by 1867, not a tune of Hale's 1830.
+    const row = songBySlug("row-row-row-your-boat")!;
+    expect(row.origin).toContain("1881");
+    expect(row.publicDomain).not.toContain("never under active copyright");
+    const mary = songBySlug("mary-had-a-little-lamb")!;
+    expect(mary.origin).toContain("1867");
+    expect(mary.publicDomain).not.toContain("of the same period");
+    for (const song of [row, mary]) expect(song.era, song.slug).toBe("1800s");
   });
 
   it("does not date Scarborough Fair's own text to the 17th century", () => {

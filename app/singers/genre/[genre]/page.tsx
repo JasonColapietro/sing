@@ -172,6 +172,7 @@ export default async function GenrePage({
             {contrastBefore}
             <Link
               href={`/singers/genre/${copy.neighbour}`}
+              prefetch={false}
               className="text-violet-ink underline decoration-violet/40 underline-offset-2"
             >
               {neighbour}
@@ -277,8 +278,11 @@ export default async function GenrePage({
           <ul className="mt-4 flex flex-wrap gap-2">
             {mixSorted.slice(0, 4).map(([type]) => (
               <li key={type}>
+                {/* No prefetch on these chips or the contrast link above: each
+                    hub's payload is its whole chart, fetched for nobody. */}
                 <Link
                   href={`/singers/voice-type/${voiceTypeSlug(type as never)}`}
+                  prefetch={false}
                   className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-violet"
                 >
                   All {pluralVoice(type.toLowerCase())}
@@ -289,6 +293,7 @@ export default async function GenrePage({
               <li key={x}>
                 <Link
                   href={`/singers/genre/${genreSlug(x)}`}
+                  prefetch={false}
                   className="inline-flex items-center rounded-full border border-line px-3 py-1.5 text-sm text-mut transition-colors hover:border-violet hover:text-ink"
                 >
                   {x}

@@ -7,7 +7,8 @@ import { PRO_STORAGE_KEY } from "./pro";
 import { PROGRAM_STORAGE_KEY } from "@/components/programs/store";
 import { liveStreak } from "@/components/account/save-state";
 import { programDayNeedsPro } from "@/components/practice/program-day";
-import { DEFAULT_PROGRESS, type ProgressState, type SessionLog } from "./progress-shape";
+import { DEFAULT_PROGRESS, sanitizeProgress, type ProgressState, type SessionLog } from "./progress-shape";
+import { POP_SONGS, popFit } from "./pop-songs";
 import {
   addDays,
   dayNeedsPro,
@@ -100,8 +101,38 @@ describe("pre-paint state: the free plan", () => {
 
   it("treats unreadable storage as a newcomer's, never as an error", () => {
     const blocked = { getItem: () => { throw new Error("SecurityError"); } };
-    expect(prepaintState(blocked, NOW, PREPAINT_CONFIG)).toEqual({ plan: "free", program: null, freeLeft: "5:00", streakClause: "" });
+    expect(prepaintState(blocked, NOW, PREPAINT_CONFIG)).toEqual({ plan: "free", program: null, freeLeft: "5:00", streakClause: "", range: false });
     expect(state({ [PROGRESS_STORAGE_KEY]: "{not json", [PRO_STORAGE_KEY]: "[]" }).plan).toBe("free");
+  });
+});
+
+describe("pre-paint state: a saved range", () => {
+  it("is saved exactly when the song verdict can compare against the repaired record", () => {
+    for (const [range, saved] of [
+      [{ lowMidi: 45, highMidi: 65 }, true],
+      [{ lowMidi: 0, highMidi: 127 }, true],
+      [{ lowMidi: 60, highMidi: 60 }, true],
+      [{ lowMidi: 45.5, highMidi: 65, voiceType: "baritone" }, false],
+      [{ lowMidi: 65, highMidi: 45 }, false],
+      [{ lowMidi: -1, highMidi: 65 }, false],
+      [{ lowMidi: 45, highMidi: 128 }, false],
+      [{}, false],
+      [{ lowMidi: 45 }, false],
+      [{ highMidi: 65 }, false],
+      [{ lowMidi: "45", highMidi: 65 }, false],
+      [{ lowMidi: null, highMidi: 65 }, false],
+      [null, false],
+    ] as const) {
+      const record = { ...progress(), range };
+      // lib/progress-shape.ts sanitizeProgress is what useProgress returns,
+      // and popFit is what CanYouSingVerdict asks before it shows an answer.
+      const repaired = sanitizeProgress(JSON.parse(JSON.stringify(record))).range;
+      const compared = POP_SONGS.some((song) => popFit(song, repaired).verdict !== "unknown");
+      expect(compared, JSON.stringify(range)).toBe(saved);
+      expect(state({ [PROGRESS_STORAGE_KEY]: record }).range, JSON.stringify(range)).toBe(saved);
+    }
+    expect(state({}).range).toBe(false);
+    expect(state({ [PROGRESS_STORAGE_KEY]: "{not json" }).range).toBe(false);
   });
 });
 
@@ -120,7 +151,8 @@ function expectedTokens(raw: unknown, opts: { isPro?: boolean; capped?: boolean 
   const tokens: string[] = [];
   if (view.status === "finished") {
     tokens.push("finished");
-    if (program.chapters) tokens.push("book");
+    // The finished card's size is the program's own; the book's is "book".
+    tokens.push(program.chapters ? "book" : program.id);
   } else if (view.status === "done-today") {
     tokens.push("done");
     if (isRestDay(program.days[view.index])) tokens.push("rest");
@@ -206,6 +238,19 @@ describe("pre-paint state: the running program", () => {
     expect(at({ ...repeating(42), later: repeatedLater().slice(1) })).toBe("todo");
   });
 
+  it("names the finished program, whose card's height is its own", () => {
+    const finished = (id: string) => {
+      const n = programById(id)!.days.length;
+      return record(id, n, Array.from({ length: n }, (_, i) => [i, n - i] as [number, number]));
+    };
+    const at = (raw: unknown) => state({ [PROGRAM_STORAGE_KEY]: raw, [PRO_STORAGE_KEY]: { active: true } }).program;
+    expect(at(finished("high-notes-6w"))).toBe("finished high-notes-6w");
+    expect(at(finished("foundations-2w"))).toBe("finished foundations-2w");
+    expect(at(finished("recovery-week"))).toBe("finished recovery-week");
+    // The CI seed's state is unchanged.
+    expect(at(finished("measured-voice-12w"))).toBe("finished book");
+  });
+
   it("covers the states the CI layout-shift run seeds", () => {
     expect(state({ [PROGRAM_STORAGE_KEY]: record("foundations-2w", 1, [[0, 1]]) }).program).toBe("todo");
     expect(state({ [PROGRAM_STORAGE_KEY]: record("mix-4w", 6, [0, 1, 2, 3, 4, 5, 6].map((i) => [i, 6 - i] as [number, number])) }).program).toBe("done rest next-locked");
@@ -230,11 +275,13 @@ describe("pre-paint state: the running program", () => {
     expect(prepaintState(storageOf({}), NOW, PREPAINT_CONFIG, { pathname: "/programs", search: "?program=mix-4w" }).program).toBeNull();
   });
 
-  it("lists every program, its length, its rest days and whether it follows the book", () => {
-    for (const [id, [pro, length, rest, book]] of Object.entries(PREPAINT_CONFIG.programs)) {
+  it("lists every program, its length, its rest days and its finished card's token", () => {
+    for (const [id, [pro, length, rest, finished]] of Object.entries(PREPAINT_CONFIG.programs)) {
       const program = programById(id)!;
       expect(pro === 1).toBe(program.pro);
-      expect(book === 1).toBe(Boolean(program.chapters));
+      expect(finished).toBe(program.chapters ? "book" : id);
+      // Never one of the status tokens it sits beside.
+      expect(["todo", "done", "finished", "rest", "locked", "next-locked", "waits"]).not.toContain(finished);
       expect(length).toBe(program.days.length);
       expect(rest.every((i) => isRestDay(program.days[i]))).toBe(true);
       expect(program.days.filter(isRestDay)).toHaveLength(rest.length);
@@ -285,6 +332,14 @@ describe("the inline script", () => {
 
   it("leaves the program attribute off with no program", () => {
     expect(run({}).attrs).toEqual({ "data-sing-plan": "free" });
+  });
+
+  it("marks a saved range, and leaves it off without one", () => {
+    expect(run({ [PROGRESS_STORAGE_KEY]: { ...progress(), range: { lowMidi: 45, highMidi: 65 } } }).attrs).toEqual({
+      "data-sing-plan": "free",
+      "data-sing-range": "saved",
+    });
+    expect(run({ [PROGRESS_STORAGE_KEY]: { ...progress(), range: { lowMidi: 45 } } }).attrs).toEqual({ "data-sing-plan": "free" });
   });
 
   it("reads the page's address, for a program's own view", () => {

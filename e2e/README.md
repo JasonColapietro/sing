@@ -128,6 +128,15 @@ page cannot read its query, so `next.config.ts` serves each known program id
 its own prerendered page at that address, and the deep link paints the
 program rather than the list it used to swap out after mount.
 
+A few more deep links are loaded only when `--route` names them, for the
+states that need them, so a plain run's page count stays the same: each
+other program's own view (`program-high-notes`, `program-mix`,
+`program-recovery`, `program-vibrato`), and the pages `--state=saved-range`
+measures: `singer-adele` (`/singers/adele`, a "test" page),
+`singer-celine-dion` (`/singers/celine-dion`, one of the comparison pilot's
+"compare" pages, with the wider labels) and `song-someone-like-you`
+(`/can-you-sing/someone-like-you`).
+
 The states are what localStorage holds and the prerender cannot: the
 prerender is always a newcomer's page, so each of these used to change shape
 at hydration only for the singers in it.
@@ -139,6 +148,8 @@ at hydration only for the singers in it.
 | `program-capped` | both: the program day waits for midnight | all of the above, with the longer "waits" lines |
 | `rest-day` | Mix in 4 weeks on its day 7 rest day, day 8 onward needing Pro | the rest-day card on `/programs` and `/warmups` |
 | `finished` | The Measured Voice finished, its six check-in days carrying readings | the book's finished card (chapter 19's next steps, six reading rows, the fortnight choices) on `/programs` and on its own `?program=` view, which the `book` token sizes apart from other programs' finished cards |
+| `finished-high-notes`, `finished-mix`, `finished-foundations`, `finished-recovery`, `finished-vibrato` | that program finished, every check-in day carrying readings | its finished card on `/programs` and its own `?program=` view, sized by the program's own token (`--finished-slot` in `app/globals.css`); Recovery week and Vibrato have no check-ins and take the plain size |
+| `saved-range` | a saved range of A2–F4 | the header action on a singer page (`SingerRangeAction`) and a popular song's (`CanYouSingAction`), which point at the comparison once the range hydrates, and the song's personal answer, which replaces the range-test pitch |
 
 Each state also names the selector that proves it showed (the cap wall, a
 program card), and a route where it did not counts as a failed reading, so
@@ -154,6 +165,14 @@ the parts that depend on it (`components/prepaint.tsx`, rules in
 every route in every state is at or under 0.10; before, a capped singer's
 rooms were 0.40 to 0.45 on a phone, `/programs` with a program 0.29 to 0.44,
 and `/warmups` with a program and the cap used 0.52.
+
+A saved range is on `<html>` too (`data-sing-range="saved"`): a popular
+song's answer card is about three times the height of the range-test pitch it
+replaces, so until hydration the pitch is held at the shortest answer's
+height (`song-verdict` in `app/globals.css`). Measured with
+`--state=saved-range`, that took the song page from 0.09 to 0.002 at 768px
+and from 0.05 to 0.003 at 1280px; the singer pages' header swap was already
+still, both labels of a pair sharing one width.
 
 CI's `layout-shift` job (`.github/workflows/ci.yml`) runs every route on a
 375px phone twice, as a newcomer and with `--returning`, then each state on

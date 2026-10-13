@@ -134,8 +134,10 @@ function leapPhrase(n: number): string {
  *
  * The rating names both of its inputs. computeDifficulty adds how densely a
  * melody leaps to its span, so "9 semitones — which rates Medium" on Loch
- * Lomond sat beside "9 semitones — which rates Hard" on Down in the Valley,
- * the same pattern app/can-you-sing/[slug]/page.tsx already fixed.
+ * Lomond sat beside "9 semitones — which rates Hard" on Down in the Valley.
+ * app/can-you-sing/[slug]/page.tsx names its own rule's inputs the same way
+ * (span and top note, through popDifficultyReason); its scale is a different
+ * one, for whole popular songs, and the /can-you-sing hub says so.
  */
 function answerSentence(song: Song): string {
   const f = songFacts(song);

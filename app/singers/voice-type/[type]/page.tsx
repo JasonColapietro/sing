@@ -203,6 +203,7 @@ export default async function VoiceTypePage({
             {contrastBefore}
             <Link
               href={`/singers/voice-type/${copy.neighbour}`}
+              prefetch={false}
               className="text-violet-ink underline decoration-violet/40 underline-offset-2"
             >
               {neighbour?.toLowerCase()}
@@ -304,6 +305,7 @@ export default async function VoiceTypePage({
                   Both listed endpoints belong to the same profile:{" "}
                   <Link
                     href={`/singers/${stats.lowest.slug}`}
+                    prefetch={false}
                     className="text-violet-ink underline decoration-violet/40 underline-offset-2"
                   >
                     {stats.lowest.name}
@@ -374,8 +376,12 @@ export default async function VoiceTypePage({
           <ul className="mt-4 flex flex-wrap gap-2">
             {VOICE_KINDS.filter((v) => v !== voice).map((v) => (
               <li key={v}>
+                {/* No prefetch here or on the contrast link above: each hub's
+                    payload is its whole chart (the tenor hub's is about
+                    0.4 MB decoded), fetched in the background for nobody. */}
                 <Link
                   href={`/singers/voice-type/${voiceTypeSlug(v)}`}
+                  prefetch={false}
                   className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm transition-colors hover:border-violet"
                 >
                   {v}

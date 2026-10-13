@@ -10,9 +10,15 @@ import { ProInlineNudge } from "@/components/pro/gate";
 import { LockGlyph } from "@/components/pro/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { aggregateNotes, overallAccuracy, weakNotes } from "@/lib/analytics";
-import { EXERCISES } from "@/components/warmups/exercises";
+import {
+  EXERCISES,
+  OCTAVE_SIREN_MIN_SEMIS,
+  computeRootLadder,
+  patternSpan,
+} from "@/components/warmups/exercises";
 import { TOLERANCE_CENTS } from "@/components/warmups/scoring";
 import { rangeTestHref } from "@/lib/site";
+import type { ProgramRangeTest } from "@/components/practice/program-day";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
 interface PlanItem {
@@ -29,28 +35,18 @@ interface PlanItem {
 }
 
 /**
- * Measured span, in semitones, before the octave siren is worth recommending.
- * computeRootLadder runs that exercise's ladder from `lowMidi + 4` up to
- * `highMidi - 5 - 12` — the octave it glides, plus five semitones of headroom
- * under the measured ceiling — so 21 (4 + 12 + 5) is exactly the span at which
- * that top finally reaches the start. At 21 the band is a single root whose
- * glide lands on `highMidi - 5`, headroom intact; wider spans widen the band a
- * semitone at a time. Below 21 the ladder gives up most of that headroom to
- * stay under the ceiling: it roots the octave lower, down to `lowMidi`,
- * keeping the glide's top two semitones under `highMidi` from a 16-semitone
- * span up and letting it reach `highMidi` below that (under 12 semitones it
- * pins the top to `highMidi` with the bottom below the range). The glide then
- * runs at or near the very top of what the singer measured, which is why a
- * narrower span gets the fifth instead.
- */
-const OCTAVE_SIREN_MIN_SEMIS = 21;
-
-/**
  * Today's plan from the singer's own numbers. `restDayOf` names the running
  * program when today is one of its rest days: the program the singer chose
  * says rest, so the plan does not tell them in red to sing or lose the streak.
  * It says what resting costs the streak instead, and leaves the plan below
  * as optional.
+ *
+ * `programRange` is the running program's next scheduled range test
+ * (components/practice/program-day.ts programRangeTest). While there is one,
+ * a stale range does not put a retest at the head of the plan: the program
+ * schedules its tests warmed up and compared, chapter 13 asks for no retest
+ * between them, and one sung early cannot count toward the program's day. A
+ * note says when the program's test falls instead.
  *
  * Exported for its test.
  */
@@ -58,9 +54,11 @@ export function buildPlan(
   state: ProgressState,
   now: Date,
   restDayOf: string | null = null,
+  programRange: ProgramRangeTest | null = null,
 ): {
   banner: string | null;
   restNote: string | null;
+  rangeNote: string | null;
   items: PlanItem[];
 } {
   const todayKey = localDayStr(now);
@@ -148,7 +146,7 @@ export function buildPlan(
       reason:
         "You haven't measured your range yet — it anchors every other exercise to your voice.",
     });
-  } else if (rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS) {
+  } else if (programRange === null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS) {
     rangeFirst = true;
     items.push({
       title: "Retake the range test",
@@ -157,6 +155,14 @@ export function buildPlan(
       reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test adds a current point to your range over time.`,
     });
   }
+  // The program's name ends its sentence: "The Measured Voice: 12 weeks" has
+  // a colon of its own, and leading with it reads as a heading.
+  const rangeNote =
+    hasRange && programRange !== null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS
+      ? programRange.today
+        ? `Your range was last measured ${rangeAgeDays} days ago. Today's program day is day ${programRange.day} of ${programRange.name}. It takes your next range test after its warm-up, so take the test there.`
+        : `Your range was last measured ${rangeAgeDays} days ago. Your next range test is on day ${programRange.day} of ${programRange.name}. Wait for that day: a test taken earlier does not count toward it.`
+      : null;
 
   items.push({
     title: "Breathing",
@@ -174,9 +180,9 @@ export function buildPlan(
     // A weak note at the top of the range wants the full-octave glide that
     // carries the voice through the break; anything lower wants the smaller,
     // slower siren that sits on the weak spot. The octave is only offered to a
-    // singer whose measured span can hold it — below OCTAVE_SIREN_MIN_SEMIS the
-    // ladder collapses to one root whose glide pushes into the headroom kept
-    // under their ceiling, so those singers get the fifth instead.
+    // singer whose measured span can hold it — below OCTAVE_SIREN_MIN_SEMIS its
+    // glides would run from near the measured floor to within two semitones
+    // of the ceiling, so those singers get the fifth instead.
     const wantsOctave =
       state.range.lowMidi !== undefined && state.range.highMidi !== undefined
         ? worst.midi >= state.range.highMidi - 5 &&
@@ -187,6 +193,34 @@ export function buildPlan(
     const target = EXERCISES.find(
       (e) => e.id === (wantsOctave ? "octave-siren" : "ng-siren-fifth"),
     );
+    // The siren's ladder is fitted inside the measured range, with room to
+    // spare at both ends once the span allows it (computeRootLadder), so a weak
+    // note near the top or bottom of the range, or outside it, can lie outside
+    // every glide. Only promise a ladder through the note when a glide
+    // actually sings it, and say why when none does.
+    const { lowMidi, highMidi } = state.range;
+    let reach = "Ladder through it slowly.";
+    if (target && lowMidi !== undefined && highMidi !== undefined) {
+      const glides = computeRootLadder(target, lowMidi, highMidi).map(
+        (root) => [root, root + patternSpan(target)] as const,
+      );
+      if (!glides.some(([lo, hi]) => lo <= worst.midi && worst.midi <= hi)) {
+        const note = midiToLabel(worst.midi);
+        if (worst.midi > Math.max(...glides.map(([, hi]) => hi))) {
+          const why =
+            worst.midi > highMidi
+              ? `${note} is above the top of your measured range (${midiToLabel(highMidi)}), so this siren's glides stop short of it`
+              : `This siren keeps clear of the top of your measured range, so its glides stop short of ${note}`;
+          reach = `${why}: let them carry you toward it lightly rather than pushing up to reach it.`;
+        } else {
+          const why =
+            worst.midi < lowMidi
+              ? `${note} is below the bottom of your measured range (${midiToLabel(lowMidi)}), so this siren's glides stay above it`
+              : `This siren keeps clear of the bottom of your measured range, so its glides stay above ${note}`;
+          reach = `${why}: let them settle toward it rather than pressing down to reach it.`;
+        }
+      }
+    }
     const item: PlanItem = {
       title: target?.title ?? "Slow sirens through your weak spot",
       href: "/warmups",
@@ -196,7 +230,7 @@ export function buildPlan(
         weak.length > 1 ? "notes" : "note"
       } right now — ${midiToLabel(worst.midi)} lands within ${TOLERANCE_CENTS} cents of the target just ${worst.accuracy}% of the time${
         worst.cents !== null ? `, off by ~${Math.round(worst.cents)} cents` : ""
-      }. Ladder through it slowly.`,
+      }. ${reach}`,
     };
     // A free singer only ever sees item 0 (CoachCard locks the rest), so the
     // one item built from their own scored notes has to be it — otherwise the
@@ -261,16 +295,19 @@ export function buildPlan(
     });
   }
 
-  return { banner, restNote, items };
+  return { banner, restNote, rangeNote, items };
 }
 
 export function CoachCard({
   state,
   restDayOf = null,
+  programRange = null,
 }: {
   state: ProgressState;
   /** The running program's name when today is one of its rest days. */
   restDayOf?: string | null;
+  /** The running program's next scheduled range test, which the coach leaves to it. */
+  programRange?: ProgramRangeTest | null;
 }) {
   const isPro = useIsPro();
   // The cap wall's "See your streak" lands here. Today's plan is still
@@ -278,7 +315,7 @@ export function CoachCard({
   // as tomorrow's; the card says plainly which steps wait for midnight and
   // what is open now.
   const cap = useFreeCap();
-  const { banner, restNote, items } = buildPlan(state, new Date(), restDayOf);
+  const { banner, restNote, rangeNote, items } = buildPlan(state, new Date(), restDayOf, programRange);
   // One step is not a plan, it is a screenshot of one. A singer who can see two
   // steps has watched the coach make a decision — this after that, and why —
   // which is the thing Pro actually sells; a singer who sees one has been shown
@@ -315,6 +352,7 @@ export function CoachCard({
         </p>
       )}
       {restNote && <p className="mt-3 text-sm text-mut">{restNote}</p>}
+      {rangeNote && <p className="mt-3 text-sm text-mut">{rangeNote}</p>}
       <ol className="mt-4 space-y-3">
         {items.map((item, i) =>
           i < shown ? (

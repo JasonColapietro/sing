@@ -30,11 +30,12 @@ import { fitDescription } from "@/lib/meta-fit";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { pageRobots } from "@/lib/robots-meta";
-import { SITE_URL, rangeTestHref } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import {
   CompareWithMe,
   PlayRangeButton,
+  SingerRangeAction,
 } from "@/components/singers/singer-actions";
 import {
   Card,
@@ -387,11 +388,13 @@ export default async function SingerPage({
       subtitle={queryAlignedDescription(s)}
       actions={
         <>
-          <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">
-            {COMPARISON_SEARCH_SLUGS.has(s.slug)
-              ? "Compare my range — free test →"
-              : "Test my range →"}
-          </LinkButton>
+          {/* "Compare my range — free test →" on the CTR pilot's pages,
+              "Test my range →" elsewhere; the labels live with the swap
+              they must stay the width of (components/singers/singer-actions.tsx). */}
+          <SingerRangeAction
+            s={rangeProps}
+            kind={COMPARISON_SEARCH_SLUGS.has(s.slug) ? "compare" : "test"}
+          />
           <LinkButton href="/singers" variant="outline" size="md">
             ← All singers
           </LinkButton>
@@ -461,8 +464,13 @@ export default async function SingerPage({
         </Card>
 
         {/* The profile's unique value is the personal comparison, so it sits
-            directly under the answer rather than below the editorial detail. */}
-        <CompareWithMe s={rangeProps} />
+            directly under the answer rather than below the editorial detail.
+            #you-vs is where the header action and the range result's
+            "Compare with <singer>" land (components/range/result-view.tsx
+            singerCompareHref); scroll-mt clears the sticky header. */}
+        <div id="you-vs" className="scroll-mt-20">
+          <CompareWithMe s={rangeProps} />
+        </div>
 
         {/* Songs in the range catalog by this artist */}
         {popSongsByArtistSlug(s.slug).length > 0 && (
@@ -678,6 +686,7 @@ export default async function SingerPage({
                       <li key={m.slug}>
                         <Link
                           href={`/singers/${m.slug}`}
+                          prefetch={false}
                           className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
                         >
                           {m.name}
@@ -706,6 +715,7 @@ export default async function SingerPage({
                       <li key={m.slug}>
                         <Link
                           href={`/singers/${m.slug}`}
+                          prefetch={false}
                           className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs transition-colors hover:border-violet"
                         >
                           {m.name}
@@ -720,10 +730,15 @@ export default async function SingerPage({
               )}
             </div>
             <div className="mt-5 flex flex-wrap gap-3">
+              {/* No prefetch on these or the chips above: a hub's payload is
+                  its whole chart (the pop hub's is about 0.5 MB decoded), and
+                  scrolling one profile made 53 background requests for pages
+                  nobody had opened. */}
               <LinkButton
                 href={`/singers/voice-type/${voiceTypeSlug(s.voiceType)}`}
                 variant="outline"
                 size="sm"
+                prefetch={false}
               >
                 All {pluralVoice(s.voiceType.toLowerCase())}
               </LinkButton>
@@ -732,6 +747,7 @@ export default async function SingerPage({
                   href={`/singers/genre/${genreSlug(s.genres[0])}`}
                   variant="ghost"
                   size="sm"
+                  prefetch={false}
                 >
                   {s.genres[0]} voices
                 </LinkButton>
@@ -748,6 +764,7 @@ export default async function SingerPage({
               <li key={r.slug}>
                 <Link
                   href={`/singers/${r.slug}`}
+                  prefetch={false}
                   className="flex items-baseline justify-between gap-3 rounded-xl border border-line bg-bg px-4 py-3 transition-colors hover:border-violet"
                 >
                   <span className="min-w-0">

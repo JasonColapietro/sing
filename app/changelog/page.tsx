@@ -122,7 +122,7 @@ const STORIES: Story[] = [
     // be contradicted a sentence later, so that deployment gets its own body.
     body: ACCOUNTS_OPEN
       ? "Until now this browser held the only copy of your sessions, streaks and range history. A free account backs that record up and restores it on any device you sign into. The backup carries your numbers — never your audio: pitch analysis still runs entirely on your own machine."
-      : "v2 built an account backup for your sessions, streaks and range history, restored on any device you sign into. Accounts are not open on this site yet; until they are, your record stays in this browser and can be exported from Progress. The backup carries your numbers — never your audio: pitch analysis still runs entirely on your own machine.",
+      : "v2 built an account backup for your sessions, streaks and range history, restored on any device you sign into. Accounts are not open on this site yet; until they are, your record stays in this browser (Pro's cloud sync also backs it up) and can be exported from Progress. The backup carries your numbers — never your audio: pitch analysis still runs entirely on your own machine.",
     links: [{ href: "/progress", text: "See your progress" }],
   },
   {

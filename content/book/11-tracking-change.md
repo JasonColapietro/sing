@@ -61,7 +61,7 @@ Test on the schedule, not on a feeling. Retesting because your voice feels great
 
 Write down the context. One line — slept badly, second day of a cold, sang for two hours last night — turns an unexplained dip into an explained one when you look back in March.
 
-Read the last three months, not the last three sessions. When you open your range history, resist the rightmost bar. Cover it with your thumb if you have to. Ask instead whether the bulk of this run of bars sits higher, lower, or level with where it was two months ago.
+Read the whole run of tests, not the last one. On the schedule this book keeps, a test every six weeks or so, three months holds only two or three bars, so resist the rightmost bar. Cover it with your thumb if you have to. Ask instead whether the bars before it were already moving the way the newest one suggests. A bar that breaks from the others usually means a condition changed rather than a voice; read it that way until the next scheduled test repeats it.
 
 Give it time before you change your practice on the strength of what you see. Four weeks on the same thing with no movement in the relevant numbers is worth examining. Six days is weather, not climate.
 
@@ -73,4 +73,4 @@ The chart is a slow instrument pointed at a slow process. Read over months, it i
 
 ## Try this
 
-Open [Progress](/progress), find the Range over time chart under Trends, and read only the bars older than four weeks — cover the recent end. Ask whether that older cluster sits higher, lower, or level with the one before it. Write down what you see, so next month you have something to compare it against.
+Open [Progress](/progress), find the Range over time chart under Trends, and cover the most recent bar. Ask whether the bars before it lean higher, lower or level, then uncover it and ask whether it carries on that lean or breaks from it. Write both answers down next to the conditions you noted for each test. With only one or two tests on the chart there is no lean to read yet: note your latest low note, high note, date and conditions, and come back after your next scheduled test.
