@@ -161,7 +161,7 @@ export function RoutineSummary({
         <ProCrescendoNudge
           line="Pro shows the full daily coach plan, not just its first two steps"
           title="See the whole plan"
-          body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, these included. Pro adds the full daily coach plan, per-note accuracy over time and no daily limit."
+          body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, these included. Pro adds the full daily coach plan, a per-note accuracy chart and no daily limit."
           context="Warmups"
         />
       </div>

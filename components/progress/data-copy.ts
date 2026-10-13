@@ -13,16 +13,19 @@
  */
 /**
  * What a backup file and a cloud copy leave behind. Song mastery
- * (suede-sing:mastered:v2) and a program's place are kept in their own browser
- * keys, outside the progress record that exportProgress() writes and Pro sync
- * pushes, so a restore brings back every score but locks the songbook's later
- * bands again. Said wherever a restore is promised.
+ * (suede-sing:mastered:v2), the ear-training and breath path bests that draw
+ * those paths' stars (suede-sing:ear-best:v1, suede-sing:breath-bests:v1) and
+ * a program's place are kept in their own browser keys, outside the progress
+ * record that exportProgress() writes and Pro sync pushes. A restore brings
+ * back every score but locks the songbook's later bands again and shows the
+ * paths' games as not played yet, and the ear log has no difficulty to
+ * rebuild those bests from. Said wherever a restore is promised.
  */
 export const NOT_IN_BACKUP_FILE =
-  "Song mastery, which opens the songbook’s later bands, and your place in a program stay in this browser and are not in the file.";
+  "Song mastery (which opens the songbook’s later bands), the stars on the ear-training and breath paths, and your place in a program stay in this browser and are not in the file.";
 const KEPT_HERE_FILE = NOT_IN_BACKUP_FILE;
 const KEPT_HERE_SYNC =
-  "Song mastery, which opens the songbook’s later bands, and your place in a program stay in this browser.";
+  "Song mastery (which opens the songbook’s later bands), the stars on the ear-training and breath paths, and your place in a program stay in this browser.";
 
 export function dataControlsCopy({
   paused,

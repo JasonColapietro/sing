@@ -183,6 +183,25 @@ describe("GLOSSARY", () => {
   });
 
   /**
+   * ♯ and ♭ are named as the entry's other names, and every note name the app
+   * prints (G#3 on a range result, Bb4 on a song in a flat key) uses them as
+   * accidentals. Defining them only as "sung too high or too low" told a
+   * singer that G#3 on their result was out of tune, so the semitone sense has
+   * to lead and the tuning sense stays second. The app types the symbols as #
+   * and b (lib/audio/notes.ts), so the entry says so, or a reader looking for
+   * ♯ never finds it on their own result.
+   */
+  it("defines sharp and flat as note names first, and as tuning second", () => {
+    const entry = GLOSSARY_TERMS.find((e) => e.term === "Sharp and flat");
+
+    expect(entry?.aka).toEqual(["♯", "♭"]);
+    expect(entry?.definition).toMatch(/^In a note name, .*semitone.*; in tuning, /);
+    expect(entry?.where).toMatch(/written with # and b, as in G#3/);
+    // The range result spells every note with a sharp; a flat is never shown there.
+    expect(entry?.where).not.toMatch(/Bb\d[^;]*range result|range result[^;]*Bb\d/);
+  });
+
+  /**
    * Only the entries this site renders are checked against this site's routes.
    * A guitar entry's href is a path on the guitar hub, which this repo cannot
    * resolve; that side is checked where it is rendered.

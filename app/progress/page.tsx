@@ -9,7 +9,7 @@ import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 const TITLE = "Singing Progress Tracker: Range and Streaks";
 const DESCRIPTION =
-  "Singing progress tracker: XP, streaks, achievements, your saved range and a daily coached session, kept on your device. Pro adds per-note accuracy charts.";
+  "Singing progress tracker: XP, streaks, achievements, your saved range and a daily coached session, kept on your device. Pro adds a per-note accuracy chart.";
 
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/progress"),

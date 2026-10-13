@@ -10,6 +10,7 @@ import {
   SUSTAIN_ATTEMPT_SEC,
   boxSeconds,
   breathDrillDesc,
+  cueDrillLoggedSeconds,
   drillPresetFromQuery,
   drillPresetQuery,
   breathDrillTitle,
@@ -322,5 +323,22 @@ describe("drill preset links", () => {
     expect(drillPresetFromQuery("farinelli", q("drill=farinelli&cap=9.5"))).toBeNull();
     expect(drillPresetFromQuery("sustain", q("drill=sustain&attempts=9"))).toBeNull();
     expect(drillPresetFromQuery("cue", q("drill=cue&reps=5"))).toBeNull();
+  });
+});
+
+describe("a breathe-and-sing run's logged practice time", () => {
+  it("logs an honest run as it was sung", () => {
+    expect(cueDrillLoggedSeconds(41.6, 4, CUE_HOLD_SEC)).toBe(42);
+  });
+
+  it("holds a run left waiting for a breath to twice a slow one", () => {
+    // Four reps, each waiting out the 8-second breath fallback, a 4-second
+    // note and the rest: 54 s, so a run is held to 108 s.
+    expect(cueDrillLoggedSeconds(6 * 60, 4, CUE_HOLD_SEC)).toBe(108);
+    expect(cueDrillLoggedSeconds(10 * 60, 8, CUE_HOLD_SEC)).toBe(216);
+  });
+
+  it("never logs a negative length", () => {
+    expect(cueDrillLoggedSeconds(-3, 4, CUE_HOLD_SEC)).toBe(0);
   });
 });

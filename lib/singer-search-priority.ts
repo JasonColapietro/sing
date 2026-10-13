@@ -11,8 +11,9 @@
  * October 4 monthly report: Damiano David added after four September clicks
  * for the exact vocal-range query (up four from August).
  * Keep this list small and evidence-led: it exists to give the pages already
- * earning meaningful `[name] vocal range` impressions a prominent path from
- * the collection hub, not to pretend this is global search-volume data.
+ * earning meaningful `[name] vocal range` impressions a named path from the
+ * collection hub, listed after the chart, not to pretend this is global
+ * search-volume data.
  *
  * Since 2026-10-09 a singer page without a reviewed or disputed evidence
  * record is noindexed, which covers most of this list (on 2026-10-12 only

@@ -15,6 +15,7 @@ import {
 import { REFERENCE_BANDS, representativeSingers } from "@/lib/singers-analysis";
 import { getSingerReviewStatus } from "@/lib/singer-evidence";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
+import { AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_ID, ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
@@ -313,6 +314,22 @@ export default function VocalRangeByVoiceTypePage() {
 
       <div className="space-y-6">
         <Card>
+          {/* The visible author the JSON-LD's author pointer names, as on the
+              free chapters, /atlas and /glossary. */}
+          <p className="mb-4 text-sm text-mut">
+            By{" "}
+            <a
+              href={AUTHOR_NODE.url}
+              rel="author"
+              className="text-violet-ink hover:underline"
+            >
+              {AUTHOR_NAME}
+            </a>{" "}
+            · a free reference from{" "}
+            <Link href="/atlas" className="text-violet-ink hover:underline">
+              The Voice Atlas
+            </Link>
+          </p>
           <h2 className="text-xl">The short answer</h2>
           <p className="mt-3 max-w-3xl text-mut">
             Each of the eight traditional categories is defined across two

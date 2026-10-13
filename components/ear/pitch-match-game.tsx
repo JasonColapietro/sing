@@ -23,6 +23,7 @@ import {
   ShellMicGate,
   StepDone,
   SummaryView,
+  useActiveStart,
   useEarSession,
   type OnEarComplete,
 } from "./session";
@@ -166,7 +167,7 @@ export function PitchMatchGame({
   const [heldMs, setHeldMs] = useState(0);
   const [leftMs, setLeftMs] = useState(WINDOW_MS);
   const [liveCents, setLiveCents] = useState<number | null>(null);
-  const [startedAt, setStartedAt] = useState(() => performance.now());
+  const [playClock, restartClock] = useActiveStart(session.results.length);
   const rafRef = useRef(0);
   const phaseRef = useRef<Phase>("listen");
   useEffect(() => {
@@ -197,13 +198,13 @@ export function PitchMatchGame({
   // lives here too.
   useEffect(() => {
     if (listening && target === null && !session.done) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the round that beginRound() below immediately plays audio for
-      setStartedAt(performance.now());
+      restartClock();
       const t = pickTarget();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the round that beginRound() below immediately plays audio for
       setTarget(t);
       beginRound(t);
     }
-  }, [listening, target, session.done, pickTarget, beginRound]);
+  }, [listening, target, session.done, pickTarget, beginRound, restartClock]);
 
   // The sing-phase loop: accumulate in-tune time inside the window.
   useEffect(() => {
@@ -293,7 +294,7 @@ export function PitchMatchGame({
           game="pitch-match"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt}
+          startedAt={playClock}
           onExit={onExit}
           onComplete={onComplete}
         />
@@ -305,7 +306,7 @@ export function PitchMatchGame({
           game="pitch-match"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt}
+          startedAt={playClock}
           onReplay={() => {
             session.reset();
             setTarget(null);

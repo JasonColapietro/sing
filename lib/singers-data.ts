@@ -360,7 +360,7 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Ordinary",
     "lowSource": "Carry You Home",
     "highSource": "Ordinary",
-    "blurb": "Stadium-folk balladry: a husky baritone that builds from hushed verse to a huge, hymn-like chorus with choir-sized reverb.",
+    "blurb": "Stadium-folk balladry: a husky voice that builds from hushed verse to a huge, hymn-like chorus with choir-sized reverb.",
     "technique": "Dynamics do the storytelling. Verses sit husky and close, almost spoken over fingerpicking, then the chorus opens into a full-throated, anthemic belt with the vowels widened and a slight rasp on top, a shape borrowed from worship music as much as from pop. Vibrato stays narrow even at volume. Map the crescendo across the whole song and rehearse the quiet sections quieter than feels natural, so the lift has somewhere to go. Peaking in verse one flattens the entire arc."
   },
   {
@@ -789,7 +789,7 @@ export const SINGERS: Singer[] = [
     "signatureSong": "Tum Hi Ho",
     "lowSource": null,
     "highSource": null,
-    "blurb": "Light nasal tenor, breath-forward; slips into head voice at the top rather than pushing chest.",
+    "blurb": "Light nasal voice, breath-forward; slips into head voice at the top rather than pushing chest.",
     "technique": "Breath leads the tone: light, slightly nasal in placement, conversational even as the dynamic rises. The distance between the A4 belt and the C5 ceiling tells you how the instrument is wired, because above that belt he thins into head voice rather than driving chest, so the highest notes arrive quieter and softer-edged. Attacks are gentle, vibrato slight and late, ornaments kept small. Pushed for volume, the fourth-octave phrases lose the intimacy the phrasing is built on."
   },
   {

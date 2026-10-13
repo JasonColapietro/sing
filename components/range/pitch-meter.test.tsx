@@ -14,6 +14,15 @@ vi.mock("@/lib/audio/use-pitch", () => ({
 }));
 vi.mock("@/lib/pro", () => ({ useIsPro: () => false, useProReady: () => true }));
 vi.mock("@/components/audio/audio-setup", () => ({ AudioSetup: () => null }));
+// next/link, marked, so a plain anchor (a program's view needs one) can be
+// told from a router link.
+vi.mock("next/link", () => ({
+  default: ({ href, children, ...rest }: { href: string; children: React.ReactNode }) => (
+    <a data-next-link="" href={href} {...rest}>
+      {children}
+    </a>
+  ),
+}));
 
 import { LastRun, PitchMeter } from "./pitch-meter";
 
@@ -85,13 +94,75 @@ describe("the pitch meter after Stop mic", () => {
   it("reads whether a retest is due when the mic starts, not during render", () => {
     const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
     const begin = src.slice(src.indexOf("const begin = async"), src.indexOf("const reset = () =>"));
-    expect(begin).toContain("setRetestDue(rangeRetestDue(range, Date.now()));");
-    // Both prompts follow it: the live panel and the stopped card.
-    expect(src).toContain("retestDue={retestDue}");
-    expect(src).toMatch(/explored && low !== null && high !== null && !retestDue && saved &&/);
+    expect(begin).toContain("const now = Date.now();");
+    expect(begin).toContain("setMicStartedAt(now);");
+    expect(begin).toContain("setRetestDue(rangeRetestDue(range, now));");
+    // Both prompts follow it, less a retest a running program schedules: the
+    // live panel and the stopped card.
+    expect(src).toContain("const offerRetest = retestDue && programNote === null;");
+    expect(src).toContain("retestDue={offerRetest}");
+    expect(src).toMatch(/explored && low !== null && high !== null && !offerRetest && saved &&/);
     // A singer whose saved range is due a retest already has a result, so the
     // live panel says the retest is due rather than offering a first one.
     expect(src).toContain("is six weeks old or more, so a retest is due");
+  });
+
+  it("leaves a stale range's retest to a running program that schedules one", () => {
+    // The /progress coach tells this singer to wait for the program's day; the
+    // meter used to call a retest due and lead with the test button.
+    const note =
+      "Your range was last measured 50 days ago. Your next range test is on day 14 of Foundations in 2 weeks. Wait for that day: a test taken earlier does not count toward it.";
+    const html = renderToStaticMarkup(
+      <LastRun low={47} high={61} lastLog={null} retestDue={false} programNote={note} onTryRange={() => {}} />,
+    );
+    expect(html).toContain(note);
+    expect(html).not.toContain("Take the 2-minute range test");
+    expect(html).not.toContain("retest is due");
+    expect(html).toContain('href="/warmups"');
+    expect(html).toContain('href="/songs"');
+    expect(html).not.toContain("today’s plan");
+    // Both views read it from the coach's own builder, so the words match,
+    // timed from the instant the mic started.
+    const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
+    expect(src).toContain("staleRangeProgramNote(range, programRange, micStartedAt)");
+    expect(src).toContain("programNote={programNote}");
+    expect(src).toContain("so far. ${programNote}");
+  });
+
+  it("sends a singer whose program tests the range today to that day's plan", () => {
+    // "Take the test there" needs a there: the program's own view, as a
+    // plain document load (lib/program-ids.ts programViewHref).
+    const note =
+      "Your range was last measured 50 days ago. Today's program day is day 14 of Foundations in 2 weeks. It takes your next range test after its warm-up, so take the test there.";
+    const html = renderToStaticMarkup(
+      <LastRun
+        low={47}
+        high={61}
+        lastLog={null}
+        retestDue={false}
+        programNote={note}
+        programDayHref="/programs?program=foundations-2w"
+        onTryRange={() => {}}
+      />,
+    );
+    expect(html).toContain(note.replace("'", "&#x27;"));
+    expect(html).not.toContain("Take the 2-minute range test");
+    const plan = /<a\b[^>]*href="\/programs\?program=foundations-2w"[^>]*>Open today’s plan<\/a>/.exec(html);
+    expect(plan?.[0]).toBeDefined();
+    expect(plan?.[0]).not.toContain("data-next-link");
+    expect(html).toContain('href="/warmups"');
+    expect(html).toContain('href="/songs"');
+  });
+
+  it("reads the running program from its own chunk, only for a stale saved range", () => {
+    // lib/programs carries every program and the song catalog; this page's
+    // cold traffic has no program and never needs them.
+    const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
+    expect(src).not.toMatch(/from "@\/lib\/programs"|from "@\/components\/programs\/use-program"|from "@\/components\/practice\/program-day"/);
+    expect(src).toContain('dynamic(() => import("@/components/practice/program-range-probe"))');
+    expect(src).toMatch(/const probe = staleSaved \? <ProgramRangeProbe /);
+    const note = readFileSync(new URL("../practice/program-range-note.ts", import.meta.url), "utf8");
+    expect(note).not.toMatch(/from "@\/lib\/programs"/);
   });
 
   it("clears the last save on every new start that opens the mic", () => {

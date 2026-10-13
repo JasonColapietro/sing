@@ -1,6 +1,5 @@
 "use client";
 
-import { midiToLabel } from "@/lib/audio/notes";
 import {
   popFit,
   popNoteLabel,
@@ -95,7 +94,9 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
 
   const low = progress.range.lowMidi as number;
   const high = progress.range.highMidi as number;
-  const yours = `${midiToLabel(low)}–${midiToLabel(high)}`;
+  // Spelled in the song's key, like the song's own notes beside it: a flat
+  // key's Bb4 against a saved A#4 reads as two notes when it is one.
+  const yours = `${popNoteLabel(song, low)}–${popNoteLabel(song, high)}`;
 
   // The range test reports limits, not a comfortable band, so an end note on
   // (or a semitone inside) a tested limit is not called a plain fit, and key
@@ -146,19 +147,61 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
     progress.range,
   );
 
+  // Twelve semitones is the written key an octave away, which octaveNote
+  // names, not a key change; a move past twelve is that octave (or two) plus
+  // the rest. No sentence asks for a key change of an octave or more, which
+  // no key control (the songbook's stops at twelve) offers.
+  const shift = (verb: "dropping" | "raising", semis: number, short: boolean) => {
+    if (semis < 12) return `${verb} ${short ? "it" : "the key"} by ${semis}`;
+    const octaves = Math.floor(semis / 12);
+    const rest = semis % 12;
+    return `singing it ${octaves === 1 ? "an octave" : `${octaves === 2 ? "two" : octaves} octaves`} ${verb === "dropping" ? "lower" : "higher"}${rest ? ` and ${verb} the key by ${rest} more` : ""}`;
+  };
+  const lead = (words: string) => words.charAt(0).toUpperCase() + words.slice(1);
+  const semitones = `${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"}`;
+  // Over or under the limit: the minimum shift parks that end on it, and the
+  // centring shift (when there is room for one) is named after it.
+  const outside = (
+    verb: "dropping" | "raising",
+    opening: string,
+    landing: string,
+    centring: number,
+    other: string,
+  ) =>
+    fit.offsetSemis === 12
+      ? `${opening}${octaveNote}${roomToCentre && centring > 12 ? ` ${lead(shift(verb, centring, false))} centres it in your range.` : ""}`
+      : `${opening} ${lead(shift(verb, fit.offsetSemis, false))} would bring it inside, ${landing}${
+          // A centring shift of exactly twelve is the octave octaveNote names.
+          roomToCentre && centring > fit.offsetSemis && centring !== 12
+            ? `; ${shift(verb, centring, true)} centres it in your range`
+            : ""
+        }.${other}${octaveNote}`;
+
   const message =
     fit.verdict === "fits"
       ? headroom <= 1 && footroom <= 1
         ? `As written, every note of ${name} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"} and its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect both ends of this song to be work.`
         : headroom <= 1
-          ? `As written, every note of ${name} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"}. ${limitsNote}, so expect the top of this song to be work.${roomToCentre && -centre >= 1 ? ` Dropping the key by ${-centre} centres it in your range.` : ""}`
+          ? `As written, every note of ${name} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"}. ${limitsNote}, so expect the top of this song to be work.${roomToCentre && -centre >= 1 ? ` ${lead(shift("dropping", -centre, false))} centres it in your range.` : ""}`
           : footroom <= 1
-            ? `As written, every note of ${name} is inside your tested range, but its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect the bottom of this song to be work.${roomToCentre && centre >= 1 ? ` Raising the key by ${centre} centres it in your range.` : ""}`
+            ? `As written, every note of ${name} is inside your tested range, but its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect the bottom of this song to be work.${roomToCentre && centre >= 1 ? ` ${lead(shift("raising", centre, false))} centres it in your range.` : ""}`
             : `As written, ${name} sits inside your range. The top of the song leaves you ${headroom} semitones of headroom.`
       : fit.verdict === "high"
-        ? `The top of ${name} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} above your tested ceiling of ${midiToLabel(high)}. Dropping the key by ${fit.offsetSemis} would bring it inside, with the top note on that ceiling${roomToCentre && -centre > fit.offsetSemis ? `; dropping it by ${-centre} centres it in your range` : ""}.${otherEnd("lowest")}${octaveNote}`
+        ? outside(
+            "dropping",
+            `The top of ${name} is ${semitones} above your tested ceiling of ${popNoteLabel(song, high)}.`,
+            "with the top note on that ceiling",
+            -centre,
+            otherEnd("lowest"),
+          )
         : fit.verdict === "low"
-          ? `The low end of ${name} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} below your tested floor of ${midiToLabel(low)}. Raising the key by ${fit.offsetSemis} would bring it inside, with the bottom note on that floor${roomToCentre && centre > fit.offsetSemis ? `; raising it by ${centre} centres it in your range` : ""}.${otherEnd("top")}${octaveNote}`
+          ? outside(
+              "raising",
+              `The low end of ${name} is ${semitones} below your tested floor of ${popNoteLabel(song, low)}.`,
+              "with the bottom note on that floor",
+              centre,
+              otherEnd("top"),
+            )
           : `${name} spans more semitones than your tested range covers, so no key change puts every note inside that saved range. Start with a smaller pattern rather than pushing for the extremes.`;
 
   return (

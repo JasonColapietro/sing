@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_PROGRESS, type ProgressState } from "@/lib/progress-shape";
@@ -7,6 +9,15 @@ import { EXERCISES, PRO_PACKS } from "./exercises";
 import type { SessionSummaryData } from "./lib";
 
 const stored = vi.hoisted(() => ({ progress: null as ProgressState | null }));
+const guide = vi.hoisted(() => ({ pct: 70 }));
+
+vi.mock("./prefs", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./prefs")>();
+  return {
+    ...actual,
+    useWarmupPrefs: () => ({ ...actual.DEFAULT_WARMUP_PREFS, guidePct: guide.pct }),
+  };
+});
 
 vi.mock("@/lib/pro", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/pro")>(),
@@ -50,6 +61,7 @@ function render(
 
 beforeEach(() => {
   stored.progress = null;
+  guide.pct = 70;
 });
 
 describe("the single-exercise summary after one of today's three", () => {
@@ -182,5 +194,64 @@ describe("the ladder diagnosis on a descending drill", () => {
     );
     expect(html).toContain("was the shakiest note in the session: within 50 cents of the target for 50% of its scored time, about 40 cents off on average.");
     expect(html).not.toMatch(/in tune/i);
+  });
+});
+
+describe("what the summary says the score measured", () => {
+  const ex = EXERCISES[0];
+  const rep = { root: 50, score: 82, avgCentsErr: 12, skipped: false };
+  const data = (mode: SessionSummaryData["mode"]): SessionSummaryData => ({
+    ex, results: [rep], avgScore: 82, best: rep, xpGained: 20, newAchievements: [], mode,
+  });
+
+  it("says the guide was sounding in sing-along with the guide on", () => {
+    const html = render(data("sing-along"), { daily: false });
+    expect(html).toContain("The guide was sounding while you sang");
+  });
+
+  it("does not say the guide was sounding when it was set to Off", () => {
+    // Off plays the pattern once at the start and nothing under the voice.
+    guide.pct = 0;
+    const html = render(data("sing-along"), { daily: false });
+    expect(html).not.toContain("The guide was sounding while you sang");
+    expect(html).toContain(
+      "The guide was off while you sang (it played the pattern once at the start), so this score measures how well you held to notes you were carrying yourself.",
+    );
+  });
+
+  it("keeps call and response's own line while the reference plays", () => {
+    expect(render(data("call-response"), { daily: false })).toContain("The guide had stopped before you sang");
+  });
+
+  it("does not say a guide stopped in call and response when the reference was off", () => {
+    // The level governs the reference itself there: at Off no pitch plays.
+    guide.pct = 0;
+    const html = render(data("call-response"), { daily: false });
+    expect(html).not.toContain("The guide had stopped before you sang");
+    expect(html).toContain(
+      "The reference was off, so no note played before you sang, and this score measures how well you found and held each note on your own.",
+    );
+  });
+
+  it("names no shakiest note when every scored note held for all of its time", () => {
+    const notes = [{ midi: 52, hitSec: 2, possibleSec: 2, centsSum: 8 * 60, centsFrames: 60 }];
+    const clean = { ...rep, score: 100, notes };
+    const html = render(
+      { ex, results: [clean], avgScore: 100, best: clean, xpGained: 20, newAchievements: [], mode: "sing-along" },
+      { daily: false },
+    );
+    expect(html).not.toContain("shakiest note");
+  });
+
+  it("sells Pro's per-note chart as a chart, not a view over time", () => {
+    // Pro's 'Accuracy by note' is one tally across every kept session, one
+    // bar per note with no time axis (components/progress/pro-charts.tsx).
+    // The nudge renders only once Pro status is known, so the copy is read
+    // from both warmup summaries' source.
+    for (const file of ["session-summary.tsx", "routine-summary.tsx"]) {
+      const src = readFileSync(fileURLToPath(new URL(file, import.meta.url)), "utf8");
+      expect(src, file).toContain("Pro adds the full daily coach plan, a per-note accuracy chart and no daily limit.");
+      expect(src, file).not.toMatch(/accuracy over time|accuracy trends?/);
+    }
   });
 });

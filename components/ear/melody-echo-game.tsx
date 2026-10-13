@@ -25,6 +25,7 @@ import {
   ShellMicGate,
   StepDone,
   SummaryView,
+  useActiveStart,
   useEarSession,
   type OnEarComplete,
 } from "./session";
@@ -65,7 +66,7 @@ export function MelodyEchoGame({
   const [leftMs, setLeftMs] = useState(0);
   const [singing, setSinging] = useState(false);
 
-  const [startedAt, setStartedAt] = useState(() => performance.now());
+  const [playClock, restartClock] = useActiveStart(session.results.length);
   const framesRef = useRef<VoicedFrame[]>([]);
   const rafRef = useRef(0);
   const timerRef = useRef(0);
@@ -96,13 +97,13 @@ export function MelodyEchoGame({
   // that must not run during render), so the state it seeds lives here too.
   useEffect(() => {
     if (listening && melody === null && !session.done) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the round that beginRound() below immediately plays audio for
-      setStartedAt(performance.now());
+      restartClock();
       const m = generateMelody(difficulty, singableRegister(progress.range));
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- seeds the round that beginRound() below immediately plays audio for
       setMelody(m);
       beginRound(m);
     }
-  }, [listening, melody, session.done, difficulty, progress.range, beginRound]);
+  }, [listening, melody, session.done, difficulty, progress.range, beginRound, restartClock]);
 
   const finishSinging = useCallback(() => {
     if (phaseRef.current !== "sing" || melody === null) return;
@@ -192,7 +193,7 @@ export function MelodyEchoGame({
           game="melody-echo"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt}
+          startedAt={playClock}
           onExit={onExit}
           onComplete={onComplete}
         />
@@ -204,7 +205,7 @@ export function MelodyEchoGame({
           game="melody-echo"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt}
+          startedAt={playClock}
           onReplay={() => {
             session.reset();
             setMelody(null);

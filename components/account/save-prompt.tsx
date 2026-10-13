@@ -282,8 +282,9 @@ export function AccountSavePrompt({
           {downloaded ? (
             <p role="status" className="mt-1.5 max-w-xl text-sm text-mut">
               Backup downloaded. It holds your record as of today; if this
-              browser is ever cleared, import it on the Progress page. A fresh
-              one is offered here after a couple more weeks of practice.
+              browser is ever cleared, open Progress and use Import JSON under
+              Your data. A fresh one is offered here after a couple more weeks
+              of practice.
             </p>
           ) : (
             <>

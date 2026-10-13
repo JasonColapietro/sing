@@ -82,6 +82,13 @@ async function sessionRows(page, state) {
 
 async function erased(page) {
   await page.getByText("Nothing logged yet", { exact: true }).waitFor();
+  // A cleared browser's first screen points at the restore, under the start
+  // buttons (components/progress/progress-client.tsx FreshStart).
+  assert.equal(
+    await page.getByRole("link", { name: "Import it under Your data", exact: true }).getAttribute("href"),
+    "#your-data",
+    "the empty state links to the import",
+  );
   await page.getByText("No range on file", { exact: true }).waitFor();
   await page.getByRole("button", { name: "Resume sync and restore", exact: true }).waitFor();
   await sessionRows(page, empty);
@@ -103,6 +110,17 @@ async function eraseThroughUi(page) {
 }
 
 async function importThroughUi(page) {
+  // The way a singer back on a cleared browser reaches it: the empty state's
+  // link, which lands on the Your data section with Import JSON in it.
+  await page.getByRole("link", { name: "Import it under Your data", exact: true }).click();
+  assert.equal(
+    await page.evaluate(() => {
+      const top = document.getElementById("your-data")?.getBoundingClientRect().top;
+      return top !== undefined && top >= 0 && top < innerHeight;
+    }),
+    true,
+    "the link lands on Your data",
+  );
   const chooser = page.waitForEvent("filechooser");
   await page.getByRole("button", { name: "Import JSON", exact: true }).click();
   await (await chooser).setFiles({

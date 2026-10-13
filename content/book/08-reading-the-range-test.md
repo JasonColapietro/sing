@@ -51,7 +51,7 @@ The label is a rough classification based on where your two edges fall. As short
 
 What it is not is an identity, a ceiling, or a verdict. Classical classification uses far more than two numbers — tessitura, timbre, where the transitions sit, how the voice holds up under sustained load — and even then teachers disagree, and singers get reclassified years into a career. A label derived from two extremes on a phone is a first approximation.
 
-The failure mode is letting the label decide what you attempt. A baritone label does not put high notes off-limits. It says your comfortable centre probably sits lower than a tenor's. That centre is the thing that actually decides whether a song fits, and the test does not report it — a low note, a high note and a label are the whole of what comes back. The chapters on choosing songs return to this.
+The failure mode is letting the label decide what you attempt. A baritone label does not put high notes off-limits. It says your comfortable centre probably sits lower than a tenor's. That centre is the thing that actually decides whether a song fits, and the test does not measure it — the result's "Start in the middle" band is only your two edges, trimmed: a starting guess. The chapters on choosing songs return to this.
 
 If the label changes between tests, that is usually your edges wobbling across a category boundary rather than your voice changing type. Do not celebrate it, do not mourn it.
 

@@ -445,9 +445,10 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "history",
     title: "Cloud sync",
-    // Song mastery (suede-sing:mastered:v2) and program place live in their
-    // own browser keys, outside the synced progress record.
-    desc: "Your sessions, streaks, scores and range follow you across devices, backed up automatically. Song mastery and your place in a program stay in the browser where you earned them.",
+    // Song mastery (suede-sing:mastered:v2), the ear and breath path bests
+    // (suede-sing:ear-best:v1, suede-sing:breath-bests:v1) and program place
+    // live in their own browser keys, outside the synced progress record.
+    desc: "Your sessions, streaks, scores and range follow you across devices, backed up automatically. Song mastery, ear-training and breath path stars, and your place in a program stay in the browser where you earned them.",
   },
 ];
 
@@ -488,7 +489,11 @@ export const PLAN_ROWS: Array<{
     free: `${FREE_PROGRAM_COUNT}, plus week 1 of ${PRO_PROGRAM_COUNT} more`,
     pro: `All ${FREE_PROGRAM_COUNT + PRO_PROGRAM_COUNT}`,
   },
-  { label: "Vocal analytics", free: "Session scores", pro: "Per-note accuracy and trends" },
+  // Pro's per-note chart is one tally across every kept session, one bar per
+  // note with no time axis (components/progress/pro-charts.tsx); the score
+  // trend by week is on /progress for everyone. Word-neutral: the section's
+  // word cap (lib/seo-section-structure.test.tsx) counts both renderings.
+  { label: "Vocal analytics", free: "Scores and trend", pro: "+ per-note chart" },
   // The record keeps the latest MAX_RANGE_HISTORY tests and MAX_SESSIONS
   // sessions (lib/progress-shape.ts), Pro included, and a daily singer passes
   // 500 sessions within months. "Every session you have ever sung" was false

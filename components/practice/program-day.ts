@@ -6,6 +6,12 @@ import {
   type ProgramProgress,
   type ProgramToday,
 } from "@/lib/programs";
+import type { ProgramRangeTest } from "./program-range-note";
+
+// The range-note builders live in a module with no lib/programs import, so the
+// /range pitch meter can use them without shipping every program; the coach
+// and the tests still reach them here.
+export { programRangeNote, staleRangeProgramNote, type ProgramRangeTest } from "./program-range-note";
 
 /**
  * True when today's program day is one this singer cannot open: a free singer
@@ -21,16 +27,6 @@ export function programDayNeedsPro(
   if (isPro || active.view.status !== "todo") return false;
   const day = active.program.days[active.view.index];
   return day !== undefined && !isRestDay(day) && dayNeedsPro(active.program, active.view.index);
-}
-
-/** The running program's next scheduled range test, as the coach names it. */
-export interface ProgramRangeTest {
-  /** The program's name. */
-  name: string;
-  /** Its 1-based program day. */
-  day: number;
-  /** That day is today's, still to do. */
-  today: boolean;
 }
 
 /**

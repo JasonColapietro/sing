@@ -161,6 +161,11 @@ export const RANGE_GUIDE: GuideContent = {
       note: "Fry, falsetto, tessitura — the words on this result, defined.",
     },
     {
+      href: "/atlas/notes-octaves-and-the-keyboard",
+      label: "Scientific pitch notation (free chapter)",
+      note: "What the letter and number on your result mean: C4 is middle C, and a span is counted in semitones.",
+    },
+    {
       href: "/learn/voice/room-check/your-range",
       label: "Your Range lessons",
       note: "Three short free lessons on finding your low and high notes without forcing either end.",
@@ -584,7 +589,7 @@ export const SONGS_GUIDE: GuideContent = {
       "Work the two bars either side of a register transition rather than the phrase as a whole",
       "Try the same song a semitone up and down to find where the melody sits best against your passaggio",
       "Use the take recorder's A/B compare to check whether a change actually improved anything",
-      "Each song keeps your personal best and a score trend on the free plan; Pro adds every note you sing to a per-note accuracy chart, so a weak note becomes a trend rather than a hunch",
+      "Each song keeps your personal best and a score trend on the free plan; Pro adds every note you sing to a per-note accuracy chart, so a note that keeps missing stands out instead of staying a hunch",
     ],
   },
   faq: [
@@ -937,7 +942,7 @@ export const STUDIO_GUIDE: GuideContent = {
       "Sustain long notes and watch for a slow sag; that is often a support problem showing up as a pitch problem",
       "Sing through your passaggio slowly and watch what the trace does at the transition",
       "Check whether accuracy degrades with volume — many singers go sharp when they push",
-      "Pro charts per-note accuracy from your scored warmups and songs, so a weak note becomes a trend rather than a hunch",
+      "Pro charts per-note accuracy from your scored warmups and songs, so a note that keeps missing stands out instead of staying a hunch",
     ],
   },
   faq: [

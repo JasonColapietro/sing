@@ -9,6 +9,7 @@ import {
   ShellButton,
   StepDone,
   SummaryView,
+  useActiveStart,
   useEarSession,
   type OnEarComplete,
 } from "./session";
@@ -67,7 +68,7 @@ export function HigherLowerGame({
 
   const [round, setRound] = useState<Round>(() => makeRound(difficulty));
   const [answered, setAnswered] = useState<Answer | null>(null);
-  const [startedAt, setStartedAt] = useState(() => performance.now());
+  const [playClock, restartClock] = useActiveStart(session.results.length);
   const advanceRef = useRef(0);
 
   const play = useCallback(() => {
@@ -123,7 +124,7 @@ export function HigherLowerGame({
           game="higher-lower"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt}
+          startedAt={playClock}
           onExit={onExit}
           onComplete={onComplete}
         />
@@ -135,12 +136,12 @@ export function HigherLowerGame({
           game="higher-lower"
           difficulty={difficulty}
           session={session}
-          startedAt={startedAt}
+          startedAt={playClock}
           onReplay={() => {
             session.reset();
             setAnswered(null);
             setRound(makeRound(difficulty));
-            setStartedAt(performance.now());
+            restartClock();
           }}
           onExit={onExit}
         />

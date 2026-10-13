@@ -56,6 +56,11 @@ describe("what a restore brings back", () => {
         const copy = dataControlsCopy({ ...who, paused });
         expect(copy.backup, JSON.stringify({ who, paused })).toContain("Song mastery");
         expect(copy.backup).toContain("your place in a program stay in this browser");
+        // The ear and breath path bests live in their own keys too, and the
+        // ear log carries no difficulty to rebuild them from.
+        expect(copy.backup).toContain("the stars on the ear-training and breath paths");
+        // Bracketed, so the list does not read as three things song mastery opens.
+        expect(copy.backup).toContain("Song mastery (which opens the songbook’s later bands), the stars");
       }
     }
   });

@@ -118,9 +118,9 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Sharp and flat",
         aka: ["♯", "♭"],
         definition:
-          "Sharp means the note came out above the pitch you were aiming at, flat means below.",
+          "In a note name, ♯ (sharp) means a semitone above the letter and ♭ (flat) a semitone below it, so F♯ and G♭ name the same black key; in tuning, sharp means a note came out above the pitch you were aiming at and flat means below.",
         where:
-          "The studio's two pills say which side of the target you are on while you hold a note.",
+          "Every note name in the app uses the first sense, written with # and b, as in G#3 or Bb4; the studio's two pills use the second, saying which side of the target you are on while you hold a note.",
         href: "/studio",
         domain: "music",
       },

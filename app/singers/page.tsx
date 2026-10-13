@@ -225,10 +225,32 @@ export default function SingersPage() {
         </section>
       )}
 
+      {/* Real voice-type destinations stay ahead of the long singer directory. */}
+      <section className="mt-12">
+        <h2 className="text-xl">Browse by voice type</h2>
+        <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {VOICE_KINDS.map((v) => (
+            <li key={v}>
+              <Link
+                href={`/singers/voice-type/${voiceTypeSlug(v)}`}
+                prefetch={false}
+                className="flex min-h-11 items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
+              >
+                <span className="text-sm font-medium">{v === "Contralto" ? "Contralto singers and their vocal ranges" : `${v} singers`}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <SingersDirectory />
+      {/* After the chart, not above it: on a phone these cards put the chart
+          five screens down, and most of the pages they link are noindexed
+          (lib/singer-search-priority.ts), so they no longer earn that place. */}
       <section
         data-singer-search-priority="true"
         aria-labelledby="popular-vocal-range-lookups"
-        className="mt-10"
+        className="mt-12"
       >
         <h2 id="popular-vocal-range-lookups" className="text-xl">
           Popular vocal range lookups
@@ -257,25 +279,6 @@ export default function SingersPage() {
         </ul>
       </section>
 
-      {/* Real voice-type destinations stay ahead of the long singer directory. */}
-      <section className="mt-12">
-        <h2 className="text-xl">Browse by voice type</h2>
-        <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {VOICE_KINDS.map((v) => (
-            <li key={v}>
-              <Link
-                href={`/singers/voice-type/${voiceTypeSlug(v)}`}
-                prefetch={false}
-                className="flex min-h-11 items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
-              >
-                <span className="text-sm font-medium">{v === "Contralto" ? "Contralto singers and their vocal ranges" : `${v} singers`}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <SingersDirectory />
       <SingerCrawlIndex />
 
       <section className="mt-12">

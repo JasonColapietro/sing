@@ -1,12 +1,10 @@
 "use client";
 
-import { CapSlide } from "@/components/practice/free-cap";
+import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
 import { useFreeCap } from "@/lib/free-cap";
 import { liveStreak } from "@/components/account/save-state";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { useProgress, type Achievement } from "@/lib/progress";
 import { SessionShell } from "@/components/practice/session-shell";
@@ -275,6 +273,74 @@ export function breathRunSubtitle(doneSteps: number, firstStep: number, stepCoun
   return ran === 1 ? `Step ${stepCount} done` : `Steps ${firstStep + 1}–${stepCount} done`;
 }
 
+/**
+ * The end of a breath set. Once the free minutes are spent, whether the cap
+ * stopped the set or its last step used them up, "Play again" could only
+ * reopen the cap slide, so it is left off and the note says why the set
+ * stopped and when it opens again.
+ */
+export function BreathRunResults({
+  routine,
+  results,
+  firstStep,
+  capped,
+  onContinue,
+  onAgain,
+}: {
+  routine: BreathRoutine;
+  results: (BreathDrillResult | null)[];
+  /** The step this run opened on; the ones before it were sung in an earlier run. */
+  firstStep: number;
+  capped: boolean;
+  onContinue: () => void;
+  onAgain: () => void;
+}) {
+  const progress = useProgress();
+  const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
+  const stepCount = routine.steps.length;
+  // A step counts as done when it ran long enough to be logged — its own
+  // MIN_LOG_SEC — not merely because End was pressed.
+  const doneSteps = results.filter((r) => r !== null && r.logged !== null).length;
+  // Only this run's steps: the ones before a `?step=` link's were sung before.
+  const ran = stepCount - firstStep;
+  const scored = results.filter(
+    (r): r is BreathDrillResult => !!r && r.score !== null,
+  );
+  const score = scored.length
+    ? Math.round(
+        scored.reduce((a, r) => a + (r.score ?? 0), 0) / scored.length,
+      )
+    : null;
+  return (
+    <ResultsScreen
+      title={routine.name}
+      subtitle={breathRunSubtitle(doneSteps, firstStep, stepCount)}
+      score={score}
+      stars={
+        score !== null
+          ? starsForScore(score)
+          : starsForCompletion(doneSteps, ran)
+      }
+      xp={results.reduce((a, r) => a + (r?.logged?.xpGained ?? 0), 0)}
+      streakDays={liveStreak(progress.streak)}
+      goal={{ doneSec: goalDoneSec, goalSec }}
+      rows={routine.steps.map((s, i) => ({
+        label: breathStepTitle(s),
+        score: results[i]?.score ?? null,
+        // The warmup summary's wording for the same case (routine-summary.tsx),
+        // capitalised like this list's own "Skipped".
+        note: i < firstStep ? "Not in this run" : (results[i]?.label ?? "Skipped"),
+      }))}
+      achievements={mergeAchievements(results)}
+      onContinue={onContinue}
+      onAgain={capped ? undefined : onAgain}
+    >
+      {capped && <CappedAgainNote />}
+    </ResultsScreen>
+  );
+}
+
 export function BreathRunner({
   capped = false,
   routine,
@@ -299,10 +365,6 @@ export function BreathRunner({
   const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: firstStep });
   const [results, setResults] = useState<(BreathDrillResult | null)[]>([]);
 
-  const progress = useProgress();
-  const { goalSec } = useDailyGoal();
-  const goalDoneSec = useGoalDoneSec(progress);
-
   function closeStep(i: number, data: BreathDrillResult | null) {
     const next = [...results];
     next[i] = data;
@@ -324,40 +386,12 @@ export function BreathRunner({
   }
 
   if (phase.kind === "done") {
-    // A step counts as done when it ran long enough to be logged — its own
-    // MIN_LOG_SEC — not merely because End was pressed.
-    const doneSteps = results.filter((r) => r !== null && r.logged !== null).length;
-    // Only this run's steps: the ones before a `?step=` link's were sung before.
-    const ran = stepCount - firstStep;
-    const scored = results.filter(
-      (r): r is BreathDrillResult => !!r && r.score !== null,
-    );
-    const score = scored.length
-      ? Math.round(
-          scored.reduce((a, r) => a + (r.score ?? 0), 0) / scored.length,
-        )
-      : null;
     return (
-      <ResultsScreen
-        title={routine.name}
-        subtitle={breathRunSubtitle(doneSteps, firstStep, stepCount)}
-        score={score}
-        stars={
-          score !== null
-            ? starsForScore(score)
-            : starsForCompletion(doneSteps, ran)
-        }
-        xp={results.reduce((a, r) => a + (r?.logged?.xpGained ?? 0), 0)}
-        streakDays={liveStreak(progress.streak)}
-        goal={{ doneSec: goalDoneSec, goalSec }}
-        rows={routine.steps.map((s, i) => ({
-          label: breathStepTitle(s),
-          score: results[i]?.score ?? null,
-          // The warmup summary's wording for the same case (routine-summary.tsx),
-          // capitalised like this list's own "Skipped".
-          note: i < firstStep ? "Not in this run" : (results[i]?.label ?? "Skipped"),
-        }))}
-        achievements={mergeAchievements(results)}
+      <BreathRunResults
+        routine={routine}
+        results={results}
+        firstStep={firstStep}
+        capped={capped}
         onContinue={onExit}
         onAgain={again}
       />
@@ -478,23 +512,8 @@ export function BreathDrillSession({
               }
         }
       >
-        {/* Why "Play again" is gone, and when it comes back. On the paper
-            panel, like the warmup summaries' version, because the results
-            screen is dark. */}
-        {capped && (
-          <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
-            That&apos;s today&apos;s {FREE_DAILY_MINUTES} free minutes of guided practice. A
-            fresh {FREE_DAILY_MINUTES} minutes opens at midnight; the pitch studio and the range
-            test stay open now.{" "}
-            <Link
-              href="/pro#buy"
-              className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
-            >
-              Pro has no daily limit
-            </Link>
-            .
-          </p>
-        )}
+        {/* Why "Play again" is gone, and when it comes back. */}
+        {capped && <CappedAgainNote />}
       </ResultsScreen>
     );
   }

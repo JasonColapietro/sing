@@ -184,6 +184,16 @@ describe("product claims", () => {
     expect(guides.STUDIO_GUIDE.advanced.points.join(" ")).toMatch(/scored warmups and songs/);
   });
 
+  /**
+   * Pro's "Accuracy by note" chart is one tally over every kept session, one
+   * bar per note and no time axis, so it shows which note keeps missing but
+   * not whether a note is improving.
+   */
+  it("sells the per-note chart as a tally, not a trend over time", () => {
+    expect(all).not.toMatch(/becomes a trend rather than a hunch/);
+    expect(all).not.toMatch(/per-note accuracy (trends?|over time)/i);
+  });
+
   it("scopes the upload claim to audio", () => {
     expect(all).not.toMatch(/nothing is uploaded|nothing uploads/i);
     // Every room logs a session record, and Pro sync uploads it, so "nothing"

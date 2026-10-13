@@ -26,6 +26,7 @@ import {
   revalidatePro,
   startCheckout,
   useProState,
+  type ProState,
 } from "@/lib/pro";
 import {
   formatPrice,
@@ -441,6 +442,71 @@ export function WelcomePanel({
   );
 }
 
+/**
+ * Whether /pro offers lifetime Pro to a subscriber whose plan is set to end.
+ * That subscription never charges again, so lifetime on top of it is safe,
+ * and without the offer the only way to it was to let Pro lapse and meet the
+ * free cap first. But `cancelAtPeriodEnd` is a cached reading, re-checked
+ * every 12 hours (lib/pro.ts revalidatePro), and a subscriber who resumed in
+ * Stripe's portal and closed that tab still reads as ending: sold lifetime
+ * then, they would pay twice, and the purchase drops the subscription id the
+ * in-app "Manage or cancel" needs. So the offer waits for a check against
+ * Stripe that finished on this visit (started at `checkedFrom`) to say the
+ * plan is still active and still ending. A failed check (offline, a Stripe
+ * hiccup) leaves `lastVerified` older than that, and no offer.
+ */
+export function offersLifetimeBeforeLapse(
+  pro: Pick<ProState, "active" | "plan" | "status" | "cancelAtPeriodEnd" | "lastVerified">,
+  checkedFrom: number | null,
+): boolean {
+  return (
+    pro.active &&
+    pro.status === "active" &&
+    (pro.plan === "monthly" || pro.plan === "annual") &&
+    pro.cancelAtPeriodEnd &&
+    checkedFrom !== null &&
+    pro.lastVerified !== null &&
+    Date.parse(pro.lastVerified) >= checkedFrom
+  );
+}
+
+/**
+ * Runs the check offersLifetimeBeforeLapse waits for, and reports when it
+ * started once it has finished (`onChecked`). Back from Stripe's portal by the
+ * browser's back button, /pro can come out of the back/forward cache with the
+ * offer still showing from a check made before the portal visit, where the
+ * plan may since have been resumed. So a restored page withdraws the offer
+ * (`onChecked(null)`) and checks again; an older check that settles after
+ * that is ignored. Returns the cleanup.
+ */
+export function checkEndingPlan(
+  revalidate: () => Promise<void>,
+  onChecked: (checkedFrom: number | null) => void,
+  page: Pick<EventTarget, "addEventListener" | "removeEventListener">,
+  now: () => number = Date.now,
+): () => void {
+  let live = true;
+  let latest = 0;
+  const check = () => {
+    const mine = ++latest;
+    const startedAt = now();
+    void revalidate().then(() => {
+      if (live && mine === latest) onChecked(startedAt);
+    });
+  };
+  const onShow = (event: Event) => {
+    if (!(event as PageTransitionEvent).persisted) return;
+    onChecked(null);
+    check();
+  };
+  check();
+  page.addEventListener("pageshow", onShow);
+  return () => {
+    live = false;
+    page.removeEventListener("pageshow", onShow);
+  };
+}
+
 export function ProClient() {
   const pro = useProState();
   const [billing, setBilling] = useState<CheckoutPlan>("lifetime");
@@ -461,7 +527,20 @@ export function ProClient() {
   const lifetimePurchase = billing === "lifetime";
   const subscriptionPlan =
     !onPass && (pro.plan === "monthly" || pro.plan === "annual");
-  const showPurchaseOptions = !pro.active || onPass;
+  // A subscription set to end, as last cached. The lifetime offer waits for
+  // the fresh check below (offersLifetimeBeforeLapse).
+  const endingAsCached = pro.active && subscriptionPlan && pro.cancelAtPeriodEnd;
+  const [endingCheckedFrom, setEndingCheckedFrom] = useState<number | null>(null);
+  useEffect(() => {
+    if (!endingAsCached) return;
+    return checkEndingPlan(
+      () => revalidatePro({ force: true }),
+      setEndingCheckedFrom,
+      window,
+    );
+  }, [endingAsCached]);
+  const lapsing = offersLifetimeBeforeLapse(pro, endingCheckedFrom);
+  const showPurchaseOptions = !pro.active || onPass || lapsing;
   // Someone was charged and confirmation failed. Until that is sorted, the
   // page must not offer them a second $79 button under "your payment went
   // through".
@@ -572,8 +651,8 @@ export function ProClient() {
   }, [billing]);
 
   /**
-   * The buy button and what sits under it, for a free singer and for a pass
-   * holder alike.
+   * The buy button and what sits under it, for a free singer, a pass holder
+   * and a subscriber whose plan is set to end alike.
    */
   const buyControls = (label: string) => (
     <>
@@ -705,6 +784,10 @@ export function ProClient() {
                   <p className="mt-5 max-w-xl rounded-xl border border-line2 bg-panel2/60 px-3 py-2 text-sm text-mut">
                     Pro is set to end on {periodEnd}. You keep everything you
                     earned when it does.
+                    {/* No lifetime pointer here: the offer waits for a forced
+                        Stripe check, and a sentence added after it returned
+                        grew the hero after load. The plans card and the final
+                        call to action carry it once that check says so. */}
                   </p>
                 )}
                 <p className="mt-6 font-mono text-xs uppercase tracking-[0.14em] text-dim">
@@ -1024,7 +1107,7 @@ export function ProClient() {
                         Runs through {periodEnd}, then ends on its own.
                       </p>
                     )}
-                    {onPass && (
+                    {(onPass || lapsing) && (
                       <div className="mt-2">
                         {buyControls(
                           lifetimePurchase
@@ -1240,11 +1323,11 @@ export function ProClient() {
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <LinkButton
-              href={pro.active && !onPass ? "#plans" : "#buy"}
+              href={pro.active && !onPass && !lapsing ? "#plans" : "#buy"}
               variant="violet"
               size="lg"
             >
-              {onPass
+              {onPass || lapsing
                 ? "Keep Pro for life"
                 : pro.active
                   ? subscriptionPlan

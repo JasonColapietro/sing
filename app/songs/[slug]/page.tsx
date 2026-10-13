@@ -30,6 +30,8 @@ import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { pageRobots } from "@/lib/robots-meta";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
+import { freeLessonsUsingSong } from "@/lib/lesson-readings";
+import { LessonList } from "@/components/learn/lesson-list";
 
 interface Params {
   slug: string;
@@ -222,6 +224,10 @@ export default async function SongPage({
     ? ALL_SONGS.find((s) => s.id === song.arrangementOf)
     : undefined;
   const fullVersions = ALL_SONGS.filter((s) => s.arrangementOf === song.id);
+
+  // The free course modules that practise on this song: the way back from a
+  // song a visitor found first to the lessons built on it, as chapters have.
+  const lessons = freeLessonsUsingSong(song.id);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -438,6 +444,12 @@ export default async function SongPage({
         <LyricSheet song={song} />
         <PublicDomainNote song={song} />
         <SongSectionMap song={song} />
+
+        {lessons.length > 0 && (
+          <Card>
+            <LessonList lessons={lessons} label="Free lessons that use this song" />
+          </Card>
+        )}
 
         {/* The other version of the same melody, in whichever direction it exists. */}
         {(phraseVersion || fullVersions.length > 0) && (

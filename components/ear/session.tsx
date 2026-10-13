@@ -8,6 +8,12 @@ import { SessionShell } from "@/components/practice/session-shell";
 import { logSession, type Achievement } from "@/lib/progress";
 import { emitProResult } from "@/lib/pro-signal";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { trackHiddenTime } from "@/components/practice/hidden-time";
+import {
+  createActiveTimer,
+  trackActivity,
+  type ActiveTimer,
+} from "@/components/practice/active-clock";
 import {
   DIFFICULTIES,
   GAME_NAMES,
@@ -17,6 +23,7 @@ import {
   type Difficulty,
   type GameId,
 } from "./lib";
+import { EAR_GAME_SECONDS } from "./routines";
 
 /* ---------------- session state ---------------- */
 
@@ -365,6 +372,68 @@ export function RoundFeedback({
   );
 }
 
+/* ---------------- play time ---------------- */
+
+/**
+ * Where a finished game's play time is read from. Note catcher passes the
+ * performance.now() instant its play began, which its own pause screen and a
+ * hidden tab already move forward. The turn-based games pass the timer from
+ * useActiveStart, which also leaves out idle time on a visible screen.
+ */
+export type PlayStart = number | ActiveTimer;
+
+/**
+ * The turn-based games' play clock, started at mount; the second value
+ * restarts it for a replay or once the mic is on. Note catcher keeps its own,
+ * which also excludes its pause screen.
+ *
+ * Time the tab spends hidden is left out (hidden-time.ts), and so is idle time
+ * on a visible screen (active-clock.ts): a stretch of more than thirty seconds
+ * with no tap, click or key press and no finished round counts as thirty
+ * seconds. `roundEvent` is the game's count of finished rounds, so a Pitch
+ * match or Melody echo round that ends on its own, with the singer singing
+ * rather than tapping, counts as activity too.
+ */
+export function useActiveStart(roundEvent: number): [ActiveTimer, () => void] {
+  const [timer] = useState(() => createActiveTimer(performance.now()));
+  useEffect(() => {
+    const stopHidden = trackHiddenTime(
+      document,
+      () => performance.now(),
+      (ms) => timer.hidden(ms),
+    );
+    const stopInput = trackActivity(document, () => timer.mark(performance.now()));
+    return () => {
+      stopHidden();
+      stopInput();
+    };
+  }, [timer]);
+  useEffect(() => {
+    timer.mark(performance.now());
+  }, [timer, roundEvent]);
+  const restart = useCallback(() => timer.restart(performance.now()), [timer]);
+  return [timer, restart];
+}
+
+/**
+ * Seconds of a finished game to log as practice.
+ *
+ * The turn-based games wait as long as it takes for a tap: a singer who puts
+ * the phone down mid-game leaves the screen on and visible, and that wait is
+ * not practice. It must not use up a free singer's daily minutes or earn XP.
+ * Their timer (useActiveStart) already leaves out hidden time and any idle
+ * stretch past thirty seconds; as a backstop they are also held to three
+ * times their observed length (EAR_GAME_SECONDS), far more than an honest
+ * slow run needs. Note catcher runs on its own clock and already leaves its
+ * paused time out.
+ */
+export function earSessionSeconds(game: GameId, startedAt: PlayStart, now: number): number {
+  const ms = typeof startedAt === "number" ? now - startedAt : startedAt.elapsedMs(now);
+  const raw = Math.round(ms / 1000);
+  const capped = game === "note-catcher" ? raw : Math.min(raw, EAR_GAME_SECONDS[game] * 3);
+  return Math.max(1, capped);
+}
+
 /* ---------------- logging ---------------- */
 
 export interface EarLogResult {
@@ -387,8 +456,8 @@ export function useLogEarSession(
   game: GameId,
   difficulty: Difficulty,
   session: EarSession,
-  /** performance.now() when play began, for session duration. */
-  startedAt: number,
+  /** When play began, or the game's play clock, for session duration. */
+  startedAt: PlayStart,
   variant?: EarVariant,
 ): EarLogResult {
   const written = useRef(false);
@@ -402,10 +471,7 @@ export function useLogEarSession(
   useEffect(() => {
     if (written.current || !session.done) return;
     written.current = true;
-    const durationSec = Math.max(
-      1,
-      Math.round((performance.now() - startedAt) / 1000),
-    );
+    const durationSec = earSessionSeconds(game, startedAt, performance.now());
     const res = logSession({
       type: "ear",
       durationSec,
@@ -442,7 +508,7 @@ export function StepDone({
   game: GameId;
   difficulty: Difficulty;
   session: EarSession;
-  startedAt: number;
+  startedAt: PlayStart;
   onExit: () => void;
   onComplete: OnEarComplete;
   variant?: EarVariant;
@@ -500,8 +566,8 @@ export function SummaryView({
   game: GameId;
   difficulty: Difficulty;
   session: EarSession;
-  /** performance.now() when play began, for session duration. */
-  startedAt: number;
+  /** When play began, or the game's play clock, for session duration. */
+  startedAt: PlayStart;
   onReplay: () => void;
   onExit: () => void;
   variant?: EarVariant;

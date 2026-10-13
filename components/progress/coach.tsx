@@ -18,8 +18,18 @@ import {
 } from "@/components/warmups/exercises";
 import { TOLERANCE_CENTS } from "@/components/warmups/scoring";
 import { rangeTestHref } from "@/lib/site";
-import type { ProgramRangeTest } from "@/components/practice/program-day";
+import { STAR_THRESHOLDS } from "@/lib/stars";
+import { programRangeNote, type ProgramRangeTest } from "@/components/practice/program-day";
 import { TYPE_META, addDays, localDayStr } from "./format";
+
+/**
+ * A note is only weak below this in-tune rate: the two-star floor (lib/stars.ts
+ * STAR_THRESHOLDS[1]), the same cut the songbook uses for a song's hardest
+ * notes (components/songs/lib.ts hardestNotes). Above it, the quietest note
+ * of a strong fortnight is not a weakness, and calling it one sent a singer
+ * who was landing nearly everything to six minutes of remedial sirens.
+ */
+const WEAK_NOTE_MAX_ACCURACY = STAR_THRESHOLDS[1];
 
 interface PlanItem {
   title: string;
@@ -86,7 +96,9 @@ export function buildPlan(
 
   const recent = state.sessions.filter((s) => s.day >= cutoff);
   const tallies = aggregateNotes(state.sessions, { sinceDay: cutoff });
-  const weak = weakNotes(tallies, { limit: 2 });
+  const weak = weakNotes(tallies, { limit: 2 }).filter(
+    (n) => n.accuracy < WEAK_NOTE_MAX_ACCURACY,
+  );
   const accuracy = overallAccuracy(tallies);
 
   // Weakest scored area over the last 14 days, with a 2-session minimum so a
@@ -155,13 +167,10 @@ export function buildPlan(
       reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test adds a current point to your range over time.`,
     });
   }
-  // The program's name ends its sentence: "The Measured Voice: 12 weeks" has
-  // a colon of its own, and leading with it reads as a heading.
+  // Shared with the /range pitch meter, so the two never disagree.
   const rangeNote =
     hasRange && programRange !== null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS
-      ? programRange.today
-        ? `Your range was last measured ${rangeAgeDays} days ago. Today's program day is day ${programRange.day} of ${programRange.name}. It takes your next range test after its warm-up, so take the test there.`
-        : `Your range was last measured ${rangeAgeDays} days ago. Your next range test is on day ${programRange.day} of ${programRange.name}. Wait for that day: a test taken earlier does not count toward it.`
+      ? programRangeNote(rangeAgeDays, programRange)
       : null;
 
   items.push({
