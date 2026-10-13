@@ -18,10 +18,11 @@
  * <html> are there for the first paint:
  *
  *   data-sing-plan     "pro" | "free" | "capped"
- *   data-sing-program  absent with no program; otherwise a status token
- *                      ("todo", "done" or "finished") and any of "rest",
- *                      "locked", "next-locked", "waits" (the end of
- *                      prepaintState says when each applies)
+ *   data-sing-program  absent with no program, or on another program's own
+ *                      view; otherwise a status token ("todo", "done" or
+ *                      "finished") and any of "rest", "locked",
+ *                      "next-locked", "waits" (the end of prepaintState
+ *                      says when each applies)
  *
  * The server HTML carries every state's version of the affected parts, each
  * marked with a `data-prepaint-*` attribute, and app/globals.css shows the one
@@ -90,11 +91,18 @@ export interface PrepaintConfig {
  * lib/free-cap.ts useFreeCap for the plan, components/programs/use-program.ts
  * for the program (reviveProgress, then reconcileProgress for rest days, then
  * programToday), and components/account/save-state.ts liveStreak.
+ *
+ * `where` is the page's address (the browser's `location`). It matters on one
+ * page: a program's own view, /programs?program=<id> (served from
+ * /programs/<id>, see next.config.ts), shows today's card only when that is
+ * the running program. Viewing another one, the running program shows nowhere
+ * on the page, so the state says no program.
  */
 export function prepaintState(
   storage: { getItem(key: string): string | null },
   now: Date,
   c: PrepaintConfig,
+  where?: { pathname: string; search: string },
 ): PrepaintState {
   function read(key: string): unknown {
     try {
@@ -203,6 +211,16 @@ export function prepaintState(
       else if (capped) tokens.push("waits");
     }
     program = tokens.join(" ");
+    // components/programs/programs-client.tsx programIdAt, on /programs.
+    let viewing: string | null = null;
+    if (where && /^\/programs(?:\/|$)/.test(where.pathname)) {
+      viewing = new URLSearchParams(where.search).get("program");
+      const segment = /^\/programs\/([^/]+)\/?$/.exec(where.pathname);
+      if (viewing === null && segment) viewing = segment[1];
+    }
+    if (viewing !== null && viewing !== record.programId && Object.prototype.hasOwnProperty.call(c.programs, viewing)) {
+      program = null;
+    }
   }
 
   return { plan, program, freeLeft, streakClause };
@@ -218,7 +236,7 @@ export const PREPAINT_GLOBAL = "__singPrepaint";
  */
 export function prepaintScript(config: PrepaintConfig): string {
   return (
-    `try{var s=(${prepaintState.toString()})(localStorage,new Date(),${JSON.stringify(config)}),` +
+    `try{var s=(${prepaintState.toString()})(localStorage,new Date(),${JSON.stringify(config)},location),` +
     `h=document.documentElement;window.${PREPAINT_GLOBAL}=s;h.setAttribute("data-sing-plan",s.plan);` +
     `if(s.program)h.setAttribute("data-sing-program",s.program)}catch(e){}`
   );

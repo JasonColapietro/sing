@@ -27,6 +27,7 @@ import {
   type ProgramReading,
 } from "@/lib/programs";
 import { programDayNeedsPro } from "@/components/practice/program-day";
+import { programViewHref } from "@/lib/program-ids";
 import { saveProgramProgress } from "./store";
 import type { ActiveProgram } from "./use-program";
 
@@ -92,29 +93,57 @@ function Chevron() {
 }
 
 /**
+ * The 0-based step a part-sung routine or breath set should carry on from:
+ * its first step the log does not show, once an earlier one has been sung.
+ * -1 when the row should open at its start (nothing sung yet, the item done,
+ * or not a routine or set). The rooms run a routine or set from the step they
+ * open on to its end, and the free plan stops one between steps, so a row
+ * that always opened at step 1 would spend the next day's minutes on steps
+ * already ticked and never reach the rest. A step `waived` for the saved
+ * range is ticked without being sung, so it is passed over but is not a
+ * start on its own.
+ */
+export function resumeStep(
+  item: ProgramDay["items"][number],
+  stepsDone: readonly boolean[] | undefined,
+  sung: boolean,
+  waived: readonly boolean[] = [],
+): number {
+  if (sung || !stepsDone || itemSteps(item).length < 2) return -1;
+  const at = stepsDone.findIndex((d) => !d);
+  if (at <= 0) return -1;
+  return stepsDone.slice(0, at).some((d, k) => d && !waived[k]) ? at : -1;
+}
+
+/**
  * One row per item of a program day, each a real link into the room that runs
  * it. `done` ticks the items today's log already shows; omitted, the list is a
- * preview with numbers instead of ticks.
+ * preview with numbers instead of ticks. A routine or set part-way done links
+ * to the first step still to sing.
  */
 export function DayItems({
   day,
   done,
   stepsDone,
+  stepsWaived,
 }: {
   day: ProgramDay;
   done?: boolean[];
   /** Per item, which of its steps are done; given, routines and sets list their steps. */
   stepsDone?: boolean[][];
+  /** Per item, which of those steps are skipped for the saved range rather than sung. */
+  stepsWaived?: boolean[][];
 }) {
   return (
     <ol className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel">
       {day.items.map((item, i) => {
         const { title, meta } = itemLabel(item);
         const sung = done?.[i] ?? false;
+        const resumeAt = resumeStep(item, stepsDone?.[i], sung, stepsWaived?.[i]);
         return (
           <li key={i}>
             <Link
-              href={itemHref(item)}
+              href={resumeAt > 0 ? itemStepHref(item, resumeAt) : itemHref(item)}
               data-program-item={item.kind}
               // The sessions that would tick this row, for the browser check.
               data-evidence={JSON.stringify(itemEvidence(item).map((e) => ({ type: e.type, detail: e.details?.[0] ?? null })))}
@@ -134,11 +163,16 @@ export function DayItems({
                   {done && <span className="sr-only">{sung ? "(done today)" : "(not done yet)"}</span>}
                   {itemIsPro(item) && <ProChip />}
                 </span>
-                <span className="mt-1 block text-sm text-dim">{meta}</span>
+                <span className="mt-1 block text-sm text-dim">
+                  {meta}
+                  {resumeAt > 0 ? ` · carries on from step ${resumeAt + 1}` : ""}
+                </span>
               </span>
               <Chevron />
             </Link>
-            {stepsDone && !sung && <ItemSteps item={item} done={stepsDone[i] ?? []} />}
+            {stepsDone && !sung && (
+              <ItemSteps item={item} done={stepsDone[i] ?? []} waived={stepsWaived?.[i] ?? []} />
+            )}
           </li>
         );
       })}
@@ -147,34 +181,73 @@ export function DayItems({
 }
 
 /**
- * A routine's or breath set's steps, each opening on its own. The rooms run a
- * routine from its first step, so a singer the free plan stopped part way
- * through can sing the rest one at a time, on this day or a later one.
+ * A routine's or breath set's steps, each opening on its own. The row above
+ * carries on from the first step still to sing; these let a singer the free
+ * plan stopped part way through pick any one of the rest, on this day or a
+ * later one. Open once a step has been sung, so the ticks show. A step the
+ * routine skips for the saved range (`waived`) needs nothing from the singer:
+ * it says so instead of linking to a step that would only skip itself, and it
+ * neither counts as sung nor opens the list.
  */
-function ItemSteps({ item, done }: { item: ProgramDay["items"][number]; done: boolean[] }) {
+function ItemSteps({
+  item,
+  done,
+  waived,
+}: {
+  item: ProgramDay["items"][number];
+  done: boolean[];
+  waived: boolean[];
+}) {
   const steps = itemSteps(item);
   if (steps.length < 2) return null;
+  const sungCount = done.filter((d, k) => d && !waived[k]).length;
   return (
-    <details className="border-t border-line px-4 py-2 pl-13 text-sm">
+    <details open={sungCount > 0} className="border-t border-line px-4 py-2 pl-13 text-sm">
       <summary className="cursor-pointer py-1 text-dim">
-        Its {steps.length} steps, one at a time ({done.filter(Boolean).length} done)
+        Its {steps.length} steps, one at a time ({sungCount} done)
       </summary>
       <ul className="mt-1 space-y-1 pb-1">
-        {steps.map((st, k) => (
-          <li key={k} className="flex items-baseline gap-2">
-            <span aria-hidden="true" className={done[k] ? "text-ok-ink" : "text-dim"}>
-              {done[k] ? "✓" : "·"}
-            </span>
-            <Link href={itemStepHref(item, k)} className="text-violet-ink underline-offset-4 hover:underline">
-              {itemLabel(st).title}
-            </Link>
-            {done[k] && <span className="sr-only">(done)</span>}
-            {itemIsPro(st) && <ProChip />}
-          </li>
-        ))}
+        {steps.map((st, k) =>
+          waived[k] ? (
+            <li key={k} className="flex flex-wrap items-baseline gap-x-2 text-dim">
+              <span aria-hidden="true">–</span>
+              <span>{itemLabel(st).title}</span>
+              <span className="text-xs">skipped for your range</span>
+            </li>
+          ) : (
+            <li key={k} className="flex items-baseline gap-2">
+              <span aria-hidden="true" className={done[k] ? "text-ok-ink" : "text-dim"}>
+                {done[k] ? "✓" : "·"}
+              </span>
+              <Link href={itemStepHref(item, k)} className="text-violet-ink underline-offset-4 hover:underline">
+                {itemLabel(st).title}
+              </Link>
+              {done[k] && <span className="sr-only">(done)</span>}
+              {itemIsPro(st) && <ProChip />}
+            </li>
+          ),
+        )}
       </ul>
     </details>
   );
+}
+
+/**
+ * What a restart asks first. A new run starts from an empty record, so the
+ * finished run's check-in readings (day 1 beside the last day, the only
+ * place a free singer sees them side by side) go with it; the question says
+ * so when there are any.
+ */
+export function restartQuestion(program: Program, readings: readonly ProgramReading[]): string {
+  return readings.length > 0
+    ? `Start ${program.name} again from day 1? This run's check-in readings above are cleared.`
+    : `Start ${program.name} again from day 1?`;
+}
+
+/** The finished card's restart, once the singer confirms it. */
+export function restartFinished(program: Program, readings: readonly ProgramReading[], today: string): void {
+  if (!window.confirm(restartQuestion(program, readings))) return;
+  saveProgramProgress(startProgram(program.id, today));
 }
 
 /** The check-in days' range and sustain readings, oldest first. */
@@ -233,7 +306,7 @@ export function ProgramTodayCard({
 }) {
   const isPro = useIsPro();
   const cap = useFreeCap();
-  const { program, progress, today, view, itemsDone, stepsDone, countsFrom, readings } = active;
+  const { program, progress, today, view, itemsDone, stepsDone, stepsWaived, countsFrom, readings } = active;
   const total = program.days.length;
   const day = program.days[view.index];
   const next = program.days[view.index + 1];
@@ -342,7 +415,7 @@ export function ProgramTodayCard({
                   </p>
                 )}
                 <div className="mt-4">
-                  <DayItems day={day} done={itemsDone} stepsDone={stepsDone} />
+                  <DayItems day={day} done={itemsDone} stepsDone={stepsDone} stepsWaived={stepsWaived} />
                 </div>
                 {!isPro && cappedSec > FREE_DAILY_SEC && (
                   <p className="mt-3 max-w-xl text-xs text-dim">
@@ -371,10 +444,7 @@ export function ProgramTodayCard({
             </Button>
           )}
           {view.status === "finished" && (
-            <Button
-              size="sm"
-              onClick={() => saveProgramProgress(startProgram(program.id, today))}
-            >
+            <Button size="sm" onClick={() => restartFinished(program, readings, today)}>
               Start again from day 1
             </Button>
           )}
@@ -436,7 +506,8 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
   const waits = proReady && !locked && view.status === "todo" && waitsForTomorrow(cap.capped, day, itemsDone);
   // Tomorrow is past a Pro program's free week (a rest day ends it).
   const nextLocked = proReady && view.status === "done-today" && nextNeedsPro(program, view.index, isPro);
-  const calendarHref = `/programs?program=${encodeURIComponent(program.id)}`;
+  // A document load, not a client navigation (lib/program-ids.ts).
+  const calendarHref = programViewHref(program.id);
   const doneLine = isRestDay(day) ? `Day ${view.index + 1}: rest day.` : `Day ${view.index + 1} done.`;
   const line = locked
     ? `Day ${view.index + 1} needs Pro. ${freeWeeksWere(true)}, and your place is kept.`
@@ -471,15 +542,15 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
               <LinkButton href={PRO_BUY_HREF} variant="outline">
                 Unlock day {view.index + 1} with Pro
               </LinkButton>
-              <Link
+              <a
                 href={calendarHref}
                 className="inline-flex min-h-11 items-center text-sm text-violet-ink underline-offset-4 hover:underline"
               >
                 See the calendar
-              </Link>
+              </a>
             </div>
           ) : (
-            <LinkButton href={calendarHref} variant={waits ? "outline" : undefined}>
+            <LinkButton href={calendarHref} variant={waits ? "outline" : undefined} fullLoad>
               {waits
                 ? "See today’s plan"
                 : view.status === "todo" && !isRestDay(day)

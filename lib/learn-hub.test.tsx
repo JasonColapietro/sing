@@ -95,6 +95,16 @@ describe("/learn vocal training hub", () => {
     }
   });
 
+  it("warms up before each song day of the seven-day plan, in a room with no clock", () => {
+    // The page's fundamentals say to warm up before song work, so the two
+    // song days do too, and the warm-up spends none of the guided minutes.
+    expect(visible).toContain("Use warmups before range, volume, and song work");
+    expect(visible).toContain(
+      "Warm up first with a few minutes of easy hums and lip trills in the pitch studio, which has no practice timer",
+    );
+    expect(visible).toContain("After the same short warm-up, record two takes of the same section.");
+  });
+
   it("is published through the sitemap, header, footer and answer-engine guide", () => {
     expect(sitemap()).toContainEqual(
       expect.objectContaining({

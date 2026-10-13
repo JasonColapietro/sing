@@ -216,14 +216,17 @@ export default function ProMoments() {
           </span>
         </div>
         <h2 className="mt-4 text-2xl sm:text-3xl">Turn this result into a plan</h2>
+        {/* The free plan already builds a daily plan from recent scores and
+            puts a weak note first (components/progress/coach.tsx); it shows
+            two steps. So the modal sells the rest of the plan, not planning. */}
         <p className="mt-3 text-sm text-mut sm:text-base">
-          Suede Pro turns your numbers into tomorrow&apos;s practice: a daily
-          plan, weak notes drilled on purpose, and your range tests charted
+          Suede Pro turns your numbers into the full daily plan, every step of
+          it, with your accuracy note by note and your range tests charted
           over time.
         </p>
         <ul className="mt-4 space-y-2">
           {[
-            "A practice plan that rebuilds itself every day",
+            "The full daily coach plan, not just its first two steps",
             "Per-note accuracy and range history",
             "Pitch analysis on every recorded take",
           ].map((line) => (

@@ -384,7 +384,13 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "coach",
     title: "Adaptive coach plan",
-    desc: "A daily practice plan that reshapes itself around your scores, streak, and weak notes.",
+    // The free plan is built the same way and shows its first two steps
+    // (components/progress/coach.tsx, PLAN_ROWS "Coach plan"), so the perk is
+    // the rest of the plan, not the planning. buildPlan's steps come from
+    // scores, weak notes, the range test's age and yesterday's minutes; the
+    // streak drives only the banner and the rest-day note, so it is not named
+    // as an input to the plan.
+    desc: "The whole daily practice plan, not just the first two steps the free plan shows, built from your scores, weak notes, how recent your range test is, and how much you sang yesterday.",
   },
   {
     id: "analytics",
@@ -399,7 +405,12 @@ export const PRO_PERKS: ProPerk[] = [
   {
     id: "takes",
     title: "Take pitch analysis",
-    desc: "A pitch trace of every recorded take, and an A/B overlay that shows which keeper actually sat in tune.",
+    // The overlay draws two takes' pitch on one chart with gridlines only at
+    // octave Cs; it has no tuning measure. The one intonation number is the
+    // single-take panel's share within 25 cents of the nearest note
+    // (lib/audio/analyze-take.ts), not of a target melody, so "which keeper
+    // sat in tune" was a verdict the feature cannot give.
+    desc: "A pitch trace of every recorded take with the share of its sung pitch within 25 cents of a note, and an A/B overlay that draws two takes' pitch on one chart.",
   },
   {
     id: "songs",

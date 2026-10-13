@@ -273,8 +273,9 @@ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="
  * before the first paint:
  *
  *   data-sing-plan     "pro" | "free" | "capped"
- *   data-sing-program  absent, or a status ("todo", "done", "finished") plus
- *                      any of "rest", "locked", "next-locked", "waits"
+ *   data-sing-program  absent (no program, or another program's own view),
+ *                      or a status ("todo", "done", "finished") plus any of
+ *                      "rest", "locked", "next-locked", "waits"
  *
  * Until hydration, the parts of a page that depend on them are in the server
  * HTML with a data-prepaint-* marker (components/prepaint.tsx), and these
@@ -285,6 +286,8 @@ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="
  *   data-prepaint-plan="free"        the free allowance line
  *   data-prepaint-plan="capped"      the cap wall
  *   data-prepaint-plan="not-capped"  what the cap wall replaces (the mic gate)
+ *   data-prepaint-plan="not-pro"     free-plan notes Pro never sees (the
+ *                                    free week, the free plan's pace)
  *   data-prepaint-slot="program-*"   an empty, card-shaped slot where a
  *                                    program card will mount, about as tall
  *                                    as that card in that state, so content
@@ -296,6 +299,7 @@ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="
 html:not([data-sing-plan="free"]) [data-prepaint-plan="free"],
 html:not([data-sing-plan="capped"]) [data-prepaint-plan="capped"],
 html[data-sing-plan="capped"] [data-prepaint-plan="not-capped"],
+html[data-sing-plan="pro"] [data-prepaint-plan="not-pro"],
 html:not([data-sing-program]) [data-prepaint-slot|="program"],
 html:not([data-sing-program~="todo"]) [data-prepaint-slot="program-lead"],
 html[data-sing-program~="locked"] [data-prepaint-slot="program-lead"] {
@@ -350,6 +354,15 @@ html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
   html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
     min-height: 24.5rem;
   }
+}
+
+/* A state's words that a newcomer never sees (the cap wall's): in the server
+   HTML they are this attribute rather than text, so a reader that runs no
+   script and applies no CSS does not take them for the page's own words
+   (components/prepaint.tsx prepaintWords). Painted inline, in the element
+   they stand for, so the box and the line breaks are the text's own. */
+[data-prepaint-text]::before {
+  content: attr(data-prepaint-text);
 }
 
 /* /songs, for a capped singer: the library replaces the gate under the wall,

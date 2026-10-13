@@ -74,13 +74,19 @@ const WEEK = [
   {
     day: "Day 5",
     focus: "Song",
-    body: "Practice one verse or chorus. Slow the difficult phrase and choose breaths. Songs open fitted to the range you measured on Day 1; shift the key a semitone at a time if the melody still sits outside your comfortable band.",
-    links: [{ href: "/songs", label: "Song practice" }],
+    // Warm before song work, as the fundamentals below say. The warm-up goes
+    // in the pitch studio, which has no clock, so a free singer's guided
+    // minutes are left for the song itself.
+    body: "Warm up first with a few minutes of easy hums and lip trills in the pitch studio, which has no practice timer, so your guided minutes go to the song. Then practice one verse or chorus. Slow the difficult phrase and choose breaths. Songs open fitted to the range you measured on Day 1; shift the key a semitone at a time if the melody still sits outside your comfortable band.",
+    links: [
+      { href: "/studio", label: "Pitch studio" },
+      { href: "/songs", label: "Song practice" },
+    ],
   },
   {
     day: "Day 6",
     focus: "Listen back",
-    body: "Record two takes of the same section. Compare pitch, timing, tone, and the end of each phrase; keep one specific change for next week.",
+    body: "After the same short warm-up, record two takes of the same section. Compare pitch, timing, tone, and the end of each phrase; keep one specific change for next week.",
     links: [
       { href: "/recorder", label: "Take recorder" },
       { href: "/analyze", label: "Voice spectrogram" },

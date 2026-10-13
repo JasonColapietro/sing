@@ -61,7 +61,7 @@ Some tiredness after a session aimed at the top is ordinary. These are different
 
 Record one take a week in the Recorder: a short ascending pattern through the transition to a comfortable top note, at the quiet volume. Two weeks later, A/B those takes against each other rather than against your baseline. You are not listening for a higher note. You are listening for whether the notes above the transition sound less startled — fewer scoops, less breath in the tone, a cleaner start.
 
-If you have Coach, watch per-note accuracy in the band three or four semitones above your transition. Notes getting steadier there are the real result of this block, whatever the range test says. Your next retest comes at the start of week 12, the way chapter 19 sets out, and there is nothing to gain from checking your ceiling in the middle of a block aimed at it.
+With Pro, watch the per-note accuracy chart in Progress for the band three or four semitones above your transition. That chart adds up every scored session you have kept, so two weeks of change shows as a slow climb rather than a jump; notes creeping up there are the real result of this block, whatever the range test says. Your next retest comes at the start of week 12, the way chapter 19 sets out, and there is nothing to gain from checking your ceiling in the middle of a block aimed at it.
 
 Some singers come out of these two weeks with a little more at the top. Some come out with the same top note, sung far better. The second is worth more, and it is the one that holds.
 

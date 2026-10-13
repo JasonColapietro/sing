@@ -11,6 +11,7 @@ import { ExercisePlayer } from "./exercise-player";
 import { patternSpan, tooWideForRange, type WarmupExercise } from "./exercises";
 import { IconPlay, IconSkip } from "./icons";
 import type { SessionSummaryData } from "./lib";
+import { slowestOneBreathTempo } from "@/lib/daily-three";
 import {
   SKIP_INTRO_SEC,
   STEP_INTRO_SEC,
@@ -76,6 +77,17 @@ export function outOfRangeNote(ex: WarmupExercise, range: VocalRange): string | 
   const span = range.highMidi! - range.lowMidi!;
   const floor = span < width ? "start below the lowest" : "start on the lowest";
   return `${ex.title} spans ${width} semitones and your saved range spans ${span}, so every rep would reach the highest note your range test found and ${floor}. This routine skips it for your range.`;
+}
+
+/**
+ * The tempo a routine step starts at. The readiness step-down (0.75x, after
+ * low recent scores) never stretches a one-breath pattern past
+ * MAX_ONE_BREATH_SEC (lib/daily-three.ts): slowing it makes the breath longer,
+ * which is harder, not easier. Hung-ee-mm is 9.4s at 1x and 12.6s at 0.75x,
+ * so it stays at 1x, as it does in Today's three. A step up is left as it is.
+ */
+export function stepStartingTempo(ex: WarmupExercise, start: 0.75 | 1 | 1.25): 0.75 | 1 | 1.25 {
+  return start < 1 ? (Math.max(start, slowestOneBreathTempo(ex)) as 0.75 | 1) : start;
 }
 
 export interface RoutineSummaryData {
@@ -173,7 +185,7 @@ export function RoutineRunner({
         pitch={pitch}
         range={range}
         variant="session"
-        initialTempo={startingTempo}
+        initialTempo={stepStartingTempo(ex, startingTempo)}
         bounds={{ reps: step.reps, stepIndex: phase.step, stepCount }}
         onFinish={(data) => closeStep(phase.step, data)}
         onExit={() => closeStep(phase.step, null)}

@@ -36,7 +36,7 @@ All four, placed where you marked them before singing. Say what will count as co
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Scoop: start a little below the note and slide up into it. Fall: drop away in pitch off the end of a note. Bend: push the pitch slightly off the note and bring it back. Slide: glide from one written note to the next. A scoop here is a choice you place, unlike the accidental scoop Stage 2 trained out. Before singing, mark which note of the phrase each will go on, then sing the phrase once with all four at the places you marked. Keep scoops, falls, bends, and slides small and intentional.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Scoop: start a little below the note and slide up into it. Fall: drop away in pitch off the end of a note. Bend: push the pitch slightly off the note and bring it back. Slide: glide from one written note to the next. A scoop here is a choice you place, unlike the accidental scoop Stage 2 trained out. Before singing, mark which note of the phrase each will go on, then record the phrase once in the [recorder](/recorder) with all four at the places you marked, so you can name each one on playback. Keep scoops, falls, bends, and slides small and intentional.
 
 - Look: Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.
 - Listen: The four versions are recognizably different and the underlying words and melody remain intact.

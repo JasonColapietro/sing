@@ -24,7 +24,8 @@
  * minutes used up, a program running, both at once, or a program's rest day.
  * Each is the returning record plus what that state adds, so it implies
  * `--returning`. `--route=<name,...>` restricts a run to the named routes
- * (the `name` in routes.mjs), so CI can measure a state only where it shows.
+ * (the `name` in routes.mjs, or in DEEP_LINKS below), so CI can measure a
+ * state only where it shows.
  *
  * Reads `entry.sources[]`, which names the element that MOVED. That element is
  * the victim; the cause is whatever above it changed size. Reporting the mover
@@ -137,10 +138,23 @@ const STATES = {
  */
 const STATE_PROOF = {
   capped: { routes: ["warmups", "breath", "ear-training", "songs"], selector: "#free-cap" },
-  program: { routes: ["programs", "warmups", "progress"], selector: "[data-program-day]" },
-  "program-capped": { routes: ["programs", "warmups"], selector: "[data-program-day] [data-program-waits]" },
+  program: { routes: ["programs", "program-foundations", "warmups", "progress"], selector: "[data-program-day]" },
+  "program-capped": { routes: ["programs", "program-foundations", "warmups"], selector: "[data-program-day] [data-program-waits]" },
   "rest-day": { routes: ["programs", "warmups", "progress"], selector: "[data-program-day]" },
 };
+
+/**
+ * Query-string deep links measured on top of routes.mjs's one-per-template
+ * list. A program's own view, /programs?program=<id>, is what today's card,
+ * /progress and the book link to; it is a different page from the list at
+ * the same path. "program-detail" is the book's program, which no state runs;
+ * "program-foundations" is the one --state=program runs, so that state
+ * measures a singer opening their own program, with today's card above it.
+ */
+const DEEP_LINKS = [
+  { path: "/programs?program=measured-voice-12w", name: "program-detail", kind: "app" },
+  { path: "/programs?program=foundations-2w", name: "program-foundations", kind: "app" },
+];
 
 if (STATE !== undefined && !Object.hasOwn(STATES, STATE)) {
   console.error(`unknown --state=${STATE}; known: ${Object.keys(STATES).join(", ")}`);
@@ -199,7 +213,7 @@ const templates = await discoverTemplateRoutes(BASE).catch((error) => {
   console.error(error.message);
   process.exit(2);
 });
-let routes = [...ROUTES, ...templates];
+let routes = [...ROUTES, ...DEEP_LINKS, ...templates];
 if (ROUTE_FILTER !== undefined) {
   const known = new Set(routes.map((r) => r.name));
   const unknown = ROUTE_FILTER.filter((name) => !known.has(name));

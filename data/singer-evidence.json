@@ -78,56 +78,61 @@
         "title": "Ordinary",
         "publisher": "Musicnotes",
         "url": "https://www.musicnotes.com/sheetmusic/alex-warren/ordinary/MN0299873",
-        "accessedAt": "2026-08-29",
-        "supportedClaim": "The published score shows a written compass for the Ordinary arrangement.",
+        "accessedAt": "2026-10-13",
+        "supportedClaim": "Musicnotes lists the Ordinary piano/vocal/guitar arrangement in its original published key, D major, with a written vocal range of A3–A5.",
         "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
         "confidence": "moderate",
         "kind": "licensed-score",
-        "song": "Ordinary"
+        "song": "Ordinary",
+        "octaveConvention": "Written pitch labels as displayed by Musicnotes. A male vocal line in treble clef is written an octave above where it sounds, so this arrangement’s written A3–A5 sounds A2–A4."
       },
       {
         "title": "Before You Leave Me",
         "publisher": "Musicnotes",
         "url": "https://www.musicnotes.com/sheetmusic/alex-warren/before-you-leave-me/MN0302282",
-        "accessedAt": "2026-08-29",
-        "supportedClaim": "The published score shows a written compass for the Before You Leave Me arrangement.",
+        "accessedAt": "2026-10-13",
+        "supportedClaim": "Musicnotes lists the Before You Leave Me piano/vocal/guitar arrangement in its original published key, Bb major, with a written vocal range of G3–G5.",
         "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
         "confidence": "moderate",
         "kind": "licensed-score",
-        "song": "Before You Leave Me"
+        "song": "Before You Leave Me",
+        "octaveConvention": "Written pitch labels as displayed by Musicnotes. A male vocal line in treble clef is written an octave above where it sounds, so this arrangement’s written G3–G5 sounds G2–G4."
       },
       {
         "title": "Carry You Home",
         "publisher": "Musicnotes",
         "url": "https://www.musicnotes.com/sheetmusic/alex-warren/carry-you-home/MN0294485",
-        "accessedAt": "2026-08-29",
-        "supportedClaim": "The published score shows a written compass for the Carry You Home arrangement.",
+        "accessedAt": "2026-10-13",
+        "supportedClaim": "Musicnotes lists the Carry You Home piano/vocal/chords arrangement in its original published key, Bb major, with a written vocal range of G3–G5.",
         "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
         "confidence": "moderate",
         "kind": "licensed-score",
-        "song": "Carry You Home"
+        "song": "Carry You Home",
+        "octaveConvention": "Written pitch labels as displayed by Musicnotes. A male vocal line in treble clef is written an octave above where it sounds, so this arrangement’s written G3–G5 sounds G2–G4."
       },
       {
         "title": "Eternity",
         "publisher": "Musicnotes",
         "url": "https://www.musicnotes.com/sheetmusic/alex-warren/eternity/MN0302267",
-        "accessedAt": "2026-08-29",
-        "supportedClaim": "The published score shows a written compass for the Eternity arrangement.",
+        "accessedAt": "2026-10-13",
+        "supportedClaim": "Musicnotes lists the Eternity piano/vocal/guitar arrangement in its original published key, Bb major, with a written vocal range of G3–G5.",
         "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
         "confidence": "moderate",
         "kind": "licensed-score",
-        "song": "Eternity"
+        "song": "Eternity",
+        "octaveConvention": "Written pitch labels as displayed by Musicnotes. A male vocal line in treble clef is written an octave above where it sounds, so this arrangement’s written G3–G5 sounds G2–G4."
       },
       {
         "title": "Burning Down",
         "publisher": "Musicnotes",
         "url": "https://www.musicnotes.com/sheetmusic/alex-warren/burning-down/MN0302281",
-        "accessedAt": "2026-08-29",
-        "supportedClaim": "The published score shows a written compass for the Burning Down arrangement.",
+        "accessedAt": "2026-10-13",
+        "supportedClaim": "Musicnotes lists the Burning Down piano/vocal/guitar arrangement in its original published key, B minor, with a written vocal range of A3–A5.",
         "scope": "Written compass for this song arrangement only; it does not establish a full-career range or physiological limit.",
         "confidence": "moderate",
         "kind": "licensed-score",
-        "song": "Burning Down"
+        "song": "Burning Down",
+        "octaveConvention": "Written pitch labels as displayed by Musicnotes. A male vocal line in treble clef is written an octave above where it sounds, so this arrangement’s written A3–A5 sounds A2–A4."
       }
     ]
   },

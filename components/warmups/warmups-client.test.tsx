@@ -242,6 +242,7 @@ describe("a program day the singer cannot open", () => {
     view: { status: "todo", index, completed: index },
     itemsDone: [],
     stepsDone: [],
+    stepsWaived: [],
     countsFrom: "2026-10-12",
     readings: [],
   });

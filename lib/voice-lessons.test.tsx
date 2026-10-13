@@ -539,6 +539,28 @@ describe("links from the lessons", () => {
   });
 
   /**
+   * Twang and Ring keeps the analyzer for its ring band, but every step is
+   * judged on a one-take baseline-and-bright recording the analyzer cannot
+   * make. The steps name both rooms: what to watch in one, where to record in
+   * the other. Mix, Not Shout opens the pitch studio, which cannot record the
+   * climb its lessons play back or the self-check's evidence take, so all three
+   * name the recorder too, as does the ornaments self-check, whose Ready when
+   * is named on playback.
+   */
+  it("has Twang and Ring's steps say what to watch in the analyzer and where the one-take comparison is recorded", () => {
+    for (const l of LESSONS.filter((l) => l.moduleId === "v-l5-m3")) {
+      const body = l.steps.map((s) => s.body).join("\n");
+      expect(body, l.id).toContain("](/analyze)");
+      expect(body, l.id).toContain("](/recorder)");
+    }
+    for (const id of ["v-l5-m4-01", "v-l5-m4-04", "v-l5-m4-07", "v-l6-m4-08"]) {
+      const lesson = LESSONS.find((l) => l.id === id);
+      expect(lesson, id).toBeDefined();
+      expect(lesson!.steps.map((s) => s.body).join("\n"), id).toContain("](/recorder)");
+    }
+  });
+
+  /**
    * Your Range's first two lessons practise the slides in the recorder; only
    * the self-check takes the test. Every finished test replaces the saved
    * range, so repeating an exercise lesson must not repeat the test.

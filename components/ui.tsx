@@ -197,19 +197,31 @@ export function LinkButton({
   variant = "violet",
   size = "md",
   className,
+  fullLoad = false,
   children,
 }: {
   href: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
   className?: string;
+  /**
+   * A plain anchor, so the browser loads the address as a document instead of
+   * the client router navigating to it: for an address the router cannot
+   * resolve on its own (lib/program-ids.ts programViewHref).
+   */
+  fullLoad?: boolean;
   children: ReactNode;
 }) {
+  const classes = cn(buttonBase, buttonVariants[variant], buttonSizes[size], className);
+  if (fullLoad) {
+    return (
+      <a href={href} className={classes}>
+        {children}
+      </a>
+    );
+  }
   return (
-    <Link
-      href={href}
-      className={cn(buttonBase, buttonVariants[variant], buttonSizes[size], className)}
-    >
+    <Link href={href} className={classes}>
       {children}
     </Link>
   );

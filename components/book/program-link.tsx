@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
 /**
@@ -30,9 +29,10 @@ export function BookProgramNote({
   return (
     <p className={className}>
       The app runs this {scope} day by day in{" "}
-      <Link href={BOOK_PROGRAM_HREF} className="text-violet-ink hover:underline">
+      {/* A plain anchor, not next/link: see lib/program-ids.ts programViewHref. */}
+      <a href={BOOK_PROGRAM_HREF} className="text-violet-ink hover:underline">
         {BOOK_PROGRAM_NAME}
-      </Link>
+      </a>
       , a Suede Pro program. Its first week is free, and each day of that week
       fits inside the free plan&apos;s {FREE_DAILY_MINUTES} guided minutes.
     </p>

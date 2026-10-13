@@ -174,6 +174,25 @@ describe("pre-paint state: the running program", () => {
     expect(state({ [PROGRAM_STORAGE_KEY]: record("mix-4w", 6, [0, 1, 2, 3, 4, 5, 6].map((i) => [i, 6 - i] as [number, number])) }).program).toBe("done rest next-locked");
   });
 
+  it("says no program on another program's own view, where today's card does not show", () => {
+    // components/programs/programs-client.tsx shows today's card on a
+    // program's view only when it is the running program.
+    const stored = { [PROGRAM_STORAGE_KEY]: record("foundations-2w", 1, [[0, 1]]) };
+    const at = (pathname: string, search = "") => prepaintState(storageOf(stored), NOW, PREPAINT_CONFIG, { pathname, search }).program;
+    expect(at("/programs")).toBe("todo");
+    expect(at("/programs", "?program=foundations-2w")).toBe("todo");
+    expect(at("/programs", "?program=measured-voice-12w")).toBeNull();
+    expect(at("/programs", "?utm_source=book&program=measured-voice-12w")).toBeNull();
+    // An unknown id lands on the list, today's card and all.
+    expect(at("/programs", "?program=nope")).toBe("todo");
+    // The page the deep link is served from, opened by its own path.
+    expect(at("/programs/measured-voice-12w")).toBeNull();
+    expect(at("/programs/foundations-2w")).toBe("todo");
+    // Only /programs reads the parameter.
+    expect(at("/warmups", "?program=measured-voice-12w")).toBe("todo");
+    expect(prepaintState(storageOf({}), NOW, PREPAINT_CONFIG, { pathname: "/programs", search: "?program=mix-4w" }).program).toBeNull();
+  });
+
   it("lists every program, its length and its rest days", () => {
     for (const [id, [pro, length, rest]] of Object.entries(PREPAINT_CONFIG.programs)) {
       const program = programById(id)!;
@@ -188,7 +207,7 @@ describe("pre-paint state: the running program", () => {
 
 describe("the inline script", () => {
   /** Runs the script text as the browser would, against fake storage and a fake <html>. */
-  function run(stored: Record<string, unknown> | "blocked") {
+  function run(stored: Record<string, unknown> | "blocked", location = { pathname: "/", search: "" }) {
     const attrs: Record<string, string> = {};
     const window: Record<string, unknown> = {};
     const localStorage =
@@ -210,6 +229,8 @@ describe("the inline script", () => {
       Object,
       isFinite,
       isNaN,
+      URLSearchParams,
+      location,
       document: { documentElement: { setAttribute: (k: string, v: string) => (attrs[k] = v) } },
     });
     return { attrs, global: window.__singPrepaint };
@@ -226,6 +247,17 @@ describe("the inline script", () => {
 
   it("leaves the program attribute off with no program", () => {
     expect(run({}).attrs).toEqual({ "data-sing-plan": "free" });
+  });
+
+  it("reads the page's address, for a program's own view", () => {
+    const stored = { [PROGRAM_STORAGE_KEY]: record("foundations-2w", 1, [[0, 1]]) };
+    expect(run(stored, { pathname: "/programs", search: "?program=foundations-2w" }).attrs).toEqual({
+      "data-sing-plan": "free",
+      "data-sing-program": "todo",
+    });
+    expect(run(stored, { pathname: "/programs", search: "?program=measured-voice-12w" }).attrs).toEqual({
+      "data-sing-plan": "free",
+    });
   });
 
   it("swallows storage that throws, leaving the newcomer's layout", () => {

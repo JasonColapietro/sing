@@ -53,7 +53,7 @@ describe("/pro Early Access offers", () => {
       price: "4.99",
       availability: "https://schema.org/SoldOut",
       description:
-        "Sold out. Renews monthly at $4.99 for existing subscribers only.",
+        "Sold out. Existing subscribers keep renewing at the price they signed up at.",
       priceSpecification: {
         referenceQuantity: { unitCode: "MON" },
       },

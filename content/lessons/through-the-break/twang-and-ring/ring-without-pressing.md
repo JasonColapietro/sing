@@ -22,7 +22,7 @@ Open the practice material on this page and choose Humming thirds. Hear the refe
 
 ### Set a safe baseline
 
-Record an easy baseline phrase at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.
+Record an easy baseline phrase in the recorder at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +36,7 @@ More carrying power without more push. Ring is a change of resonance, not a chan
 
 ### Alternate attempt and reset
 
-To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. Work in short repetitions with a normal breath and complete release between them. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take with a quiet breath between them, so saving does not replace the sound you need to compare.
+To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. While you find it, have the [voice analyzer](/analyze) open: the Ring band percentage on its tone view usually rises as the sound brightens, but getting louder or pressing can raise it too, so keep the volume steady and the throat easy. Work in short repetitions with a normal breath and complete release between them. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take in the [recorder](/recorder), with a quiet breath between them, so saving does not replace the sound you need to compare.
 
 - Look: Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.
 - Listen: The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone.

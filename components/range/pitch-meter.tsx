@@ -32,9 +32,11 @@ const PLAYHEAD = 0.78;
 /** Practice under this long is not logged: the same floor the studio uses. */
 const MIN_LOG_SEC = 45;
 /**
- * Semitones between lowest and highest held before the meter suggests the
- * range test. Under that the singer has not explored yet, so there is nothing
- * for the test to sharpen.
+ * Semitones between lowest and highest held before the live panel suggests
+ * the range test. Under that the singer has not explored yet, so there is
+ * nothing for the test to sharpen mid-run. The stopped card offers it either
+ * way, and under this span says what the test adds: the meter asks for one
+ * note, and a singer who did just that must not be left without a next step.
  */
 const SUGGEST_RANGE_SEMIS = 5;
 
@@ -82,9 +84,8 @@ function tuneWord(cents: number): string {
 /**
  * The stopped meter's summary: the notes held since the meter opened (or was
  * last Reset; "Sing again" keeps them, as the live readout does), whether the
- * stop saved (and what it earned), and the next step once the singer has
- * explored enough for the range test to sharpen. Not "your last run": after a
- * second start the notes can come from both runs.
+ * stop saved (and what it earned), and always a next step. Not "your last
+ * run": after a second start the notes can come from both runs.
  *
  * A singer whose saved range is recent is not sent to retest: the book spaces
  * range tests weeks apart, and their warmups and songs already fit the saved
@@ -109,33 +110,50 @@ export function LastRun({
     <Card className="mb-4">
       <SectionLabel>Held so far</SectionLabel>
       <p className="mt-2 text-sm text-mut">
-        You have held {midiToLabel(low)} to {midiToLabel(high)} so far.{" "}
+        {/* One note is what the gate asks for, so it is a common first
+            result: "held A3", not "held A3 to A3". */}
+        {low === high
+          ? `You have held ${midiToLabel(low)} so far.`
+          : `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far.`}{" "}
         {lastLog
           ? `+${lastLog.xpGained} XP, saved to your progress.`
           : `Not saved yet: the meter saves once you have sung ${MIN_LOG_SEC} seconds in all, and singing again adds to that time.`}
       </p>
-      {high - low >= SUGGEST_RANGE_SEMIS &&
-        (retestDue ? (
+      {/* The gate asks for one note, so a run of a note or two is the
+          expected first result, not a reason to withhold the next step. On a
+          stop the view scrolls to this card, which puts the Pitch | Range
+          test tabs under the sticky header: the card has to carry the step. */}
+      {retestDue ? (
+        <>
+          {/* Only beside the button it explains: without onTryRange there
+              is nothing on the card to take the test with. */}
+          {onTryRange && high - low < SUGGEST_RANGE_SEMIS && (
+            <p className="mt-2 text-sm text-mut">
+              Next, the 2-minute range test walks you down to your lowest note and up to
+              your highest, and saves them for your warmups and songs.
+            </p>
+          )}
           <div className="mt-3 flex flex-wrap gap-3">
             {onTryRange && <Button onClick={onTryRange}>Take the 2-minute range test</Button>}
             <LinkButton href="/warmups" variant="outline">
               Warm up first
             </LinkButton>
           </div>
-        ) : (
-          <>
-            <p className="mt-2 text-sm text-mut">
-              Your saved range already fits your warmups and songs. Retest weeks apart,
-              not in the same session.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-3">
-              <LinkButton href="/warmups">Warm up</LinkButton>
-              <LinkButton href="/songs" variant="outline">
-                Sing a song
-              </LinkButton>
-            </div>
-          </>
-        ))}
+        </>
+      ) : (
+        <>
+          <p className="mt-2 text-sm text-mut">
+            Your saved range already fits your warmups and songs. Retest weeks apart,
+            not in the same session.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <LinkButton href="/warmups">Warm up</LinkButton>
+            <LinkButton href="/songs" variant="outline">
+              Sing a song
+            </LinkButton>
+          </div>
+        </>
+      )}
     </Card>
   );
 }

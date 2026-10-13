@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import path from "path";
 import { EXERCISES } from "./components/warmups/exercises";
 import { accountsReady } from "./lib/accounts";
+import { PROGRAM_IDS } from "./lib/program-ids";
 
 /**
  * With accounts off on this build (no production Clerk key), the root
@@ -41,6 +42,28 @@ const nextConfig: NextConfig = {
   // subscription check; make sure the serving route's bundle includes them.
   outputFileTracingIncludes: {
     "/api/book/pdf": ["./content/pdfs/**"],
+  },
+  async rewrites() {
+    return {
+      // Before the filesystem: /programs is a page of its own, and a rewrite
+      // in the default (afterFiles) phase never reaches a path a page owns.
+      beforeFiles: [
+        {
+          // A program's own view is a query-string deep link (today's card,
+          // /progress, the book and GuitarHub's contract all use it), and a
+          // static page cannot read its query, so the prerendered list used
+          // to paint and then swap to the calendar after mount. Each known id
+          // is served the program's own prerendered page instead, at the same
+          // address; an unknown id matches nothing and gets the list, as the
+          // contract says. The ids are anchored (Next matches `^value$`).
+          source: "/programs",
+          has: [{ type: "query", key: "program", value: `(?<program>${PROGRAM_IDS.join("|")})` }],
+          destination: "/programs/:program",
+        },
+      ],
+      afterFiles: [],
+      fallback: [],
+    };
   },
   async redirects() {
     return [

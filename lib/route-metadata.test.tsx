@@ -36,6 +36,18 @@ type PageModule = {
   generateStaticParams?: () => Record<string, string>[] | Promise<Record<string, string>[]>;
 };
 
+/**
+ * Pages that are never an address of their own: next.config.ts rewrites a
+ * deep link onto them, so each is served at the URL of the page named here
+ * and ships that page's metadata, canonical included. They are held to
+ * exactly that metadata below rather than counted as a second page sharing a
+ * title and description.
+ */
+const SERVED_AT: Record<string, string> = {
+  // /programs?program=<id>: a program's own view, prerendered per program.
+  "programs/[program]": "programs",
+};
+
 function pageFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((entry) => {
     const full = path.join(dir, entry);
@@ -73,6 +85,7 @@ async function indexableRoutes(): Promise<RouteMeta[]> {
     readFileSync(path.join(APP_DIR, "layout.tsx"), "utf8").match(/\bdefault:\s*"([^"]+)"/)?.[1] ?? "";
   const out: RouteMeta[] = [];
   for (const file of pageFiles(APP_DIR)) {
+    if (path.relative(APP_DIR, path.dirname(file)) in SERVED_AT) continue;
     const mod = (await import(/* @vite-ignore */ file)) as PageModule;
     const paramsList = mod.generateStaticParams ? await mod.generateStaticParams() : [{}];
     for (const params of paramsList) {
@@ -141,6 +154,20 @@ describe("metadata on every indexable route", async () => {
       .filter((r) => !r.canonical?.startsWith(SITE_URL) || r.ogUrl !== r.canonical)
       .map((r) => `${r.route}: canonical ${r.canonical}, og:url ${r.ogUrl}`);
     expect(off).toEqual([]);
+  });
+
+  it("ships the served-at page's metadata on a page a rewrite serves at its address", async () => {
+    const { default: nextConfig } = await import("@/next.config");
+    const config = await nextConfig.rewrites?.();
+    const rewrites = Array.isArray(config) ? config : [...(config?.beforeFiles ?? []), ...(config?.afterFiles ?? [])];
+    for (const [dir, servedAt] of Object.entries(SERVED_AT)) {
+      const target = (await import(/* @vite-ignore */ path.join(APP_DIR, dir, "page.tsx"))) as PageModule;
+      const page = (await import(/* @vite-ignore */ path.join(APP_DIR, servedAt, "page.tsx"))) as PageModule;
+      expect(target.metadata, dir).toEqual(page.metadata);
+      // Reached only through the rewrite: `/programs/[program]` from `/programs`.
+      const pattern = `/${dir}`.replace(/\[(\w+)\]/g, ":$1");
+      expect(rewrites.some((r) => r.source === `/${servedAt}` && r.destination === pattern), dir).toBe(true);
+    }
   });
 
   it("names the site in Open Graph", () => {

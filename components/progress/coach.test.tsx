@@ -172,3 +172,27 @@ describe("the coach's accuracy lines", () => {
     for (const i of items) expect(i.reason, i.title).not.toMatch(/in tune/i);
   });
 });
+
+describe("the Pro perk that sells this plan", () => {
+  // The perk once said the plan reshapes itself around the singer's streak.
+  // The streak only switches the banner and the rest-day note; the steps come
+  // from scores, weak notes, the range test's age and yesterday's minutes.
+  it("builds the same steps whatever the streak", () => {
+    const base = state();
+    const long: ProgressState = { ...base, streak: { ...base.streak, current: 40, best: 40 } };
+    const none: ProgressState = { ...base, streak: { current: 0, best: 2, lastDay: "2026-09-01" } };
+    const steps = (s: ProgressState) => buildPlan(s, NOW).items;
+    expect(steps(long)).toEqual(steps(base));
+    expect(steps(none)).toEqual(steps(base));
+  });
+
+  it("names only the plan's real inputs", async () => {
+    const { PRO_PERKS } = await import("@/lib/pro");
+    const coach = PRO_PERKS.find((p) => p.id === "coach")!;
+    expect(coach.desc).not.toMatch(/streak/i);
+    expect(coach.desc).toMatch(/scores/);
+    expect(coach.desc).toMatch(/weak notes/);
+    expect(coach.desc).toMatch(/range test/);
+    expect(coach.desc).toMatch(/yesterday/);
+  });
+});

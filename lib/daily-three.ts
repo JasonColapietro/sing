@@ -12,11 +12,13 @@
 // has and every exercise honours: the starting tempo. Nothing here invents a
 // new mechanic; the singer can still change tempo under Adjust.
 //
-// Pure and deterministic. The same log and the same local day give the same
-// plan, and sessions logged today are ignored for picking, so singing one of
-// the three does not reshuffle the other two mid-afternoon.
+// Pure and deterministic. The same log, saved range and local day give the
+// same plan, and sessions logged today are ignored for picking, so singing one
+// of the three does not reshuffle the other two mid-afternoon. A range test
+// saved during the day can change it: an exercise too wide for the new range
+// drops out (see `candidates`).
 
-import { EXERCISES, buildSegments, titlesFor, type WarmupExercise } from "@/components/warmups/exercises";
+import { EXERCISES, buildSegments, titlesFor, tooWideForRange, type WarmupExercise } from "@/components/warmups/exercises";
 import type { SessionLog } from "@/lib/progress-shape";
 
 /** Starting tempos the planner may hand the player — a subset of its TEMPOS. */
@@ -147,15 +149,28 @@ interface Candidate {
   need: number;
 }
 
+/** The saved range test's notes, as the planner reads them. */
+export interface PlanRange {
+  lowMidi?: number;
+  highMidi?: number;
+}
+
 function candidates(
   sessions: readonly SessionLog[],
   day: string,
   catalogue: readonly WarmupExercise[],
+  range?: PlanRange,
 ): Candidate[] {
   // Only the free catalogue, whatever the caller passes: the contract rule is
   // that EXERCISES is what a free singer may start, and this plan is linked
-  // from places that do not know whether the viewer is Pro.
-  const free = catalogue.filter((ex) => EXERCISES.some((e) => e.id === ex.id));
+  // from places that do not know whether the viewer is Pro. Nor a pattern
+  // wider than the saved range (tooWideForRange): every rep of it would
+  // start under the measured low and reach the measured top, so the routine
+  // runner skips it for that range, and a low score on it would come back
+  // here as a weak spot that is the range, not the singer.
+  const free = catalogue.filter(
+    (ex) => EXERCISES.some((e) => e.id === ex.id) && !(range && tooWideForRange(ex, range)),
+  );
   // Before today only — see the note at the top of the file.
   const past = sessions
     .filter((s) => s.type === "warmup" && s.day < day && typeof s.score === "number" && Number.isFinite(s.score))
@@ -189,7 +204,8 @@ export const KIND_SESSION_ORDER: readonly ExerciseKind[] = ["sirens", "patterns"
  * rep is sung on one breath, so slowing a long one-breath pattern makes it
  * harder, not easier: Hung-ee-mm is 9.4s at 1x and 18.8s at 0.5x, close to
  * the sustain ladder's "good" hold. Every other free exercise stays under
- * this at 0.5x.
+ * this at 0.5x. The routine runner's readiness step-down honours it too
+ * (stepStartingTempo in components/warmups/routine-runner.tsx).
  */
 export const MAX_ONE_BREATH_SEC = 12;
 
@@ -279,13 +295,16 @@ export function planDailyThree({
   sessions,
   day,
   catalogue = EXERCISES,
+  range,
 }: {
   sessions: readonly SessionLog[];
   /** The singer's local day, YYYY-MM-DD (lib/progress `localDay()`). */
   day: string;
   catalogue?: readonly WarmupExercise[];
+  /** The saved range test, if any: patterns too wide for it are left out. */
+  range?: PlanRange;
 }): DailyThree {
-  const pool = candidates(sessions, day, catalogue);
+  const pool = candidates(sessions, day, catalogue, range);
   const picks: DailyPick[] = [];
   const first = confidencePick(pool);
   if (first) picks.push(first);

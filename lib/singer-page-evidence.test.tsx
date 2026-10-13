@@ -4,7 +4,10 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import SingerPage from "@/app/singers/[slug]/page";
-import { getSingerPageLastModified } from "@/lib/singer-evidence";
+import rawEvidence from "@/data/singer-evidence.json";
+import { labelToMidi } from "@/lib/audio/notes";
+import { getSingerEvidence, getSingerPageLastModified } from "@/lib/singer-evidence";
+import { singerBySlug } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
 const REVIEWED_SLUGS = [
@@ -122,6 +125,39 @@ describe("singer-page evidence and provenance", () => {
     expect(html).toContain("Octave convention:");
     expect(html).toContain("written B3–F#5 sounds B2–F#4");
     expect(await rendered("taylor-swift")).toContain("Octave convention:");
+  });
+
+  it("shows Alex Warren's cited scores at their sounding pitch, inside the displayed range", async () => {
+    // Five original-key Musicnotes scores, male line in treble clef: written
+    // A3–A5 and G3–G5 sound an octave lower. The page once showed A2–F#4,
+    // under every one of them at the top.
+    const html = await rendered("alex-warren");
+    expect(html).toContain("written vocal range of A3–A5");
+    expect(html).toContain("written A3–A5 sounds A2–A4");
+    expect(html).toContain("written G3–G5 sounds G2–G4");
+    expect(html).toContain("G2 to A4");
+    expect(html).not.toContain("F#4 is a reported");
+    // Still the human review date: re-reading the scores is not a review.
+    expect(getSingerEvidence("alex-warren").reviewedAt).toBe("2026-08-29");
+  });
+
+  it("never displays a range narrower than the sounding range of a score it cites", () => {
+    // Any source whose octave note gives a sounding compass ("sounds X–Y")
+    // is evidence the page puts beside its own range; the range has to hold it.
+    const sounding = /sounds ([A-G][#b]?\d)\u2013([A-G][#b]?\d)/;
+    let checked = 0;
+    for (const slug of Object.keys(rawEvidence)) {
+      const singer = singerBySlug(slug);
+      if (!singer) continue;
+      for (const source of getSingerEvidence(slug).sources) {
+        const m = source.octaveConvention?.match(sounding);
+        if (!m) continue;
+        checked++;
+        expect(singer.lowMidi, `${slug}: ${source.title}`).toBeLessThanOrEqual(labelToMidi(m[1])!);
+        expect(singer.highMidi, `${slug}: ${source.title}`).toBeGreaterThanOrEqual(labelToMidi(m[2])!);
+      }
+    }
+    expect(checked).toBeGreaterThanOrEqual(6);
   });
 
   it.each([

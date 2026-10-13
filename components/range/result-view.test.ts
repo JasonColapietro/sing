@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
@@ -10,6 +12,7 @@ import {
   ResultView,
   comparisonSingerFromSlug,
   rankFamousVoices,
+  returnSongHref,
   returnSongSlugFromSearch,
   sampleHistory,
   songCountCopy,
@@ -34,6 +37,18 @@ describe("range result song return path", () => {
   it("reads the song a /can-you-sing page sent", () => {
     expect(returnSongSlugFromSearch("?mode=range&check=espresso")).toBe("espresso");
     expect(returnSongSlugFromSearch("?mode=range&song=creep")).toBe("creep");
+  });
+
+  it("sends the singer back to the verdict, not the top of the song page", () => {
+    // app/can-you-sing/[slug]/page.tsx wraps the verdict in id="fit".
+    expect(returnSongHref("creep")).toBe("/can-you-sing/creep#fit");
+    // The fragment needs its target: renaming the wrapper would quietly
+    // drop the singer back on the H1.
+    const songPage = readFileSync(
+      join(__dirname, "../../app/can-you-sing/[slug]/page.tsx"),
+      "utf8",
+    );
+    expect(songPage).toMatch(/<div id="fit"[^>]*>\s*<CanYouSingVerdict/);
   });
 
   it("ignores absent and malformed slugs", () => {

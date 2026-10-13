@@ -247,8 +247,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Pop"
     ],
     "activeFrom": 2024,
-    "lowMidi": 45,
-    "highMidi": 66,
+    "lowMidi": 43,
+    "highMidi": 69,
     "beltMidi": 64,
     "whistle": false
   },

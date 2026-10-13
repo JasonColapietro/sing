@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 import { FREE_DAILY_SEC, formatClock, type FreeCap } from "@/lib/free-cap";
 import { formatPrice, PRICING } from "@/lib/pro-shared";
-import { PrepaintText, prepaintMarker, useHydrated } from "@/components/prepaint";
+import { PrepaintText, prepaintMarker, prepaintWords, useHydrated } from "@/components/prepaint";
 import { useProgress } from "@/lib/progress";
 import { liveStreak } from "@/components/account/save-state";
 import { SESSION_FOCUS, SessionButton, SessionShell } from "./session-shell";
@@ -75,7 +75,10 @@ export function FreeAllowance({ cap, className = "" }: { cap: FreeCap; className
  * there only where the pre-paint script found today's cap reached, so a
  * capped singer's room paints with the wall in place rather than growing it at
  * hydration. Once hydrated it renders only for a capped singer. `className`
- * spaces it in the room, on the element the marker hides.
+ * spaces it in the room, on the element the marker hides. Until then its
+ * words are attributes the CSS paints (prepaintWords), so the static HTML
+ * every visitor and every crawler gets carries the wall's boxes but none of
+ * its text: the room's opening is the room, not "your free minutes are used".
  */
 export function CapWall({ cap, className = "" }: { cap: FreeCap; className?: string }) {
   const hydrated = useHydrated();
@@ -103,40 +106,42 @@ export function CapWall({ cap, className = "" }: { cap: FreeCap; className?: str
         <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-6">
           <div className="contents sm:block sm:max-w-xl">
             <div className="order-1">
-              <SectionLabel>Free practice</SectionLabel>
+              <SectionLabel>{prepaintWords(hydrated, "Free practice")}</SectionLabel>
             </div>
             <h2 className="order-1 mt-3 text-2xl sm:text-3xl">
-              That&apos;s your {CAP_MIN} free minutes for today
+              {prepaintWords(hydrated, `That's your ${CAP_MIN} free minutes for today`)}
             </h2>
             <p className="order-3 mt-5 text-mut sm:mt-2">
-              The free plan includes {CAP_MIN} minutes of guided practice a day
-              across warmups, ear training, breath and songs. Today counts
-              toward your streak
-              <PrepaintText field="streakClause" value={streak > 1 ? `, now ${streak} days` : ""} />. A
-              fresh {CAP_MIN} minutes opens at midnight; the pitch studio and the
-              range test stay open now.
+              {prepaintWords(
+                hydrated,
+                `The free plan includes ${CAP_MIN} minutes of guided practice a day across warmups, ear training, breath and songs. Today counts toward your streak`,
+              )}
+              <PrepaintText field="streakClause" value={streak > 1 ? `, now ${streak} days` : ""} />
+              {prepaintWords(
+                hydrated,
+                `. A fresh ${CAP_MIN} minutes opens at midnight; the pitch studio and the range test stay open now.`,
+              )}
             </p>
             <p className="tabular order-3 mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              {formatClock(usedSec)} of {formatClock(cap.capSec)} used
-              today
+              {prepaintWords(hydrated, `${formatClock(usedSec)} of ${formatClock(cap.capSec)} used today`)}
             </p>
           </div>
           <div className="order-2 mt-5 flex w-full flex-col gap-3 sm:order-none sm:mt-0 sm:w-auto">
             {/* text-center: at 375px the priced label wraps to two lines. */}
             <LinkButton href={PRO_BUY_HREF} variant="violet" size="lg" className="w-full text-center sm:w-auto">
-              {GO_PRO_LABEL}
+              {prepaintWords(hydrated, GO_PRO_LABEL)}
             </LinkButton>
             <LinkButton href="/studio" variant="outline" className="w-full sm:w-auto">
-              Open the free studio
+              {prepaintWords(hydrated, "Open the free studio")}
             </LinkButton>
             <LinkButton href="/progress" variant="ghost" className="w-full sm:w-auto">
-              See your streak
+              {prepaintWords(hydrated, "See your streak")}
             </LinkButton>
             <Link
               href={PRO_RESTORE_HREF}
               className="flex min-h-11 items-center justify-center text-center text-sm text-mut underline underline-offset-4 hover:text-ink"
             >
-              {RESTORE_LABEL}
+              {prepaintWords(hydrated, RESTORE_LABEL)}
             </Link>
           </div>
         </div>

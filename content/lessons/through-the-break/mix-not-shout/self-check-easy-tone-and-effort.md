@@ -36,7 +36,7 @@ Hold six comfortable seconds, then report effort and stop on any warning sign. T
 
 ### Make one evidence take
 
-Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.
+Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
 - Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.

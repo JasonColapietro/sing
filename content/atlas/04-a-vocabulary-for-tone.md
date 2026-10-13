@@ -29,7 +29,7 @@ Air deliberately mixed into the tone throughout the note, not just at the start.
 
 ## Grit, rasp and distortion
 
-The controlled noise family, from a light sizzle on the tone (Myles Smith, Anderson .Paak) through committed rasp (Joe Cocker, Luke Combs) to full distortion (metal's growls and screams). Produced sustainably, the noise comes from structures *above* the vocal folds fluttering against the airstream while the folds themselves stay healthy underneath. Produced unsustainably, it is the folds slamming — and the difference is invisible from the audience and unmistakable within a week of practice. The safety chapter returns to this; the entries flag singers whose grit is a supervised skill rather than an accident.
+The controlled noise family, from a light sizzle on the tone (Myles Smith, Anderson .Paak) through committed rasp (Joe Cocker, Luke Combs) to full distortion (metal's growls and screams). Produced sustainably, the noise comes from structures *above* the vocal folds fluttering against the airstream while the folds underneath keep vibrating normally. Produced unsustainably, it is the folds slamming — and the difference is invisible from the audience and hard to judge reliably from inside, which is why the safety chapter's rule is to get ears on it and to treat any grit that leaves you hoarse as the wrong kind. That chapter returns to this; the entries flag singers whose grit is a supervised skill rather than an accident.
 
 ## Twang and nasality
 

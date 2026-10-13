@@ -35,7 +35,7 @@ A disappointing result usually has a boring explanation. Work through these befo
 
 **Time of day.** Many voices sit lower and feel thicker in the morning, then loosen over the following hours. Test at roughly the same hour each time, or accept that a morning test and an evening test are two different tests.
 
-**Pushing.** Effort at the top narrows range rather than extending it. Press, and the mechanism thickens exactly where it needs to thin, so the top note arrives earlier and sounds worse on the way. If your top went down after a stretch of hard practice, over-pressing explains that more often than lost range does.
+**Pushing.** Effort at the top narrows range rather than extending it. Press, and the mechanism thickens exactly where it needs to thin, so the top note arrives earlier and sounds worse on the way. If your top went down after a stretch of hard practice, a tired voice or over-pressing explains that more often than lost range does: rest, and retest after a night's sleep. If the top dropped suddenly, or is still down once you have rested, that is no longer a measurement question. Like pain or hoarseness that will not clear, a sudden or lasting loss of range belongs with a doctor who can examine the vocal folds, such as an ENT or laryngologist — chapter six says more.
 
 **The room and the phone.** A live bathroom, a fan, a fridge, a phone lying face down on a duvet — each of them costs you notes at the quiet end. Test in the same room when you can. Chapter 12 holds the full measurement checklist and goes further into the ways rooms lie to you.
 

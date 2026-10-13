@@ -106,6 +106,17 @@ export interface ProgramChapter {
   title: string;
 }
 
+/** A chapter to read before a point in the program, and what the program takes from it. */
+export interface ProgramReadFirst {
+  /** Where in the program: "day 1", "week 5". */
+  before: string;
+  /** A slug in lib/book-data.ts, opened at /book/<slug>. */
+  slug: string;
+  title: string;
+  /** What the program needs from it, in a clause after the title. */
+  why: string;
+}
+
 export interface Program {
   id: string;
   name: string;
@@ -125,6 +136,13 @@ export interface Program {
   pro: boolean;
   /** The book chapters that teach its weeks, when it follows the book. */
   chapters?: ProgramChapter[];
+  /**
+   * Earlier chapters the weeks build on, each to read before the point of
+   * the program it names: a plan's rules, a record kept from before week 1, a
+   * landmark a later block works on. Titles are held to lib/book-data.ts by a
+   * test, as `chapters` are.
+   */
+  readFirst?: ProgramReadFirst[];
   days: ProgramDay[];
 }
 
@@ -492,6 +510,28 @@ const ONSET_TAKE: ProgramItem = {
   take: "one middle note, five short clean onsets with a fresh breath between, then listen back",
 };
 
+/**
+ * Weeks 9 and 10's phrase work, as chapter 18 asks: "Choose two phrases: the
+ * longest one, and one that dips low. Mark where you intend to breathe …
+ * record every attempt", then listen for whether the low notes stayed
+ * released, whether the phrase ends held, and whether the breaths fell where
+ * planned. The songbook scores pitch; it cannot hear any of those, so the
+ * check is the playback. The week's first long-phrase session records the
+ * two phrases and listens back; the second sings them again and A/Bs the
+ * take "against one from earlier in the week", which then exists. The row
+ * asks for the breaths to be planned rather than "where you marked": a
+ * singer working from the day list has not been asked to mark anything, and
+ * chapter 18's rule is "Plan your breaths and keep them in the same places".
+ */
+const PHRASE_TAKE: ProgramItem = {
+  kind: "recorder",
+  take: "the longest phrase of your song and one that dips low, with each breath planned before you sing, then listen back",
+};
+const PHRASE_TAKE_AGAIN: ProgramItem = {
+  kind: "recorder",
+  take: "the longest phrase of your song and one that dips low, breathing in the places you planned, then A/B it with this week's first take",
+};
+
 /** Four sessions a week, spread out, as the book asks: "three is the floor, four is better". */
 function bookWeek(a: ProgramDay, b: ProgramDay, c: ProgramDay, d: ProgramDay): ProgramDay[] {
   return [a, b, rest(), c, d, rest(), rest()];
@@ -516,7 +556,7 @@ const MEASURED_VOICE: Program = {
   tagline:
     "The book's twelve-week plan, four sessions a week: baseline and breath, the middle, the break, the top, the bottom, then one song.",
   measures:
-    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear, and one early in week 11 is a working copy of your song. Takes of five onsets in weeks 3 and 4 are for listening back, as chapter 15 asks, and takes in weeks 5 to 8, a siren and a top-note pattern, are for the A/B comparisons chapters 16 and 17 ask for.",
+    "Range tests on day 1, at the end of week 6 and at the start of week 12 record the lowest and highest notes the test found, and a sustain test records the seconds you held. A recorded take on day 1 and in week 12 is for you to compare by ear, and one early in week 11 is a working copy of your song. Takes of five onsets in weeks 3 and 4 are for listening back, as chapter 15 asks, and takes in weeks 5 to 8, a siren and a top-note pattern, are for the A/B comparisons chapters 16 and 17 ask for. Takes of two phrases of your song in weeks 9 and 10 are for the listening back and A/B chapter 18 asks for.",
   weeks: 12,
   pro: true,
   chapters: [
@@ -526,6 +566,24 @@ const MEASURED_VOICE: Program = {
     { fromWeek: 7, toWeek: 8, slug: "weeks-7-8-top", title: "Weeks 7 and 8: extending the top" },
     { fromWeek: 9, toWeek: 10, slug: "weeks-9-10-bottom", title: "Weeks 9 and 10: the bottom and the long phrase" },
     { fromWeek: 11, toWeek: 12, slug: "weeks-11-12-songs", title: "Weeks 11 and 12: putting it in a song" },
+  ],
+  // Chapter 13 sets the plan's rules and the records kept before week 1,
+  // among them the sentence about why that chapter 19 has the singer read
+  // back in week 12. Chapter 10 is where the transition weeks 5 to 8 work
+  // on, and are tested against, is found.
+  readFirst: [
+    {
+      before: "day 1",
+      slug: "how-the-program-works",
+      title: "How the twelve weeks work",
+      why: "the rules for missed and repeated weeks, and what to record before you start, including a sentence about why you want to sing, which you read again in week 12",
+    },
+    {
+      before: "week 5",
+      slug: "finding-your-break",
+      title: "Finding your own break on the chart",
+      why: "weeks 5 to 8 work on, and test against, the transition it has you find",
+    },
   ],
   days: [
     // Weeks 1–2: baseline and breath. Chapter 14: "Stay in the middle of your
@@ -614,15 +672,17 @@ const MEASURED_VOICE: Program = {
       ),
     ),
     // Weeks 9–10: the bottom, and long phrases rather than long notes. The
-    // phrase work is in a song, the one weeks 11 and 12 go on with, and the
-    // sustain test runs once a week, as chapter 18 asks. The breath work is
-    // single drills rather than the sets, every one of which ends on sustains,
-    // at the builder set's longer counts: chapter 18 wants "four or five
-    // minutes" of chapter 14's drills "with the exhale counts a beat or two
-    // longer than you used in weeks 1 and 2", then a breath taken into a note.
+    // phrase work is in a song, the one weeks 11 and 12 go on with, sung in
+    // the songbook and then two of its phrases recorded to listen back to
+    // and A/B, and the sustain test runs once a week, as chapter 18 asks. The
+    // breath work is single drills rather than the sets, every one of which
+    // ends on sustains, at the builder set's longer counts: chapter 18 wants
+    // "four or five minutes" of chapter 14's drills "with the exhale counts a
+    // beat or two longer than you used in weeks 1 and 2", then a breath taken
+    // into a note.
     ...[9, 10].flatMap(() =>
       bookWeek(
-        day("Breath for a long phrase", ...LONG_BREATH, routine("quick"), song("home-on-the-range"), routine("cooldown")),
+        day("Breath for a long phrase", ...LONG_BREATH, routine("quick"), song("home-on-the-range"), PHRASE_TAKE, routine("cooldown")),
         day("Down low, gently", ...LONG_BREATH, routine("recovery"), routine("morning")),
         day(
           "Breath for a long phrase",
@@ -630,6 +690,7 @@ const MEASURED_VOICE: Program = {
           routine("quick"),
           drill("sustain"),
           song("home-on-the-range"),
+          PHRASE_TAKE_AGAIN,
           routine("cooldown"),
         ),
         day("Quiet and low", ...LONG_BREATH, routine("recovery"), routine("morning")),
@@ -968,6 +1029,8 @@ export function itemsDoneOn(
  * sessions the finished ones left, so a step tick never spends a session
  * another row already uses. With the saved `range`, a routine step the runner
  * skips for it is waived (Evidence.waived): ticked, and paid for by no session.
+ * `waived[i][k]` says which ticks those are, so the day card can tell a step
+ * sung from one the range rules out.
  */
 export function matchDay(
   d: ProgramDay,
@@ -975,7 +1038,7 @@ export function matchDay(
   day: string,
   from: string = day,
   range?: VocalRange | null,
-): { items: boolean[]; steps: boolean[][] } {
+): { items: boolean[]; steps: boolean[][]; waived: boolean[][] } {
   const pool = sessions.filter((s) => s.day >= from && s.day <= day);
   const reqs: Evidence[] = [];
   /** reqOf[r] = [item index, requirement index within the item]. */
@@ -1028,13 +1091,14 @@ export function matchDay(
       }
     });
   });
-  const steps = d.items.map((item) => itemEvidence(item, range).map((e) => e.waived === true));
+  const waived = d.items.map((item) => itemEvidence(item, range).map((e) => e.waived === true));
+  const steps = waived.map((w) => [...w]);
   for (const r of owner) {
     if (r === undefined) continue;
     const [i, k] = reqOf[r];
     steps[i][k] = true;
   }
-  return { items, steps };
+  return { items, steps, waived };
 }
 
 /** Whether the log shows the item done from `from` through `day`, on its own. */
@@ -1050,10 +1114,11 @@ export function itemDoneOn(
 
 /**
  * A routine's exercises or a breath set's drills as items of their own. The
- * rooms run a routine or set from its first step, and the free plan can stop
- * one between steps, so the day card also links each step: the rest can be
- * sung one at a time on a later day, and they count toward the routine the
- * same way (its evidence is one session per step).
+ * rooms run a routine or set from the step they open on to its end, and the
+ * free plan can stop one between steps, so the day card's row carries on
+ * from the first step still to sing and also links each step: the rest can
+ * be sung on a later day, and they count toward the routine the same way
+ * (its evidence is one session per step).
  */
 export function itemSteps(item: ProgramItem): ProgramItem[] {
   if (item.kind === "routine") {

@@ -5285,7 +5285,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Record an easy baseline phrase at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
+        "body": "Record an easy baseline phrase in the recorder at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -5297,7 +5297,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. Then record the same note on “eh” twice in one take at the same microphone distance: your plain baseline first, then the bright version. Brightness is the only thing that changes, so keep the volume the same. Change resonance before volume, and keep each attempt short.",
+        "body": "To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. While you find it, have the [voice analyzer](/analyze) open: the Ring band percentage on its tone view usually rises as the sound brightens, but getting louder or pressing can raise it too, so keep the volume steady and the throat easy. Then, in the [recorder](/recorder), record the same note on “eh” twice in one take at the same microphone distance: your plain baseline first, then the bright version. Brightness is the only thing that changes, so keep the volume the same. Change resonance before volume, and keep each attempt short.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5376,7 +5376,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Record an easy baseline phrase at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
+        "body": "Record an easy baseline phrase in the recorder at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -5388,7 +5388,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. Work in short repetitions with a normal breath and complete release between them. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take with a quiet breath between them, so saving does not replace the sound you need to compare.",
+        "body": "To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. While you find it, have the [voice analyzer](/analyze) open: the Ring band percentage on its tone view usually rises as the sound brightens, but getting louder or pressing can raise it too, so keep the volume steady and the throat easy. Work in short repetitions with a normal breath and complete release between them. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take in the [recorder](/recorder), with a quiet breath between them, so saving does not replace the sound you need to compare.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5467,7 +5467,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Record an easy baseline phrase at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
+        "body": "Record an easy baseline phrase in the recorder at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -5479,7 +5479,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take with a quiet breath between them, so saving does not replace the sound you need to compare.",
+        "body": "To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. While you find it, have the [voice analyzer](/analyze) open: the Ring band percentage on its tone view usually rises as the sound brightens, but getting louder or pressing can raise it too, so keep the volume steady and the throat easy. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take in the [recorder](/recorder), with a quiet breath between them, so saving does not replace the sound you need to compare.",
         "look": "Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.",
         "listen": "The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone."
       },
@@ -5570,7 +5570,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Record the climb in one take. Pitch is the only thing that changes, so on playback listen for the first note where the call starts to sound like a shout: harder, louder without getting brighter, or tight. That note is where to lighten next time. Never chase a belt label by adding throat pressure.",
+        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Record the climb in one take in the [recorder](/recorder). Pitch is the only thing that changes, so on playback listen for the first note where the call starts to sound like a shout: harder, louder without getting brighter, or tight. That note is where to lighten next time. To put a name on it, climb back to that step once more, lightly, in the [pitch studio](/studio), which shows each note as you sing it. Never chase a belt label by adding throat pressure.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5661,7 +5661,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Build the pattern in pieces",
-        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Mark the key, breaths, range edges, and lesson target before a full take of the supplied pattern, Legato triad or Wee from the fifth. Rehearse the hardest part alone, join two repetitions, then record one uninterrupted take. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.",
+        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Mark the key, breaths, range edges, and lesson target before a full take of the supplied pattern, Legato triad or Wee from the fifth. Rehearse the hardest part alone, join two repetitions, then record one uninterrupted take in the [recorder](/recorder). Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -5752,7 +5752,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.",
+        "body": "Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.",
         "look": "The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.",
         "listen": "The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward."
       },
@@ -7117,7 +7117,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Scoop: start a little below the note and slide up into it. Fall: drop away in pitch off the end of a note. Bend: push the pitch slightly off the note and bring it back. Slide: glide from one written note to the next. A scoop here is a choice you place, unlike the accidental scoop Stage 2 trained out. Before singing, mark which note of the phrase each will go on, then sing the phrase once with all four at the places you marked. Keep scoops, falls, bends, and slides small and intentional.",
+        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Scoop: start a little below the note and slide up into it. Fall: drop away in pitch off the end of a note. Bend: push the pitch slightly off the note and bring it back. Slide: glide from one written note to the next. A scoop here is a choice you place, unlike the accidental scoop Stage 2 trained out. Before singing, mark which note of the phrase each will go on, then record the phrase once in the [recorder](/recorder) with all four at the places you marked, so you can name each one on playback. Keep scoops, falls, bends, and slides small and intentional.",
         "look": "Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.",
         "listen": "The four versions are recognizably different and the underlying words and melody remain intact."
       },

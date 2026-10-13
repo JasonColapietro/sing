@@ -6,6 +6,12 @@ import type { FreeCap } from "@/lib/free-cap";
 
 const pro = vi.hoisted(() => ({ active: false }));
 const stored = vi.hoisted(() => ({ progress: null as ProgressState | null }));
+const hydration = vi.hoisted(() => ({ done: false }));
+
+vi.mock("@/components/prepaint", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/components/prepaint")>(),
+  useHydrated: () => hydration.done,
+}));
 
 vi.mock("@/lib/pro", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/pro")>(),
@@ -21,7 +27,7 @@ vi.mock("@/lib/progress", async (importOriginal) => {
 });
 
 import { CapWall, FreeAllowance } from "./free-cap";
-import { paintedFor } from "@/components/prepaint.testing";
+import { paintedFor, staticText, wordsPainted } from "@/components/prepaint.testing";
 import { StreakChip, useGoalDoneSec } from "./learn-home";
 
 const capped: FreeCap = { isPro: false, usedSec: 300, leftSec: 0, capped: true, capSec: 300 };
@@ -45,11 +51,25 @@ function daysAgo(n: number): string {
 beforeEach(() => {
   pro.active = false;
   stored.progress = null;
+  hydration.done = false;
 });
+
+/** The wall a capped singer reads once the room has hydrated. */
+function wall(cap: FreeCap = capped, className?: string): string {
+  hydration.done = true;
+  try {
+    return renderToStaticMarkup(<CapWall cap={cap} className={className} />);
+  } finally {
+    hydration.done = false;
+  }
+}
+
+/** useId's ids, which differ between two renders of one tree only by chance. */
+const ids = (html: string) => html.replace(/_R_[0-9a-z]+_/g, "_ID_");
 
 describe("the free-practice wall", () => {
   it("sends the singer to the buy card with the benefit and the price on the button", () => {
-    const html = renderToStaticMarkup(<CapWall cap={capped} />);
+    const html = wall();
     expect(html).toContain('id="free-cap"');
     expect(html).toContain('href="/pro#buy"');
     expect(html).toContain("Go Pro: no daily limit, $79 once");
@@ -57,14 +77,14 @@ describe("the free-practice wall", () => {
   });
 
   it("gives a Pro owner in a new browser a way to unlock it, not only a second purchase", () => {
-    const html = renderToStaticMarkup(<CapWall cap={capped} />);
+    const html = wall();
     expect(html).toMatch(/<a[^>]*href="\/pro#restore"[^>]*>Already have Pro\? Unlock it in this browser<\/a>/);
     // After the offer, never ahead of it.
     expect(html.indexOf('href="/pro#restore"')).toBeGreaterThan(html.indexOf('href="/pro#buy"'));
   });
 
   it("ends the day with a reason to come back, and promises no account", () => {
-    const html = renderToStaticMarkup(<CapWall cap={capped} />);
+    const html = wall();
     expect(html).toContain("The free plan includes 5 minutes of guided practice a day");
     expect(html).toContain("opens at midnight");
     expect(html).toMatch(/<a[^>]*href="\/progress"[^>]*>See your streak<\/a>/);
@@ -73,11 +93,11 @@ describe("the free-practice wall", () => {
 
   it("names the streak today's practice extended, and never a lapsed one", () => {
     stored.progress = { ...DEFAULT_PROGRESS, streak: { current: 12, best: 12, lastDay: localDay() } };
-    expect(renderToStaticMarkup(<CapWall cap={capped} />)).toContain("now 12 days");
+    expect(wall()).toContain("now 12 days");
 
     // The stored count outlives the streak; read raw it would claim 12 days.
     stored.progress = { ...DEFAULT_PROGRESS, streak: { current: 12, best: 12, lastDay: daysAgo(5) } };
-    expect(renderToStaticMarkup(<CapWall cap={capped} />)).not.toContain("12 days");
+    expect(wall()).not.toContain("12 days");
   });
 
   it("paints the allowance readout before hydration only for a free singer under the cap", () => {
@@ -101,8 +121,24 @@ describe("the free-practice wall", () => {
     expect(paintedFor(html, { plan: "pro" })).toBe("");
     // At the wall the time used is the whole allowance, whatever the
     // prerender's empty log says.
-    expect(html).toContain("5:00 of 5:00 used");
+    expect(wordsPainted(html)).toContain("5:00 of 5:00 used today");
     expect(html).toContain("p.streakClause");
+  });
+
+  it("keeps the wall's words out of the static HTML, and paints them as the hydrated wall has them", () => {
+    // Every room's server HTML carries the wall for every visitor. A reader
+    // that runs no script and applies no CSS (GPTBot, ClaudeBot, CCBot…)
+    // took "That's your 5 free minutes for today … 5:00 of 5:00 used today"
+    // for the opening of /warmups, /breath, /ear-training and /songs.
+    const html = renderToStaticMarkup(<CapWall cap={open} className="mb-6" />);
+    expect(staticText(html)).toBe("");
+    expect(html).toContain('data-prepaint-text="That&#x27;s your 5 free minutes for today"');
+    // Painted, it is the hydrated wall exactly, so the swap at hydration
+    // moves nothing: the same elements, classes and words.
+    const prepainted = wordsPainted(html)
+      .replace(' data-prepaint-plan="capped"', "")
+      .replace(/<script>[\s\S]*?<\/script>/g, "");
+    expect(ids(prepainted)).toBe(ids(wall(capped, "mb-6").replace(/<script>[\s\S]*?<\/script>/g, "")));
   });
 });
 
@@ -114,7 +150,9 @@ describe("the free-practice wall on a phone", () => {
     const open = html.lastIndexOf("<", at);
     return /class="([^"]*)"/.exec(html.slice(open, html.indexOf(">", open)))?.[1] ?? "";
   }
-  const html = renderToStaticMarkup(<CapWall cap={capped} />);
+  // As the server HTML paints before hydration (the hydrated wall is the
+  // same markup, see above).
+  const html = wordsPainted(renderToStaticMarkup(<CapWall cap={capped} />));
 
   it("orders the ways forward straight under the heading, ahead of the explanation", () => {
     // After the explanation, the actions sat under a 375×667 phone's tab bar.

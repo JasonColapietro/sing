@@ -158,7 +158,9 @@ export const SONGS: Song[] = [
     genre: "Nursery",
     era: "1700s",
     language: "French",
-    tags: ["round", "stepwise", "narrow range"],
+    // Not "stepwise": the tune falls a major third twice (E4 to C4), which
+    // the page counts as leaps beside the tag that would deny them.
+    tags: ["round", "narrow range"],
     notes: [
       { midi: 60, startBeat: 0, durBeats: 1, lyric: "Frè", wordEnd: false },
       { midi: 62, startBeat: 1, durBeats: 1, lyric: "re" },
@@ -174,18 +176,24 @@ export const SONGS: Song[] = [
     id: "london-bridge",
     slug: "london-bridge-is-falling-down",
     title: "London Bridge Is Falling Down",
-    origin: "Traditional (English nursery rhyme)",
+    // The era chip dates the melody (the page says so). The words were printed
+    // from about 1744, but the tune transcribed here, the one sung today, was
+    // first printed in 1879 (Rosewig, Illustrated National Songs and Games);
+    // the 18th-century tunes for the rhyme are different ones.
+    origin: "Traditional (English nursery rhyme; words printed from the 1740s, this tune first printed in 1879)",
     publicDomain:
-      "Traditional English nursery rhyme, printed since the 18th century.",
+      "Traditional English nursery rhyme. The words have been printed since the 1740s and the tune transcribed here since 1879; both are long out of copyright.",
     bpm: 104,
     beatsPerBar: 4,
     defaultKeyRootMidi: 60,
     form: "phrase",
     defaultLoops: 4,
     genre: "Nursery",
-    era: "1700s",
+    era: "1800s",
     language: "English",
-    tags: ["stepwise", "playground"],
+    // Not "stepwise": "down, fall-" drops a fourth (G4 to D4). Seven
+    // semitones in all, the same span as Row, Row, Row Your Boat.
+    tags: ["narrow range", "playground"],
     notes: [
       { midi: 67, startBeat: 0, durBeats: 1, lyric: "Lon", wordEnd: false },
       { midi: 69, startBeat: 1, durBeats: 1, lyric: "don" },
@@ -364,7 +372,8 @@ export const SONGS: Song[] = [
     genre: "Patriotic",
     era: "1700s",
     language: "English",
-    tags: ["march", "narrow range", "stepwise"],
+    // Not "stepwise": the page counts three leaps of a major third or more.
+    tags: ["march", "narrow range"],
     notes: [
       { midi: 60, startBeat: 0, durBeats: 1, lyric: "Yan", wordEnd: false },
       { midi: 60, startBeat: 1, durBeats: 1, lyric: "kee" },
@@ -487,7 +496,11 @@ export const SONGS: Song[] = [
     form: "phrase",
     defaultLoops: 4,
     genre: "Folk",
-    era: "1800s",
+    // No 19th-century source for this tune: Jimmie Tarlton claimed the words
+    // in 1925 and it was first recorded in 1927. The origin line says
+    // "collected in the early 20th century", so the era chip does not say
+    // 1800s.
+    era: "Traditional",
     language: "English",
     tags: ["ballad", "waltz", "long tones"],
     notes: [
@@ -739,16 +752,25 @@ export const SONGS: Song[] = [
     id: "scarborough-fair",
     slug: "scarborough-fair",
     title: "Scarborough Fair",
-    origin: "Traditional (English ballad, 17th century)",
+    // "English ballad, 17th century" dated the wrong song: the Scarborough
+    // Fair verses and refrain are known from 19th-century versions, and only
+    // the ballad they descend from, the Scottish "Elfin Knight" (Child 2), is
+    // traced to the 17th century (about 1670). The tune was taken down from
+    // Mark Anderson of Middleton-in-Teesdale in 1947.
+    origin:
+      "Traditional (Northern English ballad descended from the 17th-century Scottish ballad “The Elfin Knight”; this tune collected in 1947)",
     publicDomain:
-      "Traditional English ballad, documented from the 17th century onward.",
+      "Traditional Northern English ballad of unknown authorship, descended from “The Elfin Knight”, a ballad documented from the 17th century. The tune is a traditional melody collected from a folk singer in 1947.",
     bpm: 96,
     beatsPerBar: 3,
     defaultKeyRootMidi: 62,
     form: "phrase",
     defaultLoops: 4,
     genre: "Folk",
-    era: "1600s",
+    // The era chip dates the melody. The ballad's ancestor, The Elfin Knight,
+    // goes back to about 1670, but the best-known tune, the one transcribed
+    // here, was collected by Ewan MacColl in 1947.
+    era: "Traditional",
     language: "English",
     tags: ["ballad", "modal", "dorian"],
     notes: [
