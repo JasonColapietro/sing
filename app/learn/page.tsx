@@ -353,8 +353,9 @@ export default function LearnPage() {
           <SectionLabel>Reference</SectionLabel>
           <h2 className="mt-3 text-2xl">Look up a voice, then test your own</h2>
           <p className="mt-3 max-w-3xl text-mut">
-            The singer library collects cited ranges, voice types, highest and
-            lowest notes, and technique notes for {SINGERS.length} singers. Use it for
+            The singer library collects cited ranges, catalog voice-type labels,
+            and highest and lowest notes for {SINGERS.length} singers; The Voice
+            Atlas, part of Suede Pro, adds a technique note for each. Use it for
             context, not as a target: another singer&apos;s recorded extreme says
             nothing about the note your voice should force today.
           </p>

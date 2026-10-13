@@ -351,8 +351,17 @@ export default function VocalRangeByVoiceTypePage() {
               both need the row/column relationships, and an answer engine
               lifting one row needs the header association to keep the number
               attached to the right category. Horizontal scroll is on the
-              wrapper so the page body never scrolls sideways on a phone. */}
-          <div className="mt-4 overflow-x-auto">
+              wrapper so the page body never scrolls sideways on a phone.
+              A phone shows only the first three columns and no scrollbar at
+              rest, so a cue says the example singers are a swipe away; the
+              table's headers and cells stay untouched. */}
+          <p
+            aria-hidden="true"
+            className="mt-3 font-mono text-[10px] uppercase tracking-[0.12em] text-dim sm:hidden"
+          >
+            Swipe the table sideways for example singers →
+          </p>
+          <div className="mt-2 overflow-x-auto sm:mt-4">
             <table className="w-full min-w-[46rem] border-collapse text-left text-sm">
               <caption className="sr-only">
                 Conventional vocal range and passaggio zone for the eight

@@ -230,13 +230,11 @@ export default function EarTrainingClient() {
       title="Ear training for singers"
       subtitle="Five short games that train your ear for pitch and intervals: match a pitch, catch moving notes, name intervals and sing melodies back, ten rounds each."
     >
-      {cap.capped ? (
-        <div className="mb-6">
-          <CapWall cap={cap} />
-        </div>
-      ) : (
-        <FreeAllowance cap={cap} className="mb-4" />
-      )}
+      {/* Both are in the server HTML; each renders only in its own state, and
+          until hydration the pre-paint state shows the right one
+          (components/prepaint.tsx). */}
+      <CapWall cap={cap} className="mb-6" />
+      <FreeAllowance cap={cap} className="mb-4" />
       <ContinueCard
         kicker={earToday ? "Top up today" : "Today's ear workout"}
         title={recommended.name}

@@ -103,6 +103,51 @@ is the way to actually cover them.
 separate pass against `npm run build && npm start`, which reproduces production
 to four decimals.
 
+## Layout shift
+
+`node e2e/cls.mjs [baseUrl] [--executable=path]` loads every route template
+and fails above 0.10, Google's "good" line. It fails with exit 2, never a
+pass, when a route did not load or the observer could not see a synthetic
+shift.
+
+| Flag | Effect |
+|---|---|
+| `--viewport=mobile-375` | one viewport (default: all five) |
+| `--returning` | seed a returning singer before every load (see Navigation journeys below) |
+| `--state=<name>` | seed a returning singer in a stored state that reshapes pages; implies `--returning` |
+| `--route=warmups,programs` | just these routes, by their `name` in `routes.mjs` |
+| `--json=path.json` | write every reading |
+
+The states are what localStorage holds and the prerender cannot: the
+prerender is always a newcomer's page, so each of these used to change shape
+at hydration only for the singers in it.
+
+| `--state=` | Seeded on top of the returning record | Pages it reshapes |
+|---|---|---|
+| `capped` | 330 s of warmup today: the free plan's five guided minutes are used | the cap wall in `/warmups`, `/breath`, `/ear-training`, `/songs` |
+| `program` | Foundations in 2 weeks, day 2 still to do | today's card on `/programs`, the leading program card on `/warmups` |
+| `program-capped` | both: the program day waits for midnight | all of the above, with the longer "waits" lines |
+| `rest-day` | Mix in 4 weeks on its day 7 rest day, day 8 onward needing Pro | the rest-day card on `/programs` and `/warmups` |
+
+Each state also names the selector that proves it showed (the cap wall, a
+program card), and a route where it did not counts as a failed reading, so
+a seed that stops matching the app cannot pass by measuring a plain
+returning singer. `e2e/cls.test.mjs` runs every seed and checks it against
+the app's own rules and the pre-paint script.
+
+These pages stay still in those states because an inline script in the root
+layout's `<head>` (`lib/prepaint.ts`) reads the same storage before the first
+paint and marks `<html>`, and the server HTML carries each state's version of
+the parts that depend on it (`components/prepaint.tsx`, rules in
+`app/globals.css`). Measured against a production build at 375 and 1280px,
+every route in every state is at or under 0.10; before, a capped singer's
+rooms were 0.40 to 0.45 on a phone, `/programs` with a program 0.29 to 0.44,
+and `/warmups` with a program and the cap used 0.52.
+
+CI's `layout-shift` job (`.github/workflows/ci.yml`) runs every route on a
+375px phone twice, as a newcomer and with `--returning`, then each state on
+the routes it reshapes at 375 and 1280px.
+
 ## Pitch precision
 
 A separate runner, not an audit: it scores how many cents the practice rooms
@@ -178,7 +223,8 @@ after crossing the 640px breakpoint with the sheet open, and removal of the
 tab fade at the scroll end. It uses isolated browser contexts and never signs
 in or starts checkout. `cls.mjs`, `song-first-practice.mjs` and
 `songs-modes.mjs` take the same `--executable=` flag for machines without a
-Chrome channel. `cls.mjs --returning` seeds a returning singer's progress
+Chrome channel. `cls.mjs --returning` (and every `--state`, see Layout shift
+above) seeds a returning singer's progress
 record (a warmup yesterday, a streak, a saved range) before every load: the
 prerender is always the newcomer's layout, so a page whose layout depends on
 progress, such as `/warmups`, shifts at hydration only for a singer with a

@@ -276,10 +276,11 @@ export function SessionSummary({
               <>
                 {" "}
                 <span className="font-mono">{midiToLabel(diagnosis.weakest.midi)}</span>{" "}
-                was the shakiest note in the session: in tune{" "}
+                was the shakiest note in the session: within{" "}
+                {TOLERANCE_CENTS} cents of the target for{" "}
                 {diagnosis.weakest.accuracy}% of its scored time
                 {diagnosis.weakest.cents !== null
-                  ? `, off by about ${diagnosis.weakest.cents} cents`
+                  ? `, about ${diagnosis.weakest.cents} cents off on average`
                   : ""}
                 .
               </>

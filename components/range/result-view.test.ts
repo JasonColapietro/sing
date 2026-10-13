@@ -3,6 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { rangeGrowth, rangeSeries } from "@/lib/analytics";
+import { SONGS } from "@/components/songs/data";
+import { countOpenSongsFitting } from "@/components/songs/lib";
 
 import {
   ResultView,
@@ -10,6 +12,7 @@ import {
   rankFamousVoices,
   returnSongSlugFromSearch,
   sampleHistory,
+  songCountCopy,
   voicePlural,
 } from "./result-view";
 
@@ -94,6 +97,36 @@ describe("range result voice type", () => {
     expect(html).toContain("See the basses in the library");
     expect(html).not.toContain("basss");
     expect(html).toContain("Violet = your range");
+  });
+});
+
+describe("range result song count", () => {
+  it("counts the open songs in the key they open in, as the songbook badges do", () => {
+    // C3–F4 (48–65): the written-key count said "Nothing fits as written —
+    // yet" here, while the library marked the same three songs as fitting.
+    const counted = countOpenSongsFitting(SONGS, new Set(), { lowMidi: 48, highMidi: 65 });
+    expect(counted.fitting).toBe(counted.total);
+    const copy = songCountCopy(counted);
+    expect(copy.heading).toBe("Every open song fits your range");
+    expect(copy.body).toContain("They open fitted to the range you just measured");
+    expect(copy.body).toContain(`the other ${counted.locked} open a band at a time`);
+    expect(`${copy.heading} ${copy.body}`).not.toMatch(/written key|yet/);
+  });
+
+  it("agrees the verb with one song", () => {
+    expect(songCountCopy({ fitting: 1, total: 3, locked: 0 }).heading).toBe("1 of 3 open songs fits your range");
+    expect(songCountCopy({ fitting: 2, total: 3, locked: 0 }).heading).toBe("2 of 3 open songs fit your range");
+  });
+
+  it("does not offer more shifting as the cure when even an octave's shift misses", () => {
+    // A2–E3 (45–52): the first band, dropped the player's full octave, still
+    // sits above this ceiling.
+    const counted = countOpenSongsFitting(SONGS, new Set(), { lowMidi: 45, highMidi: 52 });
+    expect(counted.fitting).toBe(0);
+    const copy = songCountCopy(counted);
+    expect(copy.heading).toBe(`0 of ${counted.total} open songs fit your range`);
+    expect(copy.body).toContain("even shifted by up to an octave");
+    expect(copy.body).not.toContain("You can still shift");
   });
 });
 

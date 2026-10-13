@@ -20,6 +20,7 @@ import {
 import { beginProgram, leaveProgram } from "./store";
 import { DayItems, ProgramTodayCard } from "./today-card";
 import { useActiveProgram, type ActiveProgram } from "./use-program";
+import { prepaintMarker, useHydrated } from "@/components/prepaint";
 
 function minutesLabel(p: Program): string {
   const { min, max } = programMinutesRange(p);
@@ -328,6 +329,7 @@ function ProgramDetail({
  */
 export function ProgramsClient() {
   const active = useActiveProgram();
+  const hydrated = useHydrated();
   const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
@@ -353,8 +355,18 @@ export function ProgramsClient() {
       subtitle="Vocal training programs from one week to twelve, worked a day at a time: warmups, breath and range check-ins, with rest days built in. Four are free to follow; on the free plan guided practice is five minutes a day, so a longer day can be spread over several. Pro removes the cap."
     >
       <div className="space-y-8">
-        {active && (!program || program.id === active.program.id) && (
-          <ProgramTodayCard active={active} onBrowse={program ? null : () => open(active.program.id)} />
+        {/* The running program is read from this browser's storage, so the
+            prerendered list cannot have today's card above it. Until
+            hydration its place is an empty card that the pre-paint state
+            sizes for the day's status, and the list starts about where the
+            card will leave it (components/prepaint.tsx). */}
+        {!hydrated ? (
+          <div aria-hidden="true" className="rounded-3xl border border-line bg-panel" {...prepaintMarker(hydrated, { slot: "program-today" })} />
+        ) : (
+          active &&
+          (!program || program.id === active.program.id) && (
+            <ProgramTodayCard active={active} onBrowse={program ? null : () => open(active.program.id)} />
+          )
         )}
         {program ? (
           <ProgramDetail program={program} active={active} onBack={() => open(null)} />

@@ -187,6 +187,23 @@ jobs:
               ;;
             layout-shift)
               run_check layout-shift node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=mobile-375
+              # A plain returning singer (a saved range and a practice
+              # history, no cap or program state): the record most visitors
+              # who come back carry, which the fresh run above never seeds.
+              run_check layout-shift-returning node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --returning --viewport=mobile-375 "--json=browser-results/layout-shift-returning-mobile-375.json"
+              # The stored states the prerender cannot show (e2e/README.md,
+              # "Layout shift"), each on the routes it reshapes, on a phone and
+              # a desktop: about 30 page loads in all.
+              for spec in \
+                "capped:warmups,breath,ear-training,songs" \
+                "program:programs,warmups,progress" \
+                "program-capped:programs,warmups,breath,ear-training" \
+                "rest-day:programs,warmups,progress"; do
+                state="${spec%%:*}"
+                for viewport in mobile-375 desktop-1280; do
+                  run_check "layout-shift-$state-$viewport" node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" "--viewport=$viewport" "--state=$state" "--route=${spec#*:}" "--json=browser-results/layout-shift-$state-$viewport.json"
+                done
+              done
               ;;
             *)
               echo "Unknown browser suite: $SING_SUITE" >&2

@@ -12,7 +12,12 @@
 // this moment"; the path on the room home is where best scores decide what to
 // play next.
 
-import { GAME_NAMES, type Difficulty, type GameId } from "./lib";
+import {
+  GAME_NAMES,
+  pitchMatchTolerance,
+  type Difficulty,
+  type GameId,
+} from "./lib";
 
 export interface EarRoutineStep {
   game: GameId;
@@ -46,7 +51,9 @@ export const GAME_TRAINS: Record<GameId, string> = {
 
 export const GAME_DESC: Record<GameId, string> = {
   interval: "Two notes play — name the distance between them.",
-  "pitch-match": "Hear a note, sing it back, and hold it steady in tune.",
+  // The game's window is far wider than the ±15-cent in-tune zone, so this
+  // names the band, as the warm-up summaries do, rather than saying "in tune".
+  "pitch-match": `Hear a note, sing it back, and hold it steady within ${pitchMatchTolerance("medium")} cents of the target (${pitchMatchTolerance("hard")} on Hard).`,
   "melody-echo": "Hear a short melody and echo it back note for note.",
   // Easy draws gaps of 3–7 semitones (higher-lower-game.tsx), so "tiny gaps"
   // described the hardest level on the easiest step of Quick ear.

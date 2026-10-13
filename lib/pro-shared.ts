@@ -8,6 +8,15 @@
 // module safe on both sides.
 import { TOTAL_CHAPTERS, TOTAL_WORDS } from "./pro-inventory";
 
+/**
+ * Where the Stripe billing portal sends a subscriber back to. The marker
+ * makes /pro re-check the entitlement at once (revalidatePro with force):
+ * the usual check skips Stripe for 12 hours, and a cancellation or a fixed
+ * card would otherwise keep showing "Renews …" or the past-due warning.
+ */
+export const PORTAL_RETURN_PARAM = "portal";
+export const PORTAL_RETURN_PATH = `/pro?${PORTAL_RETURN_PARAM}=return`;
+
 /** Every plan an existing entitlement can carry. */
 export type ProPlan = "monthly" | "annual" | "lifetime";
 
@@ -163,7 +172,7 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "How does billing work?",
-    a: `Lifetime is a single ${formatPrice(PRICING.lifetime.amount)} payment with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing monthly subscribers keep renewing at ${formatPrice(PRICING.monthly.amount)} and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
+    a: `Lifetime is a single ${formatPrice(PRICING.lifetime.amount)} payment with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing subscribers keep renewing at the price they signed up at and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
   },
   {
     q: "Why does a free app sell anything?",

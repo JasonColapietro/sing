@@ -91,11 +91,11 @@ const FAQ = [
   },
   {
     q: "Does Suede Sing use my voice to train AI?",
-    a: "No. Suede Sing contains no machine learning model. Pitch is measured with an autocorrelation algorithm running locally in the browser, and each audio frame is discarded as soon as it is analysed. No audio leaves your device, so there is no training set a singer's voice could end up in. Suede AI builds measurement tools rather than data-collection tools.",
+    a: "No. Suede Sing contains no machine learning model: pitch is measured with an autocorrelation algorithm running locally in the browser. The Chrome extension discards each audio frame as soon as it is analysed, and on the website any take you choose to record stays on your device. No audio leaves your device, so there is no training set a singer's voice could end up in. Suede AI builds measurement tools rather than data-collection tools.",
   },
   {
     q: "Does the extension record or upload my voice?",
-    a: "No. Suede Sing analyses each audio frame in your browser and discards it immediately. Nothing is recorded, nothing is uploaded, there is no account or server, and the extension contains no analytics or tracking scripts. Practice history is stored locally in Chrome and can be cleared at any time.",
+    a: "No. The extension analyses each audio frame in your browser and discards it immediately. Nothing is recorded, nothing is uploaded, the extension has no account or server, and it contains no analytics or tracking scripts. Practice history is stored locally in Chrome and can be cleared at any time.",
   },
   {
     q: "What does pitch accuracy in cents mean?",
@@ -217,8 +217,8 @@ export default function ExtensionPage() {
         <SectionLabel heading>Your voice stays on your computer</SectionLabel>
         <Card className="mt-4">
           <p className="text-sm text-mut">
-            Suede Sing analyses each audio frame in your browser and throws it
-            away immediately. Nothing is recorded. Nothing is uploaded. There is
+            The extension analyses each audio frame in your browser and throws
+            it away immediately. Nothing is recorded. Nothing is uploaded. There is
             no account, no sign-in, no server, and no analytics or tracking
             script anywhere in the extension.
           </p>

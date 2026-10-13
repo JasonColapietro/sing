@@ -174,6 +174,37 @@ function warmupForSpan(semis: number): { id: string; title: string; why: string 
 }
 
 /**
+ * The "Sing something" card's heading and body. Counted in the key each song
+ * opens in (fitted to this range, countSongsFitting), the same judgement as
+ * the songbook's "Fits your range" badge one tap later. A song that still
+ * misses is either wider than the measured span or needs more than the
+ * player's one-octave shift (MAX_TRANSPOSE), so the zero branch says "even
+ * shifted by up to an octave" rather than offering more shifting as a cure.
+ */
+export function songCountCopy(
+  counted: { fitting: number; total: number; locked: number } | null,
+): { heading: string; body: string } {
+  if (counted === null) {
+    return {
+      heading: "Find one that fits",
+      body: "Songs now open fitted to the range you just measured, and you can shift any of them by semitones.",
+    };
+  }
+  const { fitting, total, locked } = counted;
+  const lockedNote = locked > 0 ? `; the other ${locked} open a band at a time as you master songs` : "";
+  return {
+    heading:
+      total > 0 && fitting === total
+        ? "Every open song fits your range"
+        : `${fitting} of ${total} open songs ${fitting === 1 ? "fits" : "fit"} your range`,
+    body:
+      fitting > 0
+        ? `They open fitted to the range you just measured, and you can shift any of them by semitones${lockedNote}.`
+        : `None of the ${total} songs open to you now fits inside the range you just measured, even shifted by up to an octave${lockedNote}. Each opens as close to your range as it can, and you can shift it from there by semitones.`,
+  };
+}
+
+/**
  * About six weeks between tests: RANGE_RETEST_DAYS in lib/progress.ts, the
  * interval the coach and the pitch meter wait before suggesting a retest, and
  * the spacing pro-charts.tsx asks for.
@@ -403,10 +434,7 @@ export function ResultView({
     () => (book === null ? null : countOpenSongsFitting(book, mastered, { lowMidi, highMidi })),
     [book, mastered, lowMidi, highMidi],
   );
-  const lockedNote =
-    counted !== null && counted.locked > 0
-      ? `; the other ${counted.locked} open a band at a time as you master songs`
-      : "";
+  const songCopy = songCountCopy(counted);
 
   const famous = useMemo(() => {
     const rows = rankFamousVoices(lowMidi, highMidi);
@@ -617,20 +645,10 @@ export function ResultView({
             <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
               Sing something
             </span>
-            <h3 className="mt-2 text-base font-semibold">
-              {counted === null
-                ? "Find one that fits"
-                : counted.fitting > 0
-                  ? `${counted.fitting} song${counted.fitting === 1 ? "" : "s"} already fit`
-                  : "Nothing fits as written — yet"}
-            </h3>
-            <p className="mt-1.5 text-sm text-mut">
-              {counted === null
-                ? "Songs now open fitted to the range you just measured, and you can shift any of them by semitones."
-                : counted.fitting > 0
-                  ? `${counted.fitting} of the ${counted.total} songs open to you now stay inside your range in their written key${lockedNote}. Every song opens fitted to your range, and you can shift any of them by semitones.`
-                  : `None of the ${counted.total} songs open to you now stay inside your range in their written key${lockedNote}, but every song opens fitted to your range, and you can shift any of them by semitones.`}
-            </p>
+            {/* Counted in the key each song opens in, the same judgement as
+                the songbook's "Fits your range" badge one tap later. */}
+            <h3 className="mt-2 text-base font-semibold">{songCopy.heading}</h3>
+            <p className="mt-1.5 text-sm text-mut">{songCopy.body}</p>
             <div className="mt-4">
               {/* Plain /songs, no filter param: the library seeds its browse
                   state from a constant and reads nothing off the URL, so a

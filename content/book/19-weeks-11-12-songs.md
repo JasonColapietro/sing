@@ -45,7 +45,7 @@ Take the range test under the same conditions as week one, as near as you can ma
 
 Then record the song. Same song, same key, same arrangement as your week-one take. If you sing along in Songs, check the transpose setting first: the retest you just took replaces your saved range, and the key a song opens in can move with it. Record it near the start of a session rather than the end, so fatigue is not part of the comparison.
 
-Now A/B the two takes in the recorder. Listen straight through once, without stopping and without judging. Then listen again with a list.
+Now A/B the two takes in the recorder, or, if the browser has cleared the week-one take, play the copy you downloaded and the new take one after the other. Listen straight through once, without stopping and without judging. Then listen again with a list.
 
 Onsets first — the moment each phrase starts. Cleaner? Less scooping up to the note, fewer breathy leaks before the tone arrives? Onsets are worth checking early, because they are audible even to people who cannot describe what they are hearing.
 
@@ -79,4 +79,4 @@ If the whole thing held together, do not start another twelve weeks tomorrow. Ke
 
 ## Try this
 
-Open the recorder, put your week-one take next to your week-twelve take, and A/B the first four seconds of each — the very first phrase entry, nothing more. Onsets are the kind of detail you can hear without training, and four seconds beats sitting through both takes twice.
+Open the recorder, put your week-one take next to your week-twelve take (if the browser has cleared the week-one take, play the copy you downloaded beside it), and A/B the first four seconds of each — the very first phrase entry, nothing more. Onsets are the kind of detail you can hear without training, and four seconds beats sitting through both takes twice.

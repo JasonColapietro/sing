@@ -334,12 +334,56 @@ function spanExtentCents(
 }
 
 /**
+ * The run on an even grid `frameSec` apart from its first frame to its last,
+ * each point interpolated in log frequency between the frames either side.
+ *
+ * Everything after this indexes the contour by position, as if frame k sat at
+ * k × frameSec. A run with frames missing from it does not: a dropped
+ * animation frame on a busy phone, or an unvoiced dropout the run bridged,
+ * would slide every later frame one interval early, squeeze the time axis, and
+ * read the modulation that much faster. With one frame in ten missing, a
+ * 5.5 Hz vibrato read as about 6.1 Hz. An evenly spaced run comes back as it
+ * went in.
+ */
+function onEvenGrid(
+  voiced: Array<{ t: number; f0: number }>,
+  frameSec: number,
+): Array<{ t: number; f0: number }> {
+  if (voiced.length < 2 || !(frameSec > 0)) return voiced;
+  const start = voiced[0].t;
+  // The epsilon keeps a last frame that sits exactly on the grid from being
+  // lost to floating-point error in the division.
+  const count = Math.floor((voiced[voiced.length - 1].t - start) / frameSec + 1e-6) + 1;
+  const even: Array<{ t: number; f0: number }> = [];
+  let j = 0;
+  for (let k = 0; k < count; k++) {
+    const t = start + k * frameSec;
+    while (j < voiced.length - 2 && voiced[j + 1].t <= t) j++;
+    const a = voiced[j];
+    const b = voiced[j + 1];
+    const w = b.t > a.t ? Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t))) : 0;
+    // A grid point on a frame (to rounding) takes that frame's value exactly:
+    // interpolating there would add rounding noise to a flat contour, which
+    // the normalized autocorrelation then scales up into a spurious shape.
+    const f0 =
+      w < 1e-6 || a.f0 === b.f0
+        ? a.f0
+        : w > 1 - 1e-6
+          ? b.f0
+          : Math.exp(Math.log(a.f0) * (1 - w) + Math.log(b.f0) * w);
+    even.push({ t, f0 });
+  }
+  return even;
+}
+
+/**
  * Vibrato over one run of consecutive voiced frames. The frames must already be
  * contiguous in time; `analyzeVibrato` below is what picks such a run out of a
- * whole trace.
+ * whole trace. Frames missing from inside the run are interpolated over
+ * (`onEvenGrid`), so they cost precision but never move the rate.
  */
 export function analyzeVibratoRun(
-  voiced: Array<{ t: number; f0: number }>,
+  run: Array<{ t: number; f0: number }>,
   frameSec: number,
   options: VibratoOptions = {},
 ): VibratoAnalysis {
@@ -350,7 +394,8 @@ export function analyzeVibratoRun(
   const minRateHz = options.minRateHz ?? VIBRATO_MIN_RATE_HZ;
   const maxRateHz = options.maxRateHz ?? VIBRATO_MAX_RATE_HZ;
 
-  if (voiced.length < 2) return absent("no-voiced-run");
+  if (run.length < 2) return absent("no-voiced-run");
+  const voiced = onEvenGrid(run, frameSec);
 
   const maxReportableRateHz = 1 / (frameSec * VIBRATO_MIN_FRAMES_PER_CYCLE);
   if (maxReportableRateHz < maxRateHz) {

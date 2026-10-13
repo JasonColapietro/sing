@@ -115,10 +115,12 @@ describe("song comparison to first practice", () => {
     state.range = { lowMidi: 54, highMidi: 74 };
     html = render();
     expect(html).toContain("one semitone above your tested floor");
-    // Both ends on the limits: the top is named, and no shift can centre it.
+    // Both ends on the limits: both are named, and no shift can centre it.
     state.range = { lowMidi: 55, highMidi: 69 };
     html = render();
     expect(html).toContain("its top note is your tested ceiling");
+    expect(html).toContain("its lowest note is your tested floor");
+    expect(html).toContain("expect both ends of this song to be work");
     expect(html).not.toContain("centres it");
     // Three semitones of slack in all: any shift leaves an end within one
     // semitone of a limit, so no move is suggested.
@@ -134,14 +136,38 @@ describe("song comparison to first practice", () => {
     state.range = { lowMidi: 45, highMidi: 65 };
     let html = render();
     expect(html).toContain("Dropping the key by 4 would bring it inside, with the top note on that ceiling; dropping it by 7 centres it in your range.");
-    // A range exactly as wide as the song: the minimum shift is the centred one.
+    // A range exactly as wide as the song: the minimum shift is the centred
+    // one, and it parks the other end on the opposite limit too.
     state.range = { lowMidi: 51, highMidi: 65 };
     html = render();
     expect(html).toContain("Dropping the key by 4 would bring it inside, with the top note on that ceiling.");
-    // Low side: 4 below the floor of B3–D5 (59–74); centring raises it by round(66.5 - 62) = 5.
+    expect(html).toContain("That also puts its lowest note on your tested floor");
+    // Low side: 4 below the floor of B3–D5 (59–74), one semitone of slack.
+    // Raising by 4 leaves the top one under the ceiling; "centring" (raise
+    // by 5) would put the top on the ceiling, so it is not offered.
     state.range = { lowMidi: 59, highMidi: 74 };
     html = render();
-    expect(html).toContain("Raising the key by 4 would bring it inside, with the bottom note on that floor; raising it by 5 centres it in your range.");
+    expect(html).toContain("Raising the key by 4 would bring it inside, with the bottom note on that floor. That also puts its top note one semitone under your tested ceiling, so expect both ends of the song to be work.");
+    expect(html).not.toContain("centres it");
+  });
+
+  it("names the ceiling when the advised shift puts a song as wide as the range on both limits", () => {
+    // Creep B2–B4 (47–71) against C3–C5 (48–72): raising by 1 puts the bottom
+    // on the floor and the top on the ceiling.
+    const creep = POP_SONGS.find((s) => s.slug === "creep")!;
+    expect([creep.lowMidi, creep.highMidi]).toEqual([47, 71]);
+    state.range = { lowMidi: 48, highMidi: 72 };
+    const html = renderToStaticMarkup(<CanYouSingVerdict song={creep} />);
+    expect(html).toContain("Raising the key by 1 would bring it inside, with the bottom note on that floor.");
+    expect(html).toContain("That also puts its top note on your tested ceiling");
+  });
+
+  it("quotes the title in every saved-range sentence, since several are styled lowercase", () => {
+    const vampire = POP_SONGS.find((s) => s.slug === "vampire")!;
+    expect(vampire.title).toBe("vampire");
+    state.range = { lowMidi: 57, highMidi: 64 };
+    const html = renderToStaticMarkup(<CanYouSingVerdict song={vampire} />);
+    expect(html).toContain("“vampire” spans more semitones than your tested range covers");
   });
 
   it("names the octave a lower voice can sing a higher voice's song in", () => {
@@ -159,8 +185,9 @@ describe("song comparison to first practice", () => {
     // written; G4–A5 an octave up is inside, with its top on the ceiling.
     state.range = { lowMidi: 66, highMidi: 81 };
     const html = render();
-    expect(html).toContain("The low end of Espresso is 11 semitones below your tested floor");
-    expect(html).toContain("Sung an octave higher in the written key, it runs G4–A5, inside your tested range. A range test finds your limits, not your comfortable band, so expect the top of it to be work.");
+    expect(html).toContain("The low end of “Espresso” is 11 semitones below your tested floor");
+    // G4 is also one semitone above the F#4 floor.
+    expect(html).toContain("Sung an octave higher in the written key, it runs G4–A5, inside your tested range. A range test finds your limits, not your comfortable band, so expect the top and bottom of it to be work.");
     expect(html).not.toContain("descending-five");
   });
 

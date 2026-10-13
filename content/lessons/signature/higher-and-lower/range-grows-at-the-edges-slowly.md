@@ -26,7 +26,7 @@ Open the practice material on this page and choose Small three-note climb or Chr
 
 ### Set a safe baseline
 
-Warm up in the comfortable middle, then confirm today's repeatable low and high notes before approaching either edge.
+Warm up in the comfortable middle, then confirm today's repeatable low and high notes in the [pitch studio](/studio), which names each note as you sing it, and write them down before approaching either edge.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.

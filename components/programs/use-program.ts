@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { localDay, useProgress } from "@/lib/progress";
+import { subscribePracticeDay } from "@/lib/free-cap";
 import { loadBreath, type SustainAttempt } from "@/components/breath/store";
 import {
   earliestNext,
@@ -20,30 +21,21 @@ import {
 } from "@/lib/programs";
 import { saveProgramProgress, useProgramProgress } from "./store";
 
+const noDayOnServer = () => null;
+
 /**
- * The singer's local day, read after mount and kept current across midnight.
+ * The singer's local day, kept current across midnight.
  *
  * The server has no idea what day it is where the singer sits, so this is null
- * until the client reads it — the same shape as the warmups room's hour and
- * today's-three day. A page left open overnight re-reads it when the tab comes
- * back and once a minute; the setter bails out when nothing changed.
+ * while the page is server-rendered and hydrated. It is read in the first
+ * render after hydration, the same render in which the progress and program
+ * stores switch to what this browser holds, so a program card mounts in the
+ * same commit that takes the pre-paint slot away (components/prepaint.tsx)
+ * rather than one effect later. A page left open overnight re-reads it at
+ * midnight, once a minute and when the tab comes back (subscribePracticeDay).
  */
 export function useLocalDay(): string | null {
-  const [today, setToday] = useState<string | null>(null);
-  useEffect(() => {
-    const refresh = () => setToday(localDay());
-    refresh();
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") refresh();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    const id = window.setInterval(refresh, 60_000);
-    return () => {
-      document.removeEventListener("visibilitychange", onVisibility);
-      window.clearInterval(id);
-    };
-  }, []);
-  return today;
+  return useSyncExternalStore(subscribePracticeDay, localDay, noDayOnServer);
 }
 
 export interface ActiveProgram {
@@ -67,7 +59,7 @@ export interface ActiveProgram {
  */
 export function useActiveProgram(): ActiveProgram | null {
   const stored = useProgramProgress();
-  const { sessions: logged, rangeHistory } = useProgress();
+  const { sessions: logged, rangeHistory, range } = useProgress();
   const today = useLocalDay();
   // The sustain room's own attempt record: holds under five seconds are kept
   // there but never logged, and a program still counts them. localStorage, so
@@ -80,7 +72,7 @@ export function useActiveProgram(): ActiveProgram | null {
   const sessions = useMemo(() => [...logged, ...sustainAttemptSessions(attempts)], [logged, attempts]);
   const program = programById(stored?.programId);
   const reconciled =
-    stored && program && today ? reconcileProgress(program, stored, sessions, today) : stored;
+    stored && program && today ? reconcileProgress(program, stored, sessions, today, range) : stored;
   const readings = program && reconciled ? programReadings(program, reconciled, sessions, rangeHistory, attempts) : [];
   // Keep each check-in reading on its day: a short sustain hold is only in the
   // sustain room's ten-attempt record, and must still show on the last day.
@@ -98,7 +90,9 @@ export function useActiveProgram(): ActiveProgram | null {
   const countsFrom = earliestNext(progress);
   const day = program.days[view.index];
   // One matching for the rows and their steps, so a session ticks one thing.
-  const match = view.status === "todo" ? matchDay(day, counted, today, countsFrom) : null;
+  // With the saved range, so a step the routine runner skips for it (and never
+  // logs) does not hold the day open.
+  const match = view.status === "todo" ? matchDay(day, counted, today, countsFrom, range) : null;
   const itemsDone = match?.items ?? [];
   const stepsDone = match?.steps ?? [];
   return { program, progress, today, view, itemsDone, stepsDone, countsFrom, readings };

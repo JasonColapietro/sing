@@ -247,13 +247,11 @@ export function BreathStudio() {
       title="Breathing exercises for singers"
       subtitle="Guided breath sets and a mic-based sustain test that build breath support for long phrases. Start the set that fits the moment, or pick one drill and work it."
     >
-      {cap.capped ? (
-        <div className="mb-6">
-          <CapWall cap={cap} />
-        </div>
-      ) : (
-        <FreeAllowance cap={cap} className="mb-4" />
-      )}
+      {/* Both are in the server HTML; each renders only in its own state, and
+          until hydration the pre-paint state shows the right one
+          (components/prepaint.tsx). */}
+      <CapWall cap={cap} className="mb-6" />
+      <FreeAllowance cap={cap} className="mb-4" />
       <ContinueCard
         kicker={practicedToday ? "Back for more" : "Start here"}
         title={recommended.name}

@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("./pro", () => ({ getProState: () => ({ active: true, proKey: "test-key" }) }));
+vi.mock("./pro", () => ({
+  getProState: () => ({ active: true, proKey: "test-key" }),
+  NETWORK_ERROR_MESSAGE: "Couldn't reach Suede Sing. Check your connection and try again.",
+}));
 
 const ERROR_KEY = "suede-sing:sync:error";
 
@@ -77,5 +80,20 @@ describe("sync status subscription", () => {
     expect(env.storageListeners()).toBe(0);
     env.fireStorage(ERROR_KEY);
     expect(listener).toHaveBeenCalledTimes(1);
+  });
+
+  it("tells a Sync now press with no connection what happened, not the browser's TypeError", async () => {
+    const env = await setup({ ok: true, status: 200, body: { state: null } });
+    vi.stubGlobal("fetch", vi.fn(async () => {
+      throw new TypeError("Failed to fetch");
+    }));
+    const error = await env.sync.syncNow().then(() => null, (e: unknown) => e);
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toBe(
+      "Couldn't reach Suede Sing. Check your connection and try again. Your practice is still saved on this device.",
+    );
+    // Not a refusal: the automatic syncs leave a dropped connection for next time.
+    expect(error).not.toBeInstanceOf(env.sync.SyncRefusedError);
+    expect(env.sync.lastSyncError()).toBeNull();
   });
 });

@@ -247,6 +247,14 @@ export function isFreeExercise(id: string): boolean {
 export const STEP_INTRO_SEC = 4;
 
 /**
+ * Seconds the slide holds instead when the routine moves past a step the
+ * saved range cannot hold (tooWideForRange). That slide says why in a couple
+ * of sentences, which four seconds is too short to read; the Next button is
+ * there for a singer who has read it.
+ */
+export const SKIP_INTRO_SEC = 10;
+
+/**
  * Wall-clock length of one step at 1x in sing-along: the teach rep, then the
  * steady reps, straight from the same planner the player schedules with, so
  * the estimate on the card and the session the singer gets are the same

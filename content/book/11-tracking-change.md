@@ -73,4 +73,4 @@ The chart is a slow instrument pointed at a slow process. Read over months, it i
 
 ## Try this
 
-Open Progress, find your range history under Your voice, and read only the points older than four weeks — cover the recent end. Ask whether that older cluster sits higher, lower, or level with the one before it. Write down what you see, so next month you have something to compare it against.
+Open [Progress](/progress), find your range history under Your voice, and read only the points older than four weeks — cover the recent end. Ask whether that older cluster sits higher, lower, or level with the one before it. Write down what you see, so next month you have something to compare it against.

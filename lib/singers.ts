@@ -118,6 +118,11 @@ export function singersByGenre(g: string): Singer[] {
  * pageprop ("Mika" is one), so the check must also read the page's short
  * description — anything like "Topics referred to by the same term" or
  * "Name list" is not a person, whatever the pageprops say.
+ *
+ * Re-checked 2026-10-13. A bare title can also be an ordinary article on
+ * something else (Prince, Pink, Brandy, V, Rosé), so the short description
+ * must describe a person — a singer, musician or actor — or the title gets
+ * an override.
  */
 const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string | null> = {
   // Landed on a disambiguation page.
@@ -172,6 +177,16 @@ const WIKIPEDIA_TITLE_OVERRIDES: Record<string, string | null> = {
   "fka-twigs": "FKA Twigs",
   mika: "Mika (singer)",
   "chloe-bailey": "Chloe Bailey",
+  // Re-checked 2026-10-13. The bare title is an ordinary article on something
+  // else (a royal title, a colour, a spirit, a letter, a wine). It has no
+  // disambiguation pageprop and no name-list description, so both earlier
+  // checks passed it. "Brandy (singer)" is only a redirect, so the article
+  // itself is named.
+  prince: "Prince (musician)",
+  pink: "Pink (singer)",
+  brandy: "Brandy Norwood",
+  v: "V (singer)",
+  rose: "Rosé (singer)",
   // Resolved only through a redirect; point at the article directly.
   anohni: "Anohni",
   "aulii-cravalho": "Auliʻi Cravalho",

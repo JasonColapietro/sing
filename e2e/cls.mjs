@@ -10,6 +10,7 @@
  *   npm run build && npm start &     # NOT alongside `next dev` — the build
  *   node e2e/cls.mjs                 # clobbers .next out from under it
  *   node e2e/cls.mjs --returning --viewport=desktop-1280
+ *   node e2e/cls.mjs --state=capped --route=warmups,breath,ear-training
  *
  * `--returning` measures as a returning singer: a progress record with a
  * warmup sung yesterday, a streak and a saved range is seeded before every
@@ -17,6 +18,13 @@
  * layout depends on progress (/warmups leads a newcomer with a routine and a
  * returning singer with their path) changes shape at hydration only for them,
  * and a fresh-profile run can never see that shift.
+ *
+ * `--state=<name>` measures a returning singer in one of the stored states
+ * that reshape a page after hydration (see STATES below): today's free guided
+ * minutes used up, a program running, both at once, or a program's rest day.
+ * Each is the returning record plus what that state adds, so it implies
+ * `--returning`. `--route=<name,...>` restricts a run to the named routes
+ * (the `name` in routes.mjs), so CI can measure a state only where it shows.
  *
  * Reads `entry.sources[]`, which names the element that MOVED. That element is
  * the victim; the cause is whatever above it changed size. Reporting the mover
@@ -35,7 +43,12 @@ const BASE = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3000").
 const ONLY_VIEWPORT = argv.find((a) => a.startsWith("--viewport="))?.slice("--viewport=".length);
 /** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
 const EXECUTABLE = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
-const RETURNING = argv.includes("--returning");
+const flag = (name) => argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
+const STATE = flag("state");
+const RETURNING = argv.includes("--returning") || STATE !== undefined;
+const ROUTE_FILTER = flag("route")?.split(",").map((s) => s.trim()).filter(Boolean);
+/** Every reading, for a before/after comparison or CI evidence. */
+const JSON_OUT = flag("json");
 
 /**
  * A returning singer's record (lib/progress-shape.ts ProgressState), dated
@@ -48,28 +61,92 @@ const RETURNING = argv.includes("--returning");
  * shifts the page once a week by design and would swamp the hydration shift
  * this mode exists to measure, so last week's report is marked as seen.
  */
-const RETURNING_SEED = `
+const returningSeed = (state = "") => `
 try {
   // cls-returning-seed
   const pad = (n) => String(n).padStart(2, "0");
   const key = (t) => t.getFullYear() + "-" + pad(t.getMonth() + 1) + "-" + pad(t.getDate());
-  const d = new Date();
-  d.setDate(d.getDate() - 1);
-  const day = key(d);
+  const ago = (n) => {
+    const t = new Date();
+    t.setDate(t.getDate() - n);
+    return key(t);
+  };
+  const day = ago(1);
   const lastMonday = new Date();
   lastMonday.setHours(12, 0, 0, 0);
   lastMonday.setDate(lastMonday.getDate() - ((lastMonday.getDay() + 6) % 7) - 7);
   localStorage.setItem("suede-sing:weekly-report-seen:v1", key(lastMonday));
-  localStorage.setItem("suede-sing:progress:v1", JSON.stringify({
+  const progress = {
     xp: 40,
     sessions: [{ id: "cls-seed", type: "warmup", date: day + "T09:00:00.000Z", day, durationSec: 240, score: 72, detail: "First hum", xp: 40 }],
     streak: { current: 1, best: 1, lastDay: day },
     range: { lowMidi: 45, highMidi: 67 },
     rangeHistory: [],
     achievements: [],
-  }));
+  };
+${state}
+  localStorage.setItem("suede-sing:progress:v1", JSON.stringify(progress));
 } catch {}
 `;
+
+/**
+ * What each `--state` adds to the returning record, run inside its seed (so
+ * `progress`, `ago` and `key` are in scope) before the record is saved.
+ *
+ * None of these shows in the prerender, which is always a newcomer's: the
+ * free-plan cap and the running program are read from this browser's storage,
+ * and before the first paint by the inline script lib/prepaint.ts builds.
+ * Each block names itself (cls-state:<name>); e2e/cls.test.mjs runs every
+ * seed and reads it back through the app's own rules and that script.
+ */
+const CAPPED = `
+  // cls-state:capped. A free singer past today's five guided minutes
+  // (lib/free-cap.ts): 330 s of warmup logged today, newest first like the log.
+  progress.sessions.unshift({ id: "cls-cap", type: "warmup", date: new Date().toISOString(), day: ago(0), durationSec: 330, score: 70, detail: "Cap filler", xp: 30 });
+  progress.xp += 30;
+  progress.streak = { current: 2, best: 2, lastDay: ago(0) };
+`;
+/** Foundations in 2 weeks, started yesterday with day 1 marked done: day 2 is today's to do. */
+const PROGRAM = `
+  // cls-state:program
+  localStorage.setItem("suede-sing:program:v1", JSON.stringify({ programId: "foundations-2w", startedDay: ago(1), startedAt: ago(1) + "T08:00:00.000Z", done: [{ index: 0, day: ago(1), manual: true }] }));
+`;
+/**
+ * Mix in 4 weeks with its first six days done on the six days before today
+ * and day 7, a rest day, reached today: the day says it is resting and that
+ * day 8 onward needs Pro.
+ */
+const REST_DAY = `
+  // cls-state:rest-day
+  localStorage.setItem("suede-sing:program:v1", JSON.stringify({ programId: "mix-4w", startedDay: ago(6), startedAt: ago(6) + "T08:00:00.000Z", done: [0, 1, 2, 3, 4, 5, 6].map((index) => ({ index, day: ago(6 - index), manual: true })) }));
+`;
+
+const STATES = {
+  capped: CAPPED,
+  program: PROGRAM,
+  /** Today's program day waits for midnight because the free minutes are used. */
+  "program-capped": PROGRAM + CAPPED,
+  "rest-day": REST_DAY,
+};
+
+/**
+ * Where each state has to show for the run to count, by route name, and the
+ * selector that proves it did. A seed that stops producing its state (a
+ * renamed key, a reshaped record) would otherwise measure a plain returning
+ * singer and pass.
+ */
+const STATE_PROOF = {
+  capped: { routes: ["warmups", "breath", "ear-training", "songs"], selector: "#free-cap" },
+  program: { routes: ["programs", "warmups", "progress"], selector: "[data-program-day]" },
+  "program-capped": { routes: ["programs", "warmups"], selector: "[data-program-day] [data-program-waits]" },
+  "rest-day": { routes: ["programs", "warmups", "progress"], selector: "[data-program-day]" },
+};
+
+if (STATE !== undefined && !Object.hasOwn(STATES, STATE)) {
+  console.error(`unknown --state=${STATE}; known: ${Object.keys(STATES).join(", ")}`);
+  process.exit(2);
+}
+const RETURNING_SEED = returningSeed(STATE === undefined ? "" : STATES[STATE]);
 
 const OBSERVER = `
 window.__cls = { value: 0, shifts: [] };
@@ -122,7 +199,16 @@ const templates = await discoverTemplateRoutes(BASE).catch((error) => {
   console.error(error.message);
   process.exit(2);
 });
-const routes = [...ROUTES, ...templates];
+let routes = [...ROUTES, ...templates];
+if (ROUTE_FILTER !== undefined) {
+  const known = new Set(routes.map((r) => r.name));
+  const unknown = ROUTE_FILTER.filter((name) => !known.has(name));
+  if (ROUTE_FILTER.length === 0 || unknown.length > 0) {
+    console.error(`unknown route filter: ${unknown.join(", ") || "(empty)"}; known: ${[...known].join(", ")}`);
+    process.exit(2);
+  }
+  routes = routes.filter((r) => ROUTE_FILTER.includes(r.name));
+}
 const viewports = ONLY_VIEWPORT !== undefined ? VIEWPORTS.filter((v) => v.name === ONLY_VIEWPORT) : VIEWPORTS;
 if (viewports.length === 0) {
   console.error(`no viewport matched --viewport=${ONLY_VIEWPORT}; known: ${VIEWPORTS.map((v) => v.name).join(", ")}`);
@@ -154,6 +240,11 @@ for (const viewport of viewports) {
       if (!Number.isFinite(measured.value) || measured.value < 0 || !Array.isArray(measured.shifts)) {
         throw new Error("CLS observer returned an invalid measurement");
       }
+      const proof = STATE === undefined ? null : STATE_PROOF[STATE];
+      if (proof && proof.routes.includes(route.name)) {
+        const shown = await page.evaluate((selector) => document.querySelector(selector) !== null, proof.selector);
+        if (!shown) throw new Error(`the ${STATE} seed did not take: no ${proof.selector} on the page`);
+      }
       const live = await observerIsLive(page);
       rows.push({ route: route.name, path: route.path, viewport: viewport.name, ...measured, live });
     } catch (err) {
@@ -171,7 +262,8 @@ const dead = rows.filter((r) => !r.error && r.live !== true);
 const scored = rows.filter((r) => !r.error && r.live === true);
 scored.sort((a, b) => b.value - a.value);
 
-console.log(`\nCLS against ${BASE}${RETURNING ? " as a returning singer" : ""} — good <= 0.10, poor > 0.25\n${"=".repeat(64)}`);
+const who = STATE !== undefined ? ` as a returning singer, state ${STATE}` : RETURNING ? " as a returning singer" : "";
+console.log(`\nCLS against ${BASE}${who} — good <= 0.10, poor > 0.25\n${"=".repeat(64)}`);
 for (const r of scored) {
   if (r.value < 0.01) continue;
   const verdict = r.value > 0.25 ? "POOR" : r.value > 0.1 ? "NEEDS WORK" : "ok";
@@ -183,6 +275,10 @@ for (const r of scored) {
       console.log(`     moved: ${src.node}  ${move}`);
     }
   }
+}
+if (JSON_OUT) {
+  const { writeFileSync } = await import("node:fs");
+  writeFileSync(JSON_OUT, JSON.stringify({ base: BASE, state: STATE ?? (RETURNING ? "returning" : "fresh"), rows: rows.map(({ shifts, ...r }) => ({ ...r, shifts: shifts?.filter((s) => s.value > 0.001) })) }, null, 2));
 }
 const worst = scored.filter((r) => r.value > 0.1);
 console.log(`\n${scored.length} measured, ${worst.length} above the 0.10 "good" threshold`);

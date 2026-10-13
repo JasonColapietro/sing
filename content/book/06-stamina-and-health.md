@@ -59,6 +59,6 @@ A doctor who can actually look at the folds is the right person, often an ENT sp
 
 ## Try this
 
-Open Warmups and run Humming thirds as the first thing in your next practice session. Note the average score on the summary screen. Then run the same exercise again as the last thing, after everything else you had planned. Compare the two numbers.
+Open Warmups and run [Humming thirds](/warmups?exercise=humming-thirds) as the first thing in your next practice session. Note the average score on the summary screen. Then run the same exercise again as the last thing, after everything else you had planned. Compare the two numbers.
 
 Holding steady means you paced the session well. A sharp drop means you spent more than you had, and the fix is a shorter session next time, not a harder one. Do this a few times across a fortnight and you will start to recognise the drop-off before the score tells you about it, which is the actual skill.

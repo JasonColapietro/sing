@@ -59,4 +59,4 @@ One signal ends a session rather than shaping it: if singing hurts, stop, becaus
 
 ## Try this
 
-Open the singers library, filter to your own voice type, and open three singers you would never have called your kind of artist. On each page, look at the "You vs" panel and where the two bars sit on top of each other. That overlap is only the ground you could both reach, not where their songs sit. For that, pick one song by each singer, find the five or six notes its chorus keeps returning to, as above, and set that band against your own comfortable middle.
+Open the [singers library](/singers), filter to your own voice type, and open three singers you would never have called your kind of artist. On each page, look at the "You vs" panel and where the two bars sit on top of each other. That overlap is only the ground you could both reach, not where their songs sit. For that, pick one song by each singer, find the five or six notes its chorus keeps returning to, as above, and set that band against your own comfortable middle.

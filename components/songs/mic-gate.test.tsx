@@ -20,9 +20,16 @@
 import type { ReactElement, ReactNode } from "react";
 import { isValidElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import SongsPage from "@/app/songs/page";
+import { paintedFor } from "@/components/prepaint.testing";
 import { SongsMicGate } from "./mic-gate";
+
+const hydration = vi.hoisted(() => ({ done: false }));
+vi.mock("@/components/prepaint", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/components/prepaint")>(),
+  useHydrated: () => hydration.done,
+}));
 
 /** The `fallback` of the first Suspense boundary found in a rendered tree. */
 function findFallback(node: ReactNode): unknown {
@@ -45,6 +52,41 @@ describe("songs mic gate", () => {
     const fallback = findFallback(SongsPage());
     expect(isValidElement(fallback)).toBe(true);
     expect((fallback as ReactElement).type).toBe(SongsMicGate);
+  });
+
+  it("falls back to the gate with the capped view behind the pre-paint state", () => {
+    const fallback = findFallback(SongsPage()) as ReactElement<{ prepaint?: boolean }>;
+    expect(fallback.props.prepaint).toBe(true);
+    const html = renderToStaticMarkup(fallback);
+    // A singer under the cap, or on Pro, paints exactly the gate.
+    const ids = (h: string) => h.replace(/_R_[0-9a-z]+_/g, "_ID_");
+    // The two wrappers that carry the not-capped marker, and nothing else.
+    const unwrap = (h: string) =>
+      h
+        .replace(/<span data-prepaint-plan="not-capped">([^<]*)<\/span>/, "$1")
+        .replace('<div data-prepaint-plan="not-capped">', "")
+        .replace(/<\/div><\/main>$/, "</main>");
+    for (const plan of ["free", "pro"] as const) {
+      expect(ids(unwrap(paintedFor(html, { plan })))).toBe(ids(renderToStaticMarkup(<SongsMicGate />)));
+    }
+    // A capped singer paints what SongsClient will show them: the library's
+    // subtitle and the wall, with the songbook held below the fold.
+    const capped = paintedFor(html, { plan: "capped" });
+    expect(capped).not.toContain("Enable microphone");
+    expect(capped).toContain("Pick a song to start your practice loop.");
+    expect(capped).toContain('id="free-cap"');
+    expect(capped).toMatch(/<div aria-hidden="true" data-prepaint-plan="capped" data-prepaint-slot="songs-library"><\/div>/);
+  });
+
+  it("is the plain gate when rendered as a fallback on the client", () => {
+    // No inline script marks the page on a client-side navigation.
+    hydration.done = true;
+    try {
+      const ids = (h: string) => h.replace(/_R_[0-9a-z]+_/g, "_ID_");
+      expect(ids(renderToStaticMarkup(<SongsMicGate prepaint />))).toBe(ids(renderToStaticMarkup(<SongsMicGate />)));
+    } finally {
+      hydration.done = false;
+    }
   });
 
   it("prerenders the whole gate, so the box is the right size before hydration", () => {

@@ -266,3 +266,95 @@ textarea:not(:focus),
 input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]):not(:focus) {
   border-color: var(--color-field, #8a7f6a);
 }
+
+/*
+ * Pre-paint state. The inline script in the root layout's <head>
+ * (lib/prepaint.ts) puts the free cap and the running program on <html>
+ * before the first paint:
+ *
+ *   data-sing-plan     "pro" | "free" | "capped"
+ *   data-sing-program  absent, or a status ("todo", "done", "finished") plus
+ *                      any of "rest", "locked", "next-locked", "waits"
+ *
+ * Until hydration, the parts of a page that depend on them are in the server
+ * HTML with a data-prepaint-* marker (components/prepaint.tsx), and these
+ * rules leave only the matching ones on screen. display:none, so what is
+ * hidden is hidden from assistive technology too. After hydration the markers
+ * are gone and nothing here applies.
+ *
+ *   data-prepaint-plan="free"        the free allowance line
+ *   data-prepaint-plan="capped"      the cap wall
+ *   data-prepaint-plan="not-capped"  what the cap wall replaces (the mic gate)
+ *   data-prepaint-slot="program-*"   an empty, card-shaped slot where a
+ *                                    program card will mount, about as tall
+ *                                    as that card in that state, so content
+ *                                    below it is already close to where the
+ *                                    card leaves it. Unlike the cap wall, a
+ *                                    program card's contents need the
+ *                                    program and the practice log to compute.
+ */
+html:not([data-sing-plan="free"]) [data-prepaint-plan="free"],
+html:not([data-sing-plan="capped"]) [data-prepaint-plan="capped"],
+html[data-sing-plan="capped"] [data-prepaint-plan="not-capped"],
+html:not([data-sing-program]) [data-prepaint-slot|="program"],
+html:not([data-sing-program~="todo"]) [data-prepaint-slot="program-lead"],
+html[data-sing-program~="locked"] [data-prepaint-slot="program-lead"] {
+  display: none !important;
+}
+
+/* /warmups: the program card that leads the room on a day still to do.
+   Heights measured at 375 and 1280px wide; the "waits" line is four lines on
+   a phone. */
+[data-prepaint-slot="program-lead"] {
+  min-height: 11rem;
+}
+html[data-sing-program~="waits"] [data-prepaint-slot="program-lead"] {
+  min-height: 13.5rem;
+}
+
+/* /programs: today's card above the list. A day still to do is the tallest
+   (its rows), so its slot alone already puts the list below a phone's fold. */
+html[data-sing-program~="todo"] [data-prepaint-slot="program-today"] {
+  min-height: 37.5rem;
+}
+html[data-sing-program~="locked"] [data-prepaint-slot="program-today"] {
+  min-height: 32rem;
+}
+html[data-sing-program~="done"] [data-prepaint-slot="program-today"] {
+  min-height: 26rem;
+}
+html[data-sing-program~="next-locked"] [data-prepaint-slot="program-today"] {
+  min-height: 31rem;
+}
+html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
+  min-height: 36.5rem;
+}
+
+@media (min-width: 40rem) {
+  [data-prepaint-slot="program-lead"],
+  html[data-sing-program~="waits"] [data-prepaint-slot="program-lead"] {
+    min-height: 8rem;
+  }
+  html[data-sing-program~="todo"] [data-prepaint-slot="program-today"] {
+    min-height: 35rem;
+  }
+  html[data-sing-program~="locked"] [data-prepaint-slot="program-today"] {
+    min-height: 27.5rem;
+  }
+  html[data-sing-program~="done"] [data-prepaint-slot="program-today"] {
+    min-height: 23rem;
+  }
+  html[data-sing-program~="next-locked"] [data-prepaint-slot="program-today"] {
+    min-height: 27.5rem;
+  }
+  html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
+    min-height: 24.5rem;
+  }
+}
+
+/* /songs, for a capped singer: the library replaces the gate under the wall,
+   and it runs several screens long, so a screen-tall stand-in keeps the
+   songbook below the fold until it arrives. */
+[data-prepaint-slot="songs-library"] {
+  min-height: 100vh;
+}

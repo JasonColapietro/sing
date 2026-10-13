@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ProgressState } from "./progress-shape";
 
-vi.mock("./pro", () => ({ getProState: () => ({ active: true, proKey: "test-key" }) }));
+/** Pro is active unless a test says otherwise; setup() resets it. */
+const proState = vi.hoisted(() => ({ active: true, proKey: "test-key" as string | null }));
+vi.mock("./pro", () => ({
+  getProState: () => proState,
+  NETWORK_ERROR_MESSAGE: "Couldn't reach Suede Sing. Check your connection and try again.",
+}));
 
 function record(id: string): ProgressState {
   return {
@@ -22,6 +27,8 @@ function deferred<T>() {
 
 async function setup() {
   vi.resetModules();
+  proState.active = true;
+  proState.proKey = "test-key";
   const storage = new Map<string, string>();
   const events = new Map<string, ((event: { key: string | null }) => void)[]>();
   const localStorage = {
@@ -446,5 +453,37 @@ describe("Pro background sync", () => {
     await vi.advanceTimersByTimeAsync(45_000);
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(env.storage.has("suede-sing:sync:last")).toBe(true);
+  });
+
+  it("starts syncing when Pro arrives after the page loaded, the way ProSync calls it again", async () => {
+    // A checkout, a restored key or a redeemed pass makes a page Pro without
+    // reloading it. The load-time call found no key and bound nothing.
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-10T12:20:00Z"));
+    const env = await setup();
+    proState.active = false;
+    proState.proKey = null;
+    const fetchMock = vi.fn(async () => Response.json({ state: null, ok: true }));
+    vi.stubGlobal("fetch", fetchMock);
+    env.sync.startAutoSync();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    // Pro arrives: never synced, so the round trip runs (pull, then push).
+    proState.active = true;
+    proState.proKey = "test-key";
+    env.sync.startAutoSync();
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+
+    // A later call, a new key say, finds the sync fresh and runs nothing;
+    // practice afterwards still pushes once, one round trip per debounce.
+    env.sync.startAutoSync();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    env.progress.logSession({ type: "pitch", durationSec: 60 });
+    await vi.advanceTimersByTimeAsync(45_000);
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(4));
+    await vi.advanceTimersByTimeAsync(45_000);
+    expect(fetchMock).toHaveBeenCalledTimes(4);
   });
 });

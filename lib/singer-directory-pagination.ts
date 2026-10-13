@@ -12,3 +12,15 @@ export function nextRichSingerRowCount(
 ): number {
   return Math.min(totalRows, visibleCount + batchSize);
 }
+
+/**
+ * The loaded row count read back from the directory's `?shown=` param, so
+ * browser Back from a singer page returns to as many rows as were loaded.
+ * Anything missing, malformed or not past the first batch is the first batch.
+ */
+export function shownRowCountFromParam(value: string | null, totalRows: number): number {
+  const shown = Number(value);
+  return Number.isInteger(shown) && shown > INITIAL_RICH_SINGER_ROWS
+    ? Math.min(shown, totalRows)
+    : INITIAL_RICH_SINGER_ROWS;
+}

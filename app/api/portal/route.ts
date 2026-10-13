@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { getStripe, isStripeId, siteOrigin } from "@/lib/stripe";
 import { SUPPORT_EMAIL } from "@/lib/organization";
+import { PORTAL_RETURN_PATH } from "@/lib/pro-shared";
 
 /**
  * Opens the Stripe billing portal, which is where cancelling, swapping
@@ -50,7 +51,9 @@ export async function POST(request: Request) {
 
     const session = await stripe.billingPortal.sessions.create({
       customer: owner,
-      return_url: `${siteOrigin(request)}/pro`,
+      // Marked, so /pro re-checks the entitlement on the way back instead of
+      // showing the pre-portal plan for up to 12 hours.
+      return_url: `${siteOrigin(request)}${PORTAL_RETURN_PATH}`,
     });
     return NextResponse.json({ url: session.url });
   } catch (error) {

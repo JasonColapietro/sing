@@ -33,7 +33,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
-    images: [`${PAGE_URL}/opengraph-image`],
+    // No `images`: Next then copies the file-convention og image (versioned
+    // URL, alt, size and type) into twitter:image, as on every other route.
   },
 };
 

@@ -40,7 +40,7 @@ import {
   type ProgramItem,
 } from "./programs";
 import { routineById, isFreeExercise, stepExercise } from "@/components/warmups/routines";
-import { ALL_EXERCISES } from "@/components/warmups/exercises";
+import { ALL_EXERCISES, computeRootLadder, descentWalk, ladderWalk, tooWideForRange } from "@/components/warmups/exercises";
 import {
   breathRoutineById,
   drillPresetFromQuery,
@@ -242,6 +242,13 @@ describe("program data", () => {
     // pattern through the transition to a comfortable top note".
     for (const d of [30, 37]) expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · one slow ng siren/)]);
     for (const d of [43, 50]) expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · a short ascending pattern through your transition to a comfortable top note/)]);
+    // Day 1's take is the one week 12 is compared against, and the browser
+    // can clear its recordings: the row asks for a downloaded copy.
+    expect(takes(1)).toEqual([expect.stringMatching(/^Recorder · a verse and a chorus of a song you know, then download a copy to keep · about \d+ min$/)]);
+    // Week 12 opens on the other half: the same song, compared with day 1's.
+    const week12 = p.days.findIndex((d) => d.title === "Where you are now") + 1;
+    expect(week12).toBe(78);
+    expect(takes(week12)).toEqual([expect.stringMatching(/^Recorder · the same verse and chorus as day 1, then compare it with that take · about \d+ min$/)]);
     // A take that names nothing is still a verse and a chorus.
     expect(itemLabel({ kind: "recorder" }).meta).toMatch(/^Recorder · a verse and a chorus · about \d+ min$/);
     expect(p.measures).toMatch(/chapters 16 and 17/);
@@ -392,6 +399,56 @@ describe("program data", () => {
     for (const id of ["quick", "daily", "full", "range", "agility", "high-notes", "mix"]) {
       expect(items.some((i) => i.kind === "routine" && i.id === id), id).toBe(false);
     }
+    // Hoo descent opens on the measured top for a range under 16 semitones: a
+    // bounded descending step starts on its top rung, and an octave pattern
+    // fitted to a narrow range has no headroom left. Weeks 1 to 6 stay off it.
+    expect(
+      p.days.slice(0, 42).flatMap((d) => d.items).some((i) => i.kind === "exercise" && i.id === "hoo-four-note"),
+    ).toBe(false);
+  });
+
+  it("keeps every single exercise in weeks 1 to 6 off both ends of the measured range", () => {
+    // Chapter 14: "Stay in the middle of your range … Do not chase the top";
+    // chapter 16 aims every exercise at "the four or five semitones either
+    // side" of the transition, with the slide "a five-note descending scale
+    // that starts above your transition". A program row opens its exercise
+    // bounded, so a descending ladder starts on its top rung and a climbing
+    // one on its bottom rung. From 16 semitones up, every rep stays at least
+    // five semitones under the measured top: under that no ladder has the
+    // room. From 8 up (wider than any of these patterns), no rep starts under
+    // the measured low. Hoo descent failed the first at 16-24 semitones; the
+    // octave Lip-trill arpeggio failed both.
+    const p = programById("measured-voice-12w")!;
+    for (const d of [29, 32, 36, 39]) expect(p.days[d - 1].title, `day ${d}`).toBe("Slides across the break");
+    expect(p.days[1].title).toBe("Box breath, a gentle middle");
+    expect(p.days[3].title).toBe("The climb to eight");
+    const seen = new Set<string>();
+    p.days.slice(0, 42).forEach((day, i) => {
+      for (const item of day.items) {
+        if (item.kind !== "exercise") continue;
+        seen.add(item.id);
+        const ex = ALL_EXERCISES.find((e) => e.id === item.id)!;
+        const maxOff = Math.max(...ex.buildSteps(0).flat());
+        for (let span = 8; span <= 30; span++) {
+          const low = 45;
+          const high = low + span;
+          const fitted = computeRootLadder(ex, low, high);
+          const down = ex.ladder === "down";
+          const walked = down ? [...fitted].reverse() : fitted;
+          for (let rep = 0; rep < item.reps; rep++) {
+            const { root } = down ? descentWalk(walked, rep) : ladderWalk(walked, rep);
+            const at = `day ${i + 1} ${item.id} span ${span} rep ${rep + 1}`;
+            expect(root, at).toBeGreaterThanOrEqual(low);
+            if (span >= 16) expect(high - (root + maxOff), at).toBeGreaterThanOrEqual(5);
+          }
+        }
+      }
+    });
+    // The walk covers the slides, week 1's gentle middle and its lip trill.
+    for (const id of ["descending-five", "ng-siren-fifth", "straw-scale", "morning-lip-trill"]) {
+      expect(seen.has(id), id).toBe(true);
+    }
+    expect(seen.has("lip-trill-scale")).toBe(false);
   });
 
   it("opens weeks 7 and 8 on the middle-voice on-ramp, as chapter 17 asks", () => {
@@ -845,6 +902,21 @@ describe("one session pays for one item", () => {
     expect(itemsDoneOn(d, [...routineOnly, session(today, "warmup", hold)], today)).toEqual([true, true]);
   });
 
+  it("waives a routine step the runner skips for a narrow saved range, so the day can complete", () => {
+    // The routine runner closes a step tooWideForRange holds without logging
+    // it; matching that still asked for it would leave the day open for good.
+    const narrow = { lowMidi: 48, highMidi: 64 };
+    const d: ProgramDay = { title: "", items: [{ kind: "routine", id: "quick" }] };
+    const steps = routineById("quick")!.steps.map((s) => stepExercise(s));
+    expect(steps.some((ex) => tooWideForRange(ex, narrow))).toBe(true);
+    const sung = steps.filter((ex) => !tooWideForRange(ex, narrow)).map((ex) => session(today, "warmup", ex.title));
+    expect(itemsDoneOn(d, sung, today)).toEqual([false]);
+    expect(itemsDoneOn(d, sung, today, today, narrow)).toEqual([true]);
+    expect(matchDay(d, sung, today, today, narrow).steps[0]).toEqual(steps.map(() => true));
+    // A range wide enough for every step waives nothing.
+    expect(itemsDoneOn(d, sung, today, today, { lowMidi: 40, highMidi: 70 })).toEqual([false]);
+  });
+
   it("lets a later item take a session an earlier one can do without, in any log order", () => {
     const d: ProgramDay = { title: "", items: [{ kind: "drill", id: "sustain" }, { kind: "breath", id: "quick" }] };
     const log = ["Sustain test", "Box breathing", "Farinelli drill", "Sustain test"].map((x) => session(today, "breath", x));
@@ -986,7 +1058,7 @@ describe("a free singer's day, spread over several calendar days", () => {
         const steps = itemSteps(item);
         if (item.kind === "routine" || item.kind === "breath") {
           expect(steps.length, `${prog.id} ${item.id}`).toBeGreaterThan(0);
-          expect(steps.flatMap(itemEvidence)).toEqual(itemEvidence(item));
+          expect(steps.flatMap((st) => itemEvidence(st))).toEqual(itemEvidence(item));
           // A free routine's steps are free exercises: its step links gate nothing.
           if (!itemIsPro(item)) for (const st of steps) expect(itemIsPro(st)).toBe(false);
         } else {

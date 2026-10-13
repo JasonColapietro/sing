@@ -222,6 +222,16 @@ export function centsToTarget(
   return d * 100;
 }
 
+/**
+ * How far from the target, in cents, a pitch-match note may sit and still
+ * count as held. A practice window, far wider than the ±15-cent in-tune zone
+ * (IN_TUNE_CENTS in lib/audio/notes.ts), so copy names the band rather than
+ * calling a held note "in tune".
+ */
+export function pitchMatchTolerance(difficulty: Difficulty): number {
+  return difficulty === "hard" ? 35 : 50;
+}
+
 /** Whether a detected midi matches a target, octave-agnostic or exact. */
 export function midiMatches(
   detected: number,

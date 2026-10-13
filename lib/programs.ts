@@ -34,7 +34,7 @@ import {
   stepExercise,
   stepSeconds,
 } from "@/components/warmups/routines";
-import { titlesFor } from "@/components/warmups/exercises";
+import { titlesFor, tooWideForRange } from "@/components/warmups/exercises";
 import {
   BREATH_STEP_INTRO_SEC,
   CUE_HOLD_SEC,
@@ -51,7 +51,7 @@ import {
 } from "@/components/breath/routines";
 import { SONGS } from "@/components/songs/data";
 import { COUNT_IN_BEATS, secPerBeat, sessionSeconds } from "@/components/songs/lib";
-import type { ActivityType, SessionLog } from "@/lib/progress-shape";
+import type { ActivityType, SessionLog, VocalRange } from "@/lib/progress-shape";
 import type { RangeEntry } from "@/lib/analytics";
 import { CAPPED_TYPES } from "@/lib/free-cap";
 import { FREE_DAILY_SEC } from "@/lib/practice-limits";
@@ -196,6 +196,26 @@ const drill = <D extends BreathDrillId>(id: D, preset?: Extract<BreathStep, { dr
 const range: ProgramItem = { kind: "range" };
 const song = (slug: string): ProgramItem => ({ kind: "song", slug });
 const recorder: ProgramItem = { kind: "recorder" };
+/**
+ * The Measured Voice's day-1 take, the one week 12 is compared against. Takes
+ * live only in this browser's storage, which a browser can clear (Safari after
+ * about a week without a visit), and neither the backup file nor Pro's sync
+ * carries audio, so the row asks for a downloaded copy kept outside it.
+ */
+const BASELINE_TAKE: ProgramItem = {
+  kind: "recorder",
+  take: "a verse and a chorus of a song you know, then download a copy to keep",
+};
+/**
+ * Week 12's take, the other half of that comparison. Chapter 13: "you will
+ * record that same song again and put the two takes side by side"; chapter
+ * 19 plays the downloaded copy beside it if the browser cleared day 1's. A
+ * bare "a verse and a chorus" let the singer pick a different song.
+ */
+const WEEK_12_TAKE: ProgramItem = {
+  kind: "recorder",
+  take: "the same verse and chorus as day 1, then compare it with that take",
+};
 const ear: ProgramItem = { kind: "ear" };
 const day = (title: string, ...items: ProgramItem[]): ProgramDay => ({ title, items });
 const rest = (title = "Rest day"): ProgramDay => ({ title, items: [] });
@@ -425,25 +445,29 @@ const QUIET_SIRENS = day(
  * Weeks 5 and 6's first session: box breathing and the morning set, then
  * chapter 16's two kinds of work, sirens and slides. Eight ng sirens at 0.5×,
  * the slowest the room offers, as on the quiet-siren day; eight reps still
- * top out about five semitones under the measured high. Then the slow "hoo"
- * descent, 8-5-3-1 a half-step lower each rep, as the slide. The chapter's
- * slide is a five-note descending scale on "oo" that "starts above your
- * transition and ends below it" with the top note light; the room's own
- * Descending five climbs its ladder from near the bottom of the range and,
- * for a lower voice, never starts above the transition, while the Hoo descent
- * starts two semitones under the measured high, on a light top note ("Start
- * the top note light"), and comes down through the break. Not the Mix builder
- * pack, which runs its ng glide at about half a second a whole step, a fast
- * scale and bright octave leaps to within two semitones of the measured top:
- * the speed, the volume and the agility the chapter rules out ("pick a pack
- * with slides and sustained patterns rather than agility or staccato").
+ * top out about five semitones under the measured high. Then the slide, which
+ * is chapter 16's own: "a five-note descending scale that starts above your
+ * transition", legato on "oo", the room's Descending five (5-4-3-2-1 on
+ * "oo"). Its ladder climbs a half-step a rep from a major third above the
+ * measured low, so the early reps sit under the transition and the later
+ * ones start above its lower edge and come down through it, and in a range
+ * of sixteen semitones or more every rep stays at least five semitones under
+ * the measured top. Not the Hoo descent: a bounded descending step starts on
+ * its top rung, and its octave pattern then opens on the measured top itself
+ * for any range under sixteen semitones and two under it up to two octaves,
+ * the "chase the top" chapters 14 and 16 hold back until weeks 7 and 8. Not
+ * the Mix builder pack either, which runs its ng glide at about half a second
+ * a whole step, a fast scale and bright octave leaps to within two semitones
+ * of the measured top: the speed, the volume and the agility the chapter
+ * rules out ("pick a pack with slides and sustained patterns rather than
+ * agility or staccato").
  */
 const SLIDES_ACROSS = day(
   "Slides across the break",
   drill("box"),
   routine("morning"),
   { kind: "exercise", id: "ng-siren-fifth", reps: 8, tempo: 0.5 },
-  exercise("hoo-four-note", 8),
+  exercise("descending-five", 8),
   routine("cooldown"),
 );
 
@@ -504,11 +528,17 @@ const MEASURED_VOICE: Program = {
     { fromWeek: 11, toWeek: 12, slug: "weeks-11-12-songs", title: "Weeks 11 and 12: putting it in a song" },
   ],
   days: [
-    // Weeks 1–2: baseline and breath.
+    // Weeks 1–2: baseline and breath. Chapter 14: "Stay in the middle of your
+    // range. Use the easier packs — lip trills, hums, five-note patterns",
+    // and "Do not chase the top". So the lip trill is the wake-up one, gliding
+    // a third, not the octave Lip-trill arpeggio: a bounded climb of that
+    // octave reaches the measured top for any range under sixteen semitones,
+    // starts under the measured low below twelve, and comes within two of the
+    // top up to two octaves, in a week-1 voice that measured its range once.
     ...bookWeek(
-      day("Your baseline", ...BASELINE_WARMUP, range, recorder, drill("sustain")),
-      day("Box breath, a gentle middle", drill("box"), exercise("morning-hum", 5), exercise("hoo-four-note", 5), exercise("descending-five", 4)),
-      day("The climb to eight", drill("farinelli"), exercise("lip-trill-scale", 6), exercise("morning-sustain", 4)),
+      day("Your baseline", ...BASELINE_WARMUP, range, BASELINE_TAKE, drill("sustain")),
+      day("Box breath, a gentle middle", drill("box"), exercise("morning-hum", 5), exercise("straw-scale", 5), exercise("descending-five", 4)),
+      day("The climb to eight", drill("farinelli"), exercise("morning-lip-trill", 6), exercise("morning-sustain", 4)),
       day("Box breath, a held note", drill("box"), exercise("morning-sigh", 5), exercise("sustained-hold", 3), exercise("descending-five", 4)),
     ),
     // Chapter 14 runs the breath drills in a fixed order with "the sustain
@@ -615,7 +645,7 @@ const MEASURED_VOICE: Program = {
     ),
     ...week(
       bookWeek(
-        day("Where you are now", ...BASELINE_WARMUP, range, recorder, drill("sustain"), routine("recovery"), routine("cooldown")),
+        day("Where you are now", ...BASELINE_WARMUP, range, WEEK_12_TAKE, drill("sustain"), routine("recovery"), routine("cooldown")),
         day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
         day("A song, warmed up", breath("daily"), routine("quick"), song("home-on-the-range"), routine("cooldown")),
         day("The same song again", breath("daily"), routine("morning"), song("home-on-the-range"), routine("cooldown")),
@@ -855,14 +885,24 @@ export function itemIsPro(item: ProgramItem): boolean {
 export interface Evidence {
   type: ActivityType;
   details: readonly string[] | null;
+  /**
+   * A routine step the runner skips for this saved range (tooWideForRange)
+   * and so never logs: it counts as done without a session, or a program day
+   * holding the routine could never complete for a narrow range.
+   */
+  waived?: true;
 }
 
-export function itemEvidence(item: ProgramItem): Evidence[] {
+export function itemEvidence(item: ProgramItem, range?: VocalRange | null): Evidence[] {
   switch (item.kind) {
     case "routine": {
       const r = routineById(item.id);
       if (!r) return [];
-      return r.steps.map((s) => ({ type: "warmup", details: titlesFor(stepExercise(s).title) }));
+      return r.steps.map((s) => {
+        const ex = stepExercise(s);
+        const e: Evidence = { type: "warmup", details: titlesFor(ex.title) };
+        return range && tooWideForRange(ex, range) ? { ...e, waived: true } : e;
+      });
     }
     case "exercise":
       return [
@@ -915,8 +955,9 @@ export function itemsDoneOn(
   sessions: readonly SessionLog[],
   day: string,
   from: string = day,
+  range?: VocalRange | null,
 ): boolean[] {
-  return matchDay(d, sessions, day, from).items;
+  return matchDay(d, sessions, day, from, range).items;
 }
 
 /**
@@ -925,13 +966,15 @@ export function itemsDoneOn(
  * a set's k-th drill; see itemSteps) is paid for by a session. Unfinished
  * items get partial credit afterwards, one requirement at a time, from the
  * sessions the finished ones left, so a step tick never spends a session
- * another row already uses.
+ * another row already uses. With the saved `range`, a routine step the runner
+ * skips for it is waived (Evidence.waived): ticked, and paid for by no session.
  */
 export function matchDay(
   d: ProgramDay,
   sessions: readonly SessionLog[],
   day: string,
   from: string = day,
+  range?: VocalRange | null,
 ): { items: boolean[]; steps: boolean[][] } {
   const pool = sessions.filter((s) => s.day >= from && s.day <= day);
   const reqs: Evidence[] = [];
@@ -952,12 +995,15 @@ export function matchDay(
     return false;
   };
   const items = d.items.map((item, idx) => {
-    const evidence = itemEvidence(item);
+    const evidence = itemEvidence(item, range);
     if (evidence.length === 0) return false;
     const before = owner.slice();
     const start = reqs.length;
-    reqs.push(...evidence);
-    reqOf.push(...evidence.map((_, k): [number, number] => [idx, k]));
+    evidence.forEach((e, k) => {
+      if (e.waived) return;
+      reqs.push(e);
+      reqOf.push([idx, k]);
+    });
     for (let r = start; r < reqs.length; r++) {
       if (!assign(r, new Set())) {
         owner = before;
@@ -970,7 +1016,8 @@ export function matchDay(
   });
   d.items.forEach((item, idx) => {
     if (items[idx]) return;
-    itemEvidence(item).forEach((e, k) => {
+    itemEvidence(item, range).forEach((e, k) => {
+      if (e.waived) return;
       const before = owner.slice();
       reqs.push(e);
       reqOf.push([idx, k]);
@@ -981,7 +1028,7 @@ export function matchDay(
       }
     });
   });
-  const steps = d.items.map((item) => itemEvidence(item).map(() => false));
+  const steps = d.items.map((item) => itemEvidence(item, range).map((e) => e.waived === true));
   for (const r of owner) {
     if (r === undefined) continue;
     const [i, k] = reqOf[r];
@@ -996,8 +1043,9 @@ export function itemDoneOn(
   sessions: readonly SessionLog[],
   day: string,
   from: string = day,
+  range?: VocalRange | null,
 ): boolean {
-  return itemsDoneOn({ title: "", items: [item] }, sessions, day, from)[0];
+  return itemsDoneOn({ title: "", items: [item] }, sessions, day, from, range)[0];
 }
 
 /**
@@ -1191,6 +1239,7 @@ export function reconcileProgress(
   progress: ProgramProgress,
   sessions: readonly SessionLog[],
   today: string,
+  range?: VocalRange | null,
 ): ProgramProgress {
   const counted = sessionsForRun(progress, sessions);
   let done = progress.done;
@@ -1207,7 +1256,7 @@ export function reconcileProgress(
       const candidates = [...new Set(counted.map((s) => s.day))]
         .filter((x) => x >= from && x <= today)
         .sort();
-      on = candidates.find((x) => itemsDoneOn(d, counted, x, from).every(Boolean)) ?? null;
+      on = candidates.find((x) => itemsDoneOn(d, counted, x, from, range).every(Boolean)) ?? null;
     }
     if (on === null) break;
     done = [...done, { index, day: on }];

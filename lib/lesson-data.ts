@@ -383,7 +383,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "Record two slides down from the same comfortable note in one take in the recorder, with a reset between them. On the first, stop at the first note that needs any effort: extra volume, a tucked chin or a pushed breath. On the second, stop one note earlier, while it is still completely easy. The stopping note is the only thing that changes. On playback, listen for the difference: the effortful note usually thins, rattles or wobbles, and the easy one sounds like the rest of your voice, so keep the easy one as your low end. Return to the middle and do the same pair going up. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
+        "body": "Record two slides down from the same comfortable note in one take in the recorder, with a reset between them. On the first, stop at the first note that needs any effort: extra volume, a tucked chin or a pushed breath. On the second, stop one note earlier, while it is still completely easy. The stopping note is the only thing that changes. On playback, listen for the difference: the effortful note usually thins, rattles or wobbles, and the easy one sounds like the rest of your voice, so keep the easy one as your low end. To put a name on it, slide down to that easy note once more in the [pitch studio](/studio), which shows the note as you sing it, and write down the note you stop on. Return to the middle and do the same pair going up, naming the easy top note the same way. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -474,7 +474,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practise these slides in the recorder, as this module's first lesson does: nothing you record there replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. Practise these slides in the recorder, as this module's first lesson does. Then repeat each slide once in the [pitch studio](/studio), which names the note as you sing it, and write down the last easy note at each end: nothing you sing or record in either room replaces your saved range. Take the range test itself once, warmed up, for the module's self-check: every finished test replaces your saved range and refits your warm-ups and songs, and the reading Reading your range test, listed with this lesson, keeps retests weeks apart.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -8835,7 +8835,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes before approaching either edge.",
+        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes in the [pitch studio](/studio), which names each note as you sing it, and write them down before approaching either edge.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -8926,7 +8926,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes before approaching either edge.",
+        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes in the [pitch studio](/studio), which names each note as you sing it, and write them down before approaching either edge.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
@@ -9017,7 +9017,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Set a safe baseline",
-        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes before approaching either edge.",
+        "body": "Warm up in the comfortable middle, then confirm today's repeatable low and high notes in the [pitch studio](/studio), which names each note as you sing it, and write them down before approaching either edge.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },

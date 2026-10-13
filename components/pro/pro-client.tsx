@@ -23,12 +23,14 @@ import {
   redeemCode,
   rememberPendingCheckout,
   restorePro,
+  revalidatePro,
   startCheckout,
   useProState,
 } from "@/lib/pro";
 import {
   formatPrice,
   isPlanOnSale,
+  PORTAL_RETURN_PARAM,
   PRICING,
   PRO_FAQ,
   proHeadline,
@@ -481,6 +483,14 @@ export function ProClient() {
   // longer existed anywhere once it failed.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    // Back from the Stripe billing portal: a cancellation or a card update
+    // just changed the subscription, so re-check now rather than within the
+    // usual 12-hour window. useProState re-renders the plan line from it.
+    if (params.get(PORTAL_RETURN_PARAM)) {
+      window.history.replaceState({}, "", "/pro");
+      void revalidatePro({ force: true });
+      return;
+    }
     const fromUrl = params.get("session_id");
     const outcome = params.get("checkout");
     const sessionId = fromUrl ?? pendingCheckout();

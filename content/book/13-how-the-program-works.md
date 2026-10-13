@@ -49,7 +49,7 @@ Do this in one sitting, before week one, and do not skip it because you are impa
 
 **A range test, taken by the rules.** Warmed up, same room, counting only notes you would let someone else hear. Note the conditions somewhere — time of day, how you slept, whether you had a cold.
 
-**A recorded take.** One verse and one chorus of a song you already know well, in a key that is comfortable, sung the way you would actually sing it. Not your hardest song. Not a performance. One honest pass, saved in the Recorder so you can find it in twelve weeks. It is the most useful thing on this list and the easiest to talk yourself out of.
+**A recorded take.** One verse and one chorus of a song you already know well, in a key that is comfortable, sung the way you would actually sing it. Not your hardest song. Not a performance. One honest pass, saved in the Recorder so you can find it in twelve weeks. It is the most useful thing on this list and the easiest to talk yourself out of. Once it is saved, download it with the take's download button and keep the file outside the browser: takes live only in this browser's storage, which can be cleared (Safari can clear a site's data after about a week without a visit), and neither the backup file nor Pro's sync carries audio. If the browser copy is gone in week 12, play the file beside your new take.
 
 **A sustain test.** From Breath. One number, thirty seconds of your attention.
 
@@ -79,4 +79,4 @@ Two rules override all of the above. First, when in doubt, go back rather than f
 
 ## Try this
 
-Before your first session, take a range test, then record one verse and chorus of a song you already know into the Recorder — and leave both alone. At the start of week twelve you will record that same song again and put the two takes side by side in A/B compare. Whatever sits between them is the only honest evidence you will have.
+Before your first session, take a range test, then record one verse and chorus of a song you already know into the Recorder and download a copy of the take — and leave both alone. At the start of week twelve you will record that same song again and put the two takes side by side in A/B compare. Whatever sits between them is the only honest evidence you will have.

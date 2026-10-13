@@ -43,8 +43,12 @@ export interface ProState extends Entitlement {
   lastVerified: string | null;
 }
 
-/** v2: v1 held a local-only flag from before checkout existed. */
-const KEY = "suede-sing:pro:v2";
+/**
+ * v2: v1 held a local-only flag from before checkout existed. Exported for
+ * lib/prepaint.ts, whose test holds its restated copy to this one.
+ */
+export const PRO_STORAGE_KEY = "suede-sing:pro:v2";
+const KEY = PRO_STORAGE_KEY;
 
 const DEFAULT: ProState = { ...INACTIVE, since: null, lastVerified: null };
 
@@ -448,7 +452,7 @@ export const PLAN_ROWS: Array<{
     free: "5 minutes a day",
     pro: "No daily limit",
   },
-  { label: "Range test + voice type", free: "Included", pro: "Included" },
+  { label: "Range test + voice-type estimate", free: "Included", pro: "Included" },
   { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis per take" },
   // Each song's best score and score trend are free (the song summary and the
   // library cards show them), so the Pro cell names the one thing Pro adds:

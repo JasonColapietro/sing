@@ -53,4 +53,4 @@ A pairing worth hearing yourself: a straight, unbrightened tone next to the same
 
 ## Try this
 
-In the Recorder, sing one sustained note in your comfortable middle three times — once on a plain "ah", once slid toward "aw", once with a brighter, narrower ring — then A/B compare the takes. Listen for which one carries best on playback rather than which one felt biggest while you were singing it.
+In the [Recorder](/recorder), sing one sustained note in your comfortable middle three times — once on a plain "ah", once slid toward "aw", once with a brighter, narrower ring — then A/B compare the takes. Listen for which one carries best on playback rather than which one felt biggest while you were singing it.

@@ -40,7 +40,12 @@ function referenceWave(ctx: AudioContext): PeriodicWave {
 
 /** Output level of the reference tone relative to the gain a caller asks for. */
 const TONE_LEVEL = 1.6;
-/** Two voices a hair apart give the tone body without audible wobble. */
+/**
+ * Two voices a hair apart give a short reference tone body. Never use them
+ * for the drone: a drone must be beat-free, because beating is the cue it
+ * teaches (two copies 6 cents apart at A3 beat at 0.76 Hz, and harmonic n at
+ * n times that, which is the wobble a singer is told means they are off).
+ */
 const DETUNE_CENTS = 3;
 
 /**
@@ -219,7 +224,9 @@ export function startDrone(midi: number, gain = 0.09): () => void {
   const t0 = ctx.currentTime;
   const out = ctx.createGain();
   out.gain.setValueAtTime(0.0001, t0);
-  out.gain.exponentialRampToValueAtTime(gain, t0 + 0.35);
+  // One voice at sqrt(2) times the gain matches the average power the old
+  // detuned pair had, and peaks lower than that pair did.
+  out.gain.exponentialRampToValueAtTime(gain * Math.SQRT2, t0 + 0.35);
   out.connect(getOutput());
 
   const droneTone = ctx.createBiquadFilter();
@@ -227,17 +234,17 @@ export function startDrone(midi: number, gain = 0.09): () => void {
   droneTone.frequency.value = 3000;
   droneTone.connect(out);
 
-  const freq = midiToFreq(midi);
-  const oscs = [-3, 3].map((cents) => {
-    const o = ctx.createOscillator();
-    // Same harmonic series as the reference tone, so a low drone is audible
-    // on a phone speaker, and a little quieter per voice since there are two.
-    o.setPeriodicWave(referenceWave(ctx));
-    o.frequency.value = freq * Math.pow(2, cents / 1200);
-    o.connect(droneTone);
-    o.start(t0);
-    return o;
-  });
+  // A single oscillator at the exact pitch. The /tools guide teaches singers
+  // to tune until the beating against the drone disappears, so the drone
+  // itself must not beat: no detuned second voice (see DETUNE_CENTS).
+  // Same harmonic series as the reference tone, so a low drone is audible on
+  // a phone speaker.
+  const o = ctx.createOscillator();
+  o.setPeriodicWave(referenceWave(ctx));
+  o.frequency.value = midiToFreq(midi);
+  o.connect(droneTone);
+  o.start(t0);
+  const oscs = [o];
 
   let stopped = false;
   return () => {

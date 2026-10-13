@@ -67,4 +67,4 @@ And keep a spare — one song you can sing on any voice in any condition and wou
 
 ## Try this
 
-Open the Recorder and sing the choruses of your set, in order, back to back, as one take. Do it again at the end of a long practice session and put the two side by side in A/B compare. The chorus that falls off most between the fresh take and the tired one is the one to move, transpose, or protect.
+Open the [Recorder](/recorder) and sing the choruses of your set, in order, back to back, as one take. Do it again at the end of a long practice session and put the two side by side in A/B compare. The chorus that falls off most between the fresh take and the tired one is the one to move, transpose, or protect.

@@ -462,7 +462,9 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
               <SectionLabel>Your program: day {Math.min(view.index + 1, program.days.length)}</SectionLabel>
             </h2>
             <p className="mt-2 font-medium">{program.name}</p>
-            <p className="mt-1 text-sm text-mut">{line}</p>
+            <p className="mt-1 text-sm text-mut" data-program-waits={waits ? "" : undefined}>
+              {line}
+            </p>
           </div>
           {locked ? (
             <div className="flex flex-wrap items-center gap-3">

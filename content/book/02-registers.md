@@ -57,4 +57,4 @@ For your own practice, the useful questions are mechanical ones. Where does the 
 
 ## Try this
 
-Open the pitch studio, pick a comfortable low note, and slide up an octave on an "oo" slowly enough that the pitch trace stays unbroken. Mark the pitch where the tone changes character or the trace starts to wobble. That is your register transition announcing itself, and it is the same spot you come back to in weeks 5 and 6.
+Open the [pitch studio](/studio), pick a comfortable low note, and slide up an octave on an "oo" slowly enough that the pitch trace stays unbroken. Mark the pitch where the tone changes character or the trace starts to wobble. That is your register transition announcing itself, and it is the same spot you come back to in weeks 5 and 6.

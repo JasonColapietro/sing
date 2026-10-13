@@ -153,7 +153,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "registerMechanism",
       "That you can produce a pitch two ways on cue and hear the difference. Nothing classifies which mechanism you used.",
     ),
-    companion: { room: "analyze" },
+    // Its lessons sing the fuller and lighter versions in one take and judge
+    // the switch on playback; the analyzer has no record or playback.
+    companion: { room: "recorder" },
     studies: ["humming-thirds", "head-wee-descent"],
     // Chapter 1's "The vibrator: the folds" is the free reading of this module.
     readings: ["registers", "what-your-voice-is"],
@@ -633,6 +635,12 @@ export interface MaterialItem {
   title: string;
   /** Absent for a Pro exercise: a free page never deep-links one. */
   href?: string;
+  /**
+   * A free song's own page, which prints its range and key. `href` opens the
+   * song in the songbook to sing; that URL canonicalises to /songs, so the
+   * song's name links here and the practice link sits beside it.
+   */
+  page?: string;
   /** Part of Suede Pro rather than free. */
   pro: boolean;
   /** A one-line description where the source has one. */
@@ -652,6 +660,7 @@ function studyItem(id: string): MaterialItem {
       kind: "song",
       title: song.title,
       href: isProSong(id) ? undefined : `/songs?song=${song.slug}`,
+      page: isProSong(id) ? undefined : `/songs/${song.slug}`,
       pro: isProSong(id),
     };
   }

@@ -116,10 +116,14 @@ export default function V2Banner() {
 
   return (
     <>
+      {/* suppressHydrationWarning: the script below may set `hidden` before
+          React hydrates; without it development warns about an attribute
+          React did not render, on every first-time visitor's homepage. */}
       <section
         id="v2-banner"
         aria-label="What's new in Suede Sing"
         className="relative mt-6 rounded-3xl bg-brand text-white sm:mt-8"
+        suppressHydrationWarning
       >
         {/* The card reads as a filled band rather than a hairline: white on
             --color-brand is 5.70:1, so the announcement carries at a glance
