@@ -80,9 +80,9 @@ export interface PrepaintState {
   /** The cap wall's streak clause (", now 4 days"), or "". */
   streakClause: string;
   /**
-   * Whether the progress record holds a saved range: both ends are numbers,
-   * which is what lib/progress-shape.ts repairRange keeps and what a page
-   * needs to compare against it (lib/pop-songs.ts popFit).
+   * Whether the progress record holds a range a page can compare against:
+   * both ends whole MIDI notes from 0 to 127, low not above high, which is
+   * exactly what lib/pop-songs.ts popFit accepts.
    */
   range: boolean;
 }
@@ -184,10 +184,15 @@ export function prepaintState(
   const streakClause = live > 1 ? ", now " + live + " days" : "";
 
   const saved = isObject(progress) && isObject(progress.range) ? progress.range : null;
+  // The same test lib/pop-songs.ts popFit applies before it compares a song:
+  // a range it would refuse renders the short range-test card, so marking it
+  // saved would reserve the personal answer's space for nothing.
+  const lo = saved !== null ? saved.lowMidi : undefined;
+  const hi = saved !== null ? saved.highMidi : undefined;
   const range =
-    saved !== null &&
-    typeof saved.lowMidi === "number" && isFinite(saved.lowMidi) &&
-    typeof saved.highMidi === "number" && isFinite(saved.highMidi);
+    typeof lo === "number" && typeof hi === "number" &&
+    Number.isInteger(lo) && Number.isInteger(hi) &&
+    lo >= 0 && hi <= 127 && lo <= hi;
 
   let program: string | null = null;
   const record = read(c.keys.program);

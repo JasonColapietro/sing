@@ -8,6 +8,7 @@ import { PROGRAM_STORAGE_KEY } from "@/components/programs/store";
 import { liveStreak } from "@/components/account/save-state";
 import { programDayNeedsPro } from "@/components/practice/program-day";
 import { DEFAULT_PROGRESS, sanitizeProgress, type ProgressState, type SessionLog } from "./progress-shape";
+import { POP_SONGS, popFit } from "./pop-songs";
 import {
   addDays,
   dayNeedsPro,
@@ -106,10 +107,15 @@ describe("pre-paint state: the free plan", () => {
 });
 
 describe("pre-paint state: a saved range", () => {
-  it("is saved exactly when both ends survive the record's repair, as the pages compare against it", () => {
+  it("is saved exactly when the song verdict can compare against the repaired record", () => {
     for (const [range, saved] of [
       [{ lowMidi: 45, highMidi: 65 }, true],
-      [{ lowMidi: 45.5, highMidi: 65, voiceType: "baritone" }, true],
+      [{ lowMidi: 0, highMidi: 127 }, true],
+      [{ lowMidi: 60, highMidi: 60 }, true],
+      [{ lowMidi: 45.5, highMidi: 65, voiceType: "baritone" }, false],
+      [{ lowMidi: 65, highMidi: 45 }, false],
+      [{ lowMidi: -1, highMidi: 65 }, false],
+      [{ lowMidi: 45, highMidi: 128 }, false],
       [{}, false],
       [{ lowMidi: 45 }, false],
       [{ highMidi: 65 }, false],
@@ -118,9 +124,11 @@ describe("pre-paint state: a saved range", () => {
       [null, false],
     ] as const) {
       const record = { ...progress(), range };
-      // lib/progress-shape.ts sanitizeProgress is what useProgress returns.
+      // lib/progress-shape.ts sanitizeProgress is what useProgress returns,
+      // and popFit is what CanYouSingVerdict asks before it shows an answer.
       const repaired = sanitizeProgress(JSON.parse(JSON.stringify(record))).range;
-      expect(repaired.lowMidi !== undefined && repaired.highMidi !== undefined, JSON.stringify(range)).toBe(saved);
+      const compared = POP_SONGS.some((song) => popFit(song, repaired).verdict !== "unknown");
+      expect(compared, JSON.stringify(range)).toBe(saved);
       expect(state({ [PROGRESS_STORAGE_KEY]: record }).range, JSON.stringify(range)).toBe(saved);
     }
     expect(state({}).range).toBe(false);
