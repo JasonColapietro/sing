@@ -279,7 +279,7 @@ export function getSingerLastModified(slug: string): string | undefined {
  * A fixed, hand-set date, bumped only when the shared singer template's
  * content actually changes, never a build timestamp.
  */
-export const SINGER_PAGE_REVISED = "2026-09-30";
+export const SINGER_PAGE_REVISED = "2026-10-12";
 
 /**
  * Sitemap lastmod for a singer page: the later of its evidence review date

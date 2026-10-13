@@ -5,7 +5,7 @@ stage: "v-l1"
 title: "Hiss for Twelve"
 type: "exercise"
 minutes: 4
-objective: "Evenness first, duration second. Count your hiss gently and listen for a steady sound; duration is your own observation."
+objective: "Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass."
 prerequisites: "v-l1-m3-01"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -15,10 +15,10 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and read Breath: support versus pressure. Use its written exercise and stop rules. The reading Breath: support versus pressure is listed there too.
+Open the sustain test in the breath room with the button at the top of this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound.
+- Listen: A quiet, even hiss is the whole task; you do not need to make a pitched sound.
 
 ### Set a safe baseline
 
@@ -29,7 +29,7 @@ Stand or sit tall without locking the ribs. Let the shoulders remain quiet while
 
 ### Name the target: Low breath and rib expansion
 
-Evenness first, duration second. Count your hiss gently and listen for a steady sound; duration is your own observation. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Evenness first, duration second. Count your hiss gently and listen for a steady sound; the sustain test's seconds are a record, not a pass. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.
 - Listen: The hiss stays even rather than surging at the start and fading to almost nothing at the end.
@@ -55,7 +55,7 @@ I counted an even hiss, kept my shoulders quiet, and released before running out
 
 ## Practice blocks
 
-- 30s: Open the practice material. Prepare the room, body, and safe baseline for “Hiss for Twelve.”
+- 30s: Open the sustain test. Prepare the room, body, and safe baseline for “Hiss for Twelve.”
 - 60s: Isolate the low breath and rib expansion target in short, comfortable examples.
 - 90s: Practise or record the complete “Hiss for Twelve” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.

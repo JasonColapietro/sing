@@ -44,7 +44,9 @@ export const ROUTES = [
 
 /** Data-driven templates get one real slug each, discovered from the sitemap. */
 export async function discoverTemplateRoutes(baseUrl) {
-  const res = await fetch(`${baseUrl}/sitemap.xml`);
+  const sitemapUrl = `${baseUrl}/sitemap.xml`;
+  const res = await fetch(sitemapUrl, { signal: AbortSignal.timeout(15_000) });
+  if (!res.ok) throw new Error(`Sitemap discovery failed: HTTP ${res.status} at ${sitemapUrl}`);
   const xml = await res.text();
   const paths = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)]
     .map((m) => { try { return new URL(m[1]).pathname; } catch { return null; } })
@@ -65,7 +67,11 @@ export async function discoverTemplateRoutes(baseUrl) {
     { path: firstUnder("/learn/voice/", 3), name: "learn-stage", kind: "reference" },
     { path: firstUnder("/learn/voice/", 4), name: "learn-module", kind: "reference" },
     { path: firstUnder("/learn/voice/", 5), name: "learn-lesson", kind: "reference" },
-  ].filter((r) => r.path);
+  ];
+  const missing = picks.filter((route) => !route.path);
+  if (missing.length > 0) {
+    throw new Error(`Sitemap discovery missing templates: ${missing.map((route) => route.name).join(", ")}`);
+  }
 
   return picks;
 }

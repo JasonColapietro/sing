@@ -1,9 +1,10 @@
 /** Regressions from the September 27 adversarial singer-funnel audit. */
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import type { ReactNode } from "react";
+import { isValidElement, type ReactElement, type ReactNode } from "react";
 
 const visitor = vi.hoisted(() => ({ range: { lowMidi: 48, highMidi: 72 } as { lowMidi?: number; highMidi?: number } }));
+const plan = vi.hoisted(() => ({ pro: false }));
 
 vi.mock("server-only", () => ({}));
 vi.mock("next/og", () => ({
@@ -15,6 +16,10 @@ vi.mock("@/lib/progress", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/progress")>(),
   useProgress: () => visitor,
 }));
+vi.mock("@/lib/pro", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/lib/pro")>(),
+  useIsPro: () => plan.pro,
+}));
 vi.mock("@/components/pro/gate", () => ({
   ProInlineNudge: ({ children }: { children: ReactNode }) => <p>{children}</p>,
 }));
@@ -22,7 +27,7 @@ vi.mock("@/components/pro/gate", () => ({
 import SingerPage from "@/app/singers/[slug]/page";
 import SingerImage from "@/app/singers/[slug]/opengraph-image";
 import LearnPage from "@/app/learn/page";
-import { CompareWithMe } from "@/components/singers/singer-actions";
+import { CompareWithMe, PlayRangeButton } from "@/components/singers/singer-actions";
 import { singerBySlug } from "@/lib/singers";
 import { FREE_DAILY_SEC } from "@/lib/free-cap";
 import { RANGE_GUIDE } from "@/lib/guides";
@@ -68,13 +73,42 @@ describe("singer evidence and comparison regressions", () => {
     visitor.range = { lowMidi: 48, highMidi: 72 };
     const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
     const retake = html.match(/<a\b[^>]*>Retake the range test<\/a>/)?.[0];
-    expect(retake).toContain('href="/range?compare=olivia-rodrigo"');
+    expect(retake).toContain('href="/range?compare=olivia-rodrigo#start"');
+  });
+
+  it("does not send a free singer to a range history the free plan does not show", () => {
+    visitor.range = { lowMidi: 48, highMidi: 72 };
+    const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
+    expect(html).not.toContain("range history");
+    expect(html).toMatch(/<a\b[^>]*href="\/progress"[^>]*>Your saved range<\/a>/);
+  });
+
+  it("keeps the range-history label for Pro, where Progress charts it", () => {
+    visitor.range = { lowMidi: 48, highMidi: 72 };
+    plan.pro = true;
+    try {
+      const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
+      expect(html).toMatch(/<a\b[^>]*href="\/progress"[^>]*>Your range history<\/a>/);
+    } finally {
+      plan.pro = false;
+    }
+  });
+
+  it("names the free guided allowance where the comparison sends singers into practice", () => {
+    visitor.range = { lowMidi: 48, highMidi: 72 };
+    const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
+    expect(html).toContain('href="/warmups"');
+    expect(html).toContain(`${FREE_DAILY_SEC / 60} free minutes a day`);
+    // Free already gets the coach's first two steps a day (PLAN_ROWS "Coach
+    // plan"); what Pro adds is the full plan, not the coach.
+    expect(html).toContain("full coach plan");
+    expect(html).not.toContain("coach plans each day");
   });
 
   it("preserves the first-time visitor's direct range-test path", () => {
     visitor.range = {};
     const html = renderToStaticMarkup(<CompareWithMe s={singerBySlug("olivia-rodrigo")!} />);
-    expect(html).toContain('href="/range?compare=olivia-rodrigo"');
+    expect(html).toContain('href="/range?compare=olivia-rodrigo#start"');
     expect(html).toContain("reported reference span");
   });
 
@@ -95,6 +129,17 @@ describe("singer evidence and comparison regressions", () => {
     expect(html).not.toContain("How Olivia Rodrigo uses that range");
     expect(html).toContain('href="#evidence"');
     expect(html).toContain('id="evidence"');
+    // The catalog-position section used to bring both claims back in other words.
+    expect(html).not.toContain("conventional mezzo-soprano band");
+    expect(html).not.toContain("highest full or belted note of E5");
+  });
+
+  it("does not measure Sam Smith against the countertenor label the review did not establish", async () => {
+    const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug: "sam-smith" }) }));
+    expect(html).not.toContain("conventional countertenor band");
+    expect(html).not.toContain("catalog countertenors");
+    // The label-free catalog facts stay.
+    expect(html).toContain("by reported span");
   });
 
   it("does not restore Arijit's disputed tenor label in editorial copy", async () => {
@@ -102,4 +147,41 @@ describe("singer evidence and comparison regressions", () => {
     expect(html).toContain("dispute a definitive tenor label");
     expect(html).not.toContain("Light nasal tenor");
   });
+
+  /**
+   * Whatever a server page hands a client component is serialized into the
+   * page source. The full singer record carries the blurb and technique notes,
+   * which are the Pro atlas's entry prose and appear on no free page, so
+   * neither may reach the element tree at all: not the client components'
+   * props, and not any other element's.
+   */
+  it.each(["adele", "sam-smith", "olivia-rodrigo"])(
+    "keeps %s's paid atlas entry notes out of the page's payload",
+    async (slug) => {
+      const tree = await SingerPage({ params: Promise.resolve({ slug }) });
+      const elements: ReactElement[] = [];
+      const walk = (node: unknown): void => {
+        if (Array.isArray(node)) node.forEach(walk);
+        else if (isValidElement(node)) {
+          elements.push(node);
+          Object.values(node.props as Record<string, unknown>).forEach(walk);
+        }
+      };
+      walk(tree);
+
+      const record = singerBySlug(slug)!;
+      const paid = [record.blurb, record.technique ?? ""];
+      for (const text of paid) expect(text.length, `${slug} has entry notes to leak`).toBeGreaterThan(40);
+
+      const clients = elements.filter((el) => el.type === CompareWithMe || el.type === PlayRangeButton);
+      expect(clients.map((el) => el.type)).toEqual(expect.arrayContaining([CompareWithMe, PlayRangeButton]));
+      for (const el of elements) {
+        const own = Object.entries(el.props as Record<string, unknown>).filter(
+          ([, value]) => !isValidElement(value) && !Array.isArray(value),
+        );
+        const json = JSON.stringify(Object.fromEntries(own)) ?? "";
+        for (const text of paid) expect(json, `${slug}: ${String(el.type)}`).not.toContain(text);
+      }
+    },
+  );
 });

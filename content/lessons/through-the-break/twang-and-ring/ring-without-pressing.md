@@ -36,7 +36,7 @@ More carrying power without more push. Ring is a change of resonance, not a chan
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take with a quiet breath between them, so saving does not replace the sound you need to compare.
+To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. Work in short repetitions with a normal breath and complete release between them. Add a bright, focused ring with less effort than a shout. Change resonance before volume, and keep each attempt short. Record the easy baseline and brighter example in one take with a quiet breath between them, so saving does not replace the sound you need to compare.
 
 - Look: Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.
 - Listen: The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone.
@@ -50,7 +50,7 @@ I compared two easy tones on the same pitch and described a change in brightness
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated.
+- The target disappears when the range, volume, speed, or duration increases. => If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -68,7 +68,7 @@ I compared two easy tones on the same pitch and described a change in brightness
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If brightness comes only with pressure, back down to the baseline, use a lighter nasal consonant onset, and stop for today if the voice feels irritated. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
 What this shows: I compared two easy tones on the same pitch and described a change in brightness by ear. This is a self-report, not an automatic assessment.
 

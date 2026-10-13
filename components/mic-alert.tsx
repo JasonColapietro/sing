@@ -2,6 +2,32 @@
 
 import { useEffect, useRef } from "react";
 
+/** Gap left between the message and the top of the phone tab bar. */
+const TAB_BAR_CLEARANCE = 8;
+
+/**
+ * How far to scroll so `el` sits clear of the phone's fixed tab bar, or 0.
+ *
+ * `scrollIntoView({ block: "nearest" })` counts the strip under the fixed bar
+ * as on screen (and Chromium ignores scroll-margin for it), so on a 375×667
+ * phone a blocked mic on /studio or /songs rendered its instructions at
+ * 625–667px, behind the bar at 610, and the press looked dead. Only measured
+ * when the bar is what is actually on top there: it is `sm:hidden` on
+ * desktop, and a full-screen session (z-[70]) covers it, where scrolling
+ * would move the hidden page underneath instead of the message.
+ */
+export function tabBarOverlap(el: Element, doc: Document = document): number {
+  const bar = doc.querySelector('nav[aria-label="Tabs"]');
+  if (!bar) return 0;
+  const barTop = bar.getBoundingClientRect().top;
+  const view = doc.defaultView;
+  if (!view || barTop >= view.innerHeight) return 0;
+  const onTop = doc.elementFromPoint(view.innerWidth / 2, barTop + 1);
+  if (!onTop || !bar.contains(onTop)) return 0;
+  const overlap = el.getBoundingClientRect().bottom - barTop + TAB_BAR_CLEARANCE;
+  return overlap > 0 ? overlap : 0;
+}
+
 /**
  * The one way a microphone failure is shown in a practice room.
  *
@@ -15,9 +41,10 @@ import { useEffect, useRef } from "react";
  *
  * Scrolling to `nearest` costs nothing when the line is already on screen, so
  * every room can render this wherever the message belongs and stop reasoning
- * about whether that spot is in view. Nothing here animates — the default
- * behaviour is an instant jump with no global `scroll-behavior: smooth` to
- * inherit — so there is no motion to opt out of.
+ * about whether that spot is in view. On a phone it then lifts the line clear
+ * of the tab bar (tabBarOverlap), which `nearest` treats as visible. Nothing
+ * here animates — the default behaviour is an instant jump with no global
+ * `scroll-behavior: smooth` to inherit — so there is no motion to opt out of.
  *
  * Rendering it in exactly one place at a time is the caller's job: two of these
  * on a page is two announcements of the same failure.
@@ -35,7 +62,11 @@ export function MicAlert({
   // different way (blocked, then busy) rewrites this line in place, and
   // `role="alert"` re-announces it. The scroll has to follow.
   useEffect(() => {
-    ref.current?.scrollIntoView({ block: "nearest" });
+    const el = ref.current;
+    if (!el) return;
+    el.scrollIntoView({ block: "nearest" });
+    const lift = tabBarOverlap(el);
+    if (lift > 0) window.scrollBy(0, lift);
   }, [message]);
 
   return (

@@ -3,14 +3,25 @@
 import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { useIsPro } from "@/lib/pro";
 import { useProgress } from "@/lib/progress";
 import { rangeOverlap, spanOctaves } from "@/lib/singers-core";
 import type { Singer } from "@/lib/singers-data";
+import { rangeTestHref } from "@/lib/site";
 import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
 
+/**
+ * The four fields these client components use. A page passes exactly these,
+ * never the whole record: everything handed to a client component is
+ * serialized into the page's flight payload, and a full Singer carries the
+ * blurb and technique notes that are the paid atlas's entry prose.
+ */
+export type SingerRangeProps = Pick<Singer, "slug" | "name" | "lowMidi" | "highMidi">;
+
 /** Low → glide → high, same gesture as the range-test result card. */
-export function PlayRangeButton({ s }: { s: Singer }) {
+export function PlayRangeButton({ s }: { s: Pick<Singer, "lowMidi" | "highMidi"> }) {
   const play = () => {
     playTone(s.lowMidi, { dur: 0.6 });
     playTone(s.lowMidi, { dur: 1.4, at: 0.7, glideToMidi: s.highMidi });
@@ -27,8 +38,11 @@ export function PlayRangeButton({ s }: { s: Singer }) {
  * Compares the visitor's measured range (from the free range test, stored
  * locally) against this singer's cited range.
  */
-export function CompareWithMe({ s }: { s: Singer }) {
+export function CompareWithMe({ s }: { s: SingerRangeProps }) {
   const { range } = useProgress();
+  // The free plan keeps only the latest test; range over time is Pro
+  // (PLAN_ROWS "Range history"), so the link names what each plan will find.
+  const isPro = useIsPro();
   const youLow = range.lowMidi;
   const youHigh = range.highMidi;
 
@@ -44,7 +58,7 @@ export function CompareWithMe({ s }: { s: Singer }) {
           voice type or technique.
         </p>
         <div className="mt-4">
-          <LinkButton href={`/range?compare=${s.slug}`} size="md">
+          <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">
             Take the free range test →
           </LinkButton>
         </div>
@@ -141,10 +155,10 @@ export function CompareWithMe({ s }: { s: Singer }) {
           href="/progress"
           className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut underline decoration-line underline-offset-2 hover:text-ink"
         >
-          Your range history
+          {isPro ? "Your range history" : "Your saved range"}
         </Link>
         <Link
-          href={`/range?compare=${s.slug}`}
+          href={rangeTestHref({ compare: s.slug })}
           className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut underline decoration-line underline-offset-2 hover:text-ink"
         >
           Retake the range test
@@ -152,9 +166,13 @@ export function CompareWithMe({ s }: { s: Singer }) {
       </div>
       {/* The ~636 singer pages are where search traffic lands; this is the one
           Pro line on them, and only after the visitor has a measured range to
-          compare — value first, pitch second. Self-hides for Pro. */}
+          compare — value first, pitch second. Both links above lead into
+          capped guided practice, so the line names the free allowance too.
+          The free plan already gets the coach's first two steps a day
+          (PLAN_ROWS "Coach plan"), so Pro is credited with the full plan, not
+          with the coach itself. Self-hides for Pro. */}
       <div className="mt-4">
-        <ProInlineNudge>The coach builds a daily plan from your own practice and scores</ProInlineNudge>
+        <ProInlineNudge>{`Guided practice is ${FREE_DAILY_MINUTES} free minutes a day; Pro removes the limit and unlocks the full coach plan`}</ProInlineNudge>
       </div>
     </Card>
   );

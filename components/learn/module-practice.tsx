@@ -5,14 +5,20 @@
  */
 import Link from "next/link";
 import { TOLERANCE_CENTS } from "@/components/songs/lib";
+import { IN_TUNE_CENTS } from "@/lib/audio/notes";
 import {
   MODULE_PRACTICE,
+  RANGE_WARM_UP,
   ROOM_LABELS,
   companionHref,
   companionLabel,
+  isGuidedPractice,
   moduleMaterial,
   practiceMatch,
+  warmsUpFirst,
+  type Companion,
 } from "@/lib/lesson-practice";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { PracticeCount } from "@/components/learn/practice-count";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 
@@ -21,12 +27,12 @@ import { Card, LinkButton, SectionLabel } from "@/components/ui";
  * contract reports as implemented appear here; the test holds this list to it.
  */
 export const MEASUREMENT_WORDS: Record<string, string> = {
-  phonationSeconds:
-    "how long your voice sounded, in seconds of confidently voiced time",
-  rangeExtremes: "your lowest and highest comfortable notes",
+  rangeExtremes: "the lowest and highest clear notes the range test heard you hold in one session",
   sustainSeconds:
     "how long one sustain lasts, in seconds. The timer reads loudness, so a steady hiss counts as well as a sung note",
-  centsFromTarget: `how far each note sits from its target, in cents. A note counts as in tune within ${TOLERANCE_CENTS} cents`,
+  // The scoring window is not the definition of in tune: it passes a phrase
+  // sung clearly flat (book chapter 9), and the studio's green zone is tighter.
+  centsFromTarget: `how far each note sits from its target, in cents. Scoring counts a note as a hit anywhere within ${TOLERANCE_CENTS} cents, a wide window that still passes a clearly flat note; the studio's green zone, ±${IN_TUNE_CENTS} cents, is the in-tune goal`,
   inTuneHoldTime: `how long you hold a note within ${TOLERANCE_CENTS} cents of the target`,
   scorePercent: `the share of each note you held within ${TOLERANCE_CENTS} cents of the target`,
   ringRatio:
@@ -35,12 +41,89 @@ export const MEASUREMENT_WORDS: Record<string, string> = {
     "how many vocal fold cycles a session used. It measures load, and there is no published safe ceiling to compare it with",
 };
 
-export function ModulePractice({ moduleId }: { moduleId: string }) {
+/**
+ * Said wherever a lesson sends someone into a room that draws on the free
+ * daily allowance (warm-ups, ear training, breath, songs), so the limit is
+ * never a surprise halfway through a free lesson. `full` adds which rooms
+ * have no clock, for the practice panel where there is room to say it.
+ */
+export function GuidedCapNote({ full = false }: { full?: boolean }) {
+  return (
+    <p className="text-xs text-dim" data-guided-cap>
+      Guided practice is {FREE_DAILY_MINUTES} free minutes a day;{" "}
+      <Link href="/pro" className="underline hover:text-ink">
+        Pro
+      </Link>{" "}
+      removes the limit.
+      {full && " The pitch studio, range test, recorder and tools have no clock."}
+    </p>
+  );
+}
+
+/**
+ * The buttons into a lesson's room. The range test comes after the warm-up
+ * the lessons prescribe, because a cold voice under-reports at both ends and
+ * the result replaces the saved range; the warm-up is guided practice, so the
+ * allowance is said beside it. Every other room is one button.
+ */
+export function CompanionButtons({
+  companion,
+  size,
+  full = false,
+}: {
+  companion: Companion;
+  size: "md" | "lg";
+  /** Passed to GuidedCapNote: also name the rooms that have no clock. */
+  full?: boolean;
+}) {
+  if (warmsUpFirst(companion)) {
+    return (
+      <div className="flex flex-col items-start gap-2" data-warm-up-first>
+        <div className="flex flex-wrap gap-3">
+          <LinkButton href={RANGE_WARM_UP.href} size={size}>
+            {RANGE_WARM_UP.label}
+          </LinkButton>
+          <LinkButton href={companionHref(companion)} size={size} variant="outline">
+            Then take the range test once
+          </LinkButton>
+        </div>
+        <p className="text-xs text-dim" data-guided-cap>
+          The Morning reset is about four minutes of guided practice, out of
+          the free plan&apos;s {FREE_DAILY_MINUTES} minutes a day;{" "}
+          <Link href="/pro" className="underline hover:text-ink">
+            Pro
+          </Link>{" "}
+          removes the limit. The range test itself has no clock.
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div className="flex flex-col items-start gap-2">
+      <LinkButton href={companionHref(companion)} size={size}>
+        Open {companionLabel(companion)}
+      </LinkButton>
+      {isGuidedPractice(companion) && <GuidedCapNote full={full} />}
+    </div>
+  );
+}
+
+export function ModulePractice({
+  moduleId,
+  lessonId,
+}: {
+  moduleId: string;
+  /** On a lesson page: the lesson, whose own room may differ from the module's. */
+  lessonId?: string;
+}) {
   const practice = MODULE_PRACTICE[moduleId];
   if (!practice) return null;
   const { basis, companion } = practice;
   const match = practiceMatch(companion);
   const material = moduleMaterial(moduleId);
+  // A lesson practised somewhere else says so here, so the panel's room
+  // and the page's first button never read as two answers to one question.
+  const lessonRoom = lessonId ? practice.lessonCompanion?.[lessonId] : undefined;
 
   return (
     <Card>
@@ -48,6 +131,13 @@ export function ModulePractice({ moduleId }: { moduleId: string }) {
         <SectionLabel>Practice</SectionLabel>
         <div className="max-w-2xl space-y-2">
           <h2 className="text-xl">Where to practise</h2>
+          {lessonRoom && (
+            <p className="text-sm text-mut" data-lesson-room={lessonRoom.room}>
+              You practise this lesson in {companionLabel(lessonRoom)}, the button
+              at the top of the page; {companionLabel(companion)} below is for the
+              module&apos;s self-check.
+            </p>
+          )}
           {basis.kind === "measured" ? (
             <p className="text-sm text-mut" data-proof-basis="measured">
               Suede Sing measures part of this: {MEASUREMENT_WORDS[basis.measurement]}. The
@@ -61,9 +151,7 @@ export function ModulePractice({ moduleId }: { moduleId: string }) {
             </p>
           )}
           <div className="pt-1">
-            <LinkButton href={companionHref(companion)} size="md">
-              Practise in {companionLabel(companion)}
-            </LinkButton>
+            <CompanionButtons companion={companion} size="md" full />
           </div>
           {match && <PracticeCount match={match} room={ROOM_LABELS[companion.room]} />}
         </div>

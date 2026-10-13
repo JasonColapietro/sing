@@ -12,7 +12,9 @@
 // cents on easy and medium (which is also the songbook's TOLERANCE_CENTS, so a
 // note caught here is a note the song player would score), 35 on hard. Easy is
 // octave-agnostic, again like pitch match, so a singer with no saved range can
-// still catch notes pitched for someone else's voice.
+// still catch notes pitched for someone else's voice. Until a range is saved
+// the game makes every level octave-agnostic (note-catcher-game.tsx), since the
+// fallback register is one a higher voice can only answer an octave up.
 //
 // A catch is a *hold*, not a touch. The dwell accumulates while the voice is in
 // tolerance and survives a short lapse (a dropped detector frame, a consonant),
@@ -122,8 +124,9 @@ export function centreShift(midis: readonly number[], register: { lo: number; hi
 }
 
 /**
- * Targets from the opening of a song: its first ten notes in order (the phrase
- * again from the top if it is shorter), transposed as a whole so the melody sits
+ * Targets from a song's songbook phrase (its opening, or the excerpt the entry
+ * names, such as Home on the Range's chorus hook): its first ten notes in order
+ * (the phrase again from the top if it is shorter), transposed as a whole so the melody sits
  * in the middle of the singer's range. The contour is kept exactly; nothing is
  * folded note by note, because a melody with one note an octave off is not the
  * song any more.

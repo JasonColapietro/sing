@@ -1,19 +1,49 @@
 "use client";
 
-import { useId, useSyncExternalStore } from "react";
-import {SignInButton, SignUpButton} from "@clerk/nextjs";
+import { useId, useState, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import { useAccountAuth } from "@/lib/use-account-auth";
 import { Button, Card, SectionLabel } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
 import { useIsPro, useProReady } from "@/lib/pro";
 import { useProgress, type ProgressState } from "@/lib/progress";
+import { NOT_IN_BACKUP_FILE } from "@/components/progress/data-copy";
+import { backupFileStatus, hasSomethingToSave, liveStreak } from "./save-state";
+import {
+  downloadProgressBackup,
+  readBackupFileAt,
+  subscribeBackupFileAt,
+} from "./download-backup";
+
+export { hasSomethingToSave } from "./save-state";
+
+/**
+ * The account offer's Clerk buttons, loaded only when that branch renders, so
+ * a page that mounts this prompt never ships Clerk's SDK while accounts are
+ * off. The placeholder holds the button row's height while the chunk loads.
+ */
+const SavePromptAccountActions = dynamic(() => import("./save-prompt-actions"), {
+  loading: () => <div aria-hidden className="mt-4 min-h-16" />,
+});
 
 /**
  * Dismissed once, dismissed for good. A snooze would be kinder to the funnel
  * and worse for the singer: the offer is worth exactly one ask, and anyone who
- * declines it has told us what they think of it.
+ * declines it has told us what they think of it. Only "Not now" dismisses: a
+ * downloaded backup file is not a dismissal. A file restores the record as of
+ * its download, so with accounts off the card offers a fresh one once practice
+ * has run a couple of weeks past it (BACKUP_FILE_AT_KEY in download-backup.ts,
+ * written by both buttons that save a file), instead of going quiet for good
+ * while the file silently goes stale.
+ *
+ * The file-backup card (accounts off) and the account offer are different
+ * asks, so they keep separate keys: waving away a download today must not
+ * silently suppress the account offer on the deploy that turns accounts on.
+ * accountsReady() is a build constant, so a build only ever uses one key.
  */
-const DISMISS_KEY = "suede-sing:account-prompt:v1";
+const DISMISS_KEY = accountsReady()
+  ? "suede-sing:account-prompt:v1"
+  : "suede-sing:backup-prompt:v1";
 
 /* ------------------------------------------------------- dismissal store */
 
@@ -74,20 +104,20 @@ function markDismissed(): void {
 }
 
 /**
- * True once the visitor has practice worth losing.
- *
- * Deliberately independent of the caller's own trigger. A wiring mistake that
- * drops this on a cold page is a wall in disguise on a site whose entire funnel
- * is organic search, so the component refuses on its own evidence as well as
- * on the caller's. Recorded takes are covered by `sessions` — they land there
- * as type "recording" (lib/progress.ts ActivityType).
+ * No backup file on the server. The dismissal snapshot already keeps the
+ * server and hydration render empty; the stored date is read right after.
  */
-export function hasSomethingToSave(s: ProgressState): boolean {
-  return (
-    s.sessions.length > 0 ||
-    s.streak.current >= 2 ||
-    s.range.lowMidi !== undefined
-  );
+function serverFileAt(): string | null {
+  return null;
+}
+
+/** "September 3, 2026": the backup file's date, as the card names it. */
+function fileDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 }
 
 /** House prose joins lists without the Oxford comma. */
@@ -107,7 +137,10 @@ function stakeSentence(s: ProgressState): string {
   const parts: string[] = [];
   const n = s.sessions.length;
   if (n > 0) parts.push(`${n} practice ${n === 1 ? "session" : "sessions"}`);
-  if (s.streak.current >= 2) parts.push(`a ${s.streak.current}-day streak`);
+  // The live streak, not streak.current: a lapsed 12-day streak is gone, and
+  // naming it here would offer to protect something the next session resets.
+  const streak = liveStreak(s.streak);
+  if (streak >= 2) parts.push(`a ${streak}-day streak`);
   if (s.range.lowMidi !== undefined) parts.push("your measured range");
   return `This browser holds the only copy of ${joinList(parts)}.`;
 }
@@ -130,15 +163,34 @@ function bodyCopy(s: ProgressState): string {
 }
 
 /**
+ * What the file backup offers when accounts are off. "Can clear" rather than
+ * "clears": WebKit's seven-day cap on script-writable storage counts days of
+ * Safari use without a visit, so it is a real risk, not a schedule.
+ *
+ * The file is exportProgress(): the practice record, not the recorder's audio,
+ * which lives in IndexedDB. The card fires on the recorder right after a take,
+ * so it says so rather than promising to bring "it all" back.
+ */
+const FILE_PROMISE = `Some browsers, Safari among them, can clear a site's saved data after about a week without a visit. A backup file restores your practice record from the Progress page, in any browser. Recorded audio is not in the file. ${NOT_IN_BACKUP_FILE}`;
+
+/**
  * A quiet, earned offer to back up the practice record.
  *
- * Everything on this site works signed out and stays that way, so this is an
- * offer and never a gate. It is pitched below the Pro nudges on purpose: no
- * gold, no chip, no price. Pro is being sold; this is being mentioned.
+ * Signing in to use the tools is handled by lib/account-gate.ts; this card is
+ * the earned offer to back up a record that already exists, pitched below the
+ * Pro nudges on purpose: no gold, no chip, no price. Pro is being sold; this is
+ * being mentioned.
  *
  * What it promises is bounded by what the free tier actually delivers, which
  * is a second copy of localStorage "suede-sing:progress:v1". Continuous
  * multi-device sync is a Pro benefit and this copy must never imply it.
+ *
+ * With accounts off on this deployment (accountsReady() false) there is no
+ * account to offer, and ClerkProvider is not mounted, so Clerk's buttons would
+ * throw. The card then offers the one backup that exists, a JSON file of the
+ * record that /progress can import, behind the same refusals below. Without
+ * it a free singer's only copy sat several screens down /progress, and a week
+ * away from Safari could wipe it.
  *
  * Four independent refusals, any one of which renders nothing:
  *
@@ -148,8 +200,10 @@ function bodyCopy(s: ProgressState): string {
  * 2. Pro. A Pro member's record is already syncing (ProSync in the layout),
  *    which makes "this browser holds the only copy" simply false for them.
  *    This is an accuracy refusal, not a courtesy one.
- * 3. Dismissed, per the localStorage-backed store above.
- * 4. Nothing at risk — the caller's `when`, and our own check.
+ * 3. Dismissed, per the localStorage-backed store above ("Not now" only).
+ * 4. Nothing at risk — the caller's `when`, and our own check. With accounts
+ *    off, a backup file that practice has not yet run a couple of weeks past
+ *    counts as nothing at risk too; a stale one brings the card back.
  *
  * It is inline rather than a modal, so there is no scroll lock, no overlay and
  * no focus trap to escape from. The named <section> makes it one stop for a
@@ -180,15 +234,79 @@ export function AccountSavePrompt({
     readDismissed,
     serverDismissed,
   );
+  const fileAt = useSyncExternalStore(
+    subscribeBackupFileAt,
+    readBackupFileAt,
+    serverFileAt,
+  );
+  // Set by the download, so the card can confirm it on this mount. The next
+  // page load finds a fresh file on record and stays quiet until practice has
+  // run past it (backupFileStatus).
+  const [downloaded, setDownloaded] = useState(false);
+
+  if (!isLoaded || isSignedIn) return null;
+  if (!proReady || isPro) return null;
+  if (dismissed && !downloaded) return null;
+  if (!when || !hasSomethingToSave(progress)) return null;
 
   // Never offer an account this deployment cannot actually create. On a
   // development Clerk instance the sign-in completes and then every call comes
-  // back 401, which is a worse experience than no offer at all.
-  if (!accountsReady()) return null;
-  if (!isLoaded || isSignedIn) return null;
-  if (!proReady || isPro) return null;
-  if (dismissed) return null;
-  if (!when || !hasSomethingToSave(progress)) return null;
+  // back 401, which is a worse experience than no offer at all. Offer the
+  // backup that does exist instead.
+  if (!accountsReady()) {
+    const file = backupFileStatus(progress.sessions, fileAt);
+    if (!downloaded && !file.stale) return null;
+    // downloadProgressBackup records the file's date itself, so this card
+    // stays quiet on the next load whichever button saved the file.
+    const download = () => {
+      downloadProgressBackup();
+      setDownloaded(true);
+    };
+    // With a file on record, say how old it is and what it is missing rather
+    // than "the only copy", which the file makes untrue.
+    const stake =
+      fileAt && file.hasFile && file.sessionsSince > 0
+        ? `Your last backup file is from ${fileDate(fileAt)}; ${file.sessionsSince} ${
+            file.sessionsSince === 1 ? "session since then is" : "sessions since then are"
+          } only in this browser.`
+        : stakeSentence(progress);
+    return (
+      <section aria-labelledby={headingId} className={className}>
+        <Card className="animate-fadeup">
+          <SectionLabel>{context}</SectionLabel>
+          <h2 id={headingId} className="mt-3 text-xl font-extrabold text-ink">
+            Keep a copy of your progress
+          </h2>
+          {downloaded ? (
+            <p role="status" className="mt-1.5 max-w-xl text-sm text-mut">
+              Backup downloaded. It holds your record as of today; if this
+              browser is ever cleared, import it on the Progress page. A fresh
+              one is offered here after a couple more weeks of practice.
+            </p>
+          ) : (
+            <>
+              <p className="mt-1.5 max-w-xl text-sm text-mut">
+                {`${stake} ${FILE_PROMISE}`}
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={download}>
+                  Download a backup
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={markDismissed}
+                >
+                  Not now
+                </Button>
+              </div>
+            </>
+          )}
+        </Card>
+      </section>
+    );
+  }
 
   return (
     <section aria-labelledby={headingId} className={className}>
@@ -203,41 +321,7 @@ export function AccountSavePrompt({
           Keep a copy of your progress
         </h2>
         <p className="mt-1.5 max-w-xl text-sm text-mut">{bodyCopy(progress)}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {/* Explicit type on both: <button> defaults to submit, and this
-              card is meant to be droppable anywhere, forms included. */}
-          <SignUpButton mode="modal">
-            <Button type="button" variant="outline" size="sm">
-              Back up my progress
-            </Button>
-          </SignUpButton>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={markDismissed}
-          >
-            Not now
-          </Button>
-        </div>
-        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          <span>Free</span>
-          <span aria-hidden className="text-line2">
-            ·
-          </span>
-          <span>Everything keeps working signed out</span>
-          <span aria-hidden className="text-line2">
-            ·
-          </span>
-          <SignInButton mode="modal">
-            <button
-              type="button"
-              className="uppercase tracking-[0.14em] text-mut underline decoration-line2 underline-offset-4 hover:text-ink hover:decoration-ink"
-            >
-              Sign in
-            </button>
-          </SignInButton>
-        </p>
+        <SavePromptAccountActions onDismiss={markDismissed} />
       </Card>
     </section>
   );

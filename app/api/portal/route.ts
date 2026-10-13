@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rate-limit";
 import { getStripe, isStripeId, siteOrigin } from "@/lib/stripe";
+import { SUPPORT_EMAIL } from "@/lib/organization";
 
 /**
  * Opens the Stripe billing portal, which is where cancelling, swapping
@@ -68,7 +69,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error:
-            "We couldn't find that subscription in Stripe. Unlock Pro again with your Pro key, or email hey@suedeai.ai.",
+            `We couldn't find that subscription in Stripe. Unlock Pro again with your Pro key, or email ${SUPPORT_EMAIL}.`,
         },
         { status: 404 },
       );

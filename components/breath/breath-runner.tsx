@@ -2,17 +2,16 @@
 
 import { CapSlide } from "@/components/practice/free-cap";
 import { useFreeCap } from "@/lib/free-cap";
+import { liveStreak } from "@/components/account/save-state";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
-import {
-  todayPracticeSec,
-  useProgress,
-  type Achievement,
-} from "@/lib/progress";
+import { useProgress, type Achievement } from "@/lib/progress";
 import { SessionShell } from "@/components/practice/session-shell";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
-import { useDailyGoal } from "@/components/practice/learn-home";
+import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { BoxBreathing } from "./box-breathing";
 import { BreathCueDrill } from "./breath-cue-drill";
 import { FarinelliDrill } from "./farinelli-drill";
@@ -290,6 +289,7 @@ export function BreathRunner({
 
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
   function closeStep(i: number, data: BreathDrillResult | null) {
     const next = [...results];
@@ -337,8 +337,8 @@ export function BreathRunner({
             : starsForCompletion(doneSteps, stepCount)
         }
         xp={results.reduce((a, r) => a + (r?.logged?.xpGained ?? 0), 0)}
-        streakDays={progress.streak.current}
-        goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+        streakDays={liveStreak(progress.streak)}
+        goal={{ doneSec: goalDoneSec, goalSec }}
         rows={routine.steps.map((s, i) => ({
           label: breathStepTitle(s),
           score: results[i]?.score ?? null,
@@ -394,11 +394,21 @@ export function BreathRunner({
  * the path and the workouts grid agree on what finishing something looks like.
  */
 export function BreathDrillSession({
+  capped = false,
   drill,
+  preset,
   pitch,
   onExit,
 }: {
+  /**
+   * The free allowance is spent. A drill under way still finishes and logs,
+   * but its results offer no "Play again": that would start a new session
+   * past the cap, which every other way into the room refuses.
+   */
+  capped?: boolean;
   drill: BreathDrillId;
+  /** A setting a link asked for, such as a program day's five-count square; it seeds the setup card. */
+  preset?: BreathStep;
   pitch: UsePitchResult;
   onExit: () => void;
 }) {
@@ -407,20 +417,23 @@ export function BreathDrillSession({
 
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
-  // The path's rows are drills, not presets, so the step handed to StepDrill is
-  // mostly a carrier for the drill id — the fields the drills would read as a
-  // preset are ignored, because autoStart is false and the setup card decides.
-  // Breathe and sing reads its note length from here, and its first rep count
-  // is only the picker's starting value.
+  // The path's rows are drills, not presets, so without a linked preset the
+  // step handed to StepDrill carries the setup card's usual starting values.
+  // Either way autoStart is false: the preset only seeds the card, and the
+  // singer can still change it before starting. Breathe and sing reads its
+  // note length from here.
   const step: BreathStep =
-    drill === "box"
-      ? { drill: "box", side: 4, minutes: 3 }
-      : drill === "farinelli"
-        ? { drill: "farinelli", cap: 8 }
-        : drill === "cue"
-          ? { drill: "cue", reps: CUE_REP_CHOICES[1], holdSec: CUE_HOLD_SEC }
-          : { drill: "sustain", attempts: 1 };
+    preset && preset.drill === drill
+      ? preset
+      : drill === "box"
+        ? { drill: "box", side: 4, minutes: 3 }
+        : drill === "farinelli"
+          ? { drill: "farinelli", cap: 8 }
+          : drill === "cue"
+            ? { drill: "cue", reps: CUE_REP_CHOICES[1], holdSec: CUE_HOLD_SEC }
+            : { drill: "sustain", attempts: 1 };
 
   if (result) {
     return (
@@ -432,8 +445,8 @@ export function BreathDrillSession({
         score={result.score}
         stars={starsForDrillResult(drill, result)}
         xp={result.logged?.xpGained ?? 0}
-        streakDays={progress.streak.current}
-        goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+        streakDays={liveStreak(progress.streak)}
+        goal={{ doneSec: goalDoneSec, goalSec }}
         rows={[
           {
             label: breathDrillTitle(drill),
@@ -443,11 +456,33 @@ export function BreathDrillSession({
         ]}
         achievements={result.logged?.newAchievements ?? []}
         onContinue={onExit}
-        onAgain={() => {
-          setResult(null);
-          setRunId((n) => n + 1);
-        }}
-      />
+        onAgain={
+          capped
+            ? undefined
+            : () => {
+                setResult(null);
+                setRunId((n) => n + 1);
+              }
+        }
+      >
+        {/* Why "Play again" is gone, and when it comes back. On the paper
+            panel, like the warmup summaries' version, because the results
+            screen is dark. */}
+        {capped && (
+          <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
+            That&apos;s today&apos;s {FREE_DAILY_MINUTES} free minutes of guided practice. A
+            fresh {FREE_DAILY_MINUTES} minutes opens at midnight; the pitch studio and the range
+            test stay open now.{" "}
+            <Link
+              href="/pro#buy"
+              className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+            >
+              Pro has no daily limit
+            </Link>
+            .
+          </p>
+        )}
+      </ResultsScreen>
     );
   }
 

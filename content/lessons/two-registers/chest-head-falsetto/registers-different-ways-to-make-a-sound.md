@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A register is a way of setting up the vocal folds, and each setup handles one band of pitches well and gives out above it. In chest voice, the setup you speak in, the folds are shorter and thicker and close firmly, giving a full, speech-like tone; in head voice they are stretched longer and thinner but still close, giving a lighter tone that can still ring; in falsetto they are stretched without closing completely, so air leaks through and the sound is airy and hard to sing loudly. No single setup covers a whole range, which is why you have more than one, and the skill is choosing between them on purpose rather than hauling one past its ceiling.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ What actually changes inside, and what each one is for. Say what will count as c
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Registers: Different Ways to Make a Sound.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Contrast a fuller speech-like sound with a lighter sound at the same pitch. Match pitch and volume as closely as practical so the production change is what you hear.
+Pick one comfortable note from Humming thirds, low enough that you could say a word on it. Sing it on “ah” twice in one take, with a quiet breath between: first fuller and speech-like, as if calling a word across a small room; then lighter, with less weight, like a gentle hoot. The setup is the only thing that changes, so match pitch and volume as closely as you can. Record your takes in the recorder and listen for a change in color and weight, not just in loudness.
 
 - Look: Choose one note from Humming thirds before changing the sound. Keep the chin and neck easy; the displayed notes are the targets to aim for.
 - Listen: Two repeatable tone qualities are audible at the same pitch without a sudden volume jump being the only difference.

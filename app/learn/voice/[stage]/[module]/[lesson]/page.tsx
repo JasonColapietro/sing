@@ -5,18 +5,21 @@ import { notFound } from "next/navigation";
 import { LESSON_REFERENCES, LESSONS } from "@/lib/lesson-data";
 import { Markdown } from "@/lib/markdown";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { firstFit } from "@/lib/meta-fit";
+import { MODULE_PRACTICE, lessonCompanion } from "@/lib/lesson-practice";
+import { MAX_TITLE, MAX_TITLE_BODY } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import {
+  UNIVERSAL_LESSON_TEXT,
   VOICE_LEARN_PATH,
   findLesson,
   lessonById,
   lessonHref,
   neighbours,
+  shownSteps,
 } from "@/lib/voice-lessons";
 import { CourseBreadcrumbs } from "@/components/learn/breadcrumbs";
-import { ModulePractice } from "@/components/learn/module-practice";
+import { CompanionButtons, ModulePractice } from "@/components/learn/module-practice";
 import { VoiceSafetyNote } from "@/components/learn/safety-note";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
 
@@ -42,15 +45,20 @@ const DESCRIPTION_KIND: Record<string, string> = {
 
 type Found = NonNullable<ReturnType<typeof findLesson>>;
 
+/** "An 8-minute", "An 11-minute", "A 5-minute": the article follows the spoken number. */
+function minuteArticle(minutes: number): "A" | "An" {
+  return /^(?:8\d*|11|18)$/.test(String(minutes)) ? "An" : "A";
+}
+
 /**
  * The objective, then what and where the lesson is. Shown under the h1 and used
  * as the search snippet, so the first thing a reader and a crawler meet is the
- * same answer. Many objectives are one short line ("Called at random
- * mid-phrase."), which on their own say nothing about the page.
+ * same answer. Many objectives are one short line ("Three ways to attack the
+ * same note."), which on their own say nothing about the page.
  */
 function lessonAnswer({ stage, module, lesson }: Found): string {
   const body = lesson.body;
-  return `${body.objective} A ${body.minutes}-minute ${DESCRIPTION_KIND[body.type] ?? "lesson"} from ${module.catalog.name}, Stage ${stage.catalog.stage} of the free Suede Sing voice course.`;
+  return `${body.objective} ${minuteArticle(body.minutes)} ${body.minutes}-minute ${DESCRIPTION_KIND[body.type] ?? "lesson"} from ${module.catalog.name}, Stage ${stage.catalog.stage} of the free Suede Sing voice course.`;
 }
 
 export async function generateMetadata({
@@ -63,15 +71,17 @@ export async function generateMetadata({
   if (!found) return {};
   const { body } = found.lesson;
   const moduleName = found.module.catalog.name;
+  // fitTitle() alone sheds the whole tail, which left 94 of 102 lessons in
+  // search as a bare phrase ("Drift Correction") with nothing saying it is a
+  // singing lesson. Keep "Voice Lesson" whenever the budget allows: with the
+  // site name if it fits, else without it, since saying what the page is
+  // matters more in a result than saying whose it is. Only a title too long
+  // for even that falls back to the bare name, which keeps the site name.
+  const withModule = `${body.title} · ${moduleName} Voice Lesson`;
+  const short = `${body.title} · Voice Lesson`;
+  const templated = [withModule, short].find((t) => t.length <= MAX_TITLE_BODY);
   return withCanonicalOpenGraph({
-    // fitTitle() alone sheds the whole tail, which left 94 of 102 lessons in
-    // search as a bare phrase ("Drift Correction") with nothing saying it is a
-    // singing lesson. Keep "Voice Lesson" whenever the budget allows.
-    title: firstFit([
-      `${body.title} · ${moduleName} Voice Lesson`,
-      `${body.title} · Voice Lesson`,
-      body.title,
-    ]),
+    title: templated ?? (short.length <= MAX_TITLE ? { absolute: short } : body.title),
     // The objective leads, as the catalog wrote it. Most objectives are one
     // short line (64 of 102 under 100 characters), so the second sentence says
     // what and where the page is, from the same fields the kicker shows;
@@ -103,6 +113,28 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
   });
   const references = LESSON_REFERENCES.filter((r) => lesson.references.includes(r.id));
   const url = `${SITE_URL}${lessonHref(lesson)}`;
+  const practice = MODULE_PRACTICE[module.catalog.id];
+  // The room this lesson's own steps send the singer to, which for an
+  // exercise practised in the recorder is not the module's range test.
+  const companion = practice ? lessonCompanion(practice, lesson.id) : undefined;
+  // The course-wide lines (UNIVERSAL_LESSON_TEXT) are stated once on
+  // /learn/voice; here they would bury what this lesson says of its own.
+  const own = (text: string) => !UNIVERSAL_LESSON_TEXT.has(text);
+  const steps = shownSteps(lesson);
+  // The port repeats a step's look/listen checks word for word under the next
+  // step; print each check once, under the first step that sets it.
+  const printedChecks = new Set<string>();
+  const stepChecks = steps.map((step) => {
+    const fresh = (text: string) => own(text) && !printedChecks.has(text);
+    const checks = {
+      look: fresh(step.look) ? step.look : "",
+      listen: fresh(step.listen) ? step.listen : "",
+    };
+    printedChecks.add(step.look).add(step.listen);
+    return checks;
+  });
+  const mistakes = lesson.mistakes.filter((mk) => own(mk.recovery));
+  const criteria = lesson.selfCheck.criteria.filter(own);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -111,7 +143,7 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
         "@type": "LearningResource",
         "@id": `${url}#lesson`,
         name: lesson.title,
-        description: lesson.objective,
+        description: lesson.explanation || lesson.objective,
         url,
         learningResourceType: TYPE_LABEL[lesson.type] ?? lesson.type,
         timeRequired: `PT${lesson.minutes}M`,
@@ -140,6 +172,13 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
       kicker={`Stage ${stage.catalog.stage} · ${module.catalog.name} · ${TYPE_LABEL[lesson.type] ?? lesson.type} · ${lesson.minutes} min`}
       title={lesson.title}
       subtitle={lessonAnswer(found)}
+      actions={
+        companion ? (
+          // The room first, for a reader who came to sing: the panel further
+          // down says what the module's room measures.
+          <CompanionButtons companion={companion} size="lg" />
+        ) : undefined
+      }
     >
       <script
         type="application/ld+json"
@@ -154,6 +193,17 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
         current={lesson.title}
       />
       <div className="space-y-6" data-lesson={lesson.id}>
+        {lesson.explanation && (
+          <Card>
+            <div className="max-w-2xl">
+              <SectionLabel>In short</SectionLabel>
+              <p data-lesson-answer className="mt-3 text-ink/85">
+                {lesson.explanation}
+              </p>
+            </div>
+          </Card>
+        )}
+
         {prerequisites.length > 0 && (
           <p className="text-sm text-mut">
             Builds on{" "}
@@ -176,30 +226,36 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
               How to practise it
             </h2>
             <ol className="mt-4 space-y-6">
-              {lesson.steps.map((step, i) => (
+              {steps.map((step, i) => (
                 <li key={step.title}>
                   <h3 className="text-lg">
                     <span className="mr-2 font-mono text-sm text-dim">{i + 1}.</span>
                     {step.title}
                   </h3>
                   <Markdown source={step.body} />
-                  <dl className="mt-3 space-y-1 text-sm">
-                    <div>
-                      <dt className="inline font-medium text-ink">Look: </dt>
-                      <dd className="inline text-mut">{step.look}</dd>
-                    </div>
-                    <div>
-                      <dt className="inline font-medium text-ink">Listen: </dt>
-                      <dd className="inline text-mut">{step.listen}</dd>
-                    </div>
-                  </dl>
+                  {(stepChecks[i].look || stepChecks[i].listen) && (
+                    <dl className="mt-3 space-y-1 text-sm">
+                      {stepChecks[i].look && (
+                        <div>
+                          <dt className="inline font-medium text-ink">Look: </dt>
+                          <dd className="inline text-mut">{stepChecks[i].look}</dd>
+                        </div>
+                      )}
+                      {stepChecks[i].listen && (
+                        <div>
+                          <dt className="inline font-medium text-ink">Listen: </dt>
+                          <dd className="inline text-mut">{stepChecks[i].listen}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  )}
                 </li>
               ))}
             </ol>
           </section>
         </Card>
 
-        <ModulePractice moduleId={module.catalog.id} />
+        <ModulePractice moduleId={module.catalog.id} lessonId={lesson.id} />
 
         <Card>
           <section aria-labelledby="blocks" className="max-w-2xl">
@@ -221,37 +277,49 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
           </section>
         </Card>
 
-        <Card>
-          <section aria-labelledby="recover" className="max-w-2xl">
-            <h2 id="recover" className="text-xl">
-              If it goes wrong
-            </h2>
-            <ul className="mt-3 space-y-3 text-sm">
-              {lesson.mistakes.map((mk) => (
-                <li key={mk.observation}>
-                  <p className="text-ink">{mk.observation}</p>
-                  <p className="text-mut">{mk.recovery}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </Card>
+        {mistakes.length > 0 && (
+          <Card>
+            <section aria-labelledby="recover" className="max-w-2xl">
+              <h2 id="recover" className="text-xl">
+                If it goes wrong
+              </h2>
+              <ul className="mt-3 space-y-3 text-sm">
+                {/*
+                  The port gave every lesson the same generic symptom; its
+                  recovery names its own ("If …", "Stop …"), so the shared
+                  observation is left out rather than printed over an
+                  answer to something else.
+                */}
+                {mistakes.map((mk) => (
+                  <li key={mk.recovery}>
+                    {own(mk.observation) && <p className="text-ink">{mk.observation}</p>}
+                    <p className="text-mut">{mk.recovery}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </Card>
+        )}
 
         <Card>
           <section aria-labelledby="self-check" className="max-w-2xl" data-self-check>
             <h2 id="self-check" className="text-xl">
               Self-check
             </h2>
-            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-mut">
-              {lesson.selfCheck.criteria.map((c) => (
-                <li key={c}>{c}</li>
-              ))}
-            </ul>
+            {criteria.length > 0 && (
+              <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-mut">
+                {criteria.map((c) => (
+                  <li key={c}>{c}</li>
+                ))}
+              </ul>
+            )}
             <dl className="mt-4 space-y-2 text-sm">
-              <div>
-                <dt className="font-medium text-ink">Ready when</dt>
-                <dd className="text-mut">{lesson.selfCheck.readyWhen}</dd>
-              </div>
+              {own(lesson.selfCheck.readyWhen) && (
+                <div>
+                  <dt className="font-medium text-ink">Ready when</dt>
+                  <dd className="text-mut">{lesson.selfCheck.readyWhen}</dd>
+                </div>
+              )}
               <div>
                 <dt className="font-medium text-ink">If you&apos;re not ready</dt>
                 <dd className="text-mut">{lesson.selfCheck.ifNotReady}</dd>

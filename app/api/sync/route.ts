@@ -4,6 +4,7 @@ import { verifyProKey } from "@/lib/pro-key";
 import { isCleanString } from "@/lib/progress-shape";
 import { rateLimit } from "@/lib/rate-limit";
 import { getRedis } from "@/lib/redis";
+import { CLOUD_STATE_MAX_CHARS } from "@/lib/progress-cloud-fit";
 import {
   getStripe,
   isOurLifetimePayment,
@@ -24,8 +25,13 @@ import {
  * interprets the blob beyond safety checks.
  */
 
-/** Progress payload ceiling — roughly 2× a maxed-out 500-session store. */
-const MAX_STATE_BYTES = 400_000;
+/**
+ * Progress payload ceiling, in characters of JSON. A full 500-session log
+ * with every warmup's per-note tallies can pass it, so the client
+ * (lib/progress-cloud-fit.ts) drops the oldest sessions' tallies from what it
+ * pushes until the record fits.
+ */
+const MAX_STATE_BYTES = CLOUD_STATE_MAX_CHARS;
 const ENT_TTL_SEC = 24 * 60 * 60;
 
 /**

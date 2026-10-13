@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Your passaggio is the zone of two to four notes where the voice has to hand over from a thicker fold setup to a thinner one while the resonance that was helping the sound drops away, so notes start to need effort, thin out or crack. It sits where your own folds and vocal tract put it: often near the published zone for your voice type, but it can land a semitone or more either side, and it shifts with the vowel and the volume. For contralto, mezzo and soprano the published zones mark where a belt or full mix changes gear; a quiet slide will often find an earlier, lighter shift out of chest voice first, somewhere around E4 to G4, at or below the published zone, and that is expected rather than a failed search. A range test reports only your two ends, so you find this zone by ear on a slow, quiet slide, starting from the note where the effort first rises.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Your scan gives the ends of your range, not this. You find the gear change by ea
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Where Your Voice Changes Gear.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated category.
+In the pitch studio, slide slowly on a quiet “ng” from a comfortable middle note up through the place where the sound starts to change, then back down. Do it twice: once at your usual volume, once at about half that. Volume is the only thing that changes, and the quieter pass usually lets you hear the change coming as a gradual thinning instead of a sudden flip. Note the first note where effort rises on the way up and where the sound settles on the way down: that is a zone, not a single magic pitch. Then compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: You can anticipate the change and cross the same general area in both directions without forcing the endpoints.

@@ -24,9 +24,6 @@ import { LiveWaveform, PeaksWaveform } from "./waveforms";
 import { TakeRow } from "./take-row";
 import { AbPitchOverlay, TakePitchPanel } from "./pitch-analysis";
 import { AccountSavePrompt } from "@/components/account/save-prompt";
-// Lives under components/progress because what it backs up is the progress
-// record, not the takes — the takes never leave this device either way.
-import { AccountBackupSync } from "@/components/progress/account-backup-sync";
 import { FreeOnly, ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
@@ -690,10 +687,6 @@ export default function RecorderPageClient() {
         ) : undefined
       }
     >
-      {/* Silent, and only for whoever is signed in. Mounted here as well as on
-          /progress so a singer who lives in the recorder still gets backed up. */}
-      <AccountBackupSync />
-
       <div className="grid gap-6 lg:grid-cols-5">
         {/* ------- left column: deck + playback + compare ------- */}
         <div className="space-y-6 lg:col-span-3">
@@ -744,10 +737,10 @@ export default function RecorderPageClient() {
                   </>
                 ) : (
                   <>
-                    <p className="max-w-sm text-sm text-mut">
-                      Record practice takes and listen back. Takes stay on this device — they
-                      never leave your browser.
-                    </p>
+                    {/* One short privacy line beside the prompt, not a repeat of
+                        the page subtitle: the three-line version put "Enable
+                        microphone" under a 375×667 phone's tab bar. */}
+                    <p className="text-xs text-dim">Takes stay on this device.</p>
                     <Button
                       variant="rec"
                       onClick={() => void enableMic()}

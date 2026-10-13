@@ -10,7 +10,15 @@ import { computeGrade, starGlyphs, starRatingLabel, type Tone } from "./grade";
 import { ResultCard } from "./result-card";
 import { TakeReview } from "./take-review";
 import type { TakeState } from "./take";
-import { JUDGMENTS, PASS_LABEL, formatTempoPct, type Judgment, type SessionSummaryData } from "./lib";
+import { liveStreak } from "@/components/account/save-state";
+import {
+  JUDGMENTS,
+  PASS_LABEL,
+  formatTempoPct,
+  isSessionOfSong,
+  type Judgment,
+  type SessionSummaryData,
+} from "./lib";
 import type { SessionMode, Song } from "./types";
 
 function scoreTone(score: number): "ok" | "violet" | "rec" {
@@ -41,10 +49,13 @@ const JUDGMENT_TONE: Record<Judgment, "ok" | "cool" | "violet" | "rec"> = {
 
 type ScoredSongLog = SessionLog & { score: number };
 
-/** Every logged "song" session for this title that carries a score, newest first. */
+/**
+ * Every logged "song" session for this title that carries a score, newest
+ * first, including sessions logged under a title the song had before a rename.
+ */
 function songScoreLogs(sessions: SessionLog[], title: string): ScoredSongLog[] {
   return sessions.filter(
-    (s): s is ScoredSongLog => s.type === "song" && s.detail === title && s.score !== undefined,
+    (s): s is ScoredSongLog => isSessionOfSong(s, title) && s.score !== undefined,
   );
 }
 
@@ -133,6 +144,9 @@ export function SessionSummary({
     topMultiplier,
   } = data;
   const progress = useProgress();
+  // Read just after the session logged, so it is today's streak — but read
+  // live anyway, so a summary never names a streak that has lapsed.
+  const streak = liveStreak(progress.streak);
 
   // No mic, nothing judged, nothing to grade — computeGrade already encodes
   // this (it returns null whenever score is undefined), so listen mode falls
@@ -314,9 +328,9 @@ export function SessionSummary({
       {!listenMode && (
         <div>
           <ProCrescendoNudge
-            line="Pro keeps every song's scoring history and per-note practice data"
+            line="Pro adds this song's notes to your per-note accuracy report"
             title="Keep building this score"
-            body="Every song is free to sing. Pro keeps the scoring history for each one and builds per-note history across your scored practices."
+            body="Every song is free to sing, and your personal best and score trend stay free. Pro adds the notes from each scored run to your per-note accuracy report and removes the daily limit."
             context="Song practice"
           />
         </div>
@@ -326,7 +340,15 @@ export function SessionSummary({
         <div className="flex flex-wrap items-center gap-3">
           <Pill tone="ok">Saved to your progress</Pill>
           <span className="tabular font-mono text-sm text-ok-ink">+{xpGained} XP</span>
+          {streak > 0 && (
+            <span className="tabular font-mono text-sm text-rec">
+              <span aria-hidden="true">🔥</span> {streak}-day streak
+            </span>
+          )}
         </div>
+        {streak > 0 && (
+          <p className="mt-2 text-sm text-mut">Sing tomorrow to make it {streak + 1}.</p>
+        )}
         {newAchievements.length > 0 && (
           <ul className="mt-4 space-y-2">
             {newAchievements.map((a) => (

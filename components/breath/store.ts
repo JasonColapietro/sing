@@ -128,10 +128,12 @@ export function recordBreathBest(patch: Partial<BreathBests>): BreathBests {
 export type Stars = 0 | 1 | 2 | 3;
 
 /**
- * Stars for a sustain, against the benchmarks the test already prints under its
- * own chart: 10s fair, 20s good, 30s strong. Three stars is "strong", not
- * "excellent" — 45 seconds is a lifetime-goal number, and a path row only a
- * professional can fill is a locked door with no key.
+ * Stars for a sustain, by length: 10s, 20s, 30s. Three stars is not 45
+ * seconds — a lifetime-goal number, and a path row only a professional can
+ * fill is a locked door with no key. The test itself no longer grades by
+ * length (it asks for a note ended while it is still easy), so these cuts
+ * are published as the contract's starsSec and should follow steadiness, or
+ * apply only to the "sss" hiss, at the next contract version.
  */
 export function starsForSustain(sec: number): Stars {
   if (sec >= SUSTAIN_STAR_SEC.three) return 3;

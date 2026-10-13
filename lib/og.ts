@@ -33,6 +33,29 @@ export const OG_IMAGE_ALT = `Suede Sing: online singing practice with live pitch
 export const OG_IMAGE_TAGLINE = `Free pitch meter & range test · Guided practice: ${FREE_DAILY_MINUTES} free min a day`;
 
 /**
+ * A short, stable fingerprint of a card's text (31-multiplier string hash,
+ * base 36). Deterministic across builds, so the URL only moves when the words
+ * do.
+ */
+export function ogCardVersion(text: string): string {
+  return [...text]
+    .reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7)
+    .toString(36);
+}
+
+/**
+ * Version of the sitewide card, derived from what it says.
+ *
+ * Share scrapers (Facebook, LinkedIn, X, Slack) cache a preview image by its
+ * URL. The homepage gets Next's hashed file-convention URL, but every route
+ * that names the card through DEFAULT_OG_IMAGE used a bare /opengraph-image,
+ * so when the card stopped calling the product simply "Free" (2026-10-10),
+ * those links could keep the old picture indefinitely. The route ignores the
+ * query string; the scrapers do not.
+ */
+export const OG_CARD_VERSION = ogCardVersion(`${OG_IMAGE_ALT}|${OG_IMAGE_TAGLINE}`);
+
+/**
  * The sitewide card, shaped for a route's own `openGraph.images`.
  *
  * Next resolves metadata one segment at a time and *replaces* `openGraph`
@@ -50,7 +73,7 @@ export const OG_IMAGE_TAGLINE = `Free pitch meter & range test · Guided practic
  * test beside this file fails the build if a new one forgets.
  */
 export const DEFAULT_OG_IMAGE = {
-  url: `${SITE_URL}/opengraph-image`,
+  url: `${SITE_URL}/opengraph-image?v=${OG_CARD_VERSION}`,
   width: OG_IMAGE_SIZE.width,
   height: OG_IMAGE_SIZE.height,
   alt: OG_IMAGE_ALT,

@@ -21,12 +21,19 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import GlossaryPage from "@/app/glossary/page";
+import { EXERCISES } from "@/components/warmups/exercises";
+import { ATLAS_CONTENTS } from "./atlas-data";
+import { AUTHOR_NAME } from "./author";
+import { BOOK_CONTENTS } from "./book-data";
 import {
   GLOSSARY_TERMS,
   publisherFor,
   SING_GLOSSARY_TERMS,
   termId,
 } from "./glossary";
+import { courseModuleForTerm } from "./lesson-glossary";
+import { GUIDED_PRACTICE_ROOMS } from "./llms-txt";
+import { FREE_DAILY_MINUTES } from "./practice-limits";
 
 const HTML = renderToStaticMarkup(<GlossaryPage />);
 
@@ -102,5 +109,105 @@ describe("the glossary page", () => {
       expect(published).toHaveLength(1);
       expect(published[0].description).toBe(own?.definition);
     }
+  });
+});
+
+/**
+ * Where a definition leads. Each entry links its room; an entry that names a
+ * free warmup also links that drill, and an entry a course module trains links
+ * the module's free lessons, which link back to the term from their side.
+ */
+describe("the glossary page's onward links", () => {
+  /** The rendered block for one term, from its anchor to the next entry. */
+  function entryHtml(term: string): string {
+    const start = HTML.indexOf(`id="${termId(term)}"`);
+    expect(start, term).toBeGreaterThan(-1);
+    // Every entry and section heading carries this class; skip the entry's own.
+    const own = HTML.indexOf('class="scroll-mt-20', start);
+    const next = HTML.indexOf('class="scroll-mt-20', own + 1);
+    return HTML.slice(start, next === -1 ? undefined : next);
+  }
+
+  it("links each named drill as a warmup deep link", () => {
+    const withDrill = SING_GLOSSARY_TERMS.filter((e) => e.drill);
+    expect(withDrill.map((e) => e.term)).toContain("Lip trill");
+    for (const entry of withDrill) {
+      const title = EXERCISES.find((x) => x.id === entry.drill)?.title;
+      const html = entryHtml(entry.term);
+      expect(html).toContain(`href="/warmups?exercise=${entry.drill}"`);
+      expect(html).toContain(`Try it: ${title}`);
+    }
+  });
+
+  /**
+   * A drill in another room links by that room's deep link, so "Breath
+   * support" opens the sustain test its sentence names rather than the top of
+   * the breath room, a few screens above it on a phone.
+   */
+  it("links another room's named drill by its deep link", () => {
+    const withTryIt = SING_GLOSSARY_TERMS.filter((e) => e.tryIt);
+    expect(withTryIt.map((e) => e.term)).toContain("Breath support");
+    for (const entry of withTryIt) {
+      const html = entryHtml(entry.term);
+      expect(html).toContain(`href="${entry.tryIt!.href.replace(/&/g, "&amp;")}"`);
+      expect(html).toContain(`Try it: ${entry.tryIt!.label}`);
+    }
+  });
+
+  it("links the free lessons a module trains each term in", () => {
+    let linked = 0;
+    for (const entry of SING_GLOSSARY_TERMS) {
+      const lessons = courseModuleForTerm(entry.term);
+      const html = entryHtml(entry.term);
+      if (!lessons) {
+        expect(html, entry.term).not.toContain("Free lessons:");
+        continue;
+      }
+      linked += 1;
+      expect(html).toContain(`href="${lessons.href}"`);
+    }
+    expect(linked).toBeGreaterThan(10);
+  });
+
+  it("shows the author its markup names", () => {
+    expect(HTML).toMatch(new RegExp(`rel="author"[^>]*>${AUTHOR_NAME}<`));
+  });
+
+  it("states the daily guided-practice limit where it links into capped rooms", () => {
+    expect(HTML).toContain(`${FREE_DAILY_MINUTES} minutes of guided practice a day`);
+    // The capped rooms, named the way every other disclosure names them.
+    const labels = GUIDED_PRACTICE_ROOMS.map((room) => room.label);
+    const rooms = `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+    expect(HTML.toLowerCase()).toContain(`${rooms} share`);
+  });
+
+  /**
+   * The Measured Voice samples chapters across the book, not only its first, so
+   * the long-version card links each free one instead of "its first chapter".
+   */
+  it("links every free chapter of both books", () => {
+    expect(HTML).not.toMatch(/first chapter is free/);
+    const free = BOOK_CONTENTS.filter((c) => c.free);
+    expect(free.length).toBeGreaterThan(1);
+    expect(HTML).toContain(`${free.length} of its chapters are free to read`);
+    for (const c of free) expect(HTML).toContain(`href="/book/${c.slug}"`);
+    for (const c of ATLAS_CONTENTS.filter((x) => x.free)) {
+      expect(HTML).toContain(`href="/atlas/${c.slug}"`);
+    }
+  });
+
+  /**
+   * Without #start a phone lands on the range page's intro with the start
+   * button under the tab bar; the intro link and every "/range" entry go there.
+   */
+  it("links the range test at its start button", () => {
+    const rangeHrefs = [...HTML.matchAll(/href="(\/range[^"]*)"/g)].map((m) => m[1]);
+    expect(rangeHrefs.length).toBeGreaterThan(SING_GLOSSARY_TERMS.filter((e) => e.href === "/range").length);
+    for (const href of rangeHrefs) expect(href).toBe("/range?mode=range#start");
+  });
+
+  /** The intro may not say nothing is prescribed above entries that link a drill. */
+  it("does not deny the drill links it renders", () => {
+    expect(HTML).not.toMatch(/No exercise is prescribed/);
   });
 });

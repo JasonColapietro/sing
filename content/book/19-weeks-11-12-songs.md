@@ -21,7 +21,7 @@ Pick something you already know by heart. Learning notes and words while also ap
 
 Pick something that mostly sits in your comfortable middle, with a few notes reaching into the zone you worked on in weeks 5 through 10. A song that lives entirely in easy territory tells you nothing. A song that sits above your transition for two minutes is not a test, it is an ordeal. Chapter 20 covers auditing a song properly; the rough check for now is where the chorus sits, because the chorus is where you spend the most time and where the tessitura bites.
 
-If the song is in the wrong key, move it. Songs keeps melodies auto-transposed into your comfortable range, which does the arithmetic for you. Changing key is standard practice, and chapter 21 makes the case at length. What matters this week is that a song fighting you by two semitones can hide whatever changed in the last ten.
+If the song is in the wrong key, move it. Once you have taken the range test, Songs opens each melody fitted to your measured range, and the transpose control shifts it a semitone at a time from there; without a saved range it opens in the written key and is scored in either octave. The fit works from your two extremes, so it is a starting guess rather than a judgement of where you are comfortable; trust the chorus over the arithmetic. Changing key is standard practice, and chapter 21 makes the case at length. What matters this week is that a song fighting you by two semitones can hide whatever changed in the last ten.
 
 Record it once, early in week 11, before you have worked on it. That is your working copy — separate from the week-one baseline take, which you leave alone.
 
@@ -43,7 +43,7 @@ Do the retest at the start of week 12, not the end, so you have a few days left 
 
 Take the range test under the same conditions as week one, as near as you can manage: same time of day, same room, same distance from the mic, similar warmup. Chapter 8 covers taking it honestly and chapter 12 covers the ways a session can lie to you. Both are worth a reread before you press record, because a surprising retest result often turns out to be a measurement difference rather than a voice difference.
 
-Then record the song. Same song, same key, same arrangement as your week-one take. Record it near the start of a session rather than the end, so fatigue is not part of the comparison.
+Then record the song. Same song, same key, same arrangement as your week-one take. If you sing along in Songs, check the transpose setting first: the retest you just took replaces your saved range, and the key a song opens in can move with it. Record it near the start of a session rather than the end, so fatigue is not part of the comparison.
 
 Now A/B the two takes in the recorder. Listen straight through once, without stopping and without judging. Then listen again with a list.
 
@@ -65,7 +65,7 @@ The second is hearing everything. A retest showing three extra semitones at the 
 
 The honest summary is usually undramatic and specific: the middle is steadier, the onsets are cleaner, the passage that fell apart in week one survives at low volume but not at full volume. That is a real result. Write it down somewhere you will find it in three months.
 
-Then find the sentence you wrote in chapter 14 about why you wanted to sing, and read it next to that summary. The numbers say what changed; the sentence says whether what changed is the thing you came for.
+Then find the sentence you wrote before week one (chapter 13) about why you wanted to sing, and read it next to that summary. The numbers say what changed; the sentence says whether what changed is the thing you came for.
 
 ## Choosing what comes next
 

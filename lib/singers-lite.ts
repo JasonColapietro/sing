@@ -705,8 +705,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "voiceType": "Baritone",
     "genres": [
       "Latin",
-      "Hip-Hop",
-      "Reggae"
+      "Hip-Hop"
     ],
     "activeFrom": 2017,
     "lowMidi": 41,
@@ -1424,8 +1423,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Singer-Songwriter"
     ],
     "activeFrom": 2015,
-    "lowMidi": 59,
-    "highMidi": 85,
+    "lowMidi": 47,
+    "highMidi": 73,
     "beltMidi": null,
     "whistle": false
   },
@@ -1740,7 +1739,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "activeFrom": 2011,
     "lowMidi": 34,
     "highMidi": 84,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false
   },
   {
@@ -2184,8 +2183,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Alternative"
     ],
     "activeFrom": 2023,
-    "lowMidi": 53,
-    "highMidi": 79,
+    "lowMidi": 41,
+    "highMidi": 67,
     "beltMidi": null,
     "whistle": false
   },
@@ -2227,7 +2226,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "activeFrom": 1964,
     "lowMidi": 45,
     "highMidi": 88,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false
   },
   {
@@ -3630,7 +3629,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "activeFrom": 1957,
     "lowMidi": 45,
     "highMidi": 85,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false
   },
   {
@@ -4604,8 +4603,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Pop"
     ],
     "activeFrom": 2020,
-    "lowMidi": 60,
-    "highMidi": 89,
+    "lowMidi": 48,
+    "highMidi": 77,
     "beltMidi": null,
     "whistle": false
   },
@@ -6497,7 +6496,7 @@ export const SINGERS_LITE: SingerLite[] = [
     ],
     "activeFrom": 2022,
     "lowMidi": 47,
-    "highMidi": 68,
+    "highMidi": 69,
     "beltMidi": 66,
     "whistle": false
   },
@@ -7512,8 +7511,8 @@ export const SINGERS_LITE: SingerLite[] = [
       "Rock"
     ],
     "activeFrom": 2022,
-    "lowMidi": 60,
-    "highMidi": 88,
+    "lowMidi": 48,
+    "highMidi": 76,
     "beltMidi": null,
     "whistle": false
   },
@@ -8118,7 +8117,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "activeFrom": 2014,
     "lowMidi": 39,
     "highMidi": 85,
-    "beltMidi": 83,
+    "beltMidi": null,
     "whistle": false
   },
   {
@@ -8889,8 +8888,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "voiceType": "Tenor",
     "genres": [
       "Pop",
-      "Electronic",
-      "Opera"
+      "Electronic"
     ],
     "activeFrom": 2000,
     "lowMidi": 38,
@@ -8968,7 +8966,7 @@ export const SINGERS_LITE: SingerLite[] = [
     "activeFrom": 1965,
     "lowMidi": 46,
     "highMidi": 88,
-    "beltMidi": 86,
+    "beltMidi": null,
     "whistle": false
   },
   {

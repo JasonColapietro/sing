@@ -15,7 +15,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.
+Open the practice material on this page and choose Tongue-trill descent or Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
@@ -36,7 +36,7 @@ Targeted release before targeted effort. Say what will count as complete in this
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Compare an easy baseline with a deliberately airier, brighter-nasal, or firmer version only as a listening demonstration. Return to the easy baseline after each contrast.
+Work in short repetitions with a normal breath and complete release between them. Rest the tongue tip against the back of your lower front teeth. With one hand resting lightly on your chin, sing your baseline phrase on “yah-yah-yah”, letting the tongue make each “y” while the jaw stays still under your hand. Then sing it on “mah”, letting the jaw drop loosely on each “ah” without pushing it open. Record the release version straight after the baseline in one take and compare.
 
 - Look: The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.
 - Listen: Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap.
@@ -68,7 +68,7 @@ I compared a relaxed baseline with a later example in the same recording and des
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.
 

@@ -1002,8 +1002,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Baritone",
     "genres": [
       "Latin",
-      "Hip-Hop",
-      "Reggae"
+      "Hip-Hop"
     ],
     "country": "Puerto Rico",
     "activeFrom": 2017,
@@ -2022,15 +2021,15 @@ export const SINGERS: Singer[] = [
     ],
     "country": "UK",
     "activeFrom": 2015,
-    "lowMidi": 59,
-    "highMidi": 85,
+    "lowMidi": 47,
+    "highMidi": 73,
     "beltMidi": null,
     "whistle": false,
     "signatureSong": "You Are the Reason",
     "lowSource": "Heaven",
     "highSource": "Roots",
     "blurb": "Cried, legato pop tenor — swelling sustains that flip into a glass-clear falsetto at the top.",
-    "technique": "Everything here is legato: Calum joins notes with portamento-smooth onsets, swells through the middle of long tones, and releases with a taper instead of a cut. The money register is a cried, head-leaning mix in the fifth octave, flipping into pure falsetto for peaks. Vibrato is wide and emotional. Students copying him often start phrases at full volume; he begins small, which makes the climb audible and keeps the top from sounding pushed."
+    "technique": "Everything here is legato: Calum joins notes with portamento-smooth onsets, swells through the middle of long tones, and releases with a taper instead of a cut. The money register is a cried, head-leaning mix in the fourth octave, flipping into pure falsetto for peaks. Vibrato is wide and emotional. Students copying him often start phrases at full volume; he begins small, which makes the climb audible and keeps the top from sounding pushed."
   },
   {
     "slug": "camila-cabello",
@@ -2332,7 +2331,7 @@ export const SINGERS: Singer[] = [
     "whistle": false,
     "signatureSong": "Good Luck, Babe!",
     "lowSource": null,
-    "highSource": "Good Luck, Babe!",
+    "highSource": null,
     "blurb": "Theatre-sized soprano belt with hard consonants, then a sudden thin head voice up top.",
     "technique": "Stage projection is the baseline. Consonants get hit hard, vowels stay bright and narrow, and the belt runs up to F5 with a steady ring rather than a shout. The characteristic move is a drop into thin, quiet head voice right after a big line, letting the contrast carry the feeling; belt the whole song and half the effect is gone. Long notes finish with a wide vibrato that only surfaces at the very end."
   },
@@ -2470,13 +2469,13 @@ export const SINGERS: Singer[] = [
     "activeFrom": 2011,
     "lowMidi": 34,
     "highMidi": 84,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "Redbone",
     "lowSource": "Algorhythm",
     "highSource": "Me and Your Mama",
     "blurb": "Shape-shifting funk tenor sliding from talky lows to screamed belts and quivering falsetto.",
-    "technique": "Elastic and theatrical, moving from a talky low register near Bb1 up through screamed full-voice climaxes and a keening falsetto. He treats registration as costume: airy croon, funk yelp, preacher rasp, sometimes all inside one verse. Falsetto carries whole songs with a fast flicker vibrato; belts around Bb5 are distorted on purpose. Students copying him chase the scream first; the control lives in his soft singing, pitch-true falsetto with a released jaw, and the distortion must sit over support or it shreds."
+    "technique": "Elastic and theatrical, moving from a talky low register near Bb1 up through screamed full-voice climaxes and a keening falsetto. He treats registration as costume: airy croon, funk yelp, preacher rasp, sometimes all inside one verse. Falsetto carries whole songs with a fast flicker vibrato; his high belts are distorted on purpose. Students copying him chase the scream first; the control lives in his soft singing, pitch-true falsetto with a released jaw, and the distortion must sit over support or it shreds."
   },
   {
     "slug": "chino-moreno",
@@ -3100,8 +3099,8 @@ export const SINGERS: Singer[] = [
     ],
     "country": "USA",
     "activeFrom": 2023,
-    "lowMidi": 53,
-    "highMidi": 79,
+    "lowMidi": 41,
+    "highMidi": 67,
     "beltMidi": null,
     "whistle": false,
     "signatureSong": "Daylight",
@@ -3161,13 +3160,13 @@ export const SINGERS: Singer[] = [
     "activeFrom": 1964,
     "lowMidi": 45,
     "highMidi": 88,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "My Girl",
     "lowSource": "I Get Excited",
     "highSource": "Rainy Night in Georgia",
     "blurb": "Gravel-and-plead soul tenor whose controlled fray climbs into screamed full-voice peaks.",
-    "technique": "Raw-grained tenor whose signature is controlled fray: a pleading rasp that intensifies as lines climb, stretched over a firm rhythmic core. He belts to Bb5 in full voice and rides screamed peaks above that, using hoarseness as expression rather than accident. Phrasing tugs against the pulse, with sobs and spoken asides breaking the line. Students copying him start with the rasp and lose the pitch; his grit sits on top of accurate, supported tone, and the cracks are placed, not accidental."
+    "technique": "Raw-grained tenor whose signature is controlled fray: a pleading rasp that intensifies as lines climb, stretched over a firm rhythmic core. He belts high and rides screamed peaks at the top of the range, using hoarseness as expression rather than accident. Phrasing tugs against the pulse, with sobs and spoken asides breaking the line. Students copying him start with the rasp and lose the pitch; his grit sits on top of accurate, supported tone, and the cracks are placed, not accidental."
   },
   {
     "slug": "dean-martin",
@@ -5152,13 +5151,13 @@ export const SINGERS: Singer[] = [
     "activeFrom": 1957,
     "lowMidi": 45,
     "highMidi": 85,
-    "beltMidi": 82,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "Higher and Higher",
     "lowSource": "What Kind of Fool Am I?",
     "highSource": "Baby Workout",
     "blurb": "Ringing, vibrato-rich soul tenor with operatic swoops and full-voice altitude.",
-    "technique": "Operatic power in a rhythm-and-blues frame: a ringing tenor with fast, wide vibrato, immaculate legato, and full-voice attacks to Bb5 that never thin out. He swoops into notes from below, ornaments with rapid turns, and shifts from croon to shout inside a single bar. The larynx stays remarkably free at the extremes. Students copying him try to muscle the top notes; his altitude comes from released, forward resonance and a vibrato that keeps the tone spinning instead of locking."
+    "technique": "Operatic power in a rhythm-and-blues frame: a ringing tenor with fast, wide vibrato, immaculate legato, and high full-voice attacks that never thin out. He swoops into notes from below, ornaments with rapid turns, and shifts from croon to shout inside a single bar. The larynx stays remarkably free at the extremes. Students copying him try to muscle the top notes; his altitude comes from released, forward resonance and a vibrato that keeps the tone spinning instead of locking."
   },
   {
     "slug": "jacky-cheung",
@@ -6298,7 +6297,7 @@ export const SINGERS: Singer[] = [
     "whistle": false,
     "signatureSong": "Ah! mes amis (La Fille du régiment)",
     "lowSource": null,
-    "highSource": "Ah! mes amis — the nine high Cs",
+    "highSource": null,
     "blurb": "Bel canto's high-C machine: a light, agile leggero tenor that fires nine full-voice C5s in one aria, every night, no falsetto.",
     "technique": "Leggero lightness makes the altitude possible: the instrument is deliberately lean, brilliant and forward, never carrying more weight up the scale than the top can support, which is how nine full-voice high Cs in a single aria stay repeatable across a career. Coloratura runs are articulated from the diaphragm, each note struck, not smeared. The lesson for any voice is proportion: match the weight you carry upward to what your lightest top note can hold. Heavier is not better; sustainable is better."
   },
@@ -6534,15 +6533,15 @@ export const SINGERS: Singer[] = [
     ],
     "country": "USA",
     "activeFrom": 2020,
-    "lowMidi": 60,
-    "highMidi": 89,
+    "lowMidi": 48,
+    "highMidi": 77,
     "beltMidi": null,
     "whistle": false,
     "signatureSong": "golden hour",
     "lowSource": "this is what losing someone feels like",
     "highSource": "this is what losing someone feels like",
     "blurb": "Featherweight tenor living above the staff — sighing onsets gliding into stacked head-voice hooks.",
-    "technique": "Head voice is the main event: JVKE writes hooks that live above the staff, gliding from a light chest mix into ringing head tones and stacking falsetto harmonies over the top. His onset is soft, almost sighed, and he bends into peak notes with portamento instead of attacking them. Below the fifth octave he keeps things plain and rhythmic. Copying the top without slow siren practice ends in cracking; the transitions are the actual skill."
+    "technique": "Head voice is the main event: JVKE writes hooks that live above the staff, gliding from a light chest mix into ringing head tones and stacking falsetto harmonies over the top. His onset is soft, almost sighed, and he bends into peak notes with portamento instead of attacking them. Below the fourth octave he keeps things plain and rhythmic. Copying the top without slow siren practice ends in cracking; the transitions are the actual skill."
   },
   {
     "slug": "kacey-musgraves",
@@ -9225,12 +9224,12 @@ export const SINGERS: Singer[] = [
     "country": "USA",
     "activeFrom": 2022,
     "lowMidi": 47,
-    "highMidi": 68,
+    "highMidi": 69,
     "beltMidi": 66,
     "whistle": false,
     "signatureSong": "Stick Season",
     "lowSource": null,
-    "highSource": null,
+    "highSource": "Stick Season",
     "blurb": "New England folk urgency: a bright, keening tenor that gallops through wordy verses and breaks upward like a shout across a field.",
     "technique": "Urgency drives the phrasing: verses tumble out in dense, galloping strings of syllables, almost patter, then the hook leaps upward into a keening, open-throated call with a folk singer's forward bite and a hint of yodel at the flip. The tone is bright, reedy and unglamorous on purpose. Practice the verse diction at full speed with a metronome until no syllable clips, then let the chorus leap carry a touch of break. Muddying the words loses the breathless, confiding effect the style depends on."
   },
@@ -10530,9 +10529,9 @@ export const SINGERS: Singer[] = [
     "whistle": false,
     "signatureSong": "Oh, Pretty Woman",
     "lowSource": null,
-    "highSource": "Running Scared",
+    "highSource": null,
     "blurb": "Operatic tenor that swells from a soft low murmur to full-voice high notes with no audible break.",
-    "technique": "Rather than belting, he crescendos. A phrase can start nearly murmured down low and grow through the transition with no audible seam, so the top near E5 arrives as ringing head voice instead of a shout — the long build in Running Scared is the clearest example. Vibrato stays narrow and quick, legato unbroken. The tone tilts lighter as it rises instead of thickening, which is why nothing jams up at the passaggio and the climb reads as one line."
+    "technique": "Rather than belting, he crescendos. A phrase can start nearly murmured down low and grow through the transition with no audible seam, so the top arrives ringing rather than shouted — the long build in Running Scared is the clearest example of that crescendo. Vibrato stays narrow and quick, legato unbroken. The tone tilts lighter as it rises instead of thickening, which is why nothing jams up at the passaggio and the climb reads as one line."
   },
   {
     "slug": "rufus-wainwright",
@@ -10666,15 +10665,15 @@ export const SINGERS: Singer[] = [
     ],
     "country": "UK",
     "activeFrom": 2022,
-    "lowMidi": 60,
-    "highMidi": 88,
+    "lowMidi": 48,
+    "highMidi": 76,
     "beltMidi": null,
     "whistle": false,
     "signatureSong": "Space Man",
     "lowSource": "Somebody",
     "highSource": "Set You Free",
     "blurb": "Sunny rock-pop voice with ringing high belts and a feathery falsetto that flips on a dime.",
-    "technique": "Ryder rides a high-set, sunny placement, mixing so far up that full-sounding notes and reinforced falsetto blur into one column. His head voice up to E6 stays connected because he keeps the vowel narrow and the soft palate high rather than blowing air. Onsets are clean and springy, vibrato quick and even, and around C4 he keeps the text conversational. The common mistake when copying him is belting the top instead of spinning it, which trades his release for shout."
+    "technique": "Ryder rides a high-set, sunny placement, mixing so far up that full-sounding notes and reinforced falsetto blur into one column. His head voice up to E5 stays connected because he keeps the vowel narrow and the soft palate high rather than blowing air. Onsets are clean and springy, vibrato quick and even, and around C3 he keeps the text conversational. The common mistake when copying him is belting the top instead of spinning it, which trades his release for shout."
   },
   {
     "slug": "sam-smith",
@@ -11524,13 +11523,13 @@ export const SINGERS: Singer[] = [
     "activeFrom": 2014,
     "lowMidi": 39,
     "highMidi": 85,
-    "beltMidi": 83,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "Turtles All the Way Down",
     "lowSource": null,
     "highSource": "Call to Arms (live)",
     "blurb": "Slurred outlaw baritone that builds from croon to overdriven full-voice wail without losing pitch.",
-    "technique": "Simpson starts from a slurred, marble-mouthed outlaw baritone, then detonates: he drags belts upward with increasing rasp until full voice rings around B5. The low register is loose and conversational; the top is compressed, distorted on purpose, and held with startling breath support. Vowels stay dark even at extreme volume. Students copying the scream first get hurt; the graduated build from croon to overdrive is the actual technique."
+    "technique": "Simpson starts from a slurred, marble-mouthed outlaw baritone, then detonates: he drags belts upward with increasing rasp toward the top of the range. The low register is loose and conversational; the top is compressed, distorted on purpose, and held with startling breath support. Vowels stay dark even at extreme volume. Students copying the scream first get hurt; the graduated build from croon to overdrive is the actual technique."
   },
   {
     "slug": "sufjan-stevens",
@@ -12624,8 +12623,7 @@ export const SINGERS: Singer[] = [
     "voiceType": "Tenor",
     "genres": [
       "Pop",
-      "Electronic",
-      "Opera"
+      "Electronic"
     ],
     "country": "Russia",
     "activeFrom": 2000,
@@ -12734,7 +12732,7 @@ export const SINGERS: Singer[] = [
     "activeFrom": 1965,
     "lowMidi": 46,
     "highMidi": 88,
-    "beltMidi": 86,
+    "beltMidi": null,
     "whistle": false,
     "signatureSong": "In the Midnight Hour",
     "lowSource": "I'm in Love",

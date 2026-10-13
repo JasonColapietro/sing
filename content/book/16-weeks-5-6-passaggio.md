@@ -45,7 +45,7 @@ Warmups can do a lot of this work. Pick a pack with slides and sustained pattern
 
 Chapter 5 explained why the tract does what it does, and its modification ladder — which vowel leans toward which as you climb — is the reference to keep open beside you. Here is the practical version.
 
-Going up through the transition, a vowel held in exactly the same shape gets harder to keep together. The fix is not to sing a different word. It is to let the vowel drift a small amount toward a more open, more neutral shape as the pitch rises. The listener still hears the word. You feel the space change.
+Going up through the transition, a vowel held in exactly the same shape gets harder to keep together. The fix is not to sing a different word. It is to let the vowel drift a small amount toward the neutral middle as the pitch rises — closed vowels like "ee" and "oo" opening slightly, open ones like "ah" rounding slightly, along chapter 5's ladder. The listener still hears the word. You feel the space change.
 
 Try it directly. Sustain a note two semitones below your transition on "ee" for four seconds. Then the same note, same breath, letting the "ee" widen slightly. Repeat a semitone higher, then again, walking up through the zone. Somewhere in there the unmodified version may start to feel pinched while the modified one does not. If that happens, the note it happens on is worth remembering.
 

@@ -8,10 +8,17 @@
  * a question must carry a page name or the page would be named after a
  * question.
  */
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import * as guides from "./guides";
 import { TOOL_GUIDES } from "./guides";
-import { guideJsonLd, type GuideContent } from "@/components/guide";
+import { GUIDED_PRACTICE_ROOMS } from "./llms-txt";
+import { FREE_DAILY_MINUTES } from "./practice-limits";
+import { COURSE } from "./voice-lessons";
+import { ToolGuide, guideJsonLd, type GuideContent } from "@/components/guide";
+import { DIFFICULTIES, GAME_NAMES } from "@/components/ear/lib";
+import { PRO_PACKS } from "@/components/warmups/exercises";
 
 const exported = Object.entries(guides).filter(
   (entry): entry is [string, GuideContent] => entry[0].endsWith("_GUIDE"),
@@ -101,5 +108,313 @@ describe("analyze guide", () => {
     expect(body).toContain(`${(440 * 3600).toLocaleString("en-US")} cycles`);
     expect(body).toContain(`${(110 * 3600).toLocaleString("en-US")}`);
     expect(body).toMatch(/four times/);
+  });
+});
+
+/**
+ * The way back to the tool. A reader who has finished the steps gets a button
+ * to the room the guide is about, anchored to the #content wrapper the root
+ * layout renders, because a same-URL link would not reliably scroll anywhere.
+ * A room that shares the free plan's daily guided-practice allowance says so
+ * beside the button.
+ */
+describe("start button", () => {
+  const guided = new Set<string>(GUIDED_PRACTICE_ROOMS.map((room) => room.path));
+
+  it.each(TOOL_GUIDES.map((g) => [g.path, g] as const))("%s starts its own tool", (path, guide) => {
+    const target = new URL(guide.start.href, "https://sing.suedeai.ai");
+    expect(target.pathname).toBe(path);
+    expect(target.hash).toBe("#content");
+    expect(guide.start.label.length).toBeGreaterThan(0);
+  });
+
+  it.each(TOOL_GUIDES.map((g) => [g.path, g] as const))(
+    "%s states the daily limit only where there is one",
+    (path, guide) => {
+      if (guided.has(path)) {
+        expect(guide.start.note).toContain(`${FREE_DAILY_MINUTES} free minutes`);
+        expect(guide.start.note).toMatch(/Pro removes the limit/);
+        // The capped rooms, named the way llms.txt and the glossary name them.
+        const labels = GUIDED_PRACTICE_ROOMS.map((room) => room.label);
+        const rooms = `${labels.slice(0, -1).join(", ")} and ${labels[labels.length - 1]}`;
+        expect(guide.start.note!.toLowerCase()).toContain(rooms);
+      } else {
+        expect(guide.start.note ?? "").not.toMatch(/minutes/);
+      }
+    },
+  );
+
+  it("renders the button with the guide", () => {
+    const html = renderToStaticMarkup(createElement(ToolGuide, { guide: guides.RANGE_GUIDE }));
+    expect(html).toContain(`href="${guides.RANGE_GUIDE.start.href}"`);
+    expect(html).toContain(guides.RANGE_GUIDE.start.label);
+  });
+});
+
+/**
+ * A related link into the range test lands on the start button (#start, the
+ * anchor voice-test.tsx carries) rather than the intro above it, which on a
+ * phone leaves the button under the tab bar.
+ */
+describe("range-test links", () => {
+  const rangeLinks = TOOL_GUIDES.flatMap((g) =>
+    g.related.filter((link) => link.href.startsWith("/range")).map((link) => [g.path, link.href] as const),
+  );
+
+  it("exist", () => {
+    expect(rangeLinks.length).toBeGreaterThan(0);
+  });
+
+  it.each(rangeLinks)("%s links %s at #start", (_, href) => {
+    expect(new URL(href, "https://sing.suedeai.ai").hash).toBe("#start");
+  });
+});
+
+/**
+ * What the guides say Pro and the privacy model do, as they behave: studio
+ * sessions log no per-note tallies (only scored warmups and songs do), and Pro
+ * sync uploads progress records, so only audio is never uploaded.
+ */
+describe("product claims", () => {
+  const all = JSON.stringify(TOOL_GUIDES);
+
+  it("does not say Pro tracks studio notes", () => {
+    expect(all).not.toMatch(/Pro keeps per-note accuracy across sessions/);
+    expect(guides.STUDIO_GUIDE.advanced.points.join(" ")).toMatch(/scored warmups and songs/);
+  });
+
+  it("scopes the upload claim to audio", () => {
+    expect(all).not.toMatch(/nothing is uploaded|nothing uploads/i);
+    // Every room logs a session record, and Pro sync uploads it, so "nothing"
+    // sent, stored or recorded is false for a Pro singer; audio is the claim.
+    expect(all).not.toMatch(/nothing is sent|nothing you sing|nothing is recorded/i);
+  });
+
+  /**
+   * Each song's personal best and score trend are free (the song summary);
+   * Pro's per-note chart pools notes by pitch across sessions, so it shows no
+   * phrase's history.
+   */
+  it("sells songs' Pro extra as the per-note chart, not a history free singers have", () => {
+    const songs = guides.SONGS_GUIDE.advanced.points.join(" ");
+    expect(songs).not.toMatch(/phrase's history/);
+    expect(songs).toMatch(/personal best and a score trend on the free plan/);
+    expect(songs).toMatch(/per-note accuracy chart/);
+  });
+
+  it("does not urge a range retest within a few sessions", () => {
+    expect(all).not.toMatch(/Retest after several practice sessions/);
+    expect(guides.RANGE_GUIDE.beginner.points.join(" ")).toMatch(/few weeks/);
+  });
+});
+
+/**
+ * Every guide hands a reader on to the free course, and every course link is a
+ * module page that exists with the three lessons its note promises.
+ */
+describe("course links", () => {
+  const modules = new Map(
+    COURSE.flatMap((stage) => stage.modules).flatMap((m) => (m.href ? [[m.href, m] as const] : [])),
+  );
+
+  it.each(TOOL_GUIDES.map((g) => [g.path, g] as const))("%s links one free module", (_, guide) => {
+    const course = guide.related.filter((link) => link.href.startsWith("/learn/voice/"));
+    expect(course).toHaveLength(1);
+    const mod = modules.get(course[0].href);
+    expect(mod, course[0].href).toBeDefined();
+    const words = (text: string) => text.toLowerCase().replace(/[^a-z]+/g, " ").trim();
+    expect(words(course[0].label)).toContain(words(mod!.catalog.name));
+    const published = mod!.lessons.filter((lesson) => lesson.href).length;
+    if (/three short free lessons/.test(course[0].note)) expect(published).toBe(3);
+  });
+});
+
+/**
+ * HowTo markup states only what the visible copy states: a duration where the
+ * intro names one, and a microphone only where the procedure needs one.
+ */
+describe("HowTo markup", () => {
+  const howTo = (guide: GuideContent) => {
+    const page = guideJsonLd(guide)["@graph"].find((n) => n["@type"] === "WebPage") as {
+      mainEntity: Array<Record<string, unknown>>;
+    };
+    return page.mainEntity.find((n) => n["@type"] === "HowTo")!;
+  };
+
+  it("matches the durations the intros give", () => {
+    expect(guides.RANGE_GUIDE.howTo?.intro).toMatch(/about two minutes/);
+    expect(howTo(guides.RANGE_GUIDE).totalTime).toBe("PT2M");
+    expect(guides.WARMUPS_GUIDE.howTo?.intro).toMatch(/about ten minutes/);
+    expect(howTo(guides.WARMUPS_GUIDE).totalTime).toBe("PT10M");
+    expect(howTo(guides.STUDIO_GUIDE)).not.toHaveProperty("totalTime");
+  });
+
+  it("names a microphone only where the procedure needs one", () => {
+    expect(howTo(guides.TOOLS_GUIDE)).not.toHaveProperty("supply");
+    expect(howTo(guides.RANGE_GUIDE).supply).toEqual([
+      { "@type": "HowToSupply", name: "A microphone" },
+    ]);
+  });
+});
+
+/**
+ * Voice-science corrections, pinned so the old claims cannot return. Each
+ * pattern is a sentence these guides used to contain.
+ */
+describe("voice-science claims", () => {
+  const all = JSON.stringify(TOOL_GUIDES);
+
+  it("does not read a full harmonic stack as good support", () => {
+    expect(all).not.toMatch(/breathy or pressed tone shows fewer/);
+    expect(all).not.toMatch(/well-supported tone shows many harmonics/);
+    const step = guides.ANALYZE_GUIDE.howTo!.steps.find((s) => s.title === "Count how far the stack goes");
+    expect(step?.body).toMatch(/pressed/);
+    expect(step?.body).toMatch(/not proof of good support/);
+  });
+
+  it("does not use a siren as a test for amusia", () => {
+    expect(all).not.toMatch(/you are not tone deaf in the clinical sense/);
+  });
+
+  /**
+   * The finer check the answer offers is a real level of a real game, named as
+   * the ear-training room names it, so a renamed game or level fails here
+   * rather than leaving the answer pointing at nothing.
+   */
+  it("points a worried singer at an ear-game level that exists", () => {
+    const a = guides.EAR_GUIDE.faq.find((f) => /tone deaf/i.test(f.q))!.a;
+    const hard = DIFFICULTIES.find((d) => d.id === "hard")!.label;
+    expect(a).toContain(`${GAME_NAMES["higher-lower"]} on ${hard}`);
+    expect(a).toMatch(/semitone/);
+    expect(a).not.toMatch(/will improve/);
+  });
+
+  /** The range test saves its own result; the steps may not ask for a save. */
+  it("does not ask for a save the range test makes itself", () => {
+    const steps = guides.RANGE_GUIDE.howTo!.steps;
+    expect(steps.map((s) => s.title).join(" ")).not.toMatch(/save it/i);
+    expect(steps[steps.length - 1].body).toMatch(/fitted to it/);
+  });
+
+  it("sends pain, hoarseness and lost range to a doctor, not a teacher", () => {
+    for (const guide of TOOL_GUIDES) {
+      if (!guide.safety) continue;
+      expect(guide.safety.body).toMatch(/doctor who can examine the vocal folds/);
+      expect(guide.safety.body).not.toMatch(/voice teacher or a clinician|voice professional or clinician/);
+    }
+  });
+
+  it("says cycle dose leaves out loudness", () => {
+    expect(guides.ANALYZE_GUIDE.body.join(" ")).toMatch(/ignores loudness/);
+    expect(all).not.toMatch(/how much work the vocal folds have done/);
+  });
+
+  /**
+   * The warmup ladder moves a semitone every rep whatever the score, and walks
+   * back down; nothing waits for a clean rep. The room's own explainer says so,
+   * and the guide under it, its HowTo markup included, may not say otherwise.
+   */
+  it("does not make the warmup key wait for a cleared pattern", () => {
+    expect(all).not.toMatch(/clear a pattern|cleared pattern/);
+    const copy = JSON.stringify(guides.WARMUPS_GUIDE);
+    expect(copy).toMatch(/semitone every rep, whatever the score/);
+    expect(copy).toMatch(/come back down/);
+  });
+
+  /** The packs Pro sells are the three technique packs, named as the room names them. */
+  it("sells only the Pro warmup packs the room has", () => {
+    const point = guides.WARMUPS_GUIDE.advanced.points.find((p) => /^Pro /.test(p))!;
+    expect(point).not.toMatch(/\bgenre\b|voice-type/i);
+    const count = ["one", "two", "three", "four", "five"][PRO_PACKS.length - 1];
+    expect(point).toContain(`${count} technique packs`);
+    for (const pack of PRO_PACKS) expect(point.toLowerCase()).toContain(pack.name.toLowerCase());
+  });
+
+  /** Ear games keep a score per game and a best per level; nothing per interval or in cents. */
+  it("promises no ear-training metric the games do not keep", () => {
+    const copy = JSON.stringify(guides.EAR_GUIDE);
+    expect(copy).not.toMatch(/per-interval|pitch-matching deviation/);
+  });
+
+  /**
+   * The advanced section says drilling the whole set equally leaves the weak
+   * intervals where they are, so its advice for the missed ones cannot be to
+   * replay a level that shuffles the whole set again. The piano in Tools
+   * plays any pair on demand, free and without a clock.
+   */
+  it("drills missed intervals on their own, as the ear guide says to", () => {
+    const point = guides.EAR_GUIDE.advanced.points.find((p) => /keep missing/.test(p))!;
+    expect(point).not.toMatch(/replay the level/);
+    expect(point).toMatch(/piano in Tools/);
+    expect(guides.EAR_GUIDE.related.map((r) => r.href)).toContain("/tools");
+  });
+
+  /**
+   * A score that falls as the ladder climbs can be a limit as easily as a
+   * passaggio; only a dip that repeats at the same place reads as a break,
+   * which is how the glossary's Passaggio entry puts it.
+   */
+  it("calls a repeating dip a passaggio, not any drop", () => {
+    const copy = JSON.stringify(guides.WARMUPS_GUIDE);
+    expect(copy).not.toMatch(/starts dropping/);
+    expect(copy).toMatch(/same place every session is usually a passaggio/);
+  });
+
+  /**
+   * Vocal load counts any voiced frame, speech included, and only while
+   * /analyze is the visible tab.
+   */
+  it("says what vocal load counts and where", () => {
+    const copy = JSON.stringify(guides.ANALYZE_GUIDE);
+    expect(copy).not.toMatch(/talking between exercises do not/);
+    expect(copy).toMatch(/talking near the mic counts/);
+    expect(copy).toMatch(/only counts while it is visible/);
+  });
+
+  it("describes song keys the way the player sets them", () => {
+    const copy = JSON.stringify(guides.SONGS_GUIDE);
+    expect(copy).not.toMatch(/transposed automatically|into a key that suits your (?:measured range|voice)/);
+    expect(copy).toMatch(/fitted to your measured range/);
+    expect(copy).toMatch(/written key/);
+    expect(copy).toMatch(/scored in either octave/);
+  });
+
+  /**
+   * Inhale noise is turbulence at a narrow throat, wherever the breath fills
+   * (book ch. 4), and a shoulder-lifting breath is a separate fault.
+   */
+  it("does not call a noisy inhale a high breath", () => {
+    const points = guides.BREATH_GUIDE.beginner.points.join(" ");
+    expect(points).not.toMatch(/noisy gasp is a high breath/);
+    expect(points).toMatch(/narrow throat/);
+  });
+
+  /**
+   * The breath room reads only loudness and time; pitch steadiness is seen in
+   * the studio's trace, so the guide says which room shows which half.
+   */
+  it("sends pitch steadiness to the studio and keeps the breath room to loudness", () => {
+    expect(guides.BREATH_GUIDE.body.join(" ")).toMatch(/pitch studio's trace shows whether the pitch held/);
+    const studio = guides.BREATH_GUIDE.related.find((r) => r.href === "/studio")!;
+    expect(studio.note).not.toMatch(/loudness/);
+    expect(studio.note).toMatch(/pitch/);
+  });
+
+  /** The keyboard on /tools stops at C3, above the bass and baritone bands' floors. */
+  it("does not promise the C3 keyboard finds a low voice's floor", () => {
+    const a = guides.TOOLS_GUIDE.faq.find((f) => /piano to find my range/.test(f.q))!.a;
+    expect(a).not.toMatch(/until you run out at either end/);
+    expect(a).toMatch(/C3 to C6/);
+  });
+});
+
+/**
+ * The popular-song hub owns "can I sing this song"; the range and songs
+ * guides are where that question comes up, so both link it in the body.
+ */
+describe("popular-song links", () => {
+  it("range and songs guides link the popular-song hub", () => {
+    expect(guides.RANGE_GUIDE.related.map((r) => r.href)).toContain("/can-you-sing");
+    expect(guides.SONGS_GUIDE.related.map((r) => r.href)).toContain("/can-you-sing");
   });
 });

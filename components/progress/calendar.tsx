@@ -28,13 +28,23 @@ const ROWS = 7;
 const LEFT = 30; // day-of-week labels
 const TOP = 14; // month labels
 
+/** The Monday the heatmap's first column starts on. */
+function calendarStart(today: Date): Date {
+  return addDays(mondayOf(today), -7 * (COLS - 1));
+}
+
+/** The first day the heatmap shows, as a YYYY-MM-DD day key. */
+export function calendarStartDay(today: Date = new Date()): string {
+  return localDayStr(calendarStart(today));
+}
+
 /** GitHub-style practice heatmap: last 12 weeks, Monday-first rows. */
 export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
   const { cells, monthLabels, totalMin, activeDays } = useMemo(() => {
     const byDay = secondsByDay(sessions);
     const today = new Date();
     const todayKey = localDayStr(today);
-    const start = addDays(mondayOf(today), -7 * (COLS - 1));
+    const start = calendarStart(today);
 
     const cells: Array<{
       key: string;

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
-import { midiToLabel } from "@/lib/audio/notes";
+import { midiToLabel, voiceFitLabel } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
 import {
   logSession,
@@ -26,6 +26,44 @@ import { PianoStrip } from "./piano-strip";
 import { ResultView, type SaveSummary } from "./result-view";
 
 type Stage = "intro" | "warm" | "low" | "high" | "result";
+
+/**
+ * Whether finishing a range test may signal the one-time Pro moment, given
+ * the range history as it stood before this test was saved. A singer's first
+ * range result is the screen the whole funnel leads to, so it is never
+ * covered by a full-screen sales dialog; a retake can carry it. (A history
+ * migrated from a pre-history saved range counts as a prior test.)
+ */
+export function offersProMomentAfterRangeTest(
+  priorRangeHistory: readonly unknown[],
+): boolean {
+  return priorRangeHistory.length > 0;
+}
+
+/**
+ * The narrowest span saved as a range: the same five semitones the pitch
+ * meter waits for before suggesting the test. A bailed-out run that never
+ * left its starting note (A3–A3, 0 semitones) is not a measurement, and
+ * saving it would replace a real range and collapse every warmup ladder and
+ * song key fitted to it.
+ */
+export const MIN_SAVED_SPAN = 5;
+
+/**
+ * The range a test has counted so far: the notes found in each direction,
+ * never narrower than the starting note, and whether it is wide enough to
+ * save.
+ */
+export function countedRange(
+  anchorMidi: number | null,
+  lowFound: number | null,
+  highFound: number | null,
+): { lowMidi: number; highMidi: number; savable: boolean } {
+  const anchor = anchorMidi ?? 57;
+  const lowMidi = Math.min(lowFound ?? anchor, anchor);
+  const highMidi = Math.max(highFound ?? anchor, anchor);
+  return { lowMidi, highMidi, savable: highMidi - lowMidi >= MIN_SAVED_SPAN };
+}
 
 /** Continuous hold needed on one note to establish the register. */
 const WARM_HOLD_MS = 2000;
@@ -122,6 +160,9 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     save?: SaveSummary;
   } | null>(null);
 
+  /** "I can't go higher" was pressed on a span too narrow to save. */
+  const [tooNarrow, setTooNarrow] = useState(false);
+
   /** Why the note isn't counting, when it isn't. Null while things are fine. */
   const [inputHint, setInputHint] = useState<string | null>(null);
 
@@ -141,6 +182,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
   const resetHunt = () => {
     dwellMapRef.current = new Map();
     setDwell(null);
+    setTooNarrow(false);
     lastTRef.current = 0;
   };
 
@@ -264,20 +306,44 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     }
   }, [frame, stage]);
 
+  // Each stage swaps in a card of a different height while the page stays put,
+  // so on a phone the "counted" line, the too-quiet hint and the button that
+  // moves the test on ended up under the bottom tab bar, and the result opened
+  // with its readout under the header. Align each new stage with the top of
+  // the screen instead. "Start over" goes back to the intro from a page
+  // scrolled down to the stage card, which left the intro's heading under the
+  // header, so it brings the top of the test back. The first render is left
+  // alone: it is where the page landed.
+  const topRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const shownStageRef = useRef<Stage>("intro");
+  useEffect(() => {
+    const from = shownStageRef.current;
+    shownStageRef.current = stage;
+    if (stage === from) return;
+    (stage === "intro" ? topRef : stageRef).current?.scrollIntoView({ block: "start" });
+  }, [stage]);
+
   const advanceToHigh = () => {
     resetHunt();
     setStage("high");
   };
 
   const finish = () => {
-    const anchor = anchorMidi ?? 57;
-    const low = Math.min(lowFound ?? anchor, anchor);
-    const high = Math.max(highFound ?? anchor, anchor);
+    const { lowMidi: low, highMidi: high, savable } = countedRange(anchorMidi, lowFound, highFound);
+    // Nothing is saved, logged or offered for a span under the minimum: the
+    // mic stays on so the singer can keep sliding, or press Start over.
+    if (!savable) {
+      setTooNarrow(true);
+      return;
+    }
     stop();
     const durationSec = Math.max(
       1,
       Math.round((performance.now() - startedAtRef.current) / 1000),
     );
+    // Read before the save below appends this test to the history.
+    const offerPro = offersProMomentAfterRangeTest(progress.rangeHistory);
     const r1 = setVocalRange(low, high);
     const r2 = logSession({
       type: "range",
@@ -295,7 +361,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
       save: { xpGained: r1.xpGained + r2.xpGained, newAchievements: achievements },
     });
     setStage("result");
-    emitProResult();
+    if (offerPro) emitProResult();
   };
 
   const retake = () => {
@@ -307,6 +373,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
   const liveMidi = frame.note?.midi ?? null;
   const liveLabel = frame.note?.label ?? "—";
   const savedRange = progress.range;
+  const counted = countedRange(anchorMidi, lowFound, highFound);
 
   const pill =
     stage !== "intro" && stage !== "result" ? <ListeningPill /> : undefined;
@@ -329,6 +396,8 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
 
   return wrap(
     <>
+      {/* Where "Start over" scrolls back to: the top of the intro. */}
+      <div ref={topRef} />
       {stage !== "intro" && (
         <div className="mb-6">
           <StepIndicator stage={stage} />
@@ -349,7 +418,11 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
                       {midiToLabel(savedRange.highMidi)}
                     </div>
                     <p className="mt-1 text-sm text-mut">
-                      {savedRange.voiceTypeLabel ?? "Unclassified"}
+                      {/* Worked out from the notes, not the stored label: a
+                          label saved before the two-band rule would name one
+                          band where the result screen names both. */}
+                      Closest fit:{" "}
+                      {voiceFitLabel(savedRange.lowMidi, savedRange.highMidi)}
                       {savedRange.testedAt &&
                         ` · tested ${new Date(savedRange.testedAt).toLocaleDateString()}`}
                     </p>
@@ -382,8 +455,8 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
               </li>
               <li>Slide up the same way — falsetto counts.</li>
               <li>
-                Get your range, voice type, and how you compare to famous
-                singers.
+                Get your range, a voice-type estimate, and how you compare to
+                famous singers.
               </li>
             </ol>
             <p className="mt-3 text-sm text-dim">
@@ -413,6 +486,14 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
         </div>
       )}
 
+      {/* Where each stage after the intro scrolls to. No scroll-mt: the
+          page's scroll-padding-top already clears the sticky header, and the
+          extra 80px would put the button back under a 375x667 phone's tab
+          bar. Measured there: "I can't go lower" sits at 499-543 against a
+          bar at 610. While the four-line too-quiet hint shows, the hint is in
+          view and the button drops to about 595-639, but that hint means no
+          pitch is coming through yet, and it clears as soon as one does. */}
+      <div id="range-stage" ref={stageRef} />
       {stage === "warm" && (
         <Card>
           <SectionLabel>Step 1 of 4</SectionLabel>
@@ -452,6 +533,13 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
               ariaLabel="Keyboard highlighting the note you are singing"
             />
           </div>
+          {/* The way out the other stages have: stops the mic and goes back
+              to the intro, where the microphone picker is. */}
+          <div className="mt-6">
+            <Button variant="ghost" size="sm" onClick={retake}>
+              Start over
+            </Button>
+          </div>
         </Card>
       )}
 
@@ -463,11 +551,31 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
               ? "Slide down to your lowest note"
               : "Slide up to your highest note"}
           </h2>
-          <p className="mt-2 max-w-xl text-sm text-mut">
-            {stage === "low"
-              ? "Move down gradually, a step at a time. Hold each note clearly for a moment so it counts. Stop when the sound turns to croak, rattle, or air."
-              : "Move up gradually and hold each note clearly for a moment. Falsetto and head voice count. Stop before a note causes pain or strain."}
-          </p>
+          {/* Said where the instruction is, not under the buttons: there,
+              on a 375x667 phone, the line sat under the tab bar, so pressing
+              "I can't go higher" seemed to do nothing. It stands in for the
+              instruction (and repeats its strain rule) so the buttons do not
+              move down either. */}
+          {stage === "high" && tooNarrow && !counted.savable ? (
+            <p role="status" className="mt-2 max-w-xl text-sm text-ink">
+              So far the test has counted{" "}
+              {counted.lowMidi === counted.highMidi
+                ? `only ${midiToLabel(counted.lowMidi)}`
+                : `${midiToLabel(counted.lowMidi)} to ${midiToLabel(counted.highMidi)}`}
+              , too narrow to save as your range
+              {savedRange.lowMidi !== undefined
+                ? ", so your saved range stays as it is"
+                : ""}
+              . Keep sliding up and hold each note for a moment, stopping
+              before a note strains, or press Start over.
+            </p>
+          ) : (
+            <p className="mt-2 max-w-xl text-sm text-mut">
+              {stage === "low"
+                ? "Move down gradually, a step at a time. Hold each note clearly for a moment so it counts. Stop when the sound turns to croak, rattle, or air."
+                : "Move up gradually and hold each note clearly for a moment. Falsetto and head voice count. Stop before a note causes pain or strain."}
+            </p>
+          )}
           <div className="mt-6 flex flex-wrap items-end gap-8">
             <div>
               <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">

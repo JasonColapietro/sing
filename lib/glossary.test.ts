@@ -9,6 +9,9 @@ import {
   termId,
 } from "./glossary";
 import type { GlossaryDomain } from "./glossary";
+import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
+import { breathDrillTitle, isBreathDrillId } from "@/components/breath/routines";
+import { VOICE_TYPES } from "@/lib/audio/notes";
 import { readdirSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
@@ -193,6 +196,43 @@ describe("GLOSSARY", () => {
     }
   });
 
+  /**
+   * A drill is linked as /warmups?exercise=<id>, so it has to be a warmup that
+   * exists, and a free one: a Pro-pack id would put a locked exercise behind a
+   * "Try it" link on a free reference page.
+   */
+  it("names only free warmups as drills", () => {
+    const free = new Set(EXERCISES.map((exercise) => exercise.id));
+    const drills = SING_GLOSSARY_TERMS.filter((e) => e.drill);
+    expect(drills.length).toBeGreaterThan(0);
+    for (const entry of drills) {
+      expect(free.has(entry.drill!), `${entry.term}: ${entry.drill}`).toBe(true);
+    }
+  });
+
+  /**
+   * A drill in another room is linked by that room's own deep link and named
+   * the way the room names it, so a renamed drill or a dropped query parameter
+   * fails here rather than leaving "Try it" pointing at the room's front page.
+   * The only room this is used for so far is breath, whose deep link is
+   * /breath?drill=<id>.
+   */
+  it("links other rooms' drills by a deep link the room reads", () => {
+    const linked = SING_GLOSSARY_TERMS.filter((e) => e.tryIt);
+    expect(linked.map((e) => e.term)).toContain("Breath support");
+    for (const entry of linked) {
+      // One "Try it" per entry: a warmup drill and another room's drill would
+      // render two links with the same label.
+      expect(entry.drill, entry.term).toBeUndefined();
+      const target = new URL(entry.tryIt!.href, "https://sing.suedeai.ai");
+      expect(APP_ROUTES).toContain(target.pathname);
+      expect(target.pathname, entry.term).toBe("/breath");
+      const drill = target.searchParams.get("drill");
+      expect(isBreathDrillId(drill), `${entry.term}: ${drill}`).toBe(true);
+      if (isBreathDrillId(drill)) expect(entry.tryIt!.label).toBe(breathDrillTitle(drill));
+    }
+  });
+
   it("never lists a term as its own alternate name", () => {
     for (const entry of GLOSSARY_TERMS) {
       for (const alias of entry.aka ?? []) {
@@ -224,10 +264,114 @@ describe("published glossary claims", () => {
     expect(byTerm("Voice type").where).toMatch(/estimate/);
   });
 
+  /**
+   * The entry defines eight labels, and the range result can return only six
+   * of them; a countertenor span is told the closest of those six. The atlas
+   * and the voice-type hubs say so, and the glossary says it the same way.
+   */
+  it("says the range result names one of six types, never the two it cannot return", () => {
+    const where = byTerm("Voice type").where;
+    expect(VOICE_TYPES).toHaveLength(6);
+    expect(where).toMatch(/six types, bass to soprano/);
+    for (const label of ["bass-baritone", "countertenor"]) {
+      expect(VOICE_TYPES.some((v) => v.label.toLowerCase() === label), label).toBe(false);
+      expect(where).toMatch(new RegExp(`never[^.]*${label}`));
+    }
+  });
+
+  /** The free messa di voce drill trains dynamics, and the entry links it. */
+  it("links dynamics to the swell-and-fade drill", () => {
+    expect(byTerm("Dynamics").drill).toBe("swell-and-fade");
+  });
+
+  /**
+   * The records page lost its whistle section, so the entry points at the
+   * singers chart, which draws a dot at the high (right-hand) end of each bar
+   * with a whistle register listed (WHISTLE_DOT_CLASS). The atlas says most
+   * voices never engage whistle, not that they lack one.
+   */
+  it("points whistle register at the chart that marks it", () => {
+    const entry = byTerm("Whistle register");
+    expect(entry.href).toBe("/singers");
+    expect(entry.where).toMatch(/high end of a bar/);
+    expect(entry.where).not.toMatch(/records page|most voices never have/);
+  });
+
+  /** Twang buys loudness through brightness, as atlas ch. 6 teaches belters. */
+  it("does not deny twang's loudness", () => {
+    const definition = byTerm("Twang").definition;
+    expect(definition).not.toMatch(/rather than volume/);
+    expect(definition).toMatch(/louder without more breath pressure/);
+  });
+
   it("states the cycle-dose arithmetic correctly", () => {
     // A minute at 440 Hz is 440 x 60 cycles; at 110 Hz, a quarter of that.
     expect(byTerm("Vocal dose").where).toContain((440 * 60).toLocaleString("en-US"));
     expect(byTerm("Vocal dose").where).toMatch(/four times/);
+  });
+
+  /**
+   * Cycle dose counts vibrations and ignores loudness, so it is a measure of
+   * use, not of the work the tissue did.
+   */
+  it("does not call cycle dose the folds' work", () => {
+    expect(byTerm("Vocal dose").definition).not.toMatch(/\bwork\b/);
+  });
+
+  /**
+   * Songs open fitted to a saved range and can be shifted by semitones; with
+   * no range they open in the written key and are scored in either octave
+   * (components/songs/lib.ts defaultOctaveAgnostic). Nothing knows where a
+   * voice is comfortable, so the entry may not say it does.
+   */
+  it("describes song key fitting as the player does it", () => {
+    const where = byTerm("Transposition").where;
+    expect(where).toMatch(/range test/);
+    expect(where).toMatch(/fitted to your measured range/);
+    expect(where).toMatch(/written key/);
+    expect(where).toMatch(/scored in either octave/);
+    expect(where).not.toMatch(/comfortable/);
+  });
+
+  /**
+   * Gug is the library's staccato drill, a dark closure sound, not a twang
+   * one. The bright, bratty nays are the twang drills, and all of them sit in
+   * Pro packs, so the entry says Pro; a free nay drill would make that wrong.
+   */
+  it("names the twang drills the library actually has", () => {
+    const where = byTerm("Twang").where;
+    expect(where).not.toMatch(/\bgug\b/i);
+    expect(where).toMatch(/\bnay\b/);
+    expect(where).toMatch(/\bPro\b/);
+    const isNay = (x: { title: string; desc: string }) => /\bnay/i.test(`${x.title} ${x.desc}`);
+    expect(EXERCISES.filter(isNay).map((x) => x.id)).toEqual([]);
+    // Every Pro pack that holds a nay drill is named, the way the sentence
+    // spells it ("belt-prep", "mix-builder").
+    const nayPacks = PRO_PACKS.filter((p) => p.exercises.some(isNay));
+    expect(nayPacks.length).toBeGreaterThan(0);
+    for (const pack of nayPacks) {
+      expect(where.toLowerCase()).toContain(pack.name.toLowerCase().replace(/\s+/g, "-"));
+    }
+  });
+
+  /**
+   * The analyzer draws a spectrogram, a tone view and a vocal-load panel; it
+   * has no pitch trace (that is the studio's). An entry sending a reader to
+   * /analyze describes what that page draws.
+   */
+  it("describes the analyzer by what it draws", () => {
+    for (const entry of SING_GLOSSARY_TERMS.filter((e) => e.href === "/analyze")) {
+      expect(entry.where, entry.term).not.toMatch(/\btrace\b/);
+    }
+  });
+
+  /**
+   * The vocal-load panel counts only while /analyze is open and visible;
+   * practice in the other rooms adds nothing to it.
+   */
+  it("says where vocal dose is counted", () => {
+    expect(byTerm("Vocal dose").where).not.toMatch(/while you practi[cs]e/);
+    expect(byTerm("Vocal dose").where).toMatch(/open and on screen/);
   });
 
   it("names the product, not a bare surname", () => {
@@ -235,5 +379,20 @@ describe("published glossary claims", () => {
       const text = `${entry.definition} ${entry.where}`;
       expect(text).not.toMatch(/\bSuede\b(?! Sing| Pro| AI| Voice)/);
     }
+  });
+});
+
+describe("entries that name a room", () => {
+  const entry = (term: string) => SING_GLOSSARY_TERMS.find((t) => t.term === term)!;
+
+  it("sends Metronome to the metronome, in Tools, rather than to song practice", () => {
+    expect(entry("Metronome").href).toBe("/tools");
+    expect(entry("Metronome").where).toMatch(/30 to 240 bpm/);
+  });
+
+  it("credits the clean trace to the balanced onset the course trains, not the glottal one", () => {
+    const { where } = entry("Onset");
+    expect(where).toMatch(/balanced onset/);
+    expect(where).not.toMatch(/glottal/);
   });
 });

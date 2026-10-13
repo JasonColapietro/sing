@@ -5,7 +5,7 @@ order: 10
 summary: "How to locate your own transition with the pitch studio and range test, read a belt ceiling honestly, and tell head voice from falsetto."
 ---
 
-Charts put a tenor's first transition around C4 or D4 and a second around F#4 or G4, and a soprano's around F#4 or G4 and then C#5 or D5. Those figures are a rough middle of a wide spread, and a rough middle is useful right up until you try to sing one. Your transition sits where your folds and your vocal tract put it. It can land either side of the printed number, it can be a zone rather than a single note, and it can shift with the vowel, the volume, and how long you have been awake.
+Chapter 3's table puts a tenor's transition zone around D4 to G4 and a soprano's around C5 to E5. Those figures are a rough middle of a wide spread, and a rough middle is useful right up until you try to sing one. Your transition sits where your folds and your vocal tract put it. It can land either side of the printed zone, it can be wider or narrower than the table suggests, and it can shift with the vowel, the volume, and how long you have been awake. If you are a woman, the quiet slide below will often find the earlier, lighter shift out of chest voice that chapter 3 also describes, somewhere around E4 to G4, at or below the table's figures. That is not a failed measurement. It is the first of the two gear changes.
 
 So the job is not to look up your break. It is to find it, write down a note name, and keep checking whether that name still holds.
 
@@ -25,7 +25,7 @@ The third is the trace. Watch the pitch line through that zone. A slide that is 
 
 Three or four passes usually give you a zone rather than a note: "it gets strange between D4 and F4." That zone is the honest answer. Write down its lowest note, because that is where preparation has to start, not where the trouble becomes obvious.
 
-Then do it on more than one vowel. Try "ee", then "ah". If your transition sits higher on the closed vowel than the open one, that is not sloppy measurement. It is a real property of your voice, and knowing it is worth more than one tidy number.
+Then do it on more than one vowel. Try "ee", then "ah". If your transition sits at a different note on the closed vowel than on the open one, that is not sloppy measurement. It is a real property of your voice, and knowing it is worth more than one tidy number.
 
 ## What the range test adds
 

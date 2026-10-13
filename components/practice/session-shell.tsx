@@ -53,6 +53,28 @@ export const SESSION_FOCUS =
 const FOCUSABLE =
   'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
+/** Restore after the underlying room has remounted, unless it claimed focus. */
+export function restoreSessionFocus(previous: HTMLElement | null) {
+  requestAnimationFrame(() => {
+    const active = document.activeElement;
+    if (active && active !== document.body && active !== document.documentElement && active.isConnected) return;
+
+    if (previous && previous !== document.body && previous.isConnected &&
+        previous.getClientRects().length > 0 && !previous.matches(":disabled") && !previous.closest("[inert]")) {
+      previous.focus();
+      if (document.activeElement === previous) return;
+    }
+
+    // Warmups replaces the home card when a session starts, so its original
+    // button is detached. The room heading gives keyboard users a stable
+    // place to resume without putting a heading into the ordinary Tab order.
+    const heading = document.querySelector<HTMLElement>("main h1");
+    if (!heading || heading.getClientRects().length === 0) return;
+    if (!heading.hasAttribute("tabindex")) heading.setAttribute("tabindex", "-1");
+    heading.focus();
+  });
+}
+
 export function SessionShell({
   title,
   subtitle,
@@ -130,13 +152,12 @@ export function SessionShell({
     };
   }, [onClose]);
 
-  // Focus enters the dialog on mount and goes back where it came from on the
-  // way out, so ending a session returns a keyboard user to the card they
-  // started it from rather than to the top of the page.
+  // Prefer the starter on exit, with a room-heading fallback when the view
+  // replaced that DOM subtree. A successor dialog keeps any focus it claims.
   useEffect(() => {
     const returnTo = document.activeElement as HTMLElement | null;
     rootRef.current?.focus();
-    return () => returnTo?.focus?.();
+    return () => restoreSessionFocus(returnTo);
   }, []);
 
   if (typeof document === "undefined") return null;

@@ -36,7 +36,7 @@ Three vowels, both directions. Say what will count as complete in this lesson be
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.
 
 - Look: Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
@@ -66,7 +66,7 @@ I followed a comfortable portion of the siren up and down and listened for conti
 - Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, three slow sirens in a row, one on each vowel, sound continuous to you on playback, up and down, at conversational volume.
 
 If not ready: If the sound flips abruptly, reduce volume and span, return to a trill or hum, and cross the same area more slowly. Stop if it feels tight. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

@@ -142,6 +142,7 @@ function scoredAverage(list: readonly SessionLog[]): number | null {
  *
  * 1. A room the singer used in the three weeks before and skipped last week —
  *    the one they used most, so the claim is "you dropped this", not a guess.
+ *    Never the range test, which the book spaces weeks apart.
  * 2. The room whose scores trailed the week's average by 10+ points, with at
  *    least two scored sessions so one bad take cannot name a room.
  * 3. Fewer than three practice days: ask for one more.
@@ -155,6 +156,9 @@ function pickSuggestion(
   const used = new Set(week.map((s) => s.type));
   const skipped = new Map<ActivityType, number>();
   for (const s of earlier) {
+    // The range test is a scheduled check-in (book chapters 8 and 13), not a
+    // room to keep up weekly: a week without one is the plan, not a lapse.
+    if (s.type === "range") continue;
     if (!used.has(s.type)) skipped.set(s.type, (skipped.get(s.type) ?? 0) + 1);
   }
   if (skipped.size > 0) {
@@ -194,6 +198,62 @@ function pickSuggestion(
 
 function pick(type: ActivityType) {
   return { label: TYPE_META[type].label, href: TYPE_META[type].href };
+}
+
+/**
+ * Each room as a sentence names it: where the singer practised (`name`),
+ * where the scores came from (`scored`), and the link that opens it and the
+ * one that asks for practice there. A suggestion's `label` is the session
+ * table's pill ("Song", "Ear"), and in a sentence it read as a broken
+ * template: "You didn't open Song last week … Open Song".
+ */
+const ROOM_WORDS: Record<ActivityType, { name: string; scored: string; open: string; practise: string }> = {
+  warmup: { name: "the warmups", scored: "the warmups", open: "Open the warmups", practise: "Practise a warmup" },
+  // Pitch sessions come from the pitch meter on the range page as well as the
+  // studio, and only the studio scores them.
+  pitch: {
+    name: "the pitch meter or pitch studio",
+    scored: "the pitch studio",
+    open: "Open the pitch studio",
+    practise: "Practise in the pitch studio",
+  },
+  range: { name: "the range test", scored: "the range test", open: "Open the range test", practise: "Open the range test" },
+  ear: { name: "ear training", scored: "ear training", open: "Open ear training", practise: "Practise ear training" },
+  breath: { name: "breath training", scored: "breath training", open: "Open breath training", practise: "Practise breathing" },
+  song: { name: "song practice", scored: "song practice", open: "Open song practice", practise: "Practise a song" },
+  recording: { name: "the take recorder", scored: "the take recorder", open: "Open the recorder", practise: "Record a take" },
+  tools: { name: "the practice tools", scored: "the practice tools", open: "Open the tools", practise: "Open the tools" },
+  analyze: { name: "the voice analyzer", scored: "the voice analyzer", open: "Open the analyzer", practise: "Open the analyzer" },
+};
+
+function plural(n: number, word: string): string {
+  return `${n} ${word}${n === 1 ? "" : "s"}`;
+}
+
+/** The "Your week" card's next step in words, with the link that takes it. */
+export function suggestionWords(s: WeeklySuggestion): { text: string; link: { href: string; label: string } } {
+  switch (s.kind) {
+    case "neglected":
+      return {
+        text: `You didn't open ${ROOM_WORDS[s.type].name} last week, after ${plural(s.before, "session")} there in the three weeks before.`,
+        link: { href: s.href, label: ROOM_WORDS[s.type].open },
+      };
+    case "weakest":
+      return {
+        text: `Scores in ${ROOM_WORDS[s.type].scored} averaged ${s.average}% against ${s.overall}% across your week, the widest gap of any room.`,
+        link: { href: s.href, label: ROOM_WORDS[s.type].practise },
+      };
+    case "more-days":
+      return {
+        text: `You practised on ${plural(s.days, "day")}. Aim for one more this week; a short session counts.`,
+        link: { href: "/warmups", label: "Start a warmup" },
+      };
+    case "keep-going":
+      return {
+        text: `${plural(s.days, "practice day")} last week. Match that this week to keep the habit.`,
+        link: { href: "/warmups", label: "Start a warmup" },
+      };
+  }
 }
 
 /**

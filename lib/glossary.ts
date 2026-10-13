@@ -54,6 +54,20 @@ export interface GlossaryEntry {
   where: string;
   /** The room or page that shows it — a path in the publishing site. */
   href: string;
+  /**
+   * A free warmup that trains or measures the word, by its EXERCISES id, for
+   * a one-tap link to /warmups?exercise=<id> beside the room link. Only set
+   * where the drill is about the term itself, not merely uses it.
+   */
+  drill?: string;
+  /**
+   * A drill in another room that measures the word, for a one-tap deep link
+   * beside the room link, e.g. the breath room's sustain test. `href` is the
+   * room's own deep link and `label` the drill's name as that room shows it.
+   * Kept off entries that already name a warmup `drill`, so an entry never
+   * shows two "Try it" links.
+   */
+  tryIt?: { href: string; label: string };
   domain: GlossaryDomain;
 }
 
@@ -214,8 +228,8 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A setup above head voice in which only a short section of the folds vibrates, giving a thin, flute-like tone.",
         where:
-          "The records page lists the whistle notes in the library; most voices never have one, and nothing depends on it.",
-        href: "/singers/records",
+          "On the singers' range chart, a dot at the high end of a bar marks a voice with a whistle register listed; most singers never use one, and nothing depends on it.",
+        href: "/singers",
         domain: "voice",
       },
       {
@@ -226,6 +240,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "The range test asks you not to count fry as your low note — the floor is the lowest note you can hold clearly.",
         href: "/range",
+        drill: "fry-onset",
         domain: "voice",
       },
       {
@@ -277,7 +292,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "One of the eight conventional labels, soprano through bass, for the band a voice sits in and the weight it carries.",
         where:
-          "The range result names the type whose band overlaps your span most closely, as an estimate rather than a classification, and the singer library files every voice by its catalog label.",
+          "The range result names whichever of six types, bass to soprano, has the band that overlaps your span most closely (never bass-baritone or countertenor), as an estimate rather than a classification, and the singer library files every voice by its catalog label.",
         href: "/range",
         domain: "voice",
       },
@@ -287,7 +302,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "Moving a whole song up or down by a fixed number of semitones, which changes the key without changing the tune.",
         where:
-          "Song practice transposes the backing to land the melody where your voice is comfortable.",
+          "Once you have taken the range test, song practice opens each melody fitted to your measured range, and you can shift it a semitone at a time from there; without a saved range it opens in its written key and is scored in either octave.",
         href: "/songs",
         domain: "music",
       },
@@ -305,6 +320,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "The sustain test scores steadiness alongside duration, because a long note that wobbles is not a supported one.",
         href: "/breath",
+        tryIt: { href: "/breath?drill=sustain", label: "Sustain test" },
         domain: "voice",
       },
       {
@@ -314,6 +330,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "On the spectrogram, a steady ripple in the harmonic stack is vibrato; the stack jumping instead is a register change.",
         href: "/analyze",
+        drill: "vibrato-hold",
         domain: "music",
       },
       {
@@ -322,7 +339,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "The throat and mouth shaping the buzz from the folds into a vowel and a colour, without changing the pitch.",
         where:
-          "Hold one note and change vowel: the trace stays on the same line while the spectrogram redraws.",
+          "Hold one note and change vowel: on the spectrogram the stack of lines stays at the same heights while the brightness shifts between them.",
         href: "/analyze",
         domain: "voice",
       },
@@ -348,9 +365,9 @@ export const GLOSSARY: GlossarySection[] = [
         term: "Vocal dose",
         aka: ["Cycle dose"],
         definition:
-          "A measure of how much work the folds have done, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
+          "A measure of how much the folds have been used, counted in vibration cycles rather than minutes, because a minute sung high puts the folds through more cycles than a minute sung low.",
         where:
-          "The vocal-load panel counts cycles while you practice: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
+          "The analyzer's vocal-load panel counts cycles while that page is open and on screen: a minute voiced at A4 (440 Hz) is 26,400 cycles, four times a minute at A2 (110 Hz).",
         href: "/analyze",
         domain: "voice",
       },
@@ -371,6 +388,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Several warmups run on lip trills, and they are hard to blast through — the trill stops if you push.",
         href: "/warmups",
+        drill: "lip-trill-scale",
         domain: "voice",
       },
       {
@@ -380,15 +398,16 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Warmup sirens are the standard way to find a register transition and then smooth it.",
         href: "/warmups",
+        drill: "morning-siren",
         domain: "voice",
       },
       {
         term: "Twang",
         aka: ["Epilaryngeal narrowing"],
         definition:
-          "A bright, carrying resonance made by narrowing the space just above the vocal folds, which adds high-frequency energy rather than volume.",
+          "A bright, carrying resonance made by narrowing the space just above the vocal folds, which boosts the high frequencies the ear is most sensitive to, so the voice sounds louder without more breath pressure.",
         where:
-          "The warmups that run on nay and gug are twang exercises, and the analyzer shows the change as energy arriving in the upper bands while the pitch trace holds its line.",
+          "The bratty nay drills in the Pro belt-prep and mix-builder packs train twang, and on the analyzer's spectrogram it shows as energy arriving in the upper bands while the bottom line, the note itself, stays put.",
         href: "/warmups",
         domain: "voice",
       },
@@ -408,7 +427,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "How a note starts — breath before tone, breath and tone together, or a click as the folds release.",
         where:
-          "In the studio the pitch trace arrives a moment late on a breathy onset and starts already on the note on a glottal one.",
+          "In the studio the pitch trace arrives a moment late on a breathy onset, hooks up into the note on a scoop, and starts on the note from the first moment on a balanced onset sung on its pitch.",
         href: "/studio",
         domain: "voice",
       },
@@ -417,7 +436,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "The shape of the vocal tract that sets which frequencies a note is loudest at, colouring it without changing its pitch.",
         where:
-          "Warmups name the vowel each pattern is sung on, because the same scale on ee and on ah asks different things of the tract.",
+          "Most warmups name the vowel or sound a pattern is sung on, because the same scale on ee and on ah asks different things of the tract.",
         href: "/warmups",
         domain: "voice",
       },
@@ -453,8 +472,10 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "How loud a passage is and how its loudness moves across it.",
         where:
-          "The breath room's steadiness score reads loudness rather than pitch, so a deliberate swell and an unsteady note look alike to it.",
+          "Swell and fade in the warmups grows one note from soft to medium and back while only its pitch is scored; the breath room's steadiness score reads loudness, so a deliberate swell and an unsteady note look alike to it.",
         href: "/breath",
+        // Messa di voce, the free drill built for this term.
+        drill: "swell-and-fade",
         domain: "music",
       },
       {
@@ -464,6 +485,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Sirens and glides are legato by definition, and the studio draws them as one unbroken line instead of a row of steps.",
         href: "/warmups",
+        drill: "legato-triad",
         domain: "music",
       },
       {
@@ -473,6 +495,7 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Staccato warmup patterns break the pitch trace into separate marks, which is the same picture a lost note makes.",
         href: "/warmups",
+        drill: "gug-staccato",
         domain: "music",
       },
       {
@@ -481,8 +504,8 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A steady click at a chosen tempo, counted in beats per minute.",
         where:
-          "Song practice runs against the tempo you set, so a phrase that only works when you rush it stops working.",
-        href: "/songs",
+          "The metronome in Tools clicks at any tempo from 30 to 240 bpm, in 2/4, 3/4, 4/4 or 6/8, free with no time limit and no mic; song practice can also play a click under the melody at the tempo you set.",
+        href: "/tools",
         domain: "music",
       },
       {

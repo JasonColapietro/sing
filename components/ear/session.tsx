@@ -7,6 +7,7 @@ import { ProCrescendoNudge } from "@/components/pro/gate";
 import { SessionShell } from "@/components/practice/session-shell";
 import { logSession, type Achievement } from "@/lib/progress";
 import { emitProResult } from "@/lib/pro-signal";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import {
   DIFFICULTIES,
   GAME_NAMES,
@@ -562,9 +563,9 @@ export function SummaryView({
       )}
       <div className="mt-5">
         <ProCrescendoNudge
-          line="Pro unlocks your full daily plan and every practice pack"
+          line="Pro removes the daily limit and unlocks your full daily plan"
           title="Build the rest of your practice"
-          body="Pro unlocks your full daily Coach plan, range history, take analysis, and every Pro song and warmup."
+          body={`Pro removes the ${FREE_DAILY_MINUTES}-minute daily limit on guided practice and unlocks your full daily Coach plan, range history, take analysis and the pro warmup packs.`}
           context="Ear training"
         />
       </div>

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { midiToFreq } from "@/lib/audio/notes";
-import { EXERCISES, buildSegments, type Segment } from "./exercises";
+import { EXERCISES, PRO_PACKS, buildSegments, type Segment } from "./exercises";
 import { targetMidiAt } from "./lib";
 import {
   MEASURED_ONSET_LAG_SEC,
@@ -8,10 +8,15 @@ import {
   UNMODELLED_INPUT_LAG_SEC,
 } from "@/lib/audio/latency";
 import {
+  GLIDE_TIME_SLACK,
+  MAX_OCTAVE_SHIFT,
+  OCTAVE_LEAD_SEC,
   ONSET_GRACE_MAX_SHARE,
   ONSET_GRACE_SEC,
   createRepScorer,
+  foldToOctaveOf,
   onsetGraceFor,
+  referenceMidiAt,
 } from "./scoring";
 
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
@@ -255,5 +260,283 @@ describe("onset grace", () => {
       expect(sec, `note ${i}`).toBeGreaterThanOrEqual(segs[i].dur * 0.9);
       expect(sec, `note ${i}`).toBeLessThanOrEqual(segs[i].dur + 1e-9);
     });
+  });
+});
+
+describe("glide scoring", () => {
+  const SIRENS = ["ng-siren-fifth", "octave-siren", "high-siren-tenth"] as const;
+  const smoothstep = (x: number) => x * x * (3 - 2 * x);
+
+  /**
+   * A siren sung with exact endpoints along `shape` (0..1 → 0..1 of the
+   * slide), reported `lagSec` late, silent between the two glides.
+   */
+  function feedGlide(
+    scorer: ReturnType<typeof createRepScorer>,
+    segs: Segment[],
+    shape: (x: number) => number,
+    lagSec = 0,
+  ) {
+    const dt = 1 / 60;
+    const last = segs[segs.length - 1];
+    for (let t = 0; t < last.t0 + last.dur + 0.35; t += dt) {
+      const meant = t - lagSec;
+      const seg = segs.find((s) => meant >= s.t0 && meant <= s.t0 + s.dur);
+      if (!seg) {
+        scorer.feed(t, null, dt);
+        continue;
+      }
+      const x = Math.min(1, Math.max(0, (meant - seg.t0) / seg.dur));
+      const midi = seg.startMidi + (seg.endMidi - seg.startMidi) * shape(x);
+      scorer.feed(t, midiToFreq(midi), dt);
+    }
+  }
+
+  it("scores a natural, eased siren with exact endpoints as sung", () => {
+    // Scored against the bare ramp this read 24 on the octave siren and 17 on
+    // the tenth: the drill was rewarding a straight line, not a smooth slide.
+    for (const id of SIRENS) {
+      for (const tempo of [0.75, 1, 1.25]) {
+        const { segs } = buildSegments(byId(id), 52, tempo);
+        const scorer = createRepScorer(segs);
+        feedGlide(scorer, segs, smoothstep);
+        expect(scorer.result(52)!.score, `${id} at ${tempo}x`).toBeGreaterThanOrEqual(90);
+      }
+    }
+  });
+
+  it("scores a straight slide sung ~100 ms late as sung", () => {
+    for (const id of SIRENS) {
+      const { segs } = buildSegments(byId(id), 52, 1);
+      const scorer = createRepScorer(segs);
+      feedGlide(scorer, segs, (x) => x, UNMODELLED_INPUT_LAG_SEC);
+      expect(scorer.result(52)!.score, id).toBeGreaterThanOrEqual(90);
+    }
+  });
+
+  it("still scores a slide that never leaves the start pitch low", () => {
+    for (const id of ["octave-siren", "high-siren-tenth"]) {
+      const { segs } = buildSegments(byId(id), 52, 1);
+      const scorer = createRepScorer(segs);
+      feedGlide(scorer, segs, () => 0);
+      expect(scorer.result(52)!.score, id).toBeLessThan(30);
+    }
+  });
+
+  it("still scores a step in place of a slide low", () => {
+    for (const id of ["octave-siren", "high-siren-tenth"]) {
+      const { segs } = buildSegments(byId(id), 52, 1);
+      const scorer = createRepScorer(segs);
+      feedGlide(scorer, segs, (x) => (x < 0.5 ? 0 : 1));
+      expect(scorer.result(52)!.score, id).toBeLessThan(50);
+    }
+  });
+
+  it("publishes a slack that is a small share of the glide", () => {
+    expect(GLIDE_TIME_SLACK).toBeGreaterThan(0);
+    expect(GLIDE_TIME_SLACK).toBeLessThanOrEqual(0.15);
+  });
+
+  it("gives the live readout the reference the scorer uses", () => {
+    // Plain notes measure against the note; gaps have nothing to measure.
+    const plain = buildSegments(fiveNote, 52, 1).segs;
+    expect(referenceMidiAt(plain, plain[1].t0 + 0.2, 60)).toBe(plain[1].startMidi);
+    expect(referenceMidiAt(plain, plain[1].t0 - 0.01, 60)).toBeNull();
+
+    // A glide measures against the stretch of ramp around the frame: a pitch
+    // inside that stretch reads 0 cents off, one outside it reads its distance
+    // to the near end, and the stretch is held at the glide's endpoints.
+    const { segs } = buildSegments(byId("octave-siren"), 52, 1);
+    const up = segs[0];
+    const mid = up.t0 + up.dur / 2; // the bare ramp reads 58 here
+    const w = GLIDE_TIME_SLACK * up.dur;
+    const span = up.endMidi - up.startMidi;
+    const lo = 58 - (span * (w + ONSET_GRACE_SEC)) / up.dur;
+    const hi = 58 + (span * w) / up.dur;
+    expect(referenceMidiAt(segs, mid, 57.2)).toBeCloseTo(57.2, 9);
+    expect(referenceMidiAt(segs, mid, 50)).toBeCloseTo(lo, 9);
+    expect(referenceMidiAt(segs, mid, 70)).toBeCloseTo(hi, 9);
+    expect(referenceMidiAt(segs, up.t0, 49)).toBe(52);
+
+    // And the scorer credits a frame exactly when the readout would call it
+    // within tolerance (both sides of the window, in and out).
+    const verdicts = [55.5, 56, 57.2, 59.6, 61].map((sung) => {
+      const scorer = createRepScorer(segs);
+      scorer.feed(mid, midiToFreq(sung), 0.1);
+      const inTune = Math.abs(sung - referenceMidiAt(segs, mid, sung)!) * 100 <= 50;
+      expect(scorer.hitSec()[0] > 0, `sung ${sung}`).toBe(inTune);
+      return inTune;
+    });
+    expect(verdicts).toEqual([false, true, true, true, false]);
+  });
+});
+
+describe("octave-agnostic scoring", () => {
+  it("folds a pitch to the octave nearest the target", () => {
+    expect(foldToOctaveOf(64, 52)).toBe(52);
+    expect(foldToOctaveOf(40.3, 52)).toBeCloseTo(52.3, 9);
+    expect(foldToOctaveOf(57.5, 52)).toBeCloseTo(57.5, 9);
+    expect(foldToOctaveOf(58.5, 52)).toBeCloseTo(46.5, 9);
+    expect(foldToOctaveOf(52, 52)).toBe(52);
+  });
+
+  it("counts a take an octave up or down only when told to", () => {
+    for (const octaves of [1, -1, 2]) {
+      const { segs } = buildSegments(fiveNote, 52, 1);
+      const strict = createRepScorer(segs);
+      const either = createRepScorer(segs, { octaveAgnostic: true });
+      feedThroughout(strict, segs, 12 * octaves);
+      feedThroughout(either, segs, 12 * octaves);
+      expect(strict.result(52)!.score, `${octaves} octaves`).toBe(0);
+      expect(either.result(52)!.score, `${octaves} octaves`).toBe(100);
+      expect(either.result(52)!.avgCentsErr, `${octaves} octaves`).toBe(0);
+    }
+  });
+
+  it("still fails a wrong note in the other octave", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const scorer = createRepScorer(segs, { octaveAgnostic: true });
+    // An octave up and 60 cents sharp: wrong in any octave.
+    feedThroughout(scorer, segs, 12.6);
+    expect(scorer.result(52)!.score).toBe(0);
+    const tritone = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(tritone, segs, 6);
+    expect(tritone.result(52)!.score).toBe(0);
+  });
+
+  it("files the per-note analytics under the octave actually sung", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const up = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(up, segs, 12);
+    expect(up.result(52)!.notes!.map((n) => n.midi)).toEqual(segs.map((s) => s.startMidi + 12));
+    // The rep's root reads in the same octave, so the summary never names
+    // the rung an octave away from the notes listed under it.
+    expect(up.result(52)!.root).toBe(64);
+    const asWritten = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(asWritten, segs, 0);
+    expect(asWritten.result(52)!.notes!.map((n) => n.midi)).toEqual(segs.map((s) => s.startMidi));
+    expect(asWritten.result(52)!.root).toBe(52);
+    const down = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(down, segs, -12);
+    expect(down.result(52)!.root).toBe(40);
+    // Exact-octave scoring never moves a note or the root.
+    const strict = createRepScorer(segs);
+    feedThroughout(strict, segs, 12);
+    expect(strict.result(52)!.notes!.map((n) => n.midi)).toEqual(segs.map((s) => s.startMidi));
+    expect(strict.result(52)!.root).toBe(52);
+  });
+
+  it("counts a siren an octave up when told to", () => {
+    const { segs } = buildSegments(byId("octave-siren"), 52, 1);
+    const either = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(either, segs, 12);
+    expect(either.result(52)!.score).toBeGreaterThanOrEqual(98);
+  });
+
+  /**
+   * Feed 60 fps frames at `sungAt(t, target)` for the whole pattern, the way
+   * the player does, rather than one exact segment length at a time.
+   */
+  function feedFrames(
+    scorer: ReturnType<typeof createRepScorer>,
+    segs: Segment[],
+    sungAt: (t: number, target: number) => number,
+    afterEach?: () => void,
+  ) {
+    const dt = 1 / 60;
+    const end = Math.max(...segs.map((s) => s.t0 + s.dur));
+    for (let t = dt / 2; t < end; t += dt) {
+      const target = targetMidiAt(segs, t);
+      if (target === null) continue;
+      scorer.feed(t, midiToFreq(sungAt(t, target)), dt);
+      afterEach?.();
+    }
+  }
+
+  const proById = (id: string) =>
+    PRO_PACKS.flatMap((p) => p.exercises).find((e) => e.id === id)!;
+  const anyById = (id: string) => EXERCISES.find((e) => e.id === id) ?? proById(id);
+
+  it("scores one octave per rep, so a leap never sung is not a pass", () => {
+    // Octave leaps sung entirely on the root: folded frame by frame this
+    // scored 99. One octave per rep marks the missed tops as missed, and the
+    // lane keeps drawing the voice in the root's octave throughout.
+    const leaps = buildSegments(proById("head-octave-leaps"), 52, 1).segs;
+    const flat = createRepScorer(leaps, { octaveAgnostic: true });
+    const drawn = new Set<number | null>();
+    feedFrames(flat, leaps, () => 52, () => drawn.add(flat.octaveShift));
+    expect([...drawn].filter((s) => s !== null)).toEqual([0]);
+    expect(flat.result(52)!.score).toBeLessThan(70);
+
+    // An octave arpeggio with its top note dropped an octave loses that note.
+    for (const id of ["gee-octave", "octave-arpeggio", "lip-trill-scale"]) {
+      const { segs } = buildSegments(byId(id), 52, 1);
+      const dropped = createRepScorer(segs, { octaveAgnostic: true });
+      feedFrames(dropped, segs, (_, target) => (target >= 64 ? target - 12 : target));
+      const exact = createRepScorer(segs);
+      feedFrames(exact, segs, (_, target) => (target >= 64 ? target - 12 : target));
+      expect(dropped.result(52)!.score, id).toBe(exact.result(52)!.score);
+      expect(dropped.result(52)!.score, id).toBeLessThan(90);
+    }
+  });
+
+  it("does not let a descent's dropped first note sink the notes after it", () => {
+    // These start on their top note. Dropping that one note an octave and
+    // singing the rest as written is one missed note, as in exact-octave
+    // scoring; an octave settled by the first note alone would have marked
+    // every later note an octave out (17-29 where the written octave gives
+    // 71-81).
+    for (const id of ["reverse-arpeggio", "pentatonic-run", "hoo-four-note", "high-float-descent"]) {
+      const { segs } = buildSegments(anyById(id), 52, 1);
+      const top = Math.max(...segs.map((s) => s.startMidi));
+      expect(segs[0].startMidi, id).toBe(top);
+      const sing = (t: number, target: number) => (t < segs[0].t0 + segs[0].dur ? target - 12 : target);
+      const either = createRepScorer(segs, { octaveAgnostic: true });
+      feedFrames(either, segs, sing);
+      const exact = createRepScorer(segs);
+      feedFrames(exact, segs, sing);
+      expect(either.result(52)!.score, id).toBe(exact.result(52)!.score);
+      expect(either.result(52)!.score, id).toBeGreaterThanOrEqual(70);
+      expect(either.result(52)!.root, id).toBe(52);
+      expect(either.octaveShift, id).toBe(0);
+    }
+  });
+
+  it("still counts a whole take sung an octave up or down", () => {
+    const leaps = buildSegments(proById("head-octave-leaps"), 52, 1).segs;
+    for (const octaves of [1, -1]) {
+      const either = createRepScorer(leaps, { octaveAgnostic: true });
+      feedFrames(either, leaps, (_, target) => target + 12 * octaves);
+      expect(either.octaveShift, `${octaves}`).toBe(octaves);
+      expect(either.result(52)!.score, `${octaves}`).toBeGreaterThanOrEqual(98);
+    }
+  });
+
+  it("tries the rep in up to MAX_OCTAVE_SHIFT octaves either way, no further", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const far = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(far, segs, 12 * MAX_OCTAVE_SHIFT);
+    expect(far.result(52)!.score).toBe(100);
+    const beyond = createRepScorer(segs, { octaveAgnostic: true });
+    feedThroughout(beyond, segs, 12 * (MAX_OCTAVE_SHIFT + 1));
+    expect(beyond.result(52)!.score).toBe(0);
+  });
+
+  it("does not let one octave slip at the onset decide the rep", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const scorer = createRepScorer(segs, { octaveAgnostic: true });
+    // The tracker reads the first few frames an octave up, for less than the
+    // lead time, then the singer is heard in the written octave throughout.
+    const slip = OCTAVE_LEAD_SEC * 0.6;
+    feedFrames(scorer, segs, (t, target) => (t < slip ? target + 12 : target));
+    expect(scorer.octaveShift).toBe(0);
+    expect(scorer.result(52)!.score).toBeGreaterThanOrEqual(98);
+  });
+
+  it("never draws in another octave when either octave does not count", () => {
+    const { segs } = buildSegments(fiveNote, 52, 1);
+    const strict = createRepScorer(segs);
+    feedThroughout(strict, segs, 0);
+    expect(strict.octaveShift).toBeNull();
   });
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { midiToLabel } from "@/lib/audio/notes";
+import { midiToLabel, voiceFitLabel } from "@/lib/audio/notes";
 import {
   noteReports,
   overallAccuracy,
@@ -246,8 +246,8 @@ export function RangeHistoryChart({ history }: { history: RangeEntry[] }) {
             <g key={`${point.testedAt}-${i}`}>
               <title>
                 {dateLabel(point.testedAt)}: {midiToLabel(point.lowMidi)}–
-                {midiToLabel(point.highMidi)} ({point.semitones} semitones
-                {point.voiceTypeLabel ? `, ${point.voiceTypeLabel}` : ""})
+                {midiToLabel(point.highMidi)}{" "}
+                {`(${point.semitones} semitones, closest fit ${voiceFitLabel(point.lowMidi, point.highMidi)})`}
               </title>
               <rect
                 x={padL + i * slot}
@@ -291,7 +291,7 @@ export function RangeHistoryChart({ history }: { history: RangeEntry[] }) {
         {midiToLabel(latest.lowMidi)}–{midiToLabel(latest.highMidi)} ·{" "}
         {latest.semitones} semitones
         {growth === null
-          ? " · retake the test to start charting growth"
+          ? " · retest about six weeks after this one to chart any change"
           : growth === 0
             ? " · unchanged since your first test"
             : ` · ${growth > 0 ? "+" : ""}${growth} semitones since your first test`}

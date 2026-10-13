@@ -34,6 +34,7 @@ import {
   stepExercise,
   type Routine,
 } from "./routines";
+import { PRO_PACKS_ANCHOR } from "@/lib/pro-inventory";
 
 /** How many exercise names the strip under a routine shows before "+N". */
 const STRIP_MAX = 3;
@@ -135,7 +136,13 @@ export function RoutineGrid({
       </Card>
     );
     return (
-      <div key={routine.id} className="flex flex-col">
+      // The first Pro pack carries the anchor /pro links to after a purchase,
+      // so "Sing your first pro warmup" lands on the packs, not a free set.
+      <div
+        key={routine.id}
+        id={routine.id === PRO_ROUTINES[0]?.id ? PRO_PACKS_ANCHOR : undefined}
+        className="flex scroll-mt-20 flex-col"
+      >
         {locked ? (
           <Link href="/pro" className="flex-1">
             {body}
@@ -230,6 +237,9 @@ export function PathSection({
     levels.push({
       title: "Pro packs",
       blurb: "Themed sets that pick up where the path ends.",
+      // Each row is a whole pack, not an exercise: "0 of 3 exercises" would
+      // count three packs that hold 19.
+      unit: "packs",
       items: PRO_PACKS.map((pack) => ({
         id: pack.id,
         title: pack.name,

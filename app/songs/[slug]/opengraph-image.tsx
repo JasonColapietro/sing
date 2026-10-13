@@ -62,8 +62,23 @@ export default async function Image({
           {pro ? "PRO SONGBOOK" : "PUBLIC DOMAIN · FREE TO SING"}
         </div>
 
+        {/*
+          The title steps down in size so a long one ("Amazing Grace (Opening
+          Lines, Verses 1 & 2)") stays on one line: at a fixed 68px it wrapped
+          and the second line was drawn over the facts line below. The
+          rendered face measures about 0.49em a character, so 43 characters
+          at 46px fit inside W. A set width and line height keep any wrap that
+          does happen in flow.
+        */}
         <div
-          style={{ display: "flex", marginTop: 16, fontSize: 68, fontWeight: 700 }}
+          style={{
+            display: "flex",
+            marginTop: 16,
+            fontSize: song.title.length > 34 ? 46 : song.title.length > 28 ? 56 : 68,
+            lineHeight: 1.1,
+            fontWeight: 700,
+            width: W,
+          }}
         >
           {song.title}
         </div>

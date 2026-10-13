@@ -8,7 +8,7 @@ import {
   popRangeLabel,
 } from "@/lib/pop-songs";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
 const TITLE = "Can I Sing This Song? Popular Song Vocal Ranges";
@@ -76,8 +76,8 @@ export default function CanYouSingHub() {
     <PageShell
       kicker="Song ranges"
       title="Can I sing this song? Vocal ranges and keys of popular songs"
-      subtitle={`You can sing a song comfortably when its vocal range sits inside yours. Here are the key, range and difficulty of ${songs.length} popular songs, from the commonly cited studio-version figures; take the free range test and every page answers for your voice specifically.`}
-      actions={<LinkButton href="/range?mode=range">Find your range free</LinkButton>}
+      subtitle={`A song is within reach when its vocal range sits inside yours, and it is easier to sing with room to spare at both ends. Here are the key, range and difficulty of ${songs.length} popular songs, from the commonly cited lead-vocal figures; take the free range test and every page answers for your voice specifically.`}
+      actions={<LinkButton href={rangeTestHref()}>Find your range free</LinkButton>}
     >
       <script
         type="application/ld+json"
@@ -111,11 +111,12 @@ export default function CanYouSingHub() {
         <SectionLabel heading>How these figures work</SectionLabel>
         <p className="mt-3 max-w-prose text-sm text-mut">
           Each page cites the published key and the commonly circulated
-          lead-vocal range for the studio version — the same figures
-          sheet-music arrangements and fan transcriptions agree on, framed as
-          approximations, never lab measurements. No lyrics or melodies are
-          reproduced. For what the artists themselves can do beyond one song,
-          see the{" "}
+          lead-vocal range, usually from a named original-key sheet-music
+          arrangement; runs and ad-libs on the recording can go past its top
+          note. Sources can differ by a note
+          or two at either end, so treat these as approximations, never lab
+          measurements. No lyrics or melodies are reproduced. For what the
+          artists themselves can do beyond one song, see the{" "}
           <Link
             className="text-violet-ink underline-offset-4 hover:underline"
             href="/singers"

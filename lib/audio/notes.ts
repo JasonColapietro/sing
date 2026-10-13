@@ -113,6 +113,24 @@ export function centsOff(freq: number, targetMidi: number): number {
   return Math.round((freqToMidiFloat(freq) - targetMidi) * 100);
 }
 
+/** Within this many cents of the nearest note reads as in tune: the green zone. */
+export const IN_TUNE_CENTS = 15;
+/** Within this many cents is close: a nudge, not a correction. */
+export const CLOSE_CENTS = 35;
+
+export type TuneZone = "in-tune" | "close" | "off";
+
+/**
+ * One verdict for a cents offset, so the pitch meter and the studio tuner
+ * never call the same note in tune on one screen and sharp on the other.
+ */
+export function tuneZone(cents: number): TuneZone {
+  const a = Math.abs(cents);
+  if (a <= IN_TUNE_CENTS) return "in-tune";
+  if (a <= CLOSE_CENTS) return "close";
+  return "off";
+}
+
 export interface VoiceType {
   id: string;
   /**
@@ -140,20 +158,87 @@ export const VOICE_TYPES: VoiceType[] = [
   { id: "soprano", label: "Soprano", lowMidi: 60, highMidi: 84 }, // C4–C6
 ];
 
-/** Best-fit classical voice type for a measured range, by overlap then center distance. */
-export function classifyVoice(lowMidi: number, highMidi: number): VoiceType {
+/** How well a measured range fits one band: overlap, less half the center distance. */
+function fitScore(v: VoiceType, lowMidi: number, highMidi: number): number {
   const center = (lowMidi + highMidi) / 2;
-  let best = VOICE_TYPES[0];
-  let bestScore = -Infinity;
-  for (const v of VOICE_TYPES) {
-    const overlap =
-      Math.min(highMidi, v.highMidi) - Math.max(lowMidi, v.lowMidi);
-    const centerDist = Math.abs(center - (v.lowMidi + v.highMidi) / 2);
-    const score = overlap - centerDist * 0.5;
-    if (score > bestScore) {
-      bestScore = score;
-      best = v;
-    }
-  }
-  return best;
+  const overlap = Math.min(highMidi, v.highMidi) - Math.max(lowMidi, v.lowMidi);
+  const centerDist = Math.abs(center - (v.lowMidi + v.highMidi) / 2);
+  return overlap - centerDist * 0.5;
+}
+
+/**
+ * Who wins a tied score. A range sitting between two bands often scores them
+ * exactly level (A2–E4 ties bass and baritone, F3–C5 ties tenor and
+ * contralto), and array order used to settle it, which handed every
+ * bass/baritone tie to Bass, the lowest band on the chart. The middle bands
+ * now win ties before the outer ones.
+ */
+const TIE_RANK: Readonly<Record<string, number>> = {
+  baritone: 0,
+  tenor: 1,
+  mezzo: 2,
+  contralto: 3,
+  soprano: 4,
+  bass: 5,
+};
+
+/** Every band, best fit first. */
+function rankVoiceTypes(
+  lowMidi: number,
+  highMidi: number,
+): Array<{ type: VoiceType; score: number }> {
+  return VOICE_TYPES.map((type) => ({
+    type,
+    score: fitScore(type, lowMidi, highMidi),
+  })).sort(
+    (a, b) =>
+      b.score - a.score ||
+      (TIE_RANK[a.type.id] ?? 99) - (TIE_RANK[b.type.id] ?? 99),
+  );
+}
+
+/**
+ * Best-fit classical voice type for a measured range: overlap less half the
+ * center distance, with TIE_RANK settling exact ties.
+ */
+export function classifyVoice(lowMidi: number, highMidi: number): VoiceType {
+  return rankVoiceTypes(lowMidi, highMidi)[0].type;
+}
+
+/** The bass, baritone and tenor bands; the other three are contralto to soprano. */
+const LOWER_BANDS: ReadonlySet<string> = new Set(["bass", "baritone", "tenor"]);
+/** Score points within which a band from the other set is a real alternative. */
+const ALTERNATIVE_MARGIN = 3;
+
+/**
+ * A near-equal fit from the other set of bands, or null.
+ *
+ * Range alone cannot separate them: a woman singing F3–C5 fits the tenor band
+ * exactly as well as the contralto one, and a man whose falsetto takes him to
+ * A5 edges into contralto. A single label there is a guess presented as a
+ * result, so the result names both and lets the singer choose.
+ */
+export function crossFamilyAlternative(
+  lowMidi: number,
+  highMidi: number,
+): VoiceType | null {
+  const ranked = rankVoiceTypes(lowMidi, highMidi);
+  const best = ranked[0];
+  const lower = LOWER_BANDS.has(best.type.id);
+  const other = ranked.find((r) => LOWER_BANDS.has(r.type.id) !== lower);
+  return other && best.score - other.score <= ALTERNATIVE_MARGIN
+    ? other.type
+    : null;
+}
+
+/**
+ * The voice-type estimate as one line of text: "Tenor", or "Tenor or
+ * Contralto" when the other set of bands fits about as well. Every place that
+ * names a singer's voice type uses this, so the saved-result card and the
+ * share image never say less than the result screen did.
+ */
+export function voiceFitLabel(lowMidi: number, highMidi: number): string {
+  const best = classifyVoice(lowMidi, highMidi);
+  const alt = crossFamilyAlternative(lowMidi, highMidi);
+  return alt ? `${best.label} or ${alt.label}` : best.label;
 }

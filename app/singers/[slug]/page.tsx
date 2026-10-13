@@ -18,6 +18,7 @@ import { sharesHigh, sharesLow } from "@/lib/singers-analysis";
 import { catalogPositionFor } from "@/lib/singer-catalog-position";
 import {
   getSingerEvidence,
+  getSingerPageLastModified,
   groupEvidenceSources,
   isSingerReviewed,
   singerReviewLabel,
@@ -29,7 +30,7 @@ import { fitDescription } from "@/lib/meta-fit";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { pageRobots } from "@/lib/robots-meta";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { ChromaticStrip } from "@/components/singers/chromatic-strip";
 import {
   CompareWithMe,
@@ -87,6 +88,16 @@ function hasReviewedVoiceTypeCorrection(s: SingerRecord): boolean {
     "arijit-singh",
   ].includes(s.slug);
 }
+
+/**
+ * Catalog-position facts that read the catalog voice label (or its register
+ * split) as settled; pages with a reviewed voice-type correction omit them.
+ */
+const LABEL_DEPENDENT_FACTS: ReadonlySet<string> = new Set([
+  "type-rank",
+  "band",
+  "belt",
+]);
 
 /** Google cuts titles at roughly 60 characters. */
 const TITLE_MAX = 60;
@@ -255,6 +266,11 @@ export default async function SingerPage({
   const { slug } = await params;
   const s = singerBySlug(slug);
   if (!s) notFound();
+  // The client components get these four fields and nothing else. Whatever a
+  // server page hands a client component is serialized into the page source,
+  // and the full record carries the blurb and technique notes that are the
+  // Pro atlas's entry prose, which this page does not show.
+  const rangeProps = { slug: s.slug, name: s.name, lowMidi: s.lowMidi, highMidi: s.highMidi };
 
   const semis = s.highMidi - s.lowMidi;
   const related = relatedSingers(s);
@@ -271,9 +287,13 @@ export default async function SingerPage({
     { name: "Famous vocal ranges", href: "/singers", url: `${SITE_URL}/singers` },
     { name: s.name, href: `/singers/${s.slug}`, url: pageUrl },
   ];
+  // dateModified follows the sitemap lastmod (the later of the review and the
+  // shared template revision) so the two freshness signals agree; the review
+  // date itself is what schema.org's lastReviewed is for.
   const reviewedPageFields = reviewed
     ? {
-        dateModified: evidence.reviewedAt,
+        dateModified: getSingerPageLastModified(s.slug),
+        lastReviewed: evidence.reviewedAt,
         reviewedBy: { "@type": "Person", name: evidence.reviewedBy },
         citation: evidence.sources.map((source) => ({
           "@type": "CreativeWork",
@@ -366,7 +386,7 @@ export default async function SingerPage({
       subtitle={queryAlignedDescription(s)}
       actions={
         <>
-          <LinkButton href={`/range?compare=${s.slug}`} size="md">
+          <LinkButton href={rangeTestHref({ compare: s.slug })} size="md">
             {COMPARISON_SEARCH_SLUGS.has(s.slug)
               ? "Compare my range — free test →"
               : "Test my range →"}
@@ -435,13 +455,13 @@ export default async function SingerPage({
             />
           </div>
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            <PlayRangeButton s={s} />
+            <PlayRangeButton s={rangeProps} />
           </div>
         </Card>
 
         {/* The profile's unique value is the personal comparison, so it sits
             directly under the answer rather than below the editorial detail. */}
-        <CompareWithMe s={s} />
+        <CompareWithMe s={rangeProps} />
 
         {/* Songs in the range catalog by this artist */}
         {popSongsByArtistSlug(s.slug).length > 0 && (
@@ -469,14 +489,25 @@ export default async function SingerPage({
             Where {s.name}&rsquo;s reported span sits in the catalog
           </h2>
           <dl className="mt-4 max-w-3xl space-y-4">
-            {catalogPositionFor(s).map((fact) => (
-              <div key={fact.id}>
-                <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                  {fact.label}
-                </dt>
-                <dd className="mt-1 text-sm text-mut">{fact.text}</dd>
-              </div>
-            ))}
+            {/* A reviewed correction means the sources do not establish the
+                catalog voice label. The facts that measure this singer
+                against that label (group rank, textbook band) or restate the
+                catalog's register split (full-voice ceiling) would put back
+                what the review set aside, so those pages leave them out. */}
+            {catalogPositionFor(s)
+              .filter(
+                (fact) =>
+                  !hasReviewedVoiceTypeCorrection(s) ||
+                  !LABEL_DEPENDENT_FACTS.has(fact.id),
+              )
+              .map((fact) => (
+                <div key={fact.id}>
+                  <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                    {fact.label}
+                  </dt>
+                  <dd className="mt-1 text-sm text-mut">{fact.text}</dd>
+                </div>
+              ))}
           </dl>
           <p className="mt-4 text-xs text-dim">
             Counted from the catalog&rsquo;s reported figures, which are not
@@ -561,6 +592,9 @@ export default async function SingerPage({
                         <p className="mt-1">Supports: {source.supportedClaim}</p>
                         <p className="mt-1">Scope: {source.scope}</p>
                         <p className="mt-1 text-xs">Confidence: {source.confidence}</p>
+                        {source.octaveConvention && (
+                          <p className="mt-1 text-xs">Octave convention: {source.octaveConvention}</p>
+                        )}
                       </li>
                     ))}
                   </ul>

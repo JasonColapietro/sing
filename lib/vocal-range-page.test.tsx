@@ -132,6 +132,16 @@ describe("the answer is actually on the page", () => {
     // The chapter's argument is the reason this page is allowed to exist.
     expect(text.toLowerCase()).toContain("different measurements");
   });
+
+  it("does not call the conventional bands where a voice lives", () => {
+    // The site's own definition of where a voice lives is its tessitura, a
+    // band much narrower than these two-octave spans (atlas ch. 3, book ch. 7,
+    // the glossary). Telling a tenor C3–C5 is comfortable for hours invites
+    // keys built on the ceiling.
+    const lower = text.toLowerCase();
+    expect(lower).not.toMatch(/description of where a voice\s+lives/);
+    expect(lower).toMatch(/its\s+tessitura\s*,\s+is a much narrower\s+band inside that span/);
+  });
 });
 
 describe("generated prose stays true to the data", () => {

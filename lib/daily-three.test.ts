@@ -1,13 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { ALL_EXERCISES, EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
+import { ALL_EXERCISES, EXERCISES, PRO_PACKS, buildSegments } from "@/components/warmups/exercises";
 import type { SessionLog } from "@/lib/progress-shape";
 import {
   KIND_SESSION_ORDER,
+  MAX_ONE_BREATH_SEC,
   dailyTempoFor,
   dailyThreeDone,
   exerciseKind,
   planDailyThree,
   seededUnit,
+  slowestOneBreathTempo,
   tempoForScores,
 } from "./daily-three";
 
@@ -79,7 +81,7 @@ describe("planDailyThree", () => {
   it("brings back an exercise that has gone stale", () => {
     // Two sung well long ago, everything else sung well yesterday: the stale
     // pair take the set — one as the warm-up, the other as a refresh.
-    const stale = new Set(["sixth-leaps", "octave-siren"]);
+    const stale = new Set(["humming-thirds", "octave-siren"]);
     const sessions = [
       ...EXERCISES.filter((e) => !stale.has(e.id)).map((e) => warmup(e.title, 85, "2026-09-22")),
       ...[...stale].map((id) => warmup(title(id), 85, "2026-08-01")),
@@ -110,6 +112,32 @@ describe("planDailyThree", () => {
     expect(plan.picks[0].exercise.id).toBe("humming-thirds");
     expect(plan.picks[0].role).toBe("confidence");
     expect(plan.picks.slice(1).every((p) => p.role === "focus")).toBe(true);
+  });
+
+  it("never opens on a run, a leap or an advanced exercise, however well it is sung", () => {
+    // A singer who sings every free exercise well: the warm-up slot used to
+    // land on a sixth leap or a pentatonic run at 1.25x on about one day in six.
+    for (let i = 0; i < 60; i++) {
+      const day = new Date(Date.UTC(2026, 9, 1 + i)).toISOString().slice(0, 10);
+      const back = (n: number) => new Date(Date.UTC(2026, 9, 1 + i - n)).toISOString().slice(0, 10);
+      const sessions = EXERCISES.flatMap((e) => [warmup(e.title, 88, back(1)), warmup(e.title, 88, back(2))]);
+      const first = planDailyThree({ sessions, day }).picks[0];
+      expect(first.role, day).toBe("confidence");
+      expect(first.exercise.tier, `${day} ${first.exercise.id}`).toBe("beginner");
+      expect(["runs", "leaps"], `${day} ${first.exercise.id}`).not.toContain(first.kind);
+    }
+  });
+
+  it("does not hand the warm-up slot to a run the singer sings best", () => {
+    const sessions = [
+      ...EXERCISES.map((e) => warmup(e.title, 40, "2026-09-22")),
+      warmup(title("pentatonic-run"), 95, "2026-09-22"),
+      warmup(title("pentatonic-run"), 95, "2026-09-21"),
+      warmup(title("humming-thirds"), 70, "2026-09-21"),
+    ];
+    const plan = planDailyThree({ sessions, day: TODAY });
+    expect(plan.picks[0].exercise.id).not.toBe("pentatonic-run");
+    expect(plan.picks[0].exercise.tier).toBe("beginner");
   });
 
   it("falls back to the best-scored exercise when nothing is confident yet", () => {
@@ -203,6 +231,30 @@ describe("difficulty steps", () => {
     expect(dailyTempoFor(plan, "octave-siren")).toBe(0.5);
     expect(dailyTempoFor(plan, "not-in-plan")).toBeNull();
     expect(dailyTempoFor(null, "octave-siren")).toBeNull();
+  });
+
+  it("never slows a one-breath pattern past one comfortable breath", () => {
+    // Hung-ee-mm is three passes on one breath: 9.4s at 1x, 18.8s at 0.5x.
+    const hung = EXERCISES.find((e) => e.id === "hung-ee-mm")!;
+    const rep = (t: number) => buildSegments(hung, 60, t).totalSec;
+    expect(rep(0.5)).toBeGreaterThan(MAX_ONE_BREATH_SEC);
+    expect(slowestOneBreathTempo(hung)).toBe(1);
+    const sessions = [
+      ...baseline(),
+      warmup(title("hung-ee-mm"), 30, "2026-09-22"),
+      warmup(title("hung-ee-mm"), 35, "2026-09-21"),
+    ];
+    const plan = planDailyThree({ sessions, day: TODAY });
+    const p = plan.picks.find((x) => x.exercise.id === "hung-ee-mm")!;
+    expect(p.role).toBe("focus");
+    expect(p).toMatchObject({ tempo: 1, step: "hold" });
+    expect(rep(p.tempo)).toBeLessThanOrEqual(MAX_ONE_BREATH_SEC);
+    // Every free exercise's floor fits one breath.
+    for (const e of EXERCISES) {
+      expect(buildSegments(e, 60, slowestOneBreathTempo(e)).totalSec, e.id).toBeLessThanOrEqual(MAX_ONE_BREATH_SEC);
+    }
+    // Shorter patterns still step down as far as their scores ask.
+    expect(slowestOneBreathTempo(EXERCISES.find((e) => e.id === "octave-siren")!)).toBe(0.5);
   });
 });
 

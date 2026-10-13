@@ -11,18 +11,22 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+The pitch reading works by finding the one repeating pattern in whatever the microphone hears, so it is only as good as the sound that reaches it. A reference or a song playing through a speaker reaches the microphone along with your voice, and the reading becomes a blend of the two: it can lean toward the reference and flatter you, or find a note while you are silent. Stop playback before you sing, keep the speaker low or use closed headphones, and judge only takes that hold your voice alone.
+
 ## Steps
 
 ### Use the practice material
 
-Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading What your voice actually is is listed there too.
+Open the practice material on this page and choose Sustained hold. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Silence reference playback, lower speaker volume below halfway, and use wired headphones when available. Keep the microphone opening clear and stay one relaxed hand-span away.
+Silence reference playback, lower speaker volume below halfway, and use wired headphones when available. Keep the microphone opening clear and stay one relaxed hand-span away. Before singing today, check your speaking voice: if it is tired from a day of talking, especially over noise, keep this session short and quiet, or rest it. Stop for pain, burning or sudden hoarseness.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +40,7 @@ Reference sound can enter the microphone along with your voice. Compare your set
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Why Loud Playback Ruins Pitch.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Make one comfortable sustained sound, then leave a full quiet gap before the next. Change only one room or device setting at a time so you can hear what fixed the input.
+Make two short takes of the same easy hum at the same distance from the microphone, with a full quiet gap between them. For the first, have something playing aloud through a speaker at your usual volume, a song or the reference from another tab or device; for the second, stop it and hum again. Playback is the only thing that changes. Record both in the recorder and listen back: the first usually carries the other sound under your voice, and the second should hold only you. Then change only one room or device setting at a time, one take each, so you can hear what fixed the input.
 
 - Look: The recording starts with your voice, settles while you sing, and returns to quiet instead of moving with playback or room noise.
 - Listen: Your recorded voice is clear enough to follow without echo, clipping, a second voice, or loud accompaniment.

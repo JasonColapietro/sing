@@ -28,7 +28,7 @@ import { ShareableResult } from "@/components/songs/result-card";
  * it, so `contracts/practice-parity.ts` can import the same numbers instead of
  * re-typing them.
  */
-import type { Stars } from "@/lib/stars";
+import { STAR_THRESHOLDS, type Stars } from "@/lib/stars";
 
 export { starsForScore, STAR_THRESHOLDS, type Stars } from "@/lib/stars";
 
@@ -93,8 +93,12 @@ export function ResultsScreen({
   onAgain?: () => void;
   /** Run the weakest part again, where the room can. */
   onPractice?: () => void;
-  /** Renders the shareable card, but only when there is a score to share. */
-  share?: { title: string; subtitle?: string };
+  /**
+   * Renders the shareable card, but only when there is a score to share.
+   * `url` is where a friend who opens the share lands: the room the result
+   * came from. Without it the share links to the home page.
+   */
+  share?: { title: string; subtitle?: string; url?: string };
   /**
    * Anything the room wants under the rows — a nudge, a hint, a chart. This
    * renders on the dark surface, so anything built out of the site's paper
@@ -248,11 +252,18 @@ export function ResultsScreen({
 
           {share && shareGrade && score !== null && (
             <div className="mt-6">
+              {/* The card's letter grade is the songbook's, but its stars are
+                  this room's: the same count the row at the top of this
+                  screen shows and /progress adds to the week's tally. The
+                  songbook's five-star scale here once read "★★★★☆ (4/5)"
+                  under one star for the same run. */}
               <ShareableResult
                 title={share.title}
                 subtitle={share.subtitle}
                 score={score}
                 grade={shareGrade}
+                starScale={{ stars, max: STAR_THRESHOLDS.length }}
+                url={share.url}
               />
             </div>
           )}

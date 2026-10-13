@@ -11,11 +11,15 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Breathy, nasal and tight all get called a bad tone, but they are three different sounds. Breathy is a haze of air in the tone, usually from vocal folds that are not meeting fully. Nasal is sound colored by the nose, though a pinched, bright tone often only seems nasal: pinch your nose on an “ah”, and if the sound changes, some of it was going through the nose. Tight, or pressed, is more squeeze than the note needs, heard as a hard, effortful tone rather than a louder one. The three can overlap, and the ear cannot always tell what causes them, so this lesson trains you to name the sound you hear before you try to change it.
+
 ## Steps
 
 ### Use the practice material
 
-Open the practice material on this page and choose Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.
+Open the practice material on this page and choose Tongue-trill descent or Soft sustain. Hear the reference, choose a comfortable key, then stop it before singing. The reading When the numbers lie to you is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
@@ -36,7 +40,7 @@ Three different problems that get called the same thing. Say what will count as 
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Breathy, Nasal, Tight: Tell Them Apart.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Compare an easy baseline with a deliberately airier, brighter-nasal, or firmer version only as a listening demonstration. Return to the easy baseline after each contrast.
+Sing one short, comfortable phrase at moderate volume as your baseline. Then sing it again changing one thing on purpose, gently and only as a listening demonstration: a little more air in the tone (breathy), more of the sound through the nose (nasal), or a slightly firmer, held sound (tight). Use only one of the three per take, keep the pitch, words and volume the same, and return to the easy baseline straight after. Record your takes in the recorder and, on playback, name the difference you hear without diagnosing its cause.
 
 - Look: The pitch and words remain the same across comparisons; no version requires a raised chin, locked jaw, or sustained pressure.
 - Listen: Name the audible difference without diagnosing its cause. Breathy, nasal, and tight are perceptions that can overlap.
@@ -68,7 +72,7 @@ I compared a relaxed baseline with a later example in the same recording and des
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If a contrast causes discomfort, hoarseness, loss of range, or effort that remains after the attempt, stop the exercise and rest your voice. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I compared a relaxed baseline with a later example in the same recording and described one audible change without forcing a rough sound. This is a self-report, not an automatic assessment.
 

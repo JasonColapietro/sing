@@ -31,14 +31,14 @@ Transpose the supplied study so its low and high phrases both fit, then mark the
 
 Rehearse the supplied phrase through and compare the connection by ear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: The written span fits inside the scanned range and the crossing phrase has a planned vowel and breath.
+- Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 
 ### Make one evidence take
 
 State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.
 
-- Look: The written span fits inside the scanned range and the crossing phrase has a planned vowel and breath.
+- Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 
 ### Review your own attempt
@@ -66,7 +66,7 @@ I rehearsed the supplied Deep River phrase in a comfortable key and marked where
 - The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: You sing the Deep River phrase through in your chosen key in one take, and on playback the crossing stays connected, with no stop, crack or push, while the low notes stay clearly audible.
 
 If not ready: If the top is forced or the bottom disappears, change key. If the crossing cracks, isolate it on a hum before returning to the lyric. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

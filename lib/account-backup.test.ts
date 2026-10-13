@@ -62,8 +62,8 @@ globalThis.fetch = async (url: string, init: RequestInit = {}) => {
   return (init.method === "PUT" ? PUT(req) : GET(req)) as Promise<Response>;
 };
 
-const progress = await import("./progress");
-const backup = await import("./account-backup");
+let progress = await import("./progress");
+let backup = await import("./account-backup");
 
 const iso = (n: number) => new Date(Date.UTC(2026, 7, 21 - n)).toISOString();
 const session = (id: string, n: number) => ({
@@ -86,9 +86,16 @@ function writeLocal(ids: [string, number][], xp: number, streak: number) {
  * A fresh browser holding `ids` and nothing else. The clear() matters as much
  * as the write: it drops "suede-sing:backup:last", which is what decides
  * whether maybeBackup() is inside its throttle window.
+ *
+ * importProgress merges into the cached record rather than replacing it, and
+ * storage.clear() does not reset that cache, so a fresh browser needs fresh
+ * modules as well as empty storage.
  */
-function seed(ids: [string, number][], xp: number, streak: number) {
+async function seed(ids: [string, number][], xp: number, streak: number) {
   storage.clear();
+  vi.resetModules();
+  progress = await import("./progress");
+  backup = await import("./account-backup");
   writeLocal(ids, xp, streak);
 }
 
@@ -107,7 +114,7 @@ describe.skipIf(!CONFIGURED)("free backup round trip against real Redis", () => 
 
   it("stores and returns the record", async () => {
     expect(getRedis(), "REAL Redis must be configured for this test").not.toBeNull();
-    seed([["a", 1], ["b", 2], ["c", 3]], 1200, 4);
+    await seed([["a", 1], ["b", 2], ["c", 3]], 1200, 4);
     const savedAt = await backup.backupNow();
     expect(savedAt).toBeTruthy();
     const remote = await backup.fetchBackup();
@@ -117,7 +124,7 @@ describe.skipIf(!CONFIGURED)("free backup round trip against real Redis", () => 
 
   it("NEVER loses practice done signed out on another device", async () => {
     // Device B: different local work, has never seen a/b/c.
-    seed([["d", 0], ["e", 1]], 300, 1);
+    await seed([["d", 0], ["e", 1]], 300, 1);
     const before = progress.getState().sessions.map((s) => s.id).sort();
     expect(before).toEqual(["d", "e"]);
 
@@ -142,12 +149,12 @@ describe.skipIf(!CONFIGURED)("free backup round trip against real Redis", () => 
    */
   it("a background refresh cannot erase another device's backup", async () => {
     // What the account holds, from some other device.
-    seed([["p", 1], ["q", 2]], 800, 3);
+    await seed([["p", 1], ["q", 2]], 800, 3);
     await backup.backupNow();
 
     // This device: different practice, and it reconciled with the account long
     // enough ago that AccountBackupSync sends it straight past the merge.
-    seed([["z", 0]], 100, 1);
+    await seed([["z", 0]], 100, 1);
     await backup.maybeBackup();
 
     const remote = await backup.fetchBackup();
@@ -155,7 +162,7 @@ describe.skipIf(!CONFIGURED)("free backup round trip against real Redis", () => 
   });
 
   it("still leaves the stored copy alone inside the throttle window", async () => {
-    seed([["t", 0]], 100, 1);
+    await seed([["t", 0]], 100, 1);
     await backup.backupNow();
     const before = await backup.fetchBackup();
 
@@ -170,7 +177,7 @@ describe.skipIf(!CONFIGURED)("free backup round trip against real Redis", () => 
   });
 
   it("is idempotent - reconciling twice changes nothing", async () => {
-    seed([["d", 0], ["e", 1]], 300, 1);
+    await seed([["d", 0], ["e", 1]], 300, 1);
     await backup.reconcileBackup();
     const once = progress.getState().sessions.map((s) => s.id).sort();
     await backup.reconcileBackup();

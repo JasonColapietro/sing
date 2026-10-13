@@ -34,7 +34,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Measured Voice",
     chapters: 23,
-    words: 31738,
+    words: 32633,
     free: 3,
     pdfMb: 1.0,
     href: "/book",
@@ -42,7 +42,7 @@ export const BOOKS: BookInventory[] = [
   {
     title: "The Voice Atlas",
     chapters: 27,
-    words: 72394,
+    words: 72468,
     free: 3,
     pdfMb: 5.0,
     href: "/atlas",
@@ -56,11 +56,28 @@ export const FREE_CHAPTERS = BOOKS.reduce((n, b) => n + b.free, 0);
 /** Songs in the practice catalogue. All public domain, all free. */
 export const SONG_COUNT = 26;
 
+/**
+ * Distinct melodies behind those songs. Two catalogue entries are longer
+ * arrangements of a melody that is already in the list (`arrangementOf`), so
+ * /songs counts melodies, and any copy that says "melodies" has to use this
+ * number rather than SONG_COUNT.
+ */
+export const MELODY_COUNT = 24;
+
 /** Warmup exercises, split by tier. */
 export const FREE_EXERCISES = 39;
 export const PRO_EXERCISES = 19;
 export const PRO_PACK_COUNT = 3;
 export const TOTAL_EXERCISES = FREE_EXERCISES + PRO_EXERCISES;
+
+/**
+ * Where the Pro packs start on /warmups: the id on the first Pro routine card.
+ * The packs render after every free routine, about eight phone screens down,
+ * so a buyer told to sing a pro warmup is sent straight to them rather than
+ * to a page whose only start button on screen runs a free set.
+ */
+export const PRO_PACKS_ANCHOR = "pro-packs";
+export const PRO_PACKS_HREF = `/warmups#${PRO_PACKS_ANCHOR}`;
 
 /**
  * Singers with a reported range and a page of their own. Free to read. The
@@ -83,6 +100,19 @@ export const GLOSSARY_COUNT = 42;
 export const ROOM_COUNT = 10;
 
 /**
+ * Guided programs at /programs. Week 1 of a Pro program is free (FREE_WEEKS
+ * in lib/programs.ts); the weeks after it need Pro. /pro's "Exactly where
+ * free ends" table has to say so, or a free singer meets the day-8 wall
+ * after reading "no asterisks".
+ */
+export const PRO_PROGRAM_NAMES: readonly string[] = [
+  "Mix in 4 weeks",
+  "The Measured Voice: 12 weeks",
+];
+export const PRO_PROGRAM_COUNT = PRO_PROGRAM_NAMES.length;
+export const FREE_PROGRAM_COUNT = 4;
+
+/**
  * The headline tiles under the buy button.
  *
  * Ordered deliberately: the recurring value first and the PDFs last. The PDFs
@@ -95,12 +125,15 @@ export const UNLOCK_TILES: Array<{ figure: string; label: string; sub: string }>
     {
       figure: TOTAL_WORDS.toLocaleString("en-US"),
       label: "words, two books",
-      sub: `${TOTAL_CHAPTERS} chapters, open the moment you subscribe`,
+      sub: `${TOTAL_CHAPTERS} chapters, open the moment you upgrade`,
     },
+    // The Atlas profiles, not the ranges: every singer page and its range is
+    // free, and the same section's "Already yours" box says so. A tile under
+    // "opens the second you upgrade" that counted them sold a free asset.
     {
-      figure: String(SINGER_COUNT),
-      label: "singer ranges",
-      sub: "The Atlas chapters that explain how to borrow them",
+      figure: String(ATLAS_VOICE_COUNT),
+      label: "Atlas singer profiles",
+      sub: "Tone and technique for each voice; the ranges stay free on every singer page",
     },
     {
       figure: String(PRO_EXERCISES),

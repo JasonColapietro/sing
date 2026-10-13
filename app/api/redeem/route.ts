@@ -21,11 +21,11 @@ import { entitlementFrom, getStripe, resolvePriceId } from "@/lib/stripe";
  * Codes live in PRO_COMP_CODES rather than in Stripe or a database, so handing
  * one out and revoking it are both an env var edit.
  *
- * A code is reusable without limit unless PRO_COMP_MAX_REDEMPTIONS is set. That
- * is fine for a code shared with a mailing list and dangerous for one that ends
- * up on Reddit: every redemption mints a real Stripe customer and subscription,
- * so an unbounded code is both unbounded free Pro and unbounded object
- * creation. Setting the cap turns on a durable per-code counter.
+ * Each code is capped at DEFAULT_COMP_CAP redemptions unless
+ * PRO_COMP_MAX_REDEMPTIONS says otherwise (0 = uncapped): every redemption
+ * mints a real Stripe customer and subscription, so an unbounded code is both
+ * unbounded free Pro and unbounded object creation. The cap is enforced by a
+ * durable per-code counter in Redis.
  */
 
 const COMP_DAYS = 30;
@@ -79,8 +79,9 @@ const usageKey = (code: string) => `comp:used:${code}`;
  * tool here: it lags writes by around a minute, which is exactly the window a
  * script would exploit.
  *
- * Returns null when the claim succeeded, or a reason when it did not. With no
- * cap configured this never runs, so the store stays entirely optional.
+ * Returns null when the claim succeeded, or a reason when it did not. It runs
+ * whenever a cap applies, which is the default, so comp codes need the store
+ * unless PRO_COMP_MAX_REDEMPTIONS=0 lifts the cap.
  */
 async function claimRedemption(
   code: string,
@@ -88,10 +89,10 @@ async function claimRedemption(
 ): Promise<"exhausted" | "unavailable" | null> {
   const redis = getRedis();
   if (!redis) {
-    // The operator asked for a cap. Granting unlimited passes because the
-    // counter is unreachable would quietly do the opposite of that.
+    // A cap applies (by default or by setting). Granting unlimited passes
+    // because the counter is unreachable would quietly do the opposite of it.
     console.error(
-      "[api/redeem] PRO_COMP_MAX_REDEMPTIONS is set but no Redis store is configured; refusing rather than granting uncapped passes.",
+      `[api/redeem] A redemption cap applies (PRO_COMP_MAX_REDEMPTIONS, default ${DEFAULT_COMP_CAP}) but no Redis store is configured; refusing rather than granting uncapped passes.`,
     );
     return "unavailable";
   }

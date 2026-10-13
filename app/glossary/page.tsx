@@ -2,15 +2,19 @@ import type { Metadata } from "next";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import Link from "next/link";
 import { ATLAS_CONTENTS } from "@/lib/atlas-data";
-import { AUTHOR_NODE } from "@/lib/author";
+import { AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
+import { BOOK_CONTENTS } from "@/lib/book-data";
 import {
   roomLabel,
   SING_GLOSSARY,
   SING_GLOSSARY_TERMS,
   termId,
 } from "@/lib/glossary";
+import { courseModuleForTerm } from "@/lib/lesson-glossary";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
+import { EXERCISES } from "@/components/warmups/exercises";
 import { Card, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -30,8 +34,23 @@ export const metadata: Metadata = withCanonicalOpenGraph({
   },
 });
 
+/**
+ * Where "the range test" links land: the test tab, at the #start anchor
+ * voice-test.tsx carries, so a phone lands on the start button rather than the
+ * intro above it (the guides and song pages link the test the same way).
+ */
+const RANGE_TEST_HREF = rangeTestHref();
+
 /** The definition the opening paragraph quotes, so the answer is the page's own. */
 const PASSAGGIO = SING_GLOSSARY_TERMS.find((entry) => entry.term === "Passaggio");
+
+/**
+ * The free warmup an entry names, resolved by id. Only the free catalogue is
+ * searched, so a Pro-pack id can never put a locked drill behind "Try it".
+ */
+function drillFor(id: string | undefined) {
+  return id ? EXERCISES.find((exercise) => exercise.id === id) : undefined;
+}
 
 export default function GlossaryPage() {
   const setId = `${SITE_URL}/glossary#glossary`;
@@ -60,6 +79,9 @@ export default function GlossaryPage() {
   // The atlas chapters that teach notation and the voice-type labels are free,
   // so the glossary can hand a reader the long version without a paywall.
   const freeChapters = ATLAS_CONTENTS.filter((c) => c.free);
+  // The Measured Voice samples chapters across the book (not only its first),
+  // so each free one is listed and linked rather than summed up as "the first".
+  const freeBookChapters = BOOK_CONTENTS.filter((c) => c.free);
 
   return (
     <PageShell
@@ -78,6 +100,17 @@ export default function GlossaryPage() {
 
       <div className="space-y-6">
         <Card>
+          {/* The visible counterpart of the DefinedTermSet's author node. */}
+          <p className="mb-3 text-sm text-mut">
+            By{" "}
+            <a
+              href={AUTHOR_NODE.url}
+              rel="author"
+              className="text-violet-ink hover:underline"
+            >
+              {AUTHOR_NAME}
+            </a>
+          </p>
           <p className="max-w-3xl text-mut">
             Vocal teaching runs on borrowed words. Half of them arrived from
             three different traditions that never agreed with each other, and
@@ -88,15 +121,20 @@ export default function GlossaryPage() {
             definition has somewhere to land.
           </p>
           <p className="mt-3 max-w-3xl text-sm text-mut">
-            Definitions only. No exercise is prescribed here — the{" "}
+            Definitions only. The exercises live in the{" "}
             <Link href="/warmups" className="text-violet-ink hover:underline">
               warmups
             </Link>{" "}
             and the{" "}
-            <Link href="/range?mode=range" className="text-violet-ink hover:underline">
+            <Link href={RANGE_TEST_HREF} className="text-violet-ink hover:underline">
               range test
-            </Link>{" "}
-            do that part, and none of this is medical advice.
+            </Link>
+            ; where a free warmup or breath drill trains a term, its entry
+            links straight to it. None of this is medical advice. Warmups,
+            ear training, breath drills and song practice share the free
+            plan&apos;s{" "}
+            {FREE_DAILY_MINUTES} minutes of guided practice a day; the other
+            rooms linked here have no daily limit.
           </p>
           <nav aria-label="Sections" className="mt-5 flex flex-wrap gap-2">
             {SING_GLOSSARY.map((section) => (
@@ -118,36 +156,73 @@ export default function GlossaryPage() {
             </h2>
             <p className="mt-2 max-w-3xl text-sm text-mut">{section.blurb}</p>
             <div className="mt-5 divide-y divide-line/50">
-              {section.entries.map((entry) => (
-                <div
-                  key={entry.term}
-                  id={termId(entry.term)}
-                  className="scroll-mt-20 py-4 first:pt-0 last:pb-0"
-                >
-                  <div className="flex flex-wrap items-baseline gap-x-3">
-                    <h3 className="text-lg font-extrabold text-ink">
-                      {entry.term}
-                    </h3>
-                    {entry.aka && (
-                      <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-dim">
-                        also {entry.aka.join(" · ")}
-                      </span>
-                    )}
+              {section.entries.map((entry) => {
+                const drill = drillFor(entry.drill);
+                const lessons = courseModuleForTerm(entry.term);
+                return (
+                  <div
+                    key={entry.term}
+                    id={termId(entry.term)}
+                    className="scroll-mt-20 py-4 first:pt-0 last:pb-0"
+                  >
+                    <div className="flex flex-wrap items-baseline gap-x-3">
+                      <h3 className="text-lg font-extrabold text-ink">
+                        {entry.term}
+                      </h3>
+                      {entry.aka && (
+                        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-dim">
+                          also {entry.aka.join(" · ")}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1.5 max-w-3xl text-mut">
+                      {entry.definition}
+                    </p>
+                    <p className="mt-1.5 max-w-3xl text-sm text-dim">
+                      {entry.where}{" "}
+                      <Link
+                        href={entry.href === "/range" ? RANGE_TEST_HREF : entry.href}
+                        className="text-violet-ink hover:underline"
+                      >
+                        Open {roomLabel(entry.href)} →
+                      </Link>
+                      {drill && (
+                        <>
+                          {" · "}
+                          <Link
+                            href={`/warmups?exercise=${drill.id}`}
+                            className="text-violet-ink hover:underline"
+                          >
+                            Try it: {drill.title} →
+                          </Link>
+                        </>
+                      )}
+                      {entry.tryIt && (
+                        <>
+                          {" · "}
+                          <Link
+                            href={entry.tryIt.href}
+                            className="text-violet-ink hover:underline"
+                          >
+                            Try it: {entry.tryIt.label} →
+                          </Link>
+                        </>
+                      )}
+                      {lessons && (
+                        <>
+                          {" · "}
+                          <Link
+                            href={lessons.href}
+                            className="text-violet-ink hover:underline"
+                          >
+                            Free lessons: {lessons.name} →
+                          </Link>
+                        </>
+                      )}
+                    </p>
                   </div>
-                  <p className="mt-1.5 max-w-3xl text-mut">
-                    {entry.definition}
-                  </p>
-                  <p className="mt-1.5 max-w-3xl text-sm text-dim">
-                    {entry.where}{" "}
-                    <Link
-                      href={entry.href === "/range" ? "/range?mode=range" : entry.href}
-                      className="text-violet-ink hover:underline"
-                    >
-                      Open {roomLabel(entry.href)} →
-                    </Link>
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Card>
         ))}
@@ -177,9 +252,22 @@ export default function GlossaryPage() {
               The Measured Voice
             </Link>{" "}
             takes the same ground from the other side — how the voice works,
-            then how to read your own numbers — and its first chapter is free
-            too.
+            then how to read your own numbers — and {freeBookChapters.length} of
+            its chapters are free to read:
           </p>
+          <ul className="mt-4 space-y-2">
+            {freeBookChapters.map((c) => (
+              <li key={c.slug} className="max-w-3xl text-sm text-mut">
+                <Link
+                  href={`/book/${c.slug}`}
+                  className="text-violet-ink hover:underline"
+                >
+                  {c.title}
+                </Link>
+                {c.summary && <span> — {c.summary}</span>}
+              </li>
+            ))}
+          </ul>
         </Card>
       </div>
     </PageShell>

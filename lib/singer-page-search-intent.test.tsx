@@ -70,7 +70,7 @@ const ARTIST_INTENT_CASES = [
   {
     slug: "reba-mcentire",
     name: "Reba McEntire",
-    opening: "Reba McEntire's reviewed sources describe a peak-career span of about three octaves but do not establish a definitive classical voice type. The displayed range of E3 to F5 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Reba McEntire's own lesson describes a peak-career span of about three octaves, wider than this catalog's listed span, but gives no endpoints; the reviewed sources do not establish a definitive classical voice type. The displayed range of E3 to F5 is a reported reference span, not an independently verified physiological limit.",
     title: "Reba McEntire Vocal Range & Voice Type: Classifications Vary",
     heading: "Reba McEntire Voice Type and Vocal Range",
   },
@@ -278,7 +278,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
           `<h1 class="text-4xl sm:text-5xl">${heading}</h1>`,
         );
         expect(html).toContain(opening);
-        expect(html).toContain(`href="/range?compare=${singer.slug}"`);
+        expect(html).toContain(`href="/range?compare=${singer.slug}#start"`);
         expect(html).toContain(COMPARISON_SNIPPETS[singer.slug] ? "Compare my range — free test" : "Test my range");
       }
     },
@@ -307,7 +307,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
     expect(metadata.description).not.toMatch(/pending/i);
     expect(metadata.alternates?.canonical).toBe(`${SITE_URL}/singers/${slug}`);
     const html = renderToStaticMarkup(await SingerPage({ params: Promise.resolve({ slug }) }));
-    expect(html).toMatch(new RegExp(`<a[^>]+href="/range\\?compare=${slug}"[^>]*>Compare my range — free test →</a>`));
+    expect(html).toMatch(new RegExp(`<a[^>]+href="/range\\?compare=${slug}#start"[^>]*>Compare my range — free test →</a>`));
     expect(html).toContain("Catalog label");
     expect(html).not.toContain("Can You Sing It?");
     expect(html).not.toContain("Full voice to");

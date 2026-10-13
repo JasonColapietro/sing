@@ -5,6 +5,7 @@ import { SITE_URL } from "./site";
 import {
   ENTITLING_STATUSES,
   INACTIVE,
+  LIFETIME_OFFER,
   PRICING,
   type CheckoutPlan,
   type Entitlement,
@@ -73,9 +74,10 @@ const PRICE_ID_ENV_VARS: Record<CheckoutPlan, string> = {
 export class PriceNotConfiguredError extends Error {
   readonly plan: CheckoutPlan;
 
-  constructor(plan: CheckoutPlan) {
+  constructor(plan: CheckoutPlan, message?: string) {
     super(
-      `No active Stripe price with lookup key "${CHECKOUT_PRICE_LOOKUP_KEYS[plan]}". Run \`npm run stripe:setup -- ${plan}\` to create one.`,
+      message ??
+        `No active Stripe price with lookup key "${CHECKOUT_PRICE_LOOKUP_KEYS[plan]}". Run \`npm run stripe:setup -- ${plan}\` to create one.`,
     );
     this.name = "PriceNotConfiguredError";
     this.plan = plan;
@@ -114,6 +116,18 @@ function priceMatchesPlan(plan: CheckoutPlan, price: Stripe.Price): boolean {
 }
 
 export async function resolvePriceId(plan: CheckoutPlan): Promise<string> {
+  // A lifetime sale at an amount isOurLifetimePayment does not honour would
+  // be refused at its own confirmation and on every recheck after it: the
+  // buyer pays and never gets Pro. Refuse the sale until the amount is added.
+  if (
+    plan === "lifetime" &&
+    !HONOURED_LIFETIME_CENTS.has(Math.round(PRICING.lifetime.amount * 100))
+  ) {
+    throw new PriceNotConfiguredError(
+      plan,
+      `PRICING.lifetime.amount ($${PRICING.lifetime.amount}) is not in HONOURED_LIFETIME_CENTS in lib/stripe.ts, so its buyers would be refused Pro. Add the amount there (keeping the old ones) before selling at it.`,
+    );
+  }
   const pinned = process.env[PRICE_ID_ENV_VARS[plan]];
   if (pinned) {
     if (!isStripeId(pinned, "price_")) {
@@ -270,7 +284,20 @@ export function entitlementFrom(
   };
 }
 
-/** True only for an unreversed $79 Early Access lifetime purchase. */
+/**
+ * Every amount a lifetime purchase has been sold at, in cents. Append only.
+ *
+ * A lifetime buyer is checked against Stripe again every twelve hours, on
+ * restore, on sync and on every locked chapter. Testing the payment against
+ * the price on display today would revoke everyone who paid an earlier one
+ * the moment PRICING.lifetime.amount changes, and wipe the Pro key from their
+ * browser with it. When the price changes, add the new amount here and keep
+ * the old ones: removing an entry revokes the people who paid it. Until the
+ * new amount is here, resolvePriceId refuses to sell lifetime at it.
+ */
+export const HONOURED_LIFETIME_CENTS: ReadonlySet<number> = new Set([7_900]);
+
+/** True only for an unreversed lifetime purchase at an honoured price. */
 export function isOurLifetimePayment(payment: Stripe.PaymentIntent): boolean {
   const customerId =
     typeof payment.customer === "string"
@@ -282,9 +309,9 @@ export function isOurLifetimePayment(payment: Stripe.PaymentIntent): boolean {
     payment.status === "succeeded" &&
     !!customerId?.startsWith("cus_") &&
     payment.currency === "usd" &&
-    payment.amount_received === Math.round(PRICING.lifetime.amount * 100) &&
+    HONOURED_LIFETIME_CENTS.has(payment.amount_received) &&
     payment.metadata.app === "suede-sing" &&
-    payment.metadata.offer === "early-access" &&
+    payment.metadata.offer === LIFETIME_OFFER &&
     payment.metadata.plan === "lifetime" &&
     charge.paid &&
     charge.status === "succeeded" &&

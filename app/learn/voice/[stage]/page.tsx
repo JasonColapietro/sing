@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { webPageJsonLd } from "@/lib/page-jsonld";
 import { SITE_URL } from "@/lib/site";
-import { MODULE_PRACTICE, practiceMatch } from "@/lib/lesson-practice";
+import { distinctPracticeMatch } from "@/lib/lesson-practice";
 import {
   COURSE,
   VOICE_LEARN_PATH,
@@ -42,9 +42,12 @@ function stageAnswer(stage: CourseStage): string {
 
 type Stage = NonNullable<ReturnType<typeof findStage>>;
 
+// The goal leads: the counts alone ("3 modules and 9 short lessons") say
+// nothing about what the stage teaches, and a longer template ran past the
+// snippet budget for five of the seven stages, so fitDescription cut the goal.
 function stageDescription(stage: Stage): string {
   const { catalog } = stage;
-  return `${catalog.name} voice lessons: stage ${catalog.stage} of the free singing course, ${stage.modules.length} modules and ${stageLessonCount(stage)} short lessons. The goal: ${lowerFirst(catalog.subtitle)}.`;
+  return `${catalog.name} voice lessons, stage ${catalog.stage} of ${COURSE.length}: ${lowerFirst(catalog.subtitle)}. ${stage.modules.length} modules, ${stageLessonCount(stage)} short free lessons.`;
 }
 
 export async function generateMetadata({
@@ -100,8 +103,8 @@ export default async function StagePage({ params }: { params: Promise<Params> })
       <CourseBreadcrumbs trail={[{ href: VOICE_LEARN_PATH, label: "Voice lessons" }]} current={catalog.name} />
       <div className="space-y-6">
         {stage.modules.map((module) => {
-          const practice = MODULE_PRACTICE[module.catalog.id];
-          const match = practice ? practiceMatch(practice.companion) : undefined;
+          // Only a room session no other module shares marks a module practised.
+          const match = distinctPracticeMatch(module.catalog.id);
           return (
             <Card key={module.catalog.id}>
               <div data-course-module={module.catalog.id} className="max-w-3xl">

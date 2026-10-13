@@ -1,4 +1,4 @@
-import { midiToLabel } from "@/lib/audio/notes";
+import { midiToFlatLabel, midiToLabel } from "@/lib/audio/notes";
 import { SINGERS } from "@/lib/singers-data";
 
 /**
@@ -31,6 +31,14 @@ export interface PopSong {
   sourceUrl?: string;
   /** What the voice is actually asked to do. No lyric quotes. */
   blurb: string;
+  /**
+   * Editorial override, set only where the blurb documents a sustained
+   * full-voice top above the tenor passaggio (D4–G4), which span plus
+   * altitude cannot see for a song sung in the male octave. The song's page
+   * states that reason beside the rating, so an override set for any other
+   * reason would make the page say something false.
+   */
+  difficulty?: PopDifficulty;
 }
 
 /** Parse scientific pitch ("A3", "F#5", "Bb2") to MIDI. C4 = 60. */
@@ -48,11 +56,14 @@ export type PopDifficulty = "Easy" | "Medium" | "Hard";
  * Difficulty from the two facts every entry carries. The songbook scores
  * melodic leaps too, but this catalog stores no melodies, so the read is
  * span plus altitude: a wide span or a top above F5 is what defeats most
- * untrained singers, regardless of the tune between the extremes.
+ * untrained singers, regardless of the tune between the extremes. An entry
+ * may set `difficulty` where its blurb documents a sustained full-voice top
+ * above the tenor passaggio.
  */
 export function popDifficulty(song: PopSong): PopDifficulty {
+  if (song.difficulty) return song.difficulty;
   const span = song.highMidi - song.lowMidi;
-  if (span >= 22 || song.highMidi >= 81) return "Hard";
+  if (span >= 22 || song.highMidi >= 78) return "Hard";
   if (span <= 14 && song.highMidi <= 72) return "Easy";
   return "Medium";
 }
@@ -91,8 +102,20 @@ export function popFit(
   return { verdict: "fits", offsetSemis: 0 };
 }
 
+/**
+ * Keys whose signatures carry flats. Notes in these keys are spelled with
+ * flats ("Ab3", not "G#3"), the way the cited sheet music and the source
+ * notes spell them; every other key keeps the site's default sharps.
+ */
+const FLAT_KEY = /^(F|Bb|Eb|Ab|Db|Gb) major$|^(D|G|C|F|Bb|Eb) minor$/;
+
+/** One of the song's notes, spelled for the song's key. */
+export function popNoteLabel(song: Pick<PopSong, "key">, midi: number): string {
+  return FLAT_KEY.test(song.key) ? midiToFlatLabel(midi) : midiToLabel(midi);
+}
+
 export function popRangeLabel(song: PopSong): string {
-  return `${midiToLabel(song.lowMidi)}–${midiToLabel(song.highMidi)}`;
+  return `${popNoteLabel(song, song.lowMidi)}–${popNoteLabel(song, song.highMidi)}`;
 }
 
 export function popSongBySlug(slug: string): PopSong | undefined {
@@ -103,14 +126,29 @@ export function popSongsByArtistSlug(artistSlug: string): PopSong[] {
   return POP_SONGS.filter((s) => s.artistSlugs.includes(artistSlug));
 }
 
-/** Catalog songs nearest in range center, for the "try these next" links. */
+/**
+ * Catalog songs nearest in range center, for the "try these next" links.
+ *
+ * Neighbours are taken in rank order, alternating below and above the song,
+ * rather than by raw distance. By distance alone the song with the lowest
+ * center (Hallelujah) ranked fifth or lower on every list and was linked
+ * from none of its siblings; by rank, every song sits within two places of
+ * at least two others and so appears on their lists.
+ */
 export function relatedPopSongs(song: PopSong, count = 4): PopSong[] {
-  const center = (song.lowMidi + song.highMidi) / 2;
-  return POP_SONGS.filter((s) => s.slug !== song.slug)
-    .map((s) => ({ s, d: Math.abs((s.lowMidi + s.highMidi) / 2 - center) }))
-    .sort((a, b) => a.d - b.d)
-    .slice(0, count)
-    .map((x) => x.s);
+  const center = (s: PopSong) => (s.lowMidi + s.highMidi) / 2;
+  const order = [...POP_SONGS].sort(
+    (a, b) => center(a) - center(b) || a.slug.localeCompare(b.slug),
+  );
+  const i = order.findIndex((s) => s.slug === song.slug);
+  if (i < 0) return [];
+  const picks: PopSong[] = [];
+  for (let d = 1; picks.length < count && d < order.length; d++) {
+    for (const j of [i - d, i + d]) {
+      if (j >= 0 && j < order.length && picks.length < count) picks.push(order[j]);
+    }
+  }
+  return picks;
 }
 
 /** Library singers credited on this song, resolved to full records. */
@@ -133,7 +171,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("A4"),
     sourceNote: "Musicnotes original-key arrangement, G3–A4 in A minor",
     blurb:
-      "A nine-semitone range makes this one of the most reachable hits of its decade on paper. What the record actually trades on is delivery: a lazy, behind-the-beat vocal fry drawl, quick flips into light head voice for the hook's decorations, and total rhythmic confidence. Sing it accurately but stiffly and it collapses; the notes are the least of it.",
+      "A fourteen-semitone range (G3 to A4, a ninth) keeps the notes within reach on paper. What the record actually trades on is delivery: a lazy, behind-the-beat vocal fry drawl, quick flips into light head voice for the hook's decorations, and total rhythmic confidence. Sing it accurately but stiffly and it collapses; the notes are the least of it.",
   },
   {
     slug: "birds-of-a-feather",
@@ -232,7 +270,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("E5"),
     sourceNote: "Musicnotes original-key arrangement, E3–E5 in A major",
     blurb:
-      "Two full octaves from a hushed E3 to the chorus's repeated E5 peaks, sung over nothing but piano. The chorus tessitura hangs high and stays there, and the emotional dynamic asks for those top notes in a cry-adjacent mix rather than a hard belt. The most commonly attempted and most commonly transposed karaoke ballad of its era, for exactly these reasons.",
+      "Two full octaves from a hushed E3 to the chorus's repeated E5 peaks, sung over nothing but piano. The chorus tessitura hangs high and stays there, and the emotional dynamic asks for those top notes in a cry-adjacent mix rather than a hard belt. Those two demands are what to check against your own range before choosing a key.",
   },
   {
     slug: "shallow",
@@ -261,6 +299,8 @@ export const POP_SONGS: PopSong[] = [
     sourceNote: "Musicnotes original-key arrangement, written E4–C#6, sounding E3–C#5 in A major",
     blurb:
       "A modern soul feature for a big male voice: gritty low verses, then choruses that park on sustained A4s and push to C#5 in full chest. The rasp is optional; the sheer sustained weight at the top of the tenor range is not, and the song repeats that demand until the last chorus.",
+    // Span 21 reads Medium, but the chorus holds full-chest A4s to C#5.
+    difficulty: "Hard",
   },
   {
     slug: "beautiful-things",
@@ -274,7 +314,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("F5"),
     sourceNote: "Musicnotes original-key arrangement, written F4–F6, sounding F3–F5 in Bb major",
     blurb:
-      "A quiet folk-pop opening that detonates into one of the hardest choruses in current pop: two octaves of range topping out at a screamed-belt F5 that even trained tenors treat with respect. The dynamic whiplash is the point — the song is engineered around the jump from a whisper to that note.",
+      "A quiet folk-pop opening that detonates into a demanding chorus: two octaves of range topping out at a screamed-belt F5 that even trained tenors treat with respect. The dynamic whiplash is the point — the song is engineered around the jump from a whisper to that note.",
   },
   {
     slug: "i-will-always-love-you",
@@ -288,7 +328,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("G#5"),
     sourceNote: "Musicnotes original-key arrangement, F#3–G#5 in A major",
     blurb:
-      "Long a-cappella phrases with nowhere to hide, then a modulation up to B major for the final chorus that plants the famous belted climax near the top of the soprano break. The verses sit low and conversational, so the voice has to cover more than two octaves of dynamic and emotional ground in under five minutes. Written by Dolly Parton, whose original sits far lower and gentler.",
+      "Long a-cappella phrases with nowhere to hide, then a modulation up to B major for the final chorus that plants the famous belted climax near the top of the soprano break. The verses sit low and conversational, so the voice has to cover more than two octaves of dynamic and emotional ground in under five minutes. Written by Dolly Parton, whose own recording is a gentler country ballad.",
   },
   {
     slug: "take-me-to-church",
@@ -303,7 +343,7 @@ export const POP_SONGS: PopSong[] = [
     sourceNote:
       "Musicnotes original-key arrangement, sounding C3–B4 in E minor; some range sites cite a low growl near E2",
     blurb:
-      "A slow gospel-blues build that lives in the baritone's strongest octave, then leans on a sustained, full-voiced B4 in the choruses — comfortable territory for a high baritone, a strain for anyone who reaches it from below. The difficulty is stamina, not acrobatics: the chorus top repeats over and over at full volume.",
+      "A slow gospel-blues build that lives in the baritone's strongest octave, then leans on a sustained, full-voiced B4 in the choruses — a note above the conventional baritone band, so even a high baritone is working at the top of the voice. The difficulty is stamina, not acrobatics: the chorus top repeats over and over at full volume.",
   },
   {
     slug: "someone-you-loved",
@@ -317,7 +357,9 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("Bb4"),
     sourceNote: "Musicnotes original-key arrangement, sounding Eb3–Bb4 in Db major",
     blurb:
-      "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is barely an octave and a half, but the tessitura of the chorus parks a male voice right in the passaggio and keeps it there — the classic reason it feels so much harder than its range suggests.",
+      "A piano ballad whose whole design is the leap from a murmured verse to a chorus that sits on sustained Ab4s and Bb4s in full voice. The span is only an octave and a fifth, but the tessitura of the chorus parks a male voice at or above the top of its passaggio and keeps it there — the classic reason it feels so much harder than its range suggests.",
+    // Span 19 reads Medium, but the chorus holds full-voice Ab4–Bb4.
+    difficulty: "Hard",
   },
   {
     slug: "rolling-in-the-deep",
@@ -374,7 +416,7 @@ export const POP_SONGS: PopSong[] = [
     sourceNote:
       "Musicnotes original-key arrangement of the Buckley version, sounding C3–F4 in C major; some sources cite F#4 at the top",
     blurb:
-      "Leonard Cohen's hymn, in the version most people now mean: Buckley keeps the written range barely over an octave and makes the song entirely about breath control, dynamics and sustained quiet head-mix. It is one of the most singable ranges in the catalog and one of the hardest songs to sing well, because there is nothing to hide behind.",
+      "Leonard Cohen's hymn, in the version most people now mean: Buckley keeps the written range to an octave and a fourth and makes the song entirely about breath control, dynamics and sustained quiet head-mix. The range itself is modest; singing it well is not, because there is nothing to hide behind.",
   },
   {
     slug: "tennessee-whiskey",
@@ -399,11 +441,11 @@ export const POP_SONGS: PopSong[] = [
     genre: "Pop",
     key: "A major",
     lowMidi: noteMidi("G#3"),
-    highMidi: noteMidi("C#6"),
+    highMidi: noteMidi("E5"),
     sourceNote:
-      "Musicnotes original-key duet arrangement, combined voice range G#3–C#6 in A major; the notated lead line tops near E5",
+      "Musicnotes original-key duet arrangement in A major: notated lead line G#3 to about E5; harmonized falsetto ad-libs take the combined voice range to C#6",
     blurb:
-      "A retro-soul duet whose combined range looks terrifying on paper — the C#6 ceiling belongs to the harmonized falsetto ad-libs, while the lead melody itself crests around E5. Sung solo it demands both a warm low verse register and a committed belt; sung as written it needs two voices trading and stacking. The span is the widest in this catalog.",
+      "A retro-soul duet whose combined range looks terrifying on paper — the C#6 ceiling belongs to the harmonized falsetto ad-libs, while the lead melody itself crests around E5. Sung solo it demands both a warm low verse register and a committed belt; sung as written it needs two voices trading and stacking.",
   },
   {
     slug: "stick-season",
@@ -417,7 +459,7 @@ export const POP_SONGS: PopSong[] = [
     highMidi: noteMidi("A4"),
     sourceNote: "Musicnotes original-key arrangement, written E4–A5, sounding E3–A4",
     blurb:
-      "Strummed folk-pop with a fast, wordy verse and a chorus that sits on A4 at the top of an untrained male range without ever leaving it much room to rest. The song is a stamina-and-diction test: eleven semitones of range, a relentless syllable count, and a top note that recurs just often enough to find out whether it is really there.",
+      "Strummed folk-pop with a fast, wordy verse and a chorus that sits on A4 at the top of an untrained male range without ever leaving it much room to rest. The song is a stamina-and-diction test: seventeen semitones of range (an octave and a fourth), a relentless syllable count, and a top note that recurs just often enough to find out whether it is really there.",
   },
   {
     slug: "drop-dead",
@@ -434,7 +476,7 @@ export const POP_SONGS: PopSong[] = [
     sourceUrl:
       "https://www.musicnotes.com/sheetmusic/olivia-rodrigo/drop-dead/MN0309204",
     blurb:
-      "Almost two octaves separate the grounded Ab3 low from the F5 peak, so this is less about one isolated high note than keeping every register available at a brisk pop pace. Start the phrases lighter than the recording suggests, map the two range edges separately, and only join the full song after both ends stay free of strain.",
+      "An octave and a sixth separates the grounded Ab3 low from the F5 peak, so this is less about one isolated high note than keeping every register available at a brisk pop pace. Start the phrases lighter than the recording suggests, map the two range edges separately, and only join the full song after both ends stay free of strain.",
   },
   {
     slug: "unchained-melody",
@@ -444,14 +486,14 @@ export const POP_SONGS: PopSong[] = [
     year: 1965,
     genre: "Pop",
     key: "Bb major",
-    lowMidi: noteMidi("C4"),
-    highMidi: noteMidi("A5"),
+    lowMidi: noteMidi("C3"),
+    highMidi: noteMidi("A4"),
     sourceNote:
-      "Musicnotes original-key Singer Pro arrangement MN0133818, C4–A5 in Bb major",
+      "Musicnotes original-key Singer Pro arrangement MN0133818, written C4–A5, sounding C3–A4 in Bb major",
     sourceUrl:
       "https://www.musicnotes.com/sheetmusic/the-righteous-brothers/unchained-melody/MN0133818",
     blurb:
-      "The climb from C4 to A5 makes the ending the obvious headline, but the first job is controlled breath and an even legato line through the quieter opening. Practice the upper section softly and separately; the page's range fit is a boundary check, not permission to push for the recording's full volume or color.",
+      "The climb from C3 to A4 makes the ending the obvious headline, but the first job is controlled breath and an even legato line through the quieter opening. Practice the upper section softly and separately; the page's range fit is a boundary check, not permission to push for the recording's full volume or color.",
   },
   {
     slug: "greedy",

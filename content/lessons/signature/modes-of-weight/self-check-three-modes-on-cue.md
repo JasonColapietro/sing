@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Self-Check: Three Modes on Cue"
 type: "checkpoint"
 minutes: 6
-objective: "Called at random, with a return to easy neutral voice between attempts. Strain is not measured."
+objective: "Before recording, draw the order from slips marked neutral, restrained and driven, with a return to easy neutral voice between attempts. Strain is not measured."
 prerequisites: "v-l7-m3-04"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -22,21 +22,21 @@ Open the practice material on this page and choose Soft sustain. Hear the refere
 
 ### Set a safe baseline
 
-Use one mid-range phrase at moderate volume and establish a neutral baseline. Define the three intended weights in words before recording.
+Use one mid-range phrase at moderate volume and establish a neutral baseline. Use neutral plus two others, and leave edged out until a teacher has heard it. Neutral: your easy, speech-like default. Restrained: the same note held back, softer and more contained. Driven: fuller and more speech-like, like calling across a room at a moderate level. Edged: brighter and more cutting, still not loud.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
 
 ### Name the target: Weight and mode switching
 
-Called at random, with a return to easy neutral voice between attempts. Strain is not measured. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Before recording, draw the order from slips marked neutral, restrained and driven, with a return to easy neutral voice between attempts. Strain is not measured. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.
 - Listen: Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Change vocal weight without moving the pitch or using loudness as the only cue. Return to neutral between every attempt.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Draw the slips, then sing the phrase once per slip in the order drawn, returning to easy neutral between attempts. Change vocal weight without moving the pitch or using loudness as the only cue.
 
 - Look: The same phrase, key, and tempo are used; the jaw, neck, and chin remain available in every version.
 - Listen: Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.
@@ -66,7 +66,7 @@ I compared comfortable production choices in one short phrase and returned to an
 - Three repeatable weights are audible on cue without persistent rasp, pressure, or loss of range afterward.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: In one take sung in the order you drew, you can tell neutral, restrained and driven apart on playback without the slips, each attempt returned to easy neutral before the next, and your speaking voice afterward is unchanged.
 
 If not ready: If a heavier mode requires pressure, reduce the contrast or stop. Do not repeat a tight attempt in pursuit of a label. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

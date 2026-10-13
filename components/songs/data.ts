@@ -35,7 +35,9 @@ export const SONGS: Song[] = [
     genre: "Nursery",
     era: "1700s",
     language: "English",
-    tags: ["first song", "stepwise", "narrow range"],
+    // Not "stepwise": the opening "twinkle, twinkle" is a rising fifth, the
+    // textbook reference for that interval.
+    tags: ["first song", "narrow range"],
     notes: [
       { midi: 60, startBeat: 0, durBeats: 1, lyric: "Twin", wordEnd: false },
       { midi: 60, startBeat: 1, durBeats: 1, lyric: "kle" },
@@ -195,9 +197,9 @@ export const SONGS: Song[] = [
       { midi: 62, startBeat: 7, durBeats: 1, lyric: "fall", line: 1, wordEnd: false },
       { midi: 64, startBeat: 8, durBeats: 1, lyric: "ing", line: 1 },
       { midi: 65, startBeat: 9, durBeats: 1, lyric: "down,", line: 1 },
-      { midi: 67, startBeat: 10, durBeats: 1, lyric: "fall", line: 1, wordEnd: false },
-      { midi: 64, startBeat: 11, durBeats: 1, lyric: "ing", line: 1 },
-      { midi: 60, startBeat: 12, durBeats: 2, lyric: "down", line: 1 },
+      { midi: 64, startBeat: 10, durBeats: 1, lyric: "fall", line: 1, wordEnd: false },
+      { midi: 65, startBeat: 11, durBeats: 1, lyric: "ing", line: 1 },
+      { midi: 67, startBeat: 12, durBeats: 2, lyric: "down", line: 1 },
     ],
   },
   {
@@ -216,7 +218,7 @@ export const SONGS: Song[] = [
     form: "phrase",
     defaultLoops: 4,
     genre: "Hymn",
-    era: "1700s",
+    era: "1800s",
     language: "English",
     tags: ["hymn", "wide range", "leap"],
     notes: [
@@ -284,6 +286,9 @@ export const SONGS: Song[] = [
     beatsPerBar: 3,
     defaultKeyRootMidi: 60,
     form: "phrase",
+    // The song opens on the verse ("Oh, give me a home…", in the longer
+    // arrangement below); this phrase is the chorus, so its page says so.
+    excerpt: "chorus hook",
     defaultLoops: 4,
     genre: "Folk",
     era: "1800s",
@@ -298,12 +303,13 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Full arrangement: the verse climbs from the dominant-below up to the
-    // sixth-leap on "buf-FA-lo," then the chorus enters on its own peak. The
-    // two halves together span more than either does alone.
+    // Longer arrangement: the first line of the verse climbs from the
+    // dominant-below up to the sixth-leap on "buf-FA-lo," then the first line
+    // of the chorus enters on its own peak. The two lines together span more
+    // than either does alone.
     id: "home-on-the-range-full",
     slug: "home-on-the-range-full",
-    title: "Home on the Range (Verse & Chorus)",
+    title: "Home on the Range (Opening Lines)",
     origin: "Poem “My Western Home” by Dr. Brewster Higley, 1873; melody by Daniel E. Kelley, 1873",
     publicDomain:
       "Higley’s poem and Kelley’s melody were both published in 1873; Higley died in 1911 and Kelley in 1905 — long out of copyright.",
@@ -315,7 +321,7 @@ export const SONGS: Song[] = [
     genre: "Folk",
     era: "1800s",
     language: "English",
-    tags: ["cowboy song", "full song", "verse and chorus"],
+    tags: ["cowboy song", "longer arrangement", "verse and chorus"],
     arrangementOf: "home-on-the-range",
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh," },
@@ -336,8 +342,8 @@ export const SONGS: Song[] = [
       { midi: 64, startBeat: 18, durBeats: 3, lyric: "range,", line: 1 },
     ],
     sections: [
-      { kind: "verse", label: "Verse 1", startBeat: 0, endBeat: 12 },
-      { kind: "chorus", label: "Chorus", startBeat: 12, endBeat: 21 },
+      { kind: "verse", label: "Verse 1, line 1", startBeat: 0, endBeat: 12 },
+      { kind: "chorus", label: "Chorus, line 1", startBeat: 12, endBeat: 21 },
     ],
   },
   {
@@ -406,8 +412,12 @@ export const SONGS: Song[] = [
   },
   {
     // 6/8, counted in eighths: the lilting compound meter is the whole
-    // character of the tune, and a 3/4 reduction loses it. A repeated dominant
-    // that falls a third and comes back — genuinely Easy.
+    // character of the tune, and a 3/4 reduction loses it. Gruber's line is
+    // sol-la-sol-mi, twice, but the la is a sixteenth-note upper neighbour
+    // slurred onto "Si-" and "ho-": "lent" and "ly" are back on the G and
+    // "night" is the long E. As with every melisma in the book, that turn is
+    // reduced to its main note, so each syllable carries one pitch: a
+    // repeated dominant that falls a third and comes back — genuinely Easy.
     id: "silent-night",
     slug: "silent-night",
     title: "Silent Night",
@@ -526,7 +536,8 @@ export const SONGS: Song[] = [
   },
   {
     // Two quarter-note pickups on the dominant below, then a bright climb to
-    // the dominant above. Mostly stepwise, with one 3rd on "'tis the."
+    // the dominant above: a 4th up on "the gift", 3rds on "sim-ple, 'tis",
+    // and an octave from the pickup to the top.
     id: "simple-gifts",
     slug: "simple-gifts",
     title: "Simple Gifts",
@@ -540,7 +551,7 @@ export const SONGS: Song[] = [
     genre: "Traditional",
     era: "1800s",
     language: "English",
-    tags: ["shaker", "stepwise", "pickup"],
+    tags: ["shaker", "wide range", "pickup"],
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "'Tis" },
       { midi: 55, startBeat: 1, durBeats: 1, lyric: "the" },
@@ -573,7 +584,7 @@ export const SONGS: Song[] = [
     genre: "Traditional",
     era: "1800s",
     language: "English",
-    tags: ["ballad", "narrow range", "stepwise"],
+    tags: ["ballad", "narrow range"],
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1.5, lyric: "As" },
       { midi: 60, startBeat: 1.5, durBeats: 0.5, lyric: "the" },
@@ -590,7 +601,7 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Hexatonic — the tune never touches the 4th or the 7th, which is what
+    // Pentatonic — the tune never touches the 4th or the 7th, which is what
     // gives it the open, pipe-like colour. Stepwise apart from the pickup.
     id: "loch-lomond",
     slug: "loch-lomond",
@@ -605,7 +616,7 @@ export const SONGS: Song[] = [
     genre: "Folk",
     era: "1700s",
     language: "English",
-    tags: ["scottish", "ballad", "hexatonic"],
+    tags: ["scottish", "ballad", "pentatonic"],
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "By" },
       { midi: 60, startBeat: 1, durBeats: 1, lyric: "yon" },
@@ -653,13 +664,19 @@ export const SONGS: Song[] = [
     ],
   },
   {
-    // Contour: rising step opening, phrase peak on "call" — Medium (span 14 st).
+    // The Londonderry Air as Petrie printed it (1855), moved to C: a stepwise
+    // rise from the leading tone to "boy," a step down and back, then a 4th up
+    // to the phrase peak, A4, on the second "the", and a fall through "are
+    // call-" to A3, the sixth below the tonic, on "-ing". "Call-" is a
+    // slurred D4–C4 pair; the C4 is left out, one note per syllable as
+    // elsewhere in the book.
+    // Hard (span 12 st, two leaps).
     id: "danny-boy",
     slug: "danny-boy",
     title: "Danny Boy",
     origin: "Traditional (Londonderry Air, publ. 1855); lyrics Frederic Weatherly, 1913",
     publicDomain:
-      "The Londonderry Air melody was published in 1855; Frederic Weatherly’s lyrics date from 1913, before the 1929 US public-domain cutoff.",
+      "The Londonderry Air melody was published in 1855 and Frederic Weatherly’s lyrics in 1913; both are long out of US copyright, and Weatherly died in 1929.",
     bpm: 63,
     beatsPerBar: 4,
     defaultKeyRootMidi: 60,
@@ -670,21 +687,24 @@ export const SONGS: Song[] = [
     language: "English",
     tags: ["ballad", "wide range", "legato"],
     notes: [
-      { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh" },
+      { midi: 59, startBeat: 0, durBeats: 1, lyric: "Oh" },
       { midi: 60, startBeat: 1, durBeats: 1, lyric: "Dan", wordEnd: false },
       { midi: 62, startBeat: 2, durBeats: 1, lyric: "ny" },
       { midi: 64, startBeat: 3, durBeats: 2, lyric: "boy," },
-      { midi: 64, startBeat: 5, durBeats: 1, lyric: "the" },
-      { midi: 65, startBeat: 6, durBeats: 1, lyric: "pipes," },
-      { midi: 64, startBeat: 7, durBeats: 1, lyric: "the" },
-      { midi: 65, startBeat: 8, durBeats: 1, lyric: "pipes" },
-      { midi: 67, startBeat: 9, durBeats: 1, lyric: "are" },
-      { midi: 69, startBeat: 10, durBeats: 2, lyric: "call", wordEnd: false },
-      { midi: 67, startBeat: 12, durBeats: 2, lyric: "ing" },
+      { midi: 62, startBeat: 5, durBeats: 1, lyric: "the" },
+      { midi: 64, startBeat: 6, durBeats: 1, lyric: "pipes," },
+      { midi: 69, startBeat: 7, durBeats: 1, lyric: "the" },
+      { midi: 67, startBeat: 8, durBeats: 1, lyric: "pipes" },
+      { midi: 64, startBeat: 9, durBeats: 1, lyric: "are" },
+      { midi: 62, startBeat: 10, durBeats: 2, lyric: "call", wordEnd: false },
+      { midi: 57, startBeat: 12, durBeats: 2, lyric: "ing" },
     ],
   },
   {
-    // Long held tones over a gentle arch — Easy tempo, Medium reach to A4.
+    // Pickup on the dominant below, three repeated tonics on "Shen-an-doah",
+    // a stepwise climb to the fourth, then a third up to the sixth on "hear":
+    // G3 to A4. Scores Hard (span 14, two leaps) and sits in the "A stretch"
+    // band.
     id: "shenandoah",
     slug: "shenandoah",
     title: "Shenandoah",
@@ -701,19 +721,21 @@ export const SONGS: Song[] = [
     language: "English",
     tags: ["ballad", "legato", "long tones"],
     notes: [
-      { midi: 60, startBeat: 0, durBeats: 1, lyric: "Oh" },
-      { midi: 64, startBeat: 1, durBeats: 1, lyric: "Shen", wordEnd: false },
-      { midi: 65, startBeat: 2, durBeats: 1, lyric: "an", wordEnd: false },
-      { midi: 67, startBeat: 3, durBeats: 2, lyric: "doah," },
-      { midi: 67, startBeat: 5, durBeats: 1, lyric: "I" },
-      { midi: 69, startBeat: 6, durBeats: 2, lyric: "long" },
-      { midi: 67, startBeat: 8, durBeats: 1, lyric: "to" },
-      { midi: 64, startBeat: 9, durBeats: 1, lyric: "hear" },
+      { midi: 55, startBeat: 0, durBeats: 1, lyric: "Oh" },
+      { midi: 60, startBeat: 1, durBeats: 1, lyric: "Shen", wordEnd: false },
+      { midi: 60, startBeat: 2, durBeats: 1, lyric: "an", wordEnd: false },
+      { midi: 60, startBeat: 3, durBeats: 2, lyric: "doah," },
+      { midi: 62, startBeat: 5, durBeats: 1, lyric: "I" },
+      { midi: 64, startBeat: 6, durBeats: 2, lyric: "long" },
+      { midi: 65, startBeat: 8, durBeats: 1, lyric: "to" },
+      { midi: 69, startBeat: 9, durBeats: 1, lyric: "hear" },
       { midi: 67, startBeat: 10, durBeats: 2, lyric: "you" },
     ],
   },
   {
-    // Dorian: the raised sixth on "to" is the tune's signature color.
+    // D Dorian. The opening phrase leaps a fifth on "go-" and falls back
+    // E–F–E to the tonic; the Dorian raised sixth (B) arrives in the
+    // untranscribed "parsley, sage" line.
     id: "scarborough-fair",
     slug: "scarborough-fair",
     title: "Scarborough Fair",
@@ -734,21 +756,23 @@ export const SONGS: Song[] = [
       { midi: 62, startBeat: 1, durBeats: 1, lyric: "you" },
       { midi: 69, startBeat: 2, durBeats: 2, lyric: "go", wordEnd: false },
       { midi: 69, startBeat: 4, durBeats: 1, lyric: "ing" },
-      { midi: 71, startBeat: 5, durBeats: 1, lyric: "to" },
-      { midi: 69, startBeat: 6, durBeats: 2, lyric: "Scar", wordEnd: false },
-      { midi: 67, startBeat: 8, durBeats: 1, lyric: "bo", wordEnd: false },
+      { midi: 69, startBeat: 5, durBeats: 1, lyric: "to" },
+      { midi: 64, startBeat: 6, durBeats: 2, lyric: "Scar", wordEnd: false },
+      { midi: 65, startBeat: 8, durBeats: 1, lyric: "bo", wordEnd: false },
       { midi: 64, startBeat: 9, durBeats: 1, lyric: "rough" },
       { midi: 62, startBeat: 10, durBeats: 3, lyric: "Fair?" },
     ],
   },
   {
-    // Full arrangement: verse 1 is the phrase entry's melody; verse 2 repeats
-    // the exact same tune (this hymn is strophic — every stanza reuses it)
-    // with the second stanza of Newton's original text. Two passes of the
-    // phrase's own range-plus-leaps keep it Hard across the whole thing.
+    // Longer arrangement: the first two lines of verse 1 are the phrase
+    // entry's melody; the first two lines of verse 2 repeat the exact same
+    // tune (this hymn is strophic — every stanza reuses it) with the second
+    // stanza of Newton's original text. The second half of each stanza is not
+    // transcribed. Two passes of the phrase's own range-plus-leaps keep it
+    // Hard across the whole thing.
     id: "amazing-grace-full",
     slug: "amazing-grace-full",
-    title: "Amazing Grace (Verse 1 & 2)",
+    title: "Amazing Grace (Opening Lines, Verses 1 & 2)",
     origin: "Traditional tune “New Britain” (American shape-note, printed 1829); words by John Newton, 1779",
     publicDomain:
       "John Newton’s hymn text — including this second stanza — was published in his 1779 Olney Hymns; the “New Britain” tune it is now sung to first appeared in an 1829 shape-note tunebook. Both are centuries out of copyright.",
@@ -758,9 +782,9 @@ export const SONGS: Song[] = [
     form: "full",
     defaultLoops: 1,
     genre: "Hymn",
-    era: "1700s",
+    era: "1800s",
     language: "English",
-    tags: ["hymn", "wide range", "leap", "full song", "two verses"],
+    tags: ["hymn", "wide range", "leap", "longer arrangement", "two verses"],
     arrangementOf: "amazing-grace",
     notes: [
       { midi: 55, startBeat: 0, durBeats: 1, lyric: "A", wordEnd: false },
@@ -780,7 +804,7 @@ export const SONGS: Song[] = [
       { midi: 55, startBeat: 21, durBeats: 1, lyric: "'Twas", line: 2 },
       { midi: 60, startBeat: 22, durBeats: 2, lyric: "grace", line: 2 },
       { midi: 64, startBeat: 24, durBeats: 1, lyric: "that", line: 2 },
-      { midi: 64, startBeat: 25, durBeats: 2, lyric: "taught,", line: 2 },
+      { midi: 64, startBeat: 25, durBeats: 2, lyric: "taught", line: 2 },
       { midi: 62, startBeat: 27, durBeats: 1, lyric: "my", line: 2 },
       { midi: 60, startBeat: 28, durBeats: 2, lyric: "heart", line: 2 },
       { midi: 57, startBeat: 30, durBeats: 1, lyric: "to", line: 2 },
@@ -793,8 +817,8 @@ export const SONGS: Song[] = [
       { midi: 67, startBeat: 40, durBeats: 2, lyric: "lieved;", line: 3 },
     ],
     sections: [
-      { kind: "verse", label: "Verse 1", startBeat: 0, endBeat: 21 },
-      { kind: "verse", label: "Verse 2", startBeat: 21, endBeat: 42 },
+      { kind: "verse", label: "Verse 1, lines 1–2", startBeat: 0, endBeat: 21 },
+      { kind: "verse", label: "Verse 2, lines 1–2", startBeat: 21, endBeat: 42 },
     ],
   },
   {
@@ -854,7 +878,7 @@ export const SONGS: Song[] = [
     genre: "Spiritual",
     era: "1800s",
     language: "English",
-    tags: ["spiritual", "narrow range", "repeated note"],
+    tags: ["spiritual", "repeated note"],
     notes: [
       { midi: 64, startBeat: 0, durBeats: 1, lyric: "Swing" },
       { midi: 60, startBeat: 1, durBeats: 2, lyric: "low," },
@@ -885,9 +909,9 @@ export const SONGS: Song[] = [
  * argument against it. A number you cannot say out loud is not an asset.
  *
  * The export stays so that the type and the split stay expressible if a genuine
- * Pro song — something licensed, or something recorded — ever arrives. What Pro
- * sells on this surface now is the record: scoring history per song, and the
- * transposition report.
+ * Pro song — something licensed, or something recorded — ever arrives. Each
+ * song's personal best and score trend are free; what Pro adds on this surface
+ * is the per-note accuracy report that song runs feed, and no daily limit.
  */
 export const PRO_SONGS: Song[] = [];
 

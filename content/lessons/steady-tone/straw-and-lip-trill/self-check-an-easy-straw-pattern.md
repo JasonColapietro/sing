@@ -29,7 +29,7 @@ Begin at a comfortable middle pitch with a straw in air or a loose lip trill. Ke
 
 ### Name the target: Semi-occluded warm-up
 
-The warm-up you will use every session for the next year. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+An easy straw or lip-trill pattern across a comfortable span. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.
 - Listen: The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound.
@@ -66,7 +66,7 @@ I tried the straw or lip-trill pattern gently, with an easy breath and a full re
 - The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, the straw or lip-trill pattern runs its whole span without the buzz stopping and feels easier than the same notes on a vowel.
 
 If not ready: If the trill stops, reduce volume and range, check that the lips are loose, or return to a straw. Do not add throat pressure to keep it going. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

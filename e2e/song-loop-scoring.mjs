@@ -57,15 +57,17 @@ try {
     const button = page.getByRole("button", { name, exact: true });
     if (await button.count()) await button.first().click({ force: true }).catch(() => {});
   }
-  // A click that lands before hydration is a no-op; retry until React reports it.
+  await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+  const from = page.getByLabel("Loop from", { exact: true });
+  await from.waitFor();
+  // The mode is chosen in the player, before the first run (the mic gate no
+  // longer carries it). A click that lands before hydration is a no-op; retry
+  // until React reports it.
   const performance = page.getByRole("button", { name: "Performance", exact: true }).first();
   for (let i = 0; i < 20 && (await performance.getAttribute("aria-pressed")) !== "true"; i++) {
     await performance.click();
     await page.waitForTimeout(250);
   }
-  await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
-  const from = page.getByLabel("Loop from", { exact: true });
-  await from.waitFor();
   // Boundaries 1..2 are the single one-beat note "lent" (G4).
   await page.getByLabel("Loop to", { exact: true }).fill("2");
   await from.fill("1");

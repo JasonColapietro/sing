@@ -29,7 +29,7 @@ Check how the voice feels before making sound. Choose only drills that have prev
 
 ### Name the target: Vocal health
 
-Review this module before effect study. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Assemble a short warm-up with rests and write down the warning signs that would make you stop, before you move on to effects. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.
@@ -50,7 +50,7 @@ I assembled a short warm-up with rests and wrote the warning signs that would ma
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use.
+- The target disappears when the range, volume, speed, or duration increases. => If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -66,9 +66,9 @@ I assembled a short warm-up with rests and wrote the warning signs that would ma
 - The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.
 
-If not ready: If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.
 

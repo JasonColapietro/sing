@@ -5,7 +5,7 @@ stage: "v-l7"
 title: "Semitone at a Time"
 type: "exercise"
 minutes: 7
-objective: "Extend, hold, rescan. Open the range tool yourself when you want to compare another comfortable scan."
+objective: "Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today."
 prerequisites: "v-l7-m5-01"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
@@ -29,14 +29,14 @@ Warm up in the comfortable middle, then confirm today's repeatable low and high 
 
 ### Name the target: Range extension
 
-Extend, hold, rescan. Open the range tool yourself when you want to compare another comfortable scan. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Extend one semitone, hold it briefly, release. Count it only when it is easy on three separate days; retest your range weeks apart, not today. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly, release, and rescan only after rest.
+Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly and release. Do not rescan today: a finished range test replaces your saved range. Count the note only when it is easy on three separate days, and compare it at your next retest, weeks apart, with the same warm-up, room and microphone distance as your baseline.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
@@ -68,7 +68,7 @@ I compared comfortable notes with an earlier baseline and recorded my observatio
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.
 

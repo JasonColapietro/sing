@@ -2,7 +2,7 @@
   {
     "name": "Vitas",
     "voiceType": "Tenor",
-    "genres": ["Pop", "Electronic", "Opera"],
+    "genres": ["Pop", "Electronic"],
     "country": "Russia",
     "activeFrom": 2000,
     "lowNote": "D2",
@@ -53,15 +53,15 @@
     "genres": ["Pop", "Rock"],
     "country": "UK",
     "activeFrom": 2022,
-    "lowNote": "C4",
-    "highNote": "E6",
+    "lowNote": "C3",
+    "highNote": "E5",
     "beltNote": null,
     "whistle": false,
     "signatureSong": "Space Man",
     "lowSource": "Somebody",
     "highSource": "Set You Free",
     "blurb": "Sunny rock-pop voice with ringing high belts and a feathery falsetto that flips on a dime.",
-    "technique": "Ryder rides a high-set, sunny placement, mixing so far up that full-sounding notes and reinforced falsetto blur into one column. His head voice up to E6 stays connected because he keeps the vowel narrow and the soft palate high rather than blowing air. Onsets are clean and springy, vibrato quick and even, and around C4 he keeps the text conversational. The common mistake when copying him is belting the top instead of spinning it, which trades his release for shout."
+    "technique": "Ryder rides a high-set, sunny placement, mixing so far up that full-sounding notes and reinforced falsetto blur into one column. His head voice up to E5 stays connected because he keeps the vowel narrow and the soft palate high rather than blowing air. Onsets are clean and springy, vibrato quick and even, and around C3 he keeps the text conversational. The common mistake when copying him is belting the top instead of spinning it, which trades his release for shout."
   },
   {
     "name": "Lara Fabian",

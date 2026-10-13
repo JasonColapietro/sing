@@ -1,10 +1,41 @@
 import type { NextConfig } from "next";
 import path from "path";
 import { EXERCISES } from "./components/warmups/exercises";
+import { accountsReady } from "./lib/accounts";
+
+/**
+ * With accounts off on this build (no production Clerk key), the root
+ * layout's account provider resolves to a Clerk-free stand-in with the same
+ * default export, so Clerk's React SDK stays out of every page. Next loads
+ * every client component the layout's imports reach, rendered or not, so
+ * skipping the render alone did not skip the download. See
+ * components/account/clerk-shell.tsx. Evaluated once per build: the deploy
+ * that gains a pk_live_ key builds with the real provider and no alias.
+ */
+const ACCOUNTS_OFF = !accountsReady();
+const CLERK_SHELL = "@/components/account/clerk-shell";
+const CLERK_SHELL_OFF = "./components/account/clerk-shell-off.tsx";
 
 const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
+    ...(ACCOUNTS_OFF ? { resolveAlias: { [CLERK_SHELL]: CLERK_SHELL_OFF } } : {}),
+  },
+  // The same swap for `next dev --webpack` (scripts/audit-warmup-timing.mjs
+  // measures under it) and any `next build --webpack`. Next's tsconfig-paths
+  // resolver plugin can rewrite "@/…" to an absolute path before
+  // resolve.alias sees the request, so both spellings are aliased, each as
+  // an exact match.
+  webpack(config) {
+    if (ACCOUNTS_OFF) {
+      const off = path.join(__dirname, CLERK_SHELL_OFF);
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        [`${CLERK_SHELL}$`]: off,
+        [`${path.join(__dirname, "components/account/clerk-shell")}$`]: off,
+      };
+    }
+    return config;
   },
   // The Pro book PDFs live outside public/ so they can't be fetched without a
   // subscription check; make sure the serving route's bundle includes them.

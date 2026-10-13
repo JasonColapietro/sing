@@ -1,10 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
-import { useDailyGoal } from "@/components/practice/learn-home";
-import { todayPracticeSec, useProgress, type Achievement } from "@/lib/progress";
+import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
+import { liveStreak } from "@/components/account/save-state";
+import { useProgress, type Achievement } from "@/lib/progress";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { SITE_URL } from "@/lib/site";
 import type { RoutineSummaryData } from "./routine-runner";
 import { routineMinutes, stepExercise } from "./routines";
 
@@ -20,16 +24,24 @@ export function RoutineSummary({
   onRepeat,
   onHome,
   onPractice,
+  capped = false,
 }: {
   data: RoutineSummaryData;
   onRepeat: () => void;
   onHome: () => void;
   /** Run the weakest step again on its own, where the room can start one. */
   onPractice?: (exerciseId: string) => void;
+  /**
+   * Today's free guided minutes are used. Both starts would do nothing (the
+   * room refuses them), so they are not offered, and the screen says why and
+   * when practice opens again instead of ending on two dead buttons.
+   */
+  capped?: boolean;
 }) {
   const { routine, steps, completed, startStep = 0 } = data;
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
   const { sungCount, score, xp, achievements, weakestId } = useMemo(() => {
     const sung = steps.filter((s): s is NonNullable<typeof s> => s !== null);
@@ -70,8 +82,10 @@ export function RoutineSummary({
       score={score}
       stars={starsForScore(score)}
       xp={xp}
-      streakDays={progress.streak.current}
-      goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+      // Live, not the stored count: a routine whose steps were all skipped
+      // logged nothing, and a lapsed streak must not read as alive.
+      streakDays={liveStreak(progress.streak)}
+      goal={{ doneSec: goalDoneSec, goalSec }}
       rows={routine.steps.map((s, i) => {
         const r = steps[i] ?? null;
         return {
@@ -82,9 +96,9 @@ export function RoutineSummary({
       })}
       achievements={achievements}
       onContinue={onHome}
-      onAgain={onRepeat}
+      onAgain={capped ? undefined : onRepeat}
       onPractice={
-        onPractice && weakestId ? () => onPractice(weakestId) : undefined
+        !capped && onPractice && weakestId ? () => onPractice(weakestId) : undefined
       }
       share={
         score === null
@@ -92,9 +106,26 @@ export function RoutineSummary({
           : {
               title: routine.name,
               subtitle: `Warmup routine · ${sungCount}/${routine.steps.length} exercises · ~${routineMinutes(routine)} min`,
+              url: `${SITE_URL}/warmups?routine=${routine.id}`,
             }
       }
     >
+      {/* Why "Play again" and "Practice" are gone, and when they come back.
+          On the paper panel for the same contrast reason as the nudge. */}
+      {capped && (
+        <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
+          That&apos;s today&apos;s {FREE_DAILY_MINUTES} free minutes of guided
+          practice. A fresh {FREE_DAILY_MINUTES} minutes opens at midnight; the
+          pitch studio and the range test stay open now.{" "}
+          <Link
+            href="/pro#buy"
+            className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+          >
+            Pro has no daily limit
+          </Link>
+          .
+        </p>
+      )}
       {/* The nudge is built from the site's paper tokens, and the results
           screen is dark — its quiet one-line variant would land at about
           2.3:1 straight on the session background. It gets its own paper
@@ -103,9 +134,9 @@ export function RoutineSummary({
           they would get a blank cream block where the pitch used to be. */}
       <div className="rounded-2xl bg-panel p-4 empty:hidden sm:p-5">
         <ProCrescendoNudge
-          line="Pro plans tomorrow's routine from these scores"
-          title="Make tomorrow's warmup count"
-          body="Pro plans tomorrow's session from these scores — weak notes first."
+          line="Pro shows the full daily coach plan, not just its first two steps"
+          title="See the whole plan"
+          body="Tomorrow's three and Today's warmup already read your recent scores on the free plan, these included. Pro adds the full daily coach plan, per-note accuracy over time and no daily limit."
           context="Warmups"
         />
       </div>

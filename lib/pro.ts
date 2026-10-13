@@ -1,6 +1,9 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { accountsReady } from "./accounts";
+import { FREE_DAILY_MINUTES } from "./practice-limits";
+import { MAX_RANGE_HISTORY, MAX_SESSIONS } from "./progress-shape";
 import {
   INACTIVE,
   type CheckoutPlan,
@@ -10,10 +13,12 @@ import {
 import {
   ATLAS_VOICE_COUNT,
   FREE_EXERCISES,
+  FREE_PROGRAM_COUNT,
   PRO_EXERCISES,
   PRO_PACK_COUNT,
+  PRO_PROGRAM_COUNT,
   SINGER_COUNT,
-  GLOSSARY_COUNT,
+  SONG_COUNT,
   TOTAL_CHAPTERS,
   TOTAL_WORDS,
 } from "./pro-inventory";
@@ -23,8 +28,9 @@ export type { CheckoutPlan, ProPlan, Entitlement };
 /**
  * Suede Pro — entitlement on the client.
  *
- * There are no accounts and no database: Stripe is the source of truth, and
- * this store is a local cache of what Stripe last said. That means it can go
+ * Pro hangs off no account and no database (a sign-in, where accounts are
+ * configured, never touches it): Stripe is the source of truth, and this store
+ * is a local cache of what Stripe last said. That means it can go
  * stale (someone cancels in the portal), so `revalidatePro` re-checks on a
  * schedule, and `restorePro` recovers access on a new device or a cleared
  * browser.
@@ -107,8 +113,8 @@ const NOT_READY = () => false;
  * Whether the entitlement cache has been read on this device yet.
  *
  * Every gated page is prerendered, and there is no server-side entitlement to
- * prerender with — no accounts, no database, and the cache lives in
- * localStorage — so the static HTML always says "not Pro". Rendering the upsell
+ * prerender with — Pro hangs off no account or database, and the cache lives
+ * in localStorage — so the static HTML always says "not Pro". Rendering the upsell
  * straight from `useIsPro()` therefore ships a sales pitch to the subscriber
  * who already paid, and flashes it away on hydration. Surfaces that would
  * assert something false in that window hold a neutral state until this flips
@@ -124,12 +130,25 @@ export function useProReady(): boolean {
 
 /* ------------------------------------------------------------------ stripe */
 
+/**
+ * What a dropped connection says. fetch() rejects with the browser's own
+ * TypeError ("Failed to fetch", Safari's "Load failed"), which tells a buyer
+ * neither what happened nor whether anything was charged.
+ */
+export const NETWORK_ERROR_MESSAGE =
+  "Couldn't reach Suede Sing. Check your connection and try again.";
+
 async function post<T>(path: string, body: unknown): Promise<T> {
-  const res = await fetch(path, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  let res: Response;
+  try {
+    res = await fetch(path, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new Error(NETWORK_ERROR_MESSAGE);
+  }
   const data = (await res.json().catch(() => null)) as
     | (T & { error?: string })
     | null;
@@ -380,28 +399,40 @@ export const PRO_PERKS: ProPerk[] = [
   },
   {
     id: "songs",
-    title: "Every song, scored and kept",
+    title: "Every song, no daily limit",
     // The songbook itself moved to free — six public-domain folk tunes were a
-    // gate that argued against buying. What Pro sells on this surface is the
-    // record of singing them, which is the thing that compounds. No cadence
-    // promise: the catalog is a checked-in array, so "new songs every week" is
-    // a claim only a weekly deploy could keep.
-    desc: "All 26 songs are free. Pro keeps the scoring history for each one, so you can hear month one against month six.",
+    // gate that argued against buying. So is each song's own record: the song
+    // summary shows every singer their personal best and a sparkline of past
+    // scores, and library cards show the best score. This perk once sold
+    // "scoring history for each one", which a free singer could see directly
+    // under the line that sold it. What Pro really adds here is no daily limit
+    // (songs share the free plan's guided-practice minutes, so "all free"
+    // without the cap read as unlimited), and that a scored song run's
+    // per-note tallies feed the Pro-only "Accuracy by note" chart on
+    // /progress. No cadence promise: the catalog is a checked-in array, so "new
+    // songs every week" is a claim only a weekly deploy could keep.
+    desc: `All ${SONG_COUNT} songs are free to sing in your ${FREE_DAILY_MINUTES} free minutes a day, and each song's personal best and score trend are free too. Pro lifts that limit and adds every note you sing to your per-note accuracy report.`,
   },
   {
     id: "warmups",
     title: "Pro warmup packs",
-    desc: "Genre and voice-type routines: belt prep, head-voice builders, mix builders.",
+    // Exactly what PRO_PACKS holds: three technique packs, one of each, fitted
+    // to no genre and no voice type. This line once sold "genre and voice-type
+    // routines" and plural builders that do not exist. It also makes no fit
+    // claim: without a saved range the packs run on the nominal ladder.
+    desc: `${PRO_PACK_COUNT} extra sets, ${PRO_EXERCISES} exercises: belt prep, a head-voice builder and a mix builder.`,
   },
   {
     id: "book",
     title: "Two books, with PDFs",
-    desc: `${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words: The Measured Voice (how the voice works, plus a twelve-week program) and The Voice Atlas (${ATLAS_VOICE_COUNT} singer profiles: reported range, tone and technique). Both open in full the moment you subscribe, and both as PDFs to keep.`,
+    desc: `${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words: The Measured Voice (how the voice works, plus a twelve-week program) and The Voice Atlas (${ATLAS_VOICE_COUNT} singer profiles: reported range, tone and technique). Both open in full the moment you upgrade, and both as PDFs to keep.`,
   },
   {
     id: "history",
     title: "Cloud sync",
-    desc: "Progress that follows you across devices, backed up automatically — no export files.",
+    // Song mastery (suede-sing:mastered:v2) and program place live in their
+    // own browser keys, outside the synced progress record.
+    desc: "Your sessions, streaks, scores and range follow you across devices, backed up automatically. Song mastery and your place in a program stay in the browser where you earned them.",
   },
 ];
 
@@ -417,25 +448,61 @@ export const PLAN_ROWS: Array<{
     free: "5 minutes a day",
     pro: "No daily limit",
   },
-  { label: "Real-time pitch feedback", free: "Included", pro: "Included" },
   { label: "Range test + voice type", free: "Included", pro: "Included" },
-  { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis on every take" },
-  { label: "Song library (all 26)", free: "Included", pro: "+ scoring history per song" },
+  { label: "Take recorder + A/B compare", free: "Included", pro: "+ pitch analysis per take" },
+  // Each song's best score and score trend are free (the song summary and the
+  // library cards show them), so the Pro cell names the one thing Pro adds:
+  // a scored run's notes in the per-note accuracy chart. Kept short: every
+  // cell renders twice (phone list and table), and the section has a word cap
+  // (lib/seo-section-structure.test.tsx).
+  {
+    label: `Song library (all ${SONG_COUNT})`,
+    free: "Included, with best score and trend",
+    pro: "+ per-note accuracy",
+  },
   {
     label: "Warmup routines",
     free: `${FREE_EXERCISES} exercises`,
     pro: `${FREE_EXERCISES} + ${PRO_EXERCISES} in ${PRO_PACK_COUNT} pro packs`,
   },
   { label: "Coach plan", free: "First two steps each day", pro: "Full adaptive plan, daily" },
+  // Two programs need Pro after their free first week (lib/programs.ts), and
+  // a table headed "no asterisks" has to say so before day 8 does.
+  {
+    label: "Programs",
+    free: `${FREE_PROGRAM_COUNT}, plus week 1 of ${PRO_PROGRAM_COUNT} more`,
+    pro: `All ${FREE_PROGRAM_COUNT + PRO_PROGRAM_COUNT}`,
+  },
   { label: "Vocal analytics", free: "Session scores", pro: "Per-note accuracy and trends" },
-  { label: "Range history", free: "Latest test", pro: "Every test, charted over time" },
-  { label: "Practice history", free: "Last 20 sessions", pro: "Every session you have ever sung" },
-  { label: "Backup & sync", free: "Account backup, every 6 hours", pro: "Continuous two-way sync across devices" },
+  // The record keeps the latest MAX_RANGE_HISTORY tests and MAX_SESSIONS
+  // sessions (lib/progress-shape.ts), Pro included, and a daily singer passes
+  // 500 sessions within months. "Every session you have ever sung" was false
+  // for exactly the singers most likely to check it.
+  {
+    label: "Range history",
+    free: "Latest test",
+    pro: `Latest ${MAX_RANGE_HISTORY} tests, charted over time`,
+  },
+  {
+    label: "Practice history",
+    free: "Last 20 sessions",
+    pro: `Latest ${MAX_SESSIONS} sessions`,
+  },
+  {
+    label: "Backup & sync",
+    // Account backup is only real where accounts are (see lib/accounts.ts).
+    // Until then the free record lives in this browser, and selling a backup
+    // nobody can switch on is the one row that would be false. accountsReady
+    // reads only inlined env, so this matches on server and client.
+    free: accountsReady()
+      ? "Account backup, every 6 hours"
+      : "Saved in this browser; export from Progress",
+    pro: "Continuous two-way sync across devices",
+  },
   { label: "The Measured Voice (book)", free: "Contents + 3 chapters", pro: "All 23 chapters + PDF" },
   { label: "The Voice Atlas (book)", free: "Contents + first 3 chapters", pro: "All 27 chapters + PDF" },
   // Singer pages have always been free and the comparison table never said
   // so — the single largest free asset in the product, invisible on the page
   // whose whole job is to argue that free is generous.
   { label: `Famous voices (all ${SINGER_COUNT})`, free: "Every singer page", pro: "+ the Atlas chapters behind them" },
-  { label: `Glossary (${GLOSSARY_COUNT} terms)`, free: "Included", pro: "Included" },
 ];

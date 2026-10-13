@@ -3,7 +3,7 @@ id: "v-l5-m4-04"
 module: "v-l5-m4"
 stage: "v-l5"
 title: "An Easy Pattern Through Your Transition"
-type: "song"
+type: "exercise"
 minutes: 6
 objective: "A short supplied pattern that crosses your transition zone — pick the key that puts it there."
 prerequisites: "v-l5-m4-01"
@@ -15,7 +15,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Wee from the fifth or Legato triad. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.
+Open the practice material on this page and choose Legato triad or Wee from the fifth. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
@@ -36,7 +36,7 @@ A short supplied pattern that crosses your transition zone — pick the key that
 
 ### Build the pattern in pieces
 
-Mark the key, breaths, range edges, and lesson target before a full take of the supplied pattern, Wee from the fifth or Legato triad. Rehearse the hardest part alone, join two repetitions, then record one uninterrupted take. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.
+Say “hey!” as if calling a friend across a quiet room — a call, not a shout. Sing that “hey” on a comfortable note below your transition, then move it up one semitone at a time only while it stays as easy as speaking; if it starts to need a push, let it lighten instead. Mark the key, breaths, range edges, and lesson target before a full take of the supplied pattern, Legato triad or Wee from the fifth. Rehearse the hardest part alone, join two repetitions, then record one uninterrupted take. Build a speech-like mix at moderate intensity before moving upward by semitone. Never chase a belt label by adding throat pressure.
 
 - Look: The chin stays level, the jaw remains available, and the pitch does not require a raised chest or rigid neck.
 - Listen: The tone stays clear and repeatable for the planned short hold, with an easy release and no rasp that persists afterward.
@@ -68,7 +68,7 @@ I tried the supplied short pattern gently, returned to an easy baseline, and not
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: Stop immediately for pain, burning, sudden hoarseness, loss of range, or effort that lingers. Resume another day or work with a qualified teacher; do not repeat to prove toughness. When you come back, start from a smaller version, and only once your speaking voice feels normal.
 
 What this shows: I tried the supplied short pattern gently, returned to an easy baseline, and noted my own effort. This is a self-report, not an automatic assessment.
 

@@ -9,8 +9,10 @@ import {
 } from "@/lib/book-data";
 import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { PROGRAMME_PART } from "@/lib/programme-exit-tests";
 import { SITE_URL } from "@/lib/site";
 import { BookCta } from "@/components/book/cta";
+import { BookProgramNote } from "@/components/book/program-link";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -42,7 +44,6 @@ export default function BookPage() {
     name: BOOK_TITLE,
     description: DESCRIPTION,
     url: `${SITE_URL}/book`,
-    numberOfPages: BOOK_CONTENTS.length,
     inLanguage: "en",
     isAccessibleForFree: false,
     // Was an Organization named "Suede Sing" — the product name, not the
@@ -66,6 +67,10 @@ export default function BookPage() {
       kicker={`Included with Pro · ${FREE_COUNT} chapters free`}
       title={`${BOOK_TITLE}: a singing book on how your voice works and how to train it`}
       subtitle={`${BOOK_TITLE} is a ${BOOK_CONTENTS.length}-chapter singing book by ${AUTHOR_NAME}: how the voice works, how to read the numbers your own practice produces, a twelve-week program, and how to choose songs that fit. The contents and ${FREE_COUNT} chapters are free; the rest comes with Suede Sing Pro.`}
+      // In the header, not at the foot of the first card: on a phone the card's
+      // stats and paragraphs pushed "Read a free chapter" a screen and a half
+      // below the subtitle that promises it.
+      actions={<BookCta />}
     >
       <script
         type="application/ld+json"
@@ -102,13 +107,10 @@ export default function BookPage() {
           </p>
           <p className="mt-3 max-w-2xl text-sm text-mut">
             The contents below are free, and so are {FREE_COUNT} chapters — read
-            them before you decide whether the writing is worth a subscription. Pro
+            them before you decide whether the writing is worth paying for. Pro
             unlocks the other {BOOK_CONTENTS.filter((c) => !c.free).length} and
             the PDF.
           </p>
-          <div className="mt-5">
-            <BookCta />
-          </div>
         </Card>
 
         {BOOK_PARTS.map((part, i) => (
@@ -146,6 +148,10 @@ export default function BookPage() {
                 </li>
               ))}
             </ol>
+            {/* The plan this part describes, run day by day in the app. */}
+            {part.part === PROGRAMME_PART && (
+              <BookProgramNote scope="plan" className="mt-4 max-w-2xl text-sm text-mut" />
+            )}
           </Card>
         ))}
 
@@ -165,9 +171,10 @@ export default function BookPage() {
         <p className="max-w-2xl text-xs text-dim">
           This book is about practice, not medicine. Nothing here diagnoses or
           treats anything. If singing hurts, if you are hoarse and it will not
-          clear, or if you ever see blood, that is a question for a doctor or a
-          speech-language pathologist — there is no waiting period, and you do
-          not need to be sure it is serious before you go.
+          clear, or if you ever see blood, that is a question for a doctor who
+          can examine the vocal folds, such as an ENT or laryngologist — there
+          is no waiting period, and you do not need to be sure it is serious
+          before you go.
         </p>
       </div>
     </PageShell>

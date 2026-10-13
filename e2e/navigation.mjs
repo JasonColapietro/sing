@@ -12,18 +12,21 @@ const argv = process.argv.slice(2);
 const base = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3197").replace(/\/$/, "");
 /** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
 const executable = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
+// A third entry is the fragment the link must land on. /range's two entries
+// land on #start, its start button, rather than the intro above it, which on
+// a phone leaves the button under the tab bar.
 const rooms = [
-  ["Pitch & range", "/range"], ["Studio", "/studio"], ["Warmups", "/warmups"],
+  ["Pitch & range", "/range", "#start"], ["Studio", "/studio"], ["Warmups", "/warmups"],
   ["Songs", "/songs"], ["Singers", "/singers"], ["Ear training", "/ear-training"],
   ["Breath", "/breath"], ["Tools", "/tools"], ["Learn", "/learn"], ["Progress", "/progress"],
 ];
 const primary = [
-  ["Home", "/"], ["Sing", "/range"], ["Songs", "/songs"], ["Lessons", "/warmups"], ["Progress", "/progress"],
+  ["Home", "/"], ["Sing", "/range", "#start"], ["Songs", "/songs"], ["Lessons", "/warmups"], ["Progress", "/progress"],
 ];
 const SM = 640;
 
-async function assertLanded(page, path) {
-  await page.waitForURL((url) => url.pathname === path);
+async function assertLanded(page, path, hash) {
+  await page.waitForURL((url) => url.pathname === path && (hash === undefined || url.hash === hash));
   await page.locator("h1").first().waitFor();
   assert.equal(await page.locator("h1").count(), 1, `${path}: one main heading`);
   assert.equal(await page.getByRole("dialog", { name: "Navigation menu" }).count(), 0, `${path}: sheet closed`);
@@ -31,18 +34,21 @@ async function assertLanded(page, path) {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${path}: no horizontal overflow`);
 }
 
-async function clickTo(page, link, label, path, width) {
+async function clickTo(page, link, label, path, width, hash) {
   await link.scrollIntoViewIfNeeded();
   const box = await link.boundingBox();
   assert.ok(box && box.height >= 44, `${width}px ${label}: 44px target (got ${box?.height})`);
   await link.click();
-  await assertLanded(page, path);
+  await assertLanded(page, path, hash);
 }
 
-const browser = await chromium.launch(executable ? { executablePath: executable } : { channel: "chrome" });
+const browser = await chromium.launch({
+  ...(executable ? { executablePath: executable } : { channel: "chrome" }),
+  args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream", "--autoplay-policy=no-user-gesture-required"],
+});
 try {
   for (const width of [320, 375, 768, 1280]) {
-    const context = await browser.newContext({ viewport: { width, height: 900 } });
+    const context = await browser.newContext({ viewport: { width, height: 900 }, permissions: ["microphone"] });
     const page = await context.newPage();
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
@@ -51,18 +57,18 @@ try {
       await page.goto(`${base}/learn`, { waitUntil: "networkidle" });
 
       // Every room, through the sheet, at every width.
-      for (const [name, path] of rooms) {
+      for (const [name, path, hash] of rooms) {
         await trigger.click();
         const drawer = page.getByRole("dialog", { name: "Navigation menu" });
         await drawer.waitFor();
         const nav = drawer.getByRole("navigation", { name: "All rooms", exact: true });
-        await clickTo(page, nav.getByRole("link", { name, exact: true }), `sheet ${name}`, path, width);
+        await clickTo(page, nav.getByRole("link", { name, exact: true }), `sheet ${name}`, path, width, hash);
       }
 
       // The five primary destinations, through whichever bar this width shows.
       const bar = page.getByRole("navigation", { name: width < SM ? "Tabs" : "Main", exact: true });
-      for (const [name, path] of primary) {
-        await clickTo(page, bar.getByRole("link", { name, exact: true }), `${width < SM ? "tab" : "header"} ${name}`, path, width);
+      for (const [name, path, hash] of primary) {
+        await clickTo(page, bar.getByRole("link", { name, exact: true }), `${width < SM ? "tab" : "header"} ${name}`, path, width, hash);
       }
 
       if (width >= SM) {
@@ -89,8 +95,37 @@ try {
       await page.getByRole("dialog", { name: "Navigation menu", includeHidden: true }).waitFor({ state: "detached" });
       await page.waitForFunction(() => document.body.style.overflow !== "hidden");
 
+      // Starting a warmup removes its home card. On exit the old DOM button
+      // cannot receive focus: the remounted room heading is the fallback.
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(`${base}/warmups`, { waitUntil: "networkidle" });
+      const starter = page.getByRole("button", { name: "Enable mic and start", exact: true }).first();
+      const originalStarter = await starter.elementHandle();
+      await starter.focus();
+      await page.keyboard.press("Enter");
+      const session = page.locator("[data-session-shell]");
+      await session.waitFor({ state: "visible" });
+      assert.equal(await originalStarter.evaluate((el) => el.isConnected), false, "warmup start card unmounted");
+      await page.keyboard.press("Escape");
+      await session.waitFor({ state: "detached" });
+      await page.waitForFunction(() => document.activeElement === document.querySelector("main h1"));
+      assert.equal(await page.evaluate(() => document.body.style.overflow === "hidden"), false, "warmup exit releases scroll lock");
+      await page.keyboard.press("Tab");
+      // Tab continues from the heading: focus lands on the room's first
+      // visible control after it. For a free singer that is the allowance
+      // line's "Pro has no daily limit" link (components/practice/free-cap.tsx),
+      // ahead of the start buttons, so a link counts as well as a button.
+      assert.equal(await page.evaluate(() => {
+        const active = document.activeElement;
+        const heading = document.querySelector("main h1");
+        const next = [...document.querySelectorAll("main a[href], main button, main input, main select, main textarea, main summary, main [tabindex]")]
+          .find((el) => (heading.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
+            && el.tabIndex >= 0 && !el.matches(":disabled") && el.getClientRects().length > 0);
+        return (active?.tagName === "BUTTON" || active?.tagName === "A") && active === next;
+      }), true, "Tab resumes at the first visible warmup control after the heading");
+
       assert.deepEqual(errors, []);
-      console.log(`PASS ${width}px: ten rooms via the sheet, five primary tabs, touch targets, overflow, menu cleanup`);
+      console.log(`PASS ${width}px: ten rooms via the sheet, five primary tabs, touch targets, overflow, menu cleanup, warmup exit focus`);
     } finally { await context.close(); }
   }
 } finally { await browser.close(); }

@@ -5,6 +5,7 @@ import { midiToLabel } from "@/lib/audio/notes";
 import {
   SINGERS,
   VOICE_KINDS,
+  joinNames,
   pluralVoice,
   rangeLabel,
   singersByVoiceType,
@@ -12,9 +13,10 @@ import {
   type VoiceKind,
 } from "@/lib/singers";
 import { REFERENCE_BANDS, representativeSingers } from "@/lib/singers-analysis";
+import { getSingerReviewStatus } from "@/lib/singer-evidence";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { ORG_ID, ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -89,6 +91,19 @@ function row(voice: VoiceKind): Row {
   return found;
 }
 
+/**
+ * The singers closest to the conventional band, minus any whose catalog label
+ * was disputed on individual review. A page that defines the categories must
+ * not illustrate one with a singer this repo has found does not belong in it.
+ * Ranks the whole category before filtering, so a disputed name near the top
+ * never leaves a row short.
+ */
+function exampleSingers(voice: VoiceKind): Row["examples"] {
+  return representativeSingers(voice, singersByVoiceType(voice).length)
+    .filter((s) => getSingerReviewStatus(s.slug) !== "disputed")
+    .slice(0, EXAMPLE_COUNT);
+}
+
 const ROWS: Row[] = VOICE_KINDS.map((voice) => {
   const band = REFERENCE_BANDS[voice];
   const p = VOICE_TYPE_PASSAGGIO[voice];
@@ -99,20 +114,41 @@ const ROWS: Row[] = VOICE_KINDS.map((voice) => {
     band: `${midiToLabel(band.low)}–${midiToLabel(band.high)}`,
     passaggio: `${midiToLabel(p.low)}–${midiToLabel(p.high)}`,
     caveat: p.caveat,
-    examples: representativeSingers(voice, EXAMPLE_COUNT),
+    examples: exampleSingers(voice),
     count: singersByVoiceType(voice).length,
   };
 });
 
 /**
- * Categories too small for "closest to the band" to be a selection at all.
- *
- * With three basses in the library, picking the three closest to the band
- * returns all three, and the footnote's claim that they are illustrative
- * rather than exceptional would be doing no work. Derived, not listed, so it
+ * Categories too small for "closest to the band" to be a selection at all:
+ * picking the three closest returns every voice the library holds, so the
+ * footnote says the row is the whole population. Derived, not listed, so it
  * corrects itself when the library grows.
  */
 const SMALL_CATEGORIES = ROWS.filter((r) => r.count <= EXAMPLE_COUNT);
+
+/** Low-end gap plus high-end gap, in semitones, past which an example is not close to its band. */
+const MAX_EXAMPLE_DISTANCE = 6;
+
+/**
+ * Examples that are only the nearest the library has, so the footnote must not
+ * let them pass as typical. Being among the closest is not the same as being
+ * close: when this was written the third-closest of five basses was Avi
+ * Kaplan, whose cited floor sits more than an octave under the band. The
+ * footnote used to call every example "illustrative rather than exceptional",
+ * which that row made false. Named per singer rather than per row, and
+ * derived, so it clears itself as the library fills in.
+ */
+const STRETCHED_EXAMPLES = ROWS.flatMap((r) => {
+  const band = REFERENCE_BANDS[r.voice];
+  return r.examples
+    .filter(
+      (s) =>
+        Math.abs(s.lowMidi - band.low) + Math.abs(s.highMidi - band.high) >
+        MAX_EXAMPLE_DISTANCE,
+    )
+    .map((s) => `${s.name} (${r.lower}, ${rangeLabel(s)})`);
+});
 
 /* ------------------------------------------------------------------- faq --- */
 
@@ -130,6 +166,21 @@ interface Faq {
   a: string;
 }
 
+/**
+ * The female passaggio zones are the commercial belt-or-mix break, not the
+ * first flip out of chest voice (see VOICE_TYPE_PASSAGGIO). A woman who does a
+ * quiet slide will find that first flip several notes lower, so every answer
+ * that prints a female zone names it too, with the same E4-G4 band book
+ * chapter three gives.
+ */
+const CCM_ZONE_TYPES: ReadonlySet<VoiceKind> = new Set<VoiceKind>([
+  "Contralto",
+  "Mezzo-soprano",
+  "Soprano",
+]);
+const EARLIER_SHIFT =
+  "most women also meet an earlier, lighter shift out of chest voice somewhere around E4 to G4";
+
 function typeAnswer(row: Row): string {
   const note = VOICE_TYPE_NOTES[row.voice];
   const group = singersByVoiceType(row.voice);
@@ -144,6 +195,9 @@ function typeAnswer(row: Row): string {
     row.caveat
       ? `${row.caveat} It is usually placed around ${row.passaggio}.`
       : `The passaggio, where the voice changes gear between registers, usually falls around ${row.passaggio}.`,
+    ...(CCM_ZONE_TYPES.has(row.voice)
+      ? [`That is the commercial-singing zone where a belt or mix changes gear; ${EARLIER_SHIFT}.`]
+      : []),
     `Range and voice type are different measurements, though: the type describes where a voice sits comfortably, not the furthest notes it can reach. The ${row.count} ${plural} in Suede Sing's library of ${SINGERS.length} singers carry cited ranges running ${observed}, well outside the conventional band at both ends.`,
   ].join(" ");
 }
@@ -159,7 +213,7 @@ const FAQ: Faq[] = [
   },
   {
     q: "How do I find out my own voice type?",
-    a: "Sing from your lowest comfortable note to your highest and back, and note where the voice is easy rather than where it stops. Suede Sing's free browser range test at https://sing.suedeai.ai/range does this in about two minutes and reports your lowest note, your highest note, your span in semitones, and an estimate of the voice type that range best fits. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
+    a: "Start with your range: Suede Sing's free browser range test at https://sing.suedeai.ai/range takes about two minutes and reports the lowest and highest clear notes it hears in that session, your span in semitones, and an estimate of which of six of these types, bass to soprano, has the band that overlaps that span most closely (it never names bass-baritone or countertenor). The test finds the edges of your voice, not where it is easy, so afterwards sing a few phrases you know and note where the voice feels comfortable: that band, together with your tone and where the voice changes gear, is what a voice type describes. Treat the type as a starting shelf, not a verdict: voices reclassify with training, with age, and with repertoire, and plenty of working tenors spent their first years labelled baritone.",
   },
   {
     q: "What is a passaggio?",
@@ -167,7 +221,7 @@ const FAQ: Faq[] = [
     // one that can drift from the table. Built from the same constant the
     // table renders: the hand-typed version of this sentence outlived a
     // correction to the figures once already.
-    a: `The passaggio is the pitch zone where a singing voice changes gear between registers — it runs from where the voice has to start shedding weight up to where chest voice stops working the way it did and a lighter production has to take over. It is a few notes wide rather than a single note, and it is felt as a break, a wobble, or a sudden need to push. Each voice type has its own zone: roughly ${row("Bass").passaggio} for a bass, ${row("Baritone").passaggio} for a baritone, ${row("Tenor").passaggio} for a tenor, ${row("Mezzo-soprano").passaggio} for a mezzo-soprano, and ${row("Soprano").passaggio} for a soprano. Most of the difficulty in a song lives at or just under the singer's passaggio, which is why two singers with identical ranges can find completely different songs hard.`,
+    a: `The passaggio is the pitch zone where a singing voice changes gear between registers — it runs from where the voice has to start shedding weight up to where chest voice stops working the way it did and a lighter production has to take over. It is a few notes wide rather than a single note, and it is felt as a break, a wobble, or a sudden need to push. Each voice type has its own zone: roughly ${row("Bass").passaggio} for a bass, ${row("Baritone").passaggio} for a baritone, ${row("Tenor").passaggio} for a tenor, ${row("Mezzo-soprano").passaggio} for a mezzo-soprano, and ${row("Soprano").passaggio} for a soprano. For mezzo-sopranos and sopranos those figures are the commercial-singing zone where a belt or mix changes gear; ${EARLIER_SHIFT}. Most of the difficulty in a song lives at or just under the singer's passaggio, which is why two singers with identical ranges can find completely different songs hard.`,
   },
 ];
 
@@ -247,7 +301,7 @@ export default function VocalRangeByVoiceTypePage() {
       title="Vocal range by voice type: what range does a tenor, soprano or bass sing?"
       subtitle={`A tenor's conventional range is ${row("Tenor").band}, a soprano's ${row("Soprano").band} and a bass's ${row("Bass").band}. Below are all eight voice types, the passaggio zone where each one changes gear, and singers whose cited ranges sit there.`}
       actions={
-        <LinkButton href="/range?mode=range" size="md">
+        <LinkButton href={rangeTestHref()} size="md">
           Test your own range
         </LinkButton>
       }
@@ -269,13 +323,16 @@ export default function VocalRangeByVoiceTypePage() {
             the extremes do.
           </p>
           <p className="mt-3 max-w-3xl text-mut">
-            Read those numbers as a description of where a voice{" "}
-            <em>lives</em>, not a fence around what it can reach. Range and
-            voice type are different measurements: the type tracks the band
-            where a voice works comfortably for hours, while the range tracks
-            the furthest it has ever been photographed. A soprano with a
-            practiced low extension can show a floor below a contralto who never
-            records down there, and the{" "}
+            Read those numbers as the span a trained voice of each type is
+            conventionally expected to cover. They are not a fence around what
+            it can reach, and not where it lives: where a voice works
+            comfortably for hours, its <em>tessitura</em>, is a much narrower
+            band inside that span, clear of both ends. Range and voice type are
+            different measurements: the type is judged by that comfortable
+            band, the voice&apos;s timbre and where it changes gear, while a
+            cited range tracks the furthest it has ever been photographed. A
+            soprano with a practiced low extension can show a floor below a
+            contralto who never records down there, and the{" "}
             <Link
               href="/singers"
               className="text-violet-ink underline decoration-violet/40 underline-offset-2"
@@ -376,10 +433,10 @@ export default function VocalRangeByVoiceTypePage() {
 
           <p className="mt-5 max-w-3xl text-xs text-dim">
             Example singers are not the most famous of each category — they are
-            the three whose cited ranges sit closest to the conventional band,
-            which is what makes them illustrative rather than exceptional. Their
-            figures are commonly cited approximations compiled from recordings
-            and public discussion, not lab measurements.
+            the three whose cited ranges sit closest to the conventional band.
+            Singers whose catalog label was disputed on individual review are
+            left out. Their figures are commonly cited approximations compiled
+            from recordings and public discussion, not lab measurements.
             {SMALL_CATEGORIES.length > 0 && (
               <>
                 {" "}
@@ -395,6 +452,15 @@ export default function VocalRangeByVoiceTypePage() {
                 are the whole population rather than a selection from it — true
                 to the record, in which these categories really are that rare,
                 but not a claim that the singers named are typical.
+              </>
+            )}
+            {STRETCHED_EXAMPLES.length > 0 && (
+              <>
+                {" "}
+                Closest is not always close: {joinNames(STRETCHED_EXAMPLES)}{" "}
+                {STRETCHED_EXAMPLES.length === 1
+                  ? "is the nearest the library has for that row, not a typical example."
+                  : "are the nearest the library has for those rows, not typical examples."}
               </>
             )}
             {ROWS.some((r) => r.caveat) && (
@@ -440,7 +506,7 @@ export default function VocalRangeByVoiceTypePage() {
               a teacher. Free.
             </li>
             <li>
-              <Link href="/range?mode=range" className="text-violet-ink hover:underline">
+              <Link href={rangeTestHref()} className="text-violet-ink hover:underline">
                 The free range test
               </Link>{" "}
               — about two minutes in the browser gives you your own two numbers to
@@ -468,7 +534,7 @@ export default function VocalRangeByVoiceTypePage() {
               <Link href="/glossary" className="text-violet-ink hover:underline">
                 The glossary
               </Link>{" "}
-              — passaggio, tessitura, fach, belt and the rest, defined.
+              — passaggio, tessitura, belt and the rest, defined.
             </li>
           </ul>
         </Card>
@@ -477,8 +543,9 @@ export default function VocalRangeByVoiceTypePage() {
           Voice categories are guides borrowed from choral and operatic
           practice, not boxes, and plenty of singers are filed differently by
           different sources. Nothing here is medical advice — a voice that
-          hurts, stays hoarse, or loses easy notes is a question for a doctor or
-          a speech-language pathologist, not a practice plan.
+          hurts, stays hoarse, or loses easy notes is a question for a doctor
+          who can examine the vocal folds, such as an ENT or laryngologist, not
+          a practice plan.
         </p>
       </div>
     </PageShell>

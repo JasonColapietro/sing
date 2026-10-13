@@ -36,7 +36,7 @@ Compare your observation with an earlier comfortable range; a new note is not re
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly, release, and rescan only after rest.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Sing Small three-note climb with its top on today's easy high note, then with its bottom on today's easy low note, and compare both with your earlier baseline. Try a semitone further only if both feel easy today.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
@@ -66,9 +66,9 @@ I compared comfortable notes with an earlier baseline and recorded my observatio
 - The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: You have written today's easy low and high notes next to an earlier baseline taken the same way (same warm-up, room and microphone distance), and you count a note as new only if it has been easy on three separate days.
 
-If not ready: If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.
 

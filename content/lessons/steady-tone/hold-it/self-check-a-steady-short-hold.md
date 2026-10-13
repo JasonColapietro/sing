@@ -29,7 +29,7 @@ Use a comfortable pitch and moderate volume. Let the reference stop before singi
 
 ### Name the target: Sustained tone
 
-Compare the beginning and ending of a comfortable hold by ear; no cents score is produced. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
+Compare the beginning and ending of a comfortable hold by ear; the warm-up's score only counts time within 50 cents of the note, so a slow sag inside that window is yours to hear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.
@@ -66,7 +66,7 @@ I matched the sustained reference, released comfortably, and listened for a stea
 - The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, three short holds in a row start and end on the same pitch to your ear at a comfortable volume.
 
 If not ready: If the note drifts, shorten it, reset the breath, and correct one direction on the next attempt. Do not chase every frame while still singing. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

@@ -9,6 +9,7 @@ import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import {
   generateMelody,
+  hasSavedRange,
   midiMatches,
   segmentNotes,
   singableRegister,
@@ -44,7 +45,9 @@ export function MelodyEchoGame({
   const session = useEarSession();
   const { latest, listening, error, start, stop } = usePitch();
   const progress = useProgress();
-  const octaveAgnostic = difficulty === "easy";
+  // Any octave on easy, and on every level until a range is saved: the
+  // targets sit in a C3–C4 fallback that a higher voice answers an octave up.
+  const octaveAgnostic = difficulty === "easy" || !hasSavedRange(progress.range);
 
   const [melody, setMelody] = useState<number[] | null>(null);
   const [phase, setPhase] = useState<Phase>("listen");
@@ -298,6 +301,12 @@ export function MelodyEchoGame({
             {melody.map((t, i) => {
               const d = detected[i];
               const hit = d !== null && midiMatches(d, t, octaveAgnostic);
+              // When any octave counts the lanes above fold the sung note to
+              // the target's octave, so the pill names pitch classes only,
+              // as pitch match does; otherwise a higher voice's F4 against a
+              // D3 read as fifteen semitones off.
+              const label = (m: number) =>
+                octaveAgnostic ? midiToLabel(m).replace(/-?\d+$/, "") : midiToLabel(m);
               return (
                 <span
                   key={i}
@@ -308,9 +317,9 @@ export function MelodyEchoGame({
                   }}
                 >
                   {hit ? <CheckIcon /> : <CrossIcon />}
-                  {midiToLabel(t)}
+                  {label(t)}
                   {!hit && d !== null && (
-                    <span className="text-[var(--s-dim)]">you sang {midiToLabel(d)}</span>
+                    <span className="text-[var(--s-dim)]">you sang {label(d)}</span>
                   )}
                   {!hit && d === null && <span className="text-[var(--s-dim)]">missed</span>}
                 </span>

@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Improvising is easiest to start as an answer: a short call sets the key and the pulse, and you reply with a phrase of your own that ends on the home note. Limiting the answer to five notes of the scale, 1, 2, 3, 5 and 6, leaves fewer wrong choices, so your attention can go to rhythm, direction and where you land. Change one of those at a time and the answer stays connected to the call while still being yours.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Rung one of the improvising ladder: answer a short call with notes from the supp
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Improvising Is Answering.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Answer a short call, leave space, then vary one element—rhythm, direction, or ending—while keeping the same key center. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Once that is familiar, invent a different answer from the same note set. Record call and answer together in one take.
+Tap four steady beats per bar. For a concrete starting call, sing 1 on beat 1, 2 on beat 2, 3 on beat 3, and rest on beat 4. Answer with 3, 2, 1, rest in bar 2. Vary one rhythm in bar 3, then end on 1 in bar 4. Sing those four bars twice in one take, with a bar of tapped rest between: the second time, keep every note the same and change only the rhythm of bar 3, for example by holding one note for two beats. Listen back for whether both versions still sound like an answer that lands home on 1. Once that is familiar, invent a different answer from the same note set, varying one element—rhythm, direction, or ending—while keeping the same key center. Record your takes in the recorder.
 
 - Look: Plan four bars with a beginning, response, contrast, and ending rather than filling every beat.
 - Listen: The take sounds like an answer to the call and returns convincingly to the tonal center.

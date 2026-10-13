@@ -7,17 +7,19 @@ import {
   HUB_GENRES,
   SINGERS,
   VOICE_KINDS,
-  computeRecords,
   genreSlug,
+  joinNames,
   rangeLabel,
+  recordHolders,
   spanOctaves,
   voiceTypeSlug,
 } from "@/lib/singers";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
+import { isSingerReviewed, singerReviewLabel } from "@/lib/singer-evidence";
 import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 
 const DESCRIPTION = `Reported catalog ranges for famous singers on one keyboard. Check each profile's evidence status and compare your own range free.`;
@@ -29,6 +31,15 @@ const VOCAL_RANGE_PRIORITY_SINGERS = VOCAL_RANGE_PRIORITY_SLUGS.map((slug) => {
 });
 
 /**
+ * Profiles whose sources a person has reviewed (status reviewed or disputed).
+ * These are the only singer pages that are indexed, so they get a named place
+ * on the hub rather than only an A–Z link.
+ */
+const REVIEWED_SINGERS = SINGERS.filter((s) => isSingerReviewed(s.slug)).sort(
+  (a, b) => a.name.localeCompare(b.name),
+);
+
+/**
  * The questions people actually type before they land here, answered from the
  * same data the page renders — so an answer engine quoting us cannot quote a
  * figure the page contradicts, and neither can drift as SINGERS changes.
@@ -38,20 +49,27 @@ const VOCAL_RANGE_PRIORITY_SINGERS = VOCAL_RANGE_PRIORITY_SLUGS.map((slug) => {
  * answer engines, which read the Q&A pairing directly.
  */
 function buildFaq() {
-  const r = computeRecords();
+  // Every holder of each record, so a tie is never reported as one winner.
+  const r = recordHolders(SINGERS);
   const total = SINGERS.length;
+  const w = r.widest[0];
+  const octaves = spanOctaves(w.highMidi - w.lowMidi);
+  const names = (list: typeof SINGERS) => joinNames(list.map((s) => s.name));
   return [
     {
       q: "Who has the widest vocal range?",
-      a: `Among ${total} catalog profiles, ${r.widest.name} has the largest reported span: ${rangeLabel(r.widest)}, about ${spanOctaves(r.widest.highMidi - r.widest.lowMidi)} octaves. This is a catalog ranking, not a verified individual record.`,
+      a:
+        r.widest.length === 1
+          ? `Among ${total} catalog profiles, ${w.name} has the largest reported span: ${rangeLabel(w)}, about ${octaves} octaves. This is a catalog ranking, not a verified individual record.`
+          : `Among ${total} catalog profiles, ${joinNames(r.widest.map((s) => `${s.name} (${rangeLabel(s)})`))} share the largest reported span, about ${octaves} octaves. This is a catalog ranking, not a verified individual record.`,
     },
     {
       q: "What is the lowest note sung by a famous singer?",
-      a: `The lowest catalog endpoint is ${rangeLabel(r.lowest).split("–")[0]}, listed for ${r.lowest.name}. The profile's evidence status determines what the source material actually supports.`,
+      a: `The lowest catalog endpoint is ${rangeLabel(r.lowest[0]).split("–")[0]}, listed for ${names(r.lowest)}. ${r.lowest.length === 1 ? "The profile's" : "Each profile's"} evidence status determines what the source material actually supports.`,
     },
     {
       q: "What is the highest note sung by a famous singer?",
-      a: `The highest catalog endpoint is ${rangeLabel(r.highest).split("–")[1]}, listed for ${r.highest.name}. It is not a verified highest note without individual source review.`,
+      a: `The highest catalog endpoint is ${rangeLabel(r.highest[0]).split("–")[1]}, listed for ${names(r.highest)}. It is not a verified highest note without individual source review.`,
     },
     {
       q: "What does a singer's reported range mean?",
@@ -59,7 +77,7 @@ function buildFaq() {
     },
     {
       q: "How do I find my own vocal range?",
-      a: "Sing your lowest comfortable note, then your highest, into your microphone. Suede Sing's free range test detects both and marks them on the same keyboard as every singer in this index, so you can overlay yours against theirs.",
+      a: "Slide down to the lowest note you can hold clearly, then up to the highest, into your microphone. Suede Sing's free range test detects both in about two minutes and marks them on the same keyboard as every singer in this index, so you can overlay yours against theirs.",
     },
   ];
 }
@@ -125,7 +143,7 @@ export default function SingersPage() {
       title="Famous singers' vocal ranges on one chart"
       subtitle={`A vocal range chart of ${SINGERS.length} famous singers: each reported catalog range, lowest note to highest, drawn on the same keyboard so you can compare voices, and your own range, at a glance.`}
       actions={
-        <LinkButton href="/range?mode=range" size="md">
+        <LinkButton href={rangeTestHref()} size="md">
           Test my vocal range →
         </LinkButton>
       }
@@ -159,11 +177,53 @@ export default function SingersPage() {
               your browser, nothing to install.
             </p>
           </div>
-          <LinkButton href="/range?mode=range" size="lg">
+          <LinkButton href={rangeTestHref()} size="lg">
             Test my vocal range →
           </LinkButton>
         </div>
       </Card>
+
+      {REVIEWED_SINGERS.length > 0 && (
+        <section
+          data-singer-reviewed="true"
+          aria-labelledby="reviewed-singer-profiles"
+          className="mt-10"
+        >
+          <h2 id="reviewed-singer-profiles" className="text-xl">
+            Profiles with reviewed sources
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-mut">
+            A person has checked the sources behind each of these profiles.
+            Open one to see what those sources support.
+          </p>
+          {/* prefetch off on this page's link lists (profiles, voice types,
+              genres): by default each fetched its route payload on scroll,
+              about 70 background requests for pages nobody had opened. */}
+          <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {REVIEWED_SINGERS.map((singer) => (
+              <li key={singer.slug}>
+                <Link
+                  href={`/singers/${singer.slug}`}
+                  prefetch={false}
+                  className="flex h-full flex-col gap-1 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
+                >
+                  <span className="flex items-baseline justify-between gap-3">
+                    <span className="text-sm font-medium">
+                      {singer.name} vocal range
+                    </span>
+                    <span className="tabular shrink-0 font-mono text-[11px] text-mut">
+                      {rangeLabel(singer)}
+                    </span>
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-dim">
+                    {singerReviewLabel(singer.slug)}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section
         data-singer-search-priority="true"
@@ -174,14 +234,15 @@ export default function SingersPage() {
           Popular vocal range lookups
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-mut">
-          The singer pages currently drawing the most Google search interest,
-          with the reported span visible before you open one.
+          Frequently looked-up singers, with the reported span visible before
+          you open one.
         </p>
         <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           {VOCAL_RANGE_PRIORITY_SINGERS.map((singer) => (
             <li key={singer.slug}>
               <Link
                 href={`/singers/${singer.slug}`}
+                prefetch={false}
                 className="flex h-full items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
               >
                 <span className="text-sm font-medium">
@@ -204,6 +265,7 @@ export default function SingersPage() {
             <li key={v}>
               <Link
                 href={`/singers/voice-type/${voiceTypeSlug(v)}`}
+                prefetch={false}
                 className="flex min-h-11 items-baseline justify-between gap-3 rounded-xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet"
               >
                 <span className="text-sm font-medium">{v === "Contralto" ? "Contralto singers and their vocal ranges" : `${v} singers`}</span>
@@ -223,6 +285,7 @@ export default function SingersPage() {
             <li key={g}>
               <Link
                 href={`/singers/genre/${genreSlug(g)}`}
+                prefetch={false}
                 className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1.5 text-sm transition-colors hover:border-violet"
               >
                 {g}

@@ -41,11 +41,11 @@ Not seven. Voices adapt in the gaps as much as in the work, and daily singing at
 
 Three is the floor. Four is better. Five is fine if the sessions stay at twenty minutes and stay gentle. Spread them out — Monday, Wednesday, Friday beats three sessions crammed into a weekend, because the point is repeated exposure, not total volume.
 
-Coach, on the Progress page, reads your recent scored sessions and range tests and builds a short plan around whichever area came back weakest: ear training, warmups, or song work. It is arithmetic on your own numbers, not a second opinion. Free accounts see the first step of the plan; Pro shows all of it. Either way, it is a reasonable way to fill the middle of a session without deciding for yourself every time. It does not replace the block structure — Coach picks what to drill, the program decides what the fortnight is for.
+Coach, on the Progress page, reads your recent scored sessions and range tests and builds a short plan around whichever area came back weakest: ear training, warmups, or song work. It is arithmetic on your own numbers, not a second opinion. On the free plan you see the first two steps of the plan; Pro shows all of it. Either way, it is a reasonable way to fill the middle of a session without deciding for yourself every time. It does not replace the block structure — Coach picks what to drill, the program decides what the fortnight is for.
 
 ## Before you start: what to record
 
-Do this in one sitting, before week one, and do not skip it because you are impatient to sing. Everything in week eleven depends on having something honest to compare against, and you cannot go back and collect it later.
+Do this in one sitting, before week one, and do not skip it because you are impatient to sing. Everything at the start of week twelve depends on having something honest to compare against, and you cannot go back and collect it later.
 
 **A range test, taken by the rules.** Warmed up, same room, counting only notes you would let someone else hear. Note the conditions somewhere — time of day, how you slept, whether you had a cold.
 
@@ -53,7 +53,7 @@ Do this in one sitting, before week one, and do not skip it because you are impa
 
 **A sustain test.** From Breath. One number, thirty seconds of your attention.
 
-**A sentence about why.** What you want to be able to do that you currently cannot — sing the second chorus without running out, get through a bridge without the break showing, sing at all in front of someone. Write it down. Wants drift over three months, and in week eleven that sentence will tell you whether you got closer to the thing you actually cared about better than any chart can.
+**A sentence about why.** What you want to be able to do that you currently cannot — sing the second chorus without running out, get through a bridge without the break showing, sing at all in front of someone. Write it down. Wants drift over three months, and at the start of week twelve that sentence will tell you whether you got closer to the thing you actually cared about better than any chart can.
 
 That is the baseline. Twenty minutes of setup for three months of comparison.
 
@@ -79,4 +79,4 @@ Two rules override all of the above. First, when in doubt, go back rather than f
 
 ## Try this
 
-Before your first session, take a range test, then record one verse and chorus of a song you already know into the Recorder — and leave both alone. In week eleven you will record that same song again and put the two takes side by side in A/B compare. Whatever sits between them is the only honest evidence you will have.
+Before your first session, take a range test, then record one verse and chorus of a song you already know into the Recorder — and leave both alone. At the start of week twelve you will record that same song again and put the two takes side by side in A/B compare. Whatever sits between them is the only honest evidence you will have.

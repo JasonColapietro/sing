@@ -67,7 +67,7 @@ function allPageKeywords(): Record<string, readonly string[]> {
   for (const v of VOICE_KINDS) out[`/singers/voice-type/${v}`] = singerVoiceTypeKeywords(v);
   for (const s of ALL_SONGS) out[`/songs/${s.slug}`] = songKeywords(s);
   for (const s of POP_SONGS) out[`/can-you-sing/${s.slug}`] = popSongKeywords(s);
-  for (const c of BOOK_CONTENTS) out[`/book/${c.slug}`] = chapterKeywords(c.title, "book");
+  for (const c of BOOK_CONTENTS) out[`/book/${c.slug}`] = chapterKeywords(c.searchTitle || c.title, "book");
   for (const c of ATLAS_CONTENTS) out[`/atlas/${c.slug}`] = chapterKeywords(c.title, "atlas");
   const moduleNames = new Map<string, string>();
   for (const st of COURSE) {
@@ -132,6 +132,54 @@ describe("keyword map", () => {
       const name = normalizeKeywords([s.name])[0];
       expect(terms.every((t) => t.includes(name) || t.includes("suede")), s.slug).toBe(true);
     }
+  });
+
+  it("targets no superlative ranking queries", () => {
+    // The singer pages rank catalog figures, never singers; a "best" term
+    // targets a question the pages deliberately do not answer.
+    for (const [route, terms] of Object.entries(pages)) {
+      expect(terms.filter((t) => /\bbest\b/.test(t)), route).toEqual([]);
+    }
+  });
+
+  it("names singer-songwriters the way their hub's title does", () => {
+    const terms = singerGenreKeywords("Singer-Songwriter");
+    expect(terms[0]).toBe("singer-songwriters vocal range");
+    expect(terms.filter((t) => t.includes("singer-songwriter singers"))).toEqual([]);
+    expect(singerGenreKeywords("Pop")[0]).toBe("pop singers vocal range");
+  });
+
+  it("does not target lyrics or vocal-range queries on opening-phrase or arrangement song pages", () => {
+    const phrases = ALL_SONGS.filter((s) => s.form === "phrase");
+    expect(phrases.length).toBeGreaterThan(0);
+    for (const song of phrases) {
+      const terms = songKeywords(song);
+      expect(terms[0], song.slug).toBe(normalizeKeywords([`sing ${song.title}`])[0]);
+      expect(terms.filter((t) => /lyrics|vocal range/.test(t)), song.slug).toEqual([]);
+    }
+    // Longer arrangements sing selected lines, so they target neither the
+    // song's lyrics nor its vocal range; only whole-song pages lead with lyrics.
+    const arrangements = ALL_SONGS.filter((s) => s.arrangementOf !== undefined);
+    expect(arrangements.length).toBeGreaterThan(0);
+    for (const song of arrangements) {
+      const terms = songKeywords(song);
+      expect(terms[0], song.slug).toBe(normalizeKeywords([`sing ${song.title}`])[0]);
+      expect(terms.filter((t) => /lyrics|vocal range/.test(t)), song.slug).toEqual([]);
+    }
+    for (const song of ALL_SONGS.filter((s) => s.form !== "phrase" && s.arrangementOf === undefined)) {
+      expect(songKeywords(song)[0], song.slug).toMatch(/ lyrics$/);
+    }
+  });
+
+  it("names the part of the song a phrase page holds, not an opening it does not transcribe", () => {
+    const home = ALL_SONGS.find((s) => s.slug === "home-on-the-range")!;
+    expect(home.excerpt).toBe("chorus hook");
+    const terms = songKeywords(home);
+    expect(terms).toContain("home on the range chorus hook");
+    expect(terms.filter((t) => t.includes("opening phrase"))).toEqual([]);
+    // Entries that do open their song keep the opening-phrase term.
+    const opener = ALL_SONGS.find((s) => s.form === "phrase" && s.excerpt === undefined)!;
+    expect(songKeywords(opener)).toContain(normalizeKeywords([`${opener.title} opening phrase`])[0]);
   });
 
   it("normalizeKeywords strips punctuation, lowercases, dedupes and caps", () => {

@@ -1,9 +1,19 @@
-import { describe, expect, it } from "vitest";
-import { PLAN_ROWS, PRICING, PRO_PERKS } from "./pro";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  NETWORK_ERROR_MESSAGE,
+  PLAN_ROWS,
+  PRICING,
+  PRO_PERKS,
+  redeemCode,
+  restorePro,
+  startCheckout,
+} from "./pro";
 import { PRICING as SHARED_PRICING } from "./pro-shared";
 import { ATLAS_CONTENTS } from "./atlas-data";
 import { BOOK_CONTENTS } from "./book-data";
 import { PRO_SONGS, SONGS } from "@/components/songs/data";
+import { PRO_PACKS } from "@/components/warmups/exercises";
+import { FREE_DAILY_MINUTES } from "./practice-limits";
 
 describe("PRICING", () => {
   it("re-exports the shared price rather than keeping a second copy", () => {
@@ -47,6 +57,34 @@ describe("Pro sales copy", () => {
     }
   });
 
+  it("sells the warmup packs as the technique packs that ship", () => {
+    // PRO_PACKS is one belt-prep, one head-voice and one mix pack, keyed to no
+    // genre and no voice type. "Genre and voice-type routines" sold packs that
+    // never existed, on the page a buyer reads before paying.
+    expect(claims.filter((c) => /\bgenres?\b|voice-type routines/i.test(c))).toEqual([]);
+    const warmups = PRO_PERKS.find((p) => p.id === "warmups")!;
+    const exercises = PRO_PACKS.reduce((n, p) => n + p.exercises.length, 0);
+    expect(warmups.desc).toContain(`${PRO_PACKS.length} extra sets`);
+    expect(warmups.desc).toContain(`${exercises} exercises`);
+  });
+
+  it("never sells a song's free score record as a Pro feature", () => {
+    // Every singer's song summary shows their personal best and a sparkline of
+    // past scores, and library cards show the best score. Pro's addition is
+    // the song notes in the per-note accuracy chart, not the score history.
+    const songHistory = /scoring history|song history|month one against month six/i;
+    expect(claims.filter((c) => songHistory.test(c))).toEqual([]);
+  });
+
+  it("says songs share the free daily minutes when it calls them free", () => {
+    // Songs are guided practice, so on the free plan they run on the daily
+    // allowance. "All 26 songs are free" with no cap beside it read as
+    // unlimited, and left out the one thing Pro changes about them.
+    const songs = PRO_PERKS.find((p) => p.id === "songs")!;
+    expect(songs.desc).toContain(`${FREE_DAILY_MINUTES} free minutes a day`);
+    expect(`${songs.title} ${songs.desc}`).toMatch(/no daily limit|lifts that limit/i);
+  });
+
   it("describes each book's free tier by its actual free-chapter count", () => {
     // The `free` flags on the checked-in chapter arrays are the source of
     // truth; this copy is the only place the counts are restated by hand.
@@ -72,5 +110,26 @@ describe("Pro sales copy", () => {
       expect(row, `missing PLAN_ROWS entry: ${label}`).toBeDefined();
       expect(row?.free).toBe(free);
     }
+  });
+});
+
+describe("a dropped connection on the buy, unlock and pass paths", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("says so in plain words instead of the browser's 'Failed to fetch'", async () => {
+    vi.stubGlobal("fetch", () => Promise.reject(new TypeError("Failed to fetch")));
+    await expect(startCheckout("lifetime")).rejects.toThrow(NETWORK_ERROR_MESSAGE);
+    await expect(restorePro("key")).rejects.toThrow(NETWORK_ERROR_MESSAGE);
+    await expect(redeemCode("code")).rejects.toThrow(NETWORK_ERROR_MESSAGE);
+    expect(NETWORK_ERROR_MESSAGE).not.toMatch(/fetch|load failed/i);
+  });
+
+  it("still passes the server's own error through when the request lands", async () => {
+    vi.stubGlobal("fetch", () =>
+      Promise.resolve(new Response(JSON.stringify({ error: "That code has expired." }), { status: 400 })),
+    );
+    await expect(redeemCode("code")).rejects.toThrow("That code has expired.");
   });
 });

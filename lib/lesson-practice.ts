@@ -25,7 +25,9 @@ import { ATLAS_CONTENTS } from "@/lib/atlas-data";
 import { BOOK_CONTENTS } from "@/lib/book-data";
 import { ALL_SONGS, isProSong } from "@/components/songs/data";
 import { EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
+import { routineById, stepExercise } from "@/components/warmups/routines";
 import type { ActivityType } from "@/lib/progress-shape";
+import { rangeTestHref } from "@/lib/site";
 
 export type ProofBasis =
   /** A measurement the contract reports as implemented. */
@@ -46,6 +48,13 @@ export interface Companion {
 export interface ModulePractice {
   basis: ProofBasis;
   companion: Companion;
+  /**
+   * A lesson whose own steps send the singer somewhere other than the
+   * module's room, keyed by lesson ID. Its page's first button opens this
+   * room instead; the practice panel, which describes the module's evidence,
+   * keeps the module's.
+   */
+  lessonCompanion?: Partial<Record<string, Companion>>;
   /** Warm-up exercise IDs and song IDs, in the order GuitarHub listed them. */
   studies: string[];
   /** Book slugs, or `atlas:<slug>` for an atlas chapter. */
@@ -66,16 +75,35 @@ const selfCheck = (missing: string, showsInstead: string): ProofBasis => ({
 export const MODULE_PRACTICE: Record<string, ModulePractice> = {
   // Stage 1 · Room Check
   "v-l1-m1": {
-    // Usable input time is what a confidently-voiced time measurement reports.
-    basis: measured("phonationSeconds"),
-    companion: { room: "analyze" },
+    // The module's evidence is a recording heard back: its lessons compare
+    // takes made with playback on and with it stopped, and its self-check is
+    // one clear recording. Voiced time was the basis once, but it counts any
+    // confident pitch, so a reference bleeding in from a speaker raises it;
+    // and the analyzer, where it was read, has no record or playback.
+    basis: selfCheck(
+      "simultaneousVoices",
+      "That a take recorded with playback stopped holds only your voice when you play it back. The pitch detector reports one pitch from everything the microphone hears, so it cannot pick a reference out from under your voice; your ear on playback can.",
+    ),
+    companion: { room: "recorder" },
     studies: ["sustained-hold"],
-    readings: ["what-your-voice-is", "when-numbers-lie"],
+    // Chapter 12 covers room noise, mic placement and headphone bleed, which
+    // is this module, so it comes first. Chapter 1, how the voice works, stays
+    // as the course's opening read and is listed again in the breath, register
+    // and vowel modules its three sections teach.
+    readings: ["when-numbers-lie", "what-your-voice-is"],
   },
   "v-l1-m2": {
     // Strain is not measurable. What a scan establishes is the two extremes.
     basis: measured("rangeExtremes"),
     companion: { room: "range" },
+    // The first two lessons practise the slides in the recorder, as their
+    // steps say; only the self-check takes the range test, because every
+    // finished test replaces the saved range and refits the warm-ups and
+    // songs. Repeating an exercise lesson must not mean repeating the test.
+    lessonCompanion: {
+      "v-l1-m2-01": { room: "recorder" },
+      "v-l1-m2-02": { room: "recorder" },
+    },
     studies: ["morning-hum", "morning-siren"],
     readings: ["reading-the-range-test", "range-is-not-one-number"],
   },
@@ -85,12 +113,15 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     basis: measured("sustainSeconds"),
     companion: { room: "breath", param: "drill", value: "sustain" },
     studies: [],
-    readings: ["breath", "weeks-1-2-baseline"],
+    // Chapter 1's "The power: breath" is the free reading of this module.
+    readings: ["breath", "weeks-1-2-baseline", "what-your-voice-is"],
   },
 
   // Stage 2 · Steady Tone
   "v-l2-m1": {
-    basis: measured("sustainSeconds"),
+    // Straw scale is a pitched pattern scored by the warm-up room; the
+    // sustain timer lives in the breath room and never sees this drill.
+    basis: measured("scorePercent"),
     companion: { room: "warmups", param: "exercise", value: "straw-scale" },
     studies: ["straw-scale", "lip-trill-scale"],
     readings: ["breath", "stamina-and-health"],
@@ -99,13 +130,15 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     basis: measured("centsFromTarget"),
     companion: { room: "studio" },
     studies: ["five-note-scale", "chromatic-neighbor"],
-    readings: ["pitch-accuracy"],
+    // Chapter 15 (weeks 3-4) is the book's onset and steady-tone block, so it
+    // is read here and in Hold It, not beside the Stage 6 runs.
+    readings: ["pitch-accuracy", "weeks-3-4-middle"],
   },
   "v-l2-m3": {
     basis: measured("inTuneHoldTime"),
     companion: { room: "warmups", param: "exercise", value: "sustained-hold" },
     studies: ["sustained-hold", "morning-sustain"],
-    readings: ["breath", "pitch-accuracy"],
+    readings: ["breath", "pitch-accuracy", "weeks-3-4-middle"],
   },
   "v-l2-m4": {
     basis: measured("scorePercent"),
@@ -122,7 +155,8 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     ),
     companion: { room: "analyze" },
     studies: ["humming-thirds", "head-wee-descent"],
-    readings: ["registers"],
+    // Chapter 1's "The vibrator: the folds" is the free reading of this module.
+    readings: ["registers", "what-your-voice-is"],
   },
   "v-l3-m2": {
     // A crack stays voiced, so a longest-voiced-run figure reports one
@@ -142,7 +176,8 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     ),
     companion: { room: "warmups", param: "exercise", value: "hung-ee-mm" },
     studies: ["hung-ee-mm", "legato-triad"],
-    readings: ["resonance"],
+    // Chapter 1's "The filter: the tract" is the free reading of this module.
+    readings: ["resonance", "what-your-voice-is"],
   },
   "v-l3-m4": {
     basis: measured("scorePercent"),
@@ -156,7 +191,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "That you can tell breathy, nasal and tight apart in your own takes. Nothing measures any of the three.",
     ),
     companion: { room: "recorder" },
-    studies: ["morning-sustain"],
+    // Tongue-trill descent first: "Release the Jaw and Tongue" needs a drill
+    // that works the tongue, which a plain sustain does not.
+    studies: ["tongue-trill-descent", "morning-sustain"],
     readings: ["when-numbers-lie", "stamina-and-health", "atlas:a-vocabulary-for-tone"],
   },
 
@@ -199,7 +236,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "absoluteLoudness",
       "That the levels sound distinct on one note. Input level is uncalibrated, so discrete dynamic levels are not measurable.",
     ),
-    companion: { room: "analyze" },
+    // The recorder, where the lesson has you record the levels in one take
+    // and play them back; the analyzer has no record or playback.
+    companion: { room: "recorder" },
     // Swell and fade is the dynamics drill itself: one note, soft to medium
     // and back. Only its pitch is scored, which is the honest half.
     studies: ["swell-and-fade", "sustained-hold", "simple-gifts"],
@@ -214,7 +253,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "passaggioPitches",
       "That you located your own transition by ear and can name the published zone for your voice type. A range scan does not give you a passaggio.",
     ),
-    companion: { room: "range" },
+    // The pitch studio, not the range test: its live trace is where the book
+    // has you find the gear change, and a range result shows no passaggio.
+    companion: { room: "studio" },
     studies: ["ng-siren-fifth"],
     readings: ["the-passaggio", "finding-your-break"],
   },
@@ -241,7 +282,8 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "That you tried the pattern gently and noted your own effort. Nothing detects strain, so a safe belt cannot be scored.",
     ),
     companion: { room: "studio" },
-    studies: ["head-wee-descent", "legato-triad"],
+    // The free Legato triad first, so a free reader's first choice opens.
+    studies: ["legato-triad", "head-wee-descent"],
     readings: ["registers", "atlas:the-safety-rail"],
   },
   "v-l5-m5": {
@@ -249,7 +291,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "keyAdherence",
       "That your answering phrase stayed in key, by ear. With no written target there is nothing for a score to compare against.",
     ),
-    companion: { room: "earTraining" },
+    // The lessons record the call and answer in one take; the reference
+    // patterns are in the practice material. Ear training can do neither.
+    companion: { room: "recorder" },
     studies: ["pentatonic-run", "minor-scale"],
     readings: ["pitch-accuracy", "atlas:a-vocabulary-for-tone"],
   },
@@ -262,13 +306,13 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     basis: measured("scorePercent"),
     companion: { room: "warmups", param: "exercise", value: "morning-three-note" },
     studies: ["morning-three-note", "agility-run"],
-    readings: ["weeks-3-4-middle"],
+    readings: ["pitch-accuracy"],
   },
   "v-l6-m2": {
     basis: measured("scorePercent"),
     companion: { room: "warmups", param: "exercise", value: "hoo-four-note" },
     studies: ["hoo-four-note"],
-    readings: ["breath", "weeks-3-4-middle"],
+    readings: ["breath", "pitch-accuracy"],
   },
   "v-l6-m3": {
     basis: selfCheck(
@@ -297,7 +341,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "improvisationQuality",
       "That you made your own phrases over the pattern rather than repeating a line. Nothing judges improvisation.",
     ),
-    companion: { room: "earTraining" },
+    // The lessons record the call and answer in one take; the reference
+    // patterns are in the practice material. Ear training can do neither.
+    companion: { room: "recorder" },
     studies: ["minor-scale", "pentatonic-run"],
     readings: ["atlas:a-vocabulary-for-tone", "pitch-accuracy"],
   },
@@ -310,9 +356,11 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
 
   // Stage 7 · Signature
   "v-l7-m1": {
-    // The one module where cycle dose is the right evidence.
+    // The one module where cycle dose is the right evidence, and the analyzer
+    // is the room that shows it. The studies are the drills a singer builds
+    // the short warm-up from; the Full warmup is a 14-minute routine.
     basis: measured("cycleDose"),
-    companion: { room: "warmups", param: "routine", value: "full" },
+    companion: { room: "analyze" },
     studies: ["morning-hum", "humming-thirds", "descending-five"],
     readings: ["stamina-and-health", "how-the-program-works"],
   },
@@ -321,7 +369,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "vowelOrFormant",
       "That you sang one phrase two recognisably different ways. Style is a human judgement and is not scored.",
     ),
-    companion: { room: "atlas" },
+    // The lessons record both styles in one take; the atlas chapter stays
+    // listed under the readings.
+    companion: { room: "recorder" },
     studies: ["amazing-grace-full", "simple-gifts"],
     readings: ["atlas:how-to-borrow-a-voice", "learning-from-other-voices"],
   },
@@ -330,7 +380,7 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "strainOrPressedPhonation",
       "That you tried production choices on cue and returned to neutral. Neither the choices nor the absence of strain is measured.",
     ),
-    companion: { room: "analyze" },
+    companion: { room: "recorder" },
     studies: ["morning-sustain"],
     readings: ["atlas:a-vocabulary-for-tone", "atlas:the-safety-rail"],
   },
@@ -339,22 +389,33 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
       "strainOrPressedPhonation",
       "That you read the safety material and wrote a stop plan. Effects carry real injury risk and nothing here can verify safety.",
     ),
-    companion: { room: "analyze" },
+    // Where earlier supervised takes are played back; nothing here asks for
+    // the effect to be produced.
+    companion: { room: "recorder" },
     studies: [],
     readings: ["atlas:the-safety-rail", "stamina-and-health"],
   },
   "v-l7-m5": {
-    basis: measured("rangeExtremes"),
-    companion: { room: "range" },
+    // The lessons take their evidence in one recorded take and save the range
+    // test for the next retest, weeks apart; a test is not practice, and every
+    // finished one replaces the saved range. Not the warm-up room either: it
+    // fits each pattern under the measured high, so it can never place the
+    // semitone past today's comfortable endpoint that these lessons ask for.
+    basis: selfCheck(
+      "strainOrPressedPhonation",
+      "That you compared today's easy low and high notes with an earlier baseline taken the same way, by ear and on playback, without forcing an extension. Whether a new note is usable rather than forced is your judgement; the range test measures your extremes, and it belongs to your next retest, weeks apart.",
+    ),
+    companion: { room: "recorder" },
     studies: ["morning-three-note", "chromatic-neighbor"],
-    readings: ["tracking-change", "range-is-not-one-number"],
+    // Chapter 8's "Retesting fairly" is this module's retest rule, and free.
+    readings: ["tracking-change", "range-is-not-one-number", "reading-the-range-test"],
   },
   "v-l7-m6": {
     // The detector returns one fundamental per frame, so a harmony against a
     // lead is not two measurable parts.
     basis: selfCheck(
       "simultaneousVoices",
-      "That you rehearsed the study and compared takes. The harmony half cannot be measured: the pitch detector hears one voice at a time.",
+      "That you rehearsed the study and compared takes. A harmony, if you add one, cannot be measured: the pitch detector hears one voice at a time.",
     ),
     companion: { room: "recorder" },
     studies: ["amazing-grace-full", "home-on-the-range-full"],
@@ -391,7 +452,8 @@ export const ROOM_LABELS: Record<string, string> = {
   earTraining: "ear training",
   studio: "the pitch studio",
   songs: "the songbook",
-  analyze: "take analysis",
+  // The live analyzer, not the Pro "take analysis" of recorded takes.
+  analyze: "the voice analyzer",
   recorder: "the recorder",
   progress: "your progress",
   tools: "the practice tools",
@@ -417,7 +479,7 @@ function companionValue(c: Companion): string | undefined {
 export function companionHref(c: Companion): string {
   const path = ROOM_PATHS[c.room];
   if (!path) throw new Error(`Unknown room ${c.room}`);
-  if (c.room === "range") return `${path}?mode=range`;
+  if (c.room === "range") return rangeTestHref();
   const value = companionValue(c);
   return c.param && value ? `${path}?${c.param}=${encodeURIComponent(value)}` : path;
 }
@@ -431,8 +493,29 @@ export function companionLabel(c: Companion): string {
     return `${SONGS_BY_ID.get(c.value)?.title ?? c.value} in the songbook`;
   }
   if (c.room === "breath" && c.value === "sustain") return "the sustain test in the breath room";
-  if (c.room === "warmups" && c.param === "routine") return "the full warm-up routine";
   return ROOM_LABELS[c.room] ?? c.room;
+}
+
+/** The room a lesson page's first button opens: the lesson's own, else its module's. */
+export function lessonCompanion(practice: ModulePractice, lessonId: string): Companion {
+  return practice.lessonCompanion?.[lessonId] ?? practice.companion;
+}
+
+/**
+ * The warm-up offered ahead of every link into the range test: a cold voice
+ * under-reports at both ends, and the result replaces the saved range. The
+ * Morning reset is about four minutes, inside the free daily allowance, and
+ * it is the set the Your Range lessons and /learn's Day 1 name.
+ */
+export const RANGE_WARM_UP = {
+  routine: "morning",
+  href: "/warmups?routine=morning",
+  label: "Warm up first: Morning reset",
+} as const;
+
+/** True when a link into this room comes after the warm-up. */
+export function warmsUpFirst(c: Companion): boolean {
+  return c.room === "range";
 }
 
 /**
@@ -444,7 +527,10 @@ export function companionLabel(c: Companion): string {
  */
 export interface PracticeMatch {
   type: ActivityType;
-  /** When set, the session's `detail` must equal it. */
+  /**
+   * When set, the session's `detail` must name it: this title, or for a song
+   * or warm-up exercise one of the titles it was logged under before a rename.
+   */
   detail?: string;
 }
 
@@ -460,6 +546,33 @@ const ROOM_ACTIVITY: Partial<Record<string, ActivityType>> = {
   tools: "tools",
 };
 
+/**
+ * The activities that draw on the free daily allowance of guided practice.
+ * Restates CAPPED_TYPES from lib/free-cap.ts, which is client-only; the test
+ * holds the two together.
+ */
+export const GUIDED_ACTIVITY: ReadonlySet<ActivityType> = new Set<ActivityType>([
+  "warmup",
+  "ear",
+  "breath",
+  "song",
+]);
+
+/** True when practising here uses the free daily guided-practice allowance. */
+export function isGuidedPractice(c: Companion): boolean {
+  const type = ROOM_ACTIVITY[c.room];
+  return type !== undefined && GUIDED_ACTIVITY.has(type);
+}
+
+/**
+ * True when the buttons into this room send the singer to guided practice:
+ * the room itself, or the warm-up offered before a range test. Wherever this
+ * holds, the page states the daily allowance.
+ */
+export function linksGuidedPractice(c: Companion): boolean {
+  return isGuidedPractice(c) || warmsUpFirst(c);
+}
+
 export function practiceMatch(c: Companion): PracticeMatch | undefined {
   const type = ROOM_ACTIVITY[c.room];
   if (!type) return undefined;
@@ -473,6 +586,46 @@ export function practiceMatch(c: Companion): PracticeMatch | undefined {
   }
   if (c.room === "breath" && c.value === "sustain") return { type, detail: "Sustain test" };
   return { type };
+}
+
+/**
+ * Every session a module's pages send the singer to log: its room, any
+ * lesson's own room, and each step of the warm-up offered before a range
+ * test, which logs under its exercises' titles like any other warm-up.
+ */
+function sessionsSentTo(p: ModulePractice): PracticeMatch[] {
+  const rooms = [p.companion, ...Object.values(p.lessonCompanion ?? {})].filter(
+    (c): c is Companion => c !== undefined,
+  );
+  const matches = rooms.flatMap((c) => practiceMatch(c) ?? []);
+  if (rooms.some(warmsUpFirst)) {
+    for (const step of routineById(RANGE_WARM_UP.routine)?.steps ?? []) {
+      matches.push({ type: "warmup", detail: stepExercise(step).title });
+    }
+  }
+  return matches;
+}
+
+/**
+ * A module's match for the "Practised" mark on the course and stage pages,
+ * or nothing when a session another module sends the singer to would satisfy
+ * it too. A recording, a studio or analyzer session, or a song that two
+ * modules share is evidence for none of them in particular: one take in the
+ * recorder once marked eleven modules across Stages 3 to 7 as practised. So
+ * is a drill inside the Morning reset that Stage 1 prescribes before the
+ * range test: every new singer sings it on day one. The module and lesson
+ * pages still count the room's sessions, naming the room they count.
+ */
+export function distinctPracticeMatch(moduleId: string): PracticeMatch | undefined {
+  const own = MODULE_PRACTICE[moduleId];
+  const match = own ? practiceMatch(own.companion) : undefined;
+  if (!match) return undefined;
+  const shared = Object.entries(MODULE_PRACTICE).some(
+    ([id, p]) =>
+      id !== moduleId &&
+      sessionsSentTo(p).some((other) => other.type === match.type && other.detail === match.detail),
+  );
+  return shared ? undefined : match;
 }
 
 export interface MaterialItem {

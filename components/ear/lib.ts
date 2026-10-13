@@ -103,6 +103,16 @@ export const INTERVAL_NAMES: Record<number, string> = {
   12: "Octave",
 };
 
+/**
+ * The interval's name in lower case with its article, for feedback lines:
+ * "an octave", "a perfect fifth". Only "octave" opens on a vowel sound;
+ * "unison" starts with a "yoo" and keeps "a".
+ */
+export function intervalWithArticle(semi: number): string {
+  const name = INTERVAL_NAMES[semi].toLowerCase();
+  return `${name.startsWith("o") ? "an" : "a"} ${name}`;
+}
+
 export const INTERVAL_SETS: Record<Difficulty, number[]> = {
   easy: [0, 4, 7, 12],
   medium: [0, 3, 4, 5, 7, 9, 12],
@@ -117,8 +127,12 @@ export const SHORTCUT_KEYS = [
 /* ---------------- register ---------------- */
 
 /**
- * A comfortable register for reference tones: saved range midpoint ±5
- * semitones, else C3–C4.
+ * A comfortable register for the notes the games ask a singer to sing: saved
+ * range midpoint ±5 semitones, kept inside the measured range, else C3–C4.
+ *
+ * With a range saved, medium and hard score the exact octave, so a target
+ * outside a narrow range fails the singer for being out of range rather than
+ * out of tune.
  */
 export function singableRegister(range: {
   lowMidi?: number;
@@ -126,31 +140,65 @@ export function singableRegister(range: {
 }): { lo: number; hi: number } {
   if (range.lowMidi !== undefined && range.highMidi !== undefined) {
     const mid = Math.round((range.lowMidi + range.highMidi) / 2);
-    return { lo: mid - 5, hi: mid + 5 };
+    // Kept inside a narrow measured range, as songRegister does. A span under
+    // five semitones (saved before the range test's minimum) is not a
+    // measurement, so it keeps the ±5 band instead of a register too small
+    // to hold a melody.
+    const lo = Math.max(range.lowMidi, mid - 5);
+    const hi = Math.min(range.highMidi, mid + 5);
+    return hi - lo >= 5 ? { lo, hi } : { lo: mid - 5, hi: mid + 5 };
   }
   return { lo: 48, hi: 60 }; // C3–C4
 }
 
+/**
+ * Whether a range test result is saved. Without one the games pitch their
+ * notes for a C3–C4 register that many voices cannot reach, so every sung
+ * game counts any octave until there is a range to place the notes in.
+ */
+export function hasSavedRange(range: { lowMidi?: number; highMidi?: number }): boolean {
+  return range.lowMidi !== undefined && range.highMidi !== undefined;
+}
+
 /* ---------------- melody generation ---------------- */
 
-const STEPS = [-2, -1, 1, 2];
-const LEAPS = [-7, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 7];
+/** Semitones of the major scale's seven degrees above its tonic. */
+const MAJOR = [0, 2, 4, 5, 7, 9, 11];
 
+/**
+ * A short melody to echo, inside one major key and inside `register`.
+ *
+ * Beginner ear training starts from diatonic shapes (do-re-mi, sol-fa-mi), so
+ * every melody stays in a key: easy and medium move by scale step, hard leaps
+ * up to a fifth. Random semitone moves with no key gave clusters like D3 D#3
+ * E3, which are hard to hear and to sing back and carry over to no song.
+ * Each next note is drawn only from degrees inside the register and never
+ * repeats the last one, so nothing has to bounce off the edges.
+ */
 export function generateMelody(
   difficulty: Difficulty,
   register: { lo: number; hi: number },
 ): number[] {
   const len = difficulty === "easy" ? 3 : difficulty === "medium" ? 4 : 5;
-  const moves = difficulty === "hard" ? LEAPS : STEPS;
+  // In scale degrees: neighbours only, or up to four degrees (a fifth) on hard.
+  const maxStep = difficulty === "hard" ? 4 : 1;
   const { lo, hi } = register;
-  const notes: number[] = [randInt(lo + 2, Math.max(lo + 2, hi - 2))];
+  // Low enough that the first five degrees, do to sol, all fit.
+  const tonic = randInt(lo, Math.max(lo, hi - 7));
+  const toMidi = (d: number) => tonic + 12 * Math.floor(d / 7) + MAJOR[((d % 7) + 7) % 7];
+  const inRange: number[] = [];
+  for (let d = -7; d <= 14; d++) {
+    const m = toMidi(d);
+    if (m >= lo && m <= hi) inRange.push(d);
+  }
+  // Starts on do to sol, as far as the register holds them: a five- or
+  // six-semitone register has no room for sol above the tonic.
+  let deg = pick(inRange.filter((d) => d >= 0 && d <= 4));
+  const notes = [toMidi(deg)];
   while (notes.length < len) {
-    const prev = notes[notes.length - 1];
-    let next = prev + pick(moves);
-    if (next < lo || next > hi) next = prev - (next - prev); // bounce back
-    next = Math.min(hi, Math.max(lo, next));
-    if (next === prev) next = prev + (prev >= hi ? -1 : 1);
-    notes.push(next);
+    const prev = deg;
+    deg = pick(inRange.filter((d) => d !== prev && Math.abs(d - prev) <= maxStep));
+    notes.push(toMidi(deg));
   }
   return notes;
 }

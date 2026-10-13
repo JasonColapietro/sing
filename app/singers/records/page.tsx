@@ -2,8 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { midiToLabel } from "@/lib/audio/notes";
-import { SINGERS, rangeLabel, spanOctaves, type Singer } from "@/lib/singers";
-import { SITE_URL } from "@/lib/site";
+import {
+  SINGERS,
+  joinNames,
+  rangeLabel,
+  recordHolders,
+  spanOctaves,
+  type Singer,
+} from "@/lib/singers";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
 
@@ -22,28 +30,64 @@ export const metadata: Metadata = withCanonicalOpenGraph({
 
 const span = (s: Singer) => s.highMidi - s.lowMidi;
 
+/**
+ * Competition ranking ("1, 1, 3"): one plus the number of profiles strictly
+ * ahead. Equal values share a rank, as they do on each singer's own page
+ * (lib/singer-catalog-position.ts), so a tie never reads as a second place.
+ */
+function rankBy(score: (s: Singer) => number) {
+  return (s: Singer) => SINGERS.filter((o) => score(o) > score(s)).length + 1;
+}
+const lowScore = (s: Singer) => -s.lowMidi;
+const highScore = (s: Singer) => s.highMidi;
+const spanRank = rankBy(span);
+const lowRank = rankBy(lowScore);
+const highRank = rankBy(highScore);
+
+/** Rows per table, before ties at the cut-off are added. */
+const TABLE_ROWS = 15;
+
+/**
+ * The top TABLE_ROWS profiles by `score`, plus every profile tied with the
+ * last of them. A hard cut at 15 kept whichever tied name sorted first and
+ * dropped the rest, the same alphabetical accident the shared ranks fix.
+ */
+function topWithTies(score: (s: Singer) => number): Singer[] {
+  const sorted = [...SINGERS].sort((a, b) => score(b) - score(a));
+  const cut = score(sorted[Math.min(TABLE_ROWS, sorted.length) - 1]);
+  return sorted.filter((s, i) => i < TABLE_ROWS || score(s) === cut);
+}
+
 function Table({
   rows,
+  rank,
   value,
 }: {
   rows: Singer[];
+  rank: (s: Singer) => number;
   value: (s: Singer) => string;
 }) {
   return (
     <ol className="mt-4 divide-y divide-line/50">
-      {rows.map((s, i) => (
+      {rows.map((s) => (
         <li key={s.slug}>
+          {/* prefetch off: some 45 rows, mostly pending profiles nobody is about
+              to open, would otherwise each fetch a page payload on scroll. */}
           <Link
             href={`/singers/${s.slug}`}
+            prefetch={false}
             className="grid grid-cols-[1.75rem_minmax(0,1fr)_auto] items-baseline gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-panel"
           >
-            <span className="tabular font-mono text-xs text-dim">{i + 1}</span>
+            <span className="tabular font-mono text-xs text-dim">{rank(s)}</span>
             <span className="min-w-0">
               <span className="block truncate text-sm font-medium">
                 {s.name}
               </span>
-              <span className="block truncate font-mono text-[10px] uppercase tracking-[0.1em] text-mut">
-                Catalog label: {s.voiceType} · reported {rangeLabel(s)}
+              {/* Wraps rather than truncates, range first: at phone widths the
+                  truncated line cut the reported range off every row, so a
+                  "6.0 oct" record showed no notes at all. */}
+              <span className="block font-mono text-[10px] uppercase tracking-[0.1em] text-mut">
+                Reported {rangeLabel(s)} · catalog label: {s.voiceType}
               </span>
             </span>
             <span className="tabular shrink-0 font-mono text-sm text-violet-ink">
@@ -57,31 +101,42 @@ function Table({
 }
 
 export default function RecordsPage() {
-  const widest = [...SINGERS].sort((a, b) => span(b) - span(a)).slice(0, 15);
-  const lowest = [...SINGERS].sort((a, b) => a.lowMidi - b.lowMidi).slice(0, 15);
-  const highest = [...SINGERS]
-    .sort((a, b) => b.highMidi - a.highMidi)
-    .slice(0, 15);
+  const widest = topWithTies(span);
+  const lowest = topWithTies(lowScore);
+  const highest = topWithTies(highScore);
 
   // The absolute phrasings people actually type — "ever", "in the world",
   // "biggest" — answered from the same computed rankings the tables render,
   // with the hedge these numbers deserve stated inside the answer rather than
   // near it. One array feeds the visible section and the FAQPage markup.
-  const w = widest[0];
-  const hi = highest[0];
-  const lo = lowest[0];
+  // Each answer names every profile tied for the record: naming only the
+  // first would crown whoever sorts first alphabetically.
+  const holders = recordHolders(SINGERS);
+  const w = holders.widest[0];
+  const hi = holders.highest[0];
+  const lo = holders.lowest[0];
+  const withRange = (s: Singer) => `${s.name} (${rangeLabel(s)})`;
+  const names = (list: Singer[]) => joinNames(list.map((s) => s.name));
+  const widestClause =
+    holders.widest.length === 1
+      ? `${w.name} has the widest reported span: ${rangeLabel(w)}, about ${spanOctaves(span(w))} octaves`
+      : `${joinNames(holders.widest.map(withRange))} share the widest reported span, ${span(w)} semitones or about ${spanOctaves(span(w))} octaves`;
   const faq = [
     {
       q: "Who has the biggest vocal range in the world?",
-      a: `This catalog cannot establish a world record. Among its ${SINGERS.length} profiles, the largest reported span is ${w.name}'s ${rangeLabel(w)} — about ${spanOctaves(span(w))} octaves. Individual endpoint evidence must be checked before treating that as a verified performance.`,
+      a: `This catalog cannot establish a world record. Among its ${SINGERS.length} profiles, ${
+        holders.widest.length === 1
+          ? `the largest reported span is ${w.name}'s ${rangeLabel(w)}`
+          : `the largest reported span is shared by ${joinNames(holders.widest.map(withRange))}`
+      } — about ${spanOctaves(span(w))} octaves. Individual endpoint evidence must be checked before treating that as a verified performance.`,
     },
     {
       q: "What is the highest note ever sung?",
-      a: `This catalog does not establish the highest note ever sung. Its highest listed endpoint is ${midiToLabel(hi.highMidi)} for ${hi.name}; check that profile's evidence status before repeating the note as a verified performance.`,
+      a: `This catalog does not establish the highest note ever sung. Its highest listed endpoint is ${midiToLabel(hi.highMidi)}, listed for ${names(holders.highest)}; check ${holders.highest.length === 1 ? "that profile's" : "each profile's"} evidence status before repeating the note as a verified performance.`,
     },
     {
       q: "What is the lowest note ever sung?",
-      a: `This catalog does not establish the lowest note ever sung. Its lowest listed endpoint is ${midiToLabel(lo.lowMidi)} for ${lo.name}; individual source review is needed to verify the performance and note.`,
+      a: `This catalog does not establish the lowest note ever sung. Its lowest listed endpoint is ${midiToLabel(lo.lowMidi)}, listed for ${names(holders.lowest)}; individual source review is needed to verify the performance and note.`,
     },
   ];
 
@@ -95,15 +150,17 @@ export default function RecordsPage() {
         name: TITLE,
         url: pageUrl,
         description: DESCRIPTION,
-        isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        publisher: ORG_PUBLISHER_NODE,
         mainEntity: {
           "@type": "ItemList",
           name: "Largest reported catalog spans",
           numberOfItems: widest.length,
           itemListOrder: "https://schema.org/ItemListOrderDescending",
-          itemListElement: widest.map((s, i) => ({
+          // Tied spans share a position, matching the visible table.
+          itemListElement: widest.map((s) => ({
             "@type": "ListItem",
-            position: i + 1,
+            position: spanRank(s),
             url: `${SITE_URL}/singers/${s.slug}`,
             name: `${s.name} — ${spanOctaves(span(s))} octaves`,
           })),
@@ -126,11 +183,17 @@ export default function RecordsPage() {
     <PageShell
       kicker="Extremes"
       title="Who has the widest vocal range? Reported catalog extremes"
-      subtitle={`Among ${SINGERS.length} catalog profiles, ${w.name} has the widest reported span: ${rangeLabel(w)}, about ${spanOctaves(span(w))} octaves. The rankings below list the largest spans and the lowest and highest endpoints, with their evidence limits in view; none is a verified world record.`}
+      subtitle={`Among ${SINGERS.length} catalog profiles, ${widestClause}. The rankings below list the largest spans and the lowest and highest endpoints, with their evidence limits in view; none is a verified world record.`}
       actions={
-        <LinkButton href="/singers" variant="outline" size="md">
-          ← All singers
-        </LinkButton>
+        // Own wrapping row: two md buttons are wider than a 320px phone.
+        <div className="flex flex-wrap items-center gap-2">
+          <LinkButton href={rangeTestHref()} size="md">
+            Find my vocal range →
+          </LinkButton>
+          <LinkButton href="/singers" variant="outline" size="md">
+            ← All singers
+          </LinkButton>
+        </div>
       }
     >
       <script
@@ -163,6 +226,7 @@ export default function RecordsPage() {
           </p>
           <Table
             rows={widest}
+            rank={spanRank}
             value={(s) => `${spanOctaves(span(s))} oct`}
           />
         </Card>
@@ -177,6 +241,7 @@ export default function RecordsPage() {
           </p>
           <Table
             rows={lowest}
+            rank={lowRank}
             value={(s) => midiToLabel(s.lowMidi)}
           />
         </Card>
@@ -192,6 +257,7 @@ export default function RecordsPage() {
           </p>
           <Table
             rows={highest}
+            rank={highRank}
             value={(s) => midiToLabel(s.highMidi)}
           />
         </Card>
@@ -220,7 +286,7 @@ export default function RecordsPage() {
             sing — which the range test and the main chart do together.
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <LinkButton href="/range?mode=range" size="sm">
+            <LinkButton href={rangeTestHref()} size="sm">
               Find my range
             </LinkButton>
             <LinkButton href="/singers" variant="outline" size="sm">

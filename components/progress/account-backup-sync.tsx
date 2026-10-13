@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccountAuth } from "@/lib/use-account-auth";
 import { Button } from "@/components/ui";
 import { accountsReady } from "@/lib/accounts";
+import { resumeProgressCloud, useProgressCloudState } from "@/lib/progress-cloud";
 import {
-  BackupError,
   lastBackupAt,
   maybeBackup,
   reconcileBackup,
@@ -31,19 +31,30 @@ import {
 const RECONCILED_KEY = "suede-sing:backup:account";
 
 /**
+ * The account this page life has already run the backup for. Module scope
+ * rather than a ref, so a second mount (a stale page-level copy, or a remount)
+ * cannot reconcile twice; the localStorage key below is what guards across
+ * page loads.
+ */
+let handledUserId: string | null = null;
+
+/**
  * Runs the backup for whoever is signed in. Renders nothing, blocks nothing,
  * and reports nothing: a failed backup must never interrupt practice, and a
  * signed-out visitor must never notice this exists.
  *
- * Mounted on /progress and in the recorder, which are the two rooms where the
- * record is most likely to have moved. Both calls are safe to repeat, so a
- * singer who visits both in one sitting still does at most one round trip.
+ * Mounted once, in the root layout, so a singer who signs up from any room is
+ * reconciled and backed up there. It used to be mounted only on /progress and
+ * in the recorder, so someone who created an account to back up their
+ * progress from warmups, ear training, breath or songs got no backup until
+ * they happened to open one of those two pages.
+ *
+ * Besides the once-per-load run, hiding the page asks for the throttled
+ * refresh, so a long single-page session is captured too. maybeBackup does
+ * nothing inside its six-hour window, which makes repeating it free.
  */
 export function AccountBackupSync() {
   const { isLoaded, isSignedIn, userId } = useAccountAuth();
-  // Guards against a second run inside one page life; the localStorage key
-  // below is what guards across page loads.
-  const handled = useRef<string | null>(null);
 
   useEffect(() => {
     // A development Clerk instance never resolves a session on a custom domain,
@@ -51,8 +62,8 @@ export function AccountBackupSync() {
     // rather than as an early return so the hook order cannot change.
     if (!accountsReady()) return;
     if (!isLoaded || !isSignedIn || !userId) return;
-    if (handled.current === userId) return;
-    handled.current = userId;
+    if (handledUserId === userId) return;
+    handledUserId = userId;
 
     void (async () => {
       let reconciled: string | null = null;
@@ -84,6 +95,16 @@ export function AccountBackupSync() {
     })();
   }, [isLoaded, isSignedIn, userId]);
 
+  useEffect(() => {
+    if (!accountsReady()) return;
+    if (!isLoaded || !isSignedIn || !userId) return;
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") void maybeBackup();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, [isLoaded, isSignedIn, userId]);
+
   return null;
 }
 
@@ -95,6 +116,7 @@ export function AccountBackupSync() {
  * is a snapshot the singer can take and pull back, not a live mirror.
  */
 export function AccountBackupControls() {
+  const { paused } = useProgressCloudState();
   const [notice, setNotice] = useState<
     { kind: "ok" | "err"; text: string } | null
   >(null);
@@ -110,10 +132,11 @@ export function AccountBackupControls() {
   // hook order between deployments that have real keys and ones that do not.
   if (!accountsReady()) return null;
 
-  const run = async (kind: "backup" | "restore") => {
+  const run = async (kind: "backup" | "restore", resume = false) => {
     setWorking(kind);
     setNotice(null);
     try {
+      if (resume) resumeProgressCloud();
       if (kind === "backup") {
         // Another device may have backed up since this browser last loaded.
         // Merge that record before writing so a manual backup keeps both.
@@ -138,7 +161,7 @@ export function AccountBackupControls() {
       setNotice({
         kind: "err",
         text:
-          error instanceof BackupError && error.message
+          error instanceof Error && error.message
             ? error.message
             : "Backup failed. Try again in a moment.",
       });
@@ -158,32 +181,44 @@ export function AccountBackupControls() {
 
   return (
     <div>
+      {paused && (
+        <p className="mb-3 text-sm text-mut">
+          Backup is paused on this browser. Your account copy is still saved.
+          Resuming restores your saved account progress and merges any new practice.
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-2.5">
         <Button
           type="button"
           variant="outline"
           size="sm"
-          onClick={() => void run("backup")}
+          onClick={() => void run(paused ? "restore" : "backup", paused)}
           disabled={working !== null}
         >
-          {working === "backup" ? "Backing up…" : "Back up now"}
+          {working === "backup"
+            ? "Backing up…"
+            : working === "restore"
+              ? "Restoring…"
+              : paused ? "Resume backup and restore" : "Back up now"}
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => void run("restore")}
-          disabled={working !== null}
-        >
-          {working === "restore" ? "Restoring…" : "Restore from account"}
-        </Button>
+        {!paused && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => void run("restore")}
+            disabled={working !== null}
+          >
+            {working === "restore" ? "Restoring…" : "Restore from account"}
+          </Button>
+        )}
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          {lastLabel
+          {paused ? "Paused on this browser" : lastLabel
             ? `Last backed up ${lastLabel}`
             : "Backs up in the background"}
         </span>
       </div>
-      {notice && (
+      {notice && !paused && (
         <p
           className={
             notice.kind === "ok"

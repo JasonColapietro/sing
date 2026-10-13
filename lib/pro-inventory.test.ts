@@ -5,15 +5,21 @@ import { SING_GLOSSARY_TERMS } from "./glossary";
 import { SINGERS } from "./singers-data";
 import { SONGS, PRO_SONGS } from "@/components/songs/data";
 import { ALL_EXERCISES, EXERCISES, PRO_PACKS } from "@/components/warmups/exercises";
-import { PRO_PERKS } from "./pro";
+import { PLAN_ROWS, PRO_PERKS } from "./pro";
+import { FREE_WEEKS, PROGRAMS } from "./programs";
+import { PRO_FAQ } from "./pro-shared";
 import {
   ATLAS_VOICE_COUNT,
   BOOKS,
   FREE_CHAPTERS,
   FREE_EXERCISES,
+  FREE_PROGRAM_COUNT,
   GLOSSARY_COUNT,
+  MELODY_COUNT,
   PRO_EXERCISES,
   PRO_PACK_COUNT,
+  PRO_PROGRAM_COUNT,
+  PRO_PROGRAM_NAMES,
   SINGER_COUNT,
   SONG_COUNT,
   TOTAL_CHAPTERS,
@@ -58,6 +64,13 @@ describe("pro inventory matches what actually ships", () => {
     expect(PRO_SONGS.length).toBe(0);
   });
 
+  it("counts the melodies behind the songs", () => {
+    // Two entries are longer arrangements of a melody already in the list, so
+    // "N melodies" and "N songs" are different numbers.
+    expect(MELODY_COUNT).toBe(SONGS.filter((s) => !s.arrangementOf).length);
+    expect(MELODY_COUNT).toBeLessThanOrEqual(SONG_COUNT);
+  });
+
   it("counts the warmups on both sides of the paywall", () => {
     const gated = PRO_PACKS.reduce((n, p) => n + p.exercises.length, 0);
     expect(FREE_EXERCISES).toBe(EXERCISES.length);
@@ -69,6 +82,21 @@ describe("pro inventory matches what actually ships", () => {
   it("counts the singers and the glossary", () => {
     expect(SINGER_COUNT).toBe(SINGERS.length);
     expect(GLOSSARY_COUNT).toBe(SING_GLOSSARY_TERMS.length);
+  });
+
+  it("counts the programs on both sides of the paywall", () => {
+    // The comparison table promises "no asterisks", so the two programs that
+    // need Pro after week 1 have to be named and counted from the real list.
+    expect(FREE_PROGRAM_COUNT).toBe(PROGRAMS.filter((p) => !p.pro).length);
+    expect(PRO_PROGRAM_COUNT).toBe(PROGRAMS.filter((p) => p.pro).length);
+    expect([...PRO_PROGRAM_NAMES]).toEqual(
+      PROGRAMS.filter((p) => p.pro).map((p) => p.name),
+    );
+    // The copy says "week 1" is free.
+    expect(FREE_WEEKS).toBe(1);
+    const row = PLAN_ROWS.find((r) => r.label === "Programs")!;
+    expect(row.free).toContain(String(FREE_PROGRAM_COUNT));
+    expect(row.pro).toContain(String(FREE_PROGRAM_COUNT + PRO_PROGRAM_COUNT));
   });
 });
 
@@ -90,10 +118,38 @@ describe("singer-range copy", () => {
     expect(copy.filter((c) => /\bmeasured\b/i.test(c))).toEqual([]);
   });
 
+  it("never counts the free singer ranges as something Pro unlocks", () => {
+    // Under "opens the second you upgrade": what Pro adds is the Atlas
+    // profiles. Every singer page and its range is free.
+    for (const t of UNLOCK_TILES) expect(t.label, t.label).not.toMatch(/singer ranges?/i);
+    const atlas = UNLOCK_TILES.find((t) => /Atlas/.test(t.label))!;
+    expect(atlas.figure).toBe(String(ATLAS_VOICE_COUNT));
+    expect(atlas.sub).toMatch(/ranges stay free/);
+  });
+
   it("prints the book totals it can prove", () => {
     const book = PRO_PERKS.find((p) => p.id === "book")!;
     expect(book.desc).toContain(`${TOTAL_CHAPTERS} chapters`);
     expect(book.desc).toContain(`${TOTAL_WORDS.toLocaleString("en-US")} words`);
     expect(book.desc).toContain(`${ATLAS_VOICE_COUNT} singer profiles`);
+  });
+
+  it("gives the FAQ (and its FAQPage markup) the same book totals", () => {
+    // This answer once hard-coded a word count ~21,000 words stale, while the
+    // buy card beside it printed TOTAL_WORDS.
+    const answer = PRO_FAQ.find((f) => f.q.startsWith("What do I get"))!.a;
+    expect(answer).toContain(`${TOTAL_CHAPTERS} chapters`);
+    expect(answer).toContain(`${TOTAL_WORDS.toLocaleString("en-US")} words`);
+  });
+
+  it("never sells the one-time purchase with subscription words", () => {
+    // Lifetime is the only plan on sale. "The moment you subscribe" beside a
+    // one-time price raises the "will this renew?" doubt the page removes.
+    const copy = [
+      ...UNLOCK_TILES.map((t) => t.sub),
+      ...PRO_PERKS.map((p) => p.desc),
+      ...PRO_FAQ.map((f) => f.a),
+    ];
+    expect(copy.filter((c) => /\bsubscribe\b/i.test(c))).toEqual([]);
   });
 });

@@ -18,8 +18,44 @@ exact copy of GuitarHub's voice catalog (`lib/learning/data/voice.json` in
 `JasonColapietro/suede-guitar-hub`, as of that repo's #47). Sing has since
 edited it on purpose. Twelve "Checkpoint:" lessons that nothing measures
 became "Self-Check:", three summaries that promised an unmeasured outcome were
-reworded, and every stage is free. Don't "re-sync" those edits away: parity
-with GuitarHub is by stage, module and lesson ID, not by text.
+reworded, three more were set to their lessons' objectives
+(`scripts/compile-lessons.mjs` now requires a lesson's objective to equal its
+catalog summary, and Hiss for Twelve's no longer calls the hiss's length "your
+own observation", since the sustain test times it), module `v-l3-m5` was
+renamed from "Fix the Wobble" to "Breathy, Nasal or Tight" because the course
+uses "wobble" for vibrato, and every stage is free. Later edits of the same
+kind (2026-10-12):
+
+- Module `v-l4-m4` was renamed from "Grace and Grit" to "Attack and Release".
+  Its lessons teach only grace notes, staccato and accent, and the site uses
+  "grit" for rasp and distortion, which the course never teaches: Stage 7's
+  Effects, Carefully tells singers not to learn an effect from the app.
+- The `v-l2` and `v-l7` stage subtitles were reworded to promise only what
+  their modules supply (a first song phrase rather than a whole song; a stop
+  plan for effects and a study rather than earned effects and a set).
+- The summaries of `v-l5-m4-01` (no invented two-second claim) and
+  `v-l7-m5-04` (no same-session rescan) were reworded, and their lessons'
+  objectives with them.
+- Module `v-l7-m5`'s `proofMetric` changed from `range_midi_span` to
+  `self_reported`. Its lessons take their evidence in a recorded take and
+  leave the range test for a retest weeks apart, and its lesson pages state a
+  self-check basis. `lib/voice-lessons.test.tsx` now requires a module's
+  `proofMetric` to be `self_reported` exactly when its lesson pages state a
+  self-check basis.
+- Module `v-l1-m1` (Set Up Your Space)'s `proofMetric` changed from
+  `phonation_sec` to `self_reported`. Its lessons and its self-check grade a
+  recording played back, so they now open the recorder instead of the voice
+  analyzer, which cannot record, and seconds of voiced time say nothing about
+  whether a take is clean.
+- Lessons `v-l2-m3-04` (One Note Per Bar) and `v-l5-m4-04` (An Easy Pattern
+  Through Your Transition) changed `type` from `song` to `exercise`. Neither
+  uses a song: one holds a supplied sustained note, the other sings a short
+  supplied pattern. The type sets each page's description and its
+  `learningResourceType`.
+
+Don't "re-sync" those edits away: parity with GuitarHub is by stage, module
+and lesson ID, not by text. GuitarHub's copy has to be re-synced byte for byte
+after each of them.
 
 Since 2026-09-23 sing also hosts the lessons. The bodies are markdown in
 `content/lessons`, compiled into `lib/lesson-data.ts` and served at
@@ -349,6 +385,143 @@ What the other apps must do: re-sync the file, then:
 
 Until then, `version` is a failing assertion on their side, which is
 intended. Exercise ids and titles are unchanged.
+
+### suede-vocal v9
+
+`version` moved to 9 on 2026-10-12. Two keys and two rules added; some values
+changed with them:
+
+- `warmups.scoring.glideTimeSlack` (0.1). A glide used to be scored against
+  the guide's ramp at one instant. A siren is taught as one unbroken slide,
+  and a natural one eases out of the bottom and into the top rather than
+  moving at constant speed: an eased octave siren with exact endpoints scored
+  24, and a straight slide about 100 ms late scored 0. A glide frame is now
+  measured against the nearest pitch the ramp passes through within this
+  share of the glide on either side, plus the onset grace on the late side.
+  A singer stuck on the start pitch, or stepping instead of sliding, still
+  scores low: the window follows the ramp and does not cover the whole sweep.
+  `rules.warmupGlideWindow` states the arithmetic exactly.
+- `warmups.nominalRange` (`lowMidi` 45, `highMidi` 64: A2–E4). Before a range
+  test, every ladder is fitted to this span instead of fixed C3→G3 roots, and
+  the scorer counts any octave of each target, so one nominal span serves
+  lower and higher voices. It is a placeholder, not a guess at anyone's voice;
+  the range test replaces it. Per-note results and the rep's root are reported
+  in the octave mostly sung. With a saved range only the written octave
+  counts. `rules.warmupOctaveWithoutRange`.
+- Value changes with no new key, shipped in the same release:
+  - Eight exercises gained a `rangeCap`. The belt calls `belt-nay-speech`,
+    `belt-hey-thirds`, `belt-bah-bursts`, `belt-yah-triad` and
+    `belt-hah-descent` now walk the lower 60% of the ladder (`0–0.6`), as the
+    two strong belt holds already did. The cool-downs `quiet-hum-descent`,
+    `soft-trill-slide` and `straw-slide-down` walk the lower half (`0–0.5`).
+  - `editorial`: book and atlas chapter word counts, one atlas summary, and
+    the repertoire figures for `unchained-melody` (now its sounding range,
+    C3–A4) and `die-with-a-smile` (the lead line, G#3–E5). Flat-key songs now
+    spell their `rangeLabel` in flats (`Eb3–Bb4`, `Bb3–D5`, `Ab3–F5`).
+
+What the other apps must do: re-sync the file, then:
+
+1. Score glide frames against the ramp window in `rules.warmupGlideWindow`.
+2. Without a saved range, fit ladders to `nominalRange` and fold sung pitch
+   to the target's octave before comparing.
+3. Apply the new `rangeCap` values (no code change if v8's cap is already
+   implemented).
+
+Until then, `version` is a failing assertion on their side, which is
+intended. Exercise ids and titles are unchanged.
+
+#### Value changes inside v9
+
+No key was added, so `version` stays 9. These values moved, and a native
+side that pins them sees the change as a failing assertion:
+
+- `rules.warmupOctaveWithoutRange`: either octave still counts without a
+  saved range, but one octave per rep, not per frame. The rep is scored as
+  if every frame were moved by the same whole number of octaves, for each
+  shift from two down to two up, and the shift that scores highest is the
+  rep's octave; its score, cents error, per-note tallies and reported root
+  all come from that shift. Folded frame by frame, octave leaps sung
+  entirely on the root scored 99 and an arpeggio with its top note dropped
+  an octave scored 100; now each scores what the written octave gives. A
+  whole take sung an octave up or down still scores in full. The best
+  shift, rather than one settled by the first notes, keeps a descent whose
+  opening top note dropped an octave from losing every note after it. The
+  span is `MAX_OCTAVE_SHIFT` in `components/warmups/scoring.ts`, stated in
+  the rule text rather than as a key so the shape does not change.
+- `head-float-hold` ("Top-note float") gained `rangeCap` `{ from: 0.5, to: 1 }`,
+  the upper half of the ladder. Walked from the bottom, a bass held it at
+  D#3–A#3, under his first transition, while the copy asked for head voice.
+- `breath.sustain.benchmarksSec` and `starsSec` keep their values, but the web
+  sustain test no longer prints the benchmark ladder or labels a hold by it:
+  it asks the singer to end the note while it is still easy. Both are for
+  review at the next version.
+- `deepLinks.rooms.warmups.params` gained `reps`, a value in an existing
+  list, as `measured-voice-12w` was in v6. `?reps=<n>` (a whole number from 1
+  to 30, used with `?exercise=`) stops a deep-linked exercise after that many
+  reps and counts them as "Rep k of N"; without it the exercise walks its
+  ladder until the singer ends it, and any other value is ignored. The
+  program rows on `/programs` now link exercises this way, so a day sized to
+  the free minutes stops where the row says.
+- `editorial`: word counts moved with this round's text edits. Book:
+  `reading-the-range-test` (1450), `finding-your-break` (1339),
+  `when-numbers-lie` (1463), `weeks-9-10-bottom` (1375), `totalWords` 32376.
+  Atlas: `voice-types-in-the-wild` (865), `modern-rnb` (5390), `the-records`
+  (1004), `totalWords` 72444.
+
+What the other apps must do: re-sync the file, score one octave per rep as
+the rule states, and apply the new `rangeCap`. A consumer that builds
+warm-up deep links may add `&reps=`.
+
+#### Further value changes inside v9
+
+Again no key was added, so `version` stays 9:
+
+- `vibrato-hold` and `vibrato-float-high` gained `rangeCap`
+  `{ from: 0.25, to: 0.75 }`, the middle half of the ladder, as
+  `swell-and-fade` already had. Uncapped, a bounded routine step walks from
+  the bottom rung, so the vibrato routine and the program built on it held
+  every note low in the voice, where a free vibrato is least likely to turn up.
+- `editorial`: book word counts moved with this round's text edits:
+  `range-is-not-one-number` (1318), `pitch-accuracy` (1498),
+  `weeks-11-12-songs` (1612), `transposition` (1522), `totalWords` 32505.
+- `editorial`: atlas chapter word counts moved because 77 singers changed
+  chapter. `scripts/compile-atlas.mjs` now lets a hand placement (`ASSIGN`)
+  win over the batch file's chapter (`FILE_GROUPS`); the lookup used to run
+  the other way, so every exception in `ASSIGN` was dead (opera singers under
+  jazz, the Latin lane under K-pop). New counts: `pop-women-the-founders`
+  1912, `pop-women-the-moderns` 4975, `the-pop-men` 4424,
+  `the-classic-rock-men` 5134, `alternative-punk-and-new-wave` 3131, `metal`
+  3161, `the-soul-men` 3276, `the-soul-and-rnb-women` 2584, `modern-rnb`
+  4482, `gospel-and-a-cappella` 2528, `folk-and-the-songwriters` 3108,
+  `jazz-and-the-standards` 2728, `opera-and-classical-crossover` 2858,
+  `musical-theatre` 2675, `latin-voices` 3350, `kpop-jpop-and-global-pop`
+  4366. Atlas `totalWords` is unchanged at 72444, since the entries only moved.
+
+What the other apps must do: re-sync the file and apply the two new
+`rangeCap` values (no code change where v8's cap is already implemented).
+
+#### Editorial and wording changes inside v9 (2026-10-12)
+
+No key was added, so `version` stays 9:
+
+- `editorial`: word counts moved with this round's text edits. Book:
+  `breath` (1568), `weeks-1-2-baseline` (1421), `stamina-and-health` (1230),
+  `learning-from-other-voices` (1412), `totalWords` 32633. Atlas:
+  `the-safety-rail` (838), `the-classic-rock-men` (5131), `totalWords` 72468.
+- `editorial.repertoire`: `difficulty` for `lose-control` and
+  `someone-you-loved` is now `Hard` (was `Medium`). Span plus altitude reads
+  both as Medium, but each chorus holds a sustained full-voice top above the
+  tenor passaggio (A4–C#5 and Ab4–Bb4). `popDifficulty` now honours an
+  editorial override that an entry sets only for that documented reason, and
+  the song's page states the reason beside the rating. The contract still
+  reads the value from `popDifficulty`; nothing types it by hand.
+- `measurement.rangeExtremes.note` no longer calls the result the "lowest and
+  highest comfortable note". The range test asks for the furthest clear notes
+  and counts a note once the detector has heard it for 600 ms in total, so the
+  row now says these are the limits reached in one test, not a comfortable
+  band. Nothing about the measurement changed.
+
+What the other apps must do: re-sync the file. Nothing else changes.
 
 ### Versioning
 

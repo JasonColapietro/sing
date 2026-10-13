@@ -21,13 +21,15 @@ import {
   songFacts,
   songLyricText,
 } from "@/components/songs/song-page";
-import { formatMinSec } from "@/components/songs/lib";
+import { formatMinSec, phraseName } from "@/components/songs/lib";
 import type { Song } from "@/components/songs/types";
 import { Card, LinkButton, PageShell, SectionLabel } from "@/components/ui";
+import { firstFit, MAX_DESCRIPTION, MAX_TITLE } from "@/lib/meta-fit";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { pageRobots } from "@/lib/robots-meta";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 
 interface Params {
   slug: string;
@@ -38,14 +40,95 @@ interface Params {
 // render on demand.
 export const dynamicParams = false;
 
+/** Distinct free melodies: a longer arrangement of one is not another melody (as on /songs). */
+const FREE_MELODIES = SONGS.filter((s) => !s.arrangementOf).length;
+
 export function generateStaticParams(): Params[] {
   return ALL_SONGS.map((s) => ({ slug: s.slug }));
+}
+
+/**
+ * Most entries transcribe a song's opening phrase, not the whole song. Their
+ * range, tonic and words are facts about that phrase, so every claim the page
+ * makes — title, heading, snippet, structured data — says so rather than
+ * presenting them as the song's lyrics and vocal range. One phrase entry is
+ * not the opening (Home on the Range holds its chorus hook), so the phrase is
+ * named by `phraseName`, never by a literal.
+ */
+function isPhrase(song: Song): boolean {
+  return song.form === "phrase";
+}
+
+/** The phrase's name in title case, for the page title. */
+function phraseTitle(song: Song): string {
+  return phraseName(song).replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/**
+ * A longer arrangement (`arrangementOf`) sings selected lines, not every
+ * verse, so like a phrase it is a partial transcription: its words are not the
+ * song's lyrics and its tonic is where this transcription sits, not the
+ * song's key.
+ */
+function isPartial(song: Song): boolean {
+  return song.form === "phrase" || song.arrangementOf !== undefined;
+}
+
+/**
+ * Tags that name what a melody asks of a voice, as opposed to its genre,
+ * occasion or origin ("christmas", "scottish", "hymn"), its meter ("waltz"),
+ * its scale ("modal", "dorian", "pentatonic") or its shape ("chorus hook",
+ * "pickup").
+ * Those describe where a melody comes from or how it sounds; only these say
+ * what singing it takes.
+ */
+const DEMAND_TAGS = new Set([
+  "stepwise",
+  "narrow range",
+  "wide range",
+  "leap",
+  "octave leap",
+  "long tones",
+  "legato",
+  "repeated note",
+  "dotted rhythm",
+]);
+
+/** The page's title: what the page actually answers, in the 60-character budget. */
+function songTitle(song: Song): string {
+  if (song.arrangementOf) {
+    return firstFit([`Sing ${song.title}: Key & Note Range`, `Sing ${song.title}`], MAX_TITLE);
+  }
+  return isPhrase(song)
+    ? firstFit(
+        [
+          `Sing ${song.title}: ${phraseTitle(song)}, Key & Range`,
+          `Sing ${song.title}: ${phraseTitle(song)} & Key`,
+          `Sing ${song.title}: ${phraseTitle(song)}`,
+          `Sing ${song.title}`,
+        ],
+        MAX_TITLE,
+      )
+    : // The lyrics term leads every tail variant, so a long song name sheds
+      // the trailing words rather than the keyword.
+      firstFit(
+        [
+          `${song.title}: Lyrics, Key & Vocal Range`,
+          `${song.title}: Lyrics, Key & Range`,
+          `${song.title}: Lyrics & Key`,
+          `${song.title}: Lyrics`,
+        ],
+        MAX_TITLE,
+      );
 }
 
 /** One sentence that answers "what is this song, musically" from the data. */
 function answerSentence(song: Song): string {
   const f = songFacts(song);
-  return `“${song.title}” is transcribed here with its tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} — ${f.rangeSemis} semitones — which rates ${f.difficulty} to sing, and a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
+  const what = isPhrase(song)
+    ? `The ${phraseName(song)} of “${song.title}”`
+    : `“${song.title}”`;
+  return `${what} is transcribed here with its tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} — ${f.rangeSemis} semitones — which rates ${f.difficulty} to sing, and a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
 }
 
 export async function generateMetadata({
@@ -58,26 +141,37 @@ export async function generateMetadata({
   if (!song) return {};
   const f = songFacts(song);
   const pro = isProSong(song.id);
-  // The lyrics term leads every tail variant, so a long song name sheds the
-  // trailing words rather than the keyword (60-character budget).
-  const title =
-    [
-      `${song.title}: Lyrics, Key & Vocal Range`,
-      `${song.title}: Lyrics, Key & Range`,
-      `${song.title}: Lyrics & Key`,
-      `${song.title}: Lyrics`,
-    ].find((t) => t.length <= 60) ?? `${song.title}: Lyrics`;
-  // Lyrics, key and range lead, as the title does; whole sentences only, so a
-  // long song name sheds the second sentence rather than a clause.
-  const description = pro
-    ? `${song.title} lyrics, key and vocal range: ${f.lowLabel} to ${f.highLabel} with its tonic on ${f.tonic}. Public domain; the practice arrangement is in the Suede Pro songbook.`
-    : `${song.title} lyrics, key and vocal range: ${f.lowLabel} to ${f.highLabel} with its tonic on ${f.tonic}, rated ${f.difficulty.toLowerCase()}. Public domain, with browser practice and live pitch feedback.`;
+  const title = songTitle(song);
+  // What the title promises leads; whole sentences only, so a long song name
+  // sheds the tail rather than a clause.
+  const phraseFacts = `${f.lowLabel} to ${f.highLabel}, tonic ${f.tonic}, rated ${f.difficulty.toLowerCase()}.`;
+  // A partial transcription leads with singing, not "<song> lyrics". A longer
+  // arrangement's own title already names the lines it holds.
+  const partialName = song.arrangementOf
+    ? song.title
+    : `the ${phraseName(song)} of ${song.title}`;
+  const description = isPartial(song)
+    ? pro
+      ? `${song.arrangementOf ? song.title : `The ${phraseName(song)} of ${song.title}`}: ${phraseFacts} Public domain; the practice arrangement is in the Suede Pro songbook.`
+      : firstFit(
+          [
+            `Sing ${partialName} with live pitch feedback: ${phraseFacts} Public domain; fitted to your range after the range test.`,
+            `Sing ${partialName} with live pitch feedback: ${phraseFacts} Public domain.`,
+          ],
+          MAX_DESCRIPTION,
+        )
+    : pro
+      ? `${song.title} lyrics, key and vocal range: ${f.lowLabel} to ${f.highLabel} with its tonic on ${f.tonic}. Public domain; the practice arrangement is in the Suede Pro songbook.`
+      : `${song.title} lyrics, key and vocal range: ${f.lowLabel} to ${f.highLabel} with its tonic on ${f.tonic}, rated ${f.difficulty.toLowerCase()}. Public domain, with browser practice and live pitch feedback.`;
   return withCanonicalOpenGraph({
     title: { absolute: title },
     description,
+    // Form-aware: a phrase page leads with "sing <song>", not "<song> lyrics".
     keywords: songKeywords(song),
     alternates: { canonical: `${SITE_URL}/songs/${song.slug}` },
-    openGraph: { title, description, type: "article" },
+    // Title and description come from withCanonicalOpenGraph, already fitted;
+    // the image is this route's own opengraph-image file.
+    openGraph: { type: "article" },
     // Same call the atlas makes for gated chapters: a Pro song page is a real
     // page worth sharing, but it is not the page we want ranking for "sing
     // <title> free" when the practice room behind it is paid.
@@ -95,7 +189,10 @@ export default async function SongPage({
   if (!song) notFound();
 
   const pro = isProSong(song.id);
+  const phrase = isPhrase(song);
+  const partial = isPartial(song);
   const f = songFacts(song);
+  const drill = song.tags.find((t) => DEMAND_TAGS.has(t));
   const pageUrl = `${SITE_URL}/songs/${song.slug}`;
   const answer = answerSentence(song);
   const lyrics = songLyricText(song);
@@ -121,7 +218,7 @@ export default async function SongPage({
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,
         url: pageUrl,
-        name: `${song.title}: Lyrics, Key & Vocal Range`,
+        name: songTitle(song),
         description: answer,
         inLanguage: "en",
         // Joins each song to the practice room's page and to the estate graph,
@@ -156,9 +253,16 @@ export default async function SongPage({
         // `musicalKey` wants a key name, so it gets the pitch class without the
         // octave; the octave-specific tonic the page actually prints goes in
         // additionalProperty below. No mode is asserted — several of these are
-        // modal rather than major or minor.
-        musicalKey: midiToName(song.defaultKeyRootMidi),
-        lyrics: { "@type": "CreativeWork", text: lyrics },
+        // modal rather than major or minor. A partial transcription (a phrase,
+        // or a longer arrangement of selected lines) carries neither: its tonic
+        // is where this transcription sits, not the song's key, and its words
+        // are some lines, not the song's lyrics.
+        ...(partial
+          ? {}
+          : {
+              musicalKey: midiToName(song.defaultKeyRootMidi),
+              lyrics: { "@type": "CreativeWork", text: lyrics },
+            }),
         // Every field below is stated on the page. Nothing is inferred, and
         // there is deliberately no composer or lyricist claim: `origin` is an
         // attribution line, not a parsed name, and asserting the wrong person
@@ -166,7 +270,7 @@ export default async function SongPage({
         additionalProperty: [
           {
             "@type": "PropertyValue",
-            name: "Tonic",
+            name: partial ? "Transcription tonic" : "Tonic",
             value: f.tonic,
           },
           {
@@ -182,12 +286,20 @@ export default async function SongPage({
           },
           {
             "@type": "PropertyValue",
-            name: "Lowest note",
+            name: phrase
+              ? `Lowest note (${phraseName(song)})`
+              : song.arrangementOf
+                ? "Lowest note (these lines)"
+                : "Lowest note",
             value: f.lowLabel,
           },
           {
             "@type": "PropertyValue",
-            name: "Highest note",
+            name: phrase
+              ? `Highest note (${phraseName(song)})`
+              : song.arrangementOf
+                ? "Highest note (these lines)"
+                : "Highest note",
             value: f.highLabel,
           },
           {
@@ -219,12 +331,32 @@ export default async function SongPage({
   return (
     <PageShell
       kicker={`${pro ? "Pro songbook" : "Free songbook"} · ${song.genre} · ${song.era}`}
-      title={`Sing ${song.title}: lyrics, key and vocal range`}
-      subtitle={`“${song.title}” runs from ${f.lowLabel} to ${f.highLabel}, ${f.rangeSemis} semitones, with its tonic on ${f.tonic} at ${song.bpm} bpm, and rates ${f.difficulty.toLowerCase()} to sing. Origin: ${song.origin}.`}
+      title={
+        phrase
+          ? `Sing ${song.title}: the ${phraseName(song)}, its key and note range`
+          : song.arrangementOf
+            ? `Sing ${song.title}: the lines, their key and note range`
+            : `Sing ${song.title}: lyrics, key and vocal range`
+      }
+      subtitle={`${phrase ? `The ${phraseName(song)} of “${song.title}”` : `“${song.title}”`} runs from ${f.lowLabel} to ${f.highLabel}, ${f.rangeSemis} semitones, with its tonic on ${f.tonic} at ${song.bpm} bpm, and rates ${f.difficulty.toLowerCase()} to sing. Origin: ${song.origin}.`}
       actions={
-        <LinkButton href="/songs" variant="outline" size="md">
-          ← All songs
-        </LinkButton>
+        // The singing action sits in the first screen, above the facts, so a
+        // visitor who came to sing does not scroll past two paragraphs of
+        // numbers on a phone to find it.
+        pro ? (
+          <LinkButton href="/songs" variant="outline" size="md">
+            ← All songs
+          </LinkButton>
+        ) : (
+          <>
+            <LinkButton href={`/songs?song=${song.slug}`} size="md">
+              Sing {song.title}
+            </LinkButton>
+            <LinkButton href="/songs" variant="outline" size="md">
+              ← All songs
+            </LinkButton>
+          </>
+        )
       }
     >
       <script
@@ -246,7 +378,7 @@ export default async function SongPage({
               The melody is public domain and the facts below are free to read,
               but this arrangement sits in the paid songbook alongside the rest
               of the extended catalog. The free songbook has{" "}
-              {SONGS.length} melodies you can sing right now.
+              {FREE_MELODIES} melodies you can sing right now.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <LinkButton href="/pro" size="md">
@@ -264,15 +396,20 @@ export default async function SongPage({
             {/*
               Deep-links into the practice room so a reader who arrived from
               search lands on this melody rather than on the library, having
-              already told us which song they wanted.
+              already told us which song they wanted. The practice room honours
+              the link whatever band the song sits in (songs-client.tsx).
             */}
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <LinkButton href={`/songs?song=${song.slug}`} size="lg">
                 Sing this song
               </LinkButton>
               <span className="text-xs text-dim">
-                Free, in the browser. Opens {song.title} straight in the
-                practice room, transposed into a key that suits your voice.
+                Opens {song.title} in the practice room, fitted to your
+                measured range if you have taken the range test; if not, it
+                opens in the written key and is scored in either octave. Free
+                in the browser: song practice counts
+                toward {FREE_DAILY_MINUTES} free minutes of guided practice a
+                day.
               </span>
             </div>
           </Card>
@@ -304,7 +441,7 @@ export default async function SongPage({
                       <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim">
                         {other.form === "full"
                           ? "longer version"
-                          : "opening phrase"}
+                          : phraseName(other)}
                       </span>
                     </Link>
                   </li>
@@ -316,15 +453,18 @@ export default async function SongPage({
 
         <Card>
           <SectionLabel>How it is filed</SectionLabel>
-          <h2 className="mt-3 text-xl">Genre, era and what it drills</h2>
+          <h2 className="mt-3 text-xl">
+            {drill ? "Genre, era and what it drills" : "Genre, era and tags"}
+          </h2>
           <div className="mt-4">
             <SongTags song={song} />
           </div>
-          <p className="mt-5 max-w-3xl text-sm text-mut">
-            Tags describe what the melody asks of a voice, not what it sounds
-            like — &ldquo;{song.tags[0] ?? song.genre.toLowerCase()}&rdquo; is
-            the reason to pick it on a given day.
-          </p>
+          {drill && (
+            <p className="mt-5 max-w-3xl text-sm text-mut">
+              Genre and era say where the melody comes from; &ldquo;{drill}&rdquo;
+              is what it asks of a voice.
+            </p>
+          )}
         </Card>
 
         {related.length > 0 && (
@@ -333,7 +473,9 @@ export default async function SongPage({
             <h2 className="mt-3 text-xl">
               {pro
                 ? "More from the Pro songbook"
-                : `Other ${f.difficulty.toLowerCase()} songs and more ${song.genre}`}
+                : related.some((r) => r.genre === song.genre)
+                  ? `Other ${f.difficulty.toLowerCase()} songs and more ${song.genre}`
+                  : `Other ${f.difficulty.toLowerCase()} songs`}
             </h2>
             <div className="mt-4">
               <SongLinkList songs={related} />
@@ -342,7 +484,7 @@ export default async function SongPage({
               <LinkButton href="/songs" variant="outline" size="sm">
                 Every song
               </LinkButton>
-              <LinkButton href="/range?mode=range" variant="ghost" size="sm">
+              <LinkButton href={rangeTestHref()} variant="ghost" size="sm">
                 Find your range first
               </LinkButton>
             </div>

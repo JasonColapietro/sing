@@ -187,6 +187,28 @@ export function bandOpen(
   return false;
 }
 
+/**
+ * The recently-sung row: each recent play resolved against the songs passed
+ * in (the entitlement-aware list the songbook browses), newest first, keeping
+ * only songs in an open band. A song page's deep link skips the band ladder,
+ * so a song sung that way lands in recents while its band is still shut; the
+ * library refuses to start it, and a recents button for it would do nothing.
+ */
+export function startableRecents(
+  recents: readonly { id: string; at: string }[],
+  songs: readonly Song[],
+  masteredIds: ReadonlySet<string>,
+  limit = 6,
+): Array<{ song: Song; at: string }> {
+  const out: Array<{ song: Song; at: string }> = [];
+  for (const r of recents) {
+    if (out.length >= limit) break;
+    const song = songs.find((s) => s.id === r.id);
+    if (song && bandOpen(bandForSong(song), masteredIds, songs)) out.push({ song, at: r.at });
+  }
+  return out;
+}
+
 /** Seconds per beat at a given bpm and tempo multiplier. */
 export function secPerBeat(bpm: number, tempo: number): number {
   return 60 / (bpm * tempo);
@@ -213,16 +235,82 @@ export function fitTransposeToRange(song: Song, range: VocalRange): number | nul
   return clampTranspose(Math.round(rangeCenter - songCenter));
 }
 
+/** A key the singer picked, tagged with the song it was picked on. */
+export interface PickedTranspose {
+  songId: string;
+  semis: number;
+}
+
+/**
+ * The key a song is sung in. A key the singer picked on this song wins;
+ * otherwise the song opens fitted to the saved range — the same placement
+ * "Fit to my range" gives — or in its written key when no range is saved.
+ * Tagged by song id because the player is not re-mounted between songs, so a
+ * pick on one song must not carry into the next.
+ */
+export function songTranspose(
+  song: Song,
+  range: VocalRange,
+  picked: PickedTranspose | null,
+): number {
+  if (picked && picked.songId === song.id) return picked.semis;
+  return fitTransposeToRange(song, range) ?? 0;
+}
+
+/**
+ * Whether scoring starts octave-agnostic. With a saved range the song is
+ * already placed in the singer's own octave, so the exact octave is scored.
+ * Without one it sits at its written pitch — most of this book is written at
+ * treble pitch — and a lower voice singing it an octave down would otherwise
+ * score zero on every note it sang in tune.
+ */
+export function defaultOctaveAgnostic(range: VocalRange): boolean {
+  return range.lowMidi === undefined || range.highMidi === undefined;
+}
+
 export function transposedNotes(song: Song, transpose: number): SongNote[] {
   if (transpose === 0) return song.notes;
   return song.notes.map((n) => ({ ...n, midi: n.midi + transpose }));
+}
+
+/**
+ * What a "phrase" entry holds, as its page and the ear room name it: the
+ * song's opening phrase, unless the entry marks it as another part of the
+ * song (`excerpt`).
+ */
+export function phraseName(song: Song): string {
+  return song.excerpt ?? "opening phrase";
+}
+
+/**
+ * Titles a song's sessions were logged under before a rename. The song player
+ * files each session by `detail: song.title`, so a renamed song would lose its
+ * best score and score trend without these. Add a line whenever a song title
+ * changes; never remove one, since old sessions keep the old title for good.
+ * Warmups do the same with RETIRED_TITLES (components/warmups/exercises.ts).
+ */
+export const RETIRED_SONG_TITLES: Readonly<Record<string, readonly string[]>> = {
+  // Round 1 (2026-10) renames.
+  "Home on the Range (Opening Lines)": ["Home on the Range (Verse & Chorus)"],
+  "Amazing Grace (Opening Lines, Verses 1 & 2)": ["Amazing Grace (Verse 1 & 2)"],
+};
+
+/** Every title this song's sessions can be logged under: its own, then retired ones. */
+export function songTitlesFor(title: string): readonly string[] {
+  const retired = RETIRED_SONG_TITLES[title];
+  return retired ? [title, ...retired] : [title];
+}
+
+/** True when a logged session belongs to the song with this current title. */
+export function isSessionOfSong(session: Pick<SessionLog, "type" | "detail">, title: string): boolean {
+  return session.type === "song" && session.detail !== undefined && songTitlesFor(title).includes(session.detail);
 }
 
 /** Best (highest) previously logged score for this song, if any. */
 export function bestScoreForSong(sessions: SessionLog[], title: string): number | undefined {
   let best: number | undefined;
   for (const s of sessions) {
-    if (s.type === "song" && s.detail === title && s.score !== undefined) {
+    if (isSessionOfSong(s, title) && s.score !== undefined) {
       best = best === undefined ? s.score : Math.max(best, s.score);
     }
   }
@@ -403,6 +491,41 @@ export const MASTERY_SCORE = 80;
  * the point of the transpose control, not a way around the scorer.
  */
 export const MASTERY_MIN_TEMPO = 1;
+
+/**
+ * The starting note an accompanist gives before an unaccompanied run.
+ *
+ * An On your own pass plays no guide, and the count-in is four unpitched
+ * clicks, so without this a singer had no reference for a key the app may
+ * have chosen (fitted to the saved range). A tune sung perfectly a semitone
+ * off is 100 cents from every target, outside TOLERANCE_CENTS on every frame,
+ * and the only pass that can master a song scored about zero. Every
+ * unaccompanied setting — choir, audition, graded exam — gives the note first.
+ *
+ * Returns the earliest note this run sings (playBeats > 0, so a looped span
+ * starts from its own first note) and when to sound it: on the first count-in
+ * beat, short enough to end at least COUNT_IN_BEATS − 1.5 beats before the
+ * downbeat, so it never overlaps a scored frame.
+ */
+export const STARTING_NOTE_MAX_SEC = 1.2;
+export const STARTING_NOTE_MAX_BEATS = 1.5;
+
+export function startingNote(
+  notes: SongNote[],
+  playBeats: number[],
+  spb: number,
+): { midi: number; dur: number } | null {
+  let first: SongNote | undefined;
+  for (let i = 0; i < notes.length; i++) {
+    const n = notes[i];
+    if ((playBeats[i] ?? 0) > 0 && (!first || n.startBeat < first.startBeat)) first = n;
+  }
+  if (!first) return null;
+  return {
+    midi: first.midi,
+    dur: Math.min(STARTING_NOTE_MAX_SEC, STARTING_NOTE_MAX_BEATS * spb),
+  };
+}
 
 /**
  * Whether a finished run masters the song: a solo pass, sung in performance
@@ -657,6 +780,26 @@ export function countSongsFitting(songs: readonly Song[], range: VocalRange): nu
     if (rangeFit(song, range).verdict === "fits") n++;
   }
   return n;
+}
+
+/**
+ * countSongsFitting over the songs a singer can start right now: the bands
+ * opened so far (bandOpen, the songbook's own rule), out of the book they are
+ * entitled to. `locked` is how many of that book wait behind a later band, so
+ * a count quoted before "Open the songbook" never promises songs the
+ * library shows as Locked.
+ */
+export function countOpenSongsFitting(
+  book: readonly Song[],
+  masteredIds: ReadonlySet<string>,
+  range: VocalRange,
+): { fitting: number; total: number; locked: number } {
+  const open = book.filter((s) => bandOpen(bandForSong(s), masteredIds, book));
+  return {
+    fitting: countSongsFitting(open, range),
+    total: open.length,
+    locked: book.length - open.length,
+  };
 }
 
 /**

@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+An onset is how a note starts, and there are three basic ways to start one. A breathy onset lets air through before the folds meet, so a small “h” comes first; a hard, or glottal, onset closes the folds before the air arrives and releases them with a little click; a balanced onset starts the breath and the sound together. This module trains the balanced one, on its pitch from the first moment, because sliding up into a note from below is a separate habit, a scoop, and onset work is where it gets fixed.
+
 ## Steps
 
 ### Use the practice material
@@ -22,7 +26,7 @@ Open the practice material on this page and choose Five-note scale or Chromatic 
 
 ### Set a safe baseline
 
-Choose a target near the middle of your scanned range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.
+Choose a target near the middle of your comfortable range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +40,7 @@ Compare an easy onset with a previous attempt; the synthesized reference supplie
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Onset Without the Click.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Begin close to the pitch rather than sliding up from below. Hold briefly, release, and compare a fresh attempt instead of steering one long note with your eyes.
+Sing “ah” on one comfortable note three ways in one take, with a quiet breath between each: first with a soft “h” leading in (breathy); then once, gently, from a held breath so it starts with a small catch (the click); then with breath and sound starting together, like the start of a sigh without the “h”. Only the onset changes, so keep the pitch and the volume the same. The third, on its pitch from the first moment rather than sliding up from below, is the onset this module trains. Record your takes in the recorder. Hold briefly, release, and compare a fresh attempt instead of steering one long note with your eyes.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide.

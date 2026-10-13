@@ -39,6 +39,26 @@ export function voiceTestModeUrl(href: string, mode: VoiceTestMode): URL {
   return url;
 }
 
+function scrollToStart() {
+  document.getElementById("start")?.scrollIntoView({ block: "start" });
+}
+
+/**
+ * Change modes, and when that opens the range test, bring its start button
+ * into view. The intro tells a visitor to choose Range test, and on a 375px
+ * phone the button it reveals would otherwise sit under the bottom tab bar.
+ * The pitch meter's "try the range test" link goes through here too.
+ */
+export function switchVoiceTestMode(
+  current: VoiceTestMode,
+  next: VoiceTestMode,
+  onModeChange: (mode: VoiceTestMode) => void,
+  scroll: () => void = scrollToStart,
+) {
+  onModeChange(next);
+  if (next === "range" && current !== "range") scroll();
+}
+
 function VoiceTestFromLocation() {
   const params = useSearchParams();
   const mode = voiceTestMode(params);
@@ -69,13 +89,15 @@ function VoiceTestContent({
             octave span and a voice-type estimate. Choose Range test to start,
             or Pitch to check a single note live.
           </p>
-          <p className="mt-2 max-w-prose text-mut">
-            {mode === "pitch"
-              ? "Sing a comfortable note and see its detected pitch."
-              : "A guided two-minute test: hold a comfortable note, slide down to your lowest, then up to your highest."}
-          </p>
         </div>
+        {/* #start is where "Start singing" links land: the tool is under
+            the fold on a phone, and a singer who already pressed start should
+            not have to scroll past the headline to find the button again.
+            The page's scroll-padding-top (app/globals.css) already clears the
+            sticky header; a scroll-mt here added 80px to it and left the start
+            button under a 375px phone's tab bar. */}
         <div
+          id="start"
           role="tablist"
           aria-label="Voice test mode"
           className="inline-flex rounded-full border border-line bg-panel p-1"
@@ -86,7 +108,9 @@ function VoiceTestContent({
               type="button"
               role="tab"
               aria-selected={mode === m.id}
-              onClick={() => onModeChange?.(m.id)}
+              onClick={() =>
+                onModeChange && switchVoiceTestMode(mode, m.id, onModeChange)
+              }
               disabled={!onModeChange}
               className={`min-h-11 rounded-full px-5 text-sm font-bold transition-colors ${
                 mode === m.id ? "bg-ink text-bg" : "text-mut hover:text-ink"
@@ -97,9 +121,27 @@ function VoiceTestContent({
           ))}
         </div>
       </div>
-      {!onModeChange ? (
-        <p className="py-8 text-sm text-mut" role="status">Loading voice tools…</p>
-      ) : mode === "pitch" ? <PitchMeter /> : <RangeTest embedded />}
+      {/* The Suspense fallback (mode "pitch", no onModeChange) renders the
+          meter's cold mic card, not a one-line "Loading…". useSearchParams
+          makes this boundary client-render, so the static HTML is the
+          fallback; a line ~400px shorter than the card put the "More practice
+          rooms" rail in a 375px phone's first frame, then hydration pushed it
+          off screen (CLS 0.17 in e2e/cls.mjs). Same trade as the songs hub
+          (components/songs/mic-gate.tsx): the box is the right size from the
+          first paint and its button goes live a moment later. A ?mode=range
+          link then swaps in the range test, a little taller, below the fold. */}
+      {mode === "pitch" ? (
+        <PitchMeter
+          onTryRange={
+            onModeChange &&
+            // The range intro is shorter than the meter, so without the
+            // scroll the singer is left scrolled past it.
+            (() => switchVoiceTestMode("pitch", "range", onModeChange))
+          }
+        />
+      ) : (
+        <RangeTest embedded />
+      )}
     </main>
   );
 }

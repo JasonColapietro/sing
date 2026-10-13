@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -7,7 +8,7 @@ vi.mock("@/lib/use-account-auth", () => ({
   useAccountAuth: () => ({ isLoaded: false, isSignedIn: false }),
 }));
 
-import Nav, { streakChipState } from "./nav";
+import Nav, { LINKS, PRIMARY, streakChipState } from "./nav";
 
 const originalTz = process.env.TZ;
 afterEach(() => {
@@ -37,12 +38,14 @@ function landmark(html: string, label: string): string {
 
 describe("main navigation current location", () => {
   it.each([
+    // Sing's link lands on the range page's start button (#start); it is
+    // still current on /range itself and inside the rooms it owns.
     ["/", "/", "page"],
-    ["/range", "/range", "page"],
+    ["/range", "/range#start", "page"],
     ["/learn/voice", "/warmups", "location"],
     ["/glossary/tessitura", "/warmups", "location"],
     ["/singers/olivia-rodrigo", "/songs", "location"],
-    ["/recorder", "/range", "location"],
+    ["/recorder", "/range#start", "location"],
   ])("announces %s through the correct link in each navigation landmark", (pathname, href, current) => {
     route.pathname = pathname;
     const html = renderToStaticMarkup(<Nav />);
@@ -59,6 +62,18 @@ describe("main navigation current location", () => {
     expect(total).toHaveLength(LANDMARKS.length);
   });
 
+  /**
+   * Bare /range opens at the top, and on a phone its start button sits under
+   * the tab bar. The More sheet renders only once opened, so its tile is
+   * checked here in the data the sheet maps (`target ?? href`), and in
+   * e2e/navigation.mjs by a real tap.
+   */
+  it("sends the Sing tab and the More sheet's Pitch & range tile to #start", () => {
+    const routed = [...PRIMARY, ...LINKS].filter((l) => l.href === "/range");
+    expect(routed.map((l) => l.label)).toEqual(["Sing", "Pitch & range"]);
+    for (const l of routed) expect(l.target, l.label).toBe("/range#start");
+  });
+
   it("does not claim an unrelated prefix is a current destination", () => {
     route.pathname = "/learning";
     expect(renderToStaticMarkup(<Nav />)).not.toContain("aria-current=");
@@ -70,5 +85,29 @@ describe("main navigation current location", () => {
     const links = main.match(/<a\b[^>]*>/g) ?? [];
     expect(links).toHaveLength(5);
     for (const link of links) expect(link).toContain("min-h-11");
+  });
+});
+
+/**
+ * The nav renders on every page, so any module it imports statically ships to
+ * every visitor. A static @clerk/nextjs import in the nav, the auth hook or
+ * the save prompt put about 42 KB (gzipped) of Clerk on every page of a build
+ * where accounts are off and no account control can render. Clerk belongs
+ * only in the lazily loaded account modules and in clerk-shell.tsx with its
+ * auth bridge. The layout reaches Clerk only through clerk-shell, so a build
+ * with accounts off swaps in clerk-shell-off.tsx (next.config.ts) and ships
+ * none of it.
+ */
+describe("Clerk stays out of the shared client bundle", () => {
+  it.each([
+    "./nav.tsx",
+    "./account/save-state.ts",
+    "./account/save-prompt.tsx",
+    "./account/clerk-shell-off.tsx",
+    "../lib/use-account-auth.ts",
+    "../app/layout.tsx",
+  ])("%s has no static Clerk import", (file) => {
+    const source = readFileSync(new URL(file, import.meta.url), "utf8");
+    expect(source).not.toMatch(/^import[^;]*from\s+["']@clerk\/nextjs["']/m);
   });
 });

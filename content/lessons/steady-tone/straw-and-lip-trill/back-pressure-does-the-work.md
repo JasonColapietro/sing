@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A straw or a lip trill puts a small obstruction in front of the mouth, and the air pressure it builds above the vocal folds pushes back against the airstream from below. That balance lets the folds vibrate fully at a fraction of the effort, so the sound comes easily without you pressing. It also makes blowing too hard obvious: push at a lip trill and it simply stops, which is why these sounds suit the start of a warm-up.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Explore how a straw or lip trill changes the feeling of a gentle sound; comfort 
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Back Pressure Does the Work.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Hold or slide through a narrow range with steady airflow and no push. Reset between attempts instead of extending a fading trill by force.
+Sing the same comfortable five-note pattern twice in one take: first on an open “ah”, then through a straw, or on a lip trill, at the same pitch and the same easy volume. The obstruction is the only thing that changes. Notice which version needed less effort in the throat and which kept the sound more even; the straw version is meant to be the easier one, and if it is not, make the sound smaller. Record your takes in the recorder. Hold or slide through a narrow range with steady airflow and no push. Reset between attempts instead of extending a fading trill by force.
 
 - Look: The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.
 - Listen: The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound.

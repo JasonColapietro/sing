@@ -40,6 +40,9 @@ import {
 import { ORG_NAME } from "./organization";
 import { FREE_DAILY_MINUTES } from "./practice-limits";
 import { PRICING, formatPrice } from "./pro-shared";
+import { FREE_WEEKS, PROGRAMS } from "./programs";
+import { MAX_RANGE_HISTORY } from "./progress-shape";
+import { SONGS } from "@/components/songs/data";
 import { GET as llmsFullRoute } from "../app/llms-full.txt/route";
 import { GET as llmsRoute } from "../app/llms.txt/route";
 import { SINGERS } from "./singers-data";
@@ -482,6 +485,21 @@ describe("/llms.txt free and Pro boundary", () => {
     expect(llms).toContain(`Check ${SING_HOME}/pro before quoting a price`);
   });
 
+  /**
+   * Week 1 of each Pro program is free (FREE_WEEKS in lib/programs.ts). The
+   * file used to call some programs "Pro-only", which the free first week
+   * makes untrue, and named none of them.
+   */
+  it("names the Pro programs and their free first week", () => {
+    const section = llms.slice(llms.indexOf("## Free and Pro"), llms.indexOf("## Pages"));
+    expect(section).not.toMatch(/Pro-only/);
+    const pro = PROGRAMS.filter((p) => p.pro);
+    expect(pro.length).toBeGreaterThan(0);
+    for (const p of pro) expect(section).toContain(p.name);
+    expect(FREE_WEEKS).toBe(1);
+    expect(section).toMatch(/need Pro after their free first week/);
+  });
+
   it("keeps range a measurement and voice type an estimate", () => {
     expect(llms).toMatch(/session measurement/);
     expect(llms).toMatch(/voice type[^\n]*estimate/i);
@@ -516,6 +534,94 @@ describe("/llms.txt coverage", () => {
  * Claim discipline across both files. Mirrors the repo's evidence rules: no
  * superlatives, no unlimited-free or accuracy claims.
  */
+/**
+ * What the file says a page contains has to be what the page renders. The
+ * studio line credited it with scale and slide drills that live in warmups,
+ * and the genre note said singer pages list their other genres, which they do
+ * not: each links one hub, for its primary genre.
+ */
+describe("/llms.txt describes pages as they render", () => {
+  const line = (prefix: string) => llms.split("\n").find((l) => l.startsWith(prefix)) ?? "";
+
+  it("gives the studio only the drill it has", () => {
+    const studio = line("- [Pitch studio]");
+    expect(studio).toMatch(/target-note drill/);
+    expect(studio).not.toMatch(/scales, slides and hold drills/);
+    expect(studio).toContain(`${SING_HOME}/warmups`);
+  });
+
+  /**
+   * Free /progress shows the latest saved range; the range-over-time chart
+   * renders only for Pro (components/progress/progress-client.tsx), as the
+   * /pro table says.
+   */
+  it("does not give free Progress the Pro range history", () => {
+    const progress = line("- [Progress]");
+    expect(progress).not.toMatch(/range history/);
+    expect(progress).toMatch(/latest saved range/);
+    expect(progress).toMatch(/range over time and per-note accuracy are part of Suede Pro/);
+  });
+
+  it("states song key fitting as it behaves, with and without a saved range", () => {
+    const songs = line("- [Songs]");
+    expect(songs).toMatch(/range test/);
+    expect(songs).toMatch(/fitted to that measured range/);
+    expect(songs).toMatch(/written key/);
+    expect(songs).toMatch(/scored in either octave/);
+    expect(songs).not.toMatch(/comfortable/);
+  });
+
+  /**
+   * /songs counts melodies, not pages (two pages are longer arrangements of a
+   * melody already in the book), and most pages hold a song's opening phrase
+   * rather than its lyrics.
+   */
+  it("counts songs the way /songs does, and does not promise whole lyrics", () => {
+    const songs = line("- [Songs]");
+    const melodies = SONGS.filter((s) => !s.arrangementOf).length;
+    expect(songs).toContain(`${melodies} melodies`);
+    expect(songs).toMatch(/opening phrase/);
+    expect(songs).not.toMatch(/melodies with lyrics/);
+  });
+
+  /** The warmup ladder moves every rep, scored or not, and turns back down. */
+  it("describes the warmup ladder as it moves", () => {
+    const warmups = line("- [Warmups]");
+    expect(warmups).toMatch(/a semitone every rep/);
+    expect(warmups).toMatch(/come back down/);
+    expect(warmups).not.toMatch(/climb by semitone/);
+    expect(buildLlmsFullTxt()).not.toMatch(/clear a pattern|cleared pattern/);
+  });
+
+  /**
+   * The vocal-load panel counts voiced frames, speech included, and only
+   * while /analyze is open and visible; the guide on that page says so too.
+   */
+  it("says where and what vocal load counts", () => {
+    const analyze = line("- [Analyze]");
+    expect(analyze).toMatch(/open and on screen/);
+    expect(analyze).toMatch(/speech counts/);
+    expect(analyze).toMatch(/other rooms does not/);
+  });
+
+  /** Pro keeps the same capped range history as the record; /pro says so. */
+  it("states Pro's range history at the cap the record keeps", () => {
+    expect(llms).toContain(`latest ${MAX_RANGE_HISTORY} range tests charted over time`);
+    expect(llms).not.toMatch(/every range test/);
+  });
+
+  it("describes genre hub links the way singer pages make them", () => {
+    expect(llms).not.toMatch(/remaining genres are listed/);
+    expect(llms).toMatch(/links the hub for its primary genre/);
+    // The claim holds only while every primary genre has a hub to link to.
+    const hubs = new Set(HUB_GENRES);
+    const orphaned = SINGERS.filter((s) => s.genres[0] && !hubs.has(s.genres[0]));
+    expect(orphaned.map((s) => `${s.slug}: ${s.genres[0]}`)).toEqual([]);
+    // The exception is named from the data, so it moves when the data does.
+    expect(llms).toContain("(Grunge is kept as a deliberate exception)");
+  });
+});
+
 describe("/llms.txt and /llms-full.txt claim discipline", () => {
   const full = buildLlmsFullTxt();
   for (const [name, text] of [["llms.txt", llms], ["llms-full.txt", full]] as const) {

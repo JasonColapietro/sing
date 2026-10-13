@@ -3,7 +3,7 @@ id: "v-l2-m3-04"
 module: "v-l2-m3"
 stage: "v-l2"
 title: "One Note Per Bar"
-type: "song"
+type: "exercise"
 minutes: 5
 objective: "Use the supplied sustained reference for short holds, resting between them."
 prerequisites: "v-l2-m3-01"
@@ -34,9 +34,9 @@ Use the supplied sustained reference for short holds, resting between them. Say 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.
 
-### Build the song from phrases
+### One note per bar
 
-Mark the key, breaths, range edges, and lesson target before a full take of “One Note Per Bar.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Aim for one centered pitch and an even release. Hear Sustained hold once, stop the reference, then record a short comfortable hold. Compare the start and end by ear; judge it by ear, not by the display.
+Count a slow four. Hear Sustained hold once and stop the reference, then sing four short holds, each lasting one bar, with a full bar of rest between them. Aim for one centered pitch and an even release. Compare the start and end of each hold by ear; judge it by ear, not by the display.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.

@@ -36,6 +36,8 @@ Teaching traditions describe two turning points rather than one: a lower one whe
 - **Mezzo-soprano:** A4 up to C5
 - **Soprano:** C5 up to E5
 
+Most women also meet an earlier, lighter shift, somewhere around E4 to G4, where chest voice hands over to a lighter middle voice. A quiet slide on "oo" will often flip there, at or below the contralto, mezzo and soprano zones above. Those zones mark where a belt or a full mix has to change gear, which happens higher than that first flip out of chest.
+
 Treat those as a neighbourhood, not an address. Individual voices sit a semitone or three off the list in either direction, and the vowel you are singing shifts the acoustic half of it, because different vowels put their resonant peaks in different places. An "ee" and an "ah" on the same pitch do not meet the wall at the same moment.
 
 The pattern is the part you can use. If you find a zone of two to four notes where sustaining feels like work while the notes just below it feel free, that zone is probably yours, and it tends to stay put rather than wander week to week. Chapter ten covers pinning down your own in the pitch studio. For now it is enough to know the thing exists and has a physical address.
@@ -56,7 +58,7 @@ Two adjustments, both subtractive.
 
 **Weight.** Let the sound thin as you approach the zone. Not breathier, not collapsing — thinner. A dimmer, not a switch. Sing the approach a little quieter than feels natural, so the muscular handover can happen over several notes instead of as an emergency. Once you are above the zone, the volume can come back. It is the crossing that needs to be quiet.
 
-**Vowel.** Since part of the trouble is a harmonic arriving at a fixed resonant peak, move the peak. That is all vowel modification is. Shading a bright, narrow vowel toward a rounder, more neutral one changes the shape of the tube, which moves where the reinforcement sits, which lets the harmonic pass without the sudden dropout. Chapter five gives the ladder of which vowel shades toward which. Small amounts. If a listener can hear the word change, you have gone too far.
+**Vowel.** Since part of the trouble is a harmonic arriving at a fixed resonant peak, move the peak. That is all vowel modification is. Shading the vowel a little toward the neutral middle — a bright "ee" opening slightly toward "ih", a wide "ah" rounding slightly toward "aw" — changes the shape of the tube, which moves where the reinforcement sits, which lets the harmonic pass without the sudden dropout. Chapter five gives the ladder of which vowel shades toward which. Small amounts. If a listener can hear the word change, you have gone too far.
 
 The two work together. Vowel without weight release still fights the handover. Weight release without the vowel gives you a note that is easy and hollow. Together they spread the transition across more notes, which leaves less of a seam to hear.
 

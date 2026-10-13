@@ -16,7 +16,7 @@
 // plan, and sessions logged today are ignored for picking, so singing one of
 // the three does not reshuffle the other two mid-afternoon.
 
-import { EXERCISES, titlesFor, type WarmupExercise } from "@/components/warmups/exercises";
+import { EXERCISES, buildSegments, titlesFor, type WarmupExercise } from "@/components/warmups/exercises";
 import type { SessionLog } from "@/lib/progress-shape";
 
 /** Starting tempos the planner may hand the player — a subset of its TEMPOS. */
@@ -184,8 +184,31 @@ function candidates(
  */
 export const KIND_SESSION_ORDER: readonly ExerciseKind[] = ["sirens", "patterns", "holds", "leaps", "runs"];
 
+/**
+ * The longest one rep may run at the tempo the plan hands out, in seconds. A
+ * rep is sung on one breath, so slowing a long one-breath pattern makes it
+ * harder, not easier: Hung-ee-mm is 9.4s at 1x and 18.8s at 0.5x, close to
+ * the sustain ladder's "good" hold. Every other free exercise stays under
+ * this at 0.5x.
+ */
+export const MAX_ONE_BREATH_SEC = 12;
+
+/**
+ * The slowest tempo at which one rep still fits a comfortable breath. The
+ * root does not change a rep's length, only its notes, so any root will do.
+ */
+export function slowestOneBreathTempo(ex: WarmupExercise): DailyTempo {
+  return (
+    ([0.5, 0.75, 1] as const).find((t) => buildSegments(ex, 60, t).totalSec <= MAX_ONE_BREATH_SEC) ?? 1
+  );
+}
+
 function pick(c: Candidate, role: PickRole, why: string): DailyPick {
-  const tempo = tempoForScores(c.recent, c.exercise.tier);
+  // A step down never stretches a rep past one comfortable breath.
+  const tempo = Math.max(
+    tempoForScores(c.recent, c.exercise.tier),
+    slowestOneBreathTempo(c.exercise),
+  ) as DailyTempo;
   return {
     exercise: c.exercise,
     kind: c.kind,
@@ -198,12 +221,25 @@ function pick(c: Candidate, role: PickRole, why: string): DailyPick {
 }
 
 /**
+ * Whether an exercise can open a session on a cold voice: a foundation-tier
+ * one that is neither a fast run nor a wide leap. The slot is sung first and
+ * labelled as the warm-up, and the order a session warms through
+ * (KIND_SESSION_ORDER) leaves reaches and speed for later.
+ */
+function warmsUp(c: Candidate): boolean {
+  return c.exercise.tier === "beginner" && c.kind !== "runs" && c.kind !== "leaps";
+}
+
+/**
  * The confidence slot: an exercise the singer already sings well, rotated
  * day to day by staleness and the seed so it is not the same favourite every
  * morning. With nothing at two stars yet it falls back to their best scored
- * exercise, and with no history at all to an easy foundation exercise.
+ * exercise, and with no history at all to an easy foundation exercise. Only
+ * exercises that warm a voice up are eligible, however well the singer sings
+ * an advanced run: the slot opens the session.
  */
-function confidencePick(pool: Candidate[]): DailyPick | null {
+function confidencePick(all: Candidate[]): DailyPick | null {
+  const pool = all.filter(warmsUp);
   const strong = pool.filter((c) => c.avg !== null && c.avg >= CONFIDENT_AVG);
   if (strong.length > 0) {
     const c = strong.reduce((best, c) => (rotation(c) > rotation(best) ? c : best));
@@ -214,9 +250,8 @@ function confidencePick(pool: Candidate[]): DailyPick | null {
     const c = scored.reduce((best, c) => (c.avg! > best.avg! ? c : best));
     return pick(c, "confidence", `Your best lately (${Math.round(c.avg!)}%), to warm up on.`);
   }
-  const easy = pool.filter((c) => c.exercise.tier === "beginner");
-  if (easy.length === 0) return null;
-  const c = easy.reduce((best, c) => (c.jitter > best.jitter ? c : best));
+  if (pool.length === 0) return null;
+  const c = pool.reduce((best, c) => (c.jitter > best.jitter ? c : best));
   return pick(c, "new", "An easy one to start with.");
 }
 

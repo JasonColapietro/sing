@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import type { ProgressState } from "@/lib/progress";
+import { RANGE_RETEST_DAYS, type ProgressState } from "@/lib/progress";
 import { useIsPro } from "@/lib/pro";
+import { useFreeCap } from "@/lib/free-cap";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Card } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
 import { LockGlyph } from "@/components/pro/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { aggregateNotes, overallAccuracy, weakNotes } from "@/lib/analytics";
 import { EXERCISES } from "@/components/warmups/exercises";
+import { rangeTestHref } from "@/lib/site";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
 interface PlanItem {
@@ -31,16 +34,32 @@ interface PlanItem {
  * under the measured ceiling — so 21 (4 + 12 + 5) is exactly the span at which
  * that top finally reaches the start. At 21 the band is a single root whose
  * glide lands on `highMidi - 5`, headroom intact; wider spans widen the band a
- * semitone at a time. Below 21 the ladder gives up that headroom to stay under
- * the ceiling: it roots the octave lower, down to `lowMidi`, and under 12
- * semitones pins the top to `highMidi` with the bottom below the range. The
- * glide then runs at the very top of what the singer measured, which is why a
+ * semitone at a time. Below 21 the ladder gives up most of that headroom to
+ * stay under the ceiling: it roots the octave lower, down to `lowMidi`,
+ * keeping the glide's top two semitones under `highMidi` from a 16-semitone
+ * span up and letting it reach `highMidi` below that (under 12 semitones it
+ * pins the top to `highMidi` with the bottom below the range). The glide then
+ * runs at or near the very top of what the singer measured, which is why a
  * narrower span gets the fifth instead.
  */
 const OCTAVE_SIREN_MIN_SEMIS = 21;
 
-function buildPlan(state: ProgressState, now: Date): {
+/**
+ * Today's plan from the singer's own numbers. `restDayOf` names the running
+ * program when today is one of its rest days: the program the singer chose
+ * says rest, so the plan does not tell them in red to sing or lose the streak.
+ * It says what resting costs the streak instead, and leaves the plan below
+ * as optional.
+ *
+ * Exported for its test.
+ */
+export function buildPlan(
+  state: ProgressState,
+  now: Date,
+  restDayOf: string | null = null,
+): {
   banner: string | null;
+  restNote: string | null;
   items: PlanItem[];
 } {
   const todayKey = localDayStr(now);
@@ -48,13 +67,21 @@ function buildPlan(state: ProgressState, now: Date): {
   const cutoff = localDayStr(addDays(now, -13));
 
   const practicedToday = state.sessions.some((s) => s.day === todayKey);
+  // A streak that ends tonight unless the singer sings today.
+  const streakAtRisk =
+    !practicedToday && state.streak.current > 0 && state.streak.lastDay === yesterdayKey;
   const banner =
-    !practicedToday &&
-    now.getHours() >= 12 &&
-    state.streak.current > 0 &&
-    state.streak.lastDay === yesterdayKey
+    restDayOf === null && streakAtRisk && now.getHours() >= 12
       ? `Keep your ${state.streak.current}-day streak alive — one short session today keeps the tape rolling.`
       : null;
+  const restNote =
+    restDayOf === null
+      ? null
+      : `Today is a rest day in ${restDayOf}, and the program counts it as done. Nothing below is required.${
+          streakAtRisk
+            ? " Your streak counts only days you practise, so if you rest today it starts again from 1 at your next session."
+            : ""
+        }`;
 
   /* ---- signals, all from the singer's own numbers ---- */
 
@@ -95,7 +122,7 @@ function buildPlan(state: ProgressState, now: Date): {
   const heavyYesterday =
     yesterdaySec >= 25 * 60 && yesterdaySec > meanDaySec * 1.6;
 
-  // Range staleness: growth charts need fresh measurements.
+  // Range staleness: the range-over-time chart needs fresh measurements.
   const testedAt = state.range.testedAt ? Date.parse(state.range.testedAt) : NaN;
   const rangeAgeDays = Number.isNaN(testedAt)
     ? null
@@ -115,18 +142,18 @@ function buildPlan(state: ProgressState, now: Date): {
     rangeFirst = true;
     items.push({
       title: "Vocal range test",
-      href: "/range?mode=range",
+      href: rangeTestHref(),
       minutes: 3,
       reason:
         "You haven't measured your range yet — it anchors every other exercise to your voice.",
     });
-  } else if (rangeAgeDays !== null && rangeAgeDays >= 21) {
+  } else if (rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS) {
     rangeFirst = true;
     items.push({
       title: "Retake the range test",
-      href: "/range?mode=range",
+      href: rangeTestHref(),
       minutes: 3,
-      reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test keeps the growth chart honest.`,
+      reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test adds a current point to your range over time.`,
     });
   }
 
@@ -136,7 +163,7 @@ function buildPlan(state: ProgressState, now: Date): {
     minutes: heavyYesterday ? 4 : 2,
     reason: heavyYesterday
       ? `Yesterday was a heavy one (${Math.round(yesterdaySec / 60)} min) — start slow and give the voice time to settle.`
-      : "Every session starts here — low, steady breaths set up the rest.",
+      : "Low, steady breaths set up the rest of the session.",
   });
 
   // The core of the plan: measured weak notes drive the warmup choice.
@@ -233,12 +260,24 @@ function buildPlan(state: ProgressState, now: Date): {
     });
   }
 
-  return { banner, items };
+  return { banner, restNote, items };
 }
 
-export function CoachCard({ state }: { state: ProgressState }) {
+export function CoachCard({
+  state,
+  restDayOf = null,
+}: {
+  state: ProgressState;
+  /** The running program's name when today is one of its rest days. */
+  restDayOf?: string | null;
+}) {
   const isPro = useIsPro();
-  const { banner, items } = buildPlan(state, new Date());
+  // The cap wall's "See your streak" lands here. Today's plan is still
+  // today's (its reasons read yesterday and today), so it is not relabelled
+  // as tomorrow's; the card says plainly which steps wait for midnight and
+  // what is open now.
+  const cap = useFreeCap();
+  const { banner, restNote, items } = buildPlan(state, new Date(), restDayOf);
   // One step is not a plan, it is a screenshot of one. A singer who can see two
   // steps has watched the coach make a decision — this after that, and why —
   // which is the thing Pro actually sells; a singer who sees one has been shown
@@ -254,11 +293,27 @@ export function CoachCard({ state }: { state: ProgressState }) {
           {items.slice(0, shown).reduce((a, i) => a + i.minutes, 0)} min planned
         </span>
       </div>
+      {cap.capped && (
+        <p className="mt-3 text-sm text-mut">
+          Today&apos;s {FREE_DAILY_MINUTES} free guided minutes are used, so
+          warmups, ear training, breath and songs open again at midnight.
+          The{" "}
+          <Link href="/studio" className="text-violet-ink underline underline-offset-4">
+            pitch studio
+          </Link>{" "}
+          and the{" "}
+          <Link href={rangeTestHref()} className="text-violet-ink underline underline-offset-4">
+            range test
+          </Link>{" "}
+          are open now.
+        </p>
+      )}
       {banner && (
         <p className="mt-3 rounded-xl border border-rec/40 bg-rec/10 px-3 py-2 text-sm text-rec">
           {banner}
         </p>
       )}
+      {restNote && <p className="mt-3 text-sm text-mut">{restNote}</p>}
       <ol className="mt-4 space-y-3">
         {items.map((item, i) =>
           i < shown ? (
@@ -308,6 +363,15 @@ export function CoachCard({ state }: { state: ProgressState }) {
         Built from your scored notes, range tests, and recent practice — no AI,
         just the numbers.
       </p>
+      {/* The plan can run past the free allowance, so say so here rather than
+          at the cap wall halfway through step two. */}
+      {!isPro && !cap.capped && (
+        <p className="mt-1 text-xs text-dim">
+          On the free plan, warmups, ear training, breath and songs share{" "}
+          {FREE_DAILY_MINUTES} guided minutes a day; the range test and the
+          pitch studio have no clock.
+        </p>
+      )}
       <div className="mt-3">
         <ProInlineNudge>
           Pro unlocks the full daily plan

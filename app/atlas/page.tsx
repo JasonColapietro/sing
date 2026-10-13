@@ -9,7 +9,8 @@ import {
 } from "@/lib/atlas-data";
 import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
+import { balancedChunks } from "@/lib/singers-core";
 import { AtlasCta } from "@/components/atlas/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -59,8 +60,12 @@ function SingerLinks({ singers }: { singers: AtlasSinger[] }) {
     <ul className="grid grid-cols-1 gap-x-6 pl-2 sm:grid-cols-2 lg:grid-cols-3">
       {singers.map((s) => (
         <li key={s.slug}>
+          {/* No prefetch: the contents list every singer the book covers,
+              several hundred links, and on a phone each one scrolling into
+              view would otherwise download a singer page nobody asked for. */}
           <Link
             href={`/singers/${s.slug}`}
+            prefetch={false}
             className="flex items-baseline justify-between gap-3 rounded-lg px-2 py-1 text-sm transition-colors hover:bg-panel"
           >
             <span className="min-w-0 truncate text-mut">{s.name}</span>
@@ -89,14 +94,7 @@ function ChapterSingerIndex({
     );
   }
 
-  const groups = Array.from(
-    { length: Math.ceil(singers.length / MAX_SINGERS_PER_CHAPTER_SECTION) },
-    (_, index) =>
-      singers.slice(
-        index * MAX_SINGERS_PER_CHAPTER_SECTION,
-        (index + 1) * MAX_SINGERS_PER_CHAPTER_SECTION,
-      ),
-  );
+  const groups = balancedChunks(singers, MAX_SINGERS_PER_CHAPTER_SECTION);
 
   return (
     <div className="mt-2">
@@ -131,7 +129,6 @@ export default function AtlasPage() {
     name: ATLAS_TITLE,
     description: DESCRIPTION,
     url: `${SITE_URL}/atlas`,
-    numberOfPages: ATLAS_CONTENTS.length,
     inLanguage: "en",
     isAccessibleForFree: false,
     // Was an Organization named "Suede Sing" — the product name, not the
@@ -155,6 +152,9 @@ export default function AtlasPage() {
       kicker="Included with Pro · first 3 chapters free"
       title={`${ATLAS_TITLE}: how famous singers sing, voice by voice`}
       subtitle={`${ATLAS_TITLE} is a ${ATLAS_CONTENTS.length}-chapter book on the range, tone and technique of ${ATLAS_SINGER_COUNT} singers: who sings what, how it sounds, and how to borrow it safely. The contents and the first three chapters are free.`}
+      // In the header, so the free chapter the subtitle promises is one tap
+      // away on the first phone screen rather than below the stats and prose.
+      actions={<AtlasCta />}
     >
       <script
         type="application/ld+json"
@@ -223,14 +223,11 @@ export default function AtlasPage() {
             </Link>
             . Pro unlocks the chapter text, the entry notes and the PDF, and
             the{" "}
-            <Link href="/range?mode=range" className="text-violet-ink hover:underline">
+            <Link href={rangeTestHref()} className="text-violet-ink hover:underline">
               range test
             </Link>{" "}
             gives you your own numbers to read it with.
           </p>
-          <div className="mt-5">
-            <AtlasCta />
-          </div>
         </Card>
 
         {ATLAS_PARTS.map((part, i) => (
@@ -294,8 +291,8 @@ export default function AtlasPage() {
           recorded moments rather than anyone&rsquo;s everyday voice. The
           technique notes describe how voices sound on record — nothing here is
           medical advice, and a voice that hurts, stays hoarse, or loses easy
-          notes is a question for a doctor or speech-language pathologist, not
-          a practice plan.
+          notes is a question for a doctor who can examine the vocal folds,
+          such as an ENT or laryngologist, not a practice plan.
         </p>
       </div>
     </PageShell>

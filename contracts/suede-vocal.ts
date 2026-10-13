@@ -117,12 +117,14 @@ import {
 } from "@/components/ear/routines";
 import {
   EXERCISES,
+  NOMINAL_RANGE,
   NOTE_GAP_SEC,
   PRO_PACKS,
   buildSegments,
   type WarmupExercise,
 } from "@/components/warmups/exercises";
 import {
+  GLIDE_TIME_SLACK,
   ONSET_GRACE_MAX_SHARE,
   ONSET_GRACE_SEC,
   TOLERANCE_CENTS as WARMUP_TOLERANCE_CENTS,
@@ -140,12 +142,16 @@ import { FREE_WEEKS, PROGRAMS } from "@/lib/programs";
  * A changed value is not a version bump; it is the thing the contract exists
  * to surface.
  */
-export const CONTRACT_VERSION = 8;
+export const CONTRACT_VERSION = 9;
 /*
  * 8: added warmups.scoring (the warmup scorer's tolerance and its per-note
  *    onset grace), gapSec and rangeCap on every warm-up exercise, and
  *    rules.warmupOnsetGrace, rules.warmupGap and rules.warmupRangeCap. See
  *    contracts/README.md, "suede-vocal v8".
+ * 9: added warmups.scoring.glideTimeSlack (glides scored against a window of
+ *    the guide's ramp), warmups.nominalRange (the ladder span used before a
+ *    range test), and rules.warmupGlideWindow and
+ *    rules.warmupOctaveWithoutRange. See contracts/README.md, "suede-vocal v9".
  */
 
 /**
@@ -234,7 +240,7 @@ const MEASUREMENTS = {
     measurable: "yes",
     unit: "midi",
     module: "components/range/range-test.tsx",
-    note: "Lowest and highest comfortable note by cumulative dwell. Falsetto and head voice count toward the high note.",
+    note: "Lowest and highest clear notes reached in one test, each counted once the detector has heard it for 600 ms in total (cumulative dwell), so a passing octave error does not count. These are the limits the singer reached, not a comfortable band. Falsetto and head voice count toward the high note.",
   },
   ringRatio: {
     measurable: "yes",
@@ -410,6 +416,10 @@ const RULES = {
     "Consecutive notes (or glide steps) of a warm-up are separated by gapSec / tempo seconds of silence, gapSec being the exercise's own value; the default is published on every exercise rather than left implicit. The gap is part of patternSeconds and is never scored, and the guide plays the same gaps.",
   warmupRangeCap:
     "A non-null rangeCap trims the fitted root ladder before it is walked: with n rungs counted from the bottom (index 0), keep indexes round(from * (n - 1)) through max(that, round(to * (n - 1))), inclusive. A ladder of one rung is kept as it is. A down ladder is capped first and reversed after. Null walks the whole fitted ladder.",
+  warmupGlideWindow:
+    "A glide frame at pattern time t is measured against the nearest pitch the guide's straight-line ramp passes through between t - glideTimeSlack * d - onsetGraceSec and t + glideTimeSlack * d, d being the glide's duration at the tempo sung and the ramp held at its endpoints outside the glide. The frame is in tune when it is within toleranceCents of that pitch, and its cents error is measured from it. onsetGraceSec here is warmups.scoring.onsetGraceSec itself, not the per-note capped grace. Plain notes are scored against their one pitch.",
+  warmupOctaveWithoutRange:
+    "Without a saved range every warm-up ladder is fitted to warmups.nominalRange (A2–E4, before any rangeCap) and any octave counts, but one octave per rep: the rep is scored as if every sung frame were moved by the same whole number of octaves, for each shift from 2 octaves down to 2 octaves up, and the shift whose score is highest before rounding is the rep's octave (on a tie, the one with the smaller mean cents error, then the one nearer the written octave, the lower first). The rep's score, its cents error and every note's tallies come from that shift alone, and each note and the rep's reported root are moved by it. With a saved range only the written octave counts.",
   freeExerciseGate:
     "A warmup is free if and only if it is in EXERCISES. Pro packs are gated by array membership, not by a flag, so a free surface must never deep-link a pack exercise.",
 } as const;
@@ -512,7 +522,7 @@ function serializePopSong(song: (typeof POP_SONGS)[number], pathPrefix: string) 
     /** Spelled out because the two repos print accidentals differently. */
     rangeLabel: popRangeLabel(song),
     spanSemitones: song.highMidi - song.lowMidi,
-    /** Derived by `popDifficulty`, not authored, so the cut cannot drift. */
+    /** From popDifficulty (span plus altitude, or a documented editorial override), never typed into the contract by hand. */
     difficulty: popDifficulty(song),
     /** Where the cited key and range come from. Not a measurement. */
     sourceNote: song.sourceNote,
@@ -699,7 +709,11 @@ export function buildContract() {
          * The published benchmark ladder, imported rather than restated. Note
          * 12 seconds is NOT a rung: it sits inside the lowest band, so a
          * curriculum promising a twelve-second milestone has no threshold here
-         * to pass or fail against.
+         * to pass or fail against. The web room no longer prints this ladder
+         * or labels a hold by it: the drill asks for a note ended while it is
+         * still easy, so a length grade rewarded the squeeze it warns against.
+         * starsSec still awards path stars by length; both are for review at
+         * the next contract version.
          */
         benchmarksSec: { ...SUSTAIN_BENCHMARKS_SEC },
         starsSec: { ...SUSTAIN_STAR_SEC },
@@ -776,7 +790,14 @@ export function buildContract() {
         onsetGraceSec: ONSET_GRACE_SEC,
         /** The most of one note the grace may cover, as a share of its duration. */
         onsetGraceMaxShare: ONSET_GRACE_MAX_SHARE,
+        /** Share of a glide's length the ramp window reaches either side; see rules.warmupGlideWindow. */
+        glideTimeSlack: GLIDE_TIME_SLACK,
       },
+      /**
+       * The span every ladder is fitted to before a range test, in midi; see
+       * rules.warmupOctaveWithoutRange.
+       */
+      nominalRange: { lowMidi: NOMINAL_RANGE.lowMidi, highMidi: NOMINAL_RANGE.highMidi },
       exercises: [
         ...EXERCISES.map((ex) => serializeExercise(ex, true)),
         ...PRO_PACKS.flatMap((pack) => pack.exercises.map((ex) => serializeExercise(ex, false))),
@@ -886,7 +907,13 @@ export function buildContract() {
       origin: "https://sing.suedeai.ai",
       rooms: {
         range: { path: "/range", params: [] },
-        warmups: { path: "/warmups", params: ["exercise", "routine", "step"] },
+        /**
+         * `reps` (a whole number 1–30, with `exercise`) stops a deep-linked
+         * exercise after that many reps ("Rep 2 of 5"); without it the
+         * exercise walks its ladder until the singer ends it. Anything else
+         * is ignored and opens the ordinary exercise.
+         */
+        warmups: { path: "/warmups", params: ["exercise", "routine", "step", "reps"] },
         breath: {
           path: "/breath",
           params: ["drill", "routine", "step"],

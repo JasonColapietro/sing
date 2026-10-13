@@ -5,6 +5,7 @@ import {
   genreSlug,
   voiceTypeSlug,
 } from "@/lib/singers";
+import { rangeTestHref } from "@/lib/site";
 
 /**
  * Site-wide footer. A Server Component with no client state, so every link
@@ -19,6 +20,14 @@ import {
  * how link equity flows to the deep singer inventory Google discovered but was
  * not crawling. Descriptive, self-contained anchor text throughout — no
  * "click here" / "read more".
+ *
+ * Every internal link here is prefetch={false}. Next prefetches a <Link>'s
+ * whole static route when it scrolls into view, and this is secondary
+ * navigation on every page: reaching the footer fired dozens of background
+ * requests (hundreds on /singers) for pages almost nobody was about to open.
+ * The <a href> a crawler reads is identical, and a click still navigates
+ * client-side; the header and tab bar keep their prefetch for the rooms
+ * people actually go to next.
  */
 
 type FooterLink = { href: string; label: string };
@@ -30,6 +39,7 @@ const REFERENCE: FooterLink[] = [
   { href: "/singers/methodology", label: "Singer range methodology" },
   { href: "/contact", label: "Suggest a correction" },
   { href: "/atlas", label: "The Voice Atlas" },
+  { href: "/book", label: "The Measured Voice singing book" },
   {
     href: "/atlas/vocal-range-by-voice-type",
     label: "Vocal range by voice type",
@@ -43,7 +53,7 @@ const PRACTICE: FooterLink[] = [
   { href: "/studio", label: "Vocal studio" },
   { href: "/warmups", label: "Guided warmups" },
   { href: "/programs", label: "Multi-week practice programs" },
-  { href: "/range?mode=range", label: "Free vocal range test" },
+  { href: rangeTestHref(), label: "Free vocal range test" },
   { href: "/voice", label: "Suede Voice for iPhone & Android" },
   { href: "/ear-training", label: "Ear training" },
   // Both rooms are live and were in no footer column, so neither had a
@@ -58,6 +68,7 @@ const PRACTICE: FooterLink[] = [
   { href: "/analyze", label: "Voice analyzer" },
   { href: "/progress", label: "Your progress" },
   { href: "/extension", label: "Chrome extension vocal coach" },
+  { href: "/pro", label: "Suede Pro online vocal coach" },
 ];
 
 /**
@@ -106,7 +117,7 @@ function Column({
                 {l.label}
               </a>
             ) : (
-              <Link href={l.href} className={linkClass}>
+              <Link href={l.href} prefetch={false} className={linkClass}>
                 {l.label}
               </Link>
             )}
@@ -139,6 +150,7 @@ export default function SiteFooter() {
                 <li key={v}>
                   <Link
                     href={`/singers/voice-type/${voiceTypeSlug(v)}`}
+                    prefetch={false}
                     className={linkClass}
                   >
                     {v} voices
@@ -158,6 +170,7 @@ export default function SiteFooter() {
                 <li key={g}>
                   <Link
                     href={`/singers/genre/${genreSlug(g)}`}
+                    prefetch={false}
                     className={linkClass}
                   >
                     {g} vocal ranges
@@ -174,22 +187,33 @@ export default function SiteFooter() {
             <span aria-hidden>·</span>
             {/* The durable inbound link to /changelog: the release banner will
                 retire one day, and the crawl path must not retire with it. */}
-            <Link href="/changelog" className={linkClass}>
+            <Link href="/changelog" prefetch={false} className={linkClass}>
               3.1: what we&apos;ve changed
             </Link>
             <span aria-hidden>·</span>
             {/* Both pages were already live and neither was linked from
                 anywhere on the site. An app that asks for a microphone should
                 put its policy one click from every page. */}
-            {/* Policy lives on the org site. Linked directly: /privacy and
-                /terms here are 308s kept for inbound links only, and a <Link>
-                to them cost a hop and a cross-origin RSC prefetch. */}
-            <a href="https://suedeai.org/voice/privacy/" className={linkClass}>
+            {/* The company policy and terms cover suedeai.ai and its
+                subdomains, including Stripe purchases, so they govern this
+                site. suedeai.org/voice/* is the mobile app's policy. /privacy
+                and /terms here still 308 there for the app-store and Chrome
+                Web Store listings that declared them. Plain anchors: a <Link>
+                to another origin buys nothing but a prefetch. */}
+            <a href="https://suedeai.org/privacy/" className={linkClass}>
               Privacy
             </a>
             <span aria-hidden>·</span>
-            <a href="https://suedeai.org/voice/terms/" className={linkClass}>
+            <a href="https://suedeai.org/terms/" className={linkClass}>
               Terms
+            </a>
+            <span aria-hidden>·</span>
+            {/* A plain anchor: /ai-instructions is a static file behind a
+                vercel.json rewrite, not an app route, so there is nothing for
+                next/link to prefetch. It used to sit in a stray nav of its own
+                below the footer on every page. */}
+            <a href="/ai-instructions" className={linkClass}>
+              AI instructions
             </a>
             <span aria-hidden>·</span>
             {/* CC BY 3.0 asks for a credit where the samples are used. */}

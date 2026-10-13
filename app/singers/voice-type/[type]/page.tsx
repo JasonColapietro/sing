@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { singerVoiceTypeKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { midiToLabel } from "@/lib/audio/notes";
+import { VOICE_TYPES, midiToLabel } from "@/lib/audio/notes";
 import {
   SINGERS,
   VOICE_KINDS,
+  joinNames,
   pluralVoice,
   rangeLabel,
   singersByVoiceType,
@@ -17,8 +18,10 @@ import { REFERENCE_BANDS, statsFor } from "@/lib/singers-analysis";
 import { withCanonicalOpenGraph } from "@/lib/og";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { VOICE_TYPE_HUB_COPY, fillTokens, splitContrast } from "@/lib/singer-hub-copy";
-import { SITE_URL } from "@/lib/site";
+import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { HubChart } from "@/components/singers/hub-chart";
+import { LinkedNames } from "@/components/singers/linked-names";
 import { Card, LinkButton, PageShell, SectionLabel, Stat } from "@/components/ui";
 
 interface Params {
@@ -47,7 +50,10 @@ export async function generateMetadata({
   const title = voice === "Contralto"
     ? `Contralto Singers and Vocal Ranges: ${copy.titleTag}`
     : `Famous ${voice} Vocal Ranges: ${copy.titleTag}`;
-  const description = `${copy.summary} Conventional band ${midiToLabel(band.low)} to ${midiToLabel(band.high)}, with catalog spans for ${count} ${pluralVoice(voice.toLowerCase())} on one keyboard.`;
+  // Short enough that fitDescription never drops it (longest hub: 152
+  // characters). The longer sentence was cut whole on four hubs, leaving a
+  // snippet with no band, no singer count and, on some, no "vocal range".
+  const description = `${copy.summary} Conventional band ${midiToLabel(band.low)}–${midiToLabel(band.high)}; catalog ranges for ${count} famous ${pluralVoice(voice.toLowerCase())}.`;
   return withCanonicalOpenGraph({
     title: { absolute: title },
     description,
@@ -82,6 +88,9 @@ export default async function VoiceTypePage({
   const neighbour = voiceTypeFromSlug(copy.neighbour);
   const [contrastBefore, contrastAfter] = splitContrast(copy.contrast);
   const lower = voice.toLowerCase();
+  // Bass-baritone and countertenor are editorial categories: the range test
+  // classifies into six bands, bass to soprano, and can never return them.
+  const rangeTestCanName = VOICE_TYPES.some((t) => t.label === voice);
   const share = Math.round((list.length / SINGERS.length) * 100);
 
   const axisLow = Math.floor(stats.lowest.lowMidi / 12) * 12;
@@ -93,14 +102,17 @@ export default async function VoiceTypePage({
   // figures already render elsewhere on the page, so the Q&A introduces no
   // new claims — and one array feeds the visible section and the FAQPage
   // markup, so the two can never drift.
+  // Every tied holder is named, so a shared endpoint is not credited to
+  // whichever name sorts first.
+  const names = (singers: typeof list) => joinNames(singers.map((s) => s.name));
   const faq = [
     {
       q: `How high can a ${lower} sing?`,
-      a: `The conventional ${lower} band tops out around ${midiToLabel(band.high)}. Among ${list.length} catalog profiles labeled ${pluralVoice(lower)}, the highest listed endpoint is ${midiToLabel(stats.highest.highMidi)} for ${stats.highest.name}; it is not a verified individual maximum.`,
+      a: `The conventional ${lower} band tops out around ${midiToLabel(band.high)}. Among ${list.length} catalog profiles labeled ${pluralVoice(lower)}, the highest listed endpoint is ${midiToLabel(stats.highest.highMidi)} for ${names(stats.highestAll)}; it is not a verified individual maximum.`,
     },
     {
       q: `How low can a ${lower} sing?`,
-      a: `Conventionally the ${lower} band bottoms out around ${midiToLabel(band.low)}. The lowest listed endpoint in this catalog category is ${midiToLabel(stats.lowest.lowMidi)} for ${stats.lowest.name}; check the profile before treating it as a verified performance.`,
+      a: `Conventionally the ${lower} band bottoms out around ${midiToLabel(band.low)}. The lowest listed endpoint in this catalog category is ${midiToLabel(stats.lowest.lowMidi)} for ${names(stats.lowestAll)}; check ${stats.lowestAll.length === 1 ? "the profile" : "each profile"} before treating it as a verified performance.`,
     },
   ];
 
@@ -114,7 +126,8 @@ export default async function VoiceTypePage({
         name: `Famous ${pluralVoice(voice)} and their vocal ranges`,
         url: pageUrl,
         description: intro,
-        isPartOf: { "@type": "WebSite", name: "Suede Sing", url: SITE_URL },
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        publisher: ORG_PUBLISHER_NODE,
         breadcrumb: {
           "@type": "BreadcrumbList",
           itemListElement: [
@@ -166,9 +179,15 @@ export default async function VoiceTypePage({
       }
       subtitle={`A ${lower}'s conventional range runs from about ${midiToLabel(band.low)} to ${midiToLabel(band.high)}. Below are reported catalog ranges for ${list.length} singers labeled ${pluralVoice(lower)}: ${note.summary}.`}
       actions={
-        <LinkButton href="/singers" variant="outline" size="md">
-          ← All singers
-        </LinkButton>
+        // Own wrapping row: two md buttons are wider than a 320px phone.
+        <div className="flex flex-wrap items-center gap-2">
+          <LinkButton href={rangeTestHref()} size="md">
+            Find my vocal range →
+          </LinkButton>
+          <LinkButton href="/singers" variant="outline" size="md">
+            ← All singers
+          </LinkButton>
+        </div>
       }
     >
       <script
@@ -190,15 +209,29 @@ export default async function VoiceTypePage({
             </Link>
             {contrastAfter}
           </p>
-          {voice === "Contralto" && (
-            <div className="mt-4 flex flex-wrap gap-3">
+          {/* "Am I a {type}?" is the next question on every one of these
+              hubs, and the range test answers it with an estimate. Outline,
+              because the header's "Find my vocal range" button, a few lines
+              up, is the page's one primary action and goes to the same test.
+              Two hubs, bass-baritone and countertenor, name a type the
+              classifier cannot return, so they say so under the buttons
+              rather than promise an answer the test can't give. */}
+          <div className="mt-4 flex flex-wrap gap-3">
+            <LinkButton href={rangeTestHref()} variant="outline" size="sm">
+              Estimate my voice type
+            </LinkButton>
+            {voice === "Contralto" && (
               <LinkButton href="/atlas/vocal-range-by-voice-type" variant="outline" size="sm">
                 Compare contralto, mezzo-soprano and soprano ranges
               </LinkButton>
-              <LinkButton href="/range?mode=range" size="sm">
-                Find my vocal range
-              </LinkButton>
-            </div>
+            )}
+          </div>
+          {!rangeTestCanName && (
+            <p className="mt-2 max-w-3xl text-xs text-dim">
+              The range test estimates one of six types, bass to soprano, and never
+              names {lower}: compare the notes it finds with this page&apos;s{" "}
+              {midiToLabel(band.low)}–{midiToLabel(band.high)} band.
+            </p>
           )}
         </Card>
 
@@ -233,26 +266,40 @@ export default async function VoiceTypePage({
           </h3>
           <ul className="mt-3 max-w-3xl space-y-2 text-sm text-mut">
             <li>
-              Largest reported catalog span:{" "}
-              <Link
-                href={`/singers/${stats.widest.slug}`}
-                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
-              >
-                {stats.widest.name}
-              </Link>{" "}
-              at {rangeLabel(stats.widest)} (
-              {spanOctaves(stats.widest.highMidi - stats.widest.lowMidi)}{" "}
-              octaves); narrowest is{" "}
-              <Link
-                href={`/singers/${stats.narrowest.slug}`}
-                className="text-violet-ink underline decoration-violet/40 underline-offset-2"
-              >
-                {stats.narrowest.name}
-              </Link>{" "}
-              at {rangeLabel(stats.narrowest)}.
+              {/* Ties name every holder; a shared record has no single
+                  holder to crown. */}
+              {stats.widestAll.length === 1 ? (
+                <>
+                  Largest reported catalog span:{" "}
+                  <LinkedNames singers={stats.widestAll} /> at{" "}
+                  {rangeLabel(stats.widest)} (
+                  {spanOctaves(stats.widest.highMidi - stats.widest.lowMidi)}{" "}
+                  octaves)
+                </>
+              ) : (
+                <>
+                  Largest reported catalog span, shared at{" "}
+                  {spanOctaves(stats.widest.highMidi - stats.widest.lowMidi)}{" "}
+                  octaves:{" "}
+                  <LinkedNames
+                    singers={stats.widestAll}
+                    after={(s) => ` (${rangeLabel(s)})`}
+                  />
+                </>
+              )}
+              {stats.narrowestAll.length === 1
+                ? "; narrowest is "
+                : "; tied for narrowest are "}
+              <LinkedNames
+                singers={stats.narrowestAll}
+                after={(s) => ` at ${rangeLabel(s)}`}
+              />
+              .
             </li>
             <li>
-              {stats.lowest.slug === stats.highest.slug ? (
+              {stats.lowestAll.length === 1 &&
+              stats.highestAll.length === 1 &&
+              stats.lowest.slug === stats.highest.slug ? (
                 <>
                   Both listed endpoints belong to the same profile:{" "}
                   <Link
@@ -270,19 +317,9 @@ export default async function VoiceTypePage({
               ) : (
                 <>
                   The catalog group starts at {midiToLabel(stats.lowest.lowMidi)} (
-                  <Link
-                    href={`/singers/${stats.lowest.slug}`}
-                    className="text-violet-ink underline decoration-violet/40 underline-offset-2"
-                  >
-                    {stats.lowest.name}
-                  </Link>
+                  <LinkedNames singers={stats.lowestAll} />
                   ) and ends at {midiToLabel(stats.highest.highMidi)} (
-                  <Link
-                    href={`/singers/${stats.highest.slug}`}
-                    className="text-violet-ink underline decoration-violet/40 underline-offset-2"
-                  >
-                    {stats.highest.name}
-                  </Link>
+                  <LinkedNames singers={stats.highestAll} />
                   ) — {stats.highest.highMidi - stats.lowest.lowMidi} semitones
                   from the floor of the category to its ceiling.
                 </>
@@ -326,8 +363,8 @@ export default async function VoiceTypePage({
             ))}
           </div>
           <div className="mt-5">
-            <LinkButton href="/range?mode=range" variant="outline" size="sm">
-              Find out how high you can sing
+            <LinkButton href={rangeTestHref()} variant="outline" size="sm">
+              Find your lowest and highest notes
             </LinkButton>
           </div>
         </Card>

@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A wider phrase covers more notes than a first song, so it is more likely to cross the place where your voice changes gear. The key you choose decides where that crossing lands, and moving a song down does not always make it easier: it can drop the melody right onto the join. Pick a key where the high and low phrases both fit, mark the phrase that crosses, and sing that crossing the way you practised the siren, quieter and on a narrow vowel, rather than pushing the upper notes.
+
 ## Steps
 
 ### Use the practice material
@@ -31,14 +35,14 @@ Transpose the supplied study so its low and high phrases both fit, then mark the
 
 Why this song needs the siren you just built. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: The written span fits inside the scanned range and the crossing phrase has a planned vowel and breath.
+- Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “A Wider Phrase, One Comfortable Key.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.
+Sing the phrase of Deep River that crosses your transition twice in one take: first in the key the song opens in, then one semitone lower. The key is the only thing that changes. Listen to where the crossing lands in each, and keep the key in which the change falls on an easier note or a more open vowel, as long as the low phrase is still clearly audible. Record your takes in the recorder. Rehearse the crossing as a siren and on the actual words before singing the supplied study. Reduce volume through the transition rather than pushing the upper phrase.
 
-- Look: The written span fits inside the scanned range and the crossing phrase has a planned vowel and breath.
+- Look: The written span fits inside your comfortable range and the crossing phrase has a planned vowel and breath.
 - Listen: The melody stays accurate through both parts of the range and the crossing does not interrupt the phrase to your ear.
 
 ### Review your own attempt

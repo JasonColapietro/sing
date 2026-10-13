@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import SingerPage from "@/app/singers/[slug]/page";
+import { getSingerPageLastModified } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 
 const REVIEWED_SLUGS = [
@@ -83,6 +84,7 @@ describe("singer-page evidence and provenance", () => {
     expect(html).toContain("reported reference span, not an independently verified physiological limit");
     expect(html).toContain("Reported reference span");
     expect(page).not.toHaveProperty("dateModified");
+    expect(page).not.toHaveProperty("lastReviewed");
     expect(page).not.toHaveProperty("reviewedBy");
     expect(page).not.toHaveProperty("citation");
     expect(html).toContain("Rihanna Vocal Range: Reported");
@@ -108,6 +110,18 @@ describe("singer-page evidence and provenance", () => {
     expect(page).not.toHaveProperty("reviewedBy");
     expect(page).not.toHaveProperty("dateModified");
     expect(page).not.toHaveProperty("citation");
+  });
+
+  it("shows a pending score's octave convention beside its written range", async () => {
+    // Beggin' is written in treble clef an octave above Damiano David's sung
+    // line; without the note the written F#5 reads as seven semitones above
+    // the page's own reported ceiling.
+    const html = await rendered("damiano-david");
+    expect(html).toContain("Source context awaiting individual review");
+    expect(html).toContain("written vocal range of B3–F#5");
+    expect(html).toContain("Octave convention:");
+    expect(html).toContain("written B3–F#5 sounds B2–F#4");
+    expect(await rendered("taylor-swift")).toContain("Octave convention:");
   });
 
   it.each([
@@ -163,7 +177,9 @@ describe("singer-page evidence and provenance", () => {
     const graph = graphFrom(html);
     const page = graph["@graph"].find((node) => node["@type"] === "WebPage")!;
 
-    expect(page.dateModified).toBe("2026-08-29");
+    // The review date is lastReviewed; dateModified matches the sitemap lastmod.
+    expect(page.lastReviewed).toBe("2026-08-29");
+    expect(page.dateModified).toBe(getSingerPageLastModified("adele"));
     expect(page.reviewedBy).toEqual({ "@type": "Person", name: "Jason Colapietro" });
     expect(page.citation).toEqual(
       expect.arrayContaining([

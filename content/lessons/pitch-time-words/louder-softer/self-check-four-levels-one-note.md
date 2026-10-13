@@ -32,14 +32,14 @@ Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. 
 Four audibly distinct levels on one note. Input level is uncalibrated, so your ear is the judge, not a number. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
-- Listen: The four recordings form an audible progression while pitch stays centered.
+- Listen: The four levels in your take form an audible progression while pitch stays centered.
 
 ### Make one evidence take
 
 State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
-- Listen: The four recordings form an audible progression while pitch stays centered.
+- Listen: The four levels in your take form an audible progression while pitch stays centered.
 
 ### Review your own attempt
 
@@ -50,7 +50,7 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears.
+- The target disappears when the range, volume, speed, or duration increases. => If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -63,12 +63,12 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 ## Self-check
 
 - I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.
-- The four recordings form an audible progression while pitch stays centered.
+- The four levels in your take form an audible progression while pitch stays centered.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: In one take on one comfortable note, you can put the four levels in order from playback alone, the pitch stays centered at every level, and the loudest feels no tighter in the neck than the quietest.
 
-If not ready: If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
 What this shows: I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.
 

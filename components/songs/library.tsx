@@ -28,6 +28,8 @@ import {
   phraseSeconds,
   rangeFit,
   sessionSeconds,
+  songTranspose,
+  startableRecents,
   type RangeFit,
 } from "./lib";
 import {
@@ -55,6 +57,7 @@ import {
   type BrowseState,
 } from "./browse-controls";
 import { pickForTaste, tasteGenreOptions } from "@/lib/song-taste";
+import { rangeTestHref } from "@/lib/site";
 import { saveTaste, skipTaste, useTaste } from "./taste";
 import { PickedForYou, TasteQuiz } from "./taste-quiz";
 
@@ -82,7 +85,12 @@ function semitones(n: number): string {
   return `${n} semitone${n === 1 ? "" : "s"}`;
 }
 
-/** Plain-language range verdict, or null when there's no saved range to judge against. */
+/**
+ * Plain-language range verdict for the key the song opens in — fitted to the
+ * saved range — or null when there's no saved range to judge against. Judging
+ * the written key instead would mark a song "5 semitones high" that the
+ * practice room is about to open five semitones lower.
+ */
 function rangeBadge(
   fit: RangeFit,
 ): { tone: "ok" | "violet" | "rec"; text: string } | null {
@@ -395,7 +403,7 @@ export function Library({
           songs: visible.filter((s) => bandForSong(s) === band),
           open: bandOpen(band, mastered, accessible),
           unlock: below
-            ? `${done} of ${BAND_UNLOCK_MASTERED} ${BAND_LABEL[below]} songs mastered — master ${Math.max(BAND_UNLOCK_MASTERED - done, 0)} more to open this band.`
+            ? `${done} of ${BAND_UNLOCK_MASTERED} songs in “${BAND_LABEL[below]}” mastered — master ${Math.max(BAND_UNLOCK_MASTERED - done, 0)} more to open this band.`
             : "",
         };
       }).filter((section) => section.songs.length > 0),
@@ -443,16 +451,11 @@ export function Library({
     if (song) start(song);
   }
 
+  // Filtered by band like the cards, the dice and the setlist: a song sung
+  // through its page's deep link can sit in recents while its band is shut.
   const recentSongs = useMemo(
-    () =>
-      recents
-        .map((r) => {
-          const song = accessible.find((s) => s.id === r.id);
-          return song ? { song, at: r.at } : null;
-        })
-        .filter((r): r is { song: Song; at: string } => r !== null)
-        .slice(0, 6),
-    [recents, accessible],
+    () => startableRecents(recents, accessible, mastered),
+    [recents, accessible, mastered],
   );
 
   return (
@@ -499,12 +502,12 @@ export function Library({
             <div>
               <SectionLabel>No range saved</SectionLabel>
               <p className="mt-2 max-w-md text-sm text-mut">
-                Take the range test and songs can auto-transpose to fit your
-                voice with &ldquo;Fit to my range,&rdquo; and every card will
-                say whether it sits in your range as written.
+                Take the range test and each song opens fitted to your
+                measured range, ready to shift a semitone either way, and
+                every card will say whether it fits.
               </p>
             </div>
-            <LinkButton href="/range?mode=range" variant="outline" size="sm">
+            <LinkButton href={rangeTestHref()} variant="outline" size="sm">
               Take the range test
             </LinkButton>
           </div>
@@ -644,7 +647,7 @@ export function Library({
                       key={song.id}
                       song={song}
                       best={bestScoreForSong(progress.sessions, song.title)}
-                      fit={rangeFit(song, progress.range)}
+                      fit={rangeFit(song, progress.range, songTranspose(song, progress.range, null))}
                       favorite={favorites.includes(song.id)}
                       queued={setlist.ids.includes(song.id)}
                       mastered={mastered.has(song.id)}
@@ -667,12 +670,12 @@ export function Library({
 
         {/* The songbook is no longer the paywall — all 26 melodies are free,
             because six public-domain folk tunes held back from someone who
-            already had twenty was a gate that argued against buying. What Pro
-            adds on this surface is the record of singing them. */}
+            already had twenty was a gate that argued against buying. Each
+            song's best score and score trend are free too, so what Pro adds
+            here is the per-note report the song runs feed. */}
         <FreeOnly>
           <ProInlineNudge>
-            Pro charts every take of every song, so you can hear month one
-            against month six
+            Pro adds every song you sing to your per-note accuracy report
           </ProInlineNudge>
         </FreeOnly>
       </section>

@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+The highest and lowest notes you can make are set largely by your anatomy, and practice does not redesign anatomy; what it changes is your access to notes that were already there but badly coordinated. The edges follow the middle and rarely lead it, which is why range work comes this late, once the middle is reliable. Add one semitone at a time, count it only when it is comfortable on three separate days, and compare readings over months rather than sessions.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Why this is Stage 7 and not Stage 1, despite being the reason most people downlo
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Range Grows at the Edges, Slowly.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly, release, and rescan only after rest.
+After warming up in the middle, sing Small three-note climb with its top note on your current comfortable high note, then once more a semitone higher, both at low-to-moderate volume. Change only the key. Record both in one take in the recorder with a breath between them, and on playback ask whether the higher top note is a usable sung note you could repeat or a one-off reach. Count the new note only if it is easy on three separate days, and leave the range test for your next retest, weeks apart, after the same warm-up as your baseline.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
@@ -68,7 +72,7 @@ I compared comfortable notes with an earlier baseline and recorded my observatio
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.
 

@@ -47,8 +47,12 @@ const SAMPLE_RATE = 48000;
  * and a wrap inside the hold would put a phase jump in the middle of it.
  */
 const FILE_SECONDS = 30;
-/** Rep 0's root on the default C3-G3 ladder, which a fresh browser gets. */
-const ROOT_MIDI = 48;
+/**
+ * Rep 0's root on the nominal no-range ladder (E3), which a fresh browser
+ * gets: vibrato-hold fitted to NOMINAL_RANGE in components/warmups/exercises,
+ * then trimmed to the middle of it (rangeCap MIDDLE_OF_RANGE).
+ */
+const ROOT_MIDI = 52;
 /** Rep 0 closes around 12 s in; the rest is headroom for a slow machine. */
 const READING_TIMEOUT_MS = 40000;
 
@@ -113,7 +117,9 @@ async function runCase(dir, testCase) {
     });
     const page = await context.newPage();
     await page.goto(`${BASE}/warmups?exercise=vibrato-hold`, { waitUntil: "networkidle" });
-    await page.getByRole("button", { name: "Enable microphone" }).first().click();
+    // Scoped to the gate: the Continue card's own "Enable mic and start"
+    // comes first in the DOM and pressing it would override the deep link.
+    await page.locator("#warmup-gate").getByRole("button", { name: "Enable mic and start", exact: true }).click();
     const panel = page.locator('[data-testid="vibrato-reading"]:not([data-vibrato="pending"])').first();
     await panel.waitFor({ timeout: READING_TIMEOUT_MS });
     const reading = await panel.evaluate((el) => ({

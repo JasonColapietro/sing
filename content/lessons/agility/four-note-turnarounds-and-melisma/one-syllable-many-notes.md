@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Melisma is several notes sung on one syllable, the way a run carries a single word. The vowel is what carries all of those notes, and a vowel is a shape of the tongue, jaw and lips, so if that shape moves on every note the color flickers and the line starts to sound like new syllables or a smear. Hold one vowel shape still and let only the pitch move; that steady vowel is what lets each note sound separate and still belong to the same word.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Melisma, and why it needs a stable vowel underneath. Say what will count as comp
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “One Syllable, Many Notes.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.
+Sing Hoo descent (8–5–3–1) twice at a slow tempo: first restarting the “h” on every note, then on one unbroken “oo” with the jaw and lips still and only the pitch moving. Change only whether the syllable restarts. Record both in one take in the recorder with a breath between them; the second should sound like one word carrying four notes, each still on its own pitch. Keep the vowel stable while the pitch changes. Reverse the pattern only after the descending direction has four clear notes.
 
 - Look: The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.
 - Listen: One syllable carries all four notes with clear centers and no swallowed middle pitches.

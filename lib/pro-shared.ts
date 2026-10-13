@@ -4,6 +4,10 @@
  * import it.
  */
 
+// pro-inventory has no imports of its own, so this adds no cycle and keeps the
+// module safe on both sides.
+import { TOTAL_CHAPTERS, TOTAL_WORDS } from "./pro-inventory";
+
 /** Every plan an existing entitlement can carry. */
 export type ProPlan = "monthly" | "annual" | "lifetime";
 
@@ -75,6 +79,9 @@ export interface PlanPrice {
  * what Stripe holds, and both ends enforce that rather than trust it —
  * `scripts/stripe-setup.mjs` exits non-zero on a price that differs, and
  * resolvePriceId() refuses to open a session against one.
+ *
+ * A new lifetime amount also goes into HONOURED_LIFETIME_CENTS in
+ * lib/stripe.ts, beside the old ones, so earlier buyers keep their access.
  */
 export const PRICING: Record<CheckoutPlan, PlanPrice> = {
   monthly: {
@@ -88,6 +95,14 @@ export const PRICING: Record<CheckoutPlan, PlanPrice> = {
     note: "one payment",
   },
 };
+
+/**
+ * The `offer` tag checkout writes on every lifetime payment, and that
+ * isOurLifetimePayment requires each time a buyer is checked again. It names
+ * the sale, not the label on /pro: keep it when "Early Access" ends, because
+ * changing it refuses every lifetime buyer who paid under the old tag.
+ */
+export const LIFETIME_OFFER = "early-access";
 
 /**
  * Plans that exist (and keep serving current subscribers) but can no longer
@@ -133,7 +148,7 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "Do I need Pro to get better?",
-    a: "Not to practice — the studio and the range test are free with no daily limit, and the warmups are free for five minutes a day. Pro is for the singer who wants the record: every test charted, every take analysed, and the two books that explain what the numbers mean.",
+    a: "Not to practice — the studio and the range test are free with no daily limit, and guided practice (warmups, ear training, breath and songs) is free for five minutes a day. Pro is for the singer who wants the record: range tests charted over time, every take analysed, and the two books that explain what the numbers mean.",
   },
   {
     q: "Is my voice uploaded?",
@@ -141,11 +156,14 @@ export const PRO_FAQ: Array<{ q: string; a: string }> = [
   },
   {
     q: "What do I get the moment I upgrade?",
-    a: "Both books in full — 50 chapters and 82,734 words across The Measured Voice and The Voice Atlas — plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your full range history, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.",
+    // Built from the inventory, never typed: this answer is also FAQPage
+    // markup, and a hard-coded count here once drifted ~21,000 words behind
+    // the figure the rest of the page printed.
+    a: `No daily limit on guided practice, and both books in full — ${TOTAL_CHAPTERS} chapters and ${TOTAL_WORDS.toLocaleString("en-US")} words across The Measured Voice and The Voice Atlas — plus both PDFs to keep, the pro warmup packs, pitch analysis on every take, your range history charted over time, and cloud sync. Nothing is drip-fed and nothing is on a waitlist.`,
   },
   {
     q: "How does billing work?",
-    a: "Lifetime is a single $79 payment with no renewal. The $4.99 monthly plan is sold out for now; existing monthly subscribers keep renewing at $4.99 and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.",
+    a: `Lifetime is a single ${formatPrice(PRICING.lifetime.amount)} payment with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out for now; existing monthly subscribers keep renewing at ${formatPrice(PRICING.monthly.amount)} and can cancel from the billing portal. Either way, your recordings, scores, and streaks remain yours.`,
   },
   {
     q: "Why does a free app sell anything?",

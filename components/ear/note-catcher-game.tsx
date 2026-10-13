@@ -7,7 +7,8 @@ import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
 import { SONGS } from "@/components/songs/data";
-import { centsToTarget, ROUNDS, type Difficulty } from "./lib";
+import { phraseName } from "@/components/songs/lib";
+import { centsToTarget, hasSavedRange, ROUNDS, type Difficulty } from "./lib";
 import {
   CATCHER_LEVELS,
   INITIAL_CATCHER,
@@ -72,7 +73,7 @@ export function NoteCatcherGame({
   onComplete,
 }: {
   difficulty: Difficulty;
-  /** Chase this song's opening instead of random notes. Free songs only. */
+  /** Chase this song's songbook phrase instead of random notes. Free songs only. */
   songId?: string;
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
@@ -82,7 +83,15 @@ export function NoteCatcherGame({
   const session = useEarSession();
   const { latest, listening, error, start, stop } = usePitch();
   const progress = useProgress();
-  const level = CATCHER_LEVELS[difficulty];
+  // Medium and hard count the exact octave, but only once a range is saved:
+  // until then the targets sit in a fallback register that a higher voice
+  // answers an octave up. Memoised because `begin` and the game loop depend
+  // on `level`, and a fresh object every render would rebuild both.
+  const noRange = !hasSavedRange(progress.range);
+  const level = useMemo(() => {
+    const base = CATCHER_LEVELS[difficulty];
+    return noRange && !base.octaveAgnostic ? { ...base, octaveAgnostic: true } : base;
+  }, [difficulty, noRange]);
   const song = useMemo(
     () => (songId ? (SONGS.find((s) => s.id === songId) ?? null) : null),
     [songId],
@@ -303,7 +312,7 @@ export function NoteCatcherGame({
           title={song ? `Chase the notes of ${song.title}` : "This game listens to you sing"}
           description={
             song
-              ? "The song's opening notes slide toward a line, in your range. Your voice moves the marker; hold each note as it crosses to catch it."
+              ? `The notes of its ${phraseName(song)} slide toward a line, in your range. Your voice moves the marker; hold each note as it crosses to catch it.`
               : "Notes slide toward a line. Your voice moves the marker up and down; hold each note as it crosses to catch it."
           }
           onEnable={() => {

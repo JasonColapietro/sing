@@ -15,6 +15,7 @@ import {
   TOTAL_WORDS,
   UNLOCK_TILES,
 } from "@/lib/pro-inventory";
+import { useProReady, useProState } from "@/lib/pro";
 import { SectionLabel } from "@/components/ui";
 
 /**
@@ -35,6 +36,12 @@ import { SectionLabel } from "@/components/ui";
  * is not a roadmap.
  */
 export function UnlockStack() {
+  // A buyer lands back here seconds after paying, and a lifetime owner opens
+  // /pro from the PRO pill: for them every chapter is open, so the list links
+  // every chapter instead of locking what they own. The server snapshot is
+  // not ready, so the prerendered HTML is the sales version.
+  const pro = useProState();
+  const owned = useProReady() && pro.active;
   return (
     <section
       id="unlocks"
@@ -46,7 +53,9 @@ export function UnlockStack() {
           Included, instantly
         </SectionLabel>
         <h2 id="unlocks-heading" className="max-w-2xl text-2xl sm:text-3xl">
-          Everything below opens the second you subscribe
+          {owned
+            ? "Everything below is open to you now"
+            : "Everything below opens the second you upgrade"}
         </h2>
         <p className="mt-3 max-w-2xl text-mut">
           No drip feed, no unlock schedule, no chapter that arrives in month
@@ -58,7 +67,7 @@ export function UnlockStack() {
         {/* A plain list rather than a <dl>: the description-list version needed
             an sr-only <dt> carrying the same words as the visible label, so a
             screen reader read every tile's label twice ("words, two books —
-            82,734 words, two books"). Nothing here is a term/definition pair
+            [N] words, two books"). Nothing here is a term/definition pair
             anyway; it is four figures. */}
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {UNLOCK_TILES.map((tile) => (
@@ -81,11 +90,13 @@ export function UnlockStack() {
             title={BOOK_TITLE}
             href="/book"
             entries={BOOK_CONTENTS}
+            owned={owned}
           />
           <BookContents
             title={ATLAS_TITLE}
             href="/atlas"
             entries={ATLAS_CONTENTS}
+            owned={owned}
           />
         </div>
 
@@ -108,9 +119,11 @@ export function UnlockStack() {
           <p className="mt-2 text-sm text-mut">
             {ROOM_COUNT} practice rooms, {SONG_COUNT} songs, {SINGER_COUNT}{" "}
             singer range profiles, {GLOSSARY_COUNT} glossary terms and the range test
-            are free and stay free. Pro adds {PRO_EXERCISES} exercises across{" "}
-            {PRO_PACK_COUNT} packs, both books in full, pitch analysis on every
-            take, and the long record of your own voice.
+            are free and stay free; guided practice (warmups, ear training,
+            breath and songs) shares five minutes a day. Pro removes that daily
+            limit and adds {PRO_EXERCISES} exercises across {PRO_PACK_COUNT}{" "}
+            packs, both books in full, pitch analysis on every take, and
+            charts of your per-note accuracy and range over time.
           </p>
         </div>
       </div>
@@ -131,10 +144,13 @@ function BookContents({
   title,
   href,
   entries,
+  owned,
 }: {
   title: string;
   href: string;
   entries: readonly ContentsEntry[];
+  /** Pro is active on this device: every chapter opens. */
+  owned: boolean;
 }) {
   const meta = BOOKS.find((b) => b.href === href);
   const free = entries.filter((e) => e.free).length;
@@ -142,7 +158,16 @@ function BookContents({
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-        <h3 className="text-xl text-ink">{title}</h3>
+        {/* The book's own hub, by name: this page sells the book and was the
+            one place on the site that never linked to it. */}
+        <h3 className="text-xl text-ink">
+          <Link
+            href={href}
+            className="outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
+          >
+            {title}
+          </Link>
+        </h3>
         <span className="tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           {entries.length} chapters
           <span className="mx-1.5 text-line2">·</span>
@@ -156,13 +181,15 @@ function BookContents({
         </span>
       </div>
       <p className="mt-1.5 text-xs text-mut">
-        {free} readable now, {entries.length - free} with Pro.
+        {owned
+          ? `All ${entries.length} chapters are open to you; the PDF downloads from the book's page.`
+          : `${free} readable now, ${entries.length - free} with Pro.`}
       </p>
 
       <ol className="mt-4 divide-y divide-line border-y border-line">
         {entries.map((entry) => (
           <li key={entry.slug}>
-            {entry.free ? (
+            {entry.free || owned ? (
               <Link
                 href={`${href}/${entry.slug}`}
                 className="flex items-baseline gap-3 py-2 outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
@@ -173,9 +200,11 @@ function BookContents({
                 <span className="min-w-0 flex-1 text-sm text-ink">
                   {entry.title}
                 </span>
-                <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink">
-                  Free
-                </span>
+                {entry.free && (
+                  <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-violet-ink">
+                    Free
+                  </span>
+                )}
               </Link>
             ) : (
               /* Not a link, and not a button: there is nothing to open. Making

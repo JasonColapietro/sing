@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A vowel is a shape of the throat and mouth that makes some of the voice's frequencies louder than others; the pitch comes from the folds and stays the same. Each vowel puts its resonances in a different place, so on the same note some shapes sit easily and others fight the pitch, and the closed vowels “ee” and “oo” run out of room first as you go higher. When one vowel tightens, keep the jaw released and the tongue forward and make that shape a little smaller or more open, rather than pushing harder, so the tone stays related from vowel to vowel.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Why some vowels feel free and others close the throat. Say what will count as co
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Five Shapes, One Tone.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Repeat the same pitch pattern on each assigned vowel without spreading, swallowing, or changing volume to manufacture sameness.
+Choose one comfortable note in your middle and sing it on “ee”, “eh”, “ah”, “oh” and “oo” in one take, sliding from one vowel to the next without stopping. Only the vowel changes: keep the pitch, volume and breath the same. Play it back and pick the vowel that sounds most pinched, most spread or louder than the rest; that is the shape to make smaller next time. Record your takes in the recorder. Then repeat the same pitch pattern on each vowel without spreading, swallowing, or changing volume to manufacture sameness.
 
 - Look: The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.
 - Listen: Each vowel remains intelligible while the phrase keeps a related tone and pitch center.

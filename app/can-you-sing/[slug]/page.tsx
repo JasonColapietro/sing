@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { popSongKeywords } from "@/lib/keywords";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CanYouSingVerdict } from "@/components/can-you-sing/verdict";
+import { CanYouSingAction, CanYouSingVerdict } from "@/components/can-you-sing/verdict";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
-import { midiToLabel } from "@/lib/audio/notes";
+import { firstFit } from "@/lib/meta-fit";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import {
   POP_SONGS,
   popDifficulty,
+  popNoteLabel,
   popRangeLabel,
   popSongBySlug,
   popSongSingers,
@@ -16,6 +17,7 @@ import {
   type PopSong,
 } from "@/lib/pop-songs";
 import { rangeLabel } from "@/lib/singers-core";
+import { getSingerReviewStatus, singerReviewLabel } from "@/lib/singer-evidence";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL } from "@/lib/site";
 
@@ -31,10 +33,22 @@ export function generateStaticParams(): Params[] {
   return POP_SONGS.map((s) => ({ slug: s.slug }));
 }
 
-/** One sentence that answers the search query from the data alone. */
+/**
+ * The answer to the search query, from the data alone.
+ *
+ * "— N semitones — which rates …" credits the rating to the range, which is
+ * how popDifficulty's rule reads. An editorial override rates a song above
+ * what its range says, so the answer names the reason the override exists;
+ * otherwise "19 semitones — which rates hard" would sit beside another
+ * song's "19 semitones — which rates medium".
+ */
 function answerSentence(song: PopSong): string {
   const span = song.highMidi - song.lowMidi;
-  return `“${song.title}” by ${song.artist} is in ${song.key}, and the commonly cited lead-vocal range is ${popRangeLabel(song)} — ${span} semitones — which rates ${popDifficulty(song).toLowerCase()} for an untrained voice.`;
+  const opening = `“${song.title}” by ${song.artist} is in ${song.key}, and the commonly cited lead-vocal range is ${popRangeLabel(song)} — ${span} semitones`;
+  const rating = popDifficulty(song).toLowerCase();
+  return song.difficulty
+    ? `${opening}. Its top, held in full voice above the tenor passaggio, rates it ${rating} for an untrained voice.`
+    : `${opening} — which rates ${rating} for an untrained voice.`;
 }
 
 export async function generateMetadata({
@@ -45,14 +59,22 @@ export async function generateMetadata({
   const { slug } = await params;
   const song = popSongBySlug(slug);
   if (!song) return {};
-  const title = `${song.title} Vocal Range & Key: Can You Sing It?`;
-  const description = `${answerSentence(song)} Test your own range free and see whether it fits your voice.`;
+  // The artist disambiguates one-word titles ("Creep", "Flowers") when it fits.
+  const title = firstFit([
+    `${song.title} Vocal Range & Key (${song.artist})`,
+    `${song.title} Vocal Range & Key: Can You Sing It?`,
+    `${song.title} Vocal Range & Key`,
+  ]);
+  // Short enough to survive the snippet budget whole, so the call to action
+  // ships; "cited" keeps the figures framed as sources, not measurements.
+  const description = `“${song.title}” by ${song.artist}: ${song.key}, cited range ${popRangeLabel(song)} (${song.highMidi - song.lowMidi} semitones), rated ${popDifficulty(song).toLowerCase()}. Take the free range test to see if it fits you.`;
   return withCanonicalOpenGraph({
     title,
     description,
     keywords: popSongKeywords(song),
     alternates: { canonical: `${SITE_URL}/can-you-sing/${song.slug}` },
-    openGraph: { title, description, type: "article", images: [DEFAULT_OG_IMAGE] },
+    // Title and description are filled in, fitted, by withCanonicalOpenGraph.
+    openGraph: { type: "article", images: [DEFAULT_OG_IMAGE] },
   });
 }
 
@@ -122,6 +144,7 @@ export default async function CanYouSingSongPage({
       kicker="Can you sing it?"
       title={`Can you sing “${song.title}” by ${song.artist}? Key and vocal range`}
       subtitle={answer}
+      actions={<CanYouSingAction song={song} />}
     >
       <script
         type="application/ld+json"
@@ -133,18 +156,30 @@ export default async function CanYouSingSongPage({
           <Card>
             <div className="grid grid-cols-2 gap-6 sm:grid-cols-5">
               <Stat label="Key" value={song.key} tone="violet" />
-              <Stat label="Low note" value={midiToLabel(song.lowMidi)} tone="cool" />
-              <Stat label="High note" value={midiToLabel(song.highMidi)} tone="cool" />
+              {/* Spelled for the key, as the cited source spells them (Ab3, not G#3). */}
+              <Stat label="Low note" value={popNoteLabel(song, song.lowMidi)} tone="cool" />
+              <Stat label="High note" value={popNoteLabel(song, song.highMidi)} tone="cool" />
               <Stat label="Span" value={span} sub="semitones" tone="ink" />
               <Stat label="Difficulty" value={popDifficulty(song)} tone="rec" />
             </div>
           </Card>
 
+          {/*
+            The personal answer, straight after the figures: on a phone the
+            sidebar column stacks below everything else, which put the page's
+            only action under the stats, the blurb and the singer cards. The
+            header action points here once a range is saved; Card takes no
+            id, so the anchor is on the wrapper.
+          */}
+          <div id="fit" className="scroll-mt-20">
+            <CanYouSingVerdict song={song} />
+          </div>
+
           <Card>
             <SectionLabel heading>What the voice is asked to do</SectionLabel>
             <p className="mt-3 max-w-prose text-sm text-mut">{song.blurb}</p>
             <p className="mt-4 text-xs text-dim">
-              Figures are the cited range and key for the published arrangement ({song.sourceUrl ? (
+              Figures are the cited key and lead-vocal range ({song.sourceUrl ? (
                 <a
                   className="underline underline-offset-2 hover:text-violet-ink"
                   href={song.sourceUrl}
@@ -163,6 +198,12 @@ export default async function CanYouSingSongPage({
               <SectionLabel heading>
                 {singers.length === 1 ? "The voice behind it" : "The voices behind it"}
               </SectionLabel>
+              {/*
+                Catalog figures for real singers, framed as reported and, until
+                a singer's record is individually reviewed, labelled so. A
+                voice type is printed only where a review stands behind it —
+                not for a pending record, and not for a disputed one.
+              */}
               <ul className="mt-3 space-y-2">
                 {singers.map((s) => (
                   <li key={s.slug} className="text-sm">
@@ -170,23 +211,27 @@ export default async function CanYouSingSongPage({
                       className="text-violet-ink underline-offset-4 hover:underline"
                       href={`/singers/${s.slug}`}
                     >
-                      {s.name} vocal range: {rangeLabel(s)} ({s.voiceType})
+                      {s.name}&apos;s catalog range
                     </Link>
+                    <span className="text-mut">
+                      {" "}— reported {rangeLabel(s)}
+                      {getSingerReviewStatus(s.slug) === "reviewed"
+                        ? ` (${s.voiceType})`
+                        : ` · ${singerReviewLabel(s.slug)}`}
+                    </span>
                   </li>
                 ))}
               </ul>
               <p className="mt-3 text-xs text-mut">
-                A song&apos;s written range and its singer&apos;s full range are
-                different facts — the library page shows what the artist can do
-                beyond this song.
+                A song&apos;s written range and a singer&apos;s reported
+                catalog range are different facts — the catalog page explains
+                what is and is not verified.
               </p>
             </Card>
           )}
         </div>
 
         <div className="space-y-6">
-          <CanYouSingVerdict song={song} />
-
           {related.length > 0 && (
             <Card>
               <SectionLabel heading>Songs with similar vocal demands</SectionLabel>

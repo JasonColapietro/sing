@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { buildSegments, computeRootLadder, ladderWalk, type WarmupExercise } from "./exercises";
+import {
+  buildSegments,
+  computeRootLadder,
+  descentWalk,
+  ladderWalk,
+  type Segment,
+  type WarmupExercise,
+} from "./exercises";
 import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
@@ -40,7 +47,7 @@ import {
   type SessionSummaryData,
 } from "./lib";
 import { COUNT_IN_CLICKS, clickTimes, leadSec, planRep, type RepPlan } from "./timeline";
-import { createRepScorer, type RepScorer } from "./scoring";
+import { createRepScorer, foldToOctaveOf, referenceMidiAt, type RepScorer } from "./scoring";
 import {
   createF0Recorder,
   readVibrato,
@@ -153,16 +160,67 @@ export function repAscending(roots: number[], repIndex: number): boolean {
 }
 
 /**
+ * The root rep `repIndex` sings, its rung, and whether the pill reads
+ * "Climbing". `roots` is the band as the player walks it, top note first on a
+ * "down" ladder. A routine step (`bounded`) on a "down" ladder walks
+ * descentWalk: down once, then rests on the bottom rung, because the step has
+ * a fixed rep count and the triangle walk would turn a short descending ladder
+ * round and climb it inside one cool-down step. It never turns, so it reads
+ * "Descending" throughout, resting reps included. Everything else, the
+ * endless deep-link walk included, keeps ladderWalk's triangle, where
+ * "climbing" is about pitch, not ladder index: on a reversed ladder an
+ * ascending index is a falling root.
+ */
+export function walkRep(
+  roots: number[],
+  repIndex: number,
+  { down, bounded }: { down: boolean; bounded: boolean },
+): { root: number; index: number; climbing: boolean } {
+  if (down && bounded) {
+    const { root, index } = descentWalk(roots, repIndex);
+    return { root, index, climbing: false };
+  }
+  const { root, index } = ladderWalk(roots, repIndex);
+  const up = repAscending(roots, repIndex);
+  return { root, index, climbing: down ? !up : up };
+}
+
+/**
+ * Whether a rep counts any octave of its targets. Without a saved range every
+ * ladder is fitted to NOMINAL_RANGE, a placeholder span, so a higher voice
+ * singing it an octave up is singing it right, and the lane draws her voice in
+ * the octave she is matching. With a saved range the ladder is fitted to the
+ * singer, and the octave is part of the target.
+ */
+export function scoresEitherOctave(range: VocalRange): boolean {
+  return range.lowMidi === undefined || range.highMidi === undefined;
+}
+
+/**
+ * Shown beside the root while either octave counts. The root is printed in
+ * the nominal ladder's octave (C#3, say), and a higher voice reading it
+ * should know her own octave is the right answer, not a note to reach down for.
+ */
+export const ANY_OCTAVE_NOTE = "Any octave counts";
+
+/**
  * What a routine tells the player about the step it is running. With bounds
  * the step completes itself after `reps` reps, sung or skipped, and the header
  * counts reps instead of ladder height; the runner owns the session, so the
  * Exit button goes away and End becomes "Finish step". Without bounds the
- * exercise is the endless walk a deep link still opens.
+ * exercise is the endless walk a plain deep link still opens.
  */
 export interface ExerciseBounds {
   reps: number;
   stepIndex: number;
   stepCount: number;
+  /**
+   * A set rep count on one exercise outside any routine, such as a program
+   * row's `?exercise=<id>&reps=<n>` link. It still finishes itself after
+   * `reps`, but the header names the reps rather than "Step 1 of 1", and End
+   * stays End.
+   */
+  standalone?: boolean;
 }
 
 export function ExercisePlayer({
@@ -198,6 +256,18 @@ export function ExercisePlayer({
     const band = computeRootLadder(ex, range.lowMidi, range.highMidi);
     return ex.ladder === "down" ? [...band].reverse() : band;
   }, [ex, range.lowMidi, range.highMidi]);
+  // A routine step on a "down" ladder heads down and stays down (walkRep).
+  const descends = ex.ladder === "down";
+  const bounded = bounds !== undefined;
+  // Inside a routine: the labels speak of steps. A standalone set count does not.
+  const inRoutine = bounded && !bounds.standalone;
+  const endLabel = inRoutine ? "Finish step" : "End";
+  const stepLine = !bounds
+    ? null
+    : bounds.standalone
+      ? `${bounds.reps} ${bounds.reps === 1 ? "rep" : "reps"}`
+      : `Step ${bounds.stepIndex + 1} of ${bounds.stepCount}`;
+  const eitherOctave = scoresEitherOctave(range);
 
   const { mode, guidePct, click } = useWarmupPrefs();
   const guideSliderId = useId();
@@ -224,12 +294,9 @@ export function ExercisePlayer({
   const [adjustOpen, setAdjustOpen] = useState(false);
   const adjustId = useId();
 
-  const { index: ladderIndex } = ladderWalk(roots, repIndex);
   // The direction that produced this rep, not the one the walk turns to next.
-  // "Climbing" is about pitch, not ladder index: on a reversed ladder an
-  // ascending index is a falling root.
-  const climbing = ex.ladder === "down" ? !repAscending(roots, repIndex) : repAscending(roots, repIndex);
-  const currentRoot = Math.max(24, Math.min(96, ladderWalk(roots, repIndex).root + transpose));
+  const { index: ladderIndex, root: walkRoot, climbing } = walkRep(roots, repIndex, { down: descends, bounded });
+  const currentRoot = Math.max(24, Math.min(96, walkRoot + transpose));
   const { segs, totalSec } = useMemo(
     () => buildSegments(ex, currentRoot, tempo),
     [ex, currentRoot, tempo],
@@ -253,6 +320,10 @@ export function ExercisePlayer({
   const guidePctRef = useRef(guidePct);
   const clickRef = useRef(click);
   const patternSecRef = useRef(0);
+  // The scheduled rep's segments, and the last target the lane folded the
+  // voice toward, for drawing an either-octave take where it is scored.
+  const segsRef = useRef<Segment[]>([]);
+  const foldTargetRef = useRef(48);
   const noteDurRef = useRef(0.55);
   const leadBeatRef = useRef(0);
   const rootRef = useRef(48);
@@ -316,7 +387,7 @@ export function ExercisePlayer({
    */
   function scheduleRep(repIdx: number, t0: number, opts?: { teach?: boolean }) {
     groupRef.current?.cancel();
-    const ladderRoot = ladderWalk(roots, repIdx).root;
+    const ladderRoot = walkRep(roots, repIdx, { down: descends, bounded }).root;
     const root = Math.max(24, Math.min(96, ladderRoot + transposeRef.current));
     const { segs, totalSec, noteDur } = buildSegments(ex, root, tempoRef.current);
     const plan = planRep({
@@ -364,7 +435,11 @@ export function ExercisePlayer({
 
     planRef.current = plan;
     groupRef.current = group;
-    scorerRef.current = createRepScorer(segs);
+    scorerRef.current = eitherOctave
+      ? createRepScorer(segs, { octaveAgnostic: true })
+      : createRepScorer(segs);
+    segsRef.current = segs;
+    foldTargetRef.current = segs[0]?.startMidi ?? root;
     f0Ref.current.reset();
     patternSecRef.current = totalSec;
     noteDurRef.current = noteDur;
@@ -479,13 +554,27 @@ export function ExercisePlayer({
 
       const frame = pitch.latest.current;
       const scorable = isScorableFrame(frame, nowPerf);
-      const midiFloat = scorable && frame.freq !== null ? freqToMidiFloat(frame.freq) : null;
+      const sungMidi = scorable && frame.freq !== null ? freqToMidiFloat(frame.freq) : null;
 
       if (stageNow === "sing") {
         // Drawn where the guide is heard; scored where the voice actually was.
         // The two corrections differ by the pitch-report lag, and neither is
         // the raw clock — see lib/audio/latency.
         const drawSec = Math.min(patternSec, Math.max(0, elapsed - plan.singAt - outputLag));
+        // When either octave counts, draw the voice in the octave the scorer
+        // credits it to: the octave leading the rep once one leads
+        // (RepScorer.octaveShift), so a top note dropped an octave is drawn
+        // where it was sung; before that, folded toward the target (in a
+        // gap, toward the last target).
+        let midiFloat = sungMidi;
+        if (eitherOctave && sungMidi !== null) {
+          const target = targetMidiAt(segsRef.current, drawSec);
+          if (target !== null) foldTargetRef.current = target;
+          midiFloat =
+            scorer.octaveShift !== null
+              ? sungMidi - 12 * scorer.octaveShift
+              : foldToOctaveOf(sungMidi, foldTargetRef.current);
+        }
         setCursorSec(drawSec);
         setLiveMidiFloat(midiFloat);
         scorer.feed(
@@ -645,11 +734,15 @@ export function ExercisePlayer({
   }
 
   const singing = stage === "sing";
+  // Measured the way the scorer measures it: a glide against its ramp window,
+  // not one instant of the ramp, so an eased siren that scores well does not
+  // read hundreds of cents off on the way.
   const currentCents =
     singing && liveMidiFloat !== null
       ? Math.round(
           (liveMidiFloat -
-            (targetMidiAt(segs, Math.min(cursorSec ?? 0, totalSec)) ?? liveMidiFloat)) *
+            (referenceMidiAt(segs, Math.min(cursorSec ?? 0, totalSec), liveMidiFloat) ??
+              liveMidiFloat)) *
             100,
         )
       : null;
@@ -810,7 +903,7 @@ export function ExercisePlayer({
         </SessionButton>
         <span className="flex-1" />
         <SessionButton
-          label={bounds ? "Finish step" : "End"}
+          label={endLabel}
           onClick={endExercise}
           tone="danger"
         >
@@ -823,16 +916,19 @@ export function ExercisePlayer({
   const sessionView = (
     <SessionShell
       title={ex.title}
-      subtitle={bounds ? `Step ${bounds.stepIndex + 1} of ${bounds.stepCount}` : "Endless ladder"}
+      subtitle={stepLine ?? "Endless ladder"}
       progress={progressPct}
       onClose={endExercise}
-      closeLabel={bounds ? "Finish step" : "Exit exercise"}
+      closeLabel={inRoutine ? "Finish step" : "Exit exercise"}
       topRight={
         <div className="text-right leading-tight">
           <div className="font-mono text-[11px] text-[var(--s-dim)]">
             Root · <span className="text-[var(--s-ink)]">{midiToLabel(currentRoot)}</span>
           </div>
           <div className="tabular font-mono text-[11px] text-[var(--s-dim)]">{repLabel}</div>
+          {eitherOctave && (
+            <div className="font-mono text-[11px] text-[var(--s-dim)]">{ANY_OCTAVE_NOTE}</div>
+          )}
         </div>
       }
       bottom={sessionBottom}
@@ -920,9 +1016,9 @@ export function ExercisePlayer({
   const pageView = (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        {bounds ? (
+        {inRoutine ? (
           <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Step {bounds.stepIndex + 1} of {bounds.stepCount}
+            {stepLine}
           </span>
         ) : (
           <button
@@ -1024,6 +1120,9 @@ export function ExercisePlayer({
             <div className="tabular mt-1 font-mono text-3xl font-bold text-violet-ink">
               {midiToLabel(currentRoot)}
             </div>
+            {eitherOctave && (
+              <div className="mt-1 font-mono text-[11px] text-dim">{ANY_OCTAVE_NOTE}</div>
+            )}
           </div>
         </div>
 
@@ -1117,7 +1216,7 @@ export function ExercisePlayer({
           <span className="flex-1" />
 
           <Button variant="rec" size="sm" onClick={endExercise}>
-            <IconStop /> {bounds ? "Finish step" : "End exercise"}
+            <IconStop /> {inRoutine ? "Finish step" : "End exercise"}
           </Button>
         </div>
 

@@ -17,13 +17,19 @@
  * restoring the primo-only male passaggi (55-57, 57-60, 59-62, 64-67)
  * fails both of the registration-event tests below.
  */
-import { describe, expect, it } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
 
 import { REFERENCE_BANDS, representativeSingers } from "./singers-analysis";
 import { SINGERS, VOICE_KINDS, pluralVoice, singersByVoiceType } from "./singers";
 import { VOICE_TYPE_NOTES, VOICE_TYPE_PASSAGGIO } from "./voice-types";
 import { VOICE_TYPES } from "./audio/notes";
 import { BOOK } from "./book-data";
+import { ATLAS } from "./atlas-data";
+import VocalRangeByVoiceTypePage from "@/app/atlas/vocal-range-by-voice-type/page";
+
+vi.mock("server-only", () => ({}));
 
 describe("voice category coverage", () => {
   it("has a note and a passaggio for every category, with no strays", () => {
@@ -139,6 +145,15 @@ describe("pluralVoice", () => {
     expect(bad, `mangled plurals: ${bad.map(pluralVoice).join(", ")}`).toEqual([]);
   });
 
+  it("never prints the typo in the atlas, whose voice-type appendix is generated", () => {
+    // scripts/compile-atlas.mjs built its headings with its own `${type}s`
+    // and printed "## Basss" for Pro readers and in the PDF, out of reach
+    // of every guard on the site's own pages.
+    const body = ATLAS.map((c) => c.body).join("\n");
+    expect(body).not.toMatch(/\bbasss\b/i);
+    expect(body).toContain("## Basses");
+  });
+
   it("pluralises the sibilant category correctly", () => {
     expect(pluralVoice("Bass")).toBe("Basses");
     expect(pluralVoice("bass")).toBe("basses");
@@ -223,6 +238,52 @@ describe("the book's passaggio chapter agrees with VOICE_TYPE_PASSAGGIO", () => 
 });
 
 /**
+ * The female zones are the commercial belt-or-mix break, several notes above
+ * the first flip out of chest that a woman's quiet slide finds. The reference
+ * page's per-type answers are written to be quoted alone, and the soprano one
+ * used to give C5-E5 as "where the voice changes gear" with no word of the
+ * earlier shift. Every answer that prints a female zone must name it.
+ */
+describe("the reference page names the earlier female shift", () => {
+  const faq = () => {
+    const html = renderToStaticMarkup(createElement(VocalRangeByVoiceTypePage));
+    const answers = new Map<string, string>();
+    for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+      const graph = (JSON.parse(m[1])["@graph"] ?? []) as {
+        "@type"?: string;
+        mainEntity?: { name: string; acceptedAnswer: { text: string } }[];
+      }[];
+      for (const node of graph) {
+        if (node["@type"] !== "FAQPage") continue;
+        for (const q of node.mainEntity ?? []) answers.set(q.name, q.acceptedAnswer.text);
+      }
+    }
+    return answers;
+  };
+  const EARLIER = /earlier, lighter shift out of chest voice somewhere around E4 to G4/;
+
+  it("in each female category's answer and in the passaggio definition", () => {
+    const answers = faq();
+    for (const q of [
+      "What is a contralto's vocal range?",
+      "What is a mezzo-soprano's vocal range?",
+      "What is a soprano's vocal range?",
+      "What is a passaggio?",
+    ]) {
+      expect(answers.get(q), `missing FAQ: ${q}`).toBeTruthy();
+      expect(answers.get(q), q).toMatch(EARLIER);
+    }
+  });
+
+  it("and not in the male answers, whose zones already span both turning points", () => {
+    const answers = faq();
+    for (const kind of ["bass", "bass-baritone", "baritone", "tenor"]) {
+      expect(answers.get(`What is a ${kind}'s vocal range?`), kind).not.toMatch(EARLIER);
+    }
+  });
+});
+
+/**
  * The classifier returns six categories; the editorial taxonomy publishes eight.
  * That gap is deliberate — bass-baritone and countertenor are judgments about
  * timbre and production, not bands a low and a high note can place you in — but
@@ -255,5 +316,63 @@ describe("every classifiable voice type routes", () => {
     const classifiable = VOICE_TYPES.map((t) => t.label.toLowerCase());
     const unreachable = VOICE_KINDS.filter((k) => !classifiable.includes(k.toLowerCase()));
     expect(unreachable).toEqual(["Bass-baritone", "Countertenor"]);
+  });
+});
+
+/**
+ * scripts/compile-singers.mjs only warns about this at compile time, so the
+ * suite is what keeps it out of the shipped library. A male-category floor at
+ * G3 or above sits over the singer's own speaking pitch: almost always a
+ * treble-clef score's written compass, which sounds an octave lower, copied
+ * as if it were the sounding range.
+ */
+describe("cited floors", () => {
+  it("puts no male-category floor at or above G3, the signature of a written treble-clef figure", () => {
+    const MALE = new Set(["Countertenor", "Tenor", "Baritone", "Bass-baritone", "Bass"]);
+    expect(
+      SINGERS.filter((s) => MALE.has(s.voiceType) && s.lowMidi >= 55).map(
+        (s) => `${s.name} (${s.voiceType})`,
+      ),
+    ).toEqual([]);
+  });
+});
+
+/**
+ * The soprano note prints two counts about this library as fact, on an
+ * indexable hub, and /singers/records publishes the table that checks the
+ * first one. "Most of the extreme top figures" survived round 1 of the audit
+ * while the records page showed 7 sopranos of 15; these assertions mirror
+ * that table's cut (top 15 by highest endpoint, plus ties) so the sentence
+ * cannot drift from it again.
+ */
+describe("soprano note counts", () => {
+  const countBy = (rows: typeof SINGERS) => {
+    const counts = new Map<string, number>();
+    for (const s of rows) counts.set(s.voiceType, (counts.get(s.voiceType) ?? 0) + 1);
+    return counts;
+  };
+
+  it("says sopranos hold more of the top figures than any other category, which the records cut bears out", () => {
+    expect(VOICE_TYPE_NOTES.Soprano.body).toContain(
+      "more of the extreme top figures than any other category",
+    );
+    const sorted = [...SINGERS].sort((a, b) => b.highMidi - a.highMidi);
+    const cut = sorted[14].highMidi;
+    const top = sorted.filter((s, i) => i < 15 || s.highMidi === cut);
+    const counts = countBy(top);
+    const soprano = counts.get("Soprano") ?? 0;
+    const others = [...counts].filter(([type]) => type !== "Soprano");
+    for (const [type, n] of others) {
+      expect(soprano, `${type} has ${n} of the top figures, sopranos ${soprano}`).toBeGreaterThan(n);
+    }
+  });
+
+  it("says sopranos hold most of the whistle-register entries, which the flags bear out", () => {
+    expect(VOICE_TYPE_NOTES.Soprano.body).toContain("most of the whistle-register entries");
+    const whistle = SINGERS.filter((s) => s.whistle);
+    const soprano = whistle.filter((s) => s.voiceType === "Soprano").length;
+    expect(soprano * 2, `${soprano} of ${whistle.length} whistle entries are sopranos`).toBeGreaterThan(
+      whistle.length,
+    );
   });
 });

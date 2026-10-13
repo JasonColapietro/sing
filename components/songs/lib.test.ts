@@ -1,11 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { SONGS, PRO_SONGS } from "./data";
+import { ALL_SONGS, SONGS, PRO_SONGS, songBySlug } from "./data";
 import {
   AUTO_TEMPO_DOWN_SCORE,
   AUTO_TEMPO_UP_SCORE,
   BAND_ORDER,
   BAND_UNLOCK_MASTERED,
   INITIAL_MULTIPLIER,
+  RETIRED_SONG_TITLES,
+  bestScoreForSong,
+  isSessionOfSong,
+  phraseName,
+  songTitlesFor,
   MASTERY_SCORE,
   MULTIPLIER_RUNGS,
   MULTIPLIER_STREAK,
@@ -16,13 +21,22 @@ import {
   bandForSong,
   bandOpen,
   breathMarks,
+  countOpenSongsFitting,
   countSongsFitting,
+  defaultOctaveAgnostic,
+  fitTransposeToRange,
   isMastered,
   MASTERY_MIN_TEMPO,
   multiplierStep,
   pointsFor,
   rangeFit,
   snapTempo,
+  songTranspose,
+  startableRecents,
+  startingNote,
+  transposedNotes,
+  COUNT_IN_BEATS,
+  secPerBeat,
 } from "./lib";
 import type { Song, SongNote } from "./types";
 
@@ -51,6 +65,29 @@ function song(id: string, midis: number[]): Song {
     })),
   };
 }
+
+describe("countOpenSongsFitting: what the range result can promise", () => {
+  // B2–A4: 25 of the 26 free songs fit as written, but a new singer can
+  // start only the first band; the rest show Locked in the library.
+  const range = { lowMidi: 47, highMidi: 69 };
+
+  it("counts only the bands a singer has opened, and says how many wait", () => {
+    const counted = countOpenSongsFitting(SONGS, new Set(), range);
+    const first = SONGS.filter((s) => bandForSong(s) === "first");
+    expect(counted.total).toBe(first.length);
+    expect(counted.locked).toBe(SONGS.length - first.length);
+    expect(counted.fitting).toBeLessThanOrEqual(counted.total);
+    expect(counted.fitting).toBe(countSongsFitting(first, range));
+  });
+
+  it("grows as mastery opens the next band", () => {
+    const firstTwo = SONGS.filter((s) => bandForSong(s) === "first").slice(0, BAND_UNLOCK_MASTERED);
+    const before = countOpenSongsFitting(SONGS, new Set(), range);
+    const after = countOpenSongsFitting(SONGS, new Set(firstTwo.map((s) => s.id)), range);
+    expect(after.total).toBeGreaterThan(before.total);
+    expect(after.total + after.locked).toBe(SONGS.length);
+  });
+});
 
 describe("countSongsFitting", () => {
   const range = { lowMidi: 55, highMidi: 72 };
@@ -320,6 +357,53 @@ describe("bandOpen", () => {
   });
 });
 
+describe("startableRecents: the recently-sung row never offers a locked song", () => {
+  const songs = [
+    stepwise("first-1", 0),
+    stepwise("first-2", 2),
+    stepwise("easy-1", 7),
+    stepwise("steady-1", 11),
+  ];
+  const at = "2026-10-01T12:00:00.000Z";
+
+  it("drops a song whose band is shut, as a deep link can leave in recents", () => {
+    const recents = [
+      { id: "steady-1", at },
+      { id: "first-2", at },
+    ];
+    const row = startableRecents(recents, songs, new Set());
+    expect(row.map((r) => r.song.id)).toEqual(["first-2"]);
+  });
+
+  it("offers the song once its band opens, keeping recency order", () => {
+    const recents = [
+      { id: "easy-1", at },
+      { id: "first-2", at },
+    ];
+    const row = startableRecents(recents, songs, new Set(["first-1", "first-2"]));
+    expect(row.map((r) => r.song.id)).toEqual(["easy-1", "first-2"]);
+  });
+
+  it("skips ids outside the list it was handed and caps the row", () => {
+    const recents = [{ id: "gone", at }, ...songs.map((s) => ({ id: s.id, at }))];
+    const all = new Set(songs.map((s) => s.id));
+    expect(startableRecents(recents, songs, all, 2).map((r) => r.song.id)).toEqual([
+      "first-1",
+      "first-2",
+    ]);
+  });
+
+  it("agrees with the real book: every free song in the row is startable", () => {
+    const recents = SONGS.map((s) => ({ id: s.id, at }));
+    for (const { song: s } of startableRecents(recents, SONGS, new Set(), SONGS.length)) {
+      expect(bandOpen(bandForSong(s), new Set(), SONGS), s.id).toBe(true);
+    }
+    const locked = SONGS.find((s) => bandForSong(s) !== "first");
+    expect(locked).toBeDefined();
+    expect(startableRecents([{ id: locked!.id, at }], SONGS, new Set())).toEqual([]);
+  });
+});
+
 describe("breathMarks", () => {
   it("marks a note the melody reaches after a full beat of rest", () => {
     expect(breathMarks(timed([0, 1, 3]))).toEqual([2]);
@@ -355,5 +439,121 @@ describe("breathMarks", () => {
   it("does not mark a line change after a short note", () => {
     const notes = timed([0, 1, 2, 3], [1, 1, 1, 1]).map((n, i) => ({ ...n, line: i === 3 ? 1 : 0 }));
     expect(breathMarks(notes)).toEqual([]);
+  });
+});
+
+describe("songTranspose: the key a song opens in", () => {
+  const twinkle = song("twinkle", [60, 60, 67, 67, 69, 69, 67]);
+  const other = song("other", [55, 57, 59, 60]);
+  const baritone = { lowMidi: 45, highMidi: 64 };
+
+  it("opens in the written key when no range is saved", () => {
+    expect(songTranspose(twinkle, {}, null)).toBe(0);
+    expect(songTranspose(twinkle, { lowMidi: 45 }, null)).toBe(0);
+  });
+
+  it("opens fitted to a saved range, where Fit to my range would put it", () => {
+    const fitted = songTranspose(twinkle, baritone, null);
+    expect(fitted).toBe(fitTransposeToRange(twinkle, baritone));
+    expect(fitted).toBeLessThan(0);
+    expect(rangeFit(twinkle, baritone, fitted).verdict).toBe("fits");
+  });
+
+  it("lets the singer's pick override the fit, for that song only", () => {
+    const picked = { songId: twinkle.id, semis: 2 };
+    expect(songTranspose(twinkle, baritone, picked)).toBe(2);
+    // The player is not re-mounted between songs: the next song refits.
+    expect(songTranspose(other, baritone, picked)).toBe(fitTransposeToRange(other, baritone));
+    expect(songTranspose(other, {}, picked)).toBe(0);
+  });
+});
+
+describe("startingNote: the pitch a run hears before the downbeat", () => {
+  const tune = song("tune", [62, 64, 66, 67]);
+  const sungAll = [1, 1, 1, 1];
+
+  it("is the first note the run sings, in the key it is sung in", () => {
+    const spb = secPerBeat(tune.bpm, 1);
+    expect(startingNote(tune.notes, sungAll, spb)?.midi).toBe(62);
+    // Fitted or shifted by the singer: the reference moves with the key.
+    expect(startingNote(transposedNotes(tune, -5), sungAll, spb)?.midi).toBe(57);
+  });
+
+  it("starts a looped span from that span's own first note", () => {
+    expect(startingNote(tune.notes, [0, 0, 1, 1], 0.6)?.midi).toBe(66);
+    expect(startingNote(tune.notes, [0, 0, 0, 0], 0.6)).toBeNull();
+  });
+
+  it("ends well before the downbeat at any tempo, so no scored frame hears it", () => {
+    for (const spb of [0.25, 0.4, 0.6, 1, 2.4]) {
+      const { dur } = startingNote(tune.notes, sungAll, spb)!;
+      // Sounded on the first count-in beat; the downbeat is COUNT_IN_BEATS later.
+      expect(COUNT_IN_BEATS * spb - dur).toBeGreaterThanOrEqual(2.5 * spb - 1e-9);
+    }
+  });
+});
+
+describe("defaultOctaveAgnostic", () => {
+  it("scores any octave until a saved range places the song in the singer's octave", () => {
+    expect(defaultOctaveAgnostic({})).toBe(true);
+    expect(defaultOctaveAgnostic({ highMidi: 72 })).toBe(true);
+    expect(defaultOctaveAgnostic({ lowMidi: 45, highMidi: 64 })).toBe(false);
+  });
+});
+
+describe("songbook transcriptions", () => {
+  // Regression guard for two corrected transcriptions: London Bridge's third
+  // "fall-ing down" rises E4–F4–G4, and Danny Boy's opening line.
+  it("transcribes the corrected folk melodies", () => {
+    const midis = (slug: string) => songBySlug(slug)!.notes.map((n) => n.midi);
+    expect(midis("london-bridge-is-falling-down").slice(-3)).toEqual([64, 65, 67]);
+    expect(midis("danny-boy")).toEqual([59, 60, 62, 64, 62, 64, 69, 67, 64, 62, 57]);
+  });
+});
+
+describe("song history across a rename", () => {
+  const log = (detail: string, score: number) => ({
+    id: `${detail}-${score}`,
+    type: "song" as const,
+    date: "2026-10-01T12:00:00.000Z",
+    day: "2026-10-01",
+    durationSec: 60,
+    xp: 5,
+    detail,
+    score,
+  });
+
+  it("keeps a best score logged under a song's old title", () => {
+    expect(bestScoreForSong([log("Amazing Grace (Verse 1 & 2)", 88)], "Amazing Grace (Opening Lines, Verses 1 & 2)")).toBe(88);
+    expect(bestScoreForSong([log("Home on the Range (Verse & Chorus)", 91)], "Home on the Range (Opening Lines)")).toBe(91);
+    // Old and new sessions count together; the best of both is the best.
+    expect(
+      bestScoreForSong(
+        [log("Amazing Grace (Opening Lines, Verses 1 & 2)", 70), log("Amazing Grace (Verse 1 & 2)", 88)],
+        "Amazing Grace (Opening Lines, Verses 1 & 2)",
+      ),
+    ).toBe(88);
+  });
+
+  it("never hands one song's history to another", () => {
+    // The short Amazing Grace is a different arrangement with its own record.
+    expect(bestScoreForSong([log("Amazing Grace (Verse 1 & 2)", 88)], "Amazing Grace")).toBeUndefined();
+    expect(isSessionOfSong({ type: "warmup", detail: "Amazing Grace (Verse 1 & 2)" }, "Amazing Grace (Opening Lines, Verses 1 & 2)")).toBe(false);
+    expect(songTitlesFor("Ode to Joy")).toEqual(["Ode to Joy"]);
+  });
+
+  it("maps every retired title to a current song title, and retires no title still in use", () => {
+    const live = new Set(ALL_SONGS.map((s) => s.title));
+    for (const [current, olds] of Object.entries(RETIRED_SONG_TITLES)) {
+      expect(live.has(current), current).toBe(true);
+      for (const old of olds) expect(live.has(old), old).toBe(false);
+    }
+  });
+});
+
+describe("phraseName", () => {
+  it("names an excerpt by what it is, and anything else as the opening phrase", () => {
+    expect(phraseName(songBySlug("home-on-the-range")!)).toBe("chorus hook");
+    expect(phraseName(songBySlug("silent-night")!)).toBe("opening phrase");
   });
 });

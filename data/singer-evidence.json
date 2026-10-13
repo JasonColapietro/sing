@@ -32,7 +32,7 @@
     "status": "reviewed",
     "reviewedBy": "Jason Colapietro",
     "reviewedAt": "2026-08-29",
-    "voiceTypeCopy": "Reba McEntire's reviewed sources describe a peak-career span of about three octaves but do not establish a definitive classical voice type.",
+    "voiceTypeCopy": "Reba McEntire's own lesson describes a peak-career span of about three octaves, wider than this catalog's listed span, but gives no endpoints; the reviewed sources do not establish a definitive classical voice type.",
     "sources": [
       {
         "title": "Reba McEntire Teaches Country Music: Singing",
@@ -385,7 +385,7 @@
         "confidence": "moderate",
         "kind": "licensed-score",
         "song": "Beggin’",
-        "octaveConvention": "Written pitch labels as displayed by Musicnotes; no sounding-octave conversion."
+        "octaveConvention": "Written pitch labels as displayed by Musicnotes. A male vocal line in treble clef is written an octave above where it sounds, so this arrangement’s written B3–F#5 sounds B2–F#4."
       }
     ]
   },

@@ -11,11 +11,15 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A run is a short scale or pattern sung fast, usually on one syllable, and every note in it is still a real note with its own pitch. Speed hides mistakes rather than fixing them: a run practised fast learns the smear along with the notes. The route to a clean fast run is to sing the pattern slowly enough that every note lands, then raise the tempo in small steps and drop back the moment a middle note blurs into a slide.
+
 ## Steps
 
 ### Use the practice material
 
-Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.
+Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
@@ -36,7 +40,7 @@ Why slow practice is the only route to fast runs. Say what will count as complet
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “A Run Is a Scale in a Hurry.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.
+Sing Small three-note climb (1–2–3–2–1) twice: first at a tempo where every note is easy to place, then about twice as fast. Change only the speed. Record both in one take in the recorder with a breath between them, then listen to the fast one: can you still hear the 2 on the way up and on the way down as its own note, or has it become a slide? Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.
 
 - Look: The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.
 - Listen: Three separate pitches remain audible; the middle note does not smear into a slide.

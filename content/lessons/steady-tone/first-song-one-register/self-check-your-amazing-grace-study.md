@@ -15,14 +15,14 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Amazing Grace or Amazing Grace (Verse 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.
+Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Transpose the song so every phrase fits the easy part of your scanned range. Speak the words and mark breaths before singing the supplied study.
+Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -66,7 +66,7 @@ I rehearsed the supplied Amazing Grace phrase and study arrangement in a key tha
 - The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: You sing the study through in your chosen key with no stops, neither end needed a push, and you have written that key down.
 
 If not ready: If one phrase repeatedly tightens or disappears, transpose again or shorten the phrase. A famous key is never more important than a usable one. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

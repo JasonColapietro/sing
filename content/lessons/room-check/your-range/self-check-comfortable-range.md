@@ -22,7 +22,7 @@ Open the practice material on this page and choose First hum or Easy fourth sire
 
 ### Set a safe baseline
 
-Start near the middle of your comfortable speaking range after a gentle hum. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.
+Warm up first, for about four minutes with the [Morning reset](/warmups?routine=morning): a cold voice under-reports at both ends. Then start near the middle of your comfortable speaking range. Keep the jaw loose and choose a small lip trill, hum, or easy vowel rather than a loud call.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +36,7 @@ An estimated voice type and both ends of your range, to fit every later exercise
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.
+Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
@@ -66,7 +66,7 @@ I tried a comfortable low and high note without forcing either end and noted the
 - Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: You have written down one easy low note and one easy high note you could sing again tomorrow, and the range test has saved a result.
 
 If not ready: If an endpoint needs extra volume, a lifted chin, or neck effort, discard it, return to the middle, and keep the last easy repeatable note. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

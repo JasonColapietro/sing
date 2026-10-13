@@ -15,7 +15,7 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 3 and 4: the middle voice is listed there too.
+Open the practice material on this page and choose Small three-note climb; Agility run, a five-note scale, is the step up once three notes are clean. Hear the reference, choose a comfortable key, then stop it before singing. The reading What pitch accuracy actually measures is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
@@ -66,7 +66,7 @@ I isolated the existing agility pattern slowly and connected its notes without r
 - Three separate pitches remain audible; the middle note does not smear into a slide.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, three reps in a row of the 1–2–3–2–1 turn at your current tempo play back with every note on its own pitch, the 2 included in both directions.
 
 If not ready: If notes blur, halve the pattern, slow down, and alternate one accurate rep with one rest breath before climbing again. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

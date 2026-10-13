@@ -5,8 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { fmtDur, parseDay } from "@/components/progress/format";
 import { getState as getProgressState } from "@/lib/progress";
+import { CAPPED_TYPES } from "@/lib/free-cap";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { useIsPro } from "@/lib/pro";
 import {
   shouldShowWeekInReview,
+  suggestionWords,
   weekInReview,
   type WeekInReview,
   type WeeklySuggestion,
@@ -32,9 +36,10 @@ export const WEEKLY_REPORT_SEEN_KEY = "suede-sing:weekly-report-seen:v1";
  * Placement is deliberate. It is an inline card in the flow, not a dialog and
  * not a fixed toast: ProMoments already owns the one full-screen moment and
  * the body scroll lock, a fixed panel would cover the transport controls on a
- * 375px phone, and the v2 banner sits above the nav rather than under it. So
- * nothing here can stack over either of them or block a practice control; at
- * worst the Pro modal's backdrop sits over this card, which is correct. Focus
+ * 375px phone, and the release banner is an in-flow card on the homepage,
+ * below its hero. So nothing here can stack over either of them or block a
+ * practice control; at worst the Pro modal's backdrop sits over this card,
+ * which is correct. Focus
  * is not moved on open for the same reason — a summary is not an interruption.
  * Escape closes it while focus is inside it, and closing hands focus to the
  * page content rather than dropping it on <body>.
@@ -44,6 +49,7 @@ export const WEEKLY_REPORT_SEEN_KEY = "suede-sing:weekly-report-seen:v1";
  */
 export default function WeeklyReportCard() {
   const pathname = usePathname();
+  const isPro = useIsPro();
   const [report, setReport] = useState<WeekInReview | null>(null);
   const ref = useRef<HTMLElement>(null);
   const headingId = useId();
@@ -129,7 +135,7 @@ export default function WeeklyReportCard() {
           ))}
         </dl>
 
-        <Suggestion suggestion={report.suggestion} />
+        <Suggestion suggestion={report.suggestion} isPro={isPro} onFollow={close} />
 
         {pathname !== "/progress" && (
           <Link
@@ -163,38 +169,53 @@ export default function WeeklyReportCard() {
   );
 }
 
-function Suggestion({ suggestion: s }: { suggestion: WeeklySuggestion }) {
-  let text: string;
-  let link: { href: string; label: string } | null = null;
-  switch (s.kind) {
-    case "neglected":
-      text = `You didn't open ${s.label} last week, after ${plural(s.before, "session")} there in the three weeks before.`;
-      link = { href: s.href, label: `Open ${s.label}` };
-      break;
-    case "weakest":
-      text = `${s.label} averaged ${s.average}% against ${s.overall}% across your week, the widest gap of any room.`;
-      link = { href: s.href, label: `Practise ${s.label}` };
-      break;
-    case "more-days":
-      text = `You practised on ${plural(s.days, "day")}. Aim for one more this week; a short session counts.`;
-      break;
-    case "keep-going":
-      text = `${plural(s.days, "practice day")} last week. Match that this week to keep the habit.`;
-      break;
-  }
+/**
+ * The card's one next step, always with a way to take it. The two habit
+ * suggestions, which most singers get, used to end with no link at all, so
+ * the only action on the card was "See full progress".
+ *
+ * When the step leads into a room on the free plan's daily allowance, a free
+ * singer is told so here rather than finding out at the cap wall.
+ *
+ * Following the link closes the card. It lives in the root layout and would
+ * otherwise sit above the room it just sent the singer to, and on that room's
+ * own page the link would do nothing at all.
+ *
+ * Exported for its render test: the card itself only opens after an effect
+ * reads localStorage, which a static render never runs.
+ */
+export function Suggestion({
+  suggestion: s,
+  isPro,
+  onFollow,
+}: {
+  suggestion: WeeklySuggestion;
+  isPro: boolean;
+  onFollow: () => void;
+}) {
+  const { text, link } = suggestionWords(s);
+  // Rooms on the free plan's daily allowance; the habit steps open a warmup.
+  const capped = s.kind === "neglected" || s.kind === "weakest" ? CAPPED_TYPES.has(s.type) : true;
   return (
-    <p className="mt-4 text-sm text-ink">
-      <span className="font-medium">Next: </span>
-      {text}
-      {link && (
-        <>
-          {" "}
-          <Link href={link.href} className="font-medium text-violet-ink underline underline-offset-2">
-            {link.label}
-          </Link>
-        </>
+    <>
+      <p className="mt-4 text-sm text-ink">
+        <span className="font-medium">Next: </span>
+        {text}{" "}
+        <Link
+          href={link.href}
+          onClick={onFollow}
+          className="font-medium text-violet-ink underline underline-offset-2"
+        >
+          {link.label}
+        </Link>
+      </p>
+      {capped && !isPro && (
+        <p className="mt-1 text-xs text-mut">
+          On the free plan, warmups, ear training, breath and songs share{" "}
+          {FREE_DAILY_MINUTES} guided minutes a day.
+        </p>
       )}
-    </p>
+    </>
   );
 }
 

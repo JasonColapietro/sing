@@ -6,7 +6,7 @@ import { BOOK_CONTENTS } from "@/lib/book-data";
 import { LinkButton } from "@/components/ui";
 import { PdfDownload } from "@/components/book/pdf-download";
 
-/** Start reading if subscribed, otherwise sample the free chapter. */
+/** Start reading with Pro, otherwise sample a free chapter. */
 export function BookCta() {
   const pro = useProState();
   const first = BOOK_CONTENTS[0];
@@ -27,7 +27,7 @@ export function BookCta() {
     <div className="flex flex-wrap items-center gap-3">
       {sample && (
         <LinkButton href={`/book/${sample.slug}`} size="md">
-          Read the free chapter
+          Read a free chapter
         </LinkButton>
       )}
       <LinkButton href="/pro" variant="outline" size="md">

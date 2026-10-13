@@ -36,7 +36,7 @@ Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, 
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.
+State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Before singing, choose the count where the vibrato will come in and the count where you will return to straight tone, for example in on three and out on six of a slow count. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.
@@ -66,9 +66,9 @@ I compared straight tone with naturally occurring vibrato, without shaking the j
 - The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: On two different days, in three holds in a row, you start straight, let the vibrato in at the count you chose before singing, and return to straight tone before the release, with no jaw or belly shake.
 
-If not ready: If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, and work with a teacher before adding speed. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If oscillation appears only through shaking or pressure, return to straight tone, shorten the hold, work with a teacher before adding speed, and repeat a smaller version on another fresh attempt rather than forcing the checkpoint. If no vibrato comes on its own yet, that is not a fault to fix here: keep the holds straight, steady and easy, move on to the next module, and come back to this one in a few weeks rather than shaking one in.
 
 What this shows: I compared straight tone with naturally occurring vibrato, without shaking the jaw or manufacturing a wobble. This is a self-report, not an automatic assessment.
 

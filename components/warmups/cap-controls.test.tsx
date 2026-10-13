@@ -5,6 +5,8 @@ import { DEFAULT_PROGRESS } from "@/lib/progress-shape";
 import { planDailyThree } from "@/lib/daily-three";
 import { DailyThreeCard } from "./daily-three-card";
 import { PathSection, RoutineGrid } from "./routine-home";
+import { PRO_ROUTINES, ROUTINES } from "./routines";
+import { PRO_PACKS_ANCHOR, PRO_PACKS_HREF } from "@/lib/pro-inventory";
 
 vi.mock("@/lib/pro", async (importOriginal) => ({
   ...await importOriginal<typeof import("@/lib/pro")>(),
@@ -56,7 +58,7 @@ describe("warmup starts after the daily allowance", () => {
     expect(starts.length).toBeGreaterThan(0);
     expect(starts.every((button) => button.includes('disabled=""'))).toBe(true);
     expect(html).toContain(reason);
-    expect(html).toContain('href="/range?mode=range"');
+    expect(html).toContain('href="/range?mode=range#start"');
     expect(html).toContain('href="/pro"');
   });
 
@@ -67,5 +69,27 @@ describe("warmup starts after the daily allowance", () => {
     );
     expect(html.match(/href="\/warmups\?exercise=/g)).toHaveLength(3);
     expect(html).not.toContain('disabled=""');
+  });
+});
+
+describe("the Pro packs anchor /pro sends buyers to", () => {
+  it("sits once, on the first Pro routine card, after every free routine", () => {
+    const html = renderToStaticMarkup(
+      <RoutineGrid progress={DEFAULT_PROGRESS} onStart={noop} error={null} errorRoutineId={null} />,
+    );
+    expect(PRO_PACKS_HREF).toBe(`/warmups#${PRO_PACKS_ANCHOR}`);
+    const anchor = `id="${PRO_PACKS_ANCHOR}"`;
+    expect(html.split(anchor)).toHaveLength(2);
+    const anchorAt = html.indexOf(anchor);
+    for (const routine of ROUTINES) {
+      // Found at all, then above the anchor: a missing name (-1) would
+      // otherwise pass the ordering check by accident.
+      const at = html.indexOf(`>${routine.name}<`);
+      expect(at, routine.id).toBeGreaterThanOrEqual(0);
+      expect(at, routine.id).toBeLessThan(anchorAt);
+    }
+    // The first heading after the anchor is the first Pro pack's.
+    const nextHeading = html.slice(anchorAt).match(/<h3[^>]*>([^<]*)<\/h3>/);
+    expect(nextHeading?.[1]).toBe(PRO_ROUTINES[0].name);
   });
 });

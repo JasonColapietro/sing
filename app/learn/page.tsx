@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SINGERS } from "@/lib/singers";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { CATALOG_LESSON_COUNT } from "@/lib/voice-lessons";
 import {
   VOCAL_LEARNING_FAQ,
   VOCAL_LEARNING_PATHS,
@@ -29,13 +31,19 @@ export const metadata: Metadata = withCanonicalOpenGraph({
   },
 });
 
+const FREE_BOOK_CHAPTERS = BOOK_CONTENTS.filter((c) => c.free).length;
+
 const WEEK = [
   {
     day: "Day 1",
     focus: "Baseline",
-    body: "Take the range test, then hold three comfortable notes in the pitch studio. Save the result; today is a measurement, not an audition.",
+    // Warm first, as every program's range day does: a cold voice
+    // under-reports at both ends. The Morning reset is about four minutes,
+    // inside the free daily allowance.
+    body: "Warm up for about four minutes with the Morning reset (hums, lip trills, a small siren), then take the range test and hold three comfortable notes in the pitch studio. The test saves your result; today is a measurement, not an audition.",
     links: [
-      { href: "/range?mode=range", label: "Vocal range test" },
+      { href: "/warmups?routine=morning", label: "Morning reset warmup" },
+      { href: rangeTestHref(), label: "Vocal range test" },
       { href: "/studio", label: "Pitch studio" },
     ],
   },
@@ -52,7 +60,10 @@ const WEEK = [
     day: "Day 3",
     focus: "Breath",
     body: "Run one breathing drill and the sustain test. Aim for an even note from beginning to end, not the longest possible time.",
-    links: [{ href: "/breath", label: "Breath and sustain training" }],
+    links: [
+      { href: "/breath", label: "Breath and sustain training" },
+      { href: "/learn/voice/room-check/breathe-low", label: "Breathe Low lessons" },
+    ],
   },
   {
     day: "Day 4",
@@ -63,7 +74,7 @@ const WEEK = [
   {
     day: "Day 5",
     focus: "Song",
-    body: "Practice one verse or chorus. Slow the difficult phrase, choose breaths, and transpose if the melody sits outside your comfortable band.",
+    body: "Practice one verse or chorus. Slow the difficult phrase and choose breaths. Songs open fitted to the range you measured on Day 1; shift the key a semitone at a time if the melody still sits outside your comfortable band.",
     links: [{ href: "/songs", label: "Song practice" }],
   },
   {
@@ -78,8 +89,11 @@ const WEEK = [
   {
     day: "Day 7",
     focus: "Rest and review",
-    body: "Rest from demanding singing. Review the week's scores and recordings, then choose one skill—not five—to carry into the next week.",
-    links: [{ href: "/progress", label: "Practice progress" }],
+    body: "Rest from demanding singing. Review the week's scores and recordings, then choose one skill—not five—to carry into the next week, or start a multi-week program that plans the next weeks day by day.",
+    links: [
+      { href: "/progress", label: "Practice progress" },
+      { href: "/programs", label: "Multi-week practice programs" },
+    ],
   },
 ] as const;
 
@@ -88,11 +102,12 @@ const FUNDAMENTALS = [
     title: "Range is not voice type",
     body: "Vocal range is the distance between your lowest and highest repeatable notes. Voice type also considers where the voice is comfortable—its tessitura—plus timbre, weight, and transition points. The range test gives you a useful estimate; the voice-type guide explains why the label stays provisional.",
     links: [
-      { href: "/range?mode=range", label: "Measure your range" },
+      { href: rangeTestHref(), label: "Measure your range" },
       {
         href: "/atlas/vocal-range-by-voice-type",
         label: "Compare all eight voice types",
       },
+      { href: "/learn/voice/room-check/your-range", label: "Free lessons: Your Range" },
     ],
   },
   {
@@ -101,6 +116,7 @@ const FUNDAMENTALS = [
     links: [
       { href: "/studio", label: "See your pitch live" },
       { href: "/ear-training", label: "Train pitch matching" },
+      { href: "/learn/voice/steady-tone/land-the-note", label: "Free lessons: Land the Note" },
     ],
   },
   {
@@ -108,7 +124,11 @@ const FUNDAMENTALS = [
     body: "A vocal warmup gets the voice ready for today's demand. Training repeats a focused task across days until coordination becomes more reliable. Use warmups before range, volume, and song work; use your scores and recordings to decide what the next session should train.",
     links: [
       { href: "/warmups", label: "Warm up" },
-      { href: "/book", label: "Read the structured training manual" },
+      { href: "/learn/voice", label: "Follow the free voice course" },
+      {
+        href: "/book",
+        label: `${BOOK_TITLE} (${FREE_BOOK_CHAPTERS} ${FREE_BOOK_CHAPTERS === 1 ? "chapter" : "chapters"} free)`,
+      },
     ],
   },
   {
@@ -117,6 +137,10 @@ const FUNDAMENTALS = [
     links: [
       { href: "/glossary", label: "Define the vocal terms" },
       { href: "/analyze", label: "See your voice's harmonics" },
+      {
+        href: "/learn/voice/two-registers/chest-head-falsetto",
+        label: "Free lessons: Chest, Head, Falsetto",
+      },
     ],
   },
 ] as const;
@@ -163,7 +187,8 @@ export default function LearnPage() {
           position: index + 1,
           name: path.title,
           description: path.need,
-          url: `${SITE_URL}${path.href}`,
+          // The page, not the scroll position: the range card links #start.
+          url: `${SITE_URL}${path.href.split("#")[0]}`,
         })),
       },
       {
@@ -184,7 +209,7 @@ export default function LearnPage() {
       subtitle="To learn to sing, start from your voice as it is today: test your range, train one skill at a time, use that skill in a song, and listen back. Every tool below runs in the browser."
       actions={
         <div className="flex flex-wrap gap-2">
-          <LinkButton href="/range?mode=range" size="lg">
+          <LinkButton href={rangeTestHref()} size="lg">
             Test my vocal range
           </LinkButton>
           <LinkButton href="/warmups" variant="outline" size="lg">
@@ -206,7 +231,8 @@ export default function LearnPage() {
             practice timer. Guided practice includes {FREE_DAILY_MINUTES} minutes a day
             shared across warmups, ear training, breath, and song practice.
             {" "}<Link href="/pro" className="text-violet-ink underline underline-offset-4">Pro</Link>{" "}
-            removes that guided-practice cap. The written guide is free to read.
+            removes that guided-practice cap. This guide and all{" "}
+            {CATALOG_LESSON_COUNT} voice lessons are free to read.
           </p>
         </Card>
         <Card>
@@ -334,7 +360,7 @@ export default function LearnPage() {
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
             <LinkButton href="/singers">Browse famous vocal ranges</LinkButton>
-            <LinkButton href="/range?mode=range" variant="outline">
+            <LinkButton href={rangeTestHref()} variant="outline">
               Compare with my range
             </LinkButton>
             <LinkButton href="/atlas" variant="ghost">

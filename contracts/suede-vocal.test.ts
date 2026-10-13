@@ -22,8 +22,10 @@ import { describe, expect, it } from "vitest";
 import { buildContract, CONTRACT_VERSION } from "./suede-vocal";
 import { VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import { VOICE_KINDS } from "@/lib/singers-core";
-import { EXERCISES, NOTE_GAP_SEC, PRO_PACKS } from "@/components/warmups/exercises";
+import { EXERCISES, NOMINAL_RANGE, NOTE_GAP_SEC, PRO_PACKS } from "@/components/warmups/exercises";
 import {
+  GLIDE_TIME_SLACK,
+  MAX_OCTAVE_SHIFT,
   ONSET_GRACE_MAX_SHARE,
   ONSET_GRACE_SEC,
   TOLERANCE_CENTS as WARMUP_TOLERANCE_CENTS,
@@ -52,6 +54,9 @@ const PLAYER_SRC = fileURLToPath(
   new URL("../components/warmups/exercise-player.tsx", import.meta.url),
 );
 const USE_PITCH_SRC = fileURLToPath(new URL("../lib/audio/use-pitch.ts", import.meta.url));
+const WARMUPS_CLIENT_SRC = fileURLToPath(
+  new URL("../components/warmups/warmups-client.tsx", import.meta.url),
+);
 /** Every surface that shows a singer anything about the breath gate. */
 const BREATH_GATE_SRCS = [
   "../components/breath/sustain-test.tsx",
@@ -165,6 +170,8 @@ describe("suede-vocal contract", () => {
    * v8. The warm-up scorer's onset grace, each exercise's note gap and its
    * range cap are what a native port needs to score and walk a warm-up the
    * way the web does, so each is published with its default spelled out.
+   * v9 adds the glide window and the nominal ladder span used before a range
+   * test, under which either octave of a target counts.
    */
   it("publishes how a warm-up is scored, spaced and walked", () => {
     const c = buildContract();
@@ -172,8 +179,14 @@ describe("suede-vocal contract", () => {
       toleranceCents: WARMUP_TOLERANCE_CENTS,
       onsetGraceSec: ONSET_GRACE_SEC,
       onsetGraceMaxShare: ONSET_GRACE_MAX_SHARE,
+      glideTimeSlack: GLIDE_TIME_SLACK,
     });
     expect(c.warmups.scoring.onsetGraceSec).toBe(0.105);
+    expect(c.warmups.scoring.glideTimeSlack).toBe(0.1);
+    expect(c.warmups.nominalRange).toEqual({
+      lowMidi: NOMINAL_RANGE.lowMidi,
+      highMidi: NOMINAL_RANGE.highMidi,
+    });
     const byId = new Map(c.warmups.exercises.map((e) => [e.id, e]));
     for (const ex of [...EXERCISES, ...PRO_PACKS.flatMap((p) => p.exercises)]) {
       const row = byId.get(ex.id)!;
@@ -184,7 +197,13 @@ describe("suede-vocal contract", () => {
     expect(byId.get("swell-and-fade")!.rangeCap).not.toBeNull();
     expect(byId.get("five-note-scale")!.gapSec).toBe(NOTE_GAP_SEC);
     expect(byId.get("five-note-scale")!.rangeCap).toBeNull();
-    for (const rule of ["warmupOnsetGrace", "warmupGap", "warmupRangeCap"] as const) {
+    for (const rule of [
+      "warmupOnsetGrace",
+      "warmupGap",
+      "warmupRangeCap",
+      "warmupGlideWindow",
+      "warmupOctaveWithoutRange",
+    ] as const) {
       expect(c.rules[rule], rule).toBeTruthy();
     }
   });
@@ -198,6 +217,30 @@ describe("suede-vocal contract", () => {
     const src = readFileSync(PLAYER_SRC, "utf8");
     expect(src).toContain("createRepScorer(segs)");
     expect(src).not.toContain("onsetGraceSec");
+  });
+
+  /**
+   * v9. rules.warmupOctaveWithoutRange says either octave counts only while
+   * no range is saved. That is true only while the room picks the scorer by
+   * the same test; a player that always folded octaves would contradict the
+   * rule with every equality check green.
+   */
+  it("the warmup room counts either octave only without a saved range", () => {
+    const src = readFileSync(PLAYER_SRC, "utf8");
+    expect(src).toContain("const eitherOctave = scoresEitherOctave(range);");
+    expect(src).toMatch(
+      /eitherOctave\s*\?\s*createRepScorer\(segs, \{ octaveAgnostic: true \}\)\s*:\s*createRepScorer\(segs\)/,
+    );
+  });
+
+  /**
+   * The rule names the octave span a rep is tried in as a figure rather than
+   * a key (a new key would be a shape change). It has to be the scorer's.
+   */
+  it("states the scorer's octave span in rules.warmupOctaveWithoutRange", () => {
+    expect(buildContract().rules.warmupOctaveWithoutRange).toContain(
+      `from ${MAX_OCTAVE_SHIFT} octaves down to ${MAX_OCTAVE_SHIFT} octaves up`,
+    );
   });
 
   /**
@@ -544,7 +587,12 @@ describe("suede-vocal contract", () => {
    */
   it("only advertises deep-link params the room actually parses", () => {
     const rooms = buildContract().deepLinks.rooms;
-    expect(rooms.warmups.params).toEqual(["exercise", "routine", "step"]);
+    expect(rooms.warmups.params).toEqual(["exercise", "routine", "step", "reps"]);
+    // Read from the room's own URL parser, so a param dropped there fails here.
+    const warmupsSrc = readFileSync(WARMUPS_CLIENT_SRC, "utf8");
+    for (const param of rooms.warmups.params) {
+      expect(warmupsSrc, param).toContain(`q.get("${param}")`);
+    }
     expect(rooms.songs.params).toEqual(["song"]);
     expect(rooms.breath.params).toEqual(["drill", "routine", "step"]);
     expect(rooms.programs.params).toEqual(["program"]);

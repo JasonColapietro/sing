@@ -1,6 +1,15 @@
 import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { rangeLabel, spanOctaves, type Singer } from "@/lib/singers";
+import { balancedChunks } from "@/lib/singers-core";
+import {
+  FULL_VOICE_FILL_CLASS,
+  RangeBarKey,
+  WHISTLE_DOT_CLASS,
+  fullVoicePct,
+  rangeBarWords,
+  spanBarClass,
+} from "@/components/singers/range-bar";
 
 const MAX_SINGERS_PER_SECTION = 24;
 
@@ -26,17 +35,19 @@ export function HubChart({
   for (let m = Math.ceil(axisLow / 12) * 12; m <= axisHigh; m += 12) {
     octaveCs.push(m);
   }
-  const groups = Array.from(
-    { length: Math.ceil(list.length / MAX_SINGERS_PER_SECTION) },
-    (_, index) =>
-      list.slice(
-        index * MAX_SINGERS_PER_SECTION,
-        (index + 1) * MAX_SINGERS_PER_SECTION,
-      ),
-  );
+  const groups = balancedChunks(list, MAX_SINGERS_PER_SECTION);
 
   return (
     <div>
+      {/* The bars carry three marks (full-voice share, the reach above it,
+          whistle) and a dashed style for no cited ceiling; without this key
+          a search visitor landing on a hub could not decode any of them. */}
+      <p className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] text-mut">
+        <RangeBarKey
+          noCeiling={list.some((s) => s.beltMidi == null)}
+          whistle={list.some((s) => s.whistle)}
+        />
+      </p>
       {/* Columns capped as a share of the row as well as in rem, for the same
           reason as the directory's ROW_GRID: at 200% text zoom the rem values
           double and squeeze this ruler to about 48px, stacking every octave
@@ -75,17 +86,19 @@ export function HubChart({
             {group.map((s) => {
               const left = pct(s.lowMidi);
               const width = Math.max(0.8, pct(s.highMidi + 1) - left);
-              const beltPct =
-                s.beltMidi != null
-                  ? ((s.beltMidi - s.lowMidi + 1) /
-                      (s.highMidi - s.lowMidi + 1)) *
-                    100
-                  : 100;
+              const beltPct = fullVoicePct(s);
               return (
                 <li key={s.slug} className="cv-auto">
+                  {/* prefetch off: a hub lists up to 300 singers, and the
+                      default fetched each page's payload on scroll. */}
                   <Link
                     href={`/singers/${s.slug}`}
-                    aria-label={`${s.name}, ${s.voiceType}, cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`}
+                    prefetch={false}
+                    aria-label={[
+                      `${s.name}, ${s.voiceType}`,
+                      `cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`,
+                      ...rangeBarWords(s),
+                    ].join(", ")}
                     className="group block rounded-xl px-2 py-2.5 transition-colors hover:bg-panel sm:grid sm:grid-cols-[11rem_minmax(0,1fr)_5.5rem] sm:items-center sm:gap-x-4"
                   >
                     <span className="flex items-baseline justify-between gap-2 sm:block">
@@ -102,16 +115,16 @@ export function HubChart({
                       style={{ backgroundImage: grid }}
                     >
                       <span
-                        className="absolute inset-y-1 rounded-full bg-cool/30 transition-colors group-hover:bg-cool/45"
+                        className={`absolute inset-y-1 ${spanBarClass(s)}`}
                         style={{ left: `${left}%`, width: `${width}%` }}
                       >
-                        <span
-                          className="absolute inset-y-0 left-0 rounded-full bg-cool/70 transition-colors group-hover:bg-cool"
-                          style={{ width: `${beltPct}%` }}
-                        />
-                        {s.whistle && (
-                          <span className="absolute right-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full border border-cool bg-bg" />
+                        {beltPct != null && (
+                          <span
+                            className={FULL_VOICE_FILL_CLASS}
+                            style={{ width: `${beltPct}%` }}
+                          />
                         )}
+                        {s.whistle && <span className={WHISTLE_DOT_CLASS} />}
                       </span>
                     </span>
                     <span className="hidden text-right font-mono text-[11px] leading-tight text-mut sm:block">

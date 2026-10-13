@@ -142,9 +142,9 @@ function DailyThreeIntro({ children }: { children?: ReactNode }) {
         {children}
       </div>
       <p className="mt-2 max-w-xl text-sm text-mut">
-        Picked from your recent scores: one you sing well to warm up on, then
-        the ones that need you most. Tempo is set from how each went last
-        time. The same three all day.
+        One to warm up on, then two that need you most: picked from your
+        recent scores, or from the start of the path until you have some.
+        Tempo follows how each went last time. The same three all day.
       </p>
     </>
   );

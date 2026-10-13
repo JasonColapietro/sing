@@ -82,8 +82,12 @@ const FILE_GROUPS = {
   "specialists.json": "jazz",
 };
 
-/** The gap batches are grab-bags, so every singer in them is placed by hand. */
-const ASSIGN = {
+/**
+ * Singers placed by hand. The gap batches are grab-bags, so every singer in
+ * them is here; for the curated batches above, an entry here is an exception
+ * to the file's chapter, and it wins (see buildAtlas).
+ */
+export const ASSIGN = {
   // gap-1
   "elvis-presley": "rock-men",
   "axl-rose": "rock-men",
@@ -293,7 +297,11 @@ for (const file of readdirSync(DATA).filter((f) => f.endsWith(".json")).sort()) 
     const lowMidi = labelToMidi(r.lowNote);
     const highMidi = labelToMidi(r.highNote);
     if (lowMidi == null || highMidi == null) continue; // compile-singers reports it
-    const group = FILE_GROUPS[file] ?? ASSIGN[slug];
+    // A hand placement beats the file's chapter. The other way round, every
+    // batch exception below was dead: 77 singers were filed under their
+    // file's chapter (opera singers under jazz, Tom Waits under metal, the
+    // Latin lane under K-pop).
+    const group = ASSIGN[slug] ?? FILE_GROUPS[file];
     if (!group) {
       problems.push(`${file} → ${r.name}: no chapter assignment for "${slug}"`);
       continue;
@@ -350,8 +358,9 @@ const wordCount = (t) => t.split(/\s+/).filter(Boolean).length;
 const spanText = (semis) => {
   const oct = Math.floor(semis / 12);
   const rem = semis % 12;
-  if (oct === 0) return `${rem} semitones`;
-  return rem > 0 ? `${oct} octaves + ${rem}` : `${oct} octaves`;
+  if (oct === 0) return `${rem} semitone${rem === 1 ? "" : "s"}`;
+  const octaves = `${oct} octave${oct === 1 ? "" : "s"}`;
+  return rem > 0 ? `${octaves} + ${rem}` : octaves;
 };
 
 /** Generated markdown for the records appendix. */
@@ -420,7 +429,9 @@ function voiceTypesMarkdown() {
       .filter((s) => s.voiceType === type)
       .sort((a, b) => a.name.localeCompare(b.name));
     if (!list.length) continue;
-    rows.push(`## ${type}s`);
+    // "Bass" takes -es: a bare `${type}s` printed "## Basss" here, the same
+    // typo pluralVoice in lib/singers-core.ts exists to stop on the site.
+    rows.push(`## ${/s$/i.test(type) ? `${type}es` : `${type}s`}`);
     for (const s of list) rows.push(`- **${s.name}** — \`${s.low}–${s.high}\``);
     rows.push("");
   }

@@ -11,18 +11,22 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A recording's key was chosen for one singer on one set of days, so it is a fact about that session, not about the song, and changing it is ordinary practice. Move the whole song up or down by semitones until the stretch where the melody spends most of its time sits in the easy middle of your voice, then check that the highest note comes without a push and the lowest is still clearly audible. Once you have taken the range test, songs open fitted to your measured range and you can shift them a semitone at a time; without a saved range they open in the written key and are scored in either octave.
+
 ## Steps
 
 ### Use the practice material
 
-Open the practice material on this page and choose Amazing Grace or Amazing Grace (Verse 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.
+Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Transpose the song so every phrase fits the easy part of your scanned range. Speak the words and mark breaths before singing the supplied study.
+Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +40,7 @@ The song moves to you. This is the singing equivalent of a capo. Say what will c
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Your Key, Not the Record's Key.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Keep one consistent, comfortable production through the song. Work phrase by phrase, then join the form without changing key to imitate a recording.
+Open Amazing Grace in the songbook and sing its opening phrase (“Amazing grace, how sweet the sound, that saved a wretch like me”) in the key it opens in. Then shift it one semitone up or down with the transpose control, whichever way looks easier, and sing the same phrase again. The key is the only thing that changes. Compare the second line of each: keep the key in which the highest note comes without a push and the lowest is still clearly audible, and write it down. Keep one consistent, comfortable production through the phrase.
 
 - Look: The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.
 - Listen: The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note.

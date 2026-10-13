@@ -15,14 +15,14 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Amazing Grace or Amazing Grace (Verse 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.
+Open the practice material on this page and choose Amazing Grace or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Choosing songs that actually fit is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Transpose the song so every phrase fits the easy part of your scanned range. Speak the words and mark breaths before singing the supplied study.
+Start from the key the song opens in: fitted to your measured range if you have taken the range test; if not, the written key, with either octave scored. Shift it by semitones until every phrase fits the easy part of your voice. Speak the words and mark breaths before singing the supplied study.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -36,7 +36,7 @@ Rehearse the supplied Amazing Grace phrase and study arrangement. Choose a comfo
 
 ### Build the song from phrases
 
-Mark the key, breaths, range edges, and lesson target before a full take of “Amazing Grace: Phrase to Study.” Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Keep one consistent, comfortable production through the song. Work phrase by phrase, then join the form without changing key to imitate a recording.
+Mark the key, breaths, range edges, and lesson target before a full take of Amazing Grace. Rehearse the hardest phrase alone, join two phrases, then record one uninterrupted form. Keep one consistent, comfortable production through the song. Work phrase by phrase, then join the form without changing key to imitate a recording.
 
 - Look: The chosen key keeps the melody inside your range; phrase starts, breaths, and the final note are marked before the take.
 - Listen: The pitch center and words stay recognizable from beginning to end, without a forced high note or a fading low note.

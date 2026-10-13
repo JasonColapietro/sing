@@ -22,7 +22,7 @@ Open the practice material on this page and choose Five-note scale or Chromatic 
 
 ### Set a safe baseline
 
-Choose a target near the middle of your scanned range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.
+Choose a target near the middle of your comfortable range. Hear it once, stop the reference, breathe normally, and prepare the vowel before starting.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.

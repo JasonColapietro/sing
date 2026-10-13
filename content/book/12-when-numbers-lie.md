@@ -1,5 +1,6 @@
 ---
 title: "When the numbers lie to you"
+searchTitle: "Why pitch readings go wrong"
 part: "Reading your own voice"
 order: 12
 summary: "How room noise, mic placement, headphone bleed and a rough day distort your readings — and how to catch a bad session before you act on it."
@@ -11,9 +12,9 @@ Bad data does not feel like bad data. It feels like a verdict. A range test that
 
 ## What the app is actually hearing
 
-The pitch trace, the range test scoring, the per-note accuracy Pro reports — all of it runs on your device, from your device's microphone. Nothing is uploaded, and no engineer is cleaning up the signal on the way. That is good for privacy and good for speed. It also means the input is exactly as good as your room and your setup make it.
+The pitch trace, the range test scoring, the per-note accuracy Pro reports — all of it runs on your device, from your device's microphone. No audio is uploaded (Pro's cloud sync backs up your progress numbers, never the sound), and no engineer is cleaning up the signal on the way. That is good for privacy and good for speed. It also means the input is exactly as good as your room and your setup make it.
 
-Pitch detection works by finding a repeating pattern in the incoming sound and reporting how often it repeats. That is reliable when the loudest thing in the signal is one voice on one note. It gets less reliable as other steady sounds compete, as the signal drops toward the noise floor, and at the edges of your range where your tone carries less energy in the fundamental.
+Pitch detection works by finding a repeating pattern in the incoming sound and reporting how often it repeats. That is reliable when the loudest thing in the signal is one voice on one note. It gets less reliable as other steady sounds compete, as the signal drops toward the noise floor, and at the edges of your range: at the bottom, where your tone carries little energy in the fundamental, and at the top, when a thin or breathy tone gives the detector less to lock onto.
 
 Which gives you a short list of things that can corrupt a session.
 
@@ -27,11 +28,11 @@ Test it in ten seconds. Open the pitch studio, stay silent, and watch. A clean s
 
 ## Mic placement and distance
 
-Phone microphones are close-range devices with automatic gain. Move from a hand's width to arm's length and the app is hearing a different instrument.
+Phone microphones are close-range devices. Move from a hand's width to arm's length and the app is hearing a different instrument.
 
 Too close and loud notes clip: the waveform flattens, the pitch estimate wobbles, and your best-supported belt reads as the least accurate note of the session. Too far and quiet notes fall under the noise floor, so the top of your head voice and the bottom of your chest voice never register at all. That is the classic false range test. You sang the note, the app did not hear it, and the result says you cannot reach it.
 
-Most people move the phone as they sing without noticing. You lift it as you go up. You bring it in on the quiet notes. Automatic gain rides those movements, and your loudness data becomes a record of your arm.
+Most people move the phone as they sing without noticing. You lift it as you go up. You bring it in on the quiet notes. The app asks the browser to switch automatic gain off so it measures what you actually produced, which means every one of those movements lands in the reading, and your loudness data becomes a record of your arm.
 
 Pick a distance — roughly a foot, a hand's span and a bit — and a position, and keep both the same every time. Propped on a stand or a stack of books beats held in a hand, because a stack of books does not flinch on the high note. Angle it slightly off-axis so your breath is not blasting into the capsule, which keeps plosives and breath noise out of the signal.
 
@@ -41,7 +42,7 @@ This one produces the strangest readings. If you practise with open-back headpho
 
 What comes back is neither you nor the track but a blend of the two. Sustained notes read as accurate while you are silent. Your scores drift toward whatever the reference tone is doing, which flatters you uselessly. In melody echo and pitch-match, the exercise's own reference can leak back in and score itself.
 
-Closed-back headphones or in-ears at a moderate volume fix it. If you are on speakers, the numbers from that session are decoration. Enjoy the practice and do not log the result.
+Closed-back headphones or in-ears at a moderate volume fix it. If you have to use speakers, tell the app: in the pitch studio, open Audio setup and choose Speakers under "I'm listening through". That asks the browser to filter the app's own sound out of the mic, and the choice carries over to every exercise on that device. The filter catches most of the leak, not all of it, so take any session whose scores you plan to compare on headphones.
 
 ## Time of day, and the body you woke up in
 
@@ -55,7 +56,7 @@ The consequence is simple. A range test taken cold at 7am and compared against o
 
 Congestion changes what you hear more than it changes what comes out. A blocked nose alters the resonance you perceive through your own skull, so you can feel badly out of tune while the trace says you are fine, or feel fine while you drift.
 
-The practical part is easy: put the numbers aside. A range test taken with a cold measures the cold. Go by how you feel about singing at all, and start measuring again when you are back to ordinary.
+The practical part is easy: put the numbers aside. A range test taken with a cold measures the cold. If the cold has stayed in your nose, gentle, quiet singing is usually fine. If it has reached your voice — hoarse, husky, or sore to sing — rest it rather than practising through it, and start measuring again when you are back to ordinary.
 
 Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
 
@@ -73,8 +74,8 @@ A pre-flight, thirty seconds at most:
 
 And a few tells that a session went wrong mid-flight. Accuracy uniformly bad across your whole range rather than worse in the usual places, which points at the setup more often than the voice, because voices do not degrade evenly. Low notes erratic, middle clean. Notes you sang last week that do not appear at all. A trace that lags or stutters. Everything reading sharp or flat by the same amount on every note, which usually means you are singing against a reference you cannot hear properly.
 
-When one of those shows up, stop treating the session as data. Fix the setup, or accept that today was practice rather than measurement, and do not save the range test. One discarded test costs you nothing. One believed bad test sends you chasing a problem that was never in your voice.
+When one of those shows up, stop treating the session as data. Fix the setup, or accept that today was practice rather than measurement. If a range test is under way, press Start over rather than finishing it: a finished test is saved as your range and refits your warmups and songs. One discarded test costs you nothing. One believed bad test sends you chasing a problem that was never in your voice.
 
 ## Try this
 
-Before your next range test, open the pitch studio and stay silent for fifteen seconds while you watch the trace. If it reports any pitch at all in your silence, find the noise and kill it before you test. Otherwise your low notes are measuring your room.
+Before your next [range test](/range?mode=range#start), open the [pitch studio](/studio) and stay silent for fifteen seconds while you watch the trace. If it reports any pitch at all in your silence, find the noise and kill it before you test. Otherwise your low notes are measuring your room.

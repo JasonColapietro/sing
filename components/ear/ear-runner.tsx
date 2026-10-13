@@ -2,12 +2,16 @@
 
 import { CapSlide } from "@/components/practice/free-cap";
 import { useFreeCap } from "@/lib/free-cap";
+import { liveStreak } from "@/components/account/save-state";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
-import { useDailyGoal } from "@/components/practice/learn-home";
+import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { SessionShell } from "@/components/practice/session-shell";
-import { todayPracticeSec, useProgress, type Achievement } from "@/lib/progress";
+import { useProgress, type Achievement } from "@/lib/progress";
+import { SITE_URL } from "@/lib/site";
 import { DIFFICULTIES, GAME_NAMES, type Difficulty, type GameId } from "./lib";
 import {
   EAR_STEP_INTRO_SEC,
@@ -194,15 +198,19 @@ function EarResults({
   steps,
   onContinue,
   onAgain,
+  children,
 }: {
   title: string;
   subtitle?: string;
   steps: { label: string; result: EarStepResult | null }[];
   onContinue: () => void;
-  onAgain: () => void;
+  /** Omitted once the free minutes are spent: "Play again" would start past the cap. */
+  onAgain?: () => void;
+  children?: ReactNode;
 }) {
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
   const played = steps.filter((s) => s.result !== null);
   const score =
@@ -230,8 +238,8 @@ function EarResults({
       score={score}
       stars={starsForScore(score)}
       xp={xp}
-      streakDays={progress.streak.current}
-      goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+      streakDays={liveStreak(progress.streak)}
+      goal={{ doneSec: goalDoneSec, goalSec }}
       rows={steps.map((s) => ({
         label: s.label,
         score: s.result?.score ?? null,
@@ -240,8 +248,32 @@ function EarResults({
       achievements={achievements}
       onContinue={onContinue}
       onAgain={onAgain}
-      share={{ title, subtitle }}
-    />
+      share={{ title, subtitle, url: `${SITE_URL}/ear-training` }}
+    >
+      {children}
+    </ResultsScreen>
+  );
+}
+
+/**
+ * Why "Play again" is gone from a single game's results, and when it comes
+ * back. On the paper panel, like the warmup summaries' version, because the
+ * results screen is dark.
+ */
+export function CappedAgainNote() {
+  return (
+    <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
+      That&apos;s today&apos;s {FREE_DAILY_MINUTES} free minutes of guided practice. A fresh{" "}
+      {FREE_DAILY_MINUTES} minutes opens at midnight; the pitch studio and the range test stay
+      open now.{" "}
+      <Link
+        href="/pro#buy"
+        className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
+      >
+        Pro has no daily limit
+      </Link>
+      .
+    </p>
   );
 }
 
@@ -351,11 +383,18 @@ export function EarRunner({
  * and no slide in front of it.
  */
 export function EarGameSession({
+  capped = false,
   game,
   difficulty,
   song,
   onExit,
 }: {
+  /**
+   * The free allowance is spent. A game under way still finishes and logs,
+   * but its results offer no "Play again": that would start a new session
+   * past the cap, which every other way into the room refuses.
+   */
+  capped?: boolean;
   game: GameId;
   difficulty: Difficulty;
   /** Note catcher chasing a song: its id, and the title the results show. */
@@ -373,11 +412,17 @@ export function EarGameSession({
         subtitle={`${song ? GAME_NAMES[game] : difficultyLabel(difficulty)} · 10 rounds`}
         steps={[{ label: earStepLabel(step), result }]}
         onContinue={onExit}
-        onAgain={() => {
-          setResult(null);
-          setRun((r) => r + 1);
-        }}
-      />
+        onAgain={
+          capped
+            ? undefined
+            : () => {
+                setResult(null);
+                setRun((r) => r + 1);
+              }
+        }
+      >
+        {capped && <CappedAgainNote />}
+      </EarResults>
     );
   }
 

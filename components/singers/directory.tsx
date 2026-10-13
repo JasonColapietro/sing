@@ -10,7 +10,7 @@ import {
 } from "@/lib/singers-lite";
 import {
   VOICE_KINDS,
-  computeRecords,
+  recordHolders,
   spanOctaves,
   type VoiceKind,
 } from "@/lib/singers-core";
@@ -20,6 +20,15 @@ import {
   visibleRichSingerRows,
 } from "@/lib/singer-directory-pagination";
 import { Button, EmptyState, LinkButton } from "@/components/ui";
+import { rangeTestHref } from "@/lib/site";
+import {
+  FULL_VOICE_FILL_CLASS,
+  RangeBarKey,
+  WHISTLE_DOT_CLASS,
+  fullVoicePct,
+  rangeBarWords,
+  spanBarClass,
+} from "@/components/singers/range-bar";
 
 /* ---------------------------------------------------------------- axis --- */
 
@@ -114,22 +123,23 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
   const left = pct(s.lowMidi);
   // Inclusive of the top semitone cell, matching the ruler and you-band.
   const width = Math.max(0.8, pct(s.highMidi + 1) - left);
-  const beltPct =
-    s.beltMidi != null
-      ? ((s.beltMidi - s.lowMidi + 1) / (s.highMidi - s.lowMidi + 1)) * 100
-      : 100;
+  // null when the catalog cites no full-voice ceiling: the bar is then drawn
+  // dashed and unfilled, never as full voice to the top.
+  const beltPct = fullVoicePct(s);
   const semis = s.highMidi - s.lowMidi;
   const ariaBits = [
     `${s.name}, ${s.voiceType}`,
     `cited range ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)}`,
-    s.beltMidi != null ? `full voice to ${midiToLabel(s.beltMidi)}` : null,
-    s.whistle ? "uses whistle register" : null,
-  ].filter(Boolean);
+    ...rangeBarWords(s),
+  ];
 
   return (
     <li className="cv-auto">
+      {/* prefetch off: rows load in batches of hundreds, and the default
+          fetched every row's page payload as it scrolled into view. */}
       <Link
         href={`/singers/${s.slug}`}
+        prefetch={false}
         aria-label={ariaBits.join(", ")}
         className={`group block scroll-mt-32 rounded-xl px-2 py-2.5 transition-colors hover:bg-panel ${ROW_GRID}`}
       >
@@ -152,19 +162,20 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
           className="relative mt-1.5 block h-7 sm:mt-0"
           style={{ backgroundImage: trackBg }}
         >
-          {/* Reach above the cited full-voice ceiling (head / falsetto / whistle) */}
+          {/* Whole cited span; the faded part above the full-voice portion is
+              the reach above the ceiling (head / falsetto / whistle). */}
           <span
-            className="absolute inset-y-1.5 rounded-full bg-cool/30 transition-colors group-hover:bg-cool/45"
+            className={`absolute inset-y-1.5 ${spanBarClass(s)}`}
             style={{ left: `${left}%`, width: `${width}%` }}
           >
-            {/* Full-voice portion (whole bar when no ceiling is cited) */}
-            <span
-              className="absolute inset-y-0 left-0 rounded-full bg-cool/70 transition-colors group-hover:bg-cool"
-              style={{ width: `${beltPct}%` }}
-            />
-            {s.whistle && (
-              <span className="absolute right-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 translate-x-1/2 rounded-full border border-cool bg-bg" />
+            {/* Full-voice portion, only where a ceiling is cited */}
+            {beltPct != null && (
+              <span
+                className={FULL_VOICE_FILL_CLASS}
+                style={{ width: `${beltPct}%` }}
+              />
             )}
+            {s.whistle && <span className={WHISTLE_DOT_CLASS} />}
           </span>
         </span>
 
@@ -296,7 +307,7 @@ export function SingersDirectory() {
     return [...list].sort(by[sort]);
   }, [q, voice, genre, sort]);
 
-  const records = useMemo(() => computeRecords(SINGERS), []);
+  const records = useMemo(() => recordHolders(SINGERS), []);
   const visibleRows = visibleRichSingerRows(rows, visibleRowCount);
   const canLoadMore = visibleRows.length < rows.length;
 
@@ -318,27 +329,35 @@ export function SingersDirectory() {
           on a phone, so below sm they sit in one horizontally-scrollable row
           (same fade affordance as the nav) instead of ~200px of column. */}
       <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 [mask-image:linear-gradient(to_right,black_calc(100%-20px),transparent)] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:[mask-image:none]">
+        {/* A shared record names every holder ("Dimash Kudaibergen · Mike
+            Patton"), not whichever sorts first, and links to the records
+            page, which lists them side by side, rather than to one of them. */}
         {(
           [
             [
               "Widest range",
               records.widest,
-              `${spanOctaves(records.widest.highMidi - records.widest.lowMidi)} octaves`,
+              `${spanOctaves(records.widest[0].highMidi - records.widest[0].lowMidi)} octaves`,
             ],
-            ["Lowest note", records.lowest, midiToLabel(records.lowest.lowMidi)],
-            ["Highest note", records.highest, midiToLabel(records.highest.highMidi)],
+            ["Lowest note", records.lowest, midiToLabel(records.lowest[0].lowMidi)],
+            ["Highest note", records.highest, midiToLabel(records.highest[0].highMidi)],
           ] as const
-        ).map(([label, s, value]) => (
+        ).map(([label, holders, value]) => (
           <Link
             key={label}
-            href={`/singers/${s.slug}`}
+            href={holders.length === 1 ? `/singers/${holders[0].slug}` : "/singers/records"}
             className="w-[13.5rem] shrink-0 rounded-2xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet sm:w-auto"
           >
             <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">
               {label}
+              {holders.length > 1 ? " · tied" : ""}
             </span>
             <span className="mt-1 flex items-baseline justify-between gap-2">
-              <span className="truncate text-sm font-medium">{s.name}</span>
+              {/* Wraps rather than truncates, so a second holder is never
+                  clipped off a narrow card. */}
+              <span className="min-w-0 text-sm font-medium">
+                {holders.map((h) => h.name).join(" · ")}
+              </span>
               <span className="tabular shrink-0 font-mono text-sm text-violet-ink">
                 {value}
               </span>
@@ -425,19 +444,10 @@ export function SingersDirectory() {
       <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] text-mut">
         {/* "cited range" for the solid segment implied the faded part was
             uncited, which is backwards — both come from the same figures.
-            beltMidi: null means full voice essentially to the top, so a
-            fully-solid bar reading "full voice" is accurate. */}
-        <span className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-cool/70" /> full voice
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-2 w-6 rounded-full bg-cool/30" /> falsetto · head ·
-          whistle
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full border border-cool bg-bg" />{" "}
-          whistle register
-        </span>
+            beltMidi: null means the catalog cites no full-voice ceiling, not
+            full voice to the top, so those bars are drawn dashed and unfilled.
+            The same key sits above every hub chart. */}
+        <RangeBarKey />
         {hasYou && (
           <span className="flex items-center gap-1.5">
             <span className="h-3 w-6 rounded-sm bg-violet/30" /> you (
@@ -454,7 +464,7 @@ export function SingersDirectory() {
             Your own range can sit on this chart — the test takes two minutes
             and never leaves your device.
           </span>
-          <LinkButton href="/range?mode=range" size="sm" className="ml-auto">
+          <LinkButton href={rangeTestHref()} size="sm" className="ml-auto">
             Find my range
           </LinkButton>
         </div>

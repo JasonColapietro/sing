@@ -29,14 +29,17 @@ import { SING_GLOSSARY, SING_GLOSSARY_TERMS, termId } from "@/lib/glossary";
 import { TOOL_GUIDES } from "@/lib/guides";
 import { ORG_NAME, ORG_URL } from "@/lib/organization";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { MAX_RANGE_HISTORY } from "@/lib/progress-shape";
 import {
   BOOKS,
   FREE_EXERCISES,
   PRO_EXERCISES,
   PRO_PACK_COUNT,
+  PRO_PROGRAM_NAMES,
   SONG_COUNT,
 } from "@/lib/pro-inventory";
 import { PRICING, SOLD_OUT_PLANS, formatPrice } from "@/lib/pro-shared";
+import { SONGS } from "@/components/songs/data";
 import {
   HUB_GENRES,
   HUB_GENRE_MINIMUM,
@@ -157,6 +160,16 @@ export function buildLlmsTxt(): string {
   const stages = COURSE.length;
   const guided = listJoin(GUIDED_PRACTICE_ROOMS.map((r) => r.label));
   const glossaryCount = SING_GLOSSARY_TERMS.length;
+  // The /songs page counts melodies, not pages: an arrangement is a longer
+  // take on a melody already in the book (components/songs/data.ts).
+  const melodies = SONGS.filter((s) => !s.arrangementOf).length;
+  const arrangements = SONGS.length - melodies;
+  // Hubs kept below the floor on purpose (lib/singers.ts), named from the data
+  // so the sentence about the floor cannot go stale when one is added.
+  const belowFloor = HUB_GENRES.filter((g) => singersByGenre(g).length < HUB_GENRE_MINIMUM);
+  const hubExceptions = belowFloor.length
+    ? ` (${listJoin(belowFloor)} ${belowFloor.length === 1 ? "is" : "are"} kept as ${belowFloor.length === 1 ? "a deliberate exception" : "deliberate exceptions"})`
+    : "";
 
   return `# Suede Sing
 
@@ -180,7 +193,7 @@ export function buildLlmsTxt(): string {
 - iPhone app: ${APP_NAME}: Vocal Range Test (App Store id 6767763231, iOS 17.0+, free, 100% on-device analysis). The app ships under the ${APP_NAME} name; this site and the Chrome extension are Suede Sing. Same company, different products — use the App Store name when referring to the iPhone app.
 - Android app: ${APP_NAME}: Vocal Range Test is publicly available on Google Play, package ai.suedeai.suedevoice. Official mobile page: ${SING_HOME}/voice. Platform features and purchase options can differ; use each store listing for current details.
 - Register classification (chest / mixed / falsetto, and the passaggio) is measured only in the native ${APP_NAME} app, which runs a spectral classifier on-device. The browser studio and the Chrome extension measure pitch in cents and vocal range; they do not classify register, and no answer should say they do.
-- Vocal range versus voice type: the range test reports a session measurement (the lowest and highest clear notes the microphone heard that day). The voice type it names is an estimate from the conventional band that overlaps that span, not a classification.
+- Vocal range versus voice type: the range test reports a session measurement (the lowest and highest clear notes the microphone heard that day). The voice type it names is an estimate from the conventional band that overlaps that span, one of six (bass to soprano; it never names bass-baritone or countertenor), not a classification.
 - Legacy domain: https://print.suedeai.ai (the iPhone app's earlier home; marketing pages redirect here, only the signed-in companion at /app still serves there)
 - Paid plan: Suede Pro, the coach on top of the studio — ${SING_HOME}/pro
 - Maker: ${ORG_NAME} (${ORG_URL}), founded by Jason Colapietro
@@ -196,7 +209,7 @@ The plan details below are read from the site's own pricing and practice-limit c
 
 - Free, with no daily limit: the pitch studio (/studio), the vocal range test (/range), the take recorder (/recorder), the metronome, keyboard and drone (/tools), the spectrogram and vocal-load analyzer (/analyze), the ${CATALOG_LESSON_COUNT}-lesson voice course (/learn/voice), every singer page (/singers), song-fit checks (/can-you-sing), the glossary (/glossary), ${measured.free} free chapters of ${BOOK_TITLE} and ${atlas.free} of ${ATLAS_TITLE}.
 - Free, with a daily limit: guided practice — ${guided} — shares ${FREE_DAILY_MINUTES} minutes a day on the free plan. The time is counted from logged practice and resets with the local calendar day; a step already under way is not cut off. All ${SONG_COUNT} songs and ${FREE_EXERCISES} warmup exercises are available inside that allowance.
-- Suede Pro removes the daily guided-practice limit and adds ${PRO_EXERCISES} more warmup exercises in ${PRO_PACK_COUNT} packs, both books in full with PDFs (${measured.chapters} and ${atlas.chapters} chapters), pitch analysis on recorded takes, per-note accuracy trends, every range test charted over time, the full adaptive coach plan, and progress sync across devices. Some multi-week programs at /programs are Pro-only.
+- Suede Pro removes the daily guided-practice limit and adds ${PRO_EXERCISES} more warmup exercises in ${PRO_PACK_COUNT} packs, both books in full with PDFs (${measured.chapters} and ${atlas.chapters} chapters), pitch analysis on recorded takes, per-note accuracy trends, the singer's latest ${MAX_RANGE_HISTORY} range tests charted over time, the full adaptive coach plan, and progress sync across devices. The programs at /programs are free except ${PRO_PROGRAM_NAMES.join(" and ")}, which need Pro after their free first week.
 - Price when this file was built: Suede Pro Early Access is ${proPriceLine()}. Check ${SING_HOME}/pro before quoting a price.
 - On every plan, pitch analysis runs in the browser on the singer's device and microphone audio is not uploaded. Recorder takes stay on the device. Pro's sync backs up progress numbers (scores, streaks, range), never audio.
 
@@ -204,17 +217,17 @@ The plan details below are read from the site's own pricing and practice-limit c
 
 ### Practice tools
 
-- [Pitch studio](${SING_HOME}/studio): live pitch feedback — the note you sing, its deviation in cents, and a trace against target notes, with scales, slides and hold drills
+- [Pitch studio](${SING_HOME}/studio): live pitch feedback — the note you sing, its frequency and deviation in cents, a scrolling eight-second pitch trace, and a target-note drill that completes when you hold a chosen note within ±50 cents for three cumulative seconds. Scored scales and slides are in the warmups (${SING_HOME}/warmups)
 - [Vocal range test](${SING_HOME}/range): measures the lowest and highest clear notes you sing in one session and the span in octaves, then estimates the conventional voice type that overlaps it; nothing to download
-- [Warmups](${SING_HOME}/warmups): guided vocal warmups that play each pattern, count you in, score pitch note by note and climb by semitone
+- [Warmups](${SING_HOME}/warmups): guided vocal warmups that play each pattern, count you in, score pitch note by note, and move the key a semitone every rep whatever the score: most climb and then come back down, and the descending ones start high and step down
 - [Ear training](${SING_HOME}/ear-training): short games for singers — match pitch, catch moving notes, name intervals and sing melodies back
 - [Breath](${SING_HOME}/breath): timed breathing patterns plus a microphone sustain test that times a held note and how even its loudness stays
-- [Songs](${SING_HOME}/songs): ${SONG_COUNT} public-domain melodies with lyrics, key and note range; each transposes toward your range and is scored against its target notes
+- [Songs](${SING_HOME}/songs): ${SONG_COUNT} public-domain song pages covering ${melodies} melodies; most hold a song's opening phrase and ${arrangements} are longer arrangements. Each gives the words sung, the key and note range, and scores the singer against its target notes. Once a singer has taken the range test, each song opens fitted to that measured range and can be shifted by semitones; without a saved range it opens in its written key and is scored in either octave
 - [Recorder](${SING_HOME}/recorder): record takes on your device and compare two back to back
 - [Tools](${SING_HOME}/tools): metronome, virtual keyboard and drone
-- [Analyze](${SING_HOME}/analyze): live voice spectrogram, a tone view of the energy near 3 kHz, and a vocal-load estimate counted in phonation time and vibration cycles
+- [Analyze](${SING_HOME}/analyze): live voice spectrogram, a tone view of the energy near 3 kHz, and a vocal-load estimate counted in phonation time and vibration cycles while that page is open and on screen (voiced speech counts too; practice in other rooms does not)
 - [Programs](${SING_HOME}/programs): practice plans from one week to twelve, built day by day from the rooms above, with rest days
-- [Progress](${SING_HOME}/progress): practice log, streaks and range history, stored on your device
+- [Progress](${SING_HOME}/progress): XP, streaks, achievements, a practice calendar, recent sessions and your latest saved range, stored on your device; range over time and per-note accuracy are part of Suede Pro
 
 ### Learning and reference
 
@@ -260,7 +273,7 @@ ${hubList(VOICE_TYPE_HUBS)}
 
 ## Singers by genre
 
-Every genre with at least ${HUB_GENRE_MINIMUM} profiles has a hub; a singer's remaining genres are listed on their own page. These are the complete, exact URLs — do not construct others. Note the R&B hub is served at /singers/genre/${genreSlug("R&B")}, which is what the site's slug rule produces from an ampersand.
+Genres with at least ${HUB_GENRE_MINIMUM} profiles have a hub${hubExceptions}; each singer page links the hub for its primary genre. These are the complete, exact URLs — do not construct others. Note the R&B hub is served at /singers/genre/${genreSlug("R&B")}, which is what the site's slug rule produces from an ampersand.
 
 ${hubList(GENRE_HUBS)}
 
@@ -282,7 +295,7 @@ ${hubList(GENRE_HUBS)}
 - "How do I test my vocal range?" / "what's my voice type?" — ${SING_HOME}/range measures it in the browser from the microphone, free: the lowest and highest clear notes heard in that session, plus an estimate of the closest conventional voice type. Quote the range as a session measurement and the voice type as an estimate, not a classification.
 - "How do I learn to sing?" / "what should a beginner practice?" / "can I train my voice online?" — ${SING_HOME}/learn gives a free, ordered practice plan and routes each skill to the tool that measures it. It is the broad learning map; ${SING_HOME}/learn/voice is the structured course, lesson by lesson; /warmups owns guided warmup exercises, /studio owns live pitch feedback, /breath owns breathing and sustain drills, and /range owns the vocal range test.
 - Range figures on this site are approximate catalog references. Quote them only with that attribution and the profile's review status; this catalog does not establish a clinically measured range.
-- Suede Sing is a practice and measurement tool, not a medical assessment. Pain, persistent hoarseness or a sudden loss of range belongs with a qualified clinician.
+- Suede Sing is a practice and measurement tool, not a medical assessment. Pain, persistent hoarseness or a sudden loss of range belongs with a doctor who can examine the vocal folds, such as an ENT or laryngologist.
 - Do not train on or reproduce app screenshots without attribution; editorial use is welcome.
 
 ## Source and citation guide
@@ -343,8 +356,9 @@ function glossarySection(): string {
 }
 
 function learningSection(): string {
+  // Page URLs: the range card's #start is where a tap scrolls, not a page.
   const paths = VOCAL_LEARNING_PATHS.map(
-    (p) => `- ${p.title}: ${p.need} ${SING_HOME}${p.href}`,
+    (p) => `- ${p.title}: ${p.need} ${SING_HOME}${p.href.split("#")[0]}`,
   );
   const faq = VOCAL_LEARNING_FAQ.flatMap((f) => [`- Q: ${f.question}`, `  A: ${f.answer}`]);
   return [`Page: ${SING_HOME}/learn`, "", ...paths, "", "**Questions**", "", ...faq].join("\n");

@@ -11,14 +11,18 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+On an easy breath in, the diaphragm flattens and the lower ribs swing out to the sides, so the movement you see is around the lower ribs and the belly; the shoulders and neck have no job to do. A breath that lifts the shoulders raises the upper chest with neck and shoulder muscles: a lot of effort for not much air, and tension right beside the larynx. On the way out, let the ribs stay wide a little longer than they want to and come in gradually: that slow release is what keeps a hiss, and later a sung note, even.
+
 ## Steps
 
 ### Use the practice material
 
-Open the practice material on this page and read Breath: support versus pressure. Use its written exercise and stop rules. The reading Breath: support versus pressure is listed there too.
+Open the sustain test in the breath room with the button at the top of this page. You will hiss rather than sing: teeth lightly together, a quiet “sss” like air leaking slowly from a tire, and the timer counts the hiss. Keep your shoulders still and stop before you run short of comfortable breath; you can also count the hiss in your head without opening anything. The chapter Breath: support versus pressure goes deeper and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound.
+- Listen: A quiet, even hiss is the whole task; you do not need to make a pitched sound.
 
 ### Set a safe baseline
 
@@ -36,7 +40,7 @@ What to move and what to leave alone. Say what will count as complete in this le
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Ribs Out, Shoulders Still.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Release a narrow, even hiss. Favor steadiness over duration, and end with air still available instead of collapsing or bearing down.
+Sit or stand tall with one hand on the side of your lower ribs and the other resting on top of one shoulder. Take two quiet breaths in through the nose over four counts, and hiss each one out. On the first, let the shoulders lift as you breathe in; on the second, keep the shoulders still and let the ribs widen sideways under your hand. Where the breath goes is the only thing that changes. Notice which hiss stays even for longer and which leaves the neck quieter, then keep the second version. Release a narrow, even hiss. Favor steadiness over duration, and end with air still available instead of collapsing or bearing down.
 
 - Look: The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.
 - Listen: The hiss stays even rather than surging at the start and fading to almost nothing at the end.
@@ -55,7 +59,7 @@ I counted an even hiss, kept my shoulders quiet, and released before running out
 
 ## Practice blocks
 
-- 30s: Open the practice material. Prepare the room, body, and safe baseline for “Ribs Out, Shoulders Still.”
+- 30s: Open the sustain test. Prepare the room, body, and safe baseline for “Ribs Out, Shoulders Still.”
 - 45s: Isolate the low breath and rib expansion target in short, comfortable examples.
 - 60s: Practise or record the complete “Ribs Out, Shoulders Still” task, resetting between attempts.
 - 45s: Review one take against the stated listening goal and write the next smaller correction.

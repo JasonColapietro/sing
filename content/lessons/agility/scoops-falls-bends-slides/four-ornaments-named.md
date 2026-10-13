@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Scoops, falls, bends and slides are four small pitch gestures that decorate a melody without changing it. A scoop starts a little below the note and slides up into it; a fall drops away in pitch off the end of a note; a bend pushes the pitch slightly off the note and brings it back; a slide glides from one written note to the next. An accidental scoop is the voice searching for the note, the habit Stage 2 trained out; a scoop you name and place where you meant it is a choice, and that is the whole difference.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ Naming them is what turns habits into choices. Say what will count as complete i
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Four Ornaments, Named.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Add one ornament at its marked place, return to plain, then contrast it with the next. Keep scoops, falls, bends, and slides small and intentional.
+Use Legato triad (1–3–5–3–1) as your phrase. Before singing, mark where each ornament will go: a scoop into the 3, a bend on the 5, a slide from the 5 down to the 3, and a fall off the last 1. Sing the phrase plain, then with one ornament at the place you marked, then plain again, and record each plain-and-ornament pair in one take in the recorder before moving to the next ornament. Change only the ornament. Keep scoops, falls, bends, and slides small and intentional.
 
 - Look: Each gesture begins and ends on the planned notes instead of moving the whole phrase out of key.
 - Listen: The four versions are recognizably different and the underlying words and melody remain intact.

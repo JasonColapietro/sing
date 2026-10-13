@@ -4,11 +4,14 @@ import {
   BREATH_ROUTINES,
   BREATH_STEP_INTRO_SEC,
   CUE_BREATH_SEC,
+  CUE_HOLD_SEC,
   CUE_REP_CHOICES,
   FARINELLI_LEAD_SEC,
   SUSTAIN_ATTEMPT_SEC,
   boxSeconds,
   breathDrillDesc,
+  drillPresetFromQuery,
+  drillPresetQuery,
   breathDrillTitle,
   breathRoutineById,
   breathRoutineMinutes,
@@ -22,8 +25,10 @@ import {
   isBreathDrillId,
   recommendBreathRoutine,
   routineNeedsMic,
+  sizeBreathRoutineToAllowance,
   type BreathStep,
 } from "./routines";
+import { FREE_DAILY_SEC } from "@/lib/practice-limits";
 import {
   starsForBox,
   starsForCue,
@@ -88,6 +93,27 @@ describe("breath routine catalogue", () => {
   it("recommends the quick set to someone who already breathed today", () => {
     expect(recommendBreathRoutine({ practicedToday: true }).id).toBe("quick");
     expect(recommendBreathRoutine({ practicedToday: false }).id).toBe("daily");
+  });
+});
+
+describe("the recommendation on the free plan", () => {
+  const daily = breathRoutineById("daily")!;
+  const quick = breathRoutineById("quick")!;
+
+  it("swaps a set that would reach the cap before its sustain test for one that finishes", () => {
+    // Daily runs past the free five minutes, so the cap slide would take the
+    // place of the sustains, the set's only score.
+    expect(breathRoutineSeconds(daily)).toBeGreaterThan(FREE_DAILY_SEC);
+    expect(sizeBreathRoutineToAllowance(daily, FREE_DAILY_SEC).id).toBe("quick");
+  });
+
+  it("keeps the daily set when the time is there, as it always is on Pro", () => {
+    expect(sizeBreathRoutineToAllowance(daily, Number.POSITIVE_INFINITY).id).toBe("daily");
+    expect(sizeBreathRoutineToAllowance(quick, FREE_DAILY_SEC).id).toBe("quick");
+  });
+
+  it("leaves the pick alone when not even the quick set would finish", () => {
+    expect(sizeBreathRoutineToAllowance(daily, 60).id).toBe("daily");
   });
 });
 
@@ -212,7 +238,7 @@ describe("breath step copy", () => {
 });
 
 describe("stars", () => {
-  it("scores a sustain against the printed benchmarks", () => {
+  it("stars a sustain by length, at the contract's starsSec cuts", () => {
     expect(starsForSustain(0)).toBe(0);
     expect(starsForSustain(9.9)).toBe(0);
     expect(starsForSustain(10)).toBe(1);
@@ -262,9 +288,39 @@ describe("breath routine shape", () => {
   it("asks for holds that stay open and attempts that stop before they tighten", () => {
     expect(breathDrillDesc("box")).toMatch(/pause rather than a locked throat/i);
     expect(breathDrillDesc("farinelli")).toMatch(/without gasping/i);
+    // The Farinelli holds grow every round, so they say how to hold too.
+    expect(breathDrillDesc("farinelli")).toMatch(/not by shutting your throat/i);
     expect(breathDrillDesc("sustain")).toMatch(/starts to tighten/i);
     for (const d of BREATH_DRILL_IDS) {
       expect(breathDrillDesc(d), d).not.toMatch(/support|lung|capacity|diaphragm/i);
     }
+  });
+});
+
+describe("drill preset links", () => {
+  const q = (s: string) => new URLSearchParams(s);
+
+  it("round-trips every preset the setup cards can show", () => {
+    const presets: BreathStep[] = [
+      { drill: "box", side: 5, minutes: 1 },
+      { drill: "box", side: 8, minutes: 5 },
+      { drill: "farinelli", cap: 10 },
+      { drill: "sustain", attempts: 2 },
+      { drill: "cue", reps: 8, holdSec: CUE_HOLD_SEC },
+      ...BREATH_ROUTINES.flatMap((r) => r.steps),
+    ];
+    for (const step of presets) {
+      expect(drillPresetFromQuery(step.drill, q(drillPresetQuery(step))), JSON.stringify(step)).toEqual(step);
+    }
+  });
+
+  it("opens the drill's own defaults for a bare or out-of-range link", () => {
+    expect(drillPresetFromQuery("box", q("drill=box"))).toBeNull();
+    expect(drillPresetFromQuery("box", q("drill=box&side=12&minutes=1"))).toBeNull();
+    expect(drillPresetFromQuery("box", q("drill=box&side=5&minutes=2"))).toBeNull();
+    expect(drillPresetFromQuery("farinelli", q("drill=farinelli&cap=40"))).toBeNull();
+    expect(drillPresetFromQuery("farinelli", q("drill=farinelli&cap=9.5"))).toBeNull();
+    expect(drillPresetFromQuery("sustain", q("drill=sustain&attempts=9"))).toBeNull();
+    expect(drillPresetFromQuery("cue", q("drill=cue&reps=5"))).toBeNull();
   });
 });

@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Getting louder takes breath pressure and fold closure rising together, and much of what makes a voice carry is resonance, the ring in the tone, rather than sheer effort. Getting quieter takes the same steady breath under a smaller sound, not a slide into breathiness. Pushing is the throat doing the work instead: the tone tightens, the pitch creeps sharp, and the neck feels different on the loud note than on the quiet one. If your neck feels about the same at every level, the dynamics are coming from the right place.
+
 ## Steps
 
 ### Use the practice material
@@ -32,14 +36,14 @@ Use one comfortable sustained pitch and establish a quiet-to-moderate baseline. 
 Loud from resonance, quiet from support, neither from the throat. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
-- Listen: The four recordings form an audible progression while pitch stays centered.
+- Listen: The four levels in your take form an audible progression while pitch stays centered.
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Dynamics Without Pushing.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Create four audible levels by changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short.
+Sing two short holds on one comfortable note: the first at your easy quiet level, the second at a comfortable fuller level made with a little more breath energy and a brighter vowel, with the chin and neck exactly where they were. Change only the level. Record both in one take in the recorder with a breath between them, and check on playback that the fuller one did not creep sharp. Then build four audible levels from quiet to full the same way, changing breath-energy and resonance gradually, not by squeezing the throat. Keep each sample short.
 
 - Look: Posture and microphone distance stay constant; the louder attempts do not add a lifted chin or locked neck.
-- Listen: The four recordings form an audible progression while pitch stays centered.
+- Listen: The four levels in your take form an audible progression while pitch stays centered.
 
 ### Review your own attempt
 
@@ -50,7 +54,7 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears.
+- The target disappears when the range, volume, speed, or duration increases. => If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -63,12 +67,12 @@ I compared comfortable quieter and fuller versions of one short phrase without p
 ## Self-check
 
 - I compared comfortable quieter and fuller versions of one short phrase without pushing the volume.
-- The four recordings form an audible progression while pitch stays centered.
+- The four levels in your take form an audible progression while pitch stays centered.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If louder means tighter or sharper, return to the easiest level, reduce the target contrast, and stop for today if discomfort appears. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 
 What this shows: I compared comfortable quieter and fuller versions of one short phrase without pushing the volume. This is a self-report, not an automatic assessment.
 

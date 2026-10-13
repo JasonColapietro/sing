@@ -6,6 +6,7 @@ import {
   formatMinSec,
   loopsFor,
   lyricLines,
+  phraseName,
   phraseSeconds,
   sessionSeconds,
   songNoteRange,
@@ -58,24 +59,46 @@ export function songFacts(song: Song): SongFacts {
 }
 
 /**
- * Related songs for the cluster: same genre first, then anything rated the same
- * difficulty, then whatever is left. The pool is passed in rather than read
- * from the data module so a free page links free pages and a Pro page links Pro
- * pages — the noindexed half of the songbook should not be the destination of
- * every internal link on the indexed half.
+ * Related songs for the cluster, in this order: same difficulty and genre,
+ * then same difficulty, then same genre, then whatever is left. The page heads
+ * the list "Other <difficulty> songs", so difficulty leads. Within a tier the
+ * song whose range sits closest to this one's comes first (the next song a
+ * singer can carry over the same notes), and remaining ties go round the
+ * pool from the song after this one, so no song is left out of every list
+ * just because it sits late in the data file. Each melody appears
+ * once, and never this song's own melody: the other version of it
+ * (`arrangementOf`, either direction) already has its own card on the page.
+ * The pool is passed in rather than read from the data module so a free page
+ * links free pages and a Pro page links Pro pages — the noindexed half of the
+ * songbook should not be the destination of every internal link on the
+ * indexed half.
  */
 export function relatedSongs(song: Song, pool: Song[], max = 6): Song[] {
-  const others = pool.filter((s) => s.slug !== song.slug);
+  const melodyOf = (s: Song) => s.arrangementOf ?? s.id;
+  const seen = new Set([melodyOf(song)]);
   const difficulty = computeDifficulty(song).label;
-  const sameGenre = others.filter((s) => s.genre === song.genre);
-  const sameDifficulty = others.filter(
-    (s) =>
-      s.genre !== song.genre && computeDifficulty(s).label === difficulty,
-  );
-  const rest = others.filter(
-    (s) => !sameGenre.includes(s) && !sameDifficulty.includes(s),
-  );
-  return [...sameGenre, ...sameDifficulty, ...rest].slice(0, max);
+  const tier = (s: Song) =>
+    (computeDifficulty(s).label === difficulty ? 0 : 2) +
+    (s.genre === song.genre ? 0 : 1);
+  const centre = (s: Song) => {
+    const [lo, hi] = songNoteRange(s);
+    return (lo + hi) / 2;
+  };
+  const c = centre(song);
+  // Array sort is stable, so ties keep the scan order, which starts at the
+  // song after this one and wraps.
+  const at = pool.indexOf(song);
+  const ordered = at < 0 ? pool : [...pool.slice(at + 1), ...pool.slice(0, at + 1)];
+  const related: Song[] = [];
+  for (const { s } of ordered
+    .map((s) => ({ s, t: tier(s), d: Math.abs(centre(s) - c) }))
+    .sort((a, b) => a.t - b.t || a.d - b.d)) {
+    if (related.length >= max) break;
+    if (seen.has(melodyOf(s))) continue;
+    seen.add(melodyOf(s));
+    related.push(s);
+  }
+  return related;
 }
 
 /** The measured facts, as a readout. */
@@ -92,8 +115,12 @@ export function SongStats({ song }: { song: Song }) {
             {f.highLabel}
           </div>
           <p className="mt-2 text-sm text-mut">
-            {f.rangeSemis} semitones as transcribed. The practice room
-            transposes it to sit in your own range.
+            {f.rangeSemis} semitones as transcribed. Once you have taken the
+            range test, the practice room opens it fitted to your range, and
+            you can shift it by semitones from there. Without a saved range it
+            opens at this written pitch and is scored in either octave, so a
+            lower voice can sing it an octave down and a higher voice an
+            octave up.
           </p>
         </div>
         <div className="flex flex-wrap gap-x-8 gap-y-5">
@@ -129,7 +156,7 @@ export function SongStats({ song }: { song: Song }) {
         </div>
         <div>
           <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Leaps of a third or more
+            Leaps of a major third or more
           </dt>
           <dd className="tabular mt-1 text-sm">{f.leaps}</dd>
         </div>
@@ -138,15 +165,25 @@ export function SongStats({ song }: { song: Song }) {
   );
 }
 
-/** The lyrics as printed — the substance of the page. */
+/**
+ * The lyrics as printed — the substance of the page. A longer arrangement of a
+ * melody (`arrangementOf`) holds selected lines, not every stanza, so it is
+ * labelled as what it is rather than as the song's lyrics.
+ */
 export function LyricSheet({ song }: { song: Song }) {
   const lines = lyricLines(song.notes);
-  const label = song.form === "full" ? "Lyrics" : "The phrase you sing";
+  const partial = song.form === "phrase" || song.arrangementOf !== undefined;
+  const label =
+    song.form === "phrase"
+      ? "The phrase you sing"
+      : song.arrangementOf
+        ? "The lines you sing"
+        : "Lyrics";
   return (
     <Card>
       <SectionLabel>{label}</SectionLabel>
       <h2 className="mt-3 text-xl">
-        {song.title} lyrics{song.form === "phrase" ? ", as transcribed here" : ""}
+        {song.title} lyrics{partial ? ", as transcribed here" : ""}
       </h2>
       <ol className="mt-5 max-w-2xl space-y-3">
         {lines.map((l) => (
@@ -163,10 +200,16 @@ export function LyricSheet({ song }: { song: Song }) {
       </ol>
       {song.form === "phrase" && (
         <p className="mt-5 max-w-2xl text-sm text-mut">
-          The songbook transcribes the opening phrase rather than the whole
-          song, because {song.defaultLoops} tight repetitions of a phrase you
+          The songbook transcribes the {phraseName(song)} rather than the
+          whole song, because {song.defaultLoops} tight repetitions of a phrase you
           can hear yourself improve on beats one distracted run at the full
           thing.
+        </p>
+      )}
+      {song.form === "full" && song.arrangementOf && (
+        <p className="mt-5 max-w-2xl text-sm text-mut">
+          This longer arrangement sings selected lines of the song, not every
+          verse.
         </p>
       )}
     </Card>

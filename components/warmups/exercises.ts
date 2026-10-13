@@ -87,11 +87,37 @@ export const STACCATO_GAP_SEC = 0.15;
 export const MIDDLE_OF_RANGE: RangeCap = { from: 0.25, to: 0.75 };
 
 /**
- * The lower part of the comfortable range, for loud, speech-like holds: a
- * strong sound held high is the version of the drill to build toward, not the
- * one to repeat every rung.
+ * The lower part of the comfortable range, for loud, speech-like holds and
+ * calls: a strong sound held high is the version of the drill to build toward,
+ * not the one to repeat every rung.
  */
 export const LOWER_MIDDLE_OF_RANGE: RangeCap = { from: 0, to: 0.6 };
+
+/**
+ * The lower half of the comfortable range, for the cool-down and recovery
+ * drills. A "down" ladder starts on its top rung, so without this a cool-down
+ * spent every rep in the upper half of the voice and never came back toward
+ * speaking pitch.
+ */
+export const LOWER_HALF_OF_RANGE: RangeCap = { from: 0, to: 0.5 };
+
+/**
+ * The upper half of the comfortable range, for a light hold meant to sit at or
+ * near the singer's transition rather than below it. Walked from the bottom of
+ * the whole ladder, a bass's float sat at D#3–A#3, under his first break.
+ */
+export const UPPER_HALF_OF_RANGE: RangeCap = { from: 0.5, to: 1 };
+
+/**
+ * The span every ladder is fitted to before a range test has been taken:
+ * A2–E4, inside the baritone band lib/audio/notes.ts uses (A2–A4) and, an
+ * octave up (A3–E5), inside its mezzo band (A3–A5). Without a saved range the
+ * scorer counts either octave, so one nominal span serves lower and higher
+ * voices. It is a placeholder, not a guess at anyone's voice: a tenor's floor
+ * or a bass's ceiling can sit inside it, and the range test replaces it with
+ * the singer's own.
+ */
+export const NOMINAL_RANGE = { lowMidi: 45, highMidi: 64 } as const;
 
 const rel = (root: number, offsets: number[]) => offsets.map((o) => root + o);
 
@@ -221,7 +247,8 @@ const CATALOGUE: WarmupExercise[] = [
   // public warm-up videos (the "Easy 7-minute" and the "Complete 10-minute",
   // pitch-tracked 2026-09-03 — see docs/research/singeo-warmup-parameters.md):
   // the bubble is a 1-3-5-8-5-3-1 arpeggio at ~0.42s a note, N and gug are a
-  // 13-note run up the arpeggio to the 12th and down the scale, hung-ee-mm is
+  // 13-note run up the arpeggio to the 12th (1-3-5-8-10-12) and back down
+  // 11-9-7-5-4-2-1, mostly in skips rather than down the scale, hung-ee-mm is
   // three five-note passes in one breath, and hoo is a slow 8-5-3-1 that walks
   // DOWN by half-steps. The consonant or vowel is in the title and the tip,
   // since the detector only hears the pitch.
@@ -246,7 +273,7 @@ const CATALOGUE: WarmupExercise[] = [
   {
     id: "n-hum-scale",
     title: "N run",
-    desc: 'Hum on "n" up the arpeggio to the twelfth, then down the scale — thirteen notes on one breath.',
+    desc: 'Hum on "n" up the arpeggio to the twelfth (1-3-5-8-10-12), then back down 11-9-7-5-4-2-1: thirteen notes on one breath.',
     tier: "intermediate",
     tip: "All of it through the nose, tongue on the roof of the mouth. Feel the buzz behind the top teeth.",
     noteDur: 0.3,
@@ -286,7 +313,7 @@ const CATALOGUE: WarmupExercise[] = [
   {
     id: "gug-staccato",
     title: "Staccato gug",
-    desc: 'Thirteen short, detached "gug"s — up the arpeggio to the twelfth, down the scale — with a little silence after each one.',
+    desc: 'Thirteen short, detached "gug"s, up the arpeggio to the twelfth and back down 11-9-7-5-4-2-1, with a little silence after each one.',
     tier: "intermediate",
     tip: 'Short and bouncy, and leave a small gap of silence after every note. The "g" restarts each one from the breath, never a squeeze in the throat, and every note still gets its pitch.',
     noteDur: 0.25,
@@ -410,6 +437,12 @@ const CATALOGUE: WarmupExercise[] = [
   // cycles after the onset it skips, and the player reports the rate and width
   // of the wobble it measured. That is all it reports: two numbers about the
   // pitch contour, never whether the vibrato sounded good.
+  //
+  // Both holds walk the middle of the range (MIDDLE_OF_RANGE), like the swell.
+  // Uncapped, a bounded routine step walks from rung 0, a third above the
+  // floor, so the vibrato routine and the program built on it held every note
+  // in the bottom of the voice, where a free vibrato is least likely to turn
+  // up, against the float's own tip.
   {
     id: "vibrato-hold",
     title: "Vibrato hold",
@@ -418,6 +451,7 @@ const CATALOGUE: WarmupExercise[] = [
     tip: "Do not shake it out of the jaw or the belly. Relax and let the note move on its own; straight is a fine answer too.",
     noteDur: 4.5,
     vibrato: VIBRATO_TARGET_BAND,
+    rangeCap: MIDDLE_OF_RANGE,
     buildSteps: (r) => [[r]],
   },
   {
@@ -428,12 +462,15 @@ const CATALOGUE: WarmupExercise[] = [
     tip: "Lighter than you think. A higher note held softly is often where vibrato turns up first.",
     noteDur: 4.5,
     vibrato: VIBRATO_TARGET_BAND,
+    rangeCap: MIDDLE_OF_RANGE,
     buildSteps: (r) => [[r + 5]],
   },
   // Recovery: small, quiet, low-effort patterns in a narrow comfortable band,
-  // for a voice that feels tired. The detector cannot hear vocal fry, so the
-  // creak in "Creak to tone" is for the singer; only the pitched note after it
-  // is scored, as everywhere else.
+  // for a voice that feels tired. The two descents walk only the lower half of
+  // the fitted ladder (LOWER_HALF_OF_RANGE), easing down toward speaking pitch
+  // rather than starting at the top of it. The detector cannot hear vocal fry,
+  // so the creak in "Creak to tone" is for the singer; only the pitched note
+  // after it is scored, as everywhere else.
   {
     id: "quiet-hum-descent",
     title: "Quiet hum descent",
@@ -442,6 +479,7 @@ const CATALOGUE: WarmupExercise[] = [
     tip: "Half your usual volume. Lips closed, jaw loose, and let each note settle rather than place it.",
     noteDur: 0.8,
     ladder: "down",
+    rangeCap: LOWER_HALF_OF_RANGE,
     buildSteps: (r) => [rel(r, [4, 2, 0])],
   },
   {
@@ -452,6 +490,7 @@ const CATALOGUE: WarmupExercise[] = [
     glide: true,
     noteDur: 1,
     ladder: "down",
+    rangeCap: LOWER_HALF_OF_RANGE,
     tip: "Easy air, loose lips. If the trill stops, use a hum instead; nothing here needs effort.",
     buildSteps: (r) => [[r + 4, r]],
   },
@@ -505,8 +544,9 @@ const CATALOGUE: WarmupExercise[] = [
   // Messa di voce: one note that swells and fades. The detector cannot hear
   // loudness as a level, so what is scored is the part it can hear and the part
   // that is genuinely hard: the pitch holding still while the volume moves.
-  // And a semi-occluded cool-down: a straw slide down, walked down the ladder,
-  // so a session can end the way it started, on the easiest sound there is.
+  // And a semi-occluded cool-down: a straw slide down, walked down the lower
+  // half of the ladder, so a session can end the way it started, on the
+  // easiest sound there is, settling toward speaking pitch.
   {
     id: "swell-and-fade",
     title: "Swell and fade",
@@ -525,6 +565,7 @@ const CATALOGUE: WarmupExercise[] = [
     glide: true,
     noteDur: 1,
     ladder: "down",
+    rangeCap: LOWER_HALF_OF_RANGE,
     tip: "Soft, like a sigh through the straw. Let the voice settle back toward speaking pitch; nothing here needs effort.",
     buildSteps: (r) => [[r + 7, r]],
   },
@@ -637,6 +678,7 @@ export const PRO_PACKS: WarmupPack[] = [
         tier: "intermediate",
         tip: "Bratty is correct. Keep it forward and buzzy, like a playground taunt.",
         noteDur: 0.45,
+        rangeCap: LOWER_MIDDLE_OF_RANGE,
         buildSteps: (r) => [rel(r, [0, 0, 0, 0, 0])],
       },
       {
@@ -646,6 +688,7 @@ export const PRO_PACKS: WarmupPack[] = [
         tier: "intermediate",
         tip: "Think playground call, not scream. Power comes from the body, never the throat.",
         noteDur: 0.6,
+        rangeCap: LOWER_MIDDLE_OF_RANGE,
         buildSteps: (r) => [rel(r, [4, 0, 4, 0])],
       },
       {
@@ -656,6 +699,7 @@ export const PRO_PACKS: WarmupPack[] = [
         tip: "Each burst starts from air, not from squeeze. Leave a short silence to reset between notes.",
         noteDur: 0.4,
         gapSec: STACCATO_GAP_SEC,
+        rangeCap: LOWER_MIDDLE_OF_RANGE,
         buildSteps: (r) => [rel(r, [0, 2, 4, 5])],
       },
       {
@@ -665,6 +709,7 @@ export const PRO_PACKS: WarmupPack[] = [
         tier: "intermediate",
         tip: 'Let the "y" spring each note forward. No gripping at the top of the triad.',
         noteDur: 0.55,
+        rangeCap: LOWER_MIDDLE_OF_RANGE,
         buildSteps: (r) => [rel(r, [0, 4, 7, 4, 0])],
       },
       {
@@ -703,6 +748,7 @@ export const PRO_PACKS: WarmupPack[] = [
         tier: "intermediate",
         tip: "Keep the same speech-like color all the way down. The low notes need less push, not more; just do not let them go breathy.",
         noteDur: 0.5,
+        rangeCap: LOWER_MIDDLE_OF_RANGE,
         buildSteps: (r) => [rel(r, [7, 5, 4, 2, 0])],
       },
     ],
@@ -777,10 +823,11 @@ export const PRO_PACKS: WarmupPack[] = [
       {
         id: "head-float-hold",
         title: "Top-note float",
-        desc: "Hold one light note at the fifth and let it hover — pure head voice.",
+        desc: "Hold one note at the fifth and let it hover, as light as it will go.",
         tier: "intermediate",
         tip: "Imagine the note resting on the breath, like a ball on a fountain.",
         noteDur: 3,
+        rangeCap: UPPER_HALF_OF_RANGE,
         buildSteps: (r) => [[r + 7]],
       },
     ],
@@ -911,10 +958,11 @@ export function capLadder(ladder: number[], cap: RangeCap | undefined): number[]
  * Every semitone root from the ladder's bottom to its top. With a saved
  * range, start a major third above the low note and stop a fourth below the
  * high note (accounting for the exercise's highest interval). Without one,
- * default to the classic C3→G3 ladder. The player walks this band up and
- * down endlessly — see ladderWalk — so the ladder is the singer's whole
- * comfortable span, not a fixed rep count, unless the exercise sets a
- * `rangeCap`, which keeps only that slice of it.
+ * fit a nominal A2–E4 range (NOMINAL_RANGE): the old fixed C3→G3 roots
+ * ignored the pattern's width, so a twelfth run topped out on D5. The player
+ * walks this band up and down endlessly — see ladderWalk — so the ladder is
+ * the singer's whole comfortable span, not a fixed rep count, unless the
+ * exercise sets a `rangeCap`, which keeps only that slice of it.
  */
 export function computeRootLadder(
   ex: WarmupExercise,
@@ -945,14 +993,17 @@ function fitRootLadder(
     if (!overCeiling && (top - start + 1 >= MIN_RUNGS || maxOff < 12)) {
       return range(start, top);
     }
-    // Spend the headroom first (the pattern's top note may reach the measured
-    // top, which is what the recordings this catalogue mirrors do), then let
+    // Spend most of the headroom first (the pattern's top note stays two
+    // semitones under the measured top when the range has room, and reaches it
+    // only when it does not: the measured top is the extreme a cold range test
+    // found, falsetto included, not a note to warm up on every rep), then let
     // the floor drop toward the measured low — never below it — until the
     // ladder has rungs to walk. Patterns narrower than an octave only get here
     // when the courtesy ladder would cross the ceiling; while it fits they keep
     // the courtesies untouched, which the coach's first-practice picker
     // (lib/song-first-practice.ts) relies on.
-    const top2 = Math.max(30, highMidi - maxOff);
+    const headroom = highMidi - lowMidi >= maxOff + 4 ? 2 : 0;
+    const top2 = Math.max(30, highMidi - headroom - maxOff);
     const start2 = Math.max(30, lowMidi, Math.min(lowMidi + 4, top2 - (MIN_RUNGS - 1)));
     // Take the fallback whenever the courtesy ladder would cross the ceiling,
     // and when the range is narrower than the pattern itself, pin the top note
@@ -963,7 +1014,7 @@ function fitRootLadder(
     if (overCeiling) return [top2];
     return range(start, top);
   }
-  return Array.from({ length: 8 }, (_, i) => 48 + i); // C3..G3
+  return fitRootLadder(ex, NOMINAL_RANGE.lowMidi, NOMINAL_RANGE.highMidi);
 }
 
 /** One rep of the endless up-and-down ladder walk. */
@@ -989,6 +1040,18 @@ export function ladderWalk(ladder: number[], rep: number): LadderStep {
   const pos = rep % period;
   const index = pos < n ? pos : period - pos;
   return { root: ladder[index], index, ascending: pos < n - 1 };
+}
+
+/**
+ * A bounded routine step on a "down" ladder walks down once and then stays
+ * on its bottom rung, so a step with more reps than rungs never turns round
+ * and climbs: a cool-down that heads back up partway through breaks its own
+ * "each rep a half-step lower". The endless deep-link walk keeps ladderWalk's
+ * triangle. `ladder` is the reversed band the player walks, top note first.
+ */
+export function descentWalk(ladder: number[], rep: number): LadderStep {
+  const index = Math.min(Math.max(0, rep), Math.max(0, ladder.length - 1));
+  return { root: ladder[index] ?? 48, index, ascending: index < ladder.length - 1 };
 }
 
 /** Rough length of one climb of the ladder: each rep plays the guide then a 120% sing window. */

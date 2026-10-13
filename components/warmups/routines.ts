@@ -67,7 +67,7 @@ export const ROUTINES: Routine[] = [
   {
     id: "daily",
     name: "Daily warmup",
-    tagline: "The complete ten: the bubble, sirens, raspberries, hung-ee-mm, hoo, staccato gug, then a slow descent.",
+    tagline: "The everyday set: the bubble, sirens, raspberries, hung-ee-mm, hoo, staccato gug, then a slow descent.",
     pro: false,
     steps: [
       step("lip-trill-scale", 22),
@@ -83,7 +83,7 @@ export const ROUTINES: Routine[] = [
   {
     id: "full",
     name: "Full warmup",
-    tagline: "The complete ten, then arpeggios, a reverse arpeggio, a run and a straw slide to finish.",
+    tagline: "Everything in the everyday set, plus the straw, arpeggios, a reverse arpeggio, a run and a straw slide to finish.",
     pro: false,
     steps: [
       step("ng-siren-fifth", 6),
@@ -118,11 +118,14 @@ export const ROUTINES: Routine[] = [
   },
   {
     // The end of a session, not the start of one: the same easy, semi-occluded
-    // sounds a warmup opens with, walked down the ladder instead of up, for
-    // after a long practice, a rehearsal or a set.
+    // sounds a warmup opens with, for after a long practice, a rehearsal or a
+    // set. Every pattern falls from its first note to its last, and the trill,
+    // the straw and the hum also step down rep by rep (descentWalk). The sigh
+    // keeps its own small up-ladder, low in the voice, because the Morning
+    // reset and the programmes share it; the tagline promises only the first.
     id: "cooldown",
     name: "Cool-down",
-    tagline: "A few quiet minutes after you have sung: a soft trill, a straw slide, a sigh and a small hum, all heading down.",
+    tagline: "A few quiet minutes after you have sung: a soft trill, a straw slide, a sigh and a small hum, each one sliding or stepping down.",
     pro: false,
     steps: [
       step("soft-trill-slide", 6),
@@ -265,6 +268,22 @@ export function routineSeconds(r: Routine): number {
 
 export function routineMinutes(r: Routine): number {
   return Math.max(1, Math.round(routineSeconds(r) / 60));
+}
+
+/**
+ * The recommendation sized to the free guided practice left today.
+ *
+ * A routine that runs past the allowance stops at the cap slide between two
+ * steps, so a free singer's first guided session would end on a sales slide
+ * instead of a summary. When `preferred` does not fit in `leftSec`, the short
+ * morning set takes its place if that one fits; otherwise nothing shorter
+ * would finish either, and the pick stands. Pro passes Infinity and always
+ * gets `preferred`.
+ */
+export function sizeRoutineToAllowance(preferred: Routine, leftSec: number): Routine {
+  if (routineSeconds(preferred) <= leftSec) return preferred;
+  const morning = routineById("morning");
+  return morning && routineSeconds(morning) <= leftSec ? morning : preferred;
 }
 
 export interface RecentWarmups { averageScore: number; averageStars: number; count: number }

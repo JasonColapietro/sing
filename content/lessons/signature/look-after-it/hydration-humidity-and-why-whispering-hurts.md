@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+Water reaches your voice slowly: steady drinking across the day shows up in how singing feels, while a glass just before you sing does little for the next twenty minutes. Dry air counts too, and the NIDCD's Taking Care of Your Voice guidance, listed in the sources below, suggests a humidifier at home, especially in winter or a dry climate. The same guidance names whispering and talking over noise as things to avoid, since both put stress on the voice, and most voice fatigue comes from talking rather than singing, above all talking over noise. So rest your voice with silence rather than a whisper, and count a loud evening of conversation as voice use.
+
 ## Steps
 
 ### Use the practice material
@@ -34,9 +38,9 @@ Whispering is on the harmful list. So is talking over noise. Neither is obvious.
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.
 
-### Hear the distinction
+### Plan the day for your voice
 
-Make two brief, comfortable examples of the idea in “Hydration, Humidity, and Why Whispering Hurts.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound.
+Write down tomorrow's voice use, not just your practice: where you will talk, for how long, and whether there will be noise to talk over. Next to each noisy stretch, write one change, such as moving the conversation somewhere quieter, keeping it short, or using a microphone if you have to address a group. Plan water across the day rather than a glass just before singing, note whether the air where you sleep is dry, and if you need to rest your voice, plan silence rather than whispering. Then build a short warm-up from First hum, Humming thirds and Descending five, record it in the recorder, and stop before fatigue changes the sound.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder.
@@ -50,7 +54,7 @@ I assembled a short warm-up with rests and wrote the warning signs that would ma
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use.
+- The target disappears when the range, volume, speed, or duration increases. => If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
@@ -68,7 +72,7 @@ I assembled a short warm-up with rests and wrote the warning signs that would ma
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If symptoms persist, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.
 

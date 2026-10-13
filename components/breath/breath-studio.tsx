@@ -1,11 +1,14 @@
 "use client";
 
-import { useFreeCap } from "@/lib/free-cap";
-import { CapWall } from "@/components/practice/free-cap";
+import { isCapped, useFreeCap } from "@/lib/free-cap";
+import { getProState, useProReady } from "@/lib/pro";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
+import { liveStreak } from "@/components/account/save-state";
 
 import { useCallback, useEffect, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
-import { localDay, todayPracticeSec, useProgress } from "@/lib/progress";
+import { getState, localDay, useProgress } from "@/lib/progress";
 import { Card, PageShell, SectionHeading } from "@/components/ui";
 import {
   ContinueCard,
@@ -13,6 +16,7 @@ import {
   StarTrio,
   averageStars,
   useDailyGoal,
+  useGoalDoneSec,
 } from "@/components/practice/learn-home";
 import { BreathDrillSession, BreathRunner } from "./breath-runner";
 import {
@@ -23,10 +27,13 @@ import {
   breathRoutineById,
   breathRoutineMinutes,
   breathStepTitle,
+  drillPresetFromQuery,
   isBreathDrillId,
   recommendBreathRoutine,
+  sizeBreathRoutineToAllowance,
   type BreathDrillId,
   type BreathRoutine,
+  type BreathStep,
 } from "./routines";
 import {
   EMPTY_BREATH_BESTS,
@@ -53,7 +60,8 @@ import {
 type View =
   | { kind: "home" }
   | { kind: "routine"; routine: BreathRoutine; startStep?: number }
-  | { kind: "drill"; drill: BreathDrillId };
+  /** `preset` is a setting a link asked for (a program day's counts); none opens the setup card's defaults. */
+  | { kind: "drill"; drill: BreathDrillId; preset?: BreathStep };
 
 const DRILL_ORDER: BreathDrillId[] = ["sustain", "cue", "box", "farinelli"];
 
@@ -90,6 +98,11 @@ function bestLine(drill: BreathDrillId, bests: BreathBests): string {
   }
 }
 
+/** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
+function showCapWall() {
+  document.getElementById("free-cap")?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 /** A set's stars, on the same rule the warmups room uses for its routines. */
 function routineStars(routine: BreathRoutine, bests: BreathBests): Stars {
   return averageStars(routine.steps.map((s) => starsForDrill(s.drill, bests)));
@@ -101,15 +114,26 @@ export function BreathStudio() {
 
   const progress = useProgress();
   const cap = useFreeCap();
-  /** Every way into a drill or set, so a capped singer meets the wall, not a mic prompt. */
+  /**
+   * Every way into a drill or set, so a capped singer meets the wall, not a
+   * mic prompt. A capped tap scrolls to the wall: a Start that does nothing
+   * reads as a broken page, not as a fair limit.
+   */
   const start = useCallback(
     (next: View) => {
-      if (cap.capped) return;
+      if (cap.capped) {
+        showCapWall();
+        return;
+      }
       setView(next);
     },
     [cap.capped],
   );
+  const unavailableReason = cap.capped
+    ? "Free practice is used for today. It resets at midnight; the free studio is still open."
+    : undefined;
   const { goalSec } = useDailyGoal();
+  const goalDoneSec = useGoalDoneSec(progress);
 
   /**
    * The room holds the microphone rather than the sustain step.
@@ -149,9 +173,14 @@ export function BreathStudio() {
     const routineId = q.get("routine");
     /* eslint-disable react-hooks/set-state-in-effect */
     setHandledDeepLink(true);
-    if (cap.capped) return;
+    // Asked of the stores, not of `cap`: this first runs in the hydration
+    // commit, where `cap` is still the prerender's (no sessions, so never
+    // capped), and a capped singer on a lesson link would land in the drill.
+    if (isCapped(getState(), getProState().active)) return;
     if (drill && isBreathDrillId(drill)) {
-      setView({ kind: "drill", drill });
+      // A program day links its drill with the counts it asks for
+      // (lib/programs.ts itemHref); a bare ?drill= opens the usual setup.
+      setView({ kind: "drill", drill, preset: drillPresetFromQuery(drill, q) ?? undefined });
       return;
     }
     const routine = breathRoutineById(routineId);
@@ -163,12 +192,25 @@ export function BreathStudio() {
       routine && Number.isInteger(step) && step >= 1 && step <= routine.steps.length ? step - 1 : 0;
     if (routine) setView({ kind: "routine", routine, startStep });
     /* eslint-enable react-hooks/set-state-in-effect */
-  }, [handledDeepLink, cap.capped]);
+  }, [handledDeepLink]);
 
   const practicedToday = progress.sessions.some(
     (s) => s.type === "breath" && s.day === localDay(),
   );
-  const recommended = recommendBreathRoutine({ practicedToday });
+  // Sized to the free minutes left, like the warmups room: the daily set runs
+  // past five minutes and would reach the cap before its sustain test, so a
+  // free singer's first set would end on the cap slide instead of a score.
+  const preferred = recommendBreathRoutine({ practicedToday });
+  const recommended = cap.capped ? preferred : sizeBreathRoutineToAllowance(preferred, cap.leftSec);
+  // "Ends on a score" holds on the free plan only for the quick set: the daily
+  // set and the builder run past the free minutes and stop on the cap slide
+  // before their sustain test. Said only once the entitlement is read, so a
+  // Pro singer is never told about a limit they paid to remove.
+  const proReady = useProReady();
+  const setsLede =
+    proReady && !cap.isPro
+      ? `Three sets, shortest first. Each runs its drills back to back and ends on a score. Free guided practice is ${FREE_DAILY_MINUTES} minutes a day: the quick set fits, and the longer two stop when it runs out.`
+      : "Three sets, shortest first. Each runs its drills back to back and ends on a score.";
 
   const goHome = () => {
     pitch.stop();
@@ -187,7 +229,15 @@ export function BreathStudio() {
     );
   }
   if (view.kind === "drill") {
-    return <BreathDrillSession drill={view.drill} pitch={pitch} onExit={goHome} />;
+    return (
+      <BreathDrillSession
+        capped={cap.capped}
+        drill={view.drill}
+        preset={view.preset}
+        pitch={pitch}
+        onExit={goHome}
+      />
+    );
   }
 
 
@@ -197,7 +247,13 @@ export function BreathStudio() {
       title="Breathing exercises for singers"
       subtitle="Guided breath sets and a mic-based sustain test that build breath support for long phrases. Start the set that fits the moment, or pick one drill and work it."
     >
-      {cap.capped && <CapWall cap={cap} />}
+      {cap.capped ? (
+        <div className="mb-6">
+          <CapWall cap={cap} />
+        </div>
+      ) : (
+        <FreeAllowance cap={cap} className="mb-4" />
+      )}
       <ContinueCard
         kicker={practicedToday ? "Back for more" : "Start here"}
         title={recommended.name}
@@ -216,18 +272,21 @@ export function BreathStudio() {
         /* Our own label rather than the card's mic-aware default: every breath
            set opens on a silent drill, so "Enable mic and start" would be
            asking for something this set does not need until its last step. */
-        startLabel={practicedToday ? "Top up" : "Start breathing"}
+        startLabel={cap.capped ? "Available tomorrow" : practicedToday ? "Top up" : "Start breathing"}
+        unavailableReason={unavailableReason}
         micReady={pitch.listening}
         error={pitch.error}
-        streakDays={progress.streak.current}
+        // The stored count outlives a lapsed streak; only a live one is named.
+        streakDays={liveStreak(progress.streak)}
+        streakBest={progress.streak.best}
         stars={routineStars(recommended, bests)}
-        goal={{ doneSec: todayPracticeSec(progress), goalSec }}
+        goal={{ doneSec: goalDoneSec, goalSec }}
       />
 
       <section className="mt-10">
         <SectionHeading
           label="Workouts"
-          lede="Three sets, shortest first. Each runs its drills back to back and ends on a score."
+          lede={setsLede}
         >
           Breath sets
         </SectionHeading>
@@ -269,6 +328,7 @@ export function BreathStudio() {
         <div className="mt-5">
           <PathList
             micNoteId={null}
+            unavailableReason={unavailableReason}
             levels={[
               {
                 title: "Breath",

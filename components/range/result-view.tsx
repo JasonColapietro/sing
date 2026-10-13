@@ -5,12 +5,17 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   VOICE_TYPES,
   classifyVoice,
+  crossFamilyAlternative,
   midiToLabel,
+  voiceFitLabel,
+  type VoiceType,
 } from "@/lib/audio/notes";
 import { playTone } from "@/lib/audio/synth";
-import { useProgress, type Achievement } from "@/lib/progress";
+import { RANGE_RETEST_DAYS, useProgress, type Achievement } from "@/lib/progress";
+import { MAX_RANGE_HISTORY } from "@/lib/progress-shape";
 import type { RangeEntry } from "@/lib/analytics";
 import { useIsPro, useProReady } from "@/lib/pro";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Button, Card, LinkButton, Pill, SectionLabel, Stat } from "@/components/ui";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
@@ -30,7 +35,8 @@ import { PianoStrip } from "./piano-strip";
 import { SINGERS_LITE as SINGERS } from "@/lib/singers-lite";
 import { rangeOverlap, voiceTypeSlug } from "@/lib/singers-core";
 import type { Song } from "@/components/songs/types";
-import { countSongsFitting } from "@/components/songs/lib";
+import { countOpenSongsFitting } from "@/components/songs/lib";
+import { useMastered } from "@/components/songs/favorites";
 
 /**
  * Household names for the quick post-test comparison, pulled from the full
@@ -50,6 +56,23 @@ const FAMOUS_VOICES = COMPARISON_SLUGS.flatMap((slug) => {
   return s ? [s] : [];
 });
 
+/**
+ * The quick comparison, closest first. Five of the seven listed singers have
+ * very wide reported ranges, so ranking by raw semitones of overlap left most
+ * ordinary ranges tied at the top and the list order picked the headline:
+ * nearly everyone, sopranos included, "overlapped most" with whoever was
+ * first. Ranking by the share of the two ranges' combined span that they
+ * share rewards a singer whose range is close to yours rather than one whose
+ * range simply contains it. Raw overlap breaks ties.
+ */
+export function rankFamousVoices(lowMidi: number, highMidi: number) {
+  return FAMOUS_VOICES.map((f) => {
+    const overlap = rangeOverlap(lowMidi, highMidi, f.lowMidi, f.highMidi);
+    const union = Math.max(highMidi, f.highMidi) - Math.min(lowMidi, f.lowMidi);
+    return { ...f, overlap, fit: union > 0 ? overlap / union : 0 };
+  }).sort((a, b) => b.fit - a.fit || b.overlap - a.overlap);
+}
+
 export function comparisonSingerFromSlug(slug: string | null) {
   if (!slug) return null;
   return SINGERS.find((singer) => singer.slug === slug) ?? null;
@@ -68,6 +91,44 @@ function noServerComparison() {
   return null;
 }
 
+const SONG_SLUG = /^[a-z0-9-]{1,80}$/;
+
+/**
+ * The /can-you-sing song that sent the singer here, or null. Read from
+ * ?check=, with ?song= accepted as well so either spelling of the link works.
+ * Only the slug's shape is checked: the song catalogue imports the whole
+ * singer library, which this route keeps out of its bundle on purpose, and an
+ * unknown slug lands on the site's 404 page rather than anywhere harmful.
+ */
+export function returnSongSlugFromSearch(search: string): string | null {
+  const params = new URLSearchParams(search);
+  const slug = params.get("check") ?? params.get("song");
+  return slug && SONG_SLUG.test(slug) ? slug : null;
+}
+
+function returnSongFromLocation() {
+  return returnSongSlugFromSearch(window.location.search);
+}
+
+/**
+ * The note under a two-band result. The pair is always one band from the
+ * bass-to-tenor set and one from the contralto-to-soprano set, which the
+ * singer library describes as male and female categories, so the honest
+ * tiebreaker is the singer's own voice rather than anything a pitch tracker
+ * can hear.
+ */
+function altBandsCopy(voice: VoiceType, alt: VoiceType): string {
+  const [lower, higher] =
+    voice.lowMidi <= alt.lowMidi ? [voice, alt] : [alt, voice];
+  return `Your range fits the ${voice.label.toLowerCase()} and ${alt.label.toLowerCase()} bands about equally well, and a range test alone can't tell them apart: ${lower.label.toLowerCase()} is a male voice category and ${higher.label.toLowerCase()} a female one, and their notes overlap. Go with the one that describes your voice, and treat it as an estimate, not a box.`;
+}
+
+/** "basses", "tenors", "mezzo-sopranos". */
+export function voicePlural(label: string): string {
+  const lower = label.toLowerCase();
+  return lower.endsWith("s") ? `${lower}es` : `${lower}s`;
+}
+
 function describeSpan(semitones: number): string {
   const oct = Math.floor(semitones / 12);
   const rem = semitones % 12;
@@ -77,13 +138,14 @@ function describeSpan(semitones: number): string {
 }
 
 /**
- * Semitones trimmed off each end to get from "the notes I reached" to "the
- * notes I can sing a phrase on". Both extremes came out of pushing, so
- * practising at them trains the reach rather than the voice.
+ * Semitones trimmed off each end as a first guess at "the notes I can sing a
+ * phrase on". Both extremes are the furthest notes reached, so practising at
+ * them trains the reach rather than the voice. The trim is arithmetic, not a
+ * measurement, and the result card says so.
  */
 const EDGE_TRIM_SEMIS = 3;
 
-/** The middle of the span, with the pushed edges trimmed. Never inverts. */
+/** The middle of the span, with the edges trimmed. Never inverts. */
 function workingRange(lowMidi: number, highMidi: number): [number, number] {
   const trim = Math.min(EDGE_TRIM_SEMIS, Math.floor((highMidi - lowMidi) / 4));
   return [lowMidi + trim, highMidi - trim];
@@ -111,37 +173,39 @@ function warmupForSpan(semis: number): { id: string; title: string; why: string 
       };
 }
 
-/** Seven tests a fortnight apart spans exactly the three months the caption claims. */
-const SAMPLE_TESTS = 7;
-const SAMPLE_INTERVAL_DAYS = 15;
+/**
+ * About six weeks between tests: RANGE_RETEST_DAYS in lib/progress.ts, the
+ * interval the coach and the pitch meter wait before suggesting a retest, and
+ * the spacing pro-charts.tsx asks for.
+ */
+const SAMPLE_INTERVAL_DAYS = RANGE_RETEST_DAYS;
 
 /**
- * A worked example of the range chart, not the singer's data: a test every
- * couple of weeks, ending on the range just measured, widening the way a
- * practising voice does. Shown only when there is nothing real to plot,
- * because an empty chart is the one thing that cannot sell the chart.
+ * A worked example of the range chart, not the singer's data: three tests six
+ * weeks apart, ending on the range just measured, with the edges wobbling by a
+ * semitone rather than trending, because range edges move slowly if at all
+ * (content/book/11-tracking-change.md). Shown only when there is nothing real
+ * to plot. It used to widen by up to eight semitones over three months of
+ * fortnightly tests, an outcome nobody measured and a testing habit the book
+ * advises against.
  */
-function sampleHistory(lowMidi: number, highMidi: number): RangeEntry[] {
-  const span = highMidi - lowMidi;
-  // Clamped so the earliest sample still spans at least two semitones —
+export function sampleHistory(lowMidi: number, highMidi: number): RangeEntry[] {
   // rangeSeries drops any entry whose high is not above its low.
-  const growth = Math.max(
-    0,
-    Math.min(4, Math.floor(span / 6), Math.floor((span - 2) / 2)),
-  );
+  const wobble = highMidi - lowMidi >= 4 ? 1 : 0;
+  const day = 24 * 60 * 60 * 1000;
   const end = Date.now();
-  const steps = SAMPLE_TESTS - 1;
-  return Array.from({ length: SAMPLE_TESTS }, (_, i) => {
-    const back = steps - i;
-    const inset = Math.round((back / steps) * growth);
-    return {
-      lowMidi: lowMidi + inset,
-      highMidi: highMidi - inset,
-      testedAt: new Date(
-        end - back * SAMPLE_INTERVAL_DAYS * 24 * 60 * 60 * 1000,
-      ).toISOString(),
-    };
-  });
+  const spans: Array<[number, number]> = [
+    [lowMidi, highMidi],
+    [lowMidi + wobble, highMidi - wobble],
+    [lowMidi, highMidi],
+  ];
+  return spans.map(([low, high], i) => ({
+    lowMidi: low,
+    highMidi: high,
+    testedAt: new Date(
+      end - (spans.length - 1 - i) * SAMPLE_INTERVAL_DAYS * day,
+    ).toISOString(),
+  }));
 }
 
 /** 0..100 position of a midi value on a fixed axis. */
@@ -190,16 +254,20 @@ function renderCardDataUrl(lowMidi: number, highMidi: number): string | null {
   ctx.font = `700 124px ${mono}`;
   ctx.fillText(`${midiToLabel(lowMidi)} — ${midiToLabel(highMidi)}`, W / 2, 268);
 
-  // Voice type + span
-  const voice = classifyVoice(lowMidi, highMidi);
+  // Voice type + span. This is the copy of the result that leaves the site,
+  // so it carries the same "closest fit" hedge as the page: a voice type from
+  // one range test is an estimate, not a classification.
   const semis = highMidi - lowMidi;
+  const voiceLine = `Closest fit: ${voiceFitLabel(lowMidi, highMidi)} · ${semis} semitones · ${describeSpan(semis)}`;
   ctx.fillStyle = MUT;
-  ctx.font = `500 30px ${mono}`;
-  ctx.fillText(
-    `${voice.label} · ${semis} semitones · ${describeSpan(semis)}`,
-    W / 2,
-    330,
-  );
+  let lineSize = 30;
+  ctx.font = `500 ${lineSize}px ${mono}`;
+  // Two band names make the longest line overrun the frame; shrink to fit.
+  while (lineSize > 18 && ctx.measureText(voiceLine).width > W - 140) {
+    lineSize -= 2;
+    ctx.font = `500 ${lineSize}px ${mono}`;
+  }
+  ctx.fillText(voiceLine, W / 2, 330);
 
   // Mini keyboard C2..C6 with range band
   const kbX = 120;
@@ -283,13 +351,27 @@ export function ResultView({
     noServerComparison,
   );
   const comparisonSinger = comparisonSingerFromSlug(comparisonSlug);
+  const returnSongSlug = useSyncExternalStore(
+    subscribeToLocation,
+    returnSongFromLocation,
+    noServerComparison,
+  );
   const semis = highMidi - lowMidi;
   const voice = useMemo(
     () => classifyVoice(lowMidi, highMidi),
     [lowMidi, highMidi],
   );
+  const altVoice = useMemo(
+    () => crossFamilyAlternative(lowMidi, highMidi),
+    [lowMidi, highMidi],
+  );
 
   const [workLow, workHigh] = workingRange(lowMidi, highMidi);
+  const trimmed = workLow - lowMidi;
+  const middleIs =
+    trimmed > 0
+      ? `your span with ${trimmed} semitone${trimmed === 1 ? "" : "s"} trimmed from each end`
+      : "the whole span you reached";
   const warmup = warmupForSpan(semis);
 
   const isPro = useIsPro();
@@ -313,22 +395,21 @@ export function ResultView({
     };
   }, [isPro, proReady]);
 
+  // Counted over the bands open now, not the whole book: "Open the songbook"
+  // lands on a library where later bands show Locked until songs below them
+  // are mastered, so the count must be of songs the singer can start.
+  const mastered = useMastered();
   const counted = useMemo(
-    () =>
-      book === null
-        ? null
-        : {
-            fitting: countSongsFitting(book, { lowMidi, highMidi }),
-            total: book.length,
-          },
-    [book, lowMidi, highMidi],
+    () => (book === null ? null : countOpenSongsFitting(book, mastered, { lowMidi, highMidi })),
+    [book, mastered, lowMidi, highMidi],
   );
+  const lockedNote =
+    counted !== null && counted.locked > 0
+      ? `; the other ${counted.locked} open a band at a time as you master songs`
+      : "";
 
   const famous = useMemo(() => {
-    const rows = FAMOUS_VOICES.map((f) => ({
-      ...f,
-      overlap: rangeOverlap(lowMidi, highMidi, f.lowMidi, f.highMidi),
-    })).sort((a, b) => b.overlap - a.overlap);
+    const rows = rankFamousVoices(lowMidi, highMidi);
     return { rows, best: rows[0] };
   }, [lowMidi, highMidi]);
 
@@ -375,10 +456,19 @@ export function ResultView({
               {midiToLabel(highMidi)}
             </div>
           </div>
-          <div className="flex gap-8">
+          <div className="flex flex-wrap gap-x-8 gap-y-4">
             <Stat label="Semitones" value={semis} tone="violet" />
             <Stat label="Span" value={describeSpan(semis)} tone="ink" />
-            <Stat label="Voice type" value={voice.label} tone="cool" />
+            <Stat
+              label="Voice type"
+              value={voice.label}
+              sub={
+                altVoice
+                  ? `Or ${altVoice.label}, an estimate`
+                  : "Closest fit, an estimate"
+              }
+              tone="cool"
+            />
           </div>
         </div>
         <div className="mt-6">
@@ -427,6 +517,25 @@ export function ResultView({
         </Card>
       )}
 
+      {/* The song-page twin of the card above. "Can you sing it?" sends a
+          visitor here with ?check=<song>, and the answer is back on that
+          page, so the result says so instead of leaving them to find it. */}
+      {returnSongSlug && (
+        <Card className="border-violet/40">
+          <SectionLabel>Finish the check</SectionLabel>
+          <h2 className="mt-3 text-xl">Now see if the song fits your range</h2>
+          <p className="mt-2 max-w-2xl text-sm text-mut">
+            Your result is saved in this browser. The song page now compares it
+            with the song&rsquo;s cited range.
+          </p>
+          <div className="mt-4">
+            <LinkButton href={`/can-you-sing/${returnSongSlug}`} size="md">
+              Back to the song →
+            </LinkButton>
+          </div>
+        </Card>
+      )}
+
       {/* Save summary */}
       {save && (
         <Card className="border-ok/30">
@@ -456,17 +565,33 @@ export function ResultView({
       <Card>
         <SectionLabel>What to do with this</SectionLabel>
         <h2 className="mt-3 text-xl">
-          Practise in the middle:{" "}
+          Start in the middle:{" "}
           <span className="text-violet-ink">
             {midiToLabel(workLow)}–{midiToLabel(workHigh)}
           </span>
         </h2>
+        {/* The test asks for the furthest clear notes, falsetto included, and
+            never for comfort, so the middle band is a guess and says so: a
+            baritone whose top was falsetto would otherwise be told to put
+            his songs up there. Warmups start in the band rather than stay in
+            it: the octave siren this card can recommend sweeps the span, and
+            for a span under four semitones the "middle" is all of it, which
+            is still not a measured comfortable band. */}
         <p className="mt-2 max-w-2xl text-sm text-mut">
-          {midiToLabel(lowMidi)} and {midiToLabel(highMidi)} are edges — you
-          found them by pushing, and a note you can only just reach is not a
-          note you can hold a phrase on. The middle of the span is where
-          warmups and songs should sit, and it is the part that widens with
-          practice.
+          {midiToLabel(lowMidi)} and {midiToLabel(highMidi)} are the furthest
+          clear notes you reached today, and a note you can only just reach is
+          not a note you can hold a phrase on.{" "}
+          {midiToLabel(workLow)}–{midiToLabel(workHigh)} is {middleIs}: a
+          starting guess at where you sing comfortably, not a measurement of
+          it. If your top notes were falsetto, the top of that guess may sit
+          above your comfortable band. Find the band by ear in the{" "}
+          <Link
+            href="/studio"
+            className="text-violet-ink underline decoration-violet/50 underline-offset-2 hover:decoration-violet"
+          >
+            pitch studio
+          </Link>
+          , then start warmups there and keep songs inside it.
         </p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div className="rounded-xl border border-line bg-panel2/60 p-4">
@@ -501,10 +626,10 @@ export function ResultView({
             </h3>
             <p className="mt-1.5 text-sm text-mut">
               {counted === null
-                ? "Every song shifts up to an octave either way, so the book comes to the range you just measured."
+                ? "Songs now open fitted to the range you just measured, and you can shift any of them by semitones."
                 : counted.fitting > 0
-                  ? `${counted.fitting} of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key. The rest transpose.`
-                  : `None of the ${counted.total} songs in ${isPro ? "your book" : "the free book"} stay inside your range in their written key, so start from one that transposes — every song shifts up to an octave either way.`}
+                  ? `${counted.fitting} of the ${counted.total} songs open to you now stay inside your range in their written key${lockedNote}. Every song opens fitted to your range, and you can shift any of them by semitones.`
+                  : `None of the ${counted.total} songs open to you now stay inside your range in their written key${lockedNote}, but every song opens fitted to your range, and you can shift any of them by semitones.`}
             </p>
             <div className="mt-4">
               {/* Plain /songs, no filter param: the library seeds its browse
@@ -517,6 +642,15 @@ export function ResultView({
             </div>
           </div>
         </div>
+        {/* Both cards lead into capped practice; say so before the click
+            rather than at the paywall. */}
+        {proReady && !isPro && (
+          <p className="mt-4 text-xs text-dim">
+            On the free plan, warmups and songs count toward{" "}
+            {FREE_DAILY_MINUTES} minutes of guided practice a day, and Pro
+            removes that limit. The range test has no daily limit.
+          </p>
+        )}
       </Card>
 
       {/* Voice type chart */}
@@ -524,28 +658,38 @@ export function ResultView({
         <SectionLabel>Voice type</SectionLabel>
         <h2 className="mt-3 text-xl">
           Closest fit: <span className="text-violet-ink">{voice.label}</span>
+          {altVoice && (
+            <>
+              {" "}
+              or <span className="text-violet-ink">{altVoice.label}</span>
+            </>
+          )}
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-mut">
-          Voice types are rough guides borrowed from choral music. Your range
-          overlaps the {voice.label.toLowerCase()} band the most, but plenty of
-          great singers sit between categories — treat this as a starting
-          point, not a box.
+          {altVoice
+            ? altBandsCopy(voice, altVoice)
+            : `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.`}
         </p>
         {/* The classification used to end here. Every label the classifier can
             produce has a page of singers behind it, so it should be the next
             click rather than the last word. */}
-        <Link
-          href={`/singers/voice-type/${voiceTypeSlug(voice.label)}`}
-          className="mt-3 inline-flex items-center gap-1.5 text-sm text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
-        >
-          See the {voice.label.toLowerCase()}s in the library
-          <span aria-hidden>→</span>
-        </Link>
+        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
+          {(altVoice ? [voice, altVoice] : [voice]).map((v) => (
+            <Link
+              key={v.id}
+              href={`/singers/voice-type/${voiceTypeSlug(v.label)}`}
+              className="inline-flex items-center gap-1.5 text-sm text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
+            >
+              See the {voicePlural(v.label)} in the library
+              <span aria-hidden>→</span>
+            </Link>
+          ))}
+        </div>
         <div className="mt-6 space-y-2">
           {VOICE_TYPES.map((v) => {
             const left = axisPct(v.lowMidi, 36, 84);
             const width = axisPct(v.highMidi, 36, 84) - left;
-            const isMatch = v.id === voice.id;
+            const isMatch = v.id === voice.id || v.id === altVoice?.id;
             return (
               <div key={v.id} className="flex items-center gap-3">
                 <span
@@ -601,12 +745,17 @@ export function ResultView({
       <Card>
         <SectionLabel>Famous company</SectionLabel>
         <h2 className="mt-3 text-xl">
-          Your range overlaps most with{" "}
+          Closest reported range to yours:{" "}
           <span className="text-violet-ink">{famous.best.name}</span>
         </h2>
+        {/* The order is not the (Nst) column: a much wider range can share
+            every note of yours and still sit below a closer one, and without
+            this line that reads as a sorting bug. */}
         <p className="mt-2 max-w-2xl text-sm text-mut">
-          Reported ranges — approximate figures fans and journalists commonly
-          cite, not lab measurements.
+          Ranked by the share of your two ranges&rsquo; combined span that
+          overlaps, so a much wider range can contain all of yours and still
+          rank lower. Reported ranges are approximate figures fans and
+          journalists commonly cite, not lab measurements.
         </p>
         <div className="mt-6 space-y-2">
           {famous.rows.map((f, i) => {
@@ -622,7 +771,7 @@ export function ResultView({
               <div key={f.name} className="flex items-center gap-3">
                 <Link
                   href={`/singers/${f.slug}`}
-                  className={`w-36 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current ${isBest ? "text-violet-ink" : "text-mut"}`}
+                  className={`w-24 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current sm:w-36 ${isBest ? "text-violet-ink" : "text-mut"}`}
                 >
                   {f.name}
                 </Link>
@@ -636,8 +785,12 @@ export function ResultView({
                     style={{ left: `${uLeft}%`, width: `${uWidth}%` }}
                   />
                 </div>
-                <span className="tabular w-24 shrink-0 font-mono text-[11px] text-dim">
-                  {midiToLabel(f.lowMidi)}–{midiToLabel(f.highMidi)}{" "}
+                {/* The note range is dropped on phones: with it, the bar
+                    between the name and the label was about 37px wide. */}
+                <span className="tabular w-14 shrink-0 font-mono text-[11px] text-dim sm:w-24">
+                  <span className="hidden sm:inline">
+                    {midiToLabel(f.lowMidi)}–{midiToLabel(f.highMidi)}{" "}
+                  </span>
                   <span className={isBest ? "text-violet-ink" : ""}>
                     ({f.overlap}st)
                   </span>
@@ -647,7 +800,7 @@ export function ResultView({
           })}
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-          Amber = your range · st = semitones of overlap
+          Violet = your range · st = semitones of overlap
         </p>
         <div className="mt-4">
           <Link
@@ -661,11 +814,14 @@ export function ResultView({
 
       {/* Every other completion screen carries the offer; this one, the
           highest-intent moment in the product, carried only a locked chart.
-          Self-hides for Pro, so it collapses out of the stack entirely. */}
+          Self-hides for Pro, so it collapses out of the stack entirely.
+          Free singers keep their tests too (the latest MAX_RANGE_HISTORY), so
+          Pro's part is the chart, not the keeping, and it shows change at the
+          edges rather than promising growth. */}
       <ProCrescendoNudge
-        line="Pro charts every retake, so gained semitones show as a line"
-        title="Watch this number move"
-        body="Pro keeps every range test on one chart — the semitones you gain show up as growth instead of a number you have to remember."
+        line="Pro charts each retest, so you can see whether either edge moves"
+        title="See your tests on one chart"
+        body={`Pro charts your latest ${MAX_RANGE_HISTORY} range tests on one chart, so a real change at either edge shows up instead of a number you have to remember.`}
         context="Range test"
       />
 
@@ -715,7 +871,7 @@ function RangeOverTime({
             bottom of whatever it wraps, and a caption there would be buried. */}
         {!hasHistory && (
           <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-            Sample — this is what three months of tests looks like
+            Sample — three tests about six weeks apart
           </p>
         )}
         <RangeHistoryChart

@@ -19,6 +19,12 @@ import type {
   WarmupMode,
 } from "./progress-shape";
 import { weekBoundaries, weekTotals } from "./weekly-report";
+import {
+  getProgressCloudState,
+  pauseProgressCloud,
+  resumeProgressCloud,
+  retryProgressCloudPersistence,
+} from "./progress-cloud";
 
 // The shape and its validators live in ./progress-shape so a server route can
 // import them without dragging this `"use client"` module along. Re-exported
@@ -51,6 +57,7 @@ const KEY = PROGRESS_STORAGE_KEY;
 const DEFAULT = DEFAULT_PROGRESS;
 
 let cache: ProgressState | null = null;
+let cacheResetGeneration: string | null = null;
 const listeners = new Set<() => void>();
 let storageBound = false;
 
@@ -117,13 +124,15 @@ function migrate(state: ProgressState): ProgressState {
  * better than this one does; the next real save heals the record anyway.
  */
 function load(): ProgressState {
-  if (cache) return cache;
   if (typeof window === "undefined") return DEFAULT;
+  const resetGeneration = getProgressCloudState().resetGeneration;
+  if (cache && cacheResetGeneration === resetGeneration) return cache;
+  cacheResetGeneration = resetGeneration;
   try {
     const raw = window.localStorage.getItem(KEY);
     cache = migrate(sanitizeProgress(raw ? JSON.parse(raw) : null));
   } catch {
-    cache = sanitizeProgress(null);
+    cache ??= sanitizeProgress(null);
   }
   return cache;
 }
@@ -134,6 +143,7 @@ function emit() {
 
 function save(next: ProgressState) {
   cache = next;
+  cacheResetGeneration = getProgressCloudState().resetGeneration;
   try {
     window.localStorage.setItem(KEY, JSON.stringify(next));
   } catch {
@@ -509,16 +519,57 @@ export function setVocalRange(lowMidi: number, highMidi: number): LogResult {
   return { xpGained: newAchievements.length * XP_PER_ACHIEVEMENT, newAchievements, state: next };
 }
 
+/**
+ * Days before a range test is worth suggesting again. The book spaces range
+ * tests six weeks apart (chapter 8: "a number that still means something in
+ * six weeks"; chapter 13: "Do not retest between those points"), because
+ * testing more often mostly measures the day.
+ */
+export const RANGE_RETEST_DAYS = 42;
+
+/**
+ * Whether a range test is worth suggesting: no saved range, or one
+ * RANGE_RETEST_DAYS or more old. A saved range with no date is treated as
+ * current, as the /progress coach does, so the two never disagree.
+ */
+export function rangeRetestDue(range: ProgressState["range"], nowMs: number): boolean {
+  if (range.lowMidi === undefined || range.highMidi === undefined) return true;
+  const t = range.testedAt ? Date.parse(range.testedAt) : NaN;
+  if (Number.isNaN(t)) return false;
+  return Math.floor((nowMs - t) / 86_400_000) >= RANGE_RETEST_DAYS;
+}
+
 export function todayPracticeSec(s: ProgressState = load()): number {
   return sumDaySec(s, localDay());
 }
 
 /** Wipe all progress. Ask the user to confirm before calling. */
 export function clearProgress(): void {
+  // Pause before save emits: the reset must never enqueue a cloud restore.
+  // The generation also fences requests already waiting for a response.
+  pauseProgressCloud();
   // A fresh state rather than a spread of DEFAULT: the spread would share
   // DEFAULT's nested streak/range objects with the live store, and DEFAULT is
   // now a const other modules hold too.
   save(sanitizeProgress(null));
+  retryProgressCloudPersistence();
+}
+
+/**
+ * Erase this browser's progress, as /progress's Danger zone does.
+ *
+ * clearProgress pauses automatic backup and cloud sync, so a cloud copy or an
+ * account snapshot cannot quietly restore what was just erased. When no such
+ * copy can exist — not Pro, and accounts switched off (lib/accounts.ts) — the
+ * pause guards nothing, and nothing on the free plan shows it. Left in place
+ * it would stop Pro sync from ever starting if this singer bought Pro in this
+ * browser later (startAutoSync skips a paused browser). So it is lifted again
+ * at once; the resume keeps the erase's reset generation, so the cross-tab
+ * fence in load() still drops another tab's pre-erase record.
+ */
+export function eraseBrowserProgress({ remoteCopyPossible }: { remoteCopyPossible: boolean }): void {
+  clearProgress();
+  if (!remoteCopyPossible) resumeProgressCloud();
 }
 
 /** Export progress as a JSON string (for backup / transfer). */
@@ -547,12 +598,23 @@ export function exportProgress(): string {
  *
  * migrate() runs here as well as in load(), so an old export shows its
  * backfilled range chart immediately rather than only after the next reload.
+ *
+ * An import merges; it never removes a session. /progress tells a signed-out
+ * singer to move devices by exporting on one and importing on the other, and
+ * this used to replace the record wholesale, so importing a laptop's export
+ * onto a phone with two newer weeks of practice deleted those weeks and reset
+ * the streak and XP to the file's values, under a success message. It now
+ * goes through the same union the cloud restore uses (mergeRemoteProgress):
+ * sessions by id, achievements and range tests unioned, the latest range
+ * measurement kept, XP and streaks never lower than either side. Into an
+ * empty or just-erased browser that is exactly the file's record, which is
+ * what a restore after the erase control expects.
  */
 export function importProgress(json: string): boolean {
   try {
     const parsed: unknown = JSON.parse(json);
     if (!looksLikeProgress(parsed)) return false;
-    save(migrate(sanitizeProgress(parsed)));
+    mergeRemoteProgress(migrate(sanitizeProgress(parsed)));
     return true;
   } catch {
     return false;
@@ -577,11 +639,11 @@ function streakFromSessions(sessions: SessionLog[]): number {
 
 /**
  * Two-way merge of a remote ProgressState into the local one, for cloud
- * sync. Every rule is a union, max, or latest-wins, which makes the merge
- * commutative and idempotent — the properties an eventually-consistent
- * two-device sync actually needs. Nothing a device recorded is ever lost,
- * beyond what the store's own caps (500 sessions, 60 range tests) already
- * discard.
+ * sync, the account backup and file import. Every rule is a union, max, or
+ * latest-wins, which makes the merge commutative and idempotent — the
+ * properties an eventually-consistent two-device sync actually needs. Nothing
+ * a device recorded is ever lost, beyond what the store's own caps (500
+ * sessions, 60 range tests) already discard.
  */
 export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
   const local = load();
@@ -621,12 +683,20 @@ export function mergeRemoteProgress(remoteRaw: unknown): ProgressState {
     .slice(-MAX_RANGE_HISTORY);
 
   // Latest measurement wins wholesale, keeping voiceType consistent with it.
+  // A side with no measurement never wins over one that has a measurement,
+  // whatever their dates say: a backup file whose range carries no readable
+  // testedAt, imported into a browser that has never tested, used to lose its
+  // range to the empty one here.
+  const measured = (r: VocalRange) => r.lowMidi !== undefined && r.highMidi !== undefined;
   const localTested = Date.parse(local.range.testedAt ?? "");
   const remoteTested = Date.parse(remote.range.testedAt ?? "");
-  const range =
-    Number.isNaN(remoteTested) || remoteTested <= (localTested || 0)
-      ? local.range
-      : { ...remote.range };
+  const range = !measured(remote.range)
+    ? local.range
+    : !measured(local.range)
+      ? { ...remote.range }
+      : Number.isNaN(remoteTested) || remoteTested <= (localTested || 0)
+        ? local.range
+        : { ...remote.range };
 
   // XP: recomputing from the merged work credits both devices exactly; the
   // max() floor guarantees no device ever watches its number go down.

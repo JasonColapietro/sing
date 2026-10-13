@@ -4,7 +4,9 @@ import {
   ladderHeightPct,
   practicedDurationSec,
   repAscending,
+  scoresEitherOctave,
   unsungRepAction,
+  walkRep,
 } from "./exercise-player";
 import { MAX_FRAME_MS, STALE_FRAME_MS, frameDelta } from "@/lib/audio/frame-clock";
 import { EXERCISES, computeRootLadder, ladderWalk } from "./exercises";
@@ -177,6 +179,33 @@ describe("repAscending", () => {
   });
 });
 
+describe("walkRep", () => {
+  // A "down" band as the player walks it: top note first.
+  const down = [55, 54, 53, 52];
+  const walk = (bounded: boolean, reps = 7) =>
+    Array.from({ length: reps }, (_, rep) => walkRep(down, rep, { down: true, bounded }));
+
+  it("takes a routine's descending step down once and rests at the bottom, never climbing", () => {
+    const steps = walk(true);
+    expect(steps.map((s) => s.root)).toEqual([55, 54, 53, 52, 52, 52, 52]);
+    // The pill reads "Descending" on every rep, the resting ones included.
+    expect(steps.every((s) => !s.climbing)).toBe(true);
+  });
+
+  it("keeps the endless deep-link walk's triangle, labelled by pitch", () => {
+    const steps = walk(false);
+    expect(steps.map((s) => s.root)).toEqual([55, 54, 53, 52, 53, 54, 55]);
+    expect(steps.map((s) => s.climbing)).toEqual([false, false, false, false, true, true, true]);
+  });
+
+  it("leaves a routine's climbing step on the triangle", () => {
+    const up = [52, 53, 54];
+    const steps = Array.from({ length: 5 }, (_, rep) => walkRep(up, rep, { down: false, bounded: true }));
+    expect(steps.map((s) => s.root)).toEqual([52, 53, 54, 53, 52]);
+    expect(steps.map((s) => s.climbing)).toEqual([true, true, true, false, false]);
+  });
+});
+
 describe("skipped reps are abstentions, not zeros", () => {
   it("keeps a skip out of the average instead of scoring it 0", () => {
     const results = [sungRep(90), skippedRep(), sungRep(80)];
@@ -331,5 +360,32 @@ describe("the loop's contracts with its extracted modules", () => {
     expect(scorer.result(52)).toBeNull();
     expect(unsungRepAction(1, 3)).toBe("continue");
     expect(unsungRepAction(2, 0)).toBe("exit");
+  });
+});
+
+describe("a first-time singer without a saved range", () => {
+  it("counts either octave only until a range is saved", () => {
+    expect(scoresEitherOctave({})).toBe(true);
+    expect(scoresEitherOctave({ lowMidi: 48 })).toBe(true);
+    expect(scoresEitherOctave({ highMidi: 72 })).toBe(true);
+    expect(scoresEitherOctave({ lowMidi: 48, highMidi: 72 })).toBe(false);
+  });
+
+  it("scores rep 0 sung an octave up instead of zeroing it", async () => {
+    // The bug: with no range every ladder sat around C3, the scorer matched
+    // the exact octave only, and a higher voice singing in her own octave
+    // scored 0 on every rep.
+    const { createRepScorer } = await import("./scoring");
+    const { buildSegments } = await import("./exercises");
+    const { midiToFreq } = await import("@/lib/audio/notes");
+    const root = ladderWalk(computeRootLadder(fiveNote), 0).root;
+    const { segs, totalSec } = buildSegments(fiveNote, root, 1);
+    const scorer = createRepScorer(segs, { octaveAgnostic: scoresEitherOctave({}) });
+    const dt = 1 / 60;
+    for (let t = 0; t < totalSec; t += dt) {
+      const seg = segs.find((s) => t >= s.t0 && t <= s.t0 + s.dur);
+      scorer.feed(t, seg ? midiToFreq(seg.startMidi + 12) : null, dt);
+    }
+    expect(scorer.result(root)!.score).toBeGreaterThanOrEqual(95);
   });
 });

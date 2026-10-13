@@ -27,6 +27,10 @@ const VOICE_KINDS = new Set([
   "Bass",
 ]);
 
+const MALE_KINDS = new Set(["Countertenor", "Tenor", "Baritone", "Bass-baritone", "Bass"]);
+/** G3. No male-category floor in the library sits here or above. */
+const MALE_FLOOR_CEILING = 55;
+
 const GENRES = new Set([
   "Rock", "Hard Rock", "Metal", "Punk", "Grunge", "Alternative", "Indie",
   "Pop", "Synth-Pop", "New Wave", "Disco", "R&B", "Soul", "Funk", "Hip-Hop",
@@ -98,17 +102,27 @@ for (const file of files) {
       problems.push(`${where}: implausible ${r.lowNote}–${r.highNote} — skipped`);
       continue;
     }
-    // A null beltNote renders as one solid bar, i.e. "full voice all the way to
-    // the top". That is fine for a 2-octave crooner and absurd for a 4-octave
-    // falsetto specialist, so wide spans must state a ceiling explicitly.
+    // A null beltNote means the catalog cites no full-voice ceiling, and the
+    // singers charts draw it as a dashed "no full-voice ceiling cited" bar
+    // rather than full voice to the top. On a 4-octave span that leaves most of
+    // the figure unexplained, so wide spans should state a ceiling where one is
+    // sourced.
     if (r.beltNote == null && highMidi - lowMidi > 42) {
       problems.push(
-        `${where}: ${r.lowNote}–${r.highNote} spans ${((highMidi - lowMidi) / 12).toFixed(1)} octaves with no beltNote — would render as full voice throughout`,
+        `${where}: ${r.lowNote}–${r.highNote} spans ${((highMidi - lowMidi) / 12).toFixed(1)} octaves with no beltNote — would chart with no full-voice ceiling cited`,
       );
     }
     if (!VOICE_KINDS.has(r.voiceType)) {
       problems.push(`${where}: bad voiceType "${r.voiceType}" — skipped`);
       continue;
+    }
+    // A male-category floor at G3 or above sits over the singer's own speaking
+    // pitch. That is almost always a treble-clef score's written compass,
+    // which sounds an octave lower, copied as if it were the sounding range.
+    if (MALE_KINDS.has(r.voiceType) && lowMidi >= MALE_FLOOR_CEILING) {
+      problems.push(
+        `${where}: ${r.voiceType} floor ${r.lowNote} is at or above G3 — check for a written treble-clef figure an octave high`,
+      );
     }
     const genres = (Array.isArray(r.genres) ? r.genres : []).filter((g) => GENRES.has(g));
     if (!genres.length) {

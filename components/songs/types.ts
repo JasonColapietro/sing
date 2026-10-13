@@ -81,11 +81,19 @@ export type SongGenre =
   | "Musical";
 
 /**
- * "phrase" is the house style: one short opening phrase, looped so the
- * practice rep stays tight. "full" is a complete multi-section arrangement
- * sung once through, for singers who want the whole thing.
+ * "phrase" is the house style: one short phrase — the song's opening, unless
+ * `excerpt` names another part — looped so the practice rep stays tight.
+ * "full" is a longer arrangement sung once through; the ones in the book hold
+ * selected lines (`arrangementOf`), not every verse.
  */
 export type SongForm = "phrase" | "full";
+
+/**
+ * Which part of the song a "phrase" entry holds when it is not the opening.
+ * Every claim a song page makes about the phrase (title, heading, snippet,
+ * structured data) names it, so this keeps those claims true.
+ */
+export type SongExcerpt = "chorus hook";
 
 export interface Song {
   id: string;
@@ -105,6 +113,11 @@ export interface Song {
   /** Tonic pitch of the key the melody is transcribed in. */
   defaultKeyRootMidi: number;
   form: SongForm;
+  /**
+   * Set on a "phrase" entry whose phrase is not the song's opening line.
+   * Absent means the opening phrase.
+   */
+  excerpt?: SongExcerpt;
   /** How many times through by default: 4 to drill a phrase, 1 for a full arrangement. */
   defaultLoops: number;
   genre: SongGenre;

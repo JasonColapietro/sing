@@ -5,6 +5,7 @@ vi.mock("server-only", () => ({}));
 
 import SingersPage from "@/app/singers/page";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
+import { isSingerReviewed, singerReviewLabel } from "@/lib/singer-evidence";
 import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { SINGERS, rangeLabel } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
@@ -22,6 +23,14 @@ function crawlIndexHtml(html: string) {
   if (!match) throw new Error("singer hub emitted no compact crawl index");
   return match[1];
 }
+
+function reviewedHtml(html: string) {
+  const match = html.match(/<section[^>]*data-singer-reviewed="true"[^>]*>([\s\S]*?)<\/section>/);
+  if (!match) throw new Error("singer hub emitted no reviewed-profiles section");
+  return match[1];
+}
+
+const REVIEWED_SLUGS = SINGERS.filter((s) => isSingerReviewed(s.slug)).map((s) => s.slug);
 
 function searchPriorityHtml(html: string) {
   const match = html.match(/<section[^>]*data-singer-search-priority="true"[^>]*>([\s\S]*?)<\/section>/);
@@ -81,7 +90,40 @@ describe("/singers hub schema and crawl discovery", () => {
     const allHubSlugs = [...html.matchAll(/href="\/singers\/([a-z0-9-]+)"/g)]
       .map((match) => match[1])
       .filter((slug) => knownSlugs.has(slug));
-    expect(allHubSlugs).toHaveLength(SINGERS.length + VOCAL_RANGE_PRIORITY_SLUGS.length);
+    expect(allHubSlugs).toHaveLength(
+      SINGERS.length + VOCAL_RANGE_PRIORITY_SLUGS.length + REVIEWED_SLUGS.length,
+    );
+  });
+
+  it("files accented names under their base letter in the A-Z index", () => {
+    const initials = [...crawlIndexHtml(html).matchAll(/<h3[^>]*>([^<]+)<\/h3>/g)].map((m) => m[1]);
+    expect(initials.length).toBeGreaterThan(10);
+    for (const initial of initials) expect(initial, initial).toMatch(/^[A-Z0-9]$/);
+  });
+
+  // The index is for readers too: its visible copy says what a name opens,
+  // not that the section exists for crawlers.
+  it("introduces the A-Z index to readers without SEO jargon", () => {
+    const visible = crawlIndexHtml(html).replace(/<[^>]+>/g, " ");
+    expect(visible).not.toMatch(/\bcrawl|\bSEO\b|search engine|\bindexed\b/i);
+    expect(visible).toMatch(/reported range/);
+  });
+
+  it("gives every reviewed profile (the indexable ones) a named link with its status", () => {
+    const reviewed = reviewedHtml(html);
+    expect(REVIEWED_SLUGS.length).toBeGreaterThan(0);
+    for (const slug of REVIEWED_SLUGS) {
+      const singer = SINGERS.find((s) => s.slug === slug)!;
+      const link = reviewed.match(new RegExp(`<a[^>]*href="/singers/${slug}"[^>]*>([\\s\\S]*?)</a>`))?.[1];
+      expect(link, slug).toBeDefined();
+      expect(link!.replace(/<[^>]+>/g, ""), slug).toContain(`${singer.name} vocal range`);
+      expect(link, slug).toContain(rangeLabel(singer));
+      expect(link, slug).toContain(singerReviewLabel(slug));
+    }
+  });
+
+  it("does not claim search demand for pages that are noindexed", () => {
+    expect(searchPriorityHtml(html)).not.toContain("Google");
   });
 
   it("gives current high-demand vocal-range pages prominent exact-answer links", () => {
@@ -105,7 +147,7 @@ describe("/singers hub schema and crawl discovery", () => {
   });
 
   it("makes the free range test an immediate next step from the hub", () => {
-    expect(html).toContain('href="/range?mode=range"');
+    expect(html).toContain('href="/range?mode=range#start"');
     expect(html).toContain("Test my vocal range");
     expect(html).toContain("Can you sing it?");
   });

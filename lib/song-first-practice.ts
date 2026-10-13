@@ -2,7 +2,7 @@ import { SONGS } from "@/components/songs/data";
 import { computeDifficulty, fitTransposeToRange, rangeFit } from "@/components/songs/lib";
 import { computeRootLadder, EXERCISES } from "@/components/warmups/exercises";
 import type { PopFit } from "./pop-songs";
-import type { VocalRange } from "./progress-shape";
+import { MAX_SESSIONS, type VocalRange } from "./progress-shape";
 
 interface PracticeStep {
   href: string;
@@ -11,10 +11,15 @@ interface PracticeStep {
 }
 
 const PRO_CONTEXT: Record<Exclude<PopFit["verdict"], "unknown">, string> = {
-  fits: "As you log scored song practices, Pro shows your full practice history and adds accuracy by note across sessions. This range comparison is not a scored song attempt.",
+  // Pro keeps the latest MAX_SESSIONS sessions like everyone else; what it
+  // adds is seeing them all, where free lists the last 20 (lib/pro.ts PLAN_ROWS).
+  fits: `As you log scored song practices, Pro adds accuracy by note across sessions, and your practice history lists your latest ${MAX_SESSIONS} sessions instead of the last 20. This range comparison is not a scored song attempt.`,
   high: "For more upper-register exercises, Pro adds the Head-voice builder warmup pack. It does not guarantee higher notes or make this song fit.",
   low: "After you log scored practice, Pro opens the full daily plan built from your notes and recent sessions. A song sitting too low does not, by itself, identify a technique problem.",
-  wide: "Pro charts your saved range tests over time. Retest on another day to compare measurements; one test cannot show a trend or promise range growth.",
+  // The retest rule the site teaches everywhere (lib/guides.ts,
+  // RANGE_RETEST_DAYS in lib/progress.ts, book ch. 8): weeks apart, never the
+  // next day.
+  wide: "Pro charts your saved range tests over time. Retest after a few weeks of practice to compare measurements; one test cannot show a trend or promise range growth.",
 };
 
 /** The comparison describes note bounds, never measured technique or a song performance. */
@@ -45,7 +50,7 @@ export function songFirstPractice(fit: PopFit, range: VocalRange): {
       free = {
         href: `/songs?song=${practiceSong.slug}`,
         label: `Practice ${practiceSong.title} free`,
-        reason: `The notes fit on paper; now try keeping a short phrase steady. Start with ${practiceSong.title}, a different, public-domain melody with live pitch feedback. Choose “Fit to my range” before pressing Play.`,
+        reason: `The notes fit on paper; now try keeping a short phrase steady. Start with ${practiceSong.title}, a different, public-domain melody with live pitch feedback. It opens fitted to your saved range.`,
       };
     }
   } else {

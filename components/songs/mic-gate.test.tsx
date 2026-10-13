@@ -51,7 +51,7 @@ describe("songs mic gate", () => {
     const html = renderToStaticMarkup(<SongsMicGate />);
     expect(html).toContain("Enable microphone");
     expect(html).toContain("Continue without a mic");
-    expect(html).toContain("Enable your microphone to get scored");
+    expect(html).toContain("Sing along and see every note you hit");
   });
 
   it("carries the hub's <h1>, which its static HTML previously had nowhere", () => {
@@ -66,10 +66,45 @@ describe("songs mic gate", () => {
     expect(html).toContain("Continue without a mic");
   });
 
-  it("offers all three guide passes on the start step", () => {
+  it("asks for the mic and nothing else before a song is on screen", () => {
     const html = renderToStaticMarkup(<SongsMicGate />);
-    expect(html).toContain("Guide track");
-    expect(html).toContain("Sing along");
-    expect(html).toContain("On your own");
+    // Mode and guide track start at their defaults and switch in the player.
+    expect(html).not.toContain("Session mode");
+    expect(html).not.toContain("Guide track");
+    // A singer who came to pick a song can reach the songbook without the mic.
+    expect(html).toContain('href="#songbook"');
+  });
+
+  it("shows a mic failure right under the buttons, ahead of the songbook link", () => {
+    // At 375px the second button wraps; with the link in between, the alert
+    // landed 59px below the fold (e2e/audits/80-states.mjs on mobile-375).
+    const html = renderToStaticMarkup(<SongsMicGate error="No microphone found. Plug one in." />);
+    const alert = html.indexOf('role="alert"');
+    expect(alert).toBeGreaterThan(html.indexOf("Continue without a mic"));
+    expect(alert).toBeLessThan(html.indexOf('href="#songbook"'));
+  });
+
+  it("puts the buttons straight under the heading, ahead of the explanation", () => {
+    // With the paragraph first, "Enable microphone" sat behind the tab bar on
+    // a 375×667 phone, on the hub and on every song page's deep link.
+    const html = renderToStaticMarkup(<SongsMicGate error="No microphone found. Plug one in." />);
+    const button = html.indexOf("Try again");
+    expect(button).toBeGreaterThan(html.indexOf("Sing along and see every note you hit"));
+    expect(button).toBeLessThan(html.indexOf("Audio never leaves your browser"));
+    expect(html.indexOf('role="alert"')).toBeLessThan(html.indexOf("Audio never leaves your browser"));
+  });
+
+  it("labels the button as a retry once the mic has failed", () => {
+    expect(renderToStaticMarkup(<SongsMicGate />)).toContain("Enable microphone");
+    const html = renderToStaticMarkup(<SongsMicGate error="Microphone access is blocked." />);
+    expect(html).toContain("Try again");
+    expect(html).not.toContain("Enable microphone");
+  });
+
+  it("states the free allowance before sending anyone into capped practice", () => {
+    // Shared with warmups, ear training and breath, so it is not called song time.
+    const html = renderToStaticMarkup(<SongsMicGate />);
+    expect(html).toContain("5 minutes of guided practice a day");
+    expect(html).toContain("Pro has no daily limit");
   });
 });

@@ -38,7 +38,7 @@ describe("/learn vocal training hub", () => {
 
   it("routes every major beginner need to the existing page that owns it", () => {
     for (const href of [
-      "/range?mode=range",
+      "/range?mode=range#start",
       "/studio",
       "/warmups",
       "/breath",
@@ -50,6 +50,7 @@ describe("/learn vocal training hub", () => {
       "/atlas/vocal-range-by-voice-type",
       "/glossary",
       "/book",
+      "/programs",
     ]) {
       expect(html, `learn hub missing ${href}`).toContain(`href="${href}"`);
     }
@@ -85,7 +86,12 @@ describe("/learn vocal training hub", () => {
     for (const path of paths.itemListElement) {
       expect(path.url).toMatch(new RegExp(`^${SITE_URL.replaceAll(".", "\\.")}/`));
       const destination = new URL(path.url);
-      expect(html).toContain(`href="${destination.pathname}${destination.search}"`);
+      // The schema names the page; the card may add where a tap scrolls to
+      // (the range test's #start).
+      expect(destination.hash, path.url).toBe("");
+      const page = `${destination.pathname}${destination.search}`;
+      const escaped = page.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      expect(html).toMatch(new RegExp(`href="${escaped}(#[a-z-]+)?"`));
     }
   });
 

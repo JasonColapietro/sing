@@ -65,17 +65,20 @@ export const FARINELLI_START_N = 4;
  * What one sustain attempt costs in wall-clock time.
  *
  * There is no arithmetic for this one — the attempt is over when the singer
- * runs out of air. Twenty-five seconds is the middle of our own benchmark table
- * (10s fair, 20s good, 30s strong, 45s excellent) plus the couple of seconds
- * between arming and the first sound, which is close enough for a "~7 min" on a
- * card and honest about being an estimate.
+ * ends the note. Twenty-five seconds is the middle of the old length table
+ * (SUSTAIN_BENCHMARKS_SEC: 10, 20, 30, 45) plus the couple of seconds between
+ * arming and the first sound, which is close enough for a "~7 min" on a card
+ * and honest about being an estimate.
  */
 /**
  * The sustain ladder, in one place.
  *
  * These were inline literals in `sustain-test.tsx` (the benchmark words and the
  * printed "10s fair · 20s ..." line) and again in `store.ts` (the star cuts),
- * and `contracts/suede-vocal.ts` restated them a third time. A contract that
+ * and `contracts/suede-vocal.ts` restated them a third time. The test no
+ * longer prints or grades by the benchmark ladder: it asks the singer to end
+ * the note while it is still easy, and a length grade rewarded the squeeze.
+ * The ladder stays exported because the contract publishes it (benchmarksSec). A contract that
  * copies its values instead of importing them regenerates byte-for-byte while
  * publishing stale numbers to its consumers, which is the drift it exists to
  * detect — the same defect the star thresholds had before `lib/stars.ts`.
@@ -125,7 +128,7 @@ export const BREATH_ROUTINES: BreathRoutine[] = [
     id: "quick",
     name: "Quick breath",
     tagline:
-      "Three minutes to settle: one round of the square, the climbing count, and a single sustain.",
+      "Three minutes to settle: a minute around the square, the climbing count, and a single sustain.",
     steps: [
       { drill: "box", side: 4, minutes: 1 },
       { drill: "farinelli", cap: 8 },
@@ -225,6 +228,21 @@ export function breathRoutineMinutes(r: BreathRoutine): number {
   return Math.max(1, Math.round(breathRoutineSeconds(r) / 60));
 }
 
+/**
+ * The recommendation sized to the free guided practice left today, the same
+ * rule as warmups' sizeRoutineToAllowance. A set that runs past the allowance
+ * stops on the cap slide before its sustain test, the only step that scores,
+ * so a free singer's first set would end on a sales slide instead of a score.
+ * When `preferred` does not fit in `leftSec`, the quick set takes its place if
+ * that one fits; otherwise nothing shorter would finish either, and the pick
+ * stands. Pro passes Infinity and always gets `preferred`.
+ */
+export function sizeBreathRoutineToAllowance(preferred: BreathRoutine, leftSec: number): BreathRoutine {
+  if (breathRoutineSeconds(preferred) <= leftSec) return preferred;
+  const quick = breathRoutineById("quick");
+  return quick && breathRoutineSeconds(quick) <= leftSec ? quick : preferred;
+}
+
 /** The drill's own name, as it appears everywhere in the room. */
 export function breathDrillTitle(drill: BreathDrillId): string {
   switch (drill) {
@@ -267,7 +285,7 @@ export function breathDrillDesc(drill: BreathDrillId): string {
     case "box":
       return "Breathe around the square — inhale, hold, exhale, hold, equal counts on every side. Keep each hold soft and open, a pause rather than a locked throat, and shorten the sides if you feel short of air. It settles the nerves and evens out the airflow before you sing.";
     case "farinelli":
-      return "Inhale, hold and exhale for the same count, then add one count each round. The breath gets longer as you go, which is the whole point. Breathe low and quietly, keep the shoulders still, and stop at the count you can do without gasping.";
+      return "Inhale, hold and exhale for the same count, then add one count each round. Hold by keeping the ribs open, not by shutting your throat. Breathe low and quietly, keep the shoulders still, and stop at the count you can do without gasping.";
     case "cue":
       return "Breathe in, then sing one easy note. The mic listens for the breath before each note counts, so every rep starts the way a phrase should.";
     default:
@@ -285,6 +303,75 @@ export const BREATH_DRILL_IDS: BreathDrillId[] = ["sustain", "cue", "box", "fari
  */
 export function isBreathDrillId(value: string | null | undefined): value is BreathDrillId {
   return !!value && (BREATH_DRILL_IDS as string[]).includes(value);
+}
+
+/** The ranges each drill's setup card offers, so a link can't ask for more. */
+export const BOX_SIDE_RANGE = { min: 3, max: 8 } as const;
+export const BOX_MINUTE_CHOICES = [1, 3, 5] as const;
+export const FARINELLI_CAP_RANGE = { min: 8, max: 12 } as const;
+export const SUSTAIN_ATTEMPT_CHOICES = [1, 2, 3] as const;
+
+/**
+ * The query string that opens a drill on a given preset, for a link such as a
+ * program day's: "?drill=box" alone opens the setup card's defaults, so a day
+ * that asks for a five-count square has to say so in the link.
+ */
+export function drillPresetQuery(step: BreathStep): string {
+  const q = new URLSearchParams({ drill: step.drill });
+  switch (step.drill) {
+    case "box":
+      q.set("side", String(step.side));
+      q.set("minutes", String(step.minutes));
+      break;
+    case "farinelli":
+      q.set("cap", String(step.cap));
+      break;
+    case "sustain":
+      q.set("attempts", String(step.attempts));
+      break;
+    case "cue":
+      q.set("reps", String(step.reps));
+      break;
+  }
+  return q.toString();
+}
+
+/**
+ * Reads back what drillPresetQuery wrote, for the drill the link names. Null
+ * when the link carries no preset, or one the setup card could not show, so a
+ * hand-edited or stale link opens the drill's own defaults instead.
+ */
+export function drillPresetFromQuery(drill: BreathDrillId, q: URLSearchParams): BreathStep | null {
+  const int = (key: string) => {
+    const raw = q.get(key);
+    const n = raw === null ? NaN : Number(raw);
+    return Number.isInteger(n) ? n : null;
+  };
+  const within = (n: number | null, min: number, max: number) => n !== null && n >= min && n <= max;
+  switch (drill) {
+    case "box": {
+      const side = int("side");
+      const minutes = int("minutes");
+      const m = BOX_MINUTE_CHOICES.find((c) => c === minutes);
+      return within(side, BOX_SIDE_RANGE.min, BOX_SIDE_RANGE.max) && m
+        ? { drill: "box", side: side as number, minutes: m }
+        : null;
+    }
+    case "farinelli": {
+      const cap = int("cap");
+      return within(cap, FARINELLI_CAP_RANGE.min, FARINELLI_CAP_RANGE.max)
+        ? { drill: "farinelli", cap: cap as number }
+        : null;
+    }
+    case "sustain": {
+      const attempts = SUSTAIN_ATTEMPT_CHOICES.find((c) => c === int("attempts"));
+      return attempts ? { drill: "sustain", attempts } : null;
+    }
+    case "cue": {
+      const reps = CUE_REP_CHOICES.find((c) => c === int("reps"));
+      return reps ? { drill: "cue", reps, holdSec: CUE_HOLD_SEC } : null;
+    }
+  }
 }
 
 /** True when the drill needs the microphone. */

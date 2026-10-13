@@ -6,19 +6,23 @@ title: "What a Growl Actually Is"
 type: "concept"
 minutes: 6
 objective: "The physiology, the specific ways it goes wrong, and why you should review the health module first."
-prerequisites: "v-l7-m3-08"
+prerequisites: "v-l7-m3-08,v-l7-m1-08"
 references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+A growl is noise laid over the sung note, and it can come from two places that sound the same from the audience: structures above the vocal folds fluttering in the airstream while the folds keep vibrating normally underneath, or the folds themselves being slammed together under pressure, which is how voices get hurt. You cannot reliably teach yourself the difference from text, this lesson included, which is why a growl is learned with a qualified teacher listening and why the health module comes first. Until then the rule is simple: grit that leaves you hoarse afterward was the wrong kind, and pain means stop.
+
 ## Steps
 
-### Use the practice material
+### Start with the stop rules
 
-Open the practice material on this page and read The safety rail. Use its written exercise and stop rules. The reading The safety rail is listed there too.
+Read the stop signals under If it goes wrong and the safety note at the foot of this page, and copy them into your stop plan: pain while singing means stop now; hoarseness after practice that clears overnight means do less next time; hoarseness that does not clear, or an easy note that is now unreliable, is a question for a doctor who can examine the vocal folds, such as an ENT or laryngologist. The atlas chapter The safety rail covers effects in more depth and is part of Pro.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
-- Listen: For the breathing or planning task, follow the written exercise; you do not need to make a pitched sound.
+- Listen: For the planning task, work from the stop rules on this page; you do not need to make a pitched sound.
 
 ### Set a safe baseline
 
@@ -27,7 +31,7 @@ Do not learn a growl, scream, distortion, or other new effect from written direc
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
 
-### Name the target: Creak, growl, slide, scream
+### Name the target: Effects safety and a stop plan
 
 The physiology, the specific ways it goes wrong, and why you should review the health module first. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
@@ -50,12 +54,12 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist.
+- The target disappears when the range, volume, speed, or duration increases. => Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
 
-- 45s: Open the practice material. Prepare the room, body, and safe baseline for “What a Growl Actually Is.”
+- 45s: Copy the stop rules into your stop plan. Prepare the room, body, and safe baseline for “What a Growl Actually Is.”
 - 90s: Review the anatomy, warning signs, prior supervision, and written stop plan without attempting a new effect.
 - 135s: Complete the observation-only “What a Growl Actually Is” task, or briefly review only a previously taught effect at the prescribed dose.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
@@ -68,7 +72,7 @@ I read the safety material and wrote a stop plan; I did not attempt to learn a n
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest and seek an ENT or voice-specialized speech-language pathologist when symptoms persist. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
+If not ready: Stop for pain, rawness, sudden hoarseness, loss of range, extra effort in speech, or a changed speaking voice. Do not troubleshoot by repeating; rest, and when symptoms persist see a doctor who can examine the vocal folds, such as an ENT or laryngologist. Do not try the effect again to check; leave it until a teacher has heard it.
 
 What this shows: I read the safety material and wrote a stop plan; I did not attempt to learn a new vocal effect from an app. This is a self-report, not an automatic assessment.
 

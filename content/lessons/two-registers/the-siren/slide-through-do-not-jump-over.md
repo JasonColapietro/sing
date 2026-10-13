@@ -11,6 +11,10 @@ references: "nidcd-voice-care,asha-voice-disorders"
 source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 ---
 
+## In short
+
+As you slide upward, the folds have to shift gradually from a thicker setup to a thinner one, and around your transition the resonance that was helping the sound also drops away. Push through that and the change that could have spread over several notes happens on one, which you hear as a crack or a sudden flip. A slow, quiet slide gives the handover time to spread out; a fast one only skips past the seam, so slowing down is how you hear it and how you smooth it.
+
 ## Steps
 
 ### Use the practice material
@@ -36,7 +40,7 @@ A crack is a gear change you did not plan. Say what will count as complete in th
 
 ### Hear the distinction
 
-Make two brief, comfortable examples of the idea in “Slide Through, Do Not Jump Over.” Change only the named variable. Record both contrast examples in one take with a quiet breath between them, then return to the easier baseline. Record your takes in the recorder. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow.
+Slide up an octave from a comfortable low note and back down on “oo” twice in one take, at the same quiet volume: first quickly, about a second each way, then slowly, five or six seconds each way. Speed is the only thing that changes. On playback, the fast slide may sound smooth because it skips past the change, while the slow one lets you hear where the voice wants to switch; that place is what this module works on. Record your takes in the recorder. Use less volume near the gear change and keep the vowel narrow.
 
 - Look: Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.

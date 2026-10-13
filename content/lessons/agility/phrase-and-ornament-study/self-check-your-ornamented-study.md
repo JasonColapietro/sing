@@ -15,14 +15,14 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Deep River or Amazing Grace (Verse 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.
+Open the practice material on this page and choose Deep River or Amazing Grace (Opening Lines, Verses 1 & 2). Hear the reference, choose a comfortable key, then stop it before singing. The reading Transposition without shame is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Transpose the supplied study so both ends remain repeatable. Mark each ornament and the phrase that crosses the widest interval.
+Once you have taken the range test, song practice opens the study fitted to your measured range; without a saved range it opens in its written key and is scored in either octave. Shift it a semitone at a time until both ends are repeatable, then mark each ornament and the phrase that crosses the widest interval.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -31,14 +31,14 @@ Transpose the supplied study so both ends remain repeatable. Mark each ornament 
 
 Review your supplied study and describe which small ornament stayed clear. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.
+- Look: The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.
 - Listen: The full take keeps the authored melody recognizable and the planned ornaments audible.
 
 ### Make one evidence take
 
 State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Rehearse the range, ornament, and continuity demands separately before combining them. Keep the top lighter rather than louder.
 
-- Look: The melody fits the scan and every ornament has a written location; no phrase depends on a last-second reach.
+- Look: The key keeps the melody inside your comfortable range, every ornament has a written location, and no phrase depends on a last-second reach.
 - Listen: The full take keeps the authored melody recognizable and the planned ornaments audible.
 
 ### Review your own attempt
@@ -66,7 +66,7 @@ I rehearsed the supplied phrase and study arrangement in a comfortable key, isol
 - The full take keeps the authored melody recognizable and the planned ornaments audible.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
+Ready when: One uninterrupted take of the study, in your chosen key, has every ornament you marked audible where you marked it, the melody intact, and neither end of the range needing a push.
 
 If not ready: If ornaments disappear at range edges, remove them, secure the phrase, then restore one at a time. Change key if an endpoint is forced. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

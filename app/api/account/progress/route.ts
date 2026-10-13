@@ -5,6 +5,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { getRedis } from "@/lib/redis";
 import type { ProgressState } from "@/lib/progress";
 import { checkProgress, isCleanString } from "@/lib/progress-shape";
+import { CLOUD_STATE_MAX_CHARS } from "@/lib/progress-cloud-fit";
 
 /**
  * A free account's backup of its practice record.
@@ -20,19 +21,24 @@ import { checkProgress, isCleanString } from "@/lib/progress-shape";
  * (mergeRemoteProgress in lib/progress.ts is commutative and idempotent), so
  * this route never interprets the payload beyond validating it.
  *
- * Signing in is an offer, never a requirement: the whole app works signed out
- * and simply has no backup. That is the only thing an account buys here.
+ * Where accounts are configured, lib/account-gate.ts asks a visitor to sign in
+ * before using the practice tools; where they are not, the app works signed
+ * out and simply has no backup. Either way this backup is the only thing kept
+ * against an account here; Pro never touches it.
  */
 
 /** Namespaced away from `sync:*` so the two stores can never collide. */
 const KEY_PREFIX = "account:progress:";
 
 /**
- * Ceiling on a serialized snapshot. A maxed-out store is 500 sessions plus 60
- * range tests; this leaves generous headroom above that and still refuses a
+ * Ceiling on a serialized snapshot, in characters of JSON: the same one
+ * /api/sync holds, and the one the client trims its push to. A full
+ * 500-session log whose warmups all carry per-note tallies can pass it, so
+ * pushBackup sends fitForCloud's copy (lib/progress-cloud-fit.ts), which drops
+ * the oldest sessions' tallies until the record fits. It still refuses a
  * payload that could only come from a client trying to use Redis as storage.
  */
-const MAX_STATE_BYTES = 400_000;
+const MAX_STATE_BYTES = CLOUD_STATE_MAX_CHARS;
 
 interface StoredBackup {
   state: ProgressState;

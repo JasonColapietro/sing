@@ -58,7 +58,10 @@ export const TASTE_LEVELS: ReadonlyArray<{ value: TasteLevel; label: string; hin
 
 export const TASTE_GOALS: ReadonlyArray<{ value: TasteGoal; label: string; hint: string }> = [
   { value: "phrase", label: "Short drills", hint: "One phrase, looped until it sits right." },
-  { value: "full", label: "Whole songs", hint: "Sing a full arrangement through once." },
+  // The book's longer entries sing selected lines, not whole songs, and they
+  // rate hard, so their band is shut to a new singer until easier songs are
+  // mastered. The label and hint say both rather than promising whole songs.
+  { value: "full", label: "Longer arrangements", hint: "A few lines sung through once; they open as you master easier songs." },
   { value: "either", label: "Either is fine", hint: "Mix them up." },
 ];
 
@@ -141,9 +144,11 @@ export interface TasteContext {
  *
  * The order of precedence is the point of this function:
  *   1. Eligibility is never negotiable. A song in a locked band, or a Pro song
- *      for a free singer, is dropped before anything is scored — a
- *      recommendation is a deep link, and a deep link to a lock is a dead end.
- *   2. Range fit outranks taste. With a saved range, songs "Fit to my range"
+ *      for a free singer, is dropped before anything is scored — a pick
+ *      starts from the library, which keeps to the band ladder (only a page
+ *      or lesson link that names a song skips it), so a locked pick would be
+ *      a dead end.
+ *   2. Range fit outranks taste. With a saved range, songs the automatic fit
  *      can place inside it (±12 semitones) always come before ones it cannot,
  *      whatever their genre: a favourite style sung out of reach is a worse
  *      first song than a hymn that fits.

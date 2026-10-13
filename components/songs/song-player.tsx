@@ -27,12 +27,15 @@ import { startTakeRecorder, type TakeRecorder, type TakeState } from "./take";
 import {
   COUNT_IN_BEATS,
   INITIAL_MULTIPLIER,
+  MASTERY_MIN_TEMPO,
+  MASTERY_SCORE,
   MIN_VOLUME,
   PASS_GUIDE_PCT,
   PASS_LABEL,
   TOLERANCE_CENTS,
   autoTempoStep,
   clampTranspose,
+  defaultOctaveAgnostic,
   emptyTally,
   fitTransposeToRange,
   foldedCents,
@@ -48,8 +51,11 @@ import {
   sectionAtBeat,
   snapTempo,
   songTotalBeats,
+  songTranspose,
+  startingNote,
   transposedNotes,
   type JudgmentTally,
+  type PickedTranspose,
   type SessionSummaryData,
   type Tempo,
   describeLoopRange,
@@ -145,12 +151,24 @@ export function SongPlayer({
    */
   onTake?: (take: TakeState | undefined) => void;
 }) {
-  const [transpose, setTranspose] = useState(0);
+  /**
+   * The key. With a saved range every song opens fitted to it; a key the
+   * singer picks with the arrows or the keyboard overrides that for this song
+   * only (see songTranspose), and "Fit to my range" returns to the fit.
+   */
+  const [pickedTranspose, setPickedTranspose] = useState<PickedTranspose | null>(null);
+  const fittedTranspose = fitTransposeToRange(song, range);
+  const transpose = songTranspose(song, range, pickedTranspose);
+  const pickTranspose = useCallback(
+    (semis: number) => setPickedTranspose({ songId: song.id, semis: clampTranspose(semis) }),
+    [song.id],
+  );
   const [tempo, setTempo] = useState<Tempo>(1);
   const [tempoAuto, setTempoAuto] = useState(false);
   const [guidePct, setGuidePct] = useState(PASS_GUIDE_PCT[pass]);
   const [clickDuringPlay, setClickDuringPlay] = useState(false);
-  const [octaveAgnostic, setOctaveAgnostic] = useState(false);
+  // Any octave until a range places the song in the singer's own octave.
+  const [octaveAgnostic, setOctaveAgnostic] = useState(() => defaultOctaveAgnostic(range));
   const [phase, setPhase] = useState<Phase>("idle");
   const phaseRef = useRef<Phase>("idle");
   const pauseRef = useRef<() => void>(() => {});
@@ -923,6 +941,14 @@ export function SongPlayer({
     const countInStart = audioNow() + LEAD;
     t0Ref.current = countInStart + COUNT_IN_BEATS * spb;
     for (let i = 0; i < COUNT_IN_BEATS; i++) clickAt(countInStart + i * spb, i === 0);
+    // Give the starting note, as an accompanist would: the first note this run
+    // sings, in the key it is sung in, on the first count-in beat. On your own
+    // has no guide, so this is the only pitch a solo run hears before the
+    // downbeat; it ends well before t0, so it never overlaps a scored frame.
+    const start = startingNote(notes, playBeats, spb);
+    if (start) {
+      playTone(start.midi, { at: countInStart - audioNow(), dur: start.dur, gain: GUIDE_MAX_GAIN });
+    }
     pausedGlobalBeatsRef.current = 0;
 
     // A restart throws the unfinished take away; a new one starts with the
@@ -997,9 +1023,9 @@ export function SongPlayer({
     endPractice();
   }
 
+  /** Drops the singer's pick, so the song goes back to its fitted key. */
   function applyFitToRange() {
-    const semis = fitTransposeToRange(song, range);
-    if (semis !== null) setTranspose(semis);
+    setPickedTranspose(null);
   }
 
   /**
@@ -1029,11 +1055,21 @@ export function SongPlayer({
     togglePlayPause: () => void;
     restart: () => void;
     enterStage: () => void;
+    nudgeTranspose: (delta: number) => void;
     controlsEnabled: boolean;
     stageMode: boolean;
   } | null>(null);
   useLayoutEffect(() => {
-    shortcutsRef.current = { togglePlayPause, restart, enterStage, controlsEnabled, stageMode };
+    shortcutsRef.current = {
+      togglePlayPause,
+      restart,
+      enterStage,
+      // Read through the ref like everything else here: the listener is bound
+      // once, and the current key and song only exist in this render.
+      nudgeTranspose: (delta: number) => pickTranspose(transpose + delta),
+      controlsEnabled,
+      stageMode,
+    };
   });
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -1072,7 +1108,7 @@ export function SongPlayer({
         case "ArrowDown":
           if (!s.controlsEnabled) return;
           e.preventDefault();
-          setTranspose((t) => clampTranspose(t + (e.code === "ArrowUp" ? 1 : -1)));
+          s.nudgeTranspose(e.code === "ArrowUp" ? 1 : -1);
           return;
         default:
       }
@@ -1119,11 +1155,15 @@ export function SongPlayer({
     />
   ) : null;
   /**
-   * Both modes, offered while the song is paused — the one moment where the
-   * switch cannot land in the middle of a note being judged.
+   * Mode and pass are chosen here, with the song on screen, rather than on the
+   * hub's mic step: before the first run starts and again while paused — the
+   * two moments a switch cannot land in the middle of a note being judged.
+   * Before the run is the only place a mastering run (a solo performance from
+   * the top) can be set up without a restart.
    */
+  const choosing = phase === "idle" || phase === "paused";
   const modeSwitch =
-    phase === "paused" ? (
+    choosing ? (
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           Mode
@@ -1131,6 +1171,7 @@ export function SongPlayer({
         <Button
           variant={mode === "rehearsal" ? "violet" : "outline"}
           size="sm"
+          aria-pressed={mode === "rehearsal"}
           onClick={() => { masteryEligibleRef.current = false; onModeChange("rehearsal"); }}
         >
           Rehearsal
@@ -1138,6 +1179,7 @@ export function SongPlayer({
         <Button
           variant={mode === "performance" ? "violet" : "outline"}
           size="sm"
+          aria-pressed={mode === "performance"}
           onClick={() => onModeChange("performance")}
         >
           Performance
@@ -1145,9 +1187,9 @@ export function SongPlayer({
       </div>
     ) : null;
 
-  /** The three passes, offered beside the mode switch on the same pause. */
+  /** The three passes, offered beside the mode switch at the same moments. */
   const passSwitch =
-    phase === "paused" ? (
+    choosing ? (
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
           Pass
@@ -1157,6 +1199,7 @@ export function SongPlayer({
             key={p}
             variant={pass === p ? "violet" : "outline"}
             size="sm"
+            aria-pressed={pass === p}
             onClick={() => choosePass(p)}
           >
             {PASS_LABEL[p]}
@@ -1323,7 +1366,12 @@ export function SongPlayer({
       </Card>
 
       <Card>
-        <div className="flex flex-wrap items-center gap-3">
+        {/* Anchor for SongsClient, which brings this row into view on every
+            start. The bottom scroll margin clears the phone's fixed tab bar. */}
+        <div
+          id="song-transport"
+          className="flex scroll-mb-24 flex-wrap items-center gap-3 sm:scroll-mb-6"
+        >
           <Transport phase={phase} size="sm" onToggle={togglePlayPause} onRestart={restart} />
           <Button variant="outline" size="sm" onClick={enterStage}>
             <IconExpand /> Stage mode
@@ -1359,6 +1407,15 @@ export function SongPlayer({
             {passSwitch}
           </div>
         )}
+        {/* The rule the band ladder runs on, said where the run is set up. */}
+        {phase === "idle" && listening && (
+          <p className="mt-3 max-w-xl text-xs text-mut">
+            To master a song, sing a full Performance On your own at{" "}
+            {Math.round(MASTERY_MIN_TEMPO * 100)}% tempo or faster and score{" "}
+            {MASTERY_SCORE} or more. The count-in plays your first note.
+            Mastered songs open the next band of the songbook.
+          </p>
+        )}
 
         <div className="mt-5 border-t border-line pt-5">
           <Mixer
@@ -1375,7 +1432,8 @@ export function SongPlayer({
             clickDuringPlay={clickDuringPlay}
             onClickDuringPlay={setClickDuringPlay}
             transpose={transpose}
-            onTranspose={(semis) => setTranspose(clampTranspose(semis))}
+            onTranspose={pickTranspose}
+            fitted={fittedTranspose !== null && transpose === fittedTranspose}
             tempo={tempo}
             onTempo={(rate) => setTempo(snapTempo(rate))}
             tempoAuto={tempoAuto}

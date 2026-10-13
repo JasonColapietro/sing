@@ -3,6 +3,7 @@
 import { useId, useMemo, type ReactNode } from "react";
 import { Button, LinkButton } from "@/components/ui";
 import type { Song, SongSection } from "./data";
+import { rangeTestHref } from "@/lib/site";
 import {
   TEMPO_MAX,
   TEMPO_MIN,
@@ -127,6 +128,7 @@ export function Mixer({
   octaveAgnostic,
   onOctaveAgnostic,
   hasRange,
+  fitted = false,
   onFitToRange,
   sections,
   song,
@@ -151,6 +153,9 @@ export function Mixer({
   octaveAgnostic: boolean;
   onOctaveAgnostic: (on: boolean) => void;
   hasRange: boolean;
+  /** The key is the one fitted to the saved range, not a pick of the singer's. */
+  fitted?: boolean;
+  /** Returns the key to the fit after the singer has moved it. */
   onFitToRange: () => void;
   sections: SongSection[];
   song: Song;
@@ -232,17 +237,23 @@ export function Mixer({
               <IconPlus />
             </button>
           </div>
+          {/* With a saved range the song opens fitted, so the button only
+              appears once the singer has moved the key away from the fit. */}
           {hasRange ? (
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={!controlsEnabled}
-              onClick={onFitToRange}
-            >
-              Fit to my range
-            </Button>
+            fitted ? (
+              <span className="text-xs text-mut">Fitted to your saved range</span>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!controlsEnabled}
+                onClick={onFitToRange}
+              >
+                Fit to my range
+              </Button>
+            )
           ) : (
-            <LinkButton href="/range?mode=range" variant="ghost" size="sm">
+            <LinkButton href={rangeTestHref()} variant="ghost" size="sm">
               Take the range test to fit
             </LinkButton>
           )}

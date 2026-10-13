@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isCheckoutPlan } from "@/lib/pro-shared";
+import { isCheckoutPlan, LIFETIME_OFFER } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
 import {
   getStripe,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     const origin = siteOrigin(request);
     const metadata = {
       app: "suede-sing",
-      offer: "early-access",
+      offer: LIFETIME_OFFER,
       plan,
     };
     const common = {

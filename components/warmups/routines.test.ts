@@ -11,9 +11,11 @@ import {
   routineById,
   routineMinutes,
   routineSeconds,
+  sizeRoutineToAllowance,
   stepExercise,
   stepSeconds,
 } from "./routines";
+import { FREE_DAILY_SEC } from "@/lib/practice-limits";
 
 describe("routine catalogue", () => {
   it("names only exercises that exist", () => {
@@ -130,6 +132,30 @@ describe("recommendRoutine", () => {
   });
 });
 
+describe("sizeRoutineToAllowance", () => {
+  const daily = routineById("daily")!;
+  const morning = routineById("morning")!;
+
+  it("swaps a set that runs past a fresh free allowance for the morning reset", () => {
+    // The premise: the daily set cannot finish inside the free minutes, the
+    // morning reset can. If either stops being true, revisit the swap.
+    expect(routineSeconds(daily)).toBeGreaterThan(FREE_DAILY_SEC);
+    expect(routineSeconds(morning)).toBeLessThanOrEqual(FREE_DAILY_SEC);
+    expect(sizeRoutineToAllowance(daily, FREE_DAILY_SEC).id).toBe("morning");
+    expect(sizeRoutineToAllowance(routineById("full")!, FREE_DAILY_SEC).id).toBe("morning");
+  });
+
+  it("keeps the pick on Pro and whenever it already fits", () => {
+    expect(sizeRoutineToAllowance(daily, Number.POSITIVE_INFINITY).id).toBe("daily");
+    expect(sizeRoutineToAllowance(daily, routineSeconds(daily)).id).toBe("daily");
+    expect(sizeRoutineToAllowance(morning, FREE_DAILY_SEC).id).toBe("morning");
+  });
+
+  it("keeps the pick when not even the morning reset would finish", () => {
+    expect(sizeRoutineToAllowance(daily, routineSeconds(morning) - 1).id).toBe("daily");
+  });
+});
+
 describe("adaptive warmups", () => {
   const strong = { count: 3, averageScore: 95, averageStars: 3 };
   const weak = { count: 3, averageScore: 35, averageStars: 0 };
@@ -201,7 +227,9 @@ describe("session shape", () => {
       { exerciseId: "gug-staccato", reps: 11 },
       { exerciseId: "descending-five", reps: 7 },
     ]);
-    expect(r.tagline).toMatch(/^The complete ten: the bubble, sirens/);
+    // "The everyday set", the name ear and breath give their daily sets: the
+    // old "complete ten" read as an exercise count beside "8 exercises".
+    expect(r.tagline).toMatch(/^The everyday set: the bubble, sirens/);
   });
 
   it("never recommends the cool-down as a warmup", () => {
