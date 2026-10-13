@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { SINGERS, computeRecords, spanOctaves } from "@/lib/singers";
 import { midiToLabel } from "@/lib/audio/notes";
+import { ogCardVersion } from "@/lib/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -15,17 +16,40 @@ const FEATURED = [
   "avi-kaplan",
 ];
 
-export default function Image() {
+/** The catalog figures this card draws. */
+function cardData() {
   const records = computeRecords();
-  const axisLow = 24; // C1
-  const axisHigh = 108; // C8
-  const span = axisHigh - axisLow;
-  const pct = (m: number) => ((m - axisLow) / span) * 100;
-
   const rows = FEATURED.flatMap((slug) => {
     const s = SINGERS.find((x) => x.slug === slug);
     return s ? [s] : [];
   });
+  return {
+    rows,
+    subtitle: `Famous singers on one keyboard · ${midiToLabel(records.lowest.lowMidi)} to ${midiToLabel(records.highest.highMidi)}`,
+  };
+}
+
+/**
+ * One card at a URL versioned by the figures it draws
+ * (/singers/opengraph-image/<version>), as the singer and hub cards are
+ * (lib/og-cards.ts): Next's own ?hash follows this file's source, so a
+ * corrected range for one of the featured singers would otherwise ship at
+ * the URL share scrapers cached the old picture under.
+ */
+export function generateImageMetadata() {
+  const { rows, subtitle } = cardData();
+  const id = ogCardVersion(
+    JSON.stringify([subtitle, rows.map((s) => [s.name, s.lowMidi, s.highMidi])]),
+  );
+  return [{ id, alt, size, contentType }];
+}
+
+export default function Image() {
+  const { rows, subtitle } = cardData();
+  const axisLow = 24; // C1
+  const axisHigh = 108; // C8
+  const span = axisHigh - axisLow;
+  const pct = (m: number) => ((m - axisLow) / span) * 100;
 
   return new ImageResponse(
     (
@@ -57,7 +81,7 @@ export default function Image() {
           {`Famous vocal ranges`}
         </div>
         <div style={{ marginTop: 8, fontSize: 28, color: "#c3bde3" }}>
-          {`Famous singers on one keyboard · ${midiToLabel(records.lowest.lowMidi)} to ${midiToLabel(records.highest.highMidi)}`}
+          {subtitle}
         </div>
 
         <div

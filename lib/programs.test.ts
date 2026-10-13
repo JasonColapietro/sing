@@ -21,6 +21,7 @@ import {
   itemSteps,
   itemsDoneOn,
   matchDay,
+  nextRangeTestDay,
   itemEvidence,
   itemHref,
   itemIsPro,
@@ -1315,6 +1316,10 @@ describe("going back a fortnight in the book's program", () => {
     expect(after.map((x) => x.index)).toEqual([0, 10]);
     expect(after[0]).toMatchObject({ index: 0, range: { lowMidi: 48, highMidi: 67 }, sustainSec: 7 });
     expect(after[1]).toMatchObject({ index: 10, sustainSec: 11 });
+    // Day 11 takes a sustain test and no range test: its range is not a test
+    // missed ("not logged") but none asked for.
+    expect(after[1].range).toBeUndefined();
+    expect(after[0].range).not.toBeUndefined();
     // The stored record survives a reload as it is.
     expect(reviveProgress(JSON.parse(JSON.stringify(back)))).toEqual(back);
   });
@@ -1356,6 +1361,65 @@ describe("going back a fortnight in the book's program", () => {
   it("counts from the day after the last completed day on an ordinary run", () => {
     const { r } = run(10);
     expect(countsFromDay(r)).toBe(addDays(d0, 10));
+  });
+});
+
+describe("the run's next range test", () => {
+  const program = programById("measured-voice-12w")!;
+  const d0 = "2026-06-01";
+  /** `upTo` days done, the last of them on `last`. */
+  const at = (upTo: number, last = addDays(d0, upTo - 1)) => {
+    const progress = {
+      ...begin(program.id, d0),
+      done: Array.from({ length: upTo }, (_, index) => ({ index, day: index === upTo - 1 ? last : addDays(d0, index) })),
+    };
+    return { progress, view: (today: string) => programToday(program, progress, today) };
+  };
+
+  it("names the scheduled day ahead, today's own when it is still to do", () => {
+    // The book's three tests: day 1, the end of week 6, the start of week 12.
+    const ranged = program.days.flatMap((d, i) => (d.items.some((it) => it.kind === "range") ? [i + 1] : []));
+    expect(ranged).toEqual([1, 42, 78]);
+    // Day 37 to do, a week behind the calendar.
+    const behind = at(36);
+    expect(nextRangeTestDay(program, behind.progress, behind.view(addDays(d0, 44)))).toBe(42);
+    // Day 42 to do today: today's own.
+    const due = at(41);
+    expect(due.view(addDays(d0, 41))).toMatchObject({ status: "todo", index: 41 });
+    expect(nextRangeTestDay(program, due.progress, due.view(addDays(d0, 41)))).toBe(42);
+    // Day 42 done today: the next is day 78.
+    const doneToday = at(42);
+    expect(doneToday.view(addDays(d0, 41))).toMatchObject({ status: "done-today", index: 41 });
+    expect(nextRangeTestDay(program, doneToday.progress, doneToday.view(addDays(d0, 41)))).toBe(78);
+    expect(nextRangeTestDay(program, at(43).progress, at(43).view(addDays(d0, 43)))).toBe(78);
+  });
+
+  it("is null once the last test is done, and on a finished run", () => {
+    expect(nextRangeTestDay(program, at(78).progress, at(78).view(addDays(d0, 80)))).toBeNull();
+    const all = at(program.days.length);
+    expect(all.view(addDays(d0, 90)).status).toBe("finished");
+    expect(nextRangeTestDay(program, all.progress, all.view(addDays(d0, 90)))).toBeNull();
+    // Vibrato in 3 weeks takes no range test at all.
+    const vibrato = programById("vibrato-3w")!;
+    const v = { ...begin(vibrato.id, d0), done: [] };
+    expect(nextRangeTestDay(vibrato, v, programToday(vibrato, v, d0))).toBeNull();
+  });
+
+  it("stops at a repeated fortnight's end, since the days after it stay done", () => {
+    const { progress } = at(28);
+    const repeating = {
+      ...progress,
+      until: 42,
+      later: Array.from({ length: program.days.length - 42 }, (_, k) => ({ index: 42 + k, day: addDays(d0, 42 + k) })),
+    };
+    const today = addDays(d0, 100);
+    expect(nextRangeTestDay(program, repeating, programToday(program, repeating, today))).toBe(42);
+    const past = {
+      ...repeating,
+      done: Array.from({ length: 42 }, (_, index) => ({ index, day: addDays(d0, index) })),
+    };
+    expect(programToday(program, past, today).status).toBe("finished");
+    expect(nextRangeTestDay(program, past, programToday(program, past, today))).toBeNull();
   });
 });
 
@@ -1408,6 +1472,10 @@ describe("singing one fortnight of a finished run again (chapter 19)", () => {
     const now = programReadings(program, back, sessions, history);
     expect(now.map((r) => r.index)).toEqual([0, 10, 59, 66, 77]);
     expect(now).toEqual(readings.filter((r) => r.index !== 41));
+    // Days 60 and 67 take a sustain test and no range test, on either pass.
+    for (const r of now) {
+      expect("range" in r, `day ${r.index + 1}`).toBe(r.index === 0 || r.index === 77);
+    }
   });
 
   it("finishes again once the fortnight is sung, and does not run on into week 7", () => {

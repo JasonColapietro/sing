@@ -24,7 +24,9 @@ export function LinkedNames<T extends { slug: string; name: string }>({
       {singers.map((s, i) => (
         <Fragment key={s.slug}>
           {i > 0 && (i === singers.length - 1 ? " and " : ", ")}
-          <Link href={`/singers/${s.slug}`} className={LINK_CLASS}>
+          {/* No prefetch: the hubs name several holders in their prose, and
+              each would fetch a profile's payload for nobody. */}
+          <Link href={`/singers/${s.slug}`} prefetch={false} className={LINK_CLASS}>
             {s.name}
           </Link>
           {after?.(s)}

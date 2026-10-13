@@ -608,11 +608,24 @@ describe("links from the lessons", () => {
     // The five whose Ready when is judged live or by the room's own result,
     // which the playback rule above does not reach.
     for (const id of ["v-l1-m3-04", "v-l2-m1-06", "v-l5-m1-07", "v-l7-m1-08"]) expect(checked, id).toContain(id);
+    // The passaggio checkpoint passes on naming a note, which the recorder
+    // shows a free singer none of: the zone is marked in the pitch studio,
+    // as Your Range does, after the recorded take.
+    const passaggio = LESSONS.find((l) => l.id === "v-l5-m1-07")!;
+    expect(passaggio.selfCheck.readyWhen).toMatch(/name the note/);
+    const evidence = passaggio.steps.find((s) => /record one uninterrupted attempt/.test(s.body))!;
+    expect(evidence.body).toMatch(/\]\(\/recorder\)[^]*\]\(\/studio\), which names the note as you sing it[^]*Mark a zone/);
     const range = LESSONS.find((l) => l.id === "v-l1-m2-04")!;
     expect(lessonCompanion(MODULE_PRACTICE[range.moduleId], range.id).room).toBe("range");
     const rangeBody = range.steps.map((s) => s.body).join("\n");
     expect(rangeBody).not.toMatch(/record one uninterrupted attempt/);
     expect(rangeBody).toContain("sing the test as one uninterrupted attempt, and keep its saved result");
+    // A finished test becomes the saved range every warm-up and song is fitted
+    // to, so a forced end is not kept "even when it does not pass": the page's
+    // own If it goes wrong says discard it, and chapter 12 says Start over.
+    expect(rangeBody).not.toMatch(/keep its saved result even when it does not pass/);
+    expect(rangeBody).toMatch(/press Start over before the test finishes/);
+    expect(range.selfCheck.ifNotReady).toMatch(/discard it/);
   });
 
   /**

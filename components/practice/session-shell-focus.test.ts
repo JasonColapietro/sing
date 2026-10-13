@@ -57,6 +57,31 @@ describe("session focus return", () => {
     expect(scene.document.activeElement).toBe(successor);
   });
 
+  it("leaves focus and scroll to the new page when a link in the shell left the room", () => {
+    // The cap slide's "Go Pro" to /pro#buy: focusing /pro's heading here
+    // scrolled the page back to the top after the jump to the buy card.
+    const scene = focusScene();
+    const location = { pathname: "/warmups" };
+    vi.stubGlobal("window", { location });
+    const heading = scene.node();
+    scene.document.querySelector = () => heading;
+    restoreSessionFocus(scene.node(false) as unknown as HTMLElement, "/warmups");
+    location.pathname = "/pro";
+    scene.paint();
+    expect(scene.document.activeElement).toBe(scene.document.body);
+    expect(heading.getAttribute("tabindex")).toBeUndefined();
+  });
+
+  it("still restores when the shell closes on the page it opened on", () => {
+    const scene = focusScene();
+    vi.stubGlobal("window", { location: { pathname: "/warmups" } });
+    const heading = scene.node();
+    scene.document.querySelector = () => heading;
+    restoreSessionFocus(scene.node(false) as unknown as HTMLElement, "/warmups");
+    scene.paint();
+    expect(scene.document.activeElement).toBe(heading);
+  });
+
   it("does not return focus to a starter hidden by the new view", () => {
     const scene = focusScene();
     const hiddenStarter = scene.node(true, false);

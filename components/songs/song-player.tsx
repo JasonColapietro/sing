@@ -35,6 +35,7 @@ import {
   TOLERANCE_CENTS,
   autoTempoStep,
   clampTranspose,
+  createPassOctave,
   defaultOctaveAgnostic,
   emptyTally,
   fitTransposeToRange,
@@ -237,6 +238,8 @@ export function SongPlayer({
   const guidePctRef = useRef(guidePct);
   const clickDuringPlayRef = useRef(clickDuringPlay);
   const octaveAgnosticRef = useRef(octaveAgnostic);
+  /** While either octave counts, the octave this pass is sung in (one per pass, not per frame). */
+  const passOctaveRef = useRef(createPassOctave());
   const scoringRef = useRef(scoring);
   const modeRef = useRef(mode);
   const passRef = useRef(pass);
@@ -532,6 +535,8 @@ export function SongPlayer({
     // Judge the tail before the per-note baseline moves, otherwise those notes
     // would be scored against the pass that is only just starting.
     if (scoringRef.current) flushJudgments();
+    // Each pass picks its own octave when either octave counts.
+    passOctaveRef.current = createPassOctave();
     const denom = perLoopDenomSecRef.current;
     const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
     const delta = hitTotalNow - loopSnapshotRef.current;
@@ -799,7 +804,12 @@ export function SongPlayer({
         // section can still cover this beat, and crediting it would add to the
         // score's numerator without adding to its denominator.
         if (idx >= 0 && (playBeatsRef.current[idx] ?? 0) > 0) {
-          const cents = foldedCents(midiFloat, currentNotesRef.current[idx].midi, octaveAgnosticRef.current);
+          // Either octave counts: one octave for the whole pass, so a skipped
+          // leap or a top note dropped an octave is not scored as sung.
+          const target = currentNotesRef.current[idx].midi;
+          const cents = octaveAgnosticRef.current
+            ? passOctaveRef.current.cents(midiFloat, target, dt)
+            : foldedCents(midiFloat, target, false);
           centsSumRef.current[idx] = (centsSumRef.current[idx] ?? 0) + Math.abs(cents);
           centsFramesRef.current[idx] = (centsFramesRef.current[idx] ?? 0) + 1;
           if (Math.abs(cents) <= TOLERANCE_CENTS) {
@@ -890,6 +900,7 @@ export function SongPlayer({
     perLoopDenomSecRef.current = playBeats.reduce((a, b) => a + b, 0) * spb;
 
     hitSecRef.current = notes.map(() => 0);
+    passOctaveRef.current = createPassOctave();
     hitRatioRef.current = notes.map(() => 0);
     centsSumRef.current = notes.map(() => 0);
     centsFramesRef.current = notes.map(() => 0);

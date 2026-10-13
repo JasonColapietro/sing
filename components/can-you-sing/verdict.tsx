@@ -12,6 +12,7 @@ import { useProgress } from "@/lib/progress";
 import { songFirstPractice } from "@/lib/song-first-practice";
 import { rangeTestHref } from "@/lib/site";
 import { FreeOnly } from "@/components/pro/gate";
+import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 
 /**
@@ -25,6 +26,15 @@ function rangeTestFor(song: PopSong): string {
 }
 
 /**
+ * The header action's width, shared by both of its labels. The saved-range
+ * label replaces the server's after the first paint, so it must take the same
+ * room or the header moves: "Test my range for this song" is 222px and "See
+ * how it fits your range ↓" 226px in the production build, which moved the
+ * right-aligned action on a tablet and a desktop.
+ */
+const ACTION_WIDTH = "min-w-[14.5rem]";
+
+/**
  * The page's one action, in the header where a phone sees it on the first
  * screen. The full verdict card sits under the stats, which put its button
  * a screen and a half down. With no saved range this starts the test; with
@@ -33,12 +43,14 @@ function rangeTestFor(song: PopSong): string {
 export function CanYouSingAction({ song }: { song: PopSong }) {
   const progress = useProgress();
   return popFit(song, progress.range).verdict === "unknown" ? (
-    <LinkButton href={rangeTestFor(song)}>Test my range for this song</LinkButton>
+    <LinkButton href={rangeTestFor(song)} className={ACTION_WIDTH}>
+      Test my range for this song
+    </LinkButton>
   ) : (
     // `#fit` is the wrapper around CanYouSingVerdict on the song page. Not a
     // shared constant: a server page importing a value from this client
     // module would get a client reference, not the string.
-    <LinkButton href="#fit" variant="outline">
+    <LinkButton href="#fit" variant="outline" className={ACTION_WIDTH}>
       See how it fits your range ↓
     </LinkButton>
   );
@@ -52,24 +64,32 @@ export function CanYouSingAction({ song }: { song: PopSong }) {
  */
 export function CanYouSingVerdict({ song }: { song: PopSong }) {
   const progress = useProgress();
+  const hydrated = useHydrated();
   const fit = popFit(song, progress.range);
 
   if (fit.verdict === "unknown") {
+    // Until hydration this is every visitor's card, and for one with a saved
+    // range the personal answer, three times its height, replaces it once the
+    // range is read. The slot (app/globals.css "song-verdict") holds it at
+    // about that height from the first paint when the pre-paint script found
+    // a saved range, so the cards under it are already near where they end up.
     return (
-      <Card>
-        <SectionLabel>Can you sing it?</SectionLabel>
-        <p className="mt-3 text-sm text-mut">
-          This song asks for {popRangeLabel(song)}. Take the free range test
-          and this page will tell you whether it sits inside your voice — and
-          by how much when it does not.
-        </p>
-        <div className="mt-4">
-          <LinkButton href={rangeTestFor(song)}>
-            {/* Quoted: several titles are styled lowercase ("vampire", "drop dead"). */}
-            See if “{song.title}” fits my voice
-          </LinkButton>
-        </div>
-      </Card>
+      <div className="flex flex-col" {...prepaintMarker(hydrated, { slot: "song-verdict" })}>
+        <Card className="flex-1">
+          <SectionLabel>Can you sing it?</SectionLabel>
+          <p className="mt-3 text-sm text-mut">
+            This song asks for {popRangeLabel(song)}. Take the free range test
+            and this page will tell you whether it sits inside your voice — and
+            by how much when it does not.
+          </p>
+          <div className="mt-4">
+            <LinkButton href={rangeTestFor(song)}>
+              {/* Quoted: several titles are styled lowercase ("vampire", "drop dead"). */}
+              See if “{song.title}” fits my voice
+            </LinkButton>
+          </div>
+        </Card>
+      </div>
     );
   }
 

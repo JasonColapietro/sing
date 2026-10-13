@@ -9,6 +9,7 @@ import { DEFAULT_OG_IMAGE, withCanonicalOpenGraph } from "@/lib/og";
 import {
   POP_SONGS,
   popDifficulty,
+  popDifficultyReason,
   popNoteLabel,
   popRangeLabel,
   popSongBySlug,
@@ -36,19 +37,28 @@ export function generateStaticParams(): Params[] {
 /**
  * The answer to the search query, from the data alone.
  *
- * "— N semitones — which rates …" credits the rating to the range, which is
- * how popDifficulty's rule reads. An editorial override rates a song above
- * what its range says, so the answer names the reason the override exists;
- * otherwise "19 semitones — which rates hard" would sit beside another
- * song's "19 semitones — which rates medium".
+ * popDifficulty reads the span and the top note, so the sentence names
+ * whichever decided (popDifficultyReason). An editorial override rates a song
+ * above what its numbers say, so the answer names the reason the override
+ * exists; a top note that alone made the rating names that note; every other
+ * song credits its span, read with its top. Crediting the span every time put
+ * Good Luck, Babe!'s "21 semitones — which rates hard" (hard for its F#5)
+ * beside two other songs' "21 semitones — which rates medium". "On span and
+ * top note" also tells a reader this is not the songbook's scale, which rates
+ * short practice phrases on span and leaps and is stricter.
  */
 function answerSentence(song: PopSong): string {
   const span = song.highMidi - song.lowMidi;
   const opening = `“${song.title}” by ${song.artist} is in ${song.key}, and the commonly cited lead-vocal range is ${popRangeLabel(song)} — ${span} semitones`;
   const rating = popDifficulty(song).toLowerCase();
-  return song.difficulty
-    ? `${opening}. Its top, held in full voice above the tenor passaggio, rates it ${rating} for an untrained voice.`
-    : `${opening} — which rates ${rating} for an untrained voice.`;
+  const reason = popDifficultyReason(song);
+  if (reason === "override") {
+    return `${opening}. Its top, held in full voice above the tenor passaggio, rates it ${rating} for an untrained voice.`;
+  }
+  if (reason === "top") {
+    return `${opening}. Its top note, ${popNoteLabel(song, song.highMidi)}, rates it ${rating} for an untrained voice.`;
+  }
+  return `${opening} — which, on span and top note, rates ${rating} for an untrained voice.`;
 }
 
 export async function generateMetadata({

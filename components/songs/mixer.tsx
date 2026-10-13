@@ -207,7 +207,7 @@ export function Mixer({
           <Toggle
             pressed={octaveAgnostic}
             onToggle={() => onOctaveAgnostic(!octaveAgnostic)}
-            title="Score the pitch class only, so singing an octave away still counts"
+            title="Score one octave per pass, so a pass sung an octave away still counts"
           >
             {octaveAgnostic ? "Any octave" : "Exact octave"}
           </Toggle>

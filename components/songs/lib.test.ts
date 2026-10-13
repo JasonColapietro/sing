@@ -23,7 +23,9 @@ import {
   breathMarks,
   countOpenSongsFitting,
   countSongsFitting,
+  createPassOctave,
   defaultOctaveAgnostic,
+  TOLERANCE_CENTS,
   fitTransposeToRange,
   isMastered,
   MASTERY_MIN_TEMPO,
@@ -520,6 +522,61 @@ describe("defaultOctaveAgnostic", () => {
     expect(defaultOctaveAgnostic({})).toBe(true);
     expect(defaultOctaveAgnostic({ highMidi: 72 })).toBe(true);
     expect(defaultOctaveAgnostic({ lowMidi: 45, highMidi: 64 })).toBe(false);
+  });
+});
+
+describe("either octave counts: one octave per pass", () => {
+  // Deep River is built around its octave leap: "is" on C4, then "o" on C5.
+  const deepRiver = SONGS.find((s) => s.id === "deep-river")!;
+  const FPS = 60;
+  /**
+   * One pass at 60 fps, each note sung `shift(i)` octaves from its written
+   * pitch, slightly sharp. Each note's frames' cents, by lyric.
+   */
+  function sing(shift: (i: number) => number): Map<string, number[]> {
+    const passOctave = createPassOctave();
+    const spb = secPerBeat(deepRiver.bpm, 1);
+    const out = new Map<string, number[]>();
+    deepRiver.notes.forEach((n, i) => {
+      const frames = Math.round(n.durBeats * spb * FPS);
+      const cents: number[] = [];
+      for (let f = 0; f < frames; f++) cents.push(passOctave.cents(n.midi + 12 * shift(i) + 0.1, n.midi, 1 / FPS));
+      out.set(`${i}:${n.lyric}`, cents);
+    });
+    return out;
+  }
+  const inTune = (cents: number[]) => cents.every((c) => Math.abs(c) <= TOLERANCE_CENTS);
+  const missed = (cents: number[]) => cents.every((c) => Math.abs(c) > TOLERANCE_CENTS);
+
+  it("scores a whole pass in the written octave, or an octave down or up", () => {
+    expect(deepRiver.notes.map((n) => n.midi)).toContain(72);
+    for (const octave of [0, -1, 1]) {
+      for (const [note, cents] of sing(() => octave)) expect(inTune(cents), `${octave} ${note}`).toBe(true);
+    }
+  });
+
+  it("does not score the leap's top notes as sung when they drop an octave", () => {
+    const o = deepRiver.notes.findIndex((n) => n.lyric === "o");
+    const ver = deepRiver.notes.findIndex((n) => n.lyric === "ver");
+    expect(deepRiver.notes[o].midi).toBe(72);
+    const skipped = sing((i) => (i === o || i === ver ? -1 : 0));
+    for (const [note, cents] of skipped) {
+      if (note === `${o}:o` || note === `${ver}:ver`) expect(missed(cents), note).toBe(true);
+      else expect(inTune(cents), note).toBe(true);
+    }
+  });
+
+  it("starts each pass undecided, folding to the nearest octave", () => {
+    const passOctave = createPassOctave();
+    expect(passOctave.shift).toBeNull();
+    // An octave down, before any octave leads: folded, so in tune.
+    expect(Math.abs(passOctave.cents(48.1, 60, 0.05))).toBeLessThanOrEqual(TOLERANCE_CENTS);
+    expect(passOctave.shift).toBeNull();
+    passOctave.cents(48.1, 60, 0.05);
+    expect(passOctave.shift).toBe(-1);
+    // The written octave now has to lead the pass's octave to replace it.
+    expect(passOctave.cents(60.1, 60, 0.05)).toBeCloseTo(1210);
+    expect(passOctave.shift).toBe(-1);
   });
 });
 

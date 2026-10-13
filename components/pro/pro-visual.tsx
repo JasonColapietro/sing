@@ -62,8 +62,9 @@ const BAND = `${HIGH_LINE} ${LOW_LINE.split(" ").reverse().join(" ")}`;
  * the product can produce: the footer's next step is what the coach's
  * buildPlan names for a weak E4 in this E2–G4 range (components/progress/
  * coach.tsx: a weak note within five semitones of the ceiling, in a span of at
- * least OCTAVE_SIREN_MIN_SEMIS, gets the Octave siren for 6 minutes). Same
- * console-card frame as the landing hero visual, in gold. Pure CSS animation.
+ * least OCTAVE_SIREN_MIN_SEMIS from components/warmups/exercises.ts, gets the
+ * Octave siren for 6 minutes). Same console-card frame as the landing hero
+ * visual, in gold. Pure CSS animation.
  */
 export default function ProVisual() {
   return (

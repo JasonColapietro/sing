@@ -23,6 +23,7 @@ import {
   POP_SONGS,
   noteMidi,
   popDifficulty,
+  popDifficultyReason,
   popFit,
   popNoteLabel,
   popRangeLabel,
@@ -212,6 +213,26 @@ describe("crawl path", () => {
     }
   });
 
+  it("hub defines its difficulty scale as popDifficulty applies it", () => {
+    // /songs/auld-lang-syne's 14-semitone phrase rates hard on the songbook's
+    // scale while Espresso's 14 semitones rate easy here, so the hub says
+    // what its labels mean and that the songbook's do not carry over.
+    const html = renderToStaticMarkup(CanYouSingHub()).replace(/\s+/g, " ");
+    expect(html).toContain(
+      "Easy is 14 semitones or fewer topping out at C5 or lower, Hard is 22 semitones or more or a top of F#5 or higher, and Medium is everything between",
+    );
+    expect(html).toContain("its labels do not carry over to this list");
+    const base = { ...POP_SONGS[0], difficulty: undefined };
+    const rate = (low: string, high: string) =>
+      popDifficulty({ ...base, lowMidi: noteMidi(low), highMidi: noteMidi(high) });
+    expect(rate("Bb3", "C5")).toBe("Easy"); // 14 semitones, top C5
+    expect(rate("B3", "C#5")).toBe("Medium"); // 14 semitones, top above C5
+    expect(rate("A3", "C5")).toBe("Medium"); // 15 semitones
+    expect(rate("D3", "C5")).toBe("Hard"); // 22 semitones
+    expect(rate("D3", "Bb4")).toBe("Medium"); // 20 semitones
+    expect(rate("D5", "F#5")).toBe("Hard"); // top F#5
+  });
+
   it("song pages server-render anchors to their singers, and back", async () => {
     for (const s of POP_SONGS.slice(0, 6)) {
       const html = renderToStaticMarkup(
@@ -300,10 +321,43 @@ describe("crawl path", () => {
       );
       expect(html, slug).not.toContain("which rates hard");
     }
-    // A song the rule rates keeps the sentence that credits its range.
+    // A song the rule rates keeps the sentence that credits its range, and
+    // names both of the rule's inputs: the songbook's scale reads span and
+    // leaps, so a bare "rates medium" read as the same scale.
     expect(await page("unchained-melody")).toContain(
-      "— 21 semitones — which rates medium for an untrained voice.",
+      "— 21 semitones — which, on span and top note, rates medium for an untrained voice.",
     );
+  });
+
+  it("credits a rating its top note decided to the top note, not the span", async () => {
+    const page = async (slug: string) =>
+      renderToStaticMarkup(await CanYouSingSongPage({ params: Promise.resolve({ slug }) }));
+    // Hard for its F#5 alone: 21 semitones rates medium on two other pages.
+    const babe = POP_SONGS.find((s) => s.slug === "good-luck-babe")!;
+    expect(popDifficultyReason(babe)).toBe("top");
+    const html = await page("good-luck-babe");
+    expect(html).toContain("semitones. Its top note, F#5, rates it hard for an untrained voice.");
+    expect(html).not.toContain("— 21 semitones — which");
+  });
+
+  it("never credits one span with two ratings across the catalog", async () => {
+    const ratingBySpan = new Map<number, { rating: string; slug: string }>();
+    for (const song of POP_SONGS) {
+      const html = renderToStaticMarkup(
+        await CanYouSingSongPage({ params: Promise.resolve({ slug: song.slug }) }),
+      );
+      const reason = popDifficultyReason(song);
+      const match = /— (\d+) semitones — which, on span and top note, rates (\w+)/.exec(html);
+      expect(Boolean(match), song.slug).toBe(reason === "span");
+      if (!match) continue;
+      const span = Number(match[1]);
+      const earlier = ratingBySpan.get(span);
+      if (earlier) {
+        expect(match[2], `${song.slug} vs ${earlier.slug} at ${span} semitones`).toBe(earlier.rating);
+      } else {
+        ratingBySpan.set(span, { rating: match[2], slug: song.slug });
+      }
+    }
   });
 
   it("links every song from at least two other songs' lists", () => {

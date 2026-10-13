@@ -576,6 +576,23 @@ No key was added or renamed, so `version` stays 9, and `glossary.json` and
 What the other apps must do: re-sync `suede-vocal.json` byte for byte.
 Nothing else changes.
 
+#### Editorial changes inside v9 (2026-10-13, round 10)
+
+No key was added or renamed, so `version` stays 9, and `glossary.json`,
+`suede-voice-curriculum.json` and `suede-voice-lesson-urls.json` are
+unchanged:
+
+- `editorial`: book word counts moved with this round's text edits.
+  `tracking-change` (1420), `totalWords` 33049. Chapter 11 no longer asks a
+  reader to read "the last three months" of range bars, which on the book's
+  six-weekly test schedule holds only two or three tests: it now reads the
+  whole run of tests against the newest one, and its Try this says what to
+  note when the chart has only one or two tests. The atlas is unchanged at
+  72505.
+
+What the other apps must do: re-sync `suede-vocal.json` byte for byte.
+Nothing else changes.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

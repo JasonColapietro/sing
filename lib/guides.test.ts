@@ -203,6 +203,19 @@ describe("product claims", () => {
     expect(songs).toMatch(/per-note accuracy chart/);
   });
 
+  /**
+   * "Is my microphone audio recorded or uploaded?" used to open "No.", which
+   * an answer engine lifts as the whole answer, though the recorder and song
+   * practice's opt-in take both record. The studio itself records nothing, so
+   * the answer leads with that and names both places a take is kept.
+   */
+  it("answers the studio's record question without a bare No", () => {
+    const a = guides.STUDIO_GUIDE.faq.find((f) => /recorded or uploaded/.test(f.q))!.a;
+    expect(a).not.toMatch(/^No\b/);
+    expect(a).toMatch(/^Not in the studio, and never uploaded\./);
+    expect(a).toMatch(/in the recorder or in song practice/);
+  });
+
   it("does not urge a range retest within a few sessions", () => {
     expect(all).not.toMatch(/Retest after several practice sessions/);
     expect(guides.RANGE_GUIDE.beginner.points.join(" ")).toMatch(/few weeks/);

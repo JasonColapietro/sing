@@ -955,6 +955,26 @@ export function capLadder(ladder: number[], cap: RangeCap | undefined): number[]
 }
 
 /**
+ * Measured span, in semitones, before the octave siren is worth recommending,
+ * shared by the coach's plan (components/progress/coach.tsx) and a fresh range
+ * result (components/range/result-view.tsx). computeRootLadder fits that
+ * exercise's ladder (fitRootLadder below). From a 25-semitone span up, its
+ * ladder starts at `lowMidi + 4` and its glides top out five semitones under
+ * `highMidi`. Narrower spans give up that headroom so the ladder keeps
+ * MIN_RUNGS rungs: from 16 to 24 semitones the glides top out two under
+ * `highMidi` while the lowest root slides from `lowMidi + 4` (at 22) down to
+ * `lowMidi` (at 18 and under); from 12 to 15 they reach `highMidi` itself,
+ * and under 12 the top is pinned there with the bottom below the range. So
+ * below 21 the octave would run from within two semitones of the measured
+ * floor to within two of the measured ceiling, the extremes a cold range test
+ * found, and a narrower span gets the fifth, which keeps five semitones under
+ * the ceiling from a 16-semitone span up. When that leaves the weak note
+ * above every glide, the coach's plan says so rather than promising a ladder
+ * through it.
+ */
+export const OCTAVE_SIREN_MIN_SEMIS = 21;
+
+/**
  * Every semitone root from the ladder's bottom to its top. With a saved
  * range, start a major third above the low note and stop a fourth below the
  * high note (accounting for the exercise's highest interval). Without one,

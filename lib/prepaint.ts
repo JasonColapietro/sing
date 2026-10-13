@@ -21,8 +21,14 @@
  *   data-sing-program  absent with no program, or on another program's own
  *                      view; otherwise a status token ("todo", "done" or
  *                      "finished") and any of "rest", "locked",
- *                      "next-locked", "waits", "book" (the end of
+ *                      "next-locked", "waits", and on a finished run its
+ *                      card's size: "book" for the book's program, the
+ *                      program's id for the others (the end of
  *                      prepaintState says when each applies)
+ *   data-sing-range    "saved" when the progress record holds both ends of
+ *                      a range test, absent otherwise: a popular song's
+ *                      personal answer (components/can-you-sing/verdict.tsx)
+ *                      replaces the range-test pitch at hydration
  *
  * The server HTML carries every state's version of the affected parts, each
  * marked with a `data-prepaint-*` attribute, and app/globals.css shows the one
@@ -73,6 +79,12 @@ export interface PrepaintState {
   freeLeft: string;
   /** The cap wall's streak clause (", now 4 days"), or "". */
   streakClause: string;
+  /**
+   * Whether the progress record holds a saved range: both ends are numbers,
+   * which is what lib/progress-shape.ts repairRange keeps and what a page
+   * needs to compare against it (lib/pop-songs.ts popFit).
+   */
+  range: boolean;
 }
 
 export interface PrepaintConfig {
@@ -83,10 +95,11 @@ export interface PrepaintConfig {
   /** The first program day index past a Pro program's free weeks. */
   freeDays: number;
   /**
-   * Per program id: [1 when Pro, number of days, indexes of rest days, 1 when
-   * it follows the book (has chapters)].
+   * Per program id: [1 when Pro, number of days, indexes of rest days, the
+   * token a finished run adds for its card's size ("book" for a program that
+   * follows the book, with chapters; its own id otherwise)].
    */
-  programs: Record<string, [number, number, number[], number]>;
+  programs: Record<string, [number, number, number[], string]>;
 }
 
 /**
@@ -170,6 +183,12 @@ export function prepaintState(
   const live = current > 0 && (lastDay === today || lastDay === yesterday) ? current : 0;
   const streakClause = live > 1 ? ", now " + live + " days" : "";
 
+  const saved = isObject(progress) && isObject(progress.range) ? progress.range : null;
+  const range =
+    saved !== null &&
+    typeof saved.lowMidi === "number" && isFinite(saved.lowMidi) &&
+    typeof saved.highMidi === "number" && isFinite(saved.highMidi);
+
   let program: string | null = null;
   const record = read(c.keys.program);
   const def =
@@ -180,7 +199,7 @@ export function prepaintState(
     const proProgram = def[0] === 1;
     const length = def[1];
     const rest = def[2];
-    const book = def[3] === 1;
+    const finishedSize = def[3];
     const startedDay = record.startedDay as string;
     // reviveProgress: the longest valid prefix of the done list.
     const done: string[] = [];
@@ -220,9 +239,10 @@ export function prepaintState(
     const tokens: string[] = [];
     if (done.length >= end) {
       tokens.push("finished");
-      // The book's program finishes on chapter 19's next steps, its fortnight
-      // choices and six check-in readings: a card twice another's height.
-      if (book) tokens.push("book");
+      // The finished card's height is the program's own: its name, its
+      // check-in readings (none to six rows) and, for the book's program,
+      // chapter 19's next steps and fortnight choices.
+      if (typeof finishedSize === "string" && finishedSize) tokens.push(finishedSize);
     } else if (done.length && done[done.length - 1] >= today) {
       const index = done.length - 1;
       tokens.push("done");
@@ -247,7 +267,7 @@ export function prepaintState(
     }
   }
 
-  return { plan, program, freeLeft, streakClause };
+  return { plan, program, freeLeft, streakClause, range };
 }
 
 /** Where the values the attributes cannot carry wait for components/prepaint.tsx PrepaintText. */
@@ -262,6 +282,7 @@ export function prepaintScript(config: PrepaintConfig): string {
   return (
     `try{var s=(${prepaintState.toString()})(localStorage,new Date(),${JSON.stringify(config)},location),` +
     `h=document.documentElement;window.${PREPAINT_GLOBAL}=s;h.setAttribute("data-sing-plan",s.plan);` +
-    `if(s.program)h.setAttribute("data-sing-program",s.program)}catch(e){}`
+    `if(s.program)h.setAttribute("data-sing-program",s.program);` +
+    `if(s.range)h.setAttribute("data-sing-range","saved")}catch(e){}`
   );
 }

@@ -7,7 +7,12 @@ import { describe, expect, it } from "vitest";
 import { rangeGrowth, rangeSeries } from "@/lib/analytics";
 import { SONGS } from "@/components/songs/data";
 import { countOpenSongsFitting } from "@/components/songs/lib";
-import { EXERCISES, computeRootLadder, patternSpan } from "@/components/warmups/exercises";
+import {
+  EXERCISES,
+  OCTAVE_SIREN_MIN_SEMIS,
+  computeRootLadder,
+  patternSpan,
+} from "@/components/warmups/exercises";
 
 import {
   FIVE_NOTE_SCALE_SEMIS,
@@ -222,9 +227,9 @@ describe("range result guidance", () => {
   });
 
   it("starts warmups in the band instead of confining them to it", () => {
-    // A span of 15 or more recommends the octave siren, which sweeps the
-    // span, so the card cannot also tell the singer to keep warmups inside
-    // the middle.
+    // A span of 21 or more recommends the octave siren, which roots in the
+    // band but glides above it, so the card cannot also tell the singer to
+    // keep warmups inside the middle.
     const html = render(45, 76);
     expect(html).toContain("Octave siren");
     expect(html).toContain("then start warmups there and keep songs inside it");
@@ -265,10 +270,10 @@ describe("range result guidance", () => {
     const five = EXERCISES.find((ex) => ex.id === "five-note-scale")!;
     expect(patternSpan(five)).toBe(FIVE_NOTE_SCALE_SEMIS);
     const low = 48;
-    for (let semis = 5; semis < 15; semis++) {
+    for (let semis = 5; semis < OCTAVE_SIREN_MIN_SEMIS; semis++) {
       const high = low + semis;
       const roots = computeRootLadder(five, low, high);
-      expect(roots.length, `${semis} semitones`).toBeLessThanOrEqual(4);
+      expect(roots.length, `${semis} semitones`).toBeLessThanOrEqual(5);
       const top = Math.max(...roots) + FIVE_NOTE_SCALE_SEMIS;
       if (semis < FIVE_NOTE_SCALE_SEMIS) {
         expect(top, `${semis} semitones`).toBe(high);
@@ -277,6 +282,46 @@ describe("range result guidance", () => {
         expect(top, `${semis} semitones`).toBeLessThanOrEqual(high);
         expect(Math.min(...roots), `${semis} semitones`).toBeGreaterThanOrEqual(low);
       }
+      if (semis >= 15) {
+        // "It starts a major third above the lowest note you reached and
+        // stays a few notes under your highest."
+        expect(Math.min(...roots), `${semis} semitones`).toBe(low + 4);
+        expect(top, `${semis} semitones`).toBeLessThanOrEqual(high - 4);
+      }
+    }
+  });
+
+  it("keeps the octave siren for spans whose ladder starts it inside the band", () => {
+    // Round 9 offered the siren from 15 semitones, where its fitted ladder
+    // roots the octave on the measured floor (and at 15 glides onto the
+    // measured ceiling), one tap after "Start in the middle".
+    const fifteenToTwenty = render(48, 65);
+    expect(fifteenToTwenty).toContain("Five-note scale");
+    expect(fifteenToTwenty).not.toContain("Octave siren");
+    expect(fifteenToTwenty).toContain("It starts a major third above the lowest note you reached");
+    expect(render(48, 68)).not.toContain("Octave siren");
+    expect(render(48, 69)).toContain("Octave siren");
+    expect(render(48, 69)).toContain('href="/warmups?exercise=octave-siren"');
+
+    const siren = EXERCISES.find((ex) => ex.id === "octave-siren")!;
+    const low = 48;
+    for (let semis = 15; semis < 32; semis++) {
+      const roots = computeRootLadder(siren, low, low + semis);
+      // workingRange trims three semitones off each end from 12 up.
+      const startsInBand = Math.min(...roots) >= low + 3;
+      expect(startsInBand, `${semis} semitones`).toBe(semis >= OCTAVE_SIREN_MIN_SEMIS);
+    }
+  });
+
+  it("applies the coach's span rule for the octave siren, not a second one", () => {
+    // components/progress/coach.tsx withholds the siren below the same span:
+    // both import the one constant from components/warmups/exercises.ts.
+    for (const file of ["../progress/coach.tsx", "./result-view.tsx"]) {
+      const src = readFileSync(join(__dirname, file), "utf8");
+      expect(src, file).not.toMatch(/const OCTAVE_SIREN_MIN_SEMIS\b/);
+      expect(src, file).toMatch(
+        /import \{[^}]*\bOCTAVE_SIREN_MIN_SEMIS\b[^}]*\} from "@\/components\/warmups\/exercises"/,
+      );
     }
   });
 });

@@ -198,6 +198,7 @@ export function LinkButton({
   size = "md",
   className,
   fullLoad = false,
+  prefetch,
   children,
 }: {
   href: string;
@@ -210,6 +211,12 @@ export function LinkButton({
    * resolve on its own (lib/program-ids.ts programViewHref).
    */
   fullLoad?: boolean;
+  /**
+   * Passed to next/link. `false` drops the speculative background fetch of
+   * the target's payload (a hub page's is its whole chart, up to 0.5 MB
+   * decoded) while the click still navigates. Omitted keeps Next's default.
+   */
+  prefetch?: boolean;
   children: ReactNode;
 }) {
   const classes = cn(buttonBase, buttonVariants[variant], buttonSizes[size], className);
@@ -221,7 +228,7 @@ export function LinkButton({
     );
   }
   return (
-    <Link href={href} className={classes}>
+    <Link href={href} prefetch={prefetch} className={classes}>
       {children}
     </Link>
   );

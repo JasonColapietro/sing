@@ -415,6 +415,21 @@ describe("the chapters agree with the app", () => {
     expect(body("tracking-change")).toMatch(/Range over time chart under Trends/);
   });
 
+  /**
+   * The book keeps three range tests in twelve weeks (chapters 8, 11 and 13),
+   * so three months of history holds two or three bars. Chapter 11 used to ask
+   * for "the bulk of this run of bars" and an "older cluster" beside "the one
+   * before it", which only a retest habit the book forbids could supply. Its
+   * reading rule now works bar by bar and says what to do with one or two.
+   */
+  it("reads range history on the book's own retest schedule", () => {
+    const ch11 = body("tracking-change");
+    expect(ch11).toMatch(/three range tests — week one, the end of week six, and the start of week twelve/);
+    expect(ch11).not.toMatch(/bulk of this run of bars|older cluster|bars older than four weeks/);
+    expect(ch11).toMatch(/three months holds only two or three bars/);
+    expect(ch11).toMatch(/With only one or two tests on the chart there is no lean to read yet/);
+  });
+
   it("sends a lasting loss of range from the free range chapter to a doctor, in the site's words", () => {
     expect(FREE.map((c) => c.slug)).toContain("reading-the-range-test");
     expect(body("reading-the-range-test")).toMatch(

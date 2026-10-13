@@ -1,29 +1,20 @@
 import { ImageResponse } from "next/og";
-import { SINGERS, spanOctaves } from "@/lib/singers";
+import { hubCardVersion, recordsCardProps } from "@/lib/og-cards";
 import { HubOgCard } from "@/components/singers/og-card";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "Reported catalog vocal range extremes, ranked";
 
-export default function Image() {
-  const rows = [...SINGERS]
-    .sort((a, b) => b.highMidi - b.lowMidi - (a.highMidi - a.lowMidi))
-    .slice(0, 5);
-  const axisLow = Math.floor(Math.min(...rows.map((s) => s.lowMidi)) / 12) * 12;
-  const axisHigh = Math.ceil(Math.max(...rows.map((s) => s.highMidi)) / 12) * 12;
+/**
+ * One card at a URL versioned by what it draws
+ * (/singers/records/opengraph-image/<version>), as the singer cards are: a
+ * catalog correction that moves the widest five or the extremes moves the URL.
+ */
+export function generateImageMetadata() {
+  return [{ id: hubCardVersion(recordsCardProps()), alt, size, contentType }];
+}
 
-  return new ImageResponse(
-    (
-      <HubOgCard
-        kicker="Extremes"
-        title="Reported catalog extremes"
-        stat={`The widest voices in the library — up to ${spanOctaves(rows[0].highMidi - rows[0].lowMidi)} octaves`}
-        rows={rows}
-        axisLow={axisLow}
-        axisHigh={axisHigh}
-      />
-    ),
-    size,
-  );
+export default function Image() {
+  return new ImageResponse(<HubOgCard {...recordsCardProps()} />, size);
 }

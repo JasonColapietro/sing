@@ -76,7 +76,11 @@ function ProgramCard({
   const freeWeeks = freePlanWeeks(program);
   return (
     <Card tone="raised" className="flex flex-col">
-      <div className="flex flex-wrap items-center gap-2">
+      {/* At least a pill's height (22px), so the running program's pill,
+          which arrives with the program store after hydration, does not grow
+          the row: on a short finished card the list is on the first screen,
+          and the 19px title row moved it 3px. */}
+      <div className="flex min-h-[1.375rem] flex-wrap items-center gap-2">
         <h2 className="text-lg">{program.name}</h2>
         {program.pro && <ProChip />}
         {active && <Pill tone="ok">{finished ? "Finished" : "In progress"}</Pill>}
@@ -373,7 +377,7 @@ function ProgramDetail({
             ? finished
               ? " You finished it; a restart begins a new run."
               : program.chapters
-                ? ` Taking a break? The next day waits. After two weeks or more away, or a fortnight that did not pass its “Move on when” test, chapter 13 says to go back to the start of that fortnight${goBacks.length > 0 ? "; the buttons above do it" : ""}.`
+                ? ` Taking a break? The next day waits. Back after two weeks or more away, or stuck on a fortnight whose “Move on when” check has not passed? Chapter 13's rule is to go back rather than forward${goBacks.length > 0 ? ": the buttons above restart this fortnight or go back to the one before" : ""}.`
                 : " Taking a break? You don't need to stop: the next day waits until you sing it."
             : " Miss a day and the program waits: the next day is there when you come back."}
         </p>
@@ -443,7 +447,13 @@ export function ProgramsClient({ initialProgram = null }: { initialProgram?: str
             sizes for the day's status, and the list starts about where the
             card will leave it (components/prepaint.tsx). */}
         {!hydrated ? (
-          <div aria-hidden="true" className="rounded-3xl border border-line bg-panel" {...prepaintMarker(hydrated, { slot: "program-today" })} />
+          <div
+            aria-hidden="true"
+            className="rounded-3xl border border-line bg-panel"
+            {...prepaintMarker(hydrated, { slot: "program-today" })}
+            // A program's own view: its card has no "See the whole calendar".
+            data-prepaint-view={program ? "" : undefined}
+          />
         ) : (
           active &&
           (!program || program.id === active.program.id) && (

@@ -1423,8 +1423,13 @@ export interface ProgramReading {
   index: number;
   /** The calendar day that program day was completed on. */
   day: string;
-  /** The last range test logged toward that day; null when none is on record. */
-  range: { lowMidi: number; highMidi: number } | null;
+  /**
+   * The last range test logged toward that day; null when the day takes a
+   * range test and none is on record; undefined when the day takes none (a
+   * sustain-only check-in), so the table never reads a test that was never
+   * asked for as one missed.
+   */
+  range?: { lowMidi: number; highMidi: number } | null;
   /** The longest sustain logged toward that day, in seconds; undefined when the day has no sustain test. */
   sustainSec?: number | null;
 }
@@ -1456,7 +1461,7 @@ export function programReadings(
     if (!hasRange && !hasSustain) return;
     const from = i === 0 ? progress.startedDay : addDays(progress.done[i - 1].day, 1);
     const within = (day: string) => day >= from && day <= done.day;
-    const reading: ProgramReading = { index: done.index, day: done.day, range: null };
+    const reading: ProgramReading = { index: done.index, day: done.day };
     if (hasRange) {
       const tests = rangeHistory.filter((r) => {
         const t = Date.parse(r.testedAt);
@@ -1489,7 +1494,7 @@ export function programReadings(
     out.push({
       index: done.index,
       day: done.day,
-      range: hasRange ? (done.range ?? null) : null,
+      ...(hasRange ? { range: done.range ?? null } : {}),
       ...(hasSustain ? { sustainSec: done.sustainSec ?? null } : {}),
     });
   }
@@ -1622,6 +1627,24 @@ export function repeatChoices(program: Program, at: number): ProgramChapter[] {
   if (cur.fromWeek >= 2 && at > chapterStartIndex(cur)) out.push(cur);
   if (prev && prev.fromWeek >= 2) out.push(prev);
   return out;
+}
+
+/**
+ * The 1-based program day of the run's next range test, from the day the
+ * card shows as today's on (today's own day when it is still to do), or null
+ * when the run has none left. A repeated fortnight stops at its `until`: the
+ * days after it are already done. A range test sung before that day cannot
+ * count toward it, since a day gathers its practice only from the day after
+ * the one before it was completed.
+ */
+export function nextRangeTestDay(program: Program, progress: ProgramProgress, view: ProgramToday): number | null {
+  if (view.status === "finished") return null;
+  const from = view.status === "todo" ? view.index : view.index + 1;
+  const end = runEnd(program, progress);
+  for (let i = from; i < end; i++) {
+    if (program.days[i]?.items.some((it) => it.kind === "range")) return i + 1;
+  }
+  return null;
 }
 
 /**

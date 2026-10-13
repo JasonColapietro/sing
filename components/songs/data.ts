@@ -86,9 +86,14 @@ export const SONGS: Song[] = [
     id: "row-row-row",
     slug: "row-row-row-your-boat",
     title: "Row Row Row Your Boat",
-    origin: "Traditional (American round, published 1852)",
+    // The origin line dates the tune transcribed here, not only the words:
+    // the 1852 and 1854 printings set the words to other tunes, and this one
+    // was first printed with them in 1881 (The Franklin Square Song
+    // Collection). That book's mention of a name does not settle who wrote
+    // the tune, so none is given.
+    origin: "Traditional (American round; words printed from 1852, this tune first printed with them in 1881)",
     publicDomain:
-      "Traditional American round, in print since 1852 and never under active copyright.",
+      "Traditional American round. The words have been printed since 1852 and the tune transcribed here since 1881; both are long out of copyright.",
     bpm: 76,
     beatsPerBar: 3,
     defaultKeyRootMidi: 60,
@@ -115,9 +120,12 @@ export const SONGS: Song[] = [
     id: "mary-lamb",
     slug: "mary-had-a-little-lamb",
     title: "Mary Had a Little Lamb",
-    origin: "Traditional (Sarah Josepha Hale, 1830)",
+    // Lowell Mason's 1830s setting is not the tune sung today. The tune
+    // transcribed here is the chorus of "Goodnight, Ladies", printed by 1867
+    // (the earliest print found, not a proven first).
+    origin: "Traditional (words published by Sarah Josepha Hale, 1830; this tune printed by 1867, as the chorus of “Goodnight, Ladies”)",
     publicDomain:
-      "Lyrics published by Sarah Josepha Hale in 1830; the melody is a traditional tune of the same period.",
+      "Sarah Josepha Hale published the words in 1830; the tune they are sung to today was printed by 1867, as the chorus of “Goodnight, Ladies”. Both are long out of copyright.",
     bpm: 104,
     beatsPerBar: 4,
     defaultKeyRootMidi: 60,
@@ -457,16 +465,20 @@ export const SONGS: Song[] = [
     id: "when-the-saints",
     slug: "when-the-saints-go-marching-in",
     title: "When the Saints Go Marching In",
-    origin: "Traditional African American spiritual, 19th-century roots; popularized in New Orleans jazz",
+    origin: "Traditional African American spiritual; the tune sung today is documented from the early 20th century (first recorded 1923) and was popularized in New Orleans jazz",
     publicDomain:
-      "Traditional spiritual of unknown authorship, documented since the 19th century; no copyrighted arrangement is used here.",
+      "Traditional spiritual of unknown authorship, first recorded in 1923; no copyrighted arrangement is used here.",
     bpm: 120,
     beatsPerBar: 4,
     defaultKeyRootMidi: 60,
     form: "phrase",
     defaultLoops: 4,
     genre: "Spiritual",
-    era: "1800s",
+    // No 19th-century source for this tune: it evolved in the early 1900s
+    // from similarly titled gospel songs and was first recorded in 1923 (the
+    // Paramount Jubilee Singers). The 1896 "When the Saints Are Marching In"
+    // is a different song. So the era chip does not say 1800s.
+    era: "Traditional",
     language: "English",
     tags: ["spiritual", "long tones", "upbeat"],
     notes: [

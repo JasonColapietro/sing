@@ -18,14 +18,36 @@ import SingerImage, {
 import SongImage, {
   generateImageMetadata as songImageMetadata,
 } from "@/app/songs/[slug]/opengraph-image";
+import GenreImage, {
+  alt as genreAlt,
+  generateImageMetadata as genreImageMetadata,
+} from "@/app/singers/genre/[genre]/opengraph-image";
+import VoiceTypeImage, {
+  generateImageMetadata as voiceTypeImageMetadata,
+} from "@/app/singers/voice-type/[type]/opengraph-image";
+import RecordsImage, {
+  generateImageMetadata as recordsImageMetadata,
+} from "@/app/singers/records/opengraph-image";
+import { generateImageMetadata as singersIndexImageMetadata } from "@/app/singers/opengraph-image";
 import { songBySlug } from "@/components/songs/data";
+import { HUB_OG_CARD_REVISION } from "@/components/singers/og-card";
 import {
+  genreCardProps,
+  hubCardVersion,
+  recordsCardProps,
   singerCardText,
   singerCardVersion,
   songCardText,
   songCardVersion,
+  voiceTypeCardProps,
 } from "@/lib/og-cards";
-import { singerBySlug } from "@/lib/singers";
+import { midiToLabel } from "@/lib/audio/notes";
+import {
+  SINGERS,
+  recordHolders,
+  singerBySlug,
+  singersByVoiceType,
+} from "@/lib/singers";
 
 async function drawn(card: Promise<unknown>): Promise<string> {
   const result = (await card) as { element: ReactNode };
@@ -107,5 +129,76 @@ describe("per-page share cards are versioned by what they draw", () => {
     for (const line of [text.kicker, text.title, text.facts, text.notes, text.footer]) {
       expect(html).toContain(line);
     }
+  });
+});
+
+/**
+ * The hub cards had the same problem: round 3 took Vitas off the Opera card's
+ * top row and round 5 refitted the Singer-Songwriter title, and both new
+ * pictures shipped at the URL they had had since September.
+ */
+describe("hub share cards are versioned by what they draw", () => {
+  it("puts the genre and voice-type card's version into its URL path", () => {
+    const [genre, ...moreGenre] = genreImageMetadata({ params: { genre: "opera" } });
+    expect(moreGenre).toHaveLength(0);
+    expect(genre).toMatchObject({ id: hubCardVersion(genreCardProps("Opera")!), alt: genreAlt });
+    expect(genre.id).toMatch(/^[0-9a-z]+$/);
+
+    const [voice, ...moreVoice] = voiceTypeImageMetadata({ params: { type: "tenor" } });
+    expect(moreVoice).toHaveLength(0);
+    expect(voice.id).toBe(hubCardVersion(voiceTypeCardProps("Tenor")!));
+  });
+
+  it("answers the build's param-less question, and an unknown hub, with no cards", () => {
+    expect(genreImageMetadata({ params: {} })).toEqual([]);
+    expect(genreImageMetadata({})).toEqual([]);
+    expect(genreImageMetadata({ params: { genre: "no-such-genre" } })).toEqual([]);
+    expect(voiceTypeImageMetadata({ params: {} })).toEqual([]);
+    expect(voiceTypeImageMetadata({ params: { type: "no-such-type" } })).toEqual([]);
+  });
+
+  it("gives the static records and index cards one versioned URL each", () => {
+    const [records, ...moreRecords] = recordsImageMetadata();
+    expect(moreRecords).toHaveLength(0);
+    expect(records.id).toBe(hubCardVersion(recordsCardProps()));
+    const [index, ...moreIndex] = singersIndexImageMetadata();
+    expect(moreIndex).toHaveLength(0);
+    expect(index.id).toMatch(/^[0-9a-z]+$/);
+  });
+
+  it("moves a hub card's version when a row's range or the card's layout revision moves", () => {
+    const card = genreCardProps("Opera")!;
+    expect(hubCardVersion({ ...card })).toBe(hubCardVersion(card));
+    const rows = card.rows.map((r, i) => (i === 0 ? { ...r, highMidi: r.highMidi + 1 } : r));
+    expect(hubCardVersion({ ...card, rows })).not.toBe(hubCardVersion(card));
+    expect(hubCardVersion(card, `${HUB_OG_CARD_REVISION}-next`)).not.toBe(hubCardVersion(card));
+    expect(hubCardVersion({ ...card, caption: "Range covered C2–C6" })).not.toBe(hubCardVersion(card));
+  });
+
+  it("states each group's true span, never the rounded chart axis", async () => {
+    // The axis is rounded out to octave Cs, so the old footer printed "C0 — C6"
+    // for bass-baritones, whose cited ranges run B0 to A#5.
+    const bassBaritones = singersByVoiceType("Bass-baritone");
+    const low = Math.min(...bassBaritones.map((s) => s.lowMidi));
+    const high = Math.max(...bassBaritones.map((s) => s.highMidi));
+    const card = voiceTypeCardProps("Bass-baritone")!;
+    expect(card.caption).toBe(`Range covered ${midiToLabel(low)}–${midiToLabel(high)}`);
+    const html = await drawn(
+      VoiceTypeImage({ params: Promise.resolve({ type: "bass-baritone" }) }) as Promise<unknown>,
+    );
+    expect(html).toContain(card.caption);
+    expect(html).not.toContain(`${midiToLabel(card.axisLow)} — ${midiToLabel(card.axisHigh)}`);
+
+    const grunge = await drawn(
+      GenreImage({ params: Promise.resolve({ genre: "grunge" }) }) as Promise<unknown>,
+    );
+    expect(grunge).toContain(genreCardProps("Grunge")!.caption);
+
+    const holders = recordHolders(SINGERS);
+    const records = recordsCardProps();
+    expect(records.caption).toBe(
+      `Catalog extremes ${midiToLabel(holders.lowest[0].lowMidi)}–${midiToLabel(holders.highest[0].highMidi)}`,
+    );
+    expect(await drawn(Promise.resolve(RecordsImage()))).toContain(records.caption);
   });
 });

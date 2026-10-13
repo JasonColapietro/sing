@@ -21,7 +21,9 @@
  *
  * `--state=<name>` measures a returning singer in one of the stored states
  * that reshape a page after hydration (see STATES below): today's free guided
- * minutes used up, a program running, both at once, or a program's rest day.
+ * minutes used up, a program running, both at once, a program's rest day, a
+ * program finished, or a saved range on the pages whose header action it
+ * swaps.
  * Each is the returning record plus what that state adds, so it implies
  * `--returning`. `--route=<name,...>` restricts a run to the named routes
  * (the `name` in routes.mjs, or in DEEP_LINKS below), so CI can measure a
@@ -123,15 +125,46 @@ const REST_DAY = `
 `;
 
 /**
- * The Measured Voice finished: all 84 days done, one a day up to two days ago,
- * each check-in day (days 1, 11, 42, 60, 67 and 78) carrying its readings, as
- * the record keeps them. The finished card is the book's: chapter 19's next
- * steps, six reading rows and the fortnight choices, the tallest card a
- * finished program shows.
+ * A program finished: all `length` days done, one a day up to two days ago,
+ * each check-in day (`checkIns`, 0-based) carrying its readings, as the
+ * record keeps them. A finished card's height is the program's own (its name,
+ * its check-in rows, and for the book's program chapter 19's next steps), so
+ * the pre-paint script sizes each program's card apart (app/globals.css,
+ * --finished-slot), and each needs its own seed for CI to measure that slot.
  */
-const FINISHED = `
-  // cls-state:finished
-  localStorage.setItem("suede-sing:program:v1", JSON.stringify({ programId: "measured-voice-12w", startedDay: ago(85), startedAt: ago(85) + "T08:00:00.000Z", done: Array.from({ length: 84 }, (_, index) => Object.assign({ index, day: ago(85 - index), manual: true }, [0, 10, 41, 59, 66, 77].includes(index) ? { range: { lowMidi: 45, highMidi: 67 + (index > 40 ? 1 : 0) }, sustainSec: 9.4 + index / 20 } : {})) }));
+const finishedSeed = (name, programId, length, checkIns) => `
+  // cls-state:${name}
+  localStorage.setItem("suede-sing:program:v1", JSON.stringify({ programId: "${programId}", startedDay: ago(${length + 1}), startedAt: ago(${length + 1}) + "T08:00:00.000Z", done: Array.from({ length: ${length} }, (_, index) => Object.assign({ index, day: ago(${length + 1} - index), manual: true }, ${JSON.stringify(checkIns)}.includes(index) ? { range: { lowMidi: 45, highMidi: 67 + (index > 0 ? 1 : 0) }, sustainSec: 9.4 + index / 20 } : {})) }));
+`;
+
+/**
+ * The finished states, by name: the program, its length, its check-in days,
+ * and the route that is its own `?program=` view (DEEP_LINKS). `finished` is
+ * The Measured Voice, check-ins on days 1, 11, 42, 60, 67 and 78: chapter 19's
+ * next steps, six reading rows and the fortnight choices, the tallest card a
+ * finished program shows. The others are the per-program slots: High notes
+ * (four range rows), Mix and Foundations (two rows each), and Recovery week
+ * and Vibrato, which have no check-ins and take the plain slot.
+ */
+const FINISHED_RUNS = {
+  finished: { programId: "measured-voice-12w", length: 84, checkIns: [0, 10, 41, 59, 66, 77], view: "program-detail" },
+  "finished-high-notes": { programId: "high-notes-6w", length: 42, checkIns: [0, 13, 27, 41], view: "program-high-notes" },
+  "finished-mix": { programId: "mix-4w", length: 28, checkIns: [0, 27], view: "program-mix" },
+  "finished-foundations": { programId: "foundations-2w", length: 14, checkIns: [0, 13], view: "program-foundations" },
+  "finished-recovery": { programId: "recovery-week", length: 7, checkIns: [], view: "program-recovery" },
+  "finished-vibrato": { programId: "vibrato-3w", length: 21, checkIns: [], view: "program-vibrato" },
+};
+
+/**
+ * A saved range of A2–F4, set over the returning record's. A singer page's
+ * header action (components/singers/singer-actions.tsx SingerRangeAction)
+ * and a popular song's (components/can-you-sing/verdict.tsx CanYouSingAction)
+ * swap their range-test link for a link to the comparison below once the
+ * saved range hydrates, so this state loads the pages that swap.
+ */
+const SAVED_RANGE = `
+  // cls-state:saved-range
+  progress.range = { lowMidi: 45, highMidi: 65 };
 `;
 
 const STATES = {
@@ -140,7 +173,10 @@ const STATES = {
   /** Today's program day waits for midnight because the free minutes are used. */
   "program-capped": PROGRAM + CAPPED,
   "rest-day": REST_DAY,
-  finished: FINISHED,
+  ...Object.fromEntries(
+    Object.entries(FINISHED_RUNS).map(([name, run]) => [name, finishedSeed(name, run.programId, run.length, run.checkIns)]),
+  ),
+  "saved-range": SAVED_RANGE,
 };
 
 /**
@@ -155,6 +191,13 @@ const STATE_PROOF = {
   "program-capped": { routes: ["programs", "program-foundations", "warmups"], selector: "[data-program-day] [data-program-waits]" },
   "rest-day": { routes: ["programs", "warmups", "progress"], selector: "[data-program-day]" },
   finished: { routes: ["programs", "program-detail", "warmups", "progress"], selector: '[data-program-day][data-status="finished"]' },
+  ...Object.fromEntries(
+    Object.entries(FINISHED_RUNS)
+      .filter(([name]) => name !== "finished")
+      .map(([name, run]) => [name, { routes: ["programs", run.view], selector: '[data-program-day][data-status="finished"]' }]),
+  ),
+  // The comparison link replaced the range-test link in the header.
+  "saved-range": { routes: ["singer-adele", "singer-celine-dion", "song-someone-like-you"], selector: 'a[href="#you-vs"], a[href="#fit"]' },
 };
 
 /**
@@ -165,10 +208,24 @@ const STATE_PROOF = {
  * --state=finished runs; "program-foundations" is the one --state=program
  * runs, so those states measure a singer opening their own program, with
  * today's card above it.
+ *
+ * The rest are measured only when `--route` names them, for the state that
+ * needs them, so a plain run's page count does not grow: the other programs'
+ * own views (each finished-<program> state), and the singer and song pages
+ * whose header action --state=saved-range swaps. Adele's is a "test" page,
+ * Celine Dion's a "compare" page (the CTR pilot's wider labels), and
+ * "Someone Like You" is Adele's song.
  */
 const DEEP_LINKS = [
   { path: "/programs?program=measured-voice-12w", name: "program-detail", kind: "app" },
   { path: "/programs?program=foundations-2w", name: "program-foundations", kind: "app" },
+  { path: "/programs?program=high-notes-6w", name: "program-high-notes", kind: "app", onlyWhenNamed: true },
+  { path: "/programs?program=mix-4w", name: "program-mix", kind: "app", onlyWhenNamed: true },
+  { path: "/programs?program=recovery-week", name: "program-recovery", kind: "app", onlyWhenNamed: true },
+  { path: "/programs?program=vibrato-3w", name: "program-vibrato", kind: "app", onlyWhenNamed: true },
+  { path: "/singers/adele", name: "singer-adele", kind: "detail", onlyWhenNamed: true },
+  { path: "/singers/celine-dion", name: "singer-celine-dion", kind: "detail", onlyWhenNamed: true },
+  { path: "/can-you-sing/someone-like-you", name: "song-someone-like-you", kind: "detail", onlyWhenNamed: true },
 ];
 
 if (STATE !== undefined && !Object.hasOwn(STATES, STATE)) {
@@ -237,6 +294,8 @@ if (ROUTE_FILTER !== undefined) {
     process.exit(2);
   }
   routes = routes.filter((r) => ROUTE_FILTER.includes(r.name));
+} else {
+  routes = routes.filter((r) => !r.onlyWhenNamed);
 }
 const viewports = ONLY_VIEWPORT !== undefined ? VIEWPORTS.filter((v) => v.name === ONLY_VIEWPORT) : VIEWPORTS;
 if (viewports.length === 0) {

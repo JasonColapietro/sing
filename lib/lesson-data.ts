@@ -565,7 +565,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, sing the test as one uninterrupted attempt, and keep its saved result even when it does not pass. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
+        "body": "Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, sing the test as one uninterrupted attempt, and keep its saved result. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number. If an end needs extra volume, a lifted chin or neck effort, press Start over before the test finishes: a finished test becomes the range your warm-ups and songs are fitted to.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -4933,7 +4933,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Then slide through it once more in the [pitch studio](/studio), which names the note as you sing it, and write down the first note where effort rises on the way up and where the sound settles on the way down. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },

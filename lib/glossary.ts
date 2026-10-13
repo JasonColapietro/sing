@@ -101,6 +101,8 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Song transposition is counted in semitones, and warmup scores show the semitone where your accuracy starts to drop.",
         href: "/songs",
+        // Chromatic neighbor: root, up one semitone, back home.
+        drill: "chromatic-neighbor",
         domain: "music",
       },
       {
@@ -202,6 +204,8 @@ export const GLOSSARY: GlossarySection[] = [
         where:
           "Warmup exercises that climb past your transition are asking for head voice rather than more effort.",
         href: "/warmups",
+        // Gee to the octave, the free warmup billed as the head-voice wake-up.
+        drill: "gee-octave",
         domain: "voice",
       },
       {
