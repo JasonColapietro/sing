@@ -205,7 +205,8 @@ Two traps to know:
   to the other, so a live account with no prices under the lookup keys makes
   `/api/checkout` fail. `scripts/stripe-setup.mjs` is idempotent and creates the
   product, both sellable prices and a portal config against whichever key it is given.
-  It does not repoint or archive legacy monthly or annual prices. Use it if the
+  On an existing product it updates the description if the copy in the script has
+  changed. It does not repoint or archive legacy monthly or annual prices. Use it if the
   live catalog ever needs rebuilding:
 
   ```bash

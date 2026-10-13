@@ -127,6 +127,16 @@ describe("the product description shown at checkout", () => {
     );
   });
 
+  it("has scripts/stripe-setup.mjs update a reused product's stale description", () => {
+    // Checkout reuses the account's product untouched, so the setup script is
+    // where a corrected description reaches the live checkout page.
+    const script = readFileSync(join(process.cwd(), "scripts/stripe-setup.mjs"), "utf8");
+    expect(script).toMatch(/stripe\.products\.update\(id, \{ description: PRODUCT_DESCRIPTION \}\)/);
+    const reuses = script.match(/\(reused\)`\);\s*return ([^;]+);/g) ?? [];
+    expect(reuses.length).toBe(2);
+    for (const r of reuses) expect(r).toContain("return syncDescription(");
+  });
+
   it("matches scripts/stripe-setup.mjs word for word", () => {
     const script = readFileSync(join(process.cwd(), "scripts/stripe-setup.mjs"), "utf8");
     const quoted = /const PRODUCT_DESCRIPTION =\s*"([^"]+)";/.exec(script)?.[1];
