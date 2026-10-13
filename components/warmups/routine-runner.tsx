@@ -18,6 +18,7 @@ import {
   stepExercise,
   stepSeconds,
   type Routine,
+  type RoutineStep,
 } from "./routines";
 
 /**
@@ -90,6 +91,22 @@ export function stepStartingTempo(ex: WarmupExercise, start: 0.75 | 1 | 1.25): 0
   return start < 1 ? (Math.max(start, slowestOneBreathTempo(ex)) as 0.75 | 1) : start;
 }
 
+/** At most this many reps of a routine's first exercise warm a cold voice in. */
+export const WARM_IN_MAX_REPS = 6;
+
+/**
+ * The few easy reps a routine opened part-way through sings first, when no
+ * warmup is logged today: its own first exercise, shortened. A `?step=`
+ * link from a program day the free minutes split carries on from the step the
+ * cap stopped at, and on a later day that step can be an octave siren or a
+ * tenth near the top of the range, which a cold voice should not open on
+ * (the routines open gently for that reason; see ROUTINES).
+ */
+export function warmInStep(routine: Routine): RoutineStep {
+  const first = routine.steps[0];
+  return { exerciseId: first.exerciseId, reps: Math.min(WARM_IN_MAX_REPS, first.reps) };
+}
+
 export interface RoutineSummaryData {
   routine: Routine;
   /** One entry per step, in order; null where nothing was sung (skipped or silent). */
@@ -98,6 +115,11 @@ export interface RoutineSummaryData {
   completed: boolean;
   /** The step a `?step=` link opened on; the ones before it were not part of this run. */
   startStep?: number;
+  /**
+   * The run sang warmInStep before `startStep`, and `steps[0]` holds that
+   * warm-in rather than the routine's own first step.
+   */
+  warmIn?: boolean;
 }
 
 /**
@@ -119,11 +141,18 @@ export function RoutineRunner({
   capped = false,
   initialTempo = 1,
   startStep = 0,
+  warmIn = false,
 }: {
   initialTempo?: 0.75 | 1 | 1.25;
   routine: Routine;
   /** The step to open on (0-based), from a `?step=` link. */
   startStep?: number;
+  /**
+   * No warmup is logged today: a run opened past step 1 sings a few reps of
+   * the routine's first exercise before it (warmInStep). Read once, when the
+   * run starts.
+   */
+  warmIn?: boolean;
   pitch: UsePitchResult;
   range: VocalRange;
   /** The free allowance is spent: the next intro becomes the cap slide. */
@@ -137,11 +166,19 @@ export function RoutineRunner({
   const [startingTempo] = useState(initialTempo);
   const cap = useFreeCap();
   const [firstStep] = useState(() => Math.min(Math.max(0, startStep), stepCount - 1));
-  const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: firstStep });
+  // Captured once: the warm-in logs a warmup itself, and the run must not
+  // change its mind about it half-way. A first exercise the saved range cannot
+  // hold would only be skipped, so it never warms in.
+  const [warmInFirst] = useState(
+    () => warmIn && firstStep > 0 && !tooWideForRange(stepExercise(routine.steps[0]), range),
+  );
+  // True while the warm-in is the step on screen; it runs as step 0.
+  const [warming, setWarming] = useState(warmInFirst);
+  const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: warmInFirst ? 0 : firstStep });
   const [results, setResults] = useState<(SessionSummaryData | null)[]>([]);
 
   const stepIndex = phase.kind === "done" ? stepCount - 1 : phase.step;
-  const step = routine.steps[stepIndex];
+  const step = warming ? warmInStep(routine) : routine.steps[stepIndex];
   const ex = stepExercise(step);
   // A twelfth run in a range no wider than the run: the intro says why and
   // moves on, and the step closes unsung, so the summary reads it as skipped.
@@ -151,10 +188,17 @@ export function RoutineRunner({
     const next = [...results];
     next[i] = data;
     setResults(next);
+    // The warm-in is sung as step 0 and logged like any step (so the free
+    // minutes count it); then the run goes to the step the link asked for.
+    if (warming) {
+      setWarming(false);
+      setPhase({ kind: "intro", step: firstStep });
+      return;
+    }
     const after = afterStep(i, stepCount);
     if (after.kind === "done") {
       setPhase(after);
-      onDone({ routine, steps: next, completed: true, startStep: firstStep });
+      onDone({ routine, steps: next, completed: true, startStep: firstStep, warmIn: warmInFirst });
     } else {
       setPhase(after);
     }
@@ -162,20 +206,27 @@ export function RoutineRunner({
 
   function quit() {
     if (results.some((r) => r !== null)) {
-      onDone({ routine, steps: results, completed: false, startStep: firstStep });
+      onDone({ routine, steps: results, completed: false, startStep: firstStep, warmIn: warmInFirst });
     } else {
       onQuit();
     }
   }
 
   const clockLabel = introClockLabel(
-    remainingSeconds(routine, stepIndex, range),
+    warming
+      ? stepSeconds(step) + STEP_INTRO_SEC + remainingSeconds(routine, firstStep, range)
+      : remainingSeconds(routine, stepIndex, range),
     cap.isPro ? null : cap.leftSec,
   );
   // Steps before a `?step=` link's first one weren't part of this run, so
-  // they get no "skipped" chip.
-  const prev = stepIndex > firstStep ? (results[stepIndex - 1] ?? null) : null;
-  const prevEx = stepIndex > firstStep ? stepExercise(routine.steps[stepIndex - 1]) : null;
+  // they get no "skipped" chip; the warm-in, sung just before it, does.
+  const afterWarmIn = warmInFirst && !warming && stepIndex === firstStep;
+  const prev = stepIndex > firstStep || afterWarmIn ? (results[afterWarmIn ? 0 : stepIndex - 1] ?? null) : null;
+  const prevEx = afterWarmIn
+    ? stepExercise(routine.steps[0])
+    : stepIndex > firstStep
+      ? stepExercise(routine.steps[stepIndex - 1])
+      : null;
 
   if (phase.kind === "play") {
     return (
@@ -186,7 +237,12 @@ export function RoutineRunner({
         range={range}
         variant="session"
         initialTempo={stepStartingTempo(ex, startingTempo)}
-        bounds={{ reps: step.reps, stepIndex: phase.step, stepCount }}
+        bounds={{
+          reps: step.reps,
+          stepIndex: phase.step,
+          stepCount,
+          label: warming ? `Warm-in, then step ${firstStep + 1}` : undefined,
+        }}
         onFinish={(data) => closeStep(phase.step, data)}
         onExit={() => closeStep(phase.step, null)}
       />
@@ -203,12 +259,17 @@ export function RoutineRunner({
 
   return (
     <StepIntro
-      key={phase.step}
+      key={warming ? "warm-in" : phase.step}
       routineName={routine.name}
       stepIndex={phase.step}
       stepCount={stepCount}
       clockLabel={clockLabel}
-      title={ex.title}
+      title={warming ? `Warm-in: ${ex.title}` : ex.title}
+      warmInLine={
+        warming
+          ? `No warmup yet today, so a few easy reps come first. Then step ${firstStep + 1}.`
+          : undefined
+      }
       desc={ex.desc}
       tip={ex.tip}
       reps={step.reps}
@@ -240,6 +301,7 @@ function StepIntro({
   stepCount,
   clockLabel,
   title,
+  warmInLine,
   desc,
   tip,
   reps,
@@ -257,6 +319,8 @@ function StepIntro({
   /** "~N min left", or the free minutes left when those run out first. */
   clockLabel: string;
   title: string;
+  /** Set on a warm-in (warmInStep): why it comes first and where it leads. */
+  warmInLine?: string;
   desc: string;
   tip: string;
   reps: number;
@@ -296,8 +360,8 @@ function StepIntro({
   return (
     <SessionShell
       title={routineName}
-      subtitle={`Step ${stepIndex + 1} of ${stepCount}`}
-      progress={(stepIndex / stepCount) * 100}
+      subtitle={warmInLine ? "Warm-in" : `Step ${stepIndex + 1} of ${stepCount}`}
+      progress={warmInLine ? 0 : (stepIndex / stepCount) * 100}
       onClose={onQuit}
       closeLabel="Quit routine"
       topRight={
@@ -363,11 +427,16 @@ function StepIntro({
           </p>
         )}
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--s-dim)]">
-          {note ? "Skipping" : stepIndex === 0 ? "First up" : "Up next"}
+          {note ? "Skipping" : warmInLine || stepIndex === 0 ? "First up" : "Up next"}
         </p>
         <h2 className="mt-3 text-4xl text-[var(--s-ink)] sm:text-5xl" aria-live="polite">
           {title}
         </h2>
+        {warmInLine && !note && (
+          <p className="mx-auto mt-4 max-w-md rounded-2xl border border-[var(--s-line2)] px-4 py-3 text-sm text-[var(--s-ink)]">
+            {warmInLine}
+          </p>
+        )}
         {/* A skipped step is never sung, so its how-to, rep count and length
             would only be read and then not happen: the slide says why instead. */}
         {note ? (

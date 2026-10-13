@@ -36,7 +36,7 @@ Heard and held, not scored. The vibrato drill in warm-ups reads rate and width, 
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Before singing, choose the count where the vibrato will come in and the count where you will return to straight tone, for example in on three and out on six of a slow count. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Before singing, choose the count where the vibrato will come in and the count where you will return to straight tone, for example in on three and out on six of a slow count. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble.

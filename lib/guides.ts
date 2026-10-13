@@ -126,7 +126,7 @@ export const RANGE_GUIDE: GuideContent = {
     },
     {
       q: "Can I increase my vocal range?",
-      a: "This test cannot predict whether or how much your range will change. Track comfortable, repeatable notes under similar conditions rather than chasing a larger span. For individual technique advice, work with a qualified voice teacher; pain or lasting voice changes need clinical assessment.",
+      a: "This test cannot predict whether or how much your range will change. Track comfortable, repeatable notes under similar conditions rather than chasing a larger span. For individual technique advice, work with a qualified voice teacher; pain or lasting voice changes belong with a doctor who can examine the vocal folds, such as an ENT or laryngologist.",
     },
     {
       q: "Why is my range different every time I test?",

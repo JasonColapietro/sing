@@ -144,6 +144,20 @@ describe("the ladder diagnosis on a descending drill", () => {
     expect(html).toContain("then dropped 32 points");
   });
 
+  it("names a low, level ladder by its average, never as sitting under the note", () => {
+    // The score keeps absolute cents, so it cannot tell flat from sharp:
+    // "under the target" would steer a sharp singer the wrong way.
+    const ex = EXERCISES.find((e) => e.id === "tongue-trill-descent")!;
+    const level = [40, 42, 38, 41, 39].map((score, i) => ({ root: 60 - i, score, avgCentsErr: 60, skipped: false }));
+    expect(ladderBreakAlongWalk(level, true)).toBeNull();
+    const html = render(
+      { ex, results: level, avgScore: 40, best: level[1], xpGained: 5, newAchievements: [], mode: "sing-along" },
+      { daily: false },
+    ).replace(/<!-- -->/g, "");
+    expect(html).toContain("your average across the whole ladder stayed under 50% instead");
+    expect(html).not.toContain("sat under the");
+  });
+
   it("draws the practice rooms' three-star scale, not the songbook's five", () => {
     const html = render(summaryFor(plan.picks[0].exercise.id), { daily: false });
     // An 82 is two of three practice stars, as the library and /progress count it.

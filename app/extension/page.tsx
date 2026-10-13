@@ -117,7 +117,12 @@ const jsonLd = {
     {
       "@type": "SoftwareApplication",
       "@id": `${SITE_URL}/extension#software`,
-      name: "Suede Sing: Vocal Coach, Pitch Tuner, Vocal Range Test & Ear Training",
+      // The name the Web Store listing at installUrl shows today. The rename
+      // to "…Pitch Tuner, Vocal Range Test & Ear Training" is the extension's
+      // manifest name in the suede-voice repo and has not shipped; change this,
+      // lib/llms-txt.ts and EXTENSION_NAME in lib/llms-txt.test.ts together
+      // once the store shows it.
+      name: "Suede Sing: Vocal Coach, Pitch Trainer & Vocal Range Test",
       alternateName: ["Suede Sing for Chrome"],
       applicationCategory: "EducationalApplication",
       applicationSubCategory: "Browser Extension",

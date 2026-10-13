@@ -393,9 +393,10 @@ export default function LearnPage() {
 
         <p className="max-w-3xl text-xs leading-relaxed text-dim">
           Vocal training is not medical care. Stop if singing hurts or your
-          voice becomes less coordinated as you continue. Persistent hoarseness,
-          pain, sudden loss of range, or other worrying changes belong with a
-          qualified clinician, not an online exercise.
+          voice becomes less coordinated as you continue. Pain, hoarseness that
+          will not clear, a sudden or lasting loss of range, or any blood
+          belongs with a doctor who can examine the vocal folds, such as an ENT
+          or laryngologist, not an online exercise.
         </p>
       </div>
     </PageShell>

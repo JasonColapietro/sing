@@ -1,4 +1,7 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { PRO_SONGS } from "@/components/songs/data";
 
 const api = vi.hoisted(() => ({
   pricesList: vi.fn(),
@@ -16,7 +19,7 @@ vi.mock("stripe", () => ({
 }));
 
 process.env.STRIPE_SECRET_KEY = "sk_test_provision";
-const { resolvePriceId, PriceMismatchError, PriceNotConfiguredError } =
+const { resolvePriceId, PriceMismatchError, PriceNotConfiguredError, PRODUCT_DESCRIPTION } =
   await import("./stripe");
 
 const monthlyPrice = {
@@ -103,5 +106,50 @@ describe("resolvePriceId provisioning", () => {
     await expect(resolvePriceId("monthly")).rejects.toBeInstanceOf(
       PriceNotConfiguredError,
     );
+  });
+});
+
+describe("the product description shown at checkout", () => {
+  it("is the one the product is created with", async () => {
+    api.pricesList.mockResolvedValue({ data: [] });
+    api.productsCreate.mockResolvedValue({ id: "prod_new" });
+    api.pricesCreate.mockResolvedValue({
+      id: "price_new_lifetime",
+      active: true,
+      currency: "usd",
+      unit_amount: 7900,
+      recurring: null,
+      product: "prod_new",
+    });
+    await resolvePriceId("lifetime");
+    expect(api.productsCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ name: "Suede Pro", description: PRODUCT_DESCRIPTION }),
+    );
+  });
+
+  it("has scripts/stripe-setup.mjs update a reused product's stale description", () => {
+    // Checkout reuses the account's product untouched, so the setup script is
+    // where a corrected description reaches the live checkout page.
+    const script = readFileSync(join(process.cwd(), "scripts/stripe-setup.mjs"), "utf8");
+    expect(script).toMatch(/stripe\.products\.update\(id, \{ description: PRODUCT_DESCRIPTION \}\)/);
+    const reuses = script.match(/\(reused\)`\);\s*return ([^;]+);/g) ?? [];
+    expect(reuses.length).toBe(2);
+    for (const r of reuses) expect(r).toContain("return syncDescription(");
+  });
+
+  it("matches scripts/stripe-setup.mjs word for word", () => {
+    const script = readFileSync(join(process.cwd(), "scripts/stripe-setup.mjs"), "utf8");
+    const quoted = /const PRODUCT_DESCRIPTION =\s*"([^"]+)";/.exec(script)?.[1];
+    expect(quoted).toBe(PRODUCT_DESCRIPTION);
+  });
+
+  it("sells the full plan, not planning itself, and no songbook", () => {
+    // The free plan shows the coach plan's first two steps each day, as /pro
+    // says, so planning is not something only Pro has.
+    expect(PRODUCT_DESCRIPTION).toContain("the full adaptive daily plan (free shows its first two steps)");
+    expect(PRODUCT_DESCRIPTION).not.toMatch(/adaptive daily plans/i);
+    // Every song is free, so a buyer is not sold one.
+    expect(PRO_SONGS).toHaveLength(0);
+    expect(PRODUCT_DESCRIPTION).not.toMatch(/songbook|songs/i);
   });
 });

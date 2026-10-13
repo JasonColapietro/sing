@@ -311,3 +311,58 @@ describe("the song key rule, both halves", () => {
     expect(html).toContain("open in the written key and are scored in either octave");
   });
 });
+
+describe("the answer sentence's reason for a rating", () => {
+  // computeDifficulty rates span plus how densely a melody leaps, so a
+  // sentence crediting the span alone read "9 semitones — which rates Medium"
+  // on one page and "9 semitones — which rates Hard" on another.
+  it("names the span and the leaps the rating comes from", async () => {
+    const loch = await render("loch-lomond");
+    expect(loch).toContain(
+      "9 semitones, with 1 leap of a major third or more — and the span and leaps together rate it medium to sing",
+    );
+    const valley = await render("down-in-the-valley");
+    expect(valley).toContain(
+      "9 semitones, with 3 leaps of a major third or more — and the span and leaps together rate it hard to sing",
+    );
+    for (const song of SONGS) {
+      const html = await render(song.slug);
+      expect(html, song.slug).not.toContain("semitones — which rates");
+      expect(html, song.slug).toContain("and the span and leaps together rate it");
+    }
+  });
+
+  it("never gives two songs the same span and leap count with different ratings", () => {
+    // The sentence names a leap count, but the rating reads leap density. If
+    // two songs with the same span and count ever rate differently, the
+    // sentence would contradict itself across pages again.
+    const seen = new Map<string, { slug: string; label: string }>();
+    for (const song of SONGS) {
+      const d = computeDifficulty(song);
+      const key = `${d.rangeSemis}|${d.leaps}`;
+      const prior = seen.get(key);
+      if (prior) expect(d.label, `${song.slug} vs ${prior.slug}`).toBe(prior.label);
+      else seen.set(key, { slug: song.slug, label: d.label });
+    }
+  });
+
+  it("never rates a song easier than one it matches or beats on both span and leaps", () => {
+    // The sentence invites the comparison a singer actually makes across
+    // pages: "9 semitones with 3 leaps" next to "9 semitones with 1 leap".
+    // Density can still order two songs against their counts (more notes, more
+    // leaps, lower density), so pin the reading the sentence gives: at least
+    // the span and at least the leaps never rates easier.
+    const rank = { Easy: 0, Medium: 1, Hard: 2 } as const;
+    const rated = ALL_SONGS.map((song) => ({ slug: song.slug, ...computeDifficulty(song) }));
+    for (const a of rated) {
+      for (const b of rated) {
+        if (a.rangeSemis >= b.rangeSemis && a.leaps >= b.leaps) {
+          expect(
+            rank[a.label],
+            `${a.slug} (${a.rangeSemis}/${a.leaps}, ${a.label}) vs ${b.slug} (${b.rangeSemis}/${b.leaps}, ${b.label})`,
+          ).toBeGreaterThanOrEqual(rank[b.label]);
+        }
+      }
+    }
+  });
+});

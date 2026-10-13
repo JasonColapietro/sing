@@ -40,7 +40,7 @@ Listen for drift on a short, comfortable hold and change one thing at a time. Sa
 
 ### Hear the distinction
 
-Hear Sustained hold once and stop the reference. Then record two holds on the same comfortable note in one take, with a quiet breath between them: the first for a slow count of eight, the second for a count of four. The length is the only thing that changes. Play both back and compare how each one ends: if the longer hold sags flat or thins at the end while the shorter one ends on the pitch it started on, practise at the shorter length and add a count only once its end matches its start. Aim for one centered pitch and an even release. Judge it by ear, not by the display.
+Hear Sustained hold once and stop the reference. Then, in the [recorder](/recorder), record two holds on the same comfortable note in one take, with a quiet breath between them: the first for a slow count of eight, the second for a count of four. The length is the only thing that changes. Play both back and compare how each one ends: if the longer hold sags flat or thins at the end while the shorter one ends on the pitch it started on, practise at the shorter length and add a count only once its end matches its start. Aim for one centered pitch and an even release. Judge it by ear, not by the display.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness.

@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
@@ -150,5 +151,21 @@ describe("/singers hub schema and crawl discovery", () => {
     expect(html).toContain('href="/range?mode=range#start"');
     expect(html).toContain("Test my vocal range");
     expect(html).toContain("Can you sing it?");
+  });
+});
+
+describe("the chart's range-test offer", () => {
+  it("limits its privacy claim to audio, which is all that stays on the device", () => {
+    // The offer renders only after hydration, so it is read from source. The
+    // saved range is backed up by Pro sync (lib/sync.ts) and by the account
+    // backup (lib/account-backup.ts); only the audio never leaves.
+    const source = readFileSync(
+      new URL("../components/singers/directory.tsx", import.meta.url),
+      "utf8",
+    ).replace(/\s+/g, " ");
+    expect(source).toContain(
+      "Your own range can sit on this chart: the test takes about two minutes, and your audio never leaves your device.",
+    );
+    expect(source).not.toMatch(/two minutes and never leaves your device/);
   });
 });

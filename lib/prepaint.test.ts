@@ -118,8 +118,10 @@ function expectedTokens(raw: unknown, opts: { isPro?: boolean; capped?: boolean 
   const reconciled = reconcileProgress(program, stored, [], TODAY);
   const view = programToday(program, reconciled, TODAY);
   const tokens: string[] = [];
-  if (view.status === "finished") tokens.push("finished");
-  else if (view.status === "done-today") {
+  if (view.status === "finished") {
+    tokens.push("finished");
+    if (program.chapters) tokens.push("book");
+  } else if (view.status === "done-today") {
     tokens.push("done");
     if (isRestDay(program.days[view.index])) tokens.push("rest");
     const next = program.days[view.index + 1];
@@ -141,6 +143,26 @@ function record(programId: string, startedAgo: number, done: [index: number, day
   };
 }
 
+/** The Measured Voice's days 43 to 84, done on an earlier pass (lib/programs.ts repeatFortnight). */
+function repeatedLater() {
+  return Array.from({ length: 84 - 42 }, (_, k) => ({ index: 42 + k, day: ago(150 - k) }));
+}
+
+/**
+ * A finished run of The Measured Voice gone back to weeks 5 and 6, with
+ * `done` days done: days 1 to 28 long ago, the rest one a day up to
+ * `lastAgo` days ago.
+ */
+function repeating(done: number, lastAgo = 1) {
+  const base = record("measured-voice-12w", 200, Array.from({ length: Math.min(done, 28) }, (_, i) => [i, 200 - i] as [number, number]));
+  const again = Array.from({ length: Math.max(0, done - 28) }, (_, k) => ({
+    index: 28 + k,
+    day: ago(lastAgo + (done - 28 - 1 - k)),
+    manual: true,
+  }));
+  return { ...base, done: [...base.done, ...again], until: 42, later: repeatedLater() };
+}
+
 describe("pre-paint state: the running program", () => {
   const records: [string, unknown][] = [
     ["no program", null],
@@ -157,6 +179,12 @@ describe("pre-paint state: the running program", () => {
     ["a record with no start day", { programId: "foundations-2w", done: [] }],
     ["a broken done list", { ...record("foundations-2w", 3, [[0, 3]]), done: [{ index: 0, day: ago(3) }, { index: 5, day: ago(1) }] }],
     ["a done list out of order", { ...record("foundations-2w", 3, []), done: [{ index: 0, day: ago(1) }, { index: 1, day: ago(2) }] }],
+    ["the book's program finished", record("measured-voice-12w", 84, Array.from({ length: 84 }, (_, i) => [i, 84 - i] as [number, number]))],
+    ["a finished run singing weeks 5 and 6 again", repeating(28)],
+    ["a finished run that has sung weeks 5 and 6 again", repeating(42)],
+    ["a repeated fortnight's day done today", repeating(31, 0)],
+    ["a repeated fortnight with a broken later list", { ...repeating(42), later: repeatedLater().slice(1) }],
+    ["a repeated fortnight with a later day out of place", { ...repeating(42), later: repeatedLater().map((d, k) => (k === 5 ? { ...d, index: 3 } : d)) }],
   ];
 
   for (const [name, raw] of records) {
@@ -168,6 +196,15 @@ describe("pre-paint state: the running program", () => {
       expect(state(capped).program).toBe(expectedTokens(raw, { capped: true }));
     });
   }
+
+  it("reads a repeated fortnight the way the card does", () => {
+    const at = (raw: unknown) => state({ [PROGRAM_STORAGE_KEY]: raw, [PRO_STORAGE_KEY]: { active: true } }).program;
+    expect(at(repeating(28))).toBe("todo");
+    expect(at(repeating(42))).toBe("finished book");
+    expect(at(repeating(31, 0))).toMatch(/^done\b/);
+    // A later list the record cannot vouch for is dropped: the run carries on to day 84.
+    expect(at({ ...repeating(42), later: repeatedLater().slice(1) })).toBe("todo");
+  });
 
   it("covers the states the CI layout-shift run seeds", () => {
     expect(state({ [PROGRAM_STORAGE_KEY]: record("foundations-2w", 1, [[0, 1]]) }).program).toBe("todo");
@@ -193,10 +230,11 @@ describe("pre-paint state: the running program", () => {
     expect(prepaintState(storageOf({}), NOW, PREPAINT_CONFIG, { pathname: "/programs", search: "?program=mix-4w" }).program).toBeNull();
   });
 
-  it("lists every program, its length and its rest days", () => {
-    for (const [id, [pro, length, rest]] of Object.entries(PREPAINT_CONFIG.programs)) {
+  it("lists every program, its length, its rest days and whether it follows the book", () => {
+    for (const [id, [pro, length, rest, book]] of Object.entries(PREPAINT_CONFIG.programs)) {
       const program = programById(id)!;
       expect(pro === 1).toBe(program.pro);
+      expect(book === 1).toBe(Boolean(program.chapters));
       expect(length).toBe(program.days.length);
       expect(rest.every((i) => isRestDay(program.days[i]))).toBe(true);
       expect(program.days.filter(isRestDay)).toHaveLength(rest.length);

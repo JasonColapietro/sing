@@ -122,13 +122,27 @@ function songTitle(song: Song): string {
       );
 }
 
-/** One sentence that answers "what is this song, musically" from the data. */
+/** The second input computeDifficulty rates on, as the page's stat counts it. */
+function leapPhrase(n: number): string {
+  return n === 0
+    ? "no leaps of a major third or more"
+    : `${n} ${n === 1 ? "leap" : "leaps"} of a major third or more`;
+}
+
+/**
+ * One sentence that answers "what is this song, musically" from the data.
+ *
+ * The rating names both of its inputs. computeDifficulty adds how densely a
+ * melody leaps to its span, so "9 semitones — which rates Medium" on Loch
+ * Lomond sat beside "9 semitones — which rates Hard" on Down in the Valley,
+ * the same pattern app/can-you-sing/[slug]/page.tsx already fixed.
+ */
 function answerSentence(song: Song): string {
   const f = songFacts(song);
   const what = isPhrase(song)
     ? `The ${phraseName(song)} of “${song.title}”`
     : `“${song.title}”`;
-  return `${what} is transcribed here with its tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} — ${f.rangeSemis} semitones — which rates ${f.difficulty} to sing, and a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
+  return `${what} is transcribed here with its tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} — ${f.rangeSemis} semitones, with ${leapPhrase(f.leaps)} — and the span and leaps together rate it ${f.difficulty.toLowerCase()} to sing; a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
 }
 
 export async function generateMetadata({

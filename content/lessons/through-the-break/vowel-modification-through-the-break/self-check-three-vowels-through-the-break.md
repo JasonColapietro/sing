@@ -36,7 +36,7 @@ Both directions across the zone. Say what will count as complete in this lesson 
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word. Compare modified and unmodified attempts at the same pitch and volume.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word. Compare modified and unmodified attempts at the same pitch and volume.
 
 - Look: The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.
 - Listen: The pitch remains connected and the lyric is still understandable across all three vowels.

@@ -36,7 +36,7 @@ Listen for each of the four displayed pitches; this is a self-check without an a
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.
 
 - Look: The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.
 - Listen: One syllable carries all four notes with clear centers and no swallowed middle pitches.

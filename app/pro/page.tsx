@@ -16,7 +16,7 @@ const PRO_TITLE = "Online Vocal Coach for Singers: Suede Pro";
 export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/pro"),
   title: PRO_TITLE,
-  description: `Online vocal coach for singers: adaptive daily plans, per-note analytics, take analysis and two books on top of the free studio. ${formatPrice(PRICING.lifetime.amount)} once, for life.`,
+  description: `Online vocal coach for singers: the full adaptive plan, per-note analytics, take analysis and two books on top of the free studio. ${formatPrice(PRICING.lifetime.amount)} once, for life.`,
   alternates: { canonical: `${SITE_URL}/pro` },
 });
 
@@ -118,8 +118,10 @@ const PRO_JSON_LD = {
       name: "Suede Sing Pro",
       description:
         // Song scores and their trend are free on every song summary, so the
-        // paid tier is not described by them.
-        "An adaptive daily practice plan, per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, no daily limit on guided practice, cloud sync, and two books with PDFs.",
+        // paid tier is not described by them. The free plan shows the first
+        // two coach steps each day, so planning is described as the full plan,
+        // not as something only Pro has (lib/pro.ts PLAN_ROWS "Coach plan").
+        "The full adaptive daily practice plan (the free plan shows its first two steps), per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, no daily limit on guided practice, cloud sync, and two books with PDFs.",
       applicationCategory: "MusicApplication",
       operatingSystem: "Web Browser",
       publisher: { "@id": "https://suedeai.ai/#organization" },

@@ -16,7 +16,7 @@ vi.mock("@/components/practice/session-shell", () => ({
 
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import type { VocalRange } from "@/lib/progress";
-import { RoutineRunner } from "./routine-runner";
+import { RoutineRunner, WARM_IN_MAX_REPS, warmInStep } from "./routine-runner";
 import { SKIP_INTRO_SEC, STEP_INTRO_SEC, routineById } from "./routines";
 
 /** Quick's third step is the N run, a twelfth. */
@@ -58,5 +58,43 @@ describe("the slide for a step the saved range cannot hold", () => {
     expect(html).toContain("</svg> Skip</button>");
     expect(html).not.toContain("Skipping");
     expect(html).toContain(`Starting in ${STEP_INTRO_SEC}<`);
+  });
+});
+
+/** Daily's third step is the Octave siren; its first is the Lip-trill arpeggio. */
+function dailyFromStep3(warmIn: boolean, range: VocalRange = {}): string {
+  return renderToStaticMarkup(
+    <RoutineRunner
+      routine={routineById("daily")!}
+      startStep={2}
+      warmIn={warmIn}
+      pitch={{} as UsePitchResult}
+      range={range}
+      onDone={() => {}}
+      onQuit={() => {}}
+    />,
+  ).replace(/<!-- -->/g, "");
+}
+
+describe("a routine opened part-way through on a cold day", () => {
+  it("warms in on a few reps of its first exercise before the linked step", () => {
+    const html = dailyFromStep3(true);
+    expect(html).toContain("Warm-in: Lip-trill arpeggio");
+    expect(html).toContain(`${WARM_IN_MAX_REPS} reps`);
+    expect(html).toContain("No warmup yet today, so a few easy reps come first. Then step 3.");
+    expect(html).not.toContain("Octave siren");
+  });
+
+  it("opens on the linked step when the voice is already warm", () => {
+    const html = dailyFromStep3(false);
+    expect(html).toContain("Octave siren");
+    expect(html).not.toContain("Warm-in");
+  });
+
+  it("is never longer than the routine's own first step", () => {
+    expect(warmInStep(routineById("daily")!)).toEqual({ exerciseId: "lip-trill-scale", reps: 6 });
+    expect(warmInStep(routineById("high-notes")!)).toEqual({ exerciseId: "lip-trill-scale", reps: 6 });
+    expect(warmInStep(routineById("morning")!).reps).toBe(6);
+    expect(warmInStep(routineById("recovery")!).reps).toBe(6);
   });
 });

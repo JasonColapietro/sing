@@ -21,8 +21,8 @@
  *   data-sing-program  absent with no program, or on another program's own
  *                      view; otherwise a status token ("todo", "done" or
  *                      "finished") and any of "rest", "locked",
- *                      "next-locked", "waits" (the end of prepaintState
- *                      says when each applies)
+ *                      "next-locked", "waits", "book" (the end of
+ *                      prepaintState says when each applies)
  *
  * The server HTML carries every state's version of the affected parts, each
  * marked with a `data-prepaint-*` attribute, and app/globals.css shows the one
@@ -82,8 +82,11 @@ export interface PrepaintConfig {
   maxSessions: number;
   /** The first program day index past a Pro program's free weeks. */
   freeDays: number;
-  /** Per program id: [1 when Pro, number of days, indexes of rest days]. */
-  programs: Record<string, [number, number, number[]]>;
+  /**
+   * Per program id: [1 when Pro, number of days, indexes of rest days, 1 when
+   * it follows the book (has chapters)].
+   */
+  programs: Record<string, [number, number, number[], number]>;
 }
 
 /**
@@ -177,6 +180,7 @@ export function prepaintState(
     const proProgram = def[0] === 1;
     const length = def[1];
     const rest = def[2];
+    const book = def[3] === 1;
     const startedDay = record.startedDay as string;
     // reviveProgress: the longest valid prefix of the done list.
     const done: string[] = [];
@@ -188,17 +192,37 @@ export function prepaintState(
       if (!isDay(d.day) || (d.day as string) <= prev || (d.day as string) < startedDay) break;
       done.push(d.day as string);
     }
+    // A finished run singing one fortnight again (lib/programs.ts
+    // repeatFortnight) is finished again at `until`, when reviveProgress
+    // keeps it: a whole `later` list running to the last day.
+    let end = length;
+    const until = record.until;
+    const later = record.later;
+    if (
+      typeof until === "number" && Math.floor(until) === until && until > 0 && until < length &&
+      done.length <= until && Array.isArray(later) && until + later.length === length
+    ) {
+      let whole = true;
+      for (let k = 0; k < later.length; k++) {
+        const d = later[k];
+        if (!isObject(d) || d.index !== until + k || !isDay(d.day) || (d.day as string) < startedDay) whole = false;
+      }
+      if (whole) end = until;
+    }
     // reconcileProgress, for the one thing it does without the log: a rest
     // day completes on the first calendar day it is reached.
-    while (done.length < length && rest.indexOf(done.length) >= 0) {
+    while (done.length < end && rest.indexOf(done.length) >= 0) {
       const from = done.length ? nextDay(done[done.length - 1]) : startedDay;
       if (from > today) break;
       done.push(from);
     }
     // programToday, and the cards' paywall and cap rules.
     const tokens: string[] = [];
-    if (done.length >= length) {
+    if (done.length >= end) {
       tokens.push("finished");
+      // The book's program finishes on chapter 19's next steps, its fortnight
+      // choices and six check-in readings: a card twice another's height.
+      if (book) tokens.push("book");
     } else if (done.length && done[done.length - 1] >= today) {
       const index = done.length - 1;
       tokens.push("done");

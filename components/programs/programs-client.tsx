@@ -14,12 +14,13 @@ import {
   isRestDay,
   programById,
   programMinutesRange,
+  repeatChoices,
   restDayCount,
   type Program,
 } from "@/lib/programs";
 import { programViewHref } from "@/lib/program-ids";
 import { beginProgram, leaveProgram } from "./store";
-import { DayItems, ProgramTodayCard } from "./today-card";
+import { DayItems, ProgramTodayCard, goBackTo, leaveQuestion, stopQuestion } from "./today-card";
 import { useActiveProgram, type ActiveProgram } from "./use-program";
 import { prepaintMarker, useHydrated } from "@/components/prepaint";
 
@@ -127,11 +128,15 @@ function ProgramCard({
  */
 function Calendar({ program, active }: { program: Program; active: ActiveProgram | null }) {
   const mine = active?.program.id === program.id ? active : null;
-  const doneDays = new Set(mine?.progress.done.map((d) => d.index) ?? []);
+  // With the days a repeated fortnight keeps done after it (repeatFortnight).
+  const doneDays = new Set([...(mine?.progress.done ?? []), ...(mine?.progress.later ?? [])].map((d) => d.index));
   const current = mine && mine.view.status !== "finished" ? mine.view.index : null;
   const [picked, setPicked] = useState<number | null>(null);
   const shown = picked ?? current ?? 0;
   const day = program.days[shown];
+  // Today's day, still to do, is on the card above too: its rows here carry
+  // the same ticks and carry-on links, so the two lists never disagree.
+  const todays = mine && mine.view.status === "todo" && shown === current ? mine : null;
 
   const weeks: number[][] = [];
   for (let w = 0; w < program.weeks; w++) {
@@ -185,12 +190,37 @@ function Calendar({ program, active }: { program: Program; active: ActiveProgram
           <p className="mt-2 text-sm text-mut">No program practice. A rest day counts as done once you reach it.</p>
         ) : (
           <div className="mt-3">
-            <DayItems day={day} />
+            <DayItems
+              day={day}
+              done={todays?.itemsDone}
+              stepsDone={todays?.stepsDone}
+              stepsWaived={todays?.stepsWaived}
+              compact
+            />
           </div>
         )}
       </div>
     </div>
   );
+}
+
+/**
+ * Today's card appears above a program's detail, so on a phone it lands a
+ * screen or more above the button just pressed (a start, a restart, a go-back)
+ * and the page looks unchanged. Once it has rendered, take the singer to the
+ * day it now shows unless it is in view.
+ */
+function showToday() {
+  requestAnimationFrame(() => {
+    const heading = document.getElementById("program-today-heading");
+    if (!heading) return;
+    // Below the sticky header (html's scroll-padding-top, 4.5rem) and in
+    // the top half of the screen already: leave the page where it is.
+    const { top } = heading.getBoundingClientRect();
+    if (top >= 72 && top <= window.innerHeight / 2) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    heading.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+  });
 }
 
 function ProgramDetail({
@@ -213,9 +243,13 @@ function ProgramDetail({
   // A free program runs past the free plan's daily allowance most days, so it
   // takes longer than its name; say how much longer before it is started.
   const freeWeeks = isPro ? null : freePlanWeeks(program);
+  // A book program's running fortnight, and the one before it, to go back to
+  // (chapter 13's rules for breaks and fortnights that did not work).
+  const doneCount = active?.progress.done.length ?? 0;
+  const goBacks = running && !finished ? repeatChoices(program, doneCount) : [];
   const start = () => {
     // Switching away from another program is a deliberate act; say what it costs.
-    if (active && !running && !window.confirm(`Leave ${active.program.name}? Your place in it is not kept.`)) return;
+    if (active && !running && !window.confirm(leaveQuestion(active))) return;
     // A restart starts an empty record, so this run's check-in readings go.
     if (
       running &&
@@ -226,19 +260,7 @@ function ProgramDetail({
       return;
     }
     beginProgram(program.id, active?.today ?? localDay());
-    // Today's card appears above this detail, so on a phone it lands a screen
-    // or more above the button just pressed and the page looks unchanged.
-    // Once it has rendered, take the singer to Day 1 unless it is in view.
-    requestAnimationFrame(() => {
-      const heading = document.getElementById("program-today-heading");
-      if (!heading) return;
-      // Below the sticky header (html's scroll-padding-top, 4.5rem) and in
-      // the top half of the screen already: leave the page where it is.
-      const { top } = heading.getBoundingClientRect();
-      if (top >= 72 && top <= window.innerHeight / 2) return;
-      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-      heading.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
-    });
+    showToday();
   };
 
   return (
@@ -326,15 +348,19 @@ function ProgramDetail({
           <Button variant={running ? "outline" : "violet"} onClick={start}>
             {running ? "Restart from day 1" : active ? "Switch to this program" : "Start this program"}
           </Button>
-          {running && (
-            <Button
-              variant="ghost"
-              onClick={() =>
-                window.confirm(
-                  `Stop ${program.name}? Your place in it is not kept. To take a break, just come back later: days wait for you.`,
-                ) && leaveProgram()
-              }
-            >
+          {active &&
+            goBacks.map((c) => (
+              <Button
+                key={c.slug}
+                variant="ghost"
+                onClick={() => goBackTo(active.progress, active.readings, c) && showToday()}
+              >
+                {/* The fortnight under way is repeated; the one before is gone back to. */}
+                {doneCount < c.toWeek * 7 ? `Repeat weeks ${c.fromWeek}–${c.toWeek}` : `Go back to week ${c.fromWeek}`}
+              </Button>
+            ))}
+          {running && active && (
+            <Button variant="ghost" onClick={() => window.confirm(stopQuestion(active)) && leaveProgram()}>
               Stop program
             </Button>
           )}
@@ -346,11 +372,17 @@ function ProgramDetail({
           {running
             ? finished
               ? " You finished it; a restart begins a new run."
-              : " Taking a break? You don't need to stop: the next day waits until you sing it."
+              : program.chapters
+                ? ` Taking a break? The next day waits. After two weeks or more away, or a fortnight that did not pass its “Move on when” test, chapter 13 says to go back to the start of that fortnight${goBacks.length > 0 ? "; the buttons above do it" : ""}.`
+                : " Taking a break? You don't need to stop: the next day waits until you sing it."
             : " Miss a day and the program waits: the next day is there when you come back."}
         </p>
       </Card>
-      <Calendar key={program.id + (active?.progress.startedDay ?? "")} program={program} active={active} />
+      <Calendar
+        key={program.id + (active?.progress.startedDay ?? "") + (active?.progress.startedAt ?? "")}
+        program={program}
+        active={active}
+      />
     </div>
   );
 }

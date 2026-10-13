@@ -160,8 +160,20 @@ function workingRange(lowMidi: number, highMidi: number): [number, number] {
   return [lowMidi + trim, highMidi - trim];
 }
 
-/** Under an octave and a half, the useful work is still building the span. */
+/**
+ * Under an octave and a half, the five-note scale (7 semitones) has little or
+ * no room to change key on the fitted ladder (fitRootLadder in
+ * components/warmups/exercises.ts), so the card says so instead of promising
+ * a ladder or growth.
+ */
 const LADDER_MAX_SEMIS = 15;
+
+/**
+ * The five-note scale's own width (offsets 0-2-4-5-7). A narrower span cannot
+ * hold it: the fitted ladder pins its top to the measured high and lets its
+ * bottom fall below the measured low.
+ */
+export const FIVE_NOTE_SCALE_SEMIS = 7;
 
 /**
  * Which warmup a fresh result should send the singer to. Both targets are
@@ -169,11 +181,15 @@ const LADDER_MAX_SEMIS = 15;
  * would be silently dropped by the player's entitlement check.
  */
 function warmupForSpan(semis: number): { id: string; title: string; why: string } {
+  const fiveNote = "Five notes up and back down on “ah”, light and connected.";
   return semis < LADDER_MAX_SEMIS
     ? {
         id: "five-note-scale",
         title: "Five-note scale",
-        why: "A steady ladder through the middle of your range builds the span before you try to stretch it.",
+        why:
+          semis < FIVE_NOTE_SCALE_SEMIS
+            ? `${fiveNote} The pattern is wider than the span you measured, so it may stay in one key, with its top on the highest note you reached and its bottom below your lowest: keep those notes light, and stop any rep that strains.`
+            : `${fiveNote} Your span leaves this pattern little room to change key, so it may stay in one key and come close to the lowest or highest note you reached: keep those notes light, and stop any rep that strains.`,
       }
     : {
         id: "octave-siren",

@@ -18,7 +18,7 @@ export const PREPAINT_CONFIG: PrepaintConfig = {
   programs: Object.fromEntries(
     PROGRAMS.map((p) => [
       p.id,
-      [p.pro ? 1 : 0, p.days.length, p.days.flatMap((d, i) => (isRestDay(d) ? [i] : []))],
+      [p.pro ? 1 : 0, p.days.length, p.days.flatMap((d, i) => (isRestDay(d) ? [i] : [])), p.chapters ? 1 : 0],
     ]),
   ),
 };

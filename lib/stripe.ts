@@ -162,6 +162,17 @@ export async function resolvePriceId(plan: CheckoutPlan): Promise<string> {
 
 const PRODUCT_NAME = "Suede Pro";
 
+/**
+ * The product description Stripe shows at checkout, kept word for word with
+ * scripts/stripe-setup.mjs. It says what /pro says: the coach plan is free
+ * for its first two steps a day, so Pro is the full plan rather than "plans",
+ * and every song is free (components/songs/data.ts PRO_SONGS is empty), so
+ * there is no songbook to sell. Checkout reuses an existing product as it is;
+ * scripts/stripe-setup.mjs brings a reused product's description up to date.
+ */
+export const PRODUCT_DESCRIPTION =
+  "The coach on top of the free vocal studio: the full adaptive daily plan (free shows its first two steps), no daily limit on guided practice, per-note analytics, take pitch analysis, two books with PDFs, cloud sync.";
+
 /** Finds the Suede Pro product in this Stripe account, creating it if absent. */
 async function resolveProductId(): Promise<string> {
   const stripe = getStripe();
@@ -184,8 +195,7 @@ async function resolveProductId(): Promise<string> {
   if (search.data[0]) return search.data[0].id;
   const created = await stripe.products.create({
     name: PRODUCT_NAME,
-    description:
-      "The coach on top of the free vocal studio: adaptive daily plans, per-note analytics, take pitch analysis, full songbook, cloud sync.",
+    description: PRODUCT_DESCRIPTION,
   });
   return created.id;
 }

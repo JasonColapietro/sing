@@ -74,6 +74,39 @@ const tempoSlider = (page) => page.getByLabel("Tempo", { exact: true });
 const tempoText = async (page) => (await tempoSlider(page).getAttribute("aria-valuetext")) ?? "";
 
 try {
+  // 0. The free minutes on a phone. Opening a song brings its transport into view, which on a 375×667 screen
+  //    puts the top of the page above the screen, so the "Free guided practice today" readout sits in the
+  //    player, right above the transport: on screen and clear of the fixed tab bar, before any run starts.
+  {
+    const context = await browser.newContext({ viewport: { width: 375, height: 667 }, permissions: ["microphone"] });
+    await context.addInitScript(({ progressKey, record, coachIntroKey }) => {
+      if (!localStorage.getItem(progressKey)) localStorage.setItem(progressKey, JSON.stringify(record));
+      if (!localStorage.getItem(coachIntroKey)) localStorage.setItem(coachIntroKey, new Date().toISOString());
+    }, { progressKey, record, coachIntroKey });
+    const page = await context.newPage();
+    const errors = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`${base}/songs?song=silent-night`);
+    await page.getByRole("heading", { name: /Enable your microphone to sing/ }).waitFor();
+    await page.waitForLoadState("networkidle");
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Continue without a mic", exact: true }).click();
+    await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
+    const allowance = page.locator("main p").filter({ hasText: /^Free guided practice today:/ });
+    await allowance.first().waitFor();
+    assert.equal(await allowance.count(), 1, "one allowance readout in the player");
+    // Let the scroll that brings the transport into view settle.
+    await page.waitForTimeout(800);
+    const box = await allowance.boundingBox();
+    const bar = await page.getByRole("navigation", { name: "Tabs" }).boundingBox();
+    assert.ok(box && bar, `readout ${JSON.stringify(box)}, tab bar ${JSON.stringify(bar)}`);
+    assert.ok(box.y >= 0, `readout starts above the screen: ${JSON.stringify(box)}`);
+    assert.ok(box.y + box.height <= bar.y, `readout runs under the tab bar (top ${bar.y}): ${JSON.stringify(box)}`);
+    assert.deepEqual(errors, []);
+    console.log(`PASS phone: free minutes on screen above the tab bar (y ${Math.round(box.y)}–${Math.round(box.y + box.height)}, bar at ${Math.round(bar.y)})`);
+    await context.close();
+  }
+
   // 1. Performance: chosen in the player before the first run, points + multiplier in stage mode, switch while paused, summary names the mode.
   {
     const { context, page, errors } = await open();

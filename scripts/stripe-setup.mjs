@@ -61,8 +61,9 @@ const selected = requested.length
   : PLANS;
 
 const PRODUCT_NAME = "Suede Pro";
+// Word for word with lib/stripe.ts PRODUCT_DESCRIPTION (lib/stripe-provision.test.ts).
 const PRODUCT_DESCRIPTION =
-  "The coach on top of the free vocal studio: adaptive daily plans, per-note analytics, take pitch analysis, full songbook, cloud sync.";
+  "The coach on top of the free vocal studio: the full adaptive daily plan (free shows its first two steps), no daily limit on guided practice, per-note analytics, take pitch analysis, two books with PDFs, cloud sync.";
 const PRODUCT_LOOKUP_KEYS = [
   ...PLANS.map((plan) => plan.lookupKey),
   "suede_pro_monthly",
@@ -84,6 +85,19 @@ const stripe = new Stripe(key, { appInfo: { name: "Suede Sing setup" } });
 
 console.log(`Stripe mode: ${live ? "LIVE catalog" : "test"}`);
 
+/**
+ * Brings a reused product's description up to date. Checkout reuses whatever
+ * product the account already has, so without this a corrected description
+ * would never reach the live checkout page.
+ */
+async function syncDescription(id) {
+  const product = await stripe.products.retrieve(id);
+  if (product.description === PRODUCT_DESCRIPTION) return id;
+  await stripe.products.update(id, { description: PRODUCT_DESCRIPTION });
+  console.log(`product:  ${id} description updated`);
+  return id;
+}
+
 /** Reuses the canonical product without changing any legacy prices. */
 async function resolveProduct() {
   for (const lookupKey of PRODUCT_LOOKUP_KEYS) {
@@ -98,7 +112,7 @@ async function resolveProduct() {
           ? existing.product
           : existing.product.id;
       console.log(`product:  ${id} (reused)`);
-      return id;
+      return syncDescription(id);
     }
   }
 
@@ -108,7 +122,7 @@ async function resolveProduct() {
   });
   if (search.data[0]) {
     console.log(`product:  ${search.data[0].id} (reused)`);
-    return search.data[0].id;
+    return syncDescription(search.data[0].id);
   }
 
   const created = await stripe.products.create({

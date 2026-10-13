@@ -223,8 +223,10 @@ export function SongsClient() {
       {/* In every view, not only the library: a song page's "Sing" link opens
           the player directly, and "Sing again" and "Next" start a run from
           the summary, so the time left has to be on screen there too or the
-          wall arrives as a surprise. */}
-      {!cap.capped && <FreeAllowance cap={cap} className="mb-4" />}
+          wall arrives as a surprise. In the player it sits above the
+          transport instead: every start scrolls Play into view, which on a
+          phone puts the top of the page above the screen. */}
+      {!cap.capped && view !== "practice" && <FreeAllowance cap={cap} className="mb-4" />}
       {view === "library" && <Library progress={progress} onSelect={startSong} />}
 
       {view === "practice" && activeSong && (
@@ -250,6 +252,7 @@ export function SongsClient() {
             setView("summary");
           }}
           onTake={replaceTake}
+          allowance={!cap.capped && !cap.isPro ? <FreeAllowance cap={cap} className="mb-3" /> : undefined}
           onExit={() => {
             // Walking out mid-night stops the setlist without clearing it, so
             // the running order survives for the next "Start setlist".

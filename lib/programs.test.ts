@@ -4,6 +4,8 @@ import {
   PROGRAMS,
   addDays,
   cappedDaySeconds,
+  chapterStartIndex,
+  countsFromDay,
   dayMinutes,
   dayNeedsPro,
   drillPreset,
@@ -30,6 +32,9 @@ import {
   programReadings,
   programToday,
   reconcileProgress,
+  repeatChoices,
+  repeatFortnight,
+  repeatFrom,
   reviveProgress,
   sessionsForRun,
   startProgram,
@@ -1270,3 +1275,240 @@ describe("cool-downs", () => {
     });
   });
 });
+
+describe("going back a fortnight in the book's program", () => {
+  const program = programById("measured-voice-12w")!;
+  const d0 = "2026-06-01";
+  const chapter = (fromWeek: number) => program.chapters!.find((c) => c.fromWeek === fromWeek)!;
+
+  /** Days 1 to `upTo` sung one a calendar day, the check-ins with real readings. */
+  function run(upTo: number) {
+    const p = begin(program.id, d0);
+    const sessions: SessionLog[] = [];
+    program.days.slice(0, upTo).forEach((d, i) => sessions.push(...sessionsFor(d, addDays(d0, i))));
+    for (const s of sessions) if (s.detail === "Sustain test") s.durationSec = s.day === d0 ? 7 : 11;
+    const history = [
+      { lowMidi: 48, highMidi: 67, testedAt: `${d0}T12:00:00.000Z` },
+      { lowMidi: 47, highMidi: 69, testedAt: `${addDays(d0, 41)}T12:00:00.000Z` },
+    ];
+    const today = addDays(d0, upTo);
+    const r = reconcileProgress(program, p, sessions, addDays(d0, upTo - 1));
+    const kept = withReadings(r, programReadings(program, r, sessions, history));
+    return { r: kept, sessions, history, today };
+  }
+
+  it("keeps the days before the fortnight with their check-in readings, and drops the rest", () => {
+    const { r, sessions, history, today } = run(45);
+    expect(r.done).toHaveLength(45);
+    const readings = programReadings(program, r, sessions, history);
+    // Day 11's long breath set ends on a sustain test, so it is a check-in too.
+    expect(readings.map((x) => x.index)).toEqual([0, 10, 41]);
+    const start = chapterStartIndex(chapter(5));
+    expect(start).toBe(28);
+    const back = repeatFrom(r, start, readings, new Date(`${today}T12:00:00Z`));
+    expect(back.done).toHaveLength(28);
+    expect(back.done.slice(0, 28)).toEqual(r.done.slice(0, 28));
+    expect(back.done[0]).toMatchObject({ range: { lowMidi: 48, highMidi: 67 }, sustainSec: 7 });
+    expect(back.startedDay).toBe(r.startedDay);
+    // Day 1's reading is still there to compare against; day 42's is sung again.
+    const after = programReadings(program, back, sessions, history);
+    expect(after.map((x) => x.index)).toEqual([0, 10]);
+    expect(after[0]).toMatchObject({ index: 0, range: { lowMidi: 48, highMidi: 67 }, sustainSec: 7 });
+    expect(after[1]).toMatchObject({ index: 10, sustainSec: 11 });
+    // The stored record survives a reload as it is.
+    expect(reviveProgress(JSON.parse(JSON.stringify(back)))).toEqual(back);
+  });
+
+  it("does not tick the repeated days off the practice logged before going back", () => {
+    const { r, sessions, history, today } = run(45);
+    const back = repeatFrom(r, 28, programReadings(program, r, sessions, history), new Date(`${today}T12:00:00Z`));
+    expect(reconcileProgress(program, back, sessions, today)).toBe(back);
+    expect(programToday(program, back, today)).toMatchObject({ status: "todo", index: 28 });
+    // The card names today as the first day that counts, not the day after day 28.
+    expect(countsFromDay(back)).toBe(today);
+    // Practice from now on ticks day 29, today.
+    const fresh = sessionsForDay(program.days[28], today, "13:00:00");
+    const next = reconcileProgress(program, back, [...sessions, ...fresh], today);
+    expect(next.done).toHaveLength(29);
+    expect(next.done[28]).toEqual({ index: 28, day: today });
+  });
+
+  it("never goes back past day 1, which is a restart", () => {
+    const { r, sessions, history, today } = run(10);
+    expect(repeatFrom(r, 0, programReadings(program, r, sessions, history), new Date(`${today}T12:00:00Z`)).done).toEqual(
+      r.done.slice(0, 1),
+    );
+  });
+
+  it("offers the fortnight under way once a day of it is done, and the one before it", () => {
+    // Day 29 to do: weeks 5 and 6 have not started, so only weeks 3 and 4 are offered.
+    expect(repeatChoices(program, 28).map((c) => c.fromWeek)).toEqual([3]);
+    expect(repeatChoices(program, 29).map((c) => c.fromWeek)).toEqual([5, 3]);
+    expect(repeatChoices(program, 45).map((c) => c.fromWeek)).toEqual([7, 5]);
+    // Weeks 1 and 2 are the restart's, not a go-back's.
+    expect(repeatChoices(program, 3)).toEqual([]);
+    expect(repeatChoices(program, 16).map((c) => c.fromWeek)).toEqual([3]);
+    // Finished, and programs without chapters, offer nothing here.
+    expect(repeatChoices(program, program.days.length)).toEqual([]);
+    expect(repeatChoices(programById("foundations-2w")!, 9)).toEqual([]);
+  });
+
+  it("counts from the day after the last completed day on an ordinary run", () => {
+    const { r } = run(10);
+    expect(countsFromDay(r)).toBe(addDays(d0, 10));
+  });
+});
+
+describe("singing one fortnight of a finished run again (chapter 19)", () => {
+  const program = programById("measured-voice-12w")!;
+  const d0 = "2026-06-01";
+  const chapter = (fromWeek: number) => program.chapters!.find((c) => c.fromWeek === fromWeek)!;
+  const total = program.days.length;
+
+  /** Every day sung one a calendar day, the check-ins with real readings, then the fortnight from `fromWeek` gone back to. */
+  function finishedThenBack(fromWeek: number) {
+    const p = begin(program.id, d0);
+    const sessions: SessionLog[] = [];
+    program.days.forEach((d, i) => sessions.push(...sessionsFor(d, addDays(d0, i))));
+    for (const s of sessions) if (s.detail === "Sustain test") s.durationSec = s.day === d0 ? 7 : 11;
+    const history = [
+      { lowMidi: 48, highMidi: 67, testedAt: `${d0}T12:00:00.000Z` },
+      { lowMidi: 47, highMidi: 69, testedAt: `${addDays(d0, 41)}T12:00:00.000Z` },
+      { lowMidi: 47, highMidi: 70, testedAt: `${addDays(d0, 77)}T12:00:00.000Z` },
+    ];
+    const reconciled = reconcileProgress(program, p, sessions, addDays(d0, total - 1));
+    const readings = programReadings(program, reconciled, sessions, history);
+    const finished = withReadings(reconciled, readings);
+    const today = addDays(d0, total + 3);
+    const back = repeatFortnight(finished, chapter(fromWeek), readings, new Date(`${today}T12:00:00Z`));
+    return { finished, readings, back, sessions, history, today };
+  }
+
+  it("keeps every day outside the fortnight done, with its readings", () => {
+    const { finished, readings, back, today } = finishedThenBack(5);
+    expect(finished.done).toHaveLength(total);
+    expect(programToday(program, finished, today).status).toBe("finished");
+    expect(readings.map((r) => r.index)).toEqual([0, 10, 41, 59, 66, 77]);
+    expect(back.done).toEqual(finished.done.slice(0, 28));
+    expect(back.until).toBe(42);
+    expect(back.later).toEqual(finished.done.slice(42));
+    expect(back.startedDay).toBe(finished.startedDay);
+    expect(back.startedAt).toBe(`${today}T12:00:00.000Z`);
+    // Day 29 is today's, with the later days still counted as done.
+    expect(programToday(program, back, today)).toEqual({ status: "todo", index: 28, completed: total - 14 });
+    // The stored record survives a reload as it is.
+    expect(reviveProgress(JSON.parse(JSON.stringify(back)))).toEqual(back);
+  });
+
+  it("does not tick the fortnight off the practice logged before going back", () => {
+    const { back, sessions, history, readings, today } = finishedThenBack(5);
+    expect(reconcileProgress(program, back, sessions, today)).toBe(back);
+    expect(countsFromDay(back)).toBe(today);
+    // Only day 42's check-in is sung again; the rest of the readings stay.
+    const now = programReadings(program, back, sessions, history);
+    expect(now.map((r) => r.index)).toEqual([0, 10, 59, 66, 77]);
+    expect(now).toEqual(readings.filter((r) => r.index !== 41));
+  });
+
+  it("finishes again once the fortnight is sung, and does not run on into week 7", () => {
+    const { back, sessions, history, readings, today } = finishedThenBack(5);
+    // Days 29 to 44 sung one a calendar day: the two after the fortnight must not count.
+    const fresh: SessionLog[] = [];
+    program.days.slice(28, 44).forEach((d, i) => fresh.push(...sessionsForDay(d, addDays(today, i), "13:00:00")));
+    const end = addDays(today, 15);
+    const all = [...sessions, ...fresh];
+    const sung = reconcileProgress(program, back, all, end);
+    expect(sung.done).toHaveLength(42);
+    expect(sung.done.slice(28).map((d) => d.day)).toEqual(Array.from({ length: 14 }, (_, i) => addDays(today, i)));
+    expect(sung.until).toBe(42);
+    expect(sung.later).toEqual(back.later);
+    expect(programToday(program, sung, end)).toEqual({ status: "finished", index: total - 1, completed: total });
+    expect(markDayDone(program, sung, end)).toBe(sung);
+    // Day 42's new reading, beside the earlier ones.
+    const retest = { lowMidi: 46, highMidi: 70, testedAt: `${addDays(today, 13)}T14:00:00.000Z` };
+    const after = programReadings(program, sung, all, [...history, retest]);
+    expect(after.map((r) => r.index)).toEqual([0, 10, 41, 59, 66, 77]);
+    expect(after.find((r) => r.index === 41)).toMatchObject({ day: addDays(today, 13), range: { lowMidi: 46, highMidi: 70 } });
+    expect(after.filter((r) => r.index !== 41)).toEqual(readings.filter((r) => r.index !== 41));
+    expect(reviveProgress(JSON.parse(JSON.stringify(sung)))).toEqual(sung);
+  });
+
+  it("can sing the next fortnight after that one, and keeps the record in calendar order", () => {
+    const { back, sessions, today } = finishedThenBack(5);
+    const fresh: SessionLog[] = [];
+    program.days.slice(28, 42).forEach((d, i) => fresh.push(...sessionsForDay(d, addDays(today, i), "13:00:00")));
+    const sung = reconcileProgress(program, back, [...sessions, ...fresh], addDays(today, 13));
+    expect(programToday(program, sung, addDays(today, 20)).status).toBe("finished");
+    const again = repeatFortnight(sung, chapter(7), [], new Date(`${addDays(today, 20)}T12:00:00Z`));
+    expect(again.done).toEqual(sung.done);
+    expect(again.until).toBe(56);
+    expect(again.later).toEqual(sung.later!.slice(14));
+    expect(programToday(program, again, addDays(today, 20))).toEqual({ status: "todo", index: 42, completed: total - 14 });
+    expect(reviveProgress(JSON.parse(JSON.stringify(again)))).toEqual(again);
+    // Weeks 7 and 8 sung, then back to weeks 5 and 6: the newer weeks 7 and 8
+    // wait in `later` with the older rest, and `done` stays in calendar order.
+    const more: SessionLog[] = [];
+    program.days.slice(42, 56).forEach((d, i) => more.push(...sessionsForDay(d, addDays(today, 20 + i), "13:00:00")));
+    const sungAgain = reconcileProgress(program, again, [...sessions, ...fresh, ...more], addDays(today, 33));
+    expect(programToday(program, sungAgain, addDays(today, 33)).status).toBe("finished");
+    const third = repeatFortnight(sungAgain, chapter(5), [], new Date(`${addDays(today, 40)}T12:00:00Z`));
+    expect(third.done).toEqual(sung.done.slice(0, 28));
+    expect(third.until).toBe(42);
+    expect(third.later!.map((d) => d.index)).toEqual(Array.from({ length: total - 42 }, (_, i) => 42 + i));
+    expect(third.later!.slice(0, 14)).toEqual(sungAgain.done.slice(42));
+    expect(reviveProgress(JSON.parse(JSON.stringify(third)))).toEqual(third);
+  });
+
+  it("goes back as a running program does when the run is not finished", () => {
+    const { finished, readings, back, today } = finishedThenBack(5);
+    // Part way through weeks 5 and 6 again: days 29 to 42 are on neither pass.
+    const mid = repeatFortnight(back, chapter(5), readings, new Date(`${addDays(today, 3)}T12:00:00Z`));
+    expect(mid).toEqual({ ...back, startedAt: `${addDays(today, 3)}T12:00:00.000Z` });
+    // A run that never finished has no later days to keep.
+    const running = { ...finished, done: finished.done.slice(0, 45) };
+    const r = repeatFortnight(running, chapter(5), readings, new Date(`${today}T12:00:00Z`));
+    expect(r.done).toEqual(finished.done.slice(0, 28));
+    expect(r.until).toBeUndefined();
+    expect(r.later).toBeUndefined();
+  });
+
+  it("keeps the fortnight's end when a running go-back happens inside it", () => {
+    const { back, readings, today } = finishedThenBack(5);
+    const further = repeatFrom(back, 14, readings, new Date(`${addDays(today, 2)}T12:00:00Z`));
+    expect(further.done).toHaveLength(14);
+    expect(further.until).toBe(42);
+    expect(further.later).toEqual(back.later);
+    expect(programToday(program, further, addDays(today, 2))).toEqual({ status: "todo", index: 14, completed: 14 + total - 42 });
+  });
+
+  it("drops a stored fortnight it cannot vouch for, and the run carries on to its last day", () => {
+    const { back } = finishedThenBack(5);
+    const raw = JSON.parse(JSON.stringify(back));
+    const revived = (patch: object) => reviveProgress({ ...raw, ...patch })!;
+    for (const patch of [
+      { later: raw.later.slice(1) },
+      { later: raw.later.map((d: { index: number }, k: number) => (k === 3 ? { ...d, index: 0 } : d)) },
+      { later: raw.later.map((d: { day: string }, k: number) => (k === 3 ? { ...d, day: "2026-99-99" } : d)) },
+      { until: total },
+      { until: 41.5 },
+      { until: 20 },
+      { later: undefined },
+    ]) {
+      const r = revived(patch);
+      expect(r.until, JSON.stringify(patch).slice(0, 60)).toBeUndefined();
+      expect(r.later).toBeUndefined();
+      expect(r.done).toEqual(back.done);
+    }
+  });
+
+  it("runs a fortnight that ends on the last day on to it, with nothing kept after", () => {
+    const { finished, readings, today } = finishedThenBack(5);
+    const last = program.chapters!.at(-1)!;
+    expect(last.toWeek * 7).toBe(total);
+    const back = repeatFortnight(finished, last, readings, new Date(`${today}T12:00:00Z`));
+    expect(back.done).toHaveLength(chapterStartIndex(last));
+    expect(back.until).toBeUndefined();
+    expect(back.later).toBeUndefined();
+  });
+});
+

@@ -131,6 +131,11 @@ function hrefs(html: string): string[] {
   return [...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, "&"));
 }
 
+/** The site's one referral for symptoms that need the folds looked at. */
+const DOCTOR_REFERRAL = "a doctor who can examine the vocal folds, such as an ENT or laryngologist";
+/** Referrals that cover clinicians who cannot look at the folds. */
+const VAGUE_REFERRAL = /qualified clinician|clinical assessment/i;
+
 describe("the lesson data", () => {
   it("is compiled from content/lessons and not stale", () => {
     const run = spawnSync(process.execPath, ["scripts/compile-lessons.mjs", "--check"], {
@@ -213,7 +218,7 @@ describe("the lesson data", () => {
   it("never follows a stop-for-pain or see-a-clinician rule with a retry", () => {
     for (const lesson of LESSONS) {
       const { ifNotReady } = lesson.selfCheck;
-      if (/\bpain\b|hoarse|clinician|pathologist/i.test(ifNotReady)) {
+      if (/\bpain\b|hoarse|clinician|pathologist|doctor|laryngologist/i.test(ifNotReady)) {
         expect(ifNotReady, lesson.id).not.toMatch(/Repeat a smaller version on another fresh attempt/);
       }
       // An exit that says move on and come back later is the last word; a
@@ -545,7 +550,9 @@ describe("links from the lessons", () => {
    * the other. Mix, Not Shout opens the pitch studio, which cannot record the
    * climb its lessons play back or the self-check's evidence take, so all three
    * name the recorder too, as does the ornaments self-check, whose Ready when
-   * is named on playback.
+   * is named on playback, and Hold It's opening lesson and self-check, which
+   * compare the start and end of holds on playback from a room that cannot
+   * record them.
    */
   it("has Twang and Ring's steps say what to watch in the analyzer and where the one-take comparison is recorded", () => {
     for (const l of LESSONS.filter((l) => l.moduleId === "v-l5-m3")) {
@@ -553,11 +560,78 @@ describe("links from the lessons", () => {
       expect(body, l.id).toContain("](/analyze)");
       expect(body, l.id).toContain("](/recorder)");
     }
-    for (const id of ["v-l5-m4-01", "v-l5-m4-04", "v-l5-m4-07", "v-l6-m4-08"]) {
+    for (const id of ["v-l5-m4-01", "v-l5-m4-04", "v-l5-m4-07", "v-l6-m4-08", "v-l2-m3-01", "v-l2-m3-06"]) {
       const lesson = LESSONS.find((l) => l.id === id);
       expect(lesson, id).toBeDefined();
       expect(lesson!.steps.map((s) => s.body).join("\n"), id).toContain("](/recorder)");
     }
+  });
+
+  /**
+   * The warm-up room, the pitch studio and the practice tools cannot record or
+   * play back. A checkpoint whose Ready when is judged on playback but whose
+   * button opens one of them must say where the evidence take is recorded, or
+   * the singer cannot make the recording the pass condition is judged on.
+   */
+  it("names the recorder in every checkpoint judged on playback whose room cannot record", () => {
+    const checked: string[] = [];
+    for (const l of LESSONS.filter((l) => l.type === "checkpoint")) {
+      const room = lessonCompanion(MODULE_PRACTICE[l.moduleId], l.id).room;
+      if (room === "recorder" || room === "songs") continue;
+      if (!/playback|play back/i.test(l.selfCheck.readyWhen)) continue;
+      checked.push(l.id);
+      expect(l.steps.map((s) => s.body).join("\n"), l.id).toContain("](/recorder)");
+    }
+    expect(checked.length).toBeGreaterThan(0);
+  });
+
+  /**
+   * Every self-check's evidence step asks for "one uninterrupted attempt". Said
+   * as "record" from a room that cannot record (the range test, the breath
+   * room, the warm-up room, the pitch studio, the analyzer, the tools), it
+   * must say where the recording is made, whatever the Ready when is judged
+   * on. The range self-check's attempt is the test itself, which saves its own
+   * result, so it asks for the test as the one attempt rather than a recording.
+   */
+  it("says where every evidence take is recorded when the lesson's room cannot record", () => {
+    const checked: string[] = [];
+    for (const l of LESSONS) {
+      const room = lessonCompanion(MODULE_PRACTICE[l.moduleId], l.id).room;
+      if (room === "recorder" || room === "songs") continue;
+      // The step that asks for it names the recorder (Twang and Ring's does
+      // so a sentence later, for the one take its comparison needs).
+      const steps = l.steps.filter((s) => /record one uninterrupted attempt/.test(s.body));
+      if (steps.length === 0) continue;
+      checked.push(l.id);
+      for (const s of steps) expect(s.body, l.id).toContain("](/recorder)");
+    }
+    // The five whose Ready when is judged live or by the room's own result,
+    // which the playback rule above does not reach.
+    for (const id of ["v-l1-m3-04", "v-l2-m1-06", "v-l5-m1-07", "v-l7-m1-08"]) expect(checked, id).toContain(id);
+    const range = LESSONS.find((l) => l.id === "v-l1-m2-04")!;
+    expect(lessonCompanion(MODULE_PRACTICE[range.moduleId], range.id).room).toBe("range");
+    const rangeBody = range.steps.map((s) => s.body).join("\n");
+    expect(rangeBody).not.toMatch(/record one uninterrupted attempt/);
+    expect(rangeBody).toContain("sing the test as one uninterrupted attempt, and keep its saved result");
+  });
+
+  /**
+   * The same holds for any lesson, of any type, whose steps judge the take on
+   * a recording: "Judge the continuity from your recorded playback" or "compare
+   * your sung entries with your recorded taps" needs a recording, so the steps
+   * say where it is made.
+   */
+  it("says where the recording is made on every lesson judged on one from a room that cannot record", () => {
+    const checked: string[] = [];
+    for (const l of LESSONS) {
+      const room = lessonCompanion(MODULE_PRACTICE[l.moduleId], l.id).room;
+      if (room === "recorder" || room === "songs") continue;
+      const steps = l.steps.map((s) => [s.body, s.look, s.listen].join("\n")).join("\n");
+      if (!/recorded (?:playback|taps)/i.test(steps)) continue;
+      checked.push(l.id);
+      expect(steps, l.id).toMatch(/\]\(\/recorder\)|in the recorder/);
+    }
+    expect(checked.length).toBeGreaterThan(0);
   });
 
   /**
@@ -712,6 +786,10 @@ describe("the pages", () => {
       expect(html, l.id).not.toMatch(
         /doctor or (?:a )?speech-language pathologist|seek an ENT or voice-specialized/,
       );
+      // The safety note on every page names that doctor, so no line on the
+      // same page may offer a vaguer referral beside it.
+      expect(html, l.id).toContain(DOCTOR_REFERRAL);
+      expect(html, l.id).not.toMatch(VAGUE_REFERRAL);
       for (const href of hrefs(html)) {
         expect(href, `${l.id} links ${href}`).not.toMatch(/sing\.suedeai\.ai|guitarhub\.org/);
         if (!href.startsWith("https://www.")) expect(href.startsWith("/"), `${l.id}: ${href}`).toBe(true);
@@ -921,6 +999,21 @@ describe("the pages", () => {
       } else {
         expect(html, l.id).not.toContain("data-lesson-room");
       }
+    }
+  });
+
+  /**
+   * Pain, hoarseness that will not clear, a lost range or blood all need the
+   * folds examined, so the hub and the course page name the doctor who can,
+   * as the lessons, book and guides do, and never a vaguer clinician.
+   */
+  it("send worrying symptoms to a doctor who can examine the vocal folds", () => {
+    for (const [name, html] of [
+      ["learn hub", renderToStaticMarkup(<LearnPage />)],
+      ["voice course", renderToStaticMarkup(<VoiceCoursePage />)],
+    ]) {
+      expect(html, name).toContain(DOCTOR_REFERRAL);
+      expect(html, name).not.toMatch(VAGUE_REFERRAL);
     }
   });
 

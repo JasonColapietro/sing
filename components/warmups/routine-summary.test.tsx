@@ -46,7 +46,7 @@ vi.mock("@/components/practice/results-screen", async (importOriginal) => {
   };
 });
 
-import { RoutineSummary } from "./routine-summary";
+import { RoutineSummary, routineSummaryRows } from "./routine-summary";
 
 const noop = () => {};
 const routine = routineById("quick")!;
@@ -114,5 +114,26 @@ describe("the routine summary", () => {
     // Not on a run that scored, and not once Play again is gone at the cap.
     expect(render(allSung)).not.toContain("Nothing was scored this run");
     expect(render(silent, true)).not.toContain("Nothing was scored this run");
+  });
+});
+
+describe("a run that warmed in before a later step", () => {
+  // Quick from step 3 on a cold day: a few reps of step 1's exercise, then 3 on.
+  const first = routine.steps[0].exerciseId;
+  const third = routine.steps[2].exerciseId;
+  const steps = [sung(first, 70), null, sung(third, 64), ...routine.steps.slice(3).map((s) => sung(s.exerciseId, 66))];
+
+  it("names the warm-in row, and leaves the step it skipped past out of this run", () => {
+    const rows = routineSummaryRows({ routine, steps, completed: true, startStep: 2, warmIn: true });
+    expect(rows[0]).toMatchObject({ label: `Warm-in: ${EXERCISES.find((e) => e.id === first)!.title}`, score: 70 });
+    expect(rows[1]).toMatchObject({ score: null, note: "not in this run" });
+    expect(rows[2]).toMatchObject({ score: 64 });
+  });
+
+  it("keeps the plain title when there was no warm-in, or it was skipped", () => {
+    const title = EXERCISES.find((e) => e.id === first)!.title;
+    expect(routineSummaryRows(allSung)[0].label).toBe(title);
+    const skippedWarmIn = routineSummaryRows({ routine, steps: [null, ...steps.slice(1)], completed: true, startStep: 2, warmIn: true });
+    expect(skippedWarmIn[0]).toMatchObject({ label: title, score: null, note: "not in this run" });
   });
 });

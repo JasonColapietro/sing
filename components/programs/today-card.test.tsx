@@ -27,11 +27,16 @@ vi.mock("@/lib/free-cap", async (importOriginal) => ({
 }));
 
 import {
+  DayItems,
   ProgramEntryCard,
   ProgramTodayCard,
+  goBackQuestion,
+  goBackTo,
+  leaveQuestion,
   restartFinished,
   restartQuestion,
   resumeStep,
+  stopQuestion,
 } from "@/components/programs/today-card";
 import type { ActiveProgram } from "@/components/programs/use-program";
 import { FREE_WEEKS, itemSteps, programById } from "@/lib/programs";
@@ -342,3 +347,196 @@ describe("restarting a finished program", () => {
     }
   });
 });
+
+describe("leaving or stopping a program", () => {
+  const finished = (id: string): ProgramToday => {
+    const n = programById(id)!.days.length;
+    return { status: "finished", index: n - 1, completed: n };
+  };
+  const readings: ProgramReading[] = [
+    { index: 0, day: "2026-09-01", range: { lowMidi: 48, highMidi: 67 }, sustainSec: 9.2 },
+    { index: 13, day: "2026-09-14", range: { lowMidi: 47, highMidi: 69 }, sustainSec: 12.4 },
+  ];
+
+  it("says a finished run's check-in readings go, not that its place does", () => {
+    const p = programById("foundations-2w")!;
+    const done = active("foundations-2w", 13, finished("foundations-2w"), [], [], readings);
+    expect(leaveQuestion(done)).toBe(`Leave ${p.name}? You finished it. Its check-in readings are cleared.`);
+    expect(stopQuestion(done)).toBe(`Stop ${p.name}? You finished it. Its check-in readings are cleared.`);
+    expect(stopQuestion(done)).not.toContain("days wait");
+  });
+
+  it("keeps the break advice for a run under way, and names readings only when there are any", () => {
+    const v = programById("vibrato-3w")!;
+    expect(stopQuestion(active("vibrato-3w", 2))).toBe(
+      `Stop ${v.name}? Your place in it is not kept. To take a break, just come back later: days wait for you.`,
+    );
+    expect(leaveQuestion(active("vibrato-3w", 2))).toBe(`Leave ${v.name}? Your place in it is not kept.`);
+    const p = programById("foundations-2w")!;
+    expect(leaveQuestion(active("foundations-2w", 5, undefined, undefined, undefined, readings.slice(0, 1)))).toBe(
+      `Leave ${p.name}? Your place in it is not kept. Its check-in readings are cleared.`,
+    );
+  });
+});
+
+describe("going back a fortnight in the book's program", () => {
+  const mv = programById("measured-voice-12w")!;
+  const week = (n: number) => mv.chapters!.find((c) => c.fromWeek === n)!;
+  const finished: ProgramToday = { status: "finished", index: mv.days.length - 1, completed: mv.days.length };
+  const readings: ProgramReading[] = [
+    { index: 0, day: "2026-06-01", range: { lowMidi: 48, highMidi: 67 }, sustainSec: 7 },
+    { index: 41, day: "2026-07-12", range: { lowMidi: 47, highMidi: 69 }, sustainSec: 11 },
+    { index: 77, day: "2026-08-17", range: { lowMidi: 47, highMidi: 70 }, sustainSec: 12 },
+  ];
+
+  it("gives chapter 19's next steps on the finished card, and keeps the restart", () => {
+    plan.pro = true;
+    try {
+      const html = renderToStaticMarkup(
+        <ProgramTodayCard active={active(mv.id, mv.days.length - 1, finished, [], [], readings)} onBrowse={null} />,
+      );
+      expect(html).toContain("Chapter 19 says what next");
+      // Each of chapter 19's outcomes names its own fortnight.
+      expect(html).toContain("if the transition never quite took, go back to weeks 5 and 6; if the top still frays, to weeks 7 and 8");
+      expect(html).not.toContain("Run it again from day 1");
+      // Each sings that fortnight again, not the weeks after it too.
+      const text = html.replace(/<!-- -->/g, "");
+      expect(text).toContain("Repeat weeks 5–6");
+      expect(text).toContain("Repeat weeks 7–8");
+      expect(text).not.toContain("Go back to week");
+      expect(html).toContain("Start again from day 1");
+      // Other programs keep their finished line and no go-back.
+      const f = renderToStaticMarkup(
+        <ProgramTodayCard
+          active={active("foundations-2w", 13, { status: "finished", index: 13, completed: 14 })}
+          onBrowse={null}
+        />,
+      );
+      expect(f).toContain("Run it again from day 1, or pick another program.");
+      expect(f).not.toContain("Go back to week");
+      expect(f).not.toContain("Repeat weeks");
+    } finally {
+      plan.pro = false;
+    }
+  });
+
+  it("says which readings are kept and which are sung again", () => {
+    expect(goBackQuestion(week(5), readings)).toBe(
+      "Go back to the start of weeks 5–6? Days from day 29 on are sung again, and the check-in readings before day 29 are kept. The readings from days 42 and 78 are cleared.",
+    );
+    expect(goBackQuestion(week(7), readings.slice(0, 2))).toBe(
+      "Go back to the start of weeks 7–8? Days from day 43 on are sung again, and the check-in readings before day 43 are kept.",
+    );
+    expect(goBackQuestion(week(3), [])).toBe("Go back to the start of weeks 3–4? Days from day 15 on are sung again.");
+    // A finished run's four later check-ins read as one list, and a lone one as a single day.
+    const all: ProgramReading[] = [0, 10, 41, 59, 66, 77].map((index) => ({ index, day: "2026-08-01", range: null }));
+    expect(goBackQuestion(week(5), all)).toContain("The readings from days 42, 60, 67 and 78 are cleared.");
+    expect(goBackQuestion(week(7), readings.slice(0, 2).concat(readings[2]))).toContain(
+      "The reading from day 78 is cleared.",
+    );
+  });
+
+  it("says a finished run sings only the fortnight again and keeps every other reading", () => {
+    expect(goBackQuestion(week(5), readings, 42)).toBe(
+      "Go back to the start of weeks 5–6? Days 29 to 42 are sung again, then the run is finished again; the other days stay done, with their check-in readings. The reading from day 42 is cleared.",
+    );
+    expect(goBackQuestion(week(7), readings, 56)).toBe(
+      "Go back to the start of weeks 7–8? Days 43 to 56 are sung again, then the run is finished again; the other days stay done, with their check-in readings.",
+    );
+    expect(goBackQuestion(week(3), [], 42)).toBe(
+      "Go back to the start of weeks 3–4? Days 15 to 42 are sung again, then the run is finished again; the other days stay done.",
+    );
+  });
+
+  it("asks first, and goes back only on yes", () => {
+    const progress = {
+      programId: mv.id,
+      startedDay: "2026-06-01",
+      startedAt: "2026-06-01T08:00:00.000Z",
+      // Days 1 to 45, one a calendar day from 2026-06-01.
+      done: Array.from({ length: 45 }, (_, i) => ({ index: i, day: new Date(Date.UTC(2026, 5, 1 + i)).toISOString().slice(0, 10) })),
+    };
+    let answer = false;
+    vi.stubGlobal("window", { confirm: () => answer });
+    try {
+      saved.calls.length = 0;
+      expect(goBackTo(progress, readings.slice(0, 2), week(5))).toBe(false);
+      expect(saved.calls).toEqual([]);
+      answer = true;
+      expect(goBackTo(progress, readings.slice(0, 2), week(5))).toBe(true);
+      expect(saved.calls).toHaveLength(1);
+      const next = saved.calls[0] as typeof progress;
+      expect(next.done).toHaveLength(28);
+      expect(next.done[0]).toMatchObject({ range: { lowMidi: 48, highMidi: 67 }, sustainSec: 7 });
+      expect(next.startedAt).not.toBe(progress.startedAt);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("sings only the fortnight again from a finished run", () => {
+    const progress = {
+      programId: mv.id,
+      startedDay: "2026-06-01",
+      startedAt: "2026-06-01T08:00:00.000Z",
+      // Every day, one a calendar day from 2026-06-01.
+      done: Array.from({ length: mv.days.length }, (_, i) => ({
+        index: i,
+        day: new Date(Date.UTC(2026, 5, 1 + i)).toISOString().slice(0, 10),
+      })),
+    };
+    const asked: string[] = [];
+    vi.stubGlobal("window", { confirm: (q: string) => (asked.push(q), true) });
+    try {
+      saved.calls.length = 0;
+      expect(goBackTo(progress, readings, week(5), true)).toBe(true);
+      expect(asked[0]).toContain("Days 29 to 42 are sung again, then the run is finished again");
+      const next = saved.calls[0] as typeof progress & { until?: number; later?: { index: number }[] };
+      expect(next.done).toHaveLength(28);
+      expect(next.until).toBe(42);
+      expect(next.later?.map((d) => d.index)).toEqual(Array.from({ length: mv.days.length - 42 }, (_, i) => 42 + i));
+      // Day 78's reading stays on its day.
+      expect(next.later?.find((d) => d.index === 77)).toMatchObject({ range: { lowMidi: 47, highMidi: 70 }, sustainSec: 12 });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("says on the card that a second pass finishes the run again", () => {
+    const p = active(mv.id, 28, { status: "todo", index: 28, completed: 70 });
+    p.progress = { programId: mv.id, startedDay: "2026-06-01", done: [], until: 42, later: [] };
+    plan.pro = true;
+    try {
+      const html = renderToStaticMarkup(<ProgramTodayCard active={p} onBrowse={null} />).replace(/<!-- -->/g, "");
+      expect(html).toContain("70 of 84 days done");
+      expect(html).toContain("once day 42 is done, the run is finished again. Days 43 to 84 stay done.");
+      // Not on an ordinary run.
+      const plain = renderToStaticMarkup(
+        <ProgramTodayCard active={active(mv.id, 28, { status: "todo", index: 28, completed: 28 })} onBrowse={null} />,
+      );
+      expect(plain).not.toContain("data-program-repeat");
+    } finally {
+      plan.pro = false;
+    }
+  });
+});
+
+describe("today's rows a second time, in the calendar", () => {
+  it("carry the card's ticks and carry-on links without repeating the step lists", () => {
+    const p = programById("foundations-2w")!;
+    const index = p.days.findIndex((d) => d.items.some((it) => it.kind === "routine" && it.id === "quick"));
+    const day = p.days[index];
+    const at = day.items.findIndex((it) => it.kind === "routine" && it.id === "quick");
+    const stepsDone = day.items.map((it, i) => (i === at ? itemSteps(it).map((_, k) => k < 2) : []));
+    const html = renderToStaticMarkup(
+      <DayItems day={day} done={day.items.map(() => false)} stepsDone={stepsDone} compact />,
+    ).replace(/<!-- -->/g, "");
+    expect(html).toContain("/warmups?routine=quick&amp;step=3");
+    expect(html).toContain("carries on from step 3");
+    expect(html).not.toContain("one at a time");
+    // The full card's list still has them.
+    const full = renderToStaticMarkup(<DayItems day={day} done={day.items.map(() => false)} stepsDone={stepsDone} />);
+    expect(full).toContain("one at a time");
+  });
+});
+

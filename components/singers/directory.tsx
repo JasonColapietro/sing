@@ -563,8 +563,10 @@ export function SingersDirectory() {
       {!hasYou && (
         <div className="mt-4 flex flex-wrap items-center gap-3 rounded-2xl border border-violet/40 bg-panel px-4 py-3">
           <span className="text-sm text-mut">
-            Your own range can sit on this chart — the test takes two minutes
-            and never leaves your device.
+            {/* Audio only: the saved range itself is backed up by Pro sync
+                and, once accounts open, by the account backup. */}
+            Your own range can sit on this chart: the test takes about two
+            minutes, and your audio never leaves your device.
           </span>
           <LinkButton href={rangeTestHref()} size="sm" className="ml-auto">
             Find my range

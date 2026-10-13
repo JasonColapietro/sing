@@ -747,8 +747,9 @@ export function ProClient() {
                 <div className="flex flex-col">
                   <p className="order-2 mt-5 max-w-xl text-lg text-mut sm:order-1 sm:mt-4">
                     Suede Pro is the vocal coaching layer on top of Suede Sing:
-                    adaptive daily plans, per-note accuracy from the warmups
-                    and songs you sing, and pitch analysis on your takes. The
+                    the full adaptive daily plan (free shows its first two
+                    steps), per-note accuracy from the warmups and songs you
+                    sing, and pitch analysis on your takes. The
                     pitch meter, range test and recorder stay free with no
                     daily limit. The free plan includes five minutes of guided
                     practice a day, and Pro removes that clock.

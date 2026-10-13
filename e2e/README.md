@@ -121,7 +121,7 @@ shift.
 Besides one route per template, it loads two query-string deep links that
 are different pages from the route at their path (`DEEP_LINKS` in `cls.mjs`):
 `program-detail`, `/programs?program=measured-voice-12w` (the book's
-program, which no state runs), and `program-foundations`,
+program, which only `--state=finished` runs), and `program-foundations`,
 `/programs?program=foundations-2w` (the program `--state=program` runs, so
 that state opens its own program, today's card above the calendar). A static
 page cannot read its query, so `next.config.ts` serves each known program id
@@ -138,6 +138,7 @@ at hydration only for the singers in it.
 | `program` | Foundations in 2 weeks, day 2 still to do | today's card on `/programs` and on its own `?program=` view (not on another program's), the leading program card on `/warmups` |
 | `program-capped` | both: the program day waits for midnight | all of the above, with the longer "waits" lines |
 | `rest-day` | Mix in 4 weeks on its day 7 rest day, day 8 onward needing Pro | the rest-day card on `/programs` and `/warmups` |
+| `finished` | The Measured Voice finished, its six check-in days carrying readings | the book's finished card (chapter 19's next steps, six reading rows, the fortnight choices) on `/programs` and on its own `?program=` view, which the `book` token sizes apart from other programs' finished cards |
 
 Each state also names the selector that proves it showed (the cap wall, a
 program card), and a route where it did not counts as a failed reading, so
