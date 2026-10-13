@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat } from "@/lib/audio/notes";
 import { playTone, clickAt } from "@/lib/audio/synth";
@@ -134,6 +134,7 @@ export function SongPlayer({
   onFinish,
   onExit,
   onTake,
+  allowance,
 }: {
   song: Song;
   pitch: UsePitchResult;
@@ -150,6 +151,11 @@ export function SongPlayer({
    * recorder stops, and undefined when a run starts without recording.
    */
   onTake?: (take: TakeState | undefined) => void;
+  /**
+   * The free minutes left today, drawn directly above the transport row, so
+   * the scroll that brings Play into view on every start brings it too.
+   */
+  allowance?: ReactNode;
 }) {
   /**
    * The key. With a saved range every song opens fitted to it; a key the
@@ -1366,6 +1372,7 @@ export function SongPlayer({
       </Card>
 
       <Card>
+        {allowance}
         {/* Anchor for SongsClient, which brings this row into view on every
             start. The bottom scroll margin clears the phone's fixed tab bar. */}
         <div

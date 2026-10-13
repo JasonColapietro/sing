@@ -7,7 +7,7 @@ import { shouldShowWeekInReview, weekInReview } from "@/lib/weekly-report";
 import { isCapped } from "@/lib/free-cap";
 import { localDay } from "@/lib/progress";
 import { sanitizeProgress } from "@/lib/progress-shape";
-import { dayNeedsPro, isRestDay, programById, programToday, reconcileProgress, reviveProgress } from "@/lib/programs";
+import { dayNeedsPro, isRestDay, programById, programReadings, programToday, reconcileProgress, reviveProgress } from "@/lib/programs";
 import { prepaintState } from "@/lib/prepaint";
 import { PREPAINT_CONFIG } from "@/lib/prepaint-config";
 import { TEMPLATE_SITEMAP } from "./lib/audit-fixtures.mjs";
@@ -206,6 +206,7 @@ describe("CLS measurement CLI gate", () => {
     program: { blocks: ["program"], capped: false, program: { id: "foundations-2w", status: "todo", index: 1 }, prepaint: { plan: "free", program: "todo" } },
     "program-capped": { blocks: ["program", "capped"], capped: true, program: { id: "foundations-2w", status: "todo", index: 1 }, prepaint: { plan: "capped", program: "todo waits" } },
     "rest-day": { blocks: ["rest-day"], capped: false, program: { id: "mix-4w", status: "done-today", index: 6 }, prepaint: { plan: "free", program: "done rest next-locked" } },
+    finished: { blocks: ["finished"], capped: false, program: { id: "measured-voice-12w", status: "finished", index: 83 }, prepaint: { plan: "free", program: "finished book" } },
   };
 
   for (const [name, expected] of Object.entries(STATE_EXPECTATIONS)) {
@@ -246,6 +247,17 @@ describe("CLS measurement CLI gate", () => {
           if (name === "rest-day") {
             expect(isRestDay(program.days[view.index])).toBe(true);
             expect(dayNeedsPro(program, view.index + 1)).toBe(true);
+          }
+          if (name === "finished") {
+            // Every check-in day keeps its readings, so the card shows all six
+            // rows with nothing "not logged" (a day without a range test has
+            // no range; one without a sustain test has no seconds).
+            const readings = programReadings(program, stored, progress.sessions, progress.rangeHistory);
+            expect(readings.map((r) => r.index)).toEqual([0, 10, 41, 59, 66, 77]);
+            for (const r of readings) {
+              expect(r.sustainSec, `day ${r.index + 1}`).not.toBeNull();
+              expect(r.range !== null || typeof r.sustainSec === "number", `day ${r.index + 1}`).toBe(true);
+            }
           }
         }
 

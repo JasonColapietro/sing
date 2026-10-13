@@ -13,7 +13,12 @@ import SingersPage from "@/app/singers/page";
 import sitemap from "@/app/sitemap";
 import SiteFooter from "@/components/site-footer";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
-import { SINGER_PAGE_REVISED, getSingerLastModified } from "@/lib/singer-evidence";
+import {
+  SINGER_DATA_REVISED,
+  SINGER_PAGE_REVISED,
+  getSingerLastModified,
+  getSingerPageLastModified,
+} from "@/lib/singer-evidence";
 import { SINGERS } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
 
@@ -124,7 +129,7 @@ describe("singer sitemap editorial freshness", () => {
     }
   });
 
-  it("dates singer pages by the later of their review and the fixed page revision", () => {
+  it("dates singer pages by the latest of their review, the page revision and their data revision", () => {
     const entries = sitemap();
     const reviewed = SINGERS.filter((singer) => getSingerLastModified(singer.slug));
     const pending = SINGERS.filter((singer) => !getSingerLastModified(singer.slug));
@@ -135,7 +140,22 @@ describe("singer sitemap editorial freshness", () => {
     for (const singer of reviewed) {
       const entry = entries.find((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)!;
       const review = getSingerLastModified(singer.slug)!;
-      expect(entry.lastModified).toBe(review > SINGER_PAGE_REVISED ? review : SINGER_PAGE_REVISED);
+      const floor = review > SINGER_PAGE_REVISED ? review : SINGER_PAGE_REVISED;
+      const dataRevised = SINGER_DATA_REVISED[singer.slug];
+      expect(entry.lastModified).toBe(getSingerPageLastModified(singer.slug));
+      expect(entry.lastModified).toBe(dataRevised && dataRevised > floor ? dataRevised : floor);
+    }
+    // Round 8 moved Alex Warren's range (A2–F#4 → G2–A4) and, with it, catalog
+    // facts on three other reviewed pages; Adele's and Olivia Rodrigo's pages
+    // did not change that day.
+    for (const slug of ["alex-warren", "reba-mcentire", "sam-smith", "arijit-singh"]) {
+      expect(getSingerPageLastModified(slug)).toBe("2026-10-13");
+    }
+    for (const slug of ["adele", "olivia-rodrigo"]) {
+      expect(getSingerPageLastModified(slug)).toBe(SINGER_PAGE_REVISED);
+    }
+    for (const date of Object.values(SINGER_DATA_REVISED)) {
+      expect(date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
     // Pending singers are noindexed and absent from the sitemap entirely
     // (pinned in lib/sitemap.test.ts); they have no lastModified to date.

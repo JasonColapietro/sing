@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { ProCrescendoNudge } from "@/components/pro/gate";
-import { ResultsScreen, starsForScore } from "@/components/practice/results-screen";
+import { ResultsScreen, starsForScore, type ResultRow } from "@/components/practice/results-screen";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { liveStreak } from "@/components/account/save-state";
 import { useProgress, type Achievement } from "@/lib/progress";
@@ -11,6 +11,25 @@ import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { SITE_URL } from "@/lib/site";
 import type { RoutineSummaryData } from "./routine-runner";
 import { routineMinutes, stepExercise } from "./routines";
+
+/**
+ * One row per step. Steps before a `?step=` link's were not part of this run.
+ * A warm-in (warmInStep) is sung in the first row's place, as a few reps of
+ * that exercise rather than the whole step, so its row says so: otherwise a
+ * scored step 1 next to "not in this run" on step 2 reads as a mistake.
+ */
+export function routineSummaryRows(data: RoutineSummaryData): ResultRow[] {
+  const { routine, steps, startStep = 0, warmIn = false } = data;
+  return routine.steps.map((s, i) => {
+    const r = steps[i] ?? null;
+    const title = stepExercise(s).title;
+    return {
+      label: i === 0 && warmIn && r ? `Warm-in: ${title}` : title,
+      score: r ? r.avgScore : null,
+      note: i < startStep ? "not in this run" : "skipped",
+    };
+  });
+}
 
 /**
  * The end of a routine. Every step already logged its own warmup session on
@@ -38,7 +57,7 @@ export function RoutineSummary({
    */
   capped?: boolean;
 }) {
-  const { routine, steps, completed, startStep = 0 } = data;
+  const { routine, steps, completed } = data;
   const progress = useProgress();
   const { goalSec } = useDailyGoal();
   const goalDoneSec = useGoalDoneSec(progress);
@@ -86,14 +105,7 @@ export function RoutineSummary({
       // logged nothing, and a lapsed streak must not read as alive.
       streakDays={liveStreak(progress.streak)}
       goal={{ doneSec: goalDoneSec, goalSec }}
-      rows={routine.steps.map((s, i) => {
-        const r = steps[i] ?? null;
-        return {
-          label: stepExercise(s).title,
-          score: r ? r.avgScore : null,
-          note: i < startStep ? "not in this run" : "skipped",
-        };
-      })}
+      rows={routineSummaryRows(data)}
       achievements={achievements}
       onContinue={onHome}
       onAgain={capped ? undefined : onRepeat}

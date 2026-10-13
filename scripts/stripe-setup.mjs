@@ -61,8 +61,9 @@ const selected = requested.length
   : PLANS;
 
 const PRODUCT_NAME = "Suede Pro";
+// Word for word with lib/stripe.ts PRODUCT_DESCRIPTION (lib/stripe-provision.test.ts).
 const PRODUCT_DESCRIPTION =
-  "The coach on top of the free vocal studio: adaptive daily plans, per-note analytics, take pitch analysis, full songbook, cloud sync.";
+  "The coach on top of the free vocal studio: the full adaptive daily plan (free shows its first two steps), no daily limit on guided practice, per-note analytics, take pitch analysis, two books with PDFs, cloud sync.";
 const PRODUCT_LOOKUP_KEYS = [
   ...PLANS.map((plan) => plan.lookupKey),
   "suede_pro_monthly",

@@ -275,7 +275,7 @@ input:not([type="range"]):not([type="checkbox"]):not([type="radio"]):not([type="
  *   data-sing-plan     "pro" | "free" | "capped"
  *   data-sing-program  absent (no program, or another program's own view),
  *                      or a status ("todo", "done", "finished") plus any of
- *                      "rest", "locked", "next-locked", "waits"
+ *                      "rest", "locked", "next-locked", "waits", "book"
  *
  * Until hydration, the parts of a page that depend on them are in the server
  * HTML with a data-prepaint-* marker (components/prepaint.tsx), and these
@@ -333,6 +333,13 @@ html[data-sing-program~="next-locked"] [data-prepaint-slot="program-today"] {
 html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
   min-height: 36.5rem;
 }
+/* The Measured Voice finished: chapter 19's next steps, six check-in rows and
+   the fortnight choices. Measured on the production build, 2026-10-13: 59.8rem
+   on /programs (its "See the whole calendar" wraps to its own row) and 56.6rem
+   on the program's own view at 375px; 34.4rem at 1280px. */
+html[data-sing-program~="finished"][data-sing-program~="book"] [data-prepaint-slot="program-today"] {
+  min-height: 60rem;
+}
 
 @media (min-width: 40rem) {
   [data-prepaint-slot="program-lead"],
@@ -353,6 +360,9 @@ html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
   }
   html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
     min-height: 24.5rem;
+  }
+  html[data-sing-program~="finished"][data-sing-program~="book"] [data-prepaint-slot="program-today"] {
+    min-height: 34.5rem;
   }
 }
 

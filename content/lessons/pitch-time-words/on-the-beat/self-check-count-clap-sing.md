@@ -36,7 +36,7 @@ Checked against your tapped pulse by ear. Onset timing is not automatically scor
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. If recording, tap the pulse gently through each version so you can hear your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.
 
 - Look: Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.
 - Listen: On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.

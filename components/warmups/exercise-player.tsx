@@ -221,6 +221,11 @@ export interface ExerciseBounds {
    * stays End.
    */
   standalone?: boolean;
+  /**
+   * The header's step line in place of "Step N of M": a routine's warm-in
+   * (warmInStep) is not one of its numbered steps.
+   */
+  label?: string;
 }
 
 export function ExercisePlayer({
@@ -264,9 +269,10 @@ export function ExercisePlayer({
   const endLabel = inRoutine ? "Finish step" : "End";
   const stepLine = !bounds
     ? null
-    : bounds.standalone
-      ? `${bounds.reps} ${bounds.reps === 1 ? "rep" : "reps"}`
-      : `Step ${bounds.stepIndex + 1} of ${bounds.stepCount}`;
+    : (bounds.label ??
+      (bounds.standalone
+        ? `${bounds.reps} ${bounds.reps === 1 ? "rep" : "reps"}`
+        : `Step ${bounds.stepIndex + 1} of ${bounds.stepCount}`));
   const eitherOctave = scoresEitherOctave(range);
 
   const { mode, guidePct, click } = useWarmupPrefs();

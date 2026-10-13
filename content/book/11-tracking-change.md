@@ -29,7 +29,7 @@ So if you want evidence that something is working after three weeks, look at acc
 
 ## What the progress charts can tell you
 
-Progress keeps your range history under Your voice, and your warmup and studio sessions accumulate scores over time. In Pro, Coach tracks accuracy note by note, so you can see which specific pitches keep letting you down.
+Progress shows your latest range under Your voice, and your warmup and studio sessions accumulate scores in the weekly score trend. With Pro, the Range over time chart plots your range tests, and the Accuracy by note chart adds up every scored session you have kept; Coach also names your weakest notes from the last two weeks, so you can see which specific pitches keep letting you down.
 
 That data is good for four things.
 
@@ -61,7 +61,7 @@ Test on the schedule, not on a feeling. Retesting because your voice feels great
 
 Write down the context. One line — slept badly, second day of a cold, sang for two hours last night — turns an unexplained dip into an explained one when you look back in March.
 
-Read the last three months, not the last three sessions. When you open your range history, resist the rightmost point. Cover it with your thumb if you have to. Ask instead whether the middle of this cloud of points sits higher, lower, or level with where it was two months ago.
+Read the last three months, not the last three sessions. When you open your range history, resist the rightmost bar. Cover it with your thumb if you have to. Ask instead whether the bulk of this run of bars sits higher, lower, or level with where it was two months ago.
 
 Give it time before you change your practice on the strength of what you see. Four weeks on the same thing with no movement in the relevant numbers is worth examining. Six days is weather, not climate.
 
@@ -73,4 +73,4 @@ The chart is a slow instrument pointed at a slow process. Read over months, it i
 
 ## Try this
 
-Open [Progress](/progress), find your range history under Your voice, and read only the points older than four weeks — cover the recent end. Ask whether that older cluster sits higher, lower, or level with the one before it. Write down what you see, so next month you have something to compare it against.
+Open [Progress](/progress), find the Range over time chart under Trends, and read only the bars older than four weeks — cover the recent end. Ask whether that older cluster sits higher, lower, or level with the one before it. Write down what you see, so next month you have something to compare it against.

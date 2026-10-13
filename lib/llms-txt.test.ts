@@ -58,7 +58,14 @@ const STORE_URL =
   "https://chromewebstore.google.com/detail/suede-sing-vocal-coach-pi/dbimnmcokgmibdenmonoafhmdbjhpicd";
 /** minimum_chrome_version in the extension's manifest (suede-voice repo). */
 const MIN_CHROME = 116;
-const EXTENSION_NAME =
+/** The name the Web Store listing at STORE_URL shows (checked 2026-10-13). */
+const EXTENSION_NAME = "Suede Sing: Vocal Coach, Pitch Trainer & Vocal Range Test";
+/**
+ * The rename the old copy assumed had shipped. It is the extension's manifest
+ * name in the suede-voice repo, not yet published; swap the two once the store
+ * shows it.
+ */
+const UNSHIPPED_EXTENSION_NAME =
   "Suede Sing: Vocal Coach, Pitch Tuner, Vocal Range Test & Ear Training";
 
 const llms = buildLlmsTxt();
@@ -110,18 +117,22 @@ describe("/llms.txt", () => {
   it("calls the extension what the Web Store calls it", () => {
     // Same reasoning as the store URL above: the name is hard-coded in both
     // files, so they are asserted against one literal or they drift. They did.
-    // The Web Store name field said "Pitch Trainer" while the description, the
-    // summary and this page's own title tag all said tuner — and the store
+    // The Web Store name field says "Pitch Trainer" while the description, the
+    // summary and this page's own title tag all say tuner — and the store
     // ranks a name-field match above body text, so the listing sat at #3 for
-    // "pitch tuner" behind two extensions whose names matched exactly.
+    // "pitch tuner" behind two extensions whose names matched exactly. This
+    // test once pinned the tuner name here on the assumption the store rename
+    // had shipped; it had not (the listing still read "Pitch Trainer" on
+    // 2026-10-13), so the JSON-LD and llms.txt named a product the install URL
+    // does not show. Fix the store name, then swap the two constants above.
     const page = readFileSync(
       new URL("../app/extension/page.tsx", import.meta.url),
       "utf8",
     );
     expect(llms).toContain(EXTENSION_NAME);
-    expect(page).toContain(EXTENSION_NAME);
-    expect(llms).not.toContain("Pitch Trainer");
-    expect(page).not.toContain("Pitch Trainer");
+    expect(page).toContain(`name: "${EXTENSION_NAME}"`);
+    expect(llms).not.toContain(UNSHIPPED_EXTENSION_NAME);
+    expect(page).not.toContain(`name: "${UNSHIPPED_EXTENSION_NAME}"`);
   });
 
   it("states one supported Chrome version across both surfaces", () => {
@@ -351,7 +362,7 @@ describe("/llms.txt iPhone app name", () => {
     //   ...a free iPhone app, "Suede Sing: Vocal Coach," which measures...
     // and a bare `not.toContain("Suede Sing: Vocal Coach,")` caught it. That
     // check cannot stay bare: the Chrome extension's real Web Store name is
-    // "Suede Sing: Vocal Coach, Pitch Tuner, ..." and shares the prefix, so
+    // "Suede Sing: Vocal Coach, Pitch Trainer & ..." and shares the prefix, so
     // the bare form fails on a correct file. Both assertions below still fire
     // on the original text; see the PR body for the reintroduce-and-watch-it-
     // fail run.

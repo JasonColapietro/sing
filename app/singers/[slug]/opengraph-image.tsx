@@ -1,13 +1,28 @@
 import { ImageResponse } from "next/og";
-import { midiToLabel } from "@/lib/audio/notes";
-import { describeSpan, singerBySlug } from "@/lib/singers";
-import { singerReviewLabel } from "@/lib/singer-evidence";
+import { singerCardText, singerCardVersion } from "@/lib/og-cards";
+import { singerBySlug } from "@/lib/singers";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "Reported vocal range reference span on a keyboard, with evidence review status";
 
 const BLACK_PCS = new Set([1, 3, 6, 8, 10]);
+
+/**
+ * One card per singer, at a URL versioned by what it draws
+ * (/singers/<slug>/opengraph-image/<version>). Next's own ?hash only follows
+ * this file's source, so a corrected range would otherwise ship at the URL
+ * share scrapers cached the old picture under (see lib/og-cards.ts).
+ */
+export function generateImageMetadata({ params }: { params?: { slug?: string } }) {
+  // `next build` also asks once with no slug, to prerender this route: the
+  // [slug] segment's params come from its page, which this route is not part
+  // of. Every item needs an id, so that answer is no cards, and each card is
+  // drawn on its first request, as it was before it was versioned. An unknown
+  // slug has no card either, so its URL is a 404.
+  const s = params?.slug ? singerBySlug(params.slug) : undefined;
+  return s ? [{ id: singerCardVersion(s), alt, size, contentType }] : [];
+}
 
 export default async function Image({
   params,
@@ -18,7 +33,7 @@ export default async function Image({
   const s = singerBySlug(slug);
   if (!s) return new Response("Not found", { status: 404 });
 
-  const semis = s.highMidi - s.lowMidi;
+  const text = singerCardText(s);
   const stripLow = Math.floor(s.lowMidi / 12) * 12;
   const stripHigh = Math.ceil(s.highMidi / 12) * 12;
   const n = stripHigh - stripLow + 1;
@@ -55,16 +70,16 @@ export default async function Image({
           REPORTED VOCAL RANGE
         </div>
         <div style={{ marginTop: 18, fontSize: 64, fontWeight: 700 }}>
-          {s.name}
+          {text.name}
         </div>
         <div style={{ marginTop: 10, fontSize: 92, fontWeight: 700 }}>
-          {`${midiToLabel(s.lowMidi)} — ${midiToLabel(s.highMidi)}`}
+          {text.notes}
         </div>
         <div style={{ marginTop: 12, fontSize: 28, color: "#c3bde3" }}>
-          {`${describeSpan(semis)} · ${semis} semitones`}
+          {text.span}
         </div>
         <div style={{ marginTop: 12, fontSize: 22, color: "#c3bde3" }}>
-          {`${singerReviewLabel(s.slug)} · Not a training target`}
+          {text.status}
         </div>
 
         {/* Chromatic keyboard band */}

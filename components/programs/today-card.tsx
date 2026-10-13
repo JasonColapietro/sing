@@ -10,6 +10,7 @@ import { midiToLabel } from "@/lib/audio/notes";
 import {
   FREE_WEEKS,
   cappedDaySeconds,
+  chapterStartIndex,
   dayMinutes,
   dayNeedsPro,
   isRestDay,
@@ -21,9 +22,13 @@ import {
   itemStepHref,
   itemSteps,
   markDayDone,
+  repeatFortnight,
+  repeatFrom,
   startProgram,
   type Program,
+  type ProgramChapter,
   type ProgramDay,
+  type ProgramProgress,
   type ProgramReading,
 } from "@/lib/programs";
 import { programDayNeedsPro } from "@/components/practice/program-day";
@@ -126,6 +131,7 @@ export function DayItems({
   done,
   stepsDone,
   stepsWaived,
+  compact = false,
 }: {
   day: ProgramDay;
   done?: boolean[];
@@ -133,6 +139,12 @@ export function DayItems({
   stepsDone?: boolean[][];
   /** Per item, which of those steps are skipped for the saved range rather than sung. */
   stepsWaived?: boolean[][];
+  /**
+   * Ticks and the carry-on links, without the step lists: today's rows a
+   * second time on the same page (the calendar under today's card), which
+   * must agree with the card without repeating its step lists.
+   */
+  compact?: boolean;
 }) {
   return (
     <ol className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-panel">
@@ -170,7 +182,7 @@ export function DayItems({
               </span>
               <Chevron />
             </Link>
-            {stepsDone && !sung && (
+            {stepsDone && !sung && !compact && (
               <ItemSteps item={item} done={stepsDone[i] ?? []} waived={stepsWaived?.[i] ?? []} />
             )}
           </li>
@@ -250,6 +262,98 @@ export function restartFinished(program: Program, readings: readonly ProgramRead
   saveProgramProgress(startProgram(program.id, today));
 }
 
+/** " Its check-in readings are cleared." when the run has any; leaving starts an empty record. */
+function readingsCleared(active: ActiveProgram): string {
+  return active.readings.length > 0 ? " Its check-in readings are cleared." : "";
+}
+
+/**
+ * What switching away from the running program asks first. The new run
+ * starts an empty record, so this one's check-in readings go with it, and a
+ * finished program has no place left to lose.
+ */
+export function leaveQuestion(active: ActiveProgram): string {
+  return active.view.status === "finished"
+    ? `Leave ${active.program.name}? You finished it.${readingsCleared(active)}`
+    : `Leave ${active.program.name}? Your place in it is not kept.${readingsCleared(active)}`;
+}
+
+/** What Stop asks first. A finished program has no days left to wait. */
+export function stopQuestion(active: ActiveProgram): string {
+  return active.view.status === "finished"
+    ? `Stop ${active.program.name}? You finished it.${readingsCleared(active)}`
+    : `Stop ${active.program.name}? Your place in it is not kept.${readingsCleared(active)} To take a break, just come back later: days wait for you.`;
+}
+
+/**
+ * What going back to the start of a fortnight asks first. On a running
+ * program (repeatFrom) the days before it stay done with their readings, and
+ * any check-in day from it on is sung again, so its reading goes. `until` is
+ * the day the run is finished again at, when it does not run on to its last
+ * day: a finished run singing one fortnight again (repeatFortnight), or one
+ * already doing so. Then only the days up to it are sung again, and the rest
+ * keep their readings too.
+ */
+export function goBackQuestion(
+  chapter: ProgramChapter,
+  readings: readonly ProgramReading[],
+  until?: number,
+): string {
+  const start = chapterStartIndex(chapter);
+  const end = until ?? Infinity;
+  const kept = readings.some((r) => r.index < start || r.index >= end);
+  // A finished run has up to four check-ins past week 5 (days 42, 60, 67, 78).
+  const cleared = readings.filter((r) => r.index >= start && r.index < end).map((r) => String(r.index + 1));
+  const days =
+    cleared.length === 1
+      ? `day ${cleared[0]}`
+      : `days ${cleared.slice(0, -1).join(", ")} and ${cleared.at(-1)}`;
+  const sung =
+    until === undefined
+      ? `Days from day ${start + 1} on are sung again` +
+        (kept ? `, and the check-in readings before day ${start + 1} are kept.` : ".")
+      : `Days ${start + 1} to ${until} are sung again, then the run is finished again; the other days stay done` +
+        (kept ? ", with their check-in readings." : ".");
+  return (
+    `Go back to the start of weeks ${chapter.fromWeek}–${chapter.toWeek}? ${sung}` +
+    (cleared.length === 0
+      ? ""
+      : ` The ${cleared.length === 1 ? "reading" : "readings"} from ${days} ${cleared.length === 1 ? "is" : "are"} cleared.`)
+  );
+}
+
+/**
+ * Go back to the start of `chapter`'s fortnight, once the singer confirms it.
+ * From a finished run (`fortnightOnly`, chapter 19) only that fortnight is
+ * sung again, and the run is finished again at its end; on a running one the
+ * run carries on from there, to its last day or to the end of a fortnight it
+ * is already singing again. True when it went back.
+ */
+export function goBackTo(
+  progress: ProgramProgress,
+  readings: readonly ProgramReading[],
+  chapter: ProgramChapter,
+  fortnightOnly = false,
+): boolean {
+  const until = fortnightOnly ? chapter.toWeek * 7 : progress.until;
+  if (!window.confirm(goBackQuestion(chapter, readings, until))) return false;
+  saveProgramProgress(
+    fortnightOnly
+      ? repeatFortnight(progress, chapter, readings)
+      : repeatFrom(progress, chapterStartIndex(chapter), readings),
+  );
+  return true;
+}
+
+/**
+ * The fortnights chapter 19 sends a finished run back to: weeks 5 and 6 if
+ * the transition never took, weeks 7 and 8 if the top still frays. Each is
+ * sung again on its own (repeatFortnight), not with the weeks after it.
+ */
+export function finishedGoBacks(program: Program): ProgramChapter[] {
+  return (program.chapters ?? []).filter((c) => c.fromWeek === 5 || c.fromWeek === 7);
+}
+
 /** The check-in days' range and sustain readings, oldest first. */
 function Readings({ readings }: { readings: ProgramReading[] }) {
   if (readings.length === 0) return null;
@@ -323,6 +427,8 @@ export function ProgramTodayCard({
   const stillOpen = waits ? openUncappedRows(day, itemsDone) : null;
   // A rest day ends a Pro program's free week, so tomorrow's day needs Pro.
   const nextLocked = view.status === "done-today" && nextNeedsPro(program, view.index, isPro);
+  // A book program's finished run goes back a block rather than to day 1.
+  const goBacks = view.status === "finished" ? finishedGoBacks(program) : [];
 
   return (
     <Card>
@@ -342,7 +448,9 @@ export function ProgramTodayCard({
           <div className="mt-4">
             <h3 className="text-xl">You finished {program.name}.</h3>
             <p className="mt-2 max-w-xl text-sm text-mut">
-              All {total} days done. Run it again from day 1, or pick another program.
+              {goBacks.length > 0
+                ? `All ${total} days done. Chapter 19 says what next: if the transition never quite took, go back to weeks 5 and 6; if the top still frays, to weeks 7 and 8; if it all held together, keep three warmup sessions a week and add songs rather than starting again.`
+                : `All ${total} days done. Run it again from day 1, or pick another program.`}
             </p>
           </div>
         )}
@@ -431,6 +539,14 @@ export function ProgramTodayCard({
           </div>
         )}
 
+        {progress.until !== undefined && view.status !== "finished" && (
+          // A finished run singing a fortnight again (repeatFortnight).
+          <p className="mt-3 max-w-xl text-xs text-dim" data-program-repeat>
+            A second pass from your finished run: once day {progress.until} is done, the run is finished
+            again. Days {progress.until + 1} to {total} stay done.
+          </p>
+        )}
+
         <Readings readings={readings} />
 
         <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -443,8 +559,19 @@ export function ProgramTodayCard({
               Mark day {view.index + 1} done
             </Button>
           )}
+          {goBacks.map((c) => (
+            <Button key={c.slug} variant="outline" size="sm" onClick={() => goBackTo(progress, readings, c, true)}>
+              Repeat weeks {c.fromWeek}–{c.toWeek}
+            </Button>
+          ))}
           {view.status === "finished" && (
-            <Button size="sm" onClick={() => restartFinished(program, readings, today)}>
+            // Chapter 19 asks a run that held together not to start again
+            // tomorrow, so there the restart is not the filled button.
+            <Button
+              variant={goBacks.length > 0 ? "outline" : undefined}
+              size="sm"
+              onClick={() => restartFinished(program, readings, today)}
+            >
               Start again from day 1
             </Button>
           )}
@@ -512,7 +639,9 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
   const line = locked
     ? `Day ${view.index + 1} needs Pro. ${freeWeeksWere(true)}, and your place is kept.`
     : view.status === "finished"
-      ? "Finished. Start it again or pick another."
+      ? program.chapters
+        ? "Finished. The calendar has chapter 19's next steps."
+        : "Finished. Start it again or pick another."
       : view.status === "done-today"
         ? nextLocked
           ? `${doneLine} Day ${view.index + 2} onward needs Pro; ${freeWeeksWere(false)}.`

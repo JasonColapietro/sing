@@ -1153,7 +1153,7 @@ export function localDayOf(iso: string): string {
 
 /**
  * Sustain attempts too short to be logged as sessions, as session rows. The
- * sustain room keeps every attempt of a second or more in its own record
+ * sustain room keeps its last ten attempts of a second or more in its own record
  * (components/breath/store.ts) but logs a session only from
  * SUSTAIN_LOG_MIN_SEC, so a beginner's first holds would otherwise never
  * complete a program's sustain test. Longer attempts are left out: they are
@@ -1212,6 +1212,19 @@ export interface ProgramProgress {
    * calendar day than the one before.
    */
   done: DayDone[];
+  /**
+   * A finished run sent back to sing one fortnight again (chapter 19,
+   * repeatFortnight): the run is finished again once `done` reaches this many
+   * days, rather than running on to the last day. Absent otherwise.
+   */
+  until?: number;
+  /**
+   * With `until`: the days after it, done on the earlier pass and kept with
+   * their check-in readings, in order (`later[k].index === until + k`). They
+   * stay done while the fortnight is sung again. Their calendar days come
+   * from that earlier pass, so they are never compared with `done`'s.
+   */
+  later?: DayDone[];
 }
 
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -1246,11 +1259,28 @@ export function sessionsForRun(progress: ProgramProgress, sessions: readonly Ses
   });
 }
 
+/** One stored completed day with the given index on or after `startedDay`, or null. */
+function reviveDay(raw: unknown, index: number, startedDay: string): DayDone | null {
+  if (typeof raw !== "object" || raw === null) return null;
+  const { index: at, day, manual, range, sustainSec } = raw as Partial<DayDone>;
+  if (at !== index || !isCalendarDay(day) || day < startedDay) return null;
+  const entry: DayDone = manual === true ? { index, day, manual: true } : { index, day };
+  if (
+    typeof range === "object" && range !== null &&
+    Number.isFinite(range.lowMidi) && Number.isFinite(range.highMidi) && range.lowMidi <= range.highMidi
+  ) {
+    entry.range = { lowMidi: range.lowMidi, highMidi: range.highMidi };
+  }
+  if (typeof sustainSec === "number" && Number.isFinite(sustainSec) && sustainSec > 0) entry.sustainSec = sustainSec;
+  return entry;
+}
+
 /**
  * Repair a stored record. Anything that is not a known program returns null;
  * a bad `done` list keeps its longest valid prefix, so a hand-edited or
  * half-written record loses the days it cannot vouch for rather than all of
- * them.
+ * them. A repeated fortnight's `until` and `later` are kept only whole and
+ * consistent; otherwise they go, and the run carries on to its last day.
  */
 export function reviveProgress(raw: unknown): ProgramProgress | null {
   if (typeof raw !== "object" || raw === null) return null;
@@ -1260,24 +1290,33 @@ export function reviveProgress(raw: unknown): ProgramProgress | null {
   const done: DayDone[] = [];
   let prev = "";
   for (const d of Array.isArray(v.done) ? v.done : []) {
-    if (typeof d !== "object" || d === null) break;
-    const { index, day, manual, range, sustainSec } = d as Partial<DayDone>;
-    if (index !== done.length || index >= program.days.length) break;
-    if (!isCalendarDay(day) || day <= prev || day < v.startedDay) break;
-    const entry: DayDone = manual === true ? { index, day, manual: true } : { index, day };
-    if (
-      typeof range === "object" && range !== null &&
-      Number.isFinite(range.lowMidi) && Number.isFinite(range.highMidi) && range.lowMidi <= range.highMidi
-    ) {
-      entry.range = { lowMidi: range.lowMidi, highMidi: range.highMidi };
-    }
-    if (typeof sustainSec === "number" && Number.isFinite(sustainSec) && sustainSec > 0) entry.sustainSec = sustainSec;
+    if (done.length >= program.days.length) break;
+    const entry = reviveDay(d, done.length, v.startedDay);
+    if (!entry || entry.day <= prev) break;
     done.push(entry);
-    prev = day;
+    prev = entry.day;
   }
   const startedAt =
     typeof v.startedAt === "string" && Number.isFinite(Date.parse(v.startedAt)) ? v.startedAt : undefined;
-  return { programId: program.id, startedDay: v.startedDay, ...(startedAt ? { startedAt } : {}), done };
+  const out: ProgramProgress = { programId: program.id, startedDay: v.startedDay, ...(startedAt ? { startedAt } : {}), done };
+  const until = v.until;
+  if (
+    typeof until === "number" && Number.isInteger(until) && until > 0 && until < program.days.length &&
+    done.length <= until && Array.isArray(v.later) && until + v.later.length === program.days.length
+  ) {
+    const startedDay = v.startedDay;
+    const later = v.later.map((d, k) => reviveDay(d, until + k, startedDay));
+    if (later.every((d): d is DayDone => d !== null)) {
+      out.until = until;
+      out.later = later;
+    }
+  }
+  return out;
+}
+
+/** How many days `done` holds once the run is finished: `until` while a fortnight is sung again. */
+function runEnd(program: Program, progress: ProgramProgress): number {
+  return progress.until ?? program.days.length;
 }
 
 /**
@@ -1308,9 +1347,10 @@ export function reconcileProgress(
 ): ProgramProgress {
   const counted = sessionsForRun(progress, sessions);
   let done = progress.done;
+  const end = runEnd(program, progress);
   for (;;) {
     const index = done.length;
-    if (index >= program.days.length) break;
+    if (index >= end) break;
     const from = earliestNext({ ...progress, done });
     if (from > today) break;
     const d = program.days[index];
@@ -1336,7 +1376,7 @@ export function reconcileProgress(
  */
 export function markDayDone(program: Program, progress: ProgramProgress, today: string): ProgramProgress {
   const index = progress.done.length;
-  if (index >= program.days.length) return progress;
+  if (index >= runEnd(program, progress)) return progress;
   if (earliestNext(progress) > today) return progress;
   return { ...progress, done: [...progress.done, { index, day: today, manual: true }] };
 }
@@ -1353,7 +1393,7 @@ export interface ProgramToday {
   status: TodayStatus;
   /** The program day the card shows: today's work, or what today completed. */
   index: number;
-  /** Days completed so far. */
+  /** Days completed so far, counting the later days a repeated fortnight keeps. */
   completed: number;
 }
 
@@ -1363,13 +1403,15 @@ export interface ProgramToday {
  * for tomorrow. Call after `reconcileProgress`.
  */
 export function programToday(program: Program, progress: ProgramProgress, today: string): ProgramToday {
-  const completed = progress.done.length;
+  const next = progress.done.length;
+  const completed = next + (progress.later?.length ?? 0);
   const last = progress.done.at(-1);
-  if (completed >= program.days.length) {
+  // A repeated fortnight's last day finishes the run again.
+  if (next >= runEnd(program, progress)) {
     return { status: "finished", index: program.days.length - 1, completed };
   }
   if (last && last.day >= today) return { status: "done-today", index: last.index, completed };
-  return { status: "todo", index: completed, completed };
+  return { status: "todo", index: next, completed };
 }
 
 /* ------------------------------------------------------------------ *
@@ -1410,9 +1452,7 @@ export function programReadings(
   const since = progress.startedAt ? Date.parse(progress.startedAt) : NaN;
   const out: ProgramReading[] = [];
   progress.done.forEach((done, i) => {
-    const items = program.days[done.index]?.items ?? [];
-    const hasRange = items.some((it) => it.kind === "range");
-    const hasSustain = items.some((it) => it.kind === "drill" && it.id === "sustain");
+    const { hasRange, hasSustain } = checkIns(program, done.index);
     if (!hasRange && !hasSustain) return;
     const from = i === 0 ? progress.startedDay : addDays(progress.done[i - 1].day, 1);
     const within = (day: string) => day >= from && day <= done.day;
@@ -1441,7 +1481,28 @@ export function programReadings(
     }
     out.push(reading);
   });
+  // The days after a repeated fortnight keep the readings they were done with:
+  // nothing from their earlier pass counts toward this run any more.
+  for (const done of progress.later ?? []) {
+    const { hasRange, hasSustain } = checkIns(program, done.index);
+    if (!hasRange && !hasSustain) continue;
+    out.push({
+      index: done.index,
+      day: done.day,
+      range: hasRange ? (done.range ?? null) : null,
+      ...(hasSustain ? { sustainSec: done.sustainSec ?? null } : {}),
+    });
+  }
   return out;
+}
+
+/** Whether a program day takes a range test, a sustain test, or both. */
+function checkIns(program: Program, index: number): { hasRange: boolean; hasSustain: boolean } {
+  const items = program.days[index]?.items ?? [];
+  return {
+    hasRange: items.some((it) => it.kind === "range"),
+    hasSustain: items.some((it) => it.kind === "drill" && it.id === "sustain"),
+  };
 }
 
 /**
@@ -1469,4 +1530,107 @@ export function withReadings(progress: ProgramProgress, readings: readonly Progr
     done[r.index] = next;
   }
   return done === progress.done ? progress : { ...progress, done };
+}
+
+/* ------------------------------------------------------------------ *
+ * Going back: the book's rules for missed and repeated weeks.
+ * ------------------------------------------------------------------ */
+
+/** The 0-based program day a chapter's fortnight starts on. */
+export function chapterStartIndex(chapter: ProgramChapter): number {
+  return (chapter.fromWeek - 1) * 7;
+}
+
+/**
+ * Go back to program day `index` (0-based) of a running program, as chapters
+ * 13 and 16 ask: after two weeks or more away, the start of the block you were
+ * in; a fortnight that is not working, again. Days before `index` stay done,
+ * each with its check-in readings kept on it (withReadings), so the day-1
+ * baseline is still there to compare against. The run restarts its clock now,
+ * so only practice from now on can tick the days sung again; programReadings
+ * then reads the kept days from their stored readings. Day 1 always stays:
+ * going back to it is a restart. A fortnight already being sung again from a
+ * finished run (repeatFortnight) keeps its `until` and `later`, so the run is
+ * still finished again at the same day.
+ */
+export function repeatFrom(
+  progress: ProgramProgress,
+  index: number,
+  readings: readonly ProgramReading[],
+  now: Date = new Date(),
+): ProgramProgress {
+  const kept = withReadings(progress, readings);
+  return {
+    ...kept,
+    startedAt: now.toISOString(),
+    done: kept.done.slice(0, Math.max(1, Math.min(index, kept.done.length))),
+  };
+}
+
+/**
+ * Sing one fortnight of a finished run again, as chapter 19 asks after week
+ * 12: weeks 5 and 6 if the transition never quite took, weeks 7 and 8 if the
+ * top still frays. Only that fortnight is sung again: the days before it stay
+ * done in `done`, the days after it wait in `later`, all with their check-in
+ * readings kept, and the run is finished again once the fortnight's last day
+ * is done (`until`). A fortnight that ends on the last day simply runs on to
+ * it, with no `until`. A run that is not finished goes back as repeatFrom.
+ */
+export function repeatFortnight(
+  progress: ProgramProgress,
+  chapter: ProgramChapter,
+  readings: readonly ProgramReading[],
+  now: Date = new Date(),
+): ProgramProgress {
+  const kept = withReadings(progress, readings);
+  const all = [...kept.done, ...(kept.later ?? [])];
+  // Only a finished run has every day done on one pass or the other. Part way
+  // through, some days are on neither, so the run goes back as a running one
+  // does, to the same end.
+  if (all.length !== programById(kept.programId)?.days.length) {
+    return repeatFrom(kept, chapterStartIndex(chapter), [], now);
+  }
+  // `done` must stay in calendar order, and `later`'s days come from an
+  // earlier pass, so a fortnight can start no later than `done` ends. Chapter
+  // 19's two fortnights always can: a run finished early at `until` stops on
+  // the end of week 6 or week 8.
+  const start = Math.max(1, Math.min(chapterStartIndex(chapter), kept.done.length));
+  const end = chapter.toWeek * 7;
+  const run: ProgramProgress = {
+    programId: kept.programId,
+    startedDay: kept.startedDay,
+    startedAt: now.toISOString(),
+    done: all.slice(0, start),
+  };
+  return end >= all.length ? run : { ...run, until: end, later: all.slice(end) };
+}
+
+/**
+ * The fortnights a running program offers to go back to, with `at` days done:
+ * the start of the one under way, once a day of it is done, and the one
+ * before it. The first fortnight is left out, since going back to day 1 is the
+ * restart, which starts a new run. Empty for a program without chapters, and
+ * once every day is done (chapter 19's choices are on the finished card).
+ */
+export function repeatChoices(program: Program, at: number): ProgramChapter[] {
+  const chapters = program.chapters ?? [];
+  const i = chapters.findIndex((c) => chapterStartIndex(c) <= at && at < c.toWeek * 7);
+  if (i < 0) return [];
+  const cur = chapters[i];
+  const prev = chapters[i - 1];
+  const out: ProgramChapter[] = [];
+  if (cur.fromWeek >= 2 && at > chapterStartIndex(cur)) out.push(cur);
+  if (prev && prev.fromWeek >= 2) out.push(prev);
+  return out;
+}
+
+/**
+ * The first calendar day whose practice counts toward the next program day:
+ * earliestNext, unless the run's clock was restarted later than that (a
+ * restart or repeatFrom), since nothing logged before it counts.
+ */
+export function countsFromDay(progress: ProgramProgress): string {
+  const next = earliestNext(progress);
+  const started = progress.startedAt ? localDayOf(progress.startedAt) : null;
+  return started && isCalendarDay(started) && started > next ? started : next;
 }

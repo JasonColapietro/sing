@@ -5,6 +5,7 @@ import { localDay, useProgress } from "@/lib/progress";
 import { subscribePracticeDay } from "@/lib/free-cap";
 import { loadBreath, type SustainAttempt } from "@/components/breath/store";
 import {
+  countsFromDay,
   earliestNext,
   matchDay,
   programReadings,
@@ -92,12 +93,15 @@ export function useActiveProgram(): ActiveProgram | null {
   if (!program || !progress || !today) return null;
   const view = programToday(program, progress, today);
   const counted = sessionsForRun(progress, sessions);
-  const countsFrom = earliestNext(progress);
+  // What the card names as counting. After a go-back (repeatFrom) the run's
+  // clock restarts today, so practice from the days in between does not
+  // count, however far back the last completed day is.
+  const countsFrom = countsFromDay(progress);
   const day = program.days[view.index];
   // One matching for the rows and their steps, so a session ticks one thing.
   // With the saved range, so a step the routine runner skips for it (and never
   // logs) does not hold the day open.
-  const match = view.status === "todo" ? matchDay(day, counted, today, countsFrom, range) : null;
+  const match = view.status === "todo" ? matchDay(day, counted, today, earliestNext(progress), range) : null;
   const itemsDone = match?.items ?? [];
   const stepsDone = match?.steps ?? [];
   const stepsWaived = match?.waived ?? [];

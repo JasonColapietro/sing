@@ -9,8 +9,9 @@ export function VoiceSafetyNote() {
       hoarseness, loss of range or a change in your speaking voice. These
       lessons teach practice decisions and stop rules; they don&apos;t diagnose
       or treat anything, and pitch readings do not assess vocal health.
-      Persistent symptoms belong with a qualified clinician, not another
-      attempt.
+      Pain, hoarseness that will not clear, a sudden or lasting loss of range,
+      or any blood belongs with a doctor who can examine the vocal folds, such
+      as an ENT or laryngologist, not another attempt.
     </p>
   );
 }

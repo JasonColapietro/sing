@@ -122,12 +122,25 @@ const REST_DAY = `
   localStorage.setItem("suede-sing:program:v1", JSON.stringify({ programId: "mix-4w", startedDay: ago(6), startedAt: ago(6) + "T08:00:00.000Z", done: [0, 1, 2, 3, 4, 5, 6].map((index) => ({ index, day: ago(6 - index), manual: true })) }));
 `;
 
+/**
+ * The Measured Voice finished: all 84 days done, one a day up to two days ago,
+ * each check-in day (days 1, 11, 42, 60, 67 and 78) carrying its readings, as
+ * the record keeps them. The finished card is the book's: chapter 19's next
+ * steps, six reading rows and the fortnight choices, the tallest card a
+ * finished program shows.
+ */
+const FINISHED = `
+  // cls-state:finished
+  localStorage.setItem("suede-sing:program:v1", JSON.stringify({ programId: "measured-voice-12w", startedDay: ago(85), startedAt: ago(85) + "T08:00:00.000Z", done: Array.from({ length: 84 }, (_, index) => Object.assign({ index, day: ago(85 - index), manual: true }, [0, 10, 41, 59, 66, 77].includes(index) ? { range: { lowMidi: 45, highMidi: 67 + (index > 40 ? 1 : 0) }, sustainSec: 9.4 + index / 20 } : {})) }));
+`;
+
 const STATES = {
   capped: CAPPED,
   program: PROGRAM,
   /** Today's program day waits for midnight because the free minutes are used. */
   "program-capped": PROGRAM + CAPPED,
   "rest-day": REST_DAY,
+  finished: FINISHED,
 };
 
 /**
@@ -141,15 +154,17 @@ const STATE_PROOF = {
   program: { routes: ["programs", "program-foundations", "warmups", "progress"], selector: "[data-program-day]" },
   "program-capped": { routes: ["programs", "program-foundations", "warmups"], selector: "[data-program-day] [data-program-waits]" },
   "rest-day": { routes: ["programs", "warmups", "progress"], selector: "[data-program-day]" },
+  finished: { routes: ["programs", "program-detail", "warmups", "progress"], selector: '[data-program-day][data-status="finished"]' },
 };
 
 /**
  * Query-string deep links measured on top of routes.mjs's one-per-template
  * list. A program's own view, /programs?program=<id>, is what today's card,
  * /progress and the book link to; it is a different page from the list at
- * the same path. "program-detail" is the book's program, which no state runs;
- * "program-foundations" is the one --state=program runs, so that state
- * measures a singer opening their own program, with today's card above it.
+ * the same path. "program-detail" is the book's program, which only
+ * --state=finished runs; "program-foundations" is the one --state=program
+ * runs, so those states measure a singer opening their own program, with
+ * today's card above it.
  */
 const DEEP_LINKS = [
   { path: "/programs?program=measured-voice-12w", name: "program-detail", kind: "app" },

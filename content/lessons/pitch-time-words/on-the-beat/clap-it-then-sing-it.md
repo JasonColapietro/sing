@@ -36,7 +36,7 @@ Rhythm without pitch first. Pitch hides timing errors. Say what will count as co
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. If recording, tap the pulse gently through each version so you can hear your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.
+Work in short repetitions with a normal breath and complete release between them. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take in the [recorder](/recorder). An external click is optional.
 
 - Look: Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.
 - Listen: On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.

@@ -1,22 +1,29 @@
 import { ImageResponse } from "next/og";
-import { midiToLabel } from "@/lib/audio/notes";
-import { isProSong, songBySlug } from "@/components/songs/data";
-import {
-  computeDifficulty,
-  lyricLines,
-  songNoteRange,
-  songTotalBeats,
-} from "@/components/songs/lib";
+import { songBySlug } from "@/components/songs/data";
+import { songNoteRange, songTotalBeats } from "@/components/songs/lib";
+import { songCardText, songCardVersion } from "@/lib/og-cards";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-// A per-slug alt would need generateImageMetadata; the singers cards set one
-// static string for the whole route and this matches.
+// One static alt for the whole route, as the singer cards do.
 export const alt = "Song facts and melody contour";
 
 const W = 1032;
 const CONTOUR_H = 150;
 const BAR_H = 16;
+
+/**
+ * One card per song, at a URL versioned by what it draws
+ * (/songs/<slug>/opengraph-image/<version>). Next's own ?hash only follows
+ * this file's source, so a corrected era or melody would otherwise ship at the
+ * URL share scrapers cached the old picture under (see lib/og-cards.ts).
+ */
+export function generateImageMetadata({ params }: { params?: { slug?: string } }) {
+  // As on the singer cards: `next build` asks once with no slug, and an
+  // unknown slug has no card, so both get none (and a 404 at the URL).
+  const song = params?.slug ? songBySlug(params.slug) : undefined;
+  return song ? [{ id: songCardVersion(song), alt, size, contentType }] : [];
+}
 
 export default async function Image({
   params,
@@ -27,12 +34,12 @@ export default async function Image({
   const song = songBySlug(slug);
   if (!song) return new Response("Not found", { status: 404 });
 
-  const pro = isProSong(song.id);
+  const text = songCardText(song);
+  const pro = text.pro;
   const [lo, hi] = songNoteRange(song);
   const span = Math.max(1, hi - lo);
   const totalBeats = Math.max(1, songTotalBeats(song));
-  const { label: difficulty, rangeSemis } = computeDifficulty(song);
-  const firstLine = lyricLines(song.notes)[0]?.text ?? "";
+  const firstLine = text.firstLine;
 
   return new ImageResponse(
     (
@@ -59,7 +66,7 @@ export default async function Image({
             color: pro ? "#ff5470" : "#ffc24a",
           }}
         >
-          {pro ? "PRO SONGBOOK" : "PUBLIC DOMAIN · FREE TO SING"}
+          {text.kicker}
         </div>
 
         {/*
@@ -80,13 +87,13 @@ export default async function Image({
             width: W,
           }}
         >
-          {song.title}
+          {text.title}
         </div>
 
         <div
           style={{ display: "flex", marginTop: 10, fontSize: 27, color: "#c3bde3" }}
         >
-          {`${song.genre} · ${song.era} · ${song.bpm} bpm · ${song.beatsPerBar}/bar · ${difficulty}`}
+          {text.facts}
         </div>
 
         {firstLine ? (
@@ -138,10 +145,10 @@ export default async function Image({
           }}
         >
           <div style={{ display: "flex", fontSize: 58, fontWeight: 700 }}>
-            {`${midiToLabel(lo)} — ${midiToLabel(hi)}`}
+            {text.notes}
           </div>
           <div style={{ display: "flex", fontSize: 24, color: "#6b6455" }}>
-            {`${rangeSemis} semitones · ${song.notes.length} notes · suede sing`}
+            {text.footer}
           </div>
         </div>
       </div>

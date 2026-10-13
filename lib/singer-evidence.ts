@@ -282,11 +282,29 @@ export function getSingerLastModified(slug: string): string | undefined {
 export const SINGER_PAGE_REVISED = "2026-10-12";
 
 /**
- * Sitemap lastmod for a singer page: the later of its evidence review date
- * and the shared page revision. Never claims a review that did not happen;
- * getSingerLastModified stays the review date alone.
+ * Days a reviewed singer page's own words changed after SINGER_PAGE_REVISED
+ * because catalog figures moved: its own range, or a rank or "also listed"
+ * count that another singer's correction shifted. Not a review date (that is
+ * reviewedAt, and re-reading a score is not a review). The fingerprints in
+ * lib/singer-page-freshness.test.tsx fail when a reviewed page's content
+ * changes, so this map cannot silently fall behind the page again.
+ */
+export const SINGER_DATA_REVISED: Readonly<Record<string, string>> = {
+  // Round 8: Alex Warren A2–F#4 → G2–A4 from the cited Musicnotes scores,
+  // which moved his own page and three other reviewed pages' catalog facts.
+  "alex-warren": "2026-10-13",
+  "reba-mcentire": "2026-10-13", // span rank 539 → 540 of 636
+  "sam-smith": "2026-10-13", // "also listed from G2" 67 → 68, now naming Alex Warren
+  "arijit-singh": "2026-10-13", // span rank 552 → 553; Pop rank 268 → 269
+};
+
+/**
+ * Sitemap lastmod (and JSON-LD dateModified) for a singer page: the latest of
+ * its evidence review date, the shared page revision and its own data
+ * revision. Never claims a review that did not happen; getSingerLastModified
+ * stays the review date alone.
  */
 export function getSingerPageLastModified(slug: string): string {
-  const reviewed = getSingerLastModified(slug);
-  return reviewed && reviewed > SINGER_PAGE_REVISED ? reviewed : SINGER_PAGE_REVISED;
+  const dates = [SINGER_PAGE_REVISED, getSingerLastModified(slug), SINGER_DATA_REVISED[slug]];
+  return dates.filter((date): date is string => Boolean(date)).sort().at(-1)!;
 }

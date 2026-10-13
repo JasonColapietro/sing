@@ -262,6 +262,19 @@ export function starsForCompletion(done: number, total: number): Stars {
   return done * 2 >= total ? 2 : 1;
 }
 
+/**
+ * The results screen's subtitle. A `?step=` link (a program row carrying on
+ * from the step the free minutes stopped at) runs the set from `firstStep`,
+ * so the steps before it were sung in an earlier run, not skipped in this
+ * one: the count is of this run's steps.
+ */
+export function breathRunSubtitle(doneSteps: number, firstStep: number, stepCount: number): string {
+  const ran = stepCount - firstStep;
+  if (doneSteps < ran) return `${doneSteps} of ${ran} ${ran === 1 ? "step" : "steps"}`;
+  if (firstStep === 0) return "Routine complete";
+  return ran === 1 ? `Step ${stepCount} done` : `Steps ${firstStep + 1}–${stepCount} done`;
+}
+
 export function BreathRunner({
   capped = false,
   routine,
@@ -281,10 +294,9 @@ export function BreathRunner({
   const cap = useFreeCap();
   const stepCount = routine.steps.length;
   const [runId, setRunId] = useState(0);
-  const [phase, setPhase] = useState<RunnerPhase>({
-    kind: "intro",
-    step: Math.min(Math.max(0, startStep), stepCount - 1),
-  });
+  // The step this run opened on; "again" runs the whole set.
+  const [firstStep, setFirstStep] = useState(() => Math.min(Math.max(0, startStep), stepCount - 1));
+  const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: firstStep });
   const [results, setResults] = useState<(BreathDrillResult | null)[]>([]);
 
   const progress = useProgress();
@@ -306,6 +318,7 @@ export function BreathRunner({
 
   function again() {
     setResults([]);
+    setFirstStep(0);
     setPhase({ kind: "intro", step: 0 });
     setRunId((n) => n + 1);
   }
@@ -314,6 +327,8 @@ export function BreathRunner({
     // A step counts as done when it ran long enough to be logged — its own
     // MIN_LOG_SEC — not merely because End was pressed.
     const doneSteps = results.filter((r) => r !== null && r.logged !== null).length;
+    // Only this run's steps: the ones before a `?step=` link's were sung before.
+    const ran = stepCount - firstStep;
     const scored = results.filter(
       (r): r is BreathDrillResult => !!r && r.score !== null,
     );
@@ -325,16 +340,12 @@ export function BreathRunner({
     return (
       <ResultsScreen
         title={routine.name}
-        subtitle={
-          doneSteps === stepCount
-            ? "Routine complete"
-            : `${doneSteps} of ${stepCount} steps`
-        }
+        subtitle={breathRunSubtitle(doneSteps, firstStep, stepCount)}
         score={score}
         stars={
           score !== null
             ? starsForScore(score)
-            : starsForCompletion(doneSteps, stepCount)
+            : starsForCompletion(doneSteps, ran)
         }
         xp={results.reduce((a, r) => a + (r?.logged?.xpGained ?? 0), 0)}
         streakDays={liveStreak(progress.streak)}
@@ -342,7 +353,9 @@ export function BreathRunner({
         rows={routine.steps.map((s, i) => ({
           label: breathStepTitle(s),
           score: results[i]?.score ?? null,
-          note: results[i]?.label ?? "Skipped",
+          // The warmup summary's wording for the same case (routine-summary.tsx),
+          // capitalised like this list's own "Skipped".
+          note: i < firstStep ? "Not in this run" : (results[i]?.label ?? "Skipped"),
         }))}
         achievements={mergeAchievements(results)}
         onContinue={onExit}

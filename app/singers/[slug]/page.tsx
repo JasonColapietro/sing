@@ -287,9 +287,10 @@ export default async function SingerPage({
     { name: "Famous vocal ranges", href: "/singers", url: `${SITE_URL}/singers` },
     { name: s.name, href: `/singers/${s.slug}`, url: pageUrl },
   ];
-  // dateModified follows the sitemap lastmod (the later of the review and the
-  // shared template revision) so the two freshness signals agree; the review
-  // date itself is what schema.org's lastReviewed is for.
+  // dateModified follows the sitemap lastmod (the latest of the review, the
+  // shared template revision and this singer's data revision) so the two
+  // freshness signals agree; the review date itself is what schema.org's
+  // lastReviewed is for.
   const reviewedPageFields = reviewed
     ? {
         dateModified: getSingerPageLastModified(s.slug),

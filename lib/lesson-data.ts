@@ -565,7 +565,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
+        "body": "Take the range test once for this check, after the warm-up; if you already saved one while working through this module, use it rather than testing again. State the checkpoint target, sing the test as one uninterrupted attempt, and keep its saved result even when it does not pass. Glide down only while the sound stays easy, reset, then glide up separately. Stop before squeezing, pain, scratchiness, or the urge to reach for a number.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "Both slides remain conversational in effort. The last usable note sounds repeatable, not like an extreme reached once."
       },
@@ -838,7 +838,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Release a narrow, even hiss. Favor steadiness over duration, and end with air still available instead of collapsing or bearing down.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Release a narrow, even hiss. Favor steadiness over duration, and end with air still available instead of collapsing or bearing down.",
         "look": "The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.",
         "listen": "The hiss stays even rather than surging at the start and fading to almost nothing at the end."
       },
@@ -1111,7 +1111,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Hold or slide through a narrow range with steady airflow and no push. Reset between attempts instead of extending a fading trill by force.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Hold or slide through a narrow range with steady airflow and no push. Reset between attempts instead of extending a fading trill by force.",
         "look": "The cheeks, jaw, and neck remain loose; the straw stays lightly sealed or the lips continue vibrating without being clamped.",
         "listen": "The buzz or straw tone stays continuous and even, without sudden blasts, pressed starts, or a pitch leap used to rescue the sound."
       },
@@ -1384,7 +1384,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Begin close to the pitch rather than sliding up from below. Hold briefly, release, and compare a fresh attempt instead of steering one long note with your eyes.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Begin close to the pitch rather than sliding up from below. Hold briefly, release, and compare a fresh attempt instead of steering one long note with your eyes.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide."
       },
@@ -1475,7 +1475,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Hear the distinction",
-        "body": "Hear Sustained hold once and stop the reference. Then record two holds on the same comfortable note in one take, with a quiet breath between them: the first for a slow count of eight, the second for a count of four. The length is the only thing that changes. Play both back and compare how each one ends: if the longer hold sags flat or thins at the end while the shorter one ends on the pitch it started on, practise at the shorter length and add a count only once its end matches its start. Aim for one centered pitch and an even release. Judge it by ear, not by the display.",
+        "body": "Hear Sustained hold once and stop the reference. Then, in the [recorder](/recorder), record two holds on the same comfortable note in one take, with a quiet breath between them: the first for a slow count of eight, the second for a count of four. The length is the only thing that changes. Play both back and compare how each one ends: if the longer hold sags flat or thins at the end while the shorter one ends on the pitch it started on, practise at the shorter length and add a count only once its end matches its start. Aim for one centered pitch and an even release. Judge it by ear, not by the display.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -1657,7 +1657,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Aim for one centered pitch and an even release. Hear Sustained hold once, stop the reference, then record a short comfortable hold. Compare the start and end by ear; judge it by ear, not by the display.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Aim for one centered pitch and an even release. Hear Sustained hold once, stop the reference, then sing your short comfortable holds in that one recorder take. Compare the start and end of each on playback; judge it by ear, not by the display.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The tone does not sag at the end, pulse with changing air pressure, or become louder to compensate for lost steadiness."
       },
@@ -2385,7 +2385,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Learn the pace there with the reference, then stop it and record your sirens in the [recorder](/recorder), so you can judge them on playback. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.",
         "look": "Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2476,7 +2476,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Learn the pace there with the reference, then stop it and sing the three sirens in that one recorder take, so you can judge them on playback. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.",
         "look": "Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.",
         "listen": "Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice."
       },
@@ -2749,7 +2749,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Repeat the same pitch pattern on each assigned vowel without spreading, swallowing, or changing volume to manufacture sameness.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Repeat the same pitch pattern on each assigned vowel without spreading, swallowing, or changing volume to manufacture sameness.",
         "look": "The jaw opening changes only as much as the vowel needs; the tongue and lips shape the vowel without neck movement.",
         "listen": "Each vowel remains intelligible while the phrase keeps a related tone and pitch center."
       },
@@ -3750,7 +3750,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. If recording, tap the pulse gently through each version so you can hear your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take in the [recorder](/recorder). An external click is optional.",
         "look": "Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
@@ -3841,7 +3841,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. If recording, tap the pulse gently through each version so you can hear your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.",
         "look": "Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
@@ -4933,7 +4933,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "You can anticipate the change and cross the same general area in both directions without forcing the endpoints."
       },
@@ -5206,7 +5206,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word. Compare modified and unmodified attempts at the same pitch and volume.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Narrow or shade the vowel only enough to keep the crossing easy while preserving the word. Compare modified and unmodified attempts at the same pitch and volume.",
         "look": "The jaw and lips change gradually through the crossing; the tongue does not retract sharply and the word remains recognizable.",
         "listen": "The pitch remains connected and the lyric is still understandable across all three vowels."
       },
@@ -6298,7 +6298,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.",
         "look": "The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.",
         "listen": "Three separate pitches remain audible; the middle note does not smear into a slide."
       },
@@ -6571,7 +6571,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Keep the vowel stable while the pitch changes. Reverse the pattern only after the forward direction has four clear notes.",
         "look": "The jaw does not pump once per note and the tempo remains low enough for separate pitch targets.",
         "listen": "One syllable carries all four notes with clear centers and no swallowed middle pitches."
       },
@@ -6844,7 +6844,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Before singing, choose the count where the vibrato will come in and the count where you will return to straight tone, for example in on three and out on six of a slow count. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Before singing, choose the count where the vibrato will come in and the count where you will return to straight tone, for example in on three and out on six of a slow count. Invite an even vibrato rather than shaking the jaw or pulsing the abdomen. Return deliberately to straight tone and release.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The vibrato begins and ends on cue and sounds even rather than becoming a wide uncontrolled wobble."
       },
@@ -7768,7 +7768,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7800,7 +7800,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
@@ -7859,7 +7859,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7891,7 +7891,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.",
-      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }
@@ -7936,7 +7936,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Build a short sequence from gentle semi-occluded sound, comfortable range movement, and the day's specific task. Stop before fatigue changes the sound.",
         "look": "Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.",
         "listen": "The voice feels and sounds at least as easy after the routine as before it. Persistent hoarseness or pain is a reason to stop, not warm up harder."
       },
@@ -7950,7 +7950,7 @@ export const LESSONS: Lesson[] = [
     "mistakes": [
       {
         "observation": "The target disappears when the range, volume, speed, or duration increases.",
-        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use."
+        "recovery": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use."
       },
       {
         "observation": "The reference and your own sound seem different, or you cannot judge the result.",
@@ -7982,7 +7982,7 @@ export const LESSONS: Lesson[] = [
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
       "readyWhen": "You have a written warm-up that runs from quiet and mid-range to wider and then fuller, with rests, plus a stop list (pain means stop that session; hoarseness that does not clear means a doctor who can examine the vocal folds, such as an ENT or laryngologist), and your voice feels at least as easy after running it as before.",
-      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and seek advice from a qualified clinician. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
+      "ifNotReady": "If hoarseness, discomfort or a changed speaking voice persists, reduce voice use and see a doctor who can examine the vocal folds, such as an ENT or laryngologist. The app and this checklist do not diagnose or clear a voice for continued use. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.",
       "shows": "I assembled a short warm-up with rests and wrote the warning signs that would make me stop. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Healthy vocal folds, medical clearance, hydration status, absence of injury, or that a particular routine is safe for every singer."
     }

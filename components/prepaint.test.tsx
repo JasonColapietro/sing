@@ -42,6 +42,8 @@ describe("pre-paint markers", () => {
       expect(css).toContain(`html[data-sing-program~="${token}"] [data-prepaint-slot="program-today"]`);
     }
     expect(css).toContain('html[data-sing-program~="waits"] [data-prepaint-slot="program-lead"]');
+    // The book's finished card, about twice another program's.
+    expect(css).toContain('html[data-sing-program~="finished"][data-sing-program~="book"] [data-prepaint-slot="program-today"]');
   });
 });
 

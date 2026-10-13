@@ -7,8 +7,10 @@ import { describe, expect, it } from "vitest";
 import { rangeGrowth, rangeSeries } from "@/lib/analytics";
 import { SONGS } from "@/components/songs/data";
 import { countOpenSongsFitting } from "@/components/songs/lib";
+import { EXERCISES, computeRootLadder, patternSpan } from "@/components/warmups/exercises";
 
 import {
+  FIVE_NOTE_SCALE_SEMIS,
   ResultView,
   comparisonSingerFromSlug,
   rankFamousVoices,
@@ -239,6 +241,43 @@ describe("range result guidance", () => {
       "the whole span you reached: a starting guess at where you sing comfortably, not a measurement of it",
     );
     expect(whole).not.toMatch(/reached: a starting guess, not a measurement/);
+  });
+
+  it("describes the narrow-span warmup as it plays, without promising growth", () => {
+    for (const [lo, hi] of [[48, 54], [52, 64]]) {
+      const html = render(lo, hi);
+      expect(html).toContain("Five-note scale");
+      expect(html).toContain("may stay in one key");
+      expect(html).toContain("stop any rep that strains");
+      expect(html).not.toContain("through the middle of your range");
+      expect(html).not.toContain("builds the span");
+    }
+    // Under the pattern's own width the ladder starts below the measured low.
+    expect(render(48, 54)).toContain("its bottom below your lowest");
+    expect(render(52, 64)).toContain("come close to the lowest or highest note you reached");
+  });
+
+  it("matches what the fitted five-note ladder actually plays", () => {
+    // The card's copy rests on these facts about fitRootLadder: few keys at
+    // most for every span that gets the five-note card, the top on the
+    // measured high and the bottom under the measured low when the span is
+    // narrower than the pattern, and inside the measured span otherwise.
+    const five = EXERCISES.find((ex) => ex.id === "five-note-scale")!;
+    expect(patternSpan(five)).toBe(FIVE_NOTE_SCALE_SEMIS);
+    const low = 48;
+    for (let semis = 5; semis < 15; semis++) {
+      const high = low + semis;
+      const roots = computeRootLadder(five, low, high);
+      expect(roots.length, `${semis} semitones`).toBeLessThanOrEqual(4);
+      const top = Math.max(...roots) + FIVE_NOTE_SCALE_SEMIS;
+      if (semis < FIVE_NOTE_SCALE_SEMIS) {
+        expect(top, `${semis} semitones`).toBe(high);
+        expect(Math.min(...roots), `${semis} semitones`).toBeLessThan(low);
+      } else {
+        expect(top, `${semis} semitones`).toBeLessThanOrEqual(high);
+        expect(Math.min(...roots), `${semis} semitones`).toBeGreaterThanOrEqual(low);
+      }
+    }
   });
 });
 

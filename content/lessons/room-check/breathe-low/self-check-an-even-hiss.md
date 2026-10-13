@@ -36,7 +36,7 @@ Count a comfortable hiss and listen for evenness. Twelve seconds is an optional 
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Release a narrow, even hiss. Favor steadiness over duration, and end with air still available instead of collapsing or bearing down.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Release a narrow, even hiss. Favor steadiness over duration, and end with air still available instead of collapsing or bearing down.
 
 - Look: The shoulders do not rise sharply, the neck stays quiet, and the body does not fold during the final seconds.
 - Listen: The hiss stays even rather than surging at the start and fading to almost nothing at the end.

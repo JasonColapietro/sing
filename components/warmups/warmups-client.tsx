@@ -95,6 +95,11 @@ export function WarmupsClient() {
   // lists a routine's steps one by one for a singer the free plan stopped
   // between them; opening the routine there keeps the step's rep count.
   const [routineStartStep, setRoutineStartStep] = useState(0);
+  // A `?step=` link opened past step 1 on a day with no warmup logged yet:
+  // the runner sings a few easy reps of the routine's first exercise before
+  // that step, so a program day the free minutes split never resumes cold on
+  // an octave siren the next morning.
+  const [routineWarmIn, setRoutineWarmIn] = useState(false);
   const [routineSummary, setRoutineSummary] = useState<RoutineSummaryData | null>(null);
   // The tempo the running exercise starts at: 1x, or the step today's plan
   // chose for it.
@@ -229,6 +234,7 @@ export function WarmupsClient() {
     if (!canStartRoutine(r) || cap.capped) return;
     setActiveRoutine(r);
     setRoutineStartStep(0);
+    setRoutineWarmIn(false);
     setRoutineSummary(null);
     setView("routine");
   }
@@ -309,9 +315,14 @@ export function WarmupsClient() {
     setDeepLinkDone(true);
     if (deepLinkRoutine && canStartRoutine(deepLinkRoutine)) {
       const step = Number(deepLink.step);
+      const linked = Number.isInteger(step) && step >= 1 && step <= deepLinkRoutine.steps.length;
       setActiveRoutine(deepLinkRoutine);
-      setRoutineStartStep(
-        Number.isInteger(step) && step >= 1 && step <= deepLinkRoutine.steps.length ? step - 1 : 0,
+      setRoutineStartStep(linked ? step - 1 : 0);
+      // Read now, as the link is used: the warm-in itself logs a warmup.
+      setRoutineWarmIn(
+        linked &&
+          step >= 2 &&
+          !progress.sessions.some((s) => s.type === "warmup" && s.day === localDay()),
       );
       setRoutineSummary(null);
       setView("routine");
@@ -603,6 +614,7 @@ export function WarmupsClient() {
           capped={cap.capped}
           routine={activeRoutine}
           startStep={routineStartStep}
+          warmIn={routineWarmIn}
           pitch={pitch}
           range={progress.range}
           onDone={(data) => {

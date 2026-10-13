@@ -36,7 +36,7 @@ Every note landing, not smeared. Say what will count as complete in this lesson 
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Increase tempo only after every note is distinct. Keep the first and last pitch centered instead of sacrificing them for speed.
 
 - Look: The tempo ladder advances in small steps and each failed rung is repeated or lowered rather than forced.
 - Listen: Three separate pitches remain audible; the middle note does not smear into a slide.

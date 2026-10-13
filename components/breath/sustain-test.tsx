@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { useBreathDetect } from "@/lib/audio/use-breath-detect";
 import { logSession, type Achievement, type LogResult } from "@/lib/progress";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Button, Card, MicGate, MIC_PRIVACY, Pill, Stat } from "@/components/ui";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { SessionButton, SessionShell } from "@/components/practice/session-shell";
@@ -859,9 +860,9 @@ export function SustainTest({
               <AttemptsChart data={data} />
             </div>
             <div className="mt-3">
-              <ProInlineNudge>
-                Last 10 shown — Pro keeps every attempt and trends
-              </ProInlineNudge>
+              {/* Every plan keeps the same last ten attempts (store.ts), so
+                  the nudge names what Pro does change in this room. */}
+              <ProInlineNudge>{`Guided practice is ${FREE_DAILY_MINUTES} free minutes a day; Pro removes the limit`}</ProInlineNudge>
             </div>
           </>
         ) : (

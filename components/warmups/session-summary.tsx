@@ -263,13 +263,15 @@ export function SessionSummary({
                 apart on you.
               </>
             ) : (
-              // ladderBreak only finds a *relative* fall, so a session that
-              // was under the target on every rep returns null. Saying the
-              // ladder held there would contradict the score right above it.
+              // ladderBreak only finds a *relative* fall, so a session whose
+              // average is under HELD_FLOOR with no relative fall returns null.
+              // Saying the ladder held there would contradict the score right
+              // above it. The score has no direction (it keeps absolute
+              // cents), so this names the average, never "under the note".
               <>
-                No single root came apart — the whole ladder sat under the
-                target instead, so this one is worth repeating slower rather
-                than chasing one note.
+                No single root came apart — your average across the whole
+                ladder stayed under {HELD_FLOOR}% instead, so this one is worth
+                repeating slower rather than chasing one note.
               </>
             )}
             {diagnosis.weakest && (

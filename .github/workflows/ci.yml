@@ -193,15 +193,18 @@ jobs:
               run_check layout-shift-returning node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --returning --viewport=mobile-375 "--json=browser-results/layout-shift-returning-mobile-375.json"
               # The stored states the prerender cannot show (e2e/README.md,
               # "Layout shift"), each on the routes it reshapes, on a phone and
-              # a desktop: about 40 page loads in all. program-detail and
+              # a desktop: about 48 page loads in all. program-detail and
               # program-foundations are /programs?program=<id> deep links
               # (e2e/cls.mjs DEEP_LINKS): another program's view, and the
-              # running program's own, with today's card above it.
+              # running program's own, with today's card above it. In the
+              # finished state program-detail is the running program's own
+              # view: the book's program, finished.
               for spec in \
                 "capped:warmups,breath,ear-training,songs" \
                 "program:programs,program-detail,program-foundations,warmups,progress" \
                 "program-capped:programs,program-detail,program-foundations,warmups,breath,ear-training" \
-                "rest-day:programs,program-detail,warmups,progress"; do
+                "rest-day:programs,program-detail,warmups,progress" \
+                "finished:programs,program-detail,warmups,progress"; do
                 state="${spec%%:*}"
                 for viewport in mobile-375 desktop-1280; do
                   run_check "layout-shift-$state-$viewport" node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" "--viewport=$viewport" "--state=$state" "--route=${spec#*:}" "--json=browser-results/layout-shift-$state-$viewport.json"

@@ -36,7 +36,7 @@ Hear the supplied five-note scale, then sing from silence. Compare the pitches b
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Begin close to the pitch rather than sliding up from below. Hold briefly, release, and compare a fresh attempt instead of steering one long note with your eyes.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Begin close to the pitch rather than sliding up from below. Hold briefly, release, and compare a fresh attempt instead of steering one long note with your eyes.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: The beginning sounds clean and intentional, with one pitch center rather than a click, breathy delay, or rising slide.

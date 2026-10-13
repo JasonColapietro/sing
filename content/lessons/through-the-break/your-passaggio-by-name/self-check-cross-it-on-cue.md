@@ -36,7 +36,7 @@ Located by ear, then crossed in both directions. Say what will count as complete
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt, and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Approach the transition from below and above on a hum or narrow vowel. Mark a zone, not a single magic pitch, and compare it with the published zone for your estimated voice type on [vocal range by voice type](/atlas/vocal-range-by-voice-type); if you are a contralto, mezzo or soprano, compare it first with the earlier shift out of chest voice, around E4 to G4, that the same page names.
 
 - Look: Keep the supplied reference or reading visible, settle your posture, and use only a pitch and duration you can repeat comfortably.
 - Listen: You can anticipate the change and cross the same general area in both directions without forcing the endpoints.

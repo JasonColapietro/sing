@@ -562,6 +562,20 @@ unchanged:
 What the other apps must do: re-sync `suede-vocal.json` byte for byte.
 Nothing else changes.
 
+#### Editorial changes inside v9 (2026-10-13, round 9)
+
+No key was added or renamed, so `version` stays 9, and `glossary.json` and
+`suede-voice-curriculum.json` are unchanged:
+
+- `editorial`: book word counts moved with this round's text edits.
+  `finding-your-break` (1369), `tracking-change` (1348), `totalWords` 32977.
+  Chapter 11 now names the progress charts that actually show range history
+  and per-note accuracy (Range over time, Accuracy by note) instead of
+  crediting per-note tracking to Coach. The atlas is unchanged at 72505.
+
+What the other apps must do: re-sync `suede-vocal.json` byte for byte.
+Nothing else changes.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

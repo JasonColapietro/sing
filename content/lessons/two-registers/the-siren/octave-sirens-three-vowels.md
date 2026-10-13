@@ -36,7 +36,7 @@ Slow slides. Speed hides the break instead of fixing it. Say what will count as 
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.
+Work in short repetitions with a normal breath and complete release between them. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Learn the pace there with the reference, then stop it and record your sirens in the [recorder](/recorder), so you can judge them on playback. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.
 
 - Look: Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.

@@ -396,6 +396,25 @@ describe("the chapters agree with the app", () => {
     }
   });
 
+  /**
+   * Your voice holds one reading, the latest test; the history is the Pro
+   * Range over time card under Trends. Coach names at most two weak notes from
+   * the last two weeks, so the note-by-note view is Accuracy by note, not
+   * Coach.
+   */
+  it("sends range history to Range over time and per-note tracking to Accuracy by note", () => {
+    const progress = readFileSync(join(__dirname, "..", "components", "progress", "progress-client.tsx"), "utf8");
+    const trends = progress.indexOf('<h2 className="text-lg">Trends</h2>', progress.indexOf('aria-label="Practice charts"'));
+    expect(trends).toBeGreaterThan(-1);
+    expect(progress.indexOf("<SectionLabel>Range over time</SectionLabel>", trends)).toBeGreaterThan(trends);
+    expect(progress.indexOf("<SectionLabel>Accuracy by note</SectionLabel>", trends)).toBeGreaterThan(trends);
+    for (const c of BOOK) {
+      expect(c.body, c.slug).not.toMatch(/range history under Your voice/i);
+      expect(c.body, c.slug).not.toMatch(/Coach tracks (?:accuracy )?note by note/i);
+    }
+    expect(body("tracking-change")).toMatch(/Range over time chart under Trends/);
+  });
+
   it("sends a lasting loss of range from the free range chapter to a doctor, in the site's words", () => {
     expect(FREE.map((c) => c.slug)).toContain("reading-the-range-test");
     expect(body("reading-the-range-test")).toMatch(
