@@ -59,7 +59,7 @@ export interface ActiveProgram {
  */
 export function useActiveProgram(): ActiveProgram | null {
   const stored = useProgramProgress();
-  const { sessions: logged, rangeHistory } = useProgress();
+  const { sessions: logged, rangeHistory, range } = useProgress();
   const today = useLocalDay();
   // The sustain room's own attempt record: holds under five seconds are kept
   // there but never logged, and a program still counts them. localStorage, so
@@ -72,7 +72,7 @@ export function useActiveProgram(): ActiveProgram | null {
   const sessions = useMemo(() => [...logged, ...sustainAttemptSessions(attempts)], [logged, attempts]);
   const program = programById(stored?.programId);
   const reconciled =
-    stored && program && today ? reconcileProgress(program, stored, sessions, today) : stored;
+    stored && program && today ? reconcileProgress(program, stored, sessions, today, range) : stored;
   const readings = program && reconciled ? programReadings(program, reconciled, sessions, rangeHistory, attempts) : [];
   // Keep each check-in reading on its day: a short sustain hold is only in the
   // sustain room's ten-attempt record, and must still show on the last day.
@@ -90,7 +90,9 @@ export function useActiveProgram(): ActiveProgram | null {
   const countsFrom = earliestNext(progress);
   const day = program.days[view.index];
   // One matching for the rows and their steps, so a session ticks one thing.
-  const match = view.status === "todo" ? matchDay(day, counted, today, countsFrom) : null;
+  // With the saved range, so a step the routine runner skips for it (and never
+  // logs) does not hold the day open.
+  const match = view.status === "todo" ? matchDay(day, counted, today, countsFrom, range) : null;
   const itemsDone = match?.items ?? [];
   const stepsDone = match?.steps ?? [];
   return { program, progress, today, view, itemsDone, stepsDone, countsFrom, readings };

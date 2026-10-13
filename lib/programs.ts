@@ -34,7 +34,7 @@ import {
   stepExercise,
   stepSeconds,
 } from "@/components/warmups/routines";
-import { titlesFor } from "@/components/warmups/exercises";
+import { titlesFor, tooWideForRange } from "@/components/warmups/exercises";
 import {
   BREATH_STEP_INTRO_SEC,
   CUE_HOLD_SEC,
@@ -51,7 +51,7 @@ import {
 } from "@/components/breath/routines";
 import { SONGS } from "@/components/songs/data";
 import { COUNT_IN_BEATS, secPerBeat, sessionSeconds } from "@/components/songs/lib";
-import type { ActivityType, SessionLog } from "@/lib/progress-shape";
+import type { ActivityType, SessionLog, VocalRange } from "@/lib/progress-shape";
 import type { RangeEntry } from "@/lib/analytics";
 import { CAPPED_TYPES } from "@/lib/free-cap";
 import { FREE_DAILY_SEC } from "@/lib/practice-limits";
@@ -885,14 +885,24 @@ export function itemIsPro(item: ProgramItem): boolean {
 export interface Evidence {
   type: ActivityType;
   details: readonly string[] | null;
+  /**
+   * A routine step the runner skips for this saved range (tooWideForRange)
+   * and so never logs: it counts as done without a session, or a program day
+   * holding the routine could never complete for a narrow range.
+   */
+  waived?: true;
 }
 
-export function itemEvidence(item: ProgramItem): Evidence[] {
+export function itemEvidence(item: ProgramItem, range?: VocalRange | null): Evidence[] {
   switch (item.kind) {
     case "routine": {
       const r = routineById(item.id);
       if (!r) return [];
-      return r.steps.map((s) => ({ type: "warmup", details: titlesFor(stepExercise(s).title) }));
+      return r.steps.map((s) => {
+        const ex = stepExercise(s);
+        const e: Evidence = { type: "warmup", details: titlesFor(ex.title) };
+        return range && tooWideForRange(ex, range) ? { ...e, waived: true } : e;
+      });
     }
     case "exercise":
       return [
@@ -945,8 +955,9 @@ export function itemsDoneOn(
   sessions: readonly SessionLog[],
   day: string,
   from: string = day,
+  range?: VocalRange | null,
 ): boolean[] {
-  return matchDay(d, sessions, day, from).items;
+  return matchDay(d, sessions, day, from, range).items;
 }
 
 /**
@@ -955,13 +966,15 @@ export function itemsDoneOn(
  * a set's k-th drill; see itemSteps) is paid for by a session. Unfinished
  * items get partial credit afterwards, one requirement at a time, from the
  * sessions the finished ones left, so a step tick never spends a session
- * another row already uses.
+ * another row already uses. With the saved `range`, a routine step the runner
+ * skips for it is waived (Evidence.waived): ticked, and paid for by no session.
  */
 export function matchDay(
   d: ProgramDay,
   sessions: readonly SessionLog[],
   day: string,
   from: string = day,
+  range?: VocalRange | null,
 ): { items: boolean[]; steps: boolean[][] } {
   const pool = sessions.filter((s) => s.day >= from && s.day <= day);
   const reqs: Evidence[] = [];
@@ -982,12 +995,15 @@ export function matchDay(
     return false;
   };
   const items = d.items.map((item, idx) => {
-    const evidence = itemEvidence(item);
+    const evidence = itemEvidence(item, range);
     if (evidence.length === 0) return false;
     const before = owner.slice();
     const start = reqs.length;
-    reqs.push(...evidence);
-    reqOf.push(...evidence.map((_, k): [number, number] => [idx, k]));
+    evidence.forEach((e, k) => {
+      if (e.waived) return;
+      reqs.push(e);
+      reqOf.push([idx, k]);
+    });
     for (let r = start; r < reqs.length; r++) {
       if (!assign(r, new Set())) {
         owner = before;
@@ -1000,7 +1016,8 @@ export function matchDay(
   });
   d.items.forEach((item, idx) => {
     if (items[idx]) return;
-    itemEvidence(item).forEach((e, k) => {
+    itemEvidence(item, range).forEach((e, k) => {
+      if (e.waived) return;
       const before = owner.slice();
       reqs.push(e);
       reqOf.push([idx, k]);
@@ -1011,7 +1028,7 @@ export function matchDay(
       }
     });
   });
-  const steps = d.items.map((item) => itemEvidence(item).map(() => false));
+  const steps = d.items.map((item) => itemEvidence(item, range).map((e) => e.waived === true));
   for (const r of owner) {
     if (r === undefined) continue;
     const [i, k] = reqOf[r];
@@ -1026,8 +1043,9 @@ export function itemDoneOn(
   sessions: readonly SessionLog[],
   day: string,
   from: string = day,
+  range?: VocalRange | null,
 ): boolean {
-  return itemsDoneOn({ title: "", items: [item] }, sessions, day, from)[0];
+  return itemsDoneOn({ title: "", items: [item] }, sessions, day, from, range)[0];
 }
 
 /**
@@ -1221,6 +1239,7 @@ export function reconcileProgress(
   progress: ProgramProgress,
   sessions: readonly SessionLog[],
   today: string,
+  range?: VocalRange | null,
 ): ProgramProgress {
   const counted = sessionsForRun(progress, sessions);
   let done = progress.done;
@@ -1237,7 +1256,7 @@ export function reconcileProgress(
       const candidates = [...new Set(counted.map((s) => s.day))]
         .filter((x) => x >= from && x <= today)
         .sort();
-      on = candidates.find((x) => itemsDoneOn(d, counted, x, from).every(Boolean)) ?? null;
+      on = candidates.find((x) => itemsDoneOn(d, counted, x, from, range).every(Boolean)) ?? null;
     }
     if (on === null) break;
     done = [...done, { index, day: on }];

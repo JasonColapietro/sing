@@ -40,7 +40,7 @@ import {
   type ProgramItem,
 } from "./programs";
 import { routineById, isFreeExercise, stepExercise } from "@/components/warmups/routines";
-import { ALL_EXERCISES, computeRootLadder, descentWalk, ladderWalk } from "@/components/warmups/exercises";
+import { ALL_EXERCISES, computeRootLadder, descentWalk, ladderWalk, tooWideForRange } from "@/components/warmups/exercises";
 import {
   breathRoutineById,
   drillPresetFromQuery,
@@ -902,6 +902,21 @@ describe("one session pays for one item", () => {
     expect(itemsDoneOn(d, [...routineOnly, session(today, "warmup", hold)], today)).toEqual([true, true]);
   });
 
+  it("waives a routine step the runner skips for a narrow saved range, so the day can complete", () => {
+    // The routine runner closes a step tooWideForRange holds without logging
+    // it; matching that still asked for it would leave the day open for good.
+    const narrow = { lowMidi: 48, highMidi: 64 };
+    const d: ProgramDay = { title: "", items: [{ kind: "routine", id: "quick" }] };
+    const steps = routineById("quick")!.steps.map((s) => stepExercise(s));
+    expect(steps.some((ex) => tooWideForRange(ex, narrow))).toBe(true);
+    const sung = steps.filter((ex) => !tooWideForRange(ex, narrow)).map((ex) => session(today, "warmup", ex.title));
+    expect(itemsDoneOn(d, sung, today)).toEqual([false]);
+    expect(itemsDoneOn(d, sung, today, today, narrow)).toEqual([true]);
+    expect(matchDay(d, sung, today, today, narrow).steps[0]).toEqual(steps.map(() => true));
+    // A range wide enough for every step waives nothing.
+    expect(itemsDoneOn(d, sung, today, today, { lowMidi: 40, highMidi: 70 })).toEqual([false]);
+  });
+
   it("lets a later item take a session an earlier one can do without, in any log order", () => {
     const d: ProgramDay = { title: "", items: [{ kind: "drill", id: "sustain" }, { kind: "breath", id: "quick" }] };
     const log = ["Sustain test", "Box breathing", "Farinelli drill", "Sustain test"].map((x) => session(today, "breath", x));
@@ -1043,7 +1058,7 @@ describe("a free singer's day, spread over several calendar days", () => {
         const steps = itemSteps(item);
         if (item.kind === "routine" || item.kind === "breath") {
           expect(steps.length, `${prog.id} ${item.id}`).toBeGreaterThan(0);
-          expect(steps.flatMap(itemEvidence)).toEqual(itemEvidence(item));
+          expect(steps.flatMap((st) => itemEvidence(st))).toEqual(itemEvidence(item));
           // A free routine's steps are free exercises: its step links gate nothing.
           if (!itemIsPro(item)) for (const st of steps) expect(itemIsPro(st)).toBe(false);
         } else {
