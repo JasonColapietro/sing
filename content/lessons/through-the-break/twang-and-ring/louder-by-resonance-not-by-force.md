@@ -26,7 +26,7 @@ Open the practice material on this page and choose Humming thirds. Hear the refe
 
 ### Set a safe baseline
 
-Record an easy baseline phrase at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.
+Record an easy baseline phrase in the recorder at fixed microphone distance and moderate input gain. Use the same pitch, vowel, and duration for comparisons.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -40,7 +40,7 @@ Where carrying power actually comes from, and why pressed phonation is the costl
 
 ### Hear the distinction
 
-To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. Then record the same note on “eh” twice in one take at the same microphone distance: your plain baseline first, then the bright version. Brightness is the only thing that changes, so keep the volume the same. Change resonance before volume, and keep each attempt short.
+To find the brighter setup, say a small, bratty “nyeh” at speaking volume, as if mimicking a whiny child; sing it on a comfortable note, then keep that brightness while changing to “eh”. If it only gets louder, start again smaller. While you find it, have the [voice analyzer](/analyze) open: the Ring band percentage on its tone view usually rises as the sound brightens, but getting louder or pressing can raise it too, so keep the volume steady and the throat easy. Then, in the [recorder](/recorder), record the same note on “eh” twice in one take at the same microphone distance: your plain baseline first, then the bright version. Brightness is the only thing that changes, so keep the volume the same. Change resonance before volume, and keep each attempt short.
 
 - Look: Input gain and distance stay fixed so the comparison is within your own takes; the neck and jaw do not visibly brace.
 - Listen: The second example in the same recording carries more brightness without sounding pressed or simply louder at the microphone.

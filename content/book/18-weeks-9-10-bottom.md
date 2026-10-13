@@ -57,7 +57,7 @@ Pick a song from Songs, transposed so its chorus sits in your middle rather than
 
 Then listen. You are checking three things — whether the low notes stayed released or got manufactured, whether the ends of phrases held their pitch and tone, and whether you breathed where you planned to. A/B the take in the recorder against one from earlier in the week. Do not trust the memory of how it felt; it is unreliable in both directions.
 
-With Pro, the coach report's per-note accuracy will point at which notes in the phrase are costing you. The bottom of a range often reads worse than the middle, which is what descending work is for. It is not a reason to go hunting for a new low note.
+With Pro, the per-note accuracy chart in Progress will point at which notes are costing you; Coach also names your weakest notes from the last two weeks. The bottom of a range often reads worse than the middle, which is what descending work is for. It is not a reason to go hunting for a new low note.
 
 Run one sustain test a week, at the same time of day, and log it. There is no range retest in these two weeks; the next one comes at the start of week 12. Two weeks of honest low work may not move your low note at all. What it can change is whether the bottom you already have is a note you can sing a word on.
 

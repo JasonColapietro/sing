@@ -111,6 +111,15 @@ function returnSongFromLocation() {
 }
 
 /**
+ * Where "Back to the song" goes. The song page's personal verdict sits at
+ * #fit, below the cited range and the stat grid, so the plain path would land
+ * a phone singer on the H1 with the answer they came back for below the fold.
+ */
+export function returnSongHref(slug: string): string {
+  return `/can-you-sing/${slug}#fit`;
+}
+
+/**
  * The note under a two-band result. The pair is always one band from the
  * bass-to-tenor set and one from the contralto-to-soprano set, which the
  * singer library describes as male and female categories, so the honest
@@ -557,7 +566,7 @@ export function ResultView({
             with the song&rsquo;s cited range.
           </p>
           <div className="mt-4">
-            <LinkButton href={`/can-you-sing/${returnSongSlug}`} size="md">
+            <LinkButton href={returnSongHref(returnSongSlug)} size="md">
               Back to the song →
             </LinkButton>
           </div>

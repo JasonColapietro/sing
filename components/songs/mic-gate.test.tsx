@@ -22,7 +22,7 @@ import { isValidElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import SongsPage from "@/app/songs/page";
-import { paintedFor } from "@/components/prepaint.testing";
+import { paintedFor, staticText, wordsPainted } from "@/components/prepaint.testing";
 import { SongsMicGate } from "./mic-gate";
 
 const hydration = vi.hoisted(() => ({ done: false }));
@@ -71,11 +71,18 @@ describe("songs mic gate", () => {
     }
     // A capped singer paints what SongsClient will show them: the library's
     // subtitle and the wall, with the songbook held below the fold.
-    const capped = paintedFor(html, { plan: "capped" });
+    const capped = wordsPainted(paintedFor(html, { plan: "capped" }));
     expect(capped).not.toContain("Enable microphone");
     expect(capped).toContain("Pick a song to start your practice loop.");
     expect(capped).toContain('id="free-cap"');
     expect(capped).toMatch(/<div aria-hidden="true" data-prepaint-plan="capped" data-prepaint-slot="songs-library"><\/div>/);
+    // The capped view's words are attributes until then: the hub's static
+    // text, all a script-less crawler reads, is the gate's, with no cap wall
+    // and no second subtitle run into the first.
+    const text = staticText(html);
+    expect(text).toContain("Sing along and see every note you hit");
+    expect(text).not.toContain("Pick a song to start your practice loop.");
+    expect(text).not.toMatch(/free minutes for today|used today|Go Pro/);
   });
 
   it("is the plain gate when rendered as a fallback on the client", () => {

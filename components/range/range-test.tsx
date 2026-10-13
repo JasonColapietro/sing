@@ -641,12 +641,21 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
       )}
 
       {stage === "result" && result && (
-        <ResultView
-          lowMidi={result.lowMidi}
-          highMidi={result.highMidi}
-          save={result.save}
-          onRetake={begin}
-        />
+        <>
+          {/* "Retake test" calls begin(), which stays on the result when the
+              mic fails to open (busy, unplugged, refused). The intro's alert
+              is not rendered here, so without this the press looked dead.
+              usePitch clears the error on the next successful start. */}
+          {error && (
+            <MicAlert message={error} className="mb-4 max-w-md text-sm text-rec" />
+          )}
+          <ResultView
+            lowMidi={result.lowMidi}
+            highMidi={result.highMidi}
+            save={result.save}
+            onRetake={begin}
+          />
+        </>
       )}
 
       {stage !== "intro" && stage !== "result" && !listening && (

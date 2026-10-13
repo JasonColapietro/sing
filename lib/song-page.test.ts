@@ -96,6 +96,44 @@ describe("the tag sentence", () => {
   });
 });
 
+describe("what a tag claims about the melody", () => {
+  /**
+   * The page counts "leaps of a major third or more" beside the demand tag.
+   * A "stepwise" tag on a melody that leaps (Frère Jacques' falling thirds,
+   * London Bridge's falling fourth) contradicted its own count.
+   */
+  it("never tags a melody stepwise when it moves a major third or more between notes", () => {
+    const stepwise = ALL_SONGS.filter((s) => s.tags.includes("stepwise"));
+    expect(stepwise.length).toBeGreaterThan(0);
+    for (const song of stepwise) {
+      for (let i = 1; i < song.notes.length; i++) {
+        const jump = Math.abs(song.notes[i].midi - song.notes[i - 1].midi);
+        expect(jump, `${song.slug}, note ${i}`).toBeLessThan(4);
+      }
+    }
+  });
+
+  it("dates the melody the page transcribes, not older words or an older relative", () => {
+    // The page says genre and era "say where the melody comes from".
+    // London Bridge's modern tune was first printed in 1879; Down in the
+    // Valley has no source before the 1920s; Scarborough Fair's tune was
+    // collected in 1947.
+    expect(songBySlug("london-bridge-is-falling-down")!.era).toBe("1800s");
+    expect(songBySlug("down-in-the-valley")!.era).toBe("Traditional");
+    expect(songBySlug("scarborough-fair")!.era).toBe("Traditional");
+  });
+
+  it("does not date Scarborough Fair's own text to the 17th century", () => {
+    // Its verses and refrain are known from 19th-century versions; only the
+    // Scottish ballad it descends from, The Elfin Knight, reaches the 1600s.
+    // The origin line prints in the page subtitle and its JSON-LD description.
+    const song = songBySlug("scarborough-fair")!;
+    expect(song.origin).toContain("descended from the 17th-century Scottish ballad");
+    expect(song.origin).toContain("this tune collected in 1947");
+    expect(`${song.origin} ${song.publicDomain}`).not.toMatch(/English ballad, (documented from the )?17th century/);
+  });
+});
+
 describe("structured data genre", () => {
   it.each(ALL_SONGS.map((s) => s.slug))("%s: files only the genre as genre, never a demand or shape tag", async (slug) => {
     const song = songBySlug(slug)!;

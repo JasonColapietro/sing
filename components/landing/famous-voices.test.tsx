@@ -37,7 +37,7 @@ describe("homepage famous voices", () => {
       "alex-warren",
       "Baritone",
       "Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints.",
-      "A2–F#4",
+      "G2–A4",
     ],
     [
       "sam-smith",

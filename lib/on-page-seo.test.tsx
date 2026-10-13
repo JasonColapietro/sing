@@ -18,7 +18,11 @@
  *  - a description that carries the term early and states the free/Pro
  *    boundary lib/free-cap.ts actually enforces;
  *  - headings that never skip a level;
- *  - for the guided rooms, a WebPage entity named exactly what the title says.
+ *  - for the guided rooms, a WebPage entity named exactly what the title says,
+ *    and static text that opens on the room: the cap wall every visitor's
+ *    server HTML carries (so a capped singer paints it before hydration)
+ *    adds boxes but no words, so a crawler that runs no script and applies
+ *    no CSS never reads "your free minutes are used" as the room's opening.
  */
 import { renderToStaticMarkup } from "react-dom/server";
 import type { Metadata } from "next";
@@ -30,6 +34,7 @@ vi.mock("server-only", () => ({}));
 import { ROUTE_KEYWORDS, type KeywordRoute } from "@/lib/keywords";
 import { MAX_TITLE, TITLE_SUFFIX } from "@/lib/meta-fit";
 import { TOOL_GUIDES } from "@/lib/guides";
+import { paintedFor, staticText } from "@/components/prepaint.testing";
 
 type PageModule = { default: ComponentType; metadata: Metadata };
 
@@ -176,6 +181,21 @@ describe.each(Object.entries(ROUTES))("%s", (route, spec) => {
     for (const surface of [title, description, h1]) {
       for (const banned of BANNED) expect(surface, `${route}: ${banned}`).not.toMatch(banned);
     }
+  });
+
+  it("opens its static text on the room, not on the cap wall", async () => {
+    if (spec.cap !== "capped") return;
+    const { html } = await page();
+    // The wall is there, for the capped singer's first paint…
+    expect(html, `${route}: the cap wall's pre-paint`).toContain('id="free-cap"');
+    // …and contributes nothing to the text: what a script-less reader takes
+    // from the page is exactly what a newcomer's page shows.
+    expect(staticText(html)).toBe(staticText(paintedFor(html, { plan: "free" })));
+    expect(staticText(html)).not.toMatch(/free minutes for today|used today/i);
+    const scriptless = html.replace(/<script\b[\s\S]*?<\/script>/g, "");
+    const firstH2 = headings(scriptless).find((h) => h.level === 2 && h.text !== "");
+    expect(firstH2?.text, `${route}: first H2 with words`).toBeTruthy();
+    expect(firstH2?.text).not.toMatch(/free minutes/i);
   });
 
   it("never skips a heading level", async () => {

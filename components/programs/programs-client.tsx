@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, type MouseEvent } from "react";
+import { Fragment, useEffect, useState, type MouseEvent } from "react";
 import { Button, Card, PageShell, Pill, SectionLabel } from "@/components/ui";
 import { ProChip } from "@/components/pro/ui";
 import { useIsPro } from "@/lib/pro";
@@ -17,6 +17,7 @@ import {
   restDayCount,
   type Program,
 } from "@/lib/programs";
+import { programViewHref } from "@/lib/program-ids";
 import { beginProgram, leaveProgram } from "./store";
 import { DayItems, ProgramTodayCard } from "./today-card";
 import { useActiveProgram, type ActiveProgram } from "./use-program";
@@ -60,42 +61,50 @@ function plainClick(e: MouseEvent): boolean {
 function ProgramCard({
   program,
   active,
+  finished,
   onOpen,
 }: {
   program: Program;
   active: boolean;
+  /** The running program's every day is done: a restart begins a new run. */
+  finished: boolean;
   onOpen: (id: string) => void;
 }) {
   const isPro = useIsPro();
+  const hydrated = useHydrated();
   const freeWeeks = freePlanWeeks(program);
   return (
     <Card tone="raised" className="flex flex-col">
       <div className="flex flex-wrap items-center gap-2">
         <h2 className="text-lg">{program.name}</h2>
         {program.pro && <ProChip />}
-        {active && <Pill tone="ok">In progress</Pill>}
+        {active && <Pill tone="ok">{finished ? "Finished" : "In progress"}</Pill>}
       </div>
       <p className="mt-1 font-mono text-xs text-dim">
         {lengthLabel(program)} · {minutesLabel(program)} · {restDayCount(program)} rest{" "}
         {restDayCount(program) === 1 ? "day" : "days"}
         {program.pro && ` · ${freeLabel()} free`}
       </p>
+      {/* Not for Pro, which the prerender cannot know: until hydration the
+          pre-paint state hides it from a Pro singer (components/prepaint.tsx). */}
       {!isPro && freeWeeks !== null && (
-        <p className="mt-1 text-xs text-dim">
+        <p className="mt-1 text-xs text-dim" {...prepaintMarker(hydrated, { plan: "not-pro" })}>
           On the free plan&apos;s five guided minutes a day, this takes about {freeWeeks} weeks. Pro
           runs it as written.
         </p>
       )}
       <p className="mt-3 text-sm text-mut">{program.tagline}</p>
-      {/* What each plan measures, on the list itself: the detail view opens
-          from the query after mount, so the list is all a crawler reads. */}
+      {/* What each plan measures, on the list itself: the list's own page,
+          /programs, carries no program's calendar. */}
       <p className="mt-2 flex-1 text-xs text-mut">
         <span className="font-medium text-ink">What gets measured. </span>
         {program.measures}
       </p>
       <div className="mt-4">
-        <Link
-          href={`/programs?program=${encodeURIComponent(program.id)}`}
+        {/* A plain anchor (lib/program-ids.ts programViewHref): a plain click
+            opens the view in place, and a new tab loads it as a document. */}
+        <a
+          href={programViewHref(program.id)}
           onClick={(e) => {
             if (!plainClick(e)) return;
             e.preventDefault();
@@ -104,7 +113,7 @@ function ProgramCard({
           className="text-sm font-medium text-violet-ink underline-offset-4 hover:underline"
         >
           See the {program.days.length}-day calendar
-        </Link>
+        </a>
       </div>
     </Card>
   );
@@ -194,7 +203,10 @@ function ProgramDetail({
   onBack: () => void;
 }) {
   const isPro = useIsPro();
+  const hydrated = useHydrated();
   const running = active?.program.id === program.id;
+  // Still the active program once every day is done, but nothing waits in it.
+  const finished = running && active?.view.status === "finished";
   // A Pro program starts for anyone: its first week is free, and the today
   // card asks for Pro when the singer reaches the first day past it.
   const trial = program.pro && !isPro;
@@ -204,7 +216,15 @@ function ProgramDetail({
   const start = () => {
     // Switching away from another program is a deliberate act; say what it costs.
     if (active && !running && !window.confirm(`Leave ${active.program.name}? Your place in it is not kept.`)) return;
-    if (running && !window.confirm(`Restart ${program.name} from day 1?`)) return;
+    // A restart starts an empty record, so this run's check-in readings go.
+    if (
+      running &&
+      !window.confirm(
+        `Restart ${program.name} from day 1?${active && active.readings.length > 0 ? " This run's check-in readings are cleared." : ""}`,
+      )
+    ) {
+      return;
+    }
     beginProgram(program.id, active?.today ?? localDay());
     // Today's card appears above this detail, so on a phone it lands a screen
     // or more above the button just pressed and the page looks unchanged.
@@ -240,7 +260,7 @@ function ProgramDetail({
         <div className="flex flex-wrap items-center gap-2">
           <SectionLabel>{lengthLabel(program)}</SectionLabel>
           {program.pro && <ProChip />}
-          {running && <Pill tone="ok">In progress</Pill>}
+          {running && <Pill tone="ok">{finished ? "Finished" : "In progress"}</Pill>}
         </div>
         <h2 className="mt-3 text-2xl sm:text-3xl">{program.name}</h2>
         <p className="mt-2 max-w-2xl text-mut">{program.tagline}</p>
@@ -258,6 +278,16 @@ function ProgramDetail({
         {program.chapters && (
           <div className="mt-4 max-w-2xl text-sm text-mut">
             <span className="font-medium text-ink">Read along. </span>
+            {/* What the weeks build on, before the point that needs it. */}
+            {program.readFirst?.map((r) => (
+              <Fragment key={r.slug}>
+                Before {r.before}, read{" "}
+                <Link href={`/book/${r.slug}`} className="text-violet-ink underline-offset-4 hover:underline">
+                  {r.title}
+                </Link>
+                : {r.why}.{" "}
+              </Fragment>
+            ))}
             Each fortnight has a chapter in the book:
             <ul className="mt-2 space-y-1">
               {program.chapters.map((c) => (
@@ -270,8 +300,11 @@ function ProgramDetail({
             </ul>
           </div>
         )}
+        {/* This and the free-plan note are not for Pro, which the prerender
+            of a program's view cannot know: until hydration the pre-paint
+            state hides them from a Pro singer. */}
         {trial && (
-          <p className="mt-4 max-w-2xl text-sm text-mut">
+          <p className="mt-4 max-w-2xl text-sm text-mut" {...prepaintMarker(hydrated, { plan: "not-pro" })}>
             <span className="font-medium text-ink">
               {freeLabel().replace(/^w/, "W")} is free.
             </span>{" "}
@@ -280,7 +313,7 @@ function ProgramDetail({
           </p>
         )}
         {freeWeeks !== null && (
-          <p className="mt-4 max-w-2xl text-sm text-mut">
+          <p className="mt-4 max-w-2xl text-sm text-mut" {...prepaintMarker(hydrated, { plan: "not-pro" })}>
             <span className="font-medium text-ink">On the free plan.</span> Its days run longer than
             the five guided minutes a day, so each spreads over a few calendar days and the whole
             program takes about {freeWeeks} weeks. <Link href="/pro" className="underline">Pro</Link>{" "}
@@ -311,7 +344,9 @@ function ProgramDetail({
           once the practice log shows each of its items, one program day per calendar day at most.
           Your place is kept in this browser only.
           {running
-            ? " Taking a break? You don't need to stop: the next day waits until you sing it."
+            ? finished
+              ? " You finished it; a restart begins a new run."
+              : " Taking a break? You don't need to stop: the next day waits until you sing it."
             : " Miss a day and the program waits: the next day is there when you come back."}
         </p>
       </Card>
@@ -321,19 +356,34 @@ function ProgramDetail({
 }
 
 /**
- * /programs: the list, a detail view per program, and today's card for the
- * running one. The detail view is `?program=<id>`, read from the URL after
- * mount rather than with useSearchParams — the same trade the warmups room
- * makes, so the page's heading and list prerender — and kept in step with the
- * history stack by hand.
+ * The program an address names: `?program=<id>` (the deep link), or the id
+ * segment of /programs/<id>, the page next.config.ts serves that link from,
+ * should anyone open that path itself.
  */
-export function ProgramsClient() {
+export function programIdAt(pathname: string, search: string): string | null {
+  const query = new URLSearchParams(search).get("program");
+  if (query !== null) return query;
+  return /^\/programs\/([^/]+)\/?$/.exec(pathname)?.[1] ?? null;
+}
+
+/**
+ * /programs: the list, a detail view per program, and today's card for the
+ * running one. The detail view is `?program=<id>`. A static page cannot read
+ * its query, so next.config.ts rewrites each known id onto that program's own
+ * prerendered page (app/programs/[program]), which passes it here as
+ * `initialProgram`: the deep link's HTML is the program's view from the first
+ * paint. After that the view follows the address, kept in step with the
+ * history stack by hand: opening a program or going back to the list pushes
+ * an entry in place, Back and Forward read it, and the list's own page reads
+ * it once after mount, for an entry history restores onto it.
+ */
+export function ProgramsClient({ initialProgram = null }: { initialProgram?: string | null }) {
   const active = useActiveProgram();
   const hydrated = useHydrated();
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(initialProgram);
 
   useEffect(() => {
-    const read = () => setSelected(new URLSearchParams(window.location.search).get("program"));
+    const read = () => setSelected(programIdAt(window.location.pathname, window.location.search));
     read();
     window.addEventListener("popstate", read);
     return () => window.removeEventListener("popstate", read);
@@ -341,7 +391,7 @@ export function ProgramsClient() {
 
   const open = (id: string | null) => {
     setSelected(id);
-    const url = id ? `/programs?program=${encodeURIComponent(id)}` : "/programs";
+    const url = id ? programViewHref(id) : "/programs";
     window.history.pushState(null, "", url);
     window.scrollTo({ top: 0 });
   };
@@ -373,7 +423,13 @@ export function ProgramsClient() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {PROGRAMS.map((p) => (
-              <ProgramCard key={p.id} program={p} active={active?.program.id === p.id} onOpen={open} />
+              <ProgramCard
+                key={p.id}
+                program={p}
+                active={active?.program.id === p.id}
+                finished={active?.program.id === p.id && active.view.status === "finished"}
+                onOpen={open}
+              />
             ))}
           </div>
         )}

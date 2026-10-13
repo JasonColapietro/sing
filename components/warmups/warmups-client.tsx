@@ -191,10 +191,21 @@ export function WarmupsClient() {
   ]);
   const nextExercise = pathExercises.find((e) => e.id === nextId);
   // Planned from the free catalogue whatever the viewer's plan, and from
-  // sessions before today, so it holds still all day.
+  // sessions before today, so it holds still all day unless a range test is
+  // saved: then a pattern too wide for the new range drops out, as the
+  // routines skip it.
+  const rangeLow = progress.range.lowMidi;
+  const rangeHigh = progress.range.highMidi;
   const dailyPlan = useMemo(
-    () => (today ? planDailyThree({ sessions: progress.sessions, day: today }) : null),
-    [progress.sessions, today],
+    () =>
+      today
+        ? planDailyThree({
+            sessions: progress.sessions,
+            day: today,
+            range: { lowMidi: rangeLow, highMidi: rangeHigh },
+          })
+        : null,
+    [progress.sessions, today, rangeLow, rangeHigh],
   );
   const dailyDone = dailyPlan ? dailyThreeDone(dailyPlan, progress.sessions) : [];
 
@@ -632,6 +643,10 @@ export function WarmupsClient() {
         />
       )}
 
+      {/* The single-exercise summary starts the next run itself ("Run this
+          ladder again", "Sing it", "Next exercise"), so it says how much of
+          today's free time is left before the singer picks one. */}
+      {view === "summary" && summary && !cap.capped && <FreeAllowance cap={cap} className="mb-4" />}
       {view === "summary" && summary && (
         <SessionSummary
           data={summary}

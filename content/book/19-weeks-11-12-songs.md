@@ -59,7 +59,7 @@ Then the ends of phrases. Do they still have air behind them, or do they trail o
 
 Two things go wrong here, in opposite directions.
 
-The first is hearing nothing. Your own voice on playback is uncomfortable, and the discomfort flattens everything into "that sounds bad." If you cannot hear a difference, go to the numbers: the range history in Progress, the accuracy figures, and, if you have Coach, the per-note breakdown from week one against week twelve. Ten weeks is a short stretch on the timescale voices move, and chapter 11 explains why a trend needs more than two data points. Two readings are not a trend.
+The first is hearing nothing. Your own voice on playback is uncomfortable, and the discomfort flattens everything into "that sounds bad." If you cannot hear a difference, go to the numbers: the range history in Progress, the accuracy figures, and, with Pro, the per-note accuracy chart — it adds up every scored session you have kept rather than setting week one beside week twelve, so read it for which notes have cost you most across the program, not as a before-and-after. Ten weeks is a short stretch on the timescale voices move, and chapter 11 explains why a trend needs more than two data points. Two readings are not a trend.
 
 The second is hearing everything. A retest showing three extra semitones at the top after twelve weeks is more easily explained by a warmer voice, a bolder attempt, or a closer mic than by a longer range. Be suspicious of big changes at the outer edges. Be less suspicious of changes in the comfortable middle, in accuracy, or in how a phrase holds together, because those are harder to fake.
 

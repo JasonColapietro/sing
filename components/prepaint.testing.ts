@@ -30,6 +30,11 @@ export const HIDE_RULES: { selector: string; marker: string; hides: (s: PaintSta
     hides: (s) => s.plan === "capped",
   },
   {
+    selector: 'html[data-sing-plan="pro"] [data-prepaint-plan="not-pro"]',
+    marker: 'data-prepaint-plan="not-pro"',
+    hides: (s) => s.plan === "pro",
+  },
+  {
     selector: 'html:not([data-sing-program]) [data-prepaint-slot|="program"]',
     marker: 'data-prepaint-slot="program-',
     hides: (s) => !s.program,
@@ -74,4 +79,26 @@ export function paintedFor(html: string, state: PaintState): string {
     }
   }
   return out;
+}
+
+/**
+ * The server markup with every prepaintWords span painted as the words it
+ * stands for, as the browser shows them before hydration and as the hydrated
+ * render has them. React escapes text and attribute values the same way, so
+ * the attribute's value goes in exactly as it is.
+ */
+export function wordsPainted(html: string): string {
+  return html.replace(/<span data-prepaint-text="([^"]*)"><\/span>/g, "$1");
+}
+
+/**
+ * What a reader that runs no script and applies no CSS (an answer-engine
+ * crawler reading the static HTML) takes from the markup: its text.
+ */
+export function staticText(html: string): string {
+  return html
+    .replace(/<script\b[\s\S]*?<\/script>/g, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }

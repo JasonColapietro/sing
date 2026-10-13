@@ -31,7 +31,7 @@ async function runCls(mode, viewport = "mobile-375", extra = []) {
           newPage: async () => {
             let inserted = false;
             return {
-            goto: async (url) => { console.log("GOTO " + new URL(url).pathname); ${mode === "error" ? 'throw new Error("Navigation failed in CLS regression");' : "return {};"} },
+            goto: async (url) => { console.log("GOTO " + new URL(url).pathname + new URL(url).search); ${mode === "error" ? 'throw new Error("Navigation failed in CLS regression");' : "return {};"} },
             waitForTimeout: async () => {},
             evaluate: async (fn, arg) => {
               // The check that a --state seed showed on the page.
@@ -165,6 +165,20 @@ describe("CLS measurement CLI gate", () => {
     expect(unknown.code).toBe(2);
     expect(unknown.stderr).toContain("unknown route filter: nowhere");
     expect(unknown.stdout).not.toContain("BROWSER_LAUNCHED");
+  });
+
+  it("measures a program's own view, the deep link the list used to stand in for", async () => {
+    const all = await runCls("good");
+    const gotos = [...all.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1]);
+    expect(gotos).toContain("/programs");
+    expect(gotos).toContain("/programs?program=measured-voice-12w");
+    expect(gotos).toContain("/programs?program=foundations-2w");
+    const some = await runCls("good", "mobile-375", ["--state=program", "--route=program-detail,program-foundations"]);
+    expect(some.code).toBe(0);
+    expect([...some.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1])).toEqual([
+      "/programs?program=measured-voice-12w",
+      "/programs?program=foundations-2w",
+    ]);
   });
 
   it("refuses an unknown state before launching a browser", async () => {

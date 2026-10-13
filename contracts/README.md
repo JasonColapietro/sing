@@ -544,6 +544,24 @@ stays at version 1:
 What the other apps must do: re-sync `suede-vocal.json` and `glossary.json`
 byte for byte. Nothing else changes.
 
+#### Editorial and wording changes inside v9 (2026-10-13, round 8)
+
+No key was added or renamed, so `version` stays 9 and `glossary.json` is
+unchanged:
+
+- `editorial`: word counts moved with this round's text edits. Book:
+  `reading-the-range-test` (1517), `finding-your-break` (1365),
+  `weeks-7-8-top` (1428), `weeks-9-10-bottom` (1384), `weeks-11-12-songs`
+  (1677), `totalWords` 32941. Atlas: `a-vocabulary-for-tone` (1068),
+  `totalWords` 72505.
+- The programs page's deep link is unchanged: `/programs?program=<id>` with
+  the same ids. The site now serves that URL from a prerendered page per
+  program, rewritten on the server, so the detail view is in the HTML rather
+  than drawn after mount. A consumer that builds the link needs no change.
+
+What the other apps must do: re-sync `suede-vocal.json` byte for byte.
+Nothing else changes.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or

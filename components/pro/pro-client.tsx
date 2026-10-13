@@ -789,10 +789,14 @@ export function ProClient() {
           </h2>
           {/* "Charts", not "keeps": the free record stores the same sessions
               and range tests (progress says "older sessions are stored — Pro
-              shows all of them"). What Pro adds is the view across them. */}
+              shows all of them"). What Pro adds is the view across them. The
+              free plan already reads recent scores and shows the first two
+              coach steps (components/progress/coach.tsx), so planning is not
+              sold as something only Pro does: Pro shows the rest of it. */}
           <p className="mt-3 max-w-2xl text-mut">
-            Free tells you how today went. Pro charts the months behind it,
-            finds the patterns, and plans what to sing tomorrow.
+            Free tells you how today went and plans the first two steps of each
+            day. Pro charts the months behind it, finds the patterns, and lays
+            out the full daily plan.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {PRO_PERKS.map((perk) => {

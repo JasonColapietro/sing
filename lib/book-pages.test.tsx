@@ -379,6 +379,35 @@ describe("the chapters agree with the app", () => {
     }
   });
 
+  /**
+   * Accuracy by note is a Pro panel (a LockedPanel on the free plan, whose
+   * Coach card is open), and it pools every kept session with no date window,
+   * so no chapter credits it to Coach or reads it as week one beside week
+   * twelve.
+   */
+  it("credits the per-note chart to Pro and never reads it as a before-and-after", () => {
+    const progress = readFileSync(join(__dirname, "..", "components", "progress", "progress-client.tsx"), "utf8");
+    expect(progress).toContain('<LockedPanel label="Accuracy by note"');
+    expect(progress).toMatch(/aggregateNotes\(state\.sessions\)/);
+    for (const c of BOOK) {
+      expect(c.body, c.slug).not.toMatch(/if you have Coach/i);
+      expect(c.body, c.slug).not.toMatch(/week one against week twelve/i);
+      expect(c.body, c.slug).not.toMatch(/coach report's per-note/i);
+    }
+  });
+
+  it("sends a lasting loss of range from the free range chapter to a doctor, in the site's words", () => {
+    expect(FREE.map((c) => c.slug)).toContain("reading-the-range-test");
+    expect(body("reading-the-range-test")).toMatch(
+      /sudden or lasting loss of range belongs with a doctor who can examine the vocal folds, such as an ENT or laryngologist/,
+    );
+  });
+
+  it("keeps today's belt ceiling out of the songs the reader sings night after night", () => {
+    expect(body("finding-your-break")).not.toMatch(/top of the range you can write into a song/);
+    expect(body("finding-your-break")).toMatch(/not a note to build a song on/);
+  });
+
   it("claims only that audio stays on the device, since Pro sync uploads scores", () => {
     for (const c of BOOK) {
       expect(c.body, c.slug).not.toMatch(/nothing is uploaded/i);

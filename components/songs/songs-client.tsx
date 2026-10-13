@@ -220,7 +220,11 @@ export function SongsClient() {
           <CapWall cap={cap} />
         </div>
       )}
-      {view === "library" && !cap.capped && <FreeAllowance cap={cap} className="mb-4" />}
+      {/* In every view, not only the library: a song page's "Sing" link opens
+          the player directly, and "Sing again" and "Next" start a run from
+          the summary, so the time left has to be on screen there too or the
+          wall arrives as a surprise. */}
+      {!cap.capped && <FreeAllowance cap={cap} className="mb-4" />}
       {view === "library" && <Library progress={progress} onSelect={startSong} />}
 
       {view === "practice" && activeSong && (

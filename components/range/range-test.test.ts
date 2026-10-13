@@ -114,6 +114,24 @@ describe("a range too narrow to save", () => {
   });
 });
 
+describe("a retake from the result when the mic fails", () => {
+  it("shows the mic alert on the result screen, where Retake test was pressed", () => {
+    // begin() returns early when start() fails, so the stage stays "result";
+    // the intro's alert is not on screen and the press looked dead.
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    const block = src.indexOf('{stage === "result" && result && (');
+    const result = src.slice(block, src.indexOf("</>", block));
+    expect(result).toContain("onRetake={begin}");
+    const alert = result.indexOf("{error && (");
+    expect(alert).toBeGreaterThan(-1);
+    expect(result.indexOf("<MicAlert", alert)).toBeGreaterThan(alert);
+    // Above the result, so it is seen before the readout, not after it.
+    expect(alert).toBeLessThan(result.indexOf("<ResultView"));
+    // One alert at a time: the intro's sits in its own exclusive branch.
+    expect(src.match(/<MicAlert/g)).toHaveLength(2);
+  });
+});
+
 describe("the warm-up stage", () => {
   it("offers Start over like the other stages, so a stalled singer is never stuck with the mic on", () => {
     const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");

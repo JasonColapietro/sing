@@ -33,7 +33,7 @@ The range test is doing a different job. It is hunting for the outer edges, but 
 
 Take it the way chapter 8 describes, then look back at where the ascent got difficult. The note where you had to change something to keep going often sits at or just above your transition. And if your range history in Progress shows a top note parked in the same place across retests while the climb up to it has got easier, that flat line may be the transition rather than a true ceiling.
 
-If you have Coach, the per-note accuracy breakdown is the sharpest tool here. A band three or four semitones wide where notes land in tune less often than their neighbours is worth a second look: your ear knows the pitch, and the coordination is what is wobbling. Treat a dip in the middle of an otherwise even profile as a transition until something else explains it better.
+With Pro, the per-note accuracy chart in Progress is the sharpest tool here. A band three or four semitones wide where notes land in tune less often than their neighbours is worth a second look: your ear knows the pitch, and the coordination is what is wobbling. Treat a dip in the middle of an otherwise even profile as a transition until something else explains it better.
 
 ## Belt ceilings, in practice
 
@@ -43,7 +43,7 @@ Belting carries chest-dominant weight above where that weight wants to go, held 
 
 Two things matter about it. First, it is not the top of your range. Head voice goes higher, often much higher, and the range test measures the higher figure. If your test says A4 and the belt gives out at E4, both numbers are true and they are describing different things.
 
-Second, a belt ceiling is a coordination limit rather than a wall to push through. Hammering the note just above it tends to end a session worse than it started. Chapter 17 covers adding height properly. For now, find where the cost curve turns steep and treat it as information: the top of the range you can write into a song and expect to sing four nights running.
+Second, a belt ceiling is a coordination limit rather than a wall to push through. Hammering the note just above it tends to end a session worse than it started. Chapter 17 covers adding height properly. For now, find where the cost curve turns steep and treat it as information: the edge of your belt today, not a note to build a song on. What you can expect to belt four nights running sits some way below it — chapter 7's betting test finds where, and chapter 23 builds a set with that margin.
 
 Pain, hoarseness that will not clear, or any blood is a doctor's question rather than a practice one — chapter six says more.
 

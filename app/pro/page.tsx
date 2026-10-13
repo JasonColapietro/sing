@@ -35,7 +35,9 @@ function offerFor(plan: CheckoutPlan) {
     description:
       plan === "lifetime"
         ? "One payment for lifetime access. No renewal."
-        : `Sold out. Renews monthly at ${formatPrice(amount)} for existing subscribers only.`,
+        : // Legacy subscribers renew at their own (older) price, so the
+          // renewal clause names no amount; the price field still carries 4.99.
+          "Sold out. Existing subscribers keep renewing at the price they signed up at.",
     price,
     priceCurrency: "USD",
     availability:

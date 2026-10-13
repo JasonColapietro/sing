@@ -308,3 +308,42 @@ describe("the order of today's three", () => {
     }
   });
 });
+
+describe("today's three and the saved range", () => {
+  /** `n` consecutive local days from 2026-09-23. */
+  const days = (n: number) =>
+    Array.from({ length: n }, (_, i) => new Date(Date.UTC(2026, 8, 23 + i)).toISOString().slice(0, 10));
+  const tooWide = ["n-hum-scale", "gug-staccato"];
+  // A2–D4, 17 semitones: the twelfth runs span 19, so the routines skip them.
+  const narrow = { lowMidi: 45, highMidi: 62 };
+
+  it("never hands out a pattern too wide for the saved range, new or weak", () => {
+    // Weak at both runs, the way a run sung under the measured low scores:
+    // without the range they come back as weak spots.
+    const weak = [
+      ...baseline(),
+      warmup(title("n-hum-scale"), 35, "2026-09-22"),
+      warmup(title("gug-staccato"), 35, "2026-09-22"),
+    ];
+    const unranged = days(60).filter((day) =>
+      ids(planDailyThree({ sessions: weak, day })).some((id) => tooWide.includes(id)),
+    );
+    expect(unranged.length).toBeGreaterThan(0);
+    for (const sessions of [weak, baseline(), []]) {
+      for (const day of days(60)) {
+        const plan = planDailyThree({ sessions, day, range: narrow });
+        expect(plan.picks, day).toHaveLength(3);
+        expect(ids(plan).filter((id) => tooWide.includes(id)), day).toEqual([]);
+      }
+    }
+  });
+
+  it("is unchanged for a range that holds them, or no saved range", () => {
+    const sessions = [...baseline(), warmup(title("n-hum-scale"), 35, "2026-09-22")];
+    for (const day of days(60)) {
+      const plain = ids(planDailyThree({ sessions, day }));
+      expect(ids(planDailyThree({ sessions, day, range: { lowMidi: 48, highMidi: 72 } })), day).toEqual(plain);
+      expect(ids(planDailyThree({ sessions, day, range: {} })), day).toEqual(plain);
+    }
+  });
+});

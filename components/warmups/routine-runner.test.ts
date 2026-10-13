@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { introClockLabel, outOfRangeNote, remainingSeconds } from "./routine-runner";
-import { ALL_EXERCISES } from "./exercises";
+import { introClockLabel, outOfRangeNote, remainingSeconds, stepStartingTempo } from "./routine-runner";
+import { ALL_EXERCISES, buildSegments } from "./exercises";
+import { MAX_ONE_BREATH_SEC } from "@/lib/daily-three";
 import { SKIP_INTRO_SEC, STEP_INTRO_SEC, routineById, stepSeconds } from "./routines";
 
 describe("the clock on a routine's step intro", () => {
@@ -54,5 +55,32 @@ describe("the step intro's note for a step the saved range cannot hold", () => {
   it("is null when the range holds the step, or no range is saved", () => {
     expect(outOfRangeNote(nRun, { lowMidi: 45, highMidi: 65 })).toBeNull();
     expect(outOfRangeNote(nRun, {})).toBeNull();
+  });
+});
+
+describe("the tempo a routine step starts at", () => {
+  const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
+
+  it("never slows a one-breath pattern past a comfortable breath", () => {
+    // Hung-ee-mm is 9.4s a rep at 1x and 12.6s at 0.75x: the readiness
+    // step-down would make the breath longer, so it starts at 1x.
+    const hung = byId("hung-ee-mm");
+    expect(buildSegments(hung, 60, 0.75).totalSec).toBeGreaterThan(MAX_ONE_BREATH_SEC);
+    expect(stepStartingTempo(hung, 0.75)).toBe(1);
+    // A short pattern still steps down.
+    expect(stepStartingTempo(byId("lip-trill-scale"), 0.75)).toBe(0.75);
+  });
+
+  it("leaves 1x and the step up as they are", () => {
+    expect(stepStartingTempo(byId("hung-ee-mm"), 1.25)).toBe(1.25);
+    expect(stepStartingTempo(byId("hung-ee-mm"), 1)).toBe(1);
+    expect(stepStartingTempo(byId("lip-trill-scale"), 1)).toBe(1);
+  });
+
+  it("keeps every routine step inside one breath at the step-down", () => {
+    for (const ex of ALL_EXERCISES) {
+      const t = stepStartingTempo(ex, 0.75);
+      if (t < 1) expect(buildSegments(ex, 60, t).totalSec, ex.id).toBeLessThanOrEqual(MAX_ONE_BREATH_SEC);
+    }
   });
 });

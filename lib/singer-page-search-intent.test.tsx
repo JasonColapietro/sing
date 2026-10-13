@@ -77,7 +77,7 @@ const ARTIST_INTENT_CASES = [
   {
     slug: "alex-warren",
     name: "Alex Warren",
-    opening: "Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints. The displayed range of A2 to F#4 is a reported reference span, not an independently verified physiological limit.",
+    opening: "Published evidence supports written compasses for specific Alex Warren songs, not a definitive baritone classification or full-career endpoints. The displayed range of G2 to A4 is a reported reference span, not an independently verified physiological limit.",
     title: "Alex Warren Vocal Range & Voice Type: No Definitive Type",
     heading: "Alex Warren Voice Type and Vocal Range",
   },

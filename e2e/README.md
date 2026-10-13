@@ -115,8 +115,18 @@ shift.
 | `--viewport=mobile-375` | one viewport (default: all five) |
 | `--returning` | seed a returning singer before every load (see Navigation journeys below) |
 | `--state=<name>` | seed a returning singer in a stored state that reshapes pages; implies `--returning` |
-| `--route=warmups,programs` | just these routes, by their `name` in `routes.mjs` |
+| `--route=warmups,programs` | just these routes, by their `name` in `routes.mjs` or in `cls.mjs`'s `DEEP_LINKS` |
 | `--json=path.json` | write every reading |
+
+Besides one route per template, it loads two query-string deep links that
+are different pages from the route at their path (`DEEP_LINKS` in `cls.mjs`):
+`program-detail`, `/programs?program=measured-voice-12w` (the book's
+program, which no state runs), and `program-foundations`,
+`/programs?program=foundations-2w` (the program `--state=program` runs, so
+that state opens its own program, today's card above the calendar). A static
+page cannot read its query, so `next.config.ts` serves each known program id
+its own prerendered page at that address, and the deep link paints the
+program rather than the list it used to swap out after mount.
 
 The states are what localStorage holds and the prerender cannot: the
 prerender is always a newcomer's page, so each of these used to change shape
@@ -125,7 +135,7 @@ at hydration only for the singers in it.
 | `--state=` | Seeded on top of the returning record | Pages it reshapes |
 |---|---|---|
 | `capped` | 330 s of warmup today: the free plan's five guided minutes are used | the cap wall in `/warmups`, `/breath`, `/ear-training`, `/songs` |
-| `program` | Foundations in 2 weeks, day 2 still to do | today's card on `/programs`, the leading program card on `/warmups` |
+| `program` | Foundations in 2 weeks, day 2 still to do | today's card on `/programs` and on its own `?program=` view (not on another program's), the leading program card on `/warmups` |
 | `program-capped` | both: the program day waits for midnight | all of the above, with the longer "waits" lines |
 | `rest-day` | Mix in 4 weeks on its day 7 rest day, day 8 onward needing Pro | the rest-day card on `/programs` and `/warmups` |
 

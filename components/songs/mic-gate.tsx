@@ -6,7 +6,7 @@ import { AudioSetup } from "@/components/audio/audio-setup";
 import { MicAlert } from "@/components/mic-alert";
 import { FREE_DAILY_MINUTES, FREE_DAILY_SEC } from "@/lib/practice-limits";
 import { CapWall } from "@/components/practice/free-cap";
-import { useHydrated } from "@/components/prepaint";
+import { prepaintWords, useHydrated } from "@/components/prepaint";
 import { IconHeadphones, IconMic } from "./icons";
 
 const SUBTITLE =
@@ -52,7 +52,9 @@ const CAP_REACHED = { isPro: false, usedSec: FREE_DAILY_SEC, leftSec: 0, capped:
  * subtitle and the wall, plus a screen-tall stand-in for the library, all
  * behind pre-paint markers (components/prepaint.tsx), so a capped singer's
  * first paint is the wall with the songbook below the fold, where the library
- * then keeps it, rather than this gate with the songbook just in view.
+ * then keeps it, rather than this gate with the songbook just in view. The
+ * capped view's words are attributes until then (prepaintWords), so the
+ * hub's static text reads as the gate alone.
  */
 export function SongsMicGate({
   heading = "Sing along and see every note you hit",
@@ -121,7 +123,7 @@ export function SongsMicGate({
         pre ? (
           <>
             <span data-prepaint-plan="not-capped">{SUBTITLE}</span>
-            <span data-prepaint-plan="capped">{LIBRARY_SUBTITLE}</span>
+            <span data-prepaint-plan="capped">{prepaintWords(hydrated, LIBRARY_SUBTITLE)}</span>
           </>
         ) : (
           SUBTITLE

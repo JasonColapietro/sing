@@ -202,6 +202,17 @@ describe("program data", () => {
       const book = BOOK_CONTENTS.find((b) => b.slug === c.slug);
       expect(book?.title, c.slug).toBe(c.title);
     }
+    // Chapter 13's rules and before-week-1 record (chapter 19 reads its
+    // sentence back), and chapter 10's transition, which weeks 5 to 8 work
+    // on and test against: both read before the week that needs them.
+    expect(p.readFirst?.map((r) => [r.before, r.slug])).toEqual([
+      ["day 1", "how-the-program-works"],
+      ["week 5", "finding-your-break"],
+    ]);
+    for (const r of p.readFirst!) {
+      const book = BOOK_CONTENTS.find((b) => b.slug === r.slug);
+      expect(book?.title, r.slug).toBe(r.title);
+    }
     // Every week has exactly one chapter.
     for (let w = 1; w <= p.weeks; w++) {
       expect(chapters.filter((c) => w >= c.fromWeek && w <= c.toWeek), `week ${w}`).toHaveLength(1);
@@ -213,9 +224,10 @@ describe("program data", () => {
     // Day 1's baseline, five onsets in weeks 3 and 4 (ch. 15, "run the
     // recorder and listen back"), a siren in weeks 5 and 6 (ch. 16, "twice
     // across the two weeks"), one top-note take in each of weeks 7 and 8
-    // (ch. 17, "one take a week"), the week-11 working copy (ch. 19), and
-    // week 12's take.
-    expect(on("recorder")).toEqual([1, 18, 25, 30, 37, 43, 50, 71, 78]);
+    // (ch. 17, "one take a week"), two phrases of the song in each session
+    // of weeks 9 and 10 that sings it (ch. 18, "record every attempt"), the
+    // week-11 working copy (ch. 19), and week 12's take.
+    expect(on("recorder")).toEqual([1, 18, 25, 30, 37, 43, 50, 57, 60, 64, 67, 71, 78]);
     // Three or four sessions a week, and five only where a check-in is added.
     for (let w = 0; w < p.weeks; w++) {
       const sessions = p.days.slice(w * 7, w * 7 + 7).filter((d) => !isRestDay(d)).length;
@@ -225,7 +237,7 @@ describe("program data", () => {
     expect(isRestDay(p.days.at(-1)!)).toBe(false);
   });
 
-  it("names the take each weeks 3-8 recording is for, as chapters 15 to 17 describe it", () => {
+  it("names the take each weeks 3-10 recording is for, as chapters 15 to 18 describe it", () => {
     const p = programById("measured-voice-12w")!;
     const takes = (day: number) =>
       p.days[day - 1].items.filter((i) => i.kind === "recorder").map((i) => itemLabel(i).meta);
@@ -242,6 +254,19 @@ describe("program data", () => {
     // pattern through the transition to a comfortable top note".
     for (const d of [30, 37]) expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · one slow ng siren/)]);
     for (const d of [43, 50]) expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · a short ascending pattern through your transition to a comfortable top note/)]);
+    // Chapter 18: "Choose two phrases: the longest one, and one that dips
+    // low … record every attempt", then "A/B the take in the recorder against
+    // one from earlier in the week". After the song, so the phrases are sung
+    // warm and known; the week's second session has the first's take to A/B.
+    for (const d of [57, 60, 64, 67]) {
+      expect(takes(d), `day ${d}`).toEqual([expect.stringMatching(/^Recorder · the longest phrase of your song and one that dips low/)]);
+      const items = p.days[d - 1].items;
+      const rec = items.findIndex((i) => i.kind === "recorder");
+      expect(items[rec - 1].kind, `day ${d}`).toBe("song");
+      expect(items.at(-1), `day ${d}`).toEqual({ kind: "routine", id: "cooldown" });
+    }
+    for (const d of [57, 64]) expect(takes(d)[0], `day ${d}`).toMatch(/then listen back · about \d+ min$/);
+    for (const d of [60, 67]) expect(takes(d)[0], `day ${d}`).toMatch(/then A\/B it with this week's first take · about \d+ min$/);
     // Day 1's take is the one week 12 is compared against, and the browser
     // can clear its recordings: the row asks for a downloaded copy.
     expect(takes(1)).toEqual([expect.stringMatching(/^Recorder · a verse and a chorus of a song you know, then download a copy to keep · about \d+ min$/)]);
@@ -252,6 +277,7 @@ describe("program data", () => {
     // A take that names nothing is still a verse and a chorus.
     expect(itemLabel({ kind: "recorder" }).meta).toMatch(/^Recorder · a verse and a chorus · about \d+ min$/);
     expect(p.measures).toMatch(/chapters 16 and 17/);
+    expect(p.measures).toMatch(/weeks 9 and 10 are for the listening back and A\/B chapter 18 asks for/);
   });
 
   it("works one song in the last four weeks and runs one sustain test a week, as chapters 18 and 19 ask", () => {
@@ -913,6 +939,10 @@ describe("one session pays for one item", () => {
     expect(itemsDoneOn(d, sung, today)).toEqual([false]);
     expect(itemsDoneOn(d, sung, today, today, narrow)).toEqual([true]);
     expect(matchDay(d, sung, today, today, narrow).steps[0]).toEqual(steps.map(() => true));
+    // Which ticks are waived rather than sung, so the day card can say so.
+    expect(matchDay(d, sung, today, today, narrow).waived[0]).toEqual(steps.map((ex) => tooWideForRange(ex, narrow)));
+    expect(matchDay(d, [], today, today, narrow).steps[0]).toEqual(steps.map((ex) => tooWideForRange(ex, narrow)));
+    expect(matchDay(d, sung, today).waived[0]).toEqual(steps.map(() => false));
     // A range wide enough for every step waives nothing.
     expect(itemsDoneOn(d, sung, today, today, { lowMidi: 40, highMidi: 70 })).toEqual([false]);
   });

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { PrepaintText, prepaintMarker } from "./prepaint";
+import { PrepaintText, prepaintMarker, prepaintWords } from "./prepaint";
 import { HIDE_RULES, paintedFor } from "./prepaint.testing";
 
 const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
@@ -62,5 +62,20 @@ describe("pre-paint text", () => {
     span.textContent = "5:00";
     run(undefined);
     expect(span.textContent).toBe("5:00");
+  });
+});
+
+describe("pre-paint words", () => {
+  it("are an attribute the CSS paints until hydration, then plain text", () => {
+    // Out of the static HTML's text, for readers that run no script and
+    // apply no CSS; on screen from the first paint all the same.
+    expect(renderToStaticMarkup(<h2>{prepaintWords(false, "That's your 5 free minutes")}</h2>)).toBe(
+      '<h2><span data-prepaint-text="That&#x27;s your 5 free minutes"></span></h2>',
+    );
+    expect(renderToStaticMarkup(<h2>{prepaintWords(true, "That's your 5 free minutes")}</h2>)).toBe(
+      "<h2>That&#x27;s your 5 free minutes</h2>",
+    );
+    const rules = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    expect(rules).toMatch(/\[data-prepaint-text\]::before\s*\{\s*content:\s*attr\(data-prepaint-text\);\s*\}/);
   });
 });

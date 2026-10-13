@@ -37,11 +37,37 @@ describe("the pitch meter after Stop mic", () => {
   });
 
   it("never claims a save for a run under the floor", () => {
-    const html = renderToStaticMarkup(<LastRun low={57} high={59} lastLog={null} />);
+    const html = renderToStaticMarkup(<LastRun low={57} high={59} lastLog={null} onTryRange={() => {}} />);
     expect(html).toContain("Not saved yet");
     expect(html).not.toContain("XP");
-    // Two semitones is not exploring yet: no range-test push.
-    expect(html).not.toContain("range test");
+    expect(html).toContain("Next, the 2-minute range test");
+    expect(html).toContain('href="/warmups"');
+  });
+
+  it("offers the range test to a singer who sang the one note the gate asks for", () => {
+    // The stop scroll puts the Pitch | Range test tabs under the header, so
+    // the card itself is the only next step on screen.
+    const html = renderToStaticMarkup(<LastRun low={57} high={57} lastLog={{ xpGained: 5 }} onTryRange={() => {}} />);
+    // One note reads as one note, not "A3 to A3".
+    expect(html).toContain("You have held A3 so far.");
+    expect(html).not.toContain("A3 to A3");
+    expect(html).toContain("Next, the 2-minute range test walks you down to your lowest note");
+    expect(html).toContain("Take the 2-minute range test");
+    expect(html).toContain('href="/warmups"');
+  });
+
+  it("never explains a range test the card has no button for", () => {
+    const html = renderToStaticMarkup(<LastRun low={57} high={57} lastLog={null} />);
+    expect(html).not.toContain("Take the 2-minute range test");
+    expect(html).not.toContain("Next, the 2-minute range test");
+    // Still a next step.
+    expect(html).toContain('href="/warmups"');
+  });
+
+  it("does not explain the range test to a singer who already explored a span", () => {
+    const html = renderToStaticMarkup(<LastRun low={47} high={61} lastLog={null} onTryRange={() => {}} />);
+    expect(html).toContain("Take the 2-minute range test");
+    expect(html).not.toContain("Next, the 2-minute range test");
   });
 
   it("points a singer with a recent saved range at practice, not a retest", () => {

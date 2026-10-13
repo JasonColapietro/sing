@@ -1,11 +1,12 @@
 "use client";
 
-import { useId, useSyncExternalStore } from "react";
+import { useId, useSyncExternalStore, type ReactNode } from "react";
 import { PREPAINT_GLOBAL, type PrepaintState } from "@/lib/prepaint";
 
 /**
  * The React half of the pre-paint state (lib/prepaint.ts has the script and
- * the rules it follows; app/globals.css has the CSS).
+ * the rules it follows; app/globals.css has the CSS). A state's words that a
+ * newcomer never sees stay out of the server HTML's text (prepaintWords).
  *
  * A component whose layout depends on the free cap or the running program
  * renders, while the page is server-rendered and hydrated, every state's
@@ -35,12 +36,13 @@ export function useHydrated(): boolean {
 
 /**
  * The markers, only until hydration: spread onto the element whose visibility
- * the pre-paint decides. `plan` is "free", "capped" or "not-capped";
+ * the pre-paint decides. `plan` is "free", "capped", "not-capped" or
+ * "not-pro";
  * `program` and `slot` are documented with their rules in app/globals.css.
  */
 export function prepaintMarker(
   hydrated: boolean,
-  marker: { plan?: "free" | "capped" | "not-capped"; program?: string; slot?: string },
+  marker: { plan?: "free" | "capped" | "not-capped" | "not-pro"; program?: string; slot?: string },
 ): Record<string, string> {
   if (hydrated) return {};
   const out: Record<string, string> = {};
@@ -48,6 +50,23 @@ export function prepaintMarker(
   if (marker.program) out["data-prepaint-program"] = marker.program;
   if (marker.slot) out["data-prepaint-slot"] = marker.slot;
   return out;
+}
+
+/**
+ * Words that only a pre-paint state shows, never a newcomer: the cap wall's.
+ * Every visitor's server HTML carries the wall behind the capped marker, and
+ * a reader that runs no script and applies no CSS (the answer-engine crawlers
+ * app/robots.ts invites) would otherwise take "that's your 5 free minutes for
+ * today … 5:00 of 5:00 used" for the opening of four landing pages. So until
+ * hydration the words are an attribute, which app/globals.css paints with
+ * `content: attr(data-prepaint-text)`: the element, its box and its line
+ * breaks are there from the first paint, the words are not in the HTML's
+ * text. From the first render after hydration, and on any client-side mount,
+ * they are the plain text, which lays out the same. Like prepaintMarker, it
+ * takes the caller's useHydrated().
+ */
+export function prepaintWords(hydrated: boolean, value: string): ReactNode {
+  return hydrated ? value : <span data-prepaint-text={value} />;
 }
 
 /**

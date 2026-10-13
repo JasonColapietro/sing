@@ -47,6 +47,11 @@ export interface ActiveProgram {
   itemsDone: boolean[];
   /** Per item, its steps done (routines and breath sets; empty for the rest). */
   stepsDone: boolean[][];
+  /**
+   * Per item, which of those ticks are steps the routine runner skips for the
+   * saved range (Evidence.waived) rather than steps sung.
+   */
+  stepsWaived: boolean[][];
   /** The first calendar day whose practice counts toward today's program day. */
   countsFrom: string;
   /** Range and sustain readings of the completed check-in days. */
@@ -95,5 +100,6 @@ export function useActiveProgram(): ActiveProgram | null {
   const match = view.status === "todo" ? matchDay(day, counted, today, countsFrom, range) : null;
   const itemsDone = match?.items ?? [];
   const stepsDone = match?.steps ?? [];
-  return { program, progress, today, view, itemsDone, stepsDone, countsFrom, readings };
+  const stepsWaived = match?.waived ?? [];
+  return { program, progress, today, view, itemsDone, stepsDone, stepsWaived, countsFrom, readings };
 }
