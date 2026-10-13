@@ -4,6 +4,7 @@ const dependencies = vi.hoisted(() => ({
   retrieveSubscription: vi.fn(),
   retrievePaymentIntent: vi.fn(),
   store: new Map<string, unknown>(),
+  ttls: new Map<string, number>(),
 }));
 
 vi.mock("server-only", () => ({}));
@@ -11,8 +12,9 @@ vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => null }));
 vi.mock("@/lib/redis", () => ({
   getRedis: () => ({
     get: async (key: string) => dependencies.store.get(key) ?? null,
-    set: async (key: string, value: unknown) => {
+    set: async (key: string, value: unknown, options?: { ex?: number }) => {
       dependencies.store.set(key, value);
+      if (options?.ex !== undefined) dependencies.ttls.set(key, options.ex);
       return "OK";
     },
   }),
@@ -43,6 +45,7 @@ function request(body: Record<string, unknown>) {
 
 beforeEach(() => {
   dependencies.store.clear();
+  dependencies.ttls.clear();
   dependencies.retrieveSubscription.mockReset().mockResolvedValue({
     id: "sub_legacyAnnual",
     customer: "cus_annual",
@@ -124,6 +127,8 @@ describe("POST /api/sync", () => {
       const first = await request({ key });
       expect(first.status).toBe(403);
       expect(dependencies.store.get(`sync:ent:${billingId}`)).toBe("no");
+      // Short, so a wrong-account deploy doesn't lock real buyers out for a day.
+      expect(dependencies.ttls.get(`sync:ent:${billingId}`)).toBe(600);
 
       const second = await request({ key });
       expect(second.status).toBe(403);
