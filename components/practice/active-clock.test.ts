@@ -62,7 +62,7 @@ describe("a game's active play time", () => {
     let c = startActiveClock(0);
     c = tap(c, 4 * SEC, 20 * SEC, 4 * SEC);
     const back = 25 * SEC + 6 * MIN;
-    c = skipHidden(c, 6 * MIN);
+    c = skipHidden(c, 6 * MIN, back);
     c = markActive(c, back + 10 * SEC);
     expect(activeElapsedMs(c, back + 10 * SEC)).toBe(35 * SEC);
   });
@@ -72,15 +72,27 @@ describe("a game's active play time", () => {
     // there on a visible screen: 20 s of it is excess.
     let c = startActiveClock(0);
     c = markActive(c, 10 * SEC);
-    c = skipHidden(c, 2 * MIN);
     const back = 35 * SEC + 2 * MIN;
+    c = skipHidden(c, 2 * MIN, back);
     c = markActive(c, back + 25 * SEC);
     expect(activeElapsedMs(c, back + 25 * SEC)).toBe(10 * SEC + 50 * SEC - 20 * SEC);
   });
 
   it("never reports less than nothing", () => {
-    const c = skipHidden(startActiveClock(10 * SEC), 5 * MIN);
+    const c = skipHidden(startActiveClock(10 * SEC), 5 * MIN, 20 * SEC);
     expect(activeElapsedMs(c, 20 * SEC)).toBe(0);
+  });
+
+  it("skips only the part of a hidden stretch after a restart", () => {
+    // Hidden at 5 s, the mic turns on and restarts the run at 60 s while the
+    // tab is still hidden, back at 100 s, then a minute of play with taps:
+    // only the 40 s hidden after the restart are left out.
+    let c = startActiveClock(0);
+    c = startActiveClock(60 * SEC);
+    c = skipHidden(c, 95 * SEC, 100 * SEC);
+    expect(c.start).toBe(100 * SEC);
+    c = tap(c, 103 * SEC, 160 * SEC, 3 * SEC);
+    expect(activeElapsedMs(c, 160 * SEC)).toBe(60 * SEC);
   });
 });
 
@@ -91,10 +103,13 @@ describe("the mutable timer", () => {
     expect(timer.elapsedMs(14 * SEC + 5 * MIN)).toBe(44 * SEC);
     // A hidden minute inside that idle stretch changes nothing: it was
     // already not being counted.
-    timer.hidden(MIN);
+    timer.hidden(MIN, 14 * SEC + 5 * MIN);
     expect(timer.elapsedMs(14 * SEC + 5 * MIN)).toBe(44 * SEC);
     timer.restart(10 * MIN);
     expect(timer.elapsedMs(10 * MIN + 12 * SEC)).toBe(12 * SEC);
+    // Hidden since before the restart: only the time after it is skipped.
+    timer.hidden(MIN, 10 * MIN + 20 * SEC);
+    expect(timer.elapsedMs(10 * MIN + 50 * SEC)).toBe(30 * SEC);
   });
 });
 

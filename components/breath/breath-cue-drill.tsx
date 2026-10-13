@@ -107,7 +107,7 @@ export function BreathCueDrill({
       document,
       () => performance.now(),
       (ms) => {
-        clockRef.current = skipHidden(clockRef.current, ms);
+        clockRef.current = skipHidden(clockRef.current, ms, performance.now());
       },
     );
     const stopInput = trackActivity(document, () => {

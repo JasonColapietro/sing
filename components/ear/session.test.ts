@@ -59,7 +59,7 @@ describe("an ear game timed on the active clock", () => {
   it("still leaves hidden time out", () => {
     const clock = createActiveTimer(0);
     for (let t = 3_000; t <= 30_000; t += 3_000) clock.mark(t);
-    clock.hidden(6 * MIN);
+    clock.hidden(6 * MIN, 30_000 + 6 * MIN);
     clock.mark(30_000 + 6 * MIN + 2_000);
     expect(earSessionSeconds("interval", clock, 30_000 + 6 * MIN + 2_000)).toBe(32);
   });

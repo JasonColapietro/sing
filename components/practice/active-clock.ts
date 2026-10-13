@@ -29,11 +29,13 @@ export interface ActiveClock {
   readonly start: number;
   /** The last input or game event, moved forward past hidden stretches since. */
   readonly lastActive: number;
+  /** When the run began or was last restarted: a hidden stretch counts only from here. */
+  readonly since: number;
 }
 
 /** A run starting now, with the start counting as its first event. */
 export function startActiveClock(now: number): ActiveClock {
-  return { start: now, lastActive: now };
+  return { start: now, lastActive: now, since: now };
 }
 
 /**
@@ -46,17 +48,24 @@ export function markActive(
   graceMs: number = IDLE_GRACE_MS,
 ): ActiveClock {
   const excess = Math.max(0, now - clock.lastActive - graceMs);
-  return { start: clock.start + excess, lastActive: Math.max(clock.lastActive, now) };
+  return { ...clock, start: clock.start + excess, lastActive: Math.max(clock.lastActive, now) };
 }
 
 /**
- * A hidden stretch of `ms`, reported when the tab comes back. The run moves
- * past it whole, and so does the idle gap, so the visible minutes on either
- * side of it are added up rather than the hidden ones counted twice.
+ * A hidden stretch of `ms` ending at `now`, reported when the tab comes back.
+ * The run moves past it, and so does the idle gap, so the visible minutes on
+ * either side of it are added up rather than the hidden ones counted twice.
+ * Only the part after the run began is skipped: a game that restarts its
+ * clock while the tab is hidden (a mic turning on) never had the earlier part
+ * to give back, and skipping it would push the start past `now`.
  */
-export function skipHidden(clock: ActiveClock, ms: number): ActiveClock {
-  const skip = Math.max(0, ms);
-  return { start: clock.start + skip, lastActive: clock.lastActive + skip };
+export function skipHidden(clock: ActiveClock, ms: number, now: number): ActiveClock {
+  const skip = Math.max(0, Math.min(ms, now - clock.since));
+  return {
+    ...clock,
+    start: Math.min(clock.start + skip, now),
+    lastActive: Math.min(clock.lastActive + skip, now),
+  };
 }
 
 /**
@@ -81,8 +90,8 @@ export interface ActiveTimer {
   restart(now: number): void;
   /** Input or a game event at `now`. */
   mark(now: number): void;
-  /** A hidden stretch of `ms`, reported when the tab comes back. */
-  hidden(ms: number): void;
+  /** A hidden stretch of `ms` ending at `now`, reported when the tab comes back. */
+  hidden(ms: number, now: number): void;
   /** Milliseconds of practice at `now`, hidden and idle time left out. */
   elapsedMs(now: number): number;
 }
@@ -96,8 +105,8 @@ export function createActiveTimer(now: number, graceMs: number = IDLE_GRACE_MS):
     mark: (t) => {
       clock = markActive(clock, t, graceMs);
     },
-    hidden: (ms) => {
-      clock = skipHidden(clock, ms);
+    hidden: (ms, t) => {
+      clock = skipHidden(clock, ms, t);
     },
     elapsedMs: (t) => activeElapsedMs(clock, t, graceMs),
   };

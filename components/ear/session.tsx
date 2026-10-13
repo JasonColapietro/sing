@@ -400,7 +400,7 @@ export function useActiveStart(roundEvent: number): [ActiveTimer, () => void] {
     const stopHidden = trackHiddenTime(
       document,
       () => performance.now(),
-      (ms) => timer.hidden(ms),
+      (ms) => timer.hidden(ms, performance.now()),
     );
     const stopInput = trackActivity(document, () => timer.mark(performance.now()));
     return () => {
