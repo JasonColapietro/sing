@@ -11,6 +11,7 @@ import {
   type RangeEntry,
 } from "@/lib/analytics";
 import { AMBER, DIM, LINE, LINE2, MONO, MUT, PANEL } from "./charts";
+import { TOLERANCE_CENTS } from "@/components/warmups/scoring";
 
 /** Weak enough to be worth practising on purpose. */
 const WEAK_BELOW = 70;
@@ -62,7 +63,7 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
           reports[0].midi,
         )} to ${midiToLabel(reports[reports.length - 1].midi)}. Overall ${
           overall ?? 0
-        }% in tune. Weakest note ${midiToLabel(weakest.midi)} at ${
+        }% within ${TOLERANCE_CENTS} cents of the target. Weakest note ${midiToLabel(weakest.midi)} at ${
           weakest.accuracy
         }%.`}
       >
@@ -99,10 +100,12 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
           const weak = report.accuracy < WEAK_BELOW;
           return (
             <g key={report.midi}>
+              {/* One string: React 19 writes a <title> only when its child is
+                  a single string, so split text children rendered it empty. */}
               <title>
-                {midiToLabel(report.midi)}: {report.accuracy}% in tune over{" "}
-                {report.sec.toFixed(0)}s
-                {report.cents !== null ? `, ${Math.round(report.cents)} cents off on average` : ""}
+                {`${midiToLabel(report.midi)}: ${report.accuracy}% within ${TOLERANCE_CENTS} cents of the target over ${report.sec.toFixed(0)}s${
+                  report.cents !== null ? `, ${Math.round(report.cents)} cents off on average` : ""
+                }`}
               </title>
               <rect
                 x={padL + i * slot}
@@ -137,7 +140,8 @@ export function NoteAccuracyChart({ tallies }: { tallies: NoteTallies }) {
         })}
       </svg>
       <p className="mt-2 text-xs text-mut">
-        {overall}% in tune across {Math.round(scoredSeconds(tallies))}s of scored
+        {overall}% within {TOLERANCE_CENTS} cents of the target across{" "}
+        {Math.round(scoredSeconds(tallies))}s of scored
         singing. Weakest note{" "}
         <span className="text-rec">{midiToLabel(weakest.midi)}</span> at{" "}
         {weakest.accuracy}%
@@ -244,10 +248,9 @@ export function RangeHistoryChart({ history }: { history: RangeEntry[] }) {
           const newest = i === series.length - 1;
           return (
             <g key={`${point.testedAt}-${i}`}>
+              {/* One string, as on the accuracy bars: split children render empty. */}
               <title>
-                {dateLabel(point.testedAt)}: {midiToLabel(point.lowMidi)}–
-                {midiToLabel(point.highMidi)}{" "}
-                {`(${point.semitones} semitones, closest fit ${voiceFitLabel(point.lowMidi, point.highMidi)})`}
+                {`${dateLabel(point.testedAt)}: ${midiToLabel(point.lowMidi)}–${midiToLabel(point.highMidi)} (${point.semitones} semitones, closest fit ${voiceFitLabel(point.lowMidi, point.highMidi)})`}
               </title>
               <rect
                 x={padL + i * slot}

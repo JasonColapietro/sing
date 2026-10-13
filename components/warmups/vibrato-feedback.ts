@@ -40,8 +40,9 @@ export type VibratoReading =
  * Collects one hold's pitch frames as an f0 trace. The player's animation loop
  * and the pitch loop run side by side, so the same published frame can be seen
  * twice or a frame can be missed; duplicates are dropped by timestamp, and a
- * missed frame is only a gap, which the analysis's median frame interval
- * ignores.
+ * missed frame is only a gap: the analysis takes the median frame interval and
+ * interpolates the trace back onto an even grid of it (lib/audio/vibrato.ts),
+ * so a gap never speeds up the rate it reads.
  */
 export function createF0Recorder() {
   let frames: F0Frame[] = [];

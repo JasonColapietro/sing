@@ -180,7 +180,24 @@ export function ModulePractice({
                           ? "Book"
                           : "Atlas"}
                   </span>
-                  {item.href ? (
+                  {item.kind === "song" && item.page && item.href ? (
+                    // The song's name opens its page, which prints the range
+                    // and key to choose from; "Sing it" opens it in the songbook.
+                    // The hidden title tells a screen reader, which can list a
+                    // page's links out of context, which song "Sing it" opens.
+                    <>
+                      <Link href={item.page} className="text-violet-ink hover:underline">
+                        {item.title}
+                      </Link>
+                      <Link
+                        href={item.href}
+                        className="text-xs text-violet-ink hover:underline"
+                        data-sing-song
+                      >
+                        Sing it<span className="sr-only">: {item.title}</span>
+                      </Link>
+                    </>
+                  ) : item.href ? (
                     <Link href={item.href} className="text-violet-ink hover:underline">
                       {item.title}
                     </Link>

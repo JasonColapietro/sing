@@ -429,6 +429,7 @@ describe("links from the lessons", () => {
       for (const item of moduleMaterial(id)) {
         if (item.pro && (item.kind === "exercise" || item.kind === "song")) {
           expect(item.href, `${id} links Pro ${item.kind} ${item.title}`).toBeUndefined();
+          expect(item.page, `${id} links Pro ${item.kind} ${item.title}`).toBeUndefined();
         }
         if (item.href?.startsWith("/warmups?exercise=")) {
           expect(free.has(item.href.split("=")[1]), `${id}: ${item.href}`).toBe(true);
@@ -455,6 +456,34 @@ describe("links from the lessons", () => {
         }
       }
     }
+  });
+
+  /**
+   * /songs?song= canonicalises to /songs, so a lesson that links a song only
+   * that way gives the song's own page, which prints the range a lesson asks
+   * the singer to choose a key from, no link at all. The name opens the page;
+   * "Sing it" beside it opens the songbook.
+   */
+  it("links each free song in the practice material to its own page, beside a link to sing it", async () => {
+    const byTitle = new Map(ALL_SONGS.map((s) => [s.title, s]));
+    let songs = 0;
+    for (const id of Object.keys(MODULE_PRACTICE)) {
+      for (const item of moduleMaterial(id)) {
+        if (item.kind !== "song" || item.pro) continue;
+        songs++;
+        const song = byTitle.get(item.title)!;
+        expect(item.page, `${id}: ${item.title}`).toBe(`/songs/${song.slug}`);
+        expect(item.href, `${id}: ${item.title}`).toBe(`/songs?song=${song.slug}`);
+      }
+    }
+    expect(songs).toBeGreaterThan(0);
+    const stage = COURSE.find((s) => s.modules.some((m) => m.catalog.id === "v-l2-m4"))!;
+    const mod = stage.modules.find((m) => m.catalog.id === "v-l2-m4")!;
+    const html = renderToStaticMarkup(
+      await ModulePage({ params: Promise.resolve({ stage: stage.slug!, module: mod.slug! }) }),
+    );
+    expect(html).toContain('href="/songs/amazing-grace"');
+    expect(html).toMatch(/<a [^>]*data-sing-song[^>]*href="\/songs\?song=amazing-grace"[^>]*>Sing it</);
   });
 
   /**
@@ -492,6 +521,21 @@ describe("links from the lessons", () => {
     const p = MODULE_PRACTICE["v-l1-m1"];
     expect(p.companion.room).toBe("recorder");
     expect(p.basis.kind).toBe("selfCheck");
+  });
+
+  /**
+   * A self-checked module's evidence is the singer's ear on a recording, and
+   * the live analyzer cannot record or play one back. Chest, Head, Falsetto
+   * sings a fuller and a lighter version in one take and judges the switch on
+   * playback, so it practises in the recorder. The analyzer stays for the
+   * modules whose evidence it measures (ring ratio, cycle dose).
+   */
+  it("never sends a self-checked module to the analyzer, which cannot record the take its self-check plays back", () => {
+    for (const [id, p] of Object.entries(MODULE_PRACTICE)) {
+      if (p.basis.kind !== "selfCheck") continue;
+      for (const companion of companionsOf(id)) expect(companion.room, id).not.toBe("analyze");
+    }
+    expect(MODULE_PRACTICE["v-l3-m1"].companion.room).toBe("recorder");
   });
 
   /**

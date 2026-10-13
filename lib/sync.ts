@@ -1,6 +1,6 @@
 "use client";
 
-import { getProState } from "./pro";
+import { NETWORK_ERROR_MESSAGE, getProState } from "./pro";
 import { getState, mergeRemoteProgress, subscribe } from "./progress";
 import { fitForCloud } from "./progress-cloud-fit";
 import {
@@ -41,12 +41,25 @@ export class SyncRefusedError extends Error {
   }
 }
 
+/**
+ * What "Sync now" says when the connection drops. fetch() rejects with the
+ * browser's own TypeError ("Failed to fetch", Safari's "Load failed"), which
+ * says neither what happened nor that the practice is safe. A plain Error, not
+ * a SyncRefusedError, so the automatic syncs still leave it for next time.
+ */
+export const SYNC_NETWORK_ERROR = `${NETWORK_ERROR_MESSAGE} Your practice is still saved on this device.`;
+
 async function post<T>(body: unknown): Promise<T> {
-  const res = await fetch("/api/sync", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  let res: Response;
+  try {
+    res = await fetch("/api/sync", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new Error(SYNC_NETWORK_ERROR);
+  }
   const data = (await res.json().catch(() => null)) as
     | (T & { error?: string })
     | null;
@@ -213,13 +226,22 @@ function hasUnsyncedPractice(last: string): boolean {
 }
 
 let exitFlushBound = false;
+/**
+ * Whether this page has bound the debounced push. startAutoSync runs again
+ * when Pro arrives on a page that loaded without it (ProSync), and a second
+ * call may run the round trip but must never subscribe twice.
+ */
+let autoSyncBound = false;
 
 /**
- * Called once per page load (from ProSync): a full round trip when the last
- * sync is stale or this device has practice newer than it, plus a debounced
- * push whenever practice writes new data, flushed early when the page is
- * hidden. Every failure is swallowed — sync must never break practice — but
- * a refusal from the route is kept for SyncControls to show.
+ * Called on page load and again whenever a Pro key arrives on the page (from
+ * ProSync: a checkout, a restored key, a redeemed pass): a full round trip
+ * when the last sync is stale or this device has practice newer than it, plus
+ * a debounced push whenever practice writes new data, flushed early when the
+ * page is hidden. The push is bound once per page; a page that loads without
+ * Pro binds it on the first call that has a key. Every failure is swallowed —
+ * sync must never break practice — but a refusal from the route is kept for
+ * SyncControls to show.
  */
 export function startAutoSync(): void {
   const key = proKeyOrNull();
@@ -232,6 +254,9 @@ export function startAutoSync(): void {
         Date.now() - Date.parse(last) > AUTO_SYNC_AFTER_MS)) {
     syncNow().catch(noteAutoSyncFailure);
   }
+
+  if (autoSyncBound) return;
+  autoSyncBound = true;
 
   const cancelPush = () => {
     if (pushTimer !== null) window.clearTimeout(pushTimer);

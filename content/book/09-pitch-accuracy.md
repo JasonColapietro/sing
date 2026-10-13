@@ -55,4 +55,4 @@ None of this makes the number useless. It makes it a reading rather than a grade
 
 ## Try this
 
-Open the pitch studio and pick a note on the keyboard in Target practice. Sing it eight times: four with your normal onset, four landing on the note from just above rather than sliding up from underneath. Watch two things — the cents readout at the instant the sound starts, and the front edge of each note on the trace. If the hook at the front disappears when you come from above, scooping is most of what your score has been counting.
+Open the [pitch studio](/studio) and pick a note on the keyboard in Target practice. Sing it eight times: four with your normal onset, four landing on the note from just above rather than sliding up from underneath. Watch two things — the cents readout at the instant the sound starts, and the front edge of each note on the trace. If the hook at the front disappears when you come from above, scooping is most of what your score has been counting.

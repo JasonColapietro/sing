@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DIFFICULTIES, GAME_NAMES, type GameId } from "./lib";
+import { DIFFICULTIES, GAME_NAMES, pitchMatchTolerance, type GameId } from "./lib";
 import {
   EAR_GAME_SECONDS,
   EAR_ROUTINES,
@@ -93,6 +93,21 @@ describe("game metadata", () => {
     expect(earStepLabel({ game: "melody-echo", difficulty: "hard" })).toBe(
       "Melody echo · Hard",
     );
+  });
+
+  /**
+   * Pitch match counts a note held within 50 cents (35 on Hard), far wider
+   * than the ±15-cent in-tune zone, so its description names that band and
+   * does not promise "in tune".
+   */
+  it("describes pitch match by the band it scores, not as in tune", () => {
+    expect(GAME_DESC["pitch-match"]).not.toMatch(/in tune/i);
+    expect(GAME_DESC["pitch-match"]).toContain(
+      `within ${pitchMatchTolerance("medium")} cents of the target (${pitchMatchTolerance("hard")} on Hard)`,
+    );
+    expect(pitchMatchTolerance("easy")).toBe(50);
+    expect(pitchMatchTolerance("medium")).toBe(50);
+    expect(pitchMatchTolerance("hard")).toBe(35);
   });
 
   it("says which routines open the microphone", () => {

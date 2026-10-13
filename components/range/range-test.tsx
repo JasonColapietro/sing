@@ -23,6 +23,7 @@ import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { PianoStrip } from "./piano-strip";
+import { freshInputHint, nextInputHint } from "./pitch-meter-hint";
 import { ResultView, type SaveSummary } from "./result-view";
 
 type Stage = "intro" | "warm" | "low" | "high" | "result";
@@ -74,14 +75,6 @@ const MIN_PLAUSIBLE = 24;
 const MAX_PLAUSIBLE = 96;
 /** Ignore near-silent frames. */
 const MIN_VOLUME = 0.008;
-/** Below this there is nothing on the mic at all, not merely a quiet singer. */
-const SILENCE_FLOOR = 0.0015;
-/**
- * How long to let a singer work before explaining why nothing is happening.
- * Long enough not to nag someone who is about to succeed, short enough that
- * nobody sits in front of a bar that never moves wondering what is wrong.
- */
-const HINT_AFTER_MS = 2500;
 
 const STEPS: Array<{ id: Stage; label: string }> = [
   { id: "warm", label: "Warm start" },
@@ -168,7 +161,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
 
   const lastTRef = useRef(0);
   /** Rolling evidence about the mic, so the hint describes what we measured. */
-  const inputRef = useRef({ quietMs: 0, unpitchedMs: 0, loudestSeen: 0 });
+  const inputRef = useRef(freshInputHint());
   /** Mirrors inputHint so the analysis effect never reads the state it sets. */
   const hintRef = useRef<string | null>(null);
   const holdRef = useRef<{ target: number | null; ms: number; gapMs: number }>({
@@ -194,7 +187,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     setResult(null);
     setInputHint(null);
     hintRef.current = null;
-    inputRef.current = { quietMs: 0, unpitchedMs: 0, loudestSeen: 0 };
+    inputRef.current = freshInputHint();
     holdRef.current = { target: null, ms: 0, gapMs: 0 };
     resetHunt();
   };
@@ -233,33 +226,10 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     // empty readout and a bar that never fills — with nothing to act on. The
     // test asks for "normal speaking volume", and with automatic gain
     // deliberately disabled that is often below the floor the detector needs,
-    // so this is the common case rather than the odd one.
-    const input = inputRef.current;
-    input.loudestSeen = Math.max(input.loudestSeen, frame.volume);
-    if (voiced) {
-      input.quietMs = 0;
-      input.unpitchedMs = 0;
-      showHint(null);
-    } else if (frame.volume >= MIN_VOLUME) {
-      // Loud enough, but no pitch came back — a breathy or unsteady note.
-      input.quietMs = 0;
-      input.unpitchedMs += dt;
-      if (input.unpitchedMs >= HINT_AFTER_MS) {
-        showHint(
-          "We can hear you, but we can't lock onto a pitch. Try a steady \u201cah\u201d on one comfortable note.",
-        );
-      }
-    } else {
-      input.unpitchedMs = 0;
-      input.quietMs += dt;
-      if (input.quietMs >= HINT_AFTER_MS) {
-        showHint(
-          input.loudestSeen >= SILENCE_FLOOR
-            ? "You're coming through too quietly to measure. Move closer to the mic, sing a little louder, or raise your input level in your system sound settings."
-            : "We're not picking up any sound. Check the right microphone is selected in your system sound settings, and that nothing else is using it.",
-        );
-      }
-    }
+    // so this is the common case rather than the odd one. The rule is shared
+    // with the pitch meter (./pitch-meter-hint), so both rooms say the same
+    // thing about the same input.
+    showHint(nextInputHint(inputRef.current, frame, dt, voiced, MIN_VOLUME));
 
     if (stage === "warm") {
       const h = holdRef.current;

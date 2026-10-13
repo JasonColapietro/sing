@@ -103,7 +103,9 @@ describe("former-83 structural retrieval cohort", () => {
       /<h3[^>]*>The classic rock men<\/h3>([\s\S]*?)(?=<h3|<\/ol>)/,
     )?.[1];
 
-    expect(classicRock).toMatch(/<h4[^>]*>Singers [^<]+ through [^<]+<\/h4>/);
+    expect(classicRock).toMatch(
+      /<h4[^>]*>First prominent (in )?\d{4}(–\d{4})?<\/h4>/,
+    );
   });
 });
 

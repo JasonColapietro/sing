@@ -25,7 +25,7 @@ Steady means three things at once, and they fail separately. Pitch that does not
 
 Work at conversational volume, or a little above. Loud is not the goal here, and loud hides problems — a big sound covers small instabilities the way a noisy room covers a hum.
 
-The test that matters is not whether you can produce one good note. It is whether you can produce the same one twice. Sing a five-note pattern from a warmup pack three times in a row and compare the pitch traces. If the three passes look like each other, you have something. If the first is clean and the next two wander, you got lucky once. Repeatability is the actual skill.
+The test that matters is not whether you can produce one good note. It is whether you can produce the same one twice. Sing one five-note pattern three times in a row, starting on the same note each time, and compare the pitch traces. If the three passes look like each other, you have something. If the first is clean and the next two wander, you got lucky once. Repeatability is the actual skill.
 
 ## Clean onsets
 
@@ -73,4 +73,4 @@ The aim of these two weeks is not a bigger voice. It is a middle that does the s
 
 ## Try this
 
-In Warmups, pick one five-note pattern that sits in your comfortable middle and sing it three times in a row at conversational volume. Watch whether the three pitch traces lie on top of each other — not whether any single one of them was good.
+In the [Recorder](/recorder), sing one five-note pattern in your comfortable middle as three short takes, each starting on the same note (find it on the [Tools](/tools) keyboard first), at conversational volume. Put two takes at a time in A/B compare and watch, under Pitch analysis, whether their overlaid pitch traces lie on top of each other — not whether any single one of them was good.

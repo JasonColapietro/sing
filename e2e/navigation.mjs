@@ -124,8 +124,46 @@ try {
         return (active?.tagName === "BUTTON" || active?.tagName === "A") && active === next;
       }), true, "Tab resumes at the first visible warmup control after the heading");
 
+      // Back from a singer page returns to the link that was tapped. The
+      // /singers chart renders after mount, so the browser's own restored
+      // position used to land thousands of pixels off (or on the footer after
+      // "Load more"); components/singers/directory.tsx keeps the loaded rows
+      // in ?shown= and scrolls the tapped link, in the list it was tapped in,
+      // back into view.
+      if (width === 375) {
+        const rows = page.locator("#singer-directory-results a");
+        const backTo = async (link, scope, label) => {
+          await link.scrollIntoViewIfNeeded();
+          const href = await link.getAttribute("href");
+          await link.click();
+          await page.waitForURL((url) => url.pathname === href);
+          await page.locator("h1").first().waitFor();
+          await page.goBack();
+          await page.waitForURL((url) => url.pathname === "/singers");
+          const back = await page.waitForFunction(([sel, target]) => {
+            const el = document.querySelector(sel)?.querySelector(`a[href="${target}"]`);
+            if (!el) return false;
+            const top = el.getBoundingClientRect().top;
+            return top >= 0 && top < innerHeight;
+          }, [scope, href], { timeout: 5000 }).then(() => true, () => false);
+          assert.equal(back, true, `${label}: Back lands with ${href} in view`);
+        };
+        await page.goto(`${base}/singers`, { waitUntil: "networkidle" });
+        await rows.nth(47).waitFor();
+        await backTo(rows.nth(20), "#singer-directory-results", "chart row 21");
+        await page.getByRole("button", { name: /^Load more singers/ }).click();
+        await rows.nth(95).waitFor();
+        await backTo(rows.nth(59), "#singer-directory-results", "chart row 60 after Load more");
+        assert.equal(await rows.count(), 96, "Back keeps the rows that were loaded");
+        await backTo(
+          page.locator('[data-singer-crawl-index] a[href="/singers/joni-mitchell"]'),
+          "[data-singer-crawl-index]",
+          "A-Z index link",
+        );
+      }
+
       assert.deepEqual(errors, []);
-      console.log(`PASS ${width}px: ten rooms via the sheet, five primary tabs, touch targets, overflow, menu cleanup, warmup exit focus`);
+      console.log(`PASS ${width}px: ten rooms via the sheet, five primary tabs, touch targets, overflow, menu cleanup, warmup exit focus${width === 375 ? ", Back to the tapped singer" : ""}`);
     } finally { await context.close(); }
   }
 } finally { await browser.close(); }

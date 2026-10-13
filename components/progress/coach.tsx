@@ -11,6 +11,7 @@ import { LockGlyph } from "@/components/pro/ui";
 import { midiToLabel } from "@/lib/audio/notes";
 import { aggregateNotes, overallAccuracy, weakNotes } from "@/lib/analytics";
 import { EXERCISES } from "@/components/warmups/exercises";
+import { TOLERANCE_CENTS } from "@/components/warmups/scoring";
 import { rangeTestHref } from "@/lib/site";
 import { TYPE_META, addDays, localDayStr } from "./format";
 
@@ -193,7 +194,7 @@ export function buildPlan(
       minutes: 6,
       reason: `${names} ${weak.length > 1 ? "are" : "is"} your weakest ${
         weak.length > 1 ? "notes" : "note"
-      } right now — ${midiToLabel(worst.midi)} lands in tune just ${worst.accuracy}% of the time${
+      } right now — ${midiToLabel(worst.midi)} lands within ${TOLERANCE_CENTS} cents of the target just ${worst.accuracy}% of the time${
         worst.cents !== null ? `, off by ~${Math.round(worst.cents)} cents` : ""
       }. Ladder through it slowly.`,
     };
@@ -255,7 +256,7 @@ export function buildPlan(
       minutes: 3,
       reason:
         accuracy !== null
-          ? `Finish on real music — you're in tune ${accuracy}% of the scored time lately, and songs are where that shows.`
+          ? `Finish on real music — you're within ${TOLERANCE_CENTS} cents of the target ${accuracy}% of the scored time lately, and songs are where that shows.`
           : "Finish by putting the work into real music.",
     });
   }

@@ -765,7 +765,11 @@ export function rangeFit(song: Song, range: VocalRange, transpose = 0): RangeFit
 }
 
 /**
- * How many of the given songs sit inside the range as written.
+ * How many of the given songs fit the range in the key they open in: fitted
+ * to the saved range (songTranspose with no pick), the same judgement as the
+ * library's "Fits your range" badge and the "Fits my range" filter. Counting
+ * the written key instead told low and narrow voices that nothing fits while
+ * the songbook, one tap later, marked the same songs as fitting.
  *
  * Takes the list rather than reading the catalog, because the only honest
  * number to quote is one counted over the songs that singer can actually
@@ -777,7 +781,7 @@ export function rangeFit(song: Song, range: VocalRange, transpose = 0): RangeFit
 export function countSongsFitting(songs: readonly Song[], range: VocalRange): number {
   let n = 0;
   for (const song of songs) {
-    if (rangeFit(song, range).verdict === "fits") n++;
+    if (rangeFit(song, range, songTranspose(song, range, null)).verdict === "fits") n++;
   }
   return n;
 }

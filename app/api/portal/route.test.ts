@@ -29,6 +29,16 @@ function request() {
   );
 }
 
+function portal(body: unknown) {
+  return POST(
+    new Request("https://sing.suedeai.ai/api/portal", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    }),
+  );
+}
+
 function stripeError(code: string) {
   return Object.assign(new Error(code), {
     type: "StripeInvalidRequestError",
@@ -70,5 +80,20 @@ describe("POST /api/portal", () => {
     await expect(response.json()).resolves.toEqual({
       url: "https://billing.stripe.com/p/session",
     });
+  });
+
+  it("returns the subscriber to a marked /pro, so the plan is re-checked on the way back", async () => {
+    await request();
+    expect(dependencies.createPortalSession).toHaveBeenCalledWith({
+      customer: "cus_a",
+      return_url: "https://sing.suedeai.ai/pro?portal=return",
+    });
+  });
+
+  it("refuses a subscription that belongs to another customer", async () => {
+    dependencies.retrieveSubscription.mockResolvedValue({ id: "sub_a", customer: "cus_someone_else" });
+    const response = await portal({ customerId: "cus_a", subscriptionId: "sub_a" });
+    expect(response.status).toBe(403);
+    expect(dependencies.createPortalSession).not.toHaveBeenCalled();
   });
 });

@@ -155,4 +155,18 @@ describe("the ladder diagnosis on a descending drill", () => {
     expect(html).not.toContain("★★★★☆");
     expect(html.match(/2 of 3 stars/g)?.length).toBe(2);
   });
+
+  it("names the weakest note's share by the scoring window, never as in tune", () => {
+    // The ±50-cent window passes a phrase sung clearly flat (book chapter 9);
+    // the studio's ±15-cent green zone is what in tune means on this site.
+    const ex = EXERCISES.find((e) => e.id === plan.picks[0].exercise.id)!;
+    const notes = [{ midi: 52, hitSec: 1, possibleSec: 2, centsSum: 40 * 60, centsFrames: 60 }];
+    const rep = { root: 50, score: 50, avgCentsErr: 40, skipped: false, notes };
+    const html = render(
+      { ex, results: [rep], avgScore: 50, best: rep, xpGained: 20, newAchievements: [], mode: "sing-along" },
+      { daily: false },
+    );
+    expect(html).toContain("was the shakiest note in the session: within 50 cents of the target for 50% of its scored time, about 40 cents off on average.");
+    expect(html).not.toMatch(/in tune/i);
+  });
 });

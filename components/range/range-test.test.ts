@@ -121,3 +121,24 @@ describe("the warm-up stage", () => {
     expect(warm).toMatch(/<Button variant="ghost" size="sm" onClick=\{retake\}>\s*Start over\s*<\/Button>/);
   });
 });
+
+describe("the range test's too-quiet hint", () => {
+  /**
+   * The pitch meter shares this rule from ./pitch-meter-hint. A second copy
+   * of the thresholds or the sentences here would let the two rooms drift
+   * apart and describe the same input differently.
+   */
+  it("uses the rule it shares with the pitch meter, not a copy of its own", () => {
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    expect(src).toMatch(
+      /import \{ freshInputHint, nextInputHint \} from "\.\/pitch-meter-hint";/,
+    );
+    expect(src).not.toMatch(/const (SILENCE_FLOOR|HINT_AFTER_MS)\b/);
+    expect(src).not.toMatch(/too quietly to measure|picking up any sound|lock onto a pitch/);
+    expect(src).toMatch(/useRef\(freshInputHint\(\)\)/);
+    expect(src).toMatch(/inputRef\.current = freshInputHint\(\);/);
+    expect(src).toMatch(
+      /showHint\(nextInputHint\(inputRef\.current, frame, dt, voiced, MIN_VOLUME\)\);/,
+    );
+  });
+});

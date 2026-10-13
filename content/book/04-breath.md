@@ -65,4 +65,4 @@ Breath is not fuel you spend, and it is not force you apply. It is a pressure yo
 
 ## Try this
 
-Open Breath and run the sustain test twice — once cold, then again after a minute of lip trills. Compare both numbers it gives you, seconds and steadiness, not just the seconds. A second attempt that lasts longer at equal or better steadiness suggests you were spending air rather than running out of it. Your last ten attempts stay on the chart, so you can see whether that pattern holds up over a few sessions or was a one-off.
+Open Breath and run the [sustain test](/breath?drill=sustain) twice — once cold, then again after a minute of lip trills. Compare both numbers it gives you, seconds and steadiness, not just the seconds. A second attempt that lasts longer at equal or better steadiness suggests you were spending air rather than running out of it. Your last ten attempts stay on the chart, so you can see whether that pattern holds up over a few sessions or was a one-off.

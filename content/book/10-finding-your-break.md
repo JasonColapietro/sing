@@ -63,4 +63,4 @@ Write down three notes — where the effort jumps, where the sound changes, and 
 
 ## Try this
 
-In the pitch studio, sing a slow "ng" slide upward at low volume, three times, and note the pitch where the trace first gets scruffy — not where the sound flips, but where it starts to hesitate. That is where your preparation needs to begin.
+In the [pitch studio](/studio), sing a slow "ng" slide upward at low volume, three times, and note the pitch where the trace first gets scruffy — not where the sound flips, but where it starts to hesitate. That is where your preparation needs to begin.

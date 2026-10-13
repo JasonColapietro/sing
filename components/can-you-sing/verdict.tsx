@@ -80,15 +80,32 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
   // The range test reports limits, not a comfortable band, so an end note on
   // (or a semitone inside) a tested limit is not called a plain fit, and key
   // advice names the shift that centres the song when it differs from the
-  // minimum one that parks an end on a limit. Centring a song that is no
-  // wider than the range keeps both ends inside it. A song that already fits
-  // is only told to move when centring leaves at least two semitones at each
-  // end, so the advice never lands it on the limit this message warns about.
+  // minimum one that parks an end on a limit. In every branch, centring is
+  // offered only when it leaves at least two semitones at each end, so the
+  // advice never lands the song on the limit this message warns about.
   const headroom = high - song.highMidi;
   const footroom = song.lowMidi - low;
   const centre = Math.round((low + high) / 2 - (song.lowMidi + song.highMidi) / 2);
-  const roomToCentre = headroom + footroom >= 4;
+  // Semitones the saved range has to spare. A key change keeps this the same:
+  // the minimum shift parks one end on a limit and leaves the other `slack`
+  // inside its limit; centring splits it, so only slack >= 4 leaves two
+  // semitones at each end.
+  const slack = high - low - (song.highMidi - song.lowMidi);
+  const roomToCentre = slack >= 4;
   const limitsNote = "A range test finds your limits, not your comfortable band";
+  // Quoted: several titles are styled lowercase ("vampire", "drop dead").
+  const name = `“${song.title}”`;
+  // After the minimum shift, the end that did not move can land on (or a
+  // semitone inside) the opposite limit too. Name it rather than letting the
+  // advice silently park the song's other extreme on a limit.
+  const otherEnd = (end: "top" | "lowest") =>
+    slack > 1
+      ? ""
+      : ` That also puts its ${end} note ${
+          end === "top"
+            ? slack === 0 ? "on your tested ceiling" : "one semitone under your tested ceiling"
+            : slack === 0 ? "on your tested floor" : "one semitone above your tested floor"
+        }, so expect both ends of the song to be work.`;
 
   // A song pitched for a higher or lower voice is usually sung an octave away
   // in its written key (the either-octave rule the songbook scores by). When
@@ -98,7 +115,9 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
   const octLow = song.lowMidi + octave;
   const octHigh = song.highMidi + octave;
   const octaveFits = octave !== 0 && octLow >= low && octHigh <= high;
-  const octaveEdge = high - octHigh <= 1 ? "top" : octLow - low <= 1 ? "bottom" : null;
+  const octTop = high - octHigh <= 1;
+  const octBottom = octLow - low <= 1;
+  const octaveEdge = octTop && octBottom ? "top and bottom" : octTop ? "top" : octBottom ? "bottom" : null;
   const octaveNote = octaveFits
     ? ` Sung an octave ${octave < 0 ? "lower" : "higher"} in the written key, it runs ${popNoteLabel(song, octLow)}–${popNoteLabel(song, octHigh)}, inside your tested range${octaveEdge ? `. ${limitsNote}, so expect the ${octaveEdge} of it to be work` : ""}.`
     : "";
@@ -109,16 +128,18 @@ export function CanYouSingVerdict({ song }: { song: PopSong }) {
 
   const message =
     fit.verdict === "fits"
-      ? headroom <= 1
-        ? `As written, every note of ${song.title} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"}. ${limitsNote}, so expect the top of this song to be work.${roomToCentre && -centre >= 1 ? ` Dropping the key by ${-centre} centres it in your range.` : ""}`
-        : footroom <= 1
-          ? `As written, every note of ${song.title} is inside your tested range, but its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect the bottom of this song to be work.${roomToCentre && centre >= 1 ? ` Raising the key by ${centre} centres it in your range.` : ""}`
-          : `As written, ${song.title} sits inside your range. The top of the song leaves you ${headroom} semitones of headroom.`
+      ? headroom <= 1 && footroom <= 1
+        ? `As written, every note of ${name} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"} and its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect both ends of this song to be work.`
+        : headroom <= 1
+          ? `As written, every note of ${name} is inside your tested range, but its top note is ${headroom === 0 ? "your tested ceiling" : "one semitone under your tested ceiling"}. ${limitsNote}, so expect the top of this song to be work.${roomToCentre && -centre >= 1 ? ` Dropping the key by ${-centre} centres it in your range.` : ""}`
+          : footroom <= 1
+            ? `As written, every note of ${name} is inside your tested range, but its lowest note is ${footroom === 0 ? "your tested floor" : "one semitone above your tested floor"}. ${limitsNote}, so expect the bottom of this song to be work.${roomToCentre && centre >= 1 ? ` Raising the key by ${centre} centres it in your range.` : ""}`
+            : `As written, ${name} sits inside your range. The top of the song leaves you ${headroom} semitones of headroom.`
       : fit.verdict === "high"
-        ? `The top of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} above your tested ceiling of ${midiToLabel(high)}. Dropping the key by ${fit.offsetSemis} would bring it inside, with the top note on that ceiling${-centre > fit.offsetSemis ? `; dropping it by ${-centre} centres it in your range` : ""}.${octaveNote}`
+        ? `The top of ${name} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} above your tested ceiling of ${midiToLabel(high)}. Dropping the key by ${fit.offsetSemis} would bring it inside, with the top note on that ceiling${roomToCentre && -centre > fit.offsetSemis ? `; dropping it by ${-centre} centres it in your range` : ""}.${otherEnd("lowest")}${octaveNote}`
         : fit.verdict === "low"
-          ? `The low end of ${song.title} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} below your tested floor of ${midiToLabel(low)}. Raising the key by ${fit.offsetSemis} would bring it inside, with the bottom note on that floor${centre > fit.offsetSemis ? `; raising it by ${centre} centres it in your range` : ""}.${octaveNote}`
-          : `${song.title} spans more semitones than your tested range covers, so no key change puts every note inside that saved range. Start with a smaller pattern rather than pushing for the extremes.`;
+          ? `The low end of ${name} is ${fit.offsetSemis} semitone${fit.offsetSemis === 1 ? "" : "s"} below your tested floor of ${midiToLabel(low)}. Raising the key by ${fit.offsetSemis} would bring it inside, with the bottom note on that floor${roomToCentre && centre > fit.offsetSemis ? `; raising it by ${centre} centres it in your range` : ""}.${otherEnd("top")}${octaveNote}`
+          : `${name} spans more semitones than your tested range covers, so no key change puts every note inside that saved range. Start with a smaller pattern rather than pushing for the extremes.`;
 
   return (
     <Card>

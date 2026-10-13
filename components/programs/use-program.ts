@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { localDay, useProgress } from "@/lib/progress";
+import { subscribePracticeDay } from "@/lib/free-cap";
 import { loadBreath, type SustainAttempt } from "@/components/breath/store";
 import {
   earliestNext,
@@ -20,30 +21,21 @@ import {
 } from "@/lib/programs";
 import { saveProgramProgress, useProgramProgress } from "./store";
 
+const noDayOnServer = () => null;
+
 /**
- * The singer's local day, read after mount and kept current across midnight.
+ * The singer's local day, kept current across midnight.
  *
  * The server has no idea what day it is where the singer sits, so this is null
- * until the client reads it — the same shape as the warmups room's hour and
- * today's-three day. A page left open overnight re-reads it when the tab comes
- * back and once a minute; the setter bails out when nothing changed.
+ * while the page is server-rendered and hydrated. It is read in the first
+ * render after hydration, the same render in which the progress and program
+ * stores switch to what this browser holds, so a program card mounts in the
+ * same commit that takes the pre-paint slot away (components/prepaint.tsx)
+ * rather than one effect later. A page left open overnight re-reads it at
+ * midnight, once a minute and when the tab comes back (subscribePracticeDay).
  */
 export function useLocalDay(): string | null {
-  const [today, setToday] = useState<string | null>(null);
-  useEffect(() => {
-    const refresh = () => setToday(localDay());
-    refresh();
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") refresh();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    const id = window.setInterval(refresh, 60_000);
-    return () => {
-      document.removeEventListener("visibilitychange", onVisibility);
-      window.clearInterval(id);
-    };
-  }, []);
-  return today;
+  return useSyncExternalStore(subscribePracticeDay, localDay, noDayOnServer);
 }
 
 export interface ActiveProgram {

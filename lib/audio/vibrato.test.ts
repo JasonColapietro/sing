@@ -200,6 +200,44 @@ describe("analyzeVibrato", () => {
     expect(result.rateHz as number).toBeCloseTo(6, 0);
   });
 
+  it("keeps the rate when frames go missing from the trace", () => {
+    // A busy phone drops animation frames, so the pitch loop misses some.
+    // Indexed as if evenly spaced, one frame in ten missing read 5.5 Hz as
+    // 6.0 to 6.4 Hz; the run is interpolated back onto an even grid instead.
+    for (const seed of [1, 2, 3, 4, 5]) {
+      let s = seed;
+      const rand = () => (s = (s * 16807) % 2147483647) / 2147483647;
+      const frames = vibratoNote({ durationSec: 4, centreHz: 164.81 }).filter(
+        (_, i) => i < 5 || rand() >= 0.1,
+      );
+      const result = analyzeVibrato(frames);
+      expect(result.present).toBe(true);
+      expect(result.rateHz as number).toBeGreaterThan(5.4);
+      expect(result.rateHz as number).toBeLessThan(5.6);
+      expect(result.extentCents as number).toBeGreaterThan(90);
+      expect(result.extentCents as number).toBeLessThan(110);
+    }
+  });
+
+  it("keeps the rate across an unvoiced dropout the run bridges", () => {
+    // Three unvoiced frames every half second: each is bridged into the run
+    // (lib/audio/voiced-run.ts), so it must not shorten the run's time axis.
+    const frames = vibratoNote({ durationSec: 4 }).map((frame, i) =>
+      i % 30 >= 27 ? { t: frame.t, f0: null } : frame,
+    );
+    const result = analyzeVibrato(frames);
+    expect(result.present).toBe(true);
+    expect(result.rateHz as number).toBeGreaterThan(5.4);
+    expect(result.rateHz as number).toBeLessThan(5.6);
+  });
+
+  it("reads an evenly spaced trace at its true rate", () => {
+    // Every grid point of an even trace lands on a frame and takes its value
+    // exactly, so regridding leaves a clean reading where it was.
+    const result = analyzeVibrato(vibratoNote({ rateHz: 5.5, durationSec: 4 }));
+    expect(result.rateHz as number).toBeCloseTo(5.5, 2);
+  });
+
   it("refuses a trace too coarse to carry the top of the band", () => {
     // The offline take pass hops 2048 samples, about 23 frames a second at
     // 48 kHz. A 9 Hz modulation is two and a half frames a cycle there, so a

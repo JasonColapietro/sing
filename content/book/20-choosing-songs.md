@@ -73,4 +73,4 @@ Choose songs that fit the voice you have now, and you spend the performance soun
 
 ## Try this
 
-Open the recorder and sing only the last chorus of a song you are considering — twice through, at conversational volume, saved as two takes. Put them side by side in A/B compare and listen for whether your tone thins or spreads on the second pass. That second pass, not the first, is what the song will actually sound like.
+Open the [recorder](/recorder) and sing only the last chorus of a song you are considering — twice through, at conversational volume, saved as two takes. Put them side by side in A/B compare and listen for whether your tone thins or spreads on the second pass. That second pass, not the first, is what the song will actually sound like.

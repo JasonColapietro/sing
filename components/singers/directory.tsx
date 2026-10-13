@@ -17,6 +17,7 @@ import {
 import {
   INITIAL_RICH_SINGER_ROWS,
   nextRichSingerRowCount,
+  shownRowCountFromParam,
   visibleRichSingerRows,
 } from "@/lib/singer-directory-pagination";
 import { Button, EmptyState, LinkButton } from "@/components/ui";
@@ -29,6 +30,96 @@ import {
   rangeBarWords,
   spanBarClass,
 } from "@/components/singers/range-bar";
+
+/* ------------------------------------------------------- back to a row --- */
+
+/**
+ * Where a tap into a singer page came from, so browser Back lands on that
+ * link again. The chart renders nothing until after mount and starts again
+ * at its first batch, so the browser's own restored position is applied to a
+ * page thousands of pixels shorter and every return landed far from the row.
+ */
+const RETURN_KEY = "suede-sing:singers:return";
+/** The two lists a visitor taps a singer in, each searched only within itself:
+ * the same href also appears in the cards above the chart, and in the other
+ * list. */
+const RETURN_SCOPES = ["#singer-directory-results", "[data-singer-crawl-index]"] as const;
+/** How recently a history traversal must have happened to count as "Back". */
+const TRAVERSAL_WINDOW_MS = 10_000;
+
+let lastPopState = 0;
+let mountedInDocument = false;
+if (typeof window !== "undefined") {
+  window.addEventListener("popstate", () => {
+    lastPopState = Date.now();
+  });
+}
+
+/**
+ * Whether this mount is a Back/Forward return to the tap recorded at
+ * `tappedAt`: within the app, a popstate since that tap and just now (an
+ * earlier Back followed by a tap and a forward link does not count); or a
+ * full document load of this very page by history traversal.
+ */
+function arrivedByHistory(tappedAt: number): boolean {
+  const first = !mountedInDocument;
+  mountedInDocument = true;
+  if (lastPopState >= tappedAt && Date.now() - lastPopState < TRAVERSAL_WINDOW_MS) return true;
+  if (!first) return false;
+  try {
+    const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    return nav?.type === "back_forward" && new URL(nav.name).pathname === window.location.pathname;
+  } catch {
+    return false;
+  }
+}
+
+/** Remember the singer link a visitor tapped in one of the two lists. */
+function rememberTappedSinger(e: MouseEvent) {
+  const target = e.target instanceof Element ? e.target : null;
+  const link = target?.closest('a[href^="/singers/"]');
+  if (!link) return;
+  const scope = RETURN_SCOPES.find((sel) => link.closest(sel));
+  if (!scope) return;
+  try {
+    sessionStorage.setItem(
+      RETURN_KEY,
+      JSON.stringify({ href: link.getAttribute("href"), scope, at: Date.now() }),
+    );
+  } catch {
+    // Storage blocked: Back keeps the browser's own position.
+  }
+}
+
+/** On a Back return, bring the tapped link into view. The key is cleared on
+ * every mount, so a forward visit never jumps to an old row. */
+function returnToTappedSinger() {
+  let saved: { href?: unknown; scope?: unknown; at?: unknown } | null = null;
+  try {
+    saved = JSON.parse(sessionStorage.getItem(RETURN_KEY) ?? "null");
+    sessionStorage.removeItem(RETURN_KEY);
+  } catch {
+    return;
+  }
+  const traversal = arrivedByHistory(typeof saved?.at === "number" ? saved.at : 0);
+  if (!saved || typeof saved.href !== "string" || !traversal) return;
+  const scope = RETURN_SCOPES.find((sel) => sel === saved.scope);
+  if (!scope) return;
+  const link = document
+    .querySelector(scope)
+    ?.querySelector(`a[href="${CSS.escape(saved.href)}"]`);
+  if (!link) return;
+  link.scrollIntoView({ block: "center" });
+  // A Back inside the app can mount the chart while the popstate is still
+  // being handled, and the browser then applies the entry's saved scroll
+  // position on top of this one. That position was measured with every row at
+  // its real height, which a fresh chart only estimates (.cv-auto), so after
+  // "Load more" it left the row a screen or more above the viewport. Bring the
+  // link back once the browser has done that; already centred, it is a no-op.
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => link.scrollIntoView({ block: "center" })),
+  );
+}
 
 /* ---------------------------------------------------------------- axis --- */
 
@@ -248,9 +339,10 @@ export function SingersDirectory() {
   );
   const [isInteractive, setIsInteractive] = useState(false);
 
-  // Filters live in the URL (?q=&voice=&genre=&sort=) so browser Back from a
-  // singer page restores them. Read once after mount (SSR renders defaults,
-  // so no hydration mismatch), write with replaceState (no nav, no rerender).
+  // Filters live in the URL (?q=&voice=&genre=&sort=), with the loaded row
+  // count past the first batch (?shown=), so browser Back from a singer page
+  // restores them. Read once after mount (SSR renders defaults, so no
+  // hydration mismatch), write with replaceState (no nav, no rerender).
   useEffect(() => {
     // useSearchParams would need a Suspense boundary that blanks the
     // server-rendered directory (and its 357 crawlable links), so restore
@@ -265,10 +357,19 @@ export function SingersDirectory() {
     if (pv && (VOICE_KINDS as string[]).includes(pv)) setVoice(pv as VoiceKind);
     if (pg && ALL_GENRES.includes(pg)) setGenre(pg);
     if (ps && SORT_IDS.has(ps)) setSort(ps as SortId);
-    setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
+    setVisibleRowCount(shownRowCountFromParam(p.get("shown"), SINGERS.length));
     setIsInteractive(true);
     /* eslint-enable react-hooks/set-state-in-effect */
+
+    // Capture phase, so the tap is recorded before the link navigates.
+    document.addEventListener("click", rememberTappedSinger, true);
+    return () => document.removeEventListener("click", rememberTappedSinger, true);
   }, []);
+
+  // Runs once the chart (and its restored rows) is in the DOM.
+  useEffect(() => {
+    if (isInteractive) returnToTappedSinger();
+  }, [isInteractive]);
 
   useEffect(() => {
     const p = new URLSearchParams();
@@ -276,12 +377,13 @@ export function SingersDirectory() {
     if (voice !== "all") p.set("voice", voice);
     if (genre !== "all") p.set("genre", genre);
     if (sort !== "name") p.set("sort", sort);
+    if (visibleRowCount > INITIAL_RICH_SINGER_ROWS) p.set("shown", String(visibleRowCount));
     const qs = p.toString();
     const next = qs ? `?${qs}` : window.location.pathname;
     if (window.location.search !== (qs ? `?${qs}` : "")) {
       window.history.replaceState(null, "", next);
     }
-  }, [q, voice, genre, sort]);
+  }, [q, voice, genre, sort, visibleRowCount]);
 
   const progress = useProgress();
   const youLow = progress.range.lowMidi;

@@ -49,9 +49,11 @@ export default function SongsPage() {
         It also holds the space: a null fallback let hydration insert 494px of
         gate above the prerendered songbook and push all of it down, which was
         this page's CLS 0.36. SongsClient renders the same component, so the
-        real gate lands in the box the fallback already drew.
+        real gate lands in the box the fallback already drew. A singer at
+        the free cap gets the wall over the library instead, so the fallback
+        carries that too, shown by the pre-paint state (`prepaint`).
       */}
-      <Suspense fallback={<SongsMicGate />}>
+      <Suspense fallback={<SongsMicGate prepaint />}>
         <SongsClient />
       </Suspense>
 

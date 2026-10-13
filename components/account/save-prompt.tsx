@@ -133,14 +133,16 @@ function joinList(parts: string[]): string {
  * the more honest sentence: for a signed-out free user this browser really is
  * the only copy.
  */
-function stakeSentence(s: ProgressState): string {
+export function stakeSentence(s: ProgressState): string {
   const parts: string[] = [];
   const n = s.sessions.length;
   if (n > 0) parts.push(`${n} practice ${n === 1 ? "session" : "sessions"}`);
   // The live streak, not streak.current: a lapsed 12-day streak is gone, and
   // naming it here would offer to protect something the next session resets.
   const streak = liveStreak(s.streak);
-  if (streak >= 2) parts.push(`a ${streak}-day streak`);
+  // "your", not "a": "a 11-day streak" and "a 8-day streak" are wrong, and
+  // "your" reads right in every list position without choosing a or an.
+  if (streak >= 2) parts.push(`your ${streak}-day streak`);
   if (s.range.lowMidi !== undefined) parts.push("your measured range");
   return `This browser holds the only copy of ${joinList(parts)}.`;
 }

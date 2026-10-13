@@ -166,6 +166,11 @@ export const RANGE_GUIDE: GuideContent = {
       note: "Three short free lessons on finding your low and high notes without forcing either end.",
     },
     {
+      href: "/book/reading-the-range-test",
+      label: "Reading your range test (free chapter)",
+      note: "How to take the test honestly, and what a disappointing result usually means before you believe it.",
+    },
+    {
       href: "/can-you-sing",
       label: "Popular song vocal ranges",
       note: "The key and cited vocal range of popular songs; once your range is saved, each song's page checks it against yours.",
@@ -786,7 +791,7 @@ export const TOOLS_GUIDE: GuideContent = {
       },
       {
         title: "Walk the scale slowly",
-        body: "Sing up the scale one note at a time, holding each against the drone. Thirds and sevenths are where most singers discover they have been approximating.",
+        body: "Sing up the scale one note at a time, holding each against the drone. Thirds and sixths are where most singers discover they have been approximating. The seventh rubs against the drone wherever you put it, so take that one from the keyboard.",
       },
       {
         title: "Sing a phrase over it",
@@ -812,7 +817,7 @@ export const TOOLS_GUIDE: GuideContent = {
     heading: "Use the drone on the intervals you round off",
     body: "Most trained singers are accurate on the tonic, fifth and octave and quietly approximate on thirds, sixths and sevenths, where equal temperament and the ear disagree slightly anyway.",
     points: [
-      "Hold thirds and sevenths against the drone until the beating stops — that is where intonation is really tested",
+      "Hold thirds and sixths against the drone until the beating stops; a beat-free third or sixth sits a little off the piano's, so check the same note on the keyboard too. Tune sevenths on the keyboard or in the pitch studio instead: a major seventh never stops beating against the tonic, and a minor seventh goes quiet well off the piano's note",
       "Drone on a note other than the tonic of your phrase to practice hearing your line against a moving harmony",
       "Use the metronome on subdivisions rather than the beat to expose rushing inside a phrase",
       "Combine drone and take recorder: sing against the drone, then listen back with it removed",
@@ -978,6 +983,11 @@ export const STUDIO_GUIDE: GuideContent = {
       href: "/glossary",
       label: "Glossary",
       note: "Cents, sharp and flat, fundamental — the readout, defined.",
+    },
+    {
+      href: "/book/when-numbers-lie",
+      label: "Why pitch readings go wrong (free chapter)",
+      note: "Room noise, mic distance and headphone bleed, and a fifteen-second silence check before you trust a reading.",
     },
     {
       href: "/learn/voice/pitch-time-words/in-tune-all-the-way",

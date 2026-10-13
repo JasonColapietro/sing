@@ -131,17 +131,31 @@ describe("chart and roster group headings", () => {
     expect(balancedChunks(list, 24).flat()).toEqual(list);
   });
 
-  it("never read 'Singers X through X' on the hubs and the atlas contents", async () => {
+  it("never read 'Singers X through X' on the hubs", async () => {
     const pages = [
       renderToStaticMarkup(await VoiceTypePage({ params: Promise.resolve({ type: "soprano" }) })),
       renderToStaticMarkup(await GenrePage({ params: Promise.resolve({ genre: "opera" }) })),
-      renderToStaticMarkup(<AtlasPage />),
     ];
     for (const html of pages) {
       const headings = [...html.matchAll(/>Singers ([^<]+?) through ([^<]+?)</g)];
       expect(headings.length).toBeGreaterThan(1);
       for (const [heading, first, last] of headings) expect(first, heading).not.toBe(last);
     }
+  });
+
+  it("heads the atlas contents' year-ordered rosters by year span, never as name ranges", () => {
+    // Chapter rosters are in order of first prominence (compile-atlas.mjs),
+    // so "Singers Sabrina Carpenter through Lola Young" read as a backwards
+    // alphabetical range.
+    const html = renderToStaticMarkup(<AtlasPage />);
+    const headings = [...html.matchAll(/<h4[^>]*>([^<]+)<\/h4>/g)].map((m) => m[1]);
+    expect(headings.length).toBeGreaterThan(1);
+    for (const heading of headings) {
+      expect(heading).toMatch(/^First prominent (in )?\d{4}(–\d{4})?$/);
+      const span = /(\d{4})–(\d{4})/.exec(heading);
+      if (span) expect(Number(span[1]), heading).toBeLessThan(Number(span[2]));
+    }
+    expect(html).not.toMatch(/>Singers [^<]+ through [^<]+</);
   });
 });
 

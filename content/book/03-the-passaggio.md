@@ -66,4 +66,4 @@ Expect it to feel worse before it feels better. Giving up the heavy setup makes 
 
 ## Try this
 
-In the pitch studio, sing a slow siren on "ah" from a comfortable low note up through the zone where things get effortful, at about half your usual volume, letting the vowel round toward "aw" as you climb. Watch the pitch trace for the moment it jumps or thins, and note where that moment sits. Repeat the slide a few times across a few sessions; whether that spot smooths out or moves is the thing worth watching here.
+In the [pitch studio](/studio), sing a slow siren on "ah" from a comfortable low note up through the zone where things get effortful, at about half your usual volume, letting the vowel round toward "aw" as you climb. Watch the pitch trace for the moment it jumps or thins, and note where that moment sits. Repeat the slide a few times across a few sessions; whether that spot smooths out or moves is the thing worth watching here.

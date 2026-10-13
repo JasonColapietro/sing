@@ -614,7 +614,7 @@ export const SONGS: Song[] = [
     form: "phrase",
     defaultLoops: 4,
     genre: "Folk",
-    era: "1700s",
+    era: "1800s",
     language: "English",
     tags: ["scottish", "ballad", "pentatonic"],
     notes: [

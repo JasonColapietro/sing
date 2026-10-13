@@ -27,6 +27,7 @@ import { dailyTempoFor, dailyThreeDone, planDailyThree, type DailyPick, type Dai
 import { ProgramEntryCard } from "@/components/programs/today-card";
 import { useActiveProgram } from "@/components/programs/use-program";
 import { programDayNeedsPro } from "@/components/practice/program-day";
+import { prepaintMarker, useHydrated } from "@/components/prepaint";
 
 type View = "home" | "session" | "summary" | "routine" | "routine-summary";
 
@@ -84,6 +85,7 @@ export function WarmupsClient() {
   // The stored count outlives a lapsed streak; only a live one is named.
   const streakDays = liveStreak(progress.streak);
   const activeProgram = useActiveProgram();
+  const hydrated = useHydrated();
 
   const [view, setView] = useState<View>("home");
   const [activeEx, setActiveEx] = useState<WarmupExercise | null>(null);
@@ -437,10 +439,20 @@ export function WarmupsClient() {
     >
       {view === "home" && (
         <div className="space-y-8">
-          {cap.capped ? <CapWall cap={cap} /> : <FreeAllowance cap={cap} />}
+          {/* Both are in the server HTML; each renders only in its own state, and
+              until hydration the pre-paint state shows the right one
+              (components/prepaint.tsx). */}
+          <CapWall cap={cap} />
+          <FreeAllowance cap={cap} />
           {/* A program day still to do leads; done, finished, or behind the
-              paywall, it drops back below today's cards. */}
-          {programLeads && activeProgram && <ProgramEntryCard active={activeProgram} />}
+              paywall, it drops back below today's cards. The program is read
+              from this browser's storage, so until hydration its place is an
+              empty card the pre-paint state sizes for a leading day. */}
+          {!hydrated ? (
+            <div aria-hidden="true" className="rounded-3xl border border-line bg-panel" {...prepaintMarker(hydrated, { slot: "program-lead" })} />
+          ) : (
+            programLeads && activeProgram && <ProgramEntryCard active={activeProgram} />
+          )}
           {newToWarmups ? (
             // Someone who has never sung a warmup has no path to continue.
             // The homepage's "Start workout" and the Lessons tab promise a
@@ -528,7 +540,7 @@ export function WarmupsClient() {
             permission. /range already solved this: explain the loop, then ask.
           */}
           {!pitch.listening && !cap.capped && (
-            <div id="warmup-gate" className="scroll-mt-20">
+            <div id="warmup-gate" className="scroll-mt-20" {...prepaintMarker(hydrated, { plan: "not-capped" })}>
               <Card>
                 <h2 className="text-xl">{gateTitle}</h2>
                 {/* A link that named something (the range result, the coach,

@@ -110,6 +110,19 @@ export function RoutineSummary({
             }
       }
     >
+      {/* A run where nothing scored usually means the mic could not hear a
+          clear note: each step closes itself after two reps it cannot hear,
+          so the whole routine fast-forwards to every row reading "skipped".
+          Worded so it stays true when the steps were skipped by hand, and it
+          points only at things the singer can reach with the mic still on. */}
+      {sungCount === 0 && !capped && (
+        <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
+          Nothing was scored this run. If you were singing, the mic didn&apos;t
+          pick up a clear note, and each exercise moves on after two reps it
+          can&apos;t hear. Sing a little louder or closer to the mic, or raise
+          your input level in your system sound settings, then press Play again.
+        </p>
+      )}
       {/* Why "Play again" and "Practice" are gone, and when they come back.
           On the paper panel for the same contrast reason as the nudge. */}
       {capped && (

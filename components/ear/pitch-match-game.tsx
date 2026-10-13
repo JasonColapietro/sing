@@ -10,6 +10,7 @@ import { useProgress } from "@/lib/progress";
 import {
   centsToTarget,
   hasSavedRange,
+  pitchMatchTolerance,
   randInt,
   singableRegister,
   type Difficulty,
@@ -143,7 +144,7 @@ export function PitchMatchGame({
   // Any octave on easy, and on every level until a range is saved: the
   // targets sit in a C3–C4 fallback that a higher voice answers an octave up.
   const octaveAgnostic = difficulty === "easy" || !hasSavedRange(progress.range);
-  const tolerance = difficulty === "hard" ? 35 : 50;
+  const tolerance = pitchMatchTolerance(difficulty);
 
   const [target, setTarget] = useState<number | null>(null);
   const [phase, setPhase] = useState<Phase>("listen");
@@ -397,7 +398,7 @@ export function PitchMatchGame({
             <span>Held {(heldMs / 1000).toFixed(1)}s / {(HOLD_MS / 1000).toFixed(1)}s</span>
             <span className="tabular">{Math.ceil(leftMs / 1000)}s left</span>
           </div>
-          <ShellBar value={(heldMs / HOLD_MS) * 100} label="Time held in tune" />
+          <ShellBar value={(heldMs / HOLD_MS) * 100} label={`Time held within ${tolerance} cents`} />
         </div>
       )}
 

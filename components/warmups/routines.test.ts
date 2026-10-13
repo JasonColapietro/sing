@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ALL_EXERCISES, EXERCISES, PRO_PACKS } from "./exercises";
+import { ALL_EXERCISES, EXERCISES, PRO_PACKS, tooWideForRange } from "./exercises";
 import {
   ALL_ROUTINES,
   PRO_ROUTINES,
@@ -237,6 +237,41 @@ describe("session shape", () => {
       for (const practicedToday of [false, true]) {
         expect(recommendRoutine({ practicedToday, hour }).id).not.toBe("cooldown");
       }
+    }
+  });
+});
+
+describe("routine steps a narrow saved range cannot hold", () => {
+  const byId = (id: string) => ALL_EXERCISES.find((e) => e.id === id)!;
+  const twelfths = ["n-hum-scale", "gug-staccato"];
+
+  it("skips the twelfth runs in a range no wider than the run", () => {
+    // A2–D4 and A2–E4: the ladder is one root that ends every rep on the
+    // measured high, and under 19 semitones starts below the measured low.
+    for (const id of twelfths) {
+      expect(tooWideForRange(byId(id), { lowMidi: 45, highMidi: 62 }), id).toBe(true);
+      expect(tooWideForRange(byId(id), { lowMidi: 45, highMidi: 64 }), id).toBe(true);
+    }
+  });
+
+  it("keeps them once the range is wider than the run, and without a saved range", () => {
+    for (const id of twelfths) {
+      expect(tooWideForRange(byId(id), { lowMidi: 45, highMidi: 65 }), id).toBe(false);
+      expect(tooWideForRange(byId(id), { lowMidi: 48, highMidi: 72 }), id).toBe(false);
+      expect(tooWideForRange(byId(id), {}), id).toBe(false);
+    }
+  });
+
+  it("never skips any other exercise, the High notes tenths included", () => {
+    // The High notes routine exists to reach the top of the measured range.
+    for (const ex of ALL_EXERCISES) {
+      if (twelfths.includes(ex.id)) continue;
+      for (let span = 5; span <= 24; span++) {
+        expect(tooWideForRange(ex, { lowMidi: 45, highMidi: 45 + span }), `${ex.id} span ${span}`).toBe(false);
+      }
+    }
+    for (const id of ["high-arpeggio-tenth", "high-siren-tenth", "high-float-descent"]) {
+      expect(ALL_EXERCISES.some((e) => e.id === id), id).toBe(true);
     }
   });
 });

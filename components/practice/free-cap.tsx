@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { Card, LinkButton, SectionLabel } from "@/components/ui";
 import { FREE_DAILY_SEC, formatClock, type FreeCap } from "@/lib/free-cap";
-import { useProReady } from "@/lib/pro";
 import { formatPrice, PRICING } from "@/lib/pro-shared";
+import { PrepaintText, prepaintMarker, useHydrated } from "@/components/prepaint";
 import { useProgress } from "@/lib/progress";
 import { liveStreak } from "@/components/account/save-state";
 import { SESSION_FOCUS, SessionButton, SessionShell } from "./session-shell";
@@ -31,15 +31,25 @@ const RESTORE_LABEL = "Already have Pro? Unlock it in this browser";
 /**
  * The time left before the wall, shown before the wall. Without it the cap
  * arrives as a surprise, and the only meter on screen (the day's goal ring)
- * measured something else. Renders nothing until the entitlement is read, so
- * a prerendered page never shows a Pro singer a free allowance.
+ * measured something else.
+ *
+ * The prerendered page cannot know who is Pro, so it carries the line behind
+ * the free-plan marker (components/prepaint.tsx): the pre-paint script shows
+ * it only to a browser with no Pro entitlement and the cap not yet reached,
+ * and fills in the minutes left, so neither a paying singer nor a capped one
+ * ever sees it, and a free singer sees it from the first paint instead of
+ * having it push the room down at hydration.
  */
 export function FreeAllowance({ cap, className = "" }: { cap: FreeCap; className?: string }) {
-  const ready = useProReady();
-  if (!ready || cap.isPro || cap.capped) return null;
+  const hydrated = useHydrated();
+  if (hydrated && (cap.isPro || cap.capped)) return null;
   return (
-    <p className={`tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim ${className}`}>
-      Free guided practice today: {formatClock(cap.leftSec)} left of {formatClock(cap.capSec)}
+    <p
+      {...prepaintMarker(hydrated, { plan: "free" })}
+      className={`tabular font-mono text-[11px] uppercase tracking-[0.14em] text-dim ${className}`}
+    >
+      Free guided practice today: <PrepaintText field="freeLeft" value={formatClock(cap.leftSec)} /> left
+      of {formatClock(cap.capSec)}
       <span className="mx-2 text-line2">·</span>
       <Link
         href={PRO_BUY_HREF}
@@ -60,34 +70,58 @@ export function FreeAllowance({ cap, className = "" }: { cap: FreeCap; className
  *
  * The `free-cap` id is the target a capped Start button scrolls to, so a tap
  * below the fold lands on the reason rather than on nothing.
+ *
+ * Rendered in every room's server HTML behind the capped marker, and shown
+ * there only where the pre-paint script found today's cap reached, so a
+ * capped singer's room paints with the wall in place rather than growing it at
+ * hydration. Once hydrated it renders only for a capped singer. `className`
+ * spaces it in the room, on the element the marker hides.
  */
-export function CapWall({ cap }: { cap: FreeCap }) {
+export function CapWall({ cap, className = "" }: { cap: FreeCap; className?: string }) {
+  const hydrated = useHydrated();
   // Read live, never raw: the stored count outlives a lapsed streak. At the
   // wall it is live anyway (reaching the cap means practice was logged
   // today), but the shared definition costs nothing.
   const streak = liveStreak(useProgress().streak);
+  if (hydrated && !cap.capped) return null;
+  // At the wall the used time is never under the cap, so before hydration,
+  // where the cap reads as the server's empty log, the readout is still exact.
+  const usedSec = hydrated ? Math.min(cap.usedSec, cap.capSec) : cap.capSec;
   return (
-    <div id="free-cap" className="scroll-mt-24">
+    <div
+      id="free-cap"
+      className={`scroll-mt-24 ${className}`}
+      {...prepaintMarker(hydrated, { plan: "capped" })}
+    >
       <Card className="border-violet/40">
-        <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="max-w-xl">
-            <SectionLabel>Free practice</SectionLabel>
-            <h2 className="mt-3 text-2xl sm:text-3xl">
+        {/* On a phone the two columns dissolve (`contents`) into one flex
+            column and the actions are ordered straight under the heading, as
+            ContinueCard does: after the explanation, a 375×667 phone put
+            every way forward under the tab bar. DOM order, and so focus and
+            reading order, is unchanged, and from sm up the layout is exactly
+            as before. */}
+        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-6">
+          <div className="contents sm:block sm:max-w-xl">
+            <div className="order-1">
+              <SectionLabel>Free practice</SectionLabel>
+            </div>
+            <h2 className="order-1 mt-3 text-2xl sm:text-3xl">
               That&apos;s your {CAP_MIN} free minutes for today
             </h2>
-            <p className="mt-2 text-mut">
+            <p className="order-3 mt-5 text-mut sm:mt-2">
               The free plan includes {CAP_MIN} minutes of guided practice a day
               across warmups, ear training, breath and songs. Today counts
-              toward your streak{streak > 1 ? `, now ${streak} days` : ""}. A
+              toward your streak
+              <PrepaintText field="streakClause" value={streak > 1 ? `, now ${streak} days` : ""} />. A
               fresh {CAP_MIN} minutes opens at midnight; the pitch studio and the
               range test stay open now.
             </p>
-            <p className="tabular mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-              {formatClock(Math.min(cap.usedSec, cap.capSec))} of {formatClock(cap.capSec)} used
+            <p className="tabular order-3 mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+              {formatClock(usedSec)} of {formatClock(cap.capSec)} used
               today
             </p>
           </div>
-          <div className="flex w-full flex-col gap-3 sm:w-auto">
+          <div className="order-2 mt-5 flex w-full flex-col gap-3 sm:order-none sm:mt-0 sm:w-auto">
             {/* text-center: at 375px the priced label wraps to two lines. */}
             <LinkButton href={PRO_BUY_HREF} variant="violet" size="lg" className="w-full text-center sm:w-auto">
               {GO_PRO_LABEL}

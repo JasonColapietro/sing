@@ -14,8 +14,10 @@ import { reviveProgress, startProgram, type ProgramProgress } from "@/lib/progra
  * the log is re-derived on every visit, so losing this key costs the singer
  * their place in the calendar and nothing they sang. Every read and write is
  * guarded by `createLocalStore`, so a blocked store reads as "no program".
+ * The key is exported for lib/prepaint.ts, whose test holds its copy to it.
  */
-const KEY = "suede-sing:program:v1";
+export const PROGRAM_STORAGE_KEY = "suede-sing:program:v1";
+const KEY = PROGRAM_STORAGE_KEY;
 
 const store = createLocalStore<ProgramProgress | null>(KEY, null, reviveProgress);
 

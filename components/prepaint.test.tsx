@@ -1,0 +1,66 @@
+import { readFileSync } from "node:fs";
+import { renderToStaticMarkup } from "react-dom/server";
+import { describe, expect, it } from "vitest";
+import { PrepaintText, prepaintMarker } from "./prepaint";
+import { HIDE_RULES, paintedFor } from "./prepaint.testing";
+
+const css = readFileSync(new URL("../app/globals.css", import.meta.url), "utf8");
+
+/** The selectors of the one rule in globals.css that hides pre-paint markers. */
+function hideSelectors(): string[] {
+  // Rules only, comments stripped, so prose that mentions a marker cannot match.
+  const rules = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const hits = [...rules.matchAll(/([^{}]*)\{\s*display:\s*none\s*!important;\s*\}/g)]
+    .map((m) => m[1])
+    .filter((selectors) => selectors.includes("[data-prepaint-"));
+  expect(hits, "one pre-paint display:none rule in globals.css").toHaveLength(1);
+  return hits[0].split(",").map((s) => s.trim()).filter(Boolean);
+}
+
+describe("pre-paint markers", () => {
+  it("are on an element only until hydration", () => {
+    expect(prepaintMarker(false, { plan: "capped" })).toEqual({ "data-prepaint-plan": "capped" });
+    expect(prepaintMarker(false, { slot: "program-today" })).toEqual({ "data-prepaint-slot": "program-today" });
+    expect(prepaintMarker(true, { plan: "capped", slot: "program-today" })).toEqual({});
+  });
+
+  it("are hidden by exactly the rules the markup tests paint with", () => {
+    // Hidden with display:none, so a part another state needs is out of the
+    // accessibility tree as well as off the screen.
+    expect(hideSelectors().sort()).toEqual(HIDE_RULES.map((r) => r.selector).sort());
+  });
+
+  it("hide a marked element's whole subtree and nothing around it", () => {
+    const html = '<main><div data-prepaint-plan="capped"><div><p>wall</p></div></div><p data-prepaint-plan="free">left</p><div>room</div></main>';
+    expect(paintedFor(html, { plan: "free" })).toBe('<main><p data-prepaint-plan="free">left</p><div>room</div></main>');
+    expect(paintedFor(html, { plan: "capped" })).toBe('<main><div data-prepaint-plan="capped"><div><p>wall</p></div></div><div>room</div></main>');
+    expect(paintedFor(html, { plan: "pro" })).toBe("<main><div>room</div></main>");
+  });
+
+  it("size each program slot for every status token the script can set", () => {
+    for (const token of ["todo", "locked", "done", "next-locked", "finished"]) {
+      expect(css).toContain(`html[data-sing-program~="${token}"] [data-prepaint-slot="program-today"]`);
+    }
+    expect(css).toContain('html[data-sing-program~="waits"] [data-prepaint-slot="program-lead"]');
+  });
+});
+
+describe("pre-paint text", () => {
+  it("is corrected by a script straight after it, from the field the pre-paint script left", () => {
+    const html = renderToStaticMarkup(<p>left: <PrepaintText field="freeLeft" value="5:00" /></p>);
+    const id = /<span id="([^"]+)">5:00<\/span>/.exec(html)?.[1];
+    expect(id).toBeTruthy();
+    const script = /<script>([\s\S]*?)<\/script>/.exec(html)?.[1] ?? "";
+    const span = { textContent: "5:00" };
+    const run = (prepaint: unknown) =>
+      new Function("window", "document", script)({ __singPrepaint: prepaint }, {
+        getElementById: (wanted: string) => (wanted === id ? span : null),
+      });
+    run({ freeLeft: "2:10" });
+    expect(span.textContent).toBe("2:10");
+    // No pre-paint state (the script failed): the server's text stands.
+    span.textContent = "5:00";
+    run(undefined);
+    expect(span.textContent).toBe("5:00");
+  });
+});

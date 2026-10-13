@@ -16,6 +16,7 @@ import { TOOL_GUIDES } from "./guides";
 import { GUIDED_PRACTICE_ROOMS } from "./llms-txt";
 import { FREE_DAILY_MINUTES } from "./practice-limits";
 import { COURSE } from "./voice-lessons";
+import { BOOK_CONTENTS } from "./book-data";
 import { ToolGuide, guideJsonLd, type GuideContent } from "@/components/guide";
 import { DIFFICULTIES, GAME_NAMES } from "@/components/ear/lib";
 import { PRO_PACKS } from "@/components/warmups/exercises";
@@ -416,5 +417,25 @@ describe("popular-song links", () => {
   it("range and songs guides link the popular-song hub", () => {
     expect(guides.RANGE_GUIDE.related.map((r) => r.href)).toContain("/can-you-sing");
     expect(guides.SONGS_GUIDE.related.map((r) => r.href)).toContain("/can-you-sing");
+  });
+});
+
+/**
+ * The range and studio guides each answer an FAQ ("Why is my range different
+ * every time I test?", "Why is the pitch reading jumping around?") in two
+ * sentences that a free chapter answers at length, so each links that chapter,
+ * and only while it stays free, since the label says so.
+ */
+describe("free chapter links", () => {
+  it("range and studio guides link the free chapter behind their FAQ", () => {
+    for (const [guide, slug] of [
+      [guides.RANGE_GUIDE, "reading-the-range-test"],
+      [guides.STUDIO_GUIDE, "when-numbers-lie"],
+    ] as const) {
+      const link = guide.related.find((r) => r.href === `/book/${slug}`);
+      expect(link, `${guide.path} links /book/${slug}`).toBeTruthy();
+      expect(link!.label).toMatch(/\(free chapter\)$/);
+      expect(BOOK_CONTENTS.find((c) => c.slug === slug)?.free, slug).toBe(true);
+    }
   });
 });

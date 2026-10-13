@@ -21,7 +21,7 @@ Set aside about thirty minutes. It is the longest session in the block, and you 
 
 **Record the context, not just the number.** Time of day. Room. How much sleep. Whether you were getting over something. Whether you had been talking for eight hours. In eleven weeks you will look at this point on the chart in Progress and remember none of it, and a number without its conditions reads as fact.
 
-**Record a take.** This is the part people skip, and the part that will matter most in week 12. Pick a short piece of something you already know by heart — thirty to sixty seconds, a verse and a chorus, in a key that sits comfortably. Sing it once, at normal volume, without warming up further and without trying to make it good. Save it in the Recorder and rename it so you can find it in three months.
+**Record a take.** This is the part people skip, and the part that will matter most in week 12. Pick a short piece of something you already know by heart — thirty to sixty seconds, a verse and a chorus, in a key that sits comfortably. Sing it once, at normal volume, without warming up further and without trying to make it good. Save it in the Recorder, rename it, and download a copy so it survives three months: the browser can clear its recordings, and no backup or sync carries audio.
 
 Two rules about that take. Do not do six passes and keep the best one. A best-of-six baseline held up against a single week-12 take is a rigged comparison, and you are the only person it fools. And do not listen back critically today. The first reaction to your own recorded voice is mostly unfamiliarity, and on day one there is nothing in it you can use. File it and move on.
 
@@ -81,4 +81,4 @@ And if day fourteen arrives and it feels as though nothing has happened, that is
 
 ## Try this
 
-Today: warm up for five minutes, take the range test once, and record a single unedited verse and chorus in the Recorder. Rename it "baseline" and do not listen back. Then check one thing — that you stopped the range test at the last note that felt like height rather than effort. That is the number the next eleven weeks get compared against.
+Today: warm up for five minutes, take the range test once, and record a single unedited verse and chorus in the Recorder. Rename it "baseline", download a copy, and do not listen back. Then check one thing — that you stopped the range test at the last note that felt like height rather than effort. That is the number the next eleven weeks get compared against.

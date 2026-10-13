@@ -12,6 +12,7 @@ import { AccountBackupSync } from "@/components/progress/account-backup-sync";
 import WeeklyReportCard from "@/components/weekly-report-card";
 import { routeKeywords } from "@/lib/keywords";
 import { INDEXABLE_ROBOTS } from "@/lib/robots-meta";
+import { PREPAINT_SCRIPT } from "@/lib/prepaint-config";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -90,10 +91,21 @@ export default function RootLayout({
   );
 
   return (
+    // suppressHydrationWarning: the pre-paint script below sets data-sing-plan
+    // and data-sing-program on this element before React hydrates it. It
+    // covers this element's own attributes only, not anything inside it.
     <html
       lang="en"
       className={`${manrope.variable} ${plexMono.variable}`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Reads the free cap and the running program from localStorage and
+            marks <html> before the parser reaches <body>, so the rooms and
+            /programs paint the layout that state gives them instead of a
+            newcomer's that hydration then rearranges. lib/prepaint.ts. */}
+        <script dangerouslySetInnerHTML={{ __html: PREPAINT_SCRIPT }} />
+      </head>
       <body className="min-h-dvh pb-[calc(3.5rem+env(safe-area-inset-bottom))] antialiased sm:pb-0">
         <ClerkShell>{shell}</ClerkShell>
       </body>

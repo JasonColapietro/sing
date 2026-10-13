@@ -15,6 +15,8 @@ import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
 import { Button, Card, LinkButton, MicGate, SectionLabel } from "@/components/ui";
 import { AudioSetup } from "@/components/audio/audio-setup";
+import { LevelMeter } from "@/components/studio/level-meter";
+import { freshInputHint, meterInputHint, nextInputHint } from "./pitch-meter-hint";
 
 /** Ignore near-silent frames, the same floor the range test uses. */
 const MIN_VOLUME = 0.008;
@@ -179,6 +181,15 @@ export function PitchMeter({
     ms: 0,
     lastT: 0,
   });
+  /**
+   * The too-quiet hint, the range test's rule (./pitch-meter-hint): the meter
+   * used to show a dash forever to a singer the mic could not hear. The state
+   * lives in a ref the draw loop updates; the hint renders only on a change.
+   */
+  const inputRef = useRef(freshInputHint());
+  const [hint, setHint] = useState<string | null>(null);
+  /** Mirrors `hint`, so the draw loop never reads the state it sets. */
+  const hintRef = useRef<string | null>(null);
   // This is where the homepage's "Start singing" lands, and it used to save
   // nothing: no session, no streak, no reason to come back tomorrow. It logs
   // the way the studio does, counting only time the mic is on and the page is
@@ -265,6 +276,14 @@ export function PitchMeter({
       } else {
         held.midi = null;
         held.ms = 0;
+      }
+      if (f && dt > 0) {
+        nextInputHint(inputRef.current, f, dt, voiced(f), MIN_VOLUME);
+        const nextHint = meterInputHint(inputRef.current);
+        if (hintRef.current !== nextHint) {
+          hintRef.current = nextHint;
+          setHint(nextHint);
+        }
       }
       const midiF = f && voiced(f) && f.freq ? freqToMidiFloat(f.freq) : null;
       const pts = pointsRef.current;
@@ -376,6 +395,9 @@ export function PitchMeter({
     setRetestDue(rangeRetestDue(range, Date.now()));
     pointsRef.current = [];
     heldRef.current = { midi: null, ms: 0, lastT: 0 };
+    inputRef.current = freshInputHint();
+    hintRef.current = null;
+    setHint(null);
     // Cleared once the mic is on, so a later short run is never reported
     // with an earlier run's XP. A start that fails (the mic refused or
     // unplugged) leaves the last save on the card: it still happened.
@@ -402,7 +424,7 @@ export function PitchMeter({
         )}
         <MicGate
           title="See your pitch"
-          description="Sing or hum any note. You will see exactly which note you are on, how close to center you are, and a live line of your voice."
+          description="Sing any note out loud, an easy “ah” as if to someone across the room. You will see exactly which note you are on, how close to center you are, and a live line of your voice."
           enableLabel={low !== null ? "Sing again" : "Start singing"}
           onEnable={begin}
           error={error}
@@ -464,6 +486,15 @@ export function PitchMeter({
             <span>Flat</span>
             <span>Sharp</span>
           </div>
+        </div>
+
+        {/* What the mic hears, and why the note reads "—" when it cannot
+            measure: the range test's too-quiet hint, shared. */}
+        <div className="px-5 pt-3 sm:px-6">
+          <LevelMeter volume={frame.volume} />
+        </div>
+        <div role="status" className="px-5 sm:px-6">
+          {hint && <p className="pt-2 text-sm text-mut">{hint}</p>}
         </div>
 
         <canvas

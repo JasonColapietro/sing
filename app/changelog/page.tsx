@@ -112,7 +112,7 @@ const STORIES: Story[] = [
   {
     label: "Warmups",
     title: "Warmups that sing with you",
-    body: "Press start and the guide sounds under your voice — taught once, then continuous — with a real breath and a two-click count-in before every rep. Ladders climb to the top of your range, walk back down, and keep going as far as your voice does. And the score follows the phrase you actually sang.",
+    body: "Press start and the guide sounds under your voice — taught once, then continuous — with a real breath and a two-click count-in before every rep. Ladders climb a semitone each rep, walk back down, and keep going. And the score follows the phrase you actually sang.",
     links: [{ href: "/warmups", text: "Open the warmups" }],
   },
   {
@@ -175,8 +175,10 @@ const LOG: Array<{
       {
         // The lifetime price did not change on the 9th; the monthly plan
         // stopped selling. Prices come from PRICING so the log cannot drift.
+        // Legacy subscribers renew at their own (older) price, not the
+        // current monthly figure, so the renewal clause names no amount.
         day: "9",
-        note: `Pro is now sold as lifetime access only: ${formatPrice(PRICING.lifetime.amount)} once, with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out; existing monthly subscribers keep renewing at ${formatPrice(PRICING.monthly.amount)}.`,
+        note: `Pro is now sold as lifetime access only: ${formatPrice(PRICING.lifetime.amount)} once, with no renewal. The ${formatPrice(PRICING.monthly.amount)} monthly plan is sold out; existing monthly subscribers keep renewing at the price they signed up at.`,
       },
       {
         day: "2",
@@ -267,7 +269,7 @@ const LOG: Array<{
       },
       {
         day: "21",
-        note: "Warmup ladders climb to your top note, walk back down, and keep going.",
+        note: "Warmup ladders climb a semitone each rep, walk back down, and keep going.",
       },
       {
         day: "19",

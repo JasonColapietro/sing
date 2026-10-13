@@ -4,6 +4,12 @@ import { fileURLToPath } from "node:url";
 import { runInNewContext } from "node:vm";
 import { describe, expect, it } from "vitest";
 import { shouldShowWeekInReview, weekInReview } from "@/lib/weekly-report";
+import { isCapped } from "@/lib/free-cap";
+import { localDay } from "@/lib/progress";
+import { sanitizeProgress } from "@/lib/progress-shape";
+import { dayNeedsPro, isRestDay, programById, programToday, reconcileProgress, reviveProgress } from "@/lib/programs";
+import { prepaintState } from "@/lib/prepaint";
+import { PREPAINT_CONFIG } from "@/lib/prepaint-config";
 import { TEMPLATE_SITEMAP } from "./lib/audit-fixtures.mjs";
 
 const runFile = fileURLToPath(new URL("./cls.mjs", import.meta.url));
@@ -25,9 +31,11 @@ async function runCls(mode, viewport = "mobile-375", extra = []) {
           newPage: async () => {
             let inserted = false;
             return {
-            goto: async () => { ${mode === "error" ? 'throw new Error("Navigation failed in CLS regression");' : "return {};"} },
+            goto: async (url) => { console.log("GOTO " + new URL(url).pathname); ${mode === "error" ? 'throw new Error("Navigation failed in CLS regression");' : "return {};"} },
             waitForTimeout: async () => {},
             evaluate: async (fn, arg) => {
+              // The check that a --state seed showed on the page.
+              if (fn.toString().includes("querySelector")) return ${mode !== "unproven"};
               if (fn.toString().includes("...window.__cls")) return { value: ${["high", "stale"].includes(mode) ? "0.2" : mode === "invalid" ? "NaN" : "0"}, shifts: [] };
               if (fn.toString().includes("createElement")) inserted = true;
               if (fn.toString().includes("window.__cls.value")) {
@@ -148,4 +156,88 @@ describe("CLS measurement CLI gate", () => {
       expect(shouldShowWeekInReview(report, store.get("suede-sing:weekly-report-seen:v1") ?? null)).toBe(false);
     }
   });
+
+  it("restricts a run to the routes named, and refuses a name it does not know", async () => {
+    const some = await runCls("good", "mobile-375", ["--route=warmups,programs"]);
+    expect(some.code).toBe(0);
+    expect([...some.stdout.matchAll(/^GOTO (.+)$/gm)].map((m) => m[1])).toEqual(["/warmups", "/programs"]);
+    const unknown = await runCls("good", "mobile-375", ["--route=warmups,nowhere"]);
+    expect(unknown.code).toBe(2);
+    expect(unknown.stderr).toContain("unknown route filter: nowhere");
+    expect(unknown.stdout).not.toContain("BROWSER_LAUNCHED");
+  });
+
+  it("refuses an unknown state before launching a browser", async () => {
+    const result = await runCls("good", "mobile-375", ["--state=nope"]);
+    expect(result.code).toBe(2);
+    expect(result.stderr).toContain("unknown --state=nope");
+    expect(result.stdout).not.toContain("BROWSER_LAUNCHED");
+  });
+
+  it("fails rather than passing a state its seed never produced on the page", async () => {
+    const result = await runCls("unproven", "mobile-375", ["--state=capped", "--route=warmups"]);
+    expect(result.code).toBe(2);
+    expect(result.stdout).toContain("the capped seed did not take");
+  });
+
+  /**
+   * Each state's seed, run as the browser runs it at three local times
+   * (a Monday morning, a Wednesday night, a Sunday just before midnight),
+   * read back through the app's own rules: it is the state it names, the
+   * weekly report stays shut, and the pre-paint script (lib/prepaint.ts)
+   * reads the same state, which is the thing CI is measuring.
+   */
+  const STATE_EXPECTATIONS = {
+    capped: { blocks: ["capped"], capped: true, program: null, prepaint: { plan: "capped", program: null } },
+    program: { blocks: ["program"], capped: false, program: { id: "foundations-2w", status: "todo", index: 1 }, prepaint: { plan: "free", program: "todo" } },
+    "program-capped": { blocks: ["program", "capped"], capped: true, program: { id: "foundations-2w", status: "todo", index: 1 }, prepaint: { plan: "capped", program: "todo waits" } },
+    "rest-day": { blocks: ["rest-day"], capped: false, program: { id: "mix-4w", status: "done-today", index: 6 }, prepaint: { plan: "free", program: "done rest next-locked" } },
+  };
+
+  for (const [name, expected] of Object.entries(STATE_EXPECTATIONS)) {
+    it(`seeds the ${name} state as a returning singer`, async () => {
+      const { stdout, code } = await runCls("good", "mobile-375", [`--state=${name}`, "--route=warmups"]);
+      expect(code).toBe(0);
+      expect(stdout).toContain(`as a returning singer, state ${name}`);
+      const seed = Buffer.from(/^SEED:(.+)$/m.exec(stdout)[1], "base64").toString();
+      expect(seed.indexOf("localStorage.clear()")).toBeLessThan(seed.indexOf("cls-returning-seed"));
+      for (const block of expected.blocks) expect(seed).toContain(`cls-state:${block}`);
+      for (const now of [new Date(2026, 9, 12, 9), new Date(2026, 9, 14, 21), new Date(2026, 9, 18, 23, 30)]) {
+        const store = new Map();
+        class FixedDate extends Date {
+          constructor(...args) {
+            super(...(args.length ? args : [now.getTime()]));
+          }
+        }
+        runInNewContext(seed, {
+          Date: FixedDate,
+          JSON,
+          String,
+          localStorage: { clear: () => store.clear(), setItem: (k, v) => store.set(k, String(v)), getItem: (k) => store.get(k) ?? null },
+        });
+        const today = localDay(now);
+        const progress = sanitizeProgress(JSON.parse(store.get("suede-sing:progress:v1")));
+        expect(progress.sessions.length).toBeGreaterThan(0);
+        expect(isCapped(progress, false, today)).toBe(expected.capped);
+        expect(shouldShowWeekInReview(weekInReview(progress.sessions, now), store.get("suede-sing:weekly-report-seen:v1") ?? null)).toBe(false);
+
+        const stored = store.has("suede-sing:program:v1") ? reviveProgress(JSON.parse(store.get("suede-sing:program:v1"))) : null;
+        if (expected.program === null) {
+          expect(stored).toBeNull();
+        } else {
+          const program = programById(stored?.programId);
+          expect(program?.id).toBe(expected.program.id);
+          const view = programToday(program, reconcileProgress(program, stored, progress.sessions, today), today);
+          expect(view).toMatchObject({ status: expected.program.status, index: expected.program.index });
+          if (name === "rest-day") {
+            expect(isRestDay(program.days[view.index])).toBe(true);
+            expect(dayNeedsPro(program, view.index + 1)).toBe(true);
+          }
+        }
+
+        const prepaint = prepaintState({ getItem: (k) => store.get(k) ?? null }, now, PREPAINT_CONFIG);
+        expect({ plan: prepaint.plan, program: prepaint.program }).toEqual(expected.prepaint);
+      }
+    });
+  }
 });

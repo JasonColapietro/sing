@@ -972,6 +972,29 @@ export function computeRootLadder(
   return capLadder(fitRootLadder(ex, lowMidi, highMidi), ex.rangeCap);
 }
 
+/**
+ * A routine step this saved range cannot hold: a run wider than a tenth (the
+ * twelfth runs, N run and Staccato gug) in a range no wider than the run. The
+ * ladder then pins every rep's top note to the measured high and, under the
+ * run's width, starts it below the measured low, so a fixed routine would sing
+ * the range test's extremes on every rep. The tenth patterns are left alone:
+ * the High notes routine exists to reach the top of the measured range. The
+ * endless single-exercise ladder keeps its pinned fit; only routines skip.
+ */
+export function tooWideForRange(
+  ex: WarmupExercise,
+  range: { lowMidi?: number; highMidi?: number },
+): boolean {
+  if (range.lowMidi === undefined || range.highMidi === undefined) return false;
+  const maxOff = patternSpan(ex);
+  return maxOff > 16 && range.highMidi - range.lowMidi <= maxOff;
+}
+
+/** Semitones from a pattern's root to its highest note. */
+export function patternSpan(ex: WarmupExercise): number {
+  return Math.max(...ex.buildSteps(0).flat());
+}
+
 /** The whole comfortable ladder, before any range cap. */
 function fitRootLadder(
   ex: WarmupExercise,

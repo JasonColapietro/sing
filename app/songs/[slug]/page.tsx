@@ -249,7 +249,10 @@ export default async function SongPage({
         url: pageUrl,
         description: `${song.origin}. ${answer}`,
         inLanguage: song.language,
-        genre: [song.genre, ...song.tags],
+        // The genre alone. Tags such as "narrow range" or "two verses" say what
+        // the melody asks of a voice or how it is arranged, not where it comes
+        // from, and the lowercase genre tags would repeat the genre.
+        genre: song.genre,
         // `musicalKey` wants a key name, so it gets the pitch class without the
         // octave; the octave-specific tonic the page actually prints goes in
         // additionalProperty below. No mode is asserted — several of these are

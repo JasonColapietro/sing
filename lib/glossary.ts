@@ -3,10 +3,10 @@
  *
  * Every free surface here leans on words it never stops to explain: the range
  * result names a passaggio, the studio prints cents and a sharp/flat pill, the
- * singer pages hand out "chest-dominant", "whistle register" and "tessitura" as
- * given. The chapters that actually define this vocabulary live in the two
- * books, and a glossary is the cheapest way to stop charging admission for the
- * meaning of the product's own labels.
+ * singers chart and pages hand out "whistle register", "falsetto" and
+ * voice-type labels as given. The chapters that actually define this
+ * vocabulary live in the two books, and a glossary is the cheapest way to stop
+ * charging admission for the meaning of the product's own labels.
  *
  * Rules for an entry: one sentence of definition and no advice — the rooms and
  * the books do the teaching. `where` names a surface a reader can go and see
@@ -182,7 +182,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A way of setting up the vocal folds — length, thickness and how firmly they close — that handles one band of pitches well and gives out above it.",
         where:
-          "The range test's climb crosses at least one register change, and the singer pages describe voices as chest-dominant or head-dominant.",
+          "The range test's climb crosses at least one register change, and the singers chart shades the reach above a voice's cited full-voice ceiling, where falsetto, head voice or whistle take over.",
         href: "/range",
         domain: "voice",
       },
@@ -209,7 +209,7 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "A stretched fold setup with incomplete closure, which is why it sounds airy and resists being sung loudly.",
         where:
-          "The range test counts falsetto as part of your range, and singer pages flag voices whose top is falsetto rather than full.",
+          "The range test counts falsetto as part of your range, and where the catalog cites a full-voice ceiling, a singer page lists it below the top note; the reach above it is falsetto, head voice or whistle.",
         href: "/range",
         domain: "voice",
       },
@@ -219,8 +219,8 @@ export const GLOSSARY: GlossarySection[] = [
         definition:
           "The middle ground between chest and head — part fold setup, part vowel and resonance — where the transition can be crossed without a seam.",
         where:
-          "Singer technique notes describe voices climbing into mix at a named note instead of belting through it.",
-        href: "/singers",
+          "Slide slowly through your transition in the pitch studio and the trace shows whether the pitch glides across it or jumps; the Mix, Not Shout lessons practise crossing it without shouting.",
+        href: "/studio",
         domain: "voice",
       },
       {

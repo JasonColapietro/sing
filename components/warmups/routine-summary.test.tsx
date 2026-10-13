@@ -104,4 +104,15 @@ describe("the routine summary", () => {
     const html = render(allSung);
     expect(html).toContain('data-streak="4"');
   });
+
+  it("says why nothing scored, and what to try, when every step closed unsung", () => {
+    const silent: RoutineSummaryData = { routine, steps: routine.steps.map(() => null), completed: true };
+    const html = render(silent);
+    expect(html).toContain("Nothing was scored this run. If you were singing, the mic didn&#x27;t pick up a clear note");
+    expect(html).toContain("then press Play again.");
+    expect(html).toContain("Play again");
+    // Not on a run that scored, and not once Play again is gone at the cap.
+    expect(render(allSung)).not.toContain("Nothing was scored this run");
+    expect(render(silent, true)).not.toContain("Nothing was scored this run");
+  });
 });

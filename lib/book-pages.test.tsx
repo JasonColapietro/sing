@@ -16,7 +16,7 @@ import { BOOK, BOOK_CONTENTS, BOOK_TITLE } from "@/lib/book-data";
 import { Markdown } from "@/lib/markdown";
 import { PLAN_ROWS } from "@/lib/pro";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
-import { PROGRAMME_EXIT_TESTS, programmePhaseChapters } from "@/lib/programme-exit-tests";
+import { PROGRAMME_EXIT_TESTS, PROGRAMME_PART, programmePhaseChapters } from "@/lib/programme-exit-tests";
 import { FREE_WEEKS, programById } from "@/lib/programs";
 import { VOICE_TYPE_PASSAGGIO } from "@/lib/voice-types";
 import BookPage from "@/app/book/page";
@@ -60,23 +60,31 @@ describe("markdown links", () => {
   });
 });
 
-describe("the free chapters", () => {
-  it("are the three the book says", () => {
-    expect(FREE.map((c) => c.order)).toEqual([1, 8, 12]);
-  });
-
-  it.each(FREE.map((c) => [c.slug, c] as const))(
+/**
+ * Every chapter outside the programme ends with a "Try this" that sends the
+ * reader to a room, and a Pro reader gets no room button under a gated
+ * chapter (only the free chapters carry one), so the link lives in the prose.
+ * The programme chapters link their exit-test room and the program instead.
+ */
+describe("every chapter outside the programme", () => {
+  it.each(BOOK.filter((c) => c.part !== PROGRAMME_PART).map((c) => [c.slug, c] as const))(
     "%s links its Try this to a room that exists",
     (_slug, chapter) => {
       const tryThis = chapter.body.split(/^## Try this\s*$/m)[1] ?? "";
       const hrefs = [...tryThis.matchAll(/\]\((\/[^)\s]*)\)/g)].map((m) => m[1]);
       expect(hrefs.length).toBeGreaterThan(0);
       for (const href of hrefs) {
-        const path = href.split("?")[0];
+        const path = href.split(/[?#]/)[0];
         expect(existsSync(join(APP_DIR, path, "page.tsx")), href).toBe(true);
       }
     },
   );
+});
+
+describe("the free chapters", () => {
+  it("are the three the book says", () => {
+    expect(FREE.map((c) => c.order)).toEqual([1, 8, 12]);
+  });
 
   it.each(FREE.map((c) => c.slug))(
     "%s shows a byline, a room button and the lessons that use it",

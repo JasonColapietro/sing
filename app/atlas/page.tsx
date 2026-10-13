@@ -11,6 +11,7 @@ import { AUTHOR_ALIAS, AUTHOR_NAME, AUTHOR_NODE } from "@/lib/author";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { balancedChunks } from "@/lib/singers-core";
+import { SINGERS_LITE } from "@/lib/singers-lite";
 import { AtlasCta } from "@/components/atlas/cta";
 import { Card, PageShell, SectionLabel, Stat } from "@/components/ui";
 import { routeKeywords } from "@/lib/keywords";
@@ -79,6 +80,21 @@ function SingerLinks({ singers }: { singers: AtlasSinger[] }) {
   );
 }
 
+/** The year each singer first became prominent, as their atlas entry gives it. */
+const FIRST_PROMINENT = new Map(SINGERS_LITE.map((s) => [s.slug, s.activeFrom]));
+
+/**
+ * A chapter roster is in order of when each singer first became prominent
+ * (scripts/compile-atlas.mjs), not by name, so a group is headed by that year
+ * span. "Singers X through Y" read as an alphabetical range and pointed a
+ * reader scanning for a name at the wrong group.
+ */
+function rosterGroupLabel(group: readonly { slug: string }[]): string {
+  const a = FIRST_PROMINENT.get(group[0].slug);
+  const b = FIRST_PROMINENT.get(group[group.length - 1].slug);
+  return a === b ? `First prominent in ${a}` : `First prominent ${a}–${b}`;
+}
+
 function ChapterSingerIndex({
   chapterSlug,
   singers,
@@ -110,7 +126,7 @@ function ChapterSingerIndex({
               id={headingId}
               className="pl-2 font-mono text-[10px] uppercase tracking-[0.14em] text-dim"
             >
-              Singers {group[0].name} through {group[group.length - 1].name}
+              {rosterGroupLabel(group)}
             </h4>
             <div className="mt-1">
               <SingerLinks singers={group} />

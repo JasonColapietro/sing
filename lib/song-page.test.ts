@@ -96,6 +96,14 @@ describe("the tag sentence", () => {
   });
 });
 
+describe("structured data genre", () => {
+  it.each(ALL_SONGS.map((s) => s.slug))("%s: files only the genre as genre, never a demand or shape tag", async (slug) => {
+    const song = songBySlug(slug)!;
+    const composition = jsonLd(await render(slug))["@graph"].find((n) => n["@type"] === "MusicComposition")!;
+    expect(composition.genre).toBe(song.genre);
+  });
+});
+
 describe("a phrase that is not the song's opening", () => {
   /**
    * Home on the Range opens on its verse ("Oh, give me a home…", as its own

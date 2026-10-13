@@ -147,3 +147,28 @@ describe("the coach's range retest", () => {
     expect(due?.reason).not.toMatch(/growth/i);
   });
 });
+
+describe("the coach's accuracy lines", () => {
+  // The tallies count time within the ±50-cent scoring window, which passes
+  // a phrase sung clearly flat (book chapter 9); on this site "in tune" is the
+  // studio's ±15-cent zone, so the coach names the window instead.
+  const tallied = (): ProgressState => {
+    const base = state();
+    return {
+      ...base,
+      range: { lowMidi: 48, highMidi: 69, testedAt: NOW.toISOString() },
+      sessions: base.sessions.map((s) => ({ ...s, notes: { "60": { sec: 5, hitSec: 2, cents: 35, frames: 100 } } })),
+    };
+  };
+
+  it("names the weak note's share by the scoring window", () => {
+    const items = buildPlan(tallied(), NOW).items;
+    const weak = items.find((i) => i.reason.includes("weakest note"));
+    expect(weak?.reason).toContain("C4 lands within 50 cents of the target just 40% of the time, off by ~35 cents.");
+    const songs = items.find((i) => i.title === "Sing a song");
+    expect(songs?.reason).toBe(
+      "Finish on real music — you're within 50 cents of the target 40% of the scored time lately, and songs are where that shows.",
+    );
+    for (const i of items) expect(i.reason, i.title).not.toMatch(/in tune/i);
+  });
+});

@@ -39,7 +39,15 @@ vi.mock("@/lib/pro", async (importOriginal) => ({
   useProReady: () => state.ready,
 }));
 
+// `ready: false` is the server HTML and the hydration render, where the
+// cap-dependent parts are all present behind pre-paint markers.
+vi.mock("@/components/prepaint", async (importOriginal) => ({
+  ...await importOriginal<typeof import("@/components/prepaint")>(),
+  useHydrated: () => state.ready,
+}));
+
 import { WarmupsClient, linkedRepCount } from "./warmups-client";
+import { paintedFor } from "@/components/prepaint.testing";
 
 const morning = routineById("morning")!;
 const daily = routineById("daily")!;
@@ -90,12 +98,42 @@ describe("today's warmup on the free plan", () => {
   });
 
   it("names no free minutes before the entitlement is read", () => {
-    // The prerender: a Pro singer sees this HTML until hydration.
+    // The prerender: a Pro singer sees this HTML until hydration, with what
+    // the pre-paint state hides for Pro (the cap wall, the allowance line)
+    // already gone.
     state.ready = false;
-    const html = renderToStaticMarkup(<WarmupsClient />);
+    const html = paintedFor(renderToStaticMarkup(<WarmupsClient />), { plan: "pro" });
     expect(todaysWarmup(html)).toBe(morning.name);
     expect(html).not.toContain("free minutes");
     expect(html).not.toContain("free practice left");
+    expect(html).not.toContain("Free guided practice today");
+  });
+
+  it("paints the cap wall in place of the mic gate before hydration for a capped singer", () => {
+    state.ready = false;
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    const capped = paintedFor(html, { plan: "capped" });
+    expect(capped).toContain('id="free-cap"');
+    expect(capped).not.toContain('id="warmup-gate"');
+    const free = paintedFor(html, { plan: "free" });
+    expect(free).not.toContain('id="free-cap"');
+    expect(free).toContain('id="warmup-gate"');
+    expect(free).toContain("Free guided practice today");
+  });
+
+  it("holds a leading program card's place before hydration only for a day still to do", () => {
+    state.ready = false;
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    const slot = 'data-prepaint-slot="program-lead"';
+    expect(paintedFor(html, { plan: "free", program: null })).not.toContain(slot);
+    expect(paintedFor(html, { plan: "free", program: "todo" })).toContain(slot);
+    expect(paintedFor(html, { plan: "capped", program: "todo waits" })).toContain(slot);
+    expect(paintedFor(html, { plan: "free", program: "todo locked" })).not.toContain(slot);
+    expect(paintedFor(html, { plan: "free", program: "done rest next-locked" })).not.toContain(slot);
+    // Empty and out of the accessibility tree: a frame, not content.
+    expect(html).toMatch(/<div aria-hidden="true" class="[^"]*" data-prepaint-slot="program-lead"><\/div>/);
+    // Before the room's first card, where the card leads.
+    expect(html.indexOf(slot)).toBeLessThan(html.indexOf("Start here"));
   });
 
   it("says where a set that cannot fit the minutes left will stop, rather than calling it short", () => {

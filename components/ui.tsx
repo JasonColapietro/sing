@@ -54,7 +54,8 @@ export function PageShell({
   kicker?: string;
   /** Usually a string; /changelog sets one word of it in the serif italic. */
   title: ReactNode;
-  subtitle?: string;
+  /** Usually a string; the /songs prerender carries two, one per pre-paint state. */
+  subtitle?: ReactNode;
   actions?: ReactNode;
   children: ReactNode;
 }) {

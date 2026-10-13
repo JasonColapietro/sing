@@ -63,4 +63,4 @@ Otherwise: write down the key you settled on and stop relitigating it. Practisin
 
 ## Try this
 
-Open Songs, pick something that has always felt slightly out of reach, and take the key it opens in as a starting point — fitted to your measured range if you have taken the range test; if not, the written key, scored in either octave. Sing the full chorus in that key, then step the transpose control up one semitone and sing it again, recording both takes in the Recorder. Line them up in A/B compare and listen for which one holds its tone on the last line of the chorus, not the first.
+Open [Songs](/songs), pick something that has always felt slightly out of reach, and take the key it opens in as a starting point — fitted to your measured range if you have taken the range test; if not, the written key, scored in either octave. Sing the full chorus in that key, then step the transpose control up one semitone and sing it again, recording both takes in the [Recorder](/recorder). Line them up in A/B compare and listen for which one holds its tone on the last line of the chorus, not the first.

@@ -67,8 +67,9 @@ function song(id: string, midis: number[]): Song {
 }
 
 describe("countOpenSongsFitting: what the range result can promise", () => {
-  // B2–A4: 25 of the 26 free songs fit as written, but a new singer can
-  // start only the first band; the rest show Locked in the library.
+  // B2–A4: most of the free songs fit once opened in this singer's key, but
+  // a new singer can start only the first band; the rest show Locked in the
+  // library.
   const range = { lowMidi: 47, highMidi: 69 };
 
   it("counts only the bands a singer has opened, and says how many wait", () => {
@@ -92,14 +93,35 @@ describe("countOpenSongsFitting: what the range result can promise", () => {
 describe("countSongsFitting", () => {
   const range = { lowMidi: 55, highMidi: 72 };
 
-  it("counts only songs whose written notes sit inside the range", () => {
+  it("counts songs that fit once opened in the singer's key", () => {
     const songs = [
       song("inside", [60, 64, 67]),
       song("too-high", [60, 64, 74]),
       song("too-low", [50, 55, 60]),
       song("edges", [55, 72]),
     ];
-    expect(countSongsFitting(songs, range)).toBe(2);
+    // Each opens fitted to the range (songTranspose), as the library badge
+    // and the "Fits my range" filter judge it, so all four fit.
+    expect(countSongsFitting(songs, range)).toBe(4);
+    for (const s of songs) {
+      expect(rangeFit(s, range, songTranspose(s, range, null)).verdict).toBe("fits");
+    }
+  });
+
+  it("agrees with the library badge for low and narrow voices on the first band", () => {
+    // Round 7: the written-key count told these voices "Nothing fits" while
+    // the songbook marked the same first-band songs "Fits your range".
+    const first = SONGS.filter((s) => bandForSong(s) === "first");
+    for (const r of [
+      { lowMidi: 40, highMidi: 64 }, // E2–E4
+      { lowMidi: 45, highMidi: 65 }, // A2–F4
+      { lowMidi: 48, highMidi: 65 }, // C3–F4
+      { lowMidi: 57, highMidi: 64 }, // A3–E4
+    ]) {
+      const badges = first.filter((s) => rangeFit(s, r, songTranspose(s, r, null)).verdict === "fits").length;
+      expect(countSongsFitting(first, r)).toBe(badges);
+      expect(badges).toBeGreaterThan(0);
+    }
   });
 
   it("counts a song wider than the voice as a miss, since no key fixes it", () => {

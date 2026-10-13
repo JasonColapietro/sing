@@ -523,6 +523,27 @@ No key was added, so `version` stays 9:
 
 What the other apps must do: re-sync the file. Nothing else changes.
 
+#### Editorial and wording changes inside v9 (2026-10-13)
+
+No key was added or renamed, so `version` stays 9 here and `glossary.json`
+stays at version 1:
+
+- `editorial`: word counts moved with this round's text edits. Book:
+  `how-the-program-works` (1484), `weeks-1-2-baseline` (1437),
+  `weeks-3-4-middle` (1384), `weeks-11-12-songs` (1649), `totalWords` 32785.
+  Atlas: `the-soul-men` (3298), `every-voice-by-type` (3354), `totalWords`
+  72480.
+- `glossary.json`, values only. `register` and `falsetto` have a new `where`:
+  the singer pages stopped showing technique notes and chest- or
+  head-dominant labels on 2026-09-28, so both now point at what the site does
+  show, the cited full-voice ceiling and the reach above it. `mix` has a new
+  `where` and its `href` moved from `/singers` to `/studio`, for the same
+  reason: no singer page names a note where a voice climbs into mix, so the
+  entry now points at the pitch studio's trace and the Mix, Not Shout lessons.
+
+What the other apps must do: re-sync `suede-vocal.json` and `glossary.json`
+byte for byte. Nothing else changes.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or
