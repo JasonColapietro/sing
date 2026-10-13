@@ -72,4 +72,26 @@ describe("POST /api/redeem", () => {
     expect(second.status).toBe(409);
     expect(dependencies.createSubscription).toHaveBeenCalledTimes(1);
   });
+
+  it("retries a failed slot release so the counter is not left too high", async () => {
+    expect((await redeem("friends30")).status).toBe(200);
+    const decrement = dependencies.decr.getMockImplementation()!;
+    dependencies.decr
+      .mockRejectedValueOnce(new Error("upstash blip"))
+      .mockImplementation(decrement);
+
+    const second = await redeem("friends30");
+    expect(second.status).toBe(409);
+    expect(dependencies.decr).toHaveBeenCalledTimes(2);
+    expect(dependencies.counts.get("comp:used:FRIENDS30")).toBe(1);
+  });
+
+  it("gives up after one retry when the store stays down", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    expect((await redeem("friends30")).status).toBe(200);
+    dependencies.decr.mockRejectedValue(new Error("upstash down"));
+
+    expect((await redeem("friends30")).status).toBe(409);
+    expect(dependencies.decr).toHaveBeenCalledTimes(2);
+  });
 });

@@ -107,14 +107,31 @@ async function claimRedemption(
   return null;
 }
 
-/** Hands a reserved slot back after a failed grant. */
+/**
+ * Hands a reserved slot back, after a failed grant or an over-cap claim.
+ *
+ * One retry covers a transient store error, so a blip doesn't leave the
+ * counter one too high. The trade: if the first DECR landed and only its
+ * reply was lost, the retry undercounts by one, allowing at most one extra
+ * redemption — no worse than the leak it prevents.
+ */
 async function releaseRedemption(code: string) {
-  try {
-    await getRedis()?.decr(usageKey(code));
-  } catch (error) {
-    // A leaked slot costs one redemption; failing the request over it would
-    // cost the singer their pass on top of the Stripe error they already hit.
-    console.error("[api/redeem] could not release redemption slot", error);
+  const redis = getRedis();
+  if (!redis) return;
+  for (let attempt = 1; ; attempt++) {
+    try {
+      await redis.decr(usageKey(code));
+      return;
+    } catch (error) {
+      if (attempt < 2) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        continue;
+      }
+      // A leaked slot costs one redemption; failing the request over it would
+      // cost the singer their pass on top of the error they already hit.
+      console.error("[api/redeem] could not release redemption slot", error);
+      return;
+    }
   }
 }
 
