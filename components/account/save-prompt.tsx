@@ -326,5 +326,3 @@ export function AccountSavePrompt({
     </section>
   );
 }
-
-export default AccountSavePrompt;

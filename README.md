@@ -1,24 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Suede Sing
+
+Online singing practice with live pitch feedback, warmups and songs —
+production at **https://sing.suedeai.ai**. The pitch meter and range test are
+free; guided practice is 5 free minutes a day, and Suede Pro unlocks the rest.
+
+A single Next.js app (App Router). There is no SQL database: Stripe is the
+source of truth for Pro, Upstash Redis backs cloud sync, account backups,
+comp-code counters and rate limiting, and optional Clerk accounts switch on
+only when their keys are configured. Read `AGENTS.md` before writing code — this Next.js version
+differs from older docs, and its guides live in `node_modules/next/dist/docs/`.
+
+| Path | What lives there |
+|---|---|
+| `app/` | Routes, pages and the `app/api/*` handlers |
+| `components/`, `lib/` | UI and shared logic (audio DSP in `lib/audio/`) |
+| `content/` | Lessons, the book, the atlas and their PDFs |
+| `contracts/` | JSON contracts the curriculum and progress code are tested against |
+| `data/` | Singer range data and its evidence |
+| `scripts/` | Content compilers, audits, Stripe setup, deploy |
+| `e2e/` | Playwright browser journeys and audits |
+| `marketing/` | Social assets; not served by the app |
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm ci
+vercel link && vercel env pull   # optional: Stripe, Pro key and Redis secrets
+npm run dev                      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app builds and runs without any secrets; every env var is read lazily, so
+Pro, sync and comp codes simply report themselves unconfigured. See
+`.env.example` for what each variable does.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Before pushing, run what CI runs:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npx tsc --noEmit
+npm run lint
+npm test
+npm run build
+```
+
+Browser checks run against a running server (default `http://localhost:3000`):
+`npm run e2e`, plus `e2e:mobile`, `e2e:pitch`, `e2e:vibrato`, `e2e:programs`
+and `e2e:breath`.
 
 ## Payments (Suede Pro)
 
@@ -193,15 +219,6 @@ Verify the catalog by inspecting the two lookup-key prices. Verify the deployed
 annual prohibition with a single POST containing `{ "plan": "annual" }`; the
 route must return 409 before Stripe is called. Do not create a live Checkout
 Session merely as a deployment smoke test.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
 ## Deploy
 

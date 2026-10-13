@@ -4,6 +4,7 @@ const dependencies = vi.hoisted(() => ({
   retrieveSubscription: vi.fn(),
   retrievePaymentIntent: vi.fn(),
   store: new Map<string, unknown>(),
+  ttls: new Map<string, number>(),
 }));
 
 vi.mock("server-only", () => ({}));
@@ -11,8 +12,9 @@ vi.mock("@/lib/rate-limit", () => ({ rateLimit: () => null }));
 vi.mock("@/lib/redis", () => ({
   getRedis: () => ({
     get: async (key: string) => dependencies.store.get(key) ?? null,
-    set: async (key: string, value: unknown) => {
+    set: async (key: string, value: unknown, options?: { ex?: number }) => {
       dependencies.store.set(key, value);
+      if (options?.ex !== undefined) dependencies.ttls.set(key, options.ex);
       return "OK";
     },
   }),
@@ -43,6 +45,7 @@ function request(body: Record<string, unknown>) {
 
 beforeEach(() => {
   dependencies.store.clear();
+  dependencies.ttls.clear();
   dependencies.retrieveSubscription.mockReset().mockResolvedValue({
     id: "sub_legacyAnnual",
     customer: "cus_annual",
@@ -92,4 +95,44 @@ describe("POST /api/sync", () => {
       updatedAt: "2026-08-23T00:00:00.000Z",
     });
   });
+
+  it("does not store an unbounded updatedAt past the state size cap", async () => {
+    const key = mintProKey("cus_lifetime", "pi_lifetime");
+    const push = await request({
+      key,
+      state: { xp: 1 },
+      updatedAt: "x".repeat(500_000),
+    });
+
+    expect(push.status).toBe(200);
+    expect(dependencies.store.get("sync:state:pi_lifetime")).toMatchObject({
+      updatedAt: null,
+    });
+  });
+
+  it.each([
+    ["subscription", "cus_annual", "sub_gone", "retrieveSubscription"],
+    ["lifetime payment", "cus_lifetime", "pi_gone", "retrievePaymentIntent"],
+  ] as const)(
+    "answers 403 and caches 'no' when Stripe no longer has the %s",
+    async (_label, customerId, billingId, retrieve) => {
+      dependencies[retrieve].mockRejectedValue(
+        Object.assign(new Error("No such object"), {
+          type: "StripeInvalidRequestError",
+          code: "resource_missing",
+        }),
+      );
+      const key = mintProKey(customerId, billingId);
+
+      const first = await request({ key });
+      expect(first.status).toBe(403);
+      expect(dependencies.store.get(`sync:ent:${billingId}`)).toBe("no");
+      // Short, so a wrong-account deploy doesn't lock real buyers out for a day.
+      expect(dependencies.ttls.get(`sync:ent:${billingId}`)).toBe(600);
+
+      const second = await request({ key });
+      expect(second.status).toBe(403);
+      expect(dependencies[retrieve]).toHaveBeenCalledTimes(1);
+    },
+  );
 });

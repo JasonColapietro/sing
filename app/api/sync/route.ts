@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ENTITLING_STATUSES } from "@/lib/pro-shared";
 import { verifyProKey } from "@/lib/pro-key";
+import { isCleanString } from "@/lib/progress-shape";
 import { rateLimit } from "@/lib/rate-limit";
 import { getRedis } from "@/lib/redis";
 import { CLOUD_STATE_MAX_CHARS } from "@/lib/progress-cloud-fit";
@@ -32,6 +33,27 @@ import {
  */
 const MAX_STATE_BYTES = CLOUD_STATE_MAX_CHARS;
 const ENT_TTL_SEC = 24 * 60 * 60;
+/**
+ * A resource_missing answer is cached only briefly: it is also what every live
+ * id returns while production points at the wrong Stripe account or mode, and
+ * a day-long "no" would keep paying users locked out well after the key is
+ * fixed. Ten minutes still stops each debounced push from re-hitting Stripe.
+ */
+const MISSING_TTL_SEC = 10 * 60;
+
+/**
+ * Stripe no longer has the record (deleted subscription, test-mode ids). That
+ * is a definitive "not Pro", not an outage, so it is cached like any other
+ * "no" instead of surfacing as a retryable 502 that re-hits Stripe each time.
+ */
+function isMissingStripeResource(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { type?: string }).type === "StripeInvalidRequestError" &&
+    (error as { code?: string }).code === "resource_missing"
+  );
+}
 
 interface StoredSync {
   state: unknown;
@@ -50,7 +72,14 @@ async function subscriptionStillPro(subscriptionId: string, customerId: string) 
   if (cached === "yes") return true;
   if (cached === "no") return false;
 
-  const sub = await getStripe().subscriptions.retrieve(subscriptionId);
+  let sub;
+  try {
+    sub = await getStripe().subscriptions.retrieve(subscriptionId);
+  } catch (error) {
+    if (!isMissingStripeResource(error)) throw error;
+    await redis.set(cacheKey, "no", { ex: MISSING_TTL_SEC });
+    return false;
+  }
   const owner = typeof sub.customer === "string" ? sub.customer : sub.customer.id;
   const ok =
     owner === customerId &&
@@ -72,9 +101,16 @@ async function lifetimePaymentStillPro(
   if (cached === "yes") return true;
   if (cached === "no") return false;
 
-  const payment = await getStripe().paymentIntents.retrieve(paymentIntentId, {
-    expand: ["customer", "latest_charge"],
-  });
+  let payment;
+  try {
+    payment = await getStripe().paymentIntents.retrieve(paymentIntentId, {
+      expand: ["customer", "latest_charge"],
+    });
+  } catch (error) {
+    if (!isMissingStripeResource(error)) throw error;
+    await redis.set(cacheKey, "no", { ex: MISSING_TTL_SEC });
+    return false;
+  }
   const owner =
     typeof payment.customer === "string"
       ? payment.customer
@@ -162,7 +198,7 @@ export async function POST(request: Request) {
       }
       const record: StoredSync = {
         state,
-        updatedAt: typeof updatedAt === "string" ? updatedAt : null,
+        updatedAt: isCleanString(updatedAt, 64) ? updatedAt : null,
         savedAt: new Date().toISOString(),
       };
       await redis.set(storeKey, record);

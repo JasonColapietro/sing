@@ -57,11 +57,14 @@ export async function POST(request: Request) {
     // A subscription Stripe has never heard of isn't a transient fault, and
     // telling that person to "try again in a moment" sends them retrying a
     // button that can never work. It happens for real: a subscription deleted
-    // in Stripe, or ids left in localStorage from a test checkout.
+    // in Stripe, or ids left in localStorage from a test checkout. Other
+    // invalid-request errors (e.g. no portal configuration) are ours, not
+    // the subscriber's, so they fall through to the logged 502.
     if (
       typeof error === "object" &&
       error !== null &&
-      (error as { type?: string }).type === "StripeInvalidRequestError"
+      (error as { type?: string }).type === "StripeInvalidRequestError" &&
+      (error as { code?: string }).code === "resource_missing"
     ) {
       return NextResponse.json(
         {
