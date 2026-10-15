@@ -48,6 +48,22 @@ const nextConfig: NextConfig = {
       // Before the filesystem: /programs is a page of its own, and a rewrite
       // in the default (afterFiles) phase never reaches a path a page owns.
       beforeFiles: [
+        // Versioned cards replaced these formerly published image URLs.
+        // Next does not allow a route.ts alongside the metadata file, so
+        // route only these legacy paths to a handler that validates the slug
+        // and temporarily redirects to its current card version. Unknown
+        // slugs still return 404; versioned URLs never match these rules.
+        ...[
+          "/singers",
+          "/singers/records",
+          "/singers/:slug",
+          "/songs/:slug",
+          "/singers/genre/:genre",
+          "/singers/voice-type/:type",
+        ].map((page) => ({
+          source: `${page}/opengraph-image`,
+          destination: `/legacy-share-card${page}`,
+        })),
         {
           // A program's own view is a query-string deep link (today's card,
           // /progress, the book and GuitarHub's contract all use it), and a
