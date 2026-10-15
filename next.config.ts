@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { randomUUID } from "node:crypto";
 import path from "path";
 import { EXERCISES } from "./components/warmups/exercises";
 import { accountsReady } from "./lib/accounts";
@@ -18,6 +19,11 @@ const CLERK_SHELL = "@/components/account/clerk-shell";
 const CLERK_SHELL_OFF = "./components/account/clerk-shell-off.tsx";
 
 const nextConfig: NextConfig = {
+  // Next inlines this non-secret value into the legacy image handler at build
+  // time. A fresh build refreshes scraper caches even when only the renderer
+  // changed, leaving the card's data ID unchanged. This is independent of
+  // Next's private metadata source hash and is never generated per request.
+  env: { SING_OG_RENDER_REVISION: randomUUID() },
   turbopack: {
     root: path.join(__dirname),
     ...(ACCOUNTS_OFF ? { resolveAlias: { [CLERK_SHELL]: CLERK_SHELL_OFF } } : {}),

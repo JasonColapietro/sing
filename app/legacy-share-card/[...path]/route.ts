@@ -22,14 +22,18 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
   const { path } = await params;
   const image = currentImage(path);
   if (!image) return new Response("Not found", { status: 404 });
+  const revision = process.env.SING_OG_RENDER_REVISION;
+  if (!revision) throw new Error("Share-card render revision missing");
 
   // The current version can change with the card's content. A permanent or
   // cached redirect would strand a scraper on yesterday's removed version.
-  // Build the destination only from validated route segments, never a query.
+  // The build revision also refreshes the URL after renderer-only edits.
+  // Build the destination from validated segments and the inlined revision,
+  // never the caller's query (including any old Next metadata source hash).
   return new Response(null, {
     status: 307,
     headers: {
-      Location: `/${path.map(encodeURIComponent).join("/")}/opengraph-image/${encodeURIComponent(image.id)}`,
+      Location: `/${path.map(encodeURIComponent).join("/")}/opengraph-image/${encodeURIComponent(image.id)}?render=${encodeURIComponent(revision)}`,
       "Cache-Control": "no-store",
     },
   });
