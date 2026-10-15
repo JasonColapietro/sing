@@ -24,65 +24,32 @@ import { rangeTestHref } from "@/lib/site";
 const NavAccount = dynamic(() => import("@/components/account/nav-account"));
 
 /**
- * The app has five destinations, the way a phone singing app does: Home, Sing
- * (the live pitch meter and every measuring tool), Songs, Lessons (warmups,
- * ear, breath and the reading) and Progress. Every room still has its own page
- * and ranks for its own queries; `also` keeps the owning tab lit inside one.
- * The full room list lives in the More sheet.
- *
- * `href` is the tab's route, the one isActiveLink and ariaCurrentFor match on;
- * `target`, when set, is where tapping it goes. Sing lands on #start, as the
- * homepage's "Start singing" does: bare /range opens at the top, and on a
- * phone the start button sits under this tab bar.
- */
-export const PRIMARY: {
-  href: string;
-  target?: string;
-  label: string;
-  also?: string[];
-  icon: TabIconName;
-}[] = [
-  { href: "/", label: "Home", icon: "home" },
-  {
-    href: "/range",
-    target: rangeTestHref({ mode: "pitch" }),
-    label: "Sing",
-    also: ["/studio", "/analyze", "/recorder", "/tools"],
-    icon: "mic",
-  },
-  { href: "/songs", label: "Songs", also: ["/singers", "/can-you-sing"], icon: "note" },
-  {
-    href: "/warmups",
-    label: "Lessons",
-    also: ["/programs", "/ear-training", "/breath", "/learn", "/book", "/atlas", "/glossary"],
-    icon: "book",
-  },
-  { href: "/progress", label: "Progress", icon: "chart" },
-];
-
-/**
- * Every room, for the More sheet. `href` and `target` work as in PRIMARY:
- * "Pitch & range" opens the same page as the Sing tab, at the same #start.
+ * Ten tabs, not fourteen: Recorder and Analyze fold into Tools, Programs into
+ * Warmups, and Learn is the front door for the two books, glossary and
+ * training guides. The absorbed rooms keep their pages (each ranks for its own
+ * queries and is linked from its host tab and the footer) — `also` keeps the
+ * host tab lit while you're inside one, so the header never claims you are
+ * nowhere. Order follows the practice loop: warm up and sing, measure and
+ * compare, then read and review.
  */
 export const LINKS: { href: string; target?: string; label: string; also?: string[] }[] = [
-  { href: "/range", target: rangeTestHref({ mode: "pitch" }), label: "Pitch & range" },
   { href: "/studio", label: "Studio" },
   { href: "/warmups", label: "Warmups", also: ["/programs"] },
-  { href: "/songs", label: "Songs" },
+  { href: "/range", target: rangeTestHref(), label: "Range" },
   { href: "/singers", label: "Singers" },
-  { href: "/ear-training", label: "Ear training" },
+  { href: "/ear-training", label: "Ear" },
   { href: "/breath", label: "Breath" },
+  { href: "/songs", label: "Songs" },
   { href: "/tools", label: "Tools", also: ["/recorder", "/analyze"] },
   { href: "/learn", label: "Learn", also: ["/learn/voice", "/book", "/atlas", "/glossary"] },
   { href: "/progress", label: "Progress" },
 ];
 
 /** True when the pathname sits inside the tab's own route or an absorbed one. */
-export function isActiveLink(
+function isActiveLink(
   l: { href: string; also?: string[] },
   pathname: string,
 ): boolean {
-  if (l.href === "/") return pathname === "/";
   return [l.href, ...(l.also ?? [])].some(
     (h) => pathname === h || pathname.startsWith(h + "/"),
   );
@@ -91,7 +58,7 @@ export function isActiveLink(
 /**
  * aria-current for a nav link: "page" on the tab's own URL, "location" inside
  * a route it owns, nothing elsewhere. Shared by every navigation landmark so
- * the header row, the bottom tab bar and the drawer announce the same tab.
+ * the header row and the mobile drawer announce the same tab.
  */
 export function ariaCurrentFor(
   l: { href: string; also?: string[] },
@@ -99,58 +66,6 @@ export function ariaCurrentFor(
 ): "page" | "location" | undefined {
   if (!isActiveLink(l, pathname)) return undefined;
   return pathname === l.href ? "page" : "location";
-}
-
-export type TabIconName ="home" | "mic" | "note" | "book" | "chart";
-
-export function TabIcon({ name, active }: { name: TabIconName; active: boolean }) {
-  const common = {
-    width: 24,
-    height: 24,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: active ? 2.2 : 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true,
-  };
-  switch (name) {
-    case "home":
-      return (
-        <svg {...common}>
-          <path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z" fill={active ? "currentColor" : "none"} />
-        </svg>
-      );
-    case "mic":
-      return (
-        <svg {...common}>
-          <rect x="9" y="2.5" width="6" height="12" rx="3" fill={active ? "currentColor" : "none"} />
-          <path d="M5 11a7 7 0 0 0 14 0M12 18v3.5" />
-        </svg>
-      );
-    case "note":
-      return (
-        <svg {...common}>
-          <path d="M9 18V5l11-2v13" />
-          <circle cx="6" cy="18" r="3" fill={active ? "currentColor" : "none"} />
-          <circle cx="17" cy="16" r="3" fill={active ? "currentColor" : "none"} />
-        </svg>
-      );
-    case "book":
-      return (
-        <svg {...common}>
-          <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z" fill={active ? "currentColor" : "none"} />
-          <path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5" />
-        </svg>
-      );
-    case "chart":
-      return (
-        <svg {...common}>
-          <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
-        </svg>
-      );
-  }
 }
 
 function MenuIcon() {
@@ -281,6 +196,9 @@ export default function Nav() {
   const drawerRef = useRef<HTMLDivElement>(null);
   useModalFocus(menuOpen, drawerRef);
 
+  const currentLabel =
+    LINKS.find((l) => isActiveLink(l, pathname))?.label ?? "Menu";
+
   // Close the mobile menu on navigation. Adjusted during render (guarded by
   // prevPathname) rather than in an effect, per
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
@@ -296,10 +214,19 @@ export default function Nav() {
       if (e.key === "Escape") setMenuOpen(false);
     };
     window.addEventListener("keydown", onKey);
+    // CSS hides the drawer at sm. Unmount it too, releasing its focus trap
+    // and scroll lock when a phone rotates or the window is widened.
+    const desktop = window.matchMedia("(min-width: 640px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setMenuOpen(false);
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    closeOnDesktop();
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", closeOnDesktop);
       document.body.style.overflow = prevOverflow;
     };
   }, [menuOpen]);
@@ -310,11 +237,11 @@ export default function Nav() {
   // creates a new containing block for fixed descendants.
   const drawer = menuOpen
     ? createPortal(
-        <div className="fixed inset-0 z-[60]">
+        <div className="fixed inset-0 z-[60] sm:hidden">
           <button
             type="button"
             aria-label="Close menu"
-            className="absolute inset-0 bg-black/60"
+            className="absolute inset-0 bg-ink/40"
             onClick={() => setMenuOpen(false)}
           />
           <div
@@ -323,7 +250,7 @@ export default function Nav() {
             role="dialog"
             aria-modal="true"
             aria-label="Navigation menu"
-            className="animate-fadeup absolute inset-y-0 right-0 flex w-full flex-col overflow-y-auto bg-bg outline-none sm:max-w-md sm:border-l sm:border-line"
+            className="animate-fadeup absolute inset-0 flex flex-col overflow-y-auto bg-bg outline-none"
           >
             <div className="flex h-14 shrink-0 items-center justify-between border-b border-line px-4">
               <Link
@@ -338,7 +265,7 @@ export default function Nav() {
                   height={22}
                   className="rounded-full"
                 />
-                <span className="text-lg font-extrabold tracking-tight">
+                <span className="font-display text-xl tracking-tight">
                   Suede Sing
                 </span>
               </Link>
@@ -364,10 +291,8 @@ export default function Nav() {
               </button>
             </div>
 
-            {/* Directly under the header: on a phone this is the only entry to
-                the paid tier — /pro is deliberately not one of the thirteen
-                room links — and at the bottom of the list it sat below the
-                fold on every screen size. */}
+            {/* Keep Pro above the room list so it remains easy to find after
+                opening the drawer. It also has a pill in the phone header. */}
             <div className="px-4 pt-4">
               <Link
                 href="/pro"
@@ -425,7 +350,7 @@ export default function Nav() {
             )}
 
             <nav
-              aria-label="All rooms"
+              aria-label="Main"
               className="mt-4 grid grid-cols-2 gap-2.5 px-4 pb-8"
             >
               {LINKS.map((l) => {
@@ -455,7 +380,7 @@ export default function Nav() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-line/60 bg-bg/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-line bg-bg/85 backdrop-blur">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-3 px-4 sm:gap-4 sm:px-6">
           <Link
             href="/"
@@ -468,36 +393,34 @@ export default function Nav() {
               height={22}
               className="rounded-full"
             />
-            <span className="text-lg font-extrabold tracking-tight">
+            <span className="font-display text-xl tracking-tight">
               Suede Sing
             </span>
           </Link>
 
           {/* Desktop / tablet: thumb-sized tabs with a fade only while more remain.
-              Safe centring, not justify-center: between sm and ~1000px the row
-              overflows, and plain centring pushes the overflow off the left
-              edge where a scroll container cannot reach, leaving "Home"
-              unclickable under the logo. Safe centring falls back to start. */}
+              Start-aligned so the first tab stays reachable when the row
+              overflows on narrower screens. */}
           <nav
             aria-label="Main"
             ref={tabsRef}
-            className={`no-scrollbar hidden flex-1 items-center justify-center-safe gap-1 overflow-x-auto sm:flex ${
+            className={`no-scrollbar hidden flex-1 items-center gap-2 overflow-x-auto sm:flex ${
               tabsOverflow
                 ? "[mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
                 : ""
             }`}
           >
-            {PRIMARY.map((l) => {
+            {LINKS.map((l) => {
               const active = isActiveLink(l, pathname);
               return (
                 <Link
                   key={l.href}
                   href={l.target ?? l.href}
                   aria-current={ariaCurrentFor(l, pathname)}
-                  className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-bold transition-colors ${
+                  className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
                     active
-                      ? "bg-ink text-bg"
-                      : "text-mut hover:bg-panel2 hover:text-ink"
+                      ? "bg-panel2 text-violet-ink"
+                      : "text-mut hover:text-ink"
                   }`}
                 >
                   {l.label}
@@ -506,14 +429,31 @@ export default function Nav() {
             })}
           </nav>
 
-<div className="flex-1 sm:hidden" />
+          {/* Mobile: single trigger that names the current page and opens a full-screen menu */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-haspopup="dialog"
+            aria-expanded={menuOpen}
+            className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:hidden"
+          >
+            <MenuIcon />
+            {/* The 404 page is pre-rendered once with no real path, so its
+                HTML says "Menu"; under /warmups/typo the client would compute
+                "Warmups". Keeping the server's text is also the right label
+                for a page that isn't there. */}
+            <span className="truncate" suppressHydrationWarning>
+              {currentLabel}
+            </span>
+          </button>
+
           {/* Shown at every width: on a phone the header was the one place Pro
               had no entry at all, and the drawer is two taps away. */}
           <Link
             href="/pro"
             className={`flex min-h-11 shrink-0 items-center rounded-full px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.14em] transition-colors sm:px-3 ${
               proActive
-                ? "bg-brand text-white hover:bg-violet"
+                ? "bg-violet text-[#241a05] hover:bg-violet"
                 : "border border-violet/60 text-violet-ink hover:border-violet hover:bg-panel2"
             }`}
           >
@@ -572,66 +512,9 @@ export default function Nav() {
               worthSaving={worthSaving}
             />
           )}
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            aria-haspopup="dialog"
-            aria-expanded={menuOpen}
-            aria-label="All rooms"
-            className="relative flex size-11 shrink-0 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-panel2"
-          >
-            <MenuIcon />
-          </button>
         </div>
       </header>
       {drawer}
-      <TabBar pathname={pathname} />
     </>
-  );
-}
-
-/**
- * The phone's bottom tab bar: five destinations under the thumb, the shape
- * every mobile singing app uses. Hidden from sm up, where the header carries
- * the same five as pills. Rendered with its own label so screen readers can
- * tell it from the header row.
- */
-function TabBar({ pathname }: { pathname: string }) {
-  return (
-    <nav
-      aria-label="Tabs"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-line/70 bg-bg/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl sm:hidden"
-    >
-      <ul className="mx-auto grid max-w-md grid-cols-5">
-        {PRIMARY.map((l) => {
-          const active = isActiveLink(l, pathname);
-          return (
-            <li key={l.href}>
-              <Link
-                href={l.target ?? l.href}
-                aria-current={ariaCurrentFor(l, pathname)}
-                className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-bold transition-colors ${
-                  active ? "text-ink" : "text-dim hover:text-mut"
-                }`}
-              >
-                {/* The active tab was told apart by colour and stroke weight
-                    alone; the bar on the top edge is a cue that survives
-                    greyscale and a glance. Absolute, so no tab moves. */}
-                {active && (
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 top-0 mx-auto h-0.5 w-8 rounded-full bg-pink"
-                  />
-                )}
-                <span className={active ? "text-pink" : ""}>
-                  <TabIcon name={l.icon} active={active} />
-                </span>
-                {l.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
   );
 }

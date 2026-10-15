@@ -237,9 +237,9 @@ console.log("\n/studio — its single start button");
   await ctx.close();
 }
 
-/* ------------------------------------------------- phone: the tab bar */
+/* -------------------------------------------- phone: visible feedback */
 
-console.log(`\n/studio and /songs at ${PHONE.width}×${PHONE.height} — the message clears the tab bar`);
+console.log(`\n/studio and /songs at ${PHONE.width}×${PHONE.height} — the message stays on screen`);
 for (const path of ["/studio", "/songs", "/songs?song=twinkle-twinkle-little-star"]) {
   const { ctx, page } = await freshPage("", PHONE);
   await page.goto(`${BASE}${path}`, { waitUntil: "networkidle" });
@@ -253,13 +253,15 @@ for (const path of ["/studio", "/songs", "/songs?song=twinkle-twinkle-little-sta
   } catch {
     // Reported below as a failure, not a crash.
   }
-  const barBox = await page.locator(TAB_BAR).boundingBox();
+  const bar = page.locator(TAB_BAR);
+  const barBox = await bar.count() ? await bar.boundingBox() : null;
+  const visibleBottom = barBox?.y ?? PHONE.height;
   const bottom = alertBox ? Math.round(alertBox.y + alertBox.height) : null;
-  const clear = !!alertBox && !!barBox && alertBox.y >= 0 && alertBox.y + alertBox.height <= barBox.y;
-  check(`${path}: refusal sits above the tab bar`, clear,
-    alertBox && barBox
-      ? `alert ${Math.round(alertBox.y)}–${bottom}, bar from ${Math.round(barBox.y)}`
-      : "no alert or no tab bar measured");
+  const clear = !!alertBox && alertBox.y >= 0 && alertBox.y + alertBox.height <= visibleBottom;
+  check(`${path}: refusal stays on screen`, clear,
+    alertBox
+      ? `alert ${Math.round(alertBox.y)}–${bottom}, visible bottom ${Math.round(visibleBottom)}`
+      : "no alert measured");
   // The press is a retry now; an unchanged label read as a dead button.
   check(`${path}: the gate button offers to try again`,
     (await page.getByRole("button", { name: "Try again" }).count()) > 0);

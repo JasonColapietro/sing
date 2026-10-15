@@ -194,7 +194,7 @@ export default function ProMoments() {
       <button
         type="button"
         aria-label="Dismiss"
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-ink/40"
         onClick={dismiss}
       />
       <div

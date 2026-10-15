@@ -19,6 +19,7 @@ vi.mock("server-only", () => ({}));
 vi.mock("next/font/google", () => ({
   Manrope: () => ({ variable: "" }),
   IBM_Plex_Mono: () => ({ variable: "" }),
+  Instrument_Serif: () => ({ variable: "" }),
 }));
 
 import { metadata as layoutMetadata } from "@/app/layout";

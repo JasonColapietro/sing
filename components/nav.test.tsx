@@ -8,7 +8,7 @@ vi.mock("@/lib/use-account-auth", () => ({
   useAccountAuth: () => ({ isLoaded: false, isSignedIn: false }),
 }));
 
-import Nav, { LINKS, PRIMARY, streakChipState } from "./nav";
+import Nav, { LINKS, streakChipState } from "./nav";
 
 const originalTz = process.env.TZ;
 afterEach(() => {
@@ -29,8 +29,8 @@ describe("practice streak calendar days", () => {
   });
 });
 
-/** The <nav> landmarks Nav renders closed: the header row and the phone tab bar. */
-const LANDMARKS = ["Main", "Tabs"] as const;
+/** The header row is the only navigation landmark until the mobile drawer opens. */
+const LANDMARKS = ["Main"] as const;
 
 function landmark(html: string, label: string): string {
   return html.match(new RegExp(`<nav aria-label="${label}"[^>]*>(.*?)</nav>`))?.[1] ?? "";
@@ -38,15 +38,15 @@ function landmark(html: string, label: string): string {
 
 describe("main navigation current location", () => {
   it.each([
-    // Sing's link lands on the range page's start button (#start); it is
-    // still current on /range itself and inside the rooms it owns.
-    ["/", "/", "page"],
-    ["/range", "/range#start", "page"],
-    ["/learn/voice", "/warmups", "location"],
-    ["/glossary/tessitura", "/warmups", "location"],
-    ["/singers/olivia-rodrigo", "/songs", "location"],
-    ["/recorder", "/range#start", "location"],
-  ])("announces %s through the correct link in each navigation landmark", (pathname, href, current) => {
+    ["/range", "/range?mode=range#start", "page"],
+    ["/programs/first-fortnight", "/warmups", "location"],
+    ["/learn", "/learn", "page"],
+    ["/learn/voice", "/learn", "location"],
+    ["/glossary/tessitura", "/learn", "location"],
+    ["/singers/olivia-rodrigo", "/singers", "location"],
+    ["/recorder", "/tools", "location"],
+    ["/analyze", "/tools", "location"],
+  ])("announces %s through the correct navigation link", (pathname, href, current) => {
     route.pathname = pathname;
     const html = renderToStaticMarkup(<Nav />);
     for (const label of LANDMARKS) {
@@ -63,15 +63,15 @@ describe("main navigation current location", () => {
   });
 
   /**
-   * Bare /range opens at the top, and on a phone its start button sits under
-   * the tab bar. The More sheet renders only once opened, so its tile is
-   * checked here in the data the sheet maps (`target ?? href`), and in
+   * Range opens the guided test at its start button. The mobile drawer
+   * renders only once opened, so its link is checked here in the data it
+   * maps (`target ?? href`), and in
    * e2e/navigation.mjs by a real tap.
    */
-  it("sends the Sing tab and the More sheet's Pitch & range tile to #start", () => {
-    const routed = [...PRIMARY, ...LINKS].filter((l) => l.href === "/range");
-    expect(routed.map((l) => l.label)).toEqual(["Sing", "Pitch & range"]);
-    for (const l of routed) expect(l.target, l.label).toBe("/range#start");
+  it("sends the Range tab and mobile room link to the guided test", () => {
+    const routed = LINKS.filter((l) => l.href === "/range");
+    expect(routed.map((l) => l.label)).toEqual(["Range"]);
+    for (const l of routed) expect(l.target, l.label).toBe("/range?mode=range#start");
   });
 
   it("does not claim an unrelated prefix is a current destination", () => {
@@ -83,8 +83,11 @@ describe("main navigation current location", () => {
     const html = renderToStaticMarkup(<Nav />);
     const main = html.match(/<nav aria-label="Main"[^>]*>(.*?)<\/nav>/)?.[1] ?? "";
     const links = main.match(/<a\b[^>]*>/g) ?? [];
-    expect(links).toHaveLength(5);
+    expect(links).toHaveLength(10);
     for (const link of links) expect(link).toContain("min-h-11");
+    expect([...main.matchAll(/<a\b[^>]*>(.*?)<\/a>/g)].map((link) => link[1])).toEqual([
+      "Studio", "Warmups", "Range", "Singers", "Ear", "Breath", "Songs", "Tools", "Learn", "Progress",
+    ]);
   });
 });
 

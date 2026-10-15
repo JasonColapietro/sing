@@ -20,6 +20,7 @@ import { LevelMeter } from "@/components/studio/level-meter";
 import { staleRangeProgramNote } from "@/components/practice/program-range-note";
 import type { ProgramRangeLink } from "@/components/practice/program-range-probe";
 import { freshInputHint, meterInputHint, nextInputHint } from "./pitch-meter-hint";
+import { AMBER, COOL, DIM, INK, OK, PANEL, REC } from "@/lib/chart-colors";
 
 /**
  * The running program's next range test, read only once the mic starts for a
@@ -53,17 +54,17 @@ const MIN_LOG_SEC = 45;
 const SUGGEST_RANGE_SEMIS = 5;
 
 const COLORS = {
-  laneA: "rgba(255,255,255,0.025)",
-  laneB: "rgba(255,255,255,0.055)",
-  laneC: "rgba(139,92,246,0.16)",
-  label: "#a39dc9",
-  labelC: "#f6f4ff",
-  playhead: "rgba(255,255,255,0.35)",
-  trailFrom: "#8b5cf6",
-  trailTo: "#ff4fa3",
-  inTune: "#2fd49a",
-  close: "#ffc24a",
-  off: "#ff4fa3",
+  laneA: "rgba(72,58,32,0.025)",
+  laneB: "rgba(72,58,32,0.055)",
+  laneC: "rgba(197,150,66,0.12)",
+  label: DIM,
+  labelC: INK,
+  playhead: "rgba(72,58,32,0.35)",
+  trailFrom: COOL,
+  trailTo: COOL,
+  inTune: OK,
+  close: AMBER,
+  off: REC,
 };
 
 type Point = { t: number; midi: number | null };
@@ -85,7 +86,7 @@ function tuneColor(cents: number): string {
   return COLORS.off;
 }
 
-/** Matches the color: amber is a little off, pink is plainly off. */
+/** Matches the color: amber is a little off, brick red is plainly off. */
 function tuneWord(cents: number): string {
   const zone = tuneZone(cents);
   if (zone === "in-tune") return "In tune";
@@ -410,7 +411,7 @@ export function PitchMeter({
 
       // Trail.
       const grad = ctx.createLinearGradient(0, 0, px, 0);
-      grad.addColorStop(0, "rgba(139,92,246,0)");
+      grad.addColorStop(0, "rgba(17,97,93,0)");
       grad.addColorStop(0.35, COLORS.trailFrom);
       grad.addColorStop(1, COLORS.trailTo);
       ctx.strokeStyle = grad;
@@ -418,7 +419,7 @@ export function PitchMeter({
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.shadowColor = COLORS.trailTo;
-      ctx.shadowBlur = 12;
+      ctx.shadowBlur = 0;
       ctx.beginPath();
       let pen = false;
       for (const p of pts) {
@@ -441,12 +442,12 @@ export function PitchMeter({
         const color = tuneColor(f.note.cents);
         ctx.fillStyle = color;
         ctx.shadowColor = color;
-        ctx.shadowBlur = 22;
+        ctx.shadowBlur = 0;
         ctx.beginPath();
         ctx.arc(px, y, 9, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = PANEL;
         ctx.beginPath();
         ctx.arc(px, y, 3.5, 0, Math.PI * 2);
         ctx.fill();
@@ -537,7 +538,7 @@ export function PitchMeter({
   return (
     <div className="space-y-4">
       {probe}
-      <div className="overflow-hidden rounded-3xl border border-line bg-panel">
+      <div className="overflow-hidden rounded-2xl border border-line bg-panel">
         <div className="flex items-end justify-between gap-4 px-5 pt-5 sm:px-6">
           <div>
             <div className="text-label font-extrabold uppercase tracking-[0.12em] text-dim">
@@ -597,11 +598,11 @@ export function PitchMeter({
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-3xl border border-line bg-panel p-4">
+        <div className="rounded-2xl border border-line bg-panel p-4">
           <div className="text-label font-extrabold uppercase tracking-[0.12em] text-dim">Lowest held</div>
           <div className="tabular mt-1 text-3xl font-extrabold">{low !== null ? midiToLabel(low) : "—"}</div>
         </div>
-        <div className="rounded-3xl border border-line bg-panel p-4">
+        <div className="rounded-2xl border border-line bg-panel p-4">
           <div className="text-label font-extrabold uppercase tracking-[0.12em] text-dim">Highest held</div>
           <div className="tabular mt-1 text-3xl font-extrabold">{high !== null ? midiToLabel(high) : "—"}</div>
         </div>
@@ -616,7 +617,7 @@ export function PitchMeter({
           one whose running program schedules the next test, with the note
           the /progress coach gives on when it falls. */}
       {explored && low !== null && high !== null && !offerRetest && saved && (
-        <div className="rounded-3xl border border-violet/40 bg-panel p-4">
+        <div className="rounded-2xl border border-violet/40 bg-panel p-4">
           <p className="text-sm text-mut">
             {programNote
               ? `You have held ${midiToLabel(low)} to ${midiToLabel(high)} so far. ${programNote}`
@@ -633,7 +634,7 @@ export function PitchMeter({
         </div>
       )}
       {explored && low !== null && high !== null && (offerRetest || !saved) && (
-        <div className="rounded-3xl border border-violet/40 bg-panel p-4">
+        <div className="rounded-2xl border border-violet/40 bg-panel p-4">
           {/* offerRetest with a saved range means it is six weeks old or
               more (an undated one counts as current) and no running program
               schedules the next test, so a retest is due rather than a first

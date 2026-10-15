@@ -9,8 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Real-time pitch training, vocal range testing, guided warmups, ear training, breath work, a recorder and song practice, in the browser. The pitch meter and range test are free.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0f0c1f",
-    theme_color: "#0f0c1f",
+    background_color: "#f7f0e7",
+    theme_color: "#f7f0e7",
     categories: ["music", "education"],
     orientation: "portrait",
     // Built by scripts/build-icons.mjs. "any" and "maskable" are deliberately

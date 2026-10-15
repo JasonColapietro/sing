@@ -59,10 +59,10 @@ export default function Image() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          backgroundColor: "#0f0c1f",
+          backgroundColor: "#f7f0e7",
           backgroundImage:
             "radial-gradient(760px 320px at 50% -10%, rgba(197,150,66,0.14), rgba(197,150,66,0))",
-          color: "#f6f4ff",
+          color: "#20201d",
           fontFamily: "monospace",
           padding: "64px 72px",
         }}
@@ -71,7 +71,7 @@ export default function Image() {
           style={{
             fontSize: 24,
             letterSpacing: 8,
-            color: "#ffc24a",
+            color: "#c59642",
             fontWeight: 600,
           }}
         >
@@ -80,7 +80,7 @@ export default function Image() {
         <div style={{ marginTop: 14, fontSize: 68, fontWeight: 700 }}>
           {`Famous vocal ranges`}
         </div>
-        <div style={{ marginTop: 8, fontSize: 28, color: "#c3bde3" }}>
+        <div style={{ marginTop: 8, fontSize: 28, color: "#5c564d" }}>
           {subtitle}
         </div>
 
@@ -98,7 +98,7 @@ export default function Image() {
                 style={{
                   width: 250,
                   fontSize: 22,
-                  color: "#f6f4ff",
+                  color: "#20201d",
                   overflow: "hidden",
                 }}
               >
@@ -110,7 +110,7 @@ export default function Image() {
                   position: "relative",
                   width: 640,
                   height: 26,
-                  backgroundColor: "#241f42",
+                  backgroundColor: "#efe6d5",
                   borderRadius: 13,
                 }}
               >
@@ -130,7 +130,7 @@ export default function Image() {
                 style={{
                   width: 130,
                   fontSize: 19,
-                  color: "#c3bde3",
+                  color: "#5c564d",
                   textAlign: "right",
                 }}
               >
@@ -140,7 +140,7 @@ export default function Image() {
           ))}
         </div>
 
-        <div style={{ marginTop: 34, fontSize: 22, color: "#a39dc9" }}>
+        <div style={{ marginTop: 34, fontSize: 22, color: "#8a8272" }}>
           {`Reported catalog figures · test your own range free`}
         </div>
       </div>

@@ -24,8 +24,8 @@ export default function GlobalError({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#0f0c1f",
-          color: "#f6f4ff",
+          backgroundColor: "#f7f0e7",
+          color: "#20201d",
           fontFamily:
             "ui-sans-serif, system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif",
           padding: "24px",
@@ -38,7 +38,7 @@ export default function GlobalError({
               fontSize: "12px",
               letterSpacing: "0.14em",
               textTransform: "uppercase",
-              color: "#ffd27a",
+              color: "#82631f",
               margin: 0,
             }}
           >
@@ -54,7 +54,7 @@ export default function GlobalError({
           >
             The app failed to start
           </h1>
-          <p style={{ color: "#c3bde3", margin: "16px 0 0" }}>
+          <p style={{ color: "#5c564d", margin: "16px 0 0" }}>
             Something went wrong before the page could load. Reloading usually
             fixes it. Nothing you have practiced is affected — it is stored on
             this device.
@@ -74,8 +74,8 @@ export default function GlobalError({
               style={{
                 borderRadius: "999px",
                 border: "none",
-                backgroundColor: "#ff5470",
-                color: "#0f0c1f",
+                backgroundColor: "#9d3f33",
+                color: "#f7f0e7",
                 padding: "10px 20px",
                 fontFamily: "ui-monospace, Menlo, monospace",
                 fontSize: "14px",
@@ -93,8 +93,8 @@ export default function GlobalError({
               href="/"
               style={{
                 borderRadius: "999px",
-                border: "1px solid #463e75",
-                color: "#f6f4ff",
+                border: "1px solid #c9bda0",
+                color: "#20201d",
                 padding: "10px 20px",
                 fontSize: "14px",
                 textDecoration: "none",

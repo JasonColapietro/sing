@@ -53,10 +53,10 @@ export function HubOgCard({
         display: "flex",
         flexDirection: "column",
         padding: "72px 84px",
-        backgroundColor: "#0f0c1f",
+        backgroundColor: "#f7f0e7",
         backgroundImage:
           "radial-gradient(700px 300px at 50% -10%, rgba(197,150,66,0.16), rgba(197,150,66,0))",
-        color: "#f6f4ff",
+        color: "#20201d",
         fontFamily: "monospace",
       }}
     >
@@ -64,7 +64,7 @@ export function HubOgCard({
         style={{
           fontSize: 24,
           letterSpacing: 8,
-          color: "#ff5470",
+          color: "#9d3f33",
           fontWeight: 700,
           textTransform: "uppercase",
           display: "flex",
@@ -85,7 +85,7 @@ export function HubOgCard({
       >
         {title}
       </div>
-      <div style={{ marginTop: 8, fontSize: 30, color: "#c3bde3", display: "flex" }}>
+      <div style={{ marginTop: 8, fontSize: 30, color: "#5c564d", display: "flex" }}>
         {stat}
       </div>
 
@@ -109,7 +109,7 @@ export function HubOgCard({
                 display: "flex",
                 width: 250,
                 fontSize: 22,
-                color: "#f6f4ff",
+                color: "#20201d",
               }}
             >
               {s.name.length > 20 ? s.name.slice(0, 19) + "…" : s.name}
@@ -149,7 +149,7 @@ export function HubOgCard({
           marginTop: 34,
           justifyContent: "space-between",
           fontSize: 22,
-          color: "#a39dc9",
+          color: "#8a8272",
         }}
       >
         <div style={{ display: "flex" }}>{caption}</div>
