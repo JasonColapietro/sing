@@ -208,7 +208,7 @@ export function Piano({ onActive }: { onActive: (active: boolean) => void }) {
         {showLabel(k.midi) && (
           <span
             className={`pointer-events-none font-mono ${
-              isActive ? "text-white" : k.black ? "text-dim" : "text-key-label"
+              isActive ? "text-ink" : k.black ? "text-line2" : "text-mut"
             } ${k.black ? "text-[9px]" : "text-[10px]"}`}
           >
             {label}

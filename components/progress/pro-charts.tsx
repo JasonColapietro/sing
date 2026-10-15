@@ -15,7 +15,7 @@ import { TOLERANCE_CENTS } from "@/components/warmups/scoring";
 
 /** Weak enough to be worth practising on purpose. */
 const WEAK_BELOW = 70;
-const REC = "#ff5470";
+const REC = "#9d3f33";
 
 const emptyClass =
   "rounded-xl border border-dashed border-line2 px-4 py-8 text-center text-sm text-mut";

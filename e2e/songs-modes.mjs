@@ -76,7 +76,7 @@ const tempoText = async (page) => (await tempoSlider(page).getAttribute("aria-va
 try {
   // 0. The free minutes on a phone. Opening a song brings its transport into view, which on a 375×667 screen
   //    puts the top of the page above the screen, so the "Free guided practice today" readout sits in the
-  //    player, right above the transport: on screen and clear of the fixed tab bar, before any run starts.
+  //    player, right above the transport: on screen below the sticky header, before any run starts.
   {
     const context = await browser.newContext({ viewport: { width: 375, height: 667 }, permissions: ["microphone"] });
     await context.addInitScript(({ progressKey, record, coachIntroKey }) => {
@@ -98,12 +98,12 @@ try {
     // Let the scroll that brings the transport into view settle.
     await page.waitForTimeout(800);
     const box = await allowance.boundingBox();
-    const bar = await page.getByRole("navigation", { name: "Tabs" }).boundingBox();
-    assert.ok(box && bar, `readout ${JSON.stringify(box)}, tab bar ${JSON.stringify(bar)}`);
-    assert.ok(box.y >= 0, `readout starts above the screen: ${JSON.stringify(box)}`);
-    assert.ok(box.y + box.height <= bar.y, `readout runs under the tab bar (top ${bar.y}): ${JSON.stringify(box)}`);
+    const header = await page.locator("header").first().boundingBox();
+    assert.ok(box && header, `readout ${JSON.stringify(box)}, header ${JSON.stringify(header)}`);
+    assert.ok(box.y >= header.y + header.height, `readout starts under the header: ${JSON.stringify(box)}`);
+    assert.ok(box.y + box.height <= 667, `readout runs below the screen: ${JSON.stringify(box)}`);
     assert.deepEqual(errors, []);
-    console.log(`PASS phone: free minutes on screen above the tab bar (y ${Math.round(box.y)}–${Math.round(box.y + box.height)}, bar at ${Math.round(bar.y)})`);
+    console.log(`PASS phone: free minutes on screen below the header (y ${Math.round(box.y)}–${Math.round(box.y + box.height)})`);
     await context.close();
   }
 

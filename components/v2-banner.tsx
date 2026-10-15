@@ -122,7 +122,7 @@ export default function V2Banner() {
       <section
         id="v2-banner"
         aria-label="What's new in Suede Sing"
-        className="relative mt-6 rounded-3xl bg-brand text-white sm:mt-8"
+        className="relative mt-6 rounded-3xl bg-violet-ink text-white sm:mt-8"
         suppressHydrationWarning
       >
         {/* The card reads as a filled band rather than a hairline: white on

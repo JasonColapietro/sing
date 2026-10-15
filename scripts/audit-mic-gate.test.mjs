@@ -7,9 +7,9 @@ const exec = promisify(execFile);
 const auditFile = fileURLToPath(new URL("./audit-mic-gate.mjs", import.meta.url));
 
 /** Run the real CLI against the current room structure, without a browser install. */
-async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = false, wrongContinue = false, continueKicker = 'Continue your path', alertBehindBar = false } = {}) {
+async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = false, wrongContinue = false, continueKicker = 'Continue your path', alertBehindBar = false, tabBar = true } = {}) {
   const browserModule = `
-    const settings = ${JSON.stringify({ rows, broken, alerts, missingAlert, wrongContinue, continueKicker, alertBehindBar })};
+    const settings = ${JSON.stringify({ rows, broken, alerts, missingAlert, wrongContinue, continueKicker, alertBehindBar, tabBar })};
     const rowSelector = 'main li > button[aria-describedby~="practice-mic-note"]';
     function page() {
       let url = '', shown = false, ready = false, source = '';
@@ -20,7 +20,7 @@ async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = f
         locator: () => locator('titles'),
         allTextContents: async () => kind === 'titles'
           ? Array.from({ length: settings.rows }, (_, n) => 'Exercise ' + (n + 1)) : [],
-        count: async () => kind === 'rows' ? settings.rows : kind === 'alert' ? (shown ? settings.alerts : 0) : 1,
+        count: async () => kind === 'tabbar' ? Number(settings.tabBar) : kind === 'rows' ? settings.rows : kind === 'alert' ? (shown ? settings.alerts : 0) : 1,
         // The phone tab bar sits at 610 on a 375×667 screen; a refusal that
         // renders behind it is what the phone pass exists to catch.
         boundingBox: async () => kind === 'tabbar'
@@ -98,15 +98,21 @@ describe('microphone audit CLI', () => {
   it('checks on a phone that a refusal on /studio and /songs clears the tab bar', async () => {
     const result = await runAudit();
     expect(result.code).toBe(0);
-    expect(result.stdout).toContain('  ok  /studio: refusal sits above the tab bar');
-    expect(result.stdout).toContain('  ok  /songs?song=twinkle-twinkle-little-star: refusal sits above the tab bar');
+    expect(result.stdout).toContain('  ok  /studio: refusal stays on screen');
+    expect(result.stdout).toContain('  ok  /songs?song=twinkle-twinkle-little-star: refusal stays on screen');
     expect(result.stdout).toContain('  ok  /songs: the gate button offers to try again');
+  });
+
+  it('measures the viewport when the original navigation has no bottom bar', async () => {
+    const result = await runAudit({ tabBar: false });
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain('  ok  /studio: refusal stays on screen');
   });
 
   it('fails when a refusal renders behind the phone tab bar', async () => {
     const result = await runAudit({ alertBehindBar: true });
     expect(result.code).toBe(1);
-    expect(result.stdout).toContain('FAIL  /studio: refusal sits above the tab bar');
+    expect(result.stdout).toContain('FAIL  /studio: refusal stays on screen');
     expect(result.stdout).toContain('BROWSER_CLOSED');
   });
 

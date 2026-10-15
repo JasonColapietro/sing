@@ -1,9 +1,8 @@
 /** Real menu clicks and responsive edge cases. No account or payment actions.
  * node e2e/navigation.mjs http://localhost:3197 [--executable=path]
  *
- * Mirrors components/nav.tsx: five primary destinations ("Main" in the header
- * from sm up, "Tabs" pinned to the bottom below it) and the full room list in
- * the "All rooms" sheet, which the header's menu button opens at every width.
+ * Mirrors components/nav.tsx: all ten destinations in the desktop header,
+ * with the same links in a full-screen drawer below the sm breakpoint.
  */
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
@@ -12,21 +11,18 @@ const argv = process.argv.slice(2);
 const base = (argv.find((a) => !a.startsWith("--")) ?? "http://localhost:3197").replace(/\/$/, "");
 /** A browser build Playwright did not install, e.g. `/opt/pw-browsers/chromium` in a cloud container. */
 const executable = argv.find((a) => a.startsWith("--executable="))?.slice("--executable=".length);
-// A third entry is the fragment the link must land on. /range's two entries
-// land on #start, its start button, rather than the intro above it, which on
-// a phone leaves the button under the tab bar.
+// Range must retain the guided-test mode and land on its start button.
 const rooms = [
-  ["Pitch & range", "/range", "#start"], ["Studio", "/studio"], ["Warmups", "/warmups"],
-  ["Songs", "/songs"], ["Singers", "/singers"], ["Ear training", "/ear-training"],
-  ["Breath", "/breath"], ["Tools", "/tools"], ["Learn", "/learn"], ["Progress", "/progress"],
-];
-const primary = [
-  ["Home", "/"], ["Sing", "/range", "#start"], ["Songs", "/songs"], ["Lessons", "/warmups"], ["Progress", "/progress"],
+  ["Studio", "/studio"], ["Warmups", "/warmups"], ["Range", "/range", "#start", "?mode=range"],
+  ["Singers", "/singers"], ["Ear", "/ear-training"], ["Breath", "/breath"],
+  ["Songs", "/songs"], ["Tools", "/tools"], ["Learn", "/learn"], ["Progress", "/progress"],
 ];
 const SM = 640;
 
-async function assertLanded(page, path, hash) {
-  await page.waitForURL((url) => url.pathname === path && (hash === undefined || url.hash === hash));
+async function assertLanded(page, path, hash, search) {
+  await page.waitForURL((url) => url.pathname === path
+    && (hash === undefined || url.hash === hash)
+    && (search === undefined || url.search === search));
   await page.locator("h1").first().waitFor();
   assert.equal(await page.locator("h1").count(), 1, `${path}: one main heading`);
   assert.equal(await page.getByRole("dialog", { name: "Navigation menu" }).count(), 0, `${path}: sheet closed`);
@@ -34,12 +30,12 @@ async function assertLanded(page, path, hash) {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false, `${path}: no horizontal overflow`);
 }
 
-async function clickTo(page, link, label, path, width, hash) {
+async function clickTo(page, link, label, path, width, hash, search) {
   await link.scrollIntoViewIfNeeded();
   const box = await link.boundingBox();
   assert.ok(box && box.height >= 44, `${width}px ${label}: 44px target (got ${box?.height})`);
   await link.click();
-  await assertLanded(page, path, hash);
+  await assertLanded(page, path, hash, search);
 }
 
 const browser = await chromium.launch({
@@ -52,48 +48,59 @@ try {
     const page = await context.newPage();
     const errors = [];
     page.on("pageerror", (error) => errors.push(error.message));
-    const trigger = page.locator("header").getByRole("button", { name: "All rooms" });
+    const trigger = page.locator('header button[aria-haspopup="dialog"]');
     try {
       await page.goto(`${base}/learn`, { waitUntil: "networkidle" });
 
-      // Every room, through the sheet, at every width.
-      for (const [name, path, hash] of rooms) {
-        await trigger.click();
-        const drawer = page.getByRole("dialog", { name: "Navigation menu" });
-        await drawer.waitFor();
-        const nav = drawer.getByRole("navigation", { name: "All rooms", exact: true });
-        await clickTo(page, nav.getByRole("link", { name, exact: true }), `sheet ${name}`, path, width, hash);
-      }
-
-      // The five primary destinations, through whichever bar this width shows.
-      const bar = page.getByRole("navigation", { name: width < SM ? "Tabs" : "Main", exact: true });
-      for (const [name, path, hash] of primary) {
-        await clickTo(page, bar.getByRole("link", { name, exact: true }), `${width < SM ? "tab" : "header"} ${name}`, path, width, hash);
+      // Every room, through the drawer on phones and the header on larger screens.
+      for (const [name, path, hash, search] of rooms) {
+        let nav = page.locator("header").getByRole("navigation", { name: "Main", exact: true });
+        if (width < SM) {
+          await trigger.click();
+          const drawer = page.getByRole("dialog", { name: "Navigation menu" });
+          await drawer.waitFor();
+          nav = drawer.getByRole("navigation", { name: "Main", exact: true });
+          assert.equal(await nav.getByRole("link").count(), 10, "drawer exposes all ten destinations");
+        }
+        await clickTo(page, nav.getByRole("link", { name, exact: true }), `${width < SM ? "drawer" : "header"} ${name}`, path, width, hash, search);
+        if (width < SM) assert.equal((await trigger.textContent()).trim(), name, "phone trigger names the current room");
+        else {
+          const current = nav.locator('a[aria-current="page"]');
+          assert.equal(await current.count(), 1, "header announces one current page");
+          assert.equal((await current.textContent()).trim(), name);
+        }
       }
 
       if (width >= SM) {
         const nav = page.getByRole("navigation", { name: "Main", exact: true });
         await nav.evaluate((el) => { el.scrollLeft = el.scrollWidth; });
         await page.waitForFunction(() => getComputedStyle(document.querySelector('header nav[aria-label="Main"]')).maskImage === "none");
+        assert.equal(await trigger.isVisible(), false, "desktop uses the header links");
+      } else {
+        // Tab remains inside the drawer; Escape restores its trigger and scroll.
+        await trigger.click();
+        const drawer = page.getByRole("dialog", { name: "Navigation menu" });
+        await drawer.waitFor();
+        await page.waitForFunction(() => document.activeElement?.getAttribute("role") === "dialog");
+        await page.keyboard.press("Shift+Tab");
+        assert.equal(await drawer.getByRole("link", { name: "Progress", exact: true }).evaluate((el) => el === document.activeElement), true, "Shift+Tab wraps to the last drawer link");
+        await page.keyboard.press("Tab");
+        assert.equal(await drawer.getByRole("link").first().evaluate((el) => el === document.activeElement), true, "Tab wraps to the first drawer link");
+        await page.keyboard.press("Escape");
+        await drawer.waitFor({ state: "detached" });
+        assert.equal(await trigger.evaluate((el) => el === document.activeElement), true, "Escape restores trigger focus");
+        assert.equal(await page.evaluate(() => document.body.style.overflow === "hidden"), false, "Escape releases the scroll lock");
+
+        // At sm the header takes over. Unmount the hidden drawer so its focus
+        // trap and scroll lock do not survive a rotation or window resize.
+        await trigger.click();
+        await drawer.waitFor();
+        await page.setViewportSize({ width: 1280, height: 900 });
+        await page.getByRole("dialog", { name: "Navigation menu", includeHidden: true }).waitFor({ state: "detached" });
+        await page.waitForFunction(() => document.body.style.overflow !== "hidden");
+        await page.setViewportSize({ width, height: 900 });
+        assert.equal(await trigger.getAttribute("aria-expanded"), "false", "returning to phone width leaves the drawer closed");
       }
-
-      // Escape closes the sheet and hands focus back to the button that opened it.
-      await trigger.click();
-      await page.getByRole("dialog", { name: "Navigation menu" }).waitFor();
-      await page.keyboard.press("Escape");
-      await page.getByRole("dialog", { name: "Navigation menu" }).waitFor({ state: "detached" });
-      assert.equal(await trigger.evaluate((el) => el === document.activeElement), true, "Escape restores trigger focus");
-      assert.equal(await page.evaluate(() => document.body.style.overflow === "hidden"), false, "Escape releases the scroll lock");
-
-      // Crossing the sm breakpoint with the sheet open must leave a usable
-      // sheet (it is the room list at every width), and closing it afterwards
-      // must release the scroll lock.
-      await trigger.click();
-      await page.getByRole("dialog", { name: "Navigation menu" }).waitFor();
-      await page.setViewportSize({ width: width < SM ? 1280 : 375, height: 900 });
-      await page.getByRole("dialog", { name: "Navigation menu" }).getByRole("button", { name: "Close menu" }).last().click();
-      await page.getByRole("dialog", { name: "Navigation menu", includeHidden: true }).waitFor({ state: "detached" });
-      await page.waitForFunction(() => document.body.style.overflow !== "hidden");
 
       // Starting a warmup removes its home card. On exit the old DOM button
       // cannot receive focus: the remounted room heading is the fallback.
@@ -170,7 +177,7 @@ try {
       }
 
       assert.deepEqual(errors, []);
-      console.log(`PASS ${width}px: ten rooms via the sheet, five primary tabs, touch targets, overflow, menu cleanup, warmup exit focus${width === 375 ? ", Back to the tapped singer" : ""}`);
+      console.log(`PASS ${width}px: ten destinations via ${width < SM ? "drawer" : "header"}, touch targets, overflow, menu cleanup, warmup exit focus${width === 375 ? ", Back to the tapped singer" : ""}`);
     } finally { await context.close(); }
   }
 } finally { await browser.close(); }
