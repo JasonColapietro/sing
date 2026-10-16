@@ -49,7 +49,8 @@ import { SINGERS } from "./singers-data";
 import {
   HUB_GENRE_MINIMUM,
   HUB_GENRES,
-  INTENTIONAL_HUB_GENRES,
+  PUBLISHED_GENRE_HUBS,
+  genreSlug,
   singerBySlug,
   singersByGenre,
 } from "./singers";
@@ -216,26 +217,22 @@ describe("/llms.txt only advertises routes that exist", () => {
     );
   });
 
-  it("publishes the Reggae hub whatever its singer count", () => {
-    // Exactly on the floor today. Pinned so one removed or regenred singer
-    // cannot 404 the hub that seven profiles and the Afrobeats hub link to.
-    expect(INTENTIONAL_HUB_GENRES.has("Reggae")).toBe(true);
-    expect(
-      SINGERS.filter((s) => s.genres[0] === "Reggae").length,
-    ).toBeGreaterThan(0);
-    expect(realGenres).toContain("reggae");
-    expect(genreSlugs).toContain("reggae");
-    expect(llms).toContain(`${SING_HOME}/singers/genre/reggae`);
+  it("publishes and advertises every hub that has copy", () => {
+    // Reggae and J-Pop sit exactly on the floor; Grunge is below it.
+    for (const slug of PUBLISHED_GENRE_HUBS) {
+      expect(realGenres, slug).toContain(slug);
+      expect(genreSlugs, slug).toContain(slug);
+      expect(llms, slug).toContain(`${SING_HOME}/singers/genre/${slug}`);
+    }
   });
 
-  it("keeps only the named intentional exceptions below the hub floor", () => {
+  it("keeps only published hubs below the hub floor", () => {
     const belowFloor = HUB_GENRES.filter(
       (genre) => singersByGenre(genre).length < HUB_GENRE_MINIMUM,
     );
 
-    expect([...INTENTIONAL_HUB_GENRES].sort()).toEqual(["Grunge", "Reggae"]);
     for (const genre of belowFloor) {
-      expect(INTENTIONAL_HUB_GENRES.has(genre), genre).toBe(true);
+      expect(PUBLISHED_GENRE_HUBS.has(genreSlug(genre)), genre).toBe(true);
     }
     expect(belowFloor).toContain("Grunge");
     expect(singersByGenre("Grunge")).toHaveLength(6);
