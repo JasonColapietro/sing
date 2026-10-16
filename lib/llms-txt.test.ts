@@ -49,6 +49,7 @@ import { SINGERS } from "./singers-data";
 import {
   HUB_GENRE_MINIMUM,
   HUB_GENRES,
+  INTENTIONAL_HUB_GENRES,
   singerBySlug,
   singersByGenre,
 } from "./singers";
@@ -215,12 +216,28 @@ describe("/llms.txt only advertises routes that exist", () => {
     );
   });
 
-  it("keeps Grunge as the only intentional exception below the hub floor", () => {
+  it("publishes the Reggae hub whatever its singer count", () => {
+    // Exactly on the floor today. Pinned so one removed or regenred singer
+    // cannot 404 the hub that seven profiles and the Afrobeats hub link to.
+    expect(INTENTIONAL_HUB_GENRES.has("Reggae")).toBe(true);
+    expect(
+      SINGERS.filter((s) => s.genres[0] === "Reggae").length,
+    ).toBeGreaterThan(0);
+    expect(realGenres).toContain("reggae");
+    expect(genreSlugs).toContain("reggae");
+    expect(llms).toContain(`${SING_HOME}/singers/genre/reggae`);
+  });
+
+  it("keeps only the named intentional exceptions below the hub floor", () => {
     const belowFloor = HUB_GENRES.filter(
       (genre) => singersByGenre(genre).length < HUB_GENRE_MINIMUM,
     );
 
-    expect(belowFloor).toEqual(["Grunge"]);
+    expect([...INTENTIONAL_HUB_GENRES].sort()).toEqual(["Grunge", "Reggae"]);
+    for (const genre of belowFloor) {
+      expect(INTENTIONAL_HUB_GENRES.has(genre), genre).toBe(true);
+    }
+    expect(belowFloor).toContain("Grunge");
     expect(singersByGenre("Grunge")).toHaveLength(6);
   });
 
