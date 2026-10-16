@@ -66,8 +66,16 @@ export const HUB_GENRE_MINIMUM = 8;
  * Grunge is the primary genre on five singer profiles, so leaving it out of
  * the generated hub set turns those crawlable links into 404s. Keep exceptions
  * named here instead of lowering the floor for every thin genre bucket.
+ *
+ * Reggae sits exactly on the floor (8 singers) and is the primary genre on
+ * seven profiles, the Afrobeats hub's contrast link and the only indexable
+ * reggae page on the site. Losing one singer would 404 all of those, so it
+ * stays a hub whatever its count.
  */
-const INTENTIONAL_HUB_GENRES = new Set(["Grunge"]);
+export const INTENTIONAL_HUB_GENRES: ReadonlySet<string> = new Set([
+  "Grunge",
+  "Reggae",
+]);
 
 export const HUB_GENRES: string[] = (() => {
   const counts = new Map<string, number>();
