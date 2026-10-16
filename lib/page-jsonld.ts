@@ -38,8 +38,11 @@ export function webPageJsonLd(page: {
   path: string;
   name: string;
   description: string;
-  /** A hub that exists to list other pages is a CollectionPage. */
-  type?: "WebPage" | "CollectionPage";
+  /**
+   * A hub that exists to list other pages is a CollectionPage; a page whose
+   * job is telling readers how to reach the publisher is a ContactPage.
+   */
+  type?: "WebPage" | "CollectionPage" | "ContactPage";
   /** The page's visible breadcrumb trail, ending at this page. */
   breadcrumbs?: readonly Crumb[];
 }) {

@@ -79,6 +79,19 @@ describe("singer editorial trust routes", () => {
     }
   });
 
+  it("tells search engines the correction page is the publisher's contact page", () => {
+    const graph = graphFrom(renderToStaticMarkup(<ContactPage />));
+    const page = graph["@graph"].find((n) => n["@type"] === "ContactPage");
+
+    expect(page).toMatchObject({
+      url: `${SITE_URL}/contact`,
+      name: "Singer Range Correction Requests",
+      description: contactMetadata.description,
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+    });
+    expect(graph["@graph"].some((n) => n["@type"] === "Organization")).toBe(true);
+  });
+
   it("helps readers compare sources and reach their own test", () => {
     const html = renderToStaticMarkup(<MethodologyPage />);
     expect(html).toContain("Why do vocal range websites disagree?");

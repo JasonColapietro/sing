@@ -4,6 +4,7 @@ import { Card, PageShell } from "@/components/ui";
 import { DEFAULT_OG_IMAGE, OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
 import { SITE_URL } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
+import { webPageJsonLd } from "@/lib/page-jsonld";
 
 const TITLE = "Singer Range Correction Requests";
 const DESCRIPTION =
@@ -32,6 +33,14 @@ export default function ContactPage() {
       title="Suggest a singer range correction"
       subtitle="Found a singer vocal range that does not match the recording? Email the recording, the timestamp and a source, and the evidence will be reviewed before anything changes."
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            webPageJsonLd({ path: "/contact", name: TITLE, description: DESCRIPTION, type: "ContactPage" }),
+          ),
+        }}
+      />
       <Card className="max-w-3xl">
         <h2 className="text-xl">How do I send a source-backed correction?</h2>
         <p className="mt-3 text-mut">

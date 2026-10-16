@@ -26,6 +26,7 @@ export {
 } from "@/lib/singers-core";
 
 import type { Singer } from "@/lib/singers-data";
+import { GENRE_HUB_COPY } from "@/lib/singer-hub-copy";
 
 export function singerBySlug(slug: string): Singer | undefined {
   return SINGERS.find((s) => s.slug === slug);
@@ -61,34 +62,41 @@ export function relatedSingers(s: Singer, count = 6): Singer[] {
 export const HUB_GENRE_MINIMUM = 8;
 
 /**
- * Deliberate hubs below the general floor.
+ * Genre hubs that are live, by slug: one per entry in GENRE_HUB_COPY.
  *
- * Grunge is the primary genre on five singer profiles, so leaving it out of
- * the generated hub set turns those crawlable links into 404s. Keep exceptions
- * named here instead of lowering the floor for every thin genre bucket.
+ * A genre earns a hub by reaching HUB_GENRE_MINIMUM singers, and the hub is
+ * published when its copy lands (lib/singer-hub-copy.test.tsx refuses a hub
+ * without it, and a hub with copy but no route). From then on the count no
+ * longer decides anything. The URL is in the sitemap and llms.txt, it is the
+ * primary-genre link on its singers' profiles and another hub's contrast
+ * link, and search engines have it indexed, so one profile removed or
+ * regenred must not 404 all of that. Before this rule, each hub that sat on
+ * the floor had to be named by hand (Grunge at 6, then Reggae at 8), and J-Pop
+ * at 8 was one edit away from disappearing.
  *
- * Reggae sits exactly on the floor (8 singers) and is the primary genre on
- * seven profiles, the Afrobeats hub's contrast link and the only indexable
- * reggae page on the site. Losing one singer would 404 all of those, so it
- * stays a hub whatever its count.
+ * Only a genre left with no singers at all drops out, since its page has
+ * nothing to chart; the internal-linking tests then name every link it breaks.
  */
-export const INTENTIONAL_HUB_GENRES: ReadonlySet<string> = new Set([
-  "Grunge",
-  "Reggae",
-]);
+export const PUBLISHED_GENRE_HUBS: ReadonlySet<string> = new Set(
+  Object.keys(GENRE_HUB_COPY),
+);
 
-export const HUB_GENRES: string[] = (() => {
+/** The hub genres for a singer list: at the floor, or already published. */
+export function hubGenresFor(list: readonly Pick<Singer, "genres">[]): string[] {
   const counts = new Map<string, number>();
-  for (const s of SINGERS) {
+  for (const s of list) {
     for (const g of s.genres) counts.set(g, (counts.get(g) ?? 0) + 1);
   }
   return [...counts.entries()]
-    .filter(([g, n]) =>
-      n >= HUB_GENRE_MINIMUM || INTENTIONAL_HUB_GENRES.has(g),
+    .filter(
+      ([g, n]) =>
+        n >= HUB_GENRE_MINIMUM || PUBLISHED_GENRE_HUBS.has(genreSlug(g)),
     )
     .map(([g]) => g)
     .sort();
-})();
+}
+
+export const HUB_GENRES: string[] = hubGenresFor(SINGERS);
 
 export function genreFromSlug(slug: string): string | undefined {
   return HUB_GENRES.find((g) => genreSlug(g) === slug);
