@@ -176,15 +176,35 @@ export default function Nav() {
   // never be scrolled out from behind: at 1280px the row does not overflow, so
   // the last tab sat permanently half-erased with no way to reveal it.
   const tabsRef = useRef<HTMLElement>(null);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const [tabsOverflow, setTabsOverflow] = useState(false);
+  const [tabsScrollable, setTabsScrollable] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const el = tabsRef.current;
     if (!el) return;
-    const measure = () =>
+    const measure = () => {
+      // The menu depends on total overflow, not the remaining scroll distance:
+      // it must still reach the first rooms after the row is scrolled to its end.
+      // Measure the space the tabs would have without the overflow button.
+      // Otherwise the button itself can keep the row overflowing forever
+      // after resizing back to a desktop where all ten tabs would fit.
+      const triggerWidth = menuTriggerRef.current?.getBoundingClientRect().width ?? 0;
+      const menuSpace = el.clientWidth > 0 && triggerWidth > 0
+        ? triggerWidth + parseFloat(getComputedStyle(el.parentElement!).columnGap)
+        : 0;
+      const scrollable = el.scrollWidth > el.clientWidth + menuSpace + 1;
+      setTabsScrollable(scrollable);
       setTabsOverflow(el.scrollWidth - el.clientWidth - el.scrollLeft > 1);
+      // Close only when the visible row can reach every room itself. A hidden
+      // phone row has width zero and must not dismiss its own drawer.
+      if (el.clientWidth > 0 && !scrollable) setMenuOpen(false);
+    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
+    // Font loading can change the links without resizing the flex viewport.
+    for (const link of el.children) ro.observe(link);
     el.addEventListener("scroll", measure, { passive: true });
     return () => {
       ro.disconnect();
@@ -192,7 +212,6 @@ export default function Nav() {
     };
   }, []);
 
-  const [menuOpen, setMenuOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
   useModalFocus(menuOpen, drawerRef);
 
@@ -214,19 +233,10 @@ export default function Nav() {
       if (e.key === "Escape") setMenuOpen(false);
     };
     window.addEventListener("keydown", onKey);
-    // CSS hides the drawer at sm. Unmount it too, releasing its focus trap
-    // and scroll lock when a phone rotates or the window is widened.
-    const desktop = window.matchMedia("(min-width: 640px)");
-    const closeOnDesktop = () => {
-      if (desktop.matches) setMenuOpen(false);
-    };
-    desktop.addEventListener("change", closeOnDesktop);
-    closeOnDesktop();
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
-      desktop.removeEventListener("change", closeOnDesktop);
       document.body.style.overflow = prevOverflow;
     };
   }, [menuOpen]);
@@ -237,7 +247,7 @@ export default function Nav() {
   // creates a new containing block for fixed descendants.
   const drawer = menuOpen
     ? createPortal(
-        <div className="fixed inset-0 z-[60] sm:hidden">
+        <div className="fixed inset-0 z-[60]">
           <button
             type="button"
             aria-label="Close menu"
@@ -429,22 +439,25 @@ export default function Nav() {
             })}
           </nav>
 
-          {/* Mobile: single trigger that names the current page and opens a full-screen menu */}
+          {/* Phones name the current room. An overflowing tab row keeps the
+              same drawer available through a compact, visible Menu button. */}
           <button
+            ref={menuTriggerRef}
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-haspopup="dialog"
             aria-expanded={menuOpen}
-            className="flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:hidden"
+            className={`flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-full border border-line px-3 py-1.5 text-sm text-ink sm:flex-none ${tabsScrollable ? "sm:flex" : "sm:hidden"}`}
           >
             <MenuIcon />
             {/* The 404 page is pre-rendered once with no real path, so its
                 HTML says "Menu"; under /warmups/typo the client would compute
                 "Warmups". Keeping the server's text is also the right label
                 for a page that isn't there. */}
-            <span className="truncate" suppressHydrationWarning>
+            <span className="truncate sm:hidden" suppressHydrationWarning>
               {currentLabel}
             </span>
+            <span className="hidden sm:inline">Menu</span>
           </button>
 
           {/* Shown at every width: on a phone the header was the one place Pro

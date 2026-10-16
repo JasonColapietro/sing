@@ -2,7 +2,7 @@
  * node e2e/navigation.mjs http://localhost:3197 [--executable=path]
  *
  * Mirrors components/nav.tsx: all ten destinations in the desktop header,
- * with the same links in a full-screen drawer below the sm breakpoint.
+ * with the same links in a full-screen drawer on phones and overflowing rows.
  */
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
@@ -63,7 +63,7 @@ try {
           assert.equal(await nav.getByRole("link").count(), 10, "drawer exposes all ten destinations");
         }
         await clickTo(page, nav.getByRole("link", { name, exact: true }), `${width < SM ? "drawer" : "header"} ${name}`, path, width, hash, search);
-        if (width < SM) assert.equal((await trigger.textContent()).trim(), name, "phone trigger names the current room");
+        if (width < SM) assert.equal((await trigger.innerText()).trim(), name, "phone trigger names the current room");
         else {
           const current = nav.locator('a[aria-current="page"]');
           assert.equal(await current.count(), 1, "header announces one current page");
@@ -75,7 +75,8 @@ try {
         const nav = page.getByRole("navigation", { name: "Main", exact: true });
         await nav.evaluate((el) => { el.scrollLeft = el.scrollWidth; });
         await page.waitForFunction(() => getComputedStyle(document.querySelector('header nav[aria-label="Main"]')).maskImage === "none");
-        assert.equal(await trigger.isVisible(), false, "desktop uses the header links");
+        const overflows = await nav.evaluate((el) => el.scrollWidth > el.clientWidth + 1);
+        assert.equal(await trigger.isVisible(), overflows, "overflowing rows keep the menu even at the scroll end");
       } else {
         // Tab remains inside the drawer; Escape restores its trigger and scroll.
         await trigger.click();
@@ -91,8 +92,8 @@ try {
         assert.equal(await trigger.evaluate((el) => el === document.activeElement), true, "Escape restores trigger focus");
         assert.equal(await page.evaluate(() => document.body.style.overflow === "hidden"), false, "Escape releases the scroll lock");
 
-        // At sm the header takes over. Unmount the hidden drawer so its focus
-        // trap and scroll lock do not survive a rotation or window resize.
+        // A sufficiently wide header takes over. Release the drawer's focus
+        // trap and scroll lock once every tab fits, rather than at sm.
         await trigger.click();
         await drawer.waitFor();
         await page.setViewportSize({ width: 1280, height: 900 });
