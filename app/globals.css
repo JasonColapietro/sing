@@ -25,6 +25,7 @@
      border-amber on the lighter value where it works as a fill or border. */
   --color-amber-ink: #82631f;
   --color-rec: #9d3f33;
+  --color-rec-hover: oklch(43% 0.13 30);
   --color-ok: #3f8f6e;
   /* Same split as amber above: --color-ok reads 3.16–3.77:1 as text, so it
      stays the fill and border value (progress bars, success chips, the canvas
@@ -39,6 +40,7 @@
      Anything a reader has to read takes --color-violet-ink (5.73-6.84:1). */
   --color-violet: #8b5cf6;
   --color-violet-ink: #6d28d9;
+  --color-violet-hover: oklch(45% 0.22 295);
   /* Playable piano keys (/tools, studio target practice). Held here rather
      than inline so the two keyboards cannot drift apart again — they had two
      white fills, two blacks, and a white key that darkened on hover in one
@@ -67,6 +69,7 @@
      caption type. These two replace that band. */
   --text-label: 0.75rem;      /* 12px — tape labels, uppercase mono */
   --text-meta: 0.8125rem;     /* 13px — secondary lines, timestamps, hints */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html {
@@ -245,9 +248,13 @@ h3 {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .lift:hover {
+    transform: none;
   }
 }
 

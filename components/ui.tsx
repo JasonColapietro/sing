@@ -162,13 +162,18 @@ type ButtonSize = "sm" | "md" | "lg";
  * control does not press.
  */
 const buttonBase =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-150 active:scale-[0.98] motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-medium transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-out-quint active:scale-[0.98] motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100";
 const buttonVariants: Record<ButtonVariant, string> = {
-  rec: "bg-rec text-[#fffaf2] hover:bg-[#b5493d]",
-  violet: "bg-violet-ink text-white hover:bg-violet",
-  outline: "border border-line2 text-ink hover:border-violet hover:text-violet-ink",
+  rec: "bg-rec text-panel hover:bg-rec-hover",
+  violet: "bg-violet-ink text-panel hover:bg-violet-hover",
+  outline: "border border-field text-ink hover:border-violet-ink hover:text-violet-ink",
   ghost: "text-mut hover:text-ink hover:bg-panel2",
 };
+
+/** Shared search and select treatment: readable at arm's length, with a visible
+ * boundary and 16px type so focusing a field does not zoom a phone viewport. */
+export const FIELD_CLASS_NAME =
+  "min-h-11 min-w-0 rounded-xl border border-field bg-panel px-3 py-2 text-base text-ink placeholder:text-dim transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-ink";
 const buttonSizes: Record<ButtonSize, string> = {
   sm: "px-3 py-1.5 text-sm",
   md: "px-5 py-2.5 text-sm",

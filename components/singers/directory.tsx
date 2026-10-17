@@ -20,7 +20,7 @@ import {
   shownRowCountFromParam,
   visibleRichSingerRows,
 } from "@/lib/singer-directory-pagination";
-import { Button, EmptyState, LinkButton } from "@/components/ui";
+import { Button, EmptyState, FIELD_CLASS_NAME, LinkButton } from "@/components/ui";
 import { rangeTestHref } from "@/lib/site";
 import {
   FULL_VOICE_FILL_CLASS,
@@ -299,9 +299,6 @@ type SortId = (typeof SORTS)[number]["id"];
 
 const ALL_GENRES = [...new Set(SINGERS.flatMap((s) => s.genres))].sort();
 
-const selectClass =
-  "rounded-full border border-line bg-panel px-3 py-1.5 text-sm text-ink focus:border-violet focus:outline-none";
-
 /* ---------------------------------------------------------- directory --- */
 
 const SORT_IDS = new Set<string>(SORTS.map((s) => s.id));
@@ -484,7 +481,7 @@ export function SingersDirectory() {
           }}
           placeholder="Search singers…"
           aria-label="Search singers"
-          className="w-full rounded-full border border-line bg-panel px-4 py-2 text-sm text-ink placeholder:text-dim focus:border-violet focus:outline-none sm:w-64"
+          className={`w-full sm:w-64 ${FIELD_CLASS_NAME}`}
         />
         <select
           value={voice}
@@ -493,7 +490,7 @@ export function SingersDirectory() {
             setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
           }}
           aria-label="Filter by voice type"
-          className={selectClass}
+          className={FIELD_CLASS_NAME}
         >
           <option value="all">All voice types</option>
           {VOICE_KINDS.map((v) => (
@@ -509,7 +506,7 @@ export function SingersDirectory() {
             setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
           }}
           aria-label="Filter by genre"
-          className={selectClass}
+          className={FIELD_CLASS_NAME}
         >
           <option value="all">All genres</option>
           {ALL_GENRES.map((g) => (
@@ -525,7 +522,7 @@ export function SingersDirectory() {
             setVisibleRowCount(INITIAL_RICH_SINGER_ROWS);
           }}
           aria-label="Sort"
-          className={selectClass}
+          className={FIELD_CLASS_NAME}
         >
           {SORTS.map((s) => (
             <option key={s.id} value={s.id}>

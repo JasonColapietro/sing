@@ -2,7 +2,7 @@
 
 import { useId, type ReactNode } from "react";
 import type { SessionLog, VocalRange } from "@/lib/progress";
-import { Button, Card } from "@/components/ui";
+import { Button, Card, FIELD_CLASS_NAME } from "@/components/ui";
 import type { Song, SongBand, SongForm } from "./types";
 import {
   BAND_LABEL,
@@ -280,10 +280,10 @@ export function BrowseControls({
   return (
     <Card className="space-y-4">
       <div className="flex flex-wrap items-end gap-3">
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 basis-full sm:flex-1 sm:basis-auto">
           <label
             htmlFor={searchId}
-            className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
+            className="font-mono text-label uppercase tracking-[0.14em] text-dim"
           >
             Search
           </label>
@@ -293,13 +293,13 @@ export function BrowseControls({
             value={state.query}
             onChange={(e) => onChange({ ...state, query: e.target.value })}
             placeholder="Title, tradition, genre, tag…"
-            className="mt-1.5 w-full rounded-full border border-line2 bg-panel2 px-4 py-2 text-sm text-ink placeholder:text-dim"
+            className={`mt-1.5 w-full ${FIELD_CLASS_NAME}`}
           />
         </div>
-        <div>
+        <div className="min-w-0 flex-1 sm:flex-none">
           <label
             htmlFor={sortId}
-            className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim"
+            className="font-mono text-label uppercase tracking-[0.14em] text-dim"
           >
             Sort
           </label>
@@ -307,7 +307,7 @@ export function BrowseControls({
             id={sortId}
             value={state.sort}
             onChange={(e) => onChange({ ...state, sort: e.target.value as SortKey })}
-            className="mt-1.5 w-full rounded-full border border-line2 bg-panel2 px-4 py-2 text-sm text-ink"
+            className={`mt-1.5 w-full ${FIELD_CLASS_NAME}`}
           >
             {SORT_LABELS.map((s) => (
               <option key={s.key} value={s.key}>

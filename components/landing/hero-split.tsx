@@ -2,7 +2,7 @@ import { rangeTestHref } from "@/lib/site";
 import Image from "next/image";
 import Link from "next/link";
 import { LinkButton } from "@/components/ui";
-import { APP_NAME, APP_STORE_URL, VOICE_PAGE_PATH } from "@/lib/app-store";
+import { APP_NAME, VOICE_PAGE_PATH } from "@/lib/app-store";
 import { AUTHOR_NAME } from "@/lib/author";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
@@ -58,41 +58,27 @@ export function HeroSplit() {
         </h1>
         {/* The actions stay before the descriptive copy so a phone can reach
             the mic flow on its first screen. */}
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+        <div className="mt-6 flex flex-col gap-3 min-[420px]:flex-row min-[420px]:flex-wrap min-[420px]:items-center">
           <LinkButton href={rangeTestHref({ mode: "pitch" })} variant="violet" size="lg">
             Start singing
           </LinkButton>
           <LinkButton href={rangeTestHref()} variant="outline" size="lg">
             Find my vocal range
           </LinkButton>
-          <a
-            href={APP_STORE_URL}
-            aria-label={`View ${APP_NAME} on the App Store`}
-            className="inline-block rounded-[10px] transition-opacity hover:opacity-85 focus-visible:opacity-85"
-          >
-            <Image
-              src="/app-store-badge.svg"
-              width={168}
-              height={56}
-              alt="Download on the App Store"
-            />
-          </a>
         </div>
         <p className="mt-5 max-w-2xl text-lg leading-relaxed text-mut sm:text-xl">
-          Suede Sing is a singing practice app that runs in your browser: sing
-          into your mic and see the note you are singing, in real time. Warm up
-          with guided vocal exercises, practice songs in your key, and take the
-          vocal range test.
+          Practice singing in your browser with live pitch feedback, guided
+          warmups, and songs in your key. Hear a note, sing it back, and see
+          where your voice lands.
         </p>
         <p className="mt-5 max-w-xl text-sm text-mut">
           The pitch meter and range test are free with no time limit. Guided
-          practice includes {FREE_DAILY_MINUTES} free minutes a day. No install;
-          audio stays on your device.
+          practice includes {FREE_DAILY_MINUTES} free minutes a day. Audio stays
+          on your device.
         </p>
         <p className="mt-3 max-w-xl text-sm text-mut">
-          Start here in your browser, no install required. <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">{APP_NAME}</Link>, the
-          phone companion, is optional, for when you want deeper on-device
-          voice analysis.
+          Want a phone companion? Explore <Link href={VOICE_PAGE_PATH} className="text-violet-ink underline underline-offset-4">{APP_NAME}</Link> for
+          deeper on-device voice analysis.
         </p>
         <p className="mt-7 font-mono text-xs uppercase tracking-[0.14em] text-dim">
           On-device analysis
