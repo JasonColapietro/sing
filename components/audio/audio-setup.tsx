@@ -1,6 +1,7 @@
 "use client";
 
 import { useId } from "react";
+import { FIELD_CLASS_NAME } from "@/components/ui";
 import {
   canChooseOutput,
   canListDevices,
@@ -102,7 +103,7 @@ export function AudioSetup({
             id={inputSelectId}
             value={inputId}
             onChange={(e) => setInputDevice(e.target.value)}
-            className="mt-1.5 w-full rounded-xl border border-line bg-panel px-3 py-2 text-sm text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-violet"
+            className={`mt-1.5 w-full ${FIELD_CLASS_NAME}`}
           >
             <option value="">System default</option>
             {inputs.map((d) => (
@@ -155,7 +156,7 @@ export function AudioSetup({
               id={outputSelectId}
               value={outputId}
               onChange={(e) => setOutputDevice(e.target.value)}
-              className="mt-1.5 w-full rounded-xl border border-line bg-panel px-3 py-2 text-sm text-ink outline-offset-2 focus-visible:outline-2 focus-visible:outline-violet"
+              className={`mt-1.5 w-full ${FIELD_CLASS_NAME}`}
             >
               <option value="">System default</option>
               {outputs.map((d) => (

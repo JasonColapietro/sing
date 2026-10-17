@@ -159,7 +159,7 @@ export function ModulePractice({
         {material.length > 0 && (
           <div>
             <h3 className="text-base">Practice material</h3>
-            <p className="mt-1 text-sm text-mut">
+            <p className="mt-1 max-w-prose text-sm text-mut">
               The exercises and songs play synthesized reference pitches: they
               supply the notes, not a recording of a singer demonstrating a
               technique. Record your takes in{" "}
