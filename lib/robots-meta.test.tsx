@@ -110,6 +110,14 @@ describe("robots preview directives", async () => {
     for (const r of reviewed) expect(hasPreviewDirectives(r.robots), r.route).toBe(true);
   });
 
+  it("ships one robots directive on the 404 page, not noindex beside index", async () => {
+    // Next adds its own noindex to every 404; the layout's index, follow would
+    // otherwise ride along as a second, contradicting tag (live until 2026-10-18).
+    const { metadata } = (await import("@/app/not-found")) as { metadata: Metadata };
+    expect("robots" in metadata).toBe(true);
+    expect(metadata.robots).toEqual(NOINDEX_FOLLOW);
+  });
+
   it("keeps the account pages out of the index", () => {
     const auth = routes.filter((r) => /^\/sign-(?:in|up)\//.test(r.route));
     expect(auth.length).toBe(2);
