@@ -142,6 +142,33 @@ export function useProReady(): boolean {
 export const NETWORK_ERROR_MESSAGE =
   "Couldn't reach Suede Sing. Check your connection and try again.";
 
+/** A request the server answered with an error status, which it carries. */
+export class ProApiError extends Error {
+  readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ProApiError";
+    this.status = status;
+  }
+}
+
+/**
+ * Whether a failed request is a refusal that asking again will not change: a
+ * 400, which is how /api/entitlement answers once it has read the request and
+ * found no usable billing id in it (a malformed id, a body it could not read).
+ *
+ * Nothing else counts, because a paid buyer's parked session id is dropped on
+ * this answer. A 429 is a busy shared address, a 5xx is Stripe unreachable,
+ * and a dropped connection has no status. Any other 4xx (a firewall's
+ * challenge, a route missing mid-deploy) comes from in front of the API, says
+ * nothing about the id, and may be gone by the next visit, which is when the
+ * parked id would have been tried again.
+ */
+export function isDefinitiveRejection(error: unknown): boolean {
+  return error instanceof ProApiError && error.status === 400;
+}
+
 async function post<T>(path: string, body: unknown): Promise<T> {
   let res: Response;
   try {
@@ -157,7 +184,10 @@ async function post<T>(path: string, body: unknown): Promise<T> {
     | (T & { error?: string })
     | null;
   if (!res.ok) {
-    throw new Error(data?.error ?? "Something went wrong. Try again.");
+    throw new ProApiError(
+      data?.error ?? "Something went wrong. Try again.",
+      res.status,
+    );
   }
   if (!data) throw new Error("Stripe sent back an empty response.");
   return data;
@@ -227,21 +257,52 @@ const PENDING_KEY = "suede-sing:pro:pending-checkout";
  *
  * It is cleared as soon as Stripe gives a definitive answer, so it only ever
  * survives an inconclusive one.
+ *
+ * Returns whether it was stored. Where site data is blocked it is not, and the
+ * return address is then the only copy, so /pro keeps it in the address bar.
  */
-export function rememberPendingCheckout(sessionId: string): void {
+export function rememberPendingCheckout(sessionId: string): boolean {
   try {
     window.localStorage.setItem(PENDING_KEY, sessionId);
+    return true;
   } catch {
-    // storage unavailable — confirmation still runs, it just can't be retried
+    // storage unavailable — confirmation still runs from the address
+    return false;
   }
 }
 
+/**
+ * Whether `value` has the shape of a Checkout Session id: the test
+ * /api/entitlement applies before asking Stripe (lib/stripe.ts isStripeId
+ * with "cs_", restated because that module is server-only). Anything else gets
+ * a 400 there, and checking it here is what keeps a garbled or hand-made
+ * return link from being parked, retried on every visit, and read as a
+ * payment that went through.
+ */
+export function isCheckoutSessionId(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.startsWith("cs_") &&
+    value.length <= 255 &&
+    /^[A-Za-z0-9_]+$/.test(value)
+  );
+}
+
+/**
+ * The parked checkout session id, if there is one. Something that is not a
+ * session id (parked by an older build from a malformed return link) is
+ * dropped rather than confirmed on every visit for good.
+ */
 export function pendingCheckout(): string | null {
+  let parked: string | null;
   try {
-    return window.localStorage.getItem(PENDING_KEY);
+    parked = window.localStorage.getItem(PENDING_KEY);
   } catch {
     return null;
   }
+  if (parked === null || isCheckoutSessionId(parked)) return parked;
+  clearPendingCheckout();
+  return null;
 }
 
 export function clearPendingCheckout(): void {
@@ -259,7 +320,9 @@ export function clearPendingCheckout(): void {
  * has already paid by the time this runs: the difference between one attempt
  * and three is the difference between a support email and a working account.
  * A definitive answer from Stripe — including "not active" — returns on the
- * first pass and is never retried.
+ * first pass and is never retried. So does a definitive refusal from the
+ * server (isDefinitiveRejection), which throws at once and unparks the id:
+ * a reload would only be refused again.
  */
 export async function confirmCheckout(
   sessionId: string,
@@ -275,6 +338,10 @@ export async function confirmCheckout(
       clearPendingCheckout();
       return state;
     } catch (error) {
+      if (isDefinitiveRejection(error)) {
+        clearPendingCheckout();
+        throw error;
+      }
       last = error;
     }
   }

@@ -71,6 +71,20 @@ describe("singer and hub pages do not prefetch other hubs and profiles", () => {
     expect(crumbs[0], "add prefetch={false}").toMatch(/prefetch=\{false\}/);
   });
 
+  it("components/nav.tsx Singers tab, in the header row and the drawer", () => {
+    // The header row is on screen at 640px and wider and its links are built
+    // from LINKS, so HEAVY_TARGET cannot see them: the Singers tab fetched
+    // the directory on every page. LINKS carries the flag, and every Link
+    // the list renders must pass it on.
+    const src = readFileSync(path.join(process.cwd(), "components/nav.tsx"), "utf8");
+    expect(src).toMatch(/\{ href: "\/singers", label: "Singers", prefetch: false \}/);
+    const fromList = openingTags(src).filter((tag) => /href=\{l\.target \?\? l\.href\}/.test(tag));
+    expect(fromList).toHaveLength(2);
+    for (const tag of fromList) expect(tag, "pass prefetch={l.prefetch}").toMatch(/prefetch=\{l\.prefetch\}/);
+    // No literal link to the directory or the atlas elsewhere in the nav.
+    expect(openingTags(src).filter((tag) => HEAVY_TARGET.test(tag))).toEqual([]);
+  });
+
   it("lets a LinkButton opt out of prefetch", () => {
     const ui = readFileSync(path.join(process.cwd(), "components/ui.tsx"), "utf8");
     expect(ui).toMatch(/<Link href=\{href\} prefetch=\{prefetch\}/);

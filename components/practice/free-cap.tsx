@@ -207,16 +207,25 @@ export function CapSlide({ cap, onExit }: { cap: FreeCap; onExit: () => void }) 
 
 /**
  * Why "Play again" is gone from a capped singer's results, and when it comes
- * back: a workout, a single game or a single drill that the free minutes ran
- * out on. On the paper panel, like the warmup summaries' version, because the
- * results screen is dark.
+ * back: a routine, a workout, a set, a single game or a single drill that the
+ * free minutes ran out on. On the paper panel because the results screen is
+ * dark.
+ *
+ * `notReached`: how many steps the run never reached because the cap slide
+ * stood in for the first of them. Their rows read "not reached", and this
+ * says why, where a run that finished on its last minutes gets the bare
+ * "that's today's minutes".
  */
-export function CappedAgainNote() {
+export function CappedAgainNote({ notReached = 0 }: { notReached?: number }) {
   return (
     <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
-      That&apos;s today&apos;s {CAP_MIN} free minutes of guided practice. A fresh{" "}
-      {CAP_MIN} minutes opens at midnight; the pitch studio and the range test stay
-      open now.{" "}
+      {notReached > 0
+        ? `Today's ${CAP_MIN} free minutes of guided practice ran out before the last ${
+            notReached === 1 ? "step" : `${notReached} steps`
+          } of this run.`
+        : `That's today's ${CAP_MIN} free minutes of guided practice.`}{" "}
+      A fresh {CAP_MIN} minutes opens at midnight; the pitch studio and the range
+      test stay open now.{" "}
       <Link
         href={PRO_BUY_HREF}
         className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"

@@ -50,3 +50,23 @@ describe("ContinueCard on a phone", () => {
     expect(html.indexOf("A short first exercise.")).toBeLessThan(html.indexOf("Enable mic and start"));
   });
 });
+
+describe("ContinueCard's star line", () => {
+  const card = (stars: 0 | 1 | 3, started?: boolean) =>
+    renderToStaticMarkup(
+      <ContinueCard kicker="Back for more" title="Quick breath" stars={stars} started={started}
+        onStart={noop} micReady error={null} streakDays={1} />,
+    );
+
+  it("says So far, not Not started, for a set done on stars that average under one", () => {
+    expect(card(0, true)).toContain(">So far<");
+    expect(card(0, true)).not.toContain("Not started");
+  });
+
+  it("says Not started only when nothing has been done", () => {
+    expect(card(0, false)).toContain(">Not started<");
+    expect(card(0)).toContain(">Not started<");
+    expect(card(1)).toContain(">So far<");
+    expect(card(3, true)).toContain(">All three stars<");
+  });
+});

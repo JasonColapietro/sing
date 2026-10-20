@@ -1,16 +1,30 @@
 import type { TakeRecord, TakesStore } from "./db";
 import { pickMimeType } from "./mime";
+import { watchMicEnd } from "@/lib/audio/mic";
 
 type OpenMic = () => Promise<{ stream: MediaStream; error: null } | { stream: null; error: string }>;
 type MicResult = { analyser: AnalyserNode; error: null } | { analyser?: never; error: string } | null;
 
-export function createRecorderMic(open: OpenMic, getContext: () => AudioContext) {
+/**
+ * The recorder's microphone: one stream, shared by every press, released on
+ * dispose. `onEnded` hears when the mic goes away on its own mid-session
+ * (unplugged, a headset dropped); the stream is released first, so the next
+ * start opens a fresh one instead of handing back the dead analyser.
+ */
+export function createRecorderMic(
+  open: OpenMic,
+  getContext: () => AudioContext,
+  { onEnded }: { onEnded?: () => void } = {},
+) {
   let stream: MediaStream | null = null;
   let source: MediaStreamAudioSourceNode | null = null;
   let analyser: AnalyserNode | null = null;
   let pending: Promise<MicResult> | null = null;
   let disposed = false;
+  let unwatch = () => {};
   const release = () => {
+    unwatch();
+    unwatch = () => {};
     stream?.getTracks().forEach((track) => track.stop());
     stream = null;
     source?.disconnect();
@@ -36,6 +50,12 @@ export function createRecorderMic(open: OpenMic, getContext: () => AudioContext)
           analyser = context.createAnalyser();
           analyser.fftSize = 2048;
           source.connect(analyser);
+          const live = stream;
+          unwatch = watchMicEnd(live, () => {
+            if (stream !== live) return;
+            release();
+            onEnded?.();
+          });
           return { analyser, error: null };
         } catch {
           release();

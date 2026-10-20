@@ -120,3 +120,22 @@ describe("an unscored song summary", () => {
     expect(html).not.toContain("This was a listen pass");
   });
 });
+
+describe("a rehearsal stopped part-way through a loop", () => {
+  beforeEach(() => {
+    state.progress = null;
+  });
+
+  it("counts whole loops sung and says the last one is scored on the part sung", () => {
+    const html = render({ ...data(96), perLoopScores: [96, 98, 95], partialLastLoop: true, loops: 3 });
+    expect(html).toMatch(/Loops sung<\/div><div[^>]*>2<\/div>/);
+    expect(html).toContain("loop 3");
+    expect(html).toContain("You stopped part-way through loop 3, so it is scored on the part you sang.");
+  });
+
+  it("says nothing of the kind when every loop listed was whole", () => {
+    const html = render({ ...data(96), perLoopScores: [96, 98] });
+    expect(html).toMatch(/Loops sung<\/div><div[^>]*>2<\/div>/);
+    expect(html).not.toContain("part-way");
+  });
+});

@@ -132,6 +132,49 @@ describe("a retake from the result when the mic fails", () => {
   });
 });
 
+describe("a mic refusal from the intro", () => {
+  it("shows under the button that was pressed, saved card or how-to card", () => {
+    // "Retake test" in the saved-result card used to put its refusal under
+    // the how-to card's start button, 490–550px away at the bottom edge.
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    const intro = src.slice(src.indexOf('{stage === "intro" && ('), src.indexOf('<div id="range-stage"'));
+    const retake = intro.indexOf('onClick={() => beginFrom("saved")}');
+    const start = intro.indexOf('onClick={() => beginFrom("intro")}');
+    expect(retake).toBeGreaterThan(-1);
+    expect(start).toBeGreaterThan(retake);
+    const savedAlert = intro.indexOf('{micFrom === "saved" && introAlert}');
+    expect(savedAlert).toBeGreaterThan(retake);
+    expect(savedAlert).toBeLessThan(start);
+    // The how-to card's alert covers its own button, and any refusal with no
+    // saved card on screen.
+    expect(intro.slice(start)).toMatch(
+      /\{\(micFrom === "intro" \|\|\s*savedRange\.lowMidi === undefined \|\|\s*savedRange\.highMidi === undefined\) &&\s*introAlert\}/,
+    );
+    // One alert element, rendered in one place at a time.
+    expect(src.match(/<MicAlert/g)).toHaveLength(2);
+  });
+});
+
+describe("a mic that stops mid-test", () => {
+  it("drops the listening pill and the too-quiet hint, leaving the stopped line", () => {
+    // usePitch stops the room when the mic goes away; the pill stayed lit and
+    // the hint told the singer to sing louder into a dead mic.
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    expect(src).toMatch(/listening && stage !== "intro" && stage !== "result" \? <ListeningPill \/>/);
+    expect(src.match(/\{listening && inputHint && <InputHint hint=\{inputHint\} \/>\}/g)).toHaveLength(2);
+    expect(src).not.toMatch(/\{inputHint && <InputHint/);
+    expect(src).toContain("The microphone stopped. Press start over and enable it again.");
+  });
+});
+
+describe("keyboard focus as the test starts", () => {
+  it("moves to the new step's heading when the pressed button went with the intro", () => {
+    const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");
+    expect(src).toMatch(/useEffect\(\(\) => \{\s*focusIfDropped\(stageHeadingRef\.current\);\s*\}, \[stage\]\);/);
+    expect(src.match(/<h2 ref=\{stageHeadingRef\} tabIndex=\{-1\}/g)).toHaveLength(2);
+  });
+});
+
 describe("the warm-up stage", () => {
   it("offers Start over like the other stages, so a stalled singer is never stuck with the mic on", () => {
     const src = readFileSync(join(__dirname, "range-test.tsx"), "utf8");

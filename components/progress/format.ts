@@ -28,6 +28,19 @@ export function fmtDur(sec: number): string {
   return `${h}h ${String(rem).padStart(2, "0")}m`;
 }
 
+/**
+ * A practice total for a sentence: "16 seconds", "1 minute", "42 minutes".
+ * Seconds below a minute, because whole minutes rounded a first 16-second
+ * session to "0 minutes", and a chart that branched on that read it as no
+ * practice at all.
+ */
+export function durationWords(sec: number): string {
+  const s = Math.max(0, Math.round(sec));
+  if (s < 60) return `${s} ${s === 1 ? "second" : "seconds"}`;
+  const m = Math.round(s / 60);
+  return `${m} ${m === 1 ? "minute" : "minutes"}`;
+}
+
 /** Local calendar day, YYYY-MM-DD (matches lib/progress day keys). */
 export function localDayStr(d: Date): string {
   const y = d.getFullYear();

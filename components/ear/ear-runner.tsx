@@ -1,7 +1,9 @@
 "use client";
 
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
+import { withStepResult } from "@/components/practice/step-results";
 import { useFreeCap } from "@/lib/free-cap";
+import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { liveStreak } from "@/components/account/save-state";
 
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
@@ -57,25 +59,31 @@ function difficultyLabel(d: Difficulty): string {
 function GameStep({
   step,
   songId,
+  pitch,
   onExit,
   onComplete,
 }: {
   step: EarRoutineStep;
   /** Note catcher only: chase this song instead of random notes. */
   songId?: string;
+  /**
+   * A workout's microphone, lent to the games that listen. Absent for a game
+   * played on its own, which opens and closes its own.
+   */
+  pitch?: UsePitchResult;
   onExit: () => void;
   onComplete: (r: EarStepResult) => void;
 }) {
   const props = { difficulty: step.difficulty, onExit, onComplete };
   switch (step.game) {
     case "note-catcher":
-      return <NoteCatcherGame {...props} songId={songId} />;
+      return <NoteCatcherGame {...props} songId={songId} pitch={pitch} />;
     case "interval":
       return <IntervalGame {...props} />;
     case "pitch-match":
-      return <PitchMatchGame {...props} />;
+      return <PitchMatchGame {...props} pitch={pitch} />;
     case "melody-echo":
-      return <MelodyEchoGame {...props} />;
+      return <MelodyEchoGame {...props} pitch={pitch} />;
     case "higher-lower":
       return <HigherLowerGame {...props} />;
   }
@@ -196,14 +204,18 @@ function EarResults({
   steps,
   onContinue,
   onAgain,
+  notice,
   children,
 }: {
   title: string;
   subtitle?: string;
-  steps: { label: string; result: EarStepResult | null }[];
+  /** `note` replaces the row's "skipped" when the step was not skipped but never reached. */
+  steps: { label: string; result: EarStepResult | null; note?: string }[];
   onContinue: () => void;
   /** Omitted once the free minutes are spent: "Play again" would start past the cap. */
   onAgain?: () => void;
+  /** Above the rows: why the run ended where it did (ResultsScreen). */
+  notice?: ReactNode;
   children?: ReactNode;
 }) {
   const progress = useProgress();
@@ -241,12 +253,13 @@ function EarResults({
       rows={steps.map((s) => ({
         label: s.label,
         score: s.result?.score ?? null,
-        note: s.result === null ? "skipped" : undefined,
+        note: s.result === null ? (s.note ?? "skipped") : undefined,
       }))}
       achievements={achievements}
       onContinue={onContinue}
       onAgain={onAgain}
       share={{ title, subtitle, url: `${SITE_URL}/ear-training` }}
+      notice={notice}
     >
       {children}
     </ResultsScreen>
@@ -262,16 +275,23 @@ function EarResults({
 export function EarRunResults({
   routine,
   results,
+  capStoppedAt = null,
   capped,
   onContinue,
   onAgain,
 }: {
   routine: EarRoutine;
   results: (EarStepResult | null)[];
+  /**
+   * The step whose intro became the cap slide: it and the steps after it
+   * were never reached, which is not the same as skipped. Null otherwise.
+   */
+  capStoppedAt?: number | null;
   capped: boolean;
   onContinue: () => void;
   onAgain: () => void;
 }) {
+  const notReached = capStoppedAt === null ? 0 : Math.max(0, routine.steps.length - capStoppedAt);
   return (
     <EarResults
       title={routine.name}
@@ -279,12 +299,14 @@ export function EarRunResults({
       steps={routine.steps.map((s, i) => ({
         label: earStepLabel(s),
         result: results[i] ?? null,
+        note: capStoppedAt !== null && i >= capStoppedAt ? "not reached" : undefined,
       }))}
       onContinue={onContinue}
       onAgain={capped ? undefined : onAgain}
-    >
-      {capped && <CappedAgainNote />}
-    </EarResults>
+      // Above the rows, so a workout the cap stopped says why before its
+      // "not reached" rows rather than under them, below a phone's fold.
+      notice={capped ? <CappedAgainNote notReached={notReached} /> : undefined}
+    />
   );
 }
 
@@ -305,30 +327,53 @@ export function EarRunner({
   const stepCount = routine.steps.length;
   const [phase, setPhase] = useState<EarPhase>({ kind: "intro", step: 0 });
   const [results, setResults] = useState<(EarStepResult | null)[]>([]);
+  // The step the cap slide stood in for, once it has; null otherwise.
+  const [capStoppedAt, setCapStoppedAt] = useState<number | null>(null);
   // Bumped on "Play again" so every game remounts with a clean session.
   const [run, setRun] = useState(0);
 
+  /**
+   * The workout holds the microphone rather than each game, as the breath
+   * room holds it for a set. A game that owned its own opened it behind an
+   * "Enable microphone" gate and closed it when its tenth round ended, so a
+   * workout that promises to run itself stopped at every singing step for
+   * another tap: five in Pitch lab. Lent to the three games that listen, the
+   * first one's gate opens it, the next ones start listening as their intro
+   * runs out, and the results screen closes it.
+   */
+  const pitch = usePitch();
+  const { listening: micOn, stop: stopMic } = pitch;
+  // Nothing listens on the results screen or behind the cap slide.
+  const micDone = phase.kind === "done" || (phase.kind === "intro" && capped);
+  useEffect(() => {
+    if (micDone && micOn) stopMic();
+  }, [micDone, micOn, stopMic]);
+
   const closeStep = useCallback(
     (i: number, result: EarStepResult | null) => {
-      setResults((prev) => {
-        const next = [...prev];
-        next[i] = result;
-        return next;
-      });
+      setResults((prev) => withStepResult(prev, i, result, stepCount));
       setPhase(afterStep(i, stepCount));
     },
     [stepCount],
   );
 
-  const quit = useCallback(() => {
-    // A quit that played something still earned a summary; a quit with nothing
-    // played has nothing to summarise, so it just leaves.
-    if (results.some((r) => r !== null)) setPhase({ kind: "done" });
-    else onExit();
-  }, [results, onExit]);
+  /** `capAt`: the step whose intro the cap slide replaced, when it did. */
+  const quit = useCallback(
+    (capAt?: number) => {
+      // A quit that played something still earned a summary; a quit with
+      // nothing played has nothing to summarise, so it just leaves.
+      if (results.some((r) => r != null)) {
+        setCapStoppedAt(capAt ?? null);
+        setPhase({ kind: "done" });
+      } else onExit();
+    },
+    [results, onExit],
+  );
+  const quitByHand = useCallback(() => quit(), [quit]);
 
   const again = useCallback(() => {
     setResults([]);
+    setCapStoppedAt(null);
     setRun((r) => r + 1);
     setPhase({ kind: "intro", step: 0 });
   }, []);
@@ -338,6 +383,7 @@ export function EarRunner({
       <EarRunResults
         routine={routine}
         results={results}
+        capStoppedAt={capStoppedAt}
         capped={capped}
         onContinue={onExit}
         onAgain={again}
@@ -348,8 +394,9 @@ export function EarRunner({
   const step = routine.steps[phase.step];
 
   if (phase.kind === "intro") {
-    // Between steps only: a game under way finishes and logs first.
-    if (capped) return <CapSlide cap={cap} onExit={quit} />;
+    // Between steps only: a game under way finishes and logs first. This step
+    // and the ones after it are then not reached, rather than skipped.
+    if (capped) return <CapSlide cap={cap} onExit={() => quit(phase.step)} />;
     const prevStep = phase.step > 0 ? routine.steps[phase.step - 1] : null;
     return (
       <StepIntro
@@ -368,7 +415,7 @@ export function EarRunner({
         }
         onStart={() => setPhase({ kind: "play", step: phase.step })}
         onSkip={() => closeStep(phase.step, null)}
-        onQuit={quit}
+        onQuit={quitByHand}
       />
     );
   }
@@ -377,7 +424,8 @@ export function EarRunner({
     <GameStep
       key={`${run}-${phase.step}`}
       step={step}
-      onExit={quit}
+      pitch={pitch}
+      onExit={quitByHand}
       onComplete={(r) => closeStep(phase.step, r)}
     />
   );

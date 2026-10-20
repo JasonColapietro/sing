@@ -233,6 +233,30 @@ describe("what the summary says the score measured", () => {
     );
   });
 
+  it("words what was heard during the reps, not the slider as it stands at End", () => {
+    // Off for every rep, turned to 70% just before End.
+    guide.pct = 70;
+    const offThenUp = render({ ...data("sing-along"), guide: "off" }, { daily: false });
+    expect(offThenUp).not.toContain("The guide was sounding while you sang");
+    expect(offThenUp).toContain("The guide was off while you sang (it played the pattern once at the start)");
+    // 70% for every rep, turned Off just before End.
+    guide.pct = 0;
+    const upThenOff = render({ ...data("sing-along"), guide: "on" }, { daily: false });
+    expect(upThenOff).toContain("The guide was sounding while you sang");
+    expect(render({ ...data("call-response"), guide: "on" }, { daily: false })).toContain(
+      "The guide had stopped before you sang",
+    );
+  });
+
+  it("says so when the guide changed partway through", () => {
+    expect(render({ ...data("sing-along"), guide: "partly" }, { daily: false })).toContain(
+      "The guide was sounding for part of the time you sang and off for the rest, so this score mixes notes you could hear with notes you were carrying yourself.",
+    );
+    expect(render({ ...data("call-response"), guide: "partly" }, { daily: false })).toContain(
+      "The reference was on for part of the session and off for the rest, so this score mixes notes you heard first with notes you found on your own.",
+    );
+  });
+
   it("names no shakiest note when every scored note held for all of its time", () => {
     const notes = [{ midi: 52, hitSec: 2, possibleSec: 2, centsSum: 8 * 60, centsFrames: 60 }];
     const clean = { ...rep, score: 100, notes };

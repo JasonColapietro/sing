@@ -38,11 +38,17 @@ import {
   SessionShell,
 } from "@/components/practice/session-shell";
 import {
+  EMPTY_GUIDE_TRACE,
   bestRep,
+  governedGuideAudible,
+  guideHeard,
+  mergeGuide,
   playGuide,
   repAvgScore,
   sungReps,
   targetMidiAt,
+  traceGuide,
+  type GuideTrace,
   type RepResult,
   type SessionSummaryData,
 } from "./lib";
@@ -252,7 +258,13 @@ export function ExercisePlayer({
    */
   variant?: "page" | "session";
   onFinish: (summary: SessionSummaryData) => void;
-  onExit: () => void;
+  /**
+   * Leaving with nothing to report. "silent" when the player ended itself
+   * because it heard nothing for MAX_UNSUNG_REPS reps, so the room can say
+   * why the exercise closed instead of dropping the singer back on its home
+   * as if they had pressed End.
+   */
+  onExit: (reason?: "silent") => void;
 }) {
   // A "down" exercise walks the same band from the top: Singeo's raspberries
   // and hoo start high and drop a half-step a rep, and the walk's triangle
@@ -322,6 +334,13 @@ export function ExercisePlayer({
   // live mid-rep: the pass is scheduled at full gain and this node carries
   // the level, the way the songs mixer's guidePct works.
   const guideGainRef = useRef<GainNode | null>(null);
+  // Whether this rep's governed pass was scheduled (the level was above Off
+  // as it was laid out), what of it was heard this rep, and what was heard
+  // across the scored reps: the summary says what the score measured from
+  // these, not from the slider as it stands at End.
+  const guideScheduledRef = useRef(false);
+  const repGuideRef = useRef<GuideTrace>(EMPTY_GUIDE_TRACE);
+  const sessionGuideRef = useRef<GuideTrace>(EMPTY_GUIDE_TRACE);
   const modeRef = useRef<WarmupMode>(mode);
   const guidePctRef = useRef(guidePct);
   const clickRef = useRef(click);
@@ -374,6 +393,7 @@ export function ExercisePlayer({
         finalResults.flatMap((rep) => (rep.skipped ? [] : (rep.notes ?? []))),
       ),
     });
+    const guide = guideHeard(sessionGuideRef.current);
     onFinish({
       ex,
       results: finalResults,
@@ -382,6 +402,7 @@ export function ExercisePlayer({
       xpGained: log.xpGained,
       newAchievements: log.newAchievements,
       mode: modeRef.current,
+      ...(guide ? { guide } : {}),
     });
   }
 
@@ -438,6 +459,11 @@ export function ExercisePlayer({
         out: guideNode,
       });
     }
+    // The governed pass, as scheduled just above: under the voice in
+    // sing-along, the reference itself in call-and-response.
+    guideScheduledRef.current =
+      guidePctRef.current > 0 && (plan.guideUnderVoice || plan.guideAt !== null);
+    repGuideRef.current = EMPTY_GUIDE_TRACE;
 
     planRef.current = plan;
     groupRef.current = group;
@@ -486,12 +512,13 @@ export function ExercisePlayer({
       if (action === "exit") {
         finishedRef.current = true;
         groupRef.current?.cancel();
-        onExit();
+        onExit("silent");
         return;
       }
       setLastOutcome("silent");
     } else {
       unsungRepsRef.current = 0;
+      sessionGuideRef.current = mergeGuide(sessionGuideRef.current, repGuideRef.current);
       lastScoredActiveMsRef.current = practiceClock.elapsedMs();
       resultsRef.current = [...resultsRef.current, res];
       setResults(resultsRef.current);
@@ -549,6 +576,15 @@ export function ExercisePlayer({
           : plan.guideAt !== null && elapsed < plan.leadAt
             ? "teach"
             : "lead";
+      // What of the governed guide this frame let the singer hear.
+      const guideAudible = governedGuideAudible({
+        underVoice: plan.guideUnderVoice,
+        stage: stageNow,
+        scheduled: guideScheduledRef.current,
+        pct: guidePctRef.current,
+      });
+      if (guideAudible !== null) repGuideRef.current = traceGuide(repGuideRef.current, guideAudible);
+
       if (stageNow !== stageRef.current) {
         stageRef.current = stageNow;
         setStage(stageNow);

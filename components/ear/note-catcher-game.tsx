@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { usePitch } from "@/lib/audio/use-pitch";
+import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { playTone } from "@/lib/audio/synth";
 import { freqToMidiFloat, midiToLabel } from "@/lib/audio/notes";
@@ -66,22 +66,36 @@ const EMPTY_VIEW: CatcherView = {
   markerMidi: null,
 };
 
+/**
+ * Whether the game deals its own run the moment the mic is on, rather than
+ * from the gate's button: a workout's lent mic (EarRunner) with no run dealt
+ * yet and the game not over. The gate's button must then only turn the mic
+ * on; dealing there as well dealt the run twice and restarted its clock.
+ */
+export function dealsWhenMicOn(lentMic: boolean, dealt: boolean, done: boolean): boolean {
+  return lentMic && !dealt && !done;
+}
+
 export function NoteCatcherGame({
   difficulty,
   songId,
+  pitch,
   onExit,
   onComplete,
 }: {
   difficulty: Difficulty;
   /** Chase this song's songbook phrase instead of random notes. Free songs only. */
   songId?: string;
+  /** A workout's microphone (EarRunner); see pitch-match-game.tsx. */
+  pitch?: UsePitchResult;
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
       of being drawn here, and no summary card renders. */
   onComplete?: OnEarComplete;
 }) {
   const session = useEarSession();
-  const { latest, listening, error, start, stop } = usePitch();
+  const ownPitch = usePitch();
+  const { latest, listening, error, start, stop } = pitch ?? ownPitch;
   const progress = useProgress();
   // Medium and hard count the exact octave, but only once a range is saved:
   // until then the targets sit in a fallback register that a higher voice
@@ -257,10 +271,22 @@ export function NoteCatcherGame({
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
-  // Release the mic while the results are up.
+  // Release the mic while the results are up; a lent one is the workout's.
+  const ownsMic = pitch === undefined;
   useEffect(() => {
-    if (session.done && listening) stop();
-  }, [session.done, listening, stop]);
+    if (session.done && listening && ownsMic) stop();
+  }, [session.done, listening, ownsMic, stop]);
+
+  // In a workout whose mic is already on, the run starts as the game opens
+  // instead of waiting on a gate whose only job is to turn on a mic that is
+  // on. The step's intro countdown has just said what is coming, and the
+  // first note still slides in toward the line before it can be caught.
+  const dealsItself = dealsWhenMicOn(!ownsMic, targets !== null, session.done);
+  const autoBegin = dealsItself && listening && phase === "idle";
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- deals the run the gate's button would have, and starts its clock (performance.now), which cannot happen during render
+    if (autoBegin) begin();
+  }, [autoBegin, begin]);
 
   if (session.done) {
     if (onComplete) {
@@ -308,18 +334,27 @@ export function NoteCatcherGame({
         onExit={onExit}
         variant={variant}
       >
-        <ShellMicGate
-          title={song ? `Chase the notes of ${song.title}` : "This game listens to you sing"}
-          description={
-            song
-              ? `The notes of its ${phraseName(song)} slide toward a line, in your range. Your voice moves the marker; hold each note as it crosses to catch it.`
-              : "Notes slide toward a line. Your voice moves the marker up and down; hold each note as it crosses to catch it."
-          }
-          onEnable={() => {
-            void start().then((ok) => ok && begin());
-          }}
-          error={error}
-        />
+        {autoBegin ? (
+          // The frame between mount and the effect above: no gate to flash.
+          <p className="py-24 text-center text-sm text-[var(--s-mut)]" role="status">
+            Get ready…
+          </p>
+        ) : (
+          <ShellMicGate
+            title={song ? `Chase the notes of ${song.title}` : "This game listens to you sing"}
+            description={
+              song
+                ? `The notes of its ${phraseName(song)} slide toward a line, in your range. Your voice moves the marker; hold each note as it crosses to catch it.`
+                : "Notes slide toward a line. Your voice moves the marker up and down; hold each note as it crosses to catch it."
+            }
+            onEnable={() => {
+              // The effect above deals a workout's first run once the mic is
+              // on (dealsWhenMicOn); this only deals when nothing else will.
+              void start().then((ok) => ok && !dealsItself && begin());
+            }}
+            error={error}
+          />
+        )}
       </GameShell>
     );
   }

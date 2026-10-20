@@ -207,6 +207,22 @@ function holdLabel(a: AttemptResult): string {
 }
 
 /**
+ * The line a finished step reports: its longest hold, and, when no attempt
+ * reached SUSTAIN_LOG_MIN_SEC, that nothing was logged. A single sustain of
+ * 4.7 s used to end on "Session complete · 93%" with +0 XP and no reason.
+ */
+export function stepHoldLabel(
+  best: { sec: number; inhaleSec: number | null } | null,
+  logged: boolean,
+): string {
+  if (best === null) return "0.0 s";
+  const line = holdLabel({ ...best, steadiness: 0, logged: null });
+  return logged || best.sec < SUSTAIN_ATTEMPT_MIN_SEC
+    ? line
+    : `${line} · under ${SUSTAIN_LOG_MIN_SEC} s, not logged`;
+}
+
+/**
  * Fold a set of attempts into the one result a step reports.
  *
  * Each attempt over five seconds logs its own practice session — that rule is
@@ -321,11 +337,12 @@ export function SustainTest({
     const score = scored.length
       ? Math.round(scored.reduce((a, b) => a + b.steadiness, 0) / scored.length)
       : null;
+    const logged = foldAttempts(all);
     done({
       durationSec: all.reduce((a, b) => a + b.sec, 0),
       score,
-      logged: foldAttempts(all),
-      label: bestAttempt ? holdLabel(bestAttempt) : "0.0 s",
+      logged,
+      label: stepHoldLabel(bestAttempt, logged !== null),
       best,
     });
   };

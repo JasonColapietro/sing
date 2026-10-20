@@ -328,9 +328,17 @@ export function Library({
   progress,
   onSelect,
   onStartSetlist,
+  browse,
+  onBrowseChange: setBrowse,
 }: {
   progress: ProgressState;
   onSelect: (song: Song) => void;
+  /**
+   * The filters, search and sort, owned by the caller: the library unmounts
+   * while a song plays, and the singer comes back to what they had set.
+   */
+  browse: BrowseState;
+  onBrowseChange: (browse: BrowseState) => void;
   /**
    * Karaoke-night entry point. Given the queued songs in order, the caller is
    * expected to play them back to back. Optional: without it the setlist still
@@ -346,7 +354,6 @@ export function Library({
   const mastered = useMastered();
   const recents = useRecentlyPlayed();
   const setlist = useSetlist();
-  const [browse, setBrowse] = useState<BrowseState>(DEFAULT_BROWSE);
   const taste = useTaste();
   // Re-opening the quiz is local UI state: saved answers stay in force (and
   // the picks stay correct) until the singer actually submits new ones.

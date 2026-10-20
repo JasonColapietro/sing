@@ -24,8 +24,11 @@ import {
   bandOpen,
   createPendingRequest,
   melodyFingerprint,
+  setupForSong,
+  type PlayerSetup,
   type SessionSummaryData,
 } from "./lib";
+import { DEFAULT_BROWSE, type BrowseState } from "./browse-controls";
 import type { GuidePass, SessionMode } from "./types";
 
 type View = "library" | "practice" | "summary";
@@ -75,6 +78,14 @@ export function SongsClient() {
   const [view, setView] = useState<View>("library");
   const [activeSong, setActiveSong] = useState<Song | null>(null);
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
+  // How the last run was set up (key, rate, loop, octave scoring, desk), so
+  // the summary's "Sing again" repeats it: the player unmounts while the
+  // summary shows. Any other start opens the song fresh.
+  const [setup, setSetup] = useState<PlayerSetup | null>(null);
+  // The library's filters, search and sort, kept here because the library
+  // unmounts while a song plays: coming back used to reset them, and the dice
+  // stopped picking from what the singer had filtered to.
+  const [browse, setBrowse] = useState<BrowseState>(DEFAULT_BROWSE);
   // The singer's recorded take for the current run; undefined when the run
   // isn't recorded. Its object URL is released whenever it is replaced.
   const [take, setTake] = useState<TakeState | undefined>(undefined);
@@ -133,13 +144,15 @@ export function SongsClient() {
   // works; everything else still goes through the ladder.
   const mayStart = (song: Song) => canStart(song) || song.id === linkedId;
 
-  function startSong(song: Song) {
+  /** `again`: a restart from the summary, which keeps how the last run was set up. */
+  function startSong(song: Song, again = false) {
     // Song practice is guided practice: the free day's five minutes apply.
     if (cap.capped) {
       showCapWall();
       return;
     }
     if (!mayStart(song)) return;
+    if (!again) setSetup(null);
     setActiveSong(song);
     setSummary(null);
     replaceTake(undefined);
@@ -147,10 +160,10 @@ export function SongsClient() {
     setPlayToken((t) => t + 1);
   }
 
-  function startSongById(id: string) {
+  function startSongById(id: string, again = false) {
     const song = ALL_SONGS.find((s) => s.id === id);
     if (!song || !mayStart(song)) return;
-    startSong(song);
+    startSong(song, again);
   }
 
   // Recording a play touches localStorage, so it belongs in an effect rather
@@ -226,7 +239,21 @@ export function SongsClient() {
       subtitle={view === "library" ? "Pick a song to start your practice loop." : undefined}
       actions={
         !pitch.listening && view === "library" && !cap.capped ? (
-          <Button variant="rec" size="sm" onClick={pitch.start}>
+          <Button
+            variant="rec"
+            size="sm"
+            onClick={async () => {
+              // As the gate and the summary do: a listen pass scores nothing
+              // even with the mic on, so the next song opens on Sing along. A
+              // singer who continued without a mic otherwise turned it on
+              // here and still sang every song unscored. Only while the
+              // library is still showing, so access granted after a song has
+              // started cannot switch that run's pass.
+              const current = micRequestRef.current.begin();
+              if (!(await pitch.start()) || !current()) return;
+              setPass((p) => (p === "listen" ? "guided" : p));
+            }}
+          >
             <IconMic /> Enable microphone
           </Button>
         ) : undefined
@@ -250,18 +277,29 @@ export function SongsClient() {
           transport instead: every start scrolls Play into view, which on a
           phone puts the top of the page above the screen. */}
       {!cap.capped && view !== "practice" && <FreeAllowance cap={cap} className="mb-4" />}
-      {view === "library" && <Library progress={progress} onSelect={startSong} />}
+      {view === "library" && (
+        <Library
+          progress={progress}
+          onSelect={(song) => startSong(song)}
+          browse={browse}
+          onBrowseChange={setBrowse}
+        />
+      )}
 
       {view === "practice" && activeSong && (
         <SongPlayer
+          // A fresh player for every start, so a restart's setup (or none)
+          // is what it opens with.
+          key={playToken}
           song={activeSong}
+          setup={setupForSong(setup, activeSong.id)}
           pitch={pitch}
           range={progress.range}
           mode={mode}
           onModeChange={setMode}
           pass={pass}
           onPassChange={setPass}
-          onFinish={(data) => {
+          onFinish={(data, runSetup) => {
             // The whole summary, not just the id: what the run was sung at is
             // what makes the mastery re-judgeable and auditable later.
             if (data.mastered)
@@ -271,6 +309,7 @@ export function SongsClient() {
                 score: data.score ?? 0,
                 melody: melodyFingerprint(data.song),
               });
+            setSetup(runSetup);
             setSummary(data);
             setView("summary");
           }}
@@ -289,7 +328,7 @@ export function SongsClient() {
         <SessionSummary
           data={summary}
           take={take}
-          onAgain={() => startSongById(summary.song.id)}
+          onAgain={() => startSongById(summary.song.id, true)}
           // A run sung without a microphone ends on advice to turn it on, so
           // the summary carries the control. It starts the run the way "Sing
           // again" does — through the cap and the ladder (which still lets
@@ -310,7 +349,7 @@ export function SongsClient() {
                   const current = micRequestRef.current.begin();
                   if (!(await pitch.start()) || !current()) return;
                   setPass((p) => (p === "listen" ? "guided" : p));
-                  startSongById(summary.song.id);
+                  startSongById(summary.song.id, true);
                 }
           }
           micError={pitch.listening ? null : pitch.error}

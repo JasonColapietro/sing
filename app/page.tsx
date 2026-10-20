@@ -314,8 +314,15 @@ export default function Home() {
               <ul className="mt-5 space-y-2.5">
                 {[
                   `Both books open at once — ${TOTAL_CHAPTERS} chapters, ${TOTAL_WORDS.toLocaleString("en-US")} words, two PDFs to keep`,
-                  "A practice plan that rebuilds itself around your weak notes",
-                  "Range growth and accuracy trends, week over week",
+                  // The free plan is built the same way and shows its first
+                  // two steps, the weak-note siren first unless a range test
+                  // is due (lib/pro.ts PRO_PERKS "coach"): Pro's part is the
+                  // rest of the plan.
+                  "The whole daily practice plan, not just the first two steps the free plan shows",
+                  // /pro's wording. The weekly score trend is on the free
+                  // plan; Pro's accuracy chart is one tally per note with no
+                  // time axis, and only the range is charted over time.
+                  "A per-note accuracy chart, and your range charted over months",
                   "Pitch analysis on every recorded take",
                 ].map((line) => (
                   <li

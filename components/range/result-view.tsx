@@ -38,6 +38,7 @@ import type { Song } from "@/components/songs/types";
 import { countOpenSongsFitting } from "@/components/songs/lib";
 import { useMastered } from "@/components/songs/favorites";
 import { OCTAVE_SIREN_MIN_SEMIS } from "@/components/warmups/exercises";
+import { retryWhenOnline } from "./retry-when-online";
 
 /**
  * Household names for the quick post-test comparison, pulled from the full
@@ -133,21 +134,23 @@ export function singerCompareHref(slug: string): string {
 }
 
 /**
- * The voice-type caveat for a result that names a male band. The test asks
- * for falsetto at the top ("falsetto counts"), as a range should, and the
- * classifier scores that top against bands that describe full voice, so its
- * error runs one way: a baritone with an ordinary falsetto to D5 reads Tenor,
- * and to E5 "Tenor or Contralto". The female bands already take in head
- * voice, so this is not said under them.
+ * The voice-type caveat for a result a falsetto top could have lifted. The
+ * test asks for falsetto at the top ("falsetto counts"), as a range should,
+ * and the classifier scores that top against bands that describe full voice,
+ * so its error runs one way: a baritone with an ordinary falsetto to D5 reads
+ * Tenor, and to E5 "Tenor or Contralto". The female bands already take in
+ * head voice, so this is not said under them. Nor under Bass: the lowest band
+ * has nothing below it to have been lifted from, and the caveat left a bass
+ * wondering whether they were lower still.
  */
 export const FALSETTO_NOTE =
   "The bass, baritone and tenor bands describe full voice, but this test counts falsetto, so if your top notes were falsetto the fit can lean a category high: a baritone whose falsetto carried the top often reads as a tenor.";
 
-const MALE_BANDS: ReadonlySet<string> = new Set(["bass", "baritone", "tenor"]);
+const LIFTABLE_BANDS: ReadonlySet<string> = new Set(["baritone", "tenor"]);
 
 /** The single-band note under the voice-type label. */
 export function singleBandCopy(voice: VoiceType): string {
-  return `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.${MALE_BANDS.has(voice.id) ? ` ${FALSETTO_NOTE}` : ""}`;
+  return `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.${LIFTABLE_BANDS.has(voice.id) ? ` ${FALSETTO_NOTE}` : ""}`;
 }
 
 /**
@@ -492,16 +495,17 @@ export function ResultView({
   // has to be the one the singer can actually open: quoting the free set to a
   // subscriber understates what they paid for, and quoting the full set to a
   // free reader promises access they hit a paywall on one click later.
+  // Offline (the connection dropped during the test), the chunk cannot load:
+  // the card keeps its uncounted copy (songCountCopy(null)) and counts once
+  // the connection is back, rather than throwing an uncaught ChunkLoadError.
   const [book, setBook] = useState<readonly Song[] | null>(null);
   useEffect(() => {
     if (!proReady) return;
-    let live = true;
-    void import("@/components/songs/data").then((m) => {
-      if (live) setBook(isPro ? [...m.SONGS, ...m.PRO_SONGS] : m.SONGS);
+    const quit = new AbortController();
+    void retryWhenOnline(() => import("@/components/songs/data"), { signal: quit.signal }).then((m) => {
+      if (!quit.signal.aborted) setBook(isPro ? [...m.SONGS, ...m.PRO_SONGS] : m.SONGS);
     });
-    return () => {
-      live = false;
-    };
+    return () => quit.abort();
   }, [isPro, proReady]);
 
   // Counted over the bands open now, not the whole book: "Open the songbook"
@@ -790,7 +794,7 @@ export function ResultView({
             return (
               <div key={v.id} className="flex items-center gap-3">
                 <span
-                  className={`w-28 shrink-0 text-right font-mono text-xs ${isMatch ? "text-violet-ink" : "text-mut"}`}
+                  className={`w-24 shrink-0 text-right font-mono text-xs sm:w-28 ${isMatch ? "text-violet-ink" : "text-mut"}`}
                 >
                   {v.label}
                 </span>
@@ -800,7 +804,11 @@ export function ResultView({
                     style={{ left: `${left}%`, width: `${width}%` }}
                   />
                 </div>
-                <span className="tabular w-20 shrink-0 font-mono text-[11px] text-dim">
+                {/* The note range is dropped on phones, as the famous rows
+                    drop theirs: with it, a 320px screen left each bar about
+                    30px wide and ran the axis together as "C2C3C4C5C6". The
+                    bars and the axis carry the same span. */}
+                <span className="tabular hidden w-20 shrink-0 font-mono text-[11px] text-dim sm:block">
                   {midiToLabel(v.lowMidi)}–{midiToLabel(v.highMidi)}
                 </span>
               </div>
@@ -808,7 +816,7 @@ export function ResultView({
           })}
           {/* User range overlay row */}
           <div className="flex items-center gap-3">
-            <span className="w-28 shrink-0 text-right font-mono text-xs font-semibold text-violet-ink">
+            <span className="w-24 shrink-0 text-right font-mono text-xs font-semibold text-violet-ink sm:w-28">
               You
             </span>
             <div className="relative h-5 flex-1 rounded bg-panel2">
@@ -820,12 +828,12 @@ export function ResultView({
                 }}
               />
             </div>
-            <span className="tabular w-20 shrink-0 font-mono text-[11px] text-violet-ink">
+            <span className="tabular hidden w-20 shrink-0 font-mono text-[11px] text-violet-ink sm:block">
               {midiToLabel(lowMidi)}–{midiToLabel(highMidi)}
             </span>
           </div>
           <div className="flex items-center gap-3 pt-1">
-            <span className="w-28 shrink-0" />
+            <span className="w-24 shrink-0 sm:w-28" />
             <div className="flex flex-1 justify-between font-mono text-[10px] text-dim">
               <span>C2</span>
               <span>C3</span>
@@ -833,7 +841,7 @@ export function ResultView({
               <span>C5</span>
               <span>C6</span>
             </div>
-            <span className="w-20 shrink-0" />
+            <span className="hidden w-20 shrink-0 sm:block" />
           </div>
         </div>
       </Card>
@@ -883,8 +891,9 @@ export function ResultView({
                   />
                 </div>
                 {/* The note range is dropped on phones: with it, the bar
-                    between the name and the label was about 37px wide. */}
-                <span className="tabular w-14 shrink-0 font-mono text-[11px] text-dim sm:w-24">
+                    between the name and the label was about 37px wide.
+                    What is left there, "(24st)", needs no more than w-11. */}
+                <span className="tabular w-11 shrink-0 font-mono text-[11px] text-dim sm:w-24">
                   <span className="hidden sm:inline">
                     {midiToLabel(f.lowMidi)}–{midiToLabel(f.highMidi)}{" "}
                   </span>

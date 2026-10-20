@@ -9,8 +9,27 @@ import { CapWall } from "@/components/practice/free-cap";
 import { prepaintWords, useHydrated } from "@/components/prepaint";
 import { IconHeadphones, IconMic } from "./icons";
 
-const SUBTITLE =
-  "Songs to practice singing: listen to a phrase from a well-known public domain melody, then sing it back on a scrolling piano roll with live pitch scoring. Once you have taken the range test, each song opens fitted to your range.";
+const SUBTITLE_LEAD =
+  "Songs to practice singing: listen to a phrase from a well-known public domain melody, then sing it back on a scrolling piano roll with live pitch scoring.";
+const SUBTITLE_FIT = "Once you have taken the range test, each song opens fitted to your range.";
+/**
+ * The second sentence is left off below sm, and the gate's buttons drop to
+ * the md size there, so a 320×568 phone has both buttons on its first screen:
+ * "Continue without a mic" wrapped to two lines at the lg size and sat across
+ * the fold, under a six-line subtitle. The sentence stays in the HTML. The
+ * heading is a size down below sm too: on a deep link it names the song, and
+ * "She'll Be Coming Round the Mountain" or "Amazing Grace (Opening Lines,
+ * Verses 1 & 2)" took it to three lines and the second button across the fold
+ * again (to 579px); at text-lg they take two lines and it ends at 553px.
+ */
+const SUBTITLE = (
+  <>
+    {SUBTITLE_LEAD}
+    <span className="hidden sm:inline"> {SUBTITLE_FIT}</span>
+  </>
+);
+/** The lg size from sm up; md (no wrapping at 320px) below it. */
+const GATE_BUTTON = "sm:px-7 sm:py-3.5 sm:text-base";
 /** SongsClient's subtitle over the library, which is what a capped singer gets instead of this gate. */
 const LIBRARY_SUBTITLE = "Pick a song to start your practice loop.";
 /** The cap as the wall reads it once reached; only ever shown where the pre-paint state says so. */
@@ -77,17 +96,17 @@ export function SongsMicGate({
   const pre = prepaint && !hydrated;
   const gate = (
     <Card>
-      <h2 className="text-xl">{heading}</h2>
+      <h2 className="text-lg sm:text-xl">{heading}</h2>
       {/* The buttons come straight after the heading that asks for them: with
           the explanation first, a 375×667 phone put "Enable microphone"
           behind the tab bar, on the hub and on every "Sing <song>" link. */}
       <div className="mt-4 flex flex-wrap gap-3">
         {/* After a failure the press is a retry, as MicGate in the other
             rooms labels it; an unchanged label read as a dead button. */}
-        <Button variant="rec" size="lg" onClick={onEnable}>
+        <Button variant="rec" size="md" className={GATE_BUTTON} onClick={onEnable}>
           <IconMic /> {error ? "Try again" : "Enable microphone"}
         </Button>
-        <Button variant="outline" size="lg" onClick={onListen}>
+        <Button variant="outline" size="md" className={GATE_BUTTON} onClick={onListen}>
           <IconHeadphones /> Continue without a mic
         </Button>
       </div>

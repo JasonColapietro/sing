@@ -138,6 +138,25 @@ describe("range result voice type", () => {
     }
   });
 
+  it("says it under Baritone, which a falsetto top can lift from Bass", () => {
+    // A2–A4 reads Baritone with no near-equal band on the other side.
+    const html = render(45, 69);
+    expect(html).toContain('href="/singers/voice-type/baritone"');
+    expect(html).not.toContain(" or <span");
+    expect(html).toContain("this test counts falsetto");
+  });
+
+  it("does not say it under Bass, the lowest band, which nothing lifted", () => {
+    // E2–E4: the caveat told a bass the fit can lean a category high, as if
+    // the true answer could sit below the lowest band.
+    const html = render(40, 64);
+    expect(html).toContain('href="/singers/voice-type/bass"');
+    expect(html).not.toContain(" or <span");
+    expect(html).not.toContain("describe full voice");
+    expect(html).not.toContain("lean a category high");
+    expect(html).toContain("treat this as a starting point, not a box.");
+  });
+
   it("does not say it under a female band, which already takes in head voice", () => {
     // C4–C6: soprano.
     const html = render(60, 84);
@@ -158,6 +177,22 @@ describe("range result voice type", () => {
     expect(html).toContain("See the basses in the library");
     expect(html).not.toContain("basss");
     expect(html).toContain("Violet = your range");
+  });
+});
+
+describe("the voice-type chart on a small phone", () => {
+  it("drops the note-range column below sm, so the bars keep their width", () => {
+    // At 320px the fixed label and range columns left each bar about 30px
+    // wide, and the C2–C6 axis ran together.
+    const html = renderToStaticMarkup(
+      createElement(ResultView, { lowMidi: 40, highMidi: 64, onRetake: () => {} }),
+    );
+    const chart = html.slice(html.indexOf(">Voice type<"), html.indexOf(">Famous company<"));
+    for (const band of ["E2–E4", "A2–A4", "C3–C5", "F3–F5", "A3–A5", "C4–C6"]) {
+      expect(chart).toMatch(new RegExp(`<span class="tabular hidden [^"]*sm:block">${band}</span>`));
+    }
+    // The label column narrows below sm and still holds "Mezzo-soprano".
+    expect(chart).toMatch(/<span class="w-24 shrink-0 text-right font-mono text-xs sm:w-28[^"]*">Mezzo-soprano<\/span>/);
   });
 });
 

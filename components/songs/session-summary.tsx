@@ -165,6 +165,7 @@ export function SessionSummary({
   // out of every grade/star/breakdown block below for free.
   const grade = computeGrade(score, data.maxCombo, data.judgments);
   const scored = !listenMode && score !== undefined;
+  const wholeLoops = perLoopScores.length - (data.partialLastLoop ? 1 : 0);
   const totalJudged = JUDGMENTS.reduce((n, j) => n + data.judgments[j], 0);
   const { previousBest, isNewBest, history } = scored
     ? personalBestInfo(progress.sessions, song, score)
@@ -221,7 +222,9 @@ export function SessionSummary({
           <>
             <div className="mt-6 flex flex-wrap gap-10">
               <Stat label="Score" value={`${score}/100`} tone={scoreTone(score)} />
-              <Stat label="Loops sung" value={perLoopScores.length} tone="cool" />
+              {/* Whole passes: a rehearsal stopped part-way lists its last
+                  pass below, scored on the part sung, but did not sing it. */}
+              <Stat label="Loops sung" value={wholeLoops} tone="cool" />
               {mode === "performance" && (
                 <>
                   <Stat label="Points" value={`${points}`} tone="violet" />
@@ -267,6 +270,12 @@ export function SessionSummary({
                 <span className="tabular w-12 shrink-0 text-right font-mono text-xs">{s}%</span>
               </div>
             ))}
+            {data.partialLastLoop && (
+              <p className="text-xs text-dim">
+                You stopped part-way through loop {perLoopScores.length}, so it is scored on the
+                part you sang.
+              </p>
+            )}
           </div>
         )}
 

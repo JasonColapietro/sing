@@ -247,6 +247,15 @@ export function StreakChip({ days, best = 0 }: { days: number; best?: number }) 
 /* ----------------------------------------------------------- continue card */
 
 /**
+ * The words beside a continue card's stars. "Not started" only for something
+ * not started: a finished set whose drills average under one star is "So far".
+ */
+export function starLabel(stars: Stars, started: boolean = stars > 0): string {
+  if (stars === 3) return "All three stars";
+  return stars === 0 && !started ? "Not started" : "So far";
+}
+
+/**
  * The first thing in a room: one thing to do, and one button that does it.
  *
  * A singer who opens a practice room to practise should not have to choose
@@ -265,6 +274,7 @@ export function ContinueCard({
   streakDays,
   streakBest,
   stars,
+  started,
   goal,
   children,
   unavailableReason,
@@ -291,6 +301,12 @@ export function ContinueCard({
   streakBest?: number;
   /** Where the singer already stands on this thing, if anywhere. */
   stars?: Stars;
+  /**
+   * Whether any of it has been done, which no star count can say: stars are
+   * floored averages, so a set finished with one star on two drills and none
+   * on the third reads zero. Defaults to whether there are stars.
+   */
+  started?: boolean;
   goal?: { doneSec: number; goalSec: number };
   children?: ReactNode;
   /** Why starting is unavailable; shown beside the disabled action. */
@@ -321,7 +337,7 @@ export function ContinueCard({
             <div className="order-3 mt-3 flex items-center gap-2">
               <StarTrio stars={stars} size={16} />
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
-                {stars === 0 ? "Not started" : stars === 3 ? "All three stars" : "So far"}
+                {starLabel(stars, started)}
               </span>
             </div>
           )}

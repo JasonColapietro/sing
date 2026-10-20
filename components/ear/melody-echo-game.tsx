@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { usePitch } from "@/lib/audio/use-pitch";
+import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { useAudioPrefs } from "@/lib/audio/devices";
 import { playSequence } from "@/lib/audio/synth";
@@ -34,17 +34,21 @@ type Phase = "listen" | "sing" | "result";
 
 export function MelodyEchoGame({
   difficulty,
+  pitch,
   onExit,
   onComplete,
 }: {
   difficulty: Difficulty;
+  /** A workout's microphone (EarRunner); see pitch-match-game.tsx. */
+  pitch?: UsePitchResult;
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
       of being drawn here, and no summary card renders. */
   onComplete?: OnEarComplete;
 }) {
   const session = useEarSession();
-  const { latest, listening, error, start, stop } = usePitch();
+  const ownPitch = usePitch();
+  const { latest, listening, error, start, stop } = pitch ?? ownPitch;
   const progress = useProgress();
   // Any octave on easy, and on every level until a range is saved: the
   // targets sit in a C3–C4 fallback that a higher voice answers an octave up.
@@ -181,10 +185,11 @@ export function MelodyEchoGame({
     [],
   );
 
-  // Release the mic while the summary is up.
+  // Release the mic while the summary is up; a lent one is the workout's.
+  const ownsMic = pitch === undefined;
   useEffect(() => {
-    if (session.done && listening) stop();
-  }, [session.done, listening, stop]);
+    if (session.done && listening && ownsMic) stop();
+  }, [session.done, listening, ownsMic, stop]);
 
   if (session.done) {
     if (onComplete) {

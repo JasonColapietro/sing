@@ -76,8 +76,11 @@ const PATHS: Path[] = [
         note: "Same phrase, one variable, back to back. The comparison that shows whether a change helped.",
       },
     ],
+    // What Pro adds, in /pro's terms. The free coach shows the first two
+    // steps of the same plan, the weak-note siren first unless a range test
+    // is due, and the score trend by week is free, so neither is sold here.
     payoff:
-      "Then let the coach keep score: Pro charts accuracy trends and range history, and suggests practice around your weak notes.",
+      "Then let the coach keep score: Pro adds a per-note accuracy chart, charts your range tests over months, and opens the coach's whole daily plan, not just its first two steps.",
     gold: true,
   },
 ];

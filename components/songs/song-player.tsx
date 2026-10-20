@@ -1,6 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat } from "@/lib/audio/notes";
 import { playTone, clickAt } from "@/lib/audio/synth";
@@ -67,7 +76,11 @@ import {
   type Tempo,
   describeLoopRange,
   isWholeSongRange,
+  reachedBeats,
+  reachedNothing,
+  setupForSong,
   type LoopRange,
+  type PlayerSetup,
 } from "./lib";
 import type { GuidePass, SessionMode } from "./types";
 
@@ -79,14 +92,32 @@ export type Phase = "idle" | "running" | "paused" | "finished";
  * run already under way was sung unheard, so the paused control says it
  * starts over (see `afterMicOn`), and while the song plays the line points at
  * Pause, where the control is, rather than at a control that is not there.
+ *
+ * `at` is where the control is drawn. Before a run it sits under the line, in
+ * the piano-roll card, which the start's scroll keeps on screen. Once paused
+ * it sits in the transport row beside Resume: the singer just pressed Pause
+ * there, and on a phone scrolled down to the pass chips the piano-roll card
+ * (line and control with it) was above the screen.
  */
-export function micOffPrompt(phase: Phase): { line: string; control: string | null } {
+export function micOffPrompt(phase: Phase): {
+  line: string;
+  control: string | null;
+  at: "line" | "transport" | null;
+} {
   if (phase === "running") {
-    return { line: "Practicing without a mic. Pause to turn it on and be scored.", control: null };
+    return { line: "Practicing without a mic. Pause to turn it on and be scored.", control: null, at: null };
+  }
+  if (phase === "paused") {
+    return {
+      line: "Practicing without a mic. Turn it on to see your live score.",
+      control: "Enable microphone and restart",
+      at: "transport",
+    };
   }
   return {
     line: "Practicing without a mic. Turn it on to see your live score.",
-    control: phase === "paused" ? "Enable microphone and restart" : "Enable microphone",
+    control: "Enable microphone",
+    at: "line",
   };
 }
 
@@ -107,6 +138,31 @@ export function afterMicOn(
   if (phase === "finished") return null;
   return { pass: pass === "listen" ? "guided" : pass, restart: phase !== "idle" };
 }
+
+/**
+ * The loop pill. A performance counts down its planned loops; a rehearsal has
+ * no planned end, so it counts the passes it has made instead. Before a run
+ * nothing has been counted, and the pill used to read "Loop 0 of 4" (or
+ * "Loop 0"): it gives the plan instead, kept short so the header's pills wrap
+ * the same way when Play starts the count.
+ */
+export function loopPillText(
+  phase: Phase,
+  mode: SessionMode,
+  plannedLoops: number,
+  cycle: number,
+  loopIndex: number,
+): string {
+  if (phase === "idle") {
+    if (mode === "rehearsal") return "On repeat";
+    return plannedLoops === 1 ? "1 loop" : `${plannedLoops} loops`;
+  }
+  if (mode === "rehearsal") return `Loop ${cycle * plannedLoops + loopIndex + 1}`;
+  return `Loop ${Math.min(plannedLoops, loopIndex + 1)} of ${plannedLoops}`;
+}
+
+/** The in-page "Stage mode" button, which focus returns to when the stage closes. */
+const STAGE_BUTTON_ID = "song-stage-mode";
 
 /** Guide gain with the mixer at 100% — the level the old "full" setting used. */
 const GUIDE_MAX_GAIN = 0.2;
@@ -149,12 +205,10 @@ function Transport({
 }) {
   return (
     <>
-      <Button
-        variant={phase === "running" ? "outline" : "violet"}
-        size={size}
-        onClick={onToggle}
-        aria-label={phase === "running" ? "Pause" : "Play"}
-      >
+      {/* Named by its visible label alone (the icons are aria-hidden): an
+          aria-label of "Play" on a button reading "Resume" left a voice-control
+          singer saying "click Resume" with nothing to click. */}
+      <Button variant={phase === "running" ? "outline" : "violet"} size={size} onClick={onToggle}>
         {phase === "running" ? <IconPause /> : <IconPlay />}
         {phase === "running" ? "Pause" : phase === "paused" ? "Resume" : "Play"}
       </Button>
@@ -177,6 +231,7 @@ export function SongPlayer({
   onExit,
   onTake,
   allowance,
+  setup,
 }: {
   song: Song;
   pitch: UsePitchResult;
@@ -185,7 +240,8 @@ export function SongPlayer({
   onModeChange: (mode: SessionMode) => void;
   pass: GuidePass;
   onPassChange: (pass: GuidePass) => void;
-  onFinish: (summary: SessionSummaryData) => void;
+  /** The run's summary, and how it was set up so "Sing again" can repeat it. */
+  onFinish: (summary: SessionSummaryData, setup: PlayerSetup) => void;
   onExit: () => void;
   /**
    * The recorded take, for the summary: "recording" when a run starts
@@ -198,25 +254,36 @@ export function SongPlayer({
    * the scroll that brings Play into view on every start brings it too.
    */
   allowance?: ReactNode;
+  /**
+   * How the last run of this song was set up, for a restart from its summary
+   * ("Sing again"): read once, as the player opens. Ignored for another song.
+   */
+  setup?: PlayerSetup | null;
 }) {
+  // Read at mount only: the state below is the singer's from then on.
+  const [initial] = useState(() => setupForSong(setup, song.id));
   /**
    * The key. With a saved range every song opens fitted to it; a key the
    * singer picks with the arrows or the keyboard overrides that for this song
    * only (see songTranspose), and "Fit to my range" returns to the fit.
    */
-  const [pickedTranspose, setPickedTranspose] = useState<PickedTranspose | null>(null);
+  const [pickedTranspose, setPickedTranspose] = useState<PickedTranspose | null>(() =>
+    initial && initial.pickedSemis !== null ? { songId: song.id, semis: initial.pickedSemis } : null,
+  );
   const fittedTranspose = fitTransposeToRange(song, range);
   const transpose = songTranspose(song, range, pickedTranspose);
   const pickTranspose = useCallback(
     (semis: number) => setPickedTranspose({ songId: song.id, semis: clampTranspose(semis) }),
     [song.id],
   );
-  const [tempo, setTempo] = useState<Tempo>(1);
-  const [tempoAuto, setTempoAuto] = useState(false);
-  const [guidePct, setGuidePct] = useState(PASS_GUIDE_PCT[pass]);
-  const [clickDuringPlay, setClickDuringPlay] = useState(false);
+  const [tempo, setTempo] = useState<Tempo>(initial?.tempo ?? 1);
+  const [tempoAuto, setTempoAuto] = useState(initial?.tempoAuto ?? false);
+  const [guidePct, setGuidePct] = useState(initial?.guidePct ?? PASS_GUIDE_PCT[pass]);
+  const [clickDuringPlay, setClickDuringPlay] = useState(initial?.clickDuringPlay ?? false);
   // Any octave until a range places the song in the singer's own octave.
-  const [octaveAgnostic, setOctaveAgnostic] = useState(() => defaultOctaveAgnostic(range));
+  const [octaveAgnostic, setOctaveAgnostic] = useState(
+    () => initial?.octaveAgnostic ?? defaultOctaveAgnostic(range),
+  );
   const [phase, setPhase] = useState<Phase>("idle");
   const phaseRef = useRef<Phase>("idle");
   const pauseRef = useRef<() => void>(() => {});
@@ -241,12 +308,24 @@ export function SongPlayer({
    */
   const [pickedLoop, setPickedLoop] = useState<{ songId: string; range: LoopRange | null }>({
     songId: song.id,
-    range: null,
+    range: initial?.loop ?? null,
   });
   const [sectionLabel, setSectionLabel] = useState<string | null>(null);
   const [stageMode, setStageMode] = useState(false);
+  /**
+   * The in-page "Stage mode" button, where focus goes when the stage closes.
+   * The stage replaces the whole in-page player, so the button that opened it
+   * is gone by then and focus fell to the page's body. Looked up by id when
+   * read (the shared Button takes no ref), which is after the in-page player
+   * has mounted again.
+   */
+  const [stageButtonRef] = useState<RefObject<HTMLElement | null>>(() => ({
+    get current() {
+      return typeof document === "undefined" ? null : document.getElementById(STAGE_BUTTON_ID);
+    },
+  }));
   /** Record the singer's own take this run, for review in the summary. */
-  const [recordTake, setRecordTake] = useState(false);
+  const [recordTake, setRecordTake] = useState(initial?.recordTake ?? false);
   const takeRecorderRef = useRef<TakeRecorder | null>(null);
 
   const currentNotes = useMemo(() => transposedNotes(song, transpose), [song, transpose]);
@@ -360,8 +439,6 @@ export function SongPlayer({
 
   const spbRef = useRef(secPerBeat(song.bpm, 1));
   const t0Ref = useRef(0);
-  /** Position on the session clock, in beats, as of the last frame. */
-  const elapsedBeatsRef = useRef(0);
   const pausedGlobalBeatsRef = useRef(0);
   const scheduledMaskRef = useRef<boolean[]>([]);
   const clickCursorRef = useRef(0);
@@ -382,6 +459,17 @@ export function SongPlayer({
   const awakeSecRef = useRef(0);
   const sessionTransposeRef = useRef(0);
   const sessionTempoRef = useRef<Tempo>(1);
+  /**
+   * How this run was set up at count-in, for "Sing again" (see PlayerSetup).
+   * The rate is the one it started at, which Auto may have moved since.
+   */
+  const runSetupRef = useRef<PlayerSetup | null>(null);
+  /**
+   * Where scoring had got to as of the last frame: whole passes behind it and
+   * the scored song beat in the pass under way (-Infinity before the first
+   * scored frame). A rehearsal the singer stops is scored up to here.
+   */
+  const scoredAtRef = useRef({ wholePasses: 0, beat: -Infinity });
   /**
    * The slowest tempo any scored part of this run was sung at.
    *
@@ -616,7 +704,14 @@ export function SongPlayer({
     }
   }
 
-  function finalize() {
+  /**
+   * End the run and hand back its summary. `stopped` is a run the singer ended
+   * part-way (End practice in a rehearsal), scored up to where it got: the
+   * unsung rest of the pass it stopped in is neither judged nor counted as
+   * possible. A performance that played out has nothing unsung, and its last
+   * notes, still inside the pitch lag, are judged here.
+   */
+  function finalize(stopped = false) {
     if (finishedRef.current) return;
     finishedRef.current = true;
     stopLoops();
@@ -624,25 +719,44 @@ export function SongPlayer({
     takeRecorderRef.current = null;
 
     const notes = currentNotesRef.current;
-    if (scoringRef.current) flushJudgments(); // the last loop's tail
+    // Notes of a stopped pass whose windows had closed were judged as they
+    // closed; the rest were never sung, so they are not judged a miss.
+    if (scoringRef.current && !stopped) flushJudgments(); // the last loop's tail
     // Per-note results are filed where the singer sang them: a run sung an
     // octave from the written melody names its notes in that octave, in the
     // practice log (and so the coach and the per-note chart) and in the
     // summary's hardest notes, as the warm-ups file a rep at its octave.
     const sungNotes = notesInSungOctave(notes, sungOctaveShift(sungShiftSecRef.current));
 
-    const denom = perLoopDenomSecRef.current;
+    const spb = spbRef.current;
     const hitTotalNow = hitSecRef.current.reduce((a, b) => a + b, 0);
     const delta = hitTotalNow - loopSnapshotRef.current;
-    const lastLoopScore = denom > 0 ? Math.round(Math.min(100, (delta / denom) * 100)) : 0;
-    const finalPerLoop = [...perLoopScoresRef.current, lastLoopScore];
 
     // possibleSec covers every pass this session planned. A rehearsal ends when
     // the singer stops, which is rarely on a loop line, so the unsung remainder
-    // would otherwise be scored as a miss — divide by what was actually sung.
-    const totalPossible =
-      possibleSecRef.current.reduce((a, b) => a + b, 0) *
-      sessionDoneFrac(elapsedBeatsRef.current);
+    // would otherwise be scored as a miss: per note (the log, the coach and the
+    // trickiest notes), per section, overall and for the last loop. Each is
+    // divided by what was actually reached instead.
+    const { wholePasses, beat: stoppedAt } = scoredAtRef.current;
+    const possibleSec = stopped
+      ? reachedBeats(notes, playBeatsRef.current, wholePasses, stoppedAt).map((b) => b * spb)
+      : possibleSecRef.current;
+    // The pass the run ended in: whole for a performance that played out, the
+    // part reached for a stopped one.
+    const lastLoopDenom = stopped
+      ? reachedBeats(notes, playBeatsRef.current, 0, stoppedAt).reduce((a, b) => a + b, 0) * spb
+      : perLoopDenomSecRef.current;
+    const lastLoopPartial = stopped && lastLoopDenom < perLoopDenomSecRef.current - 1e-6;
+    const lastLoopScore =
+      lastLoopDenom > 0 ? Math.round(Math.min(100, (delta / lastLoopDenom) * 100)) : 0;
+    // A pass stopped before any of its notes was over has nothing to say per
+    // loop; its sung time still counts in the overall score.
+    const keepLastLoop = !lastLoopPartial || judgeCursorRef.current > 0;
+    const finalPerLoop = keepLastLoop
+      ? [...perLoopScoresRef.current, lastLoopScore]
+      : [...perLoopScoresRef.current];
+
+    const totalPossible = possibleSec.reduce((a, b) => a + b, 0);
     const overallScore =
       scoringRef.current && totalPossible > 0
         ? Math.round(Math.min(100, (hitTotalNow / totalPossible) * 100))
@@ -661,7 +775,7 @@ export function SongPlayer({
             sungNotes.map((n, i) => ({
               midi: n.midi,
               hitSec: hitSecRef.current[i] ?? 0,
-              possibleSec: possibleSecRef.current[i] ?? 0,
+              possibleSec: possibleSec[i] ?? 0,
               centsSum: centsSumRef.current[i] ?? 0,
               centsFrames: centsFramesRef.current[i] ?? 0,
             })),
@@ -673,8 +787,8 @@ export function SongPlayer({
     // zero, which would make it look like the hardest note in the song. Report
     // it as perfect so `hardestNotes` filters it out, rather than filtering the
     // array here and shifting every index.
-    const ratiosForHardest = hitRatioRef.current.map((ratio, i) =>
-      (possibleSecRef.current[i] ?? 0) > 0 ? ratio : 1,
+    const ratiosForHardest = possibleSec.map((possible, i) =>
+      possible > 0 ? Math.min(1, (hitSecRef.current[i] ?? 0) / possible) : 1,
     );
     const hardest = scoringRef.current ? hardestNotes(sungNotes, ratiosForHardest) : [];
 
@@ -685,7 +799,7 @@ export function SongPlayer({
             let possible = 0;
             notes.forEach((n, i) => {
               if (n.startBeat < section.startBeat || n.startBeat >= section.endBeat) return;
-              possible += possibleSecRef.current[i] ?? 0;
+              possible += possibleSec[i] ?? 0;
               hit += hitSecRef.current[i] ?? 0;
             });
             return {
@@ -700,12 +814,30 @@ export function SongPlayer({
           .map(({ label, score }) => ({ label, score }))
       : [];
 
+    // The desk stays live through a run (guide, click, octave, Auto), so a
+    // restart takes what the singer last set there; the key, the starting rate
+    // and the loop are locked once the run starts, so count-in has them.
+    const setupNow: PlayerSetup = {
+      ...(runSetupRef.current ?? {
+        songId: song.id,
+        pickedSemis: null,
+        tempo: sessionTempoRef.current,
+        loop: null,
+        recordTake: false,
+      }),
+      tempoAuto: tempoAutoRef.current,
+      octaveAgnostic: octaveAgnosticRef.current,
+      guidePct: guidePctRef.current,
+      clickDuringPlay: clickDuringPlayRef.current,
+    };
+
     setPhase("finished");
     positionBeatsRef.current = null;
     onFinish({
       song,
       score: overallScore,
       perLoopScores: finalPerLoop,
+      partialLastLoop: keepLastLoop && lastLoopPartial,
       hardest,
       xpGained: log.xpGained,
       newAchievements: log.newAchievements,
@@ -724,7 +856,7 @@ export function SongPlayer({
       mastered: isMastered(passRef.current, modeRef.current, overallScore, masteryEligibleRef.current, minScoredTempoRef.current),
       points: pointsRef.current,
       topMultiplier: topMultiplierRef.current,
-    });
+    }, setupNow);
   }
 
   /**
@@ -784,7 +916,6 @@ export function SongPlayer({
       return;
     }
     setCountInBeat(-1);
-    elapsedBeatsRef.current = Math.min(elapsedGlobal, totalSessionBeats);
 
     // Pitch reports describe the voice `scoreLag` ago, so everything that
     // scores — crediting, judging, closing a loop, ending a performance — runs
@@ -851,6 +982,8 @@ export function SongPlayer({
         closeLoop(elapsedGlobal);
         scoredLoopKeyRef.current = key;
       }
+      // The key counts the passes before this one: every one of them whole.
+      scoredAtRef.current = { wholePasses: key, beat: scoredBeat };
     }
 
     const label = sectionAtBeat(song, beatInSong)?.label ?? null;
@@ -1004,10 +1137,10 @@ export function SongPlayer({
     loopIndexTrackRef.current = 0;
     scoredLoopKeyRef.current = 0;
     perLoopScoresRef.current = [];
-    elapsedBeatsRef.current = 0;
     sectionLabelRef.current = undefined;
     sessionTransposeRef.current = transpose;
     sessionTempoRef.current = tempo;
+    scoredAtRef.current = { wholePasses: 0, beat: -Infinity };
     minScoredTempoRef.current = tempo;
     // The pass owns the guide level at count-in: solo silences it; listen and
     // guided keep the mixer where the singer left it, restoring the pass's own
@@ -1019,6 +1152,17 @@ export function SongPlayer({
     const passGuidePct = pass === "solo" ? 0 : guidePct > 0 ? guidePct : PASS_GUIDE_PCT[pass];
     guidePctRef.current = passGuidePct;
     setGuidePct(passGuidePct);
+    runSetupRef.current = {
+      songId: song.id,
+      pickedSemis: pickedTranspose && pickedTranspose.songId === song.id ? pickedTranspose.semis : null,
+      tempo,
+      tempoAuto,
+      octaveAgnostic,
+      loop: drilled,
+      guidePct: passGuidePct,
+      clickDuringPlay,
+      recordTake,
+    };
     scoreLagRef.current = liveLags(getAudioContext().sampleRate, PITCH_FFT_SIZE).scoreLag;
     setPerLoopScores([]);
     setLoopIndex(0);
@@ -1112,8 +1256,13 @@ export function SongPlayer({
    */
   function endSession() {
     if (modeRef.current === "rehearsal" && (phase === "running" || phase === "paused")) {
-      finalize();
-      return;
+      // Stopped in the count-in, before a note of it was sung: nothing to
+      // summarise, so it leaves like any other End practice (see reachedNothing).
+      const { wholePasses, beat } = scoredAtRef.current;
+      if (!reachedNothing(currentNotesRef.current, playBeatsRef.current, wholePasses, beat)) {
+        finalize(true);
+        return;
+      }
     }
     endPractice();
   }
@@ -1237,17 +1386,7 @@ export function SongPlayer({
 
   const hasRange = range.lowMidi !== undefined && range.highMidi !== undefined;
   const effBpm = Math.round(song.bpm * tempo);
-  // A rehearsal has no planned end, so it counts the passes it has made instead
-  // of counting down to one.
-  const loopNumber = phase === "idle" ? 0 : Math.min(plannedLoops, loopIndex + 1);
-  const passNumber = phase === "idle" ? 0 : cycle * plannedLoops + loopIndex + 1;
-  const loopPill = (
-    <Pill tone="violet">
-      {mode === "rehearsal"
-        ? `Loop ${passNumber}`
-        : `Loop ${loopNumber} of ${plannedLoops}`}
-    </Pill>
-  );
+  const loopPill = <Pill tone="violet">{loopPillText(phase, mode, plannedLoops, cycle, loopIndex)}</Pill>;
   // Rehearsal loops for as long as the singer keeps going; the summary gets the
   // whole list, the in-session row only the most recent passes.
   const shownLoopScores = perLoopScores.slice(-MAX_LOOP_PILLS);
@@ -1331,6 +1470,7 @@ export function SongPlayer({
     return (
       <Stage
         open
+        returnFocusRef={stageButtonRef}
         onExit={() => setStageMode(false)}
         label={song.title}
         points={scoring && mode === "performance" ? points : null}
@@ -1469,7 +1609,7 @@ export function SongPlayer({
               {/* The line above asks for the microphone, so the control sits
                   under it, at the moments the pass switch is offered. A
                   failed start shows in this row's alert. */}
-              {!listening && micOff.control && (
+              {!listening && micOff.control && micOff.at === "line" && (
                 <Button variant="rec" size="sm" className="mt-2" onClick={enableMic}>
                   <IconMic /> {micOff.control}
                 </Button>
@@ -1504,7 +1644,14 @@ export function SongPlayer({
           className="flex scroll-mb-24 flex-wrap items-center gap-3 sm:scroll-mb-6"
         >
           <Transport phase={phase} size="sm" onToggle={togglePlayPause} onRestart={restart} />
-          <Button variant="outline" size="sm" onClick={enterStage}>
+          {/* Paused with the mic off, the control sits beside Resume, where
+              the singer just pressed Pause (see micOffPrompt). */}
+          {!listening && micOff.control && micOff.at === "transport" && (
+            <Button variant="rec" size="sm" onClick={enableMic}>
+              <IconMic /> {micOff.control}
+            </Button>
+          )}
+          <Button id={STAGE_BUTTON_ID} variant="outline" size="sm" onClick={enterStage}>
             <IconExpand /> Stage mode
           </Button>
           {listening && (

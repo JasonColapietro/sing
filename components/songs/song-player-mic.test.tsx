@@ -2,9 +2,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { songBySlug } from "./data";
-import { createPendingRequest } from "./lib";
-import { SongPlayer, afterMicOn, micOffPrompt } from "./song-player";
-import type { GuidePass } from "./types";
+import { createPendingRequest, type PlayerSetup } from "./lib";
+import { SongPlayer, afterMicOn, loopPillText, micOffPrompt } from "./song-player";
+import type { GuidePass, SessionMode } from "./types";
 
 /**
  * "Continue without a mic" opens the player unscored, and the line under the
@@ -12,18 +12,23 @@ import type { GuidePass } from "./types";
  * microphone with no control anywhere in the player to do it; leaving to look
  * for one landed a song-page visitor in a library where their song was Locked.
  */
-function render(listening: boolean, pass: GuidePass) {
+function render(
+  listening: boolean,
+  pass: GuidePass,
+  { setup, mode = "rehearsal", slug = "amazing-grace" }: { setup?: PlayerSetup; mode?: SessionMode; slug?: string } = {},
+) {
   return renderToStaticMarkup(
     <SongPlayer
-      song={songBySlug("amazing-grace")!}
+      song={songBySlug(slug)!}
       pitch={{ listening, error: null } as unknown as UsePitchResult}
       range={{}}
-      mode="rehearsal"
+      mode={mode}
       onModeChange={() => {}}
       pass={pass}
       onPassChange={() => {}}
       onFinish={() => {}}
       onExit={() => {}}
+      setup={setup}
     />,
   );
 }
@@ -52,6 +57,14 @@ describe("turning the microphone on from inside the player", () => {
     // A paused run was sung unheard, so the control starts it over.
     expect(micOffPrompt("paused").control).toBe("Enable microphone and restart");
     expect(micOffPrompt("paused").line).toBe("Practicing without a mic. Turn it on to see your live score.");
+  });
+
+  it("draws the paused control beside Resume, where the singer just pressed Pause", () => {
+    // Under the line, in the piano-roll card, it sat above a phone's screen
+    // once the singer had scrolled down to the pass chips and pressed Play.
+    expect(micOffPrompt("idle").at).toBe("line");
+    expect(micOffPrompt("paused").at).toBe("transport");
+    expect(micOffPrompt("running").at).toBeNull();
   });
 
   it("points at Pause while the song plays, where no control is drawn", () => {
@@ -154,5 +167,74 @@ describe("a microphone prompt answered after the singer moved on", () => {
     answer(false);
     await pressed;
     expect(started).toBe(0);
+  });
+});
+
+describe("the transport button's accessible name", () => {
+  it("is its visible label, with no aria-label to disagree with Resume", () => {
+    // Paused, the button read "Resume" with aria-label "Play": a voice-control
+    // "click Resume" found nothing. The visible text now names it in every phase.
+    const html = render(false, "guided");
+    expect(html).not.toMatch(/aria-label="(Play|Pause|Resume)"/);
+    expect(html).toMatch(/<button[^>]*>(<svg[^]*?<\/svg>)?Play<\/button>/);
+  });
+});
+
+describe("the loop pill", () => {
+  it("gives the plan before a run, never a loop 0", () => {
+    expect(loopPillText("idle", "performance", 4, 0, 0)).toBe("4 loops");
+    expect(loopPillText("idle", "performance", 1, 0, 0)).toBe("1 loop");
+    expect(loopPillText("idle", "rehearsal", 4, 0, 0)).toBe("On repeat");
+    expect(render(false, "guided", { mode: "performance" })).not.toContain("Loop 0");
+    expect(render(false, "guided")).not.toContain("Loop 0");
+  });
+
+  it("counts loops once the run is under way", () => {
+    expect(loopPillText("running", "performance", 4, 0, 1)).toBe("Loop 2 of 4");
+    // A rehearsal counts every pass, across cycles of the planned loops.
+    expect(loopPillText("paused", "rehearsal", 4, 1, 2)).toBe("Loop 7");
+  });
+});
+
+/**
+ * "Sing again" mounts a new player (the old one unmounted for the summary), so
+ * it opens from the last run's setup or not at all: it used to come back at
+ * the written key, 100%, the whole song and Any octave, and the same singing
+ * then scored 0.
+ */
+describe("a player reopened from the last run's setup", () => {
+  const setup: PlayerSetup = {
+    songId: "amazing-grace",
+    pickedSemis: 2,
+    tempo: 0.8,
+    tempoAuto: false,
+    octaveAgnostic: false,
+    loop: { startBeat: 0, endBeat: 2 },
+    guidePct: 40,
+    clickDuringPlay: true,
+    recordTake: false,
+  };
+  const song = songBySlug("amazing-grace")!;
+
+  it("opens at the key, rate, octave scoring, loop and desk that run was set up with", () => {
+    expect(song.id).toBe(setup.songId);
+    const html = render(true, "guided", { setup });
+    expect(html).toContain(">+2<");
+    expect(html).toContain(`>${Math.round(song.bpm * 0.8)}<`);
+    expect(html).toContain("80%");
+    expect(html).toContain("Exact octave");
+    expect(html).toContain("40%");
+    expect(html).toContain('title="Metronome click on every beat while the song plays" aria-pressed="true"');
+    expect(html).not.toContain("Singing the whole song");
+    expect(html).toContain("Drilling ");
+  });
+
+  it("opens fresh for any other song", () => {
+    const html = render(true, "guided", { setup, slug: "silent-night" });
+    expect(html).toContain("Any octave");
+    expect(html).toContain("100%");
+    expect(html).toContain("Singing the whole song");
+    expect(html).not.toContain(">+2<");
+    expect(html).toContain('title="Metronome click on every beat while the song plays" aria-pressed="false"');
   });
 });

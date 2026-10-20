@@ -121,4 +121,69 @@ export interface SessionSummaryData {
   newAchievements: Achievement[];
   /** How the session was sung — the two modes are scored as different things. */
   mode: WarmupMode;
+  /**
+   * Whether the guide the slider governs was heard during the scored reps
+   * (GuideHeard). Absent on a summary the player did not build; the summary
+   * then reads the slider as it stands.
+   */
+  guide?: GuideHeard;
+}
+
+/* ------------------------------------------------------------ the guide */
+
+/**
+ * What the singer heard of the guide the level slider governs, over a
+ * session's scored reps: on for all of them, off for all of them, or on for
+ * part of that time and off for the rest, whether the level changed between
+ * reps or during one. In sing-along that guide sounds under the voice;
+ * in call-and-response it is the reference before each rep (exercise-player).
+ * The summary's "what this score measured" line used to read the slider as
+ * it stood at End, so a session sung with the guide off and turned up just
+ * before End said the guide had been sounding, and the reverse.
+ */
+export type GuideHeard = "on" | "off" | "partly";
+
+/** Whether the governed guide was heard on any frame of a stretch, and silent on any. */
+export interface GuideTrace {
+  on: boolean;
+  off: boolean;
+}
+
+export const EMPTY_GUIDE_TRACE: GuideTrace = { on: false, off: false };
+
+/**
+ * Whether the governed guide is sounding at this point of a rep, or null
+ * outside the stretch it plays in: the scored window in sing-along (the
+ * guide under the voice; rep 0's teach pass plays at full level whatever the
+ * slider says), the teach pass in call-and-response. The pass is scheduled
+ * only when the level is above Off as the rep is laid out (`scheduled`), and
+ * the slider carries its gain from there, so it sounds while both hold.
+ */
+export function governedGuideAudible(opts: {
+  underVoice: boolean;
+  stage: "teach" | "lead" | "sing";
+  scheduled: boolean;
+  pct: number;
+}): boolean | null {
+  if (opts.stage !== (opts.underVoice ? "sing" : "teach")) return null;
+  return opts.scheduled && opts.pct > 0;
+}
+
+/** `t` with one more frame folded in. Unchanged (the same object) when it adds nothing. */
+export function traceGuide(t: GuideTrace, audible: boolean): GuideTrace {
+  if (audible ? t.on : t.off) return t;
+  return audible ? { ...t, on: true } : { ...t, off: true };
+}
+
+/** Two traces as one: a scored rep folded into the session's. */
+export function mergeGuide(a: GuideTrace, b: GuideTrace): GuideTrace {
+  return { on: a.on || b.on, off: a.off || b.off };
+}
+
+/** The trace as the summary words it, or undefined when nothing was traced. */
+export function guideHeard(t: GuideTrace): GuideHeard | undefined {
+  if (t.on && t.off) return "partly";
+  if (t.on) return "on";
+  if (t.off) return "off";
+  return undefined;
 }

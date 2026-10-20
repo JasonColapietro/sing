@@ -153,5 +153,14 @@ describe("3.1 release banner placement", () => {
       const ownTag = home.lastIndexOf("<section", banner);
       expect(home.indexOf("<section", heroEnd)).toBe(ownTag);
     });
+
+    it("keeps it in the page's column, with the gutters the hero text has", () => {
+      // Full-bleed, its rounded corners met the screen edges and its text
+      // started at 24px against the column's 88px at 1280px wide.
+      const ownTag = home.lastIndexOf("<section", banner);
+      const wrapper = home.slice(home.lastIndexOf("<div", ownTag), ownTag);
+      const classes = wrapper.match(/^<div class="([^"]*)">$/)?.[1].split(" ") ?? [];
+      expect(classes).toEqual(expect.arrayContaining(["mx-auto", "w-full", "max-w-6xl", "px-4", "sm:px-6"]));
+    });
   });
 });

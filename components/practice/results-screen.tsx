@@ -69,6 +69,7 @@ export function ResultsScreen({
   onAgain,
   onPractice,
   share,
+  notice,
   children,
 }: {
   /** What was just practised — "Daily warmup", "Interval ID", "Box breathing". */
@@ -99,6 +100,13 @@ export function ResultsScreen({
    * came from. Without it the share links to the home page.
    */
   share?: { title: string; subtitle?: string; url?: string };
+  /**
+   * Why the run ended where it did, above the step rows rather than under
+   * them: the free minutes' note on a run the cap stopped, which the rows it
+   * explains ("not reached") would otherwise push below a phone's fold. Same
+   * ground rule as `children`.
+   */
+  notice?: ReactNode;
   /**
    * Anything the room wants under the rows — a nudge, a hint, a chart. This
    * renders on the dark surface, so anything built out of the site's paper
@@ -178,6 +186,8 @@ export function ResultsScreen({
               </div>
             </div>
           </div>
+
+          {notice && <div className="mt-6">{notice}</div>}
 
           {rows.length > 0 && (
             <div className="mt-6">

@@ -57,8 +57,10 @@ export function PdfDownload({
       >
         {state === "working" ? "Preparing…" : "Download the PDF"}
       </button>
+      {/* An alert: otherwise a screen reader heard only "Preparing…" turn
+          back into "Download the PDF". */}
       {state === "error" && (
-        <span className="text-xs text-rec">
+        <span role="alert" className="text-xs text-rec">
           Couldn&apos;t start the download — try again in a moment.
         </span>
       )}

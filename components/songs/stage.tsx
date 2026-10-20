@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { useModalFocus } from "@/lib/use-modal-focus";
 import { PointsReadout } from "./judgment";
@@ -68,6 +68,7 @@ export function Stage({
   label,
   points,
   multiplier,
+  returnFocusRef,
   children,
 }: {
   open: boolean;
@@ -78,10 +79,16 @@ export function Stage({
   points?: number | null;
   /** Multiplier those points are landing at, shown beside the total. */
   multiplier?: number | null;
+  /**
+   * Where focus goes when the stage closes. The player renders the stage in
+   * place of itself, so the button that opened it is unmounted while the
+   * stage is up; this is its replacement, mounted by the time focus returns.
+   */
+  returnFocusRef?: RefObject<HTMLElement | null>;
   children: ReactNode;
 }) {
   const panelRef = useRef<HTMLDivElement | null>(null);
-  useModalFocus(open, panelRef);
+  useModalFocus(open, panelRef, returnFocusRef);
 
   // Mirrored so the effect below depends only on `open`. The player re-renders
   // several times a second while singing, and an inline `onExit` in the dep list

@@ -268,6 +268,31 @@ export function defaultOctaveAgnostic(range: VocalRange): boolean {
   return range.lowMidi === undefined || range.highMidi === undefined;
 }
 
+/**
+ * Key names as key signatures spell them, not the sharp spellings midiToName
+ * gives single notes. Each tonic takes the name whose signature has fewer
+ * accidentals. A major (or Mixolydian) tonic is Db, Eb, Ab or Bb, never C#,
+ * D#, G# or A#; F# and Gb tie at six, and F# is the usual name. A minor or
+ * Dorian tonic sits on a different signature: Scarborough Fair (D Dorian, the
+ * book's one modal song, tagged "dorian") a semitone down is C# Dorian, five
+ * sharps, where Db Dorian would take seven flats. A song tagged with neither
+ * is read as major, which is what the rest of the book is.
+ */
+const MAJOR_KEY_NAMES = ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"] as const;
+const MINOR_KEY_NAMES = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"] as const;
+const MINOR_FAMILY_TAGS: readonly string[] = ["minor", "dorian", "aeolian"];
+
+/** "C", or "Bb (-2)" for a song moved off its written key: the result card's key. */
+export function songKeyLabel(
+  song: Pick<Song, "defaultKeyRootMidi" | "tags">,
+  transpose: number,
+): string {
+  const names = song.tags.some((t) => MINOR_FAMILY_TAGS.includes(t)) ? MINOR_KEY_NAMES : MAJOR_KEY_NAMES;
+  const midi = song.defaultKeyRootMidi + transpose;
+  const name = names[((midi % 12) + 12) % 12];
+  return transpose === 0 ? name : `${name} (${transpose > 0 ? "+" : ""}${transpose})`;
+}
+
 export function transposedNotes(song: Song, transpose: number): SongNote[] {
   if (transpose === 0) return song.notes;
   return song.notes.map((n) => ({ ...n, midi: n.midi + transpose }));
@@ -723,6 +748,12 @@ export interface SessionSummaryData {
   /** Overall score 0..100, or undefined when practiced in listen mode (no mic). */
   score: number | undefined;
   perLoopScores: number[];
+  /**
+   * True when the last entry in `perLoopScores` is a pass the singer stopped
+   * part-way (End practice in a rehearsal). It is scored against the part
+   * sung, and "Loops sung" counts whole passes only.
+   */
+  partialLastLoop?: boolean;
   hardest: HardestNote[];
   xpGained: number;
   newAchievements: Achievement[];
@@ -990,6 +1021,74 @@ export function loopRangeFromHandles(
     else e = s + 1;
   }
   return { startIndex: s, endIndex: e, range: { startBeat: bounds[s], endBeat: bounds[e] } };
+}
+
+/**
+ * Scorable beats of each note a run had reached when the singer stopped it:
+ * every whole pass before the one it stopped in, plus the part of that pass up
+ * to `beat` (song beats, on the scored clock, which runs behind the audio by
+ * the pitch lag). `playBeats` is each note's sung beats per pass, 0 outside
+ * the span, as the player fixes them at count-in.
+ *
+ * A rehearsal ends when the singer presses End practice, rarely on a loop
+ * line. Scored against every planned pass, the unsung rest of the last one
+ * read as a miss: a perfectly sung run ended a moment into loop 3 summed up as
+ * "loop 3 13%", and the notes after the stop looked like the hardest ones.
+ */
+export function reachedBeats(
+  notes: readonly SongNote[],
+  playBeats: readonly number[],
+  wholePasses: number,
+  beat: number,
+): number[] {
+  return notes.map((n, i) => {
+    const play = playBeats[i] ?? 0;
+    const partial = Math.min(play, Math.max(0, beat - n.startBeat));
+    return play * Math.max(0, wholePasses) + partial;
+  });
+}
+
+/**
+ * True when a run stopped before any of its notes began on the scored clock:
+ * End practice in the count-in, or in the moment after it. There is nothing to
+ * score, summarise or log, so the player leaves as End practice does from a
+ * performance. A summary there had no score and so told a singer on Sing
+ * along, microphone on, "This was a listen pass".
+ */
+export function reachedNothing(
+  notes: readonly SongNote[],
+  playBeats: readonly number[],
+  wholePasses: number,
+  beat: number,
+): boolean {
+  return reachedBeats(notes, playBeats, wholePasses, beat).every((b) => b <= 0);
+}
+
+/**
+ * How a run was set up in the song player: the key the singer picked (null
+ * for the fitted or written key), the rate it started at, the loop, the octave
+ * scoring and the desk. The player unmounts while the summary shows, so its own
+ * state cannot carry these, and "Sing again" used to reopen the song at the
+ * written key, 100%, the whole song and Any octave: the same singing then
+ * scored 0. SongsClient keeps the last run's setup for the summary's restarts
+ * (mode and pass already live there).
+ */
+export interface PlayerSetup {
+  songId: string;
+  pickedSemis: number | null;
+  /** The rate at count-in; Auto may have moved it by the end. */
+  tempo: Tempo;
+  tempoAuto: boolean;
+  octaveAgnostic: boolean;
+  loop: LoopRange | null;
+  guidePct: number;
+  clickDuringPlay: boolean;
+  recordTake: boolean;
+}
+
+/** The setup to reopen a song with: the last run's, when it was this song. */
+export function setupForSong(setup: PlayerSetup | null | undefined, songId: string): PlayerSetup | null {
+  return setup && setup.songId === songId ? setup : null;
 }
 
 /** True when the range is the whole song, i.e. nothing is being drilled. */

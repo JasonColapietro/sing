@@ -122,7 +122,8 @@ export function resumeStep(
 
 /**
  * One row per item of a program day, each a real link into the room that runs
- * it. `done` ticks the items today's log already shows; omitted, the list is a
+ * it. `done` ticks the items the log already shows for this day (anything
+ * since the day opened, which may be before today); omitted, the list is a
  * preview with numbers instead of ticks. A routine or set part-way done links
  * to the first step still to sing.
  */
@@ -172,7 +173,10 @@ export function DayItems({
               <span className="min-w-0 flex-1">
                 <span className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{title}</span>
-                  {done && <span className="sr-only">{sung ? "(done today)" : "(not done yet)"}</span>}
+                  {/* "(done)", not "(done today)": a row ticks for anything
+                      sung since the day opened (countsFrom), which can be an
+                      earlier calendar day than today. */}
+                  {done && <span className="sr-only">{sung ? "(done)" : "(not done yet)"}</span>}
                   {itemIsPro(item) && <ProChip />}
                 </span>
                 <span className="mt-1 block text-sm text-dim">

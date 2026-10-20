@@ -281,7 +281,10 @@ export default function SingersPage() {
 
       <SingerCrawlIndex />
 
-      <section className="mt-12">
+      {/* data-singer-return: below the chart, so Back from these links needs
+          the directory to bring the link back into view, as it does for the
+          chart's rows (components/singers/directory.tsx RETURN_SCOPES). */}
+      <section data-singer-return="browse" className="mt-12">
         <h2 className="mt-8 text-xl">Browse by genre</h2>
         <ul className="mt-4 flex flex-wrap gap-2">
           {HUB_GENRES.map((g) => (
@@ -321,7 +324,7 @@ export default function SingersPage() {
         </div>
       </section>
 
-      <section className="mt-12" id="method">
+      <section data-singer-return="method" className="mt-12" id="method">
         <h2 className="text-xl">How these ranges are sourced</h2>
         <p className="mt-3 max-w-2xl text-sm text-mut">{SINGER_RANGE_DISCLAIMER}</p>
         <Link

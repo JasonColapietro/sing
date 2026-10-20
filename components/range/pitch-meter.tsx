@@ -19,7 +19,9 @@ import { AudioSetup } from "@/components/audio/audio-setup";
 import { LevelMeter } from "@/components/studio/level-meter";
 import { staleRangeProgramNote } from "@/components/practice/program-range-note";
 import type { ProgramRangeLink } from "@/components/practice/program-range-probe";
+import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { freshInputHint, meterInputHint, nextInputHint } from "./pitch-meter-hint";
+import { retryWhenOnline } from "./retry-when-online";
 import { AMBER, COOL, DIM, INK, OK, PANEL, REC } from "@/lib/chart-colors";
 
 /**
@@ -28,8 +30,20 @@ import { AMBER, COOL, DIM, INK, OK, PANEL, REC } from "@/lib/chart-colors";
  * own chunk: lib/programs carries every program and the song catalog, and
  * this page's cold traffic (the homepage's "Start singing", the Sing tab) has
  * no program, the same reason result-view.tsx loads the catalog late.
+ *
+ * The chunk is optional, and loads that way. Offline it waits for the
+ * connection (./retry-when-online) inside a Suspense boundary of its own
+ * (`loading`), and the meter runs without it, as it does for a singer with no
+ * program. A failed load used to throw in render and replace the whole room
+ * with app/error.tsx; suspending with no boundary of its own would hide the
+ * meter behind the voice test's fallback. PitchMeter also fetches it as it
+ * mounts for a singer whose saved range is already stale, so one who loses
+ * the connection after the page loaded (on a train) still has it.
  */
-const ProgramRangeProbe = dynamic(() => import("@/components/practice/program-range-probe"));
+const ProgramRangeProbe = dynamic(
+  () => retryWhenOnline(() => import("@/components/practice/program-range-probe")),
+  { loading: () => null },
+);
 
 /** Ignore near-silent frames, the same floor the range test uses. */
 const MIN_VOLUME = 0.008;
@@ -242,6 +256,17 @@ export function PitchMeter({
   /** The range test is the next step: due, and no running program schedules it. */
   const offerRetest = retestDue && programNote === null;
   const probe = staleSaved ? <ProgramRangeProbe isPro={isPro} onProgramRange={setProgramRange} /> : null;
+  // The probe's chunk, fetched while the connection is known to be there: a
+  // saved range that is stale now will be when the mic starts.
+  useEffect(() => {
+    if (range.lowMidi === undefined || range.highMidi === undefined) return;
+    if (!rangeRetestDue(range, Date.now())) return;
+    const quit = new AbortController();
+    void retryWhenOnline(() => import("@/components/practice/program-range-probe"), {
+      signal: quit.signal,
+    });
+    return () => quit.abort();
+  }, [range]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointsRef = useRef<Point[]>([]);
   /** The midi value the view is centered on, eased toward the singer. */
@@ -471,6 +496,15 @@ export function PitchMeter({
     if (was && !listening) stoppedRef.current?.scrollIntoView({ block: "start" });
   }, [listening]);
 
+  // "Start singing" goes with the gate as the mic opens, and focus fell to
+  // <body>. The live panel takes it: it is where the gate's button was, a
+  // screen reader names it, and Tab goes on to Reset and Stop mic from there
+  // (lib/audio/mic-focus.ts).
+  const liveRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (listening) focusIfDropped(liveRef.current);
+  }, [listening]);
+
   const begin = async () => {
     const now = Date.now();
     setMicStartedAt(now);
@@ -538,7 +572,13 @@ export function PitchMeter({
   return (
     <div className="space-y-4">
       {probe}
-      <div className="overflow-hidden rounded-2xl border border-line bg-panel">
+      <div
+        ref={liveRef}
+        tabIndex={-1}
+        role="group"
+        aria-label="Live pitch meter"
+        className="overflow-hidden rounded-2xl border border-line bg-panel outline-none"
+      >
         <div className="flex items-end justify-between gap-4 px-5 pt-5 sm:px-6">
           <div>
             <div className="text-label font-extrabold uppercase tracking-[0.12em] text-dim">

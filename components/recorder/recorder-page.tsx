@@ -11,7 +11,8 @@ import {
 } from "@/components/ui";
 import { analyzeTake, type TakeAnalysis } from "@/lib/audio/analyze-take";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
-import { openMic } from "@/lib/audio/mic";
+import { MIC_ENDED_MESSAGE, openMic } from "@/lib/audio/mic";
+import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { AudioSetup } from "@/components/audio/audio-setup";
 import { MicAlert } from "@/components/mic-alert";
 import { clickAt } from "@/lib/audio/synth";
@@ -94,6 +95,48 @@ function downloadBlob(blob: Blob, filename: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
 
+/**
+ * "+N XP, take logged": the corner toast from sm up, a line in the record deck
+ * on a phone. One is display:none at any width, so a screen reader hears it
+ * once.
+ */
+function TakeLoggedNote({
+  toast,
+  onDismiss,
+  className,
+}: {
+  toast: { xp: number; achievements: Achievement[] };
+  onDismiss: () => void;
+  className?: string;
+}) {
+  return (
+    <div className={cn("rounded-2xl border border-violet/50 bg-panel2 p-4", className)} role="status">
+      <div className="flex items-center justify-between gap-2">
+        <span className="tabular font-mono text-lg text-violet-ink">+{toast.xp} XP</span>
+        <button
+          type="button"
+          className="rounded px-1 text-dim hover:text-ink"
+          aria-label="Dismiss notification"
+          onClick={onDismiss}
+        >
+          ✕
+        </button>
+      </div>
+      <div className="mt-0.5 text-xs text-mut">Take logged to your practice history.</div>
+      {toast.achievements.length > 0 && (
+        <ul className="mt-2 space-y-1.5 border-t border-line pt-2">
+          {toast.achievements.map((a) => (
+            <li key={a.id} className="flex items-center gap-2 text-sm">
+              <span aria-hidden="true">{a.icon}</span>
+              <span className="text-ink">{a.title}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export default function RecorderPageClient() {
   const isPro = useIsPro();
   const mountedRef = useRef(true);
@@ -149,6 +192,13 @@ export default function RecorderPageClient() {
   const [wavBusyId, setWavBusyId] = useState<string | null>(null);
   const [abPicks, setAbPicks] = useState<string[]>([]);
   const [toast, setToast] = useState<{ xp: number; achievements: Achievement[] } | null>(null);
+  /**
+   * Whether the corner copy of the toast is still up. Only the desktop
+   * corner toast dismisses itself: on a phone the note sits in the record
+   * deck (TakeLoggedNote), and closing it on a timer would move the page
+   * under the singer's thumb.
+   */
+  const [toastFloating, setToastFloating] = useState(false);
 
   useEffect(() => {
     takesRef.current = takes;
@@ -218,10 +268,10 @@ export default function RecorderPageClient() {
     };
   }, []);
 
-  // Auto-dismiss the XP toast.
+  // Auto-dismiss the corner XP toast.
   useEffect(() => {
     if (!toast) return;
-    const t = window.setTimeout(() => setToast(null), 6000);
+    const t = window.setTimeout(() => setToastFloating(false), 6000);
     return () => window.clearTimeout(t);
   }, [toast]);
 
@@ -268,6 +318,43 @@ export default function RecorderPageClient() {
 
   // --- mic ---
   /**
+   * The microphone went away mid-session (unplugged, a headset dropped). The
+   * runtime has already released the dead stream; a take in progress is
+   * stopped so whatever it captured is saved, and the deck goes back to the
+   * gate with a Try again rather than offering REC on a stream that can
+   * record nothing.
+   */
+  const onMicEnded = useCallback(() => {
+    if (!mountedRef.current) return;
+    window.clearInterval(countTimerRef.current);
+    const rec = recorderRef.current;
+    // A take is in progress until its stop event lands (finalizeTake clears
+    // recorderRef). A browser may already have stopped the recorder with its
+    // last track, so the stop is only asked for when it has not: either way
+    // finalizeTake saves what was captured and brings the deck back to idle.
+    const wasRecording = rec !== null;
+    if (wasRecording) {
+      setRecPhase("saving");
+      if (rec.state !== "inactive") {
+        try {
+          rec.stop();
+        } catch {
+          // already stopping with its track
+        }
+      }
+    } else {
+      setRecPhase((phase) => (phase === "countin" ? "idle" : phase));
+    }
+    setAnalyser(null);
+    setMicState("blocked");
+    setMicError(
+      wasRecording
+        ? "The microphone stopped during the take. Any audio captured is kept below. Check it is still connected, then try again."
+        : MIC_ENDED_MESSAGE,
+    );
+  }, []);
+
+  /**
    * Routed through the shared `openMic` rather than calling getUserMedia here.
    *
    * This room kept its own copy of the permission-error table, and it had
@@ -285,7 +372,7 @@ export default function RecorderPageClient() {
   const enableMic = useCallback(async () => {
     setMicState("requesting");
     setMicError(null);
-    const session = micRef.current ?? createRecorderMic(openMic, getAudioContext);
+    const session = micRef.current ?? createRecorderMic(openMic, getAudioContext, { onEnded: onMicEnded });
     micRef.current = session;
     const opened = await session.start();
     if (!opened || !mountedRef.current || micRef.current !== session) return;
@@ -294,9 +381,20 @@ export default function RecorderPageClient() {
       setMicError(opened.error);
       return;
     }
+    // The device went away between the permission prompt and here: onMicEnded
+    // has already put the gate back with its message, and the analyser in
+    // hand belongs to the released stream.
+    if (session.getStream() === null) return;
     setAnalyser(opened.analyser);
     setMicState("ready");
-  }, []);
+  }, [onMicEnded]);
+
+  // The gate's "Enable microphone" is gone once the mic opens, and focus fell
+  // to <body> with it. REC is the deck's live control (lib/audio/mic-focus.ts).
+  const deckRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (micState === "ready") focusIfDropped(deckRef.current?.querySelector("button"));
+  }, [micState]);
 
   // --- persistence helpers ---
   const clearStorageIssue = useCallback((id: string) => {
@@ -374,6 +472,7 @@ export default function RecorderPageClient() {
 
       if (result) {
         setToast({ xp: result.xpGained, achievements: result.newAchievements });
+        setToastFloating(true);
       }
     },
     [persistTake, refreshEstimate],
@@ -405,6 +504,8 @@ export default function RecorderPageClient() {
     recorderRef.current = capture.recorder;
     setElapsed(0);
     setRecPhase("recording");
+    // The last take's note gives way to the new take.
+    setToast(null);
     tickRef.current = window.setInterval(() => {
       const sec = (performance.now() - startedAtRef.current) / 1000;
       setElapsed(sec);
@@ -760,7 +861,7 @@ export default function RecorderPageClient() {
               </div>
             ) : (
               <>
-                <div className="mb-4 flex flex-wrap items-center gap-5">
+                <div ref={deckRef} className="mb-4 flex flex-wrap items-center gap-5">
                   <Button
                     variant="rec"
                     className="h-20 w-20 rounded-full p-0"
@@ -817,6 +918,16 @@ export default function RecorderPageClient() {
                 <LiveWaveform analyser={analyser} height={110} />
                 {micError && <MicAlert message={micError} className="mt-4 text-sm text-mut" />}
               </>
+            )}
+            {/* On a phone the note sits here, under the deck: the corner
+                toast covered REC and the 5:00 line for six seconds after
+                every logged take. */}
+            {toast && (
+              <TakeLoggedNote
+                toast={toast}
+                onDismiss={() => setToast(null)}
+                className="mt-4 sm:hidden"
+              />
             )}
           </Card>
 
@@ -1215,35 +1326,13 @@ export default function RecorderPageClient() {
         </div>
       </div>
 
-      {/* XP toast */}
-      {toast && (
-        <div
-          className="animate-fadeup fixed right-4 bottom-4 z-50 w-72 rounded-2xl border border-violet/50 bg-panel2 p-4 shadow-lg"
-          role="status"
-        >
-          <div className="flex items-center justify-between gap-2">
-            <span className="tabular font-mono text-lg text-violet-ink">+{toast.xp} XP</span>
-            <button
-              type="button"
-              className="rounded px-1 text-dim hover:text-ink"
-              aria-label="Dismiss notification"
-              onClick={() => setToast(null)}
-            >
-              ✕
-            </button>
-          </div>
-          <div className="mt-0.5 text-xs text-mut">Take logged to your practice history.</div>
-          {toast.achievements.length > 0 && (
-            <ul className="mt-2 space-y-1.5 border-t border-line pt-2">
-              {toast.achievements.map((a) => (
-                <li key={a.id} className="flex items-center gap-2 text-sm">
-                  <span aria-hidden="true">{a.icon}</span>
-                  <span className="text-ink">{a.title}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+      {/* XP toast, from sm up. Below that it renders in the record deck. */}
+      {toast && toastFloating && (
+        <TakeLoggedNote
+          toast={toast}
+          onDismiss={() => setToast(null)}
+          className="animate-fadeup fixed right-4 bottom-4 z-50 hidden w-72 shadow-lg sm:block"
+        />
       )}
     </PageShell>
   );

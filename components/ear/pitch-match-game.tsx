@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { usePitch } from "@/lib/audio/use-pitch";
+import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { useAudioPrefs } from "@/lib/audio/devices";
 import { playTone } from "@/lib/audio/synth";
@@ -130,17 +130,27 @@ function CentsNeedle({
 
 export function PitchMatchGame({
   difficulty,
+  pitch,
   onExit,
   onComplete,
 }: {
   difficulty: Difficulty;
+  /**
+   * A workout's microphone (EarRunner). Already on after the workout's first
+   * listening step, so the first round starts as the game opens, and left on
+   * when it ends for the next step to use.
+   */
+  pitch?: UsePitchResult;
   onExit: () => void;
   /** Set when this game is one step of a workout: the result goes up instead
       of being drawn here, and no summary card renders. */
   onComplete?: OnEarComplete;
 }) {
   const session = useEarSession();
-  const { latest, listening, error, start, stop } = usePitch();
+  // Opens no stream until start(), so the unused one costs nothing; hooks
+  // cannot be conditional.
+  const ownPitch = usePitch();
+  const { latest, listening, error, start, stop } = pitch ?? ownPitch;
   const progress = useProgress();
   // Any octave on easy, and on every level until a range is saved: the
   // targets sit in a C3–C4 fallback that a higher voice answers an octave up.
@@ -282,10 +292,12 @@ export function PitchMatchGame({
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
-  // Release the mic while the summary is up.
+  // Release the mic while the summary is up. A lent one is the workout's to
+  // close: its next step may listen too.
+  const ownsMic = pitch === undefined;
   useEffect(() => {
-    if (session.done && listening) stop();
-  }, [session.done, listening, stop]);
+    if (session.done && listening && ownsMic) stop();
+  }, [session.done, listening, ownsMic, stop]);
 
   if (session.done) {
     if (onComplete) {

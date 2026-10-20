@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getAudioContext } from "./context";
-import { openMic } from "./mic";
+import { MIC_ENDED_MESSAGE, openMic, watchMicEnd } from "./mic";
 import { useAudioPrefs } from "./devices";
 import { DEFAULT_CLARITY_THRESHOLD, detectPitch } from "./pitch";
 import { doseDay } from "./vocal-dose";
@@ -81,6 +81,8 @@ export function useAnalyser(opts?: {
   const latest = useRef<AnalyserFrame>(emptyFrame());
   const streamRef = useRef<MediaStream | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  /** Stops listening for the open stream's mic going away — see `usePitch`. */
+  const unwatchRef = useRef<() => void>(() => {});
   const rafRef = useRef<number>(0);
   // See `usePitch` — the permission prompt can outlive the component.
   const mountedRef = useRef(true);
@@ -95,6 +97,8 @@ export function useAnalyser(opts?: {
 
   const stop = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
+    unwatchRef.current();
+    unwatchRef.current = () => {};
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
     sourceRef.current?.disconnect();
@@ -144,6 +148,13 @@ export function useAnalyser(opts?: {
     setSampleRate(ctx.sampleRate);
     listeningRef.current = true;
     setListening(true);
+    // A mic that goes away mid-session stops the room and says so, rather
+    // than leaving it "listening" to silence — see `usePitch`.
+    unwatchRef.current = watchMicEnd(stream, () => {
+      if (streamRef.current !== stream) return;
+      stop();
+      setError(MIC_ENDED_MESSAGE);
+    });
 
     const freqDb = new Float32Array(analyser.frequencyBinCount);
     const timeBuf = new Float32Array(analyser.fftSize);
@@ -182,7 +193,7 @@ export function useAnalyser(opts?: {
     rafRef.current = requestAnimationFrame(loop);
     return true;
     }
-  }, [clarityThreshold]);
+  }, [clarityThreshold, stop]);
 
   useEffect(() => {
     mountedRef.current = true;

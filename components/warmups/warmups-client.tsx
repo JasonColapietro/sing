@@ -59,6 +59,38 @@ export function linkedRepCount(raw: string | null | undefined): number | null {
   return Number.isInteger(n) && n >= 1 && n <= 30 ? n : null;
 }
 
+/**
+ * Why an exercise closed itself: the player heard no note for two reps in a
+ * row and nothing had been sung, so it left without logging (ExercisePlayer's
+ * "silent" exit). The routine summary says the same for a run where nothing
+ * scored; a single exercise has no summary, so the room's home says it, with
+ * the input level beside it so "it isn't hearing me" is not a guess.
+ */
+export function SilentStopNote({
+  title,
+  listening,
+  level,
+}: {
+  title: string;
+  listening: boolean;
+  level: number;
+}) {
+  return (
+    <Card className="border-rec/40">
+      <h2 className="text-xl">No sound picked up</h2>
+      <MicAlert
+        message={`${title} stopped after two reps with no note heard, so nothing was logged.`}
+        className="mt-2 max-w-xl text-ink"
+      />
+      <p className="mt-2 max-w-xl text-sm text-mut">
+        If you were singing, the mic didn&apos;t pick up a clear note. Sing a little
+        louder or closer to the mic, or check the input below, then start it again.
+      </p>
+      <AudioSetup className="mt-4 max-w-xl" listening={listening} level={level} />
+    </Card>
+  );
+}
+
 /** Where a mic failure has to be shown: the one control the singer pressed. */
 type ErrorAt =
   | { kind: "gate" }
@@ -108,6 +140,11 @@ export function WarmupsClient() {
   // sized to the free minutes): the exercise stops itself after n reps
   // instead of walking until End. Null for every other way in.
   const [activeReps, setActiveReps] = useState<number | null>(null);
+  // The exercise that just ended itself because the mic heard nothing for two
+  // reps (ExercisePlayer's "silent" exit). Nothing was logged, so there is no
+  // summary to show; without this the room's home simply reappeared, with no
+  // word of why. Cleared by the next start.
+  const [silentStop, setSilentStop] = useState<string | null>(null);
 
   // The coach links here as /warmups?exercise=<id> and the routine cards
   // elsewhere as /warmups?routine=<id>, so a singer arrives on the thing that
@@ -170,6 +207,9 @@ export function WarmupsClient() {
   const preferred = recommendRoutine(routineContext);
   const recommended = cap.capped ? preferred : sizeRoutineToAllowance(preferred, cap.leftSec);
   const sizedToAllowance = recommended !== preferred;
+  // Stars are a floored average of the steps' bests, so a routine sung once
+  // at middling scores can read zero; `best` says whether any step was sung.
+  const recommendedStats = routineStats(progress, recommended);
   // The prerender has no entitlement, so it always sizes for free. Until the
   // entitlement is read the line holds its place without naming free minutes:
   // a Pro singer would otherwise be told about a limit they paid to remove.
@@ -216,6 +256,7 @@ export function WarmupsClient() {
 
   function startExercise(ex: WarmupExercise, tempo: DailyTempo = 1) {
     if (cap.capped) return;
+    setSilentStop(null);
     setActiveEx(ex);
     setActiveTempo(tempo);
     setActiveReps(null);
@@ -232,6 +273,7 @@ export function WarmupsClient() {
 
   function startRoutine(r: Routine) {
     if (!canStartRoutine(r) || cap.capped) return;
+    setSilentStop(null);
     setActiveRoutine(r);
     setRoutineStartStep(0);
     setRoutineWarmIn(false);
@@ -466,6 +508,11 @@ export function WarmupsClient() {
               (components/prepaint.tsx). */}
           <CapWall cap={cap} />
           <FreeAllowance cap={cap} />
+          {/* Only ever after a session the player ended for silence, so never
+              in the server HTML and never a shift at hydration. */}
+          {silentStop && (
+            <SilentStopNote title={silentStop} listening={pitch.listening} level={pitch.frame.volume} />
+          )}
           {/* A program day still to do leads; done, finished, or behind the
               paywall, it drops back below today's cards. The program is read
               from this browser's storage, so until hydration its place is an
@@ -487,7 +534,8 @@ export function WarmupsClient() {
               tagline={recommended.tagline}
               meta={<RoutineMeta routine={recommended} />}
               stepTitles={recommended.steps.map((s) => stepExercise(s).title)}
-              stars={routineStats(progress, recommended).stars}
+              stars={recommendedStats.stars}
+              started={recommendedStats.best !== null}
               goal={{ doneSec: goalDoneSec, goalSec }}
               streakDays={streakDays}
               streakBest={progress.streak.best}
@@ -539,7 +587,8 @@ export function WarmupsClient() {
               tagline={recommended.tagline}
               meta={<RoutineMeta routine={recommended} />}
               stepTitles={recommended.steps.map((s) => stepExercise(s).title)}
-              stars={routineStats(progress, recommended).stars}
+              stars={recommendedStats.stars}
+              started={recommendedStats.best !== null}
               goal={{ doneSec: goalDoneSec, goalSec }}
               streakDays={streakDays}
               streakBest={progress.streak.best}
@@ -651,7 +700,10 @@ export function WarmupsClient() {
             setSummary(data);
             setView("summary");
           }}
-          onExit={() => setView("home")}
+          onExit={(reason) => {
+            setSilentStop(reason === "silent" ? activeEx.title : null);
+            setView("home");
+          }}
         />
       )}
 

@@ -1,4 +1,3 @@
-import styles from "./pro-visual.module.css";
 import {
   AMBER,
   AMBER_INK,
@@ -25,20 +24,20 @@ const RANGE_TESTS = [
   [53, 157],
 ] as const;
 
-/** Per-note accuracy bars: label, height (of 96 max), weak note flagged. */
+/** Per-note accuracy bars: label, height (of 96 max), weak note flagged.
+    Each grows in 100ms after the one before it. */
 const NOTE_BARS: Array<{
   label: string;
   h: number;
-  cls: string;
   weak?: boolean;
 }> = [
-  { label: "C4", h: 78, cls: styles.b1 },
-  { label: "D4", h: 84, cls: styles.b2 },
-  { label: "E4", h: 44, cls: styles.b3, weak: true },
-  { label: "F4", h: 72, cls: styles.b4 },
-  { label: "G4", h: 88, cls: styles.b5 },
-  { label: "A4", h: 82, cls: styles.b6 },
-  { label: "B4", h: 64, cls: styles.b7 },
+  { label: "C4", h: 78 },
+  { label: "D4", h: 84 },
+  { label: "E4", h: 44, weak: true },
+  { label: "F4", h: 72 },
+  { label: "G4", h: 88 },
+  { label: "A4", h: 82 },
+  { label: "B4", h: 64 },
 ];
 
 const SPARK_X0 = 36;
@@ -64,7 +63,9 @@ const BAND = `${HIGH_LINE} ${LOW_LINE.split(" ").reverse().join(" ")}`;
  * coach.tsx: a weak note within five semitones of the ceiling, in a span of at
  * least OCTAVE_SIREN_MIN_SEMIS from components/warmups/exercises.ts, gets the
  * Octave siren for 6 minutes). Same console-card frame as the landing hero
- * visual, in gold. Pure CSS animation.
+ * visual, in gold. Pure CSS animation: the pro-visual-* rules in
+ * app/globals.css, not a CSS module, so the header's prefetch of / and /pro
+ * preloads no stylesheet that the page it runs on never uses.
  */
 export default function ProVisual() {
   return (
@@ -112,7 +113,7 @@ export default function ProVisual() {
         <polygon
           points={BAND}
           fill="rgba(197, 150, 66, 0.14)"
-          className={styles.sparkFill}
+          className="pro-visual-spark-fill"
         />
         <polyline
           points={HIGH_LINE}
@@ -122,7 +123,7 @@ export default function ProVisual() {
           strokeLinecap="round"
           strokeLinejoin="round"
           pathLength={1000}
-          className={styles.spark}
+          className="pro-visual-spark"
         />
         <polyline
           points={LOW_LINE}
@@ -133,9 +134,9 @@ export default function ProVisual() {
           strokeLinejoin="round"
           opacity="0.55"
           pathLength={1000}
-          className={styles.spark}
+          className="pro-visual-spark"
         />
-        <g className={styles.note}>
+        <g className="pro-visual-note">
           <text
             x="286"
             y="72"
@@ -184,7 +185,8 @@ export default function ProVisual() {
                 height={b.h}
                 rx="5"
                 fill={b.weak ? "rgba(157, 63, 51, 0.55)" : AMBER}
-                className={`${styles.bar} ${b.cls}`}
+                className="pro-visual-bar"
+                style={{ animationDelay: `${350 + i * 100}ms` }}
               />
               <text
                 x={x + 11}
@@ -199,7 +201,7 @@ export default function ProVisual() {
             </g>
           );
         })}
-        <g className={styles.note}>
+        <g className="pro-visual-note">
           <rect
             x="410"
             y="120"

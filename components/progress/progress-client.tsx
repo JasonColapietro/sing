@@ -51,6 +51,7 @@ import { CoachCard } from "./coach";
 import { VoiceCard } from "./voice-card";
 import { TYPE_META, fmtDur, localDayStr, parseDay, relDay } from "./format";
 import { rangeTestHref } from "@/lib/site";
+import { useHydrated } from "@/components/prepaint";
 
 /**
  * How many sessions the free tier lists.
@@ -482,7 +483,20 @@ export function DataControls() {
     { kind: "ok" | "err"; text: string } | null
   >(null);
   const [confirmText, setConfirmText] = useState("");
-  const [erased, setErased] = useState(false);
+  // How many erases this card has done: each one moves focus (below).
+  const [erasures, setErasures] = useState(0);
+  const erased = erasures > 0;
+  const erasedNoteRef = useRef<HTMLParagraphElement>(null);
+  const confirmRef = useRef<HTMLInputElement>(null);
+
+  // Erasing clears the confirmation, which disables the focused button, and
+  // the page above collapses to the empty state, so focus fell to <body> and
+  // the next Tab went to the room rail below the dashboard. Land on the note
+  // that says what happened, or on the field when no note shows.
+  useEffect(() => {
+    if (erasures === 0) return;
+    (erasedNoteRef.current ?? confirmRef.current)?.focus();
+  }, [erasures]);
 
   function handleImportClick() {
     fileInputRef.current?.click();
@@ -526,7 +540,7 @@ export function DataControls() {
     // erases keep it, so a remote copy cannot undo the erase.
     eraseBrowserProgress({ remoteCopyPossible: isPro || accountsReady() });
     setConfirmText("");
-    setErased(true);
+    setErasures((n) => n + 1);
   }
 
   return (
@@ -607,6 +621,8 @@ export function DataControls() {
             and goes once it is resumed. */}
         {erased && (paused || !(isPro || accountBackup)) && (
           <p
+            ref={erasedNoteRef}
+            tabIndex={-1}
             className="mt-4 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-xs text-ok-ink"
             role="status"
           >
@@ -618,6 +634,7 @@ export function DataControls() {
               Type &quot;erase&quot; to confirm
             </label>
             <input
+              ref={confirmRef}
               id="erase-confirm"
               type="text"
               value={confirmText}
@@ -748,11 +765,34 @@ export function ProgressClient() {
   // a guaranteed hydration mismatch, not a hypothetical one. Deferring the
   // real, date-dependent tree to a client-only render (after the first paint
   // matches the server exactly) is the standard fix for this class of bug.
-  const [mounted, setMounted] = useState(false);
+  //
+  // Only while hydrating, though: a client-side arrival (a tab, a link, Back)
+  // has no server HTML to match, so the dashboard renders on the first pass.
+  // That is what makes Back land where the singer left. The browser restores
+  // the old scroll position against the page as it stands, and when that was
+  // the viewport-tall skeleton, Chrome's scroll anchoring then carried the
+  // page down by the dashboard's extra height as it swapped in: the coach
+  // card's 1,507px came back as 7,146px on a phone, at the room rail.
+  const mounted = useHydrated();
+
+  // A full page load of /progress#your-data finds no target in the server
+  // HTML, so the browser's jump to it stays at the top. Make it once the
+  // dashboard is in, on that load only: a reload or a Back restores the
+  // singer's own position, and a client-side link scrolls itself.
+  const [arrivedByHydration] = useState(() => !mounted);
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- the canonical client-only-render gate: this is the one legitimate use of this pattern, not a derivable render value
-    setMounted(true);
-  }, []);
+    if (!mounted || !arrivedByHydration) return;
+    let id = "";
+    try {
+      id = decodeURIComponent(window.location.hash.slice(1));
+    } catch {
+      return;
+    }
+    if (!id) return;
+    const entry = performance.getEntriesByType?.("navigation")[0] as PerformanceNavigationTiming | undefined;
+    if (entry && entry.type !== "navigate") return;
+    document.getElementById(id)?.scrollIntoView();
+  }, [mounted, arrivedByHydration]);
 
   if (!mounted) {
     return (

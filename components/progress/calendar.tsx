@@ -3,16 +3,16 @@
 import { useMemo } from "react";
 import type { SessionLog } from "@/lib/progress";
 import { AMBER, DIM, MONO, PANEL2 } from "@/lib/chart-colors";
-import { addDays, localDayStr, mondayOf, secondsByDay } from "./format";
+import { addDays, durationWords, fmtDur, localDayStr, mondayOf, secondsByDay } from "./format";
 
 /** Unpractised day. */
 const EMPTY = PANEL2;
 
-/** 4 violet intensity steps (opacity on the violet hue) + empty. */
+/** 4 gold intensity steps (opacity on AMBER) + empty. */
 const STEPS = [0.25, 0.45, 0.7, 1] as const;
 
 function stepFor(min: number): number {
-  // 0 = empty, 1..4 = violet steps
+  // 0 = empty, 1..4 = gold steps
   if (min <= 0) return 0;
   if (min < 5) return 1;
   if (min < 15) return 2;
@@ -40,7 +40,7 @@ export function calendarStartDay(today: Date = new Date()): string {
 
 /** GitHub-style practice heatmap: last 12 weeks, Monday-first rows. */
 export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
-  const { cells, monthLabels, totalMin, activeDays } = useMemo(() => {
+  const { cells, monthLabels, totalSec, activeDays } = useMemo(() => {
     const byDay = secondsByDay(sessions);
     const today = new Date();
     const todayKey = localDayStr(today);
@@ -56,7 +56,7 @@ export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
     }> = [];
     const monthLabels: Array<{ col: number; label: string }> = [];
     let prevMonth = -1;
-    let totalMin = 0;
+    let totalSec = 0;
     let activeDays = 0;
 
     for (let c = 0; c < COLS; c++) {
@@ -72,9 +72,10 @@ export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
         const d = addDays(monday, r);
         const key = localDayStr(d);
         const future = key > todayKey;
-        const min = (byDay.get(key) ?? 0) / 60;
-        if (!future && min > 0) {
-          totalMin += min;
+        const sec = byDay.get(key) ?? 0;
+        const min = sec / 60;
+        if (!future && sec > 0) {
+          totalSec += sec;
           activeDays += 1;
         }
         cells.push({
@@ -89,11 +90,11 @@ export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
                 weekday: "short",
                 month: "short",
                 day: "numeric",
-              })} — ${min > 0 ? `${Math.round(min)} min` : "no practice"}`,
+              })} — ${sec > 0 ? fmtDur(sec) : "no practice"}`,
         });
       }
     }
-    return { cells, monthLabels, totalMin: Math.round(totalMin), activeDays };
+    return { cells, monthLabels, totalSec, activeDays };
   }, [sessions]);
 
   const W = LEFT + COLS * STEP - GAP;
@@ -105,7 +106,7 @@ export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full max-w-xl"
         role="img"
-        aria-label={`Practice calendar for the last 12 weeks: ${activeDays} active days, ${totalMin} minutes total. Darker violet squares mean more minutes that day.`}
+        aria-label={`Practice calendar for the last 12 weeks: ${activeDays} active ${activeDays === 1 ? "day" : "days"}, ${durationWords(totalSec)} total. Darker gold squares mean more minutes that day.`}
       >
         {monthLabels.map((m) => (
           <text
@@ -153,7 +154,7 @@ export function PracticeCalendar({ sessions }: { sessions: SessionLog[] }) {
       <div className="mt-3 flex flex-wrap items-center gap-4">
         <p className="text-xs text-mut">
           {activeDays > 0
-            ? `${activeDays} active ${activeDays === 1 ? "day" : "days"} and ${totalMin} minutes in the last 12 weeks.`
+            ? `${activeDays} active ${activeDays === 1 ? "day" : "days"} and ${durationWords(totalSec)} in the last 12 weeks.`
             : "No practice in the last 12 weeks — today is a good day to start."}
         </p>
         <div

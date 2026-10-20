@@ -2,7 +2,6 @@
 
 import { useState, useSyncExternalStore } from "react";
 import { Button, Card, Pill, SectionLabel } from "@/components/ui";
-import { midiToName } from "@/lib/audio/notes";
 import { SITE_URL } from "@/lib/site";
 import {
   STAR_MAX,
@@ -12,7 +11,7 @@ import {
   type GradeResult,
   type Tone,
 } from "./grade";
-import { formatTempoPct, type SessionSummaryData } from "./lib";
+import { formatTempoPct, songKeyLabel, type SessionSummaryData } from "./lib";
 
 const TONE_TEXT: Record<Tone, string> = {
   ok: "text-ok-ink",
@@ -32,12 +31,6 @@ const STAT_TONE: Record<NonNullable<ResultStat["tone"]>, string> = {
   cool: "text-cool",
   violet: "text-violet-ink",
 };
-
-/** "C" or "G# (+3)" — the key isn't meaningful without noting a shift from the default. */
-function keyLabel(defaultKeyRootMidi: number, transpose: number): string {
-  const name = midiToName(defaultKeyRootMidi + transpose);
-  return transpose === 0 ? name : `${name} (${transpose > 0 ? "+" : ""}${transpose})`;
-}
 
 // navigator.clipboard / navigator.share are stable for a page's lifetime —
 // no event ever fires when they'd change — so this is a one-shot snapshot
@@ -230,7 +223,9 @@ export function ResultCard({ data }: { data: SessionSummaryData }) {
   return (
     <ShareableResult
       title={song.title}
-      subtitle={`Key of ${keyLabel(song.defaultKeyRootMidi, transpose)} · ${formatTempoPct(tempo)} tempo`}
+      // The key as key signatures spell it ("Bb (-2)", not "A# (-2)"), with
+      // the shift from the written key, which the name alone does not say.
+      subtitle={`Key of ${songKeyLabel(song, transpose)} · ${formatTempoPct(tempo)} tempo`}
       score={score}
       grade={grade}
       stats={stats}

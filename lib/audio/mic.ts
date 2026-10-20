@@ -97,6 +97,45 @@ function constraintsFor(
 }
 
 /**
+ * What a room says when its microphone stops in the middle of a session.
+ *
+ * Every room read a stream that had ended as silence: the range test told the
+ * singer they were "coming through too quietly" and to move closer to a mic
+ * that was no longer there, the studio clock kept counting the dead time as
+ * practice, and the recorder offered REC on a stream that could record
+ * nothing. Each room's existing mic alert now carries this instead.
+ */
+export const MIC_ENDED_MESSAGE =
+  "The microphone stopped. Check it is still connected, then try again.";
+
+/**
+ * Calls `onEnded` once if the stream's microphone stops on its own: a USB mic
+ * unplugged, a Bluetooth headset that dropped, the permission withdrawn from
+ * the browser's site settings mid-session. A track the page stops itself fires
+ * no `ended` event, so a room's own Stop never reaches this. Returns the
+ * unsubscribe, for a room that lets the stream go first.
+ */
+export function watchMicEnd(stream: MediaStream, onEnded: () => void): () => void {
+  const tracks = stream.getAudioTracks();
+  let done = false;
+  const unsubscribe = () => {
+    done = true;
+    for (const track of tracks) track.removeEventListener("ended", handle);
+  };
+  function handle() {
+    if (done) return;
+    unsubscribe();
+    onEnded();
+  }
+  for (const track of tracks) track.addEventListener("ended", handle);
+  // Gone before the room could listen: the device vanished between the
+  // permission prompt and here. Reported after the caller has finished
+  // setting the stream up, so its own cleanup has something to clean.
+  if (tracks.some((track) => track.readyState === "ended")) queueMicrotask(handle);
+  return unsubscribe;
+}
+
+/**
  * Opens the microphone with the constraints every analysis surface needs, or
  * returns an actionable message.
  *

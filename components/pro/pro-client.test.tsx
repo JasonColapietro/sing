@@ -15,7 +15,15 @@ vi.mock("@/lib/pro", async (importOriginal) => {
   };
 });
 
-import { checkEndingPlan, offersLifetimeBeforeLapse, ProClient, WelcomePanel } from "./pro-client";
+import {
+  checkEndingPlan,
+  confirmFailureMessage,
+  offersLifetimeBeforeLapse,
+  ProClient,
+  readCheckoutLanding,
+  WelcomePanel,
+} from "./pro-client";
+import { NETWORK_ERROR_MESSAGE, ProApiError } from "@/lib/pro";
 import { SUPPORT_EMAIL } from "@/lib/organization";
 import { PRO_PACKS_HREF } from "@/lib/pro-inventory";
 
@@ -52,8 +60,11 @@ describe("Pro purchase choices", () => {
     // No scarcity claim the checkout does not enforce.
     expect(html).not.toContain("first 10 members");
     expect(html).not.toContain("Founding offer");
-    expect(html).toContain("Monthly: Sold out");
-    expect(html).toMatch(/<button[^>]*disabled[^>]*>Monthly · \$4\.99\/mo<\/button>/);
+    // "Sold out" beside the struck Monthly option; the name repeats only
+    // from sm up and for screen readers.
+    expect(html).toMatch(/<span class="sr-only sm:not-sr-only">Monthly: <\/span>Sold out/);
+    const monthly = html.match(/<button[^>]*disabled[^>]*>(.*?)<\/button>/)?.[1] ?? "";
+    expect(monthly.replace(/<[^>]+>/g, "")).toBe("Monthly · $4.99/mo");
     expect(html).toContain("Get lifetime Pro: $79 once");
     expect(html).not.toContain("Go Pro: $4.99/month");
     expect(html).not.toContain("Keep the $4.99 monthly price");
@@ -97,8 +108,9 @@ describe("Pro purchase choices", () => {
     expect(html).not.toContain("Renews");
     expect(html).not.toContain("Manage or cancel");
     // Labelled as the pass it is, not as the sold-out monthly plan.
-    expect(html).toContain(">Pass<");
-    expect(html).not.toContain(">Monthly<");
+    // (The purchase toggle's struck "Monthly" option is not the plan label.)
+    expect(html).toMatch(/<span class="font-mono text-4xl[^"]*">Pass<\/span>/);
+    expect(html).not.toMatch(/<span class="font-mono text-4xl[^"]*">Monthly<\/span>/);
     // Nobody on a free pass has paid, so nobody on one is thanked for it.
     expect(html).not.toContain("Thanks for keeping the free studio free");
   });
@@ -442,5 +454,161 @@ describe("after the purchase", () => {
     expect(key).toContain(`Lost it? Email ${SUPPORT_EMAIL}.`);
     const restore = renderToStaticMarkup(<ProClient />).replaceAll("&#x27;", "'");
     expect(restore).toContain(`Lost it? Email ${SUPPORT_EMAIL} and we'll send a new one.`);
+  });
+});
+
+describe("the purchase options on a phone", () => {
+  beforeEach(() => {
+    proState.current = state();
+  });
+
+  it("stacks each option's name over its price below sm, with no separator left dangling", () => {
+    // At 375px the labels broke after "Monthly ·", and at 320px a lone "·"
+    // sat on a line of its own.
+    const html = renderToStaticMarkup(<ProClient />);
+    const group = html.slice(html.indexOf('aria-label="Purchase option"'));
+    for (const [name, price] of [["Monthly", "$4.99/mo"], ["Lifetime", "$79 once"]]) {
+      expect(group).toContain(`<span class="block sm:inline">${name}</span>`);
+      expect(group).toContain(`<span class="block whitespace-nowrap sm:inline">${price}</span>`);
+    }
+    expect(group).toMatch(/<span aria-hidden="true" class="hidden sm:inline">·<\/span>/);
+  });
+});
+
+describe("the buy card's place in the Tab order", () => {
+  beforeEach(() => {
+    proState.current = state();
+  });
+
+  it("comes before the Free card in the source, as it does on a phone's screen", () => {
+    // Placed first by CSS order alone, Tab went from the toggle down to the
+    // Free card's button and back up to the buy button.
+    const html = renderToStaticMarkup(<ProClient />);
+    const buy = html.indexOf('id="buy"');
+    const buyButton = html.indexOf(">Get lifetime Pro: $79 once</button>");
+    const freeCard = html.lastIndexOf(">Keep practicing free</a>");
+    expect(buy).toBeGreaterThan(-1);
+    expect(buyButton).toBeGreaterThan(buy);
+    expect(freeCard).toBeGreaterThan(buyButton);
+    expect(html).toMatch(/id="buy" class="[^"]*sm:order-last/);
+    expect(html).not.toMatch(/id="buy" class="[^"]*\border-first\b/);
+  });
+});
+
+describe("the address /pro opens with", () => {
+  it("confirms a real session id from Stripe's return", () => {
+    expect(readCheckoutLanding("?checkout=success&session_id=cs_test_a1", null)).toEqual({
+      kind: "confirm",
+      sessionId: "cs_test_a1",
+      fromUrl: true,
+      marked: true,
+    });
+  });
+
+  it("never parks or confirms a session id that is not one", () => {
+    // It used to be parked, retried three times on every visit, read as "your
+    // payment went through", and hide the buy button for good.
+    expect(readCheckoutLanding("?checkout=success&session_id=bogus123", null)).toEqual({
+      kind: "unreferenced",
+      marked: true,
+    });
+    expect(readCheckoutLanding("?session_id=bogus123", null)).toEqual({
+      kind: "unreferenced",
+      marked: true,
+    });
+    // A real parked id still resumes.
+    expect(readCheckoutLanding("?checkout=success&session_id=bogus123", "cs_test_parked")).toEqual({
+      kind: "confirm",
+      sessionId: "cs_test_parked",
+      fromUrl: false,
+      marked: true,
+    });
+    expect(readCheckoutLanding("", "bogus123")).toEqual({ kind: "none", marked: false });
+  });
+
+  it("says a checkout was cancelled only when Stripe's cancel address says so", () => {
+    expect(readCheckoutLanding("?checkout=cancelled", null)).toEqual({ kind: "cancelled", marked: true });
+    expect(readCheckoutLanding("?checkout=success", null)).toEqual({ kind: "unreferenced", marked: true });
+    expect(readCheckoutLanding("?checkout=success&session_id=", null)).toEqual({
+      kind: "unreferenced",
+      marked: true,
+    });
+    expect(readCheckoutLanding("?checkout=whatever", null)).toEqual({ kind: "none", marked: true });
+  });
+
+  it("resumes a parked id on a plain visit, and leaves other queries alone", () => {
+    expect(readCheckoutLanding("", "cs_test_parked")).toEqual({
+      kind: "confirm",
+      sessionId: "cs_test_parked",
+      fromUrl: false,
+      marked: false,
+    });
+    expect(readCheckoutLanding("?utm_source=mail", null)).toEqual({ kind: "none", marked: false });
+    expect(readCheckoutLanding("?portal=1", "cs_test_parked")).toEqual({ kind: "portal" });
+  });
+
+  it("says nothing cancelled or confirmable on a success address without a usable id", () => {
+    const html = renderToStaticMarkup(<ProClient />);
+    const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
+    // The cancelled note is gated on Stripe's cancel address alone.
+    expect(src).toContain('{returnNote === "cancelled" && (');
+    expect(src).not.toMatch(/setAbandoned\(true\)/);
+    expect(html).not.toContain("Checkout cancelled");
+  });
+});
+
+describe("a confirmation that fails", () => {
+  it("promises a retry on reload only where one will happen", () => {
+    const parked = confirmFailureMessage(new Error(NETWORK_ERROR_MESSAGE), true);
+    expect(parked.definitive).toBe(false);
+    expect(parked.message).toContain("Reload this page and we'll try again. Nothing is lost.");
+    // Site data blocked: the address keeps the id, so a reload retries, but
+    // leaving the page loses it, and the copy says to keep the reference.
+    const blocked = confirmFailureMessage(new ProApiError("Stripe is down", 502), false);
+    expect(blocked.definitive).toBe(false);
+    expect(blocked.message).not.toContain("Nothing is lost");
+    expect(blocked.message).toContain("copy the reference below");
+    expect(blocked.message).toContain(SUPPORT_EMAIL);
+  });
+
+  it("does not tell someone a refused reference went through", () => {
+    const refused = confirmFailureMessage(new ProApiError("Provide a checkout session id", 400), true);
+    expect(refused.definitive).toBe(true);
+    expect(refused.message).not.toContain("payment went through");
+    expect(refused.message).toContain("reloading won't change it");
+    expect(confirmFailureMessage(new ProApiError("busy", 429), true).definitive).toBe(false);
+    // A firewall's 403 says nothing about the reference: the paid copy stays.
+    const blockedByEdge = confirmFailureMessage(new ProApiError("Forbidden", 403), true);
+    expect(blockedByEdge.definitive).toBe(false);
+    expect(blockedByEdge.message).toContain("Reload this page and we'll try again.");
+  });
+
+  it("keeps the address until the id is parked or Stripe's answer makes it useless", () => {
+    const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
+    expect(src).toContain("const parked = landing.fromUrl ? rememberPendingCheckout(sessionId) : true;");
+    expect(src).toContain("if (landing.marked && parked) clearAddress();");
+  });
+});
+
+describe("errors a screen reader hears", () => {
+  it("announces the unlock, pass, billing-portal and PDF failures and ties each field to its error", () => {
+    const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
+    expect(src.match(/<p id=\{errorId\} role="alert"/g)).toHaveLength(2);
+    expect(src.match(/aria-describedby=\{failed \? errorId : undefined\}/g)).toHaveLength(2);
+    expect(src.match(/aria-invalid=\{failed \|\| undefined\}/g)).toHaveLength(2);
+    expect(src).toMatch(/\{portal\.kind === "error" && \(\s*<p role="alert"/);
+    const pdf = readFileSync(new URL("../book/pdf-download.tsx", import.meta.url), "utf8");
+    expect(pdf).toMatch(/\{state === "error" && \(\s*<span role="alert"/);
+  });
+});
+
+describe("a Pro owner opening /pro#restore", () => {
+  it("is told Pro is already on here, where the plans begin", () => {
+    // The prerendered unlock form is the jump target, and hydration removes it
+    // for an owner, who was left under the plans with nothing about restoring.
+    const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
+    expect(src).toContain('if (window.location.hash !== "#restore" || !getProState().active) return;');
+    expect(src).toContain("Pro is already unlocked in this browser");
+    expect(src).toContain("{alreadyUnlocked && pro.active && !justUpgraded && (");
   });
 });

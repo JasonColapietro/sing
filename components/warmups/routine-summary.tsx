@@ -1,13 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import { ProCrescendoNudge } from "@/components/pro/gate";
+import { CappedAgainNote } from "@/components/practice/free-cap";
 import { ResultsScreen, starsForScore, type ResultRow } from "@/components/practice/results-screen";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { liveStreak } from "@/components/account/save-state";
 import { useProgress, type Achievement } from "@/lib/progress";
-import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { SITE_URL } from "@/lib/site";
 import type { RoutineSummaryData } from "./routine-runner";
 import { routineMinutes, stepExercise } from "./routines";
@@ -17,18 +16,31 @@ import { routineMinutes, stepExercise } from "./routines";
  * A warm-in (warmInStep) is sung in the first row's place, as a few reps of
  * that exercise rather than the whole step, so its row says so: otherwise a
  * scored step 1 next to "not in this run" on step 2 reads as a mistake.
+ * Steps from the one the cap slide stood in for were never reached, which is
+ * not the same as skipped: the singer chose nothing there.
  */
 export function routineSummaryRows(data: RoutineSummaryData): ResultRow[] {
-  const { routine, steps, startStep = 0, warmIn = false } = data;
+  const { routine, steps, startStep = 0, warmIn = false, capStoppedAt } = data;
   return routine.steps.map((s, i) => {
     const r = steps[i] ?? null;
     const title = stepExercise(s).title;
     return {
       label: i === 0 && warmIn && r ? `Warm-in: ${title}` : title,
       score: r ? r.avgScore : null,
-      note: i < startStep ? "not in this run" : "skipped",
+      note:
+        i < startStep
+          ? "not in this run"
+          : capStoppedAt !== undefined && i >= capStoppedAt
+            ? "not reached"
+            : "skipped",
     };
   });
+}
+
+/** How many steps the cap slide kept this run from reaching. */
+export function stepsNotReached(data: RoutineSummaryData): number {
+  const { routine, capStoppedAt } = data;
+  return capStoppedAt === undefined ? 0 : Math.max(0, routine.steps.length - capStoppedAt);
 }
 
 /**
@@ -63,7 +75,9 @@ export function RoutineSummary({
   const goalDoneSec = useGoalDoneSec(progress);
 
   const { sungCount, score, xp, achievements, weakestId } = useMemo(() => {
-    const sung = steps.filter((s): s is NonNullable<typeof s> => s !== null);
+    // `!= null`, not `!== null`: an entry a resumed run never wrote must not
+    // be read as a sung step (step-results.ts).
+    const sung = steps.filter((s): s is NonNullable<typeof s> => s != null);
     const score =
       sung.length > 0
         ? Math.round(sung.reduce((a, s) => a + s.avgScore, 0) / sung.length)
@@ -121,6 +135,10 @@ export function RoutineSummary({
               url: `${SITE_URL}/warmups?routine=${routine.id}`,
             }
       }
+      // Why "Play again" and "Practice" are gone, and when they come back;
+      // above the rows, so a run the cap stopped explains its "not reached"
+      // rows before a phone's fold rather than under them.
+      notice={capped ? <CappedAgainNote notReached={stepsNotReached(data)} /> : undefined}
     >
       {/* A run where nothing scored usually means the mic could not hear a
           clear note: each step closes itself after two reps it cannot hear,
@@ -133,22 +151,6 @@ export function RoutineSummary({
           pick up a clear note, and each exercise moves on after two reps it
           can&apos;t hear. Sing a little louder or closer to the mic, or raise
           your input level in your system sound settings, then press Play again.
-        </p>
-      )}
-      {/* Why "Play again" and "Practice" are gone, and when they come back.
-          On the paper panel for the same contrast reason as the nudge. */}
-      {capped && (
-        <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
-          That&apos;s today&apos;s {FREE_DAILY_MINUTES} free minutes of guided
-          practice. A fresh {FREE_DAILY_MINUTES} minutes opens at midnight; the
-          pitch studio and the range test stay open now.{" "}
-          <Link
-            href="/pro#buy"
-            className="text-violet-ink underline decoration-violet/50 underline-offset-4 hover:decoration-violet"
-          >
-            Pro has no daily limit
-          </Link>
-          .
         </p>
       )}
       {/* The nudge is built from the site's paper tokens, and the results

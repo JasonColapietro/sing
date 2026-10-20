@@ -6,7 +6,7 @@ import { PITCH_MEDIAN_WINDOW } from "./latency";
 import { median } from "./median";
 import { freqToNote, type NoteInfo } from "./notes";
 import { getAudioContext } from "./context";
-import { openMic } from "./mic";
+import { MIC_ENDED_MESSAGE, openMic, watchMicEnd } from "./mic";
 import { useAudioPrefs } from "./devices";
 
 export interface PitchFrame {
@@ -74,8 +74,24 @@ export type PitchFrameListener = (
  * Microphone pitch tracking. Renders a valid idle state before start() is
  * called; always give users an explicit "enable microphone" button.
  */
-export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
+export function usePitch(opts?: {
+  clarityThreshold?: number;
+  /**
+   * Called once when the microphone goes away on its own mid-session, after
+   * the hook has stopped and set its error: the room's chance to close out
+   * what it was timing. Not called for the room's own stop(), nor for the
+   * brief stop while a device change reopens the stream, so a room that only
+   * watched `listening` drop could not tell those apart.
+   */
+  onMicEnded?: () => void;
+}): UsePitchResult {
   const clarityThreshold = opts?.clarityThreshold ?? DEFAULT_CLARITY_THRESHOLD;
+  const onMicEnded = opts?.onMicEnded;
+  /** The latest onMicEnded, read when the track ends rather than at start. */
+  const onMicEndedRef = useRef(onMicEnded);
+  useEffect(() => {
+    onMicEndedRef.current = onMicEnded;
+  }, [onMicEnded]);
   const [frame, setFrame] = useState<PitchFrame>(EMPTY_FRAME);
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -83,6 +99,8 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
   const latest = useRef<PitchFrame>(EMPTY_FRAME);
   const streamRef = useRef<MediaStream | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  /** Stops listening for the open stream's mic going away (watchMicEnd). */
+  const unwatchRef = useRef<() => void>(() => {});
   const rafRef = useRef<number>(0);
   const histRef = useRef<number[]>([]);
   // Whether this hook is still on screen. `start` awaits a permission prompt
@@ -111,6 +129,8 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
 
   const stop = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
+    unwatchRef.current();
+    unwatchRef.current = () => {};
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
     sourceRef.current?.disconnect();
@@ -166,6 +186,17 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     sourceRef.current = source;
     listeningRef.current = true;
     setListening(true);
+    // An unplugged or dropped mic ends the track and the analyser reads
+    // silence from then on. Without this the room stayed "listening": the
+    // range test blamed the singer for being too quiet, the studio clock kept
+    // counting. Stopping hands every room its own stopped state, and the
+    // error is what its mic alert says.
+    unwatchRef.current = watchMicEnd(stream, () => {
+      if (streamRef.current !== stream) return;
+      stop();
+      setError(MIC_ENDED_MESSAGE);
+      onMicEndedRef.current?.();
+    });
 
     const buf = new Float32Array(analyser.fftSize);
     const loop = () => {
@@ -213,7 +244,7 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     rafRef.current = requestAnimationFrame(loop);
     return true;
     }
-  }, [clarityThreshold]);
+  }, [clarityThreshold, stop]);
 
   useEffect(() => {
     mountedRef.current = true;

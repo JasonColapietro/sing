@@ -1,4 +1,6 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -7,8 +9,21 @@ vi.mock("next/navigation", () => ({ usePathname: () => route.pathname }));
 vi.mock("@/lib/use-account-auth", () => ({
   useAccountAuth: () => ({ isLoaded: false, isSignedIn: false }),
 }));
+/** The record the header reads; null renders the fresh default. */
+const record = vi.hoisted(() => ({ value: null as null | Partial<ProgressState> }));
+vi.mock("@/lib/progress", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("@/lib/progress")>();
+  const { DEFAULT_PROGRESS } = await import("@/lib/progress-shape");
+  return {
+    ...mod,
+    useProgress: (): ProgressState => ({ ...DEFAULT_PROGRESS, ...record.value }),
+  };
+});
 
 import Nav, { LINKS, streakChipState } from "./nav";
+import { localDay, type ProgressState } from "@/lib/progress";
+
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 const originalTz = process.env.TZ;
 afterEach(() => {
@@ -88,6 +103,81 @@ describe("main navigation current location", () => {
     expect([...main.matchAll(/<a\b[^>]*>(.*?)<\/a>/g)].map((link) => link[1])).toEqual([
       "Studio", "Warmups", "Range", "Singers", "Ear", "Breath", "Songs", "Tools", "Learn", "Progress",
     ]);
+  });
+
+  it("leaves a focused tab's ring room inside the scrolling row", () => {
+    // overflow-x-auto clips both axes; the 44px tabs filled the row, so the
+    // ring (2px wide, 2px out) lost its top and bottom. The padding is the
+    // ring's room and the equal negative margin keeps the tabs in place.
+    const row = renderToStaticMarkup(<Nav />).match(/<nav aria-label="Main" class="([^"]*)"/)?.[1] ?? "";
+    expect(row.split(" ")).toEqual(expect.arrayContaining(["overflow-x-auto", "p-1", "-m-1"]));
+  });
+
+  it("does not prefetch the /singers directory from the Singers tab", () => {
+    // The row is on screen from 640px up, so a prefetching tab fetched the
+    // 230 KB directory on every page (lib/singer-link-prefetch.test.ts checks
+    // that both nav lists pass the flag through).
+    expect(LINKS.filter((l) => l.prefetch === false).map((l) => l.href)).toEqual(["/singers"]);
+  });
+});
+
+/**
+ * The header's logo and Pro links prefetch / and /pro from every page, and
+ * the router preloads a prefetched route's own stylesheet with it. The Pro
+ * visual's CSS module was the only one, so every other page logged "preloaded
+ * using link preload but not used". Shared rules live in app/globals.css.
+ */
+describe("route stylesheets the header's prefetch would preload", () => {
+  function cssModules(dir: string): string[] {
+    return readdirSync(join(ROOT, dir), { withFileTypes: true }).flatMap((entry) => {
+      const path = join(dir, entry.name);
+      if (entry.isDirectory()) return cssModules(path);
+      return entry.name.endsWith(".module.css") ? [path] : [];
+    });
+  }
+
+  it("there are none: no CSS module in app/ or components/", () => {
+    expect([...cssModules("app"), ...cssModules("components")]).toEqual([]);
+    // The Pro visual's animation is in the shared sheet instead.
+    expect(readFileSync(join(ROOT, "app/globals.css"), "utf8")).toContain(".pro-visual-bar {");
+  });
+});
+
+/**
+ * At 1280px the header row is at its max-w-6xl plateau: the ten tabs need
+ * 739px and leave the progress pill about 120px with an account control
+ * beside it. "LV 6 · 1230 XP · 12d · today?" took 250px and pushed Learn and
+ * Progress behind the Menu button on a returning singer's first result.
+ */
+describe("the header progress pill", () => {
+  afterEach(() => {
+    record.value = null;
+  });
+
+  /** The pill: the one /progress link outside the tab row. */
+  function pill(): string {
+    const html = renderToStaticMarkup(<Nav />).replace(/<nav aria-label="Main".*?<\/nav>/g, "");
+    return html.match(/<a\b[^>]*href="\/progress"[^>]*>(.*?)<\/a>/)?.[1] ?? "";
+  }
+  const shown = (inner: string) =>
+    inner.replace(/<span class="sr-only">[^<]*<\/span>/g, "").replace(/<[^>]+>/g, "");
+
+  it("shows only the level and the streak, at any count", () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    record.value = {
+      xp: 12345,
+      streak: { current: 123, best: 123, lastDay: localDay(yesterday) },
+    };
+    const inner = pill();
+    expect(shown(inner)).toBe("LV 18" + "123d");
+    // A screen reader still hears the XP and that today is not banked yet.
+    expect(inner).toContain(", 12345 XP");
+    expect(inner).toContain("123 day streak, at risk — nothing practiced today");
+  });
+
+  it("shows the level alone to a fresh visitor", () => {
+    expect(shown(pill())).toBe("LV 1");
   });
 });
 

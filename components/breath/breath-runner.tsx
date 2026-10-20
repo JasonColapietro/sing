@@ -1,6 +1,7 @@
 "use client";
 
 import { CapSlide, CappedAgainNote } from "@/components/practice/free-cap";
+import { denseStepResults, withStepResult } from "@/components/practice/step-results";
 import { useFreeCap } from "@/lib/free-cap";
 import { liveStreak } from "@/components/account/save-state";
 
@@ -18,6 +19,8 @@ import {
   BREATH_STEP_INTRO_SEC,
   CUE_HOLD_SEC,
   CUE_REP_CHOICES,
+  SUSTAIN_ATTEMPT_MIN_SEC,
+  SUSTAIN_LOG_MIN_SEC,
   breathDrillDesc,
   breathDrillTitle,
   breathStepSeconds,
@@ -261,6 +264,50 @@ export function starsForCompletion(done: number, total: number): Stars {
 }
 
 /**
+ * Whether a step of a set was done, from what it handed back.
+ *
+ * A guided drill counts once it ran long enough to be logged (its own
+ * MIN_LOG_SEC), not merely because End was pressed. The sustain test is the
+ * exception: a hold from SUSTAIN_ATTEMPT_MIN_SEC is a real attempt, kept in
+ * the room's record and counted by programs, even though only holds of
+ * SUSTAIN_LOG_MIN_SEC or more are logged for XP. A set whose three steps
+ * all ran must not read "2 of 3 steps" because its sustain was short.
+ */
+export function breathStepDone(step: BreathStep, r: BreathDrillResult | null | undefined): boolean {
+  if (r == null) return false;
+  if (step.drill === "sustain") return (r.best ?? 0) >= SUSTAIN_ATTEMPT_MIN_SEC;
+  return r.logged !== null;
+}
+
+/**
+ * The sustain hold a set counted as done but did not log, or null. Its row
+ * prints the steadiness score, so without this a set's XP silently left the
+ * sustain out and the singer had no way to tell why.
+ */
+export function shortSustainHold(
+  routine: BreathRoutine,
+  results: readonly (BreathDrillResult | null | undefined)[],
+): number | null {
+  for (let i = 0; i < routine.steps.length; i++) {
+    const r = results[i];
+    if (routine.steps[i].drill === "sustain" && r != null && r.logged === null && breathStepDone(routine.steps[i], r)) {
+      return r.best ?? r.durationSec;
+    }
+  }
+  return null;
+}
+
+/** Why a short sustain earned nothing, on the paper panel the results screen's notes use. */
+function ShortSustainNote({ held }: { held: number }) {
+  return (
+    <p className="mb-3 rounded-2xl bg-panel p-4 text-sm text-mut sm:p-5">
+      Your longest sustain hold was {held.toFixed(1)} s. It counts as done, but only holds of{" "}
+      {SUSTAIN_LOG_MIN_SEC} seconds or more are logged for XP and today&apos;s minutes.
+    </p>
+  );
+}
+
+/**
  * The results screen's subtitle. A `?step=` link (a program row carrying on
  * from the step the free minutes stopped at) runs the set from `firstStep`,
  * so the steps before it were sung in an earlier run, not skipped in this
@@ -283,6 +330,7 @@ export function BreathRunResults({
   routine,
   results,
   firstStep,
+  capStoppedAt,
   capped,
   onContinue,
   onAgain,
@@ -291,6 +339,11 @@ export function BreathRunResults({
   results: (BreathDrillResult | null)[];
   /** The step this run opened on; the ones before it were sung in an earlier run. */
   firstStep: number;
+  /**
+   * The step whose intro became the cap slide: it and the steps after it
+   * were never reached. Null when the cap did not stop the run.
+   */
+  capStoppedAt?: number | null;
   capped: boolean;
   onContinue: () => void;
   onAgain: () => void;
@@ -299,14 +352,17 @@ export function BreathRunResults({
   const { goalSec } = useDailyGoal();
   const goalDoneSec = useGoalDoneSec(progress);
   const stepCount = routine.steps.length;
-  // A step counts as done when it ran long enough to be logged — its own
-  // MIN_LOG_SEC — not merely because End was pressed.
-  const doneSteps = results.filter((r) => r !== null && r.logged !== null).length;
+  // Read per step, never by filtering `results`: a resumed run's results
+  // start past index 0, and an entry it never wrote is not a step it ran.
+  const doneSteps = routine.steps.filter((s, i) => breathStepDone(s, results[i])).length;
   // Only this run's steps: the ones before a `?step=` link's were sung before.
   const ran = stepCount - firstStep;
   const scored = results.filter(
-    (r): r is BreathDrillResult => !!r && r.score !== null,
+    (r): r is BreathDrillResult => r != null && r.score !== null,
   );
+  const stoppedAt = capStoppedAt ?? null;
+  const notReached = stoppedAt === null ? 0 : Math.max(0, stepCount - stoppedAt);
+  const shortHold = shortSustainHold(routine, results);
   const score = scored.length
     ? Math.round(
         scored.reduce((a, r) => a + (r.score ?? 0), 0) / scored.length,
@@ -328,15 +384,25 @@ export function BreathRunResults({
       rows={routine.steps.map((s, i) => ({
         label: breathStepTitle(s),
         score: results[i]?.score ?? null,
-        // The warmup summary's wording for the same case (routine-summary.tsx),
+        // The warmup summary's wording for the same cases (routine-summary.tsx),
         // capitalised like this list's own "Skipped".
-        note: i < firstStep ? "Not in this run" : (results[i]?.label ?? "Skipped"),
+        note:
+          i < firstStep
+            ? "Not in this run"
+            : stoppedAt !== null && i >= stoppedAt
+              ? "Not reached"
+              : (results[i]?.label ?? "Skipped"),
       }))}
       achievements={mergeAchievements(results)}
       onContinue={onContinue}
       onAgain={capped ? undefined : onAgain}
+      // Above the rows, so a set the cap stopped says why before its
+      // "Not reached" rows rather than under them, below a phone's fold.
+      notice={capped ? <CappedAgainNote notReached={notReached} /> : undefined}
     >
-      {capped && <CappedAgainNote />}
+      {/* Only when there is something to say: the results screen wraps any
+          children in a spaced block, and an empty one is a gap. */}
+      {shortHold !== null && <ShortSustainNote held={shortHold} />}
     </ResultsScreen>
   );
 }
@@ -364,23 +430,31 @@ export function BreathRunner({
   const [firstStep, setFirstStep] = useState(() => Math.min(Math.max(0, startStep), stepCount - 1));
   const [phase, setPhase] = useState<RunnerPhase>({ kind: "intro", step: firstStep });
   const [results, setResults] = useState<(BreathDrillResult | null)[]>([]);
+  // The step the cap slide stood in for, once it has; null otherwise.
+  const [capStoppedAt, setCapStoppedAt] = useState<number | null>(null);
 
   function closeStep(i: number, data: BreathDrillResult | null) {
-    const next = [...results];
-    next[i] = data;
-    setResults(next);
+    // Dense: a run opened at a later step closes its first one past index 0.
+    setResults(withStepResult(results, i, data, stepCount));
     setPhase(i + 1 < stepCount ? { kind: "intro", step: i + 1 } : { kind: "done" });
   }
 
-  /** The X on an intro card: leave, but never throw away work already done. */
-  function leave() {
-    if (results.some((r) => r)) setPhase({ kind: "done" });
-    else onExit();
+  /**
+   * The X on an intro card: leave, but never throw away work already done.
+   * `capAt` is the step whose intro the cap slide replaced, when it did.
+   */
+  function leave(capAt?: number) {
+    if (results.some((r) => r != null)) {
+      setResults(denseStepResults(results, stepCount));
+      setCapStoppedAt(capAt ?? null);
+      setPhase({ kind: "done" });
+    } else onExit();
   }
 
   function again() {
     setResults([]);
     setFirstStep(0);
+    setCapStoppedAt(null);
     setPhase({ kind: "intro", step: 0 });
     setRunId((n) => n + 1);
   }
@@ -391,6 +465,7 @@ export function BreathRunner({
         routine={routine}
         results={results}
         firstStep={firstStep}
+        capStoppedAt={capStoppedAt}
         capped={capped}
         onContinue={onExit}
         onAgain={again}
@@ -405,8 +480,9 @@ export function BreathRunner({
   const stepProgress = (phase.step / stepCount) * 100;
 
   if (phase.kind === "intro") {
-    // Between steps only: a drill under way finishes and logs first.
-    if (capped) return <CapSlide cap={cap} onExit={leave} />;
+    // Between steps only: a drill under way finishes and logs first. This
+    // step and the ones after it are then not reached, rather than skipped.
+    if (capped) return <CapSlide cap={cap} onExit={() => leave(phase.step)} />;
     return (
       <StepIntro
         key={`${runId}-${phase.step}`}
@@ -416,7 +492,7 @@ export function BreathRunner({
         progress={stepProgress}
         onStart={() => setPhase({ kind: "play", step: phase.step })}
         onSkip={() => closeStep(phase.step, null)}
-        onQuit={leave}
+        onQuit={() => leave()}
       />
     );
   }
