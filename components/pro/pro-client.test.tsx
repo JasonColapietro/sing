@@ -480,9 +480,11 @@ describe("the buy card's place in the Tab order", () => {
     proState.current = state();
   });
 
-  it("comes before the Free card in the source, as it does on a phone's screen", () => {
+  it("comes before the Free card in the source and on screen, at every width", () => {
     // Placed first by CSS order alone, Tab went from the toggle down to the
-    // Free card's button and back up to the buy button.
+    // Free card's button and back up to the buy button. Then, first in the
+    // source but moved right from sm up, a desktop's Tab went right before
+    // left. No order class at all keeps screen and Tab order together.
     const html = renderToStaticMarkup(<ProClient />);
     const buy = html.indexOf('id="buy"');
     const buyButton = html.indexOf(">Get lifetime Pro: $79 once</button>");
@@ -490,8 +492,11 @@ describe("the buy card's place in the Tab order", () => {
     expect(buy).toBeGreaterThan(-1);
     expect(buyButton).toBeGreaterThan(buy);
     expect(freeCard).toBeGreaterThan(buyButton);
-    expect(html).toMatch(/id="buy" class="[^"]*sm:order-last/);
-    expect(html).not.toMatch(/id="buy" class="[^"]*\border-first\b/);
+    // Neither card, nor anything between the buy card and the Free card's
+    // button, is reordered at any breakpoint.
+    const cards = html.slice(buy, freeCard);
+    expect(cards).toContain(">$0</span>");
+    expect(cards).not.toMatch(/class="[^"]*\b(?:[a-z0-9]+:)?order-/);
   });
 });
 

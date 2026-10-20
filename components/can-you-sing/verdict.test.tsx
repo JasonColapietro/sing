@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import type { ComponentProps } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_PROGRESS, MAX_SESSIONS, type VocalRange } from "@/lib/progress-shape";
@@ -6,6 +9,17 @@ import { POP_SONGS } from "@/lib/pop-songs";
 const state = vi.hoisted(() => ({ range: {} as VocalRange, pro: false, ready: true }));
 vi.mock("@/lib/progress", () => ({
   useProgress: () => ({ ...DEFAULT_PROGRESS, range: state.range }),
+}));
+/*
+ * next/link renders the same <a> a plain anchor does, so the client-router
+ * links are marked here to tell the two apart in static markup.
+ */
+vi.mock("next/link", () => ({
+  default: ({ href, prefetch, children, ...rest }: ComponentProps<"a"> & { prefetch?: boolean }) => (
+    <a data-client-router="" data-prefetch={String(prefetch)} href={String(href)} {...rest}>
+      {children}
+    </a>
+  ),
 }));
 vi.mock("@/lib/pro", () => ({
   useIsPro: () => state.pro,
@@ -274,6 +288,22 @@ describe("song comparison to first practice", () => {
     state.range = { lowMidi: 52, highMidi: 72 };
     expect(action()).toContain('href="#fit"');
     expect(action()).not.toContain("/range?");
+  });
+
+  it("jumps down to the answer with a plain anchor, so a second tap still scrolls there", () => {
+    // next/link makes no navigation once the address ends in #fit: from the
+    // top of the page, a second "See how it fits your range ↓" did nothing.
+    // The browser's own jump scrolls every time and moves the Tab starting
+    // point; jumpInPage keeps Back working after it.
+    const action = () => renderToStaticMarkup(<CanYouSingAction song={song} />);
+    state.range = { lowMidi: 52, highMidi: 72 };
+    expect(action()).toMatch(/^<a href="#fit"/);
+    expect(action()).not.toContain("data-client-router");
+    const src = readFileSync(join(__dirname, "verdict.tsx"), "utf8");
+    expect(src).toMatch(/href="#fit"\s+fullLoad\s+onClick=\{jumpInPage\}/);
+    // The range test is another page, so it stays on the client router.
+    state.range = {};
+    expect(action()).toContain("data-client-router");
   });
 
   it.each(["member", "loading"])("keeps free practice available without an upsell for %s entitlement", (mode) => {

@@ -16,6 +16,7 @@ import { DIFFICULTIES, GAME_NAMES, type Difficulty, type GameId } from "./lib";
 import {
   EAR_STEP_INTRO_SEC,
   GAME_DESC,
+  GAME_MIC,
   GAME_TRAINS,
   earStepLabel,
   type EarRoutine,
@@ -48,6 +49,18 @@ export type EarPhase =
  */
 export function afterStep(step: number, stepCount: number): EarPhase {
   return step + 1 < stepCount ? { kind: "intro", step: step + 1 } : { kind: "done" };
+}
+
+/**
+ * Whether the workout's microphone is analysed in this phase: only while a
+ * game that listens is being played. The stream stays open between such
+ * steps (EarRunner), but pitch detection, and the state update it makes on
+ * every animation frame, pause through the slides, the tapping games and the
+ * results, which otherwise re-rendered the whole workout sixty times a second
+ * with nothing listening.
+ */
+export function earPhaseListens(phase: EarPhase, steps: readonly EarRoutineStep[]): boolean {
+  return phase.kind === "play" && GAME_MIC[steps[phase.step].game];
 }
 
 function difficultyLabel(d: Difficulty): string {
@@ -339,9 +352,10 @@ export function EarRunner({
    * workout that promises to run itself stopped at every singing step for
    * another tap: five in Pitch lab. Lent to the three games that listen, the
    * first one's gate opens it, the next ones start listening as their intro
-   * runs out, and the results screen closes it.
+   * runs out, and the results screen closes it. Open is not analysed: the
+   * loop runs only while a listening game plays (earPhaseListens).
    */
-  const pitch = usePitch();
+  const pitch = usePitch({ analyse: earPhaseListens(phase, routine.steps) });
   const { listening: micOn, stop: stopMic } = pitch;
   // Nothing listens on the results screen or behind the cap slide.
   const micDone = phase.kind === "done" || (phase.kind === "intro" && capped);

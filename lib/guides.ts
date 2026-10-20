@@ -96,7 +96,7 @@ export const RANGE_GUIDE: GuideContent = {
       "Log the test under fixed conditions (same time, same warmup) so the trend is signal rather than schedule",
       "Note where tone or effort changes, without treating the pitch trace as a diagnosis of register behavior",
       "Explore overlapping reported spans in the singer library, while remembering that shared notes do not establish the same anatomy, voice type, or technique",
-      "Suede Pro charts your range tests over time, so the range line and your accuracy trend sit on the same page",
+      "Suede Pro charts your range tests over time, on the same progress page as the free weekly score trend",
     ],
   },
   faq: [

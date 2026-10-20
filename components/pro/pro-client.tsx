@@ -1156,13 +1156,15 @@ export function ProClient() {
                 and the `#buy` target the buy links land on (this page's hero
                 and final CTA, the free-practice wall, the first-result
                 modal), so the price and its button arrive without scrolling
-                past the Free card. First in the source too, and moved to the
-                right column from sm up: placed first by CSS order alone, a
-                phone's Tab went from the purchase toggle down to the Free
-                card's button and back up to the buy button. */}
+                past the Free card. First in the source and first on screen
+                at every width (the left column from sm up), with no CSS
+                order: placed first by order alone, a phone's Tab went from
+                the purchase toggle down to the Free card's button and back
+                up to the buy button, and with the source first but the card
+                on the right, a desktop's Tab went right before left. */}
             <div
               id="buy"
-              className="relative flex scroll-mt-20 flex-col overflow-hidden rounded-2xl border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:order-last sm:px-8 sm:py-7"
+              className="relative flex scroll-mt-20 flex-col overflow-hidden rounded-2xl border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:px-8 sm:py-7"
             >
               <div
                 aria-hidden

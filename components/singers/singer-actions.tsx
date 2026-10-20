@@ -9,7 +9,7 @@ import { useProgress } from "@/lib/progress";
 import { rangeOverlap, spanOctaves } from "@/lib/singers-core";
 import type { Singer } from "@/lib/singers-data";
 import { rangeTestHref } from "@/lib/site";
-import { Button, Card, LinkButton, SectionLabel } from "@/components/ui";
+import { Button, Card, LinkButton, SectionLabel, jumpInPage } from "@/components/ui";
 import { ProInlineNudge } from "@/components/pro/gate";
 
 /**
@@ -92,9 +92,19 @@ export function SingerRangeAction({
   }
   // `#you-vs` is the wrapper around CompareWithMe on the singer page. Not a
   // shared constant: a server page importing a value from this client module
-  // would get a client reference, not the string.
+  // would get a client reference, not the string. A plain anchor with the
+  // history repair (jumpInPage in components/ui.tsx): next/link makes no
+  // navigation once the address already ends in #you-vs, so a second tap did
+  // nothing, and its scripted scroll left the Tab starting point at the top.
   return (
-    <LinkButton href="#you-vs" variant="outline" size="md" className={width}>
+    <LinkButton
+      href="#you-vs"
+      fullLoad
+      onClick={jumpInPage}
+      variant="outline"
+      size="md"
+      className={width}
+    >
       {saved}
     </LinkButton>
   );

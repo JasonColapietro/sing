@@ -2,7 +2,20 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { ComponentProps } from "react";
 import { DEFAULT_PROGRESS, type VocalRange } from "@/lib/progress-shape";
+
+/*
+ * next/link renders the same <a> a plain anchor does, so the client-router
+ * links are marked here to tell the two apart in static markup.
+ */
+vi.mock("next/link", () => ({
+  default: ({ href, prefetch, children, ...rest }: ComponentProps<"a"> & { prefetch?: boolean }) => (
+    <a data-client-router="" data-prefetch={String(prefetch)} href={String(href)} {...rest}>
+      {children}
+    </a>
+  ),
+}));
 
 const state = vi.hoisted(() => ({ range: {} as VocalRange }));
 vi.mock("@/lib/progress", async (importOriginal) => ({
@@ -51,6 +64,24 @@ describe("the singer page's way back from the range test", () => {
     expect(html).not.toContain("/range?");
     state.range = { lowMidi: 45, highMidi: 65 };
     expect(action("compare")).toContain("See how your range compares ↓");
+  });
+
+  it("jumps to the comparison with a plain anchor, so a second tap still scrolls there", () => {
+    // next/link makes no navigation once the address ends in #you-vs: from
+    // the top of /singers/adele#you-vs, "See the overlap ↓" did nothing, and
+    // its scripted scroll left the Tab starting point at the top. The
+    // browser's own jump does both; jumpInPage keeps Back working after it.
+    state.range = { lowMidi: 45, highMidi: 65 };
+    for (const kind of ["test", "compare"] as const) {
+      const html = action(kind);
+      expect(html, kind).toMatch(/^<a href="#you-vs"/);
+      expect(html, kind).not.toContain("data-client-router");
+    }
+    const src = readFileSync(join(__dirname, "singer-actions.tsx"), "utf8");
+    expect(src).toMatch(/href="#you-vs"\s+fullLoad\s+onClick=\{jumpInPage\}/);
+    // The range test is another page, so it stays on the client router.
+    state.range = {};
+    expect(action()).toContain("data-client-router");
   });
 
   it("holds both labels of a pair at one width, so the swap cannot move the page", () => {
