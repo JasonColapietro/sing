@@ -173,6 +173,7 @@ jobs:
               run_check programs node e2e/programs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/programs.json
               run_check song-first-practice node e2e/song-first-practice.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check songs-modes node e2e/songs-modes.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check song-visit-unlock node e2e/song-visit-unlock.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               ;;
             mobile-audit)
               run_check mobile-audit node e2e/run.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=mobile-375 --json=browser-results/mobile-audit.json

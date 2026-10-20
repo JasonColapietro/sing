@@ -256,7 +256,7 @@ export function SongsClient() {
   const nextSetlistSong = nextSetlistId
     ? (ALL_SONGS.find((s) => s.id === nextSetlistId) ?? null)
     : null;
-  const showNext = nextSetlistSong !== null && canStart(nextSetlistSong);
+  const showNext = nextSetlistSong !== null && mayStart(nextSetlistSong);
 
   if (gated) {
     return (
@@ -333,6 +333,7 @@ export function SongsClient() {
       {view === "library" && (
         <Library
           progress={progress}
+          visitUnlockedSongId={linkedId}
           onSelect={(song) => startSong(song)}
           browse={browse}
           onBrowseChange={setBrowse}

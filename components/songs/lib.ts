@@ -190,21 +190,24 @@ export function bandOpen(
 /**
  * The recently-sung row: each recent play resolved against the songs passed
  * in (the entitlement-aware list the songbook browses), newest first, keeping
- * only songs in an open band. A song page's deep link skips the band ladder,
- * so a song sung that way lands in recents while its band is still shut; the
- * library refuses to start it, and a recents button for it would do nothing.
+ * only songs in an open band or the one explicitly linked into this visit.
+ * A link opens its song for the visit without opening the rest of its band.
+ * Entitlement still applies because the song must be in the supplied catalog.
  */
 export function startableRecents(
   recents: readonly { id: string; at: string }[],
   songs: readonly Song[],
   masteredIds: ReadonlySet<string>,
   limit = 6,
+  visitUnlockedSongId?: string | null,
 ): Array<{ song: Song; at: string }> {
   const out: Array<{ song: Song; at: string }> = [];
   for (const r of recents) {
     if (out.length >= limit) break;
     const song = songs.find((s) => s.id === r.id);
-    if (song && bandOpen(bandForSong(song), masteredIds, songs)) out.push({ song, at: r.at });
+    if (song && (song.id === visitUnlockedSongId || bandOpen(bandForSong(song), masteredIds, songs))) {
+      out.push({ song, at: r.at });
+    }
   }
   return out;
 }
