@@ -16,8 +16,9 @@ vi.mock("@/components/practice/session-shell", () => ({
 }));
 
 import { EMPTY_FRAME, type UsePitchResult } from "@/lib/audio/use-pitch";
-import { EarRunResults } from "./ear-runner";
-import { EAR_ROUTINES } from "./routines";
+import { readFileSync } from "node:fs";
+import { EarRunResults, earPhaseListens } from "./ear-runner";
+import { EAR_ROUTINES, GAME_MIC } from "./routines";
 import type { EarStepResult } from "./session";
 import { PitchMatchGame } from "./pitch-match-game";
 import { MelodyEchoGame } from "./melody-echo-game";
@@ -132,5 +133,34 @@ describe("who deals Note catcher's run in a workout", () => {
     // A run already dealt (the mic dropped mid-run) or a finished game.
     expect(dealsWhenMicOn(true, true, false)).toBe(false);
     expect(dealsWhenMicOn(true, false, true)).toBe(false);
+  });
+});
+
+describe("when a workout's open microphone is analysed", () => {
+  it("only while a game that listens is played, never on a slide, a tapping game or the results", () => {
+    // The stream stays open from the first singing step to the results, so
+    // no step asks for the mic again; the analysis loop, which updated state
+    // on every animation frame, re-rendered the whole workout through
+    // Interval ID, Higher or lower and the slides between steps.
+    let listening = 0;
+    let quiet = 0;
+    for (const routine of EAR_ROUTINES) {
+      routine.steps.forEach((step, i) => {
+        expect(earPhaseListens({ kind: "intro", step: i }, routine.steps)).toBe(false);
+        const plays = earPhaseListens({ kind: "play", step: i }, routine.steps);
+        expect(plays, `${routine.id} ${step.game}`).toBe(GAME_MIC[step.game]);
+        if (plays) listening++;
+        else quiet++;
+      });
+      expect(earPhaseListens({ kind: "done" }, routine.steps)).toBe(false);
+    }
+    // The workouts mix both kinds, so the pause is exercised.
+    expect(listening).toBeGreaterThan(0);
+    expect(quiet).toBeGreaterThan(0);
+  });
+
+  it("is what the runner hands its microphone", () => {
+    const src = readFileSync(new URL("./ear-runner.tsx", import.meta.url), "utf8");
+    expect(src).toContain("const pitch = usePitch({ analyse: earPhaseListens(phase, routine.steps) });");
   });
 });
