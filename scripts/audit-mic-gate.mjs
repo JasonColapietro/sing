@@ -239,11 +239,8 @@ console.log("\n/studio — its single start button");
 
 /* -------------------------------------------- phone: visible feedback */
 
-console.log(`\n/studio and /songs at ${PHONE.width}×${PHONE.height} — the message stays on screen`);
-for (const path of ["/studio", "/songs", "/songs?song=twinkle-twinkle-little-star"]) {
-  const { ctx, page } = await freshPage("", PHONE);
-  await page.goto(`${BASE}${path}`, { waitUntil: "networkidle" });
-  await page.getByRole("button", { name: "Enable microphone", exact: true }).first().click();
+/** After a press on a phone: is the refusal on screen and clear of the tab bar? */
+async function phoneAlertClear(page) {
   let alertBox = null;
   try {
     await page.locator(ALERT).first().waitFor({ state: "visible", timeout: 5000 });
@@ -251,20 +248,53 @@ for (const path of ["/studio", "/songs", "/songs?song=twinkle-twinkle-little-sta
     await page.waitForTimeout(400);
     alertBox = await page.locator(ALERT).first().boundingBox();
   } catch {
-    // Reported below as a failure, not a crash.
+    // Reported by the caller as a failure, not a crash.
   }
   const bar = page.locator(TAB_BAR);
   const barBox = await bar.count() ? await bar.boundingBox() : null;
   const visibleBottom = barBox?.y ?? PHONE.height;
   const bottom = alertBox ? Math.round(alertBox.y + alertBox.height) : null;
-  const clear = !!alertBox && alertBox.y >= 0 && alertBox.y + alertBox.height <= visibleBottom;
-  check(`${path}: refusal stays on screen`, clear,
-    alertBox
+  return {
+    clear: !!alertBox && alertBox.y >= 0 && alertBox.y + alertBox.height <= visibleBottom,
+    detail: alertBox
       ? `alert ${Math.round(alertBox.y)}–${bottom}, visible bottom ${Math.round(visibleBottom)}`
-      : "no alert measured");
+      : "no alert measured",
+  };
+}
+
+console.log(`\n/studio and /songs at ${PHONE.width}×${PHONE.height} — the message stays on screen`);
+for (const path of ["/studio", "/songs", "/songs?song=twinkle-twinkle-little-star"]) {
+  const { ctx, page } = await freshPage("", PHONE);
+  await page.goto(`${BASE}${path}`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Enable microphone", exact: true }).first().click();
+  const { clear, detail } = await phoneAlertClear(page);
+  check(`${path}: refusal stays on screen`, clear, detail);
   // The press is a retry now; an unchanged label read as a dead button.
   check(`${path}: the gate button offers to try again`,
     (await page.getByRole("button", { name: "Try again" }).count()) > 0);
+  await ctx.close();
+}
+
+/*
+ * The song player's own control. "Continue without a mic" opens the player
+ * unscored, and the line under the roll offers "Enable microphone"
+ * (components/songs/song-player.tsx). Refused there, the message renders in
+ * the player's row, which on a phone wraps toward the tab bar.
+ */
+console.log(`\n/songs player at ${PHONE.width}×${PHONE.height} — its Enable microphone after Continue without a mic`);
+{
+  const { ctx, page } = await freshPage("", PHONE);
+  await page.goto(`${BASE}/songs?song=twinkle-twinkle-little-star`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Continue without a mic", exact: true }).click();
+  const control = page.getByRole("button", { name: "Enable microphone", exact: true });
+  await control.waitFor({ state: "visible", timeout: 5000 });
+  check("the player offers Enable microphone", (await control.count()) === 1);
+  check("nothing is announced before the press", (await page.locator(ALERT).count()) === 0);
+  await control.scrollIntoViewIfNeeded();
+  await control.click();
+  const { clear, detail } = await phoneAlertClear(page);
+  check("player refusal stays on screen", clear, detail);
+  check("player refusal is announced once", (await page.locator(ALERT).count()) === 1);
   await ctx.close();
 }
 

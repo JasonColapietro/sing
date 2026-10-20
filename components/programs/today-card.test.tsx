@@ -559,3 +559,17 @@ describe("today's rows a second time, in the calendar", () => {
   });
 });
 
+
+describe("a ticked row, read aloud", () => {
+  it("says done, not done today: the day's ticks count from the day it opened", () => {
+    // A day still open the next morning keeps yesterday's tick (countsFrom),
+    // so "(done today)" was false for it.
+    const day = programById("foundations-2w")!.days[0];
+    const html = renderToStaticMarkup(
+      <DayItems day={day} done={day.items.map((_, i) => i === 0)} />,
+    );
+    expect(html).toContain('<span class="sr-only">(done)</span>');
+    expect(html).not.toContain("done today");
+    if (day.items.length > 1) expect(html).toContain('<span class="sr-only">(not done yet)</span>');
+  });
+});

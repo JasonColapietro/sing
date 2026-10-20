@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, LinkButton, SectionLabel } from "@/components/ui";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { Button, jumpInPage, LinkButton, SectionLabel } from "@/components/ui";
 import ProVisual from "./pro-visual";
 import { ProChip } from "./ui";
 import {
@@ -16,6 +16,9 @@ import {
 import {
   clearPendingCheckout,
   confirmCheckout,
+  getProState,
+  isCheckoutSessionId,
+  isDefinitiveRejection,
   openBillingPortal,
   pendingCheckout,
   PLAN_ROWS,
@@ -82,7 +85,9 @@ const PRO_CARD_POINTS = [
   // down. The names go in parentheses because one has a colon of its own.
   `${PRO_PROGRAM_NAMES.length === 2 ? "Both" : "All"} Pro programs in full (${new Intl.ListFormat("en", { type: "conjunction" }).format(PRO_PROGRAM_NAMES)})`,
   "Pitch analysis on every recorded take",
-  "Per-note accuracy and your range charted over months",
+  // The per-note chart is one tally with no time axis
+  // (components/progress/pro-charts.tsx); only the range is charted over time.
+  "A per-note accuracy chart, and your range charted over months",
   "Adaptive coach plan, rebuilt daily",
   "Continuous cloud sync across devices",
 ];
@@ -138,6 +143,74 @@ function revealPlans() {
 function openRestore() {
   const details = document.getElementById("restore");
   if (details instanceof HTMLDetailsElement) details.open = true;
+  jumpInPage();
+}
+
+/**
+ * What the address /pro opened with asks of the page.
+ *
+ * Stripe returns a buyer to `?checkout=success&session_id=cs_…` and a
+ * cancelled checkout to `?checkout=cancelled`; the billing portal returns with
+ * PORTAL_RETURN_PARAM. A session id that is not one (a garbled or hand-made
+ * link) is never confirmed: the API refuses it, and parking it used to retry
+ * it on every visit and hide the buy button behind "a payment from this
+ * browser hasn't been confirmed". A parked id from an earlier visit resumes
+ * before anything else. Only `cancelled` says nothing was charged; a success
+ * address without a usable id is `unreferenced`, which claims neither way.
+ * `marked` is whether the address carries checkout markers to take off.
+ */
+export type CheckoutLanding =
+  | { kind: "portal" }
+  | { kind: "confirm"; sessionId: string; fromUrl: boolean; marked: boolean }
+  | { kind: "cancelled" | "unreferenced" | "none"; marked: boolean };
+
+export function readCheckoutLanding(
+  search: string,
+  parked: string | null,
+): CheckoutLanding {
+  const params = new URLSearchParams(search);
+  if (params.get(PORTAL_RETURN_PARAM)) return { kind: "portal" };
+  const fromUrl = params.get("session_id");
+  const outcome = params.get("checkout");
+  const marked = fromUrl !== null || outcome !== null;
+  if (isCheckoutSessionId(fromUrl)) {
+    return { kind: "confirm", sessionId: fromUrl, fromUrl: true, marked };
+  }
+  if (isCheckoutSessionId(parked)) {
+    return { kind: "confirm", sessionId: parked, fromUrl: false, marked };
+  }
+  if (outcome === "cancelled") return { kind: "cancelled", marked };
+  if (outcome === "success" || fromUrl !== null) {
+    return { kind: "unreferenced", marked };
+  }
+  return { kind: "none", marked };
+}
+
+/**
+ * What a failed confirmation says. `parked` is false where the browser would
+ * not store the session id (site data blocked), so the address is all that
+ * carries it; the page then keeps it in the address bar, and the copy says
+ * to keep the reference rather than promising nothing is lost.
+ */
+export function confirmFailureMessage(
+  error: unknown,
+  parked: boolean,
+): { message: string; definitive: boolean } {
+  if (isDefinitiveRejection(error)) {
+    return {
+      definitive: true,
+      message: `This checkout reference couldn't be checked, so reloading won't change it. If you were charged, please don't buy again: email ${SUPPORT_EMAIL} with this reference and we'll sort it out.`,
+    };
+  }
+  // Deliberately not the API's message. Whatever Stripe's outage sounded
+  // like, the thing this person needs to read is that the charge is safe, the
+  // retry is automatic, and support has a handle.
+  return {
+    definitive: false,
+    message: parked
+      ? `Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again. Nothing is lost. If it keeps failing, email ${SUPPORT_EMAIL} with this reference.`
+      : `Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again. This browser isn't saving site data, so copy the reference below before you leave this page, and if it keeps failing, email it to ${SUPPORT_EMAIL}.`,
+  };
 }
 
 /** How Pro just arrived in this browser, which decides what the welcome says. */
@@ -208,6 +281,8 @@ function ProKeyRow({ proKey }: { proKey: string }) {
 function RedeemPanel({ onUnlocked }: { onUnlocked: () => void }) {
   const [code, setCode] = useState("");
   const [task, setTask] = useState<Task>({ kind: "idle" });
+  const errorId = useId();
+  const failed = task.kind === "error";
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -240,6 +315,8 @@ function RedeemPanel({ onUnlocked }: { onUnlocked: () => void }) {
           onChange={(event) => setCode(event.target.value)}
           placeholder="Your code"
           aria-label="Your comp code"
+          aria-invalid={failed || undefined}
+          aria-describedby={failed ? errorId : undefined}
           autoComplete="off"
           autoCapitalize="characters"
           spellCheck={false}
@@ -255,8 +332,12 @@ function RedeemPanel({ onUnlocked }: { onUnlocked: () => void }) {
           {task.kind === "working" ? "Checking…" : "Start my 30 days"}
         </Button>
       </form>
+      {/* An alert, like the checkout error beside the buy button: otherwise
+          a screen reader heard only the button's label change back. */}
       {task.kind === "error" && (
-        <p className="mt-3 text-sm text-rec">{task.message}</p>
+        <p id={errorId} role="alert" className="mt-3 text-sm text-rec">
+          {task.message}
+        </p>
       )}
       <p className="mt-3 text-xs text-dim">
         Every Pro feature for 30 days. No card, no charge, and it ends by itself
@@ -271,6 +352,8 @@ function RestorePanel({ onUnlocked }: { onUnlocked: () => void }) {
   const [key, setKey] = useState("");
   const [task, setTask] = useState<Task>({ kind: "idle" });
   const panel = useRef<HTMLDetailsElement>(null);
+  const errorId = useId();
+  const failed = task.kind === "error";
 
   // "Already have Pro?" on every locked book and Atlas chapter, and the
   // emailed Pro key, all point at /pro#restore. The panel is in the server
@@ -327,6 +410,8 @@ function RestorePanel({ onUnlocked }: { onUnlocked: () => void }) {
           onChange={(event) => setKey(event.target.value)}
           placeholder="suede-pro_…"
           aria-label="Your Pro key"
+          aria-invalid={failed || undefined}
+          aria-describedby={failed ? errorId : undefined}
           autoComplete="off"
           spellCheck={false}
           className="min-w-[12rem] flex-1 rounded-full border border-line2 bg-bg px-4 py-2.5 font-mono text-sm text-ink placeholder:text-dim"
@@ -341,7 +426,9 @@ function RestorePanel({ onUnlocked }: { onUnlocked: () => void }) {
         </Button>
       </form>
       {task.kind === "error" && (
-        <p className="mt-3 text-sm text-rec">{task.message}</p>
+        <p id={errorId} role="alert" className="mt-3 text-sm text-rec">
+          {task.message}
+        </p>
       )}
       <p className="mt-3 text-xs text-dim">
         Pro unlocks per browser. Paste the Pro key
@@ -514,7 +601,11 @@ export function ProClient() {
   const justUpgraded = welcome !== null;
   const [checkout, setCheckout] = useState<Task>({ kind: "idle" });
   const [portal, setPortal] = useState<Task>({ kind: "idle" });
-  const [abandoned, setAbandoned] = useState(false);
+  // A note about the address /pro opened with that confirms nothing: a
+  // cancelled checkout, or a success address without a usable session id.
+  const [returnNote, setReturnNote] = useState<"cancelled" | "unreferenced" | null>(null);
+  // Opened at #restore with Pro already on in this browser (see below).
+  const [alreadyUnlocked, setAlreadyUnlocked] = useState(false);
   // Between the buy tap and Stripe's page. Kept apart from `checkout`, whose
   // "working" state means a payment is being confirmed: before a card has
   // been entered, nobody should read that a payment is being confirmed.
@@ -528,8 +619,13 @@ export function ProClient() {
   const subscriptionPlan =
     !onPass && (pro.plan === "monthly" || pro.plan === "annual");
   // A subscription set to end, as last cached. The lifetime offer waits for
-  // the fresh check below (offersLifetimeBeforeLapse).
-  const endingAsCached = pro.active && subscriptionPlan && pro.cancelAtPeriodEnd;
+  // the fresh check below (offersLifetimeBeforeLapse). Not while a purchase
+  // is being confirmed: on the return from buying lifetime, that check asks
+  // about the old subscription, and its offer would flash a second $79 button
+  // under the confirmation. A reply that lands after the purchase is dropped
+  // anyway (lib/pro.ts revalidatePro).
+  const endingAsCached =
+    pro.active && subscriptionPlan && pro.cancelAtPeriodEnd && checkout.kind !== "working";
   const [endingCheckedFrom, setEndingCheckedFrom] = useState<number | null>(null);
   useEffect(() => {
     if (!endingAsCached) return;
@@ -559,69 +655,89 @@ export function ProClient() {
   // The id is parked in storage before the query is stripped, and a parked one
   // resumes on the next load. Confirmation is the step between "charged" and
   // "has Pro", and it used to get exactly one attempt against an id that no
-  // longer existed anywhere once it failed.
+  // longer existed anywhere once it failed. Where the browser will not store
+  // it (site data blocked), the address is the only copy, so it stays in the
+  // address bar until Stripe's answer makes it useless: a reload then really
+  // retries, and a confirmed purchase, which that browser cannot store either,
+  // confirms again rather than coming back as a $79 button.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const landing = readCheckoutLanding(window.location.search, pendingCheckout());
+    const clearAddress = () => window.history.replaceState({}, "", "/pro");
     // Back from the Stripe billing portal: a cancellation or a card update
     // just changed the subscription, so re-check now rather than within the
     // usual 12-hour window. useProState re-renders the plan line from it.
-    if (params.get(PORTAL_RETURN_PARAM)) {
-      window.history.replaceState({}, "", "/pro");
+    if (landing.kind === "portal") {
+      clearAddress();
       void revalidatePro({ force: true });
       return;
     }
-    const fromUrl = params.get("session_id");
-    const outcome = params.get("checkout");
-    const sessionId = fromUrl ?? pendingCheckout();
-    if (fromUrl || outcome) window.history.replaceState({}, "", "/pro");
-    if (!sessionId && !outcome) return;
 
     // Stripe returns to the top of the page, where the hero's buttons lead
     // away, while every message about the purchase renders in the plans
     // section several screens down: revealPlans at each of those moments.
-    if (sessionId) {
-      rememberPendingCheckout(sessionId);
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- the session id only exists in the URL, so confirmation can only start after hydration
-      setCheckout({ kind: "working" });
+    if (landing.kind !== "confirm") {
+      if (landing.marked) clearAddress();
+      if (landing.kind === "none") return;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- the checkout outcome only exists in the URL, so it can only be read after hydration
+      setReturnNote(landing.kind);
       revealPlans();
-      confirmCheckout(sessionId)
-        .then((state) => {
-          if (state.active) {
-            setCheckout({ kind: "idle" });
-            setWelcome("purchase");
-            revealPlans();
-            return;
-          }
-          // Stripe answered, and the answer wasn't "active". For a card
-          // Checkout that came back to the success URL that is definitive (a
-          // refund, a dispute, a mismatch or a bogus id), so a reload will not
-          // change it; say so, and hand over something support can act on.
-          clearPendingCheckout();
-          setCheckout({
-            kind: "error",
-            message:
-              `Stripe doesn't show a completed Pro purchase for this checkout, so reloading won't change it. If you were charged, please don't buy again: email ${SUPPORT_EMAIL} with this reference and we'll sort it out.`,
-            ref: sessionId,
-          });
-          revealPlans();
-        })
-        .catch(() => {
-          // Deliberately not the API's message. Whatever Stripe's outage
-          // sounded like, the thing this person needs to read is that the
-          // charge is safe, the retry is automatic, and support has a handle.
-          // The parked id survives this branch, so "reload" really retries.
-          setCheckout({
-            kind: "error",
-            message:
-              `Your payment went through, but we couldn't confirm it here. Reload this page and we'll try again. Nothing is lost. If it keeps failing, email ${SUPPORT_EMAIL} with this reference.`,
-            ref: sessionId,
-          });
-          revealPlans();
-        });
       return;
     }
-    setAbandoned(true);
+
+    const { sessionId } = landing;
+    const parked = landing.fromUrl ? rememberPendingCheckout(sessionId) : true;
+    if (landing.marked && parked) clearAddress();
+    setCheckout({ kind: "working" });
     revealPlans();
+    confirmCheckout(sessionId)
+      .then((state) => {
+        if (state.active) {
+          setCheckout({ kind: "idle" });
+          setWelcome("purchase");
+          revealPlans();
+          return;
+        }
+        // Stripe answered, and the answer wasn't "active". For a card
+        // Checkout that came back to the success URL that is definitive (a
+        // refund, a dispute, a mismatch or a bogus id), so a reload will not
+        // change it; say so, and hand over something support can act on.
+        clearPendingCheckout();
+        if (landing.marked) clearAddress();
+        setCheckout({
+          kind: "error",
+          message:
+            `Stripe doesn't show a completed Pro purchase for this checkout, so reloading won't change it. If you were charged, please don't buy again: email ${SUPPORT_EMAIL} with this reference and we'll sort it out.`,
+          ref: sessionId,
+        });
+        revealPlans();
+      })
+      .catch((error: unknown) => {
+        // A refused id is unparked by confirmCheckout and leaves the address
+        // too. Anything else keeps the parked id (or the address), so
+        // "reload" really retries.
+        const failure = confirmFailureMessage(error, parked);
+        if (failure.definitive && landing.marked) clearAddress();
+        setCheckout({ kind: "error", message: failure.message, ref: sessionId });
+        revealPlans();
+      });
+  }, []);
+
+  // "Already have Pro?" links and the emailed Pro key land on /pro#restore.
+  // The prerendered page holds the free unlock form there, so the browser
+  // jumps to it, and hydration takes it away from someone whose Pro is
+  // already on in this browser: they were left mid-page under the plans with
+  // nothing about restoring. Say so where the plans begin, and go there. Read
+  // from the store directly, not the render's `pro`, so it answers for how
+  // the page was reached rather than for a key restored on it.
+  useEffect(() => {
+    const land = () => {
+      if (window.location.hash !== "#restore" || !getProState().active) return;
+      setAlreadyUnlocked(true);
+      revealPlans();
+    };
+    land();
+    window.addEventListener("hashchange", land);
+    return () => window.removeEventListener("hashchange", land);
   }, []);
 
   // Back from Stripe's page via the browser's back button, the page can come
@@ -638,7 +754,7 @@ export function ProClient() {
   const goPro = useCallback(async () => {
     setOpening(true);
     setCheckout({ kind: "idle" });
-    setAbandoned(false);
+    setReturnNote(null);
     try {
       await startCheckout(billing);
     } catch (error) {
@@ -709,7 +825,7 @@ export function ProClient() {
           // A plain <a>, not next/link: the hash jump scrolls to the form and
           // RestorePanel's hashchange listener opens it. The click opens it
           // too, for when the address already ends in #restore and no
-          // hashchange fires.
+          // hashchange fires, and keeps the history entry (jumpInPage).
           <a
             href="#restore"
             onClick={openRestore}
@@ -840,8 +956,14 @@ export function ProClient() {
                   <div className="order-1 mt-6 flex flex-wrap items-center gap-3 sm:order-2 sm:mt-7">
                     {/* Straight to the buy card, with the price on the button:
                         on a phone the price was otherwise first seen about four
-                        screens down. */}
-                    <LinkButton href="#buy" variant="violet" size="lg">
+                        screens down. A plain anchor: see jumpInPage. */}
+                    <LinkButton
+                      href="#buy"
+                      fullLoad
+                      onClick={jumpInPage}
+                      variant="violet"
+                      size="lg"
+                    >
                       {`Get lifetime Pro: ${formatPrice(PRICING.lifetime.amount)} once`}
                     </LinkButton>
                     <LinkButton href="/studio" variant="ghost" size="lg">
@@ -938,13 +1060,43 @@ export function ProClient() {
               )}
             </div>
           )}
-          {abandoned && (
+          {returnNote === "cancelled" && (
             <p className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut">
               Checkout cancelled — nothing was charged. The free studio is
               exactly where you left it.
             </p>
           )}
+          {/* A success address with no usable session id: nothing to confirm,
+              and no claim either way about a charge. */}
+          {returnNote === "unreferenced" && (
+            <p
+              role="status"
+              className="mx-auto mt-8 max-w-2xl rounded-xl border border-line2 bg-panel px-4 py-3 text-center text-sm text-mut"
+            >
+              This link doesn&apos;t carry a checkout reference we can
+              check, so there&apos;s nothing to confirm here. If you were
+              charged, please don&apos;t buy again: email {SUPPORT_EMAIL} with
+              your Stripe receipt and we&apos;ll sort it out.
+            </p>
+          )}
+          {alreadyUnlocked && pro.active && !justUpgraded && (
+            <p
+              role="status"
+              className="mx-auto mt-8 max-w-2xl rounded-xl border border-violet/40 bg-panel px-4 py-3 text-center text-sm text-mut"
+            >
+              Pro is already unlocked in this browser, so there&apos;s nothing
+              to restore here.
+              {pro.proKey &&
+                " Your Pro key, on the card below, unlocks it in another browser."}
+            </p>
+          )}
 
+          {/* Below sm each option is a deliberate two-line stack, name over
+              price, and the sold-out chip shows "Sold out" beside the struck
+              Monthly option (screen readers still hear "Monthly: Sold out").
+              On one line, the three did not fit a phone: the labels broke at
+              whatever space came last, leaving "Monthly ·" with its price on
+              the next line at 375px and a lone "·" at 320px. */}
           {showPurchaseOptions && (
             <div
               role="group"
@@ -962,7 +1114,7 @@ export function ProClient() {
                     onClick={() => {
                       if (isPlanOnSale(plan)) setBilling(plan);
                     }}
-                    className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors ${
+                    className={`rounded-full px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors sm:whitespace-nowrap sm:px-4 ${
                       on
                         ? "bg-violet-ink text-white"
                         : isPlanOnSale(plan)
@@ -970,15 +1122,24 @@ export function ProClient() {
                           : "cursor-not-allowed text-dim line-through decoration-dim/60"
                     }`}
                   >
-                    {plan === "monthly"
-                      ? `Monthly · ${formatPrice(PRICING.monthly.amount)}/mo`
-                      : `Lifetime · ${formatPrice(PRICING.lifetime.amount)} once`}
+                    <span className="block sm:inline">
+                      {plan === "monthly" ? "Monthly" : "Lifetime"}
+                    </span>{" "}
+                    <span aria-hidden className="hidden sm:inline">
+                      ·
+                    </span>{" "}
+                    <span className="block whitespace-nowrap sm:inline">
+                      {plan === "monthly"
+                        ? `${formatPrice(PRICING.monthly.amount)}/mo`
+                        : `${formatPrice(PRICING.lifetime.amount)} once`}
+                    </span>
                   </button>
                 );
               })}
               {SOLD_OUT_PLANS.includes("monthly") && (
-                <span className="rounded-full border border-line2 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
-                  Monthly: Sold out
+                <span className="whitespace-nowrap rounded-full border border-line2 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
+                  <span className="sr-only sm:not-sr-only">Monthly: </span>
+                  Sold out
                 </span>
               )}
             </div>
@@ -989,45 +1150,21 @@ export function ProClient() {
               showPurchaseOptions ? "mt-6" : "mt-10"
             }`}
           >
-            {/* Free */}
-            <div className="flex flex-col rounded-2xl border border-line bg-panel p-6 sm:p-7">
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
-                Free
-              </span>
-              <div className="mt-3 flex items-baseline gap-2">
-                <span className="tabular font-mono text-3xl text-mut">$0</span>
-                <span className="text-sm text-mut">the whole studio</span>
-              </div>
-              <p className="mt-2 text-sm text-mut">
-                Every practice room, open right now.
-              </p>
-              <ul className="mt-5 space-y-2.5">
-                {FREE_CARD_POINTS.map((point) => (
-                  <PlanPoint key={point}>{point}</PlanPoint>
-                ))}
-              </ul>
-              <div className="mt-auto pt-6">
-                <LinkButton
-                  href="/studio"
-                  variant="outline"
-                  size="md"
-                  className="w-full"
-                >
-                  Keep practicing free
-                </LinkButton>
-              </div>
-            </div>
-
             {/* Pro — deliberately the louder card: this is the recommendation,
                 not a second option of equal weight. Roomier sides only, so both
                 cards' CTAs still land on the same baseline. First on a phone,
                 and the `#buy` target the buy links land on (this page's hero
                 and final CTA, the free-practice wall, the first-result
                 modal), so the price and its button arrive without scrolling
-                past the Free card. */}
+                past the Free card. First in the source and first on screen
+                at every width (the left column from sm up), with no CSS
+                order: placed first by order alone, a phone's Tab went from
+                the purchase toggle down to the Free card's button and back
+                up to the buy button, and with the source first but the card
+                on the right, a desktop's Tab went right before left. */}
             <div
               id="buy"
-              className="relative order-first flex scroll-mt-20 flex-col overflow-hidden rounded-2xl border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:order-none sm:px-8 sm:py-7"
+              className="relative flex scroll-mt-20 flex-col overflow-hidden rounded-2xl border border-violet bg-panel bg-[radial-gradient(460px_200px_at_50%_-10%,color-mix(in_oklab,var(--color-violet)_16%,transparent),transparent_62%)] px-7 py-6 ring-1 ring-violet/30 sm:px-8 sm:py-7"
             >
               <div
                 aria-hidden
@@ -1129,7 +1266,7 @@ export function ProClient() {
                             : "Manage or cancel"}
                         </Button>
                         {portal.kind === "error" && (
-                          <p className="text-center text-xs text-rec">
+                          <p role="alert" className="text-center text-xs text-rec">
                             {portal.message}
                           </p>
                         )}
@@ -1146,6 +1283,35 @@ export function ProClient() {
                       : `Go Pro: ${price}/month`,
                   )
                 )}
+              </div>
+            </div>
+
+            {/* Free */}
+            <div className="flex flex-col rounded-2xl border border-line bg-panel p-6 sm:p-7">
+              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mut">
+                Free
+              </span>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="tabular font-mono text-3xl text-mut">$0</span>
+                <span className="text-sm text-mut">the whole studio</span>
+              </div>
+              <p className="mt-2 text-sm text-mut">
+                Every practice room, open right now.
+              </p>
+              <ul className="mt-5 space-y-2.5">
+                {FREE_CARD_POINTS.map((point) => (
+                  <PlanPoint key={point}>{point}</PlanPoint>
+                ))}
+              </ul>
+              <div className="mt-auto pt-6">
+                <LinkButton
+                  href="/studio"
+                  variant="outline"
+                  size="md"
+                  className="w-full"
+                >
+                  Keep practicing free
+                </LinkButton>
               </div>
             </div>
           </div>
@@ -1324,6 +1490,8 @@ export function ProClient() {
           <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <LinkButton
               href={pro.active && !onPass && !lapsing ? "#plans" : "#buy"}
+              fullLoad
+              onClick={jumpInPage}
               variant="violet"
               size="lg"
             >

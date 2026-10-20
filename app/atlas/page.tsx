@@ -202,7 +202,7 @@ export default function AtlasPage() {
           <p className="mt-5 max-w-3xl text-mut">
             This is the written study rather than the chart. The numbers on one
             keyboard, searchable and with your own range overlaid, are the{" "}
-            <Link href="/singers" className="text-violet-ink hover:underline">
+            <Link href="/singers" prefetch={false} className="text-violet-ink hover:underline">
               famous vocal ranges chart
             </Link>
             ; this book is where the same voices are explained voice by voice.
@@ -234,7 +234,7 @@ export default function AtlasPage() {
           <p className="mt-3 max-w-3xl text-sm text-mut">
             The contents below list every chapter and every singer covered —
             free, along with the first three chapters and each singer&rsquo;s{" "}
-            <Link href="/singers" className="text-violet-ink hover:underline">
+            <Link href="/singers" prefetch={false} className="text-violet-ink hover:underline">
               range page
             </Link>
             . Pro unlocks the chapter text, the entry notes and the PDF, and

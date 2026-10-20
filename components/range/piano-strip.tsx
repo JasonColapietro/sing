@@ -23,6 +23,14 @@ const LABEL_H = 22;
 
 const BLACK_PCS = new Set([1, 3, 6, 8, 10]);
 
+/** The dim octave label under each C, and the bold label under each edge marker. */
+const OCTAVE_FONT = 9;
+const MARK_FONT = 12;
+/** A monospace glyph's advance as a share of its font size. */
+const MONO_ADVANCE = 0.6;
+/** Clear space kept between an octave label and an edge label. */
+const LABEL_GAP = 2;
+
 function isBlack(midi: number): boolean {
   return BLACK_PCS.has(((midi % 12) + 12) % 12);
 }
@@ -55,6 +63,31 @@ export function midiToStripX(midi: number): number {
   const k = KEYS.find((key) => key.midi === clamped);
   if (!k) return 0;
   return k.black ? k.x + BLACK_W / 2 : k.x + WHITE_W / 2;
+}
+
+function labelHalfWidth(text: string, fontSize: number): number {
+  return (text.length * fontSize * MONO_ADVANCE) / 2;
+}
+
+/**
+ * The C keys that keep their octave label: every C an edge marker's label
+ * does not land on. The two sit on one baseline, so an edge on a C (C5) drew
+ * "C5" twice, dim and bold, into a smudge that read like "G5", and an edge a
+ * key away (C#5) half covered it. The edge label is the one the singer came
+ * for, so the octave label gives way.
+ */
+export function octaveLabelMidis(marks: readonly number[]): number[] {
+  return KEYS.filter((k) => !k.black && k.midi % 12 === 0)
+    .map((k) => k.midi)
+    .filter((c) => {
+      const x = midiToStripX(c);
+      const half = labelHalfWidth(midiToLabel(c), OCTAVE_FONT);
+      return marks.every(
+        (m) =>
+          Math.abs(midiToStripX(m) - x) >=
+          half + labelHalfWidth(midiToLabel(m), MARK_FONT) + LABEL_GAP,
+      );
+    });
 }
 
 export interface PianoStripProps {
@@ -144,18 +177,18 @@ export function PianoStrip({
           rx={2}
         />
       )}
-      {/* Octave labels on C keys */}
-      {KEYS.filter((k) => !k.black && k.midi % 12 === 0).map((k) => (
+      {/* Octave labels on C keys, less any an edge label covers */}
+      {octaveLabelMidis(markers.map((m) => m.midi)).map((midi) => (
         <text
-          key={`oct-${k.midi}`}
-          x={k.x + WHITE_W / 2}
+          key={`oct-${midi}`}
+          x={midiToStripX(midi)}
           y={WHITE_H + 14}
           textAnchor="middle"
-          fontSize={9}
+          fontSize={OCTAVE_FONT}
           fontFamily={MONO}
           fill={DIM}
         >
-          {midiToLabel(k.midi)}
+          {midiToLabel(midi)}
         </text>
       ))}
       {/* Endpoint markers */}
@@ -175,7 +208,7 @@ export function PianoStrip({
               x={x}
               y={WHITE_H + 16}
               textAnchor="middle"
-              fontSize={12}
+              fontSize={MARK_FONT}
               fontWeight={600}
               fontFamily={MONO}
               fill={AMBER_INK}

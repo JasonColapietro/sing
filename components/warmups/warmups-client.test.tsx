@@ -46,7 +46,7 @@ vi.mock("@/components/prepaint", async (importOriginal) => ({
   useHydrated: () => state.ready,
 }));
 
-import { WarmupsClient, linkedRepCount } from "./warmups-client";
+import { SilentStopNote, WarmupsClient, linkedRepCount } from "./warmups-client";
 import { paintedFor } from "@/components/prepaint.testing";
 
 const morning = routineById("morning")!;
@@ -264,5 +264,19 @@ describe("a program day the singer cannot open", () => {
     state.cap = { isPro: true, usedSec: 0, leftSec: Number.POSITIVE_INFINITY, capped: false, capSec: 300 };
     html = renderToStaticMarkup(<WarmupsClient />);
     expect(html.indexOf("Your program: day 8")).toBeLessThan(html.indexOf("Start here"));
+  });
+});
+
+describe("an exercise the player ended for silence", () => {
+  it("says why it stopped and that nothing was logged, beside the input level", () => {
+    const html = renderToStaticMarkup(<SilentStopNote title="Five-note scale" listening level={0} />);
+    expect(html).toContain("No sound picked up");
+    expect(html).toMatch(/role="alert"[^>]*>Five-note scale stopped after two reps with no note heard, so nothing was logged\.</);
+    expect(html).toContain("Sing a little louder or closer to the mic, or check the input below, then start it again.");
+    expect(html).toContain('aria-label="Microphone input level"');
+  });
+
+  it("is not in the room until the player has ended something for silence", () => {
+    expect(renderToStaticMarkup(<WarmupsClient />)).not.toContain("No sound picked up");
   });
 });

@@ -22,6 +22,7 @@ import {
 import { ProWhisper } from "@/components/pro/gate";
 import { MicAlert } from "@/components/mic-alert";
 import { AudioSetup } from "@/components/audio/audio-setup";
+import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { PianoStrip } from "./piano-strip";
 import { freshInputHint, nextInputHint } from "./pitch-meter-hint";
 import { ResultView, type SaveSummary } from "./result-view";
@@ -156,6 +157,14 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
   /** "I can't go higher" was pressed on a span too narrow to save. */
   const [tooNarrow, setTooNarrow] = useState(false);
 
+  /**
+   * Which intro button last asked for the mic: the saved-result card's
+   * "Retake test" or the how-to card's "Start free range test". A refusal is
+   * shown under the button that was pressed; under the other one it sat
+   * 490–550px away at the bottom edge of the screen.
+   */
+  const [micFrom, setMicFrom] = useState<"saved" | "intro">("intro");
+
   /** Why the note isn't counting, when it isn't. Null while things are fine. */
   const [inputHint, setInputHint] = useState<string | null>(null);
 
@@ -198,6 +207,12 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     resetAll();
     startedAtRef.current = performance.now();
     setStage("warm");
+  };
+
+  /** Starts from one of the intro's two buttons, remembering which. */
+  const beginFrom = (from: "saved" | "intro") => {
+    setMicFrom(from);
+    void begin();
   };
 
   /** Publishes a hint only when it actually changes, so steady state is quiet. */
@@ -294,6 +309,15 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
     (stage === "intro" ? topRef : stageRef).current?.scrollIntoView({ block: "start" });
   }, [stage]);
 
+  // The card that replaces the intro takes the pressed button with it, so
+  // keyboard focus fell to <body> as the mic opened: a screen reader heard
+  // nothing of the new step. Each stage card's heading takes it instead, only
+  // when it was dropped (lib/audio/mic-focus.ts).
+  const stageHeadingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    focusIfDropped(stageHeadingRef.current);
+  }, [stage]);
+
   const advanceToHigh = () => {
     resetHunt();
     setStage("high");
@@ -345,8 +369,15 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
   const savedRange = progress.range;
   const counted = countedRange(anchorMidi, lowFound, highFound);
 
+  // Only while the mic is actually on: a mic that stops mid-test (unplugged,
+  // a headset dropped) ends the stream, and the pill used to stay lit over
+  // the "microphone stopped" line.
   const pill =
-    stage !== "intro" && stage !== "result" ? <ListeningPill /> : undefined;
+    listening && stage !== "intro" && stage !== "result" ? <ListeningPill /> : undefined;
+  // One alert for the intro, under whichever button asked for the mic.
+  const introAlert = error ? (
+    <MicAlert message={error} className="mt-4 max-w-md text-sm text-rec" />
+  ) : null;
   const wrap = (children: React.ReactNode) =>
     embedded ? (
       <div>
@@ -397,10 +428,11 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
                         ` · tested ${new Date(savedRange.testedAt).toLocaleDateString()}`}
                     </p>
                   </div>
-                  <Button variant="violet" onClick={begin}>
+                  <Button variant="violet" onClick={() => beginFrom("saved")}>
                     Retake test
                   </Button>
                 </div>
+                {micFrom === "saved" && introAlert}
                 <div className="mt-5">
                   <PianoStrip
                     rangeLow={savedRange.lowMidi}
@@ -436,16 +468,16 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
               Use a comfortable volume. Stop if a note causes pain or strain.
             </p>
             <div className="mt-5">
-              <Button variant="rec" size="lg" onClick={begin}>
+              <Button variant="rec" size="lg" onClick={() => beginFrom("intro")}>
                 Start free range test
               </Button>
             </div>
-            {error && (
-              <MicAlert
-                message={error}
-                className="mt-4 max-w-md text-sm text-rec"
-              />
-            )}
+            {/* With no saved card on screen, its button cannot have been the
+                one pressed. */}
+            {(micFrom === "intro" ||
+              savedRange.lowMidi === undefined ||
+              savedRange.highMidi === undefined) &&
+              introAlert}
             {/* The room where the input device matters most. A laptop lid mic
                 rolls off exactly the low end a bass is trying to prove, so the
                 test hands back a range short at the bottom and the singer has
@@ -467,7 +499,9 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
       {stage === "warm" && (
         <Card>
           <SectionLabel>Step 1 of 4</SectionLabel>
-          <h2 className="mt-3 text-xl">Sing a comfortable note</h2>
+          <h2 ref={stageHeadingRef} tabIndex={-1} className="mt-3 text-xl outline-none">
+            Sing a comfortable note
+          </h2>
           <p className="mt-2 max-w-xl text-sm text-mut">
             Any easy pitch — an “ahh”, sung out as if to someone across the
             room. A note at talking volume is often too quiet to measure. Hold
@@ -496,7 +530,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
               </p>
             </div>
           </div>
-          {inputHint && <InputHint hint={inputHint} />}
+          {listening && inputHint && <InputHint hint={inputHint} />}
           <div className="mt-6">
             <PianoStrip
               activeMidi={liveMidi}
@@ -516,7 +550,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
       {(stage === "low" || stage === "high") && (
         <Card>
           <SectionLabel>{stage === "low" ? "Step 2 of 4" : "Step 3 of 4"}</SectionLabel>
-          <h2 className="mt-3 text-xl">
+          <h2 ref={stageHeadingRef} tabIndex={-1} className="mt-3 text-xl outline-none">
             {stage === "low"
               ? "Slide down to your lowest note"
               : "Slide up to your highest note"}
@@ -600,7 +634,7 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
               ariaLabel="Keyboard highlighting the note you are singing and the range reached so far"
             />
           </div>
-          {inputHint && <InputHint hint={inputHint} />}
+          {listening && inputHint && <InputHint hint={inputHint} />}
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {stage === "low" ? (
               <>

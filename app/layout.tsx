@@ -10,6 +10,7 @@ import ProSync from "@/components/pro/sync";
 import ClerkShell from "@/components/account/clerk-shell";
 import { AccountBackupSync } from "@/components/progress/account-backup-sync";
 import WeeklyReportCard from "@/components/weekly-report-card";
+import { InPageJumps } from "@/components/in-page-jumps";
 import { routeKeywords } from "@/lib/keywords";
 import { INDEXABLE_ROBOTS } from "@/lib/robots-meta";
 import { PREPAINT_SCRIPT } from "@/lib/prepaint-config";
@@ -91,13 +92,17 @@ export default function RootLayout({
       {/* Sixteen tabbable elements sit ahead of the content on every page —
           the twelve-room nav plus the Pro and progress links — so a keyboard
           or screen-reader user crossed all of them again on every
-          navigation. Visible only once focused. */}
+          navigation. Visible only once focused. Its jump, like every
+          plain in-page link's, gets the history repair from InPageJumps, or
+          Back after it and a link to another room left that room on
+          screen. */}
       <a
         href="#content"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:border focus:border-violet focus:bg-panel focus:px-4 focus:py-2.5 focus:text-sm focus:text-ink"
       >
         Skip to content
       </a>
+      <InPageJumps />
       <Nav />
       <ProSync />
       {/* The free account backup, mounted once for the whole site so a singer

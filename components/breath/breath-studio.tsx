@@ -78,6 +78,24 @@ function starsForDrill(drill: BreathDrillId, bests: BreathBests): Stars {
   }
 }
 
+/**
+ * Whether the drill has a best at all. A sustain under ten seconds earns no
+ * star, and a set's own presets cap box breathing and the Farinelli climb at
+ * one, so stars cannot say whether a drill was ever done.
+ */
+export function drillTried(drill: BreathDrillId, bests: BreathBests): boolean {
+  switch (drill) {
+    case "box":
+      return bests.boxMinutes > 0;
+    case "farinelli":
+      return bests.farinelliCap > 0;
+    case "cue":
+      return bests.cueReps > 0;
+    default:
+      return bests.sustainSec > 0;
+  }
+}
+
 /** What the singer has already got out of this drill, in one line. */
 function bestLine(drill: BreathDrillId, bests: BreathBests): string {
   switch (drill) {
@@ -278,6 +296,10 @@ export function BreathStudio() {
         streakDays={liveStreak(progress.streak)}
         streakBest={progress.streak.best}
         stars={routineStars(recommended, bests)}
+        // A finished quick set can average under one star (its presets cap
+        // two drills at one, and a short sustain earns none): that is "So
+        // far", not "Not started".
+        started={recommended.steps.some((st) => drillTried(st.drill, bests))}
         goal={{ doneSec: goalDoneSec, goalSec }}
       />
 
@@ -339,8 +361,9 @@ export function BreathStudio() {
                     id: drill,
                     title: breathDrillTitle(drill),
                     // A row shows one secondary line and the mono one wins, so
-                    // an untried drill explains itself and a tried one reports.
-                    ...(stars > 0
+                    // an untried drill explains itself and a tried one reports,
+                    // stars or not: a 7-second sustain is a best, not "untried".
+                    ...(drillTried(drill, bests)
                       ? { meta: bestLine(drill, bests) }
                       : { desc: breathDrillDesc(drill) }),
                     stars,

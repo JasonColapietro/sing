@@ -31,21 +31,26 @@ vi.mock("@/components/practice/results-screen", async (importOriginal) => {
     ...actual,
     ResultsScreen: (props: {
       streakDays: number;
+      score: number | null;
+      xp: number;
       onAgain?: () => void;
       onPractice?: () => void;
+      notice?: ReactNode;
       children?: ReactNode;
     }) => (
       <div>
-        <span data-streak={props.streakDays} />
+        <span data-streak={props.streakDays} data-score={props.score ?? "none"} data-xp={props.xp} />
         <button type="button">Continue</button>
         {props.onAgain && <button type="button">Play again</button>}
         {props.onPractice && <button type="button">Practice</button>}
+        {props.notice}
         {props.children}
       </div>
     ),
   };
 });
 
+import { withStepResult } from "@/components/practice/step-results";
 import { RoutineSummary, routineSummaryRows } from "./routine-summary";
 
 const noop = () => {};
@@ -135,5 +140,58 @@ describe("a run that warmed in before a later step", () => {
     expect(routineSummaryRows(allSung)[0].label).toBe(title);
     const skippedWarmIn = routineSummaryRows({ routine, steps: [null, ...steps.slice(1)], completed: true, startStep: 2, warmIn: true });
     expect(skippedWarmIn[0]).toMatchObject({ label: title, score: null, note: "not in this run" });
+  });
+});
+
+describe("a routine resumed part-way by a program row", () => {
+  // Morning reset carried on from step 4, the cap having stopped it at step 3
+  // the day before; the warm-in is off, so steps 1–3 were never written.
+  const morning = routineById("morning")!;
+  const n = morning.steps.length;
+  const resumed = () => {
+    let steps: (SessionSummaryData | null)[] = [];
+    for (let i = 3; i < n; i++) steps = withStepResult(steps, i, sung(morning.steps[i].exerciseId, 70 + i), n);
+    return steps;
+  };
+
+  it("reaches its summary with a score, not the room's error screen", () => {
+    const data: RoutineSummaryData = { routine: morning, steps: resumed(), completed: true, startStep: 3 };
+    const html = render(data);
+    const expected = Math.round(morning.steps.slice(3).reduce((a, _, k) => a + 73 + k, 0) / (n - 3));
+    expect(html).toContain(`data-score="${expected}"`);
+    expect(html).toContain(`data-xp="${20 * (n - 3)}"`);
+    const rows = routineSummaryRows(data);
+    expect(rows.slice(0, 3).every((r) => r.note === "not in this run" && r.score === null)).toBe(true);
+    expect(rows.slice(3).every((r) => r.score !== null)).toBe(true);
+  });
+
+  it("reads an array with holes or undefined entries without dereferencing them", () => {
+    // The shape the old copy-and-assign produced: holes before step 4, then
+    // explicit undefined after the next spread.
+    const holey = [undefined, undefined, undefined, sung(morning.steps[3].exerciseId, 80), sung(morning.steps[4].exerciseId, 60)] as unknown as (SessionSummaryData | null)[];
+    const html = render({ routine: morning, steps: holey, completed: false, startStep: 3 });
+    expect(html).toContain('data-score="70"');
+  });
+});
+
+describe("a routine the free minutes stopped", () => {
+  const steps = [sung(routine.steps[0].exerciseId, 90), ...routine.steps.slice(1).map(() => null)];
+  const stopped: RoutineSummaryData = { routine, steps, completed: false, capStoppedAt: 1 };
+
+  it("calls the steps it never reached not reached, not skipped", () => {
+    const rows = routineSummaryRows(stopped);
+    expect(rows[0]).toMatchObject({ score: 90 });
+    expect(rows.slice(1).every((r) => r.note === "not reached")).toBe(true);
+    // A step skipped by hand before the cap still reads skipped.
+    const skippedFirst = routineSummaryRows({ ...stopped, steps: [steps[0], null, ...steps.slice(2)], capStoppedAt: 2 });
+    expect(skippedFirst[1].note).toBe("skipped");
+    expect(skippedFirst[2].note).toBe("not reached");
+  });
+
+  it("says how many steps the minutes ran out before, ahead of the rows", () => {
+    const html = render(stopped, true);
+    expect(html).toContain(`ran out before the last ${routine.steps.length - 1} steps of this run.`);
+    expect(html).not.toContain("That&#x27;s today&#x27;s 5 free minutes");
+    expect(html).toMatch(/<a[^>]*href="\/pro#buy"[^>]*>Pro has no daily limit<\/a>/);
   });
 });

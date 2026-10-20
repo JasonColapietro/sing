@@ -6,7 +6,7 @@ import { PITCH_MEDIAN_WINDOW } from "./latency";
 import { median } from "./median";
 import { freqToNote, type NoteInfo } from "./notes";
 import { getAudioContext } from "./context";
-import { openMic } from "./mic";
+import { MIC_ENDED_MESSAGE, openMic, watchMicEnd } from "./mic";
 import { useAudioPrefs } from "./devices";
 
 export interface PitchFrame {
@@ -74,8 +74,37 @@ export type PitchFrameListener = (
  * Microphone pitch tracking. Renders a valid idle state before start() is
  * called; always give users an explicit "enable microphone" button.
  */
-export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
+export function usePitch(opts?: {
+  clarityThreshold?: number;
+  /**
+   * Called once when the microphone goes away on its own mid-session, after
+   * the hook has stopped and set its error: the room's chance to close out
+   * what it was timing. Not called for the room's own stop(), nor for the
+   * brief stop while a device change reopens the stream, so a room that only
+   * watched `listening` drop could not tell those apart.
+   */
+  onMicEnded?: () => void;
+  /**
+   * Whether to analyse the open stream. False keeps the microphone open, so
+   * nothing asks for permission again or goes silent while it reopens, but
+   * stops the analysis loop: no pitch detection, no per-frame state update
+   * (`frame` reads empty), no subscriber calls, and `latest` is emptied.
+   * True again resumes on the same stream. For a host that holds one stream
+   * across steps that do not all listen: the ear workout keeps it from its
+   * first singing step to its results, and without this re-rendered every
+   * animation frame through Interval ID, Higher or lower and the slides
+   * between steps. Default true.
+   */
+  analyse?: boolean;
+}): UsePitchResult {
   const clarityThreshold = opts?.clarityThreshold ?? DEFAULT_CLARITY_THRESHOLD;
+  const onMicEnded = opts?.onMicEnded;
+  const analyse = opts?.analyse ?? true;
+  /** The latest onMicEnded, read when the track ends rather than at start. */
+  const onMicEndedRef = useRef(onMicEnded);
+  useEffect(() => {
+    onMicEndedRef.current = onMicEnded;
+  }, [onMicEnded]);
   const [frame, setFrame] = useState<PitchFrame>(EMPTY_FRAME);
   const [listening, setListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -83,7 +112,13 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
   const latest = useRef<PitchFrame>(EMPTY_FRAME);
   const streamRef = useRef<MediaStream | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  /** Stops listening for the open stream's mic going away (watchMicEnd). */
+  const unwatchRef = useRef<() => void>(() => {});
   const rafRef = useRef<number>(0);
+  /** The open stream's analysis loop, kept so a paused one can resume. */
+  const loopRef = useRef<(() => void) | null>(null);
+  /** `analyse`, as the loop and a stream that opens later read it. */
+  const analyseRef = useRef(analyse);
   const histRef = useRef<number[]>([]);
   // Whether this hook is still on screen. `start` awaits a permission prompt
   // that a singer can leave open for as long as they like, so the component can
@@ -111,6 +146,10 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
 
   const stop = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
+    rafRef.current = 0;
+    loopRef.current = null;
+    unwatchRef.current();
+    unwatchRef.current = () => {};
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
     sourceRef.current?.disconnect();
@@ -166,9 +205,25 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     sourceRef.current = source;
     listeningRef.current = true;
     setListening(true);
+    // An unplugged or dropped mic ends the track and the analyser reads
+    // silence from then on. Without this the room stayed "listening": the
+    // range test blamed the singer for being too quiet, the studio clock kept
+    // counting. Stopping hands every room its own stopped state, and the
+    // error is what its mic alert says.
+    unwatchRef.current = watchMicEnd(stream, () => {
+      if (streamRef.current !== stream) return;
+      stop();
+      setError(MIC_ENDED_MESSAGE);
+      onMicEndedRef.current?.();
+    });
 
     const buf = new Float32Array(analyser.fftSize);
     const loop = () => {
+      // Paused between the frame being scheduled and run: stay paused.
+      if (!analyseRef.current) {
+        rafRef.current = 0;
+        return;
+      }
       analyser.getFloatTimeDomainData(buf);
       let rms = 0;
       for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
@@ -210,10 +265,30 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
       }
       rafRef.current = requestAnimationFrame(loop);
     };
-    rafRef.current = requestAnimationFrame(loop);
+    loopRef.current = loop;
+    if (analyseRef.current) rafRef.current = requestAnimationFrame(loop);
     return true;
     }
-  }, [clarityThreshold]);
+  }, [clarityThreshold, stop]);
+
+  /**
+   * Pauses and resumes the analysis loop on the open stream (`analyse`).
+   * Pausing empties what the loop left behind, so a step that resumes it
+   * never reads a frame from before the pause as current.
+   */
+  useEffect(() => {
+    analyseRef.current = analyse;
+    if (!analyse) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+      histRef.current = [];
+      latest.current = EMPTY_FRAME;
+      return;
+    }
+    if (loopRef.current && rafRef.current === 0) {
+      rafRef.current = requestAnimationFrame(loopRef.current);
+    }
+  }, [analyse]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -245,5 +320,16 @@ export function usePitch(opts?: { clarityThreshold?: number }): UsePitchResult {
     };
   }, []);
 
-  return { frame, latest, listening, error, start, stop, getStream, subscribe };
+  return {
+    // Paused, the last frame state set is stale: report silence instead,
+    // without a state update of its own.
+    frame: analyse ? frame : EMPTY_FRAME,
+    latest,
+    listening,
+    error,
+    start,
+    stop,
+    getStream,
+    subscribe,
+  };
 }

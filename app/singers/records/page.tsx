@@ -190,7 +190,7 @@ export default function RecordsPage() {
           <LinkButton href={rangeTestHref()} size="md">
             Find my vocal range →
           </LinkButton>
-          <LinkButton href="/singers" variant="outline" size="md">
+          <LinkButton href="/singers" prefetch={false} variant="outline" size="md">
             ← All singers
           </LinkButton>
         </div>
@@ -289,7 +289,7 @@ export default function RecordsPage() {
             <LinkButton href={rangeTestHref()} size="sm">
               Find my range
             </LinkButton>
-            <LinkButton href="/singers" variant="outline" size="sm">
+            <LinkButton href="/singers" prefetch={false} variant="outline" size="sm">
               The full chart
             </LinkButton>
           </div>

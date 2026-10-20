@@ -17,7 +17,8 @@ vi.mock("@/lib/pro", async (importOriginal) => ({
   useProReady: () => state.ready,
 }));
 
-import { BreathStudio } from "./breath-studio";
+import { EMPTY_BREATH_BESTS } from "./store";
+import { BreathStudio, drillTried } from "./breath-studio";
 
 const FREE: FreeCap = { isPro: false, usedSec: 0, leftSec: 300, capped: false, capSec: 300 };
 const PRO: FreeCap = { isPro: true, usedSec: 0, leftSec: Number.POSITIVE_INFINITY, capped: false, capSec: 300 };
@@ -58,5 +59,17 @@ describe("the breath sets lede", () => {
     state.cap = FREE;
     state.ready = false;
     expect(renderToStaticMarkup(<BreathStudio />)).not.toContain("Free guided practice is");
+  });
+});
+
+describe("a drill with a best but no star", () => {
+  // Quick breath, finished: one minute of box (1 star), Farinelli to 8
+  // (1 star), a 7-second sustain (no star: the first is at 10 seconds).
+  const afterQuick = { sustainSec: 7, boxMinutes: 1, farinelliCap: 8, cueReps: 0 };
+
+  it("counts as tried, by its best rather than its stars", () => {
+    expect(drillTried("sustain", afterQuick)).toBe(true);
+    expect(drillTried("cue", afterQuick)).toBe(false);
+    expect(drillTried("box", EMPTY_BREATH_BESTS)).toBe(false);
   });
 });

@@ -19,14 +19,14 @@ As you slide upward, the folds have to shift gradually from a thicker setup to a
 
 ### Use the practice material
 
-Open the practice material on this page and choose Octave siren or Easy fourth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.
+Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Start with a lip trill, hum, or narrow vowel across an easy five-note span before attempting the octave. Keep the endpoints inside your comfortable range.
+Start with a lip trill, hum, or narrow vowel across an easy five-note span before attempting the siren. Keep the endpoints inside your comfortable range.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -35,14 +35,14 @@ Start with a lip trill, hum, or narrow vowel across an easy five-note span befor
 
 A crack is a gear change you did not plan. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
+- Look: Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
 
 ### Hear the distinction
 
-Slide up an octave from a comfortable low note and back down on “oo” twice in one take, at the same quiet volume: first quickly, about a second each way, then slowly, five or six seconds each way. Speed is the only thing that changes. On playback, the fast slide may sound smooth because it skips past the change, while the slow one lets you hear where the voice wants to switch; that place is what this module works on. Record your takes in the recorder. Use less volume near the gear change and keep the vowel narrow.
+Slide up an octave from a comfortable low note and back down on “oo” twice in one take, at the same quiet volume: first quickly, about a second each way, then slowly, five or six seconds each way. Speed is the only thing that changes. On playback, the fast slide may sound smooth because it skips past the change, while the slow one lets you hear where the voice wants to switch; that place is what this module works on. Record your takes in the recorder. Use less volume near the gear change and keep the vowel narrow. If your range test spanned less than 21 semitones, slide a fourth rather than an octave, starting a few notes above your lowest note, and widen it a step at a time only while both ends stay easy.
 
-- Look: Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
+- Look: Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
 
 ### Review your own attempt

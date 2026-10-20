@@ -169,6 +169,26 @@ describe("range-test links", () => {
   it.each(rangeLinks)("%s links %s at #start", (_, href) => {
     expect(new URL(href, "https://sing.suedeai.ai").hash).toBe("#start");
   });
+
+  /**
+   * The range test reports two ends. It locates no register transition (the
+   * passaggio lessons find that by ear, the spectrogram on a slow slide) and
+   * the studio's own guide works in the middle first, so a note on a link
+   * into it says what it measures and puts any transition on the page that
+   * shows it, never on the test.
+   */
+  const rangeNotes = TOOL_GUIDES.flatMap((g) =>
+    g.related.filter((link) => link.href.startsWith("/range")).map((link) => [g.path, link.note] as const),
+  );
+
+  it.each(rangeNotes)("%s says the range test measures the two ends: %s", (_, note) => {
+    expect(note).not.toMatch(/^(Find|Locate|Show|See|Hear)\b[^.;]*\b(transition|passaggio|register|break)/i);
+    if (/transition|passaggio|register|break/i.test(note)) {
+      expect(note).toMatch(/^Measure your lowest and highest notes;/);
+      expect(note).toMatch(/\bshow up here\b/);
+    }
+    expect(note).not.toMatch(/\bedges?\b.*\bstrengthen/i);
+  });
 });
 
 /**

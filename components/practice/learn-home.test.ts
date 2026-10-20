@@ -9,6 +9,7 @@ import {
   bestScoreForExercise,
   nextUpId,
   starsForExercise,
+  starLabel,
   type PathLevel,
   RETIRED_TITLES,
 } from "./learn-home";
@@ -178,5 +179,21 @@ describe("levelCompletion", () => {
     expect(levelCompletion({ title: "One", items })).toEqual({ sung: 1, total: 2, complete: false });
     expect(levelCompletion({ title: "One", items: items.map((i) => ({ ...i, stars: 1 })) }).complete).toBe(true);
     expect(levelCompletion({ title: "Empty", items: [] }).complete).toBe(false);
+  });
+});
+
+describe("starLabel", () => {
+  it("says Not started only for something not started", () => {
+    expect(starLabel(0)).toBe("Not started");
+    expect(starLabel(0, false)).toBe("Not started");
+    // Quick breath finished on one star, one star and a short sustain floors
+    // to zero stars; it was still done.
+    expect(starLabel(0, true)).toBe("So far");
+  });
+
+  it("is unchanged once there are stars", () => {
+    expect(starLabel(1)).toBe("So far");
+    expect(starLabel(2, true)).toBe("So far");
+    expect(starLabel(3)).toBe("All three stars");
   });
 });

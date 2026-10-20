@@ -121,6 +121,18 @@ describe("per-page share cards are versioned by what they draw", () => {
     expect(songCardVersion({ ...song, notes })).not.toBe(songCardVersion(song));
   });
 
+  it("names the part of the song a phrase card's range belongs to", () => {
+    // Round 1 labelled a phrase page's range as the phrase's in its title,
+    // heading and JSON-LD; the card still drew "E4 — G4 … 3 semitones" for
+    // Silent Night as if that were the song's.
+    expect(songCardText(songBySlug("silent-night")!).footer).toMatch(/^opening phrase · /);
+    expect(songCardText(songBySlug("home-on-the-range")!).footer).toMatch(/^chorus hook · /);
+    // The arrangements' titles already say "(Opening Lines…)".
+    const full = songBySlug("amazing-grace-full")!;
+    expect(full.form).toBe("full");
+    expect(songCardText(full).footer).toMatch(/^\d+ semitones · /);
+  });
+
   it("draws exactly the song text its version is built from", async () => {
     const song = songBySlug("scarborough-fair")!;
     const html = await drawn(SongImage({ params: Promise.resolve({ slug: song.slug }) }));

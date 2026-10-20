@@ -231,17 +231,26 @@ function Chip({
 /**
  * One labelled row of chips. The row scrolls sideways on its own rather than
  * wrapping to four lines or pushing the page wide at 375px.
+ *
+ * That takes a box narrower than its chips: `min-w-0` here, and a
+ * `grid-cols-1` track (minmax(0, 1fr)) below sm in the grid that holds the
+ * rows. With neither, a phone's implicit auto track grew to the widest row's
+ * 699px, the row was as wide as its chips and never scrolled, and Peak, Spiritual
+ * and Traditional sat past the screen edge, out of reach of a tap or a swipe.
  */
 function ChipRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div>
+    <div className="min-w-0">
       <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
         {label}
       </div>
+      {/* A scroller clips what overflows it, the chips' focus ring included
+          (2px outside a 2px offset). The 4px padding holds the ring inside
+          it, and the negative margins keep the chips where they were. */}
       <div
         role="group"
         aria-label={label}
-        className="no-scrollbar mt-1.5 flex gap-1.5 overflow-x-auto pb-0.5"
+        className="no-scrollbar -mx-1 mt-0.5 -mb-0.5 flex gap-1.5 overflow-x-auto p-1"
       >
         {children}
       </div>
@@ -352,7 +361,7 @@ export function BrowseControls({
         </span>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {options.band.length > 1 && (
           <ChipRow label="Band">
             {options.band.map((b) => (

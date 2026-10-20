@@ -61,14 +61,20 @@ describe("songs mic gate", () => {
     // A singer under the cap, or on Pro, paints exactly the gate.
     const ids = (h: string) => h.replace(/_R_[0-9a-z]+_/g, "_ID_");
     // The two wrappers that carry the not-capped marker, and nothing else.
+    // The subtitle wrapper holds the sentence phones leave off in its own span.
     const unwrap = (h: string) =>
       h
-        .replace(/<span data-prepaint-plan="not-capped">([^<]*)<\/span>/, "$1")
+        .replace(/<span data-prepaint-plan="not-capped">((?:[^<]|<span[^>]*>[^<]*<\/span>)*)<\/span>/, "$1")
         .replace('<div data-prepaint-plan="not-capped">', "")
         .replace(/<\/div><\/main>$/, "</main>");
+    // The plain gate is painted for the same plan: its "Free · Pro adds the
+    // coach" line (ProWhisper) is in the server HTML behind the not-pro
+    // marker, so a Pro singer's first paint has the gate without it.
     for (const plan of ["free", "pro"] as const) {
-      expect(ids(unwrap(paintedFor(html, { plan })))).toBe(ids(renderToStaticMarkup(<SongsMicGate />)));
+      expect(ids(unwrap(paintedFor(html, { plan })))).toBe(ids(paintedFor(renderToStaticMarkup(<SongsMicGate />), { plan })));
     }
+    expect(paintedFor(html, { plan: "free" })).toContain("adds the coach");
+    expect(paintedFor(html, { plan: "pro" })).not.toContain("adds the coach");
     // A capped singer paints what SongsClient will show them: the library's
     // subtitle and the wall, with the songbook held below the fold.
     const capped = wordsPainted(paintedFor(html, { plan: "capped" }));
@@ -141,6 +147,27 @@ describe("songs mic gate", () => {
     expect(button).toBeGreaterThan(html.indexOf("Sing along and see every note you hit"));
     expect(button).toBeLessThan(html.indexOf("Audio never leaves your browser"));
     expect(html.indexOf('role="alert"')).toBeLessThan(html.indexOf("Audio never leaves your browser"));
+  });
+
+  it("fits both buttons on a 320×568 first screen", () => {
+    // At the lg size "Continue without a mic" wrapped to two lines at 320px and
+    // sat across the fold, under a six-line subtitle. Below sm the buttons are
+    // the md size and the subtitle's second sentence is left off (it stays in
+    // the HTML); from sm up both are as before.
+    const html = renderToStaticMarkup(<SongsMicGate />);
+    for (const label of ["Enable microphone", "Continue without a mic"]) {
+      const button = html.match(new RegExp(`<button class="([^"]*)">(?:(?!</button>).)*${label}</button>`));
+      expect(button?.[1], label).toContain("px-5 py-2.5 text-sm sm:px-7 sm:py-3.5 sm:text-base");
+    }
+    expect(html).toMatch(
+      /live pitch scoring\.<span class="hidden sm:inline"> Once you have taken the range test, each song opens fitted to your range\.<\/span>/,
+    );
+    // A deep link's heading names the song; the longest titles took it to
+    // three lines at text-xl and the second button across the fold again.
+    const linked = renderToStaticMarkup(
+      <SongsMicGate heading="Enable your microphone to sing “She'll Be Coming Round the Mountain”" />,
+    );
+    expect(linked).toContain('<h2 class="text-lg sm:text-xl">Enable your microphone to sing');
   });
 
   it("labels the button as a retry once the mic has failed", () => {

@@ -7,13 +7,17 @@
  * stylesheet to lean on — hence the inline styles and the literal brand
  * values rather than the design tokens, which are defined in a stylesheet
  * that may be exactly what failed to load.
+ *
+ * "Try again" calls `retry`, the prop Next 16.3 passes to the global error
+ * boundary (with `reset`); see app/error.tsx. The 16.2 name,
+ * `unstable_retry`, arrives undefined, so a button wired to it threw.
  */
 export default function GlobalError({
   error,
-  unstable_retry,
+  retry,
 }: {
   error: Error & { digest?: string };
-  unstable_retry: () => void;
+  retry: () => void;
 }) {
   return (
     <html lang="en">
@@ -70,7 +74,7 @@ export default function GlobalError({
           >
             <button
               type="button"
-              onClick={() => unstable_retry()}
+              onClick={() => retry()}
               style={{
                 borderRadius: "999px",
                 border: "none",

@@ -140,12 +140,18 @@ try {
       // back into view.
       if (width === 375) {
         const rows = page.locator("#singer-directory-results a");
-        const backTo = async (link, scope, label) => {
+        // `reload`: the singer page is reloaded before Back, so /singers is
+        // the first page this document renders (round 12, content:D3).
+        const backTo = async (link, scope, label, { reload = false } = {}) => {
           await link.scrollIntoViewIfNeeded();
           const href = await link.getAttribute("href");
           await link.click();
           await page.waitForURL((url) => url.pathname === href);
           await page.locator("h1").first().waitFor();
+          if (reload) {
+            await page.reload({ waitUntil: "networkidle" });
+            await page.locator("h1").first().waitFor();
+          }
           await page.goBack();
           await page.waitForURL((url) => url.pathname === "/singers");
           const back = await page.waitForFunction(([sel, target]) => {
@@ -175,10 +181,67 @@ try {
           "[data-singer-search-priority]",
           "Popular vocal range lookups link",
         );
+        // The links under the chart: Browse by genre, the records button and
+        // the methodology link used to come back at the footer (content:D2).
+        await backTo(
+          page.locator('[data-singer-return="browse"] a[href="/singers/genre/reggae"]'),
+          '[data-singer-return="browse"]',
+          "Browse by genre chip",
+        );
+        await backTo(
+          page.locator('[data-singer-return="browse"] a[href="/singers/records"]'),
+          '[data-singer-return="browse"]',
+          "records button",
+        );
+        await backTo(
+          page.locator('[data-singer-return="method"] a[href="/singers/methodology"]'),
+          '[data-singer-return="method"]',
+          "methodology link",
+        );
+        await page.goto(`${base}/singers`, { waitUntil: "networkidle" });
+        await rows.nth(47).waitFor();
+        await backTo(rows.nth(30), "#singer-directory-results", "chart row 31, singer page reloaded", { reload: true });
+      }
+
+      // Back after leaving the chart by a link outside its lists (a header
+      // tab, the menu drawer) puts the chart where it was. It came back
+      // 1,490px (1280) or 3,285px (375) lower.
+      if (width === 375 || width === 1280) {
+        await page.goto(`${base}/singers`, { waitUntil: "networkidle" });
+        const row = page.locator("#singer-directory-results a").nth(30);
+        await row.scrollIntoViewIfNeeded();
+        const href = await row.getAttribute("href");
+        const before = await row.evaluate((el) => el.getBoundingClientRect().top);
+        // A press where the control is on screen, as a finger or mouse makes
+        // it: locator.click() first scrolls its target into view, and for a
+        // control in the sticky header that moved the page about 450px
+        // before the click, so the test measured its own scroll.
+        const press = async (control) => {
+          const box = await control.boundingBox();
+          await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+        };
+        if (width < SM) {
+          await press(trigger);
+          const drawer = page.getByRole("dialog", { name: "Navigation menu" });
+          await drawer.waitFor();
+          await press(drawer.getByRole("link", { name: "Songs", exact: true }));
+        } else {
+          await press(page.locator("header").getByRole("navigation", { name: "Main", exact: true })
+            .getByRole("link", { name: "Songs", exact: true }));
+        }
+        await page.waitForURL((url) => url.pathname === "/songs");
+        await page.locator("h1").first().waitFor();
+        await page.goBack();
+        await page.waitForURL((url) => url.pathname === "/singers");
+        const settled = await page.waitForFunction(([target, top]) => {
+          const el = document.querySelector(`#singer-directory-results a[href="${target}"]`);
+          return el !== null && Math.abs(el.getBoundingClientRect().top - top) <= 2;
+        }, [href, before], { timeout: 5000 }).then(() => true, () => false);
+        assert.equal(settled, true, `${width}px: Back after a header departure puts ${href} back at ${Math.round(before)}px`);
       }
 
       assert.deepEqual(errors, []);
-      console.log(`PASS ${width}px: ten destinations via ${width < SM ? "drawer" : "header"}, touch targets, overflow, menu cleanup, warmup exit focus${width === 375 ? ", Back to the tapped singer" : ""}`);
+      console.log(`PASS ${width}px: ten destinations via ${width < SM ? "drawer" : "header"}, touch targets, overflow, menu cleanup, warmup exit focus${width === 375 ? ", Back to the tapped singer" : ""}${width === 375 || width === 1280 ? ", Back after leaving the chart" : ""}`);
     } finally { await context.close(); }
   }
 } finally { await browser.close(); }

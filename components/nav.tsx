@@ -31,12 +31,24 @@ const NavAccount = dynamic(() => import("@/components/account/nav-account"));
  * host tab lit while you're inside one, so the header never claims you are
  * nowhere. Order follows the practice loop: warm up and sing, measure and
  * compare, then read and review.
+ *
+ * `prefetch: false` keeps a tab from fetching its page in the background on
+ * every load. The header row is on screen at 640px and wider, so a prefetching
+ * Singers tab pulled the whole /singers directory (about 230 KB) into every
+ * page, the payload lib/singer-link-prefetch.test.ts keeps other links from
+ * fetching unasked.
  */
-export const LINKS: { href: string; target?: string; label: string; also?: string[] }[] = [
+export const LINKS: {
+  href: string;
+  target?: string;
+  label: string;
+  also?: string[];
+  prefetch?: false;
+}[] = [
   { href: "/studio", label: "Studio" },
   { href: "/warmups", label: "Warmups", also: ["/programs"] },
   { href: "/range", target: rangeTestHref(), label: "Range" },
-  { href: "/singers", label: "Singers" },
+  { href: "/singers", label: "Singers", prefetch: false },
   { href: "/ear-training", label: "Ear" },
   { href: "/breath", label: "Breath" },
   { href: "/songs", label: "Songs" },
@@ -369,6 +381,7 @@ export default function Nav() {
                   <Link
                     key={l.href}
                     href={l.target ?? l.href}
+                    prefetch={l.prefetch}
                     onClick={() => setMenuOpen(false)}
                     aria-current={ariaCurrentFor(l, pathname)}
                     className={`rounded-2xl border px-4 py-4 text-base transition-colors ${
@@ -410,11 +423,15 @@ export default function Nav() {
 
           {/* Desktop / tablet: thumb-sized tabs with a fade only while more remain.
               Start-aligned so the first tab stays reachable when the row
-              overflows on narrower screens. */}
+              overflows on narrower screens. overflow-x-auto clips on both
+              axes, and the 44px tabs filled the row's height, so a focused
+              tab's ring (2px, 2px out) lost its top and bottom. p-1 gives the
+              ring room inside the clip and -m-1 hands the space back, so the
+              tabs sit exactly where they did. */}
           <nav
             aria-label="Main"
             ref={tabsRef}
-            className={`no-scrollbar hidden flex-1 items-center gap-2 overflow-x-auto sm:flex ${
+            className={`no-scrollbar -m-1 hidden flex-1 items-center gap-2 overflow-x-auto p-1 sm:flex ${
               tabsOverflow
                 ? "[mask-image:linear-gradient(to_right,black_calc(100%-28px),transparent)]"
                 : ""
@@ -426,6 +443,7 @@ export default function Nav() {
                 <Link
                   key={l.href}
                   href={l.target ?? l.href}
+                  prefetch={l.prefetch}
                   aria-current={ariaCurrentFor(l, pathname)}
                   className={`flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full px-3 py-1.5 text-sm transition-colors ${
                     active
@@ -473,44 +491,45 @@ export default function Nav() {
             Pro
           </Link>
 
+          {/* Fixed width at the 1280px plateau, so it shows only what fits
+              there at any count: the level and, while a streak is alive, the
+              flame (solid once today is banked, outline while it is at risk)
+              and the day count. "LV 6 · 1230 XP · 12d · today?" took 250px
+              and pushed Learn and Progress behind the Menu button, in a row
+              that leaves this pill about 120px once the account control is
+              beside it (see below). The XP count and the at-risk words are in the
+              drawer and on /progress, and the sentence below is what a screen
+              reader hears. */}
           <Link
             href="/progress"
             className="hidden min-h-11 shrink-0 items-center gap-2 rounded-full border border-line px-3 py-1.5 font-mono text-xs transition-colors hover:border-line2 hover:bg-panel2 sm:flex"
           >
             <span className="text-violet-ink">LV {lvl.level}</span>
-            <span className="text-dim">·</span>
-            <span className="tabular">{p.xp} XP</span>
+            <span className="sr-only">, {p.xp} XP</span>
             {streak !== "none" && (
-              <>
-                <span className="text-dim">·</span>
-                <span className="flex items-center gap-1 text-rec">
-                  <FlameIcon filled={streak === "banked"} />
-                  <span aria-hidden="true" className="tabular">
-                    {p.streak.current}d
-                  </span>
-                  {streak === "at-risk" && (
-                    <span aria-hidden="true" className="text-dim">
-                      · today?
-                    </span>
-                  )}
-                  {/* "5d · today?" is the compact form the header has room for;
-                      the sentence is what a screen reader gets instead. */}
-                  <span className="sr-only">
-                    {streak === "banked"
-                      ? `${p.streak.current} day streak, practiced today`
-                      : `${p.streak.current} day streak, at risk — nothing practiced today`}
-                  </span>
+              <span className="flex items-center gap-1 text-rec">
+                <FlameIcon filled={streak === "banked"} />
+                <span aria-hidden="true" className="tabular">
+                  {p.streak.current}d
                 </span>
-              </>
+                <span className="sr-only">
+                  {streak === "banked"
+                    ? `, ${p.streak.current} day streak, practiced today`
+                    : `, ${p.streak.current} day streak, at risk — nothing practiced today`}
+                </span>
+              </span>
             )}
           </Link>
 
           {/* Last in the row, where an account control is looked for, and a
               glyph rather than a label because the row has no words left to
-              give. At the max-w-6xl plateau the ten tabs need 706px and have
-              777px, so anything past 71px (this slot plus its gap) starts
-              masking the Progress tab — and a "Save progress" label alone is
-              wider than that. The offer gets its sentence where there is room
+              give. At the max-w-6xl plateau the ten tabs need 739px, and the
+              logo, the Pro pill and the progress pill at its widest (about
+              114px, "LV 60" and a three-digit streak), with their gaps, leave
+              about 50px: room for this 28px slot and its 16px gap, and little
+              more. Past that the row overflows and the Menu button takes the
+              place of Learn and Progress — and a "Save progress" label alone
+              is wider than that. The offer gets its sentence where there is room
               to say it: the drawer below, and the in-page save prompt.
               28px square either way, so signing in shifts nothing.
 

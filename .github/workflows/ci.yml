@@ -173,6 +173,7 @@ jobs:
               run_check programs node e2e/programs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/programs.json
               run_check song-first-practice node e2e/song-first-practice.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check songs-modes node e2e/songs-modes.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check song-visit-unlock node e2e/song-visit-unlock.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               ;;
             mobile-audit)
               run_check mobile-audit node e2e/run.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=mobile-375 --json=browser-results/mobile-audit.json
@@ -181,6 +182,7 @@ jobs:
               run_check desktop-audit node e2e/run.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=desktop-1280 --json=browser-results/desktop-audit.json
               ;;
             audio)
+              run_check ear-mic-interruption node e2e/ear-mic-interruption.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check pitch-precision node e2e/pitch-precision.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/pitch-precision.json
               run_check breath-gate node e2e/breath-gate.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/breath-gate.json
               run_check vibrato-drill node e2e/vibrato-drill.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/vibrato-drill.json
@@ -193,6 +195,11 @@ jobs:
               # history, no cap or program state): the record most visitors
               # who come back carry, which the fresh run above never seeds.
               run_check layout-shift-returning node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --returning --viewport=mobile-375 "--json=browser-results/layout-shift-returning-mobile-375.json"
+              # /singers on a tall desktop window, where the section after its
+              # chart is on the first screen when the chart mounts: an empty
+              # chart slot moved it by 0.128 at 1440x1300 while 375 and 1280
+              # read zero.
+              run_check layout-shift-singers-tall node e2e/cls.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=desktop-1440-tall --route=singers-directory "--json=browser-results/layout-shift-singers-tall.json"
               # The stored states the prerender cannot show (e2e/README.md,
               # "Layout shift"), each on the routes it reshapes, on a phone and
               # a desktop: about 72 page loads in all. program-detail and

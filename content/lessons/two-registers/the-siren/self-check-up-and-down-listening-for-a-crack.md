@@ -15,14 +15,14 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Octave siren or Easy fourth siren. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.
+Open the practice material on this page and choose Octave siren or Easy fourth siren. If your range test spanned less than 21 semitones (under 1 octave + 9 on its Span), choose Easy fourth siren: in a narrower range the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest. Hear the reference, choose a comfortable key, then stop it before singing. The reading Registers, and why they exist is listed there too.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Start with a lip trill, hum, or narrow vowel across an easy five-note span before attempting the octave. Keep the endpoints inside your comfortable range.
+Start with a lip trill, hum, or narrow vowel across an easy five-note span before attempting the siren. Keep the endpoints inside your comfortable range.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
@@ -31,14 +31,14 @@ Start with a lip trill, hum, or narrow vowel across an easy five-note span befor
 
 Three vowels, both directions. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
+- Look: Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Learn the pace there with the reference, then stop it and sing the three sirens in that one recorder take, so you can judge them on playback. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Slide slowly enough to hear the transition instead of jumping across it. Use less volume near the gear change and keep the vowel narrow. In the warm-up room, open Adjust and set the tempo to 0.5×: each octave glide then takes about five seconds each way, the slow siren this module asks for; at the normal tempo it takes under two and a half. Learn the pace there with the reference, then stop it and sing the three sirens in that one recorder take, so you can judge them on playback. Use the same three narrow vowels each time, “oo”, then “oh”, then “ee”, and leave “ah” for later. If your range test spanned less than 21 semitones, slide a fourth rather than an octave, starting a few notes above your lowest note, and widen it a step at a time only while both ends stay easy.
 
-- Look: Follow the start and end pitches in the supplied Octave siren, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
+- Look: Follow the start and end pitches in the supplied siren only where both sit inside your comfortable range, then stop playback before your attempt. Keep the jaw and neck easy while listening for the transition.
 - Listen: Judge the continuity from your recorded playback. Listen for a jump, break, or abrupt change in tone; the reference notes do not show or evaluate your voice.
 
 ### Review your own attempt

@@ -20,6 +20,7 @@ import { isProSong } from "@/components/songs/data";
 import {
   computeDifficulty,
   lyricLines,
+  phraseName,
   songNoteRange,
 } from "@/components/songs/lib";
 import type { Song } from "@/components/songs/types";
@@ -81,6 +82,10 @@ export function songCardText(song: Song): SongCardText {
   const pro = isProSong(song.id);
   const [lo, hi] = songNoteRange(song);
   const { label: difficulty, rangeSemis } = computeDifficulty(song);
+  // A phrase entry's notes and span describe that phrase, not the song, as
+  // the page's title and JSON-LD say; the arrangements' titles already read
+  // "(Opening Lines…)".
+  const part = song.form === "phrase" ? `${phraseName(song)} · ` : "";
   return {
     pro,
     kicker: pro ? "PRO SONGBOOK" : "PUBLIC DOMAIN · FREE TO SING",
@@ -88,7 +93,7 @@ export function songCardText(song: Song): SongCardText {
     facts: `${song.genre} · ${song.era} · ${song.bpm} bpm · ${song.beatsPerBar}/bar · ${difficulty}`,
     firstLine: lyricLines(song.notes)[0]?.text ?? "",
     notes: `${midiToLabel(lo)} — ${midiToLabel(hi)}`,
-    footer: `${rangeSemis} semitones · ${song.notes.length} notes · suede sing`,
+    footer: `${part}${rangeSemis} semitones · ${song.notes.length} notes · suede sing`,
   };
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { midiToLabel } from "@/lib/audio/notes";
 import { useProgress } from "@/lib/progress";
@@ -38,91 +38,158 @@ import {
  * link again. The chart renders nothing until after mount and starts again
  * at its first batch, so the browser's own restored position is applied to a
  * page thousands of pixels shorter and every return landed far from the row.
+ * Links below the chart move with it, so they need the same, and so does a
+ * visitor who leaves from the chart by any other link: the list link on
+ * screen then is the one to come back to.
+ *
+ * The tap is written into this page's own history entry (history.state),
+ * which only a return to that entry reads: Back, Forward, or a full load of
+ * it by either. It used to be a sessionStorage note checked against the time
+ * of the last popstate, and the listener for that only existed once this
+ * module had loaded. A Back handled by a document that had not loaded it yet
+ * (the singer page was reloaded, or the visitor left by a full page load and
+ * came back) read as a fresh visit and landed in the footer.
  */
-const RETURN_KEY = "suede-sing:singers:return";
-/** The lists a visitor taps a singer in (the chart's own rows and the two
- * link lists after it), each searched only within itself: the same href can
- * appear in more than one list and in the reviewed cards above the chart. */
-const RETURN_SCOPES = [
+const RETURN_STATE = "singersReturn";
+/** The lists a visitor taps a link in (the chart's records strip and rows,
+ * then the link lists and sections after the chart), each searched only
+ * within itself: the same href can appear in more than one list and in the
+ * reviewed cards above the chart. */
+export const RETURN_SCOPES = [
+  '[data-singer-return="records"]',
   "#singer-directory-results",
-  "[data-singer-crawl-index]",
   "[data-singer-search-priority]",
+  "[data-singer-crawl-index]",
+  '[data-singer-return="browse"]',
+  '[data-singer-return="method"]',
 ] as const;
-/** How recently a history traversal must have happened to count as "Back". */
-const TRAVERSAL_WINDOW_MS = 10_000;
 
-let lastPopState = 0;
-let mountedInDocument = false;
-if (typeof window !== "undefined") {
-  window.addEventListener("popstate", () => {
-    lastPopState = Date.now();
-  });
+export interface ReturnTarget {
+  href: string;
+  scope: (typeof RETURN_SCOPES)[number];
+  /** Set when the visitor left by some other link (a header tab, the menu,
+   * the footer) with this one on screen: its distance from the top of the
+   * viewport then, to put it back at. A tapped link has none and is centred. */
+  top?: number;
+}
+
+/** The tap recorded on a history entry's state, or null. */
+export function readReturnTarget(state: unknown): ReturnTarget | null {
+  if (!state || typeof state !== "object") return null;
+  const saved = (state as Record<string, unknown>)[RETURN_STATE];
+  if (!saved || typeof saved !== "object") return null;
+  const { href, scope, top } = saved as { href?: unknown; scope?: unknown; top?: unknown };
+  if (typeof href !== "string" || !href.startsWith("/")) return null;
+  const known = RETURN_SCOPES.find((sel) => sel === scope);
+  if (!known) return null;
+  return typeof top === "number" && Number.isFinite(top) ? { href, scope: known, top } : { href, scope: known };
 }
 
 /**
- * Whether this mount is a Back/Forward return to the tap recorded at
- * `tappedAt`: within the app, a popstate since that tap and just now (an
- * earlier Back followed by a tap and a forward link does not count); or a
- * full document load of this very page by history traversal.
+ * A history entry's state with the return target set, or removed (null).
+ * Everything else in it, Next's own fields included, is kept: a state that
+ * carries them passes Next's history patch unchanged.
  */
-function arrivedByHistory(tappedAt: number): boolean {
-  const first = !mountedInDocument;
-  mountedInDocument = true;
-  if (lastPopState >= tappedAt && Date.now() - lastPopState < TRAVERSAL_WINDOW_MS) return true;
-  if (!first) return false;
-  try {
-    const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-    return nav?.type === "back_forward" && new URL(nav.name).pathname === window.location.pathname;
-  } catch {
-    return false;
-  }
+export function withReturnTarget(state: unknown, target: ReturnTarget | null): Record<string, unknown> {
+  const next: Record<string, unknown> = state && typeof state === "object" ? { ...state } : {};
+  if (target) next[RETURN_STATE] = target;
+  else delete next[RETURN_STATE];
+  return next;
 }
 
-/** Remember the singer link a visitor tapped in one of those lists. */
-function rememberTappedSinger(e: MouseEvent) {
+/**
+ * The link to hold the view by when the visitor leaves by a link outside the
+ * lists: the first, in the lists' order, whose top is on screen below the
+ * header (`floor`, the page's scroll-padding). Candidates are in document
+ * order and each is the first link to its href in its list, which is the one
+ * the return looks up. Null when no list is on screen: above the chart the
+ * page is server-rendered and the browser's own position holds.
+ */
+export function pickReturnAnchor(
+  candidates: ReadonlyArray<ReturnTarget & { top: number; height: number }>,
+  floor: number,
+  viewportHeight: number,
+): ReturnTarget | null {
+  const hit = candidates.find((c) => c.height > 0 && c.top >= floor && c.top < viewportHeight);
+  return hit ? { href: hit.href, scope: hit.scope, top: Math.round(hit.top) } : null;
+}
+
+function returnAnchorInView(): ReturnTarget | null {
+  const floor = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  const candidates: Array<ReturnTarget & { top: number; height: number }> = [];
+  for (const scope of RETURN_SCOPES) {
+    const box = document.querySelector(scope);
+    if (!box) continue;
+    const area = box.getBoundingClientRect();
+    if (area.bottom <= floor || area.top >= window.innerHeight) continue;
+    const seen = new Set<string>();
+    for (const a of box.querySelectorAll('a[href^="/singers/"]')) {
+      const href = a.getAttribute("href");
+      if (!href || seen.has(href)) continue;
+      seen.add(href);
+      const { top, height } = a.getBoundingClientRect();
+      candidates.push({ href, scope, top, height });
+    }
+  }
+  return pickReturnAnchor(candidates, floor, window.innerHeight);
+}
+
+/**
+ * Remember, on this entry, where to bring the visitor back to: the link they
+ * tapped in one of those lists, or, when they leave by any other link from
+ * somewhere in or below the chart, the list link on screen at the time. The
+ * second case is the same fall as the first: a header tab or a footer link
+ * left from row 31 came back 3,000px further down on a phone, in the footer.
+ */
+function rememberReturn(e: MouseEvent) {
+  // A tap that opens another tab or window leaves this page where it is.
+  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
   const target = e.target instanceof Element ? e.target : null;
-  const link = target?.closest('a[href^="/singers/"]');
-  if (!link) return;
-  const scope = RETURN_SCOPES.find((sel) => link.closest(sel));
-  if (!scope) return;
+  const link = target?.closest("a[href]");
+  if (!(link instanceof HTMLAnchorElement)) return;
+  if ((link.target && link.target !== "_self") || link.hasAttribute("download")) return;
+  // A link within this page (#method, the Singers tab itself) leaves nothing
+  // to come back to.
+  if (link.origin === window.location.origin && link.pathname === window.location.pathname) return;
+  const href = link.getAttribute("href") ?? "";
+  const scope = href.startsWith("/singers/")
+    ? RETURN_SCOPES.find((sel) => link.closest(sel))
+    : undefined;
+  const saved = scope ? { href, scope } : returnAnchorInView();
   try {
-    sessionStorage.setItem(
-      RETURN_KEY,
-      JSON.stringify({ href: link.getAttribute("href"), scope, at: Date.now() }),
-    );
+    window.history.replaceState(withReturnTarget(window.history.state, saved), "");
   } catch {
-    // Storage blocked: Back keeps the browser's own position.
+    // History refused the write: Back keeps the browser's own position.
   }
 }
 
-/** On a Back return, bring the tapped link into view. The key is cleared on
- * every mount, so a forward visit never jumps to an old row. */
-function returnToTappedSinger() {
-  let saved: { href?: unknown; scope?: unknown; at?: unknown } | null = null;
+/** On a return to this entry, bring the link back into view, once: the
+ * target is cleared from the entry so a later Back here (after leaving from
+ * above the chart) keeps the browser's own position. */
+function returnToTappedSinger(saved: ReturnTarget | null) {
+  if (!saved) return;
   try {
-    saved = JSON.parse(sessionStorage.getItem(RETURN_KEY) ?? "null");
-    sessionStorage.removeItem(RETURN_KEY);
+    window.history.replaceState(withReturnTarget(window.history.state, null), "");
   } catch {
-    return;
+    // Nothing to clear.
   }
-  const traversal = arrivedByHistory(typeof saved?.at === "number" ? saved.at : 0);
-  if (!saved || typeof saved.href !== "string" || !traversal) return;
-  const scope = RETURN_SCOPES.find((sel) => sel === saved.scope);
-  if (!scope) return;
   const link = document
-    .querySelector(scope)
+    .querySelector(saved.scope)
     ?.querySelector(`a[href="${CSS.escape(saved.href)}"]`);
   if (!link) return;
-  link.scrollIntoView({ block: "center" });
+  const { top } = saved;
+  const place = () => {
+    if (top === undefined) link.scrollIntoView({ block: "center" });
+    else window.scrollBy(0, link.getBoundingClientRect().top - top);
+  };
+  place();
   // A Back inside the app can mount the chart while the popstate is still
   // being handled, and the browser then applies the entry's saved scroll
   // position on top of this one. That position was measured with every row at
   // its real height, which a fresh chart only estimates (.cv-auto), so after
   // "Load more" it left the row a screen or more above the viewport. Bring the
-  // link back once the browser has done that; already centred, it is a no-op.
-  requestAnimationFrame(() =>
-    requestAnimationFrame(() => link.scrollIntoView({ block: "center" })),
-  );
+  // link back once the browser has done that; already in place, it is a no-op.
+  requestAnimationFrame(() => requestAnimationFrame(place));
 }
 
 /* ---------------------------------------------------------------- axis --- */
@@ -315,11 +382,17 @@ function BackToFiltersButton({ searchId }: { searchId: string }) {
         const reduce = window.matchMedia(
           "(prefers-reduced-motion: reduce)",
         ).matches;
-        window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+        const search = document.getElementById(searchId);
+        // To the search box and the filters beside it, not the top of the
+        // page: the chart starts below the hero, the reviewed profiles and
+        // the voice types, so the page top left the filters about 2,100px
+        // down on a phone with the focus already in a field nobody could see.
+        // The page's scroll-padding keeps the box clear of the header.
+        search?.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
         // Scrolling alone leaves keyboard focus deep in the row list, so the
         // button did nothing for anyone not using a mouse. The search box is
         // what "↑ filters" is actually for.
-        document.getElementById(searchId)?.focus({ preventScroll: true });
+        search?.focus({ preventScroll: true });
       }}
       // py-1 rather than py-0.5: at 10px type this button measured 21px tall,
       // under the 24px minimum for a control that is not inline text.
@@ -339,6 +412,9 @@ export function SingersDirectory() {
     INITIAL_RICH_SINGER_ROWS,
   );
   const [isInteractive, setIsInteractive] = useState(false);
+  // The link this history entry was left by, read before anything below
+  // rewrites the entry's state (the filter sync's replaceState drops it).
+  const returnTarget = useRef<ReturnTarget | null>(null);
 
   // Filters live in the URL (?q=&voice=&genre=&sort=), with the loaded row
   // count past the first batch (?shown=), so browser Back from a singer page
@@ -349,6 +425,7 @@ export function SingersDirectory() {
     // server-rendered directory (and its 357 crawlable links), so restore
     // from the URL after hydration instead — the one-shot init the rule
     // can't distinguish from a cascading-render bug.
+    returnTarget.current = readReturnTarget(window.history.state);
     /* eslint-disable react-hooks/set-state-in-effect */
     const p = new URLSearchParams(window.location.search);
     const pv = p.get("voice");
@@ -363,13 +440,15 @@ export function SingersDirectory() {
     /* eslint-enable react-hooks/set-state-in-effect */
 
     // Capture phase, so the tap is recorded before the link navigates.
-    document.addEventListener("click", rememberTappedSinger, true);
-    return () => document.removeEventListener("click", rememberTappedSinger, true);
+    document.addEventListener("click", rememberReturn, true);
+    return () => document.removeEventListener("click", rememberReturn, true);
   }, []);
 
   // Runs once the chart (and its restored rows) is in the DOM.
   useEffect(() => {
-    if (isInteractive) returnToTappedSinger();
+    if (!isInteractive) return;
+    returnToTappedSinger(returnTarget.current);
+    returnTarget.current = null;
   }, [isInteractive]);
 
   useEffect(() => {
@@ -424,14 +503,22 @@ export function SingersDirectory() {
   // The complete server-only crawl index on /singers carries every raw HTML
   // artist anchor. Deferring this richer client chart avoids duplicating those
   // anchors in the initial document and keeps the first interactive batch small.
-  if (!isInteractive) return null;
+  // Until then the slot holds one empty screen (no anchors), so the sections
+  // after it start below the first screen on any display and the chart, about
+  // 2,500px, replaces it without moving anything in view: with no box there,
+  // a tall screen showed "Popular vocal range lookups" at load and the chart
+  // shoved it down (layout shift 0.1-0.2 at 1024×1366 and 1440×1300).
+  if (!isInteractive) return <div aria-hidden="true" className="min-h-screen" />;
 
   return (
     <div>
       {/* Records strip. Three stacked cards pushed every singer below the fold
           on a phone, so below sm they sit in one horizontally-scrollable row
           (same fade affordance as the nav) instead of ~200px of column. */}
-      <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 [mask-image:linear-gradient(to_right,black_calc(100%-20px),transparent)] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:[mask-image:none]">
+      <div
+        data-singer-return="records"
+        className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 [mask-image:linear-gradient(to_right,black_calc(100%-20px),transparent)] sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:[mask-image:none]"
+      >
         {/* A shared record names every holder ("Dimash Kudaibergen · Mike
             Patton"), not whichever sorts first, and links to the records
             page, which lists them side by side, rather than to one of them. */}
@@ -449,6 +536,7 @@ export function SingersDirectory() {
           <Link
             key={label}
             href={holders.length === 1 ? `/singers/${holders[0].slug}` : "/singers/records"}
+            prefetch={false}
             className="w-[13.5rem] shrink-0 rounded-2xl border border-line bg-panel px-4 py-3 transition-colors hover:border-violet sm:w-auto"
           >
             <span className="block font-mono text-[10px] uppercase tracking-[0.14em] text-dim">

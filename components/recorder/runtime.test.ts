@@ -10,8 +10,9 @@ function deferred<T>() {
 }
 
 function microphone() {
-  const track = { stop: vi.fn() };
-  const stream = { getTracks: () => [track] } as unknown as MediaStream;
+  // A track is an EventTarget: an unplugged mic fires "ended" on it.
+  const track = Object.assign(new EventTarget(), { kind: "audio", readyState: "live", stop: vi.fn() });
+  const stream = { getTracks: () => [track], getAudioTracks: () => [track] } as unknown as MediaStream;
   const source = { connect: vi.fn(), disconnect: vi.fn() };
   const analyser = {} as AnalyserNode;
   const context = {
@@ -60,6 +61,31 @@ describe("recorder microphone ownership", () => {
     expect(mic.track.stop).toHaveBeenCalledOnce();
     expect(session.getStream()).toBeNull();
     expect((await session.start())?.error).toBeNull();
+  });
+
+  it("lets go of a microphone that ends on its own, and opens a fresh one on the next start", async () => {
+    // An unplugged USB mic or a dropped headset: the recorder used to sit on
+    // "Ready" with REC live on a stream that could record nothing.
+    const first = microphone();
+    const second = microphone();
+    const open = vi
+      .fn()
+      .mockResolvedValueOnce({ stream: first.stream, error: null })
+      .mockResolvedValueOnce({ stream: second.stream, error: null });
+    const onEnded = vi.fn();
+    const session = createRecorderMic(open, () => first.context, { onEnded });
+    expect((await session.start())?.error).toBeNull();
+    first.track.dispatchEvent(new Event("ended"));
+    expect(onEnded).toHaveBeenCalledOnce();
+    expect(session.getStream()).toBeNull();
+    expect(first.source.disconnect).toHaveBeenCalledOnce();
+    expect((await session.start())?.error).toBeNull();
+    expect(open).toHaveBeenCalledTimes(2);
+    expect(session.getStream()).toBe(second.stream);
+    // The page's own release never reports itself as the mic going away.
+    session.dispose();
+    second.track.dispatchEvent(new Event("ended"));
+    expect(onEnded).toHaveBeenCalledOnce();
   });
 });
 

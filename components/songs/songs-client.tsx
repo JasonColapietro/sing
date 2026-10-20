@@ -6,8 +6,10 @@ import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
+import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { useProgress } from "@/lib/progress";
 import { Button, PageShell } from "@/components/ui";
+import { MicAlert } from "@/components/mic-alert";
 import { IconMic } from "./icons";
 import { SongsMicGate } from "./mic-gate";
 import { ALL_SONGS, SONGS, type Song } from "./data";
@@ -18,7 +20,16 @@ import { releaseTake, type TakeState } from "./take";
 import { SessionSummary } from "./session-summary";
 import { getMastered, recordMastered, recordSongPlayed } from "./favorites";
 import { advanceSetlist, endSetlist, useSetlist } from "./setlist";
-import { bandForSong, bandOpen, melodyFingerprint, type SessionSummaryData } from "./lib";
+import {
+  bandForSong,
+  bandOpen,
+  createPendingRequest,
+  melodyFingerprint,
+  setupForSong,
+  type PlayerSetup,
+  type SessionSummaryData,
+} from "./lib";
+import { DEFAULT_BROWSE, type BrowseState } from "./browse-controls";
 import type { GuidePass, SessionMode } from "./types";
 
 type View = "library" | "practice" | "summary";
@@ -45,6 +56,32 @@ function canStart(song: Song): boolean {
   return entitled(song) && bandOpen(bandForSong(song), getMastered(), accessible);
 }
 
+/** Where the room stood on the microphone at one render (micJustAnswered). */
+export interface MicAsk {
+  /** The gate was up. */
+  gated: boolean;
+  /** The library header's "Enable microphone" was on screen. */
+  headerAsk: boolean;
+  listening: boolean;
+  /** "Continue without a mic" was chosen. */
+  listenMode: boolean;
+}
+
+/**
+ * Whether a control that asked for the microphone just went away because it
+ * was answered: the gate, or the library header's button, with the mic now
+ * on or the singer going on without one. Not when one went for any other
+ * reason (a song picked from the library), which leaves focus to whatever
+ * replaced it. "Continue without a mic" swaps the gate for the library, whose
+ * header then asks again; the gate's button is still gone.
+ */
+export function micJustAnswered(prev: MicAsk, next: MicAsk): boolean {
+  const gone = (prev.gated && !next.gated) || (prev.headerAsk && !next.headerAsk);
+  const answered =
+    (next.listening && !prev.listening) || (next.listenMode && !prev.listenMode);
+  return gone && answered;
+}
+
 /** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
 function showCapWall() {
   document.getElementById("free-cap")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -68,6 +105,14 @@ export function SongsClient() {
   const [view, setView] = useState<View>("library");
   const [activeSong, setActiveSong] = useState<Song | null>(null);
   const [summary, setSummary] = useState<SessionSummaryData | null>(null);
+  // How the last run was set up (key, rate, loop, octave scoring, desk), so
+  // the summary's "Sing again" repeats it: the player unmounts while the
+  // summary shows. Any other start opens the song fresh.
+  const [setup, setSetup] = useState<PlayerSetup | null>(null);
+  // The library's filters, search and sort, kept here because the library
+  // unmounts while a song plays: coming back used to reset them, and the dice
+  // stopped picking from what the singer had filtered to.
+  const [browse, setBrowse] = useState<BrowseState>(DEFAULT_BROWSE);
   // The singer's recorded take for the current run; undefined when the run
   // isn't recorded. Its object URL is released whenever it is replaced.
   const [take, setTake] = useState<TakeState | undefined>(undefined);
@@ -101,6 +146,16 @@ export function SongsClient() {
     if (view === "summary") window.scrollTo({ top: 0 });
   }, [view]);
 
+  // The summary's "Enable microphone and sing again" waits on a permission
+  // prompt that can stay up while the singer goes back to the library or
+  // starts another run. Leaving that summary drops the request, so access
+  // granted afterwards cannot pull them back into the song they left.
+  const micRequestRef = useRef(createPendingRequest());
+  useEffect(() => {
+    const micRequest = micRequestRef.current;
+    return () => micRequest.cancel();
+  }, [view, summary]);
+
   // A song page links here as /songs?song=<slug>, so arriving from search
   // lands on the melody that was being read about rather than the library.
   // Resolved through `entitled`, so a Pro link cannot open a Pro song for a
@@ -116,13 +171,15 @@ export function SongsClient() {
   // works; everything else still goes through the ladder.
   const mayStart = (song: Song) => canStart(song) || song.id === linkedId;
 
-  function startSong(song: Song) {
+  /** `again`: a restart from the summary, which keeps how the last run was set up. */
+  function startSong(song: Song, again = false) {
     // Song practice is guided practice: the free day's five minutes apply.
     if (cap.capped) {
       showCapWall();
       return;
     }
     if (!mayStart(song)) return;
+    if (!again) setSetup(null);
     setActiveSong(song);
     setSummary(null);
     replaceTake(undefined);
@@ -130,10 +187,10 @@ export function SongsClient() {
     setPlayToken((t) => t + 1);
   }
 
-  function startSongById(id: string) {
+  function startSongById(id: string, again = false) {
     const song = ALL_SONGS.find((s) => s.id === id);
     if (!song || !mayStart(song)) return;
-    startSong(song);
+    startSong(song, again);
   }
 
   // Recording a play touches localStorage, so it belongs in an effect rather
@@ -146,6 +203,31 @@ export function SongsClient() {
   // A singer who has used today's free minutes meets the cap wall, not a
   // microphone prompt for practice they cannot start.
   const gated = !pitch.listening && !listenMode && !cap.capped;
+
+  // The gate's buttons, or the library header's "Enable microphone", go
+  // away the moment they are answered, and keyboard focus fell to <body>:
+  // the next Tab went back up to the cap note above the taste quiz. Focus
+  // moves to what replaced them instead, only if it was dropped (see
+  // focusIfDropped): the player's Play on a song link, otherwise the page's
+  // title, from which Tab reaches the library's first control.
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const mic: MicAsk = {
+    gated,
+    headerAsk: !gated && view === "library" && !pitch.listening && !cap.capped,
+    listening: pitch.listening,
+    listenMode,
+  };
+  const micRef = useRef(mic);
+  useEffect(() => {
+    const answered = micJustAnswered(micRef.current, mic);
+    micRef.current = mic;
+    if (!answered) return;
+    focusIfDropped(
+      view === "practice"
+        ? document.querySelector<HTMLElement>("#song-transport button")
+        : titleRef.current,
+    );
+  });
 
   // Consumed once, and only after the mic gate clears, so the singer still
   // gets asked for a microphone first and lands on the requested song after.
@@ -174,7 +256,7 @@ export function SongsClient() {
   const nextSetlistSong = nextSetlistId
     ? (ALL_SONGS.find((s) => s.id === nextSetlistId) ?? null)
     : null;
-  const showNext = nextSetlistSong !== null && canStart(nextSetlistSong);
+  const showNext = nextSetlistSong !== null && mayStart(nextSetlistSong);
 
   if (gated) {
     return (
@@ -199,6 +281,7 @@ export function SongsClient() {
   return (
     <PageShell
       kicker="Songs"
+      titleRef={titleRef}
       title={
         view === "practice" && activeSong
           ? activeSong.title
@@ -209,12 +292,32 @@ export function SongsClient() {
       subtitle={view === "library" ? "Pick a song to start your practice loop." : undefined}
       actions={
         !pitch.listening && view === "library" && !cap.capped ? (
-          <Button variant="rec" size="sm" onClick={pitch.start}>
+          <Button
+            variant="rec"
+            size="sm"
+            onClick={async () => {
+              // As the gate and the summary do: a listen pass scores nothing
+              // even with the mic on, so the next song opens on Sing along. A
+              // singer who continued without a mic otherwise turned it on
+              // here and still sang every song unscored. Only while the
+              // library is still showing, so access granted after a song has
+              // started cannot switch that run's pass.
+              const current = micRequestRef.current.begin();
+              if (!(await pitch.start()) || !current()) return;
+              setPass((p) => (p === "listen" ? "guided" : p));
+            }}
+          >
             <IconMic /> Enable microphone
           </Button>
         ) : undefined
       }
     >
+      {/* The header's "Enable microphone" fails here, beside the press, as it
+          does at the gate: a singer who continued without a mic, or left the
+          player for the library, otherwise pressed it to no visible effect. */}
+      {view === "library" && !pitch.listening && !cap.capped && pitch.error && (
+        <MicAlert message={pitch.error} className="mb-4 max-w-md text-sm text-rec" />
+      )}
       {view === "library" && cap.capped && (
         <div className="mb-6">
           <CapWall cap={cap} />
@@ -227,18 +330,30 @@ export function SongsClient() {
           transport instead: every start scrolls Play into view, which on a
           phone puts the top of the page above the screen. */}
       {!cap.capped && view !== "practice" && <FreeAllowance cap={cap} className="mb-4" />}
-      {view === "library" && <Library progress={progress} onSelect={startSong} />}
+      {view === "library" && (
+        <Library
+          progress={progress}
+          visitUnlockedSongId={linkedId}
+          onSelect={(song) => startSong(song)}
+          browse={browse}
+          onBrowseChange={setBrowse}
+        />
+      )}
 
       {view === "practice" && activeSong && (
         <SongPlayer
+          // A fresh player for every start, so a restart's setup (or none)
+          // is what it opens with.
+          key={playToken}
           song={activeSong}
+          setup={setupForSong(setup, activeSong.id)}
           pitch={pitch}
           range={progress.range}
           mode={mode}
           onModeChange={setMode}
           pass={pass}
           onPassChange={setPass}
-          onFinish={(data) => {
+          onFinish={(data, runSetup) => {
             // The whole summary, not just the id: what the run was sung at is
             // what makes the mastery re-judgeable and auditable later.
             if (data.mastered)
@@ -248,6 +363,7 @@ export function SongsClient() {
                 score: data.score ?? 0,
                 melody: melodyFingerprint(data.song),
               });
+            setSetup(runSetup);
             setSummary(data);
             setView("summary");
           }}
@@ -266,7 +382,31 @@ export function SongsClient() {
         <SessionSummary
           data={summary}
           take={take}
-          onAgain={() => startSongById(summary.song.id)}
+          onAgain={() => startSongById(summary.song.id, true)}
+          // A run sung without a microphone ends on advice to turn it on, so
+          // the summary carries the control. It starts the run the way "Sing
+          // again" does — through the cap and the ladder (which still lets
+          // the linked song through) — and leaves listen mode alone. A listen
+          // pass scores nothing even with the mic on, so it moves to Sing
+          // along; a pass the singer picked themselves stays.
+          onEnableMic={
+            pitch.listening
+              ? undefined
+              : async () => {
+                  // Capped: show why, and ask for no microphone that cannot
+                  // be used today.
+                  if (cap.capped) {
+                    showCapWall();
+                    return;
+                  }
+                  // Only if this summary is still the one showing.
+                  const current = micRequestRef.current.begin();
+                  if (!(await pitch.start()) || !current()) return;
+                  setPass((p) => (p === "listen" ? "guided" : p));
+                  startSongById(summary.song.id, true);
+                }
+          }
+          micError={pitch.listening ? null : pitch.error}
           onLibrary={() => {
             endSetlist();
             setView("library");

@@ -6,6 +6,8 @@ import { AMBER, DIM, LINE, LINE2, MONO, MUT, PANEL } from "@/lib/chart-colors";
 import {
   TYPE_META,
   addDays,
+  durationWords,
+  fmtDur,
   localDayStr,
   mondayOf,
   parseDay,
@@ -55,21 +57,27 @@ export function MinutesBarChart({ sessions }: { sessions: SessionLog[] }) {
     const byDay = new Map<string, number>();
     for (const s of sessions) byDay.set(s.day, (byDay.get(s.day) ?? 0) + s.durationSec);
     const today = new Date();
-    const days: { key: string; label: string; min: number }[] = [];
+    const days: { key: string; label: string; sec: number; min: number }[] = [];
     for (let i = 13; i >= 0; i--) {
       const d = addDays(today, -i);
       const key = localDayStr(d);
+      const sec = byDay.get(key) ?? 0;
       days.push({
         key,
         label: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-        min: (byDay.get(key) ?? 0) / 60,
+        sec,
+        min: sec / 60,
       });
     }
     return days;
   }, [sessions]);
 
-  const total = Math.round(data.reduce((a, d) => a + d.min, 0));
-  const activeDays = data.filter((d) => d.min > 0).length;
+  // In seconds, and the caption branches on the days practised: a total in
+  // whole minutes rounded a first 16-second warmup to 0 and printed "No
+  // practice logged" over a log that showed it.
+  const totalSec = data.reduce((a, d) => a + d.sec, 0);
+  const activeDays = data.filter((d) => d.sec > 0).length;
+  const daysWord = activeDays === 1 ? "day" : "days";
   const maxMin = Math.max(...data.map((d) => d.min));
   const niceMax = Math.max(10, Math.ceil(maxMin / 10) * 10);
 
@@ -93,7 +101,7 @@ export function MinutesBarChart({ sessions }: { sessions: SessionLog[] }) {
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full"
         role="img"
-        aria-label={`Bar chart of practice minutes per day over the last 14 days. ${total} minutes total across ${activeDays} active days.`}
+        aria-label={`Bar chart of practice minutes per day over the last 14 days. ${durationWords(totalSec)} total across ${activeDays} active ${daysWord}.`}
       >
         {ticks.map((t) => (
           <g key={t}>
@@ -125,8 +133,8 @@ export function MinutesBarChart({ sessions }: { sessions: SessionLog[] }) {
           return (
             <g key={d.key}>
               <title>
-                {d.min > 0
-                  ? `${d.label} — ${Math.round(d.min)} min`
+                {d.sec > 0
+                  ? `${d.label} — ${fmtDur(d.sec)}`
                   : `${d.label} — no practice`}
               </title>
               <rect
@@ -158,7 +166,7 @@ export function MinutesBarChart({ sessions }: { sessions: SessionLog[] }) {
                   fontFamily={MONO}
                   fill={MUT}
                 >
-                  {Math.round(d.min)}m
+                  {fmtDur(d.sec)}
                 </text>
               )}
             </g>
@@ -166,8 +174,8 @@ export function MinutesBarChart({ sessions }: { sessions: SessionLog[] }) {
         })}
       </svg>
       <p className="mt-2 text-xs text-mut">
-        {total > 0
-          ? `${total} minutes across ${activeDays} of the last 14 days.`
+        {activeDays > 0
+          ? `${durationWords(totalSec)} across ${activeDays} of the last 14 days.`
           : "No practice logged in the last 14 days."}
       </p>
     </div>
@@ -340,9 +348,9 @@ export function PracticeMixChart({ sessions }: { sessions: SessionLog[] }) {
       byType.set(s.type, (byType.get(s.type) ?? 0) + s.durationSec);
     }
     return [...byType.entries()]
-      .map(([type, sec]) => ({ type, min: sec / 60 }))
-      .filter((r) => r.min > 0)
-      .sort((a, b) => b.min - a.min);
+      .map(([type, sec]) => ({ type, sec, min: sec / 60 }))
+      .filter((r) => r.sec > 0)
+      .sort((a, b) => b.sec - a.sec);
   }, [sessions]);
 
   if (rows.length === 0) {
@@ -362,6 +370,9 @@ export function PracticeMixChart({ sessions }: { sessions: SessionLog[] }) {
   const barMax = W - labelW - valueW - 12;
   const maxMin = rows[0].min;
   const top = TYPE_META[rows[0].type].label;
+  // Seconds under a minute: "Warmup leads with 0 minutes" was a first
+  // session's whole mix.
+  const lead = durationWords(rows[0].sec);
 
   return (
     <div>
@@ -369,14 +380,14 @@ export function PracticeMixChart({ sessions }: { sessions: SessionLog[] }) {
         viewBox={`0 0 ${W} ${H}`}
         className="h-auto w-full"
         role="img"
-        aria-label={`Horizontal bar chart of total practice minutes by activity type. ${top} leads with ${Math.round(maxMin)} minutes.`}
+        aria-label={`Horizontal bar chart of total practice minutes by activity type. ${top} leads with ${lead}.`}
       >
         {rows.map((r, i) => {
           const w = Math.max(2, barMax * (r.min / maxMin));
           const yTop = i * rowH + (rowH - barH) / 2;
           return (
             <g key={r.type}>
-              <title>{`${TYPE_META[r.type].label} — ${Math.round(r.min)} min total`}</title>
+              <title>{`${TYPE_META[r.type].label} — ${fmtDur(r.sec)} total`}</title>
               <rect x={0} y={i * rowH} width={W} height={rowH} fill="transparent" />
               <text
                 x={labelW - 8}
@@ -398,15 +409,14 @@ export function PracticeMixChart({ sessions }: { sessions: SessionLog[] }) {
                 fontFamily={MONO}
                 fill={MUT}
               >
-                {Math.round(r.min)}m
+                {fmtDur(r.sec)}
               </text>
             </g>
           );
         })}
       </svg>
       <p className="mt-2 text-xs text-mut">
-        Where your total practice time has gone. {top} leads with{" "}
-        {Math.round(maxMin)} minutes.
+        Where your total practice time has gone. {top} leads with {lead}.
       </p>
     </div>
   );

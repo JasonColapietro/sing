@@ -5,6 +5,7 @@ import { usePitch } from "@/lib/audio/use-pitch";
 import { tuneZone } from "@/lib/audio/notes";
 import { logSession, type LogResult } from "@/lib/progress";
 import { useFlushOnExit } from "@/lib/use-flush-on-exit";
+import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { createPracticeClock } from "@/lib/practice-clock";
 import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
 import { AudioSetup } from "@/components/audio/audio-setup";
@@ -106,7 +107,6 @@ const STUDIO_PARTS = [
 
 
 export function StudioClient() {
-  const { frame, latest, listening, error, start, stop } = usePitch();
   const [elapsed, setElapsed] = useState(0);
   const [toast, setToast] = useState<StudioResult | null>(null);
   const [targetMidi, setTargetMidi] = useState<number | null>(null);
@@ -117,26 +117,6 @@ export function StudioClient() {
   // Owned here rather than inside TargetPractice: stopping the mic unmounts
   // that component, and the session it scored is logged after it is gone.
   const statsRef = useRef<TargetStats>(emptyTargetStats());
-
-  // Session timer while listening.
-  useEffect(() => {
-    if (!listening) return;
-    const id = window.setInterval(() => {
-      setElapsed(Math.floor(practiceClock.elapsedMs() / 1000));
-    }, 1000);
-    return () => window.clearInterval(id);
-  }, [listening, practiceClock]);
-
-  const handleStart = async () => {
-    const ok = await start();
-    if (ok) {
-      practiceClock.reset();
-      if (document.visibilityState !== "hidden") practiceClock.resume();
-      statsRef.current = emptyTargetStats();
-      setElapsed(0);
-      setToast(null);
-    }
-  };
 
   /**
    * Close out the session: bank the personal best and log the practice if it
@@ -184,10 +164,43 @@ export function StudioClient() {
     };
   }, [practiceClock]);
 
-  const handleStop = () => {
-    stop();
+  /** Close out the session and show the singer what it logged. */
+  const closeSession = useCallback(() => {
     const result = finishSession();
     if (result && (result.log || result.locks > 0)) setToast(result);
+  }, [finishSession]);
+
+  // A microphone that goes away mid-session (unplugged, a headset dropped)
+  // stops the room with its error showing, and the session closes the way
+  // Stop closes it: the clock used to go on counting dead-mic time as
+  // practice. usePitch calls this only for that, never for its own brief stop
+  // while the device picker reopens the stream, which must not cut a session
+  // in two and reset the timer.
+  const { frame, latest, listening, error, start, stop } = usePitch({ onMicEnded: closeSession });
+
+  // Session timer while listening.
+  useEffect(() => {
+    if (!listening) return;
+    const id = window.setInterval(() => {
+      setElapsed(Math.floor(practiceClock.elapsedMs() / 1000));
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [listening, practiceClock]);
+
+  const handleStart = async () => {
+    const ok = await start();
+    if (ok) {
+      practiceClock.reset();
+      if (document.visibilityState !== "hidden") practiceClock.resume();
+      statsRef.current = emptyTargetStats();
+      setElapsed(0);
+      setToast(null);
+    }
+  };
+
+  const handleStop = () => {
+    stop();
+    closeSession();
   };
 
   // Flush at the last reliable mobile lifecycle event, but leave the clock
@@ -209,6 +222,14 @@ export function StudioClient() {
     };
   }, [listening, practiceClock]);
 
+  // The gate's button is gone once the mic opens, and focus fell to <body>
+  // with it. Stop, in the page header, is the room's live control
+  // (lib/audio/mic-focus.ts).
+  const stopRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (listening) focusIfDropped(stopRef.current?.querySelector("button"));
+  }, [listening]);
+
   const note = frame.note;
   // The same zones as the pitch meter on /range. These cents are measured to
   // the nearest note, so they never pass ±50: anything not in tune used to
@@ -225,7 +246,7 @@ export function StudioClient() {
       actions={
         listening ? (
           <div className="flex flex-col items-end gap-1.5">
-            <div className="flex items-center gap-2">
+            <div ref={stopRef} className="flex items-center gap-2">
               <Pill tone="rec">
                 <span className="h-1.5 w-1.5 animate-recblink rounded-full bg-rec" />
                 <span className="tabular font-mono">{fmtTime(elapsed)}</span>

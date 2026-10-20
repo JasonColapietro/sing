@@ -1,6 +1,7 @@
 "use client";
 
 import { CapSlide } from "@/components/practice/free-cap";
+import { denseStepResults, withStepResult } from "@/components/practice/step-results";
 import { formatClock, useFreeCap } from "@/lib/free-cap";
 
 import { useEffect, useState } from "react";
@@ -120,6 +121,12 @@ export interface RoutineSummaryData {
    * warm-in rather than the routine's own first step.
    */
   warmIn?: boolean;
+  /**
+   * The step whose intro became the cap slide: today's free minutes ran out
+   * before it, so it and every step after it were never reached rather than
+   * skipped. Absent when the run was not stopped by the cap.
+   */
+  capStoppedAt?: number;
 }
 
 /**
@@ -185,8 +192,8 @@ export function RoutineRunner({
   const rangeNote = outOfRangeNote(ex, range);
 
   function closeStep(i: number, data: SessionSummaryData | null) {
-    const next = [...results];
-    next[i] = data;
+    // Dense: a run opened at a later step closes its first one past index 0.
+    const next = withStepResult(results, i, data, stepCount);
     setResults(next);
     // The warm-in is sung as step 0 and logged like any step (so the free
     // minutes count it); then the run goes to the step the link asked for.
@@ -204,9 +211,17 @@ export function RoutineRunner({
     }
   }
 
-  function quit() {
-    if (results.some((r) => r !== null)) {
-      onDone({ routine, steps: results, completed: false, startStep: firstStep, warmIn: warmInFirst });
+  /** `capStoppedAt`: the step whose intro the cap slide replaced, when it did. */
+  function quit(capStoppedAt?: number) {
+    if (results.some((r) => r != null)) {
+      onDone({
+        routine,
+        steps: denseStepResults(results, stepCount),
+        completed: false,
+        startStep: firstStep,
+        warmIn: warmInFirst,
+        ...(capStoppedAt === undefined ? {} : { capStoppedAt }),
+      });
     } else {
       onQuit();
     }
@@ -254,8 +269,10 @@ export function RoutineRunner({
   if (phase.kind === "done") return null;
 
   // Checked between steps, never mid-step: the exercise under way finishes and
-  // logs, and the routine ends on what was sung.
-  if (capped) return <CapSlide cap={cap} onExit={quit} />;
+  // logs, and the routine ends on what was sung. The step this slide stands in
+  // for, and the ones after it, were not reached; the summary says so rather
+  // than calling them skipped. A warm-in stopped here reached nothing at all.
+  if (capped) return <CapSlide cap={cap} onExit={() => quit(warming ? undefined : phase.step)} />;
 
   return (
     <StepIntro
@@ -281,7 +298,7 @@ export function RoutineRunner({
         rangeNote === null ? setPhase({ kind: "play", step: phase.step }) : closeStep(phase.step, null)
       }
       onSkip={() => closeStep(phase.step, null)}
-      onQuit={quit}
+      onQuit={() => quit()}
     />
   );
 }

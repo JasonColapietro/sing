@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { MouseEventHandler, ReactNode, Ref } from "react";
 
 import { MicAlert } from "@/components/mic-alert";
 
@@ -49,6 +49,7 @@ export function PageShell({
   title,
   subtitle,
   actions,
+  titleRef,
   children,
 }: {
   kicker?: string;
@@ -57,6 +58,11 @@ export function PageShell({
   /** Usually a string; the /songs prerender carries two, one per pre-paint state. */
   subtitle?: ReactNode;
   actions?: ReactNode;
+  /**
+   * Makes the title a focus target (tabIndex -1, no ring), for a page that
+   * moves focus to it after the control that was pressed went away.
+   */
+  titleRef?: Ref<HTMLHeadingElement>;
   children: ReactNode;
 }) {
   return (
@@ -64,7 +70,13 @@ export function PageShell({
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
           {kicker && <SectionLabel className="mb-3">{kicker}</SectionLabel>}
-          <h1 className="text-4xl sm:text-5xl">{title}</h1>
+          {titleRef ? (
+            <h1 ref={titleRef} tabIndex={-1} className="text-4xl outline-none sm:text-5xl">
+              {title}
+            </h1>
+          ) : (
+            <h1 className="text-4xl sm:text-5xl">{title}</h1>
+          )}
           {subtitle && <p className="mt-3 max-w-prose text-mut">{subtitle}</p>}
         </div>
         {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
@@ -204,6 +216,7 @@ export function LinkButton({
   className,
   fullLoad = false,
   prefetch,
+  onClick,
   children,
 }: {
   href: string;
@@ -211,11 +224,18 @@ export function LinkButton({
   size?: ButtonSize;
   className?: string;
   /**
-   * A plain anchor, so the browser loads the address as a document instead of
-   * the client router navigating to it: for an address the router cannot
-   * resolve on its own (lib/program-ids.ts programViewHref).
+   * A plain anchor, so the browser follows the address itself instead of the
+   * client router: for an address the router cannot resolve on its own
+   * (lib/program-ids.ts programViewHref), or a jump within the page that the
+   * browser should make, with `onClick={jumpInPage}` (below, which also says
+   * what the router needs done after it).
    */
   fullLoad?: boolean;
+  /**
+   * Runs on the click, before the browser or the router follows the link.
+   * Only a client component can pass one.
+   */
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
   /**
    * Passed to next/link. `false` drops the speculative background fetch of
    * the target's payload (a hub page's is its whole chart, up to 0.5 MB
@@ -227,16 +247,50 @@ export function LinkButton({
   const classes = cn(buttonBase, buttonVariants[variant], buttonSizes[size], className);
   if (fullLoad) {
     return (
-      <a href={href} className={classes}>
+      <a href={href} onClick={onClick} className={classes}>
         {children}
       </a>
     );
   }
   return (
-    <Link href={href} prefetch={prefetch} className={classes}>
+    <Link href={href} prefetch={prefetch} onClick={onClick} className={classes}>
       {children}
     </Link>
   );
+}
+
+/**
+ * The click handler for a link within the page (a plain `<a href="#buy">`,
+ * LinkButton `fullLoad`), which lets the browser make the jump and keeps the
+ * history entry usable. Client components only, like any click handler.
+ *
+ * The browser's own jump scrolls even when the address already ends in the
+ * fragment, where next/link makes no navigation at all: on /pro#buy, where
+ * every Go Pro link lands, the hero's and the final call to action's "#buy"
+ * buttons did nothing. It also moves the Tab starting point to the target,
+ * as a skip link does, which next/link's scripted scroll did not, so the next
+ * Tab went back to the hero. But the entry it writes carries no history
+ * state, and the app router ignores a Back or Forward onto such an entry:
+ * after the jump and a link to another page, Back changed the address and
+ * left the other page on screen. So the state this page's entry had before
+ * the jump goes back on the new one once the jump is made.
+ */
+export function jumpInPage() {
+  const state: unknown = window.history.state;
+  if (state === null || state === undefined) return;
+  const repair = () => {
+    if (window.history.state === null) {
+      window.history.replaceState(state, "", window.location.href);
+    }
+  };
+  window.addEventListener("hashchange", repair, { once: true });
+  // A jump to the fragment the address already holds fires no hashchange, so
+  // the listener goes with the click's own task rather than lingering until
+  // a jump on some later page.
+  window.setTimeout(() => {
+    window.removeEventListener("hashchange", repair);
+    repair();
+  }, 0);
 }
 
 export function Stat({

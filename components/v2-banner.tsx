@@ -28,10 +28,9 @@ const SEEN_KEY = "suede-sing:v3-1-banner:v1";
  * The footer carries the crawlable /changelog link on every page.
  *
  * It sits in the homepage's column, as wide as the hero above it, so it reads
- * as part of the page, not a toast. No violet anywhere in it: on this site
- * violet means a pricing event (the Pro pill, the Pro section further down the
- * homepage), and a release is not one. Its accent is --color-cool, the pitch
- * trace's colour (see v2-glyph.tsx).
+ * as part of the page, not a toast. Its fill is --color-violet-ink, the
+ * restored original design's (#229); before that it was --color-brand, kept
+ * off violet because violet otherwise marks Pro on this site.
  *
  * It started as a 40px hairline strip whose message was hidden below sm, which
  * meant phone visitors saw a bare "V2" chip and a link. It is now a solid cool
@@ -115,22 +114,26 @@ export default function V2Banner() {
   if (!wanted) return null;
 
   return (
-    <>
+    // The homepage's column and gutters (max-w-6xl, px-4/px-6), so the card
+    // lines up with the hero text and the sections below instead of running
+    // edge to edge with its rounded corners cut off by the screen. The
+    // wrapper has no height of its own: hidden before paint, the section
+    // takes its margins with it.
+    <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
       {/* suppressHydrationWarning: the script below may set `hidden` before
           React hydrates; without it development warns about an attribute
           React did not render, on every first-time visitor's homepage. */}
       <section
         id="v2-banner"
         aria-label="What's new in Suede Sing"
-        className="relative mt-6 rounded-3xl bg-violet-ink text-white sm:mt-8"
+        className="relative my-6 rounded-3xl bg-violet-ink text-white sm:my-8"
         suppressHydrationWarning
       >
         {/* The card reads as a filled band rather than a hairline: white on
-            --color-brand is 5.70:1, so the announcement carries at a glance
-            without borrowing violet, which on this site means a pricing event
-            (see the file header). The dismiss control is positioned rather
-            than in flow so the row can wrap to two lines on a narrow phone
-            instead of truncating the message away. */}
+            --color-violet-ink is 7.1:1 (the message's white/85, 5.5:1), so
+            the announcement carries at a glance. The dismiss control is
+            positioned rather than in flow so the row can wrap to two lines on
+            a narrow phone instead of truncating the message away. */}
         <div className="flex min-h-12 flex-wrap items-center gap-x-3 gap-y-1 py-3 pl-5 pr-14 sm:pl-6 sm:pr-16">
           <V2TraceGlyph className="shrink-0 text-white" />
           <span className="inline-block shrink-0 rounded border border-white/40 px-1.5 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-white">
@@ -139,10 +142,9 @@ export default function V2Banner() {
           <span className="text-meta text-white/85">
             102 voice lessons, multi-week programs, and songs that score you.
           </span>
-          {/* The pill is recessed (a black tint), not raised: white/15 over
-              the brand fill lifted the backdrop to rgb(144,87,240), where
-              white 13px text drops to 4.37:1. Black/15 is 7.25:1 at rest and
-              8.54:1 on hover. */}
+          {/* The pill is recessed (a black tint), not raised: a white tint
+              lightens the fill under 13px white text. Black/15 over the
+              violet-ink fill is 8.8:1 at rest and black/25 10.1:1 on hover. */}
           <Link
             href="/changelog"
             className="relative inline-flex min-h-11 shrink-0 items-center rounded-full bg-black/15 px-3 py-1 text-meta font-medium text-white ring-1 ring-inset ring-white/40 transition-colors hover:bg-black/25"
@@ -182,6 +184,6 @@ export default function V2Banner() {
           }}
         />
       )}
-    </>
+    </div>
   );
 }

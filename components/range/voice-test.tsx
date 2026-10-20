@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useLayoutEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { PitchMeter } from "./pitch-meter";
 import { RangeTest } from "./range-test";
@@ -59,9 +59,34 @@ export function switchVoiceTestMode(
   if (next === "range" && current !== "range") scroll();
 }
 
+/**
+ * Whether a page that has just mounted the live voice test should line #start
+ * up again, and does it.
+ *
+ * A full load of /range#start (a bookmark, the manifest's "Vocal range test"
+ * shortcut, a link from another site) scrolls to the prerendered fallback's
+ * #start, and then the live tree replaces that whole fallback, #start
+ * included. The browser keeps the scroll anchored on content it had already
+ * laid out below the swap (the room rail), so the page moved by however much
+ * taller the live tool was: 20px at 768px and up for a new singer, which put
+ * the mode tabs under the sticky header, and the whole saved-result card for
+ * a returning one, which left the tabs and their own Retake test above the
+ * screen. Lining up again as the live tree mounts, before it paints, puts
+ * #start back where the fragment put it, and the browser anchors on it from
+ * then on.
+ */
+export function alignStartOnMount(hash: string, scroll: () => void = scrollToStart): boolean {
+  if (hash !== "#start") return false;
+  scroll();
+  return true;
+}
+
 function VoiceTestFromLocation() {
   const params = useSearchParams();
   const mode = voiceTestMode(params);
+  useLayoutEffect(() => {
+    alignStartOnMount(window.location.hash);
+  }, []);
   const choose = (next: VoiceTestMode) => {
     window.history.replaceState(null, "", voiceTestModeUrl(window.location.href, next));
   };

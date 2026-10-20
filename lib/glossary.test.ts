@@ -167,6 +167,15 @@ describe("GLOSSARY", () => {
     expect(SING_GLOSSARY_TERMS).toHaveLength(42);
   });
 
+  it("names an interval by its letter names, both ends counted, as its own examples are named", () => {
+    // C to E covers two scale steps and is a third; counting steps names
+    // every interval one too small.
+    const interval = GLOSSARY_TERMS.find((e) => e.term === "Interval")!;
+    expect(interval.definition).not.toMatch(/scale steps/);
+    expect(interval.definition).toMatch(/letter names it spans with both ends included/);
+    expect(interval.definition).toContain("C up to E is a third");
+  });
+
   it("defines each term in exactly one sentence", () => {
     for (const entry of GLOSSARY_TERMS) {
       expect(entry.definition.endsWith(".")).toBe(true);

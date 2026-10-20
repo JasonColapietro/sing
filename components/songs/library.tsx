@@ -232,6 +232,7 @@ function SongCard({
   queued,
   mastered,
   locked,
+  visitUnlocked,
   pro,
   onStart,
   onFavorite,
@@ -246,6 +247,8 @@ function SongCard({
   mastered: boolean;
   /** This song's band hasn't opened yet — it still lists, marked with a lock. */
   locked: boolean;
+  /** Opened by a song page or lesson link for this visit, while its band stays locked. */
+  visitUnlocked: boolean;
   /** True when this song comes from the Pro book (only ever rendered to Pro members). */
   pro: boolean;
   onStart: () => void;
@@ -272,6 +275,7 @@ function SongCard({
         <Pill tone={difficultyTone(difficulty.label)}>{difficulty.label}</Pill>
         <Pill>{song.genre}</Pill>
         {pro && <ProChip />}
+        {visitUnlocked && <Pill tone="violet">Open this visit</Pill>}
         {best !== undefined && <Pill tone="ok">Best {best}%</Pill>}
         {badge && <Pill tone={badge.tone}>{badge.text}</Pill>}
       </div>
@@ -293,9 +297,8 @@ function SongCard({
       </div>
 
       <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
-        {/* A locked band's songs stay in view but do not start: the ladder is
-            the mechanic, and a lock that still plays would make the unlock
-            line above the band a lie. */}
+        {/* A page or lesson link opens only its song for this visit; the
+            other songs still follow the mastery ladder. */}
         <Button
           size="sm"
           onClick={onStart}
@@ -328,9 +331,20 @@ export function Library({
   progress,
   onSelect,
   onStartSetlist,
+  browse,
+  onBrowseChange: setBrowse,
+  visitUnlockedSongId,
 }: {
   progress: ProgressState;
   onSelect: (song: Song) => void;
+  /** A song explicitly linked into this visit; entitlement still limits the catalog. */
+  visitUnlockedSongId?: string | null;
+  /**
+   * The filters, search and sort, owned by the caller: the library unmounts
+   * while a song plays, and the singer comes back to what they had set.
+   */
+  browse: BrowseState;
+  onBrowseChange: (browse: BrowseState) => void;
   /**
    * Karaoke-night entry point. Given the queued songs in order, the caller is
    * expected to play them back to back. Optional: without it the setlist still
@@ -346,18 +360,27 @@ export function Library({
   const mastered = useMastered();
   const recents = useRecentlyPlayed();
   const setlist = useSetlist();
-  const [browse, setBrowse] = useState<BrowseState>(DEFAULT_BROWSE);
   const taste = useTaste();
   // Re-opening the quiz is local UI state: saved answers stay in force (and
   // the picks stay correct) until the singer actually submits new ones.
   const [editingTaste, setEditingTaste] = useState(false);
 
-  // The single definition of "songs this singer can start". Everything below —
-  // filtering, the dice, the setlist, the recents row — reads from this, so no
-  // surface can accidentally offer a locked song.
+  // Entitlement determines which songs exist in this browser's songbook.
   const accessible = useMemo(
     () => (isPro ? [...SONGS, ...PRO_SONGS] : SONGS),
     [isPro],
+  );
+
+  // The player already lets the linked song start for this visit. Keep every
+  // library entry point consistent with that rule without opening its band or
+  // adding a song outside the entitled book.
+  const startableIds = useMemo(
+    () => new Set(
+      accessible
+        .filter((song) => song.id === visitUnlockedSongId || bandOpen(bandForSong(song), mastered, accessible))
+        .map((song) => song.id),
+    ),
+    [accessible, mastered, visitUnlockedSongId],
   );
 
   const options = useMemo(() => browseOptions(accessible), [accessible]);
@@ -411,7 +434,7 @@ export function Library({
   );
 
   function start(song: Song) {
-    if (!bandOpen(bandForSong(song), mastered, accessible)) return;
+    if (!startableIds.has(song.id)) return;
     // Recorded here as well as (optionally) in the caller: the recently-sung
     // row must not look dead just because the wiring hasn't landed. The store
     // keys on song id, so recording twice for one start is a no-op.
@@ -422,8 +445,8 @@ export function Library({
   function surprise() {
     // Respect the filters the singer just set — the dice should pick from what
     // they're looking at — and fall back to the whole accessible book.
-    const openSongs = accessible.filter((s) => bandOpen(bandForSong(s), mastered, accessible));
-    const filtered = visible.filter((s) => bandOpen(bandForSong(s), mastered, accessible));
+    const openSongs = accessible.filter((s) => startableIds.has(s.id));
+    const filtered = visible.filter((s) => startableIds.has(s.id));
     const pool = filtered.length > 0 ? filtered : openSongs;
     const song = pool[Math.floor(Math.random() * pool.length)];
     if (song) start(song);
@@ -436,8 +459,8 @@ export function Library({
     () =>
       setlist.ids
         .map((id) => accessible.find((s) => s.id === id))
-        .filter((s): s is Song => s !== undefined && bandOpen(bandForSong(s), mastered, accessible)),
-    [setlist.ids, accessible, mastered],
+        .filter((s): s is Song => s !== undefined && startableIds.has(s.id)),
+    [setlist.ids, accessible, startableIds],
   );
   const nowSingingId = setlist.cursor >= 0 ? setlist.ids[setlist.cursor] : null;
 
@@ -451,11 +474,10 @@ export function Library({
     if (song) start(song);
   }
 
-  // Filtered by band like the cards, the dice and the setlist: a song sung
-  // through its page's deep link can sit in recents while its band is shut.
+  // The same visit access as the cards, dice and setlist, newest six first.
   const recentSongs = useMemo(
-    () => startableRecents(recents, accessible, mastered),
-    [recents, accessible, mastered],
+    () => startableRecents(recents, accessible, mastered, 6, visitUnlockedSongId),
+    [recents, accessible, mastered, visitUnlockedSongId],
   );
 
   return (
@@ -651,7 +673,8 @@ export function Library({
                       favorite={favorites.includes(song.id)}
                       queued={setlist.ids.includes(song.id)}
                       mastered={mastered.has(song.id)}
-                      locked={!open}
+                      locked={!startableIds.has(song.id)}
+                      visitUnlocked={!open && song.id === visitUnlockedSongId}
                       pro={isPro && !SONGS.some((s) => s.id === song.id)}
                       onStart={() => start(song)}
                       onFavorite={() => toggleFavorite(song.id)}

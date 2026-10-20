@@ -46,6 +46,11 @@ import {
   transposedNotes,
   COUNT_IN_BEATS,
   secPerBeat,
+  reachedBeats,
+  reachedNothing,
+  setupForSong,
+  songKeyLabel,
+  type PlayerSetup,
 } from "./lib";
 import type { Song, SongNote } from "./types";
 
@@ -756,5 +761,118 @@ describe("phraseName", () => {
   it("names an excerpt by what it is, and anything else as the opening phrase", () => {
     expect(phraseName(songBySlug("home-on-the-range")!)).toBe("chorus hook");
     expect(phraseName(songBySlug("silent-night")!)).toBe("opening phrase");
+  });
+});
+
+/**
+ * End practice is how a rehearsal ends, rarely on a loop line. Scored against
+ * every planned pass, a perfectly sung run stopped a moment into loop 3 read
+ * "loop 3 13%", the notes after the stop counted as missed in the log and the
+ * coach, and they topped the trickiest notes.
+ */
+describe("what a stopped run had reached", () => {
+  // Three one-beat notes and a two-beat one; the last sits outside a loop
+  // over beats 0-3, so it plays 0 beats per pass.
+  const notes = [0, 1, 2, 3].map((startBeat, i) => ({
+    midi: 60 + i,
+    startBeat,
+    durBeats: i === 3 ? 2 : 1,
+    lyric: "la",
+  })) as SongNote[];
+  const playBeats = [1, 1, 1, 0];
+
+  it("counts every whole pass and the part of the pass it stopped in", () => {
+    // Two whole passes, then half way through the second note of the third.
+    expect(reachedBeats(notes, playBeats, 2, 1.5)).toEqual([3, 2.5, 2, 0]);
+  });
+
+  it("is the whole plan for a run that played every pass out", () => {
+    expect(reachedBeats(notes, playBeats, 4, 0)).toEqual([4, 4, 4, 0]);
+  });
+
+  it("reaches nothing before the first scored frame", () => {
+    expect(reachedBeats(notes, playBeats, 0, -Infinity)).toEqual([0, 0, 0, 0]);
+  });
+
+  it("leaves, rather than summing up, a run stopped before its first note began", () => {
+    // In the count-in, and on the very first scored frame: nothing sung, and a
+    // summary there had no score and called a mic-on Sing along a listen pass.
+    expect(reachedNothing(notes, playBeats, 0, -Infinity)).toBe(true);
+    expect(reachedNothing(notes, playBeats, 0, 0)).toBe(true);
+    // Any of a note, or a whole pass behind it, is something to sum up.
+    expect(reachedNothing(notes, playBeats, 0, 0.25)).toBe(false);
+    expect(reachedNothing(notes, playBeats, 1, -Infinity)).toBe(false);
+    // A drilled span that opens on a rest: still nothing until its first note.
+    const restFirst = notes.map((n) => ({ ...n, startBeat: n.startBeat + 1 }));
+    expect(reachedNothing(restFirst, playBeats, 0, 0.5)).toBe(true);
+  });
+
+  it("scores a perfectly sung part-pass at its own size, not a whole loop's", () => {
+    // In tune for all of the 1.5 beats reached in the last pass.
+    const partial = reachedBeats(notes, playBeats, 0, 1.5).reduce((a, b) => a + b, 0);
+    const whole = playBeats.reduce((a, b) => a + b, 0);
+    expect(Math.round((1.5 / partial) * 100)).toBe(100);
+    expect(Math.round((1.5 / whole) * 100)).toBe(50); // what the summary used to show
+  });
+});
+
+describe("the setup Sing again reopens a song with", () => {
+  const setup: PlayerSetup = {
+    songId: "silent-night",
+    pickedSemis: 2,
+    tempo: 0.8,
+    tempoAuto: false,
+    octaveAgnostic: false,
+    loop: null,
+    guidePct: 100,
+    clickDuringPlay: false,
+    recordTake: false,
+  };
+
+  it("is the last run's, for the same song", () => {
+    expect(setupForSong(setup, "silent-night")).toBe(setup);
+  });
+
+  it("is nothing for another song, or with no run behind it", () => {
+    expect(setupForSong(setup, "ode-to-joy")).toBeNull();
+    expect(setupForSong(null, "silent-night")).toBeNull();
+    expect(setupForSong(undefined, "silent-night")).toBeNull();
+  });
+});
+
+describe("the result card's key", () => {
+  const inC = { defaultKeyRootMidi: 60, tags: [] as string[] };
+  const inD = { defaultKeyRootMidi: 62, tags: [] as string[] };
+
+  it("spells a major key as its signature does, with flats", () => {
+    // C, the written key, two semitones down: Bb, not A#.
+    expect(songKeyLabel(inC, -2)).toBe("Bb (-2)");
+    expect(songKeyLabel(inC, 3)).toBe("Eb (+3)");
+    expect(songKeyLabel(inC, 8)).toBe("Ab (+8)");
+    expect(songKeyLabel(inC, 1)).toBe("Db (+1)");
+    expect(songKeyLabel(inC, 6)).toBe("F# (+6)");
+  });
+
+  it("names the written key alone and the shift otherwise", () => {
+    expect(songKeyLabel(inC, 0)).toBe("C");
+    expect(songKeyLabel(inD, 0)).toBe("D");
+    expect(songKeyLabel(inD, -14)).toBe("C (-14)");
+    for (let t = -24; t <= 24; t++) {
+      expect(songKeyLabel(inC, t)).not.toMatch(/^[ACDG]#/);
+    }
+  });
+
+  it("spells a Dorian tonic from its own signature", () => {
+    // Scarborough Fair is D Dorian. A semitone down is C# Dorian (B major's
+    // five sharps), not Db Dorian (seven flats); a semitone up, Eb Dorian
+    // (five flats), not D# (seven sharps).
+    const song = songBySlug("scarborough-fair")!;
+    expect(song.tags).toContain("dorian");
+    expect(songKeyLabel(song, -1)).toBe("C# (-1)");
+    expect(songKeyLabel(song, 1)).toBe("Eb (+1)");
+    expect(songKeyLabel(song, 8)).toBe("Bb (+8)");
+    expect(songKeyLabel(song, 0)).toBe("D");
+    expect(songKeyLabel(song, -1 + 12)).toBe("C# (+11)");
+    expect(songKeyLabel({ defaultKeyRootMidi: 57, tags: ["minor"] }, -1)).toBe("G# (-1)");
   });
 });

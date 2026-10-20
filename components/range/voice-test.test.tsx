@@ -18,7 +18,7 @@ vi.mock("./range-test", () => ({
   RangeTest: () => <div data-tool="range">Start free range test</div>,
 }));
 
-import { VoiceTest, switchVoiceTestMode, voiceTestModeUrl } from "./voice-test";
+import { VoiceTest, alignStartOnMount, switchVoiceTestMode, voiceTestModeUrl } from "./voice-test";
 import { returnSongSlugFromSearch } from "./result-view";
 import { rangeTestHref, type RangeTestLink } from "@/lib/site";
 
@@ -77,6 +77,19 @@ describe("voice-tool deep links", () => {
     switchVoiceTestMode("range", "range", change, scroll);
     switchVoiceTestMode("range", "pitch", change, scroll);
     expect(change).toHaveBeenLastCalledWith("pitch");
+    expect(scroll).toHaveBeenCalledTimes(1);
+  });
+
+  it("lines #start up again once the live tool replaces the prerendered one", () => {
+    // A direct load of /range?mode=range#start at 768px and up left the tabs
+    // 5px under the header, and a returning singer's saved card pushed them
+    // and their Retake test above the screen (scrollY 490).
+    const scroll = vi.fn();
+    expect(alignStartOnMount("#start", scroll)).toBe(true);
+    expect(scroll).toHaveBeenCalledTimes(1);
+    // Any other landing is left where the browser put it.
+    expect(alignStartOnMount("", scroll)).toBe(false);
+    expect(alignStartOnMount("#voice", scroll)).toBe(false);
     expect(scroll).toHaveBeenCalledTimes(1);
   });
 

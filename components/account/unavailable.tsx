@@ -26,7 +26,9 @@ export function AccountsUnavailable({ verb }: { verb: "Signing in" | "Signing up
         page.
       </p>
       <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-        <LinkButton href="/progress" size="sm">
+        {/* Straight to Your data, where Export JSON is: the top of
+            /progress is about ten phone screens above it. */}
+        <LinkButton href="/progress#your-data" size="sm">
           Go to Progress
         </LinkButton>
         <LinkButton href="/studio" variant="ghost" size="sm">

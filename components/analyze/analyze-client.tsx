@@ -121,6 +121,17 @@ export default function AnalyzeClient() {
   // alone would lose the tail of every session.
   useFlushOnExit(flush);
 
+  // A mic that goes away mid-session stops the room without the Stop button
+  // (useAnalyser sets its error), and its listening time is logged the way
+  // Stop logs it. Keyed on the error, not on listening alone: changing input
+  // in the device picker also drops listening for a moment while the stream
+  // reopens, and that is one session, not two. After Stop, or a refused
+  // start, the flush has nothing left to log.
+  useEffect(() => {
+    if (listening || !error) return;
+    flush();
+  }, [listening, error, flush]);
+
   const onStop = useCallback(() => {
     stop();
     flush();

@@ -148,9 +148,9 @@ describe("/singers hub schema and crawl discovery", () => {
   });
 
   it("lists the frequently looked-up singers after the chart, not above it", () => {
-    // The chart (SingersDirectory) mounts where the server leaves nothing,
-    // between the voice-type links and this list; on a phone the list above
-    // it put the chart five screens down.
+    // The chart (SingersDirectory) mounts where the server leaves a
+    // one-screen placeholder, between the voice-type links and this list; on
+    // a phone the list above it put the chart five screens down.
     const priority = html.indexOf('data-singer-search-priority="true"');
     expect(priority).toBeGreaterThan(html.indexOf("Browse by voice type"));
     expect(priority).toBeGreaterThan(html.indexOf('data-singer-reviewed="true"'));
@@ -159,6 +159,18 @@ describe("/singers hub schema and crawl discovery", () => {
     expect(
       readFileSync(new URL("../components/singers/directory.tsx", import.meta.url), "utf8"),
     ).toContain('"[data-singer-search-priority]"');
+  });
+
+  it("holds one empty screen where the chart mounts, so nothing after it shifts in view", () => {
+    // With no box in the server HTML, a screen taller than about 1,200px
+    // showed the lookups at load and the ~2,500px chart then pushed them down
+    // (layout shift 0.1-0.2 at 1024×1366 and 1440×1300).
+    const placeholder = '<div aria-hidden="true" class="min-h-screen"></div>';
+    const at = html.indexOf(placeholder);
+    expect(at, "SingersDirectory renders a one-screen placeholder before mount").toBeGreaterThan(-1);
+    expect(at).toBeGreaterThan(html.indexOf("Browse by voice type"));
+    expect(at).toBeLessThan(html.indexOf('data-singer-search-priority="true"'));
+    expect(html.indexOf(placeholder, at + 1)).toBe(-1);
   });
 
   it("makes the free range test an immediate next step from the hub", () => {

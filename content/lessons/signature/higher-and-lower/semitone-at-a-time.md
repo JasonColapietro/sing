@@ -36,7 +36,7 @@ Extend one semitone, hold it briefly, release. Count it only when it is easy on 
 
 ### Alternate attempt and reset
 
-Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly and release. Do not rescan today: a finished range test replaces your saved range. Count the note only when it is easy on three separate days, and compare it at your next retest, weeks apart, with the same warm-up, room and microphone distance as your baseline.
+Work in short repetitions with a normal breath and complete release between them. Move one semitone beyond the prior comfortable endpoint at low-to-moderate volume, hold briefly and release. Give the new semitone three attempts at most today, with a few seconds' rest between them. If none of the three is easy, it is not today's note: keep the previous endpoint and spend the rest of the block in the middle of your range. Do not rescan today: a finished range test replaces your saved range. Count the note only when it is easy on three separate days, and compare it at your next retest, weeks apart, with the same warm-up, room and microphone distance as your baseline.
 
 - Look: The added note is reached without a lifted chin, collapsed posture, or a different microphone setup that could distort the comparison.
 - Listen: The new endpoint sounds like a usable sung note and can be repeated, not a breathy touch or forced shout reached once.
@@ -50,14 +50,14 @@ I compared comfortable notes with an earlier baseline and recorded my observatio
 
 ## If it goes wrong
 
-- The target disappears when the range, volume, speed, or duration increases. => If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress.
+- The target disappears when the range, volume, speed, or duration increases. => If the semitone is not easy within three attempts today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress.
 - The reference and your own sound seem different, or you cannot judge the result. => Treat the reading as missing, not as a pass or failure. Stop reference audio, restore a quiet setup, make one easier fresh attempt, and keep the human listening judgment separate from the measurement.
 
 ## Practice blocks
 
 - 60s: Open the practice material. Prepare the room, body, and safe baseline for “Semitone at a Time.”
 - 105s: Isolate the range extension target in short, comfortable examples.
-- 165s: Practise or record the complete “Semitone at a Time” task, resetting between attempts.
+- 165s: Up to three attempts at the new semitone, then the rest of the block in your comfortable middle, resetting between attempts.
 - 90s: Review one take against the stated listening goal and write the next smaller correction.
 
 ## Self-check
@@ -68,7 +68,7 @@ I compared comfortable notes with an earlier baseline and recorded my observatio
 
 Ready when: You can describe the result of the stated task and choose one useful next attempt. Completion is your own practice reflection.
 
-If not ready: If the semitone is not easy today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
+If not ready: If the semitone is not easy within three attempts today, keep the previous endpoint. Stop for discomfort or persistent voice change and do not count an extreme as progress. Leave it for today, and come back to a smaller version on another day once your speaking voice feels normal.
 
 What this shows: I compared comfortable notes with an earlier baseline and recorded my observation without forcing an extension. This is a self-report, not an automatic assessment.
 

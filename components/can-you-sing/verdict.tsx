@@ -12,7 +12,7 @@ import { songFirstPractice } from "@/lib/song-first-practice";
 import { rangeTestHref } from "@/lib/site";
 import { FreeOnly } from "@/components/pro/gate";
 import { prepaintMarker, useHydrated } from "@/components/prepaint";
-import { Card, LinkButton, SectionLabel } from "@/components/ui";
+import { Card, LinkButton, SectionLabel, jumpInPage } from "@/components/ui";
 
 /**
  * The range test, told which song to send the visitor back to: the result
@@ -48,8 +48,17 @@ export function CanYouSingAction({ song }: { song: PopSong }) {
   ) : (
     // `#fit` is the wrapper around CanYouSingVerdict on the song page. Not a
     // shared constant: a server page importing a value from this client
-    // module would get a client reference, not the string.
-    <LinkButton href="#fit" variant="outline" className={ACTION_WIDTH}>
+    // module would get a client reference, not the string. A plain anchor
+    // with the history repair (jumpInPage in components/ui.tsx): next/link
+    // makes no navigation once the address already ends in #fit, so a second
+    // tap did nothing, and the Tab starting point stayed at the top.
+    <LinkButton
+      href="#fit"
+      fullLoad
+      onClick={jumpInPage}
+      variant="outline"
+      className={ACTION_WIDTH}
+    >
       See how it fits your range ↓
     </LinkButton>
   );

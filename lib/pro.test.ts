@@ -1,10 +1,16 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  confirmCheckout,
+  isCheckoutSessionId,
+  isDefinitiveRejection,
   NETWORK_ERROR_MESSAGE,
+  pendingCheckout,
   PLAN_ROWS,
   PRICING,
   PRO_PERKS,
+  ProApiError,
   redeemCode,
+  rememberPendingCheckout,
   restorePro,
   startCheckout,
 } from "./pro";
@@ -152,5 +158,96 @@ describe("a dropped connection on the buy, unlock and pass paths", () => {
       Promise.resolve(new Response(JSON.stringify({ error: "That code has expired." }), { status: 400 })),
     );
     await expect(redeemCode("code")).rejects.toThrow("That code has expired.");
+  });
+});
+
+describe("the checkout session id parked between Stripe and Pro", () => {
+  const PENDING = "suede-sing:pro:pending-checkout";
+
+  function stubStorage(initial: Record<string, string> = {}, blocked = false) {
+    const stored = new Map(Object.entries(initial));
+    const deny = () => {
+      throw new DOMException("The operation is insecure.", "SecurityError");
+    };
+    vi.stubGlobal("window", {
+      localStorage: {
+        getItem: (key: string) => (blocked ? deny() : (stored.get(key) ?? null)),
+        setItem: (key: string, value: string) => (blocked ? deny() : void stored.set(key, value)),
+        removeItem: (key: string) => (blocked ? deny() : void stored.delete(key)),
+      },
+    });
+    return stored;
+  }
+
+  function answer(status: number, body: Record<string, unknown>) {
+    return () => Promise.resolve(new Response(JSON.stringify(body), { status }));
+  }
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it("takes only what /api/entitlement accepts as a Checkout Session id", () => {
+    expect(isCheckoutSessionId("cs_test_a1B2c3")).toBe(true);
+    expect(isCheckoutSessionId("cs_live_" + "a".repeat(200))).toBe(true);
+    for (const bad of ["bogus123", "", "sub_123", "pi_123", "cs_test_a1-b2", "cs_" + "a".repeat(253), null, undefined, 42]) {
+      expect(isCheckoutSessionId(bad), String(bad)).toBe(false);
+    }
+  });
+
+  it("drops a parked value that is not a session id instead of confirming it on every visit", () => {
+    const stored = stubStorage({ [PENDING]: "bogus123" });
+    expect(pendingCheckout()).toBeNull();
+    expect(stored.has(PENDING)).toBe(false);
+    stubStorage({ [PENDING]: "cs_test_parked" });
+    expect(pendingCheckout()).toBe("cs_test_parked");
+  });
+
+  it("says whether the id was parked, so /pro knows when the address is the only copy", () => {
+    const stored = stubStorage();
+    expect(rememberPendingCheckout("cs_test_ok")).toBe(true);
+    expect(stored.get(PENDING)).toBe("cs_test_ok");
+    stubStorage({}, true);
+    expect(rememberPendingCheckout("cs_test_blocked")).toBe(false);
+    expect(pendingCheckout()).toBeNull();
+  });
+
+  it("stops at a refusal a retry cannot change, and unparks the id", async () => {
+    const stored = stubStorage({ [PENDING]: "cs_test_refused" });
+    const fetch = vi.fn(
+      answer(400, { error: "Provide a checkout session id, subscription id, or payment intent id." }),
+    );
+    vi.stubGlobal("fetch", fetch);
+    const error = await confirmCheckout("cs_test_refused").catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(ProApiError);
+    expect((error as ProApiError).status).toBe(400);
+    expect(isDefinitiveRejection(error)).toBe(true);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(stored.has(PENDING)).toBe(false);
+  });
+
+  // A 403 is what a firewall's challenge in front of the API looks like: it
+  // says nothing about the id, and a paid buyer's id must survive it.
+  it.each([403, 429, 502])("retries a %i and keeps the id parked for the next visit", async (status) => {
+    vi.useFakeTimers();
+    const stored = stubStorage({ [PENDING]: "cs_test_busy" });
+    const fetch = vi.fn(answer(status, { error: "Try again in a moment." }));
+    vi.stubGlobal("fetch", fetch);
+    const settled = confirmCheckout("cs_test_busy").catch((e: unknown) => e);
+    await vi.runAllTimersAsync();
+    const error = await settled;
+    expect(isDefinitiveRejection(error)).toBe(false);
+    expect(fetch).toHaveBeenCalledTimes(3);
+    expect(stored.get(PENDING)).toBe("cs_test_busy");
+  });
+
+  it("never reads a dropped connection, or an error from in front of the API, as a refusal", () => {
+    expect(isDefinitiveRejection(new Error(NETWORK_ERROR_MESSAGE))).toBe(false);
+    expect(isDefinitiveRejection(new Error("Provide a checkout session id"))).toBe(false);
+    for (const status of [401, 403, 404, 405, 408, 413, 429, 500, 502, 503]) {
+      expect(isDefinitiveRejection(new ProApiError("not about the id", status)), String(status)).toBe(false);
+    }
+    expect(isDefinitiveRejection(new ProApiError("Expected a JSON body.", 400))).toBe(true);
   });
 });

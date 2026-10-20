@@ -10,7 +10,18 @@ import {
 } from "./exercise-player";
 import { MAX_FRAME_MS, STALE_FRAME_MS, frameDelta } from "@/lib/audio/frame-clock";
 import { EXERCISES, computeRootLadder, ladderWalk } from "./exercises";
-import { bestRep, repAvgScore, sungReps, type RepResult } from "./lib";
+import {
+  EMPTY_GUIDE_TRACE,
+  bestRep,
+  governedGuideAudible,
+  guideHeard,
+  mergeGuide,
+  repAvgScore,
+  sungReps,
+  traceGuide,
+  type GuideTrace,
+  type RepResult,
+} from "./lib";
 
 const fiveNote = EXERCISES.find((e) => e.id === "five-note-scale")!;
 
@@ -387,5 +398,45 @@ describe("a first-time singer without a saved range", () => {
       scorer.feed(t, seg ? midiToFreq(seg.startMidi + 12) : null, dt);
     }
     expect(scorer.result(root)!.score).toBeGreaterThanOrEqual(95);
+  });
+});
+
+describe("what the singer heard of the guide during the scored reps", () => {
+  /** One rep's trace from the frames of its governed stretch. */
+  function rep(frames: boolean[]): GuideTrace {
+    return frames.reduce(traceGuide, EMPTY_GUIDE_TRACE);
+  }
+
+  it("reads the governed pass only where it plays", () => {
+    // Sing-along: the guide under the voice, in the scored window. Rep 0's
+    // teach pass plays at full level whatever the slider says.
+    expect(governedGuideAudible({ underVoice: true, stage: "sing", scheduled: true, pct: 70 })).toBe(true);
+    expect(governedGuideAudible({ underVoice: true, stage: "teach", scheduled: true, pct: 0 })).toBeNull();
+    expect(governedGuideAudible({ underVoice: true, stage: "lead", scheduled: true, pct: 70 })).toBeNull();
+    // Call-and-response: the reference before the count-in.
+    expect(governedGuideAudible({ underVoice: false, stage: "teach", scheduled: true, pct: 40 })).toBe(true);
+    expect(governedGuideAudible({ underVoice: false, stage: "sing", scheduled: true, pct: 40 })).toBeNull();
+  });
+
+  it("is silent when the pass was never scheduled, or the slider is down", () => {
+    // Laid out at Off: raising the slider mid-rep has nothing to turn up.
+    expect(governedGuideAudible({ underVoice: true, stage: "sing", scheduled: false, pct: 70 })).toBe(false);
+    expect(governedGuideAudible({ underVoice: true, stage: "sing", scheduled: true, pct: 0 })).toBe(false);
+  });
+
+  it("words a session by every scored rep, not the slider at End", () => {
+    const off = rep([false, false, false]);
+    const on = rep([true, true]);
+    expect(guideHeard([off, off, off].reduce(mergeGuide, EMPTY_GUIDE_TRACE))).toBe("off");
+    expect(guideHeard([on, on].reduce(mergeGuide, EMPTY_GUIDE_TRACE))).toBe("on");
+    expect(guideHeard([on, off].reduce(mergeGuide, EMPTY_GUIDE_TRACE))).toBe("partly");
+    // Turned down part-way through one rep.
+    expect(guideHeard(rep([true, false]))).toBe("partly");
+    expect(guideHeard(EMPTY_GUIDE_TRACE)).toBeUndefined();
+  });
+
+  it("keeps the same trace when a frame adds nothing", () => {
+    const on = rep([true]);
+    expect(traceGuide(on, true)).toBe(on);
   });
 });

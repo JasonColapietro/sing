@@ -159,7 +159,11 @@ describe("the pitch meter after Stop mic", () => {
     // cold traffic has no program and never needs them.
     const src = readFileSync(new URL("./pitch-meter.tsx", import.meta.url), "utf8");
     expect(src).not.toMatch(/from "@\/lib\/programs"|from "@\/components\/programs\/use-program"|from "@\/components\/practice\/program-day"/);
-    expect(src).toContain('dynamic(() => import("@/components/practice/program-range-probe"))');
+    // Still its own chunk, loaded so a failed fetch (offline) waits for the
+    // connection in a Suspense boundary of its own rather than throwing in
+    // render (./retry-when-online.test.ts).
+    expect(src).toContain('retryWhenOnline(() => import("@/components/practice/program-range-probe"))');
+    expect(src).toContain("{ loading: () => null }");
     expect(src).toMatch(/const probe = staleSaved \? <ProgramRangeProbe /);
     const note = readFileSync(new URL("../practice/program-range-note.ts", import.meta.url), "utf8");
     expect(note).not.toMatch(/from "@\/lib\/programs"/);

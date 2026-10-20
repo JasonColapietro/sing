@@ -593,6 +593,27 @@ unchanged:
 What the other apps must do: re-sync `suede-vocal.json` byte for byte.
 Nothing else changes.
 
+#### Editorial changes inside v9 (2026-10-20, round 12)
+
+No key was added or renamed, so `version` stays 9 and `glossary.json` stays
+at version 1. `suede-voice-curriculum.json` and `suede-voice-lesson-urls.json`
+are unchanged; this round's lesson edits are prose in `lib/lesson-data.ts`:
+
+- `editorial`: book word counts moved with this round's text edits.
+  `reading-the-range-test` (1560), `totalWords` 33092. Chapter 8's
+  voice-type section now says the label leans high when the top notes were
+  falsetto: the bass, baritone and tenor bands describe full voice, so a
+  baritone whose falsetto carried the top often reads as a tenor. The range
+  result's voice-type card says the same. The atlas is unchanged at 72505.
+- `glossary.json`, values only. `interval` has a new `definition`: an
+  interval is named by counting the letter names it spans with both ends
+  included, so C up to E is a third and C up to the next C an octave. The old
+  wording ("how many scale steps it covers") named every interval one too
+  small.
+
+What the other apps must do: re-sync `suede-vocal.json` and `glossary.json`
+byte for byte. Nothing else changes.
+
 ### Versioning
 
 `version` is bumped only when the *shape* changes: a key added, removed or
