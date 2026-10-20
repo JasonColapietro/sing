@@ -18,6 +18,7 @@ await context.addInitScript(() => {
   }
   localStorage.setItem("suede-sing:taste:v1", JSON.stringify({ kind: "skipped", at: new Date().toISOString() }));
 });
+context.setDefaultTimeout(15_000);
 const page = await context.newPage();
 const errors = [];
 page.on("pageerror", (error) => errors.push(error.message));
@@ -29,6 +30,7 @@ try {
   const linkedCard = page.getByRole("heading", { level: 3, name: "Twinkle Twinkle Little Star", exact: true }).locator("../..");
   await linkedCard.getByRole("button", { name: "Sing", exact: true }).waitFor();
   await linkedCard.getByText("Open this visit", { exact: true }).waitFor();
+  console.log("PASS visit library: linked card opens after Exit");
   const band = linkedCard.locator("xpath=ancestor::section[@aria-label][1]");
   assert.ok(await band.getByRole("button", { name: "Locked", exact: true }).count() > 0, "other songs keep their mastery gate");
   await page.getByRole("button", { name: "Start setlist", exact: true }).click();
@@ -38,6 +40,7 @@ try {
   await page.getByLabel("Loop from", { exact: true }).fill("1");
   await page.getByRole("button", { name: "Play", exact: true }).first().click();
   await page.getByText("Performance complete", { exact: true }).waitFor({ timeout: 60_000 });
+  console.log("PASS queued first song completed");
   await page.getByRole("button", { name: "Next: Twinkle Twinkle Little Star", exact: true }).click();
   await page.getByRole("heading", { level: 1, name: "Twinkle Twinkle Little Star", exact: true }).waitFor();
   await page.getByRole("button", { name: "End practice", exact: true }).click();
@@ -51,6 +54,13 @@ try {
   await linkedCard.getByRole("button", { name: "Locked", exact: true }).waitFor();
   assert.deepEqual(errors, []);
   console.log("PASS fresh visit: linked song returns to its normal mastery gate");
+} catch (error) {
+  console.error("Visit fixture at failure:", await page.evaluate(() => ({
+    url: location.href,
+    setlist: localStorage.getItem("suede-sing:setlist:v1"),
+    buttons: [...document.querySelectorAll("main button")].map((button) => button.textContent),
+  })).catch(() => "page unavailable"));
+  throw error;
 } finally {
   await context.close();
   await browser.close();

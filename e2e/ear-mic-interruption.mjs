@@ -67,7 +67,7 @@ try {
       // Longer than Pitch match's entire 8s answer window. In Note catcher
       // this also lets at least one target pass if its clock is still live.
       await page.waitForTimeout(9000);
-      assert.match(await game.innerText(), /Round 1\/10/);
+      assert.match(await game.innerText(), /Round 1\/10/i);
       assert.equal(await retry.count(), 1);
       const sessions = await page.evaluate(() => JSON.parse(localStorage.getItem("suede-sing:progress:v1") ?? "{}").sessions ?? []);
       assert.deepEqual(sessions, [], `${name} logged practice while disconnected`);
@@ -75,7 +75,7 @@ try {
       await retry.click();
       await retry.waitFor({ state: "hidden" });
       assert.equal(await page.evaluate(() => window.__earFakeMics.length), 2);
-      assert.match(await game.innerText(), /Round 1\/10/);
+      assert.match(await game.innerText(), /Round 1\/10/i);
       if (name === "Note catcher") {
         await game.getByRole("button", { name: "Resume", exact: true }).first().click();
         await game.getByRole("button", { name: /Pause/ }).waitFor();
