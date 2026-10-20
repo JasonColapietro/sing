@@ -179,6 +179,7 @@ export function PitchMatchGame({
   const [liveCents, setLiveCents] = useState<number | null>(null);
   const [playClock, restartClock] = useActiveStart(session.results.length);
   const rafRef = useRef(0);
+  const timerRef = useRef(0);
   const phaseRef = useRef<Phase>("listen");
   useEffect(() => {
     phaseRef.current = phase;
@@ -191,12 +192,13 @@ export function PitchMatchGame({
 
   const beginRound = useCallback(
     (t: number) => {
+      window.clearTimeout(timerRef.current);
       setPhase("listen");
       setHeldMs(0);
       setLeftMs(WINDOW_MS);
       setLiveCents(null);
       const end = playTone(t, { dur: 1.3, gain: 0.25 });
-      window.setTimeout(() => {
+      timerRef.current = window.setTimeout(() => {
         if (phaseRef.current === "listen") setPhase("sing");
       }, end * 1000 + 150);
     },
@@ -216,9 +218,20 @@ export function PitchMatchGame({
     }
   }, [listening, target, session.done, pickTarget, beginRound, restartClock]);
 
+  // A lost device puts the retry gate over this same game. Cancel the
+  // reference transition and replay the unscored round when it reconnects;
+  // the hidden answer window must not fail while the singer cannot answer.
+  const wasListeningRef = useRef(listening);
+  useEffect(() => {
+    const wasListening = wasListeningRef.current;
+    wasListeningRef.current = listening;
+    if (!listening) window.clearTimeout(timerRef.current);
+    else if (!wasListening && target !== null && phase !== "result") beginRound(target);
+  }, [listening, target, phase, beginRound]);
+
   // The sing-phase loop: accumulate in-tune time inside the window.
   useEffect(() => {
-    if (phase !== "sing" || target === null) return;
+    if (!listening || phase !== "sing" || target === null) return;
     let lastT = performance.now();
     // Both the hold and the answer window run on accumulated capped deltas
     // rather than wall clock, so time the tab spent hidden is time neither of
@@ -269,7 +282,7 @@ export function PitchMatchGame({
       if (!settled) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, target]);
+  }, [phase, target, listening]);
 
   const next = useCallback(() => {
     if (session.done) return;
@@ -281,16 +294,19 @@ export function PitchMatchGame({
   // Keyboard: Enter advances from result, R replays the reference.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (session.done || target === null) return;
+      if (!listening || session.done || target === null) return;
       if (e.key === "Enter" && phase === "result") next();
       if ((e.key === "r" || e.key === "R") && replayAllowed)
         playTone(target, { dur: 1.1, gain: 0.25 });
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [session.done, target, phase, next, replayAllowed]);
+  }, [listening, session.done, target, phase, next, replayAllowed]);
 
-  useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
+  useEffect(() => () => {
+    cancelAnimationFrame(rafRef.current);
+    window.clearTimeout(timerRef.current);
+  }, []);
 
   // Release the mic while the summary is up. A lent one is the workout's to
   // close: its next step may listen too.

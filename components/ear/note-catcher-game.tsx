@@ -149,7 +149,7 @@ export function NoteCatcherGame({
   // The game loop. Runs only while playing; pausing tears it down and resuming
   // starts a new one on the same state, so paused time is never counted.
   useEffect(() => {
-    if (phase !== "play" || targets === null) return;
+    if (!listening || phase !== "play" || targets === null) return;
     let lastT = performance.now();
     let lastReadout = 0;
     let stopped = false;
@@ -219,7 +219,7 @@ export function NoteCatcherGame({
     };
     // `session.record` is stable; the session object itself changes every round.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, targets, level, latest]);
+  }, [phase, targets, level, latest, listening]);
 
   // The logged session length is `now - startedAt`, so each pause moves
   // startedAt forward by its own length: time spent paused (or with the tab
@@ -248,6 +248,15 @@ export function NoteCatcherGame({
   useEffect(() => {
     togglePauseRef.current = togglePause;
   }, [togglePause]);
+  // A disconnected device shows a retry gate. Pause the existing run so
+  // notes cannot pass behind that gate, and Resume excludes the repair time
+  // from its logged duration just like a pause chosen by hand.
+  useEffect(() => {
+    if (!listening && phase === "play") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- external microphone loss pauses the running game
+      togglePauseRef.current();
+    }
+  }, [listening, phase]);
   useEffect(() => {
     const onVisibility = () => {
       if (document.visibilityState === "hidden" && phase === "play") togglePauseRef.current();
@@ -259,7 +268,7 @@ export function NoteCatcherGame({
   // Keyboard: Space pauses and resumes.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (session.done || phase === "idle") return;
+      if (!listening || session.done || phase === "idle") return;
       if (e.key === " " && !(e.target instanceof HTMLButtonElement)) {
         e.preventDefault();
         togglePause();
@@ -267,7 +276,7 @@ export function NoteCatcherGame({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [session.done, phase, togglePause]);
+  }, [listening, session.done, phase, togglePause]);
 
   useEffect(() => () => cancelAnimationFrame(rafRef.current), []);
 
@@ -350,7 +359,9 @@ export function NoteCatcherGame({
             onEnable={() => {
               // The effect above deals a workout's first run once the mic is
               // on (dealsWhenMicOn); this only deals when nothing else will.
-              void start().then((ok) => ok && !dealsItself && begin());
+              // Reconnecting resumes the paused run; dealing it again would
+              // reset its targets while keeping the rounds already scored.
+              void start().then((ok) => ok && targets === null && !dealsItself && begin());
             }}
             error={error}
           />

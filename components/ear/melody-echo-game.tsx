@@ -87,6 +87,7 @@ export function MelodyEchoGame({
 
   const beginRound = useCallback(
     (m: number[]) => {
+      window.clearTimeout(timerRef.current);
       setPhase("listen");
       setDetected([]);
       const end = playMelody(m);
@@ -109,8 +110,19 @@ export function MelodyEchoGame({
     }
   }, [listening, melody, session.done, difficulty, progress.range, beginRound, restartClock]);
 
+  // Keep a disconnected mic's retry gate from hiding a running answer
+  // clock. Reconnect replays this unscored melody rather than marking the
+  // time spent repairing the microphone as a wrong answer.
+  const wasListeningRef = useRef(listening);
+  useEffect(() => {
+    const wasListening = wasListeningRef.current;
+    wasListeningRef.current = listening;
+    if (!listening) window.clearTimeout(timerRef.current);
+    else if (!wasListening && melody !== null && phase !== "result") beginRound(melody);
+  }, [listening, melody, phase, beginRound]);
+
   const finishSinging = useCallback(() => {
-    if (phaseRef.current !== "sing" || melody === null) return;
+    if (!listening || phaseRef.current !== "sing" || melody === null) return;
     cancelAnimationFrame(rafRef.current);
     const notes = segmentNotes(framesRef.current);
     const perNote: (number | null)[] = melody.map((_, i) => notes[i] ?? null);
@@ -121,11 +133,11 @@ export function MelodyEchoGame({
     setCorrect(ok);
     setPhase("result");
     session.record(ok);
-  }, [melody, octaveAgnostic, session]);
+  }, [listening, melody, octaveAgnostic, session]);
 
   // Sing phase: collect voiced frames until window ends or user finishes.
   useEffect(() => {
-    if (phase !== "sing" || melody === null) return;
+    if (!listening || phase !== "sing" || melody === null) return;
     framesRef.current = [];
     const windowMs = windowMsFor(melody);
     let lastT = performance.now();
@@ -154,7 +166,7 @@ export function MelodyEchoGame({
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [phase, melody, latest, finishSinging]);
+  }, [phase, melody, latest, finishSinging, listening]);
 
   const next = useCallback(() => {
     if (session.done) return;
@@ -166,7 +178,7 @@ export function MelodyEchoGame({
   // Keyboard: Enter = done singing / next round, R = hear again.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (session.done || melody === null) return;
+      if (!listening || session.done || melody === null) return;
       if (e.key === "Enter") {
         if (phase === "sing") finishSinging();
         else if (phase === "result") next();
@@ -175,7 +187,7 @@ export function MelodyEchoGame({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [session.done, melody, phase, finishSinging, next, playMelody, replayAllowed]);
+  }, [listening, session.done, melody, phase, finishSinging, next, playMelody, replayAllowed]);
 
   useEffect(
     () => () => {
