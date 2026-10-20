@@ -25,7 +25,8 @@ import { LiveWaveform, PeaksWaveform } from "./waveforms";
 import { TakeRow } from "./take-row";
 import { AbPitchOverlay, TakePitchPanel } from "./pitch-analysis";
 import { AccountSavePrompt } from "@/components/account/save-prompt";
-import { FreeOnly, ProInlineNudge, ProWhisper } from "@/components/pro/gate";
+import { ProInlineNudge, ProWhisper } from "@/components/pro/gate";
+import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
 import { createRecorderMic, createTakeMutations, startRecorder } from "./runtime";
@@ -139,6 +140,7 @@ function TakeLoggedNote({
 
 export default function RecorderPageClient() {
   const isPro = useIsPro();
+  const hydrated = useHydrated();
   const mountedRef = useRef(true);
 
   // --- store + takes ---
@@ -1168,55 +1170,65 @@ export default function RecorderPageClient() {
             </Card>
           )}
 
-          <FreeOnly>
-            <LockedPanel label="Take pitch analysis">
-              <div className="p-4">
-                <svg
-                  viewBox="0 0 640 150"
-                  className="block w-full"
-                  aria-hidden="true"
-                >
-                  <line x1="16" y1="35" x2="624" y2="35" stroke="#ddd4c4" strokeWidth="1" />
-                  <line x1="16" y1="75" x2="624" y2="75" stroke="#ddd4c4" strokeWidth="1" />
-                  <line x1="16" y1="115" x2="624" y2="115" stroke="#ddd4c4" strokeWidth="1" />
-                  <path
-                    d="M16 108 C 70 106, 96 70, 150 66 S 240 96, 296 92 S 380 40, 440 38 S 540 74, 624 44"
-                    fill="none"
-                    stroke="#c9bda0"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M16 96 C 64 98, 100 58, 158 56 S 250 84, 308 80 S 388 32, 452 32 S 552 64, 624 36"
-                    fill="none"
-                    stroke="#c59642"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                  <text
-                    x="16"
-                    y="88"
-                    className="font-mono"
-                    fontSize="9"
-                    letterSpacing="0.1em"
-                    fill={DIM}
+          {/* The free plan's preview of Pro's pitch panel. In the server HTML
+              behind the pre-paint "not-pro" marker (components/prepaint.tsx)
+              rather than in <FreeOnly>, which mounts it after hydration: about
+              240px arriving at the foot of the deck column pushed the takes
+              list under it off a 768px tablet's screen and the page's closing
+              sections down on a tall desktop (CLS 0.03 to 0.04 for every free
+              visitor). The inline script hides it before the first paint for
+              a Pro singer; from hydration on the real entitlement decides. */}
+          {(!hydrated || !isPro) && (
+            <div {...prepaintMarker(hydrated, { plan: "not-pro" })}>
+              <LockedPanel label="Take pitch analysis">
+                <div className="p-4">
+                  <svg
+                    viewBox="0 0 640 150"
+                    className="block w-full"
+                    aria-hidden="true"
                   >
-                    TAKE 3
-                  </text>
-                  <text
-                    x="16"
-                    y="122"
-                    className="font-mono"
-                    fontSize="9"
-                    letterSpacing="0.1em"
-                    fill={DIM}
-                  >
-                    TAKE 7
-                  </text>
-                </svg>
-              </div>
-            </LockedPanel>
-          </FreeOnly>
+                    <line x1="16" y1="35" x2="624" y2="35" stroke="#ddd4c4" strokeWidth="1" />
+                    <line x1="16" y1="75" x2="624" y2="75" stroke="#ddd4c4" strokeWidth="1" />
+                    <line x1="16" y1="115" x2="624" y2="115" stroke="#ddd4c4" strokeWidth="1" />
+                    <path
+                      d="M16 108 C 70 106, 96 70, 150 66 S 240 96, 296 92 S 380 40, 440 38 S 540 74, 624 44"
+                      fill="none"
+                      stroke="#c9bda0"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M16 96 C 64 98, 100 58, 158 56 S 250 84, 308 80 S 388 32, 452 32 S 552 64, 624 36"
+                      fill="none"
+                      stroke="#c59642"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                    <text
+                      x="16"
+                      y="88"
+                      className="font-mono"
+                      fontSize="9"
+                      letterSpacing="0.1em"
+                      fill={DIM}
+                    >
+                      TAKE 3
+                    </text>
+                    <text
+                      x="16"
+                      y="122"
+                      className="font-mono"
+                      fontSize="9"
+                      letterSpacing="0.1em"
+                      fill={DIM}
+                    >
+                      TAKE 7
+                    </text>
+                  </svg>
+                </div>
+              </LockedPanel>
+            </div>
+          )}
         </div>
 
         {/* ------- right column: takes list ------- */}

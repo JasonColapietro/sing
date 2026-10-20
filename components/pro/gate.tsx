@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { useIsPro, useProReady } from "@/lib/pro";
+import { prepaintMarker, useHydrated } from "@/components/prepaint";
 import { proHeadline } from "@/lib/pro-shared";
 import { useProgress } from "@/lib/progress";
 import { ProChip, UpgradeCard } from "./ui";
@@ -31,11 +32,19 @@ export function FreeOnly({ children }: { children: ReactNode }) {
  */
 export function ProWhisper({ className = "" }: { className?: string }) {
   const isPro = useIsPro();
-  const ready = useProReady();
-  if (!ready || isPro) return null;
+  const hydrated = useHydrated();
+  // In the server HTML for everyone, behind the pre-paint "not-pro" marker
+  // (components/prepaint.tsx), rather than held back until the entitlement
+  // cache is read: mounted after hydration, the line grew the mic gate it
+  // closes by about 49px and moved what sits under it (the A/B card on
+  // /recorder at 1280: CLS 0.03 for every free visitor). Before the first
+  // paint the inline script hides it for a Pro singer; from hydration on it
+  // renders from the real entitlement.
+  if (hydrated && isPro) return null;
   return (
     <p
       className={`font-mono text-[11px] uppercase tracking-[0.14em] text-dim ${className}`}
+      {...prepaintMarker(hydrated, { plan: "not-pro" })}
     >
       Free ·{" "}
       <Link

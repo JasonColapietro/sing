@@ -67,9 +67,14 @@ describe("songs mic gate", () => {
         .replace(/<span data-prepaint-plan="not-capped">((?:[^<]|<span[^>]*>[^<]*<\/span>)*)<\/span>/, "$1")
         .replace('<div data-prepaint-plan="not-capped">', "")
         .replace(/<\/div><\/main>$/, "</main>");
+    // The plain gate is painted for the same plan: its "Free · Pro adds the
+    // coach" line (ProWhisper) is in the server HTML behind the not-pro
+    // marker, so a Pro singer's first paint has the gate without it.
     for (const plan of ["free", "pro"] as const) {
-      expect(ids(unwrap(paintedFor(html, { plan })))).toBe(ids(renderToStaticMarkup(<SongsMicGate />)));
+      expect(ids(unwrap(paintedFor(html, { plan })))).toBe(ids(paintedFor(renderToStaticMarkup(<SongsMicGate />), { plan })));
     }
+    expect(paintedFor(html, { plan: "free" })).toContain("adds the coach");
+    expect(paintedFor(html, { plan: "pro" })).not.toContain("adds the coach");
     // A capped singer paints what SongsClient will show them: the library's
     // subtitle and the wall, with the songbook held below the fold.
     const capped = wordsPainted(paintedFor(html, { plan: "capped" }));

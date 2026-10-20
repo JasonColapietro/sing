@@ -49,6 +49,28 @@ describe("ContinueCard on a phone", () => {
   it("leaves DOM order alone, so focus and reading order are unchanged", () => {
     expect(html.indexOf("A short first exercise.")).toBeLessThan(html.indexOf("Enable mic and start"));
   });
+
+  // The prerender is a newcomer's kicker and "Start a streak today"; a
+  // returning singer hydrates to another kicker and chip. Side by side, the
+  // pair fit on one line or not depending on both texts, so the title and
+  // start button under them moved at hydration (0.085 at 375 on
+  // /ear-training). Stacked on a phone, the row's height cannot depend on
+  // either text.
+  it("stacks the kicker and streak chip on a phone, so the row is one height whatever they say", () => {
+    // The row is the div that opens straight before the kicker's label.
+    const rowOpen = html.lastIndexOf("<div", html.indexOf(">Start here<"));
+    const rowClass = /class="([^"]*)"/.exec(html.slice(rowOpen, html.indexOf(">", rowOpen)))?.[1] ?? "";
+    expect(rowClass).toMatch(/\border-1\b/);
+    expect(rowClass).toMatch(/(^|\s)flex-col(\s|$)/);
+    expect(rowClass).toMatch(/(^|\s)items-start(\s|$)/);
+    expect(rowClass).toMatch(/\bsm:flex-row\b/);
+    expect(rowClass).toMatch(/\bsm:flex-wrap\b/);
+    // No unprefixed flex-wrap: on a phone the pair must never share a line.
+    expect(rowClass.split(/\s+/)).not.toContain("flex-wrap");
+    // Both the kicker and the chip sit inside that row.
+    const rowEnd = html.indexOf("</h2>", rowOpen);
+    expect(html.slice(rowOpen, rowEnd)).toContain("Start a streak today");
+  });
 });
 
 describe("ContinueCard's star line", () => {

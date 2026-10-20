@@ -325,7 +325,18 @@ export function ContinueCard({
           and from sm up the two-column layout is exactly as before. */}
       <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-6">
         <div className="contents sm:block sm:max-w-xl">
-          <div className="order-1 flex flex-wrap items-center gap-2">
+          {/* On a phone the streak chip always takes its own line under the
+              kicker. Side by side, whether the pair fit on one line depended
+              on both texts, and both change at hydration: the prerender is a
+              newcomer's ("Start a streak today", the newcomer's kicker), a
+              returning singer's is "🔥 4-day streak" or a lapsed singer's
+              best, beside "Continue your path" or "Top up today". At 375 the
+              row went from two lines to one for a singer with a streak on
+              /ear-training and moved the title, start button and everything
+              under them by 30px (CLS 0.085); other widths and rooms moved
+              the other way. Stacked, the row is the same height in every
+              state. From sm up there is room for both on one line, as before. */}
+          <div className="order-1 flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             <SectionLabel>{kicker}</SectionLabel>
             <StreakChip days={streakDays} best={streakBest} />
           </div>
