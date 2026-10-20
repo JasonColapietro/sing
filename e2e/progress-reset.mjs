@@ -1,5 +1,6 @@
 /**
- * Browser regression for erasing local progress without silently restoring it.
+ * Browser regression for erasing local progress without silently restoring it,
+ * and for where /progress lands a phone singer coming back to it (returns()).
  * Run against a local, credential-free production build:
  *   node e2e/progress-reset.mjs [http://localhost:3000] [--executable=/path/to/chromium]
  *
@@ -259,6 +260,82 @@ async function scenario(browser, { delayedPull = false } = {}) {
   }
 }
 
+/** Whether `locator`'s box is on screen once the page has settled. */
+async function onScreen(page, locator) {
+  // Let a restored scroll, anchoring and a late hash jump all finish first: a
+  // check that passes on the way through is not where the singer lands.
+  await page.waitForLoadState("networkidle");
+  await page.waitForTimeout(600);
+  return locator.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < innerHeight;
+  });
+}
+
+/**
+ * Where /progress puts a phone singer back: Back from a coach step lands on
+ * the coach card (it used to come back about 7,146px down, at the room rail),
+ * a full load of /progress#your-data lands on Your data, and "Go to
+ * Progress" on /sign-in with accounts off lands on Export JSON.
+ */
+async function returns(browser) {
+  const context = await browser.newContext({
+    viewport: { width: 375, height: 667 }, locale: "en-US", timezoneId: "UTC", serviceWorkers: "block",
+  });
+  const pageErrors = [];
+  await context.route("**/*", (route) =>
+    new URL(route.request().url()).origin === base.origin ? route.continue() : route.abort("blockedbyclient"));
+  await context.addInitScript(({ keys, progress, now }) => {
+    if (localStorage.getItem(keys.seeded)) return;
+    localStorage.clear();
+    localStorage.setItem(keys.seeded, "yes");
+    localStorage.setItem(keys.progress, JSON.stringify(progress));
+    localStorage.setItem("suede-sing:coach-intro:v1", now);
+  }, { keys: KEYS, progress: beforeErase, now });
+  const page = await context.newPage();
+  page.setDefaultTimeout(15_000);
+  page.on("pageerror", (error) => pageErrors.push(String(error)));
+  try {
+    await page.goto(new URL("/progress", base).href, { waitUntil: "networkidle" });
+    const coach = page.locator('section[aria-label="Today\'s coached session"]');
+    await coach.waitFor();
+    await coach.scrollIntoViewIfNeeded();
+    const step = coach.locator("ol a[href]").first();
+    const href = await step.getAttribute("href");
+    await step.click();
+    await page.waitForURL((url) => url.pathname !== "/progress");
+    await page.locator("h1").first().waitFor();
+    await page.goBack();
+    await page.waitForURL((url) => url.pathname === "/progress");
+    await coach.waitFor();
+    assert.equal(await onScreen(page, coach), true, `Back from the coach step ${href} lands on the coach card`);
+    pass("Back from a coach step returns a phone singer to the coach card");
+
+    // A real document load, not a same-page jump from /progress.
+    await page.goto("about:blank");
+    await page.goto(new URL("/progress#your-data", base).href, { waitUntil: "networkidle" });
+    const yourData = page.getByRole("heading", { name: "Your data", exact: true });
+    await yourData.waitFor();
+    assert.equal(await onScreen(page, yourData), true, "a full load of /progress#your-data lands on Your data");
+    pass("/progress#your-data lands on Your data after hydration");
+
+    await page.goto(new URL("/sign-in", base).href, { waitUntil: "networkidle" });
+    if (await page.getByRole("heading", { name: "Accounts are not open yet", exact: true }).count()) {
+      await page.getByRole("link", { name: "Go to Progress", exact: true }).click();
+      await page.waitForURL((url) => url.pathname === "/progress" && url.hash === "#your-data");
+      const exportButton = page.getByRole("button", { name: "Export JSON", exact: true });
+      await exportButton.waitFor();
+      assert.equal(await onScreen(page, exportButton), true, "Go to Progress lands with Export JSON on screen");
+      pass("Go to Progress on /sign-in lands on Export JSON");
+    } else {
+      console.log("skip Go to Progress: accounts are on in this build");
+    }
+    assert.deepEqual(pageErrors, [], "no uncaught browser errors");
+  } finally {
+    await context.close();
+  }
+}
+
 let browser;
 try {
   browser = await pw.chromium.launch(executable
@@ -266,6 +343,7 @@ try {
     : { channel: flag("channel") ?? "chrome", headless: true });
   await scenario(browser);
   await scenario(browser, { delayedPull: true });
+  await returns(browser);
 } catch (error) {
   console.error(`FAIL progress reset: ${error.stack ?? error}`);
   process.exitCode = 1;
