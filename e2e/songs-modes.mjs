@@ -140,7 +140,7 @@ try {
     await page.getByRole("button", { name: "Performance", exact: true }).first().waitFor();
     await page.keyboard.press("Escape");
     // Resume in the page and let the planned loops run out: a performance ends on its own.
-    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    await page.getByRole("button", { name: "Resume", exact: true }).first().click();
     const summary = page.locator("main");
     await summary.getByText("Performance complete").waitFor({ timeout: 240_000 });
     assert.match(await summary.innerText(), /points/i, "summary shows points for a performance");
@@ -218,7 +218,7 @@ try {
     await page.getByRole("button", { name: "Play", exact: true }).first().click();
     await page.getByRole("button", { name: "Pause", exact: true }).first().click();
     await page.getByRole("button", { name: "Sing along", exact: true }).waitFor(); // the pass switch while paused
-    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    await page.getByRole("button", { name: "Resume", exact: true }).first().click();
     const summary = page.locator("main");
     await summary.getByText("Performance complete").waitFor({ timeout: 240_000 });
     assert.match(await summary.innerText(), /on your own pass/i, "summary names the pass sung");
