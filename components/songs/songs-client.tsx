@@ -6,6 +6,7 @@ import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
+import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { useProgress } from "@/lib/progress";
 import { Button, PageShell } from "@/components/ui";
 import { MicAlert } from "@/components/mic-alert";
@@ -53,6 +54,29 @@ export function entitled(song: Song): boolean {
 function canStart(song: Song): boolean {
   const accessible = getProState().active ? ALL_SONGS : SONGS;
   return entitled(song) && bandOpen(bandForSong(song), getMastered(), accessible);
+}
+
+/** Where the room stood on the microphone at one render (micJustAnswered). */
+export interface MicAsk {
+  /** A control asking for the mic was on screen: the gate, or the library header's button. */
+  asked: boolean;
+  listening: boolean;
+  /** "Continue without a mic" was chosen. */
+  listenMode: boolean;
+}
+
+/**
+ * Whether the control that asked for the microphone just went away because
+ * it was answered: the mic came on, or the singer chose to go on without
+ * one. Not when it went for any other reason (a song picked from the
+ * library), which leaves focus to whatever replaced it.
+ */
+export function micJustAnswered(prev: MicAsk, next: MicAsk): boolean {
+  return (
+    prev.asked &&
+    !next.asked &&
+    ((next.listening && !prev.listening) || (next.listenMode && !prev.listenMode))
+  );
 }
 
 /** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
@@ -177,6 +201,30 @@ export function SongsClient() {
   // microphone prompt for practice they cannot start.
   const gated = !pitch.listening && !listenMode && !cap.capped;
 
+  // The gate's buttons, or the library header's "Enable microphone", go
+  // away the moment they are answered, and keyboard focus fell to <body>:
+  // the next Tab went back up to the cap note above the taste quiz. Focus
+  // moves to what replaced them instead, only if it was dropped (see
+  // focusIfDropped): the player's Play on a song link, otherwise the page's
+  // title, from which Tab reaches the library's first control.
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const mic: MicAsk = {
+    asked: gated || (view === "library" && !pitch.listening && !cap.capped),
+    listening: pitch.listening,
+    listenMode,
+  };
+  const micRef = useRef(mic);
+  useEffect(() => {
+    const answered = micJustAnswered(micRef.current, mic);
+    micRef.current = mic;
+    if (!answered) return;
+    focusIfDropped(
+      view === "practice"
+        ? document.querySelector<HTMLElement>("#song-transport button")
+        : titleRef.current,
+    );
+  });
+
   // Consumed once, and only after the mic gate clears, so the singer still
   // gets asked for a microphone first and lands on the requested song after.
   // Never while capped: the link must not walk around the daily allowance.
@@ -229,6 +277,7 @@ export function SongsClient() {
   return (
     <PageShell
       kicker="Songs"
+      titleRef={titleRef}
       title={
         view === "practice" && activeSong
           ? activeSong.title

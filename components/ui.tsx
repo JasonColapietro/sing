@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { MouseEventHandler, ReactNode } from "react";
+import type { MouseEventHandler, ReactNode, Ref } from "react";
 
 import { MicAlert } from "@/components/mic-alert";
 
@@ -49,6 +49,7 @@ export function PageShell({
   title,
   subtitle,
   actions,
+  titleRef,
   children,
 }: {
   kicker?: string;
@@ -57,6 +58,11 @@ export function PageShell({
   /** Usually a string; the /songs prerender carries two, one per pre-paint state. */
   subtitle?: ReactNode;
   actions?: ReactNode;
+  /**
+   * Makes the title a focus target (tabIndex -1, no ring), for a page that
+   * moves focus to it after the control that was pressed went away.
+   */
+  titleRef?: Ref<HTMLHeadingElement>;
   children: ReactNode;
 }) {
   return (
@@ -64,7 +70,13 @@ export function PageShell({
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
           {kicker && <SectionLabel className="mb-3">{kicker}</SectionLabel>}
-          <h1 className="text-4xl sm:text-5xl">{title}</h1>
+          {titleRef ? (
+            <h1 ref={titleRef} tabIndex={-1} className="text-4xl outline-none sm:text-5xl">
+              {title}
+            </h1>
+          ) : (
+            <h1 className="text-4xl sm:text-5xl">{title}</h1>
+          )}
           {subtitle && <p className="mt-3 max-w-prose text-mut">{subtitle}</p>}
         </div>
         {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
