@@ -19,7 +19,13 @@ import { releaseTake, type TakeState } from "./take";
 import { SessionSummary } from "./session-summary";
 import { getMastered, recordMastered, recordSongPlayed } from "./favorites";
 import { advanceSetlist, endSetlist, useSetlist } from "./setlist";
-import { bandForSong, bandOpen, melodyFingerprint, type SessionSummaryData } from "./lib";
+import {
+  bandForSong,
+  bandOpen,
+  createPendingRequest,
+  melodyFingerprint,
+  type SessionSummaryData,
+} from "./lib";
 import type { GuidePass, SessionMode } from "./types";
 
 type View = "library" | "practice" | "summary";
@@ -101,6 +107,16 @@ export function SongsClient() {
   useEffect(() => {
     if (view === "summary") window.scrollTo({ top: 0 });
   }, [view]);
+
+  // The summary's "Enable microphone and sing again" waits on a permission
+  // prompt that can stay up while the singer goes back to the library or
+  // starts another run. Leaving that summary drops the request, so access
+  // granted afterwards cannot pull them back into the song they left.
+  const micRequestRef = useRef(createPendingRequest());
+  useEffect(() => {
+    const micRequest = micRequestRef.current;
+    return () => micRequest.cancel();
+  }, [view, summary]);
 
   // A song page links here as /songs?song=<slug>, so arriving from search
   // lands on the melody that was being read about rather than the library.
@@ -290,7 +306,9 @@ export function SongsClient() {
                     showCapWall();
                     return;
                   }
-                  if (!(await pitch.start())) return;
+                  // Only if this summary is still the one showing.
+                  const current = micRequestRef.current.begin();
+                  if (!(await pitch.start()) || !current()) return;
                   setPass((p) => (p === "listen" ? "guided" : p));
                   startSongById(summary.song.id);
                 }

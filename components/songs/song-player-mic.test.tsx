@@ -2,6 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
 import { songBySlug } from "./data";
+import { createPendingRequest } from "./lib";
 import { SongPlayer, afterMicOn, micOffPrompt } from "./song-player";
 import type { GuidePass } from "./types";
 
@@ -75,5 +76,83 @@ describe("turning the microphone on from inside the player", () => {
 
   it("leaves a finished run to the summary", () => {
     expect(afterMicOn("finished", "listen")).toBeNull();
+  });
+});
+
+/**
+ * The player's "Enable microphone" and the summary's "Enable microphone and
+ * sing again" both await a permission prompt the singer can leave up while
+ * they End practice or go Back to library. Allowed afterwards, the player's
+ * restart ran on an unmounted player (timers, frames and the guide with
+ * nothing to stop them) and the summary's pulled the singer back into the
+ * song they had left. Both now wait the way `press` does here.
+ */
+describe("a microphone prompt answered after the singer moved on", () => {
+  function prompt() {
+    let answer: (granted: boolean) => void = () => {};
+    const granted = new Promise<boolean>((resolve) => (answer = resolve));
+    return { granted, answer };
+  }
+
+  /** As enableMic and onEnableMic: the work runs only if the request still holds. */
+  async function press(request: ReturnType<typeof createPendingRequest>, granted: Promise<boolean>, work: () => void) {
+    const current = request.begin();
+    if (!(await granted) || !current()) return;
+    work();
+  }
+
+  it("still starts the run when nothing moved", async () => {
+    const request = createPendingRequest();
+    const { granted, answer } = prompt();
+    let started = 0;
+    const pressed = press(request, granted, () => started++);
+    answer(true);
+    await pressed;
+    expect(started).toBe(1);
+  });
+
+  it("starts nothing once the player or summary has gone, though access was granted", async () => {
+    const request = createPendingRequest();
+    const { granted, answer } = prompt();
+    let started = 0;
+    const pressed = press(request, granted, () => started++);
+    request.cancel(); // End practice unmounts the player; Back to library leaves the summary.
+    answer(true);
+    await pressed;
+    expect(started).toBe(0);
+  });
+
+  it("acts on the latest press only", async () => {
+    const request = createPendingRequest();
+    const { granted, answer } = prompt();
+    const started: string[] = [];
+    const first = press(request, granted, () => started.push("first"));
+    const second = press(request, granted, () => started.push("second"));
+    answer(true);
+    await Promise.all([first, second]);
+    expect(started).toEqual(["second"]);
+  });
+
+  it("takes a new press after a cancel", async () => {
+    // The summary cancels on every view change, and a strict-mode remount
+    // cancels once before the singer has pressed anything.
+    const request = createPendingRequest();
+    request.cancel();
+    const { granted, answer } = prompt();
+    let started = 0;
+    const pressed = press(request, granted, () => started++);
+    answer(true);
+    await pressed;
+    expect(started).toBe(1);
+  });
+
+  it("starts nothing when access is refused", async () => {
+    const request = createPendingRequest();
+    const { granted, answer } = prompt();
+    let started = 0;
+    const pressed = press(request, granted, () => started++);
+    answer(false);
+    await pressed;
+    expect(started).toBe(0);
   });
 });

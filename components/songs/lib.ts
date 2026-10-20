@@ -1020,3 +1020,28 @@ export function describeLoopRange(song: Song, range: LoopRange): string {
   const last = Math.max(first, Math.ceil(range.endBeat / perBar));
   return first === last ? `Bar ${first}` : `Bars ${first}–${last}`;
 }
+
+/**
+ * Work that waits on the microphone's permission prompt, which can stay up for
+ * as long as the singer likes while they press other things or leave. `begin`
+ * hands back a check that holds until the next `begin` or a `cancel`, so what
+ * runs after the await runs for the latest press only, and never once its
+ * owner has cancelled it — on unmount, or when the screen that asked changes.
+ */
+export function createPendingRequest(): {
+  /** Starts a request; the check it returns is true while it is still the one to act on. */
+  begin(): () => boolean;
+  /** Drops the pending request, if any. */
+  cancel(): void;
+} {
+  let latest = 0;
+  return {
+    begin() {
+      const id = ++latest;
+      return () => id === latest;
+    },
+    cancel() {
+      latest += 1;
+    },
+  };
+}

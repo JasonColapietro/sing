@@ -38,6 +38,7 @@ import {
   autoTempoStep,
   clampTranspose,
   createPassOctave,
+  createPendingRequest,
   defaultOctaveAgnostic,
   emptyTally,
   fitTransposeToRange,
@@ -221,6 +222,8 @@ export function SongPlayer({
   const pauseRef = useRef<() => void>(() => {});
   /** The latest `restart`, for a call that lands after an await (enableMic). */
   const restartRef = useRef<() => void>(() => {});
+  /** An "Enable microphone" press still waiting on its prompt (enableMic). */
+  const micRequestRef = useRef(createPendingRequest());
   const [countInBeat, setCountInBeat] = useState(-1);
   const [loopIndex, setLoopIndex] = useState(0);
   /** Whole planned sessions a rehearsal has already looped through. */
@@ -754,6 +757,13 @@ export function SongPlayer({
   // Leaving the room mid-take releases the microphone recording with it.
   useEffect(() => () => takeRecorderRef.current?.discard(), []);
 
+  // Leaving the room drops a microphone press still waiting on its prompt, so
+  // access granted afterwards starts nothing on a player that is gone.
+  useEffect(() => {
+    const micRequest = micRequestRef.current;
+    return () => micRequest.cancel();
+  }, []);
+
   function rafTick() {
     const spb = spbRef.current;
     const now = performance.now();
@@ -1136,9 +1146,15 @@ export function SongPlayer({
    * permission prompt can stay up while the singer presses other things; the
    * restart goes through `restartRef` for the same reason, so it starts the
    * run as the latest render set it up. See `afterMicOn`.
+   *
+   * Only the latest press acts, and only while the player is on screen: a
+   * singer who chose End practice with the prompt up and allowed it afterwards
+   * had the restart start timers, frames and the guide on an unmounted player,
+   * with nothing left to stop them. Either way the mic stays as usePitch left it.
    */
   async function enableMic() {
-    if (!(await pitch.start())) return;
+    const current = micRequestRef.current.begin();
+    if (!(await pitch.start()) || !current()) return;
     const next = afterMicOn(phaseRef.current, passRef.current);
     if (!next) return;
     if (next.pass !== passRef.current) choosePass(next.pass);
