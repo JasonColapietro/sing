@@ -8,6 +8,7 @@
  */
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { DEFAULT_OG_IMAGE } from "@/lib/og";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 
 const html = readFileSync(new URL("../public/ai-instructions.html", import.meta.url), "utf8");
@@ -42,8 +43,9 @@ describe("/ai-instructions static page", () => {
     expect(meta("twitter:title")).toBe(meta("og:title"));
     expect(meta("twitter:description")).toBe(meta("og:description"));
     expect(meta("twitter:image")).toBe(meta("og:image"));
-    // The site's own default card route, served by app/opengraph-image.tsx.
-    expect(meta("og:image")).toBe("https://sing.suedeai.ai/opengraph-image");
+    // Share scrapers cache the URL, so this static page needs the same
+    // content version as App Router pages when the default card changes.
+    expect(meta("og:image")).toBe(DEFAULT_OG_IMAGE.url);
   });
 
   it("keeps the description, og:description and JSON-LD description identical", () => {
