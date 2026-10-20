@@ -46,7 +46,8 @@ const hooks = vi.hoisted(() => {
       const i = cursor++;
       if (slots[i] && same(slots[i].deps, deps)) return;
       pending.push(() => {
-        slots[i]?.cleanup?.();
+        const cleanup = slots[i]?.cleanup;
+        if (typeof cleanup === "function") cleanup();
         slots[i] = { deps, cleanup: effect() };
       });
     },

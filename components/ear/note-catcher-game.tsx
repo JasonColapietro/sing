@@ -253,7 +253,6 @@ export function NoteCatcherGame({
   // from its logged duration just like a pause chosen by hand.
   useEffect(() => {
     if (!listening && phase === "play") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- external microphone loss pauses the running game
       togglePauseRef.current();
     }
   }, [listening, phase]);
