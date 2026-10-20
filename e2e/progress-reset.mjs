@@ -285,13 +285,15 @@ async function returns(browser) {
   const pageErrors = [];
   await context.route("**/*", (route) =>
     new URL(route.request().url()).origin === base.origin ? route.continue() : route.abort("blockedbyclient"));
-  await context.addInitScript(({ keys, progress, now }) => {
+  await context.addInitScript(({ keys, progress, now, origin }) => {
+    // Not on the about:blank between loads, which has no storage to touch.
+    if (location.origin !== origin) return;
     if (localStorage.getItem(keys.seeded)) return;
     localStorage.clear();
     localStorage.setItem(keys.seeded, "yes");
     localStorage.setItem(keys.progress, JSON.stringify(progress));
     localStorage.setItem("suede-sing:coach-intro:v1", now);
-  }, { keys: KEYS, progress: beforeErase, now });
+  }, { keys: KEYS, progress: beforeErase, now, origin: base.origin });
   const page = await context.newPage();
   page.setDefaultTimeout(15_000);
   page.on("pageerror", (error) => pageErrors.push(String(error)));

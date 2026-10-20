@@ -58,25 +58,28 @@ function canStart(song: Song): boolean {
 
 /** Where the room stood on the microphone at one render (micJustAnswered). */
 export interface MicAsk {
-  /** A control asking for the mic was on screen: the gate, or the library header's button. */
-  asked: boolean;
+  /** The gate was up. */
+  gated: boolean;
+  /** The library header's "Enable microphone" was on screen. */
+  headerAsk: boolean;
   listening: boolean;
   /** "Continue without a mic" was chosen. */
   listenMode: boolean;
 }
 
 /**
- * Whether the control that asked for the microphone just went away because
- * it was answered: the mic came on, or the singer chose to go on without
- * one. Not when it went for any other reason (a song picked from the
- * library), which leaves focus to whatever replaced it.
+ * Whether a control that asked for the microphone just went away because it
+ * was answered: the gate, or the library header's button, with the mic now
+ * on or the singer going on without one. Not when one went for any other
+ * reason (a song picked from the library), which leaves focus to whatever
+ * replaced it. "Continue without a mic" swaps the gate for the library, whose
+ * header then asks again; the gate's button is still gone.
  */
 export function micJustAnswered(prev: MicAsk, next: MicAsk): boolean {
-  return (
-    prev.asked &&
-    !next.asked &&
-    ((next.listening && !prev.listening) || (next.listenMode && !prev.listenMode))
-  );
+  const gone = (prev.gated && !next.gated) || (prev.headerAsk && !next.headerAsk);
+  const answered =
+    (next.listening && !prev.listening) || (next.listenMode && !prev.listenMode);
+  return gone && answered;
 }
 
 /** Bring the cap wall into view, so a capped tap lands on the reason, not on nothing. */
@@ -209,7 +212,8 @@ export function SongsClient() {
   // title, from which Tab reaches the library's first control.
   const titleRef = useRef<HTMLHeadingElement>(null);
   const mic: MicAsk = {
-    asked: gated || (view === "library" && !pitch.listening && !cap.capped),
+    gated,
+    headerAsk: !gated && view === "library" && !pitch.listening && !cap.capped,
     listening: pitch.listening,
     listenMode,
   };

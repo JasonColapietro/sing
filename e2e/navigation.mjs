@@ -212,13 +212,22 @@ try {
         await row.scrollIntoViewIfNeeded();
         const href = await row.getAttribute("href");
         const before = await row.evaluate((el) => el.getBoundingClientRect().top);
+        // A press where the control is on screen, as a finger or mouse makes
+        // it: locator.click() first scrolls its target into view, and for a
+        // control in the sticky header that moved the page about 450px
+        // before the click, so the test measured its own scroll.
+        const press = async (control) => {
+          const box = await control.boundingBox();
+          await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+        };
         if (width < SM) {
-          await trigger.click();
+          await press(trigger);
           const drawer = page.getByRole("dialog", { name: "Navigation menu" });
-          await drawer.getByRole("link", { name: "Songs", exact: true }).click();
+          await drawer.waitFor();
+          await press(drawer.getByRole("link", { name: "Songs", exact: true }));
         } else {
-          await page.locator("header").getByRole("navigation", { name: "Main", exact: true })
-            .getByRole("link", { name: "Songs", exact: true }).click();
+          await press(page.locator("header").getByRole("navigation", { name: "Main", exact: true })
+            .getByRole("link", { name: "Songs", exact: true }));
         }
         await page.waitForURL((url) => url.pathname === "/songs");
         await page.locator("h1").first().waitFor();
