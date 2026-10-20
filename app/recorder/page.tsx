@@ -11,7 +11,7 @@ export const metadata = withCanonicalOpenGraph({
   keywords: routeKeywords("/recorder"),
   title: RECORDER_GUIDE.pageName,
   description:
-    "A voice recorder for singers: record yourself singing, A/B two takes and keep the good ones. Free with no time limit, and every take stays on your device.",
+    "A voice recorder for singers: record yourself singing, A/B two takes and keep the good ones. Free with no daily limit, and every take stays on your device.",
   alternates: { canonical: `${SITE_URL}/recorder` },
 });
 

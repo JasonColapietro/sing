@@ -213,7 +213,9 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
     ),
     companion: { room: "tools" },
     studies: ["row-row-row", "ode-to-joy"],
-    readings: ["weeks-11-12-songs"],
+    // No book or atlas chapter teaches counting, subdivision or swing, so the
+    // module lists no reading rather than one that does not teach its skill.
+    readings: [],
   },
   "v-l4-m3": {
     basis: selfCheck(

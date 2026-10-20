@@ -326,7 +326,7 @@ export default function VocalRangeByVoiceTypePage() {
               {AUTHOR_NAME}
             </a>{" "}
             · a free reference from{" "}
-            <Link href="/atlas" className="text-violet-ink hover:underline">
+            <Link href="/atlas" prefetch={false} className="text-violet-ink hover:underline">
               The Voice Atlas
             </Link>
           </p>
@@ -352,6 +352,7 @@ export default function VocalRangeByVoiceTypePage() {
             contralto who never records down there, and the{" "}
             <Link
               href="/singers"
+              prefetch={false}
               className="text-violet-ink underline decoration-violet/40 underline-offset-2"
             >
               library of {SINGERS.length} cited singers
@@ -544,7 +545,7 @@ export default function VocalRangeByVoiceTypePage() {
               read this table with.
             </li>
             <li>
-              <Link href="/singers" className="text-violet-ink hover:underline">
+              <Link href="/singers" prefetch={false} className="text-violet-ink hover:underline">
                 All {SINGERS.length} singers
               </Link>{" "}
               — or jump to{" "}

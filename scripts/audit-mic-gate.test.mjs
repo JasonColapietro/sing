@@ -27,7 +27,8 @@ async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = f
           ? { x: 0, y: 610, width: 375, height: 57 }
           : { x: 0, y: kind === 'alert' ? (settings.alertBehindBar ? 625 : 156) : 100, width: 400, height: kind === 'alert' ? 20 : 56 },
         scrollIntoViewIfNeeded: async () => {},
-        click: async () => { source = kind; shown = !pageWindow.__micAuditAllow && !settings.missingAlert; ready = !!pageWindow.__micAuditAllow; },
+        // Continuing without a mic asks for nothing, so nothing is refused.
+        click: async () => { if (kind === 'nomic') return; source = kind; shown = !pageWindow.__micAuditAllow && !settings.missingAlert; ready = !!pageWindow.__micAuditAllow; },
         waitFor: async () => {
           if ((kind === 'alert' && !shown) || (kind === 'ready' && !ready)) throw new Error('element missing');
         },
@@ -41,7 +42,7 @@ async function runAudit({ rows = 2, broken = false, alerts = 1, missingAlert = f
         locator: (selector) => locator(selector === rowSelector ? 'rows' : selector === 'main [role="alert"]' ? 'alert' : selector === 'nav[aria-label="Tabs"]' ? 'tabbar' : 'unknown'),
         getByRole: (_role, { name }) => {
           if (['Start free range test', 'Retake test'].includes(name) && !url.includes('/range?mode=range')) throw new Error('range mode is not open');
-          return locator(name === 'Start recording' ? 'ready' : name === 'Enable mic and start' ? 'continue' : 'control');
+          return locator(name === 'Start recording' ? 'ready' : name === 'Enable mic and start' ? 'continue' : name === 'Continue without a mic' ? 'nomic' : 'control');
         },
         waitForTimeout: async () => {},
         evaluate: async (fn) => { const previous = globalThis.window; globalThis.window = pageWindow; try { return fn(); } finally { globalThis.window = previous; } },
@@ -101,6 +102,21 @@ describe('microphone audit CLI', () => {
     expect(result.stdout).toContain('  ok  /studio: refusal stays on screen');
     expect(result.stdout).toContain('  ok  /songs?song=twinkle-twinkle-little-star: refusal stays on screen');
     expect(result.stdout).toContain('  ok  /songs: the gate button offers to try again');
+  });
+
+  it("checks the song player's own Enable microphone after Continue without a mic", async () => {
+    const result = await runAudit();
+    expect(result.code).toBe(0);
+    expect(result.stdout).toContain('  ok  the player offers Enable microphone');
+    expect(result.stdout).toContain('  ok  nothing is announced before the press');
+    expect(result.stdout).toContain('  ok  player refusal stays on screen');
+    expect(result.stdout).toContain('  ok  player refusal is announced once');
+  });
+
+  it('fails when the player refusal renders behind the phone tab bar', async () => {
+    const result = await runAudit({ alertBehindBar: true });
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain('FAIL  player refusal stays on screen');
   });
 
   it('measures the viewport when the original navigation has no bottom bar', async () => {

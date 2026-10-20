@@ -184,7 +184,7 @@ export default async function VoiceTypePage({
           <LinkButton href={rangeTestHref()} size="md">
             Find my vocal range →
           </LinkButton>
-          <LinkButton href="/singers" variant="outline" size="md">
+          <LinkButton href="/singers" prefetch={false} variant="outline" size="md">
             ← All singers
           </LinkButton>
         </div>

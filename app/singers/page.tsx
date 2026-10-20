@@ -159,7 +159,7 @@ export default function SingersPage() {
         This page is the chart: every reported catalog range on one keyboard, filterable,
         with your own range overlaid on top of them. It reports the figures
         rather than explaining them. The{" "}
-        <Link href="/atlas" className="text-violet-ink hover:underline">
+        <Link href="/atlas" prefetch={false} className="text-violet-ink hover:underline">
           Voice Atlas
         </Link>{" "}
         is the book that explains them, voice by voice. Come here for the number.

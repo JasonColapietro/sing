@@ -47,7 +47,7 @@ If two of those are plausible, you do not have a result. The app saves every fin
 
 You get a label, and the test calls it the closest fit. That word is doing real work.
 
-The label is a rough classification based on where your two edges fall. As shorthand it earns its keep: a starting key, a direction to browse repertoire, which end of the piano to look at first.
+The label is a rough classification based on where your two edges fall. It leans high when your top notes were falsetto: the test counts them, as it should for a range, but the bass, baritone and tenor bands describe full voice, so a baritone whose falsetto carried the top often reads as a tenor. As shorthand the label earns its keep: a starting key, a direction to browse repertoire, which end of the piano to look at first.
 
 What it is not is an identity, a ceiling, or a verdict. Classical classification uses far more than two numbers — tessitura, timbre, where the transitions sit, how the voice holds up under sustained load — and even then teachers disagree, and singers get reclassified years into a career. A label derived from two extremes on a phone is a first approximation.
 

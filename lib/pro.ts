@@ -301,18 +301,32 @@ export async function revalidatePro({ force = false } = {}): Promise<void> {
   ) {
     return;
   }
+  const checked = {
+    subscriptionId: state.subscriptionId,
+    paymentIntentId: state.paymentIntentId,
+  };
   try {
-    apply(
-      await post<Entitlement>(
-        "/api/entitlement",
-        state.subscriptionId
-          ? { subscriptionId: state.subscriptionId }
-          : { paymentIntentId: state.paymentIntentId },
-      ),
-      // Status-only reply — keep the Pro key and customer id this device got
-      // at checkout. See `apply`.
-      { keepCredentials: true },
+    const reply = await post<Entitlement>(
+      "/api/entitlement",
+      checked.subscriptionId
+        ? { subscriptionId: checked.subscriptionId }
+        : { paymentIntentId: checked.paymentIntentId },
     );
+    // A checkout, a restored key or a redeemed pass replaced this entitlement
+    // while the check was in flight, so the reply describes the old billing
+    // record. Applied anyway, it put a subscriber who had just bought
+    // lifetime back on their ending plan, kept the new key beside the old
+    // subscription id, and revoked both once that plan ran out.
+    const now = load();
+    if (
+      now.subscriptionId !== checked.subscriptionId ||
+      now.paymentIntentId !== checked.paymentIntentId
+    ) {
+      return;
+    }
+    // Status-only reply — keep the Pro key and customer id this device got
+    // at checkout. See `apply`.
+    apply(reply, { keepCredentials: true });
   } catch {
     // offline or Stripe hiccup — try again next load
   }

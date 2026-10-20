@@ -155,6 +155,17 @@ describe("Pro purchase choices", () => {
     expect(src).toContain('href={pro.active && !onPass && !lapsing ? "#plans" : "#buy"}');
   });
 
+  it("does not start the ending-plan check while a purchase is being confirmed", () => {
+    // On the return from buying lifetime the check would ask about the old
+    // subscription; lib/pro-entitlement.test.ts covers the reply being
+    // dropped, and this keeps the second $79 button from flashing meanwhile.
+    // Not gated on the welcome: after a restored key for a plan that is still
+    // ending, the lifetime offer has to show.
+    const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
+    expect(src).toMatch(/const endingAsCached =[^;]*checkout\.kind !== "working";/);
+    expect(src).not.toMatch(/const endingAsCached =[^;]*welcome/);
+  });
+
   it("offers lifetime to a subscriber whose plan a check on this visit found still ending", () => {
     const checkedFrom = Date.parse("2026-10-13T09:00:00.000Z");
     const after = "2026-10-13T09:00:01.000Z";
@@ -373,6 +384,16 @@ describe("Pro sales copy on the page", () => {
     expect(html).not.toContain("Pro keeps the months");
     expect(html).not.toContain("long record of your own voice");
     expect(html).toContain("Pro charts the months behind it");
+  });
+
+  it("sells the per-note chart as one chart, not one charted over months", () => {
+    // Pro's per-note chart is one tally with no time axis; only the range is
+    // charted over time. Round 11 fixed this everywhere but the buy card.
+    const html = renderToStaticMarkup(<ProClient />);
+    expect(html).toContain("A per-note accuracy chart, and your range charted over months");
+    expect(html).not.toMatch(/per-note accuracy and your range charted over/i);
+    const src = readFileSync(new URL("./pro-client.tsx", import.meta.url), "utf8");
+    expect(src).not.toContain("Per-note accuracy and your range charted over months");
   });
 
   it("puts the price button straight under the headline on a phone", () => {

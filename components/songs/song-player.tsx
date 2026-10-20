@@ -9,11 +9,13 @@ import { liveLags } from "@/lib/audio/latency";
 import { logSession, type VocalRange } from "@/lib/progress";
 import { tallyFromScores } from "@/lib/analytics";
 import { Button, Card, Pill, ProgressBar, SectionLabel } from "@/components/ui";
+import { MicAlert } from "@/components/mic-alert";
 import type { Song } from "./data";
 import {
   IconArrowLeft,
   IconCollapse,
   IconExpand,
+  IconMic,
   IconPause,
   IconPlay,
   IconRestart,
@@ -68,7 +70,42 @@ import {
 } from "./lib";
 import type { GuidePass, SessionMode } from "./types";
 
-type Phase = "idle" | "running" | "paused" | "finished";
+export type Phase = "idle" | "running" | "paused" | "finished";
+
+/**
+ * What the player says, and offers, while the microphone is off. The control
+ * sits at the moments the pass switch does, before a run and while paused. A
+ * run already under way was sung unheard, so the paused control says it
+ * starts over (see `afterMicOn`), and while the song plays the line points at
+ * Pause, where the control is, rather than at a control that is not there.
+ */
+export function micOffPrompt(phase: Phase): { line: string; control: string | null } {
+  if (phase === "running") {
+    return { line: "Practicing without a mic. Pause to turn it on and be scored.", control: null };
+  }
+  return {
+    line: "Practicing without a mic. Turn it on to see your live score.",
+    control: phase === "paused" ? "Enable microphone and restart" : "Enable microphone",
+  };
+}
+
+/**
+ * What turning the microphone on from inside the player does, read once the
+ * permission prompt has closed (the singer can press other things while it is
+ * up). A listen pass scores nothing even with the mic on, so it moves to Sing
+ * along, the pass the gate would have started on; a pass the singer picked
+ * stays. A run already under way starts over: scoring it from here would judge
+ * every note before this moment a miss in one burst and log the score that
+ * left, and the coach would read those notes as weak. A finished run is the
+ * summary's to restart, so nothing happens.
+ */
+export function afterMicOn(
+  phase: Phase,
+  pass: GuidePass,
+): { pass: GuidePass; restart: boolean } | null {
+  if (phase === "finished") return null;
+  return { pass: pass === "listen" ? "guided" : pass, restart: phase !== "idle" };
+}
 
 /** Guide gain with the mixer at 100% — the level the old "full" setting used. */
 const GUIDE_MAX_GAIN = 0.2;
@@ -182,6 +219,8 @@ export function SongPlayer({
   const [phase, setPhase] = useState<Phase>("idle");
   const phaseRef = useRef<Phase>("idle");
   const pauseRef = useRef<() => void>(() => {});
+  /** The latest `restart`, for a call that lands after an await (enableMic). */
+  const restartRef = useRef<() => void>(() => {});
   const [countInBeat, setCountInBeat] = useState(-1);
   const [loopIndex, setLoopIndex] = useState(0);
   /** Whole planned sessions a rehearsal has already looped through. */
@@ -1014,6 +1053,7 @@ export function SongPlayer({
   }
 
   useLayoutEffect(() => { pauseRef.current = pause; });
+  useLayoutEffect(() => { restartRef.current = restart; });
 
   function pause() {
     stopLoops();
@@ -1087,6 +1127,23 @@ export function SongPlayer({
     setGuidePct(pct);
   }
 
+
+  /**
+   * The microphone, turned on from inside the player — a singer who chose
+   * "Continue without a mic" at the gate, or denied the prompt by accident and
+   * has since allowed it, is told here that the mic is off and needs the
+   * control in the same place. Read through refs after the await, because the
+   * permission prompt can stay up while the singer presses other things; the
+   * restart goes through `restartRef` for the same reason, so it starts the
+   * run as the latest render set it up. See `afterMicOn`.
+   */
+  async function enableMic() {
+    if (!(await pitch.start())) return;
+    const next = afterMicOn(phaseRef.current, passRef.current);
+    if (!next) return;
+    if (next.pass !== passRef.current) choosePass(next.pass);
+    if (next.restart) restartRef.current();
+  }
 
   /** Fullscreen has to be asked for inside the gesture — see `stage.tsx`. */
   function enterStage() {
@@ -1207,6 +1264,7 @@ export function SongPlayer({
    * the top) can be set up without a restart.
    */
   const choosing = phase === "idle" || phase === "paused";
+  const micOff = micOffPrompt(phase);
   const modeSwitch =
     choosing ? (
       <div className="flex flex-wrap items-center gap-2">
@@ -1386,11 +1444,21 @@ export function SongPlayer({
               <div className="tabular mt-1 font-mono text-2xl text-ok-ink">{runningScore}%</div>
             </div>
           ) : (
-            <p className="max-w-sm text-sm text-mut">
-              {listening
-                ? "Listen pass — the guide sings it. Switch passes to be scored."
-                : "Practicing without a mic. Enable it to see your live score."}
-            </p>
+            <div className="max-w-sm">
+              <p className="text-sm text-mut">
+                {listening
+                  ? "Listen pass — the guide sings it. Switch passes to be scored."
+                  : micOff.line}
+              </p>
+              {/* The line above asks for the microphone, so the control sits
+                  under it, at the moments the pass switch is offered. A
+                  failed start shows in this row's alert. */}
+              {!listening && micOff.control && (
+                <Button variant="rec" size="sm" className="mt-2" onClick={enableMic}>
+                  <IconMic /> {micOff.control}
+                </Button>
+              )}
+            </div>
           )}
           {shownLoopScores.length > 0 && (
             <div className="flex items-center gap-2">
@@ -1404,11 +1472,10 @@ export function SongPlayer({
               ))}
             </div>
           )}
-          {pitch.error && (
-            <p className="font-mono text-xs text-rec" role="alert">
-              {pitch.error}
-            </p>
-          )}
+          {/* Through MicAlert, like every room's mic failure: the player's own
+              "Enable microphone" can now fail here, and on a phone the line
+              wraps under the control, where the tab bar can cover it. */}
+          {pitch.error && <MicAlert message={pitch.error} className="font-mono text-xs text-rec" />}
         </div>
       </Card>
 

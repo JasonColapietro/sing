@@ -982,7 +982,7 @@ export const STUDIO_GUIDE: GuideContent = {
     {
       href: rangeTestHref(),
       label: "Range test",
-      note: "Find the edges the studio helps you strengthen.",
+      note: "Measure your lowest and highest notes, then start your pitch work in the middle of them.",
     },
     {
       href: "/glossary",
@@ -1106,7 +1106,7 @@ export const ANALYZE_GUIDE: GuideContent = {
     {
       href: rangeTestHref(),
       label: "Range test",
-      note: "Find the register transitions the spectrogram shows.",
+      note: "Measure your lowest and highest notes; the transitions between them show up here, on a slow slide.",
     },
     {
       href: "/glossary",

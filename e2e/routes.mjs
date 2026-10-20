@@ -82,4 +82,9 @@ export const VIEWPORTS = [
   { name: "tablet-768", width: 768, height: 1024 },
   { name: "desktop-1280", width: 1280, height: 900 },
   { name: "desktop-1920", width: 1920, height: 1080 },
+  // A desktop window taller than 1080px, e.g. on a 1440p monitor. Round 11's
+  // /singers chart slot moved the section after it by 0.128 here while every
+  // size above read zero: on a shorter screen that section starts below the
+  // first screen, so nothing visible moves when the chart mounts.
+  { name: "desktop-1440-tall", width: 1440, height: 1300 },
 ];

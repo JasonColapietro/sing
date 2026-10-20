@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAccountAuth } from "@/lib/use-account-auth";
 import {
@@ -465,7 +466,7 @@ function SessionLogTable({
 /* ------------------------------------------------------------------ */
 
 
-function DataControls() {
+export function DataControls() {
   const isPro = useIsPro();
   const { paused } = useProgressCloudState();
   const { isLoaded, isSignedIn } = useAccountAuth();
@@ -564,6 +565,22 @@ function DataControls() {
             <ProInlineNudge>
               Pro syncs progress across devices automatically
             </ProInlineNudge>
+            {/* Pro lives in this browser's storage, so a cleared or second
+                browser reads as free here while the record waits in the
+                cloud. The nudge above sells Pro; this is the way back. Not
+                after an erase here: sync stays paused until the singer
+                resumes it, so a restored key would not merge anything. */}
+            {!paused && (
+              <FreeOnly>
+                <p className="text-xs text-mut">
+                  Already have Pro?{" "}
+                  <Link href="/pro#restore" className="text-violet-ink underline underline-offset-4">
+                    Unlock it in this browser
+                  </Link>
+                  ; your synced record merges into this one.
+                </p>
+              </FreeOnly>
+            )}
           </div>
         )}
         {importNotice && (
@@ -631,6 +648,7 @@ function DataControls() {
  * 375×667 phone's tab bar.
  */
 export function FreshStart() {
+  const { paused } = useProgressCloudState();
   return (
     <EmptyState
       title="Nothing logged yet"
@@ -659,6 +677,22 @@ export function FreshStart() {
             </a>
             .
           </p>
+          {/* Clearing a browser takes Pro with it, so a Pro owner lands here
+              as free with their record safe in the cloud. Restoring the key
+              starts sync (components/pro/sync.tsx), which merges it back.
+              Not after an erase on this browser, which pauses sync until
+              the singer resumes it: nothing would come back by itself. */}
+          {!paused && (
+            <FreeOnly>
+              <p className="mt-2 text-center text-sm text-mut">
+                Have Pro?{" "}
+                <Link href="/pro#restore" className="text-violet-ink underline underline-offset-4">
+                  Unlock it in this browser
+                </Link>{" "}
+                and your synced sessions, streak and range come back here.
+              </p>
+            </FreeOnly>
+          )}
         </div>
       }
     />

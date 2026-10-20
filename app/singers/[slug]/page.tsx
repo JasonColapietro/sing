@@ -395,7 +395,7 @@ export default async function SingerPage({
             s={rangeProps}
             kind={COMPARISON_SEARCH_SLUGS.has(s.slug) ? "compare" : "test"}
           />
-          <LinkButton href="/singers" variant="outline" size="md">
+          <LinkButton href="/singers" prefetch={false} variant="outline" size="md">
             ← All singers
           </LinkButton>
         </>
@@ -415,7 +415,14 @@ export default async function SingerPage({
                 {index === breadcrumbs.length - 1 ? (
                   <span aria-current="page">{breadcrumb.name}</span>
                 ) : (
-                  <Link href={breadcrumb.href} className="inline-flex min-h-11 items-center hover:text-violet-ink">
+                  // The one linked crumb is the /singers directory: no
+                  // prefetch, as on "← All singers" above, or this crumb
+                  // fetches its whole payload once it is in view.
+                  <Link
+                    href={breadcrumb.href}
+                    prefetch={false}
+                    className="inline-flex min-h-11 items-center hover:text-violet-ink"
+                  >
                     {breadcrumb.name}
                   </Link>
                 )}

@@ -133,6 +133,24 @@ export function singerCompareHref(slug: string): string {
 }
 
 /**
+ * The voice-type caveat for a result that names a male band. The test asks
+ * for falsetto at the top ("falsetto counts"), as a range should, and the
+ * classifier scores that top against bands that describe full voice, so its
+ * error runs one way: a baritone with an ordinary falsetto to D5 reads Tenor,
+ * and to E5 "Tenor or Contralto". The female bands already take in head
+ * voice, so this is not said under them.
+ */
+export const FALSETTO_NOTE =
+  "The bass, baritone and tenor bands describe full voice, but this test counts falsetto, so if your top notes were falsetto the fit can lean a category high: a baritone whose falsetto carried the top often reads as a tenor.";
+
+const MALE_BANDS: ReadonlySet<string> = new Set(["bass", "baritone", "tenor"]);
+
+/** The single-band note under the voice-type label. */
+export function singleBandCopy(voice: VoiceType): string {
+  return `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.${MALE_BANDS.has(voice.id) ? ` ${FALSETTO_NOTE}` : ""}`;
+}
+
+/**
  * The note under a two-band result. The pair is always one band from the
  * bass-to-tenor set and one from the contralto-to-soprano set, which the
  * singer library describes as male and female categories, so the honest
@@ -142,7 +160,7 @@ export function singerCompareHref(slug: string): string {
 function altBandsCopy(voice: VoiceType, alt: VoiceType): string {
   const [lower, higher] =
     voice.lowMidi <= alt.lowMidi ? [voice, alt] : [alt, voice];
-  return `Your range fits the ${voice.label.toLowerCase()} and ${alt.label.toLowerCase()} bands about equally well, and a range test alone can't tell them apart: ${lower.label.toLowerCase()} is a male voice category and ${higher.label.toLowerCase()} a female one, and their notes overlap. Go with the one that describes your voice, and treat it as an estimate, not a box.`;
+  return `Your range fits the ${voice.label.toLowerCase()} and ${alt.label.toLowerCase()} bands about equally well, and a range test alone can't tell them apart: ${lower.label.toLowerCase()} is a male voice category and ${higher.label.toLowerCase()} a female one, and their notes overlap. Go with the one that describes your voice, and treat it as an estimate, not a box. ${FALSETTO_NOTE}`;
 }
 
 /** "basses", "tenors", "mezzo-sopranos". */
@@ -747,7 +765,7 @@ export function ResultView({
         <p className="mt-2 max-w-2xl text-sm text-mut">
           {altVoice
             ? altBandsCopy(voice, altVoice)
-            : `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.`}
+            : singleBandCopy(voice)}
         </p>
         {/* The classification used to end here. Every label the classifier can
             produce has a page of singers behind it, so it should be the next

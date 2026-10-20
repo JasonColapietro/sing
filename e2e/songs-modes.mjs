@@ -102,8 +102,18 @@ try {
     assert.ok(box && header, `readout ${JSON.stringify(box)}, header ${JSON.stringify(header)}`);
     assert.ok(box.y >= header.y + header.height, `readout starts under the header: ${JSON.stringify(box)}`);
     assert.ok(box.y + box.height <= 667, `readout runs below the screen: ${JSON.stringify(box)}`);
+    // The player says the mic is off and carries the control that turns it on (micOffPrompt in
+    // components/songs/song-player.tsx), so a singer who continued without one is not sent looking.
+    await page.getByText("Practicing without a mic. Turn it on to see your live score.", { exact: true }).waitFor();
+    const enableInPlayer = page.getByRole("button", { name: "Enable microphone", exact: true });
+    assert.equal(await enableInPlayer.count(), 1, "the player offers one Enable microphone");
+    await enableInPlayer.click();
+    await page.getByText(/^running score$/i).waitFor();
+    assert.equal(await enableInPlayer.count(), 0, "the control leaves once the mic is on");
+    assert.equal(await page.getByRole("button", { name: "Sing along", exact: true }).getAttribute("aria-pressed"), "true",
+      "the listen pass moves to Sing along, which is scored");
     assert.deepEqual(errors, []);
-    console.log(`PASS phone: free minutes on screen below the header (y ${Math.round(box.y)}–${Math.round(box.y + box.height)})`);
+    console.log(`PASS phone: free minutes on screen below the header (y ${Math.round(box.y)}–${Math.round(box.y + box.height)}); the player's Enable microphone scores the run`);
     await context.close();
   }
 
@@ -310,6 +320,31 @@ try {
     await page.getByText(/^Silent Night — /).first().waitFor({ timeout: 15_000 });
     assert.deepEqual(errors, []);
     console.log("PASS take: recorded run, playable take in the summary, saved to Recordings");
+    await context.close();
+  }
+
+  // 6. No mic, then the mic, from the summary: a run sung after "Continue without a mic" ends on a summary that
+  //    says why there is no score and offers to turn the mic on and sing again, and that run is scored.
+  {
+    const { context, page, errors } = await open();
+    await page.getByRole("button", { name: "Continue without a mic", exact: true }).click();
+    await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
+    await dismissOverlays(page);
+    await chooseMode(page, "Performance");
+    // A one-note loop keeps the run short.
+    await page.getByLabel("Loop to", { exact: true }).fill("2");
+    await page.getByLabel("Loop from", { exact: true }).fill("1");
+    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    const main = page.locator("main");
+    await main.getByText("Performance complete").waitFor({ timeout: 60_000 });
+    await main.getByText(/no pitch score this time/).waitFor();
+    await dismissOverlays(page);
+    await main.getByRole("button", { name: "Enable microphone and sing again", exact: true }).click();
+    await page.getByRole("heading", { level: 1, name: "Silent Night", exact: true }).waitFor();
+    await page.getByText(/^running score$/i).waitFor();
+    assert.equal(await page.getByRole("button", { name: /^Enable microphone/ }).count(), 0, "no mic prompt once the mic is on");
+    assert.deepEqual(errors, []);
+    console.log("PASS no mic: the summary says why there is no score, and Enable microphone and sing again starts a scored run");
     await context.close();
   }
 } finally {

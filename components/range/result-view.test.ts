@@ -15,6 +15,7 @@ import {
 } from "@/components/warmups/exercises";
 
 import {
+  FALSETTO_NOTE,
   FIVE_NOTE_SCALE_SEMIS,
   ResultView,
   comparisonSingerFromSlug,
@@ -106,6 +107,43 @@ describe("range result voice type", () => {
     expect(render(45, 81)).toContain(
       "tenor is a male voice category and contralto a female one",
     );
+  });
+
+  it("says a falsetto top can lift a male band's label", () => {
+    // A2–D5: a baritone's full voice with an ordinary falsetto on top, which
+    // the classifier reads as a tenor.
+    const tenor = render(45, 74);
+    expect(tenor).toContain("Closest fit, an estimate");
+    expect(tenor).toContain('href="/singers/voice-type/tenor"');
+    expect(tenor).not.toContain(" or <span");
+    expect(tenor).toContain("The bass, baritone and tenor bands describe full voice");
+    expect(tenor).toContain("a baritone whose falsetto carried the top often reads as a tenor");
+    // Every two-band result holds a male band, so the note is always there.
+    expect(render(53, 72)).toContain("this test counts falsetto");
+  });
+
+  it("says the same thing about falsetto as chapter 8 of the book", () => {
+    // The result card and The Measured Voice's voice-type section carry one
+    // caveat; if either is reworded alone they start to disagree.
+    const chapter = readFileSync(
+      join(process.cwd(), "content/book/08-reading-the-range-test.md"),
+      "utf8",
+    );
+    for (const clause of [
+      "the bass, baritone and tenor bands describe full voice",
+      "a baritone whose falsetto carried the top often reads as a tenor",
+    ]) {
+      expect(FALSETTO_NOTE.toLowerCase()).toContain(clause);
+      expect(chapter).toContain(clause);
+    }
+  });
+
+  it("does not say it under a female band, which already takes in head voice", () => {
+    // C4–C6: soprano.
+    const html = render(60, 84);
+    expect(html).toContain('href="/singers/voice-type/soprano"');
+    expect(html).not.toContain(" or <span");
+    expect(html).not.toContain("describe full voice");
   });
 
   it("says every song opens fitted to the new range", () => {

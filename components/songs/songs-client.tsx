@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { useProgress } from "@/lib/progress";
 import { Button, PageShell } from "@/components/ui";
+import { MicAlert } from "@/components/mic-alert";
 import { IconMic } from "./icons";
 import { SongsMicGate } from "./mic-gate";
 import { ALL_SONGS, SONGS, type Song } from "./data";
@@ -215,6 +216,12 @@ export function SongsClient() {
         ) : undefined
       }
     >
+      {/* The header's "Enable microphone" fails here, beside the press, as it
+          does at the gate: a singer who continued without a mic, or left the
+          player for the library, otherwise pressed it to no visible effect. */}
+      {view === "library" && !pitch.listening && !cap.capped && pitch.error && (
+        <MicAlert message={pitch.error} className="mb-4 max-w-md text-sm text-rec" />
+      )}
       {view === "library" && cap.capped && (
         <div className="mb-6">
           <CapWall cap={cap} />
@@ -267,6 +274,28 @@ export function SongsClient() {
           data={summary}
           take={take}
           onAgain={() => startSongById(summary.song.id)}
+          // A run sung without a microphone ends on advice to turn it on, so
+          // the summary carries the control. It starts the run the way "Sing
+          // again" does — through the cap and the ladder (which still lets
+          // the linked song through) — and leaves listen mode alone. A listen
+          // pass scores nothing even with the mic on, so it moves to Sing
+          // along; a pass the singer picked themselves stays.
+          onEnableMic={
+            pitch.listening
+              ? undefined
+              : async () => {
+                  // Capped: show why, and ask for no microphone that cannot
+                  // be used today.
+                  if (cap.capped) {
+                    showCapWall();
+                    return;
+                  }
+                  if (!(await pitch.start())) return;
+                  setPass((p) => (p === "listen" ? "guided" : p));
+                  startSongById(summary.song.id);
+                }
+          }
+          micError={pitch.listening ? null : pitch.error}
           onLibrary={() => {
             endSetlist();
             setView("library");

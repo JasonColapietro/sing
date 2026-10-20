@@ -29,7 +29,11 @@ import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { DIM } from "@/lib/chart-colors";
 import { createRecorderMic, createTakeMutations, startRecorder } from "./runtime";
 
-const MAX_SEC = 300; // 5 minute take limit
+// 5 minute take limit. The page subtitle says so ("takes of up to five
+// minutes"), and it and the meta description call the free recorder "no
+// daily limit", not unlimited in length: change them with it
+// (components/recorder/recorder-copy.test.ts).
+const MAX_SEC = 300;
 const COUNT_IN_BEAT = 0.5; // seconds per count-in click
 
 type MicState = "idle" | "requesting" | "ready" | "blocked";
@@ -675,7 +679,7 @@ export default function RecorderPageClient() {
     <PageShell
       kicker="Practice studio"
       title="Voice recorder for singing practice"
-      subtitle="Record yourself singing, listen back, A/B two takes and star the ones worth keeping. Free with no time limit, and every take stays on this device."
+      subtitle="Record yourself singing in takes of up to five minutes, listen back, A/B two takes and star the ones worth keeping. Free with no daily limit, and every take stays on this device."
       actions={
         takes.length > 0 ? (
           <>

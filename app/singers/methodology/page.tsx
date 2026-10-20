@@ -36,7 +36,7 @@ export default function SingerMethodologyPage() {
       actions={
         <>
           <LinkButton href={rangeTestHref()} size="md">Test my vocal range</LinkButton>
-          <LinkButton href="/singers" variant="outline" size="md">← All singers</LinkButton>
+          <LinkButton href="/singers" prefetch={false} variant="outline" size="md">← All singers</LinkButton>
         </>
       }
     >

@@ -1,6 +1,6 @@
 # UI/UX end-to-end audit
 
-Drives a real browser across every page template at five viewports and reports
+Drives a real browser across every page template at six viewports and reports
 what a person would actually hit: unreadable text, targets a thumb misses, pages
 that scroll sideways on a phone, controls a keyboard cannot reach, and a
 microphone refusal nobody can see.
@@ -112,7 +112,7 @@ shift.
 
 | Flag | Effect |
 |---|---|
-| `--viewport=mobile-375` | one viewport (default: all five) |
+| `--viewport=mobile-375` | one viewport (default: all six) |
 | `--returning` | seed a returning singer before every load (see Navigation journeys below) |
 | `--state=<name>` | seed a returning singer in a stored state that reshapes pages; implies `--returning` |
 | `--route=warmups,programs` | just these routes, by their `name` in `routes.mjs` or in `cls.mjs`'s `DEEP_LINKS` |
@@ -176,7 +176,10 @@ still, both labels of a pair sharing one width.
 
 CI's `layout-shift` job (`.github/workflows/ci.yml`) runs every route on a
 375px phone twice, as a newcomer and with `--returning`, then each state on
-the routes it reshapes at 375 and 1280px.
+the routes it reshapes at 375 and 1280px, and `/singers` on a
+`desktop-1440-tall` window (1440x1300): the section after its chart starts
+below the first screen of a phone or a 1080px-tall desktop, so only a tall
+screen would see it move when the chart mounts.
 
 ## Pitch precision
 

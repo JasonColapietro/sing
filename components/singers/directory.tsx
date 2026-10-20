@@ -424,7 +424,12 @@ export function SingersDirectory() {
   // The complete server-only crawl index on /singers carries every raw HTML
   // artist anchor. Deferring this richer client chart avoids duplicating those
   // anchors in the initial document and keeps the first interactive batch small.
-  if (!isInteractive) return null;
+  // Until then the slot holds one empty screen (no anchors), so the sections
+  // after it start below the first screen on any display and the chart, about
+  // 2,500px, replaces it without moving anything in view: with no box there,
+  // a tall screen showed "Popular vocal range lookups" at load and the chart
+  // shoved it down (layout shift 0.1-0.2 at 1024×1366 and 1440×1300).
+  if (!isInteractive) return <div aria-hidden="true" className="min-h-screen" />;
 
   return (
     <div>

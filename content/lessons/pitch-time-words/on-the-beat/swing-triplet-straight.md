@@ -19,7 +19,7 @@ Straight, triplet and swing are three ways of dividing the same steady beat. Str
 
 ### Use the practice material
 
-Open the practice material on this page and choose Row Row Row Your Boat or Ode to Joy. Hear the reference, choose a comfortable key, then stop it before singing. The reading Weeks 11 and 12: putting it in a song is listed there too.
+Open the practice material on this page and choose Row Row Row Your Boat or Ode to Joy. Hear the reference, choose a comfortable key, then stop it before singing.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.

@@ -78,3 +78,45 @@ describe("the song summary", () => {
     expect(html).toContain("Personal best is 88");
   });
 });
+
+describe("an unscored song summary", () => {
+  beforeEach(() => {
+    state.progress = null;
+  });
+
+  const unscored = (pass: SessionSummaryData["pass"]): SessionSummaryData => ({ ...data(undefined), pass });
+
+  it("carries the control its advice asks for while the mic is off", () => {
+    const html = renderToStaticMarkup(
+      <SessionSummary data={unscored("listen")} onAgain={() => {}} onLibrary={() => {}} onEnableMic={() => {}} />,
+    );
+    expect(html).toContain("with your microphone enabled to get scored");
+    expect(html).toContain("Enable microphone and sing again");
+  });
+
+  it("shows why the mic failed under that control", () => {
+    const html = renderToStaticMarkup(
+      <SessionSummary
+        data={unscored("listen")}
+        onAgain={() => {}}
+        onLibrary={() => {}}
+        onEnableMic={() => {}}
+        micError="Microphone access was blocked."
+      />,
+    );
+    expect(html).toMatch(/Enable microphone and sing again.*role="alert"[^>]*>Microphone access was blocked\./);
+  });
+
+  it("offers no microphone control when the room has not passed one", () => {
+    const html = render(unscored("listen"));
+    expect(html).not.toContain("Enable microphone");
+    expect(html).not.toContain('role="alert"');
+  });
+
+  it("does not call a Sing along run with the mic off a listen pass", () => {
+    const html = render(unscored("guided"));
+    expect(html).toContain("Sing along pass");
+    expect(html).toContain("Your microphone was off, so there’s no pitch score this time.");
+    expect(html).not.toContain("This was a listen pass");
+  });
+});

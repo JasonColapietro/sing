@@ -82,7 +82,9 @@ const PRO_CARD_POINTS = [
   // down. The names go in parentheses because one has a colon of its own.
   `${PRO_PROGRAM_NAMES.length === 2 ? "Both" : "All"} Pro programs in full (${new Intl.ListFormat("en", { type: "conjunction" }).format(PRO_PROGRAM_NAMES)})`,
   "Pitch analysis on every recorded take",
-  "Per-note accuracy and your range charted over months",
+  // The per-note chart is one tally with no time axis
+  // (components/progress/pro-charts.tsx); only the range is charted over time.
+  "A per-note accuracy chart, and your range charted over months",
   "Adaptive coach plan, rebuilt daily",
   "Continuous cloud sync across devices",
 ];
@@ -528,8 +530,13 @@ export function ProClient() {
   const subscriptionPlan =
     !onPass && (pro.plan === "monthly" || pro.plan === "annual");
   // A subscription set to end, as last cached. The lifetime offer waits for
-  // the fresh check below (offersLifetimeBeforeLapse).
-  const endingAsCached = pro.active && subscriptionPlan && pro.cancelAtPeriodEnd;
+  // the fresh check below (offersLifetimeBeforeLapse). Not while a purchase
+  // is being confirmed: on the return from buying lifetime, that check asks
+  // about the old subscription, and its offer would flash a second $79 button
+  // under the confirmation. A reply that lands after the purchase is dropped
+  // anyway (lib/pro.ts revalidatePro).
+  const endingAsCached =
+    pro.active && subscriptionPlan && pro.cancelAtPeriodEnd && checkout.kind !== "working";
   const [endingCheckedFrom, setEndingCheckedFrom] = useState<number | null>(null);
   useEffect(() => {
     if (!endingAsCached) return;

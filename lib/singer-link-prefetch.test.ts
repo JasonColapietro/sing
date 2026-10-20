@@ -23,8 +23,11 @@ function openingTags(src: string): string[] {
   return tags;
 }
 
-/** A link into a hub (whose payload is its whole chart) or a singer profile. */
-const HEAVY_TARGET = /href=\{`\/singers\/(voice-type\/|genre\/|\$\{)/;
+/**
+ * A link into a hub (whose payload is its whole chart), a singer profile, the
+ * /singers directory or the /atlas index.
+ */
+const HEAVY_TARGET = /href=(?:\{`\/singers\/(?:voice-type\/|genre\/|\$\{)|"\/(?:singers|atlas)")/;
 
 /**
  * Rounds 1-2 turned prefetch off on /singers, the hub charts, the records
@@ -32,6 +35,11 @@ const HEAVY_TARGET = /href=\{`\/singers\/(voice-type\/|genre\/|\$\{)/;
  * background. The singer page template and the voice-type reference were
  * missed, and scrolling /singers/adele made 53 background requests, about
  * 2 MB decoded, mostly whole hub charts nobody opened.
+ *
+ * Literal links to /singers (the 230 KB directory) and /atlas (332 KB) count
+ * too; round 11's byline link to /atlas fetched it on every load of the
+ * voice-type reference. The intro lines on /singers and /atlas, which point
+ * each at the other, fetched the other's whole payload the same way.
  */
 describe("singer and hub pages do not prefetch other hubs and profiles", () => {
   const files = [
@@ -39,6 +47,10 @@ describe("singer and hub pages do not prefetch other hubs and profiles", () => {
     "app/atlas/vocal-range-by-voice-type/page.tsx",
     "app/singers/voice-type/[type]/page.tsx",
     "app/singers/genre/[genre]/page.tsx",
+    "app/singers/records/page.tsx",
+    "app/singers/methodology/page.tsx",
+    "app/singers/page.tsx",
+    "app/atlas/page.tsx",
   ];
 
   it.each(files)("%s", (file) => {
@@ -47,6 +59,16 @@ describe("singer and hub pages do not prefetch other hubs and profiles", () => {
     expect(heavy.length).toBeGreaterThan(0);
     const prefetching = heavy.filter((tag) => !/prefetch=\{false\}/.test(tag));
     expect(prefetching, "add prefetch={false}").toEqual([]);
+  });
+
+  it("app/singers/[slug]/page.tsx breadcrumb back to /singers", () => {
+    // The crumb's href is a variable, so HEAVY_TARGET cannot see it; with
+    // only "← All singers" fixed, the crumb still fetched /singers at load.
+    const src = readFileSync(path.join(process.cwd(), "app/singers/[slug]/page.tsx"), "utf8");
+    expect(src).toMatch(/href: "\/singers", url:/);
+    const crumbs = openingTags(src).filter((tag) => /href=\{breadcrumb\.href\}/.test(tag));
+    expect(crumbs).toHaveLength(1);
+    expect(crumbs[0], "add prefetch={false}").toMatch(/prefetch=\{false\}/);
   });
 
   it("lets a LinkButton opt out of prefetch", () => {

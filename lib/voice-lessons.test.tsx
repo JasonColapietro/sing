@@ -38,7 +38,7 @@ import ModulePage from "@/app/learn/voice/[stage]/[module]/page";
 import StagePage, { generateMetadata as stageMetadata } from "@/app/learn/voice/[stage]/page";
 import { ALL_SONGS } from "@/components/songs/data";
 import { TOLERANCE_CENTS } from "@/components/songs/lib";
-import { EXERCISES } from "@/components/warmups/exercises";
+import { EXERCISES, OCTAVE_SIREN_MIN_SEMIS, computeRootLadder } from "@/components/warmups/exercises";
 import { routineById, routineSeconds, stepExercise } from "@/components/warmups/routines";
 import { TOLERANCE_CENTS as WARMUP_TOLERANCE_CENTS } from "@/components/warmups/scoring";
 import { MEASUREMENT_WORDS } from "@/components/learn/module-practice";
@@ -692,6 +692,69 @@ describe("links from the lessons", () => {
     // Every finished test replaces the saved range, and the practice counter
     // would log each one as practice of this module.
     expect(MODULE_PRACTICE["v-l7-m5"].companion.room).not.toBe("range");
+  });
+
+  /**
+   * Below OCTAVE_SIREN_MIN_SEMIS the warm-up room fits the octave siren from
+   * within two semitones of the measured floor (below it under an octave) to
+   * on or within two of the measured ceiling, the extremes a cold range test
+   * found; the range card and the coach stop offering it there. A lesson that
+   * offers it names that threshold, as the result card's Span prints it, and
+   * the fourth siren instead, slides a fourth where its own steps would slide
+   * an octave, and never asks for the supplied siren's endpoints whatever the
+   * range.
+   */
+  it("sends a range narrower than the octave siren's threshold to the fourth siren", () => {
+    const span = `${Math.floor(OCTAVE_SIREN_MIN_SEMIS / 12)} octave + ${OCTAVE_SIREN_MIN_SEMIS % 12}`;
+    const offering = LESSONS.filter((l) => MODULE_PRACTICE[l.moduleId]?.studies.includes("octave-siren"));
+    expect(offering.length).toBeGreaterThan(0);
+    for (const lesson of offering) {
+      const text = lesson.steps.flatMap((s) => [s.body, s.look, s.listen]).join("\n");
+      expect(text, lesson.id).not.toMatch(/supplied Octave siren, then/);
+      if (!/choose Octave siren/.test(text)) continue;
+      expect(text, lesson.id).toContain(`less than ${OCTAVE_SIREN_MIN_SEMIS} semitones (under ${span} on its Span)`);
+      expect(text, lesson.id).toContain("choose Easy fourth siren");
+      expect(text, lesson.id).toContain(
+        "the room's octave glide starts within two semitones of the lowest note you measured, or below it, and tops out on or within two of the highest",
+      );
+      expect(text, lesson.id).toContain(
+        `If your range test spanned less than ${OCTAVE_SIREN_MIN_SEMIS} semitones, slide a fourth rather than an octave`,
+      );
+      expect(text, lesson.id).not.toMatch(/before attempting the octave/);
+    }
+  });
+
+  it("describes the octave siren's narrow-range fit as the room builds it", () => {
+    // The sentence above, against fitRootLadder: every glide starts no more
+    // than two semitones above the measured low (from a span under 12, below
+    // it) and tops out on the measured high or within two under it.
+    const siren = EXERCISES.find((e) => e.id === "octave-siren")!;
+    const low = 48;
+    for (let semis = 1; semis < OCTAVE_SIREN_MIN_SEMIS; semis++) {
+      const high = low + semis;
+      const roots = computeRootLadder(siren, low, high);
+      expect(roots[0] - low, `span ${semis}`).toBeLessThanOrEqual(2);
+      const top = roots[roots.length - 1] + 12;
+      expect(top, `span ${semis}`).toBeLessThanOrEqual(high);
+      expect(top, `span ${semis}`).toBeGreaterThanOrEqual(high - 2);
+    }
+  });
+
+  it("caps the attempts at a new top or bottom note, as chapter 17 does", () => {
+    // "Three attempts at any note near your top, then move on": the one dose
+    // rule the free range-extension lesson otherwise left out.
+    const lesson = LESSONS.find((l) => l.id === "v-l7-m5-04")!;
+    expect(lesson.steps.map((s) => s.body).join("\n")).toMatch(/three attempts at most today/);
+    expect(lesson.selfCheck.ifNotReady).toMatch(/within three attempts today/);
+    expect(lesson.mistakes.some((m) => /within three attempts today/.test(m.recovery))).toBe(true);
+    expect(lesson.blocks.some((b) => /^Up to three attempts/.test(b.instruction))).toBe(true);
+  });
+
+  it("lists no reading for the rhythm module, which no chapter teaches", () => {
+    // Weeks 11 and 12 is the program's song-and-retest chapter: it has no
+    // counting, subdivision or swing, and listing it sent Stage 4 learners to
+    // a Pro chapter that does not teach the module's skill.
+    expect(MODULE_PRACTICE["v-l4-m2"].readings).toEqual([]);
   });
 
   it("files a module as self-reported in the catalog exactly when nothing here measures it", () => {
