@@ -1,5 +1,5 @@
 /**
- * Render the book to public/the-measured-voice.pdf.
+ * Render the paid book to content/pdfs/the-measured-voice.pdf.
  *
  * Usage: node scripts/build-book-pdf.mjs
  *
@@ -444,7 +444,9 @@ const PDF_OPTIONS = {
   margin: { top: "18mm", bottom: "16mm", left: "16mm", right: "16mm" },
 };
 
-const browser = await chromium.launch();
+const browser = await chromium.launch({
+  executablePath: process.env.SING_BROWSER_EXECUTABLE || undefined,
+});
 const page = await browser.newPage();
 
 async function render(html, path) {
