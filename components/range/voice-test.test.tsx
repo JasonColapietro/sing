@@ -18,7 +18,7 @@ vi.mock("./range-test", () => ({
   RangeTest: () => <div data-tool="range">Start free range test</div>,
 }));
 
-import { VoiceTest, alignStartOnMount, switchVoiceTestMode, voiceTestModeUrl } from "./voice-test";
+import { VoiceTest, mountScroll, switchVoiceTestMode, voiceTestModeUrl, type BeforeSwap } from "./voice-test";
 import { returnSongSlugFromSearch } from "./result-view";
 import { rangeTestHref, type RangeTestLink } from "@/lib/site";
 
@@ -80,17 +80,69 @@ describe("voice-tool deep links", () => {
     expect(scroll).toHaveBeenCalledTimes(1);
   });
 
+  // The page just before the swap at 1280px, where the prerendered tool ends
+  // at 765: the fragment's #start, a reader 400px down the result, and one
+  // down in the guide, whom Chrome restored 317px short (4173 - 317).
+  const atStart: BeforeSwap = { scrollY: 173, toolBottom: 765 };
+  const inTool: BeforeSwap = { scrollY: 573, toolBottom: 765 };
+  const belowTool: BeforeSwap = { scrollY: 3854, toolBottom: 765 };
+
   it("lines #start up again once the live tool replaces the prerendered one", () => {
     // A direct load of /range?mode=range#start at 768px and up left the tabs
     // 5px under the header, and a returning singer's saved card pushed them
     // and their Retake test above the screen (scrollY 490).
-    const scroll = vi.fn();
-    expect(alignStartOnMount("#start", scroll)).toBe(true);
-    expect(scroll).toHaveBeenCalledTimes(1);
+    expect(mountScroll("#start", "navigate", atStart)).toBe("start");
     // Any other landing is left where the browser put it.
-    expect(alignStartOnMount("", scroll)).toBe(false);
-    expect(alignStartOnMount("#voice", scroll)).toBe(false);
-    expect(scroll).toHaveBeenCalledTimes(1);
+    expect(mountScroll("", "navigate", inTool)).toBeNull();
+    expect(mountScroll("#voice", "navigate", inTool)).toBeNull();
+  });
+
+  it("keeps a reloading reader's place instead", () => {
+    // Lining up snapped a reader 400px down the result back to the tabs
+    // (573 -> 173), and the swap alone carried them on to 890.
+    expect(mountScroll("#start", "reload", inTool)).toEqual({ restore: 573 });
+    // Down in the guide Chrome restored against the guide, 317px short, and
+    // the swap's shift is what lands them (3854 -> 4171).
+    expect(mountScroll("#start", "reload", belowTool)).toBeNull();
+    // Past the prerendered tool it cannot be told which restore happened, so
+    // the browser keeps it, from the tool's bottom edge on.
+    expect(mountScroll("#start", "reload", { scrollY: 873, toolBottom: 765 })).toBeNull();
+    expect(mountScroll("#start", "reload", { scrollY: 765, toolBottom: 765 })).toBeNull();
+    // A reader at the top is put back at the top.
+    expect(mountScroll("#start", "reload", { scrollY: 0, toolBottom: 765 })).toEqual({ restore: 0 });
+  });
+
+  /** How each load treats the scroll as the live tool replaces the fallback. */
+  it.each<[string, NavigationTimingType | undefined, "start" | "restore"]>([
+    ["an arrival", "navigate", "start"],
+    ["a prerendered arrival", "prerender", "start"],
+    // Without Navigation Timing it is an arrival, as before the check.
+    ["a browser without Navigation Timing", undefined, "start"],
+    // These bring back the reader's own position, whatever the hash.
+    ["a reload", "reload", "restore"],
+    ["a document Back or Forward", "back_forward", "restore"],
+  ])("%s (%s) gives %s", (_, type, kind) => {
+    for (const hash of ["#start", "", "#voice", "#start-singing"]) {
+      const scroll = mountScroll(hash, type, inTool);
+      if (kind === "restore") expect(scroll).toEqual({ restore: 573 });
+      else expect(scroll).toBe(hash === "#start" ? "start" : null);
+      // Below the tool only an arrival at #start moves.
+      expect(mountScroll(hash, type, belowTool)).toBe(kind === "start" && hash === "#start" ? "start" : null);
+      // A client-side mount replaced nothing: the router scrolls a link to
+      // #start, and Back is the browser's.
+      expect(mountScroll(hash, type, null)).toBeNull();
+    }
+  });
+
+  it("renders live tabs that are not inert, so only the fallback reads as replaced", () => {
+    // readBeforeSwap looks for #start's disabled tabs; the fallback test
+    // above shows the prerender has them.
+    for (const search of ["", "?mode=range"]) {
+      location.search = search;
+      const html = renderToStaticMarkup(<VoiceTest />);
+      expect(html).toMatch(/<button[^>]*role="tab"/);
+      expect(html).not.toMatch(/<button[^>]*role="tab"[^>]*disabled/);
+    }
   });
 
   /**

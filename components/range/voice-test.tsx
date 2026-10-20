@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useLayoutEffect } from "react";
+import { Suspense, useLayoutEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PitchMeter } from "./pitch-meter";
 import { RangeTest } from "./range-test";
@@ -59,34 +59,85 @@ export function switchVoiceTestMode(
   if (next === "range" && current !== "range") scroll();
 }
 
+/** The page just before the live tree replaces the prerendered tool. */
+export type BeforeSwap = { scrollY: number; toolBottom: number };
+
 /**
- * Whether a page that has just mounted the live voice test should line #start
- * up again, and does it.
+ * What the page's scroll needs as the live voice test mounts: "start" to line
+ * #start up again, a position to put back, or null to leave it alone.
+ *
+ * Both fix the same swap. The static HTML is the prerendered fallback, and
+ * the live tree replaces that whole fallback, #start included. The browser
+ * keeps the scroll anchored on content it had already laid out below the swap
+ * (the room rail), so the page moves by however much taller the live tool is:
+ * 20px at 768px and up for a new singer, and the whole saved-result card
+ * (317px at 1280px) for a returning one.
  *
  * A full load of /range#start (a bookmark, the manifest's "Vocal range test"
- * shortcut, a link from another site) scrolls to the prerendered fallback's
- * #start, and then the live tree replaces that whole fallback, #start
- * included. The browser keeps the scroll anchored on content it had already
- * laid out below the swap (the room rail), so the page moved by however much
- * taller the live tool was: 20px at 768px and up for a new singer, which put
- * the mode tabs under the sticky header, and the whole saved-result card for
- * a returning one, which left the tabs and their own Retake test above the
- * screen. Lining up again as the live tree mounts, before it paints, puts
- * #start back where the fragment put it, and the browser anchors on it from
- * then on.
+ * shortcut, a link from another site) scrolls to the fallback's #start, so
+ * the swap put the mode tabs under the sticky header, or left them and their
+ * own Retake test above the screen. Lining up again as the live tree mounts,
+ * before it paints, puts #start back where the fragment put it, and the
+ * browser anchors on it from then on.
+ *
+ * A reload, or a Back or Forward that loads the document again, restores the
+ * reader's own position instead, whatever the hash; lining #start up there
+ * snapped a reader 400px down the result back to the tabs. The swap moves
+ * that position too. One that was on the prerendered tool comes back as a
+ * plain offset, which the shift overshoots (573 -> 890 at 1280px), so it is
+ * put back. Further down Chrome may instead find the element that was at the
+ * top of the screen in the fallback page and restore against it, landing the
+ * swap's height short, and then the shift is what completes it (3854 ->
+ * 4171); it cannot be told which happened, so anything past the prerendered
+ * tool is left to the browser, as before. Navigation Timing says which load
+ * this was; "prerender" and a browser without the entry are arrivals, like
+ * "navigate". window.scrollY cannot tell them apart: the fragment jump has
+ * already moved it by the time the live tree mounts, and a reader restored to
+ * the top reads 0.
+ *
+ * Only a mount that replaced the fallback (`before` is null otherwise) moves
+ * anything. A client-side mount keeps the document's navigation type but
+ * swaps nothing: the router scrolls a link to #start itself, and Back is the
+ * browser's to restore.
  */
-export function alignStartOnMount(hash: string, scroll: () => void = scrollToStart): boolean {
-  if (hash !== "#start") return false;
-  scroll();
-  return true;
+export function mountScroll(
+  hash: string,
+  navigationType: NavigationTimingType | undefined,
+  before: BeforeSwap | null,
+): "start" | { restore: number } | null {
+  if (!before) return null;
+  if (navigationType === "reload" || navigationType === "back_forward") {
+    return before.scrollY < before.toolBottom ? { restore: before.scrollY } : null;
+  }
+  return hash === "#start" ? "start" : null;
+}
+
+function documentNavigationType(): NavigationTimingType | undefined {
+  const entry = performance.getEntriesByType?.("navigation")[0] as PerformanceNavigationTiming | undefined;
+  return entry?.type;
+}
+
+/**
+ * Read as the live tree renders, before its commit replaces the prerendered
+ * tool (the one whose tabs are inert); null when there is none to replace.
+ */
+function readBeforeSwap(): BeforeSwap | null {
+  if (typeof document === "undefined") return null;
+  const tool = document.querySelector('#start [role="tab"]:disabled')?.closest("main");
+  if (!tool) return null;
+  return { scrollY: window.scrollY, toolBottom: tool.getBoundingClientRect().bottom + window.scrollY };
 }
 
 function VoiceTestFromLocation() {
   const params = useSearchParams();
   const mode = voiceTestMode(params);
+  const [before] = useState(readBeforeSwap);
   useLayoutEffect(() => {
-    alignStartOnMount(window.location.hash);
-  }, []);
+    const scroll = mountScroll(window.location.hash, documentNavigationType(), before);
+    if (scroll === "start") scrollToStart();
+    // Only if the swap moved it; otherwise there is nothing to undo.
+    else if (scroll && window.scrollY !== scroll.restore) window.scrollTo(0, scroll.restore);
+  }, [before]);
   const choose = (next: VoiceTestMode) => {
     window.history.replaceState(null, "", voiceTestModeUrl(window.location.href, next));
   };
