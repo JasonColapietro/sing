@@ -389,10 +389,21 @@ html[data-sing-program~="next-locked"] [data-prepaint-slot="program-today"] {
    for the others, and each sets the slot's --finished-slot. Measured against
    the production build's CSS, 2026-10-13, with every check-in read, on
    /programs at 375px and 1280px. The plain rule is a program with no check-in
-   rows (Recovery week, Vibrato in 3 weeks: 19.6rem, 14.1rem). */
+   rows and the "Run it again" finished line, two lines on a phone and one at
+   1280px (Vibrato in 3 weeks: 19.6rem, 14.1rem). */
 html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
   --finished-slot: 19.5rem;
   min-height: var(--finished-slot);
+}
+/* Recovery week: no check-in rows, and a finished line that refers a voice
+   still rough to a doctor, six lines on a phone and three at 1280px where the
+   plain line is two and one. Measured against the production build,
+   2026-10-21, on /programs: 392.45px (24.53rem) at 375px and 263.95px
+   (16.5rem) at 1280px, set to the quarter rem like the rules around it. Its
+   own view is the same at 1280px and 3.25rem shorter on a phone (340.45px),
+   which the view rule below takes off. */
+html[data-sing-program~="finished"][data-sing-program~="recovery-week"] [data-prepaint-slot="program-today"] {
+  --finished-slot: 24.5rem;
 }
 /* Mix in 4 weeks: two range rows (31.3rem, 24.7rem). */
 html[data-sing-program~="finished"][data-sing-program~="mix-4w"] [data-prepaint-slot="program-today"] {
@@ -439,6 +450,9 @@ html[data-sing-program~="finished"] [data-prepaint-slot="program-today"][data-pr
   }
   html[data-sing-program~="finished"] [data-prepaint-slot="program-today"] {
     --finished-slot: 14rem;
+  }
+  html[data-sing-program~="finished"][data-sing-program~="recovery-week"] [data-prepaint-slot="program-today"] {
+    --finished-slot: 16.5rem;
   }
   html[data-sing-program~="finished"][data-sing-program~="mix-4w"] [data-prepaint-slot="program-today"],
   html[data-sing-program~="finished"][data-sing-program~="foundations-2w"] [data-prepaint-slot="program-today"] {

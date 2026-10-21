@@ -14,17 +14,23 @@ import {
   patternSpan,
 } from "@/components/warmups/exercises";
 
+import { VOICE_TYPES, classifyVoice, crossFamilyAlternative } from "@/lib/audio/notes";
+import { VOICE_TYPE_NOTES } from "@/lib/voice-types";
+
 import {
   FALSETTO_NOTE,
   FIVE_NOTE_SCALE_SEMIS,
   ResultView,
+  SHORT_TOP_NOTE,
   comparisonSingerFromSlug,
   rankFamousVoices,
   returnSongHref,
   returnSongSlugFromSearch,
   sampleHistory,
+  singleBandCopy,
   songCountCopy,
   voicePlural,
+  warmupButtonVariant,
 } from "./result-view";
 import { MIN_SAVED_SPAN } from "./range-test";
 
@@ -163,6 +169,82 @@ describe("range result voice type", () => {
     expect(html).toContain('href="/singers/voice-type/soprano"');
     expect(html).not.toContain(" or <span");
     expect(html).not.toContain("describe full voice");
+  });
+
+  it("says a short top can pull a female result down to Contralto", () => {
+    // A3–D5: a mezzo's low with a first-test top, which reads single-band
+    // Contralto, the label the page it links to calls rare.
+    const html = render(57, 74);
+    expect(html).toContain('href="/singers/voice-type/contralto"');
+    expect(html).not.toContain(" or <span");
+    expect(html).toContain("a mezzo-soprano whose top stopped at D5 often reads as a contralto");
+    expect(html).toContain("True contralto is rare");
+    // Book ch.8's advice for a reading that looks wrong: another day, not
+    // another try in the same session.
+    expect(html).toContain("take the test again on another day after a proper warmup");
+    // The falsetto caveat is about male bands and does not apply here.
+    expect(html).not.toContain("describe full voice");
+    expect(html).not.toContain("lean a category high");
+    // Not under Mezzo-soprano or Soprano, and not under a two-band result,
+    // which keeps the falsetto caveat only.
+    expect(render(57, 81)).not.toContain("lean a category low");
+    expect(render(60, 84)).not.toContain("lean a category low");
+    expect(render(53, 72)).toContain("Or Contralto, an estimate");
+    expect(render(53, 72)).not.toContain("lean a category low");
+  });
+
+  it("does not say it under a Contralto that the low decided", () => {
+    // D3–G5 reads single-band Contralto too, but a mezzo's full top would not
+    // move it, and it is also a tenor whose falsetto carried him to G5: his
+    // label leans high, so "lean a category low" would be false.
+    const html = render(50, 79);
+    expect(html).toContain('href="/singers/voice-type/contralto"');
+    expect(html).not.toContain(" or <span");
+    expect(html).not.toContain("lean a category low");
+    expect(html).toContain("treat this as a starting point, not a box.");
+    // E3–E5, a semitone under the contralto band's floor, is the same case.
+    expect(render(52, 76)).toContain('href="/singers/voice-type/contralto"');
+    expect(render(52, 76)).not.toContain("lean a category low");
+  });
+
+  it("says it exactly where a mezzo's full top would read Mezzo-soprano", () => {
+    // "The fit can lean a category low" claims the same low with a mezzo's top
+    // (A5, the band's own) would read Mezzo-soprano. Walk every single-band
+    // Contralto the classifier can return and hold the note to that.
+    const mezzoTop = VOICE_TYPES.find((v) => v.id === "mezzo")!.highMidi;
+    let shown = 0;
+    let withheld = 0;
+    for (let low = 36; low <= 84; low++) {
+      for (let high = low + MIN_SAVED_SPAN; high <= 96; high++) {
+        const voice = classifyVoice(low, high);
+        if (voice.id !== "contralto" || crossFamilyAlternative(low, high)) continue;
+        const liftsToMezzo =
+          classifyVoice(low, mezzoTop).id === "mezzo" &&
+          crossFamilyAlternative(low, mezzoTop) === null;
+        const says = singleBandCopy(voice, low).includes(SHORT_TOP_NOTE);
+        expect(says, `${low}-${high}`).toBe(liftsToMezzo);
+        // Every top that carries the note is short of a mezzo's top.
+        if (says) expect(high, `${low}-${high}`).toBeLessThan(mezzoTop);
+        if (says) shown++;
+        else withheld++;
+      }
+    }
+    expect(shown).toBeGreaterThan(0);
+    expect(withheld).toBeGreaterThan(0);
+  });
+
+  it("rests the short-top example on the classifier and the contralto page", () => {
+    // "A mezzo-soprano whose top stopped at D5 often reads as a contralto":
+    // with a low at or under B3, a D5 top is single-band Contralto, and the
+    // same low with a mezzo's full top reads Mezzo-soprano.
+    for (const low of [55, 57, 59]) {
+      expect(classifyVoice(low, 74).id, `low ${low}`).toBe("contralto");
+      expect(crossFamilyAlternative(low, 74), `low ${low}`).toBeNull();
+      expect(classifyVoice(low, 81).id, `low ${low}`).toBe("mezzo");
+    }
+    // "True contralto is rare" is the singer library's own claim.
+    expect(VOICE_TYPE_NOTES.Contralto.body).toContain("true contralto is rare");
+    expect(SHORT_TOP_NOTE).toContain("True contralto is rare");
   });
 
   it("says every song opens fitted to the new range", () => {
@@ -399,6 +481,25 @@ describe("range result guidance", () => {
       const startsInBand = Math.min(...roots) >= low + 3;
       expect(startsInBand, `${semis} semitones`).toBe(semis >= OCTAVE_SIREN_MIN_SEMIS);
     }
+  });
+
+  it("makes the warmup the primary next step unless a finish card holds it", () => {
+    // Fresh from the range test, the only filled control used to be the Pro
+    // unlock further down; the pitch meter one tab away fills its "Warm up".
+    const html = render(48, 72);
+    const anchor = (hrefPattern: string) =>
+      html.match(new RegExp(`<a[^>]*href="${hrefPattern}"[^>]*>`))?.[0] ?? "";
+    const warmupLink = anchor("/warmups\\?exercise=[a-z-]+");
+    expect(warmupLink).toContain("bg-violet-ink");
+    expect(warmupLink).not.toContain("border-field");
+    // The songbook stays the outline second choice, as "Sing a song" is.
+    const songbookLink = anchor("/songs");
+    expect(songbookLink).toContain("border-field");
+    expect(songbookLink).not.toContain("bg-violet-ink");
+    // With "Compare with …" or "Back to the song" filled above, the warmup
+    // steps back so the page keeps one primary action.
+    expect(warmupButtonVariant(false)).toBe("violet");
+    expect(warmupButtonVariant(true)).toBe("outline");
   });
 
   it("applies the coach's span rule for the octave siren, not a second one", () => {

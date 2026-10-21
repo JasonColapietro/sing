@@ -49,6 +49,7 @@ import { routineById, isFreeExercise, stepExercise } from "@/components/warmups/
 import { ALL_EXERCISES, computeRootLadder, descentWalk, ladderWalk, tooWideForRange } from "@/components/warmups/exercises";
 import {
   breathRoutineById,
+  breathStepSummary,
   drillPresetFromQuery,
   isBreathDrillId,
   type BreathStep,
@@ -708,7 +709,9 @@ describe("program data", () => {
     const forbidden =
       /\badd(?:s|ing)?\s+(?:\w+\s+)?(?:notes?|semitones?|range)\b|\bfix(?:es|ed)?\b|\bheal|\bcure|\bguarantee|\bno strain|strain[- ]free|\bsafe\b|\bunlock your\b|\bextend your range\b/i;
     for (const p of PROGRAMS) {
-      const copy = [p.name, p.tagline, p.measures, ...p.days.map((d) => d.title)].join(" \n ");
+      // The finished card's own line (Program.finished) is a singer's last
+      // word from the program, held to the same rule.
+      const copy = [p.name, p.tagline, p.measures, p.finished ?? "", ...p.days.map((d) => d.title)].join(" \n ");
       expect(copy, p.id).not.toMatch(forbidden);
     }
   });
@@ -722,6 +725,14 @@ describe("program data", () => {
     for (const p of referrals) {
       expect(p.measures, p.id).toContain("a doctor who can examine the vocal folds, such as an ENT or laryngologist");
     }
+    // The finished card's own line too: a Recovery week that ends with the
+    // voice still rough sends it to a doctor (chapter 6), not round again.
+    const finishedReferrals = PROGRAMS.filter((p) => p.finished && /\bdoctor\b/i.test(p.finished));
+    expect(finishedReferrals.map((p) => p.id)).toEqual(["recovery-week"]);
+    for (const p of finishedReferrals) {
+      expect(p.finished, p.id).toContain("a doctor who can examine the vocal folds, such as an ENT or laryngologist");
+      expect(p.finished, p.id).not.toMatch(/run it again|start (it )?again/i);
+    }
   });
 
   it("deep-links every item with a relative URL into its room", () => {
@@ -731,7 +742,10 @@ describe("program data", () => {
     // With its rep count, so the room stops after the reps the row names.
     expect(itemHref({ kind: "exercise", id: "vibrato-hold", reps: 4 })).toBe("/warmups?exercise=vibrato-hold&reps=4");
     expect(itemHref({ kind: "breath", id: "daily" })).toBe("/breath?routine=daily");
-    expect(itemHref({ kind: "drill", id: "sustain" })).toBe("/breath?drill=sustain");
+    // A lone drill carries the lone-drill setting its row states, not a bare
+    // "?drill=", which opens the setup card's own defaults.
+    expect(itemHref({ kind: "drill", id: "sustain" })).toBe("/breath?drill=sustain&attempts=1");
+    expect(itemHref({ kind: "drill", id: "box" })).toBe("/breath?drill=box&side=4&minutes=1");
     expect(itemHref({ kind: "range" })).toBe("/range?mode=range#start");
     expect(itemHref({ kind: "recorder" })).toBe("/recorder");
     expect(itemHref({ kind: "ear" })).toBe("/ear-training?routine=quick");
@@ -739,11 +753,19 @@ describe("program data", () => {
     expect(itemHref({ kind: "drill", id: "box", preset: { drill: "box", side: 5, minutes: 1 } })).toBe(
       "/breath?drill=box&side=5&minutes=1",
     );
+    // Every drill row's link opens the room on the setting its meta line
+    // names, with a preset of its own or without: the breath room reads it
+    // back as that same setting, not as null and its 3-minute default.
+    let drills = 0;
     for (const item of PROGRAMS.flatMap(allItems)) {
-      if (item.kind !== "drill" || !item.preset) continue;
+      if (item.kind !== "drill") continue;
+      drills++;
       const q = new URLSearchParams(itemHref(item).split("?")[1]);
-      expect(drillPresetFromQuery(item.id, q), itemHref(item)).toEqual(item.preset);
+      expect(q.get("drill"), itemHref(item)).toBe(item.id);
+      expect(drillPresetFromQuery(item.id, q), itemHref(item)).toEqual(drillPreset(item));
+      expect(itemLabel(item).meta, itemHref(item)).toBe(`Breath · ${breathStepSummary(drillPreset(item))}`);
     }
+    expect(drills).toBeGreaterThan(0);
     expect(itemHref({ kind: "song", slug: "ode-to-joy" })).toBe("/songs?song=ode-to-joy");
     // Every exercise row's link carries the count its meta line names, and a
     // count the warmups room honours (a whole number from 1 to 30), so the

@@ -348,6 +348,41 @@ describe("restarting a finished program", () => {
   });
 });
 
+describe("a finished Recovery week", () => {
+  const rw = programById("recovery-week")!;
+  const finished: ProgramToday = { status: "finished", index: rw.days.length - 1, completed: rw.days.length };
+
+  it("ends on the referral, not on running the week again", () => {
+    // Chapter 6: hoarseness that hangs around is a doctor's question, not "a
+    // stricter practice week, or waiting to see".
+    const html = renderToStaticMarkup(
+      <ProgramTodayCard active={active(rw.id, rw.days.length - 1, finished)} onBrowse={null} />,
+    ).replace(/<!-- -->/g, "");
+    expect(html).toContain(`All ${rw.days.length} days done. If your voice feels back to ordinary`);
+    expect(html).toContain("a doctor who can examine the vocal folds, such as an ENT or laryngologist");
+    expect(html).not.toContain("Run it again from day 1");
+    // The restart stays (its variant is an open owner decision), with no go-back.
+    expect(html).toContain("Start again from day 1");
+    expect(html).not.toContain("Repeat weeks");
+    // The entry card on /warmups and /progress points at that line rather
+    // than suggesting another run, and never says a bare "a doctor".
+    const entry = renderToStaticMarkup(<ProgramEntryCard active={active(rw.id, rw.days.length - 1, finished)} />);
+    expect(entry).toContain("Finished. The calendar says what next if your voice is still rough.");
+    expect(entry).not.toContain("Start it again");
+    expect(entry).not.toMatch(/\bdoctor\b/);
+  });
+
+  it("leaves every other program's finished lines as they were", () => {
+    const vibrato: ProgramToday = { status: "finished", index: 20, completed: 21 };
+    const card = renderToStaticMarkup(<ProgramTodayCard active={active("vibrato-3w", 20, vibrato)} onBrowse={null} />);
+    expect(card.replace(/<!-- -->/g, "")).toContain("All 21 days done. Run it again from day 1, or pick another program.");
+    expect(card).not.toMatch(/\bdoctor\b/);
+    expect(renderToStaticMarkup(<ProgramEntryCard active={active("vibrato-3w", 20, vibrato)} />)).toContain(
+      "Finished. Start it again or pick another.",
+    );
+  });
+});
+
 describe("leaving or stopping a program", () => {
   const finished = (id: string): ProgramToday => {
     const n = programById(id)!.days.length;

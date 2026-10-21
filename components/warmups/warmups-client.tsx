@@ -219,15 +219,19 @@ export function WarmupsClient() {
   // the cap is checked between steps, so the step under way always finishes.
   const overAllowance =
     proReady && !cap.isPro && !cap.capped && routineSeconds(recommended) > cap.leftSec;
-  const recommendedReason = sizedToAllowance
-    ? !proReady
-      ? " "
-      : cap.usedSec <= 0
-        ? `Fits in today's ${Math.round(cap.capSec / 60)} free minutes.`
-        : `Fits in the ${formatClock(cap.leftSec)} of free practice left today.`
-    : overAllowance
-      ? `${formatClock(cap.leftSec)} of free practice left today: this set stops after the step that uses it up.`
-      : routineReason(routineContext);
+  // At the cap the button already says when; a top-up reason would offer a
+  // set that cannot start. The no-break space keeps the line's height.
+  const recommendedReason = cap.capped
+    ? " "
+    : sizedToAllowance
+      ? !proReady
+        ? " "
+        : cap.usedSec <= 0
+          ? `Fits in today's ${Math.round(cap.capSec / 60)} free minutes.`
+          : `Fits in the ${formatClock(cap.leftSec)} of free practice left today.`
+      : overAllowance
+        ? `${formatClock(cap.leftSec)} of free practice left today: this set stops after the step that uses it up.`
+        : routineReason(routineContext);
   const pathExercises = isPro ? ALL_EXERCISES : EXERCISES;
   const pathItem = (e: WarmupExercise) => ({ id: e.id, title: e.title, stars: starsForExercise(progress, e.title) });
   const nextId = nextUpId([
@@ -556,7 +560,14 @@ export function WarmupsClient() {
                 streakDays={streakDays}
                 streakBest={progress.streak.best}
                 title={nextExercise.title}
-                tagline="The next exercise in your lowest unfinished tier. You can still choose any exercise below."
+                // At the cap every exercise below waits for tomorrow too, so
+                // the card offers no other choice for now. Never in the server
+                // HTML (a newcomer's card is there), so no pre-paint state.
+                tagline={
+                  cap.capped
+                    ? "The next exercise in your lowest unfinished tier."
+                    : "The next exercise in your lowest unfinished tier. You can still choose any exercise below."
+                }
                 onStart={() => void selectExercise(nextExercise, "continue")}
                 startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start exercise" : "Enable mic and start"}
                 micReady={pitch.listening}

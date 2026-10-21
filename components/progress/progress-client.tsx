@@ -34,7 +34,7 @@ import { LockedPanel, ProChip } from "@/components/pro/ui";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { useActiveProgram } from "@/components/programs/use-program";
 import { ProgramEntryCard } from "@/components/programs/today-card";
-import { programDayNeedsPro, programRangeTest } from "@/components/practice/program-day";
+import { programDayNeedsPro, programRangeTest, recoveryWeekOf } from "@/components/practice/program-day";
 import { isRestDay } from "@/lib/programs";
 import { useIsPro } from "@/lib/pro";
 import { accountsReady } from "@/lib/accounts";
@@ -749,6 +749,10 @@ export function ProgressClient() {
   // the program's own (null when none is left, or when it needs Pro this
   // singer does not have).
   const programRange = activeProgram ? programRangeTest(activeProgram, isPro) : null;
+  // Recovery week's name while it runs: a week for a tired voice, so the coach
+  // asks for no range test (it would save a tired reading as the range) and
+  // no octave siren at the top of the range until the week is over.
+  const recovering = activeProgram ? recoveryWeekOf(activeProgram) : null;
   const todaySec = todayPracticeSec(state);
   const weekly = weeklyReport(state.sessions);
   const totalSec = state.sessions.reduce((a, s) => a + s.durationSec, 0);
@@ -873,7 +877,7 @@ export function ProgressClient() {
         {activeProgram && !programPaywalled && <ProgramEntryCard active={activeProgram} />}
 
         <section aria-label="Today's coached session">
-          <CoachCard state={state} restDayOf={programRestDay} programRange={programRange} />
+          <CoachCard state={state} restDayOf={programRestDay} programRange={programRange} recovering={recovering} />
         </section>
 
         {activeProgram && programPaywalled && <ProgramEntryCard active={activeProgram} />}

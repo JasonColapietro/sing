@@ -146,6 +146,49 @@ describe("today's warmup on the free plan", () => {
     expect(html).not.toContain("A short top-up after today&#x27;s practice.");
   });
 
+  it("calls nothing a top-up once today's free practice is used", () => {
+    // The button says "Available tomorrow"; the reason line under it keeps
+    // its height with a no-break space rather than offering the set now.
+    const blankReason = '<p class="text-xs text-dim sm:text-right"> </p>';
+    state.progress = practisedToday();
+    state.cap = { isPro: false, usedSec: 330, leftSec: 0, capped: true, capSec: 300 };
+    const html = renderToStaticMarkup(<WarmupsClient />);
+    expect(html).toContain("Today&#x27;s warmup");
+    expect(html).toContain("Available tomorrow");
+    expect(html).not.toContain("A short top-up after today&#x27;s practice.");
+    expect(html).toContain(blankReason);
+
+    // A newcomer capped by another guided room gets the same "Start here" card.
+    const day = localDay();
+    state.progress = {
+      ...DEFAULT_PROGRESS,
+      sessions: [
+        { id: "e1", type: "ear", date: `${day}T09:00:00.000Z`, day, durationSec: 330, score: 70, detail: "Interval ID", xp: 20 },
+      ],
+    };
+    const newcomer = renderToStaticMarkup(<WarmupsClient />);
+    expect(newcomer).toContain("Start here");
+    expect(newcomer).toContain("Available tomorrow");
+    expect(newcomer).not.toContain("A short top-up after today&#x27;s practice.");
+    expect(newcomer).toContain(blankReason);
+  });
+
+  it("offers no other exercise for now on the path card once today's free practice is used", () => {
+    const choice = "You can still choose any exercise below.";
+    state.progress = practisedToday();
+    const open = renderToStaticMarkup(<WarmupsClient />);
+    expect(open).toContain("Continue your path");
+    expect(open).toContain(choice);
+
+    // Every row below is disabled at the cap, so the card names only its own pick.
+    state.cap = { isPro: false, usedSec: 330, leftSec: 0, capped: true, capSec: 300 };
+    const capped = renderToStaticMarkup(<WarmupsClient />);
+    expect(capped).toContain("Continue your path");
+    expect(capped).toContain("The next exercise in your lowest unfinished tier.");
+    expect(capped).toContain("Available tomorrow");
+    expect(capped).not.toContain(choice);
+  });
+
   it("keeps the top-up reason when the set fits, and on Pro", () => {
     state.progress = practisedToday();
     state.pro = true;
