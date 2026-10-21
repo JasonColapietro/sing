@@ -81,7 +81,7 @@ One thing that is not a bad day: pain. Soreness, a raw feeling, or hoarseness th
 
 Block two closes with the range test. Run it on the last day of week 6, warmed up, under the conditions chapter 12 sets out — the same ones you used in week 1, or the two results are not comparable. Chapter 8's rule still governs it: only notes you would let another person hear count.
 
-It gives you a low note, a high note and a voice type, and nothing else — not which notes are comfortable, and nothing about the crossing you have spent two weeks on. Two weeks of quiet siren work may move the edges a little or not at all, and both are ordinary. Log it, then leave the test alone until the start of week 12.
+It gives you a low note, a high note, a voice type and a trimmed middle — not which notes are comfortable, and nothing about the crossing you have spent two weeks on. Two weeks of quiet siren work may move the edges a little or not at all, and both are ordinary. Log it, then leave the test alone until the start of week 12.
 
 ## Try this
 

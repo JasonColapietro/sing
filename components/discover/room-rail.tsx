@@ -41,6 +41,10 @@ export interface Room {
   Glyph: (props: ComponentProps<"svg">) => ReactElement;
   /** True when the room cannot do anything without microphone permission. */
   mic: boolean;
+  /** false for /singers: a visible link fetches the whole 235 KB directory in
+   *  the background, so the rail must not prefetch it (see
+   *  lib/singer-link-prefetch.test.ts). Every other room keeps Next's default. */
+  prefetch?: false;
 }
 
 interface RoomRailProps {
@@ -68,7 +72,7 @@ export const ROOMS: readonly Room[] = [
   { href: "/ear-training", label: "Ear training", blurb: "Interval, pitch-matching, and melody games.", Glyph: EarGlyph, mic: true },
   { href: "/breath", label: "Breath control", blurb: "Timed breathing and sustain for steadier phrases.", Glyph: BreathGlyph, mic: true },
   { href: "/songs", label: "Song practice", blurb: "Melodies that open fitted to your range once you have tested it.", Glyph: SongGlyph, mic: true },
-  { href: "/singers", label: "Famous ranges", blurb: "Famous voices on one keyboard, with yours overlaid.", Glyph: SingersGlyph, mic: false },
+  { href: "/singers", label: "Famous ranges", blurb: "Famous voices on one keyboard, with yours overlaid.", Glyph: SingersGlyph, mic: false, prefetch: false },
   { href: "/tools", label: "Tools", blurb: "Metronome, keyboard, and a drone for reference.", Glyph: ToolsGlyph, mic: false },
   { href: "/progress", label: "Progress", blurb: "XP, streaks, and a coach that plans the next session.", Glyph: ProgressGlyph, mic: false },
 ] as const;
@@ -91,10 +95,11 @@ export function RoomRail({
     <nav aria-label={title} className={cn(className)}>
       <SectionLabel>{title}</SectionLabel>
       <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {rooms.map(({ href, label, blurb, Glyph, mic }) => (
+        {rooms.map(({ href, label, blurb, Glyph, mic, prefetch }) => (
           <li key={href}>
             <Link
               href={href === "/range" ? rangeTestHref() : href}
+              prefetch={prefetch}
               className="lift group flex h-full flex-col rounded-xl border border-line bg-panel p-3 hover:border-violet/50 sm:p-4"
             >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-line bg-panel2 text-violet-ink">

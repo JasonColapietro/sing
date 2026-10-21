@@ -130,6 +130,7 @@ export default async function AtlasChapterPage({
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href="/atlas"
+            prefetch={false}
             className="inline-flex min-h-11 items-center rounded-full border border-line px-4 py-2 text-sm text-mut transition-colors hover:border-line2 hover:text-ink"
           >
             ← Contents
@@ -161,7 +162,7 @@ export default async function AtlasChapterPage({
                   {AUTHOR_NAME}
                 </a>{" "}
                 · Chapter {chapter.order} of{" "}
-                <Link href="/atlas" className="text-violet-ink hover:underline">
+                <Link href="/atlas" prefetch={false} className="text-violet-ink hover:underline">
                   {ATLAS_TITLE}
                 </Link>
               </p>
@@ -185,7 +186,7 @@ export default async function AtlasChapterPage({
                 <LinkButton href={RANGE_TEST_HREF} size="md">
                   {tryIt.label}
                 </LinkButton>
-                <LinkButton href={tryIt.next.href} variant="outline" size="md">
+                <LinkButton href={tryIt.next.href} prefetch={false} variant="outline" size="md">
                   {tryIt.next.label}
                 </LinkButton>
               </div>
@@ -222,7 +223,7 @@ export default async function AtlasChapterPage({
                 <LinkButton href="/pro" size="md">
                   See what Pro includes
                 </LinkButton>
-                <LinkButton href="/atlas" variant="outline" size="md">
+                <LinkButton href="/atlas" prefetch={false} variant="outline" size="md">
                   Back to contents
                 </LinkButton>
               </div>

@@ -17,7 +17,7 @@ The middle has none of that noise. Closure comes easily there, the air demand is
 
 There is a blunter reason too. Songs live in the middle. Verses sit there, most of any chorus sits there, and the high note everyone remembers is two seconds of a three-minute song. A middle that behaves carries the whole performance.
 
-So find your working notes. Do not go looking for them in your range test — that gives you a low note, a high note and a voice type, and none of the three is the block you want. Use the practical version instead: the notes you can sing at speaking volume, right now, cold, with no preparation and nothing to warm up first. Keep the middle five or six of those. Almost nothing you practise over the next two weeks should leave that block.
+So find your working notes. Do not go looking for them in your range test — that gives you a low note, a high note and a voice type, and its middle band is only those two edges, trimmed. Use the practical version instead: the notes you can sing at speaking volume, right now, cold, with no preparation and nothing to warm up first. Keep the middle five or six of those. Almost nothing you practise over the next two weeks should leave that block.
 
 ## Steady tone
 

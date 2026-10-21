@@ -34,6 +34,17 @@ export interface GuideLink {
   note: string;
 }
 
+/**
+ * The prefetch a "Where to go next" card passes to next/link. The /singers
+ * directory, the /atlas contents and every page under /singers (hub charts,
+ * singer profiles, records) carry their whole chart as the payload, so a card
+ * scrolling into view on /range fetched the whole directory in the
+ * background. They opt out; an article or a room keeps Next's default.
+ */
+export function relatedLinkPrefetch(href: string): false | undefined {
+  return /^\/(?:singers|atlas)(?:[?#]|$)|^\/singers\//.test(href) ? false : undefined;
+}
+
 export interface GuideContent {
   /** Route this guide belongs to, e.g. "/range". */
   path: string;
@@ -292,6 +303,7 @@ export function ToolGuide({ guide }: { guide: GuideContent }) {
               <Link
                 key={link.href}
                 href={link.href}
+                prefetch={relatedLinkPrefetch(link.href)}
                 className="group rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-violet/50"
               >
                 <span className="block text-lg font-extrabold text-ink group-hover:text-violet-ink">

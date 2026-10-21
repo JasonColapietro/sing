@@ -3641,26 +3641,26 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Row Row Row Your Boat or Ode to Joy. Hear the reference, choose a comfortable key, then stop it before singing.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
+        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Then open Swing Low, Sweet Chariot the same way, tap the pulse you just heard and speak its durations against it. Its written rhythm is straight, not swung: “char” is held through the next tap, “i” lands halfway between that tap and the one after it, and “comin' for to carry” puts two even notes on each of three taps. Ode to Joy, where every note starts on a tap, has neither.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
-        "title": "Name the target: Rhythm and syncopation",
+        "title": "Name the target: Rhythm and subdivision",
         "body": "On one comfortable pitch, compare two even sounds per tap (say “1-and”), three even sounds per tap (say “1-trip-let”), and a long-short pair using the first and third triplet positions. Keep the taps equally spaced. Record these three feels in one take, naming each before you sing it, then return to the written song rhythm.",
-        "look": "Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.",
+        "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
       {
         "title": "Hear the distinction",
-        "body": "On one comfortable pitch, tap a steady pulse and sing two notes per tap on “da” for two bars: first straight (1-and, both halves equal), then swung (long-short, on the first and third triplet positions). Keep the taps at the same tempo and change only how each beat is split. Record both in one take in the recorder with a breath between them, and on playback check that the second note of each pair moved later in the swung version while your taps stayed put. Then return to the written phrase: clap it, sing its rhythm on one pitch, then restore the melody, tapping the pulse gently through each version. An external click is optional.",
-        "look": "Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.",
+        "body": "On one comfortable pitch, tap a steady pulse and sing two notes per tap on “da” for two bars: first straight (1-and, both halves equal), then swung (long-short, on the first and third triplet positions). Keep the taps at the same tempo and change only how each beat is split. Record both in one take in the recorder with a breath between them, and on playback check that the second note of each pair moved later in the swung version while your taps stayed put. Then return to the written Swing Low, Sweet Chariot phrase and keep its pairs straight: clap it, sing its rhythm on one pitch, then restore the melody, tapping the pulse gently through each version. An external click is optional.",
+        "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
       {
@@ -3687,7 +3687,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 60,
-        "instruction": "Isolate the rhythm and syncopation target in short, comfortable examples."
+        "instruction": "Isolate the rhythm and subdivision target in short, comfortable examples."
       },
       {
         "seconds": 90,
@@ -3732,26 +3732,26 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Row Row Row Your Boat or Ode to Joy. Hear the reference, choose a comfortable key, then stop it before singing.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
+        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Then open Swing Low, Sweet Chariot the same way, tap the pulse you just heard and speak its durations against it. Its written rhythm is straight, not swung: “char” is held through the next tap, “i” lands halfway between that tap and the one after it, and “comin' for to carry” puts two even notes on each of three taps. Ode to Joy, where every note starts on a tap, has neither.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
-        "title": "Name the target: Rhythm and syncopation",
+        "title": "Name the target: Rhythm and subdivision",
         "body": "Rhythm without pitch first. Pitch hides timing errors. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
-        "look": "Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.",
+        "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
       {
         "title": "Alternate attempt and reset",
-        "body": "Work in short repetitions with a normal breath and complete release between them. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take in the [recorder](/recorder). An external click is optional.",
-        "look": "Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.",
+        "body": "Work in short repetitions with a normal breath and complete release between them. Take Ode to Joy and then Swing Low, Sweet Chariot through the same three versions: clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take in the [recorder](/recorder). An external click is optional.",
+        "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
       {
@@ -3778,7 +3778,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 90,
-        "instruction": "Isolate the rhythm and syncopation target in short, comfortable examples."
+        "instruction": "Isolate the rhythm and subdivision target in short, comfortable examples."
       },
       {
         "seconds": 135,
@@ -3823,26 +3823,26 @@ export const LESSONS: Lesson[] = [
     "steps": [
       {
         "title": "Use the practice material",
-        "body": "Open the practice material on this page and choose Row Row Row Your Boat or Ode to Joy. Hear the reference, choose a comfortable key, then stop it before singing.",
+        "body": "Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.",
         "look": "The exercise, song or chapter is open. Your chosen range remains comfortable.",
         "listen": "Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique."
       },
       {
         "title": "Set a safe baseline",
-        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.",
+        "body": "Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Then open Swing Low, Sweet Chariot the same way, tap the pulse you just heard and speak its durations against it. Its written rhythm is straight, not swung: “char” is held through the next tap, “i” lands halfway between that tap and the one after it, and “comin' for to carry” puts two even notes on each of three taps. Ode to Joy, where every note starts on a tap, has neither.",
         "look": "Posture, room, device, and the planned stop rule are settled before the first attempt.",
         "listen": "Begin from an easy, repeatable sound; silence playback before judging your own voice."
       },
       {
-        "title": "Name the target: Rhythm and syncopation",
+        "title": "Name the target: Rhythm and subdivision",
         "body": "Checked against your tapped pulse by ear. Onset timing is not automatically scored. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.",
-        "look": "Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.",
+        "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
       {
         "title": "Make one evidence take",
-        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.",
-        "look": "Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.",
+        "body": "State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Clap the complete displayed Swing Low, Sweet Chariot phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.",
+        "look": "Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.",
         "listen": "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score."
       },
       {
@@ -3869,7 +3869,7 @@ export const LESSONS: Lesson[] = [
       },
       {
         "seconds": 75,
-        "instruction": "Isolate the rhythm and syncopation target in short, comfortable examples."
+        "instruction": "Isolate the rhythm and subdivision target in short, comfortable examples."
       },
       {
         "seconds": 120,
@@ -3886,7 +3886,7 @@ export const LESSONS: Lesson[] = [
         "On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.",
         "I kept missing or uncertain evidence as missing instead of awarding myself a measured pass."
       ],
-      "readyWhen": "On playback of one take, every sung entry of the phrase lands with your recorded taps, held notes last their full count, and the melody version keeps the same pulse as the clapped version.",
+      "readyWhen": "On playback of one take of the Swing Low, Sweet Chariot phrase, every entry written on a tap lands with your recorded taps, the “i” of “char-i-ot” and every second note of “comin' for to carry” land halfway between two taps, held notes last their full count, and the melody version keeps the same pulse as the clapped version.",
       "ifNotReady": "If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.",
       "shows": "I counted and clapped the displayed rhythm before singing it, then reviewed where my entries aligned by ear. This is a self-report, not an automatic assessment.",
       "doesNotShow": "An automatic pitch, rhythm, register, tone, or safety result. Ninety-percent onset accuracy or any timing-error number; no Suede surface currently scores sung onsets."

@@ -101,6 +101,7 @@ export function FamousVoices() {
           </div>
           <Link
             href="/singers"
+            prefetch={false}
             className="inline-flex min-h-11 items-center font-mono text-xs uppercase tracking-[0.14em] text-violet-ink underline decoration-violet/50 underline-offset-4 transition-colors hover:decoration-violet"
           >
             Browse every voice
@@ -110,6 +111,7 @@ export function FamousVoices() {
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
             href="/singers/voice-type/contralto"
+            prefetch={false}
             className="inline-flex min-h-11 items-center rounded-xl border border-line bg-panel px-4 py-3 text-sm font-medium text-violet-ink transition-colors hover:border-violet hover:bg-panel2"
           >
             Contralto singers and their vocal ranges

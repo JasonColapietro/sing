@@ -301,7 +301,7 @@ export default function SingersPage() {
         </ul>
 
         <div className="mt-8">
-          <LinkButton href="/singers/records" variant="outline" size="sm">
+          <LinkButton href="/singers/records" prefetch={false} variant="outline" size="sm">
             Widest vocal ranges and catalog extremes, ranked →
           </LinkButton>
         </div>

@@ -7,9 +7,10 @@ const BLACK_PCS = new Set([1, 3, 6, 8, 10]);
  * version built from what they draw (hubCardVersion in lib/og-cards.ts), and a
  * layout fix changes the picture without changing a word of it: round 5's
  * smaller Singer-Songwriter title shipped at the URL share scrapers had
- * cached the overlapping one under.
+ * cached the overlapping one under. A palette change counts too: the
+ * 2026-10-15 restyle (#229) repainted every hub card from dark to paper.
  */
-export const HUB_OG_CARD_REVISION = "2026-10-12";
+export const HUB_OG_CARD_REVISION = "2026-10-15";
 
 /**
  * Shared OG card body for the hub pages, so a shared "famous tenors" link

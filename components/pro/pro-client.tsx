@@ -489,7 +489,7 @@ export function WelcomePanel({
             <LinkButton href="/book" variant="violet" size="md">
               Read The Measured Voice
             </LinkButton>
-            <LinkButton href="/atlas" variant="outline" size="md">
+            <LinkButton href="/atlas" prefetch={false} variant="outline" size="md">
               Read The Voice Atlas
             </LinkButton>
           </div>

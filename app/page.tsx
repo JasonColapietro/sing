@@ -73,6 +73,9 @@ const FEATURES = [
     label: "Famous ranges",
     desc: "Famous voices on one keyboard — see whose range matches yours.",
     Glyph: SingersGlyph,
+    // The directory's payload is its whole chart; a visible card would fetch
+    // it in the background (lib/singer-link-prefetch.test.ts).
+    prefetch: false,
   },
   {
     href: "/ear-training",
@@ -226,10 +229,11 @@ export default function Home() {
             Everything a practice session needs, one tab over
           </SectionHeading>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map(({ href, label, desc, Glyph }) => (
+            {FEATURES.map(({ href, label, desc, Glyph, prefetch }) => (
               <Link
                 key={href}
                 href={href}
+                prefetch={prefetch}
                 className="lift group rounded-2xl border border-line bg-panel p-5 hover:border-violet/50 sm:p-6"
               >
                 <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-panel2 text-violet-ink">

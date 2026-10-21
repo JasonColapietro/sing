@@ -161,7 +161,7 @@ export default function BookPage() {
             Pro includes two books. <em>The Voice Atlas</em> is the reference —
             the range, tone and technique of every voice in the singer library,
             with the songs where the extreme notes happened.{" "}
-            <Link href="/atlas" className="text-violet-ink hover:underline">
+            <Link href="/atlas" prefetch={false} className="text-violet-ink hover:underline">
               Its full contents are free
             </Link>
             .

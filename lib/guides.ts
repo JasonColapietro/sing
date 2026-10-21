@@ -875,7 +875,7 @@ export const TOOLS_GUIDE: GuideContent = {
     {
       href: "/learn/voice/pitch-time-words/on-the-beat",
       label: "On the Beat lessons",
-      note: "Rhythm and syncopation, in three short free lessons.",
+      note: "Rhythm and subdivision, in three short free lessons.",
     },
   ],
 };

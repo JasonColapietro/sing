@@ -220,6 +220,7 @@ export default async function CanYouSingSongPage({
                     <Link
                       className="text-violet-ink underline-offset-4 hover:underline"
                       href={`/singers/${s.slug}`}
+                      prefetch={false}
                     >
                       {s.name}&apos;s catalog range
                     </Link>

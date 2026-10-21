@@ -66,7 +66,7 @@ describe("voice-tool deep links", () => {
 
   it("brings the range test's start button into view when the tab opens it", () => {
     // The intro says "Choose Range test to start"; at 375px the start button
-    // that tab reveals sat under the bottom tab bar until the page scrolled.
+    // that tab reveals sat below the fold until the page scrolled.
     const change = vi.fn();
     const scroll = vi.fn();
     switchVoiceTestMode("pitch", "range", change, scroll);

@@ -779,6 +779,7 @@ export function ResultView({
             <Link
               key={v.id}
               href={`/singers/voice-type/${voiceTypeSlug(v.label)}`}
+              prefetch={false}
               className="inline-flex items-center gap-1.5 text-sm text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
             >
               See the {voicePlural(v.label)} in the library
@@ -876,6 +877,7 @@ export function ResultView({
               <div key={f.name} className="flex items-center gap-3">
                 <Link
                   href={singerCompareHref(f.slug)}
+                  prefetch={false}
                   className={`w-24 shrink-0 truncate text-right font-mono text-xs underline decoration-transparent underline-offset-2 transition-colors hover:decoration-current sm:w-36 ${isBest ? "text-violet-ink" : "text-mut"}`}
                 >
                   {f.name}
@@ -911,6 +913,7 @@ export function ResultView({
         <div className="mt-4">
           <Link
             href="/singers"
+            prefetch={false}
             className="text-sm text-violet-ink underline decoration-violet/50 underline-offset-2 hover:decoration-violet"
           >
             Compare against every famous voice →

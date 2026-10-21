@@ -19,30 +19,30 @@ Straight, triplet and swing are three ways of dividing the same steady beat. Str
 
 ### Use the practice material
 
-Open the practice material on this page and choose Row Row Row Your Boat or Ode to Joy. Hear the reference, choose a comfortable key, then stop it before singing.
+Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.
+Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Then open Swing Low, Sweet Chariot the same way, tap the pulse you just heard and speak its durations against it. Its written rhythm is straight, not swung: “char” is held through the next tap, “i” lands halfway between that tap and the one after it, and “comin' for to carry” puts two even notes on each of three taps. Ode to Joy, where every note starts on a tap, has neither.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
 
-### Name the target: Rhythm and syncopation
+### Name the target: Rhythm and subdivision
 
 On one comfortable pitch, compare two even sounds per tap (say “1-and”), three even sounds per tap (say “1-trip-let”), and a long-short pair using the first and third triplet positions. Keep the taps equally spaced. Record these three feels in one take, naming each before you sing it, then return to the written song rhythm.
 
-- Look: Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.
+- Look: Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.
 - Listen: On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.
 
 ### Hear the distinction
 
-On one comfortable pitch, tap a steady pulse and sing two notes per tap on “da” for two bars: first straight (1-and, both halves equal), then swung (long-short, on the first and third triplet positions). Keep the taps at the same tempo and change only how each beat is split. Record both in one take in the recorder with a breath between them, and on playback check that the second note of each pair moved later in the swung version while your taps stayed put. Then return to the written phrase: clap it, sing its rhythm on one pitch, then restore the melody, tapping the pulse gently through each version. An external click is optional.
+On one comfortable pitch, tap a steady pulse and sing two notes per tap on “da” for two bars: first straight (1-and, both halves equal), then swung (long-short, on the first and third triplet positions). Keep the taps at the same tempo and change only how each beat is split. Record both in one take in the recorder with a breath between them, and on playback check that the second note of each pair moved later in the swung version while your taps stayed put. Then return to the written Swing Low, Sweet Chariot phrase and keep its pairs straight: clap it, sing its rhythm on one pitch, then restore the melody, tapping the pulse gently through each version. An external click is optional.
 
-- Look: Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.
+- Look: Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.
 - Listen: On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.
 
 ### Review your own attempt
@@ -60,7 +60,7 @@ I counted and clapped the displayed rhythm before singing it, then reviewed wher
 ## Practice blocks
 
 - 30s: Open the practice material. Prepare the room, body, and safe baseline for “Swing, Triplet, Straight.”
-- 60s: Isolate the rhythm and syncopation target in short, comfortable examples.
+- 60s: Isolate the rhythm and subdivision target in short, comfortable examples.
 - 90s: Practise or record the complete “Swing, Triplet, Straight” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 

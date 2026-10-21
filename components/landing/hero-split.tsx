@@ -86,6 +86,7 @@ export function HeroSplit() {
           <span className="mx-2 text-line2">·</span>
           <Link
             href="/singers"
+            prefetch={false}
             className="text-violet-ink underline decoration-violet/40 underline-offset-4 hover:decoration-violet"
           >
             Famous singers&apos; ranges
