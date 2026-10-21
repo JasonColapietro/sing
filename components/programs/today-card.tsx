@@ -456,9 +456,13 @@ export function ProgramTodayCard({
           <div className="mt-4">
             <h3 className="text-xl">You finished {program.name}.</h3>
             <p className="mt-2 max-w-xl text-sm text-mut">
-              {goBacks.length > 0
-                ? `All ${total} days done. Chapter 19 says what next: if the transition never quite took, go back to weeks 5 and 6; if the top still frays, to weeks 7 and 8; if it all held together, keep three warmup sessions a week and add songs rather than starting again.`
-                : `All ${total} days done. Run it again from day 1, or pick another program.`}
+              {/* A program's own next step where running it again is the
+                  wrong advice (Recovery week's referral, chapter 6). */}
+              {program.finished
+                ? `All ${total} days done. ${program.finished}`
+                : goBacks.length > 0
+                  ? `All ${total} days done. Chapter 19 says what next: if the transition never quite took, go back to weeks 5 and 6; if the top still frays, to weeks 7 and 8; if it all held together, keep three warmup sessions a week and add songs rather than starting again.`
+                  : `All ${total} days done. Run it again from day 1, or pick another program.`}
             </p>
           </div>
         )}
@@ -649,7 +653,10 @@ export function ProgramEntryCard({ active }: { active: ActiveProgram | null }) {
     : view.status === "finished"
       ? program.chapters
         ? "Finished. The calendar has chapter 19's next steps."
-        : "Finished. Start it again or pick another."
+        : program.finished
+          ? // The calendar's finished card carries the full referral.
+            "Finished. The calendar says what next if your voice is still rough."
+          : "Finished. Start it again or pick another."
       : view.status === "done-today"
         ? nextLocked
           ? `${doneLine} Day ${view.index + 2} onward needs Pro; ${freeWeeksWere(false)}.`

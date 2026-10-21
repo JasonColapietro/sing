@@ -148,7 +148,7 @@ at hydration only for the singers in it.
 | `program-capped` | both: the program day waits for midnight | all of the above, with the longer "waits" lines |
 | `rest-day` | Mix in 4 weeks on its day 7 rest day, day 8 onward needing Pro | the rest-day card on `/programs` and `/warmups` |
 | `finished` | The Measured Voice finished, its six check-in days carrying readings | the book's finished card (chapter 19's next steps, six reading rows, the fortnight choices) on `/programs` and on its own `?program=` view, which the `book` token sizes apart from other programs' finished cards |
-| `finished-high-notes`, `finished-mix`, `finished-foundations`, `finished-recovery`, `finished-vibrato` | that program finished, every check-in day carrying readings | its finished card on `/programs` and its own `?program=` view, sized by the program's own token (`--finished-slot` in `app/globals.css`); Recovery week and Vibrato have no check-ins and take the plain size |
+| `finished-high-notes`, `finished-mix`, `finished-foundations`, `finished-recovery`, `finished-vibrato` | that program finished, every check-in day carrying readings | its finished card on `/programs` and its own `?program=` view, sized by the program's own token (`--finished-slot` in `app/globals.css`); Vibrato has no check-ins and takes the plain size, and Recovery week, with no check-ins either, has its own for its longer finished line (the doctor referral) |
 | `saved-range` | a saved range of A2–F4 | the header action on a singer page (`SingerRangeAction`) and a popular song's (`CanYouSingAction`), which point at the comparison once the range hydrates, and the song's personal answer, which replaces the range-test pitch |
 
 Each state also names the selector that proves it showed (the cap wall, a

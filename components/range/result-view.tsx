@@ -139,18 +139,67 @@ export function singerCompareHref(slug: string): string {
  * and the classifier scores that top against bands that describe full voice,
  * so its error runs one way: a baritone with an ordinary falsetto to D5 reads
  * Tenor, and to E5 "Tenor or Contralto". The female bands already take in
- * head voice, so this is not said under them. Nor under Bass: the lowest band
- * has nothing below it to have been lifted from, and the caveat left a bass
- * wondering whether they were lower still.
+ * head voice, so this is not said under them (a Contralto with a short top
+ * gets SHORT_TOP_NOTE, an error in the other direction). Nor under Bass: the
+ * lowest band has nothing below it to have been lifted from, and the caveat
+ * left a bass wondering whether they were lower still.
  */
 export const FALSETTO_NOTE =
   "The bass, baritone and tenor bands describe full voice, but this test counts falsetto, so if your top notes were falsetto the fit can lean a category high: a baritone whose falsetto carried the top often reads as a tenor.";
 
+/**
+ * The caveat for a single-band Contralto result, whose error runs the other
+ * way from FALSETTO_NOTE's. The female bands (lib/audio/notes.ts, F3–F5,
+ * A3–A5, C4–C6) run to the top of a trained head voice, and a first test on
+ * a cold or untrained voice often stops below it, so a short top pulls the
+ * label down: A3–D5, a mezzo's low with a first-test top, reads Contralto,
+ * the band the singer library's own page calls rare and over-assigned
+ * (lib/voice-types.ts) and atlas ch.3 calls genuinely rare. The advice is
+ * book ch.8's for a reading that looks wrong: a fresh test on another day,
+ * after a proper warmup, rather than another try in the same session.
+ *
+ * Said only from a low at or above the contralto band's own floor, F3
+ * (shortTopCanLower). From there every single-band Contralto has a top under
+ * A5 and reads Mezzo-soprano once the top reaches a mezzo's A5, so "lean a
+ * category low" is true of it. Under F3 the low decides the reading, which
+ * needs a top above A5 to turn Mezzo (A#5 from E3, C#6 from C#3), so a
+ * mezzo's full top would not move it; and those Contralto readings, C#3–E3
+ * lows with E5–C6 tops, take in a tenor whose falsetto carried him to G5,
+ * whose label leans high, not low.
+ */
+export const SHORT_TOP_NOTE =
+  "The contralto, mezzo-soprano and soprano bands run to the top of a trained head voice, and a first test often stops below it, so the fit can lean a category low: a mezzo-soprano whose top stopped at D5 often reads as a contralto. True contralto is rare, so before you settle on it, take the test again on another day after a proper warmup.";
+
 const LIFTABLE_BANDS: ReadonlySet<string> = new Set(["baritone", "tenor"]);
 
+/**
+ * Whether a short top, not the low, made this single-band reading Contralto:
+ * the measured low sits inside the contralto band. See SHORT_TOP_NOTE.
+ */
+export function shortTopCanLower(voice: VoiceType, lowMidi: number): boolean {
+  return voice.id === "contralto" && lowMidi >= voice.lowMidi;
+}
+
 /** The single-band note under the voice-type label. */
-export function singleBandCopy(voice: VoiceType): string {
-  return `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.${LIFTABLE_BANDS.has(voice.id) ? ` ${FALSETTO_NOTE}` : ""}`;
+export function singleBandCopy(voice: VoiceType, lowMidi: number): string {
+  const caveat = LIFTABLE_BANDS.has(voice.id)
+    ? ` ${FALSETTO_NOTE}`
+    : shortTopCanLower(voice, lowMidi)
+      ? ` ${SHORT_TOP_NOTE}`
+      : "";
+  return `Voice types are rough guides borrowed from choral and operatic practice. Your range overlaps the ${voice.label.toLowerCase()} band the most, but plenty of great singers sit between categories — treat this as a starting point, not a box.${caveat}`;
+}
+
+/**
+ * The style of "Start this warmup", the result's practice next step. It is
+ * the filled primary, as the pitch meter's "Warm up" is one tab away, unless
+ * a "Finish the comparison" or "Finish the check" card above already holds
+ * the page's primary action: two filled buttons a screen apart compete for
+ * the same tap (PRODUCT.md), the way the pitch meter outlines "Warm up" under
+ * "Open today's plan".
+ */
+export function warmupButtonVariant(finishCardShown: boolean): "violet" | "outline" {
+  return finishCardShown ? "outline" : "violet";
 }
 
 /**
@@ -717,7 +766,7 @@ export function ResultView({
                   safe either way. */}
               <LinkButton
                 href={`/warmups?exercise=${warmup.id}`}
-                variant="outline"
+                variant={warmupButtonVariant(Boolean(comparisonSinger || returnSongSlug))}
                 size="sm"
               >
                 Start this warmup
@@ -769,7 +818,7 @@ export function ResultView({
         <p className="mt-2 max-w-2xl text-sm text-mut">
           {altVoice
             ? altBandsCopy(voice, altVoice)
-            : singleBandCopy(voice)}
+            : singleBandCopy(voice, lowMidi)}
         </p>
         {/* The classification used to end here. Every label the classifier can
             produce has a page of singers behind it, so it should be the next

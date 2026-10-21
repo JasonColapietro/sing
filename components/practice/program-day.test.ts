@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { FREE_WEEKS, isRestDay, programById, startProgram, type ProgramToday } from "@/lib/programs";
-import { programDayNeedsPro, programRangeNote, programRangeTest, staleRangeProgramNote } from "./program-day";
+import { FREE_WEEKS, isRestDay, programById, programToday, startProgram, type ProgramToday } from "@/lib/programs";
+import { programDayNeedsPro, programRangeNote, programRangeTest, recoveryWeekOf, staleRangeProgramNote } from "./program-day";
 
 describe("programDayNeedsPro", () => {
   const mix = programById("mix-4w")!;
@@ -65,6 +65,45 @@ describe("programRangeTest", () => {
 
   it("is null on a finished run", () => {
     expect(programRangeTest(at(84, { status: "finished", index: 83, completed: 84 }), true)).toBeNull();
+  });
+});
+
+describe("recoveryWeekOf", () => {
+  const rw = programById("recovery-week")!;
+  const at = (program = rw, status = "todo", index = 2) => ({ program, view: { index, status } });
+
+  it("names Recovery week on every day it runs, its rest day included", () => {
+    expect(rw.days.some((d) => d.items.some((it) => it.kind === "range"))).toBe(false);
+    for (let i = 0; i < rw.days.length; i++) {
+      expect(recoveryWeekOf(at(rw, "todo", i))).toBe(rw.name);
+      expect(recoveryWeekOf(at(rw, "done-today", i))).toBe(rw.name);
+    }
+  });
+
+  it("is null once the week is finished, and for every other program", () => {
+    expect(recoveryWeekOf(at(rw, "finished", rw.days.length - 1))).toBeNull();
+    for (const id of ["foundations-2w", "measured-voice-12w"]) {
+      expect(recoveryWeekOf(at(programById(id)!))).toBeNull();
+    }
+  });
+
+  it("holds through day 6 done today and lets go as day 7 is done", () => {
+    // Through the real day view: a run whose last day was done today reads
+    // "finished", not "done-today", so the coach's own retest comes back with
+    // the finished card rather than a day later.
+    const dayOf = (index: number) => `2026-06-${String(index + 1).padStart(2, "0")}`;
+    // n days done, one a day from 1 June, the last of them today.
+    const run = (n: number) => {
+      const done = Array.from({ length: n }, (_, index) => ({ index, day: dayOf(index) }));
+      const progress = { ...startProgram(rw.id, dayOf(0)), done };
+      return { program: rw, progress, view: programToday(rw, progress, dayOf(n - 1)) };
+    };
+    const six = run(rw.days.length - 1);
+    expect(six.view.status).toBe("done-today");
+    expect(recoveryWeekOf(six)).toBe(rw.name);
+    const seven = run(rw.days.length);
+    expect(seven.view.status).toBe("finished");
+    expect(recoveryWeekOf(seven)).toBeNull();
   });
 });
 

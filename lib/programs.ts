@@ -143,6 +143,13 @@ export interface Program {
    * test, as `chapters` are.
    */
   readFirst?: ProgramReadFirst[];
+  /**
+   * What the finished card says after "All N days done.", for a program where
+   * the generic "Run it again from day 1" is the wrong advice: Recovery week,
+   * where a voice still rough after the week needs a doctor (chapter 6), not
+   * another week.
+   */
+  finished?: string;
   days: ProgramDay[];
 }
 
@@ -187,7 +194,11 @@ export const EAR_RECOGNITION_GAMES: readonly string[] = ["Interval ID", "Higher 
  */
 export const RANGE_TEST_SEC = 120;
 
-/** The preset a lone drill opens with, for its length on the card. */
+/**
+ * The setting a lone drill row states, carried in its link so the room opens
+ * on it (the card's length is counted from it too). Box breathing's is a
+ * minute, where the room's own setup card starts on three.
+ */
 const DRILL_PRESET: Record<BreathDrillId, BreathStep> = {
   box: { drill: "box", side: 4, minutes: 1 },
   farinelli: { drill: "farinelli", cap: 8 },
@@ -327,6 +338,11 @@ const RECOVERY: Program = {
     "Only what every warmup measures: how close each note landed to its target. It is practice, not treatment. A voice that hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist, not an app.",
   weeks: 1,
   pro: false,
+  // Chapter 6: hoarseness that hangs around is a question for a doctor, not
+  // "a stricter practice week, or waiting to see", so the week ends there
+  // rather than on running it again.
+  finished:
+    "If your voice feels back to ordinary, return to your usual practice or pick another program. A voice that still hurts or stays rough needs a doctor who can examine the vocal folds, such as an ENT or laryngologist, rather than another week here.",
   days: [
     day("Quiet start", breath("quick"), routine("morning"), routine("recovery")),
     day("Breath and hums", breath("daily"), routine("recovery"), routine("morning")),
@@ -898,9 +914,11 @@ export function itemHref(item: ProgramItem): string {
     case "breath":
       return `/breath?routine=${encodeURIComponent(item.id)}`;
     case "drill":
-      // With the preset in the link, so the drill opens on the day's counts
-      // rather than the setup card's defaults.
-      return item.preset ? `/breath?${drillPresetQuery(item.preset)}` : `/breath?drill=${encodeURIComponent(item.id)}`;
+      // With the setting the row states in the link, its own preset or the
+      // lone-drill one, so the drill opens on the day's counts rather than the
+      // setup card's defaults (a bare "?drill=box" opens a 3-minute square
+      // under a row that says 1 min).
+      return `/breath?${drillPresetQuery(drillPreset(item))}`;
     case "range":
       return rangeTestHref();
     case "recorder":

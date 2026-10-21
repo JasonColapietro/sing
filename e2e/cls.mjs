@@ -143,8 +143,9 @@ const finishedSeed = (name, programId, length, checkIns) => `
  * The Measured Voice, check-ins on days 1, 11, 42, 60, 67 and 78: chapter 19's
  * next steps, six reading rows and the fortnight choices, the tallest card a
  * finished program shows. The others are the per-program slots: High notes
- * (four range rows), Mix and Foundations (two rows each), and Recovery week
- * and Vibrato, which have no check-ins and take the plain slot.
+ * (four range rows), Mix and Foundations (two rows each), Recovery week (no
+ * check-ins, but its own longer finished line, the doctor referral, so its
+ * own slot) and Vibrato, which has no check-ins and takes the plain slot.
  */
 const FINISHED_RUNS = {
   finished: { programId: "measured-voice-12w", length: 84, checkIns: [0, 10, 41, 59, 66, 77], view: "program-detail" },

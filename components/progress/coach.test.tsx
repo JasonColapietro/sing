@@ -181,6 +181,75 @@ describe("the coach's range retest", () => {
   });
 });
 
+describe("the coach during Recovery week", () => {
+  // Seven quiet days for a voice that feels tired, with no range test of its
+  // own. Chapter 12: "A range test taken with a cold measures the cold … start
+  // measuring again when you are back to ordinary." A finished test saves its
+  // reading as the range every warmup and song fits to.
+  const RECOVERY = "Recovery week";
+  const DAY = 86_400_000;
+  const LINE = `${RECOVERY} is for a voice that feels tired, so leave the range test until the week is over and your voice feels back to ordinary.`;
+  const RANGE_TESTS = ["Retake the range test", "Vocal range test"];
+  const withRange = (ageDays: number, notes?: Record<string, { sec: number; hitSec: number; cents: number; frames: number }>): ProgressState => {
+    const base = state();
+    return {
+      ...base,
+      range: { lowMidi: 45, highMidi: 69, testedAt: new Date(NOW.getTime() - ageDays * DAY).toISOString() },
+      sessions: notes ? base.sessions.map((s) => ({ ...s, notes })) : base.sessions,
+    };
+  };
+
+  it("leaves the range test and the octave siren out during Recovery week", () => {
+    const stale = buildPlan(withRange(49), NOW, null, null, RECOVERY);
+    for (const i of stale.items) expect(RANGE_TESTS).not.toContain(i.title);
+    expect(stale.rangeNote).toContain("leave the range test");
+    expect(stale.rangeNote).toBe(`Your range was last measured 49 days ago. ${LINE}`);
+    expect(stale.items.length).toBeGreaterThanOrEqual(3);
+    // Outside the week the same singer is asked to retake it.
+    expect(buildPlan(withRange(49), NOW).items[0].title).toBe("Retake the range test");
+
+    // F#4 within five semitones of the top of a 24-semitone A2–A4 range.
+    const top = withRange(0, { "66": { sec: 5, hitSec: 2, cents: 35, frames: 100 } });
+    expect(buildPlan(top, NOW).items[0].id).toBe("octave-siren");
+    const gentle = buildPlan(top, NOW, null, null, RECOVERY);
+    const siren = gentle.items.find((i) => i.reason.includes("weakest note"));
+    expect(siren?.id).toBe("ng-siren-fifth");
+    expect(siren?.title).toBe("Ng siren to the fifth");
+    for (const i of gentle.items) expect(i.id).not.toBe("octave-siren");
+    // A current range needs no note.
+    expect(gentle.rangeNote).toBeNull();
+  });
+
+  it("does not ask a singer with no saved range to measure one until the week is over", () => {
+    const plan = buildPlan(state(), NOW, null, null, RECOVERY);
+    for (const i of plan.items) expect(RANGE_TESTS).not.toContain(i.title);
+    expect(plan.rangeNote).toBe(`You haven't measured your range yet. ${LINE}`);
+    expect(plan.items.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("keeps the rest-day line on the week's rest day", () => {
+    const plan = buildPlan(withRange(49), NOW, RECOVERY, null, RECOVERY);
+    expect(plan.banner).toBeNull();
+    expect(plan.restNote).toBe(
+      `Today is a rest day in ${RECOVERY}, and the program counts it as done. Nothing below is required. Your streak counts only days you practise, so if you rest today it starts again from 1 at your next session.`,
+    );
+    expect(plan.rangeNote).toBe(`Your range was last measured 49 days ago. ${LINE}`);
+  });
+
+  it("says so on the card, and offers only the studio once the free minutes are used", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    capState.capped = true;
+    const html = renderToStaticMarkup(<CoachCard state={withRange(49)} recovering={RECOVERY} />);
+    expect(html).toContain("leave the range test until the week is over");
+    expect(html).not.toContain("Retake the range test");
+    expect(html).not.toContain('href="/range?mode=range#start"');
+    expect(html).toMatch(/The <a [^>]*href="\/studio"[^>]*>pitch studio<\/a> is open now\.<\/p>/);
+    // Outside the week the range test is still open now.
+    expect(renderToStaticMarkup(<CoachCard state={withRange(49)} />)).toContain('href="/range?mode=range#start"');
+  });
+});
+
 describe("the coach's accuracy lines", () => {
   // The tallies count time within the ±50-cent scoring window, which passes
   // a phrase sung clearly flat (book chapter 9); on this site "in tune" is the

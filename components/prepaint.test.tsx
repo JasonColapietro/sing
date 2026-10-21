@@ -49,8 +49,10 @@ describe("pre-paint markers", () => {
   });
 
   it("size a finished run's slot for its own program, at both widths", () => {
-    // Every program with check-in rows has its own size; the plain finished
-    // rule is a card with none (lib/programs.ts programReadings).
+    // Every program with check-in rows, or with a finished line of its own
+    // (lib/programs.ts Program.finished: Recovery week's referral), has its
+    // own size; the plain finished rule is a card with neither (lib/programs.ts
+    // programReadings).
     const rules = css.replace(/\/\*[\s\S]*?\*\//g, "");
     const [phone, wide] = rules.split("@media (min-width: 40rem)");
     for (const [id, [, , , token]] of Object.entries(PREPAINT_CONFIG.programs)) {
@@ -58,9 +60,10 @@ describe("pre-paint markers", () => {
       const rows = program.days.filter((d) =>
         d.items.some((it) => it.kind === "range" || (it.kind === "drill" && it.id === "sustain")),
       ).length;
+      const own = rows > 0 || program.finished !== undefined;
       const selector = `html[data-sing-program~="finished"][data-sing-program~="${token}"] [data-prepaint-slot="program-today"]`;
       for (const [width, block] of [["375", phone], ["1280", wide]] as const) {
-        if (rows === 0) expect(block, `${id} at ${width}`).not.toContain(selector);
+        if (!own) expect(block, `${id} at ${width}`).not.toContain(selector);
         else expect(block, `${id} at ${width}`).toContain(selector);
       }
     }

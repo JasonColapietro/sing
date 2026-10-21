@@ -31,6 +31,15 @@ import { TYPE_META, addDays, localDayStr } from "./format";
  */
 const WEAK_NOTE_MAX_ACCURACY = STAR_THRESHOLDS[1];
 
+/**
+ * Why the plan asks for no range test while Recovery week runs. Chapter 12:
+ * "A range test taken with a cold measures the cold … start measuring again
+ * when you are back to ordinary."
+ */
+function recoveryRangeLine(program: string): string {
+  return `${program} is for a voice that feels tired, so leave the range test until the week is over and your voice feels back to ordinary.`;
+}
+
 interface PlanItem {
   title: string;
   href: string;
@@ -58,6 +67,14 @@ interface PlanItem {
  * between them, and one sung early cannot count toward the program's day. A
  * note says when the program's test falls instead.
  *
+ * `recovering` names the running program while it is Recovery week and not
+ * finished (program-day.ts recoveryWeekOf): a week for a voice that feels
+ * tired, which chapters 8 and 12 say not to measure. While it runs the plan
+ * asks for no range test, missing or stale, since a finished test saves a
+ * tired reading over the range every warmup and song fits to, and a note says
+ * to leave it until the week is over. A weak note near the top of the range
+ * gets the smaller Ng siren to the fifth, not six minutes of octave sirens.
+ *
  * Exported for its test.
  */
 export function buildPlan(
@@ -65,6 +82,7 @@ export function buildPlan(
   now: Date,
   restDayOf: string | null = null,
   programRange: ProgramRangeTest | null = null,
+  recovering: string | null = null,
 ): {
   banner: string | null;
   restNote: string | null;
@@ -149,7 +167,7 @@ export function buildPlan(
   // off it — so nothing below is allowed to promote past it.
   let rangeFirst = false;
 
-  if (!hasRange) {
+  if (!hasRange && recovering === null) {
     rangeFirst = true;
     items.push({
       title: "Vocal range test",
@@ -158,7 +176,12 @@ export function buildPlan(
       reason:
         "You haven't measured your range yet — it anchors every other exercise to your voice.",
     });
-  } else if (programRange === null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS) {
+  } else if (
+    recovering === null &&
+    programRange === null &&
+    rangeAgeDays !== null &&
+    rangeAgeDays >= RANGE_RETEST_DAYS
+  ) {
     rangeFirst = true;
     items.push({
       title: "Retake the range test",
@@ -167,11 +190,17 @@ export function buildPlan(
       reason: `Your range was last measured ${rangeAgeDays} days ago — a fresh test adds a current point to your range over time.`,
     });
   }
-  // Shared with the /range pitch meter, so the two never disagree.
+  // Recovery week's note says why the test the plan would have led with is
+  // missing. The program's note is shared with the /range pitch meter, so the
+  // two never disagree.
   const rangeNote =
-    hasRange && programRange !== null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS
-      ? programRangeNote(rangeAgeDays, programRange)
-      : null;
+    recovering !== null && !hasRange
+      ? `You haven't measured your range yet. ${recoveryRangeLine(recovering)}`
+      : recovering !== null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS
+        ? `Your range was last measured ${rangeAgeDays} days ago. ${recoveryRangeLine(recovering)}`
+        : hasRange && programRange !== null && rangeAgeDays !== null && rangeAgeDays >= RANGE_RETEST_DAYS
+          ? programRangeNote(rangeAgeDays, programRange)
+          : null;
 
   items.push({
     title: "Breathing",
@@ -191,12 +220,15 @@ export function buildPlan(
     // slower siren that sits on the weak spot. The octave is only offered to a
     // singer whose measured span can hold it — below OCTAVE_SIREN_MIN_SEMIS its
     // glides would run from near the measured floor to within two semitones
-    // of the ceiling, so those singers get the fifth instead.
+    // of the ceiling, so those singers get the fifth instead. So does a
+    // singer on Recovery week, whose tired voice is not one to work through
+    // the top of its range.
     const wantsOctave =
-      state.range.lowMidi !== undefined && state.range.highMidi !== undefined
+      recovering === null &&
+      (state.range.lowMidi !== undefined && state.range.highMidi !== undefined
         ? worst.midi >= state.range.highMidi - 5 &&
           state.range.highMidi - state.range.lowMidi >= OCTAVE_SIREN_MIN_SEMIS
-        : worst.midi >= 67;
+        : worst.midi >= 67);
     // Titled from the catalog so the link and the label can never name
     // different exercises.
     const target = EXERCISES.find(
@@ -311,12 +343,15 @@ export function CoachCard({
   state,
   restDayOf = null,
   programRange = null,
+  recovering = null,
 }: {
   state: ProgressState;
   /** The running program's name when today is one of its rest days. */
   restDayOf?: string | null;
   /** The running program's next scheduled range test, which the coach leaves to it. */
   programRange?: ProgramRangeTest | null;
+  /** Recovery week's name while it runs, when the coach asks for no range test. */
+  recovering?: string | null;
 }) {
   const isPro = useIsPro();
   // The cap wall's "See your streak" lands here. Today's plan is still
@@ -324,7 +359,7 @@ export function CoachCard({
   // as tomorrow's; the card says plainly which steps wait for midnight and
   // what is open now.
   const cap = useFreeCap();
-  const { banner, restNote, rangeNote, items } = buildPlan(state, new Date(), restDayOf, programRange);
+  const { banner, restNote, rangeNote, items } = buildPlan(state, new Date(), restDayOf, programRange, recovering);
   // One step is not a plan, it is a screenshot of one. A singer who can see two
   // steps has watched the coach make a decision — this after that, and why —
   // which is the thing Pro actually sells; a singer who sees one has been shown
@@ -348,11 +383,19 @@ export function CoachCard({
           <Link href="/studio" className="text-violet-ink underline underline-offset-4">
             pitch studio
           </Link>{" "}
-          and the{" "}
-          <Link href={rangeTestHref()} className="text-violet-ink underline underline-offset-4">
-            range test
-          </Link>{" "}
-          are open now.
+          {/* Not the range test during Recovery week: a tired voice is not one
+              to measure, so the plan leaves it until the week is over. */}
+          {recovering === null ? (
+            <>
+              and the{" "}
+              <Link href={rangeTestHref()} className="text-violet-ink underline underline-offset-4">
+                range test
+              </Link>{" "}
+              are open now.
+            </>
+          ) : (
+            "is open now."
+          )}
         </p>
       )}
       {banner && (

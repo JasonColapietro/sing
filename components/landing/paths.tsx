@@ -68,7 +68,7 @@ const PATHS: Path[] = [
       {
         href: "/ear-training",
         label: "Find your weak intervals",
-        note: "Most trained ears have a distinct slippery set. Drill those instead of the whole twelve.",
+        note: "Interval ID names the right interval after every miss, so you can note the ones that keep slipping. Then drill just those pairs on the piano in Tools.",
       },
       {
         href: "/recorder",

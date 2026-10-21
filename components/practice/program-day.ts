@@ -30,6 +30,21 @@ export function programDayNeedsPro(
 }
 
 /**
+ * The running program's name while it is Recovery week and not yet finished,
+ * else null. The week is for a voice that feels tired, and the book says not
+ * to measure one: "rest, and retest after a night's sleep" (chapter 8), "start
+ * measuring again when you are back to ordinary" (chapter 12). So while it
+ * runs the coach leaves out its own range test, which would save a tired
+ * reading over the range every warmup and song fits to, and its octave siren
+ * at the top of the range, which none of the week's own warmup sets sings.
+ * The week schedules no range test of its own, so programRangeTest is null
+ * throughout it.
+ */
+export function recoveryWeekOf(active: { program: Program; view: { status: string } }): string | null {
+  return active.program.id === "recovery-week" && active.view.status !== "finished" ? active.program.name : null;
+}
+
+/**
  * The range test the running program schedules next, which the coach leaves
  * to it rather than asking for one of its own (chapter 13: "do not retest
  * more than the plan asks"). Null when the run has none left, and for a free
