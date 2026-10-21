@@ -38,6 +38,47 @@ async function clickTo(page, link, label, path, width, hash, search) {
   await assertLanded(page, path, hash, search);
 }
 
+/**
+ * Taps `link` at its centre once it is on screen, uncovered and holding still,
+ * all read in the page by timer rather than by animation frame.
+ *
+ * Playwright's own waits (scrollIntoViewIfNeeded, click) call a box stable
+ * when it matches on two consecutive animation frames, so they wait for
+ * frames as well as for stillness. In CI (#237) the browser produced no
+ * frames for 30 s after the genre-chip Back: the records button's call log
+ * stopped at "waiting for element to be stable", without the "element is not
+ * stable" retries a moving box logs. Stopping Chrome's GPU process gives that
+ * log exactly; without a stall the button sat at the same position on every
+ * frame for 3 s after that Back, in 99 runs on Chrome 141 and 151 with the
+ * CPU throttled up to 6x. Twenty reads 10 ms apart still catch a box that
+ * moves from one frame to the next.
+ */
+async function tapWhenStill(page, link, label) {
+  await link.evaluate((el) => el.scrollIntoView({ block: "center" }));
+  const deadline = Date.now() + 5000;
+  for (;;) {
+    const { reads, onTop, viewport } = await link.evaluate((el) => new Promise((resolve) => {
+      const reads = [];
+      const read = () => {
+        const { x, y, width, height } = el.getBoundingClientRect();
+        reads.push({ x, y, width, height });
+        if (reads.length < 20) return void setTimeout(read, 10);
+        const hit = document.elementFromPoint(x + width / 2, y + height / 2);
+        resolve({ reads, onTop: hit !== null && el.contains(hit), viewport: innerHeight });
+      };
+      read();
+    }));
+    const box = reads.at(-1);
+    if (reads.every((r) => r.x === box.x && r.y === box.y && r.width === box.width && r.height === box.height)) {
+      assert.ok(box.height > 0 && box.y >= 0 && box.y + box.height <= viewport, `${label}: on screen to tap (top ${box.y}, height ${box.height})`);
+      assert.ok(onTop, `${label}: nothing covers the link`);
+      await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+      return;
+    }
+    assert.ok(Date.now() < deadline, `${label}: still moving after 5 s (tops ${[...new Set(reads.map((r) => Math.round(r.y)))].join(", ")})`);
+  }
+}
+
 const browser = await chromium.launch({
   ...(executable ? { executablePath: executable } : { channel: "chrome" }),
   args: ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream", "--autoplay-policy=no-user-gesture-required"],
@@ -143,9 +184,8 @@ try {
         // `reload`: the singer page is reloaded before Back, so /singers is
         // the first page this document renders (round 12, content:D3).
         const backTo = async (link, scope, label, { reload = false } = {}) => {
-          await link.scrollIntoViewIfNeeded();
           const href = await link.getAttribute("href");
-          await link.click();
+          await tapWhenStill(page, link, label);
           await page.waitForURL((url) => url.pathname === href);
           await page.locator("h1").first().waitFor();
           if (reload) {
@@ -154,12 +194,13 @@ try {
           }
           await page.goBack();
           await page.waitForURL((url) => url.pathname === "/singers");
+          // Polled by timer, like tapWhenStill, rather than once per frame.
           const back = await page.waitForFunction(([sel, target]) => {
             const el = document.querySelector(sel)?.querySelector(`a[href="${target}"]`);
             if (!el) return false;
             const top = el.getBoundingClientRect().top;
             return top >= 0 && top < innerHeight;
-          }, [scope, href], { timeout: 5000 }).then(() => true, () => false);
+          }, [scope, href], { timeout: 5000, polling: 50 }).then(() => true, () => false);
           assert.equal(back, true, `${label}: Back lands with ${href} in view`);
         };
         await page.goto(`${base}/singers`, { waitUntil: "networkidle" });
