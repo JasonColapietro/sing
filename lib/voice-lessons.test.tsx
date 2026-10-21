@@ -724,6 +724,28 @@ describe("links from the lessons", () => {
     }
   });
 
+  /**
+   * On the Beat's first lesson teaches how a beat divides. Its phrases were
+   * once Row Row Row and Ode to Joy, every note of both on a tap, so the
+   * self-check passed without a single note placed between two taps, while
+   * the module's name promised syncopation that no phrase had.
+   */
+  it("checks On the Beat's subdivisions on a phrase with notes between the taps", () => {
+    const songs = MODULE_PRACTICE["v-l4-m2"].studies.flatMap((id) => ALL_SONGS.filter((s) => s.id === id));
+    const between = songs.filter((s) => s.notes.some((n) => !Number.isInteger(n.startBeat)));
+    expect(between.length).toBeGreaterThan(0);
+    const lessons = LESSONS.filter((l) => l.moduleId === "v-l4-m2");
+    const check = lessons.find((l) => l.type === "checkpoint")!;
+    expect(between.some((s) => check.selfCheck.readyWhen.includes(s.title))).toBe(true);
+    // Every lesson points at a phrase it can practise that on.
+    for (const l of lessons) {
+      const text = l.steps.map((s) => s.body).join("\n");
+      expect(between.some((s) => text.includes(s.title)), l.id).toBe(true);
+      expect(JSON.stringify(l), l.id).not.toMatch(/syncopat/i);
+    }
+    expect(modules.find((m) => m.id === "v-l4-m2")!.skill).not.toMatch(/syncopat/i);
+  });
+
   it("describes the octave siren's narrow-range fit as the room builds it", () => {
     // The sentence above, against fitRootLadder: every glide starts no more
     // than two semitones above the measured low (from a span under 12, below

@@ -24,9 +24,11 @@ export interface RangeTestLink {
  * A link into the voice test at /range that lands on its start control.
  *
  * Bare /range opens at the top of the page, and on a 375px phone the start
- * button then sits under the bottom tab bar. #start is the mode tablist in
- * components/range/voice-test.tsx, directly above the start button, so the
- * tap that said "test my range" arrives one step from the mic prompt.
+ * button then sits below the fold, under the headline and the intro. #start
+ * is the mode tablist in components/range/voice-test.tsx, directly above the
+ * start button, and the page's scroll-padding-top lands it just below the
+ * sticky header, so the tap that said "test my range" arrives one step from
+ * the mic prompt.
  * lib/range-links.test.ts fails on any link into /range without it.
  *
  * A comparison opens the range test without ?mode=range (voiceTestMode), so

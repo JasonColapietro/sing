@@ -182,6 +182,7 @@ export default function GlossaryPage() {
                       {entry.where}{" "}
                       <Link
                         href={entry.href === "/range" ? RANGE_TEST_HREF : entry.href}
+                        prefetch={entry.href === "/singers" ? false : undefined}
                         className="text-violet-ink hover:underline"
                       >
                         Open {roomLabel(entry.href)} →

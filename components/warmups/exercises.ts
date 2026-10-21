@@ -173,9 +173,9 @@ const CATALOGUE: WarmupExercise[] = [
   {
     id: "sustained-hold",
     title: "Sustained hold",
-    desc: "One note, held steady. Keep the pitch dead center for the whole block.",
+    desc: "One note, held steady. Keep the pitch dead center from start to finish.",
     tier: "beginner",
-    tip: "Start the note gently, with no click or push at the front of it. Steady air, relaxed jaw, and keep the violet dot inside the block.",
+    tip: "Start the note gently, with no click or push at the front of it. Steady air, relaxed jaw, and keep your dot on the bar: it turns green while you are within 50 cents of the note.",
     noteDur: 3.5,
     buildSteps: (r) => [[r]],
   },

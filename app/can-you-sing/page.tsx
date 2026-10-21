@@ -128,6 +128,7 @@ export default function CanYouSingHub() {
           <Link
             className="text-violet-ink underline-offset-4 hover:underline"
             href="/singers"
+            prefetch={false}
           >
             famous singers&apos; vocal ranges
           </Link>{" "}

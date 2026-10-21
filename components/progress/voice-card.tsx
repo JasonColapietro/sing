@@ -153,7 +153,7 @@ export function VoiceCard({ range }: { range: VocalRange }) {
         <LinkButton href={rangeTestHref()} variant="outline" size="sm">
           Retake the test
         </LinkButton>
-        <LinkButton href="/singers" variant="ghost" size="sm">
+        <LinkButton href="/singers" prefetch={false} variant="ghost" size="sm">
           See yourself among famous voices →
         </LinkButton>
       </div>

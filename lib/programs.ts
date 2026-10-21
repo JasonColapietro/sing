@@ -501,6 +501,17 @@ const SLIDES_ACROSS = day(
 const MIDDLE_ON_RAMP: ProgramItem[] = [routine("morning"), exercise("five-note-scale", 6)];
 
 /**
+ * The breath weeks 7 and 8 open on before the on-ramp: a minute of box
+ * breathing and the climb to eight, the quick set without its sustain. The
+ * book's session starts on breath every time (chapter 13's "Four or five
+ * minutes of breath work", chapter 14's "Every session"), and chapter 17 asks
+ * for everything above the transition to be "a supported, quiet tone with the
+ * breath steady underneath it". Single drills rather than a set, because every
+ * set ends on a sustain test and these sessions take none.
+ */
+const TOP_BREATH: ProgramItem[] = [drill("box"), drill("farinelli")];
+
+/**
  * Weeks 3 and 4's onset work, as chapter 15 asks: "One note in your middle,
  * sung five times: short, clean, a full stop and a fresh breath between each.
  * Then run the recorder and listen back."
@@ -653,7 +664,8 @@ const MEASURED_VOICE: Program = {
       },
     ),
     // Weeks 7–8: height without weight, head voice before belt. Every session
-    // that goes above the transition starts on the middle-voice on-ramp
+    // that goes above the transition opens on box breathing and the Farinelli
+    // climb, as every session in the book does, then the middle-voice on-ramp
     // chapter 17 asks for. Chapter 17 also asks for one recorded take a week
     // of the same pattern, to A/B two weeks later, so the first session of
     // each week records one.
@@ -661,13 +673,21 @@ const MEASURED_VOICE: Program = {
       bookWeek(
         day(
           "Light and high",
+          ...TOP_BREATH,
           ...MIDDLE_ON_RAMP,
           routine("high-notes"),
           { kind: "recorder", take: "a short ascending pattern through your transition to a comfortable top note, quietly" },
           routine("cooldown"),
         ),
-        day("Head voice", ...MIDDLE_ON_RAMP, routine("head-voice-builder"), routine("cooldown")),
-        day("The middle set, then the tenth", ...MIDDLE_ON_RAMP, exercise("sustained-hold", 5), routine("high-notes"), routine("cooldown")),
+        day("Head voice", ...TOP_BREATH, ...MIDDLE_ON_RAMP, routine("head-voice-builder"), routine("cooldown")),
+        day(
+          "The middle set, then the tenth",
+          ...TOP_BREATH,
+          ...MIDDLE_ON_RAMP,
+          exercise("sustained-hold", 5),
+          routine("high-notes"),
+          routine("cooldown"),
+        ),
         day("Quiet and low", breath("quick"), routine("morning"), routine("recovery")),
       ),
     ),

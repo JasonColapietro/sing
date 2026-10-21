@@ -60,7 +60,48 @@ describe("longer arrangements are partial transcriptions", () => {
     expect(names).toContain("Transcription tonic");
     expect(names).toContain("Lowest note (these lines)");
     expect(names).toContain("Highest note (these lines)");
+    expect(names).toContain("Range (these lines)");
+    expect(names).toContain("Note count (these lines)");
+    expect(names).toContain("Difficulty (these lines)");
     expect(names.join(" ")).not.toContain("opening phrase");
+  });
+});
+
+describe("the composition's measured properties name the notes they describe", () => {
+  /**
+   * The MusicComposition node is named for the whole song, so a bare "Range: 3"
+   * on Silent Night told a machine reader the carol spans 3 semitones. Every
+   * property computed from the transcribed notes carries the same qualifier
+   * as the lowest and highest note.
+   */
+  const MEASURED = ["Lowest note", "Highest note", "Range", "Note count", "Difficulty"];
+
+  async function propertyNames(slug: string): Promise<string[]> {
+    const composition = jsonLd(await render(slug))["@graph"].find((n) => n["@type"] === "MusicComposition")!;
+    return (composition.additionalProperty as { name: string }[]).map((p) => p.name);
+  }
+
+  it("qualifies every one of them on an opening phrase, and none is left bare", async () => {
+    const names = await propertyNames("silent-night");
+    for (const m of MEASURED) {
+      expect(names).toContain(`${m} (opening phrase)`);
+      expect(names).not.toContain(m);
+    }
+  });
+
+  it("uses the phrase's own name when it is not the opening", async () => {
+    const names = await propertyNames("home-on-the-range");
+    expect(names).toContain("Range (chorus hook)");
+    expect(names).toContain("Note count (chorus hook)");
+    expect(names).toContain("Difficulty (chorus hook)");
+    expect(names).not.toContain("Range");
+  });
+
+  it("leaves no measured property bare on any partial transcription", async () => {
+    for (const song of ALL_SONGS.filter((s) => s.form === "phrase" || s.arrangementOf)) {
+      const names = await propertyNames(song.slug);
+      for (const m of MEASURED) expect(names, song.slug).not.toContain(m);
+    }
   });
 });
 

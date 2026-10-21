@@ -323,6 +323,21 @@ describe("the chapters agree with the app", () => {
     }
   });
 
+  it("never says the range test hands back nothing past two notes and a label, since every result prints a middle band", () => {
+    // Round 11 fixed chapter 8's sentence; chapters 7, 11, 15, 16 and 22 still
+    // said "nothing else", "nothing at all about where you live between them"
+    // or "the only thing the test reports" beside a result screen that prints
+    // "Start in the middle" on every result.
+    const result = readFileSync(join(__dirname, "..", "components", "range", "result-view.tsx"), "utf8");
+    expect(result).toContain("Start in the middle");
+    for (const c of BOOK) {
+      for (const s of c.body.split(/(?<=[.!?])\s+/).filter((s) => /a low note, a high note/.test(s))) {
+        expect(s, c.slug).not.toMatch(/nothing else|nothing (at all )?about where|none of the three/i);
+      }
+      expect(c.body, c.slug).not.toMatch(/only thing the test reports/i);
+    }
+  });
+
   it("never says Songs transposes into a comfortable range on its own", () => {
     for (const c of BOOK) {
       expect(c.body, c.slug).not.toMatch(/auto-?transpos/i);

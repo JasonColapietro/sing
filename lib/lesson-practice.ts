@@ -209,10 +209,15 @@ export const MODULE_PRACTICE: Record<string, ModulePractice> = {
   "v-l4-m2": {
     basis: selfCheck(
       "onsetTimingError",
-      "That the phrase came back on the beat by ear, against a click. There is no onset detector and no timing-error number.",
+      "That the phrase, notes between the taps included, came back in time by ear against your own recorded taps. There is no onset detector and no timing-error number.",
     ),
     companion: { room: "tools" },
-    studies: ["row-row-row", "ode-to-joy"],
+    // Ode to Joy puts every note on a tap; Swing Low, Sweet Chariot has the
+    // notes between taps that lesson one's subdivisions are about ("char-i"
+    // is 1.5 + 0.5 beats, "comin' for to carry" is three pairs of halves),
+    // and the self-check is taken on it. Row Row Row, all on the beat, could
+    // not show a note placed between two taps.
+    studies: ["ode-to-joy", "swing-low"],
     // No book or atlas chapter teaches counting, subdivision or swing, so the
     // module lists no reading rather than one that does not teach its skill.
     readings: [],

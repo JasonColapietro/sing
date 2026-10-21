@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   DEFAULT_OG_IMAGE,
+  OG_CARD_RENDER_REVISION,
   OG_CARD_VERSION,
   OG_IMAGE_ALT,
   OG_IMAGE_SIZE,
@@ -101,7 +102,9 @@ describe("share cards", () => {
    */
   it("versions the card URL by what the card says", () => {
     expect(new URL(DEFAULT_OG_IMAGE.url).searchParams.get("v")).toBe(OG_CARD_VERSION);
-    expect(OG_CARD_VERSION).toBe(ogCardVersion(`${OG_IMAGE_ALT}|${OG_IMAGE_TAGLINE}`));
+    expect(OG_CARD_VERSION).toBe(
+      ogCardVersion(`${OG_CARD_RENDER_REVISION}|${OG_IMAGE_ALT}|${OG_IMAGE_TAGLINE}`),
+    );
     expect(OG_CARD_VERSION).toMatch(/^[0-9a-z]+$/);
 
     const previousCard =
@@ -109,6 +112,20 @@ describe("share cards", () => {
     expect(ogCardVersion(previousCard)).not.toBe(OG_CARD_VERSION);
     // Same words, same URL: the version is stable across builds.
     expect(ogCardVersion(previousCard)).toBe(ogCardVersion(previousCard));
+  });
+
+  /**
+   * #229 repainted the card from dark to paper and kept every word, so a URL
+   * read off the words alone stayed at ?v=1cpiwld, where scrapers had cached
+   * the dark picture. The render revision moves it.
+   */
+  it("moves the card URL when the picture changes and the words do not", () => {
+    const wordsOnly = ogCardVersion(`${OG_IMAGE_ALT}|${OG_IMAGE_TAGLINE}`);
+    expect(OG_CARD_VERSION).not.toBe(wordsOnly);
+    expect(OG_CARD_RENDER_REVISION).toMatch(/^\d{4}-\d{2}-\d{2}/);
+    expect(
+      ogCardVersion(`${OG_CARD_RENDER_REVISION}-next|${OG_IMAGE_ALT}|${OG_IMAGE_TAGLINE}`),
+    ).not.toBe(OG_CARD_VERSION);
   });
 
   /**

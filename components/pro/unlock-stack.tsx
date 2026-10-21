@@ -163,6 +163,7 @@ function BookContents({
         <h3 className="text-xl text-ink">
           <Link
             href={href}
+            prefetch={href === "/atlas" ? false : undefined}
             className="outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
           >
             {title}
@@ -190,8 +191,13 @@ function BookContents({
         {entries.map((entry) => (
           <li key={entry.slug}>
             {entry.free || owned ? (
+              /* For an owner every row is a link, every chapter of both
+                 books: about 1 MB of payload fetched in the background as the
+                 list scrolls past. A visitor's few free rows keep Next's
+                 default, like any other article link. */
               <Link
                 href={`${href}/${entry.slug}`}
+                prefetch={owned ? false : undefined}
                 className="flex items-baseline gap-3 py-2 outline-offset-2 hover:text-violet-ink focus-visible:outline-2 focus-visible:outline-violet"
               >
                 <span className="tabular w-6 shrink-0 font-mono text-[11px] text-violet-ink">

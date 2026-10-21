@@ -52,6 +52,11 @@ kind (2026-10-12):
   uses a song: one holds a supplied sustained note, the other sings a short
   supplied pattern. The type sets each page's description and its
   `learningResourceType`.
+- Module `v-l4-m2` (On the Beat)'s `skill` changed from "Rhythm and
+  syncopation" to "Rhythm and subdivision" (2026-10-21). Its practice phrases
+  (Ode to Joy; Swing Low, Sweet Chariot) and its self-check now place notes
+  between taps, and no lesson teaches syncopation. This is a value change,
+  not a key change, so there is no version bump.
 
 Don't "re-sync" those edits away: parity with GuitarHub is by stage, module
 and lesson ID, not by text. GuitarHub's copy has to be re-synced byte for byte
@@ -613,6 +618,23 @@ are unchanged; this round's lesson edits are prose in `lib/lesson-data.ts`:
 
 What the other apps must do: re-sync `suede-vocal.json` and `glossary.json`
 byte for byte. Nothing else changes.
+
+#### Value changes inside v9 (2026-10-21, round 13)
+
+No key was added or renamed, so `version` stays 9 and `glossary.json` stays
+at version 1. `suede-vocal.json`, `glossary.json` and
+`suede-voice-lesson-urls.json` are unchanged:
+
+- `editorial`: no word count moved. Chapters 7, 11, 15, 16 and 22 now say the
+  range result's middle band is only its two edges, trimmed, instead of saying
+  the test reports nothing beyond two notes and a label; each corrected
+  sentence keeps its word count, so the book stays at 33092 and the atlas at
+  72505.
+- `suede-voice-curriculum.json`, one value: module `v-l4-m2`'s `skill` is now
+  "Rhythm and subdivision" (see the curriculum section above).
+
+What the other apps must do: GuitarHub re-syncs
+`suede-voice-curriculum.json` byte for byte. Nothing else changes.
 
 ### Versioning
 

@@ -451,6 +451,20 @@ describe("the gap-filling drills", () => {
 });
 
 describe("coaching copy", () => {
+  it("describes the live pitch in the colours the session player draws it", () => {
+    // HighwayCanvas paints the voice teal (--s-voice) and green on the note;
+    // violet means Pro everywhere else, so neither canvas ever draws it. A tip
+    // naming a violet dot sent singers looking for something not on screen.
+    for (const ex of ALL_EXERCISES) {
+      expect(`${ex.desc} ${ex.tip}`, ex.id).not.toMatch(/\b(?:violet|purple)\b/i);
+    }
+    const hold = ALL_EXERCISES.find((e) => e.id === "sustained-hold")!;
+    expect(hold.tip).toMatch(/turns green while you are within 50 cents of the note/);
+    // The routine's step intro prints desc and tip together, and the canvas
+    // draws its targets as bars, so the drill names one shape, not two.
+    expect(`${hold.desc} ${hold.tip}`).not.toMatch(/\bblocks?\b/i);
+  });
+
   it("never asks for pushing, forcing or maximum effort", () => {
     // Words like "push" may appear only as the thing to avoid.
     const pushy = /\b(?:push (?:it|harder|through)|force it|as loud as you can|max(?:imum)? (?:volume|effort)|sing through the pain)\b/i;

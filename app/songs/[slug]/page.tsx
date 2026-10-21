@@ -229,6 +229,17 @@ export default async function SongPage({
   // song a visitor found first to the lessons built on it, as chapters have.
   const lessons = freeLessonsUsingSong(song.id);
 
+  // Which notes the composition's measured properties describe. The node is
+  // named for the whole song, so a phrase's or an arrangement's range, note
+  // count and difficulty said bare would read as facts about the song (Silent
+  // Night spanning 3 semitones). Every property computed from the transcribed
+  // notes carries the same qualifier; a whole-song entry keeps the bare names.
+  const part = phrase
+    ? ` (${phraseName(song)})`
+    : song.arrangementOf
+      ? " (these lines)"
+      : "";
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -311,36 +322,28 @@ export default async function SongPage({
           },
           {
             "@type": "PropertyValue",
-            name: phrase
-              ? `Lowest note (${phraseName(song)})`
-              : song.arrangementOf
-                ? "Lowest note (these lines)"
-                : "Lowest note",
+            name: `Lowest note${part}`,
             value: f.lowLabel,
           },
           {
             "@type": "PropertyValue",
-            name: phrase
-              ? `Highest note (${phraseName(song)})`
-              : song.arrangementOf
-                ? "Highest note (these lines)"
-                : "Highest note",
+            name: `Highest note${part}`,
             value: f.highLabel,
           },
           {
             "@type": "PropertyValue",
-            name: "Range",
+            name: `Range${part}`,
             value: f.rangeSemis,
             unitText: "semitones",
           },
           {
             "@type": "PropertyValue",
-            name: "Note count",
+            name: `Note count${part}`,
             value: f.noteCount,
           },
           {
             "@type": "PropertyValue",
-            name: "Difficulty",
+            name: `Difficulty${part}`,
             value: f.difficulty,
           },
           {

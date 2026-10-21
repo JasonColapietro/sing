@@ -23,10 +23,18 @@ import { SING_APPEARANCE } from "@/lib/clerk-appearance";
 // The name Clerk prints is the Clerk dashboard's application name, so that has
 // to read "Suede Sing" there — it is not set from here.
 
+// The metadata is a static export, so it has to follow the same switch as the
+// body: while accounts are off this route renders "Accounts are not open yet",
+// and a description promising a backup above that page would be untrue. Not
+// exported: lib/route-module-exports.test.ts holds this module to the fields
+// Next accepts.
+const ACCOUNTS_OPEN = accountsReady();
+
 export const metadata: Metadata = {
-  title: "Sign in",
-  description:
-    "Sign in to Suede Sing to keep a backup of your XP, streak, logged sessions and vocal range.",
+  title: ACCOUNTS_OPEN ? "Sign in" : "Accounts are not open yet",
+  description: ACCOUNTS_OPEN
+    ? "Sign in to Suede Sing to keep a backup of your XP, streak, logged sessions and vocal range."
+    : "Suede Sing accounts are not open yet. Your XP, streak, sessions and vocal range stay saved in this browser, and Progress can export them.",
   // A utility page with no query behind it and nothing worth crawling onward
   // to. Keeping it out of the index also keeps it out of app/sitemap.ts, which
   // lists its pages by hand.
@@ -62,7 +70,7 @@ export default function SignInPage() {
       <p className="mt-10 text-center text-sm text-dim">
         The account is free. Famous singers&apos; ranges stay open without one.
       </p>
-      <LinkButton href="/singers" variant="ghost" size="sm" className="mt-2">
+      <LinkButton href="/singers" prefetch={false} variant="ghost" size="sm" className="mt-2">
         Browse singers&apos; ranges
       </LinkButton>
     </main>

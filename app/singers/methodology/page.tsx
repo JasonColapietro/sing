@@ -81,7 +81,7 @@ export default function SingerMethodologyPage() {
           </ol>
           <p className="mt-5 max-w-3xl text-mut">
             See the{" "}
-            <Link href="/singers/olivia-rodrigo#evidence" className="text-violet-ink underline underline-offset-4">
+            <Link href="/singers/olivia-rodrigo#evidence" prefetch={false} className="text-violet-ink underline underline-offset-4">
               Olivia Rodrigo source review
             </Link>: song-level evidence and disputed voice-type labels are described
             separately from the catalog&apos;s reported range.

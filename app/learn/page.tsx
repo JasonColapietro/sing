@@ -366,11 +366,13 @@ export default function LearnPage() {
             nothing about the note your voice should force today.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <LinkButton href="/singers">Browse famous vocal ranges</LinkButton>
+            <LinkButton href="/singers" prefetch={false}>
+              Browse famous vocal ranges
+            </LinkButton>
             <LinkButton href={rangeTestHref()} variant="outline">
               Compare with my range
             </LinkButton>
-            <LinkButton href="/atlas" variant="ghost">
+            <LinkButton href="/atlas" prefetch={false} variant="ghost">
               Read The Voice Atlas
             </LinkButton>
           </div>

@@ -33,9 +33,19 @@ export const OG_IMAGE_ALT = `Suede Sing: online singing practice with live pitch
 export const OG_IMAGE_TAGLINE = `Free pitch meter & range test · Guided practice: ${FREE_DAILY_MINUTES} free min a day`;
 
 /**
+ * Bump when app/opengraph-image.tsx changes how the card looks (colour,
+ * layout) without changing its words: scrapers cache the picture by URL. The
+ * 2026-10-15 restyle (#229) repainted the card from dark to paper with the
+ * same words, so the ~200 pages naming it kept the URL whose dark picture
+ * Facebook, LinkedIn, X and Slack had already cached.
+ */
+export const OG_CARD_RENDER_REVISION = "2026-10-15-paper";
+
+/**
  * A short, stable fingerprint of a card's text (31-multiplier string hash,
- * base 36). Deterministic across builds, so the URL only moves when the words
- * do.
+ * base 36). Deterministic across builds, so the URL only moves when the
+ * hashed text does: the words, plus a render revision where the caller adds
+ * one.
  */
 export function ogCardVersion(text: string): string {
   return [...text]
@@ -44,16 +54,20 @@ export function ogCardVersion(text: string): string {
 }
 
 /**
- * Version of the sitewide card, derived from what it says.
+ * Version of the sitewide card, derived from what it says and how it is
+ * drawn (OG_CARD_RENDER_REVISION).
  *
  * Share scrapers (Facebook, LinkedIn, X, Slack) cache a preview image by its
  * URL. The homepage gets Next's hashed file-convention URL, but every route
  * that names the card through DEFAULT_OG_IMAGE used a bare /opengraph-image,
  * so when the card stopped calling the product simply "Free" (2026-10-10),
  * those links could keep the old picture indefinitely. The route ignores the
- * query string; the scrapers do not.
+ * query string; the scrapers do not. The render revision moves it when the
+ * picture changes and the words do not.
  */
-export const OG_CARD_VERSION = ogCardVersion(`${OG_IMAGE_ALT}|${OG_IMAGE_TAGLINE}`);
+export const OG_CARD_VERSION = ogCardVersion(
+  `${OG_CARD_RENDER_REVISION}|${OG_IMAGE_ALT}|${OG_IMAGE_TAGLINE}`,
+);
 
 /**
  * The sitewide card, shaped for a route's own `openGraph.images`.

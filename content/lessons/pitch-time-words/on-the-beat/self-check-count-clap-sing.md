@@ -15,30 +15,30 @@ source: "suede-guitar-hub lib/learning/data/voice-instruction.json (#47)"
 
 ### Use the practice material
 
-Open the practice material on this page and choose Row Row Row Your Boat or Ode to Joy. Hear the reference, choose a comfortable key, then stop it before singing.
+Open the practice material on this page and choose Ode to Joy or Swing Low, Sweet Chariot. Hear the reference, choose a comfortable key, then stop it before singing.
 
 - Look: The exercise, song or chapter is open. Your chosen range remains comfortable.
 - Listen: Synthesized pitches supply the notes; they are not recordings of a singer demonstrating a technique.
 
 ### Set a safe baseline
 
-Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Row Row Row Your Boat is an optional three-beat comparison, using its own displayed meter.
+Choose the included Ode to Joy phrase. Open it in the songbook, set the Tempo slider to 50% and hear it once, then stop the reference and tap a comfortable, steady four-beat pulse. Speak its displayed note durations before adding pitch. Then open Swing Low, Sweet Chariot the same way, tap the pulse you just heard and speak its durations against it. Its written rhythm is straight, not swung: “char” is held through the next tap, “i” lands halfway between that tap and the one after it, and “comin' for to carry” puts two even notes on each of three taps. Ode to Joy, where every note starts on a tap, has neither.
 
 - Look: Posture, room, device, and the planned stop rule are settled before the first attempt.
 - Listen: Begin from an easy, repeatable sound; silence playback before judging your own voice.
 
-### Name the target: Rhythm and syncopation
+### Name the target: Rhythm and subdivision
 
 Checked against your tapped pulse by ear. Onset timing is not automatically scored. Say what will count as complete in this lesson before practising, and keep the attempt inside the range and duration you can repeat comfortably.
 
-- Look: Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.
+- Look: Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.
 - Listen: On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.
 
 ### Make one evidence take
 
-State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Clap the complete displayed phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.
+State the checkpoint target, record one uninterrupted attempt in the [recorder](/recorder), and keep the result even when it does not pass. Clap the complete displayed Swing Low, Sweet Chariot phrase, then sing its rhythm on one pitch, then restore the melody. Tap the pulse gently through each version so the recording catches your timing against your own taps. Leave a breath between versions and keep them in one take. An external click is optional.
 
-- Look: Each phrase start and syncopation has a written count; the body keeps the pulse through held notes and rests.
+- Look: Each phrase start, and each note that falls between two taps, has a written count; the body keeps the pulse through held notes and rests.
 - Listen: On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.
 
 ### Review your own attempt
@@ -56,7 +56,7 @@ I counted and clapped the displayed rhythm before singing it, then reviewed wher
 ## Practice blocks
 
 - 45s: Open the practice material. Prepare the room, body, and safe baseline for “Self-Check: Count, Clap, Sing.”
-- 75s: Isolate the rhythm and syncopation target in short, comfortable examples.
+- 75s: Isolate the rhythm and subdivision target in short, comfortable examples.
 - 120s: Practise or record the complete “Self-Check: Count, Clap, Sing” task, resetting between attempts.
 - 60s: Review one take against the stated listening goal and write the next smaller correction.
 
@@ -66,7 +66,7 @@ I counted and clapped the displayed rhythm before singing it, then reviewed wher
 - On playback, compare your sung entries with your recorded taps and name where you rushed or delayed. This is a listening judgment, not a timing score.
 - I kept missing or uncertain evidence as missing instead of awarding myself a measured pass.
 
-Ready when: On playback of one take, every sung entry of the phrase lands with your recorded taps, held notes last their full count, and the melody version keeps the same pulse as the clapped version.
+Ready when: On playback of one take of the Swing Low, Sweet Chariot phrase, every entry written on a tap lands with your recorded taps, the “i” of “char-i-ot” and every second note of “comin' for to carry” land halfway between two taps, held notes last their full count, and the melody version keeps the same pulse as the clapped version.
 
 If not ready: If timing collapses when pitch returns, go back to one pitch or speech and lower the tempo before rebuilding the melody. Repeat a smaller version on another fresh attempt rather than forcing the checkpoint.
 

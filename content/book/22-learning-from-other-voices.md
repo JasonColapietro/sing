@@ -31,7 +31,7 @@ What you want to know about a singer you admire is where the voice lives. Which 
 
 You can get at it yourself in about ten minutes. Pick three of their songs. Ignore the highest note in each one. Sing along quietly, or play the melody, and find the band of five or six notes the chorus keeps returning to. Write the three bands down. What you end up with describes what your voice would be asked to do for four minutes at a stretch, which a low-to-high span never does.
 
-Now set that band against your own comfortable middle, which you find the same way rather than reading it off the range test — the test reports a low note, a high note and a voice-type label, and nothing about where a voice prefers to sit. Heavy overlap means their repertoire is worth your time whatever the extremes say. If your middle sits a fourth below theirs, every chorus will fight you even when the top note is reachable — and moving the key, which is normal and covered in the previous chapter, is the fix rather than the failure.
+Now set that band against your own comfortable middle, which you find the same way rather than reading it off the range test — the test reports a low note, a high note and a voice-type label, and its middle band is only those edges trimmed. Heavy overlap means their repertoire is worth your time whatever the extremes say. If your middle sits a fourth below theirs, every chorus will fight you even when the top note is reachable — and moving the key, which is normal and covered in the previous chapter, is the fix rather than the failure.
 
 ## Using the library well
 

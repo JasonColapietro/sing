@@ -20,6 +20,9 @@ export default function Image() {
 
   return new ImageResponse(
     (
+      /* Changing colours or layout here without changing the words? Bump
+         OG_CARD_RENDER_REVISION in lib/og.ts, or scrapers keep the old
+         picture at the old URL. */
       <div
         style={{
           width: "100%",

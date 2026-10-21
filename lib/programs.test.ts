@@ -504,6 +504,25 @@ describe("program data", () => {
     }
   });
 
+  it("opens weeks 7 and 8's sessions above the transition on breath, before the on-ramp, as the book's session asks", () => {
+    // Chapter 13: "Four or five minutes of breath work. Six to eight minutes
+    // of warmups …"; chapter 14: "Breath work, five minutes. Every session."
+    // And the program's own rule: breath, a warmup, the fortnight's work.
+    const p = programById("measured-voice-12w")!;
+    const top = new Set(["high-notes", "head-voice-builder"]);
+    const days = p.days.slice(42, 56).filter((d) => d.items.some((i) => i.kind === "routine" && top.has(i.id)));
+    expect(days).toHaveLength(6);
+    for (const d of days) {
+      expect(d.items.slice(0, 2), d.title).toEqual([
+        { kind: "drill", id: "box" },
+        { kind: "drill", id: "farinelli" },
+      ]);
+      expect(d.items[2], d.title).toEqual({ kind: "routine", id: "morning" });
+      // Single drills, not a set: these sessions take no sustain test.
+      expect(d.items.some((i) => i.kind === "breath" || (i.kind === "drill" && i.id === "sustain")), d.title).toBe(false);
+    }
+  });
+
   it("schedules chapter 15's own work in weeks 3 and 4: the five-note pattern and a held note", () => {
     const p = programById("measured-voice-12w")!;
     const items = p.days.slice(14, 28).flatMap((d) => d.items);

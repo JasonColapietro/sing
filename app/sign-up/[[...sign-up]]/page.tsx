@@ -5,10 +5,17 @@ import { SING_APPEARANCE } from "@/lib/clerk-appearance";
 import { AccountsUnavailable } from "@/components/account/unavailable";
 import { accountsReady } from "@/lib/accounts";
 
+// The metadata is a static export, so it has to follow the same switch as the
+// body (the key is fixed for the life of a deployment). Without it, the account
+// offer's title and description shipped above the "Accounts are not open yet"
+// page that renders whenever the offer is hidden. Same as /sign-in.
+const ACCOUNTS_OPEN = accountsReady();
+
 export const metadata: Metadata = {
-  title: "Create your free account",
-  description:
-    "Create a free Suede Sing account to back up your XP, streak, logged sessions and vocal range.",
+  title: ACCOUNTS_OPEN ? "Create your free account" : "Accounts are not open yet",
+  description: ACCOUNTS_OPEN
+    ? "Create a free Suede Sing account to back up your XP, streak, logged sessions and vocal range."
+    : "Suede Sing accounts are not open yet. Your XP, streak, sessions and vocal range stay saved in this browser, and Progress can export them.",
   // Same reasoning as /sign-in: a utility page, deliberately outside the index
   // and outside app/sitemap.ts.
   robots: { index: false, follow: false },
@@ -45,7 +52,7 @@ export default function SignUpPage() {
       <p className="mt-10 text-center text-sm text-dim">
         The account is free. Famous singers&apos; ranges stay open without one.
       </p>
-      <LinkButton href="/singers" variant="ghost" size="sm" className="mt-2">
+      <LinkButton href="/singers" prefetch={false} variant="ghost" size="sm" className="mt-2">
         Browse singers&apos; ranges
       </LinkButton>
     </main>

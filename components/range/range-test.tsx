@@ -293,8 +293,8 @@ export function RangeTest({ embedded = false }: { embedded?: boolean } = {}) {
 
   // Each stage swaps in a card of a different height while the page stays put,
   // so on a phone the "counted" line, the too-quiet hint and the button that
-  // moves the test on ended up under the bottom tab bar, and the result opened
-  // with its readout under the header. Align each new stage with the top of
+  // moves the test on ended up off the bottom of the screen, and the result
+  // opened with its readout under the sticky header. Align each new stage with the top of
   // the screen instead. "Start over" goes back to the intro from a page
   // scrolled down to the stage card, which left the intro's heading under the
   // header, so it brings the top of the test back. The first render is left

@@ -165,6 +165,14 @@ const LOG: Array<{
     month: "October 2026",
     entries: [
       {
+        // Undoes the navigation half of the October 2 entry below, which stays
+        // as history. On phones the header button names the current room (it
+        // reads "Menu" only off-tab), so the note describes it, not its label,
+        // and its drawer lists the same ten LINKS as the header row.
+        day: "15",
+        note: "The original Suede Sing homepage and navigation are back: ten tabs across the top (Studio, Warmups, Range, Singers, Ear, Breath, Songs, Tools, Learn, Progress), and on phones a button beside the logo opens the same ten as a menu, in place of the bottom tab bar from October 2.",
+      },
+      {
         day: "11",
         note: "Fixes to practice timing, recorder recovery and the range-test journey.",
       },
@@ -331,7 +339,7 @@ function StoryBlock({ story }: { story: Story }) {
                 ·
               </span>
             )}
-            <Link href={l.href} className={linkClass}>
+            <Link href={l.href} prefetch={l.href === "/singers" ? false : undefined} className={linkClass}>
               {l.text}
             </Link>
           </span>

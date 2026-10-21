@@ -46,7 +46,8 @@ function scrollToStart() {
 /**
  * Change modes, and when that opens the range test, bring its start button
  * into view. The intro tells a visitor to choose Range test, and on a 375px
- * phone the button it reveals would otherwise sit under the bottom tab bar.
+ * phone the button it reveals would otherwise sit below the fold; #start
+ * scrolls to just below the sticky header.
  * The pitch meter's "try the range test" link goes through here too.
  */
 export function switchVoiceTestMode(
@@ -170,8 +171,8 @@ function VoiceTestContent({
             the fold on a phone, and a singer who already pressed start should
             not have to scroll past the headline to find the button again.
             The page's scroll-padding-top (app/globals.css) already clears the
-            sticky header; a scroll-mt here added 80px to it and left the start
-            button under a 375px phone's tab bar. */}
+            sticky header; a scroll-mt here added 80px to it and pushed the
+            start button that much further down a 375px phone's screen. */}
         <div
           id="start"
           role="tablist"

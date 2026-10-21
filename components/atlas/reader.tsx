@@ -121,7 +121,7 @@ export function AtlasChapterReader({ chapter }: { chapter: AtlasContentsEntry })
       <LinkButton href="/pro#restore" variant="ghost" size="md">
         Already have Pro?
       </LinkButton>
-      <LinkButton href="/atlas" variant="ghost" size="md">
+      <LinkButton href="/atlas" prefetch={false} variant="ghost" size="md">
         Back to contents
       </LinkButton>
     </div>

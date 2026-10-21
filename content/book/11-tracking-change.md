@@ -33,7 +33,7 @@ Progress shows your latest range under Your voice, and your warmup and studio se
 
 That data is good for four things.
 
-**Trend direction over a long window.** Six months of range tests, taken with reasonable consistency, will show whether your low note and your high note have moved or held. That is a real finding. It is the only thing the test reports, alongside a voice-type label, and it is not a reading of where you are comfortable.
+**Trend direction over a long window.** Six months of range tests, taken with reasonable consistency, will show whether your low note and your high note have moved or held. That is a real finding. Those two notes are all the test measures; its voice-type label and middle band come from them, not from where you are comfortable.
 
 **Which notes are persistently weak.** A note that reads badly once was a bad rep. A note that reads badly across twenty sessions is a coordination gap, and it is exactly what Coach's daily plan keeps circling back to.
 
