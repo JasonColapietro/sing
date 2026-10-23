@@ -165,6 +165,17 @@ const LOG: Array<{
     month: "October 2026",
     entries: [
       {
+        // Readings did not change: pitch-fft.test.ts and pitch-regressions.test.ts
+        // hold the detector bit for bit to the old full scan. "About 700" and
+        // "a twentieth" come from the pitch.ts header (~700 lags; 0.3 ms against
+        // 5.8 ms per 4096-sample frame at 48 kHz, measured in Node), and the FFT
+        // costs the same on noise as on a vowel. Nothing was timed on a phone, so
+        // the note claims CPU, not frame rate. Dated by merge day in US Eastern
+        // time; change the day if it merges later.
+        day: "23",
+        note: "Pitch engine: one FFT autocorrelation now replaces about 700 separate sums per frame, so the detector reads every frame exactly as before at about a twentieth of the CPU, in a noisy room or on a held note.",
+      },
+      {
         // Undoes the navigation half of the October 2 entry below, which stays
         // as history. On phones the header button names the current room (it
         // reads "Menu" only off-tab), so the note describes it, not its label,
