@@ -4,8 +4,9 @@ import { formatClock, useFreeCap } from "@/lib/free-cap";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { liveStreak } from "@/components/account/save-state";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
+import { useIdleMicRelease } from "@/lib/audio/use-idle-mic-release";
 import { localDay, useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
 import { ProWhisper } from "@/components/pro/gate";
@@ -70,10 +71,13 @@ export function SilentStopNote({
   title,
   listening,
   level,
+  onMicOff,
 }: {
   title: string;
   listening: boolean;
   level: number;
+  /** Closes the microphone this note keeps open for its level meter. */
+  onMicOff?: () => void;
 }) {
   return (
     <Card className="border-rec/40">
@@ -87,6 +91,11 @@ export function SilentStopNote({
         louder or closer to the mic, or check the input below, then start it again.
       </p>
       <AudioSetup className="mt-4 max-w-xl" listening={listening} level={level} />
+      {listening && onMicOff && (
+        <Button variant="ghost" size="sm" className="mt-3" onClick={onMicOff}>
+          Turn off the mic
+        </Button>
+      )}
     </Card>
   );
 }
@@ -104,13 +113,14 @@ type ErrorAt =
 export function WarmupsClient() {
   const pitch = usePitch();
   // Whether the singer has allowed the microphone on this visit. The stream
-  // is closed when a session ends (below), so the recording light goes off on
-  // the summary and the list; this keeps the gate card and the "Enable mic and
-  // start" labels from coming back once the singer has answered them.
-  // Adjusted during render, as the deep link below is.
+  // is closed when the room has been idle for a while (below), so the
+  // recording light goes off on the summary and the list; this keeps the gate
+  // card and the "Enable mic and start" labels from coming back once the
+  // singer has answered them. Adjusted during render, as the deep link below
+  // is. A reopen that fails brings the gate card back, with its input picker.
   const [micAllowed, setMicAllowed] = useState(false);
   if (pitch.listening && !micAllowed) setMicAllowed(true);
-  const micReady = micAllowed || pitch.listening;
+  const micReady = pitch.listening || (micAllowed && !pitch.error);
   const progress = useProgress();
   const isPro = useIsPro();
   // Five free minutes of guided practice a day; every way into a session
@@ -426,21 +436,19 @@ export function WarmupsClient() {
     if (deepLinkWaiting) document.getElementById("warmup-gate")?.scrollIntoView({ block: "start" });
   }, [deepLinkWaiting]);
 
-  // A session that ends closes the microphone: it used to stay open on the
-  // summary and the list, with the browser's recording light on and no control
-  // to turn it off short of leaving the page. Every way into the next session
-  // reopens it first (selectExercise, selectDailyPick, selectRoutine). The one
-  // exception is an exercise that closed itself for silence: the room then
-  // shows the input level beside "No sound picked up" (SilentStopNote), which
-  // needs the mic, and the singer can see it is listening.
-  const { stop: stopMic } = pitch;
-  const lastViewRef = useRef(view);
-  useEffect(() => {
-    const wasIn = lastViewRef.current === "session" || lastViewRef.current === "routine";
-    const isIn = view === "session" || view === "routine";
-    lastViewRef.current = view;
-    if (wasIn && !isIn && !silentStop) stopMic();
-  }, [view, silentStop, stopMic]);
+  // Out of a session, an open microphone closes after a short idle wait
+  // (useIdleMicRelease). It used to stay open on the summary and the list for
+  // as long as the page did, with the browser's recording light on and no
+  // control to turn it off. Every way into the next session reopens it first
+  // (selectExercise, selectDailyPick, selectRoutine), and a start still
+  // waiting on the device holds it. So does "No sound picked up"
+  // (SilentStopNote): it shows the input level, which needs the mic, and has
+  // its own control to turn it off.
+  useIdleMicRelease({
+    listening: pitch.listening,
+    hold: view === "session" || view === "routine" || pending !== null || silentStop !== null,
+    stop: pitch.stop,
+  });
 
   // Resolved after the deep link, not before it: both land in the same render
   // when permission arrives, and whoever writes the view last wins. A visitor
@@ -555,7 +563,12 @@ export function WarmupsClient() {
           {/* Only ever after a session the player ended for silence, so never
               in the server HTML and never a shift at hydration. */}
           {silentStop && (
-            <SilentStopNote title={silentStop} listening={pitch.listening} level={pitch.frame.volume} />
+            <SilentStopNote
+              title={silentStop}
+              listening={pitch.listening}
+              level={pitch.frame.volume}
+              onMicOff={pitch.stop}
+            />
           )}
           {/* A program day still to do leads; done, finished, or behind the
               paywall, it drops back below today's cards. The program is read
@@ -725,9 +738,10 @@ export function WarmupsClient() {
         />
       )}
 
-      {/* The summaries' buttons reopen the microphone the session closed; a
-          failure to reopen it shows here, above the buttons that asked. */}
-      {(view === "routine-summary" || view === "summary") &&
+      {/* The single-exercise summary's buttons reopen the microphone the room
+          closed; a failure to reopen it shows above the summary. The routine
+          summary is a full-screen dialog, so it shows its own (micError). */}
+      {view === "summary" &&
         errorAt.kind === "summary" &&
         !pitch.listening &&
         pitch.error && <MicAlert message={pitch.error} className="mb-4 max-w-md text-sm text-rec" />}
@@ -735,7 +749,13 @@ export function WarmupsClient() {
         <RoutineSummary
           data={routineSummary}
           onRepeat={() => void selectRoutine(routineSummary.routine, "summary")}
-          onHome={() => setView("home")}
+          onHome={() => {
+            // A "Play again" still waiting on the microphone is dropped, so
+            // access granted later cannot start a session from the list.
+            setPending(null);
+            setView("home");
+          }}
+          micError={errorAt.kind === "summary" && !pitch.listening ? pitch.error : null}
           onPractice={startExerciseById}
           capped={cap.capped}
         />
@@ -777,7 +797,10 @@ export function WarmupsClient() {
             if (canStart(p.exercise)) void selectDailyPick(p, "summary");
           }}
           onNext={startExerciseById}
-          onLibrary={() => setView("home")}
+          onLibrary={() => {
+            setPending(null);
+            setView("home");
+          }}
         />
       )}
     </PageShell>
