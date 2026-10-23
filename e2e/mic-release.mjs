@@ -1,6 +1,6 @@
 /**
- * The microphone closes when a warmup or song session ends, and comes back
- * on the next start, against a running app:
+ * The microphone closes once a warmup or song room has sat idle out of a
+ * session, and comes back on the next start, against a running app:
  *
  *   npm run build && npm start            # in another shell
  *   node e2e/mic-release.mjs [baseUrl] [--channel=chrome] [--executable=path]
@@ -8,18 +8,25 @@
  * Warmups and songs used to keep the mic open after a session ended (a
  * warmup's summary and the list, a song's Practice summary and the library),
  * with the browser's recording light on and nothing on screen to turn it off.
- * Now a session that ends stops the stream, the room remembers the singer
- * allowed it (no gate, no "Enable microphone" ask comes back), and the next
- * start reopens it before the run begins. The one exception is a warmup that
- * closed itself for silence: "No sound picked up" shows a live input meter,
- * so the mic stays on there.
+ * Now a room that is out of a session, with no start waiting on the device,
+ * closes the stream after 15 idle seconds (MIC_IDLE_RELEASE_MS in
+ * lib/audio/use-idle-mic-release.ts), so a quick "Sing again" keeps it. The
+ * room remembers the singer allowed it (no gate, no "Enable microphone" ask
+ * comes back), and the next start reopens it before the run begins. The one
+ * exception is a warmup that closed itself for silence: "No sound picked up"
+ * shows a live input meter, so the mic stays on there until the singer starts
+ * again or presses "Turn off the mic".
+ *
+ * Every case but one sets `window.__singMicReleaseMs` to 400 before load, so
+ * a release takes 400 ms rather than 15 s; the grace case leaves the real
+ * delay in place and checks the stream is still open 3 s after a run ends.
  *
  * Chrome's fake microphone plays a held A3 (lib/audio/voice-fixture.ts) or
  * silence. getUserMedia is wrapped before the app loads so the page can count
  * the tracks it handed out that are still `live`; a track the app stops
  * reads `ended`. Every step prints the count it measured, so a log shows the
  * 1 an open mic would leave behind, not just a pass. Chrome takes the fake
- * capture file once per process, so the silent case gets its own browser.
+ * capture file once per process, so the silent cases get their own browser.
  * Exits non-zero when any case fails.
  */
 import pw from "playwright";
@@ -39,15 +46,22 @@ const EXECUTABLE = flag("executable");
 const CHANNEL = flag("channel") ?? "chrome";
 const VIEW = { width: 1280, height: 900 };
 const SAMPLE_RATE = 48000;
-/** How long a stopped stream may take to read as closed. */
-const RELEASE_MS = 2000;
+/** The idle release every case but the grace case runs with, in place of 15 s. */
+const TEST_RELEASE_MS = 400;
+/** How long after a run ends the stream must read as closed, with that override. */
+const RELEASE_MS = 1200;
+/** How long after a run ends the stream must still be open, with the real 15 s delay. */
+const GRACE_CHECK_MS = 3000;
 
 /**
  * Runs before the app on every document of a context. Clears storage once
  * per tab (a reload inside a case keeps what the case did), marks the coach
- * intro seen so no overlay covers the cards, and wraps getUserMedia.
+ * intro seen so no overlay covers the cards, sets the idle release override
+ * (null keeps the app's own delay), and wraps getUserMedia. Setting
+ * `window.__micFail` makes the next opens fail as a refused device would.
  */
-function init() {
+function init(releaseMs) {
+  if (typeof releaseMs === "number") window.__singMicReleaseMs = releaseMs;
   try {
     if (!sessionStorage.getItem("mic-release:init")) {
       localStorage.clear();
@@ -60,6 +74,7 @@ function init() {
   const md = navigator.mediaDevices;
   const original = md.getUserMedia.bind(md);
   md.getUserMedia = async (constraints) => {
+    if (window.__micFail) throw new DOMException("Permission denied", "NotAllowedError");
     const stream = await original(constraints);
     for (const track of stream.getTracks()) {
       tracks.push(track);
@@ -150,7 +165,7 @@ async function readoutReacts(page, timeout = 30_000) {
         (el) => el.textContent?.trim() === "Cents off",
       );
       const text = label?.nextElementSibling?.textContent ?? "";
-      return /[+-]?\d+/.test(text) ? text.replace(/\s+/g, "") : false;
+      return /[+-]?\d+/.exec(text)?.[0] ?? false;
     },
     null,
     { timeout, polling: 50 },
@@ -182,9 +197,9 @@ async function enableFromGate(page, name) {
 
 let failed = 0;
 
-async function runCase(browser, name, body) {
+async function runCase(browser, name, body, { releaseMs = TEST_RELEASE_MS } = {}) {
   const context = await browser.newContext({ viewport: VIEW, permissions: ["microphone"] });
-  await context.addInitScript(init);
+  await context.addInitScript(init, releaseMs);
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -205,16 +220,18 @@ async function runCase(browser, name, body) {
 
 const held = await launch(heldWav);
 try {
-  // 1. A single exercise: End closes the mic, the list asks for nothing,
-  //    and the next exercise reopens it and hears the note.
+  // 1. A single exercise: the mic closes after End, the list asks for
+  //    nothing, and the next exercise reopens it and hears the note.
   await runCase(held, "warmups single exercise: End closes the mic, the next start reopens it", async (page, notes) => {
     await openWarmups(page);
     await expectLive(page, 0, "list before any ask", notes, 0);
     await enableFromGate(page, "Enable microphone");
     await page.locator("#warmup-gate").waitFor({ state: "detached" });
-    await expectLive(page, 1, "list after Enable microphone", notes);
+    // The list is out of a session, so the stream the gate opened goes idle too.
+    await expectLive(page, 0, "list after Enable microphone, idle", notes);
 
     await pathRow(page, "Sustained hold").click();
+    await expectLive(page, 1, "Sustained hold opened from the list", notes);
     const first = page.getByRole("dialog", { name: "Sustained hold", exact: true });
     await first.waitFor();
     notes.push(`Sustained hold reads ${await readoutReacts(page)} cents`);
@@ -243,7 +260,7 @@ try {
     await page.getByRole("heading", { level: 1, name: "Session summary", exact: true }).waitFor();
     await expectLive(page, 0, "summary after the second End", notes);
 
-    // End before any rep closes: nothing to summarise, straight back to the list.
+    // End before any rep closes: nothing to summarize, straight back to the list.
     await page.getByRole("button", { name: "Back to library", exact: true }).click();
     await pathRow(page, "Humming thirds").click();
     const third = page.getByRole("dialog", { name: "Humming thirds", exact: true });
@@ -266,7 +283,8 @@ try {
     await step.waitFor();
     notes.push(`Lip-trill arpeggio reads ${await readoutReacts(page)} cents`);
     await step.getByText(REP_SCORE).waitFor({ timeout: 30_000 });
-    await step.getByRole("button", { name: "Finish step", exact: true }).click();
+    // The header's close button and the strip's button share the name; both end the step.
+    await step.getByRole("button", { name: "Finish step", exact: true }).first().click();
     await slide.getByText("Step 2 of 4").waitFor();
     await expectLive(page, 1, "between steps", notes, 0);
     await slide.getByRole("button", { name: "Quit routine", exact: true }).click();
@@ -282,7 +300,7 @@ try {
     await step.waitFor();
     notes.push(`Lip-trill arpeggio after Play again reads ${await readoutReacts(page)} cents`);
     // Quit with nothing sung this run: back to the list, mic closed.
-    await step.getByRole("button", { name: "Finish step", exact: true }).click();
+    await step.getByRole("button", { name: "Finish step", exact: true }).first().click();
     await slide.getByText("Step 2 of 4").waitFor();
     await slide.getByRole("button", { name: "Quit routine", exact: true }).click();
     await page.getByRole("heading", { level: 1, name: "Guided vocal warm-up exercises", exact: true }).waitFor();
@@ -329,7 +347,7 @@ try {
     await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
     const libraryTitle = page.getByRole("heading", { level: 1, name: "Public domain songs to sing in your key", exact: true });
     await page.getByRole("button", { name: "Continue without a mic" }).waitFor({ state: "detached" });
-    await expectLive(page, 1, "library after the gate", notes);
+    await expectLive(page, 0, "library after the gate, idle", notes);
 
     const sing = page.getByRole("button", { name: "Sing", exact: true }).first();
     await sing.click();
@@ -366,6 +384,16 @@ try {
     await transport.waitFor();
     await expectLive(page, 1, "library card, player open before Play", notes, 0);
     assert.equal(await page.getByText("Listen mode", { exact: true }).count(), 0, '"Listen mode" from a library card');
+
+    // A reopen that fails brings the gate back, with its way on without a mic.
+    await page.getByRole("button", { name: "Exit practice", exact: true }).click();
+    await libraryTitle.waitFor();
+    await expectLive(page, 0, "library after the second Exit practice", notes);
+    await page.evaluate(() => { window.__micFail = true; });
+    await sing.click();
+    await page.getByRole("button", { name: "Continue without a mic", exact: true }).waitFor();
+    assert.equal(await transport.count(), 0, "a player opened on a failed reopen");
+    await expectLive(page, 0, "gate after a refused reopen", notes, 0);
   });
 
   // 6. Listen mode: a singer who went on without a mic is never asked for one.
@@ -401,7 +429,49 @@ try {
     await expectStill(page, 0, "library in listen mode", notes, 1000);
     const m = await mic(page);
     assert.equal(m.opened, 0, `listen mode opened the mic: ${fmt(m)}`);
+
+    // Turned on later from the library header, the mic is reopened by a start like anyone's.
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await page.waitForFunction(() => window.__mic().opened > 0, null, { timeout: 5000 });
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).waitFor({ state: "detached" });
+    await expectLive(page, 0, "library after a late Enable microphone, idle", notes);
+    await sing.click();
+    await page.locator("#song-transport").waitFor();
+    await expectLive(page, 1, "library card after a late enable, before Play", notes, 0);
+    assert.equal(await page.getByText("Listen mode", { exact: true }).count(), 0, '"Listen mode" after a late enable');
   });
+
+  // 7. The idle grace, with the app's real delay: a run that just ended
+  //    keeps its stream, and a quick "Sing again" uses it without a reopen.
+  await runCase(held, "idle grace: the mic is still open 3 s after a run ends", async (page, notes) => {
+    await openWarmups(page);
+    await enableFromGate(page, "Enable microphone");
+    await page.locator("#warmup-gate").waitFor({ state: "detached" });
+    await pathRow(page, "Humming thirds").click();
+    const run = page.getByRole("dialog", { name: "Humming thirds", exact: true });
+    await run.waitFor();
+    await run.getByRole("button", { name: "End", exact: true }).click();
+    await run.waitFor({ state: "hidden" });
+    await expectStill(page, 1, `warmups list ${GRACE_CHECK_MS / 1000} s after End`, notes, GRACE_CHECK_MS);
+
+    await page.goto(`${BASE}/songs`);
+    await page.waitForLoadState("networkidle");
+    await dismissOverlays(page);
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await page.getByRole("button", { name: "Continue without a mic" }).waitFor({ state: "detached" });
+    await page.getByRole("button", { name: "Sing", exact: true }).first().click();
+    await page.locator("#song-transport").waitFor();
+    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    await page.getByRole("heading", { level: 2, name: "Sing along", exact: true }).waitFor({ timeout: 15_000 });
+    await page.waitForTimeout(1500);
+    await page.getByRole("button", { name: "End practice", exact: true }).click();
+    await page.getByRole("heading", { level: 1, name: "Practice summary", exact: true }).waitFor();
+    const ended = await expectStill(page, 1, `Practice summary ${GRACE_CHECK_MS / 1000} s after End practice`, notes, GRACE_CHECK_MS);
+    await page.getByRole("button", { name: "Sing again", exact: true }).click();
+    await page.locator("#song-transport").waitFor();
+    const again = await expectLive(page, 1, "Sing again inside the grace", notes, 0);
+    assert.equal(again.opened, ended.opened, `Sing again reopened a stream it could keep: ${fmt(ended)} then ${fmt(again)}`);
+  }, { releaseMs: null });
 } finally {
   await held.close();
 }
@@ -409,7 +479,8 @@ try {
 const silent = await launch(silentWav);
 try {
   // 4. The deliberate exception: an exercise that closed itself for silence
-  //    keeps the mic so "No sound picked up" can show a live input meter.
+  //    keeps the mic so "No sound picked up" can show a live input meter,
+  //    however long the idle release is.
   await runCase(silent, "warmups silent stop: the mic stays open for the No sound picked up meter", async (page, notes) => {
     await openWarmups(page);
     await enableFromGate(page, "Enable microphone");
@@ -420,7 +491,27 @@ try {
     await run.waitFor({ state: "hidden", timeout: 60_000 });
     await page.getByRole("heading", { level: 2, name: "No sound picked up", exact: true }).waitFor();
     await page.getByText("Five-note scale stopped after two reps with no note heard, so nothing was logged.").waitFor();
+    // Longer than the 400 ms idle release: the note holds the mic for its meter.
     await expectStill(page, 1, "list after the silent stop", notes);
+  });
+
+  // 4b. The note's own control turns the mic off, and the next start reopens it.
+  await runCase(silent, 'warmups silent stop: "Turn off the mic" closes it, the next start reopens it', async (page, notes) => {
+    await openWarmups(page);
+    await enableFromGate(page, "Enable microphone");
+    await page.locator("#warmup-gate").waitFor({ state: "detached" });
+    await pathRow(page, "Five-note scale").click();
+    const run = page.getByRole("dialog", { name: "Five-note scale", exact: true });
+    await run.waitFor();
+    await run.waitFor({ state: "hidden", timeout: 60_000 });
+    await page.getByRole("heading", { level: 2, name: "No sound picked up", exact: true }).waitFor();
+    await expectLive(page, 1, "No sound picked up note", notes, 0);
+    await page.getByRole("button", { name: "Turn off the mic", exact: true }).click();
+    await expectLive(page, 0, "after Turn off the mic", notes);
+    await expectStill(page, 0, "still off", notes, 1000);
+    await pathRow(page, "Five-note scale").click();
+    await run.waitFor();
+    await expectLive(page, 1, "Five-note scale started again", notes);
   });
 } finally {
   await silent.close();
