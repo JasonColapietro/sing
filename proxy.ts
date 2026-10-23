@@ -33,6 +33,10 @@ const withoutClerk: NextProxy = () => {
 // No route is gated here. Every page stays visible to a signed-out visitor;
 // sign-in is asked for only when someone starts using a tool, which
 // lib/account-gate.ts enforces at the mic and audio entry points.
+// /api/webhooks/* depends on this too: Clerk and Stripe post there with no
+// session and the routes verify signatures themselves. A handler added here
+// later must leave that prefix public (createRouteMatcher(["/api/webhooks(.*)"])),
+// and proxy.webhooks.test.ts fails if it does not.
 const proxy: NextProxy = accountsReady() ? clerkMiddleware() : withoutClerk;
 
 export default proxy;

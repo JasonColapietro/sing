@@ -1,4 +1,10 @@
-import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
+import { after, NextResponse } from "next/server";
+import {
+  forwardToIntake,
+  intakeProperty,
+  type IntakeEvent,
+} from "@/lib/intake-forward";
 import { INACTIVE } from "@/lib/pro-shared";
 import { rateLimit } from "@/lib/rate-limit";
 import { getRedis } from "@/lib/redis";
@@ -151,6 +157,48 @@ function validCodes(): Set<string> {
   );
 }
 
+/**
+ * A short, stable reference to a comp code, so the owner can tell redemptions
+ * apart without the code itself leaving the app (a code is a credential for
+ * free Pro): the first 10 hex characters of SHA-256 over "sing-comp:" + the
+ * normalised code. To match one by hand:
+ *   node -e "console.log(require('crypto').createHash('sha256').update('sing-comp:CODE').digest('hex').slice(0,10))"
+ */
+function compCodeReference(code: string): string {
+  return createHash("sha256")
+    .update(`sing-comp:${code}`, "utf8")
+    .digest("hex")
+    .slice(0, 10);
+}
+
+/**
+ * The lead intake event for a granted pass. The form collects no email, so
+ * there is no person to send; the Stripe customer id is the handle that finds
+ * the pass in the dashboard, and it alone opens nothing (/api/portal needs a
+ * subscription id beside it). Never the subscription id or the code: either
+ * one unlocks something here.
+ */
+function compRedemptionLead(
+  code: string,
+  customerId: string,
+  trialEnd: number | null | undefined,
+): IntakeEvent {
+  return {
+    id: `comp:${customerId}`,
+    kind: "lead",
+    property: intakeProperty(),
+    occurredAt: new Date().toISOString(),
+    summary: "Comp code redeemed",
+    details: {
+      compCodeRef: compCodeReference(code),
+      compDays: COMP_DAYS,
+      plan: "monthly",
+      passEndsAt: typeof trialEnd === "number" ? new Date(trialEnd * 1000).toISOString() : null,
+      stripeCustomer: customerId,
+    },
+  };
+}
+
 export async function POST(request: Request) {
   // Comp codes are memorable strings, not high-entropy secrets, so this is
   // the guess budget as much as the burst budget. The durable limit is the
@@ -244,6 +292,19 @@ export async function POST(request: Request) {
         comp_days: String(COMP_DAYS),
       },
     });
+
+    // Stripe now holds the pass, so the singer never waits on the hub: the
+    // forward runs after the response, and its outcome is only logged.
+    // Never let scheduling it touch the grant: a throw here would land in the
+    // catch below and refund a slot for a pass that was in fact created.
+    const lead = compRedemptionLead(redeemed, customer.id, sub.trial_end);
+    try {
+      after(async () => {
+        await forwardToIntake(lead);
+      });
+    } catch (error) {
+      console.error("[api/redeem] could not schedule the lead intake forward", error);
+    }
 
     return NextResponse.json(entitlementFrom(sub, customer.email));
   } catch (error) {
