@@ -95,6 +95,13 @@ export function SongsClient() {
   const setlist = useSetlist();
 
   const [listenMode, setListenMode] = useState(false);
+  // Whether the singer has allowed the microphone on this visit. The stream
+  // itself is closed whenever a run ends (below), so the browser's recording
+  // light goes off on the summary and in the library; this is what keeps the
+  // gate and the "Enable microphone" asks from coming back after it was
+  // answered. Adjusted during render, as the deep link below is.
+  const [micAllowed, setMicAllowed] = useState(false);
+  if (pitch.listening && !micAllowed) setMicAllowed(true);
   // Rehearsal loops until the singer stops; performance is the scored take.
   // Chosen in the player before a run or while paused, and kept here so it
   // survives moving from one song to the next.
@@ -156,6 +163,18 @@ export function SongsClient() {
     return () => micRequest.cancel();
   }, [view, summary]);
 
+  // A run that ends, finished or walked out of, closes the microphone. It
+  // used to stay open on the summary and in the library, with the browser's
+  // recording light on and no control to turn it off short of leaving the
+  // page. The next start reopens it (startSong).
+  const { stop: stopMic } = pitch;
+  const lastViewRef = useRef(view);
+  useEffect(() => {
+    const left = lastViewRef.current === "practice" && view !== "practice";
+    lastViewRef.current = view;
+    if (left) stopMic();
+  }, [view, stopMic]);
+
   // A song page links here as /songs?song=<slug>, so arriving from search
   // lands on the melody that was being read about rather than the library.
   // Resolved through `entitled`, so a Pro link cannot open a Pro song for a
@@ -172,13 +191,22 @@ export function SongsClient() {
   const mayStart = (song: Song) => canStart(song) || song.id === linkedId;
 
   /** `again`: a restart from the summary, which keeps how the last run was set up. */
-  function startSong(song: Song, again = false) {
+  async function startSong(song: Song, again = false) {
     // Song practice is guided practice: the free day's five minutes apply.
     if (cap.capped) {
       showCapWall();
       return;
     }
     if (!mayStart(song)) return;
+    // The last run closed the microphone. Reopen it before the player mounts:
+    // a player that opens with the mic off is a listen pass, unscored, and
+    // would flash "Listen mode" until access came back. A singer who went on
+    // without a mic is left as they chose. Only if this screen is still the
+    // one showing when access arrives, as with the summary's own ask.
+    if (micAllowed && !pitch.listening && !listenMode) {
+      const current = micRequestRef.current.begin();
+      if (!(await pitch.start()) || !current()) return;
+    }
     if (!again) setSetup(null);
     setActiveSong(song);
     setSummary(null);
@@ -190,7 +218,7 @@ export function SongsClient() {
   function startSongById(id: string, again = false) {
     const song = ALL_SONGS.find((s) => s.id === id);
     if (!song || !mayStart(song)) return;
-    startSong(song, again);
+    void startSong(song, again);
   }
 
   // Recording a play touches localStorage, so it belongs in an effect rather
@@ -202,7 +230,8 @@ export function SongsClient() {
 
   // A singer who has used today's free minutes meets the cap wall, not a
   // microphone prompt for practice they cannot start.
-  const gated = !pitch.listening && !listenMode && !cap.capped;
+  const micOn = micAllowed || pitch.listening;
+  const gated = !micOn && !listenMode && !cap.capped;
 
   // The gate's buttons, or the library header's "Enable microphone", go
   // away the moment they are answered, and keyboard focus fell to <body>:
@@ -213,8 +242,8 @@ export function SongsClient() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const mic: MicAsk = {
     gated,
-    headerAsk: !gated && view === "library" && !pitch.listening && !cap.capped,
-    listening: pitch.listening,
+    headerAsk: !gated && view === "library" && !micOn && !cap.capped,
+    listening: micOn,
     listenMode,
   };
   const micRef = useRef(mic);
@@ -291,7 +320,7 @@ export function SongsClient() {
       }
       subtitle={view === "library" ? "Pick a song to start your practice loop." : undefined}
       actions={
-        !pitch.listening && view === "library" && !cap.capped ? (
+        !micOn && view === "library" && !cap.capped ? (
           <Button
             variant="rec"
             size="sm"
@@ -334,7 +363,7 @@ export function SongsClient() {
         <Library
           progress={progress}
           visitUnlockedSongId={linkedId}
-          onSelect={(song) => startSong(song)}
+          onSelect={(song) => void startSong(song)}
           browse={browse}
           onBrowseChange={setBrowse}
         />
@@ -378,6 +407,11 @@ export function SongsClient() {
         />
       )}
 
+      {/* "Sing again" or "Next" reopens the microphone the last run closed;
+          a failure to reopen it shows here, above the buttons that asked. */}
+      {view === "summary" && summary && micAllowed && !pitch.listening && pitch.error && (
+        <MicAlert message={pitch.error} className="mb-4 max-w-md text-sm text-rec" />
+      )}
       {view === "summary" && summary && (
         <SessionSummary
           data={summary}
@@ -390,7 +424,7 @@ export function SongsClient() {
           // pass scores nothing even with the mic on, so it moves to Sing
           // along; a pass the singer picked themselves stays.
           onEnableMic={
-            pitch.listening
+            micOn
               ? undefined
               : async () => {
                   // Capped: show why, and ask for no microphone that cannot

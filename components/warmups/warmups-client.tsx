@@ -4,7 +4,7 @@ import { formatClock, useFreeCap } from "@/lib/free-cap";
 import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { liveStreak } from "@/components/account/save-state";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePitch } from "@/lib/audio/use-pitch";
 import { localDay, useProgress } from "@/lib/progress";
 import { Button, Card, PageShell } from "@/components/ui";
@@ -98,10 +98,19 @@ type ErrorAt =
   | { kind: "today" }
   | { kind: "routine"; id: string }
   | { kind: "exercise"; id: string }
-  | { kind: "daily"; id: string };
+  | { kind: "daily"; id: string }
+  | { kind: "summary" };
 
 export function WarmupsClient() {
   const pitch = usePitch();
+  // Whether the singer has allowed the microphone on this visit. The stream
+  // is closed when a session ends (below), so the recording light goes off on
+  // the summary and the list; this keeps the gate card and the "Enable mic and
+  // start" labels from coming back once the singer has answered them.
+  // Adjusted during render, as the deep link below is.
+  const [micAllowed, setMicAllowed] = useState(false);
+  if (pitch.listening && !micAllowed) setMicAllowed(true);
+  const micReady = micAllowed || pitch.listening;
   const progress = useProgress();
   const isPro = useIsPro();
   // Five free minutes of guided practice a day; every way into a session
@@ -272,7 +281,7 @@ export function WarmupsClient() {
     const ex = ALL_EXERCISES.find((e) => e.id === id);
     // Defense in depth: pack exercises never start for free users.
     if (!ex || !canStart(ex)) return;
-    startExercise(ex);
+    void selectExercise(ex, "summary");
   }
 
   function startRoutine(r: Routine) {
@@ -299,7 +308,10 @@ export function WarmupsClient() {
   // the singer was actually looking.
   const [errorAt, setErrorAt] = useState<ErrorAt>({ kind: "gate" });
 
-  async function selectExercise(ex: WarmupExercise, from: "path" | "continue" = "path") {
+  async function selectExercise(
+    ex: WarmupExercise,
+    from: "path" | "continue" | "summary" = "path",
+  ) {
     if (cap.capped) return;
     if (pitch.listening) {
       startExercise(ex);
@@ -308,32 +320,44 @@ export function WarmupsClient() {
     setPending({ kind: "exercise", ex });
     // The next exercise also appears in the catalogue. Its two controls need
     // separate error destinations so only the pressed one announces and scrolls.
-    setErrorAt(from === "continue" ? { kind: "continue" } : { kind: "exercise", id: ex.id });
+    setErrorAt(
+      from === "continue"
+        ? { kind: "continue" }
+        : from === "summary"
+          ? { kind: "summary" }
+          : { kind: "exercise", id: ex.id },
+    );
     const ok = await pitch.start();
     if (!ok) setPending(null);
   }
 
   /** A row in today's three: the exercise at the tempo the plan set for it. */
-  async function selectDailyPick(p: DailyPick) {
+  async function selectDailyPick(p: DailyPick, from: "today" | "summary" = "today") {
     if (cap.capped || !canStart(p.exercise)) return;
     if (pitch.listening) {
       startExercise(p.exercise, p.tempo);
       return;
     }
     setPending({ kind: "exercise", ex: p.exercise, tempo: p.tempo });
-    setErrorAt({ kind: "daily", id: p.exercise.id });
+    setErrorAt(from === "summary" ? { kind: "summary" } : { kind: "daily", id: p.exercise.id });
     const ok = await pitch.start();
     if (!ok) setPending(null);
   }
 
-  async function selectRoutine(r: Routine, from: "today" | "grid") {
+  async function selectRoutine(r: Routine, from: "today" | "grid" | "summary") {
     if (!canStartRoutine(r) || cap.capped) return;
     if (pitch.listening) {
       startRoutine(r);
       return;
     }
     setPending({ kind: "routine", routine: r });
-    setErrorAt(from === "today" ? { kind: "today" } : { kind: "routine", id: r.id });
+    setErrorAt(
+      from === "today"
+        ? { kind: "today" }
+        : from === "summary"
+          ? { kind: "summary" }
+          : { kind: "routine", id: r.id },
+    );
     const ok = await pitch.start();
     if (!ok) setPending(null);
   }
@@ -401,6 +425,22 @@ export function WarmupsClient() {
   useEffect(() => {
     if (deepLinkWaiting) document.getElementById("warmup-gate")?.scrollIntoView({ block: "start" });
   }, [deepLinkWaiting]);
+
+  // A session that ends closes the microphone: it used to stay open on the
+  // summary and the list, with the browser's recording light on and no control
+  // to turn it off short of leaving the page. Every way into the next session
+  // reopens it first (selectExercise, selectDailyPick, selectRoutine). The one
+  // exception is an exercise that closed itself for silence: the room then
+  // shows the input level beside "No sound picked up" (SilentStopNote), which
+  // needs the mic, and the singer can see it is listening.
+  const { stop: stopMic } = pitch;
+  const lastViewRef = useRef(view);
+  useEffect(() => {
+    const wasIn = lastViewRef.current === "session" || lastViewRef.current === "routine";
+    const isIn = view === "session" || view === "routine";
+    lastViewRef.current = view;
+    if (wasIn && !isIn && !silentStop) stopMic();
+  }, [view, silentStop, stopMic]);
 
   // Resolved after the deep link, not before it: both land in the same render
   // when permission arrives, and whoever writes the view last wins. A visitor
@@ -499,7 +539,7 @@ export function WarmupsClient() {
       title={view === "summary" ? "Session summary" : "Guided vocal warm-up exercises"}
       subtitle={
         view === "home"
-          ? pitch.listening
+          ? micReady
             ? "Start today's warmup, or pick a length. Every exercise is scored as you sing."
             : "Singing warm-ups that count you in and score your pitch as you sing. The mic comes on only when you press start, and your audio never leaves this device."
           : undefined
@@ -543,9 +583,9 @@ export function WarmupsClient() {
               goal={{ doneSec: goalDoneSec, goalSec }}
               streakDays={streakDays}
               streakBest={progress.streak.best}
-              micReady={pitch.listening}
+              micReady={micReady}
               unavailableReason={unavailableReason}
-              startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start warmup" : "Enable mic and start"}
+              startLabel={cap.capped ? "Available tomorrow" : micReady ? "Start warmup" : "Enable mic and start"}
               error={errorAt.kind === "today" ? pitch.error : null}
               onStart={() => void selectRoutine(recommended, "today")}
             >
@@ -569,8 +609,8 @@ export function WarmupsClient() {
                     : "The next exercise in your lowest unfinished tier. You can still choose any exercise below."
                 }
                 onStart={() => void selectExercise(nextExercise, "continue")}
-                startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start exercise" : "Enable mic and start"}
-                micReady={pitch.listening}
+                startLabel={cap.capped ? "Available tomorrow" : micReady ? "Start exercise" : "Enable mic and start"}
+                micReady={micReady}
                 unavailableReason={unavailableReason}
                 error={errorAt.kind === "continue" ? pitch.error : null}
               />
@@ -603,9 +643,9 @@ export function WarmupsClient() {
               goal={{ doneSec: goalDoneSec, goalSec }}
               streakDays={streakDays}
               streakBest={progress.streak.best}
-              micReady={pitch.listening}
+              micReady={micReady}
               unavailableReason={unavailableReason}
-              startLabel={cap.capped ? "Available tomorrow" : pitch.listening ? "Start warmup" : "Enable mic and start"}
+              startLabel={cap.capped ? "Available tomorrow" : micReady ? "Start warmup" : "Enable mic and start"}
               error={errorAt.kind === "today" ? pitch.error : null}
               onStart={() => void selectRoutine(recommended, "today")}
             >
@@ -621,7 +661,7 @@ export function WarmupsClient() {
             visitor could not read a single exercise title before granting
             permission. /range already solved this: explain the loop, then ask.
           */}
-          {!pitch.listening && !cap.capped && (
+          {!micReady && !cap.capped && (
             <div id="warmup-gate" className="scroll-mt-20" {...prepaintMarker(hydrated, { plan: "not-capped" })}>
               <Card>
                 <h2 className="text-xl">{gateTitle}</h2>
@@ -660,7 +700,7 @@ export function WarmupsClient() {
           <PathSection
             progress={progress}
             onSelect={selectExercise}
-            micReady={pitch.listening}
+            micReady={micReady}
             error={errorAt.kind === "exercise" ? pitch.error : null}
             errorExerciseId={errorAt.kind === "exercise" ? errorAt.id : null}
             unavailableReason={unavailableReason}
@@ -685,10 +725,16 @@ export function WarmupsClient() {
         />
       )}
 
+      {/* The summaries' buttons reopen the microphone the session closed; a
+          failure to reopen it shows here, above the buttons that asked. */}
+      {(view === "routine-summary" || view === "summary") &&
+        errorAt.kind === "summary" &&
+        !pitch.listening &&
+        pitch.error && <MicAlert message={pitch.error} className="mb-4 max-w-md text-sm text-rec" />}
       {view === "routine-summary" && routineSummary && (
         <RoutineSummary
           data={routineSummary}
-          onRepeat={() => startRoutine(routineSummary.routine)}
+          onRepeat={() => void selectRoutine(routineSummary.routine, "summary")}
           onHome={() => setView("home")}
           onPractice={startExerciseById}
           capped={cap.capped}
@@ -728,7 +774,7 @@ export function WarmupsClient() {
           daily={dailyPlan ? { plan: dailyPlan, done: dailyDone } : null}
           capped={cap.capped}
           onDaily={(p) => {
-            if (canStart(p.exercise)) startExercise(p.exercise, p.tempo);
+            if (canStart(p.exercise)) void selectDailyPick(p, "summary");
           }}
           onNext={startExerciseById}
           onLibrary={() => setView("home")}
