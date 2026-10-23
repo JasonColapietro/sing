@@ -306,7 +306,7 @@ new one.
 | Warmups, routine | quit after one step, the routine summary has 0 live; "Play again" is live on its first slide |
 | Warmups, rep-count link | `?exercise=sustained-hold&reps=1` ends on its summary by itself with 0 live; "Run this ladder again" and "Next exercise" (or "Sing it") each reopen |
 | Songs | the Practice summary and the library have 0 live and no "Enable microphone"; "Sing again" and a library card are live before Play, scored, not "Listen mode"; a refused reopen brings the gate back |
-| Songs, listen mode | "Continue without a mic" opens nothing, ever; turning the mic on later from the library header makes the next start reopen it too |
+| Songs, listen mode | "Continue without a mic" opens nothing, ever; turning the mic on later from the library header makes the next start reopen it too; a refused reopen from that scored run's summary brings the gate back |
 | Idle grace | with the real delay, still 1 live 3 seconds after End in warmups and End practice in songs |
 | Silent stop | an exercise that closed itself for silence keeps its track for the "No sound picked up" meter, past the 400 ms release; "Turn off the mic" on that note closes it and the next start reopens |
 

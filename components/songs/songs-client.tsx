@@ -222,8 +222,12 @@ export function SongsClient() {
       }
       if (!ok) {
         // The device is gone, busy or refused. Bring the gate back with the
-        // error, which also offers to go on without a mic.
+        // error, which also offers to go on without a mic. That includes a
+        // singer who went on without one earlier: left in listen mode, they
+        // would get no error and no way to retry, and the next start would
+        // be an unscored run.
         setMicAllowed(false);
+        setListenMode(false);
         return false;
       }
       if (!current()) return false;

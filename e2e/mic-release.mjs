@@ -440,6 +440,21 @@ try {
     await page.locator("#song-transport").waitFor();
     await expectLive(page, 1, "library card after a late enable, before Play", notes, 0);
     assert.equal(await page.getByText("Listen mode", { exact: true }).count(), 0, '"Listen mode" after a late enable');
+
+    // A scored run, then a reopen that fails from its summary: the gate comes
+    // back with its error, as it does for a singer who never skipped the mic,
+    // and "Sing again" does not quietly start an unscored run.
+    await page.getByRole("button", { name: "Play", exact: true }).first().click();
+    await page.getByRole("heading", { level: 2, name: "Sing along", exact: true }).waitFor({ timeout: 15_000 });
+    await page.waitForTimeout(1500);
+    await page.getByRole("button", { name: "End practice", exact: true }).click();
+    await summary.waitFor();
+    await expectLive(page, 0, "scored summary after a late enable", notes);
+    await page.evaluate(() => { window.__micFail = true; });
+    await page.getByRole("button", { name: "Sing again", exact: true }).click();
+    await page.getByRole("button", { name: "Continue without a mic", exact: true }).waitFor();
+    assert.equal(await page.locator("#song-transport").count(), 0, "a player opened on a failed reopen");
+    await expectLive(page, 0, "gate after a refused reopen from a scored summary", notes, 0);
   });
 
   // 7. The idle grace, with the app's real delay: a run that just ended
