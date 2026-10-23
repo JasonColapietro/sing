@@ -51,20 +51,24 @@ export interface PitchResult {
  * computations, and if the whole interval rounds to one Float32, the direct
  * sum would have stored that same Float32, because rounding is monotone.
  * When the interval straddles a rounding boundary, that lag is summed
- * directly with the full scan's own arithmetic. That happens on about one
- * voiced frame in five, for one lag, and on every lag of a stretch where the
- * correlation is exactly zero (a short burst in a silent frame): the direct
- * sum gives exact zeros there and the FFT gives round-off near 1e-16, and
- * without the check such a frame reads a spurious peak in the round-off.
+ * directly with the full scan's own arithmetic, which happens for about one
+ * lag in every eight voiced frames. Lags whose correlation is exactly zero,
+ * which digital silence around a click, a gap or an onset produces, are
+ * found without the FFT and stored as zero, and a lag that does need its
+ * direct sum skips the products that are exactly zero (see the runs in
+ * `detectPitch`). Left to the guard, those frames would be summed directly
+ * almost lag by lag, and an FFT alone would read a spurious peak in its
+ * round-off near 1e-16.
  *
- * The weak point is the error bound itself. It rests on the standard error
- * model for a radix-2 FFT (Higham, Accuracy and Stability of Numerical
- * Algorithms, chapter 24) with twiddles accurate to the last bit or so, taken
- * at several times the per-stage error that model gives, rather than on a
- * proof written for this code. Measured on synthetic frames, the largest FFT
- * error was about 160 times smaller than the bound. `pitch-fft.test.ts`
- * keeps a copy of the full scan and checks bitwise equality on a few thousand
- * frames.
+ * The weak point is the error bound. It follows the standard error model for
+ * a radix-2 FFT (Higham, Accuracy and Stability of Numerical Algorithms,
+ * chapter 24), worked through for this code at `fftErrorUnits`, with an
+ * allowance about twice what that model gives. It also rests on Math.sin
+ * and Math.cos being accurate to about 1 ulp: V8 and SpiderMonkey use
+ * fdlibm, but ECMAScript does not require it. On synthetic frames, including
+ * ones built to push the error up, the largest FFT error reached 0.6% of the
+ * bound. `pitch-fft.test.ts` keeps a copy of the full scan and checks
+ * bitwise equality on a few thousand frames.
  *
  * Cost: about 0.3 ms per 4096-sample frame at 48 kHz in Node, against 5.8 ms
  * for the direct sums over the ~700 lags the full scan computed. The FFT
@@ -389,15 +393,21 @@ function autocorrelate(buf: Float32Array, r1: number, size: number, N: number): 
  * The most an FFT autocorrelation value can differ from the exact sum, in
  * units of 2^-53 times the window's energy, for a transform of length `N`.
  *
- * In the standard model a radix-2 butterfly stage adds a relative error of
- * about 6 to 8 units in the 2-norm with accurate twiddles; 32 is used here,
- * over the log2(N/2) stages plus two for the packing and unpacking. Call the
- * total `a`. The forward transform's error then moves the power spectrum by
- * at most (2a + a² + 2)·N·energy summed over all N bins, which is at most
- * (2a + a² + 2)·energy on any one lag after the inverse. The inverse's own
- * error is bounded per output (each output depends on each input through one
- * chain of unit-size twiddles) by about a times the sum of its inputs, which
- * is 2·N·energy, so 2a·energy after the 1/N. The a² term is negligible.
+ * In the standard model each radix-2 stage adds a relative error
+ * η = μ + γ4(√2 + μ) in the 2-norm, where μ is the twiddle error. Here μ is
+ * about 6.5 units, because Math.PI·j/h rounds by up to about 4.2 units before
+ * Math.cos or Math.sin adds its own ulp, so η is about 12.2. With
+ * L = log2(N/2) stages, the total for one lag works out to about
+ * (66L + 75)·energy. The forward error passes through the unpacking, whose
+ * norm is up to √2, onto a half spectrum of energy (N·energy + P0 + PM)/2;
+ * the inverse's own error is at most about η·L times the sum of its inputs
+ * on each output, since each input reaches each output along one chain of
+ * unit-size twiddles. The 75 includes the unpacking (about 38) and forming
+ * the inverse's input (about 17).
+ *
+ * The allowance is 32 units per stage over L + 2 stages, counted for both
+ * transforms, about (128.6L + 275)·energy: roughly twice that total, and it
+ * still holds with η up to about 24.
  */
 function fftErrorUnits(N: number): number {
   const a = 32 * (Math.log2(N >> 1) + 2);
@@ -405,6 +415,10 @@ function fftErrorUnits(N: number): number {
 }
 
 const ROUNDOFF = 2 ** -53;
+
+/** Run grouping for the exact-zero lags in `detectPitch`. */
+const ZERO_RUN_MERGE = 32;
+const ZERO_RUN_LIMIT = 32;
 
 let directSums = 0;
 
@@ -490,6 +504,57 @@ export function detectPitch(
   // of the two halves it stands for.
   const fftError = fftErrorUnits(N) * ROUNDOFF * windowEnergy * 1.01;
   const energyError = 2 * size * 2 ** -24 * windowEnergy * 1.01;
+  // Exact zeros. Digital silence around a click, a gap or an onset puts
+  // products with a zero factor in the full scan's sum. Each is +0 or −0,
+  // and adding it leaves the running sum exactly as it was (it starts at +0,
+  // and +0 + −0 is +0), so leaving them out changes nothing. The window's
+  // nonzero samples are grouped into runs; samples in runs A and B (A no
+  // later than B) can only meet at a lag from B's start minus A's end to B's
+  // end minus A's start. A lag outside every such range is stored as +0
+  // without the FFT, and a lag summed directly visits only the stretches
+  // where two runs overlap, in the full scan's order. Otherwise the FFT's
+  // round-off on values that are zero or nearly so keeps the guard from
+  // settling, and such a frame costs the FFT plus most of a full scan.
+  // Merging runs closer than ZERO_RUN_MERGE, and treating the window as one
+  // run past ZERO_RUN_LIMIT runs, only keeps zero products in. All of it
+  // needs finite samples (0·∞ is NaN), which a finite energy guarantees.
+  let runs: number[] | null = null;
+  let zeroLag: Uint8Array | null = null;
+  if (Number.isFinite(windowEnergy)) {
+    const found: number[] = [];
+    let hasZero = false;
+    for (let i = 0; i < size; i++) {
+      if (buf[r1 + i] === 0) {
+        hasZero = true;
+        continue;
+      }
+      const last = found.length - 1;
+      if (last > 0 && i - found[last] <= ZERO_RUN_MERGE) found[last] = i;
+      else found.push(i, i);
+    }
+    if (hasZero && found.length > 0) {
+      if (found.length > 2 * ZERO_RUN_LIMIT) found.splice(1, found.length - 2);
+      runs = found;
+      const count = runs.length >> 1;
+      const reach = new Int32Array(lastLag + 2);
+      for (let a = 0; a < count; a++) {
+        for (let b = a; b < count; b++) {
+          const lo = Math.max(0, runs[2 * b] - runs[2 * a + 1]);
+          const hi = Math.min(lastLag, runs[2 * b + 1] - runs[2 * a]);
+          if (lo <= hi) {
+            reach[lo]++;
+            reach[hi + 1]--;
+          }
+        }
+      }
+      zeroLag = new Uint8Array(lastLag + 1);
+      let covered = 0;
+      for (let lag = 0; lag <= lastLag; lag++) {
+        covered += reach[lag];
+        if (covered === 0) zeroLag[lag] = 1;
+      }
+    }
+  }
 
   // The normalized square difference function over the candidate lags. Lags
   // are filled in lazily, exactly the ones the full scan computed: the
@@ -504,6 +569,10 @@ export function detectPitch(
     // Energy under the two halves the lag actually overlaps.
     const m = energy[size - lag] + (total - energy[lag]);
     if (!(m > 0)) {
+      n[lag] = 0;
+      return;
+    }
+    if (zeroLag !== null && zeroLag[lag]) {
       n[lag] = 0;
       return;
     }
@@ -523,11 +592,24 @@ export function detectPitch(
       n[lag] = v;
       return;
     }
-    // Too close to a rounding boundary to tell: the full scan's own sum.
+    // Too close to a rounding boundary to tell: the full scan's own sum,
+    // leaving out only products that are exactly zero.
     directSums++;
     let sum = 0;
-    for (let j = 0; j < size - lag; j++) {
-      sum += buf[r1 + j] * buf[r1 + j + lag];
+    if (runs === null) {
+      for (let j = 0; j < size - lag; j++) {
+        sum += buf[r1 + j] * buf[r1 + j + lag];
+      }
+    } else {
+      const count = runs.length >> 1;
+      for (let a = 0; a < count; a++) {
+        for (let b = a; b < count; b++) {
+          const to = Math.min(runs[2 * a + 1], runs[2 * b + 1] - lag);
+          for (let j = Math.max(runs[2 * a], runs[2 * b] - lag); j <= to; j++) {
+            sum += buf[r1 + j] * buf[r1 + j + lag];
+          }
+        }
+      }
     }
     n[lag] = (2 * sum) / m;
   };

@@ -30,9 +30,10 @@ import {
  * compares its readings to this detector frame for frame and a reading that
  * is merely close would show up there as drift.
  *
- * The detector now takes every lag's correlation from one FFT and sums a lag
- * directly only when the FFT value is too close to a Float32 rounding
- * boundary to settle the stored value. The reference below is the detector
+ * The detector now takes every lag's correlation from one FFT, stores +0
+ * where the correlation is provably exactly zero, and sums a lag directly
+ * only when the FFT value is too close to a Float32 rounding boundary to
+ * settle the stored value. The reference below is the detector
  * as it stood when every lag was summed directly, copied verbatim. If it and
  * `detectPitch` ever disagree, the failure names the frame.
  *
@@ -43,9 +44,11 @@ import {
  * `frameClarity` scales them, 68 frames), plus the rejection fixtures from
  * pitch.test.ts (15 frames): 867 frames. Then 1,600 seeded random frames in
  * the shapes the app analyses, with missing and weak fundamentals, clicks,
- * DC, rumble, noise bursts, gaps, second tones and clipping, and a set of
- * frames whose correlation is exactly zero over a long stretch of lags, the
- * case the rounding guard exists for.
+ * DC, rumble, noise bursts, gaps, second tones and clipping. Then the frames
+ * the FFT path handles specially: correlation exactly zero over a long
+ * stretch of lags, clicks in digital silence, sparse impulse trains, a faint
+ * floor that only a direct sum can resolve, and a quiet hum on windows just
+ * long enough to need the next transform size.
  */
 
 // reference-begin
@@ -525,15 +528,61 @@ function randomFrame(rand: () => number, sampleRate: number, length: number): Fl
  * A frame that is exact zeros, then a tone riding a DC ramp. The trim keeps
  * the zeros and only the first `burst` or so samples of the ramp, so in the
  * window the correlation is exactly zero at every lag past the burst. The
- * full scan sees a flat run of zeros there; an unguarded FFT sees round-off
- * near 1e-16 with peaks in it.
+ * full scan sees a flat run of zeros there; an FFT alone sees round-off near
+ * 1e-16 with peaks in it. With `floor`, the zeros are instead a faint
+ * deterministic hiss at that level, so those lags are tiny but not zero and
+ * only a direct sum can say what the full scan stored.
  */
-function zeroPlateau(sampleRate: number, length: number, zeros: number, burst: number, toneHz: number): Float32Array {
+function zeroPlateau(
+  sampleRate: number,
+  length: number,
+  zeros: number,
+  burst: number,
+  toneHz: number,
+  floor = 0,
+): Float32Array {
   const out = new Float32Array(length);
+  if (floor > 0) {
+    const rand = seeded(zeros + burst);
+    for (let i = 0; i < zeros; i++) out[i] = floor * (2 * rand() - 1);
+  }
   const ramp = burst / 0.4;
   for (let i = zeros; i < length; i++) {
     const t = i - zeros;
     out[i] = 0.5 * Math.min(1, t / ramp) + 0.03 * Math.sin((2 * Math.PI * toneHz * t) / sampleRate);
+  }
+  return out;
+}
+
+/**
+ * Clicks in digital silence: each click rings down through the low-pass to
+ * exact zero, so the window holds a few short runs of nonzero samples, most
+ * of them far too small for the FFT to resolve.
+ */
+function clicksInSilence(length: number, positions: readonly number[]): Float32Array {
+  const out = new Float32Array(length);
+  positions.forEach((at, k) => {
+    const a = k % 2 === 0 ? 0.9 : -0.6;
+    out[at] = a;
+    out[at + 1] = 0.6 * a;
+    out[at + 2] = 0.2 * a;
+  });
+  return out;
+}
+
+/**
+ * Mains hum at 40 Hz, a fundamental lag near the top of the hum search, on a
+ * frame of `length` samples at 48 kHz quiet enough that the trim keeps all
+ * but the last sample. For lengths from 2897 up, the window plus the longest
+ * lag read is just past 4096, so a transform of 4096 would wrap the longest
+ * lags onto the start of the window, and the hum check reads them.
+ */
+function humNearTheTop(length: number): Float32Array {
+  const rand = seeded(length);
+  const out = new Float32Array(length);
+  for (let i = 0; i < length; i++) {
+    const p = (2 * Math.PI * 40.0886 * i) / 48000;
+    out[i] = 0.148 * (0.107 * Math.sin(p) + Math.sin(2 * p) + 0.3 * Math.sin(4 * p)) + 0.0074 * (2 * rand() - 1);
   }
   return out;
 }
@@ -593,12 +642,69 @@ describe("the FFT detector on random and degenerate frames", () => {
     expect(mismatches).toEqual([]);
   });
 
-  it("sums a lag directly when its FFT value cannot settle the Float32", () => {
-    // On a zero plateau every lag past the burst straddles zero, so each one
-    // the full scan reads has to be summed directly.
+  it("a quiet hum on windows just past a transform length", () => {
+    const mismatches: Mismatch[] = [];
+    for (let length = 2897; length <= 2960; length += 3) {
+      compare(`40 Hz hum, ${length} samples`, humNearTheTop(length), 48000, mismatches);
+    }
+    expect(mismatches).toEqual([]);
+  });
+
+  it("sparse impulse trains at 8 kHz, where every sample is its own run", () => {
+    // At 8 kHz the detector skips the low-pass, so the window keeps its exact
+    // zeros and each impulse is a run of one sample. Correlation exists only
+    // at multiples of the period, the edges of the ranges the detector keeps.
+    const mismatches: Mismatch[] = [];
+    let read = 0;
+    for (const period of [71, 77, 97, 113]) {
+      const frame = new Float32Array(2048);
+      for (let i = 0; i < frame.length; i += period) frame[i] = 0.5 + 0.4 * Math.sin(i);
+      if (compare(`impulse train, period ${period}`, frame, 8000, mismatches)) read++;
+    }
+    expect(mismatches).toEqual([]);
+    expect(read).toBeGreaterThanOrEqual(3);
+  });
+
+  it("clicks in digital silence", () => {
+    const mismatches: Mismatch[] = [];
     const before = nsdfDirectSums();
+    for (const sampleRate of SAMPLE_RATES) {
+      for (const [length, positions] of [
+        [2048, [485, 728]],
+        [2048, [269, 522, 1649]],
+        [4096, [300, 1900, 2200, 3500]],
+        [4096, [1000]],
+      ] as const) {
+        compare(`clicks at ${positions.join(", ")} @ ${sampleRate}, ${length} samples`, clicksInSilence(length, positions), sampleRate, mismatches);
+      }
+    }
+    expect(mismatches).toEqual([]);
+    // The ring-downs are too small for the FFT, so lags were summed directly,
+    // over the runs of nonzero samples only.
+    expect(nsdfDirectSums() - before).toBeGreaterThan(100);
+  });
+
+  it("sums a lag directly when its FFT value cannot settle the Float32", () => {
+    // A faint floor where the zeros were: every lag past the burst is tiny
+    // and not zero, so each one the full scan reads has to be summed.
+    const mismatches: Mismatch[] = [];
+    const before = nsdfDirectSums();
+    for (const sampleRate of SAMPLE_RATES) {
+      for (const burst of [150, 400]) {
+        for (const floor of [1e-20, 1e-12]) {
+          const frame = zeroPlateau(sampleRate, 4096, 2048, burst, 220, floor);
+          compare(`faint floor ${floor}, burst ${burst} @ ${sampleRate}`, frame, sampleRate, mismatches);
+        }
+      }
+    }
+    expect(mismatches).toEqual([]);
+    expect(nsdfDirectSums() - before).toBeGreaterThan(1000);
+
+    // An exact-zero plateau needs no direct sums at all: those lags are known
+    // to be zero without the FFT.
+    const plateau = nsdfDirectSums();
     detectPitch(zeroPlateau(48000, 4096, 2048, 200, 220), 48000);
-    expect(nsdfDirectSums() - before).toBeGreaterThan(500);
+    expect(nsdfDirectSums() - plateau).toBeLessThan(10);
 
     // On an ordinary frame almost every lag settles from the FFT value alone.
     const voice = synthVoice({ freq: midiToHz(57), sampleRate: 48000, seed: 1 });
