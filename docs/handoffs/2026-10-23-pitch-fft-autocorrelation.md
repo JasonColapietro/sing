@@ -24,7 +24,7 @@ The branch is pushed and open as `JasonColapietro/sing#240`. Against `main`
 
 | File | Change |
 |---|---|
-| `lib/audio/pitch.ts` | An FFT plan cache, a radix-2 FFT, `autocorrelate`, `fftErrorUnits`, the rounding guard and the zero runs. Past the numerator, the code is the full scan's, from the energy normalization through the range check. Exports `nsdfDirectSums()` for the tests. |
+| `lib/audio/pitch.ts` | An FFT plan cache, a radix-2 FFT, `autocorrelate`, `fftErrorUnits`, the rounding guard and the zero runs. Past the numerator, the code is the full scan's, from the energy normalization through the range check. Exports two test hooks: `nsdfDirectSums()` counts lags summed directly, and `nsdfValuesForTest()` returns the stored NSDF so the tests can compare every value with the full scan's. |
 | `lib/audio/pitch-fft.test.ts` | Replaces `pitch-coarse.test.ts`. Keeps the full scan verbatim and asserts bitwise equality on 867 sweep frames, 1,600 seeded random frames, and the frame types the FFT path handles specially. |
 | `lib/audio/pitch-regressions.test.ts`, `lib/audio/pitch-regressions.json` | New. The 27 frames the coarse search misread, stored as raw Float32 samples next to the full scan's reading. 21 have clarity of 0.75 or more on at least one side. |
 | `lib/audio/breath-detect.ts` | Comment only. Halving the frame's rate now saves a little over half the cost, about 0.12 ms against 0.29 ms. |
@@ -232,6 +232,7 @@ hitches (p95 frame interval 155 to 191 ms), most on low notes.
    with `detectPitch` frame for frame. Readings are unchanged on every frame
    tested here, so it should pass. It was not run. Porting the FFT to Swift for
    its CPU saving is optional and the owner's call.
+
 Items 3 to 6 are weaknesses of the detector itself, measured on synthetic sweeps
 and unrelated to the AMDF. Fixing any of them changes readings. That makes each
 a contract and iOS-port decision, and the owner's call.
@@ -260,6 +261,26 @@ three seeds.
 | 5 | 30 Hz rumble at -10 dB | Close to normal | 6 missed |
 | 6 | Breathy noise (white, low-passed at 1.5 kHz), 5 dB | Misses across the range | 75 missed; 99 at 2048 samples |
 | 6 | Breathy noise, 0 dB | Every frame unvoiced | 294 missed |
+
+### Found in a browser pass of the mic rooms, outside this change
+
+Every room read the right note on every input, at 375 and 1280 px, with no
+console or page errors. These predate this branch; the detector's readings are
+unchanged.
+
+7. **The mic stays on after stopping in three rooms.** After End in `/warmups`
+   and End practice in `/songs`, the microphone track stays live and the
+   browser's recording light stays on until the singer leaves the page.
+   Neither `components/warmups/warmups-client.tsx` nor
+   `components/songs/songs-client.tsx` calls `stop()`, and `/recorder` has no
+   stop control. Every other mic room releases it on its own stop control.
+   Engineering work, worth doing first of these.
+8. **Note Catcher names a folded octave.** In any-octave mode the "You:" line
+   shows the marker's folded pitch, not the sung note: a held A5 reads "You:
+   A2" or "A3". Engineering work.
+9. **Warmups' cents readout flips sign at a tritone.** A held A3 against a D#3
+   step alternates between +600 and -600 c and the trace jumps an octave.
+   Cosmetic.
 
 ## Environment notes
 

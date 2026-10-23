@@ -56,7 +56,7 @@ export interface PitchResult {
  * which digital silence around a click, a gap or an onset produces, are
  * found without the FFT and stored as zero, and a lag that does need its
  * direct sum skips the products that are exactly zero (see the runs in
- * `detectPitch`). Left to the guard, those frames would be summed directly
+ * `analyze`). Left to the guard, those frames would be summed directly
  * almost lag by lag, and an FFT alone would read a spurious peak in its
  * round-off near 1e-16.
  *
@@ -67,13 +67,17 @@ export interface PitchResult {
  * and Math.cos being accurate to about 1 ulp: V8 and SpiderMonkey use
  * fdlibm, but ECMAScript does not require it. On synthetic frames, including
  * ones built to push the error up, the largest FFT error reached 0.6% of the
- * bound. `pitch-fft.test.ts` keeps a copy of the full scan and checks
- * bitwise equality on a few thousand frames.
+ * bound. `pitch-fft.test.ts` keeps a copy of the full scan and checks, on a
+ * few thousand frames, that the readings and every stored NSDF value are
+ * bitwise equal (`nsdfValuesForTest` exposes the stored values).
  *
  * Cost: about 0.3 ms per 4096-sample frame at 48 kHz in Node, against 5.8 ms
- * for the direct sums over the ~700 lags the full scan computed. The FFT
- * costs the same whatever the signal, so a frame of room noise is as cheap as
- * a clean vowel.
+ * for the direct sums over the ~700 lags the full scan computed. A voiced
+ * frame and a frame of room noise cost about the same. A short click or burst
+ * over a quiet but nonzero floor does not: at most lags its correlation is
+ * tiny next to the frame's energy, the error bounds (the direct sum's own is
+ * the larger there) span more than one Float32 step, and 500 or more lags per
+ * frame fall back to direct sums, close to the old cost.
  *
  * An AMDF coarse search was tried first: it found candidate lags on a
  * decimated copy of the window and computed the NSDF only around them. It was
@@ -416,7 +420,7 @@ function fftErrorUnits(N: number): number {
 
 const ROUNDOFF = 2 ** -53;
 
-/** Run grouping for the exact-zero lags in `detectPitch`. */
+/** Run grouping for the exact-zero lags in `analyze`. */
 const ZERO_RUN_MERGE = 32;
 const ZERO_RUN_LIMIT = 32;
 
@@ -435,6 +439,35 @@ export function detectPitch(
   input: Float32Array,
   sampleRate: number,
 ): PitchResult | null {
+  return analyze(input, sampleRate, null);
+}
+
+/** Where `analyze` hands over its NSDF arrays, for `nsdfValuesForTest`. */
+interface NsdfSink {
+  n: Float32Array | null;
+  computed: Uint8Array | null;
+}
+
+/**
+ * For tests: the NSDF that `analyze` stores for this frame, the same values
+ * `detectPitch` reads, as a copy indexed by lag with NaN at every lag it did
+ * not compute. Null when the frame was rejected before any lag was computed.
+ */
+export function nsdfValuesForTest(input: Float32Array, sampleRate: number): Float32Array | null {
+  const sink: NsdfSink = { n: null, computed: null };
+  analyze(input, sampleRate, sink);
+  const { n, computed } = sink;
+  if (n === null || computed === null) return null;
+  const out = Float32Array.from(n);
+  for (let lag = 0; lag < out.length; lag++) if (!computed[lag]) out[lag] = NaN;
+  return out;
+}
+
+/**
+ * The detector itself. `detectPitch` calls it with no sink; with one, it also
+ * hands over the NSDF arrays it fills, which costs one branch per frame.
+ */
+function analyze(input: Float32Array, sampleRate: number, sink: NsdfSink | null): PitchResult | null {
   const SIZE = input.length;
   // The silence floor is judged on the raw frame, so filtering never changes
   // which frames count as quiet.
@@ -562,6 +595,10 @@ export function detectPitch(
   // expose a hidden hum fundamental.
   const n = new Float32Array(analysisMaxLag + 2);
   const computed = new Uint8Array(analysisMaxLag + 2);
+  if (sink !== null) {
+    sink.n = n;
+    sink.computed = computed;
+  }
   const computeLag = (lag: number) => {
     if (lag < minLag || lag > analysisMaxLag + 1 || lag >= size) return;
     if (computed[lag]) return;

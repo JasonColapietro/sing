@@ -12,6 +12,7 @@ import {
   SUBRANGE_MIN_CLARITY,
   SUBRANGE_SEARCH_RATIO,
   nsdfDirectSums,
+  nsdfValuesForTest,
   TRIM_THRESHOLD,
   type PitchResult,
 } from "./pitch";
@@ -34,8 +35,12 @@ import {
  * where the correlation is provably exactly zero, and sums a lag directly
  * only when the FFT value is too close to a Float32 rounding boundary to
  * settle the stored value. The reference below is the detector
- * as it stood when every lag was summed directly, copied verbatim. If it and
- * `detectPitch` ever disagree, the failure names the frame.
+ * as it stood when every lag was summed directly, copied verbatim but for one
+ * line that hands its NSDF to the comparison. If it and `detectPitch` ever
+ * disagree, the failure names the frame. Every comparison also checks the
+ * NSDF itself, bit for bit at every lag, and that both computed the same
+ * lags: a reading can survive a stored value that moved by one Float32 step,
+ * and the comparison must not.
  *
  * Coverage: every third semitone from C2 to C6 (17 notes), two seeds, both
  * browser sample rates, over ten conditions (680 frames), plus every semitone
@@ -43,13 +48,22 @@ import {
  * breath-detect path (2048-sample frames at 22.05 and 24 kHz, scaled as
  * `frameClarity` scales them, 68 frames), plus the rejection fixtures from
  * pitch.test.ts (15 frames): 867 frames. Then 1,600 seeded random frames in
- * the shapes the app analyses, with missing and weak fundamentals, clicks,
+ * the shapes the app analyzes, with missing and weak fundamentals, clicks,
  * DC, rumble, noise bursts, gaps, second tones and clipping. Then the frames
  * the FFT path handles specially: correlation exactly zero over a long
  * stretch of lags, clicks in digital silence, sparse impulse trains, a faint
  * floor that only a direct sum can resolve, and a quiet hum on windows just
- * long enough to need the next transform size.
+ * long enough to need the next transform size. Then short frames, fades and
+ * bursts at 88.2, 96 and 176.4 kHz, where the lags read reach so close to the
+ * window's end, or so far past its loud middle, that the overlap energy is a
+ * tiny part of the window's and the FFT's error is largest next to the value.
+ * Last, a tone cut into runs by digital silence at 8 kHz, where some lags'
+ * products cancel almost exactly and the stored value depends on the order
+ * the runs are summed in.
  */
+
+/** Where the reference hands over its NSDF arrays while `compare` runs it. */
+let fullScanSink: { n: Float32Array | null; computed: Uint8Array | null } | null = null;
 
 // reference-begin
 function lowpass(x: Float32Array, sampleRate: number, cornerHz: number): Float32Array {
@@ -77,7 +91,10 @@ function lowpass(x: Float32Array, sampleRate: number, cornerHz: number): Float32
   return y;
 }
 
-/** The detector when every lag was summed directly. Verbatim. */
+/**
+ * The detector when every lag was summed directly. Verbatim, but for the line
+ * after the NSDF arrays are allocated, which hands them to `fullScanSink`.
+ */
 function detectPitchFullScan(
   input: Float32Array,
   sampleRate: number,
@@ -142,6 +159,7 @@ function detectPitchFullScan(
   // work for ordinary singing.
   const n = new Float32Array(analysisMaxLag + 2);
   const computed = new Uint8Array(analysisMaxLag + 2);
+  if (fullScanSink) Object.assign(fullScanSink, { n, computed });
   const computeLag = (lag: number) => {
     if (lag < minLag || lag > analysisMaxLag + 1 || lag >= size) return;
     if (computed[lag]) return;
@@ -316,11 +334,44 @@ interface Mismatch {
   label: string;
   fullScan: PitchResult | null;
   detected: PitchResult | null;
+  /** The first lag whose stored NSDF differs; NaN where a lag was not computed. */
+  nsdf?: { lag: number; fullScan: number; detected: number };
 }
 
-/** Bitwise: both null, or `toBe` on freq and clarity. */
+/**
+ * The first lag where the stored NSDF differs, comparing with `Object.is`
+ * (so +0 and −0 differ) and with NaN for a lag not computed, so a lag only
+ * one side computed differs too. Null when they agree everywhere, including
+ * when neither got as far as computing a lag.
+ */
+function nsdfMismatch(
+  fullScan: { n: Float32Array | null; computed: Uint8Array | null },
+  detected: Float32Array | null,
+): Mismatch["nsdf"] | null {
+  const { n, computed } = fullScan;
+  if (n === null || computed === null) return detected === null ? null : { lag: -1, fullScan: NaN, detected: NaN };
+  if (detected === null) return { lag: -1, fullScan: NaN, detected: NaN };
+  for (let lag = 0; lag < Math.max(n.length, detected.length); lag++) {
+    const want = lag < n.length && computed[lag] ? n[lag] : NaN;
+    const got = lag < detected.length ? detected[lag] : NaN;
+    if (!Object.is(want, got)) return { lag, fullScan: want, detected: got };
+  }
+  return null;
+}
+
+/**
+ * Bitwise: both null, or `toBe` on freq and clarity, and the same Float32 in
+ * the NSDF at every lag.
+ */
 function compare(label: string, frame: Float32Array, sampleRate: number, into: Mismatch[]): PitchResult | null {
-  const fullScan = detectPitchFullScan(frame, sampleRate);
+  const sink: { n: Float32Array | null; computed: Uint8Array | null } = { n: null, computed: null };
+  fullScanSink = sink;
+  let fullScan: PitchResult | null;
+  try {
+    fullScan = detectPitchFullScan(frame, sampleRate);
+  } finally {
+    fullScanSink = null;
+  }
   const detected = detectPitch(frame, sampleRate);
   const same =
     (fullScan === null && detected === null) ||
@@ -328,7 +379,8 @@ function compare(label: string, frame: Float32Array, sampleRate: number, into: M
       detected !== null &&
       Object.is(fullScan.freq, detected.freq) &&
       Object.is(fullScan.clarity, detected.clarity));
-  if (!same) into.push({ label, fullScan, detected });
+  const nsdf = nsdfMismatch(sink, nsdfValuesForTest(frame, sampleRate));
+  if (!same || nsdf !== null) into.push({ label, fullScan, detected, ...(nsdf ? { nsdf } : {}) });
   return fullScan;
 }
 
@@ -587,6 +639,47 @@ function humNearTheTop(length: number): Float32Array {
   return out;
 }
 
+/**
+ * A frame whose overlap energy at the lags read is a tiny part of the
+ * window's, at a high sample rate where the lags read are long: a short frame
+ * whose lags run almost to its end, a tone that drops to a faint tail or
+ * decays fast, or a short burst over a faint floor. The FFT's error scales
+ * with the window's energy, so next to these overlaps it is at its largest.
+ */
+function thinOverlapFrame(rand: () => number, sampleRate: number, length: number): Float32Array {
+  const between = (lo: number, hi: number) => lo + rand() * (hi - lo);
+  const f0 = Math.exp(between(Math.log(70), Math.log(1500)));
+  const harmonics = Array.from({ length: 1 + Math.floor(rand() * 4) }, () => rand());
+  harmonics[0] = Math.max(harmonics[0], 0.5);
+  const level = between(0.3, 0.9);
+  const tone = (i: number) => {
+    let v = 0;
+    for (let h = 0; h < harmonics.length; h++) v += (harmonics[h] / (h + 1)) * Math.sin((2 * Math.PI * f0 * (h + 1) * i) / sampleRate);
+    return (level * v) / 2;
+  };
+  const out = new Float32Array(length);
+  const kind = Math.floor(rand() * 3);
+  if (kind === 0) {
+    // A sharp fade into a faint tail.
+    const at = Math.floor(between(0.3, 0.8) * length);
+    const tail = 10 ** -between(2, 8);
+    for (let i = 0; i < length; i++) out[i] = tone(i) * (i < at ? 1 : tail);
+  } else if (kind === 1) {
+    // An exponential decay, fast enough that the end is far below the start.
+    const tau = between(0.03, 0.15) * length;
+    for (let i = 0; i < length; i++) out[i] = tone(i) * Math.exp(-i / tau);
+  } else {
+    // A short burst over a faint floor, at the start or in the middle.
+    const floor = 10 ** -between(3, 6);
+    const burst = Math.max(8, Math.floor(between(0.05, 0.3) * length));
+    const start = rand() < 0.5 ? 0 : Math.floor((length - burst) / 2);
+    for (let i = 0; i < length; i++) {
+      out[i] = i >= start && i < start + burst ? tone(i) : floor * (2 * rand() - 1);
+    }
+  }
+  return out;
+}
+
 describe("the FFT detector on random and degenerate frames", () => {
   // 1,600 frames in eight seeded batches, so each batch stays well inside the
   // default test timeout. Batches run in order and the last test checks what
@@ -640,6 +733,69 @@ describe("the FFT detector on random and degenerate frames", () => {
       }
     }
     expect(mismatches).toEqual([]);
+  });
+
+  it("stores the full scan's NSDF where the overlap energy is a tiny part of the window's", () => {
+    const mismatches: Mismatch[] = [];
+    const rand = seeded(88200176);
+    let analyzed = 0;
+    const before = nsdfDirectSums();
+    for (let k = 0; k < 600; k++) {
+      const sampleRate = [88200, 96000, 176400][k % 3];
+      const length = [140, 200, 256, 400, 640, 1024, 2048][Math.floor(rand() * 7)];
+      const frame = thinOverlapFrame(rand, sampleRate, length);
+      compare(`thin overlap ${k} @ ${sampleRate}, ${length} samples`, frame, sampleRate, mismatches);
+      if (nsdfValuesForTest(frame, sampleRate) !== null) analyzed++;
+    }
+    // A tone faded to a faint tail on a 200-sample frame at 176.4 kHz, whose
+    // lags run to the window's last few samples.
+    const faded = new Float32Array(200);
+    for (let i = 0; i < faded.length; i++) {
+      faded[i] = 0.5 * Math.sin((2 * Math.PI * 440 * i) / 176400) * (i < 120 ? 1 : 1e-6);
+    }
+    compare("faded 200 samples @ 176400", faded, 176400, mismatches);
+    // Short bursts in the middle of a 4096-sample frame over a faint floor: at
+    // 176.4 kHz the lags read run past half the window, where neither half of
+    // the overlap holds the burst.
+    for (const sampleRate of [88200, 96000, 176400]) {
+      for (const floor of [1e-5, 1e-4]) {
+        const frame = new Float32Array(4096);
+        const noise = seeded(sampleRate + floor * 1e6);
+        for (let i = 0; i < frame.length; i++) {
+          frame[i] = i >= 1950 && i < 2150 ? 0.9 * Math.sin((2 * Math.PI * 220 * i) / sampleRate) : floor * (2 * noise() - 1);
+        }
+        compare(`burst over ${floor} floor @ ${sampleRate}`, frame, sampleRate, mismatches);
+      }
+    }
+    expect(mismatches).toEqual([]);
+    // The corpus must not pass because nothing reached the NSDF, and these
+    // frames are the ones the guard sends to direct sums.
+    expect(analyzed).toBeGreaterThan(400);
+    expect(nsdfDirectSums() - before).toBeGreaterThan(10000);
+  });
+
+  it("sums the runs in the full scan's order where a tone's correlation cancels", () => {
+    // At 8 kHz the window keeps its exact zeros, so a tone cut into runs by
+    // gaps of digital silence is summed run by run. With a period of a few
+    // samples, a multiple of four, the products at an odd multiple of a
+    // quarter period cancel almost exactly, so what the full scan stored there
+    // is rounding residue that depends on the order of the additions.
+    const mismatches: Mismatch[] = [];
+    const rand = seeded(8000);
+    const before = nsdfDirectSums();
+    for (let k = 0; k < 70; k++) {
+      const period = [8, 12, 16, 20, 24, 28, 36][k % 7];
+      const frame = new Float32Array(2048);
+      let at = Math.floor(rand() * 40);
+      while (at < frame.length) {
+        const run = 100 + Math.floor(rand() * 100);
+        for (let i = at; i < Math.min(frame.length, at + run); i++) frame[i] = 0.5 * Math.sin((2 * Math.PI * i) / period);
+        at += run + 33 + Math.floor(rand() * 40);
+      }
+      compare(`tone in runs, period ${period}, frame ${k}`, frame, 8000, mismatches);
+    }
+    expect(mismatches).toEqual([]);
+    expect(nsdfDirectSums() - before).toBeGreaterThan(100);
   });
 
   it("a quiet hum on windows just past a transform length", () => {
