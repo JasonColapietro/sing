@@ -9,7 +9,7 @@ import fixtures from "./pitch-regressions.json";
  *
  * That version found candidate lags with an AMDF coarse search and computed
  * the NSDF only around them. A random search over 20,000 frames shaped like
- * the ones the app actually analyses (44.1 and 48 kHz at 2048 and 4096
+ * the ones the app actually analyzes (44.1 and 48 kHz at 2048 and 4096
  * samples, plus the breath detector's 2048-sample frames at 22.05 and
  * 24 kHz) found 123 where it read something else. Of the ones a singer could
  * have seen, all but one were high notes, 887 to 1505 Hz, read anywhere from

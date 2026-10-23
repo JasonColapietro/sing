@@ -8,7 +8,8 @@ improve Suede Sing's pitch detection end to end. Measured, the AMDF improved no
 reading. It could find the period cheaply, but that version misread some high
 notes, so it was replaced. What ships computes the same NSDF from one FFT
 autocorrelation. On all 162,515 frames tested it reads exactly what the old full scan
-read, at about a twentieth of the CPU in Node.
+read. On 4096-sample frames at 44.1 and 48 kHz it costs 16 to 20 times less CPU
+in Node.
 
 ## Shipped
 
@@ -18,8 +19,8 @@ read, at about a twentieth of the CPU in Node.
 | Exact-zero runs | 46b3316 | Lags whose correlation is provably exactly zero are stored as +0 without the FFT. A lag that still needs a direct sum visits only the stretches where nonzero runs overlap. The error-bound comment carries the audited figures. |
 | Superseded | 490ead5, 5cc918e, c2a2e02 | The AMDF coarse search with NSDF refinement, and two comment fixes to it. 0c5dad3 replaced it. The commits stay on the branch as history. |
 
-The branch is pushed and has no PR yet. Against `main` (ee6569c) it touches
-five files:
+The branch is pushed and open as `JasonColapietro/sing#240`. Against `main`
+(ee6569c) it touches seven files:
 
 | File | Change |
 |---|---|
@@ -27,26 +28,31 @@ five files:
 | `lib/audio/pitch-fft.test.ts` | Replaces `pitch-coarse.test.ts`. Keeps the full scan verbatim and asserts bitwise equality on 867 sweep frames, 1,600 seeded random frames, and the frame types the FFT path handles specially. |
 | `lib/audio/pitch-regressions.test.ts`, `lib/audio/pitch-regressions.json` | New. The 27 frames the coarse search misread, stored as raw Float32 samples next to the full scan's reading. 21 have clarity of 0.75 or more on at least one side. |
 | `lib/audio/breath-detect.ts` | Comment only. Halving the frame's rate now saves a little over half the cost, about 0.12 ms against 0.29 ms. |
+| `app/changelog/page.tsx` | One October 2026 entry for the change. |
+| `docs/handoffs/2026-10-23-pitch-fft-autocorrelation.md` | New. This handoff. |
 
 ## Decisions
 
 **The AMDF does not improve readings.** Weighting the NSDF by an AMDF term, or
-replacing the NSDF with the AMDF, never beat the current detector on misses,
-octave errors or cents. That held on 21 synthetic sweeps (C2 to C6, both browser
-rates, three seeds) and on a second bench of harder conditions. Every peak the
-weighting changed was an octave error.
+replacing the NSDF with the AMDF, never beat the current detector once misses
+and octave errors are counted together: where it cut misses, it added at least
+as many octave-down reads. Its cents gains came with octave errors, or only under
+key clicks and reverb (below). That held on 21 synthetic sweeps (most C2 to C6,
+four on the bass range only; both browser rates, three seeds) and on a second
+bench of harder conditions. Apart from the full product form's small shifts under
+noise and clicks, every peak the weighting changed was an octave error.
 
 | Variant | Against the current detector |
 |---|---|
-| Product weighting n(1-a), parabola on the NSDF | Identical readings on every sweep |
+| Product weighting n(1-a), parabola on the NSDF | Lazy form: identical readings on every sweep. Full form: one more miss at 0 dB SNR, a worst click reading of 40 c against 10 c, small p95 shifts under noise |
 | Ratio weighting n/(a+k) | Octave-down reads on clean frames: 63 of 294 at k = 0.1, 9 at k = 0.3 |
 | Product weighting, parabola on the weighted function | Clean p50 from 0.08 to 0.44 c; vibrato p50 from 0.88 to 3.15 c |
 | AMDF alone | Clean p50 0.52 to 0.88 c, against 0.08 c; every frame missed at 0 dB SNR |
-| Weighting under harder conditions | 222 more subharmonic reads at a 0.8 cycle alternation; 75 more octave-down reads on a mid-frame note change, 48 under a major-third guide at -10 dB, 36 on breathy noise at 2048 samples |
+| Weighting under harder conditions | 222 more subharmonic reads at a 0.8 cycle alternation; 75 more octave-down reads on a mid-frame note change, 48 under a major-third guide at -10 dB, 35 on breathy noise at 2048 samples |
 
-The weighting's one gain was a lower p95 under key clicks. It cost 4 to 6 times
-the p95 on clean frames, and the live median of four already drops an isolated
-click frame.
+The weighting's only gains were a lower p95 under key clicks and on reverb
+carrying the previous note (8.59 to 6.02 c). It cost 3 to 6 times the p95 on
+clean frames, and the live median of four already drops an isolated click frame.
 
 **The AMDF coarse search was dropped too.** It used the AMDF to pick candidate
 periods and computed the NSDF only around them. On 6,486 synthetic sweep frames
@@ -58,7 +64,7 @@ over frames in the app's own shapes then found disagreements. Those shapes are
 | Corpus | Frames | Read differently | Clarity 0.75 or more on either side |
 |---|---|---|---|
 | Random frames, the app's shapes | 20,000 | 123 | 21 |
-| The repo's real audio clips | 37,877 | 34 | 21 |
+| Recorded and synthetic clips (the repo's piano samples, LibreOffice sound effects, synthetic phrases), every frame as run | 37,877 | 34 | 21 |
 
 The 21 random frames that mattered were all high notes, 723 to 1505 Hz.
 
@@ -69,8 +75,9 @@ The 21 random frames that mattered were all high notes, 723 to 1505 Hz.
 | 79 Hz | 1 |
 
 In 122 of the 123, the coarse stage never computed the lag the full scan chose.
-On the real clips, the 15 material misses logged in detail were notes from 923 to
-1292 Hz returned as null.
+On those clips, the 15 material misses logged in detail were LibreOffice sound
+effects (falling and explosion sounds) that the full scan read at 923 to 1292 Hz,
+returned as null.
 
 Repairs to the coarse stage were scored on the same 20,000 frames. Speed-ups are
 against the full scan in the same run, because absolute times moved with machine
@@ -98,12 +105,12 @@ guard widens each lag's FFT value by the worst-case error of both computations.
 If that interval rounds to one Float32, the direct sum would have stored the same
 value. Otherwise the lag is summed directly with the full scan's own arithmetic.
 
-| Random frames | Lags summed directly |
-|---|---|
-| 40,000 in the app's shapes | 0.318% |
-| 30,000 at 8 to 96 kHz, 256 to 8192 samples | 0.877% |
+| Random frames | Lags summed directly, 0c5dad3 | 46b3316 |
+|---|---|---|
+| 40,000 in the app's shapes | 0.318% | 0.090% |
+| 30,000 at 8 to 96 kHz, 256 to 8192 samples | 0.877% | 0.251% |
 
-An independent audit checked the bound. Here u is 2^-53 and L is log2(N/2) for a
+A separate audit checked the bound. Here u is 2^-53 and L is log2(N/2) for a
 transform of length N.
 
 | Audit item | Figure |
@@ -143,41 +150,48 @@ clarity are bitwise equal, or both readings are null.
 |---|---|---|
 | Synthetic voice corpus, the app's shapes | 15,000 | 0 |
 | Soprano corpus (near-pure high notes) | 3,000 | 0 |
-| The repo's real audio clips, unique frames | 24,064 | 0 |
+| The repo's piano samples, LibreOffice sound effects and synthetic phrases, frames | 24,064 | 0 |
 | Random frames that caught the coarse search, the app's shapes | 20,000 | 0 |
 | More random frames, the app's shapes | 40,000 | 0 |
 | Random frames, 8 to 96 kHz, 256 to 8192 samples | 30,000 | 0 |
 | Regression fixtures (inside the 20,000 above) | 37 | 0 |
-| Real singing, openly licensed (CC BY): Vocadito solo singers, a Dagstuhl ChoirSet quartet, a song's mix and separated vocal | 30,451 | 0 |
+| Real singing, openly licensed (CC BY): three Vocadito solo singers (one at two levels), a Dagstuhl ChoirSet quartet, a song's mix and separated vocal | 30,451 | 0 |
 
-All runs used the final commit, 46b3316: 162,515 unique frames, none read
-differently. The real singing was fetched for testing only and is not in the repo. On the same recordings the superseded coarse search read 6 frames differently with clarity 0.75 or more, the same high-note failure. The guard summed about 0.3% of lags directly in the app's shapes.
+All runs used the final commit, 46b3316: 162,515 frames, none read differently.
+The LibreOffice sound effects and the real singing were used for testing only and
+are not in the repo. On the real singing the superseded coarse search read 6
+frames differently with clarity 0.75 or more (two are one Vocadito frame at two
+levels), including a 767 Hz note read at 253 Hz. The guard summed about 0.1% of
+lags directly in the app's shapes.
 
 **Cost per frame.** Node, the three detectors interleaved, fastest of 25 rounds.
 
-| Frame | Full scan | Two-stage (superseded) | FFT (shipped) |
-|---|---|---|---|
-| A3, 4096 at 48 kHz | 5.83 ms | 0.414 ms | 0.285 ms |
-| E2 at 10 dB SNR, 4096 at 48 kHz | 5.74 ms | 0.487 ms | 0.284 ms |
-| C6, 4096 at 44.1 kHz | 4.96 ms | 0.357 ms | 0.287 ms |
-| A5, 4096 at 48 kHz | 5.46 ms | 0.366 ms | 0.285 ms |
-| Noise, 4096 at 48 kHz | 5.71 ms | 4.61 ms | 0.283 ms |
-| Breath path A3, 2048 at 24 kHz | 1.38 ms | 0.294 ms | 0.121 ms |
-| Noise, 4096 at 8 kHz | 0.98 ms | 2.14 ms | 0.252 ms |
-| Noise, 4096 at 16 kHz | 1.93 ms | 4.09 ms | 0.265 ms |
-| A3, 4096 at 8 kHz | 1.04 ms | 0.80 ms | 0.242 ms |
-| A3, 4096 at 16 kHz | 2.07 ms | 1.53 ms | 0.255 ms |
+| Frame | Full scan | Two-stage (superseded) |
+|---|---|---|
+| A3, 4096 at 48 kHz | 5.83 ms | 0.414 ms |
+| E2 at 10 dB SNR, 4096 at 48 kHz | 5.74 ms | 0.487 ms |
+| C6, 4096 at 44.1 kHz | 4.96 ms | 0.357 ms |
+| A5, 4096 at 48 kHz | 5.46 ms | 0.366 ms |
+| Noise, 4096 at 48 kHz | 5.71 ms | 4.61 ms |
+| Breath path A3, 2048 at 24 kHz | 1.38 ms | 0.294 ms |
+| Noise, 4096 at 8 kHz | 0.98 ms | 2.14 ms |
+| Noise, 4096 at 16 kHz | 1.93 ms | 4.09 ms |
+| A3, 4096 at 8 kHz | 1.04 ms | 0.80 ms |
+| A3, 4096 at 16 kHz | 2.07 ms | 1.53 ms |
 
-The FFT's cost follows the frame length, not the signal, so room noise costs what
-a vowel does. The two-stage search was slower than the full scan on noise at 8 and
-16 kHz. Nothing was timed on a phone.
+The shipped FFT path took 0.29 to 0.36 ms on the 4096-sample frames at 44.1 and
+48 kHz, depending on machine load: 16 to 20 times less than the full scan. Its
+cost follows the frame length, not the signal, so room noise costs what a vowel
+does. A short click over a faint but nonzero floor can fall back to about the old
+cost, because the guard's direct sums dominate there. The two-stage search was
+slower than the full scan on noise at 8 and 16 kHz. Nothing was timed on a phone.
 
 **Repo checks on 46b3316:** lint, types, unit tests, build and the browser suites.
 
 | Check | Result |
 |---|---|
 | `npx tsc --noEmit`, `npm run lint` | Clean |
-| `npm test` | 3,166 passed, 5 skipped, across 224 files (1 skipped) |
+| `npm test` | 3,166 passed, 5 skipped, across 225 files (224 passed, 1 skipped) |
 | `npm run build` | OK, with the empty keys CI builds with |
 | `e2e/pitch-precision.mjs` | 14 of 14 within their ceilings |
 | `e2e/breath-gate.mjs` | 4 of 4 |
@@ -186,7 +200,7 @@ a vowel does. The two-stage search was slower than the full scan on noise at 8 a
 | `scripts/audit-warmup-timing.mjs` | All checks pass |
 | `e2e/ear-mic-interruption.mjs` | Pass, all three games |
 
-Browser suites ran against a production build in headless Chromium on Linux. One pitch-precision case, E2, logged a single 13 c reading among 175; its bias (0.36 c) and p95 (0.07 c) stayed well inside the ceilings.
+Browser suites ran against a production build in headless Chromium on Linux. One pitch-precision case, E2, logged a max of 13.27 c over 175 readings; its bias (0.36 c) and p95 (0.07 c) stayed within the ceilings.
 
 **Frame rate in the studio.** Headless Chromium on Linux under CPU
 throttling, the old full scan (`main`, ee6569c) against 46b3316, median of three
@@ -198,20 +212,21 @@ on a phone.
 | A3 | 4x | 26.7 to 53.5 | 43% to 2% | 53 to 0 ms |
 | E2 at 10 dB SNR | 4x | 23.8 to 50.0 | 77% to 3% | 107 to 0 ms |
 | A5 | 4x | 30.5 to 52.3 | 19% to 2% | 0 to 0 ms |
-| Room noise only | 4x | 30.3 to 52.7 | 18% to 2% | |
+| Room noise only | 4x | 30.3 to 52.7 | 18% to 2% | 69 to 0 ms |
 | A3 | 8x | 8.3 to 25.5 | 100% to 25% | 3065 to 403 ms |
 | E2 at 10 dB SNR | 8x | 7.5 to 19.2 | 100% to 47% | 2999 to 122 ms |
 | A5 | 8x | 9.7 to 32.0 | 100% to 10% | 2884 to 289 ms |
 | Room noise only | 8x | 9.7 to 30.0 | 100% to 15% | 2679 to 188 ms |
 
-Unthrottled, both builds hold 60 fps. Bias stayed within 0.04 c and the room
+Unthrottled, both builds ran at 59.8 to 60 fps in every case. Bias stayed within 0.04 c and the room
 noise read 0% voiced on both builds in every cell. At 8x the new build still
 hitches (p95 frame interval 155 to 191 ms), most on low notes.
 
 ## Open, in priority order
 
-1. **Open the PR.** The branch is pushed and every check above passed in the
-   cloud container. CI's audio suite runs on the PR. The owner's call.
+1. **Merge PR `JasonColapietro/sing#240` once CI is green.** Every check above
+   passed in the cloud container. CI's audio suite runs on the PR. The owner's
+   call.
 2. **Run Suede Voice's Swift suite.** The iOS port (Suede-AI/suede-voice) reads
    the same contract values, and `NSDFPitchDetectorTests` compares its readings
    with `detectPitch` frame for frame. Readings are unchanged on every frame
