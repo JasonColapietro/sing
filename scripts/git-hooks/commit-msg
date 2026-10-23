@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Strip AI attribution from a commit message before git records it.
+#
+# Removes Co-Authored-By trailers that name Claude or anthropic.com, the
+# Claude-Session trailer, "Generated with/by Claude Code" footers and bare
+# claude.ai session links, then trims the blank lines they leave behind.
+# Installed by scripts/git-identity.sh (core.hooksPath=scripts/git-hooks).
+set -euo pipefail
+
+msg_file="$1"
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+awk '
+  {
+    l = tolower($0)
+    if (l ~ /^[[:space:]]*co-authored-by:.*(claude|anthropic\.com)/) next
+    if (l ~ /^[[:space:]]*claude-session:/) next
+    if (l ~ /^[^a-z0-9]*generated (with|by) \[?claude code\]?(\([^)]*\))?[[:space:]]*$/) next
+    if (l ~ /^[[:space:]]*<?https:\/\/claude\.ai\/code\/session_[^[:space:]]*>?[[:space:]]*$/) next
+    lines[++n] = $0
+  }
+  END {
+    while (n > 0 && lines[n] ~ /^[[:space:]]*$/) n--
+    for (i = 1; i <= n; i++) print lines[i]
+  }
+' "$msg_file" >"$tmp"
+
+cat "$tmp" >"$msg_file"
