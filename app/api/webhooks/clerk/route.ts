@@ -3,7 +3,7 @@ import { verifyWebhook, type WebhookEvent } from "@clerk/nextjs/webhooks";
 import { NextResponse, type NextRequest } from "next/server";
 import {
   forwardToIntake,
-  intakePerson,
+  intakeContact,
   intakeProperty,
   intakeSummary,
   type IntakeEvent,
@@ -108,14 +108,16 @@ function eventFor(
   const who = account.email ?? account.name ?? account.userId;
   const summary =
     kind === "signup" ? `New Suede Sing account: ${who}` : `Suede Sing sign-in: ${who}`;
+  const contact = intakeContact(account);
   return {
     id,
     kind,
     property: intakeProperty(),
     occurredAt,
     summary: intakeSummary(summary),
-    person: intakePerson(account),
+    person: contact.person,
     details: {
+      ...contact.details,
       clerkUserId: account.userId,
       provider: account.provider,
       ...extra,
@@ -142,7 +144,15 @@ async function intakeEventFrom(evt: WebhookEvent): Promise<IntakeEvent | null> {
   return null;
 }
 
-function respondTo(result: IntakeForwardResult): Response {
+function respondTo(event: IntakeEvent, result: IntakeForwardResult): Response {
+  if (!result.ok && result.reason === "rejected") {
+    // A redelivery cannot fix a refusal, so Clerk gets a 200, but the event
+    // is now lost unless someone acts on this line. Ids only, no PII.
+    console.error("[webhooks/clerk] lead intake refused the event; it was not stored", {
+      id: event.id,
+      kind: event.kind,
+    });
+  }
   if (!result.ok && result.reason !== "rejected") {
     return NextResponse.json(
       { error: "Lead intake unavailable; retry later." },
@@ -178,5 +188,5 @@ export async function POST(request: NextRequest): Promise<Response> {
   if (!event) {
     return NextResponse.json({ received: true, forwarded: false });
   }
-  return respondTo(await forwardToIntake(event));
+  return respondTo(event, await forwardToIntake(event));
 }

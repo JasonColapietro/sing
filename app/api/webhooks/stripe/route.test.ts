@@ -177,4 +177,34 @@ describe("POST /api/webhooks/stripe", () => {
     mocks.forwardToIntake.mockResolvedValue({ ok: false, reason: "rejected" });
     expect((await POST(signed(checkoutCompleted()))).status).toBe(200);
   });
+
+  it("logs a hub refusal with the event id and kind, and no email", async () => {
+    mocks.forwardToIntake.mockResolvedValue({ ok: false, reason: "rejected" });
+    await POST(signed(checkoutCompleted()));
+    const logged = vi.mocked(console.error).mock.calls.find(([message]) =>
+      String(message).includes("refused"),
+    );
+    expect(logged).toBeDefined();
+    expect(logged![1]).toEqual({ id: "stripe:evt_1Sing", kind: "purchase" });
+    expect(JSON.stringify(logged)).not.toContain("buyer@example.com");
+  });
+
+  it("cuts a name over 120 characters and rescues an address the hub would refuse", async () => {
+    await POST(
+      signed(
+        checkoutCompleted({
+          customer_details: {
+            email: "buyer@example",
+            name: "S".repeat(300),
+            phone: null,
+            address: { country: "US" },
+          },
+        }),
+      ),
+    );
+    const [event] = mocks.forwardToIntake.mock.calls[0]!;
+    expect(event.person.name).toHaveLength(120);
+    expect(event.person.email).toBeUndefined();
+    expect(event.details.submitted_email).toBe("buyer@example");
+  });
 });

@@ -5,9 +5,12 @@ vi.mock("server-only", () => ({}));
 
 const {
   DEFAULT_INTAKE_URL,
+  INTAKE_MAX_BODY_BYTES,
   forwardToIntake,
+  intakeContact,
   intakePerson,
   intakeSummary,
+  serializeIntakeEvent,
 } = await import("./intake-forward");
 type IntakeEvent = Parameters<typeof forwardToIntake>[0];
 
@@ -159,5 +162,90 @@ describe("intake helpers", () => {
     const long = intakeSummary("x".repeat(300));
     expect(long).toHaveLength(200);
     expect(long.endsWith("…")).toBe(true);
+  });
+});
+
+describe("shaping events the hub accepts", () => {
+  it("cuts a name over 120 characters to one line of 120", () => {
+    const person = intakePerson({ name: `Ada\n${"L".repeat(300)}` });
+    expect(person?.name).toHaveLength(120);
+    expect(person?.name?.startsWith("Ada L")).toBe(true);
+    expect(person?.name?.endsWith("…")).toBe(true);
+  });
+
+  it("keeps an address the hub's email rule accepts", () => {
+    expect(intakeContact({ email: "o'neil+sing@mail.example.co" })).toEqual({
+      person: { email: "o'neil+sing@mail.example.co" },
+      details: {},
+    });
+  });
+
+  it.each(["a..b@example.com", ".dot@example.com", "user@localhost", "no-at-sign", "x@y.c"])(
+    "moves %s, which the hub would refuse, into details.submitted_email",
+    (email) => {
+      expect(intakeContact({ email, name: "Ada" })).toEqual({
+        person: { name: "Ada" },
+        details: { submitted_email: email },
+      });
+    },
+  );
+
+  it("moves a phone the hub would refuse into details.submitted_phone", () => {
+    expect(intakeContact({ phone: "ext. 12#" })).toEqual({
+      person: undefined,
+      details: { submitted_phone: "ext. 12#" },
+    });
+  });
+
+  it("leaves a normal event untouched", () => {
+    expect(serializeIntakeEvent(EVENT)).toBe(JSON.stringify(EVENT));
+  });
+
+  it("trims details until the body fits 32,768 bytes", () => {
+    const details = Object.fromEntries(
+      Array.from({ length: 30 }, (_, i) => [`k${i}`, "é".repeat(2_000)]),
+    );
+    const body = serializeIntakeEvent({ ...EVENT, details });
+    expect(body).not.toBeNull();
+    expect(Buffer.byteLength(body!, "utf8")).toBeLessThanOrEqual(INTAKE_MAX_BODY_BYTES);
+    const parsed = JSON.parse(body!);
+    expect(parsed.id).toBe(EVENT.id);
+    expect(parsed.person).toEqual(EVENT.person);
+  });
+
+  it("sends the capped body, signed as sent", async () => {
+    const details = Object.fromEntries(
+      Array.from({ length: 30 }, (_, i) => [`k${i}`, "x".repeat(2_000)]),
+    );
+    const fetcher = vi.fn<typeof fetch>(async () => reply(202, { accepted: true }));
+    const pending = forwardToIntake({ ...EVENT, details }, ENV, fetcher);
+    await vi.runAllTimersAsync();
+    await pending;
+    const [, init] = fetcher.mock.calls[0] as [string, RequestInit];
+    const body = init.body as string;
+    expect(Buffer.byteLength(body, "utf8")).toBeLessThanOrEqual(INTAKE_MAX_BODY_BYTES);
+    const headers = init.headers as Record<string, string>;
+    const expected = createHmac("sha256", SECRET)
+      .update(`${headers["x-suede-intake-timestamp"]}.${body}`, "utf8")
+      .digest("hex");
+    expect(headers["x-suede-intake-signature"]).toBe(`v1=${expected}`);
+  });
+});
+
+describe("intakeProperty", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it.each([
+    ["http://localhost:3000", "localhost"],
+    ["https://Sing.SuedeAI.ai:8443/", "sing.suedeai.ai"],
+    [undefined, "sing.suedeai.ai"],
+  ])("uses the hostname of %s without a port", async (siteUrl, expected) => {
+    vi.resetModules();
+    if (siteUrl) vi.stubEnv("NEXT_PUBLIC_SITE_URL", siteUrl);
+    else vi.stubEnv("NEXT_PUBLIC_SITE_URL", undefined as unknown as string);
+    const { intakeProperty } = await import("./intake-forward");
+    expect(intakeProperty()).toBe(expected);
   });
 });

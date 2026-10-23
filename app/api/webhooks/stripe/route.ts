@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import {
   forwardToIntake,
-  intakePerson,
+  intakeContact,
   intakeProperty,
   intakeSummary,
   type IntakeEvent,
@@ -86,6 +86,11 @@ function purchaseFrom(event: Stripe.CheckoutSessionCompletedEvent): IntakeEvent 
   const what = `Suede Pro ${plan ?? ""} purchase${price ? `, ${price}` : ""}${pending}`
     .replace(/\s+/g, " ");
   const details = session.customer_details;
+  const contact = intakeContact({
+    email: details?.email ?? session.customer_email,
+    name: details?.name,
+    phone: details?.phone,
+  });
 
   return {
     id: `stripe:${event.id}`,
@@ -93,12 +98,9 @@ function purchaseFrom(event: Stripe.CheckoutSessionCompletedEvent): IntakeEvent 
     property: intakeProperty(),
     occurredAt: new Date(event.created * 1000).toISOString(),
     summary: intakeSummary(event.livemode ? what : `Test mode: ${what}`),
-    person: intakePerson({
-      email: details?.email ?? session.customer_email,
-      name: details?.name,
-      phone: details?.phone,
-    }),
+    person: contact.person,
     details: {
+      ...contact.details,
       plan,
       offer: session.metadata?.offer ?? null,
       mode: session.mode,
@@ -151,6 +153,14 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const result = await forwardToIntake(purchase);
+  if (!result.ok && result.reason === "rejected") {
+    // A redelivery cannot fix a refusal, so Stripe gets a 200, but the
+    // purchase report is now lost unless someone acts on this line. Ids only.
+    console.error("[webhooks/stripe] lead intake refused the event; it was not stored", {
+      id: purchase.id,
+      kind: purchase.kind,
+    });
+  }
   if (!result.ok && result.reason !== "rejected") {
     return NextResponse.json(
       { error: "Lead intake unavailable; retry later." },

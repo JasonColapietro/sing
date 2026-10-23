@@ -59,6 +59,22 @@ const BACKOFF_MS = [0, 400, 1_200] as const;
 const ATTEMPT_TIMEOUT_MS = 4_000;
 const MIN_SECRET_BYTES = 32;
 const SUMMARY_MAX_CHARS = 200;
+const NAME_MAX_CHARS = 120;
+const EMAIL_MAX_CHARS = 320;
+const PHONE_MAX_CHARS = 40;
+const DETAIL_MAX_CHARS = 2_000;
+/** The contract's limit is 32 KB; the hub answers 413 above it. */
+export const INTAKE_MAX_BODY_BYTES = 32_768;
+
+/**
+ * The hub validates `person.email` with zod's email rule and answers 400 to an
+ * address outside it. A 400 is never retried, so the event would be lost; an
+ * address Clerk or Stripe accepted but the hub would refuse goes into
+ * `details.submitted_email` instead. Same rule as seo-site's sender.
+ */
+const HUB_EMAIL =
+  /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i;
+const HUB_PHONE = /^[0-9+().\s-]*$/;
 
 export async function forwardToIntake(
   event: IntakeEvent,
@@ -75,7 +91,14 @@ export async function forwardToIntake(
     return { ok: false, reason: "not-configured" };
   }
   const url = env.SUEDE_INTAKE_URL?.trim() || DEFAULT_INTAKE_URL;
-  const body = JSON.stringify(event);
+  const body = serializeIntakeEvent(event);
+  if (body === null) {
+    console.error("[intake] event over the 32 KB body cap even without details", {
+      id: event.id,
+      kind: event.kind,
+    });
+    return { ok: false, reason: "rejected" };
+  }
   for (const delay of BACKOFF_MS) {
     if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
     // Signed per attempt, so a retry after a slow failure is never stale.
@@ -126,33 +149,103 @@ export async function forwardToIntake(
  */
 export function intakeProperty(): string {
   try {
-    return new URL(SITE_URL).host.toLowerCase();
+    // hostname, not host: a port (localhost:3000) fails the hub's property rule.
+    return new URL(SITE_URL).hostname.toLowerCase();
   } catch {
     return "sing.suedeai.ai";
   }
 }
 
+/** Cuts to a UTF-16 length (what the hub's max() counts) without splitting a surrogate pair. */
+function clip(value: string, max: number): string {
+  if (value.length <= max) return value;
+  let end = max - 1;
+  const code = value.charCodeAt(end - 1);
+  if (code >= 0xd800 && code <= 0xdbff) end -= 1;
+  return `${value.slice(0, end)}…`;
+}
+
+function oneLine(value: string, max: number): string {
+  return clip(value.replace(/\s+/g, " ").trim(), max);
+}
+
 /**
  * The `person` block from whatever a provider handed over, keeping only
- * non-empty strings. Undefined when nothing is left, so the field is omitted.
+ * non-empty strings the hub accepts. Undefined when nothing is left, so the
+ * field is omitted. Use {@link intakeContact} when a refused email or phone
+ * should survive in `details`.
  */
 export function intakePerson(fields: {
   readonly email?: string | null;
   readonly name?: string | null;
   readonly phone?: string | null;
 }): IntakePerson | undefined {
+  return intakeContact(fields).person;
+}
+
+/**
+ * The `person` block plus the details that rescue what the hub would refuse:
+ * an email failing its rule becomes `submitted_email`, a phone failing its
+ * rule becomes `submitted_phone`. Names are cut to 120 characters on one line.
+ */
+export function intakeContact(fields: {
+  readonly email?: string | null;
+  readonly name?: string | null;
+  readonly phone?: string | null;
+}): {
+  readonly person: IntakePerson | undefined;
+  readonly details: Readonly<Record<string, string>>;
+} {
   const person: { email?: string; name?: string; phone?: string } = {};
-  for (const key of ["email", "name", "phone"] as const) {
-    const value = fields[key]?.trim();
-    if (value) person[key] = value;
+  const details: Record<string, string> = {};
+  const email = fields.email?.trim();
+  if (email) {
+    if (email.length <= EMAIL_MAX_CHARS && HUB_EMAIL.test(email)) person.email = email;
+    else details.submitted_email = clip(email, DETAIL_MAX_CHARS);
   }
-  return Object.keys(person).length > 0 ? person : undefined;
+  const name = fields.name ? oneLine(fields.name, NAME_MAX_CHARS) : "";
+  if (name) person.name = name;
+  const phone = fields.phone?.trim();
+  if (phone) {
+    if (phone.length <= PHONE_MAX_CHARS && HUB_PHONE.test(phone)) person.phone = phone;
+    else details.submitted_phone = clip(phone, DETAIL_MAX_CHARS);
+  }
+  return {
+    person: Object.keys(person).length > 0 ? person : undefined,
+    details,
+  };
 }
 
 /** One line inside the contract's 200 characters. It becomes the email subject. */
 export function intakeSummary(text: string): string {
-  const line = text.replace(/\s+/g, " ").trim();
-  return line.length <= SUMMARY_MAX_CHARS
-    ? line
-    : `${line.slice(0, SUMMARY_MAX_CHARS - 1)}…`;
+  return oneLine(text, SUMMARY_MAX_CHARS);
+}
+
+/**
+ * The exact body to sign, kept under the 32 KB cap. Every event this app
+ * builds is far below it; should one ever not be, `details` string values are
+ * cut shorter, then dropped, rather than the hub answering 413 and the event
+ * being lost. Null when even that cannot fit it.
+ */
+export function serializeIntakeEvent(event: IntakeEvent): string | null {
+  const fits = (body: string) => Buffer.byteLength(body, "utf8") <= INTAKE_MAX_BODY_BYTES;
+  const full = JSON.stringify(event);
+  if (fits(full)) return full;
+  if (event.details) {
+    for (const max of [500, 120]) {
+      const details = Object.fromEntries(
+        Object.entries(event.details).map(([key, value]) => [
+          key,
+          typeof value === "string" ? clip(value, max) : value,
+        ]),
+      );
+      const trimmed = JSON.stringify({ ...event, details });
+      if (fits(trimmed)) return trimmed;
+    }
+    const { details: _dropped, ...rest } = event;
+    void _dropped;
+    const bare = JSON.stringify({ ...rest, details: { details_trimmed: true } });
+    if (fits(bare)) return bare;
+  }
+  return null;
 }
