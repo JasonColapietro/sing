@@ -16,7 +16,7 @@ awk '
     l = tolower($0)
     if (l ~ /^[[:space:]]*co-authored-by:.*(claude|anthropic\.com)/) next
     if (l ~ /^[[:space:]]*claude-session:/) next
-    if (l ~ /^[^a-z0-9]*generated (with|by) \[?claude code\]?(\([^)]*\))?[[:space:]]*$/) next
+    if (l ~ /^[^a-z0-9]*generated (with|by) \[?claude code\]?(\([^)]*\))?[^a-z0-9]*$/) next
     if (l ~ /^[[:space:]]*<?https:\/\/claude\.ai\/code\/session_[^[:space:]]*>?[[:space:]]*$/) next
     lines[++n] = $0
   }
