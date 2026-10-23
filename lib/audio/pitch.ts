@@ -28,7 +28,7 @@ export interface PitchResult {
  * than "how high is this".
  *
  * Peak choice changes with it. The old taper suppressed sub-octave lags for
- * free, since `c[2T]` was always smaller than `c[T]`, so taking the largest value
+ * free: `c[2T]` was always smaller than `c[T]`, so taking the largest value
  * in range was safe. Normalized, `n[2T] ≈ n[T]`, and the largest value is as
  * likely to be the octave below as the true period. Hence McLeod's rule: take
  * the *first* peak that comes within `PEAK_TOLERANCE` of the best one, which
@@ -36,7 +36,7 @@ export interface PitchResult {
  *
  * The detector now runs in two stages. The full NSDF scan cost one inner loop
  * of up to 4096 multiplies for every one of ~700 lags, about 5.7 ms per
- * 4096-sample frame at 48 kHz in Node on the build server, and the live rooms
+ * 4096-sample frame at 48 kHz in Node, and the live rooms
  * call it inside requestAnimationFrame at 60 fps, where a phone has 16.7 ms
  * for everything. So the lags are no longer scanned blindly. Stage one is an
  * open-loop coarse search, the way speech codecs find a pitch candidate: an
@@ -46,18 +46,22 @@ export interface PitchResult {
  * each window turns out to need, and then applies exactly the selection the
  * full scan applied.
  *
- * The readings are identical to the full scan, not merely close: the same
- * chosen lag, the same three NSDF values under the parabola, the same clarity.
- * Every value the second stage computes is the same arithmetic in the same
- * order as before; what changed is which lags get computed at all, and each
- * shortcut below carries the argument for why the lags it skips cannot change
- * the answer. Verified bitwise against the full scan over 6,486 synthetic
- * frames (clean, weak fundamental, jitter, vibrato, 20 to 0 dB SNR, phone-mic
- * bass, clicks, crescendo, at 44.1 and 48 kHz, plus 2048-sample frames at
- * 22.05 and 24 kHz for the breath detector) and the rejection fixtures in
- * pitch.test.ts; `pitch-coarse.test.ts` keeps a copy of the full scan and
- * repeats that comparison. Cost: a mean of 29 NSDF lags per frame instead of
- * 679, about 0.5 ms instead of 5.7 ms on the same frames. On a frame that is
+ * On every frame tested the readings are identical to the full scan's, bit
+ * for bit: the same chosen lag, the same NSDF values under the parabola, the
+ * same clarity. Every value the second stage computes is the same arithmetic
+ * in the same order as before. What changed is which lags get computed at all.
+ * The hum skip and the early exit below are argued exact. The coarse stage's
+ * coverage is not: `COARSE_DIP_TOLERANCE` and `REFINE_RADIUS` were measured,
+ * and a frame whose winning peak fell outside every refined window would read
+ * differently. Measured on 6,486 synthetic frames and the rejection fixtures
+ * in pitch.test.ts, it never did. The frames covered clean vowels, a weak
+ * fundamental, jitter, vibrato, 20 to 0 dB SNR, a phone-mic bass, clicks and
+ * a crescendo at 44.1 and 48 kHz, plus the breath detector's 2048-sample
+ * frames at 22.05 and 24 kHz. `pitch-coarse.test.ts` keeps a copy of the full
+ * scan and repeats that comparison on 867 of them.
+ *
+ * Cost: a mean of 29 NSDF lags per frame instead of 679, about 0.5 ms instead
+ * of 5.7 ms on the same frames. On a frame that is
  * only room noise above the silence floor the saving is small, because the
  * full scan's answer on noise depends on nearly every lag.
  */
@@ -152,7 +156,7 @@ export const COARSE_DIP_TOLERANCE = 0.5;
 
 /**
  * Half-width, in samples, of the NSDF window first computed around each
- * refined dip. The dip's centre was never more than 2 samples from the peak's
+ * refined dip. The dip's center was never more than 2 samples from the peak's
  * run in the sweeps; a window whose maximum sits on an edge grows outward
  * until it does not, so a wider start only costs lags.
  */
@@ -380,7 +384,7 @@ export function detectPitch(
 
   /**
    * Compute n over [lo − 1, hi + 1], so a peak anywhere in lo..hi has both
-   * neighbours, and grow the window outward whenever its maximum sits on an
+   * neighbors, and grow the window outward whenever its maximum sits on an
    * edge: the coarse dip pointed at a slope and the peak is further out.
    * Returns the range computed.
    */
