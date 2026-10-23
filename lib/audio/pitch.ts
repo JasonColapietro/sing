@@ -34,36 +34,49 @@ export interface PitchResult {
  * the *first* peak that comes within `PEAK_TOLERANCE` of the best one, which
  * is the shortest period that explains the signal.
  *
- * The detector now runs in two stages. The full NSDF scan cost one inner loop
- * of up to 4096 multiplies for every one of ~700 lags, about 5.7 ms per
- * 4096-sample frame at 48 kHz in Node, and the live rooms
- * call it inside requestAnimationFrame at 60 fps, where a phone has 16.7 ms
- * for everything. So the lags are no longer scanned blindly. Stage one is an
- * open-loop coarse search, the way speech codecs find a pitch candidate: an
- * average magnitude difference function on a copy of the window decimated to
- * about 11 kHz, whose dips mark every lag that could be a period. Stage two
- * computes the NSDF only in small windows around those dips, plus whatever
- * each window turns out to need, and then applies exactly the selection the
- * full scan applied.
+ * Every lag's NSDF numerator, the sum of x[j]·x[j+lag] over the window, comes
+ * from one FFT autocorrelation. The trimmed, filtered window is zero-padded
+ * to a power of two at least as long as the window plus the longest lag read,
+ * so the circular correlation never wraps into a lag that matters; it is
+ * transformed, squared in magnitude and transformed back. Everything after
+ * that is the full scan's code unchanged: the energy normalization, the walk
+ * off the initial descent, McLeod's first-peak rule, the hum check, the
+ * parabola and the range check.
  *
- * On every frame tested the readings are identical to the full scan's, bit
- * for bit: the same chosen lag, the same NSDF values under the parabola, the
- * same clarity. Every value the second stage computes is the same arithmetic
- * in the same order as before. What changed is which lags get computed at all.
- * The hum skip and the early exit below are argued exact. The coarse stage's
- * coverage is not: `COARSE_DIP_TOLERANCE` and `REFINE_RADIUS` were measured,
- * and a frame whose winning peak fell outside every refined window would read
- * differently. Measured on 6,486 synthetic frames and the rejection fixtures
- * in pitch.test.ts, it never did. The frames covered clean vowels, a weak
- * fundamental, jitter, vibrato, 20 to 0 dB SNR, a phone-mic bass, clicks and
- * a crescendo at 44.1 and 48 kHz, plus the breath detector's 2048-sample
- * frames at 22.05 and 24 kHz. `pitch-coarse.test.ts` keeps a copy of the full
- * scan and repeats that comparison on 867 of them.
+ * The readings are the direct sum's, bit for bit, and this is why. The FFT
+ * value and the direct sum each differ from the exact sum by rounding only,
+ * and `n` is stored as a Float32, whose steps are tens of thousands of times
+ * coarser than the bound on either error for a value the size of a peak. So
+ * for each lag the FFT value is widened by the worst-case error of both
+ * computations, and if the whole interval rounds to one Float32, the direct
+ * sum would have stored that same Float32, because rounding is monotone.
+ * When the interval straddles a rounding boundary, that lag is summed
+ * directly with the full scan's own arithmetic. That happens on about one
+ * voiced frame in five, for one lag, and on every lag of a stretch where the
+ * correlation is exactly zero (a short burst in a silent frame): the direct
+ * sum gives exact zeros there and the FFT gives round-off near 1e-16, and
+ * without the check such a frame reads a spurious peak in the round-off.
  *
- * Cost: a mean of 29 NSDF lags per frame instead of 679, about 0.5 ms instead
- * of 5.7 ms on the same frames. On a frame that is
- * only room noise above the silence floor the saving is small, because the
- * full scan's answer on noise depends on nearly every lag.
+ * The weak point is the error bound itself. It rests on the standard error
+ * model for a radix-2 FFT (Higham, Accuracy and Stability of Numerical
+ * Algorithms, chapter 24) with twiddles accurate to the last bit or so, taken
+ * at several times the per-stage error that model gives, rather than on a
+ * proof written for this code. Measured on synthetic frames, the largest FFT
+ * error was about 160 times smaller than the bound. `pitch-fft.test.ts`
+ * keeps a copy of the full scan and checks bitwise equality on a few thousand
+ * frames.
+ *
+ * Cost: about 0.3 ms per 4096-sample frame at 48 kHz in Node, against 5.8 ms
+ * for the direct sums over the ~700 lags the full scan computed. The FFT
+ * costs the same whatever the signal, so a frame of room noise is as cheap as
+ * a clean vowel.
+ *
+ * An AMDF coarse search was tried first: it found candidate lags on a
+ * decimated copy of the window and computed the NSDF only around them. It was
+ * faster than the full scan on voiced frames, but it missed the true period
+ * on some high notes and on frames with clicks, and it gained little on
+ * noise, so its readings could not be guaranteed. `pitch-regressions.test.ts`
+ * keeps the frames it misread.
  */
 /** The live rooms and native apps all start at C2. */
 export const MIN_FREQ = 65;
@@ -131,38 +144,6 @@ export const MIN_WINDOW_SAMPLES = 128;
 export const DEFAULT_CLARITY_THRESHOLD = 0.75;
 
 /**
- * The coarse search runs on the window decimated by the largest whole factor
- * that keeps the decimated rate at or above this: 4 at 44.1 and 48 kHz, 2 at
- * the 22.05 and 24 kHz the breath detector hands over, 1 at 16 kHz or below.
- * Its Nyquist, at least 5.5 kHz, stays above the 4 kHz low-pass corner, so the
- * decimated copy holds every harmonic the NSDF sees. Decimating by 2 instead
- * costs 3.7 times the coarse work for the same number of refined lags;
- * decimating by 8 saves a quarter of the coarse work but the grid is then too
- * sparse at the top of the range and the refinement computes 45% more lags.
- */
-export const COARSE_RATE_HZ = 11025;
-
-/**
- * A coarse dip is refined when its depth (one minus the normalized AMDF) is
- * at least this share of the deepest dip's. Measured over 31,397 NSDF peaks
- * that could have won across the synthetic sweeps, the dip that covered each
- * one was never shallower than 0.70 of the deepest, so 0.5 leaves a margin of
- * 0.2 and costs about 12% more refined lags than 0.6 would. No cap on the
- * number of dips: at high notes the depth of each period multiple is set by
- * where it falls on the decimated grid rather than by periodicity, so the dip
- * at the period itself can rank last, and any cap reads the octave below.
- */
-export const COARSE_DIP_TOLERANCE = 0.5;
-
-/**
- * Half-width, in samples, of the NSDF window first computed around each
- * refined dip. The dip's center was never more than 2 samples from the peak's
- * run in the sweeps; a window whose maximum sits on an edge grows outward
- * until it does not, so a wider start only costs lags.
- */
-export const REFINE_RADIUS = 2;
-
-/**
  * Second-order Butterworth low-pass (RBJ biquad), into a new buffer.
  *
  * The caller's frame is left untouched: every room reads the same analyser
@@ -194,64 +175,246 @@ function lowpass(x: Float32Array, sampleRate: number, cornerHz: number): Float32
 }
 
 /**
- * Stage one: the coarse lags worth refining, shortest first.
- *
- * The trimmed window is decimated by `D` (each output is the sum of `D`
- * consecutive samples, as the breath detector does with pairs), and the
- * average magnitude difference function is taken over the coarse lags that
- * cover the singable range, normalized by the magnitude in the two overlapping
- * halves so it lies in [0, 1]. A periodic signal makes a dip at every multiple
- * of its period; the dips deep enough under `COARSE_DIP_TOLERANCE` are the
- * candidates. One extra coarse lag is searched beyond each end of the range,
- * because a full-rate peak at the very edge can have its dip on the far side
- * of the nearest grid point.
+ * Twiddles, bit reversal and scratch for one transform length, built once
+ * and reused for every frame of that length. A real transform of length `N`
+ * runs as a complex one of length `M = N / 2`.
  */
-function coarseCandidates(
-  buf: Float32Array,
-  r1: number,
-  size: number,
-  D: number,
-  minLag: number,
-  maxLag: number,
-): number[] {
-  const m = Math.floor(size / D);
-  const y = new Float64Array(m);
-  for (let j = 0, s = r1; j < m; j++, s += D) {
-    let v = 0;
-    for (let k = 0; k < D; k++) v += buf[s + k];
-    y[j] = v;
-  }
-  const mass = new Float64Array(m + 1);
-  for (let j = 0; j < m; j++) mass[j + 1] = mass[j] + Math.abs(y[j]);
-  const total = mass[m];
+interface FftPlan {
+  N: number;
+  M: number;
+  /** Bit reversal of 0..M−1. */
+  rev: Uint32Array;
+  /** e^{iπj/h} at index h + j, for each stage half-length h. */
+  twr: Float64Array;
+  twi: Float64Array;
+  /** e^{2πik/N} for k = 0..M, for packing and unpacking the real transform. */
+  cosN: Float64Array;
+  sinN: Float64Array;
+  re: Float64Array;
+  im: Float64Array;
+  /** |X[k]|² for k = 0..M. */
+  power: Float64Array;
+  /** The autocorrelation, r[lag] for lag < N. */
+  r: Float64Array;
+}
 
-  const cLo = Math.max(2, Math.floor(minLag / D) - 1);
-  const cHi = Math.min(m - 2, Math.ceil(maxLag / D) + 1);
-  if (cHi < cLo) return [];
-  const a = new Float64Array(cHi + 2);
-  for (let L = cLo - 1; L <= cHi + 1; L++) {
-    let d = 0;
-    const end = m - L;
-    for (let j = 0; j < end; j++) d += Math.abs(y[j] - y[j + L]);
-    const l1 = mass[end] + (total - mass[L]);
-    a[L] = l1 > 0 ? d / l1 : 1;
+const fftPlans = new Map<number, FftPlan>();
+
+function fftPlan(N: number): FftPlan {
+  const cached = fftPlans.get(N);
+  if (cached) return cached;
+  const M = N >> 1;
+  let bits = 0;
+  while (1 << bits < M) bits++;
+  const rev = new Uint32Array(M);
+  for (let i = 0; i < M; i++) {
+    let r = 0;
+    for (let b = 0; b < bits; b++) if (i & (1 << b)) r |= 1 << (bits - 1 - b);
+    rev[i] = r;
   }
-  const dips: number[] = [];
-  const depths: number[] = [];
-  let bestDepth = -Infinity;
-  for (let c = cLo; c <= cHi; c++) {
-    if (a[c] < a[c - 1] && a[c] <= a[c + 1]) {
-      const depth = 1 - a[c];
-      dips.push(c);
-      depths.push(depth);
-      if (depth > bestDepth) bestDepth = depth;
+  // Each twiddle is computed directly rather than by recurrence, so each is
+  // as accurate as Math.cos and Math.sin, which the error bound assumes.
+  const twr = new Float64Array(Math.max(2, M));
+  const twi = new Float64Array(Math.max(2, M));
+  for (let h = 1; h < M; h <<= 1) {
+    for (let j = 0; j < h; j++) {
+      twr[h + j] = Math.cos((Math.PI * j) / h);
+      twi[h + j] = Math.sin((Math.PI * j) / h);
     }
   }
-  const out: number[] = [];
-  for (let i = 0; i < dips.length; i++) {
-    if (depths[i] >= COARSE_DIP_TOLERANCE * bestDepth) out.push(dips[i]);
+  const cosN = new Float64Array(M + 1);
+  const sinN = new Float64Array(M + 1);
+  for (let k = 0; k <= M; k++) {
+    cosN[k] = Math.cos((2 * Math.PI * k) / N);
+    sinN[k] = Math.sin((2 * Math.PI * k) / N);
   }
-  return out;
+  const plan: FftPlan = {
+    N,
+    M,
+    rev,
+    twr,
+    twi,
+    cosN,
+    sinN,
+    re: new Float64Array(M),
+    im: new Float64Array(M),
+    power: new Float64Array(M + 1),
+    r: new Float64Array(N),
+  };
+  fftPlans.set(N, plan);
+  return plan;
+}
+
+/**
+ * In-place radix-2 complex FFT of the plan's `re`/`im`, which the caller has
+ * already written in bit-reversed order. `sign` is −1 forward, +1 inverse
+ * (unscaled). Two butterfly stages are done per pass over the data: the same
+ * butterflies as one stage at a time, with half the loads and stores.
+ */
+function fft(plan: FftPlan, sign: number): void {
+  const { M, twr, twi, re, im } = plan;
+  let stages = 0;
+  while (1 << stages < M) stages++;
+  let h = 1;
+  if (stages & 1) {
+    // One stage on its own (all twiddles 1), so the rest pair up.
+    for (let a = 0; a < M; a += 2) {
+      const b = a + 1;
+      const xr = re[b];
+      const xi = im[b];
+      re[b] = re[a] - xr;
+      im[b] = im[a] - xi;
+      re[a] += xr;
+      im[a] += xi;
+    }
+    h = 2;
+  }
+  for (; 4 * h <= M; h *= 4) {
+    const len = 4 * h;
+    for (let j = 0; j < h; j++) {
+      const w1r = twr[h + j];
+      const w1i = sign * twi[h + j];
+      const w2r = twr[2 * h + j];
+      const w2i = sign * twi[2 * h + j];
+      for (let p0 = j; p0 < M; p0 += len) {
+        const p1 = p0 + h;
+        const p2 = p1 + h;
+        const p3 = p2 + h;
+        const x0r = re[p0];
+        const x0i = im[p0];
+        const x2r = re[p2];
+        const x2i = im[p2];
+        // Stage with half-length h: (p0, p1) and (p2, p3), twiddle w1.
+        let tr = re[p1] * w1r - im[p1] * w1i;
+        let ti = re[p1] * w1i + im[p1] * w1r;
+        const y0r = x0r + tr;
+        const y0i = x0i + ti;
+        const y1r = x0r - tr;
+        const y1i = x0i - ti;
+        tr = re[p3] * w1r - im[p3] * w1i;
+        ti = re[p3] * w1i + im[p3] * w1r;
+        const y2r = x2r + tr;
+        const y2i = x2i + ti;
+        const y3r = x2r - tr;
+        const y3i = x2i - ti;
+        // Stage with half-length 2h: (p0, p2) with w2, and (p1, p3) with w2
+        // turned a quarter, which multiplying by ±i does exactly.
+        tr = y2r * w2r - y2i * w2i;
+        ti = y2r * w2i + y2i * w2r;
+        re[p0] = y0r + tr;
+        im[p0] = y0i + ti;
+        re[p2] = y0r - tr;
+        im[p2] = y0i - ti;
+        const ur = y3r * w2r - y3i * w2i;
+        const ui = y3r * w2i + y3i * w2r;
+        tr = -sign * ui;
+        ti = sign * ur;
+        re[p1] = y1r + tr;
+        im[p1] = y1i + ti;
+        re[p3] = y1r - tr;
+        im[p3] = y1i - ti;
+      }
+    }
+  }
+}
+
+/**
+ * The autocorrelation of the `size` samples of `buf` from `r1`, zero-padded to
+ * `N`: `r[lag]` is the sum of buf[r1 + j]·buf[r1 + j + lag] for every lag up
+ * to N − size. Returns the plan's buffer, which the next call overwrites.
+ *
+ * The real window is packed as z[n] = x[2n] + i·x[2n+1] into one complex
+ * transform of length N/2, unpacked into X[k] for k = 0..N/2, and |X[k]|² is
+ * packed the same way for the inverse, which then yields r[2n] + i·r[2n+1].
+ */
+function autocorrelate(buf: Float32Array, r1: number, size: number, N: number): Float64Array {
+  const plan = fftPlan(N);
+  const { M, rev, cosN, sinN, re, im, power, r } = plan;
+  const pairs = size >> 1;
+  for (let k = 0; k < pairs; k++) {
+    const q = rev[k];
+    re[q] = buf[r1 + 2 * k];
+    im[q] = buf[r1 + 2 * k + 1];
+  }
+  if (size & 1) {
+    const q = rev[pairs];
+    re[q] = buf[r1 + size - 1];
+    im[q] = 0;
+  }
+  for (let k = (size + 1) >> 1; k < M; k++) {
+    const q = rev[k];
+    re[q] = 0;
+    im[q] = 0;
+  }
+  fft(plan, -1);
+
+  // X[k] = (Z[k] + conj Z[M−k]) / 2 + e^{−2πik/N}·(Z[k] − conj Z[M−k]) / 2i.
+  for (let k = 0; k <= M; k++) {
+    const ka = k === M ? 0 : k;
+    const kb = k === 0 ? 0 : M - k;
+    const ar = re[ka];
+    const ai = im[ka];
+    const br = re[kb];
+    const bi = -im[kb];
+    const er = 0.5 * (ar + br);
+    const ei = 0.5 * (ai + bi);
+    const or = 0.5 * (ai - bi);
+    const oi = -0.5 * (ar - br);
+    const c = cosN[k];
+    const s = -sinN[k];
+    const xr = er + or * c - oi * s;
+    const xi = ei + or * s + oi * c;
+    power[k] = xr * xr + xi * xi;
+  }
+
+  // The power spectrum is real and even, so the inverse packs as
+  // Y[k] = (P[k] + P[M−k]) + i·(P[k] − P[M−k])·e^{2πik/N}.
+  for (let k = 0; k < M; k++) {
+    const e = power[k] + power[M - k];
+    const d = power[k] - power[M - k];
+    const q = rev[k];
+    re[q] = e - d * sinN[k];
+    im[q] = d * cosN[k];
+  }
+  fft(plan, 1);
+  const scale = 1 / N;
+  for (let k = 0; k < M; k++) {
+    r[2 * k] = re[k] * scale;
+    r[2 * k + 1] = im[k] * scale;
+  }
+  return r;
+}
+
+/**
+ * The most an FFT autocorrelation value can differ from the exact sum, in
+ * units of 2^-53 times the window's energy, for a transform of length `N`.
+ *
+ * In the standard model a radix-2 butterfly stage adds a relative error of
+ * about 6 to 8 units in the 2-norm with accurate twiddles; 32 is used here,
+ * over the log2(N/2) stages plus two for the packing and unpacking. Call the
+ * total `a`. The forward transform's error then moves the power spectrum by
+ * at most (2a + a² + 2)·N·energy summed over all N bins, which is at most
+ * (2a + a² + 2)·energy on any one lag after the inverse. The inverse's own
+ * error is bounded per output (each output depends on each input through one
+ * chain of unit-size twiddles) by about a times the sum of its inputs, which
+ * is 2·N·energy, so 2a·energy after the 1/N. The a² term is negligible.
+ */
+function fftErrorUnits(N: number): number {
+  const a = 32 * (Math.log2(N >> 1) + 2);
+  return 2 * a + 2 + 2 * a * 1.01 + 16;
+}
+
+const ROUNDOFF = 2 ** -53;
+
+let directSums = 0;
+
+/**
+ * How many lags have been summed directly since the module loaded, because
+ * their FFT value sat too close to a Float32 rounding boundary to settle the
+ * stored value. For tests.
+ */
+export function nsdfDirectSums(): number {
+  return directSums;
 }
 
 export function detectPitch(
@@ -291,9 +454,11 @@ export function detectPitch(
   // its own inner loop: `energy[k]` is the sum of squares of the first k
   // samples of the trimmed window.
   const energy = new Float32Array(size + 1);
+  let windowEnergy = 0;
   for (let i = 0; i < size; i++) {
     const x = buf[r1 + i];
     energy[i + 1] = energy[i] + x * x;
+    windowEnergy += x * x;
   }
   const total = energy[size];
   if (total <= 0) return null;
@@ -312,178 +477,89 @@ export function detectPitch(
   );
   if (maxLag <= minLag) return null;
 
-  // The normalized square difference function, computed lazily: only the
-  // lags the refinement asks for, and below C2 only around an integer
-  // multiple that could expose a hidden hum fundamental.
+  // Every lag's numerator at once, by FFT. The longest lag the full scan could
+  // read is analysisMaxLag + 1, and none at or past the window's end; padding
+  // to at least the window plus that lag keeps the circular correlation from
+  // wrapping into any of them.
+  const lastLag = Math.min(analysisMaxLag + 1, size - 1);
+  let N = 2;
+  while (N < size + lastLag) N <<= 1;
+  const r = autocorrelate(buf, r1, size, N);
+  // Absolute error allowances for the guard below: the FFT's, and how far the
+  // Float32 running sum can put the overlap energy `m` from the exact energy
+  // of the two halves it stands for.
+  const fftError = fftErrorUnits(N) * ROUNDOFF * windowEnergy * 1.01;
+  const energyError = 2 * size * 2 ** -24 * windowEnergy * 1.01;
+
+  // The normalized square difference function over the candidate lags. Lags
+  // are filled in lazily, exactly the ones the full scan computed: the
+  // singable range, and below C2 only around an integer multiple that could
+  // expose a hidden hum fundamental.
   const n = new Float32Array(analysisMaxLag + 2);
   const computed = new Uint8Array(analysisMaxLag + 2);
   const computeLag = (lag: number) => {
     if (lag < minLag || lag > analysisMaxLag + 1 || lag >= size) return;
     if (computed[lag]) return;
+    computed[lag] = 1;
+    // Energy under the two halves the lag actually overlaps.
+    const m = energy[size - lag] + (total - energy[lag]);
+    if (!(m > 0)) {
+      n[lag] = 0;
+      return;
+    }
+    const v = (2 * r[lag]) / m;
+    // The guard. The direct sum adds size − lag products, each exact in double
+    // precision, so it is off by at most (size − lag)·2^-53 times the sum of
+    // their magnitudes, which is at most half the exact overlap energy
+    // (Cauchy-Schwarz, then the mean of two numbers bounding their geometric
+    // mean), and that energy is at most m + energyError. If the FFT value
+    // widened by both errors rounds to one Float32, the direct sum's stored
+    // value is that Float32.
+    const e =
+      ((2 * fftError + (size - lag) * ROUNDOFF * 1.001 * (m + energyError)) / m) * 1.001 +
+      4 * ROUNDOFF * Math.abs(v) +
+      Number.MIN_VALUE;
+    if (Math.fround(v - e) === Math.fround(v + e)) {
+      n[lag] = v;
+      return;
+    }
+    // Too close to a rounding boundary to tell: the full scan's own sum.
+    directSums++;
     let sum = 0;
     for (let j = 0; j < size - lag; j++) {
       sum += buf[r1 + j] * buf[r1 + j + lag];
     }
-    // Energy under the two halves the lag actually overlaps.
-    const m = energy[size - lag] + (total - energy[lag]);
-    n[lag] = m > 0 ? (2 * sum) / m : 0;
-    computed[lag] = 1;
+    n[lag] = (2 * sum) / m;
   };
+  for (let lag = minLag; lag <= maxLag + 1 && lag < size; lag++) {
+    computeLag(lag);
+  }
 
-  /**
-   * The largest value any computed `n[lag]` can hold, for the two shortcuts
-   * below. In exact arithmetic the NSDF never exceeds 1, because
-   * `2·Σ a·b <= Σ a² + Σ b²`. The computed value can only go above 1 through
-   * the overlap energy `m`, which is read off the Float32 running sum: each
-   * of its `size` additions rounds with a relative error of at most 2^-24,
-   * every partial sum is at most `total`, and `m` combines two stretches of
-   * that sum, so its absolute error is at most `2·size·2^-24·total`. While
-   * every searched lag is at most half the window, both halves together cover
-   * the window and `m >= total`, so the relative error of `m` is at most
-   * `2·size·2^-24` and `n` at most `1/(1 − 2·size·2^-24)`. The ceiling here
-   * doubles that margin to cover the second-order term, the double-precision
-   * product sum and the Float32 store of `n`. For a 4096-sample frame it is
-   * about 1.001. A window trimmed so short that a searched lag exceeds half
-   * of it keeps the bound out of reach, and both shortcuts stay off.
-   */
-  const nsdfCeiling =
-    2 * analysisMaxLag <= size ? 1 + 4 * size * 2 ** -24 : Infinity;
+  // Walk off the correlation's initial descent from lag 0 so the trivial peak
+  // at zero lag can't win, but never search below the shortest singable period.
+  let d = minLag;
+  while (d < maxLag && n[d] > n[d + 1]) d++;
+  const from = Math.max(d, minLag);
+  if (from >= maxLag) return null;
 
-  // Stage one.
-  const D = Math.max(1, Math.floor(sampleRate / COARSE_RATE_HZ));
-  const candidates = coarseCandidates(buf, r1, size, D, minLag, maxLag);
-
-  // Stage two. The eligible peaks are the local maxima of n strictly inside
-  // (minLag, maxLag), as before. The full scan also walked off the initial
-  // descent from minLag before looking for peaks; that exclusion is implied
-  // by the peak test itself, because no local maximum can sit at or below the
-  // end of a strict descent (each lag there is lower than the one before it),
-  // and a descent that reaches maxLag leaves no peak at all, which is the
-  // same null either way.
-  const collectPeaks = () => {
-    const peaks: number[] = [];
-    let best = -Infinity;
-    for (let i = minLag + 1; i < maxLag; i++) {
-      if (
-        computed[i] &&
-        computed[i - 1] &&
-        computed[i + 1] &&
-        n[i] > n[i - 1] &&
-        n[i] >= n[i + 1]
-      ) {
-        peaks.push(i);
-        if (n[i] > best) best = n[i];
-      }
-    }
-    return { peaks, best };
-  };
-  const firstQualifying = (peaks: number[], cutoff: number) => {
-    for (const i of peaks) if (n[i] >= cutoff) return i;
-    return -1;
-  };
-
-  /**
-   * Compute n over [lo − 1, hi + 1], so a peak anywhere in lo..hi has both
-   * neighbors, and grow the window outward whenever its maximum sits on an
-   * edge: the coarse dip pointed at a slope and the peak is further out.
-   * Returns the range computed.
-   */
-  const extendStep = D + 1;
-  const scanWindow = (lo: number, hi: number): [number, number] => {
-    for (let tries = 0; ; tries++) {
-      const a0 = Math.max(minLag, lo - 1);
-      const a1 = Math.min(maxLag, hi + 1);
-      let argmax = a0;
-      for (let lag = a0; lag <= a1; lag++) {
-        computeLag(lag);
-        if (n[lag] > n[argmax]) argmax = lag;
-      }
-      if (tries < 16) {
-        if (argmax === a0 && a0 > minLag) {
-          lo = Math.max(minLag, lo - extendStep);
-          continue;
-        }
-        if (argmax === a1 && a1 < maxLag) {
-          hi = Math.min(maxLag, hi + extendStep);
-          continue;
-        }
-      }
-      return [a0, a1];
-    }
-  };
-
-  /**
-   * The walk. McLeod's rule takes the first local maximum within tolerance of
-   * the best, and on a noisy frame that is often a bump on the shoulder of
-   * the main peak rather than the peak itself: at 0 dB SNR the full scan chose
-   * a bump 7 to 12 lags before the peak on 5 of 294 low notes. So from any
-   * window edge still at or above the cutoff, n is computed lag by lag until
-   * it drops below the cutoff, and every bump in that stretch becomes a peak.
-   * The cutoff used is the running best's, which can only rise later; a lower
-   * cutoff walks at least as far, so nothing that the final cutoff would admit
-   * is left uncomputed.
-   */
-  const walkLeft = (a0: number, cutoff: number) => {
-    if (n[a0] < cutoff) return;
-    for (let lag = a0 - 1; lag >= minLag; lag--) {
-      computeLag(lag);
-      if (n[lag] < cutoff) break;
-    }
-  };
-  const walkRight = (a1: number, cutoff: number) => {
-    if (n[a1] < cutoff) return;
-    for (let lag = a1 + 1; lag <= maxLag; lag++) {
-      computeLag(lag);
-      if (n[lag] < cutoff) break;
-    }
-  };
-
-  // The early exit. Candidates are refined shortest lag first. Refining a
-  // later one can only raise `best`, and with it the cutoff, so the first
-  // qualifying peak can only move later, never earlier, and it moves only if
-  // its own value falls under the raised cutoff. Once the current winner's
-  // value is at least PEAK_TOLERANCE times the ceiling, no later peak can
-  // push it out, and the remaining candidates, like the walk to the right of
-  // its window, cannot change the reading. A clean high note refines one
-  // candidate instead of sixteen multiples of its period.
-  const exitLevel = PEAK_TOLERANCE * nsdfCeiling;
-  let peaks: number[] = [];
+  // Every local maximum in range, and the best value among them. The first
+  // peak within PEAK_TOLERANCE of the best is the answer: it is the shortest
+  // period that explains the signal, which is the fundamental rather than one
+  // of the octaves below it that score just as well.
   let best = -Infinity;
-  for (const c of candidates) {
-    const centre = D * c;
-    const [a0, a1] = scanWindow(
-      Math.max(minLag, centre - REFINE_RADIUS),
-      Math.min(maxLag, centre + REFINE_RADIUS),
-    );
-    ({ peaks, best } = collectPeaks());
-    if (best === -Infinity) continue;
-    walkLeft(a0, best * PEAK_TOLERANCE);
-    ({ peaks, best } = collectPeaks());
-    let winner = firstQualifying(peaks, best * PEAK_TOLERANCE);
-    if (winner > 0 && n[winner] >= exitLevel) break;
-    walkRight(a1, best * PEAK_TOLERANCE);
-    ({ peaks, best } = collectPeaks());
-    winner = firstQualifying(peaks, best * PEAK_TOLERANCE);
-    if (winner > 0 && n[winner] >= exitLevel) break;
+  for (let i = from + 1; i < maxLag; i++) {
+    if (n[i] > n[i - 1] && n[i] >= n[i + 1] && n[i] > best) best = n[i];
   }
+  if (best === -Infinity) return null;
 
-  // The fallback. If no window held a local maximum (a frame whose NSDF is
-  // still rising at maxLag, which the coarse dips point at but never top,
-  // happened once in 6,486 frames, at 0 dB on a C2), the lags are scanned in
-  // full, which is the old detector's cost and exactly its result.
-  if (peaks.length === 0) {
-    scanWindow(minLag, maxLag);
-    ({ peaks, best } = collectPeaks());
-    if (peaks.length === 0) return null;
-  }
-
-  // Every eligible peak the full scan could have chosen is now computed, and
-  // the best value among them. The first peak within PEAK_TOLERANCE of the
-  // best is the answer: it is the shortest period that explains the signal,
-  // which is the fundamental rather than one of the octaves below it that
-  // score just as well.
   const cutoff = best * PEAK_TOLERANCE;
-  let maxpos = firstQualifying(peaks, cutoff);
+  let maxpos = -1;
+  for (let i = from + 1; i < maxLag; i++) {
+    if (n[i] > n[i - 1] && n[i] >= n[i + 1] && n[i] >= cutoff) {
+      maxpos = i;
+      break;
+    }
+  }
   if (maxpos <= 0) return null;
 
   // A periodic electrical source often has a weak 50/60 Hz fundamental and a
@@ -492,16 +568,8 @@ export function detectPitch(
   // that as the period; the range check below will then reject the frame. An
   // equally good sub-octave peak is deliberately ignored so low sung notes do
   // not disappear merely because their waveform repeats across two periods.
-  //
-  // The hum skip. The search can only change the period when some lag scores
-  // above `initialPeak + SUBRANGE_MARGIN`. When that is above the ceiling no
-  // computed value can reach, the loop is skipped with the same result. It
-  // fires on any frame with clarity above about 0.98, which after the 4 kHz
-  // low-pass includes a 10 dB SNR vowel, and saves 55 to 75 lags, each over
-  // most of the window, on every note below C4.
   const initialPeak = n[maxpos];
-  const humPossible = initialPeak + SUBRANGE_MARGIN <= nsdfCeiling;
-  for (let multiple = 2; humPossible && multiple <= 4; multiple++) {
+  for (let multiple = 2; multiple <= 4; multiple++) {
     const expectedLag = maxpos * multiple;
     if (expectedLag > analysisMaxLag) break;
     if (expectedLag <= maxLag) continue;

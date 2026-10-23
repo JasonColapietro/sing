@@ -11,6 +11,7 @@ import {
   SUBRANGE_MARGIN,
   SUBRANGE_MIN_CLARITY,
   SUBRANGE_SEARCH_RATIO,
+  nsdfDirectSums,
   TRIM_THRESHOLD,
   type PitchResult,
 } from "./pitch";
@@ -23,24 +24,28 @@ import {
 } from "./voice-fixture";
 
 /**
- * The two-stage detector must read exactly what the full NSDF scan read: the
- * same chosen lag, the same three values under the parabola, the same
- * clarity. "Exactly" here is bitwise, `toBe` on both numbers, because the iOS
- * port compares its readings to this detector frame for frame and a reading
- * that is merely close would show up there as drift.
+ * The detector must read exactly what the full NSDF scan read: the same
+ * chosen lag, the same three values under the parabola, the same clarity.
+ * "Exactly" here is bitwise, `toBe` on both numbers, because the iOS port
+ * compares its readings to this detector frame for frame and a reading that
+ * is merely close would show up there as drift.
  *
- * The reference below is the detector as it stood before the coarse search
- * was added, copied verbatim. If it and `detectPitch` ever disagree, the
- * failure names the frame.
+ * The detector now takes every lag's correlation from one FFT and sums a lag
+ * directly only when the FFT value is too close to a Float32 rounding
+ * boundary to settle the stored value. The reference below is the detector
+ * as it stood when every lag was summed directly, copied verbatim. If it and
+ * `detectPitch` ever disagree, the failure names the frame.
  *
  * Coverage: every third semitone from C2 to C6 (17 notes), two seeds, both
  * browser sample rates, over ten conditions (680 frames), plus every semitone
- * of the bottom octave at 0 dB (where the full scan's choice is a noise bump
- * on a shoulder, the case a fixed window missed in development) and as a
- * phone-mic bass (104 frames), plus the breath-detect path (2048-sample
- * frames at 22.05 and 24 kHz, scaled as `frameClarity` scales them, 68
- * frames), plus the rejection fixtures from pitch.test.ts (15 frames). 867
- * frames in all, about 5 s.
+ * of the bottom octave at 0 dB and as a phone-mic bass (104 frames), plus the
+ * breath-detect path (2048-sample frames at 22.05 and 24 kHz, scaled as
+ * `frameClarity` scales them, 68 frames), plus the rejection fixtures from
+ * pitch.test.ts (15 frames): 867 frames. Then 1,600 seeded random frames in
+ * the shapes the app analyses, with missing and weak fundamentals, clicks,
+ * DC, rumble, noise bursts, gaps, second tones and clipping, and a set of
+ * frames whose correlation is exactly zero over a long stretch of lags, the
+ * case the rounding guard exists for.
  */
 
 // reference-begin
@@ -69,7 +74,7 @@ function lowpass(x: Float32Array, sampleRate: number, cornerHz: number): Float32
   return y;
 }
 
-/** The detector before the coarse search: every lag scanned. Verbatim. */
+/** The detector when every lag was summed directly. Verbatim. */
 function detectPitchFullScan(
   input: Float32Array,
   sampleRate: number,
@@ -307,24 +312,24 @@ const CONDITIONS: Condition[] = [
 interface Mismatch {
   label: string;
   fullScan: PitchResult | null;
-  twoStage: PitchResult | null;
+  detected: PitchResult | null;
 }
 
 /** Bitwise: both null, or `toBe` on freq and clarity. */
 function compare(label: string, frame: Float32Array, sampleRate: number, into: Mismatch[]): PitchResult | null {
   const fullScan = detectPitchFullScan(frame, sampleRate);
-  const twoStage = detectPitch(frame, sampleRate);
+  const detected = detectPitch(frame, sampleRate);
   const same =
-    (fullScan === null && twoStage === null) ||
+    (fullScan === null && detected === null) ||
     (fullScan !== null &&
-      twoStage !== null &&
-      Object.is(fullScan.freq, twoStage.freq) &&
-      Object.is(fullScan.clarity, twoStage.clarity));
-  if (!same) into.push({ label, fullScan, twoStage });
+      detected !== null &&
+      Object.is(fullScan.freq, detected.freq) &&
+      Object.is(fullScan.clarity, detected.clarity));
+  if (!same) into.push({ label, fullScan, detected });
   return fullScan;
 }
 
-describe("the two-stage detector reads exactly what the full scan read", () => {
+describe("the FFT detector reads exactly what the full scan read", () => {
   it.each(CONDITIONS)("$name, 4096 samples at 44.1 and 48 kHz", (condition) => {
     const mismatches: Mismatch[] = [];
     let frames = 0;
@@ -411,7 +416,194 @@ describe("the two-stage detector reads exactly what the full scan read", () => {
     }
     expect(mismatches).toEqual([]);
     // The full scan rejects hum by reading its sub-range fundamental; the
-    // two-stage detector must take the same path, not a cheaper one.
+    // detector must take the same path, not a cheaper one.
     expect(detectPitch(mainsHum(60, 0.005, 48000), 48000)).toBeNull();
+  });
+});
+
+/** mulberry32: a small seeded generator, uniform on [0, 1). */
+function seeded(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * One random frame: a harmonic tone from 60 Hz to 2 kHz (a range wider than
+ * the detector reports, so rejections are covered too) with a random
+ * spectrum, often a weak or missing fundamental, sometimes vibrato and noise,
+ * then any mix of clicks, DC, 30 Hz rumble, a noise burst, a silent gap, a
+ * second tone, a fade and clipping.
+ */
+function randomFrame(rand: () => number, sampleRate: number, length: number): Float32Array {
+  const between = (lo: number, hi: number) => lo + rand() * (hi - lo);
+  const logBetween = (lo: number, hi: number) => Math.exp(between(Math.log(lo), Math.log(hi)));
+  const gauss = () => Math.sqrt(-2 * Math.log(Math.max(rand(), 1e-12))) * Math.cos(2 * Math.PI * rand());
+
+  const f0 = logBetween(60, 2000);
+  const harmonics = Array.from({ length: 1 + Math.floor(rand() * 6) }, () => rand());
+  const fundamental = rand();
+  if (fundamental < 0.15) harmonics[0] = 0;
+  else if (fundamental < 0.45) harmonics[0] *= 0.05;
+  else harmonics[0] = Math.max(harmonics[0], 0.5);
+  const phases = harmonics.map(() => rand() * 2 * Math.PI);
+  const vibratoHz = rand() < 0.5 ? between(4, 7) : 0;
+  const vibratoCents = between(0, 60);
+  const level = logBetween(0.005, 0.8);
+
+  const out = new Float32Array(length);
+  let phase = 0;
+  let peak = 0;
+  const raw = new Float64Array(length);
+  for (let i = 0; i < length; i++) {
+    const cents = vibratoCents * Math.sin((2 * Math.PI * vibratoHz * i) / sampleRate);
+    phase += (2 * Math.PI * f0 * 2 ** (cents / 1200)) / sampleRate;
+    let v = 0;
+    for (let h = 0; h < harmonics.length; h++) {
+      if ((h + 1) * f0 < sampleRate / 2) v += harmonics[h] * Math.sin((h + 1) * phase + phases[h]);
+    }
+    raw[i] = v;
+    peak = Math.max(peak, Math.abs(v));
+  }
+  const noise = rand() < 0.6 ? level * 10 ** (-between(-5, 30) / 20) : 0;
+  for (let i = 0; i < length; i++) out[i] = (peak > 0 ? (raw[i] / peak) * level : 0) + noise * gauss() * 0.5;
+
+  if (rand() < 0.2) {
+    for (let c = 1 + Math.floor(rand() * 6); c > 0; c--) {
+      const at = Math.floor(rand() * (length - 3));
+      const a = (rand() < 0.5 ? -1 : 1) * logBetween(0.05, 1);
+      out[at] += a;
+      out[at + 1] += 0.6 * a;
+      out[at + 2] += 0.2 * a;
+    }
+  }
+  if (rand() < 0.15) {
+    const dc = between(-0.5, 0.5);
+    for (let i = 0; i < length; i++) out[i] += dc;
+  }
+  if (rand() < 0.15) {
+    const a = logBetween(0.01, 0.5);
+    const p = rand() * 2 * Math.PI;
+    for (let i = 0; i < length; i++) out[i] += a * Math.sin((2 * Math.PI * 30 * i) / sampleRate + p);
+  }
+  if (rand() < 0.1) {
+    const start = Math.floor(rand() * length);
+    const end = Math.min(length, start + Math.floor(between(0.05, 0.4) * length));
+    const a = logBetween(0.01, 0.5);
+    for (let i = start; i < end; i++) out[i] += a * gauss();
+  }
+  if (rand() < 0.15) {
+    const tone = f0 * logBetween(1.01, 3.2);
+    const a = logBetween(0.05, 1) * level;
+    const p = rand() * 2 * Math.PI;
+    for (let i = 0; i < length; i++) out[i] += a * Math.sin((2 * Math.PI * tone * i) / sampleRate + p);
+  }
+  if (rand() < 0.15) {
+    const up = rand() < 0.5;
+    for (let i = 0; i < length; i++) out[i] *= 0.1 + 0.9 * (up ? i / length : 1 - i / length);
+  }
+  if (rand() < 0.2) {
+    // A gap of exact zeros or a faint floor, at the start, the end or the middle.
+    const gap = Math.floor(between(0.1, 0.6) * length);
+    const floor = rand() < 0.5 ? 0 : logBetween(1e-4, 0.01);
+    const where = rand();
+    const start = where < 0.4 ? 0 : where < 0.7 ? length - gap : Math.floor((length - gap) / 2);
+    for (let i = start; i < start + gap; i++) out[i] = floor * (2 * rand() - 1);
+  }
+  if (rand() < 0.1) {
+    const limit = between(0.1, 0.6);
+    for (let i = 0; i < length; i++) out[i] = Math.max(-limit, Math.min(limit, out[i]));
+  }
+  return out;
+}
+
+/**
+ * A frame that is exact zeros, then a tone riding a DC ramp. The trim keeps
+ * the zeros and only the first `burst` or so samples of the ramp, so in the
+ * window the correlation is exactly zero at every lag past the burst. The
+ * full scan sees a flat run of zeros there; an unguarded FFT sees round-off
+ * near 1e-16 with peaks in it.
+ */
+function zeroPlateau(sampleRate: number, length: number, zeros: number, burst: number, toneHz: number): Float32Array {
+  const out = new Float32Array(length);
+  const ramp = burst / 0.4;
+  for (let i = zeros; i < length; i++) {
+    const t = i - zeros;
+    out[i] = 0.5 * Math.min(1, t / ramp) + 0.03 * Math.sin((2 * Math.PI * toneHz * t) / sampleRate);
+  }
+  return out;
+}
+
+describe("the FFT detector on random and degenerate frames", () => {
+  // 1,600 frames in eight seeded batches, so each batch stays well inside the
+  // default test timeout. Batches run in order and the last test checks what
+  // the corpus held.
+  const BATCHES = 8;
+  const PER_BATCH = 200;
+  const corpus = { voiced: 0, high: 0, rejected: 0 };
+  it.each(Array.from({ length: BATCHES }, (_, i) => i + 1))("seeded random frames, batch %i of 8", (batch) => {
+    const rand = seeded(20261023 + batch);
+    const mismatches: Mismatch[] = [];
+    for (let k = 0; k < PER_BATCH; k++) {
+      // 2048 and 4096 samples at 44.1 or 48 kHz, and the breath path: a
+      // 4096-sample frame halved in rate.
+      const shape = k % 5;
+      const sampleRate = rand() < 0.5 ? 44100 : 48000;
+      let frame: Float32Array;
+      let rate = sampleRate;
+      if (shape === 4) {
+        frame = halfRate(randomFrame(rand, sampleRate, 4096));
+        rate = sampleRate / 2;
+      } else {
+        frame = randomFrame(rand, sampleRate, shape < 2 ? 2048 : 4096);
+      }
+      const r = compare(`batch ${batch} frame ${k} @ ${rate}, ${frame.length} samples`, frame, rate, mismatches);
+      if (r === null) corpus.rejected++;
+      else if (r.clarity >= CLARITY_GATE) {
+        corpus.voiced++;
+        if (r.freq > 800) corpus.high++;
+      }
+    }
+    expect(mismatches).toEqual([]);
+  });
+
+  it("the random corpus held voiced frames, high voiced frames and rejections", () => {
+    const frames = BATCHES * PER_BATCH;
+    expect(corpus.voiced).toBeGreaterThan(frames * 0.3);
+    expect(corpus.high).toBeGreaterThan(50);
+    expect(corpus.rejected).toBeGreaterThan(frames * 0.05);
+  });
+
+  it("frames whose correlation is exactly zero past a short burst", () => {
+    const mismatches: Mismatch[] = [];
+    for (const sampleRate of SAMPLE_RATES) {
+      for (const length of [2048, 4096]) {
+        for (const burst of [150, 200, 400, 650]) {
+          for (const toneHz of [220, 1363]) {
+            const frame = zeroPlateau(sampleRate, length, length >> 1, burst, toneHz);
+            compare(`zero plateau ${burst} @ ${sampleRate}, ${length} samples, ${toneHz} Hz`, frame, sampleRate, mismatches);
+          }
+        }
+      }
+    }
+    expect(mismatches).toEqual([]);
+  });
+
+  it("sums a lag directly when its FFT value cannot settle the Float32", () => {
+    // On a zero plateau every lag past the burst straddles zero, so each one
+    // the full scan reads has to be summed directly.
+    const before = nsdfDirectSums();
+    detectPitch(zeroPlateau(48000, 4096, 2048, 200, 220), 48000);
+    expect(nsdfDirectSums() - before).toBeGreaterThan(500);
+
+    // On an ordinary frame almost every lag settles from the FFT value alone.
+    const voice = synthVoice({ freq: midiToHz(57), sampleRate: 48000, seed: 1 });
+    const start = nsdfDirectSums();
+    detectPitch(voice, 48000);
+    expect(nsdfDirectSums() - start).toBeLessThan(10);
   });
 });
