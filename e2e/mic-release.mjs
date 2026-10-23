@@ -396,8 +396,9 @@ try {
     await expectLive(page, 0, "gate after a refused reopen", notes, 0);
   });
 
-  // 6. Listen mode: a singer who went on without a mic is never asked for one.
-  await runCase(held, "songs listen mode: no mic opened at any point", async (page, notes) => {
+  // 6. Listen mode: a singer who went on without a mic is never asked for
+  //    one; once they turn it on, the next start reopens it.
+  await runCase(held, "songs listen mode: no mic until asked, then starts reopen it", async (page, notes) => {
     await page.goto(`${BASE}/songs`);
     await page.waitForLoadState("networkidle");
     await dismissOverlays(page);
