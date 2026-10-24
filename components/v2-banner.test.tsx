@@ -181,6 +181,23 @@ describe("4.0 release banner placement", () => {
       expect(home.indexOf("<section", heroEnd)).toBe(ownTag);
     });
 
+    it("links the 4.0 changelog from the hero, outside its H1", () => {
+      // The hero's own "v4.0 · What's new" link, for visitors who never
+      // scroll to the card. It sits inside the hero section, before the
+      // start buttons, and outside the H1 so the heading's words stay the
+      // label and headline the SEO tests pin.
+      const heroStart = home.lastIndexOf("<section", home.indexOf('id="hero-title"'));
+      const hero = home.slice(heroStart, heroEnd);
+      const link = hero.match(/<a[^>]*href="\/changelog"[^>]*>([\s\S]*?)<\/a>/);
+      expect(link, "hero /changelog link").toBeTruthy();
+      expect(link?.[1].replace(/<[^>]+>/g, "")).toBe("v4.0 · What&#x27;s new");
+      const at = heroStart + hero.indexOf(link?.[0] ?? "");
+      expect(at).toBeGreaterThan(main);
+      expect(at).toBeLessThan(home.indexOf(">Start singing<"));
+      const h1 = home.slice(home.indexOf("<h1"), home.indexOf("</h1>"));
+      expect(h1).not.toContain('href="/changelog"');
+    });
+
     it("keeps it in the page's column, with the gutters the hero text has", () => {
       // Full-bleed, its rounded corners met the screen edges and its text
       // started at 24px against the column's 88px at 1280px wide.
