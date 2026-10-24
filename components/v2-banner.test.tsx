@@ -12,7 +12,9 @@ import Home from "@/app/page";
 import { PROGRESS_STORAGE_KEY } from "@/lib/progress";
 import V2Banner, { bannerWanted } from "./v2-banner";
 
-const SEEN_KEY = "suede-sing:v3-1-banner:v1";
+const SEEN_KEY = "suede-sing:v4-0-banner:v1";
+/** The 3.1 card's dismiss key, which must no longer hide the 4.0 card. */
+const OLD_SEEN_KEY = "suede-sing:v3-1-banner:v1";
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 interface Storage {
@@ -46,7 +48,7 @@ function hiddenBeforePaint(html: string, storage: Storage): boolean {
   return banner.hidden;
 }
 
-describe("3.1 release banner", () => {
+describe("4.0 release banner", () => {
   const html = renderToStaticMarkup(<V2Banner />);
 
   it("keeps the crawlable /changelog link in the server HTML", () => {
@@ -54,18 +56,41 @@ describe("3.1 release banner", () => {
     expect(html).toContain('href="/changelog"');
   });
 
-  it("hides before paint for a first-time visitor with no practice record", () => {
-    expect(hiddenBeforePaint(html, storageOf({}))).toBe(true);
+  it("leads with the v4.0 lockup as its heading, and names 4.0 to assistive tech", () => {
+    expect(html).toMatch(/<h2[^>]*><span class="sr-only">Suede Sing <\/span>v4\.0<\/h2>/);
+    expect(html).toContain('aria-label="Suede Sing 4.0 announcement"');
+    expect(html).toContain('aria-label="Dismiss the 4.0 announcement"');
+    expect(html).toContain("See what&#x27;s new");
+  });
+
+  /**
+   * For 4.0 the card goes to every visitor, not only returning singers, so a
+   * missing progress record must not hide it. These are the states a full
+   * page load can arrive in.
+   */
+  it("shows for a first-time visitor with no practice record", () => {
+    expect(hiddenBeforePaint(html, storageOf({}))).toBe(false);
   });
 
   it("shows for a returning singer who has not dismissed it", () => {
     expect(hiddenBeforePaint(html, storageOf({ [PROGRESS_STORAGE_KEY]: "{}" }))).toBe(false);
   });
 
-  it("stays hidden for a returning singer who dismissed it", () => {
+  it("shows again for a singer who dismissed the 3.1 card", () => {
     expect(
-      hiddenBeforePaint(html, storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-01" })),
+      hiddenBeforePaint(html, storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [OLD_SEEN_KEY]: "2026-10-01" })),
+    ).toBe(false);
+  });
+
+  it("stays hidden for anyone who dismissed it, with or without a practice record", () => {
+    expect(hiddenBeforePaint(html, storageOf({ [SEEN_KEY]: "2026-10-24" }))).toBe(true);
+    expect(
+      hiddenBeforePaint(html, storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-24" })),
     ).toBe(true);
+  });
+
+  it("shows when storage refuses the read, rather than flickering", () => {
+    expect(hiddenBeforePaint(html, BLOCKED)).toBe(false);
   });
 
   /**
@@ -82,15 +107,101 @@ describe("3.1 release banner", () => {
     it.each([
       ["a first-time visitor", storageOf({})],
       ["a returning singer", storageOf({ [PROGRESS_STORAGE_KEY]: "{}" })],
+      ["a singer who dismissed the 3.1 card", storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [OLD_SEEN_KEY]: "2026-10-01" })],
+      ["a first-time visitor who dismissed it", storageOf({ [SEEN_KEY]: "2026-10-24" })],
       [
         "a returning singer who dismissed it",
-        storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-01" }),
+        storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-24" }),
       ],
       ["a browser that blocks storage", BLOCKED],
     ])("for %s", (_who, storage) => {
       vi.stubGlobal("window", { localStorage: storage });
       expect(bannerWanted()).toBe(!hiddenBeforePaint(html, storage));
     });
+
+    /**
+     * The table above is the states we thought of. Any other key the script
+     * or the hook might come to read (a streak, a setting, an old campaign's
+     * key) must not split them either, so sweep many stores built from a
+     * pool of real and arbitrary keys.
+     */
+    it("for any mix of stored keys", () => {
+      const pool = [
+        SEEN_KEY,
+        OLD_SEEN_KEY,
+        PROGRESS_STORAGE_KEY,
+        "suede-sing:streak",
+        "suede-sing:settings",
+        "suede-sing:v2-banner:v1",
+        "unrelated",
+      ];
+      for (let mask = 0; mask < 1 << pool.length; mask++) {
+        const stored: Record<string, string> = {};
+        pool.forEach((key, i) => {
+          if (mask & (1 << i)) stored[key] = "x";
+        });
+        const storage = storageOf(stored);
+        vi.stubGlobal("window", { localStorage: storage });
+        expect(bannerWanted(), JSON.stringify(stored)).toBe(!hiddenBeforePaint(html, storage));
+      }
+    });
+  });
+
+  it("runs its pre-paint script after the card it hides", () => {
+    // Before the card, getElementById would find nothing on a real page load
+    // and a dismisser would see the card flash; the fake document above
+    // cannot catch that.
+    expect(html.indexOf("<script")).toBeGreaterThan(html.indexOf('id="v2-banner"'));
+  });
+});
+
+/**
+ * Dismissing has to reach the card in this tab whatever storage does. Run
+ * against a fresh module each time, because the dismissal is module state.
+ */
+describe("dismissing the 4.0 card", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.resetModules();
+  });
+
+  function windowWith(stored: Record<string, string>, { writes = true } = {}) {
+    return {
+      localStorage: {
+        getItem: (key: string) => stored[key] ?? null,
+        setItem: (key: string, value: string) => {
+          if (!writes) throw new Error("QuotaExceededError");
+          stored[key] = value;
+        },
+      },
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    };
+  }
+
+  it("saves the dismissal, tells the card, and hides it", async () => {
+    const stored: Record<string, string> = {};
+    vi.stubGlobal("window", windowWith(stored));
+    const banner = await import("./v2-banner");
+    const onChange = vi.fn();
+    banner.subscribe(onChange);
+    expect(banner.bannerWanted()).toBe(true);
+    banner.dismissBanner();
+    expect(onChange).toHaveBeenCalled();
+    expect(stored[SEEN_KEY]).toBeTruthy();
+    expect(banner.bannerWanted()).toBe(false);
+  });
+
+  it("keeps it hidden in this tab when storage refuses the write", async () => {
+    const stored: Record<string, string> = {};
+    vi.stubGlobal("window", windowWith(stored, { writes: false }));
+    const banner = await import("./v2-banner");
+    const onChange = vi.fn();
+    banner.subscribe(onChange);
+    banner.dismissBanner();
+    expect(onChange).toHaveBeenCalled();
+    expect(stored[SEEN_KEY]).toBeUndefined();
+    expect(banner.bannerWanted()).toBe(false);
   });
 });
 
@@ -101,7 +212,7 @@ describe("3.1 release banner", () => {
  * extension pages after the rooms and /pro). So the rule is where it renders:
  * only the homepage renders it, and only after the hero's start buttons.
  */
-describe("3.1 release banner placement", () => {
+describe("4.0 release banner placement", () => {
   const SCANNED = ["app", "components", "lib"];
   const SOURCE = /\.(?:tsx?|mjs|js)$/;
   const TEST = /\.test\.(?:tsx?|mjs)$/;
@@ -152,6 +263,23 @@ describe("3.1 release banner placement", () => {
     it("puts it directly after the hero, ahead of the next section", () => {
       const ownTag = home.lastIndexOf("<section", banner);
       expect(home.indexOf("<section", heroEnd)).toBe(ownTag);
+    });
+
+    it("links the 4.0 changelog from the hero, outside its H1", () => {
+      // The hero's own "v4.0 · What's new" link, for visitors who never
+      // scroll to the card. It sits inside the hero section, before the
+      // start buttons, and outside the H1 so the heading's words stay the
+      // label and headline the SEO tests pin.
+      const heroStart = home.lastIndexOf("<section", home.indexOf('id="hero-title"'));
+      const hero = home.slice(heroStart, heroEnd);
+      const link = hero.match(/<a[^>]*href="\/changelog"[^>]*>([\s\S]*?)<\/a>/);
+      expect(link, "hero /changelog link").toBeTruthy();
+      expect(link?.[1].replace(/<[^>]+>/g, "")).toBe("v4.0 · What&#x27;s new");
+      const at = heroStart + hero.indexOf(link?.[0] ?? "");
+      expect(at).toBeGreaterThan(main);
+      expect(at).toBeLessThan(home.indexOf(">Start singing<"));
+      const h1 = home.slice(home.indexOf("<h1"), home.indexOf("</h1>"));
+      expect(h1).not.toContain('href="/changelog"');
     });
 
     it("keeps it in the page's column, with the gutters the hero text has", () => {

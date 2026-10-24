@@ -41,7 +41,29 @@ export function HeroSplit() {
         className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(247,240,231,0.98)_0%,rgba(247,240,231,0.94)_58%,rgba(247,240,231,0.54)_78%,rgba(247,240,231,0.20)_100%)] max-sm:bg-[linear-gradient(180deg,rgba(247,240,231,0.72)_0%,rgba(247,240,231,0.94)_46%,rgba(247,240,231,0.99)_70%)]"
       />
 
-      <div className="animate-fadeup mx-auto w-full max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pb-20 sm:pt-32">
+      <div className="animate-fadeup relative mx-auto w-full max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pb-20 sm:pt-32">
+        {/* The 4.0 release link. It cannot join the label line below: that
+            line is inside the H1, so a link there would put "What's new"
+            into the page's main heading, and the line has no room for it
+            anyway (on a 375px phone it already wraps with 42px spare, and
+            at 1280px the gap before the portrait is 152px). So it sits on
+            its own row in the top padding, absolutely positioned: the
+            padding was empty, and an absolute box adds no height, so the
+            start buttons stay exactly where they were at every width
+            (measured at 320, 375, 768 and 1280). top-6 on phones and
+            sm:top-20 leave 16px and 24px above the label. The pill's
+            panel fill keeps violet-ink readable over the phone portrait. */}
+        <Link
+          href="/changelog"
+          prefetch={false}
+          className="absolute left-4 top-6 inline-flex min-h-6 items-center whitespace-nowrap gap-1.5 rounded-full border border-violet/40 bg-panel/85 px-2.5 font-mono text-label tracking-[0.08em] text-violet-ink backdrop-blur-sm transition-colors hover:border-violet sm:left-6 sm:top-20"
+        >
+          {/* Real spaces around the hidden dot, so the link's accessible
+              name reads "v4.0 What's new", not "v4.0What's new". */}
+          v4.0{" "}
+          <span aria-hidden="true">·</span>{" "}
+          What&apos;s new
+        </Link>
         {/* Keep the original portrait and display headline while carrying the
             current search intent and the direct-to-tool start actions. */}
         <h1 id="hero-title">

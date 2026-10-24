@@ -6,10 +6,12 @@ import { ProChip } from "@/components/pro/ui";
 import V2TraceGlyph from "@/components/v2-glyph";
 import { SINGERS } from "@/lib/singers";
 import { formatPrice, PRICING, proHeadlineLong } from "@/lib/pro-shared";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, rangeTestHref } from "@/lib/site";
 import { routeKeywords } from "@/lib/keywords";
 import { webPageJsonLd } from "@/lib/page-jsonld";
 import { accountsReady } from "@/lib/accounts";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
+import { IDLE_GRACE_MS } from "@/components/practice/active-clock";
 
 /**
  * Accounts were built in v2 but are not open on every deployment
@@ -18,9 +20,11 @@ import { accountsReady } from "@/lib/accounts";
  */
 const ACCOUNTS_OPEN = accountsReady();
 
-const TITLE = "Suede Sing Changelog: What's New in 3.1";
+const TITLE = "Suede Sing Changelog: What's New in 4.0";
+/** The day 4.0 shipped: the record head's <time> and the page's dateModified. */
+const RELEASE_DATE = "2026-10-24";
 const DESCRIPTION =
-  "Suede Sing changelog for 3.1: a 102-lesson voice curriculum, multi-week programs, mic-scored songs, breath and vibrato measurement, a sharper pitch engine.";
+  "Suede Sing changelog for 4.0: the original design is back, and reference notes now play from recordings of a real grand piano.";
 
 export const metadata: Metadata = {
   keywords: routeKeywords("/changelog"),
@@ -58,8 +62,67 @@ type Story = {
   links: Array<{ href: string; text: string }>;
 };
 
-/** The 3.1 stories, told in the order a singer meets them. */
+/**
+ * The 4.0 stories, told in the order a singer meets them. 4.0 is what
+ * shipped on main after 3.1 (September 24) up to October 24, and every claim
+ * here points at a commit: the restored design and its menu (#229, #230),
+ * the sampled piano and the phone and iOS audio fixes (7318aeb, f29a7be,
+ * 1239eba, all September 25), the pitch meter beside the range test on /range (6d4ccdb; the Range tab itself opens the test, #229)
+ * with #236's kept place and #238's warmup-first result, the free minutes
+ * (#212) and the active-time clock (#226), program resumes, fortnights and
+ * the program-aware coach (#224, #225, #238), and the song octave fixes and
+ * the late microphone (#225, #226, #235). Every number is read from the code
+ * that enforces it or, for the piano, from lib/audio/piano.ts's sample map.
+ * Unmerged work (the pitch detector in #240, the mic release in #242) stays
+ * out until it lands.
+ */
 const RELEASE_STORIES: Story[] = [
+  {
+    label: "Design",
+    title: "The original Suede Sing, back",
+    body: "The paper-and-portrait homepage and the original navigation are back. Ten tabs run across the top: Studio, Warmups, Range, Singers, Ear, Breath, Songs, Tools, Learn and Progress. On a phone, a button beside the logo opens the same ten as a menu, and wherever the tab row runs out of room, a Menu button keeps that list in reach.",
+    links: [{ href: "/studio", text: "Step into the studio" }],
+  },
+  {
+    label: "Range",
+    title: "Sing one note, see where it lands",
+    body: "The Range page now has a live pitch meter beside the guided range test: sing, and it shows the note you hit and whether it sits in tune, a little flat or sharp, or plainly off. The Range tab opens the range test, which finds your lowest and highest notes, and the meter is one tap away. A reload or Back keeps your place on the page, and a range result now leads with a warmup as the next step.",
+    links: [
+      { href: rangeTestHref({ mode: "pitch" }), text: "Open the pitch meter" },
+      { href: rangeTestHref(), text: "Take the range test" },
+    ],
+  },
+  {
+    label: "Sound",
+    title: "Reference notes on a recorded grand piano",
+    body: "Warmups, songs, the range test and ear training now play their reference notes from recordings of a Yamaha C5 grand (Salamander Grand Piano V2 by Alexander Holm, CC BY 3.0), sampled every three semitones from A1 to C7, so once they have loaded, a steady note in that span plays from a recording at most a semitone away. The samples load in the background, and until a note's sample arrives a synthesized tone plays instead, now built with enough upper harmonics for a phone speaker to carry it. On iPhone, audio picks up again after the microphone, a call or a notification interrupts it, instead of freezing the player.",
+    links: [{ href: "/warmups", text: "Open the warmups" }],
+  },
+  {
+    label: "Free practice",
+    title: "More free practice, and only practice counts",
+    body: `Guided practice (warmups, ear training, breath and songs) now includes ${FREE_DAILY_MINUTES} free minutes a day, and the pitch studio, range test, recorder and tools stay free with no daily limit. The clock counts practice, not waiting: turn-based ear games and Breathe and sing leave out time the tab spends hidden and count at most ${IDLE_GRACE_MS / 1000} seconds of any stretch with no input. When a set stops at the limit, its result says why.`,
+    links: [{ href: "/ear-training", text: "Play the ear games" }],
+  },
+  {
+    label: "Programs",
+    title: "Programs you can pick back up",
+    body: "A routine you resume on a later day starts with a short warm-in of its first exercise. The Measured Voice program can go back a fortnight, and from a finished run you can repeat a single fortnight while your other check-in readings stay. The coach on Progress follows a running program's schedule instead of asking for a range test the plan has not set, and during Recovery week it leaves the range test and the octave siren out.",
+    links: [
+      { href: "/programs", text: "Choose a program" },
+      { href: "/progress", text: "See your progress" },
+    ],
+  },
+  {
+    label: "Songs",
+    title: "Songs that hear the octave you sing",
+    body: "Sing a song an octave away from the written melody and the piano roll now draws your voice in the octave you sang. Per-note tallies and hardest notes are filed there too, so the coach no longer calls a low voice out of range. Without a saved range, a song scores one octave per pass. If you started without a microphone, the player and its summary offer to turn it on.",
+    links: [{ href: "/songs", text: "Sing the songs" }],
+  },
+];
+
+/** The 3.1 stories, kept as the previous release, in the order a singer meets them. */
+const PREVIOUS_STORIES: Story[] = [
   {
     label: "Lessons",
     title: "A voice curriculum, 102 lessons deep",
@@ -164,6 +227,9 @@ const LOG: Array<{
   {
     month: "October 2026",
     entries: [
+      // The owner named the October wave 4.0. Terse on purpose, like the
+      // 3.1 line: the entries below it are what shipped.
+      { day: "24", note: "Suede Sing 4.0." },
       {
         // Undoes the navigation half of the October 2 entry below, which stays
         // as history. On phones the header button names the current room (it
@@ -328,7 +394,7 @@ const LOG: Array<{
 function StoryBlock({ story }: { story: Story }) {
   return (
     <section>
-      <SectionHeading label={story.label} lede={story.body}>
+      <SectionHeading label={story.label} lede={story.body} level={3}>
         {story.title}
       </SectionHeading>
       <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -360,11 +426,11 @@ export default function ChangelogPage() {
           Suede Sing changelog: what we&apos;ve <em>changed</em>
         </>
       }
-      subtitle="Suede Sing 3.1: a full voice curriculum, programs that plan your weeks, songs that score and remember you, and a pitch engine measured to the cent."
+      subtitle="Suede Sing 4.0 brings back the original design and plays reference notes from a recorded grand piano. The stories below cover the rest of what changed since 3.1."
     >
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd({ path: "/changelog", name: TITLE, description: DESCRIPTION })) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd({ path: "/changelog", name: TITLE, description: DESCRIPTION, dateModified: RELEASE_DATE })) }}
       />
       {/* The record head: the page's one accented surface. Cool hairline and
           trace glyph up top, tape counters below — data as ornament. */}
@@ -374,11 +440,11 @@ export default function ChangelogPage() {
           className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cool to-transparent"
         />
         <V2TraceGlyph className="shrink-0 text-cool" />
-        <span className="text-ink">3.1</span>
+        <span className="text-ink">4.0</span>
         <span aria-hidden className="text-line2">
           ·
         </span>
-        <span>Shipped Sep 2026</span>
+        <time dateTime={RELEASE_DATE}>Shipped Oct 2026</time>
         <span aria-hidden className="text-line2">
           ·
         </span>
@@ -386,17 +452,42 @@ export default function ChangelogPage() {
         <span aria-hidden className="text-line2">
           ·
         </span>
-        <span className="tabular">{entriesLogged} entries logged</span>
+        {/* The whole log, since July, not 4.0's share of it. */}
+        <span className="tabular">{entriesLogged} log entries since July</span>
       </div>
 
-      <div className="mt-12 space-y-12">
-        {RELEASE_STORIES.map((s) => (
-          <StoryBlock key={s.label} story={s} />
-        ))}
-      </div>
+      {/* Each release is one section with an h2 that names it and its stories
+          as h3s inside, so a reader or an answer engine asking what is in 4.0
+          gets a boundary between 4.0 and the releases below it. The record
+          head above is 4.0's visible title; this h2 says it to the outline. */}
+      <section aria-labelledby="release-4-0">
+        <h2 id="release-4-0" className="sr-only">
+          Suede Sing 4.0, October 2026
+        </h2>
+        <div className="mt-12 space-y-12">
+          {RELEASE_STORIES.map((s) => (
+            <StoryBlock key={s.label} story={s} />
+          ))}
+        </div>
+      </section>
+
+      {/* 3.1 stays on the page as the previous release, shaped like the v2
+          section below it: a label, a one-line summary, then its stories. */}
+      <section aria-label="Suede Sing 3.1" className="mt-14 border-t border-line2 pt-8">
+        <SectionLabel heading>Earlier: 3.1, September 2026</SectionLabel>
+        <p className="mt-3 max-w-prose text-meta text-mut">
+          A full voice curriculum, programs that plan your weeks, songs that
+          score and remember you, and a pitch engine measured to the cent.
+        </p>
+        <div className="mt-8 space-y-12">
+          {PREVIOUS_STORIES.map((s) => (
+            <StoryBlock key={s.label} story={s} />
+          ))}
+        </div>
+      </section>
 
       <section aria-label="Suede Sing v2" className="mt-14 border-t border-line2 pt-8">
-        <SectionLabel>Earlier: v2, August 2026</SectionLabel>
+        <SectionLabel heading>Earlier: v2, August 2026</SectionLabel>
         <p className="mt-3 max-w-prose text-meta text-mut">
           The studio rebuilt panel by panel: warmups that sing with you,{" "}
           {ACCOUNTS_OPEN
@@ -404,13 +495,12 @@ export default function ChangelogPage() {
             : "account backup for your record (accounts are not open yet)"}
           , a deeper library, and a calmer room around all of it.
         </p>
+        <div className="mt-8 space-y-12">
+          {STORIES.map((s) => (
+            <StoryBlock key={s.label} story={s} />
+          ))}
+        </div>
       </section>
-
-      <div className="mt-8 space-y-12">
-        {STORIES.map((s) => (
-          <StoryBlock key={s.label} story={s} />
-        ))}
-      </div>
 
       {/* The page's one violet moment, because this surface genuinely is Pro. */}
       <section className="relative mt-14 overflow-hidden rounded-2xl border border-violet/50 bg-panel p-5 sm:p-6">
