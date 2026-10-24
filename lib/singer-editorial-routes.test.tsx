@@ -170,10 +170,16 @@ describe("singer sitemap editorial freshness", () => {
     for (const date of Object.values(SINGER_DATA_REVISED)) {
       expect(date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
-    // Pending singers are noindexed and absent from the sitemap entirely
-    // (pinned in lib/sitemap.test.ts); they have no lastModified to date.
+    // Public profiles awaiting evidence review use their actual page/data
+    // revision; including them must not invent an evidence review date.
     for (const singer of pending) {
-      expect(entries.some((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)).toBe(false);
+      const entry = entries.find((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)!;
+      const dataRevised = SINGER_DATA_REVISED[singer.slug];
+      expect(getSingerLastModified(singer.slug)).toBeUndefined();
+      expect(entry.lastModified).toBe(getSingerPageLastModified(singer.slug));
+      expect(entry.lastModified).toBe(
+        dataRevised && dataRevised > SINGER_PAGE_REVISED ? dataRevised : SINGER_PAGE_REVISED,
+      );
     }
 
     const sitemapSource = readFileSync(new URL("../app/sitemap.ts", import.meta.url), "utf8");
