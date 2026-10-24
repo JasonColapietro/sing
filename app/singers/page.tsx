@@ -32,8 +32,8 @@ const VOCAL_RANGE_PRIORITY_SINGERS = VOCAL_RANGE_PRIORITY_SLUGS.map((slug) => {
 
 /**
  * Profiles whose sources a person has reviewed (status reviewed or disputed).
- * These are the only singer pages that are indexed, so they get a named place
- * on the hub rather than only an A–Z link.
+ * Give these a named place on the hub as an editorial recommendation;
+ * every public singer profile is also indexable and linked in the A–Z list.
  */
 const REVIEWED_SINGERS = SINGERS.filter((s) => isSingerReviewed(s.slug)).sort(
   (a, b) => a.name.localeCompare(b.name),

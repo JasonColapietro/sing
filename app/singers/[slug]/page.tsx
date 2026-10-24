@@ -194,9 +194,9 @@ export async function generateMetadata({
     description,
     keywords: singerKeywords(s),
     alternates: { canonical },
-    // Pending-review profiles stay live and linked but out of the index until
-    // their evidence record leaves "pending" (data/singer-evidence.json).
-    robots: pageRobots(!isPending(s)),
+    // Every public profile is discoverable. Evidence status controls the
+    // page's claims and caveats, not whether search engines may index it.
+    robots: pageRobots(true),
     openGraph: {
       title,
       description,

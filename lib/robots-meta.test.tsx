@@ -100,14 +100,16 @@ describe("robots preview directives", async () => {
     expect(missing).toEqual([]);
   });
 
-  it("keeps singer pages pending review noindexed, and reviewed ones indexable", () => {
+  it("keeps pending and reviewed public singer pages indexable with full preview directives", () => {
     const singers = routes.filter((r) => r.route.startsWith("/singers/[slug] "));
     const pending = singers.filter((r) => !isSingerReviewed(r.params.slug));
     const reviewed = singers.filter((r) => isSingerReviewed(r.params.slug));
     expect(pending.length).toBeGreaterThan(0);
     expect(reviewed.length).toBeGreaterThan(0);
-    for (const r of pending) expect(r.robots, r.route).toEqual(NOINDEX_FOLLOW);
-    for (const r of reviewed) expect(hasPreviewDirectives(r.robots), r.route).toBe(true);
+    for (const r of [...pending, ...reviewed]) {
+      expect(isNoindex(r.robots), r.route).toBe(false);
+      expect(hasPreviewDirectives(r.robots), r.route).toBe(true);
+    }
   });
 
   it("ships one robots directive on the 404 page, not noindex beside index", async () => {

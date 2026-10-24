@@ -110,8 +110,8 @@ describe("sitemap indexability", () => {
   });
 });
 
-describe("singer pages pending individual review", () => {
-  it("noindex pending singers and drop them from the sitemap; reviewed singers stay indexed and listed", async () => {
+describe("public singer page indexing", () => {
+  it("keeps every public singer indexable and listed regardless of evidence review status", async () => {
     const published = new Set(sitemap().map(({ url }) => url));
     let pending = 0;
     let reviewed = 0;
@@ -122,13 +122,11 @@ describe("singer pages pending individual review", () => {
       });
       if (isSingerReviewed(singer.slug)) {
         reviewed += 1;
-        expect(saysNoindex(metadata.robots), url).toBe(false);
-        expect(published.has(url), url).toBe(true);
       } else {
         pending += 1;
-        expect(metadata.robots, url).toEqual({ index: false, follow: true });
-        expect(published.has(url), url).toBe(false);
       }
+      expect(saysNoindex(metadata.robots), url).toBe(false);
+      expect(published.has(url), url).toBe(true);
     }
     // Both branches must be exercised or the guard is vacuous.
     expect(pending).toBeGreaterThan(0);

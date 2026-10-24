@@ -6,11 +6,9 @@ import { rangeLabel, singerBySlug } from "@/lib/singers";
 /**
  * A compact set of direct homepage paths into the singer catalog.
  *
- * The reviewed profiles lead: they are the indexable ones, so the homepage's
- * first singer links point at pages search can actually show. The rest stay
- * live and linked for visitors but are noindexed pending review (see
- * isPending in app/singers/[slug]/page.tsx), and VOICES below keeps reviewed
- * cards first even if a later review changes which ones they are.
+ * Reviewed profiles lead as an editorial recommendation. All public profiles
+ * are indexable and keep their evidence status visible; VOICES below keeps
+ * reviewed cards first even if a later review changes which ones they are.
  */
 const FEATURED = [
   "adele",
@@ -71,7 +69,7 @@ const VOICES = FEATURED.map((slug) => {
     reviewed: isSingerReviewed(singer.slug),
     evidenceCopy: needsEvidenceCopy ? voiceTypeEvidenceCopy(singer) : undefined,
   };
-  // Stable: reviewed (indexable) profiles first, FEATURED order within each.
+  // Stable: reviewed profiles first, FEATURED order within each.
 }).sort((a, b) => Number(b.reviewed) - Number(a.reviewed));
 
 export function FamousVoices() {
