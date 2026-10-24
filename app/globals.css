@@ -176,9 +176,15 @@ h3 {
   color: var(--color-ink);
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-rec);
-  outline-offset: 2px;
+/* In @layer base so a component's focus-visible:outline-* utility (which
+   Tailwind emits in @layer utilities) can recolor or reposition the ring. An
+   unlayered rule beats every layered one whatever its specificity, which
+   silently threw those utilities away and drew this red ring everywhere. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-rec);
+    outline-offset: 2px;
+  }
 }
 
 .no-scrollbar {

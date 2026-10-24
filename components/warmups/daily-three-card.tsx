@@ -111,7 +111,7 @@ function DailyPickAction({ pick, onStart, unavailableId, children }: {
   unavailableId?: string;
   children: ReactNode;
 }) {
-  const rowClass = "flex min-h-[3.5rem] w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-panel2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet";
+  const rowClass = "flex min-h-[3.5rem] w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-panel2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet-ink";
   if (unavailableId) {
     return <button type="button" disabled aria-describedby={unavailableId} className={rowClass}>{children}</button>;
   }

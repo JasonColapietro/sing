@@ -26,12 +26,14 @@ export function HeroSplit() {
         <div className="absolute inset-0 bg-gradient-to-b from-bg/15 to-ink/30" />
       </div>
 
-      {/* Identify the founder in the portrait using the current canonical bio. */}
+      {/* Identify the founder in the portrait using the current canonical bio.
+          The focus ring sits inside the pill: outside it, it would land on the
+          photo, where the red ring measured 2.7:1. */}
       <p className="pointer-events-none absolute bottom-5 right-4 z-10 hidden sm:block sm:right-6">
         <a
           href="https://suedeai.ai/founder"
           rel="author"
-          className="pointer-events-auto rounded-full border border-line/60 bg-panel/80 px-3 py-1.5 font-mono text-label uppercase tracking-[0.14em] text-mut backdrop-blur-sm transition-colors hover:border-violet/50 hover:text-violet-ink"
+          className="pointer-events-auto rounded-full border border-line/60 bg-panel/80 px-3 py-1.5 font-mono text-label uppercase tracking-[0.14em] text-mut backdrop-blur-sm transition-colors hover:border-violet/50 hover:text-violet-ink focus-visible:-outline-offset-4"
         >
           Built by {AUTHOR_NAME}
         </a>
