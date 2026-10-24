@@ -14,7 +14,8 @@
  * app's declared colours, and __contrast.paint() is what actually resolves
  * those (see harness.mjs). Likewise every background is effectiveBackground(),
  * never an element's own backgroundColor, because panels here are frequently
- * semi-transparent over another panel.
+ * semi-transparent over another panel. A focus ring drawn outside its element
+ * is the exception: it is measured against what is painted around it (4).
  */
 
 export const id = "contrast";
@@ -363,26 +364,94 @@ export async function run(ctx) {
     const sample = focusables.slice(0, 40);
     const initialActive = document.activeElement;
 
+    // What is painted at (x, y) behind `el`: every layer at that point, not
+    // just el's ancestors, because a ring can sit over a positioned sibling
+    // (the hero's founder photo). Null off-viewport. "image" when a photo,
+    // video or canvas shows through before an opaque fill: its pixels can't
+    // be read from here. Gradients are ignored, as effectiveBackground does.
+    function paintedBehind(el, x, y) {
+      if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) return null;
+      let acc = { r: 0, g: 0, b: 0, a: 0 };
+      for (const node of document.elementsFromPoint(x, y)) {
+        if (node === el || el.contains(node)) continue;
+        const ncs = getComputedStyle(node);
+        if (/^(IMG|VIDEO|CANVAS|IFRAME)$/.test(node.tagName) || ncs.backgroundImage.includes("url(")) return "image";
+        const bg = window.__contrast.paint(ncs.backgroundColor);
+        if (bg.a === 0) continue;
+        acc = window.__contrast.over(acc, bg);
+        if (acc.a >= 0.999) return acc;
+      }
+      const root = window.__contrast.paint(getComputedStyle(document.documentElement).backgroundColor);
+      return window.__contrast.over(acc, root.a > 0 ? root : { r: 255, g: 255, b: 255, a: 1 });
+    }
+
     for (const el of sample) {
       el.focus({ preventScroll: true });
       if (!el.matches(":focus-visible")) continue;
       if (!isReallyVisible(el)) continue;
+      // transition-colors includes outline-color, so straight after focus()
+      // the ring is still fading in from the text colour: a white-text pill
+      // read as a white ring. Jump any outline transition to its end value.
+      for (const a of el.getAnimations()) {
+        if (String(a.transitionProperty ?? "").startsWith("outline")) a.finish();
+      }
       const cs = getComputedStyle(el);
       const width = parseFloat(cs.outlineWidth) || 0;
       if (cs.outlineStyle === "none" || width === 0) continue; // no ring at all is a keyboard-nav defect, not a contrast one
 
       const ring = window.__contrast.paint(cs.outlineColor);
       if (ring.a === 0) continue;
-      const bg = window.__contrast.effectiveBackground(el);
-      const ratio = actualRatio(ring, bg);
-      if (ratio >= 3) continue;
+
+      // Compare the ring with what it is actually drawn next to. The site's
+      // default ring (app/globals.css) sits 2px *outside* the element, so a
+      // filled button's own colour never touches it: measuring against the
+      // fill flagged every violet and rec button at ~1.0:1 while the ring
+      // read 5.8:1 on the page around it. The element's own fill counts only
+      // when the ring touches or overlaps it (outline-offset <= 0).
+      const offset = parseFloat(cs.outlineOffset) || 0;
+      const own = window.__contrast.effectiveBackground(el);
+      const surfaces = [];
+      if (offset + width > 0) {
+        const r = el.getBoundingClientRect();
+        const d = (Math.max(offset, 0) + offset + width) / 2; // middle of the ring's outside band
+        const midX = r.left + r.width / 2;
+        const midY = r.top + r.height / 2;
+        const found = [
+          paintedBehind(el, r.left - d, midY),
+          paintedBehind(el, r.right + d, midY),
+          paintedBehind(el, midX, r.top - d),
+          paintedBehind(el, midX, r.bottom + d),
+        ].filter(Boolean);
+        if (found.includes("image")) {
+          // A photo behind the ring can't be measured from here. Don't pass
+          // it: report it against the element's own fill, worded as unverified.
+          surfaces.push({ bg: own, where: "its own fill", image: true });
+        } else if (found.length) {
+          for (const bg of found) surfaces.push({ bg, where: "the surface around it" });
+        } else {
+          // Off-screen: the ancestor chain is the best available answer.
+          surfaces.push({ bg: window.__contrast.effectiveBackground(el.parentElement ?? el), where: "the surface around it" });
+        }
+      }
+      if (offset <= 0) surfaces.push({ bg: own, where: "its own fill" });
+
+      let worst = null;
+      for (const s of surfaces) {
+        const ratio = actualRatio(ring, s.bg);
+        if (!worst || ratio < worst.ratio) worst = { ...s, ratio };
+      }
+      if (worst.ratio >= 3) continue;
 
       const tag = el.tagName.toLowerCase();
       hits.push({
-        key: `ring|minor|${colorKey(ring)}|${colorKey(bg)}|${tag}`,
+        key: `ring|minor|${colorKey(ring)}|${colorKey(worst.bg)}|${tag}|${worst.image ? "image" : ""}`,
         severity: "minor",
-        summary: `Focus outline on <${tag}> fails WCAG 1.4.11 Non-text Contrast: ${ratio.toFixed(2)}:1, needs 3:1.`,
-        detail: `outline ${fmtColor(ring)} on ${fmtColor(bg)}.`,
+        summary: worst.image
+          ? `Focus outline on <${tag}> is drawn over an image, so its contrast can't be measured here: check it by eye.`
+          : `Focus outline on <${tag}> fails WCAG 1.4.11 Non-text Contrast: ${worst.ratio.toFixed(2)}:1, needs 3:1.`,
+        detail: worst.image
+          ? `outline ${fmtColor(ring)}; against ${worst.where} ${fmtColor(worst.bg)} it is ${worst.ratio.toFixed(2)}:1.`
+          : `outline ${fmtColor(ring)} on ${fmtColor(worst.bg)}, ${worst.where}.`,
         selector: window.__describe(el),
       });
     }
