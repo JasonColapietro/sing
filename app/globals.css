@@ -176,9 +176,20 @@ h3 {
   color: var(--color-ink);
 }
 
-:focus-visible {
-  outline: 2px solid var(--color-rec);
-  outline-offset: 2px;
+/* The default focus ring, in the base layer so a component's own
+   focus-visible:outline-* utility can replace it. Unlayered, it beat every
+   one of them whatever their specificity (Tailwind v4 puts utilities in
+   @layer utilities, and unlayered rules win over layered ones), so the amber
+   rings on the dark practice screens and the violet ones on cards all drew
+   this red instead, at about 1.1:1 on violet. The same goes for
+   outline-none, which is only used on tabIndex={-1} focus targets (dialogs,
+   live regions, headings focused on arrival) that were drawing this ring
+   when they were not meant to. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-rec);
+    outline-offset: 2px;
+  }
 }
 
 .no-scrollbar {
