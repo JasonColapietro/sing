@@ -160,7 +160,7 @@ export function DayItems({
               data-program-item={item.kind}
               // The sessions that would tick this row, for the browser check.
               data-evidence={JSON.stringify(itemEvidence(item).map((e) => ({ type: e.type, detail: e.details?.[0] ?? null })))}
-              className="flex min-h-[3.5rem] w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-panel2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet"
+              className="flex min-h-[3.5rem] w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-panel2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-violet-ink"
             >
               <span
                 aria-hidden="true"
