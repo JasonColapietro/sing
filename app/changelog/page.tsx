@@ -231,6 +231,12 @@ const LOG: Array<{
       // 3.1 line: the entries below it are what shipped.
       { day: "24", note: "Suede Sing 4.0." },
       {
+        // MIC_IDLE_RELEASE_MS in lib/audio/use-idle-mic-release.ts is the
+        // "15 seconds"; keep the two in step.
+        day: "23",
+        note: "Warmups and Songs now turn the microphone off 15 seconds after a session ends, so the recording light no longer stays on while you read your score or browse. Starting again reopens it, and a silent stop offers a button to turn it off right away.",
+      },
+      {
         // Undoes the navigation half of the October 2 entry below, which stays
         // as history. On phones the header button names the current room (it
         // reads "Menu" only off-tab), so the note describes it, not its label,

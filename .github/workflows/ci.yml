@@ -160,6 +160,12 @@ jobs:
             else
               failed=1
               echo "- FAIL: $label (see browser-results artifact)" >> "$GITHUB_STEP_SUMMARY"
+              # The log's tail as an annotation, so a failure reads from the
+              # checks view and the API without downloading the artifact.
+              # The FAIL and error lines first: a script that keeps going after
+              # one case fails can push them out of the last lines.
+              tail_msg="$({ grep -E -A12 '^(FAIL|not ok)|Error' "browser-results/$label.log" | head -n 60; echo '...'; tail -n 15 "browser-results/$label.log"; } | sed -e 's/%/%25/g' -e 's/\r/%0D/g' | awk '{ printf "%s%%0A", $0 }')"
+              echo "::error title=FAIL: $label::$tail_msg"
             fi
           }
 
@@ -183,6 +189,7 @@ jobs:
               ;;
             audio)
               run_check ear-mic-interruption node e2e/ear-mic-interruption.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check mic-release node e2e/mic-release.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check pitch-precision node e2e/pitch-precision.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/pitch-precision.json
               run_check breath-gate node e2e/breath-gate.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/breath-gate.json
               run_check vibrato-drill node e2e/vibrato-drill.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/vibrato-drill.json
