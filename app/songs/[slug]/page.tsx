@@ -145,8 +145,13 @@ function answerSentence(song: Song): string {
   const f = songFacts(song);
   const what = isPhrase(song)
     ? `The ${phraseName(song)} of “${song.title}”`
-    : `“${song.title}”`;
-  return `${what} is transcribed here with its tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} — ${f.rangeSemis} semitones, with ${leapPhrase(f.leaps)} — and the span and leaps together rate it ${f.difficulty.toLowerCase()} to sing; a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
+    : song.arrangementOf
+      ? `The selected lines of “${song.title}”`
+      : `“${song.title}”`;
+  const transcription = !isPhrase(song) && song.arrangementOf
+    ? "are transcribed here with their"
+    : "is transcribed here with its";
+  return `${what} ${transcription} tonic on ${f.tonic} at ${song.bpm} bpm in ${song.beatsPerBar} beats to the bar. The ${f.noteCount} notes span ${f.lowLabel} to ${f.highLabel} — ${f.rangeSemis} semitones, with ${leapPhrase(f.leaps)} — and the span and leaps together rate it ${f.difficulty.toLowerCase()} to sing; a full ${f.loops}-pass session runs about ${formatMinSec(f.sessionSec)}.`;
 }
 
 export async function generateMetadata({
@@ -229,17 +234,6 @@ export default async function SongPage({
   // song a visitor found first to the lessons built on it, as chapters have.
   const lessons = freeLessonsUsingSong(song.id);
 
-  // Which notes the composition's measured properties describe. The node is
-  // named for the whole song, so a phrase's or an arrangement's range, note
-  // count and difficulty said bare would read as facts about the song (Silent
-  // Night spanning 3 semitones). Every property computed from the transcribed
-  // notes carries the same qualifier; a whole-song entry keeps the bare names.
-  const part = phrase
-    ? ` (${phraseName(song)})`
-    : song.arrangementOf
-      ? " (these lines)"
-      : "";
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -273,9 +267,8 @@ export default async function SongPage({
         mainEntity: { "@id": `${pageUrl}#composition` },
       },
       {
-        // The melody itself, as data. MusicComposition earns no rich result —
-        // it is here so a machine reading the page does not have to parse the
-        // key, the tempo and the range back out of prose.
+        // The melody's identity, language and genre. Whole-song transcriptions
+        // also expose their key and lyrics through supported properties.
         "@type": "MusicComposition",
         "@id": `${pageUrl}#composition`,
         name: song.title,
@@ -287,8 +280,8 @@ export default async function SongPage({
         // from, and the lowercase genre tags would repeat the genre.
         genre: song.genre,
         // `musicalKey` wants a key name, so it gets the pitch class without the
-        // octave; the octave-specific tonic the page actually prints goes in
-        // additionalProperty below. No mode is asserted — several of these are
+        // octave. The octave-specific tonic and measured note range remain in
+        // the visible text and description. No mode is asserted — some songs are
         // modal rather than major or minor. A partial transcription (a phrase,
         // or a longer arrangement of selected lines) carries neither: its tonic
         // is where this transcription sits, not the song's key, and its words
@@ -299,59 +292,9 @@ export default async function SongPage({
               musicalKey: midiToName(song.defaultKeyRootMidi),
               lyrics: { "@type": "CreativeWork", text: lyrics },
             }),
-        // Every field below is stated on the page. Nothing is inferred, and
-        // there is deliberately no composer or lyricist claim: `origin` is an
-        // attribution line, not a parsed name, and asserting the wrong person
-        // as an entity is worse than asserting nobody.
-        additionalProperty: [
-          {
-            "@type": "PropertyValue",
-            name: partial ? "Transcription tonic" : "Tonic",
-            value: f.tonic,
-          },
-          {
-            "@type": "PropertyValue",
-            name: "Tempo",
-            value: song.bpm,
-            unitText: "bpm",
-          },
-          {
-            "@type": "PropertyValue",
-            name: "Beats per bar",
-            value: song.beatsPerBar,
-          },
-          {
-            "@type": "PropertyValue",
-            name: `Lowest note${part}`,
-            value: f.lowLabel,
-          },
-          {
-            "@type": "PropertyValue",
-            name: `Highest note${part}`,
-            value: f.highLabel,
-          },
-          {
-            "@type": "PropertyValue",
-            name: `Range${part}`,
-            value: f.rangeSemis,
-            unitText: "semitones",
-          },
-          {
-            "@type": "PropertyValue",
-            name: `Note count${part}`,
-            value: f.noteCount,
-          },
-          {
-            "@type": "PropertyValue",
-            name: `Difficulty${part}`,
-            value: f.difficulty,
-          },
-          {
-            "@type": "PropertyValue",
-            name: "Public domain rationale",
-            value: song.publicDomain,
-          },
-        ],
+        // MusicComposition does not support additionalProperty. The measured
+        // notes, tempo, meter and difficulty remain in the visible text and
+        // description above, qualified to the transcribed phrase or lines.
       },
     ],
   };

@@ -172,7 +172,7 @@ const HOME_JSON_LD = {
     },
     ORG_NODE,
     {
-      "@type": "SoftwareApplication",
+      "@type": "WebApplication",
       "@id": `${SITE_URL}/#app`,
       name: "Suede Sing",
       description: HOME_DESCRIPTION,
