@@ -211,7 +211,7 @@ export default function Home() {
       />
       {/* The original portrait presentation with the current pitch/range actions. */}
       <HeroSplit />
-      {/* Returning singers only; keep the announcement after the start buttons. */}
+      {/* The 4.0 card, for every visitor until dismissed; keep it after the start buttons. */}
       <V2Banner />
 
       {/* 2 — Starting paths, above the grid: equal choices are the wrong

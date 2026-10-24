@@ -12,7 +12,9 @@ import Home from "@/app/page";
 import { PROGRESS_STORAGE_KEY } from "@/lib/progress";
 import V2Banner, { bannerWanted } from "./v2-banner";
 
-const SEEN_KEY = "suede-sing:v3-1-banner:v1";
+const SEEN_KEY = "suede-sing:v4-0-banner:v1";
+/** The 3.1 card's dismiss key, which must no longer hide the 4.0 card. */
+const OLD_SEEN_KEY = "suede-sing:v3-1-banner:v1";
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 interface Storage {
@@ -46,7 +48,7 @@ function hiddenBeforePaint(html: string, storage: Storage): boolean {
   return banner.hidden;
 }
 
-describe("3.1 release banner", () => {
+describe("4.0 release banner", () => {
   const html = renderToStaticMarkup(<V2Banner />);
 
   it("keeps the crawlable /changelog link in the server HTML", () => {
@@ -54,18 +56,41 @@ describe("3.1 release banner", () => {
     expect(html).toContain('href="/changelog"');
   });
 
-  it("hides before paint for a first-time visitor with no practice record", () => {
-    expect(hiddenBeforePaint(html, storageOf({}))).toBe(true);
+  it("leads with the v4.0 lockup as its heading, and names 4.0 to assistive tech", () => {
+    expect(html).toMatch(/<h2[^>]*><span class="sr-only">Suede Sing <\/span>v4\.0<\/h2>/);
+    expect(html).toContain('aria-label="Suede Sing 4.0 announcement"');
+    expect(html).toContain('aria-label="Dismiss the 4.0 announcement"');
+    expect(html).toContain("See what&#x27;s new");
+  });
+
+  /**
+   * For 4.0 the card goes to every visitor, not only returning singers, so a
+   * missing progress record must not hide it. These are the states a full
+   * page load can arrive in.
+   */
+  it("shows for a first-time visitor with no practice record", () => {
+    expect(hiddenBeforePaint(html, storageOf({}))).toBe(false);
   });
 
   it("shows for a returning singer who has not dismissed it", () => {
     expect(hiddenBeforePaint(html, storageOf({ [PROGRESS_STORAGE_KEY]: "{}" }))).toBe(false);
   });
 
-  it("stays hidden for a returning singer who dismissed it", () => {
+  it("shows again for a singer who dismissed the 3.1 card", () => {
     expect(
-      hiddenBeforePaint(html, storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-01" })),
+      hiddenBeforePaint(html, storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [OLD_SEEN_KEY]: "2026-10-01" })),
+    ).toBe(false);
+  });
+
+  it("stays hidden for anyone who dismissed it, with or without a practice record", () => {
+    expect(hiddenBeforePaint(html, storageOf({ [SEEN_KEY]: "2026-10-24" }))).toBe(true);
+    expect(
+      hiddenBeforePaint(html, storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-24" })),
     ).toBe(true);
+  });
+
+  it("shows when storage refuses the read, rather than flickering", () => {
+    expect(hiddenBeforePaint(html, BLOCKED)).toBe(false);
   });
 
   /**
@@ -82,9 +107,11 @@ describe("3.1 release banner", () => {
     it.each([
       ["a first-time visitor", storageOf({})],
       ["a returning singer", storageOf({ [PROGRESS_STORAGE_KEY]: "{}" })],
+      ["a singer who dismissed the 3.1 card", storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [OLD_SEEN_KEY]: "2026-10-01" })],
+      ["a first-time visitor who dismissed it", storageOf({ [SEEN_KEY]: "2026-10-24" })],
       [
         "a returning singer who dismissed it",
-        storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-01" }),
+        storageOf({ [PROGRESS_STORAGE_KEY]: "{}", [SEEN_KEY]: "2026-10-24" }),
       ],
       ["a browser that blocks storage", BLOCKED],
     ])("for %s", (_who, storage) => {
@@ -101,7 +128,7 @@ describe("3.1 release banner", () => {
  * extension pages after the rooms and /pro). So the rule is where it renders:
  * only the homepage renders it, and only after the hero's start buttons.
  */
-describe("3.1 release banner placement", () => {
+describe("4.0 release banner placement", () => {
   const SCANNED = ["app", "components", "lib"];
   const SOURCE = /\.(?:tsx?|mjs|js)$/;
   const TEST = /\.test\.(?:tsx?|mjs)$/;

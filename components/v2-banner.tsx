@@ -3,16 +3,23 @@
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import V2TraceGlyph from "@/components/v2-glyph";
-import { PROGRESS_STORAGE_KEY } from "@/lib/progress";
+import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 
-const SEEN_KEY = "suede-sing:v3-1-banner:v1";
+const SEEN_KEY = "suede-sing:v4-0-banner:v1";
 
 /**
- * The release announcement (3.1 as of 2026-09-25; it announced v2 before
- * that): a filled card on the homepage, directly after the hero.
+ * The release announcement (4.0 as of 2026-10-24; it announced 3.1 from
+ * 2026-09-25 and v2 before that): a filled card on the homepage, directly
+ * after the hero, led by a large "v4.0" lockup.
  *
- * It is shown only to returning singers (a saved progress record exists); a
- * first-time visitor has nothing to compare against.
+ * It is shown to every visitor, first-time ones included, until they close it.
+ * Through 3.1 it went only to returning singers (a saved progress record),
+ * on the reasoning that a first-time visitor has nothing to compare against.
+ * For 4.0 the owner asked for the release to be prominent, and the placement
+ * rule below is what makes that cheap: the card renders after the hero's
+ * start buttons, so a first-time visitor meets it only after the page's first
+ * action, never in front of it. The progress-record condition is gone from
+ * both the pre-paint script and bannerWanted().
  *
  * Where it renders is the rule, not a list of pages to keep it off. It used to
  * be a band above the sticky header on every page, and on a 375×667 phone its
@@ -23,36 +30,44 @@ const SEEN_KEY = "suede-sing:v3-1-banner:v1";
  * hide it on missed each page nobody had measured yet. Now the homepage (the
  * installed app's start_url) is the only page that renders it, and it renders
  * it after the hero and its start buttons, so it can never stand between a
- * singer and a page's first action. v2-banner.test.tsx pins both halves: no
- * other module imports this one, and on the homepage it comes after the hero.
- * The footer carries the crawlable /changelog link on every page.
+ * singer and a page's first action. That matters more now that the card is
+ * several times taller than the 3.1 strip and every visitor sees it.
+ * v2-banner.test.tsx pins both halves: no other module imports this one, and
+ * on the homepage it comes after the hero. The footer carries the crawlable
+ * /changelog link on every page.
  *
  * It sits in the homepage's column, as wide as the hero above it, so it reads
  * as part of the page, not a toast. Its fill is --color-violet-ink, the
  * restored original design's (#229); before that it was --color-brand, kept
- * off violet because violet otherwise marks Pro on this site.
+ * off violet because violet otherwise marks Pro on this site. The lockup uses
+ * only what the site already has: the display serif (h1 and h2 only, so the
+ * numerals are the card's h2), white on the fill, and the campaign's trace
+ * glyph drawn in --color-cool on a white tile, the same cool trace the
+ * /changelog record head carries. Cool on violet-ink would be dark on dark,
+ * which is why the trace gets a white ground rather than sitting on the fill.
+ * No raster image: the whole mark is type and one SVG path.
  *
  * It started as a 40px hairline strip whose message was hidden below sm, which
- * meant phone visitors saw a bare "V2" chip and a link. It is now a solid cool
- * card carrying the message at every width. The dismiss key is deliberately
- * unchanged: making the banner louder is not a reason to re-show it to someone
- * who already closed it. Bump SEEN_KEY only to deliberately re-broadcast; it
- * was bumped for 3.1, which is a release worth re-showing to v2 dismissers.
+ * meant phone visitors saw a bare "V2" chip and a link. It became a solid cool
+ * card carrying the message at every width, and for 4.0 a large card with the
+ * version as its headline. Bump SEEN_KEY only to deliberately re-broadcast:
+ * it was bumped for 3.1, and again for 4.0, so a singer who closed the 3.1
+ * card sees the 4.0 one once. Restyling the card is never a reason to bump it.
  *
  * Dismissal has to survive server rendering without a flash or a layout
- * shift, on a site that prerenders every page. The banner is always in the
+ * shift, on a site that prerenders every page. The card is always in the
  * homepage's server HTML, and the inline script directly after it hides it
- * before first paint when the seen key is set or there is no progress record —
- * the parser executes the script synchronously, so neither a returning
- * dismisser nor a first-time visitor sees a frame of banner. React 19 leaves
+ * before first paint when the seen key is set. The parser executes the script
+ * synchronously, so a dismisser never sees a frame of the card, and everyone
+ * else gets it in the first paint, never inserted after it. React 19 leaves
  * attributes it never rendered alone during hydration, so the script-set
- * `hidden` sticks; once hydrated, the store below reads the same keys and
+ * `hidden` sticks; once hydrated, the store below reads the same key and
  * unmounts it for real. A client-side navigation to the homepage mounts it
  * fresh, where an inline script never runs: there the store's client snapshot
- * decides on the first render, so a singer who should not see it never gets a
- * painted frame of it, and the script is left out (React warns about a
- * <script> rendered on the client). Tailwind's preflight keeps `[hidden]`
- * display:none with !important, so no display utility here can override it.
+ * decides on the first render, so a dismisser never gets a painted frame of
+ * it, and the script is left out (React warns about a <script> rendered on the
+ * client). Tailwind's preflight keeps `[hidden]` display:none with !important,
+ * so no display utility here can override it.
  */
 
 /**
@@ -64,7 +79,7 @@ const listeners = new Set<() => void>();
 
 function subscribe(onChange: () => void): () => void {
   listeners.add(onChange);
-  // Another tab closing it, or saving a first session.
+  // Another tab closing it.
   window.addEventListener("storage", onChange);
   return () => {
     listeners.delete(onChange);
@@ -73,18 +88,16 @@ function subscribe(onChange: () => void): () => void {
 }
 
 /**
- * Whether this browser should see the banner: a returning singer who has not
- * closed it. The same rule as the pre-paint script, which the test checks.
+ * Whether this browser should see the banner: anyone who has not closed it.
+ * The same rule as the pre-paint script, which the test checks.
  */
 export function bannerWanted(): boolean {
   if (closedHere) return false;
   try {
-    return (
-      !window.localStorage.getItem(SEEN_KEY) &&
-      Boolean(window.localStorage.getItem(PROGRESS_STORAGE_KEY))
-    );
+    return !window.localStorage.getItem(SEEN_KEY);
   } catch {
-    // storage unavailable — keep showing rather than flicker
+    // storage unavailable: keep showing rather than flicker, as the
+    // pre-paint script does when its own read throws
     return true;
   }
 }
@@ -100,7 +113,7 @@ function close(): void {
   try {
     window.localStorage.setItem(SEEN_KEY, new Date().toISOString());
   } catch {
-    // ignore — closedHere holds the dismissal for this tab
+    // ignore: closedHere holds the dismissal for this tab
   }
   for (const notify of listeners) notify();
 }
@@ -122,65 +135,91 @@ export default function V2Banner() {
     <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
       {/* suppressHydrationWarning: the script below may set `hidden` before
           React hydrates; without it development warns about an attribute
-          React did not render, on every first-time visitor's homepage. */}
+          React did not render, on every dismisser's homepage. */}
       <section
         id="v2-banner"
-        aria-label="What's new in Suede Sing"
+        aria-label="Suede Sing 4.0 announcement"
         className="relative my-6 rounded-3xl bg-violet-ink text-white sm:my-8"
         suppressHydrationWarning
       >
-        {/* The card reads as a filled band rather than a hairline: white on
-            --color-violet-ink is 7.1:1 (the message's white/85, 5.5:1), so
-            the announcement carries at a glance. The dismiss control is
-            positioned rather than in flow so the row can wrap to two lines on
-            a narrow phone instead of truncating the message away. */}
-        <div className="flex min-h-12 flex-wrap items-center gap-x-3 gap-y-1 py-3 pl-5 pr-14 sm:pl-6 sm:pr-16">
-          <V2TraceGlyph className="shrink-0 text-white" />
-          <span className="inline-block shrink-0 rounded border border-white/40 px-1.5 py-0.5 font-mono text-label uppercase tracking-[0.1em] text-white">
-            3.1
-          </span>
-          <span className="text-meta text-white/85">
-            102 voice lessons, multi-week programs, and songs that score you.
-          </span>
-          {/* The pill is recessed (a black tint), not raised: a white tint
-              lightens the fill under 13px white text. Black/15 over the
-              violet-ink fill is 8.8:1 at rest and black/25 10.1:1 on hover. */}
-          <Link
-            href="/changelog"
-            className="relative inline-flex min-h-11 shrink-0 items-center rounded-full bg-black/15 px-3 py-1 text-meta font-medium text-white ring-1 ring-inset ring-white/40 transition-colors hover:bg-black/25"
-          >
-            See what&apos;s new
-          </Link>
-          {/* The drawer-close pattern from nav.tsx: a 44px square hit region
-              around a small glyph, here pinned to the right edge so it stays
-              reachable whether the row is one line or two. */}
-          <button
-            type="button"
-            onClick={close}
-            aria-label="Dismiss the 3.1 announcement"
-            className="absolute right-2 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              aria-hidden="true"
+        {/* White on --color-violet-ink is 7.1:1 and the message's white/85
+            5.5:1, so everything here reads at a glance. On a phone the
+            lockup stacks above the message; from sm up they sit side by
+            side. The right padding on the first row keeps the lockup clear
+            of the positioned dismiss control. */}
+        <div className="grid gap-5 p-5 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center sm:gap-10 sm:p-8 sm:pr-20">
+          <div className="flex items-end gap-4 pr-12 sm:pr-0">
+            {/* The version is the headline. The hidden words give it its
+                full name for a screen reader and the page's outline; the
+                eye gets the numerals alone. */}
+            <h2 className="text-[clamp(4.5rem,14vw,8rem)] leading-[0.85] tracking-[-0.03em] text-white">
+              <span className="sr-only">Suede Sing </span>v4.0
+            </h2>
+            <span className="mb-1 flex size-14 shrink-0 items-center justify-center rounded-2xl bg-white sm:mb-2 sm:size-20">
+              <V2TraceGlyph className="h-auto w-10 text-cool sm:w-14" />
+            </span>
+          </div>
+          <div>
+            <p className="font-mono text-label uppercase tracking-[0.14em] text-white/85">
+              New release
+              <span className="mx-2" aria-hidden>
+                ·
+              </span>
+              October 2026
+            </p>
+            {/* Only what main ships and the October log records: the
+                restored homepage and navigation (#229, the 15th) and the
+                daily free minutes (#212, the 10th), read from the same
+                constant the hero quotes so the two cannot disagree. */}
+            <p className="mt-2 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
+              The original Suede Sing homepage and navigation are back.
+              Guided practice now includes {FREE_DAILY_MINUTES} free minutes
+              a day.
+            </p>
+            {/* A solid white pill: the card's one call to action, in the
+                fill's own ink (violet-ink on white is 7.1:1). It recedes to
+                --color-panel on hover rather than tinting, so the label's
+                contrast never drops. Both controls here take a white focus
+                ring: the site's --color-rec ring (globals.css) reads about
+                1.1:1 against this fill, and white reads 7.1:1. */}
+            <Link
+              href="/changelog"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-violet-ink transition-colors hover:bg-panel focus-visible:outline-white"
             >
-              <path
-                d="M3.5 3.5l7 7m0-7l-7 7"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
+              See what&apos;s new
+              <span aria-hidden>→</span>
+            </Link>
+          </div>
         </div>
+        {/* The drawer-close pattern from nav.tsx: a 44px square hit region
+            around a small glyph, pinned to the top-right corner so it stays
+            put however the card wraps. */}
+        <button
+          type="button"
+          onClick={close}
+          aria-label="Dismiss the 4.0 announcement"
+          className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-white sm:right-3 sm:top-3"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M3.5 3.5l7 7m0-7l-7 7"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+        </button>
       </section>
       {!isClientMount && (
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem("${SEEN_KEY}")||!localStorage.getItem("${PROGRESS_STORAGE_KEY}"))document.getElementById("v2-banner").hidden=true}catch(e){}`,
+            __html: `try{if(localStorage.getItem("${SEEN_KEY}"))document.getElementById("v2-banner").hidden=true}catch(e){}`,
           }}
         />
       )}

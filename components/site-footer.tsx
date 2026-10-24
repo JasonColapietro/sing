@@ -188,7 +188,7 @@ export default function SiteFooter() {
             {/* The durable inbound link to /changelog: the release banner will
                 retire one day, and the crawl path must not retire with it. */}
             <Link href="/changelog" prefetch={false} className={linkClass}>
-              3.1: what we&apos;ve changed
+              4.0: what we&apos;ve changed
             </Link>
             <span aria-hidden>·</span>
             {/* Both pages were already live and neither was linked from

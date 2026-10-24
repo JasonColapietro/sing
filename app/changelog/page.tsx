@@ -164,6 +164,9 @@ const LOG: Array<{
   {
     month: "October 2026",
     entries: [
+      // The owner named the October wave 4.0. Terse on purpose, like the
+      // 3.1 line: the entries below it are what shipped.
+      { day: "24", note: "Suede Sing 4.0." },
       {
         // Undoes the navigation half of the October 2 entry below, which stays
         // as history. On phones the header button names the current room (it
