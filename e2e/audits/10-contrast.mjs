@@ -440,16 +440,19 @@ export async function run(ctx) {
         const ratio = actualRatio(ring, s.bg);
         if (!worst || ratio < worst.ratio) worst = { ...s, ratio };
       }
-      if (worst.ratio >= 3) continue;
+      // A ring over an image is reported whatever the fill ratio: that ratio
+      // is only a reference, and says nothing about the image's pixels.
+      const overImage = surfaces.some((s) => s.image);
+      if (!overImage && worst.ratio >= 3) continue;
 
       const tag = el.tagName.toLowerCase();
       hits.push({
-        key: `ring|minor|${colorKey(ring)}|${colorKey(worst.bg)}|${tag}|${worst.image ? "image" : ""}`,
+        key: `ring|minor|${colorKey(ring)}|${colorKey(worst.bg)}|${tag}|${overImage ? "image" : ""}`,
         severity: "minor",
-        summary: worst.image
+        summary: overImage
           ? `Focus outline on <${tag}> is drawn over an image, so its contrast can't be measured here: check it by eye.`
           : `Focus outline on <${tag}> fails WCAG 1.4.11 Non-text Contrast: ${worst.ratio.toFixed(2)}:1, needs 3:1.`,
-        detail: worst.image
+        detail: overImage
           ? `outline ${fmtColor(ring)}; against ${worst.where} ${fmtColor(worst.bg)} it is ${worst.ratio.toFixed(2)}:1.`
           : `outline ${fmtColor(ring)} on ${fmtColor(worst.bg)}, ${worst.where}.`,
         selector: window.__describe(el),
