@@ -217,3 +217,17 @@ describe("guided rooms name their WebPage after the title", () => {
     expect(guide.pageName).toBe(titleBody(shippedTitle(mod.metadata)));
   });
 });
+
+// browserRequirements is defined only for WebApplication, a SoftwareApplication
+// subtype. Do not make the microphone requirement invalid by widening its type.
+describe("homepage browser application schema", () => {
+  it("uses the web application type for its browser requirements", async () => {
+    const { default: Home } = await import("@/app/page");
+    const html = renderToStaticMarkup(<Home />);
+    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+    const nodes = blocks.flatMap((block) => JSON.parse(block[1])["@graph"] ?? []);
+    const app = nodes.find((node) => node["@id"] === "https://sing.suedeai.ai/#app");
+    expect(app?.["@type"]).toBe("WebApplication");
+    expect(app?.browserRequirements).toMatch(/microphone/i);
+  });
+});

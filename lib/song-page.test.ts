@@ -56,53 +56,35 @@ describe("longer arrangements are partial transcriptions", () => {
     const composition = jsonLd(html)["@graph"].find((n) => n["@type"] === "MusicComposition")!;
     expect(composition).not.toHaveProperty("lyrics");
     expect(composition).not.toHaveProperty("musicalKey");
-    const names = (composition.additionalProperty as { name: string }[]).map((p) => p.name);
-    expect(names).toContain("Transcription tonic");
-    expect(names).toContain("Lowest note (these lines)");
-    expect(names).toContain("Highest note (these lines)");
-    expect(names).toContain("Range (these lines)");
-    expect(names).toContain("Note count (these lines)");
-    expect(names).toContain("Difficulty (these lines)");
-    expect(names.join(" ")).not.toContain("opening phrase");
+    expect(composition).not.toHaveProperty("additionalProperty");
+    expect(composition.description).toContain(`The selected lines of “${songBySlug(slug)!.title}”`);
   });
 });
 
-describe("the composition's measured properties name the notes they describe", () => {
-  /**
-   * The MusicComposition node is named for the whole song, so a bare "Range: 3"
-   * on Silent Night told a machine reader the carol spans 3 semitones. Every
-   * property computed from the transcribed notes carries the same qualifier
-   * as the lowest and highest note.
-   */
-  const MEASURED = ["Lowest note", "Highest note", "Range", "Note count", "Difficulty"];
-
-  async function propertyNames(slug: string): Promise<string[]> {
-    const composition = jsonLd(await render(slug))["@graph"].find((n) => n["@type"] === "MusicComposition")!;
-    return (composition.additionalProperty as { name: string }[]).map((p) => p.name);
-  }
-
-  it("qualifies every one of them on an opening phrase, and none is left bare", async () => {
-    const names = await propertyNames("silent-night");
-    for (const m of MEASURED) {
-      expect(names).toContain(`${m} (opening phrase)`);
-      expect(names).not.toContain(m);
-    }
-  });
-
-  it("uses the phrase's own name when it is not the opening", async () => {
-    const names = await propertyNames("home-on-the-range");
-    expect(names).toContain("Range (chorus hook)");
-    expect(names).toContain("Note count (chorus hook)");
-    expect(names).toContain("Difficulty (chorus hook)");
-    expect(names).not.toContain("Range");
-  });
-
-  it("leaves no measured property bare on any partial transcription", async () => {
-    for (const song of ALL_SONGS.filter((s) => s.form === "phrase" || s.arrangementOf)) {
-      const names = await propertyNames(song.slug);
-      for (const m of MEASURED) expect(names, song.slug).not.toContain(m);
-    }
-  });
+describe("composition descriptions preserve the scope of measured notes", () => {
+  it.each(ALL_SONGS.map((song) => song.slug))(
+    "%s uses supported schema fields and keeps its visible measurements",
+    async (slug) => {
+      const song = songBySlug(slug)!;
+      const html = await render(slug);
+      const composition = jsonLd(html)["@graph"].find((n) => n["@type"] === "MusicComposition")!;
+      const description = String(composition.description);
+      expect(composition).not.toHaveProperty("additionalProperty");
+      expect(description).toContain(`${song.bpm} bpm`);
+      expect(description).toContain(`${song.beatsPerBar} beats to the bar`);
+      expect(description).toMatch(/notes span .+ semitones/);
+      if (song.form === "phrase") {
+        expect(description).toContain(`The ${song.excerpt ?? "opening phrase"} of “${song.title}”`);
+      } else if (song.arrangementOf) {
+        expect(description).toContain(`The selected lines of “${song.title}”`);
+      }
+      // The exact description sentence is visible prose, not hidden claims.
+      const sentence = description.slice(`${song.origin}. `.length);
+      const visibleHtml = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+      const escapedSentence = renderToStaticMarkup(createElement("span", null, sentence)).slice(6, -7);
+      expect(visibleHtml).toContain(escapedSentence);
+    },
+  );
 });
 
 describe("the tag sentence", () => {
@@ -227,9 +209,8 @@ describe("a phrase that is not the song's opening", () => {
     expect(h1).toContain("the chorus hook, its key and note range");
     expect(html).toContain("The songbook transcribes the chorus hook rather than the");
     const composition = jsonLd(html)["@graph"].find((n) => n["@type"] === "MusicComposition")!;
-    const names = (composition.additionalProperty as { name: string }[]).map((p) => p.name);
-    expect(names).toContain("Lowest note (chorus hook)");
-    expect(names).toContain("Highest note (chorus hook)");
+    expect(composition).not.toHaveProperty("additionalProperty");
+    expect(composition.description).toContain("The chorus hook of");
 
     // The longer version links back to it by what it is.
     const full = await render("home-on-the-range-full");
