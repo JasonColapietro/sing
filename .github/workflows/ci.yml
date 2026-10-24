@@ -160,6 +160,12 @@ jobs:
             else
               failed=1
               echo "- FAIL: $label (see browser-results artifact)" >> "$GITHUB_STEP_SUMMARY"
+              # The log's tail as an annotation, so a failure reads from the
+              # checks view and the API without downloading the artifact.
+              # The FAIL and error lines first: a script that keeps going after
+              # one case fails can push them out of the last lines.
+              tail_msg="$({ grep -E -A12 '^(FAIL|not ok)|Error' "browser-results/$label.log" | head -n 60; echo '...'; tail -n 15 "browser-results/$label.log"; } | sed -e 's/%/%25/g' -e 's/\r/%0D/g' | awk '{ printf "%s%%0A", $0 }')"
+              echo "::error title=FAIL: $label::$tail_msg"
             fi
           }
 
