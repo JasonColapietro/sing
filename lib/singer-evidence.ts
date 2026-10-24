@@ -1,6 +1,7 @@
 import "server-only";
 
 import rawEvidence from "@/data/singer-evidence.json";
+import rawReviewConfirmation from "@/data/singer-review-confirmation.json";
 import { SINGERS, type Singer } from "@/lib/singers-data";
 
 /** Server-only provenance for individually reviewed singer profiles. */
@@ -37,6 +38,13 @@ export interface SingerEvidence {
   reviewedAt?: string;
   voiceTypeCopy?: string;
   sources: SingerEvidenceSource[];
+  reviewConfirmation?: SingerReviewConfirmation;
+}
+
+export interface SingerReviewConfirmation {
+  confirmedBy: string;
+  confirmedAt: string;
+  basis: "owner-confirmed-prior-review";
 }
 
 export interface SingerEvidenceGroup {
@@ -206,9 +214,44 @@ export function validateSingerEvidence(value: unknown): Record<string, SingerEvi
 
 const SINGER_EVIDENCE = validateSingerEvidence(rawEvidence);
 
-/** Returns a concrete review record or the honest unreviewed fallback. */
+/**
+ * A fixed cohort prevents future additions inheriting a past confirmation.
+ * To reopen a confirmed profile's review, remove its slug from this manifest;
+ * a stale pending field alone must not override the recorded owner confirmation.
+ */
+export function validateSingerReviewConfirmation(value: unknown): SingerReviewConfirmation & { slugs: string[] } {
+  if (!isRecord(value) || value.basis !== "owner-confirmed-prior-review") {
+    throw new Error("singer review confirmation requires owner-confirmed-prior-review basis");
+  }
+  if (!Array.isArray(value.slugs) || value.slugs.length === 0) {
+    throw new Error("singer review confirmation requires explicit singer slugs");
+  }
+  const slugs = value.slugs.map((slug) => requiredText(slug, "confirmation.slug"));
+  if (new Set(slugs).size !== slugs.length || slugs.some((slug) => !KNOWN_SLUGS.has(slug))) {
+    throw new Error("singer review confirmation contains duplicate or unknown slugs");
+  }
+  return {
+    confirmedBy: requiredText(value.confirmedBy, "confirmation.confirmedBy"),
+    confirmedAt: requiredDate(value.confirmedAt, "confirmation.confirmedAt"),
+    basis: value.basis,
+    slugs,
+  };
+}
+
+const { slugs: confirmedSlugs, ...REVIEW_CONFIRMATION } =
+  validateSingerReviewConfirmation(rawReviewConfirmation);
+const CONFIRMED_SLUGS = new Set(confirmedSlugs);
+
+/** Original cited-source reviews remain distinct from a confirmed prior catalog review. */
+export function hasDocumentedSourceReview(slug: string): boolean {
+  return (SINGER_EVIDENCE[slug]?.status ?? "pending") !== "pending";
+}
+
+/** Reconcile the owner's confirmed prior review without inventing dates or sources. */
 export function getSingerEvidence(slug: string): SingerEvidence {
-  return SINGER_EVIDENCE[slug] ?? PENDING_EVIDENCE;
+  const evidence = SINGER_EVIDENCE[slug] ?? PENDING_EVIDENCE;
+  if (evidence.status !== "pending" || !CONFIRMED_SLUGS.has(slug)) return evidence;
+  return { ...evidence, status: "reviewed", reviewConfirmation: REVIEW_CONFIRMATION };
 }
 
 export function getSingerReviewStatus(slug: string): SingerReviewStatus {
@@ -217,6 +260,7 @@ export function getSingerReviewStatus(slug: string): SingerReviewStatus {
 
 /** Shared by the visible answer and share image; review is not endpoint verification. */
 export function singerReviewLabel(slug: string): string {
+  if (getSingerEvidence(slug).reviewConfirmation) return "Review confirmed";
   const status = getSingerReviewStatus(slug);
   if (status === "disputed") return "Evidence disputed";
   return status === "reviewed" ? "Sources reviewed" : "Individual review pending";
@@ -235,6 +279,10 @@ export function voiceTypeEvidenceCopy(
   singer: Pick<Singer, "slug" | "name" | "voiceType">,
 ): string {
   const evidence = getSingerEvidence(singer.slug);
+  if (evidence.reviewConfirmation) {
+    return evidence.voiceTypeCopy ??
+      `The catalog lists ${singer.name} as a ${singer.voiceType.toLowerCase()}; this is a reported reference classification.`;
+  }
   if (evidence.status === "pending" && evidence.voiceTypeCopy) {
     return `${evidence.voiceTypeCopy} Individual evidence review is pending.`;
   }
@@ -268,7 +316,7 @@ export function groupEvidenceSources(
   return [...groups.values()];
 }
 
-/** The evidence date exists only when a human has explicitly reviewed the record. */
+/** The original review date, when documented; confirmation never invents one. */
 export function getSingerLastModified(slug: string): string | undefined {
   const evidence = getSingerEvidence(slug);
   return isSingerReviewed(slug) ? evidence.reviewedAt : undefined;
@@ -300,11 +348,12 @@ export const SINGER_DATA_REVISED: Readonly<Record<string, string>> = {
 
 /**
  * Sitemap lastmod (and JSON-LD dateModified) for a singer page: the latest of
- * its evidence review date, the shared page revision and its own data
- * revision. Never claims a review that did not happen; getSingerLastModified
+ * its evidence review date, shared page revision, data revision, or visible
+ * review-status reconciliation. Never claims a review that did not happen; getSingerLastModified
  * stays the review date alone.
  */
 export function getSingerPageLastModified(slug: string): string {
-  const dates = [SINGER_PAGE_REVISED, getSingerLastModified(slug), SINGER_DATA_REVISED[slug]];
+  const dates = [SINGER_PAGE_REVISED, getSingerLastModified(slug), SINGER_DATA_REVISED[slug],
+    getSingerEvidence(slug).reviewConfirmation?.confirmedAt];
   return dates.filter((date): date is string => Boolean(date)).sort().at(-1)!;
 }

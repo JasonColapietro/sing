@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import { FamousVoices } from "@/components/landing/famous-voices";
-import { isSingerReviewed } from "@/lib/singer-evidence";
+import { hasDocumentedSourceReview } from "@/lib/singer-evidence";
 
 describe("homepage famous voices", () => {
   it.each([
@@ -62,20 +62,21 @@ describe("homepage famous voices", () => {
     expect(card).not.toContain(`>${catalogType}<`);
   });
 
-  it("labels an unreviewed voice type as the catalog's, as its profile does", () => {
+  it("labels a voice type without a documented source review as the catalog's", () => {
     const html = renderToStaticMarkup(<FamousVoices />);
     const card = (slug: string) =>
       html.match(new RegExp(`href="/singers/${slug}"[^>]*>([\\s\\S]*?)</a>`))?.[1] ?? "";
 
-    // Pending review: the profile calls this field "Catalog label".
-    expect(isSingerReviewed("freddie-mercury")).toBe(false);
+    // Confirmed catalog review without cited-source review: keep "Catalog label".
+    expect(hasDocumentedSourceReview("freddie-mercury")).toBe(false);
     expect(card("freddie-mercury")).toContain(">Catalog label: Baritone<");
     // Reviewed with no evidence sentence on the card: the label stands bare.
-    expect(isSingerReviewed("adele")).toBe(true);
+    expect(hasDocumentedSourceReview("adele")).toBe(true);
     expect(card("adele")).toContain(">Mezzo-soprano<");
     expect(card("adele")).not.toContain("Catalog label");
-    // The section says most of what it shows is still awaiting review.
-    expect(html).toContain("still await individual evidence review");
+    // Completed catalog reviews must not still be described as pending.
+    expect(html).not.toContain("still await individual evidence review");
+    expect(html).toContain("available source evidence");
   });
 
   it("stacks reviewed rows so the evidence sentence gets the card's full width", () => {
@@ -98,8 +99,8 @@ describe("homepage famous voices", () => {
     ].map((m) => ({ slug: m[1], name: m[2].replaceAll("&#x27;", "'") }));
   }
 
-  it("leads with the reviewed profiles, the ones search can index", () => {
-    const reviewed = cards().map(({ slug }) => isSingerReviewed(slug));
+  it("leads with profiles that have documented source reviews", () => {
+    const reviewed = cards().map(({ slug }) => hasDocumentedSourceReview(slug));
 
     expect(reviewed.length).toBeGreaterThan(20);
     expect(reviewed[0]).toBe(true);

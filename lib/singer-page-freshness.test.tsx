@@ -8,7 +8,7 @@ import SingerPage, { generateMetadata } from "@/app/singers/[slug]/page";
 import {
   getSingerEvidence,
   getSingerPageLastModified,
-  isSingerReviewed,
+  hasDocumentedSourceReview,
 } from "@/lib/singer-evidence";
 import { SINGERS } from "@/lib/singers";
 
@@ -35,7 +35,7 @@ async function pageFingerprint(slug: string): Promise<string> {
 }
 
 /**
- * Each indexable (reviewed) singer page, pinned to what it said on the day its
+ * Each reviewed singer page, pinned to what it said on the day its
  * sitemap lastmod and JSON-LD dateModified name. Round 8 corrected Alex
  * Warren's range, which also moved catalog ranks on three other reviewed
  * pages, and the dates stayed put; rounds 2 and 3 had already fixed the same
@@ -56,8 +56,8 @@ const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
 };
 
 describe("reviewed singer page freshness", () => {
-  it("pins every indexable singer page", () => {
-    const reviewed = SINGERS.filter((singer) => isSingerReviewed(singer.slug)).map((s) => s.slug);
+  it("pins every reviewed singer page", () => {
+    const reviewed = SINGERS.filter((singer) => hasDocumentedSourceReview(singer.slug)).map((s) => s.slug);
     expect(Object.keys(PINNED).sort()).toEqual([...reviewed].sort());
   });
 

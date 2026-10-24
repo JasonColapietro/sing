@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 import VocalRangeByVoiceTypePage from "@/app/atlas/vocal-range-by-voice-type/page";
+import rawConfirmation from "@/data/singer-review-confirmation.json";
 import { SINGERS, VOICE_KINDS } from "@/lib/singers";
 import { REFERENCE_BANDS } from "@/lib/singers-analysis";
 import {
@@ -14,6 +15,8 @@ import {
   groupEvidenceSources,
   isSingerReviewed,
   validateSingerEvidence,
+  validateSingerReviewConfirmation,
+  hasDocumentedSourceReview,
   voiceTypeEvidenceCopy,
 } from "@/lib/singer-evidence";
 
@@ -71,21 +74,28 @@ describe("singer evidence", () => {
     },
   );
 
-  it("keeps unreviewed catalog artists explicitly pending", () => {
+  it("reconciles confirmed catalog reviews without inventing original review dates", () => {
     expect(getSingerEvidence("aaliyah")).toEqual({
-      status: "pending",
+      status: "reviewed",
       sources: [],
+      reviewConfirmation: {
+        confirmedBy: "Jason Colapietro",
+        confirmedAt: "2026-10-24",
+        basis: "owner-confirmed-prior-review",
+      },
     });
-    expect(getSingerReviewStatus("aaliyah")).toBe("pending");
-    expect(isSingerReviewed("aaliyah")).toBe(false);
+    expect(getSingerReviewStatus("aaliyah")).toBe("reviewed");
+    expect(isSingerReviewed("aaliyah")).toBe(true);
+    expect(hasDocumentedSourceReview("aaliyah")).toBe(false);
     expect(getSingerLastModified("aaliyah")).toBeUndefined();
   });
 
   it.each(["jeff-buckley", "luciano-pavarotti", "jungkook", "peter-steele", "tom-jones", "paul-mccartney", "jimin"])(
-    "keeps collected source context for %s pending until human review",
+    "preserves collected source context and its limits after confirming %s review",
     (slug) => {
       const evidence = getSingerEvidence(slug);
-      expect(evidence.status).toBe("pending");
+      expect(evidence.status).toBe("reviewed");
+      expect(evidence.reviewConfirmation?.confirmedAt).toBe("2026-10-24");
       expect(evidence.sources).toHaveLength(1);
       expect(evidence.sources[0].scope).toMatch(/does not|not a/i);
       expect(evidence.reviewedBy).toBeUndefined();
@@ -93,7 +103,7 @@ describe("singer evidence", () => {
     },
   );
 
-  it("uses reviewed and pending voice-type language without overstating a catalog label", () => {
+  it("uses source-reviewed and owner-confirmed voice-type language without overstating a catalog label", () => {
     expect(
       voiceTypeEvidenceCopy({
         slug: "olivia-rodrigo",
@@ -119,8 +129,37 @@ describe("singer evidence", () => {
         voiceType: "Soprano",
       }),
     ).toBe(
-      "The catalog lists Aaliyah as a soprano; individual evidence review is pending.",
+      "The catalog lists Aaliyah as a soprano; this is a reported reference classification.",
     );
+  });
+
+  it("limits the owner confirmation to its explicit existing cohort", () => {
+    expect(rawConfirmation.slugs).toHaveLength(630);
+    expect(new Set(rawConfirmation.slugs).size).toBe(630);
+    for (const slug of rawConfirmation.slugs) {
+      expect(hasDocumentedSourceReview(slug)).toBe(false);
+      const evidence = getSingerEvidence(slug);
+      expect(evidence.status).toBe("reviewed");
+      expect(evidence.reviewConfirmation?.confirmedAt).toBe("2026-10-24");
+      expect(evidence.reviewedAt).toBeUndefined();
+      expect(evidence.reviewedBy).toBeUndefined();
+    }
+    for (const [slug] of REVIEWED_SLUGS) {
+      expect(getSingerEvidence(slug).reviewConfirmation).toBeUndefined();
+      expect(getSingerEvidence(slug).reviewedAt).toBe("2026-08-29");
+    }
+    expect(getSingerEvidence("future-singer")).toEqual({ status: "pending", sources: [] });
+    expect(isSingerReviewed("future-singer")).toBe(false);
+  });
+
+  it("rejects malformed, duplicate, or unknown review confirmations", () => {
+    expect(() => validateSingerReviewConfirmation({ ...rawConfirmation, slugs: [] })).toThrow("explicit singer slugs");
+    for (const slugs of [["aaliyah", "aaliyah"], ["future-singer"]]) {
+      expect(() => validateSingerReviewConfirmation({ ...rawConfirmation, slugs })).toThrow("duplicate or unknown slugs");
+    }
+    expect(() => validateSingerReviewConfirmation({ ...rawConfirmation, confirmedAt: "2026-02-30" })).toThrow("invalid date");
+    expect(() => validateSingerReviewConfirmation({ ...rawConfirmation, confirmedBy: "" })).toThrow("non-empty string");
+    expect(() => validateSingerReviewConfirmation({ ...rawConfirmation, basis: "automatic" })).toThrow("owner-confirmed-prior-review");
   });
 
   it("keeps song evidence grouped separately from general sources", () => {

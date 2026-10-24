@@ -10,7 +10,9 @@
  */
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("server-only", () => ({}));
 import * as guides from "./guides";
 import { TOOL_GUIDES } from "./guides";
 import { GUIDED_PRACTICE_ROOMS } from "./llms-txt";

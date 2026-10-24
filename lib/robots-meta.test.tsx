@@ -23,7 +23,7 @@ vi.mock("next/font/google", () => ({
 }));
 
 import { metadata as layoutMetadata } from "@/app/layout";
-import { isSingerReviewed } from "@/lib/singer-evidence";
+import { getSingerEvidence, hasDocumentedSourceReview } from "@/lib/singer-evidence";
 import { INDEXABLE_ROBOTS, NOINDEX_FOLLOW, pageRobots } from "@/lib/robots-meta";
 
 const APP_DIR = path.join(__dirname, "..", "app");
@@ -100,14 +100,16 @@ describe("robots preview directives", async () => {
     expect(missing).toEqual([]);
   });
 
-  it("keeps singer pages pending review noindexed, and reviewed ones indexable", () => {
+  it("keeps all published public singer pages indexable with full preview directives", () => {
     const singers = routes.filter((r) => r.route.startsWith("/singers/[slug] "));
-    const pending = singers.filter((r) => !isSingerReviewed(r.params.slug));
-    const reviewed = singers.filter((r) => isSingerReviewed(r.params.slug));
-    expect(pending.length).toBeGreaterThan(0);
+    const confirmed = singers.filter((r) => getSingerEvidence(r.params.slug).reviewConfirmation);
+    const reviewed = singers.filter((r) => hasDocumentedSourceReview(r.params.slug));
+    expect(confirmed.length).toBeGreaterThan(0);
     expect(reviewed.length).toBeGreaterThan(0);
-    for (const r of pending) expect(r.robots, r.route).toEqual(NOINDEX_FOLLOW);
-    for (const r of reviewed) expect(hasPreviewDirectives(r.robots), r.route).toBe(true);
+    for (const r of singers) {
+      expect(isNoindex(r.robots), r.route).toBe(false);
+      expect(hasPreviewDirectives(r.robots), r.route).toBe(true);
+    }
   });
 
   it("ships one robots directive on the 404 page, not noindex beside index", async () => {
