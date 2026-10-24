@@ -146,7 +146,7 @@ describe("singer sitemap editorial freshness", () => {
   it("dates singer pages by the latest of their review, the page revision and their data revision", () => {
     const entries = sitemap();
     const reviewed = SINGERS.filter((singer) => getSingerLastModified(singer.slug));
-    const confirmed = SINGERS.filter((singer) => !getSingerLastModified(singer.slug));
+    const confirmed = SINGERS.filter((singer) => getSingerEvidence(singer.slug).reviewConfirmation);
 
     expect(reviewed.length).toBeGreaterThan(0);
     expect(confirmed.length).toBeGreaterThan(0);

@@ -100,13 +100,12 @@ describe("robots preview directives", async () => {
     expect(missing).toEqual([]);
   });
 
-  it("keeps confirmed and source-reviewed public singer pages indexable with full preview directives", () => {
+  it("keeps all published public singer pages indexable with full preview directives", () => {
     const singers = routes.filter((r) => r.route.startsWith("/singers/[slug] "));
     const confirmed = singers.filter((r) => getSingerEvidence(r.params.slug).reviewConfirmation);
     const reviewed = singers.filter((r) => hasDocumentedSourceReview(r.params.slug));
     expect(confirmed.length).toBeGreaterThan(0);
     expect(reviewed.length).toBeGreaterThan(0);
-    expect(confirmed.length + reviewed.length).toBe(singers.length);
     for (const r of singers) {
       expect(isNoindex(r.robots), r.route).toBe(false);
       expect(hasPreviewDirectives(r.robots), r.route).toBe(true);

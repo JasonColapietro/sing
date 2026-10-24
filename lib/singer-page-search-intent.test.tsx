@@ -7,7 +7,7 @@ import SingerPage, {
 } from "@/app/singers/[slug]/page";
 import { SINGERS, rangeLabel, spanOctaves } from "@/lib/singers";
 import { midiToLabel } from "@/lib/audio/notes";
-import { voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
+import { isSingerReviewed, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 
 const ARTIST_INTENT_CASES = [
@@ -266,7 +266,9 @@ describe("every singer page answers its vocal range and voice type intent", () =
         const heading = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} Voice Type and Vocal Range`
           : `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`;
-        const defaultOpening = `${voiceTypeEvidenceCopy(singer)} The displayed range of ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
+        const defaultOpening = !isSingerReviewed(singer.slug)
+          ? `Our catalog reports ${singer.name} at ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(singer.highMidi - singer.lowMidi)} octaves). Individual endpoint review is pending. Compare your range free.`
+          : `${voiceTypeEvidenceCopy(singer)} The displayed range of ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
         const opening = SPECIAL_TITLE_CASES[singer.slug]?.opening ?? defaultOpening;
 
         expect(html).toContain(

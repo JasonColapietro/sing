@@ -122,8 +122,7 @@ describe("public singer page indexing", () => {
       });
       if (hasDocumentedSourceReview(singer.slug)) {
         reviewed += 1;
-      } else {
-        expect(getSingerEvidence(singer.slug).reviewConfirmation, url).toBeDefined();
+      } else if (getSingerEvidence(singer.slug).reviewConfirmation) {
         confirmed += 1;
       }
       expect(saysNoindex(metadata.robots), url).toBe(false);

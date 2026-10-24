@@ -136,18 +136,17 @@ describe("singer evidence", () => {
   it("limits the owner confirmation to its explicit existing cohort", () => {
     expect(rawConfirmation.slugs).toHaveLength(630);
     expect(new Set(rawConfirmation.slugs).size).toBe(630);
-    expect(SINGERS).toHaveLength(636);
-    for (const singer of SINGERS) {
-      const evidence = getSingerEvidence(singer.slug);
-      if (hasDocumentedSourceReview(singer.slug)) {
-        expect(evidence.reviewConfirmation).toBeUndefined();
-        expect(evidence.reviewedAt).toBe("2026-08-29");
-      } else {
-        expect(rawConfirmation.slugs).toContain(singer.slug);
-        expect(evidence.status).toBe("reviewed");
-        expect(evidence.reviewedAt).toBeUndefined();
-        expect(evidence.reviewedBy).toBeUndefined();
-      }
+    for (const slug of rawConfirmation.slugs) {
+      expect(hasDocumentedSourceReview(slug)).toBe(false);
+      const evidence = getSingerEvidence(slug);
+      expect(evidence.status).toBe("reviewed");
+      expect(evidence.reviewConfirmation?.confirmedAt).toBe("2026-10-24");
+      expect(evidence.reviewedAt).toBeUndefined();
+      expect(evidence.reviewedBy).toBeUndefined();
+    }
+    for (const [slug] of REVIEWED_SLUGS) {
+      expect(getSingerEvidence(slug).reviewConfirmation).toBeUndefined();
+      expect(getSingerEvidence(slug).reviewedAt).toBe("2026-08-29");
     }
     expect(getSingerEvidence("future-singer")).toEqual({ status: "pending", sources: [] });
     expect(isSingerReviewed("future-singer")).toBe(false);
