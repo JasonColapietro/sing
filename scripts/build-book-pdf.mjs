@@ -417,7 +417,7 @@ const documentHtml = (pages) => `<!doctype html><html lang="en"><head><meta char
     <p>${esc(TITLE)} — ${esc(SUBTITLE)}. Written for Suede Sing, the browser vocal
     studio, and included with a Suede Pro subscription. ${chapters.length} chapters
     in ${parts.length} parts.</p>
-    <p>Set in Helvetica Neue with monospace labels, and typeset from the same
+    <p>Set in a sans-serif face with monospace labels, and typeset from the same
     source text the app reads, so the book and the in-app chapters can never
     disagree. Every contents row, part list, cross-reference and chapter footer
     in this file is a live link.</p>
