@@ -233,8 +233,19 @@ const LOG: Array<{
       {
         // MIC_IDLE_RELEASE_MS in lib/audio/use-idle-mic-release.ts is the
         // "15 seconds"; keep the two in step.
-        day: "23",
+        day: "24",
         note: "Warmups and Songs now turn the microphone off 15 seconds after a session ends, so the recording light no longer stays on while you read your score or browse. Starting again reopens it, and a silent stop offers a button to turn it off right away.",
+      },
+      {
+        // Readings did not change: pitch-fft.test.ts and pitch-regressions.test.ts
+        // hold the detector bit for bit to the old full scan. "About 700" and
+        // "a twentieth" come from the pitch.ts header (~700 lags; 0.3 ms against
+        // 5.8 ms per 4096-sample frame at 48 kHz, measured in Node), and the FFT
+        // costs the same on noise as on a vowel. Nothing was timed on a phone, so
+        // the note claims CPU, not frame rate. Dated by merge day in US Eastern
+        // time; change the day if it merges later.
+        day: "24",
+        note: "Pitch engine: one FFT autocorrelation now replaces about 700 separate sums per frame, so the detector reads every frame exactly as before at about a twentieth of the CPU, in a noisy room or on a held note.",
       },
       {
         // Undoes the navigation half of the October 2 entry below, which stays

@@ -16,7 +16,7 @@ export interface PitchResult {
  * grows, so for a perfectly periodic signal `c[T] ≈ c[0]·(1 − T/size)`. When
  * clarity is read off as `c[T]/c[0]` it therefore decays with the lag itself,
  * and the caller's fixed `clarity >= 0.75` gate silently becomes a
- * *frequency* gate at `4·sampleRate/size` — 93.9 Hz for the 2048-sample frames
+ * *frequency* gate at `4·sampleRate/size`, 93.9 Hz for the 2048-sample frames
  * every practice room uses at 48 kHz. Measured against that: E2 at 82.4 Hz,
  * the note that defines the bottom of a bass, scored 0.714 and was discarded
  * as unvoiced no matter how cleanly it was sung. The range test then fell back
@@ -28,11 +28,63 @@ export interface PitchResult {
  * than "how high is this".
  *
  * Peak choice changes with it. The old taper suppressed sub-octave lags for
- * free — `c[2T]` was always smaller than `c[T]` — so taking the largest value
+ * free: `c[2T]` was always smaller than `c[T]`, so taking the largest value
  * in range was safe. Normalized, `n[2T] ≈ n[T]`, and the largest value is as
  * likely to be the octave below as the true period. Hence McLeod's rule: take
  * the *first* peak that comes within `PEAK_TOLERANCE` of the best one, which
  * is the shortest period that explains the signal.
+ *
+ * Every lag's NSDF numerator, the sum of x[j]·x[j+lag] over the window, comes
+ * from one FFT autocorrelation. The trimmed, filtered window is zero-padded
+ * to a power of two at least as long as the window plus the longest lag read,
+ * so the circular correlation never wraps into a lag that matters; it is
+ * transformed, squared in magnitude and transformed back. Everything after
+ * that is the full scan's code unchanged: the energy normalization, the walk
+ * off the initial descent, McLeod's first-peak rule, the hum check, the
+ * parabola and the range check.
+ *
+ * The readings are the direct sum's, bit for bit, and this is why. The FFT
+ * value and the direct sum each differ from the exact sum by rounding only,
+ * and `n` is stored as a Float32, whose steps are tens of thousands of times
+ * coarser than the bound on either error for a value the size of a peak. So
+ * for each lag the FFT value is widened by the worst-case error of both
+ * computations, and if the whole interval rounds to one Float32, the direct
+ * sum would have stored that same Float32, because rounding is monotone.
+ * When the interval straddles a rounding boundary, that lag is summed
+ * directly with the full scan's own arithmetic, which happens for about one
+ * lag in every eight voiced frames. Lags whose correlation is exactly zero,
+ * which digital silence around a click, a gap or an onset produces, are
+ * found without the FFT and stored as zero, and a lag that does need its
+ * direct sum skips the products that are exactly zero (see the runs in
+ * `analyze`). Left to the guard, those frames would be summed directly
+ * almost lag by lag, and an FFT alone would read a spurious peak in its
+ * round-off near 1e-16.
+ *
+ * The weak point is the error bound. It follows the standard error model for
+ * a radix-2 FFT (Higham, Accuracy and Stability of Numerical Algorithms,
+ * chapter 24), worked through for this code at `fftErrorUnits`, with an
+ * allowance about twice what that model gives. It also rests on Math.sin
+ * and Math.cos being accurate to about 1 ulp: V8 and SpiderMonkey use
+ * fdlibm, but ECMAScript does not require it. On synthetic frames, including
+ * ones built to push the error up, the largest FFT error reached 0.6% of the
+ * bound. `pitch-fft.test.ts` keeps a copy of the full scan and checks, on a
+ * few thousand frames, that the readings and every stored NSDF value are
+ * bitwise equal (`nsdfValuesForTest` exposes the stored values).
+ *
+ * Cost: about 0.3 ms per 4096-sample frame at 48 kHz in Node, against 5.8 ms
+ * for the direct sums over the ~700 lags the full scan computed. A voiced
+ * frame and a frame of room noise cost about the same. A short click or burst
+ * over a quiet but nonzero floor does not: at most lags its correlation is
+ * tiny next to the frame's energy, the error bounds (the direct sum's own is
+ * the larger there) span more than one Float32 step, and 500 or more lags per
+ * frame fall back to direct sums, close to the old cost.
+ *
+ * An AMDF coarse search was tried first: it found candidate lags on a
+ * decimated copy of the window and computed the NSDF only around them. It was
+ * faster than the full scan on voiced frames, but it missed the true period
+ * on some high notes and on frames with clicks, and it gained little on
+ * noise, so its readings could not be guaranteed. `pitch-regressions.test.ts`
+ * keeps the frames it misread.
  */
 /** The live rooms and native apps all start at C2. */
 export const MIN_FREQ = 65;
@@ -130,10 +182,292 @@ function lowpass(x: Float32Array, sampleRate: number, cornerHz: number): Float32
   return y;
 }
 
+/**
+ * Twiddles, bit reversal and scratch for one transform length, built once
+ * and reused for every frame of that length. A real transform of length `N`
+ * runs as a complex one of length `M = N / 2`.
+ */
+interface FftPlan {
+  N: number;
+  M: number;
+  /** Bit reversal of 0..M−1. */
+  rev: Uint32Array;
+  /** e^{iπj/h} at index h + j, for each stage half-length h. */
+  twr: Float64Array;
+  twi: Float64Array;
+  /** e^{2πik/N} for k = 0..M, for packing and unpacking the real transform. */
+  cosN: Float64Array;
+  sinN: Float64Array;
+  re: Float64Array;
+  im: Float64Array;
+  /** |X[k]|² for k = 0..M. */
+  power: Float64Array;
+  /** The autocorrelation, r[lag] for lag < N. */
+  r: Float64Array;
+}
+
+const fftPlans = new Map<number, FftPlan>();
+
+function fftPlan(N: number): FftPlan {
+  const cached = fftPlans.get(N);
+  if (cached) return cached;
+  const M = N >> 1;
+  let bits = 0;
+  while (1 << bits < M) bits++;
+  const rev = new Uint32Array(M);
+  for (let i = 0; i < M; i++) {
+    let r = 0;
+    for (let b = 0; b < bits; b++) if (i & (1 << b)) r |= 1 << (bits - 1 - b);
+    rev[i] = r;
+  }
+  // Each twiddle is computed directly rather than by recurrence, so each is
+  // as accurate as Math.cos and Math.sin, which the error bound assumes.
+  const twr = new Float64Array(Math.max(2, M));
+  const twi = new Float64Array(Math.max(2, M));
+  for (let h = 1; h < M; h <<= 1) {
+    for (let j = 0; j < h; j++) {
+      twr[h + j] = Math.cos((Math.PI * j) / h);
+      twi[h + j] = Math.sin((Math.PI * j) / h);
+    }
+  }
+  const cosN = new Float64Array(M + 1);
+  const sinN = new Float64Array(M + 1);
+  for (let k = 0; k <= M; k++) {
+    cosN[k] = Math.cos((2 * Math.PI * k) / N);
+    sinN[k] = Math.sin((2 * Math.PI * k) / N);
+  }
+  const plan: FftPlan = {
+    N,
+    M,
+    rev,
+    twr,
+    twi,
+    cosN,
+    sinN,
+    re: new Float64Array(M),
+    im: new Float64Array(M),
+    power: new Float64Array(M + 1),
+    r: new Float64Array(N),
+  };
+  fftPlans.set(N, plan);
+  return plan;
+}
+
+/**
+ * In-place radix-2 complex FFT of the plan's `re`/`im`, which the caller has
+ * already written in bit-reversed order. `sign` is −1 forward, +1 inverse
+ * (unscaled). Two butterfly stages are done per pass over the data: the same
+ * butterflies as one stage at a time, with half the loads and stores.
+ */
+function fft(plan: FftPlan, sign: number): void {
+  const { M, twr, twi, re, im } = plan;
+  let stages = 0;
+  while (1 << stages < M) stages++;
+  let h = 1;
+  if (stages & 1) {
+    // One stage on its own (all twiddles 1), so the rest pair up.
+    for (let a = 0; a < M; a += 2) {
+      const b = a + 1;
+      const xr = re[b];
+      const xi = im[b];
+      re[b] = re[a] - xr;
+      im[b] = im[a] - xi;
+      re[a] += xr;
+      im[a] += xi;
+    }
+    h = 2;
+  }
+  for (; 4 * h <= M; h *= 4) {
+    const len = 4 * h;
+    for (let j = 0; j < h; j++) {
+      const w1r = twr[h + j];
+      const w1i = sign * twi[h + j];
+      const w2r = twr[2 * h + j];
+      const w2i = sign * twi[2 * h + j];
+      for (let p0 = j; p0 < M; p0 += len) {
+        const p1 = p0 + h;
+        const p2 = p1 + h;
+        const p3 = p2 + h;
+        const x0r = re[p0];
+        const x0i = im[p0];
+        const x2r = re[p2];
+        const x2i = im[p2];
+        // Stage with half-length h: (p0, p1) and (p2, p3), twiddle w1.
+        let tr = re[p1] * w1r - im[p1] * w1i;
+        let ti = re[p1] * w1i + im[p1] * w1r;
+        const y0r = x0r + tr;
+        const y0i = x0i + ti;
+        const y1r = x0r - tr;
+        const y1i = x0i - ti;
+        tr = re[p3] * w1r - im[p3] * w1i;
+        ti = re[p3] * w1i + im[p3] * w1r;
+        const y2r = x2r + tr;
+        const y2i = x2i + ti;
+        const y3r = x2r - tr;
+        const y3i = x2i - ti;
+        // Stage with half-length 2h: (p0, p2) with w2, and (p1, p3) with w2
+        // turned a quarter, which multiplying by ±i does exactly.
+        tr = y2r * w2r - y2i * w2i;
+        ti = y2r * w2i + y2i * w2r;
+        re[p0] = y0r + tr;
+        im[p0] = y0i + ti;
+        re[p2] = y0r - tr;
+        im[p2] = y0i - ti;
+        const ur = y3r * w2r - y3i * w2i;
+        const ui = y3r * w2i + y3i * w2r;
+        tr = -sign * ui;
+        ti = sign * ur;
+        re[p1] = y1r + tr;
+        im[p1] = y1i + ti;
+        re[p3] = y1r - tr;
+        im[p3] = y1i - ti;
+      }
+    }
+  }
+}
+
+/**
+ * The autocorrelation of the `size` samples of `buf` from `r1`, zero-padded to
+ * `N`: `r[lag]` is the sum of buf[r1 + j]·buf[r1 + j + lag] for every lag up
+ * to N − size. Returns the plan's buffer, which the next call overwrites.
+ *
+ * The real window is packed as z[n] = x[2n] + i·x[2n+1] into one complex
+ * transform of length N/2, unpacked into X[k] for k = 0..N/2, and |X[k]|² is
+ * packed the same way for the inverse, which then yields r[2n] + i·r[2n+1].
+ */
+function autocorrelate(buf: Float32Array, r1: number, size: number, N: number): Float64Array {
+  const plan = fftPlan(N);
+  const { M, rev, cosN, sinN, re, im, power, r } = plan;
+  const pairs = size >> 1;
+  for (let k = 0; k < pairs; k++) {
+    const q = rev[k];
+    re[q] = buf[r1 + 2 * k];
+    im[q] = buf[r1 + 2 * k + 1];
+  }
+  if (size & 1) {
+    const q = rev[pairs];
+    re[q] = buf[r1 + size - 1];
+    im[q] = 0;
+  }
+  for (let k = (size + 1) >> 1; k < M; k++) {
+    const q = rev[k];
+    re[q] = 0;
+    im[q] = 0;
+  }
+  fft(plan, -1);
+
+  // X[k] = (Z[k] + conj Z[M−k]) / 2 + e^{−2πik/N}·(Z[k] − conj Z[M−k]) / 2i.
+  for (let k = 0; k <= M; k++) {
+    const ka = k === M ? 0 : k;
+    const kb = k === 0 ? 0 : M - k;
+    const ar = re[ka];
+    const ai = im[ka];
+    const br = re[kb];
+    const bi = -im[kb];
+    const er = 0.5 * (ar + br);
+    const ei = 0.5 * (ai + bi);
+    const or = 0.5 * (ai - bi);
+    const oi = -0.5 * (ar - br);
+    const c = cosN[k];
+    const s = -sinN[k];
+    const xr = er + or * c - oi * s;
+    const xi = ei + or * s + oi * c;
+    power[k] = xr * xr + xi * xi;
+  }
+
+  // The power spectrum is real and even, so the inverse packs as
+  // Y[k] = (P[k] + P[M−k]) + i·(P[k] − P[M−k])·e^{2πik/N}.
+  for (let k = 0; k < M; k++) {
+    const e = power[k] + power[M - k];
+    const d = power[k] - power[M - k];
+    const q = rev[k];
+    re[q] = e - d * sinN[k];
+    im[q] = d * cosN[k];
+  }
+  fft(plan, 1);
+  const scale = 1 / N;
+  for (let k = 0; k < M; k++) {
+    r[2 * k] = re[k] * scale;
+    r[2 * k + 1] = im[k] * scale;
+  }
+  return r;
+}
+
+/**
+ * The most an FFT autocorrelation value can differ from the exact sum, in
+ * units of 2^-53 times the window's energy, for a transform of length `N`.
+ *
+ * In the standard model each radix-2 stage adds a relative error
+ * η = μ + γ4(√2 + μ) in the 2-norm, where μ is the twiddle error. Here μ is
+ * about 6.5 units, because Math.PI·j/h rounds by up to about 4.2 units before
+ * Math.cos or Math.sin adds its own ulp, so η is about 12.2. With
+ * L = log2(N/2) stages, the total for one lag works out to about
+ * (66L + 75)·energy. The forward error passes through the unpacking, whose
+ * norm is up to √2, onto a half spectrum of energy (N·energy + P0 + PM)/2;
+ * the inverse's own error is at most about η·L times the sum of its inputs
+ * on each output, since each input reaches each output along one chain of
+ * unit-size twiddles. The 75 includes the unpacking (about 38) and forming
+ * the inverse's input (about 17).
+ *
+ * The allowance is 32 units per stage over L + 2 stages, counted for both
+ * transforms, about (128.6L + 275)·energy: roughly twice that total, and it
+ * still holds with η up to about 24.
+ */
+function fftErrorUnits(N: number): number {
+  const a = 32 * (Math.log2(N >> 1) + 2);
+  return 2 * a + 2 + 2 * a * 1.01 + 16;
+}
+
+const ROUNDOFF = 2 ** -53;
+
+/** Run grouping for the exact-zero lags in `analyze`. */
+const ZERO_RUN_MERGE = 32;
+const ZERO_RUN_LIMIT = 32;
+
+let directSums = 0;
+
+/**
+ * How many lags have been summed directly since the module loaded, because
+ * their FFT value sat too close to a Float32 rounding boundary to settle the
+ * stored value. For tests.
+ */
+export function nsdfDirectSums(): number {
+  return directSums;
+}
+
 export function detectPitch(
   input: Float32Array,
   sampleRate: number,
 ): PitchResult | null {
+  return analyze(input, sampleRate, null);
+}
+
+/** Where `analyze` hands over its NSDF arrays, for `nsdfValuesForTest`. */
+interface NsdfSink {
+  n: Float32Array | null;
+  computed: Uint8Array | null;
+}
+
+/**
+ * For tests: the NSDF that `analyze` stores for this frame, the same values
+ * `detectPitch` reads, as a copy indexed by lag with NaN at every lag it did
+ * not compute. Null when the frame was rejected before any lag was computed.
+ */
+export function nsdfValuesForTest(input: Float32Array, sampleRate: number): Float32Array | null {
+  const sink: NsdfSink = { n: null, computed: null };
+  analyze(input, sampleRate, sink);
+  const { n, computed } = sink;
+  if (n === null || computed === null) return null;
+  const out = Float32Array.from(n);
+  for (let lag = 0; lag < out.length; lag++) if (!computed[lag]) out[lag] = NaN;
+  return out;
+}
+
+/**
+ * The detector itself. `detectPitch` calls it with no sink; with one, it also
+ * hands over the NSDF arrays it fills, which costs one branch per frame.
+ */
+function analyze(input: Float32Array, sampleRate: number, sink: NsdfSink | null): PitchResult | null {
   const SIZE = input.length;
   // The silence floor is judged on the raw frame, so filtering never changes
   // which frames count as quiet.
@@ -167,16 +501,18 @@ export function detectPitch(
   // its own inner loop: `energy[k]` is the sum of squares of the first k
   // samples of the trimmed window.
   const energy = new Float32Array(size + 1);
+  let windowEnergy = 0;
   for (let i = 0; i < size; i++) {
     const x = buf[r1 + i];
     energy[i + 1] = energy[i] + x * x;
+    windowEnergy += x * x;
   }
   const total = energy[size];
   if (total <= 0) return null;
 
   // Only lags that correspond to a singable pitch are candidates. Searching
   // every lag and rejecting the answer afterwards throws the whole frame away
-  // whenever noise wins the peak at some implausible lag — which is what a
+  // whenever noise wins the peak at some implausible lag, which is what a
   // normal room, or the browser's own capture and resampling path, reliably
   // produces. The note is audible and on pitch; the detector was just looking
   // outside the range it was going to accept anyway.
@@ -188,23 +524,131 @@ export function detectPitch(
   );
   if (maxLag <= minLag) return null;
 
-  // The normalized square difference function over the candidate lags. It is
-  // extended lazily below C2 only around an integer multiple that could expose
-  // a hidden hum fundamental; a full extra scan would be needless per-frame
-  // work for ordinary singing.
+  // Every lag's numerator at once, by FFT. The longest lag the full scan could
+  // read is analysisMaxLag + 1, and none at or past the window's end; padding
+  // to at least the window plus that lag keeps the circular correlation from
+  // wrapping into any of them.
+  const lastLag = Math.min(analysisMaxLag + 1, size - 1);
+  let N = 2;
+  while (N < size + lastLag) N <<= 1;
+  const r = autocorrelate(buf, r1, size, N);
+  // Absolute error allowances for the guard below: the FFT's, and how far the
+  // Float32 running sum can put the overlap energy `m` from the exact energy
+  // of the two halves it stands for.
+  const fftError = fftErrorUnits(N) * ROUNDOFF * windowEnergy * 1.01;
+  const energyError = 2 * size * 2 ** -24 * windowEnergy * 1.01;
+  // Exact zeros. Digital silence around a click, a gap or an onset puts
+  // products with a zero factor in the full scan's sum. Each is +0 or −0,
+  // and adding it leaves the running sum exactly as it was (it starts at +0,
+  // and +0 + −0 is +0), so leaving them out changes nothing. The window's
+  // nonzero samples are grouped into runs; samples in runs A and B (A no
+  // later than B) can only meet at a lag from B's start minus A's end to B's
+  // end minus A's start. A lag outside every such range is stored as +0
+  // without the FFT, and a lag summed directly visits only the stretches
+  // where two runs overlap, in the full scan's order. Otherwise the FFT's
+  // round-off on values that are zero or nearly so keeps the guard from
+  // settling, and such a frame costs the FFT plus most of a full scan.
+  // Merging runs closer than ZERO_RUN_MERGE, and treating the window as one
+  // run past ZERO_RUN_LIMIT runs, only keeps zero products in. All of it
+  // needs finite samples (0·∞ is NaN), which a finite energy guarantees.
+  let runs: number[] | null = null;
+  let zeroLag: Uint8Array | null = null;
+  if (Number.isFinite(windowEnergy)) {
+    const found: number[] = [];
+    let hasZero = false;
+    for (let i = 0; i < size; i++) {
+      if (buf[r1 + i] === 0) {
+        hasZero = true;
+        continue;
+      }
+      const last = found.length - 1;
+      if (last > 0 && i - found[last] <= ZERO_RUN_MERGE) found[last] = i;
+      else found.push(i, i);
+    }
+    if (hasZero && found.length > 0) {
+      if (found.length > 2 * ZERO_RUN_LIMIT) found.splice(1, found.length - 2);
+      runs = found;
+      const count = runs.length >> 1;
+      const reach = new Int32Array(lastLag + 2);
+      for (let a = 0; a < count; a++) {
+        for (let b = a; b < count; b++) {
+          const lo = Math.max(0, runs[2 * b] - runs[2 * a + 1]);
+          const hi = Math.min(lastLag, runs[2 * b + 1] - runs[2 * a]);
+          if (lo <= hi) {
+            reach[lo]++;
+            reach[hi + 1]--;
+          }
+        }
+      }
+      zeroLag = new Uint8Array(lastLag + 1);
+      let covered = 0;
+      for (let lag = 0; lag <= lastLag; lag++) {
+        covered += reach[lag];
+        if (covered === 0) zeroLag[lag] = 1;
+      }
+    }
+  }
+
+  // The normalized square difference function over the candidate lags. Lags
+  // are filled in lazily, exactly the ones the full scan computed: the
+  // singable range, and below C2 only around an integer multiple that could
+  // expose a hidden hum fundamental.
   const n = new Float32Array(analysisMaxLag + 2);
   const computed = new Uint8Array(analysisMaxLag + 2);
+  if (sink !== null) {
+    sink.n = n;
+    sink.computed = computed;
+  }
   const computeLag = (lag: number) => {
     if (lag < minLag || lag > analysisMaxLag + 1 || lag >= size) return;
     if (computed[lag]) return;
-    let sum = 0;
-    for (let j = 0; j < size - lag; j++) {
-      sum += buf[r1 + j] * buf[r1 + j + lag];
-    }
+    computed[lag] = 1;
     // Energy under the two halves the lag actually overlaps.
     const m = energy[size - lag] + (total - energy[lag]);
-    n[lag] = m > 0 ? (2 * sum) / m : 0;
-    computed[lag] = 1;
+    if (!(m > 0)) {
+      n[lag] = 0;
+      return;
+    }
+    if (zeroLag !== null && zeroLag[lag]) {
+      n[lag] = 0;
+      return;
+    }
+    const v = (2 * r[lag]) / m;
+    // The guard. The direct sum adds size − lag products, each exact in double
+    // precision, so it is off by at most (size − lag)·2^-53 times the sum of
+    // their magnitudes, which is at most half the exact overlap energy
+    // (Cauchy-Schwarz, then the mean of two numbers bounding their geometric
+    // mean), and that energy is at most m + energyError. If the FFT value
+    // widened by both errors rounds to one Float32, the direct sum's stored
+    // value is that Float32.
+    const e =
+      ((2 * fftError + (size - lag) * ROUNDOFF * 1.001 * (m + energyError)) / m) * 1.001 +
+      4 * ROUNDOFF * Math.abs(v) +
+      Number.MIN_VALUE;
+    if (Math.fround(v - e) === Math.fround(v + e)) {
+      n[lag] = v;
+      return;
+    }
+    // Too close to a rounding boundary to tell: the full scan's own sum,
+    // leaving out only products that are exactly zero.
+    directSums++;
+    let sum = 0;
+    if (runs === null) {
+      for (let j = 0; j < size - lag; j++) {
+        sum += buf[r1 + j] * buf[r1 + j + lag];
+      }
+    } else {
+      const count = runs.length >> 1;
+      for (let a = 0; a < count; a++) {
+        for (let b = a; b < count; b++) {
+          const to = Math.min(runs[2 * a + 1], runs[2 * b + 1] - lag);
+          for (let j = Math.max(runs[2 * a], runs[2 * b] - lag); j <= to; j++) {
+            sum += buf[r1 + j] * buf[r1 + j + lag];
+          }
+        }
+      }
+    }
+    n[lag] = (2 * sum) / m;
   };
   for (let lag = minLag; lag <= maxLag + 1 && lag < size; lag++) {
     computeLag(lag);

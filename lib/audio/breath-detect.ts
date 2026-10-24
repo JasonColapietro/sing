@@ -214,13 +214,16 @@ export function powerSpectrum(buf: Float32Array, n = BREATH_FFT_SIZE): Float64Ar
  *
  * Two changes from calling `detectPitch` on the frame as it stands. It is
  * scaled to a normal level first: the detector returns nothing under SILENCE_RMS,
- * which reads as clarity 0 — unvoiced — so a hum under that level would look
+ * which reads as clarity 0 (unvoiced), so a hum under that level would look
  * exactly like breath in the one feature meant to tell them apart. Only the
  * shape of the waveform matters to the NSDF. And it is halved in rate by
- * averaging sample pairs, which quarters the cost of the NSDF while keeping
- * every singable period whole; the detector's own 4 kHz low-pass sits well
- * inside the new Nyquist. This is a voiced-or-not decision, not a pitch
- * reading, so the resolution given up does not matter.
+ * averaging sample pairs, which keeps every singable period whole; the
+ * detector's own 4 kHz low-pass sits well inside the new Nyquist. Halving
+ * once quartered the cost of the NSDF, which was summed lag by lag. The
+ * detector now gets every lag from one FFT, whose cost follows the frame
+ * length, so halving saves a little over half: about 0.12 ms against 0.29 ms
+ * for the full-rate frame, measured in Node. This is a voiced-or-not
+ * decision, not a pitch reading, so the resolution given up does not matter.
  */
 function frameClarity(buf: Float32Array, sampleRate: number, level: number): number {
   if (level <= 0) return 0;
