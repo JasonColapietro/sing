@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { ProCrescendoNudge } from "@/components/pro/gate";
 import { CappedAgainNote } from "@/components/practice/free-cap";
+import { MicAlert } from "@/components/mic-alert";
 import { ResultsScreen, starsForScore, type ResultRow } from "@/components/practice/results-screen";
 import { useDailyGoal, useGoalDoneSec } from "@/components/practice/learn-home";
 import { liveStreak } from "@/components/account/save-state";
@@ -56,6 +57,7 @@ export function RoutineSummary({
   onHome,
   onPractice,
   capped = false,
+  micError = null,
 }: {
   data: RoutineSummaryData;
   onRepeat: () => void;
@@ -68,6 +70,12 @@ export function RoutineSummary({
    * when practice opens again instead of ending on two dead buttons.
    */
   capped?: boolean;
+  /**
+   * "Play again" or "Practice" could not reopen the microphone the room
+   * closed while this screen was up. Shown inside the screen, beside the
+   * buttons, because the page under this full-screen dialog is hidden.
+   */
+  micError?: string | null;
 }) {
   const { routine, steps, completed } = data;
   const progress = useProgress();
@@ -138,7 +146,13 @@ export function RoutineSummary({
       // Why "Play again" and "Practice" are gone, and when they come back;
       // above the rows, so a run the cap stopped explains its "not reached"
       // rows before a phone's fold rather than under them.
-      notice={capped ? <CappedAgainNote notReached={stepsNotReached(data)} /> : undefined}
+      notice={
+        capped ? (
+          <CappedAgainNote notReached={stepsNotReached(data)} />
+        ) : micError ? (
+          <MicAlert message={micError} className="max-w-md text-sm text-rec" />
+        ) : undefined
+      }
     >
       {/* A run where nothing scored usually means the mic could not hear a
           clear note: each step closes itself after two reps it cannot hear,

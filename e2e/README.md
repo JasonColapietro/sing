@@ -274,3 +274,41 @@ journey caught it at 768px.
 The general audit also covers `/voice`, `/can-you-sing`, and a popular-song
 detail. Template discovery excludes static hubs so singer-detail coverage
 cannot accidentally select `/singers/methodology` or `/singers/records`.
+
+## Mic release
+
+`node e2e/mic-release.mjs [baseUrl] [--executable=path]` checks that the
+warmups and songs rooms let go of the microphone when a session is over.
+Both used to keep it open on a summary, the warmups list and the songs
+library, with the browser's recording light on and nothing on screen to turn
+it off. Now a room that is out of a session, with no start waiting on the
+device, closes the stream after 15 idle seconds (`MIC_IDLE_RELEASE_MS` in
+`lib/audio/use-idle-mic-release.ts`), so a quick "Sing again" keeps it. The
+room remembers the singer said yes, so no gate or "Enable microphone" comes
+back, and the next start reopens it before the run begins.
+
+It wraps `getUserMedia` before the app loads and counts the tracks it handed
+out that are still `live`. Chrome's fake microphone plays a held A3 from
+`lib/audio/voice-fixture.ts`, or silence for the cases below. Every step
+prints the count it measured, so the log shows 0 or 1 rather than only a
+pass.
+
+Waiting 15 seconds per check would make the run crawl, so every case but one
+sets `window.__singMicReleaseMs = 400` in an init script, which the hook reads
+in place of its delay, and expects 0 live tracks about a second after a run
+ends. The grace case leaves the real delay alone and expects the track still
+live 3 seconds after End, with "Sing again" reusing it rather than opening a
+new one.
+
+| Case | Passes when |
+|---|---|
+| Warmups, one exercise | after End (with reps sung, and with none), on the summary and the list: 0 live, no gate card, no "Enable mic and start"; the next exercise opens a track and its "Cents off" readout shows a number |
+| Warmups, routine | quit after one step, the routine summary has 0 live; "Play again" is live on its first slide |
+| Warmups, rep-count link | `?exercise=sustained-hold&reps=1` ends on its summary by itself with 0 live; "Run this ladder again" and "Next exercise" (or "Sing it") each reopen |
+| Songs | the Practice summary and the library have 0 live and no "Enable microphone"; "Sing again" and a library card are live before Play, scored, not "Listen mode"; a refused reopen brings the gate back |
+| Songs, listen mode | "Continue without a mic" opens nothing, ever; turning the mic on later from the library header makes the next start reopen it too; a refused reopen from that scored run's summary brings the gate back |
+| Idle grace | with the real delay, still 1 live 3 seconds after End in warmups and End practice in songs |
+| Silent stop | an exercise that closed itself for silence keeps its track for the "No sound picked up" meter, past the 400 ms release; "Turn off the mic" on that note closes it and the next start reopens |
+
+The silent cases run in their own browser, since Chrome reads the fake
+capture file once per process. A run takes about two and a half minutes.

@@ -6,6 +6,7 @@ import { CapWall, FreeAllowance } from "@/components/practice/free-cap";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { usePitch } from "@/lib/audio/use-pitch";
+import { useIdleMicRelease } from "@/lib/audio/use-idle-mic-release";
 import { focusIfDropped } from "@/lib/audio/mic-focus";
 import { useProgress } from "@/lib/progress";
 import { Button, PageShell } from "@/components/ui";
@@ -95,6 +96,18 @@ export function SongsClient() {
   const setlist = useSetlist();
 
   const [listenMode, setListenMode] = useState(false);
+  // Whether the singer has allowed the microphone on this visit. The stream
+  // itself is closed when the room has been idle for a while (below), so the
+  // browser's recording light goes off on the summary and in the library;
+  // this is what keeps the gate and the "Enable microphone" asks from coming
+  // back after they were answered. Adjusted during render, as the deep link
+  // below is. Dropped again when a reopen fails, so the gate returns with
+  // its error and "Continue without a mic".
+  const [micAllowed, setMicAllowed] = useState(false);
+  if (pitch.listening && !micAllowed) setMicAllowed(true);
+  // Reopens of the microphone still waiting on the device, so the idle
+  // release below never closes a stream a start is about to use.
+  const [reopening, setReopening] = useState(0);
   // Rehearsal loops until the singer stops; performance is the scored take.
   // Chosen in the player before a run or while paused, and kept here so it
   // survives moving from one song to the next.
@@ -156,6 +169,16 @@ export function SongsClient() {
     return () => micRequest.cancel();
   }, [view, summary]);
 
+  // Out of a run, an open microphone closes after a short idle wait
+  // (useIdleMicRelease). It used to stay open on the summary and in the
+  // library for as long as the page did, with the browser's recording light
+  // on and no control to turn it off. The next start reopens it (startSong).
+  useIdleMicRelease({
+    listening: pitch.listening,
+    hold: view === "practice" || reopening > 0,
+    stop: pitch.stop,
+  });
+
   // A song page links here as /songs?song=<slug>, so arriving from search
   // lands on the melody that was being read about rather than the library.
   // Resolved through `entitled`, so a Pro link cannot open a Pro song for a
@@ -171,26 +194,57 @@ export function SongsClient() {
   // works; everything else still goes through the ladder.
   const mayStart = (song: Song) => canStart(song) || song.id === linkedId;
 
-  /** `again`: a restart from the summary, which keeps how the last run was set up. */
-  function startSong(song: Song, again = false) {
+  /**
+   * `again`: a restart from the summary, which keeps how the last run was set
+   * up. Resolves true when the run started.
+   */
+  async function startSong(song: Song, again = false): Promise<boolean> {
     // Song practice is guided practice: the free day's five minutes apply.
     if (cap.capped) {
       showCapWall();
-      return;
+      return false;
     }
-    if (!mayStart(song)) return;
+    if (!mayStart(song)) return false;
+    // The room closed an idle microphone. Reopen it before the player mounts:
+    // a player that opens with the mic off is a listen pass, unscored, and
+    // would flash "Listen mode" until access came back. That includes a singer
+    // who first went on without a mic and turned it on later. Only if this
+    // screen is still the one showing when access arrives, as with the
+    // summary's own ask.
+    if (micAllowed && !pitch.listening) {
+      const current = micRequestRef.current.begin();
+      setReopening((n) => n + 1);
+      let ok: boolean;
+      try {
+        ok = await pitch.start();
+      } finally {
+        setReopening((n) => n - 1);
+      }
+      if (!ok) {
+        // The device is gone, busy or refused. Bring the gate back with the
+        // error, which also offers to go on without a mic. That includes a
+        // singer who went on without one earlier: left in listen mode, they
+        // would get no error and no way to retry, and the next start would
+        // be an unscored run.
+        setMicAllowed(false);
+        setListenMode(false);
+        return false;
+      }
+      if (!current()) return false;
+    }
     if (!again) setSetup(null);
     setActiveSong(song);
     setSummary(null);
     replaceTake(undefined);
     setView("practice");
     setPlayToken((t) => t + 1);
+    return true;
   }
 
-  function startSongById(id: string, again = false) {
+  function startSongById(id: string, again = false): Promise<boolean> {
     const song = ALL_SONGS.find((s) => s.id === id);
-    if (!song || !mayStart(song)) return;
-    startSong(song, again);
+    if (!song || !mayStart(song)) return Promise.resolve(false);
+    return startSong(song, again);
   }
 
   // Recording a play touches localStorage, so it belongs in an effect rather
@@ -202,7 +256,8 @@ export function SongsClient() {
 
   // A singer who has used today's free minutes meets the cap wall, not a
   // microphone prompt for practice they cannot start.
-  const gated = !pitch.listening && !listenMode && !cap.capped;
+  const micOn = micAllowed || pitch.listening;
+  const gated = !micOn && !listenMode && !cap.capped;
 
   // The gate's buttons, or the library header's "Enable microphone", go
   // away the moment they are answered, and keyboard focus fell to <body>:
@@ -213,8 +268,8 @@ export function SongsClient() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const mic: MicAsk = {
     gated,
-    headerAsk: !gated && view === "library" && !pitch.listening && !cap.capped,
-    listening: pitch.listening,
+    headerAsk: !gated && view === "library" && !micOn && !cap.capped,
+    listening: micOn,
     listenMode,
   };
   const micRef = useRef(mic);
@@ -291,7 +346,7 @@ export function SongsClient() {
       }
       subtitle={view === "library" ? "Pick a song to start your practice loop." : undefined}
       actions={
-        !pitch.listening && view === "library" && !cap.capped ? (
+        !micOn && view === "library" && !cap.capped ? (
           <Button
             variant="rec"
             size="sm"
@@ -334,7 +389,7 @@ export function SongsClient() {
         <Library
           progress={progress}
           visitUnlockedSongId={linkedId}
-          onSelect={(song) => startSong(song)}
+          onSelect={(song) => void startSong(song)}
           browse={browse}
           onBrowseChange={setBrowse}
         />
@@ -378,11 +433,16 @@ export function SongsClient() {
         />
       )}
 
+      {/* "Sing again" or "Next" reopens the microphone the last run closed;
+          a failure to reopen it shows here, above the buttons that asked. */}
+      {view === "summary" && summary && micAllowed && !pitch.listening && pitch.error && (
+        <MicAlert message={pitch.error} className="mb-4 max-w-md text-sm text-rec" />
+      )}
       {view === "summary" && summary && (
         <SessionSummary
           data={summary}
           take={take}
-          onAgain={() => startSongById(summary.song.id, true)}
+          onAgain={() => void startSongById(summary.song.id, true)}
           // A run sung without a microphone ends on advice to turn it on, so
           // the summary carries the control. It starts the run the way "Sing
           // again" does — through the cap and the ladder (which still lets
@@ -390,7 +450,7 @@ export function SongsClient() {
           // pass scores nothing even with the mic on, so it moves to Sing
           // along; a pass the singer picked themselves stays.
           onEnableMic={
-            pitch.listening
+            micOn
               ? undefined
               : async () => {
                   // Capped: show why, and ask for no microphone that cannot
@@ -403,7 +463,7 @@ export function SongsClient() {
                   const current = micRequestRef.current.begin();
                   if (!(await pitch.start()) || !current()) return;
                   setPass((p) => (p === "listen" ? "guided" : p));
-                  startSongById(summary.song.id, true);
+                  void startSongById(summary.song.id, true);
                 }
           }
           micError={pitch.listening ? null : pitch.error}
@@ -420,9 +480,12 @@ export function SongsClient() {
                     showCapWall();
                     return;
                   }
-                  const id = advanceSetlist();
-                  if (id) startSongById(id);
-                  else setView("library");
+                  // Moves the running order on only once the next song has
+                  // started: a reopen of the microphone that fails or is left
+                  // behind must not skip it.
+                  void startSongById(nextSetlistSong.id).then((started) => {
+                    if (started) advanceSetlist();
+                  });
                 }
               : undefined
           }

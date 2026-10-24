@@ -106,6 +106,7 @@ export function SectionHeading({
   lede,
   className,
   id,
+  level = 2,
 }: {
   /** The tape label above the heading. */
   label?: string;
@@ -114,13 +115,20 @@ export function SectionHeading({
   lede?: ReactNode;
   className?: string;
   id?: string;
+  /**
+   * The outline level. A section's own title is an h2; a heading nested in
+   * a titled section (a release's stories on /changelog) is an h3, styled
+   * the same.
+   */
+  level?: 2 | 3;
 }) {
+  const Heading = level === 3 ? "h3" : "h2";
   return (
     <div className={cn("max-w-2xl", className)}>
       {label && <SectionLabel className="mb-4">{label}</SectionLabel>}
-      <h2 id={id} className="text-2xl sm:text-3xl">
+      <Heading id={id} className="text-2xl sm:text-3xl">
         {children}
-      </h2>
+      </Heading>
       {lede && <p className="mt-3 text-mut">{lede}</p>}
     </div>
   );
