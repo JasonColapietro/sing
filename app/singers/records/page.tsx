@@ -71,8 +71,8 @@ function Table({
     <ol className="mt-4 divide-y divide-line/50">
       {rows.map((s) => (
         <li key={s.slug}>
-          {/* prefetch off: some 45 rows, mostly pending profiles nobody is about
-              to open, would otherwise each fetch a page payload on scroll. */}
+          {/* prefetch off: some 45 profile rows would otherwise each fetch a
+              page payload on scroll, before a visitor chooses one. */}
           <Link
             href={`/singers/${s.slug}`}
             prefetch={false}

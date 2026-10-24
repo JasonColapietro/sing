@@ -17,12 +17,14 @@
  * watch-it-fail runs.
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("server-only", () => ({}));
 
 import { generateStaticParams as genreParams } from "@/app/singers/genre/[genre]/page";
 import { generateStaticParams as voiceTypeParams } from "@/app/singers/voice-type/[type]/page";
 import { APP_NAME } from "./app-store";
-import singerEvidence from "@/data/singer-evidence.json";
+import { getSingerEvidence, hasDocumentedSourceReview } from "@/lib/singer-evidence";
 import { ATLAS, ATLAS_CONTENTS } from "./atlas-data";
 import { BOOK, BOOK_CONTENTS } from "./book-data";
 import { CAPPED_TYPES } from "./free-cap";
@@ -344,10 +346,10 @@ describe("/llms.txt singers layer", () => {
     // A song title in lowSource/highSource is context, not an external citation.
     // Only reviewed evidence records have linked sources and a scoped claim.
     expect(llms).toMatch(/not laboratory measurements|approximate/i);
-    const reviewed = Object.values(singerEvidence).filter((record) => record.status !== "pending").length;
-    const pendingWithSources = Object.values(singerEvidence).filter((record) => record.status === "pending" && record.sources.length > 0).length;
+    const reviewed = SINGERS.filter((singer) => hasDocumentedSourceReview(singer.slug)).length;
+    const confirmed = SINGERS.filter((singer) => getSingerEvidence(singer.slug).reviewConfirmation).length;
     expect(llms).toContain(`${reviewed} of ${SINGERS.length} profiles have individual evidence reviews with linked sources`);
-    expect(llms).toContain(`${pendingWithSources} pending profiles have scoped source context but are still awaiting individual review`);
+    expect(llms).toContain(`${confirmed} profiles have prior catalog review confirmed by the owner, separately from documented source verification`);
     expect(llms).toContain("A song title named beside an endpoint is context, not a source citation");
     expect(llms).not.toContain("citation-worthy");
     expect(llms).not.toContain("no popular-music source provides one");

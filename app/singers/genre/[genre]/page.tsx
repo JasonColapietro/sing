@@ -242,9 +242,9 @@ export default async function GenrePage({
             </li>
           </ul>
           <p className="mt-5 text-xs text-dim">
-            These comparisons use catalog values. Most individual endpoints and
-            voice labels are pending evidence review; open a singer profile for
-            its source status.
+            These comparisons use reported catalog values, not verified physiological
+            limits. Open a singer profile for its review status and available
+            source evidence.
           </p>
         </Card>
 

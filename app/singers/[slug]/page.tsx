@@ -55,7 +55,7 @@ type SingerRecord = (typeof SINGERS)[number];
 
 /**
  * September 27 CTR pilot; keep these titles stable. (Their snippets dropped the
- * trailing "review is pending" sentence on Sep 30; the page body still says it.)
+ * trailing review-status sentence on Sep 30.)
  */
 const COMPARISON_SEARCH_SLUGS: ReadonlySet<string> = new Set([
   "celine-dion",
@@ -238,6 +238,9 @@ function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
     ];
   }
   const referenceSpan = `The catalog lists ${midiToLabel(s.lowMidi)} to ${midiToLabel(s.highMidi)} as a reported reference span, not an independently verified physiological limit.`;
+  const sourceScope = getSingerEvidence(s.slug).reviewConfirmation
+    ? "The catalog record does not independently establish"
+    : "The reviewed sources do not independently establish";
   return [
     {
       q: `How high can ${s.name} sing?`,
@@ -245,11 +248,11 @@ function singerFaq(s: SingerRecord): Array<{ q: string; a: string }> {
     },
     {
       q: `What is ${s.name}’s highest note?`,
-      a: `${referenceSpan} The reviewed sources do not independently establish the upper endpoint as an individual highest note.`,
+      a: `${referenceSpan} ${sourceScope} the upper endpoint as an individual highest note.`,
     },
     {
       q: `What is ${s.name}’s lowest note?`,
-      a: `${referenceSpan} The reviewed sources do not independently establish the lower endpoint as an individual physiological limit.`,
+      a: `${referenceSpan} ${sourceScope} the lower endpoint as an individual physiological limit.`,
     },
     {
       q: `How many octaves can ${s.name} sing?`,
@@ -296,14 +299,14 @@ export default async function SingerPage({
     ? {
         dateModified: getSingerPageLastModified(s.slug),
         lastReviewed: evidence.reviewedAt,
-        reviewedBy: { "@type": "Person", name: evidence.reviewedBy },
-        citation: evidence.sources.map((source) => ({
+        ...(evidence.reviewedBy ? { reviewedBy: { "@type": "Person", name: evidence.reviewedBy } } : {}),
+        ...(evidence.sources.length ? { citation: evidence.sources.map((source) => ({
           "@type": "CreativeWork",
           name: source.title,
           publisher: source.publisher,
           url: source.url,
           description: source.scope,
-        })),
+        })) } : {}),
       }
     : {};
   // Rendered below AND used verbatim in the FAQPage markup. Google requires the
@@ -452,7 +455,7 @@ export default async function SingerPage({
               <Stat label="Octaves" value={spanOctaves(semis)} tone="violet" />
               <Stat label="Semitones" value={semis} tone="ink" />
               <Stat
-                label={isPending(s) || hasReviewedVoiceTypeCorrection(s) ? "Catalog label" : "Voice type"}
+                label={isPending(s) || evidence.reviewConfirmation || hasReviewedVoiceTypeCorrection(s) ? "Catalog label" : "Voice type"}
                 value={s.voiceType}
                 tone="cool"
               />
@@ -537,12 +540,21 @@ export default async function SingerPage({
           {reviewed ? (
             <>
               <p className="mt-3 max-w-3xl text-sm text-mut">
-                Reviewed {evidence.reviewedAt} · Dataset editor: {evidence.reviewedBy}
+                {evidence.reviewConfirmation
+                  ? `Catalog review confirmed ${evidence.reviewConfirmation.confirmedAt} · Dataset editor: ${evidence.reviewConfirmation.confirmedBy}`
+                  : `Reviewed ${evidence.reviewedAt} · Dataset editor: ${evidence.reviewedBy}`}
               </p>
               <p className="mt-3 max-w-3xl text-sm text-mut">
                 Reported reference span: the displayed catalog range is not an independently
                 verified physiological limit. {voiceTypeEvidenceCopy(s)}
               </p>
+              {evidence.reviewConfirmation && (
+                <p className="mt-3 max-w-3xl text-sm text-mut">
+                  The catalog has not verified recordings or scores for both endpoints.
+                  These figures cannot establish a repeatable singing range or an absolute
+                  highest or lowest note.
+                </p>
+              )}
               <div className="mt-5 space-y-5">
                 {groupEvidenceSources(evidence.sources).map((group) => (
                   <section key={group.label}>

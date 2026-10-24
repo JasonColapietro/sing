@@ -7,56 +7,56 @@ import SingerPage, {
 } from "@/app/singers/[slug]/page";
 import { SINGERS, rangeLabel, spanOctaves } from "@/lib/singers";
 import { midiToLabel } from "@/lib/audio/notes";
-import { isSingerReviewed } from "@/lib/singer-evidence";
+import { voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
 import { SITE_URL } from "@/lib/site";
 
 const ARTIST_INTENT_CASES = [
   {
     slug: "celine-dion",
     name: "Celine Dion",
-    opening: "Our catalog reports Celine Dion at A#2 to C6 (3.2 octaves). Individual endpoint review is pending. Compare your range free.",
+    opening: "The catalog lists Celine Dion as a soprano; this is a reported reference classification. The displayed range of A#2 to C6 is a reported reference span, not an independently verified physiological limit.",
     title: "Celine Dion Vocal Range & Voice Type | Compare Yours",
     heading: "Celine Dion Vocal Range: Reported A#2–C6",
   },
   {
     slug: "peter-steele",
     name: "Peter Steele",
-    opening: "Our catalog reports Peter Steele at F1 to G5 (4.2 octaves). Individual endpoint review is pending. Compare your range free.",
+    opening: "A MetalSucks memorial describes Peter Steele's singing voice as baritone; it does not establish a definitive bass-baritone classification or range endpoints. The displayed range of F1 to G5 is a reported reference span, not an independently verified physiological limit.",
     title: "Peter Steele Vocal Range & Voice Type | Compare Yours",
     heading: "Peter Steele Vocal Range: Reported F1–G5",
   },
   {
     slug: "michael-jackson",
     name: "Michael Jackson",
-    opening: "Our catalog reports Michael Jackson at D#2 to F6 (4.2 octaves). Individual endpoint review is pending. Compare your range free.",
+    opening: "The catalog lists Michael Jackson as a tenor; this is a reported reference classification. The displayed range of D#2 to F6 is a reported reference span, not an independently verified physiological limit.",
     title: "Michael Jackson Vocal Range & Voice Type | Compare Yours",
     heading: "Michael Jackson Vocal Range: Reported D#2–F6",
   },
   {
     slug: "bruno-mars",
     name: "Bruno Mars",
-    opening: "Our catalog reports Bruno Mars at G2 to D6 (3.6 octaves). Individual endpoint review is pending. Compare your range free.",
+    opening: "The catalog lists Bruno Mars as a tenor; this is a reported reference classification. The displayed range of G2 to D6 is a reported reference span, not an independently verified physiological limit.",
     title: "Bruno Mars Vocal Range: Reported G2–D6, Tenor | Suede Sing",
     heading: "Bruno Mars Vocal Range: Reported G2–D6",
   },
   {
     slug: "taylor-swift",
     name: "Taylor Swift",
-    opening: "Our catalog reports Taylor Swift at A2 to A#5 (3.1 octaves). Individual endpoint review is pending. Compare your range free.",
+    opening: "The catalog lists Taylor Swift as a mezzo-soprano; this is a reported reference classification. The displayed range of A2 to A#5 is a reported reference span, not an independently verified physiological limit.",
     title: "Taylor Swift Vocal Range: Reported A2–A#5, Mezzo-soprano",
     heading: "Taylor Swift Vocal Range: Reported A2–A#5",
   },
   {
     slug: "jeff-buckley",
     name: "Jeff Buckley",
-    opening: "Our catalog reports Jeff Buckley at E2 to D6 (3.8 octaves). Individual endpoint review is pending. Compare your range free.",
+    opening: "Jeff Buckley's official FAQ describes him as a tenor with a four-octave range; it does not verify this catalog's exact E2–D6 endpoints. The displayed range of E2 to D6 is a reported reference span, not an independently verified physiological limit.",
     title: "Jeff Buckley Vocal Range: Reported E2–D6, Tenor | Suede Sing",
     heading: "Jeff Buckley Vocal Range: Reported E2–D6",
   },
   {
     slug: "billie-eilish",
     name: "Billie Eilish",
-    opening: "Our catalog reports Billie Eilish at A2 to B5 (3.2 octaves). Individual endpoint review is pending. Compare your range free.",
+    opening: "The catalog lists Billie Eilish as a mezzo-soprano; this is a reported reference classification. The displayed range of A2 to B5 is a reported reference span, not an independently verified physiological limit.",
     title: "Billie Eilish Vocal Range: Reported A2–B5, Mezzo-soprano",
     heading: "Billie Eilish Vocal Range: Reported A2–B5",
   },
@@ -259,7 +259,6 @@ describe("every singer page answers its vocal range and voice type intent", () =
     "covers singer render batch %# in the H1 and opening answer",
     async (singers) => {
       for (const singer of singers) {
-        const semis = singer.highMidi - singer.lowMidi;
         const page = await SingerPage({
           params: Promise.resolve({ slug: singer.slug }),
         });
@@ -267,11 +266,7 @@ describe("every singer page answers its vocal range and voice type intent", () =
         const heading = VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
           ? `${singer.name} Voice Type and Vocal Range`
           : `${singer.name} Vocal Range: Reported ${rangeLabel(singer)}`;
-        const defaultOpening = !isSingerReviewed(singer.slug)
-          ? `Our catalog reports ${singer.name} at ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves). Individual endpoint review is pending. Compare your range free.`
-          : VOICE_TYPE_QUERY_SLUGS.has(singer.slug)
-            ? `${singer.name} is commonly classified as a ${singer.voiceType.toLowerCase()}. The cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)}.`
-            : `${singer.name}'s cited vocal range is ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} (${spanOctaves(semis)} octaves).`;
+        const defaultOpening = `${voiceTypeEvidenceCopy(singer)} The displayed range of ${midiToLabel(singer.lowMidi)} to ${midiToLabel(singer.highMidi)} is a reported reference span, not an independently verified physiological limit.`;
         const opening = SPECIAL_TITLE_CASES[singer.slug]?.opening ?? defaultOpening;
 
         expect(html).toContain(
@@ -286,14 +281,16 @@ describe("every singer page answers its vocal range and voice type intent", () =
   );
 
   it.each(ARTIST_INTENT_CASES.filter(({ slug }) => ORIGINAL_PRIORITY_SLUGS.has(slug)))(
-    "$slug keeps unreviewed endpoints out of individual extrema claims",
+    "$slug keeps reported endpoints separate from verified individual extrema",
     async ({ slug, name }) => {
       const page = await SingerPage({ params: Promise.resolve({ slug }) });
       const html = renderToStaticMarkup(page).replaceAll("&#x27;", "'");
 
-      expect(html).toContain("Individual endpoint review is pending; these are not verified physiological limits.");
-      expect(html).toContain(`No reviewed source here establishes the upper endpoint as ${name}’s highest note.`);
-      expect(html).toContain(`No reviewed source here establishes the lower endpoint as ${name}’s lowest note.`);
+      expect(html).toContain("Review confirmed");
+      expect(html).toContain("not an independently verified physiological limit");
+      expect(html).not.toContain("review is pending");
+      expect(html).toContain("The catalog record does not independently establish the upper endpoint as an individual highest note.");
+      expect(html).toContain("The catalog record does not independently establish the lower endpoint as an individual physiological limit.");
       expect(html).toContain(`What voice type is ${name}?`);
       expect(html).not.toContain("Full voice to");
     },

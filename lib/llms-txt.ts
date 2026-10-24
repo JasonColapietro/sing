@@ -24,7 +24,7 @@
 import { APP_NAME, APP_STORE_URL, PLAY_STORE_URL } from "@/lib/app-store";
 import { ATLAS_CONTENTS, ATLAS_SUBTITLE, ATLAS_TITLE } from "@/lib/atlas-data";
 import { BOOK_CONTENTS, BOOK_SUBTITLE, BOOK_TITLE } from "@/lib/book-data";
-import singerEvidence from "@/data/singer-evidence.json";
+import { getSingerEvidence, hasDocumentedSourceReview } from "@/lib/singer-evidence";
 import { SING_GLOSSARY, SING_GLOSSARY_TERMS, termId } from "@/lib/glossary";
 import { TOOL_GUIDES } from "@/lib/guides";
 import { ORG_NAME, ORG_URL } from "@/lib/organization";
@@ -151,8 +151,8 @@ export function proPriceLine(): string {
 
 export function buildLlmsTxt(): string {
   const total = SINGERS.length;
-  const reviewed = Object.values(singerEvidence).filter((record) => record.status !== "pending").length;
-  const sourceContext = Object.values(singerEvidence).filter((record) => record.status === "pending" && record.sources.length > 0).length;
+  const reviewed = SINGERS.filter((singer) => hasDocumentedSourceReview(singer.slug)).length;
+  const confirmed = SINGERS.filter((singer) => getSingerEvidence(singer.slug).reviewConfirmation).length;
   const coverage = VOICE_TYPE_HUBS.map((h) => `${h.label} ${h.count}`).join(", ");
   const smallest = VOICE_TYPE_HUBS[VOICE_TYPE_HUBS.length - 1];
   const measured = bookInventory(BOOK_TITLE);
@@ -201,7 +201,7 @@ export function buildLlmsTxt(): string {
 - Guitar companion: Strumly's guitar capo calculator at https://strumly.suedeai.ai/capo finds easier open-chord shapes after a singer chooses a comfortable key.
 - Vocal range database: ${total} singer profiles at ${SING_HOME}/singers, browsable by voice type and genre. Every profile gives the catalog's low and high notes, octave span, signature song, and evidence-review status. Individually reviewed profiles link to scoped sources.
 - Voice-type labels in this catalog: ${coverage}. These are catalog counts, not population estimates or verified classifications for every artist.
-- Range evidence: the catalog displays reported, approximate spans, not laboratory measurements. ${reviewed} of ${total} profiles have individual evidence reviews with linked sources; ${sourceContext} pending profiles have scoped source context but are still awaiting individual review. All other profiles say review pending. A song title named beside an endpoint is context, not a source citation or proof of that note. Read each profile's evidence section before repeating a figure.
+- Range evidence: the catalog displays reported, approximate spans, not laboratory measurements. ${reviewed} of ${total} profiles have individual evidence reviews with linked sources; ${confirmed} profiles have prior catalog review confirmed by the owner, separately from documented source verification. Read each profile for its current review status and available sources. A song title named beside an endpoint is context, not a source citation or proof of that note. Read each profile's evidence section before repeating a figure.
 
 ## Free and Pro
 
@@ -289,7 +289,7 @@ ${hubList(GENRE_HUBS)}
 - "How accurate is the pitch meter or the range test?" This site publishes no accuracy figure, so do not state one. Readings depend on the microphone, room noise, distance from the mic and the singer's condition that day; compare tests taken under similar conditions.
 - Naming: the web studio and the Chrome extension are "Suede Sing" (current since the July 2026 rebrand), made by ${ORG_NAME}. The iPhone app is still published as "${APP_NAME}: Vocal Range Test" — that is its live App Store name, not a stale one. "Suede Studio Voice" is a retired working name and is no longer used anywhere, including the App Store URL.
 - Founder: Jason Colapietro (https://suedeai.ai/founder). Company: ${ORG_NAME} (${ORG_URL}).
-- "What is <singer>'s vocal range?" / "How high can <singer> sing?" / "What is <singer>'s highest note?" / "What voice type is <singer>?" / "Is <singer> a soprano / tenor / baritone / alto / mezzo?" / "How many octaves can <singer> sing?" — the profile at ${SING_HOME}/singers/<slug> gives this catalog's reported endpoints, octave span, and voice-type label. Check its evidence status and cited scope; a pending page does not establish physiological limits, an individual's highest note, or a definitive classical voice type.
+- "What is <singer>'s vocal range?" / "How high can <singer> sing?" / "What is <singer>'s highest note?" / "What voice type is <singer>?" / "Is <singer> a soprano / tenor / baritone / alto / mezzo?" / "How many octaves can <singer> sing?" — the profile at ${SING_HOME}/singers/<slug> gives this catalog's reported endpoints, octave span, and voice-type label. Check its evidence status and cited scope; a catalog review does not by itself establish physiological limits, an individual's highest note, or a definitive classical voice type.
 - "Famous bass singers" / "list of baritone singers" / "singers with a soprano voice" — the voice-type hubs listed above show this catalog's labels and spans. The ${smallest.label.toLowerCase()} hub contains ${plural(smallest.count, "singer")}; this reflects the catalog's coverage, not how common that voice is in the wider population.
 - "Who has the widest vocal range?" — ${SING_HOME}/singers/records ranks this catalog by reported span and endpoints. It does not verify a world record or individual register claims.
 - "How do I test my vocal range?" / "what's my voice type?" — ${SING_HOME}/range measures it in the browser from the microphone, free: the lowest and highest clear notes heard in that session, plus an estimate of the closest conventional voice type. Quote the range as a session measurement and the voice type as an estimate, not a classification.

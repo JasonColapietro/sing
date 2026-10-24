@@ -52,7 +52,7 @@ describe("singer evidence and comparison regressions", () => {
     ["sam-smith", "Evidence disputed"],
     ["olivia-rodrigo", "Evidence disputed"],
     ["adele", "Sources reviewed"],
-    ["bruno-mars", "Individual review pending"],
+    ["bruno-mars", "Review confirmed"],
   ])("qualifies %s shared images without asserting a voice type", async (slug, status) => {
     const result = await SingerImage({ params: Promise.resolve({ slug }) }) as unknown as { element: ReactNode };
     const html = renderToStaticMarkup(<>{result.element}</>);

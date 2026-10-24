@@ -8,7 +8,7 @@ import SingerPage, { generateMetadata } from "@/app/singers/[slug]/page";
 import {
   getSingerEvidence,
   getSingerPageLastModified,
-  isSingerReviewed,
+  hasDocumentedSourceReview,
 } from "@/lib/singer-evidence";
 import { SINGERS } from "@/lib/singers";
 
@@ -57,7 +57,7 @@ const PINNED: Record<string, { fingerprint: string; lastModified: string }> = {
 
 describe("reviewed singer page freshness", () => {
   it("pins every reviewed singer page", () => {
-    const reviewed = SINGERS.filter((singer) => isSingerReviewed(singer.slug)).map((s) => s.slug);
+    const reviewed = SINGERS.filter((singer) => hasDocumentedSourceReview(singer.slug)).map((s) => s.slug);
     expect(Object.keys(PINNED).sort()).toEqual([...reviewed].sort());
   });
 

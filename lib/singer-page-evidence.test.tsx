@@ -78,15 +78,16 @@ describe("singer-page evidence and provenance", () => {
     expect(html).toContain("Scientific pitch notation as published by the score");
   });
 
-  it("is explicit when an individual singer evidence review is pending", async () => {
+  it("shows confirmed prior review without inventing a source review date", async () => {
     const html = await rendered("rihanna");
     const graph = graphFrom(html);
-    const page = graph["@graph"].find((node) => node["@type"] === "WebPage");
+    const page = graph["@graph"].find((node) => node["@type"] === "WebPage")!;
 
-    expect(html).toContain("Individual evidence review is pending");
+    expect(html).toContain("Catalog review confirmed 2026-10-24");
+    expect(html).not.toMatch(/review is pending|review awaiting/i);
     expect(html).toContain("reported reference span, not an independently verified physiological limit");
     expect(html).toContain("Reported reference span");
-    expect(page).not.toHaveProperty("dateModified");
+    expect(page.dateModified).toBe("2026-10-24");
     expect(page).not.toHaveProperty("lastReviewed");
     expect(page).not.toHaveProperty("reviewedBy");
     expect(page).not.toHaveProperty("citation");
@@ -103,24 +104,25 @@ describe("singer-page evidence and provenance", () => {
     ["tom-jones", "https://www.tomjones.com/blog/reviews/las-vegas-review-journal"],
     ["paul-mccartney", "https://www.thebeatles.com/youll-be-mine"],
     ["jimin", "https://magazine.weverse.io/article/view/1170?lang=en"],
-  ])("shows scoped source context for pending %s without review schema", async (slug, url) => {
+  ])("preserves scoped sources for confirmed %s without inventing dated review schema", async (slug, url) => {
     const html = await rendered(slug);
     const page = graphFrom(html)["@graph"].find((node) => node["@type"] === "WebPage")!;
 
     expect(html).toContain(`href="${url.replaceAll("&", "&amp;")}"`);
-    expect(html).toContain("Source context awaiting individual review");
-    expect(html).toContain("They do not verify");
+    expect(html).toContain("Catalog review confirmed 2026-10-24");
+    expect(html).toContain("not an independently verified physiological limit");
     expect(page).not.toHaveProperty("reviewedBy");
-    expect(page).not.toHaveProperty("dateModified");
-    expect(page).not.toHaveProperty("citation");
+    expect(page.dateModified).toBe("2026-10-24");
+    expect(page.lastReviewed).toBeUndefined();
+    expect(page.citation).toEqual(expect.arrayContaining([expect.objectContaining({ url })]));
   });
 
-  it("shows a pending score's octave convention beside its written range", async () => {
+  it("shows a source score's octave convention beside its written range", async () => {
     // Beggin' is written in treble clef an octave above Damiano David's sung
     // line; without the note the written F#5 reads as seven semitones above
     // the page's own reported ceiling.
     const html = await rendered("damiano-david");
-    expect(html).toContain("Source context awaiting individual review");
+    expect(html).toContain("Catalog review confirmed 2026-10-24");
     expect(html).toContain("written vocal range of B3–F#5");
     expect(html).toContain("Octave convention:");
     expect(html).toContain("written B3–F#5 sounds B2–F#4");
@@ -165,7 +167,7 @@ describe("singer-page evidence and provenance", () => {
     ["taylor-swift", "Taylor Swift"],
     ["jeff-buckley", "Jeff Buckley"],
     ["billie-eilish", "Billie Eilish"],
-  ])("keeps %s schema aligned with pending evidence", async (slug, name) => {
+  ])("keeps %s schema aligned with confirmed review and limited evidence", async (slug, name) => {
     const html = await rendered(slug);
     const graph = graphFrom(html)["@graph"];
     const page = graph.find((node) => node["@type"] === "WebPage")!;
@@ -173,11 +175,16 @@ describe("singer-page evidence and provenance", () => {
     const faq = graph.find((node) => node["@type"] === "FAQPage")!;
 
     expect(page.name).toMatch(/^.+ Vocal Range: Reported /);
-    expect(page.description).toContain("Individual endpoint review is pending");
+    expect(page.description).toContain("reported reference span");
+    expect(page.description).not.toMatch(/pending/i);
     expect(page).not.toHaveProperty("reviewedBy");
-    expect(page).not.toHaveProperty("citation");
+    expect(page.lastReviewed).toBeUndefined();
+    expect(page.dateModified).toBe("2026-10-24");
+    const sources = getSingerEvidence(slug).sources;
+    if (sources.length) expect(page.citation).toHaveLength(sources.length);
+    else expect(page).not.toHaveProperty("citation");
     expect(person.description).toContain(name);
-    expect(String(person.description)).toMatch(/individual evidence review is pending/i);
+    expect(String(person.description)).not.toMatch(/individual evidence review is pending/i);
     expect(JSON.stringify(faq)).toContain(`What voice type is ${name}?`);
   });
 

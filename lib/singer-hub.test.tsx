@@ -6,7 +6,7 @@ vi.mock("server-only", () => ({}));
 
 import SingersPage from "@/app/singers/page";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
-import { isSingerReviewed, singerReviewLabel } from "@/lib/singer-evidence";
+import { hasDocumentedSourceReview, singerReviewLabel } from "@/lib/singer-evidence";
 import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { SINGERS, rangeLabel } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
@@ -31,7 +31,7 @@ function reviewedHtml(html: string) {
   return match[1];
 }
 
-const REVIEWED_SLUGS = SINGERS.filter((s) => isSingerReviewed(s.slug)).map((s) => s.slug);
+const REVIEWED_SLUGS = SINGERS.filter((s) => hasDocumentedSourceReview(s.slug)).map((s) => s.slug);
 
 function searchPriorityHtml(html: string) {
   const match = html.match(/<section[^>]*data-singer-search-priority="true"[^>]*>([\s\S]*?)<\/section>/);
@@ -110,7 +110,7 @@ describe("/singers hub schema and crawl discovery", () => {
     expect(visible).toMatch(/reported range/);
   });
 
-  it("gives every reviewed profile (the indexable ones) a named link with its status", () => {
+  it("gives every documented source review a named link with its status", () => {
     const reviewed = reviewedHtml(html);
     expect(REVIEWED_SLUGS.length).toBeGreaterThan(0);
     for (const slug of REVIEWED_SLUGS) {
@@ -123,7 +123,7 @@ describe("/singers hub schema and crawl discovery", () => {
     }
   });
 
-  it("does not claim search demand for pages that are noindexed", () => {
+  it("keeps search-demand implementation details out of the reader-facing section", () => {
     expect(searchPriorityHtml(html)).not.toContain("Google");
   });
 

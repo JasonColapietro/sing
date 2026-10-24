@@ -18,6 +18,7 @@ import {
   SINGER_PAGE_REVISED,
   getSingerLastModified,
   getSingerPageLastModified,
+  getSingerEvidence,
 } from "@/lib/singer-evidence";
 import { SINGERS } from "@/lib/singers";
 import { SITE_URL } from "@/lib/site";
@@ -145,10 +146,10 @@ describe("singer sitemap editorial freshness", () => {
   it("dates singer pages by the latest of their review, the page revision and their data revision", () => {
     const entries = sitemap();
     const reviewed = SINGERS.filter((singer) => getSingerLastModified(singer.slug));
-    const pending = SINGERS.filter((singer) => !getSingerLastModified(singer.slug));
+    const confirmed = SINGERS.filter((singer) => !getSingerLastModified(singer.slug));
 
     expect(reviewed.length).toBeGreaterThan(0);
-    expect(pending.length).toBeGreaterThan(0);
+    expect(confirmed.length).toBeGreaterThan(0);
     expect(SINGER_PAGE_REVISED).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     for (const singer of reviewed) {
       const entry = entries.find((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)!;
@@ -170,16 +171,13 @@ describe("singer sitemap editorial freshness", () => {
     for (const date of Object.values(SINGER_DATA_REVISED)) {
       expect(date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
-    // Public profiles awaiting evidence review use their actual page/data
-    // revision; including them must not invent an evidence review date.
-    for (const singer of pending) {
+    // Status reconciliation changes these pages on the confirmation date,
+    // while leaving the unknown original review date unset.
+    for (const singer of confirmed) {
       const entry = entries.find((item) => item.url === `${SITE_URL}/singers/${singer.slug}`)!;
-      const dataRevised = SINGER_DATA_REVISED[singer.slug];
       expect(getSingerLastModified(singer.slug)).toBeUndefined();
       expect(entry.lastModified).toBe(getSingerPageLastModified(singer.slug));
-      expect(entry.lastModified).toBe(
-        dataRevised && dataRevised > SINGER_PAGE_REVISED ? dataRevised : SINGER_PAGE_REVISED,
-      );
+      expect(entry.lastModified).toBe(getSingerEvidence(singer.slug).reviewConfirmation?.confirmedAt);
     }
 
     const sitemapSource = readFileSync(new URL("../app/sitemap.ts", import.meta.url), "utf8");

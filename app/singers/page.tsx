@@ -15,7 +15,7 @@ import {
   voiceTypeSlug,
 } from "@/lib/singers";
 import { SINGER_RANGE_DISCLAIMER } from "@/lib/singer-editorial";
-import { isSingerReviewed, singerReviewLabel } from "@/lib/singer-evidence";
+import { hasDocumentedSourceReview, singerReviewLabel } from "@/lib/singer-evidence";
 import { VOCAL_RANGE_PRIORITY_SLUGS } from "@/lib/singer-search-priority";
 import { ORG_PUBLISHER_NODE } from "@/lib/organization";
 import { OG_LOCALE, OG_SITE_NAME } from "@/lib/og";
@@ -35,7 +35,7 @@ const VOCAL_RANGE_PRIORITY_SINGERS = VOCAL_RANGE_PRIORITY_SLUGS.map((slug) => {
  * Give these a named place on the hub as an editorial recommendation;
  * every public singer profile is also indexable and linked in the A–Z list.
  */
-const REVIEWED_SINGERS = SINGERS.filter((s) => isSingerReviewed(s.slug)).sort(
+const REVIEWED_SINGERS = SINGERS.filter((s) => hasDocumentedSourceReview(s.slug)).sort(
   (a, b) => a.name.localeCompare(b.name),
 );
 
@@ -245,8 +245,8 @@ export default function SingersPage() {
 
       <SingersDirectory />
       {/* After the chart, not above it: on a phone these cards put the chart
-          five screens down, and most of the pages they link are noindexed
-          (lib/singer-search-priority.ts), so they no longer earn that place. */}
+          five screens down. Keep the comparison tool ahead of this additional
+          set of links. */}
       <section
         data-singer-search-priority="true"
         aria-labelledby="popular-vocal-range-lookups"

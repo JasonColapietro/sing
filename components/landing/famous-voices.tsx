@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SectionLabel } from "@/components/ui";
-import { isSingerReviewed, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
+import { hasDocumentedSourceReview, voiceTypeEvidenceCopy } from "@/lib/singer-evidence";
 import { rangeLabel, singerBySlug } from "@/lib/singers";
 
 /**
@@ -59,14 +59,14 @@ const VOICES = FEATURED.map((slug) => {
     );
   }
   const needsEvidenceCopy = EVIDENCE_FEATURED.has(singer.slug);
-  if (needsEvidenceCopy && !isSingerReviewed(singer.slug)) {
+  if (needsEvidenceCopy && !hasDocumentedSourceReview(singer.slug)) {
     throw new Error(
       `famous-voices: missing reviewed evidence for promoted singer "${singer.slug}".`,
     );
   }
   return {
     singer,
-    reviewed: isSingerReviewed(singer.slug),
+    reviewed: hasDocumentedSourceReview(singer.slug),
     evidenceCopy: needsEvidenceCopy ? voiceTypeEvidenceCopy(singer) : undefined,
   };
   // Stable: reviewed profiles first, FEATURED order within each.
@@ -90,11 +90,9 @@ export function FamousVoices() {
                 land, and a number in this sentence would go stale with them. */}
             <p className="mt-3 text-mut">
               Every range below is the span a singer is commonly cited as
-              covering, low note to high. Most voice-type labels and endpoints
-              in this catalog still await individual evidence review; open a
-              profile to see its source status and the span drawn on a
-              keyboard, then run the range test and put your own voice beside
-              it.
+              covering, low note to high. Open a profile to see its review status, available source evidence,
+              and the span drawn on a keyboard, then run the range test and
+              put your own voice beside it.
             </p>
           </div>
           <Link
