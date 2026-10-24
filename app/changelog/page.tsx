@@ -233,7 +233,7 @@ const LOG: Array<{
       {
         // MIC_IDLE_RELEASE_MS in lib/audio/use-idle-mic-release.ts is the
         // "15 seconds"; keep the two in step.
-        day: "23",
+        day: "24",
         note: "Warmups and Songs now turn the microphone off 15 seconds after a session ends, so the recording light no longer stays on while you read your score or browse. Starting again reopens it, and a silent stop offers a button to turn it off right away.",
       },
       {
@@ -244,7 +244,7 @@ const LOG: Array<{
         // costs the same on noise as on a vowel. Nothing was timed on a phone, so
         // the note claims CPU, not frame rate. Dated by merge day in US Eastern
         // time; change the day if it merges later.
-        day: "23",
+        day: "24",
         note: "Pitch engine: one FFT autocorrelation now replaces about 700 separate sums per frame, so the detector reads every frame exactly as before at about a twentieth of the CPU, in a noisy room or on a held note.",
       },
       {
