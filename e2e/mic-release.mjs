@@ -197,6 +197,25 @@ async function enableFromGate(page, name) {
 
 let failed = 0;
 
+// Ends a scored song run on its Practice summary. End practice leaves for the
+// library instead when the scored clock (behind the audio by the pitch lag)
+// has reached no note yet, which a short fixed wait after the count-in does not
+// rule out on a slower runner or browser. So the run is left well under way
+// first, and a miss names the screen End practice went to and what the run
+// showed, rather than a bare timeout.
+async function endSongRunOnSummary(page) {
+  await page.getByRole("heading", { level: 2, name: "Sing along", exact: true }).waitFor({ timeout: 15_000 });
+  await page.waitForTimeout(4000);
+  const before = (await page.getByRole("heading", { level: 2 }).allTextContents()).map((t) => t.trim()).join(" | ");
+  const score = (await page.getByText("Running score", { exact: true }).locator("..").textContent().catch(() => ""))?.replace(/\s+/g, " ").trim();
+  await page.getByRole("button", { name: "End practice", exact: true }).click();
+  const summary = page.getByRole("heading", { level: 1, name: "Practice summary", exact: true });
+  await summary.waitFor({ timeout: 15_000 }).catch(() => {});
+  if (await summary.count()) return;
+  const h1 = (await page.getByRole("heading", { level: 1 }).first().textContent().catch(() => ""))?.trim();
+  throw new Error(`End practice did not reach the Practice summary: it showed "${h1}"; before it, the run's headings read "${before}" and "${score}"`);
+}
+
 async function runCase(browser, name, body, { releaseMs = TEST_RELEASE_MS } = {}) {
   const context = await browser.newContext({ viewport: VIEW, permissions: ["microphone"] });
   await context.addInitScript(init, releaseMs);
@@ -445,10 +464,7 @@ try {
     // back with its error, as it does for a singer who never skipped the mic,
     // and "Sing again" does not quietly start an unscored run.
     await page.getByRole("button", { name: "Play", exact: true }).first().click();
-    await page.getByRole("heading", { level: 2, name: "Sing along", exact: true }).waitFor({ timeout: 15_000 });
-    await page.waitForTimeout(1500);
-    await page.getByRole("button", { name: "End practice", exact: true }).click();
-    await summary.waitFor();
+    await endSongRunOnSummary(page);
     await expectLive(page, 0, "scored summary after a late enable", notes);
     await page.evaluate(() => { window.__micFail = true; });
     await page.getByRole("button", { name: "Sing again", exact: true }).click();
@@ -478,10 +494,7 @@ try {
     await page.getByRole("button", { name: "Sing", exact: true }).first().click();
     await page.locator("#song-transport").waitFor();
     await page.getByRole("button", { name: "Play", exact: true }).first().click();
-    await page.getByRole("heading", { level: 2, name: "Sing along", exact: true }).waitFor({ timeout: 15_000 });
-    await page.waitForTimeout(1500);
-    await page.getByRole("button", { name: "End practice", exact: true }).click();
-    await page.getByRole("heading", { level: 1, name: "Practice summary", exact: true }).waitFor();
+    await endSongRunOnSummary(page);
     const ended = await expectStill(page, 1, `Practice summary ${GRACE_CHECK_MS / 1000} s after End practice`, notes, GRACE_CHECK_MS);
     await page.getByRole("button", { name: "Sing again", exact: true }).click();
     await page.locator("#song-transport").waitFor();
