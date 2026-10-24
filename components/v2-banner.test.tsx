@@ -118,6 +118,90 @@ describe("4.0 release banner", () => {
       vi.stubGlobal("window", { localStorage: storage });
       expect(bannerWanted()).toBe(!hiddenBeforePaint(html, storage));
     });
+
+    /**
+     * The table above is the states we thought of. Any other key the script
+     * or the hook might come to read (a streak, a setting, an old campaign's
+     * key) must not split them either, so sweep many stores built from a
+     * pool of real and arbitrary keys.
+     */
+    it("for any mix of stored keys", () => {
+      const pool = [
+        SEEN_KEY,
+        OLD_SEEN_KEY,
+        PROGRESS_STORAGE_KEY,
+        "suede-sing:streak",
+        "suede-sing:settings",
+        "suede-sing:v2-banner:v1",
+        "unrelated",
+      ];
+      for (let mask = 0; mask < 1 << pool.length; mask++) {
+        const stored: Record<string, string> = {};
+        pool.forEach((key, i) => {
+          if (mask & (1 << i)) stored[key] = "x";
+        });
+        const storage = storageOf(stored);
+        vi.stubGlobal("window", { localStorage: storage });
+        expect(bannerWanted(), JSON.stringify(stored)).toBe(!hiddenBeforePaint(html, storage));
+      }
+    });
+  });
+
+  it("runs its pre-paint script after the card it hides", () => {
+    // Before the card, getElementById would find nothing on a real page load
+    // and a dismisser would see the card flash; the fake document above
+    // cannot catch that.
+    expect(html.indexOf("<script")).toBeGreaterThan(html.indexOf('id="v2-banner"'));
+  });
+});
+
+/**
+ * Dismissing has to reach the card in this tab whatever storage does. Run
+ * against a fresh module each time, because the dismissal is module state.
+ */
+describe("dismissing the 4.0 card", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.resetModules();
+  });
+
+  function windowWith(stored: Record<string, string>, { writes = true } = {}) {
+    return {
+      localStorage: {
+        getItem: (key: string) => stored[key] ?? null,
+        setItem: (key: string, value: string) => {
+          if (!writes) throw new Error("QuotaExceededError");
+          stored[key] = value;
+        },
+      },
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    };
+  }
+
+  it("saves the dismissal, tells the card, and hides it", async () => {
+    const stored: Record<string, string> = {};
+    vi.stubGlobal("window", windowWith(stored));
+    const banner = await import("./v2-banner");
+    const onChange = vi.fn();
+    banner.subscribe(onChange);
+    expect(banner.bannerWanted()).toBe(true);
+    banner.dismissBanner();
+    expect(onChange).toHaveBeenCalled();
+    expect(stored[SEEN_KEY]).toBeTruthy();
+    expect(banner.bannerWanted()).toBe(false);
+  });
+
+  it("keeps it hidden in this tab when storage refuses the write", async () => {
+    const stored: Record<string, string> = {};
+    vi.stubGlobal("window", windowWith(stored, { writes: false }));
+    const banner = await import("./v2-banner");
+    const onChange = vi.fn();
+    banner.subscribe(onChange);
+    banner.dismissBanner();
+    expect(onChange).toHaveBeenCalled();
+    expect(stored[SEEN_KEY]).toBeUndefined();
+    expect(banner.bannerWanted()).toBe(false);
   });
 });
 

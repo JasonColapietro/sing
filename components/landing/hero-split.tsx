@@ -55,7 +55,8 @@ export function HeroSplit() {
             panel fill keeps violet-ink readable over the phone portrait. */}
         <Link
           href="/changelog"
-          className="absolute left-4 top-6 inline-flex min-h-6 items-center gap-1.5 rounded-full border border-violet/40 bg-panel/85 px-2.5 font-mono text-label tracking-[0.08em] text-violet-ink backdrop-blur-sm transition-colors hover:border-violet sm:left-6 sm:top-20"
+          prefetch={false}
+          className="absolute left-4 top-6 inline-flex min-h-6 items-center whitespace-nowrap gap-1.5 rounded-full border border-violet/40 bg-panel/85 px-2.5 font-mono text-label tracking-[0.08em] text-violet-ink backdrop-blur-sm transition-colors hover:border-violet sm:left-6 sm:top-20"
         >
           {/* Real spaces around the hidden dot, so the link's accessible
               name reads "v4.0 What's new", not "v4.0What's new". */}

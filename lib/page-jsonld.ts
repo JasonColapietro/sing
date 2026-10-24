@@ -45,6 +45,8 @@ export function webPageJsonLd(page: {
   type?: "WebPage" | "CollectionPage" | "ContactPage";
   /** The page's visible breadcrumb trail, ending at this page. */
   breadcrumbs?: readonly Crumb[];
+  /** ISO date the page's content last changed, for a page that dates itself. */
+  dateModified?: string;
 }) {
   const url = `${SITE_URL}${page.path}`;
   return {
@@ -60,6 +62,7 @@ export function webPageJsonLd(page: {
         isPartOf: { "@id": `${SITE_URL}/#website` },
         publisher: { "@id": ORG_ID },
         inLanguage: "en",
+        ...(page.dateModified ? { dateModified: page.dateModified } : {}),
         ...(page.breadcrumbs ? { breadcrumb: breadcrumbListJsonLd(page.breadcrumbs) } : {}),
       },
     ],

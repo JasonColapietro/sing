@@ -77,7 +77,8 @@ const SEEN_KEY = "suede-sing:v4-0-banner:v1";
 let closedHere = false;
 const listeners = new Set<() => void>();
 
-function subscribe(onChange: () => void): () => void {
+/** Exported for the tests, which check that a dismissal reaches the card. */
+export function subscribe(onChange: () => void): () => void {
   listeners.add(onChange);
   // Another tab closing it.
   window.addEventListener("storage", onChange);
@@ -108,7 +109,8 @@ const noChanges = () => () => {};
 const hydrated = () => true;
 const notHydrated = () => false;
 
-function close(): void {
+/** The dismiss button's action. Exported for the tests. */
+export function dismissBanner(): void {
   closedHere = true;
   try {
     window.localStorage.setItem(SEEN_KEY, new Date().toISOString());
@@ -143,12 +145,15 @@ export default function V2Banner() {
         suppressHydrationWarning
       >
         {/* White on --color-violet-ink is 7.1:1 and the message's white/85
-            5.5:1, so everything here reads at a glance. On a phone the
-            lockup stacks above the message; from sm up they sit side by
-            side. The right padding on the first row keeps the lockup clear
-            of the positioned dismiss control. */}
-        <div className="grid gap-5 p-5 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center sm:gap-10 sm:p-8 sm:pr-20">
-          <div className="flex items-end gap-4 pr-12 sm:pr-0">
+            5.5:1, so everything here reads at a glance. The lockup and the
+            message share a wrapping row: side by side where the message
+            keeps at least 20rem, stacked otherwise. A grid sized to the
+            lockup squeezed the message to one word a line between 640 and
+            768px, and on a phone pushed it off the card, once a visitor
+            enlarged their default text. The right padding on the lockup
+            keeps it clear of the positioned dismiss control. */}
+        <div className="flex flex-wrap items-center gap-x-10 gap-y-5 p-5 sm:p-8 sm:pr-20">
+          <div className="flex max-w-full flex-wrap items-end gap-4 pr-12 sm:pr-0">
             {/* The version is the headline. The hidden words give it its
                 full name for a screen reader and the page's outline; the
                 eye gets the numerals alone. */}
@@ -159,13 +164,15 @@ export default function V2Banner() {
               <V2TraceGlyph className="h-auto w-10 text-cool sm:w-14" />
             </span>
           </div>
-          <div>
+          <div className="min-w-0 flex-1 basis-[20rem]">
             <p className="font-mono text-label uppercase tracking-[0.14em] text-white/85">
-              New release
-              <span className="mx-2" aria-hidden>
+              {/* Real spaces around the hidden dot, so the line reads "New
+                  release October 2026", not "New releaseOctober 2026". */}
+              New release{" "}
+              <span className="mx-1" aria-hidden>
                 ·
-              </span>
-              October 2026
+              </span>{" "}
+              <span className="whitespace-nowrap">October 2026</span>
             </p>
             {/* Only what main ships and the October log records: the
                 restored homepage and navigation (#229, the 15th) and the
@@ -184,7 +191,7 @@ export default function V2Banner() {
                 1.1:1 against this fill, and white reads 7.1:1. */}
             <Link
               href="/changelog"
-              className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-violet-ink transition-colors hover:bg-panel focus-visible:outline-white"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-violet-ink transition-colors hover:bg-panel focus-visible:outline-white!"
             >
               See what&apos;s new
               <span aria-hidden>→</span>
@@ -196,9 +203,21 @@ export default function V2Banner() {
             put however the card wraps. */}
         <button
           type="button"
-          onClick={close}
+          onClick={(event) => {
+            // Unmounting the card would drop keyboard focus to <body>. Hand it
+            // to the first heading of the section that follows, where the
+            // reader would be had the card never been there.
+            const next = event.currentTarget
+              .closest("#v2-banner")
+              ?.parentElement?.nextElementSibling?.querySelector<HTMLElement>("h2, h3");
+            dismissBanner();
+            if (next) {
+              next.tabIndex = -1;
+              next.focus();
+            }
+          }}
           aria-label="Dismiss the 4.0 announcement"
-          className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-white sm:right-3 sm:top-3"
+          className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-white! sm:right-3 sm:top-3"
         >
           <svg
             width="14"
