@@ -1200,6 +1200,9 @@ export function SongPlayer({
     takeRecorderRef.current = recorder;
     onTake?.(recorder ? "recording" : undefined);
 
+    // Show the count-in with Play's state change, before the first rAF.
+    // Otherwise "Sing along" briefly appears while the count-in is pending.
+    setCountInBeat(0);
     setPhase("running");
     schedTimerRef.current = setInterval(schedTick, 90);
     schedTick();

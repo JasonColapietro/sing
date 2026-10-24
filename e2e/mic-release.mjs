@@ -199,13 +199,14 @@ let failed = 0;
 
 // Ends a scored song run on its Practice summary. End practice leaves for the
 // library instead when the scored clock (behind the audio by the pitch lag)
-// has reached no note yet, which a short fixed wait after the count-in does not
-// rule out on a slower runner or browser. So the run is left well under way
-// first, and a miss names the screen End practice went to and what the run
-// showed, rather than a bare timeout.
+// has reached no note yet. A heading or fixed sleep does not prove that the
+// scored clock has advanced; a judged note does, even when the held fixture
+// misses the melody. A miss names the screen End practice went to and what
+// the run showed, rather than a bare timeout.
 async function endSongRunOnSummary(page) {
   await page.getByRole("heading", { level: 2, name: "Sing along", exact: true }).waitFor({ timeout: 15_000 });
-  await page.waitForTimeout(4000);
+  // JudgmentReadout retains the last label after its visual flash fades.
+  await page.locator('[aria-hidden="true"] span').filter({ hasText: /^(Perfect|Great|Good|Miss)$/ }).first().waitFor({ state: "attached", timeout: 15_000 });
   const before = (await page.getByRole("heading", { level: 2 }).allTextContents()).map((t) => t.trim()).join(" | ");
   const score = (await page.getByText("Running score", { exact: true }).locator("..").textContent().catch(() => ""))?.replace(/\s+/g, " ").trim();
   await page.getByRole("button", { name: "End practice", exact: true }).click();
@@ -375,11 +376,8 @@ try {
     const title = (await page.getByRole("heading", { level: 1 }).textContent())?.trim();
     await page.getByRole("button", { name: "Play", exact: true }).first().click();
     await page.getByText("Running score", { exact: true }).waitFor();
-    await page.getByRole("heading", { level: 2, name: "Sing along", exact: true }).waitFor({ timeout: 15_000 });
-    await page.waitForTimeout(1500);
     await expectLive(page, 1, `${title}, running`, notes, 0);
-    await page.getByRole("button", { name: "End practice", exact: true }).click();
-    await page.getByRole("heading", { level: 1, name: "Practice summary", exact: true }).waitFor();
+    await endSongRunOnSummary(page);
     await expectLive(page, 0, "Practice summary after End practice", notes);
     assert.equal(await page.getByRole("button", { name: /Enable microphone/ }).count(), 0, "a mic ask on the summary");
 
