@@ -185,10 +185,8 @@ function returnToTappedSinger(saved: ReturnTarget | null) {
   place();
   // A Back inside the app can mount the chart while the popstate is still
   // being handled, and the browser then applies the entry's saved scroll
-  // position on top of this one. That position was measured with every row at
-  // its real height, which a fresh chart only estimates (.cv-auto), so after
-  // "Load more" it left the row a screen or more above the viewport. Bring the
-  // link back once the browser has done that; already in place, it is a no-op.
+  // position on top of this one. Bring the link back once the browser has
+  // done that; already in place, it is a no-op.
   requestAnimationFrame(() => requestAnimationFrame(place));
 }
 
@@ -281,7 +279,7 @@ function Ruler({ youLow, youHigh }: { youLow?: number; youHigh?: number }) {
 
 /* ---------------------------------------------------------------- rows --- */
 
-function SingerRow({ s, trackBg, materialized }: { s: Singer; trackBg: string; materialized: boolean }) {
+function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
   const left = pct(s.lowMidi);
   // Inclusive of the top semitone cell, matching the ruler and you-band.
   const width = Math.max(0.8, pct(s.highMidi + 1) - left);
@@ -296,7 +294,10 @@ function SingerRow({ s, trackBg, materialized }: { s: Singer; trackBg: string; m
   ];
 
   return (
-    <li className={materialized ? undefined : "cv-auto"}>
+    // Pagination bounds this rich list (48 initially). Its rows must use real
+    // heights on departure as well as return: intrinsic offscreen estimates
+    // changed distances between visible rows while Back restored its anchor.
+    <li>
       {/* prefetch off: rows load in batches of hundreds, and the default
           fetched every row's page payload as it scrolled into view. */}
       <Link
@@ -412,12 +413,6 @@ export function SingersDirectory() {
     INITIAL_RICH_SINGER_ROWS,
   );
   const [isInteractive, setIsInteractive] = useState(false);
-  // A return must lay out the loaded rows before restoring its anchor. With
-  // content-visibility estimates, the anchor itself could be correct while
-  // another visible row drifted seven pixels as intermediate rows expanded.
-  // Fresh visits retain offscreen rendering savings; pagination still bounds
-  // the rows mounted on a return.
-  const [materializeRows, setMaterializeRows] = useState(false);
   // The link this history entry was left by, read before anything below
   // rewrites the entry's state (the filter sync's replaceState drops it).
   const returnTarget = useRef<ReturnTarget | null>(null);
@@ -433,7 +428,6 @@ export function SingersDirectory() {
     // can't distinguish from a cascading-render bug.
     returnTarget.current = readReturnTarget(window.history.state);
     /* eslint-disable react-hooks/set-state-in-effect */
-    setMaterializeRows(returnTarget.current !== null);
     const p = new URLSearchParams(window.location.search);
     const pv = p.get("voice");
     const pg = p.get("genre");
@@ -453,12 +447,10 @@ export function SingersDirectory() {
 
   // Runs once the chart (and its restored rows) is in the DOM.
   useEffect(() => {
-    // React can reactivate effects with the previous interactive state on
-    // Back. Wait for the materialized-row commit before consuming the target.
-    if (!isInteractive || (returnTarget.current && !materializeRows)) return;
+    if (!isInteractive) return;
     returnToTappedSinger(returnTarget.current);
     returnTarget.current = null;
-  }, [isInteractive, materializeRows]);
+  }, [isInteractive]);
 
   useEffect(() => {
     const p = new URLSearchParams();
@@ -716,7 +708,7 @@ export function SingersDirectory() {
             className="mt-2 divide-y divide-line/50"
           >
             {visibleRows.map((s) => (
-              <SingerRow key={s.slug} s={s} trackBg={trackBg} materialized={materializeRows} />
+              <SingerRow key={s.slug} s={s} trackBg={trackBg} />
             ))}
           </ul>
           {canLoadMore && (
