@@ -248,6 +248,8 @@ try {
       // tab, the menu drawer) puts the chart where it was. It came back
       // 1,490px (1280) or 3,285px (375) lower.
       if (width === 375 || width === 1280) {
+        const returnFailures = [];
+        for (let returnAttempt = 0; returnAttempt < (width === 1280 ? 5 : 1); returnAttempt++) {
         await page.goto(`${base}/singers`, { waitUntil: "networkidle" });
         const row = page.locator("#singer-directory-results a").nth(30);
         await row.scrollIntoViewIfNeeded();
@@ -311,8 +313,10 @@ try {
           console.error("RETURN_DIAGNOSTICS", diagnostic);
           console.log(`::notice title=Return diagnostics::${diagnostic.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A")}`);
         }
-        assert.equal(settled, true, `${width}px: Back after a header departure puts ${href} back at ${Math.round(before)}px`);
+        if (!settled) returnFailures.push(`${width}px attempt ${returnAttempt + 1}: Back after a header departure puts ${href} back at ${Math.round(before)}px`);
         console.log("RETURN_POSITION", JSON.stringify(await row.evaluate((el, expected) => ({ expected, actual: el.getBoundingClientRect().top, y: scrollY, departure: window.__singerDeparture }), before)));
+        }
+        assert.deepEqual(returnFailures, [], "each header departure must restore within two pixels");
       }
 
       assert.deepEqual(errors, []);
