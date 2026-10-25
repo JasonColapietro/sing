@@ -142,7 +142,12 @@ export default async function CanYouSingSongPage({
         "@type": "MusicRecording",
         "@id": `${pageUrl}#recording`,
         name: song.title,
-        byArtist: { "@type": "MusicGroup", name: song.artist },
+        // Singer-library links name vocalists, which can be only one member
+        // of a band or duet. Use the recording's full credits for its artists.
+        byArtist: (song.artistCredits ?? [{ name: song.artist, type: "Person" }]).map((artist) => ({
+          "@type": artist.type,
+          name: artist.name,
+        })),
         datePublished: String(song.year),
         genre: song.genre,
       },

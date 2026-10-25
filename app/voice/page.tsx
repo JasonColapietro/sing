@@ -57,7 +57,7 @@ const JSON_LD = {
       "@type": "MobileApplication",
       "@id": `${PAGE_URL}#${id}`,
       name: `${APP_NAME}: Vocal Range Test`,
-      applicationCategory: "MusicApplication",
+      applicationCategory: "EducationalApplication",
       operatingSystem,
       url: `${PAGE_URL}#${id}`,
       installUrl: store,

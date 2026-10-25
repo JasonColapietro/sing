@@ -303,7 +303,7 @@ export default async function SingerPage({
         ...(evidence.sources.length ? { citation: evidence.sources.map((source) => ({
           "@type": "CreativeWork",
           name: source.title,
-          publisher: source.publisher,
+          publisher: { "@type": "Organization", name: source.publisher },
           url: source.url,
           description: source.scope,
         })) } : {}),
@@ -349,7 +349,7 @@ export default async function SingerPage({
         "@id": `${pageUrl}#person`,
         name: s.name,
         jobTitle: "Singer",
-        nationality: s.country,
+        nationality: s.country.split("/").map((name) => ({ "@type": "Country", name })),
         description: voiceTypeEvidenceCopy(s),
         // Without an external identifier these are hundreds of unresolvable
         // strings; the Wikipedia URL is the cheapest anchor to the real entity.

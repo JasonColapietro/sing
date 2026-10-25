@@ -17,6 +17,8 @@ export interface PopSong {
   title: string;
   /** Display credit, e.g. "Lady Gaga & Bruno Mars". */
   artist: string;
+  /** Structured credits for bands and collaborations; other credits name one person. */
+  artistCredits?: { name: string; type: "Person" | "MusicGroup" }[];
   /** Singer-library slugs for the credited vocalists that exist there. */
   artistSlugs: string[];
   year: number;
@@ -294,6 +296,7 @@ export const POP_SONGS: PopSong[] = [
     slug: "shallow",
     title: "Shallow",
     artist: "Lady Gaga & Bradley Cooper",
+    artistCredits: [{ name: "Lady Gaga", type: "Person" }, { name: "Bradley Cooper", type: "Person" }],
     artistSlugs: ["lady-gaga"],
     year: 2018,
     genre: "Pop",
@@ -397,6 +400,7 @@ export const POP_SONGS: PopSong[] = [
     slug: "uptown-funk",
     title: "Uptown Funk",
     artist: "Mark Ronson ft. Bruno Mars",
+    artistCredits: [{ name: "Mark Ronson", type: "Person" }, { name: "Bruno Mars", type: "Person" }],
     artistSlugs: ["bruno-mars"],
     year: 2014,
     genre: "Funk",
@@ -411,6 +415,7 @@ export const POP_SONGS: PopSong[] = [
     slug: "creep",
     title: "Creep",
     artist: "Radiohead",
+    artistCredits: [{ name: "Radiohead", type: "MusicGroup" }],
     artistSlugs: ["thom-yorke"],
     year: 1992,
     genre: "Alternative",
@@ -454,6 +459,7 @@ export const POP_SONGS: PopSong[] = [
     slug: "die-with-a-smile",
     title: "Die With A Smile",
     artist: "Lady Gaga & Bruno Mars",
+    artistCredits: [{ name: "Lady Gaga", type: "Person" }, { name: "Bruno Mars", type: "Person" }],
     artistSlugs: ["lady-gaga", "bruno-mars"],
     year: 2024,
     genre: "Pop",
@@ -500,6 +506,7 @@ export const POP_SONGS: PopSong[] = [
     slug: "unchained-melody",
     title: "Unchained Melody",
     artist: "The Righteous Brothers",
+    artistCredits: [{ name: "The Righteous Brothers", type: "MusicGroup" }],
     artistSlugs: ["bobby-hatfield"],
     year: 1965,
     genre: "Pop",

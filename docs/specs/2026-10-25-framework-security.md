@@ -28,3 +28,5 @@ Another authorized actor merged PR #248 at f0c2af7802955806ad7d94e6161b35e7d148a
 ## Combined-head microphone verification
 
 Reconciled-head CI passed strict singer return checks but failed one silent warmup mic-retention assertion (opened1/stopped1/live0). Warmup application logic is unchanged by #248 and this patch. Instrument the existing media-track wrapper with stop time, elapsed-open duration, current headings/dialog text and stack; emit it only on failure. Repeat the strict silent-retention case across three contexts, retaining the 400ms idle override and expected live track count. Determine the stop source before changing release behavior.
+
+A subsequent external merge, PR #252 at651a1c7b069fa6542183cecca0876f7ff7b5d8e1, updated public schema entities/categories and tests. Reconcile it unchanged and validate the combined head again before merge. Repository instructions remain unchanged.
