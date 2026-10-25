@@ -185,10 +185,8 @@ function returnToTappedSinger(saved: ReturnTarget | null) {
   place();
   // A Back inside the app can mount the chart while the popstate is still
   // being handled, and the browser then applies the entry's saved scroll
-  // position on top of this one. That position was measured with every row at
-  // its real height, which a fresh chart only estimates (.cv-auto), so after
-  // "Load more" it left the row a screen or more above the viewport. Bring the
-  // link back once the browser has done that; already in place, it is a no-op.
+  // position on top of this one. Bring the link back once the browser has
+  // done that; already in place, it is a no-op.
   requestAnimationFrame(() => requestAnimationFrame(place));
 }
 
@@ -296,7 +294,10 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
   ];
 
   return (
-    <li className="cv-auto">
+    // Pagination bounds this rich list (48 initially). Its rows must use real
+    // heights on departure as well as return: intrinsic offscreen estimates
+    // changed distances between visible rows while Back restored its anchor.
+    <li>
       {/* prefetch off: rows load in batches of hundreds, and the default
           fetched every row's page payload as it scrolled into view. */}
       <Link

@@ -248,6 +248,8 @@ try {
       // tab, the menu drawer) puts the chart where it was. It came back
       // 1,490px (1280) or 3,285px (375) lower.
       if (width === 375 || width === 1280) {
+        const returnFailures = [];
+        for (let returnAttempt = 0; returnAttempt < (width === 1280 ? 5 : 1); returnAttempt++) {
         await page.goto(`${base}/singers`, { waitUntil: "networkidle" });
         const row = page.locator("#singer-directory-results a").nth(30);
         await row.scrollIntoViewIfNeeded();
@@ -278,7 +280,34 @@ try {
           const el = document.querySelector(`#singer-directory-results a[href="${target}"]`);
           return el !== null && Math.abs(el.getBoundingClientRect().top - top) <= 2;
         }, [href, before], { timeout: 5000 }).then(() => true, () => false);
-        assert.equal(settled, true, `${width}px: Back after a header departure puts ${href} back at ${Math.round(before)}px`);
+        if (!settled) {
+          const diagnostic = JSON.stringify(await page.evaluate(async ([target, expected]) => {
+          const el = document.querySelector(`#singer-directory-results a[href="${target}"]`);
+          const firstTop = el?.getBoundingClientRect().top;
+          let frames = 0;
+          const samples = [];
+          let done = false;
+          const frame = () => { frames++; if (!done) requestAnimationFrame(frame); };
+          requestAnimationFrame(frame);
+          for (let i = 0; i < 20; i++) {
+            samples.push({ top: el?.getBoundingClientRect().top, y: scrollY, frames });
+            await new Promise((resolve) => setTimeout(resolve, 50));
+          }
+          done = true;
+          return ({
+          target, expected, actual: document.querySelector(`#singer-directory-results a[href="${target}"]`)?.getBoundingClientRect().top,
+          y: scrollY, height: innerHeight, documentHeight: document.documentElement.scrollHeight,
+          state: history.state, visibility: document.visibilityState, ready: document.readyState,
+          firstTop, frames, samples,
+          rowLayout: [...document.querySelectorAll("#singer-directory-results > li")].slice(20, 32).map((row) => ({ className: row.className, height: row.getBoundingClientRect().height, contentVisibility: getComputedStyle(row).contentVisibility })),
+        }); }, [href, before]));
+          console.error("RETURN_DIAGNOSTICS", diagnostic);
+          console.log(`::notice title=Return diagnostics::${diagnostic.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A")}`);
+        }
+        if (!settled) returnFailures.push(`${width}px attempt ${returnAttempt + 1}: Back after a header departure puts ${href} back at ${Math.round(before)}px`);
+        console.log("RETURN_POSITION", JSON.stringify(await row.evaluate((el, expected) => ({ expected, actual: el.getBoundingClientRect().top, y: scrollY }), before)));
+        }
+        assert.deepEqual(returnFailures, [], "each header departure must restore within two pixels");
       }
 
       assert.deepEqual(errors, []);

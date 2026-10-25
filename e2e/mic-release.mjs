@@ -71,6 +71,7 @@ function init(releaseMs) {
   } catch {}
   const tracks = [];
   let stopped = 0;
+  const events = [];
   const md = navigator.mediaDevices;
   const original = md.getUserMedia.bind(md);
   md.getUserMedia = async (constraints) => {
@@ -78,9 +79,16 @@ function init(releaseMs) {
     const stream = await original(constraints);
     for (const track of stream.getTracks()) {
       tracks.push(track);
+      const openedAt = performance.now();
+      events.push({ kind: "open", at: openedAt });
       const stop = track.stop.bind(track);
       track.stop = () => {
-        if (track.readyState === "live") stopped += 1;
+        if (track.readyState === "live") {
+          stopped += 1;
+          events.push({ kind: "stop", at: performance.now(), elapsed: performance.now() - openedAt,
+            headings: [...document.querySelectorAll("h1,h2,[role=dialog]")].map((el) => ({ role: el.getAttribute("role"), label: el.getAttribute("aria-label"), text: el.textContent?.slice(0, 180) })),
+            stack: new Error("microphone track stopped").stack });
+        }
         stop();
       };
     }
@@ -90,6 +98,7 @@ function init(releaseMs) {
     opened: tracks.length,
     live: tracks.filter((t) => t.readyState === "live").length,
     stopped,
+    events,
   });
 }
 
@@ -232,6 +241,7 @@ async function runCase(browser, name, body, { releaseMs = TEST_RELEASE_MS } = {}
   } catch (error) {
     failed += 1;
     console.log(`FAIL ${name}: ${error.message.split("\n")[0]}`);
+    console.error("MIC_DIAGNOSTICS", JSON.stringify(await mic(page).catch(() => null)));
   } finally {
     for (const note of notes) console.log(`       ${note}`);
     await context.close();
@@ -508,6 +518,7 @@ try {
   // 4. The deliberate exception: an exercise that closed itself for silence
   //    keeps the mic so "No sound picked up" can show a live input meter,
   //    however long the idle release is.
+  for (let silentAttempt = 0; silentAttempt < 3; silentAttempt++) {
   await runCase(silent, "warmups silent stop: the mic stays open for the No sound picked up meter", async (page, notes) => {
     await openWarmups(page);
     await enableFromGate(page, "Enable microphone");
@@ -521,6 +532,8 @@ try {
     // Longer than the 400 ms idle release: the note holds the mic for its meter.
     await expectStill(page, 1, "list after the silent stop", notes);
   });
+
+  }
 
   // 4b. The note's own control turns the mic off, and the next start reopens it.
   await runCase(silent, 'warmups silent stop: "Turn off the mic" closes it, the next start reopens it', async (page, notes) => {
