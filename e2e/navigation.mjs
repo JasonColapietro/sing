@@ -299,6 +299,7 @@ try {
           y: scrollY, height: innerHeight, documentHeight: document.documentElement.scrollHeight,
           state: history.state, visibility: document.visibilityState, ready: document.readyState,
           firstTop, frames, samples,
+          rowLayout: [...document.querySelectorAll("#singer-directory-results > li")].slice(20, 32).map((row) => ({ className: row.className, height: row.getBoundingClientRect().height, contentVisibility: getComputedStyle(row).contentVisibility })),
         }); }, [href, before]));
           console.error("RETURN_DIAGNOSTICS", diagnostic);
           console.log(`::notice title=Return diagnostics::${diagnostic.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A")}`);

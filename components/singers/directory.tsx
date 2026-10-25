@@ -453,10 +453,12 @@ export function SingersDirectory() {
 
   // Runs once the chart (and its restored rows) is in the DOM.
   useEffect(() => {
-    if (!isInteractive) return;
+    // React can reactivate effects with the previous interactive state on
+    // Back. Wait for the materialized-row commit before consuming the target.
+    if (!isInteractive || (returnTarget.current && !materializeRows)) return;
     returnToTappedSinger(returnTarget.current);
     returnTarget.current = null;
-  }, [isInteractive]);
+  }, [isInteractive, materializeRows]);
 
   useEffect(() => {
     const p = new URLSearchParams();
