@@ -255,12 +255,6 @@ try {
         await row.scrollIntoViewIfNeeded();
         const href = await row.getAttribute("href");
         const before = await row.evaluate((el) => el.getBoundingClientRect().top);
-        await page.evaluate((target) => {
-          document.addEventListener("click", () => {
-            const el = document.querySelector(`#singer-directory-results a[href="${target}"]`);
-            window.__singerDeparture = { target, top: el?.getBoundingClientRect().top, y: scrollY, state: history.state };
-          }, { capture: true, once: true });
-        }, href);
         // A press where the control is on screen, as a finger or mouse makes
         // it: locator.click() first scrolls its target into view, and for a
         // control in the sticky header that moved the page about 450px
@@ -304,17 +298,13 @@ try {
           target, expected, actual: document.querySelector(`#singer-directory-results a[href="${target}"]`)?.getBoundingClientRect().top,
           y: scrollY, height: innerHeight, documentHeight: document.documentElement.scrollHeight,
           state: history.state, visibility: document.visibilityState, ready: document.readyState,
-          firstTop, frames, samples, departure: window.__singerDeparture,
-          departureAnchorTop: (() => {
-            const saved = window.__singerDeparture?.state?.singersReturn;
-            return saved && document.querySelector(saved.scope)?.querySelector(`a[href="${CSS.escape(saved.href)}"]`)?.getBoundingClientRect().top;
-          })(),
+          firstTop, frames, samples,
         }); }, [href, before]));
           console.error("RETURN_DIAGNOSTICS", diagnostic);
           console.log(`::notice title=Return diagnostics::${diagnostic.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A")}`);
         }
         if (!settled) returnFailures.push(`${width}px attempt ${returnAttempt + 1}: Back after a header departure puts ${href} back at ${Math.round(before)}px`);
-        console.log("RETURN_POSITION", JSON.stringify(await row.evaluate((el, expected) => ({ expected, actual: el.getBoundingClientRect().top, y: scrollY, departure: window.__singerDeparture }), before)));
+        console.log("RETURN_POSITION", JSON.stringify(await row.evaluate((el, expected) => ({ expected, actual: el.getBoundingClientRect().top, y: scrollY }), before)));
         }
         assert.deepEqual(returnFailures, [], "each header departure must restore within two pixels");
       }

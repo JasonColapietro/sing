@@ -281,7 +281,7 @@ function Ruler({ youLow, youHigh }: { youLow?: number; youHigh?: number }) {
 
 /* ---------------------------------------------------------------- rows --- */
 
-function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
+function SingerRow({ s, trackBg, materialized }: { s: Singer; trackBg: string; materialized: boolean }) {
   const left = pct(s.lowMidi);
   // Inclusive of the top semitone cell, matching the ruler and you-band.
   const width = Math.max(0.8, pct(s.highMidi + 1) - left);
@@ -296,7 +296,7 @@ function SingerRow({ s, trackBg }: { s: Singer; trackBg: string }) {
   ];
 
   return (
-    <li className="cv-auto">
+    <li className={materialized ? undefined : "cv-auto"}>
       {/* prefetch off: rows load in batches of hundreds, and the default
           fetched every row's page payload as it scrolled into view. */}
       <Link
@@ -412,6 +412,12 @@ export function SingersDirectory() {
     INITIAL_RICH_SINGER_ROWS,
   );
   const [isInteractive, setIsInteractive] = useState(false);
+  // A return must lay out the loaded rows before restoring its anchor. With
+  // content-visibility estimates, the anchor itself could be correct while
+  // another visible row drifted seven pixels as intermediate rows expanded.
+  // Fresh visits retain offscreen rendering savings; pagination still bounds
+  // the rows mounted on a return.
+  const [materializeRows, setMaterializeRows] = useState(false);
   // The link this history entry was left by, read before anything below
   // rewrites the entry's state (the filter sync's replaceState drops it).
   const returnTarget = useRef<ReturnTarget | null>(null);
@@ -427,6 +433,7 @@ export function SingersDirectory() {
     // can't distinguish from a cascading-render bug.
     returnTarget.current = readReturnTarget(window.history.state);
     /* eslint-disable react-hooks/set-state-in-effect */
+    setMaterializeRows(returnTarget.current !== null);
     const p = new URLSearchParams(window.location.search);
     const pv = p.get("voice");
     const pg = p.get("genre");
@@ -707,7 +714,7 @@ export function SingersDirectory() {
             className="mt-2 divide-y divide-line/50"
           >
             {visibleRows.map((s) => (
-              <SingerRow key={s.slug} s={s} trackBg={trackBg} />
+              <SingerRow key={s.slug} s={s} trackBg={trackBg} materialized={materializeRows} />
             ))}
           </ul>
           {canLoadMore && (
