@@ -179,6 +179,10 @@ function VoiceTestContent({
           aria-label="Voice test mode"
           className="inline-flex rounded-full border border-line bg-panel p-1"
         >
+          {/* The tabs touch, so an outset ring crossed the selected tab's
+              ink fill (2.48:1) and the control's border. Inset, the ring sits
+              on the tab's own fill, and violet clears 3:1 on both the panel
+              (4.07:1) and the ink (3.86:1). */}
           {MODES.map((m) => (
             <button
               key={m.id}
@@ -189,7 +193,7 @@ function VoiceTestContent({
                 onModeChange && switchVoiceTestMode(mode, m.id, onModeChange)
               }
               disabled={!onModeChange}
-              className={`min-h-11 rounded-full px-5 text-sm font-bold transition-colors ${
+              className={`min-h-11 rounded-full px-5 text-sm font-bold transition-colors focus-visible:-outline-offset-4 focus-visible:outline-violet ${
                 mode === m.id ? "bg-ink text-bg" : "text-mut hover:text-ink"
               }`}
             >
