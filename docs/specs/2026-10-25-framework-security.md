@@ -24,3 +24,7 @@ Return-only materialization and a commit-order guard were investigated and super
 ## Current-main reconciliation
 
 Another authorized actor merged PR #248 at f0c2af7802955806ad7d94e6161b35e7d148af62 while this security work was validating. Reconcile that main, including its unrelated dormant intake commits, into this branch without changing those files. Repository instructions are unchanged. Preserve all five #248 changes and require independent review plus full CI/build/browser checks on the reconciled head. The earlier plan to merge security before #248 was overtaken by that external merge; no claim of prior deployment protection or exploitation is made.
+
+## Combined-head microphone verification
+
+Reconciled-head CI passed strict singer return checks but failed one silent warmup mic-retention assertion (opened1/stopped1/live0). Warmup application logic is unchanged by #248 and this patch. Instrument the existing media-track wrapper with stop time, elapsed-open duration, current headings/dialog text and stack; emit it only on failure. Repeat the strict silent-retention case across three contexts, retaining the 400ms idle override and expected live track count. Determine the stop source before changing release behavior.
