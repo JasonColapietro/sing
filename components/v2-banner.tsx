@@ -191,7 +191,7 @@ export default function V2Banner() {
                 1.1:1 against this fill, and white reads 7.1:1. */}
             <Link
               href="/changelog"
-              className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-violet-ink transition-colors hover:bg-panel focus-visible:outline-white!"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-violet-ink transition-colors hover:bg-panel focus-visible:outline-white"
             >
               See what&apos;s new
               <span aria-hidden>→</span>
@@ -217,7 +217,7 @@ export default function V2Banner() {
             }
           }}
           aria-label="Dismiss the 4.0 announcement"
-          className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-white! sm:right-3 sm:top-3"
+          className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/15 hover:text-white focus-visible:outline-white sm:right-3 sm:top-3"
         >
           <svg
             width="14"
