@@ -274,10 +274,30 @@ try {
         await page.locator("h1").first().waitFor();
         await page.goBack();
         await page.waitForURL((url) => url.pathname === "/singers");
+        // Diagnose frame starvation separately from a misplaced return. Timer
+        // samples do not drive restoration or weaken the two-pixel assertion.
+        await page.evaluate((target) => {
+          const trace = { frames: 0, samples: [] };
+          window.__singerReturnTrace = trace;
+          const frame = () => { trace.frames++; if (trace.samples.length < 110) requestAnimationFrame(frame); };
+          requestAnimationFrame(frame);
+          const sample = () => {
+            const el = document.querySelector(`#singer-directory-results a[href="${target}"]`);
+            trace.samples.push({ ms: Math.round(performance.now()), top: el?.getBoundingClientRect().top, y: scrollY, frames: trace.frames });
+            if (trace.samples.length < 110) setTimeout(sample, 50);
+          };
+          sample();
+        }, href);
         const settled = await page.waitForFunction(([target, top]) => {
           const el = document.querySelector(`#singer-directory-results a[href="${target}"]`);
           return el !== null && Math.abs(el.getBoundingClientRect().top - top) <= 2;
         }, [href, before], { timeout: 5000 }).then(() => true, () => false);
+        if (!settled) console.error("RETURN_DIAGNOSTICS", JSON.stringify(await page.evaluate(([target, expected]) => ({
+          target, expected, actual: document.querySelector(`#singer-directory-results a[href="${target}"]`)?.getBoundingClientRect().top,
+          y: scrollY, height: innerHeight, documentHeight: document.documentElement.scrollHeight,
+          state: history.state, visibility: document.visibilityState, ready: document.readyState,
+          trace: window.__singerReturnTrace,
+        }), [href, before])));
         assert.equal(settled, true, `${width}px: Back after a header departure puts ${href} back at ${Math.round(before)}px`);
       }
 
