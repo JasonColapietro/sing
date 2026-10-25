@@ -312,7 +312,7 @@ try {
           console.log(`::notice title=Return diagnostics::${diagnostic.replaceAll("%", "%25").replaceAll("\r", "%0D").replaceAll("\n", "%0A")}`);
         }
         assert.equal(settled, true, `${width}px: Back after a header departure puts ${href} back at ${Math.round(before)}px`);
-        console.log("RETURN_POSITION", JSON.stringify(await row.evaluate((el, expected) => ({ expected, actual: el.getBoundingClientRect().top, y: scrollY }), before)));
+        console.log("RETURN_POSITION", JSON.stringify(await row.evaluate((el, expected) => ({ expected, actual: el.getBoundingClientRect().top, y: scrollY, departure: window.__singerDeparture }), before)));
       }
 
       assert.deepEqual(errors, []);
