@@ -22,6 +22,7 @@ Files: `lib/intake/events.ts`, `lib/intake/events.test.ts`, `tests/fixtures/inta
 Files: `lib/intake/outbox.ts`, `lib/intake/outbox.test.ts`, `lib/intake/transport.ts`, `lib/intake/transport.test.ts`.
 - [ ] Write failing fault-injection tests for atomic dedupe, lease interruption, persistence failure, ambiguous ACK, timeout and config/auth/schema rejection recovery.
 - [ ] Implement storage adapter with atomic enqueue/claim/transition; no loss TTL for undelivered accepted events.
+- [ ] Add a distinct failure-alert capture and retention task: explicit safe-code schema, durable enqueue, reserved capacity, approved retention/reconciliation and failure-injection tests; block wire delivery until the revised contract defines alert semantics.
 - [ ] Implement explicitly disabled-by-default transport with bounded network and response parsing; acknowledge delivery only on approved durable ACK.
 - [ ] Test spam/canary isolation and zero network/store activity when disabled; commit.
 
