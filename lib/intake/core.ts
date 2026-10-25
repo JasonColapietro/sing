@@ -53,5 +53,5 @@ export async function deliver(event: PurchaseEvent, env: Readonly<Record<string,
     return data?.accepted===true && typeof data.duplicate==='boolean' ? {state:'delivered'} : {state:'pending'};
     })()]);
   } catch { return {state:'pending'}; }
-  finally {clearTimeout(timeout!);}
+  finally {controller.abort();clearTimeout(timeout!);}
 }

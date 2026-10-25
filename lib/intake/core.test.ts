@@ -63,3 +63,9 @@ it('rejects normalized impossible dates and dates beyond four-digit ISO years',(
  for(const occurredAt of ['2026-02-30T12:00:00.000Z','2026-10-25T24:00:00.000Z','2026-10-25T12:60:00.000Z'])expect(validPurchase({...event,occurredAt})).toBe(false);
  expect(purchaseEvent({...raw,data:{object:{...raw.data.object,created:253402300800}}})).toBeNull();
 });
+it('aborts an unread rejection body after classifying response headers',async()=>{
+ const event=purchaseEvent({id:'evt_cleanup',type:'checkout.session.completed',data:{object:{id:'cs_cleanup',created:1792929600,metadata:{app:'suede-sing',plan:'lifetime'},payment_status:'paid',amount_total:100,currency:'usd'}}})!;
+ let signal:AbortSignal|undefined;
+ await deliver(event,{SING_INTAKE_ENABLED:'1',SUEDE_INTAKE_CONTRACT:'0b33f45a0bdde87b8e7746666d6200c17d0c4b82',SUEDE_INTAKE_SECRET:'fixture-secret-012345678901234567890123'},async(_url,init)=>{signal=init?.signal as AbortSignal;return new Response(new ReadableStream({start(){}}),{status:401});});
+ expect(signal?.aborted).toBe(true);
+});
