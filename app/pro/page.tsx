@@ -122,7 +122,7 @@ const PRO_JSON_LD = {
         // two coach steps each day, so planning is described as the full plan,
         // not as something only Pro has (lib/pro.ts PLAN_ROWS "Coach plan").
         "The full adaptive daily practice plan (the free plan shows its first two steps), per-note accuracy and range history, pitch analysis on every recorded take, pro warmup packs, no daily limit on guided practice, cloud sync, and two books with PDFs.",
-      applicationCategory: "MusicApplication",
+      applicationCategory: "EducationalApplication",
       operatingSystem: "Web Browser",
       publisher: { "@id": "https://suedeai.ai/#organization" },
       // isPartOf, not isRelatedTo: isRelatedTo only takes Product and Service

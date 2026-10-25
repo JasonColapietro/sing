@@ -176,7 +176,7 @@ const HOME_JSON_LD = {
       "@id": `${SITE_URL}/#app`,
       name: "Suede Sing",
       description: HOME_DESCRIPTION,
-      applicationCategory: "MusicApplication",
+      applicationCategory: "EducationalApplication",
       operatingSystem: "Web Browser",
       browserRequirements: "Requires a microphone for pitch and range features",
       url: `${SITE_URL}/`,
