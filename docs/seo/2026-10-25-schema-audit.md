@@ -13,13 +13,14 @@ enumeration URLs, and ISO durations were treated as their supported values.
 No remaining unknown vocabulary, domain, or checked value-type issues were found.
 This vocabulary check does not establish Google rich-result eligibility.
 
-Three confirmed issues were fixed:
+Four confirmed issues were fixed:
 
 | Location | Before | After |
 | --- | --- | --- |
 | Singer profiles: `Person.nationality` | A country-name string, including slash-joined dual nationalities | Named `Country` entities; dual nationalities remain separate entities |
 | Singer evidence: `CreativeWork.publisher` | A publisher-name string | A named `Organization`, preserving the visible source name |
 | Popular-song pages: `MusicRecording.byArtist` | Every artist was a `MusicGroup`, including solo singers and duets | Solo `Person` entities, the two actual groups, and individual collaboration credits |
+| Web, Pro, and native apps: `applicationCategory` | `MusicApplication`, which is not a Google-supported app category | `EducationalApplication`, matching the extension and the singing-training product |
 
 Artist credits are explicit where the display credit names a group or multiple
 people. They do not come from singer-library links: those links may name only
@@ -28,14 +29,17 @@ credits and source facts are preserved.
 
 Reference: [nationality](https://schema.org/nationality),
 [publisher](https://schema.org/publisher),
-[byArtist](https://schema.org/byArtist), and
+[byArtist](https://schema.org/byArtist),
+[Google's supported software-app categories](https://developers.google.com/search/docs/appearance/structured-data/software-app), and
 [Google's structured-data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies).
 
 ## Verification
 
 - Eleven new rendering regressions failed before the fixes and passed after.
+- Three application-category cases failed before the category fix; all four
+  application surfaces (including the already-correct extension) pass after.
 - Targeted schema, popular-song, and singer-evidence tests: 85 passed.
-- Full local suite: 3,235 Vitest tests passed, 8 skipped; 12 Node tests passed.
+- Full local suite: 3,239 Vitest tests passed, 8 skipped; 12 Node tests passed.
 - TypeScript, ESLint, and whitespace checks passed.
 - The 949-page in-memory audit completed without rendering or JSON parsing errors.
 - Local production builds could not finish because the disk filled up during

@@ -5,6 +5,10 @@ vi.mock("server-only", () => ({}));
 
 import SingerPage from "@/app/singers/[slug]/page";
 import PopSongPage from "@/app/can-you-sing/[slug]/page";
+import HomePage from "@/app/page";
+import ProPage from "@/app/pro/page";
+import VoicePage from "@/app/voice/page";
+import ExtensionPage from "@/app/extension/page";
 
 type Node = Record<string, unknown>;
 
@@ -13,6 +17,21 @@ function graph(html: string): Node[] {
   if (!block) throw new Error("No JSON-LD emitted");
   return JSON.parse(block[1])["@graph"];
 }
+
+describe("software application categories", () => {
+  it.each([
+    ["home", HomePage],
+    ["Pro", ProPage],
+    ["native apps", VoicePage],
+    ["extension", ExtensionPage],
+  ])("%s uses Google's supported educational category", (_, Page) => {
+    const apps = graph(renderToStaticMarkup(<Page />)).filter((n) =>
+      ["SoftwareApplication", "WebApplication", "MobileApplication"].includes(String(n["@type"])),
+    );
+    expect(apps.length).toBeGreaterThan(0);
+    for (const app of apps) expect(app.applicationCategory).toBe("EducationalApplication");
+  });
+});
 
 describe("singer schema entity values", () => {
   it.each([
