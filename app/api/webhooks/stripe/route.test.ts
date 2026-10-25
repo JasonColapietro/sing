@@ -17,3 +17,9 @@ it('acknowledges only durable admission and keeps storage failure retryable',asy
  expect(JSON.stringify(command.mock.calls)).not.toMatch(/private@example|NEVER|cs_synthetic/);
  command.mockRejectedValue(Error('store down'));expect((await POST(request(payload,signature))).status).toBe(503);
 });
+
+it('does not acknowledge an unrepresentable paid Sing purchase',async()=>{
+ for(const [k,v]of Object.entries(env))vi.stubEnv(k,v);
+ const payload=JSON.stringify({id:'evt_bad',type:'checkout.session.completed',data:{object:{id:'cs_bad',created:1792929600,metadata:{app:'suede-sing',plan:'unknown'},payment_status:'paid',amount_total:9900,currency:'usd'}}});
+ const signature=Stripe.webhooks.generateTestHeaderString({payload,secret});expect((await POST(request(payload,signature))).status).toBe(503);expect(command).not.toHaveBeenCalled();
+});

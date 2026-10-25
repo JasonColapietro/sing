@@ -17,7 +17,7 @@ export async function POST(request:Request):Promise<Response> {
   let event:Stripe.Event;
   try{event=Stripe.webhooks.constructEvent(body,signature,env.SING_STRIPE_INTAKE_WEBHOOK_SECRET);}catch{return Response.json({error:'Invalid signature'},{status:400});}
   if(event.type!=='checkout.session.completed')return Response.json({received:true});
-  const purchase=purchaseEvent(event);if(!purchase)return Response.json({received:true});
+  const purchase=purchaseEvent(event);if(!purchase){if(event.data.object.metadata?.app==='suede-sing' && event.data.object.payment_status==='paid')return Response.json({error:'Purchase requires reconciliation'},{status:503});return Response.json({received:true});}
   const state=await createOutbox(storeCommand(env)).enqueue(purchase,env);
   if(!['pending','duplicate','delivered'].includes(state))return Response.json({error:'Intake admission unavailable'},{status:503});
   return Response.json({received:true});
