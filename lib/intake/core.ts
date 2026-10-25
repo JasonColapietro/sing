@@ -1,7 +1,8 @@
 import { createHash, createHmac } from 'node:crypto';
 
 // Draft-code conformance: Studio 0b33f45a0bdde87b8e7746666d6200c17d0c4b82.
-// No route imports this module. Activation and identity/consent remain held.
+// A gated admission route is prepared; no provider registration or activation.
+// Identity/consent reconciliation remains held.
 export interface PurchaseEvent {
   readonly id: string;
   readonly kind: 'purchase';

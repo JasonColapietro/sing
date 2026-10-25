@@ -44,7 +44,7 @@ if row.state=='blocked' then redis.call('ZREM',KEYS[2],id)
 else redis.call('ZADD',KEYS[2],now+math.max(tonumber(ARGV[7]) or 0,math.min(3600000,60000*2^math.min(row.attempts-1,6))),id) end
 return 1`;
 interface Row {event:PurchaseEvent;state:string;attempts:number;token:string}
-/** Dormant durable core. No production route, worker, schedule or credentials are installed. */
+/** Dormant durable core with gated admission route; no provider webhook registration, worker schedule or activation. */
 export function createOutbox(command:Command, now:()=>number=Date.now, capacity=1000) {
  const evalOp=(...args:(string|number)[])=>command(['EVAL',SCRIPT,3,...KEYS,...args]);
  return {
