@@ -9,7 +9,7 @@ import {
   Pill,
   SectionLabel,
 } from "@/components/ui";
-import { analyzeTake, type TakeAnalysis } from "@/lib/audio/analyze-take";
+import { useTakeAnalysis } from "./use-take-analysis";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { MIC_ENDED_MESSAGE, openMic } from "@/lib/audio/mic";
 import { focusIfDropped } from "@/lib/audio/mic-focus";
@@ -184,8 +184,7 @@ export default function RecorderPageClient() {
   const decodingRef = useRef(new Set<string>());
 
   // --- pitch analysis cache ---
-  const [analysisMap, setAnalysisMap] = useState<Map<string, TakeAnalysis>>(() => new Map());
-  const analyzingRef = useRef(new Set<string>());
+  const { analysisMap, analysisErrors, ensureAnalysis, forgetAnalysis } = useTakeAnalysis();
 
   // --- review, downloads, compare, toast ---
   const [reviewId, setReviewId] = useState<string | null>(null);
@@ -291,22 +290,6 @@ export default function RecorderPageClient() {
         decodingRef.current.delete(take.id);
       });
   }, [peaksMap]);
-
-  const ensureAnalysis = useCallback(
-    (take: TakeRecord) => {
-      if (analysisMap.has(take.id) || analyzingRef.current.has(take.id)) return;
-      analyzingRef.current.add(take.id);
-      void analyzeTake(take.blob)
-        .then((analysis) => {
-          setAnalysisMap((prev) => new Map(prev).set(take.id, analysis));
-        })
-        .catch(() => {})
-        .finally(() => {
-          analyzingRef.current.delete(take.id);
-        });
-    },
-    [analysisMap],
-  );
 
   useEffect(() => {
     const wanted = new Set([selectedId, ...abPicks]);
@@ -660,12 +643,7 @@ export default function RecorderPageClient() {
         next.delete(take.id);
         return next;
       });
-      setAnalysisMap((prev) => {
-        if (!prev.has(take.id)) return prev;
-        const next = new Map(prev);
-        next.delete(take.id);
-        return next;
-      });
+      forgetAnalysis(take.id);
       setAbPicks((prev) => prev.filter((id) => id !== take.id));
       setSelectedId((prev) => (prev === take.id ? null : prev));
       setReviewId((prev) => (prev === take.id ? null : prev));
@@ -673,7 +651,7 @@ export default function RecorderPageClient() {
       setTakes(takesRef.current);
       refreshEstimate();
     },
-    [refreshEstimate, mutations, clearStorageIssue],
+    [refreshEstimate, mutations, clearStorageIssue, forgetAnalysis],
   );
 
   const downloadOriginal = useCallback((take: TakeRecord) => {
@@ -1143,8 +1121,15 @@ export default function RecorderPageClient() {
                       name={selectedTake.name}
                     />
                   </div>
+                ) : analysisErrors.has(selectedTake.id) ? (
+                  <div role="alert" className="mt-4 text-sm text-mut">
+                    <p>Pitch analysis couldn’t finish for {selectedTake.name}. Your recording is still in your takes.</p>
+                    <Button variant="outline" size="sm" className="mt-2" onClick={() => ensureAnalysis(selectedTake, true)}>
+                      Retry pitch analysis
+                    </Button>
+                  </div>
                 ) : (
-                  <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
+                  <p role="status" className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-dim">
                     Analyzing {selectedTake.name}…
                   </p>
                 )
@@ -1154,6 +1139,16 @@ export default function RecorderPageClient() {
                   drawn over time.
                 </p>
               )}
+              {[abA, abB].filter((take): take is TakeRecord =>
+                take !== null && take !== undefined && take.id !== selectedId && analysisErrors.has(take.id)
+              ).map((take) => (
+                <div key={take.id} role="alert" className="mt-4 text-sm text-mut">
+                  <p>Pitch analysis couldn’t finish for {take.name}. Your recording is still in your takes.</p>
+                  <Button variant="outline" size="sm" className="mt-2" onClick={() => ensureAnalysis(take, true)}>
+                    Retry pitch analysis for {take.name}
+                  </Button>
+                </div>
+              ))}
               {abA &&
                 abB &&
                 analysisMap.has(abA.id) &&

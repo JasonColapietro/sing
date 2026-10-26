@@ -162,15 +162,22 @@ export function usePitch(opts?: {
   }, []);
 
   const start = useCallback(async (): Promise<boolean> => {
-    if (streamRef.current) return true;
+    // A stream can already be owned while startup is still failing. Wait for
+    // the complete startup result before treating that stream as ready.
     if (pendingRef.current) return pendingRef.current;
-    const run = openStream();
-    pendingRef.current = run;
-    try {
-      return await run;
-    } finally {
+    if (streamRef.current) return true;
+    const run = openStream().catch(() => {
+      // Web Audio can fail after permission succeeds. Release the stream and
+      // any source already created, then leave the room ready for a retry.
+      stop();
+      setError("The microphone couldn't start. Check your input and try again.");
+      return false;
+    }).finally(() => {
       pendingRef.current = null;
-    }
+    });
+    // Every concurrent caller shares cleanup and the handled result.
+    pendingRef.current = run;
+    return run;
     async function openStream(): Promise<boolean> {
     setError(null);
 
@@ -188,9 +195,12 @@ export function usePitch(opts?: {
       return false;
     }
     const stream = opened.stream;
+    // Own each resource before the next startup operation can throw.
+    streamRef.current = stream;
 
     const ctx = getAudioContext();
     const source = ctx.createMediaStreamSource(stream);
+    sourceRef.current = source;
     const analyser = ctx.createAnalyser();
     // 4096 samples is 85 ms at 48 kHz — about five and a half periods of a low
     // C2, where 2048 gave under three. Normalizing the correlation is what made
@@ -201,8 +211,6 @@ export function usePitch(opts?: {
     // below already spans more time than the extra 43 ms this adds.
     analyser.fftSize = PITCH_FFT_SIZE;
     source.connect(analyser);
-    streamRef.current = stream;
-    sourceRef.current = source;
     listeningRef.current = true;
     setListening(true);
     // An unplugged or dropped mic ends the track and the analyser reads

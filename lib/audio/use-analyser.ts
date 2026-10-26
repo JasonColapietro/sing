@@ -109,15 +109,22 @@ export function useAnalyser(opts?: {
   }, []);
 
   const start = useCallback(async (): Promise<boolean> => {
-    if (streamRef.current) return true;
+    // A stream can already be owned while startup is still failing. Wait for
+    // the complete startup result before treating that stream as ready.
     if (pendingRef.current) return pendingRef.current;
-    const run = openStream();
-    pendingRef.current = run;
-    try {
-      return await run;
-    } finally {
+    if (streamRef.current) return true;
+    const run = openStream().catch(() => {
+      // Web Audio can fail after permission succeeds. Release the stream and
+      // any source already created, then leave the room ready for a retry.
+      stop();
+      setError("The microphone couldn't start. Check your input and try again.");
+      return false;
+    }).finally(() => {
       pendingRef.current = null;
-    }
+    });
+    // Every concurrent caller shares cleanup and the handled result.
+    pendingRef.current = run;
+    return run;
     async function openStream(): Promise<boolean> {
     setError(null);
 
@@ -132,9 +139,12 @@ export function useAnalyser(opts?: {
       return false;
     }
     const stream = opened.stream;
+    // Own each resource before the next startup operation can throw.
+    streamRef.current = stream;
 
     const ctx = getAudioContext();
     const source = ctx.createMediaStreamSource(stream);
+    sourceRef.current = source;
     const analyser = ctx.createAnalyser();
     analyser.fftSize = FFT_SIZE;
     // A little smoothing steadies the spectrum without visibly lagging the
@@ -143,8 +153,6 @@ export function useAnalyser(opts?: {
     analyser.minDecibels = -100;
     analyser.maxDecibels = -10;
     source.connect(analyser);
-    streamRef.current = stream;
-    sourceRef.current = source;
     setSampleRate(ctx.sampleRate);
     listeningRef.current = true;
     setListening(true);
