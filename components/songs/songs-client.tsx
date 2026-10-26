@@ -210,8 +210,10 @@ export function SongsClient() {
     // would flash "Listen mode" until access came back. That includes a singer
     // who first went on without a mic and turned it on later. Only if this
     // screen is still the one showing when access arrives, as with the
-    // summary's own ask.
-    if (micAllowed && !pitch.listening) {
+    // summary's own ask. Asked of the stream, not `pitch.listening`: the idle
+    // release can close the mic after the last render, and a stale "listening"
+    // skipped the reopen and started the run on a stopped track.
+    if (micAllowed && pitch.getStream() === null) {
       const current = micRequestRef.current.begin();
       setReopening((n) => n + 1);
       let ok: boolean;

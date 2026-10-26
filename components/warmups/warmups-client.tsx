@@ -318,12 +318,19 @@ export function WarmupsClient() {
   // the singer was actually looking.
   const [errorAt, setErrorAt] = useState<ErrorAt>({ kind: "gate" });
 
+  // Whether a start can skip reopening the mic. Read from the stream, not from
+  // `pitch.listening`: the idle release (useIdleMicRelease) can close the mic
+  // between the last render and this press, and the rendered value would
+  // still say it is open. The run then started on a stopped track, heard
+  // nothing, and told a singer who was singing "No sound picked up".
+  const micOpen = () => pitch.getStream() !== null;
+
   async function selectExercise(
     ex: WarmupExercise,
     from: "path" | "continue" | "summary" = "path",
   ) {
     if (cap.capped) return;
-    if (pitch.listening) {
+    if (micOpen()) {
       startExercise(ex);
       return;
     }
@@ -344,7 +351,7 @@ export function WarmupsClient() {
   /** A row in today's three: the exercise at the tempo the plan set for it. */
   async function selectDailyPick(p: DailyPick, from: "today" | "summary" = "today") {
     if (cap.capped || !canStart(p.exercise)) return;
-    if (pitch.listening) {
+    if (micOpen()) {
       startExercise(p.exercise, p.tempo);
       return;
     }
@@ -356,7 +363,7 @@ export function WarmupsClient() {
 
   async function selectRoutine(r: Routine, from: "today" | "grid" | "summary") {
     if (!canStartRoutine(r) || cap.capped) return;
-    if (pitch.listening) {
+    if (micOpen()) {
       startRoutine(r);
       return;
     }

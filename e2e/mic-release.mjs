@@ -204,6 +204,45 @@ async function enableFromGate(page, name) {
   throw new Error(`"${name}" in the warmups gate never opened the mic`);
 }
 
+/**
+ * Presses a button in the same task as the idle release, right after it has
+ * closed the mic and before React re-renders: a singer who presses start just
+ * as the wait runs out. Arm it before the mic opens; the next timer set with
+ * the release delay is the release. `window.__raced` records whether the
+ * press landed and the mic as it did. A Playwright click cannot hit that gap
+ * on purpose, and hitting it by chance failed the silent-stop case now and
+ * then (opened 1, stopped 1, live 0).
+ */
+async function armPressAsReleaseFires(page, text, { exact = false } = {}) {
+  await page.evaluate(([text, exact, ms]) => {
+    const realSetTimeout = window.setTimeout;
+    window.setTimeout = function (fn, delay, ...rest) {
+      if (delay !== ms || typeof fn !== "function") return realSetTimeout(fn, delay, ...rest);
+      window.setTimeout = realSetTimeout;
+      return realSetTimeout(() => {
+        fn();
+        const button = [...document.querySelectorAll("button")].find((b) => {
+          const label = (b.textContent ?? "").trim();
+          return exact ? label === text : label.startsWith(text);
+        });
+        window.__raced = { pressed: Boolean(button), mic: window.__mic() };
+        button?.click();
+      }, delay, ...rest);
+    };
+  }, [text, exact, TEST_RELEASE_MS]);
+}
+
+/** Waits for the armed press, and requires that the release closed the mic first. */
+async function racedPress(page, notes) {
+  const raced = await page
+    .waitForFunction(() => window.__raced ?? false, null, { timeout: 10_000, polling: 50 })
+    .then((h) => h.jsonValue());
+  notes.push(`press as the release fired: ${fmt(raced.mic)}`);
+  assert.ok(raced.pressed, "the armed press found no button");
+  assert.equal(raced.mic.live, 0, `the release had not closed the mic before the press: ${fmt(raced.mic)}`);
+  return raced;
+}
+
 let failed = 0;
 
 // Ends a scored song run on its Practice summary. End practice leaves for the
@@ -509,6 +548,36 @@ try {
     const again = await expectLive(page, 1, "Sing again inside the grace", notes, 0);
     assert.equal(again.opened, ended.opened, `Sing again reopened a stream it could keep: ${fmt(ended)} then ${fmt(again)}`);
   }, { releaseMs: null });
+
+  // 8. A start pressed just as the idle release closes the mic reopens it.
+  //    The room read the last render's "listening", which still said open,
+  //    so the run started on the stopped track: it heard nothing and ended on
+  //    "No sound picked up" for a singer who was singing.
+  await runCase(held, "warmups: a start pressed as the idle release fires reopens the mic", async (page, notes) => {
+    await openWarmups(page);
+    await armPressAsReleaseFires(page, "Five-note scale");
+    await enableFromGate(page, "Enable microphone");
+    await racedPress(page, notes);
+    const run = page.getByRole("dialog", { name: "Five-note scale", exact: true });
+    await run.waitFor();
+    const during = await expectLive(page, 1, "Five-note scale started on the press", notes);
+    assert.equal(during.opened, 2, `the run did not reopen the mic: ${fmt(during)}`);
+    notes.push(`Five-note scale reads ${await readoutReacts(page)} cents`);
+    await run.getByRole("button", { name: "End", exact: true }).click();
+  });
+
+  await runCase(held, "songs: a card pressed as the idle release fires reopens the mic", async (page, notes) => {
+    await page.goto(`${BASE}/songs`);
+    await page.waitForLoadState("networkidle");
+    await dismissOverlays(page);
+    await armPressAsReleaseFires(page, "Sing", { exact: true });
+    await page.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await racedPress(page, notes);
+    await page.locator("#song-transport").waitFor();
+    const ready = await expectLive(page, 1, "song player after the press", notes);
+    assert.equal(ready.opened, 2, `the card did not reopen the mic: ${fmt(ready)}`);
+    assert.equal(await page.getByText("Listen mode", { exact: true }).count(), 0, '"Listen mode" after the press');
+  });
 } finally {
   await held.close();
 }
