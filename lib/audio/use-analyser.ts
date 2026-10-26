@@ -89,6 +89,10 @@ export function useAnalyser(opts?: {
   const listeningRef = useRef(false);
   /** The in-flight open, shared by concurrent callers — see `usePitch`. */
   const pendingRef = useRef<Promise<boolean> | null>(null);
+  // Stop can leave this hook mounted (for example, the breath room's home
+  // screen). A permission prompt cannot be dismissed programmatically, so
+  // invalidate its attempt and release its stream if it arrives later.
+  const attemptRef = useRef(0);
   const onFrameRef = useRef(opts?.onFrame);
   const onFrame = opts?.onFrame;
   useEffect(() => {
@@ -96,6 +100,8 @@ export function useAnalyser(opts?: {
   }, [onFrame]);
 
   const stop = useCallback(() => {
+    attemptRef.current++;
+    pendingRef.current = null;
     cancelAnimationFrame(rafRef.current);
     unwatchRef.current();
     unwatchRef.current = () => {};
@@ -113,14 +119,18 @@ export function useAnalyser(opts?: {
     // the complete startup result before treating that stream as ready.
     if (pendingRef.current) return pendingRef.current;
     if (streamRef.current) return true;
+    const attempt = ++attemptRef.current;
     const run = openStream().catch(() => {
+      // A cancelled request's rejection must not stop a replacement stream
+      // or overwrite the replacement's error state.
+      if (attempt !== attemptRef.current || !mountedRef.current) return false;
       // Web Audio can fail after permission succeeds. Release the stream and
       // any source already created, then leave the room ready for a retry.
       stop();
       setError("The microphone couldn't start. Check your input and try again.");
       return false;
     }).finally(() => {
-      pendingRef.current = null;
+      if (pendingRef.current === run) pendingRef.current = null;
     });
     // Every concurrent caller shares cleanup and the handled result.
     pendingRef.current = run;
@@ -130,7 +140,7 @@ export function useAnalyser(opts?: {
 
     const opened = await openMic();
     // Left the room while the permission prompt was up — see `usePitch`.
-    if (!mountedRef.current) {
+    if (!mountedRef.current || attempt !== attemptRef.current) {
       opened.stream?.getTracks().forEach((t) => t.stop());
       return false;
     }
