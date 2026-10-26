@@ -42,7 +42,10 @@ export async function launchLifecycleBrowser(executablePath, args) {
     try {
       await browser?.close();
     } finally {
-      await rm(profile, { recursive: true, force: true });
+      // Chromium's utility processes can finish profile writes just after the
+      // browser process exits. Retry transient ENOTEMPTY/EBUSY removal races;
+      // keep persistent cleanup failures fatal rather than hiding them.
+      await rm(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
     }
   };
 
