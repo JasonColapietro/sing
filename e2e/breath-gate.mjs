@@ -133,6 +133,36 @@ async function readResult(page) {
 }
 
 const CASES = [
+  ...["sustain", "cue"].map((drill) => ({
+    name: `${drill} visibility interruption`,
+    drill,
+    make: () => inhaleThenVowel(8),
+    async run(page) {
+      if (drill === "cue") await page.getByRole("button", { name: "Begin", exact: true }).click();
+      await page.getByText("Hold", { exact: true }).waitFor({ timeout: 15000 });
+      const cdp = await page.context().newCDPSession(page);
+      try {
+        // Chromium hides and freezes this page while capture keeps its place
+        // in the long vowel. Returning must require a new observed breath.
+        await cdp.send("Page.setWebLifecycleState", { state: "frozen" });
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      } finally {
+        await cdp.send("Page.setWebLifecycleState", { state: "active" });
+        await page.bringToFront();
+        await cdp.detach();
+      }
+      await page.waitForFunction(() => document.visibilityState === "visible", null, { timeout: 3000 });
+      const failures = [];
+      try { await page.getByText("Breathe in", { exact: true }).waitFor({ timeout: 3000 }); }
+      catch { failures.push("unobserved time did not reset the unfinished hold to a fresh breath"); }
+      if (drill === "cue" && await page.getByRole("img", { name: "0 of 6 reps done", exact: true }).count() !== 1)
+        failures.push("interrupted cue counted a rep");
+      const sessions = await page.evaluate(() => JSON.parse(localStorage.getItem("suede-sing:progress:v1") ?? "{}").sessions ?? []);
+      if (sessions.length) failures.push("interrupted hold logged practice");
+      if (await page.getByText(/^Breath · /).count()) failures.push("interrupted hold completed the drill");
+      return { failures };
+    },
+  })),
   {
     name: "inhale then vowel",
     drill: "sustain",

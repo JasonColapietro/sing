@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { useBreathDetect } from "@/lib/audio/use-breath-detect";
+import { STALE_FRAME_MS } from "@/lib/audio/frame-clock";
 import { logSession, type Achievement, type LogResult } from "@/lib/progress";
 import { FREE_DAILY_MINUTES } from "@/lib/practice-limits";
 import { Button, Card, MicGate, MIC_PRIVACY, Pill, Stat } from "@/components/ui";
@@ -31,6 +32,9 @@ import { BreathGatePanel } from "./breath-gate";
 type Phase = "idle" | "breath" | "armed" | "running" | "done";
 
 const SILENCE_MS = 700;
+// Allow ordinary scheduling hitches, but never bridge a whole silence window
+// plus the shared analysis-frame freshness allowance without an observation.
+const MAX_HOLD_GAP_MS = SILENCE_MS + STALE_FRAME_MS;
 const METER_SEGS = 28;
 /** How long the between-attempts card holds before the next attempt arms itself. */
 const NEXT_ATTEMPT_MS = 3000;
@@ -296,10 +300,13 @@ export function SustainTest({
    */
   const [gated, setGated] = useState(true);
   const [breathStale, setBreathStale] = useState(false);
-  const breath = useBreathDetect(mic, gated);
+  const [visible, setVisible] = useState(true);
+  const available = listening && visible;
+  const breath = useBreathDetect(mic, gated && visible);
 
   const startRef = useRef(0);
   const lastLoudRef = useRef(0);
+  const lastFrameRef = useRef(0);
   const samplesRef = useRef<number[]>([]);
   const attemptsRef = useRef<AttemptResult[]>([]);
   const finishedRef = useRef(false);
@@ -320,6 +327,13 @@ export function SustainTest({
     // HTML shell.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setData(loadBreath());
+  }, []);
+
+  useEffect(() => {
+    const onVisibility = () => setVisible(document.visibilityState !== "hidden");
+    onVisibility();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
   /** Hand the whole step back — every attempt so far, folded into one row. */
@@ -349,6 +363,10 @@ export function SustainTest({
 
   /** Start an attempt: listen for the breath first, unless that is switched off. */
   const arm = (withGate = gated) => {
+    startRef.current = 0;
+    lastLoudRef.current = 0;
+    lastFrameRef.current = 0;
+    samplesRef.current = [];
     setElapsed(0);
     setResult(null);
     setBreathStale(false);
@@ -363,13 +381,13 @@ export function SustainTest({
     arm(false);
   };
 
-  // If the mic is turned off mid-attempt, drop back to idle cleanly. Adjusted
-  // during render (guarded by prevListening) rather than in an effect, per
+  // If the mic disappears or the tab hides mid-attempt, discard only that
+  // unfinished hold. Adjusted during render (guarded by prevAvailable) rather than in an effect, per
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
-  const [prevListening, setPrevListening] = useState(listening);
-  if (listening !== prevListening) {
-    setPrevListening(listening);
-    if (!listening && (phase === "breath" || phase === "armed" || phase === "running")) {
+  const [prevAvailable, setPrevAvailable] = useState(available);
+  if (available !== prevAvailable) {
+    setPrevAvailable(available);
+    if (!available && (phase === "breath" || phase === "armed" || phase === "running")) {
       setPhase("idle");
       setElapsed(0);
     }
@@ -382,20 +400,20 @@ export function SustainTest({
   const selfArming = autoStart || variant === "session";
   useEffect(() => {
     if (!selfArming || finishedRef.current) return;
-    if (listening && phase === "idle") {
+    if (available && phase === "idle") {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- arming follows the mic stream going live, which is not a render-derivable value
       arm();
     }
     // `arm` reads only state this effect already re-runs on.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selfArming, listening, phase]);
+  }, [selfArming, available, phase]);
 
   // The gate: an inhale heard since this attempt started listening arms it.
   // One heard earlier — during the last hold's result card, say — does not.
   const latest = mic.latest;
   useEffect(() => {
     const heard = breath.lastInhale;
-    if (phase !== "breath" || !heard || heard.endMs < breathSinceRef.current) return;
+    if (!available || phase !== "breath" || !heard || heard.endMs < breathSinceRef.current) return;
     setHeardSec(Math.round(heard.durationSec * 10) / 10);
     const now = latest.current;
     if (heard.endedByHiss && now.volume > threshold) {
@@ -413,36 +431,43 @@ export function SustainTest({
     setPhase("armed");
     // `threshold` is read at the moment the gate opens, not watched.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [breath.lastInhale, phase, latest]);
+  }, [breath.lastInhale, phase, latest, available]);
 
   // Some mics and rooms never carry a breath. After a fair wait, say so and
   // put the way round it first, rather than leaving the singer breathing at a
   // screen that is not going to answer.
   useEffect(() => {
-    if (phase !== "breath") return;
+    if (!available || phase !== "breath") return;
     const id = window.setTimeout(() => setBreathStale(true), BREATH_FALLBACK_SEC * 1000);
     return () => window.clearTimeout(id);
-  }, [phase, doneCount]);
+  }, [phase, doneCount, available]);
 
   // Between attempts of a multi-attempt step: read the last figure, then the
   // next attempt arms itself, the way the routine's own steps do.
   const moreToDo = !!onComplete && doneCount > 0 && doneCount < attemptsTarget;
   useEffect(() => {
-    if (!moreToDo || phase !== "done") return;
+    if (!available || !moreToDo || phase !== "done") return;
     const id = window.setTimeout(() => arm(), NEXT_ATTEMPT_MS);
     return () => window.clearTimeout(id);
     // `arm` reads `gated`, which only the fallback changes, and never mid-card.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [moreToDo, phase]);
+  }, [moreToDo, phase, available]);
 
   // Attempt state machine, driven by pitch frames (one per animation frame).
   // This is a subscription to an external, continuously-updating signal
   // (mic frames), not a derivable render value — genuinely effect-shaped.
   useEffect(() => {
-    if (phase !== "armed" && phase !== "running") return;
-    const v = frame.volume;
+    if (!available) return;
     const now = frame.t;
-    if (now === 0) return;
+    if (now === 0 || now < breathSinceRef.current) return;
+    const previous = lastFrameRef.current;
+    lastFrameRef.current = now;
+    if (phase !== "armed" && phase !== "running") return;
+    if (previous > 0 && now - previous > MAX_HOLD_GAP_MS) {
+      arm();
+      return;
+    }
+    const v = frame.volume;
 
     if (phase === "armed") {
       if (v > threshold) {
@@ -506,7 +531,7 @@ export function SustainTest({
     // `completeStep` and `attemptsTarget` are stable for the life of a step;
     // adding them would re-run this subscription on every parent render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frame, phase, threshold]);
+  }, [frame, phase, threshold, available]);
 
   /* ---------------------------------------------------------------- *
    * Session — the full-screen dark surface.

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
+import { STALE_FRAME_MS } from "@/lib/audio/frame-clock";
 import { useBreathDetect } from "@/lib/audio/use-breath-detect";
 import { logSession, type LogResult } from "@/lib/progress";
 import { MIC_PRIVACY } from "@/components/ui";
@@ -48,6 +49,9 @@ type Phase = "setup" | "breath" | "ready" | "holding" | "rest";
 
 /** A note that stops for this long has ended. The sustain test's own figure. */
 const SILENCE_MS = 700;
+// A full silence timeout plus the allowed age of one reading cannot establish
+// a continuous note. Short scheduling hitches keep the usual hold semantics.
+const MAX_HOLD_GAP_MS = SILENCE_MS + STALE_FRAME_MS;
 const REST_MS = CUE_REST_SEC * 1000;
 /** Without detection, the breath is a count rather than something heard. */
 const TIMED_BREATH_MS = 2500;
@@ -84,13 +88,16 @@ export function BreathCueDrill({
   const [lastBreathSec, setLastBreathSec] = useState<number | null>(null);
   const [threshold, setThreshold] = useState(0.015);
 
-  const breath = useBreathDetect(pitch, gated);
+  const [visible, setVisible] = useState(true);
+  const available = listening && visible;
+  const breath = useBreathDetect(pitch, gated && visible);
 
   /** The run's play clock: hidden time and idle time past the grace left out. */
   const clockRef = useRef(startActiveClock(0));
   const breathSinceRef = useRef(0);
   const holdStartRef = useRef(0);
   const lastLoudRef = useRef(0);
+  const lastFrameRef = useRef(0);
   const finishedRef = useRef(false);
 
   /** A tap, a key, a breath heard or a note sung: the singer is still here. */
@@ -103,6 +110,9 @@ export function BreathCueDrill({
   // more than thirty seconds with no tap, key, breath or note counts as
   // thirty, so a phone left on "Breathe in" is not logged as practice.
   useEffect(() => {
+    const onVisibility = () => setVisible(document.visibilityState !== "hidden");
+    onVisibility();
+    document.addEventListener("visibilitychange", onVisibility);
     const stopHidden = trackHiddenTime(
       document,
       () => performance.now(),
@@ -114,6 +124,7 @@ export function BreathCueDrill({
       clockRef.current = markActive(clockRef.current, performance.now());
     });
     return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
       stopHidden();
       stopInput();
     };
@@ -126,6 +137,23 @@ export function BreathCueDrill({
     breathSinceRef.current = performance.now();
     setPhase("breath");
   };
+
+  const restartInterruptedRep = () => {
+    holdStartRef.current = 0;
+    lastLoudRef.current = 0;
+    setCutShort(false);
+    setLastBreathSec(null);
+    startRep();
+  };
+
+  // The borrowed mic can disappear while this drill stays mounted behind its
+  // retry gate. Keep completed reps/settings, but require a fresh breath.
+  useEffect(() => {
+    if (available || phase === "setup" || finishedRef.current) return;
+    lastFrameRef.current = 0;
+    restartInterruptedRep();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- interruption resets only the unfinished rep
+  }, [available, phase]);
 
   const begin = () => {
     clockRef.current = startActiveClock(performance.now());
@@ -163,17 +191,17 @@ export function BreathCueDrill({
 
   // A routine step starts once the mic is live; there is nothing to choose.
   useEffect(() => {
-    if (!autoStart || !listening || phase !== "setup" || finishedRef.current) return;
+    if (!autoStart || !available || phase !== "setup" || finishedRef.current) return;
     begin();
     // `begin` only resets state and reads the clock.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoStart, listening, phase]);
+  }, [autoStart, available, phase]);
 
   // The gate: a breath heard since this rep began listening opens it.
   const latest = pitch.latest;
   useEffect(() => {
     const inhale = breath.lastInhale;
-    if (!gated || phase !== "breath" || !inhale || inhale.endMs < breathSinceRef.current) return;
+    if (!available || !gated || phase !== "breath" || !inhale || inhale.endMs < breathSinceRef.current) return;
     markActiveAt(performance.now());
     setHeard((n) => n + 1);
     setLastBreathSec(Math.round(inhale.durationSec * 10) / 10);
@@ -191,32 +219,39 @@ export function BreathCueDrill({
     setPhase("ready");
     // `threshold` is read at the moment the gate opens, not watched.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [breath.lastInhale, gated, phase, latest]);
+  }, [breath.lastInhale, gated, phase, latest, available]);
 
   // Without detection the breath is a timed cue; with it, a long wait offers
   // the way round.
   useEffect(() => {
-    if (phase !== "breath") return;
+    if (!available || phase !== "breath") return;
     const id = window.setTimeout(
       () => (gated ? setStale(true) : setPhase("ready")),
       gated ? BREATH_FALLBACK_SEC * 1000 : TIMED_BREATH_MS,
     );
     return () => window.clearTimeout(id);
-  }, [phase, gated, done, cutShort]);
+  }, [phase, gated, done, cutShort, available]);
 
   useEffect(() => {
-    if (phase !== "rest") return;
+    if (!available || phase !== "rest") return;
     const id = window.setTimeout(startRep, REST_MS);
     return () => window.clearTimeout(id);
-  }, [phase]);
+  }, [phase, available]);
 
   // The note, driven by the pitch loop's frames. The same subscription shape as
   // the sustain test's: an external signal, not a render-derivable value.
   useEffect(() => {
-    if (phase !== "ready" && phase !== "holding") return;
-    const v = frame.volume;
+    if (!available) return;
     const now = frame.t;
     if (now === 0) return;
+    const previous = lastFrameRef.current;
+    lastFrameRef.current = now;
+    if (phase !== "ready" && phase !== "holding") return;
+    if (previous > 0 && now - previous > MAX_HOLD_GAP_MS) {
+      restartInterruptedRep();
+      return;
+    }
+    const v = frame.volume;
     if (v > threshold) markActiveAt(now);
     if (phase === "ready") {
       if (v > threshold) {
@@ -244,7 +279,7 @@ export function BreathCueDrill({
     }
     // `finish` and `startRep` are stable in what they read for this frame.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frame, phase, threshold]);
+  }, [frame, phase, threshold, available]);
 
   const close = () => {
     if (done > 0) finish(done, heard, true);
