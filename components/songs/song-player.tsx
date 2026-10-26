@@ -12,7 +12,7 @@ import {
 } from "react";
 import { PITCH_FFT_SIZE, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { freqToMidiFloat } from "@/lib/audio/notes";
-import { playTone, clickAt } from "@/lib/audio/synth";
+import { playTone, clickAt, createToneGroup, type ToneGroup } from "@/lib/audio/synth";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { liveLags } from "@/lib/audio/latency";
 import { logSession, type VocalRange } from "@/lib/progress";
@@ -288,7 +288,7 @@ export function SongPlayer({
   const phaseRef = useRef<Phase>("idle");
   const pauseRef = useRef<() => void>(() => {});
   /** The latest `restart`, for a call that lands after an await (enableMic). */
-  const restartRef = useRef<() => void>(() => {});
+  const restartRef = useRef<(nextPass: GuidePass) => void>(() => {});
   /** An "Enable microphone" press still waiting on its prompt (enableMic). */
   const micRequestRef = useRef(createPendingRequest());
   const [countInBeat, setCountInBeat] = useState(-1);
@@ -496,7 +496,11 @@ export function SongPlayer({
   const rafRef = useRef(0);
   const schedTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const toneGroupRef = useRef<ToneGroup | null>(null);
+
   const stopLoops = () => {
+    toneGroupRef.current?.cancel();
+    toneGroupRef.current = null;
     cancelAnimationFrame(rafRef.current);
     if (schedTimerRef.current) clearInterval(schedTimerRef.current);
     schedTimerRef.current = null;
@@ -510,7 +514,8 @@ export function SongPlayer({
     const loops = loopsRef.current;
     const playBeats = playBeatsRef.current;
     const spanBeats = spanBeatsRef.current;
-    const horizon = audioNow() + 0.35;
+    const now = audioNow();
+    const horizon = now + 0.35;
     const mask = scheduledMaskRef.current;
     const gain = (guidePctRef.current / 100) * GUIDE_MAX_GAIN;
 
@@ -523,11 +528,16 @@ export function SongPlayer({
       const time = t0Ref.current + beatAbs * spb;
       if (time > horizon) break; // events are in ascending time order
       mask[slot] = true;
-      if (gain > 0) {
+      // A resumed scheduler starts with a fresh mask: skip elapsed notes,
+      // restore only the sounding tail, and requeue future lookahead notes.
+      const end = time + playBeats[noteIdx] * spb * 0.92;
+      const start = Math.max(now, time);
+      if (gain > 0 && end > start) {
         playTone(note.midi, {
-          dur: playBeats[noteIdx] * spb * 0.92,
+          dur: end - start,
           gain,
-          at: time - audioNow(),
+          at: start - now,
+          out: toneGroupRef.current?.node,
         });
       }
     }
@@ -545,7 +555,7 @@ export function SongPlayer({
         const time = t0Ref.current + beat * spb;
         if (time > horizon) break;
         const songBeat = spanStartRef.current + (beat % spanBeats);
-        clickAt(time, Math.round(songBeat) % song.beatsPerBar === 0);
+        clickAt(time, Math.round(songBeat) % song.beatsPerBar === 0, toneGroupRef.current?.node);
         beat++;
       }
       clickCursorRef.current = beat;
@@ -1080,17 +1090,39 @@ export function SongPlayer({
     rafRef.current = requestAnimationFrame(rafTick);
   }
 
+  /** Rebuild only the count-in sounds that have not elapsed, including on resume. */
+  function scheduleCountIn() {
+    const now = audioNow();
+    const spb = spbRef.current;
+    const countInStart = t0Ref.current - COUNT_IN_BEATS * spb;
+    const out = toneGroupRef.current?.node;
+    for (let i = 0; i < COUNT_IN_BEATS; i++) {
+      const at = countInStart + i * spb;
+      if (at >= now) clickAt(at, i === 0, out);
+    }
+    const start = startingNote(currentNotesRef.current, playBeatsRef.current, spb);
+    if (start) {
+      const at = Math.max(now, countInStart);
+      const dur = countInStart + start.dur - at;
+      if (dur > 0) playTone(start.midi, { at: at - now, dur, gain: GUIDE_MAX_GAIN, out });
+    }
+  }
+
   /** Full reset + count-in + play, from the top of the span. */
-  function beginSession() {
+  function beginSession(nextPass: GuidePass) {
     getAudioContext();
     stopLoops();
+    toneGroupRef.current = createToneGroup();
     finishedRef.current = false;
+    // A paused pass change starts before React commits the new prop.
+    passRef.current = nextPass;
+    scoringRef.current = listening && nextPass !== "listen";
 
     const spb = secPerBeat(song.bpm, tempo);
     spbRef.current = spb;
     const notes = currentNotesRef.current;
     const loops = plannedLoops;
-    masteryEligibleRef.current = pass === "solo" && mode === "performance" && !drilled;
+    masteryEligibleRef.current = nextPass === "solo" && mode === "performance" && !drilled;
     loopsRef.current = loops;
     cyclesRef.current = 0;
     spanStartRef.current = spanStart;
@@ -1149,7 +1181,7 @@ export function SongPlayer({
     // compiler rules start flagging this component's ref mirrors. Written
     // through the ref as well as state, because schedTick runs below before
     // React re-renders.
-    const passGuidePct = pass === "solo" ? 0 : guidePct > 0 ? guidePct : PASS_GUIDE_PCT[pass];
+    const passGuidePct = nextPass === "solo" ? 0 : guidePct > 0 ? guidePct : PASS_GUIDE_PCT[nextPass];
     guidePctRef.current = passGuidePct;
     setGuidePct(passGuidePct);
     runSetupRef.current = {
@@ -1178,15 +1210,9 @@ export function SongPlayer({
     const LEAD = 0.15;
     const countInStart = audioNow() + LEAD;
     t0Ref.current = countInStart + COUNT_IN_BEATS * spb;
-    for (let i = 0; i < COUNT_IN_BEATS; i++) clickAt(countInStart + i * spb, i === 0);
-    // Give the starting note, as an accompanist would: the first note this run
-    // sings, in the key it is sung in, on the first count-in beat. On your own
-    // has no guide, so this is the only pitch a solo run hears before the
-    // downbeat; it ends well before t0, so it never overlaps a scored frame.
-    const start = startingNote(notes, playBeats, spb);
-    if (start) {
-      playTone(start.midi, { at: countInStart - audioNow(), dur: start.dur, gain: GUIDE_MAX_GAIN });
-    }
+    // The starting pitch belongs to the same cancellable group as the guide
+    // and clicks, so pause, restart and leaving the player silence them all.
+    scheduleCountIn();
     pausedGlobalBeatsRef.current = 0;
 
     // A restart throws the unfinished take away; a new one starts with the
@@ -1209,13 +1235,10 @@ export function SongPlayer({
     rafRef.current = requestAnimationFrame(rafTick);
   }
 
-  useLayoutEffect(() => { pauseRef.current = pause; });
-  useLayoutEffect(() => { restartRef.current = restart; });
-
   function pause() {
     stopLoops();
     const spb = spbRef.current;
-    const elapsedGlobal = Math.max(0, (audioNow() - t0Ref.current) / spb);
+    const elapsedGlobal = (audioNow() - t0Ref.current) / spb;
     pausedGlobalBeatsRef.current = elapsedGlobal;
     takeRecorderRef.current?.pause();
     setPhase("paused");
@@ -1224,6 +1247,9 @@ export function SongPlayer({
   function resume() {
     const spb = spbRef.current;
     t0Ref.current = audioNow() - pausedGlobalBeatsRef.current * spb;
+    toneGroupRef.current = createToneGroup();
+    scheduledMaskRef.current = freshScheduleMask();
+    scheduleCountIn();
     // The click cursor counts beats from t0, which just moved; rewinding it lets
     // schedTick clamp it forward to wherever the song now is.
     clickCursorRef.current = 0;
@@ -1236,14 +1262,17 @@ export function SongPlayer({
   }
 
   function togglePlayPause() {
-    if (phase === "idle") beginSession();
+    if (phase === "idle") beginSession(pass);
     else if (phase === "running") pause();
     else if (phase === "paused") resume();
   }
 
   function restart() {
-    beginSession();
+    beginSession(pass);
   }
+
+  useLayoutEffect(() => { pauseRef.current = pause; });
+  useLayoutEffect(() => { restartRef.current = beginSession; });
 
   function endPractice() {
     stopLoops();
@@ -1287,6 +1316,11 @@ export function SongPlayer({
     const pct = guideLevelFor(next, guidePct);
     guidePctRef.current = pct;
     setGuidePct(pct);
+    // Listen time is never a failed attempt. Starting a fresh run at this
+    // boundary keeps both the score and the summary about one kind of pass.
+    if (phase === "paused" && (pass === "listen") !== (next === "listen")) {
+      beginSession(next);
+    }
   }
 
 
@@ -1309,8 +1343,14 @@ export function SongPlayer({
     if (!(await pitch.start()) || !current()) return;
     const next = afterMicOn(phaseRef.current, passRef.current);
     if (!next) return;
-    if (next.pass !== passRef.current) choosePass(next.pass);
-    if (next.restart) restartRef.current();
+    if (next.restart) {
+      // Pass the choice through this single restart: choosePass also restarts
+      // a paused Listen boundary, and the prop may not have committed yet.
+      onPassChange(next.pass);
+      restartRef.current(next.pass);
+    } else if (next.pass !== passRef.current) {
+      choosePass(next.pass);
+    }
   }
 
   /** Fullscreen has to be asked for inside the gesture — see `stage.tsx`. */
@@ -1466,6 +1506,11 @@ export function SongPlayer({
             {PASS_LABEL[p]}
           </Button>
         ))}
+        {phase === "paused" && (
+          <p className="basis-full text-xs text-mut">
+            Switching to or from Listen restarts with a count-in.
+          </p>
+        )}
       </div>
     ) : null;
 
