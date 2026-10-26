@@ -12,7 +12,8 @@ const browser = await chromium.launch({
 });
 try {
   for (const room of [
-    { path: "/range?mode=pitch#start", start: "Start singing", stop: "Stop mic" },
+    { path: "/range?mode=pitch#start", start: "Start singing", ready: "Stop mic", stop: "Stop mic" },
+    { path: "/recorder", start: "Enable microphone", ready: "Start recording", rejectStale: true },
   ]) {
     const context = await browser.newContext({ viewport: { width: 375, height: 667 } });
     try {
@@ -24,10 +25,10 @@ try {
         navigator.mediaDevices.enumerateDevices = async () => ["a", "b", "c"].map((id) => ({
           deviceId: `qa-${id}`, kind: "audioinput", label: `Fixture ${id.toUpperCase()}`, groupId: "fixture",
         }));
-        navigator.mediaDevices.getUserMedia = ({ audio }) => new Promise((resolve) => {
+        navigator.mediaDevices.getUserMedia = ({ audio }) => new Promise((resolve, reject) => {
           const request = { device: audio.deviceId?.exact ?? "", echo: audio.echoCancellation };
           requests.push(request);
-          pending.push({ ...request, resolve });
+          pending.push({ ...request, resolve, reject });
         });
         const source = AudioContext.prototype.createMediaStreamSource;
         AudioContext.prototype.createMediaStreamSource = function (stream) {
@@ -42,6 +43,7 @@ try {
           tracks.push(...stream.getTracks().map((track) => ({ track, device: request.device })));
           request.resolve(stream);
         };
+        window.__rejectNextMic = () => pending.shift().reject(new DOMException("The old input disappeared", "OverconstrainedError"));
         window.__micPreferences = () => ({
           requests, attached,
           live: tracks.filter(({ track }) => track.readyState === "live").map(({ device }) => device),
@@ -61,12 +63,12 @@ try {
       await page.evaluate(() => window.__grantNextMic());
       await page.waitForFunction(() => window.__micPreferences().requests.length === 2);
       await input.selectOption("qa-c");
-      await page.evaluate(() => window.__grantNextMic());
+      if (room.rejectStale) await page.evaluate(() => window.__rejectNextMic());
+      else await page.evaluate(() => window.__grantNextMic());
       await page.waitForFunction(() => window.__micPreferences().requests.length === 3);
       assert.equal(await input.inputValue(), "qa-c");
       await page.evaluate(() => window.__grantNextMic());
-      const stop = page.getByRole("button", { name: room.stop, exact: true });
-      await stop.waitFor();
+      await page.getByRole("button", { name: room.ready, exact: true }).waitFor();
       assert.deepEqual(await page.evaluate(() => window.__micPreferences()), {
         requests: [
           { device: "qa-a", echo: false },
@@ -75,10 +77,18 @@ try {
         ],
         attached: ["qa-c"], live: ["qa-c"],
       });
-      await stop.click();
-      await input.locator('option[value="qa-c"]').waitFor({ state: "attached" });
-      assert.equal(await input.inputValue(), "qa-c", "the picker retains the selected input after stopping");
-      assert.deepEqual((await page.evaluate(() => window.__micPreferences())).live, []);
+      if (room.stop) {
+        await page.getByRole("button", { name: room.stop, exact: true }).click();
+        await input.locator('option[value="qa-c"]').waitFor({ state: "attached" });
+        assert.equal(await input.inputValue(), "qa-c", "the picker retains the selected input after stopping");
+      } else {
+        // Recorder has no mic-only Stop; leave through its ordinary client link.
+        await page.locator('header a[href="/"]').click();
+        await page.waitForURL(`${base}/`);
+      }
+      await page.waitForFunction(() => window.__micPreferences().live.length === 0);
+      assert.equal((await page.evaluate(() => window.__micPreferences())).requests.length, 3,
+        "cleanup does not open another input or replace the document fixture");
       assert.deepEqual(errors, []);
       console.log(`PASS ${room.path}: pending A→B→C uses C with speaker echo cancellation, releases stale streams`);
     } finally { await context.close(); }

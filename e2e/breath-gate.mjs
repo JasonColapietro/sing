@@ -140,8 +140,28 @@ const CASES = [
     async run(page) {
       if (drill === "cue") await page.getByRole("button", { name: "Begin", exact: true }).click();
       await page.getByText("Hold", { exact: true }).waitFor({ timeout: 15000 });
+      const before = await page.locator('[role="dialog"]').innerText();
+      await page.evaluate(() => {
+        const probe = { events: [], maxFrameGap: 0, frames: 0 };
+        window.__breathInterruption = probe;
+        for (const type of ["visibilitychange", "freeze", "resume"]) {
+          document.addEventListener(type, () => probe.events.push({ type, visibility: document.visibilityState }));
+        }
+        let previous = performance.now();
+        const frame = (now) => {
+          probe.maxFrameGap = Math.max(probe.maxFrameGap, now - previous);
+          probe.frames++;
+          previous = now;
+          requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+      });
+      await page.waitForFunction(() => window.__breathInterruption.frames > 0);
       const cdp = await page.context().newCDPSession(page);
       try {
+        // Playwright enables focus emulation by default, forcing visibility
+        // to visible and suppressing visibilitychange. Exercise real hiding.
+        await cdp.send("Emulation.setFocusEmulationEnabled", { enabled: false });
         // Chromium hides and freezes this page while capture keeps its place
         // in the long vowel. Returning must require a new observed breath.
         await cdp.send("Page.setWebLifecycleState", { state: "frozen" });
@@ -153,6 +173,14 @@ const CASES = [
       }
       await page.waitForFunction(() => document.visibilityState === "visible", null, { timeout: 3000 });
       const failures = [];
+      // Visibility can return before the first resumed animation frame. Let
+      // the probe observe that frame before evaluating the interruption.
+      await page.waitForFunction(() => window.__breathInterruption.maxFrameGap > 900, null, { timeout: 3000 }).catch(() => {});
+      const interruption = await page.evaluate(() => window.__breathInterruption);
+      if (!interruption.events.some((event) => event.type === "visibilitychange" && event.visibility === "hidden"))
+        failures.push("fixture did not deliver a hidden visibility event");
+      if (!(interruption.maxFrameGap > 900))
+        failures.push(`fixture did not interrupt observed frames: largest gap ${interruption.maxFrameGap.toFixed(0)} ms`);
       try { await page.getByText("Breathe in", { exact: true }).waitFor({ timeout: 3000 }); }
       catch { failures.push("unobserved time did not reset the unfinished hold to a fresh breath"); }
       if (drill === "cue" && await page.getByRole("img", { name: "0 of 6 reps done", exact: true }).count() !== 1)
@@ -160,7 +188,7 @@ const CASES = [
       const sessions = await page.evaluate(() => JSON.parse(localStorage.getItem("suede-sing:progress:v1") ?? "{}").sessions ?? []);
       if (sessions.length) failures.push("interrupted hold logged practice");
       if (await page.getByText(/^Breath · /).count()) failures.push("interrupted hold completed the drill");
-      return { failures };
+      return { failures, interruption, before, after: await page.locator('[role="dialog"]').innerText() };
     },
   })),
   {
@@ -282,6 +310,8 @@ try {
         : `inhales ${result.inhales}  ${result.inhaleSec !== undefined ? `breath ${result.inhaleSec.toFixed(2)} s  ` : ""}results "${result.text}"`;
     console.log(`${mark} ${result.name.padEnd(18)} ${stats}`);
     for (const f of result.failures) console.log(`       ${f}`);
+    if (result.failures.length && result.interruption)
+      console.log(`       interruption diagnostics: ${JSON.stringify({ interruption: result.interruption, before: result.before, after: result.after })}`);
   }
 } finally {
   await rm(dir, { recursive: true, force: true });

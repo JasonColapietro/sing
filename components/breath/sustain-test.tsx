@@ -414,8 +414,14 @@ export function SustainTest({
   useEffect(() => {
     const heard = breath.lastInhale;
     if (!available || phase !== "breath" || !heard || heard.endMs < breathSinceRef.current) return;
-    setHeardSec(Math.round(heard.durationSec * 10) / 10);
     const now = latest.current;
+    // Hiss confirmation may arrive on the first frame after an unobserved gap.
+    // Reject its old split before it can backdate the start of this attempt.
+    if (lastFrameRef.current > 0 && now.t - lastFrameRef.current > MAX_HOLD_GAP_MS) {
+      breathSinceRef.current = now.t;
+      return;
+    }
+    setHeardSec(Math.round(heard.durationSec * 10) / 10);
     if (heard.endedByHiss && now.volume > threshold) {
       // The breath ran straight into the hiss, which has been sounding since
       // the split — reported a moment after it, once the hiss had held. The
@@ -462,6 +468,11 @@ export function SustainTest({
     if (now === 0 || now < breathSinceRef.current) return;
     const previous = lastFrameRef.current;
     lastFrameRef.current = now;
+    if (phase === "breath") {
+      // Cover frame-first delivery too, without restarting the gate's timer.
+      if (previous > 0 && now - previous > MAX_HOLD_GAP_MS) breathSinceRef.current = now;
+      return;
+    }
     if (phase !== "armed" && phase !== "running") return;
     if (previous > 0 && now - previous > MAX_HOLD_GAP_MS) {
       arm();

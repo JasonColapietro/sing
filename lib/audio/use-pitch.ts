@@ -200,12 +200,16 @@ export function usePitch(opts?: {
     // for the latest choice and no second permission request runs in parallel.
     while (true) {
       const wanted = getAudioPrefs();
-      const changed = () => {
+      const changed = (acquiredInput = wanted.inputId) => {
         const current = getAudioPrefs();
-        return current.inputId !== wanted.inputId || current.monitoring !== wanted.monitoring;
+        return current.inputId !== acquiredInput || current.monitoring !== wanted.monitoring;
       };
       try {
-        opened = await openMic({ deviceId: wanted.inputId, monitoring: wanted.monitoring });
+        opened = await openMic({
+          deviceId: wanted.inputId,
+          monitoring: wanted.monitoring,
+          isCancelled: () => !mountedRef.current || attempt !== attemptRef.current,
+        });
       } catch (cause) {
         if (!mountedRef.current || attempt !== attemptRef.current) return false;
         if (changed()) continue;
@@ -216,11 +220,12 @@ export function usePitch(opts?: {
         opened.stream?.getTracks().forEach((track) => track.stop());
         return false;
       }
-      if (changed()) {
+      const acquiredInput = opened.inputId ?? wanted.inputId;
+      if (changed(acquiredInput)) {
         opened.stream?.getTracks().forEach((track) => track.stop());
         continue;
       }
-      openedPrefs = wanted;
+      openedPrefs = { ...wanted, inputId: acquiredInput };
       break;
     }
     if (opened.stream === null) {
@@ -228,6 +233,13 @@ export function usePitch(opts?: {
       return false;
     }
     const stream = opened.stream;
+    // The device can disappear while its permission result is being delivered.
+    // Do not publish success and let a queued ended notification undo it later.
+    if (stream.getTracks().some((track) => track.readyState === "ended")) {
+      stream.getTracks().forEach((track) => track.stop());
+      setError(MIC_ENDED_MESSAGE);
+      return false;
+    }
     // Own each resource before the next startup operation can throw.
     streamRef.current = stream;
 

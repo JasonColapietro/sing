@@ -1,6 +1,14 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRecorderMic, startRecorder, createTakeMutations } from "./runtime";
 import type { TakeRecord, TakesStore } from "./db";
+import { openMic } from "@/lib/audio/mic";
+const prefs = vi.hoisted(() => ({ inputId: "B", outputId: "", monitoring: "headphones" }));
+vi.mock("@/lib/audio/devices", () => ({
+  getAudioPrefs: () => ({ ...prefs }), getInputDeviceId: () => prefs.inputId, getMonitoring: () => prefs.monitoring,
+  clearInputDevice: () => { prefs.inputId = ""; },
+}));
+vi.mock("@/lib/account-gate", () => ({ requireAccountToUse: () => true }));
+beforeEach(() => { prefs.inputId = "B"; prefs.monitoring = "headphones"; });
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -61,6 +69,97 @@ describe("recorder microphone ownership", () => {
     expect(mic.track.stop).toHaveBeenCalledOnce();
     expect(session.getStream()).toBeNull();
     expect((await session.start())?.error).toBeNull();
+  });
+
+  it("rejects an already-ended arrival for every waiter and allows retry", async () => {
+    const dead = microphone(); dead.track.readyState = "ended";
+    const live = microphone();
+    const open = vi.fn().mockResolvedValueOnce({ stream: dead.stream, error: null }).mockResolvedValueOnce({ stream: live.stream, error: null });
+    const session = createRecorderMic(open, () => live.context);
+    const results = await Promise.all([session.start(), session.start()]);
+    expect(results[0]?.error).toMatch(/microphone stopped/i);
+    expect(results[1]).toEqual(results[0]);
+    expect(dead.track.stop).toHaveBeenCalledOnce(); expect(session.getStream()).toBeNull();
+    expect((await session.start())?.error).toBeNull(); expect(session.getStream()).toBe(live.stream);
+    session.dispose();
+  });
+
+  it("does not clear the device or acquire a fallback after disposal", async () => {
+    const permission = deferred<MediaStream>(); const mic = microphone();
+    const getUserMedia = vi.fn().mockReturnValueOnce(permission.promise);
+    vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+    const session = createRecorderMic(openMic, () => mic.context);
+    const first = session.start(); const second = session.start(); session.dispose();
+    permission.reject({ name: "OverconstrainedError" });
+    expect(await Promise.all([first, second])).toEqual([null, null]);
+    expect(getUserMedia).toHaveBeenCalledOnce(); expect(prefs.inputId).toBe("B");
+  });
+
+  it("releases a fallback that was already pending when disposed", async () => {
+    const permission = deferred<MediaStream>(); const mic = microphone();
+    const getUserMedia = vi.fn().mockRejectedValueOnce({ name: "OverconstrainedError" }).mockReturnValueOnce(permission.promise);
+    vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+    const session = createRecorderMic(openMic, () => mic.context); const opening = session.start();
+    await Promise.resolve(); expect(getUserMedia).toHaveBeenCalledTimes(2);
+    session.dispose(); permission.resolve(mic.stream);
+    expect(await opening).toBeNull(); expect(mic.track.stop).toHaveBeenCalledOnce();
+    expect(getUserMedia).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not repeat a default fallback after its permission is refused", async () => {
+    const mic = microphone();
+    const getUserMedia = vi.fn().mockRejectedValueOnce({ name: "OverconstrainedError" })
+      .mockRejectedValueOnce({ name: "NotAllowedError" });
+    vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+    const session = createRecorderMic(openMic, () => mic.context);
+    expect((await session.start())?.error).toMatch(/access is blocked/i);
+    expect(getUserMedia).toHaveBeenCalledTimes(2);
+    expect(session.getStream()).toBeNull(); session.dispose();
+  });
+
+  it("reopens B if it is selected again while the default fallback is pending", async () => {
+    const permission = deferred<MediaStream>(); const fallback = microphone(); const current = microphone();
+    const getUserMedia = vi.fn().mockRejectedValueOnce({ name: "OverconstrainedError" })
+      .mockReturnValueOnce(permission.promise).mockResolvedValueOnce(current.stream);
+    vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+    const session = createRecorderMic(openMic, () => current.context); const opening = session.start();
+    await Promise.resolve(); expect(prefs.inputId).toBe("");
+    prefs.inputId = "B"; permission.resolve(fallback.stream);
+    expect((await opening)?.error).toBeNull(); expect(session.getStream()).toBe(current.stream);
+    expect(fallback.track.stop).toHaveBeenCalledOnce(); expect(getUserMedia).toHaveBeenCalledTimes(3);
+    expect(getUserMedia.mock.calls[2][0].audio.deviceId).toEqual({ exact: "B" });
+    session.dispose();
+  });
+
+  it("settles on default after the still-selected input fails", async () => {
+    const fallback = microphone();
+    const getUserMedia = vi.fn().mockRejectedValueOnce({ name: "OverconstrainedError" })
+      .mockResolvedValueOnce(fallback.stream);
+    vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+    const session = createRecorderMic(openMic, () => fallback.context);
+    expect((await session.start())?.error).toBeNull();
+    expect(session.getStream()).toBe(fallback.stream); expect(prefs.inputId).toBe("");
+    expect(fallback.track.stop).not.toHaveBeenCalled(); expect(getUserMedia).toHaveBeenCalledTimes(2);
+    session.dispose();
+  });
+
+  it.each(["grant", "refusal", "overconstrained"])("reconciles pending B to C and speakers after %s", async (outcome) => {
+    const permission = deferred<MediaStream>(); const stale = microphone(); const live = microphone();
+    const getUserMedia = vi.fn().mockReturnValueOnce(permission.promise).mockResolvedValueOnce(live.stream);
+    vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+    const session = createRecorderMic(openMic, () => live.context);
+    const first = session.start(); const second = session.start();
+    prefs.inputId = "C"; prefs.monitoring = "speakers";
+    if (outcome === "grant") permission.resolve(stale.stream);
+    else permission.reject({ name: outcome === "refusal" ? "NotAllowedError" : "OverconstrainedError" });
+    const results = await Promise.all([first, second]);
+    expect(results[0]?.error).toBeNull(); expect(results[1]).toEqual(results[0]);
+    expect(session.getStream()).toBe(live.stream);
+    expect(getUserMedia).toHaveBeenCalledTimes(2);
+    expect(getUserMedia.mock.calls[1][0].audio).toMatchObject({ deviceId: { exact: "C" }, echoCancellation: true });
+    expect(prefs.inputId).toBe("C");
+    expect(stale.track.stop).toHaveBeenCalledTimes(outcome === "grant" ? 1 : 0);
+    session.dispose();
   });
 
   it("lets go of a microphone that ends on its own, and opens a fresh one on the next start", async () => {

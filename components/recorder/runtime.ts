@@ -1,8 +1,9 @@
 import type { TakeRecord, TakesStore } from "./db";
 import { pickMimeType } from "./mime";
-import { watchMicEnd } from "@/lib/audio/mic";
+import { MIC_ENDED_MESSAGE, watchMicEnd, type openMic } from "@/lib/audio/mic";
+import { getAudioPrefs } from "@/lib/audio/devices";
 
-type OpenMic = () => Promise<{ stream: MediaStream; error: null } | { stream: null; error: string }>;
+type OpenMic = typeof openMic;
 type MicResult = { analyser: AnalyserNode; error: null } | { analyser?: never; error: string } | null;
 
 /**
@@ -38,12 +39,42 @@ export function createRecorderMic(
       if (pending) return pending;
       pending = (async (): Promise<MicResult> => {
         try {
-          const opened = await open();
-          if (disposed) {
-            opened.stream?.getTracks().forEach((track) => track.stop());
-            return null;
+          let opened: Awaited<ReturnType<OpenMic>>;
+          // A picker change during permission belongs to this same shared
+          // request. Never publish a stream with the old echo/input settings.
+          while (true) {
+            const wanted = getAudioPrefs();
+            const changed = (acquiredInput = wanted.inputId) => {
+              const current = getAudioPrefs();
+              return current.inputId !== acquiredInput || current.monitoring !== wanted.monitoring;
+            };
+            try {
+              opened = await open({
+                deviceId: wanted.inputId,
+                monitoring: wanted.monitoring,
+                isCancelled: () => disposed,
+              });
+            } catch (cause) {
+              if (disposed) return null;
+              if (changed()) continue;
+              throw cause;
+            }
+            if (disposed) {
+              opened.stream?.getTracks().forEach((track) => track.stop());
+              return null;
+            }
+            const acquiredInput = opened.inputId ?? wanted.inputId;
+            if (changed(acquiredInput)) {
+              opened.stream?.getTracks().forEach((track) => track.stop());
+              continue;
+            }
+            break;
           }
           if (!opened.stream) return { error: opened.error };
+          if (opened.stream.getTracks().some((track) => track.readyState === "ended")) {
+            opened.stream.getTracks().forEach((track) => track.stop());
+            return { error: MIC_ENDED_MESSAGE };
+          }
           stream = opened.stream;
           const context = getContext();
           source = context.createMediaStreamSource(stream);

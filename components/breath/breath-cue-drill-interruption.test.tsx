@@ -65,7 +65,7 @@ vi.mock("react", async (original) => ({
 }));
 
 import type { UsePitchResult } from "@/lib/audio/use-pitch";
-import type { InhaleEvent } from "@/lib/audio/breath-detect";
+import { InhaleDetector, type BreathFeatures, type InhaleEvent } from "@/lib/audio/breath-detect";
 
 const fixture = vi.hoisted(() => ({
   inhale: null as InhaleEvent | null,
@@ -111,6 +111,16 @@ function mount() {
   };
   return {
     advance, frame,
+    observation(ms: number, features: BreathFeatures, detector: InhaleDetector, frameFirst = false) {
+      now += ms; vi.advanceTimersByTime(ms);
+      const event = detector.push(features, now).inhale;
+      pitch.frame = { ...pitch.frame, t: now, volume: features.rms };
+      pitch.latest.current = pitch.frame;
+      if (frameFirst) render();
+      if (event) fixture.inhale = event;
+      render();
+      return event;
+    },
     begin() { (nodes(tree).find((n) => n.props.children === "Begin")!.props.onClick as () => void)(); render(); },
     inhale(hiss = false) {
       if (hiss) { pitch.frame = { ...pitch.frame, t: now, volume: 0.1 }; pitch.latest.current = pitch.frame; }
@@ -234,5 +244,49 @@ describe("routed Breathe and sing interruptions", () => {
     expect(vi.getTimerCount()).toBe(1);
     hooks.unmount();
     expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+// A real detector waits 400ms to confirm the inhale-to-hiss split. A resumed
+// frame can confirm a split from before the gap; the drill must reject it.
+function pendingHiss(player: ReturnType<typeof mount>) {
+  const detector = new InhaleDetector();
+  const room: BreathFeatures = { rms: 0.0005, lowPower: 1, highPower: 1, flatness: 0.5, centroidHz: 2000, clarity: 0 };
+  const breath = { ...room, rms: 0.01, highPower: 30, centroidHz: 3000 };
+  const hiss = { ...breath, rms: 0.1, highPower: 150, centroidHz: 4500 };
+  for (let i = 0; i < 30; i++) player.observation(20, room, detector);
+  for (let i = 0; i < 30; i++) player.observation(20, breath, detector);
+  for (let i = 0; i < 10; i++) expect(player.observation(20, hiss, detector)).toBeNull();
+  return { detector, hiss };
+}
+
+describe("hiss confirmation continuity", () => {
+  it.each([
+    { gap: 901, frameFirst: false }, { gap: 60_000, frameFirst: false },
+    { gap: 901, frameFirst: true }, { gap: 60_000, frameFirst: true },
+  ])("rejects an old split after $gap ms (frame first: $frameFirst)", ({ gap, frameFirst }) => {
+    const player = mount();
+    player.begin();
+    const { detector, hiss } = pendingHiss(player);
+    const event = player.observation(gap, hiss, detector, frameFirst);
+    expect(event?.endedByHiss).toBe(true);
+    expect(now - event!.endMs).toBeGreaterThan(gap);
+    if (gap === 60_000) expect(player.gate()?.stale).toBe(true);
+    expect(player.done()).toBe("0 of 6 reps done");
+    expect(player.gate()).toBeDefined();
+    expect(fixture.log).not.toHaveBeenCalled();
+    player.inhale(); hold(player);
+    expect(player.done()).toBe("1 of 6 reps done");
+  });
+
+  it("accepts the real detector's normal delayed hiss confirmation", () => {
+    const player = mount();
+    player.begin();
+    const { detector, hiss } = pendingHiss(player);
+    const event = player.observation(400, hiss, detector);
+    expect(event?.endedByHiss).toBe(true);
+    expect(player.gate()).toBeUndefined();
+    for (let i = 0; i < 40; i++) player.frame(100, 0.1);
+    expect(player.done()).toBe("1 of 6 reps done");
   });
 });

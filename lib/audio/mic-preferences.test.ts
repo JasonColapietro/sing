@@ -91,9 +91,10 @@ vi.mock("@/lib/account-gate", () => ({ requireAccountToUse: () => true }));
 vi.mock("./mic", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./mic")>();
   return {
-  openMic: (options?: { deviceId: string; monitoring: Prefs["monitoring"] }) => {
+  ...actual,
+  openMic: (options?: Parameters<typeof actual.openMic>[0]) => {
     if (audio.actualMic) return actual.openMic(options);
-    const prefs = options ? { inputId: options.deviceId, monitoring: options.monitoring } : { ...audio.prefs };
+    const prefs = { inputId: options?.deviceId ?? audio.prefs.inputId, monitoring: options?.monitoring ?? audio.prefs.monitoring };
     return new Promise<Reply>((resolve, reject) => audio.requests.push({ prefs, resolve, reject }));
   },
   watchMicEnd: () => () => {},
@@ -108,7 +109,7 @@ vi.mock("./context", () => ({ getAudioContext: () => ({
 import { usePitch } from "./use-pitch";
 import { useAnalyser } from "./use-analyser";
 
-function microphone(id: string) { const stop = vi.fn(); return { stream: { id, getTracks: () => [{ stop }] }, stop }; }
+function microphone(id: string, readyState = "live") { const stop = vi.fn(); const track = Object.assign(new EventTarget(), { stop, readyState }); return { stream: { id, getTracks: () => [track], getAudioTracks: () => [track] }, stop }; }
 const settle = async () => { for (let i = 0; i < 8; i++) await Promise.resolve(); };
 beforeEach(() => {
   runtime.reset(); audio.prefs = { inputId: "A", monitoring: "headphones" }; audio.requests = []; audio.sources = []; audio.actualMic = false;
@@ -178,14 +179,13 @@ for (const [name, hook] of [["usePitch", usePitch], ["useAnalyser", useAnalyser]
       expect(current.stop).not.toHaveBeenCalled();
     });
 
-    it("preserves C through B's actual overconstrained fallback and applies C's echo settings", async () => {
+    it("skips B's obsolete fallback and applies C's echo settings", async () => {
       audio.actualMic = true;
       audio.prefs = { inputId: "B", monitoring: "headphones" };
       let reject!: (error: unknown) => void;
-      const fallback = microphone("default"); const current = microphone("C");
+      const current = microphone("C");
       const getUserMedia = vi.fn()
         .mockReturnValueOnce(new Promise((_resolve, no) => { reject = no; }))
-        .mockResolvedValueOnce(fallback.stream)
         .mockResolvedValueOnce(current.stream);
       vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
       const mic = runtime.render(() => hook()); const first = mic.start();
@@ -195,9 +195,79 @@ for (const [name, hook] of [["usePitch", usePitch], ["useAnalyser", useAnalyser]
       runtime.render(() => hook());
       expect(audio.prefs).toEqual({ inputId: "C", monitoring: "speakers" });
       expect(audio.sources).toEqual(["C"]);
-      expect(fallback.stop).toHaveBeenCalledOnce(); expect(current.stop).not.toHaveBeenCalled();
+      expect(current.stop).not.toHaveBeenCalled();
+      expect(getUserMedia).toHaveBeenCalledTimes(2);
+      expect(getUserMedia.mock.calls[1][0].audio).toMatchObject({ deviceId: { exact: "C" }, echoCancellation: true });
+    });
+
+    it.each(["stop", "unmount"])("does not request a fallback or clear the selected input after %s", async (action) => {
+      audio.actualMic = true;
+      let reject!: (error: unknown) => void;
+      const getUserMedia = vi.fn().mockReturnValueOnce(new Promise((_resolve, no) => { reject = no; }));
+      vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+      const mic = runtime.render(() => hook()); const first = mic.start(); const second = mic.start();
+      if (action === "stop") mic.stop(); else runtime.unmount();
+      reject({ name: "OverconstrainedError" });
+      expect(await Promise.all([first, second])).toEqual([false, false]);
+      expect(getUserMedia).toHaveBeenCalledOnce();
+      expect(audio.prefs.inputId).toBe("A");
+      expect(audio.sources).toEqual([]);
+    });
+
+    it("does not repeat a default fallback after its permission is refused", async () => {
+      audio.actualMic = true;
+      const getUserMedia = vi.fn().mockRejectedValueOnce({ name: "OverconstrainedError" })
+        .mockRejectedValueOnce({ name: "NotAllowedError" });
+      vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+      const mic = runtime.render(() => hook());
+      expect(await Promise.all([mic.start(), mic.start()])).toEqual([false, false]);
+      expect(getUserMedia).toHaveBeenCalledTimes(2);
+      expect(runtime.render(() => hook()).error).toMatch(/access is blocked/i);
+    });
+
+    it("does not mistake a default fallback for B when B is selected again", async () => {
+      audio.actualMic = true; audio.prefs = { inputId: "B", monitoring: "headphones" };
+      let resolve!: (stream: unknown) => void;
+      const fallback = microphone("default"); const current = microphone("B");
+      const getUserMedia = vi.fn().mockRejectedValueOnce({ name: "OverconstrainedError" })
+        .mockReturnValueOnce(new Promise((yes) => { resolve = yes; })).mockResolvedValueOnce(current.stream);
+      vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+      const mic = runtime.render(() => hook()); const first = mic.start(); const second = mic.start();
+      await settle(); runtime.render(() => hook()); expect(audio.prefs.inputId).toBe("");
+      audio.prefs = { ...audio.prefs, inputId: "B" }; runtime.render(() => hook());
+      resolve(fallback.stream);
+      expect(await Promise.all([first, second])).toEqual([true, true]);
+      expect(audio.sources).toEqual(["B"]); expect(fallback.stop).toHaveBeenCalledOnce();
       expect(getUserMedia).toHaveBeenCalledTimes(3);
-      expect(getUserMedia.mock.calls[2][0].audio).toMatchObject({ deviceId: { exact: "C" }, echoCancellation: true });
+      expect(getUserMedia.mock.calls[2][0].audio.deviceId).toEqual({ exact: "B" });
+    });
+
+    it("discards a fallback already pending when Stop is pressed", async () => {
+      audio.actualMic = true;
+      let resolve!: (stream: unknown) => void;
+      const getUserMedia = vi.fn().mockRejectedValueOnce({ name: "OverconstrainedError" })
+        .mockReturnValueOnce(new Promise((yes) => { resolve = yes; }));
+      vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+      const mic = runtime.render(() => hook()); const first = mic.start(); const second = mic.start();
+      await settle(); expect(getUserMedia).toHaveBeenCalledTimes(2);
+      mic.stop(); const fallback = microphone("default"); resolve(fallback.stream);
+      expect(await Promise.all([first, second])).toEqual([false, false]);
+      expect(fallback.stop).toHaveBeenCalledOnce(); expect(audio.sources).toEqual([]);
+      expect(getUserMedia).toHaveBeenCalledTimes(2);
+    });
+
+    it("reports an already-ended arrival to every caller and permits a fresh retry", async () => {
+      const mic = runtime.render(() => hook()); const first = mic.start(); const second = mic.start();
+      const dead = microphone("dead", "ended");
+      audio.requests[0].resolve({ stream: dead.stream, error: null });
+      expect(await Promise.all([first, second])).toEqual([false, false]);
+      const failed = runtime.render(() => hook());
+      expect(failed.listening).toBe(false); expect(failed.error).toMatch(/microphone stopped/i);
+      expect(dead.stop).toHaveBeenCalledOnce(); expect(audio.sources).toEqual([]);
+      const retry = failed.start(); const live = microphone("live");
+      audio.requests[1].resolve({ stream: live.stream, error: null });
+      await expect(retry).resolves.toBe(true);
+      expect(runtime.render(() => hook()).listening).toBe(true);
     });
 
     it("settles after an unavailable device falls back to the default", async () => {

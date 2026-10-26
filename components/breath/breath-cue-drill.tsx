@@ -202,11 +202,17 @@ export function BreathCueDrill({
   useEffect(() => {
     const inhale = breath.lastInhale;
     if (!available || !gated || phase !== "breath" || !inhale || inhale.endMs < breathSinceRef.current) return;
+    const now = latest.current;
+    // The detector can confirm an old hiss on the first frame after a gap.
+    // Validate continuity before that event can open and backdate a hold.
+    if (lastFrameRef.current > 0 && now.t - lastFrameRef.current > MAX_HOLD_GAP_MS) {
+      breathSinceRef.current = now.t;
+      return;
+    }
     markActiveAt(performance.now());
     setHeard((n) => n + 1);
     setLastBreathSec(Math.round(inhale.durationSec * 10) / 10);
     setCutShort(false);
-    const now = latest.current;
     if (inhale.endedByHiss && now.volume > threshold) {
       // Straight into a hiss: the note began at the split, a moment before
       // the breath was reported, and is timed from there.
@@ -246,6 +252,12 @@ export function BreathCueDrill({
     if (now === 0) return;
     const previous = lastFrameRef.current;
     lastFrameRef.current = now;
+    if (phase === "breath") {
+      // Also reject the old inhale if its state update arrives after the frame.
+      // Keep the existing wait/fallback timer: this is still the same gate.
+      if (previous > 0 && now - previous > MAX_HOLD_GAP_MS) breathSinceRef.current = now;
+      return;
+    }
     if (phase !== "ready" && phase !== "holding") return;
     if (previous > 0 && now - previous > MAX_HOLD_GAP_MS) {
       restartInterruptedRep();
