@@ -190,8 +190,10 @@ jobs:
               run_check desktop-audit node e2e/run.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --viewport=desktop-1280 --json=browser-results/desktop-audit.json
               ;;
             audio)
+              run_check mic-preferences node e2e/mic-preferences.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check mic-startup node e2e/mic-startup.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check ear-mic-interruption node e2e/ear-mic-interruption.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check ear-keyboard node e2e/ear-keyboard.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check mic-release node e2e/mic-release.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check pitch-precision node e2e/pitch-precision.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/pitch-precision.json
               run_check breath-gate node e2e/breath-gate.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/breath-gate.json

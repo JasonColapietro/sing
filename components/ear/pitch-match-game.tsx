@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ignoreEarShortcut } from "./keyboard";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { useAudioPrefs } from "@/lib/audio/devices";
@@ -294,6 +295,7 @@ export function PitchMatchGame({
   // Keyboard: Enter advances from result, R replays the reference.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (ignoreEarShortcut(e)) return;
       if (!listening || session.done || target === null) return;
       if (e.key === "Enter" && phase === "result") next();
       if ((e.key === "r" || e.key === "R") && replayAllowed)

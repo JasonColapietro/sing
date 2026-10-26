@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getAudioContext } from "./context";
 import { MIC_ENDED_MESSAGE, openMic, watchMicEnd } from "./mic";
-import { useAudioPrefs } from "./devices";
+import { getAudioPrefs, useAudioPrefs } from "./devices";
 import { DEFAULT_CLARITY_THRESHOLD, detectPitch } from "./pitch";
 import { doseDay } from "./vocal-dose";
 
@@ -80,6 +80,7 @@ export function useAnalyser(opts?: {
 
   const latest = useRef<AnalyserFrame>(emptyFrame());
   const streamRef = useRef<MediaStream | null>(null);
+  const activePrefsRef = useRef<{ prefs: ReturnType<typeof getAudioPrefs>; clarityThreshold: number } | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   /** Stops listening for the open stream's mic going away — see `usePitch`. */
   const unwatchRef = useRef<() => void>(() => {});
@@ -107,6 +108,7 @@ export function useAnalyser(opts?: {
     unwatchRef.current = () => {};
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
+    activePrefsRef.current = null;
     sourceRef.current?.disconnect();
     sourceRef.current = null;
     latest.current = emptyFrame();
@@ -138,17 +140,53 @@ export function useAnalyser(opts?: {
     async function openStream(): Promise<boolean> {
     setError(null);
 
-    const opened = await openMic();
-    // Left the room while the permission prompt was up — see `usePitch`.
-    if (!mountedRef.current || attempt !== attemptRef.current) {
-      opened.stream?.getTracks().forEach((t) => t.stop());
-      return false;
+    let opened: Awaited<ReturnType<typeof openMic>>;
+    let openedPrefs: ReturnType<typeof getAudioPrefs>;
+    // Preferences can change while permission/device initialization is pending.
+    // Reconcile sequentially inside the shared promise, so every caller waits
+    // for the latest choice and no second permission request runs in parallel.
+    while (true) {
+      const wanted = getAudioPrefs();
+      const changed = (acquiredInput = wanted.inputId) => {
+        const current = getAudioPrefs();
+        return current.inputId !== acquiredInput || current.monitoring !== wanted.monitoring;
+      };
+      try {
+        opened = await openMic({
+          deviceId: wanted.inputId,
+          monitoring: wanted.monitoring,
+          isCancelled: () => !mountedRef.current || attempt !== attemptRef.current,
+        });
+      } catch (cause) {
+        if (!mountedRef.current || attempt !== attemptRef.current) return false;
+        if (changed()) continue;
+        throw cause;
+      }
+      // Stop or exit still owns this attempt, even if newer preferences exist.
+      if (!mountedRef.current || attempt !== attemptRef.current) {
+        opened.stream?.getTracks().forEach((track) => track.stop());
+        return false;
+      }
+      const acquiredInput = opened.inputId ?? wanted.inputId;
+      if (changed(acquiredInput)) {
+        opened.stream?.getTracks().forEach((track) => track.stop());
+        continue;
+      }
+      openedPrefs = { ...wanted, inputId: acquiredInput };
+      break;
     }
     if (opened.stream === null) {
       setError(opened.error);
       return false;
     }
     const stream = opened.stream;
+    // The device can disappear while its permission result is being delivered.
+    // Do not publish success and let a queued ended notification undo it later.
+    if (stream.getTracks().some((track) => track.readyState === "ended")) {
+      stream.getTracks().forEach((track) => track.stop());
+      setError(MIC_ENDED_MESSAGE);
+      return false;
+    }
     // Own each resource before the next startup operation can throw.
     streamRef.current = stream;
 
@@ -163,6 +201,7 @@ export function useAnalyser(opts?: {
     analyser.minDecibels = -100;
     analyser.maxDecibels = -10;
     source.connect(analyser);
+    activePrefsRef.current = { prefs: openedPrefs, clarityThreshold };
     setSampleRate(ctx.sampleRate);
     listeningRef.current = true;
     setListening(true);
@@ -224,9 +263,13 @@ export function useAnalyser(opts?: {
   /** Reopens a running stream when the singer changes device — see `usePitch`. */
   useEffect(() => {
     if (!listeningRef.current) return;
+    // Acquisition may already have reconciled a change before React rendered
+    // it. Do not interrupt that stream again when this effect catches up.
+    const active = activePrefsRef.current;
+    if (active?.prefs.inputId === inputId && active.prefs.monitoring === monitoring && active.clarityThreshold === clarityThreshold) return;
     stop();
     void start();
-  }, [inputId, monitoring, start, stop]);
+  }, [inputId, monitoring, clarityThreshold, start, stop]);
 
   return { latest, listening, error, sampleRate, start, stop };
 }

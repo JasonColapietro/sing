@@ -23,9 +23,12 @@
  *                      only after a breath, and every breath is heard.
  *
  * Chrome takes the fake capture file once per process and loops it, so each
- * case gets its own browser. Exits non-zero when any case fails.
+ * case gets its own browser. Visibility cases require --executable or
+ * --channel=chromium so they can launch without Playwright focus overrides.
+ * Exits non-zero when any case fails.
  */
 import pw from "playwright";
+import { launchLifecycleBrowser } from "./chromium-lifecycle.mjs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -84,24 +87,32 @@ function fanThenVowel() {
   return mixAt(fan({ sampleRate: SR, length: take.length, level: 0.01 }), take);
 }
 
-async function withBrowser(wav, drill, fn) {
-  const browser = await chromium.launch({
+async function withBrowser(wav, drill, fn, lifecycle = false) {
+  const args = [
+    "--use-fake-ui-for-media-stream",
+    "--use-fake-device-for-media-stream",
+    `--use-file-for-fake-audio-capture=${wav}`,
+    "--autoplay-policy=no-user-gesture-required",
+  ];
+  const owned = lifecycle
+    ? await launchLifecycleBrowser(EXECUTABLE ?? (CHANNEL === "chromium" ? chromium.executablePath() : null), args)
+    : null;
+  const browser = owned?.browser ?? await chromium.launch({
     ...(EXECUTABLE ? { executablePath: EXECUTABLE } : { channel: CHANNEL }),
-    args: [
-      "--use-fake-ui-for-media-stream",
-      "--use-fake-device-for-media-stream",
-      `--use-file-for-fake-audio-capture=${wav}`,
-      "--autoplay-policy=no-user-gesture-required",
-    ],
+    args,
   });
   try {
-    const context = await browser.newContext();
+    const context = owned?.context ?? await browser.newContext();
     await context.addInitScript(() => {
       try { localStorage.clear(); sessionStorage.clear(); } catch {}
       window.__singBreathProbe = [];
     });
     const page = await context.newPage();
     await page.goto(`${BASE}/breath?drill=${drill}`, { waitUntil: "networkidle" });
+    if (owned) {
+      await page.bringToFront();
+      await page.waitForFunction(() => document.visibilityState === "visible", null, { polling: 50 });
+    }
     await page.getByRole("button", { name: "Enable microphone" }).first().click();
     const beganAt = await page.evaluate(() => performance.now());
     try {
@@ -109,14 +120,18 @@ async function withBrowser(wav, drill, fn) {
     } catch (error) {
       console.error("Breath test state:", JSON.stringify({
         drill,
+        ...(owned ? { browserStderr: owned.diagnostics() } : {}),
         elapsedMs: await page.evaluate((began) => performance.now() - began, beganAt),
+        visibility: await page.evaluate(() => document.visibilityState),
+        interruption: await page.evaluate(() => window.__breathInterruption ?? null),
         text: await page.locator('[role="dialog"]').allTextContents(),
         inhales: await page.evaluate(() => window.__singBreathProbe.filter((p) => p.inhale).map((p) => p.inhale)),
       }));
       throw error;
     }
   } finally {
-    await browser.close();
+    if (owned) await owned.close();
+    else await browser.close();
   }
 }
 
@@ -133,6 +148,76 @@ async function readResult(page) {
 }
 
 const CASES = [
+  ...["sustain", "cue"].map((drill) => ({
+    name: `${drill} visibility interruption`,
+    lifecycle: true,
+    drill,
+    make: () => inhaleThenVowel(8),
+    async run(page) {
+      if (drill === "cue") await page.getByRole("button", { name: "Begin", exact: true }).click();
+      await page.getByText("Hold", { exact: true }).waitFor({ timeout: 15000 });
+      const before = await page.locator('[role="dialog"]').innerText();
+      await page.evaluate(() => {
+        const probe = { events: [], maxFrameGap: 0, frames: 0 };
+        window.__breathInterruption = probe;
+        for (const type of ["visibilitychange", "freeze", "resume"]) {
+          document.addEventListener(type, () => probe.events.push({ type, visibility: document.visibilityState }));
+        }
+        let previous = performance.now();
+        const frame = (now) => {
+          probe.maxFrameGap = Math.max(probe.maxFrameGap, now - previous);
+          probe.frames++;
+          previous = now;
+          requestAnimationFrame(frame);
+        };
+        requestAnimationFrame(frame);
+      });
+      await page.waitForFunction(() => window.__breathInterruption.frames > 0);
+      const cdp = await page.context().newCDPSession(page);
+      let cover;
+      try {
+        // This case uses the default context of a noDefaults CDP connection,
+        // so no other session owns a focus-emulation visible-capture handle.
+        // Unfreezing alone leaves Chromium's page hidden. Select a separate
+        // tab so returning below is a real hidden -> visible tab transition,
+        // not bringToFront on an already-selected (but still hidden) page.
+        cover = await page.context().newPage();
+        await cover.bringToFront();
+        await page.waitForFunction(() => document.visibilityState === "hidden", null, { timeout: 3000, polling: 50 });
+        await cdp.send("Page.setWebLifecycleState", { state: "frozen" });
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      } finally {
+        try {
+          await cdp.send("Page.setWebLifecycleState", { state: "active" });
+          await page.bringToFront();
+          // rAF polling cannot observe visibility while rAF is suspended.
+          await page.waitForFunction(() => document.visibilityState === "visible", null, { timeout: 3000, polling: 50 });
+        } finally {
+          try { await cover?.close(); }
+          finally { await cdp.detach(); }
+        }
+      }
+      const failures = [];
+      // Visibility can return before the first resumed animation frame. Let
+      // the probe observe that frame before evaluating the interruption.
+      await page.waitForFunction(() => window.__breathInterruption.maxFrameGap > 900, null, { timeout: 3000, polling: 50 }).catch(() => {});
+      const interruption = await page.evaluate(() => window.__breathInterruption);
+      if (!interruption.events.some((event) => event.type === "visibilitychange" && event.visibility === "hidden"))
+        failures.push("fixture did not deliver a hidden visibility event");
+      if (!interruption.events.some((event) => event.type === "visibilitychange" && event.visibility === "visible"))
+        failures.push("fixture did not deliver a visible visibility event on return");
+      if (!(interruption.maxFrameGap > 900))
+        failures.push(`fixture did not interrupt observed frames: largest gap ${interruption.maxFrameGap.toFixed(0)} ms`);
+      try { await page.getByText("Breathe in", { exact: true }).waitFor({ timeout: 3000 }); }
+      catch { failures.push("unobserved time did not reset the unfinished hold to a fresh breath"); }
+      if (drill === "cue" && await page.getByRole("img", { name: "0 of 6 reps done", exact: true }).count() !== 1)
+        failures.push("interrupted cue counted a rep");
+      const sessions = await page.evaluate(() => JSON.parse(localStorage.getItem("suede-sing:progress:v1") ?? "{}").sessions ?? []);
+      if (sessions.length) failures.push("interrupted hold logged practice");
+      if (await page.getByText(/^Breath · /).count()) failures.push("interrupted hold completed the drill");
+      return { failures, interruption, before, after: await page.locator('[role="dialog"]').innerText() };
+    },
+  })),
   {
     name: "inhale then vowel",
     drill: "sustain",
@@ -239,7 +324,7 @@ try {
     try {
       result = {
         name: testCase.name,
-        ...(await withBrowser(wav, testCase.drill, (page) => testCase.run(page))),
+        ...(await withBrowser(wav, testCase.drill, (page) => testCase.run(page), testCase.lifecycle)),
       };
     } catch (error) {
       result = { name: testCase.name, failures: [`crashed: ${error.message.split("\n")[0]}`] };
@@ -252,6 +337,8 @@ try {
         : `inhales ${result.inhales}  ${result.inhaleSec !== undefined ? `breath ${result.inhaleSec.toFixed(2)} s  ` : ""}results "${result.text}"`;
     console.log(`${mark} ${result.name.padEnd(18)} ${stats}`);
     for (const f of result.failures) console.log(`       ${f}`);
+    if (result.failures.length && result.interruption)
+      console.log(`       interruption diagnostics: ${JSON.stringify({ interruption: result.interruption, before: result.before, after: result.after })}`);
   }
 } finally {
   await rm(dir, { recursive: true, force: true });

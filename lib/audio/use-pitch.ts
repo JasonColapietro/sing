@@ -7,7 +7,7 @@ import { median } from "./median";
 import { freqToNote, type NoteInfo } from "./notes";
 import { getAudioContext } from "./context";
 import { MIC_ENDED_MESSAGE, openMic, watchMicEnd } from "./mic";
-import { useAudioPrefs } from "./devices";
+import { getAudioPrefs, useAudioPrefs } from "./devices";
 
 export interface PitchFrame {
   /** Median-smoothed frequency in Hz, or null when no confident voiced pitch. */
@@ -111,6 +111,7 @@ export function usePitch(opts?: {
 
   const latest = useRef<PitchFrame>(EMPTY_FRAME);
   const streamRef = useRef<MediaStream | null>(null);
+  const activePrefsRef = useRef<{ prefs: ReturnType<typeof getAudioPrefs>; clarityThreshold: number } | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   /** Stops listening for the open stream's mic going away (watchMicEnd). */
   const unwatchRef = useRef<() => void>(() => {});
@@ -158,6 +159,7 @@ export function usePitch(opts?: {
     unwatchRef.current = () => {};
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
+    activePrefsRef.current = null;
     sourceRef.current?.disconnect();
     sourceRef.current = null;
     histRef.current = [];
@@ -191,20 +193,53 @@ export function usePitch(opts?: {
     async function openStream(): Promise<boolean> {
     setError(null);
 
-    const opened = await openMic();
-    // Left the room while the permission prompt was up. Without this the tracks
-    // stay live on a component that no longer exists — the unmount cleanup ran
-    // while `streamRef` was still null, so it had nothing to stop — and the
-    // browser's recording indicator stays on with no UI left to turn it off.
-    if (!mountedRef.current || attempt !== attemptRef.current) {
-      opened.stream?.getTracks().forEach((t) => t.stop());
-      return false;
+    let opened: Awaited<ReturnType<typeof openMic>>;
+    let openedPrefs: ReturnType<typeof getAudioPrefs>;
+    // Preferences can change while permission/device initialization is pending.
+    // Reconcile sequentially inside the shared promise, so every caller waits
+    // for the latest choice and no second permission request runs in parallel.
+    while (true) {
+      const wanted = getAudioPrefs();
+      const changed = (acquiredInput = wanted.inputId) => {
+        const current = getAudioPrefs();
+        return current.inputId !== acquiredInput || current.monitoring !== wanted.monitoring;
+      };
+      try {
+        opened = await openMic({
+          deviceId: wanted.inputId,
+          monitoring: wanted.monitoring,
+          isCancelled: () => !mountedRef.current || attempt !== attemptRef.current,
+        });
+      } catch (cause) {
+        if (!mountedRef.current || attempt !== attemptRef.current) return false;
+        if (changed()) continue;
+        throw cause;
+      }
+      // Stop or exit still owns this attempt, even if newer preferences exist.
+      if (!mountedRef.current || attempt !== attemptRef.current) {
+        opened.stream?.getTracks().forEach((track) => track.stop());
+        return false;
+      }
+      const acquiredInput = opened.inputId ?? wanted.inputId;
+      if (changed(acquiredInput)) {
+        opened.stream?.getTracks().forEach((track) => track.stop());
+        continue;
+      }
+      openedPrefs = { ...wanted, inputId: acquiredInput };
+      break;
     }
     if (opened.stream === null) {
       setError(opened.error);
       return false;
     }
     const stream = opened.stream;
+    // The device can disappear while its permission result is being delivered.
+    // Do not publish success and let a queued ended notification undo it later.
+    if (stream.getTracks().some((track) => track.readyState === "ended")) {
+      stream.getTracks().forEach((track) => track.stop());
+      setError(MIC_ENDED_MESSAGE);
+      return false;
+    }
     // Own each resource before the next startup operation can throw.
     streamRef.current = stream;
 
@@ -221,6 +256,7 @@ export function usePitch(opts?: {
     // below already spans more time than the extra 43 ms this adds.
     analyser.fftSize = PITCH_FFT_SIZE;
     source.connect(analyser);
+    activePrefsRef.current = { prefs: openedPrefs, clarityThreshold };
     listeningRef.current = true;
     setListening(true);
     // An unplugged or dropped mic ends the track and the analyser reads
@@ -325,9 +361,13 @@ export function usePitch(opts?: {
    */
   useEffect(() => {
     if (!listeningRef.current) return;
+    // Acquisition may already have reconciled a change before React rendered
+    // it. Do not interrupt that stream again when this effect catches up.
+    const active = activePrefsRef.current;
+    if (active?.prefs.inputId === inputId && active.prefs.monitoring === monitoring && active.clarityThreshold === clarityThreshold) return;
     stop();
     void start();
-  }, [inputId, monitoring, start, stop]);
+  }, [inputId, monitoring, clarityThreshold, start, stop]);
 
   const getStream = useCallback(() => streamRef.current, []);
   const subscribe = useCallback((listener: PitchFrameListener) => {

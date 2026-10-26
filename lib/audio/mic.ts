@@ -141,12 +141,20 @@ export function watchMicEnd(stream: MediaStream, onEnded: () => void): () => voi
  *
  * Options default to the singer's stored choices, so a room that just calls
  * `openMic()` still honours the device they picked in some other room.
+ * Results identify the input actually requested, including a refused fallback.
  */
 export async function openMic(
-  opts: { deviceId?: string; monitoring?: Monitoring } = {},
+  opts: {
+    deviceId?: string;
+    monitoring?: Monitoring;
+    /** A pending browser prompt cannot be aborted, but its fallback can. */
+    isCancelled?: () => boolean;
+  } = {},
 ): Promise<
-  { stream: MediaStream; error: null } | { stream: null; error: string }
+  { stream: MediaStream; error: null; inputId?: string } | { stream: null; error: string; inputId?: string }
 > {
+  const cancelled = () => opts.isCancelled?.() ?? false;
+  if (cancelled()) return { stream: null, error: "Microphone request canceled." };
   // Using a tool needs an account; this starts the redirect to sign-in before
   // the browser's mic prompt can appear.
   if (!requireAccountToUse()) {
@@ -173,21 +181,33 @@ export async function openMic(
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: constraintsFor(deviceId, monitoring),
     });
-    return { stream, error: null };
+    return { stream, error: null, inputId: deviceId };
   } catch (cause) {
     // The chosen microphone is gone — unplugged, or an id Safari rotated
     // between sessions. Falling back to the system default beats handing
     // someone a dead room and an error about constraints they have never heard
     // of, and forgetting the preference stops it recurring on every press.
     if (deviceId && isOverconstrained(cause)) {
+      // Only a still-wanted request may forget an input or open the default.
+      // The caller reconciles newer preferences; Stop must not prompt again.
+      if (cancelled() || getInputDeviceId() !== deviceId || getMonitoring() !== monitoring) {
+        return { stream: null, error: micErrorMessage(cause) };
+      }
       clearInputDevice();
+      // Clearing the store notifies subscribers synchronously. They can leave
+      // the room or choose another input before this fallback starts.
+      if (cancelled() || getInputDeviceId() !== "" || getMonitoring() !== monitoring) {
+        return { stream: null, error: micErrorMessage(cause) };
+      }
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: constraintsFor("", monitoring),
         });
-        return { stream, error: null };
+        // Report the acquired constraint, not the original failed device. A
+        // user can select that device again while the default request waits.
+        return { stream, error: null, inputId: "" };
       } catch (fallbackCause) {
-        return { stream: null, error: micErrorMessage(fallbackCause) };
+        return { stream: null, error: micErrorMessage(fallbackCause), inputId: "" };
       }
     }
     return { stream: null, error: micErrorMessage(cause) };

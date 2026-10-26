@@ -21,7 +21,7 @@ try {
     { path: "/range?mode=pitch#start", start: "Start singing", retry: "Try again", stop: "Stop mic" },
     { path: "/analyze", start: "Enable microphone", retry: "Enable microphone", stop: "Stop" },
   ]) {
-    for (const stage of ["createMediaStreamSource", "createAnalyser"]) {
+    for (const stage of ["createMediaStreamSource", "createAnalyser", "endedStream"]) {
       const context = await browser.newContext({ viewport: { width: 375, height: 667 } });
       try {
         await context.addInitScript((failureStage) => {
@@ -33,16 +33,22 @@ try {
             const audio = new AudioContext();
             const stream = audio.createMediaStreamDestination().stream;
             tracks.push(...stream.getTracks());
+            if (failureStage === "endedStream" && fail) {
+              fail = false;
+              stream.getTracks().forEach((track) => track.stop());
+            }
             return stream;
           };
-          const original = AudioContext.prototype[failureStage];
-          AudioContext.prototype[failureStage] = function (...params) {
-            if (fail && tracks.length > 0) {
-              fail = false;
-              throw new DOMException("Injected audio setup failure", "InvalidStateError");
-            }
-            return original.apply(this, params);
-          };
+          if (failureStage !== "endedStream") {
+            const original = AudioContext.prototype[failureStage];
+            AudioContext.prototype[failureStage] = function (...params) {
+              if (fail && tracks.length > 0) {
+                fail = false;
+                throw new DOMException("Injected audio setup failure", "InvalidStateError");
+              }
+              return original.apply(this, params);
+            };
+          }
           window.__micStartup = () => ({
             opened: tracks.length,
             live: tracks.filter((track) => track.readyState === "live").length,
@@ -55,7 +61,8 @@ try {
         await page.waitForLoadState("networkidle");
         const start = page.getByRole("button", { name: room.start, exact: true });
         await start.click();
-        const alert = page.getByRole("alert").filter({ hasText: "The microphone couldn't start." });
+        const alert = page.getByRole("alert").filter({ hasText: stage === "endedStream"
+          ? "The microphone stopped." : "The microphone couldn't start." });
         await alert.waitFor({ timeout: 5000 });
         assert.deepEqual(await page.evaluate(() => window.__micStartup()), { opened: 1, live: 0 });
         const retry = page.getByRole("button", { name: room.retry, exact: true });

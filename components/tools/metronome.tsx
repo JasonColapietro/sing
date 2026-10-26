@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { clickAt, playTone } from "@/lib/audio/synth";
+import { clickAt, createToneGroup, playTone } from "@/lib/audio/synth";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
 import { Button, Card, Pill, SectionLabel } from "@/components/ui";
 
@@ -62,6 +62,9 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
       setBeat(-1);
       return;
     }
+    // Own future subdivisions as well as the short lookahead clicks: at a
+    // slow tempo an eighth can already be scheduled a second after Stop.
+    const tones = createToneGroup();
     const tick = () => {
       const now = audioNow();
       const horizon = now + LOOKAHEAD_SEC;
@@ -95,13 +98,14 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
       while (s.nextTime < horizon) {
         const interval = 60 / bpmRef.current;
         const beatInBar = s.beat % beatsRef.current;
-        clickAt(s.nextTime, beatInBar === 0);
+        clickAt(s.nextTime, beatInBar === 0, tones.node);
         if (subRef.current === "eighth") {
           // Lighter sub-click halfway through the beat.
           playTone(96, {
             dur: 0.03,
             gain: 0.06,
             at: s.nextTime + interval / 2 - audioNow(),
+            out: tones.node,
           });
         }
         queue.current.push({ time: s.nextTime, beat: beatInBar });
@@ -127,6 +131,7 @@ export function Metronome({ onActive }: { onActive: (active: boolean) => void })
     return () => {
       window.clearInterval(intervalId);
       cancelAnimationFrame(raf);
+      tones.cancel();
     };
   }, [running]);
 
