@@ -23,9 +23,12 @@
  *                      only after a breath, and every breath is heard.
  *
  * Chrome takes the fake capture file once per process and loops it, so each
- * case gets its own browser. Exits non-zero when any case fails.
+ * case gets its own browser. Visibility cases require --executable or
+ * --channel=chromium so they can launch without Playwright focus overrides.
+ * Exits non-zero when any case fails.
  */
 import pw from "playwright";
+import { launchLifecycleBrowser } from "./chromium-lifecycle.mjs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -84,24 +87,32 @@ function fanThenVowel() {
   return mixAt(fan({ sampleRate: SR, length: take.length, level: 0.01 }), take);
 }
 
-async function withBrowser(wav, drill, fn) {
-  const browser = await chromium.launch({
+async function withBrowser(wav, drill, fn, lifecycle = false) {
+  const args = [
+    "--use-fake-ui-for-media-stream",
+    "--use-fake-device-for-media-stream",
+    `--use-file-for-fake-audio-capture=${wav}`,
+    "--autoplay-policy=no-user-gesture-required",
+  ];
+  const owned = lifecycle
+    ? await launchLifecycleBrowser(EXECUTABLE ?? (CHANNEL === "chromium" ? chromium.executablePath() : null), args)
+    : null;
+  const browser = owned?.browser ?? await chromium.launch({
     ...(EXECUTABLE ? { executablePath: EXECUTABLE } : { channel: CHANNEL }),
-    args: [
-      "--use-fake-ui-for-media-stream",
-      "--use-fake-device-for-media-stream",
-      `--use-file-for-fake-audio-capture=${wav}`,
-      "--autoplay-policy=no-user-gesture-required",
-    ],
+    args,
   });
   try {
-    const context = await browser.newContext();
+    const context = owned?.context ?? await browser.newContext();
     await context.addInitScript(() => {
       try { localStorage.clear(); sessionStorage.clear(); } catch {}
       window.__singBreathProbe = [];
     });
     const page = await context.newPage();
     await page.goto(`${BASE}/breath?drill=${drill}`, { waitUntil: "networkidle" });
+    if (owned) {
+      await page.bringToFront();
+      await page.waitForFunction(() => document.visibilityState === "visible");
+    }
     await page.getByRole("button", { name: "Enable microphone" }).first().click();
     const beganAt = await page.evaluate(() => performance.now());
     try {
@@ -109,6 +120,7 @@ async function withBrowser(wav, drill, fn) {
     } catch (error) {
       console.error("Breath test state:", JSON.stringify({
         drill,
+        ...(owned ? { browserStderr: owned.diagnostics() } : {}),
         elapsedMs: await page.evaluate((began) => performance.now() - began, beganAt),
         text: await page.locator('[role="dialog"]').allTextContents(),
         inhales: await page.evaluate(() => window.__singBreathProbe.filter((p) => p.inhale).map((p) => p.inhale)),
@@ -116,7 +128,8 @@ async function withBrowser(wav, drill, fn) {
       throw error;
     }
   } finally {
-    await browser.close();
+    if (owned) await owned.close();
+    else await browser.close();
   }
 }
 
@@ -135,6 +148,7 @@ async function readResult(page) {
 const CASES = [
   ...["sustain", "cue"].map((drill) => ({
     name: `${drill} visibility interruption`,
+    lifecycle: true,
     drill,
     make: () => inhaleThenVowel(8),
     async run(page) {
@@ -159,9 +173,8 @@ const CASES = [
       await page.waitForFunction(() => window.__breathInterruption.frames > 0);
       const cdp = await page.context().newCDPSession(page);
       try {
-        // Playwright enables focus emulation by default, forcing visibility
-        // to visible and suppressing visibilitychange. Exercise real hiding.
-        await cdp.send("Emulation.setFocusEmulationEnabled", { enabled: false });
+        // This case uses the default context of a noDefaults CDP connection,
+        // so no other session owns a focus-emulation visible-capture handle.
         // Chromium hides and freezes this page while capture keeps its place
         // in the long vowel. Returning must require a new observed breath.
         await cdp.send("Page.setWebLifecycleState", { state: "frozen" });
@@ -297,7 +310,7 @@ try {
     try {
       result = {
         name: testCase.name,
-        ...(await withBrowser(wav, testCase.drill, (page) => testCase.run(page))),
+        ...(await withBrowser(wav, testCase.drill, (page) => testCase.run(page), testCase.lifecycle)),
       };
     } catch (error) {
       result = { name: testCase.name, failures: [`crashed: ${error.message.split("\n")[0]}`] };
