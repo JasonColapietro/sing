@@ -111,7 +111,7 @@ async function withBrowser(wav, drill, fn, lifecycle = false) {
     await page.goto(`${BASE}/breath?drill=${drill}`, { waitUntil: "networkidle" });
     if (owned) {
       await page.bringToFront();
-      await page.waitForFunction(() => document.visibilityState === "visible");
+      await page.waitForFunction(() => document.visibilityState === "visible", null, { polling: 50 });
     }
     await page.getByRole("button", { name: "Enable microphone" }).first().click();
     const beganAt = await page.evaluate(() => performance.now());
@@ -122,6 +122,8 @@ async function withBrowser(wav, drill, fn, lifecycle = false) {
         drill,
         ...(owned ? { browserStderr: owned.diagnostics() } : {}),
         elapsedMs: await page.evaluate((began) => performance.now() - began, beganAt),
+        visibility: await page.evaluate(() => document.visibilityState),
+        interruption: await page.evaluate(() => window.__breathInterruption ?? null),
         text: await page.locator('[role="dialog"]').allTextContents(),
         inhales: await page.evaluate(() => window.__singBreathProbe.filter((p) => p.inhale).map((p) => p.inhale)),
       }));
@@ -172,26 +174,38 @@ const CASES = [
       });
       await page.waitForFunction(() => window.__breathInterruption.frames > 0);
       const cdp = await page.context().newCDPSession(page);
+      let cover;
       try {
         // This case uses the default context of a noDefaults CDP connection,
         // so no other session owns a focus-emulation visible-capture handle.
-        // Chromium hides and freezes this page while capture keeps its place
-        // in the long vowel. Returning must require a new observed breath.
+        // Unfreezing alone leaves Chromium's page hidden. Select a separate
+        // tab so returning below is a real hidden -> visible tab transition,
+        // not bringToFront on an already-selected (but still hidden) page.
+        cover = await page.context().newPage();
+        await cover.bringToFront();
+        await page.waitForFunction(() => document.visibilityState === "hidden", null, { timeout: 3000, polling: 50 });
         await cdp.send("Page.setWebLifecycleState", { state: "frozen" });
         await new Promise((resolve) => setTimeout(resolve, 1500));
       } finally {
-        await cdp.send("Page.setWebLifecycleState", { state: "active" });
-        await page.bringToFront();
-        await cdp.detach();
+        try {
+          await cdp.send("Page.setWebLifecycleState", { state: "active" });
+          await page.bringToFront();
+          // rAF polling cannot observe visibility while rAF is suspended.
+          await page.waitForFunction(() => document.visibilityState === "visible", null, { timeout: 3000, polling: 50 });
+        } finally {
+          try { await cover?.close(); }
+          finally { await cdp.detach(); }
+        }
       }
-      await page.waitForFunction(() => document.visibilityState === "visible", null, { timeout: 3000 });
       const failures = [];
       // Visibility can return before the first resumed animation frame. Let
       // the probe observe that frame before evaluating the interruption.
-      await page.waitForFunction(() => window.__breathInterruption.maxFrameGap > 900, null, { timeout: 3000 }).catch(() => {});
+      await page.waitForFunction(() => window.__breathInterruption.maxFrameGap > 900, null, { timeout: 3000, polling: 50 }).catch(() => {});
       const interruption = await page.evaluate(() => window.__breathInterruption);
       if (!interruption.events.some((event) => event.type === "visibilitychange" && event.visibility === "hidden"))
         failures.push("fixture did not deliver a hidden visibility event");
+      if (!interruption.events.some((event) => event.type === "visibilitychange" && event.visibility === "visible"))
+        failures.push("fixture did not deliver a visible visibility event on return");
       if (!(interruption.maxFrameGap > 900))
         failures.push(`fixture did not interrupt observed frames: largest gap ${interruption.maxFrameGap.toFixed(0)} ms`);
       try { await page.getByText("Breathe in", { exact: true }).waitFor({ timeout: 3000 }); }
