@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ignoreEarShortcut } from "./keyboard";
 import { usePitch, type UsePitchResult } from "@/lib/audio/use-pitch";
 import { frameDelta, isFrameFresh } from "@/lib/audio/frame-clock";
 import { useAudioPrefs } from "@/lib/audio/devices";
@@ -178,6 +179,7 @@ export function MelodyEchoGame({
   // Keyboard: Enter = done singing / next round, R = hear again.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (ignoreEarShortcut(e)) return;
       if (!listening || session.done || melody === null) return;
       if (e.key === "Enter") {
         if (phase === "sing") finishSinging();

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { ignoreEarShortcut } from "./keyboard";
 import { playSequence, playTone } from "@/lib/audio/synth";
 import {
   INTERVAL_NAMES,
@@ -88,6 +89,7 @@ export function IntervalGame({
   // Keyboard: number keys answer, Enter advances, R replays.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (ignoreEarShortcut(e)) return;
       if (session.done) return;
       if (e.key === "Enter") {
         next();
