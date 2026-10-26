@@ -180,7 +180,9 @@ export async function openMic(
     // someone a dead room and an error about constraints they have never heard
     // of, and forgetting the preference stops it recurring on every press.
     if (deviceId && isOverconstrained(cause)) {
-      clearInputDevice();
+      // A newer picker choice may have arrived while this request waited.
+      // Forget only the input this failed attempt still owns.
+      if (getInputDeviceId() === deviceId) clearInputDevice();
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: constraintsFor("", monitoring),

@@ -77,6 +77,7 @@ vi.mock("./mic", () => ({
 }));
 vi.mock("./devices", () => ({
   useAudioPrefs: () => ({ inputId: null, monitoring: false }),
+  getAudioPrefs: () => ({ inputId: "", monitoring: "headphones" }),
 }));
 vi.mock("./context", () => ({
   getAudioContext: () => ({

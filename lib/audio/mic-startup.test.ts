@@ -87,7 +87,7 @@ vi.mock("./mic", () => ({
   },
   watchMicEnd: () => () => {},
 }));
-vi.mock("./devices", () => ({ useAudioPrefs: () => ({}) }));
+vi.mock("./devices", () => ({ useAudioPrefs: () => ({}), getAudioPrefs: () => ({ inputId: "", monitoring: "headphones" }) }));
 vi.mock("./vocal-dose", () => ({ doseDay: () => "2026-10-26" }));
 vi.mock("./context", () => ({
   getAudioContext: () => {
