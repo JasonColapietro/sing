@@ -176,6 +176,7 @@ jobs:
               run_check navigation-inputs node e2e/navigation-inputs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check progress-reset node e2e/progress-reset.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check recorder-recovery node e2e/recorder-recovery.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
+              run_check voice-tabs node e2e/voice-tabs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check mic-refusal node scripts/audit-mic-gate.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
               run_check programs node e2e/programs.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE" --json=browser-results/programs.json
               run_check song-first-practice node e2e/song-first-practice.mjs "$SING_BASE_URL" "--executable=$SING_BROWSER_EXECUTABLE"
