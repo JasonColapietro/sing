@@ -18,8 +18,8 @@ const browser = await chromium.launch({
 
 try {
   for (const room of [
-    { path: "/range?mode=pitch#start", start: "Start singing", stop: "Stop mic" },
-    { path: "/analyze", start: "Enable microphone", stop: "Stop" },
+    { path: "/range?mode=pitch#start", start: "Start singing", retry: "Try again", stop: "Stop mic" },
+    { path: "/analyze", start: "Enable microphone", retry: "Enable microphone", stop: "Stop" },
   ]) {
     for (const stage of ["createMediaStreamSource", "createAnalyser"]) {
       const context = await browser.newContext({ viewport: { width: 375, height: 667 } });
@@ -58,10 +58,11 @@ try {
         const alert = page.getByRole("alert").filter({ hasText: "The microphone couldn't start." });
         await alert.waitFor({ timeout: 5000 });
         assert.deepEqual(await page.evaluate(() => window.__micStartup()), { opened: 1, live: 0 });
-        assert.equal(await start.isEnabled(), true, "the failure leaves a retry control");
+        const retry = page.getByRole("button", { name: room.retry, exact: true });
+        assert.equal(await retry.isEnabled(), true, "the failure leaves a retry control");
         const bounds = await alert.boundingBox();
         assert.ok(bounds && bounds.y >= 0 && bounds.y + bounds.height <= 667, "failure feedback is visible on a phone");
-        await start.click();
+        await retry.click();
         const stop = page.getByRole("button", { name: room.stop, exact: true });
         await stop.waitFor();
         assert.equal(await alert.count(), 0, "successful retry clears the error");
