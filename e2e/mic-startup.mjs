@@ -76,6 +76,50 @@ try {
       }
     }
   }
+
+  // BreathStudio owns the mic across its drill and home views. Leaving the
+  // drill must cancel permission even though the hook itself stays mounted.
+  const context = await browser.newContext({ viewport: { width: 375, height: 667 } });
+  try {
+    await context.addInitScript(() => {
+      localStorage.clear();
+      localStorage.setItem("suede-sing:coach-intro:v1", new Date().toISOString());
+      const pending = [];
+      const tracks = [];
+      navigator.mediaDevices.getUserMedia = () => new Promise((resolve) => pending.push(resolve));
+      window.__pendingMicCount = () => pending.length;
+      window.__grantPendingMic = () => {
+        const audio = new AudioContext();
+        const stream = audio.createMediaStreamDestination().stream;
+        tracks.push(...stream.getTracks());
+        pending.shift()(stream);
+      };
+      window.__cancelledMicState = () => ({
+        opened: tracks.length,
+        live: tracks.filter((track) => track.readyState === "live").length,
+      });
+    });
+    const page = await context.newPage();
+    const errors = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto(`${base}/breath?drill=sustain`);
+    await page.waitForLoadState("networkidle");
+    const drill = page.getByRole("dialog", { name: "Sustain test", exact: true });
+    await drill.getByRole("button", { name: "Enable microphone", exact: true }).click();
+    await page.waitForFunction(() => window.__pendingMicCount() === 1);
+    await drill.getByRole("button", { name: "End drill", exact: true }).click();
+    await page.getByRole("heading", { name: "Breathing exercises for singers", exact: true }).waitFor();
+    await page.evaluate(() => window.__grantPendingMic());
+    await page.waitForFunction(() => {
+      const state = window.__cancelledMicState();
+      return state.opened === 1 && state.live === 0;
+    }, null, { timeout: 5000 });
+    assert.equal(await drill.count(), 0, "late permission does not reopen the drill");
+    assert.deepEqual(errors, []);
+    console.log("PASS breath drill: late permission after End drill is released on home");
+  } finally {
+    await context.close();
+  }
 } finally {
   await browser.close();
 }

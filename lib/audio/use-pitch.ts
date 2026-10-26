@@ -138,6 +138,10 @@ export function usePitch(opts?: {
    * once, and both "Enable microphone" and any exercise card call start().
    */
   const pendingRef = useRef<Promise<boolean> | null>(null);
+  // Stop can leave this hook mounted (for example, the breath room's home
+  // screen). A permission prompt cannot be dismissed programmatically, so
+  // invalidate its attempt and release its stream if it arrives later.
+  const attemptRef = useRef(0);
   const listenersRef = useRef(new Set<PitchFrameListener>());
 
   // The input device and monitoring mode, so a change made in the picker can
@@ -145,6 +149,8 @@ export function usePitch(opts?: {
   const { inputId, monitoring } = useAudioPrefs();
 
   const stop = useCallback(() => {
+    attemptRef.current++;
+    pendingRef.current = null;
     cancelAnimationFrame(rafRef.current);
     rafRef.current = 0;
     loopRef.current = null;
@@ -166,14 +172,18 @@ export function usePitch(opts?: {
     // the complete startup result before treating that stream as ready.
     if (pendingRef.current) return pendingRef.current;
     if (streamRef.current) return true;
+    const attempt = ++attemptRef.current;
     const run = openStream().catch(() => {
+      // A cancelled request's rejection must not stop a replacement stream
+      // or overwrite the replacement's error state.
+      if (attempt !== attemptRef.current || !mountedRef.current) return false;
       // Web Audio can fail after permission succeeds. Release the stream and
       // any source already created, then leave the room ready for a retry.
       stop();
       setError("The microphone couldn't start. Check your input and try again.");
       return false;
     }).finally(() => {
-      pendingRef.current = null;
+      if (pendingRef.current === run) pendingRef.current = null;
     });
     // Every concurrent caller shares cleanup and the handled result.
     pendingRef.current = run;
@@ -186,7 +196,7 @@ export function usePitch(opts?: {
     // stay live on a component that no longer exists — the unmount cleanup ran
     // while `streamRef` was still null, so it had nothing to stop — and the
     // browser's recording indicator stays on with no UI left to turn it off.
-    if (!mountedRef.current) {
+    if (!mountedRef.current || attempt !== attemptRef.current) {
       opened.stream?.getTracks().forEach((t) => t.stop());
       return false;
     }

@@ -19,6 +19,12 @@ const runtime = vi.hoisted(() => {
       slots.length = 0;
       counts.stateUpdates = 0;
     },
+    unmount() {
+      for (const slot of slots) {
+        const effect = slot as Effect | undefined;
+        if (typeof effect?.cleanup === "function") effect.cleanup();
+      }
+    },
     render<T>(hook: () => T): T {
       cursor = 0;
       queued = [];
@@ -67,10 +73,16 @@ vi.mock("react", async (importOriginal) => ({
   useEffect: runtime.useEffect,
 }));
 
-const audio = vi.hoisted(() => ({ failAt: "context", stop: vi.fn(), disconnect: vi.fn(), opens: 0 }));
+type MicReply = { stream: { getTracks: () => Array<{ stop: () => void }> } | null; error: string | null };
+const audio = vi.hoisted(() => ({
+  failAt: "context", stop: vi.fn(), disconnect: vi.fn(), opens: 0,
+  deferred: false,
+  requests: [] as Array<{ resolve: (reply: MicReply) => void; reject: (error: Error) => void }>,
+}));
 vi.mock("./mic", () => ({
   openMic: async () => {
     audio.opens++;
+    if (audio.deferred) return new Promise<MicReply>((resolve, reject) => audio.requests.push({ resolve, reject }));
     return { stream: { getTracks: () => [{ stop: audio.stop }] }, error: null };
   },
   watchMicEnd: () => () => {},
@@ -104,6 +116,8 @@ beforeEach(() => {
   audio.stop.mockClear();
   audio.disconnect.mockClear();
   audio.opens = 0;
+  audio.deferred = false;
+  audio.requests = [];
   vi.stubGlobal("requestAnimationFrame", vi.fn(() => 1));
   vi.stubGlobal("cancelAnimationFrame", vi.fn());
 });
@@ -111,6 +125,58 @@ afterEach(() => vi.unstubAllGlobals());
 
 for (const [name, hook] of [["usePitch", usePitch], ["useAnalyser", useAnalyser]] as const) {
   describe(name, () => {
+    it.each(["stop", "unmount"])("releases permission granted after %s without reactivating the mic", async (action) => {
+      audio.deferred = true; audio.failAt = "";
+      const mic = runtime.render(() => hook());
+      const pending = mic.start();
+      if (action === "stop") mic.stop();
+      else runtime.unmount();
+      const updates = runtime.counts.stateUpdates;
+      const trackStop = vi.fn();
+      audio.requests[0].resolve({ stream: { getTracks: () => [{ stop: trackStop }] }, error: null });
+      await expect(pending).resolves.toBe(false);
+      expect(trackStop).toHaveBeenCalledOnce();
+      expect(requestAnimationFrame).not.toHaveBeenCalled();
+      expect(runtime.counts.stateUpdates).toBe(updates);
+      if (action === "stop") expect(runtime.render(() => hook()).listening).toBe(false);
+    });
+
+    for (const outcome of ["grant", "refusal", "reject"] as const) {
+      it.each(["before", "after"])(`ignores an old ${outcome} arriving %s a replacement stream opens`, async (order) => {
+        audio.deferred = true; audio.failAt = "";
+        const mic = runtime.render(() => hook());
+        const first = mic.start();
+        mic.stop();
+        const next = mic.start();
+        expect(audio.opens).toBe(2);
+        const oldStop = vi.fn(); const newStop = vi.fn();
+        const finishOld = () => {
+          if (outcome === "reject") audio.requests[0].reject(new Error("Old request failed"));
+          else audio.requests[0].resolve(outcome === "grant"
+            ? { stream: { getTracks: () => [{ stop: oldStop }] }, error: null }
+            : { stream: null, error: "Old permission denied" });
+        };
+        const finishNew = () => audio.requests[1].resolve({ stream: { getTracks: () => [{ stop: newStop }] }, error: null });
+        if (order === "before") {
+          finishOld(); await expect(first).resolves.toBe(false);
+          // The old finally must not erase the replacement's pending promise.
+          const concurrent = mic.start(); expect(audio.opens).toBe(2);
+          finishNew(); await expect(concurrent).resolves.toBe(true);
+        } else {
+          finishNew(); await expect(next).resolves.toBe(true);
+          finishOld(); await expect(first).resolves.toBe(false);
+        }
+        await expect(next).resolves.toBe(true);
+        const active = runtime.render(() => hook());
+        expect(active.listening).toBe(true); expect(active.error).toBeNull();
+        expect(newStop).not.toHaveBeenCalled();
+        expect(audio.disconnect).not.toHaveBeenCalled();
+        expect(requestAnimationFrame).toHaveBeenCalledOnce();
+        expect(oldStop).toHaveBeenCalledTimes(outcome === "grant" ? 1 : 0);
+        active.stop(); expect(newStop).toHaveBeenCalledOnce();
+      });
+    }
+
     it.each(["context", "connect"])("does not report a partially initialized stream ready after %s fails", async (failure) => {
       audio.failAt = failure;
       const mic = runtime.render(() => hook());

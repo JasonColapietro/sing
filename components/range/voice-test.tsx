@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useLayoutEffect, useState } from "react";
+import { Suspense, useId, useLayoutEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PitchMeter } from "./pitch-meter";
 import { RangeTest } from "./range-test";
@@ -152,6 +152,7 @@ function VoiceTestContent({
   mode: VoiceTestMode;
   onModeChange?: (mode: VoiceTestMode) => void;
 }) {
+  const id = useId();
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
@@ -183,12 +184,26 @@ function VoiceTestContent({
               ink fill (2.48:1) and the control's border. Inset, the ring sits
               on the tab's own fill, and violet clears 3:1 on both the panel
               (4.07:1) and the ink (3.86:1). */}
-          {MODES.map((m) => (
+          {MODES.map((m, index) => (
             <button
               key={m.id}
               type="button"
+              id={`${id}-${m.id}-tab`}
               role="tab"
               aria-selected={mode === m.id}
+              aria-controls={`${id}-panel`}
+              tabIndex={mode === m.id ? 0 : -1}
+              onKeyDown={(event) => {
+                if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+                const next = event.key === "ArrowRight" ? (index + 1) % MODES.length
+                  : event.key === "ArrowLeft" ? (index + MODES.length - 1) % MODES.length
+                    : event.key === "Home" ? 0 : event.key === "End" ? MODES.length - 1 : null;
+                if (next === null) return;
+                event.preventDefault();
+                // Focus alone must not end a microphone session. Enter or
+                // Space activates the focused mode through the native button.
+                event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus();
+              }}
               onClick={() =>
                 onModeChange && switchVoiceTestMode(mode, m.id, onModeChange)
               }
@@ -211,6 +226,7 @@ function VoiceTestContent({
           (components/songs/mic-gate.tsx): the box is the right size from the
           first paint and its button goes live a moment later. A ?mode=range
           link then swaps in the range test, a little taller, below the fold. */}
+      <div id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-${mode}-tab`} tabIndex={0}>
       {mode === "pitch" ? (
         <PitchMeter
           onTryRange={
@@ -223,6 +239,7 @@ function VoiceTestContent({
       ) : (
         <RangeTest embedded />
       )}
+      </div>
     </main>
   );
 }

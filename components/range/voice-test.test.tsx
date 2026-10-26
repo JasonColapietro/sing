@@ -145,6 +145,23 @@ describe("voice-tool deep links", () => {
     }
   });
 
+  it("gives the selected mode one tab stop and names its content panel", () => {
+    for (const mode of ["pitch", "range"]) {
+      location.search = `?mode=${mode}`;
+      const html = renderToStaticMarkup(<VoiceTest />);
+      const tabs = html.match(/<button[^>]*role="tab"[^>]*>/g) ?? [];
+      expect(tabs).toHaveLength(2);
+      for (const tab of tabs) {
+        expect(tab).toContain(`tabindex="${tab.includes('aria-selected="true"') ? "0" : "-1"}"`);
+        const controls = tab.match(/aria-controls="([^"]+)"/)?.[1];
+        expect(controls).toBeTruthy();
+        expect(html).toContain(`id="${controls}" role="tabpanel"`);
+      }
+      const selectedId = tabs.find((tab) => tab.includes('aria-selected="true"'))?.match(/id="([^"]+)"/)?.[1];
+      expect(html).toContain(`aria-labelledby="${selectedId}"`);
+    }
+  });
+
   /**
    * rangeTestHref (lib/site.ts) is how every page links here. Each link it
    * builds has to open the tool it asks for, on the #start anchor above, and
