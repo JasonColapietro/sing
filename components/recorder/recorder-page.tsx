@@ -11,6 +11,7 @@ import {
 } from "@/components/ui";
 import { useWavDownloads } from "./use-wav-downloads";
 import { recorderShortcut } from "./shortcuts";
+import { createPlaybackRecovery } from "./playback-recovery";
 import { createPlaybackSeek } from "./playback-seek";
 import { useTakeAnalysis } from "./use-take-analysis";
 import { audioNow, getAudioContext } from "@/lib/audio/context";
@@ -186,6 +187,11 @@ export default function RecorderPageClient() {
   const [loadedId, setLoadedId] = useState<string | null>(null);
   const loadedIdRef = useRef<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackErrorId, setPlaybackErrorId] = useState<string | null>(null);
+  const [playbackRecovery] = useState(() => createPlaybackRecovery((takeId) => {
+    setIsPlaying(false);
+    setPlaybackErrorId(takeId);
+  }));
   const [positionSec, setPositionSec] = useState(0);
 
   // --- peaks cache ---
@@ -276,10 +282,10 @@ export default function RecorderPageClient() {
       micRef.current?.dispose();
       micRef.current = null;
       playbackSeek.clear();
-      audioRef.current?.pause();
+      playbackRecovery.pause(audioRef.current);
       if (urlRef.current) URL.revokeObjectURL(urlRef.current);
     };
-  }, [playbackSeek]);
+  }, [playbackSeek, playbackRecovery]);
 
   // Auto-dismiss the corner XP toast.
   useEffect(() => {
@@ -538,7 +544,7 @@ export default function RecorderPageClient() {
     if (recPhase !== "idle") return;
 
     // Pause any playback so it doesn't bleed into the take.
-    audioRef.current?.pause();
+    playbackRecovery.pause(audioRef.current);
 
     if (countIn) {
       setRecPhase("countin");
@@ -563,16 +569,23 @@ export default function RecorderPageClient() {
     } else {
       beginCapture();
     }
-  }, [micState, recPhase, countIn, beginCapture]);
+  }, [micState, recPhase, countIn, beginCapture, playbackRecovery]);
 
   // --- playback ---
   const ensureAudio = useCallback((): HTMLAudioElement => {
     if (!audioRef.current) {
       const a = new Audio();
-      a.addEventListener("timeupdate", () => setPositionSec(a.currentTime));
-      a.addEventListener("play", () => setIsPlaying(true));
-      a.addEventListener("pause", () => setIsPlaying(false));
+      a.addEventListener("timeupdate", () => {
+        if (mountedRef.current) setPositionSec(a.currentTime);
+      });
+      a.addEventListener("play", () => {
+        if (mountedRef.current && !a.paused && !a.error) setIsPlaying(true);
+      });
+      a.addEventListener("pause", () => {
+        if (mountedRef.current && a.paused) setIsPlaying(false);
+      });
       a.addEventListener("ended", () => {
+        if (!mountedRef.current || !a.ended) return;
         setIsPlaying(false);
         setPositionSec(0);
       });
@@ -585,7 +598,7 @@ export default function RecorderPageClient() {
     (take: TakeRecord) => {
       const a = ensureAudio();
       playbackSeek.clear();
-      a.pause();
+      playbackRecovery.pause(a);
       if (urlRef.current) URL.revokeObjectURL(urlRef.current);
       urlRef.current = URL.createObjectURL(take.blob);
       a.src = urlRef.current;
@@ -594,22 +607,29 @@ export default function RecorderPageClient() {
       setPositionSec(0);
       return a;
     },
-    [ensureAudio, playbackSeek],
+    [ensureAudio, playbackSeek, playbackRecovery],
   );
+
+  const playTake = useCallback((audio: HTMLAudioElement, take: TakeRecord) => {
+    setPlaybackErrorId(null);
+    playbackRecovery.play(audio, take.id);
+  }, [playbackRecovery]);
 
   const togglePlay = useCallback(
     (take: TakeRecord) => {
       setSelectedId(take.id);
       const a = ensureAudio();
-      if (loadedId === take.id) {
-        if (a.paused) void a.play().catch(() => {});
-        else a.pause();
+      if (loadedId === take.id && !a.error && playbackErrorId !== take.id) {
+        if (a.paused) playTake(a, take);
+        else playbackRecovery.pause(a);
       } else {
+        // Reload even the same take after a failure: play() cannot clear a
+        // failed media resource by itself.
         loadTake(take);
-        void a.play().catch(() => {});
+        playTake(a, take);
       }
     },
-    [ensureAudio, loadTake, loadedId],
+    [ensureAudio, loadTake, loadedId, playbackErrorId, playbackRecovery, playTake],
   );
 
   const seekTake = useCallback(
@@ -617,12 +637,13 @@ export default function RecorderPageClient() {
       setSelectedId(take.id);
       const a = ensureAudio();
       const wasPlaying = loadedId === take.id && !a.paused;
-      if (loadedId !== take.id) loadTake(take);
+      const needsLoad = loadedId !== take.id || !!a.error;
+      if (needsLoad) loadTake(take);
       const target = Math.max(0, Math.min(take.durationSec - 0.05, fraction * take.durationSec));
       playbackSeek.seek(a, target, setPositionSec);
-      if (wasPlaying || loadedId !== take.id) void a.play().catch(() => {});
+      if (wasPlaying || needsLoad) playTake(a, take);
     },
-    [ensureAudio, loadTake, loadedId, playbackSeek],
+    [ensureAudio, loadTake, loadedId, playbackSeek, playTake],
   );
 
   const deleteTake = useCallback(
@@ -642,7 +663,7 @@ export default function RecorderPageClient() {
       clearStorageIssue(take.id);
       if (loadedIdRef.current === take.id) {
         playbackSeek.clear();
-        audioRef.current?.pause();
+        playbackRecovery.pause(audioRef.current);
         if (urlRef.current) {
           URL.revokeObjectURL(urlRef.current);
           urlRef.current = null;
@@ -666,7 +687,7 @@ export default function RecorderPageClient() {
       setTakes(takesRef.current);
       refreshEstimate();
     },
-    [refreshEstimate, mutations, clearStorageIssue, forgetAnalysis, forgetWav, playbackSeek],
+    [refreshEstimate, mutations, clearStorageIssue, forgetAnalysis, forgetWav, playbackSeek, playbackRecovery],
   );
 
   const downloadOriginal = useCallback((take: TakeRecord) => {
@@ -688,15 +709,15 @@ export default function RecorderPageClient() {
       const a = ensureAudio();
       // Quick switch: keep the current position so A/B lines up.
       const offset = loadedId !== null && loadedId !== id ? a.currentTime : -1;
-      if (loadedId !== id) loadTake(take);
+      if (loadedId !== id || a.error) loadTake(take);
       setSelectedId(take.id);
       if (offset >= 0) {
         const target = Math.min(offset, Math.max(0, take.durationSec - 0.05));
         playbackSeek.seek(a, target, setPositionSec);
       }
-      void a.play().catch(() => {});
+      playTake(a, take);
     },
-    [ensureAudio, loadTake, loadedId, playbackSeek],
+    [ensureAudio, loadTake, loadedId, playbackSeek, playTake],
   );
 
   // --- self-review ---
@@ -986,6 +1007,15 @@ export default function RecorderPageClient() {
                   </div>
                 </div>
               </div>
+              {playbackErrorId === selectedTake.id && (
+                <div role="alert" className="mb-3 rounded-xl border border-rec/30 bg-panel2 p-3 text-sm text-mut">
+                  <p>“{selectedTake.name}” couldn’t play. Try again, or download the original recording to keep it.</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" onClick={() => togglePlay(selectedTake)}>Retry playback</Button>
+                    <Button variant="outline" size="sm" onClick={() => downloadOriginal(selectedTake)}>Download original</Button>
+                  </div>
+                </div>
+              )}
               <PeaksWaveform
                 peaks={peaksMap.get(selectedTake.id) ?? null}
                 progress={progressFor(selectedTake)}
@@ -1073,7 +1103,7 @@ export default function RecorderPageClient() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => audioRef.current?.pause()}
+                      onClick={() => playbackRecovery.pause(audioRef.current)}
                       aria-label="Pause comparison playback"
                     >
                       <IconPause className="h-3.5 w-3.5" /> Pause

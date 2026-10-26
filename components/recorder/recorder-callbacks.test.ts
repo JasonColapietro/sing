@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import vm from "node:vm";
 import ts from "typescript";
 import { describe, expect, it, vi } from "vitest";
+import { createPlaybackRecovery } from "./playback-recovery";
 import { createPlaybackSeek } from "./playback-seek";
 
 // Execute the real component callbacks with a deterministic audio/timer clock.
@@ -25,6 +26,7 @@ function room() {
   const clicks: Array<{ at: number; out?: { muted: boolean } }> = [];
   const env: Record<string, unknown> = {
     micState: "ready", recPhase: "idle", countIn: true,
+    playbackRecovery: createPlaybackRecovery(vi.fn()),
     countTimerRef: { current: 0 }, countGroupRef: { current: null },
     mountedRef: { current: true }, recorderRef: { current: null }, audioRef: { current: null },
     COUNT_IN_BEAT: 0.5, MIC_ENDED_MESSAGE: "Microphone stopped",
@@ -96,12 +98,15 @@ describe("recorder playback callback wiring", () => {
     const env: Record<string, unknown> = {
       ensureAudio: () => audio,
       playbackSeek: createPlaybackSeek(),
+      playbackRecovery: createPlaybackRecovery(vi.fn()),
+      playbackErrorId: null, setPlaybackErrorId: vi.fn(),
       urlRef: { current: null }, loadedIdRef: { current: null }, loadedId: null,
       URL: { createObjectURL: () => "blob:test", revokeObjectURL: vi.fn() },
       setLoadedId: (id: string) => { env.loadedId = id; },
       setPositionSec: vi.fn(), setSelectedId: vi.fn(),
     };
     env.loadTake = callback("loadTake", env);
+    env.playTake = callback("playTake", env);
     callback("seekTake", env)(a, 0.5);
     if (next === "another take") callback("togglePlay", env)(b);
     else (env.loadTake as (take: unknown) => void)(a);
@@ -109,4 +114,54 @@ describe("recorder playback callback wiring", () => {
     expect(audio.currentTime).toBe(0);
     expect(env.setPositionSec).not.toHaveBeenCalledWith(10);
   });
+});
+
+it("returns the actual recorder controls to idle on playback failure and reloads on retry", async () => {
+  class FailingAudio extends EventTarget {
+    paused = true;
+    ended = false;
+    currentTime = 0;
+    readyState = 0;
+    error: { code: number } | null = null;
+    loads = 0;
+    failNext = true;
+    set src(_value: string) { this.loads++; this.error = null; }
+    pause() { this.paused = true; this.dispatchEvent(new Event("pause")); }
+    play() {
+      this.paused = false;
+      this.dispatchEvent(new Event("play"));
+      if (this.failNext) {
+        this.failNext = false;
+        this.error = { code: 4 };
+        this.dispatchEvent(new Event("error"));
+        return Promise.reject(new Error("NotSupportedError"));
+      }
+      return Promise.resolve();
+    }
+  }
+  const env: Record<string, unknown> = {
+    Audio: FailingAudio, mountedRef: { current: true }, audioRef: { current: null },
+    playbackSeek: createPlaybackSeek(), urlRef: { current: null }, loadedIdRef: { current: null },
+    loadedId: null, isPlaying: false, playbackErrorId: null,
+    URL: { createObjectURL: () => "blob:test", revokeObjectURL: vi.fn() },
+    setLoadedId: (id: string) => { env.loadedId = id; },
+    setIsPlaying: (value: boolean) => { env.isPlaying = value; },
+    setPlaybackErrorId: (id: string | null) => { env.playbackErrorId = id; },
+    setPositionSec: vi.fn(), setSelectedId: vi.fn(),
+  };
+  env.playbackRecovery = createPlaybackRecovery((id) => { env.isPlaying = false; env.playbackErrorId = id; });
+  env.ensureAudio = callback("ensureAudio", env);
+  env.loadTake = callback("loadTake", env);
+  env.playTake = callback("playTake", env);
+  const toggle = callback("togglePlay", env);
+  const take = { id: "a", durationSec: 20, blob: new Blob(["a"]) };
+  toggle(take);
+  await Promise.resolve();
+  expect(env.isPlaying).toBe(false);
+  expect(env.playbackErrorId).toBe("a");
+  toggle(take);
+  await Promise.resolve();
+  expect(env.isPlaying).toBe(true);
+  expect(env.playbackErrorId).toBeNull();
+  expect((env.audioRef as { current: FailingAudio }).current.loads).toBe(2);
 });

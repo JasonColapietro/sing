@@ -21,6 +21,12 @@ try {
     window.__failTakeDecode = false;
     window.__takeDecodeReads = 0;
     window.__takeDecodePending = 0;
+    window.__takePlays = 0;
+    const play = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function (...args) {
+      if (this.src.startsWith("blob:")) window.__takePlays++;
+      return play.apply(this, args);
+    };
     const decode = AudioContext.prototype.decodeAudioData;
     AudioContext.prototype.decodeAudioData = function (bytes, ...callbacks) {
       if (bytes.byteLength !== byteLength) return decode.call(this, bytes, ...callbacks);
@@ -50,6 +56,10 @@ try {
       tx.objectStore("takes").put({
         id: "qa-take", name: "QA take", createdAt: Date.now(), durationSec: 5,
         mimeType: "audio/wav", blob: new Blob([new Uint8Array(bytes)], { type: "audio/wav" }), starred: false,
+      });
+      tx.objectStore("takes").put({
+        id: "broken-take", name: "Broken take", createdAt: 0, durationSec: 5,
+        mimeType: "audio/wav", blob: new Blob(["damaged recording"], { type: "audio/wav" }), starred: false,
       });
       tx.oncomplete = resolve;
       tx.onerror = () => reject(tx.error);
@@ -94,8 +104,30 @@ try {
   await page.getByRole("button", { name: "Keep", exact: true }).press("Space");
   assert.equal(await page.getByRole("button", { name: "Rename QA take", exact: true }).count(), 1);
   assert.equal(await takeRow.getByRole("button", { name: "Play QA take", exact: true }).count(), 1);
+
+  const brokenRow = page.getByRole("listitem").filter({
+    has: page.getByRole("button", { name: "Rename Broken take", exact: true }),
+  });
+  await brokenRow.getByRole("button", { name: "Play Broken take", exact: true }).click();
+  const playbackError = page.getByRole("alert").filter({ hasText: "couldn’t play" });
+  await playbackError.waitFor();
+  assert.equal(await brokenRow.getByRole("button", { name: "Play Broken take", exact: true }).count(), 1,
+    "A real unsupported media resource returns the controls to idle");
+  const attempts = await page.evaluate(() => window.__takePlays);
+  await playbackError.getByRole("button", { name: "Retry playback", exact: true }).click();
+  await page.waitForFunction((previous) => window.__takePlays > previous, attempts);
+  await playbackError.waitFor();
+  const originalPending = page.waitForEvent("download");
+  await playbackError.getByRole("button", { name: "Download original", exact: true }).click();
+  const original = await originalPending;
+  assert.equal(await readFile(await original.path(), "utf8"), "damaged recording",
+    "The original bytes remain downloadable after playback failure");
+  await takeRow.getByRole("button", { name: "Play QA take", exact: true }).click();
+  await takeRow.getByRole("button", { name: "Pause QA take", exact: true }).waitFor();
+  assert.equal(await playbackError.count(), 0, "A different valid take still plays");
+  await takeRow.getByRole("button", { name: "Pause QA take", exact: true }).click();
   assert.deepEqual(errors, []);
-  console.log("PASS recorder: Space activation, failed WAV feedback, original download, retry WAV, Keep");
+  console.log("PASS recorder: Space activation, WAV retry, original download, Keep, real media failure and playback retry");
   await context.close();
 } finally {
   await browser.close();
